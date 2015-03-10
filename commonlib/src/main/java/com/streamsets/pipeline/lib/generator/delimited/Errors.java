@@ -8,8 +8,8 @@ package com.streamsets.pipeline.lib.generator.delimited;
 import com.streamsets.pipeline.api.ErrorCode;
 
 public enum Errors implements ErrorCode {
-  DELIMITED_GENERATOR_00("Record '{}' root field should be a 'LIST' but it is a '{}'"),
-  DELIMITED_GENERATOR_01("Record '{}' column '{}' field should be a 'MAP' but it is a '{}'"),
+  DELIMITED_GENERATOR_00("Record '{}' root field should be List instead of '{}'"),
+  DELIMITED_GENERATOR_01("Record '{}' column '{}' field should be Map instead of '{}'"),
   ;
 
   private final String msg;

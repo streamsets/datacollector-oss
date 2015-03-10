@@ -7,13 +7,19 @@ package com.streamsets.pipeline.stage.processor.dedup;
 
 import com.streamsets.pipeline.api.ErrorCode;
 
+/* LC: For the first two - do we need to tell them what the value is? Can't we just tell them what it needs to be?
+* Can we say:
+* Maximum record count must be greater than zero
+* Time to compare must be a positive integer or zero to opt out of a time comparison */
+
 public enum Errors implements ErrorCode {
   DEDUP_00("Maximum record count must be greater than zero, it is '{}'"),
   DEDUP_01("Time window must be zero (disabled) or greater than zero, it is '{}'"),
-  DEDUP_02("At least one field-path to hash must be specified"),
-  DEDUP_03("The estimated required memory for '{}' records is '{}'MBs, current maximum heap is '{}'MBs, the " +
-           "required memory must not exceed 1/3 of the maximum heap"),
+  DEDUP_02("Specify at least one field for comparison"),
+  DEDUP_03("The estimated required memory for '{}' records is '{}' MB. The current maximum heap is '{}' MB. The " +
+           "required memory must not exceed 1/3 of the maximum heap."),
   ;
+
 
   private final String msg;
   Errors(String msg) {

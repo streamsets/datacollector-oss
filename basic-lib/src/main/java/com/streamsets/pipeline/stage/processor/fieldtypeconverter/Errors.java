@@ -8,7 +8,7 @@ package com.streamsets.pipeline.stage.processor.fieldtypeconverter;
 import com.streamsets.pipeline.api.ErrorCode;
 
 public enum Errors implements ErrorCode {
-  CONVERTER_00("Failed to convert field '{}' with value '{}' to type '{}', {}."),
+  CONVERTER_00("Failed to convert field '{}' with value '{}' to type '{}': {}"),
   ;
 
   private final String msg;

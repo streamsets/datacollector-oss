@@ -8,11 +8,11 @@ package com.streamsets.pipeline.stage.origin.logtail;
 import com.streamsets.pipeline.api.ErrorCode;
 
 public enum Errors implements ErrorCode {
-  TAIL_00("Log File '{}' does not exist"),
+  TAIL_00("Log file '{}' does not exist"),
   TAIL_01("Insufficient permissions to read the log file '{}'"),
-  TAIL_02("Invalid data format '{}', must be one of '{}'"),
+  TAIL_02("Invalid data format '{}'. Use one of the following formats: {}"),
   TAIL_03("Path '{}' is not a file"),
-  TAIL_04("Could not parse record '{}', {}"),
+  TAIL_04("Cannot parse record '{}': {}"),
   ;
 
   private final String msg;

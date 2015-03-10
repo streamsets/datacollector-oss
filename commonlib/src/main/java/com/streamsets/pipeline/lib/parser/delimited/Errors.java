@@ -8,9 +8,7 @@ package com.streamsets.pipeline.lib.parser.delimited;
 import com.streamsets.pipeline.api.ErrorCode;
 
 public enum Errors implements ErrorCode {
-  DELIMITED_PARSER_00("Could advance reader '{}' to '{}' offset"),
-  XML_PARSER_01("Could not obtain current reader position, {}"),
-  XML_PARSER_02("XML object exceeded maximum length, readerId '{}' offset '{}' maximum length '{}'"),
+  DELIMITED_PARSER_00("Cannot advance reader '{}' to offset '{}'"),
   ;
 
   private final String msg;

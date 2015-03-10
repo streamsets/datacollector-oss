@@ -8,7 +8,7 @@ package com.streamsets.pipeline.lib.generator;
 import com.streamsets.pipeline.api.ErrorCode;
 
 public enum Errors implements ErrorCode {
-  DATA_GENERATOR_00("Could not open file '{}'"),
+  DATA_GENERATOR_00("Cannot open file '{}'"),
 
   ;
 

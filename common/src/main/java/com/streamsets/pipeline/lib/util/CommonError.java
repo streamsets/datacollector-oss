@@ -10,12 +10,12 @@ import com.streamsets.pipeline.api.ErrorCode;
 public enum CommonError implements ErrorCode {
 
   //Kafka source and Target messages
-  CMN_0100("Unsupported field type '{}' with value '{}' encountered in record '{}'."),
-  CMN_0101("Error converting record '{}' to String, reason: {}"),
-  CMN_0102("Field Path to Column Name Mapping must be supplied to convert records into CSV format."),
-  CMN_0103("Error converting record '{}' to String, reason: {}"),
-  CMN_0104("Error evaluating expression {}, reason: {}"),
-  CMN_0105("Error parsing expression {}, reason: {}"),
+  CMN_0100("Unsupported field type '{}' with value '{}' encountered in record '{}'"),
+  CMN_0101("Error converting record '{}' to string: {}"),
+  CMN_0102("Field Path to Column Name mapping must be configured to convert records to CSV."),
+  CMN_0103("Error converting record '{}' to string: {}"),
+  CMN_0104("Error evaluating expression {}: {}"),
+  CMN_0105("Error parsing expression {}: {}"),
 
   ;
   private final String msg;

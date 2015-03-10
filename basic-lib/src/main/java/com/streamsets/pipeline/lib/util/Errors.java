@@ -8,7 +8,7 @@ package com.streamsets.pipeline.lib.util;
 import com.streamsets.pipeline.api.ErrorCode;
 
 public enum Errors implements ErrorCode {
-  RECORD_00("Error parsing a JSON string '{}': {}"),
+  RECORD_00("Error parsing JSON string '{}': {}"),
   ;
 
   private final String msg;

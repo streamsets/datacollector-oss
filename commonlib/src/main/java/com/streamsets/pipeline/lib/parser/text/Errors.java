@@ -8,7 +8,7 @@ package com.streamsets.pipeline.lib.parser.text;
 import com.streamsets.pipeline.api.ErrorCode;
 
 public enum Errors implements ErrorCode {
-  TEXT_PARSER_00("Could advance file '{}' to '{}' offset"),
+  TEXT_PARSER_00("Cannot advance file '{}' to offset '{}'"),
   ;
 
   private final String msg;

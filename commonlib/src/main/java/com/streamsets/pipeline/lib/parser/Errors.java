@@ -8,7 +8,7 @@ package com.streamsets.pipeline.lib.parser;
 import com.streamsets.pipeline.api.ErrorCode;
 
 public enum Errors implements ErrorCode {
-  DATA_PARSER_00("Could not open file '{}'"),
+  DATA_PARSER_00("Cannot open file '{}'"),
   ;
 
   private final String msg;

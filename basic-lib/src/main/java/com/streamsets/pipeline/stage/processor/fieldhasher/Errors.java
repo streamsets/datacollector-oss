@@ -8,9 +8,9 @@ package com.streamsets.pipeline.stage.processor.fieldhasher;
 import com.streamsets.pipeline.api.ErrorCode;
 
 public enum Errors implements ErrorCode {
-  HASH_00("Error creating message digest for {}, {}."),
-  HASH_01("The record '{}' has the following issues - Fields '{}' do not exist, Fields '{}' have null value, " +
-    "Fields '{}' are of type 'MAP' or 'LIST'.")
+  HASH_00("Error creating message digest for {}: {}"),
+  HASH_01("The record '{}' has the following issues: fields '{}' do not exist, fields '{}' include null values, " +
+    "fields '{}' are of type Map or List")
   ;
 
   private final String msg;

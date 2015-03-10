@@ -8,7 +8,7 @@ package com.streamsets.pipeline.lib.generator.json;
 import com.streamsets.pipeline.api.ErrorCode;
 
 public enum Errors implements ErrorCode {
-  JSON_GENERATOR_00("Record '{}' root field should be a 'LIST' but it is a '{}'"),
+  JSON_GENERATOR_00("Record '{}' root field should be List instead of '{}'"),
   ;
 
   private final String msg;

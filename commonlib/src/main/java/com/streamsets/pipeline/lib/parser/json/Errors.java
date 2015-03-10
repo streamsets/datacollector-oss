@@ -8,9 +8,9 @@ package com.streamsets.pipeline.lib.parser.json;
 import com.streamsets.pipeline.api.ErrorCode;
 
 public enum Errors implements ErrorCode {
-  JSON_PARSER_00("Could advance reader '{}' to '{}' offset"),
-  JSON_PARSER_01("Could not parse JSON, readerId '{}' offset '{}', unsupported type '{}'"),
-  JSON_PARSER_02("JSON object exceeded maximum length, readerId '{}' offset '{}' maximum length '{}'"),
+  JSON_PARSER_00("Cannot advance reader '{}' to offset '{}'"),
+  JSON_PARSER_01("Cannot parse JSON: readerId '{}', offset '{}', unsupported type '{}'"),
+  JSON_PARSER_02("JSON object exceeded maximum length: readerId '{}', offset '{}', maximum length '{}'"),
   ;
 
   private final String msg;

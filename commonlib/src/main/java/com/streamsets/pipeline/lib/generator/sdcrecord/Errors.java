@@ -8,7 +8,7 @@ package com.streamsets.pipeline.lib.generator.sdcrecord;
 import com.streamsets.pipeline.api.ErrorCode;
 
 public enum Errors implements ErrorCode {
-  TEXT_GENERATOR_00("Record '{}' could not convert field-path '{}' value to string"),
+  TEXT_GENERATOR_00("Record '{}' cannot convert the field '{}' value to string"),
   ;
 
   private final String msg;
