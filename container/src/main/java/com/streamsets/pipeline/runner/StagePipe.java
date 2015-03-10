@@ -24,6 +24,7 @@ import java.util.concurrent.TimeUnit;
 
 public class StagePipe extends Pipe {
 
+  //static variables needed to update the runtime stat gauge
   private static final String RUNTIME_STATS_GAUGE = "RuntimeStatsGauge";
   private static final RuntimeStats RUNTIME_STATS = new RuntimeStats();
   private static int BATCH_COUNTER = 0;
@@ -91,15 +92,8 @@ public class StagePipe extends Pipe {
   public void process(PipeBatch pipeBatch) throws StageException, PipelineRuntimeException {
     //note down time when this stage was entered
     long startTimeInStage = System.currentTimeMillis();
-    //update the runtime stats gauge
-    //set the name of the stage
-    RUNTIME_STATS.setCurrentStage(getStage().getInfo().getInstanceName());
-    //update batch ige if the stage is Source
-    if (getStage().getDefinition().getType() == StageType.SOURCE) {
-      BATCH_AGE = System.currentTimeMillis();
-    }
-    RUNTIME_STATS.setCurrentBatchAge(System.currentTimeMillis() - BATCH_AGE);
-    RUNTIME_STATS.setTimeInCurrentStage(System.currentTimeMillis() - startTimeInStage);
+    //update stats
+    updateStatsAtStart(startTimeInStage);
 
     BatchMakerImpl batchMaker = pipeBatch.startStage(this);
     BatchImpl batchImpl = pipeBatch.getBatch(this);
@@ -113,7 +107,7 @@ public class StagePipe extends Pipe {
     long start = System.currentTimeMillis();
     String newOffset = getStage().execute(previousOffset, pipeBatch.getBatchSize(), batch, batchMaker,
                                           errorSink);
-    if (getStage().getDefinition().getType() == StageType.SOURCE) {
+    if (isSource()) {
       pipeBatch.setNewOffset(newOffset);
     }
     processingTimer.update(System.currentTimeMillis() - start, TimeUnit.MILLISECONDS);
@@ -128,7 +122,7 @@ public class StagePipe extends Pipe {
     errorRecordsHistogram.update(stageErrorRecordCount);
 
     int outputRecordsCount = batchMaker.getSize();
-    if (getStage().getDefinition().getType() == StageType.TARGET) {
+    if (isTarget()) {
       //Assumption is that the target will not drop any record.
       //Records are sent to destination or to the error sink.
       outputRecordsCount = batchImpl.getSize() - stageErrorRecordCount;
@@ -151,18 +145,14 @@ public class StagePipe extends Pipe {
     }
     pipeBatch.completeStage(batchMaker);
 
-    //update stats
-    if (getStage().getDefinition().getType() == StageType.SOURCE) {
-      BATCH_COUNTER++;
-      if (outputRecordsCount > 0) {
-        TIME_OF_LAST_RECORD = System.currentTimeMillis();
-      }
+    //get records count to determine if this stage saw any record in this batch
+    int recordsCount = batchImpl.getSize();
+    if(isSource()) {
+      //source does not have input records
+      recordsCount = outputRecordsCount;
     }
-    RUNTIME_STATS.setBatchCount(BATCH_COUNTER);
-    RUNTIME_STATS.setCurrentBatchAge(System.currentTimeMillis() - BATCH_AGE);
-    RUNTIME_STATS.setTimeInCurrentStage(System.currentTimeMillis() - startTimeInStage);
-    RUNTIME_STATS.setCurrentSourceOffset(newOffset);
-    RUNTIME_STATS.setTimeOfLastReceivedRecord(TIME_OF_LAST_RECORD);
+    //update stats
+    updateStatsAtEnd(startTimeInStage, newOffset, recordsCount);
   }
 
   @Override
@@ -183,4 +173,54 @@ public class StagePipe extends Pipe {
     }
     return runtimeStatsGauge;
   }
+
+  private void updateStatsAtStart(long startTimeInStage) {
+    //update the runtime stats
+    //The following needs to be done at the beginning of a stage per batch
+    //1. set name of current stage
+    //2. update current batch age, [if source then update the batch age]
+    //3. update time in current stage [near zero]
+    RUNTIME_STATS.setCurrentStage(getStage().getInfo().getInstanceName());
+    //update batch ige if the stage is Source
+    if (isSource()) {
+      BATCH_AGE = System.currentTimeMillis();
+    }
+    RUNTIME_STATS.setCurrentBatchAge(System.currentTimeMillis() - BATCH_AGE);
+    RUNTIME_STATS.setTimeInCurrentStage(System.currentTimeMillis() - startTimeInStage);
+  }
+
+  private void updateStatsAtEnd(long startTimeInStage, String offset, int outputRecordsCount) {
+    //update the runtime stats
+    //The following needs to be done at the beginning of a stage per batch
+    //1. If source, update batch counter, current offset, if there was at least one record in this batch then
+    //   update time of last record
+    //2. update current batch age
+    //3. update time in current stage
+    if (isSource()) {
+      BATCH_COUNTER++;
+      RUNTIME_STATS.setCurrentSourceOffset(offset);
+      if (outputRecordsCount > 0) {
+        TIME_OF_LAST_RECORD = System.currentTimeMillis();
+      }
+    }
+    RUNTIME_STATS.setBatchCount(BATCH_COUNTER);
+    RUNTIME_STATS.setCurrentBatchAge(System.currentTimeMillis() - BATCH_AGE);
+    RUNTIME_STATS.setTimeInCurrentStage(System.currentTimeMillis() - startTimeInStage);
+    RUNTIME_STATS.setTimeOfLastReceivedRecord(TIME_OF_LAST_RECORD);
+  }
+
+  private boolean isSource() {
+    if (getStage().getDefinition().getType() == StageType.SOURCE) {
+      return true;
+    }
+    return false;
+  }
+
+  private boolean isTarget() {
+    if(getStage().getDefinition().getType() == StageType.TARGET) {
+      return true;
+    }
+    return false;
+  }
+
 }
