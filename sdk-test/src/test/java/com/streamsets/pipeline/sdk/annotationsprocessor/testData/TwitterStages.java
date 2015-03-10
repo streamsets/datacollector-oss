@@ -153,7 +153,7 @@ public class TwitterStages {
     }
 
     @Override
-    public List<ELEval> getElEvals(ElEvalProvider elEvalProvider) {
+    public List<ELEval> getELEvals(ELContext elContext) {
       return new ArrayList<>();
     }
 

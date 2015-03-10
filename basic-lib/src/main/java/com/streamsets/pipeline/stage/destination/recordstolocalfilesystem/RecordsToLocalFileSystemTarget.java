@@ -56,12 +56,12 @@ public class RecordsToLocalFileSystemTarget extends BaseTarget {
   private ELEval rotationMillisEvaluator;
 
   @Override
-  public List<ELEval> getElEvals(ElEvalProvider elEvalProvider) {
-    return ImmutableList.of(createRotationMillisEval(elEvalProvider));
+  public List<ELEval> getELEvals(ELContext elContext) {
+    return ImmutableList.of(createRotationMillisEval(elContext));
   }
 
-  private ELEval createRotationMillisEval(ElEvalProvider elEvalProvider) {
-    return elEvalProvider.createELEval("rotationIntervalSecs", TimeEL.class);
+  private ELEval createRotationMillisEval(ELContext elContext) {
+    return elContext.createELEval("rotationIntervalSecs", TimeEL.class);
   }
 
   @Override
@@ -79,7 +79,7 @@ public class RecordsToLocalFileSystemTarget extends BaseTarget {
     try {
       rotationMillisEvaluator = createRotationMillisEval(getContext());
       getContext().parseEL(rotationIntervalSecs);
-      rotationMillis = rotationMillisEvaluator.eval(getContext().createELVariables(), rotationIntervalSecs, Long.class);
+      rotationMillis = rotationMillisEvaluator.eval(getContext().createELVars(), rotationIntervalSecs, Long.class);
       if (rotationMillis <= 0) {
         issues.add(getContext().createConfigIssue(Groups.FILES.name(), "rotationIntervalSecs", Errors.RECORDFS_03,
                                                   rotationIntervalSecs, rotationMillis / 1000));

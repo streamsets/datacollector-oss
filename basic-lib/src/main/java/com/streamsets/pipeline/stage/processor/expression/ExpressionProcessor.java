@@ -13,6 +13,7 @@ import com.streamsets.pipeline.api.base.OnRecordErrorException;
 import com.streamsets.pipeline.api.base.SingleLaneRecordProcessor;
 import com.streamsets.pipeline.api.el.ELEval;
 import com.streamsets.pipeline.api.el.ELEvalException;
+import com.streamsets.pipeline.api.el.ELVars;
 import com.streamsets.pipeline.lib.el.RecordEL;
 import com.streamsets.pipeline.lib.el.StringEL;
 import com.streamsets.pipeline.lib.el.ELUtils;
@@ -34,7 +35,7 @@ public class ExpressionProcessor extends SingleLaneRecordProcessor {
   }
 
   private ELEval expressionEval;
-  private ELEval.Variables variables;
+  private ELVars variables;
 
   @Override
   protected List<ConfigIssue> validateConfigs() throws StageException {
@@ -44,19 +45,19 @@ public class ExpressionProcessor extends SingleLaneRecordProcessor {
     expressionEval = createExpressionEval(getContext());
     for(ExpressionProcessorConfig expressionProcessorConfig : expressionProcessorConfigs) {
       ELUtils.validateExpression(expressionEval, variables, expressionProcessorConfig.expression, getContext(),
-        Groups.EXPRESSIONS.name(), "expressionProcessorConfigs", Errors.EXPR_00,
-        Object.class, issues);
+                                 Groups.EXPRESSIONS.name(), "expressionProcessorConfigs", Errors.EXPR_00,
+                                 Object.class, issues);
     }
     return issues;
   }
 
   @Override
-  public List<ELEval> getElEvals(ElEvalProvider elEvalProvider) {
-    return ImmutableList.of(createExpressionEval(elEvalProvider));
+  public List<ELEval> getELEvals(ELContext elContext) {
+    return ImmutableList.of(createExpressionEval(elContext));
   }
 
-  private ELEval createExpressionEval(ElEvalProvider elEvalProvider) {
-    return elEvalProvider.createELEval("expression", RecordEL.class, StringEL.class);
+  private ELEval createExpressionEval(ELContext elContext) {
+    return elContext.createELEval("expression", RecordEL.class, StringEL.class);
   }
 
   @Override

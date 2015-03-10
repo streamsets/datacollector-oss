@@ -7,6 +7,7 @@ package com.streamsets.pipeline.alerts;
 
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.el.ELEvaluator;
+import com.streamsets.pipeline.el.ELVariables;
 import com.streamsets.pipeline.lib.el.RecordEL;
 import com.streamsets.pipeline.util.ContainerError;
 import com.streamsets.pipeline.util.ObserverException;
@@ -16,7 +17,7 @@ public class AlertsUtil {
   private static final String ALERT_PREFIX = "alert.";
   private static final String USER_PREFIX = "user.";
 
-  public static boolean evaluateRecord(Record record, String predicate, ELEvaluator.Variables variables,
+  public static boolean evaluateRecord(Record record, String predicate, ELVariables variables,
                                        ELEvaluator elEvaluator) throws ObserverException {
     try {
       RecordEL.setRecordInContext(variables, record);
@@ -27,7 +28,7 @@ public class AlertsUtil {
     }
   }
 
-  public static boolean evaluateExpression(String predicate, ELEvaluator.Variables variables,
+  public static boolean evaluateExpression(String predicate, ELVariables variables,
                                        ELEvaluator elEvaluator) throws ObserverException {
     try {
       return (Boolean) elEvaluator.eval(variables, predicate, Boolean.class);

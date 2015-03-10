@@ -15,6 +15,7 @@ import com.streamsets.pipeline.config.MetricElement;
 import com.streamsets.pipeline.config.MetricType;
 import com.streamsets.pipeline.config.MetricsRuleDefinition;
 import com.streamsets.pipeline.el.ELEvaluator;
+import com.streamsets.pipeline.el.ELVariables;
 import com.streamsets.pipeline.lib.el.RecordEL;
 import com.streamsets.pipeline.lib.el.StringEL;
 import com.streamsets.pipeline.main.RuntimeInfo;
@@ -36,13 +37,13 @@ public class TestMetricRuleEvaluator {
 
   private static MetricRegistry metrics;
   private static ELEvaluator elEvaluator;
-  private static ELEvaluator.Variables variables;
+  private static ELVariables variables;
   private static RuntimeInfo runtimeInfo;
 
   @BeforeClass
   public static void setUp() {
     metrics = new MetricRegistry();
-    variables = new ELEvaluator.Variables();
+    variables = new ELVariables();
     elEvaluator = new ELEvaluator("TestMetricRuleEvaluator", RecordEL.class, StringEL.class);
     runtimeInfo = new RuntimeInfo(Arrays.asList(TestDataRuleEvaluator.class.getClassLoader()));
   }

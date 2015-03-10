@@ -10,7 +10,7 @@ import com.streamsets.pipeline.api.ElFunction;
 import com.streamsets.pipeline.api.ElParam;
 import com.streamsets.pipeline.api.el.ELEval;
 import com.streamsets.pipeline.api.el.ELEvalException;
-import com.streamsets.pipeline.api.impl.TextUtils;
+import com.streamsets.pipeline.api.el.ELVars;
 import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.lib.util.CommonError;
 import org.apache.commons.el.ExpressionEvaluatorImpl;
@@ -102,8 +102,8 @@ public class ELEvaluator extends ELEval {
     return configName;
   }
 
-  public ELEval.Variables createVariables() {
-    ELEval.Variables variables = new ELEvaluator.Variables();
+  public ELVars createVariables() {
+    ELVars variables = new ELVariables();
     if (constants != null) {
       for (Map.Entry<String, ?> entry : constants.entrySet()) {
         variables.addVariable(entry.getKey(), entry.getValue());
@@ -121,7 +121,7 @@ public class ELEvaluator extends ELEval {
   }
 
   @Override
-  public <T> T evaluate (final ELEval.Variables vars, String expression, Class<T> returnType) throws ELEvalException {
+  public <T> T evaluate (final ELVars vars, String expression, Class<T> returnType) throws ELEvalException {
 
     VariableResolver variableResolver = new VariableResolver() {
 
@@ -157,65 +157,6 @@ public class ELEvaluator extends ELEval {
     @Override
     public Method resolveFunction(String functionNamespace, String functionName) {
       return functions.get(ELEvaluator.getFunctionName(functionNamespace, functionName));
-    }
-  }
-
-  public static class Variables implements ELEval.Variables {
-
-    private final Map<String, Object> variables;
-
-    public Variables() {
-      variables = new HashMap<>();
-    }
-
-    public Variables(Map<String, Object> variables, Map<String, Object> contextVariables) {
-      this();
-      if (variables != null) {
-        for (Map.Entry<String, Object> entry : variables.entrySet()) {
-          addVariable(entry.getKey(), entry.getValue());
-        }
-      }
-      if (contextVariables != null) {
-        for (Map.Entry<String, Object> entry : contextVariables.entrySet()) {
-          addContextVariable(entry.getKey(), entry.getValue());
-        }
-      }
-    }
-
-    private static final void checkVariableName(String name) {
-      Utils.checkNotNull(name, "name");
-      Utils.checkArgument(TextUtils.isValidName(name), Utils.formatL("Invalid name '{}', must be '{}'",
-        name, TextUtils.VALID_NAME));
-    }
-
-    public void addVariable(String name, Object value) {
-      checkVariableName(name);
-      variables.put(name, value);
-    }
-
-    public void addContextVariable(String name, Object value) {
-      checkVariableName(name);
-      variables.put(":" + name, value);
-    }
-
-    public Object getVariable(String name) {
-      checkVariableName(name);
-      return variables.get(name);
-    }
-
-    public boolean hasVariable(String name) {
-      checkVariableName(name);
-      return variables.containsKey(name);
-    }
-
-    public boolean hasContextVariable(String name) {
-      checkVariableName(name);
-      return variables.containsKey(":" + name);
-    }
-
-    public Object getContextVariable(String name) {
-      checkVariableName(name);
-      return variables.get(":" + name);
     }
   }
 

@@ -14,6 +14,7 @@ import com.streamsets.pipeline.config.MetricsRuleDefinition;
 import com.streamsets.pipeline.config.RuleDefinitions;
 import com.streamsets.pipeline.config.ThresholdType;
 import com.streamsets.pipeline.el.ELEvaluator;
+import com.streamsets.pipeline.el.ELVariables;
 import com.streamsets.pipeline.lib.el.RecordEL;
 import com.streamsets.pipeline.lib.el.StringEL;
 import org.slf4j.Logger;
@@ -40,10 +41,10 @@ public class RuleDefinitionValidator {
   private static final String SAMPLING_PERCENTAGE = "Sampling Percentage";
 
   private final ELEvaluator elEvaluator;
-  private final ELEvaluator.Variables variables;
+  private final ELVariables variables;
 
   public RuleDefinitionValidator() {
-    variables = new ELEvaluator.Variables();
+    variables = new ELVariables();
     elEvaluator = new ELEvaluator("RuleDefinitionValidator", StringEL.class, RecordEL.class);
   }
 

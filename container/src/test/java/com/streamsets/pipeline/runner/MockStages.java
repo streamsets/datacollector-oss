@@ -99,7 +99,7 @@ public class MockStages {
       }
 
       @Override
-      public List<ELEval> getElEvals(ElEvalProvider elEvalProvider) {
+      public List<ELEval> getELEvals(ELContext elContext) {
         return new ArrayList<>();
       }
 
@@ -148,7 +148,7 @@ public class MockStages {
       }
 
       @Override
-      public List<ELEval> getElEvals(ElEvalProvider elEvalProvider) {
+      public List<ELEval> getELEvals(ELContext elContext) {
         return new ArrayList<>();
       }
 
@@ -177,7 +177,7 @@ public class MockStages {
     public static class MTarget implements Target {
 
       @Override
-      public List<ELEval> getElEvals(ElEvalProvider elEvalProvider) {
+      public List<ELEval> getELEvals(ELContext elContext) {
         return new ArrayList<>();
       }
 
@@ -215,7 +215,7 @@ public class MockStages {
     public static class ETarget implements Target {
 
       @Override
-      public List<ELEval> getElEvals(ElEvalProvider elEvalProvider) {
+      public List<ELEval> getELEvals(ELContext elContext) {
         return new ArrayList<>();
       }
 

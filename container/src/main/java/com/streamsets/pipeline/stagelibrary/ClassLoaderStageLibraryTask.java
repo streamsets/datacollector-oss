@@ -306,8 +306,9 @@ public class ClassLoaderStageLibraryTask extends AbstractTask implements StageLi
     InstantiationException {
     Class<?> stageClass = stageDefinition.getStageClassLoader().loadClass(stageDefinition.getClassName());
     Stage<?> stage = (Stage<?>) stageClass.newInstance();
-    List<ELEval> elEvals = stage.getElEvals(new StageContext(stageDefinition.getName(), stageDefinition.getType(),
-      false,OnRecordError.TO_ERROR,Collections.<String>emptyList()));
+    List<ELEval> elEvals = stage.getELEvals(new StageContext(stageDefinition.getName(), stageDefinition.getType(),
+                                                             false, OnRecordError.TO_ERROR,
+                                                             Collections.<String>emptyList()));
     for(ELEval elEval : elEvals) {
       ConfigDefinition configDefinition = stageDefinition.getConfigDefinition(elEval.getConfigName());
       configDefinition.getElFunctionDefinitions().addAll(((ELEvaluator) elEval).getElFunctionDefinitions());

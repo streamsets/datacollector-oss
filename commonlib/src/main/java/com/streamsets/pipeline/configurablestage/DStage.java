@@ -29,11 +29,11 @@ public abstract class DStage<C extends Stage.Context> implements Stage<C> {
   }
 
   @Override
-  public List<ELEval> getElEvals(ElEvalProvider elEvalProvider) {
+  public List<ELEval> getELEvals(ELContext elContext) {
     if(stage == null) {
       stage = createStage();
     }
-    return stage.getElEvals(elEvalProvider);
+    return stage.getELEvals(elContext);
   }
 
   @Override

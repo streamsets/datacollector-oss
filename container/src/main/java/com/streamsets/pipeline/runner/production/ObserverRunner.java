@@ -15,6 +15,7 @@ import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.config.DataRuleDefinition;
 import com.streamsets.pipeline.config.MetricsRuleDefinition;
 import com.streamsets.pipeline.el.ELEvaluator;
+import com.streamsets.pipeline.el.ELVariables;
 import com.streamsets.pipeline.lib.el.RecordEL;
 import com.streamsets.pipeline.lib.el.StringEL;
 import com.streamsets.pipeline.metrics.MetricsConfigurator;
@@ -37,7 +38,7 @@ public class ObserverRunner {
   private final Map<String, EvictingQueue<Record>> ruleToSampledRecordsMap;
   private final MetricRegistry metrics;
   private final ELEvaluator elEvaluator;
-  private final ELEvaluator.Variables variables;
+  private final ELVariables variables;
   private final Map<String, Map<String, Object>> alertResponse;
   private final AlertManager alertManager;
   private final Configuration configuration;
@@ -49,7 +50,7 @@ public class ObserverRunner {
     this.ruleToSampledRecordsMap = new HashMap<>();
     this.configuration = configuration;
     elEvaluator = new ELEvaluator("ObserverRunner", RecordEL.class, StringEL.class);
-    variables = new ELEvaluator.Variables();
+    variables = new ELVariables();
     this.alertManager = alertManager;
   }
 

@@ -11,6 +11,7 @@ import com.streamsets.pipeline.api.ElParam;
 import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.el.ELEval;
+import com.streamsets.pipeline.api.el.ELVars;
 import com.streamsets.pipeline.api.impl.Utils;
 
 public class RecordEL {
@@ -213,7 +214,7 @@ public class RecordEL {
   public static Field.Type STRING = Field.Type.STRING;
 
 
-  public static void setRecordInContext(ELEval.Variables variables, Record record) {
+  public static void setRecordInContext(ELVars variables, Record record) {
     Utils.checkNotNull(variables, "variables");
     variables.addContextVariable(RECORD_CONTEXT_VAR, record);
   }

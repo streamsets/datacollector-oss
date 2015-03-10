@@ -10,13 +10,13 @@ import com.streamsets.pipeline.lib.el.StringEL;
 import org.junit.Assert;
 import org.junit.Test;
 
-public class TestELStringSupport {
+public class TestStringEL {
 
   @Test
   public void testSubstring() throws Exception {
     ELEvaluator eval = new ELEvaluator("testSubstring", StringEL.class);
 
-    ELEvaluator.Variables variables = new ELEvaluator.Variables();
+    ELVariables variables = new ELVariables();
 
     Assert.assertEquals("StreamSets", eval.eval(variables,
       "${str:substring(\"The StreamSets Inc\", 4, 14)}", String.class));
@@ -34,7 +34,7 @@ public class TestELStringSupport {
   public void testSubstringNegative() throws Exception {
     ELEvaluator eval = new ELEvaluator("testSubstringNegative", StringEL.class);
 
-    ELEvaluator.Variables variables = new ELEvaluator.Variables();
+    ELVariables variables = new ELVariables();
 
     try {
       eval.eval(variables, "${str:substring(\"The StreamSets Inc\", -1, 14)}", String.class);
@@ -58,7 +58,7 @@ public class TestELStringSupport {
   public void testTrim() throws Exception {
     ELEvaluator eval = new ELEvaluator("testTrim", StringEL.class);
 
-    ELEvaluator.Variables variables = new ELEvaluator.Variables();
+    ELVariables variables = new ELVariables();
 
     Assert.assertEquals("StreamSets", eval.eval(variables,
       "${str:trim(\"   StreamSets  \")}", String.class));
@@ -68,7 +68,7 @@ public class TestELStringSupport {
   public void testToUpper() throws Exception {
     ELEvaluator eval = new ELEvaluator("testToUpper", StringEL.class);
 
-    ELEvaluator.Variables variables = new ELEvaluator.Variables();
+    ELVariables variables = new ELVariables();
 
     Assert.assertEquals("STREAMSETS", eval.eval(variables,
       "${str:toUpper(\"StreamSets\")}", String.class));
@@ -78,7 +78,7 @@ public class TestELStringSupport {
   public void testToLower() throws Exception {
     ELEvaluator eval = new ELEvaluator("testToLower", StringEL.class);
 
-    ELEvaluator.Variables variables = new ELEvaluator.Variables();
+    ELVariables variables = new ELVariables();
 
     Assert.assertEquals("streamsets inc", eval.eval(variables,
       "${str:toLower(\"StreamSets INC\")}", String.class));
@@ -88,7 +88,7 @@ public class TestELStringSupport {
   public void testReplace() throws Exception {
     ELEvaluator eval = new ELEvaluator("testReplace", StringEL.class);
 
-    ELEvaluator.Variables variables = new ELEvaluator.Variables();
+    ELVariables variables = new ELVariables();
 
     Assert.assertEquals("The.Streamsets.Inc", eval.eval(variables,
       "${str:replace(\"The Streamsets Inc\", ' ', '.')}", String.class));
@@ -98,7 +98,7 @@ public class TestELStringSupport {
   public void testReplaceAll() throws Exception {
     ELEvaluator eval = new ELEvaluator("testReplaceAll", StringEL.class);
 
-    ELEvaluator.Variables variables = new ELEvaluator.Variables();
+    ELVariables variables = new ELVariables();
 
     Assert.assertEquals("The Streamsets Company", eval.eval(variables,
       "${str:replaceAll(\"The Streamsets Inc\", \"Inc\", \"Company\")}", String.class));
@@ -108,7 +108,7 @@ public class TestELStringSupport {
   public void testContains() throws Exception {
     ELEvaluator eval = new ELEvaluator("testContains", StringEL.class);
 
-    ELEvaluator.Variables variables = new ELEvaluator.Variables();
+    ELVariables variables = new ELVariables();
 
     Assert.assertTrue(eval.eval(variables, "${str:contains(\"The Streamsets Inc\", \"Inc\")}", Boolean.class));
     Assert.assertFalse(eval.eval(variables, "${str:contains(\"The Streamsets Inc\", \"Incorporated\")}", Boolean.class));
@@ -118,7 +118,7 @@ public class TestELStringSupport {
   public void testStartsWith() throws Exception {
     ELEvaluator eval = new ELEvaluator("testStartsWith", StringEL.class);
 
-    ELEvaluator.Variables variables = new ELEvaluator.Variables();
+    ELVariables variables = new ELVariables();
 
     Assert.assertTrue(eval.eval(variables, "${str:startsWith(\"The Streamsets Inc\", \"The Streamsets\")}", Boolean.class));
     Assert.assertFalse(eval.eval(variables, "${str:startsWith(\"The Streamsets Inc\", \"Streamsets Inc\")}", Boolean.class));
@@ -128,7 +128,7 @@ public class TestELStringSupport {
   public void testEndsWith() throws Exception {
     ELEvaluator eval = new ELEvaluator("testEndsWith", StringEL.class);
 
-    ELEvaluator.Variables variables = new ELEvaluator.Variables();
+    ELVariables variables = new ELVariables();
 
     Assert.assertFalse(eval.eval(variables, "${str:endsWith(\"The Streamsets Inc\", \"The Streamsets\")}", Boolean.class));
     Assert.assertTrue(eval.eval(variables, "${str:endsWith(\"The Streamsets Inc\", \"Streamsets Inc\")}", Boolean.class));
@@ -138,7 +138,7 @@ public class TestELStringSupport {
   public void testTruncate() throws Exception {
     ELEvaluator eval = new ELEvaluator("testTruncate", StringEL.class);
 
-    ELEvaluator.Variables variables = new ELEvaluator.Variables();
+    ELVariables variables = new ELVariables();
 
     Assert.assertEquals("The StreamSets", eval.eval(variables,
       "${str:truncate(\"The StreamSets Inc\", 14)}", String.class));
@@ -149,7 +149,7 @@ public class TestELStringSupport {
 
     ELEvaluator eval = new ELEvaluator("testRegExCapture", StringEL.class);
 
-    ELEvaluator.Variables variables = new ELEvaluator.Variables();
+    ELVariables variables = new ELVariables();
 
     String result = eval.eval(variables,
       "${str:regExCapture(\"2015-01-18 22:31:51,813 DEBUG ZkClient - Received event: WatchedEvent state:Disconnected\"," +

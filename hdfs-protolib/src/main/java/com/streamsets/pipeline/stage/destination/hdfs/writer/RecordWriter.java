@@ -9,6 +9,7 @@ import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.Target;
 import com.streamsets.pipeline.api.el.ELEval;
+import com.streamsets.pipeline.api.el.ELVars;
 import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.lib.el.RecordEL;
 import com.streamsets.pipeline.lib.generator.CharDataGeneratorFactory;
@@ -41,7 +42,7 @@ public class RecordWriter {
   private SequenceFile.Writer seqWriter;
   private String keyEL;
   private ELEval keyElEval;
-  private ELEval.Variables elVars;
+  private ELVars elVars;
   private Text key;
   private Text value;
   private boolean seqFile;
@@ -67,7 +68,7 @@ public class RecordWriter {
     this.seqWriter = seqWriter;
     this.keyEL = keyEL;
     keyElEval = ElUtil.createKeyElEval(context);
-    elVars = context.createELVariables();
+    elVars = context.createELVars();
     key = new Text();
     value = new Text();
     seqFile = true;

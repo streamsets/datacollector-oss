@@ -26,7 +26,7 @@ public abstract class BaseStage<C extends Context> implements Stage<C> {
     return validateConfigs();
   }
 
-  public List<ELEval> getElEvals(ElEvalProvider elEvalProvider) {
+  public List<ELEval> getELEvals(ELContext elContext) {
     return new ArrayList<>();
   }
 

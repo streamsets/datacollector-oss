@@ -23,6 +23,7 @@ import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.Target;
 import com.streamsets.pipeline.api.el.ELEval;
 import com.streamsets.pipeline.api.el.ELEvalException;
+import com.streamsets.pipeline.api.el.ELVars;
 import com.streamsets.pipeline.api.ext.ContextExtensions;
 import com.streamsets.pipeline.api.ext.JsonRecordReader;
 import com.streamsets.pipeline.api.ext.JsonRecordWriter;
@@ -30,6 +31,7 @@ import com.streamsets.pipeline.api.impl.ErrorMessage;
 import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.config.StageType;
 import com.streamsets.pipeline.el.ELEvaluator;
+import com.streamsets.pipeline.el.ELVariables;
 import com.streamsets.pipeline.json.ObjectMapperFactory;
 import com.streamsets.pipeline.lib.io.CountingReader;
 import com.streamsets.pipeline.lib.json.OverrunStreamingJsonParser;
@@ -324,8 +326,8 @@ public class StageContext implements Source.Context, Target.Context, Processor.C
   }
 
   @Override
-  public ELEval.Variables createELVariables() {
-    return new ELEvaluator.Variables();
+  public ELVars createELVars() {
+    return new ELVariables();
   }
 
   @Override

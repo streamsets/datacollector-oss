@@ -12,12 +12,12 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.mockito.Mockito;
 
-public class TestELRecordSupport {
+public class TestRecordEL {
 
   @Test
   public void testRecordFunctions() throws Exception {
     ELEvaluator eval = new ELEvaluator("testRecordFunctions", RecordEL.class);
-    ELEvaluator.Variables variables = new ELEvaluator.Variables();
+    ELVariables variables = new ELVariables();
 
     Record.Header header = Mockito.mock(Record.Header.class);
     Mockito.when(header.getSourceId()).thenReturn("id");
@@ -42,7 +42,7 @@ public class TestELRecordSupport {
   public void testErrorRecordFunctions() throws Exception {
     ELEvaluator eval = new ELEvaluator("testErrorRecordFunctions", RecordEL.class);
 
-    ELEvaluator.Variables variables = new ELEvaluator.Variables();
+    ELVariables variables = new ELVariables();
 
     Record.Header header = Mockito.mock(Record.Header.class);
     Mockito.when(header.getErrorStage()).thenReturn("stage");

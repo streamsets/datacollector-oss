@@ -13,6 +13,7 @@ import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.base.BaseTarget;
 import com.streamsets.pipeline.api.el.ELEval;
 import com.streamsets.pipeline.api.el.ELEvalException;
+import com.streamsets.pipeline.api.el.ELVars;
 import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.config.CsvHeader;
 import com.streamsets.pipeline.config.CsvMode;
@@ -60,7 +61,7 @@ public class KafkaTarget extends BaseTarget {
   private long recordCounter = 0;
   private CharDataGeneratorFactory generatorFactory;
   private ELEval partitionStrategyEval;
-  private ELEval.Variables variables;
+  private ELVars variables;
 
   public KafkaTarget(String metadataBrokerList, String topic, PartitionStrategy partitionStrategy, String partition,
       DataFormat dataFormat, boolean singleMessagePerBatch, Map<String, String> kafkaProducerConfigs,
@@ -287,12 +288,12 @@ public class KafkaTarget extends BaseTarget {
   }
 
   @Override
-  public List<ELEval> getElEvals(ElEvalProvider elEvalProvider) {
-    return ImmutableList.of(createPartitionStrategyEval(elEvalProvider));
+  public List<ELEval> getELEvals(ELContext elContext) {
+    return ImmutableList.of(createPartitionStrategyEval(elContext));
   }
 
-  private ELEval createPartitionStrategyEval(ElEvalProvider elEvalProvider) {
-    return elEvalProvider.createELEval("partitionStrategy", RecordEL.class, StringEL.class);
+  private ELEval createPartitionStrategyEval(ELContext elContext) {
+    return elContext.createELEval("partitionStrategy", RecordEL.class, StringEL.class);
   }
 
   /****************************************************/
@@ -303,7 +304,7 @@ public class KafkaTarget extends BaseTarget {
     if (partitionStrategy == PartitionStrategy.EXPRESSION) {
       partitionStrategyEval = createPartitionStrategyEval(getContext());
       //There is no scope to provide variables for kafka target as of today, create empty variables
-      variables = getContext().createELVariables();
+      variables = getContext().createELVars();
       ELUtils.validateExpression(partitionStrategyEval, variables, partition, getContext(), Groups.KAFKA.name(),
                                  "partition", Errors.KAFKA_57, Object.class, issues);
     }

@@ -52,7 +52,7 @@ public class TestStagePipe {
       }
 
       @Override
-      public List<ELEval> getElEvals(ElEvalProvider elEvalProvider) {
+      public List<ELEval> getELEvals(ELContext elContext) {
         return new ArrayList<>();
       }
 
@@ -109,7 +109,7 @@ public class TestStagePipe {
       }
 
       @Override
-      public List<ELEval> getElEvals(ElEvalProvider elEvalProvider) {
+      public List<ELEval> getELEvals(ELContext elContext) {
         return new ArrayList<>();
       }
 
@@ -172,7 +172,7 @@ public class TestStagePipe {
       }
 
       @Override
-      public List<ELEval> getElEvals(ElEvalProvider elEvalProvider) {
+      public List<ELEval> getELEvals(ELContext elContext) {
         return new ArrayList<>();
       }
 

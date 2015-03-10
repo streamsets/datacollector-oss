@@ -10,6 +10,7 @@ import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.Target;
 import com.streamsets.pipeline.api.el.ELEval;
 import com.streamsets.pipeline.api.el.ELEvalException;
+import com.streamsets.pipeline.api.el.ELVars;
 import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.lib.el.RecordEL;
 import com.streamsets.pipeline.lib.el.TimeEL;
@@ -48,7 +49,7 @@ public class RecordWriterManager {
 
   public static void validateDirPathTemplate2(Target.Context context, String pathTemplate) throws ELEvalException {
     ELEval dirPathTemplateEval = ElUtil.createDirPathTemplateEval(context);
-    ELEval.Variables vars = context.createELVariables();
+    ELVars vars = context.createELVars();
     RecordEL.setRecordInContext(vars, context.createRecord("validateDirPathTemplate"));
     Calendar calendar = Calendar.getInstance(TimeZone.getDefault());
     calendar.setTime(new Date());
@@ -104,7 +105,7 @@ public class RecordWriterManager {
 
   String getDirPath(Date date, Record record) throws StageException {
     try {
-      ELEval.Variables vars = context.createELVariables();
+      ELVars vars = context.createELVars();
       RecordEL.setRecordInContext(vars, record);
       Calendar calendar = Calendar.getInstance(timeZone);
       calendar.setTime(date);

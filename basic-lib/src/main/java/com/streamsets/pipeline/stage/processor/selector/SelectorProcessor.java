@@ -8,12 +8,12 @@ package com.streamsets.pipeline.stage.processor.selector;
 import com.google.common.collect.ImmutableList;
 import com.streamsets.pipeline.api.BatchMaker;
 import com.streamsets.pipeline.api.Record;
-import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.base.OnRecordErrorException;
 import com.streamsets.pipeline.api.base.RecordProcessor;
 import com.streamsets.pipeline.api.el.ELEval;
 import com.streamsets.pipeline.api.el.ELEvalException;
+import com.streamsets.pipeline.api.el.ELVars;
 import com.streamsets.pipeline.lib.el.RecordEL;
 import com.streamsets.pipeline.lib.el.StringEL;
 import com.streamsets.pipeline.lib.el.ELUtils;
@@ -36,16 +36,16 @@ public class SelectorProcessor extends RecordProcessor {
 
   private String[][] predicateLanes;
   private ELEval predicateLanesEval;
-  private ELEval.Variables variables;
+  private ELVars variables;
   private String defaultLane;
 
   @Override
-  public List<ELEval> getElEvals(ElEvalProvider elEvalProvider) {
-    return ImmutableList.of(createPredicateLanesEval(elEvalProvider));
+  public List<ELEval> getELEvals(ELContext elContext) {
+    return ImmutableList.of(createPredicateLanesEval(elContext));
   }
 
-  private ELEval createPredicateLanesEval(ElEvalProvider elEvalProvider) {
-    return elEvalProvider.createELEval("lanePredicates", RecordEL.class, StringEL.class);
+  private ELEval createPredicateLanesEval(ELContext elContext) {
+    return elContext.createELEval("lanePredicates", RecordEL.class, StringEL.class);
   }
 
   @Override

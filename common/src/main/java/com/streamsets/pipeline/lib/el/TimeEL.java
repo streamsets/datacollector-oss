@@ -8,6 +8,7 @@ package com.streamsets.pipeline.lib.el;
 import com.streamsets.pipeline.api.ElConstant;
 import com.streamsets.pipeline.api.ElFunction;
 import com.streamsets.pipeline.api.el.ELEval;
+import com.streamsets.pipeline.api.el.ELVars;
 import com.streamsets.pipeline.api.impl.Utils;
 
 import java.util.Calendar;
@@ -32,12 +33,12 @@ public class TimeEL {
     return now;
   }
 
-  public static void setTimeNowInContext(ELEval.Variables variables, Date now) {
+  public static void setTimeNowInContext(ELVars variables, Date now) {
     Utils.checkNotNull(variables, "variables");
     variables.addContextVariable(TIME_NOW_CONTEXT_VAR, now);
   }
 
-  public static void setCalendarInContext(ELEval.Variables variables, Calendar calendar) {
+  public static void setCalendarInContext(ELVars variables, Calendar calendar) {
     Utils.checkNotNull(variables, "variables");
     variables.addContextVariable(CALENDER_CONTEXT_VAR, calendar);
   }

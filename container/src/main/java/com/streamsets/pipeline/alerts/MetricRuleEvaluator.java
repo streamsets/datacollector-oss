@@ -11,6 +11,7 @@ import com.codahale.metrics.MetricRegistry;
 import com.codahale.metrics.Timer;
 import com.streamsets.pipeline.config.MetricsRuleDefinition;
 import com.streamsets.pipeline.el.ELEvaluator;
+import com.streamsets.pipeline.el.ELVariables;
 import com.streamsets.pipeline.metrics.ExtendedMeter;
 import com.streamsets.pipeline.util.ObserverException;
 import org.slf4j.Logger;
@@ -25,13 +26,13 @@ public class MetricRuleEvaluator {
 
   private final MetricsRuleDefinition metricsRuleDefinition;
   private final MetricRegistry metrics;
-  private final ELEvaluator.Variables variables;
+  private final ELVariables variables;
   private final ELEvaluator elEvaluator;
   private final List<String> emailIds;
   private final AlertManager alertManager;
 
   public MetricRuleEvaluator(MetricsRuleDefinition metricsRuleDefinition, MetricRegistry metricRegistry,
-                             ELEvaluator.Variables variables, ELEvaluator elEvaluator, AlertManager alertManager,
+                             ELVariables variables, ELEvaluator elEvaluator, AlertManager alertManager,
                              List<String> emailIds) {
     this.metricsRuleDefinition = metricsRuleDefinition;
     this.metrics = metricRegistry;

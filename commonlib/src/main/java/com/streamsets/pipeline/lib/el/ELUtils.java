@@ -8,16 +8,16 @@ package com.streamsets.pipeline.lib.el;
 import com.streamsets.pipeline.api.ErrorCode;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.el.ELEval;
-import com.streamsets.pipeline.lib.el.RecordEL;
+import com.streamsets.pipeline.api.el.ELVars;
 
 import java.util.List;
 import java.util.Map;
 
 public class ELUtils {
 
-  public static ELEval.Variables parseConstants(Map<String,?> constants, Stage.Context context, String group,
+  public static ELVars parseConstants(Map<String,?> constants, Stage.Context context, String group,
       String config, ErrorCode err, List<Stage.ConfigIssue> issues) {
-    ELEval.Variables variables = context.createELVariables();
+    ELVars variables = context.createELVars();
     if (constants != null) {
       for (Map.Entry<String, ?> entry : constants.entrySet()) {
         try {
@@ -30,7 +30,7 @@ public class ELUtils {
     return variables;
   }
 
-  public static void validateExpression(ELEval elEvaluator, ELEval.Variables variables, String expression,
+  public static void validateExpression(ELEval elEvaluator, ELVars variables, String expression,
       Stage.Context context, String group, String config, ErrorCode err, Class<?> type, List<Stage.ConfigIssue> issues)
   {
     RecordEL.setRecordInContext(variables, context.createRecord("forValidation"));

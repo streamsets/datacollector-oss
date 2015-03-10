@@ -13,6 +13,7 @@ import com.google.common.collect.EvictingQueue;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.config.DataRuleDefinition;
 import com.streamsets.pipeline.el.ELEvaluator;
+import com.streamsets.pipeline.el.ELVariables;
 import com.streamsets.pipeline.metrics.MetricsConfigurator;
 import com.streamsets.pipeline.runner.LaneResolver;
 import com.streamsets.pipeline.util.Configuration;
@@ -29,14 +30,14 @@ public class DataRuleEvaluator {
   private static final String USER_PREFIX = "user.";
 
   private final MetricRegistry metrics;
-  private final ELEvaluator.Variables variables;
+  private final ELVariables variables;
   private final ELEvaluator elEvaluator;
   private final List<String> emailIds;
   private final Configuration configuration;
   private final DataRuleDefinition dataRuleDefinition;
   private final AlertManager alertManager;
 
-  public DataRuleEvaluator(MetricRegistry metrics, ELEvaluator.Variables variables, ELEvaluator elEvaluator,
+  public DataRuleEvaluator(MetricRegistry metrics, ELVariables variables, ELEvaluator elEvaluator,
                            AlertManager alertManager, List<String> emailIds, DataRuleDefinition dataRuleDefinition,
                            Configuration configuration) {
     this.metrics = metrics;

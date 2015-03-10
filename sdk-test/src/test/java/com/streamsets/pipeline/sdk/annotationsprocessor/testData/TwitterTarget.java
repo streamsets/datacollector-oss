@@ -68,7 +68,7 @@ public class TwitterTarget implements Target {
   }
 
   @Override
-  public List<ELEval> getElEvals(ElEvalProvider elEvalProvider) {
+  public List<ELEval> getELEvals(ELContext elContext) {
     return new ArrayList<>();
   }
 

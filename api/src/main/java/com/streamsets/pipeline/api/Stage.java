@@ -11,6 +11,7 @@ import com.codahale.metrics.MetricRegistry;
 import com.codahale.metrics.Timer;
 import com.streamsets.pipeline.api.el.ELEval;
 import com.streamsets.pipeline.api.el.ELEvalException;
+import com.streamsets.pipeline.api.el.ELVars;
 
 import java.util.List;
 
@@ -26,17 +27,17 @@ public interface Stage<C extends Stage.Context> {
 
   }
 
-  public interface ElEvalProvider {
+  public interface ELContext {
 
     public void parseEL(String el) throws ELEvalException;
 
-    public ELEval.Variables createELVariables();
+    public ELVars createELVars();
 
     public ELEval createELEval(String configName, Class<?> ... elFuncConstDefClasses);
 
   }
 
-  public interface Context extends ElEvalProvider {
+  public interface Context extends ELContext {
 
     public boolean isPreview();
 
@@ -78,7 +79,7 @@ public interface Stage<C extends Stage.Context> {
 
   public List<ConfigIssue> validateConfigs(Info info, C context)  throws StageException;
 
-  public List<ELEval> getElEvals(ElEvalProvider elEvalProvider);
+  public List<ELEval> getELEvals(ELContext elContext);
 
   public void init(Info info, C context) throws StageException;
 
