@@ -23,13 +23,18 @@
 
 <script type="text/ng-template" id="elStringConfigurationTemplate">
   <div class="controls col-lg-7 col-md-8">
-    <textarea class="form-control"
-              rows="1"
-              name="{{configDefinition.name}}"
-              focus-me="{{autoFocusConfigName === configDefinition.name}}"
-              ng-readonly="isPipelineRunning"
-              ng-model="detailPaneConfig.configuration[configIndex].value"
-              ng-required="configDefinition.required"></textarea>
+
+    <div ui-codemirror
+         focus-me="{{autoFocusConfigName === configDefinition.name}}"
+         ng-model="detailPaneConfig.configuration[configIndex].value"
+         ui-refresh="refreshCodemirror"
+         ui-codemirror-opts="getCodeMirrorOptions({
+                readOnly: isPipelineRunning || lanePredicateMapping.predicate === 'default',
+                extraKeys: {'Ctrl-Space': 'autocomplete'}
+              })"
+         ng-codemirror-dictionary-hint="getCodeMirrorHints(configDefinition)">
+    </div>
+
 
     <p class="help-block">{{getConfigurationIssueMessage(detailPaneConfig, configDefinition)}}</p>
   </div>
@@ -297,7 +302,11 @@
 
         <div ui-codemirror ng-model="lanePredicateMapping.predicate"
              ui-refresh="refreshCodemirror"
-             ui-codemirror-opts="getCodeMirrorOptions({readOnly: isPipelineRunning || lanePredicateMapping.predicate === 'default'})">
+             ui-codemirror-opts="getCodeMirrorOptions({
+                readOnly: isPipelineRunning || lanePredicateMapping.predicate === 'default',
+                extraKeys: {'Ctrl-Space': 'autocomplete'}
+              })"
+             ng-codemirror-dictionary-hint="getCodeMirrorHints(configDefinition)">
         </div>
 
       </div>
@@ -335,11 +344,13 @@
 
 
 <script type="text/ng-template" id="elStringComplexConfigurationTemplate">
-  <textarea class="form-control"
-            rows="1"
-            name="{{customFieldConfigDefinition.name + $index}}"
-            placeholder="{{customFieldConfigDefinition.label}}"
-            ng-readonly="isPipelineRunning"
-            ng-model="customFieldValue[customFieldConfigDefinition.name]"
-            ng-required="customFieldConfigDefinition.required"></textarea>
+  <div ui-codemirror
+       ng-model="customFieldValue[customFieldConfigDefinition.name]"
+       ui-refresh="refreshCodemirror"
+       ui-codemirror-opts="getCodeMirrorOptions({
+                readOnly: isPipelineRunning || lanePredicateMapping.predicate === 'default',
+                extraKeys: {'Ctrl-Space': 'autocomplete'}
+              })"
+       ng-codemirror-dictionary-hint="getCodeMirrorHints(customFieldConfigDefinition)">
+  </div>
 </script>

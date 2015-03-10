@@ -537,6 +537,47 @@ angular.module('dataCollectorApp.common')
       return configurationHtml;
     };
 
+
+    /**
+     * Returns list of EL Function Signature and Constants.
+     *
+     * @param configDefinition
+     * @returns {Array}
+     */
+    this.getELFunctionAndConstantLists = function(configDefinition) {
+      var elLists = [];
+
+      angular.forEach(configDefinition.elFunctionDefinitions, function(functionDefn) {
+        var functionName = '';
+
+        if(functionDefn.group) {
+          functionName += functionDefn.group + ':';
+        }
+
+        functionName += functionDefn.name + '(';
+
+        angular.forEach(functionDefn.elFunctionArgumentDefinition, function(argumentDefn, index) {
+          if(index !== 0) {
+            functionName += ', ';
+          }
+
+          functionName += argumentDefn.name;
+        });
+
+
+        functionName += ')';
+
+        elLists.push(functionName);
+      });
+
+
+      angular.forEach(configDefinition.elConstantDefinitions, function(constantDefn) {
+        elLists.push(constantDefn.name);
+      });
+
+      return elLists;
+    };
+
     $translate([
       'metrics.COUNTER_COUNT',
 

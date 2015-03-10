@@ -95,8 +95,7 @@ module.exports = function(grunt) {
         'bower_components/codemirror/mode/javascript/javascript.js',
         'bower_components/codemirror/addon/edit/closebrackets.js',
         'bower_components/codemirror/addon/edit/matchbrackets.js',
-        'bower_components/codemirror/addon/hint/show-hint.js',
-        'bower_components/angular-ui-codemirror/ui-codemirror.js'
+        'bower_components/codemirror/addon/hint/show-hint.js'
       ],
       css: [
         'bower_components/bootstrap/dist/css/bootstrap.min.css',

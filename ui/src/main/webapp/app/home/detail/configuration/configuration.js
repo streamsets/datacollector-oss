@@ -40,6 +40,9 @@ angular
     angular.extend($scope, {
       fieldPaths: [],
 
+      /**
+       * Callback function when tab is selected.
+       */
       onTabSelect: function() {
         $scope.refreshCodemirror = true;
         $timeout(function () {
@@ -47,8 +50,19 @@ angular
         }, 100);
       },
 
+      /**
+       * Returns Codemirror Options.
+       *
+       * @param options
+       * @returns {*}
+       */
       getCodeMirrorOptions: function(options) {
         return angular.extend({}, defaultELEditorOptions, options);
+      },
+
+
+      getCodeMirrorHints: function(configDefinition) {
+        return pipelineService.getELFunctionAndConstantLists(configDefinition);
       },
 
       /**
