@@ -10,6 +10,7 @@ import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.FieldSelector;
 import com.streamsets.pipeline.api.ValueChooser;
+import com.streamsets.pipeline.config.DateFormat;
 import com.streamsets.pipeline.config.LocaleChooserValues;
 import com.streamsets.pipeline.config.DateFormatChooserValues;
 import com.streamsets.pipeline.config.PrimitiveFieldTypeChooserValues;
@@ -74,7 +75,18 @@ public class FieldTypeConverterConfig {
       dependsOn = "targetType",
       triggeredByValue = {"DATE", "DATETIME"}
   )
-  @ValueChooser(chooserValues = DateFormatChooserValues.class, type = ChooserMode.SUGGESTED)
-  public String dateFormat;
+  @ValueChooser(chooserValues = DateFormatChooserValues.class, type = ChooserMode.PROVIDED)
+  public DateFormat dateFormat;
+
+  @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.STRING,
+      defaultValue = "",
+      label = "Other Date Format",
+      displayPosition = 40,
+      dependsOn = "dateFormat",
+      triggeredByValue = "OTHER"
+  )
+  public String otherDateFormat;
 
 }

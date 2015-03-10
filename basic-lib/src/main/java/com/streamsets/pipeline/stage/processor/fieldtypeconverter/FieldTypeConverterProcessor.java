@@ -9,6 +9,7 @@ import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.base.SingleLaneRecordProcessor;
+import com.streamsets.pipeline.config.DateFormat;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -45,8 +46,15 @@ public class FieldTypeConverterProcessor extends SingleLaneRecordProcessor {
               record.set(fieldToConvert, Field.create(fieldTypeConverterConfig.targetType, null));
             } else {
               try {
+                String dateMask = null;
+                if (fieldTypeConverterConfig.targetType == Field.Type.DATE ||
+                    fieldTypeConverterConfig.targetType == Field.Type.DATETIME) {
+                  dateMask = (fieldTypeConverterConfig.dateFormat != DateFormat.OTHER)
+                             ? fieldTypeConverterConfig.dateFormat.getFormat()
+                             : fieldTypeConverterConfig.otherDateFormat;
+                }
                 record.set(fieldToConvert, convertStringToTargetType(field, fieldTypeConverterConfig.targetType,
-                  fieldTypeConverterConfig.getLocale(), fieldTypeConverterConfig.dateFormat));
+                  fieldTypeConverterConfig.getLocale(), dateMask));
               } catch (ParseException | NumberFormatException e) {
                 getContext().toError(record, Errors.CONVERTER_00, fieldToConvert, field.getValueAsString(),
                   fieldTypeConverterConfig.targetType.name(), e.getMessage(), e);
