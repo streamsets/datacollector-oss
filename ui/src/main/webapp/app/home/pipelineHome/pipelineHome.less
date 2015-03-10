@@ -190,6 +190,16 @@
     }
   }
 
+  .CodeMirror {
+    border: solid 1px #008000;
+    height: 34px;
+    padding: @smallPadding @defaultPadding;
+    border-radius: 3px;
+    position: relative;
+    margin-right: 5px;
+    color: #555;
+  }
+
   &.comfortable-density {
     .form-group {
       margin-bottom: @smallPadding * 3;
@@ -216,6 +226,15 @@
     .table>tbody>tr>td, .table>tbody>tr>th, .table>tfoot>tr>td, .table>tfoot>tr>th, .table>thead>tr>td, .table>thead>tr>th {
       padding: 5px 8px;
     }
+
+    .btn {
+      padding: @smallPadding * .8 @smallPadding * 2;
+    }
+
+    .CodeMirror {
+      height: 30px;
+      padding: @smallPadding *.5 @defaultPadding;
+    }
   }
 
   &.compact-density {
@@ -223,12 +242,12 @@
       margin-bottom: @smallPadding * .7;
 
       .form-control {
-        min-height: 25px;
+        min-height: 27px;
         padding: 0 @smallPadding;
       }
 
       input.form-control, select.form-control, textarea.form-control {
-        height: 25px;
+        height: 27px;
       }
     }
 
@@ -258,17 +277,11 @@
     .btn {
       padding: @smallPadding * 0.45 @smallPadding * 2;
     }
-  }
 
-
-  .CodeMirror {
-    border: solid 1px #008000;
-    height: 46px;
-    padding: 2px;
-    border-radius: 3px;
-    position: relative;
-    margin-right: 5px;
-    color: #555;
+    .CodeMirror {
+      height: 27px;
+      padding: 0 @smallPadding;
+    }
   }
 
 }

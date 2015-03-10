@@ -313,12 +313,12 @@
 
       <div class="col-xs-2" role="group" aria-label="Default button group"
            ng-hide="isPipelineRunning">
-        <button type="button" class="btn btn-default btn-sm"
+        <button type="button" class="btn btn-default"
                 ng-hide="$last"
                 ng-click="removeLane(detailPaneConfig, detailPaneConfig.configuration[configIndex].value, lanePredicateMapping, $index)">
           <i class="fa fa-minus pointer"></i>
         </button>
-        <button type="button" class="btn btn-default btn-sm"
+        <button type="button" class="btn btn-default"
                 ng-show="$last"
                 ng-click="addLane(detailPaneConfig, detailPaneConfig.configuration[configIndex].value, lanePredicateMapping)">
           <i class="fa fa-plus pointer"></i>
