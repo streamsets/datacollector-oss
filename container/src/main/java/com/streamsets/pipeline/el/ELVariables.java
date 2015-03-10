@@ -9,35 +9,31 @@ import com.streamsets.pipeline.api.el.ELVars;
 import com.streamsets.pipeline.api.impl.TextUtils;
 import com.streamsets.pipeline.api.impl.Utils;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
 public class ELVariables implements ELVars {
 
+  private final Map<String, Object> constants;
   private final Map<String, Object> variables;
 
+  @SuppressWarnings("unchecked")
   public ELVariables() {
+    this(Collections.EMPTY_MAP);
+  }
+
+  public ELVariables(Map<String, Object> constants) {
+    this.constants = constants;
     variables = new HashMap<>();
   }
 
-  public ELVariables(Map<String, Object> variables, Map<String, Object> contextVariables) {
-    this();
-    if (variables != null) {
-      for (Map.Entry<String, Object> entry : variables.entrySet()) {
-        addVariable(entry.getKey(), entry.getValue());
-      }
-    }
-    if (contextVariables != null) {
-      for (Map.Entry<String, Object> entry : contextVariables.entrySet()) {
-        addContextVariable(entry.getKey(), entry.getValue());
-      }
-    }
-  }
-
-  private static final void checkVariableName(String name) {
+  private final void checkVariableName(String name) {
     Utils.checkNotNull(name, "name");
     Utils.checkArgument(TextUtils.isValidName(name), Utils.formatL("Invalid name '{}', must be '{}'",
       name, TextUtils.VALID_NAME));
+    Utils.checkArgument(!constants.containsKey(name), Utils.formatL(
+        "Name '{}' is defined as a constant, cannot be used as variable", name));
   }
 
   public void addVariable(String name, Object value) {

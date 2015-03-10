@@ -129,12 +129,7 @@ public class ELEvaluator extends ELEval {
   }
 
   public ELVars createVariables() {
-    ELVars variables = new ELVariables();
-    if (constants != null) {
-      for (Map.Entry<String, ?> entry : constants.entrySet()) {
-        variables.addVariable(entry.getKey(), entry.getValue());
-      }
-    }
+    ELVars variables = new ELVariables(constants);
     return variables;
   }
 
