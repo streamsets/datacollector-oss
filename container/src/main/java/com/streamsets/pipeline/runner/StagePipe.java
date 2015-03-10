@@ -6,6 +6,7 @@
 package com.streamsets.pipeline.runner;
 
 import com.codahale.metrics.Counter;
+import com.codahale.metrics.Gauge;
 import com.codahale.metrics.Histogram;
 import com.codahale.metrics.Meter;
 import com.codahale.metrics.MetricRegistry;
@@ -22,6 +23,13 @@ import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 public class StagePipe extends Pipe {
+
+  private static final String RUNTIME_STATS_GAUGE = "RuntimeStatsGauge";
+  private static final RuntimeStats RUNTIME_STATS = new RuntimeStats();
+  private static int BATCH_COUNTER = 0;
+  private static long BATCH_AGE = 0;
+  private static long TIME_OF_LAST_RECORD = 0;
+
   private Timer processingTimer;
   private Counter inputRecordsCounter;
   private Counter outputRecordsCounter;
@@ -70,26 +78,40 @@ public class StagePipe extends Pipe {
       outputRecordsPerLaneMeter = new HashMap<>();
       for (String lane : getStage().getConfiguration().getOutputLanes()) {
         outputRecordsPerLaneCounter.put(lane, MetricsConfigurator.createCounter(
-            metrics, metricsKey + ":" + lane + ".outputRecords"));
+          metrics, metricsKey + ":" + lane + ".outputRecords"));
         outputRecordsPerLaneMeter.put(lane, MetricsConfigurator.createMeter(
-            metrics, metricsKey + ":" + lane + ".outputRecords"));
+          metrics, metricsKey + ":" + lane + ".outputRecords"));
       }
     }
+    createRuntimeStatsGauge(metrics);
   }
 
   @Override
   @SuppressWarnings("unchecked")
   public void process(PipeBatch pipeBatch) throws StageException, PipelineRuntimeException {
+    //note down time when this stage was entered
+    long startTimeInStage = System.currentTimeMillis();
+    //update the runtime stats gauge
+    //set the name of the stage
+    RUNTIME_STATS.setCurrentStage(getStage().getInfo().getInstanceName());
+    //update batch ige if the stage is Source
+    if (getStage().getDefinition().getType() == StageType.SOURCE) {
+      BATCH_AGE = System.currentTimeMillis();
+    }
+    RUNTIME_STATS.setCurrentBatchAge(System.currentTimeMillis() - BATCH_AGE);
+    RUNTIME_STATS.setTimeInCurrentStage(System.currentTimeMillis() - startTimeInStage);
+
     BatchMakerImpl batchMaker = pipeBatch.startStage(this);
     BatchImpl batchImpl = pipeBatch.getBatch(this);
     ErrorSink errorSink = pipeBatch.getErrorSink();
+    String previousOffset = pipeBatch.getPreviousOffset();
 
     RequiredFieldsErrorPredicateSink predicateSink = new RequiredFieldsErrorPredicateSink(
         getStage().getInfo().getInstanceName(), getStage().getRequiredFields(), errorSink);
     Batch batch = new FilterRecordBatch(batchImpl, predicateSink, predicateSink);
 
     long start = System.currentTimeMillis();
-    String newOffset = getStage().execute(pipeBatch.getPreviousOffset(), pipeBatch.getBatchSize(), batch, batchMaker,
+    String newOffset = getStage().execute(previousOffset, pipeBatch.getBatchSize(), batch, batchMaker,
                                           errorSink);
     if (getStage().getDefinition().getType() == StageType.SOURCE) {
       pipeBatch.setNewOffset(newOffset);
@@ -128,6 +150,19 @@ public class StagePipe extends Pipe {
       }
     }
     pipeBatch.completeStage(batchMaker);
+
+    //update stats
+    if (getStage().getDefinition().getType() == StageType.SOURCE) {
+      BATCH_COUNTER++;
+      if (outputRecordsCount > 0) {
+        TIME_OF_LAST_RECORD = System.currentTimeMillis();
+      }
+    }
+    RUNTIME_STATS.setBatchCount(BATCH_COUNTER);
+    RUNTIME_STATS.setCurrentBatchAge(System.currentTimeMillis() - BATCH_AGE);
+    RUNTIME_STATS.setTimeInCurrentStage(System.currentTimeMillis() - startTimeInStage);
+    RUNTIME_STATS.setCurrentSourceOffset(newOffset);
+    RUNTIME_STATS.setTimeOfLastReceivedRecord(TIME_OF_LAST_RECORD);
   }
 
   @Override
@@ -135,5 +170,17 @@ public class StagePipe extends Pipe {
     getStage().destroy();
   }
 
-
+  private Gauge<Object> createRuntimeStatsGauge(MetricRegistry metricRegistry) {
+    Gauge<Object> runtimeStatsGauge = MetricsConfigurator.getGauge(metricRegistry, RUNTIME_STATS_GAUGE);
+    if(runtimeStatsGauge == null) {
+      runtimeStatsGauge = new Gauge<Object>() {
+        @Override
+        public Object getValue() {
+          return RUNTIME_STATS;
+        }
+      };
+      MetricsConfigurator.createGauge(metricRegistry, RUNTIME_STATS_GAUGE, runtimeStatsGauge);
+    }
+    return runtimeStatsGauge;
+  }
 }

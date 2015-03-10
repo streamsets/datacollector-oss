@@ -40,8 +40,8 @@ public class MetricsConfigurator {
     return metrics.register(name + HISTOGRAM_M5_SUFFIX, new Histogram(new ExponentiallyDecayingReservoir()));
   }
 
-  public static Gauge<Object> createGuage(MetricRegistry metrics, String name,
-                                                       Gauge<Object> guage) {
+  public static Gauge<Object> createGauge(MetricRegistry metrics, String name,
+                                          Gauge<Object> guage) {
     return metrics.register(name + GAUGE_SUFFIX, guage);
   }
 

@@ -98,7 +98,7 @@ public class AlertManager {
         return alertResponse;
       }
     };
-    MetricsConfigurator.createGuage(metrics, AlertsUtil.getAlertGaugeName(ruleDefinition.getId()),
+    MetricsConfigurator.createGauge(metrics, AlertsUtil.getAlertGaugeName(ruleDefinition.getId()),
       alertResponseGauge);
   }
 }
