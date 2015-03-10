@@ -27,8 +27,6 @@ public abstract class ELEval {
 
   public abstract Variables createVariables();
 
-  public abstract void parseEL(String el) throws ELEvalException;
-
   protected abstract <T> T evaluate(Variables vars, String el, Class<T> returnType) throws ELEvalException;
 
   public  <T> T eval(Variables vars, String el, Class<T> returnType) throws ELEvalException {

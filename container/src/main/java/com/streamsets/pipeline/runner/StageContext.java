@@ -22,6 +22,7 @@ import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.Target;
 import com.streamsets.pipeline.api.el.ELEval;
+import com.streamsets.pipeline.api.el.ELEvalException;
 import com.streamsets.pipeline.api.ext.ContextExtensions;
 import com.streamsets.pipeline.api.ext.JsonRecordReader;
 import com.streamsets.pipeline.api.ext.JsonRecordWriter;
@@ -29,7 +30,6 @@ import com.streamsets.pipeline.api.impl.ErrorMessage;
 import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.config.StageType;
 import com.streamsets.pipeline.el.ELEvaluator;
-import com.streamsets.pipeline.el.RecordEl;
 import com.streamsets.pipeline.json.ObjectMapperFactory;
 import com.streamsets.pipeline.lib.io.CountingReader;
 import com.streamsets.pipeline.lib.json.OverrunStreamingJsonParser;
@@ -45,7 +45,6 @@ import java.io.IOException;
 import java.io.Reader;
 import java.io.Writer;
 import java.util.List;
-import java.util.Map;
 
 public class StageContext implements Source.Context, Target.Context, Processor.Context, ContextExtensions {
 
@@ -218,6 +217,7 @@ public class StageContext implements Source.Context, Target.Context, Processor.C
   }
 
   @Override
+  @SuppressWarnings("ThrowableResultOfMethodCallIgnored")
   public void reportError(Exception exception) {
     Preconditions.checkNotNull(exception, "exception cannot be null");
     errorSink.addError(instanceName, new ErrorMessage(ContainerError.CONTAINER_0001, exception.getMessage()));
@@ -318,47 +318,19 @@ public class StageContext implements Source.Context, Target.Context, Processor.C
   }
 
   //ElProvider interface implementation
+
+  public void parseEL(String el) throws ELEvalException {
+    ELEvaluator.parseEL(el);
+  }
+
+  @Override
+  public ELEval.Variables createELVariables() {
+    return new ELEvaluator.Variables();
+  }
+
   @Override
   public ELEval createELEval(String configName, Class<?>... elFuncConstDefClasses) {
     return new ELEvaluator(configName, elFuncConstDefClasses);
   }
 
-  @Override
-  public ELEval.Variables parseConstants(Map<String,?> constants, Stage.Context context, String group,
-                                                String config, ErrorCode err, List<Stage.ConfigIssue> issues) {
-    ELEval.Variables variables = new ELEvaluator.Variables();
-    if (constants != null) {
-      for (Map.Entry<String, ?> entry : constants.entrySet()) {
-        try {
-          variables.addVariable(entry.getKey(), entry.getValue());
-        } catch (Exception ex) {
-          issues.add(context.createConfigIssue(group, config, err, constants, ex.getMessage(), ex));
-        }
-      }
-    }
-    return variables;
-  }
-
-  @Override
-  public ELEval.Variables getDefaultVariables() {
-    return new ELEvaluator.Variables(null, null);
-  }
-
-  @Override
-  public ELEval.Variables createVariables(Map<String, Object> variables, Map<String, Object> contextVariables) {
-    return new ELEvaluator.Variables(variables, contextVariables);
-  }
-
-  @Override
-  public void validateExpression(ELEval elEvaluator, ELEval.Variables variables, String expression,
-                                        Stage.Context context, String group, String config, ErrorCode err, Class<?> type, List<Stage.ConfigIssue> issues)
-  {
-    RecordEl.setRecordInContext(variables, context.createRecord("forValidation"));
-    try {
-      elEvaluator.parseEL(expression);
-      elEvaluator.eval(variables, expression, type);
-    } catch (Exception ex) {
-      issues.add(context.createConfigIssue(group, config, err, expression, ex.getMessage(), ex));
-    }
-  }
 }

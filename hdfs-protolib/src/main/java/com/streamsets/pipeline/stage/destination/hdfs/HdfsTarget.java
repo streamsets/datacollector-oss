@@ -19,8 +19,8 @@ import com.streamsets.pipeline.config.CsvHeader;
 import com.streamsets.pipeline.config.CsvMode;
 import com.streamsets.pipeline.config.DataFormat;
 import com.streamsets.pipeline.config.JsonMode;
-import com.streamsets.pipeline.el.RecordEl;
-import com.streamsets.pipeline.el.TimeEl;
+import com.streamsets.pipeline.lib.el.RecordEL;
+import com.streamsets.pipeline.lib.el.TimeEL;
 import com.streamsets.pipeline.lib.generator.CharDataGeneratorFactory;
 import com.streamsets.pipeline.lib.generator.delimited.DelimitedCharDataGeneratorFactory;
 import com.streamsets.pipeline.lib.generator.text.TextCharDataGeneratorFactory;
@@ -141,8 +141,8 @@ public class HdfsTarget extends RecordTarget {
     validateHadoopFS(issues);
     try {
       lateRecordsLimitEvaluator = ElUtil.createLateRecordsLimitEval(getContext());
-      lateRecordsLimitEvaluator.parseEL(lateRecordsLimit);
-      lateRecordsLimitSecs = lateRecordsLimitEvaluator.eval(getContext().getDefaultVariables(),
+      getContext().parseEL(lateRecordsLimit);
+      lateRecordsLimitSecs = lateRecordsLimitEvaluator.eval(getContext().createELVariables(),
         lateRecordsLimit, Long.class);
       if (lateRecordsLimitSecs <= 0) {
         issues.add(getContext().createConfigIssue(Groups.LATE_RECORDS.name(), "lateRecordsLimit", Errors.HADOOPFS_10));
@@ -227,10 +227,10 @@ public class HdfsTarget extends RecordTarget {
 
     timeDriverElEval = ElUtil.createTimeDriverEval(getContext());
     try {
-      ELEval.Variables variables = getContext().getDefaultVariables();
-      RecordEl.setRecordInContext(variables, getContext().createRecord("validationConfigs"));
-      TimeEl.setTimeNowInContext(variables, new Date());
-      timeDriverElEval.parseEL(timeDriver);
+      ELEval.Variables variables = getContext().createELVariables();
+      RecordEL.setRecordInContext(variables, getContext().createRecord("validationConfigs"));
+      TimeEL.setTimeNowInContext(variables, new Date());
+      getContext().parseEL(timeDriver);
       timeDriverElEval.eval(variables, timeDriver, Date.class);
     } catch (ELEvalException ex) {
       issues.add(getContext().createConfigIssue(Groups.OUTPUT_FILES.name(), "timeDriver", Errors.HADOOPFS_19,
@@ -427,9 +427,9 @@ public class HdfsTarget extends RecordTarget {
   }
 
   protected Date getRecordTime(Record record) throws ELEvalException {
-    ELEval.Variables variables = getContext().getDefaultVariables();
-    TimeEl.setTimeNowInContext(variables, getBatchTime());
-    RecordEl.setRecordInContext(variables, record);
+    ELEval.Variables variables = getContext().createELVariables();
+    TimeEL.setTimeNowInContext(variables, getBatchTime());
+    RecordEL.setRecordInContext(variables, record);
     return timeDriverElEval.eval(variables, timeDriver, Date.class);
   }
 

@@ -7,7 +7,7 @@ package com.streamsets.pipeline.alerts;
 
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.el.ELEvaluator;
-import com.streamsets.pipeline.el.RecordEl;
+import com.streamsets.pipeline.lib.el.RecordEL;
 import com.streamsets.pipeline.util.ContainerError;
 import com.streamsets.pipeline.util.ObserverException;
 
@@ -19,7 +19,7 @@ public class AlertsUtil {
   public static boolean evaluateRecord(Record record, String predicate, ELEvaluator.Variables variables,
                                        ELEvaluator elEvaluator) throws ObserverException {
     try {
-      RecordEl.setRecordInContext(variables, record);
+      RecordEL.setRecordInContext(variables, record);
       return (Boolean) elEvaluator.eval(variables, predicate, Boolean.class);
     } catch (Exception ex) {
       throw new ObserverException(ContainerError.CONTAINER_0400, predicate, record.getHeader().getSourceId(),

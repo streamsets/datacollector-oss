@@ -6,6 +6,7 @@
 package com.streamsets.pipeline.el;
 
 import com.streamsets.pipeline.api.el.ELEvalException;
+import com.streamsets.pipeline.lib.el.StringEL;
 import org.junit.Assert;
 import org.junit.Test;
 

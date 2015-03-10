@@ -13,8 +13,8 @@ import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.config.DataRuleDefinition;
 import com.streamsets.pipeline.config.ThresholdType;
 import com.streamsets.pipeline.el.ELEvaluator;
-import com.streamsets.pipeline.el.RecordEl;
-import com.streamsets.pipeline.el.StringEL;
+import com.streamsets.pipeline.lib.el.RecordEL;
+import com.streamsets.pipeline.lib.el.StringEL;
 import com.streamsets.pipeline.main.RuntimeInfo;
 import com.streamsets.pipeline.metrics.MetricsConfigurator;
 import com.streamsets.pipeline.runner.LaneResolver;
@@ -42,7 +42,7 @@ public class TestDataRuleEvaluator {
   public static void setUp() {
     metrics = new MetricRegistry();
     variables = new ELEvaluator.Variables();
-    elEvaluator = new ELEvaluator("TestDataRuleEvaluator", RecordEl.class, StringEL.class);
+    elEvaluator = new ELEvaluator("TestDataRuleEvaluator", RecordEL.class, StringEL.class);
     runtimeInfo = new RuntimeInfo(Arrays.asList(TestDataRuleEvaluator.class.getClassLoader()));
   }
 

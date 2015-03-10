@@ -11,8 +11,8 @@ import com.streamsets.pipeline.api.Target;
 import com.streamsets.pipeline.api.el.ELEval;
 import com.streamsets.pipeline.api.el.ELEvalException;
 import com.streamsets.pipeline.api.impl.Utils;
-import com.streamsets.pipeline.el.RecordEl;
-import com.streamsets.pipeline.el.TimeEl;
+import com.streamsets.pipeline.lib.el.RecordEL;
+import com.streamsets.pipeline.lib.el.TimeEL;
 import com.streamsets.pipeline.lib.generator.CharDataGeneratorFactory;
 import com.streamsets.pipeline.stage.destination.hdfs.ElUtil;
 import com.streamsets.pipeline.stage.destination.hdfs.Errors;
@@ -48,11 +48,11 @@ public class RecordWriterManager {
 
   public static void validateDirPathTemplate2(Target.Context context, String pathTemplate) throws ELEvalException {
     ELEval dirPathTemplateEval = ElUtil.createDirPathTemplateEval(context);
-    ELEval.Variables vars = context.getDefaultVariables();
-    RecordEl.setRecordInContext(vars, context.createRecord("validateDirPathTemplate"));
+    ELEval.Variables vars = context.createELVariables();
+    RecordEL.setRecordInContext(vars, context.createRecord("validateDirPathTemplate"));
     Calendar calendar = Calendar.getInstance(TimeZone.getDefault());
     calendar.setTime(new Date());
-    TimeEl.setCalendarInContext(vars, calendar);
+    TimeEL.setCalendarInContext(vars, calendar);
     dirPathTemplateEval.eval(vars, pathTemplate, String.class);
   }
 
@@ -104,11 +104,11 @@ public class RecordWriterManager {
 
   String getDirPath(Date date, Record record) throws StageException {
     try {
-      ELEval.Variables vars = context.getDefaultVariables();
-      RecordEl.setRecordInContext(vars, record);
+      ELEval.Variables vars = context.createELVariables();
+      RecordEL.setRecordInContext(vars, record);
       Calendar calendar = Calendar.getInstance(timeZone);
       calendar.setTime(date);
-      TimeEl.setCalendarInContext(vars, calendar);
+      TimeEL.setCalendarInContext(vars, calendar);
       return dirPathTemplateElEval.eval(vars, dirPathTemplate, String.class);
     } catch (ELEvalException ex) {
       throw new StageException(Errors.HADOOPFS_02, dirPathTemplate, ex.getMessage(), ex);

@@ -112,8 +112,7 @@ public class ELEvaluator extends ELEval {
     return variables;
   }
 
-  @Override
-  public void parseEL(String el) throws ELEvalException {
+  public static void parseEL(String el) throws ELEvalException {
     try {
       EVALUATOR.parseExpressionString(el);
     } catch (ELException e) {

@@ -13,7 +13,7 @@ import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.base.BaseTarget;
 import com.streamsets.pipeline.api.el.ELEval;
 import com.streamsets.pipeline.api.el.ELEvalException;
-import com.streamsets.pipeline.el.TimeEl;
+import com.streamsets.pipeline.lib.el.TimeEL;
 import com.streamsets.pipeline.lib.generator.CharDataGeneratorFactory;
 import com.streamsets.pipeline.lib.generator.DataGenerator;
 import com.streamsets.pipeline.lib.io.WildcardFilter;
@@ -61,7 +61,7 @@ public class RecordsToLocalFileSystemTarget extends BaseTarget {
   }
 
   private ELEval createRotationMillisEval(ElEvalProvider elEvalProvider) {
-    return elEvalProvider.createELEval("rotationIntervalSecs", TimeEl.class);
+    return elEvalProvider.createELEval("rotationIntervalSecs", TimeEL.class);
   }
 
   @Override
@@ -78,8 +78,8 @@ public class RecordsToLocalFileSystemTarget extends BaseTarget {
     }
     try {
       rotationMillisEvaluator = createRotationMillisEval(getContext());
-      rotationMillisEvaluator.parseEL(rotationIntervalSecs);
-      rotationMillis = rotationMillisEvaluator.eval(getContext().getDefaultVariables(), rotationIntervalSecs, Long.class);
+      getContext().parseEL(rotationIntervalSecs);
+      rotationMillis = rotationMillisEvaluator.eval(getContext().createELVariables(), rotationIntervalSecs, Long.class);
       if (rotationMillis <= 0) {
         issues.add(getContext().createConfigIssue(Groups.FILES.name(), "rotationIntervalSecs", Errors.RECORDFS_03,
                                                   rotationIntervalSecs, rotationMillis / 1000));

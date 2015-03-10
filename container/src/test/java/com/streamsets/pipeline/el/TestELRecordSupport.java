@@ -7,6 +7,7 @@ package com.streamsets.pipeline.el;
 
 import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.Record;
+import com.streamsets.pipeline.lib.el.RecordEL;
 import org.junit.Assert;
 import org.junit.Test;
 import org.mockito.Mockito;
@@ -15,7 +16,7 @@ public class TestELRecordSupport {
 
   @Test
   public void testRecordFunctions() throws Exception {
-    ELEvaluator eval = new ELEvaluator("testRecordFunctions", RecordEl.class);
+    ELEvaluator eval = new ELEvaluator("testRecordFunctions", RecordEL.class);
     ELEvaluator.Variables variables = new ELEvaluator.Variables();
 
     Record.Header header = Mockito.mock(Record.Header.class);
@@ -27,7 +28,7 @@ public class TestELRecordSupport {
     Mockito.when(record.get(Mockito.eq(""))).thenReturn(Field.create(1));
     Mockito.when(record.get(Mockito.eq("/x"))).thenReturn(null);
 
-    RecordEl.setRecordInContext(variables, record);
+    RecordEL.setRecordInContext(variables, record);
 
     Assert.assertTrue(eval.eval(variables, "${record:type('') eq INTEGER}", Boolean.class));
     Assert.assertTrue(eval.eval(variables, "${record:value('') eq 1}", Boolean.class));
@@ -39,7 +40,7 @@ public class TestELRecordSupport {
 
   @Test
   public void testErrorRecordFunctions() throws Exception {
-    ELEvaluator eval = new ELEvaluator("testErrorRecordFunctions", RecordEl.class);
+    ELEvaluator eval = new ELEvaluator("testErrorRecordFunctions", RecordEL.class);
 
     ELEvaluator.Variables variables = new ELEvaluator.Variables();
 
@@ -53,7 +54,7 @@ public class TestELRecordSupport {
     Record record = Mockito.mock(Record.class);
     Mockito.when(record.getHeader()).thenReturn(header);
 
-    RecordEl.setRecordInContext(variables, record);
+    RecordEL.setRecordInContext(variables, record);
 
     Assert.assertEquals("stage", eval.eval(variables, "${error:stage()}", String.class));
     Assert.assertEquals("code", eval.eval(variables, "${error:code()}", String.class));

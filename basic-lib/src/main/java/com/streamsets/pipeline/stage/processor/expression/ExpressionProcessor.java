@@ -13,8 +13,9 @@ import com.streamsets.pipeline.api.base.OnRecordErrorException;
 import com.streamsets.pipeline.api.base.SingleLaneRecordProcessor;
 import com.streamsets.pipeline.api.el.ELEval;
 import com.streamsets.pipeline.api.el.ELEvalException;
-import com.streamsets.pipeline.el.RecordEl;
-import com.streamsets.pipeline.el.StringEL;
+import com.streamsets.pipeline.lib.el.RecordEL;
+import com.streamsets.pipeline.lib.el.StringEL;
+import com.streamsets.pipeline.lib.el.ELUtils;
 
 import java.math.BigDecimal;
 import java.util.Date;
@@ -38,11 +39,11 @@ public class ExpressionProcessor extends SingleLaneRecordProcessor {
   @Override
   protected List<ConfigIssue> validateConfigs() throws StageException {
     List<ConfigIssue> issues =  super.validateConfigs();
-    variables = getContext().parseConstants(constants, getContext(), Groups.EXPRESSIONS.name(), "constants",
-      Errors.EXPR_01, issues);
+    variables = ELUtils.parseConstants(constants, getContext(), Groups.EXPRESSIONS.name(), "constants",
+                                       Errors.EXPR_01, issues);
     expressionEval = createExpressionEval(getContext());
     for(ExpressionProcessorConfig expressionProcessorConfig : expressionProcessorConfigs) {
-      getContext().validateExpression(expressionEval, variables, expressionProcessorConfig.expression, getContext(),
+      ELUtils.validateExpression(expressionEval, variables, expressionProcessorConfig.expression, getContext(),
         Groups.EXPRESSIONS.name(), "expressionProcessorConfigs", Errors.EXPR_00,
         Object.class, issues);
     }
@@ -55,12 +56,12 @@ public class ExpressionProcessor extends SingleLaneRecordProcessor {
   }
 
   private ELEval createExpressionEval(ElEvalProvider elEvalProvider) {
-    return elEvalProvider.createELEval("expression", RecordEl.class, StringEL.class);
+    return elEvalProvider.createELEval("expression", RecordEL.class, StringEL.class);
   }
 
   @Override
   protected void process(Record record, SingleLaneBatchMaker batchMaker) throws StageException {
-    RecordEl.setRecordInContext(variables, record);
+    RecordEL.setRecordInContext(variables, record);
     for(ExpressionProcessorConfig expressionProcessorConfig : expressionProcessorConfigs) {
       String fieldToSet = expressionProcessorConfig.fieldToSet;
       if(fieldToSet == null || fieldToSet.isEmpty()) {

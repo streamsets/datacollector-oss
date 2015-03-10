@@ -6,40 +6,12 @@
 package com.streamsets.pipeline.api.el;
 
 import com.streamsets.pipeline.api.ErrorCode;
-import com.streamsets.pipeline.api.impl.ErrorMessage;
+import com.streamsets.pipeline.api.StageException;
 
-public class ELEvalException extends Exception {
+public class ELEvalException extends StageException {
 
-  private static Throwable getCause(Object... params) {
-    Throwable throwable = null;
-    if (params.length > 0 && params[params.length - 1] instanceof Throwable) {
-      throwable = (Throwable) params[params.length - 1];
-    }
-    return throwable;
-  }
-
-  private final ErrorCode errorCode;
-  private final ErrorMessage errorMessage;
-
-  // last parameter can be an exception cause
   public ELEvalException(ErrorCode errorCode, Object... params) {
-    super(getCause(params));
-    this.errorCode = errorCode;
-    errorMessage = new ErrorMessage(errorCode, params);
-  }
-
-  public ErrorCode getErrorCode() {
-    return errorCode;
-  }
-
-  @Override
-  public String getMessage() {
-    return errorMessage.getNonLocalized();
-  }
-
-  @Override
-  public String getLocalizedMessage() {
-    return errorMessage.getLocalized();
+    super(errorCode, params);
   }
 
 }

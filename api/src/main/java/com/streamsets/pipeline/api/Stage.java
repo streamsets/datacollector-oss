@@ -10,9 +10,9 @@ import com.codahale.metrics.Meter;
 import com.codahale.metrics.MetricRegistry;
 import com.codahale.metrics.Timer;
 import com.streamsets.pipeline.api.el.ELEval;
+import com.streamsets.pipeline.api.el.ELEvalException;
 
 import java.util.List;
-import java.util.Map;
 
 public interface Stage<C extends Stage.Context> {
 
@@ -28,18 +28,12 @@ public interface Stage<C extends Stage.Context> {
 
   public interface ElEvalProvider {
 
+    public void parseEL(String el) throws ELEvalException;
+
+    public ELEval.Variables createELVariables();
+
     public ELEval createELEval(String configName, Class<?> ... elFuncConstDefClasses);
 
-    public ELEval.Variables parseConstants(Map<String,?> constants, Stage.Context context, String group,
-                                    String config, ErrorCode err, List<Stage.ConfigIssue> issues);
-
-    public ELEval.Variables getDefaultVariables();
-
-    public ELEval.Variables createVariables(Map<String, Object> variables, Map<String, Object> contextVariables);
-
-    public void validateExpression(ELEval elEvaluator, ELEval.Variables variables, String expression,
-                                          Stage.Context context, String group, String config, ErrorCode err,
-                                          Class<?> type, List<Stage.ConfigIssue> issues);
   }
 
   public interface Context extends ElEvalProvider {

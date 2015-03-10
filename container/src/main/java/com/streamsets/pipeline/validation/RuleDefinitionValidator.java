@@ -14,8 +14,8 @@ import com.streamsets.pipeline.config.MetricsRuleDefinition;
 import com.streamsets.pipeline.config.RuleDefinitions;
 import com.streamsets.pipeline.config.ThresholdType;
 import com.streamsets.pipeline.el.ELEvaluator;
-import com.streamsets.pipeline.el.RecordEl;
-import com.streamsets.pipeline.el.StringEL;
+import com.streamsets.pipeline.lib.el.RecordEL;
+import com.streamsets.pipeline.lib.el.StringEL;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -44,7 +44,7 @@ public class RuleDefinitionValidator {
 
   public RuleDefinitionValidator() {
     variables = new ELEvaluator.Variables();
-    elEvaluator = new ELEvaluator("RuleDefinitionValidator", StringEL.class, RecordEl.class);
+    elEvaluator = new ELEvaluator("RuleDefinitionValidator", StringEL.class, RecordEL.class);
   }
 
   public boolean validateRuleDefinition(RuleDefinitions ruleDefinitions) {
@@ -294,7 +294,7 @@ public class RuleDefinitionValidator {
       }
     };
 
-    RecordEl.setRecordInContext(variables, record);
+    RecordEL.setRecordInContext(variables, record);
     try {
       elEvaluator.eval(variables, condition, Object.class);
     } catch (ELEvalException ex) {

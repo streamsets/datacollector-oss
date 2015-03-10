@@ -14,8 +14,9 @@ import com.streamsets.pipeline.api.base.OnRecordErrorException;
 import com.streamsets.pipeline.api.base.RecordProcessor;
 import com.streamsets.pipeline.api.el.ELEval;
 import com.streamsets.pipeline.api.el.ELEvalException;
-import com.streamsets.pipeline.el.RecordEl;
-import com.streamsets.pipeline.el.StringEL;
+import com.streamsets.pipeline.lib.el.RecordEL;
+import com.streamsets.pipeline.lib.el.StringEL;
+import com.streamsets.pipeline.lib.el.ELUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -44,7 +45,7 @@ public class SelectorProcessor extends RecordProcessor {
   }
 
   private ELEval createPredicateLanesEval(ElEvalProvider elEvalProvider) {
-    return elEvalProvider.createELEval("lanePredicates", RecordEl.class, StringEL.class);
+    return elEvalProvider.createELEval("lanePredicates", RecordEL.class, StringEL.class);
   }
 
   @Override
@@ -62,19 +63,19 @@ public class SelectorProcessor extends RecordProcessor {
         if (!predicateLanes[predicateLanes.length - 1][0].equals("default")) {
           issues.add(getContext().createConfigIssue(Groups.CONDITIONS.name(), "lanePredicates", Errors.SELECTOR_07));
         } else {
-          variables = getContext().parseConstants(constants, getContext(), Groups.CONDITIONS.name(), "constants",
-            Errors.SELECTOR_04, issues);
+          variables = ELUtils.parseConstants(constants, getContext(), Groups.CONDITIONS.name(), "constants",
+                                             Errors.SELECTOR_04, issues);
           predicateLanesEval = createPredicateLanesEval(getContext());
-          RecordEl.setRecordInContext(variables, getContext().createRecord("forValidation"));
+          RecordEL.setRecordInContext(variables, getContext().createRecord("forValidation"));
           for (int i = 0; i < predicateLanes.length - 1; i++) {
             String[] predicateLane = predicateLanes[i];
             if (!predicateLane[0].startsWith("${") || !predicateLane[0].endsWith("}")) {
               issues.add(getContext().createConfigIssue(Groups.CONDITIONS.name(), "lanePredicates", Errors.SELECTOR_08,
                                                         predicateLane[0]));
             } else {
-              getContext().validateExpression(predicateLanesEval, variables, predicateLane[0], getContext(),
-                Groups.CONDITIONS.name(), "lanePredicates", Errors.SELECTOR_03,
-                Boolean.class, issues);
+              ELUtils.validateExpression(predicateLanesEval, variables, predicateLane[0], getContext(),
+                                         Groups.CONDITIONS.name(), "lanePredicates", Errors.SELECTOR_03,
+                                         Boolean.class, issues);
             }
           }
         }
@@ -113,7 +114,7 @@ public class SelectorProcessor extends RecordProcessor {
   @Override
   protected void process(Record record, BatchMaker batchMaker) throws StageException {
     boolean matchedAtLeastOnePredicate = false;
-    RecordEl.setRecordInContext(variables, record);
+    RecordEL.setRecordInContext(variables, record);
     for (int i = 0; i < predicateLanes.length - 1; i ++) {
       String[] pl = predicateLanes[i];
       try {

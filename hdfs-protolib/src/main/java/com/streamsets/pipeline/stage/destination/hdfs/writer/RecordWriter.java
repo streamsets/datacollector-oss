@@ -9,9 +9,8 @@ import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.Target;
 import com.streamsets.pipeline.api.el.ELEval;
-import com.streamsets.pipeline.api.el.ELEvalException;
 import com.streamsets.pipeline.api.impl.Utils;
-import com.streamsets.pipeline.el.RecordEl;
+import com.streamsets.pipeline.lib.el.RecordEL;
 import com.streamsets.pipeline.lib.generator.CharDataGeneratorFactory;
 import com.streamsets.pipeline.lib.generator.DataGenerator;
 import com.streamsets.pipeline.stage.destination.hdfs.ElUtil;
@@ -46,7 +45,6 @@ public class RecordWriter {
   private Text key;
   private Text value;
   private boolean seqFile;
-  private Target.Context context;
 
   private RecordWriter(Path path, long timeToLiveMillis, CharDataGeneratorFactory generatorFactory) {
     this.expires = System.currentTimeMillis() + timeToLiveMillis;
@@ -68,9 +66,8 @@ public class RecordWriter {
     this(path, timeToLiveMillis, generatorFactory);
     this.seqWriter = seqWriter;
     this.keyEL = keyEL;
-    this.context = context;
     keyElEval = ElUtil.createKeyElEval(context);
-    elVars = context.getDefaultVariables();
+    elVars = context.createELVariables();
     key = new Text();
     value = new Text();
     seqFile = true;
@@ -84,14 +81,14 @@ public class RecordWriter {
     return expires;
   }
 
-  public void write(Record record) throws IOException, StageException, ELEvalException {
+  public void write(Record record) throws IOException, StageException {
     if (LOG.isDebugEnabled()) {
       LOG.debug("Path[{}] - Writing ['{}']", path, record.getHeader().getSourceId());
     }
     if (generator != null) {
       generator.write(record);
     } else if (seqWriter != null) {
-      RecordEl.setRecordInContext(elVars, record);
+      RecordEL.setRecordInContext(elVars, record);
       key.set(keyElEval.eval(elVars, keyEL, String.class));
       StringWriter sw = new StringWriter(1024);
       DataGenerator dg = generatorFactory.getGenerator(sw);
