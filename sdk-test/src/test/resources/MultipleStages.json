@@ -19,7 +19,6 @@
     "fieldName" : "username",
     "model" : {
       "modelType" : "FIELD_SELECTOR_MULTI_VALUED",
-      "chooserMode" : null,
       "valuesProviderClass" : null,
       "values" : null,
       "labels" : null,
@@ -56,7 +55,6 @@
       "fieldName" : "username",
       "model" : {
         "modelType" : "FIELD_SELECTOR_MULTI_VALUED",
-        "chooserMode" : null,
         "valuesProviderClass" : null,
         "values" : null,
         "labels" : null,
@@ -120,7 +118,6 @@
     "fieldName" : "regEx",
     "model" : {
       "modelType" : "FIELD_VALUE_CHOOSER",
-      "chooserMode" : "PROVIDED",
       "valuesProviderClass" : "com.streamsets.pipeline.sdk.annotationsprocessor.testData.TypesProvider",
       "values" : null,
       "labels" : null,
@@ -140,7 +137,6 @@
     "fieldName" : "tweetType1",
     "model" : {
       "modelType" : "VALUE_CHOOSER",
-      "chooserMode" : "PROVIDED",
       "valuesProviderClass" : "com.streamsets.pipeline.sdk.annotationsprocessor.testData.TweetTypeProvider",
       "values" : null,
       "labels" : null,
@@ -160,7 +156,6 @@
     "fieldName" : "tweetType2",
     "model" : {
       "modelType" : "FIELD_VALUE_CHOOSER",
-      "chooserMode" : "PROVIDED",
       "valuesProviderClass" : "com.streamsets.pipeline.sdk.annotationsprocessor.testData.TweetTypeProvider",
       "values" : null,
       "labels" : null,
@@ -203,7 +198,6 @@
     "fieldName" : "regEx",
     "model" : {
       "modelType" : "FIELD_VALUE_CHOOSER",
-      "chooserMode" : "PROVIDED",
       "valuesProviderClass" : "com.streamsets.pipeline.sdk.annotationsprocessor.testData.TypesProvider",
       "values" : null,
       "labels" : null,
