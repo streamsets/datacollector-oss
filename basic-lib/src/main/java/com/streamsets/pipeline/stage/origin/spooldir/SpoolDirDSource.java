@@ -77,7 +77,7 @@ public class SpoolDirDSource extends DSource {
       description = "Max number of records per batch",
       displayPosition = 20,
       group = "FILES",
-      min = 1,
+      min = 0,
       max = Integer.MAX_VALUE
   )
   public int batchSize;

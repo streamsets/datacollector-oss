@@ -58,7 +58,7 @@ public class RecordsToLocalFileSystemDTarget extends DTarget {
       description = "Max file size to trigger the creation of a new file. Use 0 to opt out.",
       displayPosition = 30,
       group = "FILES",
-      min = 1,
+      min = 0,
       max = Integer.MAX_VALUE
   )
   public int maxFileSizeMbs;

@@ -56,7 +56,7 @@ public class FileTailDSource extends DSourceOffsetCommitter {
       description = "The maximum number of file lines that will be sent in a single batch",
       displayPosition = 30,
       group = "FILE",
-      min = 1,
+      min = 0,
       max = Integer.MAX_VALUE
   )
   public int batchSize;

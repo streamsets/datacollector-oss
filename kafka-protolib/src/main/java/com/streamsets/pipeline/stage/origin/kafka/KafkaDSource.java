@@ -95,7 +95,7 @@ public class KafkaDSource extends DSourceOffsetCommitter {
     type = ConfigDef.Type.NUMBER,
     defaultValue = "1000",
     label = "Max Batch Size (messages)",
-    description = "",
+    description = "Max number of records per batch",
     displayPosition = 50,
     group = "KAFKA",
     min = 1,
