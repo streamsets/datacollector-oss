@@ -125,7 +125,7 @@ public class FaultySource {
       label = "floor",
       required = true,
       description = "The domain of the twitter user",
-      type = ConfigDef.Type.INTEGER)
+      type = ConfigDef.Type.NUMBER)
   public long phone;
 
   //17. The type is int but the default value is string
@@ -135,9 +135,11 @@ public class FaultySource {
       label = "floor",
       required = true,
       description = "The domain of the twitter user",
-      type = ConfigDef.Type.INTEGER,
+      type = ConfigDef.Type.NUMBER,
       dependsOn = "myPhone",
-      triggeredByValue = {"123", "567"})
+      triggeredByValue = {"123", "567"},
+      min = 1,
+      max =999)
   public int extension;
 
   //18. The type is boolean but default value is not true or false
@@ -181,12 +183,15 @@ public class FaultySource {
     @FieldSelector(singleValued = true)
     public List<String> phone;
 
+    //27. Non number type but has non default min and max
     @ConfigDef(
       defaultValue = "Hello",
       label = "Extension",
       required = true,
       description = "The domain of the twitter user",
-      type = ConfigDef.Type.STRING)
+      type = ConfigDef.Type.STRING,
+      min = 1,
+      max = 999)
     public String extn;
   }
 

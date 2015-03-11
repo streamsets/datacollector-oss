@@ -16,7 +16,7 @@ import java.lang.annotation.Target;
 @Target(ElementType.FIELD)
 public @interface ConfigDef {
 
-  public enum Type { BOOLEAN, INTEGER, STRING, LIST, MAP, MODEL, EL_STRING, EL_NUMBER, EL_DATE, EL_BOOLEAN, EL_OBJECT,
+  public enum Type { BOOLEAN, NUMBER, STRING, LIST, MAP, MODEL, EL_STRING, EL_NUMBER, EL_DATE, EL_BOOLEAN, EL_OBJECT,
     CHARACTER }
 
   Type type();
@@ -36,5 +36,9 @@ public @interface ConfigDef {
   int displayPosition() default 0;
 
   String[] triggeredByValue() default {};
+
+  long min() default Long.MIN_VALUE;
+
+  long max() default Long.MAX_VALUE;
 
 }

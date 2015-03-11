@@ -138,23 +138,25 @@ public class HdfsDTarget extends DTarget {
 
   @ConfigDef(
       required = true,
-      type = ConfigDef.Type.INTEGER,
+      type = ConfigDef.Type.NUMBER,
       defaultValue = "0",
       label = "Max records in a File",
       description = "Number of records that triggers the creation of a new file. Use 0 to opt out.",
       displayPosition = 140,
-      group = "OUTPUT_FILES"
+      group = "OUTPUT_FILES",
+      min = 0
   )
   public long maxRecordsPerFile;
 
   @ConfigDef(
       required = true,
-      type = ConfigDef.Type.INTEGER,
+      type = ConfigDef.Type.NUMBER,
       defaultValue = "0",
       label = "Max file size (MB)",
       description = "Exceeding this size triggers the creation of a new file. Use 0 to opt out.",
       displayPosition = 150,
-      group = "OUTPUT_FILES"
+      group = "OUTPUT_FILES",
+      min = 0
   )
   public long maxFileSize;
 

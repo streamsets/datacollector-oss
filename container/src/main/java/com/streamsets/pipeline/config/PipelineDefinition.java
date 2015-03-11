@@ -103,7 +103,9 @@ public class PipelineDefinition {
       new ArrayList<>(),
       0,
       Collections.<ElFunctionDefinition> emptyList(),
-      Collections.<ElConstantDefinition> emptyList());
+      Collections.<ElConstantDefinition> emptyList(),
+      Long.MIN_VALUE,
+      Long.MAX_VALUE);
 
     return dgConfigDef;
   }
@@ -148,7 +150,9 @@ public class PipelineDefinition {
         new ArrayList<>(),
         10,
         Collections.<ElFunctionDefinition> emptyList(),
-        Collections.<ElConstantDefinition> emptyList());
+        Collections.<ElConstantDefinition> emptyList(),
+        Long.MIN_VALUE,
+        Long.MAX_VALUE);
     configs.add(config);
 
     return configs;

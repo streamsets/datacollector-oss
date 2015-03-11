@@ -32,7 +32,7 @@ public class TestRecordEL {
 
     RecordEL.setRecordInContext(variables, record);
 
-    Assert.assertTrue(eval.eval(variables, "${record:type('') eq INTEGER}", Boolean.class));
+    Assert.assertTrue(eval.eval(variables, "${record:type('') eq NUMBER}", Boolean.class));
     Assert.assertTrue(eval.eval(variables, "${record:value('') eq 1}", Boolean.class));
     Assert.assertNull(eval.eval(variables, "${record:value('/x')}", Object.class));
     Assert.assertEquals("id", eval.eval(variables, "${record:id()}", String.class));

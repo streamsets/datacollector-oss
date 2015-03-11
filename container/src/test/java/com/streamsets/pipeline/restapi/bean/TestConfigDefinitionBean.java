@@ -36,8 +36,8 @@ public class TestConfigDefinitionBean {
     triggeredBy.add("Y");
     triggeredBy.add("Z");
     com.streamsets.pipeline.config.ConfigDefinition configDefinition =
-      new ConfigDefinition("int", ConfigDef.Type.INTEGER, "l2", "d2", "-1", true, "g", "intVar", modelDefinition, "A",
-        triggeredBy, 0, Collections.<ElFunctionDefinition>emptyList(), Collections.<ElConstantDefinition>emptyList());
+      new ConfigDefinition("int", ConfigDef.Type.NUMBER, "l2", "d2", "-1", true, "g", "intVar", modelDefinition, "A",
+        triggeredBy, 0, Collections.<ElFunctionDefinition>emptyList(), Collections.<ElConstantDefinition>emptyList(), Long.MIN_VALUE, Long.MAX_VALUE);
 
     ConfigDefinitionJson configDefinitionJsonBean =
       new ConfigDefinitionJson(configDefinition);
@@ -67,15 +67,15 @@ public class TestConfigDefinitionBean {
     triggeredBy.add("Y");
     triggeredBy.add("Z");
     com.streamsets.pipeline.config.ConfigDefinition configDefinition =
-      new ConfigDefinition("int", ConfigDef.Type.INTEGER, "l2", "d2", "-1", true, "g", "intVar", modelDefinition, "A",
-        triggeredBy, 0, Collections.<ElFunctionDefinition>emptyList(), Collections.<ElConstantDefinition>emptyList());
+      new ConfigDefinition("int", ConfigDef.Type.NUMBER, "l2", "d2", "-1", true, "g", "intVar", modelDefinition, "A",
+        triggeredBy, 0, Collections.<ElFunctionDefinition>emptyList(), Collections.<ElConstantDefinition>emptyList(), Long.MIN_VALUE, Long.MAX_VALUE);
 
     ModelDefinitionJson modelDefinitionJsonBean =
       new ModelDefinitionJson(modelDefinition);
     ConfigDefinitionJson configDefinitionJsonBean =
-      new ConfigDefinitionJson("int", ConfigDef.Type.INTEGER, "l2", "d2", "-1", true,
+      new ConfigDefinitionJson("int", ConfigDef.Type.NUMBER, "l2", "d2", "-1", true,
         "g", "intVar", modelDefinitionJsonBean, "A", triggeredBy, 0, Collections.<ElFunctionDefinitionJson>emptyList(),
-        Collections.<ElConstantDefinitionJson>emptyList());
+        Collections.<ElConstantDefinitionJson>emptyList(), Long.MIN_VALUE, Long.MAX_VALUE);
 
     Assert.assertEquals(configDefinition.getName(), configDefinitionJsonBean.getName());
     Assert.assertEquals(configDefinition.getDefaultValue(), configDefinitionJsonBean.getDefaultValue());

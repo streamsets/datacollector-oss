@@ -32,11 +32,13 @@ public class KafkaRawSourcePreviewer implements RawSourcePreviewer {
 
   @ConfigDef(
       required = true,
-      type = ConfigDef.Type.INTEGER,
+      type = ConfigDef.Type.NUMBER,
       defaultValue = "9092",
       label = "Broker Port",
       description = "",
-      displayPosition = 20
+      displayPosition = 20,
+      min = 1,
+      max = Integer.MAX_VALUE
   )
   public int brokerPort;
 
@@ -52,21 +54,25 @@ public class KafkaRawSourcePreviewer implements RawSourcePreviewer {
 
   @ConfigDef(
       required = true,
-      type = ConfigDef.Type.INTEGER,
+      type = ConfigDef.Type.NUMBER,
       defaultValue = "0",
       label = "Partition",
       description = "",
-      displayPosition = 40
+      displayPosition = 40,
+      min = 0,
+      max = Integer.MAX_VALUE
   )
   public int partition;
 
   @ConfigDef(
       required = true,
-      type = ConfigDef.Type.INTEGER,
+      type = ConfigDef.Type.NUMBER,
       defaultValue = "1000",
       label = "Max Wait Time (millisecs)",
       description = "Max time to wait for data from Kafka",
-      displayPosition = 50
+      displayPosition = 50,
+      min = 1,
+      max = Integer.MAX_VALUE
   )
   public int maxWaitTime;
 

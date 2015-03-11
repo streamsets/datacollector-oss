@@ -29,9 +29,11 @@ public class RandomSource extends BaseSource {
     label = "Record fields to generate, comma separated")
   public String fields;
 
-  @ConfigDef(required = true, type = ConfigDef.Type.INTEGER,
+  @ConfigDef(required = true, type = ConfigDef.Type.NUMBER,
     defaultValue = "1000",
-    label = "Delay between each batch")
+    label = "Delay between each batch",
+    min = 1,
+    max = Integer.MAX_VALUE)
   public int delay;
 
 

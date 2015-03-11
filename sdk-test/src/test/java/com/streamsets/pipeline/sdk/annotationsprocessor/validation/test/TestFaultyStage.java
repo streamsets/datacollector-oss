@@ -70,6 +70,7 @@ public class TestFaultyStage extends TestPipelineAnnotationProcessorBase {
     expectedSet.add("The stage FaultySource3 identifies \"com.streamsets.pipeline.api.StageDef$DefaultOutputStreams\" as the output streams provider class. It should not specify a value xyz for 'outputStreamsDrivenByConfig'.");
     expectedSet.add("The stage FaultySource4 indicates a value 'xyz' for literal 'outputStreamsDrivenByConfig' but no configuration option is found with that name.");
     expectedSet.add("The stage FaultyTarget is a target but identifies an output streams provider class 'com.streamsets.pipeline.api.StageDef$VariableOutputStreams' which is not \"com.streamsets.pipeline.api.StageDef$DefaultOutputStreams\".");
+    expectedSet.add("The type of the field PhoneConfig.extn is not a number but has min and max values specified in the configuration.");
 
     for(Diagnostic d : diagnostics) {
       System.out.println(d.toString());

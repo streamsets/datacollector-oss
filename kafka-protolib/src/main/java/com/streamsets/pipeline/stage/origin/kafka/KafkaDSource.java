@@ -92,23 +92,27 @@ public class KafkaDSource extends DSourceOffsetCommitter {
 
   @ConfigDef(
     required = true,
-    type = ConfigDef.Type.INTEGER,
+    type = ConfigDef.Type.NUMBER,
     defaultValue = "1000",
     label = "Max Batch Size (messages)",
     description = "",
     displayPosition = 50,
-    group = "KAFKA"
+    group = "KAFKA",
+    min = 1,
+    max = Integer.MAX_VALUE
   )
   public int maxBatchSize;
 
   @ConfigDef(
     required = true,
-    type = ConfigDef.Type.INTEGER,
+    type = ConfigDef.Type.NUMBER,
     defaultValue = "1000",
     label = "Batch Wait Time (millisecs)",
     description = "Max time to wait for data before sending a batch",
     displayPosition = 60,
-    group = "KAFKA"
+    group = "KAFKA",
+    min = 1,
+    max = Integer.MAX_VALUE
   )
   public int maxWaitTime;
 
@@ -125,14 +129,16 @@ public class KafkaDSource extends DSourceOffsetCommitter {
 
   @ConfigDef(
       required = true,
-      type = ConfigDef.Type.INTEGER,
+      type = ConfigDef.Type.NUMBER,
       defaultValue = "1024",
       label = "Max Line Length",
       description = "Longer lines are truncated",
       displayPosition = 100,
       group = "TEXT",
       dependsOn = "dataFormat",
-      triggeredByValue = "TEXT"
+      triggeredByValue = "TEXT",
+      min = 1,
+      max = Integer.MAX_VALUE
   )
   public int textMaxLineLen;
 
@@ -152,14 +158,16 @@ public class KafkaDSource extends DSourceOffsetCommitter {
 
   @ConfigDef(
       required = true,
-      type = ConfigDef.Type.INTEGER,
+      type = ConfigDef.Type.NUMBER,
       defaultValue = "4096",
       label = "Max Object Length (chars)",
       description = "Larger objects are not processed",
       displayPosition = 110,
       group = "JSON",
       dependsOn = "dataFormat",
-      triggeredByValue = "JSON"
+      triggeredByValue = "JSON",
+      min = 1,
+      max = Integer.MAX_VALUE
   )
   public int jsonMaxObjectLen;
 
@@ -193,14 +201,16 @@ public class KafkaDSource extends DSourceOffsetCommitter {
 
   @ConfigDef(
       required = true,
-      type = ConfigDef.Type.INTEGER,
+      type = ConfigDef.Type.NUMBER,
       defaultValue = "1024",
       label = "Max Record Length (chars)",
       description = "Larger objects are not processed",
       displayPosition = 220,
       group = "DELIMITED",
       dependsOn = "dataFormat",
-      triggeredByValue = "DELIMITED"
+      triggeredByValue = "DELIMITED",
+      min = 1,
+      max = Integer.MAX_VALUE
   )
   public int csvMaxObjectLen;
 
@@ -219,14 +229,16 @@ public class KafkaDSource extends DSourceOffsetCommitter {
 
   @ConfigDef(
       required = true,
-      type = ConfigDef.Type.INTEGER,
+      type = ConfigDef.Type.NUMBER,
       defaultValue = "4096",
       label = "Max Record Length (chars)",
       description = "Larger records are not processed",
       displayPosition = 310,
       group = "XML",
       dependsOn = "dataFormat",
-      triggeredByValue = "XML"
+      triggeredByValue = "XML",
+      min = 1,
+      max = Integer.MAX_VALUE
   )
   public int xmlMaxObjectLen;
 

@@ -40,8 +40,9 @@ public class TestModelDefinitionBean {
     triggeredBy.add("Z");
 
     List< ConfigDefinition > configDefinitions = new ArrayList<>();
-    configDefinitions.add(new ConfigDefinition("int", ConfigDef.Type.INTEGER, "l2", "d2", "-1", true, "g", "intVar", null, "A",
-      triggeredBy, 0, Collections.<ElFunctionDefinition>emptyList(), Collections.<ElConstantDefinition>emptyList()));
+    configDefinitions.add(new ConfigDefinition("int", ConfigDef.Type.NUMBER, "l2", "d2", "-1", true, "g", "intVar", null, "A",
+      triggeredBy, 0, Collections.<ElFunctionDefinition>emptyList(), Collections.<ElConstantDefinition>emptyList(),
+      Long.MIN_VALUE, Long.MAX_VALUE));
 
     com.streamsets.pipeline.config.ModelDefinition modelDefinition =
       new com.streamsets.pipeline.config.ModelDefinition(ModelType.COMPLEX_FIELD,
@@ -74,9 +75,9 @@ public class TestModelDefinitionBean {
     triggeredBy.add("Z");
 
     List< ConfigDefinition > configDefinitions = new ArrayList<>();
-    configDefinitions.add(new ConfigDefinition("int", ConfigDef.Type.INTEGER, "l2", "d2", "-1", true, "g", "intVar",
+    configDefinitions.add(new ConfigDefinition("int", ConfigDef.Type.NUMBER, "l2", "d2", "-1", true, "g", "intVar",
       null, "A", triggeredBy, 0, Collections.<ElFunctionDefinition>emptyList(),
-      Collections.<ElConstantDefinition>emptyList()));
+      Collections.<ElConstantDefinition>emptyList(), Long.MIN_VALUE, Long.MAX_VALUE));
 
     com.streamsets.pipeline.config.ModelDefinition modelDefinition =
       new com.streamsets.pipeline.config.ModelDefinition(ModelType.COMPLEX_FIELD,

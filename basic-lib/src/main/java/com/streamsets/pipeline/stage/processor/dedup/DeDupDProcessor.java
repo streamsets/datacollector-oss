@@ -31,22 +31,26 @@ public class DeDupDProcessor extends DProcessor {
 
   @ConfigDef(
       required = true,
-      type = ConfigDef.Type.INTEGER,
+      type = ConfigDef.Type.NUMBER,
       defaultValue = "1000000",
       label = "Max Records to Compare",
       displayPosition = 10,
-      group = "DE_DUP"
+      group = "DE_DUP",
+      min = 1,
+      max = Integer.MAX_VALUE
   )
   public int recordCountWindow;
 
   @ConfigDef(
       required = true,
-      type = ConfigDef.Type.INTEGER,
+      type = ConfigDef.Type.NUMBER,
       defaultValue = "0",
       label = "Time to Compare (secs)",
       description = "Creates a window of time for comparison. Takes precedence over Max Records. Use 0 for no time window.",
       displayPosition = 20,
-      group = "DE_DUP"
+      group = "DE_DUP",
+      min = 0,
+      max = Integer.MAX_VALUE
   )
   public int timeWindowSecs;
 

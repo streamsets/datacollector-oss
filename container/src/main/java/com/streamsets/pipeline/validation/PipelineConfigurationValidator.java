@@ -325,7 +325,7 @@ public class PipelineConfigurationValidator {
             preview = false;
           }
           break;
-        case INTEGER:
+        case NUMBER:
           if (!(conf.getValue() instanceof Long || conf.getValue() instanceof Integer)) {
             issues.add(issueCreator.createConfigIssue(stageConf.getInstanceName(), confDef.getGroup(),
               confDef.getName(), ValidationError.VALIDATION_0009,

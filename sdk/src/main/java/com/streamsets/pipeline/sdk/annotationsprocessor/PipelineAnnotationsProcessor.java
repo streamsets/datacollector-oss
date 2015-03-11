@@ -404,7 +404,9 @@ public class PipelineAnnotationsProcessor extends AbstractProcessor {
             getTriggeredByValues(configDefAnnot.triggeredByValue(), allFields.get(configDefAnnot.dependsOn())),
             configDefAnnot.displayPosition(),
             new ArrayList<ElFunctionDefinition>(),
-            new ArrayList<ElConstantDefinition>());
+            new ArrayList<ElConstantDefinition>(),
+            configDefAnnot.min(),
+            configDefAnnot.max());
         configDefinitions.add(configDefinition);
       }
     }
@@ -776,6 +778,24 @@ public class PipelineAnnotationsProcessor extends AbstractProcessor {
     //validate DependsOn and triggered by
     valid &= validateDependsOn(typeElement, variableElement, configDefAnnot);
 
+    //validate min and max
+    valid &= validateMinMax(typeElement, variableElement, configDefAnnot);
+
+    return valid;
+  }
+
+  private boolean validateMinMax(TypeElement typeElement, VariableElement variableElement, ConfigDef configDefAnnot) {
+    boolean valid = true;
+    TypeMirror fieldType = variableElement.asType();
+    //if min and max has non default values make sure that the type of the field is int or long
+    if (configDefAnnot.max() != Long.MAX_VALUE || configDefAnnot.min() != Long.MIN_VALUE) {
+      if (!(fieldType.getKind().equals(TypeKind.INT) || fieldType.getKind().equals(TypeKind.LONG))) {
+        printError("field.validation.min.max.specified.for.non.number",
+          "The type of the field {} is not a number but has min and max values specified in the configuration.",
+          typeElement.getSimpleName().toString() + SEPARATOR + variableElement.getSimpleName().toString());
+        valid = false;
+      }
+    }
     return valid;
   }
 
@@ -836,7 +856,7 @@ public class PipelineAnnotationsProcessor extends AbstractProcessor {
           valid = false;
         }
       }
-    } else if (configDefAnnot.type().equals(ConfigDef.Type.INTEGER)) {
+    } else if (configDefAnnot.type().equals(ConfigDef.Type.NUMBER)) {
       if(!(fieldType.getKind().equals(TypeKind.INT) || fieldType.getKind().equals(TypeKind.LONG))) {
         printError("field.validation.type.is.not.int.or.long",
             "The type of the field {} is expected to be either an int or a long.",

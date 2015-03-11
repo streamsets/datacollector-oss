@@ -52,12 +52,14 @@ public class RecordsToLocalFileSystemDTarget extends DTarget {
 
   @ConfigDef(
       required = true,
-      type = ConfigDef.Type.INTEGER,
+      type = ConfigDef.Type.NUMBER,
       defaultValue = "512",
       label = "Max File Size (MB)",
       description = "Max file size to trigger the creation of a new file. Use 0 to opt out.",
       displayPosition = 30,
-      group = "FILES"
+      group = "FILES",
+      min = 1,
+      max = Integer.MAX_VALUE
   )
   public int maxFileSizeMbs;
 

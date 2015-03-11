@@ -181,7 +181,7 @@ public class RecordEL {
   }
 
   //Declare field types as constants
-  @ElConstant(name = "INTEGER", description = "Field Type Integer")
+  @ElConstant(name = "NUMBER", description = "Field Type Integer")
   public static Field.Type INTEGER = Field.Type.INTEGER;
 
   @ElConstant(name = "BOOLEAN", description = "Field Type Boolean")

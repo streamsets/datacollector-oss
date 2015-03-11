@@ -58,34 +58,39 @@ public class SpoolDirDSource extends DSource {
 
   @ConfigDef(
       required = true,
-      type = ConfigDef.Type.INTEGER,
+      type = ConfigDef.Type.NUMBER,
       label = "Overrun Limit (KB)",
       defaultValue = "128",
       description = "Low level reader limit to avoid Out of Memory errors",
       displayPosition = 15,
-      group = "FILES"
+      group = "FILES",
+      min = 1,
+      max = Integer.MAX_VALUE
   )
   public int overrunLimit;
 
   @ConfigDef(
       required = true,
-      type = ConfigDef.Type.INTEGER,
+      type = ConfigDef.Type.NUMBER,
       label = "Batch Size (recs)",
       defaultValue = "1000",
       description = "Max number of records per batch",
       displayPosition = 20,
-      group = "FILES"
+      group = "FILES",
+      min = 1,
+      max = Integer.MAX_VALUE
   )
   public int batchSize;
 
   @ConfigDef(
       required = false,
-      type = ConfigDef.Type.INTEGER,
+      type = ConfigDef.Type.NUMBER,
       defaultValue = "600",
       label = "Batch Wait Time (secs)",
       description = "Max time to wait for new files before sending an empty batch",
       displayPosition = 30,
-      group = "FILES"
+      group = "FILES",
+      min = 1
   )
   public long poolingTimeoutSecs;
 
@@ -104,7 +109,7 @@ public class SpoolDirDSource extends DSource {
 
   @ConfigDef(
       required = true,
-      type = ConfigDef.Type.INTEGER,
+      type = ConfigDef.Type.NUMBER,
       defaultValue = "10",
       label = "Max Files in Directory",
       description = "Max number of files in the directory waiting to be processed. Additional files cause the " +
@@ -112,7 +117,9 @@ public class SpoolDirDSource extends DSource {
       displayPosition = 60,
       group = "FILES",
       dependsOn = "dataFormat",
-      triggeredByValue = { "TEXT", "JSON", "XML", "DELIMITED"}
+      triggeredByValue = { "TEXT", "JSON", "XML", "DELIMITED"},
+      min = 1,
+      max = Integer.MAX_VALUE
   )
   public int maxSpoolFiles;
 
@@ -165,14 +172,15 @@ public class SpoolDirDSource extends DSource {
 
   @ConfigDef(
       required = false,
-      type = ConfigDef.Type.INTEGER,
+      type = ConfigDef.Type.NUMBER,
       defaultValue = "0",
       label = "Archive Retention Time (minutes)",
       description = "How long archived files should be kept before deleting, a value of zero means forever",
       displayPosition = 210,
       group = "POST_PROCESSING",
       dependsOn = "postProcessing",
-      triggeredByValue = "ARCHIVE"
+      triggeredByValue = "ARCHIVE",
+      min = 0
   )
   public long retentionTimeMins;
 
@@ -208,14 +216,16 @@ public class SpoolDirDSource extends DSource {
 
   @ConfigDef(
       required = true,
-      type = ConfigDef.Type.INTEGER,
+      type = ConfigDef.Type.NUMBER,
       defaultValue = "1024",
       label = "Max Record Length (chars)",
       description = "Larger objects are not processed",
       displayPosition = 320,
       group = "DELIMITED",
       dependsOn = "dataFormat",
-      triggeredByValue = "DELIMITED"
+      triggeredByValue = "DELIMITED",
+      min = 1,
+      max = Integer.MAX_VALUE
   )
   public int csvMaxObjectLen;
 
@@ -237,14 +247,16 @@ public class SpoolDirDSource extends DSource {
 
   @ConfigDef(
       required = true,
-      type = ConfigDef.Type.INTEGER,
+      type = ConfigDef.Type.NUMBER,
       defaultValue = "4096",
       label = "Max Object Length (chars)",
       description = "Larger objects are not processed",
       displayPosition = 410,
       group = "JSON",
       dependsOn = "dataFormat",
-      triggeredByValue = "JSON"
+      triggeredByValue = "JSON",
+      min = 1,
+      max = Integer.MAX_VALUE
   )
   public int jsonMaxObjectLen;
 
@@ -252,14 +264,16 @@ public class SpoolDirDSource extends DSource {
 
   @ConfigDef(
       required = true,
-      type = ConfigDef.Type.INTEGER,
+      type = ConfigDef.Type.NUMBER,
       defaultValue = "1024",
       label = "Max Line Length",
       description = "Longer lines are truncated",
       displayPosition = 500,
       group = "TEXT",
       dependsOn = "dataFormat",
-      triggeredByValue = "TEXT"
+      triggeredByValue = "TEXT",
+      min = 1,
+      max = Integer.MAX_VALUE
   )
   public int textMaxObjectLen;
 
@@ -280,14 +294,16 @@ public class SpoolDirDSource extends DSource {
 
   @ConfigDef(
       required = true,
-      type = ConfigDef.Type.INTEGER,
+      type = ConfigDef.Type.NUMBER,
       defaultValue = "4096",
       label = "Max Record Length (chars)",
       description = "Larger records are not processed",
       displayPosition = 610,
       group = "XML",
       dependsOn = "dataFormat",
-      triggeredByValue = "XML"
+      triggeredByValue = "XML",
+      min = 1,
+      max = Integer.MAX_VALUE
   )
   public int xmlMaxObjectLen;
 
