@@ -92,7 +92,7 @@ public class SplitterProcessor extends SingleLaneRecordProcessor {
       }
       batchMaker.addRecord(record);
     } else {
-      throw new OnRecordErrorException(error);
+      throw new OnRecordErrorException(error, record.getHeader().getSourceId(), fieldPath);
     }
   }
 
