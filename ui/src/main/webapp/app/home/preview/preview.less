@@ -59,53 +59,58 @@
     .pipeline-preview {
       .preview-heading {
         padding: @defaultPadding @defaultPadding;
-        margin-left: 0px;
-        margin-right: 0px;
+        margin-left: 0;
+        margin-right: 0;
       }
 
-      th, td {
-        padding-left: @smallPadding*3;
+      .table {
+        table-layout: fixed;
 
-        &.from-stage {
-          select {
-            color: @default-pipeline-graph-start-node-color;
+        th, td {
+          padding-left: @smallPadding*3;
+
+          &.from-stage {
+            select {
+              color: @default-pipeline-graph-start-node-color;
+            }
           }
-        }
 
-        &.to-stage {
-          select {
-            color: @default-pipeline-graph-end-node-color;
+          &.to-stage {
+            select {
+              color: @default-pipeline-graph-end-node-color;
+            }
           }
+
+          label {
+            margin-bottom: 0;
+            font-weight: normal;
+            white-space: normal;
+            text-align: left;
+          }
+
+          .label-danger, .label-warning {
+            font-size: 90%;
+          }
+
+          .dirty-icon {
+            font-size: 8px;
+            position: relative;
+            top: -5px;
+            color: gray;
+          }
+
+          &.no-records {
+            text-align: center;
+            padding-top: @defaultPadding * 4;
+          }
+
+          .delete-preview-record {
+            color: @brand-danger;
+            padding-right: @defaultPadding * 2;
+            cursor: pointer;
+          }
+
         }
-
-
-        label {
-          margin-bottom: 0px;
-          font-weight: normal;
-        }
-
-        .label-danger, .label-warning {
-          font-size: 90%;
-        }
-
-        .dirty-icon {
-          font-size: 8px;
-          position: relative;
-          top: -5px;
-          color: gray;
-        }
-
-        &.no-records {
-          text-align: center;
-          padding-top: @defaultPadding * 4;
-        }
-
-        .delete-preview-record {
-          color: @brand-danger;
-          padding-right: @defaultPadding * 2;
-          cursor: pointer;
-        }
-
       }
 
       input[type=checkbox] {

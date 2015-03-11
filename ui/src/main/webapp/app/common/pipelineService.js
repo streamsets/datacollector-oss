@@ -550,10 +550,6 @@ angular.module('dataCollectorApp.common')
       angular.forEach(configDefinition.elFunctionDefinitions, function(functionDefn) {
         var functionName = '';
 
-        if(functionDefn.group) {
-          functionName += functionDefn.group + ':';
-        }
-
         functionName += functionDefn.name + '(';
 
         angular.forEach(functionDefn.elFunctionArgumentDefinition, function(argumentDefn, index) {
