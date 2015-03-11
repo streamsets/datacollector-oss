@@ -9,7 +9,6 @@ import java.util.List;
 
 public class ElFunctionDefinition {
 
-  private final String id;
   private final String name;
   private final String description;
   private final String group;
@@ -18,16 +17,11 @@ public class ElFunctionDefinition {
 
   public ElFunctionDefinition(String group, String name, String description,
       List<ElFunctionArgumentDefinition> elFunctionArgumentDefinition, String returnType) {
-    this.id = group + ":" + name;
     this.name = name;
     this.description = description;
     this.group = group;
     this.returnType = returnType;
     this.elFunctionArgumentDefinition = elFunctionArgumentDefinition;
-  }
-
-  public String getId() {
-    return id;
   }
 
   public String getName() {

@@ -118,30 +118,30 @@ public class StringEL {
   @ElFunction(
     prefix = "str",
     name = "contains",
-    description = "Indicates whether argument string s1 contains argument string s2")
+    description = "Indicates whether the argument string contains the specified substring.")
   public static boolean contains(
-    @ElParam("s1") String s1,
-    @ElParam("s1") String s2) {
-    return s1.contains(s2);
+    @ElParam("string") String string,
+    @ElParam("substring") String substring) {
+    return string.contains(substring);
   }
 
   @ElFunction(
     prefix = "str",
     name = "startsWith",
-    description = "Indicates whether argument string s1 starts with argument string s2")
+    description = "Indicates whether the argument string starts with the specified prefix")
   public static boolean startsWith(
-    @ElParam("s1") String s1,
-    @ElParam("s1") String s2) {
-    return s1.startsWith(s2);
+    @ElParam("string") String string,
+    @ElParam("prefix") String prefix) {
+    return string.startsWith(prefix);
   }
 
   @ElFunction(
     prefix = "str",
     name = "endsWith",
-    description = "Indicates whether argument string s1 ends with argument string s2")
+    description = "Indicates whether argument string ends with the specified suffix")
   public static boolean endsWith(
-    @ElParam("s1") String s1,
-    @ElParam("s1") String s2) {
-    return s1.endsWith(s2);
+    @ElParam("string") String string,
+    @ElParam("suffix") String suffix) {
+    return string.endsWith(suffix);
   }
 }

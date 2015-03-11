@@ -53,6 +53,19 @@ public class RecordEL {
     return value;
   }
 
+  @ElFunction(
+    prefix = RECORD_CONTEXT_VAR,
+    name = "exists",
+    description = "Checks if the field represented by path 'fieldPath' exists in the record")
+  public static boolean exists(
+    @ElParam("fieldPath") String fieldPath) {
+    Record record = (Record) ELEval.getVariablesInScope().getContextVariable(RECORD_CONTEXT_VAR);
+    if (record != null) {
+      return record.has(fieldPath);
+    }
+    return false;
+  }
+
   private enum HeaderProperty {
     ID, STAGE_CREATOR, STAGES_PATH, ERROR_STAGE, ERROR_CODE, ERROR_MESSAGE, ERROR_DATA_COLLECTOR_ID,
     ERROR_PIPELINE_NAME, ERROR_TIME

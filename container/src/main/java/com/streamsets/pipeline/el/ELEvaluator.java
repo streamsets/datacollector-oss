@@ -49,15 +49,6 @@ public class ELEvaluator extends ELEval {
     this.functionMapper = new FunctionMapperImpl();
   }
 
-  public ELEvaluator() {
-    this.configName = null;
-    this.constants = new HashMap<>();
-    this.functions = new HashMap<>();
-    this.functionMapper = new FunctionMapperImpl();
-    elFunctionDefinitions = new ArrayList<>();
-    elConstantDefinitions = new ArrayList<>();
-  }
-
   private void populateConstantsAndFunctions(Class<?>... elFuncConstDefClasses) {
     for(Class<?> klass : elFuncConstDefClasses) {
       for(Method m : klass.getMethods()) {
@@ -67,6 +58,7 @@ public class ELEvaluator extends ELEval {
             throw new RuntimeException(Utils.format("EL function method must be static, class:'{}' method:'{}",
                                                     klass.getName(), m));
           }
+          //getMethods returns only public methods, so the following is always true
           if (!Modifier.isPublic(m.getModifiers())) {
             throw new RuntimeException(Utils.format("EL function method must be public, class:'{}' method:'{}",
                                                     klass.getName(), m));
@@ -102,6 +94,7 @@ public class ELEvaluator extends ELEval {
             throw new RuntimeException(Utils.format("EL constant field must be static, class:'{}' field:'{}",
                                                     klass.getName(), f));
           }
+          //getFields returns only accessible public fields, so the following is always true
           if (!Modifier.isPublic(f.getModifiers())) {
             throw new RuntimeException(Utils.format("EL constant field must be public, class:'{}' field:'{}",
                                                     klass.getName(), f));
@@ -116,7 +109,7 @@ public class ELEvaluator extends ELEval {
             elConstantDefinitions.add(new ElConstantDefinition(constantName, elConstant.description(),
               f.getType().getSimpleName()));
           } catch (IllegalAccessException e) {
-            //FIXME: throw exception
+            throw new RuntimeException(e);
           }
         }
       }

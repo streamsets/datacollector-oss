@@ -33,10 +33,6 @@ public class ElFunctionDefinitionJson {
     this.elFunctionDefinition = elFunctionDefinition;
   }
 
-  public String getId() {
-    return elFunctionDefinition.getId();
-  }
-
   public String getName() {
     return elFunctionDefinition.getName();
   }

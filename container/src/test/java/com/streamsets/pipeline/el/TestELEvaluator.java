@@ -5,57 +5,142 @@
  */
 package com.streamsets.pipeline.el;
 
+import com.streamsets.pipeline.api.ElConstant;
+import com.streamsets.pipeline.api.ElFunction;
+import com.streamsets.pipeline.api.el.ELEval;
+import com.streamsets.pipeline.api.el.ELEvalException;
+import com.streamsets.pipeline.api.el.ELVars;
+import org.junit.Assert;
+import org.junit.Test;
+
+import java.util.List;
+
 public class TestELEvaluator {
 
-  public static int idFunction(int i) {
-    return i;
+  @Test
+  public void testElFunction() throws ELEvalException {
+    ELEval elEval = new ELEvaluator("testElFunction", ValidTestEl.class);
+    ELVars variables = elEval.createVariables();
+    Boolean result = elEval.eval(variables, "${location:city() eq CITY}", Boolean.class);
+    Assert.assertTrue(result);
   }
 
-  public static Object varViaContextFunction(String varName) {
-    return ELEvaluator.getVariablesInScope().getVariable(varName);
+  @Test
+  public void testElFunctionMetadata() {
+    ELEval elEval = new ELEvaluator("testElFunctionMetadata", ValidTestEl.class);
+
+    Assert.assertEquals(elEval.getConfigName(), "testElFunctionMetadata");
+
+    List<ElFunctionDefinition> elFunctionDefinitions = ((ELEvaluator) elEval).getElFunctionDefinitions();
+    Assert.assertEquals(1, elFunctionDefinitions.size());
+
+    ElFunctionDefinition cityDef = elFunctionDefinitions.get(0);
+    Assert.assertEquals("location:city", cityDef.getName());
+    Assert.assertEquals("location", cityDef.getGroup());
+    Assert.assertEquals("Returns the Address", cityDef.getDescription());
+    Assert.assertEquals("String", cityDef.getReturnType());
   }
 
-  public static Object contextVarFunction(String varName) {
-    return ELEvaluator.getVariablesInScope().getContextVariable(varName);
+  @Test(expected = RuntimeException.class)
+  public void testNonStaticFunctionEl() {
+    new ELEvaluator("testNonStaticFunctionEl", NonStaticFunctionEl.class);
   }
 
-  /*@Test
-  public void testELEvaluator() throws Exception {
-    ELEvaluator eval = new ELEvaluator();
-    ELEvaluator.Variables variables = new ELEvaluator.Variables();
+  @Test(expected = RuntimeException.class)
+  public void testEmptyNameFunctionEl() {
+    new ELEvaluator("testEmptyNameFunctionEl", EmptyNameFunctionEl.class);
+  }
 
-    Assert.assertTrue(eval.eval(variables, "${1 eq 1}", Boolean.class));
-    Assert.assertEquals(Boolean.TRUE, eval.eval(variables, "${1 eq 1}", Boolean.class));
+  @Test
+  public void testElConstant() throws ELEvalException {
+    ELEval elEval = new ELEvaluator("testElConstant", ValidTestEl.class);
+    ELVars variables = elEval.createVariables();
+    Boolean result = elEval.eval(variables, "${CITY eq \"San Francisco\"}", Boolean.class);
+    Assert.assertTrue(result);
+  }
 
-    variables.addVariable("a", "A");
-    Assert.assertTrue(variables.hasVariable("a"));
+  @Test
+  public void testElConstantMetadata() {
+    ELEval elEval = new ELEvaluator("testElConstantMetadata", ValidTestEl.class);
+    List<ElConstantDefinition> elConstantDefinitions = ((ELEvaluator) elEval).getElConstantDefinitions();
 
-    Assert.assertEquals(Boolean.TRUE, eval.eval(variables, "${a eq 'A'}", Boolean.class));
+    Assert.assertEquals(1, elConstantDefinitions.size());
 
-    Method function = getClass().getMethod("idFunction", Integer.TYPE);
+    ElConstantDefinition constDef = elConstantDefinitions.get(0);
+    Assert.assertEquals("CITY", constDef.getName());
+    Assert.assertEquals("Declares the CITY constant to be 'San Francisco'", constDef.getDescription());
+    Assert.assertEquals("String", constDef.getReturnType());
+  }
 
-    eval.registerFunction("", "id", function);
-    Assert.assertEquals(Boolean.TRUE, eval.eval(variables, "${id(1) eq 1}", Boolean.class));
+  @Test(expected = RuntimeException.class)
+  public void testNonStaticConstEl() {
+    new ELEvaluator("testNonStaticConstEl", NonStaticConstEl.class);
+  }
 
-    eval.registerFunction("id", "id", function);
-    Assert.assertEquals(Boolean.TRUE, eval.eval(variables, "${id:id(1) eq 1}", Boolean.class));
+  @Test(expected = RuntimeException.class)
+  public void testEmptyNameConstEl() {
+    new ELEvaluator("testEmptyNameConstEl", EmptyNameConstEl.class);
+  }
 
-    function = getClass().getMethod("varViaContextFunction", String.class);
+  @Test
+  public void testParseEL() throws ELEvalException {
+    //valid EL
+    ELEvaluator.parseEL("${location:city() eq CITY}");
 
-    eval.registerFunction("", "varViaContext", function);
-    Assert.assertEquals(Boolean.TRUE, eval.eval(variables, "${varViaContext('a') eq 'A'}", Boolean.class));
+    //Invalid EL
+    try {
+      ELEvaluator.parseEL("${location:city() eq }");
+      Assert.fail("ELEvalException expected as the EL string is not valid");
+    } catch (ELEvalException e) {
 
-    eval.registerConstant("X", "x");
-    Assert.assertEquals("x", eval.eval(variables, "${X}", Boolean.class));
+    }
+  }
 
-    function = getClass().getMethod("contextVarFunction", String.class);
+  public static class ValidTestEl {
 
-    variables.addContextVariable("c", "C");
-    Assert.assertTrue(variables.hasContextVariable("c"));
+    @ElConstant(name = "CITY", description = "Declares the CITY constant to be 'San Francisco'")
+    public static final String CITY = "San Francisco";
 
-    eval.registerFunction("", "contextVar", function);
-    Assert.assertEquals(Boolean.TRUE, eval.eval(variables, "${contextVar('c') eq 'C'}", Boolean.class));
+    @ElFunction(prefix = "location", name = "city", description = "Returns the Address")
+    public static String getCity() {
+      return "San Francisco";
+    }
 
   }
-*/
+
+  public static class NonStaticConstEl {
+    @ElConstant(name = "CITY", description = "Declares the CITY constant to be 'San Francisco'")
+    public final String CITY = "San Francisco";
+  }
+
+  public static class NonPublicConstEl {
+    @ElConstant(name = "CITY", description = "Declares the CITY constant to be 'San Francisco'")
+    static final String CITY = "San Francisco";
+  }
+
+  public static class EmptyNameConstEl {
+    @ElConstant(name = "", description = "Declares the CITY constant to be 'San Francisco'")
+    public static final String CITY = "San Francisco";
+  }
+
+  public static class NonStaticFunctionEl {
+    @ElFunction(prefix = "location", name = "city", description = "Returns the Address")
+    public String getCity() {
+      return "San Francisco";
+    }
+  }
+
+  public static class NonPublicFunctionEl {
+    @ElFunction(prefix = "location", name = "city", description = "Returns the Address")
+    static String getCity() {
+      return "San Francisco";
+    }
+  }
+
+  public static class EmptyNameFunctionEl {
+    @ElFunction(prefix = "location", name = "", description = "Returns the Address")
+    public static String getCity() {
+      return "San Francisco";
+    }
+  }
 }
