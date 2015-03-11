@@ -263,11 +263,11 @@
 </script>
 
 <script type="text/ng-template" id="lanePredicateMappingConfigurationTemplate">
-  <div class="controls col-lg-7 col-md-8">
+  <div class="controls col-lg-9 col-md-9">
     <div class="row map-list-type"
          ng-repeat="lanePredicateMapping in detailPaneConfig.configuration[configIndex].value track by $index">
 
-      <div class="col-xs-1">
+      <div class="lane-number">
         <!--input type="text" readonly class="form-control input-sm"
                value="{{$index + 1}}"/-->
         <label class="lane-label">{{$index + 1}}</label>
@@ -295,7 +295,7 @@
 
       </div>
 
-      <div class="col-xs-2" role="group" aria-label="Default button group"
+      <div class="col-xs-1" role="group" aria-label="Default button group"
            ng-hide="isPipelineRunning">
         <button type="button" class="btn btn-default"
                 ng-hide="$last"

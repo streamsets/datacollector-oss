@@ -2,6 +2,7 @@
      ng-controller="HeaderController">
 
   <div class="panel-heading clearfix">
+
     <div class="pull-left" ng-switch="activeConfigStatus.state">
       <button type="button" class="navbar-toggle collapsed"
               ng-class="{'selected' : !hideLibraryPanel}"
@@ -40,7 +41,8 @@
 
     <div class="pull-right" ng-if="pipelineConfig && activeConfigStatus.state !== 'STOPPING'">
 
-      <div class="pull-left" ng-cloak ng-hide="previewMode || activeConfigStatus.state === 'STOPPING'">
+      <div class="pull-left" ng-cloak
+           ng-hide="previewMode || snapshotMode || activeConfigStatus.state === 'STOPPING'">
         <div class="pipelineAgent-status pull-right" ng-hide="common.saveOperationInProgress > 0">
           <span class="glyphicon glyphicon-ok-circle"></span>
           <span translate="global.messages.info.saveOperationInProgress"></span>
@@ -51,7 +53,7 @@
         </div>
       </div>
 
-      <div class="btn-group">
+      <div class="btn-group" ng-hide="previewMode || snapshotMode">
         <a class="btn btn-link dropdown-toggle icon-button"
            tooltip-placement="bottom" tooltip="{{'home.header.more' | translate}}"
            tooltip-trigger="{{iconOnly ? 'mouseenter' : 'notooltip'}}"
@@ -233,7 +235,7 @@
 
 
       <div class="btn-group notifications-dropdown"
-           ng-show="isPipelineRunning">
+           ng-show="isPipelineRunning && !snapshotMode">
         <a class="btn btn-link dropdown-toggle"
            data-toggle="dropdown"
            tooltip-placement="top"

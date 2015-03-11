@@ -17,8 +17,7 @@ angular
         lineNumbers: false,
         matchBrackets: true,
         autoCloseBrackets: true,
-        cursorHeight: 1,
-        //readOnly: 'nocursor'
+        cursorHeight: 1
       };
 
     var getIssueMessage = function(config, issues, instanceName, configDefinition) {
@@ -196,7 +195,7 @@ angular
         stageInstance.outputLanes.unshift(outputLaneName);
         configValue.unshift({
           outputLane: outputLaneName,
-          predicate: ''
+          predicate: '${}'
         });
       },
 
@@ -531,7 +530,7 @@ angular
       showLoading: true,
       noPreviewRecord: false,
       recordObject: {},
-      selectedPath:_.reduce(currentSelectedPaths, function(obj, path){
+      selectedPath: _.reduce(currentSelectedPaths, function(obj, path){
         obj[path] = true;
         return obj;
       }, {}),

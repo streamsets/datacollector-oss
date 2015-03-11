@@ -6,6 +6,7 @@ angular.module('dataCollectorApp.codemirrorDirectives')
       restrict: 'A',
       priority: 2, // higher than ui-codemirror which is 1.
       compile: function compile() {
+        var ctrlSpaceKey = false;
 
         if (angular.isUndefined(window.CodeMirror)) {
           throw new Error('ng-codemirror-dictionary-hint needs CodeMirror to work.');
@@ -29,7 +30,7 @@ angular.module('dataCollectorApp.codemirrorDirectives')
             var regex = new RegExp('^' + curWord, 'i');
 
             return {
-              list: (!curWord ? [] : dictionary.filter(function(item) {
+              list:(!curWord ? (ctrlSpaceKey ? dictionary.sort() : []) : dictionary.filter(function(item) {
                 return item.match(regex);
               })).sort(),
               from: CodeMirror.Pos(cur.line, start),
@@ -60,6 +61,15 @@ angular.module('dataCollectorApp.codemirrorDirectives')
               }
               $timeout(function() {});
             });
+
+            cm.on('keyHandled', function(instance, name, event) {
+              if(name === 'Ctrl-Space') {
+                ctrlSpaceKey = true;
+                instance.showHint({ hint: window.CodeMirror.hint.dictionaryHint, completeSingle: false });
+                ctrlSpaceKey = false;
+              }
+            });
+
           });
 
         };

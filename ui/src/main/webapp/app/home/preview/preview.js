@@ -74,11 +74,12 @@ angular
           previewBatchOutput = $scope.previewData.batchesOutput[0],
           stageOutputs = [];
 
-        angular.forEach(previewBatchOutput, function(stageOutput) {
+        angular.forEach(previewBatchOutput, function(stageOutput, index) {
           var lanesList = _.keys(stageOutput.output),
             intersection = _.intersection(dirtyLanes, lanesList);
 
-          if(intersection && intersection.length) {
+          if((intersection && intersection.length) || index === 0) {
+            //Always add Source preview data
             var stageOutputCopy = angular.copy(stageOutput);
             stageOutputs.push(stageOutputCopy);
           }
@@ -172,6 +173,10 @@ angular
      * @param stageInstance
      */
     var updatePreviewDataForStage = function(stageInstance) {
+      if(!$scope.previewData || !$scope.previewData.batchesOutput) {
+        return;
+      }
+
       var stageInstances = $scope.pipelineConfig.stages,
         batchData = $scope.previewData.batchesOutput[0];
 
