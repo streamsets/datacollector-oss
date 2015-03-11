@@ -54,6 +54,7 @@ public class SplitterDProcessor extends DProcessor {
   @ConfigDef(
       required = false,
       type = ConfigDef.Type.LIST,
+      defaultValue = "[\"/fieldSplit1\", \"/fieldSplit2\"]",
       label = "New Split Fields",
       description="New fields to pass split data. The last field includes any remaining unsplit data.",
       displayPosition = 30,

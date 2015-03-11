@@ -46,6 +46,15 @@ public class SplitterProcessor extends SingleLaneRecordProcessor {
                                                 Errors.SPLITTER_00));
     }
 
+    int count = 1;
+    for(String fieldPath: fieldPathsForSplits) {
+      if(fieldPath == null || fieldPath.trim().length() == 0) {
+        issues.add(getContext().createConfigIssue(Groups.FIELD_SPLITTER.name(), "fieldPathsForSplits",
+          Errors.SPLITTER_03, count));
+      }
+      count++;
+    }
+
     return issues;
   }
 

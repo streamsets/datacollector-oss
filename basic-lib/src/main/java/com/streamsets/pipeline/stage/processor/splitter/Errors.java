@@ -8,9 +8,10 @@ package com.streamsets.pipeline.stage.processor.splitter;
 import com.streamsets.pipeline.api.ErrorCode;
 
 public enum Errors implements ErrorCode {
-  SPLITTER_00("Define at least one field to split"),
+  SPLITTER_00("Define at least two fields to split"),
   SPLITTER_01("Field cannot split. The record '{}' does not include the field '{}'."),
   SPLITTER_02("The record '{}' does not have enough splits"),
+  SPLITTER_03("Field Path at index '{}' cannot be empty")
   ;
 
   private final String msg;
