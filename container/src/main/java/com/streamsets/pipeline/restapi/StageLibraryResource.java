@@ -5,6 +5,8 @@
  */
 package com.streamsets.pipeline.restapi;
 
+import com.google.common.annotations.VisibleForTesting;
+import com.streamsets.pipeline.alerts.DataRuleEvaluator;
 import com.streamsets.pipeline.config.PipelineDefinition;
 import com.streamsets.pipeline.config.StageDefinition;
 import com.streamsets.pipeline.restapi.bean.BeanHelper;
@@ -29,6 +31,18 @@ public class StageLibraryResource {
   private static final String DEFAULT_ICON_FILE = "PipelineDefinition-bundle.properties";
   private static final String PNG_MEDIA_TYPE = "image/png";
   private static final String SVG_MEDIA_TYPE = "image/svg+xml";
+
+  @VisibleForTesting
+  static final String STAGES = "stages";
+  @VisibleForTesting
+  static final String PIPELINE = "pipeline";
+  @VisibleForTesting
+  static final String RULES_EL_METADATA = "rulesElMetadata";
+  @VisibleForTesting
+  static final String EL_CONSTANT_DEFS = "elConstantDefinitions";
+  @VisibleForTesting
+  static final String EL_FUNCTION_DEFS = "elFunctionDefinitions";
+
   private final StageLibraryTask stageLibrary;
 
   @Inject
@@ -46,12 +60,17 @@ public class StageLibraryResource {
     List<StageDefinition> stageDefinitions = stageLibrary.getStages();
     List<Object> stages = new ArrayList<>(stageDefinitions.size());
     stages.addAll(BeanHelper.wrapStageDefinitions(stageDefinitions));
-    definitions.put("stages", stages);
+    definitions.put(STAGES, stages);
 
     //Populate the definitions with the PipelineDefinition
     List<Object> pipeline = new ArrayList<>(1);
     pipeline.add(BeanHelper.wrapPipelineDefinition(new PipelineDefinition(stageLibrary)));
-    definitions.put("pipeline", pipeline);
+    definitions.put(PIPELINE, pipeline);
+
+    Map<String, Object> map = new HashMap<>();
+    map.put(EL_FUNCTION_DEFS, BeanHelper.wrapElFunctionDefinitions(DataRuleEvaluator.getElEvaluator().getElFunctionDefinitions()));
+    map.put(EL_CONSTANT_DEFS, BeanHelper.wrapElConstantDefinitions(DataRuleEvaluator.getElEvaluator().getElConstantDefinitions()));
+    definitions.put(RULES_EL_METADATA, map);
 
     return Response.ok().type(MediaType.APPLICATION_JSON).entity(definitions).build();
   }

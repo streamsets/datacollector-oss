@@ -14,10 +14,6 @@ import com.streamsets.pipeline.alerts.MetricRuleEvaluator;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.config.DataRuleDefinition;
 import com.streamsets.pipeline.config.MetricsRuleDefinition;
-import com.streamsets.pipeline.el.ELEvaluator;
-import com.streamsets.pipeline.el.ELVariables;
-import com.streamsets.pipeline.lib.el.RecordEL;
-import com.streamsets.pipeline.lib.el.StringEL;
 import com.streamsets.pipeline.metrics.MetricsConfigurator;
 import com.streamsets.pipeline.util.Configuration;
 import org.slf4j.Logger;
@@ -37,8 +33,6 @@ public class ObserverRunner {
   private RulesConfigurationChangeRequest rulesConfigurationChangeRequest;
   private final Map<String, EvictingQueue<Record>> ruleToSampledRecordsMap;
   private final MetricRegistry metrics;
-  private final ELEvaluator elEvaluator;
-  private final ELVariables variables;
   private final Map<String, Map<String, Object>> alertResponse;
   private final AlertManager alertManager;
   private final Configuration configuration;
@@ -49,8 +43,6 @@ public class ObserverRunner {
     this.alertResponse = new HashMap<>();
     this.ruleToSampledRecordsMap = new HashMap<>();
     this.configuration = configuration;
-    elEvaluator = new ELEvaluator("ObserverRunner", RecordEL.class, StringEL.class);
-    variables = new ELVariables();
     this.alertManager = alertManager;
   }
 
@@ -64,7 +56,7 @@ public class ObserverRunner {
       List<DataRuleDefinition> dataRuleDefinitions = rulesConfigurationChangeRequest.getLaneToDataRuleMap().get(lane);
       if (dataRuleDefinitions != null) {
         for (DataRuleDefinition dataRuleDefinition : dataRuleDefinitions) {
-          DataRuleEvaluator dataRuleEvaluator = new DataRuleEvaluator(metrics, variables, elEvaluator, alertManager,
+          DataRuleEvaluator dataRuleEvaluator = new DataRuleEvaluator(metrics, alertManager,
             rulesConfigurationChangeRequest.getRuleDefinitions().getEmailIds(), dataRuleDefinition, configuration);
           dataRuleEvaluator.evaluateRule(ruleIdToSampledRecords.get(dataRuleDefinition.getId()), lane,
             ruleToSampledRecordsMap);
@@ -79,8 +71,8 @@ public class ObserverRunner {
       rulesConfigurationChangeRequest.getRuleDefinitions().getMetricsRuleDefinitions();
     if(metricsRuleDefinitions != null) {
       for (MetricsRuleDefinition metricsRuleDefinition : metricsRuleDefinitions) {
-        MetricRuleEvaluator metricAlertsHelper = new MetricRuleEvaluator(metricsRuleDefinition, metrics,
-          variables, elEvaluator, alertManager, rulesConfigurationChangeRequest.getRuleDefinitions().getEmailIds());
+        MetricRuleEvaluator metricAlertsHelper = new MetricRuleEvaluator(metricsRuleDefinition, metrics, alertManager,
+          rulesConfigurationChangeRequest.getRuleDefinitions().getEmailIds());
         metricAlertsHelper.checkForAlerts();
       }
     }

@@ -12,6 +12,8 @@ import com.codahale.metrics.Timer;
 import com.streamsets.pipeline.config.MetricsRuleDefinition;
 import com.streamsets.pipeline.el.ELEvaluator;
 import com.streamsets.pipeline.el.ELVariables;
+import com.streamsets.pipeline.lib.el.RecordEL;
+import com.streamsets.pipeline.lib.el.StringEL;
 import com.streamsets.pipeline.metrics.ExtendedMeter;
 import com.streamsets.pipeline.util.ObserverException;
 import org.slf4j.Logger;
@@ -23,21 +25,17 @@ public class MetricRuleEvaluator {
 
   private static final Logger LOG = LoggerFactory.getLogger(MetricRuleEvaluator.class);
   private static final String VAL = "value()";
+  private static final ELEvaluator EL_EVALUATOR =  new ELEvaluator("condition", RecordEL.class, StringEL.class);
 
   private final MetricsRuleDefinition metricsRuleDefinition;
   private final MetricRegistry metrics;
-  private final ELVariables variables;
-  private final ELEvaluator elEvaluator;
   private final List<String> emailIds;
   private final AlertManager alertManager;
 
   public MetricRuleEvaluator(MetricsRuleDefinition metricsRuleDefinition, MetricRegistry metricRegistry,
-                             ELVariables variables, ELEvaluator elEvaluator, AlertManager alertManager,
-                             List<String> emailIds) {
+                             AlertManager alertManager, List<String> emailIds) {
     this.metricsRuleDefinition = metricsRuleDefinition;
     this.metrics = metricRegistry;
-    this.variables = variables;
-    this.elEvaluator = elEvaluator;
     this.emailIds = emailIds;
     this.alertManager = alertManager;
   }
@@ -218,7 +216,7 @@ public class MetricRuleEvaluator {
     // string
     String predicateWithValue = metricsRuleDefinition.getCondition().replace(VAL, String.valueOf(value));
     try {
-      if (AlertsUtil.evaluateExpression(predicateWithValue, variables, elEvaluator)) {
+      if (AlertsUtil.evaluateExpression(predicateWithValue, new ELVariables(), EL_EVALUATOR)) {
         alertManager.alert(value, emailIds, metricsRuleDefinition);
       }
     } catch (ObserverException e) {

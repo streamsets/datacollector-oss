@@ -40,45 +40,27 @@ public class TestStageLibraryResource extends JerseyTest {
   public void testGetAllModules() {
 
     Response response = target("/v1/definitions").request().get();
-    Map<String, List<Object>> definitions = response.readEntity(new GenericType<Map<String, List<Object>>>() {});
+    Map<String, Object> definitions = response.readEntity(new GenericType<Map<String, Object>>() {});
 
     //check the pipeline definition
-    Assert.assertTrue(definitions.containsKey("pipeline"));
-    List<Object> pipelineDefinition = definitions.get("pipeline");
+    Assert.assertTrue(definitions.containsKey(StageLibraryResource.PIPELINE));
+    List<Object> pipelineDefinition = (List<Object>)definitions.get(StageLibraryResource.PIPELINE);
+    Assert.assertNotNull(pipelineDefinition);
     Assert.assertTrue(pipelineDefinition.size() == 1);
 
     //check the stages
-    Assert.assertTrue(definitions.containsKey("stages"));
-    List<Object> stages = definitions.get("stages");
+    Assert.assertTrue(definitions.containsKey(StageLibraryResource.STAGES));
+    List<Object> stages = (List<Object>)definitions.get(StageLibraryResource.STAGES);
+    Assert.assertNotNull(stages);
     Assert.assertEquals(2, stages.size());
 
-    //TODO The json is deserialized as a generic map
-    /*Assert.assertTrue(pipelineDefinition.get(0) instanceof PipelineDefinition);
+    //check the rules El metadata
+    Assert.assertTrue(definitions.containsKey(StageLibraryResource.RULES_EL_METADATA));
+    Map<String, Object> rulesElMetadata = (Map<String, Object>)definitions.get(StageLibraryResource.RULES_EL_METADATA);
+    Assert.assertNotNull(rulesElMetadata);
+    Assert.assertTrue(rulesElMetadata.containsKey(StageLibraryResource.EL_FUNCTION_DEFS));
+    Assert.assertTrue(rulesElMetadata.containsKey(StageLibraryResource.EL_CONSTANT_DEFS));
 
-    PipelineDefinition pd = (PipelineDefinition)pipelineDefinition.get(0);
-    Assert.assertNotNull(pd.getConfigDefinitions());
-    Assert.assertEquals(2, pd.getConfigDefinitions().size());*/
-
-    /*//check the first stage
-    Assert.assertTrue(stages.get(0) instanceof StageDefinition);
-    StageDefinition s1 = (StageDefinition) stages.get(0);
-    Assert.assertNotNull(s1);
-    Assert.assertEquals("source", s1.getId());
-    Assert.assertEquals("com.streamsets.pipeline.restapi.TestStageLibraryResource$TSource", s1.getClassName());
-    Assert.assertEquals("1.0.0", s1.getVersion());
-    Assert.assertEquals("label", s1.getLabel());
-    Assert.assertEquals("description", s1.getDescription());
-    Assert.assertEquals(4, s1.getConfigDefinitions().size());
-
-    Assert.assertTrue(stages.get(1) instanceof StageDefinition);
-    StageDefinition s2 = (StageDefinition) stages.get(1);
-    Assert.assertNotNull(s2);
-    Assert.assertEquals("target", s2.getId());
-    Assert.assertEquals("com.streamsets.pipeline.restapi.TestStageLibraryResource$TTarget", s2.getClassName());
-    Assert.assertEquals("1.0.0", s2.getVersion());
-    Assert.assertEquals("label", s2.getLabel());
-    Assert.assertEquals("description", s2.getDescription());
-    Assert.assertTrue(s2.getConfigDefinitions().isEmpty());*/
   }
 
   @Test
