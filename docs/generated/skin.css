@@ -550,7 +550,7 @@ dl, .dl {
 /* FOOTER
 ------------------------------------------------------- */
 div.footer, .footer_separator {
-	display: none;
+  display:none;
 }
 
 

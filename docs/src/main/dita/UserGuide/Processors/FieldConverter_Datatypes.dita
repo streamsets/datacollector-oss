@@ -61,7 +61,7 @@
       </row>
       <row>
        <entry>String</entry>
-       <entry>All supported data types except for Byte Array, List, and Map.</entry>
+       <entry>All supported data types except for Byte Array, List, and Map</entry>
       </row>
      </tbody>
     </tgroup>

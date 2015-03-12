@@ -6,8 +6,8 @@
   conversion. </shortdesc>
  <conbody>
   <p>
-   <draft-comment author="Loretta">do I have to be careful not to confuse conversion and coercion?
-    Get a good example.</draft-comment>
+   <draft-comment author="Loretta">Brock to check what happens if the coercion fails. Recommend
+    using conversion for certain reasons. </draft-comment>
   </p>
  </conbody>
 </concept>
