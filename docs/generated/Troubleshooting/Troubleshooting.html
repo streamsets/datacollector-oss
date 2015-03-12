@@ -82,6 +82,33 @@
       values for required properties to enable data preview.</dd>
 
     
+        
+          <dt class="dt dlterm">Can the Kafka Producer create topics?</dt>
+
+          <dd class="dd">The Kafka Producer can create a topic when all of the following are true:<ul class="ul" id="concept_vxd_tsm_tq__ul_j4q_25y_3r">
+              <li class="li">You configure the Kafka Producer to write to a topic name that does not
+                exist.</li>
+
+              <li class="li">At least one of the Kafka brokers defined for the Kafka Producer has the
+                auto.create.topics.enable property enabled.</li>
+
+              <li class="li">The broker with the enabled property is up and available when the Kafka Producer
+                looks for the topic.</li>
+
+            </ul>
+</dd>
+
+        
+        
+          <dt class="dt dlterm">How can I reset the offset for a Kafka Consumer?</dt>
+
+          <dd class="dd">Since the offset for a Kakfa Consumer is stored with the ZooKeeper for the Kafka
+            cluster, you cannot reset the offset through the <span class="ph">Data
+                  Collector</span>. For
+            information about resetting an offset through Kafka, see the Apache Kafka documentation.
+          </dd>
+
+        
 
    </dl>
 
@@ -91,6 +118,6 @@
 
 <div class="related-links"></div>
 <div class="navfooter"><!---->
-<span class="navparent"><a class="link" href="../Troubleshooting/Troubleshooting_title.html" title="Troubleshooting"><span class="navheader_label">Parent topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">Troubleshooting</span></a></span>  </div><div class="footer"><div>© <a href="http://creativecommons.org/licenses/by-nc/4.0/legalcode">CC BY-NC 4.0.</a> StreamSets, 2015. </div></div>
+<span class="navparent"><a class="link" href="../Troubleshooting/Troubleshooting_title.html" title="Troubleshooting"><span class="navheader_label">Parent topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">Troubleshooting</span></a></span>  </div><div class="footer"><div> </div><!-- © <a href="http://creativecommons.org/licenses/by-nc/4.0/legalcode">CC BY-NC 4.0.</a> StreamSets, 2015. --></div>
 </body>
 </html>

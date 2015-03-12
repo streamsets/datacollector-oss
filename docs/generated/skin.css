@@ -550,7 +550,11 @@ dl, .dl {
 /* FOOTER
 ------------------------------------------------------- */
 div.footer, .footer_separator {
-  display:none;
+  font-weight: 100;
+  font-style: normal;
+  font-size: 20px;
+  margin-left: 10px;
+  margin-right: 1in;
 }
 
 
