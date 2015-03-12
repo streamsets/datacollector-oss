@@ -8,6 +8,8 @@ package com.streamsets.pipeline.restapi;
 import com.streamsets.pipeline.store.PipelineStoreException;
 import com.streamsets.pipeline.util.Configuration;
 
+import javax.annotation.security.DenyAll;
+import javax.annotation.security.PermitAll;
 import javax.inject.Inject;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
@@ -16,6 +18,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 @Path("/v1/configuration")
+@DenyAll
 public class ConfigurationResource {
   private static final String UI_PREFIX = "ui.";
 
@@ -29,6 +32,7 @@ public class ConfigurationResource {
   @GET
   @Path("/ui")
   @Produces(MediaType.APPLICATION_JSON)
+  @PermitAll
   public Response getUIConfiguration() throws PipelineStoreException {
 
     return Response.ok().type(MediaType.APPLICATION_JSON).entity(config.getSubSetConfiguration(UI_PREFIX)).build();
@@ -38,6 +42,7 @@ public class ConfigurationResource {
   @GET
   @Path("/all")
   @Produces(MediaType.APPLICATION_JSON)
+  @PermitAll
   public Response getConfiguration() throws PipelineStoreException {
 
     return Response.ok().type(MediaType.APPLICATION_JSON).entity(config.getUnresolvedConfiguration()).build();

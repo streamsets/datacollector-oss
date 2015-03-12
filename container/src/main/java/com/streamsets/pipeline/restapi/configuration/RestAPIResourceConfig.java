@@ -13,6 +13,7 @@ import com.streamsets.pipeline.util.Configuration;
 import com.streamsets.pipeline.store.PipelineStoreTask;
 import org.glassfish.hk2.utilities.binding.AbstractBinder;
 import org.glassfish.jersey.server.ResourceConfig;
+import org.glassfish.jersey.server.filter.RolesAllowedDynamicFeature;
 
 import java.net.URI;
 import java.security.Principal;
@@ -33,6 +34,7 @@ public class RestAPIResourceConfig extends ResourceConfig {
         bindFactory(ProductionPipelineManagerInjector.class).to(ProductionPipelineManagerTask.class);
       }
     });
+    register(RolesAllowedDynamicFeature.class);
   }
 
 }

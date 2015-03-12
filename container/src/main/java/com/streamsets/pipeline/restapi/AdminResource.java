@@ -13,23 +13,21 @@ import com.streamsets.pipeline.util.ContainerError;
 import com.streamsets.pipeline.util.LogStreamer;
 import com.streamsets.pipeline.util.PipelineException;
 
+import javax.annotation.security.DenyAll;
+import javax.annotation.security.PermitAll;
+import javax.annotation.security.RolesAllowed;
 import javax.inject.Inject;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
-import javax.ws.rs.QueryParam;
-import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.io.IOException;
 
 @Path("/v1/admin")
+@DenyAll
 public class AdminResource implements LogStreamer.Releaser {
-  private static final String SHUTDOWN_SECRET_KEY = "http.shutdown.secret";
-  private static final String SHUTDOWN_SECRET_DEFAULT = "secret";
 
   private static final String MAX_LOGTAIL_CONCURRENT_REQUESTS_KEY = "max.logtail.concurrent.requests";
   private static final int MAX_LOGTAIL_CONCURRENT_REQUESTS_DEFAULT = 5;
@@ -49,6 +47,7 @@ public class AdminResource implements LogStreamer.Releaser {
   @POST
   @Path("/shutdown")
   @Produces(MediaType.APPLICATION_JSON)
+  @RolesAllowed(AuthzRole.ADMIN)
   public Response shutdown() throws PipelineStoreException {
     Thread thread = new Thread("Shutdown Request") {
       @Override
@@ -66,17 +65,10 @@ public class AdminResource implements LogStreamer.Releaser {
     return Response.ok().build();
   }
 
-  @POST
-  @Path("/logout")
-  public void logout(@Context HttpServletRequest request) throws PipelineStoreException {
-    HttpSession session = request.getSession();
-    session.invalidate();
-  }
-
-
   @GET
   @Path("/log")
   @Produces(MediaType.TEXT_PLAIN)
+  @PermitAll
   public Response getLog() throws PipelineException, IOException {
     synchronized (AdminResource.class) {
       int maxClients = config.get(MAX_LOGTAIL_CONCURRENT_REQUESTS_KEY, MAX_LOGTAIL_CONCURRENT_REQUESTS_DEFAULT);
@@ -87,13 +79,6 @@ public class AdminResource implements LogStreamer.Releaser {
       }
     }
     return Response.status(Response.Status.OK).entity(new LogStreamer(runtimeInfo, this).getLogTailReader()).build();
-  }
-
-  @GET
-  @Path("/build-info")
-  @Produces(MediaType.APPLICATION_JSON)
-  public Response getBuild() throws PipelineException, IOException {
-    return Response.status(Response.Status.OK).entity(buildInfo).build();
   }
 
   @Override

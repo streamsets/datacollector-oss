@@ -7,6 +7,8 @@ package com.streamsets.pipeline.restapi;
 
 import com.streamsets.pipeline.main.RuntimeInfo;
 
+import javax.annotation.security.DenyAll;
+import javax.annotation.security.PermitAll;
 import javax.inject.Inject;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
@@ -20,6 +22,7 @@ import java.io.Reader;
 import java.util.Properties;
 
 @Path("/v1/helpref")
+@DenyAll
 public class HelpResource {
   private final RuntimeInfo runtimeInfo;
 
@@ -30,6 +33,7 @@ public class HelpResource {
 
   @GET
   @Produces(MediaType.APPLICATION_JSON)
+  @PermitAll
   public Response getHelpRefs() throws IOException {
     File helpRefFile = new File(runtimeInfo.getConfigDir(), "helpref.properties");
     try (Reader reader = new FileReader(helpRefFile)) {

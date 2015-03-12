@@ -1,6 +1,7 @@
 package com.streamsets.pipeline.http;
 
 import com.streamsets.pipeline.main.RuntimeInfo;
+import com.streamsets.pipeline.restapi.AuthzRole;
 import com.streamsets.pipeline.util.Configuration;
 import org.eclipse.jetty.websocket.servlet.WebSocketCreator;
 import org.eclipse.jetty.websocket.servlet.WebSocketServlet;
@@ -10,6 +11,10 @@ import org.eclipse.jetty.websocket.servlet.ServletUpgradeResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.util.Properties;
@@ -62,5 +67,15 @@ public class LogServlet extends WebSocketServlet implements WebSocketCreator{
       str = current.substring(0, start) + value + current.substring(end + 1);
     }
     return str;
+  }
+
+  @Override
+  protected void service(HttpServletRequest request, HttpServletResponse response) throws ServletException,
+      IOException {
+    if (request.isUserInRole(AuthzRole.ADMIN) || request.isUserInRole(AuthzRole.MANAGER)) {
+      super.service(request, response);
+    } else {
+      response.sendError(HttpServletResponse.SC_FORBIDDEN);
+    }
   }
 }

@@ -12,6 +12,8 @@ import com.streamsets.pipeline.config.StageDefinition;
 import com.streamsets.pipeline.restapi.bean.BeanHelper;
 import com.streamsets.pipeline.stagelibrary.StageLibraryTask;
 
+import javax.annotation.security.DenyAll;
+import javax.annotation.security.PermitAll;
 import javax.inject.Inject;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
@@ -27,6 +29,7 @@ import java.util.Map;
 
 
 @Path("/v1/definitions")
+@DenyAll
 public class StageLibraryResource {
   private static final String DEFAULT_ICON_FILE = "PipelineDefinition-bundle.properties";
   private static final String PNG_MEDIA_TYPE = "image/png";
@@ -52,6 +55,7 @@ public class StageLibraryResource {
 
   @GET
   @Produces(MediaType.APPLICATION_JSON)
+  @PermitAll
   public Response getDefinitions() {
     //The definitions to be returned
     Map<String, Object> definitions = new HashMap<>();
@@ -78,6 +82,7 @@ public class StageLibraryResource {
   @GET
   @Path("/stages/icon")
   @Produces({SVG_MEDIA_TYPE, PNG_MEDIA_TYPE})
+  @PermitAll
   public Response getIcon(@QueryParam("name") String name,
                           @QueryParam("library") String library,
                           @QueryParam("version") String version) {

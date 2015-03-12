@@ -15,6 +15,9 @@ import com.streamsets.pipeline.store.PipelineStoreTask;
 import com.streamsets.pipeline.validation.PipelineConfigurationValidator;
 import com.streamsets.pipeline.validation.RuleDefinitionValidator;
 
+import javax.annotation.security.DenyAll;
+import javax.annotation.security.PermitAll;
+import javax.annotation.security.RolesAllowed;
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
@@ -36,6 +39,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Path("/v1/pipeline-library")
+@DenyAll
 public class PipelineStoreResource {
   private final PipelineStoreTask store;
   private final StageLibraryTask stageLibrary;
@@ -52,6 +56,7 @@ public class PipelineStoreResource {
 
   @GET
   @Produces(MediaType.APPLICATION_JSON)
+  @PermitAll
   public Response getPipelines() throws PipelineStoreException {
     return Response.ok().type(MediaType.APPLICATION_JSON).entity(BeanHelper.wrapPipelineInfo(store.getPipelines()))
       .build();
@@ -60,6 +65,7 @@ public class PipelineStoreResource {
   @Path("/{name}")
   @GET
   @Produces(MediaType.APPLICATION_JSON)
+  @PermitAll
   public Response getInfo(
       @PathParam("name") String name,
       @QueryParam("rev") @DefaultValue("0") String rev,
@@ -99,6 +105,7 @@ public class PipelineStoreResource {
   @Path("/{name}")
   @PUT
   @Produces(MediaType.APPLICATION_JSON)
+  @RolesAllowed({ AuthzRole.CREATOR, AuthzRole.ADMIN })
   public Response create(
       @PathParam("name") String name,
       @QueryParam("description") @DefaultValue("") String description)
@@ -114,6 +121,7 @@ public class PipelineStoreResource {
   @Path("/{name}")
   @DELETE
   @Produces(MediaType.APPLICATION_JSON)
+  @RolesAllowed({ AuthzRole.CREATOR, AuthzRole.ADMIN })
   public Response delete(
       @PathParam("name") String name)
       throws PipelineStoreException, URISyntaxException {
@@ -126,6 +134,7 @@ public class PipelineStoreResource {
   @POST
   @Consumes(MediaType.APPLICATION_JSON)
   @Produces(MediaType.APPLICATION_JSON)
+  @RolesAllowed({ AuthzRole.CREATOR, AuthzRole.ADMIN })
   public Response save(
       @PathParam("name") String name,
       @QueryParam("tag") String tag,
@@ -144,6 +153,7 @@ public class PipelineStoreResource {
   @Path("/{name}/rules")
   @GET
   @Produces(MediaType.APPLICATION_JSON)
+  @PermitAll
   public Response getRules(
     @PathParam("name") String name,
     @QueryParam("rev") @DefaultValue("0") String rev) throws PipelineStoreException {
@@ -159,6 +169,7 @@ public class PipelineStoreResource {
   @Path("/{name}/rules")
   @POST
   @Produces(MediaType.APPLICATION_JSON)
+  @RolesAllowed({ AuthzRole.CREATOR, AuthzRole.MANAGER, AuthzRole.ADMIN })
   public Response saveRules(
     @PathParam("name") String name,
     @QueryParam("rev") @DefaultValue("0") String rev,

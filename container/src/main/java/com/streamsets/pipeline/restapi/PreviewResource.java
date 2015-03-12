@@ -5,7 +5,6 @@
  */
 package com.streamsets.pipeline.restapi;
 
-import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.config.PipelineConfiguration;
 import com.streamsets.pipeline.prodmanager.RawSourcePreviewHelper;
@@ -24,6 +23,8 @@ import com.streamsets.pipeline.store.PipelineStoreTask;
 import com.streamsets.pipeline.store.PipelineStoreException;
 import com.streamsets.pipeline.util.ContainerError;
 
+import javax.annotation.security.DenyAll;
+import javax.annotation.security.RolesAllowed;
 import javax.inject.Inject;
 import javax.ws.rs.DefaultValue;
 import javax.ws.rs.GET;
@@ -45,6 +46,7 @@ import java.util.List;
 import java.util.Map;
 
 @Path("/v1/pipeline-library")
+@DenyAll
 public class PreviewResource {
   private static final String MAX_BATCH_SIZE_KEY = "preview.maxBatchSize";
   private static final int MAX_BATCH_SIZE_DEFAULT = 10;
@@ -66,6 +68,7 @@ public class PreviewResource {
   @Path("/{name}/preview")
   @GET
   @Produces(MediaType.APPLICATION_JSON)
+  @RolesAllowed({ AuthzRole.CREATOR, AuthzRole.ADMIN })
   public Response preview(
     @PathParam("name") String name,
     @QueryParam("rev") String rev,
@@ -80,6 +83,7 @@ public class PreviewResource {
   @Path("/{name}/preview")
   @POST
   @Produces(MediaType.APPLICATION_JSON)
+  @RolesAllowed({ AuthzRole.CREATOR, AuthzRole.ADMIN })
   public Response previewWithOverride(
       @PathParam("name") String name,
       @QueryParam("rev") String rev,
@@ -114,6 +118,7 @@ public class PreviewResource {
   @Path("/{name}/rawSourcePreview")
   @GET
   @Produces(MediaType.APPLICATION_JSON)
+  @RolesAllowed({ AuthzRole.CREATOR, AuthzRole.ADMIN })
   public Response rawSourcePreview(
       @PathParam("name") String name,
       @QueryParam("rev") String rev,
@@ -128,6 +133,7 @@ public class PreviewResource {
   @Path("/{name}/validateConfigs")
   @GET
   @Produces(MediaType.APPLICATION_JSON)
+  @RolesAllowed({ AuthzRole.CREATOR, AuthzRole.MANAGER, AuthzRole.ADMIN })
   public Response preview(
       @PathParam("name") String name,
       @QueryParam("rev") String rev)
