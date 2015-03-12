@@ -83,12 +83,10 @@ public class TestRuntimeInfo {
 
   @Test
   public void testDefaultIdAndBaseHttpUrl() {
-    System.setProperty("sdc.hostname", "FOO");
-
     ObjectGraph og  = ObjectGraph.create(RuntimeModule.class);
     RuntimeInfo info = og.get(RuntimeInfo.class);
-    Assert.assertEquals("FOO:16830", info.getId());
-    Assert.assertEquals("http://FOO:16830", info.getBaseHttpUrl());
+    Assert.assertEquals("UNDEF", info.getId());
+    Assert.assertEquals("UNDEF", info.getBaseHttpUrl());
   }
 
   @Test

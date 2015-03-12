@@ -28,8 +28,8 @@ public class RuntimeInfo {
 
   public RuntimeInfo(List<? extends ClassLoader> stageLibraryClassLoaders) {
     this.stageLibraryClassLoaders = ImmutableList.copyOf(stageLibraryClassLoaders);
-    id = System.getProperty("sdc.hostname") + ":16830"; //TODO fix how we resolve the default port
-    httpUrl = "http://" + System.getProperty("sdc.hostname") + ":16830";
+    id = "UNDEF";
+    httpUrl = "UNDEF";
     this.attributes = new HashMap<>();
   }
 
