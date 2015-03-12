@@ -1,0 +1,91 @@
+.CodeMirror-EL-completion {
+  padding-left: 22px;
+  position: relative;
+}
+.CodeMirror-EL-completion:before {
+  position: absolute;
+  left: 2px;
+  bottom: 2px;
+  border-radius: 50%;
+  font-size: 12px;
+  font-weight: bold;
+  height: 15px;
+  width: 15px;
+  line-height: 16px;
+  text-align: center;
+  color: white;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+}
+.CodeMirror-EL-completion-unknown:before {
+  content: "?";
+  background: #4bb;
+}
+.CodeMirror-EL-completion-object:before {
+  content: "O";
+  background: #77c;
+}
+.CodeMirror-EL-completion-fn:before {
+  content: "F";
+  background: #7c7;
+}
+.CodeMirror-EL-completion-array:before {
+  content: "A";
+  background: #c66;
+}
+.CodeMirror-EL-completion-number:before {
+  content: "1";
+  background: #999;
+}
+.CodeMirror-EL-completion-string:before {
+  content: "S";
+  background: #999;
+}
+.CodeMirror-EL-completion-bool:before {
+  content: "B";
+  background: #999;
+}
+
+.CodeMirror-EL-completion-constant:before {
+  content: "C";
+  background: #c66;
+}
+
+.CodeMirror-EL-completion-guess {
+  color: #999;
+}
+
+.CodeMirror-EL-tooltip {
+  border: 1px solid silver;
+  border-radius: 3px;
+  color: #444;
+  padding: 2px 5px;
+  font-size: 90%;
+  font-family: monospace;
+  background-color: white;
+  white-space: pre-wrap;
+
+  max-width: 40em;
+  position: absolute;
+  z-index: 10;
+  -webkit-box-shadow: 2px 3px 5px rgba(0,0,0,.2);
+  -moz-box-shadow: 2px 3px 5px rgba(0,0,0,.2);
+  box-shadow: 2px 3px 5px rgba(0,0,0,.2);
+
+  transition: opacity 1s;
+  -moz-transition: opacity 1s;
+  -webkit-transition: opacity 1s;
+  -o-transition: opacity 1s;
+  -ms-transition: opacity 1s;
+}
+
+.CodeMirror-EL-hint-doc {
+  max-width: 25em;
+  margin-top: -3px;
+}
+
+.CodeMirror-EL-fname { color: black; }
+.CodeMirror-EL-farg { color: #70a; }
+.CodeMirror-EL-farg-current { text-decoration: underline; }
+.CodeMirror-EL-type { color: #07c; }
+.CodeMirror-EL-fhint-guess { opacity: .7; }

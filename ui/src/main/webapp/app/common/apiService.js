@@ -36,7 +36,7 @@ angular.module('dataCollectorApp.common')
        * Fetched Build Information
        */
       getBuildInfo: function() {
-        var url = apiBase + '/admin/build-info';
+        var url = apiBase + '/info/sdc';
         return $http({
           method: 'GET',
           url: url
@@ -59,7 +59,7 @@ angular.module('dataCollectorApp.common')
        * logout
        */
       logout: function() {
-        var url = apiBase + '/admin/logout';
+        var url = apiBase + '/logout';
         return $http({
           method: 'POST',
           url: url

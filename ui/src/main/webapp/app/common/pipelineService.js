@@ -542,10 +542,11 @@ angular.module('dataCollectorApp.common')
      * Returns list of EL Function Signature and Constants.
      *
      * @param configDefinition
-     * @returns {Array}
+     * @returns Object
      */
     this.getELFunctionAndConstantLists = function(configDefinition) {
-      var elLists = [];
+
+      /*var elLists = [];
 
       angular.forEach(configDefinition.elFunctionDefinitions, function(functionDefn) {
         var functionName = '';
@@ -571,7 +572,13 @@ angular.module('dataCollectorApp.common')
         elLists.push(constantDefn.name);
       });
 
-      return elLists;
+      return elLists;*/
+
+
+      return {
+        elFunctionDefinitions: configDefinition.elFunctionDefinitions,
+        elConstantDefinitions: configDefinition.elConstantDefinitions
+      };
     };
 
     $translate([
