@@ -95,7 +95,7 @@
 
 <script type="text/ng-template" id="integerConfigurationTemplate">
   <div class="controls col-lg-7 col-md-8">
-    <input type="number" class="form-control" name="{{configDefinition.name}}"
+    <input type="number" class="form-control" name="{{configDefinition.name}}" min="{{configDefinition.min}}" max="{{configDefinition.max}}"
            focus-me="{{autoFocusConfigName === configDefinition.name}}"
            ng-readonly="isPipelineRunning"
            ng-model="detailPaneConfig.configuration[configIndex].value"
