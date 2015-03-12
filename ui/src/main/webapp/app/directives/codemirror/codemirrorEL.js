@@ -11,7 +11,8 @@ angular.module('dataCollectorApp.codemirrorDirectives')
           cmpPos = CodeMirror.cmpPos,
           cls = "CodeMirror-EL-",
           cachedArgHints = null,
-          activeArgHints = null;
+          activeArgHints = null,
+          activeAutoComplete = false;
 
         if (angular.isUndefined(window.CodeMirror)) {
           throw new Error('codemirror-el needs CodeMirror to work.');
@@ -63,6 +64,13 @@ angular.module('dataCollectorApp.codemirrorDirectives')
 
             completions = _.sortBy(completions, 'text');
 
+            if(completions.length > 0 ) {
+              activeAutoComplete = true;
+              closeArgHints();
+            } else {
+              activeAutoComplete = false;
+            }
+
             var obj = {
               list: completions,
               from: CodeMirror.Pos(cur.line, start),
@@ -72,6 +80,7 @@ angular.module('dataCollectorApp.codemirrorDirectives')
             var tooltip = null;
             CodeMirror.on(obj, "close", function() {
               remove(tooltip);
+              activeAutoComplete = false;
             });
 
             CodeMirror.on(obj, "update", function() {
@@ -87,7 +96,6 @@ angular.module('dataCollectorApp.codemirrorDirectives')
                 tooltip.className += " " + cls + "hint-doc";
               }
             });
-
 
             return obj;
           });
@@ -122,14 +130,15 @@ angular.module('dataCollectorApp.codemirrorDirectives')
               }
             });
 
-
-            /*cm.on('cursorActivity', function(cm) {
+            cm.on('cursorActivity', function(cm) {
               updateArgHints(cm);
-            });*/
+            });
+
+            cm.on("blur", function(){
+              closeArgHints();
+            });
 
           });
-
-
 
           function elt(tagname, cls /*, ... elts*/) {
             var e = document.createElement(tagname);
@@ -161,28 +170,10 @@ angular.module('dataCollectorApp.codemirrorDirectives')
             }
           }
 
-          function typeToIcon(type) {
-            var suffix;
-            if (type == "?") {
-              suffix = "unknown";
-            } else if (type == "number" || type == "string" || type == "bool") {
-              suffix = type;
-            } else if (/^fn\(/.test(type)) {
-              suffix = "fn";
-            } else if (/^\[/.test(type)) {
-              suffix = "array";
-            } else {
-              suffix = "object";
-            }
-
-            return cls + "completion " + cls + "completion-" + suffix;
-          }
-
-
           function updateArgHints(cm) {
             closeArgHints();
 
-            if (cm.somethingSelected()) {
+            if (cm.somethingSelected() || activeAutoComplete) {
               return;
             }
 
@@ -199,7 +190,8 @@ angular.module('dataCollectorApp.codemirrorDirectives')
             var ch,
               argPos = lex.pos || 0,
               tabSize = cm.getOption("tabSize"),
-              pos;
+              pos,
+              functionName;
 
             for (var line = cm.getCursor().line, e = Math.max(0, line - 9), found = false; line >= e; --line) {
               var str = cm.getLine(line), extra = 0;
@@ -217,6 +209,16 @@ angular.module('dataCollectorApp.codemirrorDirectives')
 
               if (str.charAt(ch) == "(") {
                 found = true;
+
+                //Get Method Name
+                var startIndex = ch - 1;
+                while(startIndex > 0 && /[a-zA-Z:]+/.test(str.charAt(startIndex))) {
+                  startIndex--;
+                }
+
+                startIndex++;
+                functionName = str.substr(startIndex , ch - startIndex);
+
                 break;
               }
             }
@@ -231,11 +233,16 @@ angular.module('dataCollectorApp.codemirrorDirectives')
               return showArgHints(cm, argPos);
             }
 
+            var functionDefintion = _.find(dictionary.elFunctionDefinitions, function(elFunctionDefn) {
+              return elFunctionDefn.name === functionName;
+            });
+
             cachedArgHints = {
               start: pos,
-              name: 'functionName',
+              name: functionName,
               guess: 'functionGuess',
-              doc: 'functionDoc'
+              doc: cm.getDoc(),
+              functionDefinition: functionDefintion
             };
 
             showArgHints(cm, argPos);
@@ -248,24 +255,22 @@ angular.module('dataCollectorApp.codemirrorDirectives')
             }
           }
 
-
           function showArgHints(cm, pos) {
             closeArgHints();
 
             var cache = cachedArgHints,
-              tp = cache.type;
+              fd = cache.functionDefinition;
 
             var tip = elt("span", cache.guess ? cls + "fhint-guess" : null,
               elt("span", cls + "fname", cache.name), "(");
 
 
-            /*
-            for (var i = 0; i < tp.args.length; ++i) {
+            for (var i = 0; i < fd.elFunctionArgumentDefinition.length; ++i) {
               if (i) {
                 tip.appendChild(document.createTextNode(", "));
               }
 
-              var arg = tp.args[i];
+              var arg = fd.elFunctionArgumentDefinition[i];
 
               tip.appendChild(elt("span", cls + "farg" + (i == pos ? " " + cls + "farg-current" : ""), arg.name || "?"));
               if (arg.type != "?") {
@@ -274,19 +279,16 @@ angular.module('dataCollectorApp.codemirrorDirectives')
               }
             }
 
-            tip.appendChild(document.createTextNode(tp.retType ? ") ->\u00a0" : ")"));
+            tip.appendChild(document.createTextNode(fd.returnType ? ") ->\u00a0" : ")"));
 
-            if (tp.retType) {
-              tip.appendChild(elt("span", cls + "type", tp.retType));
+            if (fd.returnType) {
+              tip.appendChild(elt("span", cls + "type", fd.returnType));
             }
-
-            */
 
             var place = cm.cursorCoords(null, "page");
 
             activeArgHints = makeTooltip(place.right + 1, place.bottom, tip);
           }
-
 
         };
       }
