@@ -15,4 +15,6 @@ public interface SourceOffsetTracker {
 
   public void commitOffset();
 
+  public long getLastBatchTime();
+
 }

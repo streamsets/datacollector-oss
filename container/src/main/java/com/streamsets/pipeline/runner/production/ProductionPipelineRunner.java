@@ -29,6 +29,7 @@ import com.streamsets.pipeline.runner.PipeBatch;
 import com.streamsets.pipeline.runner.PipelineRunner;
 import com.streamsets.pipeline.runner.PipelineRuntimeException;
 import com.streamsets.pipeline.runner.SourceOffsetTracker;
+import com.streamsets.pipeline.runner.StageContext;
 import com.streamsets.pipeline.runner.StageOutput;
 import com.streamsets.pipeline.snapshotstore.SnapshotStore;
 import com.streamsets.pipeline.store.PipelineStoreTask;
@@ -213,8 +214,10 @@ public class ProductionPipelineRunner implements PipelineRunner {
 
     long start = System.currentTimeMillis();
     sourceOffset = pipeBatch.getPreviousOffset();
-
+    long lastBatchTime = offsetTracker.getLastBatchTime();
     for (Pipe pipe : pipes) {
+      //set the last batch time in the stage context of each pipe
+      ((StageContext)pipe.getStage().getContext()).setLastBatchTime(lastBatchTime);
       //TODO Define an interface to handle delivery guarantee
       if (deliveryGuarantee == DeliveryGuarantee.AT_MOST_ONCE
           && pipe.getStage().getDefinition().getType() == StageType.TARGET && !committed) {

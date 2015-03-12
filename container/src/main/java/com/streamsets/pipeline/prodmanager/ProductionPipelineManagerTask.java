@@ -349,7 +349,8 @@ public class ProductionPipelineManagerTask extends AbstractTask {
     ProductionPipelineRunner runner = new ProductionPipelineRunner(runtimeInfo, snapshotStore, deliveryGuarantee,
       name, rev, pipelineStore, observeRequests, configuration);
 
-    ProductionPipelineBuilder builder = new ProductionPipelineBuilder(stageLibrary, name, pipelineConfiguration);
+    ProductionPipelineBuilder builder = new ProductionPipelineBuilder(stageLibrary, name, rev, runtimeInfo,
+      pipelineConfiguration);
     return builder.build(runner, offsetTracker, observer);
   }
 

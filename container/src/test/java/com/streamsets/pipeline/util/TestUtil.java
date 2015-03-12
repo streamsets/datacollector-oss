@@ -78,6 +78,11 @@ public class TestUtil {
       finished = (currentOffset == null);
       newOffset = null;
     }
+
+    @Override
+    public long getLastBatchTime() {
+      return 0;
+    }
   }
 
 

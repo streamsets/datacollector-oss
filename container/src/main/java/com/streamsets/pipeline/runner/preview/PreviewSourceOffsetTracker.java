@@ -39,4 +39,9 @@ public class PreviewSourceOffsetTracker implements SourceOffsetTracker {
     newOffset = null;
   }
 
+  @Override
+  public long getLastBatchTime() {
+    return 0;
+  }
+
 }

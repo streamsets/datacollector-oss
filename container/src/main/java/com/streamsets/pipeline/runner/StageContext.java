@@ -60,6 +60,7 @@ public class StageContext implements Source.Context, Target.Context, Processor.C
   private final List<String> outputLanes;
   private final OnRecordError onRecordError;
   private ErrorSink errorSink;
+  private long lastBatchTime;
 
   //for SDK
   public StageContext(String instanceName, StageType stageType, boolean isPreview, OnRecordError onRecordError,
@@ -293,6 +294,15 @@ public class StageContext implements Source.Context, Target.Context, Processor.C
   @Override
   public Record createRecord(String recordSourceId, byte[] raw, String rawMime) {
     return new RecordImpl(instanceName, recordSourceId, raw, rawMime);
+  }
+
+  @Override
+  public long getLastBatchTime() {
+    return lastBatchTime;
+  }
+
+  public void setLastBatchTime(long lastBatchTime) {
+    this.lastBatchTime = lastBatchTime;
   }
 
   //Processor.Context

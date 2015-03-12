@@ -5,27 +5,35 @@
  */
 package com.streamsets.pipeline.runner.production;
 
-import com.google.common.base.Preconditions;
 import com.streamsets.pipeline.api.OffsetCommitter;
-import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.impl.Utils;
-import com.streamsets.pipeline.io.DataStore;
-import com.streamsets.pipeline.json.ObjectMapperFactory;
 import com.streamsets.pipeline.main.RuntimeInfo;
 import com.streamsets.pipeline.runner.SourceOffsetTracker;
-import com.streamsets.pipeline.util.PipelineDirectoryUtil;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.IOException;
 
 public class ProductionSourceOffsetCommitterOffsetTracker implements SourceOffsetTracker {
-  private OffsetCommitter offsetCommitter;
+
+  private final OffsetCommitter offsetCommitter;
+  private final File offsetFile;
   private String newOffset = ""; // not null to ensure at least one pass
 
-  public ProductionSourceOffsetCommitterOffsetTracker(OffsetCommitter offsetCommitter) {
+  public ProductionSourceOffsetCommitterOffsetTracker(String name, String revision, RuntimeInfo runtimeInfo,
+                                                      OffsetCommitter offsetCommitter) {
     this.offsetCommitter = offsetCommitter;
+    offsetFile = OffsetFileUtil.getPipelineOffsetFile(runtimeInfo, name, revision);
+    createOffsetFileIfRequired();
+  }
+
+  private void createOffsetFileIfRequired() {
+    if(!offsetFile.exists()) {
+      try {
+        offsetFile.createNewFile();
+      } catch (IOException e) {
+        throw new RuntimeException(Utils.format("Could not create file '{}'", offsetFile.getAbsolutePath()));
+      }
+    }
   }
 
   @Override
@@ -48,10 +56,16 @@ public class ProductionSourceOffsetCommitterOffsetTracker implements SourceOffse
     if (newOffset != null) {
       try {
         offsetCommitter.commit(newOffset);
+        offsetFile.setLastModified(System.currentTimeMillis());
       } catch (Exception ex) {
         throw new RuntimeException(ex);
       }
     }
+  }
+
+  @Override
+  public long getLastBatchTime() {
+    return offsetFile.lastModified();
   }
 
 }

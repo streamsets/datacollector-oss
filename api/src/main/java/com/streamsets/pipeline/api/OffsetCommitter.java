@@ -6,8 +6,8 @@
 package com.streamsets.pipeline.api;
 
 /**
- * If implemented by a source, the data collector will do not keep track locally of offsets, it will relay
- * on the source functionality for such.
+ * If implemented by a source, the data collector will not keep track of the offsets locally. It will rely
+ * on the source functionality for it.
  */
 public interface OffsetCommitter {
 

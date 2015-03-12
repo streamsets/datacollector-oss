@@ -29,11 +29,15 @@ import com.streamsets.pipeline.store.impl.FilePipelineStoreTask;
 import com.streamsets.pipeline.util.Configuration;
 import com.streamsets.pipeline.util.ContainerError;
 import com.streamsets.pipeline.util.TestUtil;
+import org.apache.commons.io.FileUtils;
+import org.junit.AfterClass;
 import org.junit.Assert;
-import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 import org.mockito.Mockito;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -47,9 +51,17 @@ public class TestProductionPipeline {
   private static final String PIPELINE_NAME = "myPipeline";
   private static final String REVISION = "0";
 
-  @Before
-  public void beforeClass() {
+  @BeforeClass
+  public static void beforeClass() throws IOException {
+    System.setProperty(RuntimeInfo.DATA_DIR, "./target/var");
+    File f = new File(System.getProperty(RuntimeInfo.DATA_DIR));
+    FileUtils.deleteDirectory(f);
     TestUtil.captureMockStages();
+  }
+
+  @AfterClass
+  public static void afterClass() throws IOException {
+    System.getProperties().remove(RuntimeInfo.DATA_DIR);
   }
 
   @Test
@@ -174,8 +186,8 @@ public class TestProductionPipeline {
   private ProductionPipeline createProductionPipeline(DeliveryGuarantee deliveryGuarantee,
                                                       boolean captureNextBatch, boolean sourceOffsetCommitter)
       throws PipelineRuntimeException, StageException {
-    RuntimeInfo runtimeInfo = Mockito.mock(RuntimeInfo.class);
-    Mockito.when(runtimeInfo.getId()).thenReturn("id");
+    RuntimeInfo runtimeInfo = new RuntimeInfo(Arrays.asList(getClass().getClassLoader()));
+    runtimeInfo.setId("id");
     SourceOffsetTracker tracker = new TestUtil.SourceOffsetTrackerImpl("1");
     FileSnapshotStore snapshotStore = Mockito.mock(FileSnapshotStore.class);
 
@@ -190,8 +202,8 @@ public class TestProductionPipeline {
         ? MockStages.createPipelineConfigurationSourceOffsetCommitterProcessorTarget()
         : MockStages.createPipelineConfigurationSourceProcessorTarget();
 
-    ProductionPipeline pipeline = new ProductionPipelineBuilder(MockStages.createStageLibrary(), "name", pConf)
-        .build(runner, tracker, null);
+    ProductionPipeline pipeline = new ProductionPipelineBuilder(MockStages.createStageLibrary(), PIPELINE_NAME,
+      REVISION, runtimeInfo, pConf).build(runner, tracker, null);
 
     if(captureNextBatch) {
       runner.captureNextBatch(1);

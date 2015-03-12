@@ -72,6 +72,8 @@ public interface Stage<C extends Stage.Context> {
 
     Record createRecord(String recordSourceId, byte[] raw, String rawMime);
 
+    public long getLastBatchTime();
+
   }
 
   public interface ConfigIssue {

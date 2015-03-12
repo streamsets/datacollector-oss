@@ -11,7 +11,6 @@ import com.streamsets.pipeline.main.RuntimeInfo;
 import com.streamsets.pipeline.restapi.bean.BeanHelper;
 import com.streamsets.pipeline.restapi.bean.SourceOffsetJson;
 import com.streamsets.pipeline.runner.SourceOffsetTracker;
-import com.streamsets.pipeline.util.PipelineDirectoryUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -22,7 +21,6 @@ public class ProductionSourceOffsetTracker implements SourceOffsetTracker {
 
   private static final Logger LOG = LoggerFactory.getLogger(ProductionSourceOffsetTracker.class);
 
-  private static final String OFFSET_FILE = "offset.json";
   private static final String DEFAULT_OFFSET = null;
 
   private String currentOffset;
@@ -65,9 +63,8 @@ public class ProductionSourceOffsetTracker implements SourceOffsetTracker {
     saveOffset(pipelineName, rev, new SourceOffset(currentOffset));
   }
 
-
   public SourceOffset getSourceOffset(String pipelineName, String rev) {
-    File pipelineOffsetFile = getPipelineOffsetFile(pipelineName, rev);
+    File pipelineOffsetFile = OffsetFileUtil.getPipelineOffsetFile(runtimeInfo, pipelineName, rev);
     SourceOffset sourceOffset;
     if(pipelineOffsetFile.exists()) {
       //offset file exists, read from it
@@ -93,7 +90,8 @@ public class ProductionSourceOffsetTracker implements SourceOffsetTracker {
   private void saveOffset(String pipelineName, String rev, SourceOffset s) {
     LOG.debug("Saving offset {} for pipeline {}", s.getOffset(), pipelineName);
     try {
-      ObjectMapperFactory.get().writeValue((new DataStore(getPipelineOffsetFile(pipelineName, rev)).getOutputStream()),
+      ObjectMapperFactory.get().writeValue((new DataStore(OffsetFileUtil.getPipelineOffsetFile(runtimeInfo,
+          pipelineName, rev)).getOutputStream()),
         BeanHelper.wrapSourceOffset(s));
     } catch (IOException e) {
       LOG.error("Failed to save offset value {}. Reason {}", s.getOffset(), e.getMessage(), e);
@@ -101,8 +99,8 @@ public class ProductionSourceOffsetTracker implements SourceOffsetTracker {
     }
   }
 
-  private File getPipelineOffsetFile(String pipelineName, String rev) {
-    return new File(PipelineDirectoryUtil.getPipelineDir(runtimeInfo, pipelineName, rev), OFFSET_FILE);
+  @Override
+  public long getLastBatchTime() {
+    return OffsetFileUtil.getPipelineOffsetFile(runtimeInfo, pipelineName, rev).lastModified();
   }
-
 }

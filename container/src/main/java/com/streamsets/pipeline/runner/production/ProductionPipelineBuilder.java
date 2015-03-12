@@ -8,6 +8,7 @@ package com.streamsets.pipeline.runner.production;
 import com.streamsets.pipeline.api.OffsetCommitter;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.config.PipelineConfiguration;
+import com.streamsets.pipeline.main.RuntimeInfo;
 import com.streamsets.pipeline.runner.Observer;
 import com.streamsets.pipeline.runner.Pipeline;
 import com.streamsets.pipeline.runner.PipelineRuntimeException;
@@ -27,11 +28,16 @@ public class ProductionPipelineBuilder {
 
   private final StageLibraryTask stageLib;
   private final String name;
+  private final String rev;
   private final PipelineConfiguration pipelineConf;
+  private final RuntimeInfo runtimeInfo;
 
-  public ProductionPipelineBuilder(StageLibraryTask stageLib, String name, PipelineConfiguration pipelineConf) {
+  public ProductionPipelineBuilder(StageLibraryTask stageLib, String name, String rev, RuntimeInfo runtimeInfo,
+                                   PipelineConfiguration pipelineConf) {
     this.stageLib = stageLib;
     this.name = name;
+    this.rev = rev;
+    this.runtimeInfo = runtimeInfo;
     this.pipelineConf = pipelineConf;
   }
 
@@ -52,7 +58,8 @@ public class ProductionPipelineBuilder {
     }
 
     if (pipeline.getSource() instanceof OffsetCommitter) {
-      runner.setOffsetTracker(new ProductionSourceOffsetCommitterOffsetTracker((OffsetCommitter) pipeline.getSource()));
+      runner.setOffsetTracker(new ProductionSourceOffsetCommitterOffsetTracker(name, rev, runtimeInfo,
+        (OffsetCommitter) pipeline.getSource()));
     } else {
       runner.setOffsetTracker(offsetTracker);
     }

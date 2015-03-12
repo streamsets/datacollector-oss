@@ -181,8 +181,8 @@ public class TestProdPipelineRunnable {
     ProductionPipelineRunner runner = new ProductionPipelineRunner(runtimeInfo, snapshotStore, deliveryGuarantee,
       PIPELINE_NAME, REVISION, new FilePipelineStoreTask(info, new Configuration()), productionObserveRequests,
       new Configuration());
-    ProductionPipeline pipeline = new ProductionPipelineBuilder(MockStages.createStageLibrary(), "name",
-        MockStages.createPipelineConfigurationSourceProcessorTarget()).build(runner, tracker, null);
+    ProductionPipeline pipeline = new ProductionPipelineBuilder(MockStages.createStageLibrary(), PIPELINE_NAME,
+        REVISION, runtimeInfo, MockStages.createPipelineConfigurationSourceProcessorTarget()).build(runner, tracker, null);
     manager.getStateTracker().register(PIPELINE_NAME, REVISION);
     manager.getStateTracker().setState(PIPELINE_NAME, REVISION, State.STOPPED, null);
 

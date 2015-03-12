@@ -64,7 +64,7 @@ public class TestFailedProdRun {
     pipelineConfiguration.getStages().remove(2);
 
     ProductionPipeline pipeline = new ProductionPipelineBuilder(MockStages.createStageLibrary(),
-        PIPELINE_NAME, pipelineConfiguration).build(runner, tracker, null);
+        PIPELINE_NAME, REVISION, runtimeInfo, pipelineConfiguration).build(runner, tracker, null);
 
   }
 
