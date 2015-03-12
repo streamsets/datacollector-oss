@@ -321,18 +321,6 @@ public class HdfsTarget extends RecordTarget {
     return lateRecordsLimitSecs;
   }
 
-  private Map<String, String> getFieldPathToNameMapping(List<FieldPathToNameMappingConfig> mapping) {
-    Map<String, String> fieldPathToNameMapping = new LinkedHashMap<>();
-    if(mapping != null && !mapping.isEmpty()) {
-      for (FieldPathToNameMappingConfig fieldPathToNameMappingConfig : mapping) {
-        for(String field : fieldPathToNameMappingConfig.fields) {
-          fieldPathToNameMapping.put(field, fieldPathToNameMappingConfig.name);
-        }
-      }
-    }
-    return fieldPathToNameMapping;
-  }
-
   private void validateDataFormat(List<ConfigIssue> issues) {
     switch (dataFormat) {
       case TEXT:
