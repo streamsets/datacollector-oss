@@ -19,7 +19,8 @@ angular.module('dataCollectorApp.codemirrorDirectives')
         }
 
         return function postLink(scope, iElement, iAttrs) {
-          var dictionary = [];
+          var dictionary = {},
+            fieldPaths = [];
 
           // Register our custom Codemirror hint plugin.
           window.CodeMirror.registerHelper('hint', 'dictionaryHint', function(editor, cm, c) {
@@ -53,10 +54,21 @@ angular.module('dataCollectorApp.codemirrorDirectives')
               angular.forEach(dictionary.elFunctionDefinitions, function(elFunctionDefn) {
                 if(!curWord || elFunctionDefn.name.match(regex)) {
                   completions.push({
-                    text: elFunctionDefn.name,
+                    text: elFunctionDefn.name + (elFunctionDefn.elFunctionArgumentDefinition.length ? '(' : '()'),
                     displayText: elFunctionDefn.name,
                     className: 'CodeMirror-EL-completion CodeMirror-EL-completion-fn',
                     data: elFunctionDefn
+                  });
+                }
+              });
+
+              angular.forEach(fieldPaths, function(fieldPath) {
+                if(!curWord || fieldPath.match(regex)) {
+                  completions.push({
+                    text: fieldPath,
+                    displayText: fieldPath,
+                    className: 'CodeMirror-EL-completion CodeMirror-EL-completion-field-path',
+                    data: fieldPath
                   });
                 }
               });
@@ -112,6 +124,16 @@ angular.module('dataCollectorApp.codemirrorDirectives')
               dictionary = $parse(iAttrs.codemirrorEl)(scope);
             });
           }
+
+          if (iAttrs.fieldPaths) {
+            scope.$watch('iAttrs.fieldPaths', function() {
+              fieldPaths = $parse(iAttrs.fieldPaths)(scope);
+            });
+          }
+
+          scope.$on('fieldPathsUpdated', function(event, _fieldPaths) {
+            fieldPaths = _fieldPaths;
+          });
 
           // The ui-codemirror directive allows us to receive a reference to the Codemirror instance on demand.
           scope.$broadcast('CodeMirror', function(cm) {

@@ -61,7 +61,10 @@ angular
 
 
       getCodeMirrorHints: function(configDefinition) {
-        return pipelineService.getELFunctionAndConstantLists(configDefinition);
+        return {
+          elFunctionDefinitions: configDefinition.elFunctionDefinitions,
+          elConstantDefinitions: configDefinition.elConstantDefinitions
+        };
       },
 
       /**
@@ -149,6 +152,7 @@ angular
        * On focus callback for field selector configuration.
        */
       onFieldSelectorFocus: function(stageInstance) {
+        console.log('onFieldSelectorFocus');
         if(!$scope.fieldPaths || $scope.fieldPaths.length === 0 ) {
           updateFieldDataForStage(stageInstance);
         }
@@ -469,6 +473,7 @@ angular
               var fieldPaths = [];
               getFieldPaths(inputRecords[0].value, fieldPaths);
               $scope.fieldPaths = fieldPaths;
+              $scope.$broadcast('fieldPathsUpdated', fieldPaths);
             }
           },
           function(res) {

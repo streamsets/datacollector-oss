@@ -77,7 +77,8 @@
       <ng-include src="'fieldSelectorSingleValuedConfigurationTemplate'"></ng-include>
     </div>
 
-    <div ng-switch-when="LANE_PREDICATE_MAPPING">
+    <div ng-switch-when="LANE_PREDICATE_MAPPING"
+         ng-click="onFieldSelectorFocus(detailPaneConfig)">
       <ng-include src="'labelConfigurationTemplate'"></ng-include>
       <ng-include src="'lanePredicateMappingConfigurationTemplate'"></ng-include>
     </div>
