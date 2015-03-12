@@ -64,7 +64,8 @@ public class FullPipeBatch implements PipeBatch {
   @Override
   public BatchImpl getBatch(final Pipe pipe) {
     List<Record> records = new ArrayList<>();
-    for (String inputLane : pipe.getInputLanes()) {
+    List<String> inputLanes = pipe.getInputLanes();
+    for (String inputLane : inputLanes) {
       records.addAll(fullPayload.remove(inputLane));
     }
     if (pipe.getStage().getDefinition().getType() == StageType.TARGET) {

@@ -83,7 +83,7 @@ public class TestStagePipe {
     Mockito.when(pipeBatch.getErrorSink()).thenReturn(new ErrorSink());
 
     Mockito.when(pipeBatch.startStage(Mockito.eq(pipe))).thenReturn(batchMaker);
-    pipe.init();
+    pipe.init(new PipeContext());
     pipe.process(pipeBatch);
     pipe.destroy();
     Mockito.verify(pipeBatch, Mockito.times(1)).startStage(Mockito.eq(pipe));
@@ -146,7 +146,7 @@ public class TestStagePipe {
     Mockito.when(pipeBatch.getBatch(Mockito.eq(pipe))).thenReturn(batch);
     Mockito.when(pipeBatch.getErrorSink()).thenReturn(new ErrorSink());
 
-    pipe.init();
+    pipe.init(new PipeContext());
     pipe.process(pipeBatch);
     pipe.destroy();
 
@@ -209,7 +209,7 @@ public class TestStagePipe {
     Mockito.when(pipeBatch.getBatch(Mockito.eq(pipe))).thenReturn(batch);
     Mockito.when(pipeBatch.getErrorSink()).thenReturn(new ErrorSink());
 
-    pipe.init();
+    pipe.init(new PipeContext());
     pipe.process(pipeBatch);
     pipe.destroy();
 

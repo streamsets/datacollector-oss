@@ -12,7 +12,7 @@ import com.streamsets.pipeline.validation.StageIssue;
 
 import java.util.List;
 
-public abstract class Pipe {
+public abstract class Pipe<C extends Pipe.Context> {
   private final StageRuntime stage;
   private final List<String> inputLanes;
   private final List<String> outputLanes;
@@ -37,11 +37,15 @@ public abstract class Pipe {
 
   public abstract List<StageIssue> validateConfigs() throws StageException;
 
-  public abstract void init() throws StageException;
+  public abstract void init(C context) throws StageException;
 
   public abstract void process(PipeBatch pipeBatch) throws StageException, PipelineRuntimeException;
 
   public abstract void destroy();
+
+  public interface Context {
+
+  }
 
   @Override
   public String toString() {

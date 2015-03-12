@@ -11,7 +11,7 @@ import com.streamsets.pipeline.validation.StageIssue;
 import java.util.Collections;
 import java.util.List;
 
-public class CombinerPipe extends Pipe {
+public class CombinerPipe extends Pipe<Pipe.Context> {
 
   public CombinerPipe(StageRuntime stage, List<String> inputLanes, List<String> outputLanes) {
     super(stage, inputLanes, outputLanes);
@@ -23,7 +23,7 @@ public class CombinerPipe extends Pipe {
   }
 
   @Override
-  public void init() throws StageException {
+  public void init(Context context) throws StageException {
   }
 
   @Override

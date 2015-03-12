@@ -58,10 +58,11 @@ public class Pipeline {
 
   @SuppressWarnings("unchecked")
   public void init() throws StageException {
+    PipeContext pipeContext = new PipeContext();
     int idx = 0;
     try {
       for (; idx < pipes.length; idx++) {
-        pipes[idx].init();
+        pipes[idx].init(pipeContext);
       }
       badRecordsHandler.init();
     } catch (StageException|RuntimeException ex) {

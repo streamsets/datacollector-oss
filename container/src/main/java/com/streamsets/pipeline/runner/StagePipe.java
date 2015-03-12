@@ -22,14 +22,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
-public class StagePipe extends Pipe {
+public class StagePipe extends Pipe<StagePipe.Context> {
 
-  //static variables needed to update the runtime stat gauge
+  //Runtime stat gauge name
   private static final String RUNTIME_STATS_GAUGE = "RuntimeStatsGauge";
-  private static final RuntimeStats RUNTIME_STATS = new RuntimeStats();
-  private static int BATCH_COUNTER = 0;
-  private static long BATCH_AGE = 0;
-  private static long TIME_OF_LAST_RECORD = 0;
 
   private Timer processingTimer;
   private Counter inputRecordsCounter;
@@ -46,6 +42,7 @@ public class StagePipe extends Pipe {
   private Histogram stageErrorsHistogram;
   private Map<String, Counter> outputRecordsPerLaneCounter;
   private Map<String, Meter> outputRecordsPerLaneMeter;
+  private StagePipe.Context context;
 
   public StagePipe(StageRuntime stage, List<String> inputLanes, List<String> outputLanes) {
     super(stage, inputLanes, outputLanes);
@@ -57,7 +54,7 @@ public class StagePipe extends Pipe {
   }
 
   @Override
-  public void init() throws StageException {
+  public void init(StagePipe.Context context) throws StageException {
     getStage().init();
     MetricRegistry metrics = getStage().getContext().getMetrics();
     String metricsKey = "stage." + getStage().getConfiguration().getInstanceName();
@@ -84,6 +81,7 @@ public class StagePipe extends Pipe {
           metrics, metricsKey + ":" + lane + ".outputRecords"));
       }
     }
+    this.context = context;
     createRuntimeStatsGauge(metrics);
   }
 
@@ -166,7 +164,7 @@ public class StagePipe extends Pipe {
       runtimeStatsGauge = new Gauge<Object>() {
         @Override
         public Object getValue() {
-          return RUNTIME_STATS;
+          return context.getRuntimeStats();
         }
       };
       MetricsConfigurator.createGauge(metricRegistry, RUNTIME_STATS_GAUGE, runtimeStatsGauge);
@@ -180,13 +178,14 @@ public class StagePipe extends Pipe {
     //1. set name of current stage
     //2. update current batch age, [if source then update the batch age]
     //3. update time in current stage [near zero]
-    RUNTIME_STATS.setCurrentStage(getStage().getInfo().getInstanceName());
+    context.getRuntimeStats().setCurrentStage(getStage().getInfo().getInstanceName());
     //update batch ige if the stage is Source
     if (isSource()) {
-      BATCH_AGE = System.currentTimeMillis();
+      context.getRuntimeStats().setBatchStartTime(System.currentTimeMillis());
     }
-    RUNTIME_STATS.setCurrentBatchAge(System.currentTimeMillis() - BATCH_AGE);
-    RUNTIME_STATS.setTimeInCurrentStage(System.currentTimeMillis() - startTimeInStage);
+    context.getRuntimeStats().setCurrentBatchAge(
+      System.currentTimeMillis() - context.getRuntimeStats().getBatchStartTime());
+    context.getRuntimeStats().setTimeInCurrentStage(System.currentTimeMillis() - startTimeInStage);
   }
 
   private void updateStatsAtEnd(long startTimeInStage, String offset, int outputRecordsCount) {
@@ -197,16 +196,16 @@ public class StagePipe extends Pipe {
     //2. update current batch age
     //3. update time in current stage
     if (isSource()) {
-      BATCH_COUNTER++;
-      RUNTIME_STATS.setCurrentSourceOffset(offset);
+      context.getRuntimeStats().setBatchCount(context.getRuntimeStats().getBatchCount() + 1);
+        context.getRuntimeStats().setCurrentSourceOffset(offset);
       if (outputRecordsCount > 0) {
-        TIME_OF_LAST_RECORD = System.currentTimeMillis();
+        context.getRuntimeStats().setTimeOfLastReceivedRecord(System.currentTimeMillis());
       }
     }
-    RUNTIME_STATS.setBatchCount(BATCH_COUNTER);
-    RUNTIME_STATS.setCurrentBatchAge(System.currentTimeMillis() - BATCH_AGE);
-    RUNTIME_STATS.setTimeInCurrentStage(System.currentTimeMillis() - startTimeInStage);
-    RUNTIME_STATS.setTimeOfLastReceivedRecord(TIME_OF_LAST_RECORD);
+    context.getRuntimeStats().setCurrentBatchAge(
+      System.currentTimeMillis() - context.getRuntimeStats().getBatchStartTime());
+    context.getRuntimeStats().setTimeInCurrentStage(System.currentTimeMillis() - startTimeInStage);
+
   }
 
   private boolean isSource() {
@@ -223,4 +222,9 @@ public class StagePipe extends Pipe {
     return false;
   }
 
+  public interface Context extends Pipe.Context {
+
+    public RuntimeStats getRuntimeStats();
+
+  }
 }

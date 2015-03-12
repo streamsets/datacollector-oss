@@ -12,7 +12,7 @@ import com.streamsets.pipeline.validation.StageIssue;
 import java.util.Collections;
 import java.util.List;
 
-public class MultiplexerPipe extends Pipe {
+public class MultiplexerPipe extends Pipe<Pipe.Context> {
 
   public MultiplexerPipe(StageRuntime stage, List<String> inputLanes, List<String> outputLanes) {
     super(stage, inputLanes, outputLanes);
@@ -24,7 +24,7 @@ public class MultiplexerPipe extends Pipe {
   }
 
   @Override
-  public void init() throws StageException {
+  public void init(Context context) throws StageException {
   }
 
   @Override
@@ -44,5 +44,4 @@ public class MultiplexerPipe extends Pipe {
       }
     }
   }
-
 }

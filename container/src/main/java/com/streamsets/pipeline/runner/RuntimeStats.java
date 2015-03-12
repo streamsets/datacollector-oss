@@ -13,6 +13,7 @@ public class RuntimeStats {
   private String currentStage;
   private long timeInCurrentStage;
   private long timeOfLastReceivedRecord;
+  private long batchStartTime;
 
   public RuntimeStats() {
   }
@@ -63,5 +64,13 @@ public class RuntimeStats {
 
   public void setTimeOfLastReceivedRecord(long timeOfLastReceivedRecord) {
     this.timeOfLastReceivedRecord = timeOfLastReceivedRecord;
+  }
+
+  public long getBatchStartTime() {
+    return batchStartTime;
+  }
+
+  public void setBatchStartTime(long batchStartTime) {
+    this.batchStartTime = batchStartTime;
   }
 }

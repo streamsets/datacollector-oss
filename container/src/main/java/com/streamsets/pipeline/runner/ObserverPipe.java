@@ -11,7 +11,7 @@ import com.streamsets.pipeline.validation.StageIssue;
 import java.util.Collections;
 import java.util.List;
 
-public class ObserverPipe extends Pipe {
+public class ObserverPipe extends Pipe<Pipe.Context> {
   private final Observer observer;
 
   public ObserverPipe(StageRuntime stage, List<String> inputLanes, List<String> outputLanes, Observer observer) {
@@ -25,7 +25,7 @@ public class ObserverPipe extends Pipe {
   }
 
   @Override
-  public void init() throws StageException {
+  public void init(Context context) throws StageException {
   }
 
   @Override
