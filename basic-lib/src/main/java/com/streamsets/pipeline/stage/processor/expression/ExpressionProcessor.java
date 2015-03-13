@@ -14,6 +14,7 @@ import com.streamsets.pipeline.api.base.SingleLaneRecordProcessor;
 import com.streamsets.pipeline.api.el.ELEval;
 import com.streamsets.pipeline.api.el.ELEvalException;
 import com.streamsets.pipeline.api.el.ELVars;
+import com.streamsets.pipeline.lib.el.ExprProcEL;
 import com.streamsets.pipeline.lib.el.RecordEL;
 import com.streamsets.pipeline.lib.el.StringEL;
 import com.streamsets.pipeline.lib.el.ELUtils;
@@ -41,12 +42,12 @@ public class ExpressionProcessor extends SingleLaneRecordProcessor {
   protected List<ConfigIssue> validateConfigs() throws StageException {
     List<ConfigIssue> issues =  super.validateConfigs();
     variables = ELUtils.parseConstants(constants, getContext(), Groups.EXPRESSIONS.name(), "constants",
-                                       Errors.EXPR_01, issues);
+      Errors.EXPR_01, issues);
     expressionEval = createExpressionEval(getContext());
     for(ExpressionProcessorConfig expressionProcessorConfig : expressionProcessorConfigs) {
       ELUtils.validateExpression(expressionEval, variables, expressionProcessorConfig.expression, getContext(),
-                                 Groups.EXPRESSIONS.name(), "expressionProcessorConfigs", Errors.EXPR_00,
-                                 Object.class, issues);
+        Groups.EXPRESSIONS.name(), "expressionProcessorConfigs", Errors.EXPR_00,
+        Object.class, issues);
     }
     return issues;
   }
@@ -57,7 +58,7 @@ public class ExpressionProcessor extends SingleLaneRecordProcessor {
   }
 
   private ELEval createExpressionEval(ELContext elContext) {
-    return elContext.createELEval("expression", RecordEL.class, StringEL.class);
+    return elContext.createELEval("expression", RecordEL.class, StringEL.class, ExprProcEL.class);
   }
 
   @Override

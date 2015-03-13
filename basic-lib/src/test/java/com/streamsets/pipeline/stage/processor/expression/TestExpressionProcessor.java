@@ -278,4 +278,55 @@ public class TestExpressionProcessor {
     }
   }
 
+  @Test
+  public void testEmptyMapAndEmptyList() throws StageException {
+    ExpressionProcessorConfig expressionProcessorConfig1 = new ExpressionProcessorConfig();
+    expressionProcessorConfig1.expression = "${emptyMap()}";
+    expressionProcessorConfig1.fieldToSet = "/d";
+
+    ExpressionProcessorConfig expressionProcessorConfig2 = new ExpressionProcessorConfig();
+    expressionProcessorConfig2.expression = "${emptyList()}";
+    expressionProcessorConfig2.fieldToSet = "/d/e";
+
+    ExpressionProcessorConfig expressionProcessorConfig3 = new ExpressionProcessorConfig();
+    expressionProcessorConfig3.expression = "${emptyMap()}";
+    expressionProcessorConfig3.fieldToSet = "/d/e[0]";
+
+    ExpressionProcessorConfig expressionProcessorConfig4 = new ExpressionProcessorConfig();
+    expressionProcessorConfig4.expression = "${record:value('/a')}";
+    expressionProcessorConfig4.fieldToSet = "/d/e[0]/f";
+
+    ProcessorRunner runner = new ProcessorRunner.Builder(ExpressionDProcessor.class)
+      .addConfiguration("constants", null)
+      .addConfiguration("expressionProcessorConfigs", ImmutableList.of(
+        expressionProcessorConfig1, expressionProcessorConfig2, expressionProcessorConfig3, expressionProcessorConfig4))
+      .addOutputLane("lane").build();
+    runner.runInit();
+
+    try {
+      Map<String, Field> map = new LinkedHashMap<>();
+      map.put("a", Field.create("A"));
+      map.put("b", Field.create("B"));
+      map.put("c", Field.create("C"));
+      Record record = RecordCreator.create("s", "s:1");
+      record.set(Field.create(map));
+
+      StageRunner.Output output = runner.runProcess(ImmutableList.of(record));
+      Assert.assertEquals(1, output.getRecords().get("lane").size());
+      Field fieldD = output.getRecords().get("lane").get(0).get("/d");
+
+      Assert.assertTrue(fieldD.getValue() instanceof Map);
+      Map<String, Field> result = fieldD.getValueAsMap();
+      Field fieldE = result.get("e");
+      Assert.assertTrue(fieldE.getValue() instanceof List);
+      List<Field> listField = fieldE.getValueAsList();
+      Assert.assertTrue(listField.get(0).getValue() instanceof Map);
+      Map<String, Field> fieldMap = listField.get(0).getValueAsMap();
+      Assert.assertTrue(fieldMap.get("f").getValue() instanceof String);
+      Assert.assertEquals(fieldMap.get("f").getValueAsString(), "A");
+    } finally {
+      runner.runDestroy();
+    }
+  }
+
 }
