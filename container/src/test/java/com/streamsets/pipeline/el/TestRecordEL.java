@@ -60,12 +60,12 @@ public class TestRecordEL {
 
     RecordEL.setRecordInContext(variables, record);
 
-    Assert.assertEquals("stage", eval.eval(variables, "${error:stage()}", String.class));
-    Assert.assertEquals("code", eval.eval(variables, "${error:code()}", String.class));
-    Assert.assertEquals("message", eval.eval(variables, "${error:message()}", String.class));
-    Assert.assertEquals("collector", eval.eval(variables, "${error:collectorId()}", String.class));
-    Assert.assertEquals("pipeline", eval.eval(variables, "${error:pipeline()}", String.class));
-    Assert.assertEquals(10l, (long)eval.eval(variables, "${error:time()}", Long.class));
+    Assert.assertEquals("stage", eval.eval(variables, "${record:errorStage()}", String.class));
+    Assert.assertEquals("code", eval.eval(variables, "${record:errorCode()}", String.class));
+    Assert.assertEquals("message", eval.eval(variables, "${record:errorMessage()}", String.class));
+    Assert.assertEquals("collector", eval.eval(variables, "${record:errorCollectorId()}", String.class));
+    Assert.assertEquals("pipeline", eval.eval(variables, "${record:errorPipeline()}", String.class));
+    Assert.assertEquals(10l, (long)eval.eval(variables, "${record:errorTime()}", Long.class));
   }
 
 }

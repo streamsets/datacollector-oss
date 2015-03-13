@@ -16,17 +16,22 @@ import com.streamsets.pipeline.api.impl.Utils;
 
 public class RecordEL {
 
+  private static final String RECORD_EL_PREFIX = "record";
+
   private static final String RECORD_CONTEXT_VAR = "record";
-  private static final String ERROR_CONTEXT_VAR = "error";
+
+  public static Record getRecordInContext() {
+    return (Record) ELEval.getVariablesInScope().getContextVariable(RECORD_CONTEXT_VAR);
+  }
 
   @ElFunction(
-    prefix = RECORD_CONTEXT_VAR,
+    prefix = RECORD_EL_PREFIX,
     name = "type",
     description = "Returns the type of the field represented by path 'fieldPath' for the record in context")
   public static Field.Type getType(
     @ElParam("fieldPath") String fieldPath) {
     Field.Type type = null;
-    Record record = (Record) ELEval.getVariablesInScope().getContextVariable(RECORD_CONTEXT_VAR);
+    Record record = getRecordInContext();
     if (record != null) {
       Field field = record.get(fieldPath);
       if (field != null) {
@@ -37,13 +42,13 @@ public class RecordEL {
   }
 
   @ElFunction(
-    prefix = RECORD_CONTEXT_VAR,
+    prefix = RECORD_EL_PREFIX,
     name = "value",
     description = "Returns the value of the field represented by path 'fieldPath' for the record in context")
   public static Object getValue(
     @ElParam("fieldPath") String fieldPath) {
     Object value = null;
-    Record record = (Record) ELEval.getVariablesInScope().getContextVariable(RECORD_CONTEXT_VAR);
+    Record record = getRecordInContext();
     if (record != null) {
       Field field = record.get(fieldPath);
       if (field != null) {
@@ -54,12 +59,12 @@ public class RecordEL {
   }
 
   @ElFunction(
-    prefix = RECORD_CONTEXT_VAR,
+    prefix = RECORD_EL_PREFIX,
     name = "exists",
     description = "Checks if the field represented by path 'fieldPath' exists in the record")
   public static boolean exists(
     @ElParam("fieldPath") String fieldPath) {
-    Record record = (Record) ELEval.getVariablesInScope().getContextVariable(RECORD_CONTEXT_VAR);
+    Record record = getRecordInContext();
     if (record != null) {
       return record.has(fieldPath);
     }
@@ -73,7 +78,7 @@ public class RecordEL {
 
   private static <T> T getFromHeader(HeaderProperty prop) {
     Object value = null;
-    Record record = (Record) ELEval.getVariablesInScope().getContextVariable(RECORD_CONTEXT_VAR);
+    Record record = getRecordInContext();
     if (record != null) {
       switch (prop) {
         case ID:
@@ -109,7 +114,7 @@ public class RecordEL {
   }
 
   @ElFunction(
-    prefix = RECORD_CONTEXT_VAR,
+    prefix = RECORD_EL_PREFIX,
     name = "id",
     description = "Returns the id of the record in context")
   public static String getId() {
@@ -117,7 +122,7 @@ public class RecordEL {
   }
 
   @ElFunction(
-    prefix = RECORD_CONTEXT_VAR,
+    prefix = RECORD_EL_PREFIX,
     name = "creator",
     description = "Returns the id of the record in context")
   public static String getStageCreator() {
@@ -125,7 +130,7 @@ public class RecordEL {
   }
 
   @ElFunction(
-    prefix = RECORD_CONTEXT_VAR,
+    prefix = RECORD_EL_PREFIX,
     name = "path",
     description = "Returns the stage path for the record in context")
   public static String getStagesPath() {
@@ -133,48 +138,48 @@ public class RecordEL {
   }
 
   @ElFunction(
-    prefix = ERROR_CONTEXT_VAR,
-    name = "stage",
+    prefix = RECORD_EL_PREFIX,
+    name = "errorStage",
     description = "Returns the error stage for the record in context")
   public static String getErrorStage() {
     return getFromHeader(HeaderProperty.ERROR_STAGE);
   }
 
   @ElFunction(
-    prefix = ERROR_CONTEXT_VAR,
-    name = "code",
+    prefix = RECORD_EL_PREFIX,
+    name = "errorCode",
     description = "Returns the error code for the record in context")
   public static String getErrorCode() {
     return getFromHeader(HeaderProperty.ERROR_CODE);
   }
 
   @ElFunction(
-    prefix = ERROR_CONTEXT_VAR,
-    name = "message",
+    prefix = RECORD_EL_PREFIX,
+    name = "errorMessage",
     description = "Returns the error message for the record in context")
   public static String getErrorMessage() {
     return getFromHeader(HeaderProperty.ERROR_MESSAGE);
   }
 
   @ElFunction(
-    prefix = ERROR_CONTEXT_VAR,
-    name = "collectorId",
+    prefix = RECORD_EL_PREFIX,
+    name = "errorCollectorId",
     description = "Returns the error data collector id for the record in context")
   public static String getErrorDataCollectorId() {
     return getFromHeader(HeaderProperty.ERROR_DATA_COLLECTOR_ID);
   }
 
   @ElFunction(
-    prefix = ERROR_CONTEXT_VAR,
-    name = "pipeline",
+    prefix = RECORD_EL_PREFIX,
+    name = "errorPipeline",
     description = "Returns the error pipeline name for the record in context")
   public static String getErrorPipelineName() {
     return getFromHeader(HeaderProperty.ERROR_PIPELINE_NAME);
   }
 
   @ElFunction(
-    prefix = ERROR_CONTEXT_VAR,
-    name = "time",
+    prefix = RECORD_EL_PREFIX,
+    name = "errorTime",
     description = "Returns the error time for the record in context")
   public static long getErrorTime() {
     return getFromHeader(HeaderProperty.ERROR_TIME);
