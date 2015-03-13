@@ -199,13 +199,15 @@ public class SpoolDirSource extends BaseSource {
   }
 
   private void validateInitialFileToProcess(List<ConfigIssue> issues) {
-    try {
-      PathMatcher pathMatcher = DirectorySpooler.createPathMatcher(filePattern);
-      if (!pathMatcher.matches(new File(initialFileToProcess).toPath())) {
-        issues.add(getContext().createConfigIssue(Groups.FILES.name(), "initialFileToProcess", Errors.SPOOLDIR_18,
-                                                  initialFileToProcess, filePattern));
+    if (initialFileToProcess != null && !initialFileToProcess.isEmpty()) {
+      try {
+        PathMatcher pathMatcher = DirectorySpooler.createPathMatcher(filePattern);
+        if (!pathMatcher.matches(new File(initialFileToProcess).toPath())) {
+          issues.add(getContext().createConfigIssue(Groups.FILES.name(), "initialFileToProcess", Errors.SPOOLDIR_18,
+                                                    initialFileToProcess, filePattern));
+        }
+      } catch (Exception ex) {
       }
-    } catch (Exception ex) {
     }
   }
 
