@@ -201,34 +201,33 @@ angular.module('dataCollectorApp.codemirrorDirectives')
             var state = cm.getTokenAt(cm.getCursor()).state;
             var inner = CodeMirror.innerMode(cm.getMode(), state);
 
-            //if (inner.mode.name != "javascript") return;
-            var lex = inner.state.lexical;
-
-            if (lex.info != "call") {
-              return;
-            }
-
             var ch,
-              argPos = lex.pos || 0,
+              argPos = 0,
               tabSize = cm.getOption("tabSize"),
               pos,
+              cursorPos = cm.getCursor().ch,
               functionName;
 
             for (var line = cm.getCursor().line, e = Math.max(0, line - 9), found = false; line >= e; --line) {
-              var str = cm.getLine(line), extra = 0;
+              var str = cm.getLine(line), closedBracketCount = 0;
 
-              for (pos = 0; ;) {
-                var tab = str.indexOf("\t", pos);
-                if (tab == -1) {
-                  break;
+
+              for(pos = cursorPos - 1; pos >= 0; pos--) {
+                if(str.charAt(pos) === '('){
+                  if(closedBracketCount === 0) {
+                    ch = pos;
+                    break;
+                  } else {
+                    closedBracketCount--;
+                  }
                 }
-                extra += tabSize - (tab + extra) % tabSize - 1;
-                pos = tab + 1;
+
+                if(str.charAt(pos) === ')'){
+                  closedBracketCount++;
+                }
               }
 
-              ch = lex.column - extra;
-
-              if (str.charAt(ch) == "(") {
+              if (ch >= 0) {
                 found = true;
 
                 //Get Method Name
@@ -257,6 +256,11 @@ angular.module('dataCollectorApp.codemirrorDirectives')
             var functionDefintion = _.find(dictionary.elFunctionDefinitions, function(elFunctionDefn) {
               return elFunctionDefn.name === functionName;
             });
+
+            if (!functionDefintion) {
+              console.log('No function definition found for name:' + functionDefintion);
+              return;
+            }
 
             cachedArgHints = {
               start: pos,
