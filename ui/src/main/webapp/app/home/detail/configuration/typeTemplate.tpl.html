@@ -227,7 +227,7 @@
   <div class="controls col-lg-7 col-md-8">
     <ui-select multiple
                tagging="tagTransform"
-               tagging-label="false"
+               tagging-label=""
                reset-search-input="true"
                ng-disabled="isPipelineRunning"
                tagging-tokens=",|ENTER"
@@ -236,7 +236,7 @@
         {{$item}}
       </ui-select-match>
       <ui-select-choices repeat="fieldPath in fieldPaths.concat(detailPaneConfig.configuration[configIndex].value) | filter:$select.search">
-        {{fieldPath}}
+        <div ng-bind-html="fieldPath | highlight: $select.search"></div>
       </ui-select-choices>
     </ui-select>
 
