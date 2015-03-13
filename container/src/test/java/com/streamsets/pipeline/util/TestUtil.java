@@ -51,6 +51,7 @@ public class TestUtil {
     private String currentOffset;
     private String newOffset;
     private boolean finished;
+    private long lastBatchTime;
 
     public SourceOffsetTrackerImpl(String currentOffset) {
       this.currentOffset = currentOffset;
@@ -77,11 +78,12 @@ public class TestUtil {
       currentOffset = newOffset;
       finished = (currentOffset == null);
       newOffset = null;
+      lastBatchTime = System.currentTimeMillis();
     }
 
     @Override
     public long getLastBatchTime() {
-      return 0;
+      return lastBatchTime;
     }
   }
 

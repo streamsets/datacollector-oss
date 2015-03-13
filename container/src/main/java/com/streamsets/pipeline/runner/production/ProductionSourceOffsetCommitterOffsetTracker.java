@@ -53,13 +53,11 @@ public class ProductionSourceOffsetCommitterOffsetTracker implements SourceOffse
 
   @Override
   public void commitOffset() {
-    if (newOffset != null) {
-      try {
-        offsetCommitter.commit(newOffset);
-        offsetFile.setLastModified(System.currentTimeMillis());
-      } catch (Exception ex) {
-        throw new RuntimeException(ex);
-      }
+    try {
+      offsetCommitter.commit(newOffset);
+      offsetFile.setLastModified(System.currentTimeMillis());
+    } catch (Exception ex) {
+      throw new RuntimeException(ex);
     }
   }
 

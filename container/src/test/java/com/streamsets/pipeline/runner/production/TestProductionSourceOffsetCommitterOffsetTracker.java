@@ -5,6 +5,8 @@
  */
 package com.streamsets.pipeline.runner.production;
 
+import com.streamsets.pipeline.api.OffsetCommitter;
+import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.main.RuntimeInfo;
 import org.apache.commons.io.FileUtils;
 import org.junit.AfterClass;
@@ -16,8 +18,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
 
-public class TestProdSourceOffsetTracker {
-
+public class TestProductionSourceOffsetCommitterOffsetTracker {
   private static final String PIPELINE_NAME = "myPipeline";
   private static final String PIPELINE_REV = "2.0";
 
@@ -34,13 +35,19 @@ public class TestProdSourceOffsetTracker {
   }
 
   @Test
-  public void testProductionSourceOffsetTracker() {
+  public void testProductionSourceOffsetCommitterOffsetTracker() {
 
     RuntimeInfo info = new RuntimeInfo(Arrays.asList(getClass().getClassLoader()));
-    ProductionSourceOffsetTracker offsetTracker = new ProductionSourceOffsetTracker(PIPELINE_NAME, PIPELINE_REV, info);
+    ProductionSourceOffsetCommitterOffsetTracker offsetTracker = new ProductionSourceOffsetCommitterOffsetTracker(
+      PIPELINE_NAME, PIPELINE_REV, info, new OffsetCommitter() {
+      @Override
+      public void commit(String offset) throws StageException {
+        //no-op
+      }
+    });
 
     Assert.assertEquals(false, offsetTracker.isFinished());
-    Assert.assertEquals(null, offsetTracker.getOffset());
+    Assert.assertEquals("", offsetTracker.getOffset());
 
     offsetTracker.setOffset("abc");
     offsetTracker.commitOffset();
@@ -49,6 +56,4 @@ public class TestProdSourceOffsetTracker {
     Assert.assertEquals(OffsetFileUtil.getPipelineOffsetFile(info, PIPELINE_NAME, PIPELINE_REV).lastModified(),
       offsetTracker.getLastBatchTime());
   }
-
-
 }

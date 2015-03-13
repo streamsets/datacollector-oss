@@ -65,4 +65,8 @@ public class ProductionPipeline {
     return pipelineRunner.getErrorMessages(instanceName, size);
   }
 
+  public long getLastBatchTime() {
+    return pipelineRunner.getOffSetTracker().getLastBatchTime();
+  }
+
 }

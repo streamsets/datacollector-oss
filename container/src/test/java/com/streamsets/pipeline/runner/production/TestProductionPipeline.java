@@ -40,7 +40,6 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.ArrayBlockingQueue;
@@ -120,9 +119,10 @@ public class TestProductionPipeline {
     Assert.assertTrue(pipeline.getPipeline().getRunner().getBatchesOutput().isEmpty());
   }
 
-  private static class SourceOffsetCommitterCapture implements Source, OffsetCommitter {
+  private static class SourceOffsetCommitterCapture extends BaseSource implements OffsetCommitter {
     public int count;
     public String offset;
+    public long lastBatchTime;
 
     @Override
     public void commit(String offset) throws StageException {
@@ -131,37 +131,59 @@ public class TestProductionPipeline {
 
     @Override
     public String produce(String lastSourceOffset, int maxBatchSize, BatchMaker batchMaker) throws StageException {
+      lastBatchTime = getContext().getLastBatchTime();
       return (count++ == 0) ? "x" : null;
     }
 
-    @Override
-    public List<ConfigIssue> validateConfigs(Info info, Context context) {
-      return Collections.emptyList();
-    }
+  }
+
+  private static class SourceOffsetTrackerCapture extends BaseSource {
+    public int count;
+    public String offset;
+    public long lastBatchTime;
 
     @Override
-    public List<ELEval> getELEvals(ELContext elContext) {
-      return new ArrayList<>();
+    public String produce(String lastSourceOffset, int maxBatchSize, BatchMaker batchMaker) throws StageException {
+      lastBatchTime = getContext().getLastBatchTime();
+      return (count++ == 0) ? "x" : null;
     }
 
-    @Override
-    public void init(Info info, Context context) throws StageException {
-
-    }
-
-    @Override
-    public void destroy() {
-
-    }
   }
 
   @Test
   public void testProductionRunWithSourceOffsetCommitter() throws Exception {
     SourceOffsetCommitterCapture capture = new SourceOffsetCommitterCapture();
     MockStages.setSourceCapture(capture);
-    ProductionPipeline pipeline = createProductionPipeline(DeliveryGuarantee.AT_MOST_ONCE, true, true);
+    ProductionPipeline pipeline = createProductionPipeline(DeliveryGuarantee.AT_MOST_ONCE, true,
+      true/*source is committer*/);
+    long startTime = System.currentTimeMillis();
+    //Need sleep because the file system could truncate the time to the last second.
+    Thread.sleep(1000);
     pipeline.run();
-    Assert.assertEquals("x", capture.offset);
+    //Need sleep because the file system could truncate the time to the last second.
+    Thread.sleep(1000);
+    long endTime = System.currentTimeMillis();
+    Assert.assertEquals(null, capture.offset);
+    Assert.assertTrue(capture.lastBatchTime > startTime);
+    Assert.assertTrue(capture.lastBatchTime < endTime);
+  }
+
+  @Test
+  public void testProductionRunWithSourceOffsetTracker() throws Exception {
+    SourceOffsetTrackerCapture capture = new SourceOffsetTrackerCapture();
+    MockStages.setSourceCapture(capture);
+    ProductionPipeline pipeline = createProductionPipeline(DeliveryGuarantee.AT_MOST_ONCE, true,
+      false/*source not committer*/);
+    long startTime = System.currentTimeMillis();
+    //Need sleep because the file system could truncate the time to the last second.
+    Thread.sleep(1000);
+    pipeline.run();
+    //Need sleep because the file system could truncate the time to the last second.
+    Thread.sleep(1000);
+    long endTime = System.currentTimeMillis();
+    Assert.assertEquals(null, capture.offset);
+    Assert.assertTrue(capture.lastBatchTime > startTime);
+    Assert.assertTrue(capture.lastBatchTime < endTime);
   }
 
   public static class PreviewCheckSource extends BaseSource {
@@ -194,7 +216,8 @@ public class TestProductionPipeline {
     Mockito.when(snapshotStore.getSnapshotStatus(PIPELINE_NAME, REVISION)).thenReturn(new SnapshotStatus(false, false));
     BlockingQueue<Object> productionObserveRequests = new ArrayBlockingQueue<>(100, true /*FIFO*/);
     Configuration config = new Configuration();
-    ProductionPipelineRunner runner = new ProductionPipelineRunner(runtimeInfo, snapshotStore,  deliveryGuarantee, PIPELINE_NAME, REVISION,
+    ProductionPipelineRunner runner = new ProductionPipelineRunner(runtimeInfo, snapshotStore,  deliveryGuarantee,
+      PIPELINE_NAME, REVISION,
       new FilePipelineStoreTask(new RuntimeInfo(Arrays.asList(getClass().getClassLoader())), config) {
       }, productionObserveRequests, config);
 
@@ -314,13 +337,18 @@ public class TestProductionPipeline {
     ProductionPipeline pipeline = createProductionPipeline(DeliveryGuarantee.AT_MOST_ONCE, true, true);
     pipeline.run();
     Assert.assertEquals(4, errorStage.records.size());
-    assertErrorRecord(errorStage.records.get(0), "id", PIPELINE_NAME, Field.create("E0"), TestErrors.ERROR_S.name(), "s");
-    assertErrorRecord(errorStage.records.get(1), "id", PIPELINE_NAME, Field.create("OK0"), TestErrors.ERROR_P.name(), "p");
-    assertErrorRecord(errorStage.records.get(2), "id", PIPELINE_NAME, Field.create("E1"), TestErrors.ERROR_S.name(), "s");
-    assertErrorRecord(errorStage.records.get(3), "id", PIPELINE_NAME, Field.create("OK1"), TestErrors.ERROR_P.name(), "p");
+    assertErrorRecord(errorStage.records.get(0), "id", PIPELINE_NAME, Field.create("E0"), TestErrors.ERROR_S.name(),
+      "s");
+    assertErrorRecord(errorStage.records.get(1), "id", PIPELINE_NAME, Field.create("OK0"), TestErrors.ERROR_P.name(),
+      "p");
+    assertErrorRecord(errorStage.records.get(2), "id", PIPELINE_NAME, Field.create("E1"), TestErrors.ERROR_S.name(),
+      "s");
+    assertErrorRecord(errorStage.records.get(3), "id", PIPELINE_NAME, Field.create("OK1"), TestErrors.ERROR_P.name(),
+      "p");
   }
 
-  private void assertErrorRecord(Record record, String sdcId, String pipelineName, Field field, String errorCode, String errorStage) {
+  private void assertErrorRecord(Record record, String sdcId, String pipelineName, Field field, String errorCode,
+                                 String errorStage) {
     Assert.assertEquals(sdcId, record.getHeader().getErrorDataCollectorId());
     Assert.assertEquals(pipelineName, record.getHeader().getErrorPipelineName());
     Assert.assertEquals(field, record.get());
