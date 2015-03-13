@@ -319,7 +319,12 @@ public class StageRuntime {
             value = ((String)value).charAt(0);
           }
         }
-        var.set(stage, value);
+        if (value != null) {
+          var.set(stage, value);
+        } else {
+          // if the value is NULL we set the default value
+          var.set(stage, confDef.getDefaultValue());
+        }
       }
     }
 
