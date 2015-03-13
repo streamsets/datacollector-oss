@@ -15,6 +15,8 @@ public enum DataFormat implements Label {
   DELIMITED("Delimited", CharDataParserFactory.Format.DELIMITED, CharDataGeneratorFactory.Format.DELIMITED),
   XML("XML", CharDataParserFactory.Format.XML, CharDataGeneratorFactory.Format.XML),
   SDC_JSON("SDC Record", CharDataParserFactory.Format.SDC_RECORD, CharDataGeneratorFactory.Format.SDC_RECORD),
+  LOG("Log", CharDataParserFactory.Format.LOG, CharDataGeneratorFactory.Format.LOG),
+
 
   ;
 

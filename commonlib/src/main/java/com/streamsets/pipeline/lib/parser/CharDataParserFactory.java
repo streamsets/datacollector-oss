@@ -10,9 +10,11 @@ import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.config.CsvHeader;
 import com.streamsets.pipeline.config.CsvMode;
 import com.streamsets.pipeline.config.JsonMode;
+import com.streamsets.pipeline.config.LogMode;
 import com.streamsets.pipeline.lib.io.OverrunReader;
 import com.streamsets.pipeline.lib.parser.delimited.DelimitedCharDataParserFactory;
 import com.streamsets.pipeline.lib.parser.json.JsonCharDataParserFactory;
+import com.streamsets.pipeline.lib.parser.log.LogCharDataParserFactory;
 import com.streamsets.pipeline.lib.parser.sdcrecord.JsonSdcRecordCharDataParserFactory;
 import com.streamsets.pipeline.lib.parser.text.TextCharDataParserFactory;
 import com.streamsets.pipeline.lib.parser.xml.XmlCharDataParserFactory;
@@ -66,7 +68,7 @@ public abstract class CharDataParserFactory {
     XML(),
     DELIMITED(CsvMode.class, CsvHeader.class),
     SDC_RECORD(),
-    LOG(),
+    LOG(LogMode.class),
 
     ;
 
@@ -92,6 +94,7 @@ public abstract class CharDataParserFactory {
       XmlCharDataParserFactory.registerConfigs(defaultConfigs);
       DelimitedCharDataParserFactory.registerConfigs(defaultConfigs);
       JsonSdcRecordCharDataParserFactory.registerConfigs(defaultConfigs);
+      LogCharDataParserFactory.registerConfigs(defaultConfigs);
       DEFAULT_CONFIGS = Collections.unmodifiableMap(defaultConfigs);
     }
 
@@ -174,7 +177,9 @@ public abstract class CharDataParserFactory {
           factory = new JsonSdcRecordCharDataParserFactory(context, maxDataLen, configs);
           break;
         case LOG:
-          throw new IllegalArgumentException("LOG not yet implemented");
+          LogMode logMode = (LogMode) modes.get(LogMode.class);
+          factory = new LogCharDataParserFactory(context, maxDataLen, logMode, configs);
+          break;
         default:
           throw new IllegalStateException(Utils.format("Unsupported format '{}'", format));
       }

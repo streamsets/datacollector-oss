@@ -74,6 +74,7 @@ public class FileTailSource extends BaseSource implements OffsetCommitter {
     switch (dataFormat) {
       case TEXT:
       case JSON:
+      case LOG:
         break;
       default:
         issues.add(getContext().createConfigIssue(Groups.FILE.name(), "dataFormat", Errors.TAIL_02, dataFormat,
@@ -98,6 +99,11 @@ public class FileTailSource extends BaseSource implements OffsetCommitter {
       case JSON:
         parserFactory = new CharDataParserFactory.Builder(getContext(), CharDataParserFactory.Format.JSON)
             .setMode(JsonMode.MULTIPLE_OBJECTS).setMaxDataLen(-1).build();
+        break;
+      case LOG:
+        //TODO: Add multiline support potentially
+        parserFactory = new CharDataParserFactory.Builder(getContext(), CharDataParserFactory.Format.LOG)
+            .setMaxDataLen(-1).build();
         break;
       default:
         throw new StageException(Errors.TAIL_02, "dataFormat", dataFormat);

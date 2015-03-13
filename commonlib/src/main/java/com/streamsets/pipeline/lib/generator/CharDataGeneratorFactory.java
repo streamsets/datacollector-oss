@@ -11,6 +11,7 @@ import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.config.CsvHeader;
 import com.streamsets.pipeline.config.CsvMode;
 import com.streamsets.pipeline.config.JsonMode;
+import com.streamsets.pipeline.config.LogMode;
 import com.streamsets.pipeline.lib.generator.delimited.DelimitedCharDataGeneratorFactory;
 import com.streamsets.pipeline.lib.generator.json.JsonCharDataGeneratorFactory;
 import com.streamsets.pipeline.lib.generator.sdcrecord.JsonSdcRecordCharDataGeneratorFactory;
@@ -54,7 +55,7 @@ public abstract class CharDataGeneratorFactory {
     XML(),
     DELIMITED(CsvMode.class, CsvHeader.class),
     SDC_RECORD(),
-    LOG(),
+    LOG(LogMode.class),
 
     ;
 
