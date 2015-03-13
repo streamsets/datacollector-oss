@@ -280,14 +280,13 @@ public class ClassLoaderStageLibraryTask extends AbstractTask implements StageLi
     if(!(configDef.getDefaultValue() instanceof String)) {
       return;
     }
-    Object defaultValue = null;
-    String defaultValueString = (String) configDef.getDefaultValue();
-    if (defaultValueString != null && !defaultValueString.isEmpty()) {
-      //Boolean, Int, long are converted by annotation processor
-      //Enum can be left as String
-      //Map and classes are converted from json string to map and List.
-
-      if (field.getType().isAssignableFrom(List.class) || field.getType().isAssignableFrom(Map.class)) {
+    //Boolean, Int, long are converted by annotation processor
+    //Enum can be left as String
+    //Map and classes are converted from json string to map and List.
+    if (field.getType().isAssignableFrom(List.class) || field.getType().isAssignableFrom(Map.class)) {
+      Object defaultValue = null;
+      String defaultValueString = (String) configDef.getDefaultValue();
+      if (defaultValueString != null && !defaultValueString.isEmpty()) {
         //the defaultValue string is treated as JSON
         //Because of UI limitations both List and Map must be serialized and de-serialized as List.
         //So Map with 2 entries will be converted 2 Maps.
@@ -296,9 +295,7 @@ public class ClassLoaderStageLibraryTask extends AbstractTask implements StageLi
         //  "value"   ->     <value in the original map>
         defaultValue = ObjectMapperFactory.get().readValue(defaultValueString, List.class);
       }
-      if (defaultValue != null) {
-        configDef.setDefaultValue(defaultValue);
-      }
+      configDef.setDefaultValue(defaultValue);
     }
   }
 
