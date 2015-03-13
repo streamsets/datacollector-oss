@@ -75,17 +75,20 @@
       <artifactId>streamsets-datacollector-jython_2_7_b2-lib</artifactId>
       <scope>provided</scope>
     </dependency>
+    <dependency>
+      <groupId>com.streamsets</groupId>
+      <artifactId>streamsets-datacollector-elasticsearch_1_4_4-lib</artifactId>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>com.streamsets</groupId>
+      <artifactId>streamsets-datacollector-elasticsearch_1_5_0-lib</artifactId>
+      <scope>provided</scope>
+    </dependency>
   </dependencies>
 
   <build>
     <plugins>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-deploy-plugin</artifactId>
-        <configuration>
-          <skip>true</skip>
-        </configuration>
-      </plugin>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-assembly-plugin</artifactId>

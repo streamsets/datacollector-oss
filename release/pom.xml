@@ -237,6 +237,36 @@
               </descriptors>
             </configuration>
           </execution>
+          <execution>
+            <id>elasticsearch-1.4.4</id>
+            <phase>package</phase>
+            <goals>
+              <goal>single</goal>
+            </goals>
+            <configuration>
+              <appendAssemblyId>false</appendAssemblyId>
+              <attach>false</attach>
+              <finalName>streamsets-datacollector-elasticsearch_1_4_4-lib-${project.version}</finalName>
+              <descriptors>
+                <descriptor>src/main/assemblies/data-collector-elasticsearch_1_4_4-lib.xml</descriptor>
+              </descriptors>
+            </configuration>
+          </execution>
+          <execution>
+            <id>elasticsearch-1.5.0</id>
+            <phase>package</phase>
+            <goals>
+              <goal>single</goal>
+            </goals>
+            <configuration>
+              <appendAssemblyId>false</appendAssemblyId>
+              <attach>false</attach>
+              <finalName>streamsets-datacollector-elasticsearch_1_5_0-lib-${project.version}</finalName>
+              <descriptors>
+                <descriptor>src/main/assemblies/data-collector-elasticsearch_1_5_0-lib.xml</descriptor>
+              </descriptors>
+            </configuration>
+          </execution>
         </executions>
       </plugin>
     </plugins>

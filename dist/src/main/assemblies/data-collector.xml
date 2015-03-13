@@ -207,6 +207,16 @@
       <directory>${basedir}/../${jython_2_7_b2-lib}/target/streamsets-libs/</directory>
       <outputDirectory>/streamsets-libs/</outputDirectory>
     </fileSet>
+
+    <!-- Elasticsearch libs -->
+    <fileSet>
+      <directory>${basedir}/../${elasticsearch_1_4_4-lib}/target/streamsets-libs/</directory>
+      <outputDirectory>/streamsets-libs/</outputDirectory>
+    </fileSet>
+    <fileSet>
+      <directory>${basedir}/../${elasticsearch_1_5_0-lib}/target/streamsets-libs/</directory>
+      <outputDirectory>/streamsets-libs/</outputDirectory>
+    </fileSet>
   </fileSets>
 
 
