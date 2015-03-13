@@ -12,7 +12,6 @@
                 conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/1stStep-ReqField-ErrorHandling">
                 <cmd/>
             </step>
-           
             <step id="SelectHashField">
                 <cmd>On the <wintitle>Hash</wintitle> tab, configure the following properties:</cmd>
                 <info>
@@ -30,7 +29,8 @@
                                 <row>
                                     <entry>Fields to Hash</entry>
                                     <entry>One or more String fields to hash with the same
-                                        algorithm.</entry>
+                                            algorithm.<p>Use the <uicontrol>Add</uicontrol> icon to
+                                            configure more than one hash type.</p></entry>
                                 </row>
                                 <row>
                                     <entry>Hash Type</entry>
@@ -44,14 +44,19 @@
                                                 functions: 224, 256, 384, or 512 bits.</li>
                                         </ul></entry>
                                 </row>
+                                <row>
+                                    <entry>On Field Issue</entry>
+                                    <entry>Determines the action if a record does not include values
+                                        for the fields to hash:<ul id="ul_n3n_yr2_jr">
+                                            <li>Continue - Passes nulls for the missing values.</li>
+                                            <li>Sends to Error - Passes the record to the pipeline
+                                                for error handling.</li>
+                                        </ul></entry>
+                                </row>
                             </tbody>
                         </tgroup>
                     </table>
                 </info>
-            </step>
-            <step>
-                <cmd>To hash another field, click the <uicontrol>Add</uicontrol> icon and then
-                    repeat the previous step.</cmd>
             </step>
         </steps>
     </taskbody>

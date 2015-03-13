@@ -34,8 +34,10 @@
                                 </row>
                                 <row>
                                     <entry>Separator</entry>
-                                    <entry>A single character to trigger a split. Use ^ to represent
-                                        a space. </entry>
+                                    <entry>The character to use to split data in a field. Select one
+                                        of the listed characters or select
+                                            <uicontrol>Other</uicontrol> and enter a single
+                                        character to use.</entry>
                                 </row>
                                 <row>
                                     <entry>New Split Fields</entry>

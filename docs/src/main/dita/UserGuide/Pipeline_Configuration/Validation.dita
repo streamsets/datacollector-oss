@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
+<concept id="concept_azs_swf_jr">
+ <title>Validation</title>
+ <shortdesc>The <ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+  /> console provides two types of validation:</shortdesc>
+ <conbody>
+  <p>
+   <dl>
+    <dlentry>
+     <dt>Implicit validation</dt>
+     <dd>Implicit validation occurs by default as the console saves your changes. Implicit
+      validation lists missing or incomplete configuration, such as an unconnected stage or a
+      required property that has not been configured.</dd>
+     <dd>Errors found by implicit validation display in the Issues list. </dd>
+    </dlentry>
+    <dlentry>
+     <dt>Explicit validation</dt>
+     <dd>Explicit validation occurs on demand when you click the Validate icon. Explicit validation
+      becomes available when implicit validation passes.<draft-comment author="Loretta">Also happens
+       whenever you try to get a list of fields / anything using preview.</draft-comment></dd>
+    </dlentry>
+   </dl>
+  </p>
+ </conbody>
+</concept>

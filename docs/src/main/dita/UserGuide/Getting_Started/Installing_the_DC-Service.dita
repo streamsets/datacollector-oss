@@ -20,7 +20,8 @@
                     typically /opt/local/.</cmd>
             </step>
             <step>
-                <cmd>Copy initd/_sdcinitd_prototype to the /etc/init.d/ directory as sdc.</cmd>
+                <cmd>Copy <filepath>initd/_sdcinitd_prototype</filepath> to the
+                        <filepath>/etc/init.d/</filepath> directory as sdc.</cmd>
             </step>
             <step>
                 <cmd>Edit the sdc file and set the SDC_DIST environment variable to the location

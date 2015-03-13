@@ -72,12 +72,19 @@
                                             </ul></entry>
                                     </row>
                                     <row>
+                                        <entry>One Message per Batch</entry>
+                                        <entry>Generates a single message for all records in the
+                                            batch.</entry>
+                                    </row>
+                                    <row>
                                         <entry>Kafka Configuration</entry>
                                         <entry>Additional Kafka properties to use. Click the
                                                 <uicontrol>Add</uicontrol> icon and define the Kafka
                                             property name and value. <p>Use the property names and
                                                 values as expected by Kafka. Do not use the
-                                                broker.list property.</p></entry>
+                                                broker.list property.</p><p>By default, the
+                                                queue.buffering.max.ms Kafka property is defined.
+                                                You can edit or delete the property. </p></entry>
                                     </row>
                                 </tbody>
                             </tgroup>

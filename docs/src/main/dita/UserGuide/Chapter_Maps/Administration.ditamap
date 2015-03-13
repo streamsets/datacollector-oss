@@ -23,7 +23,10 @@
     <shortdesc/>
    </topicmeta>
   </topicref>
-  <topicref href="../Administration/RESTResponse.dita">
+  <topicref href="../Administration/RESTResponse.dita" chunk="to-content">
+   <topicmeta>
+   <shortdesc/>
+  </topicmeta>
    <topicref href="../Administration/ViewingRESTResponse.dita"/>
   </topicref>
   <topicref href="../Administration/ShuttingDown.dita">

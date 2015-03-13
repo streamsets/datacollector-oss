@@ -4,7 +4,7 @@
  <title>Stream Selector</title>
  <shortdesc>The Stream Selector passes data to streams based on conditions. Define a condition for
     each stream of data that you want to create. The Stream Selector uses a default stream to pass
-    records that do not match the user-defined conditions. </shortdesc>
+    records that do not match user-defined conditions. </shortdesc>
  <conbody>
     <p><indexterm>Stream Selector
           processor<indexterm>overview</indexterm></indexterm><indexterm>processors<indexterm>Stream
