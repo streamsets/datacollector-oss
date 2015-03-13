@@ -32,7 +32,8 @@
                 readOnly: isPipelineRunning || lanePredicateMapping.predicate === 'default',
                 extraKeys: {'Ctrl-Space': 'autocomplete'}
               })"
-         ng-codemirror-dictionary-hint="getCodeMirrorHints(configDefinition)">
+         codemirror-el="getCodeMirrorHints(configDefinition)"
+         field-paths="fieldPaths">
     </div>
 
 
@@ -340,6 +341,7 @@
                 readOnly: isPipelineRunning || lanePredicateMapping.predicate === 'default',
                 extraKeys: {'Ctrl-Space': 'autocomplete'}
               })"
-       ng-codemirror-dictionary-hint="getCodeMirrorHints(customFieldConfigDefinition)">
+       codemirror-el="getCodeMirrorHints(customFieldConfigDefinition)"
+       field-paths="fieldPaths">
   </div>
 </script>

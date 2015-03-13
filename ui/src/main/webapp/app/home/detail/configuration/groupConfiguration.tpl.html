@@ -19,27 +19,32 @@
     <ng-include src="'characterConfigurationTemplate'"></ng-include>
   </div>
 
-  <div ng-switch-when="EL_STRING" class="expression-language">
+  <div ng-switch-when="EL_STRING" class="expression-language"
+       ng-click="onFieldSelectorFocus(detailPaneConfig)">
     <ng-include src="'labelConfigurationTemplate'"></ng-include>
     <ng-include src="'elStringConfigurationTemplate'"></ng-include>
   </div>
 
-  <div ng-switch-when="EL_NUMBER" class="expression-language">
+  <div ng-switch-when="EL_NUMBER" class="expression-language"
+       ng-click="onFieldSelectorFocus(detailPaneConfig)">
     <ng-include src="'labelConfigurationTemplate'"></ng-include>
     <ng-include src="'elStringConfigurationTemplate'"></ng-include>
   </div>
 
-  <div ng-switch-when="EL_DATE" class="expression-language">
+  <div ng-switch-when="EL_DATE" class="expression-language"
+       ng-click="onFieldSelectorFocus(detailPaneConfig)">
     <ng-include src="'labelConfigurationTemplate'"></ng-include>
     <ng-include src="'elStringConfigurationTemplate'"></ng-include>
   </div>
 
-  <div ng-switch-when="EL_BOOLEAN" class="expression-language">
+  <div ng-switch-when="EL_BOOLEAN" class="expression-language"
+       ng-click="onFieldSelectorFocus(detailPaneConfig)">
     <ng-include src="'labelConfigurationTemplate'"></ng-include>
     <ng-include src="'elStringConfigurationTemplate'"></ng-include>
   </div>
 
-  <div ng-switch-when="EL_OBJECT" class="expression-language">
+  <div ng-switch-when="EL_OBJECT" class="expression-language"
+       ng-click="onFieldSelectorFocus(detailPaneConfig)">
     <ng-include src="'labelConfigurationTemplate'"></ng-include>
     <ng-include src="'elStringConfigurationTemplate'"></ng-include>
   </div>
@@ -125,23 +130,28 @@
                   <ng-include src="'stringComplexConfigurationTemplate'"></ng-include>
                 </div>
 
-                <div ng-switch-when="EL_STRING" class="expression-language">
+                <div ng-switch-when="EL_STRING" class="expression-language"
+                     ng-click="onFieldSelectorFocus(detailPaneConfig)">
                   <ng-include src="'elStringComplexConfigurationTemplate'"></ng-include>
                 </div>
 
-                <div ng-switch-when="EL_NUMBER" class="expression-language">
+                <div ng-switch-when="EL_NUMBER" class="expression-language"
+                     ng-click="onFieldSelectorFocus(detailPaneConfig)">
                   <ng-include src="'elStringComplexConfigurationTemplate'"></ng-include>
                 </div>
 
-                <div ng-switch-when="EL_DATE" class="expression-language">
+                <div ng-switch-when="EL_DATE" class="expression-language"
+                     ng-click="onFieldSelectorFocus(detailPaneConfig)">
                   <ng-include src="'elStringComplexConfigurationTemplate'"></ng-include>
                 </div>
 
-                <div ng-switch-when="EL_BOOLEAN" class="expression-language">
+                <div ng-switch-when="EL_BOOLEAN" class="expression-language"
+                     ng-click="onFieldSelectorFocus(detailPaneConfig)">
                   <ng-include src="'elStringComplexConfigurationTemplate'"></ng-include>
                 </div>
 
-                <div ng-switch-when="EL_OBJECT" class="expression-language">
+                <div ng-switch-when="EL_OBJECT" class="expression-language"
+                     ng-click="onFieldSelectorFocus(detailPaneConfig)">
                   <ng-include src="'elStringComplexConfigurationTemplate'"></ng-include>
                 </div>
 

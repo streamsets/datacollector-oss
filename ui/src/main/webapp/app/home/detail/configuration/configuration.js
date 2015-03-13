@@ -152,7 +152,6 @@ angular
        * On focus callback for field selector configuration.
        */
       onFieldSelectorFocus: function(stageInstance) {
-        console.log('onFieldSelectorFocus');
         if(!$scope.fieldPaths || $scope.fieldPaths.length === 0 ) {
           updateFieldDataForStage(stageInstance);
         }
