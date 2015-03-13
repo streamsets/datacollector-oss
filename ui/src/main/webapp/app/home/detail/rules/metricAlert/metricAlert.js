@@ -36,6 +36,9 @@ angular
               },
               metricIDList: function() {
                 return $scope.metricIDList;
+              },
+              rulesElMetadata: function() {
+                return pipelineService.getMetricRulesElMetadata();
               }
             }
           });
@@ -69,6 +72,9 @@ angular
               },
               metricIDList: function() {
                 return $scope.metricIDList;
+              },
+              rulesElMetadata: function() {
+                return pipelineService.getMetricRulesElMetadata();
               }
             }
           });
@@ -131,7 +137,8 @@ angular
   })
 
   .controller('CreateMetricAlertRuleModalInstanceController', function ($scope, $modalInstance, $translate, edge,
-                                                                        metricElementList, metricIDList) {
+                                                                        $timeout, metricElementList, metricIDList,
+                                                                        pipelineService, rulesElMetadata) {
 
     angular.extend($scope, {
       showLoading: false,
@@ -151,6 +158,19 @@ angular
         sendEmail: false
       },
 
+      refreshCodemirror: false,
+
+      getCodeMirrorOptions: function() {
+        return pipelineService.getDefaultELEditorOptions();
+      },
+
+      getRulesElMetadata: function() {
+        $timeout(function() {
+          $scope.refreshCodemirror = true;
+        });
+        return rulesElMetadata;
+      },
+
       save : function () {
         $modalInstance.close($scope.metricAlertRuleDefn);
       },
@@ -163,7 +183,8 @@ angular
   })
 
   .controller('EditMetricAlertRuleModalInstanceController', function ($scope, $modalInstance, $translate,
-                                                                      metricAlertRuleDefn, metricElementList, metricIDList) {
+                                                                      pipelineService, $timeout, metricAlertRuleDefn,
+                                                                      metricElementList, metricIDList, rulesElMetadata) {
 
     angular.extend($scope, {
       showLoading: false,
@@ -173,7 +194,18 @@ angular
       metricElementList: metricElementList,
       metricIDList: metricIDList,
       metricAlertRuleDefn: metricAlertRuleDefn,
+      refreshCodemirror: false,
 
+      getCodeMirrorOptions: function() {
+        return pipelineService.getDefaultELEditorOptions();
+      },
+
+      getRulesElMetadata: function() {
+        $timeout(function() {
+          $scope.refreshCodemirror = true;
+        });
+        return rulesElMetadata;
+      },
 
       save : function () {
         $modalInstance.close($scope.metricAlertRuleDefn);

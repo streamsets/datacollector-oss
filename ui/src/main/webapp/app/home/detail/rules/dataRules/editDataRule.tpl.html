@@ -27,14 +27,13 @@
 
     <div class="form-group" show-errors>
       <label class="col-lg-3 col-md-4 control-label" translate="home.detailPane.rulesTab.condition">Condition</label>
-      <div class="controls col-lg-9 col-md-8 expression-language">
-        <input type="text"
-          name="condition"
-          class="form-control"
-          required="true"
-          title="{{'home.detailPane.rulesTab.conditionPlaceholder' | translate}}"
-          placeholder="{{'home.detailPane.rulesTab.conditionPlaceholder' | translate}}"
-          ng-model="dataRuleDefn.condition">
+      <div class="controls col-lg-9 col-md-8 expression-language"
+           ui-codemirror
+             ng-model="dataRuleDefn.condition"
+             ui-refresh="refreshCodemirror"
+             ui-codemirror-opts="getCodeMirrorOptions()"
+             codemirror-el="getRulesElMetadata()"
+             field-paths="fieldPaths">
       </div>
     </div>
 

@@ -37,7 +37,6 @@ angular.module('dataCollectorApp.codemirrorDirectives')
             var regex = new RegExp('^' + curWord, 'i');
             var completions =[];
 
-
             if(curWord || ctrlSpaceKey) {
               angular.forEach(dictionary.elConstantDefinitions, function(elConstantDefn) {
                 if(!curWord || elConstantDefn.name.match(regex)) {
@@ -234,7 +233,7 @@ angular.module('dataCollectorApp.codemirrorDirectives')
 
                 //Get Method Name
                 var startIndex = ch - 1;
-                while(startIndex > 0 && /[a-zA-Z:]+/.test(str.charAt(startIndex))) {
+                while(startIndex >= 0 && /[a-zA-Z:]+/.test(str.charAt(startIndex))) {
                   startIndex--;
                 }
 

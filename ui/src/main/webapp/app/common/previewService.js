@@ -135,6 +135,55 @@ angular.module('dataCollectorApp.common')
 
 
     /**
+     * Returns Edge Input Records from Preview Data.
+     *
+     * @param pipelineName
+     * @param edge
+     * @param batchSize
+     * @returns {*}
+     */
+    this.getEdgeInputRecordsFromPreview = function(pipelineName, edge, batchSize) {
+      var deferred = $q.defer();
+      api.pipelineAgent.previewPipeline(pipelineName, 0, batchSize).
+        then(
+        function (res) {
+          var previewData = res.data,
+            stagePreviewData = self.getPreviewDataForEdge(previewData.batchesOutput[0], edge);
+          deferred.resolve(stagePreviewData.input);
+        },
+        function(res) {
+          deferred.reject(res);
+        }
+      );
+
+      return deferred.promise;
+    };
+
+
+    /**
+     * Returns Preview input lane & output lane data for the given Stage Instance.
+     *
+     * @param batchData
+     * @param edge
+     * @returns {{input: Array}}
+     */
+    this.getPreviewDataForEdge = function (batchData, edge) {
+      var edgePreviewData = {
+        input: []
+      };
+
+      angular.forEach(batchData, function (stageOutput) {
+        if(stageOutput.instanceName === edge.source.instanceName) {
+          edgePreviewData = {
+            input: stageOutput.output[edge.outputLane]
+          };
+        }
+      });
+
+      return edgePreviewData;
+    };
+
+    /**
      * Returns Children of the stage instance in the graph.
      *
      * @param stageInstance

@@ -29,8 +29,7 @@
          ng-model="detailPaneConfig.configuration[configIndex].value"
          ui-refresh="refreshCodemirror"
          ui-codemirror-opts="getCodeMirrorOptions({
-                readOnly: isPipelineRunning || lanePredicateMapping.predicate === 'default',
-                extraKeys: {'Ctrl-Space': 'autocomplete'}
+                readOnly: isPipelineRunning
               })"
          codemirror-el="getCodeMirrorHints(configDefinition)"
          field-paths="fieldPaths">
@@ -280,20 +279,10 @@
 
       <div class="col-xs-9 expression-language">
 
-        <!--
-        <input type="text" class="form-control input-sm"
-               placeholder="{{'home.detailPane.configurationTab.enterPredicate' | translate}}"
-               ng-required="true"
-               name="{{configDefinition.name + $index}}"
-               ng-readonly="isPipelineRunning || lanePredicateMapping.predicate === 'default'"
-               ng-model="lanePredicateMapping.predicate"/>
-               -->
-
         <div ui-codemirror ng-model="lanePredicateMapping.predicate"
              ui-refresh="refreshCodemirror"
              ui-codemirror-opts="getCodeMirrorOptions({
-                readOnly: isPipelineRunning || lanePredicateMapping.predicate === 'default',
-                extraKeys: {'Ctrl-Space': 'autocomplete'}
+                readOnly: isPipelineRunning || lanePredicateMapping.predicate === 'default'
               })"
              codemirror-el="getCodeMirrorHints(configDefinition)"
              field-paths="fieldPaths">
@@ -338,8 +327,7 @@
        ng-model="customFieldValue[customFieldConfigDefinition.name]"
        ui-refresh="refreshCodemirror"
        ui-codemirror-opts="getCodeMirrorOptions({
-                readOnly: isPipelineRunning || lanePredicateMapping.predicate === 'default',
-                extraKeys: {'Ctrl-Space': 'autocomplete'}
+                readOnly: isPipelineRunning
               })"
        codemirror-el="getCodeMirrorHints(customFieldConfigDefinition)"
        field-paths="fieldPaths">

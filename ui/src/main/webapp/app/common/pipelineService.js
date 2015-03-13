@@ -5,7 +5,21 @@ angular.module('dataCollectorApp.common')
   .service('pipelineService', function(pipelineConstant, api, $q, $translate, $modal, $location, $route, _) {
 
     var self = this,
-      translations = {};
+      translations = {},
+      defaultELEditorOptions = {
+        mode: {
+          name: 'javascript'
+        },
+        inputStyle: 'contenteditable',
+        showCursorWhenSelecting: true,
+        lineNumbers: false,
+        matchBrackets: true,
+        autoCloseBrackets: true,
+        cursorHeight: 1,
+        extraKeys: {
+          'Ctrl-Space': 'autocomplete'
+        }
+      };
 
     this.initializeDefer = undefined;
 
@@ -24,6 +38,7 @@ angular.module('dataCollectorApp.common')
             //Definitions
             self.pipelineConfigDefinition = definitions.pipeline[0];
             self.stageDefintions = definitions.stages;
+            self.rulesElMetadata = definitions.rulesElMetadata;
 
             //Pipelines
             self.pipelines = pipelines;
@@ -37,18 +52,63 @@ angular.module('dataCollectorApp.common')
       return self.initializeDefer.promise;
     };
 
+    /**
+     * Returns Pipeline Config Definition.
+     *
+     * @returns {*|pipelineConfigDefinition|$scope.pipelineConfigDefinition}
+     */
     this.getPipelineConfigDefinition = function() {
       return self.pipelineConfigDefinition;
     };
 
+    /**
+     * Returns Stage Definitions
+     *
+     * @returns {*|stageDefintions}
+     */
     this.getStageDefinitions = function() {
       return self.stageDefintions;
     };
 
+    /**
+     * Returns Rules EL Metadata
+     *
+     * @returns {*}
+     */
+    this.getRulesElMetadata = function() {
+      return self.rulesElMetadata;
+    };
+
+    /**
+     * Returns Metric Rules EL Metadata
+     */
+    this.getMetricRulesElMetadata = function() {
+      return {
+        elConstantDefinitions: [],
+        elFunctionDefinitions:[{
+          name: "value",
+          description: "Returns the value of the metric in context",
+          group: "",
+          returnType: "long",
+          elFunctionArgumentDefinition: []
+        }]
+      };
+    };
+
+    /**
+     * Returns list of Pipelines
+     *
+     * @returns {PipelineHomeController.pipelines|*|$scope.pipelines|a.pipelines|w.pipelines|string}
+     */
     this.getPipelines = function() {
       return self.pipelines;
     };
 
+    /**
+     * Add Pipeline to pipelines list
+     *
+     * @param configObject
+     */
     this.addPipeline = function(configObject) {
       var index = _.sortedIndex(self.pipelines, configObject.info, function(obj) {
         return obj.name.toLowerCase();
@@ -57,6 +117,11 @@ angular.module('dataCollectorApp.common')
       self.pipelines.splice(index, 0, configObject.info);
     };
 
+    /**
+     * Remove Pipeline from pipelines list
+     *
+     * @param configInfo
+     */
     this.removePipeline = function(configInfo) {
       var index = _.indexOf(self.pipelines, _.find(self.pipelines, function(pipeline){
         return pipeline.name === configInfo.name;
@@ -535,6 +600,33 @@ angular.module('dataCollectorApp.common')
       configurationHtml += '</ul>';
 
       return configurationHtml;
+    };
+
+    /**
+     * Returns default EL Editor Options.
+     *
+     * @returns Object
+     */
+    this.getDefaultELEditorOptions = function() {
+      return defaultELEditorOptions;
+    };
+
+
+    /**
+     * Recursively add all the field paths to list.
+     *
+     * @param record
+     * @param fieldPaths
+     */
+    this.getFieldPaths = function(record, fieldPaths) {
+      angular.forEach(record.value, function(value) {
+        if(value.path) {
+          fieldPaths.push(value.path);
+        }
+        if(value.type === 'MAP' || value.type === 'LIST') {
+          self.getFieldPaths(value, fieldPaths);
+        }
+      });
     };
 
     $translate([

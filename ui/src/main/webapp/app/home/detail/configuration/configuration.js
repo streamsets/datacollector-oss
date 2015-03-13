@@ -7,19 +7,6 @@ angular
 
   .controller('ConfigurationController', function ($scope, $rootScope, $q, $modal, _, $timeout,
                                                    api, previewService, pipelineConstant, pipelineService) {
-    var fieldsPathList,
-      defaultELEditorOptions = {
-        mode: {
-          name: 'javascript'
-        },
-        inputStyle: 'contenteditable',
-        showCursorWhenSelecting: true,
-        lineNumbers: false,
-        matchBrackets: true,
-        autoCloseBrackets: true,
-        cursorHeight: 1
-      };
-
     var getIssueMessage = function(config, issues, instanceName, configDefinition) {
       if(instanceName && issues.stageIssues && issues.stageIssues[instanceName]) {
         issues = issues.stageIssues[instanceName];
@@ -56,10 +43,15 @@ angular
        * @returns {*}
        */
       getCodeMirrorOptions: function(options) {
-        return angular.extend({}, defaultELEditorOptions, options);
+        return angular.extend({}, pipelineService.getDefaultELEditorOptions(), options);
       },
 
-
+      /**
+       * Returns EL Functions and Constants Metadata.
+       *
+       * @param configDefinition
+       * @returns {{elFunctionDefinitions: (*|ConfigurationController.getCodeMirrorHints.elFunctionDefinitions|$scope.getCodeMirrorHints.elFunctionDefinitions|a.getCodeMirrorHints.elFunctionDefinitions), elConstantDefinitions: (*|ConfigurationController.getCodeMirrorHints.elConstantDefinitions|$scope.getCodeMirrorHints.elConstantDefinitions|a.getCodeMirrorHints.elConstantDefinitions)}}
+       */
       getCodeMirrorHints: function(configDefinition) {
         return {
           elFunctionDefinitions: configDefinition.elFunctionDefinitions,
@@ -406,6 +398,14 @@ angular
       },
 
 
+      /**
+       * Returns true if there is any configuration issue for given Stage Instance name and configuration group.
+       *
+       * @param stageInstance
+       * @param groupName
+       * @param errorStage
+       * @returns {*}
+       */
       showConfigurationWarning: function(stageInstance, groupName, errorStage) {
         var config = $scope.pipelineConfig,
           commonErrors = $rootScope.common.errors,
@@ -436,6 +436,12 @@ angular
         }
       },
 
+      /**
+       * Returns character value.
+       *
+       * @param val
+       * @returns {*}
+       */
       getCharacterValue: function(val) {
         if(val !== '\t' && val !== ';' && val !== ',' && val !== ' ') {
           return 'Other';
@@ -444,18 +450,6 @@ angular
         return val;
       }
     });
-
-
-    var getFieldPaths = function(record, fieldPaths) {
-      angular.forEach(record.value, function(value, key) {
-        if(value.path) {
-          fieldPaths.push(value.path);
-        }
-        if(value.type === 'MAP' || value.type === 'LIST') {
-          getFieldPaths(value, fieldPaths);
-        }
-      });
-    };
 
     /**
      * Update Stage Preview Data when stage selection changed.
@@ -470,7 +464,7 @@ angular
           then(function (inputRecords) {
             if(_.isArray(inputRecords) && inputRecords.length) {
               var fieldPaths = [];
-              getFieldPaths(inputRecords[0].value, fieldPaths);
+              pipelineService.getFieldPaths(inputRecords[0].value, fieldPaths);
               $scope.fieldPaths = fieldPaths;
               $scope.$broadcast('fieldPathsUpdated', fieldPaths);
             }
@@ -514,7 +508,6 @@ angular
     $scope.$on('onSelectionChange', function(event, options) {
       initializeGroupInformation(options);
       if (options.type === pipelineConstant.STAGE_INSTANCE) {
-        fieldsPathList = undefined;
         $scope.fieldPaths = [];
       }
     });

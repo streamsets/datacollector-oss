@@ -5,7 +5,7 @@
 angular
   .module('dataCollectorApp.home')
 
-  .controller('DataRulesController', function ($scope, $modal, pipelineConstant) {
+  .controller('DataRulesController', function ($scope, $rootScope, $modal, pipelineConstant, pipelineService, previewService) {
     angular.extend($scope, {
       showLoading: false,
 
@@ -15,6 +15,10 @@ angular
       createDataRule: function() {
         if($scope.selectedType === pipelineConstant.LINK) {
 
+          if(!$scope.fieldPaths || $scope.fieldPaths.length === 0 ) {
+            updateFieldDataForStage($scope.selectedObject);
+          }
+
           var modalInstance = $modal.open({
             templateUrl: 'app/home/detail/rules/dataRules/editDataRule.tpl.html',
             controller: 'CreateDataRuleModalInstanceController',
@@ -23,6 +27,12 @@ angular
             resolve: {
               edge: function () {
                 return $scope.selectedObject;
+              },
+              rulesElMetadata: function() {
+                return pipelineService.getRulesElMetadata();
+              },
+              fieldPaths: function() {
+                return $scope.fieldPaths;
               }
             }
           });
@@ -41,6 +51,10 @@ angular
       editDataRule: function(dataRuleDefn, index) {
         if($scope.selectedType === pipelineConstant.LINK) {
 
+          if(!$scope.fieldPaths || $scope.fieldPaths.length === 0 ) {
+            updateFieldDataForStage($scope.selectedObject);
+          }
+
           var modalInstance = $modal.open({
             templateUrl: 'app/home/detail/rules/dataRules/editDataRule.tpl.html',
             controller: 'EditDataRuleModalInstanceController',
@@ -49,6 +63,12 @@ angular
             resolve: {
               dataRuleDefn: function () {
                 return angular.copy(dataRuleDefn);
+              },
+              rulesElMetadata: function() {
+                return pipelineService.getRulesElMetadata();
+              },
+              fieldPaths: function() {
+                return $scope.fieldPaths;
               }
             }
           });
@@ -83,9 +103,37 @@ angular
       }
     });
 
+
+
+    /**
+     * Update Stage Preview Data when stage selection changed.
+     *
+     * @param edge
+     */
+    var updateFieldDataForStage = function(edge) {
+      if(edge && $scope.pipelineConfig.previewable) {
+
+        previewService.getEdgeInputRecordsFromPreview($scope.activeConfigInfo.name, edge, 10).
+          then(function (inputRecords) {
+            if(_.isArray(inputRecords) && inputRecords.length) {
+              var fieldPaths = [];
+              pipelineService.getFieldPaths(inputRecords[0].value, fieldPaths);
+              $scope.fieldPaths = fieldPaths;
+              $rootScope.$broadcast('fieldPathsUpdated', fieldPaths);
+            }
+          },
+          function(res) {
+            $rootScope.common.errors = [res.data];
+          });
+      } else {
+
+      }
+    };
+
   })
 
-  .controller('CreateDataRuleModalInstanceController', function ($scope, $modalInstance, $translate, edge) {
+  .controller('CreateDataRuleModalInstanceController', function ($scope, $modalInstance, $translate, $timeout,
+                                                                 pipelineService, edge, rulesElMetadata, fieldPaths) {
 
     angular.extend($scope, {
       showLoading: false,
@@ -108,6 +156,19 @@ angular
         meterEnabled: true,
         enabled: false
       },
+      fieldPaths: fieldPaths,
+      refreshCodemirror: false,
+
+      getCodeMirrorOptions: function() {
+        return pipelineService.getDefaultELEditorOptions();
+      },
+
+      getRulesElMetadata: function() {
+        $timeout(function() {
+          $scope.refreshCodemirror = true;
+        });
+        return rulesElMetadata;
+      },
 
       save : function () {
         $modalInstance.close($scope.dataRuleDefn);
@@ -120,7 +181,8 @@ angular
     $scope.$broadcast('show-errors-check-validity');
   })
 
-  .controller('EditDataRuleModalInstanceController', function ($scope, $modalInstance, $translate, dataRuleDefn) {
+  .controller('EditDataRuleModalInstanceController', function ($scope, $modalInstance, $translate, pipelineService,
+                                                               $timeout, dataRuleDefn, rulesElMetadata, fieldPaths) {
 
     angular.extend($scope, {
       showLoading: false,
@@ -128,6 +190,19 @@ angular
         errors: []
       },
       dataRuleDefn: dataRuleDefn,
+      fieldPaths: fieldPaths,
+      refreshCodemirror: false,
+
+      getCodeMirrorOptions: function() {
+        return pipelineService.getDefaultELEditorOptions();
+      },
+
+      getRulesElMetadata: function() {
+        $timeout(function() {
+          $scope.refreshCodemirror = true;
+        });
+        return rulesElMetadata;
+      },
 
       save : function () {
         $modalInstance.close($scope.dataRuleDefn);

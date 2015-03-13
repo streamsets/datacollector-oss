@@ -118,7 +118,7 @@
       </div>
 
       <div class="btn-group issues-dropdown"
-           ng-show="pipelineConfig && pipelineConfig.issues.issueCount > 0">
+           ng-show="pipelineConfig && pipelineConfig.issues.issueCount > 0 && !previewMode">
         <a class="btn btn-link dropdown-toggle" data-toggle="dropdown"
            tooltip-placement="top"
            tooltip="{{'home.header.issues' | translate}}"
