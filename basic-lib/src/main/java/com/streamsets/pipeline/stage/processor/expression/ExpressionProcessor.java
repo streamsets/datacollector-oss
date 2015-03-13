@@ -14,7 +14,6 @@ import com.streamsets.pipeline.api.base.SingleLaneRecordProcessor;
 import com.streamsets.pipeline.api.el.ELEval;
 import com.streamsets.pipeline.api.el.ELEvalException;
 import com.streamsets.pipeline.api.el.ELVars;
-import com.streamsets.pipeline.lib.el.ExprProcEL;
 import com.streamsets.pipeline.lib.el.RecordEL;
 import com.streamsets.pipeline.lib.el.StringEL;
 import com.streamsets.pipeline.lib.el.ELUtils;
@@ -58,7 +57,7 @@ public class ExpressionProcessor extends SingleLaneRecordProcessor {
   }
 
   private ELEval createExpressionEval(ELContext elContext) {
-    return elContext.createELEval("expression", RecordEL.class, StringEL.class, ExprProcEL.class);
+    return elContext.createELEval("expression", RecordEL.class, StringEL.class, ELSupport.class);
   }
 
   @Override
