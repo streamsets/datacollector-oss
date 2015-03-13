@@ -9,9 +9,47 @@
             and ZooKeeper details. For delimited and JSON data, configure additional related
             properties. You can optionally add custom Kafka properties. </context>
         <steps id="steps_f3x_nhw_yq">
-            <step
-                conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/1stStepErrorHandling">
-                <cmd/>
+            <step>
+                <cmd>In the Properties panel, on the <wintitle>General tab</wintitle>, configure the
+                    following properties:</cmd>
+                <info>
+                    <table frame="all" rowsep="1" colsep="1" id="table_tvy_43h_hr">
+                        <tgroup cols="2">
+                            <colspec colname="c1" colnum="1" colwidth="1*"/>
+                            <colspec colname="c2" colnum="2" colwidth="3.08*"/>
+                            <thead>
+                                <row>
+                                    <entry>General Property</entry>
+                                    <entry>Description</entry>
+                                </row>
+                            </thead>
+                            <tbody>
+                                <row>
+                                    <entry>Name</entry>
+                                    <entry>Stage name.</entry>
+                                </row>
+                                <row>
+                                    <entry>Description</entry>
+                                    <entry>Optional description.</entry>
+                                </row>
+                                <row>
+                                    <entry>Stage Library</entry>
+                                    <entry>Library version that you want to use. </entry>
+                                </row>
+                                <row>
+                                    <entry>On Record Error</entry>
+                                    <entry>Error record handling for the stage: <ul
+                                            id="ul_kwy_43h_hr">
+                                            <li>Discard - Discards the record.</li>
+                                            <li>Send to Error - Sends the record to the pipeline for
+                                                error handling.</li>
+                                            <li>Stop Pipeline - Stops the pipeline. </li>
+                                        </ul></entry>
+                                </row>
+                            </tbody>
+                        </tgroup>
+                    </table>
+                </info>
             </step><step>
                 <cmd>On the <uicontrol>Kafka</uicontrol> tab, configure the following
                     properties:</cmd>
@@ -27,13 +65,6 @@
                                 </row>
                             </thead>
                             <tbody>
-                                <row>
-                                    <entry>Produce Single Record</entry>
-                                    <entry>Generates a single record for records that include
-                                        multiple objects. <p>When not selected, Kafka Consumer
-                                            generates multiple records when a record includes
-                                            multiple objects.</p></entry>
-                                </row>
                                 <row>
                                     <entry>ZooKeeper Connection String</entry>
                                     <entry>Connection string for the ZooKeeper of the Kafka cluster.
@@ -64,6 +95,13 @@
                                         </ul></entry>
                                 </row>
                                 <row>
+                                    <entry>Produce Single Record</entry>
+                                    <entry>Generates a single record for records that include
+                                        multiple objects. <p>When not selected, Kafka Consumer
+                                            generates multiple records when a record includes
+                                            multiple objects.</p></entry>
+                                </row>
+                                <row>
                                     <entry>Max Batch Size (messages)</entry>
                                     <entry>Maximum number of messages processed at one time.</entry>
                                 </row>
@@ -84,6 +122,31 @@
                                             values as expected by Kafka.</p></entry>
                                 </row>
     
+                            </tbody>
+                        </tgroup>
+                    </table>
+                </info>
+            </step>
+            <step>
+                <cmd>For text data, click the <uicontrol>Text</uicontrol> tab and configure the
+                    following property:</cmd>
+                <info>
+                    <table frame="all" rowsep="1" colsep="1" id="table_ppl_dhz_3r">
+                        <tgroup cols="2">
+                            <colspec colname="c1" colnum="1" colwidth="1*"/>
+                            <colspec colname="c2" colnum="2" colwidth="2.13*"/>
+                            <thead>
+                                <row>
+                                    <entry>Text Property</entry>
+                                    <entry>Description</entry>
+                                </row>
+                            </thead>
+                            <tbody>
+                                <row>
+                                    <entry>Max Line Length</entry>
+                                    <entry>Maximum number of characters in a line. Longer lines are
+                                        truncated.</entry>
+                                </row>
                             </tbody>
                         </tgroup>
                     </table>
@@ -127,7 +190,7 @@
             </step>
             <step>
                 <cmd>For delimited data, click the <uicontrol>Delimited</uicontrol> tab and
-                    configure the following property:</cmd>
+                    configure the following properties:</cmd>
                 <info>
                     <table frame="all" rowsep="1" colsep="1" id="table_p3s_l42_br">
                         <tgroup cols="2">
@@ -143,16 +206,10 @@
                                 <row>
                                     <entry>Delimiter Format Type</entry>
                                     <entry>Format for delimited data. Use one of the following
-                                            options:<ul id="ul_delFileTypes">
-                                            <li>Basic CSV - File that includes comma-separated
-                                                values.</li>
-                                            <li>MS Excel CSV - Microsoft Excel comma-separated
-                                                file.</li>
-                                            <li>MySQL CSV - MySQL comma separated file.</li>
-                                            <li>RFC4180 CSV - Comma-separated file that strictly
-                                                follows RFC4180 guidelines.</li>
-                                            <li>Tab-Separated Values - File that includes
-                                                tab-separated values.</li>
+                                            options:<ul
+                                            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/ul_delFileTypes"
+                                            id="ul_nkn_vhz_3r">
+                                            <li/>
                                         </ul></entry>
                                 </row>
                                 <row>

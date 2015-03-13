@@ -216,12 +216,9 @@
                                 <row>
                                     <entry>File Type</entry>
                                     <entry>File type. Use one of the following options: <ul
-                                            id="ul_ift_hm2_br">
-                                            <li>CSV (ignores empty lines)</li>
-                                            <li>CSV</li>
-                                            <li>MS Excel CSV</li>
-                                            <li>MySQL CSV</li>
-                                            <li>TSV (tab-separated)</li>
+                                            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/ul_delFileTypes"
+                                            id="ul_s5z_b3z_3r">
+                                            <li/>
                                         </ul></entry>
                                 </row>
                                 <row>

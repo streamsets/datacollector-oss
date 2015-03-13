@@ -82,8 +82,8 @@
                 </cmd>
             </step>
             <step id="1stStepErrorHandling">
-                <cmd>In the Properties panel, on the General tab, configure the following
-                    properties. </cmd>
+                <cmd>In the Properties panel, on the <wintitle>General</wintitle> tab, configure the
+                    following properties:</cmd>
                 <info>
                     <table frame="all" rowsep="1" colsep="1" id="table_vlh_bgh_hr">
                         <tgroup cols="2">
@@ -126,8 +126,8 @@
                 </cmd>
             </step>
             <step id="1stStep-ReqField-ErrorHandling">
-                <cmd>In the Properties panel, on the General tab, configure the following
-                    properties. </cmd>
+                <cmd>In the Properties panel, on the <wintitle>General</wintitle> tab, configure the
+                    following properties:</cmd>
                 <info>
                     <table frame="all" rowsep="1" colsep="1" id="table_blh_n2h_hr">
                         <tgroup cols="2">
@@ -179,8 +179,8 @@
                 </cmd>
             </step>
             <step id="1stStep-ReqField-noEHandling">
-                <cmd>In the Properties panel, on the General tab, configure the following
-                    properties. </cmd>
+                <cmd>In the Properties panel, on the <wintitle>General</wintitle> tab, configure the
+                    following properties:</cmd>
                 <info>
                     <table frame="all" rowsep="1" colsep="1" id="table_wjk_pfh_hr">
                         <tgroup cols="2">
@@ -223,8 +223,8 @@
                 </cmd>
             </step>
             <step id="1stStep-StageLib-ReqField-EHandling">
-                <cmd>In the Properties panel, on the General tab, configure the following
-                    properties. </cmd>
+                <cmd>In the Properties panel, on the <wintitle>General</wintitle> tab, configure the
+                    following properties:</cmd>
                 <info>
                     <table frame="all" rowsep="1" colsep="1" id="table_tvy_43h_hr">
                         <tgroup cols="2">
@@ -280,8 +280,8 @@
                 </cmd>
             </step>
             <step id="1stStep-NameDescOnly">
-                <cmd>In the Properties panel, on the General tab, optionally enter a name and
-                    description for the destination.</cmd>
+                <cmd>In the Properties panel, on the <wintitle>General</wintitle> tab, optionally
+                    enter a name and description for the destination.</cmd>
             </step>
         </steps>
     </taskbody>
