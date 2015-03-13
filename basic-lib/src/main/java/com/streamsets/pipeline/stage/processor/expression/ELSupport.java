@@ -3,7 +3,7 @@
  * be copied, modified, or distributed in whole or part without
  * written consent of StreamSets, Inc.
  */
-package com.streamsets.pipeline.lib.el;
+package com.streamsets.pipeline.stage.processor.expression;
 
 import com.streamsets.pipeline.api.ElFunction;
 
@@ -12,7 +12,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class ExprProcEL {
+public class ELSupport {
 
   //TODO: decide prefix. These functions seem very similar to uuid which is in MiscEL and has no prefix.
   @ElFunction(
