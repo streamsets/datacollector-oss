@@ -6,8 +6,7 @@ angular.module('dataCollectorApp.codemirrorDirectives')
       restrict: 'A',
       priority: 2, // higher than ui-codemirror which is 1.
       compile: function compile() {
-        var ctrlSpaceKey = false,
-          cmPos = CodeMirror.Pos,
+        var cmPos = CodeMirror.Pos,
           cmpPos = CodeMirror.cmpPos,
           cls = "CodeMirror-EL-",
           cachedArgHints = null,
@@ -23,7 +22,7 @@ angular.module('dataCollectorApp.codemirrorDirectives')
             fieldPaths = [];
 
           // Register our custom Codemirror hint plugin.
-          window.CodeMirror.registerHelper('hint', 'dictionaryHint', function(editor, cm, c) {
+          window.CodeMirror.registerHelper('hint', 'dictionaryHint', function(editor, options, c) {
             var cur = editor.getCursor(), curLine = editor.getLine(cur.line);
             var start = cur.ch, end = start;
 
@@ -37,7 +36,7 @@ angular.module('dataCollectorApp.codemirrorDirectives')
             var regex = new RegExp('^' + curWord, 'i');
             var completions =[];
 
-            if(curWord || ctrlSpaceKey) {
+            if(curWord || options.ctrlSpaceKey) {
               angular.forEach(dictionary.elConstantDefinitions, function(elConstantDefn) {
                 if(!curWord || elConstantDefn.name.match(regex)) {
                   completions.push({
@@ -145,9 +144,11 @@ angular.module('dataCollectorApp.codemirrorDirectives')
 
             cm.on('keyHandled', function(instance, name, event) {
               if(name === 'Ctrl-Space') {
-                ctrlSpaceKey = true;
-                instance.showHint({ hint: window.CodeMirror.hint.dictionaryHint, completeSingle: false });
-                ctrlSpaceKey = false;
+                instance.showHint({
+                  hint: window.CodeMirror.hint.dictionaryHint,
+                  completeSingle: false,
+                  ctrlSpaceKey: true
+                });
               }
             });
 
