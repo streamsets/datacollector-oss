@@ -22,6 +22,10 @@
   <name>StreamSets Data Collector UI</name>
   <packaging>jar</packaging>
 
+  <properties>
+    <bowerInstallArgs>install</bowerInstallArgs>
+  </properties>
+
   <dependencies>
 
   </dependencies>
@@ -39,7 +43,7 @@
       <plugin>
         <groupId>com.github.trecloux</groupId>
         <artifactId>yeoman-maven-plugin</artifactId>
-        <version>0.2</version>
+        <version>0.4</version>
         <executions>
           <execution>
             <id>run-grunt</id>
@@ -48,7 +52,8 @@
               <goal>build</goal>
             </goals>
             <configuration>
-              <gruntBuildArgs>--force</gruntBuildArgs>
+              <buildArgs>--force</buildArgs>
+              <bowerInstallArgs>${bowerInstallArgs}</bowerInstallArgs>
             </configuration>
           </execution>
         </executions>
@@ -58,4 +63,17 @@
       </plugin>
     </plugins>
   </build>
-</project>
+
+  <profiles>
+    <profile>
+      <id>offline</id>
+      <activation>
+        <activeByDefault>false</activeByDefault>
+      </activation>
+      <properties>
+        <bowerInstallArgs>install --offline</bowerInstallArgs>
+      </properties>
+    </profile>
+  </profiles>
+
+  </project>
