@@ -11,4 +11,5 @@ public class AuthzRole {
   public static final String CREATOR = "creator";
   public static final String ADMIN = "admin";
 
+  public static final String[] ALL_ROLES = { ADMIN, CREATOR, MANAGER, GUEST};
 }

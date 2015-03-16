@@ -11,6 +11,7 @@ import com.streamsets.pipeline.util.PipelineException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
@@ -75,8 +76,12 @@ public class ExceptionToHttpErrorProvider implements ExceptionMapper<Exception> 
 
   @Override
   public Response toResponse(Exception ex) {
-    LOG.error("REST API call error: {}", ex.getMessage(), ex);
-    return createResponse(Status.INTERNAL_SERVER_ERROR, ex);
+    if (ex instanceof WebApplicationException) {
+      return ((WebApplicationException)ex).getResponse();
+    } else {
+      LOG.error("REST API call error: {}", ex.getMessage(), ex);
+      return createResponse(Status.INTERNAL_SERVER_ERROR, ex);
+    }
   }
 
 }

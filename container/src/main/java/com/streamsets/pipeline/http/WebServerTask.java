@@ -17,6 +17,7 @@ import org.eclipse.jetty.security.ConstraintSecurityHandler;
 import org.eclipse.jetty.security.HashLoginService;
 import org.eclipse.jetty.security.LoginService;
 import org.eclipse.jetty.security.SecurityHandler;
+import org.eclipse.jetty.security.authentication.BasicAuthenticator;
 import org.eclipse.jetty.security.authentication.DigestAuthenticator;
 import org.eclipse.jetty.security.authentication.FormAuthenticator;
 import org.eclipse.jetty.server.Connector;
@@ -70,7 +71,7 @@ public class WebServerTask extends AbstractTask {
 
   private static final String JSESSIONID_COOKIE = "JSESSIONID_";
 
-  private static final Set<String> AUTHENTICATION_MODES = ImmutableSet.of("none", "digest", "form");
+  private static final Set<String> AUTHENTICATION_MODES = ImmutableSet.of("none", "digest", "basic", "form");
 
   private static final Logger LOG = LoggerFactory.getLogger(WebServerTask.class);
 
@@ -138,7 +139,8 @@ public class WebServerTask extends AbstractTask {
       case "none":
         break;
       case "digest":
-        appHandler.setSecurityHandler(configureDigest(server));
+      case "basic":
+        appHandler.setSecurityHandler(configureDigest(server, auth));
         break;
       case "form":
         appHandler.setSecurityHandler(configureForm(server));
@@ -150,7 +152,7 @@ public class WebServerTask extends AbstractTask {
     return appHandler;
   }
 
-  private static final Set<PosixFilePermission> OWNER_PERMISSIONS = ImmutableSet.of(PosixFilePermission.OWNER_EXECUTE,
+  public static final Set<PosixFilePermission> OWNER_PERMISSIONS = ImmutableSet.of(PosixFilePermission.OWNER_EXECUTE,
                                                                                     PosixFilePermission.OWNER_READ,
                                                                                     PosixFilePermission.OWNER_WRITE);
 
@@ -174,7 +176,7 @@ public class WebServerTask extends AbstractTask {
     }
   }
 
-  private SecurityHandler configureDigest(Server server) {
+  private SecurityHandler configureDigest(Server server, String mode) {
     String realm = conf.get(DIGEST_REALM_KEY, DIGEST_REALM_DEFAULT);
     File realmFile = new File(runtimeInfo.getConfigDir(), realm + ".properties").getAbsoluteFile();
     validateRealmFile(realmFile);
@@ -190,7 +192,14 @@ public class WebServerTask extends AbstractTask {
     mapping.setPathSpec("/*");
     mapping.setConstraint(constraint);
     security.setConstraintMappings(Collections.singletonList(mapping));
-    security.setAuthenticator(new DigestAuthenticator());
+    switch (mode) {
+      case "digest":
+        security.setAuthenticator(new DigestAuthenticator());
+        break;
+      case "basic":
+        security.setAuthenticator(new BasicAuthenticator());
+        break;
+    }
     security.setLoginService(loginService);
     return security;
   }

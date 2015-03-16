@@ -5,10 +5,12 @@
  */
 package com.streamsets.pipeline.restapi;
 
+import javax.annotation.security.PermitAll;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 
 @Path("/ping")
+@PermitAll
 public class RestAPI {
 
   @GET
