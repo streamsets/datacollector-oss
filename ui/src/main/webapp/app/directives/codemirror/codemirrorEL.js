@@ -66,7 +66,9 @@ angular.module('dataCollectorApp.codemirrorDirectives')
                     text: fieldPath,
                     displayText: fieldPath,
                     className: 'CodeMirror-EL-completion CodeMirror-EL-completion-field-path',
-                    data: fieldPath
+                    data: {
+                      description: 'Field Path ' + fieldPath
+                    }
                   });
                 }
               });

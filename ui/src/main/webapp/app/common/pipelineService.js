@@ -1072,6 +1072,28 @@ angular.module('dataCollectorApp.common')
           enabled: false,
           sendEmail: false,
           valid: true
+        },
+        {
+          id: pipelineName + 'idleGauge' + (new Date()).getTime(),
+          alertText: "Pipeline is Idle",
+          metricId: "RuntimeStatsGauge.gauge",
+          metricType: "GAUGE",
+          metricElement: "TIME_OF_LAST_RECEIVED_RECORD",
+          condition: "${time:now() - value() > 120000}",
+          sendEmail: false,
+          enabled: false,
+          valid: true
+        },
+        {
+          id: pipelineName + 'batchTime' + (new Date()).getTime(),
+          alertText: "Batch taking more time to process",
+          metricId: "RuntimeStatsGauge.gauge",
+          metricType: "GAUGE",
+          metricElement: "CURRENT_BATCH_AGE",
+          condition: "${value() > 200}",
+          sendEmail: false,
+          enabled: false,
+          valid: true
         }
       ];
     };
