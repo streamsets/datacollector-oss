@@ -134,7 +134,7 @@
 
 <script type="text/ng-template" id="summaryBatchThroughputBarChartTemplate">
   <div class="col-sm-4"
-       ng-if="!detailPaneConfig.instanceName"
+       ng-if="selectedType === pipelineConstant.PIPELINE"
        ng-controller="BatchCountBarChartController">
     <div class="panel panel-default">
       <div class="panel-heading">
@@ -166,7 +166,7 @@
 
 
 <script type="text/ng-template" id="summaryRecordHistogramTemplate">
-  <div class="col-sm-8">
+  <div class="col-sm-4">
     <div class="panel panel-default">
       <div class="panel-heading">
         <span translate="global.form.histogram">Record Histogram (5 minutes decay)</span>
@@ -223,6 +223,64 @@
         </nvd3-multi-bar-horizontal-chart>
       </div>
 
+    </div>
+  </div>
+</script>
+
+
+<script type="text/ng-template" id="summaryRuntimeStatisticsTemplate">
+  <div class="col-sm-4"
+       ng-if="selectedType === pipelineConstant.PIPELINE"
+       ng-controller="BatchTimerChartController">
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <span translate="home.detailPane.summaryTab.runtimeStatistics">Runtime Statistics</span>
+        <button type="button" class="close" aria-label="Close" ng-click="removeChart(chart, chartIndex)">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="panel-body">
+
+        <ul class="table-properties">
+
+          <li>
+            <span class="properties-label">{{'home.detailPane.summaryTab.timeOfLastReceivedRecord' | translate}}:</span>
+            <span class="properties-value">{{common.pipelineMetrics.gauges['RuntimeStatsGauge.gauge'].value.timeOfLastReceivedRecord  | date:'medium'}}</span>
+          </li>
+
+          <li>
+            <span class="properties-label">{{'home.detailPane.summaryTab.batchCount' | translate}}:</span>
+            <span class="properties-value">{{common.pipelineMetrics.gauges['RuntimeStatsGauge.gauge'].value.batchCount}}</span>
+          </li>
+
+          <li>
+            <span class="properties-label">{{'home.detailPane.summaryTab.batchStartTime' | translate}}:</span>
+            <span class="properties-value">{{common.pipelineMetrics.gauges['RuntimeStatsGauge.gauge'].value.batchStartTime  | date:'medium'}}</span>
+          </li>
+
+          <li>
+            <span class="properties-label">{{'home.detailPane.summaryTab.currentBatchAge' | translate}}:</span>
+            <span class="properties-value">{{common.pipelineMetrics.gauges['RuntimeStatsGauge.gauge'].value.currentBatchAge}}</span>
+          </li>
+
+          <li>
+            <span class="properties-label">{{'home.detailPane.summaryTab.currentSourceOffset' | translate}}:</span>
+            <span class="properties-value">{{common.pipelineMetrics.gauges['RuntimeStatsGauge.gauge'].value.currentSourceOffset}}</span>
+          </li>
+
+          <li>
+            <span class="properties-label">{{'home.detailPane.summaryTab.currentStage' | translate}}:</span>
+            <span class="properties-value">{{stageNameToLabelMap[common.pipelineMetrics.gauges['RuntimeStatsGauge.gauge'].value.currentStage]}}</span>
+          </li>
+
+          <li>
+            <span class="properties-label">{{'home.detailPane.summaryTab.timeInCurrentStage' | translate}}:</span>
+            <span class="properties-value">{{common.pipelineMetrics.gauges['RuntimeStatsGauge.gauge'].value.timeInCurrentStage}}</span>
+          </li>
+
+        </ul>
+
+      </div>
     </div>
   </div>
 </script>

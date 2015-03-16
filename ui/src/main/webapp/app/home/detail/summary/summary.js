@@ -30,6 +30,10 @@ angular
       {
         label: 'home.detailPane.summaryTab.batchProcessingTimer',
         templateId: 'summaryRecordsProcessedTemplate'
+      },
+      {
+        label: 'home.detailPane.summaryTab.runtimeStatistics',
+        templateId: 'summaryRuntimeStatisticsTemplate'
       }
     ];
 
@@ -51,6 +55,10 @@ angular
         'Output 6': '#138808',
         'Output 7': '#556B2F'
       },
+      stageNameToLabelMap: _.reduce($scope.pipelineConfig.stages, function(nameToLabelMap, stageInstance){
+        nameToLabelMap[stageInstance.instanceName] = stageInstance.uiInfo.label;
+        return nameToLabelMap;
+      }, {}),
 
       getDurationLabel: function(key) {
         switch(key) {
@@ -82,6 +90,7 @@ angular
     if(!$rootScope.$storage.summaryChartList) {
       $rootScope.$storage.summaryChartList = chartList;
     }
+
 
     /**
      * Update Summary Tab Data

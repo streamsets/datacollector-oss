@@ -3,10 +3,37 @@
     margin-bottom: @smallPadding * 3;
 
     .panel {
+
       .panel-heading {
         .close {
           top: -2px;
           position: relative;
+        }
+      }
+
+      .panel-body {
+        min-height: 250px;
+      }
+
+      .table-properties {
+        list-style: none;
+        margin: 0;
+
+        padding: @defaultPadding;
+
+        li {
+          padding: @smallPadding;
+        }
+
+        .properties-label {
+          display: inline-block;
+          opacity: 0.6;
+          width: 150px;
+          color: #000000;
+        }
+
+        .properties-value {
+
         }
       }
     }
