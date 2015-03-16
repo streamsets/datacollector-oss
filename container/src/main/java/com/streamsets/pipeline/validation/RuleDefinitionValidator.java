@@ -31,6 +31,7 @@ public class RuleDefinitionValidator {
   private static final String LABEL = "label";
   private static final String CONDITION = "condition";
   private static final String VAL = "value()";
+  private static final String TIME_NOW = "time:now()";
   private static final String METRIC_ID = "metric id";
   private static final String DEFAULT_VALUE = "10";
   private static final String PROPERTY = "property";
@@ -158,7 +159,9 @@ public class RuleDefinitionValidator {
     if(!condition.startsWith("${") || !condition.endsWith("}") || !condition.contains(VAL)) {
       return RuleIssue.createRuleIssue(ruleId, ValidationError.VALIDATION_0046);
     }
-    String predicateWithValue = condition.replace(VAL, DEFAULT_VALUE);
+    String predicateWithValue = condition
+      .replace(VAL, DEFAULT_VALUE)
+      .replace(TIME_NOW, DEFAULT_VALUE);
     try {
       elEvaluator.eval(variables, predicateWithValue, Object.class);
     } catch (ELEvalException e) {

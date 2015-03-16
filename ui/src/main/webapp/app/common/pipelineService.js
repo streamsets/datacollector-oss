@@ -91,6 +91,12 @@ angular.module('dataCollectorApp.common')
           group: "",
           returnType: "long",
           elFunctionArgumentDefinition: []
+        },{
+          name: "time:now",
+          description: "Returns the current time in milliseconds.",
+          group: "",
+          returnType: "long",
+          elFunctionArgumentDefinition: []
         }]
       };
     };
@@ -630,9 +636,15 @@ angular.module('dataCollectorApp.common')
     };
 
     $translate([
+      //Gauge
+      'metrics.CURRENT_BATCH_AGE',
+      'metrics.TIME_IN_CURRENT_STAGE',
+      'metrics.TIME_OF_LAST_RECEIVED_RECORD',
+
+      //Counter
       'metrics.COUNTER_COUNT',
 
-      //Related to Histogram
+      //Histogram
       'metrics.HISTOGRAM_COUNT',
       'metrics.HISTOGRAM_MAX',
       'metrics.HISTOGRAM_MIN',
@@ -683,6 +695,20 @@ angular.module('dataCollectorApp.common')
      */
     this.getMetricElementList = function() {
       var elementList = {
+        GAUGE: [
+          {
+            value: 'CURRENT_BATCH_AGE',
+            label: translations['metrics.CURRENT_BATCH_AGE']
+          },
+          {
+            value: 'TIME_IN_CURRENT_STAGE',
+            label: translations['metrics.TIME_IN_CURRENT_STAGE']
+          },
+          {
+            value: 'TIME_OF_LAST_RECEIVED_RECORD',
+            label: translations['metrics.TIME_OF_LAST_RECEIVED_RECORD']
+          }
+        ],
         COUNTER: [
           {
             value: 'COUNTER_COUNT',
@@ -856,6 +882,12 @@ angular.module('dataCollectorApp.common')
      */
     this.getMetricIDList = function(pipelineConfig) {
       var metricIDList = {
+        GAUGE: [
+          {
+            value: 'RuntimeStatsGauge.gauge',
+            label: 'Runtime Statistics Gauge'
+          }
+        ],
         COUNTER: [],
         HISTOGRAM: [
             {

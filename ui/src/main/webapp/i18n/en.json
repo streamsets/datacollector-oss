@@ -244,6 +244,7 @@
         "enableAlert": "Enable Alert",
         "enableMeter": "Enable Meter",
         "enabled": "Active",
+        "gauge": "Gauge",
         "group": "Group",
         "groupPlaceholder": "Group",
         "histogram": "Histogram",
@@ -393,6 +394,10 @@
     "version": "Version:"
   },
   "metrics": {
+    "CURRENT_BATCH_AGE": "Current Batch Age",
+    "TIME_IN_CURRENT_STAGE": "Time in Current Stage",
+    "TIME_OF_LAST_RECEIVED_RECORD": "Time of Last Received Record",
+
     "COUNTER_COUNT" : "Count",
 
     "HISTOGRAM_COUNT" : "Count",

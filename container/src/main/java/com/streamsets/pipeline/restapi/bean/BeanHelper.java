@@ -866,6 +866,16 @@ public class BeanHelper {
         return MetricElementJson.TIMER_M15_RATE;
       case TIMER_MEAN_RATE:
         return MetricElementJson.TIMER_MEAN_RATE;
+
+
+      //Gauge
+      case CURRENT_BATCH_AGE:
+        return MetricElementJson.CURRENT_BATCH_AGE;
+      case TIME_IN_CURRENT_STAGE:
+        return MetricElementJson.TIME_IN_CURRENT_STAGE;
+      case TIME_OF_LAST_RECEIVED_RECORD:
+        return MetricElementJson.TIME_OF_LAST_RECEIVED_RECORD;
+
       default:
         throw new IllegalArgumentException("Unrecognized metric element");
     }
@@ -957,6 +967,15 @@ public class BeanHelper {
         return com.streamsets.pipeline.config.MetricElement.TIMER_M15_RATE;
       case TIMER_MEAN_RATE:
         return com.streamsets.pipeline.config.MetricElement.TIMER_MEAN_RATE;
+
+      //Gauge
+      case CURRENT_BATCH_AGE:
+        return com.streamsets.pipeline.config.MetricElement.CURRENT_BATCH_AGE;
+      case TIME_IN_CURRENT_STAGE:
+        return com.streamsets.pipeline.config.MetricElement.TIME_IN_CURRENT_STAGE;
+      case TIME_OF_LAST_RECEIVED_RECORD:
+        return com.streamsets.pipeline.config.MetricElement.TIME_OF_LAST_RECEIVED_RECORD;
+
       default:
         throw new IllegalArgumentException("Unrecognized metric element");
     }
@@ -967,6 +986,8 @@ public class BeanHelper {
       return null;
     }
     switch(metricType) {
+      case GAUGE:
+        return MetricTypeJson.GAUGE;
       case HISTOGRAM:
         return MetricTypeJson.HISTOGRAM;
       case TIMER:
@@ -985,6 +1006,8 @@ public class BeanHelper {
       return null;
     }
     switch(metricType) {
+      case GAUGE:
+        return com.streamsets.pipeline.config.MetricType.GAUGE;
       case HISTOGRAM:
         return com.streamsets.pipeline.config.MetricType.HISTOGRAM;
       case TIMER:

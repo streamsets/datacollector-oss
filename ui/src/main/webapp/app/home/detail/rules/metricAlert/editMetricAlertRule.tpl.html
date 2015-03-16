@@ -30,6 +30,7 @@
       <div class="controls col-lg-9 col-md-8">
         <select class="form-control" name="metricType" required="true"
                 ng-model="metricAlertRuleDefn.metricType">
+          <option value="GAUGE">{{'home.detailPane.rulesTab.gauge' | translate}}</option>
           <option value="COUNTER">{{'home.detailPane.rulesTab.counter' | translate}}</option>
           <option value="HISTOGRAM">{{'home.detailPane.rulesTab.histogram' | translate}}</option>
           <option value="METER">{{'home.detailPane.rulesTab.meter' | translate}}</option>

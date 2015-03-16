@@ -6,6 +6,7 @@
 package com.streamsets.pipeline.config;
 
 public enum MetricType {
+  GAUGE,
   COUNTER,
   HISTOGRAM,
   METER,

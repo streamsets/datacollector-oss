@@ -6,6 +6,7 @@
 package com.streamsets.pipeline.alerts;
 
 import com.codahale.metrics.Counter;
+import com.codahale.metrics.Gauge;
 import com.codahale.metrics.Histogram;
 import com.codahale.metrics.MetricRegistry;
 import com.codahale.metrics.Timer;
@@ -15,6 +16,7 @@ import com.streamsets.pipeline.el.ELVariables;
 import com.streamsets.pipeline.lib.el.RecordEL;
 import com.streamsets.pipeline.lib.el.StringEL;
 import com.streamsets.pipeline.metrics.ExtendedMeter;
+import com.streamsets.pipeline.runner.RuntimeStats;
 import com.streamsets.pipeline.util.ObserverException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,6 +27,7 @@ public class MetricRuleEvaluator {
 
   private static final Logger LOG = LoggerFactory.getLogger(MetricRuleEvaluator.class);
   private static final String VAL = "value()";
+  private static final String TIME_NOW = "time:now()";
   private static final ELEvaluator EL_EVALUATOR =  new ELEvaluator("condition", RecordEL.class, StringEL.class);
 
   private final MetricsRuleDefinition metricsRuleDefinition;
@@ -55,6 +58,8 @@ public class MetricRuleEvaluator {
         case TIMER:
           checkForTimerAlerts();
           break;
+        case GAUGE:
+          checkForGaugeAlerts();
       }
     }
   }
@@ -210,11 +215,34 @@ public class MetricRuleEvaluator {
     }
   }
 
+  private void checkForGaugeAlerts() {
+    Gauge g = metrics.getGauges().get(metricsRuleDefinition.getMetricId());
+    if(g != null) {
+      RuntimeStats runtimeStats = (RuntimeStats)g.getValue();
+      Object value = null;
+      switch (metricsRuleDefinition.getMetricElement()) {
+        case CURRENT_BATCH_AGE:
+          value =  runtimeStats.getCurrentBatchAge();
+          break;
+        case TIME_IN_CURRENT_STAGE:
+          value =  runtimeStats.getTimeInCurrentStage();
+          break;
+        case TIME_OF_LAST_RECEIVED_RECORD:
+          value =  runtimeStats.getTimeOfLastReceivedRecord();
+          break;
+      }
+      evaluate(value);
+    }
+  }
+
+
   private void evaluate(Object value) {
     //predicate String is of the form "val()<200" or "val() < 200 && val() > 100" etc
     //replace val() with the actual value, append dollar and curly braces and evaluate the resulting EL expression
     // string
-    String predicateWithValue = metricsRuleDefinition.getCondition().replace(VAL, String.valueOf(value));
+    String predicateWithValue = metricsRuleDefinition.getCondition()
+      .replace(VAL, String.valueOf(value))
+      .replace(TIME_NOW, System.currentTimeMillis() + "");
     try {
       if (AlertsUtil.evaluateExpression(predicateWithValue, new ELVariables(), EL_EVALUATOR)) {
         alertManager.alert(value, emailIds, metricsRuleDefinition);

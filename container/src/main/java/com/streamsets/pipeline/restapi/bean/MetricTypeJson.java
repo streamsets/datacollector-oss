@@ -6,6 +6,7 @@
 package com.streamsets.pipeline.restapi.bean;
 
 public enum MetricTypeJson {
+  GAUGE,
   COUNTER,
   HISTOGRAM,
   METER,

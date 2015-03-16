@@ -49,6 +49,11 @@ public enum MetricElementJson {
   TIMER_M1_RATE,
   TIMER_M5_RATE,
   TIMER_M15_RATE,
-  TIMER_MEAN_RATE
+  TIMER_MEAN_RATE,
+
+  //Gauge - Related to Runtime Stats
+  CURRENT_BATCH_AGE,
+  TIME_IN_CURRENT_STAGE,
+  TIME_OF_LAST_RECEIVED_RECORD
 
 }
