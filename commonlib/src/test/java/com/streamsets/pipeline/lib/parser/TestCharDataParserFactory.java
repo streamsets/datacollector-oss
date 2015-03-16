@@ -13,6 +13,7 @@ import org.junit.Test;
 import java.io.File;
 import java.io.IOException;
 import java.io.StringReader;
+import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.util.UUID;
 
@@ -73,7 +74,7 @@ public class TestCharDataParserFactory {
     File file = new File(dir, "abc");
     Files.createFile(file.toPath());
     factory = new TestFactory(file.getName(), reader, 10, false);
-    Assert.assertEquals(DATA_PARSER, factory.getParser(file, 10, 10));
+    Assert.assertEquals(DATA_PARSER, factory.getParser(file, Charset.forName("UTF-8"), 10, 10));
   }
 
   @Test

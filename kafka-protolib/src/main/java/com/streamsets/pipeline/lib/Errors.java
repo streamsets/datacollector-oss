@@ -17,6 +17,7 @@ public enum Errors implements ErrorCode {
   KAFKA_05("Topic cannot be empty"),
   KAFKA_06("Broker URIs cannot be empty"),
   KAFKA_07("Invalid broker URI '{}'"),
+  KAFKA_08("Unsupported charset '{}'"),
 
   //Kafka source messages
     /* LC Hari says the first one is not being used right now  */

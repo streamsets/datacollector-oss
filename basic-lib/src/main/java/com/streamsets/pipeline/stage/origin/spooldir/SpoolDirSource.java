@@ -26,6 +26,8 @@ import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.charset.Charset;
+import java.nio.charset.UnsupportedCharsetException;
 import java.nio.file.PathMatcher;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -36,6 +38,7 @@ public class SpoolDirSource extends BaseSource {
   private static final int MIN_OVERRUN_LIMIT = 64 * 1024;
 
   private final DataFormat dataFormat;
+  private String charset;
   private final int overrunLimit;
   private final String spoolDir;
   private final int batchSize;
@@ -56,12 +59,14 @@ public class SpoolDirSource extends BaseSource {
   private final String xmlRecordElement;
   private final int xmlMaxObjectLen;
 
-  public SpoolDirSource(DataFormat dataFormat, int overrunLimit, String spoolDir, int batchSize, long poolingTimeoutSecs,
+  public SpoolDirSource(DataFormat dataFormat, String charset, int overrunLimit, String spoolDir, int batchSize,
+      long poolingTimeoutSecs,
       String filePattern, int maxSpoolFiles, String initialFileToProcess, String errorArchiveDir,
       PostProcessingOptions postProcessing, String archiveDir, long retentionTimeMins,
       CsvMode csvFileFormat, CsvHeader csvHeader, int csvMaxObjectLen, JsonMode jsonContent, int jsonMaxObjectLen,
       int textMaxLineLen, String xmlRecordElement, int xmlMaxObjectLen) {
     this.dataFormat = dataFormat;
+    this.charset = charset;
     this.overrunLimit = overrunLimit * 1024;
     this.spoolDir = spoolDir;
     this.batchSize = batchSize;
@@ -83,6 +88,7 @@ public class SpoolDirSource extends BaseSource {
     this.xmlMaxObjectLen = xmlMaxObjectLen;
   }
 
+  private Charset fileCharset;
   private DirectorySpooler spooler;
   private File currentFile;
   private CharDataParserFactory parserFactory;
@@ -213,6 +219,15 @@ public class SpoolDirSource extends BaseSource {
 
   private void validateDataParser(List<ConfigIssue> issues) {
     CharDataParserFactory.Builder  builder = new CharDataParserFactory.Builder(getContext(), dataFormat.getParserFormat());
+
+    try {
+      fileCharset = Charset.forName(charset);
+    } catch (UnsupportedCharsetException ex) {
+      // setting it to a valid one so the parser factory can be configured and tested for more errors
+      fileCharset = Charset.forName("UTF-8");
+      issues.add(getContext().createConfigIssue(Groups.FILES.name(), "charset", Errors.SPOOLDIR_00, charset));
+    }
+
     switch (dataFormat) {
       case TEXT:
         builder.setMaxDataLen(textMaxLineLen);
@@ -408,7 +423,7 @@ public class SpoolDirSource extends BaseSource {
     String sourceFile = file.getName();
     try {
       if (parser == null) {
-        parser = parserFactory.getParser(file, overrunLimit, offset);
+        parser = parserFactory.getParser(file, fileCharset, overrunLimit, offset);
       }
       for (int i = 0; i < maxBatchSize; i++) {
         try {

@@ -12,6 +12,7 @@ import com.streamsets.pipeline.api.RawSource;
 import com.streamsets.pipeline.api.Source;
 import com.streamsets.pipeline.api.StageDef;
 import com.streamsets.pipeline.api.ValueChooser;
+import com.streamsets.pipeline.config.CharsetChooserValues;
 import com.streamsets.pipeline.config.CsvHeader;
 import com.streamsets.pipeline.config.CsvHeaderChooserValues;
 import com.streamsets.pipeline.config.CsvMode;
@@ -78,6 +79,17 @@ public class KafkaDSource extends DSourceOffsetCommitter {
   )
   @ValueChooser(DataFormatChooserValues.class)
   public DataFormat dataFormat;
+
+  @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.MODEL,
+      defaultValue = "UTF-8",
+      label = "Messages Charset",
+      displayPosition = 42,
+      group = "KAFKA"
+  )
+  @ValueChooser(CharsetChooserValues.class)
+  public String charset;
 
   @ConfigDef(
       required = true,
@@ -244,7 +256,7 @@ public class KafkaDSource extends DSourceOffsetCommitter {
 
   @Override
   protected Source createSource() {
-    return new KafkaSource(zookeeperConnect, consumerGroup, topic, dataFormat, produceSingleRecordPerMessage,
+    return new KafkaSource(zookeeperConnect, consumerGroup, topic, dataFormat, charset, produceSingleRecordPerMessage,
                            maxBatchSize, maxWaitTime, kafkaConsumerConfigs, textMaxLineLen, jsonContent,
                            jsonMaxObjectLen, csvFileFormat, csvHeader, csvMaxObjectLen, xmlRecordElement,
                            xmlMaxObjectLen);

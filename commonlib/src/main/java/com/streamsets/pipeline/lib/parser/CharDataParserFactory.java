@@ -18,9 +18,13 @@ import com.streamsets.pipeline.lib.parser.text.TextCharDataParserFactory;
 import com.streamsets.pipeline.lib.parser.xml.XmlCharDataParserFactory;
 
 import java.io.File;
-import java.io.FileReader;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.Reader;
 import java.io.StringReader;
+import java.nio.charset.Charset;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
@@ -31,10 +35,11 @@ public abstract class CharDataParserFactory {
     return getParser(id, new OverrunReader(new StringReader(data), 0, false), 0);
   }
 
-  public DataParser getParser(File file, int overrunLimit, long fileOffset) throws DataParserException {
-    FileReader fileReader;
+  public DataParser getParser(File file, Charset charset, int overrunLimit, long fileOffset) throws DataParserException {
+    Reader fileReader;
     try {
-      fileReader = new FileReader(file);
+      InputStream fis = new FileInputStream(file);
+      fileReader = new InputStreamReader(fis, charset);
     } catch (IOException ex) {
       throw new DataParserException(Errors.DATA_PARSER_00, file.getAbsolutePath(), ex.getMessage(), ex);
     }

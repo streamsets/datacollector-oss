@@ -15,7 +15,9 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.FileWriter;
+import java.io.OutputStreamWriter;
 import java.io.Writer;
 import java.util.List;
 import java.util.UUID;
@@ -31,29 +33,28 @@ public class TestTextSpoolDirSource {
   private final static String LINE1 = "1234567890";
   private final static String LINE2 = "A1234567890";
 
-  private File createLogFile() throws Exception {
+  private File createLogFile(String charset) throws Exception {
     File f = new File(createTestDir(), "test.log");
-    Writer writer = new FileWriter(f);
+    Writer writer = new OutputStreamWriter(new FileOutputStream(f), charset);
     IOUtils.write(LINE1 + "\n", writer);
     IOUtils.write(LINE2, writer);
     writer.close();
     return f;
   }
 
-  private SpoolDirSource createSource() {
-    return new SpoolDirSource(DataFormat.TEXT, 100, createTestDir(), 10, 1, "file-[0-9].log", 10, null, null,
+  private SpoolDirSource createSource(String charset) {
+    return new SpoolDirSource(DataFormat.TEXT, charset, 100, createTestDir(), 10, 1, "file-[0-9].log", 10, null, null,
                               PostProcessingOptions.ARCHIVE, createTestDir(), 10, null, null, -1, null, 0, 10,
                               null, 0);
   }
 
-  @Test
-  public void testProduceFullFile() throws Exception {
-    SpoolDirSource source = createSource();
+  public void testProduceFullFile(String charset) throws Exception {
+    SpoolDirSource source = createSource(charset);
     SourceRunner runner = new SourceRunner.Builder(source).addOutputLane("lane").build();
     runner.runInit();
     try {
       BatchMaker batchMaker = SourceRunner.createTestBatchMaker("lane");
-      Assert.assertEquals(-1, source.produce(createLogFile(), 0, 10, batchMaker));
+      Assert.assertEquals(-1, source.produce(createLogFile(charset), 0, 10, batchMaker));
       StageRunner.Output output = SourceRunner.getOutput(batchMaker);
       List<Record> records = output.getRecords().get("lane");
       Assert.assertNotNull(records);
@@ -68,13 +69,23 @@ public class TestTextSpoolDirSource {
   }
 
   @Test
+  public void testProduceFullFileUTF8() throws Exception {
+    testProduceFullFile("UTF-8");
+  }
+
+  @Test
+  public void testProduceFullFileIBM500() throws Exception {
+    testProduceFullFile("IBM500");
+  }
+
+  @Test
   public void testProduceLessThanFile() throws Exception {
-    SpoolDirSource source = createSource();
+    SpoolDirSource source = createSource("UTF-8");
     SourceRunner runner = new SourceRunner.Builder(source).addOutputLane("lane").build();
     runner.runInit();
     try {
       BatchMaker batchMaker = SourceRunner.createTestBatchMaker("lane");
-      long offset = source.produce(createLogFile(), 0, 1, batchMaker);
+      long offset = source.produce(createLogFile("UTF-8"), 0, 1, batchMaker);
       Assert.assertEquals(11, offset);
       StageRunner.Output output = SourceRunner.getOutput(batchMaker);
       List<Record> records = output.getRecords().get("lane");
@@ -85,7 +96,7 @@ public class TestTextSpoolDirSource {
 
 
       batchMaker = SourceRunner.createTestBatchMaker("lane");
-      offset = source.produce(createLogFile(), offset, 1, batchMaker);
+      offset = source.produce(createLogFile("UTF-8"), offset, 1, batchMaker);
       Assert.assertEquals(22, offset);
       output = SourceRunner.getOutput(batchMaker);
       records = output.getRecords().get("lane");
@@ -95,7 +106,7 @@ public class TestTextSpoolDirSource {
       Assert.assertEquals(true, records.get(0).get().getValueAsMap().get("truncated").getValueAsBoolean());
 
       batchMaker = SourceRunner.createTestBatchMaker("lane");
-      offset = source.produce(createLogFile(), offset, 1, batchMaker);
+      offset = source.produce(createLogFile("UTF-8"), offset, 1, batchMaker);
       Assert.assertEquals(-1, offset);
       output = SourceRunner.getOutput(batchMaker);
       records = output.getRecords().get("lane");

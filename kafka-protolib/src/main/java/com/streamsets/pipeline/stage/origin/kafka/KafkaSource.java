@@ -31,6 +31,7 @@ import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.nio.charset.Charset;
+import java.nio.charset.UnsupportedCharsetException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -42,6 +43,7 @@ public class KafkaSource extends BaseSource implements OffsetCommitter {
   private final String consumerGroup;
   private final String topic;
   private final DataFormat dataFormat;
+  private final String charset;
   public boolean produceSingleRecordPerMessage;
   private final int maxBatchSize;
   private final Map<String, String> kafkaConsumerConfigs;
@@ -56,7 +58,7 @@ public class KafkaSource extends BaseSource implements OffsetCommitter {
   private int maxWaitTime;
   private KafkaConsumer kafkaConsumer;
 
-  public KafkaSource(String zookeeperConnect, String consumerGroup, String topic, DataFormat dataFormat,
+  public KafkaSource(String zookeeperConnect, String consumerGroup, String topic, DataFormat dataFormat, String charset,
       boolean produceSingleRecordPerMessage, int maxBatchSize, int maxWaitTime, Map<String, String> kafkaConsumerConfigs,
       int textMaxLineLen, JsonMode jsonContent, int jsonMaxObjectLen, CsvMode csvFileFormat, CsvHeader csvHeader,
       int csvMaxObjectLen, String xmlRecordElement, int xmlMaxObjectLen) {
@@ -64,6 +66,7 @@ public class KafkaSource extends BaseSource implements OffsetCommitter {
     this.consumerGroup = consumerGroup;
     this.topic = topic;
     this.dataFormat = dataFormat;
+    this.charset = charset;
     this.produceSingleRecordPerMessage = produceSingleRecordPerMessage;
     this.maxBatchSize = maxBatchSize;
     this.maxWaitTime = maxWaitTime;
@@ -149,26 +152,25 @@ public class KafkaSource extends BaseSource implements OffsetCommitter {
         issues.add(getContext().createConfigIssue(Groups.KAFKA.name(), "dataFormat", Errors.KAFKA_39, dataFormat));
     }
 
+    validateParserFactoryConfigs(issues);
+
     //kafka consumer configs
     //We do not validate this, just pass it down to Kafka
 
     return issues;
   }
 
-  CharDataParserFactory parserFactory;
-
-  @Override
-  public void init() throws StageException {
-    super.init();
-    if(getContext().isPreview()) {
-      //set fixed batch duration time of 1 second for preview.
-      maxWaitTime = 1000;
-    }
-    kafkaConsumer.init();
-    LOG.info("Successfully initialized Kafka Consumer");
-
+  private void validateParserFactoryConfigs(List<ConfigIssue> issues) {
     CharDataParserFactory.Builder builder =
         new CharDataParserFactory.Builder(getContext(), dataFormat.getParserFormat());
+
+    try {
+      messageCharset = Charset.forName(charset);
+    } catch (UnsupportedCharsetException ex) {
+      // setting it to a valid one so the parser factory can be configured and tested for more errors
+      messageCharset = Charset.forName("UTF-8");
+      issues.add(getContext().createConfigIssue(Groups.KAFKA.name(), "charset", Errors.KAFKA_08, charset));
+    }
 
     switch ((dataFormat)) {
       case TEXT:
@@ -190,6 +192,21 @@ public class KafkaSource extends BaseSource implements OffsetCommitter {
         break;
     }
     parserFactory = builder.build();
+
+  }
+
+  Charset messageCharset;
+  CharDataParserFactory parserFactory;
+
+  @Override
+  public void init() throws StageException {
+    super.init();
+    if(getContext().isPreview()) {
+      //set fixed batch duration time of 1 second for preview.
+      maxWaitTime = 1000;
+    }
+    kafkaConsumer.init();
+    LOG.info("Successfully initialized Kafka Consumer");
   }
 
   @Override
@@ -211,12 +228,10 @@ public class KafkaSource extends BaseSource implements OffsetCommitter {
     return lastSourceOffset;
   }
 
-  private final static Charset UTF8 = Charset.forName("UTF-8");
-
   @VisibleForTesting
   List<Record> processKafkaMessage(MessageAndOffset message) throws StageException {
     List<Record> records = new ArrayList<>();
-    String messageStr = new String(message.getPayload(), UTF8);
+    String messageStr = new String(message.getPayload(), messageCharset);
     String messageId = getMessageID(message);
     try (DataParser parser = parserFactory.getParser(messageId, messageStr)) {
       Record record = parser.parse();

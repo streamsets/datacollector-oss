@@ -13,6 +13,7 @@ import com.streamsets.pipeline.api.Source;
 import com.streamsets.pipeline.api.StageDef;
 import com.streamsets.pipeline.api.ValueChooser;
 import com.streamsets.pipeline.api.base.FileRawSourcePreviewer;
+import com.streamsets.pipeline.config.CharsetChooserValues;
 import com.streamsets.pipeline.config.CsvHeader;
 import com.streamsets.pipeline.config.CsvHeaderChooserValues;
 import com.streamsets.pipeline.config.CsvMode;
@@ -45,6 +46,16 @@ public class SpoolDirDSource extends DSource {
   @ValueChooser(DataFormatChooserValues.class)
   public DataFormat dataFormat;
 
+  @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.MODEL,
+      defaultValue = "UTF-8",
+      label = "Files Charset",
+      displayPosition = 5,
+      group = "FILES"
+  )
+  @ValueChooser(CharsetChooserValues.class)
+  public String charset;
 
   @ConfigDef(
       required = true,
@@ -309,7 +320,7 @@ public class SpoolDirDSource extends DSource {
 
   @Override
   protected Source createSource() {
-    return new SpoolDirSource(dataFormat, overrunLimit, spoolDir, batchSize, poolingTimeoutSecs, filePattern,
+    return new SpoolDirSource(dataFormat, charset, overrunLimit, spoolDir, batchSize, poolingTimeoutSecs, filePattern,
                               maxSpoolFiles, initialFileToProcess, errorArchiveDir, postProcessing, archiveDir,
                               retentionTimeMins, csvFileFormat, csvHeader, csvMaxObjectLen, jsonContent,
                               jsonMaxObjectLen, textMaxObjectLen, xmlRecordElement, xmlMaxObjectLen);

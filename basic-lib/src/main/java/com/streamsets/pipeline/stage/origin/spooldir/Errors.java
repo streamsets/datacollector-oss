@@ -14,6 +14,8 @@ public enum Errors implements ErrorCode {
   SPOOLDIR_02("Object in file '{}' at offset '{}' exceeds maximum length"),
   SPOOLDIR_04("File '{}' could not be fully processed, failed on '{}' offset: {}"),
 
+  SPOOLDIR_05("Unsupported charset '{}'"),
+
   SPOOLDIR_10("Unsupported data format '{}'"),
   SPOOLDIR_11("Directory path cannot be empty"),
   SPOOLDIR_12("Directory '{}' does not exist"),

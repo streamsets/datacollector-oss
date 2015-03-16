@@ -40,7 +40,7 @@ public class TestSpoolDirSourceOnErrorHandling {
     writer = new FileWriter(file2);
     IOUtils.write("x,y", writer);
     writer.close();
-    return new SpoolDirSource(DataFormat.DELIMITED, 100, dir, 10, 1, "file-[0-9].csv", 10, null, null,
+    return new SpoolDirSource(DataFormat.DELIMITED, "UTF-8", 100, dir, 10, 1, "file-[0-9].csv", 10, null, null,
                               PostProcessingOptions.ARCHIVE, dir, 10, CsvMode.RFC4180, CsvHeader.NO_HEADER,
                               5, null, 0, 10, null, 0);
   }
@@ -121,7 +121,7 @@ public class TestSpoolDirSourceOnErrorHandling {
     writer = new FileWriter(file2);
     IOUtils.write("[2]", writer);
     writer.close();
-    return new SpoolDirSource(DataFormat.JSON, 100, dir, 10, 1, "file-[0-9].json", 10, null, null,
+    return new SpoolDirSource(DataFormat.JSON, "UTF-8", 100, dir, 10, 1, "file-[0-9].json", 10, null, null,
                               PostProcessingOptions.ARCHIVE, dir, 10, null, null,
                               5, JsonMode.ARRAY_OBJECTS, 100, 10, null, 0);
   }

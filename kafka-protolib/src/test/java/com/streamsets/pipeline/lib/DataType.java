@@ -5,24 +5,11 @@
  */
 package com.streamsets.pipeline.lib;
 
-import com.streamsets.pipeline.api.Label;
-
-public enum DataType implements Label {
-  LOG("Text"),
-  JSON("JSON"),
-  CSV("Delimited"),
-  XML("XML"),
-
+public enum DataType {
+  LOG,
+  JSON,
+  CSV,
+  XML,
   ;
 
-  private final String label;
-
-  DataType(String label) {
-    this.label = label;
-  }
-
-  @Override
-  public String getLabel() {
-    return label;
-  }
 }
