@@ -63,7 +63,7 @@ public class WebServerTask extends AbstractTask {
   private static final String HTTPS_KEYSTORE_PASSWORD_DEFAULT = "@sdc-keystore-password.txt@";
 
   public static final String AUTHENTICATION_KEY = "http.authentication";
-  private static final String AUTHENTICATION_DEFAULT = "form";
+  public static final String AUTHENTICATION_DEFAULT = "form";
 
   private static final String DIGEST_REALM_KEY = "http.digest.realm";
   private static final String DIGEST_REALM_DEFAULT = "local-realm";

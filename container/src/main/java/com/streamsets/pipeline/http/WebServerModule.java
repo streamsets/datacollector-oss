@@ -130,6 +130,19 @@ public class WebServerModule {
   }
 
   @Provides(type = Type.SET)
+  ContextConfigurator provideNoAuthenticationRoles(final Configuration configuration) {
+    return new ContextConfigurator() {
+      @Override
+      public void init(ServletContextHandler context) {
+        if (configuration.get(WebServerTask.AUTHENTICATION_KEY, WebServerTask.AUTHENTICATION_DEFAULT).equals("none")) {
+          FilterHolder filter = new FilterHolder(new AlwaysAllRolesFilter());
+          context.addFilter(filter, "/rest/*", EnumSet.of(DispatcherType.REQUEST));
+        }
+      }
+    };
+  }
+
+  @Provides(type = Type.SET)
   ContextConfigurator provideJersey() {
     return new ContextConfigurator() {
       @Override
