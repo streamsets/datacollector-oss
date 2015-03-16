@@ -17,6 +17,18 @@ angular.module('recordTreeDirectives', ['RecursionHelper'])
           if(scope.isRoot) {
             scope.isOpen = !scope.record.expand;
             scope.record.expand = scope.isOpen;
+
+            if(scope.isOpen && scope.diffRecord) {
+              var diffRecords = scope.diffRecord;
+              if(!_.isArray(diffRecords)) {
+                diffRecords = [diffRecords];
+              }
+
+              angular.forEach(diffRecords, function(diffRecord) {
+                diffRecord.expand = true;
+              });
+            }
+
           } else {
             scope.isOpen = !scope.isOpen;
           }
@@ -60,6 +72,7 @@ angular.module('recordTreeDirectives', ['RecursionHelper'])
         record: '=',
         recordValue: '=',
         diffType: '=',
+        diffRecord: '=',
         diffRecordValue: '=',
         fieldName: '=',
         isRoot: '=',

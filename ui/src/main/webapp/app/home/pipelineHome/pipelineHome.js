@@ -808,6 +808,14 @@ angular
 
         $scope.stageLibraryList = stageLibraryList;
 
+        if(!options.detailTabName) {
+          if($scope.isPipelineRunning) {
+            options.detailTabName = 'summary';
+          } else {
+            options.detailTabName = 'configuration';
+          }
+        }
+
       } else if(type === pipelineConstant.PIPELINE){
         //Pipeline Configuration
         $scope.stageSelected = false;
@@ -823,8 +831,24 @@ angular
           });
         }
 
+        if(!options.detailTabName) {
+          if($scope.isPipelineRunning) {
+            options.detailTabName = 'summary';
+          } else {
+            options.detailTabName = 'configuration';
+          }
+        }
+
       } else if(type === pipelineConstant.LINK) {
         $scope.detailPaneConfig = $scope.selectedObject = selectedObject;
+
+        if(!options.detailTabName) {
+          if($scope.isPipelineRunning) {
+            options.detailTabName = 'summary';
+          } else {
+            options.detailTabName = 'dataRules';
+          }
+        }
       }
 
       $scope.$broadcast('onSelectionChange', options);
