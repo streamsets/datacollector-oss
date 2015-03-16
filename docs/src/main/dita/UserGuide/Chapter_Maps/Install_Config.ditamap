@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE map PUBLIC "-//OASIS//DTD DITA Map//EN" "map.dtd">
+<map>
+ <title>Installation and Configuration</title>
+ <topicref href="../Install_Config/Install_Config_title.dita">
+  <topicref href="../Install_Config/InstallationAndConfig.dita" chunk="to-content">
+   <topicmeta>
+    <shortdesc/>
+   </topicmeta>
+   <topicref href="../Install_Config/Requirements.dita"/>
+   <topicref href="../Install_Config/Installing_the_DC.dita"/>
+   <topicref href="../Install_Config/Installing_the_DC-Service.dita"/>
+  </topicref>
+  <topicref href="../Install_Config/InstallingAdditionalStages.dita" chunk="to-content">
+   <topicmeta>
+   <shortdesc/>
+  </topicmeta>
+   <topicref href="../Install_Config/InstallStage-DownloadUntar.dita"/>
+   <topicref href="../Install_Config/InstallStage-UntarCopy.dita"/>
+  </topicref>
+  <topicref href="../Install_Config/UsersandRoles.dita" chunk="to-content">
+   <topicmeta>
+    <shortdesc/>
+   </topicmeta>
+   <topicref href="../Install_Config/CreatingAdditionalUsers.dita"/>
+  </topicref>
+  <topicref href="../Install_Config/CustomizingDataCollector.dita" chunk="to-content"> <topicmeta>
+   <shortdesc/>
+  </topicmeta>
+  </topicref>
+  </topicref>
+</map>

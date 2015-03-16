@@ -47,6 +47,21 @@
                                     /> console.<p>Default is 18630.</p></entry>
                             </row>
                             <row>
+                                <entry>https.port</entry>
+                                <entry>
+                                    <draft-comment author="Loretta">fill these in after talking to
+                                        tucu</draft-comment>
+                                </entry>
+                            </row>
+                            <row>
+                                <entry>https.keystore.path</entry>
+                                <entry/>
+                            </row>
+                            <row>
+                                <entry>https.keystore.password</entry>
+                                <entry/>
+                            </row>
+                            <row>
                                 <entry>http.authentication</entry>
                                 <entry>HTTP authentication. Use none, digest, or form.<p>Default is
                                         form.</p></entry>

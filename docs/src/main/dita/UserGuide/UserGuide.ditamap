@@ -29,6 +29,7 @@
         </booklists>
     </frontmatter>
     <chapter href="Chapter_Maps/GettingStarted.ditamap" format="ditamap" collection-type="sequence"/>
+    <chapter href="Chapter_Maps/Install_Config.ditamap" format="ditamap"/>
     <chapter href="Chapter_Maps/Pipeline.ditamap" format="ditamap" processing-role="normal"/>
     <chapter href="Chapter_Maps/Origins.ditamap" format="ditamap"/>
     <chapter href="Chapter_Maps/Processors.ditamap" format="ditamap"/>

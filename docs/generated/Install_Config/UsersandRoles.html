@@ -1,0 +1,132 @@
+
+<!DOCTYPE html
+  SYSTEM "about:legacy-compat">
+<html xml:lang="en-us" lang="en-us">
+<head><meta name="description" content="The Data Collector includes a default administrator login. You can create additional users for increased security. Data Collector provides several roles that define the tasks that a user can perform. ..."></meta><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><meta name="copyright" content="(C) Copyright 2005"></meta><meta name="DC.rights.owner" content="(C) Copyright 2005"></meta><meta name="DC.Type" content="concept"></meta><meta name="DC.Title" content="Users and Roles"></meta><meta name="abstract" content="The Data Collector includes a default administrator login. You can create additional users for increased security."></meta><meta name="description" content="The Data Collector includes a default administrator login. You can create additional users for increased security."></meta><meta name="DC.Relation" scheme="URI" content="../Install_Config/Install_Config_title.html"></meta><meta name="DC.Format" content="XHTML"></meta><meta name="DC.Identifier" content="concept_dt2_cpb_kr"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/commonltr.css"><!----></link><title>Users and Roles</title><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/webhelp_topic.css"><!----></link><link rel="stylesheet" type="text/css" href="../skin.css"></link><script type="text/javascript"><!--
+          
+          var prefix = "../index.html";
+          
+          --></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery-1.8.2.min.js"><!----></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery.cookie.js"><!----></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery-ui.custom.min.js"><!----></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery.highlight-3.js"><!----></script><script type="text/javascript" charset="utf-8" src="../oxygen-webhelp/resources/js/webhelp_topic.js"><!----></script></head>
+<body onload="highlightSearchTerm()" class="frmBody">
+<table class="nav"><tbody><tr><td colspan="2"><div id="printlink"><a href="javascript:window.print();" title="Print this page"></a></div><div id="permalink"><a href="#" title="Link to this page"></a></div></td></tr><tr><td width="75%"><a class="navheader_parent_path" href="../Install_Config/Install_Config_title.html" title="Installation and Configuration">Installation and Configuration</a></td><td><div class="navheader">
+<span class="navparent"><a class="link" href="../Install_Config/Install_Config_title.html" title="Installation and Configuration"><span class="navheader_label">Parent topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">Installation and Configuration</span></a></span>  </div></td></tr></tbody></table>
+<div class="nested0" id="concept_dt2_cpb_kr">
+ <h1 class="title topictitle1">Users and Roles</h1>
+
+ 
+ <div class="body conbody"><p class="shortdesc">The <span class="ph">Data
+                  Collector</span> includes a default administrator login. You can create additional users for increased security. </p>
+
+  <p class="p"><span class="ph">Data
+                  Collector</span> provides
+   several roles that define the tasks that a user can perform. When you configure a user, assign
+   the user one or more roles. Users can perform any task that their roles allow.</p>
+
+  <div class="p"><span class="ph">Data
+                  Collector</span> provides
+   the following roles: <dl class="dl">
+    
+     <dt class="dt dlterm">admin</dt>
+
+     <dd class="dd">Allows you to perform any task within the <span class="ph">Data
+                  Collector</span>. As an
+      admin, you can configure pipelines and alerts, start and stop pipelines, review snapshots, and
+      start or stop the <span class="ph">Data
+                  Collector</span>.</dd>
+
+    
+    
+     <dt class="dt dlterm">manager</dt>
+
+     <dd class="dd">Allows you to manage pipelines. As a manager, you can start and stop pipelines, monitor
+      pipelines, configure and reset alerts, and review snapshots. You cannot create pipelines or
+      perform data preview.</dd>
+
+    
+    
+     <dt class="dt dlterm">creator</dt>
+
+     <dd class="dd">Allows you to configure pipelines. As a creator, you can configure pipelines and alerts,
+      perform data preview, and monitor the pipeline. You cannot view snapshots or reset
+      alerts.</dd>
+
+    
+    
+     <dt class="dt dlterm">guest</dt>
+
+     <dd class="dd">Allows read-only access to pipelines, alerts, and <span class="ph">Data
+                  Collector</span> logs. As a
+      guest, you can view pipeline and alert configuration, view general monitoring information and
+      view log information. You cannot view data preview or snapshots or configure pipelines or
+      alerts.</dd>
+
+    
+   </dl>
+</div>
+
+ </div>
+
+<div class="related-links"></div>
+<div class="topic task nested1" id="task_nsz_lp4_1r">
+    <h2 class="title topictitle2">Creating Additional Users</h2>
+
+    
+    <div class="body taskbody"><p class="shortdesc">The <span class="ph">Data
+                  Collector</span>
+        includes a default login: admin/admin. You can create additional Data Collector users for
+        increased security.</p>
+
+        <div class="section context">
+            <p class="p">You can use an
+                md5 program to encrypt login information.</p>
+
+        </div>
+
+        <ol class="ol steps" id="task_nsz_lp4_1r__steps_ody_3q4_1r"><li class="li step stepexpand">
+                <span class="ph cmd">Modify the local-realm.properties file located in the etc directory.</span>
+                <div class="itemgroup info"> When installed as a service, the location is
+                    /etc/sdc/local-realm.properties.</div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">For each new user, add a line using the following format:</span>
+                <div class="itemgroup info">
+                    <pre class="pre codeblock"> &lt;username&gt;: &lt;password&gt;[,&lt;rolename&gt; …]</pre>
+
+                </div>
+                <div class="itemgroup info">Assign one or more roles for each user.</div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">To use a password that is not stored in plain text, use the following format
+                    for the password: </span>
+                <div class="itemgroup info">
+                    <pre class="pre codeblock">MD5:&lt;password-hash&gt;</pre>
+
+                </div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">You can generate the hash by running an md5 program, such as md5 on Mac OS X or
+                    md5sum on Linux program. </span>
+                <div class="itemgroup info">For example: <pre class="pre codeblock">echo -n "&lt;password&gt;" | md5</pre>
+</div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">To use digest authentication, hash the combination of
+                    &lt;username&gt;:&lt;realm&gt;:&lt;password&gt;. </span>
+                <div class="itemgroup info">For example:
+                    <pre class="pre codeblock">echo -n "&lt;username&gt;:&lt;realm&gt;:&lt;password&gt;" | md5</pre>
+</div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">To make the new users available, restart the <span class="ph">Data
+                  Collector</span>.</span>
+            </li>
+</ol>
+
+    </div>
+
+</div>
+</div>
+<div class="navfooter"><!---->
+<span class="navparent"><a class="link" href="../Install_Config/Install_Config_title.html" title="Installation and Configuration"><span class="navheader_label">Parent topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">Installation and Configuration</span></a></span>  </div><div class="footer"><div> </div><!-- © <a href="http://creativecommons.org/licenses/by-nc/4.0/legalcode">CC BY-NC 4.0.</a> StreamSets, 2015. --></div>
+</body>
+</html>

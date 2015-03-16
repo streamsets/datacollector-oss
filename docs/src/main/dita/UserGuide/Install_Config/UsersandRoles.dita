@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
+<concept id="concept_dt2_cpb_kr">
+ <title>Users and Roles</title>
+ <shortdesc>The <ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+  /> includes a default administrator login. You can create additional users for increased security. </shortdesc>
+ <conbody>
+  <p><ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> provides
+   several roles that define the tasks that a user can perform. When you configure a user, assign
+   the user one or more roles. Users can perform any task that their roles allow.</p>
+  <p><ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> provides
+   the following roles: <dl>
+    <dlentry>
+     <dt>admin</dt>
+     <dd>Allows you to perform any task within the <ph
+       conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>. As an
+      admin, you can configure pipelines and alerts, start and stop pipelines, review snapshots, and
+      start or stop the <ph
+       conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>.</dd>
+    </dlentry>
+    <dlentry>
+     <dt>manager</dt>
+     <dd>Allows you to manage pipelines. As a manager, you can start and stop pipelines, monitor
+      pipelines, configure and reset alerts, and review snapshots. You cannot create pipelines or
+      perform data preview.</dd>
+    </dlentry>
+    <dlentry>
+     <dt>creator</dt>
+     <dd>Allows you to configure pipelines. As a creator, you can configure pipelines and alerts,
+      perform data preview, and monitor the pipeline. You cannot view snapshots or reset
+      alerts.</dd>
+    </dlentry>
+    <dlentry>
+     <dt>guest</dt>
+     <dd>Allows read-only access to pipelines, alerts, and <ph
+       conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> logs. As a
+      guest, you can view pipeline and alert configuration, view general monitoring information and
+      view log information. You cannot view data preview or snapshots or configure pipelines or
+      alerts.</dd>
+    </dlentry>
+   </dl></p>
+ </conbody>
+</concept>

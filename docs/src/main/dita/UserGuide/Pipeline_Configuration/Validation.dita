@@ -11,14 +11,20 @@
      <dt>Implicit validation</dt>
      <dd>Implicit validation occurs by default as the console saves your changes. Implicit
       validation lists missing or incomplete configuration, such as an unconnected stage or a
-      required property that has not been configured.</dd>
+      required property that has not been configured. Implicit validation also lists information
+      that uses incorrect syntax, such as the wrong structure for a URI.</dd>
      <dd>Errors found by implicit validation display in the Issues list. </dd>
     </dlentry>
     <dlentry>
      <dt>Explicit validation</dt>
      <dd>Explicit validation occurs on demand when you click the Validate icon. Explicit validation
-      becomes available when implicit validation passes.<draft-comment author="Loretta">Also happens
-       whenever you try to get a list of fields / anything using preview.</draft-comment></dd>
+      becomes available when implicit validation passes.</dd>
+     <dd>Explicit validation checks all configured values for validity and verifies whether the
+      pipeline can run as configured. </dd>
+     <dd>For example, while implicit validation checks for the syntax for a URI, explicit validation
+      tests the URI by connecting to the system. Similarly, while implicit validation checks
+      expression syntax, explicit validation verifies <draft-comment author="Loretta"
+       >what?</draft-comment></dd>
     </dlentry>
    </dl>
   </p>
