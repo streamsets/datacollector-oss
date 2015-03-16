@@ -36,7 +36,7 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
 
-public class TestWebServerTask {
+public class TestWebServerTaskHttpHttps {
 
   private static class PingServlet extends HttpServlet {
     @Override
