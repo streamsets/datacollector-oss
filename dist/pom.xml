@@ -140,6 +140,11 @@
           <artifactId>streamsets-datacollector-cdh5_3_1-lib</artifactId>
           <scope>provided</scope>
         </dependency>
+        <dependency>
+          <groupId>com.streamsets</groupId>
+          <artifactId>streamsets-datacollector-apache-kafka_0_8_2_1-lib</artifactId>
+          <scope>provided</scope>
+        </dependency>
       </dependencies>
     </profile>
     <profile>

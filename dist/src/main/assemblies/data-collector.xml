@@ -179,6 +179,10 @@
       <directory>${basedir}/../${apache-kafka_0_8_2_0-lib}/target/stage-libs/</directory>
       <outputDirectory>/stage-libs/</outputDirectory>
     </fileSet>
+    <fileSet>
+      <directory>${basedir}/../${apache-kafka_0_8_2_1-lib}/target/stage-libs/</directory>
+      <outputDirectory>/stage-libs/</outputDirectory>
+    </fileSet>
 
   </fileSets>
 
