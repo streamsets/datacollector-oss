@@ -8,7 +8,15 @@ angular
     $routeProvider.when('/collector/jvmMetrics',
       {
         templateUrl: 'app/jvmMetrics/jvmMetrics.tpl.html',
-        controller: 'JVMMetricsController'
+        controller: 'JVMMetricsController',
+        resolve: {
+          myVar: function(authService) {
+            return authService.init();
+          }
+        },
+        data: {
+          authorizedRoles: ['admin', 'creator', 'manager']
+        }
       }
     );
   }])

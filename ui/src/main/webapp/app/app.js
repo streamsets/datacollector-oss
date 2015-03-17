@@ -4,7 +4,15 @@ angular.module('dataCollectorApp')
     $locationProvider.html5Mode({enabled: true, requireBase: false});
     $routeProvider.otherwise({
       templateUrl: 'app/home/home.tpl.html',
-      controller: 'HomeController'
+      controller: 'HomeController',
+      resolve: {
+        myVar: function(authService) {
+          return authService.init();
+        }
+      },
+      data: {
+        authorizedRoles: ['admin', 'creator', 'manager', 'guest']
+      }
     });
 
     // Initialize angular-translate
@@ -37,7 +45,8 @@ angular.module('dataCollectorApp')
     });
 
   })
-  .run(function ($location, $rootScope, $modal, api, pipelineConstant, $localStorage, contextHelpService, $translate) {
+  .run(function ($location, $rootScope, $modal, api, pipelineConstant, $localStorage, contextHelpService,
+                 $translate, authService, userRoles, authService) {
     var defaultTitle = 'StreamSets Data Collector';
 
     $rootScope.pipelineConstant = pipelineConstant;
@@ -49,6 +58,7 @@ angular.module('dataCollectorApp')
 
     $rootScope.common = $rootScope.common || {
       title : defaultTitle,
+      userName: 'Account',
       active: {
         home: 'active'
       },
@@ -122,39 +132,47 @@ angular.module('dataCollectorApp')
       }
     };
 
-    var logMessages = [],
-      loc = window.location,
-      webSocketLogURL = ((loc.protocol === "https:") ? "wss://" : "ws://") + loc.hostname + (((loc.port != 80) && (loc.port != 443)) ? ":" + loc.port : "") + '/log/',
-      logWebSocket = new WebSocket(webSocketLogURL);
+    var logMessages = [];
+
+    authService.init().then(function() {
+      $rootScope.common.userName = authService.getUserName();
+
+      if(authService.isAuthorized([userRoles.admin, userRoles.creator, userRoles.manager])) {
+        var loc = window.location,
+          webSocketLogURL = ((loc.protocol === "https:") ? "wss://" : "ws://") + loc.hostname + (((loc.port != 80) && (loc.port != 443)) ? ":" + loc.port : "") + '/log/',
+          logWebSocket = new WebSocket(webSocketLogURL);
 
 
-    logWebSocket.onmessage = function (evt) {
-      var received_msg = evt.data;
-      if(logMessages.length > 1000) {
-        logMessages.shift();
+        logWebSocket.onmessage = function (evt) {
+          var received_msg = evt.data;
+          if(logMessages.length > 1000) {
+            logMessages.shift();
+          }
+          logMessages.push(received_msg);
+        };
+
+        $rootScope.$on('$destroy', function() {
+          logWebSocket.close();
+        });
+
+        $rootScope.userRoles = userRoles;
+        $rootScope.isAuthorized = authService.isAuthorized;
       }
-      logMessages.push(received_msg);
-    };
-
-    $rootScope.$on('$destroy', function() {
-      logWebSocket.close();
     });
+
 
     // set actions to be taken each time the user navigates
     $rootScope.$on('$routeChangeSuccess', function (event, current, previous) {
       // set page title
-      if(current.$$route) {
-        $rootScope.common.title = current.$$route.title || defaultTitle;
+      if(current.$$route && current.$$route.data) {
+        var authorizedRoles = current.$$route.data.authorizedRoles;
 
-        // set active menu class for the left navigation (.sidenav)
-        var currentCtrl = current.controller.substring(0, current.controller.indexOf('Controller')).toLowerCase();
-        $rootScope.common.active[currentCtrl] = 'active';
-        if (previous && previous.controller) {
-          var previousCtrl = previous.controller.substring(0, previous.controller.indexOf('Controller')).toLowerCase();
-          delete $rootScope.common.active[previousCtrl];
+        if (!authService.isAuthorized(authorizedRoles)) {
+          $rootScope.notAuthorized = true;
+        } else {
+          $rootScope.notAuthorized = false;
         }
       }
-
 
       //To fix NVD3 JS errors - https://github.com/novus/nvd3/pull/396
       window.nv.charts = {};

@@ -2,6 +2,7 @@
   <div class="panel-heading clearfix">
     <span translate="home.detailPane.rulesTab.dataRules"></span>
     <button type="button" class="btn btn-primary btn-sm add-button pull-right"
+            ng-if="!isPipelineRulesReadOnly"
             ng-click="createDataRule()">
       <i class="fa fa-plus"></i> {{'global.form.add' | translate}}
     </button>
@@ -50,14 +51,14 @@
           <td>
             <input type="checkbox"
                    name="meterEnabled{{$index}}"
-                   ng-disabled="dataRuleDefn.enabled"
+                   ng-disabled="dataRuleDefn.enabled || isPipelineRulesReadOnly"
                    ng-model="dataRuleDefn.meterEnabled">
           </td>
 
           <td>
             <input type="checkbox"
                    name="alertEnabled{{$index}}"
-                   ng-disabled="dataRuleDefn.enabled"
+                   ng-disabled="dataRuleDefn.enabled || isPipelineRulesReadOnly"
                    ng-model="dataRuleDefn.alertEnabled">
           </td>
 
@@ -65,19 +66,19 @@
             <input type="checkbox"
                    name="sendEmail{{$index}}"
                    ng-if="dataRuleDefn.alertEnabled"
-                   ng-disabled="dataRuleDefn.enabled"
+                   ng-disabled="dataRuleDefn.enabled || isPipelineRulesReadOnly"
                    ng-model="dataRuleDefn.sendEmail">
           </td>
 
           <td>
             <input type="checkbox"
                    name="enabled{{$index}}"
-                   ng-disabled="!dataRuleDefn.valid && dataRuleDefn.enabled === false"
+                   ng-disabled="(!dataRuleDefn.valid && dataRuleDefn.enabled === false) || isPipelineRulesReadOnly"
                    ng-model="dataRuleDefn.enabled">
           </td>
 
           <td>
-            <div ng-show="!dataRuleDefn.enabled">
+            <div ng-show="!dataRuleDefn.enabled" ng-if="!isPipelineRulesReadOnly">
               <a href="javascript:;" ng-click="editDataRule(dataRuleDefn, $index)">Edit</a>
               &nbsp;|&nbsp;
               <a href="javascript:;" ng-click="removeRule(pipelineRules.dataRuleDefinitions, dataRuleDefn)">Delete</a>

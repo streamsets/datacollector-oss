@@ -33,6 +33,17 @@ angular.module('dataCollectorApp.common')
       },
 
       /**
+       * Fetched User Information
+       */
+      getUserInfo: function() {
+        var url = apiBase + '/info/user';
+        return $http({
+          method: 'GET',
+          url: url
+        });
+      },
+
+      /**
        * Fetched Build Information
        */
       getBuildInfo: function() {

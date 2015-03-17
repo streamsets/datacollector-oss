@@ -16,7 +16,7 @@
     <div class="controls col-lg-7 col-md-8">
       <textarea class="form-control" name="description"
                 rows="1"
-                ng-readonly="isPipelineRunning"
+                ng-readonly="isPipelineReadOnly || isPipelineRunning"
                 ng-model="pipelineConfig.description"></textarea>
     </div>
   </div>
@@ -26,7 +26,7 @@
     <label class="col-lg-3 col-md-4 control-label" translate="global.form.name">Name</label>
     <div class="controls col-lg-7 col-md-8">
       <input type="text" class="form-control" name="name"
-             ng-readonly="isPipelineRunning"
+             ng-readonly="isPipelineReadOnly || isPipelineRunning"
              ng-model="detailPaneConfig.uiInfo.label">
     </div>
   </div>
@@ -36,7 +36,7 @@
     <div class="controls col-lg-7 col-md-8">
       <textarea class="form-control" name="description"
                 rows="1"
-                ng-readonly="isPipelineRunning"
+                ng-readonly="isPipelineReadOnly || isPipelineRunning"
                 ng-model="detailPaneConfig.uiInfo.description"></textarea>
     </div>
   </div>
@@ -46,7 +46,7 @@
     <div class="controls col-lg-7 col-md-8">
       <select class="form-control"
               name="stageLibrary"
-              ng-disabled="isPipelineRunning"
+              ng-disabled="isPipelineReadOnly || isPipelineRunning"
               ng-model="detailPaneConfig.library"
               ng-options="item.library as item.libraryLabel for item in stageLibraryList">
       </select>

@@ -121,7 +121,7 @@
                   <input type="number" class="form-control"
                          name="{{customFieldConfigDefinition.name + $index}}"
                          placeholder="{{customFieldConfigDefinition.label}}"
-                         ng-readonly="isPipelineRunning"
+                         ng-readonly="isPipelineReadOnly || isPipelineRunning"
                          ng-model="customFieldValue[customFieldConfigDefinition.name]"
                          ng-required="customFieldConfigDefinition.required">
                 </div>
@@ -161,7 +161,7 @@
                   <div ng-switch-when="VALUE_CHOOSER">
                     <select class="form-control"
                             name="{{customFieldConfigDefinition.name + $index}}"
-                            ng-disabled="isPipelineRunning"
+                            ng-disabled="isPipelineReadOnly || isPipelineRunning"
                             ng-model="customFieldValue[customFieldConfigDefinition.name]">
                       <option ng-repeat="listValue in customFieldConfigDefinition.model.values"
                               value="{{listValue}}"
@@ -179,7 +179,7 @@
                                tagging-label=""
                                reset-search-input="true"
                                tagging-tokens=",|ENTER"
-                               ng-disabled="isPipelineRunning"
+                               ng-disabled="isPipelineReadOnly || isPipelineRunning"
                                ng-model="customFieldValue[customFieldConfigDefinition.name]">
                       <ui-select-match
                         placeholder="{{'home.detailPane.configurationTab.selectFields' | translate}}">
@@ -211,7 +211,7 @@
             </td>
 
             <td>
-              <div class="btn-group" role="group" aria-label="Default button group" ng-hide="isPipelineRunning">
+              <div class="btn-group" role="group" aria-label="Default button group" ng-hide="isPipelineReadOnly || isPipelineRunning">
                 <button type="button" class="btn btn-default"
                         ng-click="removeFromCustomField(detailPaneConfig, customeFieldValueList, $index)">
                   <i class="fa fa-minus pointer"></i>
@@ -230,7 +230,7 @@
 
         <button type="button" class="btn btn-default btn-sm pull-right"
                 ng-if="customeFieldValueList.length === 0"
-                ng-hide="isPipelineRunning"
+                ng-hide="isPipelineReadOnly || isPipelineRunning"
                 ng-click="addToCustomField(detailPaneConfig, detailPaneConfig.configuration[configIndex].value, configDefinition.model.configDefinitions)">
           <i class="fa fa-plus pointer"></i>
         </button>

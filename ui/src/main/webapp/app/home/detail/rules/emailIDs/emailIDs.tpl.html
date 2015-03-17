@@ -15,10 +15,12 @@
           <input type="text" class="form-control input-sm"
                  required
                  name="{{'emailId' + $index}}"
+                 ng-readonly="isPipelineRulesReadOnly"
                  ng-model="pipelineRules.emailIds[$index]"/>
         </div>
 
-        <div class="col-md-4 btn-group" role="group" aria-label="Default button group">
+        <div class="col-md-4 btn-group" role="group" aria-label="Default button group"
+             ng-if="!isPipelineRulesReadOnly">
           <button type="button" class="btn btn-default btn-sm"
                   ng-click="removeFromList(pipelineRules.emailIds, $index)">
             <i class="fa fa-minus pointer"></i>
@@ -32,7 +34,7 @@
 
       </div>
 
-      <div ng-if="pipelineRules.emailIds.length === 0" class="row">
+      <div ng-if="pipelineRules.emailIds.length === 0 && !isPipelineRulesReadOnly" class="row">
         <div class="col-md-2 btn-group" role="group">
           <button type="button" class="btn btn-default btn-sm"
                   ng-click="addToList(pipelineRules.emailIds)">

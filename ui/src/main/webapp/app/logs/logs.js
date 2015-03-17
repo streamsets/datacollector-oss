@@ -8,7 +8,15 @@ angular
     $routeProvider.when('/collector/logs',
       {
         templateUrl: 'app/logs/logs.tpl.html',
-        controller: 'LogsController'
+        controller: 'LogsController',
+        resolve: {
+          myVar: function(authService) {
+            return authService.init();
+          }
+        },
+        data: {
+          authorizedRoles: ['admin', 'creator', 'manager']
+        }
       }
     );
   }])

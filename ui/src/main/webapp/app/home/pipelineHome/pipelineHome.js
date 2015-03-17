@@ -8,12 +8,20 @@ angular
     $routeProvider
       .when('/collector/pipeline/:pipelineName', {
         templateUrl: 'app/home/pipelineHome/pipelineHome.tpl.html',
-        controller: 'PipelineHomeController'
+        controller: 'PipelineHomeController',
+        resolve: {
+          myVar: function(authService) {
+            return authService.init();
+          }
+        },
+        data: {
+          authorizedRoles: ['admin', 'creator', 'manager', 'guest']
+        }
       });
   }])
   .controller('PipelineHomeController', function ($scope, $rootScope, $routeParams, $timeout, api, configuration, _, $q, $modal,
                                           $localStorage, pipelineService, pipelineConstant, visibilityBroadcaster,
-                                          $translate, contextHelpService, $location) {
+                                          $translate, contextHelpService, $location, authService, userRoles) {
     var routeParamPipelineName = $routeParams.pipelineName,
       configTimeout,
       configDirty = false,
@@ -29,6 +37,8 @@ angular
       pageHidden = false;
 
     angular.extend($scope, {
+      isPipelineReadOnly: !authService.isAuthorized([userRoles.admin, userRoles.creator]),
+      isPipelineRulesReadOnly: !authService.isAuthorized([userRoles.admin, userRoles.creator, userRoles.manager]),
       selectedType: pipelineConstant.PIPELINE,
       loaded: false,
       isPipelineRunning: false,
@@ -82,6 +92,10 @@ angular
 
         if(event) {
           event.preventDefault();
+        }
+
+        if($scope.isPipelineReadOnly) {
+          return;
         }
 
         if(stage.type === pipelineConstant.SOURCE_STAGE_TYPE) {
@@ -579,7 +593,7 @@ angular
      * @param config
      */
     var saveUpdates = function (config) {
-      if (configSaveInProgress) {
+      if (configSaveInProgress || $scope.isPipelineReadOnly) {
         return;
       }
 
@@ -756,7 +770,7 @@ angular
           selectNode: ($scope.selectedType && $scope.selectedType === pipelineConstant.STAGE_INSTANCE) ? $scope.selectedObject : undefined,
           stageErrorCounts: stageErrorCounts,
           showEdgePreviewIcon: $scope.isPipelineRunning,
-          isReadOnly: $scope.isPipelineRunning || $scope.previewMode,
+          isReadOnly: $scope.isPipelineReadOnly || $scope.isPipelineRunning || $scope.previewMode,
           pipelineRules: $scope.pipelineRules,
           triggeredAlerts: $scope.triggeredAlerts,
           errorStage: $scope.pipelineConfig.errorStage
@@ -1030,7 +1044,7 @@ angular
      * @param rules
      */
     var saveRulesUpdate = function (rules) {
-      if (rulesSaveInProgress) {
+      if (rulesSaveInProgress || $scope.isPipelineRulesReadOnly) {
         return;
       }
 

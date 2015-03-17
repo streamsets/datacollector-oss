@@ -34,7 +34,8 @@
           </a>
         </li>
 
-        <li class="dropdown pointer">
+        <li class="dropdown pointer"
+            ng-if="common.userName && isAuthorized([userRoles.admin, userRoles.creator, userRoles.manager])">
           <a class="dropdown-toggle" data-toggle="dropdown" href="javascript:;">
             <span>
                 <i class="fa fa-cogs fa-lg"></i>
@@ -64,7 +65,7 @@
                 <span translate="global.menu.admin.logs">Logs</span>
               </a>
             </li>
-            <li>
+            <li ng-if="common.userName && isAuthorized([userRoles.admin])">
               <a href="javascript:;" ng-click="common.shutdownCollector()">
                 <i class="fa fa-stop"></i>
                 <span translate="global.menu.admin.shutdown">Shutdown</span>
@@ -83,9 +84,7 @@
           <a class="dropdown-toggle" data-toggle="dropdown" href="javascript:;">
             <span>
                 <i class="fa fa-user fa-lg"></i>
-                <span class="hidden-tablet" translate="global.menu.account.main">
-                    Account
-                </span>
+                <span class="hidden-tablet">{{common.userName}}</span>
                 <b class="caret"></b>
             </span>
           </a>
@@ -186,7 +185,11 @@
 <ng-include src="'app/shutdown/shutdownModal.tpl.html'"></ng-include>
 <ng-include src="'app/about/aboutModal.tpl.html'"></ng-include>
 
-<div ng-view>
+<div ng-view ng-if="!notAuthorized">
+</div>
+
+<div class="panel panel-default page-panel not-authorized-page" ng-if="notAuthorized">
+  <h4>{{'global.messages.error.notAuthorized' | translate}}</h4>
 </div>
 
 </body>

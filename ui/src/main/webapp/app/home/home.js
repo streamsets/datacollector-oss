@@ -8,7 +8,15 @@ angular
     $routeProvider
       .when('/', {
         templateUrl: 'app/home/home.tpl.html',
-        controller: 'HomeController'
+        controller: 'HomeController',
+        resolve: {
+          myVar: function(authService) {
+            return authService.init();
+          }
+        },
+        data: {
+          authorizedRoles: ['admin', 'creator', 'manager', 'guest']
+        }
       });
   }])
   .controller('HomeController', function ($scope, $rootScope, $q, $modal, $location, pipelineService, api) {

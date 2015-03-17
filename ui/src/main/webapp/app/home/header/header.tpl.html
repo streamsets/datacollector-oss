@@ -42,6 +42,7 @@
     <div class="pull-right" ng-if="pipelineConfig && activeConfigStatus.state !== 'STOPPING'">
 
       <div class="pull-left" ng-cloak
+           ng-if="!isPipelineReadOnly"
            ng-hide="previewMode || snapshotMode || activeConfigStatus.state === 'STOPPING'">
         <div class="pipelineAgent-status pull-right" ng-hide="common.saveOperationInProgress > 0">
           <span class="glyphicon glyphicon-ok-circle"></span>
@@ -64,7 +65,7 @@
         <ul class="dropdown-menu pull-right" role="menu">
 
           <li role="presentation"
-              ng-if="!isPipelineRunning"
+              ng-if="!isPipelineRunning && isAuthorized([userRoles.admin, userRoles.creator, userRoles.manager])"
               ng-class="{'disabled': !pipelineConfig.valid}">
             <a href="#" ng-click="!pipelineConfig.valid || resetOffset()">
               <i class="fa fa-power-off"></i> {{'home.resetOffset.title' | translate}}
@@ -85,7 +86,7 @@
 
           <li role="presentation" class="divider"></li>
 
-          <li role="presentation"
+          <li role="presentation" ng-if="isAuthorized([userRoles.admin, userRoles.creator])"
               ng-hide="pipeline.name === common.pipelineStatus.name  && common.pipelineStatus.state === 'RUNNING'">
             <a href="#" dropdown-toggle ng-click="deletePipelineConfig(activeConfigInfo, $event)">
               <i class="fa fa-trash-o"></i>
@@ -93,14 +94,14 @@
             </a>
           </li>
 
-          <li role="presentation">
+          <li role="presentation" ng-if="isAuthorized([userRoles.admin, userRoles.creator])">
             <a href="#" dropdown-toggle ng-click="duplicatePipelineConfig(activeConfigInfo, $event)">
               <i class="fa fa-files-o"></i>
               <span>{{'global.form.duplicate' | translate}}</span>
             </a>
           </li>
 
-          <li role="presentation">
+          <li role="presentation" ng-if="isAuthorized([userRoles.admin, userRoles.creator])">
             <a href="#" dropdown-toggle ng-click="importPipelineConfig(activeConfigInfo, $event)">
               <i class="glyphicon glyphicon-import"></i>
               <span>{{'global.form.import' | translate}}</span>
@@ -159,6 +160,7 @@
               tooltip-placement="bottom" tooltip="{{'home.header.snapshot' | translate}}"
               tooltip-trigger="{{iconOnly ? 'mouseenter' : 'notooltip'}}"
               tooltip-popup-delay="500"
+              ng-if="isAuthorized([userRoles.admin, userRoles.manager])"
               ng-show="isPipelineRunning && !snapshotMode"
               ng-click="captureSnapshot()">
         <span class="glyphicon glyphicon-camera fa-14x"></span>
@@ -168,6 +170,7 @@
               tooltip-placement="bottom" tooltip="{{'home.header.closeSnapshot' | translate}}"
               tooltip-trigger="{{iconOnly ? 'mouseenter' : 'notooltip'}}"
               tooltip-popup-delay="500"
+              ng-if="isAuthorized([userRoles.admin, userRoles.manager])"
               ng-show="snapshotMode"
               ng-click="closeSnapshot()">
         <span class="glyphicon glyphicon-camera fa-14x"></span>
@@ -179,6 +182,7 @@
               tooltip-trigger="{{iconOnly ? 'mouseenter' : 'notooltip'}}"
               tooltip-popup-delay="500"
               ng-hide="isPipelineRunning || previewMode"
+              ng-if="isAuthorized([userRoles.admin, userRoles.creator])"
               ng-click="previewPipeline()"
               ng-disabled="!pipelineConfig.previewable">
         <span class="glyphicon glyphicon-eye-open fa-14x"></span>
@@ -189,6 +193,7 @@
               tooltip-trigger="{{iconOnly ? 'mouseenter' : 'notooltip'}}"
               tooltip-popup-delay="500"
               ng-show="previewMode"
+              ng-if="isAuthorized([userRoles.admin, userRoles.creator])"
               ng-click="closePreview()">
         <span class="glyphicon glyphicon-eye-close fa-14x"></span>
       </a>
@@ -198,6 +203,7 @@
          tooltip="{{'home.header.validate' | translate}}"
          tooltip-trigger="mouseenter"
          tooltip-popup-delay="500"
+         ng-if="isAuthorized([userRoles.admin, userRoles.creator])"
          ng-hide="isPipelineRunning || previewMode"
          ng-disabled="!pipelineConfig.valid"
          ng-click="validatePipeline()">
@@ -209,6 +215,7 @@
               tooltip-trigger="{{iconOnly ? 'mouseenter' : 'notooltip'}}"
               tooltip-popup-delay="500"
               ng-hide="isPipelineRunning || previewMode"
+              ng-if="isAuthorized([userRoles.admin, userRoles.manager])"
               ng-disabled="!pipelineConfig.valid"
               ng-click="startPipeline()">
         <span class="glyphicon glyphicon-play fa-14x"></span>
@@ -218,6 +225,7 @@
               tooltip-placement="bottom" tooltip="{{'home.header.stop' | translate}}"
               tooltip-trigger="{{iconOnly ? 'mouseenter' : 'notooltip'}}"
               tooltip-popup-delay="500"
+              ng-if="isAuthorized([userRoles.admin, userRoles.manager])"
               ng-click="stopPipeline()"
               ng-show="isPipelineRunning && !snapshotMode">
         <span class="glyphicon glyphicon-stop fa-14x"></span>

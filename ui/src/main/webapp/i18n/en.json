@@ -108,6 +108,7 @@
         "unloadMessage": "If you leave this page you are going to lose all unsaved changes, are you sure you want to leave?"
       },
       "error": {
+        "notAuthorized": "Access denied - You are not authorized to access this page."
       },
       "validate": {
         "validationFailed": "Validation Failed",

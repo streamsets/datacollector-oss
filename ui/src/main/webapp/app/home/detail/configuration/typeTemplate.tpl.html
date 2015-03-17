@@ -13,7 +13,7 @@
   <div class="controls col-lg-7 col-md-8">
     <input type="text" class="form-control" name="{{configDefinition.name}}"
            focus-me="{{autoFocusConfigName === configDefinition.name}}"
-           ng-readonly="isPipelineRunning"
+           ng-readonly="isPipelineReadOnly || isPipelineRunning"
            ng-model="detailPaneConfig.configuration[configIndex].value"
            ng-required="configDefinition.required">
 
@@ -29,7 +29,7 @@
          ng-model="detailPaneConfig.configuration[configIndex].value"
          ui-refresh="refreshCodemirror"
          ui-codemirror-opts="getCodeMirrorOptions({
-                readOnly: isPipelineRunning
+                readOnly: isPipelineReadOnly || isPipelineRunning
               })"
          codemirror-el="getCodeMirrorHints(configDefinition)"
          field-paths="fieldPaths">
@@ -73,7 +73,7 @@
              focus-me="{{autoFocusConfigName === configDefinition.name}}"
              ng-if="characterModel === 'Other'"
              ng-maxlength="1"
-             ng-readonly="isPipelineRunning"
+             ng-readonly="isPipelineReadOnly || isPipelineRunning"
              ng-model="detailPaneConfig.configuration[configIndex].value"
              ng-required="configDefinition.required">
 
@@ -86,7 +86,7 @@
 <script type="text/ng-template" id="booleanConfigurationTemplate">
   <div class="controls col-lg-7 col-md-8">
     <input type="checkbox" name="{{configDefinition.name}}"
-           ng-disabled="isPipelineRunning"
+           ng-disabled="isPipelineReadOnly || isPipelineRunning"
            ng-model="detailPaneConfig.configuration[configIndex].value">
 
     <p class="help-block">{{getConfigurationIssueMessage(detailPaneConfig, configDefinition)}}</p>
@@ -97,7 +97,7 @@
   <div class="controls col-lg-7 col-md-8">
     <input type="number" class="form-control" name="{{configDefinition.name}}" min="{{configDefinition.min}}" max="{{configDefinition.max}}"
            focus-me="{{autoFocusConfigName === configDefinition.name}}"
-           ng-readonly="isPipelineRunning"
+           ng-readonly="isPipelineReadOnly || isPipelineRunning"
            ng-model="detailPaneConfig.configuration[configIndex].value"
            ng-required="configDefinition.required">
 
@@ -118,12 +118,12 @@
         <input type="text" class="form-control input-sm"
                ng-required="true"
                name="{{configDefinition.name + $index}}"
-               ng-readonly="isPipelineRunning"
+               ng-readonly="isPipelineReadOnly || isPipelineRunning"
                ng-model="listValue[$index]"/>
       </div>
 
       <div class="col-md-4 btn-group" role="group" aria-label="Default button group"
-           ng-hide="isPipelineRunning">
+           ng-hide="isPipelineReadOnly || isPipelineRunning">
         <button type="button" class="btn btn-default btn-sm"
                 ng-click="removeFromList(detailPaneConfig, detailPaneConfig.configuration[configIndex].value, $index)">
           <i class="fa fa-minus pointer"></i>
@@ -138,7 +138,7 @@
     </div>
 
     <div ng-if="detailPaneConfig.configuration[configIndex].value.length === 0" class="row"
-         ng-hide="isPipelineRunning">
+         ng-hide="isPipelineReadOnly || isPipelineRunning">
       <div class="col-md-2 btn-group" role="group">
         <button type="button" class="btn btn-default btn-sm"
                 ng-click="addToList(detailPaneConfig, detailPaneConfig.configuration[configIndex].value)">
@@ -160,7 +160,7 @@
                name="{{configDefinition.name + 'key' + $index}}"
                placeholder="{{'home.detailPane.configurationTab.enterKey' | translate}}"
                ng-required="true"
-               ng-readonly="isPipelineRunning"
+               ng-readonly="isPipelineReadOnly || isPipelineRunning"
                ng-model="mapObject.key"/>
       </div>
 
@@ -171,12 +171,12 @@
                name="{{configDefinition.name + 'value' + $index}}"
                placeholder="{{'home.detailPane.configurationTab.enterValue' | translate}}"
                ng-required="true"
-               ng-readonly="isPipelineRunning"
+               ng-readonly="isPipelineReadOnly || isPipelineRunning"
                ng-model="mapObject.value"/>
       </div>
 
       <div class="col-md-3 btn-group" role="group" aria-label="Default button group"
-           ng-hide="isPipelineRunning">
+           ng-hide="isPipelineReadOnly || isPipelineRunning">
         <button type="button" class="btn btn-default btn-sm"
                 ng-click="removeFromMap(detailPaneConfig, detailPaneConfig.configuration[configIndex].value, mapObject, $index)">
           <i class="fa fa-minus pointer"></i>
@@ -191,7 +191,7 @@
     </div>
 
     <div ng-if="detailPaneConfig.configuration[configIndex].value.length === 0" class="row"
-         ng-hide="isPipelineRunning">
+         ng-hide="isPipelineReadOnly || isPipelineRunning">
       <div class="col-md-2 btn-group" role="group">
         <button type="button" class="btn btn-default btn-sm"
                 ng-click="addToMap(detailPaneConfig, detailPaneConfig.configuration[configIndex].value)">
@@ -211,7 +211,7 @@
             name="{{configDefinition.name}}"
             focus-me="{{autoFocusConfigName === configDefinition.name}}"
             ng-required="configDefinition.required"
-            ng-disabled="isPipelineRunning"
+            ng-disabled="isPipelineReadOnly || isPipelineRunning"
             ng-model="detailPaneConfig.configuration[configIndex].value">
       <option ng-repeat="listValue in configDefinition.model.values"
               value="{{listValue}}"
@@ -229,7 +229,7 @@
                tagging="tagTransform"
                tagging-label=""
                reset-search-input="true"
-               ng-disabled="isPipelineRunning"
+               ng-disabled="isPipelineReadOnly || isPipelineRunning"
                tagging-tokens=",|ENTER"
                ng-model="detailPaneConfig.configuration[configIndex].value">
       <ui-select-match>
@@ -240,7 +240,7 @@
       </ui-select-choices>
     </ui-select>
 
-    <div class="pull-right field-selector-btn" ng-hide="isPipelineRunning">
+    <div class="pull-right field-selector-btn" ng-hide="isPipelineReadOnly || isPipelineRunning">
       <button type="button" class="btn btn-link"
               translate="home.detailPane.configurationTab.requiredFieldsSelectionButton"
               ng-disabled="!pipelineConfig.previewable"
@@ -282,7 +282,7 @@
         <div ui-codemirror ng-model="lanePredicateMapping.predicate"
              ui-refresh="refreshCodemirror"
              ui-codemirror-opts="getCodeMirrorOptions({
-                readOnly: isPipelineRunning || lanePredicateMapping.predicate === 'default'
+                readOnly: isPipelineReadOnly || isPipelineRunning || lanePredicateMapping.predicate === 'default'
               })"
              codemirror-el="getCodeMirrorHints(configDefinition)"
              field-paths="fieldPaths">
@@ -291,7 +291,7 @@
       </div>
 
       <div class="col-xs-1" role="group" aria-label="Default button group"
-           ng-hide="isPipelineRunning">
+           ng-hide="isPipelineReadOnly || isPipelineRunning">
         <button type="button" class="btn btn-default"
                 ng-hide="$last"
                 ng-click="removeLane(detailPaneConfig, detailPaneConfig.configuration[configIndex].value, lanePredicateMapping, $index)">
@@ -316,7 +316,7 @@
   <input type="text" class="form-control"
          name="{{customFieldConfigDefinition.name + $index}}"
          placeholder="{{customFieldConfigDefinition.label}}"
-         ng-readonly="isPipelineRunning"
+         ng-readonly="isPipelineReadOnly || isPipelineRunning"
          ng-model="customFieldValue[customFieldConfigDefinition.name]"
          ng-required="customFieldConfigDefinition.required">
 </script>
@@ -327,7 +327,7 @@
        ng-model="customFieldValue[customFieldConfigDefinition.name]"
        ui-refresh="refreshCodemirror"
        ui-codemirror-opts="getCodeMirrorOptions({
-                readOnly: isPipelineRunning
+                readOnly: isPipelineReadOnly || isPipelineRunning
               })"
        codemirror-el="getCodeMirrorHints(customFieldConfigDefinition)"
        field-paths="fieldPaths">

@@ -3,6 +3,7 @@
     <span translate="home.detailPane.rulesTab.metricAlertRules">Metric Alert Rules</span>
 
     <button type="button" class="btn btn-primary btn-sm pull-right"
+            ng-if="!isPipelineRulesReadOnly"
             ng-click="createMetricAlertRule()">
       <i class="fa fa-plus"></i> {{'global.form.add' | translate}}
     </button>
@@ -51,18 +52,18 @@
 
           <td>
             <input type="checkbox" name="sendEmail{{$index}}"
-                   ng-disabled="alertRule.enabled"
+                   ng-disabled="alertRule.enabled || isPipelineRulesReadOnly"
                    ng-model="alertRule.sendEmail">
           </td>
 
           <td>
             <input type="checkbox" name="enabled{{$index}}"
-                   ng-disabled="!alertRule.valid && alertRule.enabled === false"
+                   ng-disabled="(!alertRule.valid && alertRule.enabled === false) || isPipelineRulesReadOnly"
                    ng-model="alertRule.enabled">
           </td>
 
           <td>
-            <div ng-show="!alertRule.enabled">
+            <div ng-show="!alertRule.enabled" ng-if="!isPipelineRulesReadOnly">
               <a href="javascript:;" ng-click="editMetricAlertDataRule(alertRule, $index)">Edit</a>
               &nbsp;|&nbsp;
               <a href="javascript:;" ng-click="removeRule(pipelineRules.metricsRuleDefinitions, $index)">Delete</a>

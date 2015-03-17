@@ -8,7 +8,15 @@ angular
     $routeProvider.when('/collector/configuration',
       {
         templateUrl: 'app/sdcConfiguration/sdcConfiguration.tpl.html',
-        controller: 'SDCConfigurationController'
+        controller: 'SDCConfigurationController',
+        resolve: {
+          myVar: function(authService) {
+            return authService.init();
+          }
+        },
+        data: {
+          authorizedRoles: ['admin', 'creator', 'manager']
+        }
       }
     );
   }])
