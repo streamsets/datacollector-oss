@@ -20,13 +20,13 @@
   data from all streams to the same stage, but does not perform a join of records in the stream. </p>
 
   <p class="p">For example, in the following pipeline, the Routes Data Stream
-   Selector sends data with null values to Replaces Null Values Value Replacer. </p>
-
-  <p class="p">The data from stream 2 of  Routes Data and all data from Replaces Null Values pass to
-   Field-Level Expressions for further processing, but in no particular order and with no record
-   merging.</p>
+   Selector stage sends data with null values to the Replaces Null Values stage:</p>
 
   <p class="p"><img class="image" id="concept_w3y_cry_5q__image_kxc_jty_5q" src="../Graphics/MergingStreams.png" height="90" width="444"></img></p>
+
+  <p class="p">The data from the Routes Data default stream and all data from Replaces Null Values pass to
+   Field-Level Expressions for further processing, but in no particular order and with no record
+   merging.</p>
 
   <div class="note note"><span class="notetitle">Note:</span> The pipeline validation does not prevent duplicate data. To avoid writing duplicate data to
    destinations, configure pipeline logic to remove duplicate data or to prevent the generation of
