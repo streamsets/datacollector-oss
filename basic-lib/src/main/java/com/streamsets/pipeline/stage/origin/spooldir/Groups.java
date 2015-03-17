@@ -14,6 +14,8 @@ public enum Groups implements Label {
   JSON("JSON"),
   DELIMITED("Delimited"),
   XML("XML"),
+  LOG("LOG"),
+
   ;
 
   private final String label;

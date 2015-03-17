@@ -34,6 +34,10 @@ public class TestLogCharDataParserFactory {
     CharDataParserFactory factory = new LogCharDataParserFactory(getContext(), 100, LogMode.COMMON_LOG_FORMAT, configs);
     DataParser parser = factory.getParser("id",
       "127.0.0.1 ss h [10/Oct/2000:13:55:36 -0700] \"GET /apache_pb.gif HTTP/1.0\" 200 2326");
+
+    //should get an instance of CommonLogFormatParser
+    Assert.assertTrue(parser instanceof CommonLogFormatParser);
+
     Assert.assertEquals(0, parser.getOffset());
     Record record = parser.parse();
     Assert.assertTrue(record.has("/text"));
@@ -76,6 +80,9 @@ public class TestLogCharDataParserFactory {
     CharDataParserFactory factory = new LogCharDataParserFactory(getContext(), 100, LogMode.COMMON_LOG_FORMAT, configs);
     DataParser parser = factory.getParser("id",
       "127.0.0.1 ss h [10/Oct/2000:13:55:36 -0700] \"GET /apache_pb.gif HTTP/1.0\" 200 2326");
+    //should get an instance of CommonLogFormatParser
+    Assert.assertTrue(parser instanceof CommonLogFormatParser);
+
     Assert.assertEquals(0, parser.getOffset());
     Record record = parser.parse();
     Assert.assertFalse(record.has("/text"));
@@ -119,6 +126,9 @@ public class TestLogCharDataParserFactory {
       new StringReader("127.0.0.1 ss h [10/Oct/2000:13:55:36 -0700] \"GET /apache_pb.gif HTTP/1.0\" 200 2326"), 100,
       true);
     DataParser parser = factory.getParser("id", reader, 0);
+    //should get an instance of CommonLogFormatParser
+    Assert.assertTrue(parser instanceof CommonLogFormatParser);
+
     Assert.assertEquals(0, parser.getOffset());
     Record record = parser.parse();
     Assert.assertTrue(record.has("/text"));
@@ -164,10 +174,16 @@ public class TestLogCharDataParserFactory {
       new StringReader("127.0.0.1 ss h [10/Oct/2000:13:55:36 -0700] \"GET /apache_pb.gif HTTP/1.0\" 200 2326"), 100,
       true);
     DataParser parser = factory.getParser("id", reader, 0);
+    //should get an instance of CommonLogFormatParser
+    Assert.assertTrue(parser instanceof CommonLogFormatParser);
+
     Assert.assertEquals(0, parser.getOffset());
     Record record = parser.parse();
     Assert.assertTrue(record.has("/text"));
+    //log line is truncated
     Assert.assertTrue(record.has("/truncated"));
+
+    //truncated log line does not match the Common Log Format pattern
     Assert.assertFalse(record.has("/ipAddress"));
     Assert.assertFalse(record.has("/clientId"));
     Assert.assertFalse(record.has("/userId"));
@@ -188,7 +204,10 @@ public class TestLogCharDataParserFactory {
     CharDataParserFactory factory = new LogCharDataParserFactory(getContext(), 150, LogMode.COMMON_LOG_FORMAT, configs);
     OverrunReader reader = new OverrunReader(new StringReader(
       "Hello\n127.0.0.1 ss h [10/Oct/2000:13:55:36 -0700] \"GET /apache_pb.gif HTTP/1.0\" 200 2326"), 1000, true);
+
     DataParser parser = factory.getParser("id", reader, 6);
+    //should get an instance of CommonLogFormatParser
+    Assert.assertTrue(parser instanceof CommonLogFormatParser);
 
     Assert.assertEquals(6, parser.getOffset());
 

@@ -22,6 +22,8 @@ import com.streamsets.pipeline.config.DataFormat;
 import com.streamsets.pipeline.config.DataFormatChooserValues;
 import com.streamsets.pipeline.config.JsonMode;
 import com.streamsets.pipeline.config.JsonModeChooserValues;
+import com.streamsets.pipeline.config.LogMode;
+import com.streamsets.pipeline.config.LogModeChooserValues;
 import com.streamsets.pipeline.configurablestage.DSource;
 
 @GenerateResourceBundle
@@ -271,7 +273,7 @@ public class SpoolDirDSource extends DSource {
   )
   public int jsonMaxObjectLen;
 
-  // LOG Configuration
+  // TEXT Configuration
 
   @ConfigDef(
       required = true,
@@ -318,12 +320,57 @@ public class SpoolDirDSource extends DSource {
   )
   public int xmlMaxObjectLen;
 
+  // LOG Configuration
+
+  @ConfigDef(
+    required = true,
+    type = ConfigDef.Type.MODEL,
+    defaultValue = "COMMON_LOG_FORMAT",
+    label = "Log Format",
+    description = "",
+    displayPosition = 700,
+    group = "LOG",
+    dependsOn = "dataFormat",
+    triggeredByValue = "LOG"
+  )
+  @ValueChooser(LogModeChooserValues.class)
+  public LogMode logMode;
+
+  @ConfigDef(
+    required = true,
+    type = ConfigDef.Type.NUMBER,
+    defaultValue = "1024",
+    label = "Max Line Length",
+    description = "Longer lines are truncated",
+    displayPosition = 710,
+    group = "LOG",
+    dependsOn = "dataFormat",
+    triggeredByValue = "LOG",
+    min = 1,
+    max = Integer.MAX_VALUE
+  )
+  public int logMaxObjectLen;
+
+  @ConfigDef(
+    required = true,
+    type = ConfigDef.Type.BOOLEAN,
+    defaultValue = "false",
+    label = "Retain Original Line",
+    description = "Indicates if the original line of log should be retained in the record",
+    displayPosition = 720,
+    group = "LOG",
+    dependsOn = "dataFormat",
+    triggeredByValue = "LOG"
+  )
+  public boolean retainOriginalLine;
+
   @Override
   protected Source createSource() {
     return new SpoolDirSource(dataFormat, charset, overrunLimit, spoolDir, batchSize, poolingTimeoutSecs, filePattern,
-                              maxSpoolFiles, initialFileToProcess, errorArchiveDir, postProcessing, archiveDir,
-                              retentionTimeMins, csvFileFormat, csvHeader, csvMaxObjectLen, jsonContent,
-                              jsonMaxObjectLen, textMaxObjectLen, xmlRecordElement, xmlMaxObjectLen);
+      maxSpoolFiles, initialFileToProcess, errorArchiveDir, postProcessing, archiveDir,
+      retentionTimeMins, csvFileFormat, csvHeader, csvMaxObjectLen, jsonContent,
+      jsonMaxObjectLen, textMaxObjectLen, xmlRecordElement, xmlMaxObjectLen, logMode,
+      logMaxObjectLen, retainOriginalLine);
   }
 
 }

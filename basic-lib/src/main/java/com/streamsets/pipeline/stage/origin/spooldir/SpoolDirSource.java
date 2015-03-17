@@ -14,11 +14,13 @@ import com.streamsets.pipeline.config.CsvHeader;
 import com.streamsets.pipeline.config.CsvMode;
 import com.streamsets.pipeline.config.DataFormat;
 import com.streamsets.pipeline.config.JsonMode;
+import com.streamsets.pipeline.config.LogMode;
 import com.streamsets.pipeline.lib.dirspooler.DirectorySpooler;
 import com.streamsets.pipeline.lib.io.ObjectLengthException;
 import com.streamsets.pipeline.lib.io.OverrunException;
 import com.streamsets.pipeline.lib.parser.CharDataParserFactory;
 import com.streamsets.pipeline.lib.parser.DataParser;
+import com.streamsets.pipeline.lib.parser.log.LogCharDataParserFactory;
 import com.streamsets.pipeline.lib.parser.xml.XmlCharDataParserFactory;
 import org.apache.xerces.util.XMLChar;
 import org.slf4j.Logger;
@@ -58,13 +60,17 @@ public class SpoolDirSource extends BaseSource {
   private final int textMaxLineLen;
   private final String xmlRecordElement;
   private final int xmlMaxObjectLen;
+  private final LogMode logMode;
+  private final int logMaxObjectLen;
+  private final boolean logRetainOriginalLine;
 
   public SpoolDirSource(DataFormat dataFormat, String charset, int overrunLimit, String spoolDir, int batchSize,
       long poolingTimeoutSecs,
       String filePattern, int maxSpoolFiles, String initialFileToProcess, String errorArchiveDir,
       PostProcessingOptions postProcessing, String archiveDir, long retentionTimeMins,
       CsvMode csvFileFormat, CsvHeader csvHeader, int csvMaxObjectLen, JsonMode jsonContent, int jsonMaxObjectLen,
-      int textMaxLineLen, String xmlRecordElement, int xmlMaxObjectLen) {
+      int textMaxLineLen, String xmlRecordElement, int xmlMaxObjectLen, LogMode logMode, int logMaxObjectLen,
+      boolean retainOriginalLine) {
     this.dataFormat = dataFormat;
     this.charset = charset;
     this.overrunLimit = overrunLimit * 1024;
@@ -86,6 +92,9 @@ public class SpoolDirSource extends BaseSource {
     this.textMaxLineLen = textMaxLineLen;
     this.xmlRecordElement = xmlRecordElement;
     this.xmlMaxObjectLen = xmlMaxObjectLen;
+    this.logMode = logMode;
+    this.logMaxObjectLen = logMaxObjectLen;
+    this.logRetainOriginalLine = retainOriginalLine;
   }
 
   private Charset fileCharset;
@@ -170,6 +179,11 @@ public class SpoolDirSource extends BaseSource {
         break;
       case SDC_JSON:
         break;
+      case LOG:
+        if (logMaxObjectLen < 1) {
+          issues.add(getContext().createConfigIssue(Groups.JSON.name(), "logMaxObjectLen", Errors.SPOOLDIR_20));
+        }
+        break;
       default:
         issues.add(getContext().createConfigIssue(Groups.FILES.name(), "dataFormat", Errors.SPOOLDIR_10,
                                                   dataFormat));
@@ -246,6 +260,10 @@ public class SpoolDirSource extends BaseSource {
         filePattern = "records-??????.json";
         initialFileToProcess = "";
         maxSpoolFiles = 10000;
+        break;
+      case LOG:
+        builder.setMaxDataLen(logMaxObjectLen).setConfig(LogCharDataParserFactory.RETAIN_ORIGINAL_TEXT_KEY,
+          logRetainOriginalLine).setMode(logMode);
         break;
     }
     try {

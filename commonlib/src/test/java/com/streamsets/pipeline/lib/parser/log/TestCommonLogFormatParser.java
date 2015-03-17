@@ -162,4 +162,37 @@ public class TestCommonLogFormatParser {
     Assert.assertEquals(-1, parser.getOffset());
     parser.close();
   }
+
+  @Test
+  public void testParseNonLogLine() throws Exception {
+    OverrunReader reader = new OverrunReader(new StringReader(
+      "127.0.0.1 ss h [10/Oct/2000:13:55:36 -0700] This is a log line that does not confirm to common log format"),
+      1000, true);
+    DataParser parser = new CommonLogFormatParser(getContext(), "id", reader, 0, 1000, true);
+    Assert.assertEquals(0, parser.getOffset());
+    Record record = parser.parse();
+    Assert.assertNotNull(record);
+
+    Assert.assertEquals("id::0", record.getHeader().getSourceId());
+
+    Assert.assertEquals(
+      "127.0.0.1 ss h [10/Oct/2000:13:55:36 -0700] This is a log line that does not confirm to common log format",
+      record.get().getValueAsMap().get("text").getValueAsString());
+
+    Assert.assertFalse(record.has("/truncated"));
+
+    Assert.assertEquals(105, parser.getOffset());
+
+    Assert.assertFalse(record.has("/ipAddress"));
+    Assert.assertFalse(record.has("/clientId"));
+    Assert.assertFalse(record.has("/userId"));
+    Assert.assertFalse(record.has("/dateTime"));
+    Assert.assertFalse(record.has("/method"));
+    Assert.assertFalse(record.has("/request"));
+    Assert.assertFalse(record.has("/protocol"));
+    Assert.assertFalse(record.has("/responseCode"));
+    Assert.assertFalse(record.has("/size"));
+
+    parser.close();
+  }
 }
