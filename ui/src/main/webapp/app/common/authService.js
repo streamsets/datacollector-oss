@@ -14,6 +14,11 @@ angular.module('dataCollectorApp.common')
 
     this.initializeDefer = undefined;
 
+    /**
+     * Initializes by fetching User Info
+     *
+     * @returns {*}
+     */
     this.init = function() {
       if(!self.initializeDefer) {
         self.initializeDefer = $q.defer();
@@ -32,6 +37,12 @@ angular.module('dataCollectorApp.common')
       return self.initializeDefer.promise;
     };
 
+    /**
+     * Checks if the logged in User Roles matches with the given list of roles.
+     *
+     * @param authorizedRoles
+     * @returns {*}
+     */
     this.isAuthorized = function (authorizedRoles) {
       if (!angular.isArray(authorizedRoles)) {
         authorizedRoles = [authorizedRoles];
@@ -42,7 +53,20 @@ angular.module('dataCollectorApp.common')
       return intersection && intersection.length;
     };
 
+    /**
+     * Return Logged in User Name
+     *
+     * @returns {user|*|exports.config.params.login.user|Frisby.current.outgoing.auth.user|mapping.user|string}
+     */
     this.getUserName = function() {
       return self.userInfo ? self.userInfo.user: '';
+    };
+
+    /**
+     * Return User Roles
+     * @returns {w.roles|*|string}
+     */
+    this.getUserRoles = function() {
+      return self.userInfo ? self.userInfo.roles : [''];
     };
   });

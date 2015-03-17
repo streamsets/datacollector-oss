@@ -136,6 +136,8 @@ angular.module('dataCollectorApp')
 
     authService.init().then(function() {
       $rootScope.common.userName = authService.getUserName();
+      $rootScope.common.userRoles = authService.getUserRoles().join(', ');
+
 
       if(authService.isAuthorized([userRoles.admin, userRoles.creator, userRoles.manager])) {
         var loc = window.location,
