@@ -65,6 +65,8 @@ public class LogMessageWebSocket extends WebSocketAdapter {
       }
     };
 
+    //TODO send -20K of logFile to session, separator line, then tailer
+
     tailer = new Tailer(new File(logFile), listener, 100, true, true);
     Thread thread = new Thread(tailer, "LogMessageWebSocket-tailLog");
     thread.setDaemon(true);

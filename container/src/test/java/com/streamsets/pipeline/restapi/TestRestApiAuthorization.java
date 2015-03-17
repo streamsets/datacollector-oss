@@ -8,6 +8,7 @@ package com.streamsets.pipeline.restapi;
 import com.google.common.collect.ImmutableSet;
 import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.http.WebServerTask;
+import com.streamsets.pipeline.log.LogUtils;
 import com.streamsets.pipeline.main.PipelineTaskModule;
 import com.streamsets.pipeline.main.RuntimeInfo;
 import com.streamsets.pipeline.task.Task;
@@ -51,6 +52,7 @@ public class TestRestApiAuthorization {
     return port;
   }
 
+  private String log4jConf;
   private String baseDir;
   private Task server;
 
@@ -58,6 +60,11 @@ public class TestRestApiAuthorization {
   public void setup() throws Exception {
     server = null;
     baseDir = createTestDir();
+    log4jConf = new File(baseDir, "log4j.properties").getAbsolutePath();
+    File logFile = new File(baseDir, "x.log");
+    Writer writer = new FileWriter(log4jConf);
+    IOUtils.write(LogUtils.LOG4J_APPENDER_STREAMSETS_FILE_PROPERTY + "=" + logFile.getAbsolutePath(), writer);
+    writer.close();
     Assert.assertTrue(new File(baseDir, "etc").mkdir());
     Assert.assertTrue(new File(baseDir, "data").mkdir());
     Assert.assertTrue(new File(baseDir, "log").mkdir());
@@ -91,6 +98,8 @@ public class TestRestApiAuthorization {
     writer.close();
     Files.setPosixFilePermissions(realmFile.toPath(), WebServerTask.OWNER_PERMISSIONS);
     ObjectGraph dagger = ObjectGraph.create(PipelineTaskModule.class);
+    RuntimeInfo runtimeInfo = dagger.get(RuntimeInfo.class);
+    runtimeInfo.setAttribute(RuntimeInfo.LOG4J_CONFIGURATION_URL_ATTR, new URL("file://" + baseDir + "/log4j.properties"));
     server = dagger.get(TaskWrapper.class);
     server.init();
     server.run();
@@ -135,7 +144,6 @@ public class TestRestApiAuthorization {
         Set<String> has = api.roles;
         for (String user : ALL_ROLES) {
           user = "guest";
-          System.err.println(Utils.format("Authz '{}' User '{}' METHOD '{}' API '{}'", authzEnabled, user, api.method, api.uriPath));
           URL url = new URL(baseUrl + api.uriPath);
           HttpURLConnection conn = (HttpURLConnection) url.openConnection();
           if (authzEnabled) {
@@ -171,7 +179,6 @@ public class TestRestApiAuthorization {
     list.add(new RestApi("/rest/ping", Method.GET, AuthzRole.ALL_ROLES));
 
     list.add(new RestApi("/rest/v1/admin/shutdown", Method.POST, AuthzRole.ADMIN));
-    list.add(new RestApi("/rest/v1/admin/log", Method.GET, AuthzRole.ALL_ROLES));
 
     list.add(new RestApi("/rest/v1/configuration/ui", Method.GET, AuthzRole.ALL_ROLES));
     list.add(new RestApi("/rest/v1/configuration/all", Method.GET, AuthzRole.ALL_ROLES));
@@ -217,6 +224,8 @@ public class TestRestApiAuthorization {
 
     list.add(new RestApi("/rest/v1/definitions", Method.GET, AuthzRole.ALL_ROLES));
     list.add(new RestApi("/rest/v1/definitions/stage/icons", Method.GET, AuthzRole.ALL_ROLES));
+
+    list.add(new RestApi("/log", Method.GET, AuthzRole.ADMIN, AuthzRole.CREATOR, AuthzRole.MANAGER));
 
     return list;
   }

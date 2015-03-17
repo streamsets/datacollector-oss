@@ -12,6 +12,7 @@ import org.slf4j.Logger;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class RuntimeInfo {
   public static final String CONFIG_DIR = "sdc.conf.dir";
@@ -30,7 +31,7 @@ public class RuntimeInfo {
     this.stageLibraryClassLoaders = ImmutableList.copyOf(stageLibraryClassLoaders);
     id = "UNDEF";
     httpUrl = "UNDEF";
-    this.attributes = new HashMap<>();
+    this.attributes = new ConcurrentHashMap<>();
   }
 
   public void setId(String id) {

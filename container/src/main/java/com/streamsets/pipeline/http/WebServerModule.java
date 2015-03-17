@@ -136,7 +136,7 @@ public class WebServerModule {
       public void init(ServletContextHandler context) {
         if (configuration.get(WebServerTask.AUTHENTICATION_KEY, WebServerTask.AUTHENTICATION_DEFAULT).equals("none")) {
           FilterHolder filter = new FilterHolder(new AlwaysAllRolesFilter());
-          context.addFilter(filter, "/rest/*", EnumSet.of(DispatcherType.REQUEST));
+          context.addFilter(filter, "/*", EnumSet.of(DispatcherType.REQUEST));
         }
       }
     };

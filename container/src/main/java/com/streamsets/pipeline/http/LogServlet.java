@@ -1,5 +1,7 @@
 package com.streamsets.pipeline.http;
 
+import com.streamsets.pipeline.log.LogStreamer;
+import com.streamsets.pipeline.log.LogUtils;
 import com.streamsets.pipeline.main.RuntimeInfo;
 import com.streamsets.pipeline.restapi.AuthzRole;
 import com.streamsets.pipeline.util.Configuration;
@@ -22,28 +24,17 @@ import java.util.Properties;
 
 @SuppressWarnings("serial")
 public class LogServlet extends WebSocketServlet implements WebSocketCreator{
-  private final static Logger LOG = LoggerFactory.getLogger(LogServlet.class);
-  static final String LOG4J_APPENDER_STREAMSETS_FILE = "log4j.appender.streamsets.File";
-
+  public static final String X_SDC_LOG_PREVIOUS_OFFSET_HEADER = "X-SDC-LOG-PREVIOUS-OFFSET";
 
   private final Configuration config;
   private String logFile;
 
   public LogServlet(Configuration configuration, RuntimeInfo runtimeInfo) {
     this.config = configuration;
-    URL log4jConfig = runtimeInfo.getAttribute(RuntimeInfo.LOG4J_CONFIGURATION_URL_ATTR);
-    if (log4jConfig != null) {
-      try (InputStream is = log4jConfig.openStream()) {
-        Properties props = new Properties();
-        props.load(is);
-        logFile = props.getProperty(LOG4J_APPENDER_STREAMSETS_FILE);
-        if (logFile != null) {
-          logFile = resolveValue(logFile);
-        }
-      } catch (Exception ex) {
-        logFile = null;
-        LOG.error("Could not determine log file, {}", ex.getMessage(), ex);
-      }
+    try {
+      logFile = LogUtils.getLogFile(runtimeInfo);
+    } catch (IOException ex) {
+      throw new RuntimeException(ex);
     }
   }
 
@@ -58,22 +49,23 @@ public class LogServlet extends WebSocketServlet implements WebSocketCreator{
     return new LogMessageWebSocket(logFile, config);
   }
 
-  static String resolveValue(String str) {
-    while (str.contains("${")) {
-      int start = str.indexOf("${");
-      int end = str.indexOf("}", start);
-      String value = System.getProperty(str.substring(start + 2, end));
-      String current = str;
-      str = current.substring(0, start) + value + current.substring(end + 1);
-    }
-    return str;
-  }
-
   @Override
   protected void service(HttpServletRequest request, HttpServletResponse response) throws ServletException,
       IOException {
-    if (request.isUserInRole(AuthzRole.ADMIN) || request.isUserInRole(AuthzRole.MANAGER)) {
-      super.service(request, response);
+    if (request.isUserInRole(AuthzRole.ADMIN) ||
+        request.isUserInRole(AuthzRole.MANAGER) ||
+        request.isUserInRole(AuthzRole.CREATOR)) {
+      String offset = request.getParameter("offset");
+      if (offset == null) {
+        super.service(request, response);
+      } else {
+        response.setStatus(HttpServletResponse.SC_OK);
+        response.setContentType("text/plain");
+        try (LogStreamer streamer = new LogStreamer(logFile, Long.parseLong(offset), 20 * 1024)) {
+          response.setHeader(X_SDC_LOG_PREVIOUS_OFFSET_HEADER, Long.toString(streamer.getNewEndingOffset()));
+          streamer.stream(response.getOutputStream());
+        }
+      }
     } else {
       response.sendError(HttpServletResponse.SC_FORBIDDEN);
     }
