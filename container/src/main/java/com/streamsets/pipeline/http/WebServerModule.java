@@ -123,8 +123,8 @@ public class WebServerModule {
     return new ContextConfigurator() {
       @Override
       public void init(ServletContextHandler context) {
-        ServletHolder holderEvents = new ServletHolder(new LogServlet(configuration, runtimeInfo));
-        context.addServlet(holderEvents, "/log/*");
+        ServletHolder holderEvents = new ServletHolder(new WebSocketLogServlet(configuration, runtimeInfo));
+        context.addServlet(holderEvents, "/rest/v1/log/streaming");
       }
     };
   }
