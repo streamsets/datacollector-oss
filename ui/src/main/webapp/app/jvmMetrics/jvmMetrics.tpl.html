@@ -13,13 +13,15 @@
         </a>
         <ul class="dropdown-menu pull-right" role="menu">
 
-          <li role="presentation" class="dropdown-header" translate="home.detailPane.restURL">REST URL</li>
+          <li role="presentation" class="dropdown-header"
+              ng-if="!$storage.dontShowRESTResponseMenu"
+              translate="home.detailPane.restURL">REST URL</li>
 
-          <li role="presentation">
+          <li role="presentation" ng-if="!$storage.dontShowRESTResponseMenu">
             <a role="menuitem" tabindex="-1" href="/jmx" target="_blank">{{'jvmMetrics.title' | translate}}</a>
           </li>
 
-          <li role="presentation" class="divider"></li>
+          <li role="presentation" class="divider" ng-if="!$storage.dontShowRESTResponseMenu"></li>
 
           <li role="presentation">
             <a role="menuitem" tabindex="-1" href="#"

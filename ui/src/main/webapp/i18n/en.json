@@ -37,6 +37,7 @@
       "createdOn": "Created On",
       "delete": "Delete",
       "description": "Description",
+      "done": "Done",
       "duplicate": "Duplicate",
       "error": "Error",
       "errorCode": "Error Code",
@@ -443,5 +444,10 @@
   },
   "sdcConfiguration": {
     "title": "Data Collector Configuration"
+  },
+  "sdcSettings": {
+    "title": "Settings",
+    "helpBar": "Don't Show Pipeline Creation Help Bar",
+    "restResponse": "Don't Show REST Response Dropdown Menu"
   }
 }

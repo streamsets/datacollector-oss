@@ -46,7 +46,7 @@ angular.module('dataCollectorApp')
 
   })
   .run(function ($location, $rootScope, $modal, api, pipelineConstant, $localStorage, contextHelpService,
-                 $translate, authService, userRoles, authService) {
+                 $translate, authService, userRoles) {
     var defaultTitle = 'StreamSets Data Collector';
 
     $rootScope.pipelineConstant = pipelineConstant;
@@ -111,6 +111,18 @@ angular.module('dataCollectorApp')
         $modal.open({
           templateUrl: 'aboutModalContent.html',
           controller: 'AboutModalInstanceController',
+          size: '',
+          backdrop: true
+        });
+      },
+
+      /**
+       * Open the Settings Modal Dialog
+       */
+      showSettings: function() {
+        $modal.open({
+          templateUrl: 'app/settings/settingsModal.tpl.html',
+          controller: 'SettingsModalInstanceController',
           size: '',
           backdrop: true
         });
