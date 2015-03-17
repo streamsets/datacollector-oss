@@ -7,7 +7,8 @@ exports.config = {
 
   suites: {
     restAPI: [
-      'restAPI/adminResource.js',
+      'restAPI/infoResource.js',
+      'restAPI/logoutResource.js',
       'restAPI/configurationResource.js',
       'restAPI/helpResource.js',
       'restAPI/jmx.js',

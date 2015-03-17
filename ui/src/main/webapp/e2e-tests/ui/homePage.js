@@ -180,9 +180,8 @@ describe('StreamSets Data Collector App', function() {
       element(by.css('[ng-click="$storage.hideStageLibraryPanel = !$storage.hideStageLibraryPanel"]')).click();
       expect(element(by.model('$storage.stageFilterGroup')).getAttribute('value')).toEqual('SOURCE');
 
-
       //Add Source
-      element.all(by.repeater('stageLibrary in stageLibraries')).then(function(stageLibraries) {
+      element.all(by.repeater('stageLibrary in filteredStageLibraries')).then(function(stageLibraries) {
         //Select 1 Stage
         stageLibraries[0].click();
 
@@ -192,7 +191,7 @@ describe('StreamSets Data Collector App', function() {
 
       //Add Processor
       element(by.model('$storage.stageFilterGroup')).element(by.cssContainingText('option', 'Processor')).click();
-      element.all(by.repeater('stageLibrary in stageLibraries')).then(function(stageLibraries) {
+      element.all(by.repeater('stageLibrary in filteredStageLibraries')).then(function(stageLibraries) {
         //Select 1 Stage
         stageLibraries[0].click();
         browser.sleep(2000);
@@ -201,7 +200,7 @@ describe('StreamSets Data Collector App', function() {
 
       //Add Target
       element(by.model('$storage.stageFilterGroup')).element(by.cssContainingText('option', 'Destinations')).click();
-      element.all(by.repeater('stageLibrary in stageLibraries')).then(function(stageLibraries) {
+      element.all(by.repeater('stageLibrary in filteredStageLibraries')).then(function(stageLibraries) {
         //Select 1 Stage
         stageLibraries[0].click();
         browser.sleep(2000);

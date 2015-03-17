@@ -7,29 +7,6 @@ frisby.create('Login to StreamSets Data Collector')
   .after(function(body, res) {
     var cookie = res.headers['set-cookie'];
 
-    /**
-     * GET rest/v1/admin/build-info
-     */
-    frisby.create('Should return Build Information data')
-      .get(browser.baseUrl + 'rest/v1/admin/build-info', {
-        headers:  {
-          "Content-Type": "application/json",
-          "Accept": "application/json",
-          "Cookie": cookie
-        }
-      })
-      .inspectJSON()
-      .expectStatus(200)
-      .expectHeaderContains('content-type', 'application/json')
-      .afterJSON(function(buildInfoJSON) {
-        expect(buildInfoJSON).toBeDefined();
-        expect(buildInfoJSON['builtDate']).toBeDefined();
-        expect(buildInfoJSON['builtBy']).toBeDefined();
-        expect(buildInfoJSON['builtRepoSha']).toBeDefined();
-        expect(buildInfoJSON['version']).toBeDefined();
-      })
-      .toss();
-
 
     /**
      * GET rest/v1/admin/logout
@@ -60,5 +37,3 @@ frisby.create('Login to StreamSets Data Collector')
       .toss();
   })
   .toss();
-
-
