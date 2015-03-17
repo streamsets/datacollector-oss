@@ -54,7 +54,8 @@ public class FieldHasherProcessor extends SingleLaneRecordProcessor {
       }
     }
 
-    if(onStagePreConditionFailure == OnStagePreConditionFailure.TO_ERROR) {
+    if(onStagePreConditionFailure == OnStagePreConditionFailure.TO_ERROR
+      && !(fieldsDontExist.isEmpty() && fieldsWithListOrMapType.isEmpty() && fieldsWithNull.isEmpty())) {
       throw new OnRecordErrorException(Errors.HASH_01, record.getHeader().getSourceId(),
         StageUtil.getCommaSeparatedNames(fieldsDontExist),  StageUtil.getCommaSeparatedNames(fieldsWithNull),
         StageUtil.getCommaSeparatedNames(fieldsWithListOrMapType));

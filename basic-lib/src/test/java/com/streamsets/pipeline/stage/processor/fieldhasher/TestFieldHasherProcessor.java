@@ -29,7 +29,7 @@ import java.util.Map;
 public class TestFieldHasherProcessor {
 
   @Test
-  public void testStringField() throws StageException {
+  public void testStringFieldWithContinue() throws StageException {
     FieldHasherConfig fieldHasherConfig = new FieldHasherConfig();
     fieldHasherConfig.fieldsToHash = ImmutableList.of("/name");
     fieldHasherConfig.hashType = HashType.SHA2;
@@ -47,6 +47,45 @@ public class TestFieldHasherProcessor {
       record.set(Field.create(map));
 
       StageRunner.Output output = runner.runProcess(ImmutableList.of(record));
+
+      //No error records
+      Assert.assertEquals(0, runner.getErrorRecords().size());
+
+      Assert.assertEquals(1, output.getRecords().get("a").size());
+      Field field = output.getRecords().get("a").get(0).get();
+      Assert.assertTrue(field.getValue() instanceof Map);
+      Map<String, Field> result = field.getValueAsMap();
+      Assert.assertTrue(result.size() == 1);
+      Assert.assertTrue(result.containsKey("name"));
+      Assert.assertEquals(computeHash("streamsets", HashType.SHA2), result.get("name").getValue());
+    } finally {
+      runner.runDestroy();
+    }
+  }
+
+  @Test
+  public void testStringFieldWithToError() throws StageException {
+    FieldHasherConfig fieldHasherConfig = new FieldHasherConfig();
+    fieldHasherConfig.fieldsToHash = ImmutableList.of("/name");
+    fieldHasherConfig.hashType = HashType.SHA2;
+
+    ProcessorRunner runner = new ProcessorRunner.Builder(FieldHasherDProcessor.class)
+      .addConfiguration("fieldHasherConfigs", ImmutableList.of(fieldHasherConfig))
+      .addConfiguration("onStagePreConditionFailure", OnStagePreConditionFailure.TO_ERROR)
+      .addOutputLane("a").build();
+    runner.runInit();
+
+    try {
+      Map<String, Field> map = new LinkedHashMap<>();
+      map.put("name", Field.create("streamsets"));
+      Record record = RecordCreator.create("s", "s:1");
+      record.set(Field.create(map));
+
+      StageRunner.Output output = runner.runProcess(ImmutableList.of(record));
+
+      //No error records
+      Assert.assertEquals(0, runner.getErrorRecords().size());
+
       Assert.assertEquals(1, output.getRecords().get("a").size());
       Field field = output.getRecords().get("a").get(0).get();
       Assert.assertTrue(field.getValue() instanceof Map);
@@ -715,7 +754,7 @@ public class TestFieldHasherProcessor {
       Assert.assertEquals(0, output.getRecords().get("a").size());
       Assert.assertEquals(1, runner.getErrorRecords().size());
 
-      System.out.println(runner.getErrorRecords().get(0).getHeader().getErrorMessage());
+      Assert.assertEquals(Errors.HASH_01.toString(), runner.getErrorRecords().get(0).getHeader().getErrorCode());
     } finally {
       runner.runDestroy();
     }
