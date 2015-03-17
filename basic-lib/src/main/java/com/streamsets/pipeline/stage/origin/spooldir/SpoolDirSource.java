@@ -388,7 +388,7 @@ public class SpoolDirSource extends BaseSource {
 
         if (nextAvailFile == null) {
           // no file to process
-          LOG.debug("No new file available in spool directory after '{}' secs, produccing empty batch",
+          LOG.debug("No new file available in spool directory after '{}' secs, producing empty batch",
                     poolingTimeoutSecs);
         } else {
           // file to process

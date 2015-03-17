@@ -116,7 +116,7 @@ public class SpoolDirDSource extends DSource {
       displayPosition = 40,
       group = "FILES",
       dependsOn = "dataFormat",
-      triggeredByValue = { "TEXT", "JSON", "XML", "DELIMITED"}
+      triggeredByValue = { "TEXT", "JSON", "XML", "DELIMITED", "LOG"}
   )
   public String filePattern;
 
@@ -130,7 +130,7 @@ public class SpoolDirDSource extends DSource {
       displayPosition = 60,
       group = "FILES",
       dependsOn = "dataFormat",
-      triggeredByValue = { "TEXT", "JSON", "XML", "DELIMITED"},
+      triggeredByValue = { "TEXT", "JSON", "XML", "DELIMITED", "LOG"},
       min = 1,
       max = Integer.MAX_VALUE
   )
@@ -145,7 +145,7 @@ public class SpoolDirDSource extends DSource {
       displayPosition = 50,
       group = "FILES",
       dependsOn = "dataFormat",
-      triggeredByValue = { "TEXT", "JSON", "XML", "DELIMITED"}
+      triggeredByValue = { "TEXT", "JSON", "XML", "DELIMITED", "LOG"}
   )
   public String initialFileToProcess;
 

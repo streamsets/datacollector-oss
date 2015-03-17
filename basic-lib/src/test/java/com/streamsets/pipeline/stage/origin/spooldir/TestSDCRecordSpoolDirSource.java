@@ -51,14 +51,9 @@ public class TestSDCRecordSpoolDirSource {
   }
 
   private SpoolDirSource createSource(String dir) {
-<<<<<<< HEAD
     return new SpoolDirSource(DataFormat.SDC_JSON, "UTF-8", 100, createTestDir(), 10, 1, null, 10, null, null,
-                              PostProcessingOptions.ARCHIVE, dir, 10, null, null, -1, null, 0, 10, null, 0);
-=======
-    return new SpoolDirSource(DataFormat.SDC_JSON, 100, createTestDir(), 10, 1, null, 10, null, null,
                               PostProcessingOptions.ARCHIVE, dir, 10, null, null, -1, null, 0, 10, null, 0, null, 0,
       false);
->>>>>>> Log Data Format related changes
   }
 
   @Test

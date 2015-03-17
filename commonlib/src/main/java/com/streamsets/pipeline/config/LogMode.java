@@ -23,8 +23,7 @@ public enum LogMode implements Label {
 	  error, and 5xx a server error.
 	  •	2326 is the size of the object returned to the client, measured in bytes.
   */
-  COMMON_LOG_FORMAT("The common log format which is of the form " +
-    "'127.0.0.1 user-identifier frank [10/Oct/2000:13:55:36 -0700] \"GET /apache_pb.gif HTTP/1.0\" 200 2326'"),
+  COMMON_LOG_FORMAT("Common Log Format"),
 
   ;
 
