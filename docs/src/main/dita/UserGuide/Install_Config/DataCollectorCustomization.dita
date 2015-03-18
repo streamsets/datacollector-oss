@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
+<concept id="concept_pq5_xjq_kr">
+ <title>Data Collector Customization</title>
+ <shortdesc>You can customize the <ph
+   conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>.</shortdesc>
+ <conbody>
+  <p>
+   <draft-comment author="Loretta">what else to add here?</draft-comment>
+  </p>
+ </conbody>
+</concept>

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
+<concept id="concept_ecx_hkq_kr">
+ <title>HTTP or HTTPS</title>
+ <shortdesc>You can configure the <ph
+   conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> to use HTTP or
+  HTTPS. By default the <ph
+   conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> uses
+  HTTP.</shortdesc>
+ <conbody>
+  <p>When you configure the <ph
+    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> to use HTTPS,
+   you have the <ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+   /> redirect HTTP requests to HTTPS or ignore them.</p>
+  <p>
+   <draft-comment author="Loretta">add info about keystore files</draft-comment>
+  </p>
+ </conbody>
+</concept>

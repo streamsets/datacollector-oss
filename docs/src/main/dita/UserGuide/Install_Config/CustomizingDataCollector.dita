@@ -44,22 +44,31 @@
                                 <entry>http.port</entry>
                                 <entry>Port number to use for the <ph
                                         conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                                    /> console.<p>Default is 18630.</p></entry>
+                                    /> console. <p>Default is 18630.</p></entry>
                             </row>
                             <row>
                                 <entry>https.port</entry>
-                                <entry>
-                                    <draft-comment author="Loretta">fill these in after talking to
-                                        tucu</draft-comment>
-                                </entry>
+                                <entry>Secure port number for the <ph
+                                        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                                    /> console. Any number besides 0 enables the secure port number.
+                                        <p>If you use both port properties, the http port bounces to
+                                        the https port.</p></entry>
                             </row>
                             <row>
                                 <entry>https.keystore.path</entry>
-                                <entry/>
+                                <entry>Java keystore path and file name. <p>By default, the file
+                                        name is sdc-keystore.jks and expected in the same directory
+                                        as the <ph
+                                            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                                        /> properties file.</p></entry>
                             </row>
                             <row>
                                 <entry>https.keystore.password</entry>
-                                <entry/>
+                                <entry>File that contains the password to the Java keystore file.
+                                        <p>By default, the file name is sdc-keystore-password.txt
+                                        and expected in the same directory as the <ph
+                                            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                                        /> properties file.</p></entry>
                             </row>
                             <row>
                                 <entry>http.authentication</entry>
