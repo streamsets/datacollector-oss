@@ -40,11 +40,12 @@ public class JavaScriptDProcessor extends DProcessor {
 
   @ConfigDef(
       required = true,
-      type = ConfigDef.Type.STRING,
+      type = ConfigDef.Type.TEXT,
       defaultValue = "",
       label = "Script",
       displayPosition = 20,
-      group = "JAVASCRIPT"
+      group = "JAVASCRIPT",
+      mode = ConfigDef.Mode.JAVASCRIPT
   )
   public String script;
 

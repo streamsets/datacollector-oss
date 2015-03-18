@@ -40,11 +40,12 @@ public class JythonDProcessor extends DProcessor {
 
   @ConfigDef(
       required = true,
-      type = ConfigDef.Type.STRING,
+      type = ConfigDef.Type.TEXT,
       defaultValue = "",
       label = "Script",
       displayPosition = 20,
-      group = "JYTHON"
+      group = "JYTHON",
+      mode = ConfigDef.Mode.PYTHON
   )
   public String script;
 
