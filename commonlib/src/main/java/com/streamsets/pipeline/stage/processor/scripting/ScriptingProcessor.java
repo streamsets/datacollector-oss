@@ -279,9 +279,13 @@ public abstract class ScriptingProcessor extends SingleLaneProcessor {
     }
   }
 
+  protected Object toScriptArray(List<RecordWrapper> records) {
+    return records.toArray(new RecordWrapper[records.size()]);
+  }
+
   private void runScript(List<RecordWrapper> records, OutImpl out, ErrImpl err) throws StageException {
     SimpleBindings bindings = new SimpleBindings();
-    bindings.put("records", records);
+    bindings.put("records", toScriptArray(records));
     bindings.put("out", out);
     bindings.put("err", err);
     try {

@@ -3,7 +3,7 @@
  * be copied, modified, or distributed in whole or part without
  * written consent of StreamSets, Inc.
  */
-package com.streamsets.pipeline.stage.processor.jython;
+package com.streamsets.pipeline.stage.processor.javascript;
 
 import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.ConfigGroups;
@@ -18,12 +18,12 @@ import com.streamsets.pipeline.stage.processor.scripting.ProcessingModeChooserVa
 @GenerateResourceBundle
 @StageDef(
     version = "1.0.0",
-    label = "Jython 2.7",
-    description = "Jython script processor",
-    icon="jython.png"
+    label = "JavaScript 1.8",
+    description = "Rhino JavaScript processor",
+    icon="javascript.png"
 )
 @ConfigGroups(Groups.class)
-public class JythonDProcessor extends DProcessor {
+public class JavaScriptDProcessor extends DProcessor {
 
   @ConfigDef(
       required = true,
@@ -31,9 +31,9 @@ public class JythonDProcessor extends DProcessor {
       defaultValue = "RECORD",
       label = "Record Processing Mode",
       description = "If 'Record by Record' the processor takes care of record error handling, if 'Record batch' " +
-                    "the Jython script must take care of record error handling",
+                    "the JavaScript must take care of record error handling",
       displayPosition = 10,
-      group = "JYTHON"
+      group = "JAVASCRIPT"
   )
   @ValueChooser(ProcessingModeChooserValues.class)
   public ProcessingMode processingMode;
@@ -44,13 +44,13 @@ public class JythonDProcessor extends DProcessor {
       defaultValue = "",
       label = "Script",
       displayPosition = 20,
-      group = "JYTHON"
+      group = "JAVASCRIPT"
   )
   public String script;
 
   @Override
   protected Processor createProcessor() {
-    return new JythonProcessor(processingMode, script);
+    return new JavaScriptProcessor(processingMode, script);
   }
 
 }
