@@ -12,6 +12,7 @@
    <topicmeta>
     <shortdesc/>
    </topicmeta>
+   <topicref href="../Destinations/HadoopFS-DataFormat.dita"/>
    <topicref href="../Destinations/HadoopFS-DirectoryTemplates.dita"/>
    <topicref href="../Destinations/HadoopFS-TimeBasis.dita"/>
    <topicref href="../Destinations/HadoopFS-LateRecordHandling.dita"/>
@@ -22,7 +23,7 @@
    <topicmeta>
     <shortdesc/>
    </topicmeta>
-   <topicref href="../Destinations/KProducer_WritingTextDelimitedData.dita"/>
+   <topicref href="../Destinations/KProducer-DataFormat.dita"/>
    <topicref href="../Destinations/KafkaProducer_BrokerList.dita"/>
    <topicref href="../Destinations/KProducer-AdditionalKProperties.dita"/>
    <topicref href="../Destinations/KProducer-Configuring.dita"/>

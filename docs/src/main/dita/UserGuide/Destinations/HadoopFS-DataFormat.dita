@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
+<concept id="concept_lww_3b3_kr">
+ <title>Data Formats</title>
+ <shortdesc>Hadoop FS proesses data differently based on the format of data being processed. Hadoop
+  FS processes the following data formats:</shortdesc>
+ <conbody>
+  <p>
+   <dl>
+    <dlentry>
+     <dt>Text</dt>
+     <dd><indexterm>Hadoop FS<indexterm>data formats</indexterm></indexterm><indexterm>data
+        formats<indexterm>Hadoop FS</indexterm></indexterm>Hadoop FS writes a single field of text
+      data to Hadoop.</dd>
+     <dd>
+      <p>When you configure text data properties, you select the field to write. If necessary, merge
+       the data that you want to write to Hadoop earlier in the pipeline. </p>
+     </dd>
+    </dlentry>
+    <dlentry>
+     <dt>JSON</dt>
+     <dd>Hadoop FS writes JSON data as multiple JSON objects or a JSON array.</dd>
+    </dlentry>
+    <dlentry>
+     <dt>Delimited</dt>
+     <dd>Hadoop FS writes data to Hadoop based on the field name metadata associated with each field
+      value. <draft-comment author="Loretta">When necessary, you can use what processor to set the
+       field names? </draft-comment></dd>
+    </dlentry>
+    <dlentry>
+     <dt>SDC Record</dt>
+     <dd>Hadoop FS writes data to Hadoop in the proprietary SDC record format. You can use the
+      Directory or Kafka Consumer origins to read SDC record data.</dd>
+    </dlentry>
+   </dl>
+  </p>
+ </conbody>
+</concept>
