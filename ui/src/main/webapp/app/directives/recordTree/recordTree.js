@@ -55,11 +55,17 @@ angular.module('recordTreeDirectives', ['RecursionHelper'])
         }
       });
 
-      if(scope.diffType && scope.recordValue && scope.recordValue.type !== 'MAP' && scope.recordValue.type !== 'LIST') {
-        if(!scope.diffRecordValue || scope.recordValue.path !== scope.diffRecordValue.path) {
-          scope.updatedField = true;
-        } else if(scope.recordValue.value !== scope.diffRecordValue.value){
-          scope.updatedValue = true;
+      if(scope.diffType && scope.recordValue) {
+        if(scope.recordValue.type !== 'MAP' && scope.recordValue.type !== 'LIST') {
+          if(!scope.diffRecordValue || scope.recordValue.path !== scope.diffRecordValue.path) {
+            scope.updatedField = true;
+          } else if(scope.recordValue.value !== scope.diffRecordValue.value){
+            scope.updatedValue = true;
+          }
+        } else {
+          if(!scope.diffRecordValue) {
+            scope.updatedField = true;
+          }
         }
       }
 

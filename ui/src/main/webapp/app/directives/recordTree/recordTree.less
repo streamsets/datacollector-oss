@@ -5,15 +5,15 @@
   margin-bottom: 0;
 
   ul {
-    padding-left: @smallPadding * 4;
+    //padding-left: @smallPadding * 4;
   }
 
   .record-list-item {
     list-style: none;
-    padding: @smallPadding/2;
+    padding: @smallPadding/2 @smallPadding/2 @smallPadding/2 @smallPadding * 4;
     //white-space: nowrap;
 
-    .field-addition {
+    &.field-addition {
       background-color: #eaffea;
     }
 
@@ -21,7 +21,7 @@
       background-color: #a6f3a6;
     }
 
-    .field-deletion {
+    &.field-deletion {
       background-color: #ffecec;
     }
 

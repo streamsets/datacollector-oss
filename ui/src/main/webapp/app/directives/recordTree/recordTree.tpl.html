@@ -1,7 +1,8 @@
 <ul class="record-list" ng-init="isOpen=false">
-  <li class="record-list-item">
+  <li class="record-list-item"
+      ng-class="{'field-addition' : (diffType === 'output' && (updatedField || updatedValue)), 'field-deletion': (diffType === 'input' && (updatedField || updatedValue))}">
 
-    <div ng-class="{'field-addition' : (diffType === 'output' && (updatedField || updatedValue)), 'field-deletion': (diffType === 'input' && (updatedField || updatedValue))}">
+    <div>
 
       <label class="pull-left"
              ng-class="{'label label-danger': record.header.errorMessage && isRoot}">
@@ -59,8 +60,9 @@
         </div>
 
         <div ng-switch-when="DATE" class="clearfix">
-          <span class="field-value pull-left"
-                ng-class="recordValue.type">{{recordValue.value + '' | date:'medium'}} </span>
+          <span class="field-value pull-left {{recordValue.type}}"
+                ng-class="{'value-addition' : (diffType === 'output' && updatedValue), 'value-deletion' : (diffType === 'input' && updatedValue)}"
+            >{{recordValue.value + '' | date:'medium'}} </span>
 
           <div class="dropdown pull-left"
                ng-if="editable === true"
@@ -78,8 +80,9 @@
 
 
         <div ng-switch-when="DATETIME" class="clearfix">
-          <span class="field-value pull-left"
-                ng-class="recordValue.type">{{recordValue.value + '' | date:'medium'}} </span>
+          <span class="field-value pull-left {{recordValue.type}}"
+                ng-class="{'value-addition' : (diffType === 'output' && updatedValue), 'value-deletion' : (diffType === 'input' && updatedValue)}"
+            >{{recordValue.value + '' | date:'medium'}} </span>
 
           <div class="dropdown pull-left"
                ng-if="editable === true"
