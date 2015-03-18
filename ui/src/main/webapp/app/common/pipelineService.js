@@ -390,7 +390,7 @@ angular.module('dataCollectorApp.common')
           return stageInstance.uiInfo.label.indexOf(label) !== -1;
         });
 
-        return label + (similarStageInstances.length + 1);
+        return label + ' ' + (similarStageInstances.length + 1);
       }
     };
 
