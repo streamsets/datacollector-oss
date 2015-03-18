@@ -19,7 +19,7 @@ import java.io.IOException;
 import java.io.StringReader;
 import java.util.Collections;
 
-public class TestCommonLogFormatParser {
+public class TestCombinedLogFormatParser {
   private Stage.Context getContext() {
     return ContextInfoCreator.createSourceContext("i", false, OnRecordError.TO_ERROR,
       Collections.<String>emptyList());
@@ -28,20 +28,22 @@ public class TestCommonLogFormatParser {
   @Test
   public void testParse() throws Exception {
     OverrunReader reader = new OverrunReader(new StringReader(
-      "127.0.0.1 ss h [10/Oct/2000:13:55:36 -0700] \"GET /apache_pb.gif HTTP/1.0\" 200 2326 Hello"), 1000, true);
-    DataParser parser = new CommonLogParser(getContext(), "id", reader, 0, 1000, true);
+      "127.0.0.1 ss h [10/Oct/2000:13:55:36 -0700] \"GET /apache_pb.gif HTTP/1.0\" 200 2326 " +
+        "\"http://www.example.com/start.html\" \"Mozilla/4.08 [en] (Win98; I ;Nav)\""), 1000, true);
+    DataParser parser = new CombinedLogParser(getContext(), "id", reader, 0, 1000, true);
     Assert.assertEquals(0, parser.getOffset());
     Record record = parser.parse();
     Assert.assertNotNull(record);
 
     Assert.assertEquals("id::0", record.getHeader().getSourceId());
 
-    Assert.assertEquals("127.0.0.1 ss h [10/Oct/2000:13:55:36 -0700] \"GET /apache_pb.gif HTTP/1.0\" 200 2326 Hello",
+    Assert.assertEquals("127.0.0.1 ss h [10/Oct/2000:13:55:36 -0700] \"GET /apache_pb.gif HTTP/1.0\" 200 2326 " +
+        "\"http://www.example.com/start.html\" \"Mozilla/4.08 [en] (Win98; I ;Nav)\"",
       record.get().getValueAsMap().get("originalLine").getValueAsString());
 
     Assert.assertFalse(record.has("/truncated"));
 
-    Assert.assertEquals(88, parser.getOffset());
+    Assert.assertEquals(154, parser.getOffset());
 
     Assert.assertTrue(record.has("/remoteHost"));
     Assert.assertEquals("127.0.0.1", record.get("/remoteHost").getValueAsString());
@@ -69,6 +71,12 @@ public class TestCommonLogFormatParser {
 
     Assert.assertTrue(record.has("/bytesSent"));
     Assert.assertEquals("2326", record.get("/bytesSent").getValueAsString());
+
+    Assert.assertTrue(record.has("/referer"));
+    Assert.assertEquals("http://www.example.com/start.html", record.get("/referer").getValueAsString());
+
+    Assert.assertTrue(record.has("/userAgent"));
+    Assert.assertEquals("Mozilla/4.08 [en] (Win98; I ;Nav)", record.get("/userAgent").getValueAsString());
 
     parser.close();
   }
@@ -76,20 +84,22 @@ public class TestCommonLogFormatParser {
   @Test
   public void testParseWithOffset() throws Exception {
     OverrunReader reader = new OverrunReader(new StringReader(
-      "Hello\n127.0.0.1 ss h [10/Oct/2000:13:55:36 -0700] \"GET /apache_pb.gif HTTP/1.0\" 200 2326"), 1000, true);
-    DataParser parser = new CommonLogParser(getContext(), "id", reader, 6, 1000, true);
+      "Hello\n127.0.0.1 ss h [10/Oct/2000:13:55:36 -0700] \"GET /apache_pb.gif HTTP/1.0\" 200 2326 " +
+      "\"http://www.example.com/start.html\" \"Mozilla/4.08 [en] (Win98; I ;Nav)\""), 1000, true);
+    DataParser parser = new CombinedLogParser(getContext(), "id", reader, 6, 1000, true);
     Assert.assertEquals(6, parser.getOffset());
     Record record = parser.parse();
     Assert.assertNotNull(record);
 
     Assert.assertEquals("id::6", record.getHeader().getSourceId());
 
-    Assert.assertEquals("127.0.0.1 ss h [10/Oct/2000:13:55:36 -0700] \"GET /apache_pb.gif HTTP/1.0\" 200 2326",
+    Assert.assertEquals("127.0.0.1 ss h [10/Oct/2000:13:55:36 -0700] \"GET /apache_pb.gif HTTP/1.0\" 200 2326 " +
+        "\"http://www.example.com/start.html\" \"Mozilla/4.08 [en] (Win98; I ;Nav)\"",
       record.get().getValueAsMap().get("originalLine").getValueAsString());
 
     Assert.assertFalse(record.has("/truncated"));
 
-    Assert.assertEquals(88, parser.getOffset());
+    Assert.assertEquals(160, parser.getOffset());
 
     Assert.assertTrue(record.has("/remoteHost"));
     Assert.assertEquals("127.0.0.1", record.get("/remoteHost").getValueAsString());
@@ -118,6 +128,11 @@ public class TestCommonLogFormatParser {
     Assert.assertTrue(record.has("/bytesSent"));
     Assert.assertEquals("2326", record.get("/bytesSent").getValueAsString());
 
+    Assert.assertTrue(record.has("/referer"));
+    Assert.assertEquals("http://www.example.com/start.html", record.get("/referer").getValueAsString());
+
+    Assert.assertTrue(record.has("/userAgent"));
+    Assert.assertEquals("Mozilla/4.08 [en] (Win98; I ;Nav)", record.get("/userAgent").getValueAsString());
 
     record = parser.parse();
     Assert.assertNull(record);
@@ -129,7 +144,7 @@ public class TestCommonLogFormatParser {
   @Test(expected = IOException.class)
   public void testClose() throws Exception {
     OverrunReader reader = new OverrunReader(new StringReader("Hello\nByte"), 1000, true);
-    DataParser parser = new CommonLogParser(getContext(), "id", reader, 0, 1000, false);
+    DataParser parser = new CombinedLogParser(getContext(), "id", reader, 0, 1000, false);
     parser.close();
     parser.parse();
   }
@@ -137,14 +152,16 @@ public class TestCommonLogFormatParser {
   @Test(expected = DataParserException.class)
   public void testTruncate() throws Exception {
     OverrunReader reader = new OverrunReader(new StringReader(
-      "127.0.0.1 ss h [10/Oct/2000:13:55:36 -0700] \"GET /apache_pb.gif HTTP/1.0\" 200 2326"), 1000, true);
-    DataParser parser = new CommonLogParser(getContext(), "id", reader, 0, 25, true); //cut short to 25
+      "127.0.0.1 ss h [10/Oct/2000:13:55:36 -0700] \"GET /apache_pb.gif HTTP/1.0\" 200 2326 " +
+        "\"http://www.example.com/start.html\" \"Mozilla/4.08 [en] (Win98; I ;Nav)\""), 1000, true);
+    DataParser parser = new CombinedLogParser(getContext(), "id", reader, 0, 25, true); //cut short to 25
     Assert.assertEquals(0, parser.getOffset());
     try {
       parser.parse();
     } finally {
       parser.close();
     }
+
   }
 
   @Test(expected = DataParserException.class)
@@ -152,7 +169,7 @@ public class TestCommonLogFormatParser {
     OverrunReader reader = new OverrunReader(new StringReader(
       "127.0.0.1 ss h [10/Oct/2000:13:55:36 -0700] This is a log line that does not confirm to common log format"),
       1000, true);
-    DataParser parser = new CommonLogParser(getContext(), "id", reader, 0, 1000, true);
+    DataParser parser = new CombinedLogParser(getContext(), "id", reader, 0, 1000, true);
     Assert.assertEquals(0, parser.getOffset());
     try {
       parser.parse();

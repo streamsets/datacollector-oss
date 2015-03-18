@@ -20,6 +20,8 @@ import com.streamsets.pipeline.lib.io.ObjectLengthException;
 import com.streamsets.pipeline.lib.io.OverrunException;
 import com.streamsets.pipeline.lib.parser.CharDataParserFactory;
 import com.streamsets.pipeline.lib.parser.DataParser;
+import com.streamsets.pipeline.lib.parser.DataParserException;
+import com.streamsets.pipeline.lib.parser.log.ApacheAccessLogHelper;
 import com.streamsets.pipeline.lib.parser.log.LogCharDataParserFactory;
 import com.streamsets.pipeline.lib.parser.xml.XmlCharDataParserFactory;
 import org.apache.xerces.util.XMLChar;
@@ -31,8 +33,13 @@ import java.io.IOException;
 import java.nio.charset.Charset;
 import java.nio.charset.UnsupportedCharsetException;
 import java.nio.file.PathMatcher;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import java.util.regex.PatternSyntaxException;
 
 public class SpoolDirSource extends BaseSource {
   private final static Logger LOG = LoggerFactory.getLogger(SpoolDirSource.class);
@@ -63,6 +70,9 @@ public class SpoolDirSource extends BaseSource {
   private final LogMode logMode;
   private final int logMaxObjectLen;
   private final boolean logRetainOriginalLine;
+  private final String customLogFormat;
+  private final String regex;
+  private final List<RegExConfig> fieldPathsToGroupName;
 
   public SpoolDirSource(DataFormat dataFormat, String charset, int overrunLimit, String spoolDir, int batchSize,
       long poolingTimeoutSecs,
@@ -70,7 +80,7 @@ public class SpoolDirSource extends BaseSource {
       PostProcessingOptions postProcessing, String archiveDir, long retentionTimeMins,
       CsvMode csvFileFormat, CsvHeader csvHeader, int csvMaxObjectLen, JsonMode jsonContent, int jsonMaxObjectLen,
       int textMaxLineLen, String xmlRecordElement, int xmlMaxObjectLen, LogMode logMode, int logMaxObjectLen,
-      boolean retainOriginalLine) {
+      boolean retainOriginalLine, String customLogFormat, String regex, List<RegExConfig> fieldPathsToGroupName) {
     this.dataFormat = dataFormat;
     this.charset = charset;
     this.overrunLimit = overrunLimit * 1024;
@@ -95,6 +105,9 @@ public class SpoolDirSource extends BaseSource {
     this.logMode = logMode;
     this.logMaxObjectLen = logMaxObjectLen;
     this.logRetainOriginalLine = retainOriginalLine;
+    this.customLogFormat = customLogFormat;
+    this.regex = regex;
+    this.fieldPathsToGroupName = fieldPathsToGroupName;
   }
 
   private Charset fileCharset;
@@ -183,6 +196,12 @@ public class SpoolDirSource extends BaseSource {
         if (logMaxObjectLen < 1) {
           issues.add(getContext().createConfigIssue(Groups.JSON.name(), "logMaxObjectLen", Errors.SPOOLDIR_20));
         }
+        if(logMode == LogMode.APACHE_CUSTOM_LOG_FORMAT) {
+          validateApacheCustomLogFormat(issues);
+        }
+        if(logMode == LogMode.REGEX) {
+          validateRegExFormat(issues);
+        }
         break;
       default:
         issues.add(getContext().createConfigIssue(Groups.FILES.name(), "dataFormat", Errors.SPOOLDIR_10,
@@ -193,6 +212,39 @@ public class SpoolDirSource extends BaseSource {
     validateDataParser(issues);
 
     return issues;
+  }
+
+  private void validateApacheCustomLogFormat(List<ConfigIssue> issues) {
+    if(customLogFormat == null || customLogFormat.isEmpty()) {
+      issues.add(getContext().createConfigIssue(Groups.LOG.name(), "customLogFormat", Errors.SPOOLDIR_27,
+        customLogFormat));
+      return;
+    }
+    Map<String, Integer> fieldToGroup = new HashMap<>();
+    try {
+      ApacheAccessLogHelper.convertLogFormatToRegEx(customLogFormat, fieldToGroup);
+    } catch (DataParserException e) {
+      issues.add(getContext().createConfigIssue(Groups.LOG.name(), "customLogFormat", Errors.SPOOLDIR_28,
+        customLogFormat, e.getMessage(), e));
+    }
+  }
+
+  private void validateRegExFormat(List<ConfigIssue> issues) {
+    try {
+      Pattern compile = Pattern.compile(regex);
+      Matcher matcher = compile.matcher(" ");
+      int groupCount = matcher.groupCount();
+
+      for(RegExConfig r : fieldPathsToGroupName) {
+        if(r.group > groupCount) {
+          issues.add(getContext().createConfigIssue(Groups.LOG.name(), "fieldPathsToGroupName", Errors.SPOOLDIR_30,
+            regex, groupCount, r.group));
+        }
+      }
+    } catch (PatternSyntaxException e) {
+      issues.add(getContext().createConfigIssue(Groups.LOG.name(), "regex", Errors.SPOOLDIR_29,
+        regex, e.getMessage(), e));
+    }
   }
 
   private void validateDir(String dir, String group, String config, List<ConfigIssue> issues) {
@@ -262,8 +314,13 @@ public class SpoolDirSource extends BaseSource {
         maxSpoolFiles = 10000;
         break;
       case LOG:
-        builder.setMaxDataLen(logMaxObjectLen).setConfig(LogCharDataParserFactory.RETAIN_ORIGINAL_TEXT_KEY,
-          logRetainOriginalLine).setMode(logMode);
+        builder.setMaxDataLen(logMaxObjectLen)
+          .setConfig(LogCharDataParserFactory.RETAIN_ORIGINAL_TEXT_KEY, logRetainOriginalLine)
+          .setConfig(LogCharDataParserFactory.APACHE_CUSTOMLOG_FORMAT_KEY, customLogFormat)
+          .setConfig(LogCharDataParserFactory.REGEX_KEY, regex)
+          .setConfig(LogCharDataParserFactory.REGEX_FIELD_PATH_TO_GROUP_KEY,
+            getFieldPathToGroupMap(fieldPathsToGroupName))
+          .setMode(logMode);
         break;
     }
     try {
@@ -271,8 +328,16 @@ public class SpoolDirSource extends BaseSource {
     } catch (Exception ex) {
       issues.add(getContext().createConfigIssue(null, null, Errors.SPOOLDIR_24, ex.getMessage(), ex));
     }
-
   }
+
+  private Map<String, Integer> getFieldPathToGroupMap(List<RegExConfig> fieldPathsToGroupName) {
+    Map<String, Integer> fieldPathToGroup = new HashMap<>();
+    for(RegExConfig r : fieldPathsToGroupName) {
+      fieldPathToGroup.put(r.fieldPath, r.group);
+    }
+    return fieldPathToGroup;
+  }
+
   @Override
   protected void init() throws StageException {
     super.init();

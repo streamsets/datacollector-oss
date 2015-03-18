@@ -24,6 +24,16 @@ public enum LogMode implements Label {
 	  •	2326 is the size of the object returned to the client, measured in bytes.
   */
   COMMON_LOG_FORMAT("Common Log Format"),
+  /*
+    Has "Referer" and "User-agent" fields in addition to the ones from common log format
+   */
+  COMBINED_LOG_FORMAT("Combined Log Format"),
+
+  APACHE_ERROR_LOG_FORMAT("Apache Error Log Format"),
+
+  APACHE_CUSTOM_LOG_FORMAT("Apache Custom Log Format"),
+
+  REGEX("Regular Expression"),
 
   ;
 

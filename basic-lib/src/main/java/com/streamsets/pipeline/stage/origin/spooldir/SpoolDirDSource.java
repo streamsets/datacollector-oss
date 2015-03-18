@@ -5,6 +5,7 @@
  */
 package com.streamsets.pipeline.stage.origin.spooldir;
 
+import com.streamsets.pipeline.api.ComplexField;
 import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.ConfigGroups;
 import com.streamsets.pipeline.api.GenerateResourceBundle;
@@ -25,6 +26,8 @@ import com.streamsets.pipeline.config.JsonModeChooserValues;
 import com.streamsets.pipeline.config.LogMode;
 import com.streamsets.pipeline.config.LogModeChooserValues;
 import com.streamsets.pipeline.configurablestage.DSource;
+
+import java.util.List;
 
 @GenerateResourceBundle
 @StageDef(
@@ -364,13 +367,56 @@ public class SpoolDirDSource extends DSource {
   )
   public boolean retainOriginalLine;
 
+  //APACHE_CUSTOM_LOG_FORMAT
+  @ConfigDef(
+    required = true,
+    type = ConfigDef.Type.STRING,
+    defaultValue = "%h %l %u %t \"%r\" %>s %b",
+    label = "Custom Log Format",
+    description = "The custom log format string built using the apache log format strings.",
+    displayPosition = 730,
+    group = "LOG",
+    dependsOn = "logMode",
+    triggeredByValue = "APACHE_CUSTOM_LOG_FORMAT"
+  )
+  public String customLogFormat;
+
+  //REGEX
+
+  @ConfigDef(
+    required = true,
+    type = ConfigDef.Type.STRING,
+    defaultValue = "^(\\S+) (\\S+) (\\S+) \\[([\\w:/]+\\s[+\\-]\\d{4})\\] \"(\\S+) (\\S+) (\\S+)\" (\\d{3}) (\\d+)",
+    label = "Regular Expression",
+    description = "The regular expression which is used to parse the log line.",
+    displayPosition = 740,
+    group = "LOG",
+    dependsOn = "logMode",
+    triggeredByValue = "REGEX"
+  )
+  public String regex;
+
+  @ConfigDef(
+    required = true,
+    type = ConfigDef.Type.MODEL,
+    defaultValue = "",
+    label = "Field Path To RegEx Group Mapping",
+    description = "The mapping between the field.",
+    displayPosition = 750,
+    group = "LOG",
+    dependsOn = "logMode",
+    triggeredByValue = "REGEX"
+  )
+  @ComplexField
+  public List<RegExConfig> fieldPathsToGroupName;
+
   @Override
   protected Source createSource() {
     return new SpoolDirSource(dataFormat, charset, overrunLimit, spoolDir, batchSize, poolingTimeoutSecs, filePattern,
       maxSpoolFiles, initialFileToProcess, errorArchiveDir, postProcessing, archiveDir,
       retentionTimeMins, csvFileFormat, csvHeader, csvMaxObjectLen, jsonContent,
       jsonMaxObjectLen, textMaxObjectLen, xmlRecordElement, xmlMaxObjectLen, logMode,
-      logMaxObjectLen, retainOriginalLine);
+      logMaxObjectLen, retainOriginalLine, customLogFormat, regex, fieldPathsToGroupName);
   }
 
 }

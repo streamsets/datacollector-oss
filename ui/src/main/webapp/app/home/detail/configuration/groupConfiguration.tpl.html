@@ -122,7 +122,7 @@
 
               <div ng-if="(!customFieldConfigDefinition.dependsOn || verifyCustomFieldDependsOn(detailPaneConfig, customFieldValue, customFieldConfigDefinition))"
                    ng-switch="customFieldConfigDefinition.type">
-                <div ng-switch-when="INTEGER">
+                <div ng-switch-when="NUMBER">
                   <input type="number" class="form-control"
                          name="{{customFieldConfigDefinition.name + $index}}"
                          placeholder="{{customFieldConfigDefinition.label}}"

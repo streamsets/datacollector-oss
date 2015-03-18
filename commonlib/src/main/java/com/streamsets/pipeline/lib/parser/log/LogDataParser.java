@@ -19,7 +19,7 @@ import java.util.Map;
 
 public abstract class LogDataParser implements DataParser {
 
-  static final String TEXT_FIELD_NAME = "text";
+  static final String TEXT_FIELD_NAME = "originalLine";
   static final String TRUNCATED_FIELD_NAME = "truncated";
 
   private final Stage.Context context;
@@ -62,7 +62,12 @@ public abstract class LogDataParser implements DataParser {
           map.put(TRUNCATED_FIELD_NAME, Field.create(true));
         }
       }
-      Map<String, Field> fieldsFromLogLine = parseLogLine(sb);
+      Map<String, Field> fieldsFromLogLine = null;
+      try {
+        fieldsFromLogLine = parseLogLine(sb);
+      } catch (DataParserException e) {
+        throw new DataParserException(Errors.LOG_PARSER_01, sb.toString(), e.getMessage(), e);
+      }
       if(fieldsFromLogLine != null && !fieldsFromLogLine.isEmpty()) {
         for (Map.Entry<String, Field> e : fieldsFromLogLine.entrySet()) {
           map.put(e.getKey(), e.getValue());
@@ -77,7 +82,9 @@ public abstract class LogDataParser implements DataParser {
     return record;
   }
 
-  protected abstract Map<String, Field> parseLogLine(StringBuilder sb);
+
+
+  protected abstract Map<String, Field> parseLogLine(StringBuilder sb) throws DataParserException;
 
   @Override
   public long getOffset() {

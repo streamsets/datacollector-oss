@@ -42,9 +42,10 @@ public class TestSpoolDirSource {
         String archiveDir, long retentionTimeMins, CsvMode csvFileFormat, CsvHeader csvHeaders,
         JsonMode jsonContent, int maxJsonObjectLen, int maxLogLineLength, String xmlRecordElement,
         int maxXmlObjectLen) {
-      super(dataFormat, "UTF-8", 100, spoolDir, batchSize, poolingTimeoutSecs, filePattern, maxSpoolFiles, initialFileToProcess,
-            errorArchiveDir, postProcessing, archiveDir, retentionTimeMins, csvFileFormat, csvHeaders, -1,
-            jsonContent, maxJsonObjectLen, maxLogLineLength, xmlRecordElement, maxXmlObjectLen, null, 0, false);
+      super(dataFormat, "UTF-8", 100, spoolDir, batchSize, poolingTimeoutSecs, filePattern, maxSpoolFiles,
+        initialFileToProcess, errorArchiveDir, postProcessing, archiveDir, retentionTimeMins, csvFileFormat,
+        csvHeaders, -1, jsonContent, maxJsonObjectLen, maxLogLineLength, xmlRecordElement, maxXmlObjectLen, null, 0,
+        false, null, null, null);
       this.spoolDir = spoolDir;
     }
 
