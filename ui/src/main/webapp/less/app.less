@@ -216,7 +216,8 @@ body {
 
   .CodeMirror {
     border: solid 1px #008000;
-    height: 34px;
+    min-height: 34px;
+    height: auto;
     min-width: 500px;
     padding: @smallPadding @defaultPadding;
     border-radius: 3px;
@@ -231,6 +232,15 @@ body {
 
   .CodeMirror-hints {
     z-index: 1500;
+  }
+
+  .codemirror-editor {
+    .CodeMirror {
+      border: 1px solid #ccc;
+      min-height: 34px;
+      padding: 0;
+      height: auto;
+    }
   }
 
   .not-authorized-page {

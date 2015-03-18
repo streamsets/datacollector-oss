@@ -59,6 +59,11 @@
     <ng-include src="'mapConfigurationTemplate'"></ng-include>
   </div>
 
+  <div ng-switch-when="TEXT">
+    <ng-include src="'labelConfigurationTemplate'"></ng-include>
+    <ng-include src="'textConfigurationTemplate'"></ng-include>
+  </div>
+
   <div ng-switch-when="MODEL"
        ng-switch="configDefinition.model.modelType">
 

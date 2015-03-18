@@ -92,10 +92,15 @@ module.exports = function(grunt) {
         'bower_components/ngstorage/ngStorage.js',
         'bower_components/angular-bootstrap-datetimepicker/src/js/datetimepicker.js',
         'bower_components/codemirror/lib/codemirror.js',
+        'bower_components/codemirror/mode/clike/clike.js',
+        'bower_components/codemirror/mode/python/python.js',
+        'bower_components/codemirror/mode/ruby/ruby.js',
         'bower_components/codemirror/mode/javascript/javascript.js',
         'bower_components/codemirror/addon/edit/closebrackets.js',
         'bower_components/codemirror/addon/edit/matchbrackets.js',
-        'bower_components/codemirror/addon/hint/show-hint.js'
+        'bower_components/codemirror/addon/hint/show-hint.js',
+        'bower_components/codemirror/addon/hint/javascript-hint.js',
+        'bower_components/codemirror/addon/hint/python-hint.js'
       ],
       css: [
         'bower_components/bootstrap/dist/css/bootstrap.min.css',

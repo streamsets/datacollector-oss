@@ -11,11 +11,24 @@
 
 <script type="text/ng-template" id="stringConfigurationTemplate">
   <div class="controls col-lg-7 col-md-8">
-    <input type="text" class="form-control" name="{{configDefinition.name}}"
+
+    <input type="text" class="form-control"
+           name="{{configDefinition.name}}"
+           ng-if="configDefinition.lines === 0"
            focus-me="{{autoFocusConfigName === configDefinition.name}}"
            ng-readonly="isPipelineReadOnly || isPipelineRunning"
            ng-model="detailPaneConfig.configuration[configIndex].value"
            ng-required="configDefinition.required">
+
+
+    <textarea class="form-control"
+              name="{{configDefinition.name}}"
+              ng-if="configDefinition.lines > 0"
+              focus-me="{{autoFocusConfigName === configDefinition.name}}"
+              rows="{{configDefinition.lines}}"
+              ng-readonly="isPipelineReadOnly || isPipelineRunning"
+              ng-model="detailPaneConfig.configuration[configIndex].value"
+              ng-required="configDefinition.required"></textarea>
 
     <p class="help-block">{{getConfigurationIssueMessage(detailPaneConfig, configDefinition)}}</p>
   </div>
@@ -331,5 +344,29 @@
               })"
        codemirror-el="getCodeMirrorHints(customFieldConfigDefinition)"
        field-paths="fieldPaths">
+  </div>
+</script>
+
+
+<script type="text/ng-template" id="textConfigurationTemplate">
+  <div class="controls col-lg-7 col-md-8">
+
+    <div ui-codemirror
+         class="codemirror-editor"
+         focus-me="{{autoFocusConfigName === configDefinition.name}}"
+         ng-model="detailPaneConfig.configuration[configIndex].value"
+         ui-refresh="refreshCodemirror"
+         ui-codemirror-opts="getCodeMirrorOptions({
+                readOnly: isPipelineReadOnly || isPipelineRunning,
+                mode: {
+                  name: configDefinition.mode
+                },
+                lineNumbers: true
+              })"
+         codemirror-el="getCodeMirrorHints(configDefinition)"
+         field-paths="fieldPaths">
+    </div>
+
+    <p class="help-block">{{getConfigurationIssueMessage(detailPaneConfig, configDefinition)}}</p>
   </div>
 </script>
