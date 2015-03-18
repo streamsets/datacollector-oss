@@ -37,11 +37,13 @@ public class ConfigDefinitionJson {
     @JsonProperty("elFunctionDefinitions") List<ElFunctionDefinitionJson> elFunctionDefinitions,
     @JsonProperty("elConstantDefinitions") List<ElConstantDefinitionJson> elConstantDefinitions,
     @JsonProperty("min")long min,
-    @JsonProperty("max")long max) {
+    @JsonProperty("max")long max,
+    @JsonProperty("mode")String mode,
+    @JsonProperty("lines")int lines) {
     this.configDefinition = new com.streamsets.pipeline.config.ConfigDefinition(name, type, label, description,
       defaultValue, required, group, fieldName, BeanHelper.unwrapModelDefinition(model), dependsOn, triggeredByValues,
       displayPosition, BeanHelper.unwrapElFunctionDefinitions(elFunctionDefinitions),
-      BeanHelper.unwrapElConstantDefinitions(elConstantDefinitions), min, max);
+      BeanHelper.unwrapElConstantDefinitions(elConstantDefinitions), min, max, mode, lines);
   }
 
   public ConfigDefinitionJson(com.streamsets.pipeline.config.ConfigDefinition configDefinition) {
@@ -109,6 +111,14 @@ public class ConfigDefinitionJson {
 
   public long getMax() {
     return configDefinition.getMax();
+  }
+
+  public String getMode() {
+    return configDefinition.getMode();
+  }
+
+  public int getLines() {
+    return configDefinition.getLines();
   }
 
   @JsonIgnore

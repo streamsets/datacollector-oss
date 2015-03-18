@@ -151,7 +151,7 @@ public class ClassLoaderStageLibraryTask extends AbstractTask implements StageLi
       "Records without any of these fields are sent to error",
       null, false, "", null, new ModelDefinition(ModelType.FIELD_SELECTOR_MULTI_VALUED, null, null, null, null),
       "", new ArrayList<>(), 10, Collections.<ElFunctionDefinition>emptyList(),
-      Collections.<ElConstantDefinition>emptyList(), Long.MIN_VALUE, Long.MAX_VALUE);
+      Collections.<ElConstantDefinition>emptyList(), Long.MIN_VALUE, Long.MAX_VALUE, "text/plain", 0);
 
   //Group name needs to be empty for UI to show the config in General Group.
   private static final ConfigDefinition ON_RECORD_ERROR_CONFIG = new ConfigDefinition(
@@ -162,7 +162,7 @@ public class ClassLoaderStageLibraryTask extends AbstractTask implements StageLi
                                                  new OnRecordErrorChooserValues().getValues(),
                                                  new OnRecordErrorChooserValues().getLabels(), null), "",
       new ArrayList<>(), 20, Collections.<ElFunctionDefinition>emptyList(),
-      Collections.<ElConstantDefinition>emptyList(), Long.MIN_VALUE, Long.MAX_VALUE);
+      Collections.<ElConstantDefinition>emptyList(), Long.MIN_VALUE, Long.MAX_VALUE, "text/plain", 0);
 
   private void addSystemConfigurations(StageDefinition stage) {
     if (stage.hasRequiredFields()) {

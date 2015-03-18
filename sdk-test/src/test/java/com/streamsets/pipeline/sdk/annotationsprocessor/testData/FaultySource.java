@@ -195,6 +195,18 @@ public class FaultySource {
     public String extn;
   }
 
+  //28. Text Editor config, mode is python but type is not TEXT
+  //29. Text Editor config, lines is non zero but type is not TEXT
+  @ConfigDef(
+    defaultValue = "Hello",
+    label = "Extension",
+    required = true,
+    description = "The domain of the twitter user",
+    type = ConfigDef.Type.STRING,
+    mode = ConfigDef.Mode.PYTHON,
+    lines = 5)
+  public String pythonCode;
+
   //15. Inner class ChooserValues must be static
   public class MyChooserValues implements ChooserValues {
 

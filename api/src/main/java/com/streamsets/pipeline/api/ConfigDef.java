@@ -17,7 +17,9 @@ import java.lang.annotation.Target;
 public @interface ConfigDef {
 
   public enum Type { BOOLEAN, NUMBER, STRING, LIST, MAP, MODEL, EL_STRING, EL_NUMBER, EL_DATE, EL_BOOLEAN, EL_OBJECT,
-    CHARACTER }
+    CHARACTER, TEXT }
+
+  public enum Mode {JAVA, JAVASCRIPT, JSON, PLAIN_TEXT, PYTHON, RUBY, SCALA}
 
   Type type();
 
@@ -41,4 +43,10 @@ public @interface ConfigDef {
 
   long max() default Long.MAX_VALUE;
 
+  //O displays 1 line in UI, text box cannot be re-sized and user can enter just one line of input
+  //1 displays 1 line in UI, text box can be re-sized and user can enter n lines of input
+  //n indicates n lines in UI, text box can be re-sized and user can enter just one line of input
+  int lines() default 0;
+
+  Mode mode() default Mode.PLAIN_TEXT;
 }

@@ -71,6 +71,8 @@ public class TestFaultyStage extends TestPipelineAnnotationProcessorBase {
     expectedSet.add("The stage FaultySource4 indicates a value 'xyz' for literal 'outputStreamsDrivenByConfig' but no configuration option is found with that name.");
     expectedSet.add("The stage FaultyTarget is a target but identifies an output streams provider class 'com.streamsets.pipeline.api.StageDef$VariableOutputStreams' which is not \"com.streamsets.pipeline.api.StageDef$DefaultOutputStreams\".");
     expectedSet.add("The type of the field PhoneConfig.extn is not a number but has min and max values specified in the configuration.");
+    expectedSet.add("The type of the field FaultySource.pythonCode is expected to be ConfigDef.Type.TEXT.");
+    expectedSet.add("The type of the field FaultySource.pythonCode is not ConfigDef.Type.TEXT. The value expected for lines() is zero.");
 
     for(Diagnostic d : diagnostics) {
       System.out.println(d.toString());

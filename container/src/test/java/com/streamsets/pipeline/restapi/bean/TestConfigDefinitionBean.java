@@ -37,7 +37,8 @@ public class TestConfigDefinitionBean {
     triggeredBy.add("Z");
     com.streamsets.pipeline.config.ConfigDefinition configDefinition =
       new ConfigDefinition("int", ConfigDef.Type.NUMBER, "l2", "d2", "-1", true, "g", "intVar", modelDefinition, "A",
-        triggeredBy, 0, Collections.<ElFunctionDefinition>emptyList(), Collections.<ElConstantDefinition>emptyList(), Long.MIN_VALUE, Long.MAX_VALUE);
+        triggeredBy, 0, Collections.<ElFunctionDefinition>emptyList(), Collections.<ElConstantDefinition>emptyList(), Long.MIN_VALUE, Long.MAX_VALUE
+        , "text/plain", 0);
 
     ConfigDefinitionJson configDefinitionJsonBean =
       new ConfigDefinitionJson(configDefinition);
@@ -68,14 +69,16 @@ public class TestConfigDefinitionBean {
     triggeredBy.add("Z");
     com.streamsets.pipeline.config.ConfigDefinition configDefinition =
       new ConfigDefinition("int", ConfigDef.Type.NUMBER, "l2", "d2", "-1", true, "g", "intVar", modelDefinition, "A",
-        triggeredBy, 0, Collections.<ElFunctionDefinition>emptyList(), Collections.<ElConstantDefinition>emptyList(), Long.MIN_VALUE, Long.MAX_VALUE);
+        triggeredBy, 0, Collections.<ElFunctionDefinition>emptyList(), Collections.<ElConstantDefinition>emptyList(), Long.MIN_VALUE, Long.MAX_VALUE
+        , "text/plain", 0);
 
     ModelDefinitionJson modelDefinitionJsonBean =
       new ModelDefinitionJson(modelDefinition);
     ConfigDefinitionJson configDefinitionJsonBean =
       new ConfigDefinitionJson("int", ConfigDef.Type.NUMBER, "l2", "d2", "-1", true,
         "g", "intVar", modelDefinitionJsonBean, "A", triggeredBy, 0, Collections.<ElFunctionDefinitionJson>emptyList(),
-        Collections.<ElConstantDefinitionJson>emptyList(), Long.MIN_VALUE, Long.MAX_VALUE);
+        Collections.<ElConstantDefinitionJson>emptyList(), Long.MIN_VALUE, Long.MAX_VALUE
+        , "text/plain", 0);
 
     Assert.assertEquals(configDefinition.getName(), configDefinitionJsonBean.getName());
     Assert.assertEquals(configDefinition.getDefaultValue(), configDefinitionJsonBean.getDefaultValue());

@@ -406,11 +406,34 @@ public class PipelineAnnotationsProcessor extends AbstractProcessor {
             new ArrayList<ElFunctionDefinition>(),
             new ArrayList<ElConstantDefinition>(),
             configDefAnnot.min(),
-            configDefAnnot.max());
+            configDefAnnot.max(),
+            getMimeString(configDefAnnot),
+            configDefAnnot.lines());
         configDefinitions.add(configDefinition);
       }
     }
     return configDefinitions;
+  }
+
+  private String getMimeString(ConfigDef configDefAnnot) {
+    switch(configDefAnnot.mode()) {
+      case JSON:
+        return "application/json";
+      case PLAIN_TEXT:
+        return "text/plain";
+      case PYTHON:
+        return "text/x-python";
+      case JAVASCRIPT:
+        return "text/javascript";
+      case RUBY:
+        return "text/x-ruby";
+      case JAVA:
+        return "text/x-java";
+      case SCALA:
+        return "text/x-scala";
+      default:
+        return null;
+    }
   }
 
   private String getTypeNameFromComplexField(VariableElement variableElement) {
@@ -898,7 +921,29 @@ public class PipelineAnnotationsProcessor extends AbstractProcessor {
                    typeElement.getSimpleName().toString() + SEPARATOR + variableElement.getSimpleName().toString());
         valid = false;
       }
+    } else if (configDefAnnot.type().equals(ConfigDef.Type.TEXT)) {
+      if(!fieldType.toString().equals("java.lang.String")) {
+        printError("field.validation.type.is.not.string",
+          "The type of the field {} is expected to be String.",
+          typeElement.getSimpleName().toString() + SEPARATOR + variableElement.getSimpleName().toString());
+        valid = false;
+      }
     }
+
+    if(configDefAnnot.mode() != ConfigDef.Mode.PLAIN_TEXT && !configDefAnnot.type().equals(ConfigDef.Type.TEXT)) {
+      printError("field.validation.type.is.not.text",
+        "The type of the field {} is expected to be ConfigDef.Type.TEXT.",
+        typeElement.getSimpleName().toString() + SEPARATOR + variableElement.getSimpleName().toString());
+      valid = false;
+    }
+
+    if(!configDefAnnot.type().equals(ConfigDef.Type.TEXT) && configDefAnnot.lines() != 0) {
+      printError("field.validation.lines.is.not.zero",
+        "The type of the field {} is not ConfigDef.Type.TEXT. The value expected for lines() is zero.",
+        typeElement.getSimpleName().toString() + SEPARATOR + variableElement.getSimpleName().toString());
+      valid = false;
+    }
+
     return valid;
   }
 

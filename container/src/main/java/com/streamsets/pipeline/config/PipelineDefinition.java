@@ -105,7 +105,9 @@ public class PipelineDefinition {
       Collections.<ElFunctionDefinition> emptyList(),
       Collections.<ElConstantDefinition> emptyList(),
       Long.MIN_VALUE,
-      Long.MAX_VALUE);
+      Long.MAX_VALUE,
+      "text/plain",
+      0);
 
     return dgConfigDef;
   }
@@ -152,7 +154,9 @@ public class PipelineDefinition {
         Collections.<ElFunctionDefinition> emptyList(),
         Collections.<ElConstantDefinition> emptyList(),
         Long.MIN_VALUE,
-        Long.MAX_VALUE);
+        Long.MAX_VALUE,
+        "text/plain",
+        0);
     configs.add(config);
 
     return configs;
