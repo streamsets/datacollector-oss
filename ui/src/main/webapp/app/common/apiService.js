@@ -7,6 +7,34 @@ angular.module('dataCollectorApp.common')
     var apiBase = '/rest/v1',
       api = {events: {}};
 
+    api.log = {
+      /**
+       * Fetch current log
+       *
+       * @param endingOffset
+       */
+      getCurrentLog: function(endingOffset) {
+        var url = apiBase + '/log?endingOffset=' +  (endingOffset ? endingOffset : '-1');
+        return $http({
+          method: 'GET',
+          url: url
+        });
+      },
+
+      /**
+       * Fetch list of Log file names
+       *
+       * @returns {*}
+       */
+      getFilesList: function() {
+        var url = apiBase + '/log/files';
+        return $http({
+          method: 'GET',
+          url: url
+        });
+      }
+    };
+
     api.admin = {
 
       /**

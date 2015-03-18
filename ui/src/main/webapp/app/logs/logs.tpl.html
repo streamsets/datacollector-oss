@@ -5,18 +5,42 @@
       <h3 translate="logs.title">Logs</h3>
     </div>
 
-    <!--div class="pull-right">
-      <button type="button" class="btn btn-primary btn-sm"
-              ng-click="refreshLog()">
-        <span translate="logs.refreshLog">Refresh Log</span>
-        <span class="glyphicon glyphicon-refresh"></span>
+    <div class="pull-right">
+      <button type="button"
+              ng-if="logMessages.length && common.logEndingOffset !== 0"
+              class="btn btn-primary btn-sm"
+              ng-disabled="common.fetchingLog"
+              ng-click="common.loadPreviousLog()">
+        <span ng-hide="common.fetchingLog">
+          {{'logs.loadPreviousLog' | translate}}
+        </span>
+
+        <span ng-show="common.fetchingLog">
+          {{'logs.loadingLog' | translate}}
+        </span>
       </button>
-    </div-->
+
+      <div class="btn-group" ng-if="logFiles && logFiles.length">
+        <a href="/rest/v1/log/files/{{logFiles[0].file}}?attachment=true" target="_self"
+           class="btn btn-primary btn-sm">{{'logs.download' | translate}}</a>
+        <button type="button" class="btn btn-primary btn-sm dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+          <span class="caret"></span>
+          <span class="sr-only">Toggle Dropdown</span>
+        </button>
+        <ul class="dropdown-menu pull-right" role="menu">
+          <li ng-repeat="logFile in logFiles">
+            <a href="/rest/v1/log/files/{{logFile.file}}?attachment=true" target="_self">{{logFile.file}}</a>
+          </li>
+        </ul>
+      </div>
+
+    </div>
 
   </div>
 
   <div class="panel-body" ng-style="{'height': (windowHeight - 60 - 51) + 'px', 'width': (windowWidth) + 'px'}" resize>
     <pre ng-if="logMessages && logMessages.length">{{logMessages}}</pre>
+
     <pre ng-if="!logMessages || logMessages.length === 0">{{'logs.emptyMessage' | translate}}</pre>
   </div>
 </div>

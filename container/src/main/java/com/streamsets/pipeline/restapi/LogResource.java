@@ -98,7 +98,8 @@ public class LogResource {
   @Path("/files/{logName}")
   @Produces(MediaType.TEXT_PLAIN)
   @RolesAllowed({AuthzRole.ADMIN, AuthzRole.CREATOR, AuthzRole.MANAGER})
-  public Response getLogFile(@PathParam("logName") String logName) throws IOException {
+  public Response getLogFile(@PathParam("logName") String logName,
+                             @QueryParam("attachment") @DefaultValue("false") Boolean attachment) throws IOException {
     Response response;
     File logFile = null;
     for (File file : getLogFiles()) {
@@ -108,7 +109,13 @@ public class LogResource {
       }
     }
     if (logFile != null) {
-      response = Response.ok(new FileInputStream(logFile)).build();
+      if(attachment) {
+        return Response.ok().
+          header("Content-Disposition", "attachment; filename=" + logName).entity(new FileInputStream(logFile)).build();
+      } else {
+        response = Response.ok(new FileInputStream(logFile)).build();
+      }
+
     } else {
       response = Response.status(Response.Status.NOT_FOUND).build();
     }

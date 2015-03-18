@@ -20,13 +20,19 @@ angular
       }
     );
   }])
-  .controller('LogsController', function ($scope, $rootScope, $interval) {
+  .controller('LogsController', function ($scope, $rootScope, $interval, api) {
     angular.extend($scope, {
       logMessages: $rootScope.common.getLogMessages(),
+      logFiles: [],
 
       refreshLog: function() {
         $scope.logMessages = $rootScope.common.getLogMessages();
       }
+    });
+
+
+    api.log.getFilesList().then(function(res) {
+      $scope.logFiles = res.data;
     });
 
 

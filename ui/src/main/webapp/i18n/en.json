@@ -379,9 +379,12 @@
     }
   },
   "logs": {
-    "title": "Logs",
+    "download": "Download",
+    "emptyMessage": "Loading Logs...",
+    "loadPreviousLog": "Load Previous Logs",
+    "loadingLog": "Loading Log...",
     "refreshLog": "Refresh Log",
-    "emptyMessage": "No logs."
+    "title": "Logs"
   },
   "errors": {
     "title": "Error page!",
