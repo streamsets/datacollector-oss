@@ -28,9 +28,13 @@ public class BlackListURLClassLoader extends URLClassLoader {
 
   // Visible for testing only
   void validateClass(String name) {
-    for (String blacklistedPackage : blacklistedPackages) {
-      if (name.startsWith(blacklistedPackage)) {
-        throw new IllegalArgumentException(String.format("Class '%s' cannot be present in current ClassLoader", name));
+    // python scripting engine generates __*__ classes under all packages (including SDC api package)
+    if (!(name.endsWith("__"))) {
+      for (String blacklistedPackage : blacklistedPackages) {
+        if (name.startsWith(blacklistedPackage)) {
+          throw new IllegalArgumentException(
+              String.format("Class '%s' cannot be present in current ClassLoader", name));
+        }
       }
     }
   }

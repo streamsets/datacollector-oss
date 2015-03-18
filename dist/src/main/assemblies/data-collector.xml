@@ -184,6 +184,10 @@
       <outputDirectory>/stage-libs/</outputDirectory>
     </fileSet>
 
+    <fileSet>
+      <directory>${basedir}/../${jython_2_7_b2-lib}/target/stage-libs/</directory>
+      <outputDirectory>/stage-libs/</outputDirectory>
+    </fileSet>
   </fileSets>
 
   <dependencySets>

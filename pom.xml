@@ -42,6 +42,7 @@
     <apache-kafka_0_8_1_1-lib>apache-kafka_0_8_1_1-lib</apache-kafka_0_8_1_1-lib>
     <apache-kafka_0_8_2_0-lib>apache-kafka_0_8_2_0-lib</apache-kafka_0_8_2_0-lib>
     <apache-kafka_0_8_2_1-lib>none</apache-kafka_0_8_2_1-lib>
+    <jython_2_7_b2-lib>jython_2_7_b2-lib</jython_2_7_b2-lib>
   </properties>
 
   <modules>
@@ -62,6 +63,8 @@
     <module>kafka-protolib</module>
     <module>apache-kafka_0_8_1_1-lib</module>
     <module>apache-kafka_0_8_2_0-lib</module>
+    <module>jython-protolib</module>
+    <module>jython_2_7_b2-lib</module>
   </modules>
 
   <build>
