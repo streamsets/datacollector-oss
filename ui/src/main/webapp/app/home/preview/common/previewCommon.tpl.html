@@ -95,7 +95,7 @@
                   <record-tree
                     record="record"
                     record-value="record.value"
-                    field-name="('global.form.record' | translate)+($parent.$index+1) + '-' + ('global.form.errorRecord' | translate) + ' ' + record.header.errorMessage"
+                    field-name="('global.form.record' | translate)+($parent.$index+1) + '-' + ('global.form.errorRecord' | translate) + ' ' + escapeHtml(record.header.errorMessage)"
                     is-root="true"
                     editable="false">
                   </record-tree>

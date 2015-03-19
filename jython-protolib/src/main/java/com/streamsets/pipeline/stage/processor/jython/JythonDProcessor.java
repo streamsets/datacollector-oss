@@ -41,7 +41,7 @@ public class JythonDProcessor extends DProcessor {
   @ConfigDef(
       required = true,
       type = ConfigDef.Type.TEXT,
-      defaultValue = "",
+      defaultValue = "# Sample Jython code\n\nfor record in records:\n  \n  # Change Field Value\n  try:\n  \trecord.set('/a', Field.create(record.get('/b').getValueAsLong() + \n                                  record.get('/c').getValueAsLong()));\n  except:\n    print \"Unexpected error:\"\n  \n  # Add Primitive Field\n  record.set('/simpleField', \n             Field.create('field string Value'))\n  \n  # Add Map Field\n  record.set('/mapField', Field.create({\n    'mapField1' : Field.create('map field value 1'),\n    'mapField2' : Field.create('map field value 2')\n  }))\n  \n  # Add Array Field\n  fieldList = [Field.create('list value1'), \n               Field.create('list value2')];\n  record.set('/arrayField', Field.create(fieldList))\n  \n  # To write record to error sink\n  # err.write(record, 'Error Message')\n  \n  out.write(record)\n\n",
       label = "Script",
       displayPosition = 20,
       group = "JYTHON",

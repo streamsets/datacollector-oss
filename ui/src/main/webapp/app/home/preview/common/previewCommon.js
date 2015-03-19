@@ -94,6 +94,15 @@ angular
        */
       getRecordAdditionalInfo: function(stageInstance, record, recordType) {
         return previewService.getRecordAdditionalInfo(stageInstance, record, recordType);
+      },
+
+      escapeHtml: function(unsafe) {
+        return unsafe
+          .replace(/&/g, "&amp;")
+          .replace(/</g, "&lt;")
+          .replace(/>/g, "&gt;")
+          .replace(/"/g, "&quot;")
+          .replace(/'/g, "&#039;");
       }
     });
 
