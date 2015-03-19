@@ -8,6 +8,7 @@ package com.streamsets.pipeline.stage.processor.fieldfilter;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.base.SingleLaneRecordProcessor;
+import com.streamsets.pipeline.lib.util.FieldRegexUtil;
 
 import java.util.HashSet;
 import java.util.List;
@@ -35,7 +36,9 @@ public class FieldFilterProcessor extends SingleLaneRecordProcessor {
       fieldsToRemove.remove("");
     }
     for (String fieldToRemove : fieldsToRemove) {
-      record.delete(fieldToRemove);
+      for(String field : FieldRegexUtil.getMatchingFieldPaths(fieldToRemove, record)) {
+        record.delete(field);
+      }
     }
     batchMaker.addRecord(record);
   }

@@ -13,7 +13,7 @@ public class RegExConfig {
     required = true,
     type = ConfigDef.Type.STRING,
     defaultValue="/",
-    label = "",
+    label = "Field Path",
     description = "Hash string fields. You can enter multiple fields for the same hash type.",
     displayPosition = 10
   )
@@ -23,7 +23,7 @@ public class RegExConfig {
     required = true,
     type = ConfigDef.Type.NUMBER,
     defaultValue="1",
-    label = "",
+    label = "Regular Expression Group",
     description="",
     displayPosition = 20
   )

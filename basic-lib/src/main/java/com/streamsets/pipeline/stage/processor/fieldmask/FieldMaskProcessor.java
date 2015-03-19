@@ -11,6 +11,7 @@ import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.base.OnRecordErrorException;
 import com.streamsets.pipeline.api.base.SingleLaneRecordProcessor;
+import com.streamsets.pipeline.lib.util.FieldRegexUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -35,14 +36,16 @@ public class FieldMaskProcessor extends SingleLaneRecordProcessor {
     List<String> nonStringFields = new ArrayList<>();
     for(FieldMaskConfig fieldMaskConfig : fieldMaskConfigs) {
       for (String toMask : fieldMaskConfig.fields) {
-        if(record.has(toMask)) {
-          Field field = record.get(toMask);
-          if (field.getType() != Field.Type.STRING) {
-            nonStringFields.add(toMask);
-          } else {
-            if (field.getValue() != null) {
-              Field newField = Field.create(maskField(field, fieldMaskConfig));
-              record.set(toMask, newField);
+        for(String matchingFieldPath : FieldRegexUtil.getMatchingFieldPaths(toMask, record)) {
+          if (record.has(matchingFieldPath)) {
+            Field field = record.get(matchingFieldPath);
+            if (field.getType() != Field.Type.STRING) {
+              nonStringFields.add(matchingFieldPath);
+            } else {
+              if (field.getValue() != null) {
+                Field newField = Field.create(maskField(field, fieldMaskConfig));
+                record.set(matchingFieldPath, newField);
+              }
             }
           }
         }

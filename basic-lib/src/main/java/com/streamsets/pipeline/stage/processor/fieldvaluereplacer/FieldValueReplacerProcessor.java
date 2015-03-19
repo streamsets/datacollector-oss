@@ -11,6 +11,7 @@ import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.base.OnRecordErrorException;
 import com.streamsets.pipeline.api.base.SingleLaneRecordProcessor;
 import com.streamsets.pipeline.config.OnStagePreConditionFailure;
+import com.streamsets.pipeline.lib.util.FieldRegexUtil;
 import com.streamsets.pipeline.stage.util.StageUtil;
 
 import java.math.BigDecimal;
@@ -40,11 +41,13 @@ public class FieldValueReplacerProcessor extends SingleLaneRecordProcessor {
     Set<String> fieldsThatDoNotExist = new HashSet<>();
     if(fieldsToNull != null && !fieldsToNull.isEmpty()) {
       for (String fieldToNull : fieldsToNull) {
-        if(record.has(fieldToNull)) {
-          Field field = record.get(fieldToNull);
-          record.set(fieldToNull, Field.create(field, null));
-        } else {
-          fieldsThatDoNotExist.add(fieldToNull);
+        for(String matchingField : FieldRegexUtil.getMatchingFieldPaths(fieldToNull, record)) {
+          if (record.has(matchingField)) {
+            Field field = record.get(matchingField);
+            record.set(matchingField, Field.create(field, null));
+          } else {
+            fieldsThatDoNotExist.add(matchingField);
+          }
         }
       }
     }
@@ -52,19 +55,21 @@ public class FieldValueReplacerProcessor extends SingleLaneRecordProcessor {
     if(fieldsToReplaceIfNull !=null && !fieldsToReplaceIfNull.isEmpty()) {
       for (FieldValueReplacerConfig fieldValueReplacerConfig : fieldsToReplaceIfNull) {
         for (String fieldToReplace : fieldValueReplacerConfig.fields) {
-          if(record.has(fieldToReplace)) {
-            Field field = record.get(fieldToReplace);
-            if (field.getValue() == null) {
-              try {
-                record.set(fieldToReplace, Field.create(field, convertToType(
-                  fieldValueReplacerConfig.newValue, field.getType())));
-              } catch (Exception e) {
-                throw new OnRecordErrorException(Errors.VALUE_REPLACER_00, fieldValueReplacerConfig.newValue,
-                  field.getType(), e.getMessage(), e);
+          for(String matchingField : FieldRegexUtil.getMatchingFieldPaths(fieldToReplace, record)) {
+            if (record.has(matchingField)) {
+              Field field = record.get(matchingField);
+              if (field.getValue() == null) {
+                try {
+                  record.set(matchingField, Field.create(field, convertToType(
+                    fieldValueReplacerConfig.newValue, field.getType())));
+                } catch (Exception e) {
+                  throw new OnRecordErrorException(Errors.VALUE_REPLACER_00, fieldValueReplacerConfig.newValue,
+                    field.getType(), e.getMessage(), e);
+                }
               }
+            } else {
+              fieldsThatDoNotExist.add(matchingField);
             }
-          } else {
-            fieldsThatDoNotExist.add(fieldToReplace);
           }
         }
       }

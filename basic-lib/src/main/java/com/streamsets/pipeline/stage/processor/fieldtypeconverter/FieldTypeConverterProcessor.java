@@ -10,6 +10,7 @@ import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.base.SingleLaneRecordProcessor;
 import com.streamsets.pipeline.config.DateFormat;
+import com.streamsets.pipeline.lib.util.FieldRegexUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -34,41 +35,43 @@ public class FieldTypeConverterProcessor extends SingleLaneRecordProcessor {
   protected void process(Record record, SingleLaneBatchMaker batchMaker) throws StageException {
     for(FieldTypeConverterConfig fieldTypeConverterConfig : fieldTypeConverterConfigs) {
       for(String fieldToConvert : fieldTypeConverterConfig.fields) {
-        Field field = record.get(fieldToConvert);
-        if(field == null) {
-          LOG.warn("Record {} does not have field {}. Ignoring conversion.", record.getHeader().getSourceId(),
-            fieldToConvert);
-        } else {
-          if(field.getType() == Field.Type.STRING) {
-            if(field.getValue() == null) {
-              LOG.warn("Field {} in record {} has null value. Converting the type of filed to '{}' with null value.",
-              fieldToConvert, record.getHeader().getSourceId(), fieldTypeConverterConfig.targetType);
-              record.set(fieldToConvert, Field.create(fieldTypeConverterConfig.targetType, null));
+        for(String matchingField : FieldRegexUtil.getMatchingFieldPaths(fieldToConvert, record)) {
+          Field field = record.get(matchingField);
+          if (field == null) {
+            LOG.warn("Record {} does not have field {}. Ignoring conversion.", record.getHeader().getSourceId(),
+              matchingField);
+          } else {
+            if (field.getType() == Field.Type.STRING) {
+              if (field.getValue() == null) {
+                LOG.warn("Field {} in record {} has null value. Converting the type of filed to '{}' with null value.",
+                  matchingField, record.getHeader().getSourceId(), fieldTypeConverterConfig.targetType);
+                record.set(matchingField, Field.create(fieldTypeConverterConfig.targetType, null));
+              } else {
+                try {
+                  String dateMask = null;
+                  if (fieldTypeConverterConfig.targetType == Field.Type.DATE ||
+                    fieldTypeConverterConfig.targetType == Field.Type.DATETIME) {
+                    dateMask = (fieldTypeConverterConfig.dateFormat != DateFormat.OTHER)
+                      ? fieldTypeConverterConfig.dateFormat.getFormat()
+                      : fieldTypeConverterConfig.otherDateFormat;
+                  }
+                  record.set(matchingField, convertStringToTargetType(field, fieldTypeConverterConfig.targetType,
+                    fieldTypeConverterConfig.getLocale(), dateMask));
+                } catch (ParseException | NumberFormatException e) {
+                  getContext().toError(record, Errors.CONVERTER_00, matchingField, field.getValueAsString(),
+                    fieldTypeConverterConfig.targetType.name(), e.getMessage(), e);
+                  return;
+                }
+              }
             } else {
               try {
-                String dateMask = null;
-                if (fieldTypeConverterConfig.targetType == Field.Type.DATE ||
-                    fieldTypeConverterConfig.targetType == Field.Type.DATETIME) {
-                  dateMask = (fieldTypeConverterConfig.dateFormat != DateFormat.OTHER)
-                             ? fieldTypeConverterConfig.dateFormat.getFormat()
-                             : fieldTypeConverterConfig.otherDateFormat;
-                }
-                record.set(fieldToConvert, convertStringToTargetType(field, fieldTypeConverterConfig.targetType,
-                  fieldTypeConverterConfig.getLocale(), dateMask));
-              } catch (ParseException | NumberFormatException e) {
-                getContext().toError(record, Errors.CONVERTER_00, fieldToConvert, field.getValueAsString(),
+                //use the built in type conversion provided by TypeSupport
+                record.set(matchingField, Field.create(fieldTypeConverterConfig.targetType, field.getValue()));
+              } catch (IllegalArgumentException e) {
+                getContext().toError(record, Errors.CONVERTER_00, matchingField, field.getValueAsString(),
                   fieldTypeConverterConfig.targetType.name(), e.getMessage(), e);
                 return;
               }
-            }
-          } else {
-            try {
-              //use the built in type conversion provided by TypeSupport
-              record.set(fieldToConvert, Field.create(fieldTypeConverterConfig.targetType, field.getValue()));
-            } catch (IllegalArgumentException e) {
-              getContext().toError(record, Errors.CONVERTER_00, fieldToConvert, field.getValueAsString(),
-                fieldTypeConverterConfig.targetType.name(), e.getMessage(), e);
-              return;
             }
           }
         }

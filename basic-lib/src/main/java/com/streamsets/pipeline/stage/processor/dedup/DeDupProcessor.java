@@ -19,6 +19,7 @@ import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.base.RecordProcessor;
 import com.streamsets.pipeline.lib.queue.XEvictingQueue;
+import com.streamsets.pipeline.lib.util.FieldRegexUtil;
 
 import java.nio.charset.Charset;
 import java.util.ArrayList;
@@ -53,9 +54,13 @@ public class DeDupProcessor extends RecordProcessor {
     }
 
     protected List<String> getFieldsToHash(Record record) {
-      List<String> fields;
+      List<String> fields = new ArrayList<>();
       if (fieldsToHash != null) {
-        fields = fieldsToHash;
+        for(String field : fieldsToHash) {
+          List<String> matchingFieldPaths = FieldRegexUtil.getMatchingFieldPaths(field, record);
+          Collections.sort(matchingFieldPaths);
+          fields.addAll(matchingFieldPaths);
+        }
       } else {
         fields = new ArrayList<>(record.getFieldPaths());
         Collections.sort(fields);

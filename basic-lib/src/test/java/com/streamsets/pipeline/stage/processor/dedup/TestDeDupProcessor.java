@@ -19,6 +19,7 @@ import org.junit.Test;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -327,6 +328,86 @@ public class TestDeDupProcessor {
     } finally {
       runner.runDestroy();
     }
+  }
+
+  @Test
+  public void testWildCardDedup() throws Exception {
+    Processor processor = new DeDupProcessor(4, 1, SelectFields.SPECIFIED_FIELDS,
+      ImmutableList.of("/USA[*]/SanFrancisco/*/streets[*][*]/name"));
+    ProcessorRunner runner = new ProcessorRunner.Builder(processor)
+      .addOutputLane("unique")
+      .addOutputLane("duplicate")
+      .build();
+    runner.runInit();
+    try {
+
+      Record r0 = createRecord("a", "b");
+      Record r1 = createRecord("b", "a");
+      Record r2 = createRecord("c", "c");
+      Record r3 = createRecord("a", "b");
+      List<Record> input = ImmutableList.of(r0, r1, r2, r3);
+      StageRunner.Output output = runner.runProcess(input);
+      Assert.assertEquals(3, output.getRecords().get("unique").size());
+      Assert.assertEquals(1, output.getRecords().get("duplicate").size());
+    } finally {
+      runner.runDestroy();
+    }
+  }
+
+  private Record createRecord(String name, String anotherName) {
+    Field name1 = Field.create(name);
+    Field name2 = Field.create(anotherName);
+    Map<String, Field> nameMap1 = new HashMap<>();
+    nameMap1.put("name", name1);
+    Map<String, Field> nameMap2 = new HashMap<>();
+    nameMap2.put("name", name2);
+
+    Field name3 = Field.create(name);
+    Field name4 = Field.create(anotherName);
+    Map<String, Field> nameMap3 = new HashMap<>();
+    nameMap3.put("name", name3);
+    Map<String, Field> nameMap4 = new HashMap<>();
+    nameMap4.put("name", name4);
+
+    Field name5 = Field.create("madhu");
+    Field name6 = Field.create("girish");
+    Map<String, Field> nameMap5 = new HashMap<>();
+    nameMap5.put("name", name5);
+    Map<String, Field> nameMap6 = new HashMap<>();
+    nameMap6.put("name", name6);
+
+    Field first = Field.create(Field.Type.LIST, ImmutableList.of(Field.create(nameMap1), Field.create(nameMap2)));
+    Field second = Field.create(Field.Type.LIST, ImmutableList.of(Field.create(nameMap3), Field.create(nameMap4)));
+    Field third = Field.create(Field.Type.LIST, ImmutableList.of(Field.create(nameMap5), Field.create(nameMap6)));
+
+    Map<String, Field> noe = new HashMap<>();
+    noe.put("streets", Field.create(ImmutableList.of(first, second)));
+
+    Map<String, Field> cole = new HashMap<>();
+    cole.put("streets", Field.create(ImmutableList.of(third)));
+
+
+    Map<String, Field> sfArea = new HashMap<>();
+    sfArea.put("noe", Field.create(noe));
+
+    Map<String, Field> utahArea = new HashMap<>();
+    utahArea.put("cole", Field.create(cole));
+
+
+    Map<String, Field> california = new HashMap<>();
+    california.put("SanFrancisco", Field.create(sfArea));
+
+    Map<String, Field> utah = new HashMap<>();
+    utah.put("SantaMonica", Field.create(utahArea));
+
+    Map<String, Field> map = new LinkedHashMap<>();
+    map.put("USA", Field.create(Field.Type.LIST,
+      ImmutableList.of(Field.create(california), Field.create(utah))));
+
+    Record record = RecordCreator.create("s", "s:1");
+    record.set(Field.create(map));
+
+    return record;
   }
 
 // //TO TEST MEMORY USAGE

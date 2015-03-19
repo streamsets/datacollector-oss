@@ -33,7 +33,7 @@ public class FieldTypeConverterConfig {
   @ConfigDef(
       required = true,
       type = ConfigDef.Type.MODEL,
-      defaultValue="NUMBER",
+      defaultValue="INTEGER",
       label = "Convert to Type",
       description = "Select a compatible data type",
       displayPosition = 10
@@ -50,7 +50,7 @@ public class FieldTypeConverterConfig {
                     "separator",
       displayPosition = 20,
       dependsOn = "targetType",
-      triggeredByValue = {"BYTE", "NUMBER", "LONG", "DOUBLE", "DECIMAL", "FLOAT", "SHORT"}
+      triggeredByValue = {"BYTE", "INTEGER", "LONG", "DOUBLE", "DECIMAL", "FLOAT", "SHORT"}
   )
   @ValueChooser(LocaleChooserValues.class)
   public String dataLocale;

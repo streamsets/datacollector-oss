@@ -11,6 +11,7 @@ import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.base.OnRecordErrorException;
 import com.streamsets.pipeline.api.base.SingleLaneRecordProcessor;
 import com.streamsets.pipeline.config.OnStagePreConditionFailure;
+import com.streamsets.pipeline.lib.util.FieldRegexUtil;
 import com.streamsets.pipeline.stage.util.StageUtil;
 
 import java.security.MessageDigest;
@@ -38,18 +39,20 @@ public class FieldHasherProcessor extends SingleLaneRecordProcessor {
 
     for(FieldHasherConfig fieldHasherConfig : fieldHasherConfigs) {
       for(String fieldToHash : fieldHasherConfig.fieldsToHash) {
-        if(record.has(fieldToHash)) {
-          Field field = record.get(fieldToHash);
-          if (field.getType() == Field.Type.MAP || field.getType() == Field.Type.LIST) {
-            fieldsWithListOrMapType.add(fieldToHash);
-          } else if(field.getValue() == null) {
-            fieldsWithNull.add(fieldToHash);
+        for(String matchingFieldPath : FieldRegexUtil.getMatchingFieldPaths(fieldToHash, record)) {
+          if (record.has(matchingFieldPath)) {
+            Field field = record.get(matchingFieldPath);
+            if (field.getType() == Field.Type.MAP || field.getType() == Field.Type.LIST) {
+              fieldsWithListOrMapType.add(matchingFieldPath);
+            } else if (field.getValue() == null) {
+              fieldsWithNull.add(matchingFieldPath);
+            } else {
+              Field newField = Field.create(generateHashForField(field, fieldHasherConfig.hashType));
+              record.set(matchingFieldPath, newField);
+            }
           } else {
-            Field newField = Field.create(generateHashForField(field, fieldHasherConfig.hashType));
-            record.set(fieldToHash, newField);
+            fieldsDontExist.add(matchingFieldPath);
           }
-        } else {
-          fieldsDontExist.add(fieldToHash);
         }
       }
     }

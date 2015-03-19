@@ -25,6 +25,8 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class TestFieldHasherProcessor {
 
@@ -776,5 +778,141 @@ public class TestFieldHasherProcessor {
       sb.append(Integer.toString((b & 0xff) + 0x100, 16).substring(1));
     }
     return sb.toString();
+  }
+
+  @Test
+  public void testWildCardHashing() throws StageException {
+
+    Field name1 = Field.create("jon");
+    Field name2 = Field.create("natty");
+    Map<String, Field> nameMap1 = new HashMap<>();
+    nameMap1.put("name", name1);
+    Map<String, Field> nameMap2 = new HashMap<>();
+    nameMap2.put("name", name2);
+
+    Field name3 = Field.create("adam");
+    Field name4 = Field.create("hari");
+    Map<String, Field> nameMap3 = new HashMap<>();
+    nameMap3.put("name", name3);
+    Map<String, Field> nameMap4 = new HashMap<>();
+    nameMap4.put("name", name4);
+
+    Field name5 = Field.create("madhu");
+    Field name6 = Field.create("girish");
+    Map<String, Field> nameMap5 = new HashMap<>();
+    nameMap5.put("name", name5);
+    Map<String, Field> nameMap6 = new HashMap<>();
+    nameMap6.put("name", name6);
+
+    Field first = Field.create(Field.Type.LIST, ImmutableList.of(Field.create(nameMap1), Field.create(nameMap2)));
+    Field second = Field.create(Field.Type.LIST, ImmutableList.of(Field.create(nameMap3), Field.create(nameMap4)));
+    Field third = Field.create(Field.Type.LIST, ImmutableList.of(Field.create(nameMap5), Field.create(nameMap6)));
+
+    Map<String, Field> noe = new HashMap<>();
+    noe.put("streets", Field.create(ImmutableList.of(first, second)));
+
+    Map<String, Field> cole = new HashMap<>();
+    cole.put("streets", Field.create(ImmutableList.of(third)));
+
+
+    Map<String, Field> sfArea = new HashMap<>();
+    sfArea.put("noe", Field.create(noe));
+
+    Map<String, Field> utahArea = new HashMap<>();
+    utahArea.put("cole", Field.create(cole));
+
+
+    Map<String, Field> california = new HashMap<>();
+    california.put("SanFrancisco", Field.create(sfArea));
+
+    Map<String, Field> utah = new HashMap<>();
+    utah.put("SantaMonica", Field.create(utahArea));
+
+    Map<String, Field> map = new LinkedHashMap<>();
+    map.put("USA", Field.create(Field.Type.LIST,
+      ImmutableList.of(Field.create(california), Field.create(utah))));
+
+    Record record = RecordCreator.create("s", "s:1");
+    record.set(Field.create(map));
+
+    Assert.assertEquals(record.get("/USA[0]/SanFrancisco/noe/streets[0][0]/name").getValueAsString(), "jon");
+    Assert.assertEquals(record.get("/USA[0]/SanFrancisco/noe/streets[0][1]/name").getValueAsString(), "natty");
+    Assert.assertEquals(record.get("/USA[0]/SanFrancisco/noe/streets[1][0]/name").getValueAsString(), "adam");
+    Assert.assertEquals(record.get("/USA[0]/SanFrancisco/noe/streets[1][1]/name").getValueAsString(), "hari");
+    Assert.assertEquals(record.get("/USA[1]/SantaMonica/cole/streets[0][0]/name").getValueAsString(), "madhu");
+    Assert.assertEquals(record.get("/USA[1]/SantaMonica/cole/streets[0][1]/name").getValueAsString(), "girish");
+
+    /* All the field Paths in the record are
+        /USA
+        /USA[0]
+        /USA[0]/SantaMonica
+        /USA[0]/SantaMonica/noe
+        /USA[0]/SantaMonica/noe/streets
+        /USA[0]/SantaMonica/noe/streets[0]
+        /USA[0]/SantaMonica/noe/streets[0][0]
+        /USA[0]/SantaMonica/noe/streets[0][0]/name
+        /USA[0]/SantaMonica/noe/streets[0][1]
+        /USA[0]/SantaMonica/noe/streets[0][1]/name
+        /USA[0]/SantaMonica/noe/streets[1]
+        /USA[0]/SantaMonica/noe/streets[1][0]
+        /USA[0]/SantaMonica/noe/streets[1][0]/name
+        /USA[0]/SantaMonica/noe/streets[1][1]
+        /USA[0]/SantaMonica/noe/streets[1][1]/name
+        /USA[1]
+        /USA[1]/SantaMonica
+        /USA[1]/SantaMonica/cole
+        /USA[1]/SantaMonica/cole/streets
+        /USA[1]/SantaMonica/cole/streets[0]
+        /USA[1]/SantaMonica/cole/streets[0][0]
+        /USA[1]/SantaMonica/cole/streets[0][0]/name
+        /USA[1]/SantaMonica/cole/streets[0][1]
+        /USA[1]/SantaMonica/cole/streets[0][1]/name
+      */
+
+    //Goal is to encrypt names of all ppl residing in cities named San Francisco in all states of USA
+    FieldHasherConfig fieldHasherConfig = new FieldHasherConfig();
+    fieldHasherConfig.fieldsToHash = ImmutableList.of("/USA[*]/SanFrancisco/*/streets[*][*]/name");
+    fieldHasherConfig.hashType = HashType.SHA2;
+
+    ProcessorRunner runner = new ProcessorRunner.Builder(FieldHasherDProcessor.class)
+      .addConfiguration("fieldHasherConfigs", ImmutableList.of(fieldHasherConfig))
+      .addConfiguration("onStagePreConditionFailure", OnStagePreConditionFailure.CONTINUE)
+      .addOutputLane("a").build();
+    runner.runInit();
+
+    try {
+
+      StageRunner.Output output = runner.runProcess(ImmutableList.of(record));
+      Assert.assertEquals(1, output.getRecords().get("a").size());
+
+      Record resultRecord = output.getRecords().get("a").get(0);
+      Assert.assertEquals(resultRecord.get("/USA[0]/SanFrancisco/noe/streets[0][0]/name").getValueAsString(),
+        computeHash("jon", HashType.SHA2));
+      Assert.assertEquals(resultRecord.get("/USA[0]/SanFrancisco/noe/streets[0][1]/name").getValueAsString(),
+        computeHash("natty", HashType.SHA2));
+
+      Assert.assertEquals(resultRecord.get("/USA[0]/SanFrancisco/noe/streets[1][0]/name").getValueAsString(),
+        computeHash("adam", HashType.SHA2));
+      Assert.assertEquals(resultRecord.get("/USA[0]/SanFrancisco/noe/streets[1][1]/name").getValueAsString(),
+        computeHash("hari", HashType.SHA2));
+
+      Assert.assertEquals(resultRecord.get("/USA[1]/SantaMonica/cole/streets[0][0]/name").getValueAsString(),
+        "madhu");
+      Assert.assertEquals(resultRecord.get("/USA[1]/SantaMonica/cole/streets[0][1]/name").getValueAsString(),
+        "girish");
+
+    } finally {
+      runner.runDestroy();
+    }
+  }
+
+  @Test
+  public void testRegex() {
+    String pattern  = "(.*)/name";
+    String testString = "/USA[1]/SantaMonica/cole/streets[0][0]/name";
+    Pattern compile = Pattern.compile(pattern);
+    Matcher matcher = compile.matcher(testString);
+    Assert.assertTrue(matcher.matches());
+
   }
 }

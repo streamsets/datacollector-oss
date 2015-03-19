@@ -17,6 +17,7 @@ import com.streamsets.pipeline.api.el.ELVars;
 import com.streamsets.pipeline.lib.el.RecordEL;
 import com.streamsets.pipeline.lib.el.StringEL;
 import com.streamsets.pipeline.lib.el.ELUtils;
+import com.streamsets.pipeline.lib.util.FieldRegexUtil;
 
 import java.math.BigDecimal;
 import java.util.Date;
@@ -76,15 +77,22 @@ public class ExpressionProcessor extends SingleLaneRecordProcessor {
                                          record.getHeader().getSourceId(), e.getMessage(), e);
       }
       Field newField = Field.create(getTypeFromObject(result), result);
-      if(record.has(expressionProcessorConfig.fieldToSet)) {
-        record.set(expressionProcessorConfig.fieldToSet, newField);
+
+      if(FieldRegexUtil.hasWildCards(fieldToSet)) {
+        for(String field : FieldRegexUtil.getMatchingFieldPaths(fieldToSet, record)) {
+          record.set(field, newField);
+        }
       } else {
-        //A new field will be created only if the parent field exists and supports creation of a new child field.
-        //For a new field can be created in the parent field which is a map or if the parent field is an array.
-        record.set(expressionProcessorConfig.fieldToSet, newField);
-        if(!record.has(expressionProcessorConfig.fieldToSet)) {
-          throw new OnRecordErrorException(Errors.EXPR_02, record.getHeader().getSourceId(),
-                                           expressionProcessorConfig.fieldToSet);
+        if (record.has(fieldToSet)) {
+          record.set(fieldToSet, newField);
+        } else {
+          //A new field will be created only if the parent field exists and supports creation of a new child field.
+          //For a new field can be created in the parent field which is a map or if the parent field is an array.
+          record.set(fieldToSet, newField);
+          if (!record.has(fieldToSet)) {
+            throw new OnRecordErrorException(Errors.EXPR_02, record.getHeader().getSourceId(),
+              expressionProcessorConfig.fieldToSet);
+          }
         }
       }
     }
