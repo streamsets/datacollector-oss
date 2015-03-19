@@ -179,6 +179,7 @@ public class TestRestApiAuthorization {
     list.add(new RestApi("/rest/ping", Method.GET, AuthzRole.ALL_ROLES));
 
     list.add(new RestApi("/rest/v1/admin/shutdown", Method.POST, AuthzRole.ADMIN));
+    list.add(new RestApi("/rest/v1/admin/threadsDump", Method.GET, AuthzRole.ADMIN));
 
     list.add(new RestApi("/rest/v1/configuration/ui", Method.GET, AuthzRole.ALL_ROLES));
     list.add(new RestApi("/rest/v1/configuration/all", Method.GET, AuthzRole.ALL_ROLES));
