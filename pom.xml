@@ -46,6 +46,7 @@
     <jython_2_7_b2-lib>jython_2_7_b2-lib</jython_2_7_b2-lib>
     <elasticsearch_1_4_4-lib>none</elasticsearch_1_4_4-lib>
     <elasticsearch_1_5_0-lib>elasticsearch_1_5_0-lib</elasticsearch_1_5_0-lib>
+    <cassandra_2_1_5-lib>cassandra_2_1_5-lib</cassandra_2_1_5-lib>
   </properties>
 
   <modules>
@@ -81,6 +82,9 @@
 
     <module>elasticsearch-protolib</module>
     <module>elasticsearch_1_5_0-lib</module>
+
+    <module>cassandra-protolib</module>
+    <module>cassandra_2_1_5-lib</module>
 
   </modules>
 

@@ -161,6 +161,11 @@
           <artifactId>streamsets-datacollector-elasticsearch_1_4_4-lib</artifactId>
           <scope>provided</scope>
         </dependency>
+        <dependency>
+          <groupId>com.streamsets</groupId>
+          <artifactId>streamsets-datacollector-cassandra_2_1_5-lib</artifactId>
+          <scope>provided</scope>
+        </dependency>
       </dependencies>
     </profile>
     <profile>

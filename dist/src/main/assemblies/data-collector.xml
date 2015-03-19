@@ -182,6 +182,12 @@
       <outputDirectory>/streamsets-libs/</outputDirectory>
     </fileSet>
 
+    <!-- Cassandra libs -->
+    <fileSet>
+      <directory>${basedir}/../${cassandra_2_1_5-lib}/target/streamsets-libs/</directory>
+      <outputDirectory>/streamsets-libs/</outputDirectory>
+    </fileSet>
+
     <!-- CDH5 Kafka libs -->
     <fileSet>
       <directory>${basedir}/../${cdh5-kafka_0_8_2_0_kafka_1_2_0-lib}/target/streamsets-libs/</directory>
