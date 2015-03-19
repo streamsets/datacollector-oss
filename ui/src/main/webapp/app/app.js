@@ -1,6 +1,6 @@
 angular.module('dataCollectorApp')
   .config(function($routeProvider, $locationProvider, $translateProvider, tmhDynamicLocaleProvider,
-                   uiSelectConfig, $httpProvider){
+                   uiSelectConfig, $httpProvider, AnalyticsProvider){
     $locationProvider.html5Mode({enabled: true, requireBase: false});
     $routeProvider.otherwise({
       templateUrl: 'app/home/home.tpl.html',
@@ -44,9 +44,16 @@ angular.module('dataCollectorApp')
       };
     });
 
+    AnalyticsProvider.setAccount('UA-60917135-1');
+    AnalyticsProvider.trackPages(true);
+    AnalyticsProvider.trackUrlParams(true);
+    AnalyticsProvider.setDomainName('none');
+    AnalyticsProvider.useAnalytics(true);
+    AnalyticsProvider.delayScriptTag(true);
+
   })
   .run(function ($location, $rootScope, $modal, api, pipelineConstant, $localStorage, contextHelpService,
-                 $translate, authService, userRoles) {
+                 $translate, authService, userRoles, configuration, Analytics) {
     var defaultTitle = 'StreamSets Data Collector';
 
     $rootScope.pipelineConstant = pipelineConstant;
@@ -206,6 +213,11 @@ angular.module('dataCollectorApp')
       }
     });
 
+    configuration.init().then(function() {
+      if(configuration.isAnalyticsEnabled()) {
+        Analytics.createAnalyticsScriptTag();
+      }
+    });
 
     // set actions to be taken each time the user navigates
     $rootScope.$on('$routeChangeSuccess', function (event, current, previous) {

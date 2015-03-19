@@ -14,5 +14,6 @@ angular.module('dataCollectorApp', [
   'dataCollectorApp.sdcConfiguration',
   'dataCollectorApp.jvmMetrics',
   'dataCollectorApp.logs',
-  'ngStorage'
+  'ngStorage',
+  'angular-google-analytics'
 ]);

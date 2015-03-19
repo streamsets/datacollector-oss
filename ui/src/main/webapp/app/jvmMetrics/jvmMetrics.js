@@ -20,10 +20,16 @@ angular
       }
     );
   }])
-  .controller('JVMMetricsController', function ($scope, $rootScope, $timeout, api, configuration, visibilityBroadcaster, $modal) {
+  .controller('JVMMetricsController', function ($scope, $rootScope, $timeout, api, configuration,
+                                                Analytics, visibilityBroadcaster, $modal) {
     var jvmMetricsTimer,
       destroyed = false;
 
+    configuration.init().then(function() {
+      if(configuration.isAnalyticsEnabled()) {
+        Analytics.trackPage('/collector/jvmMetrics');
+      }
+    });
 
     angular.extend($scope, {
       metrics: {},

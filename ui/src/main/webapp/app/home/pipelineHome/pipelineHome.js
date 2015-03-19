@@ -21,7 +21,7 @@ angular
   }])
   .controller('PipelineHomeController', function ($scope, $rootScope, $routeParams, $timeout, api, configuration, _, $q, $modal,
                                           $localStorage, pipelineService, pipelineConstant, visibilityBroadcaster,
-                                          $translate, contextHelpService, $location, authService, userRoles) {
+                                          $translate, contextHelpService, $location, authService, userRoles, Analytics) {
     var routeParamPipelineName = $routeParams.pipelineName,
       configTimeout,
       configDirty = false,
@@ -35,6 +35,13 @@ angular
       edges = [],
       destroyed = false,
       pageHidden = false;
+
+    configuration.init().then(function() {
+      if(configuration.isAnalyticsEnabled()) {
+        Analytics.trackPage('/collector/pipeline/' + routeParamPipelineName);
+      }
+    });
+
 
     angular.extend($scope, {
       isPipelineReadOnly: !authService.isAuthorized([userRoles.admin, userRoles.creator]),

@@ -20,13 +20,18 @@ angular
       }
     );
   }])
-  .controller('SDCConfigurationController', function ($scope, $rootScope, $q, configuration, _) {
+  .controller('SDCConfigurationController', function ($scope, $rootScope, $q, Analytics, configuration, _) {
+
     angular.extend($scope, {
       configKeys: [],
       sdcConfiguration: {}
     });
 
     $q.all([configuration.init()]).then(function() {
+      if(configuration.isAnalyticsEnabled()) {
+        Analytics.trackPage('/collector/logs');
+      }
+
       $scope.sdcConfiguration = configuration.getConfiguration();
       $scope.configKeys = _.keys($scope.sdcConfiguration);
       $scope.configKeys.sort();

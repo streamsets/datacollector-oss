@@ -20,7 +20,14 @@ angular
       }
     );
   }])
-  .controller('LogsController', function ($scope, $rootScope, $interval, api) {
+  .controller('LogsController', function ($scope, $rootScope, $interval, api, configuration, Analytics) {
+
+    configuration.init().then(function() {
+      if(configuration.isAnalyticsEnabled()) {
+        Analytics.trackPage('/collector/logs');
+      }
+    });
+
     angular.extend($scope, {
       logMessages: $rootScope.common.getLogMessages(),
       logFiles: [],
