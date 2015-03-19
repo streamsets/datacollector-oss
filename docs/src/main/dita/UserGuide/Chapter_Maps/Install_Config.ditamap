@@ -24,13 +24,12 @@
    </topicmeta>
    <topicref href="../Install_Config/CreatingAdditionalUsers.dita"/>
   </topicref>
-  <topicref href="../Install_Config/DataCollectorCustomization.dita">
+  <topicref href="../Install_Config/DataCollectorCustomization.dita" chunk="to-content">
    <topicmeta>
     <shortdesc/>
    </topicmeta>
    <topicref href="../Install_Config/HTTPorHTTPS.dita"/>
-   <topicref href="../Install_Config/CustomizingDataCollector.dita" chunk="to-content">
-   </topicref>
+   <topicref href="../Install_Config/CustomizingDataCollector.dita"/>  
   </topicref>
   </topicref>
 </map>
