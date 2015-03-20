@@ -224,12 +224,7 @@ angular.module('dataCollectorApp')
       // set page title
       if(current.$$route && current.$$route.data) {
         var authorizedRoles = current.$$route.data.authorizedRoles;
-
-        if (!authService.isAuthorized(authorizedRoles)) {
-          $rootScope.notAuthorized = true;
-        } else {
-          $rootScope.notAuthorized = false;
-        }
+        $rootScope.notAuthorized = !authService.isAuthorized(authorizedRoles);
       }
 
       //To fix NVD3 JS errors - https://github.com/novus/nvd3/pull/396

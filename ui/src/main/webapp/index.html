@@ -159,7 +159,9 @@
 <div ng-view ng-if="!notAuthorized">
 </div>
 
-<div class="panel panel-default page-panel not-authorized-page" ng-if="notAuthorized">
+<div class="panel panel-default page-panel not-authorized-page"
+     ng-class="{'show': true}"
+     ng-if="notAuthorized">
   <h4>{{'global.messages.error.notAuthorized' | translate}}</h4>
 </div>
 

@@ -75,6 +75,9 @@ angular
         return _.contains($rootScope.$storage.jvmMetricsChartList, chart.name);
       },
 
+      /**
+       * Launch Settings Modal Dialog
+       */
       launchSettings: function() {
         var modalInstance = $modal.open({
           templateUrl: 'app/jvmMetrics/settings/settingsModal.tpl.html',
@@ -97,7 +100,21 @@ angular
         }, function () {
 
         });
+      },
+
+
+      /**
+       * Launch Thread Dump Modal Dialog
+       */
+      launchThreadDump: function() {
+        $modal.open({
+          templateUrl: 'app/jvmMetrics/threadDump/threadDumpModal.tpl.html',
+          controller: 'ThreadDumpModalInstanceController',
+          backdrop: 'static',
+          size: 'lg'
+        });
       }
+
     });
 
     $scope.chartList = [
@@ -454,26 +471,4 @@ angular
       }
     });
 
-  })
-
-  .controller('JVMMetricsSettingsModalInstanceController', function ($scope, $modalInstance, availableCharts, selectedCharts) {
-    angular.extend($scope, {
-      showLoading: false,
-      common: {
-        errors: []
-      },
-      availableCharts: availableCharts,
-      selectedCharts: {
-        selected : selectedCharts
-      },
-
-      save : function () {
-        $modalInstance.close($scope.selectedCharts.selected);
-      },
-      cancel : function () {
-        $modalInstance.dismiss('cancel');
-      }
-    });
-
-    $scope.$broadcast('show-errors-check-validity');
   });

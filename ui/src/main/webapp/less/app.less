@@ -244,9 +244,14 @@ body {
   }
 
   .not-authorized-page {
+    display: none;
     padding-top: 50px;
     text-align: center;
     color: @brand-danger;
+
+    .show {
+      display: block;
+    }
   }
 }
 

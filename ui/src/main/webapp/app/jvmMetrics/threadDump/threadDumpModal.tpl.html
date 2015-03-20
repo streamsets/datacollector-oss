@@ -1,0 +1,108 @@
+<form class="thread-dump-modal-form form" role="form">
+  <div class="modal-header">
+    <button type="button" class="close" ng-click="close()">
+      <span aria-hidden="true">&times;</span>
+      <span class="sr-only">Close</span>
+    </button>
+    <h3 class="modal-title" translate="jvmMetrics.threads.threadDump">Thread Dump</h3>
+  </div>
+  <div class="modal-body">
+    <ng-include src="'app/home/alerts/error/errorAlert.tpl.html'"></ng-include>
+
+    <table class="table table-hover">
+      <thead>
+        <tr>
+          <th class="expand-col">
+              <span class="pointer toggler {{expandAll ? 'open' : ''}}"
+                    ng-click="expandAll = !expandAll">
+              </span>
+          </th>
+          <th>{{'jvmMetrics.threads.id' | translate}}</th>
+          <th>{{'jvmMetrics.threads.threadName' | translate}}</th>
+          <th>{{'jvmMetrics.threads.state' | translate}}</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        <tr class="pointer"
+            ng-repeat-start="thread in threads"
+            ng-init="isOpen=false;"
+            ng-click="isOpen = !isOpen">
+          <td>
+            <span class="pointer toggler {{isOpen || expandAll ? 'open' : ''}}"
+                  ng-click="isOpen = !isOpen; $event.stopPropagation()"></span>
+          </td>
+          <td>{{thread.threadInfo.threadId}}</td>
+          <td>{{thread.threadInfo.threadName}}</td>
+          <td>{{thread.threadInfo.threadState}}</td>
+        </tr>
+
+        <tr ng-repeat-end ng-if="isOpen || expandAll" class="expand-row">
+          <td colspan="8" class="stack-trace-row">
+            <span class="properties-label">{{'jvmMetrics.threads.stackTrace' | translate}}:</span>
+            <ul>
+              <li ng-repeat="line in thread.threadInfo.stackTrace">
+                <span>at</span>
+                <span>{{line.className}}.{{line.methodName}}</span>
+                <span>({{line.fileName}}:{{line.lineNumber}})</span>
+              </li>
+            </ul>
+
+            <ul class="table-properties">
+
+              <li>
+                <span class="properties-label">
+                  {{'jvmMetrics.threads.userTime' | translate}}:
+                </span>
+                <span class="properties-value">
+                  {{thread.userTimeNanosecs}} {{'Nanoseconds'}}
+                </span>
+              </li>
+
+
+              <li>
+                <span class="properties-label">
+                  {{'jvmMetrics.threads.cpuTime' | translate}}:
+                </span>
+                <span class="properties-value">
+                  {{thread.cpuTimeNanosecs}} {{'Nanoseconds'}}
+                </span>
+              </li>
+
+              <li>
+                <span class="properties-label">
+                 {{'jvmMetrics.threads.blockedCount' | translate}}:
+                </span>
+                <span class="properties-value">
+                  {{thread.threadInfo.blockedCount}}
+                </span>
+              </li>
+
+              <li>
+                <span class="properties-label">
+                  {{'jvmMetrics.threads.waitedCount' | translate}}:
+                </span>
+                <span class="properties-value">
+                  {{thread.threadInfo.waitedCount}}
+                </span>
+              </li>
+
+            </ul>
+          </td>
+        </tr>
+      </tbody>
+
+    </table>
+
+    <div show-loading="showLoading"></div>
+
+  </div>
+  <div class="modal-footer">
+    <button type="reset" class="btn btn-primary" ng-click="refresh()" translate="global.form.refresh">
+      Refresh
+    </button>
+    <button type="reset" class="btn btn-primary" ng-click="close()" translate="global.form.close">
+      Close
+    </button>
+  </div>
+</form>

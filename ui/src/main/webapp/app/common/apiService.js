@@ -60,6 +60,18 @@ angular.module('dataCollectorApp.common')
         });
       },
 
+
+      /**
+       * Fetches JVM Thread Dump
+       */
+      getThreadDump: function() {
+        var url = apiBase + '/admin/threadsDump';
+        return $http({
+          method: 'GET',
+          url: url
+        });
+      },
+
       /**
        * Fetched User Information
        */

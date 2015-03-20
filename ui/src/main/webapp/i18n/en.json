@@ -355,28 +355,38 @@
     }
   },
   "jvmMetrics": {
-    "title": "JVM Metrics",
-    "settingsTitle": "JVM Metrics Settings",
-    "memory": {
-      "title": "Memory",
-      "total": "Total Memory",
-      "heap": "Heap Memory",
-      "nonheap": "Non-Heap Memory"
-    },
-    "threads": {
-      "title": "Threads",
-      "runnable": "Runnable",
-      "timedwaiting": "Timed Waiting",
-      "waiting": "Waiting",
-      "blocked": "Blocked"
-    },
     "gc": {
       "title": "Garbage Collections",
       "marksweepcount": "Mark Sweep count",
       "marksweeptime": "Mark Sweep time",
       "scavengecount": "Scavenge count",
       "scavengetime": "Scavenge time"
-    }
+    },
+    "memory": {
+      "title": "Memory",
+      "total": "Total Memory",
+      "heap": "Heap Memory",
+      "nonheap": "Non-Heap Memory"
+    },
+    "title": "JVM Metrics",
+    "threads": {
+      "title": "Threads",
+      "threadDump": "Threads Dump",
+      "runnable": "Runnable",
+      "timedwaiting": "Timed Waiting",
+      "waiting": "Waiting",
+      "blocked": "Blocked",
+      "id": "ID",
+      "threadName": "Thread Name",
+      "state": "State",
+      "stackTrace": "Stack Trace",
+      "userTime": "User Time",
+      "cpuTime": "CPU Time",
+      "blockedCount": "Blocked Count",
+      "waitedCount": "Waited Count",
+      "viewThreadDump" : "View Threads Dump ..."
+    },
+    "settingsTitle": "JVM Metrics Settings"
   },
   "logs": {
     "download": "Download",

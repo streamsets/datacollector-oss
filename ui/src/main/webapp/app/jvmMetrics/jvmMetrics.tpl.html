@@ -13,12 +13,25 @@
         </a>
         <ul class="dropdown-menu pull-right" role="menu">
 
+          <li role="presentation">
+            <a role="menuitem" tabindex="-1" href="#"
+               ng-click="launchThreadDump()">{{'jvmMetrics.threads.threadDump' | translate}}</a>
+          </li>
+
+          <li role="presentation" class="divider"></li>
+
           <li role="presentation" class="dropdown-header"
               ng-if="!$storage.dontShowRESTResponseMenu"
               translate="home.detailPane.restURL">REST URL</li>
 
           <li role="presentation" ng-if="!$storage.dontShowRESTResponseMenu">
-            <a role="menuitem" tabindex="-1" href="/jmx" target="_blank">{{'jvmMetrics.title' | translate}}</a>
+            <a role="menuitem" tabindex="-1" href="/jmx"
+               target="_blank">{{'jvmMetrics.title' | translate}}</a>
+          </li>
+
+          <li role="presentation" ng-if="!$storage.dontShowRESTResponseMenu">
+            <a role="menuitem" tabindex="-1" href="/rest/v1/admin/threadsDump"
+               target="_blank">{{'jvmMetrics.threads.threadDump' | translate}}</a>
           </li>
 
           <li role="presentation" class="divider" ng-if="!$storage.dontShowRESTResponseMenu"></li>
@@ -39,7 +52,8 @@
       <div class="col-sm-4" ng-repeat="chart in chartList | filter: filterChart">
         <div class="panel panel-default">
           <div class="panel-heading">
-            <span>{{chart.label}}</span>
+            <span ng-bind-html="chart.label"></span>
+            <span ng-if="chart.name === 'threads'"> ( <a href="#" ng-click="launchThreadDump()">{{'jvmMetrics.threads.viewThreadDump' | translate}} </a> ) </span>
             <button type="button" class="close" aria-label="Close" ng-click="removeChart(chart, chartIndex)">
               <span aria-hidden="true">&times;</span>
             </button>
