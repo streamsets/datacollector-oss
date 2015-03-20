@@ -13,7 +13,7 @@ package com.streamsets.pipeline.api;
  * <pre>
  *
  * public enum BaseError implements ErrorCode {
- *   BASE_0001("Stage '{}', there should be 1 output lane but there are '{}'");
+ *   API_00("Stage '{}', there should be 1 output lane but there are '{}'");
  *
  *   private final String msg;
  *

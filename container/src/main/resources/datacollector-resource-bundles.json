@@ -1,0 +1,5 @@
+[
+  "com.streamsets.pipeline.util.ContainerError",
+  "com.streamsets.pipeline.validation.ValidationError",
+  "com.streamsets.pipeline.config.ErrorRecordsOptions"
+]

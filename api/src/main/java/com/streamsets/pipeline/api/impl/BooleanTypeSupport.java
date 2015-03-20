@@ -5,7 +5,7 @@
  */
 package com.streamsets.pipeline.api.impl;
 
-import com.streamsets.pipeline.api.base.BaseError;
+import com.streamsets.pipeline.api.base.Errors;
 
 import java.math.BigDecimal;
 
@@ -40,7 +40,7 @@ public class BooleanTypeSupport extends TypeSupport<Boolean> {
     if (value instanceof BigDecimal) {
       return ! value.equals(BigDecimal.ZERO);
     }
-    throw new IllegalArgumentException(Utils.format(BaseError.BASE_0002.getMessage(),
+    throw new IllegalArgumentException(Utils.format(Errors.API_01.getMessage(),
                                                     value.getClass().getSimpleName(), value));
   }
 

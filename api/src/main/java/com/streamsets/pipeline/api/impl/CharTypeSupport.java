@@ -5,7 +5,7 @@
  */
 package com.streamsets.pipeline.api.impl;
 
-import com.streamsets.pipeline.api.base.BaseError;
+import com.streamsets.pipeline.api.base.Errors;
 
 public class CharTypeSupport extends TypeSupport<Character> {
 
@@ -20,7 +20,7 @@ public class CharTypeSupport extends TypeSupport<Character> {
         return s.charAt(0);
       }
     }
-    throw new IllegalArgumentException(Utils.format(BaseError.BASE_0006.getMessage(),
+    throw new IllegalArgumentException(Utils.format(Errors.API_05.getMessage(),
                                                     value.getClass().getSimpleName(), value));
   }
 

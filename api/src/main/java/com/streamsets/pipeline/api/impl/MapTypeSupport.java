@@ -6,7 +6,7 @@
 package com.streamsets.pipeline.api.impl;
 
 import com.streamsets.pipeline.api.Field;
-import com.streamsets.pipeline.api.base.BaseError;
+import com.streamsets.pipeline.api.base.Errors;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -18,7 +18,7 @@ public class MapTypeSupport extends TypeSupport<Map> {
     if (value instanceof Map) {
       return (Map) value;
     }
-    throw new IllegalArgumentException(Utils.format(BaseError.Base_0016.getMessage(),
+    throw new IllegalArgumentException(Utils.format(Errors.API_15.getMessage(),
                                                     value.getClass().getSimpleName(), value));
   }
 
@@ -27,7 +27,7 @@ public class MapTypeSupport extends TypeSupport<Map> {
     if (targetTypeSupport instanceof MapTypeSupport) {
       return value;
     } else {
-      throw new IllegalArgumentException(Utils.format(BaseError.Base_0017.getMessage(), targetTypeSupport));
+      throw new IllegalArgumentException(Utils.format(Errors.API_16.getMessage(), targetTypeSupport));
     }
   }
 

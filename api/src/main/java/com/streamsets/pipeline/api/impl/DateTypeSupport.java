@@ -5,7 +5,7 @@
  */
 package com.streamsets.pipeline.api.impl;
 
-import com.streamsets.pipeline.api.base.BaseError;
+import com.streamsets.pipeline.api.base.Errors;
 
 import java.text.ParseException;
 import java.util.Date;
@@ -22,13 +22,13 @@ public class DateTypeSupport extends TypeSupport<Date> {
       try {
         return Utils.parse((String) value);
       } catch (ParseException ex) {
-        throw new IllegalArgumentException(Utils.format(BaseError.BASE_0007.getMessage(), value));
+        throw new IllegalArgumentException(Utils.format(Errors.API_06.getMessage(), value));
       }
     }
     if (value instanceof Long) {
       return new Date((long) value);
     }
-    throw new IllegalArgumentException(Utils.format(BaseError.BASE_0008.getMessage(),
+    throw new IllegalArgumentException(Utils.format(Errors.API_07.getMessage(),
                                                     value.getClass().getSimpleName(), value));
   }
 

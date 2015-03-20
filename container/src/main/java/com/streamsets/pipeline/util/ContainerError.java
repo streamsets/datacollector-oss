@@ -6,7 +6,12 @@
 package com.streamsets.pipeline.util;
 
 import com.streamsets.pipeline.api.ErrorCode;
+import com.streamsets.pipeline.api.GenerateResourceBundle;
 
+// we are using the annotation for reference purposes only.
+// the annotation processor does not work on this maven project
+// we have a hardcoded 'datacollector-resource-bundles.json' file in resources
+@GenerateResourceBundle
 public enum ContainerError implements ErrorCode {
   // Unchecked exception
   CONTAINER_0000("Runtime exception: {}"),

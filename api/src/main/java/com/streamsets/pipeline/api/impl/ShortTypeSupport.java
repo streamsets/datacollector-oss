@@ -5,7 +5,7 @@
  */
 package com.streamsets.pipeline.api.impl;
 
-import com.streamsets.pipeline.api.base.BaseError;
+import com.streamsets.pipeline.api.base.Errors;
 
 import java.math.BigDecimal;
 
@@ -37,7 +37,7 @@ public class ShortTypeSupport extends TypeSupport<Short> {
     if (value instanceof BigDecimal) {
       return ((BigDecimal)value).shortValue();
     }
-    throw new IllegalArgumentException(Utils.format(BaseError.BASE_0018.getMessage(),
+    throw new IllegalArgumentException(Utils.format(Errors.API_17.getMessage(),
                                                     value.getClass().getSimpleName(), value));
   }
 

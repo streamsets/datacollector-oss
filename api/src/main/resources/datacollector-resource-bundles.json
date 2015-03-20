@@ -1,0 +1,6 @@
+[
+  "com.streamsets.pipeline.api.OnRecordError",
+  "com.streamsets.pipeline.api.StageDef$DefaultOutputStreams",
+  "com.streamsets.pipeline.api.StageDef$VariableOutputStreams",
+  "com.streamsets.pipeline.api.base.Errors"
+]

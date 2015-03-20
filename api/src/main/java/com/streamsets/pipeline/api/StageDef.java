@@ -17,6 +17,11 @@ import java.lang.annotation.Target;
 public @interface StageDef {
 
   //enum for processors using LanePredicateMapping configurations
+
+  // we are using the annotation for reference purposes only.
+  // the annotation processor does not work on this maven project
+  // we have a hardcoded 'datacollector-resource-bundles.json' file in resources
+  @GenerateResourceBundle
   public enum VariableOutputStreams implements Label {
     ;
 
@@ -27,6 +32,11 @@ public @interface StageDef {
   }
 
   //default enum for processors that don;'t specify 'outputStreams'
+
+  // we are using the annotation for reference purposes only.
+  // the annotation processor does not work on this maven project
+  // we have a hardcoded 'datacollector-resource-bundles.json' file in resources
+  @GenerateResourceBundle
   public enum DefaultOutputStreams implements Label {
     OUTPUT("Output");
 

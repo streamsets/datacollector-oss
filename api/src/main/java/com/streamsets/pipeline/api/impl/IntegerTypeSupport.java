@@ -5,7 +5,7 @@
  */
 package com.streamsets.pipeline.api.impl;
 
-import com.streamsets.pipeline.api.base.BaseError;
+import com.streamsets.pipeline.api.base.Errors;
 
 import java.math.BigDecimal;
 
@@ -37,7 +37,7 @@ public class IntegerTypeSupport extends TypeSupport<Integer> {
     if (value instanceof BigDecimal) {
       return ((BigDecimal)value).intValue();
     }
-    throw new IllegalArgumentException(Utils.format(BaseError.BASE_0012.getMessage(),
+    throw new IllegalArgumentException(Utils.format(Errors.API_11.getMessage(),
                                                     value.getClass().getSimpleName(), value));
   }
 

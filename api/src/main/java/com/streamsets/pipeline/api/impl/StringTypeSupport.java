@@ -5,7 +5,7 @@
  */
 package com.streamsets.pipeline.api.impl;
 
-import com.streamsets.pipeline.api.base.BaseError;
+import com.streamsets.pipeline.api.base.Errors;
 
 import java.util.List;
 import java.util.Map;
@@ -15,7 +15,7 @@ public class StringTypeSupport extends TypeSupport<String> {
   @Override
   public String convert(Object value) {
     if(value instanceof Map || value instanceof List || value instanceof byte[]) {
-      throw new IllegalArgumentException(Utils.format(BaseError.Base_0019.getMessage()));
+      throw new IllegalArgumentException(Utils.format(Errors.API_18.getMessage()));
     }
     return value.toString();
   }

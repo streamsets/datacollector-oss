@@ -5,8 +5,13 @@
  */
 package com.streamsets.pipeline.config;
 
+import com.streamsets.pipeline.api.GenerateResourceBundle;
 import com.streamsets.pipeline.api.Label;
 
+// we are using the annotation for reference purposes only.
+// the annotation processor does not work on this maven project
+// we have a hardcoded 'datacollector-resource-bundles.json' file in resources
+@GenerateResourceBundle
 public enum ErrorRecordsOptions implements Label {
   TRASH("Discard", "streamsets-datacollector-basic-lib:com_streamsets_pipeline_lib_stage_destination_NullTarget:1.0.0"),
   DISK("Save to Disk", "streamsets-datacollector-basic-lib:com_streamsets_pipeline_lib_stage_destination_DiskErrorRecordsTarget:1.0.0")
