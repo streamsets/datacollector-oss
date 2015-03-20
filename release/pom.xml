@@ -208,6 +208,21 @@
             </configuration>
           </execution>
           <execution>
+            <id>cdh5-0.8.2.0-kafka-1.2.0</id>
+            <phase>package</phase>
+            <goals>
+              <goal>single</goal>
+            </goals>
+            <configuration>
+              <appendAssemblyId>false</appendAssemblyId>
+              <attach>false</attach>
+              <finalName>streamsets-datacollector-cdh5-kafka_0_8_2_0_kafka_1_2_0-lib-${project.version}</finalName>
+              <descriptors>
+                <descriptor>src/main/assemblies/data-collector-cdh5-kafka_0_8_2_0_kafka_1_2_0-lib.xml</descriptor>
+              </descriptors>
+            </configuration>
+          </execution>
+          <execution>
             <id>jython-2.7.b4</id>
             <phase>package</phase>
             <goals>
