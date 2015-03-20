@@ -51,7 +51,6 @@ import javax.tools.Diagnostic;
 import javax.tools.FileObject;
 import javax.tools.StandardLocation;
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.lang.annotation.Annotation;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -76,13 +75,8 @@ public class PipelineAnnotationsProcessor extends AbstractProcessor {
   private static final String PROCESSOR = "PROCESSOR";
   private static final String TARGET = "TARGET";
   private static final String ERROR = "ERROR";
-  private static final String BUNDLE_SUFFIX = ".properties";
-  private static final String STAGE_LABEL = "label";
-  private static final String STAGE_DESCRIPTION = "description";
+  private static final String LABEL = "LABEL";
   private static final String SEPARATOR = ".";
-  private static final String LABEL = "label";
-  private static final String DESCRIPTION = "description";
-  private static final String EQUALS = "=";
   private static final String DOT = ".";
   private static final String DEFAULT_CONSTRUCTOR = "<init>";
   private static final String PIPELINE_STAGES_JSON = "PipelineStages.json";
@@ -101,11 +95,11 @@ public class PipelineAnnotationsProcessor extends AbstractProcessor {
   /*Indicates if there is an error while processing stages*/
   private boolean stageDefValidationError = false;
   /*Indicates if there is an error while processing stage error definition enum*/
-  private boolean errorEnumValidationFailure = false;
+  private boolean enumValidationFailure = false;
   /*Map of enum names that need resource bundles to names of resource bundles*/
-  private Map<String, String> enumsNeedingResourceBundles;
+  private Set<String> enumsNeedingResourceBundles;
   /*literal vs value maps for the stage error def enum*/
-  private Map<String, Map<String, String>> errorEnumToLiteralsMap;
+  //private Map<String, Map<String, String>> errorEnumToLiteralsMap;
   /*Json object mapper to generate json file for the stages*/
   private final ObjectMapper json;
   /*Set of stage names for which resource bundles must be generated*/
@@ -120,11 +114,11 @@ public class PipelineAnnotationsProcessor extends AbstractProcessor {
     super();
     stageDefinitions = new ArrayList<>();
     stageNameToVersionMap = new HashMap<>();
-    errorEnumToLiteralsMap = new HashMap<>();
+//    errorEnumToLiteralsMap = new HashMap<>();
     json = new ObjectMapper();
     json.enable(SerializationFeature.INDENT_OUTPUT);
     stagesNeedingResourceBundles = new HashSet<>();
-    enumsNeedingResourceBundles = new HashMap<>();
+    enumsNeedingResourceBundles = new HashSet<>();
   }
 
   @Override
@@ -150,11 +144,11 @@ public class PipelineAnnotationsProcessor extends AbstractProcessor {
         if(stageNameToVersionMap.containsKey(elementName)) {
           //these are stages needing resource bundles.
           stagesNeedingResourceBundles.add(typeElement.getQualifiedName().toString());
-        } else if(validateErrorDefinition(typeElement)) {
+        } else if(validateEnums(typeElement)) {
           //As of now these have to be enums that implement ErrorId. Validate and note down enums needing resource
           //bundle generation
-          createErrorEnum(typeElement);
-          enumsNeedingResourceBundles.put(elementName, getClassNameFromTypeMirror(typeElement.asType()));
+          //createErrorEnum(typeElement);
+          enumsNeedingResourceBundles.add(typeElement.getQualifiedName().toString());
         } else {
           //error scenario - neither a stage nor enum but has GenerateResourceBundle annotation on it
           printError("validation.not.a.stage.or.enum",
@@ -176,11 +170,6 @@ public class PipelineAnnotationsProcessor extends AbstractProcessor {
         generateConfigFile();
         generateClassNeedingResourceBundle();
       }
-      //generate a error bundle
-      if(!errorEnumValidationFailure &&
-          !errorEnumToLiteralsMap.isEmpty()) {
-        generateErrorBundle();
-      }
     }
     return true;
   }
@@ -194,11 +183,14 @@ public class PipelineAnnotationsProcessor extends AbstractProcessor {
    * generation.
    */
   private void generateClassNeedingResourceBundle() {
-    if(!stagesNeedingResourceBundles.isEmpty()) {
+    Set<String> stagesAndEnumsNeedingResourceBundle = new HashSet<>();
+    stagesAndEnumsNeedingResourceBundle.addAll(stagesNeedingResourceBundles);
+    stagesAndEnumsNeedingResourceBundle.addAll(enumsNeedingResourceBundles);
+    if(!stagesAndEnumsNeedingResourceBundle.isEmpty()) {
       try {
         FileObject resource = processingEnv.getFiler().createResource(StandardLocation.CLASS_OUTPUT, "",
           DC_RESOURCE_BUNDLES_JSON);
-        json.writeValue(resource.openOutputStream(), stagesNeedingResourceBundles);
+        json.writeValue(resource.openOutputStream(), stagesAndEnumsNeedingResourceBundle);
       } catch (IOException e) {
         processingEnv.getMessager().printMessage(Diagnostic.Kind.ERROR, e.getMessage());
       }
@@ -215,30 +207,6 @@ public class PipelineAnnotationsProcessor extends AbstractProcessor {
       json.writeValue(resource.openOutputStream(), BeanHelper.wrapStageDefinitions(stageDefinitions));
     } catch (IOException e) {
       processingEnv.getMessager().printMessage(Diagnostic.Kind.ERROR, e.getMessage());
-    }
-  }
-
-  /**
-   * Generates <enumName>.properties file.
-   */
-  private void generateErrorBundle() {
-    for(Map.Entry<String, String> e : enumsNeedingResourceBundles.entrySet()) {
-      String enumClassName = e.getValue();
-      try {
-        FileObject resource = processingEnv.getFiler().createResource(StandardLocation.CLASS_OUTPUT,
-            enumClassName.substring(0, enumClassName.lastIndexOf(DOT)),
-            enumClassName.substring(enumClassName.lastIndexOf(DOT) + 1,
-                enumClassName.length())
-                + BUNDLE_SUFFIX, (Element[]) null);
-        PrintWriter pw = new PrintWriter(resource.openWriter());
-        for (Map.Entry<String, String> entry : errorEnumToLiteralsMap.get(e.getKey()).entrySet()) {
-          pw.println(entry.getKey() + EQUALS + entry.getValue());
-        }
-        pw.flush();
-        pw.close();
-      } catch (IOException ex) {
-        processingEnv.getMessager().printMessage(Diagnostic.Kind.ERROR, ex.getMessage());
-      }
     }
   }
 
@@ -317,20 +285,6 @@ public class PipelineAnnotationsProcessor extends AbstractProcessor {
     }
 
     return new ConfigGroupDefinition(classNameToGroupsMap, groupNameToLabelMapList);
-  }
-
-  private void createErrorEnum(TypeElement typeElement) {
-    String enumName = StageHelper.getStageNameFromClassName(typeElement.getQualifiedName().toString());
-    List<? extends Element> enclosedElements = typeElement.getEnclosedElements();
-    List<VariableElement> variableElements = ElementFilter.fieldsIn(enclosedElements);
-    Map<String, String> literalToValueMap = new HashMap<>();
-    for (VariableElement variableElement : variableElements) {
-      if(variableElement.getKind() == ElementKind.ENUM_CONSTANT) {
-          literalToValueMap.put(variableElement.getSimpleName().toString(),
-            (String) variableElement.getConstantValue());
-      }
-    }
-    errorEnumToLiteralsMap.put(enumName, literalToValueMap);
   }
 
   private List<ConfigDefinition> getConfigDefsFromTypeElement(TypeElement typeElement) {
@@ -559,6 +513,8 @@ public class PipelineAnnotationsProcessor extends AbstractProcessor {
         return TARGET;
       } else if (isError(typeMirror)) {
         return ERROR;
+      } else if (isLabel(typeMirror)) {
+        return LABEL;
       }
     }
     return "";
@@ -566,6 +522,13 @@ public class PipelineAnnotationsProcessor extends AbstractProcessor {
 
   private boolean isError(TypeMirror typeMirror) {
     if(typeMirror.toString().equals("com.streamsets.pipeline.api.ErrorCode")) {
+      return true;
+    }
+    return false;
+  }
+
+  private boolean isLabel(TypeMirror typeMirror) {
+    if(typeMirror.toString().equals("com.streamsets.pipeline.api.Label")) {
       return true;
     }
     return false;
@@ -1470,7 +1433,7 @@ public class PipelineAnnotationsProcessor extends AbstractProcessor {
    *
    * @param typeElement
    */
-  private boolean validateErrorDefinition(TypeElement typeElement) {
+  private boolean validateEnums(TypeElement typeElement) {
     boolean valid = true;
     //must be enum
     if(typeElement.getKind() != ElementKind.ENUM) {
@@ -1480,28 +1443,19 @@ public class PipelineAnnotationsProcessor extends AbstractProcessor {
         "Stage Error Definition {} must be an enum", typeElement.getQualifiedName());
       valid = false;
     }
-    //must implement com.streamsets.pipeline.api.ErrorCode
+    //must implement com.streamsets.pipeline.api.ErrorCode or com.streamsets.pipeline.api.Label
     String type = getStageTypeFromElement(typeElement);
-    if(type.isEmpty() || !type.equals("ERROR")) {
+    if(type.isEmpty() || !(type.equals("ERROR") || type.equals("LABEL"))) {
       //Stage does not implement one of the Stage interface or extend the base stage class
       //This must be flagged as a compiler error.
-      printError("stagedeferror.validation.enum.does.not.implement.interface",
-        "Stage Error Definition {} does not implement interface 'com.streamsets.pipeline.api.ErrorCode'.",
+      printError("stagedef.validation.enum.does.not.implement.interface",
+        "Stage Enum {} does not implement interface 'com.streamsets.pipeline.api.ErrorCode' " +
+          "or 'com.streamsets.pipeline.api.Label'.",
         typeElement.getQualifiedName());
       valid = false;
     }
-    errorEnumValidationFailure &= !valid;
+    enumValidationFailure &= !valid;
     return valid;
-  }
-
-  private boolean checkIfTypeIsString(Element typeElement, VariableElement variableElement) {
-    if (!variableElement.asType().toString().equals("java.lang.String")) {
-      printError("field.validation.type.is.not.String",
-          "The type of the field {} is expected to be String.",
-          typeElement.getSimpleName().toString() + SEPARATOR + variableElement.getSimpleName().toString());
-      return false;
-    }
-    return true;
   }
 
   private boolean checkIfTypeIsEnumOrString(Element typeElement, VariableElement variableElement, String typeName) {
