@@ -6,7 +6,9 @@
 package com.streamsets.pipeline.stage.destination.hdfs;
 
 import com.streamsets.pipeline.api.ErrorCode;
+import com.streamsets.pipeline.api.GenerateResourceBundle;
 
+@GenerateResourceBundle
 public enum Errors implements ErrorCode {
   HADOOPFS_00("Hadoop UserGroupInformation reports Simple authentication, it should be Kerberos"),
   HADOOPFS_01("Failed to configure or connect to the '{}' Hadoop file system: {}"),

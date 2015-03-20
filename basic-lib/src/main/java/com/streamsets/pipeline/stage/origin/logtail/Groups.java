@@ -5,8 +5,10 @@
  */
 package com.streamsets.pipeline.stage.origin.logtail;
 
+import com.streamsets.pipeline.api.GenerateResourceBundle;
 import com.streamsets.pipeline.api.Label;
 
+@GenerateResourceBundle
 public enum Groups implements Label {
   FILE;
 

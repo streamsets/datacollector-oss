@@ -6,7 +6,9 @@
 package com.streamsets.pipeline.stage.processor.fieldvaluereplacer;
 
 import com.streamsets.pipeline.api.ErrorCode;
+import com.streamsets.pipeline.api.GenerateResourceBundle;
 
+@GenerateResourceBundle
 public enum Errors implements ErrorCode {
   VALUE_REPLACER_00("Failed to convert value '{}' to type '{}': {}"),
   VALUE_REPLACER_01("Record '{}' does not contain fields '{}'"),

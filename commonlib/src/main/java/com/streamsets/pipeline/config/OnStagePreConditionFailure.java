@@ -5,8 +5,10 @@
  */
 package com.streamsets.pipeline.config;
 
+import com.streamsets.pipeline.api.GenerateResourceBundle;
 import com.streamsets.pipeline.api.Label;
 
+@GenerateResourceBundle
 public enum OnStagePreConditionFailure implements Label {
   CONTINUE("Continue"),
   TO_ERROR("Send to Error"),

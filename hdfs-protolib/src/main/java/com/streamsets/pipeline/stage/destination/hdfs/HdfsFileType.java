@@ -5,8 +5,10 @@
  */
 package com.streamsets.pipeline.stage.destination.hdfs;
 
+import com.streamsets.pipeline.api.GenerateResourceBundle;
 import com.streamsets.pipeline.api.Label;
 
+@GenerateResourceBundle
 public enum HdfsFileType implements Label {
   TEXT("Text files"), SEQUENCE_FILE("Sequence files");
 

@@ -6,12 +6,14 @@
 package com.streamsets.pipeline.stage.processor.dedup;
 
 import com.streamsets.pipeline.api.ErrorCode;
+import com.streamsets.pipeline.api.GenerateResourceBundle;
 
 /* LC: For the first two - do we need to tell them what the value is? Can't we just tell them what it needs to be?
 * Can we say:
 * Maximum record count must be greater than zero
 * Time to compare must be a positive integer or zero to opt out of a time comparison */
 
+@GenerateResourceBundle
 public enum Errors implements ErrorCode {
   DEDUP_00("Maximum record count must be greater than zero, it is '{}'"),
   DEDUP_01("Time window must be zero (disabled) or greater than zero, it is '{}'"),

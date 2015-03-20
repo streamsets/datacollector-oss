@@ -6,7 +6,9 @@
 package com.streamsets.pipeline.stage.processor.fieldmask;
 
 import com.streamsets.pipeline.api.ErrorCode;
+import com.streamsets.pipeline.api.GenerateResourceBundle;
 
+@GenerateResourceBundle
 public enum Errors implements ErrorCode {
   MASK_00("Record '{}'"),
   ;

@@ -20,7 +20,6 @@ import com.streamsets.pipeline.configurablestage.DProcessor;
 
 import java.util.List;
 
-@GenerateResourceBundle
 @StageDef(
     version="1.0.0",
     label="Value Replacer",
@@ -28,6 +27,7 @@ import java.util.List;
     icon="replacer.png"
 )
 @ConfigGroups(Groups.class)
+@GenerateResourceBundle
 public class FieldValueReplacerDProcessor extends DProcessor {
 
   @ConfigDef(

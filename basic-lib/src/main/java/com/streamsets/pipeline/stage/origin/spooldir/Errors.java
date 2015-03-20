@@ -6,7 +6,9 @@
 package com.streamsets.pipeline.stage.origin.spooldir;
 
 import com.streamsets.pipeline.api.ErrorCode;
+import com.streamsets.pipeline.api.GenerateResourceBundle;
 
+@GenerateResourceBundle
 public enum Errors implements ErrorCode {
   SPOOLDIR_00("Could not archive file '{}': {}"),
   SPOOLDIR_01("Error while processing file '{}' at position '{}': {}"),

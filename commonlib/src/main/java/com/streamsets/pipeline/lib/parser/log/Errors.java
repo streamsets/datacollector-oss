@@ -1,7 +1,9 @@
 package com.streamsets.pipeline.lib.parser.log;
 
 import com.streamsets.pipeline.api.ErrorCode;
+import com.streamsets.pipeline.api.GenerateResourceBundle;
 
+@GenerateResourceBundle
 public enum Errors implements ErrorCode {
   LOG_PARSER_00("Cannot advance file '{}' to offset '{}'"),
   LOG_PARSER_01("Error parsing log line '{}', reason : '{}'"),

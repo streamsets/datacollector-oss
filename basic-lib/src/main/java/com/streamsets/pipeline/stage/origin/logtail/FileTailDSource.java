@@ -16,7 +16,6 @@ import com.streamsets.pipeline.api.base.FileRawSourcePreviewer;
 import com.streamsets.pipeline.config.DataFormat;
 import com.streamsets.pipeline.configurablestage.DSourceOffsetCommitter;
 
-@GenerateResourceBundle
 @StageDef(
     version="1.0.0",
     label="File Tail",
@@ -25,6 +24,7 @@ import com.streamsets.pipeline.configurablestage.DSourceOffsetCommitter;
 )
 @RawSource(rawSourcePreviewer = FileRawSourcePreviewer.class)
 @ConfigGroups(Groups.class)
+@GenerateResourceBundle
 public class FileTailDSource extends DSourceOffsetCommitter {
 
   @ConfigDef(

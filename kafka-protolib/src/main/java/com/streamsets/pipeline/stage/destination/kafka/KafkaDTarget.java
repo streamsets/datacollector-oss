@@ -24,13 +24,13 @@ import com.streamsets.pipeline.configurablestage.DTarget;
 import java.util.List;
 import java.util.Map;
 
-@GenerateResourceBundle
 @StageDef(
   version = "1.0.0",
   label = "Kafka Producer",
   description = "Writes data to Kafka",
   icon = "kafka.png")
 @ConfigGroups(value = Groups.class)
+@GenerateResourceBundle
 public class KafkaDTarget extends DTarget {
 
   @ConfigDef(

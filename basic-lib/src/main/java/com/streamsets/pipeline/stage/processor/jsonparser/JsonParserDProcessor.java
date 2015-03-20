@@ -12,7 +12,6 @@ import com.streamsets.pipeline.api.Processor;
 import com.streamsets.pipeline.api.StageDef;
 import com.streamsets.pipeline.configurablestage.DProcessor;
 
-@GenerateResourceBundle
 @StageDef(
     version="1.0.0",
     label="JSON Parser",
@@ -20,6 +19,7 @@ import com.streamsets.pipeline.configurablestage.DProcessor;
     icon="jsonparser.png"
 )
 @ConfigGroups(Groups.class)
+@GenerateResourceBundle
 public class JsonParserDProcessor extends DProcessor {
 
   @ConfigDef(

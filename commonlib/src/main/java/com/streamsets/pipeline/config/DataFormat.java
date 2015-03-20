@@ -5,10 +5,12 @@
  */
 package com.streamsets.pipeline.config;
 
+import com.streamsets.pipeline.api.GenerateResourceBundle;
 import com.streamsets.pipeline.api.Label;
 import com.streamsets.pipeline.lib.generator.CharDataGeneratorFactory;
 import com.streamsets.pipeline.lib.parser.CharDataParserFactory;
 
+@GenerateResourceBundle
 public enum DataFormat implements Label {
   TEXT("Text", CharDataParserFactory.Format.TEXT, CharDataGeneratorFactory.Format.TEXT),
   JSON("JSON", CharDataParserFactory.Format.JSON, CharDataGeneratorFactory.Format.JSON),

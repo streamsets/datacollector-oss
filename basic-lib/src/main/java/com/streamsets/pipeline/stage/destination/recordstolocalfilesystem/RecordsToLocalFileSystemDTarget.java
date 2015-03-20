@@ -14,7 +14,6 @@ import com.streamsets.pipeline.api.StageDef;
 import com.streamsets.pipeline.api.Target;
 import com.streamsets.pipeline.configurablestage.DTarget;
 
-@GenerateResourceBundle
 @StageDef(
     version = "1.0.0",
     label = "SDC Record Files",
@@ -24,6 +23,7 @@ import com.streamsets.pipeline.configurablestage.DTarget;
 @HideConfig(requiredFields = true, onErrorRecord = true)
 @ErrorStage
 @ConfigGroups(Groups.class)
+@GenerateResourceBundle
 public class RecordsToLocalFileSystemDTarget extends DTarget {
 
   @ConfigDef(

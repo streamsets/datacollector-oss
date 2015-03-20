@@ -6,7 +6,9 @@
 package com.streamsets.pipeline.stage.processor.fieldhasher;
 
 import com.streamsets.pipeline.api.ErrorCode;
+import com.streamsets.pipeline.api.GenerateResourceBundle;
 
+@GenerateResourceBundle
 public enum Errors implements ErrorCode {
   HASH_00("Error creating message digest for {}: {}"),
   HASH_01("The record '{}' has the following issues: fields '{}' do not exist, fields '{}' include null values, " +

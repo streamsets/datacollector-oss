@@ -5,6 +5,7 @@
  */
 package com.streamsets.pipeline.stage.destination.hdfs;
 
+import com.streamsets.pipeline.api.GenerateResourceBundle;
 import com.streamsets.pipeline.api.Label;
 import com.streamsets.pipeline.api.StageException;
 import org.apache.hadoop.io.compress.BZip2Codec;
@@ -12,6 +13,7 @@ import org.apache.hadoop.io.compress.CompressionCodec;
 import org.apache.hadoop.io.compress.GzipCodec;
 import org.apache.hadoop.io.compress.SnappyCodec;
 
+@GenerateResourceBundle
 public enum CompressionMode implements Label {
   NONE("None", null),
   GZIP("Gzip", GzipCodec.class),

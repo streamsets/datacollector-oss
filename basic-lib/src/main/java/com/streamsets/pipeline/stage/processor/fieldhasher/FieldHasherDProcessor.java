@@ -19,13 +19,13 @@ import com.streamsets.pipeline.configurablestage.DProcessor;
 
 import java.util.List;
 
-@GenerateResourceBundle
 @StageDef(
     version="1.0.0",
     label="Field Hasher",
     description = "Uses an algorithm to hash field values",
     icon="hash.png")
 @ConfigGroups(Groups.class)
+@GenerateResourceBundle
 public class FieldHasherDProcessor extends DProcessor {
 
   @ConfigDef(

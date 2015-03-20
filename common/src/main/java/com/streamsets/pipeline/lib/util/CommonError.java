@@ -6,7 +6,9 @@
 package com.streamsets.pipeline.lib.util;
 
 import com.streamsets.pipeline.api.ErrorCode;
+import com.streamsets.pipeline.api.GenerateResourceBundle;
 
+@GenerateResourceBundle
 public enum CommonError implements ErrorCode {
 
   //Kafka source and Target messages

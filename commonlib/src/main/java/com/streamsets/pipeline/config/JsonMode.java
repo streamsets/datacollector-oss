@@ -5,9 +5,11 @@
  */
 package com.streamsets.pipeline.config;
 
+import com.streamsets.pipeline.api.GenerateResourceBundle;
 import com.streamsets.pipeline.api.Label;
 import com.streamsets.pipeline.lib.json.StreamingJsonParser;
 
+@GenerateResourceBundle
 public enum JsonMode implements Label {
   ARRAY_OBJECTS("JSON array of objects", StreamingJsonParser.Mode.ARRAY_OBJECTS),
   MULTIPLE_OBJECTS("Multiple JSON objects", StreamingJsonParser.Mode.MULTIPLE_OBJECTS),

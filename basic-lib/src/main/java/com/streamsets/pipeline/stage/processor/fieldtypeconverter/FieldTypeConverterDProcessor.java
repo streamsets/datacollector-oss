@@ -16,7 +16,6 @@ import com.streamsets.pipeline.api.StageDef;
 import com.streamsets.pipeline.configurablestage.DProcessor;
 import java.util.List;
 
-@GenerateResourceBundle
 @StageDef(
     version="1.0.0",
     label="Field Converter",
@@ -25,6 +24,7 @@ import java.util.List;
 )
 @ConfigGroups(Groups.class)
 @HideConfig(onErrorRecord = true)
+@GenerateResourceBundle
 public class FieldTypeConverterDProcessor extends DProcessor {
 
   @ConfigDef(

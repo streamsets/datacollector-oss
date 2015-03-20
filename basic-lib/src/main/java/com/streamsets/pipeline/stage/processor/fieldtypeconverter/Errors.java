@@ -6,7 +6,9 @@
 package com.streamsets.pipeline.stage.processor.fieldtypeconverter;
 
 import com.streamsets.pipeline.api.ErrorCode;
+import com.streamsets.pipeline.api.GenerateResourceBundle;
 
+@GenerateResourceBundle
 public enum Errors implements ErrorCode {
   CONVERTER_00("Failed to convert field '{}' with value '{}' to type '{}': {}"),
   ;

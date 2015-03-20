@@ -18,7 +18,6 @@ import com.streamsets.pipeline.configurablestage.DProcessor;
 
 import java.util.List;
 
-@GenerateResourceBundle
 @StageDef(
     version="1.0.0",
     label="Field Splitter",
@@ -26,6 +25,7 @@ import java.util.List;
     icon="splitter.png"
 )
 @ConfigGroups(Groups.class)
+@GenerateResourceBundle
 public class SplitterDProcessor extends DProcessor {
 
   @ConfigDef(

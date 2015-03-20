@@ -6,7 +6,9 @@
 package com.streamsets.pipeline.lib.generator.delimited;
 
 import com.streamsets.pipeline.api.ErrorCode;
+import com.streamsets.pipeline.api.GenerateResourceBundle;
 
+@GenerateResourceBundle
 public enum Errors implements ErrorCode {
   DELIMITED_GENERATOR_00("Record '{}' root field should be List instead of '{}'"),
   DELIMITED_GENERATOR_01("Record '{}' column '{}' field should be Map instead of '{}'"),

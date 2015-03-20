@@ -5,8 +5,10 @@
  */
 package com.streamsets.pipeline.stage.processor.fieldfilter;
 
+import com.streamsets.pipeline.api.GenerateResourceBundle;
 import com.streamsets.pipeline.api.Label;
 
+@GenerateResourceBundle
 public enum FilterOperation implements Label {
   KEEP("Keep Listed Fields"),
   REMOVE("Remove Listed Fields");

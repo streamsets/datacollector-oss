@@ -6,7 +6,9 @@
 package com.streamsets.pipeline.lib.util;
 
 import com.streamsets.pipeline.api.ErrorCode;
+import com.streamsets.pipeline.api.GenerateResourceBundle;
 
+@GenerateResourceBundle
 public enum Errors implements ErrorCode {
   RECORD_00("Error parsing JSON string '{}': {}"),
   ;

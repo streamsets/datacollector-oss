@@ -6,7 +6,9 @@
 package com.streamsets.pipeline.lib.parser.sdcrecord;
 
 import com.streamsets.pipeline.api.ErrorCode;
+import com.streamsets.pipeline.api.GenerateResourceBundle;
 
+@GenerateResourceBundle
 public enum Errors implements ErrorCode {
   SDC_RECORD_PARSER_00("Could advance reader '{}' to '{}' offset"),
 

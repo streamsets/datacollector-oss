@@ -16,7 +16,6 @@ import com.streamsets.pipeline.configurablestage.DProcessor;
 import java.util.List;
 import java.util.Map;
 
-@GenerateResourceBundle
 @StageDef(
     version = "1.0.0",
     label = "Stream Selector",
@@ -25,6 +24,7 @@ import java.util.Map;
     outputStreams = StageDef.VariableOutputStreams.class,
     outputStreamsDrivenByConfig = "lanePredicates")
 @ConfigGroups(Groups.class)
+@GenerateResourceBundle
 public class SelectorDProcessor extends DProcessor {
 
   @ConfigDef(

@@ -6,7 +6,9 @@
 package com.streamsets.pipeline.stage.destination.toerror;
 
 import com.streamsets.pipeline.api.ErrorCode;
+import com.streamsets.pipeline.api.GenerateResourceBundle;
 
+@GenerateResourceBundle
 public enum Errors implements ErrorCode {
   TOERROR_00,
   ;

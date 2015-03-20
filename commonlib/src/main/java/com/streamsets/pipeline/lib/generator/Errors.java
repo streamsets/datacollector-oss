@@ -6,7 +6,9 @@
 package com.streamsets.pipeline.lib.generator;
 
 import com.streamsets.pipeline.api.ErrorCode;
+import com.streamsets.pipeline.api.GenerateResourceBundle;
 
+@GenerateResourceBundle
 public enum Errors implements ErrorCode {
   DATA_GENERATOR_00("Cannot open file '{}'"),
 

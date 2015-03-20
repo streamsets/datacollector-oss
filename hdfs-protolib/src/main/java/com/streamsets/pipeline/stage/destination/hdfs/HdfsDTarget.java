@@ -23,7 +23,6 @@ import com.streamsets.pipeline.configurablestage.DTarget;
 
 import java.util.Map;
 
-@GenerateResourceBundle
 @StageDef(
     version = "1.0.0",
     label = "Hadoop FS",
@@ -31,6 +30,7 @@ import java.util.Map;
     icon = "hdfs.png"
 )
 @ConfigGroups(Groups.class)
+@GenerateResourceBundle
 public class HdfsDTarget extends DTarget {
 
   @ConfigDef(

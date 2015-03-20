@@ -5,8 +5,10 @@
  */
 package com.streamsets.pipeline.stage.processor.splitter;
 
+import com.streamsets.pipeline.api.GenerateResourceBundle;
 import com.streamsets.pipeline.api.Label;
 
+@GenerateResourceBundle
 public enum OriginalFieldAction implements Label {
   REMOVE("Remove"),
   KEEP("Keep"),

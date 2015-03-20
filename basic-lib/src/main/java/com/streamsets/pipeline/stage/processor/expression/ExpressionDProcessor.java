@@ -16,7 +16,6 @@ import com.streamsets.pipeline.configurablestage.DProcessor;
 import java.util.List;
 import java.util.Map;
 
-@GenerateResourceBundle
 @StageDef(
     version="1.0.0",
     label="Expression Evaluator",
@@ -24,6 +23,7 @@ import java.util.Map;
     icon="expression.png"
 )
 @ConfigGroups(Groups.class)
+@GenerateResourceBundle
 public class ExpressionDProcessor extends DProcessor {
 
   @ConfigDef(

@@ -6,7 +6,9 @@
 package com.streamsets.pipeline.lib.generator.json;
 
 import com.streamsets.pipeline.api.ErrorCode;
+import com.streamsets.pipeline.api.GenerateResourceBundle;
 
+@GenerateResourceBundle
 public enum Errors implements ErrorCode {
   JSON_GENERATOR_00("Record '{}' root field should be List instead of '{}'"),
   ;

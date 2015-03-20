@@ -6,7 +6,9 @@
 package com.streamsets.pipeline.lib.parser.text;
 
 import com.streamsets.pipeline.api.ErrorCode;
+import com.streamsets.pipeline.api.GenerateResourceBundle;
 
+@GenerateResourceBundle
 public enum Errors implements ErrorCode {
   TEXT_PARSER_00("Cannot advance file '{}' to offset '{}'"),
   ;

@@ -5,8 +5,10 @@
  */
 package com.streamsets.pipeline.stage.destination.hdfs;
 
+import com.streamsets.pipeline.api.GenerateResourceBundle;
 import com.streamsets.pipeline.api.Label;
 
+@GenerateResourceBundle
 public enum Groups implements Label {
   HADOOP_FS("Hadoop FS"),
   OUTPUT_FILES("Output Files"),

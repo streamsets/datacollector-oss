@@ -6,7 +6,9 @@
 package com.streamsets.pipeline.lib.parser.json;
 
 import com.streamsets.pipeline.api.ErrorCode;
+import com.streamsets.pipeline.api.GenerateResourceBundle;
 
+@GenerateResourceBundle
 public enum Errors implements ErrorCode {
   JSON_PARSER_00("Cannot advance reader '{}' to offset '{}'"),
   JSON_PARSER_01("Cannot parse JSON: readerId '{}', offset '{}', unsupported type '{}'"),

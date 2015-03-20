@@ -6,7 +6,9 @@
 package com.streamsets.pipeline.lib;
 
 import com.streamsets.pipeline.api.ErrorCode;
+import com.streamsets.pipeline.api.GenerateResourceBundle;
 
+@GenerateResourceBundle
 public enum Errors implements ErrorCode {
 
   KAFKA_00("Cannot parse CSV: {}"),

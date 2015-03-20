@@ -29,7 +29,6 @@ import com.streamsets.pipeline.configurablestage.DSource;
 
 import java.util.List;
 
-@GenerateResourceBundle
 @StageDef(
     version = "1.0.0",
     label = "Directory",
@@ -38,6 +37,7 @@ import java.util.List;
 )
 @RawSource(rawSourcePreviewer = FileRawSourcePreviewer.class)
 @ConfigGroups(Groups.class)
+@GenerateResourceBundle
 public class SpoolDirDSource extends DSource {
 
   @ConfigDef(

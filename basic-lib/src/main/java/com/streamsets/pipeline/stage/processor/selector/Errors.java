@@ -6,7 +6,9 @@
 package com.streamsets.pipeline.stage.processor.selector;
 
 import com.streamsets.pipeline.api.ErrorCode;
+import com.streamsets.pipeline.api.GenerateResourceBundle;
 
+@GenerateResourceBundle
 public enum Errors implements ErrorCode {
   SELECTOR_00("The Stream Selector must include a default output stream"),
   SELECTOR_01("The number of conditions '{}' does not match the number of output streams '{}'"),

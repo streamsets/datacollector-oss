@@ -6,7 +6,9 @@
 package com.streamsets.pipeline.stage.processor.scripting;
 
 import com.streamsets.pipeline.api.ErrorCode;
+import com.streamsets.pipeline.api.GenerateResourceBundle;
 
+@GenerateResourceBundle
 public enum Errors implements ErrorCode {
   SCRIPTING_00("Scripting engine '{}' not found"),
   SCRIPTING_01("Could not load scripting engine '{}': {}"),

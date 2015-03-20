@@ -6,7 +6,9 @@
 package com.streamsets.pipeline.lib.parser;
 
 import com.streamsets.pipeline.api.ErrorCode;
+import com.streamsets.pipeline.api.GenerateResourceBundle;
 
+@GenerateResourceBundle
 public enum Errors implements ErrorCode {
   DATA_PARSER_00("Cannot open file '{}'"),
   ;

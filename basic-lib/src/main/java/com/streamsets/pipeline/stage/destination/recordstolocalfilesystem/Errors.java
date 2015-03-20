@@ -6,7 +6,9 @@
 package com.streamsets.pipeline.stage.destination.recordstolocalfilesystem;
 
 import com.streamsets.pipeline.api.ErrorCode;
+import com.streamsets.pipeline.api.GenerateResourceBundle;
 
+@GenerateResourceBundle
 public enum Errors implements ErrorCode {
     /* LC: can we delete '{}' from the first one - not necessary, I don't think? */
   RECORDFS_00("Max file size '{}' must be zero or greater"),

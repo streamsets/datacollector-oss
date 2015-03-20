@@ -6,7 +6,9 @@
 package com.streamsets.pipeline.lib.parser.delimited;
 
 import com.streamsets.pipeline.api.ErrorCode;
+import com.streamsets.pipeline.api.GenerateResourceBundle;
 
+@GenerateResourceBundle
 public enum Errors implements ErrorCode {
   DELIMITED_PARSER_00("Cannot advance reader '{}' to offset '{}'"),
   ;

@@ -5,8 +5,10 @@
  */
 package com.streamsets.pipeline.stage.processor.dedup;
 
+import com.streamsets.pipeline.api.GenerateResourceBundle;
 import com.streamsets.pipeline.api.Label;
 
+@GenerateResourceBundle
 public enum SelectFields implements Label {
   ALL_FIELDS("All Fields"),
   SPECIFIED_FIELDS("Specified Fields"),

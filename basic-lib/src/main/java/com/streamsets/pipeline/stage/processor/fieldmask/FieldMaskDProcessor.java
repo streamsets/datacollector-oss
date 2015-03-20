@@ -15,7 +15,6 @@ import com.streamsets.pipeline.configurablestage.DProcessor;
 
 import java.util.List;
 
-@GenerateResourceBundle
 @StageDef(
     version = "1.0.0",
     label = "Field Masker",
@@ -23,6 +22,7 @@ import java.util.List;
     icon = "mask.png"
 )
 @ConfigGroups(Groups.class)
+@GenerateResourceBundle
 public class FieldMaskDProcessor extends DProcessor {
 
   @ConfigDef(

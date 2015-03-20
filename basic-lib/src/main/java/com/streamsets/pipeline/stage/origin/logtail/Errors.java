@@ -6,7 +6,9 @@
 package com.streamsets.pipeline.stage.origin.logtail;
 
 import com.streamsets.pipeline.api.ErrorCode;
+import com.streamsets.pipeline.api.GenerateResourceBundle;
 
+@GenerateResourceBundle
 public enum Errors implements ErrorCode {
   TAIL_00("Log file '{}' does not exist"),
   TAIL_01("Insufficient permissions to read the log file '{}'"),

@@ -5,9 +5,11 @@
  */
 package com.streamsets.pipeline.stage.destination.hdfs;
 
+import com.streamsets.pipeline.api.GenerateResourceBundle;
 import com.streamsets.pipeline.api.Label;
 import org.apache.hadoop.io.SequenceFile;
 
+@GenerateResourceBundle
 public enum HdfsSequenceFileCompressionType implements Label {
   BLOCK("Block Compression", SequenceFile.CompressionType.BLOCK),
   RECORD("Record Compression", SequenceFile.CompressionType.RECORD);

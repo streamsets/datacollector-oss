@@ -5,8 +5,10 @@
  */
 package com.streamsets.pipeline.config;
 
+import com.streamsets.pipeline.api.GenerateResourceBundle;
 import com.streamsets.pipeline.api.Label;
 
+@GenerateResourceBundle
 public enum DateFormat implements Label {
 
   YYYY_MM_DD("yyyy-MM-dd", "YYYY-MM-DD"),

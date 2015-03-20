@@ -6,9 +6,11 @@
 package com.streamsets.pipeline.stage.processor.jsonparser;
 
 import com.streamsets.pipeline.api.ErrorCode;
+import com.streamsets.pipeline.api.GenerateResourceBundle;
 
 /* LC: sorry Tucu, I changed the order of some of these. Change back if you want! */
 
+@GenerateResourceBundle
 public enum Errors implements ErrorCode {
   JSONP_00("JSON field '{}' does not exist in record '{}'. Cannot parse the field."),
   JSONP_01("JSON field '{}' in record '{}' is set to NULL. Cannot parse the field."),

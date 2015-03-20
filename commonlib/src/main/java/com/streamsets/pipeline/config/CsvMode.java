@@ -5,9 +5,11 @@
  */
 package com.streamsets.pipeline.config;
 
+import com.streamsets.pipeline.api.GenerateResourceBundle;
 import com.streamsets.pipeline.api.Label;
 import org.apache.commons.csv.CSVFormat;
 
+@GenerateResourceBundle
 public enum CsvMode implements Label {
   CSV("Default CSV (ignores empty lines)", CSVFormat.DEFAULT),
   RFC4180("RFC4180 CSV", CSVFormat.RFC4180),

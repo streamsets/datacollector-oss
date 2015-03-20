@@ -25,7 +25,6 @@ import com.streamsets.pipeline.configurablestage.DSourceOffsetCommitter;
 
 import java.util.Map;
 
-@GenerateResourceBundle
 @StageDef(
     version = "1.0.0",
     label = "Kafka Consumer",
@@ -34,6 +33,7 @@ import java.util.Map;
 )
 @RawSource(rawSourcePreviewer = KafkaRawSourcePreviewer.class, mimeType = "application/json")
 @ConfigGroups(value = Groups.class)
+@GenerateResourceBundle
 public class KafkaDSource extends DSourceOffsetCommitter {
 
   @ConfigDef(

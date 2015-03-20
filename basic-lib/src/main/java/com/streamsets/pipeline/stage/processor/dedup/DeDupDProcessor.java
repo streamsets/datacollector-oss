@@ -17,7 +17,6 @@ import com.streamsets.pipeline.configurablestage.DProcessor;
 
 import java.util.List;
 
-@GenerateResourceBundle
 @StageDef(
     version = "1.0.0",
     label = "Record Deduplicator",
@@ -27,6 +26,7 @@ import java.util.List;
 )
 @ConfigGroups(Groups.class)
 @HideConfig(onErrorRecord = true)
+@GenerateResourceBundle
 public class DeDupDProcessor extends DProcessor {
 
   @ConfigDef(

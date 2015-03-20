@@ -6,7 +6,9 @@
 package com.streamsets.pipeline.lib.parser.xml;
 
 import com.streamsets.pipeline.api.ErrorCode;
+import com.streamsets.pipeline.api.GenerateResourceBundle;
 
+@GenerateResourceBundle
 public enum Errors implements ErrorCode {
   XML_PARSER_00("Cannot advance reader '{}' to offset '{}'"),
   XML_PARSER_01("Cannot obtain current reader position: {}"),

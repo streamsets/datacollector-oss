@@ -5,8 +5,10 @@
  */
 package com.streamsets.pipeline.stage.destination.kafka;
 
+import com.streamsets.pipeline.api.GenerateResourceBundle;
 import com.streamsets.pipeline.api.Label;
 
+@GenerateResourceBundle
 public enum PartitionStrategy implements Label {
   RANDOM("Random"),
   ROUND_ROBIN("Round Robin"),

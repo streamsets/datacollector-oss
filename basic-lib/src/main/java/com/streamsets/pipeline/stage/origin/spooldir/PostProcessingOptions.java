@@ -5,9 +5,11 @@
  */
 package com.streamsets.pipeline.stage.origin.spooldir;
 
+import com.streamsets.pipeline.api.GenerateResourceBundle;
 import com.streamsets.pipeline.api.Label;
 import com.streamsets.pipeline.lib.dirspooler.DirectorySpooler;
 
+@GenerateResourceBundle
 public enum PostProcessingOptions implements Label {
   NONE("None", DirectorySpooler.FilePostProcessing.NONE),
   ARCHIVE("Archive", DirectorySpooler.FilePostProcessing.ARCHIVE),

@@ -15,7 +15,6 @@ import com.streamsets.pipeline.configurablestage.DProcessor;
 import com.streamsets.pipeline.stage.processor.scripting.ProcessingMode;
 import com.streamsets.pipeline.stage.processor.scripting.ProcessingModeChooserValues;
 
-@GenerateResourceBundle
 @StageDef(
     version = "1.0.0",
     label = "JavaScript 1.8",
@@ -23,6 +22,7 @@ import com.streamsets.pipeline.stage.processor.scripting.ProcessingModeChooserVa
     icon="javascript.png"
 )
 @ConfigGroups(Groups.class)
+@GenerateResourceBundle
 public class JavaScriptDProcessor extends DProcessor {
 
   @ConfigDef(

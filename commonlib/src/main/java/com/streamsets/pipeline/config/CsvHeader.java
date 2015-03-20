@@ -5,8 +5,10 @@
  */
 package com.streamsets.pipeline.config;
 
+import com.streamsets.pipeline.api.GenerateResourceBundle;
 import com.streamsets.pipeline.api.Label;
 
+@GenerateResourceBundle
 public enum CsvHeader implements Label {
   WITH_HEADER("With Header Line"),
   IGNORE_HEADER("Ignore Header Line"),

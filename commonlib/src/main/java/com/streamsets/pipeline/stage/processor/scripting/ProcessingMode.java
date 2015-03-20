@@ -5,8 +5,10 @@
  */
 package com.streamsets.pipeline.stage.processor.scripting;
 
+import com.streamsets.pipeline.api.GenerateResourceBundle;
 import com.streamsets.pipeline.api.Label;
 
+@GenerateResourceBundle
 public enum ProcessingMode implements Label {
   RECORD("Record by Record"), BATCH("Record Batch");
 

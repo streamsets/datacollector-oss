@@ -6,7 +6,9 @@
 package com.streamsets.pipeline.stage.processor.splitter;
 
 import com.streamsets.pipeline.api.ErrorCode;
+import com.streamsets.pipeline.api.GenerateResourceBundle;
 
+@GenerateResourceBundle
 public enum Errors implements ErrorCode {
   SPLITTER_00("Define at least two new split fields"),
   SPLITTER_01("Field cannot split. The record '{}' does not include the field '{}'."),

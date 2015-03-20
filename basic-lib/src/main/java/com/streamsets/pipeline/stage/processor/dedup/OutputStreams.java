@@ -5,8 +5,10 @@
  */
 package com.streamsets.pipeline.stage.processor.dedup;
 
+import com.streamsets.pipeline.api.GenerateResourceBundle;
 import com.streamsets.pipeline.api.Label;
 
+@GenerateResourceBundle
 public enum OutputStreams implements Label {
   UNIQUE("Unique Records"),
   DUPLICATE("Duplicate Records"),

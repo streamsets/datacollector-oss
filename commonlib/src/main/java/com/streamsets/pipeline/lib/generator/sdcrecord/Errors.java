@@ -6,7 +6,9 @@
 package com.streamsets.pipeline.lib.generator.sdcrecord;
 
 import com.streamsets.pipeline.api.ErrorCode;
+import com.streamsets.pipeline.api.GenerateResourceBundle;
 
+@GenerateResourceBundle
 public enum Errors implements ErrorCode {
   TEXT_GENERATOR_00("Record '{}' cannot convert the field '{}' value to string"),
   ;

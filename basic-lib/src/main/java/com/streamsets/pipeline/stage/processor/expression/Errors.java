@@ -6,7 +6,9 @@
 package com.streamsets.pipeline.stage.processor.expression;
 
 import com.streamsets.pipeline.api.ErrorCode;
+import com.streamsets.pipeline.api.GenerateResourceBundle;
 
+@GenerateResourceBundle
 public enum Errors implements ErrorCode {
   EXPR_00("Invalid expression '{}': {}"),
   EXPR_01("Invalid constant '{}': {}"),
