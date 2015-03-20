@@ -220,6 +220,11 @@
             </dependency>
           </dependencies>
         </plugin>
+        <plugin>
+          <groupId>com.streamsets</groupId>
+          <artifactId>streamsets-datacollector-rbgen-maven-plugin</artifactId>
+          <version>${project.version}</version>
+        </plugin>
       </plugins>
     </pluginManagement>
 
@@ -262,5 +267,31 @@
       </plugin>
     </plugins>
   </build>
+
+  <profiles>
+    <profile>
+      <id>rbgen</id>
+      <activation>
+        <activeByDefault>false</activeByDefault>
+      </activation>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>com.streamsets</groupId>
+            <artifactId>streamsets-datacollector-rbgen-maven-plugin</artifactId>
+            <executions>
+              <execution>
+                <id>rbgen</id>
+                <phase>package</phase>
+                <goals>
+                  <goal>rbgen</goal>
+                </goals>
+              </execution>
+            </executions>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+  </profiles>
 
 </project>

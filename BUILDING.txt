@@ -23,6 +23,7 @@ Maven Profiles (use -P<profile-name>):
 * docs      : used in conjunction with the 'dist' profile to generate documentation
               as part of the build
 * all-libs  : builds all versions of stage libs (CDHs, Kafkas, etc)
+* rbgen     : generates -bundles JARs
 
 Maven Properties (use -D<property-name>):
 

@@ -46,6 +46,7 @@
   </properties>
 
   <modules>
+    <module>rbgen-maven-plugin</module>
     <module>root-proto</module>
     <module>root</module>
     <module>root-lib</module>
