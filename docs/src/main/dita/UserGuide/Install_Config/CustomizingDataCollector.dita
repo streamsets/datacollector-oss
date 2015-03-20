@@ -4,22 +4,19 @@
     <title>Customizing the <ph
             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
         /></title>
-    <shortdesc>You can optionally customize the <ph
-            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> by
-        configuring the <ph
+    <shortdesc>You can edit properties in the <ph
             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
-        properties file. </shortdesc>
+        properties file to customize the <ph
+            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>. </shortdesc>
     <taskbody>
         <context>
             <p><indexterm>Data
                     Collector<indexterm>customizing</indexterm></indexterm><indexterm>sdc.properties
                         file<indexterm>configuring</indexterm></indexterm><indexterm>email<indexterm>Data
-                        Collector configuration</indexterm></indexterm>You can use the <ph
+                        Collector configuration</indexterm></indexterm>Use a text editor to edit the
+                    <ph
                     conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                /> properties file to change the defaults for properties such as the host name and
-                port number. To send email alerts, define the SMTP properties and email account
-                information. </p>
-            <p>Use a text editor to edit the file. After you edit the file, restart the <ph
+                /> properties file. After you edit the file, restart the <ph
                     conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
                 /> to enable the changes. </p>
             <p>The <ph
@@ -56,17 +53,17 @@
                             </row>
                             <row>
                                 <entry>https.keystore.path</entry>
-                                <entry>Java keystore path and file name. <p>By default, the file
-                                        name is sdc-keystore.jks and expected in the same directory
-                                        as the <ph
+                                <entry>Keystore path and file name. <p>By default, the file name is
+                                        sdc-keystore.jks and expected in the same directory as the
+                                            <ph
                                             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
                                         /> properties file.</p></entry>
                             </row>
                             <row>
                                 <entry>https.keystore.password</entry>
-                                <entry>File that contains the password to the Java keystore file.
-                                        <p>By default, the file name is sdc-keystore-password.txt
-                                        and expected in the same directory as the <ph
+                                <entry>File that contains the password to the keystore file. <p>By
+                                        default, the file name is sdc-keystore-password.txt and
+                                        expected in the same directory as the <ph
                                             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
                                         /> properties file.</p></entry>
                             </row>
@@ -151,6 +148,11 @@
                                 <entry>ui.jvmMetrics.refresh.interval.ms</entry>
                                 <entry>Interval in milliseconds that the JVM metrics are
                                         refreshed.<p>Default is 4000.</p></entry>
+                            </row>
+                            <row>
+                                <entry>ui.enable.usage.data.collection</entry>
+                                <entry>Allows anonymous Google Analytics information to be sent
+                                    StreamSets. <p>Default is true. </p></entry>
                             </row>
                         </tbody>
                     </tgroup>

@@ -21,8 +21,8 @@
                 <info>
                     <ul id="ul_vbv_b44_1r">
                         <li>SDC_CONF - SDC configuration directory.</li>
-                        <li>SDC_DATA - SDC data directory, where pipeline state and configuration
-                            are stored.</li>
+                        <li>SDC_DATA - SDC data directory where pipeline state and configuration are
+                            stored.</li>
                         <li>SDC_LOG - SDC logging directory.</li>
                     </ul>
                 </info>

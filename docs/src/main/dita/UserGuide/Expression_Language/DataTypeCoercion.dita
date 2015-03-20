@@ -2,12 +2,17 @@
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_fmr_ggh_fr">
  <title>Data Type Coercion</title>
- <shortdesc>When possible, the expression language performs coersion - or implicit data type
-  conversion. </shortdesc>
+ <shortdesc>When an expression requires it, the expression language attempts implicit data type
+  conversion - a.k.a data type coercion. When coercion is not possible, the <ph
+   conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> passes the
+  error records to the stage for error handling.</shortdesc>
  <conbody>
-  <p>
-   <draft-comment author="Loretta">Brock to check what happens if the coercion fails. Recommend
-    using conversion for certain reasons. </draft-comment>
-  </p>
+  <p>For example, you have an Expression Evaluator stage configured to send error records to the
+   pipeline for error handling, and the pipeline writes error records to a file.  The Expression
+   Evaluator includes an expression that treats string data as integers. When the field includes
+   integer or valid numeric data, the expression language coerces the data type. If the field
+   includes a date, that record is written to the error records file.</p>
+  <p>To avoid coercion errors, use the Field Converter earlier in the pipeline to convert data to
+   the appropriate data type.</p>
  </conbody>
 </concept>

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_ecx_hkq_kr">
- <title>HTTP or HTTPS</title>
+ <title>HTTP Protocol</title>
  <shortdesc>You can configure the <ph
    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> to use HTTP or
   HTTPS. By default the <ph
@@ -12,8 +12,29 @@
     conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> to use HTTPS,
    you have the <ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
    /> redirect HTTP requests to HTTPS or ignore them.</p>
-  <p>
-   <draft-comment author="Loretta">add info about keystore files</draft-comment>
-  </p>
+  <p>Using HTTPS requires an SSL Certificate. When you generate a SSL Certificate, you generate the
+   following files: <dl>
+    <dlentry>
+     <dt>keystore file</dt>
+     <dd>A file that contains the private key and self-signed certificates for the web server. You
+      can create your own keystore file or use the keystore file provided by the <ph
+       conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>. </dd>
+     <dd>Store the keystore file in the following
+      location:<codeblock>&lt;SDCinstalldir>/etc</codeblock></dd>
+     <dd>The default keystore file is <filepath>sdc-keystore.jks</filepath>.</dd>
+    </dlentry>
+    <dlentry>
+     <dt>keystore password file</dt>
+     <dd>A file that contains the password to open the Java keystore file. You can create your own
+      keystore password file or use the file provided by the <ph
+       conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>. </dd>
+     <dd>Store the keystore password file in the following
+      location:<codeblock>&lt;SDCinstalldir>/etc</codeblock></dd>
+     <dd>The default keystore file is <filepath>sdc-keystore-password.txt</filepath>.</dd>
+    </dlentry>
+   </dl>For more information about generating an SSL Certificate and the related files, see <xref
+    href="http://docs.oracle.com/cd/E19118-01/n1.sprovsys51/819-1655/fapsf/index.html" format="html"
+    scope="external"
+    >http://docs.oracle.com/cd/E19118-01/n1.sprovsys51/819-1655/fapsf/index.html</xref>.</p>
  </conbody>
 </concept>
