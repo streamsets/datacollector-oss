@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_ecx_hkq_kr">
- <title>HTTP Protocol</title>
+ <title>HTTP Protocols</title>
  <shortdesc>You can configure the <ph
    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> to use HTTP or
   HTTPS. By default the <ph
@@ -12,8 +12,9 @@
     conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> to use HTTPS,
    you have the <ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
    /> redirect HTTP requests to HTTPS or ignore them.</p>
-  <p>Using HTTPS requires an SSL Certificate. When you generate a SSL Certificate, you generate the
-   following files: <dl>
+  <p>HTTPS requires an SSL Certificate. You can generate a certificate that is self-signed or signed
+   by a certifying authority. Web browsers generally issue a warning for self-signed certificates. </p>
+  <p>When you generate a SSL Certificate, use the following files: <dl>
     <dlentry>
      <dt>keystore file</dt>
      <dd>A file that contains the private key and self-signed certificates for the web server. You
@@ -32,9 +33,6 @@
       location:<codeblock>&lt;SDCinstalldir>/etc</codeblock></dd>
      <dd>The default keystore file is <filepath>sdc-keystore-password.txt</filepath>.</dd>
     </dlentry>
-   </dl>For more information about generating an SSL Certificate and the related files, see <xref
-    href="http://docs.oracle.com/cd/E19118-01/n1.sprovsys51/819-1655/fapsf/index.html" format="html"
-    scope="external"
-    >http://docs.oracle.com/cd/E19118-01/n1.sprovsys51/819-1655/fapsf/index.html</xref>.</p>
+   </dl></p>
  </conbody>
 </concept>

@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE task PUBLIC "-//OASIS//DTD DITA General Task//EN" "generalTask.dtd">
+<task id="task_s3y_dw2_lr">
+    <title>Generating an Authority-Signed Certificate</title>
+    <shortdesc>You can use the Java <codeph>keytool</codeph> command to request a certificate from a
+        certifying authority. </shortdesc>
+    <taskbody>
+        <context>
+            <p></p>
+        </context>
+        <steps id="steps_m1q_n1f_lr">
+            <step>
+                <cmd>From the command line, navigate to the following directory:
+                        <filepath>&lt;SDCinstalldir>/etc</filepath>.</cmd>
+            </step>
+            <step>
+                <cmd>Enter the following command:</cmd>
+                <info>
+                    <codeblock>$ keytool -certreq -v -alias sdc -keyalg RSA -keystore sdc-keystore.jks</codeblock>
+                </info>
+            </step>
+            <step>
+                <cmd>When keystore requests the keystore password, enter the password.</cmd>
+            </step>
+            <step>
+                <cmd>When keystore generates a new certificate request, send the request to the
+                    certifying authority.</cmd>
+            </step>
+            <step>
+                <cmd>When the certifying authority responds to the request, use the following
+                    command to verify the results:</cmd>
+                <info>
+                    <codeblock>$ keytool -printcert -file &lt;certificate-reply-file></codeblock>
+                </info>
+            </step>
+            <step>
+                <cmd>To import the response to the sdc-keystore.jks file, use the following command
+                    and enter the keystore password when requested:</cmd>
+                <info>
+                    <codeblock>$ keytool -v -import -trustcacerts -keystore sdc-keystore.jks -file certificate-reply-file -alias sdc</codeblock>
+                </info>
+            </step>
+            <step>
+                <cmd>To verify the imported certificate, use the following command and enter the
+                    keystore password when requested:</cmd>
+                <info>
+                    <codeblock>$ keytool -v -list -keystore sdc-keystore.jks</codeblock>
+                </info>
+            </step>
+            <step>
+                <cmd>Enter the keystore password in the keystore password file:
+                        <filepath>&lt;SDCinstalldir>/etc/sdc-keystore-password.txt</filepath>.</cmd>
+            </step>
+            <step>
+                <cmd>Save a copy of the sdc-keystore.jks and sdc-keystore-password.txt files.</cmd>
+            </step>
+        </steps>
+    </taskbody>
+</task>

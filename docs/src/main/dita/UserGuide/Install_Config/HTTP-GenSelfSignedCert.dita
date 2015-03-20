@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE task PUBLIC "-//OASIS//DTD DITA General Task//EN" "generalTask.dtd">
+<task id="task_vsq_yt2_lr">
+    <title>Generating a Self-Signed Certificate</title>
+    <shortdesc>You can use the Java <codeph>keytool</codeph> command to generate a self-signed
+        certificate.</shortdesc>
+    <taskbody>
+        <context/>
+        <steps id="steps_zzk_c52_lr">
+            <step>
+                <cmd>From the command line, navigate to the following directory:
+                        <filepath>&lt;SDCinstalldir>/etc</filepath>.</cmd>
+            </step>
+            <step>
+                <cmd>Enter the following command:</cmd>
+                <info>
+                    <codeblock>$ keytool -genkey -alias sdc -keyalg RSA -keystore sdc-keystore.jks -storepass &lt;password> -keypass &lt;password></codeblock>
+                    <note>Use the same password for the -storepass and -keypass parameters.</note>
+                </info>
+            </step>
+            <step>
+                <cmd>When keytool requests your first and last name, enter a fully-qualified host
+                    name as follows: </cmd>
+                <info>
+                    <codeblock>&lt;SDC host name>:&lt;domain name></codeblock>
+                    <p>For example: <codeph>mymachine.streamsets.com</codeph>.</p>
+                </info>
+            </step>
+            <step>
+                <cmd>When keytool requests the name of your organizational unit, enter the
+                    name.</cmd>
+            </step>
+            <step>
+                <cmd>When keytool requests the name of your organization, enter the name.</cmd>
+            </step>
+            <step>
+                <cmd>When keytool requests the name of your city or locality, enter the name.</cmd>
+            </step>
+            <step>
+                <cmd>When keytool requests the name of your state or province, enter the name.</cmd>
+            </step>
+            <step>
+                <cmd>When keytool requests the two character country code, enter the code.</cmd>
+            </step>
+            <step>
+                <cmd>When keytool requests verification that the information is correct, enter yes
+                    if it is correct.</cmd>
+                <stepresult>The tool generates a self-signed certificate in the form of the
+                    sdc-keystore.jks file. </stepresult>
+            </step>
+            <step>
+                <cmd>Enter the keystore password in the keystore password file:
+                        <filepath>&lt;SDCinstalldir>/etc/sdc-keystore-password.txt</filepath>.</cmd>
+            </step>
+            <step>
+                <cmd>Save a copy of the sdc-keystore.jks and sdc-keystore-password.txt files.</cmd>
+            </step>
+        </steps>
+    </taskbody>
+</task>

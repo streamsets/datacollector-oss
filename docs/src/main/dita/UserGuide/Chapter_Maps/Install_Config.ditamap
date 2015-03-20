@@ -28,7 +28,10 @@
    <topicmeta>
     <shortdesc/>
    </topicmeta>
-   <topicref href="../Install_Config/HTTPorHTTPS.dita"/>
+   <topicref href="../Install_Config/HTTP_protocols.dita">
+    <topicref href="../Install_Config/HTTP-GenSelfSignedCert.dita"/>
+    <topicref href="../Install_Config/HTTP-GenAuthSignedCert.dita"/>
+   </topicref>
    <topicref href="../Install_Config/CustomizingDataCollector.dita"/>  
   </topicref>
   </topicref>

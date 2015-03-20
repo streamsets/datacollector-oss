@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
+<concept id="concept_a1h_lkf_lr">
+ <title>Jython</title>
+ <shortdesc>The Jython processor stage processes data based on custom Jython script. Use the Jython
+  processor to incorporate Jython processing in a pipeline.</shortdesc>
+ <conbody>
+  <p></p>
+ </conbody>
+</concept>
