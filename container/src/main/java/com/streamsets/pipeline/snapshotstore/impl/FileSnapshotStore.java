@@ -31,7 +31,7 @@ public class FileSnapshotStore implements SnapshotStore {
 
   private static final Logger LOG = LoggerFactory.getLogger(FileSnapshotStore.class);
 
-  private static final String TEMP_SNAPSHOT_FILE = "snapshot.json.tmp";
+  private static final String TEMP_SNAPSHOT_FILE_SUFFIX = "-tmp";
   private static final String SNAPSHOT_FILE = "snapshot.json";
 
   private final RuntimeInfo runtimeInfo;
@@ -96,7 +96,8 @@ public class FileSnapshotStore implements SnapshotStore {
   }
 
   private File getPipelineSnapshotTempFile(String pipelineName, String rev) {
-    return new File(PipelineDirectoryUtil.getPipelineDir(runtimeInfo, pipelineName, rev), TEMP_SNAPSHOT_FILE);
+    return new File(PipelineDirectoryUtil.getPipelineDir(runtimeInfo, pipelineName, rev),
+      SNAPSHOT_FILE + TEMP_SNAPSHOT_FILE_SUFFIX);
   }
 
 }
