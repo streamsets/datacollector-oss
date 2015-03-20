@@ -31,10 +31,14 @@ public class FileSnapshotStore implements SnapshotStore {
 
   private static final Logger LOG = LoggerFactory.getLogger(FileSnapshotStore.class);
 
-  private static final String TEMP_SNAPSHOT_FILE_SUFFIX = "-tmp";
   private static final String SNAPSHOT_FILE = "snapshot.json";
 
   private final RuntimeInfo runtimeInfo;
+  private boolean inProgress = false;
+
+  public void setInProgress(boolean inProgress) {
+    this.inProgress = inProgress;
+  }
 
   public FileSnapshotStore(RuntimeInfo runtimeInfo) {
     this.runtimeInfo = runtimeInfo;
@@ -44,6 +48,7 @@ public class FileSnapshotStore implements SnapshotStore {
     try {
       ObjectMapperFactory.get().writeValue(new DataStore(getPipelineSnapshotFile(pipelineName, rev)).getOutputStream(),
         new SnapshotJson(new Snapshot(snapshot)));
+      inProgress = false;
     } catch (IOException e) {
       throw new RuntimeException(e);
     }
@@ -67,8 +72,7 @@ public class FileSnapshotStore implements SnapshotStore {
   @Override
   public SnapshotStatus getSnapshotStatus(String pipelineName, String rev) {
     boolean snapshotFileExists = getPipelineSnapshotFile(pipelineName, rev).exists();
-    boolean snapshotStageFileExists = getPipelineSnapshotTempFile(pipelineName, rev).exists();
-    return new SnapshotStatus(snapshotFileExists, snapshotStageFileExists);
+    return new SnapshotStatus(snapshotFileExists, inProgress);
   }
 
   @Override
@@ -94,10 +98,4 @@ public class FileSnapshotStore implements SnapshotStore {
   private File getPipelineSnapshotFile(String pipelineName, String rev) {
     return new File(PipelineDirectoryUtil.getPipelineDir(runtimeInfo, pipelineName, rev), SNAPSHOT_FILE);
   }
-
-  private File getPipelineSnapshotTempFile(String pipelineName, String rev) {
-    return new File(PipelineDirectoryUtil.getPipelineDir(runtimeInfo, pipelineName, rev),
-      SNAPSHOT_FILE + TEMP_SNAPSHOT_FILE_SUFFIX);
-  }
-
 }

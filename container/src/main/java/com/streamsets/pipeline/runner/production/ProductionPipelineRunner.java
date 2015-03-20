@@ -32,6 +32,7 @@ import com.streamsets.pipeline.runner.SourceOffsetTracker;
 import com.streamsets.pipeline.runner.StageContext;
 import com.streamsets.pipeline.runner.StageOutput;
 import com.streamsets.pipeline.snapshotstore.SnapshotStore;
+import com.streamsets.pipeline.snapshotstore.impl.FileSnapshotStore;
 import com.streamsets.pipeline.store.PipelineStoreTask;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -190,6 +191,7 @@ public class ProductionPipelineRunner implements PipelineRunner {
     Preconditions.checkArgument(batchSize > 0);
     this.snapshotBatchSize = batchSize;
     this.captureNextBatch = true;
+    ((FileSnapshotStore)snapshotStore).setInProgress(true);
 
   }
 
