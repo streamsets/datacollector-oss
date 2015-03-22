@@ -227,15 +227,13 @@ angular.module('pipelineGraphDirectives', ['underscore'])
       thisGraph.edges = [];
       thisGraph.state.selectedNode = null;
       thisGraph.state.selectedEdge = null;
-      thisGraph.updateGraph();
 
       $('.graph-bootstrap-tooltip').each(function() {
-        var $this = $(this),
-          title = $this.attr('title');
-        if(title) {
-          $this.tooltip('destroy');
-        }
+        var $this = $(this);
+        $this.tooltip('destroy');
       });
+
+      thisGraph.updateGraph();
     };
 
     /* select all text in element: taken from http://stackoverflow.com/questions/6139107/programatically-select-text-in-a-contenteditable-html-element */
@@ -932,7 +930,17 @@ angular.module('pipelineGraphDirectives', ['underscore'])
         pathNewGs
           .append('svg:foreignObject')
           .attr('class', 'edge-preview-container graph-bootstrap-tooltip')
-          .attr('title', 'Inspect Data')
+          .attr('title', function(d) {
+            var alertRules = _.filter(graph.pipelineRules.dataRuleDefinitions, function(ruleDefn) {
+              return ruleDefn.lane === d.outputLane && ruleDefn.enabled;
+            });
+
+            if(alertRules && alertRules.length) {
+              return alertRules.length + ' Active Data Rules';
+            } else {
+              return 'No Active Data Rules';
+            }
+          })
           .attr('width', 30)
           .attr('height', 30)
           .attr('x', function(d) {
@@ -1419,6 +1427,26 @@ angular.module('pipelineGraphDirectives', ['underscore'])
               return 'fa fa-tachometer fa-2x pointer edge-preview';
             }
           });
+
+        graph.paths.selectAll('.edge-preview-container').each(function(d) {
+          var $this = $(this),
+            title = $this.attr('title'),
+            alertRules = _.filter(graph.pipelineRules.dataRuleDefinitions, function(ruleDefn) {
+              return ruleDefn.lane === d.outputLane && ruleDefn.enabled;
+            });
+
+          if(alertRules && alertRules.length) {
+            title = alertRules.length + ' Active Data Rules';
+          } else {
+            title = 'No Active Data Rules';
+          }
+
+          if(title) {
+            $this.tooltip('hide')
+              .attr('data-original-title', title)
+              .tooltip('fixTitle');
+          }
+        });
       }
     });
 

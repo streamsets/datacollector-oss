@@ -793,7 +793,7 @@ angular
           issues: $scope.pipelineConfig.issues,
           selectNode: ($scope.selectedType && $scope.selectedType === pipelineConstant.STAGE_INSTANCE) ? $scope.selectedObject : undefined,
           stageErrorCounts: stageErrorCounts,
-          showEdgePreviewIcon: $scope.isPipelineRunning,
+          showEdgePreviewIcon: true,
           isReadOnly: $scope.isPipelineReadOnly || $scope.isPipelineRunning || $scope.previewMode,
           pipelineRules: $scope.pipelineRules,
           triggeredAlerts: $scope.triggeredAlerts,
@@ -1113,6 +1113,8 @@ angular
           if (rulesDirty) {
             saveRulesUpdate(rules);
           }
+
+          $scope.$broadcast('updateEdgePreviewIconColor', $scope.pipelineRules, []);
         }).
         error(function(data, status, headers, config) {
           $rootScope.common.saveOperationInProgress--;
