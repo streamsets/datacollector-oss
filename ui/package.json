@@ -33,7 +33,15 @@
     "test-single-run": "karma start karma-conf.tpl.js  --single-run",
     "preupdate-webdriver": "npm install",
     "update-webdriver": "webdriver-manager update",
-    "preprotractor": "npm run update-webdriver",
-    "protractor": "protractor ./src/main/webapp/e2e-tests/protractor.conf.js"
+
+    "predocker-build": "npm run update-webdriver",
+    "docker-build": "docker build -t streamsets/sdc ../release",
+
+    "predocker-compose": "npm run docker-build",
+    "docker-compose": "docker-compose up -d",
+
+    "preprotractor": "npm run docker-compose",
+    "protractor": "protractor ./src/main/webapp/e2e-tests/protractor.conf.js",
+    "postprotractor": "docker-compose stop"
   }
 }

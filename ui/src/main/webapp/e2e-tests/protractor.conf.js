@@ -1,5 +1,5 @@
 var env = {
-  baseUrl: 'http://localhost:18630/'
+  baseUrl: 'http://192.168.59.103:18630/'
 };
 
 exports.config = {
@@ -32,6 +32,8 @@ exports.config = {
   },
 
   onPrepare: function() {
+    browser.sleep(3000);
+
     browser.driver.get(env.baseUrl + 'login.html');
 
     browser.driver.findElement(by.id('usernameId')).sendKeys('admin');

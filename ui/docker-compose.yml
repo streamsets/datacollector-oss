@@ -1,0 +1,5 @@
+# Configuration supporting a single instance of SDC.
+sdc:
+  image: streamsets/sdc
+  ports:
+  - "18630:18630"
