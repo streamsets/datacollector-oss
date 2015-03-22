@@ -11,7 +11,11 @@
   .record-list-item {
     list-style: none;
     padding: @smallPadding/2 @smallPadding/2 @smallPadding/2 @smallPadding * 4;
-    //white-space: nowrap;
+
+
+    &.is-root {
+      padding: @smallPadding/2;
+    }
 
     &.field-addition {
       background-color: #eaffea;

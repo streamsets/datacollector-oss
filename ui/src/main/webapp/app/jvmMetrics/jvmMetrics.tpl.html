@@ -18,7 +18,12 @@
                ng-click="launchThreadDump()">{{'jvmMetrics.threads.threadDump' | translate}}</a>
           </li>
 
-          <li role="presentation" class="divider"></li>
+          <li role="presentation">
+            <a role="menuitem" tabindex="-1" href="#"
+               ng-click="launchSettings()">{{'global.form.settings' | translate}}</a>
+          </li>
+
+          <li role="presentation" class="divider" ng-if="!$storage.dontShowRESTResponseMenu"></li>
 
           <li role="presentation" class="dropdown-header"
               ng-if="!$storage.dontShowRESTResponseMenu"
@@ -32,13 +37,6 @@
           <li role="presentation" ng-if="!$storage.dontShowRESTResponseMenu">
             <a role="menuitem" tabindex="-1" href="/rest/v1/admin/threadsDump"
                target="_blank">{{'jvmMetrics.threads.threadDump' | translate}}</a>
-          </li>
-
-          <li role="presentation" class="divider" ng-if="!$storage.dontShowRESTResponseMenu"></li>
-
-          <li role="presentation">
-            <a role="menuitem" tabindex="-1" href="#"
-               ng-click="launchSettings()">{{'global.form.settings' | translate}}</a>
           </li>
 
         </ul>

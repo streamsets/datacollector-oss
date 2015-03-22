@@ -83,6 +83,7 @@ angular
           templateUrl: 'app/jvmMetrics/settings/settingsModal.tpl.html',
           controller: 'JVMMetricsSettingsModalInstanceController',
           backdrop: 'static',
+          size: 'lg',
           resolve: {
             availableCharts: function () {
               return $scope.chartList;

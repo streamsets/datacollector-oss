@@ -326,9 +326,10 @@ angular.module('dataCollectorApp.common')
        * @param batchSize
        * @param rev
        * @param skipTargets
+       * @param stageOutputList
        * @returns {*}
        */
-      previewPipeline: function(name, sourceOffset, batchSize, rev, skipTargets) {
+      previewPipeline: function(name, sourceOffset, batchSize, rev, skipTargets, stageOutputList) {
         var url;
 
         if(!sourceOffset) {
@@ -345,39 +346,7 @@ angular.module('dataCollectorApp.common')
         return $http({
           method: 'POST',
           url: url,
-          data: []
-        });
-      },
-
-      /**
-       * Preview Stage by running with passed input records.
-       *
-       * @param name
-       * @param sourceOffset
-       * @param batchSize
-       * @param rev
-       * @param skipTargets
-       * @param stageOutputList
-       * @returns {*}
-       */
-      previewPipelineRunStage: function(name, sourceOffset, batchSize, rev, skipTargets, stageOutputList) {
-        var url;
-
-        if(!sourceOffset) {
-          sourceOffset = 0;
-        }
-
-        if(!batchSize) {
-          batchSize = 10;
-        }
-
-        url = apiBase + '/pipeline-library/' + name + '/preview?sourceOffset=' + sourceOffset +
-        '&batchSize=' + batchSize + '&rev=' + rev;
-
-        return $http({
-          method: 'POST',
-          url: url,
-          data: stageOutputList
+          data: stageOutputList || []
         });
       },
 

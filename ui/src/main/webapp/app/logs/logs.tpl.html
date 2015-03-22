@@ -7,15 +7,15 @@
 
     <div class="pull-right">
       <button type="button"
-              ng-if="logMessages.length && common.logEndingOffset !== 0"
+              ng-if="logMessages.length && logEndingOffset !== 0"
               class="btn btn-primary btn-sm"
-              ng-disabled="common.fetchingLog"
-              ng-click="common.loadPreviousLog()">
-        <span ng-hide="common.fetchingLog">
+              ng-disabled="fetchingLog"
+              ng-click="loadPreviousLog()">
+        <span ng-hide="fetchingLog">
           {{'logs.loadPreviousLog' | translate}}
         </span>
 
-        <span ng-show="common.fetchingLog">
+        <span ng-show="fetchingLog">
           {{'logs.loadingLog' | translate}}
         </span>
       </button>
@@ -39,7 +39,7 @@
   </div>
 
   <div class="panel-body" ng-style="{'height': (windowHeight - 60 - 51) + 'px', 'width': (windowWidth) + 'px'}" resize>
-    <pre ng-if="logMessages && logMessages.length">{{logMessages}}</pre>
+    <pre ng-if="logMessages && logMessages.length">{{logMessages.join('')}}</pre>
 
     <pre ng-if="!logMessages || logMessages.length === 0">{{'logs.emptyMessage' | translate}}</pre>
   </div>

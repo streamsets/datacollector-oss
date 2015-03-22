@@ -145,23 +145,6 @@ angular.module('dataCollectorApp')
         return logMessages.join('\n');
       },
 
-      loadPreviousLog: function() {
-        $rootScope.common.fetchingLog = true;
-        api.log.getCurrentLog($rootScope.common.logEndingOffset).then(function(res) {
-          logMessages[0] = res.data;
-          $rootScope.common.logEndingOffset = +res.headers('X-SDC-LOG-PREVIOUS-OFFSET');
-
-          if ($rootScope.common.logEndingOffset !== 0) {
-            logMessages.unshift('.................................................................................................................................................');
-          }
-
-          $rootScope.common.fetchingLog = false;
-
-        }, function() {
-          $rootScope.common.fetchingLog = false;
-        });
-      },
-
       /**
        * Clear Local Storage Contents
        */
@@ -175,42 +158,8 @@ angular.module('dataCollectorApp')
     authService.init().then(function() {
       $rootScope.common.userName = authService.getUserName();
       $rootScope.common.userRoles = authService.getUserRoles().join(', ');
-
-
-      if(authService.isAuthorized([userRoles.admin, userRoles.creator, userRoles.manager])) {
-
-
-        api.log.getCurrentLog($rootScope.common.logEndingOffset).then(function(res) {
-          logMessages.push(res.data);
-          $rootScope.common.logEndingOffset = +res.headers('X-SDC-LOG-PREVIOUS-OFFSET');
-
-
-          if($rootScope.common.logEndingOffset !== 0) {
-            logMessages.unshift('.................................................................................................................................................');
-          }
-
-          var loc = window.location,
-            webSocketLogURL = ((loc.protocol === "https:") ? "wss://" : "ws://") + loc.hostname + (((loc.port != 80) && (loc.port != 443)) ? ":" + loc.port : "") + '/rest/v1/log/streaming',
-            logWebSocket = new WebSocket(webSocketLogURL);
-
-          logWebSocket.onmessage = function (evt) {
-            var received_msg = evt.data;
-            if(logMessages.length > 100000) {
-              logMessages.shift();
-            }
-            logMessages.push(received_msg);
-          };
-
-          $rootScope.$on('$destroy', function() {
-            logWebSocket.close();
-          });
-
-        });
-
-
-        $rootScope.userRoles = userRoles;
-        $rootScope.isAuthorized = authService.isAuthorized;
-      }
+      $rootScope.userRoles = userRoles;
+      $rootScope.isAuthorized = authService.isAuthorized;
     });
 
     configuration.init().then(function() {

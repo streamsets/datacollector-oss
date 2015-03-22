@@ -1,6 +1,10 @@
 <ul class="record-list" ng-init="isOpen=false">
   <li class="record-list-item"
-      ng-class="{'field-addition' : (diffType === 'output' && (updatedField || updatedValue)), 'field-deletion': (diffType === 'input' && (updatedField || updatedValue))}">
+      ng-class="{
+        'field-addition' : (diffType === 'output' && (updatedField || updatedValue)),
+        'field-deletion': (diffType === 'input' && (updatedField || updatedValue)),
+        'is-root': isRoot
+      }">
 
     <div>
 

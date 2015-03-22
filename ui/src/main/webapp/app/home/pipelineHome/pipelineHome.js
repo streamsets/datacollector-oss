@@ -179,12 +179,28 @@ angular
        *
        */
       previewPipeline: function () {
-        $scope.previewMode = true;
-        $rootScope.$storage.maximizeDetailPane = false;
-        $rootScope.$storage.minimizeDetailPane = false;
-        $scope.setGraphReadOnly(true);
-        $scope.setGraphPreviewMode(true);
-        $scope.$broadcast('previewPipeline');
+        var modalInstance = $modal.open({
+          templateUrl: 'app/home/preview/configuration/previewConfigModal.tpl.html',
+          controller: 'PreviewConfigModalInstanceController',
+          size: '',
+          backdrop: 'static',
+          resolve: {
+            pipelineConfig: function () {
+              return $scope.pipelineConfig;
+            }
+          }
+        });
+
+        modalInstance.result.then(function () {
+          $scope.previewMode = true;
+          $rootScope.$storage.maximizeDetailPane = false;
+          $rootScope.$storage.minimizeDetailPane = false;
+          $scope.setGraphReadOnly(true);
+          $scope.setGraphPreviewMode(true);
+          $scope.$broadcast('previewPipeline');
+        }, function () {
+
+        });
       },
 
       /**
@@ -670,6 +686,7 @@ angular
       if(!$scope.pipelineConfig.uiInfo) {
         $scope.pipelineConfig.uiInfo = {
           previewConfig : {
+            previewSource: pipelineConstant.CONFIGURED_SOURCE,
             batchSize: 10,
             skipTargets: true
           }

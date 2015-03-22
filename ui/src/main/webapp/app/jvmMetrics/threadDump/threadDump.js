@@ -11,6 +11,10 @@ angular
         errors: []
       },
       threads: [],
+      columnSort: {
+        sortColumn: 'jvmMetrics.threads.id',
+        reverse: false
+      },
 
       close : function () {
         $modalInstance.dismiss('cancel');

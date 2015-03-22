@@ -1,60 +1,72 @@
 .thread-dump-modal-form {
   .modal-body {
-    height: 600px;
+    height: 550px;
     overflow: auto;
 
-    .toggler {
-      font-size: 1em;
-      line-height: 1em;
-      vertical-align: middle;
-      opacity: 0.6;
-      cursor: pointer;
+    .table {
+      th {
+        min-width: 150px;
 
-      &:after {
-        display: inline-block;
-        transition: transform @rotate-time ease-in;
-        content: "►";
+        &.expand-col, &.id-col {
+          min-width: 0;
+        }
       }
 
-      &.open:after{
-        transform: rotate(90deg);
+      .toggler {
+        font-size: 1em;
+        line-height: 1em;
+        vertical-align: middle;
+        opacity: 0.6;
+        cursor: pointer;
+
+        &:after {
+          display: inline-block;
+          transition: transform @rotate-time ease-in;
+          content: "►";
+        }
+
+        &.open:after{
+          transform: rotate(90deg);
+        }
       }
-    }
 
-    .stack-trace-row {
-      padding-left: 50px;
-      border-top: none;
+      .stack-trace-row {
+        padding-left: 50px;
+        border-top: none;
 
-      ul {
-        padding-left: @smallPadding * .5;
+        ul {
+          padding-left: @smallPadding * .5;
+          list-style: none;
+
+          li {
+            padding: @smallPadding;
+            white-space: nowrap;
+          }
+        }
+      }
+
+      .table-properties {
         list-style: none;
+        margin: 0;
+        padding-left: 50px;
 
         li {
           padding: @smallPadding;
-          white-space: nowrap;
         }
       }
-    }
 
-    .table-properties {
-      list-style: none;
-      margin: 0;
-      padding-left: 50px;
+      .properties-label {
+        display: inline-block;
+        opacity: 0.6;
+        width: 200px;
+        color: #000000;
+      }
 
-      li {
-        padding: @smallPadding;
+      .properties-value {
+
       }
     }
 
-    .properties-label {
-      display: inline-block;
-      opacity: 0.6;
-      width: 200px;
-      color: #000000;
-    }
 
-    .properties-value {
-
-    }
   }
 }

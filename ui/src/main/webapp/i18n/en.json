@@ -311,6 +311,8 @@
     "previewPane": {
       "batchSize": "Preview Batch Size",
       "configTitle": "Preview Configuration",
+      "configuredSource": "Configured Source",
+      "previewSource": "Preview Source",
       "previewStage": "Preview Stage",
       "previewSingleStage": "Preview Single Stage",
       "previewMultipleStages": "Preview Multiple Stages",
@@ -319,8 +321,11 @@
       "outputData": "Output Data",
       "noOutputWarning": "No output records produced.",
       "noRecords": "No Records to view.",
+      "runPreview": "Run Preview",
+      "snapshotSource": "Snapshot Data",
       "stageErrorsWarning": "{{stageErrorsCount}} Stage Errors, check Errors tab for more detail.",
-      "skipTargets": "Skip Targets"
+      "skipTargets": "Skip Targets",
+      "userProvider": "User Provided"
     },
     "library": {
       "descriptionPlaceholder": "Pipeline Definition Description",
@@ -380,8 +385,8 @@
       "threadName": "Thread Name",
       "state": "State",
       "stackTrace": "Stack Trace",
-      "userTime": "User Time",
-      "cpuTime": "CPU Time",
+      "userTime": "User Time (ns)",
+      "cpuTime": "CPU Time (ns)",
       "blockedCount": "Blocked Count",
       "waitedCount": "Waited Count",
       "viewThreadDump" : "View Threads Dump ..."

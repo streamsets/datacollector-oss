@@ -17,9 +17,14 @@
                     ng-click="expandAll = !expandAll">
               </span>
           </th>
-          <th>{{'jvmMetrics.threads.id' | translate}}</th>
+          <th class="id-col">{{'jvmMetrics.threads.id' | translate}}</th>
           <th>{{'jvmMetrics.threads.threadName' | translate}}</th>
           <th>{{'jvmMetrics.threads.state' | translate}}</th>
+
+          <th>{{'jvmMetrics.threads.userTime' | translate}}</th>
+          <th>{{'jvmMetrics.threads.cpuTime' | translate}}</th>
+          <th>{{'jvmMetrics.threads.blockedCount' | translate}}</th>
+          <th>{{'jvmMetrics.threads.waitedCount' | translate}}</th>
         </tr>
       </thead>
 
@@ -35,6 +40,11 @@
           <td>{{thread.threadInfo.threadId}}</td>
           <td>{{thread.threadInfo.threadName}}</td>
           <td>{{thread.threadInfo.threadState}}</td>
+
+          <td>{{thread.userTimeNanosecs}}</td>
+          <td>{{thread.cpuTimeNanosecs}}</td>
+          <td>{{thread.threadInfo.blockedCount}}</td>
+          <td>{{thread.threadInfo.waitedCount}}</td>
         </tr>
 
         <tr ng-repeat-end ng-if="isOpen || expandAll" class="expand-row">
@@ -46,47 +56,6 @@
                 <span>{{line.className}}.{{line.methodName}}</span>
                 <span>({{line.fileName}}:{{line.lineNumber}})</span>
               </li>
-            </ul>
-
-            <ul class="table-properties">
-
-              <li>
-                <span class="properties-label">
-                  {{'jvmMetrics.threads.userTime' | translate}}:
-                </span>
-                <span class="properties-value">
-                  {{thread.userTimeNanosecs}} {{'Nanoseconds'}}
-                </span>
-              </li>
-
-
-              <li>
-                <span class="properties-label">
-                  {{'jvmMetrics.threads.cpuTime' | translate}}:
-                </span>
-                <span class="properties-value">
-                  {{thread.cpuTimeNanosecs}} {{'Nanoseconds'}}
-                </span>
-              </li>
-
-              <li>
-                <span class="properties-label">
-                 {{'jvmMetrics.threads.blockedCount' | translate}}:
-                </span>
-                <span class="properties-value">
-                  {{thread.threadInfo.blockedCount}}
-                </span>
-              </li>
-
-              <li>
-                <span class="properties-label">
-                  {{'jvmMetrics.threads.waitedCount' | translate}}:
-                </span>
-                <span class="properties-value">
-                  {{thread.threadInfo.waitedCount}}
-                </span>
-              </li>
-
             </ul>
           </td>
         </tr>
