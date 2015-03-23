@@ -895,7 +895,7 @@ angular.module('pipelineGraphDirectives', ['underscore'])
             outputLaneIndex = _.indexOf(d.source.outputLanes, d.outputLane),
             y = Math.round(((consts.rectHeight) / (2 * totalLanes) ) + ((consts.rectHeight * (outputLaneIndex))/totalLanes));
 
-          return ((d.source.uiInfo.yPos + y + d.target.uiInfo.yPos + consts.rectHeight/2))/2 - 26;
+          return ((d.source.uiInfo.yPos + y + d.target.uiInfo.yPos + consts.rectHeight/2))/2 - 20;
         });
 
       var pathNewGs= paths.enter()
@@ -941,8 +941,8 @@ angular.module('pipelineGraphDirectives', ['underscore'])
               return 'No Active Data Rules';
             }
           })
-          .attr('width', 30)
-          .attr('height', 30)
+          .attr('width', 25)
+          .attr('height', 25)
           .attr('x', function(d) {
             return (d.source.uiInfo.xPos + consts.rectWidth + (d.target.uiInfo.xPos -30))/2;
           })
@@ -951,7 +951,7 @@ angular.module('pipelineGraphDirectives', ['underscore'])
               outputLaneIndex = _.indexOf(d.source.outputLanes, d.outputLane),
               y = Math.round(((consts.rectHeight) / (2 * totalLanes) ) + ((consts.rectHeight * (outputLaneIndex))/totalLanes));
 
-            return ((d.source.uiInfo.yPos + y + d.target.uiInfo.yPos + consts.rectHeight/2))/2 - 26;
+            return ((d.source.uiInfo.yPos + y + d.target.uiInfo.yPos + consts.rectHeight/2))/2 - 20;
           })
           .append('xhtml:span')
           .attr('class', function(d) {
@@ -965,13 +965,13 @@ angular.module('pipelineGraphDirectives', ['underscore'])
               });
 
               if(triggeredAlert && triggeredAlert.length) {
-                return 'fa fa-tachometer fa-2x pointer edge-preview alert-triggered';
+                return 'fa fa-tachometer fa-16x pointer edge-preview alert-triggered';
               } else {
-                return 'fa fa-tachometer fa-2x pointer edge-preview active-alerts-defined';
+                return 'fa fa-tachometer fa-16x pointer edge-preview active-alerts-defined';
               }
 
             } else {
-              return 'fa fa-tachometer fa-2x pointer edge-preview';
+              return 'fa fa-tachometer fa-16x pointer edge-preview';
             }
           });
       }

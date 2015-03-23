@@ -7,6 +7,7 @@ angular
   .controller('StageLibraryController', function ($scope, pipelineService, pipelineConstant) {
     angular.extend($scope, {
       filteredStageLibraries: [],
+      searchInput: '',
 
       allStage: {
         group: 'All'
@@ -28,10 +29,12 @@ angular
        *
        */
       onStageFilterGroupChange: function() {
-        var stageNameList = [];
+        var stageNameList = [],
+          regex = new RegExp($scope.searchInput, 'i');
         $scope.filteredStageLibraries = [];
         angular.forEach($scope.stageLibraries, function(stageLibrary) {
-          if(libraryFilter(stageLibrary) && !_.contains(stageNameList, stageLibrary.name)) {
+          if(libraryFilter(stageLibrary) && !_.contains(stageNameList, stageLibrary.name) &&
+            regex.test(stageLibrary.label)) {
             stageNameList.push(stageLibrary.name);
             $scope.filteredStageLibraries.push(stageLibrary);
           }

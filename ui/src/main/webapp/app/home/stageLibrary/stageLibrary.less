@@ -1,17 +1,34 @@
 .stage-library-pane {
 
-  .stage-filter {
-    padding: @defaultPadding @smallPadding;
-    width: 170px;
+  .stage-filter, .stage-search {
+    padding: @defaultPadding @smallPadding 0 @smallPadding;
+    width: 175px;
     //border-bottom: 1px solid #dedede;
 
-    select {
+    select, input {
       height: 25px;
     }
 
+    .search-clear {
+      position: absolute;
+      right: 10px;
+      top: 8px;
+      bottom: 0;
+      height: 14px;
+      margin: auto;
+      font-size: 14px;
+      cursor: pointer;
+      color: #ccc;
+
+      &:hover {
+        color: @streamsets-icon-btn-hover-color;
+      }
+    }
   }
 
+
   .stage-list-container {
+    padding-top: @smallPadding;
 
     .stages-list {
       list-style: none;

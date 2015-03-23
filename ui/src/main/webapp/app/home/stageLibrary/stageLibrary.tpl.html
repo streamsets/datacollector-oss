@@ -9,6 +9,14 @@
       </select>
     </div>
 
+    <div class="btn-group stage-search" >
+      <input type="search" class="form-control" placeholder="Type to search"
+             ng-model="searchInput"
+             ng-change="onStageFilterGroupChange()">
+      <span class="glyphicon glyphicon-remove-circle search-clear"
+            ng-click="searchInput = '';onStageFilterGroupChange();"></span>
+    </div>
+
     <div class="stage-list-container">
       <ul class="stages-list">
         <li id="item1" draggable drag-data="stageLibrary"
