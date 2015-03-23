@@ -245,7 +245,9 @@
 
           <li>
             <span class="properties-label">{{'home.detailPane.summaryTab.timeOfLastReceivedRecord' | translate}}:</span>
-            <span class="properties-value">{{common.pipelineMetrics.gauges['RuntimeStatsGauge.gauge'].value.timeOfLastReceivedRecord  | date:'medium'}}</span>
+            <span class="properties-value"
+                  ng-if="common.pipelineMetrics.gauges['RuntimeStatsGauge.gauge'].value.timeOfLastReceivedRecord"
+              >{{common.pipelineMetrics.gauges['RuntimeStatsGauge.gauge'].value.timeOfLastReceivedRecord  | date:'medium'}}</span>
           </li>
 
           <li>
@@ -255,7 +257,9 @@
 
           <li>
             <span class="properties-label">{{'home.detailPane.summaryTab.batchStartTime' | translate}}:</span>
-            <span class="properties-value">{{common.pipelineMetrics.gauges['RuntimeStatsGauge.gauge'].value.batchStartTime  | date:'medium'}}</span>
+            <span class="properties-value"
+                  ng-if="common.pipelineMetrics.gauges['RuntimeStatsGauge.gauge'].value.batchStartTime"
+              >{{common.pipelineMetrics.gauges['RuntimeStatsGauge.gauge'].value.batchStartTime  | date:'medium'}}</span>
           </li>
 
           <li>

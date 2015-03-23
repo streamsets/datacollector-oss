@@ -1418,13 +1418,13 @@ angular.module('pipelineGraphDirectives', ['underscore'])
               });
 
               if(triggeredAlert && triggeredAlert.length) {
-                return 'fa fa-tachometer fa-2x pointer edge-preview alert-triggered';
+                return 'fa fa-tachometer fa-16x pointer edge-preview alert-triggered';
               } else {
-                return 'fa fa-tachometer fa-2x pointer edge-preview active-alerts-defined';
+                return 'fa fa-tachometer fa-16x pointer edge-preview active-alerts-defined';
               }
 
             } else {
-              return 'fa fa-tachometer fa-2x pointer edge-preview';
+              return 'fa fa-tachometer fa-16x pointer edge-preview';
             }
           });
 
