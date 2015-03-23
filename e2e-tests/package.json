@@ -1,0 +1,18 @@
+{
+  "name": "data-collector-e2e-tests",
+  "private": true,
+  "version": "1.0.0b2-SNAPSHOT",
+  "description": "StreamSets Data Collector e2e tests",
+  "homepage": "http://streamsets.com/",
+  "devDependencies": {
+    "frisby": "0.8.4",
+    "grunt": "~0.4.1",
+    "grunt-protractor-runner": "1.2.1",
+    "grunt-shell": "1.1.2",
+    "protractor": "^1.1.1"
+  },
+  "scripts": {
+    "update-webdriver": "webdriver-manager update",
+    "postinstall": "npm run update-webdriver"
+  }
+}
