@@ -20,15 +20,31 @@ module.exports = function(grunt) {
         configFile: "src/test/protractor.conf.js",
         keepAlive: true,
         noColor: false,
-        args: {}
+        args: {
+          baseUrl: 'http://localhost:18630/'
+        }
       },
-      e2e: {}
+      docker: {
+        options: {
+          args: {
+            baseUrl: 'http://192.168.59.103:18630/'
+          }
+        }
+      },
+      local: {
+        options: {
+          args: {
+            baseUrl: 'http://localhost:18630/'
+          }
+        }
+      }
     }
   });
 
-  grunt.registerTask( 'test', ['shell:dockerBuild', 'shell:dockerComposeUp', 'protractor:e2e',
+  grunt.registerTask( 'test', ['shell:dockerBuild', 'shell:dockerComposeUp', 'protractor:docker',
     'shell:dockerComposeStop']);
 
+  grunt.registerTask( 'local', ['protractor:local']);
 };
 
 

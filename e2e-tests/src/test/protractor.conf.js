@@ -1,11 +1,8 @@
-var env = {
-  baseUrl: 'http://192.168.59.103:18630/'
-};
-
 exports.config = {
   allScriptsTimeout: 11000,
 
   suites: {
+    //sample: ['ui/logPage.js']
     restAPI: [
       'restAPI/infoResource.js',
       'restAPI/logoutResource.js',
@@ -15,7 +12,12 @@ exports.config = {
       'restAPI/stageLibraryResource.js',
       'restAPI/pipelineStoreResource.js'
     ],
-    ui: ['ui/homePage.js']
+    ui: [
+      'ui/homePage.js',
+      'ui/configurationPage.js',
+      'ui/jvmMetricsPage.js',
+      'ui/logPage.js'
+    ]
   },
 
   capabilities: {
@@ -23,7 +25,7 @@ exports.config = {
     'browserName': 'chrome'
   },
 
-  baseUrl: env.baseUrl,
+  //baseUrl: env.baseUrl,
 
   framework: 'jasmine',
 
@@ -34,7 +36,7 @@ exports.config = {
   onPrepare: function() {
     browser.sleep(3000);
 
-    browser.driver.get(env.baseUrl + 'login.html');
+    browser.driver.get(browser.baseUrl + 'login.html');
 
     browser.driver.findElement(by.id('usernameId')).sendKeys('admin');
     browser.driver.findElement(by.id('passwordId')).sendKeys('admin');
