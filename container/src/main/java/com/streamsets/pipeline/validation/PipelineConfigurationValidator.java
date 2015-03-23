@@ -12,6 +12,7 @@ import com.streamsets.pipeline.config.ConfigConfiguration;
 import com.streamsets.pipeline.config.ConfigDefinition;
 import com.streamsets.pipeline.config.ModelDefinition;
 import com.streamsets.pipeline.config.PipelineConfiguration;
+import com.streamsets.pipeline.config.PipelineDefConfigs;
 import com.streamsets.pipeline.config.PipelineDefinition;
 import com.streamsets.pipeline.config.StageConfiguration;
 import com.streamsets.pipeline.config.StageDefinition;
@@ -603,7 +604,7 @@ public class PipelineConfigurationValidator {
   boolean validateErrorStage() {
     boolean preview = true;
     if (pipelineConfiguration.getErrorStage() == null) {
-      issues.addP(new Issue(PipelineDefinition.BAD_RECORDS_HANDLING_FIELD, PipelineDefinition.BAD_RECORDS_GROUP,
+      issues.addP(new Issue(PipelineDefConfigs.ERROR_RECORDS_CONFIG, PipelineDefConfigs.Groups.BAD_RECORDS.name(),
                             ValidationError.VALIDATION_0060));
       preview = false;
     } else {

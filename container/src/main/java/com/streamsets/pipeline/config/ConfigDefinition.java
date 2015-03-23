@@ -5,13 +5,17 @@
  */
 package com.streamsets.pipeline.config;
 
+import com.google.common.collect.ImmutableSet;
+import com.streamsets.pipeline.api.ChooserValues;
 import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.impl.LocalizableMessage;
 import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.el.ElConstantDefinition;
 import com.streamsets.pipeline.el.ElFunctionDefinition;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Captures attributes related to individual configuration options
@@ -20,6 +24,7 @@ public class ConfigDefinition {
 
   public static final String REQUIRED_FIELDS = "stageRequiredFields";
   public static final String ON_RECORD_ERROR = "stageOnRecordError";
+  public static final Set<String> SYSTEM_CONFIGS = ImmutableSet.of(REQUIRED_FIELDS, ON_RECORD_ERROR);
 
   private final String name;
   private final ConfigDef.Type type;
@@ -142,22 +147,56 @@ public class ConfigDefinition {
     this.defaultValue = defaultValue;
   }
 
-  private final static String CONFIG_LABEL = "{}.label";
-  private final static String CONFIG_DESCRIPTION = "{}.description";
-
   public ConfigDefinition localize(ClassLoader classLoader, String bundle) {
-    String labelKey = Utils.format(CONFIG_LABEL, getName());
-    String descriptionKey = Utils.format(CONFIG_DESCRIPTION, getName());
+    String labelKey = "configLabel." + getName();
+    String descriptionKey = "configDescription." + getName();
 
-    String label = new LocalizableMessage(classLoader, bundle, labelKey, getLabel(), null).
-        getLocalized();
+    // config label & description
+    String label = new LocalizableMessage(classLoader, bundle, labelKey, getLabel(), null).getLocalized();
     String description = new LocalizableMessage(classLoader, bundle, descriptionKey, getDescription(), null)
         .getLocalized();
 
+    // config model
+    ModelDefinition model = getModel();
+    if(getType() == ConfigDef.Type.MODEL) {
+      switch (model.getModelType()) {
+        case VALUE_CHOOSER:
+          try {
+            Class klass = classLoader.loadClass(model.getValuesProviderClass());
+            ChooserValues chooserValues = (ChooserValues) klass.newInstance();
+            List<String> values = chooserValues.getValues();
+            if (values != null) {
+              List<String> localizedValueChooserLabels = new ArrayList<>(chooserValues.getLabels());
+              String rbName = chooserValues.getResourceBundle();
+              if (rbName != null) {
+                for (int i = 0; i < values.size(); i++) {
+                  String l = new LocalizableMessage(classLoader, rbName, values.get(i),
+                                                    localizedValueChooserLabels.get(i), null).getLocalized();
+                  localizedValueChooserLabels.set(i, l);
+                }
+              }
+              model = ModelDefinition.localizedValueChooser(model, values, localizedValueChooserLabels);
+            }
+          } catch (Exception ex) {
+            throw new RuntimeException(Utils.format("Could not extract localization info from '{}': {}",
+                                                    model.getValuesProviderClass(), ex.getMessage(), ex));
+          }
+          break;
+        case COMPLEX_FIELD:
+          List<ConfigDefinition> complexField = model.getConfigDefinitions();
+          List<ConfigDefinition> complexFieldLocalized = new ArrayList<>(complexField.size());
+          for (ConfigDefinition def : complexField) {
+            complexFieldLocalized.add(def.localize(classLoader, bundle));
+          }
+          model = ModelDefinition.localizedComplexField(model, complexFieldLocalized);
+          break;
+      }
+    }
+
     return new ConfigDefinition(getName(), getType(), label, description, getDefaultValue(),
-      isRequired(), getGroup(), getFieldName(), getModel(), getDependsOn(), getTriggeredByValues(),
-      getDisplayPosition(), getElFunctionDefinitions(), getElConstantDefinitions(), getMin(), getMax(), getMode(),
-      getLines());
+                                isRequired(), getGroup(), getFieldName(), model, getDependsOn(), getTriggeredByValues(),
+                                getDisplayPosition(), getElFunctionDefinitions(), getElConstantDefinitions(), getMin(),
+                                getMax(), getMode(), getLines());
   }
 
   @Override

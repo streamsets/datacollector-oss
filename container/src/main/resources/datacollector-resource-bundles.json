@@ -1,5 +1,8 @@
 [
   "com.streamsets.pipeline.util.ContainerError",
   "com.streamsets.pipeline.validation.ValidationError",
-  "com.streamsets.pipeline.config.ErrorRecordsOptions"
+  "com.streamsets.pipeline.config.SystemStageConfigs",
+  "com.streamsets.pipeline.config.PipelineDefConfigs",
+  "com.streamsets.pipeline.config.PipelineDefConfigs$Groups",
+  "com.streamsets.pipeline.config.DeliveryGuarantee"
 ]

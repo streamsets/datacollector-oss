@@ -211,6 +211,11 @@ public class FaultySource {
   public class MyChooserValues implements ChooserValues {
 
     @Override
+    public String getResourceBundle() {
+      return null;
+    }
+
+    @Override
     public List<String> getValues() {
       return ImmutableList.of("a", "b");
     }

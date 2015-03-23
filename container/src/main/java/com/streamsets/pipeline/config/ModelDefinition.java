@@ -16,6 +16,16 @@ public class ModelDefinition {
   private List<String> values;
   private List<String> labels;
 
+  public static ModelDefinition localizedValueChooser(ModelDefinition model, List<String> values, List<String> labels) {
+    return new ModelDefinition(model.getModelType(), model.getValuesProviderClass(), values, labels,
+                        model.getConfigDefinitions());
+  }
+
+  public static ModelDefinition localizedComplexField(ModelDefinition model, List<ConfigDefinition> configDefs) {
+    return new ModelDefinition(model.getModelType(), model.getValuesProviderClass(), model.getValues(),
+                               model.getLabels(), configDefs);
+  }
+
   public ModelDefinition(ModelType modelType, String valuesProviderClass, List<String> values,
       List<String> labels, List<ConfigDefinition> configDefinitions) {
     this.modelType = modelType;

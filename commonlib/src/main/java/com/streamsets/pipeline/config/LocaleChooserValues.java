@@ -47,6 +47,11 @@ public class LocaleChooserValues implements ChooserValues {
   }
 
   @Override
+  public String getResourceBundle() {
+    return null;
+  }
+
+  @Override
   public List<String> getValues() {
     return VALUES;
   }

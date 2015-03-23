@@ -9,6 +9,8 @@ import java.util.List;
 
 public interface ChooserValues {
 
+  public String getResourceBundle();
+
   public List<String> getValues();
 
   public List<String> getLabels();

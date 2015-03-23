@@ -87,6 +87,11 @@ public class TwitterValuesProviderAndEnum extends BaseSource {
     public static class TwitterTypesProvider implements ChooserValues {
 
       @Override
+      public String getResourceBundle() {
+        return null;
+      }
+
+      @Override
       public List<String> getValues() {
         List<String> values = new ArrayList<String>();
         values.add("INT");

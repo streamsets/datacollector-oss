@@ -5,30 +5,21 @@
  */
 package com.streamsets.pipeline.config;
 
-import com.google.common.collect.ImmutableList;
-import com.streamsets.pipeline.api.ChooserValues;
 import com.streamsets.pipeline.api.Label;
 import com.streamsets.pipeline.api.impl.LocalizableMessage;
 import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.stagelibrary.StageLibraryUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-
 /**
  * Captures the configuration options for a {@link com.streamsets.pipeline.api.Stage}.
  *
  */
 public class StageDefinition {
-  private static final Logger LOG = LoggerFactory.getLogger(StageDefinition.class);
-
-  private static final String SEPARATOR = ".";
-
   private String library;
   private String libraryLabel;
   private ClassLoader classLoader;
@@ -52,6 +43,47 @@ public class StageDefinition {
   private final int outputStreams;
   private final String outputStreamLabelProviderClass;
   private List<String> outputStreamLabels;
+
+  // localized version
+  private StageDefinition(ClassLoader classLoader, String library, String libraryLabel, String className, String name,
+      String version, String label, String description, StageType type, boolean errorStage, boolean requiredFields,
+      boolean onRecordError, List<ConfigDefinition> configDefinitions, RawSourceDefinition rawSourceDefinition,
+      String icon, ConfigGroupDefinition configGroupDefinition, boolean variableOutputStreams, int outputStreams,
+      List<String> outputStreamLabels) {
+    this.classLoader = classLoader;
+    this.library = library;
+    this.libraryLabel = libraryLabel;
+    this.className = className;
+    this.name = name;
+    this.version = version;
+    this.label = label;
+    this.description = description;
+    this.type = type;
+    this.errorStage = errorStage;
+    this.requiredFields = requiredFields;
+    this.onRecordError = onRecordError;
+    this.configDefinitions = configDefinitions;
+    this.rawSourceDefinition = rawSourceDefinition;
+    configDefinitionsMap = new HashMap<>();
+    for (ConfigDefinition conf : configDefinitions) {
+      configDefinitionsMap.put(conf.getName(), conf);
+      ModelDefinition modelDefinition = conf.getModel();
+      if(modelDefinition != null && modelDefinition.getConfigDefinitions() != null) {
+        //Multi level complex is not allowed. So we stop at this level
+        //Assumption is that the config property names are unique in the class hierarchy
+        //and across complex types
+        for (ConfigDefinition configDefinition : modelDefinition.getConfigDefinitions()) {
+          configDefinitionsMap.put(configDefinition.getName(), configDefinition);
+        }
+      }
+    }
+    this.icon = icon;
+    this.configGroupDefinition = configGroupDefinition;
+    this.variableOutputStreams = variableOutputStreams;
+    this.outputStreams = outputStreams;
+    this.outputStreamLabels = outputStreamLabels;
+    outputStreamLabelProviderClass = null;
+  }
 
   public StageDefinition(String className, String name, String version, String label, String description,
       StageType type, boolean errorStage, boolean requiredFields, boolean onRecordError,
@@ -93,14 +125,12 @@ public class StageDefinition {
     this.library = library;
     this.libraryLabel = label;
     this.classLoader = classLoader;
+    this.outputStreamLabels = getOutputStreamLabels(classLoader);
     try {
       klass = classLoader.loadClass(getClassName());
     } catch (ClassNotFoundException ex) {
       throw new RuntimeException(ex);
     }
-    updateValuesAndLabelsFromValuesProvider();
-    updateGroupLabels();
-    updateOutputStreamLabelsFromProvider();
   }
 
   public ConfigGroupDefinition getConfigGroupDefinition() {
@@ -120,10 +150,6 @@ public class StageDefinition {
   }
 
   public String getClassName() {
-    return className;
-  }
-
-  public String getBundle() {
     return className;
   }
 
@@ -210,172 +236,131 @@ public class StageDefinition {
     return outputStreamLabels;
   }
 
-  public void setOutputStreamLabels(List<String> labels) {
-    this.outputStreamLabels = labels;
+  private final static String STAGE_LABEL = "stageLabel";
+  private final static String STAGE_DESCRIPTION = "stageDescription";
+
+  private static Map<String, String> getGroupToResourceBundle(ConfigGroupDefinition configGroupDefinition) {
+    Map<String, String> map = new HashMap<>();
+    for (Map.Entry<String, List<String>> entry: configGroupDefinition.getClassNameToGroupsMap().entrySet()) {
+      for (String group : entry.getValue()) {
+        map.put(group, entry.getKey() + "-bundle");
+      }
+    }
+    return map;
   }
 
-  private final static String STAGE_LABEL = "label";
-  private final static String STAGE_DESCRIPTION = "description";
+  public static ConfigGroupDefinition localizeConfigGroupDefinition(ClassLoader classLoader,
+      ConfigGroupDefinition groupDefs) {
+    if (groupDefs != null) {
+      Map<String, List<String>> classNameToGroupsMap = groupDefs.getClassNameToGroupsMap();
+      Map<String, String> groupToDefaultLabelMap = new HashMap<>();
+      for (Map.Entry<String, List<String>> entry : classNameToGroupsMap.entrySet()) {
+        Class groupClass;
+        try {
+          groupClass = classLoader.loadClass(entry.getKey());
+        } catch (Exception ex) {
+          throw new RuntimeException(ex);
+        }
+        boolean isLabel = Label.class.isAssignableFrom(groupClass);
+        for (String group : entry.getValue()) {
+          Enum e = Enum.valueOf(groupClass, group);
+          String groupLabel = (isLabel) ? ((Label)e).getLabel() : e.name();
+          groupToDefaultLabelMap.put(group, groupLabel);
+        }
+      }
+      Map<String, String> groupBundles = getGroupToResourceBundle(groupDefs);
+      List<Map<String, String>> localizedGroups = new ArrayList<>();
+      for (Map<String, String> group : groupDefs.getGroupNameToLabelMapList()) {
+        String groupName = group.get("name");
+        Map<String, String> localizeGroup = new HashMap<>();
+        localizeGroup.put("name", groupName);
+        localizeGroup.put("label", new LocalizableMessage(classLoader, groupBundles.get(groupName), groupName,
+                                                          groupToDefaultLabelMap.get(groupName), null).getLocalized());
+        localizedGroups.add(localizeGroup);
+      }
+      groupDefs = new ConfigGroupDefinition(groupDefs.getClassNameToGroupsMap(), localizedGroups);
+    }
+    return groupDefs;
+  }
+
+  private static final String SYSTEM_CONFIGS_RB = SystemStageConfigs.class.getName() + "-bundle";
 
   public StageDefinition localize() {
-    String rbName = getClassName();
-    List<ConfigDefinition> configDefs = new ArrayList<>();
-    for (ConfigDefinition configDef : getConfigDefinitions()) {
-      configDefs.add(configDef.localize(classLoader, rbName));
-    }
+    String rbName = getClassName() + "-bundle";
 
-    //Localize RawSourceDefinition instance which contains ConfigDefinitions
-    List<ConfigDefinition> rawSourcePreviewConfigDefs = new ArrayList<>();
-    RawSourceDefinition rawSourceDef = getRawSourceDefinition();
-    RawSourceDefinition rsd = null;
-    if(rawSourceDef != null) {
-      for (ConfigDefinition configDef : rawSourceDef.getConfigDefinitions()) {
-        rawSourcePreviewConfigDefs.add(configDef.localize(classLoader, rbName));
-      }
-      rsd = new RawSourceDefinition(rawSourceDef.getRawSourcePreviewerClass(), rawSourceDef.getMimeType(),
-          rawSourcePreviewConfigDefs);
-    }
-
+    // stage label & description
     String label = new LocalizableMessage(classLoader, rbName, STAGE_LABEL, getLabel(), null).getLocalized();
-    String description = new LocalizableMessage(classLoader, rbName, STAGE_DESCRIPTION, getDescription(), null).
-        getLocalized();
+    String description = new LocalizableMessage(classLoader, rbName, STAGE_DESCRIPTION, getDescription(), null)
+        .getLocalized();
 
+    // Library label
     String libraryLabel = StageLibraryUtils.getLibraryLabel(classLoader);
 
-    ConfigGroupDefinition configGroupDefinition = getConfigGroupDefinition();
-    ConfigGroupDefinition localizedConfGroupDef = null;
-    //localize group names
-    if(configGroupDefinition != null) {
-      List<Map<String, String>> localizedGroups = new ArrayList<>();
-      for (Map<String, String> groupNameToLabelMap : getConfigGroupDefinition().getGroupNameToLabelMapList()) {
-        Map<String, String> localizedGroupToLabelMap = new HashMap<>();
-        localizedGroupToLabelMap.put("name", groupNameToLabelMap.get("name"));
-        localizedGroupToLabelMap.put("label", new LocalizableMessage(classLoader, rbName,
-          groupNameToLabelMap.get("name"), groupNameToLabelMap.get("label"), null).getLocalized());
-        localizedGroups.add(localizedGroupToLabelMap);
-      }
-      localizedConfGroupDef = new ConfigGroupDefinition(configGroupDefinition.getClassNameToGroupsMap(),
-        localizedGroups);
-    }
-
-    List<String> localizedOutputStreamLabels = getOutputStreamLabels();
-    //TODO
-    //TODO we should specially handle the case of the built-in Output localization
-
-    StageDefinition def = new StageDefinition(
-      getClassName(), getName(), getVersion(), label, description,
-      getType(), isErrorStage(), hasRequiredFields(), hasOnRecordError(), configDefs, rsd, getIcon(),
-      localizedConfGroupDef, isVariableOutputStreams(), getOutputStreams(), getOutputStreamLabelProviderClass());
-    def.setLibrary(getLibrary(), libraryLabel, classLoader);
-
-    for(ConfigDefinition configDef : def.getConfigDefinitions()) {
-      if(configDef.getModel() != null &&
-        configDef.getModel().getValues() != null &&
-        !configDef.getModel().getValues().isEmpty()) {
-        List<String> values = configDef.getModel().getValues();
-        List<String> labels = configDef.getModel().getLabels();
-        List<String> localizedLabels = new ArrayList<>(values.size());
-        for(int i = 0; i < values.size(); i++) {
-          String key = configDef.getName() + SEPARATOR + configDef.getModel().getModelType().name() + SEPARATOR +
-            values.get(i);
-          String l = new LocalizableMessage(classLoader, rbName, key, labels.get(i), null).getLocalized();
-          localizedLabels.add(l);
-        }
-        configDef.getModel().setLabels(localizedLabels);
+    // stage configs
+    List<ConfigDefinition> configDefs = new ArrayList<>();
+    for (ConfigDefinition configDef : getConfigDefinitions()) {
+      if (ConfigDefinition.SYSTEM_CONFIGS.contains(configDef.getName())) {
+        configDefs.add(configDef.localize(getClass().getClassLoader(), SYSTEM_CONFIGS_RB));
+      } else {
+        configDefs.add(configDef.localize(classLoader, rbName));
       }
     }
 
-    return def;
+    // stage raw-source
+    RawSourceDefinition rawSourceDef = getRawSourceDefinition();
+    if(rawSourceDef != null) {
+      String rawSourceRbName = rawSourceDef.getRawSourcePreviewerClass() + "-bundle";
+      List<ConfigDefinition> rawSourceConfigDefs = new ArrayList<>();
+      for (ConfigDefinition configDef : rawSourceDef.getConfigDefinitions()) {
+        rawSourceConfigDefs.add(configDef.localize(classLoader, rawSourceRbName));
+      }
+      rawSourceDef = new RawSourceDefinition(rawSourceDef.getRawSourcePreviewerClass(), rawSourceDef.getMimeType(),
+                                    rawSourceConfigDefs);
+    }
+
+    // stage groups
+    ConfigGroupDefinition groupDefs = localizeConfigGroupDefinition(classLoader, getConfigGroupDefinition());
+
+    // output stream labels
+    List<String> streamLabels = getOutputStreamLabels();
+    if (!isVariableOutputStreams() && getOutputStreams() > 0) {
+      streamLabels = getLocalizedOutputStreamLabels(classLoader);
+    }
+
+    return new StageDefinition(classLoader, getLibrary(), libraryLabel, getClassName(), getName(), getVersion(), label,
+                               description, getType(), isErrorStage(), hasRequiredFields(), hasOnRecordError(),
+                               configDefs, rawSourceDef, getIcon(), groupDefs, isVariableOutputStreams(),
+                               getOutputStreams(), streamLabels);
   }
 
-  private void updateValuesAndLabelsFromValuesProvider() {
-    for(ConfigDefinition configDef : getConfigDefinitions()) {
-      updateValuesAndLabels(configDef);
-    }
-  }
-
-  private void updateValuesAndLabels(ConfigDefinition configDef) {
-    if(configDef.getModel() != null) {
-      if(configDef.getModel().getValuesProviderClass() != null &&
-        !configDef.getModel().getValuesProviderClass().isEmpty()) {
-        setValuesAndLabels(configDef);
-      }
-      if (configDef.getModel().getConfigDefinitions() != null) {
-        for (ConfigDefinition complexFeldConfDef : configDef.getModel().getConfigDefinitions()) {
-          //complex fields cannot have more complex fields as of now
-          updateValuesAndLabels(complexFeldConfDef);
-        }
-      }
-    }
-  }
-
-  private void setValuesAndLabels(ConfigDefinition configDef) {
-    try {
-      Class valueProviderClass = classLoader.loadClass(configDef.getModel().getValuesProviderClass());
-      ChooserValues valueProvider = (ChooserValues) valueProviderClass.newInstance();
-      List<String> values = valueProvider.getValues();
-      List<String> labels = valueProvider.getLabels();
-
-      if(values != null && labels != null && values.size() != labels.size()) {
-        LOG.error(
-          "The ChooserValues implementation for configuration '{}' in stage '{}' does not have the same number of "
-            + "values and labels. Values '{}], labels '{}'.",
-          configDef.getFieldName(), getStageClass().getName(), values, labels);
-        throw new RuntimeException(Utils.format("The ChooserValues implementation for configuration '{}' in stage "
-            + "'{}' does not have the same number of values and labels. Values '{}], labels '{}'.",
-          configDef.getFieldName(), getStageClass().getName(), values, labels));
-      }
-      configDef.getModel().setValues(values);
-      configDef.getModel().setLabels(labels);
-    } catch (ClassNotFoundException | InstantiationException | IllegalAccessException e) {
-      throw new RuntimeException(e);
-    }
-  }
-
-  private void updateGroupLabels() {
-    ConfigGroupDefinition configGroupDefinition = getConfigGroupDefinition();
-    if(configGroupDefinition != null) {
-      Map<String, List<String>> classNameToGroupsMap = configGroupDefinition.getClassNameToGroupsMap();
-      List<Map<String, String>> groupNameToLabelMapList = configGroupDefinition.getGroupNameToLabelMapList();
-
-      for (Map.Entry<String, List<String>> entry : classNameToGroupsMap.entrySet()) {
-        try {
-          Class configGroupsClass = classLoader.loadClass(entry.getKey());
-          for (String groupName : entry.getValue()) {
-            Label group = (Label) Enum.valueOf(configGroupsClass, groupName);
-            for(Map<String, String> groupNameToLabelMap : groupNameToLabelMapList) {
-              if(groupNameToLabelMap.get("name").equals(groupName)) {
-                groupNameToLabelMap.put("label", group.getLabel());
-              }
-            }
-          }
-        } catch (ClassNotFoundException e) {
-          throw new RuntimeException(e);
-        }
-      }
-    }
-  }
-
-
-  private void updateOutputStreamLabelsFromProvider() {
+  private List<String> _getOutputStreamLabels(ClassLoader classLoader, boolean localized) {
+    List<String> list = new ArrayList<>();
     if (getOutputStreamLabelProviderClass() != null) {
       try {
-        List<String> list = new ArrayList<>();
-        Class providerClass = classLoader.loadClass(getOutputStreamLabelProviderClass());
-        for (Object e : providerClass.getEnumConstants()) {
-          if (com.streamsets.pipeline.api.Label.class.isAssignableFrom(providerClass)) {
-            list.add(((com.streamsets.pipeline.api.Label)e).getLabel());
-          } else {
-            list.add(e.toString());
+        String rbName = (localized) ? getOutputStreamLabelProviderClass() + "-bundle" : null;
+        Class klass = classLoader.loadClass(getOutputStreamLabelProviderClass());
+        boolean isLabel = Label.class.isAssignableFrom(klass);
+        for (Object e : klass.getEnumConstants()) {
+
+          String label = (isLabel) ? ((Label) e).getLabel() : ((Enum) e).name();
+          if (rbName != null) {
+            label = new LocalizableMessage(classLoader, rbName, ((Enum)e).name(), label, null).getLocalized();
           }
+          list.add(label);
         }
-        setOutputStreamLabels(list);
-      } catch (Exception e) {
-        throw new RuntimeException(e);
+      } catch (Exception ex) {
+        throw new RuntimeException(ex);
       }
-    } else {
-      setOutputStreamLabels(ImmutableList.of("Output"));
     }
+    return list;
+  }
+
+  private List<String> getOutputStreamLabels(ClassLoader classLoader) {
+    return _getOutputStreamLabels(classLoader, false);
+  }
+
+  private List<String> getLocalizedOutputStreamLabels(ClassLoader classLoader) {
+    return _getOutputStreamLabels(classLoader, true);
   }
 
 }

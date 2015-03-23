@@ -6,18 +6,20 @@
 package com.streamsets.pipeline.config;
 
 import com.streamsets.pipeline.api.ChooserValues;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.nio.charset.Charset;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.TimeZone;
 
 public class CharsetChooserValues implements ChooserValues {
+  private static final Logger LOG = LoggerFactory.getLogger(CharsetChooserValues.class);
+
   private static final List<String> VALUES;
 
   static {
@@ -33,13 +35,18 @@ public class CharsetChooserValues implements ChooserValues {
       String cs = it.next();
       if (!Charset.isSupported(cs)) {
         it.remove();
-        System.out.println("ARRRGH: " + cs);
+        LOG.warn("Charset '{}' is not supported", cs);
       }
     }
     for (Map.Entry<String, Charset> entry : Charset.availableCharsets().entrySet()) {
       set.add(entry.getKey());
     }
     VALUES = new ArrayList<>(set);
+  }
+
+  @Override
+  public String getResourceBundle() {
+    return null;
   }
 
   @Override

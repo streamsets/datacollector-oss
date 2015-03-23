@@ -5,47 +5,55 @@
  */
 package com.streamsets.pipeline.config;
 
+import com.google.common.annotations.VisibleForTesting;
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
+import com.streamsets.pipeline.api.ChooserValues;
 import com.streamsets.pipeline.api.ConfigDef;
-import com.streamsets.pipeline.api.impl.LocalizableMessage;
 import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.el.ElConstantDefinition;
 import com.streamsets.pipeline.el.ElFunctionDefinition;
-import com.streamsets.pipeline.stagelibrary.StageLibraryTask;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 
 public class PipelineDefinition {
-  private static final String PIPELINE_RESOURCE_BUNDLE = "PipelineDefinition-bundle";
-
-  private final static String DELIVERY_GUARANTEE_LABEL_KEY = "config.deliveryGuarantee.label";
-  private final static String DELIVERY_GUARANTEE_LABEL_VALUE = "Delivery Guarantee";
-
-  private final static String DELIVERY_GUARANTEE_DESCRIPTION_KEY = "config.deliveryGuarantee.description";
-  private final static String DELIVERY_GUARANTEE_DESCRIPTION_DEFAULT = "Data processing in case of unexpected errors";
-
-  private final static String DELIVERY_GUARANTEE_AT_LEAST_ONCE_KEY = "config.deliveryGuarantee.AT_LEAST_ONCE";
-  private final static String DELIVERY_GUARANTEE_AT_LEAST_ONCE_DEFAULT = "At Least Once";
-  private final static String DELIVERY_GUARANTEE_AT_MOST_ONCE_KEY = "config.deliveryGuarantee.AT_MOST_ONCE";
-  private final static String DELIVERY_GUARANTEE_AT_MOST_ONCE_DEFAULT = "At Most Once";
-
-  public static final String BAD_RECORDS_HANDLING_FIELD = "badRecordsHandling";
-  public static final String BAD_RECORDS_GROUP = "BAD_RECORDS";
-  public static final String BAD_RECORDS_GROUP_LABEL = "Error Records";
-
-  private StageLibraryTask stageLibrary;
   /*The config definitions of the pipeline*/
   private List<ConfigDefinition> configDefinitions;
+  private ConfigGroupDefinition groupDefinition;
 
-  public PipelineDefinition(StageLibraryTask stageLibrary) {
-    this.stageLibrary = stageLibrary;
-    configDefinitions = new ArrayList<>();
-    configDefinitions.add(createDeliveryGuaranteeOption());
-    configDefinitions.addAll(createBadRecordsHandlingConfigs());
+  public static PipelineDefinition getPipelineDef() {
+    return new PipelineDefinition().localize();
+  }
+
+  public PipelineDefinition localize() {
+    ClassLoader classLoader = getClass().getClassLoader();
+
+    // stage configs
+    List<ConfigDefinition> configDefs = new ArrayList<>();
+    for (ConfigDefinition configDef : getConfigDefinitions()) {
+      configDefs.add(configDef.localize(classLoader, PipelineDefConfigs.class.getName() + "-bundle"));
+    }
+
+    // stage groups
+    ConfigGroupDefinition groupDefs = StageDefinition.localizeConfigGroupDefinition(classLoader,
+                                                                                    getConfigGroupDefinition());
+    return new PipelineDefinition(configDefs, groupDefs);
+  }
+
+  private PipelineDefinition(List<ConfigDefinition> configDefs, ConfigGroupDefinition groupDef) {
+    configDefinitions = configDefs;
+    groupDefinition = groupDef;
+  }
+
+  @VisibleForTesting
+  PipelineDefinition() {
+    this(ImmutableList.of(createDeliveryGuaranteeOption(), createBadRecordsHandlingConfigs()),
+         createConfigGroupDefinition());
   }
 
   /*Need this API for Jackson to serialize*/
@@ -54,9 +62,7 @@ public class PipelineDefinition {
   }
 
   public ConfigGroupDefinition getConfigGroupDefinition() {
-    List<Map<String, String>> groups = new ArrayList<>();
-    groups.add(ImmutableMap.of("name", BAD_RECORDS_GROUP, "label", BAD_RECORDS_GROUP_LABEL));
-    return new ConfigGroupDefinition(null, groups);
+    return groupDefinition;
   }
 
   @Override
@@ -68,37 +74,34 @@ public class PipelineDefinition {
   /********************** Private methods ***********************/
   /**************************************************************/
 
-  private ConfigDefinition createDeliveryGuaranteeOption() {
+  private static ConfigGroupDefinition createConfigGroupDefinition() {
+    Map<String, List<String>> classNameToGroupsMap = new HashMap<>();
+    List<String> groupsInEnum = new ArrayList<>();
+    List<Map<String, String>> groups = new ArrayList<>();
+    for (PipelineDefConfigs.Groups group : PipelineDefConfigs.Groups.values()) {
+      groupsInEnum.add(group.name());
+      groups.add(ImmutableMap.of("name", group.name(), "label", group.getLabel()));
+    }
+    classNameToGroupsMap.put(PipelineDefConfigs.Groups.class.getName(), groupsInEnum);
+    return new ConfigGroupDefinition(classNameToGroupsMap, groups);
+  }
 
-    List<String> gdLabels = new ArrayList<>(2);
-    gdLabels.add(new LocalizableMessage(getClass().getClassLoader(), PIPELINE_RESOURCE_BUNDLE,
-        DELIVERY_GUARANTEE_AT_LEAST_ONCE_KEY, DELIVERY_GUARANTEE_AT_LEAST_ONCE_DEFAULT, null).getLocalized());
-    gdLabels.add(new LocalizableMessage(getClass().getClassLoader(), PIPELINE_RESOURCE_BUNDLE,
-        DELIVERY_GUARANTEE_AT_MOST_ONCE_KEY, DELIVERY_GUARANTEE_AT_MOST_ONCE_DEFAULT, null).getLocalized());
+  private static ConfigDefinition createDeliveryGuaranteeOption() {
 
-    List<String> gdValues = new ArrayList<>(2);
-    gdValues.add(DeliveryGuarantee.AT_LEAST_ONCE.name());
-    gdValues.add(DeliveryGuarantee.AT_MOST_ONCE.name());
+    ChooserValues valueChooser = new DeliveryGuaranteeChooserValues();
+    ModelDefinition model = new ModelDefinition(ModelType.VALUE_CHOOSER, valueChooser.getClass().getName(),
+                                                valueChooser.getValues(), valueChooser.getLabels(), null);
 
-    ModelDefinition gdModelDefinition = new ModelDefinition(ModelType.VALUE_CHOOSER,
-                                                            "",  gdValues, gdLabels, null);
-
-    //Localize label and description for "delivery guarantee" config option
-    String dgLabel = new LocalizableMessage(getClass().getClassLoader(), PIPELINE_RESOURCE_BUNDLE,
-        DELIVERY_GUARANTEE_LABEL_KEY, DELIVERY_GUARANTEE_LABEL_VALUE, null).getLocalized();
-    String dgDescription = new LocalizableMessage(getClass().getClassLoader(), PIPELINE_RESOURCE_BUNDLE,
-        DELIVERY_GUARANTEE_DESCRIPTION_KEY, DELIVERY_GUARANTEE_DESCRIPTION_DEFAULT, null).getLocalized();
-
-    ConfigDefinition dgConfigDef = new ConfigDefinition(
-      "deliveryGuarantee",
+    return new ConfigDefinition(
+      PipelineDefConfigs.DELIVERY_GUARANTEE_CONFIG,
       ConfigDef.Type.MODEL,
-      dgLabel,
-      dgDescription,
+      PipelineDefConfigs.DELIVERY_GUARANTEE_LABEL,
+      PipelineDefConfigs.DELIVERY_GUARANTEE_DESCRIPTION,
       DeliveryGuarantee.AT_LEAST_ONCE.name(),
       true,
       "",
-      "deliveryGuarantee",
-      gdModelDefinition,
+      PipelineDefConfigs.DELIVERY_GUARANTEE_CONFIG,
+      model,
       "",
       new ArrayList<>(),
       0,
@@ -106,47 +109,23 @@ public class PipelineDefinition {
       Collections.<ElConstantDefinition> emptyList(),
       Long.MIN_VALUE,
       Long.MAX_VALUE,
-      "text/plain",
+      "",
       0);
-
-    return dgConfigDef;
   }
 
-  private List<String> getErrorHandlingOptions(boolean value) {
-    List<String> list = new ArrayList<>();
-    for (StageDefinition def : stageLibrary.getStages()) {
-      if (def.getType() == StageType.TARGET && def.isErrorStage()) {
-        if (value) {
-          list.add(def.getLibrary() + "::" + def.getName() + "::" + def.getVersion());
-        } else {
-          list.add(def.getLabel() + " - " + def.getLibraryLabel());
-        }
-      }
-    }
-    return list;
-  }
-
-  private List<String> getErrorHandlingValues() {
-    return getErrorHandlingOptions(true);
-  }
-
-  private List<String> getErrorHandlingLabels() {
-    return getErrorHandlingOptions(false);
-  }
-
-  private List<ConfigDefinition> createBadRecordsHandlingConfigs() {
-    List<ConfigDefinition> configs = new ArrayList<>();
-    ModelDefinition model = new ModelDefinition(ModelType.VALUE_CHOOSER, "",
-                                                getErrorHandlingValues(), getErrorHandlingLabels(), null);
-    ConfigDefinition config = new ConfigDefinition(
-        BAD_RECORDS_HANDLING_FIELD,
+  private static ConfigDefinition createBadRecordsHandlingConfigs() {
+    ChooserValues valueChooser = new ErrorHandlingChooserValues();
+    ModelDefinition model = new ModelDefinition(ModelType.VALUE_CHOOSER, valueChooser.getClass().getName(),
+                                                valueChooser.getValues(), valueChooser.getLabels(), null);
+    return new ConfigDefinition(
+        PipelineDefConfigs.ERROR_RECORDS_CONFIG,
         ConfigDef.Type.MODEL,
-        "Error Records Handling",
-        "",
+        PipelineDefConfigs.ERROR_RECORDS_LABEL,
+        PipelineDefConfigs.ERROR_RECORDS_DESCRIPTION,
         "",
         true,
-        BAD_RECORDS_GROUP,
-        "",
+        PipelineDefConfigs.Groups.BAD_RECORDS.name(),
+        PipelineDefConfigs.ERROR_RECORDS_CONFIG,
         model,
         "",
         new ArrayList<>(),
@@ -155,11 +134,8 @@ public class PipelineDefinition {
         Collections.<ElConstantDefinition> emptyList(),
         Long.MIN_VALUE,
         Long.MAX_VALUE,
-        "text/plain",
+        "",
         0);
-    configs.add(config);
-
-    return configs;
   }
 
 }

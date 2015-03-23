@@ -68,7 +68,7 @@ public class StageLibraryResource {
 
     //Populate the definitions with the PipelineDefinition
     List<Object> pipeline = new ArrayList<>(1);
-    pipeline.add(BeanHelper.wrapPipelineDefinition(new PipelineDefinition(stageLibrary)));
+    pipeline.add(BeanHelper.wrapPipelineDefinition(PipelineDefinition.getPipelineDef()));
     definitions.put(PIPELINE, pipeline);
 
     Map<String, Object> map = new HashMap<>();

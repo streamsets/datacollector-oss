@@ -11,6 +11,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class TypeChooserValueProvider implements ChooserValues {
+
+  @Override
+  public String getResourceBundle() {
+    return null;
+  }
+
   @Override
   public List<String> getValues() {
     List<String> values = new ArrayList<>();

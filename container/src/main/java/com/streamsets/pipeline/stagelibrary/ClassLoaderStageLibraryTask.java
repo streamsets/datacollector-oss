@@ -20,6 +20,7 @@ import com.streamsets.pipeline.api.el.ELEval;
 import com.streamsets.pipeline.api.impl.LocaleInContext;
 import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.config.ConfigDefinition;
+import com.streamsets.pipeline.config.ErrorHandlingChooserValues;
 import com.streamsets.pipeline.config.ModelDefinition;
 import com.streamsets.pipeline.config.ModelType;
 import com.streamsets.pipeline.config.StageDefinition;
@@ -79,6 +80,7 @@ public class ClassLoaderStageLibraryTask extends AbstractTask implements StageLi
     stageList = ImmutableList.copyOf(stageList);
     stageMap = ImmutableMap.copyOf(stageMap);
 
+    // localization cache for definitions
     localizedStageList = CacheBuilder.newBuilder().build(new CacheLoader<Locale, List<StageDefinition>>() {
       @Override
       public List<StageDefinition> load(Locale key) throws Exception {
@@ -89,6 +91,9 @@ public class ClassLoaderStageLibraryTask extends AbstractTask implements StageLi
         return list;
       }
     });
+
+    // initializing the list of targets that can be used for error handling
+    ErrorHandlingChooserValues.setErrorHandlingOptions(this);
 
   }
 

@@ -44,13 +44,6 @@ public class TestBaseEnumChooserValues {
     ChooserValues cv = new EnumTestChooserValues();
     Assert.assertEquals(Arrays.asList("A", "B"), cv.getValues());
     Assert.assertEquals(Arrays.asList("A", "B"), cv.getLabels());
-
-    // asserting the resolve is done on first use only
-    List<String> values = cv.getValues();
-    List<String> labels = cv.getLabels();
-    ChooserValues cv1 = new EnumTestChooserValues();
-    Assert.assertSame(values, cv1.getValues());
-    Assert.assertSame(labels, cv1.getLabels());
   }
 
   @Test
