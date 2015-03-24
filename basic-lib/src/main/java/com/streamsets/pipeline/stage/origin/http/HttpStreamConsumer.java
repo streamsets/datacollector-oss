@@ -1,0 +1,132 @@
+package com.streamsets.pipeline.stage.origin.http;
+
+import org.glassfish.jersey.client.ChunkedInput;
+import org.glassfish.jersey.client.oauth1.AccessToken;
+import org.glassfish.jersey.client.oauth1.ConsumerCredentials;
+import org.glassfish.jersey.client.oauth1.OAuth1ClientSupport;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import javax.ws.rs.client.AsyncInvoker;
+import javax.ws.rs.client.Client;
+import javax.ws.rs.client.ClientBuilder;
+import javax.ws.rs.client.WebTarget;
+import javax.ws.rs.core.Feature;
+import javax.ws.rs.core.GenericType;
+import javax.ws.rs.core.Response;
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
+
+/**
+ * Consumes the HTTP stream chunk by chunk buffering it into a queue for consumption
+ * by the origin.
+ */
+class HttpStreamConsumer implements Runnable {
+  private static final Logger LOG = LoggerFactory.getLogger(HttpStreamConsumer.class);
+  private WebTarget resource;
+  private AccessToken authToken;
+
+  private final long responseTimeoutMillis;
+  private final String entityDelimiter;
+  private final BlockingQueue<String> entityQueue;
+
+  private volatile boolean stop = false;
+
+  /**
+   * Constructor for unauthenticated connections.
+   * @param resourceUrl URL of streaming JSON resource.
+   * @param responseTimeoutMillis How long to wait for a response from http endpoint.
+   * @param entityDelimiter String delimiter that marks the end of a record.
+   * @param entityQueue A queue to place received chunks (usually a single JSON object) into.
+   */
+  public HttpStreamConsumer(
+      final String resourceUrl,
+      final long responseTimeoutMillis,
+      final String entityDelimiter,
+      BlockingQueue<String> entityQueue
+  ) {
+    this.responseTimeoutMillis = responseTimeoutMillis;
+    this.entityDelimiter = entityDelimiter;
+    this.entityQueue = entityQueue;
+    Client client = ClientBuilder.newClient();
+    resource = client.target(resourceUrl);
+  }
+
+  /**
+   * Constructor for OAuth authenticated connections. Requires a stored auth token since we
+   * cannot display an authentication web page to confirm authorization at this time.
+   * @param resourceUrl URL of streaming JSON resource.
+   * @param responseTimeoutMillis How long to wait for a response from http endpoint.
+   * @param entityDelimiter String delimiter that marks the end of a record.
+   * @param entityQueue A queue to place received chunks (usually a single JSON object) into.
+   * @param consumerKey OAuth required parameter.
+   * @param consumerSecret OAuth required parameter.
+   * @param token OAuth required parameter.
+   * @param tokenSecret OAuth required parameter.
+   */
+  public HttpStreamConsumer(
+      final String resourceUrl,
+      final long responseTimeoutMillis,
+      final String entityDelimiter,
+      BlockingQueue<String> entityQueue,
+      final String consumerKey,
+      final String consumerSecret,
+      final String token,
+      final String tokenSecret
+  ) {
+    this.responseTimeoutMillis = responseTimeoutMillis;
+    this.entityDelimiter = entityDelimiter;
+    this.entityQueue = entityQueue;
+
+    ConsumerCredentials consumerCredentials = new ConsumerCredentials(
+        consumerKey,
+        consumerSecret
+    );
+
+    authToken = new AccessToken(token, tokenSecret);
+    Feature feature = OAuth1ClientSupport.builder(consumerCredentials)
+        .feature()
+        .accessToken(authToken)
+        .build();
+
+    Client client = ClientBuilder.newBuilder()
+        .register(feature)
+        .build();
+    resource = client.target(resourceUrl);
+  }
+
+  @Override
+  public void run() {
+    final AsyncInvoker asyncInvoker = resource.request()
+        .property(OAuth1ClientSupport.OAUTH_PROPERTY_ACCESS_TOKEN, authToken)
+        .async();
+    final Future<Response> responseFuture = asyncInvoker.get();
+    Response response;
+    try {
+      response = responseFuture.get(responseTimeoutMillis, TimeUnit.MILLISECONDS);
+        final ChunkedInput<String> chunkedInput = response.readEntity(new GenericType<ChunkedInput<String>>() {});
+        chunkedInput.setParser(ChunkedInput.createParser(entityDelimiter));
+        String chunk;
+        while ((chunk = chunkedInput.read()) != null && !stop) {
+          boolean accepted = entityQueue.offer(chunk, responseTimeoutMillis, TimeUnit.MILLISECONDS);
+          if (!accepted) {
+            LOG.warn("Response buffer full, dropped record.");
+          }
+        }
+        chunkedInput.close();
+      response.close();
+      LOG.debug("HTTP stream consumer closed.");
+    } catch (InterruptedException | ExecutionException e) {
+      LOG.warn(Errors.HTTP_01.getMessage(), e.toString(), e);
+    } catch (TimeoutException e) {
+      LOG.warn("HTTP request future timed out", e.toString(), e);
+    }
+  }
+
+  public void stop() {
+    stop = true;
+  }
+}
