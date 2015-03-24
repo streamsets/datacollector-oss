@@ -61,13 +61,6 @@ public class ApacheAccessLogHelper {
   static final String LOG_FORMAT_USER_AGENT = "%{User-agent}i";
 
   //Supported regex groups
-  private static final String REG_EX_STRING = "(\\S+)";
-  private static final String REG_EX_REQUEST_LINE = "(\\S+ \\S+ \\S+)";
-  private static final String REG_EX_REQUEST_TIME = "\\[([\\w:/]+\\s[+\\-]\\d{4})\\]";
-  private static final String REG_EX_STATUS = "(\\d{3})";
-  private static final String REG_EX_NUMBER = "(\\d+)";
-  private static final String REG_EX_URL = "([^\"]*)";
-  private static final String REG_EX_PERCENTAGE = "%";
 
   //Field names for supported formats
   static final String REMOTE_IP_ADDRESS = "remoteIpAddress";
@@ -102,37 +95,37 @@ public class ApacheAccessLogHelper {
   public static Map<String, String> formatToFieldNameMap = new HashMap<>();
 
   static {
-    formatToRegExMap.put(LOG_FORMAT_REMOTE_IP_ADDRESS, REG_EX_STRING);
-    formatToRegExMap.put(LOG_FORMAT_LOCAL_IP_ADDRESS, REG_EX_STRING);
-    formatToRegExMap.put(LOG_FORMAT_REQUEST_RECEIVED_TIME, REG_EX_REQUEST_TIME);
-    formatToRegExMap.put(LOG_FORMAT_REQUEST, REG_EX_REQUEST_LINE);
-    formatToRegExMap.put(LOG_FORMAT_REMOTE_LOGNAME, REG_EX_STRING);
-    formatToRegExMap.put(LOG_FORMAT_REMOTE_HOST, REG_EX_STRING);
-    formatToRegExMap.put(LOG_FORMAT_REMOTE_USER, REG_EX_STRING);
-    formatToRegExMap.put(LOG_FORMAT_FINAL_REQUEST_STATUS, REG_EX_STATUS);
-    formatToRegExMap.put(LOG_FORMAT_RESPONSE_SIZE, REG_EX_NUMBER);
-    formatToRegExMap.put(LOG_FORMAT_RESPONSE_SIZE_CLF, REG_EX_NUMBER);
-    formatToRegExMap.put(LOG_FORMAT_REQUEST_METHOD, REG_EX_STRING);
-    formatToRegExMap.put(LOG_FORMAT_REQUEST_PROTOCOL, REG_EX_STRING);
-    formatToRegExMap.put(LOG_FORMAT_URL_PATH, REG_EX_STRING);
-    formatToRegExMap.put(LOG_FORMAT_REFERER, REG_EX_URL);
-    formatToRegExMap.put(LOG_FORMAT_USER_AGENT, REG_EX_URL);
-    formatToRegExMap.put(LOG_FORMAT_TIME_TO_SERVE_MICRO_SECONDS, REG_EX_NUMBER);
-    formatToRegExMap.put(LOG_FORMAT_FILE_NAME, REG_EX_STRING);
-    formatToRegExMap.put(LOG_FORMAT_NUMBER_OF_KEEPALIVE_REQUESTS, REG_EX_NUMBER);
-    formatToRegExMap.put(LOG_FORMAT_SERVER_PORT, REG_EX_NUMBER);
-    formatToRegExMap.put(LOG_FORMAT_CHILD_PID, REG_EX_NUMBER);
-    formatToRegExMap.put(LOG_FORMAT_QUERY_STRING, REG_EX_STRING);
-    formatToRegExMap.put(LOG_FORMAT_HANDLER_GENERATING_REQUEST, REG_EX_STRING);
-    formatToRegExMap.put(LOG_FORMAT_STATUS, REG_EX_STATUS);
-    formatToRegExMap.put(LOG_FORMAT_TIME_TO_SERVE_REQUEST, REG_EX_NUMBER);
-    formatToRegExMap.put(LOG_FORMAT_CANONICAL_SERVER_NAME, REG_EX_STRING);
-    formatToRegExMap.put(LOG_FORMAT_SERVER_NAME, REG_EX_STRING);
-    formatToRegExMap.put(LOG_FORMAT_CONNECTION_STATUS, REG_EX_STRING);
-    formatToRegExMap.put(LOG_FORMAT_BYTES_RECEIVED, REG_EX_NUMBER);
-    formatToRegExMap.put(LOG_FORMAT_BYTES_SENT, REG_EX_NUMBER);
-    formatToRegExMap.put(LOG_FORMAT_BYTES_TRANSFERRED, REG_EX_NUMBER);
-    formatToRegExMap.put(LOG_FORMAT_PERCENTAGE, REG_EX_PERCENTAGE);
+    formatToRegExMap.put(LOG_FORMAT_REMOTE_IP_ADDRESS, Constants.REG_EX_STRING);
+    formatToRegExMap.put(LOG_FORMAT_LOCAL_IP_ADDRESS, Constants.REG_EX_STRING);
+    formatToRegExMap.put(LOG_FORMAT_REQUEST_RECEIVED_TIME, Constants.REG_EX_REQUEST_TIME);
+    formatToRegExMap.put(LOG_FORMAT_REQUEST, Constants.REG_EX_REQUEST_LINE);
+    formatToRegExMap.put(LOG_FORMAT_REMOTE_LOGNAME, Constants.REG_EX_STRING);
+    formatToRegExMap.put(LOG_FORMAT_REMOTE_HOST, Constants.REG_EX_STRING);
+    formatToRegExMap.put(LOG_FORMAT_REMOTE_USER, Constants.REG_EX_STRING);
+    formatToRegExMap.put(LOG_FORMAT_FINAL_REQUEST_STATUS, Constants.REG_EX_STATUS);
+    formatToRegExMap.put(LOG_FORMAT_RESPONSE_SIZE, Constants.REG_EX_NUMBER);
+    formatToRegExMap.put(LOG_FORMAT_RESPONSE_SIZE_CLF, Constants.REG_EX_NUMBER);
+    formatToRegExMap.put(LOG_FORMAT_REQUEST_METHOD, Constants.REG_EX_STRING);
+    formatToRegExMap.put(LOG_FORMAT_REQUEST_PROTOCOL, Constants.REG_EX_STRING);
+    formatToRegExMap.put(LOG_FORMAT_URL_PATH, Constants.REG_EX_STRING);
+    formatToRegExMap.put(LOG_FORMAT_REFERER, Constants.REG_EX_URL);
+    formatToRegExMap.put(LOG_FORMAT_USER_AGENT, Constants.REG_EX_URL);
+    formatToRegExMap.put(LOG_FORMAT_TIME_TO_SERVE_MICRO_SECONDS, Constants.REG_EX_NUMBER);
+    formatToRegExMap.put(LOG_FORMAT_FILE_NAME, Constants.REG_EX_STRING);
+    formatToRegExMap.put(LOG_FORMAT_NUMBER_OF_KEEPALIVE_REQUESTS, Constants.REG_EX_NUMBER);
+    formatToRegExMap.put(LOG_FORMAT_SERVER_PORT, Constants.REG_EX_NUMBER);
+    formatToRegExMap.put(LOG_FORMAT_CHILD_PID, Constants.REG_EX_NUMBER);
+    formatToRegExMap.put(LOG_FORMAT_QUERY_STRING, Constants.REG_EX_STRING);
+    formatToRegExMap.put(LOG_FORMAT_HANDLER_GENERATING_REQUEST, Constants.REG_EX_STRING);
+    formatToRegExMap.put(LOG_FORMAT_STATUS, Constants.REG_EX_STATUS);
+    formatToRegExMap.put(LOG_FORMAT_TIME_TO_SERVE_REQUEST, Constants.REG_EX_NUMBER);
+    formatToRegExMap.put(LOG_FORMAT_CANONICAL_SERVER_NAME, Constants.REG_EX_STRING);
+    formatToRegExMap.put(LOG_FORMAT_SERVER_NAME, Constants.REG_EX_STRING);
+    formatToRegExMap.put(LOG_FORMAT_CONNECTION_STATUS, Constants.REG_EX_STRING);
+    formatToRegExMap.put(LOG_FORMAT_BYTES_RECEIVED, Constants.REG_EX_NUMBER);
+    formatToRegExMap.put(LOG_FORMAT_BYTES_SENT, Constants.REG_EX_NUMBER);
+    formatToRegExMap.put(LOG_FORMAT_BYTES_TRANSFERRED, Constants.REG_EX_NUMBER);
+    formatToRegExMap.put(LOG_FORMAT_PERCENTAGE, Constants.REG_EX_PERCENTAGE);
 
     formatToFieldNameMap.put(LOG_FORMAT_REMOTE_IP_ADDRESS, REMOTE_IP_ADDRESS);
     formatToFieldNameMap.put(LOG_FORMAT_LOCAL_IP_ADDRESS, LOCAL_IP_ADDRESS);

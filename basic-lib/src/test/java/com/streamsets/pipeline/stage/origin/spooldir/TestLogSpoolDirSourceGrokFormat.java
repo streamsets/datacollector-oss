@@ -9,7 +9,6 @@ import com.streamsets.pipeline.api.BatchMaker;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.config.DataFormat;
 import com.streamsets.pipeline.config.LogMode;
-import com.streamsets.pipeline.lib.parser.log.Constants;
 import com.streamsets.pipeline.sdk.SourceRunner;
 import com.streamsets.pipeline.sdk.StageRunner;
 import org.apache.commons.io.IOUtils;
@@ -23,7 +22,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 
-public class TestLogSpoolDirSourceApacheErrorLogFormat {
+public class TestLogSpoolDirSourceGrokFormat {
 
   private String createTestDir() {
     File f = new File("target", UUID.randomUUID().toString());
@@ -31,10 +30,17 @@ public class TestLogSpoolDirSourceApacheErrorLogFormat {
     return f.getAbsolutePath();
   }
 
-  private final static String LINE1 = "[Wed Oct 11 14:32:52 2000] [error] [client 127.0.0.1] client denied " +
-    "by server configuration1: /export/home/live/ap/htdocs/test1";
-  private final static String LINE2 = "[Thu Oct 11 14:32:52 2000] [warn] [client 127.0.0.1] client denied "+
-    "by server configuration2: /export/home/live/ap/htdocs/test2";
+  private static final String LINE1 = "[3223] 26 Feb 23:59:01 Background append only file rewriting started by pid " +
+    "19383 [19383] 26 Feb 23:59:01 SYNC append only file rewrite performed ";
+
+  private static final String LINE2 = "[3223] 26 Mar 23:59:01 Background append only file rewriting started by pid " +
+    "19383 [19383] 26 Feb 23:59:01 SYNC append only file rewrite performed ";
+
+  private static final String GROK_PATTERN_DEFINITION =
+    "REDISTIMESTAMP %{MONTHDAY} %{MONTH} %{TIME}\n" +
+      "REDISLOG \\[%{POSINT:pid}\\] %{REDISTIMESTAMP:timestamp} %{GREEDYDATA:message}";
+
+  private static final String GROK_PATTERN = "%{REDISLOG}";
 
   private File createLogFile() throws Exception {
     File f = new File(createTestDir(), "test.log");
@@ -48,8 +54,8 @@ public class TestLogSpoolDirSourceApacheErrorLogFormat {
   private SpoolDirSource createSource() {
     return new SpoolDirSource(DataFormat.LOG, "UTF-8", 100, createTestDir(), 10, 1, "file-[0-9].log", 10, null, null,
       PostProcessingOptions.ARCHIVE, createTestDir(), 10, null, null, -1, null, 0, 0,
-      null, 0, LogMode.APACHE_ERROR_LOG_FORMAT, 1000, true, null, null, Collections.<RegExConfig>emptyList(), null,
-      null);
+      null, 0, LogMode.GROK, 1000, true, null, null, Collections.<RegExConfig>emptyList(), GROK_PATTERN_DEFINITION,
+      GROK_PATTERN);
   }
 
   @Test
@@ -73,36 +79,33 @@ public class TestLogSpoolDirSourceApacheErrorLogFormat {
 
       Assert.assertFalse(record.has("/truncated"));
 
-      Assert.assertTrue(record.has("/" + Constants.TIMESTAMP));
-      Assert.assertEquals("Wed Oct 11 14:32:52 2000", record.get("/" + Constants.TIMESTAMP).getValueAsString());
+      Assert.assertTrue(record.has("/timestamp"));
+      Assert.assertEquals("26 Feb 23:59:01", record.get("/timestamp").getValueAsString());
 
-      Assert.assertTrue(record.has("/" + Constants.LOGLEVEL));
-      Assert.assertEquals("error", record.get("/" + Constants.LOGLEVEL).getValueAsString());
+      Assert.assertTrue(record.has("/pid"));
+      Assert.assertEquals("3223", record.get("/pid").getValueAsString());
 
-      Assert.assertTrue(record.has("/" + Constants.CLIENTIP));
-      Assert.assertEquals("127.0.0.1", record.get("/" + Constants.CLIENTIP).getValueAsString());
+      Assert.assertTrue(record.has("/message"));
+      Assert.assertEquals("Background append only file rewriting started by pid " +
+        "19383 [19383] 26 Feb 23:59:01 SYNC append only file rewrite performed ",
+        record.get("/message").getValueAsString());
 
-      Assert.assertTrue(record.has("/" + Constants.MESSAGE));
-      Assert.assertEquals("client denied by server configuration1: /export/home/live/ap/htdocs/test1",
-        record.get("/" + Constants.MESSAGE).getValueAsString());
 
       record = records.get(1);
 
       Assert.assertEquals(LINE2, records.get(1).get().getValueAsMap().get("originalLine").getValueAsString());
       Assert.assertFalse(record.has("/truncated"));
 
-      Assert.assertTrue(record.has("/" + Constants.TIMESTAMP));
-      Assert.assertEquals("Thu Oct 11 14:32:52 2000", record.get("/" + Constants.TIMESTAMP).getValueAsString());
+      Assert.assertTrue(record.has("/timestamp"));
+      Assert.assertEquals("26 Mar 23:59:01", record.get("/timestamp").getValueAsString());
 
-      Assert.assertTrue(record.has("/" + Constants.LOGLEVEL));
-      Assert.assertEquals("warn", record.get("/" + Constants.LOGLEVEL).getValueAsString());
+      Assert.assertTrue(record.has("/pid"));
+      Assert.assertEquals("3223", record.get("/pid").getValueAsString());
 
-      Assert.assertTrue(record.has("/" + Constants.CLIENTIP));
-      Assert.assertEquals("127.0.0.1", record.get("/" + Constants.CLIENTIP).getValueAsString());
-
-      Assert.assertTrue(record.has("/" + Constants.MESSAGE));
-      Assert.assertEquals("client denied by server configuration2: /export/home/live/ap/htdocs/test2",
-        record.get("/" + Constants.MESSAGE).getValueAsString());
+      Assert.assertTrue(record.has("/message"));
+      Assert.assertEquals("Background append only file rewriting started by pid " +
+          "19383 [19383] 26 Feb 23:59:01 SYNC append only file rewrite performed ",
+        record.get("/message").getValueAsString());
 
     } finally {
       runner.runDestroy();
@@ -117,8 +120,8 @@ public class TestLogSpoolDirSourceApacheErrorLogFormat {
     try {
       BatchMaker batchMaker = SourceRunner.createTestBatchMaker("lane");
       long offset = source.produce(createLogFile(), 0, 1, batchMaker);
-      //FIXME
-      Assert.assertEquals(128, offset);
+
+      Assert.assertEquals(147, offset);
       StageRunner.Output output = SourceRunner.getOutput(batchMaker);
       List<Record> records = output.getRecords().get("lane");
       Assert.assertNotNull(records);
@@ -128,22 +131,21 @@ public class TestLogSpoolDirSourceApacheErrorLogFormat {
       Record record = records.get(0);
       Assert.assertFalse(record.has("/truncated"));
 
-      Assert.assertTrue(record.has("/" + Constants.TIMESTAMP));
-      Assert.assertEquals("Wed Oct 11 14:32:52 2000", record.get("/" + Constants.TIMESTAMP).getValueAsString());
+      Assert.assertTrue(record.has("/timestamp"));
+      Assert.assertEquals("26 Feb 23:59:01", record.get("/timestamp").getValueAsString());
 
-      Assert.assertTrue(record.has("/" + Constants.LOGLEVEL));
-      Assert.assertEquals("error", record.get("/" + Constants.LOGLEVEL).getValueAsString());
+      Assert.assertTrue(record.has("/pid"));
+      Assert.assertEquals("3223", record.get("/pid").getValueAsString());
 
-      Assert.assertTrue(record.has("/" + Constants.CLIENTIP));
-      Assert.assertEquals("127.0.0.1", record.get("/" + Constants.CLIENTIP).getValueAsString());
+      Assert.assertTrue(record.has("/message"));
+      Assert.assertEquals("Background append only file rewriting started by pid " +
+          "19383 [19383] 26 Feb 23:59:01 SYNC append only file rewrite performed ",
+        record.get("/message").getValueAsString());
 
-      Assert.assertTrue(record.has("/" + Constants.MESSAGE));
-      Assert.assertEquals("client denied by server configuration1: /export/home/live/ap/htdocs/test1",
-        record.get("/" + Constants.MESSAGE).getValueAsString());
 
       batchMaker = SourceRunner.createTestBatchMaker("lane");
       offset = source.produce(createLogFile(), offset, 1, batchMaker);
-      Assert.assertEquals(254, offset);
+      Assert.assertEquals(293, offset);
       output = SourceRunner.getOutput(batchMaker);
       records = output.getRecords().get("lane");
       Assert.assertNotNull(records);
@@ -154,18 +156,17 @@ public class TestLogSpoolDirSourceApacheErrorLogFormat {
 
       record = records.get(0);
 
-      Assert.assertTrue(record.has("/" + Constants.TIMESTAMP));
-      Assert.assertEquals("Thu Oct 11 14:32:52 2000", record.get("/" + Constants.TIMESTAMP).getValueAsString());
+      Assert.assertTrue(record.has("/timestamp"));
+      Assert.assertEquals("26 Mar 23:59:01", record.get("/timestamp").getValueAsString());
 
-      Assert.assertTrue(record.has("/" + Constants.LOGLEVEL));
-      Assert.assertEquals("warn", record.get("/" + Constants.LOGLEVEL).getValueAsString());
+      Assert.assertTrue(record.has("/pid"));
+      Assert.assertEquals("3223", record.get("/pid").getValueAsString());
 
-      Assert.assertTrue(record.has("/" + Constants.CLIENTIP));
-      Assert.assertEquals("127.0.0.1", record.get("/" + Constants.CLIENTIP).getValueAsString());
+      Assert.assertTrue(record.has("/message"));
+      Assert.assertEquals("Background append only file rewriting started by pid " +
+          "19383 [19383] 26 Feb 23:59:01 SYNC append only file rewrite performed ",
+        record.get("/message").getValueAsString());
 
-      Assert.assertTrue(record.has("/" + Constants.MESSAGE));
-      Assert.assertEquals("client denied by server configuration2: /export/home/live/ap/htdocs/test2",
-        record.get("/" + Constants.MESSAGE).getValueAsString());
 
       batchMaker = SourceRunner.createTestBatchMaker("lane");
       offset = source.produce(createLogFile(), offset, 1, batchMaker);

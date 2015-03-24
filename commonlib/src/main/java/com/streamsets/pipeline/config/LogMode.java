@@ -16,7 +16,7 @@ public enum LogMode implements Label {
   APACHE_ERROR_LOG_FORMAT("Apache Error Log Format"),
   APACHE_CUSTOM_LOG_FORMAT("Apache Access Log Custom Format"),
   REGEX("Regular Expression"),
-
+  GROK("Grok Pattern")
   ;
 
   private final String label;

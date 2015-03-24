@@ -19,10 +19,10 @@ import java.io.IOException;
 import java.io.StringReader;
 import java.util.Collections;
 
-public class TestErrorLogFormatParser {
+public class TestLog4jParser {
 
-  private static final String ERROR_LOG_LINE = "[Wed Oct 11 14:32:52 2000] [error] [client 127.0.0.1] client denied " +
-    "by server configuration: /export/home/live/ap/htdocs/test";
+  private static final String LOG_LINE = "2015-03-20 15:53:31,161 DEBUG PipelineConfigurationValidator - " +
+    "Pipeline 'test:preview' validation. valid=true, canPreview=true, issuesCount=0";
 
   private Stage.Context getContext() {
     return ContextInfoCreator.createSourceContext("i", false, OnRecordError.TO_ERROR,
@@ -31,31 +31,31 @@ public class TestErrorLogFormatParser {
 
   @Test
   public void testParse() throws Exception {
-    OverrunReader reader = new OverrunReader(new StringReader(ERROR_LOG_LINE), 1000, true);
-    DataParser parser = new ApacheErrorLogParserV22(getContext(), "id", reader, 0, 1000, true);
+    OverrunReader reader = new OverrunReader(new StringReader(LOG_LINE), 1000, true);
+    DataParser parser = new Log4jParser(getContext(), "id", reader, 0, 1000, true);
     Assert.assertEquals(0, parser.getOffset());
     Record record = parser.parse();
     Assert.assertNotNull(record);
 
     Assert.assertEquals("id::0", record.getHeader().getSourceId());
 
-    Assert.assertEquals(ERROR_LOG_LINE, record.get().getValueAsMap().get("originalLine").getValueAsString());
+    Assert.assertEquals(LOG_LINE, record.get().getValueAsMap().get("originalLine").getValueAsString());
 
     Assert.assertFalse(record.has("/truncated"));
 
-    Assert.assertEquals(125, parser.getOffset());
+    Assert.assertEquals(141, parser.getOffset());
 
     Assert.assertTrue(record.has("/" + Constants.TIMESTAMP));
-    Assert.assertEquals("Wed Oct 11 14:32:52 2000", record.get("/" + Constants.TIMESTAMP).getValueAsString());
+    Assert.assertEquals("2015-03-20 15:53:31,161", record.get("/" + Constants.TIMESTAMP).getValueAsString());
 
-    Assert.assertTrue(record.has("/" + Constants.LOGLEVEL));
-    Assert.assertEquals("error", record.get("/" + Constants.LOGLEVEL).getValueAsString());
+    Assert.assertTrue(record.has("/" + Constants.SEVERITY));
+    Assert.assertEquals("DEBUG", record.get("/" + Constants.SEVERITY).getValueAsString());
 
-    Assert.assertTrue(record.has("/" + Constants.CLIENTIP));
-    Assert.assertEquals("127.0.0.1", record.get("/" + Constants.CLIENTIP).getValueAsString());
+    Assert.assertTrue(record.has("/" + Constants.JAVACLASS));
+    Assert.assertEquals("PipelineConfigurationValidator", record.get("/" + Constants.JAVACLASS).getValueAsString());
 
     Assert.assertTrue(record.has("/" + Constants.MESSAGE));
-    Assert.assertEquals("client denied by server configuration: /export/home/live/ap/htdocs/test",
+    Assert.assertEquals("Pipeline 'test:preview' validation. valid=true, canPreview=true, issuesCount=0",
       record.get("/" + Constants.MESSAGE).getValueAsString());
 
     parser.close();
@@ -64,31 +64,31 @@ public class TestErrorLogFormatParser {
   @Test
   public void testParseWithOffset() throws Exception {
     OverrunReader reader = new OverrunReader(new StringReader(
-      "Hello\n" + ERROR_LOG_LINE), 1000, true);
-    DataParser parser = new ApacheErrorLogParserV22(getContext(), "id", reader, 6, 1000, true);
+      "Hello\n" + LOG_LINE), 1000, true);
+    DataParser parser = new Log4jParser(getContext(), "id", reader, 6, 1000, true);
     Assert.assertEquals(6, parser.getOffset());
     Record record = parser.parse();
     Assert.assertNotNull(record);
 
     Assert.assertEquals("id::6", record.getHeader().getSourceId());
 
-    Assert.assertEquals(ERROR_LOG_LINE, record.get().getValueAsMap().get("originalLine").getValueAsString());
+    Assert.assertEquals(LOG_LINE, record.get().getValueAsMap().get("originalLine").getValueAsString());
 
     Assert.assertFalse(record.has("/truncated"));
 
-    Assert.assertEquals(131, parser.getOffset());
+    Assert.assertEquals(147, parser.getOffset());
 
     Assert.assertTrue(record.has("/" + Constants.TIMESTAMP));
-    Assert.assertEquals("Wed Oct 11 14:32:52 2000", record.get("/" + Constants.TIMESTAMP).getValueAsString());
+    Assert.assertEquals("2015-03-20 15:53:31,161", record.get("/" + Constants.TIMESTAMP).getValueAsString());
 
-    Assert.assertTrue(record.has("/" + Constants.LOGLEVEL));
-    Assert.assertEquals("error", record.get("/" + Constants.LOGLEVEL).getValueAsString());
+    Assert.assertTrue(record.has("/" + Constants.SEVERITY));
+    Assert.assertEquals("DEBUG", record.get("/" + Constants.SEVERITY).getValueAsString());
 
-    Assert.assertTrue(record.has("/" + Constants.CLIENTIP));
-    Assert.assertEquals("127.0.0.1", record.get("/" + Constants.CLIENTIP).getValueAsString());
+    Assert.assertTrue(record.has("/" + Constants.JAVACLASS));
+    Assert.assertEquals("PipelineConfigurationValidator", record.get("/" + Constants.JAVACLASS).getValueAsString());
 
     Assert.assertTrue(record.has("/" + Constants.MESSAGE));
-    Assert.assertEquals("client denied by server configuration: /export/home/live/ap/htdocs/test",
+    Assert.assertEquals("Pipeline 'test:preview' validation. valid=true, canPreview=true, issuesCount=0",
       record.get("/" + Constants.MESSAGE).getValueAsString());
 
     record = parser.parse();
@@ -101,15 +101,15 @@ public class TestErrorLogFormatParser {
   @Test(expected = IOException.class)
   public void testClose() throws Exception {
     OverrunReader reader = new OverrunReader(new StringReader("Hello\nByte"), 1000, true);
-    DataParser parser = new ApacheErrorLogParserV22(getContext(), "id", reader, 0, 1000, false);
+    DataParser parser = new Log4jParser(getContext(), "id", reader, 0, 1000, false);
     parser.close();
     parser.parse();
   }
 
   @Test(expected = DataParserException.class)
   public void testTruncate() throws Exception {
-    OverrunReader reader = new OverrunReader(new StringReader(ERROR_LOG_LINE), 1000, true);
-    DataParser parser = new ApacheErrorLogParserV22(getContext(), "id", reader, 0, 25, true); //cut short to 25
+    OverrunReader reader = new OverrunReader(new StringReader(LOG_LINE), 1000, true);
+    DataParser parser = new Log4jParser(getContext(), "id", reader, 0, 25, true); //cut short to 25
     Assert.assertEquals(0, parser.getOffset());
     try {
       parser.parse();
@@ -121,9 +121,9 @@ public class TestErrorLogFormatParser {
   @Test(expected = DataParserException.class)
   public void testParseNonLogLine() throws Exception {
     OverrunReader reader = new OverrunReader(new StringReader(
-      "127.0.0.1 ss h [10/Oct/2000:13:55:36 -0700] This is a log line that does not confirm to common log format"),
+      "127.0.0.1 ss h [10/Oct/2000:13:55:36 -0700] This is a log line that does not confirm to default log4j log format"),
       1000, true);
-    DataParser parser = new ApacheErrorLogParserV22(getContext(), "id", reader, 0, 1000, true);
+    DataParser parser = new Log4jParser(getContext(), "id", reader, 0, 1000, true);
     Assert.assertEquals(0, parser.getOffset());
     try {
       parser.parse();
@@ -131,4 +131,5 @@ public class TestErrorLogFormatParser {
       parser.close();
     }
   }
+
 }

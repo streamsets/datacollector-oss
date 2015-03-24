@@ -31,7 +31,7 @@ import java.util.Map;
     description = "Reads data from Kafka",
     icon = "kafka.png"
 )
-@RawSource(rawSourcePreviewer = KafkaRawSourcePreviewer.class, mimeType = "application/json")
+@RawSource(rawSourcePreviewer = KafkaRawSourcePreviewer.class, mimeType = "*/*")
 @ConfigGroups(value = Groups.class)
 @GenerateResourceBundle
 public class KafkaDSource extends DSourceOffsetCommitter {

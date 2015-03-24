@@ -38,6 +38,10 @@ public class RegexParser extends LogDataParser {
         throw new DataParserException(Errors.LOG_PARSER_03, sb.toString(), "Regular Expression - " + regex);
       }
     }
+    for(int i = 1; i <= m.groupCount(); i++) {
+      System.out.println("Group : " + i + "= " + m.group() + ",  Value : " + m.group(i));
+    }
+
     Map<String, Field> map = new HashMap<>();
     for(Map.Entry<String, Integer> e : fieldToGroupMap.entrySet()) {
       map.put(e.getKey(), Field.create(m.group(e.getValue())));

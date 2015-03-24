@@ -9,6 +9,7 @@ import com.streamsets.pipeline.api.BatchMaker;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.config.DataFormat;
 import com.streamsets.pipeline.config.LogMode;
+import com.streamsets.pipeline.lib.parser.log.Constants;
 import com.streamsets.pipeline.sdk.SourceRunner;
 import com.streamsets.pipeline.sdk.StageRunner;
 import org.apache.commons.io.IOUtils;
@@ -18,47 +19,11 @@ import org.junit.Test;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.Writer;
-import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 
 public class TestLogSpoolDirSourceCommonLogFormat {
-
-  private static final String CUSTOM_LOG_FORMAT = "%h %l %u %t \"%r\" %>s %b";
-  private static final String REGEX =
-    "^(\\S+) (\\S+) (\\S+) \\[([\\w:/]+\\s[+\\-]\\d{4})\\] \"(\\S+) (\\S+) (\\S+)\" (\\d{3}) (\\d+)";
-  private static final List<RegExConfig> REGEX_CONFIG = new ArrayList<>();
-
-  static {
-    RegExConfig r1 = new RegExConfig();
-    r1.fieldPath = "remoteHost";
-    r1.group = 1;
-    REGEX_CONFIG.add(r1);
-    RegExConfig r2 = new RegExConfig();
-    r2.fieldPath = "logName";
-    r2.group = 2;
-    REGEX_CONFIG.add(r2);
-    RegExConfig r3 = new RegExConfig();
-    r3.fieldPath = "remoteUser";
-    r3.group = 3;
-    REGEX_CONFIG.add(r3);
-    RegExConfig r4 = new RegExConfig();
-    r4.fieldPath = "requestTime";
-    r4.group = 4;
-    REGEX_CONFIG.add(r4);
-    RegExConfig r5 = new RegExConfig();
-    r5.fieldPath = "request";
-    r5.group = 5;
-    REGEX_CONFIG.add(r5);
-    RegExConfig r6 = new RegExConfig();
-    r6.fieldPath = "status";
-    r6.group = 6;
-    REGEX_CONFIG.add(r6);
-    RegExConfig r7 = new RegExConfig();
-    r7.fieldPath = "bytesSent";
-    r7.group = 7;
-    REGEX_CONFIG.add(r7);
-  }
 
   private String createTestDir() {
     File f = new File("target", UUID.randomUUID().toString());
@@ -81,7 +46,8 @@ public class TestLogSpoolDirSourceCommonLogFormat {
   private SpoolDirSource createSource() {
     return new SpoolDirSource(DataFormat.LOG, "UTF-8", 100, createTestDir(), 10, 1, "file-[0-9].log", 10, null, null,
       PostProcessingOptions.ARCHIVE, createTestDir(), 10, null, null, -1, null, 0, 0,
-      null, 0, LogMode.COMMON_LOG_FORMAT, 100, true, CUSTOM_LOG_FORMAT, REGEX, REGEX_CONFIG);
+      null, 0, LogMode.COMMON_LOG_FORMAT, 100, true, null, null, Collections.<RegExConfig>emptyList(),
+      null, null);
   }
 
   @Test
@@ -101,63 +67,65 @@ public class TestLogSpoolDirSourceCommonLogFormat {
 
       Record record = records.get(0);
 
-      Assert.assertTrue(record.has("/remoteHost"));
-      Assert.assertEquals("127.0.0.1", record.get("/remoteHost").getValueAsString());
+      Assert.assertTrue(record.has("/" + Constants.CLIENTIP));
+      Assert.assertEquals("127.0.0.1", record.get("/" + Constants.CLIENTIP).getValueAsString());
 
-      Assert.assertTrue(record.has("/logName"));
-      Assert.assertEquals("ss", record.get("/logName").getValueAsString());
+      Assert.assertTrue(record.has("/" + Constants.USER_IDENT));
+      Assert.assertEquals("ss", record.get("/" + Constants.USER_IDENT).getValueAsString());
 
-      Assert.assertTrue(record.has("/remoteUser"));
-      Assert.assertEquals("h", record.get("/remoteUser").getValueAsString());
+      Assert.assertTrue(record.has("/" + Constants.USER_AUTH));
+      Assert.assertEquals("h", record.get("/" + Constants.USER_AUTH).getValueAsString());
 
-      Assert.assertTrue(record.has("/requestTime"));
-      Assert.assertEquals("10/Oct/2000:13:55:36 -0700", record.get("/requestTime").getValueAsString());
+      Assert.assertTrue(record.has("/" + Constants.TIMESTAMP));
+      Assert.assertEquals("10/Oct/2000:13:55:36 -0700", record.get("/" + Constants.TIMESTAMP).getValueAsString());
 
-      Assert.assertTrue(record.has("/requestMethod"));
-      Assert.assertEquals("GET", record.get("/requestMethod").getValueAsString());
+      Assert.assertTrue(record.has("/" + Constants.VERB));
+      Assert.assertEquals("GET", record.get("/" + Constants.VERB).getValueAsString());
 
-      Assert.assertTrue(record.has("/urlPath"));
-      Assert.assertEquals("/apache_pb.gif", record.get("/urlPath").getValueAsString());
+      Assert.assertTrue(record.has("/" + Constants.REQUEST));
+      Assert.assertEquals("/apache_pb.gif", record.get("/" + Constants.REQUEST).getValueAsString());
 
-      Assert.assertTrue(record.has("/requestProtocol"));
-      Assert.assertEquals("HTTP/1.0", record.get("/requestProtocol").getValueAsString());
+      Assert.assertTrue(record.has("/" + Constants.HTTPVERSION));
+      Assert.assertEquals("1.0", record.get("/" + Constants.HTTPVERSION).getValueAsString());
 
-      Assert.assertTrue(record.has("/status"));
-      Assert.assertEquals("200", record.get("/status").getValueAsString());
+      Assert.assertTrue(record.has("/" + Constants.RESPONSE));
+      Assert.assertEquals("200", record.get("/" + Constants.RESPONSE).getValueAsString());
 
-      Assert.assertTrue(record.has("/bytesSent"));
-      Assert.assertEquals("2326", record.get("/bytesSent").getValueAsString());
+      Assert.assertTrue(record.has("/" + Constants.BYTES));
+      Assert.assertEquals("2326", record.get("/" + Constants.BYTES).getValueAsString());
+
 
       Assert.assertEquals(LINE2, records.get(1).get().getValueAsMap().get("originalLine").getValueAsString());
       Assert.assertFalse(records.get(1).has("/truncated"));
 
       record = records.get(1);
-      Assert.assertTrue(record.has("/remoteHost"));
-      Assert.assertEquals("127.0.0.2", record.get("/remoteHost").getValueAsString());
+      Assert.assertTrue(record.has("/" + Constants.CLIENTIP));
+      Assert.assertEquals("127.0.0.2", record.get("/" + Constants.CLIENTIP).getValueAsString());
 
-      Assert.assertTrue(record.has("/logName"));
-      Assert.assertEquals("ss", record.get("/logName").getValueAsString());
+      Assert.assertTrue(record.has("/" + Constants.USER_IDENT));
+      Assert.assertEquals("ss", record.get("/" + Constants.USER_IDENT).getValueAsString());
 
-      Assert.assertTrue(record.has("/remoteUser"));
-      Assert.assertEquals("m", record.get("/remoteUser").getValueAsString());
+      Assert.assertTrue(record.has("/" + Constants.USER_AUTH));
+      Assert.assertEquals("m", record.get("/" + Constants.USER_AUTH).getValueAsString());
 
-      Assert.assertTrue(record.has("/requestTime"));
-      Assert.assertEquals("10/Oct/2000:13:55:36 -0800", record.get("/requestTime").getValueAsString());
+      Assert.assertTrue(record.has("/" + Constants.TIMESTAMP));
+      Assert.assertEquals("10/Oct/2000:13:55:36 -0800", record.get("/" + Constants.TIMESTAMP).getValueAsString());
 
-      Assert.assertTrue(record.has("/requestMethod"));
-      Assert.assertEquals("GET", record.get("/requestMethod").getValueAsString());
+      Assert.assertTrue(record.has("/" + Constants.VERB));
+      Assert.assertEquals("GET", record.get("/" + Constants.VERB).getValueAsString());
 
-      Assert.assertTrue(record.has("/urlPath"));
-      Assert.assertEquals("/apache_pb.gif", record.get("/urlPath").getValueAsString());
+      Assert.assertTrue(record.has("/" + Constants.REQUEST));
+      Assert.assertEquals("/apache_pb.gif", record.get("/" + Constants.REQUEST).getValueAsString());
 
-      Assert.assertTrue(record.has("/requestProtocol"));
-      Assert.assertEquals("HTTP/2.0", record.get("/requestProtocol").getValueAsString());
+      Assert.assertTrue(record.has("/" + Constants.HTTPVERSION));
+      Assert.assertEquals("2.0", record.get("/" + Constants.HTTPVERSION).getValueAsString());
 
-      Assert.assertTrue(record.has("/status"));
-      Assert.assertEquals("200", record.get("/status").getValueAsString());
+      Assert.assertTrue(record.has("/" + Constants.RESPONSE));
+      Assert.assertEquals("200", record.get("/" + Constants.RESPONSE).getValueAsString());
 
-      Assert.assertTrue(record.has("/bytesSent"));
-      Assert.assertEquals("2326", record.get("/bytesSent").getValueAsString());
+      Assert.assertTrue(record.has("/" + Constants.BYTES));
+      Assert.assertEquals("2326", record.get("/" + Constants.BYTES).getValueAsString());
+
 
     } finally {
       runner.runDestroy();
@@ -181,32 +149,33 @@ public class TestLogSpoolDirSourceCommonLogFormat {
 
 
       Record record = records.get(0);
-      Assert.assertTrue(record.has("/remoteHost"));
-      Assert.assertEquals("127.0.0.1", record.get("/remoteHost").getValueAsString());
+      Assert.assertTrue(record.has("/" + Constants.CLIENTIP));
+      Assert.assertEquals("127.0.0.1", record.get("/" + Constants.CLIENTIP).getValueAsString());
 
-      Assert.assertTrue(record.has("/logName"));
-      Assert.assertEquals("ss", record.get("/logName").getValueAsString());
+      Assert.assertTrue(record.has("/" + Constants.USER_IDENT));
+      Assert.assertEquals("ss", record.get("/" + Constants.USER_IDENT).getValueAsString());
 
-      Assert.assertTrue(record.has("/remoteUser"));
-      Assert.assertEquals("h", record.get("/remoteUser").getValueAsString());
+      Assert.assertTrue(record.has("/" + Constants.USER_AUTH));
+      Assert.assertEquals("h", record.get("/" + Constants.USER_AUTH).getValueAsString());
 
-      Assert.assertTrue(record.has("/requestTime"));
-      Assert.assertEquals("10/Oct/2000:13:55:36 -0700", record.get("/requestTime").getValueAsString());
+      Assert.assertTrue(record.has("/" + Constants.TIMESTAMP));
+      Assert.assertEquals("10/Oct/2000:13:55:36 -0700", record.get("/" + Constants.TIMESTAMP).getValueAsString());
 
-      Assert.assertTrue(record.has("/requestMethod"));
-      Assert.assertEquals("GET", record.get("/requestMethod").getValueAsString());
+      Assert.assertTrue(record.has("/" + Constants.VERB));
+      Assert.assertEquals("GET", record.get("/" + Constants.VERB).getValueAsString());
 
-      Assert.assertTrue(record.has("/urlPath"));
-      Assert.assertEquals("/apache_pb.gif", record.get("/urlPath").getValueAsString());
+      Assert.assertTrue(record.has("/" + Constants.REQUEST));
+      Assert.assertEquals("/apache_pb.gif", record.get("/" + Constants.REQUEST).getValueAsString());
 
-      Assert.assertTrue(record.has("/requestProtocol"));
-      Assert.assertEquals("HTTP/1.0", record.get("/requestProtocol").getValueAsString());
+      Assert.assertTrue(record.has("/" + Constants.HTTPVERSION));
+      Assert.assertEquals("1.0", record.get("/" + Constants.HTTPVERSION).getValueAsString());
 
-      Assert.assertTrue(record.has("/status"));
-      Assert.assertEquals("200", record.get("/status").getValueAsString());
+      Assert.assertTrue(record.has("/" + Constants.RESPONSE));
+      Assert.assertEquals("200", record.get("/" + Constants.RESPONSE).getValueAsString());
 
-      Assert.assertTrue(record.has("/bytesSent"));
-      Assert.assertEquals("2326", record.get("/bytesSent").getValueAsString());
+      Assert.assertTrue(record.has("/" + Constants.BYTES));
+      Assert.assertEquals("2326", record.get("/" + Constants.BYTES).getValueAsString());
+
 
       batchMaker = SourceRunner.createTestBatchMaker("lane");
       offset = source.produce(createLogFile(), offset, 1, batchMaker);
@@ -220,32 +189,33 @@ public class TestLogSpoolDirSourceCommonLogFormat {
       Assert.assertFalse(records.get(0).has("/truncated"));
 
       record = records.get(0);
-      Assert.assertTrue(record.has("/remoteHost"));
-      Assert.assertEquals("127.0.0.2", record.get("/remoteHost").getValueAsString());
+      Assert.assertTrue(record.has("/" + Constants.CLIENTIP));
+      Assert.assertEquals("127.0.0.2", record.get("/" + Constants.CLIENTIP).getValueAsString());
 
-      Assert.assertTrue(record.has("/logName"));
-      Assert.assertEquals("ss", record.get("/logName").getValueAsString());
+      Assert.assertTrue(record.has("/" + Constants.USER_IDENT));
+      Assert.assertEquals("ss", record.get("/" + Constants.USER_IDENT).getValueAsString());
 
-      Assert.assertTrue(record.has("/remoteUser"));
-      Assert.assertEquals("m", record.get("/remoteUser").getValueAsString());
+      Assert.assertTrue(record.has("/" + Constants.USER_AUTH));
+      Assert.assertEquals("m", record.get("/" + Constants.USER_AUTH).getValueAsString());
 
-      Assert.assertTrue(record.has("/requestTime"));
-      Assert.assertEquals("10/Oct/2000:13:55:36 -0800", record.get("/requestTime").getValueAsString());
+      Assert.assertTrue(record.has("/" + Constants.TIMESTAMP));
+      Assert.assertEquals("10/Oct/2000:13:55:36 -0800", record.get("/" + Constants.TIMESTAMP).getValueAsString());
 
-      Assert.assertTrue(record.has("/requestMethod"));
-      Assert.assertEquals("GET", record.get("/requestMethod").getValueAsString());
+      Assert.assertTrue(record.has("/" + Constants.VERB));
+      Assert.assertEquals("GET", record.get("/" + Constants.VERB).getValueAsString());
 
-      Assert.assertTrue(record.has("/urlPath"));
-      Assert.assertEquals("/apache_pb.gif", record.get("/urlPath").getValueAsString());
+      Assert.assertTrue(record.has("/" + Constants.REQUEST));
+      Assert.assertEquals("/apache_pb.gif", record.get("/" + Constants.REQUEST).getValueAsString());
 
-      Assert.assertTrue(record.has("/requestProtocol"));
-      Assert.assertEquals("HTTP/2.0", record.get("/requestProtocol").getValueAsString());
+      Assert.assertTrue(record.has("/" + Constants.HTTPVERSION));
+      Assert.assertEquals("2.0", record.get("/" + Constants.HTTPVERSION).getValueAsString());
 
-      Assert.assertTrue(record.has("/status"));
-      Assert.assertEquals("200", record.get("/status").getValueAsString());
+      Assert.assertTrue(record.has("/" + Constants.RESPONSE));
+      Assert.assertEquals("200", record.get("/" + Constants.RESPONSE).getValueAsString());
 
-      Assert.assertTrue(record.has("/bytesSent"));
-      Assert.assertEquals("2326", record.get("/bytesSent").getValueAsString());
+      Assert.assertTrue(record.has("/" + Constants.BYTES));
+      Assert.assertEquals("2326", record.get("/" + Constants.BYTES).getValueAsString());
+
 
 
       batchMaker = SourceRunner.createTestBatchMaker("lane");

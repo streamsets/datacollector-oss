@@ -22,7 +22,9 @@ import com.streamsets.pipeline.lib.parser.CharDataParserFactory;
 import com.streamsets.pipeline.lib.parser.DataParser;
 import com.streamsets.pipeline.lib.parser.DataParserException;
 import com.streamsets.pipeline.lib.parser.log.ApacheAccessLogHelper;
+import com.streamsets.pipeline.lib.parser.log.Constants;
 import com.streamsets.pipeline.lib.parser.log.LogCharDataParserFactory;
+import com.streamsets.pipeline.lib.parser.shaded.org.aicer.grok.dictionary.GrokDictionary;
 import com.streamsets.pipeline.lib.parser.xml.XmlCharDataParserFactory;
 import org.apache.xerces.util.XMLChar;
 import org.slf4j.Logger;
@@ -30,6 +32,7 @@ import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.StringReader;
 import java.nio.charset.Charset;
 import java.nio.charset.UnsupportedCharsetException;
 import java.nio.file.PathMatcher;
@@ -72,6 +75,8 @@ public class SpoolDirSource extends BaseSource {
   private final boolean logRetainOriginalLine;
   private final String customLogFormat;
   private final String regex;
+  private final String grokPatternDefinition;
+  private final String grokPattern;
   private final List<RegExConfig> fieldPathsToGroupName;
 
   public SpoolDirSource(DataFormat dataFormat, String charset, int overrunLimit, String spoolDir, int batchSize,
@@ -80,7 +85,8 @@ public class SpoolDirSource extends BaseSource {
       PostProcessingOptions postProcessing, String archiveDir, long retentionTimeMins,
       CsvMode csvFileFormat, CsvHeader csvHeader, int csvMaxObjectLen, JsonMode jsonContent, int jsonMaxObjectLen,
       int textMaxLineLen, String xmlRecordElement, int xmlMaxObjectLen, LogMode logMode, int logMaxObjectLen,
-      boolean retainOriginalLine, String customLogFormat, String regex, List<RegExConfig> fieldPathsToGroupName) {
+      boolean retainOriginalLine, String customLogFormat, String regex, List<RegExConfig> fieldPathsToGroupName,
+      String grokPatternDefinition, String grokPattern) {
     this.dataFormat = dataFormat;
     this.charset = charset;
     this.overrunLimit = overrunLimit * 1024;
@@ -108,6 +114,8 @@ public class SpoolDirSource extends BaseSource {
     this.customLogFormat = customLogFormat;
     this.regex = regex;
     this.fieldPathsToGroupName = fieldPathsToGroupName;
+    this.grokPatternDefinition = grokPatternDefinition;
+    this.grokPattern = grokPattern;
   }
 
   private Charset fileCharset;
@@ -198,9 +206,10 @@ public class SpoolDirSource extends BaseSource {
         }
         if(logMode == LogMode.APACHE_CUSTOM_LOG_FORMAT) {
           validateApacheCustomLogFormat(issues);
-        }
-        if(logMode == LogMode.REGEX) {
+        } else if(logMode == LogMode.REGEX) {
           validateRegExFormat(issues);
+        } else if(logMode == LogMode.GROK) {
+          validateGrokPattern(issues);
         }
         break;
       default:
@@ -241,6 +250,23 @@ public class SpoolDirSource extends BaseSource {
             regex, groupCount, r.group));
         }
       }
+    } catch (PatternSyntaxException e) {
+      issues.add(getContext().createConfigIssue(Groups.LOG.name(), "regex", Errors.SPOOLDIR_29,
+        regex, e.getMessage(), e));
+    }
+  }
+
+  private void validateGrokPattern(List<ConfigIssue> issues) {
+    try {
+      GrokDictionary grokDictionary = new GrokDictionary();
+      grokDictionary.addDictionary(getClass().getClassLoader().getResourceAsStream(Constants.GROK_PATTERNS_FILE_NAME));
+      grokDictionary.addDictionary(getClass().getClassLoader().getResourceAsStream(
+        Constants.GROK_JAVA_LOG_PATTERNS_FILE_NAME));
+      if(grokPatternDefinition != null || !grokPatternDefinition.isEmpty()) {
+        grokDictionary.addDictionary(new StringReader(grokPatternDefinition));
+      }
+      grokDictionary.bind();
+      grokDictionary.compileExpression(grokPattern);
     } catch (PatternSyntaxException e) {
       issues.add(getContext().createConfigIssue(Groups.LOG.name(), "regex", Errors.SPOOLDIR_29,
         regex, e.getMessage(), e));
@@ -320,6 +346,8 @@ public class SpoolDirSource extends BaseSource {
           .setConfig(LogCharDataParserFactory.REGEX_KEY, regex)
           .setConfig(LogCharDataParserFactory.REGEX_FIELD_PATH_TO_GROUP_KEY,
             getFieldPathToGroupMap(fieldPathsToGroupName))
+          .setConfig(LogCharDataParserFactory.GROK_PATTERN_DEFINITION_KEY, grokPatternDefinition)
+          .setConfig(LogCharDataParserFactory.GROK_PATTERN_KEY, grokPattern)
           .setMode(logMode);
         break;
     }

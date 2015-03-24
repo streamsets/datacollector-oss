@@ -410,13 +410,45 @@ public class SpoolDirDSource extends DSource {
   @ComplexField
   public List<RegExConfig> fieldPathsToGroupName;
 
+  //GROK
+
+  @ConfigDef(
+    required = true,
+    type = ConfigDef.Type.TEXT,
+    defaultValue = "",
+    label = "Grok Pattern Definition",
+    description = "Define your own grok patterns which will be used to parse the logs",
+    displayPosition = 760,
+    group = "LOG",
+    dependsOn = "logMode",
+    triggeredByValue = "GROK",
+    mode = ConfigDef.Mode.PLAIN_TEXT
+  )
+  public String grokPatternDefinition;
+
+  @ConfigDef(
+    required = true,
+    type = ConfigDef.Type.STRING,
+    defaultValue = "%{COMMONAPACHELOG}",
+    label = "Grok Pattern",
+    description = "The grok pattern which is used to parse the log line.",
+    displayPosition = 740,
+    group = "LOG",
+    dependsOn = "logMode",
+    triggeredByValue = "GROK"
+  )
+  public String grokPattern;
+
+
+
   @Override
   protected Source createSource() {
     return new SpoolDirSource(dataFormat, charset, overrunLimit, spoolDir, batchSize, poolingTimeoutSecs, filePattern,
       maxSpoolFiles, initialFileToProcess, errorArchiveDir, postProcessing, archiveDir,
       retentionTimeMins, csvFileFormat, csvHeader, csvMaxObjectLen, jsonContent,
       jsonMaxObjectLen, textMaxObjectLen, xmlRecordElement, xmlMaxObjectLen, logMode,
-      logMaxObjectLen, retainOriginalLine, customLogFormat, regex, fieldPathsToGroupName);
+      logMaxObjectLen, retainOriginalLine, customLogFormat, regex, fieldPathsToGroupName, grokPatternDefinition,
+      grokPattern);
   }
 
 }

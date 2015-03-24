@@ -45,7 +45,7 @@ public class TestSpoolDirSource {
       super(dataFormat, "UTF-8", 100, spoolDir, batchSize, poolingTimeoutSecs, filePattern, maxSpoolFiles,
         initialFileToProcess, errorArchiveDir, postProcessing, archiveDir, retentionTimeMins, csvFileFormat,
         csvHeaders, -1, jsonContent, maxJsonObjectLen, maxLogLineLength, xmlRecordElement, maxXmlObjectLen, null, 0,
-        false, null, null, null);
+        false, null, null, null, null, null);
       this.spoolDir = spoolDir;
     }
 

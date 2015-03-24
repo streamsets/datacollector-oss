@@ -14,7 +14,9 @@ import com.streamsets.pipeline.lib.parser.DataParser;
 import com.streamsets.pipeline.lib.parser.DataParserException;
 
 import java.io.IOException;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class LogCharDataParserFactory extends CharDataParserFactory {
@@ -29,13 +31,18 @@ public class LogCharDataParserFactory extends CharDataParserFactory {
     "^(\\S+) (\\S+) (\\S+) \\[([\\w:/]+\\s[+\\-]\\d{4})\\] \"(\\S+) (\\S+) (\\S+)\" (\\d{3}) (\\d+)";
   public static final String REGEX_FIELD_PATH_TO_GROUP_KEY = KEY_PREFIX + "regex.fieldPath.to.group.name";
   static final Map<String, Integer> REGEX_FIELD_PATH_TO_GROUP_DEFAULT = new HashMap<>();
-
+  public static final String GROK_PATTERN_KEY = KEY_PREFIX + "grok.pattern";
+  static final String GROK_PATTERN_DEFAULT = "%{COMMONAPACHELOG}";
+  public static final String GROK_PATTERN_DEFINITION_KEY = KEY_PREFIX + "grok.pattern.definition";
+  static final String GROK_PATTERN_DEFINITION_DEFAULT = "";
 
   public static Map<String, Object> registerConfigs(Map<String, Object> configs) {
     configs.put(RETAIN_ORIGINAL_TEXT_KEY, RETAIN_ORIGINAL_TEXT_DEFAULT);
     configs.put(APACHE_CUSTOMLOG_FORMAT_KEY, APACHE_CUSTOMLOG_FORMAT_DEFAULT);
     configs.put(REGEX_KEY, REGEX_DEFAULT);
     configs.put(REGEX_FIELD_PATH_TO_GROUP_KEY, REGEX_FIELD_PATH_TO_GROUP_DEFAULT);
+    configs.put(GROK_PATTERN_DEFINITION_KEY, GROK_PATTERN_DEFINITION_DEFAULT);
+    configs.put(GROK_PATTERN_KEY, GROK_PATTERN_DEFAULT);
     return configs;
   }
 
@@ -46,6 +53,9 @@ public class LogCharDataParserFactory extends CharDataParserFactory {
   private final String customLogFormat;
   private final String regex;
   private final Map<String, Integer> fieldPathToGroup;
+  private final String grokPatternDefinition;
+  private final String grokPattern;
+  private final List<String> grokDictionaries;
 
   public LogCharDataParserFactory(Stage.Context context, int maxObjectLen, LogMode logMode,
                                   Map<String, Object> configs) {
@@ -56,7 +66,9 @@ public class LogCharDataParserFactory extends CharDataParserFactory {
     this.customLogFormat = (String) configs.get(APACHE_CUSTOMLOG_FORMAT_KEY);
     this.regex = (String) configs.get(REGEX_KEY);
     this.fieldPathToGroup = (Map<String, Integer>) configs.get(REGEX_FIELD_PATH_TO_GROUP_KEY);
-
+    this.grokPatternDefinition = (String) configs.get(GROK_PATTERN_DEFINITION_KEY);
+    this.grokPattern = (String) configs.get(GROK_PATTERN_KEY);
+    this.grokDictionaries = Collections.emptyList();
   }
 
   @Override
@@ -77,6 +89,9 @@ public class LogCharDataParserFactory extends CharDataParserFactory {
         case REGEX:
           return new RegexParser(context, id, reader, readerOffset, maxObjectLen, retainOriginalText, regex,
             fieldPathToGroup);
+        case GROK:
+          return new GrokParser(context, id, reader, readerOffset, maxObjectLen, retainOriginalText,
+            grokPatternDefinition, grokPattern, grokDictionaries);
         default :
           return null;
       }

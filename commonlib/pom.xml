@@ -40,10 +40,6 @@
       <scope>compile</scope>
       <exclusions>
         <exclusion>
-          <groupId>com.google.guava</groupId>
-          <artifactId>guava</artifactId>
-        </exclusion>
-        <exclusion>
           <groupId>commons-io</groupId>
           <artifactId>commons-io</artifactId>
         </exclusion>
@@ -109,6 +105,7 @@
       <version>${commons-io.version}</version>
       <scope>compile</scope>
     </dependency>
+
   </dependencies>
 
   <build>

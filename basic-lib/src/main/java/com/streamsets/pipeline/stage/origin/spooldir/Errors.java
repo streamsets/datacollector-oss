@@ -37,6 +37,7 @@ public enum Errors implements ErrorCode {
   SPOOLDIR_28("Error parsing custom log format string {}, reason {}"),
   SPOOLDIR_29("Error parsing regex {}, reason {}"),
   SPOOLDIR_30("RegEx {} contains {} groups but the field Path to group mapping specifies group {}."),
+  SPOOLDIR_31("Error parsing grok pattern {}, reason {}"),
   ;
 
   private final String msg;
