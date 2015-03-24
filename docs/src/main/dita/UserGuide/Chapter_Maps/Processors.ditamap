@@ -37,12 +37,16 @@
    <topicmeta><shortdesc></shortdesc></topicmeta>
    <topicref href="../Processors/FieldSplitter-Configuring.dita"/>
   </topicref>
-  <topicref href="../Processors/JavaScript.dita"/>
+  <topicref href="../Processors/JavaScript.dita" chunk="to-content"> 
+   <topicmeta><shortdesc></shortdesc></topicmeta>
+  </topicref>
   <topicref href="../Processors/JSONParser.dita" chunk="to-content">
    <topicmeta><shortdesc></shortdesc></topicmeta>
    <topicref href="../Processors/JSONParser-Configuring.dita"/>
   </topicref>
-  <topicref href="../Processors/Jython.dita"/>
+  <topicref href="../Processors/Jython.dita" chunk="to-content">
+   <topicmeta><shortdesc></shortdesc></topicmeta>
+  </topicref>
   <topicref href="../Processors/RDeduplicator.dita" chunk="to-content">
    <topicmeta>
     <shortdesc/>

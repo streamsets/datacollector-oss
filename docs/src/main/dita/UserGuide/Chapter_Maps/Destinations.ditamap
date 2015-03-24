@@ -34,6 +34,10 @@
    </topicmeta>
    <topicref href="../Destinations/SDCRecordFiles-Configuring.dita"/>
   </topicref>
+  <topicref href="../Destinations/Error.dita" chunk="to-content"> <topicmeta>
+   <shortdesc/>
+  </topicmeta>
+  </topicref>
   <topicref href="../Destinations/Trash.dita" chunk="to-content">
    <topicmeta>
     <shortdesc/>

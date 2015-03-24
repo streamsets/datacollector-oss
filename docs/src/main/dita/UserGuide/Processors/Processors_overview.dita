@@ -14,7 +14,9 @@
         <li>Field Masker - Masks sensitive string data.</li>
         <li>Field Remover - Removes fields from a record.</li>
         <li>Field Splitter - Splits the string values in a field into different fields.</li>
+        <li>JavaScript Evaluator - Processes records based on custom JavaScript code. </li>
         <li>JSON Parser - Parses a JSON object embedded in a string field.</li>
+        <li>Jython Evaluator - Processes records based on custom Jython code.</li>
         <li>Record Deduplicator - Removes duplicate records.</li>
         <li>Stream Selector - Routes data to different streams based on conditions.</li>
         <li>Value Replacer - Replaces null values or replaces values with Nulls.</li>

@@ -1,10 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_n2p_jgf_lr">
- <title>JavaScript </title>
- <shortdesc>The JavaScript processor stage processes data based on custom JavaScript. Use the
-  JavaScript processor to incorporate JavaScript processing in a pipeline.</shortdesc>
- <conbody>
-  <p></p>
- </conbody>
+ <title>JavaScript Evaluator</title>
+ <shortdesc>The JavaScript Evaluator processes data based on custom JavaScript. Use the JavaScript
+  processor to incorporate custom JavaScript script in a pipeline.</shortdesc>
+ <conbody/>
 </concept>

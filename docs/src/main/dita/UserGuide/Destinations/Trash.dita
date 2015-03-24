@@ -2,7 +2,7 @@
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_htf_ydj_wq">
  <title>Trash</title>
- <shortdesc>The Trash destination discards all records. Use the Trash destination as a visual
+ <shortdesc>The Trash destination discards records. Use the Trash destination as a visual
   representation of records discarded from the pipeline. Or, you might use the Trash destination
   during development as a temporary placeholder. </shortdesc>
  <conbody>
