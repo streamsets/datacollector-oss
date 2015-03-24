@@ -12,21 +12,91 @@ pipeline-graph {
     }
 
     .graph-toolbar {
-      position: relative;
-      float: right;
-      top: -80px;
-      right: 30px;
-      color: @streamsets-icon-btn-color;
-      background-color: #ffffff;
-      background-clip: padding-box;
-      box-shadow: 0 1px 4px rgba(0,0,0,0.3);
 
-      div {
-        padding: @smallPadding*.5 @defaultPadding * .7 ;
+      .pan-toolbar {
+
+        clear: both;
+
+        .circle-div {
+          text-indent: -9999px;
+          position: absolute;
+          border: 1px solid #ccc;
+          -moz-border-radius: 50%;
+          -webkit-border-radius: 390px;
+          border-radius: 390px;
+          list-style-type: none;
+          box-shadow: 0 1px 4px rgba(0,0,0,0.3);
+          width: 60px;
+          height: 60px;
+          bottom: 90px;
+          right: 30px;
+          background-color: rgba(255,255,255,0.4);
+          background-clip: padding-box;
+        }
+
+        .pan-up {
+          position: relative;
+          float: right;
+          top: -145px;
+          right: 52px;
+        }
+
+        .pan-right {
+          position: relative;
+          float: right;
+          top: -125px;
+          right: 22px;
+        }
+
+        .pan-home {
+          position: relative;
+          float: right;
+          top: -125px;
+          right: 28px;
+        }
+
+        .pan-left {
+          position: relative;
+          float: right;
+          top: -125px;
+          right: 33px;
+        }
+
+        .pan-down {
+          position: relative;
+          float: right;
+          top: -106px;
+          right: 2px;
+        }
 
         span {
+          cursor: pointer;
+          font-size: 0.9em;
+          color: @streamsets-icon-btn-color;
           &:hover {
             color: @streamsets-icon-btn-hover-color;
+          }
+        }
+
+      }
+
+      .zoom-toolbar {
+        position: relative;
+        float: right;
+        top: -80px;
+        right: -16px;
+        color: @streamsets-icon-btn-color;
+        background-color: #ffffff;
+        background-clip: padding-box;
+        box-shadow: 0 1px 4px rgba(0,0,0,0.3);
+
+        div {
+          padding: @smallPadding*.5 @defaultPadding * .7 ;
+
+          span {
+            &:hover {
+              color: @streamsets-icon-btn-hover-color;
+            }
           }
         }
       }

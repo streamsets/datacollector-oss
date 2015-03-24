@@ -1089,6 +1089,41 @@ angular.module('pipelineGraphDirectives', ['underscore'])
       }
     };
 
+    GraphCreator.prototype.panUp = function() {
+      var translatePos = this.zoom.translate();
+      translatePos[1] -= 150;
+      showTransition = true;
+      this.zoom.translate(translatePos).event(this.svg);
+    };
+
+    GraphCreator.prototype.panRight = function() {
+      var translatePos = this.zoom.translate();
+      translatePos[0] -= 250;
+      showTransition = true;
+      this.zoom.translate(translatePos).event(this.svg);
+    };
+
+
+    GraphCreator.prototype.panHome = function() {
+      showTransition = true;
+      this.zoom.translate([0,0]).event(this.svg);
+    };
+
+
+    GraphCreator.prototype.panLeft = function() {
+      var translatePos = this.zoom.translate();
+      translatePos[0] += 250;
+      showTransition = true;
+      this.zoom.translate(translatePos).event(this.svg);
+    };
+
+    GraphCreator.prototype.panDown = function() {
+      var translatePos = this.zoom.translate();
+      translatePos[1] += 150;
+      showTransition = true;
+      this.zoom.translate(translatePos).event(this.svg);
+    };
+
     GraphCreator.prototype.moveNodeToCenter = function(stageInstance) {
       var thisGraph = this,
         consts = thisGraph.consts,
@@ -1164,7 +1199,7 @@ angular.module('pipelineGraphDirectives', ['underscore'])
     };
 
     /** MAIN SVG **/
-    var graphContainer, svg, graph, toolbar, graphWarning;
+    var graphContainer, svg, graph, toolbar, panToolbar, zoomToolbar, graphWarning;
 
     $scope.$on('updateGraph', function(event, options) {
       var nodes = options.nodes,
@@ -1192,7 +1227,51 @@ angular.module('pipelineGraphDirectives', ['underscore'])
         toolbar = graphContainer.append('div')
           .attr('class', 'graph-toolbar');
 
-        toolbar.append('div')
+        panToolbar = toolbar.append('div')
+          .attr('class', 'pan-toolbar');
+
+        panToolbar.append('div')
+          .attr('class', 'circle-div');
+
+        panToolbar.append('span')
+          .attr('class', 'glyphicon glyphicon-chevron-up pan-up')
+          .on('mousedown', function() {
+            graph.panUp();
+            d3.event.preventDefault();
+          });
+
+        panToolbar.append('span')
+          .attr('class', 'glyphicon glyphicon-chevron-right pan-right')
+          .on('mousedown', function() {
+            graph.panRight();
+            d3.event.preventDefault();
+          });
+
+        panToolbar.append('span')
+          .attr('class', 'glyphicon glyphicon-home pan-home')
+          .on('mousedown', function() {
+            graph.panHome();
+            d3.event.preventDefault();
+          });
+
+        panToolbar.append('span')
+          .attr('class', 'glyphicon glyphicon-chevron-left pan-left')
+          .on('mousedown', function() {
+            graph.panLeft();
+            d3.event.preventDefault();
+          });
+
+        panToolbar.append('span')
+          .attr('class', 'glyphicon glyphicon-chevron-down pan-down')
+          .on('mousedown', function() {
+            graph.panDown();
+            d3.event.preventDefault();
+          });
+
+        zoomToolbar = toolbar.append('div')
+          .attr('class', 'zoom-toolbar');
+
+        zoomToolbar.append('div')
           .append('span')
           .attr('class', 'pointer fa fa-plus')
           .on('mousedown', function() {
@@ -1200,7 +1279,7 @@ angular.module('pipelineGraphDirectives', ['underscore'])
             d3.event.preventDefault();
           });
 
-        toolbar.append('div')
+        zoomToolbar.append('div')
           .append('span')
           .attr('class', 'pointer fa fa-minus')
           .on('mousedown', function() {
