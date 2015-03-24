@@ -5,14 +5,11 @@
  <shortdesc>The Error destination passes records to the pipeline for error handling. Use the Error
   destination when you have a stream of records that you want to send to pipeline error handling. </shortdesc>
  <conbody>
-  <p>Typically, error records are generated individually. With some processors, such as the
-   Expression Editor or Stream Selector, you can create a custom stream of data. You can connect a
-   custom stream to the Error destination to pass the records to the pipeline for error handling. </p>
+  <p>Typically, error records are generated individually. With some processors, such as the Stream
+   Selector or JavaScript Evaluator, you can create multiple streams of data. You can connect an
+   error stream to the Error destination to pass the records to the pipeline for error handling. </p>
   <p>The pipeline performs error handling based on the Error Records properties configured for the
    pipeline. </p>
-  <p>
-   <draft-comment author="Loretta">For example, </draft-comment>
-  </p>
   <p>As with other destinations, you can monitor the number of records passed to Error and you can
    create metric and data alerts. You can also examine the data sent to Error as part of data
    preview or a monitor snapshot. </p>

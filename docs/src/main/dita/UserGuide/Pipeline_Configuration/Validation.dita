@@ -23,7 +23,7 @@
       pipeline can run as configured. </dd>
      <dd>For example, while implicit validation checks for the syntax for a URI, explicit validation
       tests the URI by connecting to the system. Similarly, while implicit validation checks
-      expression syntax, explicit validation verifies <draft-comment author="Loretta"
+      expressions for invalid syntax, explicit validation verifies <draft-comment author="Loretta"
        >what?</draft-comment></dd>
     </dlentry>
    </dl>

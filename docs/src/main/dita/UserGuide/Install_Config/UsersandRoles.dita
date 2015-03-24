@@ -5,13 +5,11 @@
  <shortdesc>The <ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
   /> includes a default administrator login. You can create additional users for increased security. </shortdesc>
  <conbody>
-  <p>The <ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
-      provides several roles that define the tasks that a user can perform. When you configure a
-      user, assign the user one or more roles. Users can perform any task that their roles
-      allow.</p>
-    <draft-comment author="Loretta">
-      <p>Testing <codeph>codeph</codeph> and also testing <filepath>c:\filepath</filepath>.</p>
-    </draft-comment>
+  <p><indexterm>users<indexterm>roles</indexterm></indexterm><indexterm>roles<indexterm>for
+          users</indexterm></indexterm>The <ph
+        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> provides
+      several roles that define the tasks that a user can perform. When you configure a user, assign
+      each user one or more roles. Users can perform any task that their roles allow.</p>
   <p>The <ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
       provides the following roles: <dl>
         <dlentry>
@@ -37,11 +35,11 @@
         </dlentry>
         <dlentry>
           <dt>guest</dt>
-          <dd>Allows read-only access to pipelines, alerts, and <ph
-              conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
-            logs. As a guest, you can view pipeline and alert configuration, view general monitoring
-            and log information. You cannot view data preview or snapshots, or configure pipelines
-            or alerts.</dd>
+          <dd>Allows read-only access to areas of the <ph
+              conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>. As
+            a guest, you can view pipeline and alert configuration, view general monitoring and log
+            information. You cannot view data preview or snapshots, or configure pipelines or
+            alerts.</dd>
         </dlentry>
       </dl></p>
  </conbody>
