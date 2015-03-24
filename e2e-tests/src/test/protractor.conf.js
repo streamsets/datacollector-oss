@@ -2,8 +2,9 @@ exports.config = {
   allScriptsTimeout: 11000,
 
   suites: {
-    //sample: ['ui/logPage.js']
+    //sample: ['restAPI/logoutResource.js']
     restAPI: [
+      'restAPI/adminResource.js',
       'restAPI/infoResource.js',
       'restAPI/logoutResource.js',
       'restAPI/configurationResource.js',

@@ -12,10 +12,8 @@ frisby.create('Login to StreamSets Data Collector')
      * GET rest/v1/admin/logout
      */
     frisby.create('Should be able to logout SDC')
-      .post(browser.baseUrl + 'rest/v1/admin/logout', undefined, undefined, {
+      .post(browser.baseUrl + 'rest/v1/logout', {
         headers:  {
-          "Content-Type": "application/json",
-          "Accept": "application/json",
           "Cookie": cookie
         }
       })
@@ -23,7 +21,7 @@ frisby.create('Login to StreamSets Data Collector')
       .after(function(body, res) {
         var cookie = res.headers['set-cookie'];
         frisby.create('Trying to access build info after logout should redirect to login page.')
-          .get(browser.baseUrl + 'rest/v1/admin/build-info', {
+          .get(browser.baseUrl + 'rest/v1/admin/threadsDump', {
             headers:  {
               "Content-Type": "application/json",
               "Accept": "application/json",

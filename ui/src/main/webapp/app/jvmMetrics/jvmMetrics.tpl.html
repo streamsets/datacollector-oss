@@ -13,7 +13,7 @@
         </a>
         <ul class="dropdown-menu pull-right" role="menu">
 
-          <li role="presentation">
+          <li role="presentation" ng-if="isAuthorized(userRoles.admin)">
             <a role="menuitem" tabindex="-1" href="#"
                ng-click="launchThreadDump()">{{'jvmMetrics.threads.threadDump' | translate}}</a>
           </li>
@@ -34,7 +34,7 @@
                target="_blank">{{'jvmMetrics.title' | translate}}</a>
           </li>
 
-          <li role="presentation" ng-if="!$storage.dontShowRESTResponseMenu">
+          <li role="presentation" ng-if="!$storage.dontShowRESTResponseMenu && isAuthorized(userRoles.admin)">
             <a role="menuitem" tabindex="-1" href="/rest/v1/admin/threadsDump"
                target="_blank">{{'jvmMetrics.threads.threadDump' | translate}}</a>
           </li>
@@ -51,7 +51,8 @@
         <div class="panel panel-default">
           <div class="panel-heading">
             <span ng-bind-html="chart.label"></span>
-            <span ng-if="chart.name === 'threads'"> ( <a href="#" ng-click="launchThreadDump()">{{'jvmMetrics.threads.viewThreadDump' | translate}} </a> ) </span>
+            <span ng-if="chart.name === 'threads' && isAuthorized(userRoles.admin)"
+              > ( <a href="#" ng-click="launchThreadDump()">{{'jvmMetrics.threads.viewThreadDump' | translate}} </a> ) </span>
             <button type="button" class="close" aria-label="Close" ng-click="removeChart(chart, chartIndex)">
               <span aria-hidden="true">&times;</span>
             </button>
