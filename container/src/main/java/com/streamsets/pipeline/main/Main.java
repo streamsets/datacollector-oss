@@ -45,6 +45,12 @@ public class Main {
       log.info("-----------------------------------------------------------------");
       dagger.get(RuntimeInfo.class).log(log);
       log.info("-----------------------------------------------------------------");
+      if (System.getSecurityManager() != null) {
+        log.info("  Security Manager : ENABLED, policy file: {}", System.getProperty("java.security.policy"));
+      } else {
+        log.warn("  Security Manager : DISABLED");
+      }
+      log.info("-----------------------------------------------------------------");
       log.info("Starting ...");
 
       task.init();

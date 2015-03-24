@@ -21,8 +21,8 @@
 
     <!-- Library -->
     <fileSet>
-      <directory>${basedir}/../cdh5-kafka_0_8_2_0_kafka_1_2_0-lib/target/stage-libs</directory>
-      <outputDirectory>/streamsets-datacollector-${project.version}/stage-libs</outputDirectory>
+      <directory>${basedir}/../cdh5-kafka_0_8_2_0_kafka_1_2_0-lib/target/streamsets-libs</directory>
+      <outputDirectory>/streamsets-datacollector-${project.version}/streamsets-libs</outputDirectory>
     </fileSet>
   </fileSets>
 

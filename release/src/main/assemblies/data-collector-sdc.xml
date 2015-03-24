@@ -24,14 +24,14 @@
       <directory>${basedir}/../dist/target/streamsets-datacollector-${project.version}</directory>
       <outputDirectory>/</outputDirectory>
       <excludes>
-        <exclude>streamsets-datacollector-${project.version}/stage-libs/**</exclude>
+        <exclude>streamsets-datacollector-${project.version}/streamsets-libs/**</exclude>
       </excludes>
     </fileSet>
     <fileSet>
       <directory>${basedir}/../dist/target/streamsets-datacollector-${project.version}</directory>
       <outputDirectory>/</outputDirectory>
       <includes>
-        <include>streamsets-datacollector-${project.version}/stage-libs/streamsets-datacollector-basic-lib/**</include>
+        <include>streamsets-datacollector-${project.version}/streamsets-libs/streamsets-datacollector-basic-lib/**</include>
       </includes>
     </fileSet>
   </fileSets>

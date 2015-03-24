@@ -1,0 +1,30 @@
+//
+// (c) 2015 StreamSets, Inc. All rights reserved. May not
+// be copied, modified, or distributed in whole or part without
+// written consent of StreamSets, Inc.
+//
+
+// StreamSets Data Collector Policy File
+
+// StreamSets code base:
+grant codebase "file://${sdc.dist.dir}/bin/*" {
+  permission java.security.AllPermission;
+};
+grant codebase "file://${sdc.dist.dir}/api-lib/*" {
+  permission java.security.AllPermission;
+};
+grant codebase "file://${sdc.dist.dir}/container-lib/*" {
+  permission java.security.AllPermission;
+};
+
+// StreamSets stage libraries code base:
+grant codebase "file://${sdc.dist.dir}/stage-libs/-" {
+  permission java.security.AllPermission;
+};
+
+// For details on how to grant specific permissions, refer to the Java Permissions Documentation:
+//   http://docs.oracle.com/javase/7/docs/technotes/guides/security/permissions.html
+
+// Custom stage libraries code base:
+grant codebase "file://${sdc.dist.dir}/custom-libs/-" {
+};

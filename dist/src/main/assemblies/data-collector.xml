@@ -129,73 +129,86 @@
 
     <!-- basic-lib -->
     <fileSet>
-      <directory>${basedir}/../basic-lib/target/stage-libs/</directory>
-      <outputDirectory>/stage-libs/</outputDirectory>
+      <directory>${basedir}/../basic-lib/target/streamsets-libs/</directory>
+      <outputDirectory>/streamsets-libs/</outputDirectory>
+    </fileSet>
+
+    <!-- Create an empty streamsets-libs -->
+    <fileSet>
+      <directory>${basedir}/src/main/emptydir</directory>
+      <outputDirectory>/streamsets-libs</outputDirectory>
+    </fileSet>
+
+    <!-- Create an empty user-libs -->
+    <fileSet>
+      <directory>${basedir}/src/main/emptydir</directory>
+      <outputDirectory>/user-libs</outputDirectory>
     </fileSet>
 
     <!-- dev-lib -->
     <!-- only picked up if dev profile is enabled -->
     <fileSet>
       <directory>${dev-lib.dist-dir}</directory>
-      <outputDirectory>/stage-libs/</outputDirectory>
+      <outputDirectory>/user-libs/</outputDirectory>
     </fileSet>
 
     <!-- CDH libs -->
     <fileSet>
-      <directory>${basedir}/../${cdh_5_2_1-lib}/target/stage-libs/</directory>
-      <outputDirectory>/stage-libs/</outputDirectory>
+      <directory>${basedir}/../${cdh_5_2_1-lib}/target/streamsets-libs/</directory>
+      <outputDirectory>/streamsets-libs/</outputDirectory>
     </fileSet>
     <fileSet>
-      <directory>${basedir}/../${cdh_5_2_2-lib}/target/stage-libs/</directory>
-      <outputDirectory>/stage-libs/</outputDirectory>
+      <directory>${basedir}/../${cdh_5_2_2-lib}/target/streamsets-libs/</directory>
+      <outputDirectory>/streamsets-libs/</outputDirectory>
     </fileSet>
     <fileSet>
-      <directory>${basedir}/../${cdh_5_2_3-lib}/target/stage-libs/</directory>
-      <outputDirectory>/stage-libs/</outputDirectory>
+      <directory>${basedir}/../${cdh_5_2_3-lib}/target/streamsets-libs/</directory>
+      <outputDirectory>/streamsets-libs/</outputDirectory>
     </fileSet>
     <fileSet>
-      <directory>${basedir}/../${cdh_5_2_4-lib}/target/stage-libs/</directory>
-      <outputDirectory>/stage-libs/</outputDirectory>
+      <directory>${basedir}/../${cdh_5_2_4-lib}/target/streamsets-libs/</directory>
+      <outputDirectory>/streamsets-libs/</outputDirectory>
     </fileSet>
     <fileSet>
-      <directory>${basedir}/../${cdh_5_3_0-lib}/target/stage-libs/</directory>
-      <outputDirectory>/stage-libs/</outputDirectory>
+      <directory>${basedir}/../${cdh_5_3_0-lib}/target/streamsets-libs/</directory>
+      <outputDirectory>/streamsets-libs/</outputDirectory>
     </fileSet>
     <fileSet>
-      <directory>${basedir}/../${cdh_5_3_1-lib}/target/stage-libs/</directory>
-      <outputDirectory>/stage-libs/</outputDirectory>
+      <directory>${basedir}/../${cdh_5_3_1-lib}/target/streamsets-libs/</directory>
+      <outputDirectory>/streamsets-libs/</outputDirectory>
     </fileSet>
     <fileSet>
-      <directory>${basedir}/../${cdh_5_3_2-lib}/target/stage-libs/</directory>
-      <outputDirectory>/stage-libs/</outputDirectory>
+      <directory>${basedir}/../${cdh_5_3_2-lib}/target/streamsets-libs/</directory>
+      <outputDirectory>/streamsets-libs/</outputDirectory>
     </fileSet>
 
     <!-- Apache Kafka libs -->
     <fileSet>
-      <directory>${basedir}/../${apache-kafka_0_8_1_1-lib}/target/stage-libs/</directory>
-      <outputDirectory>/stage-libs/</outputDirectory>
+      <directory>${basedir}/../${apache-kafka_0_8_1_1-lib}/target/streamsets-libs/</directory>
+      <outputDirectory>/streamsets-libs/</outputDirectory>
     </fileSet>
     <fileSet>
-      <directory>${basedir}/../${apache-kafka_0_8_2_0-lib}/target/stage-libs/</directory>
-      <outputDirectory>/stage-libs/</outputDirectory>
+      <directory>${basedir}/../${apache-kafka_0_8_2_0-lib}/target/streamsets-libs/</directory>
+      <outputDirectory>/streamsets-libs/</outputDirectory>
     </fileSet>
     <fileSet>
-      <directory>${basedir}/../${apache-kafka_0_8_2_1-lib}/target/stage-libs/</directory>
-      <outputDirectory>/stage-libs/</outputDirectory>
+      <directory>${basedir}/../${apache-kafka_0_8_2_1-lib}/target/streamsets-libs/</directory>
+      <outputDirectory>/streamsets-libs/</outputDirectory>
     </fileSet>
 
     <!-- CDH5 Kafka libs -->
     <fileSet>
-      <directory>${basedir}/../${cdh5-kafka_0_8_2_0_kafka_1_2_0-lib}/target/stage-libs/</directory>
-      <outputDirectory>/stage-libs/</outputDirectory>
+      <directory>${basedir}/../${cdh5-kafka_0_8_2_0_kafka_1_2_0-lib}/target/streamsets-libs/</directory>
+      <outputDirectory>/streamsets-libs/</outputDirectory>
     </fileSet>
 
     <!-- Jython libs -->
     <fileSet>
-      <directory>${basedir}/../${jython_2_7_b2-lib}/target/stage-libs/</directory>
-      <outputDirectory>/stage-libs/</outputDirectory>
+      <directory>${basedir}/../${jython_2_7_b2-lib}/target/streamsets-libs/</directory>
+      <outputDirectory>/streamsets-libs/</outputDirectory>
     </fileSet>
   </fileSets>
+
 
   <dependencySets>
 

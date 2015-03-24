@@ -39,7 +39,9 @@ SDC_DATA=${SDC_DATA:=${SDC_HOME}/data}
 SDC_LOG=${SDC_LOG:=${SDC_HOME}/log}
 SDC_JAVA_OPTS=${SDC_JAVA_OPTS:="-Xmx1024m"}
 SDC_MAIN_CLASS=${SDC_MAIN_CLASS:="com.streamsets.pipeline.main.Main"}
+SDC_SECURITY_MANAGER_ENABLED=${SDC_SECURITY_MANAGER_ENABLED:="true"}
 
+SDC_JAVA_OPTS="${SDC_JAVA_OPTS} -Dsdc.dist.dir=${SDC_DIST}"
 SDC_JAVA_OPTS="${SDC_JAVA_OPTS} -Dsdc.hostname=${SDC_HOSTNAME}"
 SDC_JAVA_OPTS="${SDC_JAVA_OPTS} -Dsdc.conf.dir=${SDC_CONF}"
 SDC_JAVA_OPTS="${SDC_JAVA_OPTS} -Dsdc.data.dir=${SDC_DATA}"
@@ -61,10 +63,12 @@ fi
 CONTAINER_CLASSPATH="${SDC_CONF}:${SDC_DIST}/container-lib/"'*.jar'
 CONTAINER_CLASSPATH="${SDC_PRE_CLASSPATH}${CONTAINER_CLASSPATH}${SDC_POST_CLASSPATH}"
 
-STAGE_LIBRARIES_DIR="${SDC_HOME}/stage-libs"
-if [ ! -d "${STAGES_LIBRARY_DIR}" ]
+STREAMSETS_LIBRARIES_DIR="${SDC_DIST}/streamsets-libs"
+
+USER_LIBRARIES_DIR="${SDC_HOME}/user-libs"
+if [ ! -d "${USER_LIBRARIES_DIR}" ]
 then
-  STAGE_LIBRARIES_DIR="${SDC_DIST}/stage-libs"
+  USER_LIBRARIES_DIR="${SDC_DIST}/user-libs"
 fi
 
 if [ -z "${JAVA_HOME}" ]
@@ -74,28 +78,38 @@ else
   JAVA="${JAVA_HOME}/bin/java"
 fi
 
+SDC_POLICY_FILE=""
+if [ "${SDC_SECURITY_MANAGER_ENABLED}" = "true" ]
+then
+  SDC_POLICY_FILE=${SDC_POLICY_FILE:="file://${SDC_CONF}/sdc-security.policy"}
+  SDC_SECURITY_MANAGER="-Djava.security.manager -Djava.security.policy=${SDC_POLICY_FILE}"
+  SDC_JAVA_OPTS="${SDC_SECURITY_MANAGER} ${SDC_JAVA_OPTS}"
+fi
+
 if [ "$1" = "-verbose" ];
 then
   echo "SDC Agent:"
-  echo "  DIST               : ${SDC_DIST}"
-  echo "  HOME               : ${SDC_HOME}"
-  echo "  CONF               : ${SDC_CONF}"
-  echo "  DATA               : ${SDC_DATA}"
-  echo "  LOG                : ${SDC_LOG}"
-  echo "  JAVA PATH          : ${JAVA}"
-  echo "  BOOTSTRAP_CLASSPATH: ${BOOTSTRAP_CLASSPATH}"
-  echo "  API_CLASSPATH      : ${API_CLASSPATH}"
-  echo "  CONTAINER_CLASSPATH: ${CONTAINER_CLASSPATH}"
-  echo "  STAGE_LIBRARIES_DIR: ${STAGE_LIBRARIES_DIR}"
-  echo "  JAVA OPTS          : ${SDC_JAVA_OPTS}"
-  echo "  MAIN CLASS         : ${SDC_MAIN_CLASS}"
+  echo "  DIST                     : ${SDC_DIST}"
+  echo "  HOME                     : ${SDC_HOME}"
+  echo "  CONF                     : ${SDC_CONF}"
+  echo "  DATA                     : ${SDC_DATA}"
+  echo "  LOG                      : ${SDC_LOG}"
+  echo "  SECURITY MANAGER POLICY  : ${SDC_POLICY_FILE}"
+  echo "  JAVA PATH                : ${JAVA}"
+  echo "  BOOTSTRAP_CLASSPATH      : ${BOOTSTRAP_CLASSPATH}"
+  echo "  API_CLASSPATH            : ${API_CLASSPATH}"
+  echo "  CONTAINER_CLASSPATH      : ${CONTAINER_CLASSPATH}"
+  echo "  STREAMSETS_LIBRARIES_DIR : ${STREAMSETS_LIBRARIES_DIR}"
+  echo "  USER_LIBRARIES_DIR       : ${USER_LIBRARIES_DIR}"
+  echo "  JAVA OPTS                : ${SDC_JAVA_OPTS}"
+  echo "  MAIN CLASS               : ${SDC_MAIN_CLASS}"
 fi
 
 cd ${SDC_DIST}
 
 exec ${JAVA} -classpath ${BOOTSTRAP_CLASSPATH} ${SDC_JAVA_OPTS} com.streamsets.pipeline.BootstrapMain \
 -mainClass ${SDC_MAIN_CLASS} -apiClasspath "${API_CLASSPATH}" -containerClasspath "${CONTAINER_CLASSPATH}" \
--stageLibrariesDir "${STAGE_LIBRARIES_DIR}"
+-streamsetsLibrariesDir "${STREAMSETS_LIBRARIES_DIR}" -userLibrariesDir "${USER_LIBRARIES_DIR}"
 status=$?
 echo "Exit: $status"
 exit $status

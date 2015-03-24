@@ -21,8 +21,8 @@
 
     <!-- Library -->
     <fileSet>
-      <directory>${basedir}/../jython_2_7_b2-lib/target/stage-libs</directory>
-      <outputDirectory>/streamsets-datacollector-${project.version}/stage-libs</outputDirectory>
+      <directory>${basedir}/../jython_2_7_b2-lib/target/streamsets-libs</directory>
+      <outputDirectory>/streamsets-datacollector-${project.version}/streamsets-libs</outputDirectory>
     </fileSet>
   </fileSets>
 

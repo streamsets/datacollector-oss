@@ -167,7 +167,7 @@
       </activation>
       <properties>
         <!-- trick to avoid pulling dev-lib files if the 'release' profile is active -->
-        <dev-lib.dist-dir>${basedir}/../dev-lib/target/stage-libs</dev-lib.dist-dir>
+        <dev-lib.dist-dir>${basedir}/../dev-lib/target/user-libs</dev-lib.dist-dir>
       </properties>
       <dependencies>
         <dependency>

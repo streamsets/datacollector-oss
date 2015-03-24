@@ -27,7 +27,10 @@ public class TestBootstrapMain {
       {"-mainClass", "a", "-apiClasspath", "b"},
       {"-mainClass", "a", "-apiClasspath", "b", "-containerClasspath"},
       {"-mainClass", "a", "-apiClasspath", "b", "-containerClasspath", "c"},
-      {"-mainClass", "a", "-apiClasspath", "b", "-containerClasspath", "c", "-stageLibrariesDir"},
+      {"-mainClass", "a", "-apiClasspath", "b", "-containerClasspath", "c", "-streamsetsLibrariesDir"},
+      {"-mainClass", "a", "-apiClasspath", "b", "-containerClasspath", "c", "-streamsetsLibrariesDir", "d"},
+      {"-mainClass", "a", "-apiClasspath", "b", "-containerClasspath", "c", "-streamsetsLibrariesDir", "d",
+          "-userLibrariesDir"},
   };
 
   @Test
@@ -46,7 +49,7 @@ public class TestBootstrapMain {
   @Test(expected = RuntimeException.class)
   public void testAllOptions() throws Exception {
       BootstrapMain.main(new String[] {"-mainClass", "a", "-apiClasspath", "b", "-containerClasspath", "c",
-          "-stageLibrariesDir", "d"});
+          "-streamsetsLibrariesDir", "d", "-userLibrariesDir", "e"});
   }
 
   private String extractPathFromUrlString(String url) {
@@ -152,7 +155,7 @@ public class TestBootstrapMain {
   @Test
   public void testGetStageLibrariesClasspaths() throws Exception {
     String baseDir = getBaseDir();
-    String stageLibsDir = baseDir + BootstrapMain.FILE_SEPARATOR + "stage-libs";
+    String stageLibsDir = baseDir + BootstrapMain.FILE_SEPARATOR + "streamsets-libs";
     Map<String, List<URL>> libs = BootstrapMain.getStageLibrariesClasspaths(stageLibsDir);
     Assert.assertEquals(2, libs.size());
     Assert.assertEquals(3, libs.get("stage1").size());
@@ -180,7 +183,7 @@ public class TestBootstrapMain {
     public static void setClassLoaders(ClassLoader api, ClassLoader container, List<ClassLoader> libs) {
       Assert.assertNotNull(api);
       Assert.assertNotNull(container);
-      Assert.assertEquals(2, libs.size());
+      Assert.assertEquals(3, libs.size());
       setClassLoaders = true;
     }
 
@@ -194,12 +197,14 @@ public class TestBootstrapMain {
     String baseDir = getBaseDir();
     String apiDir = baseDir + BootstrapMain.FILE_SEPARATOR + "jars-dir";
     String confDir = baseDir + BootstrapMain.FILE_SEPARATOR + "conf-dir";
-    String stageLibsDir = baseDir + BootstrapMain.FILE_SEPARATOR + "stage-libs";
+    String streamsetsLibsDir = baseDir + BootstrapMain.FILE_SEPARATOR + "streamsets-libs";
+    String userLibsDir = baseDir + BootstrapMain.FILE_SEPARATOR + "user-libs";
 
     setClassLoaders = false;
     main = false;
     BootstrapMain.main(new String[] {"-mainClass", TMain.class.getName(), "-apiClasspath", apiDir,
-        "-containerClasspath", confDir, "-stageLibrariesDir", stageLibsDir});
+        "-containerClasspath", confDir, "-streamsetsLibrariesDir", streamsetsLibsDir, "-userLibrariesDir",
+        userLibsDir});
     Assert.assertTrue(setClassLoaders);
     Assert.assertTrue(main);
   }

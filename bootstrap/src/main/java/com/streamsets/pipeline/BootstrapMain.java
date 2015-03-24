@@ -10,6 +10,7 @@ import java.io.FileFilter;
 import java.lang.reflect.Method;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -27,7 +28,8 @@ public class BootstrapMain {
   private static final String MAIN_CLASS_OPTION = "-mainClass";
   private static final String API_CLASSPATH_OPTION = "-apiClasspath";
   private static final String CONTAINER_CLASSPATH_OPTION = "-containerClasspath";
-  private static final String STAGE_LIBRARIES_DIR_OPTION = "-stageLibrariesDir";
+  private static final String STREAMSETS_LIBRARIES_DIR_OPTION = "-streamsetsLibrariesDir";
+  private static final String USER_LIBRARIES_DIR_OPTION = "-userLibrariesDir";
 
   private static final String SET_CLASS_LOADERS_METHOD = "setClassLoaders";
   private static final String MAIN_METHOD = "main";
@@ -55,7 +57,8 @@ public class BootstrapMain {
     String mainClass = null;
     String apiClasspath = null;
     String containerClasspath = null;
-    String stageLibrariesDir = null;
+    String streamsetsLibrariesDir = null;
+    String userLibrariesDir = null;
     for (int i = 0; i < args.length; i++) {
       if (args[i].equals(MAIN_CLASS_OPTION)) {
         i++;
@@ -79,12 +82,19 @@ public class BootstrapMain {
         } else {
           throw new IllegalArgumentException(String.format(MISSING_ARG_MSG, CONTAINER_CLASSPATH_OPTION));
         }
-      } else if (args[i].equals(STAGE_LIBRARIES_DIR_OPTION)) {
+      } else if (args[i].equals(STREAMSETS_LIBRARIES_DIR_OPTION)) {
         i++;
         if (i < args.length) {
-          stageLibrariesDir = args[i];
+          streamsetsLibrariesDir = args[i];
         } else {
-          throw new IllegalArgumentException(String.format(MISSING_ARG_MSG, STAGE_LIBRARIES_DIR_OPTION));
+          throw new IllegalArgumentException(String.format(MISSING_ARG_MSG, STREAMSETS_LIBRARIES_DIR_OPTION));
+        }
+      } else if (args[i].equals(USER_LIBRARIES_DIR_OPTION)) {
+        i++;
+        if (i < args.length) {
+          userLibrariesDir = args[i];
+        } else {
+          throw new IllegalArgumentException(String.format(MISSING_ARG_MSG, USER_LIBRARIES_DIR_OPTION));
         }
       } else {
         throw new IllegalArgumentException(String.format(INVALID_OPTION_ARG_MSG, args[i]));
@@ -99,8 +109,11 @@ public class BootstrapMain {
     if (containerClasspath == null) {
       throw new IllegalArgumentException(String.format(OPTION_NOT_SPECIFIED_MSG, CONTAINER_CLASSPATH_OPTION));
     }
-    if (stageLibrariesDir == null) {
-      throw new IllegalArgumentException(String.format(OPTION_NOT_SPECIFIED_MSG, STAGE_LIBRARIES_DIR_OPTION));
+    if (streamsetsLibrariesDir == null) {
+      throw new IllegalArgumentException(String.format(OPTION_NOT_SPECIFIED_MSG, STREAMSETS_LIBRARIES_DIR_OPTION));
+    }
+    if (userLibrariesDir == null) {
+      throw new IllegalArgumentException(String.format(OPTION_NOT_SPECIFIED_MSG, USER_LIBRARIES_DIR_OPTION));
     }
 
     if (debug) {
@@ -111,13 +124,16 @@ public class BootstrapMain {
       System.out.println();
       System.out.println(String.format(DEBUG_MSG, CONTAINER_CLASSPATH_OPTION, containerClasspath));
       System.out.println();
-      System.out.println(String.format(DEBUG_MSG, STAGE_LIBRARIES_DIR_OPTION, stageLibrariesDir));
+      System.out.println(String.format(DEBUG_MSG, STREAMSETS_LIBRARIES_DIR_OPTION, streamsetsLibrariesDir));
+      System.out.println();
+      System.out.println(String.format(DEBUG_MSG, USER_LIBRARIES_DIR_OPTION, userLibrariesDir));
     }
 
     // Extract classpath URLs for API, Container and Stage Libraries
     List<URL> apiUrls = getClasspathUrls(apiClasspath);
     List<URL> containerUrls = getClasspathUrls(containerClasspath);
-    Map<String, List<URL>> stageLibsUrls = getStageLibrariesClasspaths(stageLibrariesDir);
+    Map<String, List<URL>> streamsetsLibsUrls = getStageLibrariesClasspaths(streamsetsLibrariesDir);
+    Map<String, List<URL>> userLibsUrls = getStageLibrariesClasspaths(userLibrariesDir);
 
     if (debug) {
       System.out.println();
@@ -125,15 +141,21 @@ public class BootstrapMain {
       System.out.println();
       System.out.println(String.format(DEBUG_MSG, "Container classpath      :", containerUrls));
       System.out.println();
-      System.out.println(String.format(DEBUG_MSG, "Stage libraries classpath:", stageLibsUrls));
+      System.out.println(String.format(DEBUG_MSG, "StreamSets libraries classpath:", streamsetsLibsUrls));
+      System.out.println();
+      System.out.println(String.format(DEBUG_MSG, "User libraries classpath:", userLibsUrls));
       System.out.println();
     }
+
+    Map<String, List<URL>> libsUrls = new LinkedHashMap<>();
+    libsUrls.putAll(streamsetsLibsUrls);
+    libsUrls.putAll(userLibsUrls);
 
     // Create all ClassLoaders
     ClassLoader apiCL = new BlackListURLClassLoader("API", apiUrls, ClassLoader.getSystemClassLoader(), null);
     ClassLoader containerCL = new BlackListURLClassLoader("Container", containerUrls, apiCL, null);
-    List<ClassLoader> stageLibrariesCLs = new ArrayList<ClassLoader>();
-    for (Map.Entry<String,List<URL>> entry : stageLibsUrls.entrySet()) {
+    List<ClassLoader> stageLibrariesCLs = new ArrayList<>();
+    for (Map.Entry<String,List<URL>> entry : libsUrls.entrySet()) {
       stageLibrariesCLs.add(new BlackListURLClassLoader(entry.getKey(), entry.getValue(), apiCL,
                                                         PACKAGES_BLACKLIST_FOR_STAGE_LIBRARIES));
     }

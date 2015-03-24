@@ -26,3 +26,7 @@ export SDC_PRE_CLASSPATH=${SDC_PRE_CLASSPATH}
 export SDC_POST_CLASSPATH=${SDC_POST_CLASSPATH}
 
 export SDC_JAVA_OPTS="-Xmx1024m -server ${SDC_JAVA_OPTS}"
+
+# Enables/disables the JVM security manager
+#
+export SDC_SECURITY_MANAGER_ENABLED=true

@@ -177,7 +177,7 @@
                 <configuration>
                   <appendAssemblyId>false</appendAssemblyId>
                   <attach>false</attach>
-                  <finalName>stage-libs</finalName>
+                  <finalName>streamsets-libs</finalName>
                   <descriptors>
                     <descriptor>${basedir}/../root/src/main/assemblies/stage-lib.xml</descriptor>
                   </descriptors>
