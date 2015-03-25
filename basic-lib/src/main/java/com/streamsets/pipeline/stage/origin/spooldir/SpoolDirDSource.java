@@ -413,7 +413,7 @@ public class SpoolDirDSource extends DSource {
   //GROK
 
   @ConfigDef(
-    required = true,
+    required = false,
     type = ConfigDef.Type.TEXT,
     defaultValue = "",
     label = "Grok Pattern Definition",
@@ -432,14 +432,40 @@ public class SpoolDirDSource extends DSource {
     defaultValue = "%{COMMONAPACHELOG}",
     label = "Grok Pattern",
     description = "The grok pattern which is used to parse the log line.",
-    displayPosition = 740,
+    displayPosition = 780,
     group = "LOG",
     dependsOn = "logMode",
     triggeredByValue = "GROK"
   )
   public String grokPattern;
 
+  //LOG4J
 
+  @ConfigDef(
+    required = true,
+    type = ConfigDef.Type.BOOLEAN,
+    defaultValue = "false",
+    label = "Use Custom Log Format",
+    description = "Select this option to specify your own custom log4j format.",
+    displayPosition = 800,
+    group = "LOG",
+    dependsOn = "logMode",
+    triggeredByValue = "LOG4J"
+  )
+  public boolean enableLog4jCustomLogFormat;
+
+  @ConfigDef(
+    required = true,
+    type = ConfigDef.Type.STRING,
+    defaultValue = "%r [%t] %-5p %c %x - %m%n",
+    label = "Custom Log4J Format",
+    description = "Specify your own custom log4j format.",
+    displayPosition = 820,
+    group = "LOG",
+    dependsOn = "enableLog4jCustomLogFormat",
+    triggeredByValue = "true"
+  )
+  public String log4jCustomLogFormat;
 
   @Override
   protected Source createSource() {
@@ -448,7 +474,7 @@ public class SpoolDirDSource extends DSource {
       retentionTimeMins, csvFileFormat, csvHeader, csvMaxObjectLen, jsonContent,
       jsonMaxObjectLen, textMaxObjectLen, xmlRecordElement, xmlMaxObjectLen, logMode,
       logMaxObjectLen, retainOriginalLine, customLogFormat, regex, fieldPathsToGroupName, grokPatternDefinition,
-      grokPattern);
+      grokPattern, enableLog4jCustomLogFormat, log4jCustomLogFormat);
   }
 
 }

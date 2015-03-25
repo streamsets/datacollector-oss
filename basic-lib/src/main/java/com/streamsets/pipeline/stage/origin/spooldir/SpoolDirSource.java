@@ -23,6 +23,7 @@ import com.streamsets.pipeline.lib.parser.DataParser;
 import com.streamsets.pipeline.lib.parser.DataParserException;
 import com.streamsets.pipeline.lib.parser.log.ApacheAccessLogHelper;
 import com.streamsets.pipeline.lib.parser.log.Constants;
+import com.streamsets.pipeline.lib.parser.log.Log4jHelper;
 import com.streamsets.pipeline.lib.parser.log.LogCharDataParserFactory;
 import com.streamsets.pipeline.lib.parser.shaded.org.aicer.grok.dictionary.GrokDictionary;
 import com.streamsets.pipeline.lib.parser.xml.XmlCharDataParserFactory;
@@ -78,6 +79,8 @@ public class SpoolDirSource extends BaseSource {
   private final String grokPatternDefinition;
   private final String grokPattern;
   private final List<RegExConfig> fieldPathsToGroupName;
+  private final boolean enableLog4jCustomLogFormat;
+  private final String log4jCustomLogFormat;
 
   public SpoolDirSource(DataFormat dataFormat, String charset, int overrunLimit, String spoolDir, int batchSize,
       long poolingTimeoutSecs,
@@ -86,7 +89,8 @@ public class SpoolDirSource extends BaseSource {
       CsvMode csvFileFormat, CsvHeader csvHeader, int csvMaxObjectLen, JsonMode jsonContent, int jsonMaxObjectLen,
       int textMaxLineLen, String xmlRecordElement, int xmlMaxObjectLen, LogMode logMode, int logMaxObjectLen,
       boolean retainOriginalLine, String customLogFormat, String regex, List<RegExConfig> fieldPathsToGroupName,
-      String grokPatternDefinition, String grokPattern) {
+      String grokPatternDefinition, String grokPattern, boolean enableLog4jCustomLogFormat,
+      String log4jCustomLogFormat) {
     this.dataFormat = dataFormat;
     this.charset = charset;
     this.overrunLimit = overrunLimit * 1024;
@@ -116,6 +120,8 @@ public class SpoolDirSource extends BaseSource {
     this.fieldPathsToGroupName = fieldPathsToGroupName;
     this.grokPatternDefinition = grokPatternDefinition;
     this.grokPattern = grokPattern;
+    this.enableLog4jCustomLogFormat = enableLog4jCustomLogFormat;
+    this.log4jCustomLogFormat = log4jCustomLogFormat;
   }
 
   private Charset fileCharset;
@@ -210,6 +216,8 @@ public class SpoolDirSource extends BaseSource {
           validateRegExFormat(issues);
         } else if(logMode == LogMode.GROK) {
           validateGrokPattern(issues);
+        } else if (logMode == LogMode.LOG4J) {
+          validateLog4jCustomLogFormat(issues);
         }
         break;
       default:
@@ -235,6 +243,22 @@ public class SpoolDirSource extends BaseSource {
     } catch (DataParserException e) {
       issues.add(getContext().createConfigIssue(Groups.LOG.name(), "customLogFormat", Errors.SPOOLDIR_28,
         customLogFormat, e.getMessage(), e));
+    }
+  }
+
+  private void validateLog4jCustomLogFormat(List<ConfigIssue> issues) {
+    if(enableLog4jCustomLogFormat) {
+      if (log4jCustomLogFormat == null || log4jCustomLogFormat.isEmpty()) {
+        issues.add(getContext().createConfigIssue(Groups.LOG.name(), "log4jCustomLogFormat", Errors.SPOOLDIR_27,
+          log4jCustomLogFormat));
+        return;
+      }
+      try {
+        Log4jHelper.translateLog4jLayoutToGrok(log4jCustomLogFormat);
+      } catch (DataParserException e) {
+        issues.add(getContext().createConfigIssue(Groups.LOG.name(), "log4jCustomLogFormat", Errors.SPOOLDIR_28,
+          log4jCustomLogFormat, e.getMessage(), e));
+      }
     }
   }
 
@@ -348,6 +372,7 @@ public class SpoolDirSource extends BaseSource {
             getFieldPathToGroupMap(fieldPathsToGroupName))
           .setConfig(LogCharDataParserFactory.GROK_PATTERN_DEFINITION_KEY, grokPatternDefinition)
           .setConfig(LogCharDataParserFactory.GROK_PATTERN_KEY, grokPattern)
+          .setConfig(LogCharDataParserFactory.LOG4J_FORMAT_KEY, log4jCustomLogFormat)
           .setMode(logMode);
         break;
     }

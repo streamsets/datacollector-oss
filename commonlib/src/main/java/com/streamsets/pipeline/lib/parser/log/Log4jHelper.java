@@ -5,6 +5,8 @@
  */
 package com.streamsets.pipeline.lib.parser.log;
 
+import com.streamsets.pipeline.lib.parser.DataParserException;
+
 import java.util.StringTokenizer;
 
 public class Log4jHelper {
@@ -13,13 +15,16 @@ public class Log4jHelper {
   private static final int LITERAL_STATE = 1;
   private static final int NEXT_LAYOUT = 2;
   private static final int ERROR = -1;
+  private static final String TRAILING_SPACE = "(?:\\s*)";
 
-  public static String parseLayout(String patternLayout) {
+  public static String translateLog4jLayoutToGrok(String patternLayout) throws DataParserException {
     int state = NEXT_LAYOUT;
     StringTokenizer stringTokenizer = new StringTokenizer(patternLayout);
     StringBuilder regex = new StringBuilder();
     String argument;
     while (stringTokenizer.hasMoreTokens()) {
+      boolean leftPadWithSpace = false;
+      boolean rightPadWithSpace = false;
       String token = stringTokenizer.nextToken();
       int index = 0;
       StringBuilder partialRegex = new StringBuilder();
@@ -31,13 +36,20 @@ public class Log4jHelper {
             break;
           case '-':
             if (state == PERCENT_STATE) {
-              //no-op
+              rightPadWithSpace = true;
             } else if (state == NEXT_LAYOUT) {
               partialRegex.append(c);
-              state = NEXT_LAYOUT;
-
             } else if (state == LITERAL_STATE) {
-              throw new IllegalArgumentException("hello!!");
+              throw new DataParserException(Errors.LOG_PARSER_02, patternLayout);
+            }
+            break;
+          case '[':
+          case ']':
+            if (state == PERCENT_STATE) {
+            } else if (state == NEXT_LAYOUT) {
+              //partialRegex.append("\\\\").append(c);
+            } else if (state == LITERAL_STATE) {
+              throw new DataParserException(Errors.LOG_PARSER_02, patternLayout);
             }
             break;
           case '0':
@@ -51,12 +63,14 @@ public class Log4jHelper {
           case '8':
           case '9':
             if (state == PERCENT_STATE) {
-              //no-op
+              if(!rightPadWithSpace && !leftPadWithSpace) {
+                partialRegex.append(TRAILING_SPACE);
+                leftPadWithSpace = true;
+              }
             } else if (state == NEXT_LAYOUT) {
               partialRegex.append(c);
-              state = NEXT_LAYOUT;
             } else {
-              throw new IllegalArgumentException("hello!!");
+              throw new DataParserException(Errors.LOG_PARSER_02, patternLayout);
             }
             break;
           case '.':
@@ -64,79 +78,97 @@ public class Log4jHelper {
               //no-op
             } else if (state == NEXT_LAYOUT) {
               partialRegex.append("\\.");
-              state = NEXT_LAYOUT;
             } else {
-              throw new IllegalArgumentException("hello!!");
-            }
-            break;
-
-          case '{':
-          case '}':
-            if (state == NEXT_LAYOUT) {
-              partialRegex.append(c);
-            } else {
-              throw new IllegalArgumentException("hello!!");
+              throw new DataParserException(Errors.LOG_PARSER_02, patternLayout);
             }
             break;
 
           case 'c' :
-            checkStateAndAppend(partialRegex, state, "%{JAVACLASS:logger}", c);
+            index += ignoreArgument(token, index);
+            state = checkStateAndAppend(partialRegex, state, "%{JAVACLASS:category}", c, rightPadWithSpace);
             break;
           case 'C' :
-            checkStateAndAppend(partialRegex, state, "%{JAVACLASS:class}", c);
+            index += ignoreArgument(token, index);
+            state = checkStateAndAppend(partialRegex, state, "%{JAVACLASS:class}", c, rightPadWithSpace);
             break;
           case 'F' :
-            checkStateAndAppend(partialRegex, state, "%{JAVAFILE:class}", c);
+            index += ignoreArgument(token, index);
+            state = checkStateAndAppend(partialRegex, state, "%{JAVAFILE:class}", c, rightPadWithSpace);
             break;
           case 'l' :
-            checkStateAndAppend(partialRegex, state, "%{JAVASTACKTRACEPART:location}", c);
+            index += ignoreArgument(token, index);
+            state = checkStateAndAppend(partialRegex, state, "%{JAVASTACKTRACEPART:location}", c, rightPadWithSpace);
             break;
           case 'L' :
-            checkStateAndAppend(partialRegex, state, "%{NONNEGINT:line}", c);
+            index += ignoreArgument(token, index);
+            state = checkStateAndAppend(partialRegex, state, "%{NONNEGINT:line}", c, rightPadWithSpace);
             break;
           case 'm' :
-            checkStateAndAppend(partialRegex, state, "%{GREEDYDATA:message}", c);
+            index += ignoreArgument(token, index);
+            state = checkStateAndAppend(partialRegex, state, "%{GREEDYDATA:message}", c, rightPadWithSpace);
             break;
           case 'n' :
-            checkStateAndAppend(partialRegex, state, "\\r?\\n", c);
+            index += ignoreArgument(token, index);
+            state = checkStateAndAppend(partialRegex, state, "\\r?\\n", c, rightPadWithSpace);
             break;
           case 'M' :
-            checkStateAndAppend(partialRegex, state, "${WORD:method}", c);
+            index += ignoreArgument(token, index);
+            state = checkStateAndAppend(partialRegex, state, "${WORD:method}", c, rightPadWithSpace);
             break;
           case 'p' :
-            checkStateAndAppend(partialRegex, state, "%{LOGLEVEL:loglevel}", c);
+            index += ignoreArgument(token, index);
+            state = checkStateAndAppend(partialRegex, state, "%{LOGLEVEL:severity}", c, rightPadWithSpace);
             break;
           case 'r' :
-            checkStateAndAppend(partialRegex, state, "%{INT:relativetime}", c);
+            index += ignoreArgument(token, index);
+            state = checkStateAndAppend(partialRegex, state, "%{INT:relativetime}", c, rightPadWithSpace);
+            break;
+          case 't' :
+            index += ignoreArgument(token, index);
+            state = checkStateAndAppend(partialRegex, state, "%{PROG:thread}", c, rightPadWithSpace);
             break;
           case 'x' :
-            checkStateAndAppend(partialRegex, state, "%{WORD:ndc}?", c);
+            index += ignoreArgument(token, index);
+            state = checkStateAndAppend(partialRegex, state, "%{WORD:ndc}?", c, rightPadWithSpace);
             break;
           case 'X' :
             argument = getArgument(token, ++index);
             if (null == argument) {
-              checkStateAndAppend(partialRegex, state, "\\{(?<mdc>(?:\\{[^\\}]*,[^\\}]*\\})*)\\}", c);
+              state = checkStateAndAppend(partialRegex, state, getDefaultMDCPattern(), c, rightPadWithSpace);
             } else {
-              checkStateAndAppend(partialRegex, state, "${WORD:" + argument + "}?", c);
+              index += argument.length() + 1 /* +1 for '}'*/;
+              state = checkStateAndAppend(partialRegex, state, "${WORD:" + argument + "}?", c, rightPadWithSpace);
             }
             break;
           case 'd' :
             argument = getArgument(token, ++index);
-            checkStateAndAppend(partialRegex, state, getDatePatternFromArgument(argument), c);
+            if(argument != null) {
+              index += argument.length() + 1 /* +1 for the '}'*/;
+            }
+            state = checkStateAndAppend(partialRegex, state, getDatePatternFromArgument(argument), c, rightPadWithSpace);
             break;
           default:
               partialRegex.append(c);
         }
         index++;
       }
-      regex.append(partialRegex.toString()).append(" ");
+     regex.append(partialRegex.toString()).append(" ");
     }
     return regex.toString().trim();
+  }
+
+  private static int ignoreArgument(String token, int index) {
+    String argument = getArgument(token, ++index);
+    if(argument != null) {
+      return argument.length() + 2 /*+1 for '{' and +1 for '}'*/;
+    }
+    return 0;
   }
 
   private static String getArgument(String token, int index) {
     if (index < token.length()) {
       if (token.charAt(index) == '{') {
+        index++;
         StringBuilder sb = new StringBuilder();
         while (index < token.length() && token.charAt(index) != '}') {
           //read the number of characters
@@ -165,28 +197,29 @@ public class Log4jHelper {
           datePattern = getPatternFromDateArgument(dateArgument);
       }
     }
-    return "(?<date>" + datePattern + ")";
+    return "(?<timestamp>" + datePattern + ")";
   }
 
-  private static String getMDCRegex() {
-    return "";
+  private static String getDefaultMDCPattern() {
+    return "\\{(?<mdc>(?:\\{[^\\}]*,[^\\}]*\\})*)\\}";
   }
 
   public static String getDefaultDatePattern() {
-    //no format specified, return default ISO8601 Date Format
-    //TIMESTAMP_ISO8601 %{YEAR}-%{MONTHNUM}-%{MONTHDAY}[T ]%{HOUR}:?%{MINUTE}(?::?%{SECOND})?%{ISO8601_TIMEZONE}?
-    //YYYY-mm-dd HH:mm:ss,SSS
     return "%{TIMESTAMP_ISO8601}";
   }
 
   public static String getPatternFromDateArgument(String dateFormat) {
-    return "%{TIMESTAMP_ISO8601}";
+    return ".{" + dateFormat.length() + "}";
   }
 
-  private static int checkStateAndAppend(StringBuilder sb, int state, String pattern, char c) {
+  private static int checkStateAndAppend(StringBuilder sb, int state, String pattern, char c,
+                                         boolean rightPadWithSpace) {
     if (state == PERCENT_STATE) {
       //encountered conversion character
       sb.append(pattern);
+      if(rightPadWithSpace) {
+        sb.append(TRAILING_SPACE);
+      }
       state = NEXT_LAYOUT;
     } else if (state == NEXT_LAYOUT) {
       sb.append(c);

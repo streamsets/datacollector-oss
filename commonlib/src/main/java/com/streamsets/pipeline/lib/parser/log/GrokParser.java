@@ -33,7 +33,7 @@ public class GrokParser extends LogDataParser {
     for(String dictionary : dictionaries) {
       grokDictionary.addDictionary(getClass().getClassLoader().getResourceAsStream(dictionary));
     }
-    if(grokPatternDefinition != null || !grokPatternDefinition.isEmpty()) {
+    if(grokPatternDefinition != null && !grokPatternDefinition.isEmpty()) {
       grokDictionary.addDictionary(new StringReader(grokPatternDefinition));
     }
     // Resolve all expressions loaded

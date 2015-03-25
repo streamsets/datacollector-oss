@@ -32,7 +32,7 @@ public class TestLog4jParser {
   @Test
   public void testParse() throws Exception {
     OverrunReader reader = new OverrunReader(new StringReader(LOG_LINE), 1000, true);
-    DataParser parser = new Log4jParser(getContext(), "id", reader, 0, 1000, true);
+    DataParser parser = new Log4jParser(getContext(), "id", reader, 0, 1000, true, Constants.GROK_LOG4J_LOG_FORMAT);
     Assert.assertEquals(0, parser.getOffset());
     Record record = parser.parse();
     Assert.assertNotNull(record);
@@ -65,7 +65,7 @@ public class TestLog4jParser {
   public void testParseWithOffset() throws Exception {
     OverrunReader reader = new OverrunReader(new StringReader(
       "Hello\n" + LOG_LINE), 1000, true);
-    DataParser parser = new Log4jParser(getContext(), "id", reader, 6, 1000, true);
+    DataParser parser = new Log4jParser(getContext(), "id", reader, 6, 1000, true, Constants.GROK_LOG4J_LOG_FORMAT);
     Assert.assertEquals(6, parser.getOffset());
     Record record = parser.parse();
     Assert.assertNotNull(record);
@@ -101,7 +101,7 @@ public class TestLog4jParser {
   @Test(expected = IOException.class)
   public void testClose() throws Exception {
     OverrunReader reader = new OverrunReader(new StringReader("Hello\nByte"), 1000, true);
-    DataParser parser = new Log4jParser(getContext(), "id", reader, 0, 1000, false);
+    DataParser parser = new Log4jParser(getContext(), "id", reader, 0, 1000, false, Constants.GROK_LOG4J_LOG_FORMAT);
     parser.close();
     parser.parse();
   }
@@ -109,7 +109,7 @@ public class TestLog4jParser {
   @Test(expected = DataParserException.class)
   public void testTruncate() throws Exception {
     OverrunReader reader = new OverrunReader(new StringReader(LOG_LINE), 1000, true);
-    DataParser parser = new Log4jParser(getContext(), "id", reader, 0, 25, true); //cut short to 25
+    DataParser parser = new Log4jParser(getContext(), "id", reader, 0, 25, true, Constants.GROK_LOG4J_LOG_FORMAT); //cut short to 25
     Assert.assertEquals(0, parser.getOffset());
     try {
       parser.parse();
@@ -123,7 +123,7 @@ public class TestLog4jParser {
     OverrunReader reader = new OverrunReader(new StringReader(
       "127.0.0.1 ss h [10/Oct/2000:13:55:36 -0700] This is a log line that does not confirm to default log4j log format"),
       1000, true);
-    DataParser parser = new Log4jParser(getContext(), "id", reader, 0, 1000, true);
+    DataParser parser = new Log4jParser(getContext(), "id", reader, 0, 1000, true, Constants.GROK_LOG4J_LOG_FORMAT);
     Assert.assertEquals(0, parser.getOffset());
     try {
       parser.parse();

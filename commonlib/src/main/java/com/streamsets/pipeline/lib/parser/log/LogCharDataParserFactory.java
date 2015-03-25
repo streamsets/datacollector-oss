@@ -35,6 +35,8 @@ public class LogCharDataParserFactory extends CharDataParserFactory {
   static final String GROK_PATTERN_DEFAULT = "%{COMMONAPACHELOG}";
   public static final String GROK_PATTERN_DEFINITION_KEY = KEY_PREFIX + "grok.pattern.definition";
   static final String GROK_PATTERN_DEFINITION_DEFAULT = "";
+  public static final String LOG4J_FORMAT_KEY = KEY_PREFIX + "log4j.custom.log.format";
+  static final String LOG4J_FORMAT_DEFAULT = "%d{ISO8601} %-5p %c{1} - %m";
 
   public static Map<String, Object> registerConfigs(Map<String, Object> configs) {
     configs.put(RETAIN_ORIGINAL_TEXT_KEY, RETAIN_ORIGINAL_TEXT_DEFAULT);
@@ -43,6 +45,8 @@ public class LogCharDataParserFactory extends CharDataParserFactory {
     configs.put(REGEX_FIELD_PATH_TO_GROUP_KEY, REGEX_FIELD_PATH_TO_GROUP_DEFAULT);
     configs.put(GROK_PATTERN_DEFINITION_KEY, GROK_PATTERN_DEFINITION_DEFAULT);
     configs.put(GROK_PATTERN_KEY, GROK_PATTERN_DEFAULT);
+    configs.put(LOG4J_FORMAT_KEY, LOG4J_FORMAT_DEFAULT);
+
     return configs;
   }
 
@@ -56,6 +60,7 @@ public class LogCharDataParserFactory extends CharDataParserFactory {
   private final String grokPatternDefinition;
   private final String grokPattern;
   private final List<String> grokDictionaries;
+  private final String log4jCustomLogFormat;
 
   public LogCharDataParserFactory(Stage.Context context, int maxObjectLen, LogMode logMode,
                                   Map<String, Object> configs) {
@@ -69,6 +74,7 @@ public class LogCharDataParserFactory extends CharDataParserFactory {
     this.grokPatternDefinition = (String) configs.get(GROK_PATTERN_DEFINITION_KEY);
     this.grokPattern = (String) configs.get(GROK_PATTERN_KEY);
     this.grokDictionaries = Collections.emptyList();
+    this.log4jCustomLogFormat = (String) configs.get(LOG4J_FORMAT_KEY);
   }
 
   @Override
@@ -92,6 +98,9 @@ public class LogCharDataParserFactory extends CharDataParserFactory {
         case GROK:
           return new GrokParser(context, id, reader, readerOffset, maxObjectLen, retainOriginalText,
             grokPatternDefinition, grokPattern, grokDictionaries);
+        case LOG4J:
+          return new Log4jParser(context, id, reader, readerOffset, maxObjectLen, retainOriginalText,
+            Log4jHelper.translateLog4jLayoutToGrok(log4jCustomLogFormat));
         default :
           return null;
       }

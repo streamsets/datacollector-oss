@@ -48,5 +48,8 @@ public class Constants {
 
   public static final String SEVERITY = "severity";
   public static final String JAVACLASS = "class";
+  public static final String CATEGORY = "category";
+  public static final String THREAD = "thread";
+  public static final String RELATIVETIME = "relativetime";
 
 }
