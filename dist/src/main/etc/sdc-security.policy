@@ -18,7 +18,7 @@ grant codebase "file://${sdc.dist.dir}/container-lib/*" {
 };
 
 // StreamSets stage libraries code base:
-grant codebase "file://${sdc.dist.dir}/stage-libs/-" {
+grant codebase "file://${sdc.dist.dir}/streamsets-libs/-" {
   permission java.security.AllPermission;
 };
 
