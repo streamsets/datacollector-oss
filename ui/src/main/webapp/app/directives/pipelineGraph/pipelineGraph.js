@@ -553,7 +553,7 @@ angular.module('pipelineGraphDirectives', ['underscore'])
       this.state.lastKeyDown = -1;
     };
 
-    GraphCreator.prototype.addNode = function(node, edge, relativeX, relativeY) {
+    GraphCreator.prototype.addNode = function(node, edges, relativeX, relativeY) {
       var thisGraph = this;
 
       if(relativeX && relativeY) {
@@ -570,8 +570,8 @@ angular.module('pipelineGraphDirectives', ['underscore'])
 
       thisGraph.nodes.push(node);
 
-      if(edge) {
-        thisGraph.edges.push(edge);
+      if(edges) {
+        thisGraph.edges = edges;
       }
 
       thisGraph.updateGraph();
@@ -1206,6 +1206,7 @@ angular.module('pipelineGraphDirectives', ['underscore'])
         edges = options.edges,
         issues = options.issues,
         selectNode = options.selectNode,
+        selectEdge = options.selectEdge,
         stageErrorCounts = options.stageErrorCounts,
         showEdgePreviewIcon = options.showEdgePreviewIcon;
 
@@ -1230,38 +1231,35 @@ angular.module('pipelineGraphDirectives', ['underscore'])
         panToolbar = toolbar.append('div')
           .attr('class', 'pan-toolbar');
 
-        panToolbar.append('div')
-          .attr('class', 'circle-div');
-
-        panToolbar.append('span')
+        panToolbar.append('div').append('span')
           .attr('class', 'glyphicon glyphicon-chevron-up pan-up')
           .on('mousedown', function() {
             graph.panUp();
             d3.event.preventDefault();
           });
 
-        panToolbar.append('span')
+        panToolbar.append('div').append('span')
           .attr('class', 'glyphicon glyphicon-chevron-right pan-right')
           .on('mousedown', function() {
             graph.panRight();
             d3.event.preventDefault();
           });
 
-        panToolbar.append('span')
+        panToolbar.append('div').append('span')
           .attr('class', 'glyphicon glyphicon-home pan-home')
           .on('mousedown', function() {
             graph.panHome();
             d3.event.preventDefault();
           });
 
-        panToolbar.append('span')
+        panToolbar.append('div').append('span')
           .attr('class', 'glyphicon glyphicon-chevron-left pan-left')
           .on('mousedown', function() {
             graph.panLeft();
             d3.event.preventDefault();
           });
 
-        panToolbar.append('span')
+        panToolbar.append('div').append('span')
           .attr('class', 'glyphicon glyphicon-chevron-down pan-down')
           .on('mousedown', function() {
             graph.panDown();
@@ -1353,11 +1351,13 @@ angular.module('pipelineGraphDirectives', ['underscore'])
 
       if(selectNode) {
         graph.selectNode(selectNode);
+      } else if(selectEdge) {
+        graph.selectEdge(selectEdge);
       }
     });
 
-    $scope.$on('addNode', function(event, stageInstance, edge, relativeX, relativeY) {
-      graph.addNode(stageInstance, edge, relativeX, relativeY);
+    $scope.$on('addNode', function(event, stageInstance, edges, relativeX, relativeY) {
+      graph.addNode(stageInstance, edges, relativeX, relativeY);
       $(graph.svg[0]).focus();
     });
 

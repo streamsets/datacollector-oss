@@ -42,7 +42,6 @@ angular
       }
     });
 
-
     angular.extend($scope, {
       isPipelineReadOnly: !authService.isAuthorized([userRoles.admin, userRoles.creator]),
       isPipelineRulesReadOnly: !authService.isAuthorized([userRoles.admin, userRoles.creator, userRoles.manager]),
@@ -85,8 +84,9 @@ angular
        *  relativeXPos [optional]
        *  relativeYPos [optional]
        *  configuration [optional]
+       *  insertBetweenEdge [optional]
        *
-       *  @param event
+       * @param event
        */
       addStageInstance: function (options, event) {
         var stage = options.stage,
@@ -94,7 +94,9 @@ angular
           relativeXPos = options.relativeXPos,
           relativeYPos = options.relativeYPos,
           configuration = options.configuration,
+          insertBetweenEdge = options.insertBetweenEdge,
           stageInstance,
+          edges = $scope.edges,
           edge;
 
         if(event) {
@@ -133,7 +135,8 @@ angular
           firstOpenLane: firstOpenLane,
           relativeXPos: relativeXPos,
           relativeYPos: relativeYPos,
-          configuration: configuration
+          configuration: configuration,
+          insertBetweenEdge: insertBetweenEdge
         });
 
         $scope.changeStageSelection({
@@ -148,9 +151,30 @@ angular
             target: stageInstance,
             outputLane: firstOpenLane.laneName
           };
+          edges.push(edge);
         }
 
-        $scope.$broadcast('addNode', stageInstance, edge, relativeXPos, relativeYPos);
+        if(insertBetweenEdge) {
+          edges = _.filter(edges, function(e) {
+            return (e.outputLane !== insertBetweenEdge.outputLane &&
+              e.source.instanceName !== insertBetweenEdge.source.instanceName &&
+              e.target.instanceName !== insertBetweenEdge.target.instanceName);
+          });
+
+          edges.push({
+            source: insertBetweenEdge.source,
+            target: stageInstance,
+            outputLane: insertBetweenEdge.outputLane
+          });
+
+          edges.push({
+            source: stageInstance,
+            target: insertBetweenEdge.target,
+            outputLane: stageInstance.outputLanes[0]
+          });
+        }
+
+        $scope.$broadcast('addNode', stageInstance, edges, relativeXPos, relativeYPos);
       },
 
       /**
@@ -792,6 +816,7 @@ angular
           edges: edges,
           issues: $scope.pipelineConfig.issues,
           selectNode: ($scope.selectedType && $scope.selectedType === pipelineConstant.STAGE_INSTANCE) ? $scope.selectedObject : undefined,
+          selectEdge: ($scope.selectedType && $scope.selectedType === pipelineConstant.LINK) ? $scope.selectedObject : undefined,
           stageErrorCounts: stageErrorCounts,
           showEdgePreviewIcon: true,
           isReadOnly: $scope.isPipelineReadOnly || $scope.isPipelineRunning || $scope.previewMode,
@@ -1037,8 +1062,6 @@ angular
           };
         }
       }
-
-
 
       return firstOpenLane;
     };

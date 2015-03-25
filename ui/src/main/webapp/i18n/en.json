@@ -167,7 +167,8 @@
       "errorStackTrace": "Error Stack Trace",
       "dontShowAgain": "Don't show again.",
       "selectProcessor": "Select Processor to connect...",
-      "selectTarget": "Select Destination to connect..."
+      "selectTarget": "Select Destination to connect...",
+      "selectProcessorToAddInBetween": "Select Processor to add in between the selected stream..."
     },
     "detailPane": {
       "alerts": "Alerts",

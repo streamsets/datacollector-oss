@@ -289,6 +289,7 @@ angular.module('dataCollectorApp.common')
      *  relativeYPos [Optional]
      *  configuration [Optional]
      *  errorStage [optional]
+     *  edges [optional]
      * @returns {{instanceName: *, library: (*|stageInstance.library|library|e.library), stageName: *, stageVersion: *, configuration: Array, uiInfo: {label: *, description: string, xPos: *, yPos: number, stageType: *}, inputLanes: Array, outputLanes: Array}}
      */
     this.getNewStageInstance = function (options) {
@@ -333,6 +334,30 @@ angular.module('dataCollectorApp.common')
         }
       } else if(stage.variableOutputStreams) {
         stageInstance.outputLanes.push(stageInstance.instanceName + 'OutputLane' + (new Date()).getTime());
+      }
+
+
+      if(options.insertBetweenEdge && (stage.outputStreams > 0 || stage.variableOutputStreams)) {
+        //Insert stage instance in the middle of edge
+        var edge = options.insertBetweenEdge,
+          targetInstance = edge.target,
+          laneIndex;
+
+        stageInstance.inputLanes.push(edge.outputLane);
+
+        angular.forEach(targetInstance.inputLanes, function(laneName, index) {
+          if(laneName === edge.outputLane) {
+            laneIndex = index;
+          }
+        });
+
+        if(laneIndex !== undefined) {
+          targetInstance.inputLanes[laneIndex] = stageInstance.outputLanes[0];
+        }
+
+        stageInstance.uiInfo.xPos = targetInstance.uiInfo.xPos - 20;
+        stageInstance.uiInfo.yPos = targetInstance.uiInfo.yPos + 50;
+        targetInstance.uiInfo.xPos += 200;
       }
 
       angular.forEach(stage.configDefinitions, function (configDefinition) {

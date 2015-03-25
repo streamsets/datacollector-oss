@@ -77,6 +77,39 @@
 
     </div>
 
+
+
+    <div class="alert alert-dismissible alert-info alert-select-stage" role="alert"
+         ng-if="!isPipelineReadOnly && pipelineConfig && selectedType === pipelineConstant.LINK && !previewMode &&
+         !$storage.maximizeDetailPane && !$storage.dontShowHelpAlert">
+
+      <button type="button" class="close" ng-click="$storage.dontShowHelpAlert = !$storage.dontShowHelpAlert">
+        <span aria-hidden="true">&times;</span>
+        <span class="sr-only">Close</span>
+      </button>
+
+
+      <select class="form-control stage-in-between" name="newPipelineProcessor"
+              ng-options="(stage.label + ' - ' +  stage.libraryLabel) for stage in processors"
+              ng-model="insertStage.selected"
+              ng-change="onInsertStageChange()">
+        <option value="">
+          {{'home.graphPane.selectProcessorToAddInBetween' | translate}}
+        </option>
+      </select>
+
+
+      <div class="pull-right checkbox dont-show-again">
+        <label>
+          <input type="checkbox" name="dontShowHelpAgain"
+                 ng-model="$storage.dontShowHelpAlert">  {{'home.graphPane.dontShowAgain' | translate}}
+        </label>
+      </div>
+
+    </div>
+
+
+
     <ng-include src="'app/home/alerts/error/errorAlert.tpl.html'" ng-if="!$storage.maximizeDetailPane"></ng-include>
     <ng-include src="'app/home/alerts/info/infoAlert.tpl.html'" ng-if="!$storage.maximizeDetailPane"></ng-include>
     <ng-include src="'app/home/alerts/success/successAlert.tpl.html'" ng-if="!$storage.maximizeDetailPane"></ng-include>

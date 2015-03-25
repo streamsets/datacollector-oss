@@ -14,69 +14,56 @@ pipeline-graph {
     .graph-toolbar {
 
       .pan-toolbar {
-
-        clear: both;
-
-        .circle-div {
-          text-indent: -9999px;
-          position: absolute;
-          border: 1px solid #ccc;
-          -moz-border-radius: 50%;
-          -webkit-border-radius: 390px;
-          border-radius: 390px;
-          list-style-type: none;
-          box-shadow: 0 1px 4px rgba(0,0,0,0.3);
-          width: 60px;
-          height: 60px;
-          bottom: 90px;
-          right: 30px;
-          background-color: rgba(255,255,255,0.4);
-          background-clip: padding-box;
-        }
-
-        .pan-up {
-          position: relative;
-          float: right;
-          top: -145px;
-          right: 52px;
-        }
-
-        .pan-right {
-          position: relative;
-          float: right;
-          top: -125px;
-          right: 22px;
-        }
-
-        .pan-home {
-          position: relative;
-          float: right;
-          top: -125px;
-          right: 28px;
-        }
-
-        .pan-left {
-          position: relative;
-          float: right;
-          top: -125px;
-          right: 33px;
-        }
-
-        .pan-down {
-          position: relative;
-          float: right;
-          top: -106px;
-          right: 2px;
-        }
+        position: relative;
+        border: 1px solid #ccc;
+        -moz-border-radius: 50%;
+        -webkit-border-radius: 390px;
+        border-radius: 390px;
+        list-style-type: none;
+        box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3);
+        width: 60px;
+        height: 60px;
+        bottom: 150px;
+        right: 30px;
+        background-color: #fff;
+        background-clip: padding-box;
+        float: right;
 
         span {
           cursor: pointer;
           font-size: 0.9em;
           color: @streamsets-icon-btn-color;
+
           &:hover {
             color: @streamsets-icon-btn-hover-color;
           }
         }
+
+        .pan-up {
+          left: 23px;
+        }
+
+        .pan-right {
+          left: 42px;
+        }
+
+        .pan-home {
+          left: 22px;
+          top: -19px;
+          color: rgba(128, 128, 128, 0.63);
+        }
+
+        .pan-left {
+          left: 3px;
+          top: -39px;
+        }
+
+        .pan-down {
+          left: 23px;
+          top: -40px;
+        }
+
+
 
       }
 
@@ -84,7 +71,7 @@ pipeline-graph {
         position: relative;
         float: right;
         top: -80px;
-        right: -16px;
+        right: -12px;
         color: @streamsets-icon-btn-color;
         background-color: #ffffff;
         background-clip: padding-box;
