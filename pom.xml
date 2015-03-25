@@ -41,11 +41,10 @@
     <cdh_5_3_2-lib>cdh5_3_2-lib</cdh_5_3_2-lib>
     <cdh5-kafka_0_8_2_0_kafka_1_2_0-lib>cdh5-kafka_0_8_2_0_kafka_1_2_0-lib</cdh5-kafka_0_8_2_0_kafka_1_2_0-lib>
     <apache-kafka_0_8_1_1-lib>none</apache-kafka_0_8_1_1-lib>
-    <apache-kafka_0_8_1_1-lib>apache-kafka_0_8_1_1-lib</apache-kafka_0_8_1_1-lib>
-    <apache-kafka_0_8_2_0-lib>apache-kafka_0_8_2_0-lib</apache-kafka_0_8_2_0-lib>
+    <apache-kafka_0_8_2_0-lib>none</apache-kafka_0_8_2_0-lib>
     <apache-kafka_0_8_2_1-lib>none</apache-kafka_0_8_2_1-lib>
     <jython_2_7_b2-lib>jython_2_7_b2-lib</jython_2_7_b2-lib>
-    <elasticsearch_1_4_4-lib>elasticsearch_1_4_4-lib</elasticsearch_1_4_4-lib>
+    <elasticsearch_1_4_4-lib>none</elasticsearch_1_4_4-lib>
     <elasticsearch_1_5_0-lib>elasticsearch_1_5_0-lib</elasticsearch_1_5_0-lib>
   </properties>
 
@@ -74,14 +73,13 @@
 
     <module>kafka-protolib</module>
     <module>cdh5-kafka_0_8_2_0_kafka_1_2_0-lib</module>
-    <module>apache-kafka_0_8_2_0-lib</module>
 
     <module>jython-protolib</module>
     <module>jython_2_7_b2-lib</module>
 
     <module>elasticsearch-protolib</module>
-    <module>elasticsearch_1_4_4-lib</module>
     <module>elasticsearch_1_5_0-lib</module>
+
   </modules>
 
   <build>
@@ -216,7 +214,9 @@
         <cdh_5_3_0-lib>cdh5_3_0-lib</cdh_5_3_0-lib>
         <cdh_5_3_1-lib>cdh5_3_1-lib</cdh_5_3_1-lib>
         <apache-kafka_0_8_1_1-lib>apache-kafka_0_8_1_1-lib</apache-kafka_0_8_1_1-lib>
+        <apache-kafka_0_8_2_0-lib>apache-kafka_0_8_2_0-lib</apache-kafka_0_8_2_0-lib>
         <apache-kafka_0_8_2_1-lib>apache-kafka_0_8_2_1-lib</apache-kafka_0_8_2_1-lib>
+        <elasticsearch_1_4_4-lib>elasticsearch_1_4_4-lib</elasticsearch_1_4_4-lib>
       </properties>
       <modules>
         <module>cdh5_2_1-lib</module>
@@ -224,8 +224,10 @@
         <module>cdh5_2_3-lib</module>
         <module>cdh5_3_0-lib</module>
         <module>cdh5_3_1-lib</module>
-        <module>apache-kafka_0_8_2_1-lib</module>
         <module>apache-kafka_0_8_1_1-lib</module>
+        <module>apache-kafka_0_8_2_0-lib</module>
+        <module>apache-kafka_0_8_2_1-lib</module>
+        <module>elasticsearch_1_4_4-lib</module>
       </modules>
     </profile>
   </profiles>
