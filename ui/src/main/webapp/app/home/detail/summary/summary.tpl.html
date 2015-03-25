@@ -36,7 +36,8 @@
        ng-controller="RecordPercentagePieChartController">
     <div class="panel panel-default">
       <div class="panel-heading">
-        <span translate="home.detailPane.summaryTab.recordsProcessed">Records Processed</span>
+        <span title="{{'home.detailPane.summaryTab.recordsProcessed' | translate}}"
+          translate="home.detailPane.summaryTab.recordsProcessed">Records Processed</span>
         <button type="button" class="close" aria-label="Close" ng-click="removeChart(chart, chartIndex)">
           <span aria-hidden="true">&times;</span>
         </button>
@@ -71,7 +72,8 @@
   <div class="col-sm-4" ng-controller="RecordCountBarChartController">
     <div class="panel panel-default">
       <div class="panel-heading">
-        <span translate="home.detailPane.summaryTab.recordCountBarChartTitle">Record Count (since last startup)</span>
+        <span title="{{'home.detailPane.summaryTab.recordCountBarChartTitle' | translate}}"
+              translate="home.detailPane.summaryTab.recordCountBarChartTitle">Record Count (since last startup)</span>
         <button type="button" class="close" aria-label="Close" ng-click="removeChart(chart, chartIndex)">
           <span aria-hidden="true">&times;</span>
         </button>
@@ -100,7 +102,8 @@
   <div class="col-sm-4" ng-controller="MeterBarChartController">
     <div class="panel panel-default">
       <div class="panel-heading">
-        <span translate="home.detailPane.summaryTab.recordThroughput">Record Throughput</span>
+        <span title="{{'home.detailPane.summaryTab.recordThroughput' | translate}}"
+              translate="home.detailPane.summaryTab.recordThroughput">Record Throughput</span>
         <button type="button" class="close" aria-label="Close" ng-click="removeChart(chart, chartIndex)">
           <span aria-hidden="true">&times;</span>
         </button>
@@ -138,7 +141,8 @@
        ng-controller="BatchCountBarChartController">
     <div class="panel panel-default">
       <div class="panel-heading">
-        <span translate="home.detailPane.summaryTab.batchThroughput">Batch Throughput</span>
+        <span title="{{'home.detailPane.summaryTab.batchThroughput' | translate}}"
+          translate="home.detailPane.summaryTab.batchThroughput">Batch Throughput</span>
         <button type="button" class="close" aria-label="Close" ng-click="removeChart(chart, chartIndex)">
           <span aria-hidden="true">&times;</span>
         </button>
@@ -169,7 +173,8 @@
   <div class="col-sm-4">
     <div class="panel panel-default">
       <div class="panel-heading">
-        <span translate="global.form.histogram">Record Histogram (5 minutes decay)</span>
+        <span title="{{'global.form.histogram' | translate}}"
+          translate="global.form.histogram">Record Histogram (5 minutes decay)</span>
         <button type="button" class="close" aria-label="Close" ng-click="removeChart(chart, chartIndex)">
           <span aria-hidden="true">&times;</span>
         </button>
@@ -203,7 +208,8 @@
        ng-controller="BatchTimerChartController">
     <div class="panel panel-default">
       <div class="panel-heading">
-        <span translate="home.detailPane.summaryTab.batchProcessingTimer">Batch Processing Timer (in seconds)</span>
+        <span title="{{'home.detailPane.summaryTab.batchProcessingTimer' | translate}}"
+          translate="home.detailPane.summaryTab.batchProcessingTimer">Batch Processing Timer (in seconds)</span>
         <button type="button" class="close" aria-label="Close" ng-click="removeChart(chart, chartIndex)">
           <span aria-hidden="true">&times;</span>
         </button>
@@ -234,7 +240,8 @@
        ng-controller="BatchTimerChartController">
     <div class="panel panel-default">
       <div class="panel-heading">
-        <span translate="home.detailPane.summaryTab.runtimeStatistics">Runtime Statistics</span>
+        <span title="{{'home.detailPane.summaryTab.runtimeStatistics' | translate}}" 
+          translate="home.detailPane.summaryTab.runtimeStatistics">Runtime Statistics</span>
         <button type="button" class="close" aria-label="Close" ng-click="removeChart(chart, chartIndex)">
           <span aria-hidden="true">&times;</span>
         </button>

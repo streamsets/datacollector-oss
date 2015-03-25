@@ -54,32 +54,32 @@
         </div>
       </div>
 
-      <div class="btn-group" ng-hide="previewMode || snapshotMode">
-        <a class="btn btn-link dropdown-toggle icon-button"
-           tooltip-placement="bottom" tooltip="{{'home.header.more' | translate}}"
-           tooltip-trigger="{{iconOnly ? 'mouseenter' : 'notooltip'}}"
-           tooltip-popup-delay="500"
-           data-toggle="dropdown">
-          <span class="fa fa-ellipsis-h fa-14x"></span>
-        </a>
+      <div class="btn-group" dropdown ng-hide="previewMode || snapshotMode">
+       <span class="btn btn-link dropdown-toggle icon-button" dropdown-toggle aria-expanded="true"
+             tooltip-placement="bottom" tooltip="{{'home.header.more' | translate}}"
+             tooltip-trigger="{{iconOnly ? 'mouseenter' : 'notooltip'}}"
+             tooltip-popup-delay="500"
+             ng-click="$event.stopPropagation();">
+          <i class="fa fa-ellipsis-h fa-14x"></i>
+        </span>
         <ul class="dropdown-menu pull-right" role="menu">
 
           <li role="presentation"
               ng-if="!isPipelineRunning && isAuthorized([userRoles.admin, userRoles.creator, userRoles.manager])"
               ng-class="{'disabled': !pipelineConfig.valid}">
-            <a href="#" ng-click="!pipelineConfig.valid || resetOffset()">
+            <a href="#" dropdown-toggle ng-click="!pipelineConfig.valid || resetOffset()">
               <i class="fa fa-power-off"></i> {{'home.resetOffset.title' | translate}}
             </a>
           </li>
 
           <li role="presentation" ng-if="isPipelineRunning && !monitoringPaused">
-            <a href="#" ng-click="pauseMonitoring()">
+            <a href="#" dropdown-toggle ng-click="pauseMonitoring()">
               <i class="fa fa-pause"></i> {{'home.header.pauseMonitoring' | translate}}
             </a>
           </li>
 
           <li role="presentation" ng-if="isPipelineRunning && monitoringPaused">
-            <a href="#" ng-click="continueMonitoring()">
+            <a href="#" dropdown-toggle ng-click="continueMonitoring()">
               <i class="fa fa-play"></i> {{'home.header.continueMonitoring' | translate}}
             </a>
           </li>

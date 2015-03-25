@@ -1091,7 +1091,7 @@ angular.module('pipelineGraphDirectives', ['underscore'])
 
     GraphCreator.prototype.panUp = function() {
       var translatePos = this.zoom.translate();
-      translatePos[1] -= 150;
+      translatePos[1] += 150;
       showTransition = true;
       this.zoom.translate(translatePos).event(this.svg);
     };
@@ -1119,7 +1119,7 @@ angular.module('pipelineGraphDirectives', ['underscore'])
 
     GraphCreator.prototype.panDown = function() {
       var translatePos = this.zoom.translate();
-      translatePos[1] += 150;
+      translatePos[1] -= 150;
       showTransition = true;
       this.zoom.translate(translatePos).event(this.svg);
     };

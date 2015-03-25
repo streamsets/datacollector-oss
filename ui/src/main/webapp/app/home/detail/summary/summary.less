@@ -5,6 +5,14 @@
     .panel {
 
       .panel-heading {
+        span {
+          width: 90%;
+          display: inline-block;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+          overflow: hidden;
+        }
+
         .close {
           top: -2px;
           position: relative;
@@ -13,7 +21,7 @@
 
       .panel-body {
         min-height: 250px;
-        overflow: scroll;
+        overflow: auto;
       }
 
       .table-properties {
