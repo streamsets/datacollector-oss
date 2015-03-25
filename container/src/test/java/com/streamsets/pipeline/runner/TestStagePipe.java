@@ -223,4 +223,13 @@ public class TestStagePipe {
     Assert.assertTrue(write);
   }
 
+  @Test
+  public void testMemoryLimit() throws PipelineRuntimeException {
+    StagePipe.checkMemory(2, 1, "something");
+    StagePipe.checkMemory(2, 2, "something");
+  }
+  @Test(expected = PipelineRuntimeException.class)
+  public void testMemoryLimitThrows() throws PipelineRuntimeException {
+    StagePipe.checkMemory(1, 2, "something");
+  }
 }

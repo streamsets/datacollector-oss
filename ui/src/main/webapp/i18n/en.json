@@ -305,6 +305,7 @@
           "errors": "Stage Error"
         },
         "runtimeStatistics": "Runtime Statistics",
+        "memoryConsumed": "Heap Memory Usage",
         "settingsTitle": "Monitoring Settings",
 
 

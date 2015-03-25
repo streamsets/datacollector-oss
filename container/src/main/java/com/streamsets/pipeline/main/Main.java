@@ -6,6 +6,7 @@
 package com.streamsets.pipeline.main;
 
 import com.google.common.annotations.VisibleForTesting;
+import com.streamsets.pipeline.memory.MemoryUsageCollector;
 import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.task.Task;
 import com.streamsets.pipeline.task.TaskWrapper;
@@ -13,6 +14,7 @@ import dagger.ObjectGraph;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.lang.instrument.Instrumentation;
 import java.util.List;
 
 public class Main {
@@ -90,8 +92,9 @@ public class Main {
     }
   }
 
-  public static void setClassLoaders(ClassLoader apiCL, ClassLoader containerCL,
-      List<? extends ClassLoader> moduleCLs) {
+  public static void setContext(ClassLoader apiCL, ClassLoader containerCL,
+                                List<? extends ClassLoader> moduleCLs, Instrumentation instrumentation) {
+    MemoryUsageCollector.initialize(instrumentation);
     RuntimeModule.setStageLibraryClassLoaders(moduleCLs);
   }
 

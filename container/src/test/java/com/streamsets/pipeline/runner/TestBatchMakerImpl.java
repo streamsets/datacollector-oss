@@ -48,7 +48,7 @@ public class TestBatchMakerImpl {
       pipeOutputs.add(LaneResolver.createLane(output, "x"));
     }
     List<String> pipeOutput = LaneResolver.getPostFixed(pipeOutputs, LaneResolver.STAGE_OUT);
-    return new StagePipe(stageRuntime, pipeInput, pipeOutput);
+    return new StagePipe(stageRuntime, pipeInput, pipeOutput, new ResourceControlledScheduledExecutor(0.05f), 0);
   }
 
   @Test

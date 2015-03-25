@@ -7,6 +7,7 @@ package com.streamsets.pipeline;
 
 import java.io.File;
 import java.io.FileFilter;
+import java.lang.instrument.Instrumentation;
 import java.lang.reflect.Method;
 import java.net.URL;
 import java.util.ArrayList;
@@ -16,7 +17,6 @@ import java.util.List;
 import java.util.Map;
 
 public class BootstrapMain {
-
   private static final String[] PACKAGES_BLACKLIST_FOR_STAGE_LIBRARIES = {
       "com.streamsets.pipeline.api.",
       "com.streamsets.pipeline.container",
@@ -31,7 +31,7 @@ public class BootstrapMain {
   private static final String STREAMSETS_LIBRARIES_DIR_OPTION = "-streamsetsLibrariesDir";
   private static final String USER_LIBRARIES_DIR_OPTION = "-userLibrariesDir";
 
-  private static final String SET_CLASS_LOADERS_METHOD = "setClassLoaders";
+  private static final String SET_CONTEXT_METHOD = "setContext";
   private static final String MAIN_METHOD = "main";
 
   private static final String STAGE_LIB_JARS_DIR = "lib";
@@ -50,6 +50,19 @@ public class BootstrapMain {
   private static final String CLASSPATH_PATH_S_IS_NOT_A_DIR_MSG = "Specified Classpath path '%s' is not a directory";
 
   private static final String DEBUG_MSG = "DEBUG: '%s' %s";
+
+  private static Instrumentation instrumentation;
+
+  /**
+   * Visible due to JVM requirements only
+   */
+  public static void premain(String args, Instrumentation instrumentation) {
+    if (BootstrapMain.instrumentation == null) {
+      BootstrapMain.instrumentation = instrumentation;
+    } else {
+      throw new IllegalStateException("Premain method cannot be called twice (" + BootstrapMain.instrumentation + ")");
+    }
+  }
 
   @SuppressWarnings("unchecked")
   public static void main(String[] args) throws Exception {
@@ -163,8 +176,9 @@ public class BootstrapMain {
     // Bootstrap container
     Thread.currentThread().setContextClassLoader(containerCL);
     Class klass = containerCL.loadClass(mainClass);
-    Method method = klass.getMethod(SET_CLASS_LOADERS_METHOD, ClassLoader.class, ClassLoader.class, List.class);
-    method.invoke(null, apiCL, containerCL, stageLibrariesCLs);
+    Method method = klass.getMethod(SET_CONTEXT_METHOD, ClassLoader.class, ClassLoader.class, List.class,
+      Instrumentation.class);
+    method.invoke(null, apiCL, containerCL, stageLibrariesCLs, instrumentation);
     method = klass.getMethod(MAIN_METHOD, String[].class);
     method.invoke(null, new Object[]{new String[]{}});
   }

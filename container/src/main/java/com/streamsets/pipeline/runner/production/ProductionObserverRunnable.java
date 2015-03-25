@@ -52,6 +52,10 @@ public class ProductionObserverRunnable implements Runnable {
           } else if (request instanceof RulesConfigurationChangeRequest) {
             //configuration changes
             observerRunner.handleConfigurationChangeRequest((RulesConfigurationChangeRequest) request);
+          } else if (request instanceof  PipelineErrorNotificationRequest) {
+            observerRunner.handlePipelineErrorNotificationRequest((PipelineErrorNotificationRequest)request);
+          } else {
+            LOG.error("Unknown request: " + request.getClass().getName());
           }
         }
       } catch(InterruptedException e){

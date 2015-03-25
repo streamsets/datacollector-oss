@@ -10,6 +10,7 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import java.io.File;
+import java.lang.instrument.Instrumentation;
 import java.net.URL;
 import java.util.HashSet;
 import java.util.List;
@@ -180,7 +181,8 @@ public class TestBootstrapMain {
   private static boolean main;
 
   public static class TMain {
-    public static void setClassLoaders(ClassLoader api, ClassLoader container, List<ClassLoader> libs) {
+    public static void setContext(ClassLoader api, ClassLoader container,
+                                  List<? extends ClassLoader> libs, Instrumentation instrumentation) {
       Assert.assertNotNull(api);
       Assert.assertNotNull(container);
       Assert.assertEquals(3, libs.size());

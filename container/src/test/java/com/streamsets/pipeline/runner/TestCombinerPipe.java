@@ -15,7 +15,7 @@ public class TestCombinerPipe {
   public void testCombinerPipe() throws Exception {
     PipelineRunner pipelineRunner = Mockito.mock(PipelineRunner.class);
     Pipeline pipeline = new Pipeline.Builder(MockStages.createStageLibrary(), "name",
-                                             MockStages.createPipelineConfigurationSourceTarget()).build(pipelineRunner);
+      MockStages.createPipelineConfigurationSourceTarget()).build(pipelineRunner);
     CombinerPipe pipe = (CombinerPipe) pipeline.getPipes()[3];
     PipeBatch pipeBatch = Mockito.mock(FullPipeBatch.class);
     pipe.process(pipeBatch);

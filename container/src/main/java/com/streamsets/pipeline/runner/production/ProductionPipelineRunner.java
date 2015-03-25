@@ -10,6 +10,7 @@ import com.codahale.metrics.Meter;
 import com.codahale.metrics.MetricRegistry;
 import com.codahale.metrics.Timer;
 import com.google.common.base.Preconditions;
+import com.google.common.base.Throwables;
 import com.google.common.collect.EvictingQueue;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
@@ -143,7 +144,22 @@ public class ProductionPipelineRunner implements PipelineRunner {
   @Override
   public void run(Pipe[] pipes, BadRecordsHandler badRecordsHandler) throws StageException, PipelineRuntimeException {
     while(!offsetTracker.isFinished() && !stop) {
-      runBatch(pipes, badRecordsHandler);
+      try {
+        runBatch(pipes, badRecordsHandler);
+      } catch (Throwable throwable) {
+        boolean offered = false;
+        try {
+          observeRequests.put(new PipelineErrorNotificationRequest(throwable));
+          offered = true;
+        } catch (InterruptedException e) {
+        }
+        if(!offered) {
+          LOG.error("Could not submit alert request for pipeline ending error: " + throwable, throwable);
+        }
+        Throwables.propagateIfInstanceOf(throwable, StageException.class);
+        Throwables.propagateIfInstanceOf(throwable, PipelineRuntimeException.class);
+        Throwables.propagate(throwable);
+      }
     }
   }
 

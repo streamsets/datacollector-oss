@@ -31,7 +31,8 @@ public class TestObserverPipe {
     Observer observer = Mockito.mock(Observer.class);
     Mockito.when(observer.isObserving(Mockito.any(List.class))).thenReturn(observing);
     Pipeline pipeline = new Pipeline.Builder(MockStages.createStageLibrary(), "name",
-                                             MockStages.createPipelineConfigurationSourceTarget()).setObserver(observer).build(pipelineRunner);
+                                             MockStages.createPipelineConfigurationSourceTarget()).setObserver(observer)
+                                             .build(pipelineRunner);
     ObserverPipe pipe = (ObserverPipe) pipeline.getPipes()[1];
     PipeBatch pipeBatch = Mockito.mock(FullPipeBatch.class);
     pipe.process(pipeBatch);

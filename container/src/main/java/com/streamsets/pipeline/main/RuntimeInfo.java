@@ -26,12 +26,21 @@ public class RuntimeInfo {
   private String httpUrl;
   private final Map<String, Object> attributes;
   private Runnable shutdownRunnable;
+  private MemoryLimitConfiguration memoryLimitConfiguration = MemoryLimitConfiguration.empty();
 
   public RuntimeInfo(List<? extends ClassLoader> stageLibraryClassLoaders) {
     this.stageLibraryClassLoaders = ImmutableList.copyOf(stageLibraryClassLoaders);
     id = "UNDEF";
     httpUrl = "UNDEF";
     this.attributes = new ConcurrentHashMap<>();
+  }
+
+  public void setMemoryLimitConfiguration(MemoryLimitConfiguration memoryLimitConfiguration) {
+    this.memoryLimitConfiguration = memoryLimitConfiguration;
+  }
+
+  public MemoryLimitConfiguration getMemoryLimitConfiguration() {
+    return memoryLimitConfiguration;
   }
 
   public void setId(String id) {

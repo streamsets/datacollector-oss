@@ -365,7 +365,7 @@ public class ProductionPipelineManagerTask extends AbstractTask {
     return builder.build(runner, offsetTracker, observer);
   }
 
-  void createPipeline(String name, String rev, ProductionObserver observer, BlockingQueue<Object> observeRequests)
+  private void createPipeline(String name, String rev, ProductionObserver observer, BlockingQueue<Object> observeRequests)
     throws PipelineStoreException, PipelineManagerException, StageException, PipelineRuntimeException {
     PipelineConfiguration pipelineConfiguration = pipelineStore.load(name, rev);
     prodPipeline = createProductionPipeline(name, rev, configuration, stageLibrary,

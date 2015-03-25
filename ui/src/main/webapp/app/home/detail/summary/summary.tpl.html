@@ -233,6 +233,43 @@
   </div>
 </script>
 
+<script type="text/ng-template" id="memoryConsumedLineChartTemplate">
+  <div class="col-sm-4"
+       ng-if="selectedType === pipelineConstant.STAGE_INSTANCE"
+       ng-controller="MemoryConsumedLineChartController">
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <span title="{{'home.detailPane.summaryTab.memoryConsumed' | translate}}"
+          translate="home.detailPane.summaryTab.memoryConsumed">Memory Consumed</span>
+        <button type="button" class="close" aria-label="Close" ng-click="removeChart(chart, chartIndex)">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="panel-body">
+        <nvd3-line-chart
+          objectequality="true"
+          data="lineChartData"
+          id="MemoryConsumedLineChartID"
+          height="250"
+          isArea="false"
+          xAxisTickFormat="xAxisTickFormat"
+          yAxisTickFormat="yAxisTickFormat"
+          showXAxis="true"
+          showYAxis="true"
+          color="getColor()"
+          legendColor="getColor()"
+          showLabels="true"
+          showLegend="true"
+          tooltips="true"
+          tooltipcontent="getTooltipContent()"
+          margin="{left:50,top:70,bottom:20,right:20}">
+          <svg></svg>
+        </nvd3-line-chart>
+      </div>
+    </div>
+  </div>
+</script>
+
 
 <script type="text/ng-template" id="summaryRuntimeStatisticsTemplate">
   <div class="col-sm-4"

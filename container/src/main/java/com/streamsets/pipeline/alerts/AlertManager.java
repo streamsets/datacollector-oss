@@ -15,6 +15,8 @@ import com.streamsets.pipeline.util.PipelineException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
@@ -29,7 +31,12 @@ public class AlertManager {
   private static final String CURRENT_VALUE = "currentValue";
   private static final String TIMESTAMP = "timestamp";
   private static final String STREAMSETS_DATA_COLLECTOR_ALERT = "StreamsSets Data Collector Alert - ";
-  private static final String EMAIL_TEMPLATE = "Value \t\t: ALERT_VALUE_KEY\n" +
+  private static final String ERROR_EMAIL_TEMPLATE = "Error Code \t\t: ERROR_CODE\n" +
+    "Time \t\t: TIME_KEY\n" +
+    "Pipeline\t: PIPELINE_NAME_KEY\n" +
+    "URL\t\t: URL_KEY\n" +
+  "Description\t: DESCRIPTION_KEY";
+  private static final String METRIC_EMAIL_TEMPLATE = "Value \t\t: ALERT_VALUE_KEY\n" +
     "Time \t\t: TIME_KEY\n" +
     "Pipeline\t: PIPELINE_NAME_KEY\n" +
     "Condition\t: CONDITION_KEY\n" +
@@ -37,6 +44,8 @@ public class AlertManager {
   private static final String ALERT_VALUE_KEY = "ALERT_VALUE_KEY";
   private static final String TIME_KEY = "TIME_KEY";
   private static final String PIPELINE_NAME_KEY = "PIPELINE_NAME_KEY";
+  private static final String DESCRIPTION_KEY = "DESCRIPTION_KEY";
+  private static final String ERROR_CODE = "ERROR_CODE";
   private static final String CONDITION_KEY = "CONDITION_KEY";
   private static final String URL_KEY = "URL_KEY";
   private static final String DATE_MASK = "yyyy-MM-dd HH:mm:ss";
@@ -56,7 +65,43 @@ public class AlertManager {
     this.metrics = metrics;
     this.runtimeInfo = runtimeInfo;
   }
-
+  public void alert(List<String> emailIds, Throwable throwable) {
+    StringWriter stringWriter = new StringWriter();
+    PrintWriter printWriter = new PrintWriter(stringWriter);
+    throwable.printStackTrace(printWriter);
+    String description = stringWriter.toString();
+    String subject = "ERROR: " + throwable;
+    long timestamp = System.currentTimeMillis();
+    String errorCode = "UNKNOWN";
+    if (throwable instanceof PipelineException) {
+      PipelineException pipelineException = (PipelineException)throwable;
+      timestamp = pipelineException.getErrorMessage().getTimestamp();
+      subject =  "ERROR: " + pipelineException.getLocalizedMessage();
+      errorCode = pipelineException.getErrorCode().getCode();
+    }
+    String emailBody = ERROR_EMAIL_TEMPLATE;
+    java.text.DateFormat dateTimeFormat = new SimpleDateFormat(DATE_MASK, Locale.ENGLISH);
+    emailBody = emailBody.replace(ERROR_CODE, errorCode)
+      .replace(TIME_KEY, dateTimeFormat.format(new Date(timestamp)))
+      .replace(PIPELINE_NAME_KEY, pipelineName)
+      .replace(DESCRIPTION_KEY, description)
+      .replace(URL_KEY, runtimeInfo.getBaseHttpUrl() + PIPELINE_URL + pipelineName.replaceAll(" ", "%20"));
+    subject = STREAMSETS_DATA_COLLECTOR_ALERT + subject;
+    if (LOG.isDebugEnabled()) {
+      LOG.debug("Email Alert: subject = " + subject + ", body = " + emailBody);
+    }
+    if(emailSender == null) {
+      LOG.error("Email Sender is not configured. Alert with message '{}' will not be sent via email:",
+        emailBody, throwable);
+    } else {
+      try {
+        emailSender.send(emailIds, subject, emailBody);
+      } catch (PipelineException e) {
+        LOG.error("Error sending alert email, reason: {}", e.getMessage(), e);
+        //Log error and move on. This should not stop the pipeline.
+      }
+    }
+  }
   public void alert(Object value, List<String> emailIds, RuleDefinition ruleDefinition) {
     final Map<String, Object> alertResponse = new HashMap<>();
     alertResponse.put(CURRENT_VALUE, value);
@@ -67,7 +112,7 @@ public class AlertManager {
       //send email the first time alert is triggered
       if(ruleDefinition.isSendEmail()) {
 
-        String emailBody = new String(EMAIL_TEMPLATE);
+        String emailBody = METRIC_EMAIL_TEMPLATE;
         java.text.DateFormat dateTimeFormat = new SimpleDateFormat(DATE_MASK, Locale.ENGLISH);
         emailBody = emailBody.replace(ALERT_VALUE_KEY, String.valueOf(value))
           .replace(TIME_KEY, dateTimeFormat.format(new Date((Long) alertResponse.get(TIMESTAMP))))
@@ -76,7 +121,7 @@ public class AlertManager {
           .replace(URL_KEY, runtimeInfo.getBaseHttpUrl() + PIPELINE_URL + pipelineName.replaceAll(" ", "%20"));
 
         if(emailSender == null) {
-          LOG.warn("Email Sender is not configured. Alert '{}' with message '{}' will not be sent via email.",
+          LOG.error("Email Sender is not configured. Alert '{}' with message '{}' will not be sent via email.",
             ruleDefinition.getId(), emailBody);
         } else {
           try {

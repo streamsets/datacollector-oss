@@ -28,6 +28,10 @@ public class PipelineException extends Exception {
     errorMessage = new ErrorMessage(errorCode, params);
   }
 
+  public ErrorMessage getErrorMessage() {
+    return errorMessage;
+  }
+
   public ErrorCode getErrorCode() {
     return errorCode;
   }

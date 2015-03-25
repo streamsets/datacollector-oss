@@ -21,6 +21,7 @@ public enum ContainerError implements ErrorCode {
   CONTAINER_0002("{}"),
 
   CONTAINER_0010("Stage configuration validation error: {}"),
+  CONTAINER_0011("Stage {} memory consumption {} exceeded allowed memory {}"),
 
   // RequiredFieldsErrorPredicateSink
   CONTAINER_0050("The stage requires records to include the following required fields: '{}'"),

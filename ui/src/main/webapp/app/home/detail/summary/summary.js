@@ -34,6 +34,10 @@ angular
       {
         label: 'home.detailPane.summaryTab.runtimeStatistics',
         templateId: 'summaryRuntimeStatisticsTemplate'
+      },
+      {
+        label: 'home.detailPane.summaryTab.memoryConsumed',
+        templateId: 'memoryConsumedLineChartTemplate'
       }
     ];
 
@@ -89,6 +93,10 @@ angular
 
     if(!$rootScope.$storage.summaryChartList) {
       $rootScope.$storage.summaryChartList = chartList;
+    }
+
+    if(!$rootScope.$storage.counters) {
+      $rootScope.$storage.counters = {};
     }
 
 
@@ -161,6 +169,29 @@ angular
         };
 
       }
+
+      var persistedCounters = ['memoryConsumed'];
+      angular.forEach(persistedCounters, function(persistedCounter) {
+        angular.forEach(Object.keys(pipelineMetrics.counters), function(counterName) {
+          var value = pipelineMetrics.counters[counterName].count;
+          if(!$rootScope.$storage.counters[persistedCounter]) {
+            $rootScope.$storage.counters[persistedCounter] = {};
+          }
+          var suffix = persistedCounter + '.counter';
+          if(counterName.indexOf(suffix, counterName.length - suffix.length) !== -1) {
+            var instanceName = counterName.substring(counterName.indexOf('.') + 1, counterName.lastIndexOf(persistedCounter) - 1);
+            if(!$rootScope.$storage.counters[persistedCounter][instanceName]) {
+              $rootScope.$storage.counters[persistedCounter][instanceName] = [];
+            }
+            var values = $rootScope.$storage.counters[persistedCounter][instanceName];
+            values.push([(new Date()).getTime(), value]);
+            var max = 1000;
+            if (values.length > max) {
+              values.splice(0, values.length - max);
+            }
+          }
+        });
+      });
 
       //meters
       if(isStageSelected) {

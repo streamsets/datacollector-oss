@@ -11,10 +11,16 @@ import com.codahale.metrics.Histogram;
 import com.codahale.metrics.Meter;
 import com.codahale.metrics.MetricRegistry;
 import com.codahale.metrics.Timer;
+import com.google.common.annotations.VisibleForTesting;
+import com.google.common.base.Supplier;
 import com.streamsets.pipeline.api.Batch;
 import com.streamsets.pipeline.api.StageException;
+import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.config.StageType;
+import com.streamsets.pipeline.memory.MemoryMonitor;
+import com.streamsets.pipeline.memory.MemoryUsageCollector;
 import com.streamsets.pipeline.metrics.MetricsConfigurator;
+import com.streamsets.pipeline.util.ContainerError;
 import com.streamsets.pipeline.validation.StageIssue;
 
 import java.util.HashMap;
@@ -32,6 +38,7 @@ public class StagePipe extends Pipe<StagePipe.Context> {
   private Counter outputRecordsCounter;
   private Counter errorRecordsCounter;
   private Counter stageErrorCounter;
+  private Counter memoryConsumedCounter;
   private Meter inputRecordsMeter;
   private Meter outputRecordsMeter;
   private Meter errorRecordsMeter;
@@ -43,9 +50,14 @@ public class StagePipe extends Pipe<StagePipe.Context> {
   private Map<String, Counter> outputRecordsPerLaneCounter;
   private Map<String, Meter> outputRecordsPerLaneMeter;
   private StagePipe.Context context;
+  private final ResourceControlledScheduledExecutor scheduledExecutorService;
+  private final long memoryLimit;
 
-  public StagePipe(StageRuntime stage, List<String> inputLanes, List<String> outputLanes) {
+  public StagePipe(StageRuntime stage, List<String> inputLanes, List<String> outputLanes,
+                   ResourceControlledScheduledExecutor scheduledExecutorService, long memoryLimit) {
     super(stage, inputLanes, outputLanes);
+    this.scheduledExecutorService = scheduledExecutorService;
+    this.memoryLimit = memoryLimit;
   }
 
   @Override
@@ -63,6 +75,7 @@ public class StagePipe extends Pipe<StagePipe.Context> {
     outputRecordsCounter = MetricsConfigurator.createCounter(metrics, metricsKey + ".outputRecords");
     errorRecordsCounter = MetricsConfigurator.createCounter(metrics, metricsKey + ".errorRecords");
     stageErrorCounter = MetricsConfigurator.createCounter(metrics, metricsKey + ".stageErrors");
+    memoryConsumedCounter = MetricsConfigurator.createCounter(metrics, metricsKey + ".memoryConsumed");
     inputRecordsMeter = MetricsConfigurator.createMeter(metrics, metricsKey + ".inputRecords");
     outputRecordsMeter = MetricsConfigurator.createMeter(metrics, metricsKey + ".outputRecords");
     errorRecordsMeter = MetricsConfigurator.createMeter(metrics, metricsKey + ".errorRecords");
@@ -82,7 +95,22 @@ public class StagePipe extends Pipe<StagePipe.Context> {
       }
     }
     this.context = context;
+    scheduledExecutorService.submit(new MemoryMonitor(memoryConsumedCounter,
+      new Supplier<MemoryUsageCollector>() {
+        @Override
+        public MemoryUsageCollector get() {
+          return new MemoryUsageCollector.Builder().setStageRuntime(getStage()).build();
+        }
+      }));
     createRuntimeStatsGauge(metrics);
+  }
+
+  @VisibleForTesting
+  static void checkMemory(long memoryLimit, long memoryConsumption, String msg) throws PipelineRuntimeException {
+    if (memoryLimit > 0 && memoryConsumption > memoryLimit) {
+      throw new PipelineRuntimeException(ContainerError.CONTAINER_0011, msg,
+        Utils.humanReadableInt(memoryConsumption), Utils.humanReadableInt(memoryLimit));
+    }
   }
 
   @Override
@@ -92,6 +120,8 @@ public class StagePipe extends Pipe<StagePipe.Context> {
     long startTimeInStage = System.currentTimeMillis();
     //update stats
     updateStatsAtStart(startTimeInStage);
+
+    checkMemory(memoryLimit,  memoryConsumedCounter.getCount(), String.valueOf(getStage().getInfo()));
 
     BatchMakerImpl batchMaker = pipeBatch.startStage(this);
     BatchImpl batchImpl = pipeBatch.getBatch(this);

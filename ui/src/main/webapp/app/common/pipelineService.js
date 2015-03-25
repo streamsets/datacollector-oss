@@ -1038,6 +1038,10 @@ angular.module('dataCollectorApp.common')
           {
             value: 'stage.' + instanceName + '.stageErrors.counter',
             label: label + ' Stage Errors Counter'
+          },
+          {
+            value: 'stage.' + instanceName + '.memoryConsumed.counter',
+            label: label + ' Heap Memory Usage Counter (bytes)'
           }
         ]);
 

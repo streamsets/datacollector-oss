@@ -113,6 +113,16 @@ public class ObserverRunner {
     }
   }
 
+  public void handlePipelineErrorNotificationRequest(PipelineErrorNotificationRequest request) {
+    RulesConfigurationChangeRequest rulesConfigurationChangeRequest = this.rulesConfigurationChangeRequest;
+    if (rulesConfigurationChangeRequest == null) {
+      LOG.error("Cannot send alert for throwable due to null RulesConfigurationChangeRequest: " +
+        request.getThrowable(), request.getThrowable());
+    } else {
+      alertManager.alert(rulesConfigurationChangeRequest.getRuleDefinitions().getEmailIds(), request.getThrowable());
+    }
+  }
+
   public List<Record> getSampledRecords(String ruleId, int size) {
     if(ruleToSampledRecordsMap.get(ruleId) != null) {
       if(ruleToSampledRecordsMap.get(ruleId).size() > size) {

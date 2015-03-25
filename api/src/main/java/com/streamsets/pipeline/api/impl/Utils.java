@@ -6,6 +6,7 @@
 package com.streamsets.pipeline.api.impl;
 
 import java.text.DateFormat;
+import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -114,4 +115,55 @@ public final class Utils {
     return getISO8601DateFormat().parse(str);
   }
 
+  /**
+   * Given an integer, return a string that is in an approximate, but human
+   * readable format.
+   * It uses the bases 'KiB', 'MiB', and 'GiB' for 1024, 1024**2, and 1024**3.
+   * @param number the number to format
+   * @return a human readable form of the integer
+   */
+  public static String humanReadableInt(long number) {
+    DecimalFormat oneDecimal = new DecimalFormat("0.0");
+    long absNumber = Math.abs(number);
+    double result = number;
+    String prefix = number < 0 ? "-" : "";
+    String suffix = "";
+    if (absNumber < 1024) {
+      // since no division has occurred, don't format with a decimal point
+      return number + " bytes";
+    } else if (absNumber < 1024 * 1024) {
+      result = number / 1024.0;
+      suffix = " KiB";
+    } else if (absNumber < 1024 * 1024 * 1024) {
+      result = number / (1024.0 * 1024);
+      suffix = " MiB";
+    } else {
+      result = number / (1024.0 * 1024 * 1024);
+      suffix = " GiB";
+    }
+    return prefix + oneDecimal.format(result) + suffix;
+  }
+
+  public static long humanReadableToBytes(String number) {
+    String lower = number.toLowerCase();
+    if (lower.endsWith("kb")) {
+      return Long.parseLong(lower.substring(0, lower.length() - 2).trim()) * 1000;
+    } else if (lower.endsWith("mb")) {
+      return Long.parseLong(lower.substring(0, lower.length() - 2).trim()) * 1000 * 1000;
+    } else if (lower.endsWith("gb")) {
+      return Long.parseLong(lower.substring(0, lower.length() - 2).trim()) * 1000 * 1000 * 1000;
+    } else if (lower.endsWith("tb")) {
+      return Long.parseLong(lower.substring(0, lower.length() - 2).trim()) * 1000 * 1000 * 1000 * 1000;
+    } else if (lower.endsWith("kib")) {
+      return Long.parseLong(lower.substring(0, lower.length() - 3).trim()) * 1024;
+    } else if (lower.endsWith("mib")) {
+      return Long.parseLong(lower.substring(0, lower.length() - 3).trim()) * 1024 * 1024;
+    } else if (lower.endsWith("gib")) {
+      return Long.parseLong(lower.substring(0, lower.length() - 3).trim()) * 1024 * 1024 * 1024;
+    } else if (lower.endsWith("tib")) {
+      return Long.parseLong(lower.substring(0, lower.length() - 3).trim()) * 1024 * 1024 * 1024 * 1024;
+    } else {// no suffix, so it's just a number in bytes
+      return Long.parseLong(lower);
+    }
+  }
 }

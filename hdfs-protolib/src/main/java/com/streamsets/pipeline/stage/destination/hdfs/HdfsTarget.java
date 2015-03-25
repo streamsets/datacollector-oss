@@ -42,7 +42,6 @@ import java.io.IOException;
 import java.net.URI;
 import java.security.PrivilegedExceptionAction;
 import java.util.Date;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.TimeZone;
@@ -76,7 +75,6 @@ public class HdfsTarget extends RecordTarget {
   private final JsonMode jsonMode;
   private final String textFieldPath;
   private final boolean textEmptyLineIfNull;
-
 
   public HdfsTarget(String hdfsUri, boolean hdfsKerberos, String kerberosPrincipal, String kerberosKeytab,
       Map<String, String> hdfsConfigs, String uniquePrefix, String dirPathTemplate, String timeZoneID,
