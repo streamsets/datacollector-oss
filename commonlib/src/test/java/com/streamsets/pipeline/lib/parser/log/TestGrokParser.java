@@ -39,7 +39,7 @@ public class TestGrokParser {
   public void testParse() throws Exception {
     OverrunReader reader = new OverrunReader(new StringReader(LOG_LINE), 1000, true);
     DataParser parser = new GrokParser(getContext(), "id", reader, 0, 1000, true, REGEX_DEFINITION, REGEX,
-      Collections.<String> emptyList());
+      Collections.<String> emptyList(), -1);
     Assert.assertEquals(0, parser.getOffset());
     Record record = parser.parse();
     Assert.assertNotNull(record);
@@ -66,7 +66,7 @@ public class TestGrokParser {
     OverrunReader reader = new OverrunReader(new StringReader(
       "Hello\n" + LOG_LINE), 1000, true);
     DataParser parser = new GrokParser(getContext(), "id", reader, 6, 1000, true, REGEX_DEFINITION, REGEX,
-      Collections.<String> emptyList());
+      Collections.<String> emptyList(), -1);
     Assert.assertEquals(6, parser.getOffset());
     Record record = parser.parse();
     Assert.assertNotNull(record);
@@ -96,7 +96,7 @@ public class TestGrokParser {
   public void testClose() throws Exception {
     OverrunReader reader = new OverrunReader(new StringReader("Hello\nByte"), 1000, true);
     DataParser parser = new GrokParser(getContext(), "id", reader, 0, 1000, false, REGEX_DEFINITION, REGEX,
-      Collections.<String> emptyList());
+      Collections.<String> emptyList(), -1);
     parser.close();
     parser.parse();
   }
@@ -106,7 +106,7 @@ public class TestGrokParser {
     OverrunReader reader = new OverrunReader(new StringReader(
       LOG_LINE), 1000, true);
     DataParser parser = new GrokParser(getContext(), "id", reader, 0, 7, true, REGEX_DEFINITION, REGEX,
-      Collections.<String> emptyList()); //cut short to 7
+      Collections.<String> emptyList(), -1); //cut short to 7
     Assert.assertEquals(0, parser.getOffset());
     try {
       parser.parse();
@@ -121,7 +121,7 @@ public class TestGrokParser {
       "127.0.0.1 ss h [10/Oct/2000:13:55:36 -0700] This is a log line that does not confirm to common log format"),
       1000, true);
     DataParser parser = new GrokParser(getContext(), "id", reader, 0, 1000, true, REGEX_DEFINITION, REGEX,
-      Collections.<String> emptyList());
+      Collections.<String> emptyList(), -1);
     Assert.assertEquals(0, parser.getOffset());
     try {
       parser.parse();

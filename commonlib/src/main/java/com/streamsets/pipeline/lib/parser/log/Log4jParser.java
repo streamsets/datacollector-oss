@@ -19,10 +19,11 @@ import java.io.IOException;
 public class Log4jParser extends GrokParser {
 
   public Log4jParser(Stage.Context context, String readerId, OverrunReader reader, long readerOffset,
-                                 int maxObjectLen, boolean retainOriginalText, String log4jFormat)
+                                 int maxObjectLen, boolean retainOriginalText, String log4jFormat,
+                                 int maxStackTraceLines)
     throws IOException, DataParserException {
     super(context, readerId, reader, readerOffset, maxObjectLen, retainOriginalText, "",
-      log4jFormat, ImmutableList.of(Constants.GROK_LOG4J_LOG_PATTERNS_FILE_NAME));
+      log4jFormat, ImmutableList.of(Constants.GROK_LOG4J_LOG_PATTERNS_FILE_NAME), maxStackTraceLines);
   }
 
   @Override

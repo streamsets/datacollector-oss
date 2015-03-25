@@ -24,7 +24,7 @@ public class RegexParser extends LogDataParser {
 
   public RegexParser(Stage.Context context, String readerId, OverrunReader reader, long readerOffset, int maxObjectLen,
                      boolean retainOriginalText, String regex, Map<String, Integer> fieldToGroupMap) throws IOException {
-    super(context, readerId, reader, readerOffset, maxObjectLen, retainOriginalText);
+    super(context, readerId, reader, readerOffset, maxObjectLen, retainOriginalText, -1);
     this.regex = regex;
     this.fieldToGroupMap = fieldToGroupMap;
     this.pattern = Pattern.compile(regex);

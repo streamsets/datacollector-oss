@@ -71,8 +71,7 @@ public class TestLogCharDataParserFactory {
     Assert.assertTrue(record.has("/" + Constants.BYTES));
     Assert.assertEquals("2326", record.get("/" + Constants.BYTES).getValueAsString());
 
-
-    Assert.assertEquals(82, parser.getOffset()); //The log line is 82 characters treating '\"' as a single character
+    Assert.assertEquals(82, parser.getOffset());
     parser.close();
   }
 
@@ -117,7 +116,8 @@ public class TestLogCharDataParserFactory {
     Assert.assertTrue(record.has("/" + Constants.BYTES));
     Assert.assertEquals("2326", record.get("/" + Constants.BYTES).getValueAsString());
 
-    Assert.assertEquals(82, parser.getOffset()); //The log line is 82 characters treating '\"' as a single character
+    Assert.assertEquals(82, parser.getOffset());
+
     parser.close();
   }
 
@@ -164,8 +164,8 @@ public class TestLogCharDataParserFactory {
     Assert.assertTrue(record.has("/" + Constants.BYTES));
     Assert.assertEquals("2326", record.get("/" + Constants.BYTES).getValueAsString());
 
+    Assert.assertEquals(82, parser.getOffset());
 
-    Assert.assertEquals(82, parser.getOffset()); //The log line is 82 characters treating '\"' as a single character
     parser.close();
   }
 
@@ -235,7 +235,8 @@ public class TestLogCharDataParserFactory {
     Assert.assertTrue(record.has("/" + Constants.BYTES));
     Assert.assertEquals("2326", record.get("/" + Constants.BYTES).getValueAsString());
 
-    Assert.assertEquals(88, parser.getOffset()); //starts from offset 6 and reads a line 82 characters long
+    Assert.assertEquals(88, parser.getOffset());
+
     parser.close();
   }
 
@@ -355,7 +356,7 @@ public class TestLogCharDataParserFactory {
     Map<String, Object> configs = LogCharDataParserFactory.registerConfigs(new HashMap<String, Object>());
     configs.put(LogCharDataParserFactory.RETAIN_ORIGINAL_TEXT_KEY, true);
     configs.put(LogCharDataParserFactory.APACHE_CUSTOMLOG_FORMAT_KEY,
-      "%h %l %u %t \"%m %U %H\" %>s %b \"%{Referer}i\" \"%{User-agent}i\"");
+      "%h %l %u [%t] \"%m %U %H\" %>s %b \"%{Referer}i\" \"%{User-agent}i\"");
     CharDataParserFactory factory = new LogCharDataParserFactory(getContext(), 1000, LogMode.APACHE_CUSTOM_LOG_FORMAT,
       configs);
     DataParser parser = factory.getParser("id", logLine);
@@ -393,8 +394,8 @@ public class TestLogCharDataParserFactory {
     Assert.assertTrue(record.has("/urlPath"));
     Assert.assertEquals("/apache_pb.gif", record.get("/urlPath").getValueAsString());
 
-    Assert.assertTrue(record.has("/requestProtocol"));
-    Assert.assertEquals("HTTP/1.0", record.get("/requestProtocol").getValueAsString());
+    Assert.assertTrue(record.has("/httpversion"));
+    Assert.assertEquals("1.0", record.get("/httpversion").getValueAsString());
 
     Assert.assertTrue(record.has("/status"));
     Assert.assertEquals("200", record.get("/status").getValueAsString());

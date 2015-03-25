@@ -43,6 +43,7 @@ public class TestCombinedLogFormatParser {
 
     Assert.assertFalse(record.has("/truncated"));
 
+    //offset is -1 as the parser attempted a read ahead and met the end
     Assert.assertEquals(154, parser.getOffset());
 
     Assert.assertTrue(record.has("/" + Constants.CLIENTIP));
@@ -100,6 +101,7 @@ public class TestCombinedLogFormatParser {
 
     Assert.assertFalse(record.has("/truncated"));
 
+    //offset is -1 as the parser attempted a read ahead and met the end
     Assert.assertEquals(160, parser.getOffset());
 
     Assert.assertTrue(record.has("/" + Constants.CLIENTIP));

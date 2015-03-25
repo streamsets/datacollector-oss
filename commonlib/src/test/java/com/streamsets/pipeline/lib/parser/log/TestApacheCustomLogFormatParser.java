@@ -23,7 +23,7 @@ public class TestApacheCustomLogFormatParser {
 
   private static final String LOG_LINE = "127.0.0.1 ss h [10/Oct/2000:13:55:36 -0700] \"GET /apache_pb.gif HTTP/1.0\" " +
     "200 2326 Hello";
-  private static final String FORMAT = "%h %l %u %t \"%r\" %>s %b";
+  private static final String FORMAT = "%h %l %u [%t] \"%r\" %>s %b";
   private Stage.Context getContext() {
     return ContextInfoCreator.createSourceContext("i", false, OnRecordError.TO_ERROR,
       Collections.<String>emptyList());
@@ -43,6 +43,7 @@ public class TestApacheCustomLogFormatParser {
 
     Assert.assertFalse(record.has("/truncated"));
 
+    //offset is -1 as the parser attempted a read ahead and met the end
     Assert.assertEquals(88, parser.getOffset());
 
     Assert.assertTrue(record.has("/remoteHost"));
@@ -84,6 +85,7 @@ public class TestApacheCustomLogFormatParser {
 
     Assert.assertFalse(record.has("/truncated"));
 
+    //offset is -1 as the parser attempted a read ahead and met the end
     Assert.assertEquals(94, parser.getOffset());
 
     Assert.assertTrue(record.has("/remoteHost"));

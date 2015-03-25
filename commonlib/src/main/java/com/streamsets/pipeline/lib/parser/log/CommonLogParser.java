@@ -23,7 +23,7 @@ public class CommonLogParser extends GrokParser {
   public CommonLogParser(Stage.Context context, String readerId, OverrunReader reader, long readerOffset,
                          int maxObjectLen, boolean retainOriginalText) throws IOException {
     super(context, readerId, reader, readerOffset, maxObjectLen, retainOriginalText, "",
-      Constants.GROK_COMMON_APACHE_LOG_FORMAT, ImmutableList.of(Constants.GROK_PATTERNS_FILE_NAME));
+      Constants.GROK_COMMON_APACHE_LOG_FORMAT, ImmutableList.of(Constants.GROK_PATTERNS_FILE_NAME), -1);
   }
 
   @Override

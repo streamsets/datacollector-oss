@@ -21,7 +21,7 @@ import com.streamsets.pipeline.lib.io.OverrunException;
 import com.streamsets.pipeline.lib.parser.CharDataParserFactory;
 import com.streamsets.pipeline.lib.parser.DataParser;
 import com.streamsets.pipeline.lib.parser.DataParserException;
-import com.streamsets.pipeline.lib.parser.log.ApacheAccessLogHelper;
+import com.streamsets.pipeline.lib.parser.log.ApacheCustomLogHelper;
 import com.streamsets.pipeline.lib.parser.log.Constants;
 import com.streamsets.pipeline.lib.parser.log.Log4jHelper;
 import com.streamsets.pipeline.lib.parser.log.LogCharDataParserFactory;
@@ -81,6 +81,7 @@ public class SpoolDirSource extends BaseSource {
   private final List<RegExConfig> fieldPathsToGroupName;
   private final boolean enableLog4jCustomLogFormat;
   private final String log4jCustomLogFormat;
+  private final int maxStackTraceLines;
 
   public SpoolDirSource(DataFormat dataFormat, String charset, int overrunLimit, String spoolDir, int batchSize,
       long poolingTimeoutSecs,
@@ -90,7 +91,7 @@ public class SpoolDirSource extends BaseSource {
       int textMaxLineLen, String xmlRecordElement, int xmlMaxObjectLen, LogMode logMode, int logMaxObjectLen,
       boolean retainOriginalLine, String customLogFormat, String regex, List<RegExConfig> fieldPathsToGroupName,
       String grokPatternDefinition, String grokPattern, boolean enableLog4jCustomLogFormat,
-      String log4jCustomLogFormat) {
+      String log4jCustomLogFormat, int maxStackTraceLines) {
     this.dataFormat = dataFormat;
     this.charset = charset;
     this.overrunLimit = overrunLimit * 1024;
@@ -122,6 +123,7 @@ public class SpoolDirSource extends BaseSource {
     this.grokPattern = grokPattern;
     this.enableLog4jCustomLogFormat = enableLog4jCustomLogFormat;
     this.log4jCustomLogFormat = log4jCustomLogFormat;
+    this.maxStackTraceLines = maxStackTraceLines;
   }
 
   private Charset fileCharset;
@@ -237,9 +239,8 @@ public class SpoolDirSource extends BaseSource {
         customLogFormat));
       return;
     }
-    Map<String, Integer> fieldToGroup = new HashMap<>();
     try {
-      ApacheAccessLogHelper.convertLogFormatToRegEx(customLogFormat, fieldToGroup);
+      ApacheCustomLogHelper.translateApacheLayoutToGrok(customLogFormat);
     } catch (DataParserException e) {
       issues.add(getContext().createConfigIssue(Groups.LOG.name(), "customLogFormat", Errors.SPOOLDIR_28,
         customLogFormat, e.getMessage(), e));
@@ -373,6 +374,7 @@ public class SpoolDirSource extends BaseSource {
           .setConfig(LogCharDataParserFactory.GROK_PATTERN_DEFINITION_KEY, grokPatternDefinition)
           .setConfig(LogCharDataParserFactory.GROK_PATTERN_KEY, grokPattern)
           .setConfig(LogCharDataParserFactory.LOG4J_FORMAT_KEY, log4jCustomLogFormat)
+          .setConfig(LogCharDataParserFactory.LOG4J_TRIM_STACK_TRACES_TO_LENGTH_KEY, maxStackTraceLines)
           .setMode(logMode);
         break;
     }

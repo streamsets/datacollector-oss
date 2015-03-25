@@ -25,7 +25,7 @@ import java.util.UUID;
 
 public class TestLogSpoolDirSourceApacheCustomLogFormat {
 
-  private static final String CUSTOM_LOG_FORMAT = "%h %l %u %t \"%m %U %H\" %>s %b";
+  private static final String CUSTOM_LOG_FORMAT = "%h %l %u [%t] \"%m %U %H\" %>s %b";
   private static final String INVALID_CUSTOM_LOG_FORMAT = "%h %xyz %u %t \"%m %U %H\" %>s %b";
 
   private String createTestDir() {
@@ -50,7 +50,7 @@ public class TestLogSpoolDirSourceApacheCustomLogFormat {
     return new SpoolDirSource(DataFormat.LOG, "UTF-8", 100, createTestDir(), 10, 1, "file-[0-9].log", 10, null, null,
       PostProcessingOptions.ARCHIVE, createTestDir(), 10, null, null, -1, null, 0, 0,
       null, 0, LogMode.APACHE_CUSTOM_LOG_FORMAT, 1000, true, CUSTOM_LOG_FORMAT, null,
-      Collections.<RegExConfig>emptyList(), null, null, false, null);
+      Collections.<RegExConfig>emptyList(), null, null, false, null, -1);
   }
 
   @Test
@@ -92,8 +92,8 @@ public class TestLogSpoolDirSourceApacheCustomLogFormat {
       Assert.assertTrue(record.has("/urlPath"));
       Assert.assertEquals("/apache_pb.gif", record.get("/urlPath").getValueAsString());
 
-      Assert.assertTrue(record.has("/requestProtocol"));
-      Assert.assertEquals("HTTP/1.0", record.get("/requestProtocol").getValueAsString());
+      Assert.assertTrue(record.has("/httpversion"));
+      Assert.assertEquals("1.0", record.get("/httpversion").getValueAsString());
 
       Assert.assertTrue(record.has("/status"));
       Assert.assertEquals("200", record.get("/status").getValueAsString());
@@ -124,8 +124,8 @@ public class TestLogSpoolDirSourceApacheCustomLogFormat {
       Assert.assertTrue(record.has("/urlPath"));
       Assert.assertEquals("/apache_pb.gif", record.get("/urlPath").getValueAsString());
 
-      Assert.assertTrue(record.has("/requestProtocol"));
-      Assert.assertEquals("HTTP/2.0", record.get("/requestProtocol").getValueAsString());
+      Assert.assertTrue(record.has("/httpversion"));
+      Assert.assertEquals("2.0", record.get("/httpversion").getValueAsString());
 
       Assert.assertTrue(record.has("/status"));
       Assert.assertEquals("200", record.get("/status").getValueAsString());
@@ -175,8 +175,8 @@ public class TestLogSpoolDirSourceApacheCustomLogFormat {
       Assert.assertTrue(record.has("/urlPath"));
       Assert.assertEquals("/apache_pb.gif", record.get("/urlPath").getValueAsString());
 
-      Assert.assertTrue(record.has("/requestProtocol"));
-      Assert.assertEquals("HTTP/1.0", record.get("/requestProtocol").getValueAsString());
+      Assert.assertTrue(record.has("/httpversion"));
+      Assert.assertEquals("1.0", record.get("/httpversion").getValueAsString());
 
       Assert.assertTrue(record.has("/status"));
       Assert.assertEquals("200", record.get("/status").getValueAsString());
@@ -214,8 +214,8 @@ public class TestLogSpoolDirSourceApacheCustomLogFormat {
       Assert.assertTrue(record.has("/urlPath"));
       Assert.assertEquals("/apache_pb.gif", record.get("/urlPath").getValueAsString());
 
-      Assert.assertTrue(record.has("/requestProtocol"));
-      Assert.assertEquals("HTTP/2.0", record.get("/requestProtocol").getValueAsString());
+      Assert.assertTrue(record.has("/httpversion"));
+      Assert.assertEquals("2.0", record.get("/httpversion").getValueAsString());
 
       Assert.assertTrue(record.has("/status"));
       Assert.assertEquals("200", record.get("/status").getValueAsString());
@@ -243,7 +243,7 @@ public class TestLogSpoolDirSourceApacheCustomLogFormat {
       "file-[0-9].log", 10, null, null,
       PostProcessingOptions.ARCHIVE, createTestDir(), 10, null, null, -1, null, 0, 0,
       null, 0, LogMode.APACHE_CUSTOM_LOG_FORMAT, 1000, true, INVALID_CUSTOM_LOG_FORMAT, null,
-      Collections.<RegExConfig>emptyList(), null, null, false, null);
+      Collections.<RegExConfig>emptyList(), null, null, false, null, -1);
     SourceRunner runner = new SourceRunner.Builder(spoolDirSource).addOutputLane("lane").build();
     runner.runInit();
   }

@@ -7,8 +7,6 @@ package com.streamsets.pipeline.lib.parser.log;
 
 import com.streamsets.pipeline.lib.parser.DataParserException;
 
-import java.util.StringTokenizer;
-
 public class Log4jHelper {
 
   private static final int PERCENT_STATE = 0;
@@ -18,19 +16,28 @@ public class Log4jHelper {
   private static final String TRAILING_SPACE = "(?:\\s*)";
 
   public static String translateLog4jLayoutToGrok(String patternLayout) throws DataParserException {
+    //remove trailing '%n's since the reader does not return the new line character
+    while(patternLayout.endsWith("%n")) {
+      patternLayout = patternLayout.substring(0, patternLayout.length()-2);
+    }
+
     int state = NEXT_LAYOUT;
-    StringTokenizer stringTokenizer = new StringTokenizer(patternLayout);
     StringBuilder regex = new StringBuilder();
+    StringBuilder partialRegex = new StringBuilder();
     String argument;
-    while (stringTokenizer.hasMoreTokens()) {
-      boolean leftPadWithSpace = false;
-      boolean rightPadWithSpace = false;
-      String token = stringTokenizer.nextToken();
-      int index = 0;
-      StringBuilder partialRegex = new StringBuilder();
-      while (index < token.length()) {
-        char c = token.charAt(index);
+    int index = 0;
+    boolean leftPadWithSpace = false;
+    boolean rightPadWithSpace = false;
+    while (index < patternLayout.length()) {
+
+        char c = patternLayout.charAt(index);
         switch (c) {
+          case ' ':
+            regex.append(partialRegex.toString()).append(" ");
+            partialRegex.setLength(0);
+            leftPadWithSpace = false;
+            rightPadWithSpace = false;
+            break;
           case '%':
             state = PERCENT_STATE;
             break;
@@ -46,12 +53,15 @@ public class Log4jHelper {
           case '[':
           case ']':
             if (state == PERCENT_STATE) {
+              throw new DataParserException(Errors.LOG_PARSER_02, patternLayout);
             } else if (state == NEXT_LAYOUT) {
-              //partialRegex.append("\\\\").append(c);
+              partialRegex.append("\\").append(c);
             } else if (state == LITERAL_STATE) {
               throw new DataParserException(Errors.LOG_PARSER_02, patternLayout);
             }
             break;
+
+
           case '0':
           case '1':
           case '2':
@@ -84,55 +94,55 @@ public class Log4jHelper {
             break;
 
           case 'c' :
-            index += ignoreArgument(token, index);
+            index += ignoreArgument(patternLayout, index);
             state = checkStateAndAppend(partialRegex, state, "%{JAVACLASS:category}", c, rightPadWithSpace);
             break;
           case 'C' :
-            index += ignoreArgument(token, index);
+            index += ignoreArgument(patternLayout, index);
             state = checkStateAndAppend(partialRegex, state, "%{JAVACLASS:class}", c, rightPadWithSpace);
             break;
           case 'F' :
-            index += ignoreArgument(token, index);
-            state = checkStateAndAppend(partialRegex, state, "%{JAVAFILE:class}", c, rightPadWithSpace);
+            index += ignoreArgument(patternLayout, index);
+            state = checkStateAndAppend(partialRegex, state, "%{JAVAFILE:filename}", c, rightPadWithSpace);
             break;
           case 'l' :
-            index += ignoreArgument(token, index);
+            index += ignoreArgument(patternLayout, index);
             state = checkStateAndAppend(partialRegex, state, "%{JAVASTACKTRACEPART:location}", c, rightPadWithSpace);
             break;
           case 'L' :
-            index += ignoreArgument(token, index);
+            index += ignoreArgument(patternLayout, index);
             state = checkStateAndAppend(partialRegex, state, "%{NONNEGINT:line}", c, rightPadWithSpace);
             break;
           case 'm' :
-            index += ignoreArgument(token, index);
+            index += ignoreArgument(patternLayout, index);
             state = checkStateAndAppend(partialRegex, state, "%{GREEDYDATA:message}", c, rightPadWithSpace);
             break;
           case 'n' :
-            index += ignoreArgument(token, index);
+            index += ignoreArgument(patternLayout, index);
             state = checkStateAndAppend(partialRegex, state, "\\r?\\n", c, rightPadWithSpace);
             break;
           case 'M' :
-            index += ignoreArgument(token, index);
-            state = checkStateAndAppend(partialRegex, state, "${WORD:method}", c, rightPadWithSpace);
+            index += ignoreArgument(patternLayout, index);
+            state = checkStateAndAppend(partialRegex, state, "%{WORD:method}", c, rightPadWithSpace);
             break;
           case 'p' :
-            index += ignoreArgument(token, index);
+            index += ignoreArgument(patternLayout, index);
             state = checkStateAndAppend(partialRegex, state, "%{LOGLEVEL:severity}", c, rightPadWithSpace);
             break;
           case 'r' :
-            index += ignoreArgument(token, index);
+            index += ignoreArgument(patternLayout, index);
             state = checkStateAndAppend(partialRegex, state, "%{INT:relativetime}", c, rightPadWithSpace);
             break;
           case 't' :
-            index += ignoreArgument(token, index);
+            index += ignoreArgument(patternLayout, index);
             state = checkStateAndAppend(partialRegex, state, "%{PROG:thread}", c, rightPadWithSpace);
             break;
           case 'x' :
-            index += ignoreArgument(token, index);
+            index += ignoreArgument(patternLayout, index);
             state = checkStateAndAppend(partialRegex, state, "%{WORD:ndc}?", c, rightPadWithSpace);
             break;
           case 'X' :
-            argument = getArgument(token, ++index);
+            argument = getArgument(patternLayout, ++index);
             if (null == argument) {
               state = checkStateAndAppend(partialRegex, state, getDefaultMDCPattern(), c, rightPadWithSpace);
             } else {
@@ -141,20 +151,24 @@ public class Log4jHelper {
             }
             break;
           case 'd' :
-            argument = getArgument(token, ++index);
+            argument = getArgument(patternLayout, ++index);
             if(argument != null) {
               index += argument.length() + 1 /* +1 for the '}'*/;
+            } else {
+              index--;
             }
             state = checkStateAndAppend(partialRegex, state, getDatePatternFromArgument(argument), c, rightPadWithSpace);
             break;
           default:
-              partialRegex.append(c);
+            if(state == PERCENT_STATE) {
+              throw new DataParserException(Errors.LOG_PARSER_02, patternLayout);
+            }
+            partialRegex.append(c);
         }
         index++;
-      }
-     regex.append(partialRegex.toString()).append(" ");
     }
-    return regex.toString().trim();
+    regex.append(partialRegex.toString());
+    return "^" /*begins with*/ + regex.toString().trim();
   }
 
   private static int ignoreArgument(String token, int index) {
@@ -190,7 +204,10 @@ public class Log4jHelper {
           datePattern = "%{TIMESTAMP_ISO8601}";
           break;
         case "ABSOLUTE":
-          datePattern = "HH:mm:ss,SSS";
+          datePattern = "%{HOUR}:%{MINUTE}:%{SECOND}";
+          break;
+        case "DATE" :
+          datePattern = "%{MONTHDAY} %{MONTH} %{YEAR} %{HOUR}:%{MINUTE}:%{SECOND}";
           break;
         default:
           //custom date format, generate regex based on the date format

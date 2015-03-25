@@ -37,6 +37,8 @@ public class LogCharDataParserFactory extends CharDataParserFactory {
   static final String GROK_PATTERN_DEFINITION_DEFAULT = "";
   public static final String LOG4J_FORMAT_KEY = KEY_PREFIX + "log4j.custom.log.format";
   static final String LOG4J_FORMAT_DEFAULT = "%d{ISO8601} %-5p %c{1} - %m";
+  public static final String LOG4J_TRIM_STACK_TRACES_TO_LENGTH_KEY = KEY_PREFIX + "log4j.trim.stack.trace.to.length";
+  static final int LOG4J_TRIM_STACK_TRACES_TO_LENGTH_DEFAULT = 50;
 
   public static Map<String, Object> registerConfigs(Map<String, Object> configs) {
     configs.put(RETAIN_ORIGINAL_TEXT_KEY, RETAIN_ORIGINAL_TEXT_DEFAULT);
@@ -46,7 +48,7 @@ public class LogCharDataParserFactory extends CharDataParserFactory {
     configs.put(GROK_PATTERN_DEFINITION_KEY, GROK_PATTERN_DEFINITION_DEFAULT);
     configs.put(GROK_PATTERN_KEY, GROK_PATTERN_DEFAULT);
     configs.put(LOG4J_FORMAT_KEY, LOG4J_FORMAT_DEFAULT);
-
+    configs.put(LOG4J_TRIM_STACK_TRACES_TO_LENGTH_KEY, LOG4J_TRIM_STACK_TRACES_TO_LENGTH_DEFAULT);
     return configs;
   }
 
@@ -61,6 +63,7 @@ public class LogCharDataParserFactory extends CharDataParserFactory {
   private final String grokPattern;
   private final List<String> grokDictionaries;
   private final String log4jCustomLogFormat;
+  private final int maxStackTraceLength;
 
   public LogCharDataParserFactory(Stage.Context context, int maxObjectLen, LogMode logMode,
                                   Map<String, Object> configs) {
@@ -75,6 +78,7 @@ public class LogCharDataParserFactory extends CharDataParserFactory {
     this.grokPattern = (String) configs.get(GROK_PATTERN_KEY);
     this.grokDictionaries = Collections.emptyList();
     this.log4jCustomLogFormat = (String) configs.get(LOG4J_FORMAT_KEY);
+    this.maxStackTraceLength = (Integer) configs.get(LOG4J_TRIM_STACK_TRACES_TO_LENGTH_KEY);
   }
 
   @Override
@@ -97,10 +101,10 @@ public class LogCharDataParserFactory extends CharDataParserFactory {
             fieldPathToGroup);
         case GROK:
           return new GrokParser(context, id, reader, readerOffset, maxObjectLen, retainOriginalText,
-            grokPatternDefinition, grokPattern, grokDictionaries);
+            grokPatternDefinition, grokPattern, grokDictionaries, maxStackTraceLength);
         case LOG4J:
           return new Log4jParser(context, id, reader, readerOffset, maxObjectLen, retainOriginalText,
-            Log4jHelper.translateLog4jLayoutToGrok(log4jCustomLogFormat));
+            Log4jHelper.translateLog4jLayoutToGrok(log4jCustomLogFormat), maxStackTraceLength);
         default :
           return null;
       }
@@ -108,6 +112,5 @@ public class LogCharDataParserFactory extends CharDataParserFactory {
       throw new DataParserException(Errors.LOG_PARSER_00, id, readerOffset, ex.getMessage(), ex);
     }
   }
-
 
 }

@@ -14,7 +14,7 @@ import com.streamsets.pipeline.lib.parser.shaded.org.aicer.grok.util.Grok;
 
 import java.io.IOException;
 import java.io.StringReader;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -23,8 +23,9 @@ public class GrokParser extends LogDataParser {
   private final Grok compiledPattern;
 
   public GrokParser(Stage.Context context, String readerId, OverrunReader reader, long readerOffset, int maxObjectLen,
-                    boolean retainOriginalText, String grokPatternDefinition, String grokPattern, List<String> dictionaries) throws IOException {
-    super(context, readerId, reader, readerOffset, maxObjectLen, retainOriginalText);
+                    boolean retainOriginalText, String grokPatternDefinition, String grokPattern,
+                    List<String> dictionaries, int maxStackTraceLines) throws IOException {
+    super(context, readerId, reader, readerOffset, maxObjectLen, retainOriginalText, maxStackTraceLines);
     GrokDictionary grokDictionary = new GrokDictionary();
     //Add grok patterns and Java patterns by default
     grokDictionary.addDictionary(getClass().getClassLoader().getResourceAsStream(Constants.GROK_PATTERNS_FILE_NAME));
@@ -50,7 +51,7 @@ public class GrokParser extends LogDataParser {
       //Did not match
       handleNoMatch(logLine.toString());
     }
-    Map<String, Field> map = new HashMap<>();
+    Map<String, Field> map = new LinkedHashMap<>();
     for(Map.Entry<String, String> e : namedGroupToValuesMap.entrySet()) {
       map.put(e.getKey(), Field.create(e.getValue()));
     }
