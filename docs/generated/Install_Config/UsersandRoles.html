@@ -2,7 +2,7 @@
 <!DOCTYPE html
   SYSTEM "about:legacy-compat">
 <html xml:lang="en-us" lang="en-us">
-<head><meta name="description" content="The Data Collector includes a default administrator login. You can create additional users for increased security. The Data Collector provides several roles that define the tasks that a user can ..."></meta><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><meta name="copyright" content="(C) Copyright 2005"></meta><meta name="DC.rights.owner" content="(C) Copyright 2005"></meta><meta name="DC.Type" content="concept"></meta><meta name="DC.Title" content="Users and Roles"></meta><meta name="abstract" content="The Data Collector includes a default administrator login. You can create additional users for increased security."></meta><meta name="description" content="The Data Collector includes a default administrator login. You can create additional users for increased security."></meta><meta name="DC.Relation" scheme="URI" content="../Install_Config/Install_Config_title.html"></meta><meta name="DC.Format" content="XHTML"></meta><meta name="DC.Identifier" content="concept_dt2_cpb_kr"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/commonltr.css"><!----></link><title>Users and Roles</title><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/webhelp_topic.css"><!----></link><link rel="stylesheet" type="text/css" href="../skin.css"></link><script type="text/javascript"><!--
+<head><meta name="description" content="The Data Collector provides several roles and a default user account based on each role. For increased security, update the passwords for these accounts or create additional user accounts. A ..."></meta><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><meta name="copyright" content="(C) Copyright 2005"></meta><meta name="DC.rights.owner" content="(C) Copyright 2005"></meta><meta name="DC.Type" content="concept"></meta><meta name="DC.Title" content="Users and Roles"></meta><meta name="abstract" content="The Data Collector provides several roles and a default user account based on each role. For increased security, update the passwords for these accounts or create additional user accounts. A production deployment of the Data Collector should integrate with intranet authentication such as LDAP."></meta><meta name="description" content="The Data Collector provides several roles and a default user account based on each role. For increased security, update the passwords for these accounts or create additional user accounts. A production deployment of the Data Collector should integrate with intranet authentication such as LDAP."></meta><meta name="DC.Relation" scheme="URI" content="../Install_Config/Install_Config_title.html"></meta><meta name="DC.Format" content="XHTML"></meta><meta name="DC.Identifier" content="concept_dt2_cpb_kr"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/commonltr.css"><!----></link><title>Users and Roles</title><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/webhelp_topic.css"><!----></link><link rel="stylesheet" type="text/css" href="../skin.css"></link><script type="text/javascript"><!--
           
           var prefix = "../index.html";
           
@@ -15,12 +15,20 @@
 
  
  <div class="body conbody"><p class="shortdesc">The <span class="ph">Data
-                  Collector</span> includes a default administrator login. You can create additional users for increased security. </p>
+                  Collector</span> provides several roles and a default user account based on each role. For increased security,
+    update the passwords for these accounts or create additional user accounts. A production
+    deployment of the <span class="ph">Data
+                  Collector</span> should
+    integrate with intranet authentication such as LDAP.</p>
 
-  <p class="p">The <span class="ph">Data
-                  Collector</span> provides
-      several roles that define the tasks that a user can perform. When you configure a user, assign
-      each user one or more roles. Users can perform any task that their roles allow.</p>
+  <p class="p"><span class="ph">Data
+                  Collector</span> roles
+      define the tasks that a user can perform. When you configure a user, assign the user one or
+      more roles. Users can perform any task that their roles allow.</p>
+
+    <p class="p">You can create additional users for increased security. A production deployment of the <span class="ph">Data
+                  Collector</span> should
+      integrate with intranet authentication such as LDAP.</p>
 
   <div class="p">The <span class="ph">Data
                   Collector</span>
@@ -34,6 +42,8 @@
             snapshots, and start or stop the <span class="ph">Data
                   Collector</span>.</dd>
 
+          <dd class="dd">The login for the admin user account is admin/admin.</dd>
+
         
         
           <dt class="dt dlterm">manager</dt>
@@ -42,6 +52,8 @@
             monitor pipelines, configure and reset alerts, and view snapshots. You cannot configure
             pipelines or perform data preview.</dd>
 
+          <dd class="dd">The login for the manager user account is manager/manager.</dd>
+
         
         
           <dt class="dt dlterm">creator</dt>
@@ -49,6 +61,8 @@
           <dd class="dd">Allows you to configure pipelines. As a creator, you can configure pipelines and
             alerts, perform data preview, and monitor the pipeline. You cannot view snapshots or
             reset alerts.</dd>
+
+          <dd class="dd">The login for the creator user account is creator/creator.</dd>
 
         
         
@@ -60,6 +74,8 @@
             information. You cannot view data preview or snapshots, or configure pipelines or
             alerts.</dd>
 
+          <dd class="dd">The login for the guest user account is guest/guest.</dd>
+
         
       </dl>
 </div>
@@ -68,13 +84,13 @@
 
 <div class="related-links"></div>
 <div class="topic task nested1" id="task_nsz_lp4_1r">
-    <h2 class="title topictitle2">Creating Additional Users</h2>
+    <h2 class="title topictitle2">Configuring Users</h2>
 
     
     <div class="body taskbody"><p class="shortdesc">The <span class="ph">Data
                   Collector</span>
-        includes a default login: admin/admin. You can create additional Data Collector users for
-        increased security.</p>
+        includes several default logins. You can customize You can create additional Data Collector
+        users for increased security.</p>
 
         <div class="section context">
             <p class="p">You can use an md5 program
@@ -84,16 +100,18 @@
 
         <ol class="ol steps" id="task_nsz_lp4_1r__steps_ody_3q4_1r"><li class="li step stepexpand">
                 <span class="ph cmd">Modify the local-realm.properties file located in the etc directory.</span>
-                <div class="itemgroup info"> When installed as a service, the location is
+                <div class="itemgroup info">When installed as a service, the location is
                     /etc/sdc/local-realm.properties.</div>
             </li>
 <li class="li step stepexpand">
                 <span class="ph cmd">For each new user, add a line using the following format:</span>
                 <div class="itemgroup info">
-                    <pre class="pre codeblock"> &lt;username&gt;: &lt;password&gt;[,&lt;rolename&gt; …]</pre>
+                    <pre class="pre codeblock">&lt;username&gt;: &lt;password&gt;, user, &lt;role&gt; [, &lt;additional role&gt;, &lt;additional role&gt;...]</pre>
 
                 </div>
-                <div class="itemgroup info">Assign one or more roles for each user.</div>
+                <div class="itemgroup info"><div class="note note"><span class="notetitle">Note:</span> Be sure to include "user" in the user account description.</div>
+Assign
+                    one or more roles for each user. </div>
             </li>
 <li class="li step stepexpand">
                 <span class="ph cmd">To use a password that is not stored in plain text, use the following format

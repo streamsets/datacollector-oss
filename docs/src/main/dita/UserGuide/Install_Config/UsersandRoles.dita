@@ -3,13 +3,21 @@
 <concept id="concept_dt2_cpb_kr">
  <title>Users and Roles</title>
  <shortdesc>The <ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-  /> includes a default administrator login. You can create additional users for increased security. </shortdesc>
+    /> provides several roles and a default user account based on each role. For increased security,
+    update the passwords for these accounts or create additional user accounts. A production
+    deployment of the <ph
+      conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> should
+    integrate with intranet authentication such as LDAP.</shortdesc>
  <conbody>
-  <p><indexterm>users<indexterm>roles</indexterm></indexterm><indexterm>roles<indexterm>for
-          users</indexterm></indexterm>The <ph
-        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> provides
-      several roles that define the tasks that a user can perform. When you configure a user, assign
-      each user one or more roles. Users can perform any task that their roles allow.</p>
+  <p><indexterm>users<indexterm>default users and
+          roles</indexterm></indexterm><indexterm>roles<indexterm>for
+        users</indexterm></indexterm><ph
+        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> roles
+      define the tasks that a user can perform. When you configure a user, assign the user one or
+      more roles. Users can perform any task that their roles allow.</p>
+    <p>You can create additional users for increased security. A production deployment of the <ph
+        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> should
+      integrate with intranet authentication such as LDAP.</p>
   <p>The <ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
       provides the following roles: <dl>
         <dlentry>
@@ -20,18 +28,21 @@
             snapshots, and start or stop the <ph
               conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
             />.</dd>
+          <dd>The login for the admin user account is admin/admin.</dd>
         </dlentry>
         <dlentry>
           <dt>manager</dt>
           <dd>Allows you to manage pipelines. As a manager, you can start and stop pipelines,
             monitor pipelines, configure and reset alerts, and view snapshots. You cannot configure
             pipelines or perform data preview.</dd>
+          <dd>The login for the manager user account is manager/manager.</dd>
         </dlentry>
         <dlentry>
           <dt>creator</dt>
           <dd>Allows you to configure pipelines. As a creator, you can configure pipelines and
             alerts, perform data preview, and monitor the pipeline. You cannot view snapshots or
             reset alerts.</dd>
+          <dd>The login for the creator user account is creator/creator.</dd>
         </dlentry>
         <dlentry>
           <dt>guest</dt>
@@ -40,6 +51,7 @@
             a guest, you can view pipeline and alert configuration, view general monitoring and log
             information. You cannot view data preview or snapshots, or configure pipelines or
             alerts.</dd>
+          <dd>The login for the guest user account is guest/guest.</dd>
         </dlentry>
       </dl></p>
  </conbody>
