@@ -1,0 +1,43 @@
+<div class="graph-container">
+  <svg width="100%" height="100%" tabindex="0">
+  </svg>
+
+
+  <div class="graph-toolbar">
+
+    <div class="pan-toolbar">
+      <div>
+        <span class="glyphicon glyphicon-chevron-up pan-up" ng-click="panUp($event)">
+        </span>
+      </div>
+      <div>
+        <span class="glyphicon glyphicon-chevron-right pan-right" ng-click="panRight($event)"></span>
+      </div>
+      <div>
+        <span class="glyphicon glyphicon-home pan-home" ng-click="panHome($event)"></span>
+      </div>
+      <div>
+        <span class="glyphicon glyphicon-chevron-left pan-left" ng-click="panLeft($event)"></span>
+      </div>
+      <div>
+        <span class="glyphicon glyphicon-chevron-down pan-down" ng-click="panDown($event)"></span>
+      </div>
+    </div>
+
+    <div class="zoom-toolbar">
+      <div>
+        <span class="pointer fa fa-plus" ng-click="zoomIn($event)"></span>
+      </div>
+      <div>
+        <span class="pointer fa fa-minus" ng-click="zoomOut($event)"></span>
+      </div>
+    </div>
+
+  </div>
+
+  <span class="warning-toolbar node-warning fa fa-exclamation-triangle graph-bootstrap-tooltip"
+        ng-click="onWarningClick($event)"
+        data-html="true" data-placement="right" style="visibility: hidden;">
+  </span>
+
+</div>

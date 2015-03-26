@@ -86,6 +86,9 @@
 
           <li role="presentation" class="divider"></li>
 
+          <li role="presentation" class="dropdown-header"
+              translate="home.header.pipeline">Pipeline</li>
+
           <li role="presentation" ng-if="isAuthorized([userRoles.admin, userRoles.creator])"
               ng-hide="pipeline.name === common.pipelineStatus.name  && common.pipelineStatus.state === 'RUNNING'">
             <a href="#" dropdown-toggle ng-click="deletePipelineConfig(activeConfigInfo, $event)">
@@ -157,44 +160,75 @@
       </div>
 
       <a class="btn btn-link icon-button"
-              tooltip-placement="bottom" tooltip="{{'home.header.snapshot' | translate}}"
-              tooltip-trigger="{{iconOnly ? 'mouseenter' : 'notooltip'}}"
-              tooltip-popup-delay="500"
-              ng-if="isAuthorized([userRoles.admin, userRoles.manager])"
-              ng-show="isPipelineRunning && !snapshotMode"
-              ng-click="captureSnapshot()">
+         tooltip-placement="bottom"
+         tooltip="{{selectedType === pipelineConstant.STAGE_INSTANCE ?
+          ('global.form.deleteStage' | translate) + ' ' + selectedObject.uiInfo.label : ('global.form.deleteStream' | translate)}}"
+         tooltip-popup-delay="500"
+         ng-hide="isPipelineRunning || previewMode || selectedType === pipelineConstant.PIPELINE"
+         ng-if="isAuthorized([userRoles.admin, userRoles.creator])"
+         ng-click="deleteSelection()">
+        <span class="fa fa-trash fa-14x"></span>
+      </a>
+
+      <a class="btn btn-link icon-button"
+         tooltip-placement="bottom"
+         tooltip="{{('global.form.duplicateStage' | translate) + ' ' + selectedObject.uiInfo.label}}"
+         tooltip-popup-delay="500"
+         ng-hide="isPipelineRunning || previewMode || selectedType !== pipelineConstant.STAGE_INSTANCE ||
+         selectedObject.uiInfo.stageType === pipelineConstant.SOURCE_STAGE_TYPE"
+         ng-if="isAuthorized([userRoles.admin, userRoles.creator])"
+         ng-click="duplicateStage()">
+        <span class="glyphicon glyphicon-duplicate fa-14x"></span>
+      </a>
+
+      <a class="btn btn-link icon-button"
+         tooltip-placement="bottom"
+         tooltip="{{'global.form.autoArrange' | translate}}"
+         tooltip-popup-delay="500"
+         ng-hide="previewMode || pipelineConfig.stages.length <= 1"
+         ng-if="isAuthorized([userRoles.admin, userRoles.creator, userRoles.manager])"
+         ng-click="autoArrange()">
+        <span class="fa fa-random fa-14x"></span>
+      </a>
+
+      <a class="btn btn-link icon-button"
+          tooltip-placement="bottom" tooltip="{{'home.header.snapshot' | translate}}"
+          tooltip-trigger="{{iconOnly ? 'mouseenter' : 'notooltip'}}"
+          tooltip-popup-delay="500"
+          ng-if="isAuthorized([userRoles.admin, userRoles.manager])"
+          ng-show="isPipelineRunning && !snapshotMode"
+          ng-click="captureSnapshot()">
         <span class="glyphicon glyphicon-camera fa-14x"></span>
       </a>
 
       <a class="btn btn-danger btn-link icon-button"
-              tooltip-placement="bottom" tooltip="{{'home.header.closeSnapshot' | translate}}"
-              tooltip-trigger="{{iconOnly ? 'mouseenter' : 'notooltip'}}"
-              tooltip-popup-delay="500"
-              ng-if="isAuthorized([userRoles.admin, userRoles.manager])"
-              ng-show="snapshotMode"
-              ng-click="closeSnapshot()">
+          tooltip-placement="bottom" tooltip="{{'home.header.closeSnapshot' | translate}}"
+          tooltip-trigger="{{iconOnly ? 'mouseenter' : 'notooltip'}}"
+          tooltip-popup-delay="500"
+          ng-if="isAuthorized([userRoles.admin, userRoles.manager])"
+          ng-show="snapshotMode"
+          ng-click="closeSnapshot()">
         <span class="glyphicon glyphicon-camera fa-14x"></span>
       </a>
 
-
       <a class="btn btn-link icon-button"
-              tooltip-placement="bottom" tooltip="{{'home.header.preview' | translate}}"
-              tooltip-trigger="{{iconOnly ? 'mouseenter' : 'notooltip'}}"
-              tooltip-popup-delay="500"
-              ng-hide="isPipelineRunning || previewMode"
-              ng-if="isAuthorized([userRoles.admin, userRoles.creator])"
-              ng-click="previewPipeline()"
-              ng-disabled="!pipelineConfig.previewable">
+          tooltip-placement="bottom" tooltip="{{'home.header.preview' | translate}}"
+          tooltip-trigger="{{iconOnly ? 'mouseenter' : 'notooltip'}}"
+          tooltip-popup-delay="500"
+          ng-hide="isPipelineRunning || previewMode"
+          ng-if="isAuthorized([userRoles.admin, userRoles.creator])"
+          ng-click="previewPipeline()"
+          ng-disabled="!pipelineConfig.previewable">
         <span class="glyphicon glyphicon-eye-open fa-14x"></span>
       </a>
 
       <a class="btn btn-danger btn-link icon-button"
-              tooltip-placement="bottom" tooltip="{{'home.header.closePreview' | translate}}"
-              tooltip-trigger="{{iconOnly ? 'mouseenter' : 'notooltip'}}"
-              tooltip-popup-delay="500"
-              ng-show="previewMode"
-              ng-if="isAuthorized([userRoles.admin, userRoles.creator])"
-              ng-click="closePreview()">
+          tooltip-placement="bottom" tooltip="{{'home.header.closePreview' | translate}}"
+          tooltip-trigger="{{iconOnly ? 'mouseenter' : 'notooltip'}}"
+          tooltip-popup-delay="500"
+          ng-show="previewMode"
+          ng-if="isAuthorized([userRoles.admin, userRoles.creator])"
+          ng-click="closePreview()">
         <span class="glyphicon glyphicon-eye-close fa-14x"></span>
       </a>
 
@@ -211,23 +245,23 @@
       </a>
 
       <a class="btn btn-link icon-button"
-              tooltip-placement="bottom" tooltip="{{'home.header.start' | translate}}"
-              tooltip-trigger="{{iconOnly ? 'mouseenter' : 'notooltip'}}"
-              tooltip-popup-delay="500"
-              ng-hide="isPipelineRunning || previewMode"
-              ng-if="isAuthorized([userRoles.admin, userRoles.manager])"
-              ng-disabled="!pipelineConfig.valid"
-              ng-click="startPipeline()">
+          tooltip-placement="bottom" tooltip="{{'home.header.start' | translate}}"
+          tooltip-trigger="{{iconOnly ? 'mouseenter' : 'notooltip'}}"
+          tooltip-popup-delay="500"
+          ng-hide="isPipelineRunning || previewMode"
+          ng-if="isAuthorized([userRoles.admin, userRoles.manager])"
+          ng-disabled="!pipelineConfig.valid"
+          ng-click="startPipeline()">
         <span class="glyphicon glyphicon-play fa-14x"></span>
       </a>
 
       <a class="btn btn-danger btn-link icon-button"
-              tooltip-placement="bottom" tooltip="{{'home.header.stop' | translate}}"
-              tooltip-trigger="{{iconOnly ? 'mouseenter' : 'notooltip'}}"
-              tooltip-popup-delay="500"
-              ng-if="isAuthorized([userRoles.admin, userRoles.manager])"
-              ng-click="stopPipeline()"
-              ng-show="isPipelineRunning && !snapshotMode">
+          tooltip-placement="bottom" tooltip="{{'home.header.stop' | translate}}"
+          tooltip-trigger="{{iconOnly ? 'mouseenter' : 'notooltip'}}"
+          tooltip-popup-delay="500"
+          ng-if="isAuthorized([userRoles.admin, userRoles.manager])"
+          ng-click="stopPipeline()"
+          ng-show="isPipelineRunning && !snapshotMode">
         <span class="glyphicon glyphicon-stop fa-14x"></span>
       </a>
 

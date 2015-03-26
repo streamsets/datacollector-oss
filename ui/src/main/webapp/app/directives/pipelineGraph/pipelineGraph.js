@@ -6,8 +6,9 @@ angular.module('pipelineGraphDirectives', ['underscore'])
   .directive('pipelineGraph', function() {
     return {
       restrict: 'E',
-      replace: false,
-      controller: 'PipelineGraphController'
+      //replace: true,
+      controller: 'PipelineGraphController',
+      templateUrl: 'app/directives/pipelineGraph/pipelineGraph.tpl.html'
     };
   })
   .controller('PipelineGraphController', function($scope, $rootScope, $element, _, $filter,
@@ -28,23 +29,6 @@ angular.module('pipelineGraphDirectives', ['underscore'])
       thisGraph.nodes = nodes || [];
       thisGraph.edges = edges || [];
       thisGraph.issues = issues || {};
-
-      thisGraph.state = {
-        selectedNode: null,
-        selectedEdge: null,
-        mouseDownNode: null,
-        mouseDownNodeLane: null,
-        mouseDownLink: null,
-        justDragged: false,
-        justScaleTransGraph: false,
-        lastKeyDown: -1,
-        shiftNodeDrag: false,
-        selectedText: null,
-        currentScale: 1,
-        copiedStage: undefined,
-        showBadRecords: false,
-        showConfiguration: false
-      };
 
       // define arrow markers for graph links
 
@@ -112,7 +96,7 @@ angular.module('pipelineGraphDirectives', ['underscore'])
           return {x: d.uiInfo.xPos, y: d.uiInfo.yPos};
         })
         .on('drag', function(args){
-          thisGraph.state.justDragged = true;
+          $scope.state.justDragged = true;
           thisGraph.dragmove.call(thisGraph, args);
         })
         .on('dragend', function() {
@@ -198,9 +182,9 @@ angular.module('pipelineGraphDirectives', ['underscore'])
 
     GraphCreator.prototype.dragmove = function(d) {
       var thisGraph = this;
-      if (thisGraph.state.shiftNodeDrag){
+      if ($scope.state.shiftNodeDrag){
         var sourceX = (d.uiInfo.xPos + thisGraph.consts.rectWidth),
-          sourceY = (d.uiInfo.yPos + thisGraph.state.shiftNodeDragYPos),
+          sourceY = (d.uiInfo.yPos + $scope.state.shiftNodeDragYPos),
           targetX = d3.mouse(thisGraph.svgG.node())[0],
           targetY = d3.mouse(this.svgG.node())[1],
           sourceTangentX = sourceX + (targetX - sourceX)/2,
@@ -225,8 +209,8 @@ angular.module('pipelineGraphDirectives', ['underscore'])
       var thisGraph = this;
       thisGraph.nodes = [];
       thisGraph.edges = [];
-      thisGraph.state.selectedNode = null;
-      thisGraph.state.selectedEdge = null;
+      $scope.state.selectedNode = null;
+      $scope.state.selectedEdge = null;
 
       $('.graph-bootstrap-tooltip').each(function() {
         var $this = $(this);
@@ -303,41 +287,41 @@ angular.module('pipelineGraphDirectives', ['underscore'])
 
     GraphCreator.prototype.replaceSelectEdge = function(d3Path, edgeData){
       var thisGraph = this;
-      if (thisGraph.state.selectedEdge){
+      if ($scope.state.selectedEdge){
         thisGraph.removeSelectFromEdge();
       }
       d3Path.classed(thisGraph.consts.selectedClass, true);
-      thisGraph.state.selectedEdge = edgeData;
+      $scope.state.selectedEdge = edgeData;
     };
 
     GraphCreator.prototype.replaceSelectNode = function(d3Node, nodeData){
       var thisGraph = this;
-      if (thisGraph.state.selectedNode){
+      if ($scope.state.selectedNode){
         thisGraph.removeSelectFromNode();
       }
       d3Node.classed(this.consts.selectedClass, true);
-      thisGraph.state.selectedNode = nodeData;
+      $scope.state.selectedNode = nodeData;
     };
 
     GraphCreator.prototype.removeSelectFromNode = function(){
       var thisGraph = this;
       thisGraph.rects.filter(function(cd){
-        return cd.instanceName === thisGraph.state.selectedNode.instanceName;
+        return cd.instanceName === $scope.state.selectedNode.instanceName;
       }).classed(thisGraph.consts.selectedClass, false);
-      thisGraph.state.selectedNode = null;
+      $scope.state.selectedNode = null;
     };
 
     GraphCreator.prototype.removeSelectFromEdge = function(){
       var thisGraph = this;
       thisGraph.paths.filter(function(cd){
-        return cd === thisGraph.state.selectedEdge;
+        return cd === $scope.state.selectedEdge;
       }).classed(thisGraph.consts.selectedClass, false);
-      thisGraph.state.selectedEdge = null;
+      $scope.state.selectedEdge = null;
     };
 
     GraphCreator.prototype.pathMouseDown = function(d3path, d){
       var thisGraph = this,
-        state = thisGraph.state;
+        state = $scope.state;
       d3.event.stopPropagation();
       state.mouseDownLink = d;
 
@@ -354,7 +338,7 @@ angular.module('pipelineGraphDirectives', ['underscore'])
     // mousedown on node
     GraphCreator.prototype.stageMouseDown = function(d3node, d){
       var thisGraph = this,
-        state = thisGraph.state;
+        state = $scope.state;
       d3.event.stopPropagation();
       state.mouseDownNode = d;
       if (state.shiftNodeDrag){
@@ -367,7 +351,7 @@ angular.module('pipelineGraphDirectives', ['underscore'])
     // mouseup on nodes
     GraphCreator.prototype.stageMouseUp = function(d3node, d){
       var thisGraph = this,
-        state = thisGraph.state,
+        state = $scope.state,
         consts = thisGraph.consts;
       // reset the states
       state.shiftNodeDrag = false;
@@ -428,13 +412,13 @@ angular.module('pipelineGraphDirectives', ['underscore'])
 
     // mousedown on main svg
     GraphCreator.prototype.svgMouseDown = function(){
-      this.state.graphMouseDown = true;
+      $scope.state.graphMouseDown = true;
     };
 
     // mouseup on main svg
     GraphCreator.prototype.svgMouseUp = function(){
       var thisGraph = this,
-        state = thisGraph.state;
+        state = $scope.state;
       if (state.justScaleTransGraph) {
         // dragged not clicked
         state.justScaleTransGraph = false;
@@ -442,10 +426,10 @@ angular.module('pipelineGraphDirectives', ['underscore'])
         // dragged from node
         state.shiftNodeDrag = false;
         thisGraph.dragLine.classed('hidden', true);
-      } else if(this.state.graphMouseDown && !this.isPreviewMode) {
-        if(this.state.selectedNode) {
+      } else if($scope.state.graphMouseDown && !this.isPreviewMode) {
+        if($scope.state.selectedNode) {
           this.removeSelectFromNode();
-        } else if(this.state.selectedEdge) {
+        } else if($scope.state.selectedEdge) {
           this.removeSelectFromEdge();
         }
 
@@ -462,7 +446,7 @@ angular.module('pipelineGraphDirectives', ['underscore'])
     // keydown on main svg
     GraphCreator.prototype.svgKeyDown = function() {
       var thisGraph = this,
-        state = thisGraph.state,
+        state = $scope.state,
         consts = thisGraph.consts;
 
       // make sure repeated key presses don't register for each keydown
@@ -479,54 +463,9 @@ angular.module('pipelineGraphDirectives', ['underscore'])
         case consts.BACKSPACE_KEY:
         case consts.DELETE_KEY:
           d3.event.preventDefault();
-          if(thisGraph.isReadOnly) {
-            //Graph is read only
-            return;
-          }
-          if (selectedNode) {
-            $scope.$apply(function() {
-              var nodeIndex = thisGraph.nodes.indexOf(selectedNode);
-
-              if(nodeIndex !== -1) {
-                thisGraph.nodes.splice(nodeIndex, 1);
-
-                //Remove the input lanes in all stages having output lanes of delete node.
-                _.each(thisGraph.edges, function(edge) {
-                  if(edge.source === selectedNode) {
-                    edge.target.inputLanes = _.filter(edge.target.inputLanes, function(inputLane) {
-                      return !_.contains(edge.source.outputLanes, inputLane);
-                    });
-                  }
-                });
-
-                thisGraph.spliceLinksForNode(selectedNode);
-                state.selectedNode = null;
-                $scope.$emit('onRemoveNodeSelection', {
-                  selectedObject: undefined,
-                  type: pipelineConstant.PIPELINE
-                });
-                thisGraph.updateGraph();
-              }
-            });
-          } else if (selectedEdge) {
-            $scope.$apply(function() {
-              var edgeIndex = thisGraph.edges.indexOf(selectedEdge);
-              if(edgeIndex !== -1) {
-                //Update pipeline target input lanes.
-                selectedEdge.target.inputLanes = _.filter(selectedEdge.target.inputLanes, function(inputLane) {
-                  return !_.contains(selectedEdge.source.outputLanes, inputLane);
-                });
-
-                thisGraph.edges.splice(edgeIndex, 1);
-                state.selectedEdge = null;
-                $scope.$emit('onRemoveNodeSelection', {
-                  selectedObject: undefined,
-                  type: pipelineConstant.PIPELINE
-                });
-                thisGraph.updateGraph();
-              }
-            });
-          }
+          $scope.$apply(function() {
+            $scope.deleteSelected();
+          });
           break;
 
         case consts.COPY_KEY:
@@ -550,7 +489,7 @@ angular.module('pipelineGraphDirectives', ['underscore'])
     };
 
     GraphCreator.prototype.svgKeyUp = function() {
-      this.state.lastKeyDown = -1;
+      $scope.state.lastKeyDown = -1;
     };
 
     GraphCreator.prototype.addNode = function(node, edges, relativeX, relativeY) {
@@ -564,8 +503,8 @@ angular.module('pipelineGraphDirectives', ['underscore'])
           startX = (currentTranslatePos[0] + left),
           startY = (currentTranslatePos[1] + top);
 
-        node.uiInfo.xPos = (relativeX - startX)/ thisGraph.state.currentScale;
-        node.uiInfo.yPos = (relativeY - startY)/ thisGraph.state.currentScale;
+        node.uiInfo.xPos = (relativeX - startX)/ $scope.state.currentScale;
+        node.uiInfo.yPos = (relativeY - startY)/ $scope.state.currentScale;
       }
 
       thisGraph.nodes.push(node);
@@ -622,7 +561,7 @@ angular.module('pipelineGraphDirectives', ['underscore'])
 
       var thisGraph = this,
         consts = thisGraph.consts,
-        state = thisGraph.state,
+        state = $scope.state,
         stageErrorCounts = thisGraph.stageErrorCounts,
         firstConfigIssue;
 
@@ -666,9 +605,9 @@ angular.module('pipelineGraphDirectives', ['underscore'])
             options.configName =  firstConfigIssue.configName;
           }
 
-          if(thisGraph.state.showBadRecords) {
+          if($scope.state.showBadRecords) {
             options.detailTabName = 'errors';
-          } else if(thisGraph.state.showConfiguration) {
+          } else if($scope.state.showConfiguration) {
             options.detailTabName = 'configuration';
           }
 
@@ -727,9 +666,9 @@ angular.module('pipelineGraphDirectives', ['underscore'])
                 'class': 'graph-bootstrap-tooltip ' + lane,
                 'title': lanePredicate ? lanePredicate.predicate : ''
               }).on('mousedown', function(d){
-                thisGraph.state.shiftNodeDrag = true;
-                thisGraph.state.shiftNodeDragYPos = y;
-                thisGraph.state.mouseDownNodeLane = lane;
+                $scope.state.shiftNodeDrag = true;
+                $scope.state.shiftNodeDragYPos = y;
+                $scope.state.mouseDownNodeLane = lane;
               });
 
             if(totalLanes > 1) {
@@ -743,9 +682,9 @@ angular.module('pipelineGraphDirectives', ['underscore'])
                 })
                 .text(index+1)
                 .on('mousedown', function(d){
-                  thisGraph.state.shiftNodeDrag = true;
-                  thisGraph.state.shiftNodeDragYPos = y;
-                  thisGraph.state.mouseDownNodeLane = lane;
+                  $scope.state.shiftNodeDrag = true;
+                  $scope.state.shiftNodeDragYPos = y;
+                  $scope.state.mouseDownNodeLane = lane;
                 });
             }
 
@@ -830,10 +769,10 @@ angular.module('pipelineGraphDirectives', ['underscore'])
         .attr('data-html', true)
         .attr('data-placement', 'bottom')
         .on('mousedown', function() {
-          thisGraph.state.showConfiguration = true;
+          $scope.state.showConfiguration = true;
         })
         .on('mouseup', function() {
-          thisGraph.state.showConfiguration = false;
+          $scope.state.showConfiguration = false;
         });
 
 
@@ -861,10 +800,10 @@ angular.module('pipelineGraphDirectives', ['underscore'])
           return '';
         })
         .on('mousedown', function() {
-          thisGraph.state.showBadRecords = true;
+          $scope.state.showBadRecords = true;
         })
         .on('mouseup', function() {
-          thisGraph.state.showBadRecords = false;
+          $scope.state.showBadRecords = false;
         });
 
 
@@ -1060,7 +999,7 @@ angular.module('pipelineGraphDirectives', ['underscore'])
     };
 
     GraphCreator.prototype.zoomed = function() {
-      this.state.justScaleTransGraph = true;
+      $scope.state.justScaleTransGraph = true;
 
       if(showTransition) {
         showTransition = false;
@@ -1076,16 +1015,16 @@ angular.module('pipelineGraphDirectives', ['underscore'])
     };
 
     GraphCreator.prototype.zoomIn = function() {
-      if(this.state.currentScale < this.zoom.scaleExtent()[1]) {
-        this.state.currentScale = Math.round((this.state.currentScale + 0.1) * 10)/10 ;
-        this.zoom.scale(this.state.currentScale).event(this.svg);
+      if($scope.state.currentScale < this.zoom.scaleExtent()[1]) {
+        $scope.state.currentScale = Math.round(($scope.state.currentScale + 0.1) * 10)/10 ;
+        this.zoom.scale($scope.state.currentScale).event(this.svg);
       }
     };
 
     GraphCreator.prototype.zoomOut = function() {
-      if(this.state.currentScale > this.zoom.scaleExtent()[0]) {
-        this.state.currentScale = Math.round((this.state.currentScale - 0.1) * 10)/10 ;
-        this.zoom.scale(this.state.currentScale).event(this.svg);
+      if($scope.state.currentScale > this.zoom.scaleExtent()[0]) {
+        $scope.state.currentScale = Math.round(($scope.state.currentScale - 0.1) * 10)/10 ;
+        this.zoom.scale($scope.state.currentScale).event(this.svg);
       }
     };
 
@@ -1129,7 +1068,7 @@ angular.module('pipelineGraphDirectives', ['underscore'])
         consts = thisGraph.consts,
         svgWidth = thisGraph.svg.style('width').replace('px', ''),
         svgHeight = thisGraph.svg.style('height').replace('px', ''),
-        currentScale = thisGraph.state.currentScale,
+        currentScale = $scope.state.currentScale,
         x = svgWidth / 2 - (stageInstance.uiInfo.xPos + consts.rectWidth/2) * currentScale,
         y = svgHeight / 2 - (stageInstance.uiInfo.yPos + consts.rectHeight/2) * currentScale;
 
@@ -1139,7 +1078,7 @@ angular.module('pipelineGraphDirectives', ['underscore'])
 
     GraphCreator.prototype.moveNodeToVisibleArea = function(stageInstance) {
       var thisGraph = this,
-        currentScale = thisGraph.state.currentScale,
+        currentScale = $scope.state.currentScale,
         svgWidth = thisGraph.svg.style('width').replace('px', ''),
         svgHeight = thisGraph.svg.style('height').replace('px', ''),
         currentTranslatePos = this.zoom.translate(),
@@ -1199,7 +1138,7 @@ angular.module('pipelineGraphDirectives', ['underscore'])
     };
 
     /** MAIN SVG **/
-    var graphContainer, svg, graph, toolbar, panToolbar, zoomToolbar, graphWarning;
+    var graphContainer, svg, graph, toolbar, graphWarning;
 
     $scope.$on('updateGraph', function(event, options) {
       var nodes = options.nodes,
@@ -1213,129 +1152,12 @@ angular.module('pipelineGraphDirectives', ['underscore'])
       if(graph !== undefined) {
         graph.deleteGraph();
       } else {
-        graphContainer = d3.select($element[0]).append('div')
-          .attr('class', 'graph-container');
-        svg = graphContainer.append('svg')
-          .attr('width', '100%')
-          .attr('height', '100%')
-          .attr('tabindex', 0);
+        graphContainer = d3.select($element[0]);
+        svg = graphContainer.select('svg');
+        graphWarning = graphContainer.select('.warning-toolbar');
+
         graph = new GraphCreator(svg, nodes, edges || [], issues);
         graph.setIdCt(2);
-
-
-        //Toolbar
-
-        toolbar = graphContainer.append('div')
-          .attr('class', 'graph-toolbar');
-
-        panToolbar = toolbar.append('div')
-          .attr('class', 'pan-toolbar');
-
-        panToolbar.append('div').append('span')
-          .attr('class', 'glyphicon glyphicon-chevron-up pan-up')
-          .on('mousedown', function() {
-            graph.panUp();
-            d3.event.preventDefault();
-          });
-
-        panToolbar.append('div').append('span')
-          .attr('class', 'glyphicon glyphicon-chevron-right pan-right')
-          .on('mousedown', function() {
-            graph.panRight();
-            d3.event.preventDefault();
-          });
-
-        panToolbar.append('div').append('span')
-          .attr('class', 'glyphicon glyphicon-home pan-home')
-          .on('mousedown', function() {
-            graph.panHome();
-            d3.event.preventDefault();
-          });
-
-        panToolbar.append('div').append('span')
-          .attr('class', 'glyphicon glyphicon-chevron-left pan-left')
-          .on('mousedown', function() {
-            graph.panLeft();
-            d3.event.preventDefault();
-          });
-
-        panToolbar.append('div').append('span')
-          .attr('class', 'glyphicon glyphicon-chevron-down pan-down')
-          .on('mousedown', function() {
-            graph.panDown();
-            d3.event.preventDefault();
-          });
-
-        zoomToolbar = toolbar.append('div')
-          .attr('class', 'zoom-toolbar');
-
-        zoomToolbar.append('div')
-          .append('span')
-          .attr('class', 'pointer fa fa-plus')
-          .on('mousedown', function() {
-            graph.zoomIn();
-            d3.event.preventDefault();
-          });
-
-        zoomToolbar.append('div')
-          .append('span')
-          .attr('class', 'pointer fa fa-minus')
-          .on('mousedown', function() {
-            graph.zoomOut();
-            d3.event.preventDefault();
-          });
-
-
-        graphWarning = graphContainer
-          .append('span')
-          .attr({
-            'class': 'warning-toolbar node-warning fa fa-exclamation-triangle graph-bootstrap-tooltip',
-            'data-html': true,
-            'data-placement': 'right'
-          })
-          .style('visibility', 'hidden')
-          .on('mouseup', function() {
-            if(graph.state.selectedNode) {
-              graph.removeSelectFromNode();
-            } else if(graph.state.selectedEdge) {
-              graph.removeSelectFromEdge();
-            }
-
-            var options = {
-              selectedObject: undefined,
-              type: pipelineConstant.PIPELINE
-            }, firstConfigIssue;
-
-            if(graph.issues && graph.issues.pipelineIssues) {
-              angular.forEach(graph.issues.pipelineIssues, function(issue) {
-                if(issue.configName && !firstConfigIssue) {
-                  firstConfigIssue = issue;
-                }
-              });
-
-
-              if(!firstConfigIssue && graph.errorStage && graph.errorStage.instanceName &&
-                  graph.issues.stageIssues[graph.errorStage.instanceName]) {
-                angular.forEach(graph.issues.stageIssues[graph.errorStage.instanceName], function(issue) {
-                  if(issue.configName && !firstConfigIssue) {
-                    firstConfigIssue = issue;
-                    options.errorStage = true;
-                  }
-                });
-              }
-
-              if(firstConfigIssue) {
-                options.detailTabName = 'configuration';
-                options.configGroup = firstConfigIssue.configGroup;
-                options.configName =  firstConfigIssue.configName;
-              }
-            }
-
-            $scope.$apply(function() {
-              $scope.$emit('onRemoveNodeSelection', options);
-            });
-          });
-
       }
 
       graph.nodes = nodes;
@@ -1356,9 +1178,173 @@ angular.module('pipelineGraphDirectives', ['underscore'])
       }
     });
 
+
+    angular.extend($scope, {
+      state: {
+        selectedNode: null,
+        selectedEdge: null,
+        mouseDownNode: null,
+        mouseDownNodeLane: null,
+        mouseDownLink: null,
+        justDragged: false,
+        justScaleTransGraph: false,
+        lastKeyDown: -1,
+        shiftNodeDrag: false,
+        selectedText: null,
+        currentScale: 1,
+        copiedStage: undefined,
+        showBadRecords: false,
+        showConfiguration: false
+      },
+
+      panUp: function($event) {
+        graph.panUp();
+        $event.preventDefault();
+      },
+
+      panDown: function($event) {
+        graph.panDown();
+        $event.preventDefault();
+      },
+
+      panLeft: function($event) {
+        graph.panLeft();
+        $event.preventDefault();
+      },
+
+      panRight: function($event) {
+        graph.panRight();
+        $event.preventDefault();
+      },
+
+      panHome: function($event) {
+        graph.panHome();
+        $event.preventDefault();
+      },
+
+      zoomIn: function($event) {
+        graph.zoomIn();
+        $event.preventDefault();
+      },
+
+      zoomOut: function($event) {
+        graph.zoomOut();
+        $event.preventDefault();
+      },
+
+      /**
+       * Callback function on warning icon sign
+       * @param $event
+       */
+      onWarningClick: function($event) {
+        if($scope.state.selectedNode) {
+          graph.removeSelectFromNode();
+        } else if($scope.state.selectedEdge) {
+          graph.removeSelectFromEdge();
+        }
+
+        var options = {
+          selectedObject: undefined,
+          type: pipelineConstant.PIPELINE
+        }, firstConfigIssue;
+
+        if(graph.issues && graph.issues.pipelineIssues) {
+          angular.forEach(graph.issues.pipelineIssues, function(issue) {
+            if(issue.configName && !firstConfigIssue) {
+              firstConfigIssue = issue;
+            }
+          });
+
+          if(!firstConfigIssue && graph.errorStage && graph.errorStage.instanceName &&
+            graph.issues.stageIssues[graph.errorStage.instanceName]) {
+            angular.forEach(graph.issues.stageIssues[graph.errorStage.instanceName], function(issue) {
+              if(issue.configName && !firstConfigIssue) {
+                firstConfigIssue = issue;
+                options.errorStage = true;
+              }
+            });
+          }
+
+          if(firstConfigIssue) {
+            options.detailTabName = 'configuration';
+            options.configGroup = firstConfigIssue.configGroup;
+            options.configName =  firstConfigIssue.configName;
+          }
+        }
+
+        $scope.$emit('onRemoveNodeSelection', options);
+      },
+
+      /**
+       * Callback function to delete stage/stream
+       */
+      deleteSelected: function() {
+        var state = $scope.state,
+          selectedNode = state.selectedNode,
+          selectedEdge = state.selectedEdge;
+
+        if(graph.isReadOnly) {
+          //Graph is read only
+          return;
+        }
+        if (selectedNode) {
+          var nodeIndex = graph.nodes.indexOf(selectedNode);
+
+          if(nodeIndex !== -1) {
+            graph.nodes.splice(nodeIndex, 1);
+
+            //Remove the input lanes in all stages having output lanes of delete node.
+            _.each(graph.edges, function(edge) {
+              if(edge.source === selectedNode) {
+                edge.target.inputLanes = _.filter(edge.target.inputLanes, function(inputLane) {
+                  return !_.contains(edge.source.outputLanes, inputLane);
+                });
+              }
+            });
+
+            graph.spliceLinksForNode(selectedNode);
+            state.selectedNode = null;
+            $scope.$emit('onRemoveNodeSelection', {
+              selectedObject: undefined,
+              type: pipelineConstant.PIPELINE
+            });
+            graph.updateGraph();
+          }
+        } else if (selectedEdge) {
+          var edgeIndex = graph.edges.indexOf(selectedEdge);
+          if(edgeIndex !== -1) {
+            //Update pipeline target input lanes.
+            selectedEdge.target.inputLanes = _.filter(selectedEdge.target.inputLanes, function(inputLane) {
+              return !_.contains(selectedEdge.source.outputLanes, inputLane);
+            });
+
+            graph.edges.splice(edgeIndex, 1);
+            state.selectedEdge = null;
+            $scope.$emit('onRemoveNodeSelection', {
+              selectedObject: undefined,
+              type: pipelineConstant.PIPELINE
+            });
+            graph.updateGraph();
+          }
+        }
+      },
+
+      /**
+       * Callback function for dupl
+       */
+      duplicateStage: function() {
+        $scope.$emit('onPasteNode', $scope.state.selectedNode);
+      }
+
+    });
+
     $scope.$on('addNode', function(event, stageInstance, edges, relativeX, relativeY) {
       graph.addNode(stageInstance, edges, relativeX, relativeY);
       $(graph.svg[0]).focus();
+    });
+
+    $scope.$on('deleteSelectionInGraph', function() {
+      $scope.deleteSelected();
     });
 
     $scope.$on('selectNode', function(event, stageInstance, moveToCenter) {
@@ -1370,17 +1356,17 @@ angular.module('pipelineGraphDirectives', ['underscore'])
           graph.moveNodeToVisibleArea(stageInstance);
         }
 
-        if(graph.state.selectedEdge) {
+        if($scope.state.selectedEdge) {
           graph.removeSelectFromEdge();
         }
 
         graph.selectNode(stageInstance);
       } else {
-        if (graph.state.selectedNode){
+        if ($scope.state.selectedNode){
           graph.removeSelectFromNode();
         }
 
-        if(graph.state.selectedEdge) {
+        if($scope.state.selectedEdge) {
           graph.removeSelectFromEdge();
         }
 
@@ -1390,7 +1376,7 @@ angular.module('pipelineGraphDirectives', ['underscore'])
 
     $scope.$on('selectEdge', function(event, edge) {
       graph.moveNodeToVisibleArea(edge.source);
-      if(graph.state.selectedNode) {
+      if($scope.state.selectedNode) {
         graph.removeSelectFromNode();
       }
       graph.selectEdge(edge);
@@ -1440,11 +1426,11 @@ angular.module('pipelineGraphDirectives', ['underscore'])
 
     $scope.$on('moveGraphToCenter', function() {
       if(graph) {
-        if (graph.state.selectedNode) {
+        if ($scope.state.selectedNode) {
           graph.removeSelectFromNode();
         }
 
-        if(graph.state.selectedEdge) {
+        if($scope.state.selectedEdge) {
           graph.removeSelectFromEdge();
         }
 

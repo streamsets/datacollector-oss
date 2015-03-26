@@ -197,6 +197,30 @@ angular
       },
 
       /**
+       * Delete Selected Stage Instance/Stream
+       */
+      deleteSelection: function() {
+        $rootScope.$broadcast('deleteSelectionInGraph');
+      },
+
+      /**
+       * Duplicate Stage
+       */
+      duplicateStage: function() {
+        if($scope.selectedType === pipelineConstant.STAGE_INSTANCE) {
+          $scope.$emit('onPasteNode', $scope.selectedObject);
+        }
+      },
+
+      /**
+       * Auto arrange stages
+       */
+      autoArrange: function() {
+        pipelineService.autoArrange($scope.pipelineConfig);
+        $scope.refreshGraph();
+      },
+
+      /**
        * Delete Pipeline Configuration
        */
       deletePipelineConfig: function(pipelineInfo, $event) {

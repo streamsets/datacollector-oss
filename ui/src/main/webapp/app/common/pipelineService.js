@@ -660,6 +660,58 @@ angular.module('dataCollectorApp.common')
       });
     };
 
+
+    /**
+     * Auto Arrange the stages in the pipeline config
+     *
+     * @param pipelineConfig
+     */
+    this.autoArrange = function(pipelineConfig) {
+      var xPos = 60,
+        yPos = 50,
+        stages = pipelineConfig.stages,
+        laneYPos = {},
+        laneXPos = {};
+
+      angular.forEach(stages, function(stage) {
+        var y = stage.inputLanes.length ? laneYPos[stage.inputLanes[0]]: yPos,
+          x = stage.inputLanes.length ? laneXPos[stage.inputLanes[0]] + 220 : xPos;
+
+
+        if(!y) {
+          y = yPos;
+        }
+
+        if(stage.outputLanes.length > 1) {
+
+          angular.forEach(stage.outputLanes, function(outputLane, index) {
+            laneYPos[outputLane] = y - 10 + (130 * index);
+            laneXPos[outputLane] = x;
+          });
+
+          if(y === yPos) {
+            y += 30 * stage.outputLanes.length;
+          }
+
+        } else {
+
+          if(stage.outputLanes.length) {
+            laneYPos[stage.outputLanes[0]] = y;
+            laneXPos[stage.outputLanes[0]] = x;
+          }
+
+          if(stage.inputLanes.length > 1 && y === yPos) {
+            y += 130;
+          }
+        }
+
+        stage.uiInfo.xPos = x;
+        stage.uiInfo.yPos = y;
+
+        xPos = x + 220;
+      });
+    };
+
     $translate([
       //Gauge
       'metrics.CURRENT_BATCH_AGE',
