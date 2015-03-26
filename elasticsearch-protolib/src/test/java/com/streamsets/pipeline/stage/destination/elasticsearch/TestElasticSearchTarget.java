@@ -17,10 +17,7 @@ import com.streamsets.pipeline.sdk.RecordCreator;
 import com.streamsets.pipeline.sdk.TargetRunner;
 import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.action.search.SearchType;
-import org.elasticsearch.client.Client;
 import org.elasticsearch.common.settings.ImmutableSettings;
-import org.elasticsearch.common.settings.Settings;
-import org.elasticsearch.common.transport.TransportAddress;
 import org.elasticsearch.node.Node;
 import org.elasticsearch.node.NodeBuilder;
 import org.elasticsearch.search.SearchHit;
@@ -40,7 +37,9 @@ import java.util.Set;
 import java.util.UUID;
 
 public class TestElasticSearchTarget {
+  private static String esName = UUID.randomUUID().toString();
   private static Node esServer;
+  private static int esPort;
 
   private static int getRandomPort() throws Exception {
     ServerSocket ss = new ServerSocket(0);
@@ -52,11 +51,15 @@ public class TestElasticSearchTarget {
   @BeforeClass
   public static void setUp() throws Exception {
     File esDir = new File("target", UUID.randomUUID().toString());
+    esPort = getRandomPort();
     Assert.assertTrue(esDir.mkdirs());
     ImmutableSettings.Builder settings = ImmutableSettings.builder();
-    settings.put("transport.tcp.port", getRandomPort());
-    settings.put("transport.http.port", getRandomPort());
+    settings.put("cluster.name", esName);
+    settings.put("http.enabled", false);
+    settings.put("transport.tcp.port", esPort);
+    settings.put("path.conf", esDir.getAbsolutePath());
     settings.put("path.data", esDir.getAbsolutePath());
+    settings.put("path.logs", esDir.getAbsolutePath());
     esServer = NodeBuilder.nodeBuilder().settings(settings.build()).build();
     esServer.start();
   }
@@ -72,19 +75,6 @@ public class TestElasticSearchTarget {
   // this is needed in embedded mode.
   private static void prepareElasticSearchServerForQueries() {
     esServer.client().admin().indices().prepareRefresh().execute().actionGet();
-  }
-
-  public class ForTestElasticSearchTarget extends ElasticSearchTarget {
-    public ForTestElasticSearchTarget(String clusterName, List<String> uris, Map<String, String> configs,
-        String indexTemplate,
-        String typeTemplate, String docIdTemplate) {
-      super(clusterName, uris, configs, indexTemplate, typeTemplate, docIdTemplate);
-    }
-
-    @Override
-    protected Client getElasticClient(Settings settings, TransportAddress[] addresses) {
-      return esServer.client();
-    }
   }
 
   @Test
@@ -113,9 +103,10 @@ public class TestElasticSearchTarget {
   }
 
   private Target createTarget() {
-    return new ForTestElasticSearchTarget("elasticsearch", ImmutableList.of("foo:123"), Collections.EMPTY_MAP,
-                                          "${record:value('/index')}", "${record:value('/type')}", "");
+    return new ElasticSearchTarget(esName, ImmutableList.of("127.0.0.1:" + esPort), Collections.EMPTY_MAP,
+                                   "${record:value('/index')}", "${record:value('/type')}", "");
   }
+
   @Test
   public void testWriteRecords() throws Exception {
     Target target = createTarget();

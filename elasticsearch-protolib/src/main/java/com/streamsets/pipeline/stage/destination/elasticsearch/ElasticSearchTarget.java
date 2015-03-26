@@ -158,7 +158,7 @@ public class ElasticSearchTarget extends BaseTarget {
   }
 
   protected Client getElasticClient(Settings settings, TransportAddress[] addresses) {
-    return new TransportClient(settings).addTransportAddresses(addresses);
+    return new TransportClient(settings, false).addTransportAddresses(addresses);
   }
 
   @Override
@@ -236,7 +236,7 @@ public class ElasticSearchTarget extends BaseTarget {
           case STOP_PIPELINE:
             String msg = bulkResponse.buildFailureMessage();
             if (msg != null && msg.length() > 100) {
-              msg = msg.substring(0, 100);
+              msg = msg.substring(0, 100) + " ...";
             }
             throw new StageException(Errors.ELASTICSEARCH_12, msg);
           default:
