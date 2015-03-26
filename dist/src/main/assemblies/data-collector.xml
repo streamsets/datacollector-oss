@@ -127,12 +127,6 @@
       <outputDirectory>/docs/api</outputDirectory>
     </fileSet>
 
-    <!-- basic-lib -->
-    <fileSet>
-      <directory>${basedir}/../basic-lib/target/streamsets-libs/</directory>
-      <outputDirectory>/streamsets-libs/</outputDirectory>
-    </fileSet>
-
     <!-- Create an empty streamsets-libs -->
     <fileSet>
       <directory>${basedir}/src/main/emptydir</directory>
@@ -145,10 +139,15 @@
       <outputDirectory>/user-libs</outputDirectory>
     </fileSet>
 
-    <!-- dev-lib -->
-    <!-- only picked up if dev profile is enabled -->
+    <!-- basic-lib -->
     <fileSet>
-      <directory>${dev-lib.dist-dir}</directory>
+      <directory>${basedir}/../basic-lib/target/streamsets-libs/</directory>
+      <outputDirectory>/streamsets-libs/</outputDirectory>
+    </fileSet>
+
+    <!-- dev-lib -->
+    <fileSet>
+      <directory>${basedir}/../dev-lib/target/user-libs/</directory>
       <outputDirectory>/user-libs/</outputDirectory>
     </fileSet>
 

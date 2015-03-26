@@ -22,11 +22,9 @@
   <packaging>jar</packaging>
 
   <properties>
-    <!-- trick to avoid pulling files from 'ui', 'docs' & 'dummy-lib' if the profile is not active -->
+    <!-- trick to avoid pulling files from 'ui' & 'docs' if their profiles are not active -->
     <ui.dist-dir>${basedir}/src/main/emptydir</ui.dist-dir>
     <docs.dist-dir>${basedir}/src/main/emptydir</docs.dist-dir>
-    <!-- trick to avoid pulling dev-lib files if the 'release' profile is active -->
-    <dev.dist-dir>${basedir}/src/main/emptydir</dev.dist-dir>
   </properties>
 
   <dependencies>
@@ -44,6 +42,11 @@
       <groupId>com.streamsets</groupId>
       <artifactId>streamsets-datacollector-bootstrap</artifactId>
       <scope>compile</scope>
+    </dependency>
+    <dependency>
+      <groupId>com.streamsets</groupId>
+      <artifactId>streamsets-datacollector-dev-lib</artifactId>
+      <scope>provided</scope>
     </dependency>
     <dependency>
       <groupId>com.streamsets</groupId>
@@ -157,26 +160,6 @@
           <groupId>com.streamsets</groupId>
           <artifactId>streamsets-datacollector-elasticsearch_1_4_4-lib</artifactId>
           <scope>provided</scope>
-        </dependency>
-      </dependencies>
-    </profile>
-    <profile>
-      <id>dev</id>
-      <activation>
-        <activeByDefault>false</activeByDefault>
-        <property>
-          <name>!release</name>
-        </property>
-      </activation>
-      <properties>
-        <!-- trick to avoid pulling dev-lib files if the 'release' profile is active -->
-        <dev-lib.dist-dir>${basedir}/../dev-lib/target/user-libs</dev-lib.dist-dir>
-      </properties>
-      <dependencies>
-        <dependency>
-          <groupId>com.streamsets</groupId>
-          <artifactId>streamsets-datacollector-dev-lib</artifactId>
-          <scope>compile</scope>
         </dependency>
       </dependencies>
     </profile>

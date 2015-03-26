@@ -65,6 +65,8 @@
 
     <module>commonlib</module>
 
+    <module>dev-lib</module>
+
     <module>basic-lib</module>
 
     <module>hdfs-protolib</module>
@@ -164,18 +166,6 @@
       </activation>
       <modules>
         <module>dist</module>
-      </modules>
-    </profile>
-    <profile>
-      <id>dev</id>
-      <activation>
-        <activeByDefault>false</activeByDefault>
-        <property>
-          <name>!release</name>
-        </property>
-      </activation>
-      <modules>
-        <module>dev-lib</module>
       </modules>
     </profile>
     <profile>

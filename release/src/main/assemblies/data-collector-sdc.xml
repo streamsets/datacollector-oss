@@ -25,6 +25,7 @@
       <outputDirectory>/</outputDirectory>
       <excludes>
         <exclude>streamsets-datacollector-${project.version}/streamsets-libs/**</exclude>
+        <exclude>streamsets-datacollector-${project.version}/user-libs/**</exclude>
       </excludes>
     </fileSet>
     <fileSet>
@@ -33,6 +34,11 @@
       <includes>
         <include>streamsets-datacollector-${project.version}/streamsets-libs/streamsets-datacollector-basic-lib/**</include>
       </includes>
+    </fileSet>
+    <!-- Create an empty user-libs -->
+    <fileSet>
+      <directory>${basedir}/../dist/src/main/emptydir</directory>
+      <outputDirectory>streamsets-datacollector-${project.version}/user-libs</outputDirectory>
     </fileSet>
   </fileSets>
 

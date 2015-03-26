@@ -1,4 +1,4 @@
-StreamSets - Data Collector Development Environment
+StreamSets - Data Collector Dev  elopment Environment
 
 -------
 
