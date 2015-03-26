@@ -185,7 +185,7 @@
          tooltip-placement="bottom"
          tooltip="{{'global.form.autoArrange' | translate}}"
          tooltip-popup-delay="500"
-         ng-hide="previewMode || pipelineConfig.stages.length <= 1"
+         ng-hide="previewMode || snapshotMode || pipelineConfig.stages.length <= 1"
          ng-if="isAuthorized([userRoles.admin, userRoles.creator, userRoles.manager])"
          ng-click="autoArrange()">
         <span class="fa fa-random fa-14x"></span>
