@@ -32,8 +32,8 @@
                 </info>
             </step>
             <step>
-                <cmd>To import the response to the sdc-keystore.jks file, use the following command
-                    and enter the keystore password when requested:</cmd>
+                <cmd>To import the response to the <filepath>sdc-keystore.jks</filepath> file, use
+                    the following command and enter the keystore password when requested:</cmd>
                 <info>
                     <codeblock>$ keytool -v -import -trustcacerts -keystore sdc-keystore.jks -file certificate-reply-file -alias sdc</codeblock>
                 </info>
@@ -50,7 +50,8 @@
                         <filepath>&lt;SDCinstalldir>/etc/sdc-keystore-password.txt</filepath>.</cmd>
             </step>
             <step>
-                <cmd>Save a copy of the sdc-keystore.jks and sdc-keystore-password.txt files.</cmd>
+                <cmd>Save a copy of the <filepath>sdc-keystore.jks</filepath> and
+                        <filepath>sdc-keystore-password.txt</filepath> files.</cmd>
             </step>
         </steps>
     </taskbody>
