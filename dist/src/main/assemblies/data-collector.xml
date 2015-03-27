@@ -14,28 +14,27 @@
   <fileSets>
 
     <!-- bin -->
-    <!-- For now we are not exposing the SDC_HOME capabilities -->
     <fileSet>
       <directory>${basedir}/src/main</directory>
       <outputDirectory>/</outputDirectory>
       <includes>
-        <include>bin/sdc</include>
+        <include>bin/*</include>
       </includes>
-      <!--<excludes>-->
-        <!--<exclude>bin/_*</exclude>-->
-      <!--</excludes>-->
+      <excludes>
+        <exclude>bin/_*</exclude>
+      </excludes>
       <filtered>true</filtered>
       <fileMode>0755</fileMode>
     </fileSet>
-    <!--<fileSet>-->
-      <!--<directory>${basedir}/src/main</directory>-->
-      <!--<outputDirectory>/</outputDirectory>-->
-      <!--<includes>-->
-        <!--<include>bin/_*</include>-->
-      <!--</includes>-->
-      <!--<filtered>true</filtered>-->
-      <!--<fileMode>0644</fileMode>-->
-    <!--</fileSet>-->
+    <fileSet>
+      <directory>${basedir}/src/main</directory>
+      <outputDirectory>/</outputDirectory>
+      <includes>
+        <include>bin/_*</include>
+      </includes>
+      <filtered>true</filtered>
+      <fileMode>0644</fileMode>
+    </fileSet>
 
     <!-- initd -->
     <fileSet>
