@@ -6,10 +6,10 @@
     stage in a pipeline.</shortdesc>
  <conbody>
   <p><indexterm>origins<indexterm>overview</indexterm></indexterm>You can use the following types of
-      origins in a pipeline: <ul id="ul_mxz_jxm_jq">
-        <li>Directory - Reads files from a directory.</li>
+      origins in a pipeline: <ol id="ul_mxz_jxm_jq">
+        <li>Directory - Reads files from a directory. </li>
         <li>File Tail - Reads data as it is written to a text file. </li>
         <li>Kafka Consumer - Reads data from Kafka.</li>
-      </ul></p>
+      </ol></p>
  </conbody>
 </concept>

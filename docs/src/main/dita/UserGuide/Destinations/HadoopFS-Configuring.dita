@@ -243,11 +243,13 @@
                             <tbody>
                                 <row>
                                     <entry>Text Field Path</entry>
-                                    <entry/>
+                                    <entry>Field to write text data to Hadoop.</entry>
                                 </row>
                                 <row>
-                                    <entry/>
-                                    <entry/>
+                                    <entry>Empty Line if No Text</entry>
+                                    <entry>
+                                        <draft-comment author="Loretta">What's this?</draft-comment>
+                                    </entry>
                                 </row>
                             </tbody>
                         </tgroup>
@@ -279,7 +281,10 @@
                                 </row>
                                 <row>
                                     <entry>Header Line</entry>
-                                    <entry/>
+                                    <entry>
+                                        <draft-comment author="Loretta">get back to
+                                            this.</draft-comment>
+                                    </entry>
                                 </row>
                                 <row>
                                     <entry>Field Mapping</entry>

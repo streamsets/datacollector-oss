@@ -13,20 +13,12 @@
   <p>
    <dl>
     <dlentry>
-     <dt>${error:stage()}</dt>
-     <dd>Returns the instance name of the stage that sent the record to error. </dd>
-     <dd>You can verify the instance name on the General tab of the stage. </dd>
-    </dlentry>
-    <dlentry>
-     <dt>${error:code()}</dt>
+     <dt>${record:errorCode()}</dt>
      <dd>Returns the error code for the error record.</dd>
+     <dd>Return type: String.</dd>
     </dlentry>
     <dlentry>
-     <dt>${error:message()}</dt>
-     <dd>Returns the error message for the error record.</dd>
-    </dlentry>
-    <dlentry>
-     <dt>${error:collectorId()}</dt>
+     <dt>${record:errorCollectorId()}</dt>
      <dd>Returns the ID of the <ph
        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> that sent
       the record to error. </dd>
@@ -34,14 +26,28 @@
       the <ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> ID
       in the <ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
       Configuration page.</dd>
+     <dd>Return type: String.</dd>
     </dlentry>
     <dlentry>
-     <dt>${error:pipeline()}</dt>
+     <dt>${record:errorMessage()}</dt>
+     <dd>Returns the error message for the error record.</dd>
+     <dd>Return type: String.</dd>
+    </dlentry>
+    <dlentry>
+     <dt>${record:errorPipeline()}</dt>
      <dd>The name of pipeline that sent the record to error.</dd>
+     <dd>Return type: String.</dd>
     </dlentry>
     <dlentry>
-     <dt>${error:time()}</dt>
-     <dd> The time the record was sent to error.</dd>
+     <dt>${record:errorStage()}</dt>
+     <dd>Returns the instance name of the stage that sent the record to error. </dd>
+     <dd>You can verify the instance name on the General tab of the stage. </dd>
+     <dd>Return type: String.</dd>
+    </dlentry>
+    <dlentry>
+     <dt>${record:errorTime()}</dt>
+     <dd>The time the record was sent to error.</dd>
+     <dd>Return type: Long.</dd>
     </dlentry>
    </dl>
   </p>

@@ -5,9 +5,7 @@
     <shortdesc>You can use the Java <codeph>keytool</codeph> command to request a certificate from a
         certifying authority. </shortdesc>
     <taskbody>
-        <context>
-            <p></p>
-        </context>
+        <context/>
         <steps id="steps_m1q_n1f_lr">
             <step>
                 <cmd>From the command line, navigate to the following directory:

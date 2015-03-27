@@ -4,13 +4,20 @@
     <title>Configuring Users</title>
     <shortdesc>The <ph
             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
-        includes several default logins. You can customize You can create additional Data Collector
-        users for increased security.<draft-comment author="Loretta">add info about editing existing
-            users or is it the same? </draft-comment></shortdesc>
+        includes several default users. You can customize the default users or create additional
+        Data Collector users for increased security.<draft-comment author="Loretta">add info from
+            Tucu when he updates the digest authentication file.  Test filepath:
+                <filepath>c:/filepath/filename.txt</filepath>. Test codeph
+            <codeph/>.</draft-comment></shortdesc>
     <taskbody>
         <context>
-            <p><indexterm>users<indexterm>creating</indexterm></indexterm>You can use an md5 program
-                to encrypt login information.</p>
+            <p><indexterm>users<indexterm>creating</indexterm></indexterm>To encrypt login
+                information, you can use an md5 program such as md5 on Mac OS X or md5sum on Linux. </p>
+            <p>For Form and Basic authentication, you can encrypt the password. For example:
+                <codeblock>echo -n "&lt;password>" | md5</codeblock></p>
+            <p>For Digest authentication, you can hash the combination of
+                &lt;username>:&lt;realm>:&lt;password>. For example:
+                <codeblock>echo -n "&lt;username>:&lt;realm>:&lt;password>" | md5</codeblock></p>
         </context>
         <steps id="steps_ody_3q4_1r">
             <step>
@@ -19,30 +26,21 @@
                     /etc/sdc/local-realm.properties.</info>
             </step>
             <step>
-                <cmd>For each new user, add a line using the following format:</cmd>
+                <cmd>For each new user, add a user definition using the following format:</cmd>
                 <info>
                     <codeblock>&lt;username>: &lt;password>, user, &lt;role> [, &lt;additional role>, &lt;additional role>...]</codeblock>
                 </info>
-                <info><note>Be sure to include "user" in the user account description.</note>Assign
-                    one or more roles for each user. </info>
+                <info>
+                    <note>Assign one or more roles for each user. Be sure to include "user" in every
+                        user definition.</note>
+                </info>
             </step>
             <step>
                 <cmd>To use a password that is not stored in plain text, use the following format
                     for the password: </cmd>
                 <info>
-                    <codeblock>MD5:&lt;password-hash></codeblock>
+                    <codeblock>MD5:&lt;hashed password></codeblock>
                 </info>
-            </step>
-            <step>
-                <cmd>You can generate the hash by running an md5 program, such as md5 on Mac OS X or
-                    md5sum on Linux program. </cmd>
-                <info>For example: <codeblock>echo -n "&lt;password>" | md5</codeblock></info>
-            </step>
-            <step>
-                <cmd>To use digest authentication, hash the combination of
-                    &lt;username>:&lt;realm>:&lt;password>. </cmd>
-                <info>For example:
-                    <codeblock>echo -n "&lt;username>:&lt;realm>:&lt;password>" | md5</codeblock></info>
             </step>
             <step>
                 <cmd>To make the new users available, restart the <ph

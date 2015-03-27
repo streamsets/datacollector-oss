@@ -3,16 +3,44 @@
 <concept id="concept_p1z_ggv_1r">
  <title>Record Functions</title>
  <shortdesc>Use record functions to get information about a record, such as the data type of a field
-  or the stage instance name for an error record. </shortdesc>
+  or the stage instance name for an error record. <draft-comment author="Loretta">are these just for
+   error records or for any record? Update everything in here if
+  necessary</draft-comment></shortdesc>
  <conbody>
   <p><indexterm>functions<indexterm>record functions</indexterm></indexterm><indexterm>record
      functions<indexterm>in the expression language</indexterm></indexterm>The expression language
    provides the following record functions:</p>
   <dl>
    <dlentry>
-    <dt>${record:type('&lt;field-path>')}</dt>
-    <dd>Returns the data type of a field. </dd>
-    <dd>Possible return values are: <ul id="ul_lmr_2hv_1r">
+    <dt>${record:creator()}</dt>
+    <dd>Returns the instance name of the stage that created the record, typically an origin stage.
+     Data is stored in the stageCreator field of an error record. </dd>
+    <dd>Use to process error records.</dd>
+    <dd>Return type: String.</dd>
+   </dlentry>
+   <dlentry>
+    <dt>${record:exists('&lt;field path>')}</dt>
+    <dd>Determines if the specified field is in a record. When the field is not in the record,
+     returns 0. When the field is in the record, returns 1. </dd>
+    <dd>Return type: Boolean.</dd>
+   </dlentry>
+   <dlentry>
+    <dt>${record:id()}</dt>
+    <dd>Returns the ID of the stage that created the record, typically an origin stage. Data is
+     stored in the sourceId field of an error record. </dd>
+    <dd>Return type: String.</dd>
+   </dlentry>
+   <dlentry>
+    <dt>${record:path()}</dt>
+    <dd>Returns the stages in the pipeline that processed a record. Data is stored in the stagesPath
+     field of an error record. The field path uses the following
+     format:<codeblock>&lt;origin instance name>:&lt;next stage instance name>:&lt;next stage instance name>:...</codeblock></dd>
+    <dd>Use to process error records. </dd>
+    <dd>Return type: String.</dd>
+   </dlentry>
+   <dlentry>
+    <dt>${record:type('&lt;field path>')}</dt>
+    <dd>Checks the data type of a field. Possible return values are: <ul id="ul_lmr_2hv_1r">
       <li>Boolean</li>
       <li>Char</li>
       <li>Byte</li>
@@ -29,28 +57,13 @@
       <li>Map</li>
       <li>List</li>
      </ul></dd>
+    <dd>Return type: String. <draft-comment author="Loretta">is this right? Said
+      "type".</draft-comment></dd>
    </dlentry>
    <dlentry>
-    <dt>${record:value('&lt;field-path>')}</dt>
+    <dt>${record:value('&lt;field path>')}</dt>
     <dd>Returns the value of the field in the appropriate data type.</dd>
-   </dlentry>
-   <dlentry>
-    <dt>${record:id()}</dt>
-    <dd>Returns the ID of the stage that created the record, typically an origin stage. Data is
-     stored in the sourceId field of an error record. </dd>
-    <dd>Use to process error records. </dd>
-   </dlentry><dlentry>
-    <dt>${record:creator()}</dt>
-    <dd>Returns the instance name of the stage that created the record, typically an origin stage.
-     Data is stored in the stageCreator field of an error record. </dd>
-    <dd>Use to process error records.</dd>
-   </dlentry>
-   <dlentry>
-    <dt>${record:path()}</dt>
-    <dd>Returns the stages in the pipeline that processed a record. Data is stored in the stagesPath
-     field of an error record. The field path uses the following
-     format:<codeblock>&lt;origin instance name>:&lt;next stage instance name>:&lt;next stage instance name>:...</codeblock></dd>
-    <dd>Use to process error records. </dd>
+    <dd>Return type: Variable, based on the field value.</dd>
    </dlentry>
   </dl>
   <p> </p>

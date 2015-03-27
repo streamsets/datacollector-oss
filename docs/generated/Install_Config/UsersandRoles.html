@@ -89,12 +89,21 @@
     
     <div class="body taskbody"><p class="shortdesc">The <span class="ph">Data
                   Collector</span>
-        includes several default logins. You can customize You can create additional Data Collector
-        users for increased security.</p>
+        includes several default users. You can customize the default users or create additional
+        Data Collector users for increased security.</p>
 
         <div class="section context">
-            <p class="p">You can use an md5 program
-                to encrypt login information.</p>
+            <p class="p">To encrypt login
+                information, you can use an md5 program such as md5 on Mac OS X or md5sum on Linux. </p>
+
+            <div class="p">For Form and Basic authentication, you can encrypt the password. For example:
+                <pre class="pre codeblock">echo -n "&lt;password&gt;" | md5</pre>
+</div>
+
+            <div class="p">For Digest authentication, you can hash the combination of
+                &lt;username&gt;:&lt;realm&gt;:&lt;password&gt;. For example:
+                <pre class="pre codeblock">echo -n "&lt;username&gt;:&lt;realm&gt;:&lt;password&gt;" | md5</pre>
+</div>
 
         </div>
 
@@ -104,35 +113,24 @@
                     /etc/sdc/local-realm.properties.</div>
             </li>
 <li class="li step stepexpand">
-                <span class="ph cmd">For each new user, add a line using the following format:</span>
+                <span class="ph cmd">For each new user, add a user definition using the following format:</span>
                 <div class="itemgroup info">
                     <pre class="pre codeblock">&lt;username&gt;: &lt;password&gt;, user, &lt;role&gt; [, &lt;additional role&gt;, &lt;additional role&gt;...]</pre>
 
                 </div>
-                <div class="itemgroup info"><div class="note note"><span class="notetitle">Note:</span> Be sure to include "user" in the user account description.</div>
-Assign
-                    one or more roles for each user. </div>
+                <div class="itemgroup info">
+                    <div class="note note"><span class="notetitle">Note:</span> Assign one or more roles for each user. Be sure to include "user" in every
+                        user definition.</div>
+
+                </div>
             </li>
 <li class="li step stepexpand">
                 <span class="ph cmd">To use a password that is not stored in plain text, use the following format
                     for the password: </span>
                 <div class="itemgroup info">
-                    <pre class="pre codeblock">MD5:&lt;password-hash&gt;</pre>
+                    <pre class="pre codeblock">MD5:&lt;hashed password&gt;</pre>
 
                 </div>
-            </li>
-<li class="li step stepexpand">
-                <span class="ph cmd">You can generate the hash by running an md5 program, such as md5 on Mac OS X or
-                    md5sum on Linux program. </span>
-                <div class="itemgroup info">For example: <pre class="pre codeblock">echo -n "&lt;password&gt;" | md5</pre>
-</div>
-            </li>
-<li class="li step stepexpand">
-                <span class="ph cmd">To use digest authentication, hash the combination of
-                    &lt;username&gt;:&lt;realm&gt;:&lt;password&gt;. </span>
-                <div class="itemgroup info">For example:
-                    <pre class="pre codeblock">echo -n "&lt;username&gt;:&lt;realm&gt;:&lt;password&gt;" | md5</pre>
-</div>
             </li>
 <li class="li step stepexpand">
                 <span class="ph cmd">To make the new users available, restart the <span class="ph">Data
