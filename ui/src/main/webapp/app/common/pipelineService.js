@@ -677,6 +677,9 @@ angular.module('dataCollectorApp.common')
         var y = stage.inputLanes.length ? laneYPos[stage.inputLanes[0]]: yPos,
           x = stage.inputLanes.length ? laneXPos[stage.inputLanes[0]] + 220 : xPos;
 
+        if(laneYPos[stage.inputLanes[0]]) {
+          laneYPos[stage.inputLanes[0]] += 150;
+        }
 
         if(!y) {
           y = yPos;

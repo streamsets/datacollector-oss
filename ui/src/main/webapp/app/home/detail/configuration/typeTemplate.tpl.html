@@ -123,11 +123,11 @@
     <div class="row map-list-type"
          ng-repeat="val in listValue = detailPaneConfig.configuration[configIndex].value track by $index">
 
-      <div class="col-md-1">
+      <div class="col-xs-1">
         <label class="lane-label">{{$index + 1}}</label>
       </div>
 
-      <div class="col-md-7">
+      <div class="col-xs-7">
         <input type="text" class="form-control input-sm"
                ng-required="true"
                name="{{configDefinition.name + $index}}"
@@ -135,7 +135,7 @@
                ng-model="listValue[$index]"/>
       </div>
 
-      <div class="col-md-4 btn-group" role="group" aria-label="Default button group"
+      <div class="col-xs-4 btn-group" role="group" aria-label="Default button group"
            ng-hide="isPipelineReadOnly || isPipelineRunning">
         <button type="button" class="btn btn-default btn-sm"
                 ng-click="removeFromList(detailPaneConfig, detailPaneConfig.configuration[configIndex].value, $index)">
@@ -168,7 +168,7 @@
   <div class="controls col-lg-7 col-md-8">
     <div class="row map-list-type" ng-repeat="mapObject in detailPaneConfig.configuration[configIndex].value track by $index">
 
-      <div class="col-xs-3">
+      <div class="col-xs-4">
         <input type="text" class="form-control input-sm"
                name="{{configDefinition.name + 'key' + $index}}"
                placeholder="{{'home.detailPane.configurationTab.enterKey' | translate}}"
@@ -188,7 +188,7 @@
                ng-model="mapObject.value"/>
       </div>
 
-      <div class="col-md-3 btn-group" role="group" aria-label="Default button group"
+      <div class="btn-group" role="group" aria-label="Default button group"
            ng-hide="isPipelineReadOnly || isPipelineRunning">
         <button type="button" class="btn btn-default btn-sm"
                 ng-click="removeFromMap(detailPaneConfig, detailPaneConfig.configuration[configIndex].value, mapObject, $index)">
@@ -281,10 +281,10 @@
 
 <script type="text/ng-template" id="lanePredicateMappingConfigurationTemplate">
   <div class="controls col-lg-9 col-md-9">
-    <div class="row map-list-type"
+    <div class="map-list-type"
          ng-repeat="lanePredicateMapping in detailPaneConfig.configuration[configIndex].value track by $index">
 
-      <div class="lane-number">
+      <div class="col-xs-1">
         <!--input type="text" readonly class="form-control input-sm"
                value="{{$index + 1}}"/-->
         <label class="lane-label">{{$index + 1}}</label>

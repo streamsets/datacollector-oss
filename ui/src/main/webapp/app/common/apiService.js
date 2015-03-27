@@ -422,11 +422,12 @@ angular.module('dataCollectorApp.common')
       /**
        * Capture Snapshot of running pipeline.
        *
+       * @param snapshotName
        * @param batchSize
        * @returns {*}
        */
-      captureSnapshot: function(batchSize) {
-        var url = apiBase + '/pipeline/snapshot?batchSize=' + batchSize ;
+      captureSnapshot: function(snapshotName, batchSize) {
+        var url = apiBase + '/pipeline/snapshot/snapshot1?batchSize=' + batchSize ;
         return $http({
           method: 'PUT',
           url: url
@@ -436,10 +437,11 @@ angular.module('dataCollectorApp.common')
       /**
        * Get Status of Snapshot.
        *
+       * @param snapshotName
        * @returns {*}
        */
-      getSnapshotStatus: function() {
-        var url = apiBase + '/pipeline/snapshot' ;
+      getSnapshotStatus: function(snapshotName) {
+        var url = apiBase + '/pipeline/snapshot/' + snapshotName;
         return $http({
           method: 'GET',
           url: url
@@ -449,11 +451,12 @@ angular.module('dataCollectorApp.common')
       /**
        * Get captured snapshot for given pipeline name.
        *
-       * @param name
+       * @param pipelineName
+       * @param snapshotName
        * @returns {*}
        */
-      getSnapshot: function(name) {
-        var url = apiBase + '/pipeline/snapshot/' + name ;
+      getSnapshot: function(pipelineName, snapshotName) {
+        var url = apiBase + '/pipeline/snapshot/' + pipelineName + '/' + snapshotName ;
         return $http({
           method: 'GET',
           url: url
@@ -463,11 +466,12 @@ angular.module('dataCollectorApp.common')
       /**
        * Delete captured snapshot for given pipeline name.
        *
-       * @param name
+       * @param pipelineName
+       * @param snapshotName
        * @returns {*}
        */
-      deleteSnapshot: function(name) {
-        var url = apiBase + '/pipeline/snapshot/' + name ;
+      deleteSnapshot: function(pipelineName, snapshotName) {
+        var url = apiBase + '/pipeline/snapshot/' + pipelineName + '/' + snapshotName ;
         return $http({
           method: 'DELETE',
           url: url

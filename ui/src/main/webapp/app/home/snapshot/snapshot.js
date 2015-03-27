@@ -91,7 +91,7 @@ angular
      * Check for Snapshot Status for every 1 seconds, once done open the snapshot view.
      *
      */
-    var checkForCaptureSnapshotStatus = function() {
+    var checkForCaptureSnapshotStatus = function(snapshotName) {
       captureSnapshotStatusTimer = $timeout(
         function() {
           //console.log( "Pipeline Metrics Timeout executed", Date.now() );
@@ -101,12 +101,12 @@ angular
 
       captureSnapshotStatusTimer.then(
         function() {
-          api.pipelineAgent.getSnapshotStatus()
+          api.pipelineAgent.getSnapshotStatus(snapshotName)
             .success(function(data) {
               if(data && data.snapshotInProgress === false) {
                 //console.log('Capturing Snapshot is completed.');
 
-                api.pipelineAgent.getSnapshot($scope.activeConfigInfo.name).
+                api.pipelineAgent.getSnapshot($scope.activeConfigInfo.name, snapshotName).
                   success(function(res) {
                     $scope.previewData = res;
 
@@ -126,7 +126,7 @@ angular
 
 
               } else {
-                checkForCaptureSnapshotStatus();
+                checkForCaptureSnapshotStatus(snapshotName);
               }
             })
             .error(function(data, status, headers, config) {
@@ -141,10 +141,11 @@ angular
 
 
     var snapshotPipeline = function() {
+      var snapshotName = 'Snapshot1';
       $scope.showLoading = true;
-      api.pipelineAgent.captureSnapshot(snapshotBatchSize).
+      api.pipelineAgent.captureSnapshot(snapshotName, snapshotBatchSize).
         then(function() {
-          checkForCaptureSnapshotStatus();
+          checkForCaptureSnapshotStatus(snapshotName);
         });
     };
 
