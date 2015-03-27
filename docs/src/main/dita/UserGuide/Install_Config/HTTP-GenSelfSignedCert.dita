@@ -8,9 +8,14 @@
         <context/>
         <steps id="steps_zzk_c52_lr">
             <step>
-                <cmd>To use the existing <filepath>sdc-keystore.jks</filepath> file, navigate to the
-                    following directory from the command line:
-                        <filepath>&lt;SDCinstalldir>/etc</filepath>.</cmd>
+                <cmd>From the command line, navigate to the following directory: </cmd>
+                <info>
+                    <codeblock>&lt;SDCinstalldir>/etc</codeblock>
+                </info>
+            </step>
+            <step>
+                <cmd>Optionally, save a backup of the <filepath>sdc-keystore.jks</filepath> file,
+                    and then delete the file. </cmd>
             </step>
             <step>
                 <cmd>Enter the following command:</cmd>
@@ -47,16 +52,18 @@
             <step>
                 <cmd>When keytool requests verification that the information is correct, enter yes
                     if it is correct.</cmd>
-                <stepresult>The tool generates a self-signed certificate in the form of the
-                        <filepath>sdc-keystore.jks</filepath> file. </stepresult>
+                <stepresult>The tool generates a <filepath>sdc-keystore.jks</filepath> file with the
+                    signed certificate. </stepresult>
             </step>
             <step>
-                <cmd>Enter the keystore password in the keystore password file:
-                        <filepath>&lt;SDCinstalldir>/etc/sdc-keystore-password.txt</filepath>.</cmd>
+                <cmd>Enter the keystore password in the keystore password file:</cmd>
+                <info>
+                    <codeblock>&lt;SDCinstalldir>/etc/sdc-keystore-password.txt</codeblock>
+                </info>
             </step>
             <step>
                 <cmd>Save a copy of the <filepath>sdc-keystore.jks</filepath> and
-                        <filepath>sdc-keystore-password.txt </filepath>files.</cmd>
+                        <filepath>sdc-keystore-password.txt</filepath> files.</cmd>
             </step>
         </steps>
     </taskbody>

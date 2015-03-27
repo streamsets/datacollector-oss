@@ -8,8 +8,10 @@
         <context/>
         <steps id="steps_m1q_n1f_lr">
             <step>
-                <cmd>From the command line, navigate to the following directory:
-                        <filepath>&lt;SDCinstalldir>/etc</filepath>.</cmd>
+                <cmd>From the command line, navigate to the following directory: </cmd>
+                <info>
+                    <codeblock>&lt;SDCinstalldir>/etc</codeblock>
+                </info>
             </step>
             <step>
                 <cmd>Enter the following command:</cmd>
@@ -46,8 +48,10 @@
                 </info>
             </step>
             <step>
-                <cmd>Enter the keystore password in the keystore password file:
-                        <filepath>&lt;SDCinstalldir>/etc/sdc-keystore-password.txt</filepath>.</cmd>
+                <cmd>Enter the keystore password in the keystore password file: </cmd>
+                <info>
+                    <codeblock>&lt;SDCinstalldir>/etc/sdc-keystore-password.txt</codeblock>
+                </info>
             </step>
             <step>
                 <cmd>Save a copy of the <filepath>sdc-keystore.jks</filepath> and
