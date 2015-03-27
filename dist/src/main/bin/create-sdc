@@ -100,6 +100,19 @@ run mkdir "${SDC_HOME}/etc"
 run mkdir "${SDC_HOME}/libexec"
 run sed -e "s|#SDC_HOME#|${SDC_HOME}|" -e "s|#SDC_DIST#|${SDC_DIST}|" \
     < "${SDC_DIST}/bin/_sdc_prototype" > "${SDC_HOME}/bin/sdc"
+
+run echo "#!/bin/bash" > "${SDC_HOME}/bin/sdc"
+run echo "#" >> "${SDC_HOME}/bin/sdc"
+run echo "# (c) 2014 StreamSets, Inc. All rights reserved. May not" >> "${SDC_HOME}/bin/sdc"
+run echo "# be copied, modified, or distributed in whole or part without" >> "${SDC_HOME}/bin/sdc"
+run echo "# written consent of StreamSets, Inc." >> "${SDC_HOME}/bin/sdc"
+run echo "#" >> "${SDC_HOME}/bin/sdc"
+run echo "" >> "${SDC_HOME}/bin/sdc"
+run echo "export SDC_HOME=${SDC_HOME}" >> "${SDC_HOME}/bin/sdc"
+run echo "exec ${SDC_DIST}/bin/sdc" >> "${SDC_HOME}/bin/sdc"
+run echo "" >> "${SDC_HOME}/bin/sdc"
+
+
 run chmod a+x "${SDC_HOME}/bin/sdc"
 run cp -r -p "${SDC_DIST}/etc/"* "${SDC_HOME}/etc/"
 run cp -r -p "${SDC_DIST}/libexec/"* "${SDC_HOME}/libexec/"
