@@ -91,9 +91,9 @@ public class TestRestApiAuthorization {
     Writer writer = new FileWriter(new File(System.getProperty(RuntimeInfo.CONFIG_DIR), "sdc.properties"));
     conf.save(writer);
     writer.close();
-    File realmFile = new File(System.getProperty(RuntimeInfo.CONFIG_DIR), "local-realm.properties");
+    File realmFile = new File(System.getProperty(RuntimeInfo.CONFIG_DIR), "basic-realm.properties");
     writer = new FileWriter(realmFile);
-    IOUtils.copy(new InputStreamReader(getClass().getClassLoader().getResourceAsStream("local-realm.properties")),
+    IOUtils.copy(new InputStreamReader(getClass().getClassLoader().getResourceAsStream("basic-realm.properties")),
                  writer);
     writer.close();
     Files.setPosixFilePermissions(realmFile.toPath(), WebServerTask.OWNER_PERMISSIONS);

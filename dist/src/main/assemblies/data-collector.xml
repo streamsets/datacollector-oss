@@ -63,7 +63,7 @@
       <outputDirectory>/etc</outputDirectory>
       <excludes>
         <exclude>*-password.txt</exclude>
-        <exclude>local-realm.properties</exclude>
+        <exclude>*-realm.properties</exclude>
         <exclude>sdc-keystore.jks</exclude>
       </excludes>
     </fileSet>
@@ -73,7 +73,7 @@
       <outputDirectory>/etc</outputDirectory>
       <includes>
         <include>*-password.txt</include>
-        <include>local-realm.properties</include>
+        <include>*-realm.properties</include>
         <include>sdc-keystore.jks</include>
       </includes>
       <fileMode>0600</fileMode>

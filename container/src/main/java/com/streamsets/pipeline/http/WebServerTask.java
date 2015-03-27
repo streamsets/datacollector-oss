@@ -67,7 +67,7 @@ public class WebServerTask extends AbstractTask {
   public static final String AUTHENTICATION_DEFAULT = "form";
 
   private static final String DIGEST_REALM_KEY = "http.digest.realm";
-  private static final String DIGEST_REALM_DEFAULT = "local-realm";
+  private static final String REALM_POSIX_DEFAULT = "-realm";
 
   private static final String JSESSIONID_COOKIE = "JSESSIONID_";
 
@@ -140,7 +140,7 @@ public class WebServerTask extends AbstractTask {
         break;
       case "digest":
       case "basic":
-        appHandler.setSecurityHandler(configureDigest(server, auth));
+        appHandler.setSecurityHandler(configureDigestBasic(server, auth));
         break;
       case "form":
         appHandler.setSecurityHandler(configureForm(server));
@@ -176,8 +176,8 @@ public class WebServerTask extends AbstractTask {
     }
   }
 
-  private SecurityHandler configureDigest(Server server, String mode) {
-    String realm = conf.get(DIGEST_REALM_KEY, DIGEST_REALM_DEFAULT);
+  private SecurityHandler configureDigestBasic(Server server, String mode) {
+    String realm = conf.get(DIGEST_REALM_KEY, mode + REALM_POSIX_DEFAULT);
     File realmFile = new File(runtimeInfo.getConfigDir(), realm + ".properties").getAbsoluteFile();
     validateRealmFile(realmFile);
     LoginService loginService = new HashLoginService(realm, realmFile.getAbsolutePath());
@@ -205,7 +205,7 @@ public class WebServerTask extends AbstractTask {
   }
 
   private SecurityHandler configureForm(Server server) {
-    String realm = conf.get(DIGEST_REALM_KEY, DIGEST_REALM_DEFAULT);
+    String realm = conf.get(DIGEST_REALM_KEY, "form" + REALM_POSIX_DEFAULT);
     File realmFile = new File(runtimeInfo.getConfigDir(), realm + ".properties").getAbsoluteFile();
     validateRealmFile(realmFile);
 
