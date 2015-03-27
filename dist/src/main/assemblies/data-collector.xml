@@ -20,20 +20,8 @@
       <includes>
         <include>bin/*</include>
       </includes>
-      <excludes>
-        <exclude>bin/_*</exclude>
-      </excludes>
       <filtered>true</filtered>
       <fileMode>0755</fileMode>
-    </fileSet>
-    <fileSet>
-      <directory>${basedir}/src/main</directory>
-      <outputDirectory>/</outputDirectory>
-      <includes>
-        <include>bin/_*</include>
-      </includes>
-      <filtered>true</filtered>
-      <fileMode>0644</fileMode>
     </fileSet>
 
     <!-- initd -->

@@ -29,9 +29,11 @@ public class TestJavaScriptProcessor {
                                               "for (var i = 0; i < records.length; i++){\n" +
                                               "  var record = records[i];" +
                                               "  out.write(record);\n" +
-                                              "  record.set('/', Field.create('Bye'));\n" +
+                                              "  record['type'] = Type.STRING;\n" +
+                                              "  record['value'] = 'Bye';\n" +
                                               "  out.write(record);\n" +
-                                              "  record.set('/', Field.create('Error'));\n" +
+                                              "  record.type = Type.STRING;\n" +
+                                              "  record.value = 'Error';\n" +
                                               "  err.write(record, 'error');\n" +
                                               "}");
     ProcessorRunner runner = new ProcessorRunner.Builder(processor)
@@ -94,7 +96,7 @@ public class TestJavaScriptProcessor {
     Processor processor = new JavaScriptProcessor(ProcessingMode.RECORD,
                                               "for (var i = 0; i < records.length; i++){\n" +
                                               "  var record = records[i];" +
-                                              "  if (record.get().getValueAsString() == 'Hello') {\n" +
+                                              "  if (record['value'] == 'Hello') {\n" +
                                               "    throw 'Exception';\n" +
                                               "  }" +
                                               "  out.write(record);" +
@@ -150,7 +152,7 @@ public class TestJavaScriptProcessor {
     Processor processor = new JavaScriptProcessor(ProcessingMode.BATCH,
                                                   "for (var i = 0; i < records.length; i++){\n" +
                                                   "  var record = records[i];" +
-                                                  "  if (record.get().getValueAsString() == 'Hello') {\n" +
+                                                  "  if (record['value'] == 'Hello') {\n" +
                                                   "    throw 'Exception';\n" +
                                                   "  }" +
                                                   "  out.write(record);" +

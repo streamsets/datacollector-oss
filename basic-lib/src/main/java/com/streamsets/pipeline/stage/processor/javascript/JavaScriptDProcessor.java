@@ -38,10 +38,63 @@ public class JavaScriptDProcessor extends DProcessor {
   @ValueChooser(ProcessingModeChooserValues.class)
   public ProcessingMode processingMode;
 
+  private static final String DEFAULT_JAVASCRIPT=
+
+      "/**\n" +
+      " * Sample JavaScript code\n" +
+      " *\n" +
+      " * Avaliable Objects:\n" +
+      " * \n" +
+      " *  Type: A Map defining the supported data types, it mirrors \n" +
+      " *        Field.Type\n" +
+      " *\n" +
+      " *  records: and array the records to process, depending on \n" +
+      " *           the processing mode it may have 1 record or all\n" +
+      " *           the records in the batch.\n" +
+      " *\n" +
+      " *  out.write(record): writes a record to processor output\n" +
+      " *\n" +
+      " *  err.write(record, message): sends a record to error\n" +
+      " *\n" +
+      " */\n" +
+      "\n" +
+      "for(var i=0; i < records.length; i++) {\n" +
+      "  \n" +
+      "  //Change record root field value to a STRING value\n" +
+      "  //records[i].type = Type.STRING;\n" +
+      "  //records[i].value = 'Hello ' + i;\n" +
+      "\n" +
+      "\n" +
+      "  //Change record root field value to a MAP value and create an entry\n" +
+      "  //records[i].type = Type.MAP;\n" +
+      "  //records[i].value = {};\n" +
+      "  //records[i].value.V = { type: Type.STRING, value : 'Hello'};\n" +
+      "\n" +
+      "  //Modify a MAP entry\n" +
+      "  //records[i].value.V.type = Type.INTEGER;\n" +
+      "  //records[i].value.V.value = 5;\n" +
+      "\n" +
+      "  //Create an ARRAY entry\n" +
+      "  //records[i].value.A = { type: Type.LIST, value : []};\n" +
+      "  //records[i].value.A.value.push({ type: Type.STRING, value : 'Element 1'});\n" +
+      "  //records[i].value.A.value.push({ type: Type.STRING, value : 'Element 2'});\n" +
+      "\n" +
+      "  //Modify an existing ARRAY entry\n" +
+      "  //records[i].value.A.value[0].type = Type.INTEGER;\n" +
+      "  //records[i].value.A.value[0].value = 100;\n" +
+      "\n" +
+      "  //Write record to procesor output\n" +
+      "  out.write(records[i]);\n" +
+      "\n" +
+      "  //Send record to error\n" +
+      "  //err.write(records[i], 'Error Message');\n" +
+      "\n" +
+      "}  \n";
+
   @ConfigDef(
       required = true,
       type = ConfigDef.Type.TEXT,
-      defaultValue = "/**\n * Sample JavaScript code\n */\n\nfor(var i=0; i < records.length; i++) {\n  var record = records[i];\n  \n  /*\n  //Change Field Value\n  try { \n  \trecord.set('/a', Field.create(record.get('/b').getValueAsLong() + \n                                  record.get('/c').getValueAsLong()));\n  } catch(e) {\n    //Ignore Exception to avoid sending record to error\n  }\n  \n  //Add Primitive Field\n  record.set('/simpleField', Field.create('field string Value'));\n  \n  //Add Map Field\n  record.set('/mapField', Field.create({\n    mapField1 : Field.create('map field value 1'),\n    mapField2 : Field.create('map field value 2')\n  }));\n  \n  //Add Array Field\n  var list = new java.util.ArrayList();\n  list.add(Field.create('sdf'));\n  record.set('/arrayField', Field.create(list));\n  \n  //To write record to error sink\n  //err.write(record, 'Error Message');\n  */\n  \n  out.write(record);\n}  \n  \n",
+      defaultValue = DEFAULT_JAVASCRIPT,
       label = "Script",
       displayPosition = 20,
       group = "JAVASCRIPT",

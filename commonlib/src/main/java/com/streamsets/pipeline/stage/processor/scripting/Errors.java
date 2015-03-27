@@ -14,6 +14,8 @@ public enum Errors implements ErrorCode {
   SCRIPTING_01("Could not load scripting engine '{}': {}"),
   SCRIPTING_02("Script cannot be empty"),
 
+  SCRIPTING_04("Script sent record to error: {}"),
+
   SCRIPTING_05("Script error while processing record: {}"),
   SCRIPTING_06("Script error while processing batch: {}"),
 
