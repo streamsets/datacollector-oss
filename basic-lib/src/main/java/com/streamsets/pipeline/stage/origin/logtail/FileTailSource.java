@@ -13,15 +13,21 @@ import com.streamsets.pipeline.api.base.BaseSource;
 import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.config.DataFormat;
 import com.streamsets.pipeline.config.JsonMode;
+import com.streamsets.pipeline.config.LogMode;
+import com.streamsets.pipeline.config.OnParseError;
 import com.streamsets.pipeline.lib.parser.CharDataParserFactory;
 import com.streamsets.pipeline.lib.parser.DataParser;
 import com.streamsets.pipeline.lib.parser.DataParserException;
+import com.streamsets.pipeline.lib.parser.log.LogDataFormatValidator;
+import com.streamsets.pipeline.lib.parser.log.RegExConfig;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
 
@@ -32,13 +38,38 @@ public class FileTailSource extends BaseSource implements OffsetCommitter {
   private final String fileName;
   private final int batchSize;
   private final int maxWaitTimeSecs;
+  private final LogMode logMode;
+  private final int logMaxObjectLen;
+  private final boolean logRetainOriginalLine;
+  private final String customLogFormat;
+  private final String regex;
+  private final String grokPatternDefinition;
+  private final String grokPattern;
+  private final List<RegExConfig> fieldPathsToGroupName;
+  private final boolean enableLog4jCustomLogFormat;
+  private final String log4jCustomLogFormat;
 
 
-  public FileTailSource(DataFormat dataFormat, String fileName, int batchSize, int maxWaitTimeSecs) {
+  public FileTailSource(DataFormat dataFormat, String fileName, int batchSize, int maxWaitTimeSecs,
+                        LogMode logMode, int logMaxObjectLen,
+                        boolean retainOriginalLine, String customLogFormat, String regex,
+                        List<RegExConfig> fieldPathsToGroupName,
+                        String grokPatternDefinition, String grokPattern, boolean enableLog4jCustomLogFormat,
+                        String log4jCustomLogFormat) {
     this.dataFormat = dataFormat;
     this.fileName = fileName;
     this.batchSize = batchSize;
     this.maxWaitTimeSecs = maxWaitTimeSecs;
+    this.logMode = logMode;
+    this.logMaxObjectLen = logMaxObjectLen;
+    this.logRetainOriginalLine = retainOriginalLine;
+    this.customLogFormat = customLogFormat;
+    this.regex = regex;
+    this.fieldPathsToGroupName = fieldPathsToGroupName;
+    this.grokPatternDefinition = grokPatternDefinition;
+    this.grokPattern = grokPattern;
+    this.enableLog4jCustomLogFormat = enableLog4jCustomLogFormat;
+    this.log4jCustomLogFormat = log4jCustomLogFormat;
   }
 
   private BlockingQueue<String> logLinesQueue;
@@ -48,6 +79,14 @@ public class FileTailSource extends BaseSource implements OffsetCommitter {
 
   private String fileOffset;
   private long recordCount;
+  private LogDataFormatValidator logDataFormatValidator;
+
+  /*
+    In order to consolidate stack traces into the same record while reading log4j lines, the origin needs to
+    read the next line and may need to cache the record.
+   */
+  private Record previousRecord;
+  private int stackTraceLineCount = 0;
 
   @Override
   protected List<ConfigIssue> validateConfigs() throws StageException {
@@ -74,7 +113,13 @@ public class FileTailSource extends BaseSource implements OffsetCommitter {
     switch (dataFormat) {
       case TEXT:
       case JSON:
+        break;
       case LOG:
+        logDataFormatValidator = new LogDataFormatValidator(logMode, logMaxObjectLen,
+          logRetainOriginalLine, customLogFormat, regex, grokPatternDefinition, grokPattern,
+          enableLog4jCustomLogFormat, log4jCustomLogFormat,
+          OnParseError.ERROR, 0, Groups.LOG.name(), getFieldPathToGroupMap(fieldPathsToGroupName));
+        logDataFormatValidator.validateLogFormatConfig(issues, getContext());
         break;
       default:
         issues.add(getContext().createConfigIssue(Groups.FILE.name(), "dataFormat", Errors.TAIL_02, dataFormat,
@@ -101,9 +146,11 @@ public class FileTailSource extends BaseSource implements OffsetCommitter {
             .setMode(JsonMode.MULTIPLE_OBJECTS).setMaxDataLen(-1).build();
         break;
       case LOG:
-        //TODO: Add multiline support potentially
-        parserFactory = new CharDataParserFactory.Builder(getContext(), CharDataParserFactory.Format.LOG)
-            .setMaxDataLen(-1).build();
+        CharDataParserFactory.Builder  builder = new CharDataParserFactory.Builder(getContext(),
+          dataFormat.getParserFormat());
+        builder.setMaxDataLen(-1);
+        logDataFormatValidator.populateBuilder(builder);
+        parserFactory = builder.build();
         break;
       default:
         throw new StageException(Errors.TAIL_02, "dataFormat", dataFormat);
@@ -152,26 +199,29 @@ public class FileTailSource extends BaseSource implements OffsetCommitter {
           recordCount++;
         }
       } catch (IOException|DataParserException ex) {
-        switch (getContext().getOnErrorRecord()) {
-          case DISCARD:
-            break;
-          case TO_ERROR:
-            getContext().reportError(Errors.TAIL_04, sourceId, ex.getMessage(), ex);
-            break;
-          case STOP_PIPELINE:
-            if (ex instanceof StageException) {
-              throw (StageException) ex;
-            } else {
-              throw new StageException(Errors.TAIL_04, sourceId, ex.getMessage(), ex);
-            }
-          default:
-            throw new IllegalStateException(Utils.format("It should never happen. OnError '{}'",
-                                                         getContext().getOnErrorRecord(), ex));
-        }
-
+        handleException(sourceId, ex);
       }
     }
     return getOffset();
+  }
+
+  private void handleException(String sourceId, Exception ex) throws StageException {
+    switch (getContext().getOnErrorRecord()) {
+      case DISCARD:
+        break;
+      case TO_ERROR:
+        getContext().reportError(Errors.TAIL_04, sourceId, ex.getMessage(), ex);
+        break;
+      case STOP_PIPELINE:
+        if (ex instanceof StageException) {
+          throw (StageException) ex;
+        } else {
+          throw new StageException(Errors.TAIL_04, sourceId, ex.getMessage(), ex);
+        }
+      default:
+        throw new IllegalStateException(Utils.format("It should never happen. OnError '{}'",
+          getContext().getOnErrorRecord(), ex));
+    }
   }
 
   @Override
@@ -179,4 +229,14 @@ public class FileTailSource extends BaseSource implements OffsetCommitter {
     //NOP
   }
 
+  private Map<String, Integer> getFieldPathToGroupMap(List<RegExConfig> fieldPathsToGroupName) {
+    if(fieldPathsToGroupName == null) {
+      return new HashMap<>();
+    }
+    Map<String, Integer> fieldPathToGroup = new HashMap<>();
+    for(RegExConfig r : fieldPathsToGroupName) {
+      fieldPathToGroup.put(r.fieldPath, r.group);
+    }
+    return fieldPathToGroup;
+  }
 }

@@ -5,6 +5,7 @@
  */
 package com.streamsets.pipeline.stage.origin.kafka;
 
+import com.streamsets.pipeline.api.ComplexField;
 import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.ConfigGroups;
 import com.streamsets.pipeline.api.GenerateResourceBundle;
@@ -21,8 +22,14 @@ import com.streamsets.pipeline.config.DataFormat;
 import com.streamsets.pipeline.config.DataFormatChooserValues;
 import com.streamsets.pipeline.config.JsonMode;
 import com.streamsets.pipeline.config.JsonModeChooserValues;
+import com.streamsets.pipeline.config.LogMode;
+import com.streamsets.pipeline.config.LogModeChooserValues;
+import com.streamsets.pipeline.config.OnParseError;
+import com.streamsets.pipeline.config.OnParseErrorChooserValues;
 import com.streamsets.pipeline.configurablestage.DSourceOffsetCommitter;
+import com.streamsets.pipeline.lib.parser.log.RegExConfig;
 
+import java.util.List;
 import java.util.Map;
 
 @StageDef(
@@ -254,12 +261,188 @@ public class KafkaDSource extends DSourceOffsetCommitter {
   )
   public int xmlMaxObjectLen;
 
+  // LOG Configuration
+
+  @ConfigDef(
+    required = true,
+    type = ConfigDef.Type.MODEL,
+    defaultValue = "COMMON_LOG_FORMAT",
+    label = "Log Format",
+    description = "",
+    displayPosition = 700,
+    group = "LOG",
+    dependsOn = "dataFormat",
+    triggeredByValue = "LOG"
+  )
+  @ValueChooser(LogModeChooserValues.class)
+  public LogMode logMode;
+
+  @ConfigDef(
+    required = true,
+    type = ConfigDef.Type.NUMBER,
+    defaultValue = "1024",
+    label = "Max Line Length",
+    description = "Longer lines are truncated",
+    displayPosition = 710,
+    group = "LOG",
+    dependsOn = "dataFormat",
+    triggeredByValue = "LOG",
+    min = 1,
+    max = Integer.MAX_VALUE
+  )
+  public int logMaxObjectLen;
+
+  @ConfigDef(
+    required = true,
+    type = ConfigDef.Type.BOOLEAN,
+    defaultValue = "false",
+    label = "Retain Original Line",
+    description = "Indicates if the original line of log should be retained in the record",
+    displayPosition = 720,
+    group = "LOG",
+    dependsOn = "dataFormat",
+    triggeredByValue = "LOG"
+  )
+  public boolean retainOriginalLine;
+
+  //APACHE_CUSTOM_LOG_FORMAT
+  @ConfigDef(
+    required = true,
+    type = ConfigDef.Type.STRING,
+    defaultValue = "%h %l %u %t \"%r\" %>s %b",
+    label = "Custom Log Format",
+    description = "Format built using the apache log format strings.",
+    displayPosition = 730,
+    group = "LOG",
+    dependsOn = "logMode",
+    triggeredByValue = "APACHE_CUSTOM_LOG_FORMAT"
+  )
+  public String customLogFormat;
+
+  //REGEX
+
+  @ConfigDef(
+    required = true,
+    type = ConfigDef.Type.STRING,
+    defaultValue = "^(\\S+) (\\S+) (\\S+) \\[([\\w:/]+\\s[+\\-]\\d{4})\\] \"(\\S+) (\\S+) (\\S+)\" (\\d{3}) (\\d+)",
+    label = "Regular Expression",
+    description = "The regular expression which is used to parse the log line.",
+    displayPosition = 740,
+    group = "LOG",
+    dependsOn = "logMode",
+    triggeredByValue = "REGEX"
+  )
+  public String regex;
+
+  @ConfigDef(
+    required = true,
+    type = ConfigDef.Type.MODEL,
+    defaultValue = "",
+    label = "Field Path To RegEx Group Mapping",
+    description = "Map groups in the regular expression to field paths.",
+    displayPosition = 750,
+    group = "LOG",
+    dependsOn = "logMode",
+    triggeredByValue = "REGEX"
+  )
+  @ComplexField
+  public List<RegExConfig> fieldPathsToGroupName;
+
+  //GROK
+
+  @ConfigDef(
+    required = false,
+    type = ConfigDef.Type.TEXT,
+    defaultValue = "",
+    label = "Grok Pattern Definition",
+    description = "Define your own grok patterns which will be used to parse the logs",
+    displayPosition = 760,
+    group = "LOG",
+    dependsOn = "logMode",
+    triggeredByValue = "GROK",
+    mode = ConfigDef.Mode.PLAIN_TEXT
+  )
+  public String grokPatternDefinition;
+
+  @ConfigDef(
+    required = true,
+    type = ConfigDef.Type.STRING,
+    defaultValue = "%{COMMONAPACHELOG}",
+    label = "Grok Pattern",
+    description = "The grok pattern which is used to parse the log line.",
+    displayPosition = 780,
+    group = "LOG",
+    dependsOn = "logMode",
+    triggeredByValue = "GROK"
+  )
+  public String grokPattern;
+
+  //LOG4J
+
+  @ConfigDef(
+    required = true,
+    type = ConfigDef.Type.BOOLEAN,
+    defaultValue = "false",
+    label = "Use Custom Log Format",
+    description = "Select this option to specify your own custom log4j format.",
+    displayPosition = 800,
+    group = "LOG",
+    dependsOn = "logMode",
+    triggeredByValue = "LOG4J"
+  )
+  public boolean enableLog4jCustomLogFormat;
+
+  @ConfigDef(
+    required = true,
+    type = ConfigDef.Type.MODEL,
+    defaultValue = "",
+    label = "On Parse Error",
+    description = "",
+    displayPosition = 805,
+    group = "LOG",
+    dependsOn = "logMode",
+    triggeredByValue = "LOG4J"
+  )
+  @ValueChooser(OnParseErrorChooserValues.class)
+  public OnParseError onParseError;
+
+  @ConfigDef(
+    required = true,
+    type = ConfigDef.Type.NUMBER,
+    defaultValue = "50",
+    label = "Trim Stack Trace to Length",
+    description = "Any line that does not match the expected pattern will be treated as a Stack trace as long as it " +
+      "is part of the same message. The stack trace will be trimmed to the specified number of lines.",
+    displayPosition = 810,
+    group = "LOG",
+    dependsOn = "onParseError",
+    triggeredByValue = "INCLUDE_AS_STACK_TRACE",
+    min = 0,
+    max = Integer.MAX_VALUE
+  )
+  public int maxStackTraceLines;
+
+  @ConfigDef(
+    required = true,
+    type = ConfigDef.Type.STRING,
+    defaultValue = "%r [%t] %-5p %c %x - %m%n",
+    label = "Custom Log4J Format",
+    description = "Specify your own custom log4j format.",
+    displayPosition = 820,
+    group = "LOG",
+    dependsOn = "enableLog4jCustomLogFormat",
+    triggeredByValue = "true"
+  )
+  public String log4jCustomLogFormat;
+
   @Override
   protected Source createSource() {
     return new KafkaSource(zookeeperConnect, consumerGroup, topic, dataFormat, charset, produceSingleRecordPerMessage,
                            maxBatchSize, maxWaitTime, kafkaConsumerConfigs, textMaxLineLen, jsonContent,
                            jsonMaxObjectLen, csvFileFormat, csvHeader, csvMaxObjectLen, xmlRecordElement,
-                           xmlMaxObjectLen);
+                           xmlMaxObjectLen, logMode, logMaxObjectLen, retainOriginalLine, customLogFormat, regex,
+      fieldPathsToGroupName, grokPatternDefinition, grokPattern, enableLog4jCustomLogFormat, log4jCustomLogFormat,
+      onParseError, maxStackTraceLines);
   }
 
 }

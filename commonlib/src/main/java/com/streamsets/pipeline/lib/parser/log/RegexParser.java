@@ -18,16 +18,16 @@ import java.util.regex.Pattern;
 
 public class RegexParser extends LogDataParser {
 
-  private final String regex;
   private final Pattern pattern;
   private final Map<String, Integer> fieldToGroupMap;
 
   public RegexParser(Stage.Context context, String readerId, OverrunReader reader, long readerOffset, int maxObjectLen,
-                     boolean retainOriginalText, String regex, Map<String, Integer> fieldToGroupMap) throws IOException {
+                     boolean retainOriginalText, Pattern pattern, Map<String, Integer> fieldToGroupMap)
+    throws IOException {
+
     super(context, readerId, reader, readerOffset, maxObjectLen, retainOriginalText, -1);
-    this.regex = regex;
     this.fieldToGroupMap = fieldToGroupMap;
-    this.pattern = Pattern.compile(regex);
+    this.pattern = pattern;
   }
 
   @Override
@@ -35,7 +35,7 @@ public class RegexParser extends LogDataParser {
     Matcher m = pattern.matcher(sb.toString());
     if (!m.find()) {
       if (!m.find()) {
-        throw new DataParserException(Errors.LOG_PARSER_03, sb.toString(), "Regular Expression - " + regex);
+        throw new DataParserException(Errors.LOG_PARSER_03, sb.toString(), "Regular Expression - " + pattern.pattern());
       }
     }
     for(int i = 1; i <= m.groupCount(); i++) {

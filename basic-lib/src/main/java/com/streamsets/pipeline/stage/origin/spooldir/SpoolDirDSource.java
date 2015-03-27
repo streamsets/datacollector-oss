@@ -25,7 +25,10 @@ import com.streamsets.pipeline.config.JsonMode;
 import com.streamsets.pipeline.config.JsonModeChooserValues;
 import com.streamsets.pipeline.config.LogMode;
 import com.streamsets.pipeline.config.LogModeChooserValues;
+import com.streamsets.pipeline.config.OnParseError;
+import com.streamsets.pipeline.config.OnParseErrorChooserValues;
 import com.streamsets.pipeline.configurablestage.DSource;
+import com.streamsets.pipeline.lib.parser.log.RegExConfig;
 
 import java.util.List;
 
@@ -456,16 +459,29 @@ public class SpoolDirDSource extends DSource {
 
   @ConfigDef(
     required = true,
+    type = ConfigDef.Type.MODEL,
+    defaultValue = "",
+    label = "On Parse Error",
+    description = "",
+    displayPosition = 805,
+    group = "LOG",
+    dependsOn = "logMode",
+    triggeredByValue = "LOG4J"
+  )
+  @ValueChooser(OnParseErrorChooserValues.class)
+  public OnParseError onParseError;
+
+  @ConfigDef(
+    required = true,
     type = ConfigDef.Type.NUMBER,
     defaultValue = "50",
     label = "Trim Stack Trace to Length",
-    description = "Any line that does not match the expected pattern will be treated as a Stack trace. " +
-      "Stack traces will be trimmed to the specified number of lines. A value of '0' implies drop stack trace lines and " +
-      "a value of '-1' implies treat as error.",
-    displayPosition = 710,
+    description = "Any line that does not match the expected pattern will be treated as a Stack trace and will be " +
+      "trimmed to the specified number of lines.",
+    displayPosition = 810,
     group = "LOG",
-    dependsOn = "logMode",
-    triggeredByValue = "LOG4J",
+    dependsOn = "onParseError",
+    triggeredByValue = "INCLUDE_AS_STACK_TRACE",
     min = 0,
     max = Integer.MAX_VALUE
   )
@@ -491,7 +507,7 @@ public class SpoolDirDSource extends DSource {
       retentionTimeMins, csvFileFormat, csvHeader, csvMaxObjectLen, jsonContent,
       jsonMaxObjectLen, textMaxObjectLen, xmlRecordElement, xmlMaxObjectLen, logMode,
       logMaxObjectLen, retainOriginalLine, customLogFormat, regex, fieldPathsToGroupName, grokPatternDefinition,
-      grokPattern, enableLog4jCustomLogFormat, log4jCustomLogFormat, maxStackTraceLines);
+      grokPattern, enableLog4jCustomLogFormat, log4jCustomLogFormat, onParseError, maxStackTraceLines);
   }
 
 }

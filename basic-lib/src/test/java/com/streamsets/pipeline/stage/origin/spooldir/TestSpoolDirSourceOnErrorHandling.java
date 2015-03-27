@@ -11,6 +11,7 @@ import com.streamsets.pipeline.config.CsvHeader;
 import com.streamsets.pipeline.config.CsvMode;
 import com.streamsets.pipeline.config.DataFormat;
 import com.streamsets.pipeline.config.JsonMode;
+import com.streamsets.pipeline.config.OnParseError;
 import com.streamsets.pipeline.sdk.SourceRunner;
 import com.streamsets.pipeline.sdk.StageRunner;
 import org.apache.commons.io.IOUtils;
@@ -42,7 +43,8 @@ public class TestSpoolDirSourceOnErrorHandling {
     writer.close();
     return new SpoolDirSource(DataFormat.DELIMITED, "UTF-8", 100, dir, 10, 1, "file-[0-9].csv", 10, null, null,
                               PostProcessingOptions.ARCHIVE, dir, 10, CsvMode.RFC4180, CsvHeader.NO_HEADER,
-                              5, null, 0, 10, null, 0, null, 0, false, null, null, null, null, null, false, null, -1);
+                              5, null, 0, 10, null, 0, null, 0, false, null, null, null, null, null, false, null,
+      OnParseError.ERROR, -1);
   }
 
   @Test
@@ -124,7 +126,7 @@ public class TestSpoolDirSourceOnErrorHandling {
     return new SpoolDirSource(DataFormat.JSON, "UTF-8", 100, dir, 10, 1, "file-[0-9].json", 10, null, null,
                               PostProcessingOptions.ARCHIVE, dir, 10, null, null,
                               5, JsonMode.ARRAY_OBJECTS, 100, 10, null, 0, null, 0, false, null, null, null, null,
-      null, false, null, -1);
+      null, false, null, OnParseError.ERROR, -1);
   }
 
   @Test

@@ -12,13 +12,18 @@ import com.streamsets.pipeline.config.CsvHeader;
 import com.streamsets.pipeline.config.CsvMode;
 import com.streamsets.pipeline.config.DataFormat;
 import com.streamsets.pipeline.config.JsonMode;
+import com.streamsets.pipeline.config.LogMode;
+import com.streamsets.pipeline.config.OnParseError;
 import com.streamsets.pipeline.lib.DataType;
 import com.streamsets.pipeline.lib.KafkaTestUtil;
 import com.streamsets.pipeline.lib.ProducerRunnable;
 import com.streamsets.pipeline.lib.json.StreamingJsonParser;
+import com.streamsets.pipeline.lib.parser.DataParserException;
+import com.streamsets.pipeline.lib.parser.log.Constants;
 import com.streamsets.pipeline.sdk.SourceRunner;
 import com.streamsets.pipeline.sdk.StageRunner;
 import kafka.javaapi.producer.Producer;
+import kafka.producer.KeyedMessage;
 import kafka.server.KafkaConfig;
 import kafka.server.KafkaServer;
 import kafka.utils.MockTime;
@@ -89,7 +94,7 @@ public class TestKafkaSource {
       REPLICATION_FACTOR, TIME_OUT);
     ExecutorService executorService = Executors.newSingleThreadExecutor();
     executorService.submit(new ProducerRunnable( "testProduceStringRecords", SINGLE_PARTITION,
-      producer, startLatch, DataType.LOG, null));
+      producer, startLatch, DataType.TEXT, null));
 
     SourceRunner sourceRunner = new SourceRunner.Builder(KafkaDSource.class)
       .addOutputLane("lane")
@@ -103,6 +108,15 @@ public class TestKafkaSource {
       .addConfiguration("textMaxLineLen", 4096)
       .addConfiguration("kafkaConsumerConfigs", null)
       .addConfiguration("produceSingleRecordPerMessage", false)
+      .addConfiguration("regex", null)
+      .addConfiguration("grokPatternDefinition", null)
+      .addConfiguration("enableLog4jCustomLogFormat", false)
+      .addConfiguration("customLogFormat", null)
+      .addConfiguration("fieldPathsToGroupName", null)
+      .addConfiguration("log4jCustomLogFormat", null)
+      .addConfiguration("grokPattern", null)
+      .addConfiguration("onParseError", null)
+      .addConfiguration("maxStackTraceLines", -1)
       .build();
 
     sourceRunner.runInit();
@@ -119,7 +133,7 @@ public class TestKafkaSource {
     for(int i = 0; i < records.size(); i++) {
       Assert.assertNotNull(records.get(i).get("/text"));
       Assert.assertTrue(!records.get(i).get("/text").getValueAsString().isEmpty());
-      Assert.assertEquals(KafkaTestUtil.generateTestData(DataType.LOG, null),
+      Assert.assertEquals(KafkaTestUtil.generateTestData(DataType.TEXT, null),
                           records.get(i).get("/text").getValueAsString());
     }
 
@@ -134,7 +148,7 @@ public class TestKafkaSource {
       MULTIPLE_PARTITIONS, REPLICATION_FACTOR, TIME_OUT);
     ExecutorService executorService = Executors.newSingleThreadExecutor();
     executorService.submit(new ProducerRunnable( "testProduceStringRecordsMultiplePartitions",
-      MULTIPLE_PARTITIONS, producer, startProducing, DataType.LOG, null));
+      MULTIPLE_PARTITIONS, producer, startProducing, DataType.TEXT, null));
 
     SourceRunner sourceRunner = new SourceRunner.Builder(KafkaDSource.class)
       .addOutputLane("lane")
@@ -148,6 +162,15 @@ public class TestKafkaSource {
       .addConfiguration("textMaxLineLen", 4096)
       .addConfiguration("kafkaConsumerConfigs", null)
       .addConfiguration("produceSingleRecordPerMessage", false)
+      .addConfiguration("regex", null)
+      .addConfiguration("grokPatternDefinition", null)
+      .addConfiguration("enableLog4jCustomLogFormat", false)
+      .addConfiguration("customLogFormat", null)
+      .addConfiguration("fieldPathsToGroupName", null)
+      .addConfiguration("log4jCustomLogFormat", null)
+      .addConfiguration("grokPattern", null)
+      .addConfiguration("onParseError", null)
+      .addConfiguration("maxStackTraceLines", -1)
       .build();
 
     sourceRunner.runInit();
@@ -164,7 +187,7 @@ public class TestKafkaSource {
     for(int i = 0; i < records.size(); i++) {
       Assert.assertNotNull(records.get(i).get("/text").getValueAsString());
       Assert.assertTrue(!records.get(i).get("/text").getValueAsString().isEmpty());
-      Assert.assertEquals(KafkaTestUtil.generateTestData(DataType.LOG, null), records.get(i).get("/text").getValueAsString());
+      Assert.assertEquals(KafkaTestUtil.generateTestData(DataType.TEXT, null), records.get(i).get("/text").getValueAsString());
     }
 
     sourceRunner.runDestroy();
@@ -193,6 +216,15 @@ public class TestKafkaSource {
       .addConfiguration("jsonMaxObjectLen", 4096)
       .addConfiguration("produceSingleRecordPerMessage", true)
       .addConfiguration("kafkaConsumerConfigs", null)
+      .addConfiguration("regex", null)
+      .addConfiguration("grokPatternDefinition", null)
+      .addConfiguration("enableLog4jCustomLogFormat", false)
+      .addConfiguration("customLogFormat", null)
+      .addConfiguration("fieldPathsToGroupName", null)
+      .addConfiguration("log4jCustomLogFormat", null)
+      .addConfiguration("grokPattern", null)
+      .addConfiguration("onParseError", null)
+      .addConfiguration("maxStackTraceLines", -1)
       .build();
 
     sourceRunner.runInit();
@@ -233,6 +265,15 @@ public class TestKafkaSource {
       .addConfiguration("jsonMaxObjectLen", 4096)
       .addConfiguration("produceSingleRecordPerMessage", false)
       .addConfiguration("kafkaConsumerConfigs", null)
+      .addConfiguration("regex", null)
+      .addConfiguration("grokPatternDefinition", null)
+      .addConfiguration("enableLog4jCustomLogFormat", false)
+      .addConfiguration("customLogFormat", null)
+      .addConfiguration("fieldPathsToGroupName", null)
+      .addConfiguration("log4jCustomLogFormat", null)
+      .addConfiguration("grokPattern", null)
+      .addConfiguration("onParseError", null)
+      .addConfiguration("maxStackTraceLines", -1)
       .build();
 
     sourceRunner.runInit();
@@ -273,6 +314,15 @@ public class TestKafkaSource {
       .addConfiguration("jsonMaxObjectLen", 4096)
       .addConfiguration("kafkaConsumerConfigs", null)
       .addConfiguration("produceSingleRecordPerMessage", true)
+      .addConfiguration("regex", null)
+      .addConfiguration("grokPatternDefinition", null)
+      .addConfiguration("enableLog4jCustomLogFormat", false)
+      .addConfiguration("customLogFormat", null)
+      .addConfiguration("fieldPathsToGroupName", null)
+      .addConfiguration("log4jCustomLogFormat", null)
+      .addConfiguration("grokPattern", null)
+      .addConfiguration("onParseError", null)
+      .addConfiguration("maxStackTraceLines", -1)
       .build();
 
     sourceRunner.runInit();
@@ -314,6 +364,15 @@ public class TestKafkaSource {
       .addConfiguration("produceSingleRecordPerMessage", false)
       .addConfiguration("xmlRecordElement", "")
       .addConfiguration("xmlMaxObjectLen", 4096)
+      .addConfiguration("regex", null)
+      .addConfiguration("grokPatternDefinition", null)
+      .addConfiguration("enableLog4jCustomLogFormat", false)
+      .addConfiguration("customLogFormat", null)
+      .addConfiguration("fieldPathsToGroupName", null)
+      .addConfiguration("log4jCustomLogFormat", null)
+      .addConfiguration("grokPattern", null)
+      .addConfiguration("onParseError", null)
+      .addConfiguration("maxStackTraceLines", -1)
       .build();
 
     sourceRunner.runInit();
@@ -355,6 +414,15 @@ public class TestKafkaSource {
         .addConfiguration("produceSingleRecordPerMessage", false)
         .addConfiguration("xmlRecordElement", "author")
         .addConfiguration("xmlMaxObjectLen", 4096)
+        .addConfiguration("regex", null)
+        .addConfiguration("grokPatternDefinition", null)
+        .addConfiguration("enableLog4jCustomLogFormat", false)
+        .addConfiguration("customLogFormat", null)
+        .addConfiguration("fieldPathsToGroupName", null)
+        .addConfiguration("log4jCustomLogFormat", null)
+        .addConfiguration("grokPattern", null)
+        .addConfiguration("onParseError", null)
+        .addConfiguration("maxStackTraceLines", -1)
         .build();
 
     sourceRunner.runInit();
@@ -389,6 +457,15 @@ public class TestKafkaSource {
         .addConfiguration("produceSingleRecordPerMessage", true)
         .addConfiguration("xmlRecordElement", "author")
         .addConfiguration("xmlMaxObjectLen", 4096)
+        .addConfiguration("regex", null)
+        .addConfiguration("grokPatternDefinition", null)
+        .addConfiguration("enableLog4jCustomLogFormat", false)
+        .addConfiguration("customLogFormat", null)
+        .addConfiguration("fieldPathsToGroupName", null)
+        .addConfiguration("log4jCustomLogFormat", null)
+        .addConfiguration("grokPattern", null)
+        .addConfiguration("onParseError", null)
+        .addConfiguration("maxStackTraceLines", -1)
         .build();
 
     sourceRunner.runInit();
@@ -417,6 +494,15 @@ public class TestKafkaSource {
       .addConfiguration("csvMaxObjectLen", 4096)
       .addConfiguration("kafkaConsumerConfigs", null)
       .addConfiguration("produceSingleRecordPerMessage", true)
+      .addConfiguration("regex", null)
+      .addConfiguration("grokPatternDefinition", null)
+      .addConfiguration("enableLog4jCustomLogFormat", false)
+      .addConfiguration("customLogFormat", null)
+      .addConfiguration("fieldPathsToGroupName", null)
+      .addConfiguration("log4jCustomLogFormat", null)
+      .addConfiguration("grokPattern", null)
+      .addConfiguration("onParseError", null)
+      .addConfiguration("maxStackTraceLines", -1)
       .build();
 
     sourceRunner.runInit();
@@ -432,4 +518,150 @@ public class TestKafkaSource {
 
     sourceRunner.runDestroy();
   }
+
+  @Test
+  public void testProduceLogRecords() throws StageException, IOException {
+
+    CountDownLatch startLatch = new CountDownLatch(1);
+    KafkaTestUtil.createTopic(zkClient, ImmutableList.of(kafkaServer), "testProduceLogRecords", SINGLE_PARTITION,
+      REPLICATION_FACTOR, TIME_OUT);
+    ExecutorService executorService = Executors.newSingleThreadExecutor();
+    executorService.submit(new ProducerRunnable( "testProduceLogRecords", SINGLE_PARTITION,
+      producer, startLatch, DataType.LOG, null));
+
+    SourceRunner sourceRunner = new SourceRunner.Builder(KafkaDSource.class)
+      .addOutputLane("lane")
+      .addConfiguration("topic", "testProduceLogRecords")
+      .addConfiguration("consumerGroup", CONSUMER_GROUP)
+      .addConfiguration("zookeeperConnect", zkConnect)
+      .addConfiguration("maxBatchSize", 9)
+      .addConfiguration("maxWaitTime", 5000)
+      .addConfiguration("dataFormat", DataFormat.LOG)
+      .addConfiguration("charset", "UTF-8")
+      .addConfiguration("jsonContent", null)
+      .addConfiguration("kafkaConsumerConfigs", null)
+      .addConfiguration("produceSingleRecordPerMessage", false)
+      .addConfiguration("xmlRecordElement", "")
+      .addConfiguration("xmlMaxObjectLen", null)
+      .addConfiguration("logMode", LogMode.LOG4J)
+      .addConfiguration("logMaxObjectLen", 1024)
+      .addConfiguration("regex", null)
+      .addConfiguration("grokPatternDefinition", null)
+      .addConfiguration("enableLog4jCustomLogFormat", false)
+      .addConfiguration("customLogFormat", null)
+      .addConfiguration("fieldPathsToGroupName", null)
+      .addConfiguration("log4jCustomLogFormat", null)
+      .addConfiguration("grokPattern", null)
+      .addConfiguration("onParseError", OnParseError.INCLUDE_AS_STACK_TRACE)
+      .addConfiguration("maxStackTraceLines", 10)
+      .addConfiguration("retainOriginalLine", true)
+      .build();
+
+    sourceRunner.runInit();
+
+    startLatch.countDown();
+    StageRunner.Output output = sourceRunner.runProduce(null, 9);
+    executorService.shutdown();
+
+    String newOffset = output.getNewOffset();
+    Assert.assertNull(newOffset);
+
+    List<Record> records = output.getRecords().get("lane");
+    Assert.assertEquals(9, records.size());
+
+    for(Record record : records) {
+      Assert.assertEquals(KafkaTestUtil.generateTestData(DataType.LOG, null),
+        record.get().getValueAsMap().get("originalLine").getValueAsString());
+
+      Assert.assertFalse(record.has("/truncated"));
+
+      Assert.assertTrue(record.has("/" + Constants.TIMESTAMP));
+      Assert.assertEquals("2015-03-20 15:53:31,161", record.get("/" + Constants.TIMESTAMP).getValueAsString());
+
+      Assert.assertTrue(record.has("/" + Constants.SEVERITY));
+      Assert.assertEquals("DEBUG", record.get("/" + Constants.SEVERITY).getValueAsString());
+
+      Assert.assertTrue(record.has("/" + Constants.CATEGORY));
+      Assert.assertEquals("PipelineConfigurationValidator", record.get("/" + Constants.CATEGORY).getValueAsString());
+
+      Assert.assertTrue(record.has("/" + Constants.MESSAGE));
+      Assert.assertEquals("Pipeline 'test:preview' validation. valid=true, canPreview=true, issuesCount=0",
+        record.get("/" + Constants.MESSAGE).getValueAsString());
+    }
+    sourceRunner.runDestroy();
+  }
+
+  @Test
+  public void testProduceLogRecordsWithStackTraceSameMessage() throws StageException, IOException {
+
+    CountDownLatch startLatch = new CountDownLatch(1);
+    KafkaTestUtil.createTopic(zkClient, ImmutableList.of(kafkaServer), "testProduceLogRecordsWithStackTraceSameMessage", SINGLE_PARTITION,
+      REPLICATION_FACTOR, TIME_OUT);
+    ExecutorService executorService = Executors.newSingleThreadExecutor();
+    executorService.submit(new ProducerRunnable( "testProduceLogRecordsWithStackTraceSameMessage", SINGLE_PARTITION,
+      producer, startLatch, DataType.LOG_STACK_TRACE, null));
+
+    SourceRunner sourceRunner = new SourceRunner.Builder(KafkaDSource.class)
+      .addOutputLane("lane")
+      .addConfiguration("topic", "testProduceLogRecordsWithStackTraceSameMessage")
+      .addConfiguration("consumerGroup", CONSUMER_GROUP)
+      .addConfiguration("zookeeperConnect", zkConnect)
+      .addConfiguration("maxBatchSize", 9)
+      .addConfiguration("maxWaitTime", 10000)
+      .addConfiguration("dataFormat", DataFormat.LOG)
+      .addConfiguration("charset", "UTF-8")
+      .addConfiguration("jsonContent", null)
+      .addConfiguration("kafkaConsumerConfigs", null)
+      .addConfiguration("produceSingleRecordPerMessage", false)
+      .addConfiguration("xmlRecordElement", "")
+      .addConfiguration("xmlMaxObjectLen", null)
+      .addConfiguration("logMode", LogMode.LOG4J)
+      .addConfiguration("logMaxObjectLen", 10000)
+      .addConfiguration("regex", null)
+      .addConfiguration("grokPatternDefinition", null)
+      .addConfiguration("enableLog4jCustomLogFormat", false)
+      .addConfiguration("customLogFormat", null)
+      .addConfiguration("fieldPathsToGroupName", null)
+      .addConfiguration("log4jCustomLogFormat", null)
+      .addConfiguration("grokPattern", null)
+      .addConfiguration("onParseError", OnParseError.INCLUDE_AS_STACK_TRACE)
+      .addConfiguration("maxStackTraceLines", 100)
+      .addConfiguration("retainOriginalLine", true)
+      .build();
+
+    sourceRunner.runInit();
+
+    startLatch.countDown();
+    StageRunner.Output output = sourceRunner.runProduce(null, 9);
+    executorService.shutdown();
+
+    String newOffset = output.getNewOffset();
+    Assert.assertNull(newOffset);
+
+    List<Record> records = output.getRecords().get("lane");
+    Assert.assertEquals(9, records.size());
+
+    for(Record record : records) {
+      Assert.assertEquals(KafkaTestUtil.generateTestData(DataType.LOG_STACK_TRACE, null),
+        record.get().getValueAsMap().get("originalLine").getValueAsString());
+
+      Assert.assertFalse(record.has("/truncated"));
+
+      Assert.assertTrue(record.has("/" + Constants.TIMESTAMP));
+      Assert.assertEquals("2015-03-24 17:49:16,808", record.get("/" + Constants.TIMESTAMP).getValueAsString());
+
+      Assert.assertTrue(record.has("/" + Constants.SEVERITY));
+      Assert.assertEquals("ERROR", record.get("/" + Constants.SEVERITY).getValueAsString());
+
+      Assert.assertTrue(record.has("/" + Constants.CATEGORY));
+      Assert.assertEquals("ExceptionToHttpErrorProvider", record.get("/" + Constants.CATEGORY).getValueAsString());
+
+      Assert.assertTrue(record.has("/" + Constants.MESSAGE));
+      Assert.assertEquals(KafkaTestUtil.ERROR_MSG_WITH_STACK_TRACE,
+        record.get("/" + Constants.MESSAGE).getValueAsString());
+    }
+
+    sourceRunner.runDestroy();
+  }
+
 }

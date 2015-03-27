@@ -9,8 +9,10 @@ import com.streamsets.pipeline.api.BatchMaker;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.config.DataFormat;
 import com.streamsets.pipeline.config.LogMode;
+import com.streamsets.pipeline.config.OnParseError;
 import com.streamsets.pipeline.lib.parser.DataParserException;
 import com.streamsets.pipeline.lib.parser.log.Constants;
+import com.streamsets.pipeline.lib.parser.log.RegExConfig;
 import com.streamsets.pipeline.sdk.SourceRunner;
 import com.streamsets.pipeline.sdk.StageRunner;
 import org.apache.commons.io.IOUtils;
@@ -142,15 +144,15 @@ public class TestLogSpoolDirSourceLog4jFormat {
     return f;
   }
 
-  private SpoolDirSource createSource(int maxStackTraceLines) {
+  private SpoolDirSource createSource(OnParseError onParseError, int maxStackTraceLines) {
     return new SpoolDirSource(DataFormat.LOG, "UTF-8", 10000, createTestDir(), 10, 1, "file-[0-9].log", 10, null, null,
       PostProcessingOptions.ARCHIVE, createTestDir(), 10, null, null, -1, null, 0, 0,
       null, 0, LogMode.LOG4J, 10000, true, null, null, Collections.<RegExConfig>emptyList(), null,
-      null, false, null, maxStackTraceLines);
+      null, false, null, onParseError, maxStackTraceLines);
   }
 
   private SpoolDirSource createSource() {
-    return createSource(150);
+    return createSource(OnParseError.INCLUDE_AS_STACK_TRACE, 150);
   }
 
   @Test
@@ -285,7 +287,7 @@ public class TestLogSpoolDirSourceLog4jFormat {
     SpoolDirSource source = new SpoolDirSource(DataFormat.LOG, "UTF-8", 100, createTestDir(), 10, 1, "file-[0-9].log",
       10, null, null, PostProcessingOptions.ARCHIVE, createTestDir(), 10, null, null, -1, null, 0, 0,
       null, 0, LogMode.LOG4J, 1000, true, null, null, Collections.<RegExConfig>emptyList(), null,
-      null, true, "%-6r [%15.15t] %-5p %30.30c - %m", -1);
+      null, true, "%-6r [%15.15t] %-5p %30.30c - %m", OnParseError.ERROR, 0);
     SourceRunner runner = new SourceRunner.Builder(source).addOutputLane("lane").build();
     runner.runInit();
     try {
@@ -426,7 +428,7 @@ public class TestLogSpoolDirSourceLog4jFormat {
 
   @Test
   public void testProduceFullFileWithStackTraceCutShort() throws Exception {
-    SpoolDirSource source = createSource(10);
+    SpoolDirSource source = createSource(OnParseError.INCLUDE_AS_STACK_TRACE, 10);
     SourceRunner runner = new SourceRunner.Builder(source).addOutputLane("lane").build();
     runner.runInit();
     try {
@@ -524,7 +526,7 @@ public class TestLogSpoolDirSourceLog4jFormat {
 
   @Test(expected = DataParserException.class)
   public void testTreatStackTraceAsError() throws Exception {
-    SpoolDirSource source = createSource(-1);
+    SpoolDirSource source = createSource(OnParseError.ERROR, 0);
     SourceRunner runner = new SourceRunner.Builder(source).addOutputLane("lane").build();
     runner.runInit();
     try {

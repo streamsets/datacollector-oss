@@ -17,13 +17,16 @@ import com.streamsets.pipeline.config.CsvHeader;
 import com.streamsets.pipeline.config.CsvMode;
 import com.streamsets.pipeline.config.DataFormat;
 import com.streamsets.pipeline.config.JsonMode;
+import com.streamsets.pipeline.config.LogMode;
+import com.streamsets.pipeline.config.OnParseError;
 import com.streamsets.pipeline.lib.Errors;
 import com.streamsets.pipeline.lib.KafkaBroker;
 import com.streamsets.pipeline.lib.KafkaUtil;
-
 import com.streamsets.pipeline.lib.parser.CharDataParserFactory;
 import com.streamsets.pipeline.lib.parser.DataParser;
 import com.streamsets.pipeline.lib.parser.DataParserException;
+import com.streamsets.pipeline.lib.parser.log.LogDataFormatValidator;
+import com.streamsets.pipeline.lib.parser.log.RegExConfig;
 import com.streamsets.pipeline.lib.parser.xml.XmlCharDataParserFactory;
 import org.apache.xerces.util.XMLChar;
 import org.slf4j.Logger;
@@ -33,6 +36,7 @@ import java.io.IOException;
 import java.nio.charset.Charset;
 import java.nio.charset.UnsupportedCharsetException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -57,11 +61,28 @@ public class KafkaSource extends BaseSource implements OffsetCommitter {
   public int xmlMaxObjectLen;
   private int maxWaitTime;
   private KafkaConsumer kafkaConsumer;
+  private final LogMode logMode;
+  private final int logMaxObjectLen;
+  private final boolean logRetainOriginalLine;
+  private final String customLogFormat;
+  private final String regex;
+  private final String grokPatternDefinition;
+  private final String grokPattern;
+  private final List<RegExConfig> fieldPathsToGroupName;
+  private final boolean enableLog4jCustomLogFormat;
+  private final String log4jCustomLogFormat;
+  private final int maxStackTraceLines;
+  private final OnParseError onParseError;
+
+  private LogDataFormatValidator logDataFormatValidator;
 
   public KafkaSource(String zookeeperConnect, String consumerGroup, String topic, DataFormat dataFormat, String charset,
       boolean produceSingleRecordPerMessage, int maxBatchSize, int maxWaitTime, Map<String, String> kafkaConsumerConfigs,
       int textMaxLineLen, JsonMode jsonContent, int jsonMaxObjectLen, CsvMode csvFileFormat, CsvHeader csvHeader,
-      int csvMaxObjectLen, String xmlRecordElement, int xmlMaxObjectLen) {
+      int csvMaxObjectLen, String xmlRecordElement, int xmlMaxObjectLen, LogMode logMode, int logMaxObjectLen,
+      boolean retainOriginalLine, String customLogFormat, String regex, List<RegExConfig> fieldPathsToGroupName,
+      String grokPatternDefinition, String grokPattern, boolean enableLog4jCustomLogFormat,
+      String log4jCustomLogFormat, OnParseError onParseError, int maxStackTraceLines) {
     this.zookeeperConnect = zookeeperConnect;
     this.consumerGroup = consumerGroup;
     this.topic = topic;
@@ -79,6 +100,18 @@ public class KafkaSource extends BaseSource implements OffsetCommitter {
     this.csvMaxObjectLen = csvMaxObjectLen;
     this.xmlRecordElement = xmlRecordElement;
     this.xmlMaxObjectLen = xmlMaxObjectLen;
+    this.logMode = logMode;
+    this.logMaxObjectLen = logMaxObjectLen;
+    this.logRetainOriginalLine = retainOriginalLine;
+    this.customLogFormat = customLogFormat;
+    this.regex = regex;
+    this.fieldPathsToGroupName = fieldPathsToGroupName;
+    this.grokPatternDefinition = grokPatternDefinition;
+    this.grokPattern = grokPattern;
+    this.enableLog4jCustomLogFormat = enableLog4jCustomLogFormat;
+    this.log4jCustomLogFormat = log4jCustomLogFormat;
+    this.maxStackTraceLines = maxStackTraceLines;
+    this.onParseError = onParseError;
   }
 
   @Override
@@ -148,6 +181,13 @@ public class KafkaSource extends BaseSource implements OffsetCommitter {
                                                     xmlRecordElement));
         }
         break;
+      case LOG:
+        logDataFormatValidator = new LogDataFormatValidator(logMode, logMaxObjectLen,
+          logRetainOriginalLine, customLogFormat, regex, grokPatternDefinition, grokPattern,
+          enableLog4jCustomLogFormat, log4jCustomLogFormat, onParseError, maxStackTraceLines,
+          Groups.LOG.name(), getFieldPathToGroupMap(fieldPathsToGroupName));
+        logDataFormatValidator.validateLogFormatConfig(issues, getContext());
+        break;
       default:
         issues.add(getContext().createConfigIssue(Groups.KAFKA.name(), "dataFormat", Errors.KAFKA_39, dataFormat));
     }
@@ -190,6 +230,11 @@ public class KafkaSource extends BaseSource implements OffsetCommitter {
         break;
       case SDC_JSON:
         break;
+      case LOG:
+        logDataFormatValidator.populateBuilder(builder);
+        parserFactory = builder.build();
+        break;
+
     }
     parserFactory = builder.build();
 
@@ -216,10 +261,9 @@ public class KafkaSource extends BaseSource implements OffsetCommitter {
     long startTime = System.currentTimeMillis();
     while(recordCounter < batchSize && (startTime + maxWaitTime) > System.currentTimeMillis()) {
       MessageAndOffset message = kafkaConsumer.read();
-      if(message != null) {
+      if (message != null) {
         List<Record> records = processKafkaMessage(message);
-        for(Record record : records) {
-          System.out.println("YYY");
+        for (Record record : records) {
           batchMaker.addRecord(record);
         }
         recordCounter += records.size();
@@ -240,22 +284,7 @@ public class KafkaSource extends BaseSource implements OffsetCommitter {
         record = parser.parse();
       }
     } catch (IOException|DataParserException ex) {
-      switch (getContext().getOnErrorRecord()) {
-        case DISCARD:
-          break;
-        case TO_ERROR:
-          getContext().reportError(Errors.KAFKA_37, messageId, ex.getMessage(), ex);
-          break;
-        case STOP_PIPELINE:
-          if (ex instanceof StageException) {
-            throw (StageException) ex;
-          } else {
-            throw new StageException(Errors.KAFKA_37, messageId, ex.getMessage(), ex);
-          }
-        default:
-          throw new IllegalStateException(Utils.format("It should never happen. OnError '{}'",
-                                                       getContext().getOnErrorRecord(), ex));
-      }
+      handleException(messageId, ex);
     }
     if (produceSingleRecordPerMessage) {
       List<Field> list = new ArrayList<>();
@@ -268,6 +297,25 @@ public class KafkaSource extends BaseSource implements OffsetCommitter {
       records.add(record);
     }
     return records;
+  }
+
+  private void handleException(String messageId, Exception ex) throws StageException {
+    switch (getContext().getOnErrorRecord()) {
+      case DISCARD:
+        break;
+      case TO_ERROR:
+        getContext().reportError(Errors.KAFKA_37, messageId, ex.getMessage(), ex);
+        break;
+      case STOP_PIPELINE:
+        if (ex instanceof StageException) {
+          throw (StageException) ex;
+        } else {
+          throw new StageException(Errors.KAFKA_37, messageId, ex.getMessage(), ex);
+        }
+      default:
+        throw new IllegalStateException(Utils.format("It should never happen. OnError '{}'",
+          getContext().getOnErrorRecord(), ex));
+    }
   }
 
   private String getMessageID(MessageAndOffset message) {
@@ -285,4 +333,14 @@ public class KafkaSource extends BaseSource implements OffsetCommitter {
     kafkaConsumer.commit();
   }
 
+  private Map<String, Integer> getFieldPathToGroupMap(List<RegExConfig> fieldPathsToGroupName) {
+    if(fieldPathsToGroupName == null) {
+      return new HashMap<>();
+    }
+    Map<String, Integer> fieldPathToGroup = new HashMap<>();
+    for(RegExConfig r : fieldPathsToGroupName) {
+      fieldPathToGroup.put(r.fieldPath, r.group);
+    }
+    return fieldPathToGroup;
+  }
 }

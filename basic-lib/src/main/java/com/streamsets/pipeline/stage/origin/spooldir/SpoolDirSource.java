@@ -15,17 +15,14 @@ import com.streamsets.pipeline.config.CsvMode;
 import com.streamsets.pipeline.config.DataFormat;
 import com.streamsets.pipeline.config.JsonMode;
 import com.streamsets.pipeline.config.LogMode;
+import com.streamsets.pipeline.config.OnParseError;
 import com.streamsets.pipeline.lib.dirspooler.DirectorySpooler;
 import com.streamsets.pipeline.lib.io.ObjectLengthException;
 import com.streamsets.pipeline.lib.io.OverrunException;
 import com.streamsets.pipeline.lib.parser.CharDataParserFactory;
 import com.streamsets.pipeline.lib.parser.DataParser;
-import com.streamsets.pipeline.lib.parser.DataParserException;
-import com.streamsets.pipeline.lib.parser.log.ApacheCustomLogHelper;
-import com.streamsets.pipeline.lib.parser.log.Constants;
-import com.streamsets.pipeline.lib.parser.log.Log4jHelper;
-import com.streamsets.pipeline.lib.parser.log.LogCharDataParserFactory;
-import com.streamsets.pipeline.lib.parser.shaded.org.aicer.grok.dictionary.GrokDictionary;
+import com.streamsets.pipeline.lib.parser.log.LogDataFormatValidator;
+import com.streamsets.pipeline.lib.parser.log.RegExConfig;
 import com.streamsets.pipeline.lib.parser.xml.XmlCharDataParserFactory;
 import org.apache.xerces.util.XMLChar;
 import org.slf4j.Logger;
@@ -33,7 +30,6 @@ import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.StringReader;
 import java.nio.charset.Charset;
 import java.nio.charset.UnsupportedCharsetException;
 import java.nio.file.PathMatcher;
@@ -41,9 +37,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-import java.util.regex.PatternSyntaxException;
 
 public class SpoolDirSource extends BaseSource {
   private final static Logger LOG = LoggerFactory.getLogger(SpoolDirSource.class);
@@ -82,6 +75,7 @@ public class SpoolDirSource extends BaseSource {
   private final boolean enableLog4jCustomLogFormat;
   private final String log4jCustomLogFormat;
   private final int maxStackTraceLines;
+  private final OnParseError onParseError;
 
   public SpoolDirSource(DataFormat dataFormat, String charset, int overrunLimit, String spoolDir, int batchSize,
       long poolingTimeoutSecs,
@@ -91,7 +85,7 @@ public class SpoolDirSource extends BaseSource {
       int textMaxLineLen, String xmlRecordElement, int xmlMaxObjectLen, LogMode logMode, int logMaxObjectLen,
       boolean retainOriginalLine, String customLogFormat, String regex, List<RegExConfig> fieldPathsToGroupName,
       String grokPatternDefinition, String grokPattern, boolean enableLog4jCustomLogFormat,
-      String log4jCustomLogFormat, int maxStackTraceLines) {
+      String log4jCustomLogFormat, OnParseError onParseError, int maxStackTraceLines) {
     this.dataFormat = dataFormat;
     this.charset = charset;
     this.overrunLimit = overrunLimit * 1024;
@@ -123,6 +117,7 @@ public class SpoolDirSource extends BaseSource {
     this.grokPattern = grokPattern;
     this.enableLog4jCustomLogFormat = enableLog4jCustomLogFormat;
     this.log4jCustomLogFormat = log4jCustomLogFormat;
+    this.onParseError = onParseError;
     this.maxStackTraceLines = maxStackTraceLines;
   }
 
@@ -131,7 +126,7 @@ public class SpoolDirSource extends BaseSource {
   private File currentFile;
   private CharDataParserFactory parserFactory;
   private DataParser parser;
-
+  private LogDataFormatValidator logDataFormatValidator;
 
   @Override
   protected List<ConfigIssue> validateConfigs() throws StageException {
@@ -209,18 +204,11 @@ public class SpoolDirSource extends BaseSource {
       case SDC_JSON:
         break;
       case LOG:
-        if (logMaxObjectLen < 1) {
-          issues.add(getContext().createConfigIssue(Groups.JSON.name(), "logMaxObjectLen", Errors.SPOOLDIR_20));
-        }
-        if(logMode == LogMode.APACHE_CUSTOM_LOG_FORMAT) {
-          validateApacheCustomLogFormat(issues);
-        } else if(logMode == LogMode.REGEX) {
-          validateRegExFormat(issues);
-        } else if(logMode == LogMode.GROK) {
-          validateGrokPattern(issues);
-        } else if (logMode == LogMode.LOG4J) {
-          validateLog4jCustomLogFormat(issues);
-        }
+        logDataFormatValidator = new LogDataFormatValidator(logMode, logMaxObjectLen,
+          logRetainOriginalLine, customLogFormat, regex, grokPatternDefinition, grokPattern,
+          enableLog4jCustomLogFormat, log4jCustomLogFormat, onParseError, maxStackTraceLines, Groups.LOG.name(),
+          getFieldPathToGroupMap(fieldPathsToGroupName));
+        logDataFormatValidator.validateLogFormatConfig(issues, getContext());
         break;
       default:
         issues.add(getContext().createConfigIssue(Groups.FILES.name(), "dataFormat", Errors.SPOOLDIR_10,
@@ -231,71 +219,6 @@ public class SpoolDirSource extends BaseSource {
     validateDataParser(issues);
 
     return issues;
-  }
-
-  private void validateApacheCustomLogFormat(List<ConfigIssue> issues) {
-    if(customLogFormat == null || customLogFormat.isEmpty()) {
-      issues.add(getContext().createConfigIssue(Groups.LOG.name(), "customLogFormat", Errors.SPOOLDIR_27,
-        customLogFormat));
-      return;
-    }
-    try {
-      ApacheCustomLogHelper.translateApacheLayoutToGrok(customLogFormat);
-    } catch (DataParserException e) {
-      issues.add(getContext().createConfigIssue(Groups.LOG.name(), "customLogFormat", Errors.SPOOLDIR_28,
-        customLogFormat, e.getMessage(), e));
-    }
-  }
-
-  private void validateLog4jCustomLogFormat(List<ConfigIssue> issues) {
-    if(enableLog4jCustomLogFormat) {
-      if (log4jCustomLogFormat == null || log4jCustomLogFormat.isEmpty()) {
-        issues.add(getContext().createConfigIssue(Groups.LOG.name(), "log4jCustomLogFormat", Errors.SPOOLDIR_27,
-          log4jCustomLogFormat));
-        return;
-      }
-      try {
-        Log4jHelper.translateLog4jLayoutToGrok(log4jCustomLogFormat);
-      } catch (DataParserException e) {
-        issues.add(getContext().createConfigIssue(Groups.LOG.name(), "log4jCustomLogFormat", Errors.SPOOLDIR_28,
-          log4jCustomLogFormat, e.getMessage(), e));
-      }
-    }
-  }
-
-  private void validateRegExFormat(List<ConfigIssue> issues) {
-    try {
-      Pattern compile = Pattern.compile(regex);
-      Matcher matcher = compile.matcher(" ");
-      int groupCount = matcher.groupCount();
-
-      for(RegExConfig r : fieldPathsToGroupName) {
-        if(r.group > groupCount) {
-          issues.add(getContext().createConfigIssue(Groups.LOG.name(), "fieldPathsToGroupName", Errors.SPOOLDIR_30,
-            regex, groupCount, r.group));
-        }
-      }
-    } catch (PatternSyntaxException e) {
-      issues.add(getContext().createConfigIssue(Groups.LOG.name(), "regex", Errors.SPOOLDIR_29,
-        regex, e.getMessage(), e));
-    }
-  }
-
-  private void validateGrokPattern(List<ConfigIssue> issues) {
-    try {
-      GrokDictionary grokDictionary = new GrokDictionary();
-      grokDictionary.addDictionary(getClass().getClassLoader().getResourceAsStream(Constants.GROK_PATTERNS_FILE_NAME));
-      grokDictionary.addDictionary(getClass().getClassLoader().getResourceAsStream(
-        Constants.GROK_JAVA_LOG_PATTERNS_FILE_NAME));
-      if(grokPatternDefinition != null || !grokPatternDefinition.isEmpty()) {
-        grokDictionary.addDictionary(new StringReader(grokPatternDefinition));
-      }
-      grokDictionary.bind();
-      grokDictionary.compileExpression(grokPattern);
-    } catch (PatternSyntaxException e) {
-      issues.add(getContext().createConfigIssue(Groups.LOG.name(), "regex", Errors.SPOOLDIR_29,
-        regex, e.getMessage(), e));
-    }
   }
 
   private void validateDir(String dir, String group, String config, List<ConfigIssue> issues) {
@@ -365,17 +288,7 @@ public class SpoolDirSource extends BaseSource {
         maxSpoolFiles = 10000;
         break;
       case LOG:
-        builder.setMaxDataLen(logMaxObjectLen)
-          .setConfig(LogCharDataParserFactory.RETAIN_ORIGINAL_TEXT_KEY, logRetainOriginalLine)
-          .setConfig(LogCharDataParserFactory.APACHE_CUSTOMLOG_FORMAT_KEY, customLogFormat)
-          .setConfig(LogCharDataParserFactory.REGEX_KEY, regex)
-          .setConfig(LogCharDataParserFactory.REGEX_FIELD_PATH_TO_GROUP_KEY,
-            getFieldPathToGroupMap(fieldPathsToGroupName))
-          .setConfig(LogCharDataParserFactory.GROK_PATTERN_DEFINITION_KEY, grokPatternDefinition)
-          .setConfig(LogCharDataParserFactory.GROK_PATTERN_KEY, grokPattern)
-          .setConfig(LogCharDataParserFactory.LOG4J_FORMAT_KEY, log4jCustomLogFormat)
-          .setConfig(LogCharDataParserFactory.LOG4J_TRIM_STACK_TRACES_TO_LENGTH_KEY, maxStackTraceLines)
-          .setMode(logMode);
+        logDataFormatValidator.populateBuilder(builder);
         break;
     }
     try {
@@ -386,6 +299,9 @@ public class SpoolDirSource extends BaseSource {
   }
 
   private Map<String, Integer> getFieldPathToGroupMap(List<RegExConfig> fieldPathsToGroupName) {
+    if(fieldPathsToGroupName == null) {
+      return new HashMap<>();
+    }
     Map<String, Integer> fieldPathToGroup = new HashMap<>();
     for(RegExConfig r : fieldPathsToGroupName) {
       fieldPathToGroup.put(r.fieldPath, r.group);

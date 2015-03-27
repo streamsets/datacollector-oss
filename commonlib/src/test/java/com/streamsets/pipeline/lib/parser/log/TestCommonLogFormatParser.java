@@ -8,7 +8,9 @@ package com.streamsets.pipeline.lib.parser.log;
 import com.streamsets.pipeline.api.OnRecordError;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.Stage;
+import com.streamsets.pipeline.config.LogMode;
 import com.streamsets.pipeline.lib.io.OverrunReader;
+import com.streamsets.pipeline.lib.parser.CharDataParserFactory;
 import com.streamsets.pipeline.lib.parser.DataParser;
 import com.streamsets.pipeline.lib.parser.DataParserException;
 import com.streamsets.pipeline.sdk.ContextInfoCreator;
@@ -18,6 +20,8 @@ import org.junit.Test;
 import java.io.IOException;
 import java.io.StringReader;
 import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 
 public class TestCommonLogFormatParser {
   private Stage.Context getContext() {
@@ -27,9 +31,9 @@ public class TestCommonLogFormatParser {
 
   @Test
   public void testParse() throws Exception {
-    OverrunReader reader = new OverrunReader(new StringReader(
-      "127.0.0.1 ss h [10/Oct/2000:13:55:36 -0700] \"GET /apache_pb.gif HTTP/1.0\" 200 2326 Hello"), 1000, true);
-    DataParser parser = new CommonLogParser(getContext(), "id", reader, 0, 1000, true);
+    DataParser parser = getDataParser(
+      "127.0.0.1 ss h [10/Oct/2000:13:55:36 -0700] \"GET /apache_pb.gif HTTP/1.0\" 200 2326 Hello", 1000, 0);
+
     Assert.assertEquals(0, parser.getOffset());
     Record record = parser.parse();
     Assert.assertNotNull(record);
@@ -76,9 +80,8 @@ public class TestCommonLogFormatParser {
 
   @Test
   public void testParseWithOffset() throws Exception {
-    OverrunReader reader = new OverrunReader(new StringReader(
-      "Hello\n127.0.0.1 ss h [10/Oct/2000:13:55:36 -0700] \"GET /apache_pb.gif HTTP/1.0\" 200 2326"), 1000, true);
-    DataParser parser = new CommonLogParser(getContext(), "id", reader, 6, 1000, true);
+    DataParser parser = getDataParser(
+      "Hello\n127.0.0.1 ss h [10/Oct/2000:13:55:36 -0700] \"GET /apache_pb.gif HTTP/1.0\" 200 2326", 1000, 6);
     Assert.assertEquals(6, parser.getOffset());
     Record record = parser.parse();
     Assert.assertNotNull(record);
@@ -130,17 +133,15 @@ public class TestCommonLogFormatParser {
 
   @Test(expected = IOException.class)
   public void testClose() throws Exception {
-    OverrunReader reader = new OverrunReader(new StringReader("Hello\nByte"), 1000, true);
-    DataParser parser = new CommonLogParser(getContext(), "id", reader, 0, 1000, false);
+    DataParser parser = getDataParser("Hello\nByte", 1000, 6);
     parser.close();
     parser.parse();
   }
 
   @Test(expected = DataParserException.class)
   public void testTruncate() throws Exception {
-    OverrunReader reader = new OverrunReader(new StringReader(
-      "127.0.0.1 ss h [10/Oct/2000:13:55:36 -0700] \"GET /apache_pb.gif HTTP/1.0\" 200 2326"), 1000, true);
-    DataParser parser = new CommonLogParser(getContext(), "id", reader, 0, 25, true); //cut short to 25
+    DataParser parser = getDataParser(
+      "127.0.0.1 ss h [10/Oct/2000:13:55:36 -0700] \"GET /apache_pb.gif HTTP/1.0\" 200 2326", 25, 0);
     Assert.assertEquals(0, parser.getOffset());
     try {
       parser.parse();
@@ -151,15 +152,24 @@ public class TestCommonLogFormatParser {
 
   @Test(expected = DataParserException.class)
   public void testParseNonLogLine() throws Exception {
-    OverrunReader reader = new OverrunReader(new StringReader(
-      "127.0.0.1 ss h [10/Oct/2000:13:55:36 -0700] This is a log line that does not confirm to common log format"),
-      1000, true);
-    DataParser parser = new CommonLogParser(getContext(), "id", reader, 0, 1000, true);
+    DataParser parser = getDataParser(
+      "127.0.0.1 ss h [10/Oct/2000:13:55:36 -0700] This is a log line that does not confirm to common log format",
+      1000, 0);
     Assert.assertEquals(0, parser.getOffset());
     try {
       parser.parse();
     } finally {
       parser.close();
     }
+  }
+
+  private DataParser getDataParser(String logLine, int maxObjectLength, int readerOffset) throws DataParserException {
+    OverrunReader reader = new OverrunReader(new StringReader(logLine), 1000, true);
+    Map<String, Object> configs = LogCharDataParserFactory.registerConfigs(new HashMap<String, Object>());
+    configs.put(LogCharDataParserFactory.RETAIN_ORIGINAL_TEXT_KEY, true);
+    CharDataParserFactory factory = new LogCharDataParserFactory(getContext(), maxObjectLength,
+      LogMode.COMMON_LOG_FORMAT,
+      configs);
+    return factory.getParser("id", reader, readerOffset);
   }
 }

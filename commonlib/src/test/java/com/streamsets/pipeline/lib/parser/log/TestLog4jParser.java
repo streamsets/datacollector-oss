@@ -8,7 +8,10 @@ package com.streamsets.pipeline.lib.parser.log;
 import com.streamsets.pipeline.api.OnRecordError;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.Stage;
+import com.streamsets.pipeline.config.LogMode;
+import com.streamsets.pipeline.config.OnParseError;
 import com.streamsets.pipeline.lib.io.OverrunReader;
+import com.streamsets.pipeline.lib.parser.CharDataParserFactory;
 import com.streamsets.pipeline.lib.parser.DataParser;
 import com.streamsets.pipeline.lib.parser.DataParserException;
 import com.streamsets.pipeline.sdk.ContextInfoCreator;
@@ -18,6 +21,8 @@ import org.junit.Test;
 import java.io.IOException;
 import java.io.StringReader;
 import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 
 public class TestLog4jParser {
 
@@ -106,8 +111,7 @@ public class TestLog4jParser {
 
   @Test
   public void testParse() throws Exception {
-    OverrunReader reader = new OverrunReader(new StringReader(LOG_LINE), 1000, true);
-    DataParser parser = new Log4jParser(getContext(), "id", reader, 0, 1000, true, Constants.GROK_LOG4J_LOG_FORMAT, -1);
+    DataParser parser = getDataParser(LOG_LINE, 1000, 0);
     Assert.assertEquals(0, parser.getOffset());
     Record record = parser.parse();
     Assert.assertNotNull(record);
@@ -138,9 +142,7 @@ public class TestLog4jParser {
 
   @Test
   public void testParseWithOffset() throws Exception {
-    OverrunReader reader = new OverrunReader(new StringReader(
-      "Hello\n" + LOG_LINE), 1000, true);
-    DataParser parser = new Log4jParser(getContext(), "id", reader, 6, 1000, true, Constants.GROK_LOG4J_LOG_FORMAT, -1);
+    DataParser parser = getDataParser("Hello\n" + LOG_LINE, 1000, 6);
     Assert.assertEquals(6, parser.getOffset());
     Record record = parser.parse();
     Assert.assertNotNull(record);
@@ -175,16 +177,14 @@ public class TestLog4jParser {
 
   @Test(expected = IOException.class)
   public void testClose() throws Exception {
-    OverrunReader reader = new OverrunReader(new StringReader("Hello\nByte"), 1000, true);
-    DataParser parser = new Log4jParser(getContext(), "id", reader, 0, 1000, false, Constants.GROK_LOG4J_LOG_FORMAT, -1);
+    DataParser parser = getDataParser("Hello\nByte", 1000, 0);
     parser.close();
     parser.parse();
   }
 
   @Test(expected = DataParserException.class)
   public void testTruncate() throws Exception {
-    OverrunReader reader = new OverrunReader(new StringReader(LOG_LINE), 1000, true);
-    DataParser parser = new Log4jParser(getContext(), "id", reader, 0, 25, true, Constants.GROK_LOG4J_LOG_FORMAT, -1); //cut short to 25
+    DataParser parser = getDataParser(LOG_LINE, 25, 0);
     Assert.assertEquals(0, parser.getOffset());
     try {
       parser.parse();
@@ -195,10 +195,9 @@ public class TestLog4jParser {
 
   @Test(expected = DataParserException.class)
   public void testParseNonLogLine() throws Exception {
-    OverrunReader reader = new OverrunReader(new StringReader(
-      "127.0.0.1 ss h [10/Oct/2000:13:55:36 -0700] This is a log line that does not confirm to default log4j log format"),
-      1000, true);
-    DataParser parser = new Log4jParser(getContext(), "id", reader, 0, 1000, true, Constants.GROK_LOG4J_LOG_FORMAT, -1);
+    DataParser parser = getDataParser(
+      "127.0.0.1 ss h [10/Oct/2000:13:55:36 -0700] This is a log line that does not confirm to default log4j log format",
+      1000, 0);
     Assert.assertEquals(0, parser.getOffset());
     try {
       parser.parse();
@@ -210,8 +209,13 @@ public class TestLog4jParser {
   @Test
   public void testParseLogLineWithStackTrace() throws Exception {
     OverrunReader reader = new OverrunReader(new StringReader(LOG_LINE_WITH_STACK_TRACE), 10000, true);
-    DataParser parser = new Log4jParser(getContext(), "id", reader, 0, 10000, true, Constants.GROK_LOG4J_LOG_FORMAT,
-      100);
+    Map<String, Object> configs = LogCharDataParserFactory.registerConfigs(new HashMap<String, Object>());
+    configs.put(LogCharDataParserFactory.RETAIN_ORIGINAL_TEXT_KEY, true);
+    configs.put(LogCharDataParserFactory.LOG4J_FORMAT_KEY, "%d{ISO8601} %-5p %c{1} - %m");
+    configs.put(LogCharDataParserFactory.ON_PARSE_ERROR_KEY, OnParseError.INCLUDE_AS_STACK_TRACE);
+    configs.put(LogCharDataParserFactory.LOG4J_TRIM_STACK_TRACES_TO_LENGTH_KEY, 100);
+    CharDataParserFactory factory = new LogCharDataParserFactory(getContext(), 10000, LogMode.LOG4J, configs);
+    DataParser parser = factory.getParser("id", reader, 0);
     Assert.assertEquals(0, parser.getOffset());
     Record record = parser.parse();
     Assert.assertNotNull(record);
@@ -238,5 +242,16 @@ public class TestLog4jParser {
     Assert.assertEquals(ERROR_MSG_WITH_STACK_TRACE, record.get("/" + Constants.MESSAGE).getValueAsString());
 
     parser.close();
+  }
+
+  private DataParser getDataParser(String logLine, int maxObjectLength, int readerOffset) throws DataParserException {
+    OverrunReader reader = new OverrunReader(new StringReader(logLine), 1000, true);
+    Map<String, Object> configs = LogCharDataParserFactory.registerConfigs(new HashMap<String, Object>());
+    configs.put(LogCharDataParserFactory.RETAIN_ORIGINAL_TEXT_KEY, true);
+    configs.put(LogCharDataParserFactory.LOG4J_FORMAT_KEY, "%d{ISO8601} %-5p %c{1} - %m");
+    CharDataParserFactory factory = new LogCharDataParserFactory(getContext(), maxObjectLength,
+      LogMode.LOG4J,
+      configs);
+    return factory.getParser("id", reader, readerOffset);
   }
 }

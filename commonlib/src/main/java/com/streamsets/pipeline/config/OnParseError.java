@@ -3,19 +3,19 @@
  * be copied, modified, or distributed in whole or part without
  * written consent of StreamSets, Inc.
  */
-package com.streamsets.pipeline.stage.origin.logtail;
+package com.streamsets.pipeline.config;
 
-import com.streamsets.pipeline.api.GenerateResourceBundle;
 import com.streamsets.pipeline.api.Label;
 
-@GenerateResourceBundle
-public enum Groups implements Label {
-  FILE("File"),
-  LOG("Log");
+public enum OnParseError implements Label {
+  ERROR("ERROR"),
+  IGNORE("IGNORE"),
+  INCLUDE_AS_STACK_TRACE("INCLUDE AS STACK TRACE")
+  ;
 
   private final String label;
 
-  Groups(String label) {
+  OnParseError(String label) {
     this.label = label;
   }
 
@@ -23,5 +23,4 @@ public enum Groups implements Label {
   public String getLabel() {
     return label;
   }
-
 }

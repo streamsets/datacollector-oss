@@ -3,7 +3,7 @@
  * be copied, modified, or distributed in whole or part without
  * written consent of StreamSets, Inc.
  */
-package com.streamsets.pipeline.stage.origin.spooldir;
+package com.streamsets.pipeline.lib.parser.log;
 
 import com.streamsets.pipeline.api.ConfigDef;
 

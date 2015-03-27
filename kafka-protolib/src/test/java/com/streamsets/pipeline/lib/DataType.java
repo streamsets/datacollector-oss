@@ -6,10 +6,12 @@
 package com.streamsets.pipeline.lib;
 
 public enum DataType {
-  LOG,
+  TEXT,
   JSON,
   CSV,
   XML,
+  LOG,
+  LOG_STACK_TRACE
   ;
 
 }

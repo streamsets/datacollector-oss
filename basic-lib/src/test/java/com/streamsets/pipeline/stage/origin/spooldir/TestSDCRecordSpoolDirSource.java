@@ -14,6 +14,7 @@ import com.streamsets.pipeline.api.Source;
 import com.streamsets.pipeline.api.ext.ContextExtensions;
 import com.streamsets.pipeline.api.ext.JsonRecordWriter;
 import com.streamsets.pipeline.config.DataFormat;
+import com.streamsets.pipeline.config.OnParseError;
 import com.streamsets.pipeline.sdk.ContextInfoCreator;
 import com.streamsets.pipeline.sdk.RecordCreator;
 import com.streamsets.pipeline.sdk.SourceRunner;
@@ -53,7 +54,7 @@ public class TestSDCRecordSpoolDirSource {
   private SpoolDirSource createSource(String dir) {
     return new SpoolDirSource(DataFormat.SDC_JSON, "UTF-8", 100, createTestDir(), 10, 1, null, 10, null, null,
                               PostProcessingOptions.ARCHIVE, dir, 10, null, null, -1, null, 0, 10, null, 0, null, 0,
-      false, null, null, null, null, null, false, null, -1);
+      false, null, null, null, null, null, false, null, OnParseError.ERROR, -1);
   }
 
   @Test
