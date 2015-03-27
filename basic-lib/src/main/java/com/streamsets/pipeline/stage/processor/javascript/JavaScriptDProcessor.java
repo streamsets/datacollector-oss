@@ -38,12 +38,12 @@ public class JavaScriptDProcessor extends DProcessor {
   @ValueChooser(ProcessingModeChooserValues.class)
   public ProcessingMode processingMode;
 
-  private static final String DEFAULT_JAVASCRIPT=
+  private static final String DEFAULT_SCRIPT =
 
       "/**\n" +
       " * Sample JavaScript code\n" +
       " *\n" +
-      " * Avaliable Objects:\n" +
+      " * Available Objects:\n" +
       " * \n" +
       " *  Type: A Map defining the supported data types, it mirrors \n" +
       " *        Field.Type\n" +
@@ -94,7 +94,7 @@ public class JavaScriptDProcessor extends DProcessor {
   @ConfigDef(
       required = true,
       type = ConfigDef.Type.TEXT,
-      defaultValue = DEFAULT_JAVASCRIPT,
+      defaultValue = DEFAULT_SCRIPT,
       label = "Script",
       displayPosition = 20,
       group = "JAVASCRIPT",

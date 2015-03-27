@@ -20,8 +20,6 @@ public class ScriptObjectFactory {
     setRecordInternal(scriptObject, record);
     if (record.get() != null) {
       setField(scriptObject, fieldToScript(record.get()));
-    } else {
-      setField(scriptObject, fieldToScript(Field.create(Field.Type.STRING, null)));
     }
     return scriptObject;
   }
@@ -29,7 +27,7 @@ public class ScriptObjectFactory {
   @SuppressWarnings("unchecked")
   public Record getRecord(Object scriptRecord) {
     Record record = getRecordInternal(scriptRecord);
-    Field field = scriptToField((Map)scriptRecord);
+    Field field = scriptToField((Map)scriptRecord, true);
     record.set(field);
     return record;
   }
@@ -97,32 +95,34 @@ public class ScriptObjectFactory {
   }
 
   @SuppressWarnings("unchecked")
-  protected Field scriptToField(Map<String, Object> map) {
+  protected Field scriptToField(Map<String, Object> map, boolean root) {
     Field field = null;
     if (map != null) {
-      Field.Type type = (Field.Type) map.get("type");
-      Object value = map.get("value");
-      if (value != null) {
-        switch (type) {
-          case MAP:
-            Map<String, Object> scriptMap = (Map<String, Object>) value;
-            Map<String, Field> fieldMap = new LinkedHashMap<>();
-            for (Map.Entry<String, Object> entry : scriptMap.entrySet()) {
-              fieldMap.put(entry.getKey(), scriptToField((Map<String, Object>) entry.getValue()));
-            }
-            value = fieldMap;
-            break;
-          case LIST:
-            List scriptArray = (List) value;
-            List<Field> fieldArray = new ArrayList<>(scriptArray.size());
-            for (Object element : scriptArray) {
-              fieldArray.add(scriptToField((Map)element));
-            }
-            value = fieldArray;
-            break;
+      if (!root || map.containsKey("type")) {
+        Field.Type type = (Field.Type) map.get("type");
+        Object value = map.get("value");
+        if (value != null) {
+          switch (type) {
+            case MAP:
+              Map<String, Object> scriptMap = (Map<String, Object>) value;
+              Map<String, Field> fieldMap = new LinkedHashMap<>();
+              for (Map.Entry<String, Object> entry : scriptMap.entrySet()) {
+                fieldMap.put(entry.getKey(), scriptToField((Map<String, Object>) entry.getValue(), false));
+              }
+              value = fieldMap;
+              break;
+            case LIST:
+              List scriptArray = (List) value;
+              List<Field> fieldArray = new ArrayList<>(scriptArray.size());
+              for (Object element : scriptArray) {
+                fieldArray.add(scriptToField((Map)element, false));
+              }
+              value = fieldArray;
+              break;
+          }
         }
+        field = Field.create(type, value);
       }
-      field = Field.create(type, value);
     }
     return field;
   }

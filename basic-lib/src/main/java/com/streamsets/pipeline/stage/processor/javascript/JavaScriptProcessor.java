@@ -93,21 +93,6 @@ public class JavaScriptProcessor extends AbstractScriptingProcessor {
       }
 
       @Override
-      protected void setField(Object scriptRecord, Object scriptField) {
-        super.setField(scriptRecord, scriptField);
-      }
-
-      @Override
-      protected Object fieldToScript(Field field) {
-        return super.fieldToScript(field);
-      }
-
-      @Override
-      protected Field scriptToField(Map<String, Object> map) {
-        return super.scriptToField(map);
-      }
-
-      @Override
       protected Record getRecordInternal(Object scriptRecord) {
         return (Record) ((Map)scriptRecord).get("_record");
       }

@@ -23,7 +23,6 @@
 
   <properties>
     <jython.version>2.7-b2</jython.version>
-    <guava.version>18.0</guava.version>
   </properties>
 
   <dependencies>
@@ -62,13 +61,6 @@
       <groupId>com.streamsets</groupId>
       <artifactId>streamsets-datacollector-commonlib</artifactId>
       <scope>compile</scope>
-    </dependency>
-
-    <dependency>
-      <groupId>com.google.guava</groupId>
-      <artifactId>guava</artifactId>
-      <scope>test</scope>
-      <version>${guava.version}</version>
     </dependency>
 
     <dependency>

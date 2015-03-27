@@ -18,6 +18,7 @@ import com.streamsets.pipeline.stage.processor.scripting.ProcessingMode;
 import org.junit.Assert;
 import org.junit.Test;
 
+import java.util.Arrays;
 import java.util.List;
 
 public class TestJavaScriptProcessor {
@@ -55,6 +56,51 @@ public class TestJavaScriptProcessor {
       runner.runDestroy();
     }
   }
+
+  @Test
+  public void testJavascriptMapArray() throws Exception {
+    Processor processor = new JavaScriptProcessor(ProcessingMode.RECORD,
+                                              "out.write(records[0]);\n" +
+                                              "records[0]['type'] = Type.STRING;\n" +
+                                              "records[0].value = 'Hello';\n" +
+                                              "out.write(records[0]);\n" +
+                                              "records[0]['type'] = Type.MAP;\n" +
+                                              "records[0]['value'] = { 'foo' : " +
+                                              "                        { 'type' : Type.STRING, 'value' : 'FOO'}" +
+                                              "                      };\n" +
+                                              "out.write(records[0]);\n" +
+                                              "records[0]['type'] = Type.LIST;\n" +
+                                              "records[0]['value'] = [ { 'type' : Type.INTEGER, 'value' : 5} ];\n" +
+                                              "out.write(records[0]);\n" +
+                                              "");
+    ProcessorRunner runner = new ProcessorRunner.Builder(processor)
+        .addOutputLane("lane")
+        .build();
+    runner.runInit();
+    try {
+
+      Record record = RecordCreator.create();
+      List<Record> input = Arrays.asList(record);
+      StageRunner.Output output = runner.runProcess(input);
+      Assert.assertEquals(4, output.getRecords().get("lane").size());
+      Record outRec = output.getRecords().get("lane").get(0);
+      Assert.assertNull(outRec.get());
+      outRec = output.getRecords().get("lane").get(1);
+      Assert.assertEquals(Field.Type.STRING, outRec.get("/").getType());
+      Assert.assertEquals("Hello", outRec.get("/").getValue());
+      outRec = output.getRecords().get("lane").get(2);
+      Assert.assertEquals(Field.Type.MAP, outRec.get("/").getType());
+      Assert.assertEquals(Field.Type.STRING, outRec.get("/foo").getType());
+      Assert.assertEquals("FOO", outRec.get("/foo").getValue());
+      outRec = output.getRecords().get("lane").get(3);
+      Assert.assertEquals(Field.Type.LIST, outRec.get("/").getType());
+      Assert.assertEquals(Field.Type.INTEGER, outRec.get("[0]").getType());
+      Assert.assertEquals(5, outRec.get("[0]").getValue());
+    } finally {
+      runner.runDestroy();
+    }
+  }
+
 
   private void testMode(ProcessingMode mode) throws Exception {
     Processor processor = new JavaScriptProcessor(mode,

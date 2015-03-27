@@ -38,10 +38,60 @@ public class JythonDProcessor extends DProcessor {
   @ValueChooser(ProcessingModeChooserValues.class)
   public ProcessingMode processingMode;
 
+  private static final String DEFAULT_SCRIPT =
+      "#\n" +
+      "# Sample Jython code\n" +
+      "#\n" +
+      "# Available Objects:\n" +
+      "# \n" +
+      "#  Type: A Dictionary defining the supported data types, \n" +
+      "#        it mirrors Field.Type\n" +
+      "#\n" +
+      "#  records: and array the records to process, depending on \n" +
+      "#           the processing mode it may have 1 record or all\n" +
+      "#           the records in the batch.\n" +
+      "#\n" +
+      "#  out.write(record): writes a record to processor output\n" +
+      "#\n" +
+      "#  err.write(record, message): sends a record to error\n" +
+      "#\n" +
+      "\n" +
+      "for record in records:\n" +
+      "  \n" +
+      "  #Change record root field value to a STRING value\n" +
+      "  #record['type'] = Type.STRING\n" +
+      "  #record['value'] = 'Hello '\n" +
+      "\n" +
+      "\n" +
+      "  #Change record root field value to a MAP value and create an entry\n" +
+      "  #record['type'] = Type.MAP\n" +
+      "  #record['value'] = { 'V' : { 'type' : Type.STRING, 'value' : 'Hello'}}\n" +
+      "\n" +
+      "  #Modify a MAP entry\n" +
+      "  #record['value']['V']['type'] = Type.INTEGER\n" +
+      "  #record['value']['V']['value'] = 5\n" +
+      "\n" +
+      "  #Create an ARRAY entry\n" +
+      "  #record['value']['A'] = { 'type' : Type.LIST, 'value' : [\n" +
+      "  #  { 'type' : Type.STRING, 'value' : 'Element 1'},\n" +
+      "  #  { 'type' : Type.STRING, 'value' : 'Element 2'} \n" +
+      "  #  ] }\n" +
+      "\n" +
+      "  #Modify an existing ARRAY entry\n" +
+      "  #record['value']['A']['value'][0]['type'] = Type.INTEGER\n" +
+      "  #record['value']['A']['value'][0]['value'] = 100\n" +
+      "\n" +
+      "  #Write record to procesor output\n" +
+      "  out.write(record)\n" +
+      "\n" +
+      "  #Send record to error\n" +
+      "  #err.write(record, 'Error Message')\n" +
+      "  \n";
+
   @ConfigDef(
       required = true,
       type = ConfigDef.Type.TEXT,
-      defaultValue = "# Sample Jython code\n\nfor record in records:\n  \n  # Change Field Value\n  try:\n  \trecord.set('/a', Field.create(record.get('/b').getValueAsLong() + \n                                  record.get('/c').getValueAsLong()));\n  except:\n    print \"Unexpected error:\"\n  \n  # Add Primitive Field\n  record.set('/simpleField', \n             Field.create('field string Value'))\n  \n  # Add Map Field\n  record.set('/mapField', Field.create({\n    'mapField1' : Field.create('map field value 1'),\n    'mapField2' : Field.create('map field value 2')\n  }))\n  \n  # Add Array Field\n  fieldList = [Field.create('list value1'), \n               Field.create('list value2')];\n  record.set('/arrayField', Field.create(fieldList))\n  \n  # To write record to error sink\n  # err.write(record, 'Error Message')\n  \n  out.write(record)\n\n",
+      defaultValue = DEFAULT_SCRIPT,
       label = "Script",
       displayPosition = 20,
       group = "JYTHON",

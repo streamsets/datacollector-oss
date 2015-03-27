@@ -126,6 +126,8 @@ public abstract class AbstractScriptingProcessor extends SingleLaneProcessor {
     }
   }
 
+  protected void addBindings(SimpleBindings bindings) {
+  }
 
   private void runScript(List<Object> records, Out out, Err err) throws StageException {
     SimpleBindings bindings = new SimpleBindings();
@@ -133,6 +135,7 @@ public abstract class AbstractScriptingProcessor extends SingleLaneProcessor {
     bindings.put("records", records.toArray(new Object[records.size()]));
     bindings.put("out", out);
     bindings.put("err", err);
+    addBindings(bindings);
     try {
       runScript(bindings);
     } catch (ScriptException ex) {

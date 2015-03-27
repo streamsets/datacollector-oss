@@ -5,7 +5,6 @@
  */
 package com.streamsets.pipeline.stage.processor.jython;
 
-import com.google.common.collect.ImmutableList;
 import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.OnRecordError;
 import com.streamsets.pipeline.api.Processor;
@@ -18,6 +17,7 @@ import com.streamsets.pipeline.stage.processor.scripting.ProcessingMode;
 import org.junit.Assert;
 import org.junit.Test;
 
+import java.util.Arrays;
 import java.util.List;
 
 public class TestJythonProcessor {
@@ -27,9 +27,9 @@ public class TestJythonProcessor {
     Processor processor = new JythonProcessor(ProcessingMode.RECORD,
                                               "for record in records:\n" +
                                               "  out.write(record)\n" +
-                                              "  record.set('/', Field.create('Bye'))\n" +
+                                              "  record['value'] = 'Bye'\n" +
                                               "  out.write(record)\n" +
-                                              "  record.set('/', Field.create('Error'))\n" +
+                                              "  record['value'] = 'Error'\n" +
                                               "  err.write(record, 'error')\n");
     ProcessorRunner runner = new ProcessorRunner.Builder(processor)
         .addOutputLane("lane")
@@ -39,13 +39,57 @@ public class TestJythonProcessor {
 
       Record record = RecordCreator.create();
       record.set(Field.create("Hello"));
-      List<Record> input = ImmutableList.of(record);
+      List<Record> input = Arrays.asList(record);
       StageRunner.Output output = runner.runProcess(input);
       Assert.assertEquals(2, output.getRecords().get("lane").size());
       Assert.assertEquals("Hello", output.getRecords().get("lane").get(0).get().getValueAsString());
       Assert.assertEquals("Bye", output.getRecords().get("lane").get(1).get().getValueAsString());
       Assert.assertEquals(1, runner.getErrorRecords().size());
       Assert.assertEquals("Error", runner.getErrorRecords().get(0).get().getValueAsString());
+    } finally {
+      runner.runDestroy();
+    }
+  }
+
+  @Test
+  public void testJythonMapArray() throws Exception {
+    Processor processor = new JythonProcessor(ProcessingMode.RECORD,
+                                              "out.write(records[0])\n" +
+                                              "records[0]['type'] = Type.STRING\n" +
+                                              "records[0]['value'] = 'Hello'\n" +
+                                              "out.write(records[0])\n" +
+                                              "records[0]['type'] = Type.MAP\n" +
+                                              "records[0]['value'] = { 'foo' : " +
+                                              "                        { 'type' : Type.STRING, 'value' : 'FOO'}" +
+                                              "                      }\n" +
+                                              "out.write(records[0])\n" +
+                                              "records[0]['type'] = Type.LIST\n" +
+                                              "records[0]['value'] = [ { 'type' : Type.INTEGER, 'value' : 5} ]\n" +
+                                              "out.write(records[0])\n" +
+                                              "");
+    ProcessorRunner runner = new ProcessorRunner.Builder(processor)
+        .addOutputLane("lane")
+        .build();
+    runner.runInit();
+    try {
+
+      Record record = RecordCreator.create();
+      List<Record> input = Arrays.asList(record);
+      StageRunner.Output output = runner.runProcess(input);
+      Assert.assertEquals(4, output.getRecords().get("lane").size());
+      Record outRec = output.getRecords().get("lane").get(0);
+      Assert.assertNull(outRec.get());
+      outRec = output.getRecords().get("lane").get(1);
+      Assert.assertEquals(Field.Type.STRING, outRec.get("/").getType());
+      Assert.assertEquals("Hello", outRec.get("/").getValue());
+      outRec = output.getRecords().get("lane").get(2);
+      Assert.assertEquals(Field.Type.MAP, outRec.get("/").getType());
+      Assert.assertEquals(Field.Type.STRING, outRec.get("/foo").getType());
+      Assert.assertEquals("FOO", outRec.get("/foo").getValue());
+      outRec = output.getRecords().get("lane").get(3);
+      Assert.assertEquals(Field.Type.LIST, outRec.get("/").getType());
+      Assert.assertEquals(Field.Type.INTEGER, outRec.get("[0]").getType());
+      Assert.assertEquals(5, outRec.get("[0]").getValue());
     } finally {
       runner.runDestroy();
     }
@@ -65,7 +109,7 @@ public class TestJythonProcessor {
       record1.set(Field.create("Hello"));
       Record record2 = RecordCreator.create();
       record2.set(Field.create("Bye"));
-      List<Record> input = ImmutableList.of(record1, record2);
+      List<Record> input = Arrays.asList(record1, record2);
       StageRunner.Output output = runner.runProcess(input);
       Assert.assertEquals(2, output.getRecords().get("lane").size());
       Assert.assertEquals("Hello", output.getRecords().get("lane").get(0).get().getValueAsString());
@@ -89,7 +133,7 @@ public class TestJythonProcessor {
   private void testRecordModeOnErrorHandling(OnRecordError  onRecordError) throws Exception {
     Processor processor = new JythonProcessor(ProcessingMode.RECORD,
                                               "for record in records:\n" +
-                                              "  if record.get().getValueAsString() == 'Hello':\n" +
+                                              "  if record['value'] == 'Hello':\n" +
                                               "    raise Exception()\n" +
                                               "  out.write(record)");
     ProcessorRunner runner = new ProcessorRunner.Builder(processor)
@@ -103,7 +147,7 @@ public class TestJythonProcessor {
       record1.set(Field.create("Hello"));
       Record record2 = RecordCreator.create();
       record2.set(Field.create("Bye"));
-      List<Record> input = ImmutableList.of(record1, record2);
+      List<Record> input = Arrays.asList(record1, record2);
       StageRunner.Output output = runner.runProcess(input);
       switch (onRecordError) {
         case DISCARD:
@@ -142,7 +186,7 @@ public class TestJythonProcessor {
   private void testBatchModeOnErrorHandling(OnRecordError  onRecordError) throws Exception {
     Processor processor = new JythonProcessor(ProcessingMode.BATCH,
                                               "for record in records:\n" +
-                                              "  if record.get().getValueAsString() == 'Hello':\n" +
+                                              "  if record['value'] == 'Hello':\n" +
                                               "    raise Exception()\n" +
                                               "  out.write(record)");
     ProcessorRunner runner = new ProcessorRunner.Builder(processor)
@@ -156,7 +200,7 @@ public class TestJythonProcessor {
       record1.set(Field.create("Hello"));
       Record record2 = RecordCreator.create();
       record2.set(Field.create("Bye"));
-      List<Record> input = ImmutableList.of(record1, record2);
+      List<Record> input = Arrays.asList(record1, record2);
       StageRunner.Output output = runner.runProcess(input);
     } finally {
       runner.runDestroy();
