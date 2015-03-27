@@ -49,6 +49,7 @@ public class TestProductionPipeline {
 
   private static final String PIPELINE_NAME = "myPipeline";
   private static final String REVISION = "0";
+  private static final String SNAPSHOT_NAME = "snapshot";
 
   @BeforeClass
   public static void beforeClass() throws IOException {
@@ -213,7 +214,7 @@ public class TestProductionPipeline {
     SourceOffsetTracker tracker = new TestUtil.SourceOffsetTrackerImpl("1");
     FileSnapshotStore snapshotStore = Mockito.mock(FileSnapshotStore.class);
 
-    Mockito.when(snapshotStore.getSnapshotStatus(PIPELINE_NAME, REVISION)).thenReturn(new SnapshotStatus(false, false));
+    Mockito.when(snapshotStore.getSnapshotStatus(PIPELINE_NAME, REVISION, SNAPSHOT_NAME)).thenReturn(new SnapshotStatus(false, false));
     BlockingQueue<Object> productionObserveRequests = new ArrayBlockingQueue<>(100, true /*FIFO*/);
     Configuration config = new Configuration();
     ProductionPipelineRunner runner = new ProductionPipelineRunner(runtimeInfo, snapshotStore,  deliveryGuarantee,
@@ -229,7 +230,7 @@ public class TestProductionPipeline {
       REVISION, runtimeInfo, pConf).build(runner, tracker, null);
 
     if(captureNextBatch) {
-      runner.captureNextBatch(1);
+      runner.captureNextBatch("snapshot", 1);
     }
 
     return pipeline;

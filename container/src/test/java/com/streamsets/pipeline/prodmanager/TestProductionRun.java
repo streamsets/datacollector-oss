@@ -36,6 +36,7 @@ public class TestProductionRun {
 
   private static final String MY_PIPELINE = "my pipeline";
   private static final String PIPELINE_REV = "2.0";
+  private static final String SNAPSHOT_NAME = "snapshot";
   private static final String MY_PROCESSOR = "p";
   private ProductionPipelineManagerTask manager;
 
@@ -123,19 +124,19 @@ public class TestProductionRun {
     manager.startPipeline(MY_PIPELINE, PIPELINE_REV);
     Assert.assertEquals(State.RUNNING, manager.getPipelineState().getState());
 
-    manager.captureSnapshot(10);
+    manager.captureSnapshot(SNAPSHOT_NAME, 10);
 
     waitForSnapshot();
 
-    SnapshotStatus snapshotStatus = manager.getSnapshotStatus();
+    SnapshotStatus snapshotStatus = manager.getSnapshotStatus(SNAPSHOT_NAME);
     Assert.assertEquals(true, snapshotStatus.isExists());
     Assert.assertEquals(false, snapshotStatus.isSnapshotInProgress());
 
-    InputStream snapshot = manager.getSnapshot(MY_PIPELINE, PIPELINE_REV);
+    InputStream snapshot = manager.getSnapshot(MY_PIPELINE, PIPELINE_REV, SNAPSHOT_NAME);
     //TODO: read the input snapshot into String format and Use de-serializer when ready
 
-    manager.deleteSnapshot(MY_PIPELINE, PIPELINE_REV);
-    snapshotStatus = manager.getSnapshotStatus();
+    manager.deleteSnapshot(MY_PIPELINE, PIPELINE_REV, SNAPSHOT_NAME);
+    snapshotStatus = manager.getSnapshotStatus(SNAPSHOT_NAME);
     Assert.assertEquals(false, snapshotStatus.isExists());
     Assert.assertEquals(false, snapshotStatus.isSnapshotInProgress());
 
@@ -310,7 +311,7 @@ public class TestProductionRun {
   }
 
   private void waitForSnapshot() throws InterruptedException {
-    while(!manager.getSnapshotStatus().isExists()) {
+    while(!manager.getSnapshotStatus(SNAPSHOT_NAME).isExists()) {
       Thread.sleep(5);
     }
   }

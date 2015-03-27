@@ -45,6 +45,7 @@ public class TestUtil {
   private static final String PIPELINE_NAME = "myPipeline";
   private static final String PIPELINE_REV = "2.0";
   private static final String DEFAULT_PIPELINE_REV = "0";
+  private static final String SNAPSHOT_NAME = "snapshot";
 
   /**
    * Mock source implementation
@@ -212,14 +213,14 @@ public class TestUtil {
         , "Pipeline is not running", System.currentTimeMillis()));
 
       try {
-        Mockito.when(pipelineManager.getSnapshot(PIPELINE_NAME, DEFAULT_PIPELINE_REV))
+        Mockito.when(pipelineManager.getSnapshot(PIPELINE_NAME, DEFAULT_PIPELINE_REV, SNAPSHOT_NAME))
           .thenReturn(getClass().getClassLoader().getResourceAsStream("snapshot.json"))
           .thenReturn(null);
       } catch (PipelineManagerException e) {
         e.printStackTrace();
       }
 
-      Mockito.when(pipelineManager.getSnapshotStatus()).thenReturn(new SnapshotStatus(false, true));
+      Mockito.when(pipelineManager.getSnapshotStatus(SNAPSHOT_NAME)).thenReturn(new SnapshotStatus(false, true));
 
       Mockito.when(pipelineManager.getMetrics()).thenReturn(new MetricRegistry());
 
@@ -233,7 +234,7 @@ public class TestUtil {
         e.printStackTrace();
       }
 
-      Mockito.doNothing().when(pipelineManager).deleteSnapshot(PIPELINE_NAME, PIPELINE_REV);
+      Mockito.doNothing().when(pipelineManager).deleteSnapshot(PIPELINE_NAME, PIPELINE_REV, SNAPSHOT_NAME);
 
       Record r = new RecordImpl("a", "b", "c".getBytes(), "d");
       try {

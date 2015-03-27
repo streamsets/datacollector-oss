@@ -94,42 +94,57 @@ public class PipelineManagerResource {
     return Response.ok().build();
   }
 
-  @Path("/snapshot")
+  @Path("/snapshot/{snapshotName}")
   @PUT
   @RolesAllowed({ AuthzRole.MANAGER, AuthzRole.ADMIN })
   public Response captureSnapshot(
+      @PathParam("snapshotName") String snapshotName,
       @QueryParam("batchSize") int batchSize) throws PipelineManagerException {
-    pipelineManager.captureSnapshot(batchSize);
+    pipelineManager.captureSnapshot(snapshotName, batchSize);
     return Response.ok().build();
   }
 
+
   @Path("/snapshot")
+  @GET
+  @RolesAllowed({ AuthzRole.MANAGER, AuthzRole.ADMIN })
+  public Response getSnapshots() throws PipelineManagerException, PipelineStoreException {
+    return Response.ok().type(MediaType.APPLICATION_JSON).entity(BeanHelper.wrapSnapshotInfo(
+      pipelineManager.getSnapshots())).build();
+  }
+
+  @Path("/snapshot/{snapshotName}")
   @GET
   @Produces(MediaType.APPLICATION_JSON)
   @RolesAllowed({ AuthzRole.MANAGER, AuthzRole.ADMIN })
-  public Response getSnapshotStatus() {
+  public Response getSnapshotStatus(
+    @PathParam("snapshotName") String snapshotName,
+    @QueryParam("rev") @DefaultValue("0") String rev) {
     return Response.ok().type(MediaType.APPLICATION_JSON).entity(
-      BeanHelper.wrapSnapshotStatus(pipelineManager.getSnapshotStatus())).build();
+      BeanHelper.wrapSnapshotStatus(pipelineManager.getSnapshotStatus(snapshotName))).build();
   }
 
-  @Path("/snapshot/{name}")
+  @Path("/snapshot/{pipelineName}/{snapshotName}")
   @GET
   @Produces(MediaType.APPLICATION_JSON)
   @RolesAllowed({ AuthzRole.MANAGER, AuthzRole.ADMIN })
   public Response getSnapshot(
-      @PathParam("name") String name,
+      @PathParam("pipelineName") String pipelineName,
+      @PathParam("snapshotName") String snapshotName,
       @QueryParam("rev") @DefaultValue("0") String rev) throws PipelineManagerException {
-    return Response.ok().type(MediaType.APPLICATION_JSON).entity(pipelineManager.getSnapshot(name, rev)).build();
+    return Response.ok().type(MediaType.APPLICATION_JSON).entity(pipelineManager.getSnapshot(pipelineName, rev,
+      snapshotName)).build();
   }
 
-  @Path("/snapshot/{name}")
+  @Path("/snapshot/{pipelineName}/{snapshotName}")
   @DELETE
   @Produces(MediaType.APPLICATION_JSON)
   @RolesAllowed({ AuthzRole.MANAGER, AuthzRole.ADMIN })
   public Response deleteSnapshot(
-      @PathParam("name") String name,
+      @PathParam("pipelineName") String pipelineName,
+      @PathParam("snapshotName") String snapshotName,
       @QueryParam("rev") @DefaultValue("0") String rev) {
-    pipelineManager.deleteSnapshot(name, rev);
+    pipelineManager.deleteSnapshot(pipelineName, rev, snapshotName);
     return Response.ok().build();
   }
 

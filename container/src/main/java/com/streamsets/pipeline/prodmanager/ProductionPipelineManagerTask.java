@@ -33,10 +33,12 @@ import com.streamsets.pipeline.runner.production.ProductionPipelineRunner;
 import com.streamsets.pipeline.runner.production.ProductionSourceOffsetTracker;
 import com.streamsets.pipeline.runner.production.RulesConfigLoader;
 import com.streamsets.pipeline.runner.production.RulesConfigLoaderRunnable;
+import com.streamsets.pipeline.snapshotstore.SnapshotInfo;
 import com.streamsets.pipeline.snapshotstore.SnapshotStatus;
 import com.streamsets.pipeline.snapshotstore.SnapshotStore;
 import com.streamsets.pipeline.snapshotstore.impl.FileSnapshotStore;
 import com.streamsets.pipeline.stagelibrary.StageLibraryTask;
+import com.streamsets.pipeline.store.PipelineInfo;
 import com.streamsets.pipeline.store.PipelineStoreException;
 import com.streamsets.pipeline.store.PipelineStoreTask;
 import com.streamsets.pipeline.task.AbstractTask;
@@ -48,6 +50,7 @@ import org.slf4j.LoggerFactory;
 import javax.inject.Inject;
 import java.io.File;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -211,24 +214,33 @@ public class ProductionPipelineManagerTask extends AbstractTask {
     offsetTracker.resetOffset(pipelineName, rev);
   }
 
-  public void captureSnapshot(int batchSize) throws PipelineManagerException {
+  public List<SnapshotInfo> getSnapshots() throws PipelineStoreException{
+    List<SnapshotInfo> snapshotInfos = new ArrayList<SnapshotInfo>();
+    for(PipelineInfo pipelineInfo: pipelineStore.getPipelines()) {
+      snapshotInfos.addAll(snapshotStore.getSnapshots(pipelineInfo.getName(), pipelineInfo.getLastRev()));
+    }
+    return snapshotInfos;
+  }
+
+  public void captureSnapshot(String snapshotName, int batchSize) throws PipelineManagerException {
     LOG.debug("Capturing snapshot with batch size {}", batchSize);
     checkState(getPipelineState() != null && getPipelineState().getState().equals(State.RUNNING),
       ContainerError.CONTAINER_0105);
     if(batchSize <= 0) {
       throw new PipelineManagerException(ContainerError.CONTAINER_0107, batchSize);
     }
-    prodPipeline.captureSnapshot(batchSize);
+    prodPipeline.captureSnapshot(snapshotName, batchSize);
     LOG.debug("Captured snapshot with batch size {}", batchSize);
   }
 
-  public SnapshotStatus getSnapshotStatus() {
-    return snapshotStore.getSnapshotStatus(stateTracker.getState().getName(), stateTracker.getState().getRev());
+  public SnapshotStatus getSnapshotStatus(String snapshotName) {
+    return snapshotStore.getSnapshotStatus(stateTracker.getState().getName(), stateTracker.getState().getRev(),
+      snapshotName);
   }
 
-  public InputStream getSnapshot(String pipelineName, String rev) throws PipelineManagerException {
+  public InputStream getSnapshot(String pipelineName, String rev, String snapshotName) throws PipelineManagerException {
     validatePipelineExistence(pipelineName);
-    return snapshotStore.getSnapshot(pipelineName, rev);
+    return snapshotStore.getSnapshot(pipelineName, rev, snapshotName);
   }
 
   public List<Record> getErrorRecords(String instanceName, int size) throws PipelineManagerException {
@@ -253,12 +265,11 @@ public class ProductionPipelineManagerTask extends AbstractTask {
     return stateTracker.getHistory(pipelineName, rev, fromBeginning);
   }
 
-  public void deleteSnapshot(String pipelineName, String rev) {
+  public void deleteSnapshot(String pipelineName, String rev, String snapshotName) {
     LOG.debug("Deleting snapshot");
-    snapshotStore.deleteSnapshot(pipelineName, rev);
+    snapshotStore.deleteSnapshot(pipelineName, rev, snapshotName);
     LOG.debug("Deleted snapshot");
   }
-
 
   public PipelineState startPipeline(String name, String rev) throws PipelineStoreException
       , PipelineManagerException, PipelineRuntimeException, StageException {

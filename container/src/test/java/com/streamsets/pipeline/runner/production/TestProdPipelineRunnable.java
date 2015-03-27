@@ -44,6 +44,7 @@ public class TestProdPipelineRunnable {
 
   private static final String PIPELINE_NAME = "xyz";
   private static final String REVISION = "1.0";
+  private static final String SNAPSHOT_NAME = "snapshot";
   private ProductionPipelineManagerTask manager = null;
   private RuntimeInfo info = null;
 
@@ -176,7 +177,7 @@ public class TestProdPipelineRunnable {
     SourceOffsetTracker tracker = new TestUtil.SourceOffsetTrackerImpl("1");
     FileSnapshotStore snapshotStore = Mockito.mock(FileSnapshotStore.class);
 
-    Mockito.when(snapshotStore.getSnapshotStatus(PIPELINE_NAME, REVISION)).thenReturn(new SnapshotStatus(false, false));
+    Mockito.when(snapshotStore.getSnapshotStatus(PIPELINE_NAME, REVISION, SNAPSHOT_NAME)).thenReturn(new SnapshotStatus(false, false));
     BlockingQueue<Object> productionObserveRequests = new ArrayBlockingQueue<>(100, true /*FIFO*/);
     ProductionPipelineRunner runner = new ProductionPipelineRunner(runtimeInfo, snapshotStore, deliveryGuarantee,
       PIPELINE_NAME, REVISION, new FilePipelineStoreTask(info, new Configuration()), productionObserveRequests,
@@ -187,7 +188,7 @@ public class TestProdPipelineRunnable {
     manager.getStateTracker().setState(PIPELINE_NAME, REVISION, State.STOPPED, null);
 
     if(capturenextBatch) {
-      runner.captureNextBatch(1);
+      runner.captureNextBatch(SNAPSHOT_NAME, 1);
     }
 
     return pipeline;

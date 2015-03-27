@@ -68,6 +68,18 @@ public class BeanHelper {
     return pipelineInfoJson;
   }
 
+  public static List<SnapshotInfoJson> wrapSnapshotInfo(List<com.streamsets.pipeline.snapshotstore.SnapshotInfo>
+                                                          snapshotInfoList) {
+    if(snapshotInfoList == null) {
+      return null;
+    }
+    List<SnapshotInfoJson> snapshotInfoJsonList = new ArrayList<>(snapshotInfoList.size());
+    for(com.streamsets.pipeline.snapshotstore.SnapshotInfo p : snapshotInfoList) {
+      snapshotInfoJsonList.add(new SnapshotInfoJson(p));
+    }
+    return snapshotInfoJsonList;
+  }
+
   public static ConfigConfigurationJson wrapConfigConfiguration(
     com.streamsets.pipeline.config.ConfigConfiguration configConfiguration) {
     if(configConfiguration == null) {

@@ -5,26 +5,27 @@
  */
 package com.streamsets.pipeline.snapshotstore.impl;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.streamsets.pipeline.io.DataStore;
 import com.streamsets.pipeline.json.ObjectMapperFactory;
 import com.streamsets.pipeline.main.RuntimeInfo;
 import com.streamsets.pipeline.restapi.bean.BeanHelper;
+import com.streamsets.pipeline.restapi.bean.SnapshotInfoJson;
 import com.streamsets.pipeline.restapi.bean.SnapshotJson;
 import com.streamsets.pipeline.restapi.bean.StageOutputJson;
 import com.streamsets.pipeline.runner.StageOutput;
 import com.streamsets.pipeline.snapshotstore.Snapshot;
+import com.streamsets.pipeline.snapshotstore.SnapshotInfo;
 import com.streamsets.pipeline.snapshotstore.SnapshotStatus;
 import com.streamsets.pipeline.snapshotstore.SnapshotStore;
 import com.streamsets.pipeline.util.PipelineDirectoryUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
+import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 
 public class FileSnapshotStore implements SnapshotStore {
@@ -32,22 +33,32 @@ public class FileSnapshotStore implements SnapshotStore {
   private static final Logger LOG = LoggerFactory.getLogger(FileSnapshotStore.class);
 
   private static final String SNAPSHOT_FILE = "snapshot.json";
+  private static final String INFO_FILE = "info.json";
 
   private final RuntimeInfo runtimeInfo;
   private boolean inProgress = false;
+  private ObjectMapper json;
 
-  public void setInProgress(boolean inProgress) {
+  public void setInProgress(String pipelineName, String rev, String snapshotName, boolean inProgress) {
+    PipelineDirectoryUtil.createPipelineSnapshotDir(runtimeInfo, pipelineName, rev, snapshotName);
     this.inProgress = inProgress;
   }
 
   public FileSnapshotStore(RuntimeInfo runtimeInfo) {
     this.runtimeInfo = runtimeInfo;
+    json = ObjectMapperFactory.get();
   }
 
-  public void storeSnapshot(String pipelineName, String rev, List<StageOutput> snapshot) {
+  public void storeSnapshot(String pipelineName, String rev, String snapshotName, List<StageOutput> snapshot) {
     try {
-      ObjectMapperFactory.get().writeValue(new DataStore(getPipelineSnapshotFile(pipelineName, rev)).getOutputStream(),
-        new SnapshotJson(new Snapshot(snapshot)));
+      SnapshotInfo info = new SnapshotInfo(pipelineName, snapshotName, new Date());
+
+      json.writeValue(new DataStore(getPipelineSnapshotFile(pipelineName, rev,
+        snapshotName)).getOutputStream(), new SnapshotJson(new Snapshot(snapshot)));
+
+      json.writeValue(new DataStore(getPipelineSnapshotInfoFile(pipelineName, rev,
+        snapshotName)).getOutputStream(), new SnapshotInfoJson(info));
+
       inProgress = false;
     } catch (IOException e) {
       throw new RuntimeException(e);
@@ -55,14 +66,14 @@ public class FileSnapshotStore implements SnapshotStore {
 
   }
 
-  public List<StageOutput> retrieveSnapshot(String pipelineName, String rev) {
+  public List<StageOutput> retrieveSnapshot(String pipelineName, String rev, String snapshotName) {
     if(!PipelineDirectoryUtil.getPipelineDir(runtimeInfo, pipelineName, rev).exists() ||
-      !getPipelineSnapshotFile(pipelineName, rev).exists()) {
+      !getPipelineSnapshotFile(pipelineName, rev, snapshotName).exists()) {
       return Collections.emptyList();
     }
     try {
       List<StageOutputJson> snapshotJson = ObjectMapperFactory.get().readValue(
-        new DataStore(getPipelineSnapshotFile(pipelineName, rev)).getInputStream(), SnapshotJson.class).getSnapshot();
+        new DataStore(getPipelineSnapshotFile(pipelineName, rev, snapshotName)).getInputStream(), SnapshotJson.class).getSnapshot();
       return BeanHelper.unwrapStageOutput(snapshotJson);
     } catch (IOException e) {
       throw new RuntimeException(e);
@@ -70,23 +81,23 @@ public class FileSnapshotStore implements SnapshotStore {
   }
 
   @Override
-  public SnapshotStatus getSnapshotStatus(String pipelineName, String rev) {
-    boolean snapshotFileExists = getPipelineSnapshotFile(pipelineName, rev).exists();
+  public SnapshotStatus getSnapshotStatus(String pipelineName, String rev, String snapshotName) {
+    boolean snapshotFileExists = getPipelineSnapshotFile(pipelineName, rev, snapshotName).exists();
     return new SnapshotStatus(snapshotFileExists, inProgress);
   }
 
   @Override
-  public void deleteSnapshot(String pipelineName, String rev) {
-    if(getPipelineSnapshotFile(pipelineName, rev).exists()) {
-      getPipelineSnapshotFile(pipelineName, rev).delete();
+  public void deleteSnapshot(String pipelineName, String rev, String snapshotName) {
+    if(getPipelineSnapshotFile(pipelineName, rev, snapshotName).exists()) {
+      getPipelineSnapshotFile(pipelineName, rev, snapshotName).delete();
     }
   }
 
   @Override
-  public InputStream getSnapshot(String pipelineName, String rev) {
-    if(getPipelineSnapshotFile(pipelineName, rev).exists()) {
+  public InputStream getSnapshot(String pipelineName, String rev, String snapshotName) {
+    if(getPipelineSnapshotFile(pipelineName, rev, snapshotName).exists()) {
       try {
-        return new FileInputStream(getPipelineSnapshotFile(pipelineName, rev));
+        return new FileInputStream(getPipelineSnapshotFile(pipelineName, rev, snapshotName));
       } catch (FileNotFoundException e) {
         LOG.warn(e.getMessage());
         return null;
@@ -95,7 +106,42 @@ public class FileSnapshotStore implements SnapshotStore {
     return null;
   }
 
-  private File getPipelineSnapshotFile(String pipelineName, String rev) {
-    return new File(PipelineDirectoryUtil.getPipelineDir(runtimeInfo, pipelineName, rev), SNAPSHOT_FILE);
+  @Override
+  public List<SnapshotInfo> getSnapshots(String pipelineName, String rev) {
+    List<SnapshotInfo> list = new ArrayList<>();
+    File snapshotDir = PipelineDirectoryUtil.getPipelineSnapshotBaseDir(runtimeInfo, pipelineName, rev);
+    if(snapshotDir.exists()) {
+      for (String name : snapshotDir.list(new FilenameFilter() {
+        @Override
+        public boolean accept(File dir, String name) {
+          //If one browses to the pipelines directory, mac creates a ".DS_store directory and this causes us problems
+          //So filter it out
+          return !name.startsWith(".");
+        }
+      })) {
+        list.add(getInfo(pipelineName, rev, name));
+      }
+    }
+    return Collections.unmodifiableList(list);
+  }
+
+  private SnapshotInfo getInfo(String pipelineName, String rev, String name) {
+    try {
+      SnapshotInfoJson snapshotInfoJsonBean =
+        json.readValue(getPipelineSnapshotInfoFile(pipelineName, rev, name), SnapshotInfoJson.class);
+      return snapshotInfoJsonBean.getSnapshotInfo();
+    } catch (Exception ex) {
+      throw new RuntimeException(ex);
+    }
+  }
+
+  private File getPipelineSnapshotFile(String pipelineName, String rev, String snapshotName) {
+    return new File(PipelineDirectoryUtil.getPipelineSnapshotDir(runtimeInfo, pipelineName, rev, snapshotName),
+      SNAPSHOT_FILE);
+  }
+
+  private File getPipelineSnapshotInfoFile(String pipelineName, String rev, String snapshotName) {
+    return new File(PipelineDirectoryUtil.getPipelineSnapshotDir(runtimeInfo, pipelineName, rev, snapshotName),
+      INFO_FILE);
   }
 }

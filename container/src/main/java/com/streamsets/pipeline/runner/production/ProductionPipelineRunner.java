@@ -76,6 +76,8 @@ public class ProductionPipelineRunner implements PipelineRunner {
   private volatile boolean stop = false;
   /*indicates if the next batch of data should be captured, only the next batch*/
   private volatile boolean captureNextBatch = false;
+  /*indicates the snapshot name to be captured*/
+  private volatile String snapshotName;
   /*indicates the batch size to be captured*/
   private volatile int snapshotBatchSize;
   /*Cache last N error records per stage in memory*/
@@ -150,11 +152,11 @@ public class ProductionPipelineRunner implements PipelineRunner {
     throw new UnsupportedOperationException();
   }
 
-    @Override
+  @Override
   public List<List<StageOutput>> getBatchesOutput() {
     List<List<StageOutput>> batchOutput = new ArrayList<>();
-    if(snapshotStore.getSnapshotStatus(pipelineName, revision).isExists()) {
-      batchOutput.add(snapshotStore.retrieveSnapshot(pipelineName, revision));
+    if(snapshotStore.getSnapshotStatus(pipelineName, revision, snapshotName).isExists()) {
+      batchOutput.add(snapshotStore.retrieveSnapshot(pipelineName, revision, snapshotName));
     }
     return batchOutput;
   }
@@ -187,12 +189,12 @@ public class ProductionPipelineRunner implements PipelineRunner {
     return stop;
   }
 
-  public void captureNextBatch(int batchSize) {
+  public void captureNextBatch(String snapshotName, int batchSize) {
     Preconditions.checkArgument(batchSize > 0);
+    this.snapshotName = snapshotName;
     this.snapshotBatchSize = batchSize;
     this.captureNextBatch = true;
-    ((FileSnapshotStore)snapshotStore).setInProgress(true);
-
+    ((FileSnapshotStore)snapshotStore).setInProgress(pipelineName, revision, snapshotName, true);
   }
 
   private void runBatch(Pipe[] pipes, BadRecordsHandler badRecordsHandler) throws PipelineRuntimeException, StageException {
@@ -248,7 +250,7 @@ public class ProductionPipelineRunner implements PipelineRunner {
 
     if(batchCaptured) {
       List<StageOutput> snapshot = pipeBatch.getSnapshotsOfAllStagesOutput();
-      snapshotStore.storeSnapshot(pipelineName, revision, snapshot);
+      snapshotStore.storeSnapshot(pipelineName, revision, snapshotName, snapshot);
       /*
        * Reset the capture snapshot variable only after capturing the snapshot
        * This guarantees that once captureSnapshot is called, the output is captured exactly once
