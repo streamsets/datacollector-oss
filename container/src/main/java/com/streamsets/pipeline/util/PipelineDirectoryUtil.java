@@ -31,11 +31,6 @@ public class PipelineDirectoryUtil {
     File pipelineDir = getPipelineDir(runtimeInfo, pipelineName, rev);
     File snapshotsBaseDir = new File(pipelineDir, SNAPSHOTS_BASE_DIR);
     File snapshotDir = new File(snapshotsBaseDir, snapshotName);
-
-    if(!snapshotDir.exists()) {
-      throw new RuntimeException(Utils.format("Could not find snapshot directory '{}'", snapshotDir.getAbsolutePath()));
-    }
-
     return snapshotDir;
   }
 

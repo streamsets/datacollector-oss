@@ -311,7 +311,7 @@ public class TestProductionRun {
   }
 
   private void waitForSnapshot() throws InterruptedException {
-    while(!manager.getSnapshotStatus(SNAPSHOT_NAME).isExists()) {
+    while(manager.getSnapshotStatus(SNAPSHOT_NAME).isSnapshotInProgress()) {
       Thread.sleep(5);
     }
   }

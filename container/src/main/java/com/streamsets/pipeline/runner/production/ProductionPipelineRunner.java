@@ -31,6 +31,7 @@ import com.streamsets.pipeline.runner.PipelineRuntimeException;
 import com.streamsets.pipeline.runner.SourceOffsetTracker;
 import com.streamsets.pipeline.runner.StageContext;
 import com.streamsets.pipeline.runner.StageOutput;
+import com.streamsets.pipeline.snapshotstore.SnapshotStatus;
 import com.streamsets.pipeline.snapshotstore.SnapshotStore;
 import com.streamsets.pipeline.snapshotstore.impl.FileSnapshotStore;
 import com.streamsets.pipeline.store.PipelineStoreTask;
@@ -155,7 +156,8 @@ public class ProductionPipelineRunner implements PipelineRunner {
   @Override
   public List<List<StageOutput>> getBatchesOutput() {
     List<List<StageOutput>> batchOutput = new ArrayList<>();
-    if(snapshotStore.getSnapshotStatus(pipelineName, revision, snapshotName).isExists()) {
+    SnapshotStatus snapshotStatus = snapshotStore.getSnapshotStatus(pipelineName, revision, snapshotName);
+    if(snapshotStatus != null && snapshotStatus.isExists()) {
       batchOutput.add(snapshotStore.retrieveSnapshot(pipelineName, revision, snapshotName));
     }
     return batchOutput;

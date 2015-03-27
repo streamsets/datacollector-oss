@@ -195,10 +195,11 @@ public class TestRestApiAuthorization {
     list.add(new RestApi("/rest/v1/pipeline/start", Method.POST, AuthzRole.MANAGER, AuthzRole.ADMIN));
     list.add(new RestApi("/rest/v1/pipeline/stop", Method.POST, AuthzRole.MANAGER, AuthzRole.ADMIN));
     list.add(new RestApi("/rest/v1/pipeline/resetOffset/foo", Method.POST, AuthzRole.MANAGER, AuthzRole.ADMIN));
-    list.add(new RestApi("/rest/v1/pipeline/snapshot", Method.PUT, AuthzRole.MANAGER, AuthzRole.ADMIN));
     list.add(new RestApi("/rest/v1/pipeline/snapshot", Method.GET, AuthzRole.MANAGER, AuthzRole.ADMIN));
+    list.add(new RestApi("/rest/v1/pipeline/snapshot/foo", Method.PUT, AuthzRole.MANAGER, AuthzRole.ADMIN));
     list.add(new RestApi("/rest/v1/pipeline/snapshot/foo", Method.GET, AuthzRole.MANAGER, AuthzRole.ADMIN));
-    list.add(new RestApi("/rest/v1/pipeline/snapshot/foo", Method.DELETE, AuthzRole.MANAGER, AuthzRole.ADMIN));
+    list.add(new RestApi("/rest/v1/pipeline/snapshot/foo/foo", Method.GET, AuthzRole.MANAGER, AuthzRole.ADMIN));
+    list.add(new RestApi("/rest/v1/pipeline/snapshot/foo/foo", Method.DELETE, AuthzRole.MANAGER, AuthzRole.ADMIN));
     list.add(new RestApi("/rest/v1/pipeline/metrics", Method.GET, AuthzRole.ALL_ROLES));
     list.add(new RestApi("/rest/v1/pipeline/history/foo", Method.GET, AuthzRole.ALL_ROLES));
     list.add(new RestApi("/rest/v1/pipeline/history/foo", Method.DELETE, AuthzRole.MANAGER, AuthzRole.ADMIN));

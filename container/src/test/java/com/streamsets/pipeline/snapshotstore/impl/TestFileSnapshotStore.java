@@ -57,6 +57,7 @@ public class TestFileSnapshotStore {
     FileUtils.deleteDirectory(f);
     RuntimeInfo info = new RuntimeInfo(ImmutableList.of(getClass().getClassLoader()));
     snapshotStore = new FileSnapshotStore(info);
+    snapshotStore.setInProgress(PIPELINE_NAME, PIPELINE_REV, SNAPSHOT_NAME, true);
   }
 
   @After
@@ -84,7 +85,7 @@ public class TestFileSnapshotStore {
     SnapshotStatus snapshotStatus = snapshotStore.getSnapshotStatus(PIPELINE_NAME, PIPELINE_REV, SNAPSHOT_NAME);
     Assert.assertNotNull(snapshotStatus);
     Assert.assertEquals(false, snapshotStatus.isExists());
-    Assert.assertEquals(false, snapshotStatus.isSnapshotInProgress());
+    Assert.assertEquals(true, snapshotStatus.isSnapshotInProgress());
 
     //create snapshot
     List<StageOutput> snapshot = createSnapshotData();
