@@ -33,7 +33,7 @@
 
  
  <div class="body conbody"><p class="shortdesc">Use record functions to get information about a record, such as the data type of a field
-  or the stage instance name for an error record. </p>
+  or the stage instance name for a record. </p>
 
   <p class="p">The expression language
    provides the following record functions:</p>
@@ -43,7 +43,7 @@
     <dt class="dt dlterm">${record:creator()}</dt>
 
     <dd class="dd">Returns the instance name of the stage that created the record, typically an origin stage.
-     Data is stored in the stageCreator field of an error record. </dd>
+     Data is stored in the stageCreator field of a record. </dd>
 
     <dd class="dd">Use to process error records.</dd>
 
@@ -63,7 +63,7 @@
     <dt class="dt dlterm">${record:id()}</dt>
 
     <dd class="dd">Returns the ID of the stage that created the record, typically an origin stage. Data is
-     stored in the sourceId field of an error record. </dd>
+     stored in the sourceId field of a  record. </dd>
 
     <dd class="dd">Return type: String.</dd>
 
@@ -72,11 +72,9 @@
     <dt class="dt dlterm">${record:path()}</dt>
 
     <dd class="dd">Returns the stages in the pipeline that processed a record. Data is stored in the stagesPath
-     field of an error record. The field path uses the following
-     format:<pre class="pre codeblock">&lt;origin instance name&gt;:&lt;next stage instance name&gt;:&lt;next stage instance name&gt;:...</pre>
+     field of a record. The field path uses the following
+     format:<pre class="pre codeblock">&lt;origin instance name&gt;:&lt;next stage instance name&gt;:&lt;next stage instance name&gt;:... </pre>
 </dd>
-
-    <dd class="dd">Use to process error records. </dd>
 
     <dd class="dd">Return type: String.</dd>
 

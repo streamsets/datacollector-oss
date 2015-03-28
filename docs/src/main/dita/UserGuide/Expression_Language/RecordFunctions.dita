@@ -3,9 +3,8 @@
 <concept id="concept_p1z_ggv_1r">
  <title>Record Functions</title>
  <shortdesc>Use record functions to get information about a record, such as the data type of a field
-  or the stage instance name for an error record. <draft-comment author="Loretta">are these just for
-   error records or for any record? Update everything in here if
-  necessary</draft-comment></shortdesc>
+  or the stage instance name for a record. <draft-comment author="Loretta">are these just for error
+   records or for any record? Update everything in here if necessary</draft-comment></shortdesc>
  <conbody>
   <p><indexterm>functions<indexterm>record functions</indexterm></indexterm><indexterm>record
      functions<indexterm>in the expression language</indexterm></indexterm>The expression language
@@ -14,7 +13,7 @@
    <dlentry>
     <dt>${record:creator()}</dt>
     <dd>Returns the instance name of the stage that created the record, typically an origin stage.
-     Data is stored in the stageCreator field of an error record. </dd>
+     Data is stored in the stageCreator field of a record. </dd>
     <dd>Use to process error records.</dd>
     <dd>Return type: String.</dd>
    </dlentry>
@@ -27,15 +26,14 @@
    <dlentry>
     <dt>${record:id()}</dt>
     <dd>Returns the ID of the stage that created the record, typically an origin stage. Data is
-     stored in the sourceId field of an error record. </dd>
+     stored in the sourceId field of a  record. </dd>
     <dd>Return type: String.</dd>
    </dlentry>
    <dlentry>
     <dt>${record:path()}</dt>
     <dd>Returns the stages in the pipeline that processed a record. Data is stored in the stagesPath
-     field of an error record. The field path uses the following
-     format:<codeblock>&lt;origin instance name>:&lt;next stage instance name>:&lt;next stage instance name>:...</codeblock></dd>
-    <dd>Use to process error records. </dd>
+     field of a record. The field path uses the following
+     format:<codeblock>&lt;origin instance name>:&lt;next stage instance name>:&lt;next stage instance name>:... </codeblock></dd>
     <dd>Return type: String.</dd>
    </dlentry>
    <dlentry>
