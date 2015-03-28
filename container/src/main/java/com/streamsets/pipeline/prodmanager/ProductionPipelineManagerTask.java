@@ -214,10 +214,10 @@ public class ProductionPipelineManagerTask extends AbstractTask {
     offsetTracker.resetOffset(pipelineName, rev);
   }
 
-  public List<SnapshotInfo> getSnapshots() throws PipelineStoreException{
+  public List<SnapshotInfo> getSnapshotsInfo() throws PipelineStoreException{
     List<SnapshotInfo> snapshotInfos = new ArrayList<SnapshotInfo>();
     for(PipelineInfo pipelineInfo: pipelineStore.getPipelines()) {
-      snapshotInfos.addAll(snapshotStore.getSnapshots(pipelineInfo.getName(), pipelineInfo.getLastRev()));
+      snapshotInfos.addAll(snapshotStore.getSnapshotsInfo(pipelineInfo.getName(), pipelineInfo.getLastRev()));
     }
     return snapshotInfos;
   }

@@ -107,7 +107,7 @@ public class FileSnapshotStore implements SnapshotStore {
   }
 
   @Override
-  public List<SnapshotInfo> getSnapshots(String pipelineName, String rev) {
+  public List<SnapshotInfo> getSnapshotsInfo(String pipelineName, String rev) {
     List<SnapshotInfo> list = new ArrayList<>();
     File snapshotDir = PipelineDirectoryUtil.getPipelineSnapshotBaseDir(runtimeInfo, pipelineName, rev);
     if(snapshotDir.exists()) {

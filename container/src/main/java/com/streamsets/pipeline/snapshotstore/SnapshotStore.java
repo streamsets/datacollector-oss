@@ -22,6 +22,6 @@ public interface SnapshotStore {
 
   public InputStream getSnapshot(String pipelineName, String rev, String snapshotName);
 
-  public List<SnapshotInfo> getSnapshots(String pipelineName, String rev);
+  public List<SnapshotInfo> getSnapshotsInfo(String pipelineName, String rev);
 
 }
