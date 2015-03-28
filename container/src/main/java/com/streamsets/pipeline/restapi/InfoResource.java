@@ -19,6 +19,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.SecurityContext;
 import java.io.IOException;
+import java.security.Principal;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -48,21 +49,31 @@ public class InfoResource {
   @Produces(MediaType.APPLICATION_JSON)
   @PermitAll
   public Response getUser(@Context SecurityContext context) throws PipelineException, IOException {
-    String user = context.getUserPrincipal().getName();
+    Map<String, Object> map = new HashMap<>();
+    String user;
     List<String> roles = new ArrayList<>();
-    if (context.isUserInRole(AuthzRole.GUEST)) {
-      roles.add(AuthzRole.GUEST);
-    }
-    if (context.isUserInRole(AuthzRole.MANAGER)) {
-      roles.add(AuthzRole.MANAGER);
-    }
-    if (context.isUserInRole(AuthzRole.CREATOR)) {
-      roles.add(AuthzRole.CREATOR);
-    }
-    if (context.isUserInRole(AuthzRole.ADMIN)) {
+    Principal principal = context.getUserPrincipal();
+
+    if(principal != null) {
+      user = principal.getName();
+      if (context.isUserInRole(AuthzRole.GUEST)) {
+        roles.add(AuthzRole.GUEST);
+      }
+      if (context.isUserInRole(AuthzRole.MANAGER)) {
+        roles.add(AuthzRole.MANAGER);
+      }
+      if (context.isUserInRole(AuthzRole.CREATOR)) {
+        roles.add(AuthzRole.CREATOR);
+      }
+      if (context.isUserInRole(AuthzRole.ADMIN)) {
+        roles.add(AuthzRole.ADMIN);
+      }
+    } else {
+      //In case of http.authentication=none
+      user = "admin";
       roles.add(AuthzRole.ADMIN);
     }
-    Map<String, Object> map = new HashMap<>();
+
     map.put("user", user);
     map.put("roles", roles);
     return Response.status(Response.Status.OK).entity(map).build();

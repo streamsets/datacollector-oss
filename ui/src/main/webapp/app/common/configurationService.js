@@ -8,7 +8,8 @@ angular.module('dataCollectorApp.common')
       JVM_METRICS_REFRESH_INTERVAL = 'ui.jvmMetrics.refresh.interval.ms',
       UI_LOCAL_HELP_BASE_URL = 'ui.local.help.base.url',
       UI_HOSTED_HELP_BASE_URL = 'ui.hosted.help.base.url',
-      UI_ENABLE_USAGE_DATA_COLLECTION = 'ui.enable.usage.data.collection';
+      UI_ENABLE_USAGE_DATA_COLLECTION = 'ui.enable.usage.data.collection',
+      HTTP_AUTHENTICATION = 'http.authentication';
 
     this.initializeDefer = undefined;
     this.config = undefined;
@@ -95,6 +96,17 @@ angular.module('dataCollectorApp.common')
         return self.config[UI_ENABLE_USAGE_DATA_COLLECTION];
       }
       return false;
+    };
+
+    /**
+     * Returns http.authentication value from sdc.properties
+     * @returns {*}
+     */
+    this.getAuthenticationType = function() {
+      if(self.config) {
+        return self.config[HTTP_AUTHENTICATION];
+      }
+      return 'form';
     };
 
   });

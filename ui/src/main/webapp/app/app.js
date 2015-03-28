@@ -66,6 +66,7 @@ angular.module('dataCollectorApp')
     $rootScope.common = $rootScope.common || {
       title : defaultTitle,
       userName: 'Account',
+      authenticationType: 'none',
       active: {
         home: 'active'
       },
@@ -163,6 +164,7 @@ angular.module('dataCollectorApp')
     });
 
     configuration.init().then(function() {
+      $rootScope.common.authenticationType = configuration.getAuthenticationType();
       if(configuration.isAnalyticsEnabled()) {
         Analytics.createAnalyticsScriptTag();
       }

@@ -80,7 +80,7 @@
           </ul>
         </li>
 
-        <li class="dropdown pointer">
+        <li class="dropdown pointer" ng-if="common.authenticationType != 'none'">
           <a class="dropdown-toggle" data-toggle="dropdown" href="javascript:;">
             <span>
                 <i class="fa fa-user fa-lg"></i>
@@ -100,7 +100,7 @@
 
             <li role="presentation" class="divider"></li>
 
-            <li>
+            <li ng-if="common.authenticationType === 'form'">
               <a href="javascript:;" ng-click="common.logout()">
                 <span class="glyphicon glyphicon-log-out"></span>
                 <span translate="global.menu.account.logout">Logout</span>
