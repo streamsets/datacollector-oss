@@ -66,13 +66,13 @@ public class TestPipelineManagerResource extends JerseyTest {
   @Test
    public void testCaptureSnapshotAPI() {
     Entity<String> stringEntity = Entity.entity("", MediaType.APPLICATION_JSON);
-    Response r = target("/v1/pipeline/snapshot/snapshot1").request().put(stringEntity);
+    Response r = target("/v1/pipeline/snapshots/snapshot1").request().put(stringEntity);
     Assert.assertNotNull(r);
   }
 
   @Test
   public void testGetSnapshotAPI() throws IOException {
-    Response r = target("/v1/pipeline/snapshot/myPipeline/snapshot").request().get();
+    Response r = target("/v1/pipeline/snapshots/myPipeline/snapshot").request().get();
     Assert.assertNotNull(r);
 
     StringWriter writer = new StringWriter();
@@ -83,14 +83,14 @@ public class TestPipelineManagerResource extends JerseyTest {
 
   @Test
   public void testDeleteSnapshotAPI() throws IOException {
-    Response r = target("/v1/pipeline/snapshot/myPipeline/snapshot").request().delete();
+    Response r = target("/v1/pipeline/snapshots/myPipeline/snapshot").request().delete();
     Assert.assertNotNull(r);
 
   }
 
   @Test
   public void testSnapshotStatusAPI() throws IOException {
-    Response r = target("/v1/pipeline/snapshot/snapshot").queryParam("get","status").request().get();
+    Response r = target("/v1/pipeline/snapshots/snapshot").queryParam("get","status").request().get();
     Assert.assertNotNull(r);
 
     SnapshotStatusJson s = r.readEntity(SnapshotStatusJson.class);

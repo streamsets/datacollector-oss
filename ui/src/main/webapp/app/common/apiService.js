@@ -427,7 +427,7 @@ angular.module('dataCollectorApp.common')
        * @returns {*}
        */
       captureSnapshot: function(snapshotName, batchSize) {
-        var url = apiBase + '/pipeline/snapshot/snapshot1?batchSize=' + batchSize ;
+        var url = apiBase + '/pipeline/snapshots/snapshot1?batchSize=' + batchSize ;
         return $http({
           method: 'PUT',
           url: url
@@ -441,7 +441,7 @@ angular.module('dataCollectorApp.common')
        * @returns {*}
        */
       getSnapshotStatus: function(snapshotName) {
-        var url = apiBase + '/pipeline/snapshot/' + snapshotName;
+        var url = apiBase + '/pipeline/snapshots/' + snapshotName;
         return $http({
           method: 'GET',
           url: url
@@ -456,7 +456,7 @@ angular.module('dataCollectorApp.common')
        * @returns {*}
        */
       getSnapshot: function(pipelineName, snapshotName) {
-        var url = apiBase + '/pipeline/snapshot/' + pipelineName + '/' + snapshotName ;
+        var url = apiBase + '/pipeline/snapshots/' + pipelineName + '/' + snapshotName ;
         return $http({
           method: 'GET',
           url: url
@@ -471,7 +471,7 @@ angular.module('dataCollectorApp.common')
        * @returns {*}
        */
       deleteSnapshot: function(pipelineName, snapshotName) {
-        var url = apiBase + '/pipeline/snapshot/' + pipelineName + '/' + snapshotName ;
+        var url = apiBase + '/pipeline/snapshots/' + pipelineName + '/' + snapshotName ;
         return $http({
           method: 'DELETE',
           url: url

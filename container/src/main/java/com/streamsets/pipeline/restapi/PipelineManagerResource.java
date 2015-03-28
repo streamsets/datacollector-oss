@@ -94,7 +94,7 @@ public class PipelineManagerResource {
     return Response.ok().build();
   }
 
-  @Path("/snapshot/{snapshotName}")
+  @Path("/snapshots/{snapshotName}")
   @PUT
   @RolesAllowed({ AuthzRole.MANAGER, AuthzRole.ADMIN })
   public Response captureSnapshot(
@@ -105,7 +105,7 @@ public class PipelineManagerResource {
   }
 
 
-  @Path("/snapshot")
+  @Path("/snapshots")
   @GET
   @RolesAllowed({ AuthzRole.MANAGER, AuthzRole.ADMIN })
   public Response getSnapshots() throws PipelineManagerException, PipelineStoreException {
@@ -113,7 +113,7 @@ public class PipelineManagerResource {
       pipelineManager.getSnapshots())).build();
   }
 
-  @Path("/snapshot/{snapshotName}")
+  @Path("/snapshots/{snapshotName}")
   @GET
   @Produces(MediaType.APPLICATION_JSON)
   @RolesAllowed({ AuthzRole.MANAGER, AuthzRole.ADMIN })
@@ -124,7 +124,7 @@ public class PipelineManagerResource {
       BeanHelper.wrapSnapshotStatus(pipelineManager.getSnapshotStatus(snapshotName))).build();
   }
 
-  @Path("/snapshot/{pipelineName}/{snapshotName}")
+  @Path("/snapshots/{pipelineName}/{snapshotName}")
   @GET
   @Produces(MediaType.APPLICATION_JSON)
   @RolesAllowed({ AuthzRole.MANAGER, AuthzRole.ADMIN })
@@ -136,7 +136,7 @@ public class PipelineManagerResource {
       snapshotName)).build();
   }
 
-  @Path("/snapshot/{pipelineName}/{snapshotName}")
+  @Path("/snapshots/{pipelineName}/{snapshotName}")
   @DELETE
   @Produces(MediaType.APPLICATION_JSON)
   @RolesAllowed({ AuthzRole.MANAGER, AuthzRole.ADMIN })
