@@ -32,6 +32,7 @@
       "autoArrange": "Auto Arrange",
       "cancel": "Cancel",
       "changeRule": "Change Rule",
+      "captured": "Captured",
       "close": "Close",
       "condition": "Condition",
       "createdBy": "Created By",
@@ -101,6 +102,7 @@
       "username": "Login",
       "username.placeholder": "Your login",
       "value": "Value",
+      "view": "View",
       "yes": "Yes"
     },
     "messages": {
@@ -154,6 +156,7 @@
       "selectorProcessors": "Selectors",
       "settings": "Settings",
       "snapshot": "Snapshot",
+      "snapshots": "Snapshots",
       "sources": "Origins",
       "stageLibrary": "Stage Library",
       "start": "Start",
@@ -363,6 +366,12 @@
       "headerLabel": "Shutdown Collector",
       "secretPlaceholder": "Enter Secret...",
       "successMessage": "Collector is stopped."
+    },
+    "snapshotsPane": {
+      "captureSnapshot": "Capture Snapshot",
+      "captureSnapshotInProgress": "Capture Snapshot in progress...",
+      "modalTitle": "Snapshots",
+      "noSnapshots": "No Snapshots"
     }
   },
   "jvmMetrics": {

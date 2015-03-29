@@ -147,22 +147,8 @@ public class FilePipelineStoreTask extends AbstractTask implements PipelineStore
     return pipeline;
   }
 
-  private boolean deleteAll(File path) {
-    boolean ok = true;
-    File[] children = path.listFiles();
-    if (children != null) {
-      for (File child : children) {
-        ok = deleteAll(child);
-        if (!ok) {
-          break;
-        }
-      }
-    }
-    return ok && path.delete();
-  }
-
   private boolean cleanUp(String name) throws PipelineStoreException {
-    return deleteAll(getPipelineDir(name));
+    return PipelineDirectoryUtil.deleteAll(getPipelineDir(name));
   }
 
   @Override

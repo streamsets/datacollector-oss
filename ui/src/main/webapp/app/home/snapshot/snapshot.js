@@ -87,74 +87,32 @@ angular
       }
     };
 
-    /**
-     * Check for Snapshot Status for every 1 seconds, once done open the snapshot view.
-     *
-     */
-    var checkForCaptureSnapshotStatus = function(snapshotName) {
-      captureSnapshotStatusTimer = $timeout(
-        function() {
-          //console.log( "Pipeline Metrics Timeout executed", Date.now() );
-        },
-        1000
-      );
+    var viewSnapshot = function(snapshotName) {
+      api.pipelineAgent.getSnapshot($scope.activeConfigInfo.name, snapshotName).
+        success(function(res) {
+          $scope.previewData = res;
 
-      captureSnapshotStatusTimer.then(
-        function() {
-          api.pipelineAgent.getSnapshotStatus(snapshotName)
-            .success(function(data) {
-              if(data && data.snapshotInProgress === false) {
-                //console.log('Capturing Snapshot is completed.');
+          var firstStageInstance = $scope.pipelineConfig.stages[0];
+          $scope.changeStageSelection({
+            selectedObject: firstStageInstance,
+            type: pipelineConstant.STAGE_INSTANCE
+          });
 
-                api.pipelineAgent.getSnapshot($scope.activeConfigInfo.name, snapshotName).
-                  success(function(res) {
-                    $scope.previewData = res;
-
-                    var firstStageInstance = $scope.pipelineConfig.stages[0];
-                    $scope.changeStageSelection({
-                      selectedObject: firstStageInstance,
-                      type: pipelineConstant.STAGE_INSTANCE
-                    });
-
-                    $scope.showLoading = false;
-                  }).
-                  error(function(data) {
-                    $rootScope.common.errors = [data];
-                    $scope.showLoading = false;
-                  });
-
-
-
-              } else {
-                checkForCaptureSnapshotStatus(snapshotName);
-              }
-            })
-            .error(function(data, status, headers, config) {
-              $rootScope.common.errors = [data];
-            });
-        },
-        function() {
-          console.log( "Timer rejected!" );
-        }
-      );
-    };
-
-
-    var snapshotPipeline = function() {
-      var snapshotName = 'Snapshot1';
-      $scope.showLoading = true;
-      api.pipelineAgent.captureSnapshot(snapshotName, snapshotBatchSize).
-        then(function() {
-          checkForCaptureSnapshotStatus(snapshotName);
+          $scope.showLoading = false;
+        }).
+        error(function(data) {
+          $rootScope.common.errors = [data];
+          $scope.showLoading = false;
         });
+
     };
 
-    $scope.$on('snapshotPipeline', function() {
-      snapshotPipeline();
+    $scope.$on('snapshotPipeline', function(event, snapshotName) {
+      viewSnapshot(snapshotName);
     });
 
     if($scope.snapshotMode) {
-      snapshotPipeline();
+      viewSnapshot($scope.snapshotName);
     }
 
     $scope.$on('onSelectionChange', function(event, options) {

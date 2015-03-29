@@ -88,8 +88,11 @@ public class FileSnapshotStore implements SnapshotStore {
 
   @Override
   public void deleteSnapshot(String pipelineName, String rev, String snapshotName) {
-    if(getPipelineSnapshotFile(pipelineName, rev, snapshotName).exists()) {
-      getPipelineSnapshotFile(pipelineName, rev, snapshotName).delete();
+    File snapshotBaseDir = PipelineDirectoryUtil.getPipelineSnapshotDir(runtimeInfo, pipelineName, rev, snapshotName);
+    if(snapshotBaseDir.exists()) {
+      if (!PipelineDirectoryUtil.deleteAll(snapshotBaseDir)) {
+        throw new RuntimeException("Cannot delete snapshot");
+      }
     }
   }
 

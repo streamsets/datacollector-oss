@@ -418,6 +418,18 @@ angular.module('dataCollectorApp.common')
         });
       },
 
+      /**
+       * Get List of available snapshots.
+       *
+       * @returns {*}
+       */
+      getSnapshotsInfo: function() {
+        var url = apiBase + '/pipeline/snapshots' ;
+        return $http({
+          method: 'GET',
+          url: url
+        });
+      },
 
       /**
        * Capture Snapshot of running pipeline.
@@ -427,7 +439,7 @@ angular.module('dataCollectorApp.common')
        * @returns {*}
        */
       captureSnapshot: function(snapshotName, batchSize) {
-        var url = apiBase + '/pipeline/snapshots/snapshot1?batchSize=' + batchSize ;
+        var url = apiBase + '/pipeline/snapshots/' + snapshotName + '?batchSize=' + batchSize ;
         return $http({
           method: 'PUT',
           url: url

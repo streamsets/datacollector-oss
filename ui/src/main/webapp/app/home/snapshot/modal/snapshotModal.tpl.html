@@ -1,0 +1,61 @@
+<form class="snapshots-modal-form" role="form">
+  <div class="modal-header">
+    <button type="button" class="close" ng-click="close()">
+      <span aria-hidden="true">&times;</span>
+      <span class="sr-only">Close</span>
+    </button>
+    <h3 class="modal-title" translate="home.snapshotsPane.modalTitle">Snapshots</h3>
+  </div>
+  <div class="modal-body">
+
+    <ng-include src="'app/home/alerts/error/errorAlert.tpl.html'"></ng-include>
+
+    <button type="button" class="btn btn-primary"
+            ng-hide="showLoading || snapshotInProgress"
+            ng-click="captureSnapshot()"
+            translate="home.snapshotsPane.captureSnapshot">Capture</button>
+
+    <button type="button" class="btn btn-primary"
+            ng-show="snapshotInProgress"
+            ng-disabled="true"
+            translate="home.snapshotsPane.captureSnapshotInProgress">Capture Snapshot in progress...</button>
+
+    <table class="table table-hover">
+      <thead>
+        <tr>
+          <th>{{'global.form.name' | translate}}</th>
+          <th>{{'global.form.captured' | translate}}</th>
+          <th>{{'global.form.actions' | translate}}</th>
+        </tr>
+      </thead>
+
+      <tbody ng-hide="showLoading">
+        <tr ng-repeat="snapshotInfo in snapshotsInfo">
+          <td>{{snapshotInfo.snapshotName}}</td>
+          <td>{{snapshotInfo.captured  | date:'medium'}}</td>
+          <td>
+            <a href="javascript:;" translate="global.form.view"
+               ng-click="viewSnapshot(snapshotInfo.snapshotName)"></a>
+            <span class="separator">|</span>
+            <a href="javascript:;" translate="global.form.delete"
+              ng-click="deleteSnapshot(snapshotInfo.snapshotName, $index)"> Delete </a>
+          </td>
+        </tr>
+
+        <tr ng-if="snapshotsInfo.length === 0">
+          <td colspan="3" class="no-records text-center"
+              translate="home.snapshotsPane.noSnapshots">No Snapshots.</td>
+        </tr>
+
+      </tbody>
+
+    </table>
+
+    <div show-loading="showLoading"></div>
+
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-primary" ng-click="close()"
+            translate="global.form.close">close</button>
+  </div>
+</form>

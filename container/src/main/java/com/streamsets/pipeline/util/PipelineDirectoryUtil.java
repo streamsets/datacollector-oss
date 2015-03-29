@@ -65,4 +65,18 @@ public class PipelineDirectoryUtil {
     return pipelineName.replaceAll(" ", ".");
   }
 
+  public static boolean deleteAll(File path) {
+    boolean ok = true;
+    File[] children = path.listFiles();
+    if (children != null) {
+      for (File child : children) {
+        ok = deleteAll(child);
+        if (!ok) {
+          break;
+        }
+      }
+    }
+    return ok && path.delete();
+  }
+
 }

@@ -13,16 +13,16 @@ import java.util.Date;
 public class SnapshotInfo {
   private String pipelineName;
   private String snapshotName;
-  private Date created;
+  private Date captured;
 
   @JsonCreator
   public SnapshotInfo(
     @JsonProperty("pipelineName") String pipelineName,
     @JsonProperty("snapshotName") String snapshotName,
-    @JsonProperty("created") Date created) {
+    @JsonProperty("captured") Date captured) {
     this.snapshotName = snapshotName;
     this.pipelineName = pipelineName;
-    this.created = created;
+    this.captured = captured;
   }
 
   public String getPipelineName() {
@@ -33,8 +33,8 @@ public class SnapshotInfo {
     return snapshotName;
   }
 
-  public Date getCreated() {
-    return created;
+  public Date getCaptured() {
+    return captured;
   }
 
 }

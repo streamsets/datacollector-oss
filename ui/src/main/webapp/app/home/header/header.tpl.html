@@ -192,12 +192,12 @@
       </a>
 
       <a class="btn btn-link icon-button"
-          tooltip-placement="bottom" tooltip="{{'home.header.snapshot' | translate}}"
+          tooltip-placement="bottom" tooltip="{{'home.header.snapshots' | translate}}"
           tooltip-trigger="{{iconOnly ? 'mouseenter' : 'notooltip'}}"
           tooltip-popup-delay="500"
           ng-if="isAuthorized([userRoles.admin, userRoles.manager])"
           ng-show="isPipelineRunning && !snapshotMode"
-          ng-click="captureSnapshot()">
+          ng-click="viewSnapshots()">
         <span class="glyphicon glyphicon-camera fa-14x"></span>
       </a>
 

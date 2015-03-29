@@ -148,6 +148,34 @@ angular
 
 
       /**
+       * View the available snapshots.
+       *
+       */
+      viewSnapshots: function() {
+        var modalInstance = $modal.open({
+          templateUrl: 'app/home/snapshot/modal/snapshotModal.tpl.html',
+          controller: 'SnapshotModalInstanceController',
+          size: '',
+          backdrop: 'static',
+          resolve: {
+            pipelineConfig: function () {
+              return $scope.pipelineConfig;
+            }
+          }
+        });
+
+        modalInstance.result.then(function(snapshotName) {
+          if(snapshotName) {
+            $scope.viewSnapshot(snapshotName);
+          }
+        }, function () {
+
+        });
+
+      },
+
+
+      /**
        * Reset Offset of pipeline
        *
        */

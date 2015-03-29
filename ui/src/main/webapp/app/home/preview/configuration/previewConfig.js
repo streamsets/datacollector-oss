@@ -3,7 +3,7 @@
  */
 
 angular
-  .module('dataCollectorApp')
+  .module('dataCollectorApp.home')
   .controller('PreviewConfigModalInstanceController', function ($scope, $modalInstance, pipelineConfig,
                                                                 $timeout, pipelineService) {
     angular.extend($scope, {

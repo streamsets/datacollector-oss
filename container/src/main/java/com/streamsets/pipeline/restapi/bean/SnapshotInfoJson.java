@@ -19,8 +19,8 @@ public class SnapshotInfoJson {
   public SnapshotInfoJson(
     @JsonProperty("pipelineName") String pipelineName,
     @JsonProperty("snapshotName") String snapshotName,
-    @JsonProperty("created") Date created) {
-    this.snapshotInfo = new com.streamsets.pipeline.snapshotstore.SnapshotInfo(pipelineName, snapshotName, created);
+    @JsonProperty("captured") Date captured) {
+    this.snapshotInfo = new com.streamsets.pipeline.snapshotstore.SnapshotInfo(pipelineName, snapshotName, captured);
   }
 
   public SnapshotInfoJson(com.streamsets.pipeline.snapshotstore.SnapshotInfo snapshotInfo) {
@@ -36,8 +36,8 @@ public class SnapshotInfoJson {
     return snapshotInfo.getSnapshotName();
   }
 
-  public Date getCreated() {
-    return snapshotInfo.getCreated();
+  public Date getCaptured() {
+    return snapshotInfo.getCaptured();
   }
 
   @JsonIgnore
