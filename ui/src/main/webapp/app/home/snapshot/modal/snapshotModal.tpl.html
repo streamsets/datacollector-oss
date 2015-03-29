@@ -15,11 +15,6 @@
             ng-click="captureSnapshot()"
             translate="home.snapshotsPane.captureSnapshot">Capture</button>
 
-    <button type="button" class="btn btn-primary"
-            ng-show="snapshotInProgress"
-            ng-disabled="true"
-            translate="home.snapshotsPane.captureSnapshotInProgress">Capture Snapshot in progress...</button>
-
     <table class="table table-hover">
       <thead>
         <tr>
@@ -32,13 +27,17 @@
       <tbody ng-hide="showLoading">
         <tr ng-repeat="snapshotInfo in snapshotsInfo">
           <td>{{snapshotInfo.snapshotName}}</td>
-          <td>{{snapshotInfo.captured  | date:'medium'}}</td>
+          <td>
+            {{snapshotInfo.captured ? (snapshotInfo.captured  | date:'medium') : ('home.snapshotsPane.captureSnapshotInProgress' | translate)}}
+          </td>
           <td>
             <a href="javascript:;" translate="global.form.view"
+               ng-if="snapshotInfo.captured"
                ng-click="viewSnapshot(snapshotInfo.snapshotName)"></a>
-            <span class="separator">|</span>
+            <span class="separator" ng-if="snapshotInfo.captured">|</span>
             <a href="javascript:;" translate="global.form.delete"
-              ng-click="deleteSnapshot(snapshotInfo.snapshotName, $index)"> Delete </a>
+               ng-if="snapshotInfo.captured"
+               ng-click="deleteSnapshot(snapshotInfo.snapshotName, $index)"> Delete </a>
           </td>
         </tr>
 

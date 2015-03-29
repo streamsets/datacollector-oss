@@ -37,11 +37,15 @@ public class FileSnapshotStore implements SnapshotStore {
 
   private final RuntimeInfo runtimeInfo;
   private boolean inProgress = false;
+  private String inProgressPipelineName = "";
+  private String inProgressSnapshotName = "";
   private ObjectMapper json;
 
   public void setInProgress(String pipelineName, String rev, String snapshotName, boolean inProgress) {
     PipelineDirectoryUtil.createPipelineSnapshotDir(runtimeInfo, pipelineName, rev, snapshotName);
     this.inProgress = inProgress;
+    this.inProgressPipelineName = pipelineName;
+    this.inProgressSnapshotName = snapshotName;
   }
 
   public FileSnapshotStore(RuntimeInfo runtimeInfo) {
@@ -114,7 +118,7 @@ public class FileSnapshotStore implements SnapshotStore {
     List<SnapshotInfo> list = new ArrayList<>();
     File snapshotDir = PipelineDirectoryUtil.getPipelineSnapshotBaseDir(runtimeInfo, pipelineName, rev);
     if(snapshotDir.exists()) {
-      for (String name : snapshotDir.list(new FilenameFilter() {
+      for (String snapshotName : snapshotDir.list(new FilenameFilter() {
         @Override
         public boolean accept(File dir, String name) {
           //If one browses to the pipelines directory, mac creates a ".DS_store directory and this causes us problems
@@ -122,7 +126,14 @@ public class FileSnapshotStore implements SnapshotStore {
           return !name.startsWith(".");
         }
       })) {
-        list.add(getInfo(pipelineName, rev, name));
+        if(inProgress && inProgressPipelineName.equals(pipelineName) && inProgressSnapshotName.equals(snapshotName)) {
+          list.add(new SnapshotInfo(pipelineName, snapshotName, null));
+        } else {
+          SnapshotInfo snapshotInfo = getInfo(pipelineName, rev, snapshotName);
+          if(snapshotInfo != null) {
+            list.add(snapshotInfo);
+          }
+        }
       }
     }
     return Collections.unmodifiableList(list);
@@ -130,9 +141,14 @@ public class FileSnapshotStore implements SnapshotStore {
 
   private SnapshotInfo getInfo(String pipelineName, String rev, String name) {
     try {
-      SnapshotInfoJson snapshotInfoJsonBean =
-        json.readValue(getPipelineSnapshotInfoFile(pipelineName, rev, name), SnapshotInfoJson.class);
-      return snapshotInfoJsonBean.getSnapshotInfo();
+      File infoFile = getPipelineSnapshotInfoFile(pipelineName, rev, name);
+      if(infoFile.exists()) {
+        SnapshotInfoJson snapshotInfoJsonBean =
+          json.readValue(infoFile, SnapshotInfoJson.class);
+        return snapshotInfoJsonBean.getSnapshotInfo();
+      } else {
+        return null;
+      }
     } catch (Exception ex) {
       throw new RuntimeException(ex);
     }

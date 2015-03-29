@@ -4,9 +4,24 @@
 
   <div class="panel-heading clearfix">
 
+    <div class="btn-group pull-left detail-name-dropdown">
+      <button class="btn btn-link dropdown-toggle" type="button" data-toggle="dropdown">
+        <span ng-bind="snapshotName"></span>
+
+        <span class="caret"></span>
+      </button>
+      <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
+        <li role="presentation"
+            ng-repeat="snapshotInfo in snapshotsInfo">
+          <a role="menuitem" tabindex="-1" href="#"
+             ng-click="viewSnapshot(snapshotInfo.snapshotName)"
+            >{{snapshotInfo.snapshotName}}</a>
+        </li>
+      </ul>
+    </div>
+
     <h3 class="panel-title pull-left">
-      <span>{{snapshotName}} : </span>
-      <span ng-if="!previewMultipleStages">{{detailPaneConfig.uiInfo.label}}</span>
+      <span ng-if="!previewMultipleStages">: {{detailPaneConfig.uiInfo.label}}</span>
     </h3>
 
     <div class="pull-right size-toolbar">
@@ -90,14 +105,6 @@
         <span class="glyphicon glyphicon-arrow-right"></span>
       </a>
 
-
-      <a type="button" class="btn btn-primary btn-sm"
-         tooltip-placement="bottom" tooltip="{{'home.header.refreshSnapshot' | translate}}"
-         tooltip-popup-delay="500"
-         tooltip-append-to-body="true"
-         ng-click="refreshSnapshot(true)">
-        <span class="fa fa-refresh"></span>
-      </a>
 
     </div>
 

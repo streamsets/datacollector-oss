@@ -25,6 +25,11 @@ angular
         var snapshotName = getNewSnapshotName();
         api.pipelineAgent.captureSnapshot(snapshotName, snapshotBatchSize).
           then(function() {
+            $scope.snapshotsInfo.push({
+              pipelineName: pipelineConfig.info.name,
+              snapshotName: snapshotName,
+              captured: null
+            });
             $scope.snapshotInProgress = true;
             checkForCaptureSnapshotStatus(snapshotName);
           }, function(res) {
@@ -69,9 +74,22 @@ angular
     var refreshSnapshotsInfo = function() {
       api.pipelineAgent.getSnapshotsInfo().then(function(res) {
         if(res && res.data && res.data.length) {
-          $scope.snapshotsInfo = res.data.sort(function(a, b){
-            return a.captured < b.captured;
+
+          $scope.snapshotsInfo = _.chain(res.data)
+            .filter(function(snapshotInfo) {
+              return snapshotInfo.pipelineName === pipelineConfig.info.name;
+            })
+            .sortBy('snapshotName')
+            .value();
+
+          var snapshotInfoInProgress = _.find($scope.snapshotsInfo, function(snapshotInfo) {
+            return snapshotInfo.captured === null;
           });
+
+          if(snapshotInfoInProgress)  {
+            $scope.snapshotInProgress = true;
+            checkForCaptureSnapshotStatus(snapshotInfoInProgress.snapshotName);
+          }
         }
         $scope.showLoading = false;
 
@@ -83,7 +101,7 @@ angular
 
     var getNewSnapshotName = function() {
       if($scope.snapshotsInfo.length) {
-        var lastSnapshot = $scope.snapshotsInfo[0],
+        var lastSnapshot = $scope.snapshotsInfo[$scope.snapshotsInfo.length - 1],
           lastName = lastSnapshot ? lastSnapshot.snapshotName : '0',
           indexStrArr = lastName.match(/\d+/),
           index = indexStrArr.length ? parseInt(indexStrArr[0]) : 0;
@@ -128,4 +146,8 @@ angular
     };
 
     refreshSnapshotsInfo();
+
+    $scope.$on('$destroy', function() {
+      $timeout.cancel(captureSnapshotStatusTimer);
+    });
   });

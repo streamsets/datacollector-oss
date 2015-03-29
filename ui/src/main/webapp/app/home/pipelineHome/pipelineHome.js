@@ -250,6 +250,9 @@ angular
         $scope.$broadcast('snapshotPipeline', snapshotName);
       },
 
+      setSnapshotName: function(snapshotName) {
+        $scope.snapshotName = snapshotName;
+      },
 
       /**
        * Sets previewMode flag to false.

@@ -19,6 +19,7 @@ angular
         input: [],
         output: []
       },
+      snapshotsInfo: [],
 
       /**
        * Preview Data for previous stage instance.
@@ -51,8 +52,9 @@ angular
       /**
        * Refresh Snapshot
        */
-      refreshSnapshot: function() {
-        snapshotPipeline();
+      viewSnapshot: function(snapshotName) {
+        $scope.setSnapshotName(snapshotName);
+        viewSnapshot(snapshotName);
       }
     });
 
@@ -113,6 +115,16 @@ angular
 
     if($scope.snapshotMode) {
       viewSnapshot($scope.snapshotName);
+
+      api.pipelineAgent.getSnapshotsInfo().then(function(res) {
+        if(res && res.data && res.data.length) {
+          $scope.snapshotsInfo = res.data.sort(function(a, b){
+            return a.captured < b.captured;
+          });
+        }
+      }, function(res) {
+        $scope.common.errors = [res.data];
+      });
     }
 
     $scope.$on('onSelectionChange', function(event, options) {
