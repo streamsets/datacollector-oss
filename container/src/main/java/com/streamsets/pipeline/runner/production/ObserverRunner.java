@@ -119,7 +119,10 @@ public class ObserverRunner {
       LOG.error("Cannot send alert for throwable due to null RulesConfigurationChangeRequest: " +
         request.getThrowable(), request.getThrowable());
     } else {
-      alertManager.alert(rulesConfigurationChangeRequest.getRuleDefinitions().getEmailIds(), request.getThrowable());
+      List<String> emailIds = rulesConfigurationChangeRequest.getRuleDefinitions().getEmailIds();
+      if (emailIds != null && !emailIds.isEmpty()) {
+        alertManager.alert(emailIds, request.getThrowable());
+      }
     }
   }
 
