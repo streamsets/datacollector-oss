@@ -29,7 +29,7 @@ angular
       sizeFormat: function(){
         return function(d){
           var mbValue = d / 1000000;
-          return mbValue.toFixed(0) + ' MB';
+          return mbValue.toFixed(1) + ' MB';
         };
       }
 
