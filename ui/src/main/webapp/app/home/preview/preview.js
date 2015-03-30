@@ -226,20 +226,35 @@ angular
         case pipelineConstant.SNAPSHOT_SOURCE:
           var getSnapshotDefer = $q.defer();
 
-          api.pipelineAgent.getSnapshot($scope.activeConfigInfo.name).
-            success(function(res) {
-              if(res && res.snapshot && res.snapshot.length) {
-                stageOutputs = [res.snapshot[0]];
-                getSnapshotDefer.resolve();
-              } else {
-                getSnapshotDefer.reject('No Snapshot data available');
-              }
+          if(previewConfig.snapshotInfo) {
+            api.pipelineAgent.getSnapshot(previewConfig.snapshotInfo.pipelineName,
+              previewConfig.snapshotInfo.snapshotName).
+              success(function(res) {
+                if(res && res.snapshot && res.snapshot.length) {
+                  var snapshotSourceOutputs = res.snapshot[0].output;
 
-            }).
-            error(function(data) {
-              getSnapshotDefer.reject(data);
+                  stageOutputs = [{
+                    instanceName: $scope.pipelineConfig.stages[0].instanceName,
+                    output: {}
+                  }];
 
-            });
+
+                  stageOutputs[0].output[$scope.pipelineConfig.stages[0].outputLanes[0]] =
+                    snapshotSourceOutputs[Object.keys(snapshotSourceOutputs)[0]];
+
+                  getSnapshotDefer.resolve();
+                } else {
+                  getSnapshotDefer.reject('No Snapshot data available');
+                }
+
+              }).
+              error(function(data) {
+                getSnapshotDefer.reject(data);
+
+              });
+          } else {
+            getSnapshotDefer.reject('No Snapshot available');
+          }
 
           deferList.push(getSnapshotDefer.promise);
           break;

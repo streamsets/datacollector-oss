@@ -10,43 +10,41 @@
 
     <div class="form-group">
       <label class="control-label" translate="home.previewPane.previewSource">Preview Source</label>
-      <!--div class="controls col-md-7"-->
-        <select class="form-control"
-                name="previewSource"
-                ng-model="previewConfig.previewSource">
-          <option value="{{pipelineConstant.CONFIGURED_SOURCE}}"
-                  ng-selected="previewConfig.previewSource === pipelineConstant.CONFIGURED_SOURCE">
-            {{'home.previewPane.configuredSource' | translate}}</option>
-          <option value="{{pipelineConstant.SNAPSHOT_SOURCE}}"
-                  ng-selected="previewConfig.previewSource === pipelineConstant.SNAPSHOT_SOURCE">
-            {{'home.previewPane.snapshotSource' | translate}}</option>
-          <option value="{{pipelineConstant.USER_PROVIDED}}"
-                  ng-selected="previewConfig.previewSource === pipelineConstant.USER_PROVIDED">
-            {{'home.previewPane.userProvider' | translate}}</option>
-        </select>
-      <!--/div-->
+      <select class="form-control"
+              name="previewSource"
+              ng-model="previewConfig.previewSource">
+        <option value="{{pipelineConstant.CONFIGURED_SOURCE}}"
+                ng-selected="previewConfig.previewSource === pipelineConstant.CONFIGURED_SOURCE">
+          {{'home.previewPane.configuredSource' | translate}}</option>
+        <option value="{{pipelineConstant.SNAPSHOT_SOURCE}}"
+                ng-selected="previewConfig.previewSource === pipelineConstant.SNAPSHOT_SOURCE">
+          {{'home.previewPane.snapshotSource' | translate}}</option>
+        <option value="{{pipelineConstant.USER_PROVIDED}}"
+                ng-selected="previewConfig.previewSource === pipelineConstant.USER_PROVIDED">
+          {{'home.previewPane.userProvider' | translate}}</option>
+      </select>
     </div>
 
     <div class="form-group" ng-if="previewConfig.previewSource !== pipelineConstant.USER_PROVIDED">
       <label class="control-label" translate="home.previewPane.batchSize">Preview Batch Size</label>
-      <!--div class="controls col-md-7"-->
-        <input type="text" class="form-control" name="batchSize"
-               ng-model="previewConfig.batchSize">
-      <!--/div-->
+      <input type="text" class="form-control" name="batchSize"
+             ng-model="previewConfig.batchSize">
     </div>
-
-    <!--div class="form-group clearfix">
-      <label class="control-label" translate="home.previewPane.skipTargets">Skip Targets</label>
-      <div class="controls col-md-1">
-        <input type="checkbox" name="skipTargets"
-               ng-model="previewConfig.skipTargets">
-      </div>
-    </div-->
 
     <div class="checkbox">
       <label>
         <input type="checkbox" ng-model="previewConfig.skipTargets"> {{'home.previewPane.skipTargets' | translate}}
       </label>
+    </div>
+
+    <div class="form-group" ng-if="snapshotsInfo && snapshotsInfo.length && previewConfig.previewSource === pipelineConstant.SNAPSHOT_SOURCE">
+      <label class="control-label" translate="home.previewPane.snapshotSource">Snapshot</label>
+      <select class="form-control"
+              name="snapshotInfo"
+              ng-model="previewConfig.snapshotInfo"
+              ng-options="snapshotInfo.snapshotName group by snapshotInfo.pipelineName for snapshotInfo in snapshotsInfo track by snapshotInfo.captured">
+
+      </select>
     </div>
 
     <div class="form-group" ng-if="previewConfig.previewSource === pipelineConstant.USER_PROVIDED">
