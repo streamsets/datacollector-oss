@@ -118,9 +118,7 @@ angular
 
       api.pipelineAgent.getSnapshotsInfo().then(function(res) {
         if(res && res.data && res.data.length) {
-          $scope.snapshotsInfo = res.data.sort(function(a, b){
-            return a.captured < b.captured;
-          });
+          $scope.snapshotsInfo = _.sortBy(res.data, 'snapshotName');
         }
       }, function(res) {
         $scope.common.errors = [res.data];

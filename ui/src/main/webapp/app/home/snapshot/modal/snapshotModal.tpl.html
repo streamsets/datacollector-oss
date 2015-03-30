@@ -11,7 +11,7 @@
     <ng-include src="'app/home/alerts/error/errorAlert.tpl.html'"></ng-include>
 
     <button type="button" class="btn btn-primary"
-            ng-hide="showLoading || snapshotInProgress"
+            ng-disabled="showLoading || snapshotInProgress"
             ng-click="captureSnapshot()"
             translate="home.snapshotsPane.captureSnapshot">Capture</button>
 

@@ -369,7 +369,7 @@
     },
     "snapshotsPane": {
       "captureSnapshot": "Capture Snapshot",
-      "captureSnapshotInProgress": "Capture Snapshot in progress...",
+      "captureSnapshotInProgress": "Capturing...",
       "modalTitle": "Snapshots",
       "noSnapshots": "No Snapshots"
     }
