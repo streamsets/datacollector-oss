@@ -10,7 +10,6 @@ import com.google.common.annotations.VisibleForTesting;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
-import com.google.common.util.concurrent.ThreadFactoryBuilder;
 import com.streamsets.pipeline.alerts.AlertManager;
 import com.streamsets.pipeline.alerts.AlertsUtil;
 import com.streamsets.pipeline.api.Record;
@@ -21,6 +20,7 @@ import com.streamsets.pipeline.config.ConfigConfiguration;
 import com.streamsets.pipeline.config.DeliveryGuarantee;
 import com.streamsets.pipeline.config.PipelineConfiguration;
 import com.streamsets.pipeline.email.EmailSender;
+import com.streamsets.pipeline.lib.executor.SafeScheduledExecutorService;
 import com.streamsets.pipeline.main.RuntimeInfo;
 import com.streamsets.pipeline.metrics.MetricsConfigurator;
 import com.streamsets.pipeline.runner.PipelineRuntimeException;
@@ -56,9 +56,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
-import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 
@@ -93,7 +91,7 @@ public class ProductionPipelineManagerTask extends AbstractTask {
   /*Thread that is watching changes to the rules configuration*/
   private RulesConfigLoaderRunnable configLoaderRunnable;
   /*The executor service that is currently executing the ProdPipelineRunnerThread*/
-  private ScheduledExecutorService executor;
+  private SafeScheduledExecutorService executor;
   /*The pipeline being executed or the pipeline in the context*/
   private ProductionPipeline prodPipeline;
 
@@ -126,8 +124,7 @@ public class ProductionPipelineManagerTask extends AbstractTask {
   public void initTask() {
     LOG.debug("Initializing Production Pipeline Manager");
     stateTracker.init();
-    executor = Executors.newScheduledThreadPool(3, new ThreadFactoryBuilder().setNameFormat(PRODUCTION_PIPELINE_RUNNER)
-      .setDaemon(true).build());
+    executor = new SafeScheduledExecutorService(3, PRODUCTION_PIPELINE_RUNNER);
     PipelineState ps = getPipelineState();
     if(ps != null) {
       switch (ps.getState()) {
@@ -315,11 +312,11 @@ public class ProductionPipelineManagerTask extends AbstractTask {
     }
     configLoaderRunnable = new RulesConfigLoaderRunnable(rulesConfigLoader, observer);
     ScheduledFuture<?> configLoaderFuture =
-      executor.scheduleWithFixedDelay(configLoaderRunnable, 1, 2, TimeUnit.SECONDS);
+      executor.scheduleWithFixedDelayReturnFuture(configLoaderRunnable, 1, 2, TimeUnit.SECONDS);
 
     AlertManager alertManager = new AlertManager(name, rev, new EmailSender(configuration), getMetrics(), runtimeInfo);
     observerRunnable = new ProductionObserverRunnable(this, productionObserveRequests, alertManager, configuration);
-    Future<?> observerFuture = executor.submit(observerRunnable);
+    Future<?> observerFuture = executor.submitReturnFuture(observerRunnable);
 
     pipelineRunnable = new ProductionPipelineRunnable(this, prodPipeline, name, rev,
       ImmutableList.of(configLoaderFuture, observerFuture));

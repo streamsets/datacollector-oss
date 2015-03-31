@@ -7,9 +7,9 @@ package com.streamsets.pipeline.lib.dirspooler;
 
 import com.codahale.metrics.Meter;
 import com.google.common.base.Preconditions;
-import com.google.common.util.concurrent.ThreadFactoryBuilder;
 import com.streamsets.pipeline.api.Source;
 import com.streamsets.pipeline.api.impl.Utils;
+import com.streamsets.pipeline.lib.executor.SafeScheduledExecutorService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -24,9 +24,7 @@ import java.nio.file.PathMatcher;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.concurrent.Executors;
 import java.util.concurrent.PriorityBlockingQueue;
-import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
 public class DirectorySpooler {
@@ -145,7 +143,7 @@ public class DirectorySpooler {
   private PathMatcher fileMatcher;
   private PriorityBlockingQueue<Path> filesQueue;
   private Path previousFile;
-  private ScheduledExecutorService scheduledExecutor;
+  private SafeScheduledExecutorService scheduledExecutor;
 
   private Meter spoolQueueMeter;
 
@@ -199,8 +197,7 @@ public class DirectorySpooler {
       String lastFound = findAndQueueFiles(currentFile, true, false);
       LOG.debug("Last file found '{}' on startup", lastFound);
 
-      scheduledExecutor = Executors.newScheduledThreadPool(1, new ThreadFactoryBuilder()
-          .setNameFormat("directory-spooler").setDaemon(true).build());
+      scheduledExecutor = new SafeScheduledExecutorService(1, "directory-spooler");
 
       finder = new FileFinder(lastFound);
       scheduledExecutor.scheduleAtFixedRate(finder, 5, 5, TimeUnit.SECONDS);

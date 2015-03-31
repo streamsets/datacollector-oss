@@ -8,36 +8,25 @@ package com.streamsets.pipeline.runner;
 import com.codahale.metrics.ExponentiallyDecayingReservoir;
 import com.google.common.annotations.VisibleForTesting;
 import com.streamsets.pipeline.api.impl.Utils;
+import com.streamsets.pipeline.lib.executor.SafeScheduledExecutorService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.TimeUnit;
 
 public class ResourceControlledScheduledExecutor {
   private static final long DELAY_MINIMUM = 5000; // ms
   private static final Logger LOG = LoggerFactory.getLogger(ResourceControlledScheduledExecutor.class);
-  private final ScheduledExecutorService scheduledExecutorService;
+  private final SafeScheduledExecutorService scheduledExecutorService;
   private final List<Runnable> tasks = new CopyOnWriteArrayList<>();
   public ResourceControlledScheduledExecutor(final float maxCpuConsumption) {
     this(maxCpuConsumption, DELAY_MINIMUM);
   }
   public ResourceControlledScheduledExecutor(final float maxCpuConsumption, final long minimumDelay) {
     Utils.checkArgument(maxCpuConsumption > 0, "Max CPU Consumption cannot be less than zero");
-    scheduledExecutorService = Executors.newScheduledThreadPool(1, new ThreadFactory()  {
-      private final ThreadFactory defaultThreadFactory = Executors.defaultThreadFactory();
-      @Override
-      public Thread newThread(Runnable r) {
-        Thread thread = defaultThreadFactory.newThread(r);
-        thread.setDaemon(true);
-        thread.setName(thread.getName() + "-ResourceControlledScheduledExecutor");
-        return thread;
-      }
-    });
+    scheduledExecutorService = new SafeScheduledExecutorService(1, "ResourceControlledScheduledExecutor");
     scheduledExecutorService.schedule(new Runnable() {
       private final ExponentiallyDecayingReservoir decayingReservoir =
         new ExponentiallyDecayingReservoir();

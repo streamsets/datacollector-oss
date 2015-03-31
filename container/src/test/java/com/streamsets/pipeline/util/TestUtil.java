@@ -42,6 +42,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Random;
 import java.util.UUID;
+import java.util.concurrent.TimeUnit;
 
 public class TestUtil {
 
@@ -279,11 +280,17 @@ public class TestUtil {
     if(manager.getPipelineState().getState() == State.RUNNING) {
       manager.stopPipeline(false);
     }
-
+    long start = System.currentTimeMillis();
     while(manager.getPipelineState().getState() != State.FINISHED &&
       manager.getPipelineState().getState() != State.STOPPED &&
       manager.getPipelineState().getState() != State.ERROR) {
       Thread.sleep(5);
+      long elapsed = System.currentTimeMillis() - start;
+      if (elapsed > TimeUnit.MINUTES.toMillis(5)) {
+        String msg = "TimedOut waiting for pipeline to stop. State is currently: " +
+          manager.getPipelineState().getState() + " after " + TimeUnit.MILLISECONDS.toMinutes(elapsed) + "min";
+        throw new IllegalStateException(msg);
+      }
     }
   }
 

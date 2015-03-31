@@ -40,63 +40,69 @@ public class ProductionPipelineRunnable implements Runnable {
 
   @Override
   public void run() {
-    Thread.currentThread().setName("ProductionPipelineRunnable");
+    String originalThreadName = Thread.currentThread().getName();
     try {
-      runningThread = Thread.currentThread();
-      pipeline.run();
-    } catch (Exception e) {
-      LOG.error("An exception occurred while running the pipeline, {}", e.getMessage(), e);
+      Thread.currentThread().setName(originalThreadName + "-ProductionPipelineRunnable");
       try {
-        pipelineManager.setState(name, rev, State.ERROR, e.getMessage());
-      } catch (PipelineManagerException ex) {
-        LOG.error("An exception occurred while committing the state, {}", ex.getMessage(), e);
-      }
-      exception = true;
-    } catch (Error e) {
-      LOG.error("A JVM error occurred while running the pipeline, {}", e.getMessage(), e);
-      try {
-        pipelineManager.setState(name, rev, State.ERROR, e.getMessage());
-      } catch (PipelineManagerException ex) {
-        LOG.error("An exception occurred while committing the state, {}", ex.getMessage(), e);
-      }
-      throw e;
-    } finally {
-      runningThread = null;
-      //signal observer thread [which shares this object] to stop
-      for(Future<?> task : relatedTasks) {
-        task.cancel(true);
-      }
-    }
-
-    //Update pipeline state accordingly
-    if(pipeline.wasStopped()) {
-      //pipeline was stopped while it was running, could be pipeline stop or node process shutdown [Ctrl-C]
-      try {
-        if(this.nodeProcessShutdown) {
-          pipelineManager.validateStateTransition(name, rev, State.NODE_PROCESS_SHUTDOWN);
-          pipelineManager.setState(name, rev, State.NODE_PROCESS_SHUTDOWN,
-            Utils.format("The pipeline was stopped because the node process was shutdown. " +
-              "The last committed source offset is {}." , pipeline.getCommittedOffset()));
-        } else {
-          pipelineManager.validateStateTransition(name, rev, State.STOPPED);
-          pipelineManager.setState(name, rev, State.STOPPED,
-            Utils.format("The pipeline was stopped. The last committed source offset is {}."
-              , pipeline.getCommittedOffset()));
+        runningThread = Thread.currentThread();
+        pipeline.run();
+        LOG.debug("");
+      } catch (Exception e) {
+        LOG.error("An exception occurred while running the pipeline, {}", e.getMessage(), e);
+        try {
+          pipelineManager.setState(name, rev, State.ERROR, e.getMessage());
+        } catch (PipelineManagerException ex) {
+          LOG.error("An exception occurred while committing the state, {}", ex.getMessage(), e);
         }
-      } catch (PipelineManagerException e) {
-        LOG.error("An exception occurred while stopping the pipeline, {}", e.getMessage(), e);
+        exception = true;
+      } catch (Error e) {
+        LOG.error("A JVM error occurred while running the pipeline, {}", e.getMessage(), e);
+        try {
+          pipelineManager.setState(name, rev, State.ERROR, e.getMessage());
+        } catch (PipelineManagerException ex) {
+          LOG.error("An exception occurred while committing the state, {}", ex.getMessage(), e);
+        }
+        throw e;
+      } finally {
+        runningThread = null;
+        //signal observer thread [which shares this object] to stop
+        for (Future<?> task : relatedTasks) {
+          task.cancel(true);
+        }
       }
-    } else if(exception) {
-      //Pipeline stopped because of exception
-      //State is already updated to ERROR, No-op
-    } else {
-      //pipeline execution finished normally
-      try {
-        pipelineManager.validateStateTransition(name, rev, State.FINISHED);
-        pipelineManager.setState(name, rev, State.FINISHED, "Completed successfully.");
-      } catch (PipelineManagerException e) {
-        LOG.error("An exception occurred while finishing the pipeline, {}", e.getMessage(), e);
+
+      //Update pipeline state accordingly
+      if (pipeline.wasStopped()) {
+        //pipeline was stopped while it was running, could be pipeline stop or node process shutdown [Ctrl-C]
+        try {
+          if (this.nodeProcessShutdown) {
+            pipelineManager.validateStateTransition(name, rev, State.NODE_PROCESS_SHUTDOWN);
+            pipelineManager.setState(name, rev, State.NODE_PROCESS_SHUTDOWN,
+              Utils.format("The pipeline was stopped because the node process was shutdown. " +
+                "The last committed source offset is {}.", pipeline.getCommittedOffset()));
+          } else {
+            pipelineManager.validateStateTransition(name, rev, State.STOPPED);
+            pipelineManager.setState(name, rev, State.STOPPED,
+              Utils.format("The pipeline was stopped. The last committed source offset is {}."
+                , pipeline.getCommittedOffset()));
+          }
+        } catch (PipelineManagerException e) {
+          LOG.error("An exception occurred while stopping the pipeline, {}", e.getMessage(), e);
+        }
+      } else if (exception) {
+        //Pipeline stopped because of exception
+        //State is already updated to ERROR, No-op
+      } else {
+        //pipeline execution finished normally
+        try {
+          pipelineManager.validateStateTransition(name, rev, State.FINISHED);
+          pipelineManager.setState(name, rev, State.FINISHED, "Completed successfully.");
+        } catch (PipelineManagerException e) {
+          LOG.error("An exception occurred while finishing the pipeline, {}", e.getMessage(), e);
+        }
       }
+    } finally {
+      Thread.currentThread().setName(originalThreadName);
     }
   }
 
