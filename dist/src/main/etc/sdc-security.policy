@@ -25,6 +25,6 @@ grant codebase "file://${sdc.dist.dir}/streamsets-libs/-" {
 // For details on how to grant specific permissions, refer to the Java Permissions Documentation:
 //   http://docs.oracle.com/javase/7/docs/technotes/guides/security/permissions.html
 
-// Custom stage libraries code base:
-grant codebase "file://${sdc.dist.dir}/custom-libs/-" {
+// User stage libraries code base:
+grant codebase "file://${sdc.dist.dir}/user-libs/-" {
 };
