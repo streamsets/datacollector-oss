@@ -123,17 +123,33 @@ public class TestFileSnapshotStore {
     snapshotStore.setInProgress(PIPELINE_NAME, PIPELINE_REV, SNAPSHOT_NAME2, true);
     snapshotsInfo = snapshotStore.getSnapshotsInfo(PIPELINE_NAME, PIPELINE_REV);
     Assert.assertEquals(2, snapshotsInfo.size());
-    Assert.assertEquals(PIPELINE_NAME, snapshotsInfo.get(1).getPipelineName());
-    Assert.assertEquals(SNAPSHOT_NAME2, snapshotsInfo.get(1).getSnapshotName());
-    Assert.assertNull(snapshotsInfo.get(1).getCaptured());
+
+    SnapshotInfo secondSnapshotInfo = null;
+    for(SnapshotInfo snapshotInfo: snapshotsInfo) {
+      if(snapshotInfo.getSnapshotName().equals(SNAPSHOT_NAME2)) {
+        secondSnapshotInfo = snapshotInfo;
+      }
+    }
+    Assert.assertNotNull(secondSnapshotInfo);
+    Assert.assertEquals(PIPELINE_NAME, secondSnapshotInfo.getPipelineName());
+    Assert.assertEquals(SNAPSHOT_NAME2, secondSnapshotInfo.getSnapshotName());
+    Assert.assertNull(secondSnapshotInfo.getCaptured());
 
 
     snapshotStore.storeSnapshot(PIPELINE_NAME, PIPELINE_REV, SNAPSHOT_NAME2, snapshot);
     snapshotsInfo = snapshotStore.getSnapshotsInfo(PIPELINE_NAME, PIPELINE_REV);
     Assert.assertEquals(2, snapshotsInfo.size());
-    Assert.assertEquals(PIPELINE_NAME, snapshotsInfo.get(1).getPipelineName());
-    Assert.assertEquals(SNAPSHOT_NAME2, snapshotsInfo.get(1).getSnapshotName());
-    Assert.assertNotNull(snapshotsInfo.get(1).getCaptured());
+
+    secondSnapshotInfo = null;
+    for(SnapshotInfo snapshotInfo: snapshotsInfo) {
+      if(snapshotInfo.getSnapshotName().equals(SNAPSHOT_NAME2)) {
+        secondSnapshotInfo = snapshotInfo;
+      }
+    }
+    Assert.assertNotNull(secondSnapshotInfo);
+    Assert.assertEquals(PIPELINE_NAME, secondSnapshotInfo.getPipelineName());
+    Assert.assertEquals(SNAPSHOT_NAME2, secondSnapshotInfo.getSnapshotName());
+    Assert.assertNotNull(secondSnapshotInfo.getCaptured());
   }
 
   @Test
