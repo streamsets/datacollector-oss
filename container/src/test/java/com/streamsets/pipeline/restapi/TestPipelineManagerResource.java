@@ -64,6 +64,12 @@ public class TestPipelineManagerResource extends JerseyTest {
   }
 
   @Test
+  public void testGetSnapshotsInfoAPI() throws IOException {
+    Response r = target("/v1/pipeline/snapshots").request().get();
+    Assert.assertNotNull(r);
+  }
+
+  @Test
    public void testCaptureSnapshotAPI() {
     Entity<String> stringEntity = Entity.entity("", MediaType.APPLICATION_JSON);
     Response r = target("/v1/pipeline/snapshots/snapshot1").request().put(stringEntity);
@@ -85,7 +91,6 @@ public class TestPipelineManagerResource extends JerseyTest {
   public void testDeleteSnapshotAPI() throws IOException {
     Response r = target("/v1/pipeline/snapshots/myPipeline/snapshot").request().delete();
     Assert.assertNotNull(r);
-
   }
 
   @Test

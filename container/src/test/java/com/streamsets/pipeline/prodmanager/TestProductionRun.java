@@ -11,6 +11,7 @@ import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.impl.ErrorMessage;
 import com.streamsets.pipeline.main.RuntimeInfo;
 import com.streamsets.pipeline.runner.PipelineRuntimeException;
+import com.streamsets.pipeline.snapshotstore.SnapshotInfo;
 import com.streamsets.pipeline.snapshotstore.SnapshotStatus;
 import com.streamsets.pipeline.store.PipelineStoreException;
 import com.streamsets.pipeline.util.LogUtil;
@@ -36,7 +37,8 @@ public class TestProductionRun {
 
   private static final String MY_PIPELINE = "my pipeline";
   private static final String PIPELINE_REV = "2.0";
-  private static final String SNAPSHOT_NAME = "snapshot";
+  private static final String SNAPSHOT_NAME1 = "snapshot1";
+  private static final String SNAPSHOT_NAME2 = "snapshot2";
   private static final String MY_PROCESSOR = "p";
   private ProductionPipelineManagerTask manager;
 
@@ -124,22 +126,24 @@ public class TestProductionRun {
     manager.startPipeline(MY_PIPELINE, PIPELINE_REV);
     Assert.assertEquals(State.RUNNING, manager.getPipelineState().getState());
 
-    manager.captureSnapshot(SNAPSHOT_NAME, 10);
+    List<SnapshotInfo> snapshotsInfo =  manager.getSnapshotsInfo();
+    Assert.assertEquals(0, snapshotsInfo.size());
 
-    waitForSnapshot();
+    manager.captureSnapshot(SNAPSHOT_NAME1, 10);
 
-    SnapshotStatus snapshotStatus = manager.getSnapshotStatus(SNAPSHOT_NAME);
+    waitForSnapshot(SNAPSHOT_NAME1);
+
+    SnapshotStatus snapshotStatus = manager.getSnapshotStatus(SNAPSHOT_NAME1);
     Assert.assertEquals(true, snapshotStatus.isExists());
     Assert.assertEquals(false, snapshotStatus.isSnapshotInProgress());
 
-    InputStream snapshot = manager.getSnapshot(MY_PIPELINE, PIPELINE_REV, SNAPSHOT_NAME);
+    InputStream snapshot = manager.getSnapshot(MY_PIPELINE, PIPELINE_REV, SNAPSHOT_NAME1);
     //TODO: read the input snapshot into String format and Use de-serializer when ready
 
-    manager.deleteSnapshot(MY_PIPELINE, PIPELINE_REV, SNAPSHOT_NAME);
-    snapshotStatus = manager.getSnapshotStatus(SNAPSHOT_NAME);
+    manager.deleteSnapshot(MY_PIPELINE, PIPELINE_REV, SNAPSHOT_NAME1);
+    snapshotStatus = manager.getSnapshotStatus(SNAPSHOT_NAME1);
     Assert.assertEquals(false, snapshotStatus.isExists());
     Assert.assertEquals(false, snapshotStatus.isSnapshotInProgress());
-
   }
 
   @Test()
@@ -310,8 +314,8 @@ public class TestProductionRun {
     }
   }
 
-  private void waitForSnapshot() throws InterruptedException {
-    while(manager.getSnapshotStatus(SNAPSHOT_NAME).isSnapshotInProgress()) {
+  private void waitForSnapshot(String snapshotName) throws InterruptedException {
+    while(manager.getSnapshotStatus(snapshotName).isSnapshotInProgress()) {
       Thread.sleep(5);
     }
   }
