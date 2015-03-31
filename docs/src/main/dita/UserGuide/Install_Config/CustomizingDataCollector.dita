@@ -74,18 +74,8 @@
                                         form.</p></entry>
                             </row>
                             <row>
-                                <entry>http.digest.realm</entry>
-                                <entry>Realm used by digest authentication. <p>Default is
-                                        local-realm.</p></entry>
-                            </row>
-                            <row>
                                 <entry>preview.maxBatchSize</entry>
                                 <entry>Maximum number of records used to preview data.<p>Default is
-                                        10.</p></entry>
-                            </row>
-                            <row>
-                                <entry>preview.maxBatches</entry>
-                                <entry>Maximum number of batches used to preview data. <p>Default is
                                         10.</p></entry>
                             </row>
                             <row>
@@ -94,17 +84,9 @@
                                     pipeline runs.<p>Default is 1000.</p></entry>
                             </row>
                             <row>
-                                <entry>production.maxErrorFileSize</entry>
-                                <entry>Maximum error file size. <p>Default is 1024 MB. </p></entry>
-                            </row>
-                            <row>
-                                <entry>production.maxBackupIndex</entry>
-                                <entry>Maximum number of error files the pipeline can create. When
-                                    the error file count exceeds this number, older files are
-                                    removed. <p>Enter a positive integer. If you enter 0, no
-                                        additional files are created and the error file is truncated
-                                        when it reaches the maximum size. </p><p>Default is
-                                    5.</p></entry>
+                                <entry>preview.maxBatches</entry>
+                                <entry>Maximum number of batches used to preview data. <p>Default is
+                                        10.</p></entry>
                             </row>
                             <row>
                                 <entry>production.maxErrorRecordsPerStage</entry>

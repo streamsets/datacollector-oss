@@ -2,7 +2,7 @@
 <!DOCTYPE html
   SYSTEM "about:legacy-compat">
 <html xml:lang="en-us" lang="en-us">
-<head><meta name="description" content="The JavaScript Evaluator processes data based on custom JavaScript. Use the JavaScript processor to incorporate custom JavaScript script in a pipeline."></meta><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><meta name="copyright" content="(C) Copyright 2005"></meta><meta name="DC.rights.owner" content="(C) Copyright 2005"></meta><meta name="DC.Type" content="concept"></meta><meta name="DC.Title" content="JavaScript Evaluator"></meta><meta name="abstract" content="The JavaScript Evaluator processes data based on custom JavaScript. Use the JavaScript processor to incorporate custom JavaScript script in a pipeline."></meta><meta name="description" content="The JavaScript Evaluator processes data based on custom JavaScript. Use the JavaScript processor to incorporate custom JavaScript script in a pipeline."></meta><meta name="DC.Relation" scheme="URI" content="../Processors/Processors_title.html"></meta><meta name="DC.Format" content="XHTML"></meta><meta name="DC.Identifier" content="concept_n2p_jgf_lr"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/commonltr.css"><!----></link><title>JavaScript Evaluator</title><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/webhelp_topic.css"><!----></link><link rel="stylesheet" type="text/css" href="../skin.css"></link><script type="text/javascript"><!--
+<head><meta name="description" content="The JavaScript Evaluator processes data based on custom JavaScript. Use the JavaScript processor to incorporate custom JavaScript script in a pipeline. The JavaScript Evaluator can process records as ..."></meta><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><meta name="copyright" content="(C) Copyright 2005"></meta><meta name="DC.rights.owner" content="(C) Copyright 2005"></meta><meta name="DC.Type" content="concept"></meta><meta name="DC.Title" content="JavaScript Evaluator"></meta><meta name="abstract" content="The JavaScript Evaluator processes data based on custom JavaScript. Use the JavaScript processor to incorporate custom JavaScript script in a pipeline."></meta><meta name="description" content="The JavaScript Evaluator processes data based on custom JavaScript. Use the JavaScript processor to incorporate custom JavaScript script in a pipeline."></meta><meta name="DC.Relation" scheme="URI" content="../Processors/Processors_title.html"></meta><meta name="DC.Format" content="XHTML"></meta><meta name="DC.Identifier" content="concept_n2p_jgf_lr"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/commonltr.css"><!----></link><title>JavaScript Evaluator</title><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/webhelp_topic.css"><!----></link><link rel="stylesheet" type="text/css" href="../skin.css"></link><script type="text/javascript"><!--
           
           var prefix = "../index.html";
           
@@ -16,9 +16,98 @@
  
  <div class="body conbody"><p class="shortdesc">The JavaScript Evaluator processes data based on custom JavaScript. Use the JavaScript
   processor to incorporate custom JavaScript script in a pipeline.</p>
-</div>
+
+  <p class="p">The JavaScript Evaluator can process records as follows: </p>
+
+  <dl class="dl">
+                        
+                              <dt class="dt dlterm">Record by Record</dt>
+
+                              <dd class="dd">Processes each record individually. </dd>
+
+                              <dd class="dd">When processing records individually, the processor handles error
+                                    records based on the Error Record property defined for the
+                                    processor.</dd>
+
+                        
+                        
+                              <dt class="dt dlterm">Record Batch</dt>
+
+                              <dd class="dd">Processes batches of records.</dd>
+
+                              <dd class="dd">When processing records by the batch, the script must include
+                                    error handling code. </dd>
+
+                        
+                  </dl>
+
+ </div>
 
 <div class="related-links"></div>
+<div class="topic task nested1" id="task_mzc_1by_nr">
+    <h2 class="title topictitle2">Configuring a JavaScript Evaluator</h2>
+
+    <div class="body taskbody">
+        <div class="section context">
+            <p class="p">Configure a JavaScript
+                Evaluator to use custom JavaScript in a pipeline.</p>
+
+        </div>
+
+        <div class="li step p">
+                <span class="ph cmd">On the <span class="keyword wintitle">JavaScript</span> tab, configure the following
+                    properties:</span>
+                <div class="itemgroup info">
+                    
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_mzc_1by_nr__table_wvy_4xx_nr" class="table" frame="border" border="1" rules="all">
+                            
+                            
+                            <thead class="thead" align="left">
+                                <tr class="row">
+                                    <th class="entry" valign="top" width="25.97402597402597%" id="d21572e110">JavaScript Property</th>
+
+                                    <th class="entry" valign="top" width="74.02597402597402%" id="d21572e113">Description</th>
+
+                                </tr>
+
+                            </thead>
+
+                            <tbody class="tbody">
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="25.97402597402597%" headers="d21572e110 ">Record Processing Mode</td>
+
+                                    <td class="entry" valign="top" width="74.02597402597402%" headers="d21572e113 ">Determines how the JavaScript Evaluator processes
+                                            data:<ul class="ul" id="task_mzc_1by_nr__ul_tzg_vzx_nr">
+                                            <li class="li">Record by Record - Processes records individually.
+                                                Performs error handling.</li>
+
+                                            <li class="li">Record Batch - Processes records in batches.
+                                                Requires error handling code in the Jython
+                                                script.</li>
+
+                                        </ul>
+</td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="25.97402597402597%" headers="d21572e110 ">Script</td>
+
+                                    <td class="entry" valign="top" width="74.02597402597402%" headers="d21572e113 ">JavaScript code to use in the processor.</td>
+
+                                </tr>
+
+                            </tbody>
+
+                        </table>
+</div>
+
+                </div>
+            </div>
+
+    </div>
+
+</div>
 </div>
 <div class="navfooter"><!---->
 <span class="navparent"><a class="link" href="../Processors/Processors_title.html" title="Processors"><span class="navheader_label">Parent topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">Processors</span></a></span>  </div><div class="footer"><div> </div><!-- © <a href="http://creativecommons.org/licenses/by-nc/4.0/legalcode">CC BY-NC 4.0.</a> StreamSets, 2015. --></div>

@@ -17,14 +17,21 @@
                   <li>The output data column for an origin.</li>
                   <li>The input data column for processors.</li>
             </ul>
-            <p>The following bullets are the types of origins that can be reset / that remember
-                  where you left off. These are used currently in "Starting a Pipeline" and
-                  "Resetting an Origin":<ul id="ul_saveOffset">
+            <p>
+                  <draft-comment author="Loretta">The following bullets are the types of origins
+                        that can be reset / that remember where you left off. These are used
+                        currently in "Starting a Pipeline" and "Resetting an
+                        Origin":</draft-comment>
+                  <ul id="ul_saveOffset">
                         <li>Directory</li>
                         <li>Kafka Consumer</li>
-                  </ul></p>
-            <p>The following bullets are CSV file types. Used in "Configuring a Directory Origin"
-                  and "Configuring the Kafka Consumer"</p>
+                  </ul>
+            </p>
+            <p>
+                  <draft-comment author="Loretta">The following bullets are CSV file types. Used in
+                        "Configuring a Directory Origin" and "Configuring the Kafka
+                        Consumer"</draft-comment>
+            </p>
             <p>
                   <ul id="ul_delFileTypes">
                         <li><uicontrol>Default CSV</uicontrol> - File that includes comma-separated
@@ -37,6 +44,26 @@
                         <li><uicontrol>Tab-Separated Values</uicontrol> - File that includes
                               tab-separated values.</li>
                   </ul>
+            </p>
+            <p>
+                  <draft-comment author="Loretta">The following bullets are ways the Jython and
+                        JavaScript Evaluators can process code: -- more info on these, make sure
+                        they are good for both.</draft-comment>
+                  <dl id="prccessingMode">
+                        <dlentry>
+                              <dt>Record by Record</dt>
+                              <dd>Processes each record individually. </dd>
+                              <dd>When processing records individually, the processor handles error
+                                    records based on the Error Record property defined for the
+                                    processor.</dd>
+                        </dlentry>
+                        <dlentry>
+                              <dt>Record Batch</dt>
+                              <dd>Processes batches of records.</dd>
+                              <dd>When processing records by the batch, the script must include
+                                    error handling code. </dd>
+                        </dlentry>
+                  </dl>
             </p>
       </conbody>
 </concept>

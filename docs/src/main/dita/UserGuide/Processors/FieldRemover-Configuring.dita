@@ -2,7 +2,7 @@
 <!DOCTYPE task PUBLIC "-//OASIS//DTD DITA General Task//EN" "generalTask.dtd">
 <task id="task_c1j_btr_wq">
     <title>Configuring a Field Remover</title>
-    <shortdesc>Use a Field Remover to remove unwanted fields from the pipeline. </shortdesc>
+    <shortdesc>Configure a Field Remover to remove unwanted fields from the pipeline. </shortdesc>
     <taskbody>
         <context><indexterm>Field Remover
             processor<indexterm>configuring</indexterm></indexterm>When you configure the Field

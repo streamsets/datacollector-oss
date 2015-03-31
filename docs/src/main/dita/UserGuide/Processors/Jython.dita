@@ -3,8 +3,18 @@
 <concept id="concept_a1h_lkf_lr">
  <title>Jython Evaluator</title>
  <shortdesc>The Jython Evaluator processes data based on custom Jython script. Use the Jython
-  processor to incorporate custom Jython script in a pipeline.</shortdesc>
+  Evaluator to incorporate custom Jython script in a pipeline.</shortdesc>
  <conbody>
-  <p></p>
+  <p><indexterm>Jython
+     Evaluator<indexterm>overview</indexterm></indexterm><indexterm>processors<indexterm>Jython
+     Evaluator</indexterm></indexterm>The Jython Evaluator can process records as follows:
+    <draft-comment author="Loretta">more info for these - currently conreffing reusable
+    phrases:</draft-comment><dl
+    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/prccessingMode">
+    <dlentry>
+     <dt/>
+     <dd/>
+    </dlentry>
+   </dl></p>
  </conbody>
 </concept>

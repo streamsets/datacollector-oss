@@ -39,6 +39,7 @@
   </topicref>
   <topicref href="../Processors/JavaScript.dita" chunk="to-content"> 
    <topicmeta><shortdesc></shortdesc></topicmeta>
+   <topicref href="../Processors/JavaScript-Configuring.dita"/>
   </topicref>
   <topicref href="../Processors/JSONParser.dita" chunk="to-content">
    <topicmeta><shortdesc></shortdesc></topicmeta>
@@ -46,6 +47,7 @@
   </topicref>
   <topicref href="../Processors/Jython.dita" chunk="to-content">
    <topicmeta><shortdesc></shortdesc></topicmeta>
+   <topicref href="../Processors/Jython-Configuring.dita"/>
   </topicref>
   <topicref href="../Processors/RDeduplicator.dita" chunk="to-content">
    <topicmeta>

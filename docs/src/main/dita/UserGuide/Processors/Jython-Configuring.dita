@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE task PUBLIC "-//OASIS//DTD DITA General Task//EN" "generalTask.dtd">
+<task id="task_fty_jwx_nr">
+    <title>Configuring a Jython Evaluator</title>
+    <taskbody>
+        <context>
+            <p><indexterm>Jython Evaluator<indexterm>configuring</indexterm></indexterm>Configure a
+                Jython Evaluator to use custom Jython code in a pipeline.</p>
+        </context>
+        <steps id="steps_q2n_hxx_nr">
+            <step
+                conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/1stStep-ReqField-ErrorHandling">
+                <cmd/>
+            </step>
+            <step>
+                <cmd>On the <wintitle>Jython</wintitle> tab, configure the following
+                    properties:</cmd>
+                <info>
+                    <table frame="all" rowsep="1" colsep="1" id="table_wvy_4xx_nr">
+                        <tgroup cols="2">
+                            <colspec colname="c1" colnum="1" colwidth="1*"/>
+                            <colspec colname="c2" colnum="2" colwidth="2.85*"/>
+                            <thead>
+                                <row>
+                                    <entry>Jython Property</entry>
+                                    <entry>Description</entry>
+                                </row>
+                            </thead>
+                            <tbody>
+                                <row>
+                                    <entry>Record Processing Mode</entry>
+                                    <entry>Determines how the Jython Evaluator processes data:<ul
+                                            id="ul_tzg_vzx_nr">
+                                            <li>Record by Record - Processes records individually.
+                                                Performs error handling.</li>
+                                            <li>Record Batch - Processes records in batches.
+                                                Requires error handling code in the Jython
+                                                script.</li>
+                                        </ul></entry>
+                                </row>
+                                <row>
+                                    <entry>Script</entry>
+                                    <entry>Jython code to use in the processor.</entry>
+                                </row>
+                            </tbody>
+                        </tgroup>
+                    </table>
+                </info>
+            </step>
+        </steps>
+    </taskbody>
+</task>

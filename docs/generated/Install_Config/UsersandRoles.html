@@ -93,8 +93,12 @@
         Data Collector users for increased security.</p>
 
         <div class="section context">
-            <p class="p">To encrypt login
-                information, you can use an md5 program such as md5 on Mac OS X or md5sum on Linux. </p>
+            <p class="p">Configure users in the
+                properties file for the type of authentication that you use. For example, if you use
+                basic authentication, you configure users in the basic-realm.properties file.</p>
+
+            <p class="p">To encrypt login information, you can use an md5 program such as md5 on Mac OS X or
+                md5sum on Linux. </p>
 
             <div class="p">For Form and Basic authentication, you can encrypt the password. For example:
                 <pre class="pre codeblock">echo -n "&lt;password&gt;" | md5</pre>
@@ -108,9 +112,12 @@
         </div>
 
         <ol class="ol steps" id="task_nsz_lp4_1r__steps_ody_3q4_1r"><li class="li step stepexpand">
-                <span class="ph cmd">Modify the local-realm.properties file located in the etc directory.</span>
-                <div class="itemgroup info">When installed as a service, the location is
-                    /etc/sdc/local-realm.properties.</div>
+                <span class="ph cmd">Modify the properties file for the type of authentication that you use. The
+                    file name is &lt;authentication type&gt;-realm.properties.</span>
+                <div class="itemgroup info">The file is located in the following directory:
+                        <span class="ph filepath">&lt;SDCinstalldir&gt;/etc/</span>. When the <span class="ph">Data
+                  Collector</span> is installed as a service, the file is located in the follwing directory:
+                        <span class="ph filepath">/etc/sdc/</span>. </div>
             </li>
 <li class="li step stepexpand">
                 <span class="ph cmd">For each new user, add a user definition using the following format:</span>

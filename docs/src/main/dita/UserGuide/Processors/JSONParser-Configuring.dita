@@ -2,7 +2,7 @@
 <!DOCTYPE task PUBLIC "-//OASIS//DTD DITA General Task//EN" "generalTask.dtd">
 <task id="task_kwz_lg2_zq">
     <title>Configuring a JSON Parser</title>
-    <shortdesc>Use a JSON Parser to parse a JSON object in a String field. </shortdesc>
+    <shortdesc>Configure a JSON Parser to parse a JSON object in a String field. </shortdesc>
     <taskbody>
         <context><indexterm>JSON Parser processor<indexterm>configuring</indexterm></indexterm>When
             you configure a JSON Parser, you specify the field to parse and the output field to

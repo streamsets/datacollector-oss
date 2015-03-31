@@ -312,27 +312,9 @@
                             </tr>
 
                             <tr class="row">
-                                <td class="entry" valign="top" width="41.84100418410042%" headers="d7810e456 ">http.digest.realm</td>
-
-                                <td class="entry" valign="top" width="58.15899581589959%" headers="d7810e459 ">Realm used by digest authentication. <p class="p">Default is
-                                        local-realm.</p>
-</td>
-
-                            </tr>
-
-                            <tr class="row">
                                 <td class="entry" valign="top" width="41.84100418410042%" headers="d7810e456 ">preview.maxBatchSize</td>
 
                                 <td class="entry" valign="top" width="58.15899581589959%" headers="d7810e459 ">Maximum number of records used to preview data.<p class="p">Default is
-                                        10.</p>
-</td>
-
-                            </tr>
-
-                            <tr class="row">
-                                <td class="entry" valign="top" width="41.84100418410042%" headers="d7810e456 ">preview.maxBatches</td>
-
-                                <td class="entry" valign="top" width="58.15899581589959%" headers="d7810e459 ">Maximum number of batches used to preview data. <p class="p">Default is
                                         10.</p>
 </td>
 
@@ -348,23 +330,10 @@
                             </tr>
 
                             <tr class="row">
-                                <td class="entry" valign="top" width="41.84100418410042%" headers="d7810e456 ">production.maxErrorFileSize</td>
+                                <td class="entry" valign="top" width="41.84100418410042%" headers="d7810e456 ">preview.maxBatches</td>
 
-                                <td class="entry" valign="top" width="58.15899581589959%" headers="d7810e459 ">Maximum error file size. <p class="p">Default is 1024 MB. </p>
-</td>
-
-                            </tr>
-
-                            <tr class="row">
-                                <td class="entry" valign="top" width="41.84100418410042%" headers="d7810e456 ">production.maxBackupIndex</td>
-
-                                <td class="entry" valign="top" width="58.15899581589959%" headers="d7810e459 ">Maximum number of error files the pipeline can create. When
-                                    the error file count exceeds this number, older files are
-                                    removed. <p class="p">Enter a positive integer. If you enter 0, no
-                                        additional files are created and the error file is truncated
-                                        when it reaches the maximum size. </p>
-<p class="p">Default is
-                                    5.</p>
+                                <td class="entry" valign="top" width="58.15899581589959%" headers="d7810e459 ">Maximum number of batches used to preview data. <p class="p">Default is
+                                        10.</p>
 </td>
 
                             </tr>
@@ -461,9 +430,9 @@
                         
                         <thead class="thead" align="left">
                             <tr class="row">
-                                <th class="entry" valign="top" width="30.48780487804878%" id="d7810e727">Email Alert Properties</th>
+                                <th class="entry" valign="top" width="30.48780487804878%" id="d7810e691">Email Alert Properties</th>
 
-                                <th class="entry" valign="top" width="69.51219512195121%" id="d7810e730">Description</th>
+                                <th class="entry" valign="top" width="69.51219512195121%" id="d7810e694">Description</th>
 
                             </tr>
 
@@ -471,90 +440,90 @@
 
                         <tbody class="tbody">
                             <tr class="row">
-                                <td class="entry" valign="top" width="30.48780487804878%" headers="d7810e727 ">mail.transport.protocol</td>
+                                <td class="entry" valign="top" width="30.48780487804878%" headers="d7810e691 ">mail.transport.protocol</td>
 
-                                <td class="entry" valign="top" width="69.51219512195121%" headers="d7810e730 ">Use smtp or smtps. <p class="p">Default is smtp.</p>
+                                <td class="entry" valign="top" width="69.51219512195121%" headers="d7810e694 ">Use smtp or smtps. <p class="p">Default is smtp.</p>
 </td>
 
                             </tr>
 
                             <tr class="row">
-                                <td class="entry" valign="top" width="30.48780487804878%" headers="d7810e727 ">mail.smtp.host</td>
+                                <td class="entry" valign="top" width="30.48780487804878%" headers="d7810e691 ">mail.smtp.host</td>
 
-                                <td class="entry" valign="top" width="69.51219512195121%" headers="d7810e730 ">SMTP host name.<p class="p">Default is localhost.</p>
+                                <td class="entry" valign="top" width="69.51219512195121%" headers="d7810e694 ">SMTP host name.<p class="p">Default is localhost.</p>
 </td>
 
                             </tr>
 
                             <tr class="row">
-                                <td class="entry" valign="top" width="30.48780487804878%" headers="d7810e727 ">mail.smtp.port</td>
+                                <td class="entry" valign="top" width="30.48780487804878%" headers="d7810e691 ">mail.smtp.port</td>
 
-                                <td class="entry" valign="top" width="69.51219512195121%" headers="d7810e730 ">SMTP port number.<p class="p">Default is 25.</p>
+                                <td class="entry" valign="top" width="69.51219512195121%" headers="d7810e694 ">SMTP port number.<p class="p">Default is 25.</p>
 </td>
 
                             </tr>
 
                             <tr class="row">
-                                <td class="entry" valign="top" width="30.48780487804878%" headers="d7810e727 ">mail.smtp.auth</td>
+                                <td class="entry" valign="top" width="30.48780487804878%" headers="d7810e691 ">mail.smtp.auth</td>
 
-                                <td class="entry" valign="top" width="69.51219512195121%" headers="d7810e730 ">Whether the SMTP host uses authentication. Use true or
+                                <td class="entry" valign="top" width="69.51219512195121%" headers="d7810e694 ">Whether the SMTP host uses authentication. Use true or
                                         false.<p class="p">Default is false.</p>
 </td>
 
                             </tr>
 
                             <tr class="row">
-                                <td class="entry" valign="top" width="30.48780487804878%" headers="d7810e727 ">mail.smtp.starttls.enable</td>
+                                <td class="entry" valign="top" width="30.48780487804878%" headers="d7810e691 ">mail.smtp.starttls.enable</td>
 
-                                <td class="entry" valign="top" width="69.51219512195121%" headers="d7810e730 ">Whether the SMTP host uses STARTTLS encryption. Use true or
+                                <td class="entry" valign="top" width="69.51219512195121%" headers="d7810e694 ">Whether the SMTP host uses STARTTLS encryption. Use true or
                                         false.<p class="p">Default is false. </p>
 </td>
 
                             </tr>
 
                             <tr class="row">
-                                <td class="entry" valign="top" width="30.48780487804878%" headers="d7810e727 ">mail.smtps.host</td>
+                                <td class="entry" valign="top" width="30.48780487804878%" headers="d7810e691 ">mail.smtps.host</td>
 
-                                <td class="entry" valign="top" width="69.51219512195121%" headers="d7810e730 ">SMTPS host name. <p class="p">Default is localhost.</p>
+                                <td class="entry" valign="top" width="69.51219512195121%" headers="d7810e694 ">SMTPS host name. <p class="p">Default is localhost.</p>
 </td>
 
                             </tr>
 
                             <tr class="row">
-                                <td class="entry" valign="top" width="30.48780487804878%" headers="d7810e727 ">mail.smtps.port</td>
+                                <td class="entry" valign="top" width="30.48780487804878%" headers="d7810e691 ">mail.smtps.port</td>
 
-                                <td class="entry" valign="top" width="69.51219512195121%" headers="d7810e730 ">SMTPS port number.<p class="p">Default is 25.</p>
+                                <td class="entry" valign="top" width="69.51219512195121%" headers="d7810e694 ">SMTPS port number.<p class="p">Default is 25.</p>
 </td>
 
                             </tr>
 
                             <tr class="row">
-                                <td class="entry" valign="top" width="30.48780487804878%" headers="d7810e727 ">mail.smtps.auth</td>
+                                <td class="entry" valign="top" width="30.48780487804878%" headers="d7810e691 ">mail.smtps.auth</td>
 
-                                <td class="entry" valign="top" width="69.51219512195121%" headers="d7810e730 ">Whether the SMTPS host uses authentication. Use true or
+                                <td class="entry" valign="top" width="69.51219512195121%" headers="d7810e694 ">Whether the SMTPS host uses authentication. Use true or
                                         false.<p class="p">Default is false.</p>
 </td>
 
                             </tr>
 
                             <tr class="row">
-                                <td class="entry" valign="top" width="30.48780487804878%" headers="d7810e727 ">xmail.username</td>
+                                <td class="entry" valign="top" width="30.48780487804878%" headers="d7810e691 ">xmail.username</td>
 
-                                <td class="entry" valign="top" width="69.51219512195121%" headers="d7810e730 ">User name for the email account to send alert email.</td>
-
-                            </tr>
-
-                            <tr class="row">
-                                <td class="entry" valign="top" width="30.48780487804878%" headers="d7810e727 ">xmail.password</td>
-
-                                <td class="entry" valign="top" width="69.51219512195121%" headers="d7810e730 ">Password for the email account to send alert email.</td>
+                                <td class="entry" valign="top" width="69.51219512195121%" headers="d7810e694 ">User name for the email account to send alert email.</td>
 
                             </tr>
 
                             <tr class="row">
-                                <td class="entry" valign="top" width="30.48780487804878%" headers="d7810e727 ">xmail.from.address</td>
+                                <td class="entry" valign="top" width="30.48780487804878%" headers="d7810e691 ">xmail.password</td>
 
-                                <td class="entry" valign="top" width="69.51219512195121%" headers="d7810e730 ">Email address to send alert email. </td>
+                                <td class="entry" valign="top" width="69.51219512195121%" headers="d7810e694 ">Password for the email account to send alert email.</td>
+
+                            </tr>
+
+                            <tr class="row">
+                                <td class="entry" valign="top" width="30.48780487804878%" headers="d7810e691 ">xmail.from.address</td>
+
+                                <td class="entry" valign="top" width="69.51219512195121%" headers="d7810e694 ">Email address to send alert email. </td>
 
                             </tr>
 

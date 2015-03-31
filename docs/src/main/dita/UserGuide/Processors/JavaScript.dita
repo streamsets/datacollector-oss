@@ -4,5 +4,15 @@
  <title>JavaScript Evaluator</title>
  <shortdesc>The JavaScript Evaluator processes data based on custom JavaScript. Use the JavaScript
   processor to incorporate custom JavaScript script in a pipeline.</shortdesc>
- <conbody/>
+ <conbody>
+  <p><indexterm>JavaScript
+     Evaluator<indexterm>overview</indexterm></indexterm><indexterm>processors<indexterm>JavaScript
+     Evaluator</indexterm></indexterm>The JavaScript Evaluator can process records as follows: </p>
+  <dl conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/prccessingMode">
+   <dlentry>
+    <dt/>
+    <dd/>
+   </dlentry>
+  </dl>
+ </conbody>
 </concept>
