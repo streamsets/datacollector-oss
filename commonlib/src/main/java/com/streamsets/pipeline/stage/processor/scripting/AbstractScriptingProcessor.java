@@ -40,8 +40,8 @@ public abstract class AbstractScriptingProcessor extends SingleLaneProcessor {
   private final String scriptConfigName;
   private final ProcessingMode processingMode;
   private final  String script;
-  private final ScriptObjectFactory scriptObjectFactory;
-  private ScriptEngine engine;
+  private ScriptObjectFactory scriptObjectFactory;
+  protected ScriptEngine engine;
   private Err err;
 
   public AbstractScriptingProcessor(String scriptingEngineName, String scriptConfigGroup, String scriptConfigName,
@@ -51,11 +51,15 @@ public abstract class AbstractScriptingProcessor extends SingleLaneProcessor {
     this.scriptConfigName = scriptConfigName;
     this.processingMode = processingMode;
     this.script = prepareScript(script);
-    scriptObjectFactory = getScriptObjectFactory();
   }
-
+  private ScriptObjectFactory getScriptObjectFactoryInternal() {
+    if (scriptObjectFactory == null) {
+      scriptObjectFactory = getScriptObjectFactory();
+    }
+    return scriptObjectFactory;
+  }
   protected ScriptObjectFactory getScriptObjectFactory() {
-    return new ScriptObjectFactory();
+    return new ScriptObjectFactory(engine);
   }
 
   protected Object createScriptType() {
@@ -100,7 +104,7 @@ public abstract class AbstractScriptingProcessor extends SingleLaneProcessor {
     Out out = new Out() {
       @Override
       public void write(Object record) {
-        singleLaneBatchMaker.addRecord(scriptObjectFactory.getRecord(record));
+        singleLaneBatchMaker.addRecord(getScriptObjectFactoryInternal().getRecord(record));
       }
     };
     switch (processingMode) {
@@ -109,7 +113,7 @@ public abstract class AbstractScriptingProcessor extends SingleLaneProcessor {
         records.add(null);
         Iterator<Record> it = batch.getRecords();
         while (it.hasNext()) {
-          records.set(0, scriptObjectFactory.createRecord(it.next()));
+          records.set(0, getScriptObjectFactoryInternal().createRecord(it.next()));
           runScript(records, out, err);
         }
         break;
@@ -118,7 +122,7 @@ public abstract class AbstractScriptingProcessor extends SingleLaneProcessor {
         List records = new ArrayList();
         Iterator<Record> it = batch.getRecords();
         while (it.hasNext()) {
-          records.add(scriptObjectFactory.createRecord(it.next()));
+          records.add(getScriptObjectFactoryInternal().createRecord(it.next()));
         }
         runScript(records, out, err);
         break;
@@ -145,7 +149,7 @@ public abstract class AbstractScriptingProcessor extends SingleLaneProcessor {
             case DISCARD:
               break;
             case TO_ERROR:
-              getContext().toError(scriptObjectFactory.getRecord(records.get(0)), Errors.SCRIPTING_05, ex.getMessage(),
+              getContext().toError(getScriptObjectFactoryInternal().getRecord(records.get(0)), Errors.SCRIPTING_05, ex.getMessage(),
                                    ex);
               break;
             case STOP_PIPELINE:

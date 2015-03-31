@@ -13,6 +13,7 @@ import com.streamsets.pipeline.stage.processor.scripting.ScriptObjectFactory;
 import org.python.core.PyDictionary;
 import org.python.core.PyList;
 
+import javax.script.ScriptEngine;
 import javax.script.SimpleBindings;
 import java.util.List;
 import java.util.Map;
@@ -26,39 +27,43 @@ public class JythonProcessor extends AbstractScriptingProcessor {
   }
 
 
-  protected ScriptObjectFactory getScriptObjectFactory() {
-    return new ScriptObjectFactory() {
+  protected ScriptObjectFactory getScriptObjectFactory(ScriptEngine scriptEngine) {
+    return new JythonScriptObjectFactory(scriptEngine);
+    }
 
-      @Override
-      public void putInMap(Object obj, String key, Object value) {
-        ((PyDictionary)obj).put(key, value);
+  private class JythonScriptObjectFactory extends ScriptObjectFactory {
+
+    public JythonScriptObjectFactory(ScriptEngine scriptEngine) {
+      super(scriptEngine);
+    }
+
+    @Override
+    public void putInMap(Object obj, Object key, Object value) {
+      ((PyDictionary) obj).put(key, value);
+    }
+
+    @Override
+    public Object createMap() {
+      return new PyDictionary();
+    }
+
+    @Override
+    public Object createArray(List elements) {
+      PyList list = new PyList();
+      for (Object element : elements) {
+        list.add(element);
       }
+      return list;
+    }
 
-      @Override
-      public Object createMap() {
-        return new PyDictionary();
-      }
+    @Override
+    protected Record getRecordInternal(Object scriptRecord) {
+      return (Record) ((PyDictionary) scriptRecord).get("_record");
+    }
 
-      @Override
-      public Object createArray(List elements) {
-        PyList list = new PyList();
-        for (Object element : elements) {
-          list.add(element);
-        }
-        return list;
-      }
-
-      @Override
-      protected Record getRecordInternal(Object scriptRecord) {
-        return (Record) ((PyDictionary)scriptRecord).get("_record");
-      }
-
-      @Override
-      protected void setRecordInternal(Object scriptRecord, Record record) {
-        putInMap(scriptRecord, "_record", record);
-      }
-
-    };
+    @Override
+    protected void setRecordInternal(Object scriptRecord, Record record) {
+      putInMap(scriptRecord, "_record", record);
+    }
   }
-
 }

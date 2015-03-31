@@ -8,12 +8,19 @@ package com.streamsets.pipeline.stage.processor.scripting;
 import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.Record;
 
+import javax.script.ScriptEngine;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
 public class ScriptObjectFactory {
+
+  protected final ScriptEngine engine;
+
+  public ScriptObjectFactory(ScriptEngine engine) {
+    this.engine = engine;
+  }
 
   public Object createRecord(Record record) {
     Object scriptObject = createMap();
@@ -33,7 +40,7 @@ public class ScriptObjectFactory {
   }
 
   @SuppressWarnings("unchecked")
-  public void putInMap(Object obj, String key, Object value) {
+  public void putInMap(Object obj, Object key, Object value) {
     ((Map)obj).put(key, value);
   }
 
@@ -95,7 +102,8 @@ public class ScriptObjectFactory {
   }
 
   @SuppressWarnings("unchecked")
-  protected Field scriptToField(Map<String, Object> map, boolean root) {
+  protected Field scriptToField(Object mapArg, boolean root) {
+    Map<String, Object> map = (Map<String, Object>)mapArg;
     Field field = null;
     if (map != null) {
       if (!root || map.containsKey("type")) {

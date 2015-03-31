@@ -18,7 +18,7 @@ import com.streamsets.pipeline.stage.processor.scripting.ProcessingModeChooserVa
 @StageDef(
     version = "1.0.0",
     label = "JavaScript 1.8",
-    description = "Rhino JavaScript processor",
+    description = "JavaScript processor",
     icon="javascript.png"
 )
 @ConfigGroups(Groups.class)
