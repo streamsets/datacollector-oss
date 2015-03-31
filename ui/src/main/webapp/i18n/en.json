@@ -354,7 +354,9 @@
     "import": {
       "headerLabel" : "Import Pipeline",
       "fileUploadPlaceholder": "No file chosen",
-      "browse": "Browse"
+      "browse": "Browse",
+      "overwritePipeline": "Overwrite Pipeline",
+      "createPipelineAndImport": "Create New Pipeline & Import"
     },
     "resetOffset": {
       "title": "Reset Origin",

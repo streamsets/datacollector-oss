@@ -10,6 +10,43 @@
 
     <ng-include src="'app/home/alerts/error/errorAlert.tpl.html'"></ng-include>
 
+    <div class="form-group btn-group toggle-toolbar" ng-show="pipelineInfo">
+      <label class="btn btn-default btn-sm" ng-model="createNewPipeline" btn-radio="false">
+        {{'home.import.overwritePipeline' | translate}}
+      </label>
+      <label class="btn btn-default btn-sm" ng-model="createNewPipeline" btn-radio="true">
+        {{'home.import.createPipelineAndImport' | translate}}
+      </label>
+    </div>
+
+    <div class="form-group" show-errors="{ trigger: 'keypress' }" ng-if="createNewPipeline">
+      <label class="control-label" translate="global.form.name">Name</label>
+      <i class="fa fa-info-circle help-icon"
+         popover-placement="right"
+         popover-append-to-body="false"
+         popover="{{'home.library.nameValidation' | translate}}"
+         popover-trigger="mouseenter"></i>
+      <input type="text"
+             autofocus
+             name="name"
+             class="form-control"
+             ng-pattern="$root.common.namePattern"
+             ng-required
+             pattern="{{$root.common.namePattern}}"
+             title="{{'home.library.nameValidation' | translate}}"
+             placeholder="{{'home.library.namePlaceholder' | translate}}"
+             ng-model="newConfig.name"
+             focus-me="true">
+      <p class="help-block">{{'home.library.nameValidation' | translate}}</p>
+    </div>
+
+    <div class="form-group" ng-if="createNewPipeline">
+      <label class="control-label" translate="global.form.description">Description</label>
+      <textarea class="form-control" rows="2"
+                placeholder="{{'home.library.descriptionPlaceholder' | translate}}"
+                ng-model="newConfig.description"></textarea>
+    </div>
+
     <div class="input-group">
       <span class="input-group-btn">
           <span class="btn btn-primary btn-file">
