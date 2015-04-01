@@ -13,8 +13,7 @@ import com.codahale.metrics.Timer;
 import com.streamsets.pipeline.config.MetricsRuleDefinition;
 import com.streamsets.pipeline.el.ELEvaluator;
 import com.streamsets.pipeline.el.ELVariables;
-import com.streamsets.pipeline.lib.el.RecordEL;
-import com.streamsets.pipeline.lib.el.StringEL;
+import com.streamsets.pipeline.lib.el.RuleELRegistry;
 import com.streamsets.pipeline.metrics.ExtendedMeter;
 import com.streamsets.pipeline.metrics.MetricsConfigurator;
 import com.streamsets.pipeline.runner.RuntimeStats;
@@ -29,7 +28,7 @@ public class MetricRuleEvaluator {
   private static final Logger LOG = LoggerFactory.getLogger(MetricRuleEvaluator.class);
   private static final String VAL = "value()";
   private static final String TIME_NOW = "time:now()";
-  private static final ELEvaluator EL_EVALUATOR =  new ELEvaluator("condition", RecordEL.class, StringEL.class);
+  private static final ELEvaluator EL_EVALUATOR =  new ELEvaluator("condition", RuleELRegistry.getRuleELs());
 
   private final MetricsRuleDefinition metricsRuleDefinition;
   private final MetricRegistry metrics;

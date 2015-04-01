@@ -27,7 +27,6 @@ public class RuntimeInfo {
   private String httpUrl;
   private final Map<String, Object> attributes;
   private Runnable shutdownRunnable;
-  private MemoryLimitConfiguration memoryLimitConfiguration = MemoryLimitConfiguration.empty();
 
   public RuntimeInfo(MetricRegistry metrics, List<? extends ClassLoader> stageLibraryClassLoaders) {
     this.metrics = metrics;
@@ -39,14 +38,6 @@ public class RuntimeInfo {
 
   public MetricRegistry getMetrics() {
     return metrics;
-  }
-
-  public void setMemoryLimitConfiguration(MemoryLimitConfiguration memoryLimitConfiguration) {
-    this.memoryLimitConfiguration = memoryLimitConfiguration;
-  }
-
-  public MemoryLimitConfiguration getMemoryLimitConfiguration() {
-    return memoryLimitConfiguration;
   }
 
   public void setId(String id) {

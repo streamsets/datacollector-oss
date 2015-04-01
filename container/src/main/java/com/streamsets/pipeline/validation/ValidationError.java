@@ -72,7 +72,8 @@ public enum ValidationError implements ErrorCode {
 
   VALIDATION_0060("Define the error record handling for the pipeline"),
   VALIDATION_0061("Define the directory for error record files"),
-
+  VALIDATION_0062("Configured memory limit '{}' is not an integer"),
+  VALIDATION_0063("Configured memory limit {} is {} allowed {}"),
   ;
 
   private final String msg;

@@ -15,7 +15,9 @@ import java.lang.ref.SoftReference;
 import java.lang.ref.WeakReference;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
+import java.util.ArrayDeque;
 import java.util.Collection;
+import java.util.Deque;
 import java.util.Vector;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
@@ -35,8 +37,10 @@ public class MemoryUsageCollector {
   private final Instrumentation instrumentation;
   private final Object targetObject;
   private final ClassLoader targetClassloader;
-  private final MemoryUsageSnapshot memoryUsageSnapshot;
+  private final Deque stack;
+  private final IntOpenHashSet countedObjectSet;
   private final boolean traverseClassLoaderClasses;
+  private final MemoryUsageSnapshot memoryUsageSnapshot;
   private Collection<Class<?>> classes;
 
   static {
@@ -74,6 +78,7 @@ public class MemoryUsageCollector {
   public static class Builder {
     private StageRuntime stageRuntime;
     private boolean traverseClassLoaderClasses = true;
+    private MemoryUsageCollectorResourceBundle memoryUsageCollectorResourceBundle;
 
     public Builder setTraverseClassLoaderClasses(boolean traverseClassLoaderClasses) {
       this.traverseClassLoaderClasses = traverseClassLoaderClasses;
@@ -83,24 +88,35 @@ public class MemoryUsageCollector {
       this.stageRuntime = stageRuntime;
       return this;
     }
-
+    public Builder setMemoryUsageCollectorResourceBundle(
+      MemoryUsageCollectorResourceBundle memoryUsageCollectorResourceBundle) {
+      this.memoryUsageCollectorResourceBundle = memoryUsageCollectorResourceBundle;
+      return this;
+    }
     public MemoryUsageCollector build() {
       if (sharedInstrumentation == null) {
-        throw new IllegalStateException("MemoryUtility has not been initialized");
+        throw new IllegalStateException("MemoryUsageCollector has not been initialized");
+      }
+      if (memoryUsageCollectorResourceBundle == null) {
+        memoryUsageCollectorResourceBundle = new MemoryUsageCollectorResourceBundle();
       }
       MemoryUsageCollector result = new MemoryUsageCollector(sharedInstrumentation, stageRuntime.getStage(),
-        stageRuntime.getDefinition().getStageClassLoader(), traverseClassLoaderClasses);
+        stageRuntime.getDefinition().getStageClassLoader(), memoryUsageCollectorResourceBundle.getStack(),
+        memoryUsageCollectorResourceBundle.getObjectSet(), traverseClassLoaderClasses);
       result.initialize();
       return result;
     }
   }
 
   private MemoryUsageCollector(Instrumentation instrumentation, Object targetObject, ClassLoader targetClassloader,
+                               Deque stack, IntOpenHashSet countedObjectSet,
                                boolean traverseClassLoaderClasses) {
     this.instrumentation = instrumentation;
     this.targetObject = targetObject;
     this.targetClassloader = targetClassloader;
     this.traverseClassLoaderClasses = traverseClassLoaderClasses;
+    this.stack = stack;
+    this.countedObjectSet = countedObjectSet;
     this.memoryUsageSnapshot = new MemoryUsageSnapshot(targetObject, targetClassloader);
   }
 
@@ -130,15 +146,16 @@ public class MemoryUsageCollector {
   }
 
   public MemoryUsageSnapshot collect() {
-    IntOpenHashSet counted = new IntOpenHashSet(10000);
+    stack.clear();
+    countedObjectSet.clear();
     long startInstances = System.currentTimeMillis();
-    long memoryConsumedByInstances = getMemoryUsageProtected(counted, targetObject, targetClassloader);
+    long memoryConsumedByInstances = getMemoryUsageIterative(targetObject, targetClassloader);
     memoryUsageSnapshot.addMemoryConsumedByInstances(memoryConsumedByInstances);
     memoryUsageSnapshot.addElapsedTimeByInstances(System.currentTimeMillis() - startInstances);
     if (traverseClassLoaderClasses) {
       long startClasses = System.currentTimeMillis();
       if (classes != null) {
-        long memoryConsumedByClasses = getMemoryUsageProtected(counted, classes, targetClassloader);
+        long memoryConsumedByClasses = getMemoryUsageIterative(classes, targetClassloader);
         memoryUsageSnapshot.addMemoryConsumedByClasses(memoryConsumedByClasses);
       }
       memoryUsageSnapshot.addElapsedTimeByClasses(System.currentTimeMillis() - startClasses);
@@ -163,111 +180,100 @@ public class MemoryUsageCollector {
     if (sharedInstrumentation == null) {
       throw new IllegalStateException("MemoryUtility has not been initialized");
     }
+    MemoryUsageCollectorResourceBundle bundle = new MemoryUsageCollectorResourceBundle();
     MemoryUsageCollector collector = new MemoryUsageCollector(sharedInstrumentation, obj, classLoader,
-      traverseClassLoaderClasses);
+      bundle.getStack(), bundle.getObjectSet(), traverseClassLoaderClasses);
     collector.initialize();
     MemoryUsageSnapshot snapshot = collector.collect();
     LOG.info("MemoryUsageSnapshot = " + snapshot);
     return snapshot.getMemoryConsumed();
   }
-
   /**
-   * Recursively finds the memory consumption of an object. We should not run into stack overflow
-   * issues with recursion because it's unlikely for a an array to be thousands of dimensions
-   * or for a class to thousands of of super classes.
+   * Finds the memory consumption of an object.
    *
    * Note for debugging, if you need to call obj.toString() you need to wrap that in try-catch
    * as some objects we will find will throw a NPE when toString() is called.
    */
-  private long getMemoryUsageProtected(IntOpenHashSet counted, Object obj, ClassLoader classLoader) {
-    try {
-      return getMemoryUsageInternal(counted, obj, classLoader);
-    } catch(StackOverflowError error) {
-      return 1;
-    }
-  }
 
-  /*
-   * Should only be called by getMemoryUsageInternal. All invocations of getMemoryUsage* from
-   * getMemoryUsageInternal should actually invoke getMemoryUsageProtected to ensure we can
-   * retain as much information about memory usage as possible when we overflow the stack
-   */
-  private long getMemoryUsageInternal(IntOpenHashSet counted, Object obj, ClassLoader classLoader) {
+  private long getMemoryUsageIterative(Object obj, ClassLoader classLoader) {
     long total = 0L;
-    if (obj == null || obj instanceof PhantomReference || obj instanceof WeakReference
-      || obj instanceof SoftReference) {
-      return total;
+    if (obj != null) {
+      stack.push(obj);
     }
-    boolean isObjectClass = (obj instanceof Class);
-    Class clz;
-    if (isObjectClass) {
-      // if object is a class, we want to inspect the class represented as the object
-      // not the classes class which is java.lang.Class
-      clz = (Class)obj;
-    } else {
-      clz = obj.getClass();
-    }
-    boolean isClassOwnedByClassLoader = clz.getClassLoader() == classLoader;
-    int objectId = System.identityHashCode(obj);
-    if (counted.add(objectId)) {
-      long objSizeInBytes = instrumentation.getObjectSize(obj);
-      total += objSizeInBytes;
-      Class componentType = clz.getComponentType();
-      // this means the object is an array
-      if (componentType != null && !isObjectClass) {
-        if (!componentType.isPrimitive()) {
-          for (Object item : (Object[]) obj) {
-            if (item != null) {
-              total += getMemoryUsageProtected(counted, item, classLoader);
+    while (!stack.isEmpty()) {
+      obj = stack.pop();
+      if (obj == null || obj instanceof PhantomReference || obj instanceof WeakReference
+        || obj instanceof SoftReference) {
+        continue;
+      }
+      boolean isObjectClass = (obj instanceof Class);
+      Class clz;
+      if (isObjectClass) {
+        // if object is a class, we want to inspect the class represented as the object
+        // not the classes class which is java.lang.Class
+        clz = (Class)obj;
+      } else {
+        clz = obj.getClass();
+      }
+      boolean isClassOwnedByClassLoader = clz.getClassLoader() == classLoader;
+      int objectId = System.identityHashCode(obj);
+      if (countedObjectSet.add(objectId)) {
+        long objSizeInBytes = instrumentation.getObjectSize(obj);
+        total += objSizeInBytes;
+        Class componentType = clz.getComponentType();
+        // this means the object is an array
+        if (componentType != null && !isObjectClass) {
+          if (!componentType.isPrimitive()) {
+            for (Object item : (Object[]) obj) {
+              if (item != null) {
+                stack.push(item);
+              }
             }
           }
-        }
-      } else {
-        // Instrumentation.getObjectSize is shallow and as such we must traverse all fields
-        for (; clz != null; clz = clz.getSuperclass()) {
-          for (Field field : getFields(clz)) {
-            Object childObject = null;
-            if (!field.isAccessible()) {
-              field.setAccessible(true);
-            }
-            // synthetic fields can result in references outside the original object we want
-            // to traverse and thus lead to traversing the entire JVM. For example if we remove
-            // this check when traversing a stage we will at some point find a synthetic field
-            // which results in traversing all stages. TestMemoryIsolation was written to detect
-            // this case.
-            // primitives fields will be included in the above Instrumentation.getObjectSize
-            if (field.isSynthetic() || field.getType().isPrimitive()) {
-              continue;
-            } else if (Modifier.isStatic(field.getModifiers())) {
-              // only inspect static fields if the class is owned by the given classloader
-              if (!isClassOwnedByClassLoader) {
+        } else {
+          // Instrumentation.getObjectSize is shallow and as such we must traverse all fields
+          for (; clz != null; clz = clz.getSuperclass()) {
+            for (Field field : getFields(clz)) {
+              Object childObject = null;
+              // synthetic fields can result in references outside the original object we want
+              // to traverse and thus lead to traversing the entire JVM. For example if we remove
+              // this check when traversing a stage we will at some point find a synthetic field
+              // which results in traversing all stages. TestMemoryIsolation was written to detect
+              // this case.
+              // primitives fields will be included in the above Instrumentation.getObjectSize
+              if (field.isSynthetic() || field.getType().isPrimitive()) {
                 continue;
-              }
-              try {
-                childObject = field.get(null);
-              } catch (Throwable ignored) {
-                // this can throw all kinds of strange errors
-                // thus we don't have a better way to handle this
-                if (ignored instanceof OutOfMemoryError) {
-                  throw (OutOfMemoryError) ignored;
+              } else if (Modifier.isStatic(field.getModifiers())) {
+                // only inspect static fields if the class is owned by the given classloader
+                if (!isClassOwnedByClassLoader) {
+                  continue;
+                }
+                try {
+                  childObject = field.get(null);
+                } catch (Throwable ignored) {
+                  // this can throw all kinds of strange errors
+                  // thus we don't have a better way to handle this
+                  if (ignored instanceof OutOfMemoryError) {
+                    throw (OutOfMemoryError) ignored;
+                  }
+                }
+              } else if (!isObjectClass) {
+                // if the object is a class, we want to traverse the static fields
+                // otherwise we'll get a bunch of errors thrown in the Field.get()
+                // call below.
+                try {
+                  childObject = field.get(obj);
+                } catch (Throwable ignored) {
+                  // this can throw all kinds of strange errors
+                  // thus we don't have a better way to handle this
+                  if (ignored instanceof OutOfMemoryError) {
+                    throw (OutOfMemoryError) ignored;
+                  }
                 }
               }
-            } else if (!isObjectClass) {
-              // if the object is a class, we want to traverse the static fields
-              // otherwise we'll get a bunch of errors thrown in the Field.get()
-              // call below.
-              try {
-                childObject = field.get(obj);
-              } catch (Throwable ignored) {
-                // this can throw all kinds of strange errors
-                // thus we don't have a better way to handle this
-                if (ignored instanceof OutOfMemoryError) {
-                  throw (OutOfMemoryError) ignored;
-                }
+              if (childObject != null) {
+                stack.push(childObject);
               }
-            }
-            if (childObject != null) {
-              total += getMemoryUsageProtected(counted, childObject, classLoader);
             }
           }
         }
@@ -275,6 +281,7 @@ public class MemoryUsageCollector {
     }
     return total;
   }
+
   private Field[] getFields(Class clz) {
     Field[] result = classToFieldCache.get(clz);
     if (result != null) {
@@ -282,6 +289,11 @@ public class MemoryUsageCollector {
     }
     try {
       result = clz.getDeclaredFields();
+      for (Field field : result) {
+        if (!field.isAccessible()) {
+          field.setAccessible(true);
+        }
+      }
       classToFieldCache.putIfAbsent(clz, result);
       return result;
     } catch (Throwable ignored) {

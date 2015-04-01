@@ -20,7 +20,7 @@ import com.streamsets.pipeline.config.JsonMode;
 import com.streamsets.pipeline.config.JsonModeChooserValues;
 import com.streamsets.pipeline.config.TimeZoneChooserValues;
 import com.streamsets.pipeline.configurablestage.DTarget;
-import com.streamsets.pipeline.lib.el.MiscEL;
+import com.streamsets.pipeline.lib.el.DataUtilEL;
 import com.streamsets.pipeline.lib.el.RecordEL;
 import com.streamsets.pipeline.lib.el.TimeEL;
 
@@ -214,7 +214,7 @@ public class HdfsDTarget extends DTarget {
       group = "OUTPUT_FILES",
       dependsOn = "fileType",
       triggeredByValue = "SEQUENCE_FILE",
-      elDefs = {RecordEL.class, MiscEL.class}
+      elDefs = {RecordEL.class, DataUtilEL.class}
   )
   public String keyEl;
 

@@ -42,9 +42,8 @@ public class TestPipeBatch {
                                                     MockStages.createPipelineConfigurationSourceTarget()).build();
 
     StagePipe pipe = new StagePipe(stages[0], Collections.EMPTY_LIST,
-                                             LaneResolver.getPostFixed(stages[0].getConfiguration().getOutputLanes(),
-                                                                       LaneResolver.STAGE_OUT),
-      new ResourceControlledScheduledExecutor(0.05f), 0);
+      LaneResolver.getPostFixed(stages[0].getConfiguration().getOutputLanes(),
+        LaneResolver.STAGE_OUT));
 
     Batch batch = pipeBatch.getBatch(pipe);
     Assert.assertEquals("foo", batch.getSourceOffset());
@@ -60,8 +59,7 @@ public class TestPipeBatch {
                                                      MockStages.createPipelineConfigurationSourceTarget()).build();
     List<String> stageOutputLanes = stages[0].getConfiguration().getOutputLanes();
     StagePipe pipe = new StagePipe(stages[0], Collections.EMPTY_LIST,
-                                   LaneResolver.getPostFixed(stageOutputLanes, LaneResolver.STAGE_OUT),
-      new ResourceControlledScheduledExecutor(0.05f), 0);
+      LaneResolver.getPostFixed(stageOutputLanes, LaneResolver.STAGE_OUT));
 
     // starting source
     BatchMakerImpl batchMaker = pipeBatch.startStage(pipe);
@@ -75,7 +73,7 @@ public class TestPipeBatch {
     pipeBatch.completeStage(batchMaker);
 
     pipe = new StagePipe(stages[1], LaneResolver.getPostFixed(stageOutputLanes, LaneResolver.STAGE_OUT),
-                         Collections.EMPTY_LIST, new ResourceControlledScheduledExecutor(0.05f), 0);
+      Collections.EMPTY_LIST);
 
     // starting target
     batchMaker = pipeBatch.startStage(pipe);
@@ -117,8 +115,7 @@ public class TestPipeBatch {
                                                      MockStages.createPipelineConfigurationSourceTarget()).build();
     List<String> stageOutputLanes = stages[0].getConfiguration().getOutputLanes();
     StagePipe sourcePipe = new StagePipe(stages[0], Collections.EMPTY_LIST,
-                                   LaneResolver.getPostFixed(stageOutputLanes, LaneResolver.STAGE_OUT),
-      new ResourceControlledScheduledExecutor(0.05f), 0);
+      LaneResolver.getPostFixed(stageOutputLanes, LaneResolver.STAGE_OUT));
 
     // starting source
     BatchMakerImpl batchMaker = pipeBatch.startStage(sourcePipe);
@@ -132,7 +129,7 @@ public class TestPipeBatch {
     pipeBatch.completeStage(batchMaker);
 
     StagePipe targetPipe = new StagePipe(stages[1], LaneResolver.getPostFixed(stageOutputLanes, LaneResolver.STAGE_OUT),
-                         Collections.EMPTY_LIST, new ResourceControlledScheduledExecutor(0.05f), 0);
+      Collections.EMPTY_LIST);
 
     // starting target
     batchMaker = pipeBatch.startStage(targetPipe);
@@ -204,8 +201,7 @@ public class TestPipeBatch {
                                                      MockStages.createPipelineConfigurationSourceTarget()).build();
     List<String> stageOutputLanes = stages[0].getConfiguration().getOutputLanes();
     StagePipe pipe = new StagePipe(stages[0], Collections.EMPTY_LIST,
-                                   LaneResolver.getPostFixed(stageOutputLanes, LaneResolver.STAGE_OUT),
-      new ResourceControlledScheduledExecutor(0.05f), 0);
+      LaneResolver.getPostFixed(stageOutputLanes, LaneResolver.STAGE_OUT));
 
     // starting source
     BatchMakerImpl batchMaker = pipeBatch.startStage(pipe);
@@ -239,8 +235,7 @@ public class TestPipeBatch {
                                                      MockStages.createPipelineConfigurationSourceTarget()).build();
     List<String> stageOutputLanes = stages[0].getConfiguration().getOutputLanes();
     StagePipe pipe = new StagePipe(stages[0], Collections.EMPTY_LIST,
-                                   LaneResolver.getPostFixed(stageOutputLanes, LaneResolver.STAGE_OUT),
-      new ResourceControlledScheduledExecutor(0.05f), 0);
+      LaneResolver.getPostFixed(stageOutputLanes, LaneResolver.STAGE_OUT));
 
     // starting source
     BatchMakerImpl batchMaker = pipeBatch.startStage(pipe);
@@ -286,8 +281,7 @@ public class TestPipeBatch {
                                                      MockStages.createPipelineConfigurationSourceTarget()).build();
     List<String> stageOutputLanes = stages[0].getConfiguration().getOutputLanes();
     StagePipe pipe = new StagePipe(stages[0], Collections.EMPTY_LIST,
-                                   LaneResolver.getPostFixed(stageOutputLanes, LaneResolver.STAGE_OUT),
-      new ResourceControlledScheduledExecutor(0.05f), 0);
+      LaneResolver.getPostFixed(stageOutputLanes, LaneResolver.STAGE_OUT));
 
     // starting source
     BatchMakerImpl batchMaker = pipeBatch.startStage(pipe);
@@ -327,8 +321,7 @@ public class TestPipeBatch {
                                                      MockStages.createPipelineConfigurationSourceTarget()).build();
     List<String> stageOutputLanes = stages[0].getConfiguration().getOutputLanes();
     StagePipe sourcePipe = new StagePipe(stages[0], Collections.EMPTY_LIST,
-                                         LaneResolver.getPostFixed(stageOutputLanes, LaneResolver.STAGE_OUT),
-      new ResourceControlledScheduledExecutor(0.05f), 0);
+      LaneResolver.getPostFixed(stageOutputLanes, LaneResolver.STAGE_OUT));
 
     // starting source
     BatchMakerImpl batchMaker = pipeBatch.startStage(sourcePipe);
@@ -341,8 +334,8 @@ public class TestPipeBatch {
     // completing source
     pipeBatch.completeStage(batchMaker);
 
-    StagePipe targetPipe = new StagePipe(stages[1], LaneResolver.getPostFixed(stageOutputLanes, LaneResolver.STAGE_OUT),
-                                         Collections.EMPTY_LIST, new ResourceControlledScheduledExecutor(0.05f), 0);
+    StagePipe targetPipe = new StagePipe(stages[1], LaneResolver.getPostFixed(stageOutputLanes,
+      LaneResolver.STAGE_OUT), Collections.EMPTY_LIST);
 
     // starting target
     batchMaker = pipeBatch.startStage(targetPipe);

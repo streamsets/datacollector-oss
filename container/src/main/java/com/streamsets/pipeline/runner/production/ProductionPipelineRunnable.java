@@ -46,7 +46,6 @@ public class ProductionPipelineRunnable implements Runnable {
       try {
         runningThread = Thread.currentThread();
         pipeline.run();
-        LOG.debug("");
       } catch (Exception e) {
         LOG.error("An exception occurred while running the pipeline, {}", e.getMessage(), e);
         try {

@@ -5,6 +5,7 @@
  */
 package com.streamsets.pipeline.memory;
 
+import com.streamsets.pipeline.api.impl.Utils;
 import javassist.ClassPool;
 import javassist.CtClass;
 import javassist.CtField;
@@ -141,8 +142,10 @@ public class TestMemoryUsageCollector {
     testClass.addField(testField, CtField.Initializer.byNewArray(byteArrayClass, byteArraySize));
     cp.toClass(testClass, classLoader, null);
     long size = MemoryUsageCollector.getMemoryUsageOfForTests(classLoader, classLoader, true);
-    Assert.assertTrue("Expected " + size + " to be greater than 10MB", size > byteArraySize);
-    Assert.assertTrue("Expected " + size + " to be less than 20MB", size < 2*byteArraySize);
+    Assert.assertTrue("Expected " + Utils.humanReadableInt(size) + " to be greater than 10MB",
+      size > byteArraySize);
+    Assert.assertTrue("Expected " + Utils.humanReadableInt(size) + " to be less than 20MB",
+      size < 2*byteArraySize);
   }
   private static class ClassWithNoFields {
 

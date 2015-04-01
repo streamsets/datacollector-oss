@@ -13,7 +13,6 @@ import com.streamsets.pipeline.config.ConfigDefinition;
 import com.streamsets.pipeline.config.ModelDefinition;
 import com.streamsets.pipeline.config.PipelineConfiguration;
 import com.streamsets.pipeline.config.PipelineDefConfigs;
-import com.streamsets.pipeline.config.PipelineDefinition;
 import com.streamsets.pipeline.config.StageConfiguration;
 import com.streamsets.pipeline.config.StageDefinition;
 import com.streamsets.pipeline.config.StageType;
@@ -34,9 +33,6 @@ import java.util.Set;
 
 public class PipelineConfigurationValidator {
   private static final Logger LOG = LoggerFactory.getLogger(PipelineConfigurationValidator.class);
-  private static final String RECORDS_TO_LOCAL_FILESYSTEM_STAGE_NAME =
-    "com_streamsets_pipeline_lib_stage_destination_recordstolocalfilesystem_RecordsToLocalFileSystemTarget";
-  private static final String RECORDS_TO_LOCAL_FILESYSTEM_DIRECTORY_CONFIG = "directory";
 
   private final StageLibraryTask stageLibrary;
   private final String name;
@@ -95,6 +91,7 @@ public class PipelineConfigurationValidator {
     if (validSchemaVersion()) {
       canPreview = sortStages();
       canPreview &= checkIfPipelineIsEmpty();
+      canPreview &= validatePipelineMemoryConfiguration();
       canPreview &= validatePipelineConfiguration(StageIssueCreator.getStageCreator());
       canPreview &= validatePipelineLanes(StageIssueCreator.getStageCreator());
       canPreview &= validateErrorStage();
@@ -115,6 +112,32 @@ public class PipelineConfigurationValidator {
                 pipelineConfiguration.getSchemaVersion());
     }
     return !issues.hasIssues();
+  }
+
+  private boolean validatePipelineMemoryConfiguration() {
+    List<ConfigConfiguration> configs = pipelineConfiguration.getConfiguration();
+    if (configs != null) {
+      for (ConfigConfiguration config : configs) {
+        if (PipelineDefConfigs.MEMORY_LIMIT_CONFIG.equals(config.getName())) {
+          try {
+            long memoryLimit = Long.parseLong(String.valueOf(config.getValue()));
+            if (memoryLimit > PipelineDefConfigs.MEMORY_LIMIT_MAX) {
+              issues.addP(new Issue(config.getName(), "", ValidationError.VALIDATION_0063, memoryLimit,
+                "above the maximum", PipelineDefConfigs.MEMORY_LIMIT_MAX));
+              return false;
+            } else if (memoryLimit < PipelineDefConfigs.MEMORY_LIMIT_MIN) {
+              issues.addP(new Issue(config.getName(), "", ValidationError.VALIDATION_0063, memoryLimit,
+                "below the minimum", PipelineDefConfigs.MEMORY_LIMIT_MIN));
+              return false;
+            }
+          } catch (NumberFormatException e) {
+            issues.addP(new Issue(config.getName(), "", ValidationError.VALIDATION_0062, config.getValue()));
+            return false;
+          }
+        }
+      }
+    }
+    return true;
   }
 
   //TODO eventually, this should trigger a schema upgrade

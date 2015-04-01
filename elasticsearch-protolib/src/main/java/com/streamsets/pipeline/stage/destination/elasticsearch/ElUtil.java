@@ -7,6 +7,9 @@ package com.streamsets.pipeline.stage.destination.elasticsearch;
 
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.el.ELEval;
+import com.streamsets.pipeline.lib.el.DataUtilEL;
+import com.streamsets.pipeline.lib.el.RecordEL;
+import com.streamsets.pipeline.lib.el.TimeEL;
 
 public class ElUtil {
 
@@ -19,7 +22,7 @@ public class ElUtil {
   }
 
   public static ELEval createDocIdEval(Stage.ELContext elContext) {
-    return elContext.createELEval("docIdTemplate");
+    return elContext.createELEval("docIdTemplate", RecordEL.class, DataUtilEL.class);
   }
 
 }

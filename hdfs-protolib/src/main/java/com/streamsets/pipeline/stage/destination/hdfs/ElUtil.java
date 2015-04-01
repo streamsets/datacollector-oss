@@ -7,7 +7,7 @@ package com.streamsets.pipeline.stage.destination.hdfs;
 
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.el.ELEval;
-import com.streamsets.pipeline.lib.el.MiscEL;
+import com.streamsets.pipeline.lib.el.DataUtilEL;
 import com.streamsets.pipeline.lib.el.RecordEL;
 import com.streamsets.pipeline.lib.el.TimeEL;
 
@@ -22,7 +22,7 @@ public class ElUtil {
   }
 
   public static ELEval createKeyElEval(Stage.ELContext elContext) {
-    return elContext.createELEval("keyEl", RecordEL.class, MiscEL.class);
+    return elContext.createELEval("keyEl", RecordEL.class, DataUtilEL.class);
   }
 
   public static ELEval createLateRecordsLimitEval(Stage.ELContext elContext) {

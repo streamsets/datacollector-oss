@@ -968,7 +968,12 @@ angular.module('dataCollectorApp.common')
             label: 'Runtime Statistics Gauge'
           }
         ],
-        COUNTER: [],
+        COUNTER: [
+            {
+              value: 'pipeline.memoryConsumed.counter',
+              label: 'Pipeline Memory Consumption Counter'
+            }
+        ],
         HISTOGRAM: [
             {
               value: 'pipeline.inputRecordsPerBatch.histogramM5',
@@ -1175,6 +1180,17 @@ angular.module('dataCollectorApp.common')
           metricType: "GAUGE",
           metricElement: "CURRENT_BATCH_AGE",
           condition: "${value() > 200}",
+          sendEmail: false,
+          enabled: false,
+          valid: true
+        },
+        {
+          id: pipelineName + 'memoryLimit' + (new Date()).getTime(),
+          alertText: "Memory limit for pipeline exceeded",
+          metricId: "pipeline.memoryConsumed.counter",
+          metricType: "COUNTER",
+          metricElement: "COUNTER_COUNT",
+          condition: "${value() > humanReadableToBytes('100MB')}",
           sendEmail: false,
           enabled: false,
           valid: true

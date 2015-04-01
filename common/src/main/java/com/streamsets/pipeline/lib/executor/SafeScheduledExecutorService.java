@@ -47,6 +47,10 @@ public class SafeScheduledExecutorService {
     scheduledExecutorService.shutdown();
   }
 
+  public boolean isShutdown() {
+    return scheduledExecutorService.isShutdown();
+  }
+
   public void shutdownNow() {
     scheduledExecutorService.shutdownNow();
   }

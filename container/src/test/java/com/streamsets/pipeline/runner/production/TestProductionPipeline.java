@@ -18,8 +18,11 @@ import com.streamsets.pipeline.api.base.BaseProcessor;
 import com.streamsets.pipeline.api.base.BaseSource;
 import com.streamsets.pipeline.api.base.BaseTarget;
 import com.streamsets.pipeline.config.DeliveryGuarantee;
+import com.streamsets.pipeline.config.MemoryLimitConfiguration;
+import com.streamsets.pipeline.config.MemoryLimitExceeded;
 import com.streamsets.pipeline.config.PipelineConfiguration;
 import com.streamsets.pipeline.main.RuntimeInfo;
+import com.streamsets.pipeline.memory.TestMemoryUsageCollector;
 import com.streamsets.pipeline.metrics.MetricsConfigurator;
 import com.streamsets.pipeline.runner.MockStages;
 import com.streamsets.pipeline.runner.PipelineRuntimeException;
@@ -54,13 +57,15 @@ public class TestProductionPipeline {
   private static final String REVISION = "0";
   private static final String SNAPSHOT_NAME = "snapshot";
   private MetricRegistry runtimeInfoMetrics;
+  private MemoryLimitConfiguration memoryLimit;
 
   @BeforeClass
-  public static void beforeClass() throws IOException {
+  public static void beforeClass() throws Exception {
     System.setProperty(RuntimeInfo.DATA_DIR, "./target/var");
     File f = new File(System.getProperty(RuntimeInfo.DATA_DIR));
     FileUtils.deleteDirectory(f);
     TestUtil.captureMockStages();
+    TestMemoryUsageCollector.initalizeMemoryUtility();
   }
 
   @AfterClass
@@ -71,6 +76,7 @@ public class TestProductionPipeline {
   @Before
   public void setUp() {
     runtimeInfoMetrics = new MetricRegistry();
+    memoryLimit = new MemoryLimitConfiguration();
   }
 
   @Test
@@ -230,6 +236,32 @@ public class TestProductionPipeline {
     Assert.assertTrue(capture.lastBatchTime < endTime);
   }
 
+  @Test
+  public void testMemoryLimit() throws Exception {
+    memoryLimit = new MemoryLimitConfiguration(MemoryLimitExceeded.STOP_PIPELINE, 1);
+    SourceOffsetTrackerCapture capture = new SourceOffsetTrackerCapture() {
+      @Override
+      public String produce(String lastSourceOffset, int maxBatchSize, BatchMaker batchMaker) throws StageException {
+        try {
+          Thread.sleep(5000); // sleep enough time to get
+        } catch (InterruptedException e) {}
+        return super.produce(lastSourceOffset, maxBatchSize, batchMaker);
+      }
+    };
+    MockStages.setSourceCapture(capture);
+    ProductionPipeline pipeline = createProductionPipeline(DeliveryGuarantee.AT_MOST_ONCE, true,
+      false/*source not committer*/);
+    long startTime = System.currentTimeMillis();
+    //Need sleep because the file system could truncate the time to the last second.
+    Thread.sleep(1000);
+    try {
+      pipeline.run();
+      Assert.fail("Expected PipelineRuntimeException");
+    } catch (PipelineRuntimeException e) {
+      Assert.assertEquals(ContainerError.CONTAINER_0011, e.getErrorCode());
+    }
+  }
+
   public static class PreviewCheckSource extends BaseSource {
     public boolean isPreview;
 
@@ -260,11 +292,8 @@ public class TestProductionPipeline {
     Mockito.when(snapshotStore.getSnapshotStatus(PIPELINE_NAME, REVISION, SNAPSHOT_NAME)).thenReturn(new SnapshotStatus(false, false));
     BlockingQueue<Object> productionObserveRequests = new ArrayBlockingQueue<>(100, true /*FIFO*/);
     Configuration config = new Configuration();
-    ProductionPipelineRunner runner = new ProductionPipelineRunner(runtimeInfo, snapshotStore,  deliveryGuarantee,
-      PIPELINE_NAME, REVISION,
-      new FilePipelineStoreTask(new RuntimeInfo(new MetricRegistry(), Arrays.asList(getClass().getClassLoader())), config) {
-      }, productionObserveRequests, config);
-
+    ProductionPipelineRunner runner = new ProductionPipelineRunner(runtimeInfo, snapshotStore, deliveryGuarantee,
+      PIPELINE_NAME, REVISION, productionObserveRequests, config, memoryLimit);
     PipelineConfiguration pConf = (sourceOffsetCommitter)
         ? MockStages.createPipelineConfigurationSourceOffsetCommitterProcessorTarget()
         : MockStages.createPipelineConfigurationSourceProcessorTarget();

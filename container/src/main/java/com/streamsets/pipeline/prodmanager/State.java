@@ -7,10 +7,16 @@ package com.streamsets.pipeline.prodmanager;
 
 public enum State {
 
+  /**
+   * The pipeline was stopped by a user or an error.
+   */
   STOPPED,
   RUNNING,
   STOPPING,
   ERROR,
+  /**
+   * The origin returned null as offset and is done consuming data, forever. The pipeline stopped naturally.
+   */
   FINISHED,
   NODE_PROCESS_SHUTDOWN
 }

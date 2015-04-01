@@ -128,18 +128,18 @@ public final class Utils {
     double result = number;
     String prefix = number < 0 ? "-" : "";
     String suffix = "";
-    if (absNumber < 1024) {
+    if (absNumber < 1000) {
       // since no division has occurred, don't format with a decimal point
       return number + " bytes";
-    } else if (absNumber < 1024 * 1024) {
-      result = number / 1024.0;
-      suffix = " KiB";
-    } else if (absNumber < 1024 * 1024 * 1024) {
-      result = number / (1024.0 * 1024);
-      suffix = " MiB";
+    } else if (absNumber < 1000.0 * 1000.0) {
+      result = number / 1000.0;
+      suffix = " KB";
+    } else if (absNumber < 1000.0 * 1000.0 * 1000.0) {
+      result = number / (1000 * 1000);
+      suffix = " MB";
     } else {
-      result = number / (1024.0 * 1024 * 1024);
-      suffix = " GiB";
+      result = number / (1000.0 * 1000.0 * 1000.0);
+      suffix = " GB";
     }
     return prefix + oneDecimal.format(result) + suffix;
   }

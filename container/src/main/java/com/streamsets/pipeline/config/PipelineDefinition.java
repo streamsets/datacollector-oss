@@ -52,7 +52,8 @@ public class PipelineDefinition {
 
   @VisibleForTesting
   PipelineDefinition() {
-    this(ImmutableList.of(createDeliveryGuaranteeOption(), createBadRecordsHandlingConfigs(), createConstantsConfigs()),
+    this(ImmutableList.of(createDeliveryGuaranteeOption(), createBadRecordsHandlingConfigs(), createConstantsConfigs(),
+      createMemoryLimitConfigs(), createMemoryLimitExceededBehaviorConfigs()),
          createConfigGroupDefinition());
   }
 
@@ -165,5 +166,56 @@ public class PipelineDefinition {
       Collections.<String> emptyList(),
       null);
   }
+  private static ConfigDefinition createMemoryLimitExceededBehaviorConfigs() {
 
+    ChooserValues valueChooser = new MemoryLimitExceededChooserValues();
+    ModelDefinition model = new ModelDefinition(ModelType.VALUE_CHOOSER, valueChooser.getClass().getName(),
+      valueChooser.getValues(), valueChooser.getLabels(), null);
+
+    return new ConfigDefinition(
+      PipelineDefConfigs.MEMORY_LIMIT_EXCEEDED_CONFIG,
+      ConfigDef.Type.MODEL,
+      PipelineDefConfigs.MEMORY_LIMIT_EXCEEDED_LABEL,
+      PipelineDefConfigs.MEMORY_LIMIT_EXCEEDED_DESCRIPTION,
+      MemoryLimitExceeded.STOP_PIPELINE.name(),
+      true,
+      "",
+      PipelineDefConfigs.MEMORY_LIMIT_EXCEEDED_CONFIG,
+      model,
+      "",
+      new ArrayList<>(),
+      10,
+      Collections.<ElFunctionDefinition> emptyList(),
+      Collections.<ElConstantDefinition> emptyList(),
+      Long.MIN_VALUE,
+      Long.MAX_VALUE,
+      "",
+      0,
+      Collections.<String> emptyList(),
+      null);
+  }
+  private static ConfigDefinition createMemoryLimitConfigs() {
+
+    return new ConfigDefinition(
+      PipelineDefConfigs.MEMORY_LIMIT_CONFIG,
+      ConfigDef.Type.NUMBER,
+      PipelineDefConfigs.MEMORY_LIMIT_LABEL,
+      PipelineDefConfigs.MEMORY_LIMIT_DESCRIPTION,
+      PipelineDefConfigs.MEMORY_LIMIT_DEFAULT,
+      true,
+      "",
+      PipelineDefConfigs.MEMORY_LIMIT_CONFIG,
+      null,
+      "",
+      new ArrayList<>(),
+      20,
+      Collections.<ElFunctionDefinition> emptyList(),
+      Collections.<ElConstantDefinition> emptyList(),
+      Long.MIN_VALUE,
+      Long.MAX_VALUE,
+      "",
+      0,
+      Collections.<String> emptyList(),
+      null);
+  }
 }

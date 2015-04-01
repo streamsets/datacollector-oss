@@ -12,8 +12,10 @@ import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.config.ConfigConfiguration;
 import com.streamsets.pipeline.config.DataRuleDefinition;
 import com.streamsets.pipeline.config.DeliveryGuarantee;
+import com.streamsets.pipeline.config.MemoryLimitExceeded;
 import com.streamsets.pipeline.config.MetricsRuleDefinition;
 import com.streamsets.pipeline.config.PipelineConfiguration;
+import com.streamsets.pipeline.config.PipelineDefConfigs;
 import com.streamsets.pipeline.config.RuleDefinitions;
 import com.streamsets.pipeline.io.DataStore;
 import com.streamsets.pipeline.json.ObjectMapperFactory;
@@ -129,10 +131,15 @@ public class FilePipelineStoreTask extends AbstractTask implements PipelineStore
     UUID uuid = UUID.randomUUID();
     PipelineInfo info = new PipelineInfo(name, description, date, date, user, user, REV, uuid, false);
 
-    List<ConfigConfiguration> configuration = new ArrayList<>(2);
-    configuration.add(new ConfigConfiguration("deliveryGuarantee", DeliveryGuarantee.AT_LEAST_ONCE));
-    configuration.add(new ConfigConfiguration("badRecordsHandling", ""));
+    List<ConfigConfiguration> configuration = new ArrayList<>(3);
+    configuration.add(new ConfigConfiguration(PipelineDefConfigs.DELIVERY_GUARANTEE_CONFIG,
+      DeliveryGuarantee.AT_LEAST_ONCE));
+    configuration.add(new ConfigConfiguration(PipelineDefConfigs.ERROR_RECORDS_CONFIG, ""));
     configuration.add(new ConfigConfiguration("constants", new ArrayList<>()));
+    configuration.add(new ConfigConfiguration(PipelineDefConfigs.MEMORY_LIMIT_EXCEEDED_CONFIG,
+      MemoryLimitExceeded.STOP_PIPELINE));
+    configuration.add(new ConfigConfiguration(PipelineDefConfigs.MEMORY_LIMIT_CONFIG,
+      PipelineDefConfigs.MEMORY_LIMIT_DEFAULT));
 
     PipelineConfiguration pipeline = new PipelineConfiguration(SCHEMA_VERSION, uuid, configuration, null, null, null);
     pipeline.setDescription(description);

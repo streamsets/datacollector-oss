@@ -10,6 +10,7 @@ import com.streamsets.pipeline.api.BatchMaker;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.base.BaseSource;
 import com.streamsets.pipeline.config.DeliveryGuarantee;
+import com.streamsets.pipeline.config.MemoryLimitConfiguration;
 import com.streamsets.pipeline.main.RuntimeInfo;
 import com.streamsets.pipeline.prodmanager.PipelineManagerException;
 import com.streamsets.pipeline.prodmanager.ProductionPipelineManagerTask;
@@ -20,6 +21,7 @@ import com.streamsets.pipeline.runner.SourceOffsetTracker;
 import com.streamsets.pipeline.snapshotstore.SnapshotStatus;
 import com.streamsets.pipeline.snapshotstore.impl.FileSnapshotStore;
 import com.streamsets.pipeline.stagelibrary.StageLibraryTask;
+import com.streamsets.pipeline.store.PipelineStoreTask;
 import com.streamsets.pipeline.store.impl.FilePipelineStoreTask;
 import com.streamsets.pipeline.util.Configuration;
 import com.streamsets.pipeline.util.TestUtil;
@@ -46,8 +48,9 @@ public class TestProdPipelineRunnable {
   private static final String PIPELINE_NAME = "xyz";
   private static final String REVISION = "1.0";
   private static final String SNAPSHOT_NAME = "snapshot";
-  private ProductionPipelineManagerTask manager = null;
-  private RuntimeInfo info = null;
+  private ProductionPipelineManagerTask manager;
+  private PipelineStoreTask pipelineStoreTask;
+  private RuntimeInfo info;
 
   @BeforeClass
   public static void beforeClass() throws IOException {
@@ -65,14 +68,15 @@ public class TestProdPipelineRunnable {
   public void setUp() {
     MockStages.resetStageCaptures();
     info = new RuntimeInfo(new MetricRegistry(), Arrays.asList(getClass().getClassLoader()));
-    manager = new ProductionPipelineManagerTask(info, Mockito.mock(Configuration.class)
-        , Mockito.mock(FilePipelineStoreTask.class), Mockito.mock(StageLibraryTask.class));
+    pipelineStoreTask = Mockito.mock(FilePipelineStoreTask.class);
+    Mockito.when(pipelineStoreTask.hasPipeline(PIPELINE_NAME)).thenReturn(true);
+    manager = new ProductionPipelineManagerTask(info, Mockito.mock(Configuration.class), pipelineStoreTask,
+      Mockito.mock(StageLibraryTask.class));
     manager.init();
   }
 
   @After
   public void tearDown() {
-    manager.stop();
     manager.getStateTracker().getStateFile().delete();
   }
 
@@ -84,6 +88,7 @@ public class TestProdPipelineRunnable {
     ProductionPipeline pipeline = createProductionPipeline(DeliveryGuarantee.AT_MOST_ONCE, true);
     ProductionPipelineRunnable runnable = new ProductionPipelineRunnable(manager, pipeline, PIPELINE_NAME, REVISION,
       Collections.<Future<?>>emptyList());
+    manager.getStateTracker().setState(PIPELINE_NAME, REVISION, State.RUNNING, null, null);
     runnable.run();
 
     //The source returns null offset because all the data from source was read
@@ -100,7 +105,7 @@ public class TestProdPipelineRunnable {
     ProductionPipeline pipeline = createProductionPipeline(DeliveryGuarantee.AT_MOST_ONCE, false);
     ProductionPipelineRunnable runnable = new ProductionPipelineRunnable(manager, pipeline, PIPELINE_NAME, REVISION,
       Collections.<Future<?>>emptyList());
-
+    manager.getStateTracker().setState(PIPELINE_NAME, REVISION, State.STOPPING, null, null);
     runnable.stop(false);
     Assert.assertTrue(pipeline.wasStopped());
 
@@ -170,7 +175,7 @@ public class TestProdPipelineRunnable {
     Assert.assertTrue(pipeline.getPipeline().getRunner().getBatchesOutput().isEmpty());
   }
 
-  private ProductionPipeline createProductionPipeline(DeliveryGuarantee deliveryGuarantee, boolean capturenextBatch)
+  private ProductionPipeline createProductionPipeline(DeliveryGuarantee deliveryGuarantee, boolean captureNextBatch)
     throws PipelineRuntimeException, PipelineManagerException, StageException {
     RuntimeInfo runtimeInfo = Mockito.mock(RuntimeInfo.class);
     Mockito.when(runtimeInfo.getId()).thenReturn("id");
@@ -178,17 +183,18 @@ public class TestProdPipelineRunnable {
     SourceOffsetTracker tracker = new TestUtil.SourceOffsetTrackerImpl("1");
     FileSnapshotStore snapshotStore = Mockito.mock(FileSnapshotStore.class);
 
-    Mockito.when(snapshotStore.getSnapshotStatus(PIPELINE_NAME, REVISION, SNAPSHOT_NAME)).thenReturn(new SnapshotStatus(false, false));
+    Mockito.when(snapshotStore.getSnapshotStatus(PIPELINE_NAME, REVISION, SNAPSHOT_NAME)).
+      thenReturn(new SnapshotStatus(false, false));
     BlockingQueue<Object> productionObserveRequests = new ArrayBlockingQueue<>(100, true /*FIFO*/);
     ProductionPipelineRunner runner = new ProductionPipelineRunner(runtimeInfo, snapshotStore, deliveryGuarantee,
-      PIPELINE_NAME, REVISION, new FilePipelineStoreTask(info, new Configuration()), productionObserveRequests,
-      new Configuration());
+      PIPELINE_NAME, REVISION, productionObserveRequests, new Configuration(), new MemoryLimitConfiguration());
     ProductionPipeline pipeline = new ProductionPipelineBuilder(MockStages.createStageLibrary(), PIPELINE_NAME,
-        REVISION, runtimeInfo, MockStages.createPipelineConfigurationSourceProcessorTarget()).build(runner, tracker, null);
+        REVISION, runtimeInfo, MockStages.createPipelineConfigurationSourceProcessorTarget())
+      .build(runner, tracker, null);
     manager.getStateTracker().register(PIPELINE_NAME, REVISION);
     manager.getStateTracker().setState(PIPELINE_NAME, REVISION, State.STOPPED, null, null);
 
-    if(capturenextBatch) {
+    if(captureNextBatch) {
       runner.captureNextBatch(SNAPSHOT_NAME, 1);
     }
 

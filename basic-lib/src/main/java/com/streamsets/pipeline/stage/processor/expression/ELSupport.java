@@ -14,7 +14,7 @@ import java.util.Map;
 
 public class ELSupport {
 
-  //TODO: decide prefix. These functions seem very similar to uuid which is in MiscEL and has no prefix.
+  //TODO: decide prefix. These functions seem very similar to uuid which is in DataUtilEL and has no prefix.
   @ElFunction(
     prefix = "",
     name = "emptyMap",

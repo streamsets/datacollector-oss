@@ -14,6 +14,7 @@ import org.slf4j.LoggerFactory;
 
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.concurrent.RejectedExecutionException;
 import java.util.concurrent.TimeUnit;
 
 public class ResourceControlledScheduledExecutor {
@@ -26,7 +27,7 @@ public class ResourceControlledScheduledExecutor {
   }
   public ResourceControlledScheduledExecutor(final float maxCpuConsumption, final long minimumDelay) {
     Utils.checkArgument(maxCpuConsumption > 0, "Max CPU Consumption cannot be less than zero");
-    scheduledExecutorService = new SafeScheduledExecutorService(1, "ResourceControlledScheduledExecutor");
+    scheduledExecutorService = new SafeScheduledExecutorService(2, "ResourceControlledScheduledExecutor");
     scheduledExecutorService.schedule(new Runnable() {
       private final ExponentiallyDecayingReservoir decayingReservoir =
         new ExponentiallyDecayingReservoir();
@@ -57,7 +58,13 @@ public class ResourceControlledScheduledExecutor {
         } else if (delay < minimumDelay) {
           delay = minimumDelay;
         }
-        scheduledExecutorService.schedule(this, delay, TimeUnit.MILLISECONDS);
+        try {
+          scheduledExecutorService.schedule(this, delay, TimeUnit.MILLISECONDS);
+        } catch(RejectedExecutionException e) {
+          if (!scheduledExecutorService.isShutdown()) {
+            throw e;
+          }
+        }
       }
     }, 10, TimeUnit.MILLISECONDS);
   }

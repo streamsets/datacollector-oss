@@ -11,7 +11,7 @@ import com.streamsets.pipeline.api.GenerateResourceBundle;
 import com.streamsets.pipeline.api.StageDef;
 import com.streamsets.pipeline.api.Target;
 import com.streamsets.pipeline.configurablestage.DTarget;
-import com.streamsets.pipeline.lib.el.MiscEL;
+import com.streamsets.pipeline.lib.el.DataUtilEL;
 import com.streamsets.pipeline.lib.el.RecordEL;
 import com.streamsets.pipeline.lib.el.TimeEL;
 
@@ -93,7 +93,7 @@ public class ElasticSearchDTarget extends DTarget {
       description = "Typically left empty",
       displayPosition = 50,
       group = "ELASTIC_SEARCH",
-      elDefs = {RecordEL.class, MiscEL.class}
+      elDefs = {RecordEL.class, DataUtilEL.class}
   )
   public String docIdTemplate;
 

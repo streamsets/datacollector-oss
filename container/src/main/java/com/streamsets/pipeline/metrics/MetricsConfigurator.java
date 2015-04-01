@@ -28,6 +28,9 @@ public class MetricsConfigurator {
   private static final String GAUGE_SUFFIX = ".gauge";
 
   private static String metricName(String name, String type) {
+    if (name.endsWith(type)) {
+      return name;
+    }
     return name + type;
   }
 

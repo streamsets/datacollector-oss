@@ -49,7 +49,6 @@ public class ProductionPipelineBuilder {
           validator.getIssues()));
     }
     Pipeline pipeline = new Pipeline.Builder(stageLib, name + PRODUCTION_PIPELINE_SUFFIX, pipelineConf)
-      .setMemoryLimitConfiguration(runtimeInfo.getMemoryLimitConfiguration())
       .setObserver(observer).build(runner);
 
     List<StageIssue> configIssues = pipeline.validateConfigs();

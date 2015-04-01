@@ -15,12 +15,11 @@ import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Supplier;
 import com.streamsets.pipeline.api.Batch;
 import com.streamsets.pipeline.api.StageException;
-import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.config.StageType;
 import com.streamsets.pipeline.memory.MemoryMonitor;
 import com.streamsets.pipeline.memory.MemoryUsageCollector;
+import com.streamsets.pipeline.memory.MemoryUsageCollectorResourceBundle;
 import com.streamsets.pipeline.metrics.MetricsConfigurator;
-import com.streamsets.pipeline.util.ContainerError;
 import com.streamsets.pipeline.validation.StageIssue;
 
 import java.util.HashMap;
@@ -51,13 +50,20 @@ public class StagePipe extends Pipe<StagePipe.Context> {
   private Map<String, Meter> outputRecordsPerLaneMeter;
   private StagePipe.Context context;
   private final ResourceControlledScheduledExecutor scheduledExecutorService;
-  private final long memoryLimit;
+  private final MemoryUsageCollectorResourceBundle memoryUsageCollectorResourceBundle;
+
+  @VisibleForTesting
+  StagePipe(StageRuntime stage, List<String> inputLanes, List<String> outputLanes) {
+    this(stage, inputLanes, outputLanes, new ResourceControlledScheduledExecutor(0.02f),
+      new MemoryUsageCollectorResourceBundle());
+  }
 
   public StagePipe(StageRuntime stage, List<String> inputLanes, List<String> outputLanes,
-                   ResourceControlledScheduledExecutor scheduledExecutorService, long memoryLimit) {
+                   ResourceControlledScheduledExecutor scheduledExecutorService,
+                   MemoryUsageCollectorResourceBundle memoryUsageCollectorResourceBundle) {
     super(stage, inputLanes, outputLanes);
     this.scheduledExecutorService = scheduledExecutorService;
-    this.memoryLimit = memoryLimit;
+    this.memoryUsageCollectorResourceBundle = memoryUsageCollectorResourceBundle;
   }
 
   @Override
@@ -99,18 +105,12 @@ public class StagePipe extends Pipe<StagePipe.Context> {
       new Supplier<MemoryUsageCollector>() {
         @Override
         public MemoryUsageCollector get() {
-          return new MemoryUsageCollector.Builder().setStageRuntime(getStage()).build();
+          return new MemoryUsageCollector.Builder()
+            .setMemoryUsageCollectorResourceBundle(memoryUsageCollectorResourceBundle)
+            .setStageRuntime(getStage()).build();
         }
       }));
     createRuntimeStatsGauge(metrics);
-  }
-
-  @VisibleForTesting
-  static void checkMemory(long memoryLimit, long memoryConsumption, String msg) throws PipelineRuntimeException {
-    if (memoryLimit > 0 && memoryConsumption > memoryLimit) {
-      throw new PipelineRuntimeException(ContainerError.CONTAINER_0011, msg,
-        Utils.humanReadableInt(memoryConsumption), Utils.humanReadableInt(memoryLimit));
-    }
   }
 
   @Override
@@ -120,8 +120,6 @@ public class StagePipe extends Pipe<StagePipe.Context> {
     long startTimeInStage = System.currentTimeMillis();
     //update stats
     updateStatsAtStart(startTimeInStage);
-
-    checkMemory(memoryLimit,  memoryConsumedCounter.getCount(), String.valueOf(getStage().getInfo()));
 
     BatchMakerImpl batchMaker = pipeBatch.startStage(this);
     BatchImpl batchImpl = pipeBatch.getBatch(this);
@@ -187,6 +185,11 @@ public class StagePipe extends Pipe<StagePipe.Context> {
   public void destroy() {
     getStage().destroy();
   }
+
+  @Override
+  public long getMemoryConsumed() {
+    return memoryConsumedCounter.getCount();
+}
 
   private Gauge<Object> createRuntimeStatsGauge(MetricRegistry metricRegistry) {
     Gauge<Object> runtimeStatsGauge = MetricsConfigurator.getGauge(metricRegistry, RUNTIME_STATS_GAUGE);
