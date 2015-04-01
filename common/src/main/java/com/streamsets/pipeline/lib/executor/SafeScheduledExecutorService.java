@@ -107,7 +107,7 @@ public class SafeScheduledExecutorService {
     }
     public void run() {
       try {
-        delegate.run();;
+        delegate.run();
       } catch (Throwable throwable) {
         executorSupport.uncaughtThrowableInRunnable(throwable, delegate, delegateName);
         if (propagateErrors) {

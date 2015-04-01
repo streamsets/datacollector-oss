@@ -17,7 +17,6 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 public class TestSafeScheduledExecutorService {
   private static final Logger LOG = LoggerFactory.getLogger(TestSafeScheduledExecutorService.class);
-  private static AtomicInteger runnableCallCount = new AtomicInteger(0);
   @Test
   public void testCorePoolSize() throws Exception {
     long start = System.currentTimeMillis();
@@ -40,16 +39,17 @@ public class TestSafeScheduledExecutorService {
   static class RunnableWhichThrows implements Runnable {
     @Override
     public void run() {
-      LOG.info("runnableCallCount = " + runnableCallCount.incrementAndGet());
       throw new SafeScheduledExecutorServiceRethrowsException();
     }
   }
   static class ExecutorSupportForTests extends ExecutorSupport {
     private Throwable throwable;
+    private AtomicInteger uncaughtThrowableInRunnableCount = new AtomicInteger(0);
     public ExecutorSupportForTests(Logger logger) {
       super(logger);
     }
     public void uncaughtThrowableInRunnable(Throwable throwable, Runnable delegate, String delegateName) {
+      uncaughtThrowableInRunnableCount.incrementAndGet();
       this.throwable = throwable;
       super.uncaughtThrowableInRunnable(throwable, delegate, delegateName);
     }
@@ -104,13 +104,12 @@ public class TestSafeScheduledExecutorService {
   }
   @Test
   public void testScheduleAtFixedRateReturnFutureDoesNotRethrow() throws Throwable {
-    runnableCallCount.set(0);
     SafeScheduledExecutorService executorService = new SafeScheduledExecutorService(1, "test");
     ExecutorSupportForTests executorSupport = new ExecutorSupportForTests(LOG);
     executorService.setExecutorSupport(executorSupport);
     executorService.scheduleAtFixedRate(new RunnableWhichThrows(), 0, 10, TimeUnit.MILLISECONDS);
     TimeUnit.MILLISECONDS.sleep(25);
-    int executionCount = runnableCallCount.get();
+    int executionCount = executorSupport.uncaughtThrowableInRunnableCount.get();
     Assert.assertTrue("executionCount is " + executionCount + " which should be >= 2 and <= 4",
       executionCount >= 2 && executionCount <= 5);
   }
