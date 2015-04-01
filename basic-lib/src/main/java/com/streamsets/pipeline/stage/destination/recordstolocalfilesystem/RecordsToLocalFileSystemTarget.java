@@ -5,7 +5,6 @@
  */
 package com.streamsets.pipeline.stage.destination.recordstolocalfilesystem;
 
-import com.google.common.collect.ImmutableList;
 import com.google.common.io.CountingOutputStream;
 import com.streamsets.pipeline.api.Batch;
 import com.streamsets.pipeline.api.Record;
@@ -13,7 +12,6 @@ import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.base.BaseTarget;
 import com.streamsets.pipeline.api.el.ELEval;
 import com.streamsets.pipeline.api.el.ELEvalException;
-import com.streamsets.pipeline.lib.el.TimeEL;
 import com.streamsets.pipeline.lib.generator.CharDataGeneratorFactory;
 import com.streamsets.pipeline.lib.generator.DataGenerator;
 import com.streamsets.pipeline.lib.io.WildcardFilter;
@@ -55,13 +53,8 @@ public class RecordsToLocalFileSystemTarget extends BaseTarget {
   private DataGenerator generator;
   private ELEval rotationMillisEvaluator;
 
-  @Override
-  public List<ELEval> getELEvals(ELContext elContext) {
-    return ImmutableList.of(createRotationMillisEval(elContext));
-  }
-
   private ELEval createRotationMillisEval(ELContext elContext) {
-    return elContext.createELEval("rotationIntervalSecs", TimeEL.class);
+    return elContext.createELEval("rotationIntervalSecs");
   }
 
   @Override

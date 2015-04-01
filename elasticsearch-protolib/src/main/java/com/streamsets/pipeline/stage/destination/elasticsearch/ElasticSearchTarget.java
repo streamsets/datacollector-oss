@@ -59,15 +59,6 @@ public class ElasticSearchTarget extends BaseTarget {
     this.docIdTemplate = docIdTemplate;
   }
 
-  @Override
-  public List<ELEval> getELEvals(ELContext elContext) {
-    return ImmutableList.of(
-      ElUtil.createIndexEval(elContext),
-      ElUtil.createTypeEval(elContext),
-      ElUtil.createDocIdEval(elContext)
-    );
-  }
-
   private Date batchTime;
   private ELEval indexEval;
   private ELEval typeEval;

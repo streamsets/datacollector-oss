@@ -22,7 +22,7 @@ public class TestToErrorTarget {
   @Test
   public void testOutErr() throws Exception {
     Target target = new ToErrorTarget();
-    TargetRunner runner = new TargetRunner.Builder(target)
+    TargetRunner runner = new TargetRunner.Builder(ToErrorDTarget.class, target)
         .build();
     runner.runInit();
     try {

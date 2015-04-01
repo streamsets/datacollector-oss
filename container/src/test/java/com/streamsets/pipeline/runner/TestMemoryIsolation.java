@@ -162,11 +162,6 @@ public class TestMemoryIsolation {
     }
 
     @Override
-    public List<ELEval> getELEvals(ELContext elContext) {
-      return null;
-    }
-
-    @Override
     public void init(Info info, Context context) throws StageException {
 
     }
@@ -193,11 +188,6 @@ public class TestMemoryIsolation {
     }
 
     @Override
-    public List<ELEval> getELEvals(ELContext elContext) {
-      return null;
-    }
-
-    @Override
     public void init(Info info, Context context) throws StageException {
 
     }
@@ -219,11 +209,6 @@ public class TestMemoryIsolation {
 
     @Override
     public List<ConfigIssue> validateConfigs(Info info, Context context) throws StageException {
-      return null;
-    }
-
-    @Override
-    public List<ELEval> getELEvals(ELContext elContext) {
       return null;
     }
 

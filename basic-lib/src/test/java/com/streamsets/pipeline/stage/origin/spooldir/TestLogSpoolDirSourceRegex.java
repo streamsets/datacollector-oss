@@ -93,7 +93,7 @@ public class TestLogSpoolDirSourceRegex {
   @Test
   public void testProduceFullFile() throws Exception {
     SpoolDirSource source = createSource();
-    SourceRunner runner = new SourceRunner.Builder(source).addOutputLane("lane").build();
+    SourceRunner runner = new SourceRunner.Builder(SpoolDirDSource.class, source).addOutputLane("lane").build();
     runner.runInit();
     try {
       BatchMaker batchMaker = SourceRunner.createTestBatchMaker("lane");
@@ -166,7 +166,7 @@ public class TestLogSpoolDirSourceRegex {
   @Test
   public void testProduceLessThanFile() throws Exception {
     SpoolDirSource source = createSource();
-    SourceRunner runner = new SourceRunner.Builder(source).addOutputLane("lane").build();
+    SourceRunner runner = new SourceRunner.Builder(SpoolDirDSource.class, source).addOutputLane("lane").build();
     runner.runInit();
     try {
       BatchMaker batchMaker = SourceRunner.createTestBatchMaker("lane");
@@ -257,7 +257,7 @@ public class TestLogSpoolDirSourceRegex {
       PostProcessingOptions.ARCHIVE, createTestDir(), 10, null, null, -1, null, 0, 0,
       null, 0, LogMode.REGEX, 1000, true, CUSTOM_LOG_FORMAT, INVALID_REGEX, REGEX_CONFIG, null, null, false, null,
       OnParseError.ERROR, 0);
-    SourceRunner runner = new SourceRunner.Builder(spoolDirSource).addOutputLane("lane").build();
+    SourceRunner runner = new SourceRunner.Builder(SpoolDirDSource.class, spoolDirSource).addOutputLane("lane").build();
     runner.runInit();
   }
 
@@ -276,7 +276,7 @@ public class TestLogSpoolDirSourceRegex {
       PostProcessingOptions.ARCHIVE, createTestDir(), 10, null, null, -1, null, 0, 0,
       null, 0, LogMode.REGEX, 1000, true, CUSTOM_LOG_FORMAT, REGEX, regExConfig, null, null, false, null,
       OnParseError.ERROR, 0);
-    SourceRunner runner = new SourceRunner.Builder(spoolDirSource).addOutputLane("lane").build();
+    SourceRunner runner = new SourceRunner.Builder(SpoolDirDSource.class, spoolDirSource).addOutputLane("lane").build();
     runner.runInit();
   }
 

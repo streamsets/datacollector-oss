@@ -5,7 +5,6 @@
  */
 package com.streamsets.pipeline.stage.destination.kafka;
 
-import com.google.common.collect.ImmutableList;
 import com.streamsets.pipeline.api.Batch;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.Stage;
@@ -19,12 +18,11 @@ import com.streamsets.pipeline.config.CsvHeader;
 import com.streamsets.pipeline.config.CsvMode;
 import com.streamsets.pipeline.config.DataFormat;
 import com.streamsets.pipeline.config.JsonMode;
-import com.streamsets.pipeline.lib.el.RecordEL;
-import com.streamsets.pipeline.lib.el.StringEL;
 import com.streamsets.pipeline.lib.Errors;
 import com.streamsets.pipeline.lib.KafkaBroker;
 import com.streamsets.pipeline.lib.KafkaUtil;
 import com.streamsets.pipeline.lib.el.ELUtils;
+import com.streamsets.pipeline.lib.el.RecordEL;
 import com.streamsets.pipeline.lib.generator.CharDataGeneratorFactory;
 import com.streamsets.pipeline.lib.generator.DataGenerator;
 import com.streamsets.pipeline.lib.generator.delimited.DelimitedCharDataGeneratorFactory;
@@ -60,7 +58,7 @@ public class KafkaTarget extends BaseTarget {
   private KafkaProducer kafkaProducer;
   private long recordCounter = 0;
   private CharDataGeneratorFactory generatorFactory;
-  private ELEval partitionStrategyEval;
+  private ELEval partitionEval;
   private ELVars variables;
 
   public KafkaTarget(String metadataBrokerList, String topic, PartitionStrategy partitionStrategy, String partition,
@@ -266,7 +264,7 @@ public class KafkaTarget extends BaseTarget {
     if(partitionStrategy == PartitionStrategy.EXPRESSION) {
       RecordEL.setRecordInContext(variables, record);
       try {
-        int p = partitionStrategyEval.eval(variables, partition, Integer.class);
+        int p = partitionEval.eval(variables, partition, Integer.class);
         if (p < 0 || p >= kafkaProducer.getNumberOfPartitions()) {
           throw new StageException(Errors.KAFKA_56, partition, topic, kafkaProducer.getNumberOfPartitions(),
                                    record.getHeader().getSourceId());
@@ -287,13 +285,8 @@ public class KafkaTarget extends BaseTarget {
     }
   }
 
-  @Override
-  public List<ELEval> getELEvals(ELContext elContext) {
-    return ImmutableList.of(createPartitionStrategyEval(elContext));
-  }
-
-  private ELEval createPartitionStrategyEval(ELContext elContext) {
-    return elContext.createELEval("partitionStrategy", RecordEL.class, StringEL.class);
+  private ELEval createPartitionEval(ELContext elContext) {
+    return elContext.createELEval("partition");
   }
 
   /****************************************************/
@@ -302,10 +295,10 @@ public class KafkaTarget extends BaseTarget {
 
   private void validatePartitionExpression(List<ConfigIssue> issues) {
     if (partitionStrategy == PartitionStrategy.EXPRESSION) {
-      partitionStrategyEval = createPartitionStrategyEval(getContext());
+      partitionEval = createPartitionEval(getContext());
       //There is no scope to provide variables for kafka target as of today, create empty variables
       variables = getContext().createELVars();
-      ELUtils.validateExpression(partitionStrategyEval, variables, partition, getContext(), Groups.KAFKA.name(),
+      ELUtils.validateExpression(partitionEval, variables, partition, getContext(), Groups.KAFKA.name(),
                                  "partition", Errors.KAFKA_57, Object.class, issues);
     }
   }

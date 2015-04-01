@@ -39,7 +39,8 @@ public class ContextInfoCreator {
 
   private static StageContext createContext(String instanceName, boolean isPreview, OnRecordError onRecordError,
       List<String> outputLanes) {
-    return new StageContext(instanceName, StageType.SOURCE, isPreview, onRecordError, outputLanes);
+    return new StageContext(instanceName, StageType.SOURCE, isPreview, onRecordError, outputLanes,
+      Collections.<String, Class<?>[]> emptyMap());
   }
 
   public static Source.Context createSourceContext(String instanceName, boolean isPreview, OnRecordError onRecordError,

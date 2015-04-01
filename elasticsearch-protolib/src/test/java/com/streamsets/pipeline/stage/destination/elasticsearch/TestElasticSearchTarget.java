@@ -81,7 +81,7 @@ public class TestElasticSearchTarget {
   public void testValidations() throws Exception {
     Target target = new ElasticSearchTarget("", Collections.EMPTY_LIST, Collections.EMPTY_MAP,
                                                    "${record:value('/index')x}", "${record:valxue('/type')}", "");
-    TargetRunner runner = new TargetRunner.Builder(target).build();
+    TargetRunner runner = new TargetRunner.Builder(ElasticSearchDTarget.class, target).build();
     List<Stage.ConfigIssue> issues = runner.runValidateConfigs();
     Assert.assertEquals(4, issues.size());
     Assert.assertTrue(issues.get(0).toString().contains(Errors.ELASTICSEARCH_00.name()));
@@ -90,13 +90,13 @@ public class TestElasticSearchTarget {
     Assert.assertTrue(issues.get(3).toString().contains(Errors.ELASTICSEARCH_07.name()));
 
     target = new ElasticSearchTarget("x", ImmutableList.of("x"), Collections.EMPTY_MAP, "x", "x", "");
-    runner = new TargetRunner.Builder(target).build();
+    runner = new TargetRunner.Builder(ElasticSearchDTarget.class, target).build();
     issues = runner.runValidateConfigs();
     Assert.assertEquals(1, issues.size());
     Assert.assertTrue(issues.get(0).toString().contains(Errors.ELASTICSEARCH_09.name()));
 
     target = new ElasticSearchTarget("x", ImmutableList.of("localhost:0"), Collections.EMPTY_MAP, "x", "x", "");
-    runner = new TargetRunner.Builder(target).build();
+    runner = new TargetRunner.Builder(ElasticSearchDTarget.class, target).build();
     issues = runner.runValidateConfigs();
     Assert.assertEquals(1, issues.size());
     Assert.assertTrue(issues.get(0).toString().contains(Errors.ELASTICSEARCH_08.name()));
@@ -110,7 +110,7 @@ public class TestElasticSearchTarget {
   @Test
   public void testWriteRecords() throws Exception {
     Target target = createTarget();
-    TargetRunner runner = new TargetRunner.Builder(target).build();
+    TargetRunner runner = new TargetRunner.Builder(ElasticSearchDTarget.class, target).build();
     try {
       runner.runInit();
       List<Record> records = new ArrayList<>();
@@ -151,7 +151,7 @@ public class TestElasticSearchTarget {
   @Test
   public void testWriteRecordsOnErrorDiscard() throws Exception {
     Target target = createTarget();
-    TargetRunner runner = new TargetRunner.Builder(target).setOnRecordError(OnRecordError.DISCARD).build();
+    TargetRunner runner = new TargetRunner.Builder(ElasticSearchDTarget.class, target).setOnRecordError(OnRecordError.DISCARD).build();
     try {
       runner.runInit();
       List<Record> records = new ArrayList<>();
@@ -190,7 +190,7 @@ public class TestElasticSearchTarget {
   @Test
   public void testWriteRecordsOnErrorToError() throws Exception {
     Target target = createTarget();
-    TargetRunner runner = new TargetRunner.Builder(target).setOnRecordError(OnRecordError.TO_ERROR).build();
+    TargetRunner runner = new TargetRunner.Builder(ElasticSearchDTarget.class, target).setOnRecordError(OnRecordError.TO_ERROR).build();
     try {
       runner.runInit();
       List<Record> records = new ArrayList<>();
@@ -230,7 +230,7 @@ public class TestElasticSearchTarget {
   @Test(expected = StageException.class)
   public void testWriteRecordsOnErrorStopPipeline() throws Exception {
     Target target = createTarget();
-    TargetRunner runner = new TargetRunner.Builder(target).setOnRecordError(OnRecordError.STOP_PIPELINE).build();
+    TargetRunner runner = new TargetRunner.Builder(ElasticSearchDTarget.class, target).setOnRecordError(OnRecordError.STOP_PIPELINE).build();
     try {
       runner.runInit();
       List<Record> records = new ArrayList<>();

@@ -20,9 +20,9 @@ import java.util.Map;
 
 public class ProcessorRunner extends StageRunner<Processor> {
 
-  public ProcessorRunner(Processor processor, Map<String, Object> configuration, List<String> outputLanes,
+  public ProcessorRunner(Class<Processor> processorClass, Processor processor, Map<String, Object> configuration, List<String> outputLanes,
       boolean isPreview, OnRecordError onRecordError) {
-    super(processor, StageType.PROCESSOR, configuration, outputLanes, isPreview, onRecordError);
+    super(processorClass, processor, StageType.PROCESSOR, configuration, outputLanes, isPreview, onRecordError);
   }
 
   public ProcessorRunner(Class<Processor> processorClass, Map<String, Object> configuration, List<String> outputLanes,
@@ -40,8 +40,8 @@ public class ProcessorRunner extends StageRunner<Processor> {
 
   public static class Builder extends StageRunner.Builder<Processor, ProcessorRunner, Builder> {
 
-    public Builder(Processor processor) {
-      super(processor);
+    public Builder(Class<? extends Processor> processorClass,  Processor processor) {
+      super((Class<Processor>)processorClass, processor);
     }
 
     @SuppressWarnings("unchecked")
@@ -52,7 +52,7 @@ public class ProcessorRunner extends StageRunner<Processor> {
     @Override
     public ProcessorRunner build() {
       Utils.checkState(!outputLanes.isEmpty(), "A Processor must have at least one output stream");
-      return  (stage != null) ? new ProcessorRunner(stage, configs, outputLanes, isPreview, onRecordError)
+      return  (stage != null) ? new ProcessorRunner(stageClass, stage, configs, outputLanes, isPreview, onRecordError)
                               : new ProcessorRunner(stageClass, configs, outputLanes, isPreview, onRecordError);
     }
 

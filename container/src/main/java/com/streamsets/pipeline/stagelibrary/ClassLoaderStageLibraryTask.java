@@ -15,8 +15,6 @@ import com.google.common.collect.ImmutableMap;
 import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.OnRecordError;
 import com.streamsets.pipeline.api.OnRecordErrorChooserValues;
-import com.streamsets.pipeline.api.Stage;
-import com.streamsets.pipeline.api.el.ELEval;
 import com.streamsets.pipeline.api.impl.LocaleInContext;
 import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.config.ConfigDefinition;
@@ -31,7 +29,6 @@ import com.streamsets.pipeline.json.ObjectMapperFactory;
 import com.streamsets.pipeline.main.RuntimeInfo;
 import com.streamsets.pipeline.restapi.bean.BeanHelper;
 import com.streamsets.pipeline.restapi.bean.StageDefinitionJson;
-import com.streamsets.pipeline.runner.StageContext;
 import com.streamsets.pipeline.task.AbstractTask;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -138,8 +135,8 @@ public class ClassLoaderStageLibraryTask extends AbstractTask implements StageLi
               setElMetadata(stage);
             }
           }
-        } catch (IOException | ClassNotFoundException | NoSuchFieldException | InstantiationException |
-          IllegalAccessException ex) {
+        } catch (IOException | ClassNotFoundException | NoSuchFieldException | InstantiationException
+          | IllegalAccessException ex) {
           throw new RuntimeException(
               Utils.format("Could not load stages definition from '{}', {}", cl, ex.getMessage()),
               ex);
@@ -156,7 +153,7 @@ public class ClassLoaderStageLibraryTask extends AbstractTask implements StageLi
       "Records without any of these fields are sent to error",
       null, false, "", null, new ModelDefinition(ModelType.FIELD_SELECTOR_MULTI_VALUED, null, null, null, null),
       "", new ArrayList<>(), 10, Collections.<ElFunctionDefinition>emptyList(),
-      Collections.<ElConstantDefinition>emptyList(), Long.MIN_VALUE, Long.MAX_VALUE, "text/plain", 0);
+      Collections.<ElConstantDefinition>emptyList(), Long.MIN_VALUE, Long.MAX_VALUE, "text/plain", 0, Collections.<String>emptyList());
 
   //Group name needs to be empty for UI to show the config in General Group.
   private static final ConfigDefinition ON_RECORD_ERROR_CONFIG = new ConfigDefinition(
@@ -167,7 +164,7 @@ public class ClassLoaderStageLibraryTask extends AbstractTask implements StageLi
                                                  new OnRecordErrorChooserValues().getValues(),
                                                  new OnRecordErrorChooserValues().getLabels(), null), "",
       new ArrayList<>(), 20, Collections.<ElFunctionDefinition>emptyList(),
-      Collections.<ElConstantDefinition>emptyList(), Long.MIN_VALUE, Long.MAX_VALUE, "text/plain", 0);
+      Collections.<ElConstantDefinition>emptyList(), Long.MIN_VALUE, Long.MAX_VALUE, "text/plain", 0, Collections.<String>emptyList());
 
   private void addSystemConfigurations(StageDefinition stage) {
     if (stage.hasRequiredFields()) {
@@ -306,15 +303,31 @@ public class ClassLoaderStageLibraryTask extends AbstractTask implements StageLi
 
   private void setElMetadata(StageDefinition stageDefinition) throws ClassNotFoundException, IllegalAccessException,
     InstantiationException {
-    Class<?> stageClass = stageDefinition.getStageClassLoader().loadClass(stageDefinition.getClassName());
-    Stage<?> stage = (Stage<?>) stageClass.newInstance();
-    List<ELEval> elEvals = stage.getELEvals(new StageContext(stageDefinition.getName(), stageDefinition.getType(),
-      false, OnRecordError.TO_ERROR,
-      Collections.<String>emptyList()));
-    for(ELEval elEval : elEvals) {
-      ConfigDefinition configDefinition = stageDefinition.getConfigDefinition(elEval.getConfigName());
-      configDefinition.getElFunctionDefinitions().addAll(((ELEvaluator) elEval).getElFunctionDefinitions());
-      configDefinition.getElConstantDefinitions().addAll(((ELEvaluator) elEval).getElConstantDefinitions());
+    for(ConfigDefinition configDefinition : stageDefinition.getConfigDefinitions()) {
+      updateElFunctionAndConstantDef(stageDefinition, configDefinition);
+      if(configDefinition.getModel() != null) {
+        List<ConfigDefinition> configDefinitions = configDefinition.getModel().getConfigDefinitions();
+        if(configDefinitions != null) {
+          for(ConfigDefinition configDef : configDefinitions) {
+            updateElFunctionAndConstantDef(stageDefinition, configDef);
+          }
+        }
+      }
+    }
+  }
+
+  private void updateElFunctionAndConstantDef(StageDefinition stageDefinition, ConfigDefinition configDefinition)
+    throws ClassNotFoundException {
+    List<Class> classes = new ArrayList<>();
+    for(String elDef : configDefinition.getElDefs()) {
+      Class<?> elClass = stageDefinition.getStageClassLoader().loadClass(elDef);
+      classes.add(elClass);
+    }
+    if(!classes.isEmpty()) {
+      Class[] elClasses = new Class[classes.size()];
+      ELEvaluator elEval = new ELEvaluator(configDefinition.getName(), classes.toArray(elClasses));
+      configDefinition.getElFunctionDefinitions().addAll(elEval.getElFunctionDefinitions());
+      configDefinition.getElConstantDefinitions().addAll(elEval.getElConstantDefinitions());
     }
   }
 }

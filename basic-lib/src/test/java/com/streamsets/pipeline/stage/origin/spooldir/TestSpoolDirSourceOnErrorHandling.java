@@ -50,7 +50,7 @@ public class TestSpoolDirSourceOnErrorHandling {
   @Test
   public void testOnErrorDiscardMaxObjectLen() throws Exception {
     SpoolDirSource source = createSource();
-    SourceRunner runner = new SourceRunner.Builder(source).addOutputLane("lane")
+    SourceRunner runner = new SourceRunner.Builder(SpoolDirDSource.class, source).addOutputLane("lane")
                                                           .setOnRecordError(OnRecordError.DISCARD).build();
     runner.runInit();
     try {
@@ -75,7 +75,7 @@ public class TestSpoolDirSourceOnErrorHandling {
   @Test
   public void testOnErrorToErrorMaxObjectLen() throws Exception {
     SpoolDirSource source = createSource();
-    SourceRunner runner = new SourceRunner.Builder(source).addOutputLane("lane")
+    SourceRunner runner = new SourceRunner.Builder(SpoolDirDSource.class, source).addOutputLane("lane")
                                                           .setOnRecordError(OnRecordError.TO_ERROR).build();
     runner.runInit();
     try {
@@ -103,7 +103,7 @@ public class TestSpoolDirSourceOnErrorHandling {
   @Test(expected = StageException.class)
   public void testOnErrorLenPipelineMaxObjectLen() throws Exception {
     SpoolDirSource source = createSource();
-    SourceRunner runner = new SourceRunner.Builder(source).addOutputLane("lane")
+    SourceRunner runner = new SourceRunner.Builder(SpoolDirDSource.class, source).addOutputLane("lane")
                                                           .setOnRecordError(OnRecordError.STOP_PIPELINE).build();
     runner.runInit();
     try {
@@ -132,7 +132,7 @@ public class TestSpoolDirSourceOnErrorHandling {
   @Test
   public void testOnErrorDiscardIOEx() throws Exception {
     SpoolDirSource source = createSourceIOEx();
-    SourceRunner runner = new SourceRunner.Builder(source).addOutputLane("lane")
+    SourceRunner runner = new SourceRunner.Builder(SpoolDirDSource.class, source).addOutputLane("lane")
                                                           .setOnRecordError(OnRecordError.DISCARD).build();
     runner.runInit();
     try {
@@ -156,7 +156,7 @@ public class TestSpoolDirSourceOnErrorHandling {
   @Test
   public void testOnErrorToErrorIOEx() throws Exception {
     SpoolDirSource source = createSourceIOEx();
-    SourceRunner runner = new SourceRunner.Builder(source).addOutputLane("lane")
+    SourceRunner runner = new SourceRunner.Builder(SpoolDirDSource.class, source).addOutputLane("lane")
                                                           .setOnRecordError(OnRecordError.TO_ERROR).build();
     runner.runInit();
     try {
@@ -183,7 +183,7 @@ public class TestSpoolDirSourceOnErrorHandling {
   @Test(expected = StageException.class)
   public void testOnErrorPipelineIOEx() throws Exception {
     SpoolDirSource source = createSourceIOEx();
-    SourceRunner runner = new SourceRunner.Builder(source).addOutputLane("lane")
+    SourceRunner runner = new SourceRunner.Builder(SpoolDirDSource.class, source).addOutputLane("lane")
                                                           .setOnRecordError(OnRecordError.STOP_PIPELINE).build();
     runner.runInit();
     try {

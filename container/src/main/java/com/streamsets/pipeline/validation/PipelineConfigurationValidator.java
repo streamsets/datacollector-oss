@@ -394,7 +394,7 @@ public class PipelineConfigurationValidator {
             preview = false;
           }
           break;
-        case EL_BOOLEAN:
+        /*case EL_BOOLEAN:
         case EL_DATE:
         case EL_NUMBER:
           if (!(conf.getValue() instanceof String)) {
@@ -409,10 +409,7 @@ public class PipelineConfigurationValidator {
               confDef.getName(), ValidationError.VALIDATION_0030, value));
             preview = false;
           }
-          break;
-        case EL_STRING:
-        case EL_OBJECT:
-          break;
+          break;*/
         case MODEL:
           preview &= validateModel(stageConf, confDef, conf, issueCreator);
           break;

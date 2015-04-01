@@ -17,7 +17,6 @@ import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.base.BaseProcessor;
 import com.streamsets.pipeline.api.base.BaseSource;
 import com.streamsets.pipeline.api.base.BaseTarget;
-import com.streamsets.pipeline.api.el.ELEval;
 import com.streamsets.pipeline.config.DeliveryGuarantee;
 import com.streamsets.pipeline.config.PipelineConfiguration;
 import com.streamsets.pipeline.main.RuntimeInfo;
@@ -292,11 +291,6 @@ public class TestProductionPipeline {
     @Override
     public List<ConfigIssue> validateConfigs(Info info, Context context) {
       return Arrays.asList(context.createConfigIssue(null, null, ContainerError.CONTAINER_0000));
-    }
-
-    @Override
-    public List<ELEval> getELEvals(ELContext elContext) {
-      return new ArrayList<>();
     }
 
     @Override

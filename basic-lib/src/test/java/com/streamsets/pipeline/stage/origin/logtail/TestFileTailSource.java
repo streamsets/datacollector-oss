@@ -34,7 +34,7 @@ public class TestFileTailSource {
 
     FileTailSource source = new FileTailSource(DataFormat.TEXT, logFile, 25, 1, null,
       -1, false, null, null, null, null, null, false, null);
-    SourceRunner runner = new SourceRunner.Builder(source)
+    SourceRunner runner = new SourceRunner.Builder(FileTailDSource.class, source)
         .addOutputLane("lane")
         .build();
     runner.runInit();
@@ -53,7 +53,7 @@ public class TestFileTailSource {
 
       FileTailSource source = new FileTailSource(DataFormat.TEXT, logFile, 25, 1, null,
         -1, false, null, null, null, null, null, false, null);
-      SourceRunner runner = new SourceRunner.Builder(source)
+      SourceRunner runner = new SourceRunner.Builder(FileTailDSource.class, source)
           .addOutputLane("lane")
           .build();
       runner.runInit();
@@ -74,7 +74,7 @@ public class TestFileTailSource {
 
     FileTailSource source = new FileTailSource(DataFormat.TEXT, logFile, 25, 1, null,
       -1, false, null, null, null, null, null, false, null);
-    SourceRunner runner = new SourceRunner.Builder(source)
+    SourceRunner runner = new SourceRunner.Builder(FileTailDSource.class, source)
         .addOutputLane("lane")
         .build();
     runner.runInit();
@@ -109,7 +109,7 @@ public class TestFileTailSource {
 
     FileTailSource source = new FileTailSource(DataFormat.JSON, logFile, 25, 1, null,
       -1, false, null, null, null, null, null, false, null);
-    SourceRunner runner = new SourceRunner.Builder(source)
+    SourceRunner runner = new SourceRunner.Builder(FileTailDSource.class, source)
         .addOutputLane("lane")
         .build();
     runner.runInit();
@@ -228,7 +228,7 @@ public class TestFileTailSource {
 
     FileTailSource source = new FileTailSource(DataFormat.LOG, logFile, 25, 1, LogMode.LOG4J,
       1000, true, null, null, null, null, null, false, null);
-    SourceRunner runner = new SourceRunner.Builder(source)
+    SourceRunner runner = new SourceRunner.Builder(FileTailDSource.class, source)
       .addOutputLane("lane")
       .build();
     runner.runInit();
@@ -300,7 +300,7 @@ public class TestFileTailSource {
 
     FileTailSource source = new FileTailSource(DataFormat.LOG, logFile, 100, 1, LogMode.LOG4J,
       1000, true, null, null, null, null, null, false, null);
-    SourceRunner runner = new SourceRunner.Builder(source)
+    SourceRunner runner = new SourceRunner.Builder(FileTailDSource.class, source)
       .addOutputLane("lane")
       .build();
     runner.runInit();

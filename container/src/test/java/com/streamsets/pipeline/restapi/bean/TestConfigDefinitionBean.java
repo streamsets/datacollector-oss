@@ -38,7 +38,7 @@ public class TestConfigDefinitionBean {
     com.streamsets.pipeline.config.ConfigDefinition configDefinition =
       new ConfigDefinition("int", ConfigDef.Type.NUMBER, "l2", "d2", "-1", true, "g", "intVar", modelDefinition, "A",
         triggeredBy, 0, Collections.<ElFunctionDefinition>emptyList(), Collections.<ElConstantDefinition>emptyList(), Long.MIN_VALUE, Long.MAX_VALUE
-        , "text/plain", 0);
+        , "text/plain", 0, Collections.<String> emptyList());
 
     ConfigDefinitionJson configDefinitionJsonBean =
       new ConfigDefinitionJson(configDefinition);
@@ -70,7 +70,7 @@ public class TestConfigDefinitionBean {
     com.streamsets.pipeline.config.ConfigDefinition configDefinition =
       new ConfigDefinition("int", ConfigDef.Type.NUMBER, "l2", "d2", "-1", true, "g", "intVar", modelDefinition, "A",
         triggeredBy, 0, Collections.<ElFunctionDefinition>emptyList(), Collections.<ElConstantDefinition>emptyList(), Long.MIN_VALUE, Long.MAX_VALUE
-        , "text/plain", 0);
+        , "text/plain", 0, Collections.<String> emptyList());
 
     ModelDefinitionJson modelDefinitionJsonBean =
       new ModelDefinitionJson(modelDefinition);
@@ -78,7 +78,7 @@ public class TestConfigDefinitionBean {
       new ConfigDefinitionJson("int", ConfigDef.Type.NUMBER, "l2", "d2", "-1", true,
         "g", "intVar", modelDefinitionJsonBean, "A", triggeredBy, 0, Collections.<ElFunctionDefinitionJson>emptyList(),
         Collections.<ElConstantDefinitionJson>emptyList(), Long.MIN_VALUE, Long.MAX_VALUE
-        , "text/plain", 0);
+        , "text/plain", 0, Collections.<String> emptyList());
 
     Assert.assertEquals(configDefinition.getName(), configDefinitionJsonBean.getName());
     Assert.assertEquals(configDefinition.getDefaultValue(), configDefinitionJsonBean.getDefaultValue());

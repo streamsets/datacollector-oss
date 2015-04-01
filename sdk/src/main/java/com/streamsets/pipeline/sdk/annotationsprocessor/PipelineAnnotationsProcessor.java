@@ -44,6 +44,7 @@ import javax.lang.model.element.PackageElement;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.element.VariableElement;
 import javax.lang.model.type.MirroredTypeException;
+import javax.lang.model.type.MirroredTypesException;
 import javax.lang.model.type.TypeKind;
 import javax.lang.model.type.TypeMirror;
 import javax.lang.model.util.ElementFilter;
@@ -53,6 +54,7 @@ import javax.tools.StandardLocation;
 import java.io.IOException;
 import java.lang.annotation.Annotation;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
@@ -357,16 +359,32 @@ public class PipelineAnnotationsProcessor extends AbstractProcessor {
             configDefAnnot.dependsOn(),
             getTriggeredByValues(configDefAnnot.triggeredByValue(), allFields.get(configDefAnnot.dependsOn())),
             configDefAnnot.displayPosition(),
-            new ArrayList<ElFunctionDefinition>(),
-            new ArrayList<ElConstantDefinition>(),
+            Collections.<ElFunctionDefinition> emptyList(),
+            Collections.<ElConstantDefinition> emptyList(),
             configDefAnnot.min(),
             configDefAnnot.max(),
             getMimeString(configDefAnnot),
-            configDefAnnot.lines());
+            configDefAnnot.lines(),
+            getElDefs(configDefAnnot));
         configDefinitions.add(configDefinition);
       }
     }
     return configDefinitions;
+  }
+
+  private List<String> getElDefs(ConfigDef configDefAnnot) {
+    List<String> elDefs = new ArrayList<>();
+    List<? extends TypeMirror> typeMirrors = null;
+    try {
+      configDefAnnot.elDefs();
+    } catch (MirroredTypesException e) {
+      typeMirrors = e.getTypeMirrors();
+    }
+
+    for(TypeMirror t : typeMirrors) {
+      elDefs.add(getClassNameFromTypeMirror(t));
+    }
+    return elDefs;
   }
 
   private String getMimeString(ConfigDef configDefAnnot) {

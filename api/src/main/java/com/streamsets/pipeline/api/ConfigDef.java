@@ -7,6 +7,7 @@
 package com.streamsets.pipeline.api;
 
 
+import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -49,4 +50,7 @@ public @interface ConfigDef {
   int lines() default 0;
 
   Mode mode() default Mode.PLAIN_TEXT;
+
+  Class[] elDefs() default {};
+
 }

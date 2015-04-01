@@ -20,6 +20,9 @@ import com.streamsets.pipeline.config.JsonMode;
 import com.streamsets.pipeline.config.JsonModeChooserValues;
 import com.streamsets.pipeline.config.TimeZoneChooserValues;
 import com.streamsets.pipeline.configurablestage.DTarget;
+import com.streamsets.pipeline.lib.el.MiscEL;
+import com.streamsets.pipeline.lib.el.RecordEL;
+import com.streamsets.pipeline.lib.el.TimeEL;
 
 import java.util.Map;
 
@@ -108,7 +111,8 @@ public class HdfsDTarget extends DTarget {
                     "${hh()}, ${mm()}, ${ss()} and {record:value(“/field”)} for values in a field. Directories are " +
                     "created based on the smallest time unit variable used.",
       displayPosition = 110,
-      group = "OUTPUT_FILES"
+      group = "OUTPUT_FILES",
+      elDefs = {RecordEL.class, TimeEL.class}
   )
   public String dirPathTemplate;
 
@@ -132,7 +136,8 @@ public class HdfsDTarget extends DTarget {
       description = "Time basis to use for a record. Enter an expression that evaluates to a datetime. To use the " +
                     "processing time, enter ${time:now()}. To use field values, use '${record:value(\"<filepath>\")}'.",
       displayPosition = 130,
-      group = "OUTPUT_FILES"
+      group = "OUTPUT_FILES",
+      elDefs = {RecordEL.class, TimeEL.class}
   )
   public String timeDriver;
 
@@ -208,7 +213,8 @@ public class HdfsDTarget extends DTarget {
       displayPosition = 180,
       group = "OUTPUT_FILES",
       dependsOn = "fileType",
-      triggeredByValue = "SEQUENCE_FILE"
+      triggeredByValue = "SEQUENCE_FILE",
+      elDefs = {RecordEL.class, MiscEL.class}
   )
   public String keyEl;
 
@@ -236,7 +242,8 @@ public class HdfsDTarget extends DTarget {
                     "If a number is used it is considered seconds, it can be multiplied by 'MINUTES' or 'HOURS', ie: " +
                     "'${30 * MINUTES}'",
       displayPosition = 200,
-      group = "LATE_RECORDS"
+      group = "LATE_RECORDS",
+      elDefs = {TimeEL.class}
   )
   public String lateRecordsLimit;
 
@@ -262,7 +269,8 @@ public class HdfsDTarget extends DTarget {
       displayPosition = 220,
       group = "LATE_RECORDS",
       dependsOn = "lateRecordsAction",
-      triggeredByValue = "SEND_TO_LATE_RECORDS_FILE"
+      triggeredByValue = "SEND_TO_LATE_RECORDS_FILE",
+      elDefs = {RecordEL.class, TimeEL.class}
   )
   public String lateRecordsDirPathTemplate;
 

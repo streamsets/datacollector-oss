@@ -14,6 +14,7 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -30,11 +31,13 @@ public class TestStageDefinitionLocalization {
   private StageDefinition createStageDefinition() {
     List<ConfigDefinition> configs = new ArrayList<>();
     configs.add(new ConfigDefinition("c1", ConfigDef.Type.STRING, "Config1Label", "Config1Description", "default",
-                                     true, "GROUP", "c1", null, null, null, 0, null, null, 0, 0, "mode", 1));
+                                     true, "GROUP", "c1", null, null, null, 0, null, null, 0, 0, "mode", 1,
+      Collections.<String> emptyList()));
     ModelDefinition model = new ModelDefinition(ModelType.VALUE_CHOOSER, OptionsChooserValues.class.getName(),
                                                 ImmutableList.of("OPTION"), ImmutableList.of("Option"), null);
     configs.add(new ConfigDefinition("c2", ConfigDef.Type.MODEL, "Config2Label", "Config2Description", "default",
-                                     true, "GROUP", "c2", model, null, null, 0, null, null, 0, 0, "mode", 1));
+                                     true, "GROUP", "c2", model, null, null, 0, null, null, 0, 0, "mode", 1,
+      Collections.<String> emptyList()));
     RawSourceDefinition rawSource = new RawSourceDefinition(TRawSourcePreviewer.class.getName(), "*/*", configs);
     ConfigGroupDefinition configGroup = new ConfigGroupDefinition(
         (Map)ImmutableMap.of(Groups.class.getName(), ImmutableList.of(Groups.GROUP.name())),

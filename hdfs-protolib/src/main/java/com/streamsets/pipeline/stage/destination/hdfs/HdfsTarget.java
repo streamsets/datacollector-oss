@@ -7,7 +7,6 @@ package com.streamsets.pipeline.stage.destination.hdfs;
 
 import com.codahale.metrics.Counter;
 import com.codahale.metrics.Meter;
-import com.google.common.collect.ImmutableList;
 import com.streamsets.pipeline.api.Batch;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
@@ -122,17 +121,6 @@ public class HdfsTarget extends RecordTarget {
   private ELEval lateRecordsLimitEvaluator;
   private Date batchTime;
   private CompressionCodec compressionCodec;
-
-  @Override
-  public List<ELEval> getELEvals(ELContext elContext) {
-    return ImmutableList.of(
-      ElUtil.createDirPathTemplateEval(elContext),
-      ElUtil.createTimeDriverEval(elContext),
-      ElUtil.createKeyElEval(elContext),
-      ElUtil.createLateRecordsLimitEval(elContext),
-      ElUtil.createLateRecordsDirPathTemplateEval(elContext)
-    );
-  }
 
   @Override
   protected List<ConfigIssue> validateConfigs() throws StageException {

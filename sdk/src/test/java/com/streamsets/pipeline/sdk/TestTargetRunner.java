@@ -50,7 +50,7 @@ public class TestTargetRunner {
   @Test(expected = RuntimeException.class)
   public void testBuilderOutputLane() throws Exception {
     DummyTarget stage = new DummyTarget();
-    TargetRunner.Builder builder = new TargetRunner.Builder(stage).addOutputLane("a");
+    TargetRunner.Builder builder = new TargetRunner.Builder(DummyTarget.class, stage).addOutputLane("a");
     builder.build();
   }
 
@@ -58,7 +58,7 @@ public class TestTargetRunner {
   @SuppressWarnings("unchecked")
   public void testInitProcessDestroy() throws Exception {
     DummyTargetEmptyBatch stage = new DummyTargetEmptyBatch();
-    TargetRunner.Builder builder = new TargetRunner.Builder(stage);
+    TargetRunner.Builder builder = new TargetRunner.Builder(DummyTarget.class, stage);
     TargetRunner runner = builder.build();
     try {
       runner.runInit();
@@ -72,7 +72,7 @@ public class TestTargetRunner {
   @SuppressWarnings("unchecked")
   public void testInvalidProcess1() throws Exception {
     DummyTarget stage = new DummyTarget();
-    TargetRunner.Builder builder = new TargetRunner.Builder(stage);
+    TargetRunner.Builder builder = new TargetRunner.Builder(DummyTarget.class, stage);
     TargetRunner runner = builder.build();
     try {
       runner.runWrite(Collections.EMPTY_LIST);
@@ -85,7 +85,7 @@ public class TestTargetRunner {
   @SuppressWarnings("unchecked")
   public void testInvalidProcess2() throws Exception {
     DummyTarget stage = new DummyTarget();
-    TargetRunner.Builder builder = new TargetRunner.Builder(stage);
+    TargetRunner.Builder builder = new TargetRunner.Builder(DummyTarget.class, stage);
     TargetRunner runner = builder.build();
     runner.runInit();
     runner.runDestroy();
@@ -96,7 +96,7 @@ public class TestTargetRunner {
   @SuppressWarnings("unchecked")
   public void testProcessEmptyBatch() throws Exception {
     DummyTargetEmptyBatch stage = new DummyTargetEmptyBatch();
-    TargetRunner.Builder builder = new TargetRunner.Builder(stage);
+    TargetRunner.Builder builder = new TargetRunner.Builder(DummyTarget.class, stage);
     TargetRunner runner = builder.build();
     try {
       runner.runInit();
@@ -110,7 +110,7 @@ public class TestTargetRunner {
   @Test
   public void testProcessNonEmptyBatch() throws Exception {
     DummyTarget stage = new DummyTarget();
-    TargetRunner.Builder builder = new TargetRunner.Builder(stage);
+    TargetRunner.Builder builder = new TargetRunner.Builder(DummyTarget.class, stage);
     TargetRunner runner = builder.build();
     try {
       runner.runInit();

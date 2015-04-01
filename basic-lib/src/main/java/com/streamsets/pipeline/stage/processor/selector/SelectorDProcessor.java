@@ -12,6 +12,8 @@ import com.streamsets.pipeline.api.LanePredicateMapping;
 import com.streamsets.pipeline.api.Processor;
 import com.streamsets.pipeline.api.StageDef;
 import com.streamsets.pipeline.configurablestage.DProcessor;
+import com.streamsets.pipeline.lib.el.RecordEL;
+import com.streamsets.pipeline.lib.el.StringEL;
 
 import java.util.List;
 import java.util.Map;
@@ -33,7 +35,8 @@ public class SelectorDProcessor extends DProcessor {
       label = "Condition",
       description = "Records that match the condition pass to the stream",
       displayPosition = 10,
-      group = "CONDITIONS"
+      group = "CONDITIONS",
+      elDefs = {RecordEL.class, StringEL.class}
   )
   @LanePredicateMapping
   public List<Map<String, String>> lanePredicates;

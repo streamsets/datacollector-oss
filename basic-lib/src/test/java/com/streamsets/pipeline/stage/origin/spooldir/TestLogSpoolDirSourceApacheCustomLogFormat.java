@@ -58,7 +58,7 @@ public class TestLogSpoolDirSourceApacheCustomLogFormat {
   @Test
   public void testProduceFullFile() throws Exception {
     SpoolDirSource source = createSource();
-    SourceRunner runner = new SourceRunner.Builder(source).addOutputLane("lane").build();
+    SourceRunner runner = new SourceRunner.Builder(SpoolDirDSource.class, source).addOutputLane("lane").build();
     runner.runInit();
     try {
       BatchMaker batchMaker = SourceRunner.createTestBatchMaker("lane");
@@ -143,7 +143,7 @@ public class TestLogSpoolDirSourceApacheCustomLogFormat {
   @Test
   public void testProduceLessThanFile() throws Exception {
     SpoolDirSource source = createSource();
-    SourceRunner runner = new SourceRunner.Builder(source).addOutputLane("lane").build();
+    SourceRunner runner = new SourceRunner.Builder(SpoolDirDSource.class, source).addOutputLane("lane").build();
     runner.runInit();
     try {
       BatchMaker batchMaker = SourceRunner.createTestBatchMaker("lane");
@@ -246,7 +246,7 @@ public class TestLogSpoolDirSourceApacheCustomLogFormat {
       PostProcessingOptions.ARCHIVE, createTestDir(), 10, null, null, -1, null, 0, 0,
       null, 0, LogMode.APACHE_CUSTOM_LOG_FORMAT, 1000, true, INVALID_CUSTOM_LOG_FORMAT, null,
       Collections.<RegExConfig>emptyList(), null, null, false, null, OnParseError.ERROR, 0);
-    SourceRunner runner = new SourceRunner.Builder(spoolDirSource).addOutputLane("lane").build();
+    SourceRunner runner = new SourceRunner.Builder(SpoolDirDSource.class, spoolDirSource).addOutputLane("lane").build();
     runner.runInit();
   }
 }

@@ -36,7 +36,7 @@ public class TestStageContext {
   @Test
   public void testToErrorNonStageException() throws Exception {
     StageContext context = new StageContext("stage", StageType.SOURCE, false, OnRecordError.TO_ERROR,
-                                            Collections.EMPTY_LIST);
+                                            Collections.EMPTY_LIST, Collections.EMPTY_MAP);
 
     ErrorSink errorSink = new ErrorSink();
     context.setErrorSink(errorSink);
@@ -54,7 +54,7 @@ public class TestStageContext {
   @Test
   public void testToErrorString() throws Exception {
     StageContext context = new StageContext("stage", StageType.SOURCE, false, OnRecordError.TO_ERROR,
-                                            Collections.EMPTY_LIST);
+                                            Collections.EMPTY_LIST, Collections.EMPTY_MAP);
 
     ErrorSink errorSink = new ErrorSink();
     context.setErrorSink(errorSink);
@@ -71,7 +71,7 @@ public class TestStageContext {
   @Test
   public void testToErrorMessage() throws Exception {
     StageContext context = new StageContext("stage", StageType.SOURCE, false, OnRecordError.TO_ERROR,
-                                            Collections.EMPTY_LIST);
+                                            Collections.EMPTY_LIST, Collections.EMPTY_MAP);
 
     ErrorSink errorSink = new ErrorSink();
     context.setErrorSink(errorSink);
@@ -88,7 +88,7 @@ public class TestStageContext {
   @Test
   public void testToErrorStageException() throws Exception {
     StageContext context = new StageContext("stage", StageType.SOURCE, false, OnRecordError.TO_ERROR,
-                                            Collections.EMPTY_LIST);
+                                            Collections.EMPTY_LIST, Collections.EMPTY_MAP);
 
     ErrorSink errorSink = new ErrorSink();
     context.setErrorSink(errorSink);

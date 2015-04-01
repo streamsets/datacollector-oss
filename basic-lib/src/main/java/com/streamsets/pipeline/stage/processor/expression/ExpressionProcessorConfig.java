@@ -7,6 +7,8 @@ package com.streamsets.pipeline.stage.processor.expression;
 
 import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.FieldSelector;
+import com.streamsets.pipeline.lib.el.RecordEL;
+import com.streamsets.pipeline.lib.el.StringEL;
 
 public class ExpressionProcessorConfig {
 
@@ -28,7 +30,8 @@ public class ExpressionProcessorConfig {
       defaultValue = "${record:value('/')}",
       label = "Expression",
       description = "Use the expression language to modify values in a field.",
-      displayPosition = 20
+      displayPosition = 20,
+      elDefs = {RecordEL.class, StringEL.class, ELSupport.class}
   )
   public String expression;
 

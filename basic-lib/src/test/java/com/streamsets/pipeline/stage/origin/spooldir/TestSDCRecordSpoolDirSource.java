@@ -61,7 +61,7 @@ public class TestSDCRecordSpoolDirSource {
   public void testProduceFullFile() throws Exception {
     File errorRecordsFile = createErrorRecordsFile();
     SpoolDirSource source = createSource(errorRecordsFile.getParent());
-    SourceRunner runner = new SourceRunner.Builder(source).addOutputLane("lane").build();
+    SourceRunner runner = new SourceRunner.Builder(SpoolDirDSource.class, source).addOutputLane("lane").build();
     runner.runInit();
     try {
       BatchMaker batchMaker = SourceRunner.createTestBatchMaker("lane");

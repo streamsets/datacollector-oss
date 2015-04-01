@@ -8,6 +8,7 @@ package com.streamsets.pipeline.sdk;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Sets;
 import com.streamsets.pipeline.api.BatchMaker;
+import com.streamsets.pipeline.api.ComplexField;
 import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.OnRecordError;
 import com.streamsets.pipeline.api.Record;
@@ -22,6 +23,8 @@ import com.streamsets.pipeline.sdk.annotationsprocessor.StageHelper;
 import com.streamsets.pipeline.util.ContainerError;
 
 import java.lang.reflect.Field;
+import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -35,6 +38,7 @@ public abstract class StageRunner<S extends Stage> {
 
   enum Status { CREATED, INITIALIZED, DESTROYED}
 
+  private final Class<S> stageClass;
   private final S stage;
   private final Stage.Info info;
   private final StageContext context;
@@ -62,6 +66,16 @@ public abstract class StageRunner<S extends Stage> {
   }
 
   private Set<String> getStageConfigurationFields(Class<? extends Stage> klass) throws Exception {
+    Set<String> names = new HashSet<>();
+    for (Field field : klass.getFields()) {
+      if (field.isAnnotationPresent(ConfigDef.class)) {
+        names.add(field.getName());
+      }
+    }
+    return names;
+  }
+
+  private Set<String> getComplexFieldConfigs(Class<?> klass) throws Exception {
     Set<String> names = new HashSet<>();
     for (Field field : klass.getFields()) {
       if (field.isAnnotationPresent(ConfigDef.class)) {
@@ -161,15 +175,16 @@ public abstract class StageRunner<S extends Stage> {
   @SuppressWarnings("unchecked")
   StageRunner(Class<S> stageClass, StageType stageType, Map<String, Object> configuration, List<String> outputLanes,
       boolean isPreview, OnRecordError onRecordError) {
-    this((S) getStage(Utils.checkNotNull(stageClass, "stageClass")), stageType, configuration, outputLanes, isPreview,
+    this(stageClass, (S) getStage(Utils.checkNotNull(stageClass, "stageClass")), stageType, configuration, outputLanes, isPreview,
          onRecordError);
   }
 
-  StageRunner(S stage, StageType stageType, Map < String, Object > configuration, List< String > outputLanes,
+  StageRunner(Class<S> stageClass, S stage, StageType stageType, Map < String, Object > configuration, List< String > outputLanes,
       boolean isPreview, OnRecordError onRecordError) {
     Utils.checkNotNull(stage, "stage");
     Utils.checkNotNull(configuration, "configuration");
     Utils.checkNotNull(outputLanes, "outputLanes");
+    this.stageClass = stageClass;
     this.stage = stage;
     try {
       configureStage(stage, configuration);
@@ -180,9 +195,47 @@ public abstract class StageRunner<S extends Stage> {
     String version = getVersion(stage.getClass());
     String instanceName = name + "_1";
     info = ContextInfoCreator.createInfo(name, version, instanceName);
-    context = new StageContext(instanceName, stageType ,isPreview, onRecordError, outputLanes);
+    Map<String, Class<?>[]> configToElDefMap = null;
+    try {
+      configToElDefMap = getConfigToElDefMap(stageClass);
+    } catch (Exception e) {
+      throw new RuntimeException(e);
+    }
+    context = new StageContext(instanceName, stageType ,isPreview, onRecordError, outputLanes, configToElDefMap);
     status = Status.CREATED;
   }
+
+  private Map<String, Class<?>[]> getConfigToElDefMap(Class<S> stageClass) throws Exception {
+    Map<String, Class<?>[]> configToElDefMap = new HashMap<>();
+    for (Field field : stageClass.getFields()) {
+      if (field.isAnnotationPresent(ConfigDef.class)) {
+        ConfigDef configDef = field.getAnnotation(ConfigDef.class);
+        if(configDef.elDefs().length > 0) {
+          configToElDefMap.put(field.getName(), configDef.elDefs());
+        }
+        if(field.getAnnotation(ComplexField.class) != null) {
+          Type genericType = field.getGenericType();
+          Class<?> klass;
+          if (genericType instanceof ParameterizedType) {
+            Type[] typeArguments = ((ParameterizedType) genericType).getActualTypeArguments();
+            klass = (Class<?>) typeArguments[0];
+          } else {
+            klass = (Class<?>) genericType;
+          }
+          for (Field f : klass.getFields()) {
+            if (f.isAnnotationPresent(ConfigDef.class)) {
+              ConfigDef configDefinition = f.getAnnotation(ConfigDef.class);
+              if (configDefinition.elDefs().length > 0) {
+                configToElDefMap.put(f.getName(), configDefinition.elDefs());
+              }
+            }
+          }
+        }
+      }
+    }
+    return configToElDefMap;
+  }
+
 
   void ensureStatus(Status status) {
     Utils.checkState(this.status == status, Utils.format("Current status '{}', expected '{}'", this.status, status));
@@ -273,16 +326,12 @@ public abstract class StageRunner<S extends Stage> {
     boolean isPreview;
     OnRecordError onRecordError;
 
-    private Builder(Class<S> stageClass, S stage) {
+    protected Builder(Class<S> stageClass, S stage) {
       this.stageClass =stageClass;
       this.stage = stage;
       outputLanes = new ArrayList<>();
       configs = new HashMap<>();
       onRecordError = OnRecordError.STOP_PIPELINE;
-    }
-
-    protected Builder(S stage) {
-      this(null, Utils.checkNotNull(stage, "stage"));
     }
 
     @SuppressWarnings("unchecked")

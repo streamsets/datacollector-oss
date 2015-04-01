@@ -31,7 +31,7 @@ public class TestJythonProcessor {
                                               "  out.write(record)\n" +
                                               "  record['value'] = 'Error'\n" +
                                               "  err.write(record, 'error')\n");
-    ProcessorRunner runner = new ProcessorRunner.Builder(processor)
+    ProcessorRunner runner = new ProcessorRunner.Builder(JythonDProcessor.class, processor)
         .addOutputLane("lane")
         .build();
     runner.runInit();
@@ -67,7 +67,7 @@ public class TestJythonProcessor {
                                               "records[0]['value'] = [ { 'type' : Type.INTEGER, 'value' : 5} ]\n" +
                                               "out.write(records[0])\n" +
                                               "");
-    ProcessorRunner runner = new ProcessorRunner.Builder(processor)
+    ProcessorRunner runner = new ProcessorRunner.Builder(JythonDProcessor.class, processor)
         .addOutputLane("lane")
         .build();
     runner.runInit();
@@ -99,7 +99,7 @@ public class TestJythonProcessor {
     Processor processor = new JythonProcessor(mode,
                                               "for record in records:\n" +
                                               "  out.write(record)");
-    ProcessorRunner runner = new ProcessorRunner.Builder(processor)
+    ProcessorRunner runner = new ProcessorRunner.Builder(JythonDProcessor.class, processor)
         .addOutputLane("lane")
         .build();
     runner.runInit();
@@ -136,7 +136,7 @@ public class TestJythonProcessor {
                                               "  if record['value'] == 'Hello':\n" +
                                               "    raise Exception()\n" +
                                               "  out.write(record)");
-    ProcessorRunner runner = new ProcessorRunner.Builder(processor)
+    ProcessorRunner runner = new ProcessorRunner.Builder(JythonDProcessor.class, processor)
         .setOnRecordError(onRecordError)
         .addOutputLane("lane")
         .build();
@@ -189,7 +189,7 @@ public class TestJythonProcessor {
                                               "  if record['value'] == 'Hello':\n" +
                                               "    raise Exception()\n" +
                                               "  out.write(record)");
-    ProcessorRunner runner = new ProcessorRunner.Builder(processor)
+    ProcessorRunner runner = new ProcessorRunner.Builder(JythonDProcessor.class, processor)
         .setOnRecordError(onRecordError)
         .addOutputLane("lane")
         .build();

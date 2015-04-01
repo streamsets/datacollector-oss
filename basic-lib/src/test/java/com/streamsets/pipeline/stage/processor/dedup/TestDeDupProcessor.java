@@ -36,7 +36,7 @@ public class TestDeDupProcessor {
   @Test(expected = StageException.class)
   public void testValidateConfigs1() throws Exception {
     Processor processor = new DeDupProcessor(4, 1, SelectFields.SPECIFIED_FIELDS, Collections.EMPTY_LIST);
-    ProcessorRunner runner = new ProcessorRunner.Builder(processor)
+    ProcessorRunner runner = new ProcessorRunner.Builder(DeDupDProcessor.class, processor)
         .addOutputLane("unique")
         .addOutputLane("duplicate")
         .build();
@@ -46,7 +46,7 @@ public class TestDeDupProcessor {
   @Test
   public void testValidateConfigs2() throws Exception {
     Processor processor = new DeDupProcessor(4, 1, SelectFields.SPECIFIED_FIELDS, Arrays.asList("/a"));
-    ProcessorRunner runner = new ProcessorRunner.Builder(processor)
+    ProcessorRunner runner = new ProcessorRunner.Builder(DeDupDProcessor.class, processor)
         .addOutputLane("unique")
         .addOutputLane("duplicate")
         .build();
@@ -57,7 +57,7 @@ public class TestDeDupProcessor {
   @Test(expected = StageException.class)
   public void testValidateConfigs3() throws Exception {
     Processor processor = new DeDupProcessor(0, 0, SelectFields.ALL_FIELDS, Collections.EMPTY_LIST);
-    ProcessorRunner runner = new ProcessorRunner.Builder(processor)
+    ProcessorRunner runner = new ProcessorRunner.Builder(DeDupDProcessor.class, processor)
         .addOutputLane("unique")
         .addOutputLane("duplicate")
         .build();
@@ -67,7 +67,7 @@ public class TestDeDupProcessor {
   @Test
   public void testValidateConfigs4() throws Exception {
     Processor processor = new DeDupProcessor(4, 0, SelectFields.ALL_FIELDS, Collections.EMPTY_LIST);
-    ProcessorRunner runner = new ProcessorRunner.Builder(processor)
+    ProcessorRunner runner = new ProcessorRunner.Builder(DeDupDProcessor.class, processor)
         .addOutputLane("unique")
         .addOutputLane("duplicate")
         .build();
@@ -78,7 +78,7 @@ public class TestDeDupProcessor {
   public void testValidateConfigs5() throws Exception {
     Processor processor = new DeDupProcessor((int) (Runtime.getRuntime().maxMemory() / 3 / 85 + 1), 0,
                                              SelectFields.ALL_FIELDS, Collections.EMPTY_LIST);
-    ProcessorRunner runner = new ProcessorRunner.Builder(processor)
+    ProcessorRunner runner = new ProcessorRunner.Builder(DeDupDProcessor.class, processor)
         .addOutputLane("unique")
         .addOutputLane("duplicate")
         .build();
@@ -89,7 +89,7 @@ public class TestDeDupProcessor {
   public void testValidateConfigs6() throws Exception {
     Processor processor = new DeDupProcessor((int) (Runtime.getRuntime().maxMemory() / 3 / 85 - 1), 0,
                                              SelectFields.ALL_FIELDS, Collections.EMPTY_LIST);
-    ProcessorRunner runner = new ProcessorRunner.Builder(processor)
+    ProcessorRunner runner = new ProcessorRunner.Builder(DeDupDProcessor.class, processor)
         .addOutputLane("unique")
         .addOutputLane("duplicate")
         .build();
@@ -99,7 +99,7 @@ public class TestDeDupProcessor {
   @Test
   public void testUniqueSingleBatch() throws Exception {
     Processor processor = new DeDupProcessor(4, 1, SelectFields.ALL_FIELDS, Collections.EMPTY_LIST);
-    ProcessorRunner runner = new ProcessorRunner.Builder(processor)
+    ProcessorRunner runner = new ProcessorRunner.Builder(DeDupDProcessor.class, processor)
         .addOutputLane("unique")
         .addOutputLane("duplicate")
         .build();
@@ -122,7 +122,7 @@ public class TestDeDupProcessor {
   @Test
   public void testDupWithinTimeWindowSingleBatch() throws Exception {
     Processor processor = new DeDupProcessor(4, 1, SelectFields.ALL_FIELDS, Collections.EMPTY_LIST);
-    ProcessorRunner runner = new ProcessorRunner.Builder(processor)
+    ProcessorRunner runner = new ProcessorRunner.Builder(DeDupDProcessor.class, processor)
         .addOutputLane("unique")
         .addOutputLane("duplicate")
         .build();
@@ -145,7 +145,7 @@ public class TestDeDupProcessor {
   @Test
   public void testUniqueMultipleBatches() throws Exception {
     Processor processor = new DeDupProcessor(4, 1, SelectFields.ALL_FIELDS, Collections.EMPTY_LIST);
-    ProcessorRunner runner = new ProcessorRunner.Builder(processor)
+    ProcessorRunner runner = new ProcessorRunner.Builder(DeDupDProcessor.class, processor)
         .addOutputLane("unique")
         .addOutputLane("duplicate")
         .build();
@@ -184,7 +184,7 @@ public class TestDeDupProcessor {
   @Test
   public void testDupWithinTimeWindowMultipleBatches() throws Exception {
     Processor processor = new DeDupProcessor(4, 1, SelectFields.ALL_FIELDS, Collections.EMPTY_LIST);
-    ProcessorRunner runner = new ProcessorRunner.Builder(processor)
+    ProcessorRunner runner = new ProcessorRunner.Builder(DeDupDProcessor.class, processor)
         .addOutputLane("unique")
         .addOutputLane("duplicate")
         .build();
@@ -223,7 +223,7 @@ public class TestDeDupProcessor {
   @Test
   public void testDupOutsideTimeWindowMultipleBatches() throws Exception {
     Processor processor = new DeDupProcessor(4, 1, SelectFields.ALL_FIELDS, Collections.EMPTY_LIST);
-    ProcessorRunner runner = new ProcessorRunner.Builder(processor)
+    ProcessorRunner runner = new ProcessorRunner.Builder(DeDupDProcessor.class, processor)
         .addOutputLane("unique")
         .addOutputLane("duplicate")
         .build();
@@ -264,7 +264,7 @@ public class TestDeDupProcessor {
   @Test
   public void testDupWithinRecordTailSingleBatch() throws Exception {
     Processor processor = new DeDupProcessor(3, 0, SelectFields.ALL_FIELDS, Collections.EMPTY_LIST);
-    ProcessorRunner runner = new ProcessorRunner.Builder(processor)
+    ProcessorRunner runner = new ProcessorRunner.Builder(DeDupDProcessor.class, processor)
         .addOutputLane("unique")
         .addOutputLane("duplicate")
         .build();
@@ -288,7 +288,7 @@ public class TestDeDupProcessor {
   @Test
   public void testDupWithinRecordTailMultipleBatches() throws Exception {
     Processor processor = new DeDupProcessor(3, 0, SelectFields.ALL_FIELDS, Collections.EMPTY_LIST);
-    ProcessorRunner runner = new ProcessorRunner.Builder(processor)
+    ProcessorRunner runner = new ProcessorRunner.Builder(DeDupDProcessor.class, processor)
         .addOutputLane("unique")
         .addOutputLane("duplicate")
         .build();
@@ -334,7 +334,7 @@ public class TestDeDupProcessor {
   public void testWildCardDedup() throws Exception {
     Processor processor = new DeDupProcessor(4, 1, SelectFields.SPECIFIED_FIELDS,
       ImmutableList.of("/USA[*]/SanFrancisco/*/streets[*][*]/name"));
-    ProcessorRunner runner = new ProcessorRunner.Builder(processor)
+    ProcessorRunner runner = new ProcessorRunner.Builder(DeDupDProcessor.class, processor)
       .addOutputLane("unique")
       .addOutputLane("duplicate")
       .build();

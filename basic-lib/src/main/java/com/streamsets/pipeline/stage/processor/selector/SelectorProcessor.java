@@ -39,13 +39,8 @@ public class SelectorProcessor extends RecordProcessor {
   private ELVars variables;
   private String defaultLane;
 
-  @Override
-  public List<ELEval> getELEvals(ELContext elContext) {
-    return ImmutableList.of(createPredicateLanesEval(elContext));
-  }
-
   private ELEval createPredicateLanesEval(ELContext elContext) {
-    return elContext.createELEval("lanePredicates", RecordEL.class, StringEL.class);
+    return elContext.createELEval("lanePredicates");
   }
 
   @Override

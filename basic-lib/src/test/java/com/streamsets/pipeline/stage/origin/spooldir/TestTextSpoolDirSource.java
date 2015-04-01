@@ -51,7 +51,7 @@ public class TestTextSpoolDirSource {
 
   public void testProduceFullFile(String charset) throws Exception {
     SpoolDirSource source = createSource(charset);
-    SourceRunner runner = new SourceRunner.Builder(source).addOutputLane("lane").build();
+    SourceRunner runner = new SourceRunner.Builder(SpoolDirDSource.class, source).addOutputLane("lane").build();
     runner.runInit();
     try {
       BatchMaker batchMaker = SourceRunner.createTestBatchMaker("lane");
@@ -82,7 +82,7 @@ public class TestTextSpoolDirSource {
   @Test
   public void testProduceLessThanFile() throws Exception {
     SpoolDirSource source = createSource("UTF-8");
-    SourceRunner runner = new SourceRunner.Builder(source).addOutputLane("lane").build();
+    SourceRunner runner = new SourceRunner.Builder(SpoolDirDSource.class, source).addOutputLane("lane").build();
     runner.runInit();
     try {
       BatchMaker batchMaker = SourceRunner.createTestBatchMaker("lane");

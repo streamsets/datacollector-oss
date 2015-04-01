@@ -5,7 +5,6 @@
  */
 package com.streamsets.pipeline.stage.processor.expression;
 
-import com.google.common.collect.ImmutableList;
 import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
@@ -14,9 +13,8 @@ import com.streamsets.pipeline.api.base.SingleLaneRecordProcessor;
 import com.streamsets.pipeline.api.el.ELEval;
 import com.streamsets.pipeline.api.el.ELEvalException;
 import com.streamsets.pipeline.api.el.ELVars;
-import com.streamsets.pipeline.lib.el.RecordEL;
-import com.streamsets.pipeline.lib.el.StringEL;
 import com.streamsets.pipeline.lib.el.ELUtils;
+import com.streamsets.pipeline.lib.el.RecordEL;
 import com.streamsets.pipeline.lib.util.FieldRegexUtil;
 
 import java.math.BigDecimal;
@@ -52,13 +50,8 @@ public class ExpressionProcessor extends SingleLaneRecordProcessor {
     return issues;
   }
 
-  @Override
-  public List<ELEval> getELEvals(ELContext elContext) {
-    return ImmutableList.of(createExpressionEval(elContext));
-  }
-
   private ELEval createExpressionEval(ELContext elContext) {
-    return elContext.createELEval("expression", RecordEL.class, StringEL.class, ELSupport.class);
+    return elContext.createELEval("expression");
   }
 
   @Override

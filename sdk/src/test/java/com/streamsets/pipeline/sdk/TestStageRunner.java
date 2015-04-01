@@ -31,14 +31,14 @@ public class TestStageRunner {
       super(stageClass, StageType.SOURCE, configuration, outputLanes, isPreview, OnRecordError.TO_ERROR);
     }
 
-    DummyStageRunner(DummyStage stage, Map<String, Object> configuration, List<String> outputLanes, boolean isPreview) {
-      super(stage, StageType.SOURCE, configuration, outputLanes, isPreview, OnRecordError.TO_ERROR);
+    DummyStageRunner(Class<DummyStage> stageClass, DummyStage stage, Map<String, Object> configuration, List<String> outputLanes, boolean isPreview) {
+      super(stageClass, stage, StageType.SOURCE, configuration, outputLanes, isPreview, OnRecordError.TO_ERROR);
     }
 
     public static class Builder extends StageRunner.Builder<DummyStage, DummyStageRunner, Builder> {
 
       public Builder(DummyStage stage) {
-        super(stage);
+        super(DummyStage.class, stage);
       }
 
       @SuppressWarnings("unchecked")
@@ -48,7 +48,7 @@ public class TestStageRunner {
 
       @Override
       public DummyStageRunner build() {
-        return (stage != null) ? new DummyStageRunner(stage, configs, outputLanes, isPreview)
+        return (stage != null) ? new DummyStageRunner(stageClass, stage, configs, outputLanes, isPreview)
                                : new DummyStageRunner(stageClass, configs, outputLanes, isPreview);
       }
     }
@@ -62,11 +62,6 @@ public class TestStageRunner {
     @Override
     public List<ConfigIssue> validateConfigs(Info info, Stage.Context context) {
       return Collections.emptyList();
-    }
-
-    @Override
-    public List<ELEval> getELEvals(ELContext elContext) {
-      return new ArrayList<>();
     }
 
     @Override

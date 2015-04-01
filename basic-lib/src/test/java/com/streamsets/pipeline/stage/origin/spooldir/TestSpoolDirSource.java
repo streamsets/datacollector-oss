@@ -70,7 +70,7 @@ public class TestSpoolDirSource {
   @Test
   public void testInitDestroy() throws Exception {
     TSpoolDirSource source = createSource("file-0.log");
-    SourceRunner runner = new SourceRunner.Builder(source).addOutputLane("lane").build();
+    SourceRunner runner = new SourceRunner.Builder(TSpoolDirSource.class, source).addOutputLane("lane").build();
     runner.runInit();
     try {
       Assert.assertTrue(source.getSpooler().isRunning());
@@ -94,7 +94,7 @@ public class TestSpoolDirSource {
   @Test
   public void testProduceNoInitialFileNoFileInSpoolDirNullOffset() throws Exception {
     TSpoolDirSource source = createSource(null);
-    SourceRunner runner = new SourceRunner.Builder(source).addOutputLane("lane").build();
+    SourceRunner runner = new SourceRunner.Builder(TSpoolDirSource.class, source).addOutputLane("lane").build();
     runner.runInit();
     try {
       StageRunner.Output output = runner.runProduce(null, 10);
@@ -110,7 +110,7 @@ public class TestSpoolDirSource {
   @Test
   public void testProduceNoInitialFileWithFileInSpoolDirNullOffset() throws Exception {
     TSpoolDirSource source = createSource("file-0.log");
-    SourceRunner runner = new SourceRunner.Builder(source).addOutputLane("lane").build();
+    SourceRunner runner = new SourceRunner.Builder(TSpoolDirSource.class, source).addOutputLane("lane").build();
     File file = new File(source.spoolDir, "file-0.log").getAbsoluteFile();
     Files.createFile(file.toPath());
     runner.runInit();
@@ -130,7 +130,7 @@ public class TestSpoolDirSource {
   @Test
   public void testProduceNoInitialFileNoFileInSpoolDirNotNullOffset() throws Exception {
     TSpoolDirSource source = createSource(null);
-    SourceRunner runner = new SourceRunner.Builder(source).addOutputLane("lane").build();
+    SourceRunner runner = new SourceRunner.Builder(TSpoolDirSource.class, source).addOutputLane("lane").build();
     runner.runInit();
     try {
       StageRunner.Output output = runner.runProduce("file-0.log", 10);
@@ -145,7 +145,7 @@ public class TestSpoolDirSource {
   @Test
   public void testProduceNoInitialFileWithFileInSpoolDirNotNullOffset() throws Exception {
     TSpoolDirSource source = createSource("file-0.log");
-    SourceRunner runner = new SourceRunner.Builder(source).addOutputLane("lane").build();
+    SourceRunner runner = new SourceRunner.Builder(TSpoolDirSource.class, source).addOutputLane("lane").build();
     File file = new File(source.spoolDir, "file-0.log").getAbsoluteFile();
     Files.createFile(file.toPath());
     runner.runInit();
@@ -164,7 +164,7 @@ public class TestSpoolDirSource {
   @Test
   public void testProduceNoInitialFileWithFileInSpoolDirNonZeroOffset() throws Exception {
     TSpoolDirSource source = createSource(null);
-    SourceRunner runner = new SourceRunner.Builder(source).addOutputLane("lane").build();
+    SourceRunner runner = new SourceRunner.Builder(TSpoolDirSource.class, source).addOutputLane("lane").build();
     File file = new File(source.spoolDir, "file-0.log").getAbsoluteFile();
     Files.createFile(file.toPath());
     runner.runInit();
@@ -183,7 +183,7 @@ public class TestSpoolDirSource {
   @Test
   public void testAdvanceToNextSpoolFile() throws Exception {
     TSpoolDirSource source = createSource(null);
-    SourceRunner runner = new SourceRunner.Builder(source).addOutputLane("lane").build();
+    SourceRunner runner = new SourceRunner.Builder(TSpoolDirSource.class, source).addOutputLane("lane").build();
     File file1 = new File(source.spoolDir, "file-0.log").getAbsoluteFile();
     Files.createFile(file1.toPath());
     File file2 = new File(source.spoolDir, "file-1.log").getAbsoluteFile();

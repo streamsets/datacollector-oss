@@ -10,6 +10,7 @@ import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.Target;
 import com.streamsets.pipeline.sdk.RecordCreator;
 import com.streamsets.pipeline.sdk.TargetRunner;
+import com.streamsets.pipeline.stage.destination.recordstolocalfilesystem.RecordsToLocalFileSystemDTarget;
 import com.streamsets.pipeline.stage.destination.recordstolocalfilesystem.RecordsToLocalFileSystemTarget;
 import org.junit.Assert;
 import org.junit.Test;
@@ -33,7 +34,7 @@ public class TestRecordsToLocalFileSystemTarget {
     File dir = new File("target", UUID.randomUUID().toString());
     Assert.assertTrue(dir.mkdirs());
     Target target = new RecordsToLocalFileSystemTarget(dir.getAbsolutePath(), "${900}", 0);
-    TargetRunner runner = new TargetRunner.Builder(target).build();
+    TargetRunner runner = new TargetRunner.Builder(RecordsToLocalFileSystemDTarget.class, target).build();
     List<Record> input = new ArrayList<>();
     input.add(createRecord("a"));
     input.add(createRecord("b"));
@@ -58,7 +59,7 @@ public class TestRecordsToLocalFileSystemTarget {
     File dir = new File("target", UUID.randomUUID().toString());
     Assert.assertTrue(dir.mkdirs());
     Target target = new RecordsToLocalFileSystemTarget(dir.getAbsolutePath(), "${10}", 1);
-    TargetRunner runner = new TargetRunner.Builder(target).build();
+    TargetRunner runner = new TargetRunner.Builder(RecordsToLocalFileSystemDTarget.class, target).build();
     List<Record> input = new ArrayList<>();
     for (int i = 0; i < 5000; i++) {
       input.add(createRecord(Integer.toString(i)));
@@ -80,7 +81,7 @@ public class TestRecordsToLocalFileSystemTarget {
     File dir = new File("target", UUID.randomUUID().toString());
     Assert.assertTrue(dir.mkdirs());
     Target target = new RecordsToLocalFileSystemTarget(dir.getAbsolutePath(), "${1}", 1);
-    TargetRunner runner = new TargetRunner.Builder(target).build();
+    TargetRunner runner = new TargetRunner.Builder(RecordsToLocalFileSystemDTarget.class, target).build();
     List<Record> input = new ArrayList<>();
     for (int i = 0; i < 5000; i++) {
       input.add(createRecord(Integer.toString(i)));

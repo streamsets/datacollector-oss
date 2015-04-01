@@ -20,8 +20,9 @@ import com.streamsets.pipeline.config.DataFormat;
 import com.streamsets.pipeline.config.JsonMode;
 import com.streamsets.pipeline.config.JsonModeChooserValues;
 import com.streamsets.pipeline.configurablestage.DTarget;
+import com.streamsets.pipeline.lib.el.RecordEL;
+import com.streamsets.pipeline.lib.el.StringEL;
 
-import java.util.List;
 import java.util.Map;
 
 @StageDef(
@@ -77,7 +78,8 @@ public class KafkaDTarget extends DTarget {
     displayPosition = 40,
     group = "KAFKA",
     dependsOn = "partitionStrategy",
-    triggeredByValue = "EXPRESSION"
+    triggeredByValue = "EXPRESSION",
+    elDefs = {RecordEL.class, StringEL.class}
   )
   public String partition;
 

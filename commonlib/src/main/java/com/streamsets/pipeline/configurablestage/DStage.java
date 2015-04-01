@@ -7,7 +7,6 @@ package com.streamsets.pipeline.configurablestage;
 
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.StageException;
-import com.streamsets.pipeline.api.el.ELEval;
 
 import java.util.List;
 
@@ -26,14 +25,6 @@ public abstract class DStage<C extends Stage.Context> implements Stage<C> {
       stage = createStage();
     }
     return stage.validateConfigs(info, context);
-  }
-
-  @Override
-  public List<ELEval> getELEvals(ELContext elContext) {
-    if(stage == null) {
-      stage = createStage();
-    }
-    return stage.getELEvals(elContext);
   }
 
   @Override

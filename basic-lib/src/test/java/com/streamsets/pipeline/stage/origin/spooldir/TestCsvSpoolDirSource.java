@@ -54,7 +54,7 @@ public class TestCsvSpoolDirSource {
   @Test
   public void testProduceFullFile() throws Exception {
     SpoolDirSource source = createSource(CsvHeader.NO_HEADER);
-    SourceRunner runner = new SourceRunner.Builder(source).addOutputLane("lane").build();
+    SourceRunner runner = new SourceRunner.Builder(SpoolDirDSource.class, source).addOutputLane("lane").build();
     runner.runInit();
     try {
       BatchMaker batchMaker = SourceRunner.createTestBatchMaker("lane");
@@ -85,7 +85,7 @@ public class TestCsvSpoolDirSource {
 
   private void testProduceLessThanFile(boolean ignoreHeader) throws Exception {
     SpoolDirSource source = createSource((ignoreHeader) ? CsvHeader.IGNORE_HEADER : CsvHeader.WITH_HEADER);
-    SourceRunner runner = new SourceRunner.Builder(source).addOutputLane("lane").build();
+    SourceRunner runner = new SourceRunner.Builder(SpoolDirDSource.class, source).addOutputLane("lane").build();
     runner.runInit();
     try {
       BatchMaker batchMaker = SourceRunner.createTestBatchMaker("lane");

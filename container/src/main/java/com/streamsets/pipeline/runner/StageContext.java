@@ -29,6 +29,7 @@ import com.streamsets.pipeline.api.ext.JsonRecordReader;
 import com.streamsets.pipeline.api.ext.JsonRecordWriter;
 import com.streamsets.pipeline.api.impl.ErrorMessage;
 import com.streamsets.pipeline.api.impl.Utils;
+import com.streamsets.pipeline.config.ConfigDefinition;
 import com.streamsets.pipeline.config.StageType;
 import com.streamsets.pipeline.el.ELEvaluator;
 import com.streamsets.pipeline.el.ELVariables;
@@ -46,7 +47,9 @@ import com.streamsets.pipeline.validation.StageIssue;
 import java.io.IOException;
 import java.io.Reader;
 import java.io.Writer;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class StageContext implements Source.Context, Target.Context, Processor.Context, ContextExtensions {
 
@@ -61,10 +64,11 @@ public class StageContext implements Source.Context, Target.Context, Processor.C
   private final OnRecordError onRecordError;
   private ErrorSink errorSink;
   private long lastBatchTime;
+  private final Map<String, Class<?>[]> configToElDefMap;
 
   //for SDK
   public StageContext(String instanceName, StageType stageType, boolean isPreview, OnRecordError onRecordError,
-      List<String> outputLanes) {
+      List<String> outputLanes, Map<String, Class<?>[]> configToElDefMap) {
     pipelineInfo = ImmutableList.of();
     this.stageType = stageType;
     this.isPreview = isPreview;
@@ -73,6 +77,7 @@ public class StageContext implements Source.Context, Target.Context, Processor.C
     this.outputLanes = ImmutableList.copyOf(outputLanes);
     this.onRecordError = onRecordError;
     errorSink = new ErrorSink();
+    this. configToElDefMap = configToElDefMap;
   }
 
   public StageContext(List<Stage.Info> pipelineInfo, StageType stageType, boolean isPreview, MetricRegistry metrics,
@@ -84,6 +89,35 @@ public class StageContext implements Source.Context, Target.Context, Processor.C
     this.instanceName = stageRuntime.getConfiguration().getInstanceName();
     this.outputLanes = ImmutableList.copyOf(stageRuntime.getConfiguration().getOutputLanes());
     onRecordError = stageRuntime.getOnRecordError();
+    this.configToElDefMap = getConfigToElDefMap(stageRuntime);
+  }
+
+  private Map<String, Class<?>[]> getConfigToElDefMap(StageRuntime stageRuntime) {
+    Map<String, Class<?>[]> configToElDefMap = new HashMap<>();
+    for(ConfigDefinition configDefinition : stageRuntime.getDefinition().getConfigDefinitions()) {
+      configToElDefMap.put(configDefinition.getFieldName(),
+        getElDefClassArray(stageRuntime.getDefinition().getStageClassLoader(), configDefinition.getElDefs()));
+      if(configDefinition.getModel() != null && configDefinition.getModel().getConfigDefinitions() != null) {
+        for(ConfigDefinition configDef : configDefinition.getModel().getConfigDefinitions()) {
+          configToElDefMap.put(configDef.getFieldName(),
+            getElDefClassArray(stageRuntime.getDefinition().getStageClassLoader(), configDef.getElDefs()));
+        }
+      }
+    }
+    return configToElDefMap;
+
+  }
+
+  private Class<?>[] getElDefClassArray(ClassLoader classLoader, List<String> elDefs) {
+    Class<?>[] elDefClasses = new Class<?>[elDefs.size()];
+    for(int i = 0; i < elDefs.size(); i++) {
+      try {
+        elDefClasses[i] = classLoader.loadClass(elDefs.get(i));
+      } catch (ClassNotFoundException e) {
+        throw new RuntimeException(e);
+      }
+    }
+    return  elDefClasses;
   }
 
   private static class ConfigIssueImpl extends StageIssue implements Stage.ConfigIssue {
@@ -341,8 +375,12 @@ public class StageContext implements Source.Context, Target.Context, Processor.C
   }
 
   @Override
-  public ELEval createELEval(String configName, Class<?>... elFuncConstDefClasses) {
-    return new ELEvaluator(configName, elFuncConstDefClasses);
+  public ELEval createELEval(String configName) {
+    return new ELEvaluator(configName, configToElDefMap.get(configName));
   }
 
+  @Override
+  public ELEval createELEval(String configName, Class<?>... elDefClasses) {
+    return new ELEvaluator(configName, elDefClasses);
+  }
 }

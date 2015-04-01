@@ -6,6 +6,7 @@
 package com.streamsets.pipeline.sdk;
 
 import com.streamsets.pipeline.api.OnRecordError;
+import com.streamsets.pipeline.api.Processor;
 import com.streamsets.pipeline.api.Target;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
@@ -20,8 +21,8 @@ import java.util.Map;
 public class TargetRunner extends StageRunner<Target> {
 
   @SuppressWarnings("unchecked")
-  public TargetRunner(Target source, Map<String, Object> configuration, boolean isPreview, OnRecordError onRecordError) {
-    super(source, StageType.TARGET, configuration, Collections.EMPTY_LIST, isPreview, onRecordError);
+  public TargetRunner(Class<Target> targetClass, Target target, Map<String, Object> configuration, boolean isPreview, OnRecordError onRecordError) {
+    super(targetClass, target, StageType.TARGET, configuration, Collections.EMPTY_LIST, isPreview, onRecordError);
   }
 
   @SuppressWarnings("unchecked")
@@ -38,19 +39,19 @@ public class TargetRunner extends StageRunner<Target> {
 
   public static class Builder extends StageRunner.Builder<Target, TargetRunner, Builder> {
 
-    public Builder(Target processor) {
-      super(processor);
+    public Builder(Class<? extends Target> targetClass,  Target target) {
+      super((Class<Target>)targetClass, target);
     }
 
     @SuppressWarnings("unchecked")
-    public Builder(Class<? extends Target> processorClass) {
-      super((Class<Target>) processorClass);
+    public Builder(Class<? extends Target> targetClass) {
+      super((Class<Target>) targetClass);
     }
 
     @Override
     public TargetRunner build() {
       Utils.checkState(outputLanes.isEmpty(), "A Target cannot have output streams");
-      return (stage != null) ? new TargetRunner(stage, configs, isPreview, onRecordError)
+      return (stage != null) ? new TargetRunner(stageClass, stage, configs, isPreview, onRecordError)
                              : new TargetRunner(stageClass, configs, isPreview, onRecordError);
     }
 

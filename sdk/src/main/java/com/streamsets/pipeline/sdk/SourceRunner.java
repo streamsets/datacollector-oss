@@ -17,9 +17,9 @@ import java.util.Map;
 
 public class SourceRunner extends StageRunner<Source> {
 
-  public SourceRunner(Source source, Map<String, Object> configuration, List<String> outputLanes, boolean isPreview,
+  public SourceRunner(Class<Source> sourceClass, Source source, Map<String, Object> configuration, List<String> outputLanes, boolean isPreview,
       OnRecordError onRecordError) {
-    super(source, StageType.SOURCE, configuration, outputLanes, isPreview, onRecordError);
+    super(sourceClass, source, StageType.SOURCE, configuration, outputLanes, isPreview, onRecordError);
   }
 
   public SourceRunner(Class<Source> sourceClass, Map<String, Object> configuration, List<String> outputLanes,
@@ -36,8 +36,8 @@ public class SourceRunner extends StageRunner<Source> {
 
   public static class Builder extends StageRunner.Builder<Source, SourceRunner, Builder> {
 
-    public Builder(Source source) {
-      super(source);
+    public Builder(Class<? extends Source> sourceClass,  Source source) {
+      super((Class<Source>)sourceClass, source);
     }
 
     @SuppressWarnings("unchecked")
@@ -48,7 +48,7 @@ public class SourceRunner extends StageRunner<Source> {
     @Override
     public SourceRunner build() {
       Utils.checkState(!outputLanes.isEmpty(), "A Source must have at least one output stream");
-      return  (stage != null) ? new SourceRunner(stage, configs, outputLanes, isPreview, onRecordError)
+      return  (stage != null) ? new SourceRunner(stageClass, stage, configs, outputLanes, isPreview, onRecordError)
                               : new SourceRunner(stageClass, configs, outputLanes, isPreview, onRecordError);
     }
 

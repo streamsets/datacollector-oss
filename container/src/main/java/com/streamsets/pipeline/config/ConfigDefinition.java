@@ -44,11 +44,13 @@ public class ConfigDefinition {
   private final long max;
   private final String mode;
   private final int lines;
+  private final List<String> elDefs;
 
   public ConfigDefinition(String name, ConfigDef.Type type, String label, String description, Object defaultValue,
       boolean required, String group, String fieldName, ModelDefinition model, String dependsOn,
       List<Object> triggeredByValues, int displayPosition, List<ElFunctionDefinition> elFunctionDefinitions,
-      List<ElConstantDefinition> elConstantDefinitions, long min, long max, String mode, int lines) {
+      List<ElConstantDefinition> elConstantDefinitions, long min, long max, String mode, int lines,
+      List<String> elDefs) {
     this.name = name;
     this.type = type;
     this.label = label;
@@ -67,6 +69,7 @@ public class ConfigDefinition {
     this.max = max;
     this.mode = mode;
     this.lines = lines;
+    this.elDefs = elDefs;
   }
 
   public String getName() {
@@ -121,6 +124,10 @@ public class ConfigDefinition {
 
   public int getLines() {
     return lines;
+  }
+
+  public List<String> getElDefs() {
+    return elDefs;
   }
 
   public List<Object> getTriggeredByValues() {
@@ -196,7 +203,7 @@ public class ConfigDefinition {
     return new ConfigDefinition(getName(), getType(), label, description, getDefaultValue(),
                                 isRequired(), getGroup(), getFieldName(), model, getDependsOn(), getTriggeredByValues(),
                                 getDisplayPosition(), getElFunctionDefinitions(), getElConstantDefinitions(), getMin(),
-                                getMax(), getMode(), getLines());
+                                getMax(), getMode(), getLines(), getElDefs());
   }
 
   @Override

@@ -13,6 +13,7 @@ import com.streamsets.pipeline.api.HideConfig;
 import com.streamsets.pipeline.api.StageDef;
 import com.streamsets.pipeline.api.Target;
 import com.streamsets.pipeline.configurablestage.DTarget;
+import com.streamsets.pipeline.lib.el.TimeEL;
 
 @StageDef(
     version = "1.0.0",
@@ -46,7 +47,8 @@ public class RecordsToLocalFileSystemDTarget extends DTarget {
                     "Enter the time in seconds or use the default expression to enter the time limit in minutes. " +
                     "You can also use HOURS in the expression to enter the limit in hours.",
       displayPosition = 20,
-      group = "FILES"
+      group = "FILES",
+      elDefs = {TimeEL.class}
   )
   public String rotationIntervalSecs;
 

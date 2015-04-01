@@ -39,11 +39,13 @@ public class ConfigDefinitionJson {
     @JsonProperty("min")long min,
     @JsonProperty("max")long max,
     @JsonProperty("mode")String mode,
-    @JsonProperty("lines")int lines) {
+    @JsonProperty("lines")int lines,
+    @JsonProperty("elDefs") List<String> elDefs) {
+
     this.configDefinition = new com.streamsets.pipeline.config.ConfigDefinition(name, type, label, description,
       defaultValue, required, group, fieldName, BeanHelper.unwrapModelDefinition(model), dependsOn, triggeredByValues,
       displayPosition, BeanHelper.unwrapElFunctionDefinitions(elFunctionDefinitions),
-      BeanHelper.unwrapElConstantDefinitions(elConstantDefinitions), min, max, mode, lines);
+      BeanHelper.unwrapElConstantDefinitions(elConstantDefinitions), min, max, mode, lines, elDefs);
   }
 
   public ConfigDefinitionJson(com.streamsets.pipeline.config.ConfigDefinition configDefinition) {
@@ -119,6 +121,10 @@ public class ConfigDefinitionJson {
 
   public int getLines() {
     return configDefinition.getLines();
+  }
+
+  public List<String> getElDefs() {
+    return configDefinition.getElDefs();
   }
 
   @JsonIgnore

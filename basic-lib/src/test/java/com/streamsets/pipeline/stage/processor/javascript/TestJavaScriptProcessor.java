@@ -37,7 +37,7 @@ public class TestJavaScriptProcessor {
                                               "  record.value = 'Error';\n" +
                                               "  err.write(record, 'error');\n" +
                                               "}");
-    ProcessorRunner runner = new ProcessorRunner.Builder(processor)
+    ProcessorRunner runner = new ProcessorRunner.Builder(JavaScriptDProcessor.class, processor)
         .addOutputLane("lane")
         .build();
     runner.runInit();
@@ -73,7 +73,7 @@ public class TestJavaScriptProcessor {
                                               "records[0]['value'] = [ { 'type' : Type.INTEGER, 'value' : 5} ];\n" +
                                               "out.write(records[0]);\n" +
                                               "");
-    ProcessorRunner runner = new ProcessorRunner.Builder(processor)
+    ProcessorRunner runner = new ProcessorRunner.Builder(JavaScriptDProcessor.class, processor)
         .addOutputLane("lane")
         .build();
     runner.runInit();
@@ -107,7 +107,7 @@ public class TestJavaScriptProcessor {
                                               "for (var i = 0; i < records.length; i++){\n" +
                                               "  out.write(records[i]);\n" +
                                               "}");
-    ProcessorRunner runner = new ProcessorRunner.Builder(processor)
+    ProcessorRunner runner = new ProcessorRunner.Builder(JavaScriptDProcessor.class, processor)
         .addOutputLane("lane")
         .build();
     runner.runInit();
@@ -147,7 +147,7 @@ public class TestJavaScriptProcessor {
                                               "  }" +
                                               "  out.write(record);" +
                                               "}");
-    ProcessorRunner runner = new ProcessorRunner.Builder(processor)
+    ProcessorRunner runner = new ProcessorRunner.Builder(JavaScriptDProcessor.class, processor)
         .setOnRecordError(onRecordError)
         .addOutputLane("lane")
         .build();
@@ -203,7 +203,7 @@ public class TestJavaScriptProcessor {
                                                   "  }" +
                                                   "  out.write(record);" +
                                                   "}");
-    ProcessorRunner runner = new ProcessorRunner.Builder(processor)
+    ProcessorRunner runner = new ProcessorRunner.Builder(JavaScriptDProcessor.class, processor)
         .setOnRecordError(onRecordError)
         .addOutputLane("lane")
         .build();

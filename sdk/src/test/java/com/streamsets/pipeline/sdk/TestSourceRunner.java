@@ -8,7 +8,6 @@ package com.streamsets.pipeline.sdk;
 import com.streamsets.pipeline.api.BatchMaker;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.base.BaseSource;
-import com.streamsets.pipeline.sdk.StageRunner;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -27,14 +26,14 @@ public class TestSourceRunner {
   @Test(expected = RuntimeException.class)
   public void testBuilderNoOutput() throws Exception {
     DummySource stage = new DummySource();
-    SourceRunner.Builder builder = new SourceRunner.Builder(stage);
+    SourceRunner.Builder builder = new SourceRunner.Builder(DummySource.class, stage);
     builder.build();
   }
 
   @Test
   public void testInitProduceDestroy() throws Exception {
     DummySource stage = new DummySource();
-    SourceRunner.Builder builder = new SourceRunner.Builder(stage).addOutputLane("a");
+    SourceRunner.Builder builder = new SourceRunner.Builder(DummySource.class, stage).addOutputLane("a");
     SourceRunner runner = builder.build();
     try {
       runner.runInit();
@@ -47,7 +46,7 @@ public class TestSourceRunner {
   @Test(expected = RuntimeException.class)
   public void testInvalidProduce1() throws Exception {
     DummySource stage = new DummySource();
-    SourceRunner.Builder builder = new SourceRunner.Builder(stage).addOutputLane("a");
+    SourceRunner.Builder builder = new SourceRunner.Builder(DummySource.class, stage).addOutputLane("a");
     SourceRunner runner = builder.build();
     try {
       runner.runProduce("lastOffset", 10);
@@ -59,7 +58,7 @@ public class TestSourceRunner {
   @Test(expected = RuntimeException.class)
   public void testInvalidProduce2() throws Exception {
     DummySource stage = new DummySource();
-    SourceRunner.Builder builder = new SourceRunner.Builder(stage).addOutputLane("a");
+    SourceRunner.Builder builder = new SourceRunner.Builder(DummySource.class, stage).addOutputLane("a");
     SourceRunner runner = builder.build();
     runner.runInit();
     runner.runDestroy();
@@ -69,7 +68,7 @@ public class TestSourceRunner {
   @Test
   public void testProduce() throws Exception {
     DummySource stage = new DummySource();
-    SourceRunner.Builder builder = new SourceRunner.Builder(stage).addOutputLane("a");
+    SourceRunner.Builder builder = new SourceRunner.Builder(DummySource.class, stage).addOutputLane("a");
     SourceRunner runner = builder.build();
     try {
       runner.runInit();

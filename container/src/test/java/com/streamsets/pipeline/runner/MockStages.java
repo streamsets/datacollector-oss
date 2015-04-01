@@ -96,11 +96,6 @@ public class MockStages {
     }
 
     @Override
-    public List<ELEval> getELEvals(ELContext elContext) {
-      return new ArrayList<>();
-    }
-
-    @Override
     public void init(Info info, Context context) throws StageException {
       if (sourceCapture != null) {
         sourceCapture.init(info, context);
@@ -145,11 +140,6 @@ public class MockStages {
     }
 
     @Override
-    public List<ELEval> getELEvals(ELContext elContext) {
-      return new ArrayList<>();
-    }
-
-    @Override
     public void init(Info info, Context context) throws StageException {
       if (processorCapture != null) {
         processorCapture.init(info, context);
@@ -172,11 +162,6 @@ public class MockStages {
   }
 
   public static class MTarget implements Target {
-
-    @Override
-    public List<ELEval> getELEvals(ELContext elContext) {
-      return new ArrayList<>();
-    }
 
     @Override
     public List<ConfigIssue> validateConfigs(Info info, Target.Context context) throws StageException {
@@ -210,11 +195,6 @@ public class MockStages {
   }
 
   public static class ETarget implements Target {
-
-    @Override
-    public List<ELEval> getELEvals(ELContext elContext) {
-      return new ArrayList<>();
-    }
 
     @Override
     public List<ConfigIssue> validateConfigs(Info info, Target.Context context) throws StageException {
@@ -341,20 +321,21 @@ public class MockStages {
         ConfigDefinition depConfDef = new ConfigDefinition(
           "dependencyConfName", ConfigDef.Type.NUMBER, "dependencyConfLabel", "dependencyConfDesc", "", true,
           "groupName", "dependencyConfFieldName", null, "", null, 0, Collections.<ElFunctionDefinition>emptyList(),
-          Collections.<ElConstantDefinition>emptyList(), Long.MIN_VALUE, Long.MAX_VALUE, "text/plain", 0);
+          Collections.<ElConstantDefinition>emptyList(), Long.MIN_VALUE, Long.MAX_VALUE, "text/plain", 0, Collections.<String> emptyList());
         List<Object> triggeredBy = new ArrayList<>();
         triggeredBy.add(1);
         ConfigDefinition triggeredConfDef = new ConfigDefinition(
           "triggeredConfName", ConfigDef.Type.NUMBER, "triggeredConfLabel", "triggeredConfDesc", "", true,
           "groupName", "triggeredConfFieldName", null, "dependencyConfName", triggeredBy, 0,
-          Collections.<ElFunctionDefinition>emptyList(), Collections.<ElConstantDefinition>emptyList(), Long.MIN_VALUE, Long.MAX_VALUE, "text/plain", 0);
+          Collections.<ElFunctionDefinition>emptyList(), Collections.<ElConstantDefinition>emptyList(), Long.MIN_VALUE, Long.MAX_VALUE, "text/plain", 0,
+          Collections.<String> emptyList());
         StageDefinition swcDef = new StageDefinition(
           MSource.class.getName(), "sourceWithConfigsName", "1.0.0", "sourceWithConfigsLabel",
           "sourceWithConfigsDesc", StageType.SOURCE, false, true, true, Lists.newArrayList(depConfDef, triggeredConfDef),
           null/*raw source definition*/, "", null, false, 1, null);
         swcDef.setLibrary("default", "", Thread.currentThread().getContextClassLoader());
         StageDefinition[] stageDefs = new StageDefinition[]{sDef, socDef, pDef, tDef, swcDef, eDef};
-        stages = new HashMap<String, StageDefinition>();
+        stages = new HashMap<>();
         for (StageDefinition def : stageDefs) {
           if (stages.containsKey(def.getName())) {
             throw new IllegalStateException("Duplicate stage at " + def.getName());

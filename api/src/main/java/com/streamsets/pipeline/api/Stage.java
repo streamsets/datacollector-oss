@@ -33,7 +33,10 @@ public interface Stage<C extends Stage.Context> {
 
     public ELVars createELVars();
 
-    public ELEval createELEval(String configName, Class<?> ... elFuncConstDefClasses);
+    public ELEval createELEval(String configName);
+
+    @Deprecated
+    public ELEval createELEval(String configName, Class<?>... elDefClasses) ;
 
   }
 
@@ -80,8 +83,6 @@ public interface Stage<C extends Stage.Context> {
   }
 
   public List<ConfigIssue> validateConfigs(Info info, C context)  throws StageException;
-
-  public List<ELEval> getELEvals(ELContext elContext);
 
   public void init(Info info, C context) throws StageException;
 

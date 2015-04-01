@@ -12,7 +12,6 @@ import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.Processor;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.Stage;
-import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.OnRecordError;
 import com.streamsets.pipeline.sdk.ProcessorRunner;
 import com.streamsets.pipeline.sdk.RecordCreator;
@@ -49,7 +48,7 @@ public class TestSelectorProcessor {
     List<Map<String, String>> lanePredicates = createLanePredicates();
     Map<String, ?> constants = Collections.EMPTY_MAP;
     Processor selector = new SelectorProcessor(lanePredicates, constants);
-    ProcessorRunner runner = new ProcessorRunner.Builder(selector)
+    ProcessorRunner runner = new ProcessorRunner.Builder(SelectorDProcessor.class, selector)
         .setOnRecordError(OnRecordError.DISCARD)
         .addOutputLane("a")
         .build();
@@ -60,7 +59,7 @@ public class TestSelectorProcessor {
     lanePredicates = createLanePredicates("a","${true}", "b", "${true}");
     constants = Collections.EMPTY_MAP;
     selector = new SelectorProcessor(lanePredicates, constants);
-    runner = new ProcessorRunner.Builder(selector)
+    runner = new ProcessorRunner.Builder(SelectorDProcessor.class, selector)
         .setOnRecordError(OnRecordError.DISCARD)
         .addOutputLane("a")
         .build();
@@ -71,7 +70,7 @@ public class TestSelectorProcessor {
     lanePredicates = createLanePredicates("a","${true}", "b", "${true}");
     constants = Collections.EMPTY_MAP;
     selector = new SelectorProcessor(lanePredicates, constants);
-    runner = new ProcessorRunner.Builder(selector)
+    runner = new ProcessorRunner.Builder(SelectorDProcessor.class, selector)
         .setOnRecordError(OnRecordError.DISCARD)
         .addOutputLane("a")
         .addOutputLane("b")
@@ -83,7 +82,7 @@ public class TestSelectorProcessor {
     lanePredicates = createLanePredicates("x","x${true}", "b", "${x + 'x'}", "c", "default");
     constants = ImmutableMap.of("a-x", 1);
     selector = new SelectorProcessor(lanePredicates, constants);
-    runner = new ProcessorRunner.Builder(selector)
+    runner = new ProcessorRunner.Builder(SelectorDProcessor.class, selector)
         .setOnRecordError(OnRecordError.DISCARD)
         .addOutputLane("a")
         .addOutputLane("b")

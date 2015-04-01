@@ -395,7 +395,7 @@ public class KafkaDSource extends DSourceOffsetCommitter {
   @ConfigDef(
     required = true,
     type = ConfigDef.Type.MODEL,
-    defaultValue = "",
+    defaultValue = "ERROR",
     label = "On Parse Error",
     description = "",
     displayPosition = 805,

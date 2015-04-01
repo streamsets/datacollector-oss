@@ -48,7 +48,7 @@ public class TestProcessorRunner {
   @Test(expected = RuntimeException.class)
   public void testBuilderNoOutput() throws Exception {
     DummyProcessor stage = new DummyProcessor();
-    ProcessorRunner.Builder builder = new ProcessorRunner.Builder(stage);
+    ProcessorRunner.Builder builder = new ProcessorRunner.Builder(DummyProcessor.class, stage);
     builder.build();
   }
 
@@ -56,7 +56,7 @@ public class TestProcessorRunner {
   @SuppressWarnings("unchecked")
   public void testInitProcessDestroy() throws Exception {
     DummyProcessorEmptyBatch stage = new DummyProcessorEmptyBatch();
-    ProcessorRunner.Builder builder = new ProcessorRunner.Builder(stage).addOutputLane("a");
+    ProcessorRunner.Builder builder = new ProcessorRunner.Builder(DummyProcessorEmptyBatch.class, stage).addOutputLane("a");
     ProcessorRunner runner = builder.build();
     try {
       runner.runInit();
@@ -70,7 +70,7 @@ public class TestProcessorRunner {
   @SuppressWarnings("unchecked")
   public void testInvalidProcess1() throws Exception {
     DummyProcessor stage = new DummyProcessor();
-    ProcessorRunner.Builder builder = new ProcessorRunner.Builder(stage).addOutputLane("a");
+    ProcessorRunner.Builder builder = new ProcessorRunner.Builder(DummyProcessor.class, stage).addOutputLane("a");
     ProcessorRunner runner = builder.build();
     try {
       runner.runProcess(Collections.EMPTY_LIST);
@@ -83,7 +83,7 @@ public class TestProcessorRunner {
   @SuppressWarnings("unchecked")
   public void testInvalidProcess2() throws Exception {
     DummyProcessor stage = new DummyProcessor();
-    ProcessorRunner.Builder builder = new ProcessorRunner.Builder(stage).addOutputLane("a");
+    ProcessorRunner.Builder builder = new ProcessorRunner.Builder(DummyProcessor.class, stage).addOutputLane("a");
     ProcessorRunner runner = builder.build();
     runner.runInit();
     runner.runDestroy();
@@ -94,7 +94,7 @@ public class TestProcessorRunner {
   @SuppressWarnings("unchecked")
   public void testProcessEmptyBatch() throws Exception {
     DummyProcessorEmptyBatch stage = new DummyProcessorEmptyBatch();
-    ProcessorRunner.Builder builder = new ProcessorRunner.Builder(stage).addOutputLane("a");
+    ProcessorRunner.Builder builder = new ProcessorRunner.Builder(DummyProcessorEmptyBatch.class, stage).addOutputLane("a");
     ProcessorRunner runner = builder.build();
     try {
       runner.runInit();
@@ -112,7 +112,7 @@ public class TestProcessorRunner {
   @Test
   public void testProcessNonEmptyBatch() throws Exception {
     DummyProcessor stage = new DummyProcessor();
-    ProcessorRunner.Builder builder = new ProcessorRunner.Builder(stage).addOutputLane("a");
+    ProcessorRunner.Builder builder = new ProcessorRunner.Builder(DummyProcessor.class, stage).addOutputLane("a");
     ProcessorRunner runner = builder.build();
     try {
       runner.runInit();
