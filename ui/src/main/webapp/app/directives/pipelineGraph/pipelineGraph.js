@@ -745,6 +745,7 @@ angular.module('pipelineGraphDirectives', ['underscore'])
         });
 
       //Add Configuration Icon
+      /*
       newGs.append('svg:foreignObject')
         .filter(function(d) {
           var configurationExists = false;
@@ -774,7 +775,7 @@ angular.module('pipelineGraphDirectives', ['underscore'])
         .on('mouseup', function() {
           $scope.state.showConfiguration = false;
         });
-
+      */
 
       //Add bad records count
       newGs.append('svg:foreignObject')

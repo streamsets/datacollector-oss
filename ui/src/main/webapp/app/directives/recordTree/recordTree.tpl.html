@@ -25,7 +25,7 @@
       <div ng-switch="recordValue.type">
 
         <div ng-switch-when="MAP">
-          <span class="field-type"> Map  </span>
+          <span class="field-type">{{recordValue.type}}</span>
 
           <record-tree
             ng-if="isOpen || (isRoot && record.expand)"
@@ -45,7 +45,7 @@
         </div>
 
         <div ng-switch-when="LIST">
-          <span class="field-type"> List [ {{recordValue.value.length}} ]</span>
+          <span class="field-type">{{recordValue.type}} [ {{recordValue.value.length}} ]</span>
 
           <record-tree
             ng-if="isOpen || (isRoot && record.expand)"
@@ -64,6 +64,8 @@
         </div>
 
         <div ng-switch-when="DATE" class="clearfix">
+          <span class="field-type">{{recordValue.type}}</span>
+
           <span class="field-value pull-left {{recordValue.type}}"
                 ng-class="{'value-addition' : (diffType === 'output' && updatedValue), 'value-deletion' : (diffType === 'input' && updatedValue)}"
             >{{recordValue.value + '' | date:'medium'}} </span>
@@ -84,6 +86,9 @@
 
 
         <div ng-switch-when="DATETIME" class="clearfix">
+
+          <span class="field-type">{{recordValue.type}}</span>
+
           <span class="field-value pull-left {{recordValue.type}}"
                 ng-class="{'value-addition' : (diffType === 'output' && updatedValue), 'value-deletion' : (diffType === 'input' && updatedValue)}"
             >{{recordValue.value + '' | date:'medium'}} </span>
@@ -103,6 +108,9 @@
         </div>
 
         <div ng-switch-default>
+
+          <span class="field-type">{{recordValue.type}}</span>
+
           <span ng-if="editable !== true"
                 class="field-value {{recordValue.type}}"
                 ng-class="{'value-addition' : (diffType === 'output' && updatedValue), 'value-deletion' : (diffType === 'input' && updatedValue)}"

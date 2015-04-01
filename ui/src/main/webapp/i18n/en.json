@@ -336,9 +336,10 @@
       "noOutputWarning": "No output records produced.",
       "noRecords": "No Records to view.",
       "runPreview": "Run Preview",
+      "skipTargets": "Skip Targets",
       "snapshotSource": "Snapshot Data",
       "stageErrorsWarning": "{{stageErrorsCount}} Stage Errors, check Errors tab for more detail.",
-      "skipTargets": "Skip Targets",
+      "stageConfigTitle": "Stage Configuration",
       "userProvider": "User Provided"
     },
     "library": {

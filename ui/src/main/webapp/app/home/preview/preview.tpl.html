@@ -150,8 +150,61 @@
   </div>
 
   <div class="panel-body">
-    <ng-include ng-if="!previewMultipleStages" src="'app/home/preview/common/previewCommon.tpl.html'"></ng-include>
-    <ng-include ng-if="previewMultipleStages" src="'app/home/preview/common/previewMultiStage.tpl.html'"></ng-include>
+    <tabset class="preview-tabs-left tabs-left icon-only">
+
+      <tab active="true">
+        <tab-heading tooltip-placement="right" tooltip="{{ 'global.form.records' | translate }}">
+          <i class="fa fa-list-ul fa-12x"></i>
+        </tab-heading>
+        <ng-include ng-if="!previewMultipleStages" src="'app/home/preview/common/previewCommon.tpl.html'"></ng-include>
+        <ng-include ng-if="previewMultipleStages" src="'app/home/preview/common/previewMultiStage.tpl.html'"></ng-include>
+      </tab>
+
+      <tab>
+        <tab-heading tooltip-placement="right" tooltip="{{ 'home.previewPane.stageConfigTitle' | translate }}">
+          <i class="fa fa-gear fa-12x"></i>
+        </tab-heading>
+        <ng-include src="'app/home/detail/configuration/configuration.tpl.html'"></ng-include>
+      </tab>
+
+      <tab>
+        <tab-heading tooltip-placement="right" tooltip="{{ 'home.previewPane.configTitle' | translate }}">
+          <i class="fa fa-eye fa-12x"></i>
+        </tab-heading>
+        <ng-include src="'app/home/preview/configuration/previewConfig.tpl.html'"></ng-include>
+      </tab>
+
+      <tab ng-if="stagePreviewData.stageErrors && stagePreviewData.stageErrors.length">
+        <tab-heading tooltip-placement="right" tooltip="{{ 'global.form.errors' | translate }}">
+          <i class="fa fa-exclamation-triangle icon-danger fa-12x"></i>
+        </tab-heading>
+        <div>
+          <table class="table table-hover">
+            <caption>
+              <label translate="global.form.errorMessages">Error Messages</label>
+            </caption>
+            <thead>
+            <tr>
+              <th class="col-md-3" translate="global.form.timestamp">Timestamp</th>
+              <th class="col-md-2" translate="global.form.errorCode">Error Code</th>
+              <th class="col-md-7" translate="global.form.errorMessage"> Error Message</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr ng-repeat="errorMessage in stagePreviewData.stageErrors">
+              <td>{{errorMessage.timestamp | date:'medium'}}</td>
+              <td ng-bind="errorMessage.errorCode"> </td>
+              <td ng-bind="errorMessage.localized"> </td>
+            </tr>
+            </tbody>
+          </table>
+        </div>
+      </tab>
+
+    </tabset>
+
+
+
   </div>
 
 </div>

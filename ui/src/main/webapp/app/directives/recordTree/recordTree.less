@@ -78,6 +78,14 @@
     .field-type {
       padding-left: @defaultPadding;
       opacity: 0.6;
+
+      &:before {
+        content: '{';
+      }
+
+      &:after {
+        content: '}';
+      }
     }
 
     .dirty {
