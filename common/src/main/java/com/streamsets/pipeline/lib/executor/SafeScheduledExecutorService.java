@@ -5,6 +5,7 @@
  */
 package com.streamsets.pipeline.lib.executor;
 
+import com.google.common.annotations.VisibleForTesting;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -18,6 +19,7 @@ import java.util.concurrent.TimeUnit;
 public class SafeScheduledExecutorService {
   private static final Logger LOG = LoggerFactory.getLogger(SafeScheduledExecutorService.class);
   private final ScheduledExecutorService scheduledExecutorService;
+  private ExecutorSupport executorSupport = new ExecutorSupport(LOG);
 
   public SafeScheduledExecutorService(int corePoolSize, final String prefix) {
     this(corePoolSize, new ThreadFactory() {
@@ -31,8 +33,14 @@ public class SafeScheduledExecutorService {
       }
     });
   }
+
   public SafeScheduledExecutorService(int corePoolSize, ThreadFactory threadFactory) {
     scheduledExecutorService = Executors.newScheduledThreadPool(corePoolSize, threadFactory);
+  }
+
+  @VisibleForTesting
+  void setExecutorSupport(ExecutorSupport executorSupport) {
+    this.executorSupport = executorSupport;
   }
 
   public void shutdown() {
@@ -56,10 +64,17 @@ public class SafeScheduledExecutorService {
     scheduledExecutorService.submit(new SafeRunnable(runnable, false));
   }
 
-  public ScheduledFuture<?> scheduleAtFixedRate(Runnable command,
-                                                long initialDelay,
-                                                long period,
-                                                TimeUnit unit) {
+  public void scheduleAtFixedRate(Runnable command,
+                                                            long initialDelay,
+                                                            long period,
+                                                            TimeUnit unit) {
+    scheduledExecutorService.scheduleAtFixedRate(new SafeRunnable(command, false), initialDelay, period, unit);
+  }
+
+  public ScheduledFuture<?> scheduleAtFixedRateReturnFuture(Runnable command,
+                                                            long initialDelay,
+                                                            long period,
+                                                            TimeUnit unit) {
     return scheduledExecutorService.scheduleAtFixedRate(new SafeRunnable(command, true), initialDelay, period, unit);
   }
   public void scheduleWithFixedDelay(Runnable command,
@@ -81,7 +96,7 @@ public class SafeScheduledExecutorService {
     scheduledExecutorService.schedule(new SafeRunnable(command, false), delay, unit);
   }
 
-  private static class SafeRunnable implements Runnable {
+  private class SafeRunnable implements Runnable {
     private final Runnable delegate;
     private final String delegateName;
     private final boolean propagateErrors;
@@ -94,8 +109,7 @@ public class SafeScheduledExecutorService {
       try {
         delegate.run();;
       } catch (Throwable throwable) {
-        String msg = "Uncaught throwable from " + delegateName + ": " + throwable;
-        LOG.error(msg, throwable);
+        executorSupport.uncaughtThrowableInRunnable(throwable, delegate, delegateName);
         if (propagateErrors) {
           if (throwable instanceof RuntimeException) {
             throw (RuntimeException)throwable;
