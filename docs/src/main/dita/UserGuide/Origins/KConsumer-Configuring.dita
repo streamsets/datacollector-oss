@@ -10,7 +10,7 @@
             properties. You can optionally add custom Kafka properties. </context>
         <steps id="steps_f3x_nhw_yq">
             <step>
-                <cmd>In the Properties panel, on the <wintitle>General tab</wintitle>, configure the
+                <cmd>In the Properties panel, on the <wintitle>General</wintitle> tab, configure the
                     following properties:</cmd>
                 <info>
                     <table frame="all" rowsep="1" colsep="1" id="table_tvy_43h_hr">

@@ -8,23 +8,24 @@
   <p>
    <dl>
     <dlentry>
-     <dt>Implicit validation</dt>
-     <dd>Implicit validation occurs by default as the console saves your changes. Implicit
-      validation lists missing or incomplete configuration, such as an unconnected stage or a
-      required property that has not been configured. Implicit validation also lists information
-      that uses incorrect syntax, such as the wrong structure for a URI.</dd>
-     <dd>Errors found by implicit validation display in the Issues list. </dd>
+     <dt>Logical validation</dt>
+     <dd>Logical validation occurs by default as the console saves your changes. Logical validation
+      lists missing or incomplete configuration, such as an unconnected stage or a required property
+      that has not been configured. Logical validation also lists information that uses incorrect
+      syntax, such as the wrong structure for a URI.</dd>
+     <dd>Errors found by logical validation display in the Issues list. </dd>
     </dlentry>
     <dlentry>
-     <dt>Explicit validation</dt>
-     <dd>Explicit validation occurs on demand when you click the Validate icon. Explicit validation
-      becomes available when implicit validation passes.</dd>
-     <dd>Explicit validation checks all configured values for validity and verifies whether the
+     <dt>Semantic validation</dt>
+     <dd>Semantic validation occurs on demand when you click the Validate icon. Semantic validation
+      becomes available when logical validation passes.</dd>
+     <dd>Semantic validation checks all configured values for validity and verifies whether the
       pipeline can run as configured. </dd>
-     <dd>For example, while implicit validation checks for the syntax for a URI, explicit validation
-      tests the URI by connecting to the system. Similarly, while implicit validation checks
-      expressions for invalid syntax, explicit validation verifies <draft-comment author="Loretta"
-       >what?</draft-comment></dd>
+     <dd>For example, while logical validation checks for the syntax for a URI, semantic validation
+      tests the URI by connecting to the system. Similarly, while logical validation checks
+      expressions for invalid syntax, semantic validation verifies <draft-comment author="Loretta"
+       >what's the difference for expressions, or should I use a different example?
+      </draft-comment></dd>
     </dlentry>
    </dl>
   </p>
