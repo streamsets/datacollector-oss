@@ -26,10 +26,10 @@ public class JythonProcessor extends AbstractScriptingProcessor {
     super(JYTHON_ENGINE, Groups.JYTHON.name(), "script", processingMode, script);
   }
 
-
-  protected ScriptObjectFactory getScriptObjectFactory(ScriptEngine scriptEngine) {
-    return new JythonScriptObjectFactory(scriptEngine);
-    }
+  @Override
+  protected ScriptObjectFactory getScriptObjectFactory() {
+    return new JythonScriptObjectFactory(engine);
+  }
 
   private class JythonScriptObjectFactory extends ScriptObjectFactory {
 
