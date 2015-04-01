@@ -62,7 +62,7 @@ public class TestProductionRun {
     ObjectGraph g = ObjectGraph.create(TestUtil.TestProdManagerModule.class);
     manager = g.get(ProductionPipelineManagerTask.class);
     manager.init();
-    manager.setState(MY_PIPELINE, PIPELINE_REV, State.STOPPED, "Pipeline created");
+    manager.setState(MY_PIPELINE, PIPELINE_REV, State.STOPPED, "Pipeline created", null);
     manager.getStateTracker().register(MY_PIPELINE, PIPELINE_REV);
   }
 

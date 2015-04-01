@@ -19,9 +19,10 @@ public class PipelineStateJson {
     @JsonProperty("rev") String rev,
     @JsonProperty("state") StateJson stateJson,
     @JsonProperty("message") String message,
-    @JsonProperty("lastStatusChange") long lastStatusChange) {
+    @JsonProperty("lastStatusChange") long lastStatusChange,
+    @JsonProperty("metrics") String metrics) {
     pipelineState = new com.streamsets.pipeline.prodmanager.PipelineState(name, rev, BeanHelper.unwrapState(stateJson),
-      message, lastStatusChange);
+      message, lastStatusChange, metrics);
   }
 
   public PipelineStateJson(com.streamsets.pipeline.prodmanager.PipelineState pipelineState) {
@@ -46,6 +47,10 @@ public class PipelineStateJson {
 
   public String getName() {
     return pipelineState.getName();
+  }
+
+  public String getMetrics() {
+    return pipelineState.getMetrics();
   }
 
   @JsonIgnore

@@ -186,7 +186,7 @@ public class TestProdPipelineRunnable {
     ProductionPipeline pipeline = new ProductionPipelineBuilder(MockStages.createStageLibrary(), PIPELINE_NAME,
         REVISION, runtimeInfo, MockStages.createPipelineConfigurationSourceProcessorTarget()).build(runner, tracker, null);
     manager.getStateTracker().register(PIPELINE_NAME, REVISION);
-    manager.getStateTracker().setState(PIPELINE_NAME, REVISION, State.STOPPED, null);
+    manager.getStateTracker().setState(PIPELINE_NAME, REVISION, State.STOPPED, null, null);
 
     if(capturenextBatch) {
       runner.captureNextBatch(SNAPSHOT_NAME, 1);

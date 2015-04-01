@@ -224,7 +224,11 @@
       "general": "General",
       "history": "History",
       "historyTab": {
-        "noStatus": "No Status to view."
+        "noStatus": "No Status to view.",
+        "summaryModal": {
+          "recordCountBarChartTitle": "Record Count"
+        },
+        "viewSummary": "View Summary..."
       },
       "info": "Info",
       "inspectingData": "Inspecting Data",

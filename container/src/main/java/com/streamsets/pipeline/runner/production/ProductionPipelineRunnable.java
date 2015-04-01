@@ -50,7 +50,7 @@ public class ProductionPipelineRunnable implements Runnable {
       } catch (Exception e) {
         LOG.error("An exception occurred while running the pipeline, {}", e.getMessage(), e);
         try {
-          pipelineManager.setState(name, rev, State.ERROR, e.getMessage());
+          pipelineManager.setState(name, rev, State.ERROR, e.getMessage(), pipelineManager.getMetrics());
         } catch (PipelineManagerException ex) {
           LOG.error("An exception occurred while committing the state, {}", ex.getMessage(), e);
         }
@@ -58,7 +58,7 @@ public class ProductionPipelineRunnable implements Runnable {
       } catch (Error e) {
         LOG.error("A JVM error occurred while running the pipeline, {}", e.getMessage(), e);
         try {
-          pipelineManager.setState(name, rev, State.ERROR, e.getMessage());
+          pipelineManager.setState(name, rev, State.ERROR, e.getMessage(), pipelineManager.getMetrics());
         } catch (PipelineManagerException ex) {
           LOG.error("An exception occurred while committing the state, {}", ex.getMessage(), e);
         }
@@ -79,12 +79,12 @@ public class ProductionPipelineRunnable implements Runnable {
             pipelineManager.validateStateTransition(name, rev, State.NODE_PROCESS_SHUTDOWN);
             pipelineManager.setState(name, rev, State.NODE_PROCESS_SHUTDOWN,
               Utils.format("The pipeline was stopped because the node process was shutdown. " +
-                "The last committed source offset is {}.", pipeline.getCommittedOffset()));
+                "The last committed source offset is {}.", pipeline.getCommittedOffset()), pipelineManager.getMetrics());
           } else {
             pipelineManager.validateStateTransition(name, rev, State.STOPPED);
             pipelineManager.setState(name, rev, State.STOPPED,
               Utils.format("The pipeline was stopped. The last committed source offset is {}."
-                , pipeline.getCommittedOffset()));
+                , pipeline.getCommittedOffset()), pipelineManager.getMetrics());
           }
         } catch (PipelineManagerException e) {
           LOG.error("An exception occurred while stopping the pipeline, {}", e.getMessage(), e);
@@ -96,7 +96,7 @@ public class ProductionPipelineRunnable implements Runnable {
         //pipeline execution finished normally
         try {
           pipelineManager.validateStateTransition(name, rev, State.FINISHED);
-          pipelineManager.setState(name, rev, State.FINISHED, "Completed successfully.");
+          pipelineManager.setState(name, rev, State.FINISHED, "Completed successfully.", pipelineManager.getMetrics());
         } catch (PipelineManagerException e) {
           LOG.error("An exception occurred while finishing the pipeline, {}", e.getMessage(), e);
         }

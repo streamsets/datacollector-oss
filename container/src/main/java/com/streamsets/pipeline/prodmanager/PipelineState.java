@@ -13,13 +13,16 @@ public class PipelineState {
   private final State state;
   private final String message;
   private final long lastStatusChange;
+  private final String metrics;
 
-  public PipelineState(String name, String rev, State state, String message, long lastStatusChange) {
+  public PipelineState(String name, String rev, State state, String message, long lastStatusChange,
+                       String metrics) {
     this.name = name;
     this.rev = rev;
     this.state = state;
     this.message = message;
     this.lastStatusChange = lastStatusChange;
+    this.metrics = metrics;
   }
 
   public String getRev() {
@@ -40,6 +43,10 @@ public class PipelineState {
 
   public String getName() {
     return name;
+  }
+
+  public String getMetrics() {
+    return metrics;
   }
 
   @Override

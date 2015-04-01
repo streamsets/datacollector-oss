@@ -10,8 +10,9 @@
             <thead>
               <tr>
                 <th class="col-md-3" translate="global.form.lastStatusChange">Last Status Change</th>
-                <th class="col-md-3" translate="global.form.status">Status</th>
-                <th class="col-md-6" translate="global.form.message">Message</th>
+                <th class="col-md-2" translate="global.form.status">Status</th>
+                <th class="col-md-5" translate="global.form.message">Message</th>
+                <th class="col-md-2" translate="home.detailPane.summary">Summary</th>
               </tr>
             </thead>
             <tbody ng-hide="showLoading">
@@ -19,6 +20,12 @@
                 <td>{{history.lastStatusChange | date:'medium'}}</td>
                 <td ng-bind="history.state"></td>
                 <td ng-bind="history.message"></td>
+                <td>
+                  <a href="javascript:;"
+                     ng-if="history.metrics"
+                     translate="home.detailPane.historyTab.viewSummary"
+                     ng-click="viewSummary(history)">View Summary ...</a>
+                </td>
               </tr>
 
               <tr ng-if="runHistory.length === 0">

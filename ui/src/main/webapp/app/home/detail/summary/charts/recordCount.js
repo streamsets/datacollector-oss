@@ -28,7 +28,7 @@ angular
 
     });
 
-    $scope.$on('summaryDataUpdated', function() {
+    var refreshData = function() {
       var stageInstance = $scope.detailPaneConfig,
         pipelineMetrics = $rootScope.common.pipelineMetrics,
         valueList = [],
@@ -80,6 +80,15 @@ angular
           values: valueList
         }
       ];
+    };
+
+
+    $scope.$on('summaryDataUpdated', function() {
+      refreshData();
     });
+
+    if($scope.summaryMeters) {
+      refreshData();
+    }
 
   });

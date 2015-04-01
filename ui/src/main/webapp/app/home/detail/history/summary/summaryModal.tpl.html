@@ -1,0 +1,129 @@
+<form class="history-summary-modal" role="form">
+  <div class="modal-header">
+    <button type="button" class="close" ng-click="close()">
+      <span aria-hidden="true">&times;</span>
+      <span class="sr-only">Close</span>
+    </button>
+    <h3 class="modal-title" translate="home.detailPane.summary">Snapshots</h3>
+  </div>
+  <div class="modal-body">
+
+    <div class="btn-group detail-name-dropdown">
+      <button class="btn btn-link dropdown-toggle" type="button" data-toggle="dropdown">
+        <span>{{getDetailPaneLabel()}}</span>
+
+        <span class="caret"></span>
+      </button>
+      <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
+
+        <li role="presentation" class="dropdown-header"
+            translate="global.form.pipeline">Pipeline</li>
+
+        <li role="presentation">
+          <a role="menuitem" tabindex="-1" href="#"
+             ng-click="changeStageSelection({selectedObject: pipelineConfig, type: pipelineConstant.PIPELINE})">{{pipelineConfig.info.name}}</a>
+        </li>
+
+        <li role="presentation" class="divider"></li>
+
+        <li role="presentation" class="dropdown-header"
+            translate="global.form.stage">Stage</li>
+
+        <li role="presentation"
+            ng-repeat="stageInstance in pipelineConfig.stages">
+          <a role="menuitem" tabindex="-1" href="#"
+             ng-click="changeStageSelection({selectedObject: stageInstance, type: pipelineConstant.STAGE_INSTANCE})">{{stageInstance.uiInfo.label}}</a>
+        </li>
+      </ul>
+    </div>
+
+    <div class="row">
+      <div class="col-sm-6" ng-controller="RecordCountBarChartController">
+        <div class="panel panel-default">
+          <div class="panel-heading">
+        <span title="{{'home.detailPane.historyTab.summaryModal.recordCountBarChartTitle' | translate}}"
+              translate="home.detailPane.historyTab.summaryModal.recordCountBarChartTitle">Record Count</span>
+          </div>
+          <div class="panel-body">
+            <nvd3-discrete-bar-chart
+              data="barChartData"
+              id="HistorySummaryRecordProcessedBarChartID"
+              height="250"
+              color="getColor()"
+              showXAxis="true"
+              showYAxis="true"
+              showValues="true"
+              showLegend="true"
+              staggerLabels="true"
+              yAxisTickFormat="getYAxisLabel()"
+              valueformat="valueFormatFunction()"
+              margin="{left:20,top:20,bottom:40,right:20}">
+            </nvd3-discrete-bar-chart>
+          </div>
+        </div>
+      </div>
+
+
+      <div class="col-sm-6"
+           ng-if="selectedType === pipelineConstant.PIPELINE">
+        <div class="panel panel-default">
+          <div class="panel-heading">
+        <span title="{{'home.detailPane.summaryTab.runtimeStatistics' | translate}}"
+              translate="home.detailPane.summaryTab.runtimeStatistics">Runtime Statistics</span>
+          </div>
+          <div class="panel-body">
+
+            <ul class="table-properties">
+
+              <li>
+                <span class="properties-label">{{'home.detailPane.summaryTab.timeOfLastReceivedRecord' | translate}}:</span>
+            <span class="properties-value"
+                  ng-if="common.pipelineMetrics.gauges['RuntimeStatsGauge.gauge'].value.timeOfLastReceivedRecord"
+              >{{common.pipelineMetrics.gauges['RuntimeStatsGauge.gauge'].value.timeOfLastReceivedRecord  | date:'medium'}}</span>
+              </li>
+
+              <li>
+                <span class="properties-label">{{'home.detailPane.summaryTab.batchCount' | translate}}:</span>
+                <span class="properties-value">{{common.pipelineMetrics.gauges['RuntimeStatsGauge.gauge'].value.batchCount}}</span>
+              </li>
+
+              <li>
+                <span class="properties-label">{{'home.detailPane.summaryTab.batchStartTime' | translate}}:</span>
+            <span class="properties-value"
+                  ng-if="common.pipelineMetrics.gauges['RuntimeStatsGauge.gauge'].value.batchStartTime"
+              >{{common.pipelineMetrics.gauges['RuntimeStatsGauge.gauge'].value.batchStartTime  | date:'medium'}}</span>
+              </li>
+
+              <li>
+                <span class="properties-label">{{'home.detailPane.summaryTab.currentBatchAge' | translate}}:</span>
+                <span class="properties-value">{{common.pipelineMetrics.gauges['RuntimeStatsGauge.gauge'].value.currentBatchAge}}</span>
+              </li>
+
+              <li>
+                <span class="properties-label">{{'home.detailPane.summaryTab.currentSourceOffset' | translate}}:</span>
+                <span class="properties-value">{{common.pipelineMetrics.gauges['RuntimeStatsGauge.gauge'].value.currentSourceOffset}}</span>
+              </li>
+
+              <li>
+                <span class="properties-label">{{'home.detailPane.summaryTab.currentStage' | translate}}:</span>
+                <span class="properties-value">{{stageNameToLabelMap[common.pipelineMetrics.gauges['RuntimeStatsGauge.gauge'].value.currentStage]}}</span>
+              </li>
+
+              <li>
+                <span class="properties-label">{{'home.detailPane.summaryTab.timeInCurrentStage' | translate}}:</span>
+                <span class="properties-value">{{common.pipelineMetrics.gauges['RuntimeStatsGauge.gauge'].value.timeInCurrentStage}}</span>
+              </li>
+
+            </ul>
+
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-primary" ng-click="close()"
+            translate="global.form.close">close</button>
+  </div>
+</form>

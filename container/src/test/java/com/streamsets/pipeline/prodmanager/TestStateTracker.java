@@ -67,7 +67,7 @@ public class TestStateTracker {
   @Test
   public void testSetState() throws PipelineManagerException {
     stateTracker.init();
-    stateTracker.setState("xyz", "2.0", State.RUNNING, "Started pipeline");
+    stateTracker.setState("xyz", "2.0", State.RUNNING, "Started pipeline", null);
 
     PipelineState state = stateTracker.getState();
 
@@ -90,7 +90,7 @@ public class TestStateTracker {
     PipelineState state = stateTracker.getState();
     Assert.assertNull(state);
 
-    stateTracker.setState("xyz", "1.0", State.RUNNING, null);
+    stateTracker.setState("xyz", "1.0", State.RUNNING, null, null);
     state = stateTracker.getState();
     Assert.assertNotNull(state);
     Assert.assertEquals("xyz", state.getName());

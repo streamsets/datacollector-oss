@@ -116,8 +116,8 @@ public class ProductionPipelineManagerTask extends AbstractTask {
     return stateTracker.getState();
   }
 
-  public void setState(String name, String rev, State state, String message) throws PipelineManagerException {
-    stateTracker.setState(name, rev, state, message);
+  public void setState(String name, String rev, State state, String message, MetricRegistry metricRegistry) throws PipelineManagerException {
+    stateTracker.setState(name, rev, state, message, metricRegistry);
   }
 
   @Override
@@ -274,7 +274,7 @@ public class ProductionPipelineManagerTask extends AbstractTask {
       LOG.info("Starting pipeline {} {}", name, rev);
       validateStateTransition(name, rev, State.RUNNING);
       handleStartRequest(name, rev);
-      setState(name, rev, State.RUNNING, null);
+      setState(name, rev, State.RUNNING, null, null);
       return getPipelineState();
     }
   }
@@ -283,7 +283,7 @@ public class ProductionPipelineManagerTask extends AbstractTask {
     synchronized (pipelineMutex) {
       validateStateTransition(pipelineRunnable.getName(), pipelineRunnable.getRev(), State.STOPPING);
       setState(pipelineRunnable.getName(), pipelineRunnable.getRev(), State.STOPPING,
-        Configuration.STOP_PIPELINE_MESSAGE);
+        Configuration.STOP_PIPELINE_MESSAGE, getMetrics());
       PipelineState pipelineState = getPipelineState();
       handleStopRequest(nodeProcessShutdown);
       return pipelineState;
@@ -291,7 +291,11 @@ public class ProductionPipelineManagerTask extends AbstractTask {
   }
 
   public MetricRegistry getMetrics() {
-    return prodPipeline.getPipeline().getRunner().getMetrics();
+    if(prodPipeline != null) {
+      return prodPipeline.getPipeline().getRunner().getMetrics();
+    }
+
+    return null;
   }
 
   private void handleStartRequest(String name, String rev) throws PipelineManagerException, StageException
