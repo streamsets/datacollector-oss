@@ -60,7 +60,7 @@
     </dependency>
     <dependency>
       <groupId>com.streamsets</groupId>
-      <artifactId>streamsets-datacollector-cdh5_2_4-lib</artifactId>
+      <artifactId>streamsets-datacollector-hdp_2_2_0-lib</artifactId>
       <scope>provided</scope>
     </dependency>
     <dependency>
@@ -129,6 +129,11 @@
         <dependency>
           <groupId>com.streamsets</groupId>
           <artifactId>streamsets-datacollector-cdh5_2_3-lib</artifactId>
+          <scope>provided</scope>
+        </dependency>
+        <dependency>
+          <groupId>com.streamsets</groupId>
+          <artifactId>streamsets-datacollector-cdh5_2_4-lib</artifactId>
           <scope>provided</scope>
         </dependency>
         <dependency>
