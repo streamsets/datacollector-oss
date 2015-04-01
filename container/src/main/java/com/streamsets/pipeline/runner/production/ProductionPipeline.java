@@ -8,26 +8,35 @@ package com.streamsets.pipeline.runner.production;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.impl.ErrorMessage;
+import com.streamsets.pipeline.main.RuntimeInfo;
+import com.streamsets.pipeline.metrics.MetricsConfigurator;
 import com.streamsets.pipeline.runner.Pipeline;
 import com.streamsets.pipeline.runner.PipelineRuntimeException;
 
 import java.util.List;
 
 public class ProductionPipeline {
+  private final RuntimeInfo runtimeInfo;
   private final Pipeline pipeline;
   private final ProductionPipelineRunner pipelineRunner;
 
-  public ProductionPipeline(Pipeline pipeline) {
+  public ProductionPipeline(RuntimeInfo runtimeInfo, Pipeline pipeline) {
+    this.runtimeInfo = runtimeInfo;
     this.pipeline = pipeline;
     this.pipelineRunner =  (ProductionPipelineRunner)pipeline.getRunner();
   }
 
   public void run() throws StageException, PipelineRuntimeException{
-    pipeline.init();
+    MetricsConfigurator.registerJmxMetrics(runtimeInfo.getMetrics());
     try {
-      pipeline.run();
+      pipeline.init();
+      try {
+        pipeline.run();
+      } finally {
+        pipeline.destroy();
+      }
     } finally {
-      pipeline.destroy();
+      MetricsConfigurator.cleanUpJmxMetrics();
     }
   }
 

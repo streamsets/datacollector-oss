@@ -5,6 +5,7 @@
  */
 package com.streamsets.pipeline.runner.production;
 
+import com.codahale.metrics.MetricRegistry;
 import com.streamsets.pipeline.api.OffsetCommitter;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.main.RuntimeInfo;
@@ -37,7 +38,7 @@ public class TestProductionSourceOffsetCommitterOffsetTracker {
   @Test
   public void testProductionSourceOffsetCommitterOffsetTracker() {
 
-    RuntimeInfo info = new RuntimeInfo(Arrays.asList(getClass().getClassLoader()));
+    RuntimeInfo info = new RuntimeInfo(new MetricRegistry(), Arrays.asList(getClass().getClassLoader()));
     ProductionSourceOffsetCommitterOffsetTracker offsetTracker = new ProductionSourceOffsetCommitterOffsetTracker(
       PIPELINE_NAME, PIPELINE_REV, info, new OffsetCommitter() {
       @Override

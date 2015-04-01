@@ -12,6 +12,8 @@ import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.config.PipelineConfiguration;
 import com.streamsets.pipeline.main.MemoryLimitConfiguration;
+import com.streamsets.pipeline.metrics.MetricsConfigurator;
+import com.streamsets.pipeline.metrics.MetricsModule;
 import com.streamsets.pipeline.runner.production.BadRecordsHandler;
 import com.streamsets.pipeline.stagelibrary.StageLibraryTask;
 import com.streamsets.pipeline.util.ContainerError;

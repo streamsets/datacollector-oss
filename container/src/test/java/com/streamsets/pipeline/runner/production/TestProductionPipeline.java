@@ -5,6 +5,7 @@
  */
 package com.streamsets.pipeline.runner.production;
 
+import com.codahale.metrics.MetricRegistry;
 import com.streamsets.pipeline.api.Batch;
 import com.streamsets.pipeline.api.BatchMaker;
 import com.streamsets.pipeline.api.ErrorCode;
@@ -20,9 +21,11 @@ import com.streamsets.pipeline.api.el.ELEval;
 import com.streamsets.pipeline.config.DeliveryGuarantee;
 import com.streamsets.pipeline.config.PipelineConfiguration;
 import com.streamsets.pipeline.main.RuntimeInfo;
+import com.streamsets.pipeline.metrics.MetricsConfigurator;
 import com.streamsets.pipeline.runner.MockStages;
 import com.streamsets.pipeline.runner.PipelineRuntimeException;
 import com.streamsets.pipeline.runner.SourceOffsetTracker;
+import com.streamsets.pipeline.runner.StagePipe;
 import com.streamsets.pipeline.snapshotstore.SnapshotStatus;
 import com.streamsets.pipeline.snapshotstore.impl.FileSnapshotStore;
 import com.streamsets.pipeline.store.impl.FilePipelineStoreTask;
@@ -32,6 +35,7 @@ import com.streamsets.pipeline.util.TestUtil;
 import org.apache.commons.io.FileUtils;
 import org.junit.AfterClass;
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.mockito.Mockito;
@@ -50,6 +54,7 @@ public class TestProductionPipeline {
   private static final String PIPELINE_NAME = "myPipeline";
   private static final String REVISION = "0";
   private static final String SNAPSHOT_NAME = "snapshot";
+  private MetricRegistry runtimeInfoMetrics;
 
   @BeforeClass
   public static void beforeClass() throws IOException {
@@ -62,6 +67,11 @@ public class TestProductionPipeline {
   @AfterClass
   public static void afterClass() throws IOException {
     System.getProperties().remove(RuntimeInfo.DATA_DIR);
+  }
+
+  @Before
+  public void setUp() {
+    runtimeInfoMetrics = new MetricRegistry();
   }
 
   @Test
@@ -169,6 +179,40 @@ public class TestProductionPipeline {
     Assert.assertTrue(capture.lastBatchTime < endTime);
   }
 
+
+  private class RuntimeInfoMetricCheckSource extends BaseSource {
+
+    @Override
+    public String produce(String lastSourceOffset, int maxBatchSize, BatchMaker batchMaker) throws StageException {
+      for (String name : runtimeInfoMetrics.getNames()) {
+        if (name.startsWith(MetricsConfigurator.JMX_PREFIX)) {
+          return null;
+        }
+      }
+      Assert.fail();
+      return null;
+    }
+
+  }
+
+  @Test
+  public void testPipelineMetricsInRuntimeMetrics() throws Exception {
+    Source capture = new RuntimeInfoMetricCheckSource();
+    MockStages.setSourceCapture(capture);
+    ProductionPipeline pipeline = createProductionPipeline(DeliveryGuarantee.AT_MOST_ONCE, true, true);
+    for (String name : runtimeInfoMetrics.getNames()) {
+      if (name.startsWith(MetricsConfigurator.JMX_PREFIX)) {
+        Assert.fail();
+      }
+    }
+    pipeline.run();
+    for (String name : runtimeInfoMetrics.getNames()) {
+      if (name.startsWith(MetricsConfigurator.JMX_PREFIX)) {
+        Assert.fail();
+      }
+    }
+  }
+
   @Test
   public void testProductionRunWithSourceOffsetTracker() throws Exception {
     SourceOffsetTrackerCapture capture = new SourceOffsetTrackerCapture();
@@ -209,7 +253,7 @@ public class TestProductionPipeline {
   private ProductionPipeline createProductionPipeline(DeliveryGuarantee deliveryGuarantee,
                                                       boolean captureNextBatch, boolean sourceOffsetCommitter)
       throws PipelineRuntimeException, StageException {
-    RuntimeInfo runtimeInfo = new RuntimeInfo(Arrays.asList(getClass().getClassLoader()));
+    RuntimeInfo runtimeInfo = new RuntimeInfo(runtimeInfoMetrics, Arrays.asList(getClass().getClassLoader()));
     runtimeInfo.setId("id");
     SourceOffsetTracker tracker = new TestUtil.SourceOffsetTrackerImpl("1");
     FileSnapshotStore snapshotStore = Mockito.mock(FileSnapshotStore.class);
@@ -219,7 +263,7 @@ public class TestProductionPipeline {
     Configuration config = new Configuration();
     ProductionPipelineRunner runner = new ProductionPipelineRunner(runtimeInfo, snapshotStore,  deliveryGuarantee,
       PIPELINE_NAME, REVISION,
-      new FilePipelineStoreTask(new RuntimeInfo(Arrays.asList(getClass().getClassLoader())), config) {
+      new FilePipelineStoreTask(new RuntimeInfo(new MetricRegistry(), Arrays.asList(getClass().getClassLoader())), config) {
       }, productionObserveRequests, config);
 
     PipelineConfiguration pConf = (sourceOffsetCommitter)

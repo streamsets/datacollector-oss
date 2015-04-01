@@ -5,11 +5,11 @@
  */
 package com.streamsets.pipeline.main;
 
+import com.codahale.metrics.MetricRegistry;
 import com.google.common.collect.ImmutableList;
 import com.streamsets.pipeline.api.impl.Utils;
 import org.slf4j.Logger;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -21,6 +21,7 @@ public class RuntimeInfo {
   public static final String STATIC_WEB_DIR = "sdc.static-web.dir";
 
   public static final String LOG4J_CONFIGURATION_URL_ATTR = "log4j.configuration.url";
+  private final MetricRegistry metrics;
   private final List<? extends ClassLoader> stageLibraryClassLoaders;
   private String id;
   private String httpUrl;
@@ -28,11 +29,16 @@ public class RuntimeInfo {
   private Runnable shutdownRunnable;
   private MemoryLimitConfiguration memoryLimitConfiguration = MemoryLimitConfiguration.empty();
 
-  public RuntimeInfo(List<? extends ClassLoader> stageLibraryClassLoaders) {
+  public RuntimeInfo(MetricRegistry metrics, List<? extends ClassLoader> stageLibraryClassLoaders) {
+    this.metrics = metrics;
     this.stageLibraryClassLoaders = ImmutableList.copyOf(stageLibraryClassLoaders);
     id = "UNDEF";
     httpUrl = "UNDEF";
     this.attributes = new ConcurrentHashMap<>();
+  }
+
+  public MetricRegistry getMetrics() {
+    return metrics;
   }
 
   public void setMemoryLimitConfiguration(MemoryLimitConfiguration memoryLimitConfiguration) {

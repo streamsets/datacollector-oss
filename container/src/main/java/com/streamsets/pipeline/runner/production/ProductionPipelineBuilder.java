@@ -64,7 +64,7 @@ public class ProductionPipelineBuilder {
     } else {
       runner.setOffsetTracker(offsetTracker);
     }
-    return new ProductionPipeline(pipeline);
+    return new ProductionPipeline(runtimeInfo, pipeline);
   }
 
   private String getFirstIssueAsString(Issues issues) {

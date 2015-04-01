@@ -5,6 +5,7 @@
  */
 package com.streamsets.pipeline.main;
 
+import com.codahale.metrics.MetricRegistry;
 import com.streamsets.pipeline.util.Configuration;
 import dagger.ObjectGraph;
 import org.junit.After;
@@ -40,7 +41,7 @@ public class TestRuntimeInfo {
 
   @Test
   public void testInfoDefault() {
-    RuntimeInfo info = new RuntimeInfo(Arrays.asList(getClass().getClassLoader()));
+    RuntimeInfo info = new RuntimeInfo(new MetricRegistry(), Arrays.asList(getClass().getClassLoader()));
     Assert.assertEquals(System.getProperty("user.dir"), info.getRuntimeDir());
     Assert.assertEquals(System.getProperty("user.dir") + "/static-web", info.getStaticWebDir());
     Assert.assertEquals(System.getProperty("user.dir") + "/etc", info.getConfigDir());
@@ -59,7 +60,7 @@ public class TestRuntimeInfo {
     System.setProperty(RuntimeInfo.DATA_DIR, "z");
 
     List<? extends ClassLoader> customCLs = Arrays.asList(new URLClassLoader(new URL[0], null));
-    RuntimeInfo info = new RuntimeInfo(customCLs);
+    RuntimeInfo info = new RuntimeInfo(new MetricRegistry(), customCLs);
     Assert.assertEquals(System.getProperty("user.dir"), info.getRuntimeDir());
     Assert.assertEquals("w", info.getStaticWebDir());
     Assert.assertEquals("x", info.getConfigDir());
@@ -72,7 +73,7 @@ public class TestRuntimeInfo {
 
   @Test
   public void testAttributes() {
-    RuntimeInfo info = new RuntimeInfo(Arrays.asList(getClass().getClassLoader()));
+    RuntimeInfo info = new RuntimeInfo(new MetricRegistry(), Arrays.asList(getClass().getClassLoader()));
     Assert.assertFalse(info.hasAttribute("a"));
     info.setAttribute("a", 1);
     Assert.assertTrue(info.hasAttribute("a"));
@@ -87,6 +88,13 @@ public class TestRuntimeInfo {
     RuntimeInfo info = og.get(RuntimeInfo.class);
     Assert.assertEquals("UNDEF", info.getId());
     Assert.assertEquals("UNDEF", info.getBaseHttpUrl());
+  }
+
+  @Test
+  public void testMetrics() {
+    ObjectGraph og  = ObjectGraph.create(RuntimeModule.class);
+    RuntimeInfo info = og.get(RuntimeInfo.class);
+    Assert.assertNotNull(info.getMetrics());
   }
 
   @Test

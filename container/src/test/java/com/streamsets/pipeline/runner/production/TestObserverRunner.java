@@ -42,7 +42,7 @@ public class TestObserverRunner {
 
   @Before
   public void setUp() {
-    runtimeInfo = new RuntimeInfo(Arrays.asList(TestDataRuleEvaluator.class.getClassLoader()));
+    runtimeInfo = new RuntimeInfo(new MetricRegistry(), Arrays.asList(TestDataRuleEvaluator.class.getClassLoader()));
     observerRunner = new ObserverRunner(metrics, new AlertManager(PIPELINE_NAME, REVISION, null, metrics, runtimeInfo),
       new Configuration());
   }

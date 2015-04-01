@@ -5,6 +5,7 @@
  */
 package com.streamsets.pipeline.runner.production;
 
+import com.codahale.metrics.MetricRegistry;
 import com.streamsets.pipeline.api.BatchMaker;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.base.BaseSource;
@@ -63,7 +64,7 @@ public class TestProdPipelineRunnable {
   @Before()
   public void setUp() {
     MockStages.resetStageCaptures();
-    info = new RuntimeInfo(Arrays.asList(getClass().getClassLoader()));
+    info = new RuntimeInfo(new MetricRegistry(), Arrays.asList(getClass().getClassLoader()));
     manager = new ProductionPipelineManagerTask(info, Mockito.mock(Configuration.class)
         , Mockito.mock(FilePipelineStoreTask.class), Mockito.mock(StageLibraryTask.class));
     manager.init();

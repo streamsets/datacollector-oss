@@ -31,7 +31,7 @@ import java.util.concurrent.TimeUnit;
 public class StagePipe extends Pipe<StagePipe.Context> {
 
   //Runtime stat gauge name
-  private static final String RUNTIME_STATS_GAUGE = "RuntimeStatsGauge";
+  public static final String RUNTIME_STATS_GAUGE = "RuntimeStatsGauge";
 
   private Timer processingTimer;
   private Counter inputRecordsCounter;

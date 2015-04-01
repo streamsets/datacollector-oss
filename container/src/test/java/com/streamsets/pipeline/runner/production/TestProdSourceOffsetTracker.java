@@ -5,6 +5,7 @@
  */
 package com.streamsets.pipeline.runner.production;
 
+import com.codahale.metrics.MetricRegistry;
 import com.streamsets.pipeline.main.RuntimeInfo;
 import org.apache.commons.io.FileUtils;
 import org.junit.AfterClass;
@@ -36,7 +37,7 @@ public class TestProdSourceOffsetTracker {
   @Test
   public void testProductionSourceOffsetTracker() {
 
-    RuntimeInfo info = new RuntimeInfo(Arrays.asList(getClass().getClassLoader()));
+    RuntimeInfo info = new RuntimeInfo(new MetricRegistry(), Arrays.asList(getClass().getClassLoader()));
     ProductionSourceOffsetTracker offsetTracker = new ProductionSourceOffsetTracker(PIPELINE_NAME, PIPELINE_REV, info);
 
     Assert.assertEquals(false, offsetTracker.isFinished());

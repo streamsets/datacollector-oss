@@ -5,6 +5,7 @@
  */
 package com.streamsets.pipeline.snapshotstore.impl;
 
+import com.codahale.metrics.MetricRegistry;
 import com.google.common.collect.ImmutableList;
 import com.streamsets.pipeline.main.RuntimeInfo;
 import com.streamsets.pipeline.api.Field;
@@ -57,7 +58,7 @@ public class TestFileSnapshotStore {
   public void setUp() throws IOException {
     File f = new File(System.getProperty(RuntimeInfo.DATA_DIR));
     FileUtils.deleteDirectory(f);
-    RuntimeInfo info = new RuntimeInfo(ImmutableList.of(getClass().getClassLoader()));
+    RuntimeInfo info = new RuntimeInfo(new MetricRegistry(), ImmutableList.of(getClass().getClassLoader()));
     snapshotStore = new FileSnapshotStore(info);
     snapshotStore.setInProgress(PIPELINE_NAME, PIPELINE_REV, SNAPSHOT_NAME1, true);
   }

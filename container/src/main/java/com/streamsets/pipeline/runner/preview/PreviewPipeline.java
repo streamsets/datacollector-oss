@@ -5,12 +5,11 @@
  */
 package com.streamsets.pipeline.runner.preview;
 
-import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.StageException;
+import com.streamsets.pipeline.metrics.MetricsConfigurator;
 import com.streamsets.pipeline.runner.Pipeline;
 import com.streamsets.pipeline.runner.PipelineRuntimeException;
 import com.streamsets.pipeline.runner.StageOutput;
-import com.streamsets.pipeline.validation.Issue;
 import com.streamsets.pipeline.validation.Issues;
 import com.streamsets.pipeline.validation.StageIssue;
 
@@ -33,6 +32,7 @@ public class PreviewPipeline {
 
   public PreviewPipelineOutput run(List<StageOutput> stageOutputsToOverride)
       throws StageException, PipelineRuntimeException{
+    MetricsConfigurator.registerJmxMetrics(null);
     pipeline.init();
     try {
       pipeline.run(stageOutputsToOverride);

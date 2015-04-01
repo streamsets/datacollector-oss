@@ -5,6 +5,7 @@
  */
 package com.streamsets.pipeline.prodmanager;
 
+import com.codahale.metrics.MetricRegistry;
 import com.streamsets.pipeline.main.RuntimeInfo;
 import com.streamsets.pipeline.util.*;
 import com.streamsets.pipeline.util.Configuration;
@@ -40,7 +41,7 @@ public class TestStateTracker {
 
   @Before()
   public void setUp() {
-    RuntimeInfo info = new RuntimeInfo(Arrays.asList(getClass().getClassLoader()));
+    RuntimeInfo info = new RuntimeInfo(new MetricRegistry(), Arrays.asList(getClass().getClassLoader()));
     com.streamsets.pipeline.util.Configuration configuration = new com.streamsets.pipeline.util.Configuration();
 
     stateTracker = new StateTracker(info, configuration);

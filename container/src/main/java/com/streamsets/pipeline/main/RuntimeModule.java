@@ -5,7 +5,9 @@
  */
 package com.streamsets.pipeline.main;
 
+import com.codahale.metrics.MetricRegistry;
 import com.google.common.collect.ImmutableList;
+import com.streamsets.pipeline.metrics.MetricsModule;
 import com.streamsets.pipeline.util.Configuration;
 import dagger.Module;
 import dagger.Provides;
@@ -18,7 +20,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-@Module(library = true, injects = {BuildInfo.class, RuntimeInfo.class, Configuration.class})
+@Module(library = true, injects = {BuildInfo.class, RuntimeInfo.class, Configuration.class},
+    includes = MetricsModule.class)
 public class RuntimeModule {
   public static final String DATA_COLLECTOR_ID = "sdc.id";
   public static final String DATA_COLLECTOR_BASE_HTTP_URL = "sdc.base.http.url";
@@ -36,8 +39,8 @@ public class RuntimeModule {
   }
 
   @Provides @Singleton
-  public RuntimeInfo provideRuntimeInfo() {
-    return new RuntimeInfo(stageLibraryClassLoaders);
+  public RuntimeInfo provideRuntimeInfo(MetricRegistry metrics) {
+    return new RuntimeInfo(metrics, stageLibraryClassLoaders);
   }
 
   @Provides @Singleton

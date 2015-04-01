@@ -5,6 +5,7 @@
  */
 package com.streamsets.pipeline.http;
 
+import com.codahale.metrics.MetricRegistry;
 import com.streamsets.pipeline.main.RuntimeInfo;
 import com.streamsets.pipeline.util.Configuration;
 import org.apache.commons.io.IOUtils;
@@ -48,7 +49,7 @@ public class TestWebServerTaskHttpHttps {
 
   @SuppressWarnings("unchecked")
   private WebServerTask createWebServerTask(final String confDir, final Configuration conf) throws Exception {
-    RuntimeInfo ri = new RuntimeInfo(Collections.EMPTY_LIST) {
+    RuntimeInfo ri = new RuntimeInfo(new MetricRegistry(), Collections.EMPTY_LIST) {
       @Override
       public String getConfigDir() {
         return confDir;

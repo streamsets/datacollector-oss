@@ -5,6 +5,7 @@
  */
 package com.streamsets.pipeline.util;
 
+import com.codahale.metrics.MetricRegistry;
 import com.streamsets.pipeline.api.Batch;
 import com.streamsets.pipeline.api.BatchMaker;
 import com.streamsets.pipeline.api.Field;
@@ -250,7 +251,7 @@ public class TestUtil {
 
     @Provides
     public RuntimeInfo provideRuntimeInfo() {
-      RuntimeInfo info = new RuntimeInfo(Arrays.asList(getClass().getClassLoader()));
+      RuntimeInfo info = new RuntimeInfo(new MetricRegistry(), Arrays.asList(getClass().getClassLoader()));
       return info;
     }
   }

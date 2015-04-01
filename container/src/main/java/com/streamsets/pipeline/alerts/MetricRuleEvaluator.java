@@ -16,6 +16,7 @@ import com.streamsets.pipeline.el.ELVariables;
 import com.streamsets.pipeline.lib.el.RecordEL;
 import com.streamsets.pipeline.lib.el.StringEL;
 import com.streamsets.pipeline.metrics.ExtendedMeter;
+import com.streamsets.pipeline.metrics.MetricsConfigurator;
 import com.streamsets.pipeline.runner.RuntimeStats;
 import com.streamsets.pipeline.util.ObserverException;
 import org.slf4j.Logger;
@@ -65,7 +66,7 @@ public class MetricRuleEvaluator {
   }
 
   private void checkForTimerAlerts() {
-    Timer t = metrics.getTimers().get(metricsRuleDefinition.getMetricId());
+    Timer t = MetricsConfigurator.getTimer(metrics, metricsRuleDefinition.getMetricId());
     if(t != null) {
       Object value = null;
       switch (metricsRuleDefinition.getMetricElement()) {
@@ -120,7 +121,7 @@ public class MetricRuleEvaluator {
   }
 
   private void checkForCounterAlerts() {
-    Counter c = metrics.getCounters().get(metricsRuleDefinition.getMetricId());
+    Counter c = MetricsConfigurator.getCounter(metrics, metricsRuleDefinition.getMetricId());
     if(c !=null) {
       Object value = null;
       switch (metricsRuleDefinition.getMetricElement()) {
@@ -133,7 +134,7 @@ public class MetricRuleEvaluator {
   }
 
   private void checkForMeterAlerts() {
-    ExtendedMeter m = (ExtendedMeter) metrics.getMeters().get(metricsRuleDefinition.getMetricId());
+    ExtendedMeter m = MetricsConfigurator.getMeter(metrics, metricsRuleDefinition.getMetricId());
     if(m != null) {
       Object value = null;
       switch (metricsRuleDefinition.getMetricElement()) {
@@ -173,7 +174,7 @@ public class MetricRuleEvaluator {
   }
 
   private void checkForHistogramAlerts() {
-    Histogram h = metrics.getHistograms().get(metricsRuleDefinition.getMetricId());
+    Histogram h = MetricsConfigurator.getHistogram(metrics, metricsRuleDefinition.getMetricId());
     if (h != null) {
       Object value = null;
       switch (metricsRuleDefinition.getMetricElement()) {
@@ -216,7 +217,7 @@ public class MetricRuleEvaluator {
   }
 
   private void checkForGaugeAlerts() {
-    Gauge g = metrics.getGauges().get(metricsRuleDefinition.getMetricId());
+    Gauge g = MetricsConfigurator.getGauge(metrics, metricsRuleDefinition.getMetricId());
     if(g != null) {
       RuntimeStats runtimeStats = (RuntimeStats)g.getValue();
       Object value = null;
