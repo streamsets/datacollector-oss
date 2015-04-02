@@ -134,8 +134,7 @@ public class FilePipelineStoreTask extends AbstractTask implements PipelineStore
     configuration.add(new ConfigConfiguration("badRecordsHandling", ""));
     configuration.add(new ConfigConfiguration("constants", new ArrayList<>()));
 
-    PipelineConfiguration pipeline = new PipelineConfiguration(SCHEMA_VERSION, uuid, configuration, null,
-      null, null, Collections.<String, Object> emptyMap());
+    PipelineConfiguration pipeline = new PipelineConfiguration(SCHEMA_VERSION, uuid, configuration, null, null, null);
     pipeline.setDescription(description);
     try {
       json.writeValue(getInfoFile(name), BeanHelper.wrapPipelineInfo(info));

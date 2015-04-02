@@ -225,10 +225,26 @@ public class StageRuntime {
         Class klass = def.getStageClassLoader().loadClass(def.getClassName());
         Stage stage = (Stage) klass.newInstance();
         configureStage(def, conf, klass, stage);
-        return new StageRuntime(def, conf, requiredFields, onRecordError, stage, pipelineConf.getConstants());
+        return new StageRuntime(def, conf, requiredFields, onRecordError, stage, getConstants(pipelineConf));
       } catch (Exception ex) {
         throw new PipelineRuntimeException(ContainerError.CONTAINER_0151, ex.getMessage(), ex);
       }
+    }
+
+    private Map<String, Object> getConstants(PipelineConfiguration pipelineConf) {
+      Map<String, Object> constants = new HashMap<>();
+      if(pipelineConf != null && pipelineConf.getConfiguration() != null) {
+        for (ConfigConfiguration configConfiguration : pipelineConf.getConfiguration()) {
+          if (configConfiguration.getName().equals("constants") && configConfiguration.getValue() != null) {
+            List<Map<String, String>> consts = (List<Map<String, String>>) configConfiguration.getValue();
+            for (Map<String, String> constant : consts) {
+              constants.put(constant.get("key"), constant.get("value"));
+            }
+            return constants;
+          }
+        }
+      }
+      return constants;
     }
 
     @SuppressWarnings("unchecked")
@@ -270,7 +286,8 @@ public class StageRuntime {
     }
 
     private void setComplexField(Field var, StageDefinition stageDef, StageConfiguration stageConf, Stage stage,
-                                 ConfigDefinition confDef, Object value) throws IllegalAccessException, InstantiationException, NoSuchFieldException, PipelineRuntimeException {
+                                 ConfigDefinition confDef, Object value)
+      throws IllegalAccessException, InstantiationException, NoSuchFieldException, PipelineRuntimeException {
       Type genericType = var.getGenericType();
       Class klass;
       if(genericType instanceof ParameterizedType) {

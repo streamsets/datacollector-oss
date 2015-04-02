@@ -14,7 +14,6 @@ import com.streamsets.pipeline.api.StageDef;
 import com.streamsets.pipeline.configurablestage.DProcessor;
 
 import java.util.List;
-import java.util.Map;
 
 @StageDef(
     version="1.0.0",
@@ -38,19 +37,9 @@ public class ExpressionDProcessor extends DProcessor {
   @ComplexField
   public List<ExpressionProcessorConfig> expressionProcessorConfigs;
 
-  @ConfigDef(
-      required = true,
-      type = ConfigDef.Type.MAP,
-      label = "Constants",
-      description = "Can be used in any expression in the processor.",
-      displayPosition = 20,
-      group = "EXPRESSIONS"
-  )
-  public Map<String, ?> constants;
-
   @Override
   protected Processor createProcessor() {
-    return new ExpressionProcessor(expressionProcessorConfigs, constants);
+    return new ExpressionProcessor(expressionProcessorConfigs);
   }
 
 }

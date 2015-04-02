@@ -41,19 +41,9 @@ public class SelectorDProcessor extends DProcessor {
   @LanePredicateMapping
   public List<Map<String, String>> lanePredicates;
 
-  @ConfigDef(
-      required = true,
-      type = ConfigDef.Type.MAP,
-      label = "Constants",
-      description = "Can be used in any expression in the processor",
-      displayPosition = 20,
-      group = "CONDITIONS"
-  )
-  public Map<String, ?> constants;
-
   @Override
   protected Processor createProcessor() {
-    return new SelectorProcessor(lanePredicates, constants);
+    return new SelectorProcessor(lanePredicates);
   }
 
 }

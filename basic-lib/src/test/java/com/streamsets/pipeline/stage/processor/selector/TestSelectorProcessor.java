@@ -6,13 +6,12 @@
 package com.streamsets.pipeline.stage.processor.selector;
 
 import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 import com.streamsets.pipeline.api.Field;
+import com.streamsets.pipeline.api.OnRecordError;
 import com.streamsets.pipeline.api.Processor;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.Stage;
-import com.streamsets.pipeline.api.OnRecordError;
 import com.streamsets.pipeline.sdk.ProcessorRunner;
 import com.streamsets.pipeline.sdk.RecordCreator;
 import com.streamsets.pipeline.sdk.StageRunner;
@@ -20,8 +19,8 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -46,8 +45,7 @@ public class TestSelectorProcessor {
   @SuppressWarnings("unchecked")
   public void testValidation() throws Exception {
     List<Map<String, String>> lanePredicates = createLanePredicates();
-    Map<String, ?> constants = Collections.EMPTY_MAP;
-    Processor selector = new SelectorProcessor(lanePredicates, constants);
+    Processor selector = new SelectorProcessor(lanePredicates);
     ProcessorRunner runner = new ProcessorRunner.Builder(SelectorDProcessor.class, selector)
         .setOnRecordError(OnRecordError.DISCARD)
         .addOutputLane("a")
@@ -57,8 +55,7 @@ public class TestSelectorProcessor {
     Assert.assertTrue(issues.get(0).toString().contains("SELECTOR_00"));
 
     lanePredicates = createLanePredicates("a","${true}", "b", "${true}");
-    constants = Collections.EMPTY_MAP;
-    selector = new SelectorProcessor(lanePredicates, constants);
+    selector = new SelectorProcessor(lanePredicates);
     runner = new ProcessorRunner.Builder(SelectorDProcessor.class, selector)
         .setOnRecordError(OnRecordError.DISCARD)
         .addOutputLane("a")
@@ -68,8 +65,8 @@ public class TestSelectorProcessor {
     Assert.assertTrue(issues.get(0).toString().contains("SELECTOR_01"));
 
     lanePredicates = createLanePredicates("a","${true}", "b", "${true}");
-    constants = Collections.EMPTY_MAP;
-    selector = new SelectorProcessor(lanePredicates, constants);
+
+    selector = new SelectorProcessor(lanePredicates);
     runner = new ProcessorRunner.Builder(SelectorDProcessor.class, selector)
         .setOnRecordError(OnRecordError.DISCARD)
         .addOutputLane("a")
@@ -80,29 +77,33 @@ public class TestSelectorProcessor {
     Assert.assertTrue(issues.get(0).toString().contains("SELECTOR_07"));
 
     lanePredicates = createLanePredicates("x","x${true}", "b", "${x + 'x'}", "c", "default");
-    constants = ImmutableMap.of("a-x", 1);
-    selector = new SelectorProcessor(lanePredicates, constants);
+
+    Map<String, Object> constants = new HashMap<>();
+    constants.put("a-x", 1);
+    selector = new SelectorProcessor(lanePredicates);
     runner = new ProcessorRunner.Builder(SelectorDProcessor.class, selector)
         .setOnRecordError(OnRecordError.DISCARD)
         .addOutputLane("a")
         .addOutputLane("b")
         .addOutputLane("c")
+        .addConstants(constants)
         .build();
     issues = runner.runValidateConfigs();
-    Assert.assertEquals(4, issues.size());
+    Assert.assertEquals(3, issues.size());
     Assert.assertTrue(issues.get(0).toString().contains("SELECTOR_02"));
-    Assert.assertTrue(issues.get(1).toString().contains("SELECTOR_04"));
-    Assert.assertTrue(issues.get(2).toString().contains("SELECTOR_08"));
-    Assert.assertTrue(issues.get(3).toString().contains("SELECTOR_03"));
+    Assert.assertTrue(issues.get(1).toString().contains("SELECTOR_08"));
+    Assert.assertTrue(issues.get(2).toString().contains("SELECTOR_03"));
 
   }
 
   @Test
   public void testInitLanePredicates() throws Exception {
+    Map<String, Object> constants = new HashMap<>();
+    constants.put("x", "false");
     ProcessorRunner runner = new ProcessorRunner.Builder(SelectorDProcessor.class)
         .setOnRecordError(OnRecordError.DISCARD)
         .addConfiguration("lanePredicates", createLanePredicates("a", "${x}", "b", "default"))
-        .addConfiguration("constants", ImmutableMap.of("x", "false"))
+        .addConstants(constants)
         .addOutputLane("a")
         .addOutputLane("b")
         .build();
@@ -111,11 +112,12 @@ public class TestSelectorProcessor {
 
   @Test
   public void testInitLanePredicatesWithListMapConstants() throws Exception {
-    List<Map> constant = ImmutableList.of((Map)ImmutableMap.of("key", "x", "value", "false"));
+    Map<String, Object> constants = new HashMap<>();
+    constants.put("x", "false");
     ProcessorRunner runner = new ProcessorRunner.Builder(SelectorDProcessor.class)
         .setOnRecordError(OnRecordError.DISCARD)
         .addConfiguration("lanePredicates", createLanePredicates("a", "${x}", "b", "default"))
-        .addConfiguration("constants", constant)
+        .addConstants(constants)
         .addOutputLane("a")
         .addOutputLane("b")
         .build();
@@ -129,7 +131,6 @@ public class TestSelectorProcessor {
         .addConfiguration("lanePredicates", createLanePredicates("a", "${record:value('') == 1}",
                                                                  "b", "${record:value('') == 2}",
                                                                  "c", "default"))
-        .addConfiguration("constants", null)
         .addOutputLane("a")
         .addOutputLane("b")
         .addOutputLane("c")
@@ -167,8 +168,7 @@ public class TestSelectorProcessor {
         .setOnRecordError(OnRecordError.TO_ERROR)
         .addConfiguration("lanePredicates", createLanePredicates("a", "${record:value('') == 1}",
                                                                  "b", "${record:value('') == 2}",
-                                                                 "c", "default"))
-        .addConfiguration("constants", null)
+          "c", "default"))
         .addOutputLane("a")
         .addOutputLane("b")
         .addOutputLane("c")

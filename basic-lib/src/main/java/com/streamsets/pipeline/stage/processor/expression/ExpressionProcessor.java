@@ -25,12 +25,10 @@ import java.util.Map;
 public class ExpressionProcessor extends SingleLaneRecordProcessor {
 
   private final List<ExpressionProcessorConfig> expressionProcessorConfigs;
-  private final Map<String, ?> constants;
 
   public ExpressionProcessor(
-      List<ExpressionProcessorConfig> expressionProcessorConfigs, Map<String, ?> constants) {
+      List<ExpressionProcessorConfig> expressionProcessorConfigs) {
     this.expressionProcessorConfigs = expressionProcessorConfigs;
-    this.constants = constants;
   }
 
   private ELEval expressionEval;
@@ -39,7 +37,7 @@ public class ExpressionProcessor extends SingleLaneRecordProcessor {
   @Override
   protected List<ConfigIssue> validateConfigs() throws StageException {
     List<ConfigIssue> issues =  super.validateConfigs();
-    variables = ELUtils.parseConstants(constants, getContext(), Groups.EXPRESSIONS.name(), "constants",
+    variables = ELUtils.parseConstants(null, getContext(), Groups.EXPRESSIONS.name(), "constants",
       Errors.EXPR_01, issues);
     expressionEval = createExpressionEval(getContext());
     for(ExpressionProcessorConfig expressionProcessorConfig : expressionProcessorConfigs) {

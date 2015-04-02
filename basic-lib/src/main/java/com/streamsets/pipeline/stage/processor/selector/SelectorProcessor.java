@@ -27,11 +27,9 @@ public class SelectorProcessor extends RecordProcessor {
   private static final Logger LOG = LoggerFactory.getLogger(SelectorProcessor.class);
 
   private final List<Map<String, String>> lanePredicates;
-  private final Map<String, ?> constants;
 
-  public SelectorProcessor(List<Map<String, String>> lanePredicates, Map<String, ?> constants) {
+  public SelectorProcessor(List<Map<String, String>> lanePredicates) {
     this.lanePredicates = lanePredicates;
-    this.constants = constants;
   }
 
   private String[][] predicateLanes;
@@ -58,7 +56,7 @@ public class SelectorProcessor extends RecordProcessor {
         if (!predicateLanes[predicateLanes.length - 1][0].equals("default")) {
           issues.add(getContext().createConfigIssue(Groups.CONDITIONS.name(), "lanePredicates", Errors.SELECTOR_07));
         } else {
-          variables = ELUtils.parseConstants(constants, getContext(), Groups.CONDITIONS.name(), "constants",
+          variables = ELUtils.parseConstants(null, getContext(), Groups.CONDITIONS.name(), "constants",
                                              Errors.SELECTOR_04, issues);
           predicateLanesEval = createPredicateLanesEval(getContext());
           RecordEL.setRecordInContext(variables, getContext().createRecord("forValidation"));

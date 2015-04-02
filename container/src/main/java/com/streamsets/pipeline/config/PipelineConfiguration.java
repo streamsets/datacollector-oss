@@ -28,12 +28,10 @@ public class PipelineConfiguration {
   private StageConfiguration errorStage;
   private Issues issues;
   private boolean previewable;
-  private final Map<String, Object> constants;
 
   @SuppressWarnings("unchecked")
   public PipelineConfiguration(int schemaVersion, UUID uuid, List<ConfigConfiguration> configuration,
-      Map<String, Object> uiInfo, List<StageConfiguration> stages, StageConfiguration errorStage,
-      Map<String, Object> constants) {
+      Map<String, Object> uiInfo, List<StageConfiguration> stages, StageConfiguration errorStage) {
     this.schemaVersion = schemaVersion;
     this.uuid = Preconditions.checkNotNull(uuid, "uuid cannot be null");
     this.configuration = configuration;
@@ -41,7 +39,6 @@ public class PipelineConfiguration {
     this.stages = (stages != null) ? stages : Collections.<StageConfiguration>emptyList();
     this.errorStage = errorStage;
     issues = new Issues();
-    this.constants = constants;
   }
 
   public void setInfo(PipelineInfo info) {
@@ -127,10 +124,6 @@ public class PipelineConfiguration {
 
   public Map<String, Object> getUiInfo() {
     return uiInfo;
-  }
-
-  public Map<String, Object> getConstants() {
-    return constants;
   }
 
   @Override

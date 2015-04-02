@@ -6,7 +6,6 @@
 package com.streamsets.pipeline.stage.processor.expression;
 
 import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableMap;
 import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.OnRecordError;
 import com.streamsets.pipeline.api.Record;
@@ -35,14 +34,12 @@ public class TestExpressionProcessor {
     expressionProcessorConfig.fieldToSet = "/grossSalary";
 
     ProcessorRunner runner = new ProcessorRunner.Builder(ExpressionDProcessor.class)
-      .addConfiguration("constants", ImmutableMap.of("x-1", "x"))
       .addConfiguration("expressionProcessorConfigs", ImmutableList.of(expressionProcessorConfig))
       .addOutputLane("a").build();
 
     List<Stage.ConfigIssue> issues = runner.runValidateConfigs();
-    Assert.assertEquals(2, issues.size());
-    Assert.assertTrue(issues.get(0).toString().contains("EXPR_01"));
-    Assert.assertTrue(issues.get(1).toString().contains("EXPR_00"));
+    Assert.assertEquals(1, issues.size());
+    Assert.assertTrue(issues.get(0).toString().contains("EXPR_00"));
   }
 
   @Test
@@ -51,9 +48,8 @@ public class TestExpressionProcessor {
     ExpressionProcessorConfig expressionProcessorConfig = new ExpressionProcessorConfig();
     expressionProcessorConfig.expression = "${record:value('/baseSalary') + record:value('/bonusx')}";
     expressionProcessorConfig.fieldToSet = "/grossSalary";
-
     ProcessorRunner runner = new ProcessorRunner.Builder(ExpressionDProcessor.class)
-      .addConfiguration("constants", null)
+
       .addConfiguration("expressionProcessorConfigs", ImmutableList.of(expressionProcessorConfig))
       .addOutputLane("a").build();
 
@@ -82,7 +78,6 @@ public class TestExpressionProcessor {
     expressionProcessorConfig.fieldToSet = "/baseSalary";
 
     ProcessorRunner runner = new ProcessorRunner.Builder(ExpressionDProcessor.class)
-      .addConfiguration("constants", null)
       .addConfiguration("expressionProcessorConfigs", ImmutableList.of(expressionProcessorConfig))
       .addOutputLane("a").build();
     runner.runInit();
@@ -116,7 +111,6 @@ public class TestExpressionProcessor {
     expressionProcessorConfig.fieldToSet = "/netSalary";
 
     ProcessorRunner runner = new ProcessorRunner.Builder(ExpressionDProcessor.class)
-      .addConfiguration("constants", null)
       .addConfiguration("expressionProcessorConfigs", ImmutableList.of(expressionProcessorConfig))
       .addOutputLane("a").build();
     runner.runInit();
@@ -151,9 +145,7 @@ public class TestExpressionProcessor {
 
     Map<String, Object> constants = new HashMap<>();
     constants.put("BONUS", 2000);
-
     ProcessorRunner runner = new ProcessorRunner.Builder(ExpressionDProcessor.class)
-      .addConfiguration("constants", null)
       .addConfiguration("expressionProcessorConfigs", ImmutableList.of(expressionProcessorConfig))
       .addConstants(constants)
       .addOutputLane("a").build();
@@ -188,7 +180,6 @@ public class TestExpressionProcessor {
     complexExpressionConfig.fieldToSet = "/complexResult";
 
     ProcessorRunner runner = new ProcessorRunner.Builder(ExpressionDProcessor.class)
-      .addConfiguration("constants", null)
       .addConfiguration("expressionProcessorConfigs", ImmutableList.of(complexExpressionConfig))
       .addOutputLane("a").build();
     runner.runInit();
@@ -230,7 +221,6 @@ public class TestExpressionProcessor {
     expressionProcessorConfig2.fieldToSet = "/first";
 
     ProcessorRunner runner = new ProcessorRunner.Builder(ExpressionDProcessor.class)
-      .addConfiguration("constants", null)
       .addConfiguration("expressionProcessorConfigs", ImmutableList.of(expressionProcessorConfig, expressionProcessorConfig1, expressionProcessorConfig2))
       .addOutputLane("a").build();
     runner.runInit();
@@ -266,7 +256,6 @@ public class TestExpressionProcessor {
     complexExpressionConfig.fieldToSet = "/id";
 
     ProcessorRunner runner = new ProcessorRunner.Builder(ExpressionDProcessor.class)
-        .addConfiguration("constants", null)
         .addConfiguration("expressionProcessorConfigs", ImmutableList.of(complexExpressionConfig))
         .addOutputLane("a").build();
     runner.runInit();
@@ -298,7 +287,6 @@ public class TestExpressionProcessor {
 
     ProcessorRunner runner = new ProcessorRunner.Builder(ExpressionDProcessor.class)
         .setOnRecordError(OnRecordError.TO_ERROR)
-        .addConfiguration("constants", null)
         .addConfiguration("expressionProcessorConfigs", ImmutableList.of(complexExpressionConfig))
         .addOutputLane("a").build();
     runner.runInit();
@@ -336,7 +324,6 @@ public class TestExpressionProcessor {
     expressionProcessorConfig4.fieldToSet = "/d/e[0]/f";
 
     ProcessorRunner runner = new ProcessorRunner.Builder(ExpressionDProcessor.class)
-      .addConfiguration("constants", null)
       .addConfiguration("expressionProcessorConfigs", ImmutableList.of(
         expressionProcessorConfig1, expressionProcessorConfig2, expressionProcessorConfig3, expressionProcessorConfig4))
       .addOutputLane("lane").build();
@@ -462,7 +449,6 @@ public class TestExpressionProcessor {
     expressionProcessorConfig.fieldToSet = "/USA[*]/SanFrancisco/*/streets[*][*]/name";
 
     ProcessorRunner runner = new ProcessorRunner.Builder(ExpressionDProcessor.class)
-      .addConfiguration("constants", null)
       .addConfiguration("expressionProcessorConfigs", ImmutableList.of(expressionProcessorConfig))
       .addOutputLane("a").build();
     runner.runInit();

@@ -374,7 +374,7 @@ public class StageContext implements Source.Context, Target.Context, Processor.C
 
   @Override
   public ELVars createELVars() {
-    return new ELVariables();
+    return new ELVariables(constants);
   }
 
   @Override
