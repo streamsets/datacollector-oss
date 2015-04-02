@@ -27,10 +27,11 @@ public class PipelineConfigurationJson {
     @JsonProperty("configuration") List<ConfigConfigurationJson> configuration,
     @JsonProperty("uiInfo") Map<String, Object> uiInfo,
     @JsonProperty("stages") List<StageConfigurationJson> stages,
-    @JsonProperty("errorStage") StageConfigurationJson errorStage) {
+    @JsonProperty("errorStage") StageConfigurationJson errorStage,
+    @JsonProperty("constants") Map<String, Object> constants) {
     this.pipelineConfiguration = new com.streamsets.pipeline.config.PipelineConfiguration(schemaVersion, uuid,
       BeanHelper.unwrapConfigConfiguration(configuration), uiInfo, BeanHelper.unwrapStageConfigurations(stages),
-      BeanHelper.unwrapStageConfiguration(errorStage));
+      BeanHelper.unwrapStageConfiguration(errorStage), constants);
   }
 
   public PipelineConfigurationJson(com.streamsets.pipeline.config.PipelineConfiguration pipelineConfiguration) {
@@ -80,6 +81,10 @@ public class PipelineConfigurationJson {
 
   public Map<String, Object> getUiInfo() {
     return pipelineConfiguration.getUiInfo();
+  }
+
+  public Map<String, Object> getConstants() {
+    return pipelineConfiguration.getConstants();
   }
 
   @JsonIgnore

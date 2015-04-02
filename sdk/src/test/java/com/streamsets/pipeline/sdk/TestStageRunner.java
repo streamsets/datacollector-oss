@@ -27,12 +27,13 @@ public class TestStageRunner {
   public static class DummyStageRunner extends StageRunner<DummyStage> {
 
     DummyStageRunner(Class<DummyStage> stageClass, Map<String, Object> configuration, List<String> outputLanes,
-        boolean isPreview) {
-      super(stageClass, StageType.SOURCE, configuration, outputLanes, isPreview, OnRecordError.TO_ERROR);
+        boolean isPreview, Map<String, Object> constants) {
+      super(stageClass, StageType.SOURCE, configuration, outputLanes, isPreview, OnRecordError.TO_ERROR, constants);
     }
 
-    DummyStageRunner(Class<DummyStage> stageClass, DummyStage stage, Map<String, Object> configuration, List<String> outputLanes, boolean isPreview) {
-      super(stageClass, stage, StageType.SOURCE, configuration, outputLanes, isPreview, OnRecordError.TO_ERROR);
+    DummyStageRunner(Class<DummyStage> stageClass, DummyStage stage, Map<String, Object> configuration,
+                     List<String> outputLanes, boolean isPreview, Map<String, Object> constants) {
+      super(stageClass, stage, StageType.SOURCE, configuration, outputLanes, isPreview, OnRecordError.TO_ERROR, constants);
     }
 
     public static class Builder extends StageRunner.Builder<DummyStage, DummyStageRunner, Builder> {
@@ -48,8 +49,8 @@ public class TestStageRunner {
 
       @Override
       public DummyStageRunner build() {
-        return (stage != null) ? new DummyStageRunner(stageClass, stage, configs, outputLanes, isPreview)
-                               : new DummyStageRunner(stageClass, configs, outputLanes, isPreview);
+        return (stage != null) ? new DummyStageRunner(stageClass, stage, configs, outputLanes, isPreview, constants)
+                               : new DummyStageRunner(stageClass, configs, outputLanes, isPreview, constants);
       }
     }
   }

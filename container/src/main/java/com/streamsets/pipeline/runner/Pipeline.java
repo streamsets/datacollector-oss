@@ -141,7 +141,7 @@ public class Pipeline {
     public Pipeline build(PipelineRunner runner) throws PipelineRuntimeException {
       StageRuntime.Builder builder = new StageRuntime.Builder(stageLib, name, pipelineConf);
       StageRuntime[] stages = builder.build();
-      StageRuntime errorStage = builder.buildErrorStage();
+      StageRuntime errorStage = builder.buildErrorStage(pipelineConf);
       setStagesContext(stages, errorStage, runner);
       Pipe[] pipes = createPipes(stages);
       BadRecordsHandler badRecordsHandler = new BadRecordsHandler(errorStage);

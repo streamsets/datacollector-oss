@@ -15,7 +15,6 @@ import com.streamsets.pipeline.api.Processor;
 import com.streamsets.pipeline.api.Source;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.Target;
-import com.streamsets.pipeline.api.el.ELEval;
 import com.streamsets.pipeline.config.ConfigConfiguration;
 import com.streamsets.pipeline.config.ConfigDefinition;
 import com.streamsets.pipeline.config.PipelineConfiguration;
@@ -406,7 +405,8 @@ public class MockStages {
       Collections.<ConfigConfiguration>emptyList(), null, ImmutableList.of("p"), Collections.<String>emptyList());
     stages.add(target);
 
-    return new PipelineConfiguration(schemaVersion, UUID.randomUUID(), null, null, stages, getErrorStageConfig());
+    return new PipelineConfiguration(schemaVersion, UUID.randomUUID(), null, null, stages, getErrorStageConfig(),
+      Collections.<String, Object> emptyMap());
   }
 
   @SuppressWarnings("unchecked")
@@ -422,7 +422,7 @@ public class MockStages {
       Collections.<ConfigConfiguration>emptyList(), null, ImmutableList.of("p"), Collections.<String>emptyList());
     stages.add(target);
     return new PipelineConfiguration(PipelineStoreTask.SCHEMA_VERSION, UUID.randomUUID(), null, null, stages,
-                                     getErrorStageConfig());
+                                     getErrorStageConfig(), Collections.<String, Object> emptyMap());
   }
 
   @SuppressWarnings("unchecked")
@@ -437,7 +437,7 @@ public class MockStages {
       Collections.<ConfigConfiguration>emptyList(), null, lanes, Collections.<String>emptyList());
     stages.add(target);
     return new PipelineConfiguration(PipelineStoreTask.SCHEMA_VERSION, UUID.randomUUID(), null, null, stages,
-                                     getErrorStageConfig());
+                                     getErrorStageConfig(), Collections.<String, Object> emptyMap());
   }
 
   @SuppressWarnings("unchecked")
@@ -452,7 +452,7 @@ public class MockStages {
       Collections.<ConfigConfiguration>emptyList(), null, lanes, Collections.<String>emptyList());
     stages.add(target);
     return new PipelineConfiguration(PipelineStoreTask.SCHEMA_VERSION, UUID.randomUUID(), null, null, stages,
-                                     getErrorStageConfig());
+                                     getErrorStageConfig(), Collections.<String, Object> emptyMap());
   }
 
   public static PipelineConfiguration createPipelineConfigurationSourceTwoTargets() {
@@ -468,7 +468,7 @@ public class MockStages {
       Collections.<ConfigConfiguration>emptyList(), null, lanes, Collections.<String>emptyList());
     stages.add(target);
     return new PipelineConfiguration(PipelineStoreTask.SCHEMA_VERSION, UUID.randomUUID(), null, null, stages,
-                                     getErrorStageConfig());
+                                     getErrorStageConfig(), Collections.<String, Object> emptyMap());
   }
 
 }

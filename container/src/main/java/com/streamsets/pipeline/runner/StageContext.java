@@ -65,10 +65,11 @@ public class StageContext implements Source.Context, Target.Context, Processor.C
   private ErrorSink errorSink;
   private long lastBatchTime;
   private final Map<String, Class<?>[]> configToElDefMap;
+  private final Map<String, Object> constants;
 
   //for SDK
   public StageContext(String instanceName, StageType stageType, boolean isPreview, OnRecordError onRecordError,
-      List<String> outputLanes, Map<String, Class<?>[]> configToElDefMap) {
+      List<String> outputLanes, Map<String, Class<?>[]> configToElDefMap, Map<String, Object> constants) {
     pipelineInfo = ImmutableList.of();
     this.stageType = stageType;
     this.isPreview = isPreview;
@@ -78,6 +79,7 @@ public class StageContext implements Source.Context, Target.Context, Processor.C
     this.onRecordError = onRecordError;
     errorSink = new ErrorSink();
     this. configToElDefMap = configToElDefMap;
+    this.constants = constants;
   }
 
   public StageContext(List<Stage.Info> pipelineInfo, StageType stageType, boolean isPreview, MetricRegistry metrics,
@@ -90,6 +92,7 @@ public class StageContext implements Source.Context, Target.Context, Processor.C
     this.outputLanes = ImmutableList.copyOf(stageRuntime.getConfiguration().getOutputLanes());
     onRecordError = stageRuntime.getOnRecordError();
     this.configToElDefMap = getConfigToElDefMap(stageRuntime);
+    this.constants = stageRuntime.getConstants();
   }
 
   private Map<String, Class<?>[]> getConfigToElDefMap(StageRuntime stageRuntime) {
@@ -376,11 +379,11 @@ public class StageContext implements Source.Context, Target.Context, Processor.C
 
   @Override
   public ELEval createELEval(String configName) {
-    return new ELEvaluator(configName, configToElDefMap.get(configName));
+    return new ELEvaluator(configName, constants, configToElDefMap.get(configName));
   }
 
   @Override
   public ELEval createELEval(String configName, Class<?>... elDefClasses) {
-    return new ELEvaluator(configName, elDefClasses);
+    return new ELEvaluator(configName, constants, elDefClasses);
   }
 }

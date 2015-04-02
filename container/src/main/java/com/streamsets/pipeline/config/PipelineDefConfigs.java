@@ -12,6 +12,8 @@ import com.streamsets.pipeline.api.Label;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.ValueChooser;
 
+import java.util.Map;
+
 //Dummy stage that is used to produce the resource bundle for the pipeline definition configs
 //
 // we are using the annotation for reference purposes only.
@@ -21,11 +23,18 @@ import com.streamsets.pipeline.api.ValueChooser;
 public abstract class PipelineDefConfigs implements Stage {
 
   public enum Groups implements Label {
-    BAD_RECORDS;
+    BAD_RECORDS("Error Records"),
+    CONSTANTS("Constants");
+
+    private final String label;
+
+    Groups(String label) {
+      this.label = label;
+    }
 
     @Override
     public String getLabel() {
-      return "Error Records";
+      return label;
     }
   }
 
@@ -60,5 +69,20 @@ public abstract class PipelineDefConfigs implements Stage {
   )
   @ValueChooser(ErrorHandlingChooserValues.class)
   public String badRecordsHandling;
+
+  public static final String CONSTANTS_CONFIG = "constants";
+  public static final String CONSTANTS_LABEL = "Constants";
+  public static final String CONSTANTS_DESCRIPTION = "";
+
+  @ConfigDef(
+    required = true,
+    type = ConfigDef.Type.MAP,
+    defaultValue="",
+    label = CONSTANTS_LABEL,
+    description = CONSTANTS_DESCRIPTION,
+    displayPosition = 0,
+    group = ""
+  )
+  public Map<String, Object> constants;
 
 }

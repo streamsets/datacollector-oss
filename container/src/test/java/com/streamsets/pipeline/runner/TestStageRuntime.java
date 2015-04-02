@@ -141,7 +141,7 @@ public class TestStageRuntime {
         Collections.<String>emptyList());
 
     return new PipelineConfiguration(PipelineStoreTask.SCHEMA_VERSION, UUID.randomUUID(), pipelineConfigs, null,
-      stages, errorStage);
+      stages, errorStage, Collections.<String, Object> emptyMap());
   }
 
   @Test

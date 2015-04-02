@@ -14,6 +14,7 @@ import com.streamsets.pipeline.config.StageType;
 import com.streamsets.pipeline.runner.StageContext;
 
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 
 public class ContextInfoCreator {
@@ -40,7 +41,7 @@ public class ContextInfoCreator {
   private static StageContext createContext(String instanceName, boolean isPreview, OnRecordError onRecordError,
       List<String> outputLanes) {
     return new StageContext(instanceName, StageType.SOURCE, isPreview, onRecordError, outputLanes,
-      Collections.<String, Class<?>[]> emptyMap());
+      Collections.<String, Class<?>[]> emptyMap(), new HashMap<String, Object>());
   }
 
   public static Source.Context createSourceContext(String instanceName, boolean isPreview, OnRecordError onRecordError,

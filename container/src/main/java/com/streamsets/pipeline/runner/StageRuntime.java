@@ -44,14 +44,16 @@ public class StageRuntime {
   private final List<String> requiredFields;
   private final OnRecordError onRecordError;
   private StageContext context;
+  private final Map<String, Object> constants;
 
   private StageRuntime(final StageDefinition def, final StageConfiguration conf, List<String> requiredFields,
-      OnRecordError onRecordError, Stage stage) {
+      OnRecordError onRecordError, Stage stage, Map<String, Object> constants) {
     this.def = def;
     this.conf = conf;
     this.requiredFields = requiredFields;
     this.onRecordError = onRecordError;
     this.stage = stage;
+    this.constants = constants;
     info = new Stage.Info() {
       @Override
       public String getName() {
@@ -202,7 +204,7 @@ public class StageRuntime {
       try {
         StageRuntime[] runtimes = new StageRuntime[pipelineConf.getStages().size()];
         for (int i = 0; i < pipelineConf.getStages().size(); i++) {
-          runtimes[i] =  buildStage(pipelineConf.getStages().get(i));
+          runtimes[i] =  buildStage(pipelineConf.getStages().get(i), pipelineConf);
         }
         return runtimes;
       } catch (PipelineRuntimeException ex) {
@@ -212,17 +214,18 @@ public class StageRuntime {
       }
     }
 
-    public StageRuntime buildErrorStage() throws PipelineRuntimeException {
-      return buildStage(pipelineConf.getErrorStage());
+    public StageRuntime buildErrorStage(PipelineConfiguration pipelineConf) throws PipelineRuntimeException {
+      return buildStage(pipelineConf.getErrorStage(), pipelineConf);
     }
 
-    private StageRuntime buildStage(StageConfiguration conf) throws PipelineRuntimeException {
+    private StageRuntime buildStage(StageConfiguration conf, PipelineConfiguration pipelineConf)
+      throws PipelineRuntimeException {
       try {
         StageDefinition def = stageLib.getStage(conf.getLibrary(), conf.getStageName(), conf.getStageVersion());
         Class klass = def.getStageClassLoader().loadClass(def.getClassName());
         Stage stage = (Stage) klass.newInstance();
         configureStage(def, conf, klass, stage);
-        return new StageRuntime(def, conf, requiredFields, onRecordError, stage);
+        return new StageRuntime(def, conf, requiredFields, onRecordError, stage, pipelineConf.getConstants());
       } catch (Exception ex) {
         throw new PipelineRuntimeException(ContainerError.CONTAINER_0151, ex.getMessage(), ex);
       }
@@ -370,6 +373,10 @@ public class StageRuntime {
         throw new PipelineRuntimeException(ContainerError.CONTAINER_0163, stageName, instanceName, configName);
       }
     }
+  }
+
+  public Map<String, Object> getConstants() {
+    return constants;
   }
 
   @Override

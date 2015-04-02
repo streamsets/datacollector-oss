@@ -52,7 +52,7 @@ public class PipelineDefinition {
 
   @VisibleForTesting
   PipelineDefinition() {
-    this(ImmutableList.of(createDeliveryGuaranteeOption(), createBadRecordsHandlingConfigs()),
+    this(ImmutableList.of(createDeliveryGuaranteeOption(), createBadRecordsHandlingConfigs(), createConstantsConfigs()),
          createConfigGroupDefinition());
   }
 
@@ -138,6 +138,29 @@ public class PipelineDefinition {
         "",
         0,
         Collections.<String> emptyList());
+  }
+
+  private static ConfigDefinition createConstantsConfigs() {
+    return new ConfigDefinition(
+      PipelineDefConfigs.CONSTANTS_CONFIG,
+      ConfigDef.Type.MAP,
+      PipelineDefConfigs.CONSTANTS_LABEL,
+      PipelineDefConfigs.CONSTANTS_DESCRIPTION,
+      null,
+      true,
+      PipelineDefConfigs.Groups.CONSTANTS.name(),
+      PipelineDefConfigs.CONSTANTS_CONFIG,
+      null,
+      "",
+      new ArrayList<>(),
+      10,
+      Collections.<ElFunctionDefinition> emptyList(),
+      Collections.<ElConstantDefinition> emptyList(),
+      Long.MIN_VALUE,
+      Long.MAX_VALUE,
+      "",
+      0,
+      Collections.<String> emptyList());
   }
 
 }

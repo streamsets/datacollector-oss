@@ -18,13 +18,13 @@ import java.util.Map;
 public class SourceRunner extends StageRunner<Source> {
 
   public SourceRunner(Class<Source> sourceClass, Source source, Map<String, Object> configuration, List<String> outputLanes, boolean isPreview,
-      OnRecordError onRecordError) {
-    super(sourceClass, source, StageType.SOURCE, configuration, outputLanes, isPreview, onRecordError);
+      OnRecordError onRecordError, Map<String, Object> constants) {
+    super(sourceClass, source, StageType.SOURCE, configuration, outputLanes, isPreview, onRecordError, constants);
   }
 
   public SourceRunner(Class<Source> sourceClass, Map<String, Object> configuration, List<String> outputLanes,
-      boolean isPreview, OnRecordError onRecordError) {
-    super(sourceClass, StageType.SOURCE, configuration, outputLanes, isPreview, onRecordError);
+      boolean isPreview, OnRecordError onRecordError, Map<String, Object> constants) {
+    super(sourceClass, StageType.SOURCE, configuration, outputLanes, isPreview, onRecordError, constants);
   }
 
   public Output runProduce(String lastOffset, int maxBatchSize) throws StageException {
@@ -48,8 +48,8 @@ public class SourceRunner extends StageRunner<Source> {
     @Override
     public SourceRunner build() {
       Utils.checkState(!outputLanes.isEmpty(), "A Source must have at least one output stream");
-      return  (stage != null) ? new SourceRunner(stageClass, stage, configs, outputLanes, isPreview, onRecordError)
-                              : new SourceRunner(stageClass, configs, outputLanes, isPreview, onRecordError);
+      return  (stage != null) ? new SourceRunner(stageClass, stage, configs, outputLanes, isPreview, onRecordError, constants)
+                              : new SourceRunner(stageClass, configs, outputLanes, isPreview, onRecordError, constants);
     }
 
   }

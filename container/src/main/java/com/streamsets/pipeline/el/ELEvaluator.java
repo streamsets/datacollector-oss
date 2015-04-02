@@ -39,14 +39,18 @@ public class ELEvaluator extends ELEval {
   // ExpressionEvaluatorImpl can be used as a singleton
   private static final ExpressionEvaluatorImpl EVALUATOR = new ExpressionEvaluatorImpl();
 
-  public ELEvaluator(String configName, Class<?>... elFuncConstDefClasses) {
+  public ELEvaluator(String configName, Map<String, Object> constants, Class<?>... elFuncConstDefClasses) {
     this.configName = configName;
-    constants = new HashMap<>();
+    this.constants = constants;
     functions = new HashMap<>();
     elFunctionDefinitions = new ArrayList<>();
     elConstantDefinitions = new ArrayList<>();
     populateConstantsAndFunctions(elFuncConstDefClasses);
     this.functionMapper = new FunctionMapperImpl();
+  }
+
+  public ELEvaluator(String configName, Class<?>... elFuncConstDefClasses) {
+    this(configName, new HashMap<String, Object>(), elFuncConstDefClasses);
   }
 
   private void populateConstantsAndFunctions(Class<?>... elFuncConstDefClasses) {

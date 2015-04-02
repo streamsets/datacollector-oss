@@ -21,13 +21,13 @@ import java.util.Map;
 public class ProcessorRunner extends StageRunner<Processor> {
 
   public ProcessorRunner(Class<Processor> processorClass, Processor processor, Map<String, Object> configuration, List<String> outputLanes,
-      boolean isPreview, OnRecordError onRecordError) {
-    super(processorClass, processor, StageType.PROCESSOR, configuration, outputLanes, isPreview, onRecordError);
+      boolean isPreview, OnRecordError onRecordError, Map<String, Object> constants) {
+    super(processorClass, processor, StageType.PROCESSOR, configuration, outputLanes, isPreview, onRecordError, constants);
   }
 
   public ProcessorRunner(Class<Processor> processorClass, Map<String, Object> configuration, List<String> outputLanes,
-      boolean isPreview, OnRecordError onRecordError) {
-    super(processorClass, StageType.PROCESSOR, configuration, outputLanes, isPreview, onRecordError);
+      boolean isPreview, OnRecordError onRecordError, Map<String, Object> constants) {
+    super(processorClass, StageType.PROCESSOR, configuration, outputLanes, isPreview, onRecordError, constants);
   }
 
   public Output runProcess(List<Record> inputRecords) throws StageException {
@@ -52,8 +52,8 @@ public class ProcessorRunner extends StageRunner<Processor> {
     @Override
     public ProcessorRunner build() {
       Utils.checkState(!outputLanes.isEmpty(), "A Processor must have at least one output stream");
-      return  (stage != null) ? new ProcessorRunner(stageClass, stage, configs, outputLanes, isPreview, onRecordError)
-                              : new ProcessorRunner(stageClass, configs, outputLanes, isPreview, onRecordError);
+      return  (stage != null) ? new ProcessorRunner(stageClass, stage, configs, outputLanes, isPreview, onRecordError, constants)
+                              : new ProcessorRunner(stageClass, configs, outputLanes, isPreview, onRecordError, constants);
     }
 
   }

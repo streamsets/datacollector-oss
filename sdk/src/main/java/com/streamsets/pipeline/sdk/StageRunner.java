@@ -174,13 +174,14 @@ public abstract class StageRunner<S extends Stage> {
 
   @SuppressWarnings("unchecked")
   StageRunner(Class<S> stageClass, StageType stageType, Map<String, Object> configuration, List<String> outputLanes,
-      boolean isPreview, OnRecordError onRecordError) {
-    this(stageClass, (S) getStage(Utils.checkNotNull(stageClass, "stageClass")), stageType, configuration, outputLanes, isPreview,
-         onRecordError);
+      boolean isPreview, OnRecordError onRecordError, Map<String, Object> constants) {
+    this(stageClass, (S) getStage(Utils.checkNotNull(stageClass, "stageClass")), stageType, configuration, outputLanes,
+      isPreview, onRecordError, constants);
   }
 
-  StageRunner(Class<S> stageClass, S stage, StageType stageType, Map < String, Object > configuration, List< String > outputLanes,
-      boolean isPreview, OnRecordError onRecordError) {
+  StageRunner(Class<S> stageClass, S stage, StageType stageType, Map < String, Object > configuration,
+              List< String > outputLanes, boolean isPreview, OnRecordError onRecordError,
+              Map<String, Object> constants) {
     Utils.checkNotNull(stage, "stage");
     Utils.checkNotNull(configuration, "configuration");
     Utils.checkNotNull(outputLanes, "outputLanes");
@@ -201,7 +202,8 @@ public abstract class StageRunner<S extends Stage> {
     } catch (Exception e) {
       throw new RuntimeException(e);
     }
-    context = new StageContext(instanceName, stageType ,isPreview, onRecordError, outputLanes, configToElDefMap);
+    context = new StageContext(instanceName, stageType ,isPreview, onRecordError, outputLanes, configToElDefMap,
+      constants);
     status = Status.CREATED;
   }
 
@@ -323,6 +325,7 @@ public abstract class StageRunner<S extends Stage> {
     final Class<S> stageClass;
     final List<String> outputLanes;
     final Map<String, Object> configs;
+    final Map<String, Object> constants;
     boolean isPreview;
     OnRecordError onRecordError;
 
@@ -332,6 +335,7 @@ public abstract class StageRunner<S extends Stage> {
       outputLanes = new ArrayList<>();
       configs = new HashMap<>();
       onRecordError = OnRecordError.STOP_PIPELINE;
+      this.constants = new HashMap<>();
     }
 
     @SuppressWarnings("unchecked")
@@ -359,6 +363,11 @@ public abstract class StageRunner<S extends Stage> {
     @SuppressWarnings("unchecked")
     public B addConfiguration(String name, Object value) {
       configs.put(Utils.checkNotNull(name, "name"), value);
+      return (B) this;
+    }
+
+    public B addConstants(Map<String, Object> constants) {
+      this.constants.putAll(constants);
       return (B) this;
     }
 

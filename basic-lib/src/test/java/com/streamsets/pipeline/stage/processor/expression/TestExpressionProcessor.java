@@ -143,6 +143,44 @@ public class TestExpressionProcessor {
   }
 
   @Test
+  public void testExpressionWithConstants() throws StageException {
+
+    ExpressionProcessorConfig expressionProcessorConfig = new ExpressionProcessorConfig();
+    expressionProcessorConfig.expression = "${record:value('/baseSalary') + BONUS - record:value('/tax')}";
+    expressionProcessorConfig.fieldToSet = "/netSalary";
+
+    Map<String, Object> constants = new HashMap<>();
+    constants.put("BONUS", 2000);
+
+    ProcessorRunner runner = new ProcessorRunner.Builder(ExpressionDProcessor.class)
+      .addConfiguration("constants", null)
+      .addConfiguration("expressionProcessorConfigs", ImmutableList.of(expressionProcessorConfig))
+      .addConstants(constants)
+      .addOutputLane("a").build();
+
+    runner.runInit();
+
+    try {
+      Map<String, Field> map = new LinkedHashMap<>();
+      map.put("baseSalary", Field.create(Field.Type.DOUBLE, 100000.25));
+      map.put("tax", Field.create(Field.Type.DECIMAL, new BigDecimal(30000.25)));
+      Record record = RecordCreator.create("s", "s:1");
+      record.set(Field.create(map));
+
+      StageRunner.Output output = runner.runProcess(ImmutableList.of(record));
+      Assert.assertEquals(1, output.getRecords().get("a").size());
+      Field field = output.getRecords().get("a").get(0).get();
+      Assert.assertTrue(field.getValue() instanceof Map);
+      Map<String, Field> result = field.getValueAsMap();
+      Assert.assertEquals(3, result.size());
+      Assert.assertTrue(result.containsKey("netSalary"));
+      Assert.assertEquals(0, new BigDecimal(100000.25 + 2000 - 30000.25).compareTo((BigDecimal) result.get("netSalary").getValue()));
+    } finally {
+      runner.runDestroy();
+    }
+  }
+
+  @Test
   public void testComplexExpression() throws StageException {
 
     ExpressionProcessorConfig complexExpressionConfig = new ExpressionProcessorConfig();
