@@ -18,7 +18,7 @@ module.exports = function(grunt) {
     protractor: {
       options: {
         configFile: "src/test/protractor.conf.js",
-        keepAlive: true,
+        keepAlive: false,
         noColor: false,
         args: {
           baseUrl: 'http://localhost:18630/'
