@@ -22,6 +22,8 @@ public @interface ConfigDef {
 
   public enum Mode {JAVA, JAVASCRIPT, JSON, PLAIN_TEXT, PYTHON, RUBY, SCALA}
 
+  public enum Evaluation {IMPLICIT, EXPLICIT}
+
   Type type();
 
   String defaultValue() default "";
@@ -52,5 +54,7 @@ public @interface ConfigDef {
   Mode mode() default Mode.PLAIN_TEXT;
 
   Class[] elDefs() default {};
+
+  Evaluation evaluation() default Evaluation.IMPLICIT;
 
 }
