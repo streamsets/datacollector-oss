@@ -841,7 +841,16 @@ angular
       var selectedObject = options.selectedObject,
         type = options.type,
         errorStage = $scope.pipelineConfig.errorStage,
-        stageLibraryList = [];
+        stageLibraryList = [],
+        optionsLength = Object.keys(options).length;
+
+
+      if($scope.selectedType === type && $scope.selectedObject && selectedObject && optionsLength <= 2 &&
+        ((type === pipelineConstant.PIPELINE && $scope.selectedObject.info.name === selectedObject.info.name) ||
+          (type === pipelineConstant.STAGE_INSTANCE && $scope.selectedObject.instanceName === selectedObject.instanceName))) {
+        //Previous selection remain same
+        return;
+      }
 
       $scope.selectedType = type;
       $scope.errorStageConfig = undefined;
