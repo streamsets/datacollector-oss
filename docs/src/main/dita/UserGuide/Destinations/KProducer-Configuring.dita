@@ -49,14 +49,14 @@
                                                 <li>Round Robin - Takes turns writing to different
                                                   partitions.</li>
                                                 <li>Random - Writes to partitions randomly.</li>
-                                                <li>Expression - Uses an expression to evaluate
-                                                  when to write to different partitions. </li>
+                                                <li>Expression - Uses an expression to write data to
+                                                  different partitions. </li>
                                             </ul></entry>
                                     </row>
                                     <row>
                                         <entry>Expression</entry>
-                                        <entry>Expression to use to write to partitions with an
-                                            expression.</entry>
+                                        <entry>Expression to use to write to partitions. Partitions
+                                            are numbered 0 - n.</entry>
                                     </row>
                                     <row>
                                         <entry>Data Format</entry>

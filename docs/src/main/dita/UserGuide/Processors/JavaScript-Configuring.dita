@@ -9,6 +9,10 @@
                 Evaluator to use custom JavaScript in a pipeline.</p>
         </context>
         <steps id="steps_q4w_jby_nr">
+            <step
+                conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/1stStep-ReqField-ErrorHandling">
+                <cmd/>
+            </step>
             <step>
                 <cmd>On the <wintitle>JavaScript</wintitle> tab, configure the following
                     properties:</cmd>

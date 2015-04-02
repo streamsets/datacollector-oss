@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
+<concept id="concept_qpm_xp4_4r">
+ <title>Partition Strategy</title>
+ <shortdesc>The partition strategy determines how to write data to Kafka partitions. You can use a
+  partition strategy for balance the load or to write data semantically.</shortdesc>
+ <conbody>
+  <p><indexterm>Kafka Producer destination<indexterm>partition
+    strategy</indexterm></indexterm><indexterm>Kafka Producer destination<indexterm>partition
+     expression</indexterm></indexterm><indexterm>partition strategy<indexterm>Kafka
+     Producer</indexterm></indexterm><indexterm>partition expression<indexterm>Kafka
+     Producer</indexterm></indexterm>The Kafka Producer provides the following partition strategies:<dl>
+    <dlentry>
+     <dt>Round-Robin</dt>
+     <dd>Writes each record to different partition using a cyclical order. Use for load
+      balancing.</dd>
+    </dlentry>
+    <dlentry>
+     <dt>Random</dt>
+     <dd>Writes each record to a different partition using a random order. Use for load
+      balancing.</dd>
+    </dlentry>
+    <dlentry>
+     <dt>Expression</dt>
+     <dd>Writes each record to a partition based on the results of the partition expression. Use to
+      perform semantic partitioning. </dd>
+     <dd>When you configure the partition expression, define the expression to evaluate to the
+      partition where you want each record written. For example, the following expression writes
+      records to partitions based on the value in the Age
+      field:<codeblock>${record:value('/Age')&lt;21 ? 0 : 1}</codeblock></dd>
+    </dlentry>
+   </dl></p>
+ </conbody>
+</concept>
