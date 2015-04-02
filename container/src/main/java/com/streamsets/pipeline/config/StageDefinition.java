@@ -210,6 +210,10 @@ public class StageDefinition {
     return configDefinitionsMap.get(configName);
   }
 
+  public Map<String, ConfigDefinition> getConfigDefinitionsMap() {
+    return configDefinitionsMap;
+  }
+
   @Override
   public String toString() {
     return Utils.format("StageDefinition[library='{}' name='{}' version='{}' type='{}' class='{}']", getLibrary(),

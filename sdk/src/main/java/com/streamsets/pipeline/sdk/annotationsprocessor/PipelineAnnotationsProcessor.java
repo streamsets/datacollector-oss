@@ -365,7 +365,8 @@ public class PipelineAnnotationsProcessor extends AbstractProcessor {
             configDefAnnot.max(),
             getMimeString(configDefAnnot),
             configDefAnnot.lines(),
-            getElDefs(configDefAnnot));
+            getElDefs(configDefAnnot),
+            Collections.<String, List<Object>> emptyMap());
         configDefinitions.add(configDefinition);
       }
     }

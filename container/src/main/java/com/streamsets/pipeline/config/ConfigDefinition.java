@@ -15,6 +15,7 @@ import com.streamsets.pipeline.el.ElFunctionDefinition;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 /**
@@ -45,12 +46,13 @@ public class ConfigDefinition {
   private final String mode;
   private final int lines;
   private final List<String> elDefs;
+  private Map<String, List<Object>> dependsOnMap;
 
   public ConfigDefinition(String name, ConfigDef.Type type, String label, String description, Object defaultValue,
       boolean required, String group, String fieldName, ModelDefinition model, String dependsOn,
       List<Object> triggeredByValues, int displayPosition, List<ElFunctionDefinition> elFunctionDefinitions,
       List<ElConstantDefinition> elConstantDefinitions, long min, long max, String mode, int lines,
-      List<String> elDefs) {
+      List<String> elDefs, Map<String, List<Object>> dependsOnMap) {
     this.name = name;
     this.type = type;
     this.label = label;
@@ -70,6 +72,7 @@ public class ConfigDefinition {
     this.mode = mode;
     this.lines = lines;
     this.elDefs = elDefs;
+    this.dependsOnMap = dependsOnMap;
   }
 
   public String getName() {
@@ -154,6 +157,14 @@ public class ConfigDefinition {
     this.defaultValue = defaultValue;
   }
 
+  public Map<String, List<Object>> getDependsOnMap() {
+    return dependsOnMap;
+  }
+
+  public void setDependsOnMap(Map<String, List<Object>> dependsOnMap) {
+    this.dependsOnMap = dependsOnMap;
+  }
+
   public ConfigDefinition localize(ClassLoader classLoader, String bundle) {
     String labelKey = "configLabel." + getName();
     String descriptionKey = "configDescription." + getName();
@@ -203,7 +214,7 @@ public class ConfigDefinition {
     return new ConfigDefinition(getName(), getType(), label, description, getDefaultValue(),
                                 isRequired(), getGroup(), getFieldName(), model, getDependsOn(), getTriggeredByValues(),
                                 getDisplayPosition(), getElFunctionDefinitions(), getElConstantDefinitions(), getMin(),
-                                getMax(), getMode(), getLines(), getElDefs());
+                                getMax(), getMode(), getLines(), getElDefs(), getDependsOnMap());
   }
 
   @Override

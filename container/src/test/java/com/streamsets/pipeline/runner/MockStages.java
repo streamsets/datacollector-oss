@@ -320,14 +320,15 @@ public class MockStages {
         ConfigDefinition depConfDef = new ConfigDefinition(
           "dependencyConfName", ConfigDef.Type.NUMBER, "dependencyConfLabel", "dependencyConfDesc", "", true,
           "groupName", "dependencyConfFieldName", null, "", null, 0, Collections.<ElFunctionDefinition>emptyList(),
-          Collections.<ElConstantDefinition>emptyList(), Long.MIN_VALUE, Long.MAX_VALUE, "text/plain", 0, Collections.<String> emptyList());
+          Collections.<ElConstantDefinition>emptyList(), Long.MIN_VALUE, Long.MAX_VALUE, "text/plain", 0, Collections.<String> emptyList(),
+          null);
         List<Object> triggeredBy = new ArrayList<>();
         triggeredBy.add(1);
         ConfigDefinition triggeredConfDef = new ConfigDefinition(
           "triggeredConfName", ConfigDef.Type.NUMBER, "triggeredConfLabel", "triggeredConfDesc", "", true,
           "groupName", "triggeredConfFieldName", null, "dependencyConfName", triggeredBy, 0,
           Collections.<ElFunctionDefinition>emptyList(), Collections.<ElConstantDefinition>emptyList(), Long.MIN_VALUE, Long.MAX_VALUE, "text/plain", 0,
-          Collections.<String> emptyList());
+          Collections.<String> emptyList(), null);
         StageDefinition swcDef = new StageDefinition(
           MSource.class.getName(), "sourceWithConfigsName", "1.0.0", "sourceWithConfigsLabel",
           "sourceWithConfigsDesc", StageType.SOURCE, false, true, true, Lists.newArrayList(depConfDef, triggeredConfDef),

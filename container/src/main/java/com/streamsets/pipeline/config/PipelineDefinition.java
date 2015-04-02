@@ -111,7 +111,8 @@ public class PipelineDefinition {
       Long.MAX_VALUE,
       "",
       0,
-      Collections.<String> emptyList());
+      Collections.<String> emptyList(),
+      null);
   }
 
   private static ConfigDefinition createBadRecordsHandlingConfigs() {
@@ -137,7 +138,8 @@ public class PipelineDefinition {
         Long.MAX_VALUE,
         "",
         0,
-        Collections.<String> emptyList());
+        Collections.<String> emptyList(),
+        null);
   }
 
   private static ConfigDefinition createConstantsConfigs() {
@@ -160,7 +162,8 @@ public class PipelineDefinition {
       Long.MAX_VALUE,
       "",
       0,
-      Collections.<String> emptyList());
+      Collections.<String> emptyList(),
+      null);
   }
 
 }

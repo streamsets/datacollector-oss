@@ -12,6 +12,7 @@ import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.impl.Utils;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * Captures attributes related to individual configuration options
@@ -40,12 +41,13 @@ public class ConfigDefinitionJson {
     @JsonProperty("max")long max,
     @JsonProperty("mode")String mode,
     @JsonProperty("lines")int lines,
-    @JsonProperty("elDefs") List<String> elDefs) {
+    @JsonProperty("elDefs") List<String> elDefs,
+    @JsonProperty("dependsOnMap") Map<String, List<Object>> dependsOnMap) {
 
     this.configDefinition = new com.streamsets.pipeline.config.ConfigDefinition(name, type, label, description,
       defaultValue, required, group, fieldName, BeanHelper.unwrapModelDefinition(model), dependsOn, triggeredByValues,
       displayPosition, BeanHelper.unwrapElFunctionDefinitions(elFunctionDefinitions),
-      BeanHelper.unwrapElConstantDefinitions(elConstantDefinitions), min, max, mode, lines, elDefs);
+      BeanHelper.unwrapElConstantDefinitions(elConstantDefinitions), min, max, mode, lines, elDefs, dependsOnMap);
   }
 
   public ConfigDefinitionJson(com.streamsets.pipeline.config.ConfigDefinition configDefinition) {
@@ -125,6 +127,10 @@ public class ConfigDefinitionJson {
 
   public List<String> getElDefs() {
     return configDefinition.getElDefs();
+  }
+
+  public Map<String, List<Object>> getDependsOnMap() {
+    return configDefinition.getDependsOnMap();
   }
 
   @JsonIgnore

@@ -132,6 +132,7 @@ public class ClassLoaderStageLibraryTask extends AbstractTask implements StageLi
               convertDefaultValueToType(stage);
               convertTriggeredByValuesToType(stage.getStageClassLoader().loadClass(stage.getClassName()),
                 stage.getConfigDefinitions());
+              computeDependsOnChain(stage);
               setElMetadata(stage);
             }
           }
@@ -147,13 +148,36 @@ public class ClassLoaderStageLibraryTask extends AbstractTask implements StageLi
     }
   }
 
+  private void computeDependsOnChain(StageDefinition stageDefinition) {
+    Map<String, ConfigDefinition> configDefinitionsMap = stageDefinition.getConfigDefinitionsMap();
+    for(Map.Entry<String, ConfigDefinition> entry :  configDefinitionsMap.entrySet()) {
+      ConfigDefinition configDef = entry.getValue();
+      ConfigDefinition tempConfigDef = configDef;
+      Map<String, List<Object>> dependsOnMap = new HashMap<>();
+      while(tempConfigDef != null &&
+        tempConfigDef.getDependsOn() != null &&
+        !tempConfigDef.getDependsOn().isEmpty()) {
+
+        dependsOnMap.put(tempConfigDef.getDependsOn(), tempConfigDef.getTriggeredByValues());
+        tempConfigDef = configDefinitionsMap.get(tempConfigDef.getDependsOn());
+      }
+      if(dependsOnMap.isEmpty()) {
+        //Request from UI to set null for efficiency
+        configDef.setDependsOnMap(null);
+      } else {
+        configDef.setDependsOnMap(dependsOnMap);
+      }
+    }
+  }
+
   //Group name needs to be empty for UI to show the config in General Group.
   private static final ConfigDefinition REQUIRED_FIELDS_CONFIG = new ConfigDefinition(
       ConfigDefinition.REQUIRED_FIELDS, ConfigDef.Type.MODEL, "Required Fields",
       "Records without any of these fields are sent to error",
       null, false, "", null, new ModelDefinition(ModelType.FIELD_SELECTOR_MULTI_VALUED, null, null, null, null),
       "", new ArrayList<>(), 10, Collections.<ElFunctionDefinition>emptyList(),
-      Collections.<ElConstantDefinition>emptyList(), Long.MIN_VALUE, Long.MAX_VALUE, "text/plain", 0, Collections.<String>emptyList());
+      Collections.<ElConstantDefinition>emptyList(), Long.MIN_VALUE, Long.MAX_VALUE, "text/plain", 0,
+    Collections.<String>emptyList(), null);
 
   //Group name needs to be empty for UI to show the config in General Group.
   private static final ConfigDefinition ON_RECORD_ERROR_CONFIG = new ConfigDefinition(
@@ -164,7 +188,8 @@ public class ClassLoaderStageLibraryTask extends AbstractTask implements StageLi
                                                  new OnRecordErrorChooserValues().getValues(),
                                                  new OnRecordErrorChooserValues().getLabels(), null), "",
       new ArrayList<>(), 20, Collections.<ElFunctionDefinition>emptyList(),
-      Collections.<ElConstantDefinition>emptyList(), Long.MIN_VALUE, Long.MAX_VALUE, "text/plain", 0, Collections.<String>emptyList());
+      Collections.<ElConstantDefinition>emptyList(), Long.MIN_VALUE, Long.MAX_VALUE, "text/plain", 0,
+    Collections.<String>emptyList(), null);
 
   private void addSystemConfigurations(StageDefinition stage) {
     if (stage.hasRequiredFields()) {
@@ -318,13 +343,13 @@ public class ClassLoaderStageLibraryTask extends AbstractTask implements StageLi
 
   private void updateElFunctionAndConstantDef(StageDefinition stageDefinition, ConfigDefinition configDefinition)
     throws ClassNotFoundException {
-    List<Class> classes = new ArrayList<>();
+    List<Class<?>> classes = new ArrayList<>();
     for(String elDef : configDefinition.getElDefs()) {
       Class<?> elClass = stageDefinition.getStageClassLoader().loadClass(elDef);
       classes.add(elClass);
     }
     if(!classes.isEmpty()) {
-      Class[] elClasses = new Class[classes.size()];
+      Class<?>[] elClasses = new Class[classes.size()];
       ELEvaluator elEval = new ELEvaluator(configDefinition.getName(), classes.toArray(elClasses));
       configDefinition.getElFunctionDefinitions().addAll(elEval.getElFunctionDefinitions());
       configDefinition.getElConstantDefinitions().addAll(elEval.getElConstantDefinitions());
