@@ -320,6 +320,30 @@ angular
       },
 
       /**
+       * Returns true if dependsOnMap configuration contains value in triggeredByValues.
+       *
+       * @param stageInstance
+       * @param configDefinition
+       * @returns {*}
+       */
+      verifyDependsOnMap: function(stageInstance, configDefinition) {
+        var returnValue = true,
+          valueMap = _.object(_.map(stageInstance.configuration, function(configuration) {
+            return [configuration.name, configuration.value];
+          }));
+
+        angular.forEach(configDefinition.dependsOnMap, function(triggeredByValues, dependsOn) {
+          var dependsOnConfigValue = valueMap[dependsOn];
+          if(dependsOnConfigValue === undefined ||
+            !_.contains(triggeredByValues, dependsOnConfigValue)) {
+            returnValue = false;
+          }
+        });
+
+        return returnValue;
+      },
+
+      /**
        * Returns true if dependsOn configuration contains value in triggeredByValues.
        *
        * @param stageInstance
@@ -362,11 +386,17 @@ angular
        * @returns {*}
        */
       verifyCustomFieldDependsOn: function(stageInstance, customFieldConfigValue, customConfiguration) {
-        var dependsOnConfigName = customConfiguration.dependsOn,
-          triggeredByValues = customConfiguration.triggeredByValues,
-          dependsOnConfiguration = customFieldConfigValue[dependsOnConfigName];
+        var returnValue = true;
 
-        return dependsOnConfiguration && _.contains(triggeredByValues, dependsOnConfiguration);
+        angular.forEach(customConfiguration.dependsOnMap, function(triggeredByValues, dependsOn) {
+          var dependsOnConfigValue = customFieldConfigValue[dependsOn];
+          if(dependsOnConfigValue === undefined ||
+            !_.contains(triggeredByValues, dependsOnConfigValue)) {
+            returnValue = false;
+          }
+        });
+
+        return returnValue;
       },
 
       /**
@@ -404,7 +434,7 @@ angular
 
         angular.forEach(configDefinitions, function(configDefinition) {
           if(configDefinition.group === groupName &&
-            (!configDefinition.dependsOn || $scope.verifyDependsOn(stageInstance, configDefinition, configDefinitions))) {
+            (!configDefinition.dependsOn || $scope.verifyDependsOnMap(stageInstance, configDefinition))) {
             visible = true;
           }
         });
