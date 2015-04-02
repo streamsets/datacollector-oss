@@ -48,7 +48,7 @@ angular
       /**
        * Returns label for Detail Pane
        */
-      getDetailPaneLabel: function() {
+      getLabel: function() {
         var selectedType = $scope.selectedType,
           selectedObject = $scope.selectedObject;
 
