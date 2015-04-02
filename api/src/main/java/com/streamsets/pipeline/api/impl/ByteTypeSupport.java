@@ -34,8 +34,8 @@ public class ByteTypeSupport extends TypeSupport<Byte> {
     if (value instanceof Double) {
       return ((Double)value).byteValue();
     }
-    if (value instanceof BigDecimal) {
-      return ((BigDecimal)value).byteValue();
+    if (value instanceof Number) {
+      return ((Number)value).byteValue();
     }
     throw new IllegalArgumentException(Utils.format(Errors.API_04.getMessage(),
                                                     value.getClass().getSimpleName(), value));

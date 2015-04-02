@@ -34,8 +34,8 @@ public class DoubleTypeSupport extends TypeSupport<Double> {
     if (value instanceof Float) {
       return ((Float)value).doubleValue();
     }
-    if (value instanceof BigDecimal) {
-      return ((BigDecimal)value).doubleValue();
+    if (value instanceof Number) {
+      return ((Number)value).doubleValue();
     }
     throw new IllegalArgumentException(Utils.format(Errors.API_09.getMessage(),
                                                     value.getClass().getSimpleName(), value));

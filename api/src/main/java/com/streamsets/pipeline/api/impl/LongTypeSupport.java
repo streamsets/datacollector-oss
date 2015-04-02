@@ -34,8 +34,8 @@ public class LongTypeSupport extends TypeSupport<Long> {
     if (value instanceof Double) {
       return ((Double)value).longValue();
     }
-    if (value instanceof BigDecimal) {
-      return ((BigDecimal)value).longValue();
+    if (value instanceof Number) {
+      return ((Number)value).longValue();
     }
     throw new IllegalArgumentException(Utils.format(Errors.API_14.getMessage(),
                                                     value.getClass().getSimpleName(), value));

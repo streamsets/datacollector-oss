@@ -34,8 +34,8 @@ public class ShortTypeSupport extends TypeSupport<Short> {
     if (value instanceof Double) {
       return ((Double)value).shortValue();
     }
-    if (value instanceof BigDecimal) {
-      return ((BigDecimal)value).shortValue();
+    if (value instanceof Number) {
+      return ((Number)value).shortValue();
     }
     throw new IllegalArgumentException(Utils.format(Errors.API_17.getMessage(),
                                                     value.getClass().getSimpleName(), value));

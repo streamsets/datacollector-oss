@@ -37,6 +37,10 @@ public class DecimalTypeSupport extends TypeSupport<BigDecimal> {
     if (value instanceof Double) {
       return new BigDecimal((Double)value);
     }
+    if (value instanceof Number) {
+      //http://stackoverflow.com/questions/16216248/convert-java-number-to-bigdecimal-best-way
+      return new BigDecimal(value.toString());
+    }
     throw new IllegalArgumentException(Utils.format(Errors.API_08.getMessage(),
                                                     value.getClass().getSimpleName(), value));
   }
