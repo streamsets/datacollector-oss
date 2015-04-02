@@ -323,18 +323,33 @@ angular
        * Returns true if dependsOn configuration contains value in triggeredByValues.
        *
        * @param stageInstance
-       * @param configuration
+       * @param configDefinition
+       * @param configDefinitions
        * @returns {*}
        */
-      verifyDependsOn: function(stageInstance, configuration) {
-        var dependsOnConfigName = configuration.dependsOn,
-          triggeredByValues = configuration.triggeredByValues,
-          dependsOnConfiguration = _.find(stageInstance.configuration, function(config) {
-          return config.name === dependsOnConfigName;
-        });
+      verifyDependsOn: function(stageInstance, configDefinition, configDefinitions) {
+        if(!configDefinitions) {
+          configDefinitions = $scope.detailPaneConfigDefn.configDefinitions;
+        }
 
-        return dependsOnConfiguration && dependsOnConfiguration.value !== undefined &&
-          _.contains(triggeredByValues, dependsOnConfiguration.value);
+        var dependsOnConfigName = configDefinition.dependsOn,
+          triggeredByValues = configDefinition.triggeredByValues,
+          dependsOnConfigurationValue = _.find(stageInstance.configuration, function(config) {
+            return config.name === dependsOnConfigName;
+          }),
+          dependsOnConfiguration = _.find(configDefinitions, function(configDefn) {
+            return configDefn.name === dependsOnConfigName;
+          });
+
+        if(dependsOnConfiguration.dependsOn) {
+          return dependsOnConfigurationValue && dependsOnConfigurationValue.value !== undefined &&
+            _.contains(triggeredByValues, dependsOnConfigurationValue.value) &&
+            $scope.verifyDependsOn(stageInstance, dependsOnConfiguration, configDefinitions);
+        } else {
+          return dependsOnConfigurationValue && dependsOnConfigurationValue.value !== undefined &&
+            _.contains(triggeredByValues, dependsOnConfigurationValue.value);
+        }
+
       },
 
 
@@ -389,7 +404,7 @@ angular
 
         angular.forEach(configDefinitions, function(configDefinition) {
           if(configDefinition.group === groupName &&
-            (!configDefinition.dependsOn || $scope.verifyDependsOn(stageInstance, configDefinition))) {
+            (!configDefinition.dependsOn || $scope.verifyDependsOn(stageInstance, configDefinition, configDefinitions))) {
             visible = true;
           }
         });
