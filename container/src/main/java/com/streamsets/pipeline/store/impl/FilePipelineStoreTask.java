@@ -132,7 +132,7 @@ public class FilePipelineStoreTask extends AbstractTask implements PipelineStore
     List<ConfigConfiguration> configuration = new ArrayList<>(2);
     configuration.add(new ConfigConfiguration("deliveryGuarantee", DeliveryGuarantee.AT_LEAST_ONCE));
     configuration.add(new ConfigConfiguration("badRecordsHandling", ""));
-    configuration.add(new ConfigConfiguration("constants", new HashMap<>()));
+    configuration.add(new ConfigConfiguration("constants", new ArrayList<>()));
 
     PipelineConfiguration pipeline = new PipelineConfiguration(SCHEMA_VERSION, uuid, configuration, null,
       null, null, Collections.<String, Object> emptyMap());
