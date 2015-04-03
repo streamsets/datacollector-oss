@@ -1198,4 +1198,85 @@ angular.module('dataCollectorApp.common')
       ];
     };
 
+
+    this.getTextELConstantDefinitions = function() {
+      return [
+        {
+          name: "NUMBER",
+          description: "Field Type Integer",
+          returnType: "Type"
+        },
+        {
+          name: "BOOLEAN",
+          description: "Field Type Boolean",
+          returnType: "Type"
+        },
+        {
+          name: "BYTE",
+          description: "Field Type Byte",
+          returnType: "Type"
+        },
+        {
+          name: "BYTE_ARRAY",
+          description: "Field Type Byte Array",
+          returnType: "Type"
+        },
+        {
+          name: "CHAR",
+          description: "Field Type Char",
+          returnType: "Type"
+        },
+        {
+          name: "DATE",
+          description: "Field Type Date",
+          returnType: "Type"
+        },
+        {
+          name: "DATETIME",
+          description: "Field Type Date Time",
+          returnType: "Type"
+        },
+        {
+          name: "DECIMAL",
+          description: "Field Type Decimal",
+          returnType: "Type"
+        },
+        {
+          name: "DOUBLE",
+          description: "Field Type Double",
+          returnType: "Type"
+        },
+        {
+          name: "FLOAT",
+          description: "Field Type Float",
+          returnType: "Type"
+        },
+        {
+          name: "LIST",
+          description: "Field Type List",
+          returnType: "Type"
+        },
+        {
+          name: "MAP",
+          description: "Field Type Map",
+          returnType: "Type"
+        },
+        {
+          name: "LONG",
+          description: "Field Type Long",
+          returnType: "Type"
+        },
+        {
+          name: "SHORT",
+          description: "Field Type Short",
+          returnType: "Type"
+        },
+        {
+          name: "STRING",
+          description: "Field Type String",
+          returnType: "Type"
+        }
+      ];
+    };
+
   });

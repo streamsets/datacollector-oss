@@ -17,7 +17,7 @@
         <span  class="validation-message">{{issues.message}}</span>
 
         <select class="form-control" name="newPipelineSource"
-            ng-options="(stage.label + ' - ' +  stage.libraryLabel) for stage in sources"
+            ng-options="(stage.label + ' - ' +  stage.libraryLabel) for stage in sources | orderBy: 'label'"
             ng-model="selectedSource.selected"
             ng-change="onSelectSourceChange()">
           <option value="">
@@ -52,7 +52,7 @@
 
 
         <select class="form-control" name="newPipelineProcessor"
-                ng-options="(stage.label + ' - ' +  stage.libraryLabel) for stage in processors"
+                ng-options="(stage.label + ' - ' +  stage.libraryLabel) for stage in processors | orderBy: 'label'"
                 ng-model="connectStage.selected"
                 ng-change="onConnectStageChange()">
           <option value="">
@@ -63,7 +63,7 @@
         <span class="pull-left123"> Or </span>
 
         <select class="form-control" name="newPipelineTarget"
-                ng-options="(stage.label + ' - ' +  stage.libraryLabel) for stage in targets"
+                ng-options="(stage.label + ' - ' +  stage.libraryLabel) for stage in targets | orderBy: 'label'"
                 ng-model="connectStage.selected"
                 ng-change="onConnectStageChange()">
           <option value="">

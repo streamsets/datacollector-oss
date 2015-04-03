@@ -60,6 +60,19 @@ angular
       },
 
       /**
+       * Returns EL Constants for Text Type.
+       *
+       * @param configDefinition
+       * @returns {*}
+       */
+      getTextCodeMirrorHints: function(configDefinition) {
+        return {
+          elFunctionDefinitions: [],
+          elConstantDefinitions: pipelineService.getTextELConstantDefinitions()
+        };
+      },
+
+      /**
        * Returns message for the give Configuration Object and Definition.
        *
        * @param configObject
