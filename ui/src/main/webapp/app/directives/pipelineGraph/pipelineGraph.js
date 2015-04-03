@@ -870,7 +870,7 @@ angular.module('pipelineGraphDirectives', ['underscore'])
         pathNewGs
           .append('svg:foreignObject')
           .attr('class', 'edge-preview-container graph-bootstrap-tooltip')
-          .attr('title', function(d) {
+          /*.attr('title', function(d) {
             var alertRules = _.filter(graph.pipelineRules.dataRuleDefinitions, function(ruleDefn) {
               return ruleDefn.lane === d.outputLane && ruleDefn.enabled;
             });
@@ -880,7 +880,7 @@ angular.module('pipelineGraphDirectives', ['underscore'])
             } else {
               return 'No Active Data Rules';
             }
-          })
+          })*/
           .attr('width', 25)
           .attr('height', 25)
           .attr('x', function(d) {
@@ -1494,7 +1494,7 @@ angular.module('pipelineGraphDirectives', ['underscore'])
             }
           });
 
-        graph.paths.selectAll('.edge-preview-container').each(function(d) {
+        /*graph.paths.selectAll('.edge-preview-container').each(function(d) {
           var $this = $(this),
             title = $this.attr('title'),
             alertRules = _.filter(graph.pipelineRules.dataRuleDefinitions, function(ruleDefn) {
@@ -1512,7 +1512,7 @@ angular.module('pipelineGraphDirectives', ['underscore'])
               .attr('data-original-title', title)
               .tooltip('fixTitle');
           }
-        });
+        });*/
       }
     });
 

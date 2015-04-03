@@ -52,7 +52,7 @@ angular.module('dataCollectorApp.codemirrorDirectives')
               angular.forEach(dictionary.elFunctionDefinitions, function(elFunctionDefn) {
                 if(!curWord || elFunctionDefn.name.match(regex)) {
                   completions.push({
-                    text: elFunctionDefn.name + (elFunctionDefn.elFunctionArgumentDefinition.length ? '(' : '()'),
+                    text: elFunctionDefn.name + (elFunctionDefn.elFunctionArgumentDefinition.length ? '()' : '()'),
                     displayText: elFunctionDefn.name,
                     className: 'CodeMirror-EL-completion CodeMirror-EL-completion-fn',
                     data: elFunctionDefn

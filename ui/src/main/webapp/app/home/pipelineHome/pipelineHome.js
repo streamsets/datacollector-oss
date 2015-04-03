@@ -845,7 +845,7 @@ angular
         optionsLength = Object.keys(options).length;
 
 
-      if($scope.selectedType === type && $scope.selectedObject && selectedObject && optionsLength <= 2 &&
+      if(!$scope.previewMode && !$scope.snapshotMode && $scope.selectedType === type && $scope.selectedObject && selectedObject && optionsLength <= 2 &&
         ((type === pipelineConstant.PIPELINE && $scope.selectedObject.info.name === selectedObject.info.name) ||
           (type === pipelineConstant.STAGE_INSTANCE && $scope.selectedObject.instanceName === selectedObject.instanceName))) {
         //Previous selection remain same

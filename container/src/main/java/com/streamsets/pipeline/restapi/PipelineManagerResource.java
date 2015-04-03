@@ -107,7 +107,7 @@ public class PipelineManagerResource {
 
   @Path("/snapshots")
   @GET
-  @RolesAllowed({ AuthzRole.MANAGER, AuthzRole.ADMIN })
+  @RolesAllowed({ AuthzRole.MANAGER, AuthzRole.CREATOR, AuthzRole.ADMIN })
   public Response getSnapshotsInfo() throws PipelineManagerException, PipelineStoreException {
     return Response.ok().type(MediaType.APPLICATION_JSON).entity(BeanHelper.wrapSnapshotInfo(
       pipelineManager.getSnapshotsInfo())).build();
@@ -127,7 +127,7 @@ public class PipelineManagerResource {
   @Path("/snapshots/{pipelineName}/{snapshotName}")
   @GET
   @Produces(MediaType.APPLICATION_JSON)
-  @RolesAllowed({ AuthzRole.MANAGER, AuthzRole.ADMIN })
+  @RolesAllowed({ AuthzRole.MANAGER, AuthzRole.CREATOR, AuthzRole.ADMIN })
   public Response getSnapshot(
       @PathParam("pipelineName") String pipelineName,
       @PathParam("snapshotName") String snapshotName,
