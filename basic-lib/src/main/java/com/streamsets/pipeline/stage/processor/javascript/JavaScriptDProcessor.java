@@ -17,7 +17,7 @@ import com.streamsets.pipeline.stage.processor.scripting.ProcessingModeChooserVa
 
 @StageDef(
     version = "1.0.0",
-    label = "JavaScript 1.8",
+    label = "JavaScript",
     description = "JavaScript processor",
     icon="javascript.png"
 )

@@ -21,8 +21,8 @@ import java.util.Map;
 @GenerateResourceBundle
 @StageDef(
     version = "1.0.0",
-    label = "Elastic Search",
-    description = "Upload data to an Elastic Search cluster",
+    label = "Elasticsearch",
+    description = "Upload data to an Elasticsearch cluster",
     icon = "elasticsearch.png"
 )
 @ConfigGroups(Groups.class)
@@ -44,7 +44,7 @@ public class ElasticSearchDTarget extends DTarget {
       type = ConfigDef.Type.LIST,
       label = "Cluster URI(s)",
       defaultValue = "[\"localhost:9300\"]",
-      description = "Elastic Search Node URIs",
+      description = "Elasticsearch Node URIs",
       displayPosition = 20,
       group = "ELASTIC_SEARCH"
   )
@@ -55,7 +55,7 @@ public class ElasticSearchDTarget extends DTarget {
       type = ConfigDef.Type.MAP,
       defaultValue = "[{\"key\": \"client.transport.sniff\", \"value\" : \"true\"}]",
       label = "Additional Configuration",
-      description = "Additional Elastic Search client configuration properties",
+      description = "Additional Elasticsearch client configuration properties",
       displayPosition = 30,
       group = "ELASTIC_SEARCH"
   )
@@ -88,7 +88,7 @@ public class ElasticSearchDTarget extends DTarget {
   @ConfigDef(
       required = false,
       type = ConfigDef.Type.EL_STRING,
-      defaultValue = "${record:value('/es-id')}",
+      defaultValue = "",
       label = "Document ID",
       description = "Typically left empty",
       displayPosition = 50,
