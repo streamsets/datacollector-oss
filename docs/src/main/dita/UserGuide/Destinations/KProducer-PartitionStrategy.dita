@@ -3,7 +3,7 @@
 <concept id="concept_qpm_xp4_4r">
  <title>Partition Strategy</title>
  <shortdesc>The partition strategy determines how to write data to Kafka partitions. You can use a
-  partition strategy for balance the load or to write data semantically.</shortdesc>
+    partition strategy to balance the work load or to write data semantically.</shortdesc>
  <conbody>
   <p><indexterm>Kafka Producer destination<indexterm>partition
     strategy</indexterm></indexterm><indexterm>Kafka Producer destination<indexterm>partition

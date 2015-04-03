@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
+<concept id="concept_j1t_ntc_pr">
+ <title>Processing Mode</title>
+ <shortdesc></shortdesc>
+ <conbody>
+  <p>The JavaScript Evaluator can process records as follows: </p>
+  <dl conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/prccessingMode">
+   <dlentry>
+    <dt/>
+    <dd/>
+   </dlentry>
+  </dl>
+ </conbody>
+</concept>

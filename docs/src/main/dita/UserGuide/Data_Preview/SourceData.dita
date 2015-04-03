@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
+<concept id="concept_rry_fkc_pr">
+ <title>Source Data</title>
+ <shortdesc>You can use the following types of data for a data preview:</shortdesc>
+ <conbody>
+  <p>
+   <dl>
+    <dlentry>
+     <dt>Data from the origin</dt>
+     <dd>You can preview data from the origin.</dd>
+    </dlentry>
+    <dlentry>
+     <dt>Data from a snapshot</dt>
+     <dd>You can use snapshot data exported from the same pipeline or another pipeline. Snapshot
+      data provides data from the origin of the snapshot pipeline.</dd>
+    </dlentry>
+    <dlentry>
+     <dt>User-defined data</dt>
+     <dd>You can enter or paste a set of data to use for the preview.</dd>
+    </dlentry>
+   </dl>
+  </p>
+ </conbody>
+</concept>

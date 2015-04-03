@@ -33,8 +33,9 @@
                                     <entry>Elasticsearch cluster name.</entry>
                                 </row>
                                 <row>
-                                    <entry>Cluster URI</entry>
-                                    <entry>One or more node URI.</entry>
+                                    <entry>Cluster URIs</entry>
+                                    <entry>URI of one or more nodes in the cluster. <p>To ensure a
+                                            connection, enter additional URIs.</p></entry>
                                 </row>
                                 <row>
                                     <entry>Index</entry>

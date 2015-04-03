@@ -52,16 +52,31 @@
                   <dl id="prccessingMode">
                         <dlentry>
                               <dt>Record by Record</dt>
-                              <dd>Processes each record individually. </dd>
-                              <dd>When processing records individually, the processor handles error
-                                    records based on the Error Record property defined for the
-                                    processor.</dd>
+                              <dd>The processor calls the script for each record. The processor
+                                    passes the record to the script as a map and processes each
+                                    record individually. </dd>
+                              <dd>The processor handles error records based on the Error Record
+                                    property defined for the processor, so the code does not require
+                                    error handling logic. </dd>
+                              <dd>Use this mode to avoid including error handling logic in the code.
+                                    Since this mode calls the script for each record, this might
+                                    affect the performance of the pipeline.</dd>
                         </dlentry>
                         <dlentry>
                               <dt>Record Batch</dt>
-                              <dd>Processes batches of records.</dd>
-                              <dd>When processing records by the batch, the script must include
-                                    error handling code. </dd>
+                              <dd>The processor calls the script for each batch. The processor
+                                    passes the batch to the script as an array and processes the
+                                    batch at one time. The array name is "records".</dd>
+                              <dd>The script must include error handling code. </dd>
+                              <dd>Use this mode to process a batch of data at a time. At the end of
+                                    the script, include the following two functions:<ul
+                                          id="ul_jn3_tvc_pr">
+                                          <li>out.write (&lt;record>) - Passes the records to the
+                                                pipeline.</li>
+                                          <li>err.write (&lt;record>, &lt;message>) - Passes error
+                                                records to error handling. <draft-comment
+                                                  author="Loretta">check this!</draft-comment></li>
+                                    </ul></dd>
                         </dlentry>
                   </dl>
             </p>

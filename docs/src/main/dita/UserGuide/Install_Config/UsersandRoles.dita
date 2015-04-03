@@ -15,9 +15,6 @@
         conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> roles
       define the tasks that a user can perform. When you configure a user, assign the user one or
       more roles. Users can perform any task that their roles allow.</p>
-    <p>You can create additional users for increased security. A production deployment of the <ph
-        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> should
-      integrate with intranet authentication such as LDAP.</p>
   <p>The <ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
       provides the following roles: <dl>
         <dlentry>

@@ -8,10 +8,10 @@
     or for a group of stages. </shortdesc>
  <conbody>
     <p><indexterm>data preview<indexterm>overview</indexterm></indexterm><indexterm>previewing
-          data<index-see>data preview</index-see></indexterm>For a data preview, you can use data
-      from the origin or from a snapshot. You can also provide a set of data to use.</p>
-    <p>Within the data preview, you can edit data, pass it through the pipeline, and then examine
-      the results. </p>
-    <p>You can also refresh the preview to use another set of data.</p>
+          data<index-see>data preview</index-see></indexterm>Within the data preview, you can edit
+      data, pass it through the pipeline, and then examine the results. </p>
+    <p>You can also refresh the preview to use another set of data.<draft-comment author="Loretta"
+        >More changes coming - something about data preview to a particular stage? Or is that just
+        for inferencing? </draft-comment></p>
   </conbody>
 </concept>

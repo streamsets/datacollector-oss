@@ -39,6 +39,7 @@
   </topicref>
   <topicref href="../Processors/JavaScript.dita" chunk="to-content"> 
    <topicmeta><shortdesc></shortdesc></topicmeta>
+   <topicref href="../Processors/JavaScript_ProcessingMode.dita"/>
    <topicref href="../Processors/JavaScript-Configuring.dita"/>
   </topicref>
   <topicref href="../Processors/JSONParser.dita" chunk="to-content">
