@@ -25,9 +25,13 @@
      <dd>Writes each record to a partition based on the results of the partition expression. Use to
       perform semantic partitioning. </dd>
      <dd>When you configure the partition expression, define the expression to evaluate to the
-      partition where you want each record written. For example, the following expression writes
-      records to partitions based on the value in the Age
-      field:<codeblock>${record:value('/Age')&lt;21 ? 0 : 1}</codeblock></dd>
+            partition where you want each record written. For example, the following expression
+            writes records to two partitions based on the value in the Age
+            field:<codeblock>${record:value('/Age') &lt; 21 ? 0 : 1}</codeblock></dd>
+          <dd>The following example writes to three partitions based on the value of the Age
+            field:<codeblock>${record:value('/Age') &lt; 21 ? 0 : 
+  (record:value('/Age') >= 21) and (record:value('/Age') &lt; 55) ? 1 :
+     record:value('/Age') >= 55 ? 2}</codeblock></dd>
     </dlentry>
    </dl></p>
  </conbody>

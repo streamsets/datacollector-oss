@@ -8,14 +8,16 @@
    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> uses
   HTTP.</shortdesc>
  <conbody>
-  <p>When you configure the <ph
+  <p>HTTPS requires an SSL certificate. The <ph
+        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> provides a
+      self-signed certificate so you can use HTTPS immediately. You can also generate a certificate
+      that is self-signed or signed by a certifying authority. Web browsers generally issue a
+      warning for self-signed certificates. </p>
+    <p>When you configure the <ph
         conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> to use
       HTTPS, you have the <ph
         conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> redirect
       HTTP requests to HTTPS or to ignore them.</p>
-  <p>HTTPS requires an SSL certificate. You can generate a certificate that is self-signed or signed
-      by a certifying authority. Web browsers generally issue a warning for self-signed
-      certificates. </p>
   <p>When you generate a SSL certificate, use the following files: <dl>
         <dlentry>
           <dt>keystore file</dt>

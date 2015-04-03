@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
+<concept id="concept_u5t_vpv_4r">
+ <title>Elasticsearch</title>
+ <shortdesc>The Elasticsearch destination writes data to an Elasticsearch cluster. The Elasticsearch
+  destination writes each record to Elasticsearch as a document.</shortdesc>
+ <conbody>
+  <p><indexterm>Elasticsearch
+     destination<indexterm>overview</indexterm></indexterm><indexterm>destinations<indexterm>Elasticsearch</indexterm></indexterm>When
+   you configure the Elasticsearch destination, you configure the cluster name, node URI, and
+   document-related information. You can add advanced Elasticsearch properties as needed. </p>
+  <p>By default, the Elasticsearch destination accesses the cluster through the node URI that you
+   provide, then accesses other available nodes in the cluster. </p>
+ </conbody>
+</concept>

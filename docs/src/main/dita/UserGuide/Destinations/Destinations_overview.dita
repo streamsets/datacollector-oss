@@ -7,6 +7,7 @@
  <conbody>
   <p><indexterm>destinations<indexterm>overview</indexterm></indexterm>You can use the following
       types of destinations in a pipeline: <ul id="ul_mxz_jxm_jq">
+        <li>Elasticsearch - Writes data to an Elasticsearch cluster.</li>
         <li>Hadoop FS - Writes data to a file system on Hadoop.</li>
         <li>Kafka Producer - Writes data to a Kakfa cluster.</li>
         <li>SDC Record Files - Writes <ph
