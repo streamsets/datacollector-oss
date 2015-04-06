@@ -76,4 +76,18 @@ public class AdminResource {
     return Response.ok(augmented).build();
   }
 
+
+  @GET
+  @Path("/sdcDirectories")
+  @Produces(MediaType.APPLICATION_JSON)
+  @RolesAllowed(AuthzRole.ADMIN)
+  public Response getSDCDirectories() throws IOException {
+    Map<String, Object> map = new LinkedHashMap<>();
+    map.put("runtimeDir", runtimeInfo.getRuntimeDir());
+    map.put("configDir", runtimeInfo.getConfigDir());
+    map.put("dataDir", runtimeInfo.getDataDir());
+    map.put("logDir", runtimeInfo.getLogDir());
+    map.put("staticWebDir", runtimeInfo.getStaticWebDir());
+    return Response.ok(map).build();
+  }
 }

@@ -54,6 +54,13 @@
             </li>
 
             <li>
+              <a href="javascript:;" ng-click="common.showSDCDirectories()">
+                <i class="fa fa-folder"></i>
+                <span translate="sdcDirectories.title">SDC Directories</span>
+              </a>
+            </li>
+
+            <li>
               <a href="/collector/jvmMetrics">
                 <i class="fa fa-dashboard"></i>
                 <span translate="global.menu.admin.jvmMetrics">JVM Metrics</span>
@@ -153,8 +160,8 @@
   </div>
 </div>
 
-<ng-include src="'app/shutdown/shutdownModal.tpl.html'"></ng-include>
-<ng-include src="'app/about/aboutModal.tpl.html'"></ng-include>
+<ng-include src="'app/administration/shutdown/shutdownModal.tpl.html'"></ng-include>
+<ng-include src="'app/help/about/aboutModal.tpl.html'"></ng-include>
 
 <div ng-view ng-if="!notAuthorized">
 </div>

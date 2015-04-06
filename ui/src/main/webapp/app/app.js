@@ -131,8 +131,17 @@ angular.module('dataCollectorApp')
        */
       showSettings: function() {
         $modal.open({
-          templateUrl: 'app/settings/settingsModal.tpl.html',
+          templateUrl: 'app/help/settings/settingsModal.tpl.html',
           controller: 'SettingsModalInstanceController',
+          size: '',
+          backdrop: true
+        });
+      },
+
+      showSDCDirectories: function() {
+        $modal.open({
+          templateUrl: 'app/administration/sdcDirectories/sdcDirectoriesModal.tpl.html',
+          controller: 'SDCDirectoriesModalInstanceController',
           size: '',
           backdrop: true
         });

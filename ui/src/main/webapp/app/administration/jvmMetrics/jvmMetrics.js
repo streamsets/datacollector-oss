@@ -7,7 +7,7 @@ angular
   .config(['$routeProvider', function ($routeProvider) {
     $routeProvider.when('/collector/jvmMetrics',
       {
-        templateUrl: 'app/jvmMetrics/jvmMetrics.tpl.html',
+        templateUrl: 'app/administration/jvmMetrics/jvmMetrics.tpl.html',
         controller: 'JVMMetricsController',
         resolve: {
           myVar: function(authService) {
@@ -80,7 +80,7 @@ angular
        */
       launchSettings: function() {
         var modalInstance = $modal.open({
-          templateUrl: 'app/jvmMetrics/settings/settingsModal.tpl.html',
+          templateUrl: 'app/administration/jvmMetrics/settings/settingsModal.tpl.html',
           controller: 'JVMMetricsSettingsModalInstanceController',
           backdrop: 'static',
           size: 'lg',
@@ -109,7 +109,7 @@ angular
        */
       launchThreadDump: function() {
         $modal.open({
-          templateUrl: 'app/jvmMetrics/threadDump/threadDumpModal.tpl.html',
+          templateUrl: 'app/administration/jvmMetrics/threadDump/threadDumpModal.tpl.html',
           controller: 'ThreadDumpModalInstanceController',
           backdrop: 'static',
           size: 'lg'

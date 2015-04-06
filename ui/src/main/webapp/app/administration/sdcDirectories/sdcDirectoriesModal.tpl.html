@@ -1,0 +1,26 @@
+<form class="sdc-directories-modal-form" role="form">
+  <div class="modal-header">
+    <button type="button" class="close" ng-click="close()">
+      <span aria-hidden="true">&times;</span>
+      <span class="sr-only">Close</span>
+    </button>
+    <h3 class="modal-title" translate="sdcDirectories.title">SDC Directories</h3>
+  </div>
+  <div class="modal-body">
+
+    <div class="form-group" ng-repeat="(key, value) in sdcDirectories">
+      <label class="control-label">{{('sdcDirectories.' + key) | translate}}</label>
+      <div class="controls">
+        <textarea readonly type="text" class="form-control" name="{{key}}"
+               ng-model="value">
+        </textarea>
+      </div>
+    </div>
+
+  </div>
+  <div class="modal-footer">
+    <button type="submit" class="btn btn-primary" translate="global.form.close" ng-click="close()">
+      Close
+    </button>
+  </div>
+</form>

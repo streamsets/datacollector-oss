@@ -3,7 +3,7 @@
  */
 
 angular
-  .module('dataCollectorApp.home')
+  .module('dataCollectorApp')
   .controller('ShutdownModalInstanceController', function ($scope, $modalInstance, api, $window) {
     angular.extend($scope, {
       issues: [],

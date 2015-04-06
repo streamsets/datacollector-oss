@@ -115,6 +115,18 @@ angular.module('dataCollectorApp.common')
           method: 'POST',
           url: url
         });
+      },
+
+      /**
+       * Returns SDC Directories
+       * @returns {*}
+       */
+      getSDCDirectories: function() {
+        var url = apiBase + '/admin/sdcDirectories';
+        return $http({
+          method: 'GET',
+          url: url
+        });
       }
 
     };

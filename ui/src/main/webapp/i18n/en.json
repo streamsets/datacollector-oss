@@ -490,5 +490,14 @@
     "title": "Settings",
     "helpBar": "Don't Show Pipeline Creation Help Bar",
     "restResponse": "Don't Show REST Response Dropdown Menu"
+  },
+  "sdcDirectories" : {
+    "title": "SDC Directories",
+    "configDir": "Configuration Directory",
+    "dataDir": "Data Directory",
+    "logDir": "Log Directory",
+    "runtimeDir": "Runtime Directory",
+    "staticWebDir": "Static Web Directory"
+
   }
 }
