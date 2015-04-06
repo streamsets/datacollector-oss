@@ -1,0 +1,217 @@
+
+<!DOCTYPE html
+  SYSTEM "about:legacy-compat">
+<html xml:lang="en-us" lang="en-us">
+<head><meta name="description" content="The JavaScript Evaluator processes data based on custom JavaScript. Use the JavaScript processor to use JavaScript code to perform custom processing. You can configure the JavaScript Evaluator to ..."></meta><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><meta name="copyright" content="(C) Copyright 2005"></meta><meta name="DC.rights.owner" content="(C) Copyright 2005"></meta><meta name="DC.Type" content="concept"></meta><meta name="DC.Title" content="JavaScript Evaluator"></meta><meta name="abstract" content="The JavaScript Evaluator processes data based on custom JavaScript. Use the JavaScript processor to use JavaScript code to perform custom processing."></meta><meta name="description" content="The JavaScript Evaluator processes data based on custom JavaScript. Use the JavaScript processor to use JavaScript code to perform custom processing."></meta><meta name="DC.Relation" scheme="URI" content="../Processors/Processors_title.html"></meta><meta name="DC.Format" content="XHTML"></meta><meta name="DC.Identifier" content="concept_n2p_jgf_lr"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/commonltr.css"><!----></link><title>JavaScript Evaluator</title><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/webhelp_topic.css"><!----></link><link rel="stylesheet" type="text/css" href="../skin.css"></link><script type="text/javascript"><!--
+          
+          var prefix = "../index.html";
+          
+          --></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery-1.8.2.min.js"><!----></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery.cookie.js"><!----></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery-ui.custom.min.js"><!----></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery.highlight-3.js"><!----></script><script type="text/javascript" charset="utf-8" src="../oxygen-webhelp/resources/js/webhelp_topic.js"><!----></script></head>
+<body onload="highlightSearchTerm()" class="frmBody">
+<table class="nav"><tbody><tr><td colspan="2"><div id="printlink"><a href="javascript:window.print();" title="Print this page"></a></div><div id="permalink"><a href="#" title="Link to this page"></a></div></td></tr><tr><td width="75%"><a class="navheader_parent_path" href="../Processors/Processors_title.html" title="Processors">Processors</a></td><td><div class="navheader">
+<span class="navparent"><a class="link" href="../Processors/Processors_title.html" title="Processors"><span class="navheader_label">Parent topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">Processors</span></a></span>  </div></td></tr></tbody></table>
+<div class="nested0" id="concept_n2p_jgf_lr">
+ <h1 class="title topictitle1">JavaScript Evaluator</h1>
+
+ 
+ <div class="body conbody"><p class="shortdesc">The JavaScript Evaluator processes data based on custom JavaScript. Use the JavaScript
+  processor to use JavaScript code to perform custom processing.</p>
+
+  <p class="p">You can configure the JavaScript Evaluator to process data one
+   record at a time, or one batch at a time. </p>
+
+  <p class="p">When you use a JavaScript Evaluator in a pipeline, the <span class="ph">Data
+                  Collector</span> passes a batch
+   of data to the processor and converts the data to an expected format for processing. </p>
+
+ </div>
+
+<div class="related-links"></div>
+<div class="topic concept nested1" id="concept_j1t_ntc_pr">
+ <h2 class="title topictitle2">Processing Mode</h2>
+
+ 
+ <div class="body conbody"><p class="shortdesc"></p>
+
+  <p class="p">The JavaScript Evaluator can process records as follows: </p>
+
+  <dl class="dl">
+                        
+                              <dt class="dt dlterm">Record by Record</dt>
+
+                              <dd class="dd">The processor calls the script for each record. The processor
+                                    passes the record to the script as a map and processes each
+                                    record individually. </dd>
+
+                              <dd class="dd">The processor handles error records based on the Error Record
+                                    property defined for the processor, so the code does not require
+                                    error handling logic. </dd>
+
+                              <dd class="dd">Use this mode to avoid including error handling logic in the code.
+                                    Since this mode calls the script for each record, this might
+                                    affect the performance of the pipeline.</dd>
+
+                        
+                        
+                              <dt class="dt dlterm">Record Batch</dt>
+
+                              <dd class="dd">The processor calls the script for each batch. The processor
+                                    passes the batch to the script as an array and processes the
+                                    batch at one time. The array name is "records".</dd>
+
+                              <dd class="dd">The script must include error handling code. </dd>
+
+                              <dd class="dd">Use this mode to process a batch of data at a time. At the end of
+                                    the script, include the following two functions:<ul class="ul" id="concept_j1t_ntc_pr__d2066e145">
+                                          <li class="li">out.write (&lt;record&gt;) - Passes the records to the
+                                                pipeline.</li>
+
+                                          <li class="li">err.write (&lt;record&gt;, &lt;message&gt;) - Passes error
+                                                records to error handling. </li>
+
+                                    </ul>
+</dd>
+
+                        
+                  </dl>
+
+ </div>
+
+</div>
+<div class="topic task nested1" id="task_mzc_1by_nr">
+    <h2 class="title topictitle2">Configuring a JavaScript Evaluator</h2>
+
+    <div class="body taskbody">
+        <div class="section context">
+            <p class="p">Configure a JavaScript
+                Evaluator to use custom JavaScript in a pipeline.</p>
+
+        </div>
+
+        <ol class="ol steps" id="task_mzc_1by_nr__steps_q4w_jby_nr"><li class="li step stepexpand">
+                <span class="ph cmd">In the Properties panel, on the <span class="keyword wintitle">General</span> tab, configure the
+                    following properties:</span>
+                <div class="itemgroup info">
+                    
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_mzc_1by_nr__d1953e246" class="table" frame="border" border="1" rules="all">
+                            
+                            
+                            <thead class="thead" align="left">
+                                <tr class="row">
+                                    <th class="entry" valign="top" width="24.509803921568626%" id="d22222e148">General Property</th>
+
+                                    <th class="entry" valign="top" width="75.49019607843137%" id="d22222e151">Description</th>
+
+                                </tr>
+
+                            </thead>
+
+                            <tbody class="tbody">
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="24.509803921568626%" headers="d22222e148 ">Name</td>
+
+                                    <td class="entry" valign="top" width="75.49019607843137%" headers="d22222e151 ">Stage name.</td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="24.509803921568626%" headers="d22222e148 ">Description</td>
+
+                                    <td class="entry" valign="top" width="75.49019607843137%" headers="d22222e151 ">Optional description.</td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="24.509803921568626%" headers="d22222e148 ">Required Fields <a class="xref" href="../Pipeline_Configuration/RequiredFields.html#concept_dnj_bkm_vq" title="You can configure required fields for any processor and most destination stages. A required field must exist in a record to allow the record to enter the stage for processing. When a record does not include a required field, the stage passes the record to the pipeline for error handling.">
+                                            <img class="image" id="task_mzc_1by_nr__d1953e292" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
+
+                                    <td class="entry" valign="top" width="75.49019607843137%" headers="d22222e151 ">Fields that must include data to be passed to the stage.
+                                            <div class="note tip"><span class="tiptitle">Tip:</span> You might include fields
+                                            that the stage uses.</div>
+</td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="24.509803921568626%" headers="d22222e148 ">On Record Error</td>
+
+                                    <td class="entry" valign="top" width="75.49019607843137%" headers="d22222e151 ">Error record handling for the stage: <ul class="ul" id="task_mzc_1by_nr__d1953e307">
+                                            <li class="li">Discard - Discards the record.</li>
+
+                                            <li class="li">Send to Error - Sends the record to the pipeline for
+                                                error handling.</li>
+
+                                            <li class="li">Stop Pipeline - Stops the pipeline. </li>
+
+                                        </ul>
+</td>
+
+                                </tr>
+
+                            </tbody>
+
+                        </table>
+</div>
+
+                </div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">On the <span class="keyword wintitle">JavaScript</span> tab, configure the following
+                    properties:</span>
+                <div class="itemgroup info">
+                    
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_mzc_1by_nr__table_wvy_4xx_nr" class="table" frame="border" border="1" rules="all">
+                            
+                            
+                            <thead class="thead" align="left">
+                                <tr class="row">
+                                    <th class="entry" valign="top" width="25.97402597402597%" id="d22222e241">JavaScript Property</th>
+
+                                    <th class="entry" valign="top" width="74.02597402597402%" id="d22222e244">Description</th>
+
+                                </tr>
+
+                            </thead>
+
+                            <tbody class="tbody">
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="25.97402597402597%" headers="d22222e241 ">Record Processing Mode</td>
+
+                                    <td class="entry" valign="top" width="74.02597402597402%" headers="d22222e244 ">Determines how the JavaScript Evaluator processes
+                                            data:<ul class="ul" id="task_mzc_1by_nr__ul_tzg_vzx_nr">
+                                            <li class="li">Record by Record - Processes records individually.
+                                                Performs error handling.</li>
+
+                                            <li class="li">Record Batch - Processes records in batches.
+                                                Requires error handling code in the Jython
+                                                script.</li>
+
+                                        </ul>
+</td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="25.97402597402597%" headers="d22222e241 ">Script</td>
+
+                                    <td class="entry" valign="top" width="74.02597402597402%" headers="d22222e244 ">JavaScript code to use in the processor.</td>
+
+                                </tr>
+
+                            </tbody>
+
+                        </table>
+</div>
+
+                </div>
+            </li>
+</ol>
+
+    </div>
+
+</div>
+</div>
+<div class="navfooter"><!---->
+<span class="navparent"><a class="link" href="../Processors/Processors_title.html" title="Processors"><span class="navheader_label">Parent topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">Processors</span></a></span>  </div><div class="footer"><div> </div><!-- © <a href="http://creativecommons.org/licenses/by-nc/4.0/legalcode">CC BY-NC 4.0.</a> StreamSets, 2015. --></div>
+</body>
+</html>

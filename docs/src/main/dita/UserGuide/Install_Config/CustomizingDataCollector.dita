@@ -70,8 +70,8 @@
                             </row>
                             <row>
                                 <entry>http.authentication</entry>
-                                <entry>HTTP authentication. Use none, digest, or form.<p>Default is
-                                        form.</p></entry>
+                                <entry>HTTP authentication. Use none, basic, digest, or
+                                        form.<p>Default is form.</p></entry>
                             </row>
                             <row>
                                 <entry>preview.maxBatchSize</entry>

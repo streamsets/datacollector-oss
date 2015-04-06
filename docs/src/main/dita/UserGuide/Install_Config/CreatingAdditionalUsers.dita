@@ -21,15 +21,13 @@
         </context>
         <steps id="steps_ody_3q4_1r">
             <step>
-                <cmd>Modify the properties file for the type of authentication that you use. The
-                    file name is &lt;authentication type>-realm.properties.</cmd>
+                <cmd>Modify the properties file for the type of authentication that you use. </cmd>
+                <info>The file name is &lt;authentication type>-realm.properties. </info>
                 <info>The file is located in the following directory:
                         <filepath>&lt;SDCinstalldir>/etc/</filepath>. When the <ph
                         conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
                     /> is installed as a service, the file is located in the follwing directory:
-                        <filepath>/etc/sdc/</filepath>. <draft-comment author="Loretta">checking
-                        with Tucu 3/30. what's the directory location for a service?
-                    </draft-comment></info>
+                        <filepath>/etc/sdc/</filepath>. </info>
             </step>
             <step>
                 <cmd>For each new user, add a user definition using the following format:</cmd>

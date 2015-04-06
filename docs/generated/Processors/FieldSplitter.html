@@ -1,0 +1,244 @@
+
+<!DOCTYPE html
+  SYSTEM "about:legacy-compat">
+<html xml:lang="en-us" lang="en-us">
+<head><meta name="description" content="The Field Splitter splits string data based on a separator character and passes the separated data to new fields. Use the Field Splitter to split complex string values into logical components. For ..."></meta><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><meta name="copyright" content="(C) Copyright 2005"></meta><meta name="DC.rights.owner" content="(C) Copyright 2005"></meta><meta name="DC.Type" content="concept"></meta><meta name="DC.Title" content="Field Splitter"></meta><meta name="abstract" content="The Field Splitter splits string data based on a separator character and passes the separated data to new fields. Use the Field Splitter to split complex string values into logical components."></meta><meta name="description" content="The Field Splitter splits string data based on a separator character and passes the separated data to new fields. Use the Field Splitter to split complex string values into logical components."></meta><meta name="DC.Relation" scheme="URI" content="../Processors/Processors_title.html"></meta><meta name="DC.Format" content="XHTML"></meta><meta name="DC.Identifier" content="concept_vlj_vph_yq"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/commonltr.css"><!----></link><title>Field Splitter</title><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/webhelp_topic.css"><!----></link><link rel="stylesheet" type="text/css" href="../skin.css"></link><script type="text/javascript"><!--
+          
+          var prefix = "../index.html";
+          
+          --></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery-1.8.2.min.js"><!----></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery.cookie.js"><!----></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery-ui.custom.min.js"><!----></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery.highlight-3.js"><!----></script><script type="text/javascript" charset="utf-8" src="../oxygen-webhelp/resources/js/webhelp_topic.js"><!----></script></head>
+<body onload="highlightSearchTerm()" class="frmBody">
+<table class="nav"><tbody><tr><td colspan="2"><div id="printlink"><a href="javascript:window.print();" title="Print this page"></a></div><div id="permalink"><a href="#" title="Link to this page"></a></div></td></tr><tr><td width="75%"><a class="navheader_parent_path" href="../Processors/Processors_title.html" title="Processors">Processors</a></td><td><div class="navheader">
+<span class="navparent"><a class="link" href="../Processors/Processors_title.html" title="Processors"><span class="navheader_label">Parent topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">Processors</span></a></span>  </div></td></tr></tbody></table>
+<div class="nested0" id="concept_vlj_vph_yq">
+ <h1 class="title topictitle1">Field Splitter</h1>
+
+ 
+ <div class="body conbody"><p class="shortdesc">The Field Splitter splits string data based on a separator character and passes the
+  separated data to new fields. Use the Field Splitter to split complex string values into logical
+  components. </p>
+
+  <p class="p">For example, if a field contains an error code and error
+   message separated by a comma, you can use the comma to separate the code and message into
+   different fields.</p>
+
+  <p class="p">When a field includes additional data and separator characters, the Field Splitter includes the
+   remaining data in the last split field. </p>
+
+  <p class="p">If a field cannot be split as requested, the Field Splitter can pass the record split as much
+   as possible, discard the record, pass the error to the pipeline for error handling, or stop the
+   pipeline. </p>
+
+  <p class="p">You can keep data from the original field in the record or discard it. </p>
+
+  <div class="section"><h2 class="title sectiontitle">Example</h2>
+   
+   <p class="p">A Field Splitter uses a comma to split data into two fields and to discard records that cannot
+    be split as requested. When it encounters a single comma, it passes the data before the comma to
+    ErrorCode field and the data after the comma to the ErrorMessage field. </p>
+
+   <div class="p">When this Field Splitter processes the following records:<table cellpadding="4" cellspacing="0" summary="" id="concept_vlj_vph_yq__simpletable_dqy_dd3_yq" border="0" class="simpletable"><tr class="strow">
+      <td valign="top" class="stentry" width="100%">
+       <pre class="pre codeblock">GM-302,information that you might need
+ME-3042,message about this error,"additional information from the server"
+IMD-03234</pre>
+
+      </td>
+
+     </tr>
+</table>
+</div>
+
+   <div class="p">The Field Splitter produces the following records:<table cellpadding="4" cellspacing="0" summary="" id="concept_vlj_vph_yq__simpletable_kxh_fd3_yq" border="0" class="simpletable"><tr class="strow">
+      <td valign="top" class="stentry" width="19.607843137254903%">
+       <pre class="pre codeblock"><span class="ph uicontrol">ErrorCode</span>
+GM-302 
+ME-3042</pre>
+
+      </td>
+
+      <td valign="top" class="stentry" width="80.3921568627451%">
+       <pre class="pre codeblock"><span class="ph uicontrol">Message</span>
+information that you might need
+message about this error,"additional information from the server"</pre>
+
+      </td>
+
+     </tr>
+</table>
+</div>
+
+   <p class="p">The Field Splitter discards IMD-03234 because the record does not include enough data to be
+    split, and the processor is configured to discard such records. </p>
+
+  </div>
+
+ </div>
+
+<div class="related-links"></div>
+<div class="topic task nested1" id="task_av1_5g3_yq">
+    <h2 class="title topictitle2">Configuring a Field Splitter</h2>
+
+    <div class="body taskbody">
+        <div class="section context">Configure a Field Splitter to
+            split data from a single field into multiple fields. You can split data from a single
+            field. To split additional fields, add another Field Splitter to the pipeline.</div>
+
+        <ol class="ol steps" id="task_av1_5g3_yq__steps_r4z_dh3_yq"><li class="li step stepexpand">
+                <span class="ph cmd">In the Properties panel, on the <span class="keyword wintitle">General</span> tab, configure the
+                    following properties:</span>
+                <div class="itemgroup info">
+                    
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_av1_5g3_yq__d1953e246" class="table" frame="border" border="1" rules="all">
+                            
+                            
+                            <thead class="thead" align="left">
+                                <tr class="row">
+                                    <th class="entry" valign="top" width="24.509803921568626%" id="d21365e139">General Property</th>
+
+                                    <th class="entry" valign="top" width="75.49019607843137%" id="d21365e142">Description</th>
+
+                                </tr>
+
+                            </thead>
+
+                            <tbody class="tbody">
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="24.509803921568626%" headers="d21365e139 ">Name</td>
+
+                                    <td class="entry" valign="top" width="75.49019607843137%" headers="d21365e142 ">Stage name.</td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="24.509803921568626%" headers="d21365e139 ">Description</td>
+
+                                    <td class="entry" valign="top" width="75.49019607843137%" headers="d21365e142 ">Optional description.</td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="24.509803921568626%" headers="d21365e139 ">Required Fields <a class="xref" href="../Pipeline_Configuration/RequiredFields.html#concept_dnj_bkm_vq" title="You can configure required fields for any processor and most destination stages. A required field must exist in a record to allow the record to enter the stage for processing. When a record does not include a required field, the stage passes the record to the pipeline for error handling.">
+                                            <img class="image" id="task_av1_5g3_yq__d1953e292" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
+
+                                    <td class="entry" valign="top" width="75.49019607843137%" headers="d21365e142 ">Fields that must include data to be passed to the stage.
+                                            <div class="note tip"><span class="tiptitle">Tip:</span> You might include fields
+                                            that the stage uses.</div>
+</td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="24.509803921568626%" headers="d21365e139 ">On Record Error</td>
+
+                                    <td class="entry" valign="top" width="75.49019607843137%" headers="d21365e142 ">Error record handling for the stage: <ul class="ul" id="task_av1_5g3_yq__d1953e307">
+                                            <li class="li">Discard - Discards the record.</li>
+
+                                            <li class="li">Send to Error - Sends the record to the pipeline for
+                                                error handling.</li>
+
+                                            <li class="li">Stop Pipeline - Stops the pipeline. </li>
+
+                                        </ul>
+</td>
+
+                                </tr>
+
+                            </tbody>
+
+                        </table>
+</div>
+
+                </div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">On the <span class="keyword wintitle">Split</span> tab, configure the following
+                    properties:</span>
+                <div class="itemgroup info">
+                    
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_av1_5g3_yq__table_j4l_w33_yq" class="table" frame="border" border="1" rules="all">
+                            
+                            
+                            <thead class="thead" align="left">
+                                <tr class="row">
+                                    <th class="entry" valign="top" width="30.48780487804878%" id="d21365e232">Field Splitter Property</th>
+
+                                    <th class="entry" valign="top" width="69.51219512195121%" id="d21365e235">Description</th>
+
+                                </tr>
+
+                            </thead>
+
+                            <tbody class="tbody">
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="30.48780487804878%" headers="d21365e232 ">Field to Split</td>
+
+                                    <td class="entry" valign="top" width="69.51219512195121%" headers="d21365e235 ">The String field to be split.</td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="30.48780487804878%" headers="d21365e232 ">Separator</td>
+
+                                    <td class="entry" valign="top" width="69.51219512195121%" headers="d21365e235 ">The character to use to split data in a field. Select one
+                                        of the listed characters or select
+                                            <span class="ph uicontrol">Other</span> and enter a single
+                                        character to use.</td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="30.48780487804878%" headers="d21365e232 ">New Split Fields</td>
+
+                                    <td class="entry" valign="top" width="69.51219512195121%" headers="d21365e235 ">Names of the new fields to pass the split data. Precede
+                                        each field name with a slash as follows: /NewField.</td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="30.48780487804878%" headers="d21365e232 ">Not Enough Splits</td>
+
+                                    <td class="entry" valign="top" width="69.51219512195121%" headers="d21365e235 ">Determines how to handle records that cannot be split as
+                                            requested:<ul class="ul" id="task_av1_5g3_yq__ul_n5d_xn3_yq">
+                                            <li class="li">Continue - Passes the record split as much as
+                                                possible with null values in unused split fields. </li>
+
+                                            <li class="li">Send to Error - Sends the record to the pipeline for
+                                                error handling. </li>
+
+                                        </ul>
+</td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="30.48780487804878%" headers="d21365e232 ">Original Field</td>
+
+                                    <td class="entry" valign="top" width="69.51219512195121%" headers="d21365e235 ">Determines how to handle the original field being
+                                            split:<ul class="ul" id="task_av1_5g3_yq__ul_rdk_ltf_br">
+                                            <li class="li">Remove</li>
+
+                                            <li class="li">Keep</li>
+
+                                        </ul>
+</td>
+
+                                </tr>
+
+                            </tbody>
+
+                        </table>
+</div>
+
+                </div>
+            </li>
+</ol>
+
+    </div>
+
+</div>
+</div>
+<div class="navfooter"><!---->
+<span class="navparent"><a class="link" href="../Processors/Processors_title.html" title="Processors"><span class="navheader_label">Parent topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">Processors</span></a></span>  </div><div class="footer"><div> </div><!-- © <a href="http://creativecommons.org/licenses/by-nc/4.0/legalcode">CC BY-NC 4.0.</a> StreamSets, 2015. --></div>
+</body>
+</html>

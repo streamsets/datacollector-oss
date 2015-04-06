@@ -29,8 +29,9 @@
     <stentry>2</stentry>
     <stentry>Monitor Panel</stentry>
     <stentry>Displays statistics for the pipeline or selected stage. Can display information about
-          the pipeline or configuration details.<p>Allows configuration of metric and data
-            alerts.</p></stentry>
+          the pipeline or configuration details.<p>Allows configuration of metric and data alerts.
+            Can display the pipeline history and summary information for each run of the
+            pipeline.</p></stentry>
    </strow>
    <strow>
     <stentry>3</stentry>
@@ -74,5 +75,6 @@
         <stentry>Indicates an alert has been triggered.</stentry>
       </strow>
   </simpletable>
+    <note conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/Note-OptionDispay"/>
  </conbody>
 </concept>

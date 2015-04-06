@@ -1,0 +1,187 @@
+
+<!DOCTYPE html
+  SYSTEM "about:legacy-compat">
+<html xml:lang="en-us" lang="en-us">
+<head><meta name="description" content="The File Tail origin reads data as it is written to a file. As long as the pipeline runs, File Tail captures text or JSON data that is written to the file. The File Tail origin does not read data ..."></meta><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><meta name="copyright" content="(C) Copyright 2005"></meta><meta name="DC.rights.owner" content="(C) Copyright 2005"></meta><meta name="DC.Type" content="concept"></meta><meta name="DC.Title" content="File Tail"></meta><meta name="abstract" content="The File Tail origin reads data as it is written to a file. As long as the pipeline runs, File Tail captures text or JSON data that is written to the file. The File Tail origin does not read data already in the file or data that is written to the file when the pipeline is not running."></meta><meta name="description" content="The File Tail origin reads data as it is written to a file. As long as the pipeline runs, File Tail captures text or JSON data that is written to the file. The File Tail origin does not read data already in the file or data that is written to the file when the pipeline is not running."></meta><meta name="DC.Relation" scheme="URI" content="../Origins/Origins_title.html"></meta><meta name="DC.Format" content="XHTML"></meta><meta name="DC.Identifier" content="concept_n1y_qyp_5q"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/commonltr.css"><!----></link><title>File Tail</title><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/webhelp_topic.css"><!----></link><link rel="stylesheet" type="text/css" href="../skin.css"></link><script type="text/javascript"><!--
+          
+          var prefix = "../index.html";
+          
+          --></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery-1.8.2.min.js"><!----></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery.cookie.js"><!----></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery-ui.custom.min.js"><!----></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery.highlight-3.js"><!----></script><script type="text/javascript" charset="utf-8" src="../oxygen-webhelp/resources/js/webhelp_topic.js"><!----></script></head>
+<body onload="highlightSearchTerm()" class="frmBody">
+<table class="nav"><tbody><tr><td colspan="2"><div id="printlink"><a href="javascript:window.print();" title="Print this page"></a></div><div id="permalink"><a href="#" title="Link to this page"></a></div></td></tr><tr><td width="75%"><a class="navheader_parent_path" href="../Origins/Origins_title.html" title="Origins">Origins</a></td><td><div class="navheader">
+<span class="navparent"><a class="link" href="../Origins/Origins_title.html" title="Origins"><span class="navheader_label">Parent topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">Origins</span></a></span>  </div></td></tr></tbody></table>
+<div class="nested0" id="concept_n1y_qyp_5q">
+ <h1 class="title topictitle1">File Tail</h1>
+
+ 
+ <div class="body conbody"><p class="shortdesc">The File Tail origin reads data as it is written to a file. As long as the pipeline
+  runs, File Tail captures text or JSON data that is written to the file. The File Tail origin does
+  not read data already in the file or data that is written to the file when the pipeline is not
+  running.</p>
+
+  <p class="p">For example, you have a log file with 30 rows of data when you
+      start the pipeline. The File Tail origin ignores the existing data and begins processing with
+      the 31st row of data when it arrives. It continues capturing incoming data until you stop the
+      pipeline. </p>
+
+  <div class="p">When you restart the pipeline, the File Tail origin begins processing with the next row of
+            incoming data. It does not try to process any rows that were written to the log file
+            while the pipeline was stopped. <div class="note note"><span class="notetitle">Note:</span> You can use data preview to test stage and
+                pipeline behavior, but only when data is written to the file at the time of preview.
+            </div>
+</div>
+
+ </div>
+
+<div class="related-links"></div>
+<div class="topic concept nested1" id="concept_npp_skg_cr">
+ <h2 class="title topictitle2">Tailing JSON Data</h2>
+
+ <div class="body conbody">
+  <p class="p">To capture JSON
+   data with the File Tail origin, each JSON object must be written to file as a single line.</p>
+
+ </div>
+
+</div>
+<div class="topic task nested1" id="task_unq_wdw_yq">
+    <h2 class="title topictitle2">Configuring a File Tail Origin</h2>
+
+    
+    <div class="body taskbody"><p class="shortdesc">Configure a File Tail origin to read data as it is written to a file. You can read
+        text or JSON data.</p>
+
+        <div class="section context"></div>
+
+        <ol class="ol steps" id="task_unq_wdw_yq__steps_cfd_j2w_yq"><li class="li step stepexpand">
+                <span class="ph cmd">In the Properties panel, on the <span class="keyword wintitle">General</span> tab, configure the
+                    following properties:</span>
+                <div class="itemgroup info">
+                    
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_unq_wdw_yq__d1250e162" class="table" frame="border" border="1" rules="all">
+                            
+                            
+                            <thead class="thead" align="left">
+                                <tr class="row">
+                                    <th class="entry" valign="top" width="24.509803921568626%" id="d12302e101">General Property</th>
+
+                                    <th class="entry" valign="top" width="75.49019607843137%" id="d12302e104">Description</th>
+
+                                </tr>
+
+                            </thead>
+
+                            <tbody class="tbody">
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="24.509803921568626%" headers="d12302e101 ">Name</td>
+
+                                    <td class="entry" valign="top" width="75.49019607843137%" headers="d12302e104 ">Stage name.</td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="24.509803921568626%" headers="d12302e101 ">Description</td>
+
+                                    <td class="entry" valign="top" width="75.49019607843137%" headers="d12302e104 ">Optional description.</td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="24.509803921568626%" headers="d12302e101 ">On Record Error</td>
+
+                                    <td class="entry" valign="top" width="75.49019607843137%" headers="d12302e104 ">Error record handling for the stage: <ul class="ul" id="task_unq_wdw_yq__d1250e209">
+                                            <li class="li">Discard - Discards the record.</li>
+
+                                            <li class="li">Send to Error - Sends the record to the pipeline for
+                                                error handling.</li>
+
+                                            <li class="li">Stop Pipeline - Stops the pipeline. </li>
+
+                                        </ul>
+</td>
+
+                                </tr>
+
+                            </tbody>
+
+                        </table>
+</div>
+
+                </div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">On the
+                        <span class="ph uicontrol">File</span> tab, configure the following properties:</span>
+                <div class="itemgroup info">
+                    
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_unq_wdw_yq__table_ld1_5fr_5q" class="table" frame="border" border="1" rules="all">
+                            
+                            
+                            <thead class="thead" align="left">
+                                <tr class="row">
+                                    <th class="entry" valign="top" width="35.3356890459364%" id="d12302e180">File Property</th>
+
+                                    <th class="entry" valign="top" width="64.66431095406361%" id="d12302e183">Description</th>
+
+                                </tr>
+
+                            </thead>
+
+                            <tbody class="tbody">
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="35.3356890459364%" headers="d12302e180 ">Data Format</td>
+
+                                    <td class="entry" valign="top" width="64.66431095406361%" headers="d12302e183 ">Format of data in the file. Use one of the following
+                                            options:<ul class="ul" id="task_unq_wdw_yq__ul_pwv_cr2_zq">
+                                            <li class="li">Text</li>
+
+                                            <li class="li">JSON</li>
+
+                                        </ul>
+</td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="35.3356890459364%" headers="d12302e180 ">File Path</td>
+
+                                    <td class="entry" valign="top" width="64.66431095406361%" headers="d12302e183 ">Directory and name of the file to read.</td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="35.3356890459364%" headers="d12302e180 ">Maximum Lines per Batch (recs)</td>
+
+                                    <td class="entry" valign="top" width="64.66431095406361%" headers="d12302e183 ">Maximum number of records to include in a batch. </td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="35.3356890459364%" headers="d12302e180 ">Batch Wait Time (secs) <a class="xref" href="Origins_overview.html#concept_ypd_vgr_5q" title="For origin stages, the batch size determines the maximum number of records sent through the pipeline at one time. The batch wait time determines the time that the origin waits for data before sending a batch. At the end of the wait time, it sends the batch regardless of how many records the batch contains.">
+                                            <img class="image" id="task_unq_wdw_yq__image_ulc_2fm_cr" src="../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
+
+                                    <td class="entry" valign="top" width="64.66431095406361%" headers="d12302e183 ">Number of seconds to wait before sending a batch.</td>
+
+                                </tr>
+
+                            </tbody>
+
+                        </table>
+</div>
+
+                </div>
+            </li>
+</ol>
+
+    </div>
+
+    <div class="related-links"><div class="relinfo reltasks"><strong>Related tasks</strong><br></br>
+<div class="related_link"><a class="navheader_parent_path" href="Origins_overview.html#task_jp5_ql1_tq" title="You can preview raw source data when you configure an origin. Preview raw source data when reviewing the data might help with origin configuration.">Previewing Raw Source Data</a></div>
+</div>
+</div>
+</div>
+</div>
+<div class="navfooter"><!---->
+<span class="navparent"><a class="link" href="../Origins/Origins_title.html" title="Origins"><span class="navheader_label">Parent topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">Origins</span></a></span>  </div><div class="footer"><div> </div><!-- © <a href="http://creativecommons.org/licenses/by-nc/4.0/legalcode">CC BY-NC 4.0.</a> StreamSets, 2015. --></div>
+</body>
+</html>

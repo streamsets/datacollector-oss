@@ -15,14 +15,11 @@
     <shortdesc/>
    </topicmeta>
   </topicref>
-  <topicref href="../Getting_Started/DCollector_Window.dita">
+  <topicref href="../Getting_Started/DCollector_Window.dita" chunk="to-content">
    <topicmeta>
     <shortdesc/>
    </topicmeta>
-  </topicref>
-  <topicref href="../Getting_Started/LocalandHostedHelp.dita"><topicmeta>
-   <shortdesc/>
-  </topicmeta>
+   <topicref href="../Getting_Started/ConfiguringConsoleSettings.dita"/>
   </topicref>
   </topicref>
 </map>

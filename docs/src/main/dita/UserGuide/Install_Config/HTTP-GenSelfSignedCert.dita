@@ -34,20 +34,8 @@
                 </info>
             </step>
             <step>
-                <cmd>When keytool requests the name of your organizational unit, enter the
-                    name.</cmd>
-            </step>
-            <step>
-                <cmd>When keytool requests the name of your organization, enter the name.</cmd>
-            </step>
-            <step>
-                <cmd>When keytool requests the name of your city or locality, enter the name.</cmd>
-            </step>
-            <step>
-                <cmd>When keytool requests the name of your state or province, enter the name.</cmd>
-            </step>
-            <step>
-                <cmd>When keytool requests the two character country code, enter the code.</cmd>
+                <cmd>When keytool requests additional information about your origanization, enter
+                    the information.</cmd>
             </step>
             <step>
                 <cmd>When keytool requests verification that the information is correct, enter yes

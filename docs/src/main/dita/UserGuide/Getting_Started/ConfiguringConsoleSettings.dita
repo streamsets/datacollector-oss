@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE task PUBLIC "-//OASIS//DTD DITA General Task//EN" "generalTask.dtd">
+<task id="task_r3q_fnx_pr">
+    <title>Configuring Console Settings</title>
+    <taskbody>
+        <context>
+            <p><indexterm>help<indexterm>local or hosted</indexterm></indexterm><indexterm>console
+                        settings<indexterm>configuring</indexterm></indexterm>You can configure how
+                information in the <ph
+                    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                /> console displays, such as the online help version, information density in the
+                panel, and the pipeline creation help bar.</p>
+        </context>
+        <steps id="steps_zgq_dpx_pr">
+            <step>
+                <cmd>In the top right corner of the <ph
+                        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                    /> console, click <menucascade>
+                        <uicontrol>Help</uicontrol>
+                        <uicontrol>Settings</uicontrol>
+                    </menucascade>.</cmd>
+            </step>
+            <step>
+                <cmd>In the Settings dialog box, you can configure the following options:</cmd>
+                <info>
+                    <table frame="all" rowsep="1" colsep="1" id="table_nn5_3px_pr">
+                        <tgroup cols="2">
+                            <colspec colname="c1" colnum="1" colwidth="1*"/>
+                            <colspec colname="c2" colnum="2" colwidth="2.39*"/>
+                            <thead>
+                                <row>
+                                    <entry>Console Setting</entry>
+                                    <entry>Description</entry>
+                                </row>
+                            </thead>
+                            <tbody>
+                                <row>
+                                    <entry>Display Density</entry>
+                                    <entry>Defines the density of the information that displays
+                                        properties, preview, and monitor information in the
+                                            panel:<ul id="ul_jdx_5px_pr">
+                                            <li>Comfortable - Includes extra space to make the
+                                                information easy to read.</li>
+                                            <li>Compact - Includes some additional space to make
+                                                information easier to read.</li>
+                                            <li>Cozy - Includes a minimum amount of additional space
+                                                so you can view more information in the panel.</li>
+                                        </ul></entry>
+                                </row>
+                                <row>
+                                    <entry>Help</entry>
+                                    <entry>Defines the help project that the <ph
+                                            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                                        /> uses:<ul id="ul_pzd_kqx_pr">
+                                            <li>Local help - Uses the local help project installed
+                                                with the <ph
+                                                  conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                                                />.</li>
+                                            <li>Hosted help - Uses a help project hosted on the
+                                                StreamSets website. Hosted help contains the latest
+                                                available documentation, but requires an internet
+                                                connection for access. </li>
+                                        </ul><p>Default is local help. Both help projects provide
+                                            context-sensitive help.</p></entry>
+                                </row>
+                                <row>
+                                    <entry>Hide the Pipeline Creation Help Bar </entry>
+                                    <entry>Hides the pipeline configuration help bar that displays
+                                        by default when a pipeline is incomplete. </entry>
+                                </row>
+                                <row>
+                                    <entry>Hide the REST Response Menu</entry>
+                                    <entry>Hides the REST Response menu so you cannot request REST
+                                        API response information.</entry>
+                                </row>
+                            </tbody>
+                        </tgroup>
+                    </table>
+                </info>
+            </step>
+        </steps>
+    </taskbody>
+</task>

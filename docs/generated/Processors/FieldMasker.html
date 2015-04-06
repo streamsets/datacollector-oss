@@ -1,0 +1,291 @@
+
+<!DOCTYPE html
+  SYSTEM "about:legacy-compat">
+<html xml:lang="en-us" lang="en-us">
+<head><meta name="description" content="The Field Masker processor masks string values based on the selected mask type. You can use variable-length, fixed-length, or custom masks. Custom masks can reveal part of the string value. Use the ..."></meta><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><meta name="copyright" content="(C) Copyright 2005"></meta><meta name="DC.rights.owner" content="(C) Copyright 2005"></meta><meta name="DC.Type" content="concept"></meta><meta name="DC.Title" content="Field Masker"></meta><meta name="abstract" content="The Field Masker processor masks string values based on the selected mask type. You can use variable-length, fixed-length, or custom masks. Custom masks can reveal part of the string value."></meta><meta name="description" content="The Field Masker processor masks string values based on the selected mask type. You can use variable-length, fixed-length, or custom masks. Custom masks can reveal part of the string value."></meta><meta name="DC.Relation" scheme="URI" content="../Processors/Processors_title.html"></meta><meta name="DC.Format" content="XHTML"></meta><meta name="DC.Identifier" content="concept_hjc_t4k_wq"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/commonltr.css"><!----></link><title>Field Masker</title><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/webhelp_topic.css"><!----></link><link rel="stylesheet" type="text/css" href="../skin.css"></link><script type="text/javascript"><!--
+          
+          var prefix = "../index.html";
+          
+          --></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery-1.8.2.min.js"><!----></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery.cookie.js"><!----></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery-ui.custom.min.js"><!----></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery.highlight-3.js"><!----></script><script type="text/javascript" charset="utf-8" src="../oxygen-webhelp/resources/js/webhelp_topic.js"><!----></script></head>
+<body onload="highlightSearchTerm()" class="frmBody">
+<table class="nav"><tbody><tr><td colspan="2"><div id="printlink"><a href="javascript:window.print();" title="Print this page"></a></div><div id="permalink"><a href="#" title="Link to this page"></a></div></td></tr><tr><td width="75%"><a class="navheader_parent_path" href="../Processors/Processors_title.html" title="Processors">Processors</a></td><td><div class="navheader">
+<span class="navparent"><a class="link" href="../Processors/Processors_title.html" title="Processors"><span class="navheader_label">Parent topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">Processors</span></a></span>  </div></td></tr></tbody></table>
+<div class="nested0" id="concept_hjc_t4k_wq">
+ <h1 class="title topictitle1">Field Masker</h1>
+
+ 
+ <div class="body conbody"><p class="shortdesc">The Field Masker processor masks string values based on the selected mask type. You can
+  use variable-length, fixed-length, or custom masks. Custom masks can reveal part of the string
+  value.</p>
+
+  <p class="p">Use the Field Masker to mask sensitive string data. For example,
+   you might use a custom mask to mask the last four digits of a phone number.</p>
+
+  <div class="p">
+   <div class="note tip"><span class="tiptitle">Tip:</span> To mask non-string data, you might use the Field Converter processor to convert
+    non-string data to String, then pass the data to the Field Masker. </div>
+
+  </div>
+
+ </div>
+
+<div class="related-links"></div>
+<div class="topic concept nested1" id="concept_vwp_gh4_wq">
+ <h2 class="title topictitle2">Mask Types</h2>
+
+ 
+ <div class="body conbody"><p class="shortdesc">You can use the following mask types to mask data: </p>
+
+  <div class="p">
+   <dl class="dl">
+    
+     <dt class="dt dlterm">Fixed-length</dt>
+
+     <dd class="dd">Replaces values with a fixed-length mask. Use when you want to
+      mask variations in the length of the data. </dd>
+
+     <dd class="dd">The following example uses a fixed-length masks to hide passwords:<table cellpadding="4" cellspacing="0" summary="" id="concept_vwp_gh4_wq__simpletable_zyf_5cj_yq" border="0" class="simpletable"><tr class="strow">
+        <td valign="top" class="stentry" width="50%">
+         <pre class="pre codeblock"><span class="ph uicontrol">Original Password</span> 
+1234
+donKey
+022367snowfall</pre>
+
+        </td>
+
+        <td valign="top" class="stentry" width="50%">
+         <pre class="pre codeblock"><span class="ph uicontrol">Fixed-Length Mask</span>
+asd302kd0
+2v03msO3d
+L92m1sN3q</pre>
+
+        </td>
+
+       </tr>
+</table>
+</dd>
+
+    
+    
+     <dt class="dt dlterm">Variable-length</dt>
+
+     <dd class="dd">Replaces values with a variable-length mask. Use when you want to reveal the lengths of the
+      original data. </dd>
+
+     <dd class="dd">The following example uses a variable length mask to hide the same passwords:<table cellpadding="4" cellspacing="0" summary="" id="concept_vwp_gh4_wq__simpletable_jfq_bdj_yq" border="0" class="simpletable"><tr class="strow">
+        <td valign="top" class="stentry" width="50%">
+         <pre class="pre codeblock"><span class="ph uicontrol">Original Password</span>
+1234
+donKey
+022367snowfall</pre>
+
+        </td>
+
+        <td valign="top" class="stentry" width="50%">
+         <pre class="pre codeblock"><span class="ph uicontrol">Variable-Length Mask</span>
+asd3
+2v03ms
+L92m1sN3q0jaOmE67Ws</pre>
+
+        </td>
+
+       </tr>
+</table>
+</dd>
+
+    
+    
+     <dt class="dt dlterm">Custom</dt>
+
+     <dd class="dd">Replaces values with a mask based on a user-defined pattern. </dd>
+
+     <dd class="dd">When you define the pattern for the mask, you can use a hash mark (#) to reveal the
+      character in that location. All other characters are used as constants in the mask. </dd>
+
+     <dd class="dd">The following example uses <samp class="ph codeph">###-xxx-xxxx</samp> as the mask pattern to reveal the
+      area code of a phone number while masking the rest of the number:<table cellpadding="4" cellspacing="0" summary="" id="concept_vwp_gh4_wq__simpletable_xwn_ms3_cr" border="0" class="simpletable"><tr class="strow">
+        <td valign="top" class="stentry" width="50%">
+         <pre class="pre codeblock"><span class="ph uicontrol">Original Phone Number</span>
+415-333-3434
+301-999-0987
+617-567-8888</pre>
+
+        </td>
+
+        <td valign="top" class="stentry" width="50%">
+         <pre class="pre codeblock"><span class="ph uicontrol">Custom Mask (###-xxx-xxxx)</span>
+415-xxx-xxxx
+301-xxx-xxxx
+617-xxx-xxxx</pre>
+
+        </td>
+
+       </tr>
+</table>
+<div class="note tip"><span class="tiptitle">Tip:</span> To avoid confusing masking characters for real data, use one
+       masking character instead of a mix of masking characters.</div>
+</dd>
+
+    
+   </dl>
+
+  </div>
+
+ </div>
+
+</div>
+<div class="topic task nested1" id="task_vgg_z44_wq">
+    <h2 class="title topictitle2">Configuring a Field Masker</h2>
+
+    
+    <div class="body taskbody"><p class="shortdesc">Configure a Field Masker to mask sensitive data.</p>
+
+        <div class="section context"></div>
+
+        <ol class="ol steps" id="task_vgg_z44_wq__steps_ekd_cp4_wq"><li class="li step stepexpand">
+                <span class="ph cmd">In the Properties panel, on the <span class="keyword wintitle">General</span> tab, configure the
+                    following properties:</span>
+                <div class="itemgroup info">
+                    
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_vgg_z44_wq__d1953e246" class="table" frame="border" border="1" rules="all">
+                            
+                            
+                            <thead class="thead" align="left">
+                                <tr class="row">
+                                    <th class="entry" valign="top" width="24.509803921568626%" id="d20471e219">General Property</th>
+
+                                    <th class="entry" valign="top" width="75.49019607843137%" id="d20471e222">Description</th>
+
+                                </tr>
+
+                            </thead>
+
+                            <tbody class="tbody">
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="24.509803921568626%" headers="d20471e219 ">Name</td>
+
+                                    <td class="entry" valign="top" width="75.49019607843137%" headers="d20471e222 ">Stage name.</td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="24.509803921568626%" headers="d20471e219 ">Description</td>
+
+                                    <td class="entry" valign="top" width="75.49019607843137%" headers="d20471e222 ">Optional description.</td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="24.509803921568626%" headers="d20471e219 ">Required Fields <a class="xref" href="../Pipeline_Configuration/RequiredFields.html#concept_dnj_bkm_vq" title="You can configure required fields for any processor and most destination stages. A required field must exist in a record to allow the record to enter the stage for processing. When a record does not include a required field, the stage passes the record to the pipeline for error handling.">
+                                            <img class="image" id="task_vgg_z44_wq__d1953e292" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
+
+                                    <td class="entry" valign="top" width="75.49019607843137%" headers="d20471e222 ">Fields that must include data to be passed to the stage.
+                                            <div class="note tip"><span class="tiptitle">Tip:</span> You might include fields
+                                            that the stage uses.</div>
+</td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="24.509803921568626%" headers="d20471e219 ">On Record Error</td>
+
+                                    <td class="entry" valign="top" width="75.49019607843137%" headers="d20471e222 ">Error record handling for the stage: <ul class="ul" id="task_vgg_z44_wq__d1953e307">
+                                            <li class="li">Discard - Discards the record.</li>
+
+                                            <li class="li">Send to Error - Sends the record to the pipeline for
+                                                error handling.</li>
+
+                                            <li class="li">Stop Pipeline - Stops the pipeline. </li>
+
+                                        </ul>
+</td>
+
+                                </tr>
+
+                            </tbody>
+
+                        </table>
+</div>
+
+                </div>
+            </li>
+<li class="li step stepexpand" id="task_vgg_z44_wq__SelectHashField">
+                <span class="ph cmd">On the
+                        <span class="ph uicontrol">Mask</span> tab, configure the following properties:</span>
+                <div class="itemgroup info">
+                    
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_vgg_z44_wq__table_ozv_nnk_wq" class="table" frame="border" border="1" rules="all">
+                            
+                            
+                            <thead class="thead" align="left">
+                                <tr class="row">
+                                    <th class="entry" valign="top" width="30.76923076923077%" id="d20471e316">Field Masker Property</th>
+
+                                    <th class="entry" valign="top" width="69.23076923076923%" id="d20471e319">Description</th>
+
+                                </tr>
+
+                            </thead>
+
+                            <tbody class="tbody">
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="30.76923076923077%" headers="d20471e316 ">Fields to Mask</td>
+
+                                    <td class="entry" valign="top" width="69.23076923076923%" headers="d20471e319 ">One or more String fields to mask with the same mask
+                                        type.</td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="30.76923076923077%" headers="d20471e316 ">Mask Type <a class="xref" href="FieldMasker.html#concept_vwp_gh4_wq" title="You can use the following mask types to mask data:">
+                                            <img class="image" src="../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
+
+                                    <td class="entry" valign="top" width="69.23076923076923%" headers="d20471e319 ">Mask type to hide field values. Select one of the
+                                        following options:<ul class="ul" id="task_vgg_z44_wq__ul_kmd_rnk_wq">
+                                            <li class="li">Fixed-length - Replaces values with a fixed-length
+                                                mask.</li>
+
+                                            <li class="li">Variable-length - Replaces values with a mask the
+                                                length of the original value.</li>
+
+                                            <li class="li">Custom - Replaces values with a user-defined
+                                                mask.</li>
+
+                                        </ul>
+</td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="30.76923076923077%" headers="d20471e316 ">Custom Mask <a class="xref" href="FieldMasker.html#concept_vwp_gh4_wq" title="You can use the following mask types to mask data:">
+                                            <img class="image" id="task_vgg_z44_wq__image_rx1_l1q_wq" src="../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
+
+                                    <td class="entry" valign="top" width="69.23076923076923%" headers="d20471e319 ">Mask pattern for a custom mask. Enter the pattern that
+                                        you want to use.<p class="p">Use the hash mark (#) to display
+                                            characters in the specified location. Use any other
+                                            character as a masking character.</p>
+</td>
+
+                                </tr>
+
+                            </tbody>
+
+                        </table>
+</div>
+
+                </div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">To mask another field, click the <span class="ph uicontrol">Add</span> icon, and then
+                    repeat the previous step.</span>
+            </li>
+</ol>
+
+    </div>
+
+</div>
+</div>
+<div class="navfooter"><!---->
+<span class="navparent"><a class="link" href="../Processors/Processors_title.html" title="Processors"><span class="navheader_label">Parent topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">Processors</span></a></span>  </div><div class="footer"><div> </div><!-- © <a href="http://creativecommons.org/licenses/by-nc/4.0/legalcode">CC BY-NC 4.0.</a> StreamSets, 2015. --></div>
+</body>
+</html>
