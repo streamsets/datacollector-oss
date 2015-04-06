@@ -107,7 +107,7 @@
     },
     "messages": {
       "info": {
-        "graphErrorBadgeLabel": "Total Bad records + Stage errors.",
+        "graphErrorBadgeLabel": "Total Error records + Stage errors.",
         "noPipelineExists": "No Pipeline found with name '{{name}}'",
         "originExists": "Origin already exists.",
         "saveOperationInProgress" : "All Changes Saved",
@@ -183,11 +183,11 @@
       "batchesPerSecond": "( batches / sec)",
       "emailIDs": "Email IDs",
       "errors": "Errors",
-      "badRecords": "Bad Records",
+      "badRecords": "Error Records",
       "badRecordsTab": {
-        "mostRecentBadRecords": "Most Recent Bad Records",
+        "mostRecentBadRecords": "Most Recent Error Records",
         "mostRecentErrorMessages": "Most Recent Error Messages",
-        "totalNumberOfBadRecords": "Total Number of Bad Records: ",
+        "totalNumberOfBadRecords": "Total Number of Error Records: ",
         "totalNumberOfErrors": "Total Number of Errors: ",
         "badRecordsCounts": "Records in Error (since last startup)",
         "badRecordsHistogram": "Records in Error Histogram (5 minutes decay)",
