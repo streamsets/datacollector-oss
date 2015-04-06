@@ -6,6 +6,7 @@
 package com.streamsets.pipeline.stage.destination.hdfs.writer;
 
 
+import com.google.common.annotations.VisibleForTesting;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.impl.Utils;
@@ -86,6 +87,11 @@ public class ActiveRecordWriters {
       }
     }
     return writer;
+  }
+
+  @VisibleForTesting
+  public RecordWriterManager getWriterManager() {
+    return manager;
   }
 
   public void release(RecordWriter writer) throws IOException {

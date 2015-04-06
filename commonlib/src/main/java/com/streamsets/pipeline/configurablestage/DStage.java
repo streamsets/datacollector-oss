@@ -13,7 +13,7 @@ import java.util.List;
 public abstract class DStage<C extends Stage.Context> implements Stage<C> {
   private Stage<C> stage;
 
-  Stage<C> getStage() {
+  public Stage<C> getStage() {
     return stage;
   }
 

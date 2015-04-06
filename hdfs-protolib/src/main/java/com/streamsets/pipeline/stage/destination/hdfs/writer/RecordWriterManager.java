@@ -74,7 +74,7 @@ public class RecordWriterManager {
   private Target.Context context;
 
   public RecordWriterManager(URI hdfsUri, Configuration hdfsConf, String uniquePrefix, String dirPathTemplate,
-      TimeZone timeZone, long cutOffSecs, long cutOffSize, long cutOffRecords, HdfsFileType fileType,
+      TimeZone timeZone, long cutOffSecs, long cutOffSizeBytes, long cutOffRecords, HdfsFileType fileType,
       CompressionCodec compressionCodec, SequenceFile.CompressionType compressionType, String keyEL,
       CharDataGeneratorFactory generatorFactory, Target.Context context) {
     this.hdfsUri = hdfsUri;
@@ -83,7 +83,7 @@ public class RecordWriterManager {
     this.dirPathTemplate = dirPathTemplate;
     this.timeZone = timeZone;
     this.cutOffMillis = cutOffSecs * 1000;
-    this.cutOffSize = cutOffSize;
+    this.cutOffSize = cutOffSizeBytes;
     this.cutOffRecords = cutOffRecords;
     this.fileType = fileType;
     this.compressionCodec = compressionCodec;
@@ -93,6 +93,18 @@ public class RecordWriterManager {
     this.context = context;
     dirPathTemplateElEval = ElUtil.createDirPathTemplateEval(context);
     getCeilingDateBasedOnTemplate(dirPathTemplate, timeZone, new Date());
+  }
+
+  public long getCutOffMillis() {
+    return cutOffMillis;
+  }
+
+  public long getCutOffSizeBytes() {
+    return cutOffSize;
+  }
+
+  public long getCutOffRecords() {
+    return cutOffRecords;
   }
 
   private static final String CONST_YYYY = "YYYY";

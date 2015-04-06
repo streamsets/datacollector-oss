@@ -47,6 +47,7 @@ import java.util.TimeZone;
 
 public class HdfsTarget extends RecordTarget {
   private final static Logger LOG = LoggerFactory.getLogger(HdfsTarget.class);
+  private final static int MEGA_BYTE = 1024 * 1024;
 
   private final String hdfsUri;
   private final boolean hdfsKerberos;
@@ -58,7 +59,7 @@ public class HdfsTarget extends RecordTarget {
   private final String timeZoneID;
   private final String timeDriver;
   private final long maxRecordsPerFile;
-  private final long maxFileSize;
+  private final long maxFileSizeMBs;
   private final CompressionMode compression;
   private final String otherCompression;
   private final HdfsFileType fileType;
@@ -93,7 +94,7 @@ public class HdfsTarget extends RecordTarget {
     this.timeZoneID = timeZoneID;
     this.timeDriver = timeDriver;
     this.maxRecordsPerFile = maxRecordsPerFile;
-    this.maxFileSize = maxFileSize;
+    this.maxFileSizeMBs = maxFileSize;
     this.compression = compression;
     this.otherCompression = otherCompression;
     this.fileType = fileType;
@@ -138,7 +139,7 @@ public class HdfsTarget extends RecordTarget {
       issues.add(getContext().createConfigIssue(Groups.LATE_RECORDS.name(), "lateRecordsLimit", Errors.HADOOPFS_06,
                                                 lateRecordsLimit, ex.getMessage(), ex));
     }
-    if (maxFileSize < 0) {
+    if (maxFileSizeMBs < 0) {
       issues.add(getContext().createConfigIssue(Groups.LATE_RECORDS.name(), "maxFileSize", Errors.HADOOPFS_08));
     }
 
@@ -180,8 +181,8 @@ public class HdfsTarget extends RecordTarget {
             break;
         }
         RecordWriterManager mgr = new RecordWriterManager(new URI(hdfsUri), hdfsConfiguration, uniquePrefix,
-          dirPathTemplate, TimeZone.getTimeZone(timeZoneID), lateRecordsLimitSecs, maxFileSize, maxRecordsPerFile,
-          fileType, compressionCodec, compressionType, keyEl, generatorFactory, getContext());
+          dirPathTemplate, TimeZone.getTimeZone(timeZoneID), lateRecordsLimitSecs, maxFileSizeMBs * MEGA_BYTE,
+          maxRecordsPerFile, fileType, compressionCodec, compressionType, keyEl, generatorFactory, getContext());
 
         currentWriters = new ActiveRecordWriters(mgr);
       } catch (Exception ex) {
@@ -199,8 +200,9 @@ public class HdfsTarget extends RecordTarget {
         RecordWriterManager.validateDirPathTemplate2(getContext(), lateRecordsDirPathTemplate);
         try {
           RecordWriterManager mgr = new RecordWriterManager(new URI(hdfsUri), hdfsConfiguration, uniquePrefix,
-            lateRecordsDirPathTemplate, TimeZone.getTimeZone(timeZoneID), lateRecordsLimitSecs, maxFileSize,
-            maxRecordsPerFile, fileType, compressionCodec,compressionType, keyEl, generatorFactory, getContext());
+            lateRecordsDirPathTemplate, TimeZone.getTimeZone(timeZoneID), lateRecordsLimitSecs,
+            maxFileSizeMBs * MEGA_BYTE, maxRecordsPerFile, fileType, compressionCodec,compressionType, keyEl,
+            generatorFactory, getContext());
 
           lateWriters = new ActiveRecordWriters(mgr);
         } catch (Exception ex) {
