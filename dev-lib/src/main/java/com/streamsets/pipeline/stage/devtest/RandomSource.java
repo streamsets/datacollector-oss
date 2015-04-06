@@ -32,7 +32,7 @@ public class RandomSource extends BaseSource {
   @ConfigDef(required = true, type = ConfigDef.Type.NUMBER,
     defaultValue = "1000",
     label = "Delay between each batch",
-    min = 1,
+    min = 0,
     max = Integer.MAX_VALUE)
   public int delay;
 
