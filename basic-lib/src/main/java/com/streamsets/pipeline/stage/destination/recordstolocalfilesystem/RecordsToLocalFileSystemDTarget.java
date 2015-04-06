@@ -22,7 +22,7 @@ import com.streamsets.pipeline.lib.el.TimeEL;
     icon="localfilesystem.png"
 )
 @HideConfig(requiredFields = true, onErrorRecord = true)
-@ErrorStage
+@ErrorStage(label = "Write to File")
 @ConfigGroups(Groups.class)
 @GenerateResourceBundle
 public class RecordsToLocalFileSystemDTarget extends DTarget {

@@ -50,6 +50,7 @@ public class RBGenMojo extends AbstractMojo {
   private static final String ERROR_CODE_CLASS_NAME = "com.streamsets.pipeline.api.ErrorCode";
   private static final String LABEL_CLASS_NAME = "com.streamsets.pipeline.api.Label";
   private static final String STAGE_DEF_CLASS_NAME = "com.streamsets.pipeline.api.StageDef";
+  private static final String ERROR_STAGE_CLASS_NAME = "com.streamsets.pipeline.api.ErrorStage";
   private static final String CONFIG_DEF_CLASS_NAME = "com.streamsets.pipeline.api.ConfigDef";
 
   @Parameter(defaultValue="${project}", readonly=true)
@@ -62,6 +63,7 @@ public class RBGenMojo extends AbstractMojo {
   private Class errorCodeClass;
   private Class labelClass;
   private Class stageDefClass;
+  private Class errorStageClass;
   private Class configDefClass;
 
   private boolean usesDataCollectorAPI(ClassLoader classLoader) {
@@ -70,6 +72,7 @@ public class RBGenMojo extends AbstractMojo {
       errorCodeClass = classLoader.loadClass(ERROR_CODE_CLASS_NAME);
       labelClass = classLoader.loadClass(LABEL_CLASS_NAME);
       stageDefClass = classLoader.loadClass(STAGE_DEF_CLASS_NAME);
+      errorStageClass = classLoader.loadClass(ERROR_STAGE_CLASS_NAME);
       configDefClass = classLoader.loadClass(CONFIG_DEF_CLASS_NAME);
       return true;
     } catch (ClassNotFoundException ex) {
@@ -164,25 +167,31 @@ public class RBGenMojo extends AbstractMojo {
       Annotation stageDef = klass.getAnnotation(stageDefClass);
       if (stageDef != null) {
         String labelText = invokeMessageMethod(stageDefClass, "label", stageDef);
-        if (!labelText.isEmpty()) {
-          map.put("stageLabel", labelText);
-        }
+        map.put("stageLabel", labelText);
         String descriptionText = invokeMessageMethod(stageDefClass, "description", stageDef);
-        if (!descriptionText.isEmpty()) {
-          map.put("stageDescription", descriptionText);
+        map.put("stageDescription", descriptionText);
+        Annotation errorStage = klass.getAnnotation(errorStageClass);
+        if (errorStage != null) {
+          String errorLabelText = invokeMessageMethod(errorStageClass, "label", errorStage);
+          if (errorLabelText.isEmpty()) {
+            errorLabelText = labelText;
+          }
+          map.put("errorStageLabel", errorLabelText);
+          String errorDescriptionText = invokeMessageMethod(errorStageClass, "description", errorStage);
+          if (!errorDescriptionText.isEmpty()) {
+            errorDescriptionText = descriptionText;
+          }
+          map.put("errorStageDescription", errorDescriptionText);
+
         }
       }
       for (Field field : klass.getFields()) {
         Annotation configDef = field.getAnnotation(configDefClass);
         if (configDef != null) {
           String labelText = invokeMessageMethod(configDefClass, "label", configDef);
-          if (!labelText.isEmpty()) {
-            map.put("configLabel." + field.getName(), labelText);
-          }
+          map.put("configLabel." + field.getName(), labelText);
           String descriptionText = invokeMessageMethod(configDefClass, "description", configDef);
-          if (!descriptionText.isEmpty()) {
-            map.put("configDescription." + field.getName(), descriptionText);
-          }
+          map.put("configDescription." + field.getName(), descriptionText);
         }
       }
 

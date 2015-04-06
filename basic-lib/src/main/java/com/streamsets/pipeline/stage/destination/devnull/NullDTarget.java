@@ -19,7 +19,7 @@ import com.streamsets.pipeline.configurablestage.DTarget;
     icon="trash.png"
 )
 @HideConfig(requiredFields = true, onErrorRecord = true)
-@ErrorStage
+@ErrorStage(label = "Discard")
 @GenerateResourceBundle
 public class NullDTarget extends DTarget {
 

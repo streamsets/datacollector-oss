@@ -36,7 +36,7 @@ public class PreviewStageLibraryTask extends TaskWrapper implements StageLibrary
     StageDefinition def;
     if (LIBRARY.equals(library) && NAME.equals(name) && VERSION.equals(VERSION)) {
       def = new StageDefinition(PreviewPlugTarget.class.getName(), NAME, VERSION, "previewPlug", "Preview Plug",
-          StageType.TARGET, false, false, false, Collections.<ConfigDefinition>emptyList(),
+          StageType.TARGET, false, null, null, false, false, Collections.<ConfigDefinition>emptyList(),
         null/*raw source definition*/, "", null, false, 0, null);
       def.setLibrary(LIBRARY, "", getClass().getClassLoader());
     } else {

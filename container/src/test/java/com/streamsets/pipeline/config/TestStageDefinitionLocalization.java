@@ -44,7 +44,8 @@ public class TestStageDefinitionLocalization {
         (List)ImmutableList.of(ImmutableMap.of("label", "Group", "name", "GROUP"))
     );
     StageDefinition def = new StageDefinition(TProcessor.class.getName(), "stage", "1.0.0", "StageLabel",
-                                              "StageDescription", StageType.PROCESSOR, false, true, true, configs,
+                                              "StageDescription", StageType.PROCESSOR, true, "ErrorStageLabel",
+                                              "ErrorStageDescription", true, true, configs,
                                               rawSource, "", configGroup, false, 1,
                                               TOutput.class.getName());
     def.setLibrary("lib", "LIB", getClass().getClassLoader());
@@ -58,6 +59,10 @@ public class TestStageDefinitionLocalization {
     //stage
     Assert.assertEquals(expected.get("stageLabel"), def.getLabel());
     Assert.assertEquals(expected.get("stageDescription"), def.getDescription());
+
+    //error stage
+    Assert.assertEquals(expected.get("errorStageLabel"), def.getErrorStageLabel());
+    Assert.assertEquals(expected.get("errorStageDescription"), def.getErrorStageDescription());
 
     //stage groups
     Assert.assertEquals(expected.get("stageGroup"), def.getConfigGroupDefinition().getGroupNameToLabelMapList().get(0).get(
@@ -92,6 +97,8 @@ public class TestStageDefinitionLocalization {
   static {
     EXPECTED_BUILT_IN.put("stageLabel", "StageLabel");
     EXPECTED_BUILT_IN.put("stageDescription", "StageDescription");
+    EXPECTED_BUILT_IN.put("errorStageLabel", "ErrorStageLabel");
+    EXPECTED_BUILT_IN.put("errorStageDescription", "ErrorStageDescription");
     EXPECTED_BUILT_IN.put("stageGroup", "Group");
     EXPECTED_BUILT_IN.put("c1Label", "Config1Label");
     EXPECTED_BUILT_IN.put("c1Description", "Config1Description");
@@ -111,6 +118,8 @@ public class TestStageDefinitionLocalization {
   static {
     EXPECTED_RESOURCE_BUNDLE.put("stageLabel", "XStageLabel");
     EXPECTED_RESOURCE_BUNDLE.put("stageDescription", "XStageDescription");
+    EXPECTED_RESOURCE_BUNDLE.put("errorStageLabel", "XErrorStageLabel");
+    EXPECTED_RESOURCE_BUNDLE.put("errorStageDescription", "XErrorStageDescription");
     EXPECTED_RESOURCE_BUNDLE.put("stageGroup", "XGroup");
     EXPECTED_RESOURCE_BUNDLE.put("c1Label", "XConfig1Label");
     EXPECTED_RESOURCE_BUNDLE.put("c1Description", "XConfig1Description");

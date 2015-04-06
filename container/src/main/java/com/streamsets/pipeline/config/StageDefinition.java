@@ -32,6 +32,8 @@ public class StageDefinition {
   private final String description;
   private final StageType type;
   private final boolean errorStage;
+  private final String errorStageLabel;
+  private final String errorStageDescription;
   private final boolean requiredFields;
   private final boolean onRecordError;
   private final RawSourceDefinition rawSourceDefinition;
@@ -46,7 +48,8 @@ public class StageDefinition {
 
   // localized version
   private StageDefinition(ClassLoader classLoader, String library, String libraryLabel, String className, String name,
-      String version, String label, String description, StageType type, boolean errorStage, boolean requiredFields,
+      String version, String label, String description, StageType type, boolean errorStage, String errorStageLabel,
+      String errorStageDescription, boolean requiredFields,
       boolean onRecordError, List<ConfigDefinition> configDefinitions, RawSourceDefinition rawSourceDefinition,
       String icon, ConfigGroupDefinition configGroupDefinition, boolean variableOutputStreams, int outputStreams,
       List<String> outputStreamLabels) {
@@ -60,6 +63,8 @@ public class StageDefinition {
     this.description = description;
     this.type = type;
     this.errorStage = errorStage;
+    this.errorStageLabel = errorStageLabel;
+    this.errorStageDescription = errorStageDescription;
     this.requiredFields = requiredFields;
     this.onRecordError = onRecordError;
     this.configDefinitions = configDefinitions;
@@ -86,7 +91,8 @@ public class StageDefinition {
   }
 
   public StageDefinition(String className, String name, String version, String label, String description,
-      StageType type, boolean errorStage, boolean requiredFields, boolean onRecordError,
+      StageType type, boolean errorStage, String errorStageLabel,
+      String errorStageDescription,boolean requiredFields, boolean onRecordError,
       List<ConfigDefinition> configDefinitions, RawSourceDefinition rawSourceDefinition, String icon,
       ConfigGroupDefinition configGroupDefinition, boolean variableOutputStreams, int outputStreams,
       String outputStreamLabelProviderClass) {
@@ -97,6 +103,8 @@ public class StageDefinition {
     this.description = description;
     this.type = type;
     this.errorStage = errorStage;
+    this.errorStageLabel = errorStageLabel;
+    this.errorStageDescription = errorStageDescription;
     this.requiredFields = requiredFields;
     this.onRecordError = onRecordError;
     this.configDefinitions = configDefinitions;
@@ -185,6 +193,14 @@ public class StageDefinition {
     return errorStage;
   }
 
+  public String getErrorStageLabel() {
+    return errorStageLabel;
+  }
+
+  public String getErrorStageDescription() {
+    return errorStageDescription;
+  }
+
   public boolean hasRequiredFields() {
     return requiredFields;
   }
@@ -242,6 +258,8 @@ public class StageDefinition {
 
   private final static String STAGE_LABEL = "stageLabel";
   private final static String STAGE_DESCRIPTION = "stageDescription";
+  private final static String ERROR_STAGE_LABEL = "errorStageLabel";
+  private final static String ERROR_STAGE_DESCRIPTION = "errorStageDescription";
 
   private static Map<String, String> getGroupToResourceBundle(ConfigGroupDefinition configGroupDefinition) {
     Map<String, String> map = new HashMap<>();
@@ -300,6 +318,15 @@ public class StageDefinition {
     // Library label
     String libraryLabel = StageLibraryUtils.getLibraryLabel(classLoader);
 
+    String errorStageLabel = null;
+    String errorStageDescription = null;
+    if (isErrorStage()) {
+      errorStageLabel = new LocalizableMessage(classLoader, rbName, ERROR_STAGE_LABEL, getErrorStageLabel(),
+                                               null).getLocalized();
+      errorStageDescription = new LocalizableMessage(classLoader, rbName, ERROR_STAGE_DESCRIPTION,
+                                                     getErrorStageDescription(), null).getLocalized();
+    }
+
     // stage configs
     List<ConfigDefinition> configDefs = new ArrayList<>();
     for (ConfigDefinition configDef : getConfigDefinitions()) {
@@ -332,9 +359,9 @@ public class StageDefinition {
     }
 
     return new StageDefinition(classLoader, getLibrary(), libraryLabel, getClassName(), getName(), getVersion(), label,
-                               description, getType(), isErrorStage(), hasRequiredFields(), hasOnRecordError(),
-                               configDefs, rawSourceDef, getIcon(), groupDefs, isVariableOutputStreams(),
-                               getOutputStreams(), streamLabels);
+                               description, getType(), isErrorStage(), errorStageLabel, errorStageDescription,
+                               hasRequiredFields(), hasOnRecordError(), configDefs, rawSourceDef, getIcon(), groupDefs,
+                               isVariableOutputStreams(), getOutputStreams(), streamLabels);
   }
 
   private List<String> _getOutputStreamLabels(ClassLoader classLoader, boolean localized) {

@@ -285,35 +285,35 @@ public class MockStages {
       public Builder() {
         StageDefinition sDef = new StageDefinition(
           MSource.class.getName(), "sourceName", "1.0.0", "sourceLabel",
-          "sourceDesc", StageType.SOURCE, false, true, true, Collections.<ConfigDefinition>emptyList(),
+          "sourceDesc", StageType.SOURCE, false, null, null, true, true, Collections.<ConfigDefinition>emptyList(),
           null/*raw source definition*/, "", null, false, 1, null
         );
         sDef.setLibrary("default", "", Thread.currentThread().getContextClassLoader());
 
         StageDefinition socDef = new StageDefinition(
           MSourceOffsetCommitter.class.getName(), "sourceOffsetCommitterName", "1.0.0", "sourceOffsetCommitterLabel",
-          "sourceDesc", StageType.SOURCE, false, true, true, Collections.<ConfigDefinition>emptyList(),
+          "sourceDesc", StageType.SOURCE, false, null, null, true, true, Collections.<ConfigDefinition>emptyList(),
           null/*raw source definition*/, "", null, false, 1, null
         );
         socDef.setLibrary("default", "", Thread.currentThread().getContextClassLoader());
 
         StageDefinition pDef = new StageDefinition(MProcessor.class.getName(), "processorName", "1.0.0", "sourcelabel",
-          "sourceDescription", StageType.PROCESSOR, false, true, true, Collections.<ConfigDefinition>emptyList(),
+          "sourceDescription", StageType.PROCESSOR, false, null, null, true, true, Collections.<ConfigDefinition>emptyList(),
           null/*raw source definition*/, "", null,
           false, 1, null);
         pDef.setLibrary("default", "", Thread.currentThread().getContextClassLoader());
 
         StageDefinition tDef = new StageDefinition(
           MTarget.class.getName(), "targetName", "1.0.0", "targetLabel",
-          "targetDesc", StageType.TARGET, false, true, true, Collections.<ConfigDefinition>emptyList(),
+          "targetDesc", StageType.TARGET, false, null, null, true, true, Collections.<ConfigDefinition>emptyList(),
           null/*raw source definition*/, "", null, false, 0, null
         );
         tDef.setLibrary("default", "", Thread.currentThread().getContextClassLoader());
 
         StageDefinition eDef = new StageDefinition(
           ETarget.class.getName(), "errorTarget", "1.0.0", "errorTarget",
-          "Error Target", StageType.TARGET, true, false, true, Collections.<ConfigDefinition>emptyList(),
-          null/*raw source definition*/, "", null, false, 0, null
+          "Error Target", StageType.TARGET, true, "ErrorL", "ErrorD", false, true,
+          Collections.<ConfigDefinition>emptyList(), null/*raw source definition*/, "", null, false, 0, null
         );
         eDef.setLibrary("default", "", Thread.currentThread().getContextClassLoader());
 
@@ -331,8 +331,8 @@ public class MockStages {
           Collections.<String> emptyList(), null);
         StageDefinition swcDef = new StageDefinition(
           MSource.class.getName(), "sourceWithConfigsName", "1.0.0", "sourceWithConfigsLabel",
-          "sourceWithConfigsDesc", StageType.SOURCE, false, true, true, Lists.newArrayList(depConfDef, triggeredConfDef),
-          null/*raw source definition*/, "", null, false, 1, null);
+          "sourceWithConfigsDesc", StageType.SOURCE, false, null, null, true, true,
+          Lists.newArrayList(depConfDef, triggeredConfDef), null/*raw source definition*/, "", null, false, 1, null);
         swcDef.setLibrary("default", "", Thread.currentThread().getContextClassLoader());
         StageDefinition[] stageDefs = new StageDefinition[]{sDef, socDef, pDef, tDef, swcDef, eDef};
         stages = new HashMap<>();
@@ -357,7 +357,8 @@ public class MockStages {
           StageDefinition oldDef = stages.get(name);
           StageDefinition newDef = new StageDefinition(
             className, oldDef.getName(), oldDef.getVersion(), oldDef.getLabel(),
-            oldDef.getDescription(), oldDef.getType(), oldDef.isErrorStage(), oldDef.hasRequiredFields(),
+            oldDef.getDescription(), oldDef.getType(), oldDef.isErrorStage(), oldDef.getErrorStageLabel(),
+            oldDef.getErrorStageDescription(), oldDef.hasRequiredFields(),
             oldDef.hasOnRecordError(), oldDef.getConfigDefinitions(),
             oldDef.getRawSourceDefinition(), oldDef.getIcon(), oldDef.getConfigGroupDefinition(),
             oldDef.isVariableOutputStreams(), oldDef.getOutputStreams(), oldDef.getOutputStreamLabelProviderClass()
