@@ -42,12 +42,14 @@ public class ConfigDefinitionJson {
     @JsonProperty("mode")String mode,
     @JsonProperty("lines")int lines,
     @JsonProperty("elDefs") List<String> elDefs,
+    @JsonProperty("evaluation") ConfigDef.Evaluation evaluation,
     @JsonProperty("dependsOnMap") Map<String, List<Object>> dependsOnMap) {
 
     this.configDefinition = new com.streamsets.pipeline.config.ConfigDefinition(name, type, label, description,
       defaultValue, required, group, fieldName, BeanHelper.unwrapModelDefinition(model), dependsOn, triggeredByValues,
       displayPosition, BeanHelper.unwrapElFunctionDefinitions(elFunctionDefinitions),
-      BeanHelper.unwrapElConstantDefinitions(elConstantDefinitions), min, max, mode, lines, elDefs, dependsOnMap);
+      BeanHelper.unwrapElConstantDefinitions(elConstantDefinitions), min, max, mode, lines, elDefs, evaluation,
+      dependsOnMap);
   }
 
   public ConfigDefinitionJson(com.streamsets.pipeline.config.ConfigDefinition configDefinition) {
@@ -127,6 +129,10 @@ public class ConfigDefinitionJson {
 
   public List<String> getElDefs() {
     return configDefinition.getElDefs();
+  }
+
+  public ConfigDef.Evaluation getEvaluation() {
+    return this.configDefinition.getEvaluation();
   }
 
   public Map<String, List<Object>> getDependsOnMap() {

@@ -6,8 +6,6 @@
 
 package com.streamsets.pipeline.api;
 
-
-import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -17,8 +15,7 @@ import java.lang.annotation.Target;
 @Target(ElementType.FIELD)
 public @interface ConfigDef {
 
-  public enum Type { BOOLEAN, NUMBER, STRING, LIST, MAP, MODEL, EL_STRING, EL_NUMBER, EL_DATE, EL_BOOLEAN, EL_OBJECT,
-    CHARACTER, TEXT }
+  public enum Type { BOOLEAN, NUMBER, STRING, LIST, MAP, MODEL, CHARACTER, TEXT }
 
   public enum Mode {JAVA, JAVASCRIPT, JSON, PLAIN_TEXT, PYTHON, RUBY, SCALA}
 

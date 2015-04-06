@@ -104,7 +104,7 @@ public class HdfsDTarget extends DTarget {
 
   @ConfigDef(
       required = true,
-      type = ConfigDef.Type.EL_STRING,
+      type = ConfigDef.Type.STRING,
       defaultValue = "/tmp/out/${YYYY()}-${MM()}-${DD()}-${hh()}",
       label = "Directory Template",
       description = "Template for the creation of output directories. Valid variables are ${YYYY()}, ${MM()}, ${DD()}, " +
@@ -112,7 +112,8 @@ public class HdfsDTarget extends DTarget {
                     "created based on the smallest time unit variable used.",
       displayPosition = 110,
       group = "OUTPUT_FILES",
-      elDefs = {RecordEL.class, TimeEL.class}
+      elDefs = {RecordEL.class, TimeEL.class},
+      evaluation = ConfigDef.Evaluation.EXPLICIT
   )
   public String dirPathTemplate;
 
@@ -130,14 +131,15 @@ public class HdfsDTarget extends DTarget {
 
   @ConfigDef(
       required = true,
-      type = ConfigDef.Type.EL_DATE,
+      type = ConfigDef.Type.STRING,
       defaultValue = "${time:now()}",
       label = "Time Basis",
       description = "Time basis to use for a record. Enter an expression that evaluates to a datetime. To use the " +
                     "processing time, enter ${time:now()}. To use field values, use '${record:value(\"<filepath>\")}'.",
       displayPosition = 130,
       group = "OUTPUT_FILES",
-      elDefs = {RecordEL.class, TimeEL.class}
+      elDefs = {RecordEL.class, TimeEL.class},
+      evaluation = ConfigDef.Evaluation.EXPLICIT
   )
   public String timeDriver;
 
@@ -234,7 +236,7 @@ public class HdfsDTarget extends DTarget {
 
   @ConfigDef(
       required = true,
-      type = ConfigDef.Type.EL_NUMBER,
+      type = ConfigDef.Type.STRING,
       defaultValue = "${1 * HOURS}",
       label = "Late Record Time Limit (secs)",
       description = "Time limit (in seconds) for a record to be written to the corresponding HDFS directory, if the " +
@@ -243,7 +245,8 @@ public class HdfsDTarget extends DTarget {
                     "'${30 * MINUTES}'",
       displayPosition = 200,
       group = "LATE_RECORDS",
-      elDefs = {TimeEL.class}
+      elDefs = {TimeEL.class},
+      evaluation = ConfigDef.Evaluation.EXPLICIT
   )
   public String lateRecordsLimit;
 
@@ -261,7 +264,7 @@ public class HdfsDTarget extends DTarget {
 
   @ConfigDef(
       required = false,
-      type = ConfigDef.Type.EL_STRING,
+      type = ConfigDef.Type.STRING,
       defaultValue = "/tmp/late/${YYYY()}-${MM()}-${DD()}",
       label = "Late Record Directory Template",
       description = "Template for the creation of late record directories. Valid variables are ${YYYY()}, ${MM()}, " +
@@ -270,7 +273,8 @@ public class HdfsDTarget extends DTarget {
       group = "LATE_RECORDS",
       dependsOn = "lateRecordsAction",
       triggeredByValue = "SEND_TO_LATE_RECORDS_FILE",
-      elDefs = {RecordEL.class, TimeEL.class}
+      elDefs = {RecordEL.class, TimeEL.class},
+      evaluation = ConfigDef.Evaluation.EXPLICIT
   )
   public String lateRecordsDirPathTemplate;
 

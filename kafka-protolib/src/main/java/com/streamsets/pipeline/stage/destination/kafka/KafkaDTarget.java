@@ -42,6 +42,7 @@ public class KafkaDTarget extends DTarget {
     description = "Comma-separated list of URIs for brokers that write to the topic.  Use the format " +
       "<HOST>:<PORT>. To ensure a connection, enter as many as possible.",
     displayPosition = 10,
+    elDefs = {StringEL.class},
     group = "KAFKA"
   )
   public String metadataBrokerList;
@@ -53,6 +54,7 @@ public class KafkaDTarget extends DTarget {
     label = "Topic",
     description = "",
     displayPosition = 20,
+    elDefs = {StringEL.class},
     group = "KAFKA"
   )
   public String topic;
@@ -71,7 +73,7 @@ public class KafkaDTarget extends DTarget {
 
   @ConfigDef(
     required = false,
-    type = ConfigDef.Type.EL_NUMBER,
+    type = ConfigDef.Type.STRING,
     defaultValue = "${0}",
     label = "Partition Expression",
     description = "Expression that determines the partition to write to",
@@ -79,7 +81,8 @@ public class KafkaDTarget extends DTarget {
     group = "KAFKA",
     dependsOn = "partitionStrategy",
     triggeredByValue = "EXPRESSION",
-    elDefs = {RecordEL.class, StringEL.class}
+    elDefs = {RecordEL.class, StringEL.class},
+    evaluation = ConfigDef.Evaluation.EXPLICIT
   )
   public String partition;
 
@@ -190,7 +193,8 @@ public class KafkaDTarget extends DTarget {
     displayPosition = 120,
     group = "TEXT",
     dependsOn = "dataFormat",
-    triggeredByValue = "TEXT"
+    triggeredByValue = "TEXT",
+    elDefs = {StringEL.class}
   )
   @FieldSelector(singleValued = true)
   public String textFieldPath;

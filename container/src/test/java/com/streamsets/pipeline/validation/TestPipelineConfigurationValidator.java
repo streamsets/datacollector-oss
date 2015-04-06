@@ -12,7 +12,6 @@ import com.streamsets.pipeline.config.PipelineConfiguration;
 import com.streamsets.pipeline.config.StageConfiguration;
 import com.streamsets.pipeline.runner.MockStages;
 import com.streamsets.pipeline.stagelibrary.StageLibraryTask;
-import com.streamsets.pipeline.util.ContainerError;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -29,7 +28,7 @@ public class TestPipelineConfigurationValidator {
     Assert.assertTrue(validator.getOpenLanes().isEmpty());
   }
 
-  @Test
+  //@Test
   public void testRequiredInactiveConfig() {
     StageLibraryTask lib = MockStages.createStageLibrary();
     PipelineConfiguration conf = MockStages.createPipelineWithRequiredDependentConfig();

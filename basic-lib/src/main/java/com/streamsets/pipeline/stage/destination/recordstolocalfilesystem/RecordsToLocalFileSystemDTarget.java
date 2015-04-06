@@ -40,7 +40,7 @@ public class RecordsToLocalFileSystemDTarget extends DTarget {
 
   @ConfigDef(
       required = true,
-      type = ConfigDef.Type.EL_NUMBER,
+      type = ConfigDef.Type.STRING,
       defaultValue = "${1 * HOURS}",
       label = "File Wait Time (secs)",
       description = "Max time to wait for error records before creating a new error file. \n" +
@@ -48,7 +48,8 @@ public class RecordsToLocalFileSystemDTarget extends DTarget {
                     "You can also use HOURS in the expression to enter the limit in hours.",
       displayPosition = 20,
       group = "FILES",
-      elDefs = {TimeEL.class}
+      elDefs = {TimeEL.class},
+      evaluation = ConfigDef.Evaluation.EXPLICIT
   )
   public String rotationIntervalSecs;
 

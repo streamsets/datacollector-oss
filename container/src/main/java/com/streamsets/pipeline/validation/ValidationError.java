@@ -57,6 +57,7 @@ public enum ValidationError implements ErrorCode {
 
   VALIDATION_0031("The property '{}' should be a single character"),
   VALIDATION_0032("Stage must have at least one output stream"),
+  VALIDATION_0033("Invalid Configuration, {}"),
 
   //Rule Validation Errors
   VALIDATION_0040("The data rule property '{}' must be defined"),

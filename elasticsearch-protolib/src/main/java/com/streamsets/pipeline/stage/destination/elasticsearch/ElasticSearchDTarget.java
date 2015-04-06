@@ -63,37 +63,40 @@ public class ElasticSearchDTarget extends DTarget {
 
   @ConfigDef(
       required = true,
-      type = ConfigDef.Type.EL_STRING,
+      type = ConfigDef.Type.STRING,
       defaultValue = "${record:value('/es-index')}",
       label = "Index",
       description = "",
       displayPosition = 40,
       group = "ELASTIC_SEARCH",
-      elDefs = {RecordEL.class, TimeEL.class}
+      elDefs = {RecordEL.class, TimeEL.class},
+      evaluation = ConfigDef.Evaluation.EXPLICIT
   )
   public String indexTemplate;
 
   @ConfigDef(
       required = true,
-      type = ConfigDef.Type.EL_STRING,
+      type = ConfigDef.Type.STRING,
       defaultValue = "${record:value('/es-type')}",
       label = "Type",
       description = "",
       displayPosition = 50,
       group = "ELASTIC_SEARCH",
-      elDefs = {RecordEL.class, TimeEL.class}
+      elDefs = {RecordEL.class, TimeEL.class},
+      evaluation = ConfigDef.Evaluation.EXPLICIT
   )
   public String typeTemplate;
 
   @ConfigDef(
       required = false,
-      type = ConfigDef.Type.EL_STRING,
-      defaultValue = "",
+      type = ConfigDef.Type.STRING,
+      defaultValue = "${record:value('/es-id')}",
       label = "Document ID",
       description = "Typically left empty",
       displayPosition = 50,
       group = "ELASTIC_SEARCH",
-      elDefs = {RecordEL.class, DataUtilEL.class}
+      elDefs = {RecordEL.class, DataUtilEL.class},
+      evaluation = ConfigDef.Evaluation.EXPLICIT
   )
   public String docIdTemplate;
 

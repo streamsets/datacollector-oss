@@ -54,66 +54,68 @@ public class ELEvaluator extends ELEval {
   }
 
   private void populateConstantsAndFunctions(Class<?>... elFuncConstDefClasses) {
-    for(Class<?> klass : elFuncConstDefClasses) {
-      for(Method m : klass.getMethods()) {
-        ElFunction elFunctionAnnot = m.getAnnotation(ElFunction.class);
-        if(elFunctionAnnot != null) {
-          if (!Modifier.isStatic(m.getModifiers())) {
-            throw new RuntimeException(Utils.format("EL function method must be static, class:'{}' method:'{}",
-                                                    klass.getName(), m));
+    if(elFuncConstDefClasses != null) {
+      for (Class<?> klass : elFuncConstDefClasses) {
+        for (Method m : klass.getMethods()) {
+          ElFunction elFunctionAnnot = m.getAnnotation(ElFunction.class);
+          if (elFunctionAnnot != null) {
+            if (!Modifier.isStatic(m.getModifiers())) {
+              throw new RuntimeException(Utils.format("EL function method must be static, class:'{}' method:'{}",
+                klass.getName(), m));
+            }
+            //getMethods returns only public methods, so the following is always true
+            if (!Modifier.isPublic(m.getModifiers())) {
+              throw new RuntimeException(Utils.format("EL function method must be public, class:'{}' method:'{}",
+                klass.getName(), m));
+            }
+            String functionName = elFunctionAnnot.name();
+            if (functionName.isEmpty()) {
+              throw new RuntimeException(Utils.format("EL function name cannot be empty, class:'{}' method:'{}",
+                klass.getName(), m));
+            }
+            if (!elFunctionAnnot.prefix().isEmpty()) {
+              functionName = elFunctionAnnot.prefix() + ":" + functionName;
+            }
+            functions.put(functionName, m);
+            Annotation[][] parameterAnnotations = m.getParameterAnnotations();
+            Class<?>[] parameterTypes = m.getParameterTypes();
+            List<ElFunctionArgumentDefinition> elFunctionArgumentDefinitions = new ArrayList<>(
+              parameterTypes.length);
+            for (int i = 0; i < parameterTypes.length; i++) {
+              Annotation annotation = parameterAnnotations[i][0];
+              elFunctionArgumentDefinitions.add(new ElFunctionArgumentDefinition(((ElParam) annotation).value(),
+                parameterTypes[i].getSimpleName()));
+            }
+            elFunctionDefinitions.add(new ElFunctionDefinition(elFunctionAnnot.prefix(), functionName,
+              elFunctionAnnot.description(),
+              elFunctionArgumentDefinitions,
+              m.getReturnType().getSimpleName()));
           }
-          //getMethods returns only public methods, so the following is always true
-          if (!Modifier.isPublic(m.getModifiers())) {
-            throw new RuntimeException(Utils.format("EL function method must be public, class:'{}' method:'{}",
-                                                    klass.getName(), m));
-          }
-          String functionName = elFunctionAnnot.name();
-          if (functionName.isEmpty()) {
-            throw new RuntimeException(Utils.format("EL function name cannot be empty, class:'{}' method:'{}",
-                                                    klass.getName(), m));
-          }
-          if(!elFunctionAnnot.prefix().isEmpty()) {
-            functionName = elFunctionAnnot.prefix() + ":" + functionName;
-          }
-          functions.put(functionName, m);
-          Annotation[][] parameterAnnotations = m.getParameterAnnotations();
-          Class<?>[] parameterTypes = m.getParameterTypes();
-          List<ElFunctionArgumentDefinition> elFunctionArgumentDefinitions = new ArrayList<>(
-            parameterTypes.length);
-          for(int i = 0; i < parameterTypes.length; i ++) {
-            Annotation annotation = parameterAnnotations[i][0];
-            elFunctionArgumentDefinitions.add(new ElFunctionArgumentDefinition(((ElParam)annotation).value(),
-              parameterTypes[i].getSimpleName()));
-          }
-          elFunctionDefinitions.add(new ElFunctionDefinition(elFunctionAnnot.prefix(), functionName,
-                                                             elFunctionAnnot.description(),
-                                                             elFunctionArgumentDefinitions,
-                                                             m.getReturnType().getSimpleName()));
         }
-      }
-      for(Field f : klass.getFields()) {
-        ElConstant elConstant = f.getAnnotation(ElConstant.class);
-        if(elConstant != null) {
-          if (!Modifier.isStatic(f.getModifiers())) {
-            throw new RuntimeException(Utils.format("EL constant field must be static, class:'{}' field:'{}",
-                                                    klass.getName(), f));
-          }
-          //getFields returns only accessible public fields, so the following is always true
-          if (!Modifier.isPublic(f.getModifiers())) {
-            throw new RuntimeException(Utils.format("EL constant field must be public, class:'{}' field:'{}",
-                                                    klass.getName(), f));
-          }
-          String constantName = elConstant.name();
-          if (constantName.isEmpty()) {
-            throw new RuntimeException(Utils.format("EL constant name cannot be empty, class:'{}' field:'{}",
-                                                    klass.getName(), f));
-          }
-          try {
-            constants.put(constantName, f.get(null));
-            elConstantDefinitions.add(new ElConstantDefinition(constantName, elConstant.description(),
-              f.getType().getSimpleName()));
-          } catch (IllegalAccessException e) {
-            throw new RuntimeException(e);
+        for (Field f : klass.getFields()) {
+          ElConstant elConstant = f.getAnnotation(ElConstant.class);
+          if (elConstant != null) {
+            if (!Modifier.isStatic(f.getModifiers())) {
+              throw new RuntimeException(Utils.format("EL constant field must be static, class:'{}' field:'{}",
+                klass.getName(), f));
+            }
+            //getFields returns only accessible public fields, so the following is always true
+            if (!Modifier.isPublic(f.getModifiers())) {
+              throw new RuntimeException(Utils.format("EL constant field must be public, class:'{}' field:'{}",
+                klass.getName(), f));
+            }
+            String constantName = elConstant.name();
+            if (constantName.isEmpty()) {
+              throw new RuntimeException(Utils.format("EL constant name cannot be empty, class:'{}' field:'{}",
+                klass.getName(), f));
+            }
+            try {
+              constants.put(constantName, f.get(null));
+              elConstantDefinitions.add(new ElConstantDefinition(constantName, elConstant.description(),
+                f.getType().getSimpleName()));
+            } catch (IllegalAccessException e) {
+              throw new RuntimeException(e);
+            }
           }
         }
       }

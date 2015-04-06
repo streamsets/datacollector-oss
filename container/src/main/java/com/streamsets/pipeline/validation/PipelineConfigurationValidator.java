@@ -8,20 +8,31 @@ package com.streamsets.pipeline.validation;
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Sets;
+import com.streamsets.pipeline.api.ConfigDef;
+import com.streamsets.pipeline.api.OnRecordError;
+import com.streamsets.pipeline.api.el.ELEvalException;
+import com.streamsets.pipeline.api.impl.TextUtils;
+import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.config.ConfigConfiguration;
 import com.streamsets.pipeline.config.ConfigDefinition;
-import com.streamsets.pipeline.config.ModelDefinition;
+import com.streamsets.pipeline.config.ModelType;
 import com.streamsets.pipeline.config.PipelineConfiguration;
 import com.streamsets.pipeline.config.PipelineDefConfigs;
 import com.streamsets.pipeline.config.StageConfiguration;
 import com.streamsets.pipeline.config.StageDefinition;
 import com.streamsets.pipeline.config.StageType;
-import com.streamsets.pipeline.api.impl.TextUtils;
+import com.streamsets.pipeline.el.ELEvaluator;
+import com.streamsets.pipeline.runner.PipelineRuntimeException;
 import com.streamsets.pipeline.stagelibrary.StageLibraryTask;
 import com.streamsets.pipeline.store.PipelineStoreTask;
+import com.streamsets.pipeline.util.ContainerError;
+import com.streamsets.pipeline.util.ElUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.lang.reflect.Field;
+import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -291,15 +302,16 @@ public class PipelineConfigurationValidator {
       }
       for (ConfigConfiguration conf : stageConf.getConfiguration()) {
         ConfigDefinition confDef = stageDef.getConfigDefinition(conf.getName());
-        preview &= validateConfigDefinition(confDef, conf, stageConf, null, issueCreator);
+        preview &= validateConfigDefinition(confDef, conf, stageConf, stageDef, null, issueCreator, true/*inject*/);
       }
     }
     return preview;
   }
 
   private boolean validateConfigDefinition(ConfigDefinition confDef, ConfigConfiguration conf,
-                                           StageConfiguration stageConf, Map<String, Object> parentConf,
-                                           StageIssueCreator issueCreator) {
+                                           StageConfiguration stageConf, StageDefinition stageDef,
+                                           Map<String, Object> parentConf, StageIssueCreator issueCreator,
+                                           boolean inject) {
     //parentConf is applicable when validating complex fields.
     boolean preview = true;
     if (confDef == null) {
@@ -340,6 +352,10 @@ public class PipelineConfigurationValidator {
       }
     }
     if (validateConfig && conf.getValue() != null) {
+      //inject value into config configuration
+      if(inject) {
+        conf = injectConfiguration(conf, confDef, stageDef, stageConf, pipelineConfiguration, issueCreator);
+      }
       switch (confDef.getType()) {
         case BOOLEAN:
           if (!(conf.getValue() instanceof Boolean)) {
@@ -366,15 +382,20 @@ public class PipelineConfigurationValidator {
           }
           break;
         case CHARACTER:
-          if (!(conf.getValue() instanceof String)) {
+          if(conf.getValue() instanceof Character) {
+
+          } else if (conf.getValue() instanceof String) {
+            if (((String)conf.getValue()).length() > 1) {
+              issues.add(issueCreator.createConfigIssue(stageConf.getInstanceName(), confDef.getGroup(),
+                confDef.getName(), ValidationError.VALIDATION_0031,
+                conf.getValue()));
+              preview = false;
+            }
+          } else {
             issues.add(issueCreator.createConfigIssue(stageConf.getInstanceName(), confDef.getGroup(),
               confDef.getName(), ValidationError.VALIDATION_0009,
               confDef.getType()));
             preview = false;
-          } else if (((String)conf.getValue()).length() > 1) {
-            issues.add(issueCreator.createConfigIssue(stageConf.getInstanceName(), confDef.getGroup(),
-              confDef.getName(), ValidationError.VALIDATION_0031,
-              conf.getValue()));
           }
           break;
         case MAP:
@@ -417,28 +438,85 @@ public class PipelineConfigurationValidator {
             preview = false;
           }
           break;
-        /*case EL_BOOLEAN:
-        case EL_DATE:
-        case EL_NUMBER:
-          if (!(conf.getValue() instanceof String)) {
-            issues.add(issueCreator.createConfigIssue(stageConf.getInstanceName(), confDef.getGroup(),
-              confDef.getName(), ValidationError.VALIDATION_0029,
-              confDef.getType()));
-            preview = false;
-          }
-          String value = (String) conf.getValue();
-          if (!value.startsWith("${") || !value.endsWith("}")) {
-            issues.add(issueCreator.createConfigIssue(stageConf.getInstanceName(), confDef.getGroup(),
-              confDef.getName(), ValidationError.VALIDATION_0030, value));
-            preview = false;
-          }
-          break;*/
         case MODEL:
-          preview &= validateModel(stageConf, confDef, conf, issueCreator);
+          preview &= validateModel(stageConf, stageDef, confDef, conf, issueCreator);
           break;
       }
     }
     return preview;
+  }
+
+  private ConfigConfiguration injectConfiguration(ConfigConfiguration conf, ConfigDefinition confDef,
+                                                        StageDefinition stageDef, StageConfiguration stageConf,
+                                                        PipelineConfiguration pipelineConf, StageIssueCreator issueCreator) {
+    switch (confDef.getName()) {
+      case ConfigDefinition.REQUIRED_FIELDS:
+      case ConfigDefinition.ON_RECORD_ERROR:
+        return conf;
+      default:
+        try {
+          //check if the field is an enum and convert the value to enum if so
+          Class klass = stageDef.getStageClassLoader().loadClass(stageDef.getClassName());
+          Field var = klass.getField(confDef.getFieldName());
+          if (confDef.getModel() != null && confDef.getModel().getModelType() == ModelType.COMPLEX_FIELD) {
+            return injectComplexConfiguration(var, conf, confDef, stageDef, pipelineConf);
+          } else {
+            return injectSimpleConfiguration(var, conf, confDef, stageDef, pipelineConf);
+          }
+        } catch (ClassNotFoundException | NoSuchFieldException e) {
+          throw new RuntimeException(Utils.format(ContainerError.CONTAINER_0152.getMessage(),
+            stageDef.getClassName(), stageConf.getInstanceName(), confDef.getFieldName(),
+            conf.getValue(), e.getMessage(), e));
+        } catch (ELEvalException e) {
+          issues.add(issueCreator.createConfigIssue(stageConf.getInstanceName(), confDef.getGroup(), confDef.getName(),
+            ValidationError.VALIDATION_0033, e.getMessage(), e));
+          return conf;
+        }
+    }
+  }
+
+  private ConfigConfiguration injectComplexConfiguration(Field var, ConfigConfiguration conf,
+                                                         ConfigDefinition confDef,
+                                                        StageDefinition stageDef, PipelineConfiguration pipelineConf)
+    throws NoSuchFieldException, ELEvalException {
+    Type genericType = var.getGenericType();
+    Class klass;
+    if(genericType instanceof ParameterizedType) {
+      Type[] typeArguments = ((ParameterizedType) genericType).getActualTypeArguments();
+      klass = (Class) typeArguments[0];
+    } else {
+      klass = (Class) genericType;
+    }
+
+    //value is a list of map where each map has keys which represent the field names in custom config object and the
+    // value is the value of the field
+    if(conf.getValue() instanceof List) {
+      List<Map<String, Object>> evaluatedValue = new ArrayList<>();
+      for(Object object : (List) conf.getValue()) {
+        if(object instanceof Map) {
+          Map<String, Object> map = (Map) object;
+          Map<String, Object> evaluatedMap = new HashMap<>();
+          for (ConfigDefinition configDefinition : confDef.getModel().getConfigDefinitions()) {
+            Field f = klass.getField(configDefinition.getFieldName());
+            evaluatedMap.put(configDefinition.getFieldName(),
+              getValueToInject(f, map.get(configDefinition.getFieldName()), configDefinition, stageDef, pipelineConf));
+          }
+          evaluatedValue.add(evaluatedMap);
+        }
+      }
+      conf = new ConfigConfiguration(conf.getName(), evaluatedValue);
+    }
+    return conf;
+  }
+
+  private ConfigConfiguration injectSimpleConfiguration(Field var, ConfigConfiguration conf,
+                                                        ConfigDefinition confDef,
+                                                        StageDefinition stageDef, PipelineConfiguration pipelineConf) throws ELEvalException {
+    Object value = getValueToInject(var, conf.getValue(), confDef, stageDef, pipelineConf);
+    if(value != conf.getValue()) {
+      conf = new ConfigConfiguration(conf.getName(), value);
+    }
+    return conf;
   }
 
   @VisibleForTesting
@@ -459,7 +537,7 @@ public class PipelineConfigurationValidator {
     return preview;
   }
 
-  private boolean validateModel(StageConfiguration stageConf, ConfigDefinition confDef, ConfigConfiguration conf,
+  private boolean validateModel(StageConfiguration stageConf, StageDefinition stageDef, ConfigDefinition confDef, ConfigConfiguration conf,
       StageIssueCreator issueCreator) {
     String instanceName = stageConf.getInstanceName();
     boolean preview = true;
@@ -491,11 +569,11 @@ public class PipelineConfigurationValidator {
             //list of hash maps
             List<Map<String, Object>> maps = (List<Map<String, Object>>) conf.getValue();
             for (Map<String, Object> map : maps) {
-              preview &= validateComplexConfig(configDefinitionsMap, map, stageConf, confDef.getModel(), issueCreator);
+              preview &= validateComplexConfig(configDefinitionsMap, map, stageConf, stageDef, issueCreator);
             }
           } else if (conf.getValue() instanceof Map) {
             preview &= validateComplexConfig(configDefinitionsMap, (Map<String, Object>) conf.getValue(), stageConf,
-              confDef.getModel(), issueCreator);
+              stageDef, issueCreator);
           }
         }
         break;
@@ -575,14 +653,15 @@ public class PipelineConfigurationValidator {
 
   private boolean validateComplexConfig(Map<String, ConfigDefinition> configDefinitionsMap,
                                         Map<String, Object> confvalue , StageConfiguration stageConf,
-                                        ModelDefinition modelDef, StageIssueCreator issueCreator) {
+                                        StageDefinition stageDef, StageIssueCreator issueCreator) {
     boolean preview = true;
     for(Map.Entry<String, Object> entry : confvalue.entrySet()) {
       String configName = entry.getKey();
       Object value = entry.getValue();
       ConfigDefinition configDefinition = configDefinitionsMap.get(configName);
       ConfigConfiguration configConfiguration = new ConfigConfiguration(configName, value);
-      preview &= validateConfigDefinition(configDefinition, configConfiguration, stageConf, confvalue, issueCreator);
+      preview &= validateConfigDefinition(configDefinition, configConfiguration, stageConf, stageDef, confvalue,
+        issueCreator, false /*do not inject*/);
     }
     return preview;
   }
@@ -634,4 +713,41 @@ public class PipelineConfigurationValidator {
     return preview;
   }
 
+  private Object getValueToInject(Field var, Object configValue, ConfigDefinition confDef,
+                                  StageDefinition stageDef, PipelineConfiguration pipelineConf) throws ELEvalException {
+    Object value = configValue;
+    Map<String, Object> constants = ElUtil.getConstants(pipelineConf);
+    if (configValue instanceof Map) {
+      Map<Object, Object> evaluatedMap = new HashMap<>();
+      for(Map.Entry<Object, Object> e : ((Map<Object, Object>)configValue).entrySet()) {
+        evaluatedMap.put(e.getKey(), ElUtil.evaluate(e.getValue(), var, stageDef, confDef, constants));
+      }
+      value = evaluatedMap;
+    } else if (configValue instanceof List) {
+      if (confDef.getType() == ConfigDef.Type.LIST) {
+        List<Object> evaluatedValue = new ArrayList<>();
+        for (Object e : (List) configValue) {
+          evaluatedValue.add(ElUtil.evaluate(e, var, stageDef, confDef, constants));
+        }
+        value = evaluatedValue;
+      } else if (confDef.getType() == ConfigDef.Type.MAP) {
+        //List of Map
+        List<Map> evaluatedList = new ArrayList<>();
+        List<Map> list = (List<Map>) configValue;
+        for(Map map : list) {
+          //elements of map are always Strings
+          Map<Object, Object> evaluatedMap = new HashMap<>();
+          Object key = map.get("key");
+          Object val = map.get("value");
+          evaluatedMap.put("key", key);
+          evaluatedMap.put("value", ElUtil.evaluate(val, var, stageDef, confDef, constants));
+          evaluatedList.add(evaluatedMap);
+        }
+        value = evaluatedList;
+      }
+    } else {
+      value = ElUtil.evaluate(configValue, var, stageDef, confDef, constants);
+    }
+    return value;
+  }
 }

@@ -42,7 +42,7 @@ public class TestModelDefinitionBean {
     List< ConfigDefinition > configDefinitions = new ArrayList<>();
     configDefinitions.add(new ConfigDefinition("int", ConfigDef.Type.NUMBER, "l2", "d2", "-1", true, "g", "intVar", null, "A",
       triggeredBy, 0, Collections.<ElFunctionDefinition>emptyList(), Collections.<ElConstantDefinition>emptyList(),
-      Long.MIN_VALUE, Long.MAX_VALUE, "text/plain", 0, Collections.<String> emptyList(), null));
+      Long.MIN_VALUE, Long.MAX_VALUE, "text/plain", 0, Collections.<String> emptyList(), ConfigDef.Evaluation.IMPLICIT, null));
 
     com.streamsets.pipeline.config.ModelDefinition modelDefinition =
       new com.streamsets.pipeline.config.ModelDefinition(ModelType.COMPLEX_FIELD,
@@ -78,7 +78,7 @@ public class TestModelDefinitionBean {
     configDefinitions.add(new ConfigDefinition("int", ConfigDef.Type.NUMBER, "l2", "d2", "-1", true, "g", "intVar",
       null, "A", triggeredBy, 0, Collections.<ElFunctionDefinition>emptyList(),
       Collections.<ElConstantDefinition>emptyList(), Long.MIN_VALUE, Long.MAX_VALUE, "text/plain", 0, Collections.<String> emptyList(),
-      null));
+      ConfigDef.Evaluation.IMPLICIT, null));
 
     com.streamsets.pipeline.config.ModelDefinition modelDefinition =
       new com.streamsets.pipeline.config.ModelDefinition(ModelType.COMPLEX_FIELD,

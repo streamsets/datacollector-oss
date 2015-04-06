@@ -15,16 +15,18 @@ import com.streamsets.pipeline.api.Source;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.Target;
+import com.streamsets.pipeline.api.el.ELEvalException;
+import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.config.ConfigConfiguration;
 import com.streamsets.pipeline.config.ConfigDefinition;
 import com.streamsets.pipeline.config.ModelType;
 import com.streamsets.pipeline.config.PipelineConfiguration;
-import com.streamsets.pipeline.api.impl.Utils;
-import com.streamsets.pipeline.stagelibrary.StageLibraryTask;
-import com.streamsets.pipeline.util.ContainerError;
-import com.streamsets.pipeline.validation.PipelineConfigurationValidator;
 import com.streamsets.pipeline.config.StageConfiguration;
 import com.streamsets.pipeline.config.StageDefinition;
+import com.streamsets.pipeline.stagelibrary.StageLibraryTask;
+import com.streamsets.pipeline.util.ContainerError;
+import com.streamsets.pipeline.util.ElUtil;
+import com.streamsets.pipeline.validation.PipelineConfigurationValidator;
 import com.streamsets.pipeline.validation.StageIssue;
 
 import java.lang.reflect.Field;
@@ -224,31 +226,17 @@ public class StageRuntime {
         StageDefinition def = stageLib.getStage(conf.getLibrary(), conf.getStageName(), conf.getStageVersion());
         Class klass = def.getStageClassLoader().loadClass(def.getClassName());
         Stage stage = (Stage) klass.newInstance();
-        configureStage(def, conf, klass, stage);
-        return new StageRuntime(def, conf, requiredFields, onRecordError, stage, getConstants(pipelineConf));
+        Map<String, Object> constants = ElUtil.getConstants(pipelineConf);
+        configureStage(def, conf, klass, stage, constants);
+        return new StageRuntime(def, conf, requiredFields, onRecordError, stage, constants);
       } catch (Exception ex) {
         throw new PipelineRuntimeException(ContainerError.CONTAINER_0151, ex.getMessage(), ex);
       }
     }
 
-    private Map<String, Object> getConstants(PipelineConfiguration pipelineConf) {
-      Map<String, Object> constants = new HashMap<>();
-      if(pipelineConf != null && pipelineConf.getConfiguration() != null) {
-        for (ConfigConfiguration configConfiguration : pipelineConf.getConfiguration()) {
-          if (configConfiguration.getName().equals("constants") && configConfiguration.getValue() != null) {
-            List<Map<String, String>> consts = (List<Map<String, String>>) configConfiguration.getValue();
-            for (Map<String, String> constant : consts) {
-              constants.put(constant.get("key"), constant.get("value"));
-            }
-            return constants;
-          }
-        }
-      }
-      return constants;
-    }
-
     @SuppressWarnings("unchecked")
-    private void configureStage(StageDefinition stageDef, StageConfiguration stageConf, Class klass, Stage stage)
+    private void configureStage(StageDefinition stageDef, StageConfiguration stageConf, Class klass, Stage stage,
+                                Map<String, Object> constants)
         throws PipelineRuntimeException {
       for (ConfigDefinition confDef : stageDef.getConfigDefinitions()) {
         ConfigConfiguration confConf = stageConf.getConfig(confDef.getName());
@@ -270,9 +258,9 @@ public class StageRuntime {
               Field var = klass.getField(instanceVar);
               //check if the field is an enum and convert the value to enum if so
               if (confDef.getModel() != null && confDef.getModel().getModelType() == ModelType.COMPLEX_FIELD) {
-                setComplexField(var, stageDef, stageConf, stage, confDef, value);
+                setComplexField(var, stageDef, stageConf, stage, confDef, value, constants);
               } else {
-                setField(var, stageDef, stageConf, stage, confDef, value);
+                setField(var, stageDef, stageConf, stage, confDef, value, constants);
               }
             } catch (PipelineRuntimeException ex) {
               throw ex;
@@ -286,8 +274,8 @@ public class StageRuntime {
     }
 
     private void setComplexField(Field var, StageDefinition stageDef, StageConfiguration stageConf, Stage stage,
-                                 ConfigDefinition confDef, Object value)
-      throws IllegalAccessException, InstantiationException, NoSuchFieldException, PipelineRuntimeException {
+                                 ConfigDefinition confDef, Object value, Map<String, Object> constants)
+      throws IllegalAccessException, InstantiationException, NoSuchFieldException, PipelineRuntimeException, ELEvalException, ClassNotFoundException {
       Type genericType = var.getGenericType();
       Class klass;
       if(genericType instanceof ParameterizedType) {
@@ -310,7 +298,7 @@ public class StageRuntime {
             for (ConfigDefinition configDefinition : confDef.getModel().getConfigDefinitions()) {
               Field f = klass.getField(configDefinition.getFieldName());
               setField(f, stageDef, stageConf, customConfigObj, configDefinition,
-                       map.get(configDefinition.getFieldName()));
+                       map.get(configDefinition.getFieldName()), constants);
             }
           }
         }
@@ -319,31 +307,55 @@ public class StageRuntime {
     }
 
     private void setField(Field var, StageDefinition stageDef, StageConfiguration stageConf, Object stage,
-        ConfigDefinition confDef, Object value) throws IllegalAccessException, PipelineRuntimeException {
+        ConfigDefinition confDef, Object value, Map<String, Object> constants)
+      throws IllegalAccessException, PipelineRuntimeException, ELEvalException, ClassNotFoundException {
       if(var.getType().isEnum()) {
         var.set(stage, Enum.valueOf((Class<Enum>) var.getType(), (String) value));
       } else {
         if (value != null) {
           if (value instanceof List) {
             if (confDef.getType() == ConfigDef.Type.LIST) {
-              validateList((List) value, stageDef.getClassName(), stageConf.getInstanceName(), confDef.getName());
+              value = validateList((List)value, var, constants, stageDef, stageConf.getInstanceName(), confDef);
             } else if (confDef.getType() == ConfigDef.Type.MAP) {
               // special type of Map config where is a List of Maps with 'key' & 'value' entries.
               validateMapAsList((List) value, stageDef.getClassName(), stageConf.getInstanceName(),
                 confDef.getName());
-              value = convertToMap((List<Map>) value);
+              value = convertToMap((List<Map>) value, var, constants, stageDef, stageConf.getInstanceName(), confDef);
             }
           } else if (value instanceof Map) {
-            validateMap((Map) value, stageDef.getClassName(), stageConf.getInstanceName(), confDef.getName());
+            value = validateMap((Map) value, var, constants, stageDef, stageConf.getInstanceName(), confDef);
           } else if (confDef.getType() == ConfigDef.Type.CHARACTER) {
-            value = ((String)value).charAt(0);
+            //could be an el expression which evaluates to character
+            String stringVal = (String) value;
+            if(stringVal.startsWith("${")) {
+              Object evaluatedValue = ElUtil.evaluate(value, var, stageDef, confDef, constants);
+              if(evaluatedValue instanceof Character) {
+                value = evaluatedValue;
+              } else if (evaluatedValue instanceof String) {
+                value = ((String) evaluatedValue).charAt(0);
+              } else {
+                //not character and not of type String => exception
+                throw new PipelineRuntimeException(ContainerError.CONTAINER_0152, stageDef.getName(),
+                  stageConf.getInstanceName(), confDef.getName(), value);
+              }
+            } else {
+              value = stringVal.charAt(0);
+            }
+          } else if (ElUtil.isElString(value)) {
+            value = ElUtil.evaluate(value, var, stageDef, confDef, constants);
           }
         }
         if (value != null) {
           var.set(stage, value);
         } else {
           // if the value is NULL we set the default value
-          var.set(stage, confDef.getDefaultValue());
+          //default value could be el String
+          Object defaultValue = confDef.getDefaultValue();
+          if(ElUtil.isElString(defaultValue)) {
+            var.set(stage, ElUtil.evaluate(defaultValue, var, stageDef, confDef, constants));
+          } else {
+            var.set(stage, defaultValue);
+          }
         }
       }
     }
@@ -361,36 +373,59 @@ public class StageRuntime {
     }
   }
 
-  private static Map convertToMap(List<Map> list) {
+  private static Map convertToMap(List<Map> list, Field var, Map<String, Object> constants,
+                                  StageDefinition stageDef, String instanceName, ConfigDefinition confDef)
+    throws PipelineRuntimeException, ELEvalException, ClassNotFoundException {
     Map<String, String> map = new HashMap<>();
     for (Map element : list) {
       String key = (String) element.get("key");
       String value = (String) element.get("value");
-      map.put(key, value);
+      Object evaluatedValue = ElUtil.evaluate(value, var, stageDef, confDef, constants);
+      checkForString(evaluatedValue, stageDef.getName(), instanceName, confDef.getName());
+      map.put(key, (String)evaluatedValue);
     }
     return map;
   }
 
-  private static void validateList(List list, String stageName, String instanceName, String configName)
-      throws PipelineRuntimeException {
+  private static List<String> validateList(List list, Field var, Map<String, Object> constants,
+                                           StageDefinition stageDef, String instanceName, ConfigDefinition confDef)
+    throws PipelineRuntimeException, ELEvalException, ClassNotFoundException {
+    List<String> evaluatedValues = new ArrayList<>();
     for (Object e : list) {
-      if (e != null && !(e instanceof String)) {
-        throw new PipelineRuntimeException(ContainerError.CONTAINER_0161, stageName, instanceName, configName);
+      checkForString(e, stageDef.getName(), instanceName, confDef.getName());
+      String value = (String)e;
+      Object evaluatedValue = ElUtil.evaluate(value, var, stageDef, confDef, constants);
+      checkForString(evaluatedValue, stageDef.getName(), instanceName, confDef.getName());
+      evaluatedValues.add((String) evaluatedValue);
+    }
+    return evaluatedValues;
+  }
+
+  private static Map<String, String> validateMap(Map map, Field var, Map<String, Object> constants,
+                                                 StageDefinition stageDef, String instanceName, ConfigDefinition confDef)
+    throws PipelineRuntimeException, ELEvalException, ClassNotFoundException {
+    Map<String, String> evaluatedMap = new HashMap<>();
+    for (Map.Entry e : ((Map<?, ?>) map).entrySet()) {
+      if (!(e.getKey() instanceof String)) {
+        throw new PipelineRuntimeException(ContainerError.CONTAINER_0162, stageDef.getName(), instanceName,
+          confDef.getName());
       }
+      checkForString(e.getValue(), stageDef.getName(), instanceName, confDef.getName());
+      String value = (String)e.getValue();
+      Object evaluatedValue = ElUtil.evaluate(value, var, stageDef, confDef, constants);
+      checkForString(evaluatedValue, stageDef.getName(), instanceName, confDef.getName());
+      evaluatedMap.put((String) e.getKey(), (String) evaluatedValue);
+    }
+    return evaluatedMap;
+  }
+
+  private static void checkForString(Object e, String stageName, String instanceName, String configName)
+    throws PipelineRuntimeException {
+    if (e != null && !(e instanceof String)) {
+      throw new PipelineRuntimeException(ContainerError.CONTAINER_0161, stageName, instanceName, configName);
     }
   }
 
-  private static void validateMap(Map map, String stageName, String instanceName, String configName)
-      throws PipelineRuntimeException {
-    for (Map.Entry e : ((Map<?, ?>) map).entrySet()) {
-      if (!(e.getKey() instanceof String)) {
-        throw new PipelineRuntimeException(ContainerError.CONTAINER_0162, stageName, instanceName, configName);
-      }
-      if (e.getValue() != null &&  !(e.getValue() instanceof String)) {
-        throw new PipelineRuntimeException(ContainerError.CONTAINER_0163, stageName, instanceName, configName);
-      }
-    }
-  }
 
   public Map<String, Object> getConstants() {
     return constants;
@@ -400,5 +435,6 @@ public class StageRuntime {
   public String toString() {
     return Utils.format("StageRuntime[{}]", getInfo());
   }
+
 
 }

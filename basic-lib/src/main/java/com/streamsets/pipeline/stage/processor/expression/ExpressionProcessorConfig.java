@@ -26,12 +26,13 @@ public class ExpressionProcessorConfig {
 
   @ConfigDef(
       required = true,
-      type = ConfigDef.Type.EL_OBJECT,
+      type = ConfigDef.Type.STRING,
       defaultValue = "${record:value('/')}",
       label = "Expression",
       description = "Use the expression language to modify values in a field.",
       displayPosition = 20,
-      elDefs = {RecordEL.class, StringEL.class, ELSupport.class}
+      elDefs = {RecordEL.class, StringEL.class, ELSupport.class},
+      evaluation = ConfigDef.Evaluation.EXPLICIT
   )
   public String expression;
 

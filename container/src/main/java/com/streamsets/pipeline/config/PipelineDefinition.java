@@ -113,6 +113,7 @@ public class PipelineDefinition {
       "",
       0,
       Collections.<String> emptyList(),
+      ConfigDef.Evaluation.IMPLICIT,
       null);
   }
 
@@ -140,6 +141,7 @@ public class PipelineDefinition {
         "",
         0,
         Collections.<String> emptyList(),
+        ConfigDef.Evaluation.IMPLICIT,
         null);
   }
 
@@ -164,6 +166,7 @@ public class PipelineDefinition {
       "",
       0,
       Collections.<String> emptyList(),
+      ConfigDef.Evaluation.IMPLICIT,
       null);
   }
   private static ConfigDefinition createMemoryLimitExceededBehaviorConfigs() {
@@ -192,6 +195,7 @@ public class PipelineDefinition {
       "",
       0,
       Collections.<String> emptyList(),
+      ConfigDef.Evaluation.IMPLICIT,
       null);
   }
   private static ConfigDefinition createMemoryLimitConfigs() {
@@ -216,6 +220,7 @@ public class PipelineDefinition {
       "",
       0,
       Collections.<String> emptyList(),
+      ConfigDef.Evaluation.IMPLICIT,
       null);
   }
 }

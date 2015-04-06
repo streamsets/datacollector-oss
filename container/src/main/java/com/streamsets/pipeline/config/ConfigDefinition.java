@@ -46,13 +46,14 @@ public class ConfigDefinition {
   private final String mode;
   private final int lines;
   private final List<String> elDefs;
+  private final ConfigDef.Evaluation evaluation;
   private Map<String, List<Object>> dependsOnMap;
 
   public ConfigDefinition(String name, ConfigDef.Type type, String label, String description, Object defaultValue,
       boolean required, String group, String fieldName, ModelDefinition model, String dependsOn,
       List<Object> triggeredByValues, int displayPosition, List<ElFunctionDefinition> elFunctionDefinitions,
       List<ElConstantDefinition> elConstantDefinitions, long min, long max, String mode, int lines,
-      List<String> elDefs, Map<String, List<Object>> dependsOnMap) {
+      List<String> elDefs, ConfigDef.Evaluation evaluation, Map<String, List<Object>> dependsOnMap) {
     this.name = name;
     this.type = type;
     this.label = label;
@@ -73,6 +74,7 @@ public class ConfigDefinition {
     this.lines = lines;
     this.elDefs = elDefs;
     this.dependsOnMap = dependsOnMap;
+    this.evaluation = evaluation;
   }
 
   public String getName() {
@@ -165,6 +167,10 @@ public class ConfigDefinition {
     this.dependsOnMap = dependsOnMap;
   }
 
+  public ConfigDef.Evaluation getEvaluation() {
+    return evaluation;
+  }
+
   public ConfigDefinition localize(ClassLoader classLoader, String bundle) {
     String labelKey = "configLabel." + getName();
     String descriptionKey = "configDescription." + getName();
@@ -214,7 +220,7 @@ public class ConfigDefinition {
     return new ConfigDefinition(getName(), getType(), label, description, getDefaultValue(),
                                 isRequired(), getGroup(), getFieldName(), model, getDependsOn(), getTriggeredByValues(),
                                 getDisplayPosition(), getElFunctionDefinitions(), getElConstantDefinitions(), getMin(),
-                                getMax(), getMode(), getLines(), getElDefs(), getDependsOnMap());
+                                getMax(), getMode(), getLines(), getElDefs(), getEvaluation(), getDependsOnMap());
   }
 
   @Override
