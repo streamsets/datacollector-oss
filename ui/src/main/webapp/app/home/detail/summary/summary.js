@@ -105,6 +105,7 @@ angular
      */
     var updateSummaryData = function() {
       var timerProperty,
+        pipelineConfig = $scope.pipelineConfig,
         pipelineMetrics = $rootScope.common.pipelineMetrics,
         currentSelection = $scope.detailPaneConfig,
         isStageSelected = $scope.stageSelected;
@@ -170,28 +171,49 @@ angular
 
       }
 
-      var persistedCounters = ['memoryConsumed'];
+
+
+      var persistedCounters = ['memoryConsumed'],
+        pipelineCounterKey = 'pipeline.' + pipelineConfig.info.name,
+        currentTime = new Date().getTime(),
+        counterValue;
+
       angular.forEach(persistedCounters, function(persistedCounter) {
-        angular.forEach(Object.keys(pipelineMetrics.counters), function(counterName) {
-          var value = pipelineMetrics.counters[counterName].count;
-          if(!$rootScope.$storage.counters[persistedCounter]) {
-            $rootScope.$storage.counters[persistedCounter] = {};
+        var counters = $rootScope.common.counters[persistedCounter];
+
+        if(!counters) {
+          counters = $rootScope.common.counters[persistedCounter] = {};
+        }
+
+        //Pipeline
+        counterValue = pipelineMetrics.counters['pipeline.memoryConsumed.counter'] ?
+          pipelineMetrics.counters['pipeline.memoryConsumed.counter'].count : 0;
+        if(!counters[pipelineCounterKey]) {
+          counters[pipelineCounterKey] =  [[currentTime, counterValue]];
+        } else {
+          counters[pipelineCounterKey].push([currentTime, counterValue]);
+
+          if (counters[pipelineCounterKey].length > 500) {
+            counters[pipelineCounterKey].splice(0, 1);
           }
-          var suffix = persistedCounter + '.counter';
-          if(counterName.indexOf(suffix, counterName.length - suffix.length) !== -1) {
-            var instanceName = counterName.substring(counterName.indexOf('.') + 1, counterName.lastIndexOf(persistedCounter) - 1);
-            if(!$rootScope.$storage.counters[persistedCounter][instanceName]) {
-              $rootScope.$storage.counters[persistedCounter][instanceName] = [];
+        }
+
+        angular.forEach(pipelineConfig.stages, function(stageInst) {
+          counterValue = pipelineMetrics.counters['stage.' + stageInst.instanceName + '.memoryConsumed.counter'].count;
+
+          if(!counters[ stageInst.instanceName ]) {
+            counters[ stageInst.instanceName ]=  [[currentTime, counterValue]];
+          } else {
+            counters[ stageInst.instanceName ].push([currentTime, counterValue]);
+            if (counters[ stageInst.instanceName ].length > 500) {
+              counters[ stageInst.instanceName ].splice(0, 1);
             }
-            var values = $rootScope.$storage.counters[persistedCounter][instanceName];
-            values.push([(new Date()).getTime(), value]);
-            var max = 1000;
-            if (values.length > max) {
-              values.splice(0, values.length - max);
-            }
+
           }
         });
+
       });
+
 
       //meters
       if(isStageSelected) {

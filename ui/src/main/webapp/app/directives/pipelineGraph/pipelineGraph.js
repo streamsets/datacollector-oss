@@ -2,7 +2,7 @@
  * Module definition for Pipeline Graph Directive.
  */
 
-angular.module('pipelineGraphDirectives', ['underscore'])
+angular.module('pipelineGraphDirectives', [])
   .directive('pipelineGraph', function() {
     return {
       restrict: 'E',

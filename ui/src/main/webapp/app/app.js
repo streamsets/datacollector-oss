@@ -80,6 +80,7 @@ angular.module('dataCollectorApp')
       dontShowHelpAlert: false,
       logEndingOffset: -1,
       fetchingLog: false,
+      counters: {},
 
       /**
        * Open the Shutdown Modal Dialog

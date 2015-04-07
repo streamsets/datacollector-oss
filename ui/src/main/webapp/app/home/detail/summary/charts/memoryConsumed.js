@@ -37,14 +37,25 @@ angular
 
     $scope.$on('summaryDataUpdated', function() {
       var currentSelection = $scope.detailPaneConfig,
-        memoryConsumed = $rootScope.$storage.counters.memoryConsumed;
-      if(!memoryConsumed[currentSelection.instanceName]) {
+        memoryConsumed = $rootScope.common.counters.memoryConsumed || {},
+        pipelineConfig = $scope.pipelineConfig,
+        values;
+
+
+      if($scope.stageSelected) {
+        values =  memoryConsumed[currentSelection.instanceName];
+      } else {
+        values = memoryConsumed['pipeline.' + pipelineConfig.info.name];
+      }
+
+      if(!values) {
         return;
       }
+
       $scope.lineChartData = [
         {
           key: "Total",
-          values: memoryConsumed[currentSelection.instanceName],
+          values: values
         }
       ];
       $scope.xAxisTickFormat = $scope.dateFormat();

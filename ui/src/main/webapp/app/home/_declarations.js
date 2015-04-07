@@ -10,7 +10,6 @@ angular
     'tabDirectives',
     'pipelineGraphDirectives',
     'dataCollectorApp.commonDirectives',
-    'underscore',
     'ui.bootstrap',
     'angularMoment',
     'nvd3ChartDirectives',
