@@ -152,33 +152,33 @@
   <div class="panel-body">
     <tabset class="preview-tabs-left tabs-left icon-only">
 
-      <tab active="true">
+      <tab active="recordsTabActive">
         <tab-heading tooltip-placement="right" tooltip="{{ 'global.form.records' | translate }}">
           <i class="fa fa-list-ul fa-12x"></i>
         </tab-heading>
-        <ng-include ng-if="!previewMultipleStages" src="'app/home/preview/common/previewCommon.tpl.html'"></ng-include>
-        <ng-include ng-if="previewMultipleStages" src="'app/home/preview/common/previewMultiStage.tpl.html'"></ng-include>
+        <ng-include ng-if="recordsTabActive && !previewMultipleStages" src="'app/home/preview/common/previewCommon.tpl.html'"></ng-include>
+        <ng-include ng-if="recordsTabActive && previewMultipleStages" src="'app/home/preview/common/previewMultiStage.tpl.html'"></ng-include>
       </tab>
 
-      <tab>
+      <tab active="configurationTabActive">
         <tab-heading tooltip-placement="right" tooltip="{{ 'home.previewPane.stageConfigTitle' | translate }}">
           <i class="fa fa-gear fa-12x"></i>
         </tab-heading>
-        <ng-include src="'app/home/detail/configuration/configuration.tpl.html'"></ng-include>
+        <ng-include ng-if="configurationTabActive" src="'app/home/detail/configuration/configuration.tpl.html'"></ng-include>
       </tab>
 
-      <tab>
+      <tab active="previewConfigTabActive">
         <tab-heading tooltip-placement="right" tooltip="{{ 'home.previewPane.configTitle' | translate }}">
           <i class="fa fa-eye fa-12x"></i>
         </tab-heading>
-        <ng-include src="'app/home/preview/configuration/previewConfig.tpl.html'"></ng-include>
+        <ng-include ng-if="previewConfigTabActive" src="'app/home/preview/configuration/previewConfig.tpl.html'"></ng-include>
       </tab>
 
-      <tab ng-if="stagePreviewData.stageErrors && stagePreviewData.stageErrors.length">
+      <tab  active="errorsTabActive" ng-if="stagePreviewData.stageErrors && stagePreviewData.stageErrors.length">
         <tab-heading tooltip-placement="right" tooltip="{{ 'global.form.errors' | translate }}">
           <i class="fa fa-exclamation-triangle icon-danger fa-12x"></i>
         </tab-heading>
-        <div>
+        <div ng-if="errorsTabActive">
           <table class="table table-hover">
             <caption>
               <label translate="global.form.errorMessages">Error Messages</label>
@@ -202,7 +202,6 @@
       </tab>
 
     </tabset>
-
 
 
   </div>

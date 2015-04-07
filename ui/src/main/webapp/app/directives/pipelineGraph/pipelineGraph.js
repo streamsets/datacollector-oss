@@ -1129,13 +1129,18 @@ angular.module('pipelineGraphDirectives', [])
 
       thisGraph.clearStartAndEndNode();
 
-      thisGraph.rects.filter(function(cd){
-        return cd.instanceName === startNode.instanceName;
-      }).classed(thisGraph.consts.startNodeClass, true);
+      if(startNode) {
+        thisGraph.rects.filter(function(cd){
+          return cd.instanceName === startNode.instanceName;
+        }).classed(thisGraph.consts.startNodeClass, true);
+      }
 
-      thisGraph.rects.filter(function(cd){
-        return cd.instanceName === endNode.instanceName;
-      }).classed(thisGraph.consts.endNodeClass, true);
+      if(endNode) {
+        thisGraph.rects.filter(function(cd){
+          return cd.instanceName === endNode.instanceName;
+        }).classed(thisGraph.consts.endNodeClass, true);
+      }
+
     };
 
     /** MAIN SVG **/

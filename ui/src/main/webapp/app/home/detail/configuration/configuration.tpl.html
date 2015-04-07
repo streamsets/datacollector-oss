@@ -1,14 +1,14 @@
 <div ng-controller="ConfigurationController" class="configuration-tab">
   <tabset class="tabs-top">
 
-    <tab>
+    <tab active="generalConfigActive">
       <tab-heading>
         <i class="fa fa-exclamation-triangle icon-danger"
            ng-show="showConfigurationWarning(detailPaneConfig, '')"></i>
         <span translate="home.detailPane.configurationTab.general">General</span>
       </tab-heading>
 
-      <div class="tabs-content">
+      <div ng-if="generalConfigActive" class="tabs-content">
         <ng-include src="'app/home/detail/configuration/general.tpl.html'"></ng-include>
       </div>
     </tab>
@@ -23,7 +23,7 @@
         <span>{{groupNameToLabelMap.label}}</span>
       </tab-heading>
 
-      <div class="tabs-content">
+      <div class="tabs-content" ng-if="groupNameToLabelMap.active">
         <form class="form-horizontal" role="form"
               ng-class="{'form-group-sm': ($storage.displayDensity === pipelineConstant.DENSITY_COZY || $storage.displayDensity === pipelineConstant.DENSITY_COMPACT)}"
               name="{{detailPaneConfig.instanceName || 'pipeline'}}">
@@ -48,7 +48,7 @@
            ng-show="showConfigurationWarning(detailPaneConfig, undefined, true)"></i>
         {{'home.detailPane.badRecords' | translate}} - {{errorStageConfigDefn.label}}
       </tab-heading>
-      <div class="tabs-content">
+      <div class="tabs-content" ng-if="errorStageConfigActive">
         <form class="form-horizontal" role="form"
               ng-class="{'form-group-sm': ($storage.displayDensity === pipelineConstant.DENSITY_COZY || $storage.displayDensity === pipelineConstant.DENSITY_COMPACT)}"
               name="badRecordsForm">
