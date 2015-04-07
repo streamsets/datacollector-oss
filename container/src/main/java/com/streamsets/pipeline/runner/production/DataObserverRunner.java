@@ -10,10 +10,8 @@ import com.google.common.annotations.VisibleForTesting;
 import com.google.common.collect.EvictingQueue;
 import com.streamsets.pipeline.alerts.AlertManager;
 import com.streamsets.pipeline.alerts.DataRuleEvaluator;
-import com.streamsets.pipeline.alerts.MetricRuleEvaluator;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.config.DataRuleDefinition;
-import com.streamsets.pipeline.config.MetricsRuleDefinition;
 import com.streamsets.pipeline.metrics.MetricsConfigurator;
 import com.streamsets.pipeline.util.Configuration;
 import org.slf4j.Logger;
@@ -25,22 +23,20 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CopyOnWriteArrayList;
 
-public class ObserverRunner {
+public class DataObserverRunner {
 
-  private static final Logger LOG = LoggerFactory.getLogger(ObserverRunner.class);
+  private static final Logger LOG = LoggerFactory.getLogger(DataObserverRunner.class);
   private static final String USER_PREFIX = "user.";
 
   private RulesConfigurationChangeRequest rulesConfigurationChangeRequest;
   private final Map<String, EvictingQueue<Record>> ruleToSampledRecordsMap;
   private final MetricRegistry metrics;
-  private final Map<String, Map<String, Object>> alertResponse;
   private final AlertManager alertManager;
   private final Configuration configuration;
 
-  public ObserverRunner(MetricRegistry metrics, AlertManager alertManager,
-                        Configuration configuration) {
+  public DataObserverRunner(MetricRegistry metrics, AlertManager alertManager,
+                            Configuration configuration) {
     this.metrics = metrics;
-    this.alertResponse = new HashMap<>();
     this.ruleToSampledRecordsMap = new HashMap<>();
     this.configuration = configuration;
     this.alertManager = alertManager;
@@ -65,19 +61,6 @@ public class ObserverRunner {
     }
   }
 
-  public void handleMetricRulesEvaluationRequest(MetricRulesEvaluationRequest metricRulesEvaluationRequest) {
-    //pipeline metric alerts
-    List<MetricsRuleDefinition> metricsRuleDefinitions =
-      rulesConfigurationChangeRequest.getRuleDefinitions().getMetricsRuleDefinitions();
-    if(metricsRuleDefinitions != null) {
-      for (MetricsRuleDefinition metricsRuleDefinition : metricsRuleDefinitions) {
-        MetricRuleEvaluator metricAlertsHelper = new MetricRuleEvaluator(metricsRuleDefinition, metrics, alertManager,
-          rulesConfigurationChangeRequest.getRuleDefinitions().getEmailIds());
-        metricAlertsHelper.checkForAlerts();
-      }
-    }
-  }
-
   public void handleConfigurationChangeRequest(RulesConfigurationChangeRequest rulesConfigurationChangeRequest) {
     //update config changes
     this.rulesConfigurationChangeRequest = rulesConfigurationChangeRequest;
@@ -86,9 +69,6 @@ public class ObserverRunner {
     for(String ruleId : rulesConfigurationChangeRequest.getRulesToRemove()) {
       MetricsConfigurator.removeMeter(metrics, USER_PREFIX + ruleId);
       MetricsConfigurator.removeCounter(metrics, USER_PREFIX + ruleId);
-    }
-    for(String alertId : rulesConfigurationChangeRequest.getMetricAlertsToRemove()) {
-      MetricsConfigurator.removeGauge(metrics, alertId);
     }
 
     //resize evicting queue which retains sampled records

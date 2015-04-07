@@ -78,4 +78,7 @@ public class ProductionPipeline {
     return pipelineRunner.getOffSetTracker().getLastBatchTime();
   }
 
+  public void setThreadHealthReporter(ThreadHealthReporter threadHealthReporter) {
+    pipelineRunner.setThreadHealthReporter(threadHealthReporter);
+  }
 }

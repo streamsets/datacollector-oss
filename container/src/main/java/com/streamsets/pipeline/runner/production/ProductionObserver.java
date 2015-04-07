@@ -32,6 +32,8 @@ public class ProductionObserver implements Observer {
 
   private final com.streamsets.pipeline.util.Configuration configuration;
   private BlockingQueue<Object> observeRequests;
+  private MetricsObserverRunner metricsObserverRunner;
+
   private volatile RulesConfigurationChangeRequest currentConfig;
   private volatile RulesConfigurationChangeRequest newConfig;
 
@@ -70,6 +72,10 @@ public class ProductionObserver implements Observer {
       this.currentConfig = this.newConfig;
       boolean offered = false;
       LOG.debug("Reconfiguring");
+      //update the changes rule configuration in the metrics observer
+      if(metricsObserverRunner != null) {
+        metricsObserverRunner.setRulesConfigurationChangeRequest(this.currentConfig);
+      }
       while (!offered) {
         offered = observeRequests.offer(this.currentConfig);
       }
@@ -126,6 +132,10 @@ public class ProductionObserver implements Observer {
   @Override
   public void setConfiguration(RulesConfigurationChangeRequest rulesConfigurationChangeRequest) {
     this.newConfig = rulesConfigurationChangeRequest;
+  }
+
+  public void setMetricsObserverRunner(MetricsObserverRunner metricsObserverRunner) {
+    this.metricsObserverRunner = metricsObserverRunner;
   }
 
   @VisibleForTesting

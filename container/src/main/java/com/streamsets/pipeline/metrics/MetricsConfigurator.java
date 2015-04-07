@@ -97,7 +97,7 @@ public class MetricsConfigurator {
     return metrics.register(histogramName, histogram);
   }
 
-  public static Gauge<Object> createGauge(MetricRegistry metrics, String name, final Gauge<Object> guage) {
+  public static Gauge createGauge(MetricRegistry metrics, String name, final Gauge guage) {
     final String gaugeName = metricName(name, GAUGE_SUFFIX);
     if (sdcMetrics != null) {
       AccessController.doPrivileged(new PrivilegedAction<Void>() {
@@ -127,7 +127,7 @@ public class MetricsConfigurator {
     return metrics.getTimers().get(metricName(name, TIMER_SUFFIX));
   }
 
-  public static Gauge<Object> getGauge(MetricRegistry metrics, String name) {
+  public static Gauge getGauge(MetricRegistry metrics, String name) {
     return metrics.getGauges().get(metricName(name, GAUGE_SUFFIX));
   }
 

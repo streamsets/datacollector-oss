@@ -30,35 +30,35 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
-public class TestObserverRunner {
+public class TestDataObserverRunner {
 
   private static final String LANE = "lane";
   private static final String ID = "myId";
   private static final String PIPELINE_NAME = "myPipeline";
   private static final String REVISION = "1.0";
-  private ObserverRunner observerRunner;
+  private DataObserverRunner dataObserverRunner;
   private MetricRegistry metrics = new MetricRegistry();
   private static RuntimeInfo runtimeInfo;
 
   @Before
   public void setUp() {
     runtimeInfo = new RuntimeInfo(new MetricRegistry(), Arrays.asList(TestDataRuleEvaluator.class.getClassLoader()));
-    observerRunner = new ObserverRunner(metrics, new AlertManager(PIPELINE_NAME, REVISION, null, metrics, runtimeInfo),
+    dataObserverRunner = new DataObserverRunner(metrics, new AlertManager(PIPELINE_NAME, REVISION, null, metrics, runtimeInfo),
       new Configuration());
   }
 
   @Test
   public void testHandleConfigurationChangeRequest() {
     RulesConfigurationChangeRequest rulesConfigurationChangeRequest = createRulesConfigurationChangeRequest(false, false);
-    observerRunner.handleConfigurationChangeRequest(rulesConfigurationChangeRequest);
-    Assert.assertTrue(observerRunner.getRulesConfigurationChangeRequest() == rulesConfigurationChangeRequest);
+    dataObserverRunner.handleConfigurationChangeRequest(rulesConfigurationChangeRequest);
+    Assert.assertTrue(dataObserverRunner.getRulesConfigurationChangeRequest() == rulesConfigurationChangeRequest);
   }
 
   @Test
   public void testHandleObserverRequestAlert() {
     RulesConfigurationChangeRequest rulesConfigurationChangeRequest = createRulesConfigurationChangeRequest(true, false);
-    observerRunner.handleConfigurationChangeRequest(rulesConfigurationChangeRequest);
-    observerRunner.handleDataRulesEvaluationRequest(createProductionObserverRequest());
+    dataObserverRunner.handleConfigurationChangeRequest(rulesConfigurationChangeRequest);
+    dataObserverRunner.handleDataRulesEvaluationRequest(createProductionObserverRequest());
     Gauge<Object> gauge = MetricsConfigurator.getGauge(metrics, AlertsUtil.getAlertGaugeName("myId"));
     Assert.assertNotNull(gauge);
     Assert.assertEquals((long) 3, ((Map<String, Object>) gauge.getValue()).get("currentValue"));
@@ -68,8 +68,8 @@ public class TestObserverRunner {
   @Test
   public void testHandleObserverRequestMeter() {
     RulesConfigurationChangeRequest rulesConfigurationChangeRequest = createRulesConfigurationChangeRequest(false, true);
-    observerRunner.handleConfigurationChangeRequest(rulesConfigurationChangeRequest);
-    observerRunner.handleDataRulesEvaluationRequest(createProductionObserverRequest());
+    dataObserverRunner.handleConfigurationChangeRequest(rulesConfigurationChangeRequest);
+    dataObserverRunner.handleDataRulesEvaluationRequest(createProductionObserverRequest());
     Meter meter = MetricsConfigurator.getMeter(metrics, AlertsUtil.getUserMeterName("myId"));
     Assert.assertNotNull(meter);
     Assert.assertEquals(3, meter.getCount());
@@ -78,8 +78,8 @@ public class TestObserverRunner {
   @Test
   public void testHandleObserverRequestAlertAndMeter() {
     RulesConfigurationChangeRequest rulesConfigurationChangeRequest = createRulesConfigurationChangeRequest(true, true);
-    observerRunner.handleConfigurationChangeRequest(rulesConfigurationChangeRequest);
-    observerRunner.handleDataRulesEvaluationRequest(createProductionObserverRequest());
+    dataObserverRunner.handleConfigurationChangeRequest(rulesConfigurationChangeRequest);
+    dataObserverRunner.handleDataRulesEvaluationRequest(createProductionObserverRequest());
     Gauge<Object> gauge = MetricsConfigurator.getGauge(metrics, AlertsUtil.getAlertGaugeName("myId"));
     Assert.assertNotNull(gauge);
     Assert.assertEquals((long) 3, ((Map<String, Object>) gauge.getValue()).get("currentValue"));

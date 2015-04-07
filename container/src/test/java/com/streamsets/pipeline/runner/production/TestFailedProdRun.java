@@ -60,8 +60,8 @@ public class TestFailedProdRun {
     SourceOffsetTracker tracker = Mockito.mock(SourceOffsetTracker.class);
     BlockingQueue<Object> productionObserveRequests = new ArrayBlockingQueue<>(100, true /*FIFO*/);
     ProductionPipelineRunner runner = new ProductionPipelineRunner(runtimeInfo, Mockito.mock(FileSnapshotStore.class),
-        DeliveryGuarantee.AT_MOST_ONCE, PIPELINE_NAME, REVISION, productionObserveRequests, new Configuration(),
-        new MemoryLimitConfiguration());
+      DeliveryGuarantee.AT_MOST_ONCE, PIPELINE_NAME, REVISION, productionObserveRequests, new Configuration(),
+      new MemoryLimitConfiguration());
     PipelineConfiguration pipelineConfiguration = MockStages.createPipelineConfigurationSourceProcessorTarget();
     pipelineConfiguration.getStages().remove(2);
 

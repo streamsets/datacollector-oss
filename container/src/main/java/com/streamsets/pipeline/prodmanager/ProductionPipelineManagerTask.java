@@ -24,8 +24,10 @@ import com.streamsets.pipeline.lib.executor.SafeScheduledExecutorService;
 import com.streamsets.pipeline.main.RuntimeInfo;
 import com.streamsets.pipeline.metrics.MetricsConfigurator;
 import com.streamsets.pipeline.runner.PipelineRuntimeException;
+import com.streamsets.pipeline.runner.production.MetricObserverRunnable;
+import com.streamsets.pipeline.runner.production.MetricsObserverRunner;
 import com.streamsets.pipeline.runner.production.ProductionObserver;
-import com.streamsets.pipeline.runner.production.ProductionObserverRunnable;
+import com.streamsets.pipeline.runner.production.DataObserverRunnable;
 import com.streamsets.pipeline.runner.production.ProductionPipeline;
 import com.streamsets.pipeline.runner.production.ProductionPipelineBuilder;
 import com.streamsets.pipeline.runner.production.ProductionPipelineRunnable;
@@ -33,6 +35,7 @@ import com.streamsets.pipeline.runner.production.ProductionPipelineRunner;
 import com.streamsets.pipeline.runner.production.ProductionSourceOffsetTracker;
 import com.streamsets.pipeline.runner.production.RulesConfigLoader;
 import com.streamsets.pipeline.runner.production.RulesConfigLoaderRunnable;
+import com.streamsets.pipeline.runner.production.ThreadHealthReporter;
 import com.streamsets.pipeline.snapshotstore.SnapshotInfo;
 import com.streamsets.pipeline.snapshotstore.SnapshotStatus;
 import com.streamsets.pipeline.snapshotstore.SnapshotStore;
@@ -83,11 +86,13 @@ public class ProductionPipelineManagerTask extends AbstractTask {
   private final PipelineStoreTask pipelineStore;
   private final StageLibraryTask stageLibrary;
   private final SnapshotStore snapshotStore;
+  private ThreadHealthReporter threadHealthReporter;
 
   /*References the thread that is executing the pipeline currently */
   private ProductionPipelineRunnable pipelineRunnable;
   /*References the thread that is executing the observer stuff*/
-  private ProductionObserverRunnable observerRunnable;
+  private DataObserverRunnable observerRunnable;
+  private MetricObserverRunnable metricObserverRunnable;
   /*Thread that is watching changes to the rules configuration*/
   private RulesConfigLoaderRunnable configLoaderRunnable;
   /*The executor service that is currently executing the ProdPipelineRunnerThread*/
@@ -124,7 +129,7 @@ public class ProductionPipelineManagerTask extends AbstractTask {
   public void initTask() {
     LOG.debug("Initializing Production Pipeline Manager");
     stateTracker.init();
-    executor = new SafeScheduledExecutorService(3, PRODUCTION_PIPELINE_RUNNER);
+    executor = new SafeScheduledExecutorService(4, PRODUCTION_PIPELINE_RUNNER);
     PipelineState ps = getPipelineState();
     if(ps != null) {
       switch (ps.getState()) {
@@ -152,6 +157,10 @@ public class ProductionPipelineManagerTask extends AbstractTask {
               true /*FIFO*/);
             ProductionObserver observer = new ProductionObserver(productionObserveRequests, configuration);
             createPipeline(ps.getName(), ps.getRev(), observer, productionObserveRequests);
+            AlertManager alertManager = new AlertManager(ps.getName(), ps.getRev(), new EmailSender(configuration),
+              getMetrics(), runtimeInfo);
+            MetricsObserverRunner metricsObserverRunner = new MetricsObserverRunner(this.getMetrics(), alertManager);
+            observer.setMetricsObserverRunner(metricsObserverRunner);
           } catch (Exception e) {
             //log error and shutdown again
             LOG.error(ContainerError.CONTAINER_0108.getMessage(), e.getMessage(), e);
@@ -212,7 +221,7 @@ public class ProductionPipelineManagerTask extends AbstractTask {
   }
 
   public List<SnapshotInfo> getSnapshotsInfo() throws PipelineStoreException{
-    List<SnapshotInfo> snapshotInfos = new ArrayList<SnapshotInfo>();
+    List<SnapshotInfo> snapshotInfos = new ArrayList<>();
     for(PipelineInfo pipelineInfo: pipelineStore.getPipelines()) {
       snapshotInfos.addAll(snapshotStore.getSnapshotsInfo(pipelineInfo.getName(), pipelineInfo.getLastRev()));
     }
@@ -301,11 +310,46 @@ public class ProductionPipelineManagerTask extends AbstractTask {
   private void handleStartRequest(String name, String rev) throws PipelineManagerException, StageException
       , PipelineRuntimeException, PipelineStoreException {
 
+  /*
+    Implementation Notes:
+    ---------------------
+
+    What are the different threads and runnables created?
+    - - - - - - - - - - - - - - - - - - - - - - - - - - -
+     RulesConfigLoader
+     ProductionObserver
+     MetricObserver
+     ProductionPipelineRunner
+
+    How do threads communicate?
+    - - - - - - - - - - - - - -
+
+     RulesConfigLoader, ProductionObserver and ProductionPipelineRunner share a blocking queue which will hold
+     record samples to be evaluated by the Observer [Data Rule evaluation] and rules configuration change requests
+     computed by the RulesConfigLoader.
+
+     MetricsObserverRunner handles evaluating metric rules and a reference is passed to Production Observer which
+     updates the MetricsObserverRunner when configuration changes.
+
+    Other classes:
+    - - - - - - - -
+
+    Alert Manager - responsible for creating alerts and sendign email.
+
+
+  */
+
     BlockingQueue<Object> productionObserveRequests = new ArrayBlockingQueue<>(
       configuration.get(Configuration.OBSERVER_QUEUE_SIZE_KEY, Configuration.OBSERVER_QUEUE_SIZE_DEFAULT),
       true /*FIFO*/);
+
     ProductionObserver observer = new ProductionObserver(productionObserveRequests, configuration);
     createPipeline(name, rev, observer, productionObserveRequests);
+
+    AlertManager alertManager = new AlertManager(name, rev, new EmailSender(configuration), getMetrics(), runtimeInfo);
+    MetricsObserverRunner metricsObserverRunner = new MetricsObserverRunner(this.getMetrics(), alertManager);
+
+    observer.setMetricsObserverRunner(metricsObserverRunner);
 
     //bootstrap the pipeline runner thread with rule configuration
     RulesConfigLoader rulesConfigLoader = new RulesConfigLoader(name, rev, pipelineStore);
@@ -314,17 +358,31 @@ public class ProductionPipelineManagerTask extends AbstractTask {
     } catch (InterruptedException e) {
       throw new PipelineRuntimeException(ContainerError.CONTAINER_0403, name, e.getMessage(), e);
     }
-    configLoaderRunnable = new RulesConfigLoaderRunnable(rulesConfigLoader, observer);
-    ScheduledFuture<?> configLoaderFuture =
-      executor.scheduleWithFixedDelayReturnFuture(configLoaderRunnable, 1, 2, TimeUnit.SECONDS);
 
-    AlertManager alertManager = new AlertManager(name, rev, new EmailSender(configuration), getMetrics(), runtimeInfo);
-    observerRunnable = new ProductionObserverRunnable(this, productionObserveRequests, alertManager, configuration);
+    threadHealthReporter = new ThreadHealthReporter(this.getMetrics());
+    threadHealthReporter.register(RulesConfigLoaderRunnable.RUNNABLE_NAME);
+    threadHealthReporter.register(MetricObserverRunnable.RUNNABLE_NAME);
+    threadHealthReporter.register(DataObserverRunnable.RUNNABLE_NAME);
+    threadHealthReporter.register(ProductionPipelineRunnable.RUNNABLE_NAME);
+
+    configLoaderRunnable = new RulesConfigLoaderRunnable(threadHealthReporter, rulesConfigLoader, observer);
+    ScheduledFuture<?> configLoaderFuture =
+      executor.scheduleWithFixedDelayReturnFuture(configLoaderRunnable, 1,
+        RulesConfigLoaderRunnable.SCHEDULED_DELAY, TimeUnit.SECONDS);
+
+    metricObserverRunnable = new MetricObserverRunnable(threadHealthReporter, metricsObserverRunner);
+    ScheduledFuture<?> metricObserverFuture = executor.scheduleWithFixedDelayReturnFuture(
+      metricObserverRunnable, 1, 2, TimeUnit.SECONDS);
+
+    observerRunnable = new DataObserverRunnable(threadHealthReporter, this.getMetrics(), productionObserveRequests,
+      alertManager, configuration);
     Future<?> observerFuture = executor.submitReturnFuture(observerRunnable);
 
-    pipelineRunnable = new ProductionPipelineRunnable(this, prodPipeline, name, rev,
-      ImmutableList.of(configLoaderFuture, observerFuture));
+    pipelineRunnable = new ProductionPipelineRunnable(threadHealthReporter, this, prodPipeline, name, rev,
+      ImmutableList.of(configLoaderFuture, observerFuture, metricObserverFuture));
+
     executor.submit(pipelineRunnable);
+
     LOG.debug("Started pipeline {} {}", name, rev);
   }
 
@@ -334,6 +392,8 @@ public class ProductionPipelineManagerTask extends AbstractTask {
       pipelineRunnable.stop(nodeProcessShutdown);
       pipelineRunnable = null;
     }
+    threadHealthReporter.destroy();
+    threadHealthReporter = null;
     LOG.debug("Stopped pipeline");
   }
 
@@ -358,8 +418,8 @@ public class ProductionPipelineManagerTask extends AbstractTask {
     stateTracker.register(name, rev);
 
     ProductionSourceOffsetTracker offsetTracker = new ProductionSourceOffsetTracker(name, rev, runtimeInfo);
-    ProductionPipelineRunner runner = new ProductionPipelineRunner(runtimeInfo, snapshotStore, deliveryGuarantee,
-      name, rev, observeRequests, configuration, pipelineConfiguration.getMemoryLimitConfiguration());
+    ProductionPipelineRunner runner = new ProductionPipelineRunner(runtimeInfo, snapshotStore,
+      deliveryGuarantee, name, rev, observeRequests, configuration, pipelineConfiguration.getMemoryLimitConfiguration());
 
     ProductionPipelineBuilder builder = new ProductionPipelineBuilder(stageLibrary, name, rev, runtimeInfo,
       pipelineConfiguration);

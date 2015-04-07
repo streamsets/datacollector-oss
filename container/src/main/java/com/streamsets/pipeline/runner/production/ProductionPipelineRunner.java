@@ -99,6 +99,7 @@ public class ProductionPipelineRunner implements PipelineRunner {
   private Object errorRecordsMutex;
   private final MemoryLimitConfiguration memoryLimitConfiguration;
   private long lastMemoryLimitNotification;
+  private ThreadHealthReporter threadHealthReporter;
 
   public ProductionPipelineRunner(RuntimeInfo runtimeInfo, SnapshotStore snapshotStore,
                                   DeliveryGuarantee deliveryGuarantee, String pipelineName, String revision,
@@ -152,9 +153,16 @@ public class ProductionPipelineRunner implements PipelineRunner {
     this.offsetTracker = offsetTracker;
   }
 
+  public void setThreadHealthReporter(ThreadHealthReporter threadHealthReporter) {
+    this.threadHealthReporter = threadHealthReporter;
+  }
+
   @Override
   public void run(Pipe[] pipes, BadRecordsHandler badRecordsHandler) throws StageException, PipelineRuntimeException {
     while(!offsetTracker.isFinished() && !stop) {
+      if(threadHealthReporter != null) {
+        threadHealthReporter.reportHealth(ProductionPipelineRunnable.RUNNABLE_NAME, -1, System.currentTimeMillis());
+      }
       try {
         runBatch(pipes, badRecordsHandler);
       } catch (Throwable throwable) {
@@ -288,22 +296,6 @@ public class ProductionPipelineRunner implements PipelineRunner {
     Map<String, List<Record>> errorRecords = pipeBatch.getErrorSink().getErrorRecords();
     Map<String, List<ErrorMessage>> errorMessages = pipeBatch.getErrorSink().getStageErrors();
     retainErrorsInMemory(errorRecords, errorMessages);
-
-    //fire metric alert evaluation request
-    boolean offered;
-    try {
-      offered = observeRequests.offer(new MetricRulesEvaluationRequest(),
-        configuration.get(Configuration.MAX_OBSERVER_REQUEST_OFFER_WAIT_TIME_MS_KEY,
-          Configuration.MAX_OBSERVER_REQUEST_OFFER_WAIT_TIME_MS_DEFAULT), TimeUnit.MILLISECONDS);
-    } catch (InterruptedException e) {
-      offered = false;
-    }
-    if(!offered) {
-      LOG.debug("Dropping metric alert evaluation request as observer queue is full. " +
-        "Please resize the observer queue or decrease the sampling percentage.");
-      //raise alert to say that we dropped batch
-      //reconfigure queue size or tune sampling %
-    }
   }
 
   private RecordImpl getSourceRecord(Record record) {

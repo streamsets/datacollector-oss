@@ -18,6 +18,7 @@ import java.util.concurrent.Future;
 public class ProductionPipelineRunnable implements Runnable {
 
   private static final Logger LOG = LoggerFactory.getLogger(ProductionPipelineRunnable.class);
+  public static final String RUNNABLE_NAME = "ProductionPipelineRunnable";
 
   private final ProductionPipelineManagerTask pipelineManager;
   private final ProductionPipeline pipeline;
@@ -29,20 +30,22 @@ public class ProductionPipelineRunnable implements Runnable {
   private final List<Future<?>> relatedTasks;
 
 
-  public ProductionPipelineRunnable(ProductionPipelineManagerTask pipelineManager, ProductionPipeline pipeline,
+  public ProductionPipelineRunnable(ThreadHealthReporter threadHealthReporter,
+                                    ProductionPipelineManagerTask pipelineManager, ProductionPipeline pipeline,
                                     String name, String rev, List<Future<?>> relatedTasks) {
     this.pipelineManager = pipelineManager;
     this.pipeline = pipeline;
     this.rev = rev;
     this.name = name;
     this.relatedTasks = relatedTasks;
+    this.pipeline.setThreadHealthReporter(threadHealthReporter);
   }
 
   @Override
   public void run() {
     String originalThreadName = Thread.currentThread().getName();
     try {
-      Thread.currentThread().setName(originalThreadName + "-ProductionPipelineRunnable");
+      Thread.currentThread().setName(originalThreadName + "-" + RUNNABLE_NAME);
       try {
         runningThread = Thread.currentThread();
         pipeline.run();

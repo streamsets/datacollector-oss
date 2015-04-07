@@ -16,6 +16,9 @@ public class RuntimeStats {
   private long batchStartTime;
 
   public RuntimeStats() {
+    //initialize to current time, otherwise it will be 0 and will trigger the pipeline idle alert as soon as the
+    // pipeline is started.
+    timeOfLastReceivedRecord = System.currentTimeMillis();
   }
 
   public long getBatchCount() {

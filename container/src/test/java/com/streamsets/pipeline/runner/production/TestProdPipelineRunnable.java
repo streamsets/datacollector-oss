@@ -86,7 +86,7 @@ public class TestProdPipelineRunnable {
     TestUtil.captureMockStages();
 
     ProductionPipeline pipeline = createProductionPipeline(DeliveryGuarantee.AT_MOST_ONCE, true);
-    ProductionPipelineRunnable runnable = new ProductionPipelineRunnable(manager, pipeline, PIPELINE_NAME, REVISION,
+    ProductionPipelineRunnable runnable = new ProductionPipelineRunnable(null, manager, pipeline, PIPELINE_NAME, REVISION,
       Collections.<Future<?>>emptyList());
     manager.getStateTracker().setState(PIPELINE_NAME, REVISION, State.RUNNING, null, null);
     runnable.run();
@@ -103,7 +103,7 @@ public class TestProdPipelineRunnable {
     TestUtil.captureMockStages();
 
     ProductionPipeline pipeline = createProductionPipeline(DeliveryGuarantee.AT_MOST_ONCE, false);
-    ProductionPipelineRunnable runnable = new ProductionPipelineRunnable(manager, pipeline, PIPELINE_NAME, REVISION,
+    ProductionPipelineRunnable runnable = new ProductionPipelineRunnable(null, manager, pipeline, PIPELINE_NAME, REVISION,
       Collections.<Future<?>>emptyList());
     manager.getStateTracker().setState(PIPELINE_NAME, REVISION, State.STOPPING, null, null);
     runnable.stop(false);
@@ -139,7 +139,7 @@ public class TestProdPipelineRunnable {
     });
 
     ProductionPipeline pipeline = createProductionPipeline(DeliveryGuarantee.AT_MOST_ONCE, false);
-    ProductionPipelineRunnable runnable = new ProductionPipelineRunnable(manager, pipeline, PIPELINE_NAME, REVISION,
+    ProductionPipelineRunnable runnable = new ProductionPipelineRunnable(null, manager, pipeline, PIPELINE_NAME, REVISION,
       Collections.<Future<?>>emptyList());
 
     Thread t = new Thread(runnable);
@@ -162,7 +162,7 @@ public class TestProdPipelineRunnable {
     });
 
     ProductionPipeline pipeline = createProductionPipeline(DeliveryGuarantee.AT_MOST_ONCE, true);
-    ProductionPipelineRunnable runnable = new ProductionPipelineRunnable(manager, pipeline, PIPELINE_NAME, REVISION,
+    ProductionPipelineRunnable runnable = new ProductionPipelineRunnable(null, manager, pipeline, PIPELINE_NAME, REVISION,
       Collections.<Future<?>>emptyList());
 
     //Stops after the first batch
