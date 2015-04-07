@@ -18,6 +18,7 @@ import com.streamsets.pipeline.stage.processor.scripting.ProcessingMode;
 import org.junit.Assert;
 import org.junit.Test;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -78,13 +79,13 @@ public class TestJavaScriptProcessor {
         .build();
     runner.runInit();
     try {
-
       Record record = RecordCreator.create();
+      record.set(Field.create(new ArrayList<Field>()));
       List<Record> input = Arrays.asList(record);
       StageRunner.Output output = runner.runProcess(input);
       Assert.assertEquals(4, output.getRecords().get("lane").size());
       Record outRec = output.getRecords().get("lane").get(0);
-      Assert.assertNull(outRec.get());
+      Assert.assertEquals(Field.Type.LIST, outRec.get().getType());
       outRec = output.getRecords().get("lane").get(1);
       Assert.assertEquals(Field.Type.STRING, outRec.get("/").getType());
       Assert.assertEquals("Hello", outRec.get("/").getValue());

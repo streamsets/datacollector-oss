@@ -41,7 +41,7 @@ public class Java7JavaScriptObjectFactory extends ScriptObjectFactory {
   @Override
   public Object createArray(List elements) {
     try {
-      return ARRAY_CONSTRUCTOR.newInstance(elements.toArray(new Object[elements.size()]));
+      return ARRAY_CONSTRUCTOR.newInstance(new Object[]{elements.toArray(new Object[elements.size()])});
     } catch (Exception ex) {
       throw new RuntimeException(REFLECTION_ERROR_MESSAGE + ex, ex);
     }
