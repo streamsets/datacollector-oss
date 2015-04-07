@@ -34,8 +34,7 @@
                                             <li>Record by Record - Processes records individually.
                                                 Performs error handling.</li>
                                             <li>Record Batch - Processes records in batches.
-                                                Requires error handling code in the Jython
-                                                script.</li>
+                                                Requires error handling code in the script.</li>
                                         </ul></entry>
                                 </row>
                                 <row>

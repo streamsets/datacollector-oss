@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
+<concept id="concept_j1t_ntc_pr">
+ <title>Processing Mode</title>
+ <conbody>
+  <p><indexterm>Jython Evaluator<indexterm>processing
+    mode</indexterm></indexterm><indexterm>processing modes<indexterm>Jython
+    Evaluator</indexterm></indexterm>The Jython Evaluator processes data differently based on the
+   processing mode that you select. Use one of the following processing modes: <dl>
+    <dlentry>
+     <dt>Record by Record</dt>
+     <dd>The processor calls the script for each incoming record. The processor passes the record to
+      the script as a map, and then processes the record. </dd>
+     <dd>The processor handles error records based on the Error Record property defined for the
+      processor, so the code does not require additional error handling logic. </dd>
+     <dd>Use this mode to process one record at a time or to avoid creating error handling logic for
+      the code. Since this mode calls the script for each record, this might affect the performance
+      of the pipeline.</dd>
+    </dlentry>
+    <dlentry>
+     <dt>Record Batch</dt>
+     <dd>The processor calls the script for each incoming batch of records. The processor passes the
+      batch to the script as an array and processes the batch at one time. The array name is
+      "records".</dd>
+     <dd>The script must include error handling code. </dd>
+     <dd>Use this mode to process a batch of data at a time. At the end of the script, include the
+      following two functions:<ul id="ul_qws_5gy_pr">
+       <li>out.write (&lt;record>) - Passes the records to the next stage or stages in
+        pipeline.</li>
+       <li>err.write (&lt;record>, &lt;message>) - Passes error records to the pipeline for error
+        handling. </li>
+      </ul></dd>
+    </dlentry>
+   </dl></p>
+ </conbody>
+</concept>

@@ -2,19 +2,16 @@
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_a1h_lkf_lr">
  <title>Jython Evaluator</title>
- <shortdesc>The Jython Evaluator processes data based on custom Jython script. Use the Jython
-  Evaluator to incorporate custom Jython script in a pipeline.</shortdesc>
+ <shortdesc>The Jython Evaluator processes data based on custom Jython code. Use the Jython
+  Evaluator to incorporate custom Jython code in a pipeline. The Jython Evaluator supports Jython
+  version 2.7.</shortdesc>
  <conbody>
   <p><indexterm>Jython
      Evaluator<indexterm>overview</indexterm></indexterm><indexterm>processors<indexterm>Jython
-     Evaluator</indexterm></indexterm>The Jython Evaluator can process records as follows:
-    <draft-comment author="Loretta">more info for these - currently conreffing reusable
-    phrases:</draft-comment><dl
-    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/prccessingMode">
-    <dlentry>
-     <dt/>
-     <dd/>
-    </dlentry>
-   </dl></p>
+     Evaluator</indexterm></indexterm>The Jython Evaluator can process data one record at a time or
+   one batch at a time. </p>
+  <p>When you use a Jython Evaluator in a pipeline, the <ph
+    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> passes a batch
+   of data to the processor and converts the data to an expected format for processing. </p>
  </conbody>
 </concept>

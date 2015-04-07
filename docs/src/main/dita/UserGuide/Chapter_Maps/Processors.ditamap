@@ -48,6 +48,7 @@
   </topicref>
   <topicref href="../Processors/Jython.dita" chunk="to-content">
    <topicmeta><shortdesc></shortdesc></topicmeta>
+   <topicref href="../Processors/Jython_ProcessingMode.dita"/>
    <topicref href="../Processors/Jython-Configuring.dita"/>
   </topicref>
   <topicref href="../Processors/RDeduplicator.dita" chunk="to-content">

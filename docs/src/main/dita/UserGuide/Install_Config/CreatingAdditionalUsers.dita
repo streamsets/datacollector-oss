@@ -13,7 +13,7 @@
                 basic authentication, you configure users in the basic-realm.properties file.</p>
             <p>To encrypt login information, you can use an md5 program such as md5 on Mac OS X or
                 md5sum on Linux. </p>
-            <p>For Form and Basic authentication, you can encrypt the password. For example:
+            <p>For Basic and Form authentication, you can encrypt the password. For example:
                 <codeblock>echo -n "&lt;password>" | md5</codeblock></p>
             <p>For Digest authentication, you can hash the combination of
                 &lt;username>:&lt;realm>:&lt;password>. For example:

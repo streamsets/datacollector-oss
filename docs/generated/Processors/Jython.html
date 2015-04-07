@@ -2,7 +2,7 @@
 <!DOCTYPE html
   SYSTEM "about:legacy-compat">
 <html xml:lang="en-us" lang="en-us">
-<head><meta name="description" content="The Jython Evaluator processes data based on custom Jython script. Use the Jython Evaluator to incorporate custom Jython script in a pipeline. The Jython Evaluator can process records as follows: ..."></meta><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><meta name="copyright" content="(C) Copyright 2005"></meta><meta name="DC.rights.owner" content="(C) Copyright 2005"></meta><meta name="DC.Type" content="concept"></meta><meta name="DC.Title" content="Jython Evaluator"></meta><meta name="abstract" content="The Jython Evaluator processes data based on custom Jython script. Use the Jython Evaluator to incorporate custom Jython script in a pipeline."></meta><meta name="description" content="The Jython Evaluator processes data based on custom Jython script. Use the Jython Evaluator to incorporate custom Jython script in a pipeline."></meta><meta name="DC.Relation" scheme="URI" content="../Processors/Processors_title.html"></meta><meta name="DC.Format" content="XHTML"></meta><meta name="DC.Identifier" content="concept_a1h_lkf_lr"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/commonltr.css"><!----></link><title>Jython Evaluator</title><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/webhelp_topic.css"><!----></link><link rel="stylesheet" type="text/css" href="../skin.css"></link><script type="text/javascript"><!--
+<head><meta name="description" content="The Jython Evaluator processes data based on custom Jython code. Use the Jython Evaluator to incorporate custom Jython code in a pipeline. The Jython Evaluator supports Jython version 2.7. The Jython ..."></meta><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><meta name="copyright" content="(C) Copyright 2005"></meta><meta name="DC.rights.owner" content="(C) Copyright 2005"></meta><meta name="DC.Type" content="concept"></meta><meta name="DC.Title" content="Jython Evaluator"></meta><meta name="abstract" content="The Jython Evaluator processes data based on custom Jython code. Use the Jython Evaluator to incorporate custom Jython code in a pipeline. The Jython Evaluator supports Jython version 2.7."></meta><meta name="description" content="The Jython Evaluator processes data based on custom Jython code. Use the Jython Evaluator to incorporate custom Jython code in a pipeline. The Jython Evaluator supports Jython version 2.7."></meta><meta name="DC.Relation" scheme="URI" content="../Processors/Processors_title.html"></meta><meta name="DC.Format" content="XHTML"></meta><meta name="DC.Identifier" content="concept_a1h_lkf_lr"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/commonltr.css"><!----></link><title>Jython Evaluator</title><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/webhelp_topic.css"><!----></link><link rel="stylesheet" type="text/css" href="../skin.css"></link><script type="text/javascript"><!--
           
           var prefix = "../index.html";
           
@@ -14,54 +14,67 @@
  <h1 class="title topictitle1">Jython Evaluator</h1>
 
  
- <div class="body conbody"><p class="shortdesc">The Jython Evaluator processes data based on custom Jython script. Use the Jython
-  Evaluator to incorporate custom Jython script in a pipeline.</p>
+ <div class="body conbody"><p class="shortdesc">The Jython Evaluator processes data based on custom Jython code. Use the Jython
+  Evaluator to incorporate custom Jython code in a pipeline. The Jython Evaluator supports Jython
+  version 2.7.</p>
 
-  <div class="p">The Jython Evaluator can process records as follows:
-    <dl class="dl">
-                        
-                              <dt class="dt dlterm">Record by Record</dt>
+  <p class="p">The Jython Evaluator can process data one record at a time or
+   one batch at a time. </p>
 
-                              <dd class="dd">The processor calls the script for each record. The processor
-                                    passes the record to the script as a map and processes each
-                                    record individually. </dd>
-
-                              <dd class="dd">The processor handles error records based on the Error Record
-                                    property defined for the processor, so the code does not require
-                                    error handling logic. </dd>
-
-                              <dd class="dd">Use this mode to avoid including error handling logic in the code.
-                                    Since this mode calls the script for each record, this might
-                                    affect the performance of the pipeline.</dd>
-
-                        
-                        
-                              <dt class="dt dlterm">Record Batch</dt>
-
-                              <dd class="dd">The processor calls the script for each batch. The processor
-                                    passes the batch to the script as an array and processes the
-                                    batch at one time. The array name is "records".</dd>
-
-                              <dd class="dd">The script must include error handling code. </dd>
-
-                              <dd class="dd">Use this mode to process a batch of data at a time. At the end of
-                                    the script, include the following two functions:<ul class="ul" id="concept_a1h_lkf_lr__d2066e145">
-                                          <li class="li">out.write (&lt;record&gt;) - Passes the records to the
-                                                pipeline.</li>
-
-                                          <li class="li">err.write (&lt;record&gt;, &lt;message&gt;) - Passes error
-                                                records to error handling. </li>
-
-                                    </ul>
-</dd>
-
-                        
-                  </dl>
-</div>
+  <p class="p">When you use a Jython Evaluator in a pipeline, the <span class="ph">Data
+                  Collector</span> passes a batch
+   of data to the processor and converts the data to an expected format for processing. </p>
 
  </div>
 
 <div class="related-links"></div>
+<div class="topic concept nested1" id="concept_j1t_ntc_pr">
+ <h2 class="title topictitle2">Processing Mode</h2>
+
+ <div class="body conbody">
+  <div class="p">The Jython Evaluator processes data differently based on the
+   processing mode that you select. Use one of the following processing modes: <dl class="dl">
+    
+     <dt class="dt dlterm">Record by Record</dt>
+
+     <dd class="dd">The processor calls the script for each incoming record. The processor passes the record to
+      the script as a map, and then processes the record. </dd>
+
+     <dd class="dd">The processor handles error records based on the Error Record property defined for the
+      processor, so the code does not require additional error handling logic. </dd>
+
+     <dd class="dd">Use this mode to process one record at a time or to avoid creating error handling logic for
+      the code. Since this mode calls the script for each record, this might affect the performance
+      of the pipeline.</dd>
+
+    
+    
+     <dt class="dt dlterm">Record Batch</dt>
+
+     <dd class="dd">The processor calls the script for each incoming batch of records. The processor passes the
+      batch to the script as an array and processes the batch at one time. The array name is
+      "records".</dd>
+
+     <dd class="dd">The script must include error handling code. </dd>
+
+     <dd class="dd">Use this mode to process a batch of data at a time. At the end of the script, include the
+      following two functions:<ul class="ul" id="concept_j1t_ntc_pr__ul_qws_5gy_pr">
+       <li class="li">out.write (&lt;record&gt;) - Passes the records to the next stage or stages in
+        pipeline.</li>
+
+       <li class="li">err.write (&lt;record&gt;, &lt;message&gt;) - Passes error records to the pipeline for error
+        handling. </li>
+
+      </ul>
+</dd>
+
+    
+   </dl>
+</div>
+
+ </div>
+
+</div>
 <div class="topic task nested1" id="task_fty_jwx_nr">
     <h2 class="title topictitle2">Configuring a Jython Evaluator</h2>
 
@@ -82,9 +95,9 @@
                             
                             <thead class="thead" align="left">
                                 <tr class="row">
-                                    <th class="entry" valign="top" width="24.509803921568626%" id="d22642e127">General Property</th>
+                                    <th class="entry" valign="top" width="24.509803921568626%" id="d22642e151">General Property</th>
 
-                                    <th class="entry" valign="top" width="75.49019607843137%" id="d22642e130">Description</th>
+                                    <th class="entry" valign="top" width="75.49019607843137%" id="d22642e154">Description</th>
 
                                 </tr>
 
@@ -92,24 +105,24 @@
 
                             <tbody class="tbody">
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="24.509803921568626%" headers="d22642e127 ">Name</td>
+                                    <td class="entry" valign="top" width="24.509803921568626%" headers="d22642e151 ">Name</td>
 
-                                    <td class="entry" valign="top" width="75.49019607843137%" headers="d22642e130 ">Stage name.</td>
-
-                                </tr>
-
-                                <tr class="row">
-                                    <td class="entry" valign="top" width="24.509803921568626%" headers="d22642e127 ">Description</td>
-
-                                    <td class="entry" valign="top" width="75.49019607843137%" headers="d22642e130 ">Optional description.</td>
+                                    <td class="entry" valign="top" width="75.49019607843137%" headers="d22642e154 ">Stage name.</td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="24.509803921568626%" headers="d22642e127 ">Required Fields <a class="xref" href="../Pipeline_Configuration/RequiredFields.html#concept_dnj_bkm_vq" title="You can configure required fields for any processor and most destination stages. A required field must exist in a record to allow the record to enter the stage for processing. When a record does not include a required field, the stage passes the record to the pipeline for error handling.">
+                                    <td class="entry" valign="top" width="24.509803921568626%" headers="d22642e151 ">Description</td>
+
+                                    <td class="entry" valign="top" width="75.49019607843137%" headers="d22642e154 ">Optional description.</td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="24.509803921568626%" headers="d22642e151 ">Required Fields <a class="xref" href="../Pipeline_Configuration/RequiredFields.html#concept_dnj_bkm_vq" title="You can configure required fields for any processor and most destination stages. A required field must exist in a record to allow the record to enter the stage for processing. When a record does not include a required field, the stage passes the record to the pipeline for error handling.">
                                             <img class="image" id="task_fty_jwx_nr__d1953e292" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
 
-                                    <td class="entry" valign="top" width="75.49019607843137%" headers="d22642e130 ">Fields that must include data to be passed to the stage.
+                                    <td class="entry" valign="top" width="75.49019607843137%" headers="d22642e154 ">Fields that must include data to be passed to the stage.
                                             <div class="note tip"><span class="tiptitle">Tip:</span> You might include fields
                                             that the stage uses.</div>
 </td>
@@ -117,9 +130,9 @@
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="24.509803921568626%" headers="d22642e127 ">On Record Error</td>
+                                    <td class="entry" valign="top" width="24.509803921568626%" headers="d22642e151 ">On Record Error</td>
 
-                                    <td class="entry" valign="top" width="75.49019607843137%" headers="d22642e130 ">Error record handling for the stage: <ul class="ul" id="task_fty_jwx_nr__d1953e307">
+                                    <td class="entry" valign="top" width="75.49019607843137%" headers="d22642e154 ">Error record handling for the stage: <ul class="ul" id="task_fty_jwx_nr__d1953e307">
                                             <li class="li">Discard - Discards the record.</li>
 
                                             <li class="li">Send to Error - Sends the record to the pipeline for
@@ -149,9 +162,9 @@
                             
                             <thead class="thead" align="left">
                                 <tr class="row">
-                                    <th class="entry" valign="top" width="25.97402597402597%" id="d22642e220">Jython Property</th>
+                                    <th class="entry" valign="top" width="25.97402597402597%" id="d22642e244">Jython Property</th>
 
-                                    <th class="entry" valign="top" width="74.02597402597402%" id="d22642e223">Description</th>
+                                    <th class="entry" valign="top" width="74.02597402597402%" id="d22642e247">Description</th>
 
                                 </tr>
 
@@ -159,15 +172,14 @@
 
                             <tbody class="tbody">
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="25.97402597402597%" headers="d22642e220 ">Record Processing Mode</td>
+                                    <td class="entry" valign="top" width="25.97402597402597%" headers="d22642e244 ">Record Processing Mode</td>
 
-                                    <td class="entry" valign="top" width="74.02597402597402%" headers="d22642e223 ">Determines how the Jython Evaluator processes data:<ul class="ul" id="task_fty_jwx_nr__ul_tzg_vzx_nr">
+                                    <td class="entry" valign="top" width="74.02597402597402%" headers="d22642e247 ">Determines how the Jython Evaluator processes data:<ul class="ul" id="task_fty_jwx_nr__ul_tzg_vzx_nr">
                                             <li class="li">Record by Record - Processes records individually.
                                                 Performs error handling.</li>
 
                                             <li class="li">Record Batch - Processes records in batches.
-                                                Requires error handling code in the Jython
-                                                script.</li>
+                                                Requires error handling code in the script.</li>
 
                                         </ul>
 </td>
@@ -175,9 +187,9 @@
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="25.97402597402597%" headers="d22642e220 ">Script</td>
+                                    <td class="entry" valign="top" width="25.97402597402597%" headers="d22642e244 ">Script</td>
 
-                                    <td class="entry" valign="top" width="74.02597402597402%" headers="d22642e223 ">Jython code to use in the processor.</td>
+                                    <td class="entry" valign="top" width="74.02597402597402%" headers="d22642e247 ">Jython code to use in the processor.</td>
 
                                 </tr>
 

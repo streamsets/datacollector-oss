@@ -57,7 +57,7 @@
             <p>
                   <draft-comment author="Loretta">The following bullets are ways the Jython and
                         JavaScript Evaluators can process code: -- more info on these, make sure
-                        they are good for both.</draft-comment>
+                        they are good for both. -- currently not used.</draft-comment>
                   <dl id="prccessingMode">
                         <dlentry>
                               <dt>Record by Record</dt>
@@ -83,8 +83,7 @@
                                           <li>out.write (&lt;record>) - Passes the records to the
                                                 pipeline.</li>
                                           <li>err.write (&lt;record>, &lt;message>) - Passes error
-                                                records to error handling. <draft-comment
-                                                  author="Loretta">check this!</draft-comment></li>
+                                                records to error handling. </li>
                                     </ul></dd>
                         </dlentry>
                   </dl>
