@@ -181,6 +181,8 @@ public class KafkaSource extends BaseSource implements OffsetCommitter {
                                                     xmlRecordElement));
         }
         break;
+      case SDC_JSON:
+        break;
       case LOG:
         logDataFormatValidator = new LogDataFormatValidator(logMode, logMaxObjectLen,
           logRetainOriginalLine, customLogFormat, regex, grokPatternDefinition, grokPattern,
@@ -229,6 +231,7 @@ public class KafkaSource extends BaseSource implements OffsetCommitter {
         builder.setConfig(XmlCharDataParserFactory.RECORD_ELEMENT_KEY, xmlRecordElement);
         break;
       case SDC_JSON:
+        builder.setMaxDataLen(-1);
         break;
       case LOG:
         logDataFormatValidator.populateBuilder(builder);
