@@ -1,6 +1,5 @@
-<div class="panel panel-default metric-alert-rules-tab" ng-controller="MetricAlertRulesController">
+<div class="metric-alert-rules-tab" ng-controller="MetricAlertRulesController">
   <div class="panel-heading clearfix">
-    <span translate="home.detailPane.rulesTab.metricAlertRules">Metric Alert Rules</span>
 
     <button type="button" class="btn btn-primary btn-sm pull-right"
             ng-if="!isPipelineRulesReadOnly"
@@ -13,7 +12,7 @@
           ng-class="{'form-group-sm': ($storage.displayDensity === pipelineConstant.DENSITY_COZY || $storage.displayDensity === pipelineConstant.DENSITY_COMPACT)}"
           name="{{detailPaneConfig.instanceName || 'pipeline'}}">
 
-      <table class="table">
+      <table class="table table-hover">
         <thead>
           <tr>
             <th class="expand-col">
@@ -31,11 +30,13 @@
         <tbody ng-hide="showLoading">
 
         <tr ng-repeat-start="alertRule in metricsRuleDefinitions = (pipelineRules.metricsRuleDefinitions) track by $index"
-            ng-class="alertRule.valid ? '' : 'invalid-rule'">
+            ng-init="isOpen=false;"
+            ng-click="isOpen = !isOpen"
+            class="pointer {{alertRule.valid ? '' : 'invalid-rule'}}">
 
           <td>
-            <span class="pointer toggler {{isOpen || expandAll ? 'open' : ''}}"
-                  ng-click="isOpen = !isOpen"></span>
+            <span class="toggler {{isOpen || expandAll ? 'open' : ''}}"
+                  ng-click="isOpen = !isOpen; $event.stopPropagation()"></span>
           </td>
 
           <td>
@@ -53,20 +54,24 @@
           <td>
             <input type="checkbox" name="sendEmail{{$index}}"
                    ng-disabled="alertRule.enabled || isPipelineRulesReadOnly"
+                   ng-click="$event.stopPropagation()"
                    ng-model="alertRule.sendEmail">
           </td>
 
           <td>
             <input type="checkbox" name="enabled{{$index}}"
                    ng-disabled="(!alertRule.valid && alertRule.enabled === false) || isPipelineRulesReadOnly"
+                   ng-click="$event.stopPropagation()"
                    ng-model="alertRule.enabled">
           </td>
 
           <td>
             <div ng-show="!alertRule.enabled" ng-if="!isPipelineRulesReadOnly">
-              <a href="javascript:;" ng-click="editMetricAlertDataRule(alertRule, $index)">Edit</a>
-              &nbsp;|&nbsp;
-              <a href="javascript:;" ng-click="removeRule(pipelineRules.metricsRuleDefinitions, $index)">Delete</a>
+              <a href="javascript:;" translate="global.form.edit"
+                 ng-click="editMetricAlertDataRule(alertRule, $index); $event.stopPropagation()">Edit</a>
+              <span class="separator-padding">|</span>
+              <a href="javascript:;"  translate="global.form.delete"
+                 ng-click="removeRule(pipelineRules.metricsRuleDefinitions, $index); $event.stopPropagation()">Delete</a>
             </div>
           </td>
 

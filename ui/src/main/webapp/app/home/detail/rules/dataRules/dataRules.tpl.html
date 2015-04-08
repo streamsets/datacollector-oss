@@ -1,8 +1,7 @@
-<div class="panel panel-default data-rules-tab" ng-controller="DataRulesController">
+<div class="data-rules-tab" ng-controller="DataRulesController">
   <div class="panel-heading clearfix">
-    <span translate="home.detailPane.rulesTab.dataRules"></span>
     <button type="button" class="btn btn-primary btn-sm add-button pull-right"
-            ng-if="!isPipelineRulesReadOnly"
+            ng-if="!isPipelineRulesReadOnly && pipelineConfig.stages.length"
             ng-click="createDataRule()">
       <i class="fa fa-plus"></i> {{'global.form.add' | translate}}
     </button>
@@ -12,7 +11,7 @@
           ng-class="{'form-group-sm': ($storage.displayDensity === pipelineConstant.DENSITY_COZY || $storage.displayDensity === pipelineConstant.DENSITY_COMPACT)}"
           name="{{detailPaneConfig.instanceName || 'pipeline'}}">
 
-      <table class="table" ng-init="expandAll=false">
+      <table class="table table-hover" ng-init="expandAll=false">
         <thead>
           <tr>
             <th class="expand-col">
@@ -20,6 +19,7 @@
                     ng-click="expandAll = !expandAll">
               </span>
             </th>
+            <th class="alert-text-col">{{'home.detailPane.rulesTab.stream' | translate}}</th>
             <th class="alert-text-col">{{'home.detailPane.rulesTab.label' | translate}}</th>
             <th class="condition-col">{{'home.detailPane.rulesTab.condition' | translate}}</th>
             <th class="condition-col">{{'home.detailPane.rulesTab.enableMeter' | translate}}</th>
@@ -31,13 +31,18 @@
         </thead>
         <tbody ng-hide="showLoading">
 
-        <tr ng-repeat-start="dataRuleDefn in dataRuleDefinitions = (pipelineRules.dataRuleDefinitions | filter: {lane: selectedObject.outputLane})"
+        <tr ng-repeat-start="dataRuleDefn in dataRuleDefinitions = getFilteredDataRules()"
             ng-init="isOpen=false;"
-            ng-class="dataRuleDefn.valid ? '' : 'invalid-rule'">
+            ng-click="isOpen = !isOpen"
+            class="pointer {{dataRuleDefn.valid ? '' : 'invalid-rule'}}">
 
           <td>
-            <span class="pointer toggler {{isOpen || expandAll ? 'open' : ''}}"
-                  ng-click="isOpen = !isOpen"></span>
+            <span class="toggler {{isOpen || expandAll ? 'open' : ''}}"
+                  ng-click="isOpen = !isOpen; $event.stopPropagation()"></span>
+          </td>
+
+          <td>
+            <span>{{streamLabelMap[dataRuleDefn.lane]}}</span>
           </td>
 
           <td>
@@ -52,6 +57,7 @@
             <input type="checkbox"
                    name="meterEnabled{{$index}}"
                    ng-disabled="dataRuleDefn.enabled || isPipelineRulesReadOnly"
+                   ng-click="$event.stopPropagation()"
                    ng-model="dataRuleDefn.meterEnabled">
           </td>
 
@@ -59,6 +65,7 @@
             <input type="checkbox"
                    name="alertEnabled{{$index}}"
                    ng-disabled="dataRuleDefn.enabled || isPipelineRulesReadOnly"
+                   ng-click="$event.stopPropagation()"
                    ng-model="dataRuleDefn.alertEnabled">
           </td>
 
@@ -67,6 +74,7 @@
                    name="sendEmail{{$index}}"
                    ng-if="dataRuleDefn.alertEnabled"
                    ng-disabled="dataRuleDefn.enabled || isPipelineRulesReadOnly"
+                   ng-click="$event.stopPropagation()"
                    ng-model="dataRuleDefn.sendEmail">
           </td>
 
@@ -74,21 +82,24 @@
             <input type="checkbox"
                    name="enabled{{$index}}"
                    ng-disabled="(!dataRuleDefn.valid && dataRuleDefn.enabled === false) || isPipelineRulesReadOnly"
+                   ng-click="$event.stopPropagation()"
                    ng-model="dataRuleDefn.enabled">
           </td>
 
           <td>
             <div ng-show="!dataRuleDefn.enabled" ng-if="!isPipelineRulesReadOnly">
-              <a href="javascript:;" ng-click="editDataRule(dataRuleDefn, $index)">Edit</a>
-              &nbsp;|&nbsp;
-              <a href="javascript:;" ng-click="removeRule(pipelineRules.dataRuleDefinitions, dataRuleDefn)">Delete</a>
+              <a href="javascript:;" translate="global.form.edit"
+                 ng-click="editDataRule(dataRuleDefn, $index, $event)">Edit</a>
+              <span class="separator-padding">|</span>
+              <a href="javascript:;"  translate="global.form.delete"
+                 ng-click="removeRule(pipelineRules.dataRuleDefinitions, dataRuleDefn, $event)">Delete</a>
             </div>
           </td>
 
         </tr>
 
         <tr ng-repeat-end ng-if="isOpen || expandAll" class="expand-row" ng-class="dataRuleDefn.valid ? '' : 'invalid-rule'">
-          <td colspan="8">
+          <td colspan="9">
             <ul class="table-properties">
 
               <li>

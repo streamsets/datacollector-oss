@@ -1,35 +1,44 @@
 
 {
   "schemaVersion" : 1,
-  "uuid" : "d8aefd39-3605-4f30-94ae-f86268bce0b1",
+  "uuid" : "82a08bfd-0083-4559-b0c0-b137884d686e",
   "configuration" : [ {
     "name" : "deliveryGuarantee",
     "value" : "AT_LEAST_ONCE"
   }, {
     "name" : "badRecordsHandling",
     "value" : "streamsets-datacollector-basic-lib::com_streamsets_pipeline_stage_destination_devnull_NullDTarget::1.0.0"
+  }, {
+    "name" : "constants",
+    "value" : [ ]
+  }, {
+    "name" : "memoryLimitExceeded",
+    "value" : "STOP_PIPELINE"
+  }, {
+    "name" : "memoryLimit",
+    "value" : 668
   } ],
   "uiInfo" : {
     "previewConfig" : {
+      "previewSource" : "CONFIGURED_SOURCE",
       "batchSize" : 10,
-      "skipTargets" : true,
-      "previewSource" : "CONFIGURED_SOURCE"
+      "skipTargets" : true
     }
   },
   "stages" : [ {
-    "instanceName" : "com_streamsets_pipeline_stage_origin_spooldir_SpoolDirDSource1427155267022",
+    "instanceName" : "com_streamsets_pipeline_stage_origin_spooldir_SpoolDirDSource1428513289027",
     "library" : "streamsets-datacollector-basic-lib",
     "stageName" : "com_streamsets_pipeline_stage_origin_spooldir_SpoolDirDSource",
     "stageVersion" : "1.0.0",
     "configuration" : [ {
       "name" : "dataFormat",
-      "value" : "TEXT"
+      "value" : "JSON"
     }, {
       "name" : "charset",
       "value" : "UTF-8"
     }, {
       "name" : "spoolDir",
-      "value" : "/notadirectory"
+      "value" : "/var/tmp"
     }, {
       "name" : "overrunLimit",
       "value" : 128
@@ -41,7 +50,7 @@
       "value" : 600
     }, {
       "name" : "filePattern",
-      "value" : "*"
+      "value" : "t*"
     }, {
       "name" : "maxSpoolFiles",
       "value" : 10
@@ -106,14 +115,32 @@
         "group" : 1
       } ]
     }, {
+      "name" : "grokPatternDefinition",
+      "value" : null
+    }, {
+      "name" : "grokPattern",
+      "value" : "%{COMMONAPACHELOG}"
+    }, {
+      "name" : "enableLog4jCustomLogFormat",
+      "value" : false
+    }, {
+      "name" : "onParseError",
+      "value" : "ERROR"
+    }, {
+      "name" : "maxStackTraceLines",
+      "value" : 50
+    }, {
+      "name" : "log4jCustomLogFormat",
+      "value" : "%r [%t] %-5p %c %x - %m%n"
+    }, {
       "name" : "stageOnRecordError",
       "value" : "TO_ERROR"
     } ],
     "uiInfo" : {
       "label" : "Directory 1",
       "description" : "",
-      "xPos" : 27,
-      "yPos" : 107,
+      "xPos" : 60,
+      "yPos" : 50,
       "stageType" : "SOURCE",
       "rawSource" : {
         "configuration" : [ {
@@ -123,57 +150,47 @@
       "icon" : "/rest/v1/definitions/stages/icon?name=com_streamsets_pipeline_stage_origin_spooldir_SpoolDirDSource&library=streamsets-datacollector-basic-lib&version=1.0.0"
     },
     "inputLanes" : [ ],
-    "outputLanes" : [ "com_streamsets_pipeline_stage_origin_spooldir_SpoolDirDSource1427155267022OutputLane14271552670220" ]
+    "outputLanes" : [ "com_streamsets_pipeline_stage_origin_spooldir_SpoolDirDSource1428513289027OutputLane14285132890270" ]
   }, {
-    "instanceName" : "com_streamsets_pipeline_stage_processor_dedup_DeDupDProcessor1426623653161",
+    "instanceName" : "com_streamsets_pipeline_stage_processor_javascript_JavaScriptDProcessor1428513297780",
     "library" : "streamsets-datacollector-basic-lib",
-    "stageName" : "com_streamsets_pipeline_stage_processor_dedup_DeDupDProcessor",
+    "stageName" : "com_streamsets_pipeline_stage_processor_javascript_JavaScriptDProcessor",
     "stageVersion" : "1.0.0",
     "configuration" : [ {
-      "name" : "recordCountWindow",
-      "value" : 1000000
+      "name" : "processingMode",
+      "value" : "RECORD"
     }, {
-      "name" : "timeWindowSecs",
-      "value" : 200
-    }, {
-      "name" : "compareFields",
-      "value" : "ALL_FIELDS"
-    }, {
-      "name" : "fieldsToCompare",
-      "value" : [ ]
+      "name" : "script",
+      "value" : "/**\n * Sample JavaScript code\n *\n * Available Objects:\n * \n *  Type: A Map defining the supported data types, it mirrors \n *        Field.Type\n *\n *  records: and array the records to process, depending on \n *           the processing mode it may have 1 record or all\n *           the records in the batch.\n *\n *  out.write(record): writes a record to processor output\n *\n *  err.write(record, message): sends a record to error\n *\n */\n\nfor(var i=0; i < records.length; i++) {\n  \n  //Change record root field value to a STRING value\n  //records[i].type = Type.STRING;\n  //records[i].value = 'Hello ' + i;\n\n\n  //Change record root field value to a MAP value and create an entry\n  //records[i].type = Type.MAP;\n  //records[i].value = {};\n  //records[i].value.V = { type: Type.STRING, value : 'Hello'};\n\n  //Modify a MAP entry\n  //records[i].value.V.type = Type.INTEGER;\n  //records[i].value.V.value = 5;\n\n  //Create an ARRAY entry\n  //records[i].value.A = { type: Type.LIST, value : []};\n  //records[i].value.A.value.push({ type: Type.STRING, value : 'Element 1'});\n  //records[i].value.A.value.push({ type: Type.STRING, value : 'Element 2'});\n\n  //Modify an existing ARRAY entry\n  //records[i].value.A.value[0].type = Type.INTEGER;\n  //records[i].value.A.value[0].value = 100;\n\n  //Write record to procesor output\n  out.write(records[i]);\n\n  //Send record to error\n  //err.write(records[i], 'Error Message');\n\n}  \n"
     }, {
       "name" : "stageRequiredFields",
       "value" : [ ]
+    }, {
+      "name" : "stageOnRecordError",
+      "value" : "TO_ERROR"
     } ],
     "uiInfo" : {
-      "label" : "Record Deduplicator1",
+      "label" : "JavaScript 1",
       "description" : "",
-      "xPos" : 262,
-      "yPos" : 100,
+      "xPos" : 280,
+      "yPos" : 50,
       "stageType" : "PROCESSOR",
-      "outputStreamLabels" : [ "Unique Records", "Duplicate Records" ],
-      "icon" : "/rest/v1/definitions/stages/icon?name=com_streamsets_pipeline_stage_processor_dedup_DeDupDProcessor&library=streamsets-datacollector-basic-lib&version=1.0.0"
+      "icon" : "/rest/v1/definitions/stages/icon?name=com_streamsets_pipeline_stage_processor_javascript_JavaScriptDProcessor&library=streamsets-datacollector-basic-lib&version=1.0.0"
     },
-    "inputLanes" : [ "com_streamsets_pipeline_stage_origin_spooldir_SpoolDirDSource1427155267022OutputLane14271552670220" ],
-    "outputLanes" : [ "com_streamsets_pipeline_stage_processor_dedup_DeDupDProcessor1426623653161OutputLane14266236531610", "com_streamsets_pipeline_stage_processor_dedup_DeDupDProcessor1426623653161OutputLane14266236531611" ]
+    "inputLanes" : [ "com_streamsets_pipeline_stage_origin_spooldir_SpoolDirDSource1428513289027OutputLane14285132890270" ],
+    "outputLanes" : [ "com_streamsets_pipeline_stage_processor_javascript_JavaScriptDProcessor1428513297780OutputLane14285132977800" ]
   }, {
-    "instanceName" : "com_streamsets_pipeline_stage_processor_selector_SelectorDProcessor1426623648482",
+    "instanceName" : "com_streamsets_pipeline_stage_processor_selector_SelectorDProcessor1428513299793",
     "library" : "streamsets-datacollector-basic-lib",
     "stageName" : "com_streamsets_pipeline_stage_processor_selector_SelectorDProcessor",
     "stageVersion" : "1.0.0",
     "configuration" : [ {
       "name" : "lanePredicates",
       "value" : [ {
-        "outputLane" : "com_streamsets_pipeline_stage_processor_selector_SelectorDProcessor1426623648482OutputLane1426623711708",
-        "predicate" : "${record:value('/a') == null}"
-      }, {
-        "outputLane" : "com_streamsets_pipeline_stage_processor_selector_SelectorDProcessor1426623648482OutputLane1426623648482",
+        "outputLane" : "com_streamsets_pipeline_stage_processor_selector_SelectorDProcessor1428513299793OutputLane1428513299793",
         "predicate" : "default"
       } ]
     }, {
-      "name" : "constants",
-      "value" : [ ]
-    }, {
       "name" : "stageRequiredFields",
       "value" : [ ]
     }, {
@@ -181,97 +198,34 @@
       "value" : "TO_ERROR"
     } ],
     "uiInfo" : {
-      "label" : "Stream Selector1",
+      "label" : "Stream Selector 1",
       "description" : "",
-      "xPos" : 502,
-      "yPos" : 36,
+      "xPos" : 500,
+      "yPos" : 50,
       "stageType" : "PROCESSOR",
       "icon" : "/rest/v1/definitions/stages/icon?name=com_streamsets_pipeline_stage_processor_selector_SelectorDProcessor&library=streamsets-datacollector-basic-lib&version=1.0.0"
     },
-    "inputLanes" : [ "com_streamsets_pipeline_stage_processor_dedup_DeDupDProcessor1426623653161OutputLane14266236531610" ],
-    "outputLanes" : [ "com_streamsets_pipeline_stage_processor_selector_SelectorDProcessor1426623648482OutputLane1426623711708", "com_streamsets_pipeline_stage_processor_selector_SelectorDProcessor1426623648482OutputLane1426623648482" ]
+    "inputLanes" : [ "com_streamsets_pipeline_stage_processor_javascript_JavaScriptDProcessor1428513297780OutputLane14285132977800" ],
+    "outputLanes" : [ "com_streamsets_pipeline_stage_processor_selector_SelectorDProcessor1428513299793OutputLane1428513299793" ]
   }, {
-    "instanceName" : "com_streamsets_pipeline_stage_processor_expression_ExpressionDProcessor1426623705810",
-    "library" : "streamsets-datacollector-basic-lib",
-    "stageName" : "com_streamsets_pipeline_stage_processor_expression_ExpressionDProcessor",
-    "stageVersion" : "1.0.0",
-    "configuration" : [ {
-      "name" : "expressionProcessorConfigs",
-      "value" : [ {
-        "fieldToSet" : "/d",
-        "expression" : "${record:value('/a') + record:value('/b')}"
-      } ]
-    }, {
-      "name" : "constants",
-      "value" : [ ]
-    }, {
-      "name" : "stageRequiredFields",
-      "value" : [ ]
-    }, {
-      "name" : "stageOnRecordError",
-      "value" : "TO_ERROR"
-    } ],
-    "uiInfo" : {
-      "label" : "Expression Evaluator1",
-      "description" : "",
-      "xPos" : 750,
-      "yPos" : 149,
-      "stageType" : "PROCESSOR",
-      "icon" : "/rest/v1/definitions/stages/icon?name=com_streamsets_pipeline_stage_processor_expression_ExpressionDProcessor&library=streamsets-datacollector-basic-lib&version=1.0.0"
-    },
-    "inputLanes" : [ "com_streamsets_pipeline_stage_processor_selector_SelectorDProcessor1426623648482OutputLane1426623648482" ],
-    "outputLanes" : [ "com_streamsets_pipeline_stage_processor_expression_ExpressionDProcessor1426623705810OutputLane14266237058100" ]
-  }, {
-    "instanceName" : "com_streamsets_pipeline_stage_destination_devnull_NullDTarget1426623733128",
+    "instanceName" : "com_streamsets_pipeline_stage_destination_devnull_NullDTarget1428513312281",
     "library" : "streamsets-datacollector-basic-lib",
     "stageName" : "com_streamsets_pipeline_stage_destination_devnull_NullDTarget",
     "stageVersion" : "1.0.0",
     "configuration" : [ ],
     "uiInfo" : {
-      "label" : "Trash1",
+      "label" : "Trash 1",
       "description" : "",
-      "xPos" : 1006,
-      "yPos" : 152,
+      "xPos" : 720,
+      "yPos" : 50,
       "stageType" : "TARGET",
       "icon" : "/rest/v1/definitions/stages/icon?name=com_streamsets_pipeline_stage_destination_devnull_NullDTarget&library=streamsets-datacollector-basic-lib&version=1.0.0"
     },
-    "inputLanes" : [ "com_streamsets_pipeline_stage_processor_expression_ExpressionDProcessor1426623705810OutputLane14266237058100" ],
-    "outputLanes" : [ ]
-  }, {
-    "instanceName" : "com_streamsets_pipeline_stage_destination_devnull_NullDTarget1426623736478",
-    "library" : "streamsets-datacollector-basic-lib",
-    "stageName" : "com_streamsets_pipeline_stage_destination_devnull_NullDTarget",
-    "stageVersion" : "1.0.0",
-    "configuration" : [ ],
-    "uiInfo" : {
-      "label" : "Trash2",
-      "description" : "",
-      "xPos" : 744,
-      "yPos" : 11,
-      "stageType" : "TARGET",
-      "icon" : "/rest/v1/definitions/stages/icon?name=com_streamsets_pipeline_stage_destination_devnull_NullDTarget&library=streamsets-datacollector-basic-lib&version=1.0.0"
-    },
-    "inputLanes" : [ "com_streamsets_pipeline_stage_processor_selector_SelectorDProcessor1426623648482OutputLane1426623711708" ],
-    "outputLanes" : [ ]
-  }, {
-    "instanceName" : "com_streamsets_pipeline_stage_destination_devnull_NullDTarget1426623739325",
-    "library" : "streamsets-datacollector-basic-lib",
-    "stageName" : "com_streamsets_pipeline_stage_destination_devnull_NullDTarget",
-    "stageVersion" : "1.0.0",
-    "configuration" : [ ],
-    "uiInfo" : {
-      "label" : "Trash3",
-      "description" : "",
-      "xPos" : 515,
-      "yPos" : 194,
-      "stageType" : "TARGET",
-      "icon" : "/rest/v1/definitions/stages/icon?name=com_streamsets_pipeline_stage_destination_devnull_NullDTarget&library=streamsets-datacollector-basic-lib&version=1.0.0"
-    },
-    "inputLanes" : [ "com_streamsets_pipeline_stage_processor_dedup_DeDupDProcessor1426623653161OutputLane14266236531611" ],
+    "inputLanes" : [ "com_streamsets_pipeline_stage_processor_selector_SelectorDProcessor1428513299793OutputLane1428513299793" ],
     "outputLanes" : [ ]
   } ],
   "errorStage" : {
-    "instanceName" : "com_streamsets_pipeline_stage_destination_devnull_NullDTarget1426623770489",
+    "instanceName" : "com_streamsets_pipeline_stage_destination_devnull_NullDTarget1428513319641",
     "library" : "streamsets-datacollector-basic-lib",
     "stageName" : "com_streamsets_pipeline_stage_destination_devnull_NullDTarget",
     "stageVersion" : "1.0.0",
@@ -279,7 +233,7 @@
     "uiInfo" : {
       "label" : "Bad Records - Trash",
       "description" : "",
-      "xPos" : 735,
+      "xPos" : 940,
       "yPos" : 50,
       "stageType" : "TARGET",
       "icon" : "/rest/v1/definitions/stages/icon?name=com_streamsets_pipeline_stage_destination_devnull_NullDTarget&library=streamsets-datacollector-basic-lib&version=1.0.0"
@@ -287,23 +241,23 @@
     "inputLanes" : [ ],
     "outputLanes" : [ ]
   },
-  "description" : null,
-  "previewable" : true,
-  "valid" : true,
   "info" : {
     "name" : "UI End to End Test Pipeline",
     "description" : null,
-    "created" : 1427154450370,
-    "lastModified" : 1427155309256,
+    "created" : 1428513260349,
+    "lastModified" : 1428513345529,
     "creator" : "admin",
     "lastModifier" : "admin",
     "lastRev" : "0",
-    "uuid" : "d8aefd39-3605-4f30-94ae-f86268bce0b1",
+    "uuid" : "82a08bfd-0083-4559-b0c0-b137884d686e",
     "valid" : true
   },
+  "description" : null,
   "issues" : {
-    "pipelineIssues" : [ ],
     "stageIssues" : { },
-    "issueCount" : 0
-  }
+    "issueCount" : 0,
+    "pipelineIssues" : [ ]
+  },
+  "previewable" : true,
+  "valid" : true
 }

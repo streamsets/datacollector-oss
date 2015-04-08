@@ -58,6 +58,12 @@ angular
         iconClass: 'fa fa-list',
         helpId: 'metric-rules-tab'
       },
+      rulesTab = {
+        name:'rules',
+        template:'app/home/detail/rules/rules.tpl.html',
+        iconClass: 'fa fa-list',
+        helpId: 'metric-rules-tab'
+      },
       emailIdsTab = {
         name:'emailIDs',
         template:'app/home/detail/rules/emailIDs/emailIDs.tpl.html',
@@ -76,9 +82,9 @@ angular
       switch(type) {
         case pipelineConstant.PIPELINE:
           if(isPipelineRunning) {
-            tabsList = [summaryTab, errorTab, infoTab, configurationTab, metricAlertRulesTab, emailIdsTab, historyTab];
+            tabsList = [summaryTab, errorTab, infoTab, configurationTab, rulesTab, historyTab];
           } else {
-            tabsList = [infoTab, configurationTab, metricAlertRulesTab, emailIdsTab, historyTab];
+            tabsList = [infoTab, configurationTab, rulesTab, historyTab];
           }
 
           return tabsList;

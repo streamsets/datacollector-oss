@@ -11,6 +11,23 @@
     <ng-include src="'app/home/alerts/error/errorAlert.tpl.html'"></ng-include>
 
     <div class="form-group" show-errors>
+      <label class="col-lg-3 col-md-4 control-label" translate="home.detailPane.rulesTab.stream">Stream</label>
+      <div class="controls col-lg-9 col-md-8">
+        <select class="form-control" name="thresholdType"
+                required="true"
+                ng-model="dataRuleDefn.lane">
+
+          <option ng-repeat="(laneName, laneLabel) in streamLabelMap"
+                  value="{{laneName}}"
+                  ng-selected="laneName === dataRuleDefn.lane">
+            {{laneLabel}}
+          </option>
+
+        </select>
+      </div>
+    </div>
+
+    <div class="form-group" show-errors>
       <label class="col-lg-3 col-md-4 control-label" translate="home.detailPane.rulesTab.label">Label</label>
       <div class="controls col-lg-9 col-md-8">
         <input type="text"

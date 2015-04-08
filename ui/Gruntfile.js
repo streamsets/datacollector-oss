@@ -379,6 +379,7 @@ module.exports = function(grunt) {
         sub: true,
         boss: true,
         eqnull: true,
+        esnext: true,
         debug: true  //TODO: Set this flag only for development mode.
       },
       globals: {}
