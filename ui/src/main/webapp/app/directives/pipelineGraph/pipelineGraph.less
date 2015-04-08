@@ -312,20 +312,21 @@ pipeline-graph {
       }
 
       .edge-preview {
-        color:  @default-pipeline-graph-stroke-color;
+        color: #dddada;
+
+
+        &.alerts-defined {
+          color: #aaa7a7;
+        }
 
         &.active-alerts-defined {
-          color:  @brand-success;
+          color: #7f7c7c;
         }
 
         &.alert-triggered {
           color:  @brand-danger;
         }
 
-        &:hover {
-          //color: @default-pipeline-graph-selection-color;
-          //opacity: 0.8;
-        }
       }
 
       &.selected {

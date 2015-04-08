@@ -895,24 +895,7 @@ angular.module('pipelineGraphDirectives', [])
           })
           .append('xhtml:span')
           .attr('class', function(d) {
-            var alertRules = _.filter(graph.pipelineRules.dataRuleDefinitions, function(ruleDefn) {
-              return ruleDefn.lane === d.outputLane && ruleDefn.enabled;
-            });
-
-            if(alertRules && alertRules.length) {
-              var triggeredAlert = _.filter(graph.triggeredAlerts, function(triggered) {
-                return triggered.rule.lane === d.outputLane;
-              });
-
-              if(triggeredAlert && triggeredAlert.length) {
-                return 'fa fa-tachometer fa-16x pointer edge-preview alert-triggered';
-              } else {
-                return 'fa fa-tachometer fa-16x pointer edge-preview active-alerts-defined';
-              }
-
-            } else {
-              return 'fa fa-tachometer fa-16x pointer edge-preview';
-            }
+            return getEdgePreviewIcon(graph.pipelineRules, graph.triggeredAlerts, d);
           });
       }
 
@@ -1479,46 +1462,38 @@ angular.module('pipelineGraphDirectives', [])
       if(graph) {
         graph.paths.selectAll('span.edge-preview')
           .attr('class', function(d) {
-            var alertRules = _.filter(pipelineRules.dataRuleDefinitions, function(ruleDefn) {
-              return ruleDefn.lane === d.outputLane && ruleDefn.enabled;
-            });
-
-            if(alertRules && alertRules.length) {
-              var triggeredAlert = _.filter(triggeredAlerts, function(triggered) {
-                return triggered.rule.lane === d.outputLane;
-              });
-
-              if(triggeredAlert && triggeredAlert.length) {
-                return 'fa fa-tachometer fa-16x pointer edge-preview alert-triggered';
-              } else {
-                return 'fa fa-tachometer fa-16x pointer edge-preview active-alerts-defined';
-              }
-
-            } else {
-              return 'fa fa-tachometer fa-16x pointer edge-preview';
-            }
+            return getEdgePreviewIcon(pipelineRules, triggeredAlerts, d);
           });
-
-        /*graph.paths.selectAll('.edge-preview-container').each(function(d) {
-          var $this = $(this),
-            title = $this.attr('title'),
-            alertRules = _.filter(graph.pipelineRules.dataRuleDefinitions, function(ruleDefn) {
-              return ruleDefn.lane === d.outputLane && ruleDefn.enabled;
-            });
-
-          if(alertRules && alertRules.length) {
-            title = alertRules.length + ' Active Data Rules';
-          } else {
-            title = 'No Active Data Rules';
-          }
-
-          if(title) {
-            $this.tooltip('hide')
-              .attr('data-original-title', title)
-              .tooltip('fixTitle');
-          }
-        });*/
       }
     });
+
+
+
+    var getEdgePreviewIcon = function(pipelineRules, triggeredAlerts, d) {
+      var atLeastOneRuleDefined = false,
+        atLeastOneRuleActive = false,
+        triggeredAlert = _.filter(triggeredAlerts, function(triggered) {
+          return triggered.rule.lane === d.outputLane;
+        });
+
+      _.each(pipelineRules.dataRuleDefinitions, function(ruleDefn) {
+        if(ruleDefn.lane === d.outputLane) {
+          if(ruleDefn.enabled) {
+            atLeastOneRuleActive = true;
+          }
+          atLeastOneRuleDefined = true;
+        }
+      });
+
+      if(triggeredAlert && triggeredAlert.length) {
+        return 'fa fa-tachometer fa-16x pointer edge-preview alert-triggered';
+      } else if(atLeastOneRuleActive){
+        return 'fa fa-tachometer fa-16x pointer edge-preview active-alerts-defined';
+      } else if(atLeastOneRuleDefined){
+        return 'fa fa-tachometer fa-16x pointer edge-preview alerts-defined';
+      } else {
+        return 'fa fa-tachometer fa-16x pointer edge-preview';
+      }
+    };
 
   });
