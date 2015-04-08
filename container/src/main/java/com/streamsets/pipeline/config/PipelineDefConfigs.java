@@ -23,8 +23,8 @@ import java.util.Map;
 public abstract class PipelineDefConfigs implements Stage {
 
   public enum Groups implements Label {
-    BAD_RECORDS("Error Records"),
-    CONSTANTS("Constants");
+    CONSTANTS("Constants"),
+    BAD_RECORDS("Error Records");
 
     private final String label;
 

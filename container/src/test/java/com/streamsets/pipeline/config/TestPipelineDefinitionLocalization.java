@@ -33,8 +33,11 @@ public class TestPipelineDefinitionLocalization {
     def = def.localize();
 
     //pipeline groups
-    Assert.assertEquals(expected.get("pipelineGroup"), def.getConfigGroupDefinition().getGroupNameToLabelMapList().get(0).get(
-        "label"));
+    Assert.assertEquals(expected.get("pipelineConstantsGroup"), def.getConfigGroupDefinition().
+      getGroupNameToLabelMapList().get(0).get("label"));
+
+    Assert.assertEquals(expected.get("pipelineErrorRecordsGroup"), def.getConfigGroupDefinition().
+      getGroupNameToLabelMapList().get(1).get("label"));
 
     //pipeline configs
     Assert.assertEquals(expected.get("deliveryGuaranteeLabel"), def.getConfigDefinitions().get(0).getLabel());
@@ -49,7 +52,8 @@ public class TestPipelineDefinitionLocalization {
   private static final Map<String, String> EXPECTED_BUILT_IN = new HashMap<>();
 
   static {
-    EXPECTED_BUILT_IN.put("pipelineGroup", PipelineDefConfigs.Groups.BAD_RECORDS.getLabel());
+    EXPECTED_BUILT_IN.put("pipelineConstantsGroup", PipelineDefConfigs.Groups.CONSTANTS.getLabel());
+    EXPECTED_BUILT_IN.put("pipelineErrorRecordsGroup", PipelineDefConfigs.Groups.BAD_RECORDS.getLabel());
     EXPECTED_BUILT_IN.put("deliveryGuaranteeLabel", "Delivery Guarantee");
     EXPECTED_BUILT_IN.put("deliveryGuaranteeDescription", "");
     EXPECTED_BUILT_IN.put("badRecordsHandlingLabel", "Error Records");
@@ -64,7 +68,8 @@ public class TestPipelineDefinitionLocalization {
   private static final Map<String, String> EXPECTED_RESOURCE_BUNDLE = new HashMap<>();
 
   static {
-    EXPECTED_RESOURCE_BUNDLE.put("pipelineGroup", "XError Records");
+    EXPECTED_RESOURCE_BUNDLE.put("pipelineConstantsGroup", "XConstants");
+    EXPECTED_RESOURCE_BUNDLE.put("pipelineErrorRecordsGroup", "XError Records");
     EXPECTED_RESOURCE_BUNDLE.put("deliveryGuaranteeLabel", "XDelivery Guarantee");
     EXPECTED_RESOURCE_BUNDLE.put("deliveryGuaranteeDescription", "X");
     EXPECTED_RESOURCE_BUNDLE.put("badRecordsHandlingLabel", "XError Records");
