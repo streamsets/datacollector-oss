@@ -37,6 +37,21 @@ angular.module('dataCollectorApp.codemirrorDirectives')
             var completions =[];
 
             if(curWord || options.ctrlSpaceKey) {
+
+
+              if(dictionary.pipelineConstants && dictionary.pipelineConstants.length) {
+                angular.forEach(dictionary.pipelineConstants, function(pipelineConstant) {
+                  if(!curWord || pipelineConstant.key.match(regex)) {
+                    completions.push({
+                      text: pipelineConstant.key,
+                      displayText: pipelineConstant.key,
+                      className: 'CodeMirror-EL-completion CodeMirror-EL-completion-user-constant',
+                      data: pipelineConstant
+                    });
+                  }
+                });
+              }
+
               angular.forEach(dictionary.elConstantDefinitions, function(elConstantDefn) {
                 if(!curWord || elConstantDefn.name.match(regex)) {
                   completions.push({

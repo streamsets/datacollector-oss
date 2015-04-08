@@ -53,9 +53,15 @@ angular
        * @returns {{elFunctionDefinitions: (*|ConfigurationController.getCodeMirrorHints.elFunctionDefinitions|$scope.getCodeMirrorHints.elFunctionDefinitions|a.getCodeMirrorHints.elFunctionDefinitions), elConstantDefinitions: (*|ConfigurationController.getCodeMirrorHints.elConstantDefinitions|$scope.getCodeMirrorHints.elConstantDefinitions|a.getCodeMirrorHints.elConstantDefinitions)}}
        */
       getCodeMirrorHints: function(configDefinition) {
+        var pipelineConfig = $scope.pipelineConfig,
+          pipelineConstants = _.find(pipelineConfig.configuration, function(config) {
+            return config.name === 'constants';
+          });
+
         return {
           elFunctionDefinitions: configDefinition.elFunctionDefinitions,
-          elConstantDefinitions: configDefinition.elConstantDefinitions
+          elConstantDefinitions: configDefinition.elConstantDefinitions,
+          pipelineConstants: pipelineConstants ? pipelineConstants.value : []
         };
       },
 
@@ -68,7 +74,8 @@ angular
       getTextCodeMirrorHints: function(configDefinition) {
         return {
           elFunctionDefinitions: [],
-          elConstantDefinitions: pipelineService.getTextELConstantDefinitions()
+          elConstantDefinitions: pipelineService.getTextELConstantDefinitions(),
+          pipelineConstants: []
         };
       },
 

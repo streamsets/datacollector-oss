@@ -6,12 +6,12 @@
 
   <div ng-switch-when="NUMBER">
     <ng-include src="'labelConfigurationTemplate'"></ng-include>
-    <ng-include src="'integerConfigurationTemplate'"></ng-include>
+    <ng-include src="'elStringConfigurationTemplate'"></ng-include>
   </div>
 
   <div ng-switch-when="STRING">
     <ng-include src="'labelConfigurationTemplate'"></ng-include>
-    <ng-include src="'stringConfigurationTemplate'"></ng-include>
+    <ng-include src="'elStringConfigurationTemplate'"></ng-include>
   </div>
 
   <div ng-switch-when="CHARACTER">
@@ -132,7 +132,7 @@
                 </div>
 
                 <div ng-switch-when="STRING">
-                  <ng-include src="'stringComplexConfigurationTemplate'"></ng-include>
+                  <ng-include src="'elStringComplexConfigurationTemplate'"></ng-include>
                 </div>
 
                 <div ng-switch-when="EL_STRING" class="expression-language"

@@ -35,13 +35,15 @@ function uiCodemirrorDirective($timeout, uiCodemirrorConfig) {
 
     var codemirror = newCodemirrorEditor(iElement, codemirrorOptions);
 
+    var dataType = scope.$eval(iAttrs.type) || 'STRING';
+
     configOptionsWatcher(
       codemirror,
       iAttrs.uiCodemirror || iAttrs.uiCodemirrorOpts,
       scope
     );
 
-    configNgModelLink(codemirror, ngModel, scope);
+    configNgModelLink(codemirror, ngModel, scope, dataType);
 
     configUiRefreshAttribute(codemirror, iAttrs.uiRefresh, scope);
 
@@ -97,7 +99,7 @@ function uiCodemirrorDirective($timeout, uiCodemirrorConfig) {
     }
   }
 
-  function configNgModelLink(codemirror, ngModel, scope) {
+  function configNgModelLink(codemirror, ngModel, scope, dataType) {
     if (!ngModel) { return; }
     // CodeMirror expects a string, so make sure it gets one.
     // This does not change the model.
@@ -117,6 +119,11 @@ function uiCodemirrorDirective($timeout, uiCodemirrorConfig) {
       //Code mirror expects a string so make sure it gets one
       //Although the formatter have already done this, it can be possible that another formatter returns undefined (for example the required directive)
       var safeViewValue = ngModel.$viewValue || '';
+
+      if(dataType === 'NUMBER' && !isNaN(safeViewValue)) {
+        safeViewValue = safeViewValue + '';
+      }
+
       codemirror.setValue(safeViewValue);
     };
 
@@ -124,6 +131,11 @@ function uiCodemirrorDirective($timeout, uiCodemirrorConfig) {
     // Keep the ngModel in sync with changes from CodeMirror
     codemirror.on('change', function(instance) {
       var newValue = instance.getValue();
+
+      if(dataType === 'NUMBER' && !isNaN(newValue)) {
+        newValue = parseInt(newValue);
+      }
+
       if (newValue !== ngModel.$viewValue) {
         scope.$evalAsync(function() {
           ngModel.$setViewValue(newValue);

@@ -449,12 +449,6 @@ angular.module('dataCollectorApp.common')
           });
           config.value = [complexFieldObj];
         }
-      } else if(configDefinition.type === 'INTEGER') {
-        if(config.value) {
-          config.value = parseInt(config.value);
-        } else {
-          config.value = 0;
-        }
       } else if(configDefinition.type === 'BOOLEAN' && config.value === undefined) {
         config.value = false;
       } else if(configDefinition.type === 'LIST' && !config.value) {

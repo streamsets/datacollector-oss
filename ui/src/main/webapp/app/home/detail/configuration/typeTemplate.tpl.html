@@ -45,7 +45,8 @@
                 readOnly: isPipelineReadOnly || isPipelineRunning
               })"
          codemirror-el="getCodeMirrorHints(configDefinition)"
-         field-paths="fieldPaths">
+         field-paths="fieldPaths"
+         data-type="configDefinition.type">
     </div>
 
 
@@ -128,11 +129,16 @@
       </div>
 
       <div class="col-xs-7">
-        <input type="text" class="form-control input-sm"
-               ng-required="true"
-               name="{{configDefinition.name + $index}}"
-               ng-readonly="isPipelineReadOnly || isPipelineRunning"
-               ng-model="listValue[$index]"/>
+        <div ui-codemirror
+             ng-model="listValue[$index]"
+             ui-refresh="refreshCodemirror"
+             ui-codemirror-opts="getCodeMirrorOptions({
+                readOnly: isPipelineReadOnly || isPipelineRunning
+              })"
+             codemirror-el="getCodeMirrorHints(configDefinition)"
+             field-paths="fieldPaths"
+             data-type="'STRING'">
+        </div>
       </div>
 
       <div class="col-xs-4 btn-group" role="group" aria-label="Default button group"
@@ -180,12 +186,16 @@
       <div class="col-xs-1">:</div>
 
       <div class="col-xs-5">
-        <input type="text" class="form-control input-sm"
-               name="{{configDefinition.name + 'value' + $index}}"
-               placeholder="{{'home.detailPane.configurationTab.enterValue' | translate}}"
-               ng-required="true"
-               ng-readonly="isPipelineReadOnly || isPipelineRunning"
-               ng-model="mapObject.value"/>
+        <div ui-codemirror
+             ng-model="mapObject.value"
+             ui-refresh="refreshCodemirror"
+             ui-codemirror-opts="getCodeMirrorOptions({
+                readOnly: isPipelineReadOnly || isPipelineRunning
+              })"
+             codemirror-el="getCodeMirrorHints(configDefinition)"
+             field-paths="fieldPaths"
+             data-type="'STRING'">
+        </div>
       </div>
 
       <div class="btn-group" role="group" aria-label="Default button group"

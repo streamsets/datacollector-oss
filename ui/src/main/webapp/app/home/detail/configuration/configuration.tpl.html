@@ -1,7 +1,7 @@
 <div ng-controller="ConfigurationController" class="configuration-tab">
   <tabset class="tabs-top">
 
-    <tab active="generalConfigActive">
+    <tab active="generalConfigActive" select="onTabSelect()">
       <tab-heading>
         <i class="fa fa-exclamation-triangle icon-danger"
            ng-show="showConfigurationWarning(detailPaneConfig, '')"></i>
