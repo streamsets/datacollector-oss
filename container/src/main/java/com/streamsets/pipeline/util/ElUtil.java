@@ -7,13 +7,13 @@ package com.streamsets.pipeline.util;
 
 import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.el.ELEvalException;
-import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.config.ConfigConfiguration;
 import com.streamsets.pipeline.config.ConfigDefinition;
 import com.streamsets.pipeline.config.PipelineConfiguration;
 import com.streamsets.pipeline.config.StageDefinition;
 import com.streamsets.pipeline.el.ELEvaluator;
 import com.streamsets.pipeline.el.ELVariables;
+import com.streamsets.pipeline.el.RuntimeEL;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.ParameterizedType;
@@ -66,19 +66,27 @@ public class ElUtil {
     ClassLoader cl = stageDef.getStageClassLoader();
     List<String> elDefs = configDefinition.getElDefs();
     if(elDefs != null && elDefs.size() > 0) {
-      Class<?>[] elDefClasses = new Class[elDefs.size()];
-      for(int i = 0; i < elDefs.size(); i++) {
-        try {
-          elDefClasses[i] = cl.loadClass(elDefs.get(i));
-        } catch (ClassNotFoundException e) {
-          throw new RuntimeException(
-            Utils.format("Could not load EL Definition from '{}', {}", stageDef.getStageClassLoader(), e.getMessage()),
-            e);
-        }
-      }
-      return elDefClasses;
+      return getElDefClassArray(cl, elDefs);
     }
-    return null;
+    Class<?>[] elDefClasses = new Class[1];
+    //inject RuntimeEL.class into the evaluator
+    elDefClasses[0] = RuntimeEL.class;
+    return elDefClasses;
+  }
+
+  public static Class<?>[] getElDefClassArray(ClassLoader classLoader, List<String> elDefs) {
+    Class<?>[] elDefClasses = new Class<?>[elDefs.size() + 1];
+    int i = 0;
+    for(; i < elDefs.size(); i++) {
+      try {
+        elDefClasses[i] = classLoader.loadClass(elDefs.get(i));
+      } catch (ClassNotFoundException e) {
+        throw new RuntimeException(e);
+      }
+    }
+    //inject RuntimeEL.class into the evaluator
+    elDefClasses[i] = RuntimeEL.class;
+    return  elDefClasses;
   }
 
   public static ELEvaluator createElEval(String name, Map<String, Object> constants, Class<?>... elDefs) {

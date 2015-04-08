@@ -25,6 +25,7 @@ import com.streamsets.pipeline.config.StageDefinition;
 import com.streamsets.pipeline.el.ELEvaluator;
 import com.streamsets.pipeline.el.ElConstantDefinition;
 import com.streamsets.pipeline.el.ElFunctionDefinition;
+import com.streamsets.pipeline.el.RuntimeEL;
 import com.streamsets.pipeline.json.ObjectMapperFactory;
 import com.streamsets.pipeline.main.RuntimeInfo;
 import com.streamsets.pipeline.restapi.bean.BeanHelper;
@@ -101,6 +102,14 @@ public class ClassLoaderStageLibraryTask extends AbstractTask implements StageLi
         LOG.debug("About to load stages from library '{}'", StageLibraryUtils.getLibraryName(cl));
       }
     }
+
+    try {
+      RuntimeEL.loadRuntimeConfiguration(runtimeInfo);
+    } catch (IOException e) {
+      throw new RuntimeException(
+        Utils.format("Could not load runtime configuration, '{}'", e.getMessage()), e);
+    }
+
     try {
       LocaleInContext.set(Locale.getDefault());
       for (ClassLoader cl : stageClassLoaders) {
@@ -348,6 +357,12 @@ public class ClassLoaderStageLibraryTask extends AbstractTask implements StageLi
       Class<?> elClass = stageDefinition.getStageClassLoader().loadClass(elDef);
       classes.add(elClass);
     }
+
+    //Add the RuntimeEL class for every config property that has text box
+    if(configDefinition.getType() != ConfigDef.Type.BOOLEAN && configDefinition.getType() != ConfigDef.Type.MODEL) {
+      classes.add(RuntimeEL.class);
+    }
+
     if(!classes.isEmpty()) {
       Class<?>[] elClasses = new Class[classes.size()];
       ELEvaluator elEval = new ELEvaluator(configDefinition.getName(), classes.toArray(elClasses));
@@ -355,4 +370,5 @@ public class ClassLoaderStageLibraryTask extends AbstractTask implements StageLi
       configDefinition.getElConstantDefinitions().addAll(elEval.getElConstantDefinitions());
     }
   }
+
 }
