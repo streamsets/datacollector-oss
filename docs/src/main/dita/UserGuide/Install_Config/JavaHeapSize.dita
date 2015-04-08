@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
+<concept id="concept_mdc_shg_qr">
+ <title>Java Heap Size</title>
+ <shortdesc>The Data Collector environment file defines the Java heap size used by the <ph
+   conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>. </shortdesc>
+ <conbody>
+  <p>The Java heap size affects the amount of memory that a pipeline can use. </p>
+ </conbody>
+</concept>

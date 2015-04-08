@@ -80,9 +80,8 @@
                                     <entry>Determines how to handle records that cannot be processed
                                         as expected. Use one of the following options:<ul
                                             id="ul_ayr_y22_br">
-                                            <li>Trash - Discards error records.</li>
-                                            <li>Records to File - Saves error records to a
-                                                file.</li>
+                                            <li>Discard - Discards error records.</li>
+                                            <li>Write to File - Saves error records to a file.</li>
                                         </ul></entry>
                                 </row>
                             </tbody>
@@ -91,8 +90,8 @@
                 </info>
             </step>
             <step>
-                <cmd>On the <wintitle>Bad Records - Records to File</wintitle> tab, configure error
-                    file properties:</cmd>
+                <cmd>On the <wintitle>Error Records - SDC Record Files</wintitle> tab, configure
+                    error file properties:</cmd>
                 <info>
                     <table frame="all" rowsep="1" colsep="1" id="table_gy3_1y4_1r">
                         <tgroup cols="2">

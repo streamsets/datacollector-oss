@@ -24,6 +24,15 @@
                   Collector</span> passes a
       batch of data to the processor and converts the data to an expected format for processing. </p>
 
+        <div class="p">The JavaScript Evaluator supports the following versions of Java:<ul class="ul" id="concept_n2p_jgf_lr__ul_xyk_lp2_qr">
+                <li class="li">Java 7 - Supports ECMAScript 5 and partial support for JavaScript 1.8. Runs on
+                    the Rhino 1.7R3 JavaScript engine.</li>
+
+                <li class="li">Java 8 - Supports ECMAScript 5.1. Runs on the Nashorn JavaScript engine.</li>
+
+            </ul>
+</div>
+
  </div>
 
 <div class="related-links"></div>
@@ -62,7 +71,7 @@
                               <dd class="dd">The script must include error handling code. </dd>
 
                               <dd class="dd">Use this mode to process a batch of data at a time. At the end of
-                                    the script, include the following two functions:<ul class="ul" id="concept_j1t_ntc_pr__d2066e145">
+                                    the script, include the following two functions:<ul class="ul" id="concept_j1t_ntc_pr__d2110e145">
                                           <li class="li">out.write (&lt;record&gt;) - Passes the records to the
                                                 pipeline.</li>
 
@@ -93,14 +102,14 @@
                     following properties:</span>
                 <div class="itemgroup info">
                     
-<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_mzc_1by_nr__d1953e246" class="table" frame="border" border="1" rules="all">
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_mzc_1by_nr__d1997e246" class="table" frame="border" border="1" rules="all">
                             
                             
                             <thead class="thead" align="left">
                                 <tr class="row">
-                                    <th class="entry" valign="top" width="24.509803921568626%" id="d22222e146">General Property</th>
+                                    <th class="entry" valign="top" width="24.509803921568626%" id="d22393e157">General Property</th>
 
-                                    <th class="entry" valign="top" width="75.49019607843137%" id="d22222e149">Description</th>
+                                    <th class="entry" valign="top" width="75.49019607843137%" id="d22393e160">Description</th>
 
                                 </tr>
 
@@ -108,24 +117,24 @@
 
                             <tbody class="tbody">
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="24.509803921568626%" headers="d22222e146 ">Name</td>
+                                    <td class="entry" valign="top" width="24.509803921568626%" headers="d22393e157 ">Name</td>
 
-                                    <td class="entry" valign="top" width="75.49019607843137%" headers="d22222e149 ">Stage name.</td>
-
-                                </tr>
-
-                                <tr class="row">
-                                    <td class="entry" valign="top" width="24.509803921568626%" headers="d22222e146 ">Description</td>
-
-                                    <td class="entry" valign="top" width="75.49019607843137%" headers="d22222e149 ">Optional description.</td>
+                                    <td class="entry" valign="top" width="75.49019607843137%" headers="d22393e160 ">Stage name.</td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="24.509803921568626%" headers="d22222e146 ">Required Fields <a class="xref" href="../Pipeline_Configuration/RequiredFields.html#concept_dnj_bkm_vq" title="You can configure required fields for any processor and most destination stages. A required field must exist in a record to allow the record to enter the stage for processing. When a record does not include a required field, the stage passes the record to the pipeline for error handling.">
-                                            <img class="image" id="task_mzc_1by_nr__d1953e292" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
+                                    <td class="entry" valign="top" width="24.509803921568626%" headers="d22393e157 ">Description</td>
 
-                                    <td class="entry" valign="top" width="75.49019607843137%" headers="d22222e149 ">Fields that must include data to be passed to the stage.
+                                    <td class="entry" valign="top" width="75.49019607843137%" headers="d22393e160 ">Optional description.</td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="24.509803921568626%" headers="d22393e157 ">Required Fields <a class="xref" href="../Pipeline_Configuration/RequiredFields.html#concept_dnj_bkm_vq" title="You can configure required fields for any processor and most destination stages. A required field must exist in a record to allow the record to enter the stage for processing. When a record does not include a required field, the stage passes the record to the pipeline for error handling.">
+                                            <img class="image" id="task_mzc_1by_nr__d1997e292" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
+
+                                    <td class="entry" valign="top" width="75.49019607843137%" headers="d22393e160 ">Fields that must include data to be passed to the stage.
                                             <div class="note tip"><span class="tiptitle">Tip:</span> You might include fields
                                             that the stage uses.</div>
 </td>
@@ -133,9 +142,9 @@
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="24.509803921568626%" headers="d22222e146 ">On Record Error</td>
+                                    <td class="entry" valign="top" width="24.509803921568626%" headers="d22393e157 ">On Record Error</td>
 
-                                    <td class="entry" valign="top" width="75.49019607843137%" headers="d22222e149 ">Error record handling for the stage: <ul class="ul" id="task_mzc_1by_nr__d1953e307">
+                                    <td class="entry" valign="top" width="75.49019607843137%" headers="d22393e160 ">Error record handling for the stage: <ul class="ul" id="task_mzc_1by_nr__d1997e307">
                                             <li class="li">Discard - Discards the record.</li>
 
                                             <li class="li">Send to Error - Sends the record to the pipeline for
@@ -165,9 +174,9 @@
                             
                             <thead class="thead" align="left">
                                 <tr class="row">
-                                    <th class="entry" valign="top" width="25.97402597402597%" id="d22222e239">JavaScript Property</th>
+                                    <th class="entry" valign="top" width="25.97402597402597%" id="d22393e250">JavaScript Property</th>
 
-                                    <th class="entry" valign="top" width="74.02597402597402%" id="d22222e242">Description</th>
+                                    <th class="entry" valign="top" width="74.02597402597402%" id="d22393e253">Description</th>
 
                                 </tr>
 
@@ -175,9 +184,9 @@
 
                             <tbody class="tbody">
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="25.97402597402597%" headers="d22222e239 ">Record Processing Mode</td>
+                                    <td class="entry" valign="top" width="25.97402597402597%" headers="d22393e250 ">Record Processing Mode</td>
 
-                                    <td class="entry" valign="top" width="74.02597402597402%" headers="d22222e242 ">Determines how the JavaScript Evaluator processes
+                                    <td class="entry" valign="top" width="74.02597402597402%" headers="d22393e253 ">Determines how the JavaScript Evaluator processes
                                             data:<ul class="ul" id="task_mzc_1by_nr__ul_tzg_vzx_nr">
                                             <li class="li">Record by Record - Processes records individually.
                                                 Performs error handling.</li>
@@ -191,9 +200,9 @@
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="25.97402597402597%" headers="d22222e239 ">Script</td>
+                                    <td class="entry" valign="top" width="25.97402597402597%" headers="d22393e250 ">Script</td>
 
-                                    <td class="entry" valign="top" width="74.02597402597402%" headers="d22222e242 ">JavaScript code to use in the processor.</td>
+                                    <td class="entry" valign="top" width="74.02597402597402%" headers="d22393e253 ">JavaScript code to use in the processor.</td>
 
                                 </tr>
 

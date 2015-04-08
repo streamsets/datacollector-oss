@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
+<concept id="concept_vrx_4fg_qr">
+ <title>Java Configuration Options</title>
+ <shortdesc>The <ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
+  <draft-comment author="Loretta">is built on Java? What do we want to say
+  here?</draft-comment></shortdesc>
+ <conbody>
+  <p>You can edit the <ph
+    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> environment
+   file, sdc-env.sh, to add any Java configuration properties that you want the <ph
+    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> to use. </p>
+ </conbody>
+</concept>
