@@ -50,7 +50,7 @@ public class DataRuleEvaluator {
   public void evaluateRule(List<Record> sampleRecords, String lane,
                            Map<String, EvictingQueue<Record>> ruleToSampledRecordsMap) {
 
-    if (dataRuleDefinition.isEnabled()) {
+    if (dataRuleDefinition.isEnabled() && sampleRecords != null && sampleRecords.size() > 0) {
       //cache all sampled records for this data rule definition in an evicting queue
       EvictingQueue<Record> sampledRecords = ruleToSampledRecordsMap.get(dataRuleDefinition.getId());
       if (sampledRecords == null) {
