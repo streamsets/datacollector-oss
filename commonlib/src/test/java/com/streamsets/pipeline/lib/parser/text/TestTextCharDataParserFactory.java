@@ -12,13 +12,19 @@ import com.streamsets.pipeline.lib.io.OverrunReader;
 import com.streamsets.pipeline.lib.parser.CharDataParserFactory;
 import com.streamsets.pipeline.lib.parser.DataParser;
 import com.streamsets.pipeline.sdk.ContextInfoCreator;
+import org.apache.commons.io.IOUtils;
 import org.junit.Assert;
 import org.junit.Test;
 
+import java.io.File;
+import java.io.FileWriter;
 import java.io.StringReader;
+import java.io.Writer;
+import java.nio.charset.Charset;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 
 public class TestTextCharDataParserFactory {
 
@@ -65,4 +71,22 @@ public class TestTextCharDataParserFactory {
     Assert.assertEquals(9, parser.getOffset());
     parser.close();
   }
+
+  @Test
+  public void testTruncateWithFile() throws Exception {
+    File testDir = new File("target", UUID.randomUUID().toString());
+    Assert.assertTrue(testDir.mkdirs());
+    File testFile = new File(testDir, "test.txt");
+    Writer writer = new FileWriter(testFile);
+    IOUtils.write("HelloHello\r\n\r\n", writer);
+    writer.close();
+    Map<String, Object> configs = TextCharDataParserFactory.registerConfigs(new HashMap<String, Object>());
+    CharDataParserFactory factory = new TextCharDataParserFactory(getContext(), 3, configs);
+    DataParser parser = factory.getParser(testFile, Charset.forName("UTF-8"), 100000, 0);
+    Record record = parser.parse();
+    Assert.assertTrue(record.has("/text"));
+    Assert.assertTrue(record.has("/truncated"));
+    parser.close();
+  }
+
 }

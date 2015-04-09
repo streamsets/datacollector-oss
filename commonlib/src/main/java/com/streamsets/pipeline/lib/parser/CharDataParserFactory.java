@@ -19,6 +19,7 @@ import com.streamsets.pipeline.lib.parser.sdcrecord.JsonSdcRecordCharDataParserF
 import com.streamsets.pipeline.lib.parser.text.TextCharDataParserFactory;
 import com.streamsets.pipeline.lib.parser.xml.XmlCharDataParserFactory;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -42,6 +43,7 @@ public abstract class CharDataParserFactory {
     try {
       InputStream fis = new FileInputStream(file);
       fileReader = new InputStreamReader(fis, charset);
+      fileReader = new BufferedReader(fileReader);
     } catch (IOException ex) {
       throw new DataParserException(Errors.DATA_PARSER_00, file.getAbsolutePath(), ex.getMessage(), ex);
     }
