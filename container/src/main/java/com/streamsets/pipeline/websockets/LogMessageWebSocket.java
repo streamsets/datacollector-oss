@@ -1,5 +1,12 @@
-package com.streamsets.pipeline.http;
+/**
+ * (c) 2015 StreamSets, Inc. All rights reserved. May not
+ * be copied, modified, or distributed in whole or part without
+ * written consent of StreamSets, Inc.
+ */
+package com.streamsets.pipeline.websockets;
 
+import com.streamsets.pipeline.log.LogUtils;
+import com.streamsets.pipeline.main.RuntimeInfo;
 import com.streamsets.pipeline.util.Configuration;
 import org.apache.commons.io.input.Tailer;
 import org.apache.commons.io.input.TailerListener;
@@ -15,6 +22,7 @@ import java.io.IOException;
 
 
 public class LogMessageWebSocket extends WebSocketAdapter {
+  public static final String TYPE = "log";
   private final static Logger LOG = LoggerFactory.getLogger(LogMessageWebSocket.class);
   private static final String MAX_LOGTAIL_CONCURRENT_REQUESTS_KEY = "max.logtail.concurrent.requests";
   private static final int MAX_LOGTAIL_CONCURRENT_REQUESTS_DEFAULT = 5;
@@ -25,9 +33,13 @@ public class LogMessageWebSocket extends WebSocketAdapter {
   private String logFile;
   private Tailer tailer = null;
 
-  public LogMessageWebSocket(String logFile, Configuration config) {
-    this.logFile = logFile;
+  public LogMessageWebSocket(Configuration config, RuntimeInfo runtimeInfo) {
     this.config = config;
+    try {
+      logFile = LogUtils.getLogFile(runtimeInfo);
+    } catch (IOException ex) {
+      throw new RuntimeException(ex);
+    }
   }
 
   @Override
@@ -80,14 +92,16 @@ public class LogMessageWebSocket extends WebSocketAdapter {
       tailer.stop();
     }
     logTailClients--;
+    SDCWebSocketServlet.webSocketClients--;
   }
 
   @Override
   public void onWebSocketError(Throwable cause) {
     super.onWebSocketError(cause);
-    LOG.warn("WebSocket error: {}", cause.getMessage(), cause);
+    LOG.warn("LogMessageWebSocket error: {}", cause.getMessage(), cause);
     if(tailer != null) {
       tailer.stop();
     }
+    SDCWebSocketServlet.webSocketClients--;
   }
 }

@@ -11,6 +11,7 @@ import com.streamsets.pipeline.config.RuleDefinition;
 import com.streamsets.pipeline.email.EmailSender;
 import com.streamsets.pipeline.main.RuntimeInfo;
 import com.streamsets.pipeline.metrics.MetricsConfigurator;
+import com.streamsets.pipeline.prodmanager.ProductionPipelineManagerTask;
 import com.streamsets.pipeline.util.PipelineException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -56,15 +57,18 @@ public class AlertManager {
   private final EmailSender emailSender;
   private final MetricRegistry metrics;
   private final RuntimeInfo runtimeInfo;
+  private final ProductionPipelineManagerTask pipelineManager;
 
   public AlertManager(String pipelineName, String revision, EmailSender emailSender, MetricRegistry metrics,
-                      RuntimeInfo runtimeInfo) {
+                      RuntimeInfo runtimeInfo, ProductionPipelineManagerTask pipelineManager) {
     this.pipelineName = pipelineName;
     this.revision = revision;
     this.emailSender = emailSender;
     this.metrics = metrics;
     this.runtimeInfo = runtimeInfo;
+    this.pipelineManager = pipelineManager;
   }
+
   public void alert(List<String> emailIds, Throwable throwable) {
     StringWriter stringWriter = new StringWriter();
     PrintWriter printWriter = new PrintWriter(stringWriter);
@@ -102,6 +106,7 @@ public class AlertManager {
       }
     }
   }
+
   public void alert(Object value, List<String> emailIds, RuleDefinition ruleDefinition) {
     final Map<String, Object> alertResponse = new HashMap<>();
     alertResponse.put(CURRENT_VALUE, value);
@@ -132,6 +137,11 @@ public class AlertManager {
           }
         }
       }
+
+      if(pipelineManager != null) {
+        pipelineManager.broadcastAlerts(ruleDefinition);
+      }
+
     } else {
       //remove existing gauge
       MetricsConfigurator.removeGauge(metrics, AlertsUtil.getAlertGaugeName(ruleDefinition.getId()));

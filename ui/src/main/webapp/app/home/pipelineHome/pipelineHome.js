@@ -34,7 +34,17 @@ angular
       pipelineMetricsTimer,
       edges = [],
       destroyed = false,
-      pageHidden = false;
+      pageHidden = false,
+      isWebSocketSupported = (typeof(WebSocket) === "function"),
+      loc = window.location,
+      webSocketBaseURL = ((loc.protocol === "https:") ?
+          "wss://" : "ws://") + loc.hostname + (((loc.port != 80) && (loc.port != 443)) ? ":" + loc.port : ""),
+      webSocketStatusURL = webSocketBaseURL + '/rest/v1/webSocket?type=status',
+      statusWebSocket,
+      webSocketMetricsURL = webSocketBaseURL + '/rest/v1/webSocket?type=metrics',
+      metricsWebSocket,
+      webSocketAlertsURL = webSocketBaseURL + '/rest/v1/webSocket?type=alerts',
+      alertsWebSocket;
 
     configuration.init().then(function() {
       if(configuration.isAnalyticsEnabled()) {
@@ -513,9 +523,9 @@ angular
         api.pipelineAgent.deleteAlert($scope.pipelineConfig.info.name, triggeredAlert.rule.id)
           .success(function() {
             //Alert deleted successfully
-            $rootScope.$storage.readNotifications = _.filter($rootScope.$storage.readNotifications, function(alertId) {
+            /*$rootScope.$storage.readNotifications = _.filter($rootScope.$storage.readNotifications, function(alertId) {
               return alertId !== triggeredAlert.rule.id;
-            });
+            });*/
           })
           .error(function(data, status, headers, config) {
             $rootScope.common.errors = [data];
@@ -560,30 +570,13 @@ angular
         $rootScope.common.pipelineStatus = pipelineStatus;
         $rootScope.common.pipelineMetrics = pipelineMetrics;
 
-        /*
-        //Determine Active Config based on localStorage or based on last status updated config.
-        if($rootScope.$storage.activeConfigInfo && $rootScope.$storage.activeConfigInfo.name) {
-          var localStorageConfigInfoName = $rootScope.$storage.activeConfigInfo.name;
-          $scope.activeConfigInfo = $rootScope.$storage.activeConfigInfo = _.find($scope.pipelines, function(pipelineDefn) {
-            return pipelineDefn.name === localStorageConfigInfoName;
-          });
-        } else if(pipelineStatus && pipelineStatus.name) {
-          $scope.activeConfigInfo = _.find($scope.pipelines, function(pipelineDefn) {
-            return pipelineDefn.name === pipelineStatus.name;
-          });
-        }
-
-        if(!$scope.activeConfigInfo && $scope.pipelines && $scope.pipelines.length) {
-          $scope.activeConfigInfo =   $scope.pipelines[0];
-        }*/
-
-
         $scope.activeConfigInfo = _.find($scope.pipelines, function(pipelineDefn) {
           return pipelineDefn.name === routeParamPipelineName;
         });
 
         refreshPipelineStatus();
         refreshPipelineMetrics();
+        initializeAlertWebSocket();
 
         if($scope.activeConfigInfo) {
           return $q.all([api.pipelineAgent.getPipelineConfig($scope.activeConfigInfo.name),
@@ -944,34 +937,58 @@ angular
         return;
       }
 
-      pipelineStatusTimer = $timeout(
-        function() {
-          //console.log( "Pipeline Status Timeout executed", Date.now() );
-        },
-        configuration.getRefreshInterval()
-      );
+      if(isWebSocketSupported) {
+        //WebSocket to get Pipeline Status
 
-      pipelineStatusTimer.then(
-        function() {
-          api.pipelineAgent.getPipelineStatus()
-            .success(function(data) {
-              if(!_.isObject(data) && _.isString(data) && data.indexOf('<!doctype html>') !== -1) {
-                //Session invalidated
-                window.location.reload();
-                return;
-              }
+        statusWebSocket = new WebSocket(webSocketStatusURL);
 
-              $rootScope.common.pipelineStatus = data;
-              refreshPipelineStatus();
-            })
-            .error(function(data, status, headers, config) {
-              $rootScope.common.errors = [data];
-            });
-        },
-        function() {
-          //console.log( "Timer rejected!" );
-        }
-      );
+        statusWebSocket.onmessage = function (evt) {
+          var received_msg = evt.data;
+
+          $rootScope.$apply(function() {
+            $rootScope.common.pipelineStatus = JSON.parse(received_msg);
+          });
+        };
+
+        statusWebSocket.onerror = function (evt) {
+          isWebSocketSupported = false;
+          refreshPipelineStatus();
+        };
+
+      } else {
+        //WebSocket is not support use polling to get Pipeline Status
+
+        pipelineStatusTimer = $timeout(
+          function() {
+            //console.log( "Pipeline Status Timeout executed", Date.now() );
+          },
+          configuration.getRefreshInterval()
+        );
+
+        pipelineStatusTimer.then(
+          function() {
+            api.pipelineAgent.getPipelineStatus()
+              .success(function(data) {
+                if(!_.isObject(data) && _.isString(data) && data.indexOf('<!doctype html>') !== -1) {
+                  //Session invalidated
+                  window.location.reload();
+                  return;
+                }
+
+                $rootScope.common.pipelineStatus = data;
+
+                refreshPipelineStatus();
+              })
+              .error(function(data, status, headers, config) {
+                $rootScope.common.errors = [data];
+              });
+          },
+          function() {
+            //console.log( "Timer rejected!" );
+          }
+        );
+      }
+
     };
 
 
@@ -984,36 +1001,81 @@ angular
         return;
       }
 
-      pipelineMetricsTimer = $timeout(
-        function() {
-          //console.log( "Pipeline Metrics Timeout executed", Date.now() );
-        },
-        configuration.getRefreshInterval()
-      );
+      if(isWebSocketSupported) {
 
-      pipelineMetricsTimer.then(
-        function() {
-          api.pipelineAgent.getPipelineMetrics()
-            .success(function(data) {
-              if(!_.isObject(data) && _.isString(data) && data.indexOf('<!doctype html>') !== -1) {
-                //Session invalidated
-                window.location.reload();
-                return;
-              }
+        //WebSocket to get Pipeline Metrics
+        metricsWebSocket = new WebSocket(webSocketMetricsURL);
 
-              if(!$scope.monitoringPaused) {
-                $rootScope.common.pipelineMetrics = data;
-              }
-              refreshPipelineMetrics();
-            })
-            .error(function(data, status, headers, config) {
-              $rootScope.common.errors = [data];
+        metricsWebSocket.onmessage = function (evt) {
+          var received_msg = evt.data;
+
+          if(!$scope.monitoringPaused) {
+            $rootScope.$apply(function() {
+              $rootScope.common.pipelineMetrics = JSON.parse(received_msg);
             });
-        },
-        function() {
-          //console.log( "Timer rejected!" );
-        }
-      );
+
+          }
+        };
+
+        metricsWebSocket.onerror = function (evt) {
+          isWebSocketSupported = false;
+          refreshPipelineMetrics();
+        };
+
+      } else {
+
+        //WebSocket is not support use polling to get Pipeline Metrics
+        pipelineMetricsTimer = $timeout(
+          function() {
+            //console.log( "Pipeline Metrics Timeout executed", Date.now() );
+          },
+          configuration.getRefreshInterval()
+        );
+
+        pipelineMetricsTimer.then(
+          function() {
+            api.pipelineAgent.getPipelineMetrics()
+              .success(function(data) {
+                if(!_.isObject(data) && _.isString(data) && data.indexOf('<!doctype html>') !== -1) {
+                  //Session invalidated
+                  window.location.reload();
+                  return;
+                }
+
+                if(!$scope.monitoringPaused) {
+                  $rootScope.common.pipelineMetrics = data;
+                }
+                refreshPipelineMetrics();
+              })
+              .error(function(data, status, headers, config) {
+                $rootScope.common.errors = [data];
+              });
+          },
+          function() {
+            //console.log( "Timer rejected!" );
+          }
+        );
+
+      }
+    };
+
+    var initializeAlertWebSocket = function() {
+      if(isWebSocketSupported && 'Notification' in window) {
+        Notification.requestPermission(function(permission) {
+          alertsWebSocket = new WebSocket(webSocketAlertsURL);
+          alertsWebSocket.onmessage = function (evt) {
+            var received_msg = evt.data;
+            if(received_msg) {
+              var alertDefn = JSON.parse(received_msg),
+                pipelineStatus = $rootScope.common.pipelineStatus;
+              var notification = new Notification(pipelineStatus.name, {
+                body: alertDefn.alertText,
+                icon: '/assets/favicon.png'
+              });
+            }
+          };
+        });
+      }
     };
 
     var getStageErrorCounts = function() {
@@ -1298,41 +1360,40 @@ angular
         $scope.triggeredAlerts = pipelineService.getTriggeredAlerts($scope.pipelineRules,
           $rootScope.common.pipelineMetrics);
         $scope.$broadcast('updateEdgePreviewIconColor', $scope.pipelineRules, $scope.triggeredAlerts);
-
-        if ('Notification' in window) {
-          Notification.requestPermission(function(permission) {
-            angular.forEach($scope.triggeredAlerts, function(triggeredAlert) {
-              if(!_.contains($rootScope.$storage.readNotifications, triggeredAlert.rule.id)) {
-                $rootScope.$storage.readNotifications.push(triggeredAlert.rule.id);
-                var notification = new Notification(config.info.name,{
-                  body: triggeredAlert.rule.alertText,
-                  icon: '/assets/favicon.png'
-                });
-              }
-            });
-          });
-        }
-
       } else {
         $scope.triggeredAlerts = [];
       }
     });
 
     $scope.$on('$destroy', function() {
-      $timeout.cancel(pipelineStatusTimer);
-      $timeout.cancel(pipelineMetricsTimer);
+      if(isWebSocketSupported) {
+        statusWebSocket.close();
+        metricsWebSocket.close();
+        alertsWebSocket.close();
+      } else {
+        $timeout.cancel(pipelineStatusTimer);
+        $timeout.cancel(pipelineMetricsTimer);
+      }
+
       destroyed = true;
     });
 
     $scope.$on('visibilityChange', function(event, isHidden) {
       if (isHidden) {
-        $timeout.cancel(pipelineStatusTimer);
-        $timeout.cancel(pipelineMetricsTimer);
+        if(isWebSocketSupported) {
+          metricsWebSocket.close();
+        } else {
+          $timeout.cancel(pipelineStatusTimer);
+          $timeout.cancel(pipelineMetricsTimer);
+        }
         pageHidden = true;
       } else {
         refreshPipelineMetrics();
-        refreshPipelineStatus();
+        if(!isWebSocketSupported) {
+          refreshPipelineStatus();
+        }
         pageHidden = false;
       }
     });
+
   });

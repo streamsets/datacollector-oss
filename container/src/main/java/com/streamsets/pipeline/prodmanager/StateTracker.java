@@ -30,7 +30,9 @@ import java.io.FileReader;
 import java.io.FilenameFilter;
 import java.io.IOException;
 import java.io.Reader;
+import java.util.ArrayList;
 import java.util.Collections;
+import java.util.EventListener;
 import java.util.List;
 
 public class StateTracker {
@@ -46,6 +48,16 @@ public class StateTracker {
   private final RuntimeInfo runtimeInfo;
   private volatile PipelineState pipelineState;
   private final com.streamsets.pipeline.util.Configuration configuration;
+
+  private List<StateEventListener> stateEventListenerList = new ArrayList<>();
+
+  public void addStateEventListener(StateEventListener stateListener) {
+    stateEventListenerList.add(stateListener);
+  }
+
+  public void removeStateEventListener(StateEventListener stateListener) {
+    stateEventListenerList.remove(stateListener);
+  }
 
   public StateTracker(RuntimeInfo runtimeInfo, com.streamsets.pipeline.util.Configuration configuration) {
     Preconditions.checkNotNull(runtimeInfo, "runtime info cannot be null");
@@ -89,6 +101,23 @@ public class StateTracker {
       persistPipelineState(tempPipelineState);
     }
     pipelineState = tempPipelineState;
+
+    if(stateEventListenerList.size() > 0) {
+      try {
+        ObjectMapper objectMapper = ObjectMapperFactory.get();
+        String pipelineStateJSONStr = objectMapper.writer().writeValueAsString(pipelineState);
+
+        for(StateEventListener stateEventListener : stateEventListenerList) {
+          try {
+            stateEventListener.notification(pipelineStateJSONStr);
+          } catch(Exception ex) {
+            LOG.warn("Error while notifying metrics, {}", ex.getMessage(), ex);
+          }
+        }
+      } catch (JsonProcessingException ex) {
+        LOG.warn("Error while broadcasting Pipeline State, {}", ex.getMessage(), ex);
+      }
+    }
   }
 
   public void init() {

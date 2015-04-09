@@ -227,7 +227,7 @@ public class TestRestApiAuthorization {
     list.add(new RestApi("/rest/v1/definitions", Method.GET, AuthzRole.ALL_ROLES));
     list.add(new RestApi("/rest/v1/definitions/stage/icons", Method.GET, AuthzRole.ALL_ROLES));
 
-    list.add(new RestApi("/rest/v1/log/streaming", Method.GET, AuthzRole.ADMIN, AuthzRole.CREATOR, AuthzRole.MANAGER));
+
     list.add(new RestApi("/rest/v1/log", Method.GET, AuthzRole.ADMIN, AuthzRole.CREATOR, AuthzRole.MANAGER));
     list.add(new RestApi("/rest/v1/log/files", Method.GET, AuthzRole.ADMIN, AuthzRole.CREATOR, AuthzRole.MANAGER));
     list.add(new RestApi("/rest/v1/log/files/foo", Method.GET, AuthzRole.ADMIN, AuthzRole.CREATOR, AuthzRole.MANAGER));

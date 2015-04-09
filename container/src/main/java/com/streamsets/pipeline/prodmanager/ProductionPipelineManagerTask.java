@@ -6,10 +6,13 @@
 package com.streamsets.pipeline.prodmanager;
 
 import com.codahale.metrics.MetricRegistry;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
+import com.streamsets.pipeline.alerts.AlertEventListener;
 import com.streamsets.pipeline.alerts.AlertManager;
 import com.streamsets.pipeline.alerts.AlertsUtil;
 import com.streamsets.pipeline.api.Record;
@@ -19,10 +22,14 @@ import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.config.ConfigConfiguration;
 import com.streamsets.pipeline.config.DeliveryGuarantee;
 import com.streamsets.pipeline.config.PipelineConfiguration;
+import com.streamsets.pipeline.config.RuleDefinition;
 import com.streamsets.pipeline.email.EmailSender;
+import com.streamsets.pipeline.json.ObjectMapperFactory;
 import com.streamsets.pipeline.lib.executor.SafeScheduledExecutorService;
 import com.streamsets.pipeline.main.RuntimeInfo;
 import com.streamsets.pipeline.metrics.MetricsConfigurator;
+import com.streamsets.pipeline.metrics.MetricsEventListener;
+import com.streamsets.pipeline.metrics.MetricsEventRunnable;
 import com.streamsets.pipeline.runner.PipelineRuntimeException;
 import com.streamsets.pipeline.runner.production.MetricObserverRunnable;
 import com.streamsets.pipeline.runner.production.MetricsObserverRunner;
@@ -52,6 +59,7 @@ import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
 import java.io.File;
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
@@ -69,6 +77,9 @@ public class ProductionPipelineManagerTask extends AbstractTask {
   private static final String PRODUCTION_PIPELINE_MANAGER = "productionPipelineManager";
   private static final String PRODUCTION_PIPELINE_RUNNER = "ProductionPipelineRunner";
   private static final String RUN_INFO_DIR = "runInfo";
+
+  private static final String REFRESH_INTERVAL_PROPERTY = "ui.refresh.interval.ms";
+  private static final int REFRESH_INTERVAL_PROPERTY_DEFAULT = 2000;
 
   private static final Map<State, Set<State>> VALID_TRANSITIONS = new ImmutableMap.Builder<State, Set<State>>()
     .put(State.STOPPED, ImmutableSet.of(State.RUNNING))
@@ -99,9 +110,14 @@ public class ProductionPipelineManagerTask extends AbstractTask {
   private SafeScheduledExecutorService executor;
   /*The pipeline being executed or the pipeline in the context*/
   private ProductionPipeline prodPipeline;
+  /*References the thread that is serializing the metrics object */
+  private MetricsEventRunnable metricsEventRunnable;
 
   /*Mutex objects to synchronize start and stop pipeline methods*/
   private final Object pipelineMutex = new Object();
+
+  private List<AlertEventListener> alertEventListenerList = new ArrayList<>();
+
 
   @Inject
   public ProductionPipelineManagerTask(RuntimeInfo runtimeInfo,
@@ -123,6 +139,48 @@ public class ProductionPipelineManagerTask extends AbstractTask {
 
   public void setState(String name, String rev, State state, String message, MetricRegistry metricRegistry) throws PipelineManagerException {
     stateTracker.setState(name, rev, state, message, metricRegistry);
+  }
+
+  public void addStateEventListener(StateEventListener stateListener) {
+    stateTracker.addStateEventListener(stateListener);
+  }
+
+  public void removeStateEventListener(StateEventListener stateListener) {
+    stateTracker.removeStateEventListener(stateListener);
+  }
+
+  public void addAlertEventListener(AlertEventListener alertEventListener) {
+    alertEventListenerList.add(alertEventListener);
+  }
+
+  public void removeAlertEventListener(AlertEventListener alertEventListener) {
+    alertEventListenerList.remove(alertEventListener);
+  }
+
+  public void addMetricsEventListener(MetricsEventListener metricsEventListener) {
+    metricsEventRunnable.addMetricsEventListener(metricsEventListener);
+  }
+
+  public void removeMetricsEventListener(MetricsEventListener metricsEventListener) {
+    metricsEventRunnable.removeMetricsEventListener(metricsEventListener);
+  }
+
+  public void broadcastAlerts(RuleDefinition ruleDefinition) {
+    if(alertEventListenerList.size() > 0) {
+      try {
+        ObjectMapper objectMapper = ObjectMapperFactory.get();
+        String ruleDefinitionJSONStr = objectMapper.writer().writeValueAsString(ruleDefinition);
+        for(AlertEventListener alertEventListener : alertEventListenerList) {
+          try {
+            alertEventListener.notification(ruleDefinitionJSONStr);
+          } catch (Exception ex) {
+            LOG.warn("Error while notifying alerts, {}", ex.getMessage(), ex);
+          }
+        }
+      } catch (JsonProcessingException ex) {
+        LOG.warn("Error while broadcasting alerts, {}", ex.getMessage(), ex);
+      }
+    }
   }
 
   @Override
@@ -158,7 +216,7 @@ public class ProductionPipelineManagerTask extends AbstractTask {
             ProductionObserver observer = new ProductionObserver(productionObserveRequests, configuration);
             createPipeline(ps.getName(), ps.getRev(), observer, productionObserveRequests);
             AlertManager alertManager = new AlertManager(ps.getName(), ps.getRev(), new EmailSender(configuration),
-              getMetrics(), runtimeInfo);
+              getMetrics(), runtimeInfo, this);
             MetricsObserverRunner metricsObserverRunner = new MetricsObserverRunner(this.getMetrics(), alertManager);
             observer.setMetricsObserverRunner(metricsObserverRunner);
           } catch (Exception e) {
@@ -167,6 +225,14 @@ public class ProductionPipelineManagerTask extends AbstractTask {
           }
       }
     }
+
+    long refreshInterval = configuration.get(REFRESH_INTERVAL_PROPERTY, REFRESH_INTERVAL_PROPERTY_DEFAULT);
+
+    if(refreshInterval > 0) {
+      metricsEventRunnable = new MetricsEventRunnable(this);
+      executor.scheduleAtFixedRate(metricsEventRunnable, 0, refreshInterval, TimeUnit.MILLISECONDS);
+    }
+
     LOG.debug("Initialized Production Pipeline Manager");
   }
 
@@ -346,7 +412,7 @@ public class ProductionPipelineManagerTask extends AbstractTask {
     ProductionObserver observer = new ProductionObserver(productionObserveRequests, configuration);
     createPipeline(name, rev, observer, productionObserveRequests);
 
-    AlertManager alertManager = new AlertManager(name, rev, new EmailSender(configuration), getMetrics(), runtimeInfo);
+    AlertManager alertManager = new AlertManager(name, rev, new EmailSender(configuration), getMetrics(), runtimeInfo, this);
     MetricsObserverRunner metricsObserverRunner = new MetricsObserverRunner(this.getMetrics(), alertManager);
 
     observer.setMetricsObserverRunner(metricsObserverRunner);

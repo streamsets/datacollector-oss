@@ -26,6 +26,7 @@ import com.streamsets.pipeline.restapi.RestAPI;
 import com.streamsets.pipeline.stagelibrary.StageLibraryModule;
 import com.streamsets.pipeline.store.PipelineStoreTask;
 import com.streamsets.pipeline.store.PipelineStoreModule;
+import com.streamsets.pipeline.websockets.SDCWebSocketServlet;
 import dagger.Module;
 import dagger.Provides;
 import dagger.Provides.Type;
@@ -119,12 +120,14 @@ public class WebServerModule {
   }
 
   @Provides(type = Type.SET)
-  ContextConfigurator provideLogServlet(final Configuration configuration, final RuntimeInfo runtimeInfo) {
+  ContextConfigurator provideWebSocketServlet(final Configuration configuration, final RuntimeInfo runtimeInfo,
+                                        final ProductionPipelineManagerTask pipelineStateManager) {
     return new ContextConfigurator() {
       @Override
       public void init(ServletContextHandler context) {
-        ServletHolder holderEvents = new ServletHolder(new WebSocketLogServlet(configuration, runtimeInfo));
-        context.addServlet(holderEvents, "/rest/v1/log/streaming");
+        ServletHolder holderEvents = new ServletHolder(new SDCWebSocketServlet(configuration, runtimeInfo,
+          pipelineStateManager));
+        context.addServlet(holderEvents, "/rest/v1/webSocket");
       }
     };
   }
