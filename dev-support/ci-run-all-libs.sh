@@ -25,4 +25,4 @@ git show
 # compile and install
 mvn clean install -Drelease -DskipTests
 # package and run tests (if appropiate)
-mvn package -Drelease -fae -Pall-libs ${PACKAGE_OPTS[@]}
+mvn clean package -fae -Pdist,all-libs,ui -Drelease ${PACKAGE_OPTS[@]}
