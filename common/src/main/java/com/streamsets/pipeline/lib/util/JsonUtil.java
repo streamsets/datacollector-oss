@@ -7,6 +7,7 @@ package com.streamsets.pipeline.lib.util;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.common.annotations.VisibleForTesting;
 import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
@@ -127,6 +128,24 @@ public class JsonUtil {
       return objectMapper.writeValueAsString(JsonUtil.fieldToJsonObject(r, r.get()));
     } catch (JsonProcessingException e) {
       throw new StageException(CommonError.CMN_0101, r.getHeader().getSourceId(), e.getMessage(), e);
+    }
+  }
+
+  public static byte[] jsonRecordToBytes(Record r, Field f) throws StageException {
+    ObjectMapper objectMapper = new ObjectMapper();
+    try {
+      return objectMapper.writeValueAsBytes(JsonUtil.fieldToJsonObject(r, f));
+    } catch (JsonProcessingException e) {
+      throw new StageException(CommonError.CMN_0101, r.getHeader().getSourceId(), e.getMessage(), e);
+    }
+  }
+
+  public static Field bytesToField(byte[] bytes) throws StageException {
+    ObjectMapper objectMapper = new ObjectMapper();
+    try {
+      return jsonToField(objectMapper.readValue(bytes, Object.class));
+    } catch (Exception e) {
+      throw new StageException(CommonError.CMN_0101, new String(bytes), e.getMessage(), e);
     }
   }
 }

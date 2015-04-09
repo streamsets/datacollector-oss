@@ -23,6 +23,7 @@
 
   <properties>
     <hadoop.version>2.5.0-cdh5.2.2</hadoop.version>
+    <hbase.version>0.98.6-cdh5.2.2</hbase.version>
   </properties>
 
   <repositories>
@@ -92,6 +93,19 @@
       </exclusions>
     </dependency>
 
+     <dependency>
+      <groupId>com.streamsets</groupId>
+      <artifactId>streamsets-datacollector-hbase-protolib</artifactId>
+      <version>${project.version}</version>
+      <scope>compile</scope>
+      <exclusions>
+        <exclusion>
+          <groupId>org.apache.hbase</groupId>
+          <artifactId>hbase-client</artifactId>
+        </exclusion>
+      </exclusions>
+    </dependency>
+
     <dependency>
       <groupId>org.apache.hadoop</groupId>
       <artifactId>hadoop-client</artifactId>
@@ -139,6 +153,21 @@
       <version>${hadoop.version}</version>
       <scope>test</scope>
     </dependency>
+
+     <dependency>
+      <groupId>org.apache.hbase</groupId>
+      <artifactId>hbase-client</artifactId>
+      <version>${hbase.version}</version>
+       <scope>compile</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>org.apache.hbase</groupId>
+      <artifactId>hbase-testing-util</artifactId>
+      <version>${hbase.version}</version>
+      <scope>test</scope>
+    </dependency>
+
   </dependencies>
 
   <build>
@@ -155,6 +184,7 @@
             </goals>
             <configuration>
               <sources>
+                <source>${basedir}/../hbase-protolib/src/test/java</source>
                 <source>${basedir}/../hdfs-protolib/src/test/java</source>
               </sources>
             </configuration>
@@ -168,6 +198,7 @@
             <configuration>
               <resources>
                 <resource>
+                  <directory>${basedir}/../hbase-protolib/src/test/resources</directory>
                   <directory>${basedir}/../hdfs-protolib/src/test/resources</directory>
                 </resource>
               </resources>

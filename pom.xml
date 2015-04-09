@@ -86,6 +86,7 @@
     <module>cassandra-protolib</module>
     <module>cassandra_2_1_5-lib</module>
 
+    <module>hbase-protolib</module>
   </modules>
 
   <build>
