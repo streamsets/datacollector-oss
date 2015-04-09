@@ -6,7 +6,9 @@ angular
   .module('dataCollectorApp.home')
   .controller('StopConfirmationModalInstanceController', function ($scope, $modalInstance, pipelineInfo, api) {
     angular.extend($scope, {
-      issues: [],
+      common: {
+        errors: []
+      },
       pipelineInfo: pipelineInfo,
 
       yes: function() {
@@ -15,7 +17,7 @@ angular
             $modalInstance.close(res);
           }).
           error(function(data) {
-            $scope.issues = [data];
+            $scope.common.errors = [data];
           });
       },
       no: function() {

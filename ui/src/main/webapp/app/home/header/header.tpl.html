@@ -84,40 +84,6 @@
             </a>
           </li>
 
-          <!---li role="presentation" class="divider"></li>
-
-          <li role="presentation" class="dropdown-header"
-              translate="home.header.pipeline">Pipeline</li>
-
-          <li role="presentation" ng-if="isAuthorized([userRoles.admin, userRoles.creator])"
-              ng-hide="pipeline.name === common.pipelineStatus.name  && common.pipelineStatus.state === 'RUNNING'">
-            <a href="#" dropdown-toggle ng-click="deletePipelineConfig(activeConfigInfo, $event)">
-              <i class="fa fa-trash-o"></i>
-              <span>{{'global.form.delete' | translate}}</span>
-            </a>
-          </li>
-
-          <li role="presentation" ng-if="isAuthorized([userRoles.admin, userRoles.creator])">
-            <a href="#" dropdown-toggle ng-click="duplicatePipelineConfig(activeConfigInfo, $event)">
-              <i class="fa fa-files-o"></i>
-              <span>{{'global.form.duplicate' | translate}}</span>
-            </a>
-          </li>
-
-          <li role="presentation" ng-if="isAuthorized([userRoles.admin, userRoles.creator])">
-            <a href="#" dropdown-toggle ng-click="importPipelineConfig(activeConfigInfo, $event)">
-              <i class="glyphicon glyphicon-import"></i>
-              <span>{{'global.form.import' | translate}}</span>
-            </a>
-          </li>
-
-          <li role="presentation">
-            <a href="#" dropdown-toggle ng-click="exportPipelineConfig(activeConfigInfo, $event)">
-              <i class="glyphicon glyphicon-export"></i>
-              <span>{{'global.form.export' | translate}}</span>
-            </a>
-          </li-->
-
         </ul>
       </div>
 

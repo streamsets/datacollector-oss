@@ -126,7 +126,7 @@ angular
        */
       stopPipeline: function() {
         var modalInstance = $modal.open({
-          templateUrl: 'app/home/graph/stop/stopConfirmation.tpl.html',
+          templateUrl: 'app/home/header/stop/stopConfirmation.tpl.html',
           controller: 'StopConfirmationModalInstanceController',
           size: '',
           backdrop: 'static',
