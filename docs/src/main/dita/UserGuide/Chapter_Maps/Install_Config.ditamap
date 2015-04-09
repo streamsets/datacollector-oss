@@ -34,8 +34,10 @@
    </topicref>
    <topicref href="../Install_Config/CustomizingDataCollector.dita"/>  
   </topicref>
-  <topicref href="../Install_Config/JavaConfigOptions.dita">
-   <topicref href="../Install_Config/JavaHeapSize.dita"/>
+  <topicref href="../Install_Config/DCEnvironmentConfig.dita">
+   <topicref href="../Install_Config/JavaConfigOptions.dita">
+    <topicref href="../Install_Config/JavaHeapSize.dita"/>
+   </topicref>
   </topicref>
   </topicref>
 </map>

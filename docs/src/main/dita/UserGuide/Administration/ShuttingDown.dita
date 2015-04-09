@@ -4,16 +4,16 @@
     <title>Shutting Down the <ph
             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
         /></title>
-    <shortdesc>Shut down and restart the <ph
-            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> to
-        apply changes to the <ph
-            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
-        properties file or user logins. </shortdesc>
     <taskbody>
-        <context/>
+        <context><indexterm>Data Collector<indexterm>shutting down</indexterm></indexterm>Shut down
+            and restart the <ph
+                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> to
+            apply changes to the <ph
+                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
+            configuration file, environment configuration file, or user logins. </context>
         <steps id="steps_hqp_kjk_br">
             <step>
-                <cmd><indexterm>Data Collector<indexterm>shutting down</indexterm></indexterm>Click <menucascade>
+                <cmd>Click <menucascade>
                         <uicontrol>Administration</uicontrol>
                         <uicontrol>Shut Down</uicontrol>
                     </menucascade>.</cmd>

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
+<concept id="concept_rng_qym_qr">
+ <title><ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
+  Environment Configuration</title>
+ <shortdesc>You can edit the <ph
+   conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> environment
+  configuration file, sdc-env.sh, to configure Java options. </shortdesc>
+ <conbody>
+  <p>
+   <draft-comment author="Loretta">This is a place holder. Will add info about the security manager
+    after we allow users to create stages.</draft-comment>
+  </p>
+ </conbody>
+</concept>

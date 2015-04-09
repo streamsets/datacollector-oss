@@ -8,7 +8,9 @@
    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> uses
   HTTP.</shortdesc>
  <conbody>
-  <p>HTTPS requires an SSL certificate. The <ph
+  <p><indexterm>HTTP protocol<indexterm>configuring for the Data Collector
+        </indexterm></indexterm><indexterm>Data Collector<indexterm>configuring the HTTP
+          protocol</indexterm></indexterm>HTTPS requires an SSL certificate. The <ph
         conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> provides a
       self-signed certificate so you can use HTTPS immediately. You can also generate a certificate
       that is self-signed or signed by a certifying authority. Web browsers generally issue a

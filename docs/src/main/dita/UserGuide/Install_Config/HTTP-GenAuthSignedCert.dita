@@ -2,10 +2,12 @@
 <!DOCTYPE task PUBLIC "-//OASIS//DTD DITA General Task//EN" "generalTask.dtd">
 <task id="task_s3y_dw2_lr">
     <title>Generating an Authority-Signed Certificate</title>
-    <shortdesc>You can use the Java <codeph>keytool</codeph> command to request a certificate from a
-        certifying authority. </shortdesc>
     <taskbody>
-        <context/>
+        <context><indexterm>HTTP protocol<indexterm>generating an authority-signed certificate
+                </indexterm></indexterm><indexterm>authority-signed
+                    certificate<indexterm>generating</indexterm></indexterm>You can use the Java
+                <codeph>keytool</codeph> command to request a certificate from a certifying
+            authority. </context>
         <steps id="steps_m1q_n1f_lr">
             <step>
                 <cmd>From the command line, navigate to the following directory: </cmd>

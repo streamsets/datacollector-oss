@@ -2,10 +2,11 @@
 <!DOCTYPE task PUBLIC "-//OASIS//DTD DITA General Task//EN" "generalTask.dtd">
 <task id="task_vsq_yt2_lr">
     <title>Generating a Self-Signed Certificate</title>
-    <shortdesc>You can use the Java <codeph>keytool</codeph> command to generate a self-signed
-        certificate.</shortdesc>
     <taskbody>
-        <context/>
+        <context><indexterm>HTTP protocol<indexterm>generating a self-signed certificate
+                </indexterm></indexterm><indexterm>self-signed
+                    certificate<indexterm>generating</indexterm></indexterm>You can use the Java
+                <codeph>keytool</codeph> command to generate a self-signed certificate.</context>
         <steps id="steps_zzk_c52_lr">
             <step>
                 <cmd>From the command line, navigate to the following directory: </cmd>

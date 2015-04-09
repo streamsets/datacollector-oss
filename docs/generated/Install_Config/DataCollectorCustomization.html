@@ -2,7 +2,7 @@
 <!DOCTYPE html
   SYSTEM "about:legacy-compat">
 <html xml:lang="en-us" lang="en-us">
-<head><meta name="description" content="You can configure the Data Collector to use HTTP or HTTPS. By default the Data Collector uses HTTP. HTTPS requires an SSL certificate. The Data Collector provides a self-signed certificate so you can ..."></meta><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><meta name="copyright" content="(C) Copyright 2005"></meta><meta name="DC.rights.owner" content="(C) Copyright 2005"></meta><meta name="DC.Type" content="concept"></meta><meta name="DC.Title" content="Data Collector Customization"></meta><meta name="abstract" content="You can customize Data Collector to define properties such as the host name and port number, the HTTP protocol to use, and account information for email alerts."></meta><meta name="description" content="You can customize Data Collector to define properties such as the host name and port number, the HTTP protocol to use, and account information for email alerts."></meta><meta name="DC.Relation" scheme="URI" content="../Install_Config/Install_Config_title.html"></meta><meta name="DC.Format" content="XHTML"></meta><meta name="DC.Identifier" content="concept_pq5_xjq_kr"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/commonltr.css"><!----></link><title>Data Collector Customization</title><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/webhelp_topic.css"><!----></link><link rel="stylesheet" type="text/css" href="../skin.css"></link><script type="text/javascript"><!--
+<head><meta name="description" content="You can configure the Data Collector to use HTTP or HTTPS. By default the Data Collector uses HTTP. HTTPS requires an SSL certificate. The Data Collector provides a self-signed certificate so you can ..."></meta><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><meta name="copyright" content="(C) Copyright 2005"></meta><meta name="DC.rights.owner" content="(C) Copyright 2005"></meta><meta name="DC.Type" content="concept"></meta><meta name="DC.Title" content="Data Collector Configuration"></meta><meta name="abstract" content="You can edit the Data Collector configuration file, sdc.properties, to configure properties such as the host name and port number, the HTTP protocol to use, and account information for email alerts."></meta><meta name="description" content="You can edit the Data Collector configuration file, sdc.properties, to configure properties such as the host name and port number, the HTTP protocol to use, and account information for email alerts."></meta><meta name="DC.Relation" scheme="URI" content="../Install_Config/Install_Config_title.html"></meta><meta name="DC.Format" content="XHTML"></meta><meta name="DC.Identifier" content="concept_pq5_xjq_kr"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/commonltr.css"><!----></link><title>Data Collector Configuration</title><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/webhelp_topic.css"><!----></link><link rel="stylesheet" type="text/css" href="../skin.css"></link><script type="text/javascript"><!--
           
           var prefix = "../index.html";
           
@@ -11,12 +11,12 @@
 <table class="nav"><tbody><tr><td colspan="2"><div id="printlink"><a href="javascript:window.print();" title="Print this page"></a></div><div id="permalink"><a href="#" title="Link to this page"></a></div></td></tr><tr><td width="75%"><a class="navheader_parent_path" href="../Install_Config/Install_Config_title.html" title="Installation and Configuration">Installation and Configuration</a></td><td><div class="navheader">
 <span class="navparent"><a class="link" href="../Install_Config/Install_Config_title.html" title="Installation and Configuration"><span class="navheader_label">Parent topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">Installation and Configuration</span></a></span>  </div></td></tr></tbody></table>
 <div class="nested0" id="concept_pq5_xjq_kr">
- <h1 class="title topictitle1">Data Collector Customization</h1>
+ <h1 class="title topictitle1">Data Collector Configuration</h1>
 
- <p class="shortdesc">You can customize <span class="ph">Data
-                  Collector</span> to define
-    properties such as the host name and port number, the HTTP protocol to use, and account
-    information for email alerts. </p>
+ <p class="shortdesc">You can edit the <span class="ph">Data
+                  Collector</span>
+    configuration file, sdc.properties, to configure properties such as the host name and port
+    number, the HTTP protocol to use, and account information for email alerts. </p>
 
 <div class="related-links"></div>
 <div class="topic concept nested1" id="concept_ecx_hkq_kr">
@@ -78,11 +78,9 @@
 <div class="topic task nested2" id="task_vsq_yt2_lr">
     <h3 class="title topictitle3">Generating a Self-Signed Certificate</h3>
 
-    
-    <div class="body taskbody"><p class="shortdesc">You can use the Java <samp class="ph codeph">keytool</samp> command to generate a self-signed
-        certificate.</p>
-
-        <div class="section context"></div>
+    <div class="body taskbody">
+        <div class="section context">You can use the Java
+                <samp class="ph codeph">keytool</samp> command to generate a self-signed certificate.</div>
 
         <ol class="ol steps" id="task_vsq_yt2_lr__steps_zzk_c52_lr"><li class="li step stepexpand">
                 <span class="ph cmd">From the command line, navigate to the following directory: </span>
@@ -144,11 +142,10 @@
 <div class="topic task nested2" id="task_s3y_dw2_lr">
     <h3 class="title topictitle3">Generating an Authority-Signed Certificate</h3>
 
-    
-    <div class="body taskbody"><p class="shortdesc">You can use the Java <samp class="ph codeph">keytool</samp> command to request a certificate from a
-        certifying authority. </p>
-
-        <div class="section context"></div>
+    <div class="body taskbody">
+        <div class="section context">You can use the Java
+                <samp class="ph codeph">keytool</samp> command to request a certificate from a certifying
+            authority. </div>
 
         <ol class="ol steps" id="task_s3y_dw2_lr__steps_m1q_n1f_lr"><li class="li step stepexpand">
                 <span class="ph cmd">From the command line, navigate to the following directory: </span>
@@ -213,36 +210,36 @@
 </div>
 </div>
 <div class="topic task nested1" id="task_lxk_kjw_1r">
-    <h2 class="title topictitle2">Customizing the <span class="ph">Data
+    <h2 class="title topictitle2">Configuring the <span class="ph">Data
                   Collector</span></h2>
 
     
     <div class="body taskbody"><p class="shortdesc">You can edit properties in the <span class="ph">Data
                   Collector</span>
-        properties file to customize the <span class="ph">Data
+        configuration file to customize the <span class="ph">Data
                   Collector</span>. </p>
 
         <div class="section context">
             <p class="p">Use a text editor to edit the
                     <span class="ph">Data
-                  Collector</span> properties file. After you edit the file, restart the <span class="ph">Data
+                  Collector</span> configuration file. After you edit the file, restart the <span class="ph">Data
                   Collector</span> to enable the changes. </p>
 
             <div class="p">The <span class="ph">Data
-                  Collector</span> properties file, <span class="ph filepath">sdc.properties</span>, is located in the following
-                location:<pre class="pre codeblock">&lt;SDCinstalldir&gt;/etc/sdc.properties</pre>
+                  Collector</span> configuration file, <span class="ph filepath">sdc.properties</span>, is located in the
+                following location:<pre class="pre codeblock">&lt;SDCinstalldir&gt;/etc/sdc.properties</pre>
 </div>
 
             <div class="p">The <span class="ph">Data
-                  Collector</span> properties file includes the following general properties:
+                  Collector</span> configuration file includes the following general properties:
 <div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_lxk_kjw_1r__table_eyq_gkw_1r" class="table" frame="border" border="1" rules="all">
                         
                         
                         <thead class="thead" align="left">
                             <tr class="row">
-                                <th class="entry" valign="top" width="41.84100418410042%" id="d8491e434">General Property</th>
+                                <th class="entry" valign="top" width="41.84100418410042%" id="d8564e454">General Property</th>
 
-                                <th class="entry" valign="top" width="58.15899581589959%" id="d8491e437">Description</th>
+                                <th class="entry" valign="top" width="58.15899581589959%" id="d8564e457">Description</th>
 
                             </tr>
 
@@ -250,18 +247,18 @@
 
                         <tbody class="tbody">
                             <tr class="row">
-                                <td class="entry" valign="top" width="41.84100418410042%" headers="d8491e434 ">http.port</td>
+                                <td class="entry" valign="top" width="41.84100418410042%" headers="d8564e454 ">http.port</td>
 
-                                <td class="entry" valign="top" width="58.15899581589959%" headers="d8491e437 ">Port number to use for the <span class="ph">Data
+                                <td class="entry" valign="top" width="58.15899581589959%" headers="d8564e457 ">Port number to use for the <span class="ph">Data
                   Collector</span> console. <p class="p">Default is 18630.</p>
 </td>
 
                             </tr>
 
                             <tr class="row">
-                                <td class="entry" valign="top" width="41.84100418410042%" headers="d8491e434 ">https.port</td>
+                                <td class="entry" valign="top" width="41.84100418410042%" headers="d8564e454 ">https.port</td>
 
-                                <td class="entry" valign="top" width="58.15899581589959%" headers="d8491e437 ">Secure port number for the <span class="ph">Data
+                                <td class="entry" valign="top" width="58.15899581589959%" headers="d8564e457 ">Secure port number for the <span class="ph">Data
                   Collector</span> console. Any number besides 0 enables the secure port number.
                                         <p class="p">If you use both port properties, the http port bounces to
                                         the https port.</p>
@@ -270,68 +267,68 @@
                             </tr>
 
                             <tr class="row">
-                                <td class="entry" valign="top" width="41.84100418410042%" headers="d8491e434 ">https.keystore.path</td>
+                                <td class="entry" valign="top" width="41.84100418410042%" headers="d8564e454 ">https.keystore.path</td>
 
-                                <td class="entry" valign="top" width="58.15899581589959%" headers="d8491e437 ">Keystore path and file name. <p class="p">By default, the file name is
+                                <td class="entry" valign="top" width="58.15899581589959%" headers="d8564e457 ">Keystore path and file name. <p class="p">By default, the file name is
                                             <span class="ph filepath">sdc-keystore.jks</span> and expected in
                                         the same directory as the <span class="ph">Data
-                  Collector</span> properties file.</p>
+                  Collector</span> configuration file.</p>
 </td>
 
                             </tr>
 
                             <tr class="row">
-                                <td class="entry" valign="top" width="41.84100418410042%" headers="d8491e434 ">https.keystore.password</td>
+                                <td class="entry" valign="top" width="41.84100418410042%" headers="d8564e454 ">https.keystore.password</td>
 
-                                <td class="entry" valign="top" width="58.15899581589959%" headers="d8491e437 ">File that contains the password to the keystore file. <p class="p">By
+                                <td class="entry" valign="top" width="58.15899581589959%" headers="d8564e457 ">File that contains the password to the keystore file. <p class="p">By
                                         default, the file name is
                                             <span class="ph filepath">sdc-keystore-password.txt</span> and
                                         expected in the same directory as the <span class="ph">Data
-                  Collector</span> properties file.</p>
+                  Collector</span> configuration file.</p>
 </td>
 
                             </tr>
 
                             <tr class="row">
-                                <td class="entry" valign="top" width="41.84100418410042%" headers="d8491e434 ">http.authentication</td>
+                                <td class="entry" valign="top" width="41.84100418410042%" headers="d8564e454 ">http.authentication</td>
 
-                                <td class="entry" valign="top" width="58.15899581589959%" headers="d8491e437 ">HTTP authentication. Use none, basic, digest, or
+                                <td class="entry" valign="top" width="58.15899581589959%" headers="d8564e457 ">HTTP authentication. Use none, basic, digest, or
                                         form.<p class="p">Default is form.</p>
 </td>
 
                             </tr>
 
                             <tr class="row">
-                                <td class="entry" valign="top" width="41.84100418410042%" headers="d8491e434 ">preview.maxBatchSize</td>
+                                <td class="entry" valign="top" width="41.84100418410042%" headers="d8564e454 ">preview.maxBatchSize</td>
 
-                                <td class="entry" valign="top" width="58.15899581589959%" headers="d8491e437 ">Maximum number of records used to preview data.<p class="p">Default is
+                                <td class="entry" valign="top" width="58.15899581589959%" headers="d8564e457 ">Maximum number of records used to preview data.<p class="p">Default is
                                         10.</p>
 </td>
 
                             </tr>
 
                             <tr class="row">
-                                <td class="entry" valign="top" width="41.84100418410042%" headers="d8491e434 ">production.maxBatchSize</td>
+                                <td class="entry" valign="top" width="41.84100418410042%" headers="d8564e454 ">production.maxBatchSize</td>
 
-                                <td class="entry" valign="top" width="58.15899581589959%" headers="d8491e437 ">Maximum number of records included in a batch when the
+                                <td class="entry" valign="top" width="58.15899581589959%" headers="d8564e457 ">Maximum number of records included in a batch when the
                                     pipeline runs.<p class="p">Default is 1000.</p>
 </td>
 
                             </tr>
 
                             <tr class="row">
-                                <td class="entry" valign="top" width="41.84100418410042%" headers="d8491e434 ">preview.maxBatches</td>
+                                <td class="entry" valign="top" width="41.84100418410042%" headers="d8564e454 ">preview.maxBatches</td>
 
-                                <td class="entry" valign="top" width="58.15899581589959%" headers="d8491e437 ">Maximum number of batches used to preview data. <p class="p">Default is
+                                <td class="entry" valign="top" width="58.15899581589959%" headers="d8564e457 ">Maximum number of batches used to preview data. <p class="p">Default is
                                         10.</p>
 </td>
 
                             </tr>
 
                             <tr class="row">
-                                <td class="entry" valign="top" width="41.84100418410042%" headers="d8491e434 ">production.maxErrorRecordsPerStage</td>
+                                <td class="entry" valign="top" width="41.84100418410042%" headers="d8564e454 ">production.maxErrorRecordsPerStage</td>
 
-                                <td class="entry" valign="top" width="58.15899581589959%" headers="d8491e437 ">Maximum number of error records to save in memory for each
+                                <td class="entry" valign="top" width="58.15899581589959%" headers="d8564e457 ">Maximum number of error records to save in memory for each
                                     stage to display during monitoring. When the limit is reached,
                                     older error records are discarded.<p class="p">Default is 100.
                                     </p>
@@ -340,9 +337,9 @@
                             </tr>
 
                             <tr class="row">
-                                <td class="entry" valign="top" width="41.84100418410042%" headers="d8491e434 ">production.maxPipelineErrors</td>
+                                <td class="entry" valign="top" width="41.84100418410042%" headers="d8564e454 ">production.maxPipelineErrors</td>
 
-                                <td class="entry" valign="top" width="58.15899581589959%" headers="d8491e437 ">Maximum number of pipeline errors to save in memory to
+                                <td class="entry" valign="top" width="58.15899581589959%" headers="d8564e457 ">Maximum number of pipeline errors to save in memory to
                                     display during monitoring. When the limit is reached, older
                                     errors are discarded. <p class="p">Default is 100. </p>
 </td>
@@ -350,9 +347,9 @@
                             </tr>
 
                             <tr class="row">
-                                <td class="entry" valign="top" width="41.84100418410042%" headers="d8491e434 ">max.logtail.concurrent.requests</td>
+                                <td class="entry" valign="top" width="41.84100418410042%" headers="d8564e454 ">max.logtail.concurrent.requests</td>
 
-                                <td class="entry" valign="top" width="58.15899581589959%" headers="d8491e437 ">Maximum number of external processes allowed to access the
+                                <td class="entry" valign="top" width="58.15899581589959%" headers="d8564e457 ">Maximum number of external processes allowed to access the
                                         <span class="ph">Data
                   Collector</span> log file at the same time through REST API calls. <p class="p">Default
                                         is 5.</p>
@@ -361,27 +358,27 @@
                             </tr>
 
                             <tr class="row">
-                                <td class="entry" valign="top" width="41.84100418410042%" headers="d8491e434 ">ui.help.base.url</td>
+                                <td class="entry" valign="top" width="41.84100418410042%" headers="d8564e454 ">ui.help.base.url</td>
 
-                                <td class="entry" valign="top" width="58.15899581589959%" headers="d8491e437 ">Base URL for the local help project. <p class="p">Do not change this
+                                <td class="entry" valign="top" width="58.15899581589959%" headers="d8564e457 ">Base URL for the local help project. <p class="p">Do not change this
                                         value.</p>
 </td>
 
                             </tr>
 
                             <tr class="row">
-                                <td class="entry" valign="top" width="41.84100418410042%" headers="d8491e434 ">ui.hosted.help.base.url</td>
+                                <td class="entry" valign="top" width="41.84100418410042%" headers="d8564e454 ">ui.hosted.help.base.url</td>
 
-                                <td class="entry" valign="top" width="58.15899581589959%" headers="d8491e437 ">Base URL for the help project hosted at the StreamSets
+                                <td class="entry" valign="top" width="58.15899581589959%" headers="d8564e457 ">Base URL for the help project hosted at the StreamSets
                                     website. <p class="p">Do not change this value.</p>
 </td>
 
                             </tr>
 
                             <tr class="row">
-                                <td class="entry" valign="top" width="41.84100418410042%" headers="d8491e434 ">ui.refresh.interval.ms</td>
+                                <td class="entry" valign="top" width="41.84100418410042%" headers="d8564e454 ">ui.refresh.interval.ms</td>
 
-                                <td class="entry" valign="top" width="58.15899581589959%" headers="d8491e437 ">Interval in milliseconds that the <span class="ph">Data
+                                <td class="entry" valign="top" width="58.15899581589959%" headers="d8564e457 ">Interval in milliseconds that the <span class="ph">Data
                   Collector</span> waits before refreshing the <span class="ph">Data
                   Collector</span> console.<p class="p">Default is 2000.</p>
 </td>
@@ -389,18 +386,18 @@
                             </tr>
 
                             <tr class="row">
-                                <td class="entry" valign="top" width="41.84100418410042%" headers="d8491e434 ">ui.jvmMetrics.refresh.interval.ms</td>
+                                <td class="entry" valign="top" width="41.84100418410042%" headers="d8564e454 ">ui.jvmMetrics.refresh.interval.ms</td>
 
-                                <td class="entry" valign="top" width="58.15899581589959%" headers="d8491e437 ">Interval in milliseconds that the JVM metrics are
+                                <td class="entry" valign="top" width="58.15899581589959%" headers="d8564e457 ">Interval in milliseconds that the JVM metrics are
                                         refreshed.<p class="p">Default is 4000.</p>
 </td>
 
                             </tr>
 
                             <tr class="row">
-                                <td class="entry" valign="top" width="41.84100418410042%" headers="d8491e434 ">ui.enable.usage.data.collection</td>
+                                <td class="entry" valign="top" width="41.84100418410042%" headers="d8564e454 ">ui.enable.usage.data.collection</td>
 
-                                <td class="entry" valign="top" width="58.15899581589959%" headers="d8491e437 ">Allows anonymous Google Analytics information to be sent
+                                <td class="entry" valign="top" width="58.15899581589959%" headers="d8564e457 ">Allows anonymous Google Analytics information to be sent
                                     StreamSets. <p class="p">Default is true. </p>
 </td>
 
@@ -413,16 +410,16 @@
 </div>
 
             <div class="p">The <span class="ph">Data
-                  Collector</span> properties file also includes the following properties for sending email
+                  Collector</span> configuration file also includes the following properties for sending email
                     alerts:
 <div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_lxk_kjw_1r__table_ulz_3pw_1r" class="table" frame="border" border="1" rules="all">
                         
                         
                         <thead class="thead" align="left">
                             <tr class="row">
-                                <th class="entry" valign="top" width="30.48780487804878%" id="d8491e669">Email Alert Properties</th>
+                                <th class="entry" valign="top" width="30.48780487804878%" id="d8564e689">Email Alert Properties</th>
 
-                                <th class="entry" valign="top" width="69.51219512195121%" id="d8491e672">Description</th>
+                                <th class="entry" valign="top" width="69.51219512195121%" id="d8564e692">Description</th>
 
                             </tr>
 
@@ -430,90 +427,90 @@
 
                         <tbody class="tbody">
                             <tr class="row">
-                                <td class="entry" valign="top" width="30.48780487804878%" headers="d8491e669 ">mail.transport.protocol</td>
+                                <td class="entry" valign="top" width="30.48780487804878%" headers="d8564e689 ">mail.transport.protocol</td>
 
-                                <td class="entry" valign="top" width="69.51219512195121%" headers="d8491e672 ">Use smtp or smtps. <p class="p">Default is smtp.</p>
+                                <td class="entry" valign="top" width="69.51219512195121%" headers="d8564e692 ">Use smtp or smtps. <p class="p">Default is smtp.</p>
 </td>
 
                             </tr>
 
                             <tr class="row">
-                                <td class="entry" valign="top" width="30.48780487804878%" headers="d8491e669 ">mail.smtp.host</td>
+                                <td class="entry" valign="top" width="30.48780487804878%" headers="d8564e689 ">mail.smtp.host</td>
 
-                                <td class="entry" valign="top" width="69.51219512195121%" headers="d8491e672 ">SMTP host name.<p class="p">Default is localhost.</p>
+                                <td class="entry" valign="top" width="69.51219512195121%" headers="d8564e692 ">SMTP host name.<p class="p">Default is localhost.</p>
 </td>
 
                             </tr>
 
                             <tr class="row">
-                                <td class="entry" valign="top" width="30.48780487804878%" headers="d8491e669 ">mail.smtp.port</td>
+                                <td class="entry" valign="top" width="30.48780487804878%" headers="d8564e689 ">mail.smtp.port</td>
 
-                                <td class="entry" valign="top" width="69.51219512195121%" headers="d8491e672 ">SMTP port number.<p class="p">Default is 25.</p>
+                                <td class="entry" valign="top" width="69.51219512195121%" headers="d8564e692 ">SMTP port number.<p class="p">Default is 25.</p>
 </td>
 
                             </tr>
 
                             <tr class="row">
-                                <td class="entry" valign="top" width="30.48780487804878%" headers="d8491e669 ">mail.smtp.auth</td>
+                                <td class="entry" valign="top" width="30.48780487804878%" headers="d8564e689 ">mail.smtp.auth</td>
 
-                                <td class="entry" valign="top" width="69.51219512195121%" headers="d8491e672 ">Whether the SMTP host uses authentication. Use true or
+                                <td class="entry" valign="top" width="69.51219512195121%" headers="d8564e692 ">Whether the SMTP host uses authentication. Use true or
                                         false.<p class="p">Default is false.</p>
 </td>
 
                             </tr>
 
                             <tr class="row">
-                                <td class="entry" valign="top" width="30.48780487804878%" headers="d8491e669 ">mail.smtp.starttls.enable</td>
+                                <td class="entry" valign="top" width="30.48780487804878%" headers="d8564e689 ">mail.smtp.starttls.enable</td>
 
-                                <td class="entry" valign="top" width="69.51219512195121%" headers="d8491e672 ">Whether the SMTP host uses STARTTLS encryption. Use true or
+                                <td class="entry" valign="top" width="69.51219512195121%" headers="d8564e692 ">Whether the SMTP host uses STARTTLS encryption. Use true or
                                         false.<p class="p">Default is false. </p>
 </td>
 
                             </tr>
 
                             <tr class="row">
-                                <td class="entry" valign="top" width="30.48780487804878%" headers="d8491e669 ">mail.smtps.host</td>
+                                <td class="entry" valign="top" width="30.48780487804878%" headers="d8564e689 ">mail.smtps.host</td>
 
-                                <td class="entry" valign="top" width="69.51219512195121%" headers="d8491e672 ">SMTPS host name. <p class="p">Default is localhost.</p>
+                                <td class="entry" valign="top" width="69.51219512195121%" headers="d8564e692 ">SMTPS host name. <p class="p">Default is localhost.</p>
 </td>
 
                             </tr>
 
                             <tr class="row">
-                                <td class="entry" valign="top" width="30.48780487804878%" headers="d8491e669 ">mail.smtps.port</td>
+                                <td class="entry" valign="top" width="30.48780487804878%" headers="d8564e689 ">mail.smtps.port</td>
 
-                                <td class="entry" valign="top" width="69.51219512195121%" headers="d8491e672 ">SMTPS port number.<p class="p">Default is 25.</p>
+                                <td class="entry" valign="top" width="69.51219512195121%" headers="d8564e692 ">SMTPS port number.<p class="p">Default is 25.</p>
 </td>
 
                             </tr>
 
                             <tr class="row">
-                                <td class="entry" valign="top" width="30.48780487804878%" headers="d8491e669 ">mail.smtps.auth</td>
+                                <td class="entry" valign="top" width="30.48780487804878%" headers="d8564e689 ">mail.smtps.auth</td>
 
-                                <td class="entry" valign="top" width="69.51219512195121%" headers="d8491e672 ">Whether the SMTPS host uses authentication. Use true or
+                                <td class="entry" valign="top" width="69.51219512195121%" headers="d8564e692 ">Whether the SMTPS host uses authentication. Use true or
                                         false.<p class="p">Default is false.</p>
 </td>
 
                             </tr>
 
                             <tr class="row">
-                                <td class="entry" valign="top" width="30.48780487804878%" headers="d8491e669 ">xmail.username</td>
+                                <td class="entry" valign="top" width="30.48780487804878%" headers="d8564e689 ">xmail.username</td>
 
-                                <td class="entry" valign="top" width="69.51219512195121%" headers="d8491e672 ">User name for the email account to send alert email.</td>
-
-                            </tr>
-
-                            <tr class="row">
-                                <td class="entry" valign="top" width="30.48780487804878%" headers="d8491e669 ">xmail.password</td>
-
-                                <td class="entry" valign="top" width="69.51219512195121%" headers="d8491e672 ">Password for the email account to send alert email.</td>
+                                <td class="entry" valign="top" width="69.51219512195121%" headers="d8564e692 ">User name for the email account to send alert email.</td>
 
                             </tr>
 
                             <tr class="row">
-                                <td class="entry" valign="top" width="30.48780487804878%" headers="d8491e669 ">xmail.from.address</td>
+                                <td class="entry" valign="top" width="30.48780487804878%" headers="d8564e689 ">xmail.password</td>
 
-                                <td class="entry" valign="top" width="69.51219512195121%" headers="d8491e672 ">Email address to send alert email. </td>
+                                <td class="entry" valign="top" width="69.51219512195121%" headers="d8564e692 ">Password for the email account to send alert email.</td>
+
+                            </tr>
+
+                            <tr class="row">
+                                <td class="entry" valign="top" width="30.48780487804878%" headers="d8564e689 ">xmail.from.address</td>
+
+                                <td class="entry" valign="top" width="69.51219512195121%" headers="d8564e692 ">Email address to send alert email. </td>
 
                             </tr>
 

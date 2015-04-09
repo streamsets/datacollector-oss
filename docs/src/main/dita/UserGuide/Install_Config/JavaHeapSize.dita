@@ -1,10 +1,35 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_mdc_shg_qr">
- <title>Java Heap Size</title>
- <shortdesc>The Data Collector environment file defines the Java heap size used by the <ph
-   conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>. </shortdesc>
+ <title>Java Heap Size Configuration</title>
+ <shortdesc>You can define the Java heap size used by the <ph
+      conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>. By default,
+    the <ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> Java
+    heap size is 1024 MB. </shortdesc>
  <conbody>
-  <p>The Java heap size affects the amount of memory that a pipeline can use. </p>
+  <p>The Java heap size determines the heap size allocated to the <ph
+        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> and
+      affects the amount of memory the <ph
+        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> can use
+      when it runs a pipeline. Running a pipeline can use up to 65% of the allocated heap size. </p>
+    <p>Define the heap size as part of the SDC_JAVA_OPTS property in the <ph
+        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
+      environment configuration file. Increase or decrease the heap size as necessary, based on the
+      resources available on the host machine.</p>
+    <p>Use the following Java options to define the Java heap size:<ul id="ul_vyw_rzl_qr">
+        <li>xmx - Defines the maximum heap size</li>
+        <li>xms - Defines the minimum heap size</li>
+      </ul></p>
+    <p>
+      <note type="tip">To avoid constant recalculation of the allocated heap size, set the both
+        properties to the same vaue. Use m for MB and g for GB. </note>
+    </p>
+    <p>For example, to double the heap size, you might change the following default SDC_JAVA_OPTS
+      property:<codeblock>SDC_JAVA_OPTS="-Xmx1024m -Xms1024m -server ${SDC_JAVA_OPTS}"</codeblock></p>
+    <p>to the following configuration:</p>
+    <p>
+      <codeblock>SDC_JAVA_OPTS="-Xmx2048m -Xms2048m -server ${SDC_JAVA_OPTS}"</codeblock>
+    </p>
+    <p>With a heap size of 2048MB, you can configure a pipeline to use up to 1331MB of memory.</p>
  </conbody>
 </concept>

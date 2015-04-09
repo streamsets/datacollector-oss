@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE task PUBLIC "-//OASIS//DTD DITA General Task//EN" "generalTask.dtd">
+<task id="task_ugz_41n_qr">
+    <title>Configuring the Data Collector Environment</title>
+    <shortdesc>You can edit properties in the <ph
+            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
+        environment configuration file to customize the <ph
+            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>. </shortdesc>
+    <taskbody>
+        <context>
+            <p><indexterm>Data Collector configuration
+                    file<indexterm>configuring</indexterm></indexterm><indexterm>sdc.properties
+                        file<indexterm>configuring</indexterm></indexterm><indexterm>email<indexterm>Data
+                        Collector configuration</indexterm></indexterm>Use a text editor to edit the
+                    <ph
+                    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                /> configuration file. After you edit the file, restart the <ph
+                    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                /> to enable the changes. </p>
+            <p>The <ph
+                    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                /> configuration file, <filepath>sdc-env.sh</filepath>, is located in the following
+                location:<codeblock>&lt;SDCinstalldir>/libexec/sdc-env.sh</codeblock>The <ph
+                    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                /> environment configuration file includes the following properties:<table
+                    frame="all" rowsep="1" colsep="1" id="table_hby_1bn_qr">
+                    <tgroup cols="2">
+                        <colspec colname="c1" colnum="1" colwidth="1.0*"/>
+                        <colspec colname="c2" colnum="2" colwidth="1.0*"/>
+                        <thead>
+                            <row>
+                                <entry>Environment Configuration Property</entry>
+                                <entry>Description</entry>
+                            </row>
+                        </thead>
+                        <tbody>
+                            <row>
+                                <entry>SDC_PRE_CLASSPATH</entry>
+                                <entry>Path to a directory of Java classes to run
+                                        before...<draft-comment author="Loretta">check on
+                                        brock.</draft-comment></entry>
+                            </row>
+                            <row>
+                                <entry>SDC_POST_CLASSPATH</entry>
+                                <entry>Path to a directory of Java classes to run after...</entry>
+                            </row>
+                            <row>
+                                <entry>SDC_JAVA_OPTS</entry>
+                                <entry>Java options to associate with the <ph
+                                        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                                    />. <p>By default, the Java heap size is 1024MB. </p><p>To add
+                                        add additional options, </p></entry>
+                            </row>
+                            <row>
+                                <entry>SDC_SECURITY_MANAGER_ENABLED</entry>
+                                <entry>Default is True. Do not change this property. </entry>
+                            </row>
+                        </tbody>
+                    </tgroup>
+                </table></p>
+        </context>
+    </taskbody>
+</task>
