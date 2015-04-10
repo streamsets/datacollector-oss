@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE task PUBLIC "-//OASIS//DTD DITA General Task//EN" "generalTask.dtd">
+<task id="task_ogd_zj3_wq">
+    <title>Defining Pipeline Constants</title>
+    <taskbody>
+        <context/>
+        <steps id="steps_apc_qrz_qr">
+            <step>
+                <cmd>To define a constant for the pipeline, click the <wintitle>Constants</wintitle>
+                    tab of the pipeline properties.</cmd>
+            </step>
+            <step>
+                <cmd>On the <wintitle>Constants</wintitle> tab, click <uicontrol>Add</uicontrol>.
+                </cmd>
+            </step>
+            <step>
+                <cmd>Enter a name and value for the constant.</cmd>
+            </step>
+        </steps>
+    </taskbody>
+</task>

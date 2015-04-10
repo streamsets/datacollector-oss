@@ -79,39 +79,6 @@
  </div>
 
 </div>
-<div class="topic task nested1" id="task_ogd_zj3_wq">
-    <h2 class="title topictitle2">Defining Constants</h2>
-
-    
-    <div class="body taskbody"><p class="shortdesc">You can define constants that you can reuse within a processor. Define a constant
-        when you have a value that you want use more than once in the processor or that you want to
-        be able to update easily. You can define constants in the Expression Evaluator and Stream
-        Selector processors.</p>
-
-        <div class="section context">
-            <div class="p">For example, you might have an Expression
-                Evaluator processor that calculates the total income for employees using .01 as a
-                bonus percentage, as
-                follows:<pre class="pre codeblock">${(record:value("/SALARY")) + (record:value("/SALARY")*.01)}</pre>
-</div>
-
-            <p class="p">However, the bonus percentage changes regularly. So instead of using .01 directly in
-                the expression, you can create a Bonus constant and set it to .01 as shown:</p>
-
-            <p class="p"><img class="image" id="task_ogd_zj3_wq__image_cdh_cw3_cr" src="../Graphics/DefiningConstants.png" height="94" width="374"></img></p>
-
-            <p class="p">Then, you can use the Bonus constant in an expression as follows:</p>
-
-            <div class="p">
-                <pre class="pre codeblock">${record:value("/SALARY")+(record:value("/SALARY")*BONUS)}</pre>
-
-            </div>
-
-        </div>
-
-    </div>
-
-</div>
 </div>
 <div class="navfooter"><!---->
 <span class="navparent"><a class="link" href="../Processors/Processors_title.html" title="Processors"><span class="navheader_label">Parent topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">Processors</span></a></span>  </div><div class="footer"><div> </div><!-- © <a href="http://creativecommons.org/licenses/by-nc/4.0/legalcode">CC BY-NC 4.0.</a> StreamSets, 2015. --></div>

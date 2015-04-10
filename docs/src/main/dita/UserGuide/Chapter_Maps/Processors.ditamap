@@ -73,7 +73,6 @@
    <topicmeta><shortdesc></shortdesc></topicmeta>
    <topicref href="../Processors/BasicSyntax.dita"/>
    <topicref href="../Processors/UsingFieldNamesinExpressions.dita"/>
-   <topicref href="../Processors/DefiningConstants.dita"/>
   </topicref>
  </topicref>
 </map>
