@@ -21,6 +21,7 @@ import com.streamsets.pipeline.lib.io.ObjectLengthException;
 import com.streamsets.pipeline.lib.io.OverrunException;
 import com.streamsets.pipeline.lib.parser.CharDataParserFactory;
 import com.streamsets.pipeline.lib.parser.DataParser;
+import com.streamsets.pipeline.lib.parser.DataParserFactoryBuilder;
 import com.streamsets.pipeline.lib.parser.log.LogDataFormatValidator;
 import com.streamsets.pipeline.lib.parser.log.RegExConfig;
 import com.streamsets.pipeline.lib.parser.xml.XmlCharDataParserFactory;
@@ -258,7 +259,8 @@ public class SpoolDirSource extends BaseSource {
   }
 
   private void validateDataParser(List<ConfigIssue> issues) {
-    CharDataParserFactory.Builder  builder = new CharDataParserFactory.Builder(getContext(), dataFormat.getParserFormat());
+    DataParserFactoryBuilder builder = new DataParserFactoryBuilder(getContext(), dataFormat.getParserFormat());
+
 
     try {
       fileCharset = Charset.forName(charset);
@@ -267,6 +269,7 @@ public class SpoolDirSource extends BaseSource {
       fileCharset = Charset.forName("UTF-8");
       issues.add(getContext().createConfigIssue(Groups.FILES.name(), "charset", Errors.SPOOLDIR_00, charset));
     }
+    builder.setCharset(fileCharset);
 
     switch (dataFormat) {
       case TEXT:

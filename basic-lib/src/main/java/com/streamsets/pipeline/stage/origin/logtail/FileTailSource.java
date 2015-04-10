@@ -18,11 +18,13 @@ import com.streamsets.pipeline.config.OnParseError;
 import com.streamsets.pipeline.lib.parser.CharDataParserFactory;
 import com.streamsets.pipeline.lib.parser.DataParser;
 import com.streamsets.pipeline.lib.parser.DataParserException;
+import com.streamsets.pipeline.lib.parser.DataParserFactoryBuilder;
 import com.streamsets.pipeline.lib.parser.log.LogDataFormatValidator;
 import com.streamsets.pipeline.lib.parser.log.RegExConfig;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -136,25 +138,22 @@ public class FileTailSource extends BaseSource implements OffsetCommitter {
     logLinesQueue = new ArrayBlockingQueue<>(2 * batchSize);
     logTail = new LogTail(logFile, true, getInfo(), logLinesQueue);
     logTail.start();
+
+    DataParserFactoryBuilder builder = new DataParserFactoryBuilder(getContext(), dataFormat.getParserFormat())
+        .setCharset(Charset.defaultCharset()).setMaxDataLen(-1);
     switch (dataFormat) {
       case TEXT:
-        parserFactory = new CharDataParserFactory.Builder(getContext(), CharDataParserFactory.Format.TEXT)
-            .setMaxDataLen(-1).build();
         break;
       case JSON:
-        parserFactory = new CharDataParserFactory.Builder(getContext(), CharDataParserFactory.Format.JSON)
-            .setMode(JsonMode.MULTIPLE_OBJECTS).setMaxDataLen(-1).build();
+        builder.setMode(JsonMode.MULTIPLE_OBJECTS);
         break;
       case LOG:
-        CharDataParserFactory.Builder  builder = new CharDataParserFactory.Builder(getContext(),
-          dataFormat.getParserFormat());
-        builder.setMaxDataLen(-1);
         logDataFormatValidator.populateBuilder(builder);
-        parserFactory = builder.build();
         break;
       default:
         throw new StageException(Errors.TAIL_02, "dataFormat", dataFormat);
     }
+    parserFactory = builder.build();
     fileOffset = logFile.getName() + "::" + System.currentTimeMillis();
     recordCount = 0;
   }

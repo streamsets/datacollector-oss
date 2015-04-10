@@ -9,10 +9,12 @@ import com.streamsets.pipeline.api.OnRecordError;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.config.LogMode;
+import com.streamsets.pipeline.lib.data.DataFactory;
 import com.streamsets.pipeline.lib.io.OverrunReader;
-import com.streamsets.pipeline.lib.parser.CharDataParserFactory;
 import com.streamsets.pipeline.lib.parser.DataParser;
 import com.streamsets.pipeline.lib.parser.DataParserException;
+import com.streamsets.pipeline.lib.parser.DataParserFactoryBuilder;
+import com.streamsets.pipeline.lib.parser.DataParserFormat;
 import com.streamsets.pipeline.sdk.ContextInfoCreator;
 import org.junit.Assert;
 import org.junit.Test;
@@ -20,8 +22,6 @@ import org.junit.Test;
 import java.io.IOException;
 import java.io.StringReader;
 import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
 
 public class TestCombinedLogFormatParser {
   private Stage.Context getContext() {
@@ -32,7 +32,7 @@ public class TestCombinedLogFormatParser {
   @Test
   public void testParse() throws Exception {
     DataParser parser = getDataParser("127.0.0.1 ss h [10/Oct/2000:13:55:36 -0700] \"GET /apache_pb.gif HTTP/1.0\" 200 2326 " +
-      "\"http://www.example.com/start.html\" \"Mozilla/4.08 [en] (Win98; I ;Nav)\"", 1000, 0);
+      "\"http:www.example.com/start.html\" \"Mozilla/4.08 [en] (Win98; I ;Nav)\"", 1000, 0);
     Assert.assertEquals(0, parser.getOffset());
     Record record = parser.parse();
     Assert.assertNotNull(record);
@@ -40,13 +40,12 @@ public class TestCombinedLogFormatParser {
     Assert.assertEquals("id::0", record.getHeader().getSourceId());
 
     Assert.assertEquals("127.0.0.1 ss h [10/Oct/2000:13:55:36 -0700] \"GET /apache_pb.gif HTTP/1.0\" 200 2326 " +
-        "\"http://www.example.com/start.html\" \"Mozilla/4.08 [en] (Win98; I ;Nav)\"",
+        "\"http:www.example.com/start.html\" \"Mozilla/4.08 [en] (Win98; I ;Nav)\"",
       record.get().getValueAsMap().get("originalLine").getValueAsString());
 
     Assert.assertFalse(record.has("/truncated"));
 
-    //offset is -1 as the parser attempted a read ahead and met the end
-    Assert.assertEquals(154, parser.getOffset());
+    Assert.assertEquals(152, parser.getOffset());
 
     Assert.assertTrue(record.has("/" + Constants.CLIENTIP));
     Assert.assertEquals("127.0.0.1", record.get("/" + Constants.CLIENTIP).getValueAsString());
@@ -77,7 +76,7 @@ public class TestCombinedLogFormatParser {
 
 
     Assert.assertTrue(record.has("/" + Constants.REFERRER));
-    Assert.assertEquals("\"http://www.example.com/start.html\"", record.get("/" + Constants.REFERRER).getValueAsString());
+    Assert.assertEquals("\"http:www.example.com/start.html\"", record.get("/" + Constants.REFERRER).getValueAsString());
 
     Assert.assertTrue(record.has("/" + Constants.AGENT));
     Assert.assertEquals("\"Mozilla/4.08 [en] (Win98; I ;Nav)\"", record.get("/" + Constants.AGENT).getValueAsString());
@@ -89,7 +88,7 @@ public class TestCombinedLogFormatParser {
   public void testParseWithOffset() throws Exception {
     DataParser parser = getDataParser(
       "Hello\n127.0.0.1 ss h [10/Oct/2000:13:55:36 -0700] \"GET /apache_pb.gif HTTP/1.0\" 200 2326 " +
-      "\"http://www.example.com/start.html\" \"Mozilla/4.08 [en] (Win98; I ;Nav)\"", 1000, 6);
+      "\"http:www.example.com/start.html\" \"Mozilla/4.08 [en] (Win98; I ;Nav)\"", 1000, 6);
     Assert.assertEquals(6, parser.getOffset());
     Record record = parser.parse();
     Assert.assertNotNull(record);
@@ -97,13 +96,12 @@ public class TestCombinedLogFormatParser {
     Assert.assertEquals("id::6", record.getHeader().getSourceId());
 
     Assert.assertEquals("127.0.0.1 ss h [10/Oct/2000:13:55:36 -0700] \"GET /apache_pb.gif HTTP/1.0\" 200 2326 " +
-        "\"http://www.example.com/start.html\" \"Mozilla/4.08 [en] (Win98; I ;Nav)\"",
+        "\"http:www.example.com/start.html\" \"Mozilla/4.08 [en] (Win98; I ;Nav)\"",
       record.get().getValueAsMap().get("originalLine").getValueAsString());
 
     Assert.assertFalse(record.has("/truncated"));
 
-    //offset is -1 as the parser attempted a read ahead and met the end
-    Assert.assertEquals(160, parser.getOffset());
+    Assert.assertEquals(158, parser.getOffset());
 
     Assert.assertTrue(record.has("/" + Constants.CLIENTIP));
     Assert.assertEquals("127.0.0.1", record.get("/" + Constants.CLIENTIP).getValueAsString());
@@ -134,7 +132,7 @@ public class TestCombinedLogFormatParser {
 
 
     Assert.assertTrue(record.has("/" + Constants.REFERRER));
-    Assert.assertEquals("\"http://www.example.com/start.html\"", record.get("/" + Constants.REFERRER).getValueAsString());
+    Assert.assertEquals("\"http:www.example.com/start.html\"", record.get("/" + Constants.REFERRER).getValueAsString());
 
     Assert.assertTrue(record.has("/" + Constants.AGENT));
     Assert.assertEquals("\"Mozilla/4.08 [en] (Win98; I ;Nav)\"", record.get("/" + Constants.AGENT).getValueAsString());
@@ -157,7 +155,7 @@ public class TestCombinedLogFormatParser {
   public void testTruncate() throws Exception {
     DataParser parser = getDataParser(
       "127.0.0.1 ss h [10/Oct/2000:13:55:36 -0700] \"GET /apache_pb.gif HTTP/1.0\" 200 2326 " +
-        "\"http://www.example.com/start.html\" \"Mozilla/4.08 [en] (Win98; I ;Nav)\"", 25, 0);
+        "\"http:www.example.com/start.html\" \"Mozilla/4.08 [en] (Win98; I ;Nav)\"", 25, 0);
     Assert.assertEquals(0, parser.getOffset());
     try {
       parser.parse();
@@ -182,11 +180,14 @@ public class TestCombinedLogFormatParser {
 
   private DataParser getDataParser(String logLine, int maxObjectLength, int readerOffset) throws DataParserException {
     OverrunReader reader = new OverrunReader(new StringReader(logLine), 1000, true);
-    Map<String, Object> configs = LogCharDataParserFactory.registerConfigs(new HashMap<String, Object>());
-    configs.put(LogCharDataParserFactory.RETAIN_ORIGINAL_TEXT_KEY, true);
-    CharDataParserFactory factory = new LogCharDataParserFactory(getContext(), maxObjectLength,
-      LogMode.COMBINED_LOG_FORMAT,
-      configs);
+    DataParserFactoryBuilder dataParserFactoryBuilder = new DataParserFactoryBuilder(getContext(), DataParserFormat.LOG);
+    DataFactory dataFactory = dataParserFactoryBuilder
+      .setMaxDataLen(maxObjectLength)
+      .setMode(LogMode.COMBINED_LOG_FORMAT)
+      .setConfig(LogCharDataParserFactory.RETAIN_ORIGINAL_TEXT_KEY, true)
+      .build();
+    Assert.assertTrue(dataFactory instanceof LogCharDataParserFactory);
+    LogCharDataParserFactory factory = (LogCharDataParserFactory) dataFactory;
     return factory.getParser("id", reader, readerOffset);
   }
 }

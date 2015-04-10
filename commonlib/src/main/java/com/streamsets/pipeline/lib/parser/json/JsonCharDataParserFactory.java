@@ -5,32 +5,28 @@
  */
 package com.streamsets.pipeline.lib.parser.json;
 
-import com.streamsets.pipeline.api.Stage;
+import com.google.common.collect.ImmutableSet;
 import com.streamsets.pipeline.api.impl.Utils;
+import com.streamsets.pipeline.config.JsonMode;
 import com.streamsets.pipeline.lib.io.OverrunReader;
-import com.streamsets.pipeline.lib.json.StreamingJsonParser;
 import com.streamsets.pipeline.lib.parser.DataParser;
 import com.streamsets.pipeline.lib.parser.DataParserException;
 import com.streamsets.pipeline.lib.parser.CharDataParserFactory;
 
 import java.io.IOException;
+import java.util.Collections;
 import java.util.Map;
+import java.util.Set;
 
 public class JsonCharDataParserFactory extends CharDataParserFactory {
+  public static final Map<String, Object> CONFIGS = Collections.emptyMap();
 
-  public static Map<String, Object> registerConfigs(Map<String, Object> configs) {
-    return configs;
-  }
+  @SuppressWarnings("umchecked")
+  public static final Set<Class<? extends Enum>> MODES =
+      (Set<Class<? extends Enum>>) (Set) ImmutableSet.of(JsonMode.class);
 
-  private final Stage.Context context;
-  private final StreamingJsonParser.Mode mode;
-  private final int maxObjectLen;
-
-  public JsonCharDataParserFactory(Stage.Context context, int maxObjectLen, StreamingJsonParser.Mode mode,
-      Map<String, Object> configs) {
-    this.context = context;
-    this.mode = mode;
-    this.maxObjectLen = maxObjectLen;
+  public JsonCharDataParserFactory(Settings settings) {
+    super(settings);
   }
 
   @Override
@@ -38,7 +34,8 @@ public class JsonCharDataParserFactory extends CharDataParserFactory {
     Utils.checkState(reader.getPos() == 0, Utils.formatL("reader must be in position '0', it is at '{}'",
                                                          reader.getPos()));
     try {
-      return new JsonDataParser(context, id, reader, readerOffset, mode, maxObjectLen);
+      return new JsonDataParser(getSettings().getContext(), id, reader, readerOffset,
+                                getSettings().getMode(JsonMode.class).getFormat(), getSettings().getMaxRecordLen());
     } catch (IOException ex) {
       throw new DataParserException(Errors.JSON_PARSER_00, id, readerOffset, ex.getMessage(), ex);
     }

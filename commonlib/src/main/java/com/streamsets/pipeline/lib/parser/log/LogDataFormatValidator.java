@@ -11,6 +11,7 @@ import com.streamsets.pipeline.config.LogMode;
 import com.streamsets.pipeline.config.OnParseError;
 import com.streamsets.pipeline.lib.parser.CharDataParserFactory;
 import com.streamsets.pipeline.lib.parser.DataParserException;
+import com.streamsets.pipeline.lib.parser.DataParserFactoryBuilder;
 import com.streamsets.pipeline.lib.parser.shaded.org.aicer.grok.dictionary.GrokDictionary;
 
 import java.io.StringReader;
@@ -56,7 +57,7 @@ public class LogDataFormatValidator {
     this.onParseError = onParseError;
   }
 
-  public void populateBuilder(CharDataParserFactory.Builder builder) {
+  public void populateBuilder(DataParserFactoryBuilder builder) {
     builder.setMaxDataLen(logMaxObjectLen)
       .setConfig(LogCharDataParserFactory.RETAIN_ORIGINAL_TEXT_KEY, logRetainOriginalLine)
       .setConfig(LogCharDataParserFactory.APACHE_CUSTOMLOG_FORMAT_KEY, customLogFormat)

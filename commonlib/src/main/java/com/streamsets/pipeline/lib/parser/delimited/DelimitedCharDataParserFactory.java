@@ -5,9 +5,12 @@
  */
 package com.streamsets.pipeline.lib.parser.delimited;
 
+import com.google.common.collect.ImmutableSet;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.config.CsvHeader;
+import com.streamsets.pipeline.config.CsvMode;
+import com.streamsets.pipeline.lib.data.DataFactory;
 import com.streamsets.pipeline.lib.io.OverrunReader;
 import com.streamsets.pipeline.lib.parser.CharDataParserFactory;
 import com.streamsets.pipeline.lib.parser.DataParser;
@@ -15,25 +18,17 @@ import com.streamsets.pipeline.lib.parser.DataParserException;
 import org.apache.commons.csv.CSVFormat;
 
 import java.io.IOException;
+import java.util.Collections;
 import java.util.Map;
+import java.util.Set;
 
 public class DelimitedCharDataParserFactory extends CharDataParserFactory {
+  public static final Map<String, Object> CONFIGS = Collections.emptyMap();
+  public static final Set<Class<? extends Enum>> MODES =
+      ImmutableSet.of((Class<? extends Enum>) CsvMode.class, CsvHeader.class);
 
-  public static Map<String, Object> registerConfigs(Map<String, Object> configs) {
-    return configs;
-  }
-
-  private final Stage.Context context;
-  private final CSVFormat format;
-  private final CsvHeader header;
-  private final int maxObjectLen;
-
-  public DelimitedCharDataParserFactory(Stage.Context context, CSVFormat format, CsvHeader header, int maxObjectLen,
-      Map<String, Object> configs) {
-    this.context = context;
-    this.format = format;
-    this.header = header;
-    this.maxObjectLen = maxObjectLen;
+  public DelimitedCharDataParserFactory(Settings settings) {
+    super(settings);
   }
 
   @Override
@@ -41,7 +36,10 @@ public class DelimitedCharDataParserFactory extends CharDataParserFactory {
     Utils.checkState(reader.getPos() == 0, Utils.formatL("reader must be in position '0', it is at '{}'",
                                                          reader.getPos()));
     try {
-      return new DelimitedDataParser(context, id, reader, readerOffset, format, header, maxObjectLen);
+      return new DelimitedDataParser(getSettings().getContext(), id, reader, readerOffset,
+                                     getSettings().getMode(CsvMode.class).getFormat(),
+                                     getSettings().getMode(CsvHeader.class),
+                                     getSettings().getMaxRecordLen());
     } catch (IOException ex) {
       throw new DataParserException(Errors.DELIMITED_PARSER_00, id, readerOffset, ex.getMessage(), ex);
     }

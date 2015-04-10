@@ -9,10 +9,12 @@ import com.streamsets.pipeline.api.OnRecordError;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.config.LogMode;
+import com.streamsets.pipeline.lib.data.DataFactory;
 import com.streamsets.pipeline.lib.io.OverrunReader;
-import com.streamsets.pipeline.lib.parser.CharDataParserFactory;
 import com.streamsets.pipeline.lib.parser.DataParser;
 import com.streamsets.pipeline.lib.parser.DataParserException;
+import com.streamsets.pipeline.lib.parser.DataParserFactoryBuilder;
+import com.streamsets.pipeline.lib.parser.DataParserFormat;
 import com.streamsets.pipeline.sdk.ContextInfoCreator;
 import org.junit.Assert;
 import org.junit.Test;
@@ -20,8 +22,6 @@ import org.junit.Test;
 import java.io.IOException;
 import java.io.StringReader;
 import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
 
 public class TestErrorLogFormatParser {
 
@@ -133,11 +133,15 @@ public class TestErrorLogFormatParser {
 
   private DataParser getDataParser(String logLine, int maxObjectLength, int readerOffset) throws DataParserException {
     OverrunReader reader = new OverrunReader(new StringReader(logLine), 1000, true);
-    Map<String, Object> configs = LogCharDataParserFactory.registerConfigs(new HashMap<String, Object>());
-    configs.put(LogCharDataParserFactory.RETAIN_ORIGINAL_TEXT_KEY, true);
-    CharDataParserFactory factory = new LogCharDataParserFactory(getContext(), maxObjectLength,
-      LogMode.APACHE_ERROR_LOG_FORMAT,
-      configs);
+
+    DataParserFactoryBuilder dataParserFactoryBuilder = new DataParserFactoryBuilder(getContext(), DataParserFormat.LOG);
+    DataFactory dataFactory = dataParserFactoryBuilder
+      .setMaxDataLen(maxObjectLength)
+      .setMode(LogMode.APACHE_ERROR_LOG_FORMAT)
+      .setConfig(LogCharDataParserFactory.RETAIN_ORIGINAL_TEXT_KEY, true)
+      .build();
+    Assert.assertTrue(dataFactory instanceof LogCharDataParserFactory);
+    LogCharDataParserFactory factory = (LogCharDataParserFactory) dataFactory;
     return factory.getParser("id", reader, readerOffset);
   }
 }

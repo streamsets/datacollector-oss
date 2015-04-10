@@ -7,6 +7,7 @@ package com.streamsets.pipeline.lib.parser.log;
 
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableSet;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.config.LogMode;
@@ -24,6 +25,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.regex.Pattern;
 
 public class LogCharDataParserFactory extends CharDataParserFactory {
@@ -50,7 +52,10 @@ public class LogCharDataParserFactory extends CharDataParserFactory {
   public static final String LOG4J_TRIM_STACK_TRACES_TO_LENGTH_KEY = KEY_PREFIX + "log4j.trim.stack.trace.to.length";
   static final int LOG4J_TRIM_STACK_TRACES_TO_LENGTH_DEFAULT = 50;
 
-  public static Map<String, Object> registerConfigs(Map<String, Object> configs) {
+  public static final Map<String, Object> CONFIGS;
+
+  static {
+    Map<String, Object> configs = new HashMap<>();
     configs.put(RETAIN_ORIGINAL_TEXT_KEY, RETAIN_ORIGINAL_TEXT_DEFAULT);
     configs.put(APACHE_CUSTOMLOG_FORMAT_KEY, APACHE_CUSTOMLOG_FORMAT_DEFAULT);
     configs.put(REGEX_KEY, REGEX_DEFAULT);
@@ -60,8 +65,13 @@ public class LogCharDataParserFactory extends CharDataParserFactory {
     configs.put(LOG4J_FORMAT_KEY, LOG4J_FORMAT_DEFAULT);
     configs.put(ON_PARSE_ERROR_KEY, ON_PARSE_ERROR_DEFAULT);
     configs.put(LOG4J_TRIM_STACK_TRACES_TO_LENGTH_KEY, LOG4J_TRIM_STACK_TRACES_TO_LENGTH_DEFAULT);
-    return configs;
+    CONFIGS = Collections.unmodifiableMap(configs);
   }
+
+
+  @SuppressWarnings("unchecked")
+  public static final Set<Class<? extends Enum>> MODES = (Set) ImmutableSet.of(LogMode.class);
+
 
   private final Stage.Context context;
   private final int maxObjectLen;
@@ -78,21 +88,21 @@ public class LogCharDataParserFactory extends CharDataParserFactory {
   private final int maxStackTraceLength;
   private final Map<String, Object> regexToPatternMap;
 
-  public LogCharDataParserFactory(Stage.Context context, int maxObjectLen, LogMode logMode,
-                                  Map<String, Object> configs) {
-    this.context = context;
-    this.maxObjectLen = maxObjectLen;
-    this.logMode = logMode;
-    this.retainOriginalText = (boolean) configs.get(RETAIN_ORIGINAL_TEXT_KEY);
-    this.customLogFormat = (String) configs.get(APACHE_CUSTOMLOG_FORMAT_KEY);
-    this.regex = (String) configs.get(REGEX_KEY);
-    this.fieldPathToGroup = (Map<String, Integer>) configs.get(REGEX_FIELD_PATH_TO_GROUP_KEY);
-    this.grokPatternDefinition = (String) configs.get(GROK_PATTERN_DEFINITION_KEY);
-    this.grokPattern = (String) configs.get(GROK_PATTERN_KEY);
+  public LogCharDataParserFactory(Settings settings) {
+    super(settings);
+    this.context = settings.getContext();
+    this.maxObjectLen = settings.getMaxRecordLen();
+    this.logMode = settings.getMode(LogMode.class);
+    this.retainOriginalText = settings.getConfig(RETAIN_ORIGINAL_TEXT_KEY);
+    this.customLogFormat = settings.getConfig(APACHE_CUSTOMLOG_FORMAT_KEY);
+    this.regex = settings.getConfig(REGEX_KEY);
+    this.fieldPathToGroup = settings.getConfig(REGEX_FIELD_PATH_TO_GROUP_KEY);
+    this.grokPatternDefinition = settings.getConfig(GROK_PATTERN_DEFINITION_KEY);
+    this.grokPattern = settings.getConfig(GROK_PATTERN_KEY);
     this.grokDictionaries = Collections.emptyList();
-    this.log4jCustomLogFormat = (String) configs.get(LOG4J_FORMAT_KEY);
-    this.onParseError = (OnParseError) configs.get(ON_PARSE_ERROR_KEY);
-    this.maxStackTraceLength = (Integer) configs.get(LOG4J_TRIM_STACK_TRACES_TO_LENGTH_KEY);
+    this.log4jCustomLogFormat = settings.getConfig(LOG4J_FORMAT_KEY);
+    this.onParseError = settings.getConfig(ON_PARSE_ERROR_KEY);
+    this.maxStackTraceLength = settings.getConfig(LOG4J_TRIM_STACK_TRACES_TO_LENGTH_KEY);
     this.regexToPatternMap = new HashMap<>();
   }
 

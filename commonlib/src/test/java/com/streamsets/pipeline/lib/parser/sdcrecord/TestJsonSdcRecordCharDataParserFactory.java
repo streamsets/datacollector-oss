@@ -11,9 +11,14 @@ import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.ext.ContextExtensions;
 import com.streamsets.pipeline.api.ext.JsonRecordWriter;
+import com.streamsets.pipeline.config.LogMode;
+import com.streamsets.pipeline.lib.data.DataFactory;
 import com.streamsets.pipeline.lib.io.OverrunReader;
 import com.streamsets.pipeline.lib.parser.CharDataParserFactory;
 import com.streamsets.pipeline.lib.parser.DataParser;
+import com.streamsets.pipeline.lib.parser.DataParserFactoryBuilder;
+import com.streamsets.pipeline.lib.parser.DataParserFormat;
+import com.streamsets.pipeline.lib.parser.log.LogCharDataParserFactory;
 import com.streamsets.pipeline.sdk.ContextInfoCreator;
 import com.streamsets.pipeline.sdk.RecordCreator;
 import org.junit.Assert;
@@ -46,8 +51,14 @@ public class TestJsonSdcRecordCharDataParserFactory {
 
   @Test
   public void testGetParserString() throws Exception {
-    Map<String, Object> configs = JsonSdcRecordCharDataParserFactory.registerConfigs(new HashMap<String, Object>());
-    CharDataParserFactory factory = new JsonSdcRecordCharDataParserFactory(getContext(), 1000, configs);
+    DataParserFactoryBuilder dataParserFactoryBuilder = new DataParserFactoryBuilder(getContext(),
+      DataParserFormat.SDC_RECORD);
+    DataFactory dataFactory = dataParserFactoryBuilder
+      .setMaxDataLen(1000)
+      .build();
+    Assert.assertTrue(dataFactory instanceof JsonSdcRecordCharDataParserFactory);
+    JsonSdcRecordCharDataParserFactory factory = (JsonSdcRecordCharDataParserFactory) dataFactory;
+
     DataParser parser = factory.getParser("id", createJsonSdcRecordsString());
     Assert.assertEquals(0, parser.getOffset());
     Record record = parser.parse();
@@ -59,8 +70,14 @@ public class TestJsonSdcRecordCharDataParserFactory {
 
   @Test
   public void testGetParserReader() throws Exception {
-    Map<String, Object> configs = JsonSdcRecordCharDataParserFactory.registerConfigs(new HashMap<String, Object>());
-    CharDataParserFactory factory = new JsonSdcRecordCharDataParserFactory(getContext(), 1000, configs);
+    DataParserFactoryBuilder dataParserFactoryBuilder = new DataParserFactoryBuilder(getContext(),
+      DataParserFormat.SDC_RECORD);
+    DataFactory dataFactory = dataParserFactoryBuilder
+      .setMaxDataLen(1000)
+      .build();
+    Assert.assertTrue(dataFactory instanceof JsonSdcRecordCharDataParserFactory);
+    JsonSdcRecordCharDataParserFactory factory = (JsonSdcRecordCharDataParserFactory) dataFactory;
+
     OverrunReader reader = new OverrunReader(new StringReader(createJsonSdcRecordsString()), 1000, true);
     DataParser parser = factory.getParser("id", reader, 0);
     Assert.assertEquals(0, parser.getOffset());
@@ -75,9 +92,14 @@ public class TestJsonSdcRecordCharDataParserFactory {
   public void testGetParserReaderWithOffset() throws Exception {
     String payload = createJsonSdcRecordsString();
 
-    // find out offset of second record first
-    Map<String, Object> configs = JsonSdcRecordCharDataParserFactory.registerConfigs(new HashMap<String, Object>());
-    CharDataParserFactory factory = new JsonSdcRecordCharDataParserFactory(getContext(), 1000, configs);
+    DataParserFactoryBuilder dataParserFactoryBuilder = new DataParserFactoryBuilder(getContext(),
+      DataParserFormat.SDC_RECORD);
+    DataFactory dataFactory = dataParserFactoryBuilder
+      .setMaxDataLen(1000)
+      .build();
+    Assert.assertTrue(dataFactory instanceof JsonSdcRecordCharDataParserFactory);
+    JsonSdcRecordCharDataParserFactory factory = (JsonSdcRecordCharDataParserFactory) dataFactory;
+
     OverrunReader reader = new OverrunReader(new StringReader(payload), 1000, true);
     DataParser parser = factory.getParser("id", reader, 0);
     Assert.assertEquals(0, parser.getOffset());
@@ -85,7 +107,12 @@ public class TestJsonSdcRecordCharDataParserFactory {
     long offset = parser.getOffset();
     parser.close();
 
-    factory = new JsonSdcRecordCharDataParserFactory(getContext(), 1000, configs);
+    dataFactory = dataParserFactoryBuilder
+      .setMaxDataLen(1000)
+      .build();
+    Assert.assertTrue(dataFactory instanceof JsonSdcRecordCharDataParserFactory);
+    factory = (JsonSdcRecordCharDataParserFactory) dataFactory;
+
     reader = new OverrunReader(new StringReader(payload), 1000, true);
     parser = factory.getParser("id", reader, offset);
     Assert.assertEquals(offset, parser.getOffset());

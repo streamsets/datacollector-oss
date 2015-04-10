@@ -9,10 +9,12 @@ import com.streamsets.pipeline.api.OnRecordError;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.config.LogMode;
+import com.streamsets.pipeline.lib.data.DataFactory;
 import com.streamsets.pipeline.lib.io.OverrunReader;
-import com.streamsets.pipeline.lib.parser.CharDataParserFactory;
 import com.streamsets.pipeline.lib.parser.DataParser;
 import com.streamsets.pipeline.lib.parser.DataParserException;
+import com.streamsets.pipeline.lib.parser.DataParserFactoryBuilder;
+import com.streamsets.pipeline.lib.parser.DataParserFormat;
 import com.streamsets.pipeline.sdk.ContextInfoCreator;
 import org.junit.Assert;
 import org.junit.Test;
@@ -31,9 +33,15 @@ public class TestLogCharDataParserFactory {
 
   @Test
   public void testGetParserStringWithRetainOriginalText() throws Exception {
-    Map<String, Object> configs = LogCharDataParserFactory.registerConfigs(new HashMap<String, Object>());
-    configs.put(LogCharDataParserFactory.RETAIN_ORIGINAL_TEXT_KEY, true);
-    CharDataParserFactory factory = new LogCharDataParserFactory(getContext(), 100, LogMode.COMMON_LOG_FORMAT, configs);
+    DataParserFactoryBuilder dataParserFactoryBuilder = new DataParserFactoryBuilder(getContext(), DataParserFormat.LOG);
+    DataFactory dataFactory = dataParserFactoryBuilder
+      .setMaxDataLen(100)
+      .setMode(LogMode.COMMON_LOG_FORMAT)
+      .setConfig(LogCharDataParserFactory.RETAIN_ORIGINAL_TEXT_KEY, true)
+      .build();
+    Assert.assertTrue(dataFactory instanceof LogCharDataParserFactory);
+    LogCharDataParserFactory factory = (LogCharDataParserFactory) dataFactory;
+
     DataParser parser = factory.getParser("id",
       "127.0.0.1 ss h [10/Oct/2000:13:55:36 -0700] \"GET /apache_pb.gif HTTP/1.0\" 200 2326");
 
@@ -74,9 +82,16 @@ public class TestLogCharDataParserFactory {
 
   @Test
   public void testGetParserStringWithOutRetainOriginalText() throws Exception {
-    Map<String, Object> configs = LogCharDataParserFactory.registerConfigs(new HashMap<String, Object>());
-    configs.put(LogCharDataParserFactory.RETAIN_ORIGINAL_TEXT_KEY, false);
-    CharDataParserFactory factory = new LogCharDataParserFactory(getContext(), 100, LogMode.COMMON_LOG_FORMAT, configs);
+    DataParserFactoryBuilder dataParserFactoryBuilder = new DataParserFactoryBuilder(getContext(), DataParserFormat.LOG);
+    DataFactory dataFactory = dataParserFactoryBuilder
+      .setMaxDataLen(100)
+      .setMode(LogMode.COMMON_LOG_FORMAT)
+      .setConfig(LogCharDataParserFactory.RETAIN_ORIGINAL_TEXT_KEY, false)
+      .build();
+    Assert.assertTrue(dataFactory instanceof LogCharDataParserFactory);
+    LogCharDataParserFactory factory = (LogCharDataParserFactory) dataFactory;
+
+
     DataParser parser = factory.getParser("id",
       "127.0.0.1 ss h [10/Oct/2000:13:55:36 -0700] \"GET /apache_pb.gif HTTP/1.0\" 200 2326");
 
@@ -118,9 +133,15 @@ public class TestLogCharDataParserFactory {
 
   @Test
   public void testGetParserReader() throws Exception {
-    Map<String, Object> configs = LogCharDataParserFactory.registerConfigs(new HashMap<String, Object>());
-    configs.put(LogCharDataParserFactory.RETAIN_ORIGINAL_TEXT_KEY, true);
-    CharDataParserFactory factory = new LogCharDataParserFactory(getContext(), 100, LogMode.COMMON_LOG_FORMAT, configs);
+    DataParserFactoryBuilder dataParserFactoryBuilder = new DataParserFactoryBuilder(getContext(), DataParserFormat.LOG);
+    DataFactory dataFactory = dataParserFactoryBuilder
+      .setMaxDataLen(100)
+      .setMode(LogMode.COMMON_LOG_FORMAT)
+      .setConfig(LogCharDataParserFactory.RETAIN_ORIGINAL_TEXT_KEY, true)
+      .build();
+    Assert.assertTrue(dataFactory instanceof LogCharDataParserFactory);
+    LogCharDataParserFactory factory = (LogCharDataParserFactory) dataFactory;
+
     OverrunReader reader = new OverrunReader(
       new StringReader("127.0.0.1 ss h [10/Oct/2000:13:55:36 -0700] \"GET /apache_pb.gif HTTP/1.0\" 200 2326"), 100,
       true);
@@ -164,10 +185,15 @@ public class TestLogCharDataParserFactory {
 
   @Test(expected = DataParserException.class)
   public void testGetParserReaderLogLineCutShort() throws Exception {
-    Map<String, Object> configs = LogCharDataParserFactory.registerConfigs(new HashMap<String, Object>());
-    configs.put(LogCharDataParserFactory.RETAIN_ORIGINAL_TEXT_KEY, true);
-    CharDataParserFactory factory = new LogCharDataParserFactory(getContext(),
-      25 /*Cut short the log line by setting smaller limit*/ , LogMode.COMMON_LOG_FORMAT, configs);
+    DataParserFactoryBuilder dataParserFactoryBuilder = new DataParserFactoryBuilder(getContext(), DataParserFormat.LOG);
+    DataFactory dataFactory = dataParserFactoryBuilder
+      .setMaxDataLen(25) //cut short the capacity of the reader
+      .setMode(LogMode.COMMON_LOG_FORMAT)
+      .setConfig(LogCharDataParserFactory.RETAIN_ORIGINAL_TEXT_KEY, true)
+      .build();
+    Assert.assertTrue(dataFactory instanceof LogCharDataParserFactory);
+    LogCharDataParserFactory factory = (LogCharDataParserFactory) dataFactory;
+
     OverrunReader reader = new OverrunReader(
       new StringReader("127.0.0.1 ss h [10/Oct/2000:13:55:36 -0700] \"GET /apache_pb.gif HTTP/1.0\" 200 2326"), 100,
       true);
@@ -183,9 +209,15 @@ public class TestLogCharDataParserFactory {
 
   @Test
   public void testGetParserReaderWithOffset() throws Exception {
-    Map<String, Object> configs = LogCharDataParserFactory.registerConfigs(new HashMap<String, Object>());
-    configs.put(LogCharDataParserFactory.RETAIN_ORIGINAL_TEXT_KEY, false);
-    CharDataParserFactory factory = new LogCharDataParserFactory(getContext(), 150, LogMode.COMMON_LOG_FORMAT, configs);
+    DataParserFactoryBuilder dataParserFactoryBuilder = new DataParserFactoryBuilder(getContext(), DataParserFormat.LOG);
+    DataFactory dataFactory = dataParserFactoryBuilder
+      .setMaxDataLen(150)
+      .setMode(LogMode.COMMON_LOG_FORMAT)
+      .setConfig(LogCharDataParserFactory.RETAIN_ORIGINAL_TEXT_KEY, false)
+      .build();
+    Assert.assertTrue(dataFactory instanceof LogCharDataParserFactory);
+    LogCharDataParserFactory factory = (LogCharDataParserFactory) dataFactory;
+
     OverrunReader reader = new OverrunReader(new StringReader(
       "Hello\n127.0.0.1 ss h [10/Oct/2000:13:55:36 -0700] \"GET /apache_pb.gif HTTP/1.0\" 200 2326"), 1000, true);
 
@@ -231,13 +263,18 @@ public class TestLogCharDataParserFactory {
 
   @Test
   public void testFactoryCombinedLogFormatParser() throws DataParserException, IOException {
-    Map<String, Object> configs = LogCharDataParserFactory.registerConfigs(new HashMap<String, Object>());
-    configs.put(LogCharDataParserFactory.RETAIN_ORIGINAL_TEXT_KEY, true);
-    CharDataParserFactory factory = new LogCharDataParserFactory(getContext(), 1000, LogMode.COMBINED_LOG_FORMAT,
-      configs);
+    DataParserFactoryBuilder dataParserFactoryBuilder = new DataParserFactoryBuilder(getContext(), DataParserFormat.LOG);
+    DataFactory dataFactory = dataParserFactoryBuilder
+      .setMaxDataLen(1000)
+      .setMode(LogMode.COMBINED_LOG_FORMAT)
+      .setConfig(LogCharDataParserFactory.RETAIN_ORIGINAL_TEXT_KEY, true)
+      .build();
+    Assert.assertTrue(dataFactory instanceof LogCharDataParserFactory);
+    LogCharDataParserFactory factory = (LogCharDataParserFactory) dataFactory;
+
     DataParser parser = factory.getParser("id",
       "127.0.0.1 ss h [10/Oct/2000:13:55:36 -0700] \"GET /apache_pb.gif HTTP/1.0\" 200 2326 " +
-        "\"http://www.example.com/start.html\" \"Mozilla/4.08 [en] (Win98; I ;Nav)\"");
+        "\"http:www.example.com/start.html\" \"Mozilla/4.08 [en] (Win98; I ;Nav)\"");
 
     Assert.assertEquals(0, parser.getOffset());
     Record record = parser.parse();
@@ -246,12 +283,12 @@ public class TestLogCharDataParserFactory {
     Assert.assertEquals("id::0", record.getHeader().getSourceId());
 
     Assert.assertEquals("127.0.0.1 ss h [10/Oct/2000:13:55:36 -0700] \"GET /apache_pb.gif HTTP/1.0\" 200 2326 " +
-        "\"http://www.example.com/start.html\" \"Mozilla/4.08 [en] (Win98; I ;Nav)\"",
+        "\"http:www.example.com/start.html\" \"Mozilla/4.08 [en] (Win98; I ;Nav)\"",
       record.get().getValueAsMap().get("originalLine").getValueAsString());
 
     Assert.assertFalse(record.has("/truncated"));
 
-    Assert.assertEquals(154, parser.getOffset());
+    Assert.assertEquals(152, parser.getOffset());
 
     Assert.assertTrue(record.has("/" + Constants.CLIENTIP));
     Assert.assertEquals("127.0.0.1", record.get("/" + Constants.CLIENTIP).getValueAsString());
@@ -282,7 +319,7 @@ public class TestLogCharDataParserFactory {
 
 
     Assert.assertTrue(record.has("/" + Constants.REFERRER));
-    Assert.assertEquals("\"http://www.example.com/start.html\"", record.get("/" + Constants.REFERRER).getValueAsString());
+    Assert.assertEquals("\"http:www.example.com/start.html\"", record.get("/" + Constants.REFERRER).getValueAsString());
 
     Assert.assertTrue(record.has("/" + Constants.AGENT));
     Assert.assertEquals("\"Mozilla/4.08 [en] (Win98; I ;Nav)\"", record.get("/" + Constants.AGENT).getValueAsString());
@@ -292,10 +329,15 @@ public class TestLogCharDataParserFactory {
 
   @Test
   public void testFactoryApacheErrorLogFormatParser() throws DataParserException, IOException {
-    Map<String, Object> configs = LogCharDataParserFactory.registerConfigs(new HashMap<String, Object>());
-    configs.put(LogCharDataParserFactory.RETAIN_ORIGINAL_TEXT_KEY, true);
-    CharDataParserFactory factory = new LogCharDataParserFactory(getContext(), 1000, LogMode.APACHE_ERROR_LOG_FORMAT,
-      configs);
+    DataParserFactoryBuilder dataParserFactoryBuilder = new DataParserFactoryBuilder(getContext(), DataParserFormat.LOG);
+    DataFactory dataFactory = dataParserFactoryBuilder
+      .setMaxDataLen(1000)
+      .setMode(LogMode.APACHE_ERROR_LOG_FORMAT)
+      .setConfig(LogCharDataParserFactory.RETAIN_ORIGINAL_TEXT_KEY, true)
+      .build();
+    Assert.assertTrue(dataFactory instanceof LogCharDataParserFactory);
+    LogCharDataParserFactory factory = (LogCharDataParserFactory) dataFactory;
+
     DataParser parser = factory.getParser("id",
       "[Wed Oct 11 14:32:52 2000] [error] [client 127.0.0.1] client denied " +
         "by server configuration: /export/home/live/ap/htdocs/test");
@@ -334,14 +376,19 @@ public class TestLogCharDataParserFactory {
   public void testFactoryApacheCustomFormatParser() throws DataParserException, IOException {
 
     String logLine = "127.0.0.1 ss h [10/Oct/2000:13:55:36 -0700] \"GET /apache_pb.gif HTTP/1.0\" 200 2326 " +
-      "\"http://www.example.com/start.html\" \"Mozilla/4.08 [en] (Win98; I ;Nav)\"";
+      "\"http:www.example.com/start.html\" \"Mozilla/4.08 [en] (Win98; I ;Nav)\"";
 
-    Map<String, Object> configs = LogCharDataParserFactory.registerConfigs(new HashMap<String, Object>());
-    configs.put(LogCharDataParserFactory.RETAIN_ORIGINAL_TEXT_KEY, true);
-    configs.put(LogCharDataParserFactory.APACHE_CUSTOMLOG_FORMAT_KEY,
-      "%h %l %u [%t] \"%m %U %H\" %>s %b \"%{Referer}i\" \"%{User-agent}i\"");
-    CharDataParserFactory factory = new LogCharDataParserFactory(getContext(), 1000, LogMode.APACHE_CUSTOM_LOG_FORMAT,
-      configs);
+    DataParserFactoryBuilder dataParserFactoryBuilder = new DataParserFactoryBuilder(getContext(), DataParserFormat.LOG);
+    DataFactory dataFactory = dataParserFactoryBuilder
+      .setMaxDataLen(1000)
+      .setMode(LogMode.APACHE_CUSTOM_LOG_FORMAT)
+      .setConfig(LogCharDataParserFactory.RETAIN_ORIGINAL_TEXT_KEY, true)
+      .setConfig(LogCharDataParserFactory.APACHE_CUSTOMLOG_FORMAT_KEY,
+        "%h %l %u [%t] \"%m %U %H\" %>s %b \"%{Referer}i\" \"%{User-agent}i\"")
+      .build();
+    Assert.assertTrue(dataFactory instanceof LogCharDataParserFactory);
+    LogCharDataParserFactory factory = (LogCharDataParserFactory) dataFactory;
+
     DataParser parser = factory.getParser("id", logLine);
 
     Assert.assertEquals(0, parser.getOffset());
@@ -354,7 +401,7 @@ public class TestLogCharDataParserFactory {
 
     Assert.assertFalse(record.has("/truncated"));
 
-    Assert.assertEquals(154, parser.getOffset());
+    Assert.assertEquals(152, parser.getOffset());
 
     Assert.assertTrue(record.has("/remoteHost"));
     Assert.assertEquals("127.0.0.1", record.get("/remoteHost").getValueAsString());
@@ -384,7 +431,7 @@ public class TestLogCharDataParserFactory {
     Assert.assertEquals("2326", record.get("/bytesSent").getValueAsString());
 
     Assert.assertTrue(record.has("/referer"));
-    Assert.assertEquals("http://www.example.com/start.html", record.get("/referer").getValueAsString());
+    Assert.assertEquals("http:www.example.com/start.html", record.get("/referer").getValueAsString());
 
     Assert.assertTrue(record.has("/userAgent"));
     Assert.assertEquals("Mozilla/4.08 [en] (Win98; I ;Nav)", record.get("/userAgent").getValueAsString());
@@ -409,16 +456,20 @@ public class TestLogCharDataParserFactory {
     fieldToGroupMap.put("status", 6);
     fieldToGroupMap.put("bytesSent", 7);
 
-    Map<String, Object> configs = LogCharDataParserFactory.registerConfigs(new HashMap<String, Object>());
-    configs.put(LogCharDataParserFactory.RETAIN_ORIGINAL_TEXT_KEY, true);
-    configs.put(LogCharDataParserFactory.REGEX_KEY, regex);
-    configs.put(LogCharDataParserFactory.REGEX_FIELD_PATH_TO_GROUP_KEY, fieldToGroupMap);
+    DataParserFactoryBuilder dataParserFactoryBuilder = new DataParserFactoryBuilder(getContext(), DataParserFormat.LOG);
+    DataFactory dataFactory = dataParserFactoryBuilder
+      .setMaxDataLen(1000)
+      .setMode(LogMode.REGEX)
+      .setConfig(LogCharDataParserFactory.RETAIN_ORIGINAL_TEXT_KEY, true)
+      .setConfig(LogCharDataParserFactory.REGEX_KEY, regex)
+      .setConfig(LogCharDataParserFactory.REGEX_FIELD_PATH_TO_GROUP_KEY, fieldToGroupMap)
+      .build();
+    Assert.assertTrue(dataFactory instanceof LogCharDataParserFactory);
+    LogCharDataParserFactory factory = (LogCharDataParserFactory) dataFactory;
 
-    CharDataParserFactory factory = new LogCharDataParserFactory(getContext(), 1000, LogMode.REGEX,
-      configs);
     DataParser parser = factory.getParser("id", logLine);
 
-    //should get an instance of CommonLogFormatParser
+
     Assert.assertTrue(parser instanceof RegexParser);
 
     Assert.assertEquals(0, parser.getOffset());

@@ -25,6 +25,7 @@ import com.streamsets.pipeline.lib.KafkaUtil;
 import com.streamsets.pipeline.lib.parser.CharDataParserFactory;
 import com.streamsets.pipeline.lib.parser.DataParser;
 import com.streamsets.pipeline.lib.parser.DataParserException;
+import com.streamsets.pipeline.lib.parser.DataParserFactoryBuilder;
 import com.streamsets.pipeline.lib.parser.log.LogDataFormatValidator;
 import com.streamsets.pipeline.lib.parser.log.RegExConfig;
 import com.streamsets.pipeline.lib.parser.xml.XmlCharDataParserFactory;
@@ -203,8 +204,8 @@ public class KafkaSource extends BaseSource implements OffsetCommitter {
   }
 
   private void validateParserFactoryConfigs(List<ConfigIssue> issues) {
-    CharDataParserFactory.Builder builder =
-        new CharDataParserFactory.Builder(getContext(), dataFormat.getParserFormat());
+    DataParserFactoryBuilder builder = new DataParserFactoryBuilder(getContext(), dataFormat.getParserFormat())
+        .setCharset(Charset.defaultCharset());
 
     try {
       messageCharset = Charset.forName(charset);
@@ -213,7 +214,8 @@ public class KafkaSource extends BaseSource implements OffsetCommitter {
       messageCharset = Charset.forName("UTF-8");
       issues.add(getContext().createConfigIssue(Groups.KAFKA.name(), "charset", Errors.KAFKA_08, charset));
     }
-
+    builder.setCharset(messageCharset);
+    
     switch ((dataFormat)) {
       case TEXT:
         builder.setMaxDataLen(textMaxLineLen);

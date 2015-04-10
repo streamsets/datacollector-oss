@@ -8,10 +8,16 @@ package com.streamsets.pipeline.lib.parser.json;
 import com.streamsets.pipeline.api.OnRecordError;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.Stage;
+import com.streamsets.pipeline.config.JsonMode;
+import com.streamsets.pipeline.lib.data.DataFactory;
+import com.streamsets.pipeline.lib.data.DataFactoryBuilder;
 import com.streamsets.pipeline.lib.io.OverrunReader;
 import com.streamsets.pipeline.lib.json.StreamingJsonParser;
 import com.streamsets.pipeline.lib.parser.CharDataParserFactory;
 import com.streamsets.pipeline.lib.parser.DataParser;
+import com.streamsets.pipeline.lib.parser.DataParserFactoryBuilder;
+import com.streamsets.pipeline.lib.parser.DataParserFormat;
+import com.streamsets.pipeline.lib.parser.delimited.DelimitedCharDataParserFactory;
 import com.streamsets.pipeline.lib.parser.text.TextCharDataParserFactory;
 import com.streamsets.pipeline.sdk.ContextInfoCreator;
 import org.junit.Assert;
@@ -30,9 +36,14 @@ public class TestJsonCharDataParserFactory {
 
   @Test
   public void testGetParserString() throws Exception {
-    Map<String, Object> configs = JsonCharDataParserFactory.registerConfigs(new HashMap<String, Object>());
-    CharDataParserFactory factory = new JsonCharDataParserFactory(getContext(), 10,
-                                                                  StreamingJsonParser.Mode.MULTIPLE_OBJECTS, configs);
+    DataParserFactoryBuilder dataParserFactoryBuilder = new DataParserFactoryBuilder(getContext(), DataParserFormat.JSON);
+    DataFactory dataFactory = dataParserFactoryBuilder
+      .setMaxDataLen(1000)
+      .setMode(JsonMode.MULTIPLE_OBJECTS)
+      .build();
+    Assert.assertTrue(dataFactory instanceof JsonCharDataParserFactory);
+    JsonCharDataParserFactory factory = (JsonCharDataParserFactory) dataFactory;
+
     DataParser parser = factory.getParser("id", "[\"Hello\"]\n");
     Assert.assertEquals(0, parser.getOffset());
     Record record = parser.parse();
@@ -43,9 +54,14 @@ public class TestJsonCharDataParserFactory {
 
   @Test
   public void testGetParserReader() throws Exception {
-    Map<String, Object> configs = JsonCharDataParserFactory.registerConfigs(new HashMap<String, Object>());
-    CharDataParserFactory factory = new JsonCharDataParserFactory(getContext(), 10,
-                                                                  StreamingJsonParser.Mode.MULTIPLE_OBJECTS, configs);
+    DataParserFactoryBuilder dataParserFactoryBuilder = new DataParserFactoryBuilder(getContext(), DataParserFormat.JSON);
+    DataFactory dataFactory = dataParserFactoryBuilder
+      .setMaxDataLen(1000)
+      .setMode(JsonMode.MULTIPLE_OBJECTS)
+      .build();
+    Assert.assertTrue(dataFactory instanceof JsonCharDataParserFactory);
+    JsonCharDataParserFactory factory = (JsonCharDataParserFactory) dataFactory;
+
     OverrunReader reader = new OverrunReader(new StringReader("[\"Hello\"]\n"), 1000, true);
     DataParser parser = factory.getParser("id", reader, 0);
     Assert.assertEquals(0, parser.getOffset());
@@ -57,9 +73,14 @@ public class TestJsonCharDataParserFactory {
 
   @Test
   public void testGetParserReaderWithOffset() throws Exception {
-    Map<String, Object> configs = JsonCharDataParserFactory.registerConfigs(new HashMap<String, Object>());
-    CharDataParserFactory factory = new JsonCharDataParserFactory(getContext(), 10,
-                                                                  StreamingJsonParser.Mode.ARRAY_OBJECTS, configs);
+    DataParserFactoryBuilder dataParserFactoryBuilder = new DataParserFactoryBuilder(getContext(), DataParserFormat.JSON);
+    DataFactory dataFactory = dataParserFactoryBuilder
+      .setMaxDataLen(1000)
+      .setMode(JsonMode.ARRAY_OBJECTS)
+      .build();
+    Assert.assertTrue(dataFactory instanceof JsonCharDataParserFactory);
+    JsonCharDataParserFactory factory = (JsonCharDataParserFactory) dataFactory;
+
     OverrunReader reader = new OverrunReader(new StringReader("[[\"Hello\"],[\"Bye\"]]\n"), 1000, true);
     DataParser parser = factory.getParser("id", reader, 10);
     Assert.assertEquals(10, parser.getOffset());

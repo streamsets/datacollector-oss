@@ -9,10 +9,12 @@ import com.streamsets.pipeline.api.OnRecordError;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.config.LogMode;
+import com.streamsets.pipeline.lib.data.DataFactory;
 import com.streamsets.pipeline.lib.io.OverrunReader;
-import com.streamsets.pipeline.lib.parser.CharDataParserFactory;
 import com.streamsets.pipeline.lib.parser.DataParser;
 import com.streamsets.pipeline.lib.parser.DataParserException;
+import com.streamsets.pipeline.lib.parser.DataParserFactoryBuilder;
+import com.streamsets.pipeline.lib.parser.DataParserFormat;
 import com.streamsets.pipeline.sdk.ContextInfoCreator;
 import org.junit.Assert;
 import org.junit.Test;
@@ -20,8 +22,6 @@ import org.junit.Test;
 import java.io.IOException;
 import java.io.StringReader;
 import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
 
 public class TestGrokParser {
 
@@ -125,13 +125,18 @@ public class TestGrokParser {
 
   private DataParser getDataParser(String logLine, int maxObjectLength, int readerOffset) throws DataParserException {
     OverrunReader reader = new OverrunReader(new StringReader(logLine), 1000, true);
-    Map<String, Object> configs = LogCharDataParserFactory.registerConfigs(new HashMap<String, Object>());
-    configs.put(LogCharDataParserFactory.RETAIN_ORIGINAL_TEXT_KEY, true);
-    configs.put(LogCharDataParserFactory.GROK_PATTERN_KEY, REGEX);
-    configs.put(LogCharDataParserFactory.GROK_PATTERN_DEFINITION_KEY, REGEX_DEFINITION);
-    CharDataParserFactory factory = new LogCharDataParserFactory(getContext(), maxObjectLength,
-      LogMode.GROK,
-      configs);
+
+    DataParserFactoryBuilder dataParserFactoryBuilder = new DataParserFactoryBuilder(getContext(), DataParserFormat.LOG);
+    DataFactory dataFactory = dataParserFactoryBuilder
+      .setMaxDataLen(maxObjectLength)
+      .setMode(LogMode.GROK)
+      .setConfig(LogCharDataParserFactory.RETAIN_ORIGINAL_TEXT_KEY, true)
+      .setConfig(LogCharDataParserFactory.GROK_PATTERN_KEY, REGEX)
+      .setConfig(LogCharDataParserFactory.GROK_PATTERN_DEFINITION_KEY, REGEX_DEFINITION)
+      .build();
+    Assert.assertTrue(dataFactory instanceof LogCharDataParserFactory);
+    LogCharDataParserFactory factory = (LogCharDataParserFactory) dataFactory;
+
     return factory.getParser("id", reader, readerOffset);
   }
 }

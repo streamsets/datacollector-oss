@@ -8,9 +8,14 @@ package com.streamsets.pipeline.lib.parser.text;
 import com.streamsets.pipeline.api.OnRecordError;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.Stage;
+import com.streamsets.pipeline.config.JsonMode;
+import com.streamsets.pipeline.lib.data.DataFactory;
 import com.streamsets.pipeline.lib.io.OverrunReader;
 import com.streamsets.pipeline.lib.parser.CharDataParserFactory;
 import com.streamsets.pipeline.lib.parser.DataParser;
+import com.streamsets.pipeline.lib.parser.DataParserFactoryBuilder;
+import com.streamsets.pipeline.lib.parser.DataParserFormat;
+import com.streamsets.pipeline.lib.parser.json.JsonCharDataParserFactory;
 import com.streamsets.pipeline.sdk.ContextInfoCreator;
 import org.apache.commons.io.IOUtils;
 import org.junit.Assert;
@@ -34,8 +39,14 @@ public class TestTextCharDataParserFactory {
 
   @Test
   public void testGetParserString() throws Exception {
-    Map<String, Object> configs = TextCharDataParserFactory.registerConfigs(new HashMap<String, Object>());
-    CharDataParserFactory factory = new TextCharDataParserFactory(getContext(), 3, configs);
+
+    DataParserFactoryBuilder dataParserFactoryBuilder = new DataParserFactoryBuilder(getContext(), DataParserFormat.TEXT);
+    DataFactory dataFactory = dataParserFactoryBuilder
+      .setMaxDataLen(3)
+      .build();
+    Assert.assertTrue(dataFactory instanceof TextCharDataParserFactory);
+    TextCharDataParserFactory factory = (TextCharDataParserFactory) dataFactory;
+
     DataParser parser = factory.getParser("id", "Hello\n");
     Assert.assertEquals(0, parser.getOffset());
     Record record = parser.parse();
@@ -47,8 +58,12 @@ public class TestTextCharDataParserFactory {
 
   @Test
   public void testGetParserReader() throws Exception {
-    Map<String, Object> configs = TextCharDataParserFactory.registerConfigs(new HashMap<String, Object>());
-    CharDataParserFactory factory = new TextCharDataParserFactory(getContext(), 3, configs);
+    DataParserFactoryBuilder dataParserFactoryBuilder = new DataParserFactoryBuilder(getContext(), DataParserFormat.TEXT);
+    DataFactory dataFactory = dataParserFactoryBuilder
+      .setMaxDataLen(3)
+      .build();
+    Assert.assertTrue(dataFactory instanceof TextCharDataParserFactory);
+    TextCharDataParserFactory factory = (TextCharDataParserFactory) dataFactory;
     OverrunReader reader = new OverrunReader(new StringReader("Hello\nBye"), 1000, true);
     DataParser parser = factory.getParser("id", reader, 0);
     Assert.assertEquals(0, parser.getOffset());
@@ -61,8 +76,12 @@ public class TestTextCharDataParserFactory {
 
   @Test
   public void testGetParserReaderWithOffset() throws Exception {
-    Map<String, Object> configs = TextCharDataParserFactory.registerConfigs(new HashMap<String, Object>());
-    CharDataParserFactory factory = new TextCharDataParserFactory(getContext(), 3, configs);
+    DataParserFactoryBuilder dataParserFactoryBuilder = new DataParserFactoryBuilder(getContext(), DataParserFormat.TEXT);
+    DataFactory dataFactory = dataParserFactoryBuilder
+      .setMaxDataLen(1000)
+      .build();
+    Assert.assertTrue(dataFactory instanceof TextCharDataParserFactory);
+    TextCharDataParserFactory factory = (TextCharDataParserFactory) dataFactory;
     OverrunReader reader = new OverrunReader(new StringReader("Hello\nBye"), 1000, true);
     DataParser parser = factory.getParser("id", reader, 6);
     Assert.assertEquals(6, parser.getOffset());

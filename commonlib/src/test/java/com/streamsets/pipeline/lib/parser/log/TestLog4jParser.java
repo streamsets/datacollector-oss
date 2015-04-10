@@ -10,10 +10,12 @@ import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.config.LogMode;
 import com.streamsets.pipeline.config.OnParseError;
+import com.streamsets.pipeline.lib.data.DataFactory;
 import com.streamsets.pipeline.lib.io.OverrunReader;
-import com.streamsets.pipeline.lib.parser.CharDataParserFactory;
 import com.streamsets.pipeline.lib.parser.DataParser;
 import com.streamsets.pipeline.lib.parser.DataParserException;
+import com.streamsets.pipeline.lib.parser.DataParserFactoryBuilder;
+import com.streamsets.pipeline.lib.parser.DataParserFormat;
 import com.streamsets.pipeline.sdk.ContextInfoCreator;
 import org.junit.Assert;
 import org.junit.Test;
@@ -21,8 +23,6 @@ import org.junit.Test;
 import java.io.IOException;
 import java.io.StringReader;
 import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
 
 public class TestLog4jParser {
 
@@ -209,12 +209,19 @@ public class TestLog4jParser {
   @Test
   public void testParseLogLineWithStackTrace() throws Exception {
     OverrunReader reader = new OverrunReader(new StringReader(LOG_LINE_WITH_STACK_TRACE), 10000, true);
-    Map<String, Object> configs = LogCharDataParserFactory.registerConfigs(new HashMap<String, Object>());
-    configs.put(LogCharDataParserFactory.RETAIN_ORIGINAL_TEXT_KEY, true);
-    configs.put(LogCharDataParserFactory.LOG4J_FORMAT_KEY, "%d{ISO8601} %-5p %c{1} - %m");
-    configs.put(LogCharDataParserFactory.ON_PARSE_ERROR_KEY, OnParseError.INCLUDE_AS_STACK_TRACE);
-    configs.put(LogCharDataParserFactory.LOG4J_TRIM_STACK_TRACES_TO_LENGTH_KEY, 100);
-    CharDataParserFactory factory = new LogCharDataParserFactory(getContext(), 10000, LogMode.LOG4J, configs);
+
+    DataParserFactoryBuilder dataParserFactoryBuilder = new DataParserFactoryBuilder(getContext(), DataParserFormat.LOG);
+    DataFactory dataFactory = dataParserFactoryBuilder
+      .setMaxDataLen(10000)
+      .setMode(LogMode.LOG4J)
+      .setConfig(LogCharDataParserFactory.RETAIN_ORIGINAL_TEXT_KEY, true)
+      .setConfig(LogCharDataParserFactory.LOG4J_FORMAT_KEY, "%d{ISO8601} %-5p %c{1} - %m")
+      .setConfig(LogCharDataParserFactory.ON_PARSE_ERROR_KEY, OnParseError.INCLUDE_AS_STACK_TRACE)
+      .setConfig(LogCharDataParserFactory.LOG4J_TRIM_STACK_TRACES_TO_LENGTH_KEY, 100)
+      .build();
+    Assert.assertTrue(dataFactory instanceof LogCharDataParserFactory);
+    LogCharDataParserFactory factory = (LogCharDataParserFactory) dataFactory;
+
     DataParser parser = factory.getParser("id", reader, 0);
     Assert.assertEquals(0, parser.getOffset());
     Record record = parser.parse();
@@ -225,8 +232,6 @@ public class TestLog4jParser {
     Assert.assertEquals(LOG_LINE_WITH_STACK_TRACE, record.get().getValueAsMap().get("originalLine").getValueAsString());
 
     Assert.assertFalse(record.has("/truncated"));
-
-    //offset is -1 as the parser attempted a read ahead and met the end
     Assert.assertEquals(-1, parser.getOffset());
 
     Assert.assertTrue(record.has("/" + Constants.TIMESTAMP));
@@ -246,12 +251,17 @@ public class TestLog4jParser {
 
   private DataParser getDataParser(String logLine, int maxObjectLength, int readerOffset) throws DataParserException {
     OverrunReader reader = new OverrunReader(new StringReader(logLine), 1000, true);
-    Map<String, Object> configs = LogCharDataParserFactory.registerConfigs(new HashMap<String, Object>());
-    configs.put(LogCharDataParserFactory.RETAIN_ORIGINAL_TEXT_KEY, true);
-    configs.put(LogCharDataParserFactory.LOG4J_FORMAT_KEY, "%d{ISO8601} %-5p %c{1} - %m");
-    CharDataParserFactory factory = new LogCharDataParserFactory(getContext(), maxObjectLength,
-      LogMode.LOG4J,
-      configs);
+
+    DataParserFactoryBuilder dataParserFactoryBuilder = new DataParserFactoryBuilder(getContext(), DataParserFormat.LOG);
+    DataFactory dataFactory = dataParserFactoryBuilder
+      .setMaxDataLen(maxObjectLength)
+      .setMode(LogMode.LOG4J)
+      .setConfig(LogCharDataParserFactory.RETAIN_ORIGINAL_TEXT_KEY, true)
+      .setConfig(LogCharDataParserFactory.LOG4J_FORMAT_KEY, "%d{ISO8601} %-5p %c{1} - %m")
+      .build();
+    Assert.assertTrue(dataFactory instanceof LogCharDataParserFactory);
+    LogCharDataParserFactory factory = (LogCharDataParserFactory) dataFactory;
+
     return factory.getParser("id", reader, readerOffset);
   }
 }
