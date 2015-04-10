@@ -5,14 +5,9 @@
  */
 package com.streamsets.pipeline.stage.processor.javascript;
 
-import com.streamsets.pipeline.api.Field;
-import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.stage.processor.scripting.ProcessingMode;
 import com.streamsets.pipeline.stage.processor.scripting.AbstractScriptingProcessor;
 import com.streamsets.pipeline.stage.processor.scripting.ScriptObjectFactory;
-
-import java.util.List;
-import java.util.Map;
 
 public class JavaScriptProcessor extends AbstractScriptingProcessor {
 
@@ -22,18 +17,8 @@ public class JavaScriptProcessor extends AbstractScriptingProcessor {
     super(JAVASCRIPT_ENGINE, Groups.JAVASCRIPT.name(), "script", processingMode, script);
   }
 
-  protected ScriptObjectFactory getScriptObjectFactory() {
+  protected ScriptObjectFactory createScriptObjectFactory() {
     return ScriptObjectFactoryFactory.getScriptObjectFactory(engine);
-  }
-
-  @Override
-  protected Object createScriptType() {
-    ScriptObjectFactory sof = getScriptObjectFactory();
-    Object scriptMap = sof.createMap();
-    for (Field.Type type : Field.Type.values()) {
-      sof.putInMap(scriptMap, type.name(), type);
-    }
-    return scriptMap;
   }
 
 }

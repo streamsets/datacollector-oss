@@ -39,54 +39,43 @@ public class JythonDProcessor extends DProcessor {
   public ProcessingMode processingMode;
 
   private static final String DEFAULT_SCRIPT =
-      "#\n" +
-      "# Sample Jython code\n" +
-      "#\n" +
-      "# Available Objects:\n" +
-      "# \n" +
-      "#  Type: A Dictionary defining the supported data types, \n" +
-      "#        it mirrors Field.Type\n" +
-      "#\n" +
-      "#  records: and array the records to process, depending on \n" +
-      "#           the processing mode it may have 1 record or all\n" +
-      "#           the records in the batch.\n" +
-      "#\n" +
-      "#  out.write(record): writes a record to processor output\n" +
-      "#\n" +
-      "#  err.write(record, message): sends a record to error\n" +
-      "#\n" +
-      "\n" +
-      "for record in records:\n" +
-      "  \n" +
-      "  #Change record root field value to a STRING value\n" +
-      "  #record['type'] = Type.STRING\n" +
-      "  #record['value'] = 'Hello '\n" +
-      "\n" +
-      "\n" +
-      "  #Change record root field value to a MAP value and create an entry\n" +
-      "  #record['type'] = Type.MAP\n" +
-      "  #record['value'] = { 'V' : { 'type' : Type.STRING, 'value' : 'Hello'}}\n" +
-      "\n" +
-      "  #Modify a MAP entry\n" +
-      "  #record['value']['V']['type'] = Type.INTEGER\n" +
-      "  #record['value']['V']['value'] = 5\n" +
-      "\n" +
-      "  #Create an ARRAY entry\n" +
-      "  #record['value']['A'] = { 'type' : Type.LIST, 'value' : [\n" +
-      "  #  { 'type' : Type.STRING, 'value' : 'Element 1'},\n" +
-      "  #  { 'type' : Type.STRING, 'value' : 'Element 2'} \n" +
-      "  #  ] }\n" +
-      "\n" +
-      "  #Modify an existing ARRAY entry\n" +
-      "  #record['value']['A']['value'][0]['type'] = Type.INTEGER\n" +
-      "  #record['value']['A']['value'][0]['value'] = 100\n" +
-      "\n" +
-      "  #Write record to procesor output\n" +
-      "  out.write(record)\n" +
-      "\n" +
-      "  #Send record to error\n" +
-      "  #err.write(record, 'Error Message')\n" +
-      "  \n";
+    "#\n" +
+    "# Sample Jython code\n" +
+    "#\n" +
+    "# Available Objects:\n" +
+    "# \n" +
+    "#  records: an array of records to process, depending on Jython processor\n" +
+    "#           processing mode it may have 1 record or allthe records in the batch.\n" +
+    "#\n" +
+    "#  out.write(record): writes a record to processor output\n" +
+    "#\n" +
+    "#  err.write(record, message): sends a record to error\n" +
+    "#\n" +
+    "\n" +
+    "for record in records:\n" +
+    "  \n" +
+    "  #Change record root field value to a STRING value\n" +
+    "  #record.value = 'Hello '\n" +
+    "\n" +
+    "\n" +
+    "  #Change record root field value to a MAP value and create an entry\n" +
+    "  #record.value = { 'V' : 'Hello'}\n" +
+    "\n" +
+    "  #Modify a MAP entry\n" +
+    "  #record.value['V'] = 5\n" +
+    "\n" +
+    "  #Create an ARRAY entry\n" +
+    "  #record.value['A'] = [ 'Element 1', 'Element 2' ]\n" +
+    "\n" +
+    "  #Modify an existing ARRAY entry\n" +
+    "  #record.value['A'][0] = 100\n" +
+    "\n" +
+    "  #Write record to procesor output\n" +
+    "  out.write(record)\n" +
+    "\n" +
+    "  #Send record to error\n" +
+    "  #err.write(record, 'Error Message')\n" +
+    "  \ng";
 
   @ConfigDef(
       required = true,

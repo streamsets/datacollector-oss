@@ -6,7 +6,6 @@
 package com.streamsets.pipeline.stage.processor.jython;
 
 import com.streamsets.pipeline.api.Field;
-import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.stage.processor.scripting.ProcessingMode;
 import com.streamsets.pipeline.stage.processor.scripting.AbstractScriptingProcessor;
 import com.streamsets.pipeline.stage.processor.scripting.ScriptObjectFactory;
@@ -14,9 +13,10 @@ import org.python.core.PyDictionary;
 import org.python.core.PyList;
 
 import javax.script.ScriptEngine;
-import javax.script.SimpleBindings;
+import java.math.BigDecimal;
+import java.math.BigInteger;
+import java.util.Date;
 import java.util.List;
-import java.util.Map;
 
 public class JythonProcessor extends AbstractScriptingProcessor {
 
@@ -27,7 +27,7 @@ public class JythonProcessor extends AbstractScriptingProcessor {
   }
 
   @Override
-  protected ScriptObjectFactory getScriptObjectFactory() {
+  protected ScriptObjectFactory createScriptObjectFactory() {
     return new JythonScriptObjectFactory(engine);
   }
 
@@ -57,13 +57,39 @@ public class JythonProcessor extends AbstractScriptingProcessor {
     }
 
     @Override
-    protected Record getRecordInternal(Object scriptRecord) {
-      return (Record) ((PyDictionary) scriptRecord).get("_record");
-    }
-
-    @Override
-    protected void setRecordInternal(Object scriptRecord, Record record) {
-      putInMap(scriptRecord, "_record", record);
+    protected Field convertPrimitiveObject(Object scriptObject) {
+      Field field;
+      if (scriptObject instanceof Boolean) {
+        field = Field.create((Boolean) scriptObject);
+      } else if (scriptObject instanceof Character) {
+        field = Field.create((Character) scriptObject);
+      } else if (scriptObject instanceof Byte) {
+        field = Field.create((Byte) scriptObject);
+      } else if (scriptObject instanceof Short) {
+        field = Field.create((Short) scriptObject);
+      } else if (scriptObject instanceof Integer) {
+        field = Field.create((Integer) scriptObject);
+      } else if (scriptObject instanceof Long) {
+        field = Field.create((Long) scriptObject);
+      } else if (scriptObject instanceof BigInteger) { // special handling for Jython LONG type
+        field = Field.create(((BigInteger) scriptObject).longValue());
+      } else if (scriptObject instanceof Float) {
+        field = Field.create((Float) scriptObject);
+      } else if (scriptObject instanceof Double) {
+        field = Field.create((Double) scriptObject);
+      } else if (scriptObject instanceof Date) {
+        field = Field.createDate((Date) scriptObject);
+      } else if (scriptObject instanceof BigDecimal) {
+        field = Field.create((BigDecimal) scriptObject);
+      } else if (scriptObject instanceof String) {
+        field = Field.create((String) scriptObject);
+      } else if (scriptObject instanceof byte[]) {
+        field = Field.create((byte[]) scriptObject);
+      } else {
+        field = Field.create(scriptObject.toString());
+      }
+      return field;
     }
   }
+
 }

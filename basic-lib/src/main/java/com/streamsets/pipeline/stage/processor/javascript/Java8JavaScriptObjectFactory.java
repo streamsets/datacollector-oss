@@ -1,14 +1,15 @@
 package com.streamsets.pipeline.stage.processor.javascript;
 
-import com.streamsets.pipeline.api.Record;
+import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.stage.processor.scripting.ScriptObjectFactory;
 
 import javax.script.ScriptEngine;
 import java.lang.reflect.Constructor;
-import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.math.BigDecimal;
 import java.util.AbstractMap;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -25,8 +26,6 @@ public class Java8JavaScriptObjectFactory extends ScriptObjectFactory {
   private static final Method CONTEXT_SET_GLOBAL_METHOD;
   private static final Method GLOBAL_NEW_OBJECT_METHOD;
   private static final Method SCRIPT_OBJECT_ENTRYSET_METHOD;
-  private static final Method SCRIPT_OBJECT_GET_METHOD;
-  private static final Method SCRIPT_OBJECT_CONTAINS_KEY_METHOD;
   private static final Method SCRIPT_OBJECT_PUT_METHOD;
   private static final Method NATIVE_ARRAY_AS_OBJECT_ARRAY_METHOD;
   private static final Constructor ARRAY_CONSTRUCTOR;
@@ -34,6 +33,7 @@ public class Java8JavaScriptObjectFactory extends ScriptObjectFactory {
     System.getProperty("java.version") + ". Please report: ";
   private final Object context;
   private final Object global;
+
   // we are doing this reflection voodoo because the Java compile does not let you use sun....internal packages
   // PRRRRRRRRHHHHHHHHHHH Oracle.
   static {
@@ -55,8 +55,6 @@ public class Java8JavaScriptObjectFactory extends ScriptObjectFactory {
       CONTEXT_NEW_GLOBAL_METHOD = CONTEXT_CLASS.getMethod("newGlobal");
       GLOBAL_NEW_OBJECT_METHOD = GLOBAL_CLASS.getMethod("newObject");
       SCRIPT_OBJECT_ENTRYSET_METHOD = SCRIPT_OBJECT_CLASS.getMethod("entrySet");
-      SCRIPT_OBJECT_GET_METHOD = SCRIPT_OBJECT_CLASS.getMethod("get", Object.class);
-      SCRIPT_OBJECT_CONTAINS_KEY_METHOD = SCRIPT_OBJECT_CLASS.getMethod("containsKey", Object.class);
       SCRIPT_OBJECT_PUT_METHOD = SCRIPT_OBJECT_CLASS.getMethod("put", Object.class, Object.class, Boolean.TYPE);
       NATIVE_ARRAY_AS_OBJECT_ARRAY_METHOD = NATIVE_ARRAY_CLASS.getMethod("asObjectArray");
       ARRAY_CONSTRUCTOR = NATIVE_ARRAY_CLASS.getDeclaredConstructor(Object[].class);
@@ -94,40 +92,6 @@ public class Java8JavaScriptObjectFactory extends ScriptObjectFactory {
   }
 
   @Override
-  protected void setRecordInternal(Object scriptRecord, Record record) {
-    try {
-      SCRIPT_OBJECT_PUT_METHOD.invoke(scriptRecord, "_record", record, true);
-    } catch (Exception ex) {
-      throw new RuntimeException(REFLECTION_ERROR_MESSAGE + ex, ex);
-    }
-  }
-
-  @Override
-  protected void setField(Object scriptRecord, Object scriptField) {
-    if (scriptField != null) {
-      for (Map.Entry<Object, Object> entry : (new ScriptObjectMap(scriptField)).entrySet()) {
-        putInMap(scriptRecord, entry.getKey(), entry.getValue());
-      }
-    }
-  }
-  @Override
-  protected Record getRecordInternal(Object scriptRecord) {
-    try {
-      return (Record)SCRIPT_OBJECT_GET_METHOD.invoke(scriptRecord, "_record");
-    } catch (Exception ex) {
-      throw new RuntimeException(REFLECTION_ERROR_MESSAGE + ex, ex);
-    }
-  }
-
-  @Override
-  public Record getRecord(Object scriptRecord) {
-    Record record = getRecordInternal(scriptRecord);
-    com.streamsets.pipeline.api.Field field = scriptToField(scriptRecord, true);
-    record.set(field);
-    return record;
-  }
-
-  @Override
   public void putInMap(Object obj, Object key, Object value) {
     try {
       SCRIPT_OBJECT_PUT_METHOD.invoke(obj, key, value, true);
@@ -137,41 +101,36 @@ public class Java8JavaScriptObjectFactory extends ScriptObjectFactory {
   }
 
   @Override
-  protected com.streamsets.pipeline.api.Field scriptToField(Object map, boolean root) {
-    try {
-      com.streamsets.pipeline.api.Field field = null;
-      if (map != null) {
-        if (!root || (Boolean)SCRIPT_OBJECT_CONTAINS_KEY_METHOD.invoke(map, "type")) {
-          com.streamsets.pipeline.api.Field.Type type =
-            (com.streamsets.pipeline.api.Field.Type) SCRIPT_OBJECT_GET_METHOD.invoke(map, "type");
-          Object value = SCRIPT_OBJECT_GET_METHOD.invoke(map, "value");
-          if (value != null) {
-            switch (type) {
-              case MAP:
-                Map<Object, com.streamsets.pipeline.api.Field> fieldMap = new LinkedHashMap<>();
-                for (Map.Entry<Object, Object> entry : new ScriptObjectMap(value).entrySet()) {
-                  fieldMap.put(entry.getKey(), scriptToField(entry.getValue(), false));
-                }
-                value = fieldMap;
-                break;
-              case LIST:
-                Object[] values = (Object[])NATIVE_ARRAY_AS_OBJECT_ARRAY_METHOD.invoke(value);
-                List<com.streamsets.pipeline.api.Field> fieldArray = new ArrayList<>(values.length);
-                for (Object element : values) {
-                  fieldArray.add(scriptToField(element, false));
-                }
-                value = fieldArray;
-                break;
-            }
+  protected Field scriptToField(Object scriptObject) {
+    Field field;
+    if (scriptObject != null) {
+      if (NATIVE_ARRAY_CLASS.isInstance(scriptObject)) {
+        try {
+          Object[] values = (Object[]) NATIVE_ARRAY_AS_OBJECT_ARRAY_METHOD.invoke(scriptObject);
+          List<Field> fieldArray = new ArrayList<>(values.length);
+          for (Object element : values) {
+            fieldArray.add(scriptToField(element));
           }
-          field = com.streamsets.pipeline.api.Field.create(type, value);
+          field = Field.create(fieldArray);
+        } catch (Exception ex) {
+          throw new RuntimeException(ex);
         }
+      } else if (SCRIPT_OBJECT_CLASS.isInstance(scriptObject)) {
+        Map<Object, Object> scriptMap = new ScriptObjectMap(scriptObject);
+        Map<String, Field> fieldMap = new LinkedHashMap<>();
+        for (Map.Entry<Object, Object> entry : scriptMap.entrySet()) {
+          fieldMap.put(entry.getKey().toString(), scriptToField(entry.getValue()));
+        }
+        field = Field.create(fieldMap);
+      } else {
+        field = convertPrimitiveObject(scriptObject);
       }
-      return field;
-    } catch (Exception ex) {
-      throw new RuntimeException(REFLECTION_ERROR_MESSAGE + ex, ex);
+    } else {
+      field = Field.create((String)null);
     }
+    return field;
   }
+
   private static class ScriptObjectMap extends AbstractMap<Object, Object> {
     private final Object scriptMap;
     private ScriptObjectMap(Object scriptMap) {
@@ -186,4 +145,38 @@ public class Java8JavaScriptObjectFactory extends ScriptObjectFactory {
       }
     }
   }
+
+  @Override
+  protected Field convertPrimitiveObject(Object scriptObject) {
+    Field field;
+    if (scriptObject instanceof Boolean) {
+      field = Field.create((Boolean) scriptObject);
+    } else if (scriptObject instanceof Character) {
+      field = Field.create((Character) scriptObject);
+    } else if (scriptObject instanceof Byte) {
+      field = Field.create((Byte) scriptObject);
+    } else if (scriptObject instanceof Short) {
+      field = Field.create((Short) scriptObject);
+    } else if (scriptObject instanceof Integer) {
+      field = Field.create((Integer) scriptObject);
+    } else if (scriptObject instanceof Long) {
+      field = Field.create((Long) scriptObject);
+    } else if (scriptObject instanceof Float) {
+      field = Field.create((Float) scriptObject);
+    } else if (scriptObject instanceof Double) {
+      field = Field.create((Double) scriptObject);
+    } else if (scriptObject instanceof Date) {
+      field = Field.createDate((Date) scriptObject);
+    } else if (scriptObject instanceof BigDecimal) {
+      field = Field.create((BigDecimal) scriptObject);
+    } else if (scriptObject instanceof String) {
+      field = Field.create((String) scriptObject);
+    } else if (scriptObject instanceof byte[]) {
+      field = Field.create((byte[]) scriptObject);
+    } else {
+      field = Field.create(scriptObject.toString());
+    }
+    return field;
+  }
+
 }

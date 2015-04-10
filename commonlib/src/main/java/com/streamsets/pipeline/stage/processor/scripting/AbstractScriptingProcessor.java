@@ -6,7 +6,6 @@
 package com.streamsets.pipeline.stage.processor.scripting;
 
 import com.streamsets.pipeline.api.Batch;
-import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.base.SingleLaneProcessor;
@@ -25,13 +24,13 @@ public abstract class AbstractScriptingProcessor extends SingleLaneProcessor {
 
   // to hide all other methods of batchMaker
   public interface Out {
-    public void write(Object record);
+    public void write(ScriptRecord record);
   }
 
   // to hide all other methods of Stage.Context
   public class Err {
-    public void write(Object record, String errMsg) {
-      getContext().toError(scriptObjectFactory.getRecord(record), Errors.SCRIPTING_04, errMsg);
+    public void write(ScriptRecord scriptRecord, String errMsg) {
+      getContext().toError(getScriptObjectFactory().getRecord(scriptRecord), Errors.SCRIPTING_04, errMsg);
     }
   }
 
@@ -50,24 +49,18 @@ public abstract class AbstractScriptingProcessor extends SingleLaneProcessor {
     this.scriptConfigGroup = scriptConfigGroup;
     this.scriptConfigName = scriptConfigName;
     this.processingMode = processingMode;
-    this.script = prepareScript(script);
+    this.script = script;
   }
-  private ScriptObjectFactory getScriptObjectFactoryInternal() {
+
+  private ScriptObjectFactory getScriptObjectFactory() {
     if (scriptObjectFactory == null) {
-      scriptObjectFactory = getScriptObjectFactory();
+      scriptObjectFactory = createScriptObjectFactory();
     }
     return scriptObjectFactory;
   }
-  protected ScriptObjectFactory getScriptObjectFactory() {
+
+  protected ScriptObjectFactory createScriptObjectFactory() {
     return new ScriptObjectFactory(engine);
-  }
-
-  protected Object createScriptType() {
-    return Field.Type.class;
-  }
-
-  protected String prepareScript(String script) {
-    return script;
   }
 
   @Override
@@ -103,26 +96,28 @@ public abstract class AbstractScriptingProcessor extends SingleLaneProcessor {
   public void process(Batch batch, final SingleLaneBatchMaker singleLaneBatchMaker) throws StageException {
     Out out = new Out() {
       @Override
-      public void write(Object record) {
-        singleLaneBatchMaker.addRecord(getScriptObjectFactoryInternal().getRecord(record));
+      public void write(ScriptRecord scriptRecord) {
+        singleLaneBatchMaker.addRecord(getScriptObjectFactory().getRecord(scriptRecord));
       }
     };
     switch (processingMode) {
       case RECORD: {
-        List records = new ArrayList();
+        List<ScriptRecord> records = new ArrayList<>();
         records.add(null);
         Iterator<Record> it = batch.getRecords();
         while (it.hasNext()) {
-          records.set(0, getScriptObjectFactoryInternal().createRecord(it.next()));
+          Record record = it.next();
+          records.set(0, getScriptObjectFactory().createScriptRecord(record));
           runScript(records, out, err);
         }
         break;
       }
       case BATCH: {
-        List records = new ArrayList();
+        List<ScriptRecord> records = new ArrayList<>();
         Iterator<Record> it = batch.getRecords();
         while (it.hasNext()) {
-          records.add(getScriptObjectFactoryInternal().createRecord(it.next()));
+          Record record = it.next();
+          records.add(getScriptObjectFactory().createScriptRecord(record));
         }
         runScript(records, out, err);
         break;
@@ -130,16 +125,11 @@ public abstract class AbstractScriptingProcessor extends SingleLaneProcessor {
     }
   }
 
-  protected void addBindings(SimpleBindings bindings) {
-  }
-
-  private void runScript(List<Object> records, Out out, Err err) throws StageException {
+  private void runScript(List<ScriptRecord> records, Out out, Err err) throws StageException {
     SimpleBindings bindings = new SimpleBindings();
-    bindings.put("Type", createScriptType());
     bindings.put("records", records.toArray(new Object[records.size()]));
     bindings.put("out", out);
     bindings.put("err", err);
-    addBindings(bindings);
     try {
       runScript(bindings);
     } catch (ScriptException ex) {
@@ -149,7 +139,7 @@ public abstract class AbstractScriptingProcessor extends SingleLaneProcessor {
             case DISCARD:
               break;
             case TO_ERROR:
-              getContext().toError(getScriptObjectFactoryInternal().getRecord(records.get(0)), Errors.SCRIPTING_05, ex.getMessage(),
+              getContext().toError(getScriptObjectFactory().getRecord(records.get(0)), Errors.SCRIPTING_05, ex.getMessage(),
                                    ex);
               break;
             case STOP_PIPELINE:

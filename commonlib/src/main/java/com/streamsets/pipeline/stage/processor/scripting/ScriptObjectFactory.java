@@ -9,7 +9,9 @@ import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.Record;
 
 import javax.script.ScriptEngine;
+import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -22,19 +24,18 @@ public class ScriptObjectFactory {
     this.engine = engine;
   }
 
-  public Object createRecord(Record record) {
-    Object scriptObject = createMap();
-    setRecordInternal(scriptObject, record);
+  public ScriptRecord createScriptRecord(Record record) {
+    Object scriptValue = null;
     if (record.get() != null) {
-      setField(scriptObject, fieldToScript(record.get()));
+      scriptValue = fieldToScript(record.get());
     }
-    return scriptObject;
+    return new ScriptRecord(record, scriptValue);
   }
 
   @SuppressWarnings("unchecked")
-  public Record getRecord(Object scriptRecord) {
-    Record record = getRecordInternal(scriptRecord);
-    Field field = scriptToField((Map)scriptRecord, true);
+  public Record getRecord(ScriptRecord scriptRecord) {
+    Record record = scriptRecord.record;
+    Field field = scriptToField(scriptRecord.value);
     record.set(field);
     return record;
   }
@@ -52,85 +53,90 @@ public class ScriptObjectFactory {
     return elements;
   }
 
-  protected Record getRecordInternal(Object scriptRecord) {
-    return (Record) ((Map)scriptRecord).get("_record");
-  }
-
-  @SuppressWarnings("unchecked")
-  protected void setRecordInternal(Object scriptRecord, Record record) {
-    putInMap(scriptRecord, "_record", record);
-  }
-
-  @SuppressWarnings("unchecked")
-  protected void setField(Object scriptRecord, Object scriptField) {
-    if (scriptField != null) {
-      for (Map.Entry<String, Object> entry : ((Map<String, Object>)scriptField).entrySet()) {
-        putInMap(scriptRecord, entry.getKey(), entry.getValue());
-      }
-    }
-  }
-
   @SuppressWarnings("unchecked")
   protected Object fieldToScript(Field field) {
-    Object scriptObj = createMap();
+    Object scriptObject = null;
     if (field != null) {
-      putInMap(scriptObj, "type", field.getType());
-      Object value = field.getValue();
-      if (value != null) {
+      scriptObject = field.getValue();
+      if (scriptObject != null) {
         switch (field.getType()) {
           case MAP:
-            Map<String, Field> fieldMap = (Map<String, Field>) value;
+            Map<String, Field> fieldMap = (Map<String, Field>) scriptObject;
             Object scriptMap = createMap();
             for (Map.Entry<String, Field> entry : fieldMap.entrySet()) {
               putInMap(scriptMap, entry.getKey(), fieldToScript(entry.getValue()));
             }
-            value = scriptMap;
+            scriptObject = scriptMap;
             break;
           case LIST:
-            List<Field> fieldArray = (List<Field>) value;
+            List<Field> fieldArray = (List<Field>) scriptObject;
             List scripArrayElements = new ArrayList();
             for (Field aFieldArray : fieldArray) {
               scripArrayElements.add(fieldToScript(aFieldArray));
             }
-            value = createArray(scripArrayElements);
+            scriptObject = createArray(scripArrayElements);
             break;
         }
       }
-      putInMap(scriptObj, "value", value);
     }
-    return scriptObj;
+    return scriptObject;
   }
 
   @SuppressWarnings("unchecked")
-  protected Field scriptToField(Object mapArg, boolean root) {
-    Map<String, Object> map = (Map<String, Object>)mapArg;
-    Field field = null;
-    if (map != null) {
-      if (!root || map.containsKey("type")) {
-        Field.Type type = (Field.Type) map.get("type");
-        Object value = map.get("value");
-        if (value != null) {
-          switch (type) {
-            case MAP:
-              Map<String, Object> scriptMap = (Map<String, Object>) value;
-              Map<String, Field> fieldMap = new LinkedHashMap<>();
-              for (Map.Entry<String, Object> entry : scriptMap.entrySet()) {
-                fieldMap.put(entry.getKey(), scriptToField((Map<String, Object>) entry.getValue(), false));
-              }
-              value = fieldMap;
-              break;
-            case LIST:
-              List scriptArray = (List) value;
-              List<Field> fieldArray = new ArrayList<>(scriptArray.size());
-              for (Object element : scriptArray) {
-                fieldArray.add(scriptToField((Map)element, false));
-              }
-              value = fieldArray;
-              break;
-          }
+  protected Field scriptToField(Object scriptObject) {
+    Field field;
+    if (scriptObject != null) {
+      if (scriptObject instanceof Map) {
+        Map<String, Object> scriptMap = (Map<String, Object>) scriptObject;
+        Map<String, Field> fieldMap = new LinkedHashMap<>();
+        for (Map.Entry<String, Object> entry : scriptMap.entrySet()) {
+          fieldMap.put(entry.getKey(), scriptToField(entry.getValue()));
         }
-        field = Field.create(type, value);
+        field = Field.create(fieldMap);
+      } else if (scriptObject instanceof List) {
+        List scriptArray = (List) scriptObject;
+        List<Field> fieldArray = new ArrayList<>(scriptArray.size());
+        for (Object element : scriptArray) {
+          fieldArray.add(scriptToField(element));
+        }
+        field = Field.create(fieldArray);
+      } else {
+        field = convertPrimitiveObject(scriptObject);
       }
+    } else {
+      field = Field.create((String)null);
+    }
+    return field;
+  }
+
+  protected Field convertPrimitiveObject(Object scriptObject) {
+    Field field;
+    if (scriptObject instanceof Boolean) {
+      field = Field.create((Boolean) scriptObject);
+    } else if (scriptObject instanceof Character) {
+      field = Field.create((Character) scriptObject);
+    } else if (scriptObject instanceof Byte) {
+      field = Field.create((Byte) scriptObject);
+    } else if (scriptObject instanceof Short) {
+      field = Field.create((Short) scriptObject);
+    } else if (scriptObject instanceof Integer) {
+      field = Field.create((Integer) scriptObject);
+    } else if (scriptObject instanceof Long) {
+      field = Field.create((Long) scriptObject);
+    } else if (scriptObject instanceof Float) {
+      field = Field.create((Float) scriptObject);
+    } else if (scriptObject instanceof Double) {
+      field = Field.create((Double) scriptObject);
+    } else if (scriptObject instanceof Date) {
+      field = Field.createDate((Date) scriptObject);
+    } else if (scriptObject instanceof BigDecimal) {
+      field = Field.create((BigDecimal) scriptObject);
+    } else if (scriptObject instanceof String) {
+      field = Field.create((String) scriptObject);
+    } else if (scriptObject instanceof byte[]) {
+      field = Field.create((byte[]) scriptObject);
+    } else {
+      field = Field.create(scriptObject.toString());
     }
     return field;
   }
