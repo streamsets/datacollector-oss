@@ -12,13 +12,13 @@
      Producer</indexterm></indexterm>The Kafka Producer provides the following partition strategies:<dl>
     <dlentry>
      <dt>Round-Robin</dt>
-     <dd>Writes each record to different partition using a cyclical order. Use for load
-      balancing.</dd>
+     <dd>Writes each record to a different partition using a cyclical order. Use for load
+            balancing.</dd>
     </dlentry>
     <dlentry>
      <dt>Random</dt>
      <dd>Writes each record to a different partition using a random order. Use for load
-      balancing.</dd>
+            balancing.</dd>
     </dlentry>
     <dlentry>
      <dt>Expression</dt>
@@ -29,9 +29,7 @@
             writes records to two partitions based on the value in the Age
             field:<codeblock>${record:value('/Age') &lt; 21 ? 0 : 1}</codeblock></dd>
           <dd>The following example writes to three partitions based on the value of the Age
-            field:<codeblock>${record:value('/Age') &lt; 21 ? 0 : 
-  (record:value('/Age') >= 21) and (record:value('/Age') &lt; 55) ? 1 :
-     record:value('/Age') >= 55 ? 2}</codeblock></dd>
+            field:<codeblock>${record:value('/a') &lt; 21 ? 0 : record:value('/a') &lt; 55 ? 1 : 2}</codeblock></dd>
     </dlentry>
    </dl></p>
  </conbody>

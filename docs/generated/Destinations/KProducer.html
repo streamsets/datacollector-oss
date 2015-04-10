@@ -99,15 +99,15 @@
     
      <dt class="dt dlterm">Round-Robin</dt>
 
-     <dd class="dd">Writes each record to different partition using a cyclical order. Use for load
-      balancing.</dd>
+     <dd class="dd">Writes each record to a different partition using a cyclical order. Use for load
+            balancing.</dd>
 
     
     
      <dt class="dt dlterm">Random</dt>
 
      <dd class="dd">Writes each record to a different partition using a random order. Use for load
-      balancing.</dd>
+            balancing.</dd>
 
     
     
@@ -123,9 +123,7 @@
 </dd>
 
           <dd class="dd">The following example writes to three partitions based on the value of the Age
-            field:<pre class="pre codeblock">${record:value('/Age') &lt; 21 ? 0 : 
-  (record:value('/Age') &gt;= 21) and (record:value('/Age') &lt; 55) ? 1 :
-     record:value('/Age') &gt;= 55 ? 2}</pre>
+            field:<pre class="pre codeblock">${record:value('/a') &lt; 21 ? 0 : record:value('/a') &lt; 55 ? 1 : 2}</pre>
 </dd>
 
     

@@ -43,7 +43,7 @@
         </dlentry>
         <dlentry>
           <dt>guest</dt>
-          <dd>Allows read-only access to areas of the <ph
+          <dd>Allows read-only access to the <ph
               conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>. As
             a guest, you can view pipeline and alert configuration, view general monitoring and log
             information. You cannot view data preview or snapshots, or configure pipelines or

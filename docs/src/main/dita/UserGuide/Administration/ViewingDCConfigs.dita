@@ -12,8 +12,8 @@
                 <uicontrol>Administration</uicontrol>
                 <uicontrol>Configuration</uicontrol>
             </menucascade>.<p>For details about the configuration properties or to edit the
-                properties file, see <xref
-                    href="../Install_Config/CustomizingDataCollector.dita#task_lxk_kjw_1r"
+                configuration file, see <xref
+                    href="../Install_Config/ConfiguringDataCollector.dita#task_lxk_kjw_1r"
             />.</p></context>
     </taskbody>
 </task>

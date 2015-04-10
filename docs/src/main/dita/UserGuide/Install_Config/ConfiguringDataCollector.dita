@@ -4,10 +4,11 @@
     <title>Configuring the <ph
             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
         /></title>
-    <shortdesc>You can edit properties in the <ph
+    <shortdesc>You can customize the <ph
+            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> by
+        editing the <ph
             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
-        configuration file to customize the <ph
-            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>. </shortdesc>
+        configuration file. </shortdesc>
     <taskbody>
         <context>
             <p><indexterm>Data Collector configuration
@@ -48,8 +49,8 @@
                                 <entry>Secure port number for the <ph
                                         conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
                                     /> console. Any number besides 0 enables the secure port number.
-                                        <p>If you use both port properties, the http port bounces to
-                                        the https port.</p></entry>
+                                        <p>If you use both port properties, the HTTP port bounces to
+                                        the HTTPS port.</p></entry>
                             </row>
                             <row>
                                 <entry>https.keystore.path</entry>

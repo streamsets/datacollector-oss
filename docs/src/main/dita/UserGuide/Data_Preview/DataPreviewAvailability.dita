@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_ksb_hjj_br">
- <title>Availability</title>
+ <title>Data Preview Availability</title>
  <shortdesc>You can preview complete and incomplete pipelines. The Data Preview icon becomes active
   when data preview is available.</shortdesc>
  <conbody>

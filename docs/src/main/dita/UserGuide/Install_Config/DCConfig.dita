@@ -5,5 +5,5 @@
  <shortdesc>You can edit the <ph
       conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
     configuration file, sdc.properties, to configure properties such as the host name and port
-    number, the HTTP protocol to use, and account information for email alerts. </shortdesc>
+    number, the HTTP protocol, and account information for email alerts. </shortdesc>
 </concept>

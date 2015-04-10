@@ -3,34 +3,38 @@
 <concept id="concept_vrx_4fg_qr">
  <title>Java Configuration Options</title>
  <shortdesc>
-  <draft-comment author="Loretta">Do we want to say anything like, "The <ph
-    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> runs on Java."
-   Or just start with the next bit?</draft-comment>
+  <draft-comment author="Loretta">Guys: do we want to add something high level like, "The <ph
+        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> runs on /
+      is built on Java." Or okay to just start below?</draft-comment>
  </shortdesc>
  <conbody>
-  <p>You can edit the <ph
-    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> environment
-   file, sdc-env.sh, to add Java configuration options. The <ph
-    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> environment
-   configuration file includes the following Java configuration options:<dl>
-    <dlentry>
-     <dt>SDC_PRE_CLASSPATH</dt>
-     <dd>Defines the path to Java classes that you can use in custom stages such as the JavaScript
-      or Jython Evaluator. <draft-comment author="Loretta">asking Brock the
-       difference.</draft-comment></dd>
-    </dlentry>
-    <dlentry>
-     <dt>SDC_POST_CLASSPATH</dt>
-     <dd>Defines the path to Java classes that you can call from custom stages such as the
-      JavaScript or Jython Evaluator.</dd>
-    </dlentry>
-    <dlentry>
-     <dt>SDC_JAVA_OPTS</dt>
-     <dd>Defines additional Java configuration options that you want the <ph
-       conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> to use. By
-      default, this property includes the heap size for the <ph
-       conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>.</dd>
-    </dlentry>
-   </dl></p>
+  <p><indexterm>Java configuration options<indexterm>Data Collector environment
+        file</indexterm></indexterm><indexterm>Data Collector<indexterm>Java configuration
+          options</indexterm></indexterm>You can edit the <ph
+        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
+      environment file, sdc-env.sh, to add or update Java configuration options. The <ph
+        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
+      environment configuration file includes the following Java configuration options:<dl>
+        <dlentry>
+          <dt>SDC_PRE_CLASSPATH</dt>
+          <dd>Defines the path to Java classes that you can use in custom stages such as the
+            JavaScript or Jython Evaluator. Classes in this list load before those in the
+            post-classpath list.</dd>
+        </dlentry>
+        <dlentry>
+          <dt>SDC_POST_CLASSPATH</dt>
+          <dd>Defines the path to Java classes that you can call from custom stages such as the
+            JavaScript or Jython Evaluator. Classes in this list load after those in the
+            pre-classpath list.</dd>
+        </dlentry>
+        <dlentry>
+          <dt>SDC_JAVA_OPTS</dt>
+          <dd>Defines additional Java configuration options for the <ph
+              conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>. By
+            default, this property includes the heap size for the <ph
+              conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+            />.</dd>
+        </dlentry>
+      </dl></p>
  </conbody>
 </concept>

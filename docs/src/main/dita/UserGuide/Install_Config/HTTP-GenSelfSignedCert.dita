@@ -15,8 +15,11 @@
                 </info>
             </step>
             <step>
-                <cmd>Optionally, save a backup of the <filepath>sdc-keystore.jks</filepath> file,
-                    and then delete the file. </cmd>
+                <cmd>Optionally, save a backup of the <filepath>sdc-keystore.jks</filepath> file.
+                </cmd>
+            </step>
+            <step>
+                <cmd>Delete the file. </cmd>
             </step>
             <step>
                 <cmd>Enter the following command:</cmd>

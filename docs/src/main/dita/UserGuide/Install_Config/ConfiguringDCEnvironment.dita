@@ -2,10 +2,11 @@
 <!DOCTYPE task PUBLIC "-//OASIS//DTD DITA General Task//EN" "generalTask.dtd">
 <task id="task_ugz_41n_qr">
     <title>Configuring the Data Collector Environment</title>
-    <shortdesc>You can edit properties in the <ph
+    <shortdesc>You can customize the <ph
             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
-        environment configuration file to customize the <ph
-            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>. </shortdesc>
+        environment by editing the <ph
+            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
+        environment configuration file. </shortdesc>
     <taskbody>
         <context>
             <p><indexterm>Data Collector configuration
@@ -14,12 +15,13 @@
                         Collector configuration</indexterm></indexterm>Use a text editor to edit the
                     <ph
                     conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                /> configuration file. After you edit the file, restart the <ph
+                /> environment configuration file. After you edit the file, restart the <ph
                     conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
                 /> to enable the changes. </p>
             <p>The <ph
                     conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                /> configuration file, <filepath>sdc-env.sh</filepath>, is located in the following
+                /> environment configuration file, <filepath>sdc-env.sh</filepath>, is located in
+                the following
                 location:<codeblock>&lt;SDCinstalldir>/libexec/sdc-env.sh</codeblock>The <ph
                     conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
                 /> environment configuration file includes the following properties:<table
@@ -36,20 +38,26 @@
                         <tbody>
                             <row>
                                 <entry>SDC_PRE_CLASSPATH</entry>
-                                <entry>Path to a directory of Java classes to run
-                                        before...<draft-comment author="Loretta">check on
-                                        brock.</draft-comment></entry>
+                                <entry>Path to a directory of Java classes that can be called by
+                                    custom stages. Classes in this list load before the
+                                    post-classpath list.</entry>
                             </row>
                             <row>
                                 <entry>SDC_POST_CLASSPATH</entry>
-                                <entry>Path to a directory of Java classes to run after...</entry>
+                                <entry>Path to a directory of Java classes that can be called by
+                                    custom stages. Classes in this list load after the pre-classpath
+                                    list.</entry>
                             </row>
                             <row>
                                 <entry>SDC_JAVA_OPTS</entry>
-                                <entry>Java options to associate with the <ph
+                                <entry>Additional Java options for the <ph
                                         conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                                    />. <p>By default, the Java heap size is 1024MB. </p><p>To add
-                                        add additional options, </p></entry>
+                                    />. <p>By default, the xmx and xms properties set the <ph
+                                            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                                        /> Java heap size to 1024 MB. </p><p>You can add any valid
+                                        Java property.<draft-comment author="Loretta">Guys: Is this
+                                            statement too open? Do we need to add a warning or
+                                            restrict this in any way?</draft-comment></p></entry>
                             </row>
                             <row>
                                 <entry>SDC_SECURITY_MANAGER_ENABLED</entry>

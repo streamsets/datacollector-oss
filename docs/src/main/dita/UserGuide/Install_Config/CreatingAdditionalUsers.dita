@@ -10,12 +10,12 @@
         <context>
             <p><indexterm>users<indexterm>creating</indexterm></indexterm>Configure users in the
                 properties file for the type of authentication that you use. For example, if you use
-                basic authentication, you configure users in the basic-realm.properties file.</p>
+                basic authentication, use the basic-realm.properties file.</p>
             <p>To encrypt login information, you can use an md5 program such as md5 on Mac OS X or
                 md5sum on Linux. </p>
-            <p>For Basic and Form authentication, you can encrypt the password. For example:
+            <p>For basic and form authentication, you can encrypt the password. For example:
                 <codeblock>echo -n "&lt;password>" | md5</codeblock></p>
-            <p>For Digest authentication, you can hash the combination of
+            <p>For digest authentication, you can hash the combination of
                 &lt;username>:&lt;realm>:&lt;password>. For example:
                 <codeblock>echo -n "&lt;username>:&lt;realm>:&lt;password>" | md5</codeblock></p>
         </context>
@@ -26,7 +26,7 @@
                 <info>The file is located in the following directory:
                         <filepath>&lt;SDCinstalldir>/etc/</filepath>. When the <ph
                         conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                    /> is installed as a service, the file is located in the follwing directory:
+                    /> is installed as a service, the file is located in the following directory:
                         <filepath>/etc/sdc/</filepath>. </info>
             </step>
             <step>

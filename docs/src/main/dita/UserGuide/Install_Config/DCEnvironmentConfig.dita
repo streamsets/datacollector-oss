@@ -8,8 +8,8 @@
   configuration file, sdc-env.sh, to configure Java options. </shortdesc>
  <conbody>
   <p>
-   <draft-comment author="Loretta">This is a place holder. Will add info about the security manager
-    after we allow users to create stages.</draft-comment>
+   <draft-comment author="Loretta">This structure is here to keep the organization parallel. It will
+    make more sense when we add the  Security Manager.</draft-comment>
   </p>
  </conbody>
 </concept>

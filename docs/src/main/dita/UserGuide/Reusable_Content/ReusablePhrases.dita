@@ -64,9 +64,9 @@
                               <dd>The processor calls the script for each record. The processor
                                     passes the record to the script as a map and processes each
                                     record individually. </dd>
-                              <dd>The processor handles error records based on the Error Record
-                                    property defined for the processor, so the code does not require
-                                    error handling logic. </dd>
+                              <dd>The code does not require error handling logic. The processor
+                                    handles error records based on the Error Record property defined
+                                    for the processor.</dd>
                               <dd>Use this mode to avoid including error handling logic in the code.
                                     Since this mode calls the script for each record, this might
                                     affect the performance of the pipeline.</dd>

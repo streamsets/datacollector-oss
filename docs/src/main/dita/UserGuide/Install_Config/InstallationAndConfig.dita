@@ -5,6 +5,6 @@
  <shortdesc>You can install the <ph
       conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> to be
     started manually or to run as a service. After installation, you can optionally install
-    additional stages, create additional users, and customize the <ph
+    additional stages, create additional users, and configure the <ph
       conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>.</shortdesc>
 </concept>

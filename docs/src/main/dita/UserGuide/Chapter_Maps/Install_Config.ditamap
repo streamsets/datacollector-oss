@@ -24,7 +24,7 @@
    </topicmeta>
    <topicref href="../Install_Config/CreatingAdditionalUsers.dita"/>
   </topicref>
-  <topicref href="../Install_Config/DataCollectorCustomization.dita" chunk="to-content">
+  <topicref href="../Install_Config/DCConfig.dita" chunk="to-content">
    <topicmeta>
     <shortdesc/>
    </topicmeta>
@@ -32,12 +32,16 @@
     <topicref href="../Install_Config/HTTP-GenSelfSignedCert.dita"/>
     <topicref href="../Install_Config/HTTP-GenAuthSignedCert.dita"/>
    </topicref>
-   <topicref href="../Install_Config/CustomizingDataCollector.dita"/>  
+   <topicref href="../Install_Config/ConfiguringDataCollector.dita"/>
   </topicref>
-  <topicref href="../Install_Config/DCEnvironmentConfig.dita">
+  <topicref href="../Install_Config/DCEnvironmentConfig.dita" chunk="to-content">
+   <topicmeta>
+    <shortdesc/>
+   </topicmeta>
    <topicref href="../Install_Config/JavaConfigOptions.dita">
     <topicref href="../Install_Config/JavaHeapSize.dita"/>
    </topicref>
+   <topicref href="../Install_Config/ConfiguringDCEnvironment.dita"/>
   </topicref>
   </topicref>
 </map>

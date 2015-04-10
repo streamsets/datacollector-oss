@@ -17,19 +17,19 @@
       environment configuration file. Increase or decrease the heap size as necessary, based on the
       resources available on the host machine.</p>
     <p>Use the following Java options to define the Java heap size:<ul id="ul_vyw_rzl_qr">
-        <li>xmx - Defines the maximum heap size</li>
-        <li>xms - Defines the minimum heap size</li>
+        <li>xmx - Defines the maximum heap size.</li>
+        <li>xms - Defines the minimum heap size.</li>
       </ul></p>
     <p>
       <note type="tip">To avoid constant recalculation of the allocated heap size, set the both
-        properties to the same vaue. Use m for MB and g for GB. </note>
+        properties to the same vaue. To define the unit of measure, use m for MB and g for GB. </note>
     </p>
-    <p>For example, to double the heap size, you might change the following default SDC_JAVA_OPTS
-      property:<codeblock>SDC_JAVA_OPTS="-Xmx1024m -Xms1024m -server ${SDC_JAVA_OPTS}"</codeblock></p>
-    <p>to the following configuration:</p>
+    <p>For example, to double the heap size, you might change the following default
+      settings:<codeblock>SDC_JAVA_OPTS="-Xmx1024m -Xms1024m -server ${SDC_JAVA_OPTS}"</codeblock></p>
+    <p>to increase the xmx and xms settings as follows:</p>
     <p>
       <codeblock>SDC_JAVA_OPTS="-Xmx2048m -Xms2048m -server ${SDC_JAVA_OPTS}"</codeblock>
     </p>
-    <p>With a heap size of 2048MB, you can configure a pipeline to use up to 1331MB of memory.</p>
+    <p>With a heap size of 2048 MB, you can configure a pipeline to use up to 1331 MB of memory.</p>
  </conbody>
 </concept>

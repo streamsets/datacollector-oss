@@ -64,7 +64,7 @@
         
           <dt class="dt dlterm">guest</dt>
 
-          <dd class="dd">Allows read-only access to areas of the <span class="ph">Data
+          <dd class="dd">Allows read-only access to the <span class="ph">Data
                   Collector</span>. As
             a guest, you can view pipeline and alert configuration, view general monitoring and log
             information. You cannot view data preview or snapshots, or configure pipelines or
@@ -91,16 +91,16 @@
         <div class="section context">
             <p class="p">Configure users in the
                 properties file for the type of authentication that you use. For example, if you use
-                basic authentication, you configure users in the basic-realm.properties file.</p>
+                basic authentication, use the basic-realm.properties file.</p>
 
             <p class="p">To encrypt login information, you can use an md5 program such as md5 on Mac OS X or
                 md5sum on Linux. </p>
 
-            <div class="p">For Basic and Form authentication, you can encrypt the password. For example:
+            <div class="p">For basic and form authentication, you can encrypt the password. For example:
                 <pre class="pre codeblock">echo -n "&lt;password&gt;" | md5</pre>
 </div>
 
-            <div class="p">For Digest authentication, you can hash the combination of
+            <div class="p">For digest authentication, you can hash the combination of
                 &lt;username&gt;:&lt;realm&gt;:&lt;password&gt;. For example:
                 <pre class="pre codeblock">echo -n "&lt;username&gt;:&lt;realm&gt;:&lt;password&gt;" | md5</pre>
 </div>
@@ -112,7 +112,7 @@
                 <div class="itemgroup info">The file name is &lt;authentication type&gt;-realm.properties. </div>
                 <div class="itemgroup info">The file is located in the following directory:
                         <span class="ph filepath">&lt;SDCinstalldir&gt;/etc/</span>. When the <span class="ph">Data
-                  Collector</span> is installed as a service, the file is located in the follwing directory:
+                  Collector</span> is installed as a service, the file is located in the following directory:
                         <span class="ph filepath">/etc/sdc/</span>. </div>
             </li>
 <li class="li step stepexpand">
