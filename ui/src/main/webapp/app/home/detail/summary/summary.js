@@ -50,7 +50,7 @@ angular
       recordsColor: {
         'Input' :'#1f77b4',
         'Output': '#5cb85c',
-        'Bad':'#FF3333',
+        'Error':'#FF3333',
         'Output 1': '#5cb85c',
         'Output 2': '#B2EC5D',
         'Output 3': '#77DD77',

@@ -75,7 +75,7 @@ angular
           ]
         },
         bad = {
-          key: "Bad",
+          key: "Error",
           values: [
             ["1m" , $scope.summaryMeters.errorRecords.m1_rate ],
             ["5m" , $scope.summaryMeters.errorRecords.m5_rate ],

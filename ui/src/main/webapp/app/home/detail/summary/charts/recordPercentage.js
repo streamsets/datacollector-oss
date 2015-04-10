@@ -15,8 +15,8 @@ angular
           switch(d.key) {
             case 'goodRecords':
               return 'Good Records';
-            case 'badRecords':
-              return 'Bad Records';
+            case 'errorRecords':
+              return 'Error Records';
           }
         };
       },
@@ -48,7 +48,7 @@ angular
             value: $scope.summaryMeters.outputRecords.count
           },
           {
-            key: "badRecords",
+            key: "errorRecords",
             value: $scope.summaryMeters.errorRecords.count
           }
         ];

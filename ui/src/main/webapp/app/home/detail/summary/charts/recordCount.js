@@ -65,13 +65,13 @@ angular
             break;
           case pipelineConstant.TARGET_STAGE_TYPE:
             valueList.push(["Input" , inputRecordsMeter.count ]);
-            valueList.push(["Bad" , errorRecordsMeter.count ]);
+            valueList.push(["Error" , errorRecordsMeter.count ]);
             break;
         }
       } else {
         valueList.push(["Input" , inputRecordsMeter.count ]);
         valueList.push(["Output" , outputRecordsMeter.count ]);
-        valueList.push(["Bad" , errorRecordsMeter.count ]);
+        valueList.push(["Error" , errorRecordsMeter.count ]);
       }
 
       $scope.barChartData = [
