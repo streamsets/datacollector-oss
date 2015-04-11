@@ -1,15 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_rjh_ntz_qr">
- <title>Reusable Constants</title>
- <shortdesc>You can define reusable constants for a pipeline. Define a reusable constant when you
-  have a value that you want to be able to update easily, or that you want use more than once in a
-  stage or pipeline. </shortdesc>
+ <title>Pipeline Constants</title>
+ <shortdesc>A pipeline constant is a constant that you define and can be reused within a pipeline.
+  Define a pipeline constant when you have a value that you want to be able to update easily, or
+  that you want use more than once in a stage or pipeline. </shortdesc>
  <conbody>
-  <p><indexterm>pipelines<indexterm>reusable
-     constants</indexterm></indexterm><indexterm>constants<indexterm>defining
-    reusable</indexterm></indexterm>For example, you might have an Expression Evaluator processor
-   that calculates the total income for employees using .01 as a bonus percentage, as
+  <p><indexterm>pipeline
+     constants<indexterm>overview</indexterm></indexterm><indexterm>constants<indexterm>pipeline
+     constants</indexterm></indexterm><draft-comment author="Loretta">currently can only use in
+    stages, not metrics/alerts.</draft-comment>For example, you might have an Expression Evaluator
+   processor that calculates the total income for employees using .01 as a bonus percentage, as
    follows:<codeblock>${(record:value("/SALARY")) + (record:value("/SALARY")*.01)}</codeblock></p>
   <p>However, the bonus percentage changes regularly. So instead of using .01 directly in the
    expression, you can create a constant named Bonus with a value of .01.</p>

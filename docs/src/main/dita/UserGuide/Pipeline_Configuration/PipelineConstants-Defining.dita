@@ -3,11 +3,13 @@
 <task id="task_ogd_zj3_wq">
     <title>Defining Pipeline Constants</title>
     <taskbody>
-        <context/>
+        <context><indexterm>pipeline constants<indexterm>defining</indexterm></indexterm>You can
+            define pipeline constants for constant values that you want to reuse within the pipeline
+            or to easily update.</context>
         <steps id="steps_apc_qrz_qr">
             <step>
-                <cmd>To define a constant for the pipeline, click the <wintitle>Constants</wintitle>
-                    tab of the pipeline properties.</cmd>
+                <cmd>To define a constant for the pipeline, in the Pipeline properties panel, click
+                    the <wintitle>Constants</wintitle> tab.</cmd>
             </step>
             <step>
                 <cmd>On the <wintitle>Constants</wintitle> tab, click <uicontrol>Add</uicontrol>.

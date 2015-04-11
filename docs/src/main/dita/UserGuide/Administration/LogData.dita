@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
+<concept id="concept_ayz_fgc_rr">
+ <title>Data Collector Log Data</title>
+ <shortdesc>You can view and download <ph
+   conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> log data. </shortdesc>
+ <conbody>
+  <p><indexterm>Data Collector<indexterm>log data</indexterm></indexterm><indexterm>log
+     files<indexterm>Data Collector</indexterm></indexterm>Log data includes information about the
+    <ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>, such as
+   the build information, the time the <ph
+    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> started, and
+   the time the pipeline started or stopped. The type of log information that displays is based on
+   the &lt;xxx?> property in the logj4.properties file.<draft-comment author="Loretta">is this last
+    sentence true, or delete. emailed Tucu 4/10.</draft-comment></p>
+  <p>The <ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
+   writes log information to a log file and appends new information to the file. When the log file
+   reaches a defined limit, it creates another file and continues writing to the file. The file name
+   is <filepath>sdc&lt;number>.log</filepath>. </p>
+  <p>The size of the file is limited by the log4j.appender.streamsets.MaxFileSize property in the
+   logj4.properties file. <draft-comment author="Loretta">delete this last
+   sentence?</draft-comment></p>
+  <p>When you view log data, the <ph
+    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> console
+   displays approximately 50,000 characters of the most recent  information from the log file. You
+   can load older log information for display. The console displays progressively older information
+   upon request, traversing different log files when necessary. </p>
+  <p>
+  </p>
+ </conbody>
+</concept>

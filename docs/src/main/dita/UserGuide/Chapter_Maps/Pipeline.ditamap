@@ -27,7 +27,9 @@
    <topicmeta><shortdesc></shortdesc></topicmeta></topicref>
   <topicref href="../Pipeline_Configuration/Validation.dita">
    <topicmeta><shortdesc></shortdesc></topicmeta> </topicref>
-  <topicref href="../Pipeline_Configuration/Constants.dita"/>
+  <topicref href="../Pipeline_Configuration/PipelineConstants.dita">
+   <topicref href="../Pipeline_Configuration/PipelineConstants-Defining.dita"/>
+  </topicref>
   <topicref href="../Pipeline_Configuration/ConfiguringAPipeline.dita">
    <topicmeta><shortdesc></shortdesc></topicmeta></topicref>
  </topicref>

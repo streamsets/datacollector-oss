@@ -9,7 +9,7 @@
         conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> console
       when you configure a pipeline:</p>
    <p>
-      <image href="../Graphics/DCConsole_Config.png" id="image_n4b_m4z_sq" height="450"/></p>
+      <image href="../Graphics/CanvasConfig.png" id="image_u5b_1mb_rr" scale="45"/></p>
     <table frame="all" rowsep="1" colsep="1" id="table_qwf_byk_sq">
       <tgroup cols="3">
         <colspec colname="c1" colnum="1" colwidth=".5*"/>
@@ -31,8 +31,8 @@
           <row>
             <entry>2</entry>
             <entry>Stage list</entry>
-            <entry>Lists the stages in the pipeline. Use to select a stage to edit. You can also
-              select the stage in the canvas.</entry>
+            <entry>Lists the stages in the pipeline. Use to select a stage to configure. You can
+              alternatively select the stage in the canvas.</entry>
           </row>
           <row>
             <entry>3</entry>
@@ -45,7 +45,8 @@
             <entry>Stage library</entry>
             <entry>List of available stages. Use to add stages to the pipeline. You can drag a stage
               to a location on canvas or click a stage to add it to the end of the pipeline.<p>You
-                can view all stages, stages by type, or stages by library.</p></entry>
+                can view all stages, stages by type, or stages by library. You can also search for a
+                stage by name.</p></entry>
           </row>
           <row>
             <entry><image href="../Graphics/icon-StageLibrary.png" id="image_ftx_sjb_cr" scale="70"

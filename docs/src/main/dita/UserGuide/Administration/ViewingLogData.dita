@@ -5,13 +5,32 @@
             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
         Logs</title>
     <taskbody>
-        <context><indexterm>Data Collector<indexterm>viewing
-                    logs</indexterm></indexterm><indexterm>logs<indexterm>Data
-                Collector</indexterm></indexterm>To view log data for the <ph
-                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>,
-            click <menucascade>
-                <uicontrol>Administration</uicontrol>
-                <uicontrol>Logs</uicontrol>
-            </menucascade>.</context>
+        <context><indexterm>Data Collector<indexterm>viewing and downloading log
+                data</indexterm></indexterm><indexterm>log files<indexterm>viewing and downloading
+                    Data Collector</indexterm></indexterm>You can view and download log data. When
+            you download log data, you can select the file to download.</context>
+        <steps id="steps_pvc_5bb_rr">
+            <step>
+                <cmd>To view log data for the <ph
+                        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                    />, click <menucascade>
+                        <uicontrol>Administration</uicontrol>
+                        <uicontrol>Logs</uicontrol>
+                    </menucascade>. </cmd>
+                <info>The console displays roughly 50,000 characters of the most recent log
+                    information. </info>
+            </step>
+            <step>
+                <cmd>To view earlier events, click <uicontrol>Load Previous Logs</uicontrol>.</cmd>
+            </step>
+            <step>
+                <cmd>To download the latest log file, click <uicontrol>Download</uicontrol>. To
+                    download a specific log file, click<menucascade>
+                        <uicontrol>Download</uicontrol>
+                        <uicontrol>&lt;file name></uicontrol>
+                    </menucascade>.</cmd>
+                <info>The most recent information is in the file with the highest number. </info>
+            </step>
+        </steps>
     </taskbody>
 </task>
