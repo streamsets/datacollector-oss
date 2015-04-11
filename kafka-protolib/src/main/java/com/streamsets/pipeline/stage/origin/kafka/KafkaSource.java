@@ -33,6 +33,7 @@ import org.apache.xerces.util.XMLChar;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.nio.charset.Charset;
 import java.nio.charset.UnsupportedCharsetException;
@@ -280,9 +281,8 @@ public class KafkaSource extends BaseSource implements OffsetCommitter {
   @VisibleForTesting
   List<Record> processKafkaMessage(MessageAndOffset message) throws StageException {
     List<Record> records = new ArrayList<>();
-    String messageStr = new String(message.getPayload(), messageCharset);
     String messageId = getMessageID(message);
-    try (DataParser parser = parserFactory.getParser(messageId, messageStr)) {
+    try (DataParser parser = parserFactory.getParser(messageId, new ByteArrayInputStream(message.getPayload()), 0)) {
       Record record = parser.parse();
       while (record != null) {
         records.add(record);

@@ -19,7 +19,9 @@ import com.streamsets.pipeline.sdk.ContextInfoCreator;
 import org.junit.Assert;
 import org.junit.Test;
 
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.StringReader;
 import java.util.Collections;
 
@@ -164,7 +166,7 @@ public class TestCommonLogFormatParser {
   }
 
   private DataParser getDataParser(String logLine, int maxObjectLength, int readerOffset) throws DataParserException {
-    OverrunReader reader = new OverrunReader(new StringReader(logLine), 1000, true);
+    InputStream is = new ByteArrayInputStream(logLine.getBytes());
     DataParserFactoryBuilder dataParserFactoryBuilder = new DataParserFactoryBuilder(getContext(), DataParserFormat.LOG);
     DataFactory dataFactory = dataParserFactoryBuilder
       .setMaxDataLen(maxObjectLength)
@@ -173,6 +175,6 @@ public class TestCommonLogFormatParser {
       .build();
     Assert.assertTrue(dataFactory instanceof LogCharDataParserFactory);
     LogCharDataParserFactory factory = (LogCharDataParserFactory) dataFactory;
-    return factory.getParser("id", reader, readerOffset);
+    return factory.getParser("id", is, readerOffset);
   }
 }

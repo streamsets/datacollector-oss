@@ -23,6 +23,8 @@ import com.streamsets.pipeline.sdk.ContextInfoCreator;
 import org.junit.Assert;
 import org.junit.Test;
 
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
 import java.io.StringReader;
 import java.util.Collections;
 import java.util.HashMap;
@@ -62,8 +64,8 @@ public class TestJsonCharDataParserFactory {
     Assert.assertTrue(dataFactory instanceof JsonCharDataParserFactory);
     JsonCharDataParserFactory factory = (JsonCharDataParserFactory) dataFactory;
 
-    OverrunReader reader = new OverrunReader(new StringReader("[\"Hello\"]\n"), 1000, true);
-    DataParser parser = factory.getParser("id", reader, 0);
+    InputStream is = new ByteArrayInputStream("[\"Hello\"]\n".getBytes());
+    DataParser parser = factory.getParser("id", is, 0);
     Assert.assertEquals(0, parser.getOffset());
     Record record = parser.parse();
     Assert.assertTrue(record.has(""));
@@ -81,8 +83,8 @@ public class TestJsonCharDataParserFactory {
     Assert.assertTrue(dataFactory instanceof JsonCharDataParserFactory);
     JsonCharDataParserFactory factory = (JsonCharDataParserFactory) dataFactory;
 
-    OverrunReader reader = new OverrunReader(new StringReader("[[\"Hello\"],[\"Bye\"]]\n"), 1000, true);
-    DataParser parser = factory.getParser("id", reader, 10);
+    InputStream is = new ByteArrayInputStream("[[\"Hello\"],[\"Bye\"]]\n".getBytes());
+    DataParser parser = factory.getParser("id", is, 10);
     Assert.assertEquals(10, parser.getOffset());
     Record record = parser.parse();
     Assert.assertTrue(record.has(""));

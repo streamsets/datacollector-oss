@@ -270,6 +270,7 @@ public class SpoolDirSource extends BaseSource {
       issues.add(getContext().createConfigIssue(Groups.FILES.name(), "charset", Errors.SPOOLDIR_00, charset));
     }
     builder.setCharset(fileCharset);
+    builder.setOverRunLimit(overrunLimit);
 
     switch (dataFormat) {
       case TEXT:
@@ -480,7 +481,7 @@ public class SpoolDirSource extends BaseSource {
     String sourceFile = file.getName();
     try {
       if (parser == null) {
-        parser = parserFactory.getParser(file, fileCharset, overrunLimit, offset);
+        parser = parserFactory.getParser(file, offset);
       }
       for (int i = 0; i < maxBatchSize; i++) {
         try {

@@ -15,6 +15,8 @@ import java.util.Set;
 
 public class DataFactoryBuilder<B extends DataFactoryBuilder, DF extends DataFactory, F extends DataFormat<DF>> {
   private final static Charset UTF8 = Charset.forName("UTF-8");
+  private static final int MAX_OVERRUN_LIMIT = Integer.parseInt(
+    System.getProperty("DataFactoryBuilder.OverRunLimit", "1000000"));
 
   private final Stage.Context context;
   private final F format;
@@ -24,6 +26,7 @@ public class DataFactoryBuilder<B extends DataFactoryBuilder, DF extends DataFac
   private Compression compression = Compression.NONE;
   private Charset charset = UTF8;
   private int maxDataLen;
+  private int overRunLimit = MAX_OVERRUN_LIMIT;
 
   public DataFactoryBuilder(Stage.Context context, F format) {
     this.context = Utils.checkNotNull(context, "context");
@@ -78,12 +81,19 @@ public class DataFactoryBuilder<B extends DataFactoryBuilder, DF extends DataFac
     return (B) this;
   }
 
+  public B setOverRunLimit(int overRunLimit) {
+    Utils.checkArgument(overRunLimit > 0 && overRunLimit <= MAX_OVERRUN_LIMIT, Utils.formatL(
+      "overRunLimit '{}' must be greater than 0 and less than or equal to " + MAX_OVERRUN_LIMIT, overRunLimit));
+    this.overRunLimit = overRunLimit;
+    return (B) this;
+  }
+
   public DF build() {
     Utils.checkState(modes.size() == expectedModes.size(),
                      Utils.formatL("Format '{}', all required modes have not been set", format));
     Utils.checkState(maxDataLen != 0, "maxDataLen has not been set");
     DataFactory.Settings settings = new DataFactory.Settings(context, format, compression, charset, maxDataLen, modes,
-                                                             configs);
+                                                             configs, overRunLimit);
     return format.create(settings);
   }
 

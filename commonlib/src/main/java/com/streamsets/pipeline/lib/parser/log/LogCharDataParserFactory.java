@@ -20,6 +20,7 @@ import com.streamsets.pipeline.lib.parser.shaded.org.aicer.grok.dictionary.GrokD
 import com.streamsets.pipeline.lib.parser.shaded.org.aicer.grok.util.Grok;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.StringReader;
 import java.util.Collections;
 import java.util.HashMap;
@@ -107,43 +108,44 @@ public class LogCharDataParserFactory extends CharDataParserFactory {
   }
 
   @Override
-  public DataParser getParser(String id, OverrunReader reader, long readerOffset) throws DataParserException {
+  public DataParser getParser(String id, InputStream is, long offset) throws DataParserException {
+    OverrunReader reader = createReader(is);
     Utils.checkState(reader.getPos() == 0, Utils.formatL("reader must be in position '0', it is at '{}'",
       reader.getPos()));
     try {
       switch (logMode) {
         case COMMON_LOG_FORMAT:
-          return new GrokParser(context, id, reader, readerOffset, maxObjectLen, retainOriginalText,
+          return new GrokParser(context, id, reader, offset, maxObjectLen, retainOriginalText,
             getMaxStackTraceLines(), createGrok(Constants.GROK_COMMON_APACHE_LOG_FORMAT,
             Collections.<String>emptyList()), "Common Log Format");
         case COMBINED_LOG_FORMAT:
-          return new GrokParser(context, id, reader, readerOffset, maxObjectLen, retainOriginalText,
+          return new GrokParser(context, id, reader, offset, maxObjectLen, retainOriginalText,
             getMaxStackTraceLines(), createGrok(Constants.GROK_COMBINED_APACHE_LOG_FORMAT,
             Collections.<String>emptyList()), "Combined Log Format");
         case APACHE_CUSTOM_LOG_FORMAT:
-          return new GrokParser(context, id, reader, readerOffset, maxObjectLen, retainOriginalText,
+          return new GrokParser(context, id, reader, offset, maxObjectLen, retainOriginalText,
             getMaxStackTraceLines(), createGrok(ApacheCustomLogHelper.translateApacheLayoutToGrok(customLogFormat),
-              Collections.<String>emptyList()), "Apache Access Log Format");
+            Collections.<String>emptyList()), "Apache Access Log Format");
         case APACHE_ERROR_LOG_FORMAT:
-          return new GrokParser(context, id, reader, readerOffset, maxObjectLen, retainOriginalText,
+          return new GrokParser(context, id, reader, offset, maxObjectLen, retainOriginalText,
             getMaxStackTraceLines(), createGrok(Constants.GROK_APACHE_ERROR_LOG_FORMAT,
-              ImmutableList.of(Constants.GROK_APACHE_ERROR_LOG_PATTERNS_FILE_NAME)), "Apache Error Log Format");
+            ImmutableList.of(Constants.GROK_APACHE_ERROR_LOG_PATTERNS_FILE_NAME)), "Apache Error Log Format");
         case REGEX:
-          return new RegexParser(context, id, reader, readerOffset, maxObjectLen, retainOriginalText,
+          return new RegexParser(context, id, reader, offset, maxObjectLen, retainOriginalText,
             createPattern(regex), fieldPathToGroup);
         case GROK:
-          return new GrokParser(context, id, reader, readerOffset, maxObjectLen, retainOriginalText,
+          return new GrokParser(context, id, reader, offset, maxObjectLen, retainOriginalText,
             getMaxStackTraceLines(), createGrok(grokPattern, grokDictionaries), "Grok Format");
         case LOG4J:
-          return new GrokParser(context, id, reader, readerOffset, maxObjectLen, retainOriginalText,
+          return new GrokParser(context, id, reader, offset, maxObjectLen, retainOriginalText,
             getMaxStackTraceLines(), createGrok(Log4jHelper.translateLog4jLayoutToGrok(log4jCustomLogFormat),
-              ImmutableList.of(Constants.GROK_LOG4J_LOG_PATTERNS_FILE_NAME)),
+            ImmutableList.of(Constants.GROK_LOG4J_LOG_PATTERNS_FILE_NAME)),
             "Log4j Log Format");
         default:
           return null;
       }
     } catch (IOException ex) {
-      throw new DataParserException(Errors.LOG_PARSER_00, id, readerOffset, ex.getMessage(), ex);
+      throw new DataParserException(Errors.LOG_PARSER_00, id, offset, ex.getMessage(), ex);
     }
   }
 

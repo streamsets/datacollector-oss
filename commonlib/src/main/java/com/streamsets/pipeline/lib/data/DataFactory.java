@@ -21,9 +21,10 @@ public abstract class DataFactory {
     private final int maxRecordLen;
     private final Map<Class<? extends Enum>, Enum> modes;
     private final Map<String, Object> configs;
+    private final int overRunLimit;
 
     Settings(Stage.Context context, DataFormat format, Compression compression, Charset charset, int maxRecordLen,
-        Map<Class<? extends Enum>, Enum> modes, Map<String, Object> configs) {
+        Map<Class<? extends Enum>, Enum> modes, Map<String, Object> configs, int overRunLimit) {
       this.context = context;
       this.format = format;
       this.compression = compression;
@@ -31,6 +32,7 @@ public abstract class DataFactory {
       this.maxRecordLen = maxRecordLen;
       this.modes = ImmutableMap.copyOf(modes);
       this.configs = ImmutableMap.copyOf(configs);
+      this.overRunLimit = overRunLimit;
     }
 
     public Stage.Context getContext() {
@@ -63,6 +65,9 @@ public abstract class DataFactory {
       return (T) configs.get(name);
     }
 
+    public int getOverRunLimit() {
+      return overRunLimit;
+    }
   }
 
   private final Settings settings;

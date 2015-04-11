@@ -20,6 +20,8 @@ import com.streamsets.pipeline.sdk.ContextInfoCreator;
 import org.junit.Assert;
 import org.junit.Test;
 
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
 import java.io.StringReader;
 import java.util.Collections;
 import java.util.HashMap;
@@ -81,8 +83,8 @@ public class TestXmlCharDataParserFactory {
     Assert.assertTrue(dataFactory instanceof XmlCharDataParserFactory);
     XmlCharDataParserFactory factory = (XmlCharDataParserFactory) dataFactory;
 
-    OverrunReader reader = new OverrunReader(new StringReader("<r><e>Hello</e><e>Bye</e></r>"), 1000, true);
-    DataParser parser = factory.getParser("id", reader, 0);
+    InputStream is = new ByteArrayInputStream("<r><e>Hello</e><e>Bye</e></r>".getBytes());
+    DataParser parser = factory.getParser("id", is, 0);
     Assert.assertEquals(0, parser.getOffset());
     Record record = parser.parse();
     Assert.assertNotNull(record);
@@ -101,8 +103,8 @@ public class TestXmlCharDataParserFactory {
     Assert.assertTrue(dataFactory instanceof XmlCharDataParserFactory);
     XmlCharDataParserFactory factory = (XmlCharDataParserFactory) dataFactory;
 
-    OverrunReader reader = new OverrunReader(new StringReader("<r><e>Hello</e><e>Bye</e></r>"), 1000, true);
-    DataParser parser = factory.getParser("id", reader, 18);
+    InputStream is = new ByteArrayInputStream("<r><e>Hello</e><e>Bye</e></r>".getBytes());
+    DataParser parser = factory.getParser("id", is, 18);
     Assert.assertEquals(18, parser.getOffset());
     Record record = parser.parse();
     Assert.assertNotNull(record);

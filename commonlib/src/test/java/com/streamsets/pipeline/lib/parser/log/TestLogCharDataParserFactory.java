@@ -10,7 +10,6 @@ import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.config.LogMode;
 import com.streamsets.pipeline.lib.data.DataFactory;
-import com.streamsets.pipeline.lib.io.OverrunReader;
 import com.streamsets.pipeline.lib.parser.DataParser;
 import com.streamsets.pipeline.lib.parser.DataParserException;
 import com.streamsets.pipeline.lib.parser.DataParserFactoryBuilder;
@@ -19,8 +18,9 @@ import com.streamsets.pipeline.sdk.ContextInfoCreator;
 import org.junit.Assert;
 import org.junit.Test;
 
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import java.io.StringReader;
+import java.io.InputStream;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
@@ -142,10 +142,10 @@ public class TestLogCharDataParserFactory {
     Assert.assertTrue(dataFactory instanceof LogCharDataParserFactory);
     LogCharDataParserFactory factory = (LogCharDataParserFactory) dataFactory;
 
-    OverrunReader reader = new OverrunReader(
-      new StringReader("127.0.0.1 ss h [10/Oct/2000:13:55:36 -0700] \"GET /apache_pb.gif HTTP/1.0\" 200 2326"), 100,
-      true);
-    DataParser parser = factory.getParser("id", reader, 0);
+    InputStream is = new ByteArrayInputStream(
+      "127.0.0.1 ss h [10/Oct/2000:13:55:36 -0700] \"GET /apache_pb.gif HTTP/1.0\" 200 2326".getBytes());
+
+    DataParser parser = factory.getParser("id", is, 0);
 
     Assert.assertEquals(0, parser.getOffset());
     Record record = parser.parse();
@@ -194,10 +194,10 @@ public class TestLogCharDataParserFactory {
     Assert.assertTrue(dataFactory instanceof LogCharDataParserFactory);
     LogCharDataParserFactory factory = (LogCharDataParserFactory) dataFactory;
 
-    OverrunReader reader = new OverrunReader(
-      new StringReader("127.0.0.1 ss h [10/Oct/2000:13:55:36 -0700] \"GET /apache_pb.gif HTTP/1.0\" 200 2326"), 100,
-      true);
-    DataParser parser = factory.getParser("id", reader, 0);
+
+    InputStream is = new ByteArrayInputStream(
+      "127.0.0.1 ss h [10/Oct/2000:13:55:36 -0700] \"GET /apache_pb.gif HTTP/1.0\" 200 2326".getBytes());
+    DataParser parser = factory.getParser("id", is, 0);
 
     Assert.assertEquals(0, parser.getOffset());
     try {
@@ -218,10 +218,10 @@ public class TestLogCharDataParserFactory {
     Assert.assertTrue(dataFactory instanceof LogCharDataParserFactory);
     LogCharDataParserFactory factory = (LogCharDataParserFactory) dataFactory;
 
-    OverrunReader reader = new OverrunReader(new StringReader(
-      "Hello\n127.0.0.1 ss h [10/Oct/2000:13:55:36 -0700] \"GET /apache_pb.gif HTTP/1.0\" 200 2326"), 1000, true);
+    InputStream is = new ByteArrayInputStream(
+      "Hello\n127.0.0.1 ss h [10/Oct/2000:13:55:36 -0700] \"GET /apache_pb.gif HTTP/1.0\" 200 2326".getBytes());
 
-    DataParser parser = factory.getParser("id", reader, 6);
+    DataParser parser = factory.getParser("id", is, 6);
 
     Assert.assertEquals(6, parser.getOffset());
 

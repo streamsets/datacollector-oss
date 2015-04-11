@@ -24,6 +24,8 @@ import com.streamsets.pipeline.sdk.RecordCreator;
 import org.junit.Assert;
 import org.junit.Test;
 
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
 import java.io.StringReader;
 import java.io.StringWriter;
 import java.util.Collections;
@@ -78,8 +80,8 @@ public class TestJsonSdcRecordCharDataParserFactory {
     Assert.assertTrue(dataFactory instanceof JsonSdcRecordCharDataParserFactory);
     JsonSdcRecordCharDataParserFactory factory = (JsonSdcRecordCharDataParserFactory) dataFactory;
 
-    OverrunReader reader = new OverrunReader(new StringReader(createJsonSdcRecordsString()), 1000, true);
-    DataParser parser = factory.getParser("id", reader, 0);
+    InputStream is = new ByteArrayInputStream(createJsonSdcRecordsString().getBytes());
+    DataParser parser = factory.getParser("id", is, 0);
     Assert.assertEquals(0, parser.getOffset());
     Record record = parser.parse();
     Assert.assertNotNull(record);
@@ -100,8 +102,8 @@ public class TestJsonSdcRecordCharDataParserFactory {
     Assert.assertTrue(dataFactory instanceof JsonSdcRecordCharDataParserFactory);
     JsonSdcRecordCharDataParserFactory factory = (JsonSdcRecordCharDataParserFactory) dataFactory;
 
-    OverrunReader reader = new OverrunReader(new StringReader(payload), 1000, true);
-    DataParser parser = factory.getParser("id", reader, 0);
+    InputStream is = new ByteArrayInputStream(payload.getBytes());
+    DataParser parser = factory.getParser("id", is, 0);
     Assert.assertEquals(0, parser.getOffset());
     parser.parse();
     long offset = parser.getOffset();
@@ -113,8 +115,8 @@ public class TestJsonSdcRecordCharDataParserFactory {
     Assert.assertTrue(dataFactory instanceof JsonSdcRecordCharDataParserFactory);
     factory = (JsonSdcRecordCharDataParserFactory) dataFactory;
 
-    reader = new OverrunReader(new StringReader(payload), 1000, true);
-    parser = factory.getParser("id", reader, offset);
+    is = new ByteArrayInputStream(payload.getBytes());
+    parser = factory.getParser("id", is, offset);
     Assert.assertEquals(offset, parser.getOffset());
     Record record = parser.parse();
     Assert.assertNotNull(record);

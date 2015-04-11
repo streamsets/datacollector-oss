@@ -12,6 +12,7 @@ import com.streamsets.pipeline.lib.parser.DataParser;
 import com.streamsets.pipeline.lib.parser.DataParserException;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.Collections;
 import java.util.Map;
 import java.util.Set;
@@ -25,14 +26,15 @@ public class JsonSdcRecordCharDataParserFactory extends CharDataParserFactory {
   }
 
   @Override
-  public DataParser getParser(String id, OverrunReader reader, long readerOffset) throws DataParserException {
+  public DataParser getParser(String id, InputStream is, long offset) throws DataParserException {
+    OverrunReader reader = createReader(is);
     Utils.checkState(reader.getPos() == 0, Utils.formatL("reader must be in position '0', it is at '{}'",
-                                                         reader.getPos()));
+      reader.getPos()));
     try {
-      return new JsonSdcRecordDataParser(getSettings().getContext(), reader, readerOffset,
-                                         getSettings().getMaxRecordLen());
+      return new JsonSdcRecordDataParser(getSettings().getContext(), reader, offset,
+        getSettings().getMaxRecordLen());
     } catch (IOException ex) {
-      throw new DataParserException(Errors.SDC_RECORD_PARSER_00, id, readerOffset, ex.getMessage(), ex);
+      throw new DataParserException(Errors.SDC_RECORD_PARSER_00, id, offset, ex.getMessage(), ex);
     }
   }
 

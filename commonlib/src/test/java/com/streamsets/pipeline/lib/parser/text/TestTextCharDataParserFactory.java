@@ -21,8 +21,10 @@ import org.apache.commons.io.IOUtils;
 import org.junit.Assert;
 import org.junit.Test;
 
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileWriter;
+import java.io.InputStream;
 import java.io.StringReader;
 import java.io.Writer;
 import java.nio.charset.Charset;
@@ -64,8 +66,8 @@ public class TestTextCharDataParserFactory {
       .build();
     Assert.assertTrue(dataFactory instanceof TextCharDataParserFactory);
     TextCharDataParserFactory factory = (TextCharDataParserFactory) dataFactory;
-    OverrunReader reader = new OverrunReader(new StringReader("Hello\nBye"), 1000, true);
-    DataParser parser = factory.getParser("id", reader, 0);
+    InputStream is = new ByteArrayInputStream("Hello\nBye".getBytes());
+    DataParser parser = factory.getParser("id", is, 0);
     Assert.assertEquals(0, parser.getOffset());
     Record record = parser.parse();
     Assert.assertTrue(record.has("/text"));
@@ -82,8 +84,8 @@ public class TestTextCharDataParserFactory {
       .build();
     Assert.assertTrue(dataFactory instanceof TextCharDataParserFactory);
     TextCharDataParserFactory factory = (TextCharDataParserFactory) dataFactory;
-    OverrunReader reader = new OverrunReader(new StringReader("Hello\nBye"), 1000, true);
-    DataParser parser = factory.getParser("id", reader, 6);
+    InputStream is = new ByteArrayInputStream("Hello\nBye".getBytes());
+    DataParser parser = factory.getParser("id", is, 6);
     Assert.assertEquals(6, parser.getOffset());
     Record record = parser.parse();
     Assert.assertTrue(record.has("/text"));
@@ -99,9 +101,16 @@ public class TestTextCharDataParserFactory {
     Writer writer = new FileWriter(testFile);
     IOUtils.write("HelloHello\r\n\r\n", writer);
     writer.close();
-    Map<String, Object> configs = TextCharDataParserFactory.registerConfigs(new HashMap<String, Object>());
-    CharDataParserFactory factory = new TextCharDataParserFactory(getContext(), 3, configs);
-    DataParser parser = factory.getParser(testFile, Charset.forName("UTF-8"), 100000, 0);
+    DataParserFactoryBuilder dataParserFactoryBuilder = new DataParserFactoryBuilder(getContext(), DataParserFormat.TEXT);
+    DataFactory dataFactory = dataParserFactoryBuilder
+      .setMaxDataLen(3)
+      .setCharset(Charset.forName("UTF-8"))
+      .setOverRunLimit(100000)
+      .build();
+    Assert.assertTrue(dataFactory instanceof TextCharDataParserFactory);
+    TextCharDataParserFactory factory = (TextCharDataParserFactory) dataFactory;
+
+    DataParser parser = factory.getParser(testFile, 0);
     Record record = parser.parse();
     Assert.assertTrue(record.has("/text"));
     Assert.assertTrue(record.has("/truncated"));

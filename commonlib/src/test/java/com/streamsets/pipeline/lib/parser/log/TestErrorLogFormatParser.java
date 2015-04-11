@@ -10,7 +10,6 @@ import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.config.LogMode;
 import com.streamsets.pipeline.lib.data.DataFactory;
-import com.streamsets.pipeline.lib.io.OverrunReader;
 import com.streamsets.pipeline.lib.parser.DataParser;
 import com.streamsets.pipeline.lib.parser.DataParserException;
 import com.streamsets.pipeline.lib.parser.DataParserFactoryBuilder;
@@ -19,8 +18,9 @@ import com.streamsets.pipeline.sdk.ContextInfoCreator;
 import org.junit.Assert;
 import org.junit.Test;
 
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import java.io.StringReader;
+import java.io.InputStream;
 import java.util.Collections;
 
 public class TestErrorLogFormatParser {
@@ -132,7 +132,7 @@ public class TestErrorLogFormatParser {
   }
 
   private DataParser getDataParser(String logLine, int maxObjectLength, int readerOffset) throws DataParserException {
-    OverrunReader reader = new OverrunReader(new StringReader(logLine), 1000, true);
+    InputStream is = new ByteArrayInputStream(logLine.getBytes());
 
     DataParserFactoryBuilder dataParserFactoryBuilder = new DataParserFactoryBuilder(getContext(), DataParserFormat.LOG);
     DataFactory dataFactory = dataParserFactoryBuilder
@@ -142,6 +142,6 @@ public class TestErrorLogFormatParser {
       .build();
     Assert.assertTrue(dataFactory instanceof LogCharDataParserFactory);
     LogCharDataParserFactory factory = (LogCharDataParserFactory) dataFactory;
-    return factory.getParser("id", reader, readerOffset);
+    return factory.getParser("id", is, readerOffset);
   }
 }
