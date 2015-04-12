@@ -339,9 +339,10 @@ angular.module('dataCollectorApp.common')
        * @param rev
        * @param skipTargets
        * @param stageOutputList
+       * @param endStage
        * @returns {*}
        */
-      previewPipeline: function(name, sourceOffset, batchSize, rev, skipTargets, stageOutputList) {
+      previewPipeline: function(name, sourceOffset, batchSize, rev, skipTargets, stageOutputList, endStage) {
         var url;
 
         if(!sourceOffset) {
@@ -354,6 +355,10 @@ angular.module('dataCollectorApp.common')
 
         url = apiBase + '/pipeline-library/' + name + '/preview?sourceOffset=' + sourceOffset +
           '&batchSize=' + batchSize + '&rev=' + rev + '&skipTargets=' + skipTargets;
+
+        if(endStage) {
+          url += '&endStage=' + endStage;
+        }
 
         return $http({
           method: 'POST',

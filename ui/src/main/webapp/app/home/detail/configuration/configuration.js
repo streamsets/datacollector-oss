@@ -523,7 +523,7 @@ angular
      */
     var updateFieldDataForStage = function(stageInstance) {
       //In case of processors and targets run the preview to get input fields & if current state of config is previewable.
-      if(stageInstance.uiInfo.stageType !== pipelineConstant.SOURCE_STAGE_TYPE && $scope.pipelineConfig.previewable) {
+      if(stageInstance.uiInfo.stageType !== pipelineConstant.SOURCE_STAGE_TYPE) {
 
         previewService.getInputRecordsFromPreview($scope.activeConfigInfo.name, stageInstance, 10).
           then(function (inputRecords) {

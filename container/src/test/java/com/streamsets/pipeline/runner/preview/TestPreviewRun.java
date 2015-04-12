@@ -97,12 +97,49 @@ public class TestPreviewRun {
     PipelineConfiguration pipelineConfiguration = MockStages.createPipelineConfigurationSourceProcessorTarget();
     pipelineConfiguration.getStages().remove(2);
 
-    PreviewPipeline pipeline = new PreviewPipelineBuilder(MockStages.createStageLibrary(), "name", pipelineConfiguration).build(runner);
+    PreviewPipeline pipeline = new PreviewPipelineBuilder(MockStages.createStageLibrary(), "name",
+      pipelineConfiguration, null).build(runner);
     PreviewPipelineOutput previewOutput = pipeline.run();
     List<StageOutput> output = previewOutput.getBatchesOutput().get(0);
+    Assert.assertEquals(2, output.size());
     Assert.assertEquals(1, output.get(0).getOutput().get("s").get(0).get().getValue());
     Assert.assertEquals(2, output.get(1).getOutput().get("p").get(0).get().getValue());
   }
+
+
+  @Test
+  public void testPreviewPipelineBuilderWithLastStage() throws Exception {
+    MockStages.setSourceCapture(new BaseSource() {
+      @Override
+      public String produce(String lastSourceOffset, int maxBatchSize, BatchMaker batchMaker) throws StageException {
+        Record record = getContext().createRecord("x");
+        record.set(Field.create(1));
+        batchMaker.addRecord(record);
+        return "1";
+      }
+    });
+    MockStages.setProcessorCapture(new SingleLaneRecordProcessor() {
+      @Override
+      protected void process(Record record, SingleLaneBatchMaker batchMaker) throws StageException {
+        record.set(Field.create(2));
+        batchMaker.addRecord(record);
+      }
+    });
+
+    SourceOffsetTracker tracker = Mockito.mock(SourceOffsetTracker.class);
+    PreviewPipelineRunner runner = new PreviewPipelineRunner(tracker, -1, 1, true);
+    PipelineConfiguration pipelineConfiguration = MockStages.createPipelineConfigurationSourceProcessorTarget();
+
+    PreviewPipeline pipeline = new PreviewPipelineBuilder(MockStages.createStageLibrary(), "name",
+      pipelineConfiguration, "p").build(runner);
+
+    PreviewPipelineOutput previewOutput = pipeline.run();
+    List<StageOutput> output = previewOutput.getBatchesOutput().get(0);
+
+    Assert.assertEquals(1, output.size());
+    Assert.assertEquals(1, output.get(0).getOutput().get("s").get(0).get().getValue());
+  }
+
 
   @Test
   public void testIsPreview() throws Exception {
@@ -126,7 +163,7 @@ public class TestPreviewRun {
     pipelineConfiguration.getStages().remove(2);
 
     PreviewPipeline pipeline = new PreviewPipelineBuilder(MockStages.createStageLibrary(), "name",
-                                                          pipelineConfiguration).build(runner);
+                                                          pipelineConfiguration, null).build(runner);
     PreviewPipelineOutput previewOutput = pipeline.run();
     Mockito.verify(tracker).setOffset(Mockito.eq("X"));
   }
@@ -160,7 +197,7 @@ public class TestPreviewRun {
     SourceOffsetTracker tracker = Mockito.mock(SourceOffsetTracker.class);
     PipelineRunner runner = new PreviewPipelineRunner(tracker, -1, 1, true);
     new PreviewPipelineBuilder(MockStages.createStageLibrary(), "name",
-                         MockStages.createPipelineConfigurationSourceProcessorTarget()).build(runner);
+                         MockStages.createPipelineConfigurationSourceProcessorTarget(), null).build(runner);
   }
 
 

@@ -77,7 +77,7 @@ public class PreviewResource {
     @QueryParam("batches") @DefaultValue("1") int batches,
     @QueryParam("skipTargets") @DefaultValue("true") boolean skipTargets)
     throws PipelineStoreException, PipelineRuntimeException, StageException {
-    return previewWithOverride(name, rev, sourceOffset, batchSize, batches, skipTargets, Collections.EMPTY_LIST);
+    return previewWithOverride(name, rev, sourceOffset, batchSize, batches, skipTargets, null, Collections.EMPTY_LIST);
   }
 
   @Path("/{name}/preview")
@@ -91,6 +91,7 @@ public class PreviewResource {
       @QueryParam("batchSize") @DefaultValue("" + Integer.MAX_VALUE) int batchSize,
       @QueryParam("batches") @DefaultValue("1") int batches,
       @QueryParam("skipTargets") @DefaultValue("true") boolean skipTargets,
+      @QueryParam("endStage") String endStageInstanceName,
       List<StageOutputJson> stageOutputsToOverrideJson)
       throws PipelineStoreException, PipelineRuntimeException, StageException {
     int maxBatchSize = configuration.get(MAX_BATCH_SIZE_KEY, MAX_BATCH_SIZE_DEFAULT);
@@ -101,7 +102,8 @@ public class PreviewResource {
     SourceOffsetTracker tracker = new PreviewSourceOffsetTracker(sourceOffset);
     PreviewPipelineRunner runner = new PreviewPipelineRunner(tracker, batchSize, batches, skipTargets);
     try {
-      PreviewPipeline pipeline = new PreviewPipelineBuilder(stageLibrary, name, pipelineConf).build(runner);
+      PreviewPipeline pipeline = new PreviewPipelineBuilder(stageLibrary, name, pipelineConf,
+        endStageInstanceName).build(runner);
       PreviewPipelineOutput previewOutput = pipeline.run(BeanHelper.unwrapStageOutput(stageOutputsToOverrideJson));
       return Response.ok().type(MediaType.APPLICATION_JSON).entity(BeanHelper.wrapPreviewPipelineOutput(previewOutput))
         .build();
@@ -142,7 +144,7 @@ public class PreviewResource {
     SourceOffsetTracker tracker = new PreviewSourceOffsetTracker("");
     PreviewPipelineRunner runner = new PreviewPipelineRunner(tracker, 10, 1, true);
     try {
-      PreviewPipeline pipeline = new PreviewPipelineBuilder(stageLibrary, name, pipelineConf).build(runner);
+      PreviewPipeline pipeline = new PreviewPipelineBuilder(stageLibrary, name, pipelineConf, null).build(runner);
       return Response.ok().type(MediaType.APPLICATION_JSON)
                      .entity(BeanHelper.wrapStageIssues(pipeline.validateConfigs())).build();
     } catch (PipelineRuntimeException ex) {

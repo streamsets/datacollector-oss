@@ -153,7 +153,7 @@ angular
      * @param edge
      */
     var updateFieldDataForStage = function(edge) {
-      if(edge && $scope.pipelineConfig.previewable) {
+      if(edge) {
 
         previewService.getEdgeInputRecordsFromPreview($scope.activeConfigInfo.name, edge, 10).
           then(function (inputRecords) {

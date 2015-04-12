@@ -17,6 +17,7 @@ import com.streamsets.pipeline.runner.Pipeline;
 import com.streamsets.pipeline.runner.PipelineRuntimeException;
 import com.streamsets.pipeline.validation.StageIssue;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
@@ -36,14 +37,37 @@ public class PreviewPipelineBuilder {
   private final StageLibraryTask stageLib;
   private final String name;
   private final PipelineConfiguration pipelineConf;
+  private final String endStageInstanceName;
 
-  public PreviewPipelineBuilder(StageLibraryTask stageLib, String name, PipelineConfiguration pipelineConf) {
+  /**
+   * Constructor
+   *
+   * @param stageLib Stage Library Task
+   * @param name Name of pipeline
+   * @param pipelineConf Pipeline Configuration
+   * @param endStageInstanceName Optional parameter, if passed builder will generate a partial pipeline and
+   *                             endStage is exclusive
+   */
+  public PreviewPipelineBuilder(StageLibraryTask stageLib, String name, PipelineConfiguration pipelineConf,
+                                String endStageInstanceName) {
     this.stageLib = new PreviewStageLibraryTask(stageLib);
     this.name = name;
     this.pipelineConf = pipelineConf;
+    this.endStageInstanceName = endStageInstanceName;
   }
 
   public PreviewPipeline build(PipelineRunner runner) throws PipelineRuntimeException, StageException {
+    if(endStageInstanceName != null && endStageInstanceName.trim().length() > 0) {
+      List<StageConfiguration> stages = new ArrayList<>();
+      for(StageConfiguration stageConfiguration: pipelineConf.getStages()) {
+        if (stageConfiguration.getInstanceName().equals(endStageInstanceName)) {
+          break;
+        }
+        stages.add(stageConfiguration);
+      }
+      pipelineConf.setStages(stages);
+    }
+
     PipelineConfigurationValidator validator = new PipelineConfigurationValidator(stageLib, name, pipelineConf);
     if (validator.validate() || validator.canPreview()) {
       List<String> openLanes = validator.getOpenLanes();
