@@ -14,6 +14,8 @@ import com.streamsets.pipeline.api.el.ELEval;
 import com.streamsets.pipeline.api.el.ELEvalException;
 import com.streamsets.pipeline.lib.generator.CharDataGeneratorFactory;
 import com.streamsets.pipeline.lib.generator.DataGenerator;
+import com.streamsets.pipeline.lib.generator.DataGeneratorFactoryBuilder;
+import com.streamsets.pipeline.lib.generator.DataGeneratorFormat;
 import com.streamsets.pipeline.lib.io.WildcardFilter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -96,8 +98,7 @@ public class RecordsToLocalFileSystemTarget extends BaseTarget {
     fileFilter = WildcardFilter.createRegex("records-[0-9][0-9][0-9][0-9][0-9][0-9].json");
     // if we had non graceful shutdown we may have a _tmp file around. new file is not created.
     rotate(false);
-    generatorFactory = new CharDataGeneratorFactory.Builder(getContext(),
-                                                            CharDataGeneratorFactory.Format.SDC_RECORD).build();
+    generatorFactory = new DataGeneratorFactoryBuilder(getContext(), DataGeneratorFormat.SDC_RECORD).build();
   }
 
   @Override

@@ -5,8 +5,9 @@
  */
 package com.streamsets.pipeline.lib.generator.delimited;
 
-import com.streamsets.pipeline.api.Stage;
+import com.google.common.collect.ImmutableSet;
 import com.streamsets.pipeline.config.CsvHeader;
+import com.streamsets.pipeline.config.CsvMode;
 import com.streamsets.pipeline.lib.generator.CharDataGeneratorFactory;
 import com.streamsets.pipeline.lib.generator.DataGenerator;
 import com.streamsets.pipeline.lib.generator.DataGeneratorException;
@@ -14,7 +15,10 @@ import org.apache.commons.csv.CSVFormat;
 
 import java.io.IOException;
 import java.io.Writer;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 public class DelimitedCharDataGeneratorFactory extends CharDataGeneratorFactory {
   static final String KEY_PREFIX = "delimited.";
@@ -25,12 +29,18 @@ public class DelimitedCharDataGeneratorFactory extends CharDataGeneratorFactory 
   public static final String REPLACE_NEWLINES_KEY = KEY_PREFIX + "replaceNewLines";
   static final boolean REPLACE_NEWLINES_DEFAULT = true;
 
-  public static Map<String, Object> registerConfigs(Map<String, Object> configs) {
+  public static final Map<String, Object> CONFIGS;
+
+  static {
+    Map<String, Object> configs = new HashMap<>();
     configs.put(HEADER_KEY, HEADER_DEFAULT);
     configs.put(VALUE_KEY, VALUE_DEFAULT);
     configs.put(REPLACE_NEWLINES_KEY, REPLACE_NEWLINES_DEFAULT);
-    return configs;
+    CONFIGS = Collections.unmodifiableMap(configs);
   }
+
+  @SuppressWarnings("unchecked")
+  public static final Set<Class<? extends Enum>> MODES = (Set) ImmutableSet.of(CsvMode.class, CsvHeader.class);
 
   private final CSVFormat format;
   private final CsvHeader header;
@@ -38,13 +48,13 @@ public class DelimitedCharDataGeneratorFactory extends CharDataGeneratorFactory 
   private final String valueKey;
   private final boolean replaceNewLines;
 
-  public DelimitedCharDataGeneratorFactory(Stage.Context context, CSVFormat format, CsvHeader header,
-      Map<String, Object> configs) {
-    this.format = format;
-    this.header = header;
-    headerKey = (String) configs.get(HEADER_KEY);
-    valueKey = (String) configs.get(VALUE_KEY);
-    replaceNewLines = (boolean )configs.get(REPLACE_NEWLINES_KEY);
+  public DelimitedCharDataGeneratorFactory(Settings settings) {
+    super(settings);
+    this.format = settings.getMode(CsvMode.class).getFormat();
+    this.header = settings.getMode(CsvHeader.class);
+    headerKey = settings.getConfig(HEADER_KEY);
+    valueKey = settings.getConfig(VALUE_KEY);
+    replaceNewLines = settings.getConfig(REPLACE_NEWLINES_KEY);
   }
 
   @Override

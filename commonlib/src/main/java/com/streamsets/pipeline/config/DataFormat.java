@@ -7,26 +7,26 @@ package com.streamsets.pipeline.config;
 
 import com.streamsets.pipeline.api.GenerateResourceBundle;
 import com.streamsets.pipeline.api.Label;
-import com.streamsets.pipeline.lib.generator.CharDataGeneratorFactory;
+import com.streamsets.pipeline.lib.generator.DataGeneratorFormat;
 import com.streamsets.pipeline.lib.parser.DataParserFormat;
 
 @GenerateResourceBundle
 public enum DataFormat implements Label {
-  TEXT("Text", DataParserFormat.TEXT, CharDataGeneratorFactory.Format.TEXT),
-  JSON("JSON", DataParserFormat.JSON, CharDataGeneratorFactory.Format.JSON),
-  DELIMITED("Delimited", DataParserFormat.DELIMITED, CharDataGeneratorFactory.Format.DELIMITED),
-  XML("XML", DataParserFormat.XML, CharDataGeneratorFactory.Format.XML),
-  SDC_JSON("SDC Record", DataParserFormat.SDC_RECORD, CharDataGeneratorFactory.Format.SDC_RECORD),
-  LOG("Log", DataParserFormat.LOG, CharDataGeneratorFactory.Format.LOG),
+  TEXT("Text", DataParserFormat.TEXT, DataGeneratorFormat.TEXT),
+  JSON("JSON", DataParserFormat.JSON, DataGeneratorFormat.JSON),
+  DELIMITED("Delimited", DataParserFormat.DELIMITED, DataGeneratorFormat.DELIMITED),
+  XML("XML", DataParserFormat.XML, null),
+  SDC_JSON("SDC Record", DataParserFormat.SDC_RECORD, DataGeneratorFormat.SDC_RECORD),
+  LOG("Log", DataParserFormat.LOG, null),
 
 
   ;
 
   private final String label;
   private final DataParserFormat parserFormat;
-  private final CharDataGeneratorFactory.Format generatorFormat;
+  private final DataGeneratorFormat generatorFormat;
 
-  DataFormat(String label, DataParserFormat parserFormat, CharDataGeneratorFactory.Format generatorFormat) {
+  DataFormat(String label, DataParserFormat parserFormat, DataGeneratorFormat generatorFormat) {
     this.label = label;
     this.parserFormat = parserFormat;
     this.generatorFormat = generatorFormat;
@@ -41,7 +41,7 @@ public enum DataFormat implements Label {
     return parserFormat;
   }
 
-  public CharDataGeneratorFactory.Format getGeneratorFormat() {
+  public DataGeneratorFormat getGeneratorFormat() {
     return generatorFormat;
   }
 

@@ -9,7 +9,10 @@ import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.OnRecordError;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.Stage;
+import com.streamsets.pipeline.lib.data.DataFactory;
 import com.streamsets.pipeline.lib.generator.DataGenerator;
+import com.streamsets.pipeline.lib.generator.DataGeneratorFactoryBuilder;
+import com.streamsets.pipeline.lib.generator.DataGeneratorFormat;
 import com.streamsets.pipeline.sdk.ContextInfoCreator;
 import com.streamsets.pipeline.sdk.RecordCreator;
 import org.junit.Assert;
@@ -17,24 +20,26 @@ import org.junit.Test;
 
 import java.io.IOException;
 import java.io.StringWriter;
-import java.util.HashMap;
-import java.util.Map;
 
 public class TestTextDataGenerator {
 
   @Test
   public void testFactory() throws Exception {
     Stage.Context context = ContextInfoCreator.createTargetContext("i", false, OnRecordError.TO_ERROR);
-    Map<String, Object> configs = new HashMap<>();
-    TextCharDataGeneratorFactory.registerConfigs(configs);
-    TextCharDataGeneratorFactory factory = new TextCharDataGeneratorFactory(context, configs);
+    DataFactory dataFactory = new DataGeneratorFactoryBuilder(context, DataGeneratorFormat.TEXT).build();
+    Assert.assertTrue(dataFactory instanceof TextCharDataGeneratorFactory);
+    TextCharDataGeneratorFactory factory = (TextCharDataGeneratorFactory) dataFactory;
     TextDataGenerator generator = (TextDataGenerator) factory.getGenerator(new StringWriter());
     Assert.assertEquals("", generator.getFieldPath());
     Assert.assertEquals(false, generator.isEmptyLineIfNull());
 
-    configs.put(TextCharDataGeneratorFactory.FIELD_PATH_KEY, "/foo");
-    configs.put(TextCharDataGeneratorFactory.EMPTY_LINE_IF_NULL_KEY, true);
-    factory = new TextCharDataGeneratorFactory(context, configs);
+    dataFactory = new DataGeneratorFactoryBuilder(context, DataGeneratorFormat.TEXT)
+      .setConfig(TextCharDataGeneratorFactory.FIELD_PATH_KEY, "/foo")
+      .setConfig(TextCharDataGeneratorFactory.EMPTY_LINE_IF_NULL_KEY, true)
+      .build();
+    Assert.assertTrue(dataFactory instanceof TextCharDataGeneratorFactory);
+    factory = (TextCharDataGeneratorFactory) dataFactory;
+
     generator = (TextDataGenerator) factory.getGenerator(new StringWriter());
     Assert.assertEquals("/foo", generator.getFieldPath());
     Assert.assertEquals(true, generator.isEmptyLineIfNull());

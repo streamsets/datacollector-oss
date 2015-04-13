@@ -11,7 +11,10 @@ import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.ext.ContextExtensions;
 import com.streamsets.pipeline.api.ext.JsonRecordReader;
+import com.streamsets.pipeline.lib.data.DataFactory;
 import com.streamsets.pipeline.lib.generator.DataGenerator;
+import com.streamsets.pipeline.lib.generator.DataGeneratorFactoryBuilder;
+import com.streamsets.pipeline.lib.generator.DataGeneratorFormat;
 import com.streamsets.pipeline.sdk.ContextInfoCreator;
 import com.streamsets.pipeline.sdk.RecordCreator;
 import org.junit.Assert;
@@ -20,8 +23,6 @@ import org.junit.Test;
 import java.io.IOException;
 import java.io.StringReader;
 import java.io.StringWriter;
-import java.util.HashMap;
-import java.util.Map;
 
 public class TestJsonSdcRecordDataGenerator {
 
@@ -32,9 +33,10 @@ public class TestJsonSdcRecordDataGenerator {
   @Test
   public void testFactory() throws Exception {
     Stage.Context context = ContextInfoCreator.createTargetContext("i", false, OnRecordError.TO_ERROR);
-    Map<String, Object> configs = new HashMap<>();
-    JsonSdcRecordCharDataGeneratorFactory.registerConfigs(configs);
-    JsonSdcRecordCharDataGeneratorFactory factory = new JsonSdcRecordCharDataGeneratorFactory(context, configs);
+
+    DataFactory dataFactory = new DataGeneratorFactoryBuilder(context, DataGeneratorFormat.SDC_RECORD).build();
+    Assert.assertTrue(dataFactory instanceof JsonSdcRecordCharDataGeneratorFactory);
+    JsonSdcRecordCharDataGeneratorFactory factory = (JsonSdcRecordCharDataGeneratorFactory) dataFactory;
     JsonSdcRecordDataGenerator generator = (JsonSdcRecordDataGenerator) factory.getGenerator(new StringWriter());
     Assert.assertNotNull(generator);
   }

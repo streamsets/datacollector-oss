@@ -91,7 +91,6 @@ public class DataFactoryBuilder<B extends DataFactoryBuilder, DF extends DataFac
   public DF build() {
     Utils.checkState(modes.size() == expectedModes.size(),
                      Utils.formatL("Format '{}', all required modes have not been set", format));
-    Utils.checkState(maxDataLen != 0, "maxDataLen has not been set");
     DataFactory.Settings settings = new DataFactory.Settings(context, format, compression, charset, maxDataLen, modes,
                                                              configs, overRunLimit);
     return format.create(settings);

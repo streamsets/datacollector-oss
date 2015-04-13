@@ -22,6 +22,7 @@ import com.streamsets.pipeline.config.JsonMode;
 import com.streamsets.pipeline.lib.el.RecordEL;
 import com.streamsets.pipeline.lib.el.TimeEL;
 import com.streamsets.pipeline.lib.generator.CharDataGeneratorFactory;
+import com.streamsets.pipeline.lib.generator.DataGeneratorFactoryBuilder;
 import com.streamsets.pipeline.lib.generator.delimited.DelimitedCharDataGeneratorFactory;
 import com.streamsets.pipeline.lib.generator.text.TextCharDataGeneratorFactory;
 import com.streamsets.pipeline.stage.destination.hdfs.writer.ActiveRecordWriters;
@@ -323,8 +324,8 @@ public class HdfsTarget extends RecordTarget {
   }
 
   private CharDataGeneratorFactory createDataGeneratorFactory() {
-    CharDataGeneratorFactory.Builder builder = new CharDataGeneratorFactory.Builder(getContext(),
-                                                                                    dataFormat.getGeneratorFormat());
+    DataGeneratorFactoryBuilder builder = new DataGeneratorFactoryBuilder(getContext(),
+      dataFormat.getGeneratorFormat());
     switch(dataFormat) {
       case JSON:
         builder.setMode(jsonMode);

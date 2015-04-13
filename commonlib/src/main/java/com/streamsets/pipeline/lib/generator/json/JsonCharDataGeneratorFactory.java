@@ -5,7 +5,7 @@
  */
 package com.streamsets.pipeline.lib.generator.json;
 
-import com.streamsets.pipeline.api.Stage;
+import com.google.common.collect.ImmutableSet;
 import com.streamsets.pipeline.config.JsonMode;
 import com.streamsets.pipeline.lib.generator.CharDataGeneratorFactory;
 import com.streamsets.pipeline.lib.generator.DataGenerator;
@@ -13,18 +13,22 @@ import com.streamsets.pipeline.lib.generator.DataGeneratorException;
 
 import java.io.IOException;
 import java.io.Writer;
+import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 public class JsonCharDataGeneratorFactory extends CharDataGeneratorFactory {
 
-  public static Map<String, Object> registerConfigs(Map<String, Object> configs) {
-    return configs;
-  }
+  public static final Map<String, Object> CONFIGS = new HashMap<>();
+
+  @SuppressWarnings("unchecked")
+  public static final Set<Class<? extends Enum>> MODES = (Set) ImmutableSet.of(JsonMode.class);
 
   private final JsonMode jsonMode;
 
-  public JsonCharDataGeneratorFactory(Stage.Context context, JsonMode jsonMode, Map<String, Object> configs) {
-    this.jsonMode = jsonMode;
+  public JsonCharDataGeneratorFactory(Settings settings) {
+    super(settings);
+    this.jsonMode = settings.getMode(JsonMode.class);
   }
 
   @Override

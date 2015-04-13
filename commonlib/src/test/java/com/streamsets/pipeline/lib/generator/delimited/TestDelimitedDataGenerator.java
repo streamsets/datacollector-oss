@@ -11,7 +11,10 @@ import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.config.CsvHeader;
 import com.streamsets.pipeline.config.CsvMode;
+import com.streamsets.pipeline.lib.data.DataFactory;
 import com.streamsets.pipeline.lib.generator.DataGenerator;
+import com.streamsets.pipeline.lib.generator.DataGeneratorFactoryBuilder;
+import com.streamsets.pipeline.lib.generator.DataGeneratorFormat;
 import com.streamsets.pipeline.sdk.ContextInfoCreator;
 import com.streamsets.pipeline.sdk.RecordCreator;
 import org.apache.commons.csv.CSVFormat;
@@ -30,20 +33,29 @@ public class TestDelimitedDataGenerator {
   @Test
   public void testFactory() throws Exception {
     Stage.Context context = ContextInfoCreator.createTargetContext("i", false, OnRecordError.TO_ERROR);
-    Map<String, Object> configs = new HashMap<>();
-    DelimitedCharDataGeneratorFactory.registerConfigs(configs);
-    DelimitedCharDataGeneratorFactory factory = new DelimitedCharDataGeneratorFactory(context, CSVFormat.DEFAULT,
-                                                                                      CsvHeader.IGNORE_HEADER, configs);
+
+    DataGeneratorFactoryBuilder builder = new DataGeneratorFactoryBuilder(context, DataGeneratorFormat.DELIMITED);
+    builder.setMode(CsvMode.CSV).setMode(CsvHeader.IGNORE_HEADER);
+    DataFactory dataFactory = builder.build();
+
+    Assert.assertTrue(dataFactory instanceof DelimitedCharDataGeneratorFactory);
+    DelimitedCharDataGeneratorFactory factory = (DelimitedCharDataGeneratorFactory)dataFactory;
+
     DelimitedDataGenerator generator = (DelimitedDataGenerator) factory.getGenerator(new StringWriter());
     Assert.assertEquals(CSVFormat.DEFAULT, generator.getFormat());
-    Assert.assertEquals(CsvHeader.IGNORE_HEADER, generator.getHeader());
     Assert.assertEquals(CsvHeader.IGNORE_HEADER, generator.getHeader());
     Assert.assertEquals("header", generator.getHeaderKey());
     Assert.assertEquals("value", generator.getValueKey());
 
-    configs.put(DelimitedCharDataGeneratorFactory.HEADER_KEY, "foo");
-    configs.put(DelimitedCharDataGeneratorFactory.VALUE_KEY, "bar");
-    factory = new DelimitedCharDataGeneratorFactory(context, CSVFormat.DEFAULT, CsvHeader.IGNORE_HEADER, configs);
+    builder = new DataGeneratorFactoryBuilder(context, DataGeneratorFormat.DELIMITED);
+    builder.setMode(CsvMode.CSV)
+      .setMode(CsvHeader.IGNORE_HEADER)
+      .setConfig(DelimitedCharDataGeneratorFactory.HEADER_KEY, "foo")
+      .setConfig(DelimitedCharDataGeneratorFactory.VALUE_KEY, "bar");
+    dataFactory = builder.build();
+    Assert.assertTrue(dataFactory instanceof DelimitedCharDataGeneratorFactory);
+    factory = (DelimitedCharDataGeneratorFactory)dataFactory;
+
     generator = (DelimitedDataGenerator) factory.getGenerator(new StringWriter());
     Assert.assertEquals("foo", generator.getHeaderKey());
     Assert.assertEquals("bar", generator.getValueKey());

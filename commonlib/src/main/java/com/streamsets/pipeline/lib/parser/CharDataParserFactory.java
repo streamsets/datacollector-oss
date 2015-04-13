@@ -5,6 +5,7 @@
  */
 package com.streamsets.pipeline.lib.parser;
 
+import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.lib.data.DataFactory;
 import com.streamsets.pipeline.lib.io.OverrunReader;
 
@@ -21,6 +22,7 @@ public abstract class CharDataParserFactory extends DataFactory {
 
   protected CharDataParserFactory(Settings settings) {
     super(settings);
+    Utils.checkState(settings.getMaxRecordLen() != 0, "maxDataLen has not been set");
   }
 
   public DataParser getParser(String id, String data) throws DataParserException {

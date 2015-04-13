@@ -11,9 +11,9 @@ import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.lib.generator.CharDataGeneratorFactory;
 import com.streamsets.pipeline.lib.generator.DataGenerator;
 import com.streamsets.pipeline.lib.generator.DataGeneratorException;
-import com.streamsets.pipeline.stage.destination.hdfs.HdfsFileType;
 import com.streamsets.pipeline.sdk.ContextInfoCreator;
 import com.streamsets.pipeline.sdk.RecordCreator;
+import com.streamsets.pipeline.stage.destination.hdfs.HdfsFileType;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.hdfs.HdfsConfiguration;
@@ -35,6 +35,10 @@ public class TestActiveRecordWriters {
   private static Path testDir;
 
   public static class DummyDataGeneratorFactory extends CharDataGeneratorFactory {
+    protected DummyDataGeneratorFactory(Settings settings) {
+      super(settings);
+    }
+
     @Override
     public DataGenerator getGenerator(Writer writer) throws IOException, DataGeneratorException {
       return new DataGenerator() {
@@ -81,7 +85,7 @@ public class TestActiveRecordWriters {
     compressionCodec.setConf(conf);
     SequenceFile.CompressionType compressionType = SequenceFile.CompressionType.BLOCK;
     String keyEL = "uuid()";
-    CharDataGeneratorFactory generatorFactory = new DummyDataGeneratorFactory();
+    CharDataGeneratorFactory generatorFactory = new DummyDataGeneratorFactory(null);
     RecordWriterManager mgr = new RecordWriterManager(uri, conf, prefix, template, timeZone, cutOffSecs, cutOffSize,
       cutOffRecords, fileType, compressionCodec , compressionType, keyEL, generatorFactory,
       ContextInfoCreator.createTargetContext("testWritersLifecycle", false, OnRecordError.TO_ERROR));

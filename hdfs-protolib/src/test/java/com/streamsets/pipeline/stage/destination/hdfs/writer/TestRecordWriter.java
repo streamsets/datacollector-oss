@@ -35,6 +35,10 @@ public class TestRecordWriter {
   private static Path testDir;
 
   public static class DummyDataGeneratorFactory extends CharDataGeneratorFactory {
+    protected DummyDataGeneratorFactory(Settings settings) {
+      super(settings);
+    }
+
     @Override
     public DataGenerator getGenerator(final Writer writer) throws IOException, DataGeneratorException {
       return new DataGenerator() {
@@ -75,7 +79,7 @@ public class TestRecordWriter {
       OutputStream os = fs.create(file, false);
       long timeToLive = 10000;
       long expires = System.currentTimeMillis() + timeToLive;
-      RecordWriter writer = new RecordWriter(file, timeToLive, os, new DummyDataGeneratorFactory());
+      RecordWriter writer = new RecordWriter(file, timeToLive, os, new DummyDataGeneratorFactory(null));
       Assert.assertTrue(writer.isTextFile());
       Assert.assertFalse(writer.isSeqFile());
       Assert.assertEquals(file, writer.getPath());
@@ -119,7 +123,7 @@ public class TestRecordWriter {
                                                               (CompressionCodec) null);
       long timeToLive = 10000;
       long expires = System.currentTimeMillis() + timeToLive;
-      RecordWriter writer = new RecordWriter(file, timeToLive, seqFile, keyEL, new DummyDataGeneratorFactory(),
+      RecordWriter writer = new RecordWriter(file, timeToLive, seqFile, keyEL, new DummyDataGeneratorFactory(null),
         ContextInfoCreator.createTargetContext("testWritersLifecycle", false, OnRecordError.TO_ERROR));
       Assert.assertFalse(writer.isTextFile());
       Assert.assertTrue(writer.isSeqFile());

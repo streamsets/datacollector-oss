@@ -25,6 +25,7 @@ import com.streamsets.pipeline.lib.el.ELUtils;
 import com.streamsets.pipeline.lib.el.RecordEL;
 import com.streamsets.pipeline.lib.generator.CharDataGeneratorFactory;
 import com.streamsets.pipeline.lib.generator.DataGenerator;
+import com.streamsets.pipeline.lib.generator.DataGeneratorFactoryBuilder;
 import com.streamsets.pipeline.lib.generator.delimited.DelimitedCharDataGeneratorFactory;
 import com.streamsets.pipeline.lib.generator.text.TextCharDataGeneratorFactory;
 import org.slf4j.Logger;
@@ -115,8 +116,8 @@ public class KafkaTarget extends BaseTarget {
   }
 
   private CharDataGeneratorFactory createDataGeneratorFactory() {
-    CharDataGeneratorFactory.Builder builder = new CharDataGeneratorFactory.Builder(getContext(),
-                                                                                    dataFormat.getGeneratorFormat());
+    DataGeneratorFactoryBuilder builder = new DataGeneratorFactoryBuilder(getContext(),
+      dataFormat.getGeneratorFormat());
     switch (dataFormat) {
       case SDC_JSON:
         break;
