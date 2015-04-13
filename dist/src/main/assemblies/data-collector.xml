@@ -188,6 +188,12 @@
       <outputDirectory>/streamsets-libs/</outputDirectory>
     </fileSet>
 
+    <!-- AWS libs -->
+    <fileSet>
+      <directory>${basedir}/../aws-lib/target/streamsets-libs/</directory>
+      <outputDirectory>/streamsets-libs/</outputDirectory>
+    </fileSet>
+
     <!-- CDH5 Kafka libs -->
     <fileSet>
       <directory>${basedir}/../${cdh5-kafka_0_8_2_0_kafka_1_2_0-lib}/target/streamsets-libs/</directory>

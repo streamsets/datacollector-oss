@@ -94,6 +94,8 @@
     <module>flume-protolib</module>
     <module>apache-flume_1_5_0-lib</module>
 
+    <module>aws-lib</module>
+
     <module>hbase-protolib</module>
     <module>spark-protolib</module>
     <module>spark_1_3_0-lib</module>
