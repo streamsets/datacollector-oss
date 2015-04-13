@@ -22,10 +22,9 @@ import org.apache.hadoop.io.Text;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
-import java.io.OutputStreamWriter;
-import java.io.StringWriter;
 
 public class RecordWriter {
   private final static Logger LOG = LoggerFactory.getLogger(RecordWriter.class);
@@ -58,7 +57,7 @@ public class RecordWriter {
       CharDataGeneratorFactory generatorFactory) throws StageException, IOException {
     this(path, timeToLiveMillis, generatorFactory);
     this.textOutputStream = new CountingOutputStream(textOutputStream);
-    generator = generatorFactory.getGenerator(new OutputStreamWriter(this.textOutputStream));
+    generator = generatorFactory.getGenerator(this.textOutputStream);
     textFile = true;
   }
 
@@ -91,11 +90,11 @@ public class RecordWriter {
     } else if (seqWriter != null) {
       RecordEL.setRecordInContext(elVars, record);
       key.set(keyElEval.eval(elVars, keyEL, String.class));
-      StringWriter sw = new StringWriter(1024);
-      DataGenerator dg = generatorFactory.getGenerator(sw);
+      ByteArrayOutputStream baos = new ByteArrayOutputStream(1024);
+      DataGenerator dg = generatorFactory.getGenerator(baos);
       dg.write(record);
       dg.close();
-      value.set(sw.toString());
+      value.set(new String(baos.toByteArray()));
       seqWriter.append(key, value);
     } else {
       throw new IOException(Utils.format("RecordWriter '{}' is closed", path));

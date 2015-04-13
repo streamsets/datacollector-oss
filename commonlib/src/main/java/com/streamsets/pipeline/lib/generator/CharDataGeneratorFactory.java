@@ -9,8 +9,10 @@ package com.streamsets.pipeline.lib.generator;
 import com.streamsets.pipeline.lib.data.DataFactory;
 
 import java.io.File;
-import java.io.FileWriter;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
 import java.io.Writer;
 
 public abstract class CharDataGeneratorFactory extends DataFactory {
@@ -20,17 +22,17 @@ public abstract class CharDataGeneratorFactory extends DataFactory {
   }
 
   public DataGenerator getGenerator(File file) throws IOException, DataGeneratorException {
-    FileWriter fileWriter;
+    FileOutputStream fileOutputStream;
     try {
-      fileWriter = new FileWriter(file);
+      fileOutputStream = new FileOutputStream(file);
     } catch (IOException ex) {
       throw new DataGeneratorException(Errors.DATA_GENERATOR_00, file.getAbsolutePath(), ex.getMessage(), ex);
     }
     try {
-      return getGenerator(fileWriter);
+      return getGenerator(fileOutputStream);
     } catch (DataGeneratorException ex) {
       try {
-        fileWriter.close();
+        fileOutputStream.close();
       } catch (IOException ioEx) {
         //NOP
       }
@@ -38,6 +40,10 @@ public abstract class CharDataGeneratorFactory extends DataFactory {
     }
   }
 
-  public abstract DataGenerator getGenerator(Writer writer) throws IOException, DataGeneratorException;
+  public abstract DataGenerator getGenerator(OutputStream os) throws IOException, DataGeneratorException;
+
+  public Writer createWriter(OutputStream os) {
+    return new OutputStreamWriter(os);
+  }
 
 }

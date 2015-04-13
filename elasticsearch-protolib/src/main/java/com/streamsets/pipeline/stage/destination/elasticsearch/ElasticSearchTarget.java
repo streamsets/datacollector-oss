@@ -33,7 +33,7 @@ import org.elasticsearch.common.transport.InetSocketTransportAddress;
 import org.elasticsearch.common.transport.TransportAddress;
 import org.elasticsearch.common.xcontent.XContentType;
 
-import java.io.StringWriter;
+import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
@@ -162,7 +162,6 @@ public class ElasticSearchTarget extends BaseTarget {
 
   @Override
   public void write(final Batch batch) throws StageException {
-    StringWriter writer = new StringWriter();
     setBatchTime();
     ELVars elVars = getContext().createELVars();
     TimeEL.setTimeNowInContext(elVars, getBatchTime());
@@ -189,11 +188,11 @@ public class ElasticSearchTarget extends BaseTarget {
         if (docIdTemplate != null && !docIdTemplate.isEmpty()) {
           id = docIdEval.eval(elVars, docIdTemplate, String.class);
         }
-        writer.getBuffer().setLength(0);
-        DataGenerator generator = generatorFactory.getGenerator(writer);
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        DataGenerator generator = generatorFactory.getGenerator(baos);
         generator.write(record);
         generator.close();
-        String json = writer.toString();
+        String json = new String(baos.toByteArray());
         bulkRequest.add(elasticClient.prepareIndex(index, type, id).setContentType(XContentType.JSON).setSource(json));
       } catch (Exception ex) {
         switch (getContext().getOnErrorRecord()) {

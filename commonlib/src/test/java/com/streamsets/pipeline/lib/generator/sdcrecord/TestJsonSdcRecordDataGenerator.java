@@ -20,6 +20,7 @@ import com.streamsets.pipeline.sdk.RecordCreator;
 import org.junit.Assert;
 import org.junit.Test;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.StringReader;
 import java.io.StringWriter;
@@ -37,7 +38,7 @@ public class TestJsonSdcRecordDataGenerator {
     DataFactory dataFactory = new DataGeneratorFactoryBuilder(context, DataGeneratorFormat.SDC_RECORD).build();
     Assert.assertTrue(dataFactory instanceof JsonSdcRecordCharDataGeneratorFactory);
     JsonSdcRecordCharDataGeneratorFactory factory = (JsonSdcRecordCharDataGeneratorFactory) dataFactory;
-    JsonSdcRecordDataGenerator generator = (JsonSdcRecordDataGenerator) factory.getGenerator(new StringWriter());
+    JsonSdcRecordDataGenerator generator = (JsonSdcRecordDataGenerator) factory.getGenerator(new ByteArrayOutputStream());
     Assert.assertNotNull(generator);
   }
 

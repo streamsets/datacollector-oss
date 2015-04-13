@@ -21,6 +21,7 @@ import org.apache.commons.csv.CSVFormat;
 import org.junit.Assert;
 import org.junit.Test;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.StringWriter;
 import java.util.ArrayList;
@@ -41,7 +42,7 @@ public class TestDelimitedDataGenerator {
     Assert.assertTrue(dataFactory instanceof DelimitedCharDataGeneratorFactory);
     DelimitedCharDataGeneratorFactory factory = (DelimitedCharDataGeneratorFactory)dataFactory;
 
-    DelimitedDataGenerator generator = (DelimitedDataGenerator) factory.getGenerator(new StringWriter());
+    DelimitedDataGenerator generator = (DelimitedDataGenerator) factory.getGenerator(new ByteArrayOutputStream());
     Assert.assertEquals(CSVFormat.DEFAULT, generator.getFormat());
     Assert.assertEquals(CsvHeader.IGNORE_HEADER, generator.getHeader());
     Assert.assertEquals("header", generator.getHeaderKey());
@@ -56,7 +57,7 @@ public class TestDelimitedDataGenerator {
     Assert.assertTrue(dataFactory instanceof DelimitedCharDataGeneratorFactory);
     factory = (DelimitedCharDataGeneratorFactory)dataFactory;
 
-    generator = (DelimitedDataGenerator) factory.getGenerator(new StringWriter());
+    generator = (DelimitedDataGenerator) factory.getGenerator(new ByteArrayOutputStream());
     Assert.assertEquals("foo", generator.getHeaderKey());
     Assert.assertEquals("bar", generator.getValueKey());
 

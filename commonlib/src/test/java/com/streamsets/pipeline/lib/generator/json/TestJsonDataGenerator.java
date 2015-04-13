@@ -21,6 +21,7 @@ import com.streamsets.pipeline.sdk.RecordCreator;
 import org.junit.Assert;
 import org.junit.Test;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.StringWriter;
 import java.util.Iterator;
@@ -36,14 +37,14 @@ public class TestJsonDataGenerator {
       .setMode(JsonMode.ARRAY_OBJECTS).build();
     Assert.assertTrue(dataFactory instanceof JsonCharDataGeneratorFactory);
     JsonCharDataGeneratorFactory factory = (JsonCharDataGeneratorFactory) dataFactory;
-    JsonDataGenerator generator = (JsonDataGenerator) factory.getGenerator(new StringWriter());
+    JsonDataGenerator generator = (JsonDataGenerator) factory.getGenerator(new ByteArrayOutputStream());
     Assert.assertEquals(true, generator.isArrayObjects());
 
     dataFactory = new DataGeneratorFactoryBuilder(context, DataGeneratorFormat.JSON)
       .setMode(JsonMode.MULTIPLE_OBJECTS).build();
     Assert.assertTrue(dataFactory instanceof JsonCharDataGeneratorFactory);
     factory = (JsonCharDataGeneratorFactory) dataFactory;
-    generator = (JsonDataGenerator) factory.getGenerator(new StringWriter());
+    generator = (JsonDataGenerator) factory.getGenerator(new ByteArrayOutputStream());
     Assert.assertEquals(false, generator.isArrayObjects());
   }
   @Test

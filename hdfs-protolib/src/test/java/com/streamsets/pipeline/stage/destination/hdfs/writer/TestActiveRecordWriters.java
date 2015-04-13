@@ -25,7 +25,7 @@ import org.junit.Test;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.Writer;
+import java.io.OutputStream;
 import java.net.URI;
 import java.util.Date;
 import java.util.TimeZone;
@@ -40,7 +40,7 @@ public class TestActiveRecordWriters {
     }
 
     @Override
-    public DataGenerator getGenerator(Writer writer) throws IOException, DataGeneratorException {
+    public DataGenerator getGenerator(OutputStream os) throws IOException, DataGeneratorException {
       return new DataGenerator() {
         @Override
         public void write(Record record) throws IOException, DataGeneratorException {

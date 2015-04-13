@@ -33,6 +33,8 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
 import java.io.Writer;
 import java.net.URI;
 import java.text.DateFormat;
@@ -53,23 +55,32 @@ public class TestRecordWriterManager {
     }
 
     @Override
-    public DataGenerator getGenerator(final Writer writer) throws IOException, DataGeneratorException {
-      return new DataGenerator() {
-        @Override
-        public void write(Record record) throws IOException, DataGeneratorException {
-          writer.write(record.get().getValueAsString() + "\n");
-        }
+    public DataGenerator getGenerator(OutputStream os) throws IOException, DataGeneratorException {
+      return new DummyDataGenerator(os);
+    }
+  }
 
-        @Override
-        public void flush() throws IOException {
-          writer.flush();
-        }
+  public static class DummyDataGenerator implements DataGenerator {
 
-        @Override
-        public void close() throws IOException {
-          writer.close();
-        }
-      };
+    private final Writer writer;
+
+    DummyDataGenerator (OutputStream os) {
+      writer = new OutputStreamWriter(os);
+    }
+
+    @Override
+    public void write(Record record) throws IOException, DataGeneratorException {
+      writer.write(record.get().getValueAsString() + "\n");
+    }
+
+    @Override
+    public void flush() throws IOException {
+      writer.flush();
+    }
+
+    @Override
+    public void close() throws IOException {
+      writer.close();
     }
   }
 

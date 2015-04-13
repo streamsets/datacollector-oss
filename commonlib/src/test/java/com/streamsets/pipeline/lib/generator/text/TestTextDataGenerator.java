@@ -18,6 +18,7 @@ import com.streamsets.pipeline.sdk.RecordCreator;
 import org.junit.Assert;
 import org.junit.Test;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.StringWriter;
 
@@ -29,7 +30,7 @@ public class TestTextDataGenerator {
     DataFactory dataFactory = new DataGeneratorFactoryBuilder(context, DataGeneratorFormat.TEXT).build();
     Assert.assertTrue(dataFactory instanceof TextCharDataGeneratorFactory);
     TextCharDataGeneratorFactory factory = (TextCharDataGeneratorFactory) dataFactory;
-    TextDataGenerator generator = (TextDataGenerator) factory.getGenerator(new StringWriter());
+    TextDataGenerator generator = (TextDataGenerator) factory.getGenerator(new ByteArrayOutputStream());
     Assert.assertEquals("", generator.getFieldPath());
     Assert.assertEquals(false, generator.isEmptyLineIfNull());
 
@@ -40,7 +41,7 @@ public class TestTextDataGenerator {
     Assert.assertTrue(dataFactory instanceof TextCharDataGeneratorFactory);
     factory = (TextCharDataGeneratorFactory) dataFactory;
 
-    generator = (TextDataGenerator) factory.getGenerator(new StringWriter());
+    generator = (TextDataGenerator) factory.getGenerator(new ByteArrayOutputStream());
     Assert.assertEquals("/foo", generator.getFieldPath());
     Assert.assertEquals(true, generator.isEmptyLineIfNull());
   }

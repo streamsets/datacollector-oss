@@ -11,7 +11,7 @@ import com.streamsets.pipeline.lib.generator.DataGenerator;
 import com.streamsets.pipeline.lib.generator.DataGeneratorException;
 
 import java.io.IOException;
-import java.io.Writer;
+import java.io.OutputStream;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
@@ -47,8 +47,8 @@ public class TextCharDataGeneratorFactory extends CharDataGeneratorFactory {
   }
 
   @Override
-  public DataGenerator getGenerator(Writer writer) throws IOException, DataGeneratorException {
-    return new TextDataGenerator(writer, fieldPath, emptyLineIfNullDefault);
+  public DataGenerator getGenerator(OutputStream os) throws IOException, DataGeneratorException {
+    return new TextDataGenerator(createWriter(os), fieldPath, emptyLineIfNullDefault);
   }
 
 }

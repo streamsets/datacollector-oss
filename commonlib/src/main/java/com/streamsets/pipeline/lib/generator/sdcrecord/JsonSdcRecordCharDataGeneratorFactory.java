@@ -12,7 +12,7 @@ import com.streamsets.pipeline.lib.generator.DataGenerator;
 import com.streamsets.pipeline.lib.generator.DataGeneratorException;
 
 import java.io.IOException;
-import java.io.Writer;
+import java.io.OutputStream;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
@@ -32,8 +32,8 @@ public class JsonSdcRecordCharDataGeneratorFactory extends CharDataGeneratorFact
   }
 
   @Override
-  public DataGenerator getGenerator(Writer writer) throws IOException, DataGeneratorException {
-    return new JsonSdcRecordDataGenerator(context.createJsonRecordWriter(writer));
+  public DataGenerator getGenerator(OutputStream os) throws IOException, DataGeneratorException {
+    return new JsonSdcRecordDataGenerator(context.createJsonRecordWriter(createWriter(os)));
   }
 
 }

@@ -31,7 +31,7 @@ import com.streamsets.pipeline.lib.generator.text.TextCharDataGeneratorFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.StringWriter;
+import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -181,10 +181,10 @@ public class KafkaTarget extends BaseTarget {
       for (Map.Entry<String, List<Record>> entry : perPartition.entrySet()) {
         String partition = entry.getKey();
         List<Record> list = entry.getValue();
-        StringWriter sw = new StringWriter(1024 * list.size());
+        ByteArrayOutputStream baos = new ByteArrayOutputStream(1024 * list.size());
         Record currentRecord = null;
         try {
-          DataGenerator generator = generatorFactory.getGenerator(sw);
+          DataGenerator generator = generatorFactory.getGenerator(baos);
           for (Record record : list) {
             currentRecord = record;
             generator.write(record);
@@ -192,7 +192,7 @@ public class KafkaTarget extends BaseTarget {
           }
           currentRecord = null;
           generator.close();
-          byte[] bytes = sw.toString().getBytes();
+          byte[] bytes = baos.toByteArray();
           kafkaProducer.enqueueMessage(bytes, partition);
           kafkaProducer.write();
           recordCounter += count;
@@ -229,11 +229,11 @@ public class KafkaTarget extends BaseTarget {
       Record record = records.next();
       try {
         String partitionKey = getPartitionKey(record);
-        StringWriter sw = new StringWriter(1024);
-        DataGenerator generator = generatorFactory.getGenerator(sw);
+        ByteArrayOutputStream baos = new ByteArrayOutputStream(1024);
+        DataGenerator generator = generatorFactory.getGenerator(baos);
         generator.write(record);
         generator.close();
-        byte[] bytes = sw.toString().getBytes();
+        byte[] bytes = baos.toByteArray();
         kafkaProducer.enqueueMessage(bytes, partitionKey);
         count++;
       } catch (Exception ex) {

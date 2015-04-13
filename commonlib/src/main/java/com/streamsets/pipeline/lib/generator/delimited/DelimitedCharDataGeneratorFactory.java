@@ -14,7 +14,7 @@ import com.streamsets.pipeline.lib.generator.DataGeneratorException;
 import org.apache.commons.csv.CSVFormat;
 
 import java.io.IOException;
-import java.io.Writer;
+import java.io.OutputStream;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
@@ -58,8 +58,8 @@ public class DelimitedCharDataGeneratorFactory extends CharDataGeneratorFactory 
   }
 
   @Override
-  public DataGenerator getGenerator(Writer writer) throws IOException, DataGeneratorException {
-    return new DelimitedDataGenerator(writer, format, header, headerKey, valueKey, replaceNewLines);
+  public DataGenerator getGenerator(OutputStream os) throws IOException, DataGeneratorException {
+    return new DelimitedDataGenerator(createWriter(os), format, header, headerKey, valueKey, replaceNewLines);
   }
 
 }
