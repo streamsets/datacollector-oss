@@ -75,7 +75,7 @@ public class JythonDProcessor extends DProcessor {
     "\n" +
     "  #Send record to error\n" +
     "  #err.write(record, 'Error Message')\n" +
-    "  \ng";
+    "  \n";
 
   @ConfigDef(
       required = true,
