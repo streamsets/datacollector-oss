@@ -17,7 +17,7 @@ import java.util.List;
 import java.util.Map;
 
 public class BootstrapMain {
-  private static final String[] PACKAGES_BLACKLIST_FOR_STAGE_LIBRARIES = {
+  public static final String[] PACKAGES_BLACKLIST_FOR_STAGE_LIBRARIES = {
       "com.streamsets.pipeline.api.",
       "com.streamsets.pipeline.container",
       "com.codehale.metrics.",
@@ -184,7 +184,7 @@ public class BootstrapMain {
   }
 
   // Visible for testing
-  static Map<String, List<URL>> getStageLibrariesClasspaths(String stageLibrariesDir) throws Exception {
+  public static Map<String, List<URL>> getStageLibrariesClasspaths(String stageLibrariesDir) throws Exception {
     Map<String, List<URL>> map = new LinkedHashMap<String, List<URL>>();
 
     File baseDir = new File(stageLibrariesDir).getAbsoluteFile();
@@ -215,7 +215,7 @@ public class BootstrapMain {
   }
 
   // Visible for testing
-  static List<URL> getClasspathUrls(String classPath)
+  public static List<URL> getClasspathUrls(String classPath)
       throws Exception {
     List<URL> urls = new ArrayList<URL>();
     for (String path : classPath.split(CLASSPATH_SEPARATOR)) {

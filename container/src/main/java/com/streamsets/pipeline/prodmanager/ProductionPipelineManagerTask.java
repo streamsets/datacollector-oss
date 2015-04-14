@@ -139,12 +139,16 @@ public class ProductionPipelineManagerTask extends AbstractTask {
     snapshotStore = new FileSnapshotStore(runtimeInfo);
   }
 
+  public ProductionPipeline getProductionPipeline() {
+    return prodPipeline;
+  }
 
   public PipelineState getPipelineState() {
     return stateTracker.getState();
   }
 
-  public void setState(String name, String rev, State state, String message, MetricRegistry metricRegistry) throws PipelineManagerException {
+  public void setState(String name, String rev, State state, String message, MetricRegistry metricRegistry)
+    throws PipelineManagerException {
     stateTracker.setState(name, rev, state, message, metricRegistry);
   }
 

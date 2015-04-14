@@ -19,6 +19,13 @@ public class LogUtils {
   public static final String LOG4J_APPENDER_STREAMSETS_FILE_PROPERTY = "log4j.appender.streamsets.File";
 
   public static String getLogFile(RuntimeInfo runtimeInfo) throws IOException {
+    // we'll only support yarn-cluster mode for spark streaming jobs
+    // which means we'll be writing to a log file called syslog
+    // under out container. We'll need to verify how to access this
+    // inside the yarn container and fix this up
+    if (System.getProperty("spark.streaming.streamsets") != null) {
+      return "/tmp/spark-streaming-streamsets.log";
+    }
     String logFile = runtimeInfo.getAttribute(LOG4J_FILE_ATTR);
     if (logFile == null) {
       URL log4jConfig = runtimeInfo.getAttribute(RuntimeInfo.LOG4J_CONFIGURATION_URL_ATTR);

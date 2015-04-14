@@ -17,11 +17,27 @@ import javax.inject.Inject;
 
 public class PipelineTask extends CompositeTask {
 
+  private final ProductionPipelineManagerTask productionPipelineManagerTask;
+  private final PipelineStoreTask pipelineStoreTask;
+  private final StageLibraryTask stageLibraryTask;
+
   @Inject
   public PipelineTask(StageLibraryTask library, PipelineStoreTask store, ProductionPipelineManagerTask pipelineManager,
       WebServerTask webServer, DomainServerCallbackTask domainControllerCallbackTask) {
     super("pipelineNode", ImmutableList.of(library, store, pipelineManager, webServer, domainControllerCallbackTask),
       true);
+    this.stageLibraryTask = library;
+    this.pipelineStoreTask = store;
+    this.productionPipelineManagerTask = pipelineManager;
   }
 
+  public ProductionPipelineManagerTask getProductionPipelineManagerTask() {
+    return productionPipelineManagerTask;
+  }
+  public PipelineStoreTask getPipelineStoreTask() {
+    return pipelineStoreTask;
+  }
+  public StageLibraryTask getStageLibraryTask() {
+    return stageLibraryTask;
+  }
 }

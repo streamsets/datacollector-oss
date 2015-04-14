@@ -44,5 +44,7 @@ public class TaskWrapper implements Task {
   public void waitWhileRunning() throws InterruptedException {
     task.waitWhileRunning();
   }
-
+  public Task getTask() {
+    return task;
+  }
 }

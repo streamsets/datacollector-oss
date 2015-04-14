@@ -342,8 +342,9 @@ public class PipelineConfigurationValidator {
     boolean preview = true;
     if (confDef == null) {
       // stage configuration defines an invalid configuration
-      issues.add(issueCreator.createConfigIssue(stageConf.getInstanceName(), confDef.getGroup(), conf.getName(),
+      issues.add(issueCreator.createConfigIssue(stageConf.getInstanceName(), null, conf.getName(),
         ValidationError.VALIDATION_0008));
+      return false;
     } else if (conf.getValue() == null && confDef.isRequired()) {
       // stage configuration has a NULL value for a configuration that requires a value
       String dependsOn = confDef.getDependsOn();

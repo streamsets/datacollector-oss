@@ -13,12 +13,24 @@ import dagger.ObjectGraph;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public abstract class Main {
-  private final Class moduleClass;
+import java.lang.instrument.Instrumentation;
+import java.util.List;
+
+public class Main {
+  private final ObjectGraph dagger;
+  private final Task task;
 
   @VisibleForTesting
-  public Main(Class moduleClass) {
-    this.moduleClass = moduleClass;
+  Main(Class moduleClass) {
+    this(ObjectGraph.create(moduleClass), null);
+  }
+  @VisibleForTesting
+  public Main(ObjectGraph dagger, Task task) {
+    this.dagger = dagger;
+    if (task == null) {
+      task = dagger.get(TaskWrapper.class);
+    }
+    this.task = task;
   }
 
   @VisibleForTesting
@@ -29,8 +41,7 @@ public abstract class Main {
   public int doMain() {
     Logger log = null;
     try {
-      ObjectGraph dagger = ObjectGraph.create(moduleClass);
-      final Task task = dagger.get(TaskWrapper.class);
+      final Task task = this.task;
 
       dagger.get(LogConfigurator.class).configure();
       log = LoggerFactory.getLogger(Main.class);

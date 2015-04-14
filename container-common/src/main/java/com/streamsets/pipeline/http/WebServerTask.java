@@ -57,7 +57,7 @@ import java.util.Set;
 
 public class WebServerTask extends AbstractTask {
   public static final String HTTP_PORT_KEY = "http.port";
-  private static final int HTTP_PORT_DEFAULT = 18630;
+  private static final int HTTP_PORT_DEFAULT = 0;
 
   public static final String HTTPS_PORT_KEY = "https.port";
   private static final int HTTPS_PORT_DEFAULT = -1;
@@ -67,7 +67,7 @@ public class WebServerTask extends AbstractTask {
   private static final String HTTPS_KEYSTORE_PASSWORD_DEFAULT = "@sdc-keystore-password.txt@";
 
   public static final String AUTHENTICATION_KEY = "http.authentication";
-  public static final String AUTHENTICATION_DEFAULT = "form";
+  public static final String AUTHENTICATION_DEFAULT = "none"; //"form";
 
   private static final String DIGEST_REALM_KEY = "http.digest.realm";
   private static final String REALM_POSIX_DEFAULT = "-realm";
@@ -97,6 +97,7 @@ public class WebServerTask extends AbstractTask {
   protected void initTask() {
     checkValidPorts();
     server = createServer();
+    int port = -1;
     ServletContextHandler appHandler = configureAppContext();
     Handler handler = configureAuthentication(server, appHandler);
     handler = configureRedirectionRules(handler);
@@ -357,6 +358,15 @@ public class WebServerTask extends AbstractTask {
       server.start();
       port = server.getURI().getPort();
       LOG.debug("Running on URI '{}', HTTPS '{}' ",server.getURI(), isSSLEnabled());
+      for (Connector connector : server.getConnectors()) {
+        if (connector instanceof ServerConnector) {
+//          if (port > 0) {
+//            String msg = "Two server connectors are not legal. Already found port: " + port;
+//            throw new IllegalStateException(msg);
+//          }
+          port = ((ServerConnector)connector).getLocalPort();
+        }
+      }
     } catch (Exception ex) {
       throw new RuntimeException(ex);
     }
