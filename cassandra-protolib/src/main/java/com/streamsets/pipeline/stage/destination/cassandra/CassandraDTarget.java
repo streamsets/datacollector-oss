@@ -28,8 +28,8 @@ public class CassandraDTarget extends DTarget {
       required = true,
       type = ConfigDef.Type.LIST,
       defaultValue = "[\"localhost\"]",
-      label = "Cassandra Contact Point(s)",
-      description = "Cassandra nodes to use as contact points. To ensure a connection, enter several.",
+      label = "Cassandra Contact Points",
+      description = "Hostnames of Cassandra nodes to use as contact points. To ensure a connection, enter several.",
       displayPosition = 10,
       group = "CASSANDRA"
   )
@@ -40,7 +40,7 @@ public class CassandraDTarget extends DTarget {
       type = ConfigDef.Type.NUMBER,
       defaultValue = "9042",
       label = "Cassandra Port",
-      description = "Port to use when connecting to Cassandra",
+      description = "Port number to use when connecting to Cassandra nodes",
       displayPosition = 20,
       group = "CASSANDRA"
   )
@@ -51,7 +51,6 @@ public class CassandraDTarget extends DTarget {
       type = ConfigDef.Type.BOOLEAN,
       label = "Use Credentials",
       defaultValue = "false",
-      description = "Enables Credentials tab for authentication connections to C*.",
       displayPosition = 25,
       group = "CASSANDRA"
   )
@@ -61,7 +60,6 @@ public class CassandraDTarget extends DTarget {
       required = true,
       type = ConfigDef.Type.STRING,
       label = "Username",
-      description = "Username",
       defaultValue = "",
       displayPosition = 10,
       group = "CREDENTIALS",
@@ -74,7 +72,6 @@ public class CassandraDTarget extends DTarget {
       required = true,
       type = ConfigDef.Type.STRING,
       label = "Password",
-      description = "Cassandra Password",
       defaultValue = "",
       displayPosition = 20,
       group = "CREDENTIALS",
@@ -87,8 +84,8 @@ public class CassandraDTarget extends DTarget {
       required = true,
       type = ConfigDef.Type.STRING,
       defaultValue = "",
-      label = "Cassandra Fully Qualified Table Name",
-      description = "Fully qualified table name (including key space) to write to. e.g. my_keyspace.my_table",
+      label = "Fully Qualified Table Name",
+      description = "Table write to, e.g. <keyspace>.<table_name>",
       displayPosition = 30,
       group = "CASSANDRA"
   )
@@ -98,8 +95,8 @@ public class CassandraDTarget extends DTarget {
       required = true,
       type = ConfigDef.Type.MODEL,
       defaultValue="",
-      label = "Fields",
-      description = "Selected fields are mapped to columns of the same name. These should match your table schema",
+      label = "Field to Column Mapping",
+      description = "Fields to map to Cassandra columns. To avoid errors, field data types must match.",
       displayPosition = 40,
       group = "CASSANDRA"
   )

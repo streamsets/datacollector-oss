@@ -28,8 +28,8 @@ public class CassandraFieldMappingConfig {
   @ConfigDef(
       required = true,
       type = ConfigDef.Type.MODEL,
-      defaultValue="/",
-      label = "Field",
+      defaultValue="",
+      label = "SDC Field",
       description = "The field in the incoming record to output.",
       displayPosition = 10
   )
@@ -39,8 +39,8 @@ public class CassandraFieldMappingConfig {
   @ConfigDef(
       required = true,
       type = ConfigDef.Type.STRING,
-      defaultValue="c*_column",
-      label = "C* Column Name",
+      defaultValue="",
+      label = "Cassandra Column Name",
       description="The Cassandra column name to write this field to.",
       displayPosition = 20
   )
