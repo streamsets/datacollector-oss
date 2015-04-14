@@ -297,6 +297,21 @@
               </descriptors>
             </configuration>
           </execution>
+          <execution>
+            <id>apache-flume-1.5.0</id>
+            <phase>package</phase>
+            <goals>
+              <goal>single</goal>
+            </goals>
+            <configuration>
+              <appendAssemblyId>false</appendAssemblyId>
+              <attach>false</attach>
+              <finalName>streamsets-datacollector-apache-flume_1_5_0-lib-${project.version}</finalName>
+              <descriptors>
+                <descriptor>src/main/assemblies/data-collector-apache-flume_1_5_0-lib.xml</descriptor>
+              </descriptors>
+            </configuration>
+          </execution>
         </executions>
       </plugin>
     </plugins>

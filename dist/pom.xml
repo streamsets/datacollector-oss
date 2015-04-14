@@ -93,6 +93,11 @@
       <artifactId>streamsets-datacollector-spark-bootstrap</artifactId>
       <scope>provided</scope>
     </dependency>
+    <dependency>
+      <groupId>com.streamsets</groupId>
+      <artifactId>streamsets-datacollector-apache-flume_1_5_0-lib</artifactId>
+      <scope>provided</scope>
+    </dependency>
   </dependencies>
 
   <build>

@@ -210,6 +210,12 @@
       <outputDirectory>/streamsets-libs/</outputDirectory>
     </fileSet>
 
+    <!-- Apache Flume libs -->
+    <fileSet>
+      <directory>${basedir}/../${apache-flume_1_5_0-lib}/target/streamsets-libs/</directory>
+      <outputDirectory>/streamsets-libs/</outputDirectory>
+    </fileSet>
+
     <!-- Apache Spark lib -->
     <fileSet>
       <directory>${basedir}/../spark-protolib/target/streamsets-libs/</directory>
