@@ -22,7 +22,7 @@
       </ul></p>
     <p>
       <note type="tip">To avoid constant recalculation of the allocated heap size, set the both
-        properties to the same vaue. To define the unit of measure, use m for MB and g for GB. </note>
+        properties to the same value. To define the unit of measure, use m for MB and g for GB. </note>
     </p>
     <p>For example, to double the heap size, you might change the following default
       settings:<codeblock>SDC_JAVA_OPTS="-Xmx1024m -Xms1024m -server ${SDC_JAVA_OPTS}"</codeblock></p>

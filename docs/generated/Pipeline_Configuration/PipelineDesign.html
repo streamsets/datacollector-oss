@@ -1,0 +1,151 @@
+
+<!DOCTYPE html
+  SYSTEM "about:legacy-compat">
+<html xml:lang="en-us" lang="en-us">
+<head><meta name="description" content="When you design a pipeline, you define and link the stages that you want to use. To add stages to the canvas, you can use the stage library and connect stages manually, or you can use the Pipeline ..."></meta><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><meta name="copyright" content="(C) Copyright 2005"></meta><meta name="DC.rights.owner" content="(C) Copyright 2005"></meta><meta name="DC.Type" content="concept"></meta><meta name="DC.Title" content="Pipeline Design"></meta><meta name="abstract" content="When you design a pipeline, you define and link the stages that you want to use."></meta><meta name="description" content="When you design a pipeline, you define and link the stages that you want to use."></meta><meta name="DC.Relation" scheme="URI" content="../Pipeline_Configuration/PipelineConfiguration_title.html"></meta><meta name="DC.Format" content="XHTML"></meta><meta name="DC.Identifier" content="concept_ill_2gx_rr"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/commonltr.css"><!----></link><title>Pipeline Design</title><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/webhelp_topic.css"><!----></link><link rel="stylesheet" type="text/css" href="../skin.css"></link><script type="text/javascript"><!--
+          
+          var prefix = "../index.html";
+          
+          --></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery-1.8.2.min.js"><!----></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery.cookie.js"><!----></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery-ui.custom.min.js"><!----></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery.highlight-3.js"><!----></script><script type="text/javascript" charset="utf-8" src="../oxygen-webhelp/resources/js/webhelp_topic.js"><!----></script></head>
+<body onload="highlightSearchTerm()" class="frmBody">
+<table class="nav"><tbody><tr><td colspan="2"><div id="printlink"><a href="javascript:window.print();" title="Print this page"></a></div><div id="permalink"><a href="#" title="Link to this page"></a></div></td></tr><tr><td width="75%"><a class="navheader_parent_path" href="../Pipeline_Configuration/PipelineConfiguration_title.html" title="Pipeline Configuration">Pipeline Configuration</a></td><td><div class="navheader">
+<span class="navparent"><a class="link" href="../Pipeline_Configuration/PipelineConfiguration_title.html" title="Pipeline Configuration"><span class="navheader_label">Parent topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">Pipeline Configuration</span></a></span>  </div></td></tr></tbody></table>
+<div class="nested0" id="concept_ill_2gx_rr">
+ <h1 class="title topictitle1">Pipeline Design</h1>
+
+ 
+ <div class="body conbody"><p class="shortdesc">When you design a pipeline, you define and link the stages that you want to use. </p>
+
+  <p class="p">To add stages to the canvas, you can use the stage library and connect stages manually, or you
+   can use the Pipeline Creation Help Bar to automatically link a selected stage to the
+   pipeline.</p>
+
+  <p class="p">To define pipeline properties, such as the delivery guarantee, constants or error handling,
+   click in any unused space of the canvas. To define the properties for a stage, select the
+   stage.</p>
+
+  <p class="p">You can configure metric or data alerts on the Rules tab of the pipeline properties panel.
+    </p>
+
+ </div>
+
+<div class="related-links"></div>
+<div class="topic concept nested1" id="concept_ub2_zdl_br">
+ <h2 class="title topictitle2">Replicating Streams</h2>
+
+ 
+ <div class="body conbody"><p class="shortdesc">When you connect a stage to multiple stages, all data passes to all connected stages.
+      You can configure required fields for a stage to discard records before they enter the stage,
+      but by default all records are passed.</p>
+
+  <p class="p">For example, in the following pipeline, all of the data
+      from the Directory origin passes to both branches of the pipeline for different types of
+      processing. But you might optionally configure required fields for the Field Splitter or Value
+      Replacer to discard any records that are not needed.</p>
+
+    <p class="p"><img class="image" id="concept_ub2_zdl_br__image_m3h_hnm_2r" src="../Graphics/ReplicatingStreams.png"></img></p>
+
+    <p class="p">To route data based on more complex conditions, use a Stream Selector.</p>
+
+ </div>
+
+</div>
+<div class="topic concept nested1" id="concept_w3y_cry_5q">
+ <h2 class="title topictitle2">Merging Streams</h2>
+
+ 
+ <div class="body conbody"><p class="shortdesc">You can merge streams of data in a pipeline by connecting two or more stages to the same
+  downstream stage. When you merge streams of data, the <span class="ph">Data
+                  Collector</span> channels the
+  data from all streams to the same stage, but does not perform a join of records in the stream. </p>
+
+  <p class="p">For example, in the following pipeline, the Routes Data Stream
+   Selector stage sends data with null values to the Replaces Null Values stage:</p>
+
+  <p class="p"><img class="image" id="concept_w3y_cry_5q__image_kxc_jty_5q" src="../Graphics/MergingStreams.png"></img></p>
+
+  <p class="p">The data from the Routes Data default stream and all data from Replaces Null Values pass to
+   Field-Level Expressions for further processing, but in no particular order and with no record
+   merging.</p>
+
+  <div class="note note"><span class="notetitle">Note:</span> The pipeline validation does not prevent duplicate data. To avoid writing duplicate data to
+   destinations, configure pipeline logic to remove duplicate data or to prevent the generation of
+   duplicate data.</div>
+
+ </div>
+
+</div>
+<div class="topic concept nested1" id="concept_dnj_bkm_vq">
+ <h2 class="title topictitle2">Required Fields</h2>
+
+ 
+ <div class="body conbody"><p class="shortdesc">You can configure required fields for any processor and most destination stages. A
+        required field must exist in a record to allow the record to enter the stage for processing.
+        When a record does not include a required field, the stage passes the record to the pipeline
+        for error handling. </p>
+
+  <p class="p">You can configure different required
+         fields in different stages. Configure required fields based on your business requirements
+         or in order to minimize processing errors. </p>
+
+  <p class="p">For example, a Field Hasher encodes social security data in the /SSN field. To ensure
+      processing only records that include social security numbers, make /SSN a required field. </p>
+
+ </div>
+
+</div>
+<div class="topic concept nested1" id="concept_rjh_ntz_qr">
+ <h2 class="title topictitle2">Pipeline Constants</h2>
+
+ 
+ <div class="body conbody"><p class="shortdesc">A pipeline constant is a constant that you define for the pipeline, that you can use in
+  any stage in the pipeline. Define a pipeline constant when you have a value that you want to be
+  able to update easily, or that you want use more than once. </p>
+
+  <div class="p">For example, you might have an Expression Evaluator processor
+   that calculates the total income for employees using .01 as a bonus percentage, as
+   follows:<pre class="pre codeblock">${(record:value("/SALARY")) + (record:value("/SALARY")*.01)}</pre>
+</div>
+
+  <p class="p">However, the bonus percentage changes regularly. So instead of using .01 directly in the
+   expression, you can create a constant named Bonus with a value of .01.</p>
+
+  <p class="p">Then, you can use the Bonus constant in an expression as follows:</p>
+
+  <div class="p">
+   <pre class="pre codeblock">${record:value("/SALARY")+(record:value("/SALARY")*BONUS)}</pre>
+
+  </div>
+
+ </div>
+
+<div class="topic task nested2" id="task_ogd_zj3_wq">
+    <h3 class="title topictitle3">Defining Pipeline Constants</h3>
+
+    <div class="body taskbody">
+        <div class="section context">You can
+            define pipeline constants for constant values that you want to reuse within the pipeline
+            or to easily update.</div>
+
+        <ol class="ol steps" id="task_ogd_zj3_wq__steps_apc_qrz_qr"><li class="li step">
+                <span class="ph cmd">To define a constant for the pipeline, in the Pipeline properties panel, click
+                    the <span class="keyword wintitle">Constants</span> tab.</span>
+            </li>
+<li class="li step">
+                <span class="ph cmd">On the <span class="keyword wintitle">Constants</span> tab, click <span class="ph uicontrol">Add</span>.
+                </span>
+            </li>
+<li class="li step">
+                <span class="ph cmd">Enter a name and value for the constant.</span>
+            </li>
+</ol>
+
+    </div>
+
+</div>
+</div>
+</div>
+<div class="navfooter"><!---->
+<span class="navparent"><a class="link" href="../Pipeline_Configuration/PipelineConfiguration_title.html" title="Pipeline Configuration"><span class="navheader_label">Parent topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">Pipeline Configuration</span></a></span>  </div><div class="footer"><div> </div><!-- © <a href="http://creativecommons.org/licenses/by-nc/4.0/legalcode">CC BY-NC 4.0.</a> StreamSets, 2015. --></div>
+</body>
+</html>

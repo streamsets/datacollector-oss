@@ -12,9 +12,9 @@
                   Collector</ph></p>
             <draft-comment author="Loretta">Using this in all DC Console topics:</draft-comment>
             <p>
-                  <note id="Note-OptionDispay">All buttons and options might not display in the
-                        console. The items that display are based on the roles assigned to your user
-                        account. </note>
+                  <note id="Note-OptionDispay">Some buttons and options might not display in the
+                        console. The items that display are based on the task that you are
+                        performing and roles assigned to your user account. </note>
             </p>
             <p>
                   <draft-comment author="Loretta">

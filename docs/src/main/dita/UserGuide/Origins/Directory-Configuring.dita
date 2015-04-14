@@ -43,7 +43,8 @@
                                             <li>SDC Record <xref
                                                   href="../Pipeline_Configuration/SDCRecordFormat.dita#concept_qkk_mwk_br">
                                                   <image href="../Graphics/icon_moreInfo.png"
-                                                  scale="10" id="image_wjh_ycl_br"/></xref></li>
+                                                  scale="10" id="image_wjh_ycl_br"
+                                                  placement="inline" /></xref></li>
                                         </ul></entry>
                                 </row>
                                 <row>
@@ -67,14 +68,15 @@
                                     <entry>Batch Wait Time (secs) <xref
                                             href="BatchSizeWaitTime.dita#concept_ypd_vgr_5q">
                                             <image href="../Graphics/icon_moreInfo.png" scale="10"
-                                                id="image_mgp_2q3_br"/></xref></entry>
+                                                id="image_mgp_2q3_br" placement="inline"
+                                        /></xref></entry>
                                     <entry>Number of seconds to wait before sending a batch.</entry>
                                 </row>
                                 <row>
                                     <entry>File Name Pattern <xref
                                             href="Directory_FNamePattern.dita#concept_bxt_ndl_5q">
                                             <image href="../Graphics/icon_moreInfo.png" scale="10"
-                                                id="image_c4p_p5v_yq"/></xref>
+                                                id="image_c4p_p5v_yq" placement="inline"/></xref>
                                     </entry>
                                     <entry>Regular expression that describes the file names. <p>You
                                             can use UNIX-style wildcards, such as * or ?. For
@@ -83,7 +85,7 @@
                                 <row>
                                     <entry>First File to Process <xref
                                             href="Directory_FirstFile.dita#concept_ltv_r3l_5q">
-                                            <image href="../Graphics/icon_moreInfo.png" scale="10"
+                                            <image href="../Graphics/icon_moreInfo.png" scale="10" placement="inline"
                                                 id="image_tcz_pj2_br"/></xref>
                                     </entry>
                                     <entry>Name of the first file to process. Use a name that uses

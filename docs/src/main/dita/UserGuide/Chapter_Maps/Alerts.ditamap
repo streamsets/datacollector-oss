@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE map PUBLIC "-//OASIS//DTD DITA Map//EN" "map.dtd">
+<map>
+ <title>Alerts</title>
+ <topicref href="../Alerts/Alerts_title.dita">
+  <topicref href="../Alerts/MetricAlerts.dita">
+   <topicref href="../Alerts/MetricTypes.dita"/>
+   <topicref href="../Alerts/ConfiguringMetricAlerts.dita"/>
+  </topicref>
+  <topicref href="../Alerts/DataAlerts.dita">
+   <topicref href="../Alerts/ConfiguringDataAlerts.dita"/>
+  </topicref>
+  <topicref href="../Alerts/EmailforAlerts-Configuring.dita"/>
+ </topicref>
+</map>

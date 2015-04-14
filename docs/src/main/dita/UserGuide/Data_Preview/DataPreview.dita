@@ -12,6 +12,7 @@
       data, pass it through the pipeline, and then examine the results. </p>
     <p>You can also refresh the preview to use another set of data.<draft-comment author="Loretta"
         >More changes coming - something about data preview to a particular stage? Or is that just
-        for inferencing? </draft-comment></p>
+        for inferencing?   -- need to doc: can configure stages/pipeline, skip targets, add update
+        validation info?</draft-comment></p>
   </conbody>
 </concept>

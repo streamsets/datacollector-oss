@@ -13,5 +13,8 @@
       associated with the pipeline. </p>
     <p>You can configure metric alerts when you configure the pipeline or after you start the
       pipeline. The metric alert takes effect after you enable the alert.</p>
+    <p>The <ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
+      provides default metric alerts for a pipeline. The metric alerts are not active. You can edit,
+      delete, or activate the alerts. </p>
  </conbody>
 </concept>

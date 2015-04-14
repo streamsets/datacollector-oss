@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
+<concept id="concept_twq_nhx_rr">
+ <title>Pipeline Memory</title>
+ <shortdesc>The <ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+  /> uses memory when it runs a pipeline. To avoid causing out-of-memory errors on the host machine,
+  you can configure the maximum amount of memory that can be used for the pipeline. </shortdesc>
+ <conbody>
+  <p><indexterm>pipelines<indexterm>maximum
+     memory</indexterm></indexterm><indexterm>memory<indexterm>maximum for a
+    pipeline</indexterm></indexterm>Best practice is to configure the pipeline to use up to 65% of
+   the Java heap size defined for the <ph
+    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>. For example,
+   with the default Data Collector Java heap size of 1024 MB, the highest setting for the pipeline
+   memory should be 665 MB.</p>
+  <p>Use the Max Pipeline Memory pipeline property to define the maximum amount of memory to use.
+   When you configure the pipeline, you can also configure the action to take when pipeline memory
+   usage exceeds the configured amount.</p>
+  <p>
+   <note>To avoid errors, you might create an alert to indicate when the memory usage approaches the
+    configured maximum.</note>
+  </p>
+ </conbody>
+ <related-links>
+  <link href="../Install_Config/JavaHeapSize.dita#concept_mdc_shg_qr"/>
+ </related-links>
+</concept>

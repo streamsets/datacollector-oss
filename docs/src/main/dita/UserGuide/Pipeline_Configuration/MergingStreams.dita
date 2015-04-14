@@ -11,7 +11,7 @@
      streams</indexterm></indexterm><indexterm>merging<indexterm>streams in a
     pipeline</indexterm></indexterm>For example, in the following pipeline, the Routes Data Stream
    Selector stage sends data with null values to the Replaces Null Values stage:</p>
-  <p><image href="../Graphics/MergingStreams.png" id="image_kxc_jty_5q" scale="60"/></p>
+  <p><image href="../Graphics/MergingStreams.png" id="image_kxc_jty_5q"/></p>
   <p>The data from the Routes Data default stream and all data from Replaces Null Values pass to
    Field-Level Expressions for further processing, but in no particular order and with no record
    merging.</p>

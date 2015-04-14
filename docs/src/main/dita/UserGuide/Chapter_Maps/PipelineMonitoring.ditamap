@@ -13,30 +13,17 @@
     <shortdesc/>
    </topicmeta>
   </topicref>
-  <topicref href="../Pipeline_Monitoring/ReviewingSnapshotData.dita">
+  <topicref href="../Pipeline_Monitoring/Snapshots.dita" chunk="to-content"> 
    <topicmeta>
-    <shortdesc/>
-   </topicmeta>
+   <shortdesc/>
+  </topicmeta>
+   <topicref href="../Pipeline_Monitoring/ReviewingSnapshotData.dita">
+    <topicmeta>
+     <shortdesc/>
+    </topicmeta>
+   </topicref>
   </topicref>
   <topicref href="../Pipeline_Monitoring/ViewingPipelineStageStatistics.dita">
-   <topicmeta>
-    <shortdesc/>
-   </topicmeta>
-  </topicref>
-  <topicref href="../Pipeline_Monitoring/MetricAlerts.dita" chunk="to-content">
-   <topicmeta>
-    <shortdesc/>
-   </topicmeta>
-   <topicref href="../Pipeline_Monitoring/MetricTypes.dita"/>
-   <topicref href="../Pipeline_Monitoring/ConfiguringMetricAlerts.dita"/>
-  </topicref>
-  <topicref href="../Pipeline_Monitoring/DataAlerts.dita" chunk="to-content">
-   <topicmeta>
-    <shortdesc/>
-   </topicmeta>
-   <topicref href="../Pipeline_Monitoring/ConfiguringDataAlerts.dita"/>
-  </topicref>
-  <topicref href="../Pipeline_Monitoring/EmailforAlerts-Configuring.dita">
    <topicmeta>
     <shortdesc/>
    </topicmeta>

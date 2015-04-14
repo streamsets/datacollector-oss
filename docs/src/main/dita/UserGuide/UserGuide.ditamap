@@ -35,8 +35,9 @@
     <chapter href="Chapter_Maps/Processors.ditamap" format="ditamap"/>
     <chapter href="Chapter_Maps/Destinations.ditamap" format="ditamap"/>
     <chapter href="Chapter_Maps/DataPreview.ditamap" format="ditamap"/>
-    <chapter href="Chapter_Maps/PipelineMaintenance.ditamap" format="ditamap"/>
+    <chapter href="Chapter_Maps/Alerts.ditamap" format="ditamap"/>
     <chapter href="Chapter_Maps/PipelineMonitoring.ditamap" format="ditamap"/>
+    <chapter href="Chapter_Maps/PipelineMaintenance.ditamap" format="ditamap"/>
     <chapter href="Chapter_Maps/Administration.ditamap" format="ditamap"/>
     <appendix href="Chapter_Maps/Troubleshooting.ditamap" format="ditamap"/>
     <appendix href="Chapter_Maps/Glossary.ditamap" format="ditamap"/>

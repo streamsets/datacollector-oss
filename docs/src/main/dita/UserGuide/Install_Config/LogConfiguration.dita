@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
+<concept id="concept_al5_nqv_rr">
+ <title>Log Configuration</title>
+ <shortdesc>You can edit the Java log configuration file, log4j.properties to define how the <ph
+   conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> logs
+  information.</shortdesc>
+ <conbody>
+  <p>
+   <draft-comment author="Loretta">have someone walk thorugh all of the properties - see if anything
+    needs to be called out into a separate section. </draft-comment>
+  </p>
+ </conbody>
+</concept>

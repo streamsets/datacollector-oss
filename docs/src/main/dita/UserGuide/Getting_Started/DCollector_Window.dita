@@ -10,7 +10,7 @@
   <p><indexterm>Data Collector console<indexterm>overview</indexterm></indexterm>The <ph
         conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> console
       includes the following general areas and icons:</p>
-  <p><image href="../Graphics/CanvasOverview.png" id="image_k5j_5pz_sq" scale="60"/></p>
+  <p><image href="../Graphics/CanvasOverview.png" id="image_k5j_5pz_sq" scalefit="yes"/></p>
   <simpletable frame="all" id="simpletable_v4t_zhc_pq" relcolwidth="1.0* 5.23* 9.44*">
       <sthead>
         <stentry>No</stentry>
@@ -42,20 +42,19 @@
             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>. </stentry>
       </strow>
       <strow>
-        <stentry><image href="../Graphics/icon_LibraryToggle.png" id="image_kgq_klq_rq" scale="45"
+        <stentry><image href="../Graphics/icon_LibraryToggle.png" id="image_kgq_klq_rq" scale="70"
           /></stentry>
         <stentry>Toggle Library icon</stentry>
         <stentry>Icon to display or hide the library.</stentry>
       </strow>
       <strow>
-        <stentry><image href="../Graphics/icon_PipelineOptions.png" id="image_vd2_jpq_rq" scale="45"
+        <stentry><image href="../Graphics/icon_PipelineOptions.png" id="image_vd2_jpq_rq" scale="70"
           /></stentry>
         <stentry>Actions icon</stentry>
         <stentry>Allows you to import, export, duplicate, or delete the pipeline.</stentry>
       </strow>
       <strow>
-        <stentry><image href="../Graphics/icon_CHelp.png" id="image_w3f_spl_br" scale="80"
-          /></stentry>
+        <stentry><image href="../Graphics/icon_CHelp.png" id="image_w3f_spl_br"/></stentry>
         <stentry>Context-Sensitive Help icon</stentry>
         <stentry>Provides context-sensitive help based on the information in the panel. </stentry>
       </strow>

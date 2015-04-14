@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE task PUBLIC "-//OASIS//DTD DITA General Task//EN" "generalTask.dtd">
+<task id="task_p12_gbw_rr">
+    <title>Viewing the Run History</title>
+    <shortdesc>You can view the run history of a pipeline and a summary of each run when you
+        configure or monitor a pipeline. </shortdesc>
+    <taskbody>
+        <context>
+            <p><indexterm>pipelines<indexterm>viewing the run
+                    history</indexterm></indexterm><indexterm>run
+                        history<indexterm>viewing</indexterm></indexterm>The pipeline history shows
+                the following information:<ul id="ul_nhh_m1w_rr">
+                    <li>The pipeline status</li>
+                    <li>The time the pipeline started or stopped</li>
+                    <li>Related messages</li>
+                    <li>Access to each run summary</li>
+                </ul>Click the <uicontrol>History</uicontrol> tab in the pipeline properties or
+                monitor panel to view the run history. The following image shows a sample run
+                history:</p>
+            <p><image href="../Graphics/RunHistory.png" id="image_cy3_rbw_rr" scalefit="yes"/></p>
+        </context>
+    </taskbody>
+</task>

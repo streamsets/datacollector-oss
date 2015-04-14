@@ -2,10 +2,9 @@
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_rry_fkc_pr">
  <title>Source Data for Data Preview</title>
- <shortdesc>You can use the following types of data for a data preview:</shortdesc>
  <conbody>
-  <p>
-   <dl>
+  <p><indexterm>data preview<indexterm>source data</indexterm></indexterm>You can use the following
+   types of data for a data preview:<dl>
     <dlentry>
      <dt>Data from the origin</dt>
      <dd>You can preview data from the origin.</dd>
@@ -19,7 +18,6 @@
      <dt>User-defined data</dt>
      <dd>You can enter or paste a set of data to use for the preview.</dd>
     </dlentry>
-   </dl>
-  </p>
+   </dl></p>
  </conbody>
 </concept>

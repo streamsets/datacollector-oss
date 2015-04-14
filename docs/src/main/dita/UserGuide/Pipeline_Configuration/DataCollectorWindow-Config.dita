@@ -9,7 +9,7 @@
         conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> console
       when you configure a pipeline:</p>
    <p>
-      <image href="../Graphics/CanvasConfig.png" id="image_u5b_1mb_rr" scale="45"/></p>
+      <image href="../Graphics/CanvasConfig.png" id="image_u5b_1mb_rr"/></p>
     <table frame="all" rowsep="1" colsep="1" id="table_qwf_byk_sq">
       <tgroup cols="3">
         <colspec colname="c1" colnum="1" colwidth=".5*"/>
@@ -49,41 +49,76 @@
                 stage by name.</p></entry>
           </row>
           <row>
-            <entry><image href="../Graphics/icon-StageLibrary.png" id="image_ftx_sjb_cr" scale="70"
-              /></entry>
-            <entry>Stage Library icon</entry>
-            <entry>Toggles the display of the stage library.</entry>
-          </row>
-          <row>
-            <entry><image href="../Graphics/icon_Issues.png" id="image_lmk_p4z_sq" scale="70"
+            <entry><image href="../Graphics/icon_Issues.png" id="image_lmk_p4z_sq" scale="80"
               /></entry>
             <entry>Issues icon</entry>
             <entry>Displays the number of validation issues in the pipeline. Click to view a
               detailed list of issues.</entry>
           </row>
           <row>
-            <entry><image href="../Graphics/icon_DataPreview.png" id="image_tyf_xkb_cr" scale="65"
-              /></entry>
-            <entry>Preview icon</entry>
-            <entry>Starts a data preview.</entry>
-          </row>
-          <row>
-            <entry><image href="../Graphics/icon_More.png" id="image_hnh_wkb_cr" scale="75"
-              /></entry>
+            <entry><image href="../Graphics/icon-ConfigMore.png" id="image_mwf_yzw_rr"/></entry>
             <entry>More icon</entry>
             <entry>Provides additional actions for the pipeline. Use to reset the origin for the
               pipeline.</entry>
           </row>
           <row>
-            <entry><image href="../Graphics/icon_link.png" id="image_fvp_4r3_cr" scale="65"
+            <entry><image href="../Graphics/icon-ConfigDelete.png" id="image_mhh_31x_rr"/></entry>
+            <entry>Delete icon</entry>
+            <entry>Deletes the selected stage or link.</entry>
+          </row>
+          <row>
+            <entry><image href="../Graphics/icon-ConfigCopy.png" id="image_amh_41x_rr"/></entry>
+            <entry>Copy icon</entry>
+            <entry>Copies the selected stage. You can copy processor and destination stages. Because
+              a pipeline can include only one origin, you cannot copy an origin stage.</entry>
+          </row>
+          <row>
+            <entry><image href="../Graphics/icon-ConfigArrange.png" id="image_xtv_v1x_rr"/></entry>
+            <entry>Auto Arrange icon </entry>
+            <entry>Arranges the stages in the pipeline.</entry>
+          </row>
+          <row>
+            <entry><image href="../Graphics/icon-ConfigDataPreview.png" id="image_f5t_gbx_rr"
               /></entry>
+            <entry>Preview icon</entry>
+            <entry>Starts a data preview.</entry>
+          </row>
+          <row>
+            <entry><image href="../Graphics/icon-ConfigValidate.png" id="image_axt_lbx_rr"/></entry>
+            <entry>Validate icon</entry>
+            <entry>Validates the pipeline.</entry>
+          </row>
+          <row>
+            <entry><image href="../Graphics/icon-ConfigStartPipeline.png" id="image_lvj_qbx_rr"
+              /></entry>
+            <entry>Start icon</entry>
+            <entry>Starts the pipeline.</entry>
+          </row>
+          <row>
+            <entry><image href="../Graphics/icon-StageLibrary.png" id="image_ftx_sjb_cr" scale="80"
+              /></entry>
+            <entry>Stage Library icon</entry>
+            <entry>Toggles the display of the stage library.</entry>
+          </row>
+          <row>
+            <entry><image href="../Graphics/icon-ConfigLink.png" id="image_lzk_fcx_rr"/></entry>
             <entry>Stream link icon</entry>
             <entry>Indicates the flow of data through the pipeline. Select to configure data rules
-              and alerts.</entry>
+              and alerts. </entry>
+          </row>
+          <row>
+            <entry><image href="../Graphics/icon-ConfigStageIssue.png" id="image_o3b_lcx_rr"
+              /></entry>
+            <entry>Validation Error icon</entry>
+            <entry>Indicates a validation error exists in the indicated stage.</entry>
           </row>
         </tbody>
       </tgroup>
     </table>
-    <note conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/Note-OptionDispay"/>
+    <note conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/Note-OptionDispay">
+      <p>For example, the Copy icon displays only when you select stage that can be copied, it does
+        not display when you select a link or the pipeline. Alternatively, if you log in with only
+        the Manager role, most configuration-related icons are not available.</p>
+    </note>
  </conbody>
 </concept>

@@ -7,28 +7,43 @@
    <topicmeta><shortdesc></shortdesc></topicmeta></topicref>
   <topicref href="../Pipeline_Configuration/DataCollectorWindow-Config.dita">
    <topicmeta><shortdesc></shortdesc></topicmeta></topicref>
-  <topicref href="../Pipeline_Configuration/ReplicatingStreams.dita">
+  <topicref href="../Pipeline_Configuration/PipelineDesign.dita" chunk="to-content">
+   <topicmeta>
+    <shortdesc/>
+   </topicmeta>
+   <topicref href="../Pipeline_Configuration/ReplicatingStreams.dita"/>
+   <topicref href="../Pipeline_Configuration/MergingStreams.dita"/>
+   <topicref href="../Pipeline_Configuration/RequiredFields.dita"/>
+   <topicref href="../Pipeline_Configuration/PipelineConstants.dita">
+    <topicref href="../Pipeline_Configuration/PipelineConstants-Defining.dita"/>
+   </topicref>
+  </topicref>
+  <topicref href="../Pipeline_Configuration/DeliveryGuarantee.dita">
    <topicmeta>
     <shortdesc/>
    </topicmeta>
   </topicref>
-  <topicref href="../Pipeline_Configuration/MergingStreams.dita">
-   <topicmeta><shortdesc></shortdesc></topicmeta></topicref>
+  <topicref href="../Pipeline_Configuration/PipelineMemory.dita">
+   <topicmeta>
+    <shortdesc/>
+   </topicmeta>
+  </topicref>
+  <topicref href="../Pipeline_Configuration/SDCRecordFormat.dita">
+   <topicmeta>
+    <shortdesc/>
+   </topicmeta>
+  </topicref>
   <topicref href="../Pipeline_Configuration/ErrorHandling.dita" chunk="to-content">
-   <topicmeta><shortdesc></shortdesc></topicmeta>
+   <topicmeta>
+    <shortdesc/>
+   </topicmeta>
    <topicref href="../Pipeline_Configuration/SendToError.dita"/>
    <topicref href="../Pipeline_Configuration/ReprocessingErrorRecords.dita"/>
   </topicref>
-  <topicref href="../Pipeline_Configuration/DeliveryGuarantee.dita">
-   <topicmeta><shortdesc></shortdesc></topicmeta></topicref>
-  <topicref href="../Pipeline_Configuration/RequiredFields.dita">
-   <topicmeta><shortdesc></shortdesc></topicmeta></topicref>
-  <topicref href="../Pipeline_Configuration/SDCRecordFormat.dita">
-   <topicmeta><shortdesc></shortdesc></topicmeta></topicref>
   <topicref href="../Pipeline_Configuration/Validation.dita">
-   <topicmeta><shortdesc></shortdesc></topicmeta> </topicref>
-  <topicref href="../Pipeline_Configuration/PipelineConstants.dita">
-   <topicref href="../Pipeline_Configuration/PipelineConstants-Defining.dita"/>
+   <topicmeta>
+    <shortdesc/>
+   </topicmeta>
   </topicref>
   <topicref href="../Pipeline_Configuration/ConfiguringAPipeline.dita">
    <topicmeta><shortdesc></shortdesc></topicmeta></topicref>
