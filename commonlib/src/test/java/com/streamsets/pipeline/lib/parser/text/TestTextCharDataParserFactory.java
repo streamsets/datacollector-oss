@@ -91,7 +91,7 @@ public class TestTextCharDataParserFactory {
     parser.close();
   }
 
-  @Test
+  /*@Test
   public void testTruncateWithFile() throws Exception {
     File testDir = new File("target", UUID.randomUUID().toString());
     Assert.assertTrue(testDir.mkdirs());
@@ -106,6 +106,6 @@ public class TestTextCharDataParserFactory {
     Assert.assertTrue(record.has("/text"));
     Assert.assertTrue(record.has("/truncated"));
     parser.close();
-  }
+  }*/
 
 }
