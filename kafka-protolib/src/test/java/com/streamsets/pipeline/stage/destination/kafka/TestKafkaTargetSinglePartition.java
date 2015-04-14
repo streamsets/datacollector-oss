@@ -14,6 +14,7 @@ import com.streamsets.pipeline.config.CsvHeader;
 import com.streamsets.pipeline.config.CsvMode;
 import com.streamsets.pipeline.config.DataFormat;
 import com.streamsets.pipeline.lib.KafkaTestUtil;
+import com.streamsets.pipeline.lib.common.SdcRecordDataFactoryUtil;
 import com.streamsets.pipeline.sdk.ContextInfoCreator;
 import com.streamsets.pipeline.sdk.TargetRunner;
 import kafka.admin.AdminUtils;
@@ -32,8 +33,9 @@ import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import java.io.StringReader;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -335,12 +337,12 @@ public class TestKafkaTargetSinglePartition {
     targetRunner.runWrite(logRecords);
     targetRunner.runDestroy();
 
-    List<String> messages = new ArrayList<>();
+    List<byte[]> messages = new ArrayList<>();
     Assert.assertTrue(kafkaStreams6.size() == 1);
     ConsumerIterator<byte[], byte[]> it = kafkaStreams6.get(0).iterator();
     try {
       while (it.hasNext()) {
-        messages.add(new String(it.next().message()));
+        messages.add(it.next().message());
       }
     } catch (kafka.consumer.ConsumerTimeoutException e) {
       //no-op
@@ -350,7 +352,9 @@ public class TestKafkaTargetSinglePartition {
 
     ContextExtensions ctx = (ContextExtensions) ContextInfoCreator.createTargetContext("", false, OnRecordError.TO_ERROR);
     for(int i = 0; i < logRecords.size(); i++) {
-      JsonRecordReader rr = ctx.createJsonRecordReader(new StringReader(messages.get(i)), 0, Integer.MAX_VALUE);
+      ByteArrayInputStream bais = new ByteArrayInputStream(messages.get(i));
+      byte[] bytes = SdcRecordDataFactoryUtil.readHeader(bais);
+      JsonRecordReader rr = ctx.createJsonRecordReader(new InputStreamReader(bais), 0, Integer.MAX_VALUE);
       Assert.assertEquals(logRecords.get(i), rr.readRecord());
       rr.close();
     }

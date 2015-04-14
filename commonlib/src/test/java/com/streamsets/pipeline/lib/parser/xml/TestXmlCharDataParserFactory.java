@@ -44,7 +44,7 @@ public class TestXmlCharDataParserFactory {
     Assert.assertTrue(dataFactory instanceof XmlCharDataParserFactory);
     XmlCharDataParserFactory factory = (XmlCharDataParserFactory) dataFactory;
 
-    DataParser parser = factory.getParser("id", "<r><e>Hello</e><e>Bye</e></r>");
+    DataParser parser = factory.getParser("id", "<r><e>Hello</e><e>Bye</e></r>".getBytes());
     Assert.assertEquals(0, parser.getOffset());
     Record record = parser.parse();
     Assert.assertNotNull(record);
@@ -63,7 +63,7 @@ public class TestXmlCharDataParserFactory {
     XmlCharDataParserFactory factory = (XmlCharDataParserFactory) dataFactory;
 
 
-    DataParser parser = factory.getParser("id", "<r><e>Hello</e><e>Bye</e></r>");
+    DataParser parser = factory.getParser("id", "<r><e>Hello</e><e>Bye</e></r>".getBytes());
     Assert.assertEquals(0, parser.getOffset());
     Record record = parser.parse();
     Assert.assertNotNull(record);

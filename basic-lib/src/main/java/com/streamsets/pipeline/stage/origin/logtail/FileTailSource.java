@@ -191,7 +191,7 @@ public class FileTailSource extends BaseSource implements OffsetCommitter {
     logLinesQueue.drainTo(lines, fetch);
     for (String line : lines) {
       String sourceId = getOffset();
-      try (DataParser parser = parserFactory.getParser(sourceId, line)) {
+      try (DataParser parser = parserFactory.getParser(sourceId, line.getBytes(Charset.defaultCharset()))) {
         Record record = parser.parse();
         if (record != null) {
           batchMaker.addRecord(record);

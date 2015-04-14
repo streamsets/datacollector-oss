@@ -43,7 +43,7 @@ public class TestLogCharDataParserFactory {
     LogCharDataParserFactory factory = (LogCharDataParserFactory) dataFactory;
 
     DataParser parser = factory.getParser("id",
-      "127.0.0.1 ss h [10/Oct/2000:13:55:36 -0700] \"GET /apache_pb.gif HTTP/1.0\" 200 2326");
+      "127.0.0.1 ss h [10/Oct/2000:13:55:36 -0700] \"GET /apache_pb.gif HTTP/1.0\" 200 2326".getBytes());
 
     Assert.assertEquals(0, parser.getOffset());
     Record record = parser.parse();
@@ -93,7 +93,7 @@ public class TestLogCharDataParserFactory {
 
 
     DataParser parser = factory.getParser("id",
-      "127.0.0.1 ss h [10/Oct/2000:13:55:36 -0700] \"GET /apache_pb.gif HTTP/1.0\" 200 2326");
+      "127.0.0.1 ss h [10/Oct/2000:13:55:36 -0700] \"GET /apache_pb.gif HTTP/1.0\" 200 2326".getBytes());
 
     Assert.assertEquals(0, parser.getOffset());
     Record record = parser.parse();
@@ -273,8 +273,7 @@ public class TestLogCharDataParserFactory {
     LogCharDataParserFactory factory = (LogCharDataParserFactory) dataFactory;
 
     DataParser parser = factory.getParser("id",
-      "127.0.0.1 ss h [10/Oct/2000:13:55:36 -0700] \"GET /apache_pb.gif HTTP/1.0\" 200 2326 " +
-        "\"http:www.example.com/start.html\" \"Mozilla/4.08 [en] (Win98; I ;Nav)\"");
+      "127.0.0.1 ss h [10/Oct/2000:13:55:36 -0700] \"GET /apache_pb.gif HTTP/1.0\" 200 2326 \"http:www.example.com/start.html\" \"Mozilla/4.08 [en] (Win98; I ;Nav)\"".getBytes());
 
     Assert.assertEquals(0, parser.getOffset());
     Record record = parser.parse();
@@ -339,8 +338,7 @@ public class TestLogCharDataParserFactory {
     LogCharDataParserFactory factory = (LogCharDataParserFactory) dataFactory;
 
     DataParser parser = factory.getParser("id",
-      "[Wed Oct 11 14:32:52 2000] [error] [client 127.0.0.1] client denied " +
-        "by server configuration: /export/home/live/ap/htdocs/test");
+      "[Wed Oct 11 14:32:52 2000] [error] [client 127.0.0.1] client denied by server configuration: /export/home/live/ap/htdocs/test".getBytes());
 
     Assert.assertEquals(0, parser.getOffset());
     Record record = parser.parse();
@@ -389,7 +387,7 @@ public class TestLogCharDataParserFactory {
     Assert.assertTrue(dataFactory instanceof LogCharDataParserFactory);
     LogCharDataParserFactory factory = (LogCharDataParserFactory) dataFactory;
 
-    DataParser parser = factory.getParser("id", logLine);
+    DataParser parser = factory.getParser("id", logLine.getBytes());
 
     Assert.assertEquals(0, parser.getOffset());
     Record record = parser.parse();
@@ -467,7 +465,7 @@ public class TestLogCharDataParserFactory {
     Assert.assertTrue(dataFactory instanceof LogCharDataParserFactory);
     LogCharDataParserFactory factory = (LogCharDataParserFactory) dataFactory;
 
-    DataParser parser = factory.getParser("id", logLine);
+    DataParser parser = factory.getParser("id", logLine.getBytes());
 
 
     Assert.assertTrue(parser instanceof RegexParser);

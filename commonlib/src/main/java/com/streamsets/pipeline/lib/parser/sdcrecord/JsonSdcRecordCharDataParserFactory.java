@@ -6,11 +6,11 @@
 package com.streamsets.pipeline.lib.parser.sdcrecord;
 
 import com.streamsets.pipeline.api.impl.Utils;
+import com.streamsets.pipeline.lib.common.SdcRecordDataFactoryUtil;
 import com.streamsets.pipeline.lib.io.OverrunReader;
 import com.streamsets.pipeline.lib.parser.CharDataParserFactory;
 import com.streamsets.pipeline.lib.parser.DataParser;
 import com.streamsets.pipeline.lib.parser.DataParserException;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Collections;
@@ -27,6 +27,17 @@ public class JsonSdcRecordCharDataParserFactory extends CharDataParserFactory {
 
   @Override
   public DataParser getParser(String id, InputStream is, long offset) throws DataParserException {
+    byte[] headerBytes = SdcRecordDataFactoryUtil.readHeader(is);
+    byte formatNumber = headerBytes[0];
+    switch(formatNumber) {
+      case SdcRecordDataFactoryUtil.SDC_FORMAT_JSON_BYTE:
+        return getJsonSdcRecordParser(id, is, offset);
+      default:
+        throw new DataParserException(Errors.SDC_RECORD_PARSER_02, formatNumber);
+    }
+  }
+
+  private DataParser getJsonSdcRecordParser(String id, InputStream is, long offset) throws DataParserException {
     OverrunReader reader = createReader(is);
     Utils.checkState(reader.getPos() == 0, Utils.formatL("reader must be in position '0', it is at '{}'",
       reader.getPos()));
@@ -37,5 +48,4 @@ public class JsonSdcRecordCharDataParserFactory extends CharDataParserFactory {
       throw new DataParserException(Errors.SDC_RECORD_PARSER_00, id, offset, ex.getMessage(), ex);
     }
   }
-
 }

@@ -46,7 +46,7 @@ public class TestJsonCharDataParserFactory {
     Assert.assertTrue(dataFactory instanceof JsonCharDataParserFactory);
     JsonCharDataParserFactory factory = (JsonCharDataParserFactory) dataFactory;
 
-    DataParser parser = factory.getParser("id", "[\"Hello\"]\n");
+    DataParser parser = factory.getParser("id", "[\"Hello\"]\n".getBytes());
     Assert.assertEquals(0, parser.getOffset());
     Record record = parser.parse();
     Assert.assertTrue(record.has(""));

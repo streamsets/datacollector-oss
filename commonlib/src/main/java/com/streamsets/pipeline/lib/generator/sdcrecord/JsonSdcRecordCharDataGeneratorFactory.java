@@ -7,6 +7,7 @@ package com.streamsets.pipeline.lib.generator.sdcrecord;
 
 import com.google.common.collect.ImmutableSet;
 import com.streamsets.pipeline.api.ext.ContextExtensions;
+import com.streamsets.pipeline.lib.common.SdcRecordDataFactoryUtil;
 import com.streamsets.pipeline.lib.generator.CharDataGeneratorFactory;
 import com.streamsets.pipeline.lib.generator.DataGenerator;
 import com.streamsets.pipeline.lib.generator.DataGeneratorException;
@@ -33,6 +34,7 @@ public class JsonSdcRecordCharDataGeneratorFactory extends CharDataGeneratorFact
 
   @Override
   public DataGenerator getGenerator(OutputStream os) throws IOException, DataGeneratorException {
+    SdcRecordDataFactoryUtil.writeHeader(os);
     return new JsonSdcRecordDataGenerator(context.createJsonRecordWriter(createWriter(os)));
   }
 

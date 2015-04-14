@@ -15,6 +15,7 @@ import com.streamsets.pipeline.api.ext.ContextExtensions;
 import com.streamsets.pipeline.api.ext.JsonRecordWriter;
 import com.streamsets.pipeline.config.DataFormat;
 import com.streamsets.pipeline.config.OnParseError;
+import com.streamsets.pipeline.lib.common.SdcRecordDataFactoryUtil;
 import com.streamsets.pipeline.sdk.ContextInfoCreator;
 import com.streamsets.pipeline.sdk.RecordCreator;
 import com.streamsets.pipeline.sdk.SourceRunner;
@@ -40,7 +41,11 @@ public class TestSDCRecordSpoolDirSource {
     File f = new File(createTestDir(), "errorrecords-0000.json");
     Source.Context sourceContext = ContextInfoCreator.createSourceContext("myInstance", false, OnRecordError.TO_ERROR,
       ImmutableList.of("lane"));
-    JsonRecordWriter jsonRecordWriter = ((ContextExtensions) sourceContext).createJsonRecordWriter(new OutputStreamWriter(new FileOutputStream(f)));
+
+    FileOutputStream fileOutputStream = new FileOutputStream(f);
+    SdcRecordDataFactoryUtil.writeHeader(fileOutputStream);
+    JsonRecordWriter jsonRecordWriter = ((ContextExtensions) sourceContext).createJsonRecordWriter(
+      new OutputStreamWriter(fileOutputStream));
 
     Record r = RecordCreator.create("s", "c::1");
     r.set(Field.create("Hello"));

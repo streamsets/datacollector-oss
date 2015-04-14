@@ -49,7 +49,7 @@ public class TestTextCharDataParserFactory {
     Assert.assertTrue(dataFactory instanceof TextCharDataParserFactory);
     TextCharDataParserFactory factory = (TextCharDataParserFactory) dataFactory;
 
-    DataParser parser = factory.getParser("id", "Hello\n");
+    DataParser parser = factory.getParser("id", "Hello\n".getBytes());
     Assert.assertEquals(0, parser.getOffset());
     Record record = parser.parse();
     Assert.assertTrue(record.has("/text"));

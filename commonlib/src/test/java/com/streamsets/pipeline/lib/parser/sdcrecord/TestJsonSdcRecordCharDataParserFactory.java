@@ -11,26 +11,23 @@ import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.ext.ContextExtensions;
 import com.streamsets.pipeline.api.ext.JsonRecordWriter;
-import com.streamsets.pipeline.config.LogMode;
+import com.streamsets.pipeline.lib.common.SdcRecordDataFactoryUtil;
 import com.streamsets.pipeline.lib.data.DataFactory;
-import com.streamsets.pipeline.lib.io.OverrunReader;
-import com.streamsets.pipeline.lib.parser.CharDataParserFactory;
 import com.streamsets.pipeline.lib.parser.DataParser;
+import com.streamsets.pipeline.lib.parser.DataParserException;
 import com.streamsets.pipeline.lib.parser.DataParserFactoryBuilder;
 import com.streamsets.pipeline.lib.parser.DataParserFormat;
-import com.streamsets.pipeline.lib.parser.log.LogCharDataParserFactory;
 import com.streamsets.pipeline.sdk.ContextInfoCreator;
 import com.streamsets.pipeline.sdk.RecordCreator;
 import org.junit.Assert;
 import org.junit.Test;
 
 import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
-import java.io.StringReader;
-import java.io.StringWriter;
+import java.io.OutputStreamWriter;
+import java.nio.charset.Charset;
 import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
 
 public class TestJsonSdcRecordCharDataParserFactory {
 
@@ -38,9 +35,11 @@ public class TestJsonSdcRecordCharDataParserFactory {
     return ContextInfoCreator.createSourceContext("i", false, OnRecordError.TO_ERROR, Collections.EMPTY_LIST);
   }
 
-  private String createJsonSdcRecordsString() throws Exception {
-    StringWriter writer = new StringWriter();
-    JsonRecordWriter recordWriter = ((ContextExtensions)getContext()).createJsonRecordWriter(writer);
+  private byte[] createJsonSdcRecordsString() throws Exception {
+    ByteArrayOutputStream baos = new ByteArrayOutputStream();
+    SdcRecordDataFactoryUtil.writeHeader(baos);
+    JsonRecordWriter recordWriter = ((ContextExtensions)getContext()).createJsonRecordWriter(
+      new OutputStreamWriter(baos));
     Record record = RecordCreator.create();
     record.set(Field.create("Hello"));
     recordWriter.write(record);
@@ -48,7 +47,22 @@ public class TestJsonSdcRecordCharDataParserFactory {
     record.set(Field.create("Bye"));
     recordWriter.write(record);
     recordWriter.close();
-    return writer.toString();
+    return baos.toByteArray();
+  }
+
+  private byte[] createJsonSdcRecordsStringWrongFormat() throws Exception {
+    ByteArrayOutputStream baos = new ByteArrayOutputStream();
+    baos.write(new byte[] {0,0,0,4});
+    JsonRecordWriter recordWriter = ((ContextExtensions)getContext()).createJsonRecordWriter(
+      new OutputStreamWriter(baos));
+    Record record = RecordCreator.create();
+    record.set(Field.create("Hello"));
+    recordWriter.write(record);
+    record = RecordCreator.create();
+    record.set(Field.create("Bye"));
+    recordWriter.write(record);
+    recordWriter.close();
+    return baos.toByteArray();
   }
 
   @Test
@@ -80,7 +94,7 @@ public class TestJsonSdcRecordCharDataParserFactory {
     Assert.assertTrue(dataFactory instanceof JsonSdcRecordCharDataParserFactory);
     JsonSdcRecordCharDataParserFactory factory = (JsonSdcRecordCharDataParserFactory) dataFactory;
 
-    InputStream is = new ByteArrayInputStream(createJsonSdcRecordsString().getBytes());
+    InputStream is = new ByteArrayInputStream(createJsonSdcRecordsString());
     DataParser parser = factory.getParser("id", is, 0);
     Assert.assertEquals(0, parser.getOffset());
     Record record = parser.parse();
@@ -92,7 +106,7 @@ public class TestJsonSdcRecordCharDataParserFactory {
 
   @Test
   public void testGetParserReaderWithOffset() throws Exception {
-    String payload = createJsonSdcRecordsString();
+    byte[] payload = createJsonSdcRecordsString();
 
     DataParserFactoryBuilder dataParserFactoryBuilder = new DataParserFactoryBuilder(getContext(),
       DataParserFormat.SDC_RECORD);
@@ -102,7 +116,7 @@ public class TestJsonSdcRecordCharDataParserFactory {
     Assert.assertTrue(dataFactory instanceof JsonSdcRecordCharDataParserFactory);
     JsonSdcRecordCharDataParserFactory factory = (JsonSdcRecordCharDataParserFactory) dataFactory;
 
-    InputStream is = new ByteArrayInputStream(payload.getBytes());
+    InputStream is = new ByteArrayInputStream(payload);
     DataParser parser = factory.getParser("id", is, 0);
     Assert.assertEquals(0, parser.getOffset());
     parser.parse();
@@ -115,7 +129,7 @@ public class TestJsonSdcRecordCharDataParserFactory {
     Assert.assertTrue(dataFactory instanceof JsonSdcRecordCharDataParserFactory);
     factory = (JsonSdcRecordCharDataParserFactory) dataFactory;
 
-    is = new ByteArrayInputStream(payload.getBytes());
+    is = new ByteArrayInputStream(payload);
     parser = factory.getParser("id", is, offset);
     Assert.assertEquals(offset, parser.getOffset());
     Record record = parser.parse();
@@ -123,5 +137,21 @@ public class TestJsonSdcRecordCharDataParserFactory {
     Assert.assertTrue(record.has(""));
     Assert.assertTrue(offset < parser.getOffset());
     parser.close();
+  }
+
+  @Test(expected = DataParserException.class)
+  public void testCreateParserUnknownFormat() throws Exception {
+    byte[] payload = createJsonSdcRecordsStringWrongFormat();
+
+    DataParserFactoryBuilder dataParserFactoryBuilder = new DataParserFactoryBuilder(getContext(),
+      DataParserFormat.SDC_RECORD);
+    DataFactory dataFactory = dataParserFactoryBuilder
+      .setMaxDataLen(1000)
+      .build();
+    Assert.assertTrue(dataFactory instanceof JsonSdcRecordCharDataParserFactory);
+    JsonSdcRecordCharDataParserFactory factory = (JsonSdcRecordCharDataParserFactory) dataFactory;
+
+    InputStream is = new ByteArrayInputStream(payload);
+    factory.getParser("id", is, 0);
   }
 }

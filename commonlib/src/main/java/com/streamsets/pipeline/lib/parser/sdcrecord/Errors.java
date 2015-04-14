@@ -11,6 +11,8 @@ import com.streamsets.pipeline.api.GenerateResourceBundle;
 @GenerateResourceBundle
 public enum Errors implements ErrorCode {
   SDC_RECORD_PARSER_00("Could advance reader '{}' to '{}' offset"),
+  SDC_RECORD_PARSER_01("Error reading header from stream, reason {}"),
+  SDC_RECORD_PARSER_02("Unsupported Data Format number '{}' encountered in the stream."),
 
   ;
 

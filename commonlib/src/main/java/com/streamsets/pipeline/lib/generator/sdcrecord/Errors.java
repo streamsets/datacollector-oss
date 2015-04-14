@@ -10,7 +10,8 @@ import com.streamsets.pipeline.api.GenerateResourceBundle;
 
 @GenerateResourceBundle
 public enum Errors implements ErrorCode {
-  TEXT_GENERATOR_00("Record '{}' cannot convert the field '{}' value to string"),
+  SDC_GENERATOR_00("Record '{}' cannot convert the field '{}' value to string"),
+  SDC_GENERATOR_01("Error writing header to stream, reason {}"),
   ;
 
   private final String msg;
