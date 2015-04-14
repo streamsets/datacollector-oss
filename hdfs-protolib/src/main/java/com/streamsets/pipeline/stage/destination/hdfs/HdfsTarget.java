@@ -40,6 +40,7 @@ import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.net.URI;
+import java.nio.charset.Charset;
 import java.security.PrivilegedExceptionAction;
 import java.util.Date;
 import java.util.List;
@@ -76,6 +77,7 @@ public class HdfsTarget extends RecordTarget {
   private final JsonMode jsonMode;
   private final String textFieldPath;
   private final boolean textEmptyLineIfNull;
+  private String charset;
 
   public HdfsTarget(String hdfsUri, boolean hdfsKerberos, String kerberosPrincipal, String kerberosKeytab,
       Map<String, String> hdfsConfigs, String uniquePrefix, String dirPathTemplate, String timeZoneID,
@@ -83,7 +85,7 @@ public class HdfsTarget extends RecordTarget {
       HdfsFileType fileType, String keyEl,
       HdfsSequenceFileCompressionType seqFileCompressionType, String lateRecordsLimit,
       LateRecordsAction lateRecordsAction, String lateRecordsDirPathTemplate,
-      DataFormat dataFormat, CsvMode csvFileFormat, CsvHeader csvHeader, boolean csvReplaceNewLines, JsonMode jsonMode,
+      DataFormat dataFormat, String charset, CsvMode csvFileFormat, CsvHeader csvHeader, boolean csvReplaceNewLines, JsonMode jsonMode,
       String textFieldPath, boolean textEmptyLineIfNull) {
     this.hdfsUri = hdfsUri;
     this.hdfsKerberos = hdfsKerberos;
@@ -111,6 +113,7 @@ public class HdfsTarget extends RecordTarget {
     this.jsonMode = jsonMode;
     this.textFieldPath = textFieldPath;
     this.textEmptyLineIfNull = textEmptyLineIfNull;
+    this.charset = charset;
   }
 
   private Configuration hdfsConfiguration;
@@ -326,6 +329,10 @@ public class HdfsTarget extends RecordTarget {
   private CharDataGeneratorFactory createDataGeneratorFactory() {
     DataGeneratorFactoryBuilder builder = new DataGeneratorFactoryBuilder(getContext(),
       dataFormat.getGeneratorFormat());
+    if(charset == null || charset.trim().isEmpty()) {
+      charset = "UTF-8";
+    }
+    builder.setCharset(Charset.forName(charset));
     switch(dataFormat) {
       case JSON:
         builder.setMode(jsonMode);

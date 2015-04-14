@@ -61,6 +61,7 @@ public class TestHdfsTarget {
         .addConfiguration("dataFormat", DataFormat.SDC_JSON)
         .addConfiguration("csvFileFormat", null)
         .addConfiguration("csvReplaceNewLines", false)
+        .addConfiguration("charset", "UTF-8")
         .build();
     runner.runInit();
     List<Record> records = new ArrayList<>();
@@ -118,6 +119,7 @@ public class TestHdfsTarget {
         .addConfiguration("dataFormat", DataFormat.SDC_JSON)
         .addConfiguration("csvFileFormat", null)
         .addConfiguration("csvReplaceNewLines", false)
+        .addConfiguration("charset", "UTF-8")
         .build();
     runner.runInit();
     try {

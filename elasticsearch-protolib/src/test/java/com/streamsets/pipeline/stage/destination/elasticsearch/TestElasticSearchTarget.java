@@ -80,7 +80,7 @@ public class TestElasticSearchTarget {
   @Test
   public void testValidations() throws Exception {
     Target target = new ElasticSearchTarget("", Collections.EMPTY_LIST, Collections.EMPTY_MAP,
-                                                   "${record:value('/index')x}", "${record:valxue('/type')}", "");
+      "${record:value('/index')x}", "${record:valxue('/type')}", "", "UTF-8");
     TargetRunner runner = new TargetRunner.Builder(ElasticSearchDTarget.class, target).build();
     List<Stage.ConfigIssue> issues = runner.runValidateConfigs();
     Assert.assertEquals(4, issues.size());
@@ -89,13 +89,13 @@ public class TestElasticSearchTarget {
     Assert.assertTrue(issues.get(2).toString().contains(Errors.ELASTICSEARCH_06.name()));
     Assert.assertTrue(issues.get(3).toString().contains(Errors.ELASTICSEARCH_07.name()));
 
-    target = new ElasticSearchTarget("x", ImmutableList.of("x"), Collections.EMPTY_MAP, "x", "x", "");
+    target = new ElasticSearchTarget("x", ImmutableList.of("x"), Collections.EMPTY_MAP, "x", "x", "", "UTF-8");
     runner = new TargetRunner.Builder(ElasticSearchDTarget.class, target).build();
     issues = runner.runValidateConfigs();
     Assert.assertEquals(1, issues.size());
     Assert.assertTrue(issues.get(0).toString().contains(Errors.ELASTICSEARCH_09.name()));
 
-    target = new ElasticSearchTarget("x", ImmutableList.of("localhost:0"), Collections.EMPTY_MAP, "x", "x", "");
+    target = new ElasticSearchTarget("x", ImmutableList.of("localhost:0"), Collections.EMPTY_MAP, "x", "x", "", "UTF-8");
     runner = new TargetRunner.Builder(ElasticSearchDTarget.class, target).build();
     issues = runner.runValidateConfigs();
     Assert.assertEquals(1, issues.size());
@@ -104,7 +104,7 @@ public class TestElasticSearchTarget {
 
   private Target createTarget() {
     return new ElasticSearchTarget(esName, ImmutableList.of("127.0.0.1:" + esPort), Collections.EMPTY_MAP,
-                                   "${record:value('/index')}", "${record:value('/type')}", "");
+                                   "${record:value('/index')}", "${record:value('/type')}", "", "UTF-8");
   }
 
   @Test

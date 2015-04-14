@@ -10,6 +10,8 @@ import com.streamsets.pipeline.api.ConfigGroups;
 import com.streamsets.pipeline.api.GenerateResourceBundle;
 import com.streamsets.pipeline.api.StageDef;
 import com.streamsets.pipeline.api.Target;
+import com.streamsets.pipeline.api.ValueChooser;
+import com.streamsets.pipeline.config.CharsetChooserValues;
 import com.streamsets.pipeline.configurablestage.DTarget;
 import com.streamsets.pipeline.lib.el.DataUtilEL;
 import com.streamsets.pipeline.lib.el.RecordEL;
@@ -100,9 +102,20 @@ public class ElasticSearchDTarget extends DTarget {
   )
   public String docIdTemplate;
 
+  @ConfigDef(
+    required = true,
+    type = ConfigDef.Type.MODEL,
+    defaultValue = "UTF-8",
+    label = "Data Charset",
+    displayPosition = 55,
+    group = "ELASTIC_SEARCH"
+  )
+  @ValueChooser(CharsetChooserValues.class)
+  public String charset;
+
   @Override
   protected Target createTarget() {
-    return new ElasticSearchTarget(clusterName, uris, configs, indexTemplate, typeTemplate, docIdTemplate);
+    return new ElasticSearchTarget(clusterName, uris, configs, indexTemplate, typeTemplate, docIdTemplate, charset);
   }
 
 }

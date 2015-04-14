@@ -12,6 +12,7 @@ import com.streamsets.pipeline.api.GenerateResourceBundle;
 import com.streamsets.pipeline.api.StageDef;
 import com.streamsets.pipeline.api.Target;
 import com.streamsets.pipeline.api.ValueChooser;
+import com.streamsets.pipeline.config.CharsetChooserValues;
 import com.streamsets.pipeline.config.CsvHeader;
 import com.streamsets.pipeline.config.CsvHeaderChooserValues;
 import com.streamsets.pipeline.config.CsvMode;
@@ -97,6 +98,19 @@ public class KafkaDTarget extends DTarget {
   )
   @ValueChooser(ProducerDataFormatChooserValues.class)
   public DataFormat dataFormat;
+
+  @ConfigDef(
+    required = true,
+    type = ConfigDef.Type.MODEL,
+    defaultValue = "UTF-8",
+    label = "Messages Charset",
+    displayPosition = 51,
+    group = "KAFKA",
+    dependsOn = "dataFormat",
+    triggeredByValue = {"TEXT", "JSON", "DELIMITED", "XML", "LOG"}
+  )
+  @ValueChooser(CharsetChooserValues.class)
+  public String charset;
 
   @ConfigDef(
       required = true,
@@ -214,8 +228,8 @@ public class KafkaDTarget extends DTarget {
 
   @Override
   protected Target createTarget() {
-    return new KafkaTarget(metadataBrokerList, topic, partitionStrategy, partition, dataFormat, singleMessagePerBatch,
-                           kafkaProducerConfigs, csvFileFormat, csvHeader, csvReplaceNewLines, jsonMode, textFieldPath,
-                           textEmptyLineIfNull);
+    return new KafkaTarget(metadataBrokerList, topic, partitionStrategy, partition, dataFormat, charset,
+      singleMessagePerBatch, kafkaProducerConfigs, csvFileFormat, csvHeader, csvReplaceNewLines, jsonMode,
+      textFieldPath, textEmptyLineIfNull);
   }
 }

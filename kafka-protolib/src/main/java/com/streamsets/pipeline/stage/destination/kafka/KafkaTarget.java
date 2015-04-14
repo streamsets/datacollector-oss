@@ -32,6 +32,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.ByteArrayOutputStream;
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -55,6 +56,7 @@ public class KafkaTarget extends BaseTarget {
   private final JsonMode jsonMode;
   private final String textFieldPath;
   private final boolean textEmptyLineIfNull;
+  private String charset;
 
   private KafkaProducer kafkaProducer;
   private long recordCounter = 0;
@@ -63,7 +65,7 @@ public class KafkaTarget extends BaseTarget {
   private ELVars variables;
 
   public KafkaTarget(String metadataBrokerList, String topic, PartitionStrategy partitionStrategy, String partition,
-      DataFormat dataFormat, boolean singleMessagePerBatch, Map<String, String> kafkaProducerConfigs,
+      DataFormat dataFormat, String charset, boolean singleMessagePerBatch, Map<String, String> kafkaProducerConfigs,
       CsvMode csvFileFormat, CsvHeader csvHeader, boolean csvReplaceNewLines, JsonMode jsonMode, String textFieldPath,
       boolean textEmptyLineIfNull) {
     this.metadataBrokerList = metadataBrokerList;
@@ -79,6 +81,7 @@ public class KafkaTarget extends BaseTarget {
     this.jsonMode = jsonMode;
     this.textFieldPath = textFieldPath;
     this.textEmptyLineIfNull = textEmptyLineIfNull;
+    this.charset = charset;
   }
 
   @Override
@@ -118,6 +121,10 @@ public class KafkaTarget extends BaseTarget {
   private CharDataGeneratorFactory createDataGeneratorFactory() {
     DataGeneratorFactoryBuilder builder = new DataGeneratorFactoryBuilder(getContext(),
       dataFormat.getGeneratorFormat());
+    if(charset == null || charset.trim().isEmpty()) {
+      charset = "UTF-8";
+    }
+    builder.setCharset(Charset.forName(charset));
     switch (dataFormat) {
       case SDC_JSON:
         break;

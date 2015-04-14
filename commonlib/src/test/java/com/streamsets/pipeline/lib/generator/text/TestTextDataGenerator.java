@@ -20,7 +20,10 @@ import org.junit.Test;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.OutputStreamWriter;
 import java.io.StringWriter;
+import java.io.Writer;
+import java.nio.charset.Charset;
 
 public class TestTextDataGenerator {
 
@@ -37,6 +40,7 @@ public class TestTextDataGenerator {
     dataFactory = new DataGeneratorFactoryBuilder(context, DataGeneratorFormat.TEXT)
       .setConfig(TextCharDataGeneratorFactory.FIELD_PATH_KEY, "/foo")
       .setConfig(TextCharDataGeneratorFactory.EMPTY_LINE_IF_NULL_KEY, true)
+      .setCharset(Charset.forName("UTF-16"))
       .build();
     Assert.assertTrue(dataFactory instanceof TextCharDataGeneratorFactory);
     factory = (TextCharDataGeneratorFactory) dataFactory;
@@ -44,6 +48,11 @@ public class TestTextDataGenerator {
     generator = (TextDataGenerator) factory.getGenerator(new ByteArrayOutputStream());
     Assert.assertEquals("/foo", generator.getFieldPath());
     Assert.assertEquals(true, generator.isEmptyLineIfNull());
+
+    Writer writer = factory.createWriter(new ByteArrayOutputStream());
+    Assert.assertTrue(writer instanceof OutputStreamWriter);
+    OutputStreamWriter outputStreamWriter = (OutputStreamWriter) writer;
+    Assert.assertEquals("UTF-16", outputStreamWriter.getEncoding());
   }
 
   @Test

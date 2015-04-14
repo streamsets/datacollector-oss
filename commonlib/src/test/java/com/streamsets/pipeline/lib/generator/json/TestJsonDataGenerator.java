@@ -23,7 +23,10 @@ import org.junit.Test;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.OutputStreamWriter;
 import java.io.StringWriter;
+import java.io.Writer;
+import java.nio.charset.Charset;
 import java.util.Iterator;
 import java.util.List;
 
@@ -34,18 +37,24 @@ public class TestJsonDataGenerator {
     Stage.Context context = ContextInfoCreator.createTargetContext("i", false, OnRecordError.TO_ERROR);
 
     DataFactory dataFactory = new DataGeneratorFactoryBuilder(context, DataGeneratorFormat.JSON)
-      .setMode(JsonMode.ARRAY_OBJECTS).build();
+      .setMode(JsonMode.ARRAY_OBJECTS).setCharset(Charset.forName("UTF-16")).build();
     Assert.assertTrue(dataFactory instanceof JsonCharDataGeneratorFactory);
     JsonCharDataGeneratorFactory factory = (JsonCharDataGeneratorFactory) dataFactory;
     JsonDataGenerator generator = (JsonDataGenerator) factory.getGenerator(new ByteArrayOutputStream());
     Assert.assertEquals(true, generator.isArrayObjects());
 
     dataFactory = new DataGeneratorFactoryBuilder(context, DataGeneratorFormat.JSON)
-      .setMode(JsonMode.MULTIPLE_OBJECTS).build();
+      .setMode(JsonMode.MULTIPLE_OBJECTS).setCharset(Charset.forName("UTF-16")).build();
     Assert.assertTrue(dataFactory instanceof JsonCharDataGeneratorFactory);
     factory = (JsonCharDataGeneratorFactory) dataFactory;
     generator = (JsonDataGenerator) factory.getGenerator(new ByteArrayOutputStream());
     Assert.assertEquals(false, generator.isArrayObjects());
+
+    Writer writer = factory.createWriter(new ByteArrayOutputStream());
+    Assert.assertTrue(writer instanceof OutputStreamWriter);
+    OutputStreamWriter outputStreamWriter = (OutputStreamWriter) writer;
+    Assert.assertEquals("UTF-16", outputStreamWriter.getEncoding());
+
   }
   @Test
   public void testGeneratorArrayObjects() throws Exception {

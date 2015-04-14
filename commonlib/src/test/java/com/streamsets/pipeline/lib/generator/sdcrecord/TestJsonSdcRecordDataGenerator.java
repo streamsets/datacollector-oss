@@ -22,8 +22,11 @@ import org.junit.Test;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.OutputStreamWriter;
 import java.io.StringReader;
 import java.io.StringWriter;
+import java.io.Writer;
+import java.nio.charset.Charset;
 
 public class TestJsonSdcRecordDataGenerator {
 
@@ -35,11 +38,17 @@ public class TestJsonSdcRecordDataGenerator {
   public void testFactory() throws Exception {
     Stage.Context context = ContextInfoCreator.createTargetContext("i", false, OnRecordError.TO_ERROR);
 
-    DataFactory dataFactory = new DataGeneratorFactoryBuilder(context, DataGeneratorFormat.SDC_RECORD).build();
+    DataFactory dataFactory = new DataGeneratorFactoryBuilder(context, DataGeneratorFormat.SDC_RECORD)
+      .setCharset(Charset.forName("UTF-16")).build();
     Assert.assertTrue(dataFactory instanceof JsonSdcRecordCharDataGeneratorFactory);
     JsonSdcRecordCharDataGeneratorFactory factory = (JsonSdcRecordCharDataGeneratorFactory) dataFactory;
     JsonSdcRecordDataGenerator generator = (JsonSdcRecordDataGenerator) factory.getGenerator(new ByteArrayOutputStream());
     Assert.assertNotNull(generator);
+
+    Writer writer = factory.createWriter(new ByteArrayOutputStream());
+    Assert.assertTrue(writer instanceof OutputStreamWriter);
+    OutputStreamWriter outputStreamWriter = (OutputStreamWriter) writer;
+    Assert.assertEquals("UTF-16", outputStreamWriter.getEncoding());
   }
 
   @Test

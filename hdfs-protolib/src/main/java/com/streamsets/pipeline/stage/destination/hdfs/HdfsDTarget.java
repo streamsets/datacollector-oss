@@ -11,6 +11,7 @@ import com.streamsets.pipeline.api.GenerateResourceBundle;
 import com.streamsets.pipeline.api.StageDef;
 import com.streamsets.pipeline.api.Target;
 import com.streamsets.pipeline.api.ValueChooser;
+import com.streamsets.pipeline.config.CharsetChooserValues;
 import com.streamsets.pipeline.config.CsvHeader;
 import com.streamsets.pipeline.config.CsvHeaderChooserValues;
 import com.streamsets.pipeline.config.CsvMode;
@@ -292,6 +293,19 @@ public class HdfsDTarget extends DTarget {
   @ValueChooser(DataFormatChooserValues.class)
   public DataFormat dataFormat;
 
+  @ConfigDef(
+    required = true,
+    type = ConfigDef.Type.MODEL,
+    defaultValue = "UTF-8",
+    label = "Data  Charset",
+    displayPosition = 105,
+    group = "OUTPUT_FILES",
+    dependsOn = "dataFormat",
+    triggeredByValue = {"TEXT", "JSON", "DELIMITED", "XML", "LOG"}
+  )
+  @ValueChooser(CharsetChooserValues.class)
+  public String charset;
+
   /********  For DELIMITED ***********/
 
   @ConfigDef(
@@ -403,6 +417,7 @@ public class HdfsDTarget extends DTarget {
       lateRecordsAction,
       lateRecordsDirPathTemplate,
       dataFormat,
+      charset,
       csvFileFormat,
       csvHeader,
       csvReplaceNewLines,

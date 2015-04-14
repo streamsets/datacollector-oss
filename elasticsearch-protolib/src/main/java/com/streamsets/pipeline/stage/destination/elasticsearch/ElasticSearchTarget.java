@@ -34,6 +34,7 @@ import org.elasticsearch.common.transport.TransportAddress;
 import org.elasticsearch.common.xcontent.XContentType;
 
 import java.io.ByteArrayOutputStream;
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
@@ -48,15 +49,17 @@ public class ElasticSearchTarget extends BaseTarget {
   private final String indexTemplate;
   private final String typeTemplate;
   private final String docIdTemplate;
+  private final String charset;
 
   public ElasticSearchTarget(String clusterName, List<String> uris,
-      Map<String, String> configs, String indexTemplate, String typeTemplate, String docIdTemplate) {
+      Map<String, String> configs, String indexTemplate, String typeTemplate, String docIdTemplate, String charset) {
     this.clusterName = clusterName;
     this.uris = uris;
     this.configs = configs;
     this.indexTemplate = indexTemplate;
     this.typeTemplate = typeTemplate;
     this.docIdTemplate = docIdTemplate;
+    this.charset = charset;
   }
 
   private Date batchTime;
@@ -134,7 +137,7 @@ public class ElasticSearchTarget extends BaseTarget {
   protected void init() throws StageException {
     super.init();
     generatorFactory = new DataGeneratorFactoryBuilder(getContext(), DataGeneratorFormat.JSON)
-        .setMode(JsonMode.MULTIPLE_OBJECTS).build();
+        .setMode(JsonMode.MULTIPLE_OBJECTS).setCharset(Charset.forName(charset)).build();
   }
 
   private Client getElasticClient() {

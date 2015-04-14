@@ -24,6 +24,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.nio.charset.Charset;
 import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -32,6 +33,7 @@ import java.util.List;
 
 public class RecordsToLocalFileSystemTarget extends BaseTarget {
   private final static Logger LOG = LoggerFactory.getLogger(RecordsToLocalFileSystemTarget.class);
+  private static final String CHARSET_UTF8 = "UTF-8";
 
   private final String directory;
   private final String rotationIntervalSecs;
@@ -97,7 +99,8 @@ public class RecordsToLocalFileSystemTarget extends BaseTarget {
     fileFilter = WildcardFilter.createRegex("records-[0-9][0-9][0-9][0-9][0-9][0-9].json");
     // if we had non graceful shutdown we may have a _tmp file around. new file is not created.
     rotate(false);
-    generatorFactory = new DataGeneratorFactoryBuilder(getContext(), DataGeneratorFormat.SDC_RECORD).build();
+    generatorFactory = new DataGeneratorFactoryBuilder(getContext(), DataGeneratorFormat.SDC_RECORD)
+      .setCharset(Charset.forName(CHARSET_UTF8)).build();
   }
 
   @Override

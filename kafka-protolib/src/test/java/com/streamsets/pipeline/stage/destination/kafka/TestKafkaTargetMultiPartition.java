@@ -123,6 +123,7 @@ public class TestKafkaTargetMultiPartition {
       .addConfiguration("partitionStrategy", PartitionStrategy.ROUND_ROBIN)
       .addConfiguration("textFieldPath", "/")
       .addConfiguration("textEmptyLineIfNull", true)
+      .addConfiguration("charset", "UTF-8")
       .build();
 
     targetRunner.runInit();
@@ -166,6 +167,7 @@ public class TestKafkaTargetMultiPartition {
       .addConfiguration("partitionStrategy", PartitionStrategy.RANDOM)
       .addConfiguration("textFieldPath", "/")
       .addConfiguration("textEmptyLineIfNull", true)
+      .addConfiguration("charset", "UTF-8")
       .build();
 
     targetRunner.runInit();
@@ -215,7 +217,9 @@ public class TestKafkaTargetMultiPartition {
       .addConfiguration("singleMessagePerBatch", false)
       .addConfiguration("partitionStrategy", PartitionStrategy.EXPRESSION)
       .addConfiguration("textFieldPath", "/")
+      .addConfiguration("charset", "UTF-8")
       .addConfiguration("textEmptyLineIfNull", true)
+      .addConfiguration("charset", "UTF-8")
       .build();
 
     targetRunner.runInit();
@@ -262,6 +266,7 @@ public class TestKafkaTargetMultiPartition {
       .addConfiguration("partitionStrategy", PartitionStrategy.EXPRESSION)
       .addConfiguration("textFieldPath", "/")
       .addConfiguration("textEmptyLineIfNull", true)
+      .addConfiguration("charset", "UTF-8")
       .build();
 
     List<Stage.ConfigIssue> configIssues = targetRunner.runValidateConfigs();
@@ -285,6 +290,7 @@ public class TestKafkaTargetMultiPartition {
       .addConfiguration("partitionStrategy", PartitionStrategy.EXPRESSION)
       .addConfiguration("textFieldPath", "/")
       .addConfiguration("textEmptyLineIfNull", true)
+      .addConfiguration("charset", "UTF-8")
       .build();
 
     targetRunner.runInit();
@@ -313,6 +319,7 @@ public class TestKafkaTargetMultiPartition {
       .addConfiguration("partitionStrategy", PartitionStrategy.EXPRESSION)
       .addConfiguration("textFieldPath", "/")
       .addConfiguration("textEmptyLineIfNull", true)
+      .addConfiguration("charset", "UTF-8")
       .build();
 
     targetRunner.runInit();
@@ -340,6 +347,7 @@ public class TestKafkaTargetMultiPartition {
       .addConfiguration("partitionStrategy", PartitionStrategy.EXPRESSION)
       .addConfiguration("textFieldPath", "/")
       .addConfiguration("textEmptyLineIfNull", true)
+      .addConfiguration("charset", "UTF-8")
       .build();
 
     targetRunner.runInit();

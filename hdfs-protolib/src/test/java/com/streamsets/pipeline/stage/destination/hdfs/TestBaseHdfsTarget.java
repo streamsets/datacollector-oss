@@ -87,6 +87,7 @@ public class TestBaseHdfsTarget {
     target.dataFormat = DataFormat.DELIMITED;
     target.csvFileFormat = CsvMode.CSV;
     target.csvHeader = CsvHeader.IGNORE_HEADER;
+    target.charset = "UTF-8";
   }
 
   static class ForTestHdfsTarget extends HdfsDTarget {
@@ -113,6 +114,7 @@ public class TestBaseHdfsTarget {
           lateRecordsAction,
           lateRecordsDirPathTemplate,
           dataFormat,
+          charset,
           csvFileFormat,
           csvHeader,
           csvReplaceNewLines,

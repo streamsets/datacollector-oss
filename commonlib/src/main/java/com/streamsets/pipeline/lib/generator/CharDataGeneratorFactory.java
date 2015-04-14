@@ -43,7 +43,7 @@ public abstract class CharDataGeneratorFactory extends DataFactory {
   public abstract DataGenerator getGenerator(OutputStream os) throws IOException, DataGeneratorException;
 
   public Writer createWriter(OutputStream os) {
-    return new OutputStreamWriter(os);
+    return new OutputStreamWriter(os, getSettings().getCharset());
   }
 
 }

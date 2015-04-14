@@ -123,6 +123,7 @@ public class TestKafkaTargetSinglePartition {
       .addConfiguration("partitionStrategy", PartitionStrategy.EXPRESSION)
       .addConfiguration("textFieldPath", "/")
       .addConfiguration("textEmptyLineIfNull", true)
+      .addConfiguration("charset", "UTF-8")
       .build();
 
     targetRunner.runInit();
@@ -160,6 +161,7 @@ public class TestKafkaTargetSinglePartition {
       .addConfiguration("partitionStrategy", PartitionStrategy.EXPRESSION)
       .addConfiguration("textFieldPath", "/")
       .addConfiguration("textEmptyLineIfNull", true)
+      .addConfiguration("charset", "UTF-8")
       .build();
 
     targetRunner.runInit();
@@ -200,6 +202,7 @@ public class TestKafkaTargetSinglePartition {
       .addConfiguration("partitionStrategy", PartitionStrategy.EXPRESSION)
       .addConfiguration("textFieldPath", "/name")
       .addConfiguration("textEmptyLineIfNull", true)
+      .addConfiguration("charset", "UTF-8")
       .build();
 
     targetRunner.runInit();
@@ -240,7 +243,8 @@ public class TestKafkaTargetSinglePartition {
       .addConfiguration("singleMessagePerBatch", false)
       .addConfiguration("partitionStrategy", PartitionStrategy.EXPRESSION)
       .addConfiguration("textFieldPath", "/lastStatusChange") //this is number field, should be converted to string
-        .addConfiguration("textEmptyLineIfNull", true)
+      .addConfiguration("textEmptyLineIfNull", true)
+      .addConfiguration("charset", "UTF-8")
       .build();
 
     targetRunner.runInit();
@@ -284,6 +288,7 @@ public class TestKafkaTargetSinglePartition {
       .addConfiguration("partitionStrategy", PartitionStrategy.EXPRESSION)
       .addConfiguration("textFieldPath", "/") //this is map field, should not be converted to string
       .addConfiguration("textEmptyLineIfNull", true)
+      .addConfiguration("charset", "UTF-8")
       .build();
 
     targetRunner.runInit();
@@ -322,6 +327,7 @@ public class TestKafkaTargetSinglePartition {
       .addConfiguration("dataFormat", DataFormat.SDC_JSON)
       .addConfiguration("singleMessagePerBatch", false)
       .addConfiguration("partitionStrategy", PartitionStrategy.EXPRESSION)
+      .addConfiguration("charset", "UTF-8")
       .build();
 
     targetRunner.runInit();
@@ -366,6 +372,7 @@ public class TestKafkaTargetSinglePartition {
       .addConfiguration("csvFileFormat", CsvMode.CSV)
       .addConfiguration("csvHeader", CsvHeader.NO_HEADER)
       .addConfiguration("csvReplaceNewLines", false)
+      .addConfiguration("charset", "UTF-8")
       .build();
 
     targetRunner.runInit();

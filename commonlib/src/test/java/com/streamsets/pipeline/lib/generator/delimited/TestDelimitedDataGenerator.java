@@ -23,7 +23,10 @@ import org.junit.Test;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.OutputStreamWriter;
 import java.io.StringWriter;
+import java.io.Writer;
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -36,7 +39,7 @@ public class TestDelimitedDataGenerator {
     Stage.Context context = ContextInfoCreator.createTargetContext("i", false, OnRecordError.TO_ERROR);
 
     DataGeneratorFactoryBuilder builder = new DataGeneratorFactoryBuilder(context, DataGeneratorFormat.DELIMITED);
-    builder.setMode(CsvMode.CSV).setMode(CsvHeader.IGNORE_HEADER);
+    builder.setMode(CsvMode.CSV).setMode(CsvHeader.IGNORE_HEADER).setCharset(Charset.forName("US-ASCII"));
     DataFactory dataFactory = builder.build();
 
     Assert.assertTrue(dataFactory instanceof DelimitedCharDataGeneratorFactory);
@@ -47,6 +50,11 @@ public class TestDelimitedDataGenerator {
     Assert.assertEquals(CsvHeader.IGNORE_HEADER, generator.getHeader());
     Assert.assertEquals("header", generator.getHeaderKey());
     Assert.assertEquals("value", generator.getValueKey());
+
+    Writer writer = factory.createWriter(new ByteArrayOutputStream());
+    Assert.assertTrue(writer instanceof OutputStreamWriter);
+    OutputStreamWriter outputStreamWriter = (OutputStreamWriter) writer;
+    Assert.assertEquals("ASCII", outputStreamWriter.getEncoding());
 
     builder = new DataGeneratorFactoryBuilder(context, DataGeneratorFormat.DELIMITED);
     builder.setMode(CsvMode.CSV)
