@@ -44,8 +44,10 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
 import java.io.File;
 import java.io.IOException;
+import java.net.URI;
 import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.attribute.PosixFilePermission;
@@ -57,7 +59,7 @@ public class WebServerTask extends AbstractTask {
   private static final int HTTP_PORT_DEFAULT = 18630;
 
   public static final String HTTPS_PORT_KEY = "https.port";
-  private static final int HTTPS_PORT_DEFAULT = 0;
+  private static final int HTTPS_PORT_DEFAULT = -1;
   public static final String HTTPS_KEYSTORE_PATH_KEY = "https.keystore.path";
   private static final String HTTPS_KEYSTORE_PATH_DEFAULT = "sdc-keystore.jks";
   public static final String HTTPS_KEYSTORE_PASSWORD_KEY = "https.keystore.password";
@@ -92,6 +94,7 @@ public class WebServerTask extends AbstractTask {
 
   @Override
   protected void initTask() {
+    checkValidPorts();
     server = createServer();
     ServletContextHandler appHandler = configureAppContext();
     Handler handler = configureAuthentication(server, appHandler);
@@ -101,6 +104,7 @@ public class WebServerTask extends AbstractTask {
       redirector = createRedirectorServer();
     }
   }
+
 
   private ServletContextHandler configureAppContext() {
     ServletContextHandler context = new ServletContextHandler(ServletContextHandler.SESSIONS);
@@ -268,11 +272,25 @@ public class WebServerTask extends AbstractTask {
   }
 
   private boolean isSSLEnabled() {
-    return conf.get(HTTPS_PORT_KEY, HTTPS_PORT_DEFAULT) != 0;
+    return conf.get(HTTPS_PORT_KEY, HTTPS_PORT_DEFAULT) != -1;
+  }
+
+  // Currently if http or https is random (set to 0), the other should be unused (set to -1)
+  // We have this restriction as currently we are not exposing API's for publishing the redirector
+  // port.
+  private void checkValidPorts() {
+    if ((conf.get(HTTP_PORT_KEY, HTTP_PORT_DEFAULT) == 0 && conf.get(HTTPS_PORT_KEY,
+      HTTPS_PORT_DEFAULT) != -1)
+        || (conf.get(HTTPS_PORT_KEY, HTTPS_PORT_DEFAULT) == 0 && conf.get(HTTP_PORT_KEY,
+          HTTP_PORT_DEFAULT) != -1)) {
+      throw new IllegalArgumentException(
+          "Invalid port combination for http and https, If http port is set to 0 (random), then https should be "
+              + "set to -1 or vice versa");
+    }
   }
 
   private boolean isRedirectorToSSLEnabled() {
-    return conf.get(HTTPS_PORT_KEY, HTTPS_PORT_DEFAULT) != 0 && conf.get(HTTP_PORT_KEY, HTTP_PORT_DEFAULT) != 0;
+    return conf.get(HTTPS_PORT_KEY, HTTPS_PORT_DEFAULT) != -1 && conf.get(HTTP_PORT_KEY, HTTP_PORT_DEFAULT) != -1;
   }
 
   private Server createServer() {
@@ -336,7 +354,8 @@ public class WebServerTask extends AbstractTask {
     }
     try {
       server.start();
-      LOG.debug("Running on port '{}', HTTPS '{}'", port, isSSLEnabled());
+      port = server.getURI().getPort();
+      LOG.debug("Running on URI '{}', HTTPS '{}' ",server.getURI(), isSSLEnabled());
     } catch (Exception ex) {
       throw new RuntimeException(ex);
     }
@@ -347,6 +366,14 @@ public class WebServerTask extends AbstractTask {
       } catch (Exception ex) {
         throw new RuntimeException(ex);
       }
+    }
+  }
+
+  public URI getServerURI() throws ServerNotYetRunningException {
+    if (!server.isStarted()) {
+      throw new ServerNotYetRunningException("Server has not yet started");
+    } else {
+      return server.getURI();
     }
   }
 

@@ -79,6 +79,68 @@ public class TestWebServerTaskHttpHttps {
   }
 
   @Test
+  public void testInvalidPorts() throws Exception {
+    Configuration conf = new Configuration();
+    conf.set(WebServerTask.AUTHENTICATION_KEY, "none");
+    conf.set(WebServerTask.HTTP_PORT_KEY, 0);
+    conf.set(WebServerTask.HTTPS_PORT_KEY, 0);
+    WebServerTask ws = createWebServerTask(createTestDir(), conf);
+    try {
+      ws.initTask();
+    } catch (IllegalArgumentException iae) {
+      //
+    }
+    conf.set(WebServerTask.HTTP_PORT_KEY, 0);
+    conf.set(WebServerTask.HTTPS_PORT_KEY, 10000);
+    ws = createWebServerTask(createTestDir(), conf);
+    try {
+      ws.initTask();
+    } catch (IllegalArgumentException iae) {
+      //
+    }
+
+    conf.set(WebServerTask.HTTP_PORT_KEY, 10000);
+    conf.set(WebServerTask.HTTPS_PORT_KEY, 0);
+    try {
+      ws.initTask();
+    } catch (IllegalArgumentException iae) {
+      //
+    }
+  }
+
+  @Test
+  public void testGetServerURI() throws Exception {
+    Configuration conf = new Configuration();
+    int httpPort = getRandomPort();
+    conf.set(WebServerTask.AUTHENTICATION_KEY, "none");
+    conf.set(WebServerTask.HTTP_PORT_KEY, httpPort);
+    final WebServerTask ws = createWebServerTask(createTestDir(), conf);
+    ws.initTask();
+    // Server hasn't yet started
+    try {
+      ws.getServerURI();
+      Assert.fail("Expected ServerNotYetRunningException but didn't get any");
+    } catch (ServerNotYetRunningException se) {
+      // Expected
+    } catch (Exception e) {
+      Assert.fail("Expected ServerNotYetRunningException but got " + e);
+    }
+    // Now start the server
+    try {
+      new Thread() {
+        @Override
+        public void run() {
+          ws.runTask();
+        }
+      }.start();
+      Thread.sleep(1000);
+      Assert.assertEquals(httpPort, ws.getServerURI().getPort());
+    } finally {
+      ws.stopTask();
+    }
+  }
+
+  @Test
   public void testHttp() throws Exception {
     Configuration conf = new Configuration();
     int httpPort = getRandomPort();
@@ -94,7 +156,33 @@ public class TestWebServerTaskHttpHttps {
         }
       }.start();
       Thread.sleep(1000);
+
       HttpURLConnection conn = (HttpURLConnection) new URL("http://127.0.0.1:" + httpPort).openConnection();
+      Assert.assertEquals(HttpURLConnection.HTTP_OK, conn.getResponseCode());
+    } finally {
+      ws.stopTask();
+    }
+  }
+
+  @Test
+  public void testHttpRandomPort() throws Exception {
+    Configuration conf = new Configuration();
+    conf.set(WebServerTask.AUTHENTICATION_KEY, "none");
+    conf.set(WebServerTask.HTTP_PORT_KEY, 0);
+    final WebServerTask ws = createWebServerTask(createTestDir(), conf);
+    try {
+      ws.initTask();
+      new Thread() {
+        @Override
+        public void run() {
+          ws.runTask();
+        }
+      }.start();
+      Thread.sleep(1000);
+
+      HttpURLConnection conn =
+          (HttpURLConnection) new URL("http://127.0.0.1:" + ws.getServerURI().getPort())
+              .openConnection();
       Assert.assertEquals(HttpURLConnection.HTTP_OK, conn.getResponseCode());
     } finally {
       ws.stopTask();
@@ -137,7 +225,7 @@ public class TestWebServerTaskHttpHttps {
     IOUtils.copy(getClass().getClassLoader().getResourceAsStream("sdc-keystore.jks"),os);
     os.close();
     conf.set(WebServerTask.AUTHENTICATION_KEY, "none");
-    conf.set(WebServerTask.HTTP_PORT_KEY, 0);
+    conf.set(WebServerTask.HTTP_PORT_KEY, -1);
     conf.set(WebServerTask.HTTPS_PORT_KEY, httpsPort);
     conf.set(WebServerTask.HTTPS_KEYSTORE_PATH_KEY, "sdc-keystore.jks");
     conf.set(WebServerTask.HTTPS_KEYSTORE_PASSWORD_KEY, "password");
@@ -152,6 +240,40 @@ public class TestWebServerTaskHttpHttps {
       }.start();
       Thread.sleep(1000);
       HttpsURLConnection conn = (HttpsURLConnection) new URL("https://127.0.0.1:" + httpsPort).openConnection();
+      configureHttpsUrlConnection(conn);
+      Assert.assertEquals(HttpURLConnection.HTTP_OK, conn.getResponseCode());
+    } finally {
+      ws.stopTask();
+    }
+  }
+
+  @Test
+  public void testHttpsRandomPort() throws Exception {
+    Configuration conf = new Configuration();
+    String confDir = createTestDir();
+    String keyStore = new File(confDir, "sdc-keystore.jks").getAbsolutePath();
+    OutputStream os = new FileOutputStream(keyStore);
+    IOUtils.copy(getClass().getClassLoader().getResourceAsStream("sdc-keystore.jks"), os);
+    os.close();
+    conf.set(WebServerTask.AUTHENTICATION_KEY, "none");
+    conf.set(WebServerTask.HTTP_PORT_KEY, -1);
+    conf.set(WebServerTask.HTTPS_PORT_KEY, 0);
+    conf.set(WebServerTask.HTTPS_KEYSTORE_PATH_KEY, "sdc-keystore.jks");
+    conf.set(WebServerTask.HTTPS_KEYSTORE_PASSWORD_KEY, "password");
+    final WebServerTask ws = createWebServerTask(confDir, conf);
+    try {
+      ws.initTask();
+      new Thread() {
+        @Override
+        public void run() {
+          ws.runTask();
+        }
+      }.start();
+      Thread.sleep(1000);
+
+      HttpsURLConnection conn =
+          (HttpsURLConnection) new URL("https://127.0.0.1:" + ws.getServerURI().getPort())
+              .openConnection();
       configureHttpsUrlConnection(conn);
       Assert.assertEquals(HttpURLConnection.HTTP_OK, conn.getResponseCode());
     } finally {
