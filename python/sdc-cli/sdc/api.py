@@ -2,6 +2,8 @@
 import json
 import logging
 import requests
+from requests.auth import HTTPBasicAuth
+from requests.auth import HTTPDigestAuth
 import urlparse
 
 # create logger
@@ -25,20 +27,53 @@ logger.addHandler(ch)
 class DataCollector:
     """Main data collector API"""
 
-    def __init__(self, url):
-        self._base_url = url
+    def __init__(self, url, sdc_user=None, sdc_password=None, auth_type='none'):
+        self._base_url = urlparse.urljoin(url, '/rest/v1/')
+        self._login_url = urlparse.urljoin(url, 'login')
+
+        self._session = requests.Session()
+
+        setup_auth = {
+            'none': self._auth_none,
+            'basic': self._auth_basic,
+            'digest': self._auth_digest,
+            'form': self._auth_form,
+        }
+
+        setup_auth[auth_type](sdc_user, sdc_password)
+
         self._json_headers = {'content-type': 'application/json'}
         # The trailing slash is required for urljoin to work properly.
-        self._pipeline_store = urlparse.urljoin(url, 'pipeline-library/')
-        self._pipeline = urlparse.urljoin(url, 'pipeline/')
-        self._ping = url.replace('v1', 'ping')
+        self._pipeline_store = urlparse.urljoin(self._base_url, 'pipeline-library/')
+        self._pipeline = urlparse.urljoin(self._base_url, 'pipeline/')
+        self._ping = urlparse.urljoin(url, '/rest/ping')
+
+    def _auth_none(self, sdc_user, sdc_password):
+        pass
+
+    def _auth_basic(self, sdc_user, sdc_password):
+        self._session.auth = HTTPBasicAuth(sdc_user, sdc_password)
+
+    def _auth_digest(self, sdc_user, sdc_password):
+        self._session.auth = HTTPDigestAuth(sdc_user, sdc_password)
+
+    def _auth_form(self, sdc_user, sdc_password):
+        credentials = {'j_username': sdc_user, 'j_password': sdc_password}
+        logger.info('using login url %s' % self._login_url)
+        response = self._session.get(self._login_url, params=credentials)
+
+        if response.status_code != requests.codes.ok:
+            raise Exception('Failed to authenticate with SDC. Status %s' % response.status_code)
+
+        self._session.auth = (sdc_user, sdc_password)
 
     def ping(self):
-        return requests.get(self._ping)
+        response = self._session.get(self._ping)
+        return response
 
     def list_pipelines(self):
         """Returns a list of stored pipelines from the SDC."""
-        response = requests.get(self._pipeline_store)
+        response = self._session.get(self._pipeline_store)
         return response.json()
 
     def list_pipeline_names(self):
@@ -46,7 +81,7 @@ class DataCollector:
 
     def get_pipeline(self, name):
         """Returns the JSON representation of a pipeline of the given name."""
-        response = requests.get(urlparse.urljoin(self._pipeline_store, name))
+        response = self._session.get(urlparse.urljoin(self._pipeline_store, name))
         return response.json()
 
     def create_pipeline(self, pipeline_name):
@@ -70,7 +105,7 @@ class DataCollector:
             urlparse.urljoin(self._pipeline_store, pipeline_config['info']['name']),
             data=json.dumps(pipeline_config),
             headers=self._json_headers,
-            )
+        )
 
         if response.status_code != requests.codes.ok:
             raise Exception('Failed to add stages to pipeline. Status %s' % response.status_code)
@@ -80,7 +115,7 @@ class DataCollector:
     def get_rules(self, pipeline_name):
         """Get rules for a given pipeline."""
         pipeline_url = urlparse.urljoin(self._pipeline_store, pipeline_name)
-        response = requests.get(
+        response = self._session.get(
             urlparse.urljoin(pipeline_url + '/', 'rules'),
         )
 
@@ -144,8 +179,8 @@ class DataCollector:
 
     def pipeline_status(self):
         """Returns the status of the currently active pipeline."""
-        response = requests.get(
-            urlparse.urljoin(self._pipeline, 'status')
+        response = self._session.get(
+            urlparse.urljoin(self._pipeline, 'status'),
         )
         try:
             return response.json()
@@ -155,8 +190,8 @@ class DataCollector:
 
     def pipeline_metrics(self):
         """Returns metrics of the currently active pipeline."""
-        response = requests.get(
-            urlparse.urljoin(self._pipeline, 'metrics')
+        response = self._session.get(
+            urlparse.urljoin(self._pipeline, 'metrics'),
         )
         return response.json()
 

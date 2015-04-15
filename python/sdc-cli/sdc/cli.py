@@ -14,10 +14,29 @@ pass_api = click.make_pass_decorator(api.DataCollector)
     envvar='SDC_URL',
     help='Base URL of SDC REST endpoint.',
 )
+@click.option(
+    '--sdc-user',
+    default=None,
+    envvar='SDC_USER',
+    help='Username for logging into SDC',
+)
+@click.option(
+    '--sdc-password',
+    default=None,
+    envvar='SDC_PASSWORD',
+    help='Password for logging into SDC',
+)
+@click.option(
+    '--auth-type',
+    type=click.Choice(['none', 'basic', 'digest', 'form']),
+    default=None,
+    envvar='SDC_AUTH_TYPE',
+    help='Type of authentication configured in the target SDC.',
+)
 @click.pass_context
-def cli(ctx, sdc_url):
+def cli(ctx, sdc_url, sdc_user, sdc_password, auth_type):
     """sdc-cli is the command line interface for controlling StreamSets Data Collector via its REST API."""
-    ctx.obj = api.DataCollector(sdc_url)
+    ctx.obj = api.DataCollector(sdc_url, sdc_user, sdc_password, auth_type)
 
 
 @cli.command('ping')
