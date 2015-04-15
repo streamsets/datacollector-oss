@@ -10,6 +10,7 @@ import com.codahale.metrics.Timer;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.config.StageType;
 import com.streamsets.pipeline.metrics.MetricsConfigurator;
+import com.streamsets.pipeline.runner.BatchListener;
 import com.streamsets.pipeline.runner.FullPipeBatch;
 import com.streamsets.pipeline.runner.MultiplexerPipe;
 import com.streamsets.pipeline.runner.Observer;
@@ -40,6 +41,7 @@ public class PreviewPipelineRunner implements PipelineRunner {
   private String sourceOffset;
   private String newSourceOffset;
   private Timer processingTimer;
+  private List<BatchListener> batchListenerList = new ArrayList<BatchListener>();
 
   public PreviewPipelineRunner(SourceOffsetTracker offsetTracker, int batchSize, int batches, boolean skipTargets) {
     this.offsetTracker = offsetTracker;
@@ -104,16 +106,24 @@ public class PreviewPipelineRunner implements PipelineRunner {
   }
 
 
+  @Override
   public String getSourceOffset() {
     return sourceOffset;
   }
 
+  @Override
   public String getNewSourceOffset() {
     return newSourceOffset;
   }
 
   @Override
   public void setObserver(Observer observer) {
+
+  }
+
+  @Override
+  public void registerListener(BatchListener batchListener) {
+    // TODO Auto-generated method stub
 
   }
 }

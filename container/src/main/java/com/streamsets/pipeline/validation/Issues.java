@@ -9,13 +9,14 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.util.NullDeserializer;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 @JsonDeserialize(using = NullDeserializer.Object.class)
-public class Issues {
+public class Issues implements Serializable {
   private final List<Issue> pipeline;
   private final Map<String, List<StageIssue>> stages;
 

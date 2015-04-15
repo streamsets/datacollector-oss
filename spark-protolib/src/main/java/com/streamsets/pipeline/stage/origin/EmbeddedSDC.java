@@ -6,10 +6,10 @@
 package com.streamsets.pipeline.stage.origin;
 
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+import com.codahale.metrics.Counter;
 import com.streamsets.pipeline.BlackListURLClassLoader;
 import com.streamsets.pipeline.BootstrapMain;
-import com.streamsets.pipeline.json.ObjectMapperFactory;
+import com.streamsets.pipeline.config.PipelineConfiguration;
 import com.streamsets.pipeline.main.BuildInfo;
 import com.streamsets.pipeline.main.LogConfigurator;
 import com.streamsets.pipeline.main.Main;
@@ -22,28 +22,26 @@ import com.streamsets.pipeline.restapi.bean.BeanHelper;
 import com.streamsets.pipeline.restapi.bean.PipelineConfigurationJson;
 import com.streamsets.pipeline.runner.Pipeline;
 import com.streamsets.pipeline.stagelibrary.StageLibraryTask;
+import com.streamsets.pipeline.store.PipelineStoreException;
 import com.streamsets.pipeline.store.PipelineStoreTask;
 import com.streamsets.pipeline.task.Task;
 import com.streamsets.pipeline.task.TaskWrapper;
 import com.streamsets.pipeline.validation.PipelineConfigurationValidator;
+
 import dagger.ObjectGraph;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.File;
 import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
-import java.util.concurrent.CopyOnWriteArrayList;
-import java.util.concurrent.atomic.AtomicLong;
+import java.util.Random;
+import java.util.SortedMap;
+
 
 public class EmbeddedSDC {
   private static final Logger LOG = LoggerFactory.getLogger(EmbeddedSDC.class);
-  private static final List<EmbeddedSDC> instances = new CopyOnWriteArrayList<>();
-  private final AtomicLong numRecordsProduced = new AtomicLong(0);
   private ProductionPipelineManagerTask productionPipelineManagerTask;
   private ObjectGraph dagger;
-  private volatile SparkStreamingSource sparkStreamingSource;
   private Thread waitingThread;
   private EmbeddedSDCConf sdcConf;
 
@@ -51,12 +49,30 @@ public class EmbeddedSDC {
     this.sdcConf = sdcConf;
   }
 
-  public void put(List<String> batch) throws InterruptedException {
-    sparkStreamingSource.put(batch);
-    numRecordsProduced.addAndGet(batch.size());
+  private void createAndSave(PipelineTask pipelineTask, String pipelineName) throws PipelineStoreException {
+    StageLibraryTask stageLibrary = pipelineTask.getStageLibraryTask();
+    PipelineStoreTask store = pipelineTask.getPipelineStoreTask();
+    EmbeddedPipeline embeddedPipeline = sdcConf.getPipeline();
+    PipelineConfigurationJson pipelineConfigBean = embeddedPipeline.getDefinitionJson();
+    PipelineConfiguration tmpPipelineConfig =
+      store.create(pipelineName, embeddedPipeline.getDescription(), embeddedPipeline.getUser());
+    // we might want to add an import API as now to import have to create one then update it
+    PipelineConfiguration realPipelineConfig = BeanHelper.unwrapPipelineConfiguration(pipelineConfigBean);
+    realPipelineConfig.setUuid(tmpPipelineConfig.getUuid());
+
+    PipelineConfigurationValidator validator =
+      new PipelineConfigurationValidator(stageLibrary, pipelineName, realPipelineConfig);
+    validator.validate();
+    realPipelineConfig.setValidation(validator);
+    realPipelineConfig =
+      store.save(pipelineName, embeddedPipeline.getUser(), embeddedPipeline.getTag(),
+        embeddedPipeline.getDescription(), realPipelineConfig);
   }
-  public void init() throws Exception {
-    this.instances.add(this);
+
+  public Pipeline init() throws Exception {
+    EmbeddedPipeline embeddedPipeline = sdcConf.getPipeline();
+    String pipeLineName = embeddedPipeline.getName() + new Random().nextInt(Integer.MAX_VALUE);
+    LOG.info("Entering Embedded SDC");
     String classLoaderName = "embedded-sdc";
     BlackListURLClassLoader blackListURLClassLoader = new BlackListURLClassLoader(classLoaderName, sdcConf.getClassPath(),
       ClassLoader.getSystemClassLoader(), BootstrapMain.PACKAGES_BLACKLIST_FOR_STAGE_LIBRARIES);
@@ -66,7 +82,7 @@ public class EmbeddedSDC {
     PipelineTask pipelineTask = (PipelineTask) ((TaskWrapper)task).getTask();
     productionPipelineManagerTask = pipelineTask.getProductionPipelineManagerTask();
     dagger.get(LogConfigurator.class).configure();
-    final Logger log = LoggerFactory.getLogger(Main.class);
+    final Logger log = LoggerFactory.getLogger(EmbeddedSDC.class);
     log.info("-----------------------------------------------------------------");
     dagger.get(BuildInfo.class).log(log);
     log.info("-----------------------------------------------------------------");
@@ -98,28 +114,12 @@ public class EmbeddedSDC {
       }
     });
     task.run();
-    StageLibraryTask stageLibrary = pipelineTask.getStageLibraryTask();
-    EmbeddedPipeline embeddedPipeline = sdcConf.getPipeline();
-    PipelineConfigurationJson pipelineConfigBean = embeddedPipeline.getDefinitionJson();
-    PipelineStoreTask store = pipelineTask.getPipelineStoreTask();
-    // we might want to add an import API as now to import have to create one then update it
-    com.streamsets.pipeline.config.PipelineConfiguration tmpPipelineConfig = store.
-      create(embeddedPipeline.getName(), embeddedPipeline.getDescription(), embeddedPipeline.getUser());
-    com.streamsets.pipeline.config.PipelineConfiguration realPipelineConfig = BeanHelper.unwrapPipelineConfiguration(
-      pipelineConfigBean);
-    realPipelineConfig.setUuid(tmpPipelineConfig.getUuid());
-    PipelineConfigurationValidator validator = new PipelineConfigurationValidator(stageLibrary,
-      embeddedPipeline.getName(), realPipelineConfig);
-    validator.validate();
-    realPipelineConfig.setValidation(validator);
-    realPipelineConfig = store.save(embeddedPipeline.getName(), embeddedPipeline.getUser(), embeddedPipeline.getTag(),
-      embeddedPipeline.getDescription(), realPipelineConfig);
-    productionPipelineManagerTask.startPipeline(embeddedPipeline.getName(), "1");
-    Pipeline pipeline = productionPipelineManagerTask.getProductionPipeline().getPipeline();
-    productionPipelineManagerTask.getMetrics().getCounters();
-    sparkStreamingSource = (SparkStreamingSource) pipeline.getSource();
+
+    createAndSave(pipelineTask, pipeLineName);
+    productionPipelineManagerTask.startPipeline(pipeLineName, "1");
     // this thread waits until the pipeline is shutdown
     waitingThread = new Thread() {
+      @Override
       public void run() {
         try {
           task.waitWhileRunning();
@@ -136,14 +136,16 @@ public class EmbeddedSDC {
     };
     waitingThread.setName("");
     waitingThread.setDaemon(true);
-    waitingThread.start();;
+    waitingThread.start();
+    return getPipeline();
   }
 
-  public static long getRecordsProducedJVMWide() {
-    long result = 0;
-    for (EmbeddedSDC sdc : instances) {
-      result += sdc.numRecordsProduced.get();
-    }
-    return result;
+  Pipeline getPipeline() {
+    return productionPipelineManagerTask.getProductionPipeline().getPipeline();
   }
+
+  SortedMap<String, Counter> getCounters() {
+    return productionPipelineManagerTask.getMetrics().getCounters();
+  }
+
 }

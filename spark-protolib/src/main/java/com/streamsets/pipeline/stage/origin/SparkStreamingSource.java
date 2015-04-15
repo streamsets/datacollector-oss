@@ -7,7 +7,6 @@ package com.streamsets.pipeline.stage.origin;
 
 import com.google.common.base.Throwables;
 import com.streamsets.pipeline.api.BatchMaker;
-import com.streamsets.pipeline.api.ConfigGroups;
 import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.GenerateResourceBundle;
 import com.streamsets.pipeline.api.OffsetCommitter;
@@ -15,16 +14,10 @@ import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageDef;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.base.BaseSource;
-import com.streamsets.pipeline.config.DataFormat;
-import com.streamsets.pipeline.lib.parser.CharDataParserFactory;
-import org.apache.spark.SparkConf;
-import org.apache.spark.streaming.Duration;
-import org.apache.spark.streaming.api.java.JavaDStream;
-import org.apache.spark.streaming.api.java.JavaStreamingContext;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.Serializable;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -37,10 +30,10 @@ import java.util.concurrent.TimeUnit;
   label = "Spark Streaming",
   description = "Ingests data from Spark Streaming",
   icon = "")
-public class SparkStreamingSource extends BaseSource implements OffsetCommitter, Serializable {
+public class SparkStreamingSource extends BaseSource implements OffsetCommitter {
   private static final Logger LOG = LoggerFactory.getLogger(SparkStreamingSource.class);
   private final SynchronousQueue<Object> queue = new SynchronousQueue<>();
-  private volatile int recordsProduced = 0;
+  private int recordsProduced = 0;
 
   @Override
   public void destroy() {
@@ -55,12 +48,14 @@ public class SparkStreamingSource extends BaseSource implements OffsetCommitter,
   @Override
   public void commit(String offset) throws StageException {
     try {
+      LOG.debug("In commit hook ");
       queue.offer(offset, 5, TimeUnit.MINUTES);
     } catch (InterruptedException e) {
       Thread.currentThread().interrupt();
     }
   }
   public void put(List<String> batch) throws InterruptedException {
+    LOG.debug("Adding batch ");
     queue.put(batch);
     Object result = queue.poll(5, TimeUnit.MINUTES);
     if (result == null) {
@@ -79,7 +74,7 @@ public class SparkStreamingSource extends BaseSource implements OffsetCommitter,
     Throwable error = null;
     try {
       Object object;
-      if ((object = queue.poll(5, TimeUnit.SECONDS)) != null) {
+      if ((object = queue.poll(10, TimeUnit.SECONDS)) != null) {
         List<String> batch = null;
         if (object instanceof List) {
           batch = (List)object;
@@ -87,6 +82,7 @@ public class SparkStreamingSource extends BaseSource implements OffsetCommitter,
           throw new IllegalStateException("Producer expects List, got " + object.getClass().getSimpleName());
         }
         for (String line : batch) {
+          LOG.debug("Got line " + line);
           Record record = getContext().createRecord("spark-streaming");
           Map<String, Field> map = new HashMap<>();
           map.put("text", Field.create(line));
@@ -94,6 +90,8 @@ public class SparkStreamingSource extends BaseSource implements OffsetCommitter,
           batchMaker.addRecord(record);
           recordsProduced++;
         }
+      } else {
+        throw new IllegalStateException("Cannot poll from queue. This should never happen");
       }
     } catch (Throwable throwable) {
       error = throwable;
@@ -113,5 +111,9 @@ public class SparkStreamingSource extends BaseSource implements OffsetCommitter,
       Throwables.propagate(error);
     }
     return lastSourceOffset;
+  }
+
+  public long getRecordsProduced() {
+    return recordsProduced;
   }
 }

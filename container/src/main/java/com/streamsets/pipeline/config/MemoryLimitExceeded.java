@@ -5,6 +5,8 @@
  */
 package com.streamsets.pipeline.config;
 
+import java.io.Serializable;
+
 import com.streamsets.pipeline.api.GenerateResourceBundle;
 import com.streamsets.pipeline.api.Label;
 
@@ -12,7 +14,7 @@ import com.streamsets.pipeline.api.Label;
 // the annotation processor does not work on this maven project
 // we have a hardcoded 'datacollector-resource-bundles.json' file in resources
 @GenerateResourceBundle
-public enum MemoryLimitExceeded implements Label {
+public enum MemoryLimitExceeded implements Label, Serializable {
   LOG("Log"),
   ALERT("Log and alert"),
   STOP_PIPELINE("Log, alert and stop pipeline")

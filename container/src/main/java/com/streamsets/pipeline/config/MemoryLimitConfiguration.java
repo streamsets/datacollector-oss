@@ -5,7 +5,9 @@
  */
 package com.streamsets.pipeline.config;
 
-public class MemoryLimitConfiguration {
+import java.io.Serializable;
+
+public class MemoryLimitConfiguration implements Serializable {
   private MemoryLimitExceeded memoryLimitExceeded;
   private long memoryLimit;
 

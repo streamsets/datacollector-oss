@@ -5,9 +5,11 @@
  */
 package com.streamsets.pipeline.config;
 
+import java.io.Serializable;
+
 import com.streamsets.pipeline.api.impl.Utils;
 
-public class ConfigConfiguration {
+public class ConfigConfiguration implements Serializable{
   private final String name;
   private final Object value;
 

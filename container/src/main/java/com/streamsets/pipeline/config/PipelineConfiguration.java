@@ -12,12 +12,13 @@ import com.streamsets.pipeline.store.PipelineInfo;
 import com.streamsets.pipeline.validation.Issues;
 import com.streamsets.pipeline.validation.PipelineConfigurationValidator;
 
+import java.io.Serializable;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
-public class PipelineConfiguration {
+public class PipelineConfiguration implements Serializable{
   private int schemaVersion;
   private UUID uuid = null;
   private PipelineInfo info;

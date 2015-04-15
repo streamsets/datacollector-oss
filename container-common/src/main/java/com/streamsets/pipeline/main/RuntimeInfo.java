@@ -8,6 +8,7 @@ package com.streamsets.pipeline.main;
 import com.codahale.metrics.MetricRegistry;
 import com.google.common.collect.ImmutableList;
 import com.streamsets.pipeline.api.impl.Utils;
+
 import org.slf4j.Logger;
 
 import java.util.HashMap;
@@ -35,8 +36,10 @@ public class RuntimeInfo {
   private Map<String, String> authenticationTokens;
   private final String propertyPrefix;
   private final String [] roles = { "admin", "creator", "manager", "guest" };
+  private UUID randomUUID;
 
   public RuntimeInfo(String propertyPrefix, MetricRegistry metrics, List<? extends ClassLoader> stageLibraryClassLoaders) {
+  public RuntimeInfo(MetricRegistry metrics, List<? extends ClassLoader> stageLibraryClassLoaders) {
     this.metrics = metrics;
     if(stageLibraryClassLoaders != null) {
       this.stageLibraryClassLoaders = ImmutableList.copyOf(stageLibraryClassLoaders);
@@ -49,6 +52,7 @@ public class RuntimeInfo {
     this.attributes = new ConcurrentHashMap<>();
     authenticationTokens = new HashMap<>();
     reloadAuthenticationToken();
+    randomUUID = UUID.randomUUID();
   }
 
   public MetricRegistry getMetrics() {
@@ -72,7 +76,12 @@ public class RuntimeInfo {
   }
 
   public String getRuntimeDir() {
-    return System.getProperty("user.dir");
+    boolean isTransientEnv = false;
+    String transientEnv = System.getProperty(TRANSIENT_ENVIRONMENT);
+    if (transientEnv != null) {
+      isTransientEnv = Boolean.parseBoolean(transientEnv);
+    }
+    return isTransientEnv ? System.getProperty("user.dir") + "/" + randomUUID : System.getProperty("user.dir");
   }
 
   public String getStaticWebDir() {

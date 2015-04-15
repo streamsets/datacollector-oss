@@ -11,12 +11,13 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.validation.Issues;
 
+import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class PipelineConfigurationJson {
+public class PipelineConfigurationJson implements Serializable{
 
   private final com.streamsets.pipeline.config.PipelineConfiguration pipelineConfiguration;
 

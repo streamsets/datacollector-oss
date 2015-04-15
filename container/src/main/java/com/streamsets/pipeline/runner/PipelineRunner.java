@@ -30,4 +30,6 @@ public interface PipelineRunner {
 
   public void setObserver(Observer observer);
 
+  public void registerListener(BatchListener batchListener);
+
 }

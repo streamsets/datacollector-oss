@@ -26,6 +26,7 @@ import com.streamsets.pipeline.metrics.MetricsConfigurator;
 import com.streamsets.pipeline.prodmanager.Configuration;
 import com.streamsets.pipeline.record.HeaderImpl;
 import com.streamsets.pipeline.record.RecordImpl;
+import com.streamsets.pipeline.runner.BatchListener;
 import com.streamsets.pipeline.runner.ErrorSink;
 import com.streamsets.pipeline.runner.FullPipeBatch;
 import com.streamsets.pipeline.runner.Observer;
@@ -40,6 +41,7 @@ import com.streamsets.pipeline.snapshotstore.SnapshotStatus;
 import com.streamsets.pipeline.snapshotstore.SnapshotStore;
 import com.streamsets.pipeline.snapshotstore.impl.FileSnapshotStore;
 import com.streamsets.pipeline.util.ContainerError;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -95,7 +97,7 @@ public class ProductionPipelineRunner implements PipelineRunner {
   /**/
   private BlockingQueue<Object> observeRequests;
   private Observer observer;
-
+  private List<BatchListener> batchListenerList = new ArrayList<BatchListener>();
   private Object errorRecordsMutex;
   private final MemoryLimitConfiguration memoryLimitConfiguration;
   private long lastMemoryLimitNotification;
@@ -164,7 +166,13 @@ public class ProductionPipelineRunner implements PipelineRunner {
         threadHealthReporter.reportHealth(ProductionPipelineRunnable.RUNNABLE_NAME, -1, System.currentTimeMillis());
       }
       try {
+        for (BatchListener batchListener: batchListenerList) {
+          batchListener.preBatch();
+        }
         runBatch(pipes, badRecordsHandler);
+        for (BatchListener batchListener : batchListenerList) {
+          batchListener.postBatch();
+        }
       } catch (Throwable throwable) {
         sendPipelineErrorNotificationRequest(throwable);
         Throwables.propagateIfInstanceOf(throwable, StageException.class);
@@ -190,10 +198,12 @@ public class ProductionPipelineRunner implements PipelineRunner {
     return batchOutput;
   }
 
+  @Override
   public String getSourceOffset() {
     return sourceOffset;
   }
 
+  @Override
   public String getNewSourceOffset() {
     return newSourceOffset;
   }
@@ -432,5 +442,10 @@ public class ProductionPipelineRunner implements PipelineRunner {
     } else {
       return new CopyOnWriteArrayList<>(stageToErrorMessagesMap.get(instanceName));
     }
+  }
+
+  @Override
+  public void registerListener(BatchListener batchListener) {
+    batchListenerList.add(batchListener);
   }
 }

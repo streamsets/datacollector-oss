@@ -8,12 +8,13 @@ package com.streamsets.pipeline.config;
 import com.google.common.annotations.VisibleForTesting;
 import com.streamsets.pipeline.api.impl.Utils;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class StageConfiguration {
+public class StageConfiguration implements Serializable {
 
   //basic info
   private final String instanceName;
