@@ -13,6 +13,7 @@ public enum MaskType implements Label {
   FIXED_LENGTH("Fixed length"),
   VARIABLE_LENGTH("Variable length"),
   CUSTOM("Custom"),
+  REGEX("Regular Expression")
 
   ;
 

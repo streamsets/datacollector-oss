@@ -393,4 +393,117 @@ ProcessorRunner runner = new ProcessorRunner.Builder(FieldMaskDProcessor.class)
       runner.runDestroy();
     }
   }
+
+  @Test
+   public void testFieldMaskProcessorRegex() throws StageException {
+
+    FieldMaskConfig creditCardMask = new FieldMaskConfig();
+    creditCardMask.fields = ImmutableList.of("/creditCard", "/amex", "/age", "/phone", "/ssn");
+    creditCardMask.maskType = MaskType.REGEX;
+    creditCardMask.regex = "(.*)(\\d{4})$";
+    creditCardMask.mask = null;
+    creditCardMask.groupsToShow = "2";
+
+    ProcessorRunner runner = new ProcessorRunner.Builder(FieldMaskDProcessor.class)
+      .addConfiguration("fieldMaskConfigs", ImmutableList.of(creditCardMask))
+      .addOutputLane("a").build();
+    runner.runInit();
+
+    try {
+      Map<String, Field> map = new LinkedHashMap<>();
+      map.put("creditCard", Field.create("1234-5678-9101-1121"));
+      map.put("amex", Field.create("1234-567891-01112"));
+      map.put("age", Field.create("12"));
+      map.put("ssn", Field.create("123-45-6789"));
+      map.put("phone", Field.create(Field.Type.STRING, null));
+      Record record = RecordCreator.create("s", "s:1");
+      record.set(Field.create(map));
+
+      StageRunner.Output output = runner.runProcess(ImmutableList.of(record));
+      Assert.assertEquals(1, output.getRecords().get("a").size());
+      Field field = output.getRecords().get("a").get(0).get();
+      Assert.assertTrue(field.getValue() instanceof Map);
+      Map<String, Field> result = field.getValueAsMap();
+      Assert.assertTrue(result.size() == 5);
+      Assert.assertTrue(result.containsKey("creditCard"));
+      Assert.assertEquals("xxxxxxxxxxxxxxx1121", result.get("creditCard").getValue());
+      Assert.assertTrue(result.containsKey("amex"));
+      Assert.assertEquals("xxxxxxxxxxxxx1112", result.get("amex").getValue());
+      Assert.assertTrue(result.containsKey("age"));
+      Assert.assertEquals("12", result.get("age").getValue());
+      Assert.assertTrue(result.containsKey("ssn"));
+      Assert.assertEquals("xxxxxxx6789", result.get("ssn").getValue());
+      Assert.assertTrue(result.containsKey("phone"));
+      Assert.assertEquals(null, result.get("phone").getValue());
+    } finally {
+      runner.runDestroy();
+    }
+  }
+
+  @Test(expected = StageException.class)
+  public void testFieldMaskProcessorRegexInvalidGroup1() throws StageException {
+
+    FieldMaskConfig creditCardMask = new FieldMaskConfig();
+    creditCardMask.fields = ImmutableList.of("/creditCard");
+    creditCardMask.maskType = MaskType.REGEX;
+    creditCardMask.regex = "(.*)(\\d{4})(-)(\\d{4})$";
+    creditCardMask.mask = null;
+    creditCardMask.groupsToShow = "3,4,5";
+
+    ProcessorRunner runner = new ProcessorRunner.Builder(FieldMaskDProcessor.class)
+      .addConfiguration("fieldMaskConfigs", ImmutableList.of(creditCardMask))
+      .addOutputLane("a").build();
+    runner.runInit();
+
+    try {
+      Map<String, Field> map = new LinkedHashMap<>();
+      map.put("creditCard", Field.create("1234-5678-9101-1121"));
+
+      Record record = RecordCreator.create("s", "s:1");
+      record.set(Field.create(map));
+
+      StageRunner.Output output = runner.runProcess(ImmutableList.of(record));
+      Assert.assertEquals(1, output.getRecords().get("a").size());
+      Field field = output.getRecords().get("a").get(0).get();
+      Assert.assertTrue(field.getValue() instanceof Map);
+      Map<String, Field> result = field.getValueAsMap();
+      Assert.assertTrue(result.size() == 1);
+      Assert.assertTrue(result.containsKey("creditCard"));
+      //Since the group to show '5' is not valid it is ignored, groups 3 and 4 are shown
+      Assert.assertEquals("xxxxxxxxxxxxxx-1121", result.get("creditCard").getValue());
+
+    } finally {
+      runner.runDestroy();
+    }
+  }
+
+  @Test(expected = StageException.class)
+  public void testFieldMaskProcessorRegexInvalidGroup2() throws StageException {
+
+    FieldMaskConfig creditCardMask = new FieldMaskConfig();
+    creditCardMask.fields = ImmutableList.of("/creditCard");
+    creditCardMask.maskType = MaskType.REGEX;
+    creditCardMask.regex = "(.*)(\\d{4})(-)(\\d{4})$";
+    creditCardMask.mask = null;
+    creditCardMask.groupsToShow = "-1";
+
+    ProcessorRunner runner = new ProcessorRunner.Builder(FieldMaskDProcessor.class)
+      .addConfiguration("fieldMaskConfigs", ImmutableList.of(creditCardMask))
+      .addOutputLane("a").build();
+    runner.runInit();
+
+    try {
+      Map<String, Field> map = new LinkedHashMap<>();
+      map.put("creditCard", Field.create("1234-5678-9101-1121"));
+
+      Record record = RecordCreator.create("s", "s:1");
+      record.set(Field.create(map));
+
+      runner.runProcess(ImmutableList.of(record));
+
+    } finally {
+      runner.runDestroy();
+    }
+  }
+
 }

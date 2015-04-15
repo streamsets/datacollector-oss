@@ -16,7 +16,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class FieldMaskProcessor extends SingleLaneRecordProcessor {
   private static final Logger LOG = LoggerFactory.getLogger(FieldMaskProcessor.class);
@@ -26,9 +32,49 @@ public class FieldMaskProcessor extends SingleLaneRecordProcessor {
   private static final char MASK_CHAR = 'x';
 
   private final List<FieldMaskConfig> fieldMaskConfigs;
+  private Set<Integer> groupsToShow;
+  private Map<String, Pattern> regExToPatternMap = new HashMap<>();
 
   public FieldMaskProcessor(List<FieldMaskConfig> fieldMaskConfigs) {
     this.fieldMaskConfigs = fieldMaskConfigs;
+  }
+
+  @Override
+  protected List<ConfigIssue> validateConfigs() throws StageException {
+    List<ConfigIssue> issues =  super.validateConfigs();
+    for(FieldMaskConfig fieldMaskConfig : fieldMaskConfigs) {
+      if(fieldMaskConfig.maskType == MaskType.REGEX) {
+        Pattern p = Pattern.compile(fieldMaskConfig.regex);
+        int maxGroupCount = p.matcher("").groupCount();
+        if(maxGroupCount == 0) {
+          issues.add(getContext().createConfigIssue(Groups.MASKING.name(), "groupsToShow", Errors.MASK_03,
+            fieldMaskConfig.regex));
+        } else {
+          regExToPatternMap.put(fieldMaskConfig.regex, p);
+          if (fieldMaskConfig.groupsToShow == null || fieldMaskConfig.groupsToShow.trim().isEmpty()) {
+            issues.add(getContext().createConfigIssue(Groups.MASKING.name(), "groupsToShow", Errors.MASK_02));
+            return issues;
+          } else {
+            String[] groupsToShowString = fieldMaskConfig.groupsToShow.split(",");
+            groupsToShow = new HashSet<>();
+            for (String groupString : groupsToShowString) {
+              try {
+                int groupToShow = Integer.parseInt(groupString.trim());
+                if (groupToShow <= 0 || groupToShow > maxGroupCount) {
+                  issues.add(getContext().createConfigIssue(Groups.MASKING.name(), "groupsToShow", Errors.MASK_01,
+                    groupToShow, fieldMaskConfig.regex, maxGroupCount));
+                }
+                groupsToShow.add(groupToShow);
+              } catch (NumberFormatException e) {
+                issues.add(getContext().createConfigIssue(Groups.MASKING.name(), "groupsToShow", Errors.MASK_01, groupString
+                  , fieldMaskConfig.regex, maxGroupCount, e.getMessage(), e));
+              }
+            }
+          }
+        }
+      }
+    }
+    return issues;
   }
 
   @Override
@@ -65,9 +111,31 @@ public class FieldMaskProcessor extends SingleLaneRecordProcessor {
       return variableLengthMask(field.getValueAsString());
     } else if (fieldMaskConfig.maskType == MaskType.CUSTOM) {
       return mask(field.getValueAsString(), fieldMaskConfig.mask);
+    } else if (fieldMaskConfig.maskType == MaskType.REGEX) {
+      return regExMask(field, fieldMaskConfig);
     }
     //Should not happen
     return null;
+  }
+
+  @VisibleForTesting
+  String regExMask(Field field, FieldMaskConfig fieldMaskConfig) {
+    Matcher matcher = regExToPatternMap.get(fieldMaskConfig.regex).matcher(field.getValueAsString());
+    if(matcher.matches()) {
+      int groupCount = matcher.groupCount();
+      StringBuilder resultString = new StringBuilder();
+      for(int i = 1; i <= groupCount; i++) {
+        if(groupsToShow.contains(i)) {
+          resultString.append(matcher.group(i));
+        } else {
+          for(int j = 0; j < matcher.group(i).length(); j++) {
+            resultString.append(MASK_CHAR);
+          }
+        }
+      }
+      return resultString.toString();
+    }
+    return field.getValueAsString();
   }
 
   @VisibleForTesting

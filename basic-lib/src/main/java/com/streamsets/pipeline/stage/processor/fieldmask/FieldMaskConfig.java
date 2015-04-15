@@ -46,4 +46,29 @@ public class FieldMaskConfig {
   )
   public String mask;
 
+  @ConfigDef(
+    required = true,
+    type = ConfigDef.Type.STRING,
+    label = "Regular Expression",
+    description = "Regular expression that matches the data and groups them.",
+    displayPosition = 40,
+    dependsOn = "maskType",
+    triggeredByValue = "REGEX",
+    defaultValue = "(.*)"
+
+  )
+  public String regex;
+
+  @ConfigDef(
+    required = true,
+    type = ConfigDef.Type.STRING,
+    label = "Groups To Show",
+    description = "Comma separated list of group numbers that must be revealed in the data.",
+    displayPosition = 50,
+    dependsOn = "maskType",
+    triggeredByValue = "REGEX",
+    defaultValue = "1"
+  )
+  public String groupsToShow;
+
 }
