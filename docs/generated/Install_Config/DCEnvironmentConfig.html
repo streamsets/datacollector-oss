@@ -92,9 +92,9 @@
       resources available on the host machine.</p>
 
     <div class="p">Use the following Java options to define the Java heap size:<ul class="ul" id="concept_mdc_shg_qr__ul_vyw_rzl_qr">
-        <li class="li">xmx - Defines the maximum heap size.</li>
+        <li class="li">Xmx - Defines the maximum heap size.</li>
 
-        <li class="li">xms - Defines the minimum heap size.</li>
+        <li class="li">Xms - Defines the minimum heap size.</li>
 
       </ul>
 </div>
@@ -109,7 +109,7 @@
       settings:<pre class="pre codeblock">SDC_JAVA_OPTS="-Xmx1024m -Xms1024m -server ${SDC_JAVA_OPTS}"</pre>
 </div>
 
-    <p class="p">to increase the xmx and xms settings as follows:</p>
+    <p class="p">to increase the Xmx and Xms settings as follows:</p>
 
     <div class="p">
       <pre class="pre codeblock">SDC_JAVA_OPTS="-Xmx2048m -Xms2048m -server ${SDC_JAVA_OPTS}"</pre>
@@ -149,9 +149,9 @@ The <span class="ph">Data
                         
                         <thead class="thead" align="left">
                             <tr class="row">
-                                <th class="entry" valign="top" width="50%" id="d11124e249">Environment Configuration Property</th>
+                                <th class="entry" valign="top" width="50%" id="d11194e249">Environment Configuration Property</th>
 
-                                <th class="entry" valign="top" width="50%" id="d11124e252">Description</th>
+                                <th class="entry" valign="top" width="50%" id="d11194e252">Description</th>
 
                             </tr>
 
@@ -159,28 +159,28 @@ The <span class="ph">Data
 
                         <tbody class="tbody">
                             <tr class="row">
-                                <td class="entry" valign="top" width="50%" headers="d11124e249 ">SDC_PRE_CLASSPATH</td>
+                                <td class="entry" valign="top" width="50%" headers="d11194e249 ">SDC_PRE_CLASSPATH</td>
 
-                                <td class="entry" valign="top" width="50%" headers="d11124e252 ">Path to a directory of Java classes that can be called by
+                                <td class="entry" valign="top" width="50%" headers="d11194e252 ">Path to a directory of Java classes that can be called by
                                     custom stages. Classes in this list load before the
                                     post-classpath list.</td>
 
                             </tr>
 
                             <tr class="row">
-                                <td class="entry" valign="top" width="50%" headers="d11124e249 ">SDC_POST_CLASSPATH</td>
+                                <td class="entry" valign="top" width="50%" headers="d11194e249 ">SDC_POST_CLASSPATH</td>
 
-                                <td class="entry" valign="top" width="50%" headers="d11124e252 ">Path to a directory of Java classes that can be called by
+                                <td class="entry" valign="top" width="50%" headers="d11194e252 ">Path to a directory of Java classes that can be called by
                                     custom stages. Classes in this list load after the pre-classpath
                                     list.</td>
 
                             </tr>
 
                             <tr class="row">
-                                <td class="entry" valign="top" width="50%" headers="d11124e249 ">SDC_JAVA_OPTS</td>
+                                <td class="entry" valign="top" width="50%" headers="d11194e249 ">SDC_JAVA_OPTS</td>
 
-                                <td class="entry" valign="top" width="50%" headers="d11124e252 ">Additional Java options for the <span class="ph">Data
-                  Collector</span>. <p class="p">By default, the xmx and xms properties set the <span class="ph">Data
+                                <td class="entry" valign="top" width="50%" headers="d11194e252 ">Additional Java options for the <span class="ph">Data
+                  Collector</span>. <p class="p">By default, the Xmx and Xms properties set the <span class="ph">Data
                   Collector</span> Java heap size to 1024 MB. </p>
 <p class="p">You can add any valid
                                         Java property.</p>
@@ -189,9 +189,9 @@ The <span class="ph">Data
                             </tr>
 
                             <tr class="row">
-                                <td class="entry" valign="top" width="50%" headers="d11124e249 ">SDC_SECURITY_MANAGER_ENABLED</td>
+                                <td class="entry" valign="top" width="50%" headers="d11194e249 ">SDC_SECURITY_MANAGER_ENABLED</td>
 
-                                <td class="entry" valign="top" width="50%" headers="d11124e252 ">Default is True. Do not change this property. </td>
+                                <td class="entry" valign="top" width="50%" headers="d11194e252 ">Default is True. Do not change this property. </td>
 
                             </tr>
 

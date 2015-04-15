@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
+<concept id="concept_hfy_mfd_sr">
+ <title>Cassandra</title>
+ <shortdesc>The Cassandra destination writes data to Cassandra. </shortdesc>
+ <conbody>
+  <p></p>
+ </conbody>
+</concept>

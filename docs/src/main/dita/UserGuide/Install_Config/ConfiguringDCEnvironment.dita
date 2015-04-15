@@ -52,12 +52,10 @@
                                 <entry>SDC_JAVA_OPTS</entry>
                                 <entry>Additional Java options for the <ph
                                         conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                                    />. <p>By default, the xmx and xms properties set the <ph
+                                    />. <p>By default, the Xmx and Xms properties set the <ph
                                             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
                                         /> Java heap size to 1024 MB. </p><p>You can add any valid
-                                        Java property.<draft-comment author="Loretta">Guys: Is this
-                                            statement too open? Do we need to add a warning or
-                                            restrict this in any way?</draft-comment></p></entry>
+                                        Java property.</p></entry>
                             </row>
                             <row>
                                 <entry>SDC_SECURITY_MANAGER_ENABLED</entry>

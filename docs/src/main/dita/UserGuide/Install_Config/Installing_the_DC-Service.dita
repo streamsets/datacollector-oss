@@ -56,7 +56,7 @@
                         conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
                     /> as a service, use the following command: </cmd>
                 <info>
-                    <codeblock>/etc/init.d/sdc start</codeblock>
+                    <codeblock>/etc/init.d/sdc start <draft-comment author="Loretta">Adam says update this to "service sdc start" - confirming. 4/14</draft-comment></codeblock>
                 </info>
             </step>
         </steps>

@@ -17,8 +17,8 @@
       environment configuration file. Increase or decrease the heap size as necessary, based on the
       resources available on the host machine.</p>
     <p>Use the following Java options to define the Java heap size:<ul id="ul_vyw_rzl_qr">
-        <li>xmx - Defines the maximum heap size.</li>
-        <li>xms - Defines the minimum heap size.</li>
+        <li>Xmx - Defines the maximum heap size.</li>
+        <li>Xms - Defines the minimum heap size.</li>
       </ul></p>
     <p>
       <note type="tip">To avoid constant recalculation of the allocated heap size, set the both
@@ -26,7 +26,7 @@
     </p>
     <p>For example, to double the heap size, you might change the following default
       settings:<codeblock>SDC_JAVA_OPTS="-Xmx1024m -Xms1024m -server ${SDC_JAVA_OPTS}"</codeblock></p>
-    <p>to increase the xmx and xms settings as follows:</p>
+    <p>to increase the Xmx and Xms settings as follows:</p>
     <p>
       <codeblock>SDC_JAVA_OPTS="-Xmx2048m -Xms2048m -server ${SDC_JAVA_OPTS}"</codeblock>
     </p>
