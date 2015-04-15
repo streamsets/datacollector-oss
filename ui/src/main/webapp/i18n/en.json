@@ -342,6 +342,8 @@
       "snapshotSource": "Snapshot Data",
       "stageErrorsWarning": "{{stageErrorsCount}} Stage Errors, check Errors tab for more detail.",
       "stageConfigTitle": "Stage Configuration",
+      "writeToDestinations": "Write to Destinations",
+      "writeToDestinationsTooltip": "Writes preview data to destination systems",
       "userProvider": "User Provided"
     },
     "library": {

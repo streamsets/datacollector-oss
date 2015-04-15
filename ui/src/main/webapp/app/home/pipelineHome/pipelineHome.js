@@ -716,7 +716,7 @@ angular
           previewConfig : {
             previewSource: pipelineConstant.CONFIGURED_SOURCE,
             batchSize: 10,
-            skipTargets: true
+            writeToDestinations: false
           }
         };
 

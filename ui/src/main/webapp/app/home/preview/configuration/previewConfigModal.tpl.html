@@ -33,7 +33,12 @@
 
     <div class="checkbox">
       <label>
-        <input type="checkbox" ng-model="previewConfig.skipTargets"> {{'home.previewPane.skipTargets' | translate}}
+        <input type="checkbox" ng-model="previewConfig.writeToDestinations"> {{'home.previewPane.writeToDestinations' | translate}}
+        <i class="fa fa-info-circle help-icon"
+           tooltip-placement="right"
+           tooltip-append-to-body="false"
+           tooltip="{{'home.previewPane.writeToDestinationsTooltip' | translate}}"
+           tooltip-trigger="mouseenter"></i>
       </label>
     </div>
 

@@ -96,7 +96,7 @@ angular
         $scope.showLoading = true;
 
         api.pipelineAgent.previewPipeline($scope.activeConfigInfo.name, $scope.previewSourceOffset,
-          previewConfig.batchSize, 0, previewConfig.skipTargets, stageOutputs).
+          previewConfig.batchSize, 0, !previewConfig.writeToDestinations, stageOutputs).
           success(function (previewData) {
             var updatedPreviewBatchOutput = previewData.batchesOutput[0];
 
@@ -265,7 +265,7 @@ angular
 
       $q.all(deferList).then(function() {
         api.pipelineAgent.previewPipeline($scope.activeConfigInfo.name, $scope.previewSourceOffset,
-          previewConfig.batchSize, 0, previewConfig.skipTargets, stageOutputs).
+          previewConfig.batchSize, 0, !previewConfig.writeToDestinations, stageOutputs).
           success(function (previewData) {
             var firstStageInstance;
 

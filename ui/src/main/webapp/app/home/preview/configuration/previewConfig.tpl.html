@@ -1,4 +1,4 @@
-<form class="form-horizontal"
+<form class="form-horizontal preview-config-tab"
       ng-class="{'form-group-sm': $storage.displayDensity === pipelineConstant.DENSITY_COZY || $storage.displayDensity === pipelineConstant.DENSITY_COMPACT}"
       role="form" name="stageGeneralInfo">
 
@@ -29,11 +29,18 @@
   </div>
 
   <div class="form-group">
-    <label class="col-lg-3 col-md-4 control-label" translate="home.previewPane.skipTargets">Skip Targets</label>
+    <label class="col-lg-3 col-md-4 control-label">
+      {{'home.previewPane.writeToDestinations' | translate}}
+      <i class="fa fa-info-circle help-icon"
+         tooltip-placement="right"
+         tooltip-append-to-body="true"
+         tooltip="{{'home.previewPane.writeToDestinationsTooltip' | translate}}"
+         tooltip-trigger="mouseenter"></i>
+    </label>
     <div class="controls col-md-1">
-      <input type="checkbox" name="skipTargets"
+      <input type="checkbox" name="writeToDestinations"
              ng-disabled="isPipelineRunning"
-             ng-model="pipelineConfig.uiInfo.previewConfig.skipTargets">
+             ng-model="pipelineConfig.uiInfo.previewConfig.writeToDestinations">
     </div>
   </div>
 
