@@ -57,6 +57,41 @@ public class TestLiveFileReader {
   }
 
   @Test
+  public void testValidCharsets() throws Exception {
+    Path file = createFile(Arrays.asList("Hello1\n", "Hello2\n"));
+    LiveFile lf = new LiveFile(file);
+    new LiveFileReader(lf, Charset.forName("US-ASCII"), 0, 10);
+    new LiveFileReader(lf, Charset.forName("UTF-8"), 0, 10);
+    new LiveFileReader(lf, Charset.forName("GBK"), 0, 10);
+    new LiveFileReader(lf, Charset.forName("ISO-8859-1"), 0, 10);
+    new LiveFileReader(lf, Charset.forName("shift_jis"), 0, 10);
+    new LiveFileReader(lf, Charset.forName("euc-jp"), 0, 10);
+    new LiveFileReader(lf, Charset.forName("euc-kr"), 0, 10);
+    new LiveFileReader(lf, Charset.forName("koi8-r"), 0, 10);
+  }
+
+  @Test(expected = IllegalArgumentException.class)
+  public void testInvalidCharset1() throws Exception {
+    Path file = createFile(Arrays.asList("Hello1\n", "Hello2\n"));
+    LiveFile lf = new LiveFile(file);
+    new LiveFileReader(lf, Charset.forName("UTF-16"), 0, 10);
+  }
+
+  @Test(expected = IllegalArgumentException.class)
+  public void testInvalidCharset2() throws Exception {
+    Path file = createFile(Arrays.asList("Hello1\n", "Hello2\n"));
+    LiveFile lf = new LiveFile(file);
+    new LiveFileReader(lf, Charset.forName("UTF-32"), 0, 10);
+  }
+
+  @Test(expected = IllegalArgumentException.class)
+  public void testInvalidCharset3() throws Exception {
+    Path file = createFile(Arrays.asList("Hello1\n", "Hello2\n"));
+    LiveFile lf = new LiveFile(file);
+    new LiveFileReader(lf, Charset.forName("IBM500"), 0, 10);
+  }
+
+  @Test
   public void testOneLineReadFromBeginningFullLinesNoTruncate() throws Exception {
     Path file = createFile(Arrays.asList("Hello1\n", "Hello2\n"));
     LiveFile lf = new LiveFile(file);

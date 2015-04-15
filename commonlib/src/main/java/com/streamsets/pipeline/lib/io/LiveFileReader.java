@@ -28,8 +28,7 @@ import java.nio.charset.Charset;
  * IMPORTANT: The offsets are always on bytes, we are working with charsets where CR and LF are always one byte
  * (ie UTF-8 or ASCII)
  * <p/>
- * IMPORTANT: Use only charsets which use LF ('\n', '0x0A') and CR+LF ('\r\n', '0x0D0A') as EOL terminators.
- * (TODO: we should add a white list of such charsets)
+ * IMPORTANT: The provided charset must encode LF and CR as '0x0A' and '0x0D' respectively.
  */
 public class LiveFileReader implements Closeable {
   // we refresh the LiveFile every 500 msecs, to detect if it still live or not
@@ -71,8 +70,15 @@ public class LiveFileReader implements Closeable {
    *                   be truncated.
    * @throws IOException thrown if the file could not be opened or the specified offset is beyond the current file
    * length.
+   * @throws IllegalArgumentException thrown if the the provided charset must encode LF and CR as '0x0A' and '0x0D'
+   * respectively.
    */
   public LiveFileReader(LiveFile file, Charset charset, long offset, int maxLineLen) throws IOException {
+    Utils.checkNotNull(file, "file");
+    Utils.checkNotNull(charset, "charset");
+    Utils.checkArgument(maxLineLen > 1, "maxLineLen must greater than 1");
+    validateCharset(charset, '\n', "\\n");
+    validateCharset(charset, '\r', "\\r");
     this.file = file;
     this.charset = charset;
 
@@ -92,6 +98,19 @@ public class LiveFileReader implements Closeable {
     lastPosCheckedForEol = 0;
 
     open = true;
+  }
+
+  private void validateCharset(Charset charset, char c, String cStr) {
+    ByteBuffer bf = charset.encode("" + c);
+    if (bf.limit() != 1) {
+      throw new IllegalArgumentException(Utils.format("Charset '{}' does not encode character '{}' in one byte",
+                                                      charset, cStr));
+    }
+    byte b = bf.get();
+    if (b != (byte)c) {
+      throw new IllegalArgumentException(Utils.format("Charset '{}' does not encode character '{}' as '{}'",
+                                                      charset, cStr, c));
+    }
   }
 
   /**
