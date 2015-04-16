@@ -32,7 +32,7 @@ public class FieldMaskProcessor extends SingleLaneRecordProcessor {
   private static final char MASK_CHAR = 'x';
 
   private final List<FieldMaskConfig> fieldMaskConfigs;
-  private Set<Integer> groupsToShow;
+  private Map<String, Set<Integer>> regexToGroupsToShowMap = new HashMap<>();
   private Map<String, Pattern> regExToPatternMap = new HashMap<>();
 
   public FieldMaskProcessor(List<FieldMaskConfig> fieldMaskConfigs) {
@@ -56,7 +56,7 @@ public class FieldMaskProcessor extends SingleLaneRecordProcessor {
             return issues;
           } else {
             String[] groupsToShowString = fieldMaskConfig.groupsToShow.split(",");
-            groupsToShow = new HashSet<>();
+            Set<Integer> groups = new HashSet<>();
             for (String groupString : groupsToShowString) {
               try {
                 int groupToShow = Integer.parseInt(groupString.trim());
@@ -64,12 +64,13 @@ public class FieldMaskProcessor extends SingleLaneRecordProcessor {
                   issues.add(getContext().createConfigIssue(Groups.MASKING.name(), "groupsToShow", Errors.MASK_01,
                     groupToShow, fieldMaskConfig.regex, maxGroupCount));
                 }
-                groupsToShow.add(groupToShow);
+                groups.add(groupToShow);
               } catch (NumberFormatException e) {
                 issues.add(getContext().createConfigIssue(Groups.MASKING.name(), "groupsToShow", Errors.MASK_01, groupString
                   , fieldMaskConfig.regex, maxGroupCount, e.getMessage(), e));
               }
             }
+            regexToGroupsToShowMap.put(fieldMaskConfig.regex, groups);
           }
         }
       }
@@ -120,16 +121,22 @@ public class FieldMaskProcessor extends SingleLaneRecordProcessor {
 
   @VisibleForTesting
   String regExMask(Field field, FieldMaskConfig fieldMaskConfig) {
-    Matcher matcher = regExToPatternMap.get(fieldMaskConfig.regex).matcher(field.getValueAsString());
+    String value = field.getValueAsString();
+    Matcher matcher = regExToPatternMap.get(fieldMaskConfig.regex).matcher(value);
     if(matcher.matches()) {
       int groupCount = matcher.groupCount();
+      //create a masked string of the same length as the original string
       StringBuilder resultString = new StringBuilder();
-      for(int i = 1; i <= groupCount; i++) {
-        if(groupsToShow.contains(i)) {
-          resultString.append(matcher.group(i));
-        } else {
-          for(int j = 0; j < matcher.group(i).length(); j++) {
-            resultString.append(MASK_CHAR);
+      for(int i = 0; i < value.length(); i++) {
+        resultString.append(MASK_CHAR);
+      }
+      //for each group that needs to be shown, replace the masked string with the original string characters at those
+      //positions
+      Set<Integer> groupsToShow = regexToGroupsToShowMap.get(fieldMaskConfig.regex);
+      if(groupsToShow != null && !groupsToShow.isEmpty()) {
+        for (int i = 1; i <= groupCount; i++) {
+          if (groupsToShow.contains(i)) {
+            resultString.replace(matcher.start(i), matcher.end(i), matcher.group(i));
           }
         }
       }

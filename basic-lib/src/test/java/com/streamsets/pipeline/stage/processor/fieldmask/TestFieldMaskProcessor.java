@@ -41,7 +41,7 @@ public class TestFieldMaskProcessor {
       map.put("age", Field.create("12"));
       map.put("ssn", Field.create("123-45-6789"));
       map.put("phone", Field.create(Field.Type.STRING, null));
-            Record record = RecordCreator.create("s", "s:1");
+      Record record = RecordCreator.create("s", "s:1");
       record.set(Field.create(map));
 
       StageRunner.Output output = runner.runProcess(ImmutableList.of(record));
@@ -82,7 +82,7 @@ public class TestFieldMaskProcessor {
       map.put("age", Field.create("12"));
       map.put("ssn", Field.create("123-45-6789"));
       map.put("phone", Field.create(Field.Type.STRING, null));
-            Record record = RecordCreator.create("s", "s:1");
+      Record record = RecordCreator.create("s", "s:1");
       record.set(Field.create(map));
 
       StageRunner.Output output = runner.runProcess(ImmutableList.of(record));
@@ -123,7 +123,7 @@ public class TestFieldMaskProcessor {
       map.put("age", Field.create("12"));
       map.put("ssn", Field.create("123-45-6789"));
       map.put("phone", Field.create(Field.Type.STRING, null));
-            Record record = RecordCreator.create("s", "s:1");
+      Record record = RecordCreator.create("s", "s:1");
       record.set(Field.create(map));
 
       StageRunner.Output output = runner.runProcess(ImmutableList.of(record));
@@ -154,16 +154,16 @@ public class TestFieldMaskProcessor {
     formatPreserveMask.mask = "xxx-xx-####";
 
     ProcessorRunner runner = new ProcessorRunner.Builder(FieldMaskDProcessor.class)
-        .setOnRecordError(OnRecordError.TO_ERROR)
-        .addConfiguration("fieldMaskConfigs", ImmutableList.of(formatPreserveMask))
-        .addOutputLane("a").build();
+      .setOnRecordError(OnRecordError.TO_ERROR)
+      .addConfiguration("fieldMaskConfigs", ImmutableList.of(formatPreserveMask))
+      .addOutputLane("a").build();
     runner.runInit();
 
     try {
       Map<String, Field> map = new LinkedHashMap<>();
       map.put("name", Field.create(12345));
       map.put("age", Field.create(123.56));
-            Record record = RecordCreator.create("s", "s:1");
+      Record record = RecordCreator.create("s", "s:1");
       record.set(Field.create(map));
 
       StageRunner.Output output = runner.runProcess(ImmutableList.of(record));
@@ -209,7 +209,7 @@ public class TestFieldMaskProcessor {
       map.put("age", Field.create("12"));
       map.put("ssn", Field.create("123-45-6789"));
       map.put("phone", Field.create("9876543210"));
-            Record record = RecordCreator.create("s", "s:1");
+      Record record = RecordCreator.create("s", "s:1");
       record.set(Field.create(map));
 
       StageRunner.Output output = runner.runProcess(ImmutableList.of(record));
@@ -239,7 +239,7 @@ public class TestFieldMaskProcessor {
     nameMaskConfig.maskType = MaskType.VARIABLE_LENGTH;
     nameMaskConfig.mask = null;
 
-ProcessorRunner runner = new ProcessorRunner.Builder(FieldMaskDProcessor.class)
+    ProcessorRunner runner = new ProcessorRunner.Builder(FieldMaskDProcessor.class)
       .addConfiguration("fieldMaskConfigs", ImmutableList.of(nameMaskConfig))
       .addOutputLane("a").build();
     runner.runInit();
@@ -249,7 +249,7 @@ ProcessorRunner runner = new ProcessorRunner.Builder(FieldMaskDProcessor.class)
       map.put("age", Field.create("12"));
       map.put("ssn", Field.create("123-45-6789"));
       map.put("phone", Field.create("9876543210"));
-            Record record = RecordCreator.create("s", "s:1");
+      Record record = RecordCreator.create("s", "s:1");
       record.set(Field.create(map));
 
       StageRunner.Output output = runner.runProcess(ImmutableList.of(record));
@@ -395,17 +395,24 @@ ProcessorRunner runner = new ProcessorRunner.Builder(FieldMaskDProcessor.class)
   }
 
   @Test
-   public void testFieldMaskProcessorRegex() throws StageException {
+  public void testFieldMaskProcessorRegex() throws StageException {
 
     FieldMaskConfig creditCardMask = new FieldMaskConfig();
-    creditCardMask.fields = ImmutableList.of("/creditCard", "/amex", "/age", "/phone", "/ssn");
+    creditCardMask.fields = ImmutableList.of("/creditCard", "/age", "/phone", "/ssn");
     creditCardMask.maskType = MaskType.REGEX;
     creditCardMask.regex = "(.*)(\\d{4})$";
     creditCardMask.mask = null;
     creditCardMask.groupsToShow = "2";
 
+    FieldMaskConfig amexMask = new FieldMaskConfig();
+    amexMask.fields = ImmutableList.of("/amex");
+    amexMask.maskType = MaskType.REGEX;
+    amexMask.regex = "\\d{4}-\\d{6}-(\\d{5})$";
+    amexMask.mask = null;
+    amexMask.groupsToShow = "1";
+
     ProcessorRunner runner = new ProcessorRunner.Builder(FieldMaskDProcessor.class)
-      .addConfiguration("fieldMaskConfigs", ImmutableList.of(creditCardMask))
+      .addConfiguration("fieldMaskConfigs", ImmutableList.of(creditCardMask, amexMask))
       .addOutputLane("a").build();
     runner.runInit();
 
@@ -428,7 +435,7 @@ ProcessorRunner runner = new ProcessorRunner.Builder(FieldMaskDProcessor.class)
       Assert.assertTrue(result.containsKey("creditCard"));
       Assert.assertEquals("xxxxxxxxxxxxxxx1121", result.get("creditCard").getValue());
       Assert.assertTrue(result.containsKey("amex"));
-      Assert.assertEquals("xxxxxxxxxxxxx1112", result.get("amex").getValue());
+      Assert.assertEquals("xxxxxxxxxxxx01112", result.get("amex").getValue());
       Assert.assertTrue(result.containsKey("age"));
       Assert.assertEquals("12", result.get("age").getValue());
       Assert.assertTrue(result.containsKey("ssn"));
