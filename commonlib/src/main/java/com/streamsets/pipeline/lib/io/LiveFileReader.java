@@ -179,6 +179,9 @@ public class LiveFileReader implements Closeable {
       }
       if (!truncateMode) {
         liveFileChunk = readChunk();
+        if (liveFileChunk != null) {
+          break;
+        }
       }
       if (System.currentTimeMillis() - start >= 0) {
         //wait timeout

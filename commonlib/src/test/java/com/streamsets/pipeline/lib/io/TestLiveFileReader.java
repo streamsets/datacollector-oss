@@ -462,6 +462,21 @@ public class TestLiveFileReader {
   }
 
   @Test
+  public void testReadWithinTimeout() throws Exception {
+    Path file = createFile(Arrays.asList("Hello1\n"));
+    LiveFile lf = new LiveFile(file);
+    LiveFileReader lfr = new LiveFileReader(lf, Charset.defaultCharset(), 0, 10);
+
+    Assert.assertTrue(lfr.hasNext());
+    long start = System.currentTimeMillis();
+    LiveFileChunk chunk = lfr.next(1000);
+    Assert.assertNotNull(chunk);
+    Assert.assertEquals("Hello1\n", readChunk(chunk));
+    Assert.assertTrue(System.currentTimeMillis() - start < 1000);
+    lfr.close();
+  }
+
+  @Test
   public void testCRLFLines() throws Exception {
     Path file = createFile(Arrays.asList("Hello1\r\n", "Hello\r\n"));
     LiveFile lf = new LiveFile(file);
