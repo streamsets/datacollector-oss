@@ -88,6 +88,10 @@ public class LiveFileReader implements Closeable {
     getLiveFile().refresh();
 
     channel = Files.newByteChannel(getLiveFile().getPath(), StandardOpenOption.READ);
+    if (offset > channel.size()) {
+      throw new IOException(Utils.format("File '{}', offset '{}' beyond file size '{}'", file.getPath(), offset,
+                                         channel.size()));
+    }
     channel.position(this.offset);
 
     buffer = ByteBuffer.allocate(maxLineLen);

@@ -91,6 +91,13 @@ public class TestLiveFileReader {
     new LiveFileReader(lf, Charset.forName("IBM500"), 0, 10);
   }
 
+  @Test(expected = IOException.class)
+  public void testInvalidOffset() throws Exception {
+    Path file = createFile(Arrays.asList("Hello"));
+    LiveFile lf = new LiveFile(file);
+    new LiveFileReader(lf, Charset.defaultCharset(), 10, 10);
+  }
+
   @Test
   public void testOneLineReadFromBeginningFullLinesNoTruncate() throws Exception {
     Path file = createFile(Arrays.asList("Hello1\n", "Hello2\n"));
