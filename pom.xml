@@ -84,6 +84,8 @@
     <module>elasticsearch-protolib</module>
     <module>elasticsearch_1_5_0-lib</module>
 
+    <module>solr-protolib</module>
+
     <module>cassandra-protolib</module>
     <module>cassandra_2_1_5-lib</module>
 
