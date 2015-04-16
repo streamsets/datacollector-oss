@@ -190,7 +190,7 @@
                         placeholder="{{'home.detailPane.configurationTab.selectFields' | translate}}">
                         {{$item}}
                       </ui-select-match>
-                      <ui-select-choices repeat="fieldPath in fieldPaths.concat(customFieldValue[customFieldConfigDefinition.name]) | filter:$select.search">
+                      <ui-select-choices repeat="fieldPath in fieldPaths | filter:$select.search">
                         {{fieldPath}}
                       </ui-select-choices>
                     </ui-select>
@@ -203,9 +203,15 @@
                     <div class="input-group-btn">
                       <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown"><span class="caret"></span></button>
                       <ul class="dropdown-menu dropdown-menu-right" role="menu">
-                        <li ng-repeat="fieldPath in fieldPaths.concat(customFieldValue[customFieldConfigDefinition.name])">
+                        <li ng-repeat="fieldPath in fieldPaths track by $index">
                           <a href="#" ng-click="customFieldValue[customFieldConfigDefinition.name] = fieldPath">{{fieldPath}}</a>
                         </li>
+                        <li role="presentation" class="dropdown-header"
+                            ng-if="fieldPathsFetchInProgress"
+                            translate="home.detailPane.configurationTab.loading">Loading...</li>
+                        <li role="presentation" class="dropdown-header"
+                            ng-if="!fieldPathsFetchInProgress && fieldPaths.length === 0"
+                            translate="home.detailPane.configurationTab.noFieldFound">No Field found.</li>
                       </ul>
                     </div>
                   </div>

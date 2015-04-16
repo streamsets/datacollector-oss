@@ -524,9 +524,11 @@ angular
     var updateFieldDataForStage = function(stageInstance) {
       //In case of processors and targets run the preview to get input fields & if current state of config is previewable.
       if(stageInstance.uiInfo.stageType !== pipelineConstant.SOURCE_STAGE_TYPE) {
+        $scope.fieldPathsFetchInProgress = true;
 
         previewService.getInputRecordsFromPreview($scope.activeConfigInfo.name, stageInstance, 10).
           then(function (inputRecords) {
+            $scope.fieldPathsFetchInProgress = false;
             if(_.isArray(inputRecords) && inputRecords.length) {
               var fieldPaths = [];
               pipelineService.getFieldPaths(inputRecords[0].value, fieldPaths);
@@ -535,6 +537,7 @@ angular
             }
           },
           function(res) {
+            $scope.fieldPathsFetchInProgress = false;
             $rootScope.common.errors = [res.data];
           });
       } else {
