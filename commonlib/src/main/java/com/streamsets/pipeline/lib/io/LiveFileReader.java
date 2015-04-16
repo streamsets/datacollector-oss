@@ -11,11 +11,12 @@ import java.io.ByteArrayInputStream;
 import java.io.Closeable;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.io.RandomAccessFile;
 import java.io.Reader;
 import java.nio.ByteBuffer;
-import java.nio.channels.FileChannel;
+import java.nio.channels.SeekableByteChannel;
 import java.nio.charset.Charset;
+import java.nio.file.Files;
+import java.nio.file.StandardOpenOption;
 
 /**
  * A <code>LiveFileReader</code> is a Reader that allows to read in a file in a 'tail -f' mode while keeping track
@@ -43,8 +44,7 @@ public class LiveFileReader implements Closeable {
   private long offset;
   private boolean truncateMode;
 
-  private final RandomAccessFile raf;
-  private final FileChannel channel;
+  private final SeekableByteChannel channel;
 
   private final ByteBuffer buffer;
   private final byte[] chunkBytes;
@@ -87,9 +87,7 @@ public class LiveFileReader implements Closeable {
 
     getLiveFile().refresh();
 
-    raf = new RandomAccessFile(getLiveFile().getPath().toFile(), "r");
-    channel = raf.getChannel();
-
+    channel = Files.newByteChannel(getLiveFile().getPath(), StandardOpenOption.READ);
     channel.position(this.offset);
 
     buffer = ByteBuffer.allocate(maxLineLen);
@@ -201,8 +199,7 @@ public class LiveFileReader implements Closeable {
   @Override
   public void close() throws IOException {
     if (open) {
-      open = false;
-      raf.close();
+      channel.close();
     }
   }
 
@@ -241,7 +238,7 @@ public class LiveFileReader implements Closeable {
 
   private LiveFileChunk readChunk() throws IOException {
     LiveFileChunk liveFileChunk = null;
-    if (channel.read(buffer) > -1 || buffer.limit() - buffer.position() > 0 || isEof()) {
+    if (channel.read(buffer) > 0 || buffer.limit() - buffer.position() > 0 || isEof()) {
       // set the buffer into read from mode
       buffer.flip();
       if (buffer.position() < buffer.limit()) {
@@ -281,7 +278,7 @@ public class LiveFileReader implements Closeable {
       file.refresh();
       lastLiveFileRefresh = System.currentTimeMillis();
     }
-    return !file.isLive() && channel.position() == raf.length();
+    return !file.isLive() && channel.position() == channel.size();
   }
 
   private int findEndOfLastLine(ByteBuffer buffer) {
