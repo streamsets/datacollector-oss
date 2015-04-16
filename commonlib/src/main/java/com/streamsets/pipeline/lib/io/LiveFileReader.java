@@ -6,6 +6,8 @@
 package com.streamsets.pipeline.lib.io;
 
 import com.streamsets.pipeline.api.impl.Utils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.ByteArrayInputStream;
 import java.io.Closeable;
@@ -32,6 +34,8 @@ import java.nio.file.StandardOpenOption;
  * IMPORTANT: The provided charset must encode LF and CR as '0x0A' and '0x0D' respectively.
  */
 public class LiveFileReader implements Closeable {
+  private static final Logger LOG = LoggerFactory.getLogger(LiveFileReader.class);
+
   // we refresh the LiveFile every 500 msecs, to detect if it has been renamed
   static final long REFRESH_INTERVAL = Integer.parseInt(System.getProperty("LiveFileReader.refresh.ms", "500"));
 
@@ -87,6 +91,9 @@ public class LiveFileReader implements Closeable {
     truncateMode = offset < 0;
 
     currentFile = originalFile.refresh();
+    if (!currentFile.equals(originalFile)) {
+      LOG.debug("Original file '{}' refreshed to '{}'", file, currentFile);
+    }
 
     channel = Files.newByteChannel(currentFile.getPath(), StandardOpenOption.READ);
     if (offset > channel.size()) {
@@ -94,6 +101,7 @@ public class LiveFileReader implements Closeable {
                                          channel.size()));
     }
     channel.position(this.offset);
+    LOG.debug("File '{}', positioned at offset '{}'", currentFile, offset);
 
     buffer = ByteBuffer.allocate(maxLineLen);
     chunkBytes = new byte[maxLineLen];
@@ -180,15 +188,24 @@ public class LiveFileReader implements Closeable {
     long start = System.currentTimeMillis() + waitMillis;
     while (true) {
       if (truncateMode) {
+        if (LOG.isTraceEnabled()) {
+          LOG.trace("File '{}' at offset '{} in fast forward mode", currentFile, channel.position());
+        }
         truncateMode = fastForward();
       }
       if (!truncateMode) {
         liveFileChunk = readChunk();
+        if (LOG.isTraceEnabled()) {
+          LOG.trace("File '{}' at offset '{} got chunk '{}'", currentFile, channel.position(), liveFileChunk != null);
+        }
         if (liveFileChunk != null) {
           break;
         }
       }
       if (System.currentTimeMillis() - start >= 0) {
+        if (LOG.isTraceEnabled()) {
+          LOG.trace("File '{}' at offset '{} timed out while waiting for chunk", currentFile, channel.position());
+        }
         //wait timeout
         break;
       }
@@ -284,6 +301,9 @@ public class LiveFileReader implements Closeable {
   private boolean isEof() throws IOException {
     if (originalFile.equals(currentFile) && System.currentTimeMillis() - lastLiveFileRefresh > REFRESH_INTERVAL) {
       currentFile = originalFile.refresh();
+      if (!currentFile.equals(originalFile)) {
+        LOG.debug("Original file '{}' refreshed to '{}'", originalFile, currentFile);
+      }
       lastLiveFileRefresh = System.currentTimeMillis();
     }
     return !originalFile.equals(currentFile) && channel.position() == channel.size();
