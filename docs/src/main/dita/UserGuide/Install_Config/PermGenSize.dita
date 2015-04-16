@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
+<concept id="concept_kxf_y2m_sr">
+ <title>Permanent Generation Size</title>
+ <shortdesc>When you use the <ph
+   conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> with Java 7,
+  you can define the Java Permanent Generation size, also known as the PermGen size.</shortdesc>
+ <conbody>
+  <p>The PermGen size determines the amount of memory that the <ph
+    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> web
+   application server uses. Define the PermGen size as part of the SDC_JAVA_OPTS property in the <ph
+    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>  environment
+   configuration file.</p>
+  <p>Use the following options to define the PermGen size:<ul id="ul_qjd_33m_sr">
+    <li>MaxPermSize - Set to 1/4 of the Java heap size, with a minimum of 128 MB.</li>
+    <li>PermSize - Set to 1/8 of the Java heap size, with a minimum of 128 MB.</li>
+   </ul></p>
+  <draft-comment author="Loretta">need to ask Brock about the difference between these properties,
+   and what happens if they set it too high. </draft-comment>
+ </conbody>
+</concept>

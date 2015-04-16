@@ -3,8 +3,8 @@
 <concept id="concept_awl_4km_zq">
  <title>Hadoop FS</title>
  <shortdesc>The Hadoop FS destination writes data to a Hadoop file system. You can write text,
-  delimited, or JSON data to Hadoop as flat files or Hadoop sequence files. You can also use Hadoop
-  FS to create files using the SDC Record data format.</shortdesc>
+    delimited, JSON, and SDC Record data to Hadoop. You can write the data to Hadoop as flat files
+    or Hadoop sequence files. </shortdesc>
  <conbody>
   <p><indexterm>Hadoop FS
      destination<indexterm>overview</indexterm></indexterm><indexterm>destinations<indexterm>Hadoop

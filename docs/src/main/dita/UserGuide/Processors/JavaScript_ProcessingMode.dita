@@ -2,14 +2,37 @@
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_j1t_ntc_pr">
  <title>Processing Mode</title>
- <shortdesc></shortdesc>
+ <shortdesc>You can choose the processing mode to use with the JavaScript Evaluator. You can use the
+  same script in each processing mode. However, since the error handling differs in each mode, you
+  might want to write additional error handling for Record Batch mode.</shortdesc>
  <conbody>
-  <p>The JavaScript Evaluator can process records as follows: </p>
-  <dl conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/prccessingMode">
-   <dlentry>
-    <dt/>
-    <dd/>
-   </dlentry>
-  </dl>
+  <p><indexterm>JavaScript Evaluator<indexterm>processing
+    mode</indexterm></indexterm><indexterm>processing modes<indexterm>JavaScript
+     Evaluator</indexterm></indexterm>The JavaScript Evaluator provides the following processing
+   modes: </p>
+  <p>
+   <dl>
+    <dlentry>
+     <dt>Record by Record</dt>
+     <dd>The processor calls the script for each record. The processor passes the record to the
+      script as a map and processes each record individually. </dd>
+     <dd>The script does not require error handling logic. Error records are passed to the processor
+      for error handling. The processor handles error records based on the On Record Error
+      property.</dd>
+     <dd>Use this mode to avoid including error handling logic in the code. Since this mode calls
+      the script for each record, this might affect the performance of the pipeline.</dd>
+    </dlentry>
+    <dlentry>
+     <dt>Record Batch</dt>
+     <dd>The processor calls the script for each batch. The processor passes the batch to the script
+      as an array and processes the batch at one time. The array name is "records". <draft-comment
+       author="Loretta">Do I need to say the previous?</draft-comment></dd>
+     <dd>The script should include error handling logic. Without error handling logic, a single
+      error records sends the entire batch to the processor for error handling. The processor
+      handles error records based on the On Record Error property.</dd>
+     <dd>Use this mode to improve performance by processing a batch of data at a time.</dd>
+    </dlentry>
+   </dl>
+  </p>
  </conbody>
 </concept>

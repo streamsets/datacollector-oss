@@ -121,6 +121,32 @@
  </div>
 
 </div>
+<div class="topic concept nested2" id="concept_kxf_y2m_sr">
+ <h3 class="title topictitle3">Permanent Generation Size</h3>
+
+ 
+ <div class="body conbody"><p class="shortdesc">When you use the <span class="ph">Data
+                  Collector</span> with Java 7,
+  you can define the Java Permanent Generation size, also known as the PermGen size.</p>
+
+  <p class="p">The PermGen size determines the amount of memory that the <span class="ph">Data
+                  Collector</span> web
+   application server uses. Define the PermGen size as part of the SDC_JAVA_OPTS property in the <span class="ph">Data
+                  Collector</span>  environment
+   configuration file.</p>
+
+  <div class="p">Use the following options to define the PermGen size:<ul class="ul" id="concept_kxf_y2m_sr__ul_qjd_33m_sr">
+    <li class="li">MaxPermSize - Set to 1/4 of the Java heap size, with a minimum of 128 MB.</li>
+
+    <li class="li">PermSize - Set to 1/8 of the Java heap size, with a minimum of 128 MB.</li>
+
+   </ul>
+</div>
+
+  
+ </div>
+
+</div>
 </div>
 <div class="topic task nested1" id="task_ugz_41n_qr">
     <h2 class="title topictitle2">Configuring the Data Collector Environment</h2>
@@ -149,9 +175,9 @@ The <span class="ph">Data
                         
                         <thead class="thead" align="left">
                             <tr class="row">
-                                <th class="entry" valign="top" width="50%" id="d11194e249">Environment Configuration Property</th>
+                                <th class="entry" valign="top" width="50%" id="d11375e290">Environment Configuration Property</th>
 
-                                <th class="entry" valign="top" width="50%" id="d11194e252">Description</th>
+                                <th class="entry" valign="top" width="50%" id="d11375e293">Description</th>
 
                             </tr>
 
@@ -159,39 +185,40 @@ The <span class="ph">Data
 
                         <tbody class="tbody">
                             <tr class="row">
-                                <td class="entry" valign="top" width="50%" headers="d11194e249 ">SDC_PRE_CLASSPATH</td>
+                                <td class="entry" valign="top" width="50%" headers="d11375e290 ">SDC_PRE_CLASSPATH</td>
 
-                                <td class="entry" valign="top" width="50%" headers="d11194e252 ">Path to a directory of Java classes that can be called by
+                                <td class="entry" valign="top" width="50%" headers="d11375e293 ">Path to a directory of Java classes that can be called by
                                     custom stages. Classes in this list load before the
                                     post-classpath list.</td>
 
                             </tr>
 
                             <tr class="row">
-                                <td class="entry" valign="top" width="50%" headers="d11194e249 ">SDC_POST_CLASSPATH</td>
+                                <td class="entry" valign="top" width="50%" headers="d11375e290 ">SDC_POST_CLASSPATH</td>
 
-                                <td class="entry" valign="top" width="50%" headers="d11194e252 ">Path to a directory of Java classes that can be called by
+                                <td class="entry" valign="top" width="50%" headers="d11375e293 ">Path to a directory of Java classes that can be called by
                                     custom stages. Classes in this list load after the pre-classpath
                                     list.</td>
 
                             </tr>
 
                             <tr class="row">
-                                <td class="entry" valign="top" width="50%" headers="d11194e249 ">SDC_JAVA_OPTS</td>
+                                <td class="entry" valign="top" width="50%" headers="d11375e290 ">SDC_JAVA_OPTS</td>
 
-                                <td class="entry" valign="top" width="50%" headers="d11194e252 ">Additional Java options for the <span class="ph">Data
+                                <td class="entry" valign="top" width="50%" headers="d11375e293 ">Additional Java options for the <span class="ph">Data
                   Collector</span>. <p class="p">By default, the Xmx and Xms properties set the <span class="ph">Data
-                  Collector</span> Java heap size to 1024 MB. </p>
-<p class="p">You can add any valid
-                                        Java property.</p>
+                  Collector</span> Java heap size to 1024 MB. Also, the XX:PermSize is set
+                                        to 128 MB and XX:MaxPermSize is set to 256 MB.</p>
+<p class="p">You can
+                                        add any valid Java property.</p>
 </td>
 
                             </tr>
 
                             <tr class="row">
-                                <td class="entry" valign="top" width="50%" headers="d11194e249 ">SDC_SECURITY_MANAGER_ENABLED</td>
+                                <td class="entry" valign="top" width="50%" headers="d11375e290 ">SDC_SECURITY_MANAGER_ENABLED</td>
 
-                                <td class="entry" valign="top" width="50%" headers="d11194e252 ">Default is True. Do not change this property. </td>
+                                <td class="entry" valign="top" width="50%" headers="d11375e293 ">Default is True. Do not change this property. </td>
 
                             </tr>
 

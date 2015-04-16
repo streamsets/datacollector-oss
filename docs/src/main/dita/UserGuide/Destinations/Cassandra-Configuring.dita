@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE task PUBLIC "-//OASIS//DTD DITA General Task//EN" "generalTask.dtd">
+<task id="task_t1d_z3l_sr">
+    <title>Configuring a Cassandra Destination</title>
+    <taskbody>
+        <context><indexterm>Cassandra
+            destination<indexterm>configuring</indexterm></indexterm>Configure a Cassandra
+            destination to write data to a Cassandra cluster.</context>
+        <steps id="steps_tgy_3tv_4r">
+            <step
+                conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/1stStep-ReqField-ErrorHandling">
+                <cmd/>
+            </step>
+            <step>
+                <cmd>On the <wintitle>Cassandra</wintitle> tab, configure the following
+                    properties:</cmd>
+                <info>
+                    <table frame="all" rowsep="1" colsep="1" id="table_m3b_fkl_sr">
+                        <tgroup cols="2">
+                            <colspec colname="c1" colnum="1" colwidth="1*"/>
+                            <colspec colname="c2" colnum="2" colwidth="2.28*"/>
+                            <thead>
+                                <row>
+                                    <entry>Cassandra Property</entry>
+                                    <entry>Description</entry>
+                                </row>
+                            </thead>
+                            <tbody>
+                                <row>
+                                    <entry>Cassandra Contact Points</entry>
+                                    <entry>Host names for nodes in Cassandra cluster. To ensure a
+                                        connection, use the Add icon to enter several host
+                                        names.</entry>
+                                </row>
+                                <row>
+                                    <entry>Cassandra Port</entry>
+                                    <entry>The port number for the Cassandra nodes.</entry>
+                                </row>
+                                <row>
+                                    <entry>Use Credentials</entry>
+                                    <entry>Indicates whether you want to enter user credentials to
+                                        access the cluster.</entry>
+                                </row>
+                                <row>
+                                    <entry>Fully-Qualified Table Name</entry>
+                                    <entry>Name of the Cassandra table to use. Enter a
+                                        fully-qualified name using the following format: &lt;key
+                                        space>.&lt;table name>.</entry>
+                                </row>
+                                <row>
+                                    <entry>Field Mapping</entry>
+                                    <entry>Defines the mapping between record fields and Cassandra
+                                        columns. <p>Use the Add icon to create additional field
+                                            mappings. <note>The record field data type must match
+                                                the data type of the Cassandra
+                                        column.</note></p></entry>
+                                </row>
+                            </tbody>
+                        </tgroup>
+                    </table>
+                </info></step>
+            <step>
+                <cmd>To use Cassandra credentials, click the <wintitle>Credentials</wintitle> tab,
+                    and then enter a user name and password.</cmd>
+            </step>
+        </steps>
+    </taskbody>
+</task>

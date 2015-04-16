@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_vhs_5tz_xp">
- <title>Reusable phrases for the book</title>
- <shortdesc>Use the following reusable phrases for conrefs in the book:<draft-comment
+      <title>Reusable phrases for the book</title>
+      <shortdesc>Use the following reusable phrases for conrefs in the book:<draft-comment
                   author="Loretta">Company name - not really using this</draft-comment></shortdesc>
- <conbody>
+      <conbody>
             <p>Company name: <ph id="company">StreamSets</ph></p>
             <draft-comment author="Loretta">product name: trying to consistently use
                   this</draft-comment>
@@ -22,7 +22,7 @@
                               "Troubleshooting":</p>
                   </draft-comment>
             </p>
-       <ul id="ul_EditPreview">
+            <ul id="ul_EditPreview">
                   <li>The output data column for an origin.</li>
                   <li>The input data column for processors.</li>
             </ul>
@@ -53,40 +53,6 @@
                         <li><uicontrol>Tab-Separated Values</uicontrol> - File that includes
                               tab-separated values.</li>
                   </ul>
-            </p>
-            <p>
-                  <draft-comment author="Loretta">The following bullets are ways the Jython and
-                        JavaScript Evaluators can process code: -- more info on these, make sure
-                        they are good for both. -- currently not used.</draft-comment>
-                  <dl id="prccessingMode">
-                        <dlentry>
-                              <dt>Record by Record</dt>
-                              <dd>The processor calls the script for each record. The processor
-                                    passes the record to the script as a map and processes each
-                                    record individually. </dd>
-                              <dd>The code does not require error handling logic. The processor
-                                    handles error records based on the Error Record property defined
-                                    for the processor.</dd>
-                              <dd>Use this mode to avoid including error handling logic in the code.
-                                    Since this mode calls the script for each record, this might
-                                    affect the performance of the pipeline.</dd>
-                        </dlentry>
-                        <dlentry>
-                              <dt>Record Batch</dt>
-                              <dd>The processor calls the script for each batch. The processor
-                                    passes the batch to the script as an array and processes the
-                                    batch at one time. The array name is "records".</dd>
-                              <dd>The script must include error handling code. </dd>
-                              <dd>Use this mode to process a batch of data at a time. At the end of
-                                    the script, include the following two functions:<ul
-                                          id="ul_jn3_tvc_pr">
-                                          <li>out.write (&lt;record>) - Passes the records to the
-                                                pipeline.</li>
-                                          <li>err.write (&lt;record>, &lt;message>) - Passes error
-                                                records to error handling. </li>
-                                    </ul></dd>
-                        </dlentry>
-                  </dl>
             </p>
       </conbody>
 </concept>

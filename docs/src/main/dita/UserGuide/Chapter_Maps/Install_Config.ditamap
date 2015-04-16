@@ -40,6 +40,7 @@
    </topicmeta>
    <topicref href="../Install_Config/JavaConfigOptions.dita">
     <topicref href="../Install_Config/JavaHeapSize.dita"/>
+    <topicref href="../Install_Config/PermGenSize.dita"/>
    </topicref>
    <topicref href="../Install_Config/ConfiguringDCEnvironment.dita"/>
   </topicref>

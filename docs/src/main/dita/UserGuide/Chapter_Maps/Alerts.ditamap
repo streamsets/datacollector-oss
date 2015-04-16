@@ -3,11 +3,17 @@
 <map>
  <title>Alerts</title>
  <topicref href="../Alerts/Alerts_title.dita">
-  <topicref href="../Alerts/MetricAlerts.dita">
+  <topicref href="../Alerts/MetricAlerts.dita" chunk="to-content">
+   <topicmeta>
+    <shortdesc/>
+   </topicmeta>
    <topicref href="../Alerts/MetricTypes.dita"/>
    <topicref href="../Alerts/ConfiguringMetricAlerts.dita"/>
   </topicref>
-  <topicref href="../Alerts/DataAlerts.dita">
+  <topicref href="../Alerts/DataAlerts.dita" chunk="to-content">
+   <topicmeta>
+    <shortdesc/>
+   </topicmeta>
    <topicref href="../Alerts/ConfiguringDataAlerts.dita"/>
   </topicref>
   <topicref href="../Alerts/EmailforAlerts-Configuring.dita"/>

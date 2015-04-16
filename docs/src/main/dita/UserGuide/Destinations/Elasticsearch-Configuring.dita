@@ -2,7 +2,6 @@
 <!DOCTYPE task PUBLIC "-//OASIS//DTD DITA General Task//EN" "generalTask.dtd">
 <task id="task_uns_gtv_4r">
     <title>Configuring an Elasticsearch Destination</title>
-    <shortdesc/>
     <taskbody>
         <context><indexterm>Elasticsearch
             destination<indexterm>configuring</indexterm></indexterm>Configure an Elasticsearch

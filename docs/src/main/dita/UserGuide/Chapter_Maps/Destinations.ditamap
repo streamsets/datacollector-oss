@@ -8,7 +8,12 @@
     <shortdesc/>
    </topicmeta>
   </topicref>
-  <topicref href="../Destinations/Cassandra.dita"/>
+  <topicref href="../Destinations/Cassandra.dita" chunk="to-content">
+   <topicmeta>
+   <shortdesc/>
+  </topicmeta>
+   <topicref href="../Destinations/Cassandra-Configuring.dita"/>
+  </topicref>
   <topicref href="../Destinations/Elasticsearch.dita" chunk="to-content">
    <topicmeta>
     <shortdesc/>

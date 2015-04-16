@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
+<concept id="concept_mqn_5vk_sr">
+ <title>Jython Scripting Objects</title>
+ <conbody>
+  <p><indexterm>Jython Evaluator<indexterm>scripting
+    objects</indexterm></indexterm><indexterm>scripting objects<indexterm>Jython
+     Evaluator</indexterm></indexterm>You can use the following scripting objects in the Jython Evaluator:<dl>
+    <dlentry>
+     <dt>records array</dt>
+     <dd>An array of records to process. The records object should include different elements based
+      on the processing mode that you use:<ul id="ul_fdm_5yk_sr">
+       <li>Record by Record - The records array should include one record element.</li>
+       <li>Record Batch - The records array should include all records in the batch.</li>
+      </ul></dd>
+    </dlentry>
+    <dlentry>
+     <dt>record</dt>
+     <dd>An object that represents a single record. Includes a single "value" element. Value
+      contains the data for the record. </dd>
+     <dd>Map and List record fields are mapped to to Jython lists and dictionaries,
+      respectively.</dd>
+     <dd>
+      <draft-comment author="Loretta">Data types are preserved for values that are not modified. For
+       values that are modified, the scripting engine might change the original type. For example,
+       for Java 7 JavaScript, modifying an Integer value converts it to a Double. -- Is there a
+       Jython example for this? </draft-comment>
+     </dd>
+    </dlentry>
+    <dlentry>
+     <dt>out</dt>
+     <dd>An object that writes the record to the output batch. Includes a "write(record)"
+      element.</dd>
+    </dlentry>
+    <dlentry>
+     <dt>err</dt>
+     <dd>An object that passes error records to <draft-comment author="Loretta">asked tucu
+       4/15.</draft-comment></dd>
+    </dlentry>
+   </dl></p>
+ </conbody>
+</concept>

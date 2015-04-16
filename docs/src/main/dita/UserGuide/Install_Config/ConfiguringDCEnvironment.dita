@@ -54,8 +54,9 @@
                                         conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
                                     />. <p>By default, the Xmx and Xms properties set the <ph
                                             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                                        /> Java heap size to 1024 MB. </p><p>You can add any valid
-                                        Java property.</p></entry>
+                                        /> Java heap size to 1024 MB. Also, the XX:PermSize is set
+                                        to 128 MB and XX:MaxPermSize is set to 256 MB.</p><p>You can
+                                        add any valid Java property.</p></entry>
                             </row>
                             <row>
                                 <entry>SDC_SECURITY_MANAGER_ENABLED</entry>
