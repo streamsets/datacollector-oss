@@ -245,11 +245,10 @@ public class LiveDirectoryScanner {
     List<Path> matchingFiles = new ArrayList<>();
     try (DirectoryStream<Path> matchingFile = Files.newDirectoryStream(dir.toPath(), filter)) {
       for (Path file : matchingFile) {
-        LOG.trace("Found file '{}'", file);
         matchingFiles.add(file);
       }
     }
-    LOG.debug("getCurrent() scanned '{}' matching files", matchingFiles.size());
+    LOG.debug("Scanned '{}' matching files", matchingFiles.size());
     if (matchingFiles.size() > 0) {
       // sort all matching files (they don't necessary come in order from the OS)
       // we sort them using the comparator of the NonLivePostfix
@@ -265,6 +264,7 @@ public class LiveDirectoryScanner {
         current = null;
       }
     }
+    LOG.debug("Scan selected '{}' ", current);
     return current;
   }
 
