@@ -32,13 +32,14 @@ import java.nio.file.StandardOpenOption;
  * IMPORTANT: The provided charset must encode LF and CR as '0x0A' and '0x0D' respectively.
  */
 public class LiveFileReader implements Closeable {
-  // we refresh the LiveFile every 500 msecs, to detect if it still live or not
+  // we refresh the LiveFile every 500 msecs, to detect if it has been renamed
   static final long REFRESH_INTERVAL = Integer.parseInt(System.getProperty("LiveFileReader.refresh.ms", "500"));
 
   // we sleep for 10 millisec to yield CPU
   private static final long YIELD_INTERVAL = Integer.parseInt(System.getProperty("LiveFileReader.yield.ms", "10"));
 
-  private final LiveFile file;
+  private final LiveFile originalFile;
+  private LiveFile currentFile;
   private final Charset charset;
 
   private long offset;
@@ -79,17 +80,17 @@ public class LiveFileReader implements Closeable {
     Utils.checkArgument(maxLineLen > 1, "maxLineLen must greater than 1");
     validateCharset(charset, '\n', "\\n");
     validateCharset(charset, '\r', "\\r");
-    this.file = file;
+    this.originalFile = file;
     this.charset = charset;
 
     this.offset = Math.abs(offset);
     truncateMode = offset < 0;
 
-    getLiveFile().refresh();
+    currentFile = originalFile.refresh();
 
-    channel = Files.newByteChannel(getLiveFile().getPath(), StandardOpenOption.READ);
+    channel = Files.newByteChannel(currentFile.getPath(), StandardOpenOption.READ);
     if (offset > channel.size()) {
-      throw new IOException(Utils.format("File '{}', offset '{}' beyond file size '{}'", file.getPath(), offset,
+      throw new IOException(Utils.format("File '{}', offset '{}' beyond file size '{}'", currentFile.getPath(), offset,
                                          channel.size()));
     }
     channel.position(this.offset);
@@ -121,7 +122,7 @@ public class LiveFileReader implements Closeable {
    * @return the {@link LiveFile} of the reader.
    */
   public LiveFile getLiveFile() {
-    return file;
+    return currentFile;
   }
 
   /**
@@ -143,19 +144,19 @@ public class LiveFileReader implements Closeable {
    * @return the reader offset.
    */
   public long getOffset() {
-    Utils.checkState(open, Utils.formatL("LiveFileReder for '{}' is not open", file));
+    Utils.checkState(open, Utils.formatL("LiveFileReder for '{}' is not open", currentFile));
     return (truncateMode) ? -offset : offset;
   }
 
   /**
-   * Indicates if the reader has more data or the EOF has been reached. Note that if the {@link LiveFile} is 'live' and
-   * we are at the EOF we are in 'tail -f' mode, only when the file is not 'live' anymore we reached EOF.
+   * Indicates if the reader has more data or the EOF has been reached. Note that if the {@link LiveFile} is the original
+   * one and we are at the EOF we are in 'tail -f' mode, only when the file has been renamed we reached EOF.
    *
    * @return <code>true</code> if the reader has more data, <code>false</code> otherwise.
    * @throws IOException thrown if there was an error while determining if there is more data or not.
    */
   public boolean hasNext() throws IOException {
-    Utils.checkState(open, Utils.formatL("LiveFileReader for '{}' is not open", file));
+    Utils.checkState(open, Utils.formatL("LiveFileReader for '{}' is not open", currentFile));
     // the buffer is dirty, or the file is still live, or the channel pos is less than the file length
     return (buffer.position() > 0) || !isEof();
   }
@@ -173,8 +174,8 @@ public class LiveFileReader implements Closeable {
    */
   public LiveFileChunk next(long waitMillis) throws IOException, InterruptedException {
     Utils.checkArgument(waitMillis >= 0, "waitMillis must equal or greater than zero");
-    Utils.checkState(open, Utils.formatL("LiveFileReader for '{}' is not open", file));
-    Utils.checkState(hasNext(), Utils.formatL("LiveFileReader for '{}' has reached EOL", file));
+    Utils.checkState(open, Utils.formatL("LiveFileReader for '{}' is not open", currentFile));
+    Utils.checkState(hasNext(), Utils.formatL("LiveFileReader for '{}' has reached EOL", currentFile));
     LiveFileChunk liveFileChunk = null;
     long start = System.currentTimeMillis() + waitMillis;
     while (true) {
@@ -281,11 +282,11 @@ public class LiveFileReader implements Closeable {
   }
 
   private boolean isEof() throws IOException {
-    if (file.isLive() && System.currentTimeMillis() - lastLiveFileRefresh > REFRESH_INTERVAL) {
-      file.refresh();
+    if (originalFile.equals(currentFile) && System.currentTimeMillis() - lastLiveFileRefresh > REFRESH_INTERVAL) {
+      currentFile = originalFile.refresh();
       lastLiveFileRefresh = System.currentTimeMillis();
     }
-    return !file.isLive() && channel.position() == channel.size();
+    return !originalFile.equals(currentFile) && channel.position() == channel.size();
   }
 
   private int findEndOfLastLine(ByteBuffer buffer) {

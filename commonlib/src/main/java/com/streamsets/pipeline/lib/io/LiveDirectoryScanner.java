@@ -254,10 +254,10 @@ public class LiveDirectoryScanner {
       // sort all matching files (they don't necessary come in order from the OS)
       // we sort them using the comparator of the NonLivePostfix
       Collections.sort(matchingFiles, pathComparator);
-      // we found a non live file, create it as such
-      current = new LiveFile(matchingFiles.get(0), false);
+      // we found a rolled file, create it as such
+      current = new LiveFile(matchingFiles.get(0));
     } else {
-      // we are not behind with non-live files, lets return the live file
+      // we are not behind with rolled files, lets return the live file
       try {
         current = new LiveFile(new File(dir, liveFileName).toPath());
       } catch (NoSuchFileException ex) {

@@ -12,14 +12,12 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Writer;
 import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.PathMatcher;
-import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
@@ -30,14 +28,6 @@ public class TestLiveDirectoryScanner {
   public void setUp() throws IOException {
     testDir = new File("target", UUID.randomUUID().toString());
     Assert.assertTrue(testDir.mkdirs());
-  }
-
-  private Path createFile(List<String> lines) throws IOException {
-    Path file = new File(testDir, UUID.randomUUID().toString()).toPath();
-    try (Writer writer = new FileWriter(file.toFile())) {
-      IOUtils.writeLines(lines, "", writer);
-    }
-    return file;
   }
 
   @Test
@@ -76,7 +66,7 @@ public class TestLiveDirectoryScanner {
                                                             null, LiveDirectoryScanner.RolledFilesMode.REVERSE_COUNTER);
     LiveFile lf = spooler.scan(null);
     Assert.assertNotNull(lf);
-    Assert.assertEquals(new LiveFile(rolledFile, false), lf);
+    Assert.assertEquals(new LiveFile(rolledFile), lf);
     lf = spooler.scan(lf);
     Assert.assertNull(lf);
   }
@@ -91,10 +81,10 @@ public class TestLiveDirectoryScanner {
                                                             null, LiveDirectoryScanner.RolledFilesMode.REVERSE_COUNTER);
     LiveFile lf = spooler.scan(null);
     Assert.assertNotNull(lf);
-    Assert.assertEquals(new LiveFile(rolledFile, false), lf);
+    Assert.assertEquals(new LiveFile(rolledFile), lf);
     lf = spooler.scan(lf);
     Assert.assertNotNull(lf);
-    Assert.assertEquals(new LiveFile(liveFile, true), lf);
+    Assert.assertEquals(new LiveFile(liveFile), lf);
   }
 
   @Test
@@ -109,13 +99,13 @@ public class TestLiveDirectoryScanner {
                                                             null, LiveDirectoryScanner.RolledFilesMode.REVERSE_COUNTER);
     LiveFile lf = spooler.scan(null);
     Assert.assertNotNull(lf);
-    Assert.assertEquals(new LiveFile(rolledFile1, false), lf);
+    Assert.assertEquals(new LiveFile(rolledFile1), lf);
     lf = spooler.scan(lf);
     Assert.assertNotNull(lf);
-    Assert.assertEquals(new LiveFile(rolledFile2, false), lf);
+    Assert.assertEquals(new LiveFile(rolledFile2), lf);
     lf = spooler.scan(lf);
     Assert.assertNotNull(lf);
-    Assert.assertEquals(new LiveFile(liveFile, true), lf);
+    Assert.assertEquals(new LiveFile(liveFile), lf);
   }
 
   @Test
@@ -130,13 +120,13 @@ public class TestLiveDirectoryScanner {
                                                             null, LiveDirectoryScanner.RolledFilesMode.ALPHABETICAL);
     LiveFile lf = spooler.scan(null);
     Assert.assertNotNull(lf);
-    Assert.assertEquals(new LiveFile(rolledFile1, false), lf);
+    Assert.assertEquals(new LiveFile(rolledFile1), lf);
     lf = spooler.scan(lf);
     Assert.assertNotNull(lf);
-    Assert.assertEquals(new LiveFile(rolledFile2, false), lf);
+    Assert.assertEquals(new LiveFile(rolledFile2), lf);
     lf = spooler.scan(lf);
     Assert.assertNotNull(lf);
-    Assert.assertEquals(new LiveFile(liveFile, true), lf);
+    Assert.assertEquals(new LiveFile(liveFile), lf);
   }
 
   @Test
@@ -153,7 +143,7 @@ public class TestLiveDirectoryScanner {
     LiveFile lf = spooler.scan(null);
     Assert.assertNotNull(lf);
     //got my.log.2
-    Assert.assertEquals(new LiveFile(rolledFile1, false), lf);
+    Assert.assertEquals(new LiveFile(rolledFile1), lf);
 
     //shifting files 2 -> 3, 1 - >2
     Path rolledFile0 = new File(testDir, "my.log.3").toPath();
@@ -161,13 +151,13 @@ public class TestLiveDirectoryScanner {
     Files.move(rolledFile2, rolledFile1);
 
     // a refresh should get us to my.log.3
-    lf.refresh();
+    lf = lf.refresh();
     Assert.assertEquals(rolledFile0.toAbsolutePath(), lf.getPath());
 
     // getting the file should get us the new 2
     lf = spooler.scan(lf);
     Assert.assertNotNull(lf);
-    Assert.assertEquals(new LiveFile(rolledFile1, false), lf);
+    Assert.assertEquals(new LiveFile(rolledFile1), lf);
   }
 
   @Test
@@ -182,10 +172,10 @@ public class TestLiveDirectoryScanner {
                                                             rolledFile2.getFileName().toString(),
                                                             LiveDirectoryScanner.RolledFilesMode.ALPHABETICAL);
     LiveFile lf = spooler.scan(null);
-    Assert.assertEquals(new LiveFile(rolledFile2, false), lf);
+    Assert.assertEquals(new LiveFile(rolledFile2), lf);
     lf = spooler.scan(lf);
     Assert.assertNotNull(lf);
-    Assert.assertEquals(new LiveFile(liveFile, true), lf);
+    Assert.assertEquals(new LiveFile(liveFile), lf);
   }
 
   @Test

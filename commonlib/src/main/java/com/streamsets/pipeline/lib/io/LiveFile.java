@@ -27,41 +27,26 @@ import java.util.Map;
  * being accessed. By keeping track of the iNode, it is possible to get intermittent access to the same file (i.e.
  * from an application that has been restarted).
  * <p/>
- * A <code>LiveFile</code> is considered 'live' if its name has not change since it has been created (the
- * <code>LiveFile</code> instance).
+ * A <code>LiveFile</code> is immutable.
  */
 public class LiveFile {
-  private Path path;
-  private boolean live;
+  private final Path path;
   private final String iNode;
-
-  /**
-   * Creates a <code>LiveFile</code> given a {@link Path}. The LiveFile is 'live'.
-   *
-   * @param path the Path of the LiveFile. The file refered by the Path must exist.
-   * @throws IOException thrown if the LiveFile could not be instantiated.
-   */
-  public LiveFile(Path path) throws IOException {
-    this(path, true);
-  }
 
   /**
    * Creates a <code>LiveFile</code> given a {@link Path}.
    *
-   * @param path the Path of the LiveFile. The file refered by the Path must exist.
-   * @param live indicates if the LiveFile is 'live' or not, <code>true</code> is live, <code>false</code> is not.
-   * @throws IOException thrown if the LiveFile could not be instantiated.
+   * @param path the Path of the LiveFile. The file referred by the Path must exist.
+   * @throws IOException thrown if the LiveFile does not exist.
    */
-  public LiveFile(Path path, boolean live) throws IOException {
+  public LiveFile(Path path) throws IOException {
     Utils.checkNotNull(path, "path");
     this.path = path.toAbsolutePath();
-    this.live = live;
     iNode = Files.readAttributes(path, BasicFileAttributes.class).fileKey().toString();
   }
 
-  private LiveFile(Path path, boolean live, String inode) {
+  private LiveFile(Path path,  String inode) {
     this.path = path.toAbsolutePath();
-    this.live = live;
     iNode = inode;
   }
 
@@ -72,15 +57,6 @@ public class LiveFile {
    */
   public Path getPath() {
     return path;
-  }
-
-  /**
-   * Returns if the <code>LiveFile</code> is 'live' or not.
-   *
-   * @return <code>true</code> if the LiveFile is 'live', <code>false</code> if not.
-   */
-  public boolean isLive() {
-    return live;
   }
 
   /**
@@ -107,13 +83,13 @@ public class LiveFile {
     }
     if (obj instanceof LiveFile) {
       LiveFile other = (LiveFile) obj;
-      return path.equals(other.path) && iNode.equals(other.iNode) && live == other.live;
+      return path.equals(other.path) && iNode.equals(other.iNode);
     }
     return false;
   }
 
   public String toString() {
-    return String.format("LiveFile[path=%s, live=%b, iNode=%s]", path, live, iNode);
+    return String.format("LiveFile[path=%s, iNode=%s]", path, iNode);
   }
 
   private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
@@ -128,7 +104,6 @@ public class LiveFile {
     Map map = new LinkedHashMap();
     map.put("path", path.toString());
     map.put("inode", iNode);
-    map.put("live", live);
     try {
       return OBJECT_MAPPER.writeValueAsString(map);
     } catch (Exception ex) {
@@ -139,7 +114,6 @@ public class LiveFile {
   /**
    * Deserializes a string representation of a <code>LiveFile</code>.
    * <p/>
-   * The underlying file must exist at deserialization time.
    *
    * @param str the string representation of a <code>LiveFile</code>.
    * @return the deserialized <code>LiveFile</code>
@@ -150,11 +124,8 @@ public class LiveFile {
     try {
       Map map = OBJECT_MAPPER.readValue(str, Map.class);
       Path path = Paths.get((String) map.get("path"));
-      boolean live = (Boolean) map.get("live");
       String inode = (String) map.get("inode");
-      LiveFile liveFile = new LiveFile(path, live, inode);
-      liveFile.refresh();
-      return liveFile;
+      return new LiveFile(path, inode);
     } catch (RuntimeException|JsonParseException ex) {
       throw new IllegalArgumentException(Utils.format("Invalid LiveFile serialized string '{}': {}", str,
                                                       ex.getMessage()), ex);
@@ -162,14 +133,15 @@ public class LiveFile {
   }
 
   /**
-   * Refreshes the <code>LiveFile</code>, if the LiveFile was 'live' and its name changed, the LiveFile is not 'live'
-   * anymore.
+   * Refreshes the <code>LiveFile</code>, if the file was renamed, the path will have the new name..
    *
    * @return <code>true</code> if the <code>LiveFile</code> name has changed, <code>false</code> if not.
-   * @throws IOException thrown if the LiveFile could not be found (i.e. it has been deleted or moved to a different
-   * directory).
+   * @throws IOException thrown if the LiveFile could not be refreshed
+   * @throws NoSuchFileException thrown if the file could not be found
+   * (i.e. it has been deleted or moved to a different directory).
    */
-  public boolean refresh() throws IOException {
+  public LiveFile refresh() throws IOException, NoSuchFileException {
+    LiveFile refresh = this;
     boolean changed;
     try {
       String iNodeStr = Files.readAttributes(path, BasicFileAttributes.class).fileKey().toString();
@@ -183,8 +155,7 @@ public class LiveFile {
         for (Path path : directoryStream) {
           String fileiNodeStr = Files.readAttributes(path, BasicFileAttributes.class).fileKey().toString();
           if (fileiNodeStr.equals(iNode)) {
-            this.path = path;
-            this.live = false;
+            refresh = new LiveFile(path, iNode);
             found = true;
             break;
           }
@@ -194,7 +165,7 @@ public class LiveFile {
         }
       }
     }
-    return changed;
+    return refresh;
   }
 
 }

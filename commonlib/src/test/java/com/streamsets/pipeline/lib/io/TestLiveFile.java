@@ -32,14 +32,8 @@ public class TestLiveFile {
     String inode = Files.readAttributes(path, BasicFileAttributes.class).fileKey().toString();
     LiveFile lf = new LiveFile(path);
     Assert.assertEquals(path.toAbsolutePath(), lf.getPath());
-    Assert.assertTrue(lf.isLive());
     Assert.assertEquals(inode, lf.getINode());
     Assert.assertTrue(lf.toString().contains(path.toString()));
-
-    lf = new LiveFile(path, false);
-    Assert.assertEquals(path.toAbsolutePath(), lf.getPath());
-    Assert.assertFalse(lf.isLive());
-    Assert.assertEquals(inode, lf.getINode());
   }
 
   @Test(expected = IOException.class)
@@ -66,12 +60,6 @@ public class TestLiveFile {
     LiveFile inf2 = LiveFile.deserialize(ser);
     Assert.assertEquals(inf, inf2);
     Assert.assertEquals(inf.hashCode(), inf2.hashCode());
-
-    inf = new LiveFile(path, false);
-    ser = inf.serialize();
-    inf2 = LiveFile.deserialize(ser);
-    Assert.assertEquals(inf, inf2);
-    Assert.assertEquals(inf.hashCode(), inf2.hashCode());
   }
 
   @Test(expected = IllegalArgumentException.class)
@@ -85,7 +73,7 @@ public class TestLiveFile {
     LiveFile inf = new LiveFile(path);
     String ser = inf.serialize();
     Files.delete(path);
-    LiveFile.deserialize(ser);
+    LiveFile.deserialize(ser).refresh();
   }
 
   @Test
@@ -98,17 +86,15 @@ public class TestLiveFile {
 
     LiveFile inf2 = LiveFile.deserialize(ser);
 
-    Assert.assertNotEquals(inf, inf2);
-    Assert.assertEquals(path2, inf2.getPath());
-    Assert.assertFalse(inf2.isLive());
+    Assert.assertNotEquals(inf, inf2.refresh());
+    Assert.assertEquals(path2, inf2.refresh().getPath());
   }
 
   @Test
   public void testRefreshSameName() throws IOException {
     Path path = Files.createFile(new File(testDir, "1.txt").toPath());
     LiveFile lf = new LiveFile(path);
-    Assert.assertFalse(lf.refresh());
-    Assert.assertTrue(lf.isLive());
+    Assert.assertEquals(lf.refresh(), lf);
   }
 
   @Test
@@ -117,9 +103,8 @@ public class TestLiveFile {
     LiveFile lf = new LiveFile(path);
     Path path2 = Files.move(path, new File(testDir, "2.txt").toPath());
 
-    Assert.assertTrue(lf.refresh());
-    Assert.assertFalse(lf.isLive());
-    Assert.assertNotEquals(path2, lf.getPath());
+    Assert.assertNotEquals(lf.refresh(), lf);
+    Assert.assertNotEquals(path2, lf.refresh().getPath());
 
   }
 
