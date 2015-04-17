@@ -43,7 +43,7 @@
                                         <entry>Kafka topic to use.</entry>
                                     </row>
                                     <row>
-                                        <entry>Partition Strategy</entry>
+                                        <entry>Partition Strategy </entry>
                                         <entry>Strategy to use to write to partitions:<ul
                                                 id="ul_tq2_yr3_br">
                                                 <li>Round Robin - Takes turns writing to different
@@ -54,9 +54,16 @@
                                             </ul></entry>
                                     </row>
                                     <row>
-                                        <entry>Expression</entry>
-                                        <entry>Expression to use to write to partitions. Partitions
-                                            are numbered 0 - n.</entry>
+                                        <entry>Expression <xref
+                                                href="../Destinations/KProducer-PartitionStrategy.dita#concept_qpm_xp4_4r">
+                                                <image href="../Graphics/icon_moreInfo.png"
+                                                  scale="10" id="image_hwy_43h_hr"/></xref></entry>
+                                        <entry>Expression to use to using the Expression partition
+                                            strategy. <p>Define the expression to evaluate to the
+                                                partition where you want each record written.
+                                                Partitions are numbered 0 - n.</p><p
+                                                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/EEditor"
+                                            /></entry>
                                     </row>
                                     <row>
                                         <entry>Data Format</entry>

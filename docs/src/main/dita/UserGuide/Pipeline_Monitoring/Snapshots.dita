@@ -2,13 +2,17 @@
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_tyr_2zx_rr">
  <title>Snapshots</title>
- <shortdesc>A snapshot is a set of data taken when you monitor a running pipeline. You can review
-  the snapshot when the console is in monitor mode, examining how the data changes from stage to
-  stage. You can also use the snapshot as source data for data preview.</shortdesc>
+ <shortdesc>A snapshot is a set of data captured as it moves through the pipeline. The <ph
+      conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> can save up
+    to ten snapshots of data. You can capture snapshots when you monitor a pipeline. </shortdesc>
  <conbody>
-  <p>You can take multiple snapshots. The <ph
-    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> stores up to
-   ten snapshots in memory. You can delete unwanted snapshot data to make room for additional
-   snapshots.</p>
+  <p><indexterm>snapshots<indexterm>overview</indexterm></indexterm><indexterm>monitoring<indexterm>snapshots
+          of data</indexterm></indexterm>View a snapshot to verify how the pipeline processes data.
+      Like data preview, you can view how snapshot data moves through a pipeline stage by stage or
+      across multiple stages. You can drill down to review the values of each record to determine if
+      the stage or group of stages transforms data as expected.</p>
+    <p>You cannot edit snapshot data when you monitor a pipeline, but when you configure a pipeline,
+      you can use it as source data for data preview. You might capture a snapshot and use it in
+      data preview as part of pipeline testing and development.</p>
  </conbody>
 </concept>

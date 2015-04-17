@@ -2,15 +2,13 @@
 <!DOCTYPE task PUBLIC "-//OASIS//DTD DITA General Task//EN" "generalTask.dtd">
 <task id="task_wvz_rfp_tq">
     <title>Capturing and Viewing a Snapshot</title>
-    <shortdesc>You can capture a snapshot of data as it passes through the pipeline. You can capture
-        up to ten snapshots. You can review the snapshot data stage by stage or through a group of
-        stages, like data preview. You can also delete snapshot data.</shortdesc>
     <taskbody>
         <context>
-            <p><indexterm>snapshot<indexterm>overview</indexterm></indexterm>View a snapshot of data
-                to verify how the pipeline processes data. In the Monitor panel, you can drill down
-                to review the values of each record to determine if the stage or group of stages
-                transform data as expected.</p>
+            <p><indexterm>snapshot<indexterm>overview</indexterm></indexterm>You can capture a
+                snapshot of data when you monitor a pipeline. After you capture a snapshot, you can
+                view the snapshot data stage by stage or through a group of stages, like data
+                preview.</p>
+            <p>You can also delete snapshot data.</p>
         </context>
         <steps id="steps_esy_44p_tq">
             <step>
@@ -18,12 +16,17 @@
                         <uicontrol>Snapshots</uicontrol> icon.</cmd>
             </step>
             <step>
-                <cmd>In the <wintitle>Snapshots</wintitle> dialog box, optionally click
-                        <uicontrol>Capture Snapshot</uicontrol> to capture a new set of data.</cmd>
+                <cmd>In the <wintitle>Snapshots</wintitle> dialog box, click <uicontrol>Capture
+                        Snapshot</uicontrol> to capture a set of data. </cmd>
+                <stepresult>The <ph
+                        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                    /> captures the snapshot and displays it in the list. You can take additional
+                    snapshots, view a snapshot, delete a snapshot, or close the dialog box and use
+                    the snapshot later.</stepresult>
             </step>
             <step>
-                <cmd>Click <uicontrol>View</uicontrol> for the snapshot of data that you want to
-                    use.</cmd>
+                <cmd>To view a snapshot, click <uicontrol>View</uicontrol> for the snapshot that you
+                    want to use.</cmd>
                 <stepresult>The canvas highlights the origin stage of the pipeline. The Monitor
                     panel displays snapshot data in the Output Data column. Since this is the origin
                     of the pipeline, no input data displays.</stepresult>

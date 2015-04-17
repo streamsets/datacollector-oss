@@ -2,20 +2,18 @@
 <!DOCTYPE task PUBLIC "-//OASIS//DTD DITA General Task//EN" "generalTask.dtd">
 <task id="task_x2h_tv4_yq">
     <title>Configuring an Expression Evaluator</title>
-    <shortdesc>Configure an Expression Evaluator to perform calculations on records on a row-by-row
-        basis.</shortdesc>
     <taskbody>
-        <context/>
+        <context><indexterm>Expression Evaluator
+                processor<indexterm>configuring</indexterm></indexterm>Configure an Expression
+            Evaluator to perform calculations a record-by-record basis.</context>
         <steps id="steps_wxb_ky4_yq">
             <step
                 conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/1stStep-ReqField-ErrorHandling">
                 <cmd/>
             </step>
             <step>
-                <cmd><indexterm>Expression Evaluator
-                        processor<indexterm>configuring</indexterm></indexterm>To configure an
-                    expression, click the <wintitle>Expressions</wintitle> tab and configure the
-                    following properties:</cmd>
+                <cmd>To configure an expression, click the <wintitle>Expressions</wintitle> tab and
+                    configure the following information:</cmd>
                 <info>
                     <table frame="all" rowsep="1" colsep="1" id="table_zfp_zy4_yq">
                         <tgroup cols="2">
@@ -29,42 +27,34 @@
                             </thead>
                             <tbody>
                                 <row>
-                                    <entry>Expressions</entry>
+                                    <entry>Output Field</entry>
                                     <entry>
-                                        <p>Performs calculations within a row and passes the values
-                                            to an output field. Click the <uicontrol>Add</uicontrol>
-                                            icon to add additional expressions. </p>
-                                        <ul id="ul_hhv_kzf_br">
-                                            <li>Output Field - The field to pass the results of the
-                                                expression to the next stage. Enter the name of a
-                                                new or existing field as follows: /FieldName.<p>The
-                                                  Expression Evaluator replaces values in existing
-                                                  field. </p></li>
-                                            <li>Expression - Expression to evaluate.</li>
-                                        </ul>
+                                        <p>The field to pass the results of the expression to the
+                                            next stage. Enter the name of a new or existing field as
+                                            follows: /FieldName. </p>
+                                        <p>If you use an existing field, the Expression Evaluator
+                                            replaces existing values.</p>
                                     </entry>
                                 </row>
                                 <row>
-                                    <entry>Constants <xref
-                                            href="../Pipeline_Configuration/PipelineConstants.dita#task_ogd_zj3_wq">
-                                            <image href="../Graphics/icon_moreInfo.png" scale="10"
-                                                id="image_c4p_p5v_yq"/></xref></entry>
-                                    <entry>Represents a constant in expressions. Define a constant
-                                        to easily reuse it in the stage or to easily update the
-                                        constant value. <p>To define a constant, click the
-                                                <uicontrol>Add</uicontrol> icon, and then enter a
-                                                <uicontrol>Name</uicontrol> and
-                                                <uicontrol>Value</uicontrol> for the constant.
-                                        </p></entry>
+                                    <entry>Expression</entry>
+                                    <entry>Expression to evaluate. <p
+                                            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/EEditor"
+                                        /></entry>
                                 </row>
                             </tbody>
                         </tgroup>
                     </table>
                 </info>
             </step>
+            <step>
+                <cmd>To add additional expressions, click the <uicontrol>Add</uicontrol> icon.
+                </cmd>
+            </step>
         </steps>
     </taskbody>
     <related-links>
+        <link href="../Pipeline_Configuration/ExpressionEditor.dita#concept_tns_krz_sr"/>
         <link href="ConfiguringExpressionsConditions.dita#concept_ofb_1cm_xq"/>
         <link href="../Expression_Language/ExpressionLanguage_overview.dita#concept_p54_4kl_vq"/>
     </related-links>

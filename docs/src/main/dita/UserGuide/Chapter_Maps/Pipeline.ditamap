@@ -14,6 +14,7 @@
    <topicref href="../Pipeline_Configuration/ReplicatingStreams.dita"/>
    <topicref href="../Pipeline_Configuration/MergingStreams.dita"/>
    <topicref href="../Pipeline_Configuration/RequiredFields.dita"/>
+   <topicref href="../Pipeline_Configuration/ExpressionEditor.dita"/>
    <topicref href="../Pipeline_Configuration/PipelineConstants.dita">
     <topicref href="../Pipeline_Configuration/PipelineConstants-Defining.dita"/>
    </topicref>

@@ -16,6 +16,10 @@
    </topicmeta>
    <topicref href="../Alerts/ConfiguringDataAlerts.dita"/>
   </topicref>
-  <topicref href="../Alerts/EmailforAlerts-Configuring.dita"/>
+  <topicref href="../Alerts/EmailforAlerts-Configuring.dita">
+   <topicmeta>
+   <shortdesc/>
+  </topicmeta>
+  </topicref>
  </topicref>
 </map>

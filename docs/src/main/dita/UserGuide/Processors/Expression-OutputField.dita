@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_pzk_fz4_yq">
- <title>Expression Output Field</title>
+ <title>Expression Output Fields</title>
  <shortdesc>When you configure an expression, the Expression Evaluator writes the results of the
   expression to a field. You can use an existing field or create a new field.</shortdesc>
  <conbody>

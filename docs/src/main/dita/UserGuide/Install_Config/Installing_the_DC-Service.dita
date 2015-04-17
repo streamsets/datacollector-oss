@@ -30,7 +30,7 @@
             <step>
                 <cmd>Use the following command to make the sdc file executable:</cmd>
                 <info>
-                    <codeblock> sudo chmod 644 /etc/init.d/sdc</codeblock>
+                    <codeblock> sudo chmod 755 /etc/init.d/sdc</codeblock>
                 </info>
             </step>
             <step>
@@ -56,7 +56,7 @@
                         conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
                     /> as a service, use the following command: </cmd>
                 <info>
-                    <codeblock>service sdc start<draft-comment author="Loretta">changed from /etc/init.d/sdc start based on Adam's feedback</draft-comment></codeblock>
+                    <codeblock>service sdc start  </codeblock>
                 </info>
             </step>
         </steps>

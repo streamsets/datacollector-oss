@@ -54,5 +54,11 @@
                               tab-separated values.</li>
                   </ul>
             </p>
+            <draft-comment author="Loretta">Use the following for invoking the expression editor. So
+                  far, using in Config Expression Evaluator, Config Stream Selector, and Expression
+                  Editor:</draft-comment>
+            <p id="EEditor">Optionally, click <uicontrol>Ctrl + Spacebar</uicontrol> to use the
+                  expression editor to view supported functions and constants, and to help implement
+                  the appropriate syntax. </p>
       </conbody>
 </concept>

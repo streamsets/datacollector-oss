@@ -2,10 +2,10 @@
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_rjh_ntz_qr">
  <title>Pipeline Constants</title>
- <shortdesc>A pipeline constant is a constant that you define for the pipeline, that you can use in
-  any stage in the pipeline. Define a pipeline constant when you have a value that you want to be
-  able to update easily, or that you want use more than once. <draft-comment author="Loretta"
-   >currently can only use in stages, not metrics/alerts.</draft-comment></shortdesc>
+ <shortdesc>A pipeline constant is a constant that you define for the pipeline and that you can use
+  in any stage in the pipeline. Define a pipeline constant when you have a value that you want to
+  update easily, or that you want use more than once. <draft-comment author="Loretta">currently can
+   only use in stages, not metrics/alerts. Hari might add - check back.</draft-comment></shortdesc>
  <conbody>
   <p><indexterm>pipeline
      constants<indexterm>overview</indexterm></indexterm><indexterm>constants<indexterm>pipeline

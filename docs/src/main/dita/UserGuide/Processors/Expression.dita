@@ -2,20 +2,21 @@
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_zm2_pp3_wq">
  <title>Expression Evaluator</title>
- <shortdesc>The Expression Evaluator performs calculations on incoming data on a row-by-row basis.
-  It writes the results of the calculations to the expression output field. </shortdesc>
+ <shortdesc>The Expression Evaluator performs calculations on a record-by-record basis. It writes
+    the results of the calculations to the expression output fields. </shortdesc>
  <conbody>
   <p><indexterm>processors<indexterm>Expression
         Evaluator</indexterm></indexterm><indexterm>Expression Evaluator
           processor<indexterm>overview</indexterm></indexterm>To create an expression, you define
       the name of the field to receive the results of the expression and the expression that you
       want to use. Use the expression language to define the calculations that you want to use. </p>
-  <p>You can define constants that you can use in any expression in the processor. Define a constant
-   when you have a constant value that you use in more than one expression or that you want to
-   change easily. </p>
+  <p>You can use  pipeline constants in any expression in the processor. Define a pipeline constant
+      when you have a constant value that you use in more than one expression or that you want to
+      change easily. </p>
  </conbody>
   <related-links>
     <link href="ConfiguringExpressionsConditions.dita#concept_ofb_1cm_xq"/>
     <link href="../Expression_Language/ExpressionLanguage_overview.dita#concept_p54_4kl_vq"/>
+    <link href="../Pipeline_Configuration/PipelineConstants.dita#concept_rjh_ntz_qr"/>
   </related-links>
 </concept>

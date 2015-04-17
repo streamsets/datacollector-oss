@@ -11,11 +11,12 @@
    application server uses. Define the PermGen size as part of the SDC_JAVA_OPTS property in the <ph
     conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>  environment
    configuration file.</p>
-  <p>Use the following options to define the PermGen size:<ul id="ul_qjd_33m_sr">
-    <li>MaxPermSize - Set to 1/4 of the Java heap size, with a minimum of 128 MB.</li>
-    <li>PermSize - Set to 1/8 of the Java heap size, with a minimum of 128 MB.</li>
-   </ul></p>
-  <draft-comment author="Loretta">need to ask Brock about the difference between these properties,
-   and what happens if they set it too high. </draft-comment>
+  <p>Use the following properties to define the PermGen size:<ul id="ul_qjd_33m_sr">
+        <li>MaxPermSize - Set to 1/4 of the Java heap size, with a minimum of 128 MB.</li>
+        <li>PermSize - Set to 1/8 of the Java heap size, with a minimum of 128 MB.</li>
+      </ul></p>
+    <p>Setting the properties higher than these guidelines can cause out of memory errors or cause
+      the <ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> to
+      fail to start.</p>
  </conbody>
 </concept>

@@ -16,9 +16,10 @@
     </dlentry>
     <dlentry>
      <dt>record</dt>
-     <dd>An object that represents a single record. Includes a single Value element. Value contains
-            the data for the record. </dd>
+     <dd>An object that represents a single record. Includes a single value element. The value
+            element contains the data for the record. </dd>
      <dd>Map and list record fields are mapped to to JavaScript maps and arrays, respectively.</dd>
+          <dd>Null values </dd>
      <dd>Data types are preserved for values that are not modified. For values that are modified,
       the scripting engine might change the original type. For example, for Java 7 JavaScript,
       modifying an Integer value converts it to a Double.</dd>

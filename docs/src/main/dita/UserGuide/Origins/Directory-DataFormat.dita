@@ -26,7 +26,7 @@
    </dlentry>
    <dlentry>
     <dt>Delimited</dt>
-    <dd>Generates a record for each delimited record. You can use the following types of delimited
+    <dd>Generates a record for each delimited line. You can use the following types of delimited
             files:<ul id="ul_a51_wzk_5q">
             <li>Default CSV (ignores empty lines)</li>
             <li>RFC4180 CSV</li>

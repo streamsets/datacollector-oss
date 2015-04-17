@@ -5,7 +5,9 @@
     <taskbody>
         <context><indexterm>pipeline constants<indexterm>defining</indexterm></indexterm>You can
             define pipeline constants for constant values that you want to reuse within the pipeline
-            or to easily update.</context>
+            or to easily update. After defining a constant, you can use it in any stage in the
+                pipeline.<draft-comment author="Loretta">check back on where it can be
+                used.</draft-comment></context>
         <steps id="steps_apc_qrz_qr">
             <step>
                 <cmd>To define a constant for the pipeline, in the Pipeline properties panel, click

@@ -16,8 +16,8 @@
         </dlentry>
         <dlentry>
           <dt>record</dt>
-          <dd>An object that represents a single record. Includes a single Value element. Value
-            contains the data for the record. </dd>
+          <dd>An object that represents a single record. Includes a single value element. The value
+            element contains the data for the record. </dd>
           <dd>Map and list record fields are mapped to to Jython lists and dictionaries,
             respectively.</dd>
           <dd>

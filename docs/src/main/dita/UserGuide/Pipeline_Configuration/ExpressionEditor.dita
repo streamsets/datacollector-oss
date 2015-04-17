@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
+<concept id="concept_tns_krz_sr">
+ <title>Expression Editor</title>
+ <shortdesc>The expression editor provides a list of constants and functions that are valid for use
+  in the location where you invoke the editor. You can use <uicontrol>Ctrl + Spacebar</uicontrol> to
+  invoke the expression editor in any location where you need to enter syntax for an expression or
+  condition.</shortdesc>
+ <conbody>
+  <p>When you invoke the Expression Editor, it can display the following information:<draft-comment
+    author="Loretta">email to Madhu 4/17</draft-comment></p>
+ </conbody>
+</concept>

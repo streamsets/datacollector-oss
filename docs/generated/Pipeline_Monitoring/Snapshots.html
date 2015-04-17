@@ -2,7 +2,7 @@
 <!DOCTYPE html
   SYSTEM "about:legacy-compat">
 <html xml:lang="en-us" lang="en-us">
-<head><meta name="description" content="A snapshot is a set of data taken when you monitor a running pipeline. You can review the snapshot when the console is in monitor mode, examining how the data changes from stage to stage. You can also ..."></meta><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><meta name="copyright" content="(C) Copyright 2005"></meta><meta name="DC.rights.owner" content="(C) Copyright 2005"></meta><meta name="DC.Type" content="concept"></meta><meta name="DC.Title" content="Snapshots"></meta><meta name="abstract" content="A snapshot is a set of data taken when you monitor a running pipeline. You can review the snapshot when the console is in monitor mode, examining how the data changes from stage to stage. You can also use the snapshot as source data for data preview."></meta><meta name="description" content="A snapshot is a set of data taken when you monitor a running pipeline. You can review the snapshot when the console is in monitor mode, examining how the data changes from stage to stage. You can also use the snapshot as source data for data preview."></meta><meta name="DC.Relation" scheme="URI" content="../Pipeline_Monitoring/PipelineMonitoring_title.html"></meta><meta name="DC.Format" content="XHTML"></meta><meta name="DC.Identifier" content="concept_tyr_2zx_rr"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/commonltr.css"><!----></link><title>Snapshots</title><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/webhelp_topic.css"><!----></link><link rel="stylesheet" type="text/css" href="../skin.css"></link><script type="text/javascript"><!--
+<head><meta name="description" content="A snapshot is a set of data captured as it moves through the pipeline. The Data Collector can save up to ten snapshots of data. You can capture snapshots when you monitor a pipeline. View a snapshot ..."></meta><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><meta name="copyright" content="(C) Copyright 2005"></meta><meta name="DC.rights.owner" content="(C) Copyright 2005"></meta><meta name="DC.Type" content="concept"></meta><meta name="DC.Title" content="Snapshots"></meta><meta name="abstract" content="A snapshot is a set of data captured as it moves through the pipeline. The Data Collector can save up to ten snapshots of data. You can capture snapshots when you monitor a pipeline."></meta><meta name="description" content="A snapshot is a set of data captured as it moves through the pipeline. The Data Collector can save up to ten snapshots of data. You can capture snapshots when you monitor a pipeline."></meta><meta name="DC.Relation" scheme="URI" content="../Pipeline_Monitoring/PipelineMonitoring_title.html"></meta><meta name="DC.Format" content="XHTML"></meta><meta name="DC.Identifier" content="concept_tyr_2zx_rr"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/commonltr.css"><!----></link><title>Snapshots</title><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/webhelp_topic.css"><!----></link><link rel="stylesheet" type="text/css" href="../skin.css"></link><script type="text/javascript"><!--
           
           var prefix = "../index.html";
           
@@ -14,14 +14,18 @@
  <h1 class="title topictitle1">Snapshots</h1>
 
  
- <div class="body conbody"><p class="shortdesc">A snapshot is a set of data taken when you monitor a running pipeline. You can review
-  the snapshot when the console is in monitor mode, examining how the data changes from stage to
-  stage. You can also use the snapshot as source data for data preview.</p>
+ <div class="body conbody"><p class="shortdesc">A snapshot is a set of data captured as it moves through the pipeline. The <span class="ph">Data
+                  Collector</span> can save up
+    to ten snapshots of data. You can capture snapshots when you monitor a pipeline. </p>
 
-  <p class="p">You can take multiple snapshots. The <span class="ph">Data
-                  Collector</span> stores up to
-   ten snapshots in memory. You can delete unwanted snapshot data to make room for additional
-   snapshots.</p>
+  <p class="p">View a snapshot to verify how the pipeline processes data.
+      Like data preview, you can view how snapshot data moves through a pipeline stage by stage or
+      across multiple stages. You can drill down to review the values of each record to determine if
+      the stage or group of stages transforms data as expected.</p>
+
+    <p class="p">You cannot edit snapshot data when you monitor a pipeline, but when you configure a pipeline,
+      you can use it as source data for data preview. You might capture a snapshot and use it in
+      data preview as part of pipeline testing and development.</p>
 
  </div>
 
@@ -29,16 +33,14 @@
 <div class="topic task nested1" id="task_wvz_rfp_tq">
     <h2 class="title topictitle2">Capturing and Viewing a Snapshot</h2>
 
-    
-    <div class="body taskbody"><p class="shortdesc">You can capture a snapshot of data as it passes through the pipeline. You can capture
-        up to ten snapshots. You can review the snapshot data stage by stage or through a group of
-        stages, like data preview. You can also delete snapshot data.</p>
-
+    <div class="body taskbody">
         <div class="section context">
-            <p class="p">View a snapshot of data
-                to verify how the pipeline processes data. In the Monitor panel, you can drill down
-                to review the values of each record to determine if the stage or group of stages
-                transform data as expected.</p>
+            <p class="p">You can capture a
+                snapshot of data when you monitor a pipeline. After you capture a snapshot, you can
+                view the snapshot data stage by stage or through a group of stages, like data
+                preview.</p>
+
+            <p class="p">You can also delete snapshot data.</p>
 
         </div>
 
@@ -47,12 +49,16 @@
                         <span class="ph uicontrol">Snapshots</span> icon.</span>
             </li>
 <li class="li step stepexpand">
-                <span class="ph cmd">In the <span class="keyword wintitle">Snapshots</span> dialog box, optionally click
-                        <span class="ph uicontrol">Capture Snapshot</span> to capture a new set of data.</span>
+                <span class="ph cmd">In the <span class="keyword wintitle">Snapshots</span> dialog box, click <span class="ph uicontrol">Capture
+                        Snapshot</span> to capture a set of data. </span>
+                <div class="itemgroup stepresult">The <span class="ph">Data
+                  Collector</span> captures the snapshot and displays it in the list. You can take additional
+                    snapshots, view a snapshot, delete a snapshot, or close the dialog box and use
+                    the snapshot later.</div>
             </li>
 <li class="li step stepexpand">
-                <span class="ph cmd">Click <span class="ph uicontrol">View</span> for the snapshot of data that you want to
-                    use.</span>
+                <span class="ph cmd">To view a snapshot, click <span class="ph uicontrol">View</span> for the snapshot that you
+                    want to use.</span>
                 <div class="itemgroup stepresult">The canvas highlights the origin stage of the pipeline. The Monitor
                     panel displays snapshot data in the Output Data column. Since this is the origin
                     of the pipeline, no input data displays.</div>

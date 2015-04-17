@@ -64,7 +64,6 @@
    <topicmeta><shortdesc></shortdesc></topicmeta>
    <topicref href="../Processors/StreamSelector-DefaultStream.dita"/>
    <topicref href="../Processors/StreamSelector-Conditions.dita"/>
-   <topicref href="../Processors/StreamSelector_fallback.dita"/>
    <topicref href="../Processors/StreamSelector-Configuring.dita"/>
   </topicref>
   <topicref href="../Processors/ValueReplacer.dita" chunk="to-content">
