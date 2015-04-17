@@ -56,14 +56,65 @@
           <dt class="dt dlterm">Record Batch</dt>
 
           <dd class="dd">The processor calls the script for each batch. The processor passes the batch to the
-            script as a list and processes the batch at one time. The list name is "records".
-              </dd>
+            script as a list and processes the batch at one time. </dd>
 
-          <dd class="dd">The script should include error handling logic. Without error handling logic, a single
+          <dd class="dd">Include error handling logic in the script. Without error handling logic, a single
             error records sends the entire batch to the processor for error handling. The processor
             handles error records based on the On Record Error property.</dd>
 
           <dd class="dd">Use this mode to improve performance by processing a batch of data at a time.</dd>
+
+        
+      </dl>
+</div>
+
+ </div>
+
+</div>
+<div class="topic concept nested1" id="concept_mqn_5vk_sr">
+ <h2 class="title topictitle2">Jython Scripting Objects</h2>
+
+ <div class="body conbody">
+  <div class="p">You can use the following scripting objects in the Jython Evaluator:<dl class="dl">
+        
+          <dt class="dt dlterm">records array</dt>
+
+          <dd class="dd">An array of records to process. The records object should include different elements
+            based on the processing mode that you use:<ul class="ul" id="concept_mqn_5vk_sr__ul_fdm_5yk_sr">
+              <li class="li">Record by Record - The records array should include one record element.</li>
+
+              <li class="li">Batch by Batch - The records array should include all records in the batch.</li>
+
+            </ul>
+</dd>
+
+        
+        
+          <dt class="dt dlterm">record</dt>
+
+          <dd class="dd">An object that represents a single record. Includes a single Value element. Value
+            contains the data for the record. </dd>
+
+          <dd class="dd">Map and list record fields are mapped to to Jython lists and dictionaries,
+            respectively.</dd>
+
+          <dd class="dd">
+            
+          </dd>
+
+        
+        
+          <dt class="dt dlterm">out</dt>
+
+          <dd class="dd">An object that writes the record to the output batch. Includes a write(records)
+            element.</dd>
+
+        
+        
+          <dt class="dt dlterm">err</dt>
+
+          <dd class="dd">An object that passes error records to the processor for error handling. Includes a
+            write(records) element with an error message parameter.</dd>
 
         
       </dl>
@@ -87,14 +138,14 @@
                     following properties:</span>
                 <div class="itemgroup info">
                     
-<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_fty_jwx_nr__d2218e246" class="table" frame="border" border="1" rules="all">
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_fty_jwx_nr__d2232e246" class="table" frame="border" border="1" rules="all">
                             
                             
                             <thead class="thead" align="left">
                                 <tr class="row">
-                                    <th class="entry" valign="top" width="24.509803921568626%" id="d24382e148">General Property</th>
+                                    <th class="entry" valign="top" width="24.509803921568626%" id="d24626e223">General Property</th>
 
-                                    <th class="entry" valign="top" width="75.49019607843137%" id="d24382e151">Description</th>
+                                    <th class="entry" valign="top" width="75.49019607843137%" id="d24626e226">Description</th>
 
                                 </tr>
 
@@ -102,24 +153,24 @@
 
                             <tbody class="tbody">
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="24.509803921568626%" headers="d24382e148 ">Name</td>
+                                    <td class="entry" valign="top" width="24.509803921568626%" headers="d24626e223 ">Name</td>
 
-                                    <td class="entry" valign="top" width="75.49019607843137%" headers="d24382e151 ">Stage name.</td>
-
-                                </tr>
-
-                                <tr class="row">
-                                    <td class="entry" valign="top" width="24.509803921568626%" headers="d24382e148 ">Description</td>
-
-                                    <td class="entry" valign="top" width="75.49019607843137%" headers="d24382e151 ">Optional description.</td>
+                                    <td class="entry" valign="top" width="75.49019607843137%" headers="d24626e226 ">Stage name.</td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="24.509803921568626%" headers="d24382e148 ">Required Fields <a class="xref" href="../Pipeline_Configuration/PipelineDesign.html#concept_dnj_bkm_vq" title="You can configure required fields for any processor and most destination stages. A required field must exist in a record to allow the record to enter the stage for processing. When a record does not include a required field, the stage passes the record to the pipeline for error handling.">
-                                            <img class="image" id="task_fty_jwx_nr__d2218e292" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
+                                    <td class="entry" valign="top" width="24.509803921568626%" headers="d24626e223 ">Description</td>
 
-                                    <td class="entry" valign="top" width="75.49019607843137%" headers="d24382e151 ">Fields that must include data to be passed to the stage.
+                                    <td class="entry" valign="top" width="75.49019607843137%" headers="d24626e226 ">Optional description.</td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="24.509803921568626%" headers="d24626e223 ">Required Fields <a class="xref" href="../Pipeline_Configuration/PipelineDesign.html#concept_dnj_bkm_vq" title="You can configure required fields for any processor and most destination stages. A required field must exist in a record to allow the record to enter the stage for processing. When a record does not include a required field, the stage passes the record to the pipeline for error handling.">
+                                            <img class="image" id="task_fty_jwx_nr__d2232e292" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
+
+                                    <td class="entry" valign="top" width="75.49019607843137%" headers="d24626e226 ">Fields that must include data to be passed to the stage.
                                             <div class="note tip"><span class="tiptitle">Tip:</span> You might include fields
                                             that the stage uses.</div>
 </td>
@@ -127,9 +178,9 @@
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="24.509803921568626%" headers="d24382e148 ">On Record Error</td>
+                                    <td class="entry" valign="top" width="24.509803921568626%" headers="d24626e223 ">On Record Error</td>
 
-                                    <td class="entry" valign="top" width="75.49019607843137%" headers="d24382e151 ">Error record handling for the stage: <ul class="ul" id="task_fty_jwx_nr__d2218e307">
+                                    <td class="entry" valign="top" width="75.49019607843137%" headers="d24626e226 ">Error record handling for the stage: <ul class="ul" id="task_fty_jwx_nr__d2232e307">
                                             <li class="li">Discard - Discards the record.</li>
 
                                             <li class="li">Send to Error - Sends the record to the pipeline for
@@ -159,9 +210,9 @@
                             
                             <thead class="thead" align="left">
                                 <tr class="row">
-                                    <th class="entry" valign="top" width="25.97402597402597%" id="d24382e241">Jython Property</th>
+                                    <th class="entry" valign="top" width="25.97402597402597%" id="d24626e316">Jython Property</th>
 
-                                    <th class="entry" valign="top" width="74.02597402597402%" id="d24382e244">Description</th>
+                                    <th class="entry" valign="top" width="74.02597402597402%" id="d24626e319">Description</th>
 
                                 </tr>
 
@@ -169,9 +220,9 @@
 
                             <tbody class="tbody">
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="25.97402597402597%" headers="d24382e241 ">Record Processing Mode</td>
+                                    <td class="entry" valign="top" width="25.97402597402597%" headers="d24626e316 ">Record Processing Mode</td>
 
-                                    <td class="entry" valign="top" width="74.02597402597402%" headers="d24382e244 ">Determines how the Jython Evaluator processes data:<ul class="ul" id="task_fty_jwx_nr__ul_tzg_vzx_nr">
+                                    <td class="entry" valign="top" width="74.02597402597402%" headers="d24626e319 ">Determines how the Jython Evaluator processes data:<ul class="ul" id="task_fty_jwx_nr__ul_tzg_vzx_nr">
                                             <li class="li">Record by Record - Processes records individually.
                                                 Performs error handling.</li>
 
@@ -184,9 +235,9 @@
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="25.97402597402597%" headers="d24382e241 ">Script</td>
+                                    <td class="entry" valign="top" width="25.97402597402597%" headers="d24626e316 ">Script</td>
 
-                                    <td class="entry" valign="top" width="74.02597402597402%" headers="d24382e244 ">Jython code to use in the processor.</td>
+                                    <td class="entry" valign="top" width="74.02597402597402%" headers="d24626e319 ">Jython code to use in the processor.</td>
 
                                 </tr>
 

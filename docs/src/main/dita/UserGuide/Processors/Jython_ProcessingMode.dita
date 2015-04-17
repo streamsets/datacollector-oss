@@ -23,9 +23,8 @@
         <dlentry>
           <dt>Record Batch</dt>
           <dd>The processor calls the script for each batch. The processor passes the batch to the
-            script as a list and processes the batch at one time. The list name is "records".
-              <draft-comment author="Loretta">Do I need to say the previous?</draft-comment></dd>
-          <dd>The script should include error handling logic. Without error handling logic, a single
+            script as a list and processes the batch at one time. </dd>
+          <dd>Include error handling logic in the script. Without error handling logic, a single
             error records sends the entire batch to the processor for error handling. The processor
             handles error records based on the On Record Error property.</dd>
           <dd>Use this mode to improve performance by processing a batch of data at a time.</dd>

@@ -45,6 +45,7 @@
                                                   <image href="../Graphics/icon_moreInfo.png"
                                                   scale="10" id="image_wjh_ycl_br"
                                                   placement="inline" /></xref></li>
+                                            <li>Log</li>
                                         </ul></entry>
                                 </row>
                                 <row>
@@ -55,9 +56,10 @@
                                 </row>
                                 <row>
                                     <entry>Overrun Limit</entry>
-                                    <entry>Maximum record size to process. Use to limit the chance
-                                        of out of memory errors<draft-comment author="Loretta">check
-                                            what Tucu says about email.</draft-comment></entry>
+                                    <entry>Maximum record size to process. Use to limit out of
+                                        memory errors.<draft-comment author="Loretta">What happens
+                                            if it's larger - skipped? can we call this Max Record
+                                            Size?</draft-comment></entry>
                                 </row>
                                 <row>
                                     <entry>Batch Size (recs)</entry>
@@ -228,14 +230,6 @@
                                     <entry>Indicates whether a file contains a header line, and
                                         whether to use the header line.</entry>
                                 </row>
-                                <row>
-                                    <entry>Convert to Map</entry>
-                                    <entry>Converts a file to a map based on the fields in the
-                                        header. If no header exists, uses column numbers to map the
-                                            fields.<draft-comment author="Loretta">delete? set the
-                                            rest of the table up as reusable and use here and for
-                                            Kafka Consumer?</draft-comment></entry>
-                                </row>
                             </tbody>
                         </tgroup>
                     </table>
@@ -268,6 +262,109 @@
                             </tbody>
                         </tgroup>
                     </table>
+                </info>
+            </step>
+            <step>
+                <cmd>For log data, on the <wintitle>Log</wintitle> tab, configure the following
+                    properties:</cmd>
+                <info>
+                    <table frame="all" rowsep="1" colsep="1" id="table_ihc_3fs_sr">
+                        <tgroup cols="2">
+                            <colspec colname="c1" colnum="1" colwidth="1*"/>
+                            <colspec colname="c2" colnum="2" colwidth="1.82*"/>
+                            <thead>
+                                <row>
+                                    <entry>Log Property</entry>
+                                    <entry>Description</entry>
+                                </row>
+                            </thead>
+                            <tbody>
+                                <row>
+                                    <entry>Log Format</entry>
+                                    <entry>Format of the log files. Use one of the following
+                                            options:<ul id="ul_upc_mfs_sr">
+                                            <li>Common Log Format</li>
+                                            <li>Combined Log Format</li>
+                                            <li>Apache Error Log Format</li>
+                                            <li>Apache Access Log Custom Format</li>
+                                            <li>Regular Expression</li>
+                                            <li>Grok</li>
+                                            <li>Log4j</li>
+                                        </ul></entry>
+                                </row>
+                                <row>
+                                    <entry>Max Line Length</entry>
+                                    <entry>Maximum length of a log line. Directory truncates longer
+                                        lines. </entry>
+                                </row>
+                                <row>
+                                    <entry>Retain Original Line</entry>
+                                    <entry>Determines how to treat the original log line. Select to
+                                        include the original log line as a field in the resulting
+                                            record.<p>By default, the original line is
+                                            discarded.</p></entry>
+                                </row>
+                            </tbody>
+                        </tgroup>
+                    </table>
+                    <ul id="ul_mdk_djs_sr">
+                        <li>When you select <uicontrol>Apache Access Log Custom Format</uicontrol>,
+                            use Apache log format strings to define the <uicontrol>Custom Log
+                                Format</uicontrol>.</li>
+                        <li>When you select <uicontrol>Regular Expression</uicontrol>, enter the
+                            regular expression that describes the log format, and then map the
+                            fields that you want to include to each regular expression group.</li>
+                        <li>When you select <uicontrol>Grok Pattern</uicontrol>, you can define any
+                            custom grok patterns that you want to use in the <uicontrol>Grok Pattern
+                                Definition</uicontrol> field, and then enter the full grok pattern
+                            log file description in the <uicontrol>Grok Pattern</uicontrol>
+                                field.<p>For a list of supported grok patterns, see <draft-comment
+                                    author="Loretta">add xref to new grok pattern appendix when it's
+                                    ready. Or add to related links below.</draft-comment></p></li>
+                        <li>When you select <uicontrol>Log4j</uicontrol>, define the following properties:<p>
+                                <table frame="all" rowsep="1" colsep="1" id="table_pzm_rbt_sr">
+                                    <tgroup cols="2">
+                                        <colspec colname="c1" colnum="1" colwidth="1*"/>
+                                        <colspec colname="c2" colnum="2" colwidth="2.23*"/>
+                                        <thead>
+                                            <row>
+                                                <entry>Log4j Property</entry>
+                                                <entry>Description</entry>
+                                            </row>
+                                        </thead>
+                                        <tbody>
+                                            <row>
+                                                <entry>On Parse Error</entry>
+                                                <entry>Determines how to handle information that
+                                                  cannot be parsed:<ul id="ul_bvm_5bt_sr">
+                                                  <li>Skip and Log Error - Skips reading the line
+                                                  and logs a stage error.</li>
+                                                  <li>Skip, No Error - Skips reading the line and
+                                                  does not log an error.</li>
+                                                  <li>Include as Stack Trace - Includes information
+                                                  that cannot be parsed as a stack trace to the
+                                                  previously-read log line. The information is
+                                                  <draft-comment author="Loretta">added as a field?
+                                                  added to the message? - see what hari decides
+                                                  4/16</draft-comment></li>
+                                                  </ul></entry>
+                                            </row>
+                                            <row>
+                                                <entry>Use Custom Log Format</entry>
+                                                <entry>Allows you to define a custom log
+                                                  format.</entry>
+                                            </row>
+                                            <row>
+                                                <entry>Custom Format</entry>
+                                                <entry>Use log4j variables to define a custom log
+                                                  format.</entry>
+                                            </row>
+                                        </tbody>
+                                    </tgroup>
+                                </table>
+                            </p>
+                        </li>
+                    </ul>
                 </info>
             </step>
         </steps>
