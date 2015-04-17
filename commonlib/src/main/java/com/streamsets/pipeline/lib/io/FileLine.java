@@ -9,12 +9,14 @@ package com.streamsets.pipeline.lib.io;
  * A <code>FileLine</code> contains the text of a line and its byte offset in a file.
  */
 public class FileLine {
-  private final String text;
-  private final long fileOffset;
+  private final LiveFileChunk chunk;
+  private final int chunkOffset;
+  private final int length;
 
-  FileLine(String text, long fileOffset) {
-    this.text = text;
-    this.fileOffset = fileOffset;
+  public FileLine(LiveFileChunk chunk, int chunkOffset, int length) {
+    this.chunk = chunk;
+    this.chunkOffset = chunkOffset;
+    this.length = length;
   }
 
   /**
@@ -23,7 +25,7 @@ public class FileLine {
    * @return the text of the line.
    */
   public String getText() {
-    return text;
+    return new String(chunk.getBuffer(), chunkOffset, length, chunk.getCharset());
   }
 
   /**
@@ -32,7 +34,34 @@ public class FileLine {
    * @return the byte offset of the line in the file.
    */
   public long getFileOffset() {
-    return fileOffset;
+    return chunk.getOffset() + chunkOffset;
+  }
+
+  /**
+   * Returns the chunk buffer. It is reference, do not modify.
+   *
+   * @return the chunk buffer. It is reference, do not modify.
+   */
+  public byte[] getChunkBuffer() {
+    return chunk.getBuffer();
+  }
+
+  /**
+   * Returns the offset of the line within the chunk buffer.
+   *
+   * @return the offset of the line within the chunk buffer.
+   */
+  public int getOffset() {
+    return chunkOffset;
+  }
+
+  /**
+   * Returns the line length.
+   *
+   * @return the line length.
+   */
+  public int getLength() {
+    return length;
   }
 
 }

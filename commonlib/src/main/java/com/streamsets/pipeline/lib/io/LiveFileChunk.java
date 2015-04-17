@@ -32,6 +32,24 @@ public class LiveFileChunk {
   }
 
   /**
+   * Returns the chunk charset.
+   *
+   * @return  the chunk charset.
+   */
+  public Charset getCharset() {
+    return charset;
+  }
+
+  /**
+   * Returns the chunk buffer. It is reference, do not modify.
+   *
+   * @return the chunk buffer. It is reference, do not modify.
+   */
+  public byte[] getBuffer() {
+    return data;
+  }
+
+  /**
    * Returns a {@link Reader} to the data in the chunk.
    * <p/>
    * The {@link Reader} is created using the {@link java.nio.charset.Charset} specified in the {@link LiveFileReader}.
@@ -72,7 +90,7 @@ public class LiveFileChunk {
 
   /**
    * Returns a list with the {@link FileLine} in the chunk. Using <code>FileLine</code>s gives access to the
-   * byte offset of each line (which is important when using multibyte character encodings).
+   * byte offset of each line (which is important when using multi-byte character encodings).
    *
    * @return a list with the {@link FileLine} in the chunk.
    */
@@ -81,18 +99,18 @@ public class LiveFileChunk {
     int start = 0;
     for (int i = 0; i < length; i++) {
       if (data[i] == '\n') {
-        lines.add(new FileLine(new String(data, start, i + 1 - start, charset), initialOffset + start));
+        lines.add(new FileLine(this, start, i + 1 - start));
         start = i + 1;
       } else if (data[i] == '\r') {
         if (i + 1 < length && data[i + 1] == '\n') {
-          lines.add(new FileLine(new String(data, start, i + 2 - start, charset), initialOffset + start));
+          lines.add(new FileLine(this, start, i + 2 - start));
           start = i + 2;
           i++;
         }
       }
     }
     if (start < length) {
-      lines.add(new FileLine(new String(data, start, length - start, charset), initialOffset + start));
+      lines.add(new FileLine(this, start, length - start));
     }
     return lines;
   }

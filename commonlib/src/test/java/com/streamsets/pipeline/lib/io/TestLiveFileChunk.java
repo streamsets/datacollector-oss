@@ -18,14 +18,23 @@ public class TestLiveFileChunk {
 
   @Test
   public void testChunkGetters() throws IOException {
-    LiveFileChunk chunk = new LiveFileChunk("Hello".getBytes(), Charset.forName("UTF-8"), 1, 4, true);
-    Assert.assertEquals("Hell", IOUtils.readLines(chunk.getReader()).get(0));
+    LiveFileChunk chunk = new LiveFileChunk("Hola\nHello".getBytes(), Charset.forName("UTF-8"), 1, 9, true);
+    Assert.assertEquals("Hola", IOUtils.readLines(chunk.getReader()).get(0));
+    Assert.assertEquals("Hell", IOUtils.readLines(chunk.getReader()).get(1));
     Assert.assertEquals(1, chunk.getOffset());
-    Assert.assertEquals(4, chunk.getLength());
+    Assert.assertEquals(9, chunk.getLength());
     Assert.assertTrue(chunk.isTruncated());
-    Assert.assertEquals(1, chunk.getLines().size());
-    Assert.assertEquals("Hell", chunk.getLines().get(0).getText());
+    Assert.assertEquals(2, chunk.getLines().size());
+    Assert.assertEquals("Hola\n", chunk.getLines().get(0).getText());
     Assert.assertEquals(1, chunk.getLines().get(0).getFileOffset());
+    Assert.assertEquals(chunk.getBuffer(), chunk.getLines().get(0).getChunkBuffer());
+    Assert.assertEquals(0, chunk.getLines().get(0).getOffset());
+    Assert.assertEquals(5, chunk.getLines().get(0).getLength());
+    Assert.assertEquals("Hell", chunk.getLines().get(1).getText());
+    Assert.assertEquals(6, chunk.getLines().get(1).getFileOffset());
+    Assert.assertEquals(chunk.getBuffer(), chunk.getLines().get(1).getChunkBuffer());
+    Assert.assertEquals(5, chunk.getLines().get(1).getOffset());
+    Assert.assertEquals(4, chunk.getLines().get(1).getLength());
   }
 
   @Test
