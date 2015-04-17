@@ -25,8 +25,12 @@ public abstract class CharDataParserFactory extends DataFactory {
     Utils.checkState(settings.getMaxRecordLen() != 0, "maxDataLen has not been set");
   }
 
+  public DataParser getParser(String id, byte[] data, int offset, int len) throws DataParserException {
+    return getParser(id, new ByteArrayInputStream(data, offset, len), 0);
+  }
+
   public DataParser getParser(String id, byte[] data) throws DataParserException {
-    return getParser(id, new ByteArrayInputStream(data), 0);
+    return getParser(id, data, 0, data.length);
   }
 
   public DataParser getParser(File file, long fileOffset)
