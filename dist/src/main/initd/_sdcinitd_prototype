@@ -23,19 +23,26 @@
 
 # installation directory of the data collector  IT MUST BE SET
 export SDC_DIST=""
+export SDC_HOME=""
+
 if [ -z "$SDC_DIST" ]
 then
   echo "Error: SDC_DIST is not defined."
   exit 4
 fi
-
-if [ ! -f "$SDC_DIST/libexec/sdcd-env.sh" ]
+if [ -z "$SDC_HOME" ]
 then
-  echo "Error: '$SDC_DIST/libexec/sdcd-env.sh' must exist."
+  echo "Error: SDC_HOME is not defined."
   exit 4
 fi
 
-. $SDC_DIST/libexec/sdcd-env.sh
+if [ ! -f "$SDC_HOME/libexec/sdcd-env.sh" ]
+then
+  echo "Error: '$SDC_HOME/libexec/sdcd-env.sh' must exist."
+  exit 4
+fi
+
+. $SDC_HOME/libexec/sdcd-env.sh
 
 # PID file for the data collector daemon
 export SDC_PID=$SDC_DATA/sdc.pid
@@ -120,20 +127,20 @@ is_sdc_alive() {
 start_sdc() {
   install -d -o $SDC_USER -g $SDC_GROUP $SDC_DATA
   install -d -o $SDC_USER -g $SDC_GROUP $SDC_LOG
-  su -m $SDC_USER -c "env JAVA_HOME=$JAVA_HOME $SDC_DIST/initd/sdcd start"
+  su -m $SDC_USER -s /bin/bash -c "env JAVA_HOME=$JAVA_HOME $SDC_DIST/initd/sdcd start"
   exit $?
 }
 
 stop_sdc() {
   is_sdc_alive
   if [ "${STATUS}" = "0" ]; then
-    su -m $SDC_USER -c "env JAVA_HOME=$JAVA_HOME $SDC_DIST/initd/sdcd stop"
+    su -m $SDC_USER -s /bin/bash -c "env JAVA_HOME=$JAVA_HOME $SDC_DIST/initd/sdcd stop"
     if [ $? -eq 0 ]; then
       is_sdc_alive
       if [ "${STATUS}" = "1" ]; then
         rm ${SDC_PID}
       elif [ "${STATUS}" = "0" ]; then
-        su -m $SDC_USER -c "env JAVA_HOME=$JAVA_HOME $SDC_DIST/initd/sdcd stop -force"
+        su -m $SDC_USER -s /bin/bash -c "env JAVA_HOME=$JAVA_HOME $SDC_DIST/initd/sdcd stop -force"
         exit $?
       fi
     fi
