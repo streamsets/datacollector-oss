@@ -187,6 +187,15 @@
       </modules>
     </profile>
     <profile>
+      <id>rpm</id>
+      <activation>
+        <activeByDefault>false</activeByDefault>
+      </activation>
+      <modules>
+        <module>rpm</module>
+      </modules>
+    </profile>
+    <profile>
       <id>template-lib</id>
       <activation>
         <activeByDefault>false</activeByDefault>

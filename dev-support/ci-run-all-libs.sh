@@ -2,7 +2,7 @@
 set -e
 set -x
 DEV_SUPPORT=$(cd $(dirname ${BASH_SOURCE}) && /bin/pwd)
-. $DEV_SUPPORT/ci-default-profile.sh
+. ${DEV_SUPPORT}/ci-default-profile.sh
 PROFILE=$(basename ${BASH_SOURCE})
 PROFILE=${PROFILE#*-}
 PROFILE=${PROFILE%%-*}
@@ -25,4 +25,4 @@ git show
 # compile and install
 mvn clean install -Drelease -DskipTests
 # package and run tests (if appropiate)
-mvn clean package -fae -Pdist,all-libs,ui -Drelease ${PACKAGE_OPTS[@]}
+mvn clean package -fae -Pdist,all-libs,ui,rpm -Drelease ${PACKAGE_OPTS[@]}

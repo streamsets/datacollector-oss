@@ -66,7 +66,7 @@
             <configuration>
               <appendAssemblyId>false</appendAssemblyId>
               <attach>false</attach>
-              <finalName>streamsets-datacollector-sdc-${project.version}</finalName>
+              <finalName>streamsets-datacollector-${project.version}</finalName>
               <descriptors>
                 <descriptor>src/main/assemblies/data-collector-sdc.xml</descriptor>
               </descriptors>
