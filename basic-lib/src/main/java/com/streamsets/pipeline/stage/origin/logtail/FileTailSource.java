@@ -6,7 +6,6 @@
 package com.streamsets.pipeline.stage.origin.logtail;
 
 import com.streamsets.pipeline.api.BatchMaker;
-import com.streamsets.pipeline.api.OffsetCommitter;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.base.BaseSource;
@@ -15,6 +14,12 @@ import com.streamsets.pipeline.config.DataFormat;
 import com.streamsets.pipeline.config.JsonMode;
 import com.streamsets.pipeline.config.LogMode;
 import com.streamsets.pipeline.config.OnParseError;
+import com.streamsets.pipeline.lib.io.FileLine;
+import com.streamsets.pipeline.lib.io.LiveDirectoryScanner;
+import com.streamsets.pipeline.lib.io.LiveFile;
+import com.streamsets.pipeline.lib.io.LiveFileChunk;
+import com.streamsets.pipeline.lib.io.LiveFileReader;
+import com.streamsets.pipeline.lib.io.RollMode;
 import com.streamsets.pipeline.lib.parser.CharDataParserFactory;
 import com.streamsets.pipeline.lib.parser.DataParser;
 import com.streamsets.pipeline.lib.parser.DataParserException;
@@ -25,23 +30,26 @@ import com.streamsets.pipeline.lib.parser.log.RegExConfig;
 import java.io.File;
 import java.io.IOException;
 import java.nio.charset.Charset;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.ArrayBlockingQueue;
-import java.util.concurrent.BlockingQueue;
 
-public class FileTailSource extends BaseSource implements OffsetCommitter {
-  private static final int SLEEP_TIME_WAITING_FOR_BATCH_SIZE_MS = 100;
+public class FileTailSource extends BaseSource {
+
+  private final static long MAX_YIELD_TIME = Integer.parseInt(System.getProperty("FileTailSource.yield.ms", "500"));
 
   private final DataFormat dataFormat;
+  private final String charset;
+  private final String dirName;
   private final String fileName;
+  private final String firstRolledFile;
+  private final int maxLineLength;
+  private final FilesRollMode filesRollMode;
+  private final String periodicFileRegEx;
   private final int batchSize;
   private final int maxWaitTimeSecs;
   private final LogMode logMode;
-  private final int logMaxObjectLen;
   private final boolean logRetainOriginalLine;
   private final String customLogFormat;
   private final String regex;
@@ -51,19 +59,24 @@ public class FileTailSource extends BaseSource implements OffsetCommitter {
   private final boolean enableLog4jCustomLogFormat;
   private final String log4jCustomLogFormat;
 
-
-  public FileTailSource(DataFormat dataFormat, String fileName, int batchSize, int maxWaitTimeSecs,
-                        LogMode logMode, int logMaxObjectLen,
-                        boolean retainOriginalLine, String customLogFormat, String regex,
-                        List<RegExConfig> fieldPathsToGroupName,
-                        String grokPatternDefinition, String grokPattern, boolean enableLog4jCustomLogFormat,
-                        String log4jCustomLogFormat) {
+  public FileTailSource(DataFormat dataFormat, String charset, String dirName, String fileName, String firstRolledFile,
+      FilesRollMode filesRollMode, String periodicFileRegEx, int maxLineLength, int batchSize, int maxWaitTimeSecs,
+      LogMode logMode,
+      boolean retainOriginalLine, String customLogFormat, String regex,
+      List<RegExConfig> fieldPathsToGroupName,
+      String grokPatternDefinition, String grokPattern, boolean enableLog4jCustomLogFormat,
+      String log4jCustomLogFormat) {
     this.dataFormat = dataFormat;
+    this.charset = charset;
+    this.dirName = dirName;
     this.fileName = fileName;
+    this.firstRolledFile = firstRolledFile;
+    this.filesRollMode = filesRollMode;
+    this.periodicFileRegEx = periodicFileRegEx;
+    this.maxLineLength = maxLineLength;
     this.batchSize = batchSize;
     this.maxWaitTimeSecs = maxWaitTimeSecs;
     this.logMode = logMode;
-    this.logMaxObjectLen = logMaxObjectLen;
     this.logRetainOriginalLine = retainOriginalLine;
     this.customLogFormat = customLogFormat;
     this.regex = regex;
@@ -74,57 +87,45 @@ public class FileTailSource extends BaseSource implements OffsetCommitter {
     this.log4jCustomLogFormat = log4jCustomLogFormat;
   }
 
-  private BlockingQueue<String> logLinesQueue;
-  private long maxWaitTimeMillis;
-  private LogTail logTail;
-  private CharDataParserFactory parserFactory;
-
-  private String fileOffset;
-  private long recordCount;
   private LogDataFormatValidator logDataFormatValidator;
 
-  /*
-    In order to consolidate stack traces into the same record while reading log4j lines, the origin needs to
-    read the next line and may need to cache the record.
-   */
-  private Record previousRecord;
-  private int stackTraceLineCount = 0;
+  private long maxWaitTimeMillis;
+
+  private RollMode rollMode;
+  private LiveDirectoryScanner scanner;
+  private LiveFile currentFile;
+  private LiveFileReader reader;
+
+  private CharDataParserFactory parserFactory;
 
   @Override
   protected List<ConfigIssue> validateConfigs() throws StageException {
     List<ConfigIssue> issues = super.validateConfigs();
-    File logFile = new File(fileName);
-    if (!logFile.exists()) {
-      try {
-        // waiting for a second in case the log is in the middle of a file rotation and the file does not exist
-        // at this very moment.
-        Thread.sleep(1000);
-      } catch (InterruptedException ex) {
-        //NOP
-      }
-      if (!logFile.exists()) {
-        issues.add(getContext().createConfigIssue(Groups.FILE.name(), "fileName", Errors.TAIL_00, logFile));
-      }
+    File dir = new File(dirName);
+    if (!dir.exists()) {
+      issues.add(getContext().createConfigIssue(Groups.FILE.name(), "dirName", Errors.TAIL_00, dir));
+    } else if (!dir.isDirectory()) {
+      issues.add(getContext().createConfigIssue(Groups.FILE.name(), "dirName", Errors.TAIL_01, dir));
     }
-    if (logFile.exists() && !logFile.canRead()) {
-      issues.add(getContext().createConfigIssue(Groups.FILE.name(), "fileName", Errors.TAIL_01, logFile));
-    }
-    if (logFile.exists() && !logFile.isFile()) {
-      issues.add(getContext().createConfigIssue(Groups.FILE.name(), "fileName", Errors.TAIL_03, logFile));
+    rollMode = filesRollMode.createRollMode(periodicFileRegEx);
+    try {
+      scanner = new LiveDirectoryScanner(dirName, fileName, firstRolledFile, rollMode);
+    } catch (Exception ex) {
+      issues.add(getContext().createConfigIssue(Groups.FILE.name(), "", Errors.TAIL_02, ex.getMessage()));
     }
     switch (dataFormat) {
       case TEXT:
       case JSON:
         break;
       case LOG:
-        logDataFormatValidator = new LogDataFormatValidator(logMode, logMaxObjectLen,
+        logDataFormatValidator = new LogDataFormatValidator(logMode, maxLineLength,
           logRetainOriginalLine, customLogFormat, regex, grokPatternDefinition, grokPattern,
           enableLog4jCustomLogFormat, log4jCustomLogFormat,
           OnParseError.ERROR, 0, Groups.LOG.name(), getFieldPathToGroupMap(fieldPathsToGroupName));
         logDataFormatValidator.validateLogFormatConfig(issues, getContext());
         break;
       default:
-        issues.add(getContext().createConfigIssue(Groups.FILE.name(), "dataFormat", Errors.TAIL_02, dataFormat,
+        issues.add(getContext().createConfigIssue(Groups.FILE.name(), "dataFormat", Errors.TAIL_03, dataFormat,
                                                   Arrays.asList(DataFormat.TEXT, DataFormat.JSON)));
     }
     return issues;
@@ -133,11 +134,8 @@ public class FileTailSource extends BaseSource implements OffsetCommitter {
   @Override
   protected void init() throws StageException {
     super.init();
-    File logFile = new File(fileName);
+
     maxWaitTimeMillis = maxWaitTimeSecs * 1000;
-    logLinesQueue = new ArrayBlockingQueue<>(2 * batchSize);
-    logTail = new LogTail(logFile, true, getInfo(), logLinesQueue);
-    logTail.start();
 
     DataParserFactoryBuilder builder = new DataParserFactoryBuilder(getContext(), dataFormat.getParserFormat())
         .setCharset(Charset.defaultCharset()).setMaxDataLen(-1);
@@ -154,54 +152,159 @@ public class FileTailSource extends BaseSource implements OffsetCommitter {
         throw new StageException(Errors.TAIL_02, "dataFormat", dataFormat);
     }
     parserFactory = builder.build();
-    fileOffset = logFile.getName() + "::" + System.currentTimeMillis();
-    recordCount = 0;
   }
 
   @Override
   public void destroy() {
-    logTail.stop();
     super.destroy();
   }
 
-  String getFileOffset() {
+  //extract and deserialize the LiveFile from the offset kept by the SDC
+  private LiveFile getLiveFile(String sourceOffset) throws StageException{
+    LiveFile file = null;
+    if (sourceOffset != null && !sourceOffset.isEmpty()) {
+      String[] split = sourceOffset.split("::", 2);
+      try {
+        file = LiveFile.deserialize(split[1]);
+      } catch (IOException ex) {
+        throw new StageException(Errors.TAIL_05, sourceOffset, ex.getMessage(), ex);
+      }
+    }
+    return file;
+  }
+
+  //extract and deserialize the offset in file from the offset kept by the SDC
+  private long getFileOffset(String sourceOffset) throws StageException{
+    long fileOffset = 0;
+    if (sourceOffset != null && !sourceOffset.isEmpty()) {
+      String[] split = sourceOffset.split("::", 2);
+      try {
+        fileOffset = Long.parseLong(split[0]);
+      } catch (NumberFormatException ex) {
+        throw new StageException(Errors.TAIL_05, sourceOffset, ex.getMessage(), ex);
+      }
+    }
     return fileOffset;
   }
 
-  long getRecordCount() {
-    return recordCount;
+  //encode LiveFile and offset to give to SDC
+  private String createSourceOffset(LiveFile file, long offset) {
+    return offset + "::" + file.serialize();
   }
 
-  private String getOffset() {
-    return getFileOffset() + "::" + getRecordCount();
+  // if we are in batch timeout
+  private boolean isTimeout(long startTime) {
+    return (System.currentTimeMillis() - startTime) > maxWaitTimeMillis;
+  }
+
+  // remaining time till batch timeout, return zero if already in timeout
+  private long getRemainingWaitTime(long startTime) {
+    long remaining = maxWaitTimeMillis - (System.currentTimeMillis() - startTime);
+    return (remaining > 0) ? remaining : 0;
+  }
+
+  // obtains the reader if available.
+  // TODO: this is in preparation for tailing multiple files concurrently
+  private LiveFileReader obtainReader(String lastSourceOffset) throws StageException {
+    if (reader == null) {
+      currentFile = getLiveFile(lastSourceOffset);
+      long fileOffset = getFileOffset(lastSourceOffset);
+
+      boolean needsToScan = currentFile == null || fileOffset == Long.MAX_VALUE;
+      if (needsToScan) {
+        try {
+          if (currentFile != null) {
+            // we need to refresh the file in case the name changed before scanning as the scanner does not refresh
+            currentFile = currentFile.refresh();
+          }
+          currentFile = scanner.scan(currentFile);
+          fileOffset = 0;
+        } catch (IOException ex) {
+          throw new StageException(Errors.TAIL_06, ex.getMessage(), ex);
+        }
+      }
+      if (currentFile != null) {
+        try {
+          reader = new LiveFileReader(rollMode, currentFile, Charset.forName(charset), fileOffset, maxLineLength);
+        } catch (IOException ex) {
+          throw new StageException(Errors.TAIL_07, currentFile.getPath(), ex.getMessage(), ex);
+        }
+      }
+    }
+    return reader;
+  }
+
+  // returns the reader
+  // TODO: this is in preparation for tailing multiple files concurrently
+  private String releaseReader(LiveFileReader reader) throws IOException {
+    String newSourceOffset;
+    if (!reader.hasNext()) {
+      // reached EOF
+      reader.close();
+      this.reader = null;
+      //using Long.MAX_VALUE to signal we reach the end of the file and next iteration should get the next file.
+      newSourceOffset = createSourceOffset(currentFile, Long.MAX_VALUE);
+    } else {
+      newSourceOffset = createSourceOffset(currentFile, reader.getOffset());
+    }
+    return newSourceOffset;
   }
 
   @Override
   public String produce(String lastSourceOffset, int maxBatchSize, BatchMaker batchMaker) throws StageException {
-    long start = System.currentTimeMillis();
-    int fetch = Math.min(batchSize, maxBatchSize);
-    List<String> lines = new ArrayList<>(fetch);
-    while (((System.currentTimeMillis() - start) < maxWaitTimeMillis) && (logLinesQueue.size() < fetch)) {
-      try {
-        Thread.sleep(SLEEP_TIME_WAITING_FOR_BATCH_SIZE_MS);
-      } catch (InterruptedException ex) {
-        break;
-      }
-    }
-    logLinesQueue.drainTo(lines, fetch);
-    for (String line : lines) {
-      String sourceId = getOffset();
-      try (DataParser parser = parserFactory.getParser(sourceId, line.getBytes(Charset.defaultCharset()))) {
-        Record record = parser.parse();
-        if (record != null) {
-          batchMaker.addRecord(record);
-          recordCount++;
+    int recordCounter = 0;
+    long batchStartTime = System.currentTimeMillis();
+    maxBatchSize = Math.min(batchSize, maxBatchSize);
+
+    boolean exit = false;
+    while (!exit) {
+      LiveFileReader reader = obtainReader(lastSourceOffset);
+      if (reader != null) {
+        try {
+          // even if in timeout, we do one non-blocking read on the reader
+          while (!exit && recordCounter < maxBatchSize && reader.hasNext()) {
+            // non blocking read waiting up to the remaining batch timeout if not data arrives
+            LiveFileChunk chunk = reader.next(getRemainingWaitTime(batchStartTime));
+            String liveFileStr = currentFile.serialize();
+            if (chunk != null) {
+              for (FileLine line : chunk.getLines()) {
+                String sourceId = liveFileStr + "::" + line.getFileOffset();
+                try (DataParser parser = parserFactory.getParser(sourceId, line.getChunkBuffer(), line.getOffset(),
+                                                                 line.getLength())) {
+                  Record record = parser.parse();
+                  if (record != null) {
+                    batchMaker.addRecord(record);
+                    recordCounter++;
+                  }
+                } catch (IOException|DataParserException ex) {
+                  handleException(sourceId, ex);
+                }
+              }
+            }
+            exit = isTimeout(batchStartTime);
+          }
+          lastSourceOffset = releaseReader(reader);
+          exit = true;
+        } catch (IOException ex) {
+          throw new StageException(Errors.TAIL_08, reader.getLiveFile().getPath(), ex.getMessage(), ex);
+        } catch (InterruptedException ex) {
+          //NOP LOG debug
+          exit = true;
         }
-      } catch (IOException|DataParserException ex) {
-        handleException(sourceId, ex);
+      } else {
+        try {
+          // yielding CPU before looking to see if there is a reader again. MAX_YIELD_TIME default is 500 ms
+          Thread.sleep(Math.min(getRemainingWaitTime(batchStartTime), MAX_YIELD_TIME));
+        } catch (InterruptedException ex) {
+          // we got interrupted, lets exit
+          exit = true;
+        }
       }
+      exit = exit || isTimeout(batchStartTime);
     }
-    return getOffset();
+    // we are returning "" instead of NULL because if the dir is empty when starting there will be no offset
+    // until there is a file and that will trigger a pipeline stop.
+    return (lastSourceOffset == null) ? "" : lastSourceOffset;
   }
 
   private void handleException(String sourceId, Exception ex) throws StageException {
@@ -221,11 +324,6 @@ public class FileTailSource extends BaseSource implements OffsetCommitter {
         throw new IllegalStateException(Utils.format("It should never happen. OnError '{}'",
           getContext().getOnErrorRecord(), ex));
     }
-  }
-
-  @Override
-  public void commit(String offset) throws StageException {
-    //NOP
   }
 
   private Map<String, Integer> getFieldPathToGroupMap(List<RegExConfig> fieldPathsToGroupName) {

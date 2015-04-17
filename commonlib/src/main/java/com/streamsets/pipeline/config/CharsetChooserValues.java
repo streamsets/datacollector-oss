@@ -11,6 +11,7 @@ import org.slf4j.LoggerFactory;
 
 import java.nio.charset.Charset;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -20,7 +21,7 @@ import java.util.Set;
 public class CharsetChooserValues implements ChooserValues {
   private static final Logger LOG = LoggerFactory.getLogger(CharsetChooserValues.class);
 
-  private static final List<String> VALUES;
+  private static final List<String> ALL_CHARSETS;
 
   static {
     Set<String> set = new LinkedHashSet<>();
@@ -41,7 +42,31 @@ public class CharsetChooserValues implements ChooserValues {
     for (Map.Entry<String, Charset> entry : Charset.availableCharsets().entrySet()) {
       set.add(entry.getKey());
     }
-    VALUES = new ArrayList<>(set);
+    ALL_CHARSETS = Collections.unmodifiableList(new ArrayList<>(set));
+  }
+
+  public CharsetChooserValues() {
+    this(null);
+  }
+
+  protected interface Filter {
+    boolean accept(Charset charset);
+  }
+
+  private List<String> charsets;
+
+  // to enable subclasses to produce subsets of charsets base on some criteria
+  protected CharsetChooserValues(Filter filter) {
+    if (filter == null) {
+      charsets = ALL_CHARSETS;
+    } else {
+      charsets = new ArrayList<>(ALL_CHARSETS.size());
+      for (String name : ALL_CHARSETS) {
+        if (filter.accept(Charset.forName(name))) {
+          charsets.add(name);
+        }
+      }
+    }
   }
 
   @Override
@@ -51,11 +76,12 @@ public class CharsetChooserValues implements ChooserValues {
 
   @Override
   public List<String> getValues() {
-    return VALUES;
+    return charsets;
   }
 
   @Override
   public List<String> getLabels() {
-    return VALUES;
+    return charsets;
   }
+
 }

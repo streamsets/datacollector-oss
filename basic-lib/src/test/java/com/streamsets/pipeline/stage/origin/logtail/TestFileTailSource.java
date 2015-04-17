@@ -21,45 +21,25 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.nio.charset.Charset;
+import java.nio.file.Files;
+import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
 public class TestFileTailSource {
 
   @Test(expected = StageException.class)
-  public void testInitLogDoesNotExist() throws Exception {
+  public void testInitDirDoesNotExist() throws Exception {
     File testDataDir = new File("target", UUID.randomUUID().toString());
-    Assert.assertTrue(testDataDir.mkdirs());
-    String logFile = new File(testDataDir, "logFile.txt").getAbsolutePath();
 
-    FileTailSource source = new FileTailSource(DataFormat.TEXT, logFile, 25, 1, null,
-      -1, false, null, null, null, null, null, false, null);
+    FileTailSource source = new FileTailSource(DataFormat.TEXT, "UTF-8", testDataDir.getAbsolutePath(), "logFile.txt",
+                                               null, FilesRollMode.REVERSE_COUNTER, "", 1024, 25, 1, null,
+                                               false, null, null, null, null, null, false, null);
     SourceRunner runner = new SourceRunner.Builder(FileTailDSource.class, source)
         .addOutputLane("lane")
         .build();
     runner.runInit();
-  }
-
-  @Test(expected = StageException.class)
-  public void testInitLogNoPermissions() throws Exception {
-    File testDataDir = new File("target", UUID.randomUUID().toString());
-    Assert.assertTrue(testDataDir.mkdirs());
-    String logFile = new File(testDataDir, "logFile.txt").getAbsolutePath();
-
-    File file = new File(logFile);
-    Assert.assertTrue(file.createNewFile());
-    try {
-      Assert.assertTrue(file.setReadable(false));
-
-      FileTailSource source = new FileTailSource(DataFormat.TEXT, logFile, 25, 1, null,
-        -1, false, null, null, null, null, null, false, null);
-      SourceRunner runner = new SourceRunner.Builder(FileTailDSource.class, source)
-          .addOutputLane("lane")
-          .build();
-      runner.runInit();
-    } finally {
-      file.setReadable(true);
-    }
   }
 
   @Test
@@ -72,26 +52,65 @@ public class TestFileTailSource {
     IOUtils.copy(is, os);
     is.close();
 
-    FileTailSource source = new FileTailSource(DataFormat.TEXT, logFile, 25, 1, null,
-      -1, false, null, null, null, null, null, false, null);
+    FileTailSource source = new FileTailSource(DataFormat.TEXT, "UTF-8", testDataDir.getAbsolutePath(), "logFile.txt",
+                                               null, FilesRollMode.REVERSE_COUNTER, "", 1024, 25, 1, null,
+                                               false, null, null, null, null, null, false, null);
     SourceRunner runner = new SourceRunner.Builder(FileTailDSource.class, source)
         .addOutputLane("lane")
         .build();
     runner.runInit();
-    Thread.sleep(500);
     os.write("HELLO\n".getBytes());
-    Thread.sleep(500);
+    os.close();
     try {
       long start = System.currentTimeMillis();
       StageRunner.Output output = runner.runProduce(null, 1000);
       long end = System.currentTimeMillis();
       Assert.assertTrue(end - start >= 1000);
       Assert.assertNotNull(output.getNewOffset());
-      Assert.assertEquals(source.getFileOffset() + "::1", output.getNewOffset());
+      Assert.assertEquals(3, output.getRecords().get("lane").size());
+      Record record = output.getRecords().get("lane").get(0);
+      Assert.assertEquals("FIRST", record.get("/text").getValueAsString());
+      record = output.getRecords().get("lane").get(1);
+      Assert.assertEquals("LAST", record.get("/text").getValueAsString());
+      record = output.getRecords().get("lane").get(2);
+      Assert.assertEquals("HELLO", record.get("/text").getValueAsString());
+    } finally {
+      runner.runDestroy();
+    }
+  }
+
+  @Test
+  public void testTailLogOffset() throws Exception {
+    File testDataDir = new File("target", UUID.randomUUID().toString());
+    Assert.assertTrue(testDataDir.mkdirs());
+    String logFile = new File(testDataDir, "logFile.txt").getAbsolutePath();
+    InputStream is = Thread.currentThread().getContextClassLoader().getResourceAsStream("testLogFile.txt");
+    OutputStream os = new FileOutputStream(logFile);
+    IOUtils.copy(is, os);
+    is.close();
+    os.close();
+
+    FileTailSource source = new FileTailSource(DataFormat.TEXT, "UTF-8", testDataDir.getAbsolutePath(), "logFile.txt",
+                                               null, FilesRollMode.REVERSE_COUNTER, "", 7, 1, 1, null,
+                                               false, null, null, null, null, null, false, null);
+    SourceRunner runner = new SourceRunner.Builder(FileTailDSource.class, source)
+        .addOutputLane("lane")
+        .build();
+    runner.runInit();
+    try {
+      StageRunner.Output output = runner.runProduce(null, 1000);
+      Assert.assertNotNull(output.getNewOffset());
       Assert.assertEquals(1, output.getRecords().get("lane").size());
       Record record = output.getRecords().get("lane").get(0);
-      Assert.assertEquals("HELLO", record.get("/text").getValueAsString());
-      Assert.assertEquals(((FileTailSource)runner.getStage()).getFileOffset() + "::0::0", record.getHeader().getSourceId());
+      Assert.assertEquals("FIRST", record.get("/text").getValueAsString());
+
+      String offset = output.getNewOffset();
+      Assert.assertNotNull(offset);
+      output = runner.runProduce(offset, 1000);
+      Assert.assertNotNull(output.getNewOffset());
+      Assert.assertEquals(1, output.getRecords().get("lane").size());
+      record = output.getRecords().get("lane").get(0);
+      Assert.assertEquals("LAST", record.get("/text").getValueAsString());
     } finally {
       runner.runDestroy();
     }
@@ -101,36 +120,27 @@ public class TestFileTailSource {
   public void testTailJson() throws Exception {
     File testDataDir = new File("target", UUID.randomUUID().toString());
     Assert.assertTrue(testDataDir.mkdirs());
-    String logFile = new File(testDataDir, "logFile.txt").getAbsolutePath();
-    InputStream is = Thread.currentThread().getContextClassLoader().getResourceAsStream("testLogFile.txt");
-    OutputStream os = new FileOutputStream(logFile);
-    IOUtils.copy(is, os);
-    is.close();
+    File logFile = new File(testDataDir, "logFile.txt");
 
-    FileTailSource source = new FileTailSource(DataFormat.JSON, logFile, 25, 1, null,
-      -1, false, null, null, null, null, null, false, null);
+    FileTailSource source = new FileTailSource(DataFormat.JSON, "UTF-8", testDataDir.getAbsolutePath(), "logFile.txt",
+                                               null, FilesRollMode.REVERSE_COUNTER, "", 1024, 25, 1, null,
+                                               false, null, null, null, null, null, false, null);
     SourceRunner runner = new SourceRunner.Builder(FileTailDSource.class, source)
         .addOutputLane("lane")
         .build();
     runner.runInit();
-    Thread.sleep(500);
-    os.write("{\"a\": 1}\n".getBytes());
-    os.write("[{\"b\": 2}]\n".getBytes());
-    Thread.sleep(500);
+    Files.write(logFile.toPath(), Arrays.asList("{\"a\": 1}", "[{\"b\": 2}]"), Charset.forName("UTF-8"));
     try {
       long start = System.currentTimeMillis();
       StageRunner.Output output = runner.runProduce(null, 1000);
       long end = System.currentTimeMillis();
       Assert.assertTrue(end - start >= 1000);
       Assert.assertNotNull(output.getNewOffset());
-      Assert.assertEquals(source.getFileOffset() + "::2", output.getNewOffset());
       Assert.assertEquals(2, output.getRecords().get("lane").size());
       Record record = output.getRecords().get("lane").get(0);
       Assert.assertEquals(1, record.get("/a").getValue());
-      Assert.assertEquals(source.getFileOffset() + "::0::0", record.getHeader().getSourceId());
       record = output.getRecords().get("lane").get(1);
       Assert.assertEquals(2, record.get("[0]/b").getValue());
-      Assert.assertEquals(source.getFileOffset() + "::1::0", record.getHeader().getSourceId());
     } finally {
       runner.runDestroy();
     }
@@ -220,28 +230,23 @@ public class TestFileTailSource {
   public void testTailLogFormat() throws Exception {
     File testDataDir = new File("target", UUID.randomUUID().toString());
     Assert.assertTrue(testDataDir.mkdirs());
-    String logFile = new File(testDataDir, "logFile.txt").getAbsolutePath();
-    InputStream is = Thread.currentThread().getContextClassLoader().getResourceAsStream("testLogFile.txt");
-    OutputStream os = new FileOutputStream(logFile);
-    IOUtils.copy(is, os);
-    is.close();
+    File logFile = new File(testDataDir, "logFile.txt");
 
-    FileTailSource source = new FileTailSource(DataFormat.LOG, logFile, 25, 1, LogMode.LOG4J,
-      1000, true, null, null, null, null, null, false, null);
+    FileTailSource source = new FileTailSource(DataFormat.LOG, "UTF-8", testDataDir.getAbsolutePath(), "logFile.txt",
+                                               null, FilesRollMode.REVERSE_COUNTER, "", 1024, 25, 1, LogMode.LOG4J,
+                                               true, null, null, null, null, null, false, null);
     SourceRunner runner = new SourceRunner.Builder(FileTailDSource.class, source)
       .addOutputLane("lane")
       .build();
     runner.runInit();
-    Thread.sleep(500);
-    os.write((LINE1 + "\n" + LINE2 + "\n").getBytes());
-    Thread.sleep(500);
+    Files.write(logFile.toPath(), Arrays.asList(LINE1, LINE2), Charset.forName("UTF-8"));
     try {
       long start = System.currentTimeMillis();
       StageRunner.Output output = runner.runProduce(null, 10);
       long end = System.currentTimeMillis();
       Assert.assertTrue(end - start >= 1000);
       Assert.assertNotNull(output.getNewOffset());
-      Assert.assertEquals(source.getFileOffset() + "::2", output.getNewOffset());
+//      Assert.assertEquals(source.getFileOffset() + "::2", output.getNewOffset());
       List<Record> records = output.getRecords().get("lane");
       Assert.assertEquals(2, records.size());
       Assert.assertFalse(records.get(0).has("/truncated"));
@@ -292,21 +297,16 @@ public class TestFileTailSource {
   public void testTailLogFormatStackTrace() throws Exception {
     File testDataDir = new File("target", UUID.randomUUID().toString());
     Assert.assertTrue(testDataDir.mkdirs());
-    String logFile = new File(testDataDir, "logFile.txt").getAbsolutePath();
-    InputStream is = Thread.currentThread().getContextClassLoader().getResourceAsStream("testLogFile.txt");
-    OutputStream os = new FileOutputStream(logFile);
-    IOUtils.copy(is, os);
-    is.close();
+    File logFile = new File(testDataDir, "logFile.txt");
 
-    FileTailSource source = new FileTailSource(DataFormat.LOG, logFile, 100, 1, LogMode.LOG4J,
-      1000, true, null, null, null, null, null, false, null);
+    FileTailSource source = new FileTailSource(DataFormat.LOG, "UTF-8", testDataDir.getAbsolutePath(), "logFile.txt",
+                                               null, FilesRollMode.REVERSE_COUNTER, "", 2048, 100, 1, LogMode.LOG4J,
+                                               true, null, null, null, null, null, false, null);
     SourceRunner runner = new SourceRunner.Builder(FileTailDSource.class, source)
       .addOutputLane("lane")
       .build();
     runner.runInit();
-    Thread.sleep(500);
-    os.write((LOG_LINE_WITH_STACK_TRACE + "\n").getBytes());
-    Thread.sleep(500);
+    Files.write(logFile.toPath(), Arrays.asList(LOG_LINE_WITH_STACK_TRACE), Charset.forName("UTF-8"));
     try {
       runner.runProduce(null, 100);
     } finally {

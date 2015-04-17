@@ -10,10 +10,16 @@ import com.streamsets.pipeline.api.GenerateResourceBundle;
 
 @GenerateResourceBundle
 public enum Errors implements ErrorCode {
-  TAIL_00("Log file '{}' does not exist"),
-  TAIL_01("Insufficient permissions to read the log file '{}'"),
-  TAIL_02("Invalid data format '{}'. Use one of the following formats: {}"),
-  TAIL_03("Path '{}' is not a file"),
+  TAIL_00("Path '{}' does not exist"),
+  TAIL_01("Path '{}' is not a directory"),
+  TAIL_02("Could not create the directory scanner: {}"),
+
+  TAIL_05("Could not deserialize offset '{}': {}"),
+  TAIL_06("Could not scan the directory: {}"),
+  TAIL_07("Could not open file '{}': {}"),
+  TAIL_08("Error reading file '{}': {}"),
+
+  TAIL_03("Invalid data format '{}'. Use one of the following formats: {}"),
   TAIL_04("Cannot parse record '{}': {}"),
   ;
 
