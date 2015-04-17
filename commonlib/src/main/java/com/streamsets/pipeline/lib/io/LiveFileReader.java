@@ -269,36 +269,34 @@ public class LiveFileReader implements Closeable {
   private LiveFileChunk readChunk() throws IOException {
     LiveFileChunk liveFileChunk = null;
     if (channel.read(buffer) > 0 || buffer.limit() - buffer.position() > 0 || isEof()) {
-      // set the buffer into read from mode
+      // we have data, set the buffer into read from mode
       buffer.flip();
-      if (buffer.position() < buffer.limit()) {
-        // we have data, lets look for the last EOL in it
-        int lastEolIdx = (isEof()) ? buffer.limit() : findEndOfLastLine(buffer);
-        if (lastEolIdx > -1) {
-          // we have an EOL in the buffer or we are at the end of the file
-          int chunkSize =lastEolIdx - buffer.position();
-          buffer.get(chunkBytes, 0, chunkSize);
-          // create reader with exactly the chunk
-          Reader reader = new InputStreamReader(new ByteArrayInputStream(chunkBytes, 0, chunkSize), charset);
-          liveFileChunk = new LiveFileChunk(chunkBytes, charset, offset, chunkSize, false);
-        } else if (buffer.limit() == buffer.capacity()) {
-          // buffer is full and we don't have an EOL, return truncated chunk and go into truncate mode.
-          // we have an EOL in the buffer or we are at the end of the file
-          int chunkSize = buffer.limit() - buffer.position();
-          buffer.get(chunkBytes, 0, chunkSize);
-          // create reader with exactly the chunk
-          Reader reader = new InputStreamReader(new ByteArrayInputStream(chunkBytes, 0, chunkSize), charset);
-          liveFileChunk = new LiveFileChunk(chunkBytes, charset, offset, chunkSize, true);
-          truncateMode = true;
-        } else {
-          // we don't have an EOL and the buffer is not full, no chunk on this read
-          liveFileChunk = null;
-        }
+      // lets look for the last EOL in it
+      int lastEolIdx = (isEof()) ? buffer.limit() : findEndOfLastLine(buffer);
+      if (lastEolIdx > -1) {
+        // we have an EOL in the buffer or we are at the end of the file
+        int chunkSize =lastEolIdx - buffer.position();
+        buffer.get(chunkBytes, 0, chunkSize);
+        // create reader with exactly the chunk
+        Reader reader = new InputStreamReader(new ByteArrayInputStream(chunkBytes, 0, chunkSize), charset);
+        liveFileChunk = new LiveFileChunk(chunkBytes, charset, offset, chunkSize, false);
+      } else if (buffer.limit() == buffer.capacity()) {
+        // buffer is full and we don't have an EOL, return truncated chunk and go into truncate mode.
+        // we have an EOL in the buffer or we are at the end of the file
+        int chunkSize = buffer.limit() - buffer.position();
+        buffer.get(chunkBytes, 0, chunkSize);
+        // create reader with exactly the chunk
+        Reader reader = new InputStreamReader(new ByteArrayInputStream(chunkBytes, 0, chunkSize), charset);
+        liveFileChunk = new LiveFileChunk(chunkBytes, charset, offset, chunkSize, true);
+        truncateMode = true;
+      } else {
+        // we don't have an EOL and the buffer is not full, no chunk in this read
+        liveFileChunk = null;
       }
-      // correcting next position in buffer scanned for EOL to reflect post compact() position.
-      lastPosCheckedForEol = buffer.limit() - buffer.position() + 1;
       // set the buffer back into write into mode with the leftover data
       buffer.compact();
+      // correcting next position in buffer scanned for EOL to reflect post compact() position.
+      lastPosCheckedForEol = buffer.position();
     }
     return liveFileChunk;
   }
