@@ -6,6 +6,7 @@
 package com.streamsets.pipeline.main;
 
 
+import com.streamsets.pipeline.domainServer.DomainServerCallbackTask;
 import com.streamsets.pipeline.http.WebServerTask;
 import com.streamsets.pipeline.prodmanager.ProductionPipelineManagerTask;
 import com.streamsets.pipeline.stagelibrary.StageLibraryTask;
@@ -22,7 +23,8 @@ public class TestPipelineTask {
     PipelineStoreTask store = Mockito.mock(PipelineStoreTask.class);
     WebServerTask webServer = Mockito.mock(WebServerTask.class);
     ProductionPipelineManagerTask pipelineManager = Mockito.mock(ProductionPipelineManagerTask.class);
-    PipelineTask task = new PipelineTask(library, store, pipelineManager, webServer);
+    DomainServerCallbackTask domainControllerCallbackTask = Mockito.mock(DomainServerCallbackTask.class);
+    PipelineTask task = new PipelineTask(library, store, pipelineManager, webServer, domainControllerCallbackTask);
     Assert.assertEquals("pipelineNode", task.getName());
   }
 

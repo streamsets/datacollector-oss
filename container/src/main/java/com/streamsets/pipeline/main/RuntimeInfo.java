@@ -10,11 +10,14 @@ import com.google.common.collect.ImmutableList;
 import com.streamsets.pipeline.api.impl.Utils;
 import org.slf4j.Logger;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class RuntimeInfo {
+  public static final String SPLITTER = "|";
   public static final String CONFIG_DIR = "sdc.conf.dir";
   public static final String DATA_DIR = "sdc.data.dir";
   public static final String LOG_DIR = "sdc.log.dir";
@@ -27,6 +30,8 @@ public class RuntimeInfo {
   private String httpUrl;
   private final Map<String, Object> attributes;
   private Runnable shutdownRunnable;
+  private Map<String, String> authenticationTokens;
+  private final String [] roles = { "admin", "creator", "manager", "guest" };
 
   public RuntimeInfo(MetricRegistry metrics, List<? extends ClassLoader> stageLibraryClassLoaders) {
     this.metrics = metrics;
@@ -34,6 +39,8 @@ public class RuntimeInfo {
     id = "UNDEF";
     httpUrl = "UNDEF";
     this.attributes = new ConcurrentHashMap<>();
+    authenticationTokens = new HashMap<>();
+    reloadAuthenticationToken();
   }
 
   public MetricRegistry getMetrics() {
@@ -117,6 +124,35 @@ public class RuntimeInfo {
   public void shutdown() {
     if (shutdownRunnable != null) {
       shutdownRunnable.run();
+    }
+  }
+
+  public Map<String, String> getAuthenticationTokens() {
+    return authenticationTokens;
+  }
+
+  public boolean isValidAuthenticationToken(String authToken) {
+    String [] strArr = authToken.split(SPLITTER);
+    if(strArr.length > 1) {
+      String role = strArr[1];
+      String tokenCache = authenticationTokens.get(role);
+      return authToken.equals(tokenCache);
+    }
+    return false;
+  }
+
+  public String getRoleFromAuthenticationToken(String authToken) {
+    String [] strArr = authToken.split(SPLITTER);
+    if(strArr.length > 1) {
+      return strArr[1];
+    }
+
+    return null;
+  }
+
+  public void reloadAuthenticationToken() {
+    for(String role: roles) {
+      authenticationTokens.put(role, UUID.randomUUID().toString() + SPLITTER + role);
     }
   }
 }

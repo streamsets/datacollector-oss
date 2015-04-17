@@ -52,6 +52,7 @@ import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.attribute.PosixFilePermission;
 import java.util.Collections;
+import java.util.Map;
 import java.util.Set;
 
 public class WebServerTask extends AbstractTask {
@@ -198,10 +199,10 @@ public class WebServerTask extends AbstractTask {
     security.setConstraintMappings(Collections.singletonList(mapping));
     switch (mode) {
       case "digest":
-        security.setAuthenticator(new DigestAuthenticator());
+        security.setAuthenticator(new ProxyAuthenticator(new DigestAuthenticator(), runtimeInfo));
         break;
       case "basic":
-        security.setAuthenticator(new BasicAuthenticator());
+        security.setAuthenticator(new ProxyAuthenticator(new BasicAuthenticator(), runtimeInfo));
         break;
     }
     security.setLoginService(loginService);
@@ -218,7 +219,7 @@ public class WebServerTask extends AbstractTask {
     Constraint constraint = new Constraint();
     constraint.setName("auth");
     constraint.setAuthenticate(true);
-    constraint.setRoles(new String[] { "user"});
+    constraint.setRoles(new String[]{"user"});
 
     ConstraintMapping constraintMapping = new ConstraintMapping();
     constraintMapping.setPathSpec("/*");
@@ -229,7 +230,7 @@ public class WebServerTask extends AbstractTask {
     Constraint noAuthConstraint = new Constraint();
     noAuthConstraint.setName("auth");
     noAuthConstraint.setAuthenticate(false);
-    noAuthConstraint.setRoles(new String[] { "user"});
+    noAuthConstraint.setRoles(new String[]{"user"});
 
 
     ConstraintMapping resourceMapping = new ConstraintMapping();
@@ -267,7 +268,7 @@ public class WebServerTask extends AbstractTask {
     securityHandler.setLoginService(loginService);
 
     FormAuthenticator authenticator = new FormAuthenticator("/login.html", "/login.html?error=true", false);
-    securityHandler.setAuthenticator(authenticator);
+    securityHandler.setAuthenticator(new ProxyAuthenticator(authenticator, runtimeInfo));
     return securityHandler;
   }
 
