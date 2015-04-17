@@ -5,20 +5,14 @@
  */
 package com.streamsets.pipeline.lib.io;
 
-import com.google.common.collect.ImmutableMap;
-import org.apache.commons.io.IOUtils;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.Writer;
-import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.PathMatcher;
-import java.util.Map;
 import java.util.UUID;
 
 public class TestLiveDirectoryScanner {
@@ -33,7 +27,7 @@ public class TestLiveDirectoryScanner {
   @Test
   public void testNoFilesInSpoolDir() throws Exception {
     LiveDirectoryScanner spooler = new LiveDirectoryScanner(testDir.getAbsolutePath(), "my.log", null,
-                                                            LiveDirectoryScanner.RolledFilesMode.REVERSE_COUNTER);
+                                                            LogRollMode.REVERSE_COUNTER);
     Assert.assertNull(spooler.scan(null));
   }
 
@@ -42,7 +36,7 @@ public class TestLiveDirectoryScanner {
     Path file = new File(testDir, "my.log").toPath();
     Files.createFile(file);
     LiveDirectoryScanner spooler = new LiveDirectoryScanner(testDir.getAbsolutePath(), file.getFileName().toString(),
-                                                            null, LiveDirectoryScanner.RolledFilesMode.REVERSE_COUNTER);
+                                                            null, LogRollMode.REVERSE_COUNTER);
     LiveFile lf = spooler.scan(null);
     Assert.assertNotNull(lf);
     Assert.assertEquals(new LiveFile(file), lf);
@@ -53,7 +47,7 @@ public class TestLiveDirectoryScanner {
     Path file = new File(testDir, "my.log").toPath();
     Files.createFile(file);
     LiveDirectoryScanner spooler = new LiveDirectoryScanner(testDir.getAbsolutePath(), file.getFileName().toString(),
-                                                            null, LiveDirectoryScanner.RolledFilesMode.REVERSE_COUNTER);
+                                                            null, LogRollMode.REVERSE_COUNTER);
     spooler.scan(new LiveFile(file));
   }
 
@@ -63,7 +57,7 @@ public class TestLiveDirectoryScanner {
     Files.createFile(rolledFile);
     Path liveFile = new File(testDir, "my.log").toPath();
     LiveDirectoryScanner spooler = new LiveDirectoryScanner(testDir.getAbsolutePath(), liveFile.getFileName().toString(),
-                                                            null, LiveDirectoryScanner.RolledFilesMode.REVERSE_COUNTER);
+                                                            null, LogRollMode.REVERSE_COUNTER);
     LiveFile lf = spooler.scan(null);
     Assert.assertNotNull(lf);
     Assert.assertEquals(new LiveFile(rolledFile), lf);
@@ -78,7 +72,7 @@ public class TestLiveDirectoryScanner {
     Path liveFile = new File(testDir, "my.log").toPath();
     Files.createFile(liveFile);
     LiveDirectoryScanner spooler = new LiveDirectoryScanner(testDir.getAbsolutePath(), liveFile.getFileName().toString(),
-                                                            null, LiveDirectoryScanner.RolledFilesMode.REVERSE_COUNTER);
+                                                            null, LogRollMode.REVERSE_COUNTER);
     LiveFile lf = spooler.scan(null);
     Assert.assertNotNull(lf);
     Assert.assertEquals(new LiveFile(rolledFile), lf);
@@ -96,7 +90,7 @@ public class TestLiveDirectoryScanner {
     Path liveFile = new File(testDir, "my.log").toPath();
     Files.createFile(liveFile);
     LiveDirectoryScanner spooler = new LiveDirectoryScanner(testDir.getAbsolutePath(), liveFile.getFileName().toString(),
-                                                            null, LiveDirectoryScanner.RolledFilesMode.REVERSE_COUNTER);
+                                                            null, LogRollMode.REVERSE_COUNTER);
     LiveFile lf = spooler.scan(null);
     Assert.assertNotNull(lf);
     Assert.assertEquals(new LiveFile(rolledFile1), lf);
@@ -117,7 +111,7 @@ public class TestLiveDirectoryScanner {
     Path liveFile = new File(testDir, "my.log").toPath();
     Files.createFile(liveFile);
     LiveDirectoryScanner spooler = new LiveDirectoryScanner(testDir.getAbsolutePath(), liveFile.getFileName().toString(),
-                                                            null, LiveDirectoryScanner.RolledFilesMode.ALPHABETICAL);
+                                                            null, LogRollMode.ALPHABETICAL);
     LiveFile lf = spooler.scan(null);
     Assert.assertNotNull(lf);
     Assert.assertEquals(new LiveFile(rolledFile1), lf);
@@ -138,7 +132,7 @@ public class TestLiveDirectoryScanner {
     Path liveFile = new File(testDir, "my.log").toPath();
     Files.createFile(liveFile);
     LiveDirectoryScanner spooler = new LiveDirectoryScanner(testDir.getAbsolutePath(), liveFile.getFileName().toString(),
-                                                            null, LiveDirectoryScanner.RolledFilesMode.REVERSE_COUNTER);
+                                                            null, LogRollMode.REVERSE_COUNTER);
 
     LiveFile lf = spooler.scan(null);
     Assert.assertNotNull(lf);
@@ -170,7 +164,7 @@ public class TestLiveDirectoryScanner {
     Files.createFile(liveFile);
     LiveDirectoryScanner spooler = new LiveDirectoryScanner(testDir.getAbsolutePath(), liveFile.getFileName().toString(),
                                                             rolledFile2.getFileName().toString(),
-                                                            LiveDirectoryScanner.RolledFilesMode.ALPHABETICAL);
+                                                            LogRollMode.ALPHABETICAL);
     LiveFile lf = spooler.scan(null);
     Assert.assertEquals(new LiveFile(rolledFile2), lf);
     lf = spooler.scan(lf);
@@ -178,42 +172,4 @@ public class TestLiveDirectoryScanner {
     Assert.assertEquals(new LiveFile(liveFile), lf);
   }
 
-  @Test
-  @SuppressWarnings("unchecked")
-  public void testRolledFilesModePatterns() throws Exception {
-    String name = new File("target/" + UUID.randomUUID().toString(), "my.log").getAbsolutePath();
-
-    Map<LiveDirectoryScanner.RolledFilesMode, String> MATCH = (Map) ImmutableMap.builder()
-        .put(LiveDirectoryScanner.RolledFilesMode.ALPHABETICAL, name + ".a")
-        .put(LiveDirectoryScanner.RolledFilesMode.REVERSE_COUNTER, name + ".124")
-        .put(LiveDirectoryScanner.RolledFilesMode.DATE_YYYY_MM, name + ".2015-12")
-        .put(LiveDirectoryScanner.RolledFilesMode.DATE_YYYY_MM_DD, name + ".2015-12-01")
-        .put(LiveDirectoryScanner.RolledFilesMode.DATE_YYYY_MM_DD_HH, name + ".2015-12-01-23")
-        .put(LiveDirectoryScanner.RolledFilesMode.DATE_YYYY_MM_DD_HH_MM, name + ".2015-12-01-23-59")
-        .put(LiveDirectoryScanner.RolledFilesMode.DATE_YYYY_WW, name + ".2015-40")
-        .build();
-
-    Map<LiveDirectoryScanner.RolledFilesMode, String> NO_MATCH = (Map) ImmutableMap.builder()
-        .put(LiveDirectoryScanner.RolledFilesMode.ALPHABETICAL, name)
-        .put(LiveDirectoryScanner.RolledFilesMode.REVERSE_COUNTER, name + ".124x")
-        .put(LiveDirectoryScanner.RolledFilesMode.DATE_YYYY_MM, name + ".2015-13")
-        .put(LiveDirectoryScanner.RolledFilesMode.DATE_YYYY_MM_DD, name + ".2015-12-01x")
-        .put(LiveDirectoryScanner.RolledFilesMode.DATE_YYYY_MM_DD_HH, name + ".2015-12-x1-23")
-        .put(LiveDirectoryScanner.RolledFilesMode.DATE_YYYY_MM_DD_HH_MM, name + ".2015-2-01-23-59")
-        .put(LiveDirectoryScanner.RolledFilesMode.DATE_YYYY_WW, name + "2015-40")
-        .build();
-
-    for (Map.Entry<LiveDirectoryScanner.RolledFilesMode, String> entry : MATCH.entrySet()) {
-      Path path = new File(entry.getValue()).toPath();
-      PathMatcher fileMatcher = FileSystems.getDefault().getPathMatcher(entry.getKey().getPattern(name));
-      Assert.assertTrue(fileMatcher.matches(path));
-    }
-
-    for (Map.Entry<LiveDirectoryScanner.RolledFilesMode, String> entry : NO_MATCH.entrySet()) {
-      Path path = new File(entry.getValue()).toPath();
-      PathMatcher fileMatcher = FileSystems.getDefault().getPathMatcher(entry.getKey().getPattern(name));
-      Assert.assertFalse(fileMatcher.matches(path));
-    }
-
-  }
 }

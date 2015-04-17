@@ -43,88 +43,6 @@ import java.util.List;
  */
 public class LiveDirectoryScanner {
 
-  private static final String YYYY_REGEX = "\\.[0-9]{4}";
-  private static final String YYYY_MM_REGEX = YYYY_REGEX + "-(01|02|03|04|05|06|07|09|10|11|12)";
-  private static final String YYYY_MM_DD_REGEX = YYYY_MM_REGEX + "-[0-9]{2}";
-  private static final String YYYY_MM_DD_HH_REGEX = YYYY_MM_DD_REGEX + "-[0-9]{2}";
-  private static final String YYYY_MM_DD_HH_MM_REGEX = YYYY_MM_DD_HH_REGEX + "-[0-9]{2}";
-  private static final String YYYY_WW_REGEX = YYYY_REGEX + "-[0-9]{2}";
-
-  public enum RolledFilesMode {
-    REVERSE_COUNTER(ReverseCounterComparator.class, "regex:", "\\.[0-9]+$"),
-    DATE_YYYY_MM(StringComparator.class, "regex:", YYYY_MM_REGEX + "$"),
-    DATE_YYYY_MM_DD(StringComparator.class, "regex:", YYYY_MM_DD_REGEX + "$"),
-    DATE_YYYY_MM_DD_HH(StringComparator.class, "regex:", YYYY_MM_DD_HH_REGEX + "$"),
-    DATE_YYYY_MM_DD_HH_MM(StringComparator.class, "regex:", YYYY_MM_DD_HH_MM_REGEX + "$"),
-    DATE_YYYY_WW(StringComparator.class, "regex:", YYYY_WW_REGEX + "$"),
-    ALPHABETICAL(StringComparator.class, "glob:", ".*"),
-    ;
-
-    private final String patternPrefix;
-    private final String patternPostfix;
-    private final Class comparatorClass;
-
-    RolledFilesMode(Class comparatorClass, String patternPrefix, String patternPostfix) {
-      this.comparatorClass = comparatorClass;
-      this.patternPrefix = patternPrefix;
-      this.patternPostfix = patternPostfix;
-    }
-
-    @SuppressWarnings("unchecked")
-    private Comparator<Path> getComparator(String liveFileName) {
-      try {
-        Object obj = comparatorClass.newInstance();
-        ((LiveFileNameSetter)obj).setName(liveFileName);
-        return (Comparator<Path>) obj;
-      } catch (Exception ex) {
-        throw new RuntimeException("It should not happen: " + ex.getMessage(), ex);
-      }
-    }
-
-    String getPattern(String liveFileName) {
-      return patternPrefix + liveFileName + patternPostfix;
-    }
-
-    private interface LiveFileNameSetter {
-
-      public void setName(String name);
-
-    }
-
-    static class StringComparator implements Comparator<Path>, LiveFileNameSetter {
-      private int liveNameLength;
-
-      @Override
-      public void setName(String liveFileName) {
-        this.liveNameLength = liveFileName.length() + 1;
-      }
-
-      @Override
-      public int compare(Path o1, Path o2) {
-        String rd1 = o1.getFileName().toString().substring(liveNameLength);
-        String rd2 = o2.getFileName().toString().substring(liveNameLength);
-        return rd1.compareTo(rd2);
-      }
-    }
-
-    static class ReverseCounterComparator implements Comparator<Path>, LiveFileNameSetter {
-      private int liveNameLength;
-
-      @Override
-      public void setName(String liveFileName) {
-        this.liveNameLength = liveFileName.length() + 1;
-      }
-
-      @Override
-      public int compare(Path o1, Path o2) {
-        String rd1 = o1.getFileName().toString().substring(liveNameLength);
-        String rd2 = o2.getFileName().toString().substring(liveNameLength);
-        return Integer.parseInt(rd2) - Integer.parseInt(rd1);
-      }
-    }
-
-  }
-
   private static final Logger LOG = LoggerFactory.getLogger(LiveDirectoryScanner.class);
 
   private final Path firstFile;
@@ -133,6 +51,7 @@ public class LiveDirectoryScanner {
   private final File dir;
   private final PathMatcher fileMatcher;
 
+  private final RollMode rollMode;
   private final Comparator<Path> pathComparator;
 
   /**
@@ -141,18 +60,14 @@ public class LiveDirectoryScanner {
    * @param dirName directory to scan.
    * @param liveFileName name of 'live' file.
    * @param firstFileName first 'rolled' file to look for if [@link #scan()} is invoked with <code>null</code>.
-   * @param rolledFilesMode rolled files mode to use for ordering rolled files.
+   * @param rollMode rolled files mode to use for ordering rolled files.
    * @throws IOException thrown if the scanner could not be created due to an IO error.
    */
-  public LiveDirectoryScanner(String dirName, String liveFileName, String firstFileName, RolledFilesMode rolledFilesMode)
+  public LiveDirectoryScanner(String dirName, String liveFileName, String firstFileName, RollMode rollMode)
       throws IOException {
     Utils.checkNotNull(dirName, "dirName");
     Utils.checkArgument(!dirName.isEmpty(), "dirName cannot be empty");
-    Utils.checkNotNull(liveFileName, "liveFileName");
-    Utils.checkArgument(!liveFileName.isEmpty(), "liveFileName cannot be empty");
-    Utils.checkNotNull(rolledFilesMode, "nonLivPostfix");
-
-    this.liveFileName = liveFileName;
+    Utils.checkNotNull(rollMode, "rollMode");
 
     dir = new File(dirName);
     if (!dir.exists()) {
@@ -162,19 +77,21 @@ public class LiveDirectoryScanner {
       throw new IOException(Utils.format("Directory path '{}' is not a directory", dir.getAbsolutePath()));
     }
 
-    if (firstFileName == null || firstFileName.isEmpty()) {
-      this.firstFile = null;
-    } else {
-      Utils.checkArgument(firstFileName.startsWith(liveFileName),
-                          Utils.formatL("liveFileName '{}' should be a prefix of firstFileName '{}'",
-                                        liveFileName, firstFileName));
-      this.firstFile = new File(dir, firstFileName).toPath();
-    }
+    this.rollMode = rollMode;
 
-    pathComparator = rolledFilesMode.getComparator(liveFileName);
+    // liveFileName needs to be massaged by roll mode
+    this.liveFileName = rollMode.getLiveFileName(liveFileName);
+
+    // firstFileName needs to be verified by roll mode
+    Utils.checkArgument(this.rollMode.isFirstAcceptable(this.liveFileName, firstFileName),
+                        Utils.formatL("liveFileName '{}' should be a prefix of firstFileName '{}'",
+                                      this.liveFileName, firstFileName));
+    this.firstFile = (firstFileName == null) ? null : new File(dir, firstFileName).toPath();
+
+    pathComparator = this.rollMode.getComparator(this.liveFileName);
 
     //TODO check if we need to escape liveFileName
-    fileMatcher = FileSystems.getDefault().getPathMatcher(rolledFilesMode.getPattern(liveFileName));
+    fileMatcher = FileSystems.getDefault().getPathMatcher(this.rollMode.getPattern(this.liveFileName));
 
   }
 
@@ -231,8 +148,10 @@ public class LiveDirectoryScanner {
   }
 
   private LiveFile scanInternal(LiveFile current) throws IOException {
-    Utils.checkArgument(current == null || !liveFileName.equals(current.getPath().getFileName().toString()),
-                        Utils.formatL("Current file '{}' cannot be the live file", current));
+    Utils.checkArgument(current == null || rollMode.isCurrentAcceptable(liveFileName,
+                                                                        current.getPath().getFileName().toString()),
+                        Utils.formatL("Current file '{}' is not acceptable for live file '{}' using '{}'",
+                                      current, liveFileName, rollMode));
     FileFilter filter ;
     if (current == null) {
       // we don't have current file,
@@ -243,8 +162,8 @@ public class LiveDirectoryScanner {
       filter = new FileFilter(current.getPath(), false, pathComparator);
     }
     List<Path> matchingFiles = new ArrayList<>();
-    try (DirectoryStream<Path> matchingFile = Files.newDirectoryStream(dir.toPath(), filter)) {
-      for (Path file : matchingFile) {
+    try (DirectoryStream<Path> matches = Files.newDirectoryStream(dir.toPath(), filter)) {
+      for (Path file : matches) {
         matchingFiles.add(file);
       }
     }
@@ -258,7 +177,11 @@ public class LiveDirectoryScanner {
     } else {
       // we are not behind with rolled files, lets return the live file
       try {
-        current = new LiveFile(new File(dir, liveFileName).toPath());
+        if (liveFileName != null) {
+          current = new LiveFile(new File(dir, liveFileName).toPath());
+        } else {
+          current = null;
+        }
       } catch (NoSuchFileException ex) {
         // if the live file does not currently exists, return null as we cannot have a LiveFile without an iNode
         current = null;

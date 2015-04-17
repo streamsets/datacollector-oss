@@ -42,6 +42,7 @@ public class LiveFileReader implements Closeable {
   // we sleep for 10 millisec to yield CPU
   private static final long YIELD_INTERVAL = Integer.parseInt(System.getProperty("LiveFileReader.yield.ms", "10"));
 
+  private final RollMode rollMode;
   private final LiveFile originalFile;
   private LiveFile currentFile;
   private final Charset charset;
@@ -59,6 +60,7 @@ public class LiveFileReader implements Closeable {
 
   private int lastPosCheckedForEol;
 
+  private boolean rolled;
 
   // negative offset means we are in truncate mode, we need to discard data until we find an EOL
 
@@ -78,12 +80,15 @@ public class LiveFileReader implements Closeable {
    * @throws IllegalArgumentException thrown if the the provided charset must encode LF and CR as '0x0A' and '0x0D'
    * respectively.
    */
-  public LiveFileReader(LiveFile file, Charset charset, long offset, int maxLineLen) throws IOException {
+  public LiveFileReader(RollMode rollMode, LiveFile file, Charset charset, long offset, int maxLineLen)
+      throws IOException {
+    Utils.checkNotNull(rollMode, "rollMode");
     Utils.checkNotNull(file, "file");
     Utils.checkNotNull(charset, "charset");
     Utils.checkArgument(maxLineLen > 1, "maxLineLen must greater than 1");
     validateCharset(charset, '\n', "\\n");
     validateCharset(charset, '\r', "\\r");
+    this.rollMode = rollMode;
     this.originalFile = file;
     this.charset = charset;
 
@@ -299,14 +304,17 @@ public class LiveFileReader implements Closeable {
   }
 
   private boolean isEof() throws IOException {
-    if (originalFile.equals(currentFile) && System.currentTimeMillis() - lastLiveFileRefresh > REFRESH_INTERVAL) {
-      currentFile = originalFile.refresh();
-      if (!currentFile.equals(originalFile)) {
-        LOG.debug("Original file '{}' refreshed to '{}'", originalFile, currentFile);
+    if (!rolled) {
+      if (originalFile.equals(currentFile) && System.currentTimeMillis() - lastLiveFileRefresh > REFRESH_INTERVAL) {
+        currentFile = originalFile.refresh();
+        if (!currentFile.equals(originalFile)) {
+          LOG.debug("Original file '{}' refreshed to '{}'", originalFile, currentFile);
+        }
+        rolled = rollMode.isFileRolled(originalFile, currentFile);
+        lastLiveFileRefresh = System.currentTimeMillis();
       }
-      lastLiveFileRefresh = System.currentTimeMillis();
     }
-    return !originalFile.equals(currentFile) && channel.position() == channel.size();
+    return rolled && channel.position() == channel.size();
   }
 
   private int findEndOfLastLine(ByteBuffer buffer) {
