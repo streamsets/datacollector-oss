@@ -8,26 +8,19 @@ package com.streamsets.pipeline.lib.parser.xml;
 import com.streamsets.pipeline.api.OnRecordError;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.Stage;
-import com.streamsets.pipeline.config.JsonMode;
 import com.streamsets.pipeline.lib.data.DataFactory;
-import com.streamsets.pipeline.lib.io.OverrunReader;
-import com.streamsets.pipeline.lib.parser.CharDataParserFactory;
 import com.streamsets.pipeline.lib.parser.DataParser;
 import com.streamsets.pipeline.lib.parser.DataParserFactoryBuilder;
 import com.streamsets.pipeline.lib.parser.DataParserFormat;
-import com.streamsets.pipeline.lib.parser.json.JsonCharDataParserFactory;
 import com.streamsets.pipeline.sdk.ContextInfoCreator;
 import org.junit.Assert;
 import org.junit.Test;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
-import java.io.StringReader;
 import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
 
-public class TestXmlCharDataParserFactory {
+public class TestXmlDataParserFactory {
 
   private Stage.Context getContext() {
     return ContextInfoCreator.createSourceContext("i", false, OnRecordError.TO_ERROR, Collections.EMPTY_LIST);
@@ -39,10 +32,10 @@ public class TestXmlCharDataParserFactory {
     DataParserFactoryBuilder dataParserFactoryBuilder = new DataParserFactoryBuilder(getContext(), DataParserFormat.XML);
     DataFactory dataFactory = dataParserFactoryBuilder
       .setMaxDataLen(20)
-      .setConfig(XmlCharDataParserFactory.RECORD_ELEMENT_KEY, "e")
+      .setConfig(XmlDataParserFactory.RECORD_ELEMENT_KEY, "e")
       .build();
-    Assert.assertTrue(dataFactory instanceof XmlCharDataParserFactory);
-    XmlCharDataParserFactory factory = (XmlCharDataParserFactory) dataFactory;
+    Assert.assertTrue(dataFactory instanceof XmlDataParserFactory);
+    XmlDataParserFactory factory = (XmlDataParserFactory) dataFactory;
 
     DataParser parser = factory.getParser("id", "<r><e>Hello</e><e>Bye</e></r>".getBytes());
     Assert.assertEquals(0, parser.getOffset());
@@ -59,8 +52,8 @@ public class TestXmlCharDataParserFactory {
     DataFactory dataFactory = dataParserFactoryBuilder
       .setMaxDataLen(40)
       .build();
-    Assert.assertTrue(dataFactory instanceof XmlCharDataParserFactory);
-    XmlCharDataParserFactory factory = (XmlCharDataParserFactory) dataFactory;
+    Assert.assertTrue(dataFactory instanceof XmlDataParserFactory);
+    XmlDataParserFactory factory = (XmlDataParserFactory) dataFactory;
 
 
     DataParser parser = factory.getParser("id", "<r><e>Hello</e><e>Bye</e></r>".getBytes());
@@ -78,10 +71,10 @@ public class TestXmlCharDataParserFactory {
     DataParserFactoryBuilder dataParserFactoryBuilder = new DataParserFactoryBuilder(getContext(), DataParserFormat.XML);
     DataFactory dataFactory = dataParserFactoryBuilder
       .setMaxDataLen(20)
-      .setConfig(XmlCharDataParserFactory.RECORD_ELEMENT_KEY, "e")
+      .setConfig(XmlDataParserFactory.RECORD_ELEMENT_KEY, "e")
       .build();
-    Assert.assertTrue(dataFactory instanceof XmlCharDataParserFactory);
-    XmlCharDataParserFactory factory = (XmlCharDataParserFactory) dataFactory;
+    Assert.assertTrue(dataFactory instanceof XmlDataParserFactory);
+    XmlDataParserFactory factory = (XmlDataParserFactory) dataFactory;
 
     InputStream is = new ByteArrayInputStream("<r><e>Hello</e><e>Bye</e></r>".getBytes());
     DataParser parser = factory.getParser("id", is, 0);
@@ -98,10 +91,10 @@ public class TestXmlCharDataParserFactory {
     DataParserFactoryBuilder dataParserFactoryBuilder = new DataParserFactoryBuilder(getContext(), DataParserFormat.XML);
     DataFactory dataFactory = dataParserFactoryBuilder
       .setMaxDataLen(20)
-      .setConfig(XmlCharDataParserFactory.RECORD_ELEMENT_KEY, "e")
+      .setConfig(XmlDataParserFactory.RECORD_ELEMENT_KEY, "e")
       .build();
-    Assert.assertTrue(dataFactory instanceof XmlCharDataParserFactory);
-    XmlCharDataParserFactory factory = (XmlCharDataParserFactory) dataFactory;
+    Assert.assertTrue(dataFactory instanceof XmlDataParserFactory);
+    XmlDataParserFactory factory = (XmlDataParserFactory) dataFactory;
 
     InputStream is = new ByteArrayInputStream("<r><e>Hello</e><e>Bye</e></r>".getBytes());
     DataParser parser = factory.getParser("id", is, 18);

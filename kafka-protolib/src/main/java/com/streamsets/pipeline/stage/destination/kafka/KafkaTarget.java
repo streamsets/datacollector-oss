@@ -23,11 +23,11 @@ import com.streamsets.pipeline.lib.KafkaBroker;
 import com.streamsets.pipeline.lib.KafkaUtil;
 import com.streamsets.pipeline.lib.el.ELUtils;
 import com.streamsets.pipeline.lib.el.RecordEL;
-import com.streamsets.pipeline.lib.generator.CharDataGeneratorFactory;
+import com.streamsets.pipeline.lib.generator.DataGeneratorFactory;
 import com.streamsets.pipeline.lib.generator.DataGenerator;
 import com.streamsets.pipeline.lib.generator.DataGeneratorFactoryBuilder;
-import com.streamsets.pipeline.lib.generator.delimited.DelimitedCharDataGeneratorFactory;
-import com.streamsets.pipeline.lib.generator.text.TextCharDataGeneratorFactory;
+import com.streamsets.pipeline.lib.generator.delimited.DelimitedDataGeneratorFactory;
+import com.streamsets.pipeline.lib.generator.text.TextDataGeneratorFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -60,7 +60,7 @@ public class KafkaTarget extends BaseTarget {
 
   private KafkaProducer kafkaProducer;
   private long recordCounter = 0;
-  private CharDataGeneratorFactory generatorFactory;
+  private DataGeneratorFactory generatorFactory;
   private ELEval partitionEval;
   private ELVars variables;
 
@@ -118,7 +118,7 @@ public class KafkaTarget extends BaseTarget {
     generatorFactory = createDataGeneratorFactory();
   }
 
-  private CharDataGeneratorFactory createDataGeneratorFactory() {
+  private DataGeneratorFactory createDataGeneratorFactory() {
     DataGeneratorFactoryBuilder builder = new DataGeneratorFactoryBuilder(getContext(),
       dataFormat.getGeneratorFormat());
     if(charset == null || charset.trim().isEmpty()) {
@@ -131,11 +131,11 @@ public class KafkaTarget extends BaseTarget {
       case DELIMITED:
         builder.setMode(csvFileFormat);
         builder.setMode(csvHeader);
-        builder.setConfig(DelimitedCharDataGeneratorFactory.REPLACE_NEWLINES_KEY, csvReplaceNewLines);
+        builder.setConfig(DelimitedDataGeneratorFactory.REPLACE_NEWLINES_KEY, csvReplaceNewLines);
         break;
       case TEXT:
-        builder.setConfig(TextCharDataGeneratorFactory.FIELD_PATH_KEY, textFieldPath);
-        builder.setConfig(TextCharDataGeneratorFactory.EMPTY_LINE_IF_NULL_KEY, textEmptyLineIfNull);
+        builder.setConfig(TextDataGeneratorFactory.FIELD_PATH_KEY, textFieldPath);
+        builder.setConfig(TextDataGeneratorFactory.EMPTY_LINE_IF_NULL_KEY, textEmptyLineIfNull);
         break;
       case JSON:
         builder.setMode(jsonMode);

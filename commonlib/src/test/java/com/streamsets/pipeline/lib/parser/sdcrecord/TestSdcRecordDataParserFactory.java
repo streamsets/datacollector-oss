@@ -26,10 +26,9 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.io.OutputStreamWriter;
-import java.nio.charset.Charset;
 import java.util.Collections;
 
-public class TestJsonSdcRecordCharDataParserFactory {
+public class TestSdcRecordDataParserFactory {
 
   private Stage.Context getContext() {
     return ContextInfoCreator.createSourceContext("i", false, OnRecordError.TO_ERROR, Collections.EMPTY_LIST);
@@ -72,8 +71,8 @@ public class TestJsonSdcRecordCharDataParserFactory {
     DataFactory dataFactory = dataParserFactoryBuilder
       .setMaxDataLen(1000)
       .build();
-    Assert.assertTrue(dataFactory instanceof JsonSdcRecordCharDataParserFactory);
-    JsonSdcRecordCharDataParserFactory factory = (JsonSdcRecordCharDataParserFactory) dataFactory;
+    Assert.assertTrue(dataFactory instanceof SdcRecordDataParserFactory);
+    SdcRecordDataParserFactory factory = (SdcRecordDataParserFactory) dataFactory;
 
     DataParser parser = factory.getParser("id", createJsonSdcRecordsString());
     Assert.assertEquals(0, parser.getOffset());
@@ -91,8 +90,8 @@ public class TestJsonSdcRecordCharDataParserFactory {
     DataFactory dataFactory = dataParserFactoryBuilder
       .setMaxDataLen(1000)
       .build();
-    Assert.assertTrue(dataFactory instanceof JsonSdcRecordCharDataParserFactory);
-    JsonSdcRecordCharDataParserFactory factory = (JsonSdcRecordCharDataParserFactory) dataFactory;
+    Assert.assertTrue(dataFactory instanceof SdcRecordDataParserFactory);
+    SdcRecordDataParserFactory factory = (SdcRecordDataParserFactory) dataFactory;
 
     InputStream is = new ByteArrayInputStream(createJsonSdcRecordsString());
     DataParser parser = factory.getParser("id", is, 0);
@@ -113,8 +112,8 @@ public class TestJsonSdcRecordCharDataParserFactory {
     DataFactory dataFactory = dataParserFactoryBuilder
       .setMaxDataLen(1000)
       .build();
-    Assert.assertTrue(dataFactory instanceof JsonSdcRecordCharDataParserFactory);
-    JsonSdcRecordCharDataParserFactory factory = (JsonSdcRecordCharDataParserFactory) dataFactory;
+    Assert.assertTrue(dataFactory instanceof SdcRecordDataParserFactory);
+    SdcRecordDataParserFactory factory = (SdcRecordDataParserFactory) dataFactory;
 
     InputStream is = new ByteArrayInputStream(payload);
     DataParser parser = factory.getParser("id", is, 0);
@@ -126,8 +125,8 @@ public class TestJsonSdcRecordCharDataParserFactory {
     dataFactory = dataParserFactoryBuilder
       .setMaxDataLen(1000)
       .build();
-    Assert.assertTrue(dataFactory instanceof JsonSdcRecordCharDataParserFactory);
-    factory = (JsonSdcRecordCharDataParserFactory) dataFactory;
+    Assert.assertTrue(dataFactory instanceof SdcRecordDataParserFactory);
+    factory = (SdcRecordDataParserFactory) dataFactory;
 
     is = new ByteArrayInputStream(payload);
     parser = factory.getParser("id", is, offset);
@@ -148,8 +147,8 @@ public class TestJsonSdcRecordCharDataParserFactory {
     DataFactory dataFactory = dataParserFactoryBuilder
       .setMaxDataLen(1000)
       .build();
-    Assert.assertTrue(dataFactory instanceof JsonSdcRecordCharDataParserFactory);
-    JsonSdcRecordCharDataParserFactory factory = (JsonSdcRecordCharDataParserFactory) dataFactory;
+    Assert.assertTrue(dataFactory instanceof SdcRecordDataParserFactory);
+    SdcRecordDataParserFactory factory = (SdcRecordDataParserFactory) dataFactory;
 
     InputStream is = new ByteArrayInputStream(payload);
     factory.getParser("id", is, 0);

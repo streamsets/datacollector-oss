@@ -8,7 +8,7 @@ package com.streamsets.pipeline.lib.generator.sdcrecord;
 import com.google.common.collect.ImmutableSet;
 import com.streamsets.pipeline.api.ext.ContextExtensions;
 import com.streamsets.pipeline.lib.common.SdcRecordDataFactoryUtil;
-import com.streamsets.pipeline.lib.generator.CharDataGeneratorFactory;
+import com.streamsets.pipeline.lib.generator.DataGeneratorFactory;
 import com.streamsets.pipeline.lib.generator.DataGenerator;
 import com.streamsets.pipeline.lib.generator.DataGeneratorException;
 
@@ -18,7 +18,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
-public class JsonSdcRecordCharDataGeneratorFactory extends CharDataGeneratorFactory {
+public class SdcRecordDataGeneratorFactory extends DataGeneratorFactory {
 
   public static final Map<String, Object> CONFIGS = new HashMap<>();
 
@@ -27,7 +27,7 @@ public class JsonSdcRecordCharDataGeneratorFactory extends CharDataGeneratorFact
 
   private final ContextExtensions context;
 
-  public JsonSdcRecordCharDataGeneratorFactory(Settings settings) {
+  public SdcRecordDataGeneratorFactory(Settings settings) {
     super(settings);
     this.context = (ContextExtensions) settings.getContext();
   }

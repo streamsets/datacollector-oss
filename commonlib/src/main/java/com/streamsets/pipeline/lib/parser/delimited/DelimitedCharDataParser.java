@@ -21,15 +21,15 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class DelimitedDataParser implements DataParser {
+public class DelimitedCharDataParser implements DataParser {
   private final Stage.Context context;
   private final String readerId;
   private final OverrunCsvParser parser;
   private List<Field> headers;
   private boolean eof;
 
-  public DelimitedDataParser(Stage.Context context, String readerId, OverrunReader reader, long readerOffset,
-      CSVFormat format, CsvHeader header, int maxObjectLen) throws IOException {
+  public DelimitedCharDataParser(Stage.Context context, String readerId, OverrunReader reader, long readerOffset,
+                                 CSVFormat format, CsvHeader header, int maxObjectLen) throws IOException {
     this.context = context;
     this.readerId = readerId;
     switch (header) {

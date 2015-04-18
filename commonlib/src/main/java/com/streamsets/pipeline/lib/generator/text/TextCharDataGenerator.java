@@ -13,7 +13,7 @@ import com.streamsets.pipeline.lib.generator.DataGeneratorException;
 import java.io.IOException;
 import java.io.Writer;
 
-public class TextDataGenerator implements DataGenerator {
+public class TextCharDataGenerator implements DataGenerator {
   final static String EOL = System.getProperty("line.separator");
 
   private final String fieldPath;
@@ -21,7 +21,7 @@ public class TextDataGenerator implements DataGenerator {
   private final Writer writer;
   private boolean closed;
 
-  public TextDataGenerator(Writer writer, String fieldPath, boolean emptyLineIfNull)
+  public TextCharDataGenerator(Writer writer, String fieldPath, boolean emptyLineIfNull)
       throws IOException {
     this.writer = writer;
     this.fieldPath = fieldPath;

@@ -8,32 +8,19 @@ package com.streamsets.pipeline.lib.parser.text;
 import com.streamsets.pipeline.api.OnRecordError;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.Stage;
-import com.streamsets.pipeline.config.JsonMode;
 import com.streamsets.pipeline.lib.data.DataFactory;
-import com.streamsets.pipeline.lib.io.OverrunReader;
-import com.streamsets.pipeline.lib.parser.CharDataParserFactory;
 import com.streamsets.pipeline.lib.parser.DataParser;
 import com.streamsets.pipeline.lib.parser.DataParserFactoryBuilder;
 import com.streamsets.pipeline.lib.parser.DataParserFormat;
-import com.streamsets.pipeline.lib.parser.json.JsonCharDataParserFactory;
 import com.streamsets.pipeline.sdk.ContextInfoCreator;
-import org.apache.commons.io.IOUtils;
 import org.junit.Assert;
 import org.junit.Test;
 
 import java.io.ByteArrayInputStream;
-import java.io.File;
-import java.io.FileWriter;
 import java.io.InputStream;
-import java.io.StringReader;
-import java.io.Writer;
-import java.nio.charset.Charset;
 import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
 
-public class TestTextCharDataParserFactory {
+public class TestTextDataParserFactory {
 
   private Stage.Context getContext() {
     return ContextInfoCreator.createSourceContext("i", false, OnRecordError.TO_ERROR, Collections.EMPTY_LIST);
@@ -46,8 +33,8 @@ public class TestTextCharDataParserFactory {
     DataFactory dataFactory = dataParserFactoryBuilder
       .setMaxDataLen(3)
       .build();
-    Assert.assertTrue(dataFactory instanceof TextCharDataParserFactory);
-    TextCharDataParserFactory factory = (TextCharDataParserFactory) dataFactory;
+    Assert.assertTrue(dataFactory instanceof TextDataParserFactory);
+    TextDataParserFactory factory = (TextDataParserFactory) dataFactory;
 
     DataParser parser = factory.getParser("id", "Hello\n".getBytes());
     Assert.assertEquals(0, parser.getOffset());
@@ -64,8 +51,8 @@ public class TestTextCharDataParserFactory {
     DataFactory dataFactory = dataParserFactoryBuilder
       .setMaxDataLen(3)
       .build();
-    Assert.assertTrue(dataFactory instanceof TextCharDataParserFactory);
-    TextCharDataParserFactory factory = (TextCharDataParserFactory) dataFactory;
+    Assert.assertTrue(dataFactory instanceof TextDataParserFactory);
+    TextDataParserFactory factory = (TextDataParserFactory) dataFactory;
     InputStream is = new ByteArrayInputStream("Hello\nBye".getBytes());
     DataParser parser = factory.getParser("id", is, 0);
     Assert.assertEquals(0, parser.getOffset());
@@ -82,8 +69,8 @@ public class TestTextCharDataParserFactory {
     DataFactory dataFactory = dataParserFactoryBuilder
       .setMaxDataLen(1000)
       .build();
-    Assert.assertTrue(dataFactory instanceof TextCharDataParserFactory);
-    TextCharDataParserFactory factory = (TextCharDataParserFactory) dataFactory;
+    Assert.assertTrue(dataFactory instanceof TextDataParserFactory);
+    TextDataParserFactory factory = (TextDataParserFactory) dataFactory;
     InputStream is = new ByteArrayInputStream("Hello\nBye".getBytes());
     DataParser parser = factory.getParser("id", is, 6);
     Assert.assertEquals(6, parser.getOffset());

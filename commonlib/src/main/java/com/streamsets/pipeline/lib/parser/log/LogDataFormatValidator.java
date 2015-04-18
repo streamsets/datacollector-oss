@@ -9,7 +9,6 @@ import com.streamsets.pipeline.api.Source;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.config.LogMode;
 import com.streamsets.pipeline.config.OnParseError;
-import com.streamsets.pipeline.lib.parser.CharDataParserFactory;
 import com.streamsets.pipeline.lib.parser.DataParserException;
 import com.streamsets.pipeline.lib.parser.DataParserFactoryBuilder;
 import com.streamsets.pipeline.lib.parser.shaded.org.aicer.grok.dictionary.GrokDictionary;
@@ -59,15 +58,15 @@ public class LogDataFormatValidator {
 
   public void populateBuilder(DataParserFactoryBuilder builder) {
     builder.setMaxDataLen(logMaxObjectLen)
-      .setConfig(LogCharDataParserFactory.RETAIN_ORIGINAL_TEXT_KEY, logRetainOriginalLine)
-      .setConfig(LogCharDataParserFactory.APACHE_CUSTOMLOG_FORMAT_KEY, customLogFormat)
-      .setConfig(LogCharDataParserFactory.REGEX_KEY, regex)
-      .setConfig(LogCharDataParserFactory.REGEX_FIELD_PATH_TO_GROUP_KEY, fieldPathsToGroupName)
-      .setConfig(LogCharDataParserFactory.GROK_PATTERN_DEFINITION_KEY, grokPatternDefinition)
-      .setConfig(LogCharDataParserFactory.GROK_PATTERN_KEY, grokPattern)
-      .setConfig(LogCharDataParserFactory.LOG4J_FORMAT_KEY, log4jCustomLogFormat)
-      .setConfig(LogCharDataParserFactory.ON_PARSE_ERROR_KEY, onParseError)
-      .setConfig(LogCharDataParserFactory.LOG4J_TRIM_STACK_TRACES_TO_LENGTH_KEY, maxStackTraceLines)
+      .setConfig(LogDataParserFactory.RETAIN_ORIGINAL_TEXT_KEY, logRetainOriginalLine)
+      .setConfig(LogDataParserFactory.APACHE_CUSTOMLOG_FORMAT_KEY, customLogFormat)
+      .setConfig(LogDataParserFactory.REGEX_KEY, regex)
+      .setConfig(LogDataParserFactory.REGEX_FIELD_PATH_TO_GROUP_KEY, fieldPathsToGroupName)
+      .setConfig(LogDataParserFactory.GROK_PATTERN_DEFINITION_KEY, grokPatternDefinition)
+      .setConfig(LogDataParserFactory.GROK_PATTERN_KEY, grokPattern)
+      .setConfig(LogDataParserFactory.LOG4J_FORMAT_KEY, log4jCustomLogFormat)
+      .setConfig(LogDataParserFactory.ON_PARSE_ERROR_KEY, onParseError)
+      .setConfig(LogDataParserFactory.LOG4J_TRIM_STACK_TRACES_TO_LENGTH_KEY, maxStackTraceLines)
       .setMode(logMode);
   }
 

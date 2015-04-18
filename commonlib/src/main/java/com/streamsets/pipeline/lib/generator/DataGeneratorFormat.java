@@ -8,31 +8,31 @@ package com.streamsets.pipeline.lib.generator;
 import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.lib.data.DataFactory;
 import com.streamsets.pipeline.lib.data.DataFormat;
-import com.streamsets.pipeline.lib.generator.delimited.DelimitedCharDataGeneratorFactory;
-import com.streamsets.pipeline.lib.generator.json.JsonCharDataGeneratorFactory;
-import com.streamsets.pipeline.lib.generator.sdcrecord.JsonSdcRecordCharDataGeneratorFactory;
-import com.streamsets.pipeline.lib.generator.text.TextCharDataGeneratorFactory;
+import com.streamsets.pipeline.lib.generator.delimited.DelimitedDataGeneratorFactory;
+import com.streamsets.pipeline.lib.generator.json.JsonDataGeneratorFactory;
+import com.streamsets.pipeline.lib.generator.sdcrecord.SdcRecordDataGeneratorFactory;
+import com.streamsets.pipeline.lib.generator.text.TextDataGeneratorFactory;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Modifier;
 import java.util.Map;
 import java.util.Set;
 
-public enum DataGeneratorFormat implements DataFormat<CharDataGeneratorFactory> {
-  TEXT(TextCharDataGeneratorFactory.class, TextCharDataGeneratorFactory.MODES, TextCharDataGeneratorFactory.CONFIGS),
-  JSON(JsonCharDataGeneratorFactory.class, JsonCharDataGeneratorFactory.MODES, JsonCharDataGeneratorFactory.CONFIGS),
-  DELIMITED(DelimitedCharDataGeneratorFactory.class, DelimitedCharDataGeneratorFactory.MODES,
-    DelimitedCharDataGeneratorFactory.CONFIGS),
-  SDC_RECORD(JsonSdcRecordCharDataGeneratorFactory.class, JsonSdcRecordCharDataGeneratorFactory.MODES,
-    JsonSdcRecordCharDataGeneratorFactory.CONFIGS),
+public enum DataGeneratorFormat implements DataFormat<DataGeneratorFactory> {
+  TEXT(TextDataGeneratorFactory.class, TextDataGeneratorFactory.MODES, TextDataGeneratorFactory.CONFIGS),
+  JSON(JsonDataGeneratorFactory.class, JsonDataGeneratorFactory.MODES, JsonDataGeneratorFactory.CONFIGS),
+  DELIMITED(DelimitedDataGeneratorFactory.class, DelimitedDataGeneratorFactory.MODES,
+    DelimitedDataGeneratorFactory.CONFIGS),
+  SDC_RECORD(SdcRecordDataGeneratorFactory.class, SdcRecordDataGeneratorFactory.MODES,
+    SdcRecordDataGeneratorFactory.CONFIGS),
   ;
 
-  private final Class<? extends CharDataGeneratorFactory> klass;
-  private final Constructor<? extends CharDataGeneratorFactory> constructor;
+  private final Class<? extends DataGeneratorFactory> klass;
+  private final Constructor<? extends DataGeneratorFactory> constructor;
   private final Set<Class<? extends Enum>> modes;
   private Map<String, Object> configs;
 
-  DataGeneratorFormat(Class<? extends CharDataGeneratorFactory> klass, Set<Class<? extends Enum>> modes,
+  DataGeneratorFormat(Class<? extends DataGeneratorFactory> klass, Set<Class<? extends Enum>> modes,
                    Map<String, Object> configs) {
     this.klass = klass;
     try {
@@ -60,7 +60,7 @@ public enum DataGeneratorFormat implements DataFormat<CharDataGeneratorFactory> 
   }
 
   @Override
-  public CharDataGeneratorFactory create(DataFactory.Settings settings) {
+  public DataGeneratorFactory create(DataFactory.Settings settings) {
     try {
       return constructor.newInstance(settings);
     } catch (Exception ex) {

@@ -17,7 +17,7 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
-public class TextDataParser implements DataParser {
+public class TextCharDataParser implements DataParser {
   private final Stage.Context context;
   private final String readerId;
   private final OverrunReader reader;
@@ -27,8 +27,8 @@ public class TextDataParser implements DataParser {
   private final StringBuilder sb;
   private boolean eof;
 
-  public TextDataParser(Stage.Context context, String readerId, OverrunReader reader, long readerOffset,
-      int maxObjectLen, String fieldTextName, String fieldTruncatedName) throws IOException {
+  public TextCharDataParser(Stage.Context context, String readerId, OverrunReader reader, long readerOffset,
+                            int maxObjectLen, String fieldTextName, String fieldTruncatedName) throws IOException {
     this.context = context;
     this.readerId = readerId;
     this.reader = reader;

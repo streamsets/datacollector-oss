@@ -8,7 +8,7 @@ package com.streamsets.pipeline.lib.generator.delimited;
 import com.google.common.collect.ImmutableSet;
 import com.streamsets.pipeline.config.CsvHeader;
 import com.streamsets.pipeline.config.CsvMode;
-import com.streamsets.pipeline.lib.generator.CharDataGeneratorFactory;
+import com.streamsets.pipeline.lib.generator.DataGeneratorFactory;
 import com.streamsets.pipeline.lib.generator.DataGenerator;
 import com.streamsets.pipeline.lib.generator.DataGeneratorException;
 import org.apache.commons.csv.CSVFormat;
@@ -20,7 +20,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
-public class DelimitedCharDataGeneratorFactory extends CharDataGeneratorFactory {
+public class DelimitedDataGeneratorFactory extends DataGeneratorFactory {
   static final String KEY_PREFIX = "delimited.";
   public static final String HEADER_KEY = KEY_PREFIX + "header";
   static final String HEADER_DEFAULT = "header";
@@ -48,7 +48,7 @@ public class DelimitedCharDataGeneratorFactory extends CharDataGeneratorFactory 
   private final String valueKey;
   private final boolean replaceNewLines;
 
-  public DelimitedCharDataGeneratorFactory(Settings settings) {
+  public DelimitedDataGeneratorFactory(Settings settings) {
     super(settings);
     this.format = settings.getMode(CsvMode.class).getFormat();
     this.header = settings.getMode(CsvHeader.class);
@@ -59,7 +59,7 @@ public class DelimitedCharDataGeneratorFactory extends CharDataGeneratorFactory 
 
   @Override
   public DataGenerator getGenerator(OutputStream os) throws IOException, DataGeneratorException {
-    return new DelimitedDataGenerator(createWriter(os), format, header, headerKey, valueKey, replaceNewLines);
+    return new DelimitedCharDataGenerator(createWriter(os), format, header, headerKey, valueKey, replaceNewLines);
   }
 
 }

@@ -12,7 +12,7 @@ import com.streamsets.pipeline.api.el.ELEval;
 import com.streamsets.pipeline.api.el.ELVars;
 import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.lib.el.RecordEL;
-import com.streamsets.pipeline.lib.generator.CharDataGeneratorFactory;
+import com.streamsets.pipeline.lib.generator.DataGeneratorFactory;
 import com.streamsets.pipeline.lib.generator.DataGenerator;
 import com.streamsets.pipeline.stage.destination.hdfs.ElUtil;
 import org.apache.commons.io.output.CountingOutputStream;
@@ -31,7 +31,7 @@ public class RecordWriter {
 
   private final long expires;
   private final Path path;
-  private final CharDataGeneratorFactory generatorFactory;
+  private final DataGeneratorFactory generatorFactory;
   private long recordCount;
 
   private CountingOutputStream textOutputStream;
@@ -46,7 +46,7 @@ public class RecordWriter {
   private Text value;
   private boolean seqFile;
 
-  private RecordWriter(Path path, long timeToLiveMillis, CharDataGeneratorFactory generatorFactory) {
+  private RecordWriter(Path path, long timeToLiveMillis, DataGeneratorFactory generatorFactory) {
     this.expires = System.currentTimeMillis() + timeToLiveMillis;
     this.path = path;
     this.generatorFactory = generatorFactory;
@@ -54,7 +54,7 @@ public class RecordWriter {
   }
 
   public RecordWriter(Path path, long timeToLiveMillis, OutputStream textOutputStream,
-      CharDataGeneratorFactory generatorFactory) throws StageException, IOException {
+      DataGeneratorFactory generatorFactory) throws StageException, IOException {
     this(path, timeToLiveMillis, generatorFactory);
     this.textOutputStream = new CountingOutputStream(textOutputStream);
     generator = generatorFactory.getGenerator(this.textOutputStream);
@@ -62,7 +62,7 @@ public class RecordWriter {
   }
 
   public RecordWriter(Path path, long timeToLiveMillis, SequenceFile.Writer seqWriter, String keyEL,
-      CharDataGeneratorFactory generatorFactory, Target.Context context) {
+      DataGeneratorFactory generatorFactory, Target.Context context) {
     this(path, timeToLiveMillis, generatorFactory);
     this.seqWriter = seqWriter;
     this.keyEL = keyEL;

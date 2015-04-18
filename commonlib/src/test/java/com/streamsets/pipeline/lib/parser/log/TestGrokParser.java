@@ -131,12 +131,12 @@ public class TestGrokParser {
       .setMaxDataLen(maxObjectLength)
       .setMode(LogMode.GROK)
       .setOverRunLimit(1000)
-      .setConfig(LogCharDataParserFactory.RETAIN_ORIGINAL_TEXT_KEY, true)
-      .setConfig(LogCharDataParserFactory.GROK_PATTERN_KEY, REGEX)
-      .setConfig(LogCharDataParserFactory.GROK_PATTERN_DEFINITION_KEY, REGEX_DEFINITION)
+      .setConfig(LogDataParserFactory.RETAIN_ORIGINAL_TEXT_KEY, true)
+      .setConfig(LogDataParserFactory.GROK_PATTERN_KEY, REGEX)
+      .setConfig(LogDataParserFactory.GROK_PATTERN_DEFINITION_KEY, REGEX_DEFINITION)
       .build();
-    Assert.assertTrue(dataFactory instanceof LogCharDataParserFactory);
-    LogCharDataParserFactory factory = (LogCharDataParserFactory) dataFactory;
+    Assert.assertTrue(dataFactory instanceof LogDataParserFactory);
+    LogDataParserFactory factory = (LogDataParserFactory) dataFactory;
 
     return factory.getParser("id", is, readerOffset);
   }

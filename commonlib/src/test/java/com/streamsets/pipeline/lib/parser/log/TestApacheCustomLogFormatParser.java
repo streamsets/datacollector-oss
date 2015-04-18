@@ -154,11 +154,11 @@ public class TestApacheCustomLogFormatParser {
       .setMaxDataLen(maxObjectLength)
       .setMode(LogMode.APACHE_CUSTOM_LOG_FORMAT)
       .setOverRunLimit(1000)
-      .setConfig(LogCharDataParserFactory.RETAIN_ORIGINAL_TEXT_KEY, true)
-      .setConfig(LogCharDataParserFactory.APACHE_CUSTOMLOG_FORMAT_KEY, FORMAT)
+      .setConfig(LogDataParserFactory.RETAIN_ORIGINAL_TEXT_KEY, true)
+      .setConfig(LogDataParserFactory.APACHE_CUSTOMLOG_FORMAT_KEY, FORMAT)
       .build();
-    Assert.assertTrue(dataFactory instanceof LogCharDataParserFactory);
-    LogCharDataParserFactory factory = (LogCharDataParserFactory) dataFactory;
+    Assert.assertTrue(dataFactory instanceof LogDataParserFactory);
+    LogDataParserFactory factory = (LogDataParserFactory) dataFactory;
     return factory.getParser("id", is, readerOffset);
   }
 }

@@ -21,10 +21,10 @@ import com.streamsets.pipeline.config.DataFormat;
 import com.streamsets.pipeline.config.JsonMode;
 import com.streamsets.pipeline.lib.el.RecordEL;
 import com.streamsets.pipeline.lib.el.TimeEL;
-import com.streamsets.pipeline.lib.generator.CharDataGeneratorFactory;
+import com.streamsets.pipeline.lib.generator.DataGeneratorFactory;
 import com.streamsets.pipeline.lib.generator.DataGeneratorFactoryBuilder;
-import com.streamsets.pipeline.lib.generator.delimited.DelimitedCharDataGeneratorFactory;
-import com.streamsets.pipeline.lib.generator.text.TextCharDataGeneratorFactory;
+import com.streamsets.pipeline.lib.generator.delimited.DelimitedDataGeneratorFactory;
+import com.streamsets.pipeline.lib.generator.text.TextDataGeneratorFactory;
 import com.streamsets.pipeline.stage.destination.hdfs.writer.ActiveRecordWriters;
 import com.streamsets.pipeline.stage.destination.hdfs.writer.RecordWriter;
 import com.streamsets.pipeline.stage.destination.hdfs.writer.RecordWriterManager;
@@ -121,7 +121,7 @@ public class HdfsTarget extends RecordTarget {
   private long lateRecordsLimitSecs;
   private ActiveRecordWriters currentWriters;
   private ActiveRecordWriters lateWriters;
-  private CharDataGeneratorFactory generatorFactory;
+  private DataGeneratorFactory generatorFactory;
   private ELEval timeDriverElEval;
   private ELEval lateRecordsLimitEvaluator;
   private Date batchTime;
@@ -326,7 +326,7 @@ public class HdfsTarget extends RecordTarget {
     }
   }
 
-  private CharDataGeneratorFactory createDataGeneratorFactory() {
+  private DataGeneratorFactory createDataGeneratorFactory() {
     DataGeneratorFactoryBuilder builder = new DataGeneratorFactoryBuilder(getContext(),
       dataFormat.getGeneratorFormat());
     if(charset == null || charset.trim().isEmpty()) {
@@ -340,11 +340,11 @@ public class HdfsTarget extends RecordTarget {
       case DELIMITED:
         builder.setMode(csvFileFormat);
         builder.setMode(csvHeader);
-        builder.setConfig(DelimitedCharDataGeneratorFactory.REPLACE_NEWLINES_KEY, csvReplaceNewLines);
+        builder.setConfig(DelimitedDataGeneratorFactory.REPLACE_NEWLINES_KEY, csvReplaceNewLines);
         break;
       case TEXT:
-        builder.setConfig(TextCharDataGeneratorFactory.FIELD_PATH_KEY, textFieldPath);
-        builder.setConfig(TextCharDataGeneratorFactory.EMPTY_LINE_IF_NULL_KEY, textEmptyLineIfNull);
+        builder.setConfig(TextDataGeneratorFactory.FIELD_PATH_KEY, textFieldPath);
+        builder.setConfig(TextDataGeneratorFactory.EMPTY_LINE_IF_NULL_KEY, textEmptyLineIfNull);
         break;
       case SDC_JSON:
         break;

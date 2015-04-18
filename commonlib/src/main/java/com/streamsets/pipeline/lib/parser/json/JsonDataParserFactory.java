@@ -3,16 +3,15 @@
  * be copied, modified, or distributed in whole or part without
  * written consent of StreamSets, Inc.
  */
-package com.streamsets.pipeline.lib.parser.delimited;
+package com.streamsets.pipeline.lib.parser.json;
 
 import com.google.common.collect.ImmutableSet;
 import com.streamsets.pipeline.api.impl.Utils;
-import com.streamsets.pipeline.config.CsvHeader;
-import com.streamsets.pipeline.config.CsvMode;
+import com.streamsets.pipeline.config.JsonMode;
 import com.streamsets.pipeline.lib.io.OverrunReader;
-import com.streamsets.pipeline.lib.parser.CharDataParserFactory;
 import com.streamsets.pipeline.lib.parser.DataParser;
 import com.streamsets.pipeline.lib.parser.DataParserException;
+import com.streamsets.pipeline.lib.parser.DataParserFactory;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -20,12 +19,14 @@ import java.util.Collections;
 import java.util.Map;
 import java.util.Set;
 
-public class DelimitedCharDataParserFactory extends CharDataParserFactory {
+public class JsonDataParserFactory extends DataParserFactory {
   public static final Map<String, Object> CONFIGS = Collections.emptyMap();
-  public static final Set<Class<? extends Enum>> MODES =
-      ImmutableSet.of((Class<? extends Enum>) CsvMode.class, CsvHeader.class);
 
-  public DelimitedCharDataParserFactory(Settings settings) {
+  @SuppressWarnings("umchecked")
+  public static final Set<Class<? extends Enum>> MODES =
+      (Set<Class<? extends Enum>>) (Set) ImmutableSet.of(JsonMode.class);
+
+  public JsonDataParserFactory(Settings settings) {
     super(settings);
   }
 
@@ -35,12 +36,10 @@ public class DelimitedCharDataParserFactory extends CharDataParserFactory {
     Utils.checkState(reader.getPos() == 0, Utils.formatL("reader must be in position '0', it is at '{}'",
       reader.getPos()));
     try {
-      return new DelimitedDataParser(getSettings().getContext(), id, reader, offset,
-        getSettings().getMode(CsvMode.class).getFormat(),
-        getSettings().getMode(CsvHeader.class),
-        getSettings().getMaxRecordLen());
+      return new JsonCharDataParser(getSettings().getContext(), id, reader, offset,
+        getSettings().getMode(JsonMode.class).getFormat(), getSettings().getMaxRecordLen());
     } catch (IOException ex) {
-      throw new DataParserException(Errors.DELIMITED_PARSER_00, id, offset, ex.getMessage(), ex);
+      throw new DataParserException(Errors.JSON_PARSER_00, id, offset, ex.getMessage(), ex);
     }
   }
 

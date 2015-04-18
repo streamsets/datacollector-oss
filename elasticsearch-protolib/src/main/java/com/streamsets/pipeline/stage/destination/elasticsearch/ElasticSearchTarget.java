@@ -17,7 +17,7 @@ import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.config.JsonMode;
 import com.streamsets.pipeline.lib.el.RecordEL;
 import com.streamsets.pipeline.lib.el.TimeEL;
-import com.streamsets.pipeline.lib.generator.CharDataGeneratorFactory;
+import com.streamsets.pipeline.lib.generator.DataGeneratorFactory;
 import com.streamsets.pipeline.lib.generator.DataGenerator;
 import com.streamsets.pipeline.lib.generator.DataGeneratorFactoryBuilder;
 import com.streamsets.pipeline.lib.generator.DataGeneratorFormat;
@@ -66,7 +66,7 @@ public class ElasticSearchTarget extends BaseTarget {
   private ELEval indexEval;
   private ELEval typeEval;
   private ELEval docIdEval;
-  private CharDataGeneratorFactory generatorFactory;
+  private DataGeneratorFactory generatorFactory;
   private Client elasticClient;
 
   private void validateEL(ELEval elEval, String elStr, String config, ErrorCode parseError, ErrorCode evalError,

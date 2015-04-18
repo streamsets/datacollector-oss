@@ -16,7 +16,7 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class RegexParser extends LogDataParser {
+public class RegexParser extends LogCharDataParser {
 
   private final Pattern pattern;
   private final Map<String, Integer> fieldToGroupMap;

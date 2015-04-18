@@ -7,7 +7,7 @@ package com.streamsets.pipeline.lib.generator.json;
 
 import com.google.common.collect.ImmutableSet;
 import com.streamsets.pipeline.config.JsonMode;
-import com.streamsets.pipeline.lib.generator.CharDataGeneratorFactory;
+import com.streamsets.pipeline.lib.generator.DataGeneratorFactory;
 import com.streamsets.pipeline.lib.generator.DataGenerator;
 import com.streamsets.pipeline.lib.generator.DataGeneratorException;
 
@@ -17,7 +17,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
-public class JsonCharDataGeneratorFactory extends CharDataGeneratorFactory {
+public class JsonDataGeneratorFactory extends DataGeneratorFactory {
 
   public static final Map<String, Object> CONFIGS = new HashMap<>();
 
@@ -26,14 +26,14 @@ public class JsonCharDataGeneratorFactory extends CharDataGeneratorFactory {
 
   private final JsonMode jsonMode;
 
-  public JsonCharDataGeneratorFactory(Settings settings) {
+  public JsonDataGeneratorFactory(Settings settings) {
     super(settings);
     this.jsonMode = settings.getMode(JsonMode.class);
   }
 
   @Override
   public DataGenerator getGenerator(OutputStream os) throws IOException, DataGeneratorException {
-    return new JsonDataGenerator(createWriter(os), jsonMode);
+    return new JsonCharDataGenerator(createWriter(os), jsonMode);
   }
 
 }

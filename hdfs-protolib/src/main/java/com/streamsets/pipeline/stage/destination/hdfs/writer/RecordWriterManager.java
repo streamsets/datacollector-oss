@@ -14,7 +14,7 @@ import com.streamsets.pipeline.api.el.ELVars;
 import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.lib.el.RecordEL;
 import com.streamsets.pipeline.lib.el.TimeEL;
-import com.streamsets.pipeline.lib.generator.CharDataGeneratorFactory;
+import com.streamsets.pipeline.lib.generator.DataGeneratorFactory;
 import com.streamsets.pipeline.stage.destination.hdfs.ElUtil;
 import com.streamsets.pipeline.stage.destination.hdfs.Errors;
 import com.streamsets.pipeline.stage.destination.hdfs.HdfsFileType;
@@ -70,13 +70,13 @@ public class RecordWriterManager {
   private CompressionCodec compressionCodec;
   private SequenceFile.CompressionType compressionType;
   private String keyEL;
-  private CharDataGeneratorFactory generatorFactory;
+  private DataGeneratorFactory generatorFactory;
   private Target.Context context;
 
   public RecordWriterManager(URI hdfsUri, Configuration hdfsConf, String uniquePrefix, String dirPathTemplate,
       TimeZone timeZone, long cutOffSecs, long cutOffSizeBytes, long cutOffRecords, HdfsFileType fileType,
       CompressionCodec compressionCodec, SequenceFile.CompressionType compressionType, String keyEL,
-      CharDataGeneratorFactory generatorFactory, Target.Context context) {
+      DataGeneratorFactory generatorFactory, Target.Context context) {
     this.hdfsUri = hdfsUri;
     this.hdfsConf = hdfsConf;
     this.uniquePrefix = uniquePrefix;

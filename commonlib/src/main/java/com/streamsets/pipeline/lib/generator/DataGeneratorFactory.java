@@ -15,9 +15,9 @@ import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
 
-public abstract class CharDataGeneratorFactory extends DataFactory {
+public abstract class DataGeneratorFactory extends DataFactory {
 
-  protected CharDataGeneratorFactory(Settings settings) {
+  protected DataGeneratorFactory(Settings settings) {
     super(settings);
   }
 

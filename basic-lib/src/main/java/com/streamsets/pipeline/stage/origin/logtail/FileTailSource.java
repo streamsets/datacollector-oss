@@ -20,7 +20,7 @@ import com.streamsets.pipeline.lib.io.LiveFile;
 import com.streamsets.pipeline.lib.io.LiveFileChunk;
 import com.streamsets.pipeline.lib.io.LiveFileReader;
 import com.streamsets.pipeline.lib.io.RollMode;
-import com.streamsets.pipeline.lib.parser.CharDataParserFactory;
+import com.streamsets.pipeline.lib.parser.DataParserFactory;
 import com.streamsets.pipeline.lib.parser.DataParser;
 import com.streamsets.pipeline.lib.parser.DataParserException;
 import com.streamsets.pipeline.lib.parser.DataParserFactoryBuilder;
@@ -91,13 +91,12 @@ public class FileTailSource extends BaseSource {
   private LogDataFormatValidator logDataFormatValidator;
 
   private long maxWaitTimeMillis;
-
   private RollMode rollMode;
   private LiveDirectoryScanner scanner;
   private LiveFile currentFile;
   private LiveFileReader reader;
 
-  private CharDataParserFactory parserFactory;
+  private DataParserFactory parserFactory;
 
   @Override
   protected List<ConfigIssue> validateConfigs() throws StageException {

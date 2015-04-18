@@ -10,27 +10,18 @@ import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.config.JsonMode;
 import com.streamsets.pipeline.lib.data.DataFactory;
-import com.streamsets.pipeline.lib.data.DataFactoryBuilder;
-import com.streamsets.pipeline.lib.io.OverrunReader;
-import com.streamsets.pipeline.lib.json.StreamingJsonParser;
-import com.streamsets.pipeline.lib.parser.CharDataParserFactory;
 import com.streamsets.pipeline.lib.parser.DataParser;
 import com.streamsets.pipeline.lib.parser.DataParserFactoryBuilder;
 import com.streamsets.pipeline.lib.parser.DataParserFormat;
-import com.streamsets.pipeline.lib.parser.delimited.DelimitedCharDataParserFactory;
-import com.streamsets.pipeline.lib.parser.text.TextCharDataParserFactory;
 import com.streamsets.pipeline.sdk.ContextInfoCreator;
 import org.junit.Assert;
 import org.junit.Test;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
-import java.io.StringReader;
 import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
 
-public class TestJsonCharDataParserFactory {
+public class TestJsonDataParserFactory {
 
   private Stage.Context getContext() {
     return ContextInfoCreator.createSourceContext("i", false, OnRecordError.TO_ERROR, Collections.EMPTY_LIST);
@@ -43,8 +34,8 @@ public class TestJsonCharDataParserFactory {
       .setMaxDataLen(1000)
       .setMode(JsonMode.MULTIPLE_OBJECTS)
       .build();
-    Assert.assertTrue(dataFactory instanceof JsonCharDataParserFactory);
-    JsonCharDataParserFactory factory = (JsonCharDataParserFactory) dataFactory;
+    Assert.assertTrue(dataFactory instanceof JsonDataParserFactory);
+    JsonDataParserFactory factory = (JsonDataParserFactory) dataFactory;
 
     DataParser parser = factory.getParser("id", "[\"Hello\"]\n".getBytes());
     Assert.assertEquals(0, parser.getOffset());
@@ -61,8 +52,8 @@ public class TestJsonCharDataParserFactory {
       .setMaxDataLen(1000)
       .setMode(JsonMode.MULTIPLE_OBJECTS)
       .build();
-    Assert.assertTrue(dataFactory instanceof JsonCharDataParserFactory);
-    JsonCharDataParserFactory factory = (JsonCharDataParserFactory) dataFactory;
+    Assert.assertTrue(dataFactory instanceof JsonDataParserFactory);
+    JsonDataParserFactory factory = (JsonDataParserFactory) dataFactory;
 
     InputStream is = new ByteArrayInputStream("[\"Hello\"]\n".getBytes());
     DataParser parser = factory.getParser("id", is, 0);
@@ -80,8 +71,8 @@ public class TestJsonCharDataParserFactory {
       .setMaxDataLen(1000)
       .setMode(JsonMode.ARRAY_OBJECTS)
       .build();
-    Assert.assertTrue(dataFactory instanceof JsonCharDataParserFactory);
-    JsonCharDataParserFactory factory = (JsonCharDataParserFactory) dataFactory;
+    Assert.assertTrue(dataFactory instanceof JsonDataParserFactory);
+    JsonDataParserFactory factory = (JsonDataParserFactory) dataFactory;
 
     InputStream is = new ByteArrayInputStream("[[\"Hello\"],[\"Bye\"]]\n".getBytes());
     DataParser parser = factory.getParser("id", is, 10);

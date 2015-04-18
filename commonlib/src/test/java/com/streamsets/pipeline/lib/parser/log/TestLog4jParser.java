@@ -215,13 +215,13 @@ public class TestLog4jParser {
     DataFactory dataFactory = dataParserFactoryBuilder
       .setMaxDataLen(10000)
       .setMode(LogMode.LOG4J)
-      .setConfig(LogCharDataParserFactory.RETAIN_ORIGINAL_TEXT_KEY, true)
-      .setConfig(LogCharDataParserFactory.LOG4J_FORMAT_KEY, "%d{ISO8601} %-5p %c{1} - %m")
-      .setConfig(LogCharDataParserFactory.ON_PARSE_ERROR_KEY, OnParseError.INCLUDE_AS_STACK_TRACE)
-      .setConfig(LogCharDataParserFactory.LOG4J_TRIM_STACK_TRACES_TO_LENGTH_KEY, 100)
+      .setConfig(LogDataParserFactory.RETAIN_ORIGINAL_TEXT_KEY, true)
+      .setConfig(LogDataParserFactory.LOG4J_FORMAT_KEY, "%d{ISO8601} %-5p %c{1} - %m")
+      .setConfig(LogDataParserFactory.ON_PARSE_ERROR_KEY, OnParseError.INCLUDE_AS_STACK_TRACE)
+      .setConfig(LogDataParserFactory.LOG4J_TRIM_STACK_TRACES_TO_LENGTH_KEY, 100)
       .build();
-    Assert.assertTrue(dataFactory instanceof LogCharDataParserFactory);
-    LogCharDataParserFactory factory = (LogCharDataParserFactory) dataFactory;
+    Assert.assertTrue(dataFactory instanceof LogDataParserFactory);
+    LogDataParserFactory factory = (LogDataParserFactory) dataFactory;
 
     DataParser parser = factory.getParser("id", is, 0);
     Assert.assertEquals(0, parser.getOffset());
@@ -258,11 +258,11 @@ public class TestLog4jParser {
       .setMaxDataLen(maxObjectLength)
       .setMode(LogMode.LOG4J)
       .setOverRunLimit(1000)
-      .setConfig(LogCharDataParserFactory.RETAIN_ORIGINAL_TEXT_KEY, true)
-      .setConfig(LogCharDataParserFactory.LOG4J_FORMAT_KEY, "%d{ISO8601} %-5p %c{1} - %m")
+      .setConfig(LogDataParserFactory.RETAIN_ORIGINAL_TEXT_KEY, true)
+      .setConfig(LogDataParserFactory.LOG4J_FORMAT_KEY, "%d{ISO8601} %-5p %c{1} - %m")
       .build();
-    Assert.assertTrue(dataFactory instanceof LogCharDataParserFactory);
-    LogCharDataParserFactory factory = (LogCharDataParserFactory) dataFactory;
+    Assert.assertTrue(dataFactory instanceof LogDataParserFactory);
+    LogDataParserFactory factory = (LogDataParserFactory) dataFactory;
 
     return factory.getParser("id", is, readerOffset);
   }

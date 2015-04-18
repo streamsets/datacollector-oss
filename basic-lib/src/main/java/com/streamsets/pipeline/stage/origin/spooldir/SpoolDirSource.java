@@ -19,12 +19,12 @@ import com.streamsets.pipeline.config.OnParseError;
 import com.streamsets.pipeline.lib.dirspooler.DirectorySpooler;
 import com.streamsets.pipeline.lib.io.ObjectLengthException;
 import com.streamsets.pipeline.lib.io.OverrunException;
-import com.streamsets.pipeline.lib.parser.CharDataParserFactory;
+import com.streamsets.pipeline.lib.parser.DataParserFactory;
 import com.streamsets.pipeline.lib.parser.DataParser;
 import com.streamsets.pipeline.lib.parser.DataParserFactoryBuilder;
 import com.streamsets.pipeline.lib.parser.log.LogDataFormatValidator;
 import com.streamsets.pipeline.lib.parser.log.RegExConfig;
-import com.streamsets.pipeline.lib.parser.xml.XmlCharDataParserFactory;
+import com.streamsets.pipeline.lib.parser.xml.XmlDataParserFactory;
 import org.apache.xerces.util.XMLChar;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -125,7 +125,7 @@ public class SpoolDirSource extends BaseSource {
   private Charset fileCharset;
   private DirectorySpooler spooler;
   private File currentFile;
-  private CharDataParserFactory parserFactory;
+  private DataParserFactory parserFactory;
   private DataParser parser;
   private LogDataFormatValidator logDataFormatValidator;
 
@@ -283,7 +283,7 @@ public class SpoolDirSource extends BaseSource {
         builder.setMaxDataLen(csvMaxObjectLen).setMode(csvFileFormat).setMode(csvHeader);
         break;
       case XML:
-        builder.setMaxDataLen(xmlMaxObjectLen).setConfig(XmlCharDataParserFactory.RECORD_ELEMENT_KEY, xmlRecordElement);
+        builder.setMaxDataLen(xmlMaxObjectLen).setConfig(XmlDataParserFactory.RECORD_ELEMENT_KEY, xmlRecordElement);
         break;
       case SDC_JSON:
         builder.setMaxDataLen(-1);

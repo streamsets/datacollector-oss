@@ -18,7 +18,7 @@ import java.io.IOException;
 import java.io.StringReader;
 import java.util.Collections;
 
-public class TestTextDataParser {
+public class TestTextCharDataParser {
 
   @SuppressWarnings("unchecked")
   private Stage.Context getContext() {
@@ -28,7 +28,7 @@ public class TestTextDataParser {
   @Test
   public void testParse() throws Exception {
     OverrunReader reader = new OverrunReader(new StringReader("Hello\nBye"), 1000, true);
-    DataParser parser = new TextDataParser(getContext(), "id", reader, 0, 1000, "text", "truncated");
+    DataParser parser = new TextCharDataParser(getContext(), "id", reader, 0, 1000, "text", "truncated");
     Assert.assertEquals(0, parser.getOffset());
     Record record = parser.parse();
     Assert.assertNotNull(record);
@@ -51,7 +51,7 @@ public class TestTextDataParser {
   @Test
   public void testParseWithOffset() throws Exception {
     OverrunReader reader = new OverrunReader(new StringReader("Hello\nBye"), 1000, true);
-    DataParser parser = new TextDataParser(getContext(), "id", reader, 6, 1000, "text", "truncated");
+    DataParser parser = new TextCharDataParser(getContext(), "id", reader, 6, 1000, "text", "truncated");
     Assert.assertEquals(6, parser.getOffset());
     Record record = parser.parse();
     Assert.assertNotNull(record);
@@ -68,7 +68,7 @@ public class TestTextDataParser {
   @Test(expected = IOException.class)
   public void testClose() throws Exception {
     OverrunReader reader = new OverrunReader(new StringReader("Hello\nByte"), 1000, true);
-    DataParser parser = new TextDataParser(getContext(), "id", reader, 0, 1000, "text", "truncated");
+    DataParser parser = new TextCharDataParser(getContext(), "id", reader, 0, 1000, "text", "truncated");
     parser.close();
     parser.parse();
   }
@@ -76,7 +76,7 @@ public class TestTextDataParser {
   @Test
   public void testTruncate() throws Exception {
     OverrunReader reader = new OverrunReader(new StringReader("Hello\nBye"), 1000, true);
-    DataParser parser = new TextDataParser(getContext(), "id", reader, 0, 3, "text", "truncated");
+    DataParser parser = new TextCharDataParser(getContext(), "id", reader, 0, 3, "text", "truncated");
     Assert.assertEquals(0, parser.getOffset());
     Record record = parser.parse();
     Assert.assertNotNull(record);

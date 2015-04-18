@@ -8,34 +8,34 @@ package com.streamsets.pipeline.lib.parser;
 import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.lib.data.DataFactory;
 import com.streamsets.pipeline.lib.data.DataFormat;
-import com.streamsets.pipeline.lib.parser.delimited.DelimitedCharDataParserFactory;
-import com.streamsets.pipeline.lib.parser.json.JsonCharDataParserFactory;
-import com.streamsets.pipeline.lib.parser.log.LogCharDataParserFactory;
-import com.streamsets.pipeline.lib.parser.sdcrecord.JsonSdcRecordCharDataParserFactory;
-import com.streamsets.pipeline.lib.parser.text.TextCharDataParserFactory;
-import com.streamsets.pipeline.lib.parser.xml.XmlCharDataParserFactory;
+import com.streamsets.pipeline.lib.parser.delimited.DelimitedDataParserFactory;
+import com.streamsets.pipeline.lib.parser.json.JsonDataParserFactory;
+import com.streamsets.pipeline.lib.parser.log.LogDataParserFactory;
+import com.streamsets.pipeline.lib.parser.sdcrecord.SdcRecordDataParserFactory;
+import com.streamsets.pipeline.lib.parser.text.TextDataParserFactory;
+import com.streamsets.pipeline.lib.parser.xml.XmlDataParserFactory;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Modifier;
 import java.util.Map;
 import java.util.Set;
 
-public enum DataParserFormat implements DataFormat<CharDataParserFactory> {
-  TEXT(TextCharDataParserFactory.class, TextCharDataParserFactory.MODES, TextCharDataParserFactory.CONFIGS),
-  JSON(JsonCharDataParserFactory.class, JsonCharDataParserFactory.MODES, JsonCharDataParserFactory.CONFIGS),
-  XML(XmlCharDataParserFactory.class, XmlCharDataParserFactory.MODES, XmlCharDataParserFactory.CONFIGS),
-  DELIMITED(DelimitedCharDataParserFactory.class, DelimitedCharDataParserFactory.MODES, DelimitedCharDataParserFactory.CONFIGS),
-  SDC_RECORD(JsonSdcRecordCharDataParserFactory.class, JsonSdcRecordCharDataParserFactory.MODES, JsonSdcRecordCharDataParserFactory.CONFIGS),
-  LOG(LogCharDataParserFactory.class, LogCharDataParserFactory.MODES, LogCharDataParserFactory.CONFIGS),
+public enum DataParserFormat implements DataFormat<DataParserFactory> {
+  TEXT(TextDataParserFactory.class, TextDataParserFactory.MODES, TextDataParserFactory.CONFIGS),
+  JSON(JsonDataParserFactory.class, JsonDataParserFactory.MODES, JsonDataParserFactory.CONFIGS),
+  XML(XmlDataParserFactory.class, XmlDataParserFactory.MODES, XmlDataParserFactory.CONFIGS),
+  DELIMITED(DelimitedDataParserFactory.class, DelimitedDataParserFactory.MODES, DelimitedDataParserFactory.CONFIGS),
+  SDC_RECORD(SdcRecordDataParserFactory.class, SdcRecordDataParserFactory.MODES, SdcRecordDataParserFactory.CONFIGS),
+  LOG(LogDataParserFactory.class, LogDataParserFactory.MODES, LogDataParserFactory.CONFIGS),
 
   ;
 
-  private final Class<? extends CharDataParserFactory> klass;
-  private final Constructor<? extends CharDataParserFactory> constructor;
+  private final Class<? extends DataParserFactory> klass;
+  private final Constructor<? extends DataParserFactory> constructor;
   private final Set<Class<? extends Enum>> modes;
   private Map<String, Object> configs;
 
-  DataParserFormat(Class<? extends CharDataParserFactory> klass, Set<Class<? extends Enum>> modes,
+  DataParserFormat(Class<? extends DataParserFactory> klass, Set<Class<? extends Enum>> modes,
       Map<String, Object> configs) {
     this.klass = klass;
     try {
@@ -63,7 +63,7 @@ public enum DataParserFormat implements DataFormat<CharDataParserFactory> {
   }
 
   @Override
-  public CharDataParserFactory create(DataFactory.Settings settings) {
+  public DataParserFactory create(DataFactory.Settings settings) {
     try {
       return constructor.newInstance(settings);
     } catch (Exception ex) {

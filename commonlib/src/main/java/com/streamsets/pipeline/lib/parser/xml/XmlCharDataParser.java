@@ -16,15 +16,15 @@ import com.streamsets.pipeline.lib.xml.OverrunStreamingXmlParser;
 import javax.xml.stream.XMLStreamException;
 import java.io.IOException;
 
-public class XmlDataParser implements DataParser {
+public class XmlCharDataParser implements DataParser {
   private final Stage.Context context;
   private final String readerId;
   private final int maxObjectLen;
   private final OverrunStreamingXmlParser parser;
   private long readerOffset;
 
-  public XmlDataParser(Stage.Context context, String readerId, OverrunReader reader, long readerOffset,
-      String recordElement, int maxObjectLen) throws IOException {
+  public XmlCharDataParser(Stage.Context context, String readerId, OverrunReader reader, long readerOffset,
+                           String recordElement, int maxObjectLen) throws IOException {
     this.context = context;
     this.readerId = readerId;
     this.readerOffset = readerOffset;

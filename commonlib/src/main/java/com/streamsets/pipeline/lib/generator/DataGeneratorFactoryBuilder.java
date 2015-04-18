@@ -9,7 +9,7 @@ import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.lib.data.DataFactoryBuilder;
 
 public class DataGeneratorFactoryBuilder extends
-  DataFactoryBuilder<DataGeneratorFactoryBuilder, CharDataGeneratorFactory, DataGeneratorFormat> {
+  DataFactoryBuilder<DataGeneratorFactoryBuilder, DataGeneratorFactory, DataGeneratorFormat> {
 
   public DataGeneratorFactoryBuilder(Stage.Context context, DataGeneratorFormat format) {
     super(context, format);

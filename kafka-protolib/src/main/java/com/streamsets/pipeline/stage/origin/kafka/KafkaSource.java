@@ -22,13 +22,13 @@ import com.streamsets.pipeline.config.OnParseError;
 import com.streamsets.pipeline.lib.Errors;
 import com.streamsets.pipeline.lib.KafkaBroker;
 import com.streamsets.pipeline.lib.KafkaUtil;
-import com.streamsets.pipeline.lib.parser.CharDataParserFactory;
+import com.streamsets.pipeline.lib.parser.DataParserFactory;
 import com.streamsets.pipeline.lib.parser.DataParser;
 import com.streamsets.pipeline.lib.parser.DataParserException;
 import com.streamsets.pipeline.lib.parser.DataParserFactoryBuilder;
 import com.streamsets.pipeline.lib.parser.log.LogDataFormatValidator;
 import com.streamsets.pipeline.lib.parser.log.RegExConfig;
-import com.streamsets.pipeline.lib.parser.xml.XmlCharDataParserFactory;
+import com.streamsets.pipeline.lib.parser.xml.XmlDataParserFactory;
 import org.apache.xerces.util.XMLChar;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -231,7 +231,7 @@ public class KafkaSource extends BaseSource implements OffsetCommitter {
         break;
       case XML:
         builder.setMaxDataLen(xmlMaxObjectLen);
-        builder.setConfig(XmlCharDataParserFactory.RECORD_ELEMENT_KEY, xmlRecordElement);
+        builder.setConfig(XmlDataParserFactory.RECORD_ELEMENT_KEY, xmlRecordElement);
         break;
       case SDC_JSON:
         builder.setMaxDataLen(-1);
@@ -247,7 +247,7 @@ public class KafkaSource extends BaseSource implements OffsetCommitter {
   }
 
   Charset messageCharset;
-  CharDataParserFactory parserFactory;
+  DataParserFactory parserFactory;
 
   @Override
   public void init() throws StageException {

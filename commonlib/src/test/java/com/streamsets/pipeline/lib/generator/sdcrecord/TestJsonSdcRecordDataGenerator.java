@@ -40,8 +40,8 @@ public class TestJsonSdcRecordDataGenerator {
 
     DataFactory dataFactory = new DataGeneratorFactoryBuilder(context, DataGeneratorFormat.SDC_RECORD)
       .setCharset(Charset.forName("UTF-16")).build();
-    Assert.assertTrue(dataFactory instanceof JsonSdcRecordCharDataGeneratorFactory);
-    JsonSdcRecordCharDataGeneratorFactory factory = (JsonSdcRecordCharDataGeneratorFactory) dataFactory;
+    Assert.assertTrue(dataFactory instanceof SdcRecordDataGeneratorFactory);
+    SdcRecordDataGeneratorFactory factory = (SdcRecordDataGeneratorFactory) dataFactory;
     JsonSdcRecordDataGenerator generator = (JsonSdcRecordDataGenerator) factory.getGenerator(new ByteArrayOutputStream());
     Assert.assertNotNull(generator);
 

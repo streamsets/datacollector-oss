@@ -15,7 +15,7 @@ import java.io.IOException;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-public class GrokParser extends LogDataParser {
+public class GrokParser extends LogCharDataParser {
 
   private final Grok compiledPattern;
   private final String formatName;

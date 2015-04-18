@@ -18,7 +18,7 @@ import java.io.Writer;
 import java.util.ArrayList;
 import java.util.List;
 
-public class DelimitedDataGenerator implements DataGenerator {
+public class DelimitedCharDataGenerator implements DataGenerator {
   private final CSVFormat format;
   private final CsvHeader header;
   private final String headerKey;
@@ -28,8 +28,8 @@ public class DelimitedDataGenerator implements DataGenerator {
   private boolean closed;
   private boolean replaceNewLines;
 
-  public DelimitedDataGenerator(Writer writer, CSVFormat format, CsvHeader header, String headerKey, String valueKey,
-      boolean replaceNewLines)
+  public DelimitedCharDataGenerator(Writer writer, CSVFormat format, CsvHeader header, String headerKey, String valueKey,
+                                    boolean replaceNewLines)
       throws IOException {
     format = format.withHeader((String[])null);
     this.format = format;

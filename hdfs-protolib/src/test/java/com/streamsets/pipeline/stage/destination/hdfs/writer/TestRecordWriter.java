@@ -8,7 +8,7 @@ package com.streamsets.pipeline.stage.destination.hdfs.writer;
 import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.OnRecordError;
 import com.streamsets.pipeline.api.Record;
-import com.streamsets.pipeline.lib.generator.CharDataGeneratorFactory;
+import com.streamsets.pipeline.lib.generator.DataGeneratorFactory;
 import com.streamsets.pipeline.lib.generator.DataGenerator;
 import com.streamsets.pipeline.lib.generator.DataGeneratorException;
 import com.streamsets.pipeline.sdk.ContextInfoCreator;
@@ -35,7 +35,7 @@ import java.util.UUID;
 public class TestRecordWriter {
   private static Path testDir;
 
-  public static class DummyDataGeneratorFactory extends CharDataGeneratorFactory {
+  public static class DummyDataGeneratorFactory extends DataGeneratorFactory {
     protected DummyDataGeneratorFactory(Settings settings) {
       super(settings);
     }

@@ -13,7 +13,7 @@ import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.config.LogMode;
 import com.streamsets.pipeline.config.OnParseError;
 import com.streamsets.pipeline.lib.io.OverrunReader;
-import com.streamsets.pipeline.lib.parser.CharDataParserFactory;
+import com.streamsets.pipeline.lib.parser.DataParserFactory;
 import com.streamsets.pipeline.lib.parser.DataParser;
 import com.streamsets.pipeline.lib.parser.DataParserException;
 import com.streamsets.pipeline.lib.parser.shaded.org.aicer.grok.dictionary.GrokDictionary;
@@ -29,7 +29,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.regex.Pattern;
 
-public class LogCharDataParserFactory extends CharDataParserFactory {
+public class LogDataParserFactory extends DataParserFactory {
 
   static final String KEY_PREFIX = "log.";
   public static final String RETAIN_ORIGINAL_TEXT_KEY = KEY_PREFIX + "retain.original.text";
@@ -89,7 +89,7 @@ public class LogCharDataParserFactory extends CharDataParserFactory {
   private final int maxStackTraceLength;
   private final Map<String, Object> regexToPatternMap;
 
-  public LogCharDataParserFactory(Settings settings) {
+  public LogDataParserFactory(Settings settings) {
     super(settings);
     this.context = settings.getContext();
     this.maxObjectLen = settings.getMaxRecordLen();

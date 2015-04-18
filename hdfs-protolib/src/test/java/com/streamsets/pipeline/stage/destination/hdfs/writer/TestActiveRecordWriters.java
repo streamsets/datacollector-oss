@@ -8,7 +8,7 @@ package com.streamsets.pipeline.stage.destination.hdfs.writer;
 import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.OnRecordError;
 import com.streamsets.pipeline.api.Record;
-import com.streamsets.pipeline.lib.generator.CharDataGeneratorFactory;
+import com.streamsets.pipeline.lib.generator.DataGeneratorFactory;
 import com.streamsets.pipeline.lib.generator.DataGenerator;
 import com.streamsets.pipeline.lib.generator.DataGeneratorException;
 import com.streamsets.pipeline.sdk.ContextInfoCreator;
@@ -34,7 +34,7 @@ import java.util.UUID;
 public class TestActiveRecordWriters {
   private static Path testDir;
 
-  public static class DummyDataGeneratorFactory extends CharDataGeneratorFactory {
+  public static class DummyDataGeneratorFactory extends DataGeneratorFactory {
     protected DummyDataGeneratorFactory(Settings settings) {
       super(settings);
     }
@@ -85,7 +85,7 @@ public class TestActiveRecordWriters {
     compressionCodec.setConf(conf);
     SequenceFile.CompressionType compressionType = SequenceFile.CompressionType.BLOCK;
     String keyEL = "uuid()";
-    CharDataGeneratorFactory generatorFactory = new DummyDataGeneratorFactory(null);
+    DataGeneratorFactory generatorFactory = new DummyDataGeneratorFactory(null);
     RecordWriterManager mgr = new RecordWriterManager(uri, conf, prefix, template, timeZone, cutOffSecs, cutOffSize,
       cutOffRecords, fileType, compressionCodec , compressionType, keyEL, generatorFactory,
       ContextInfoCreator.createTargetContext("testWritersLifecycle", false, OnRecordError.TO_ERROR));

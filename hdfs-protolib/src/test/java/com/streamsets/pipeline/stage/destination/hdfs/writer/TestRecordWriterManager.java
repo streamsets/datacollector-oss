@@ -9,7 +9,7 @@ import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.OnRecordError;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.Target;
-import com.streamsets.pipeline.lib.generator.CharDataGeneratorFactory;
+import com.streamsets.pipeline.lib.generator.DataGeneratorFactory;
 import com.streamsets.pipeline.lib.generator.DataGenerator;
 import com.streamsets.pipeline.lib.generator.DataGeneratorException;
 import com.streamsets.pipeline.sdk.ContextInfoCreator;
@@ -49,7 +49,7 @@ public class TestRecordWriterManager {
     OnRecordError.TO_ERROR);
 
 
-  public static class DummyDataGeneratorFactory extends CharDataGeneratorFactory {
+  public static class DummyDataGeneratorFactory extends DataGeneratorFactory {
     protected DummyDataGeneratorFactory(Settings settings) {
       super(settings);
     }
@@ -121,7 +121,7 @@ public class TestRecordWriterManager {
     CompressionCodec compressionCodec = null;
     SequenceFile.CompressionType compressionType = SequenceFile.CompressionType.NONE;
     String keyEL = "uuid()";
-    CharDataGeneratorFactory generatorFactory = new DummyDataGeneratorFactory(null);
+    DataGeneratorFactory generatorFactory = new DummyDataGeneratorFactory(null);
     RecordWriterManager mgr = new RecordWriterManager(uri, conf, prefix, template, timeZone, cutOffSecs, cutOffSize,
       cutOffRecords, fileType, compressionCodec, compressionType, keyEL, generatorFactory, targetContext);
 
@@ -163,7 +163,7 @@ public class TestRecordWriterManager {
     SequenceFile.CompressionType compressionType = (compressionCodec == null) ? SequenceFile.CompressionType.NONE
                                                                               : SequenceFile.CompressionType.BLOCK;
     String keyEL = "uuid()";
-    CharDataGeneratorFactory generatorFactory = new DummyDataGeneratorFactory(null);
+    DataGeneratorFactory generatorFactory = new DummyDataGeneratorFactory(null);
     RecordWriterManager mgr = new RecordWriterManager(uri, conf, prefix, template, timeZone, cutOffSecs, cutOffSize,
       cutOffRecords, fileType, compressionCodec, compressionType,keyEL, generatorFactory, targetContext);
 
@@ -192,7 +192,7 @@ public class TestRecordWriterManager {
     HdfsFileType fileType = HdfsFileType.TEXT;
     SequenceFile.CompressionType compressionType = null;
     String keyEL = null;
-    CharDataGeneratorFactory generatorFactory = new DummyDataGeneratorFactory(null);
+    DataGeneratorFactory generatorFactory = new DummyDataGeneratorFactory(null);
     RecordWriterManager mgr = new RecordWriterManager(uri, conf, prefix, template, timeZone, cutOffSecs, cutOffSize,
       cutOffRecords, fileType, compressionCodec, compressionType, keyEL, generatorFactory, targetContext);
     FileSystem fs = FileSystem.get(uri, conf);
@@ -240,7 +240,7 @@ public class TestRecordWriterManager {
     long cutOffRecords = 2;
     HdfsFileType fileType = HdfsFileType.SEQUENCE_FILE;
     String keyEL = "${uuid()}";
-    CharDataGeneratorFactory generatorFactory = new DummyDataGeneratorFactory(null);
+    DataGeneratorFactory generatorFactory = new DummyDataGeneratorFactory(null);
     RecordWriterManager mgr = new RecordWriterManager(uri, conf, prefix, template, timeZone, cutOffSecs, cutOffSize,
       cutOffRecords, fileType, compressionCodec, compressionType, keyEL, generatorFactory, targetContext);
     FileSystem fs = FileSystem.get(uri, conf);
@@ -293,7 +293,7 @@ public class TestRecordWriterManager {
     compressionCodec.setConf(conf);
     SequenceFile.CompressionType compressionType = null;
     String keyEL = null;
-    CharDataGeneratorFactory generatorFactory = new DummyDataGeneratorFactory(null);
+    DataGeneratorFactory generatorFactory = new DummyDataGeneratorFactory(null);
     RecordWriterManager mgr = new RecordWriterManager(uri, conf, prefix, template, timeZone, cutOffSecs, cutOffSize,
       cutOffRecords, fileType, compressionCodec , compressionType, keyEL, generatorFactory, targetContext);
 
@@ -375,7 +375,7 @@ public class TestRecordWriterManager {
     compressionCodec.setConf(conf);
     SequenceFile.CompressionType compressionType = null;
     String keyEL = null;
-    CharDataGeneratorFactory generatorFactory = new DummyDataGeneratorFactory(null);
+    DataGeneratorFactory generatorFactory = new DummyDataGeneratorFactory(null);
     RecordWriterManager mgr = new RecordWriterManager(uri, conf, prefix, template, timeZone, cutOffSecs, cutOffSize,
       cutOffRecords, fileType, compressionCodec , compressionType, keyEL, generatorFactory, targetContext);
 
@@ -410,7 +410,7 @@ public class TestRecordWriterManager {
     compressionCodec.setConf(conf);
     SequenceFile.CompressionType compressionType = null;
     String keyEL = null;
-    CharDataGeneratorFactory generatorFactory = new DummyDataGeneratorFactory(null);
+    DataGeneratorFactory generatorFactory = new DummyDataGeneratorFactory(null);
     RecordWriterManager mgr = new RecordWriterManager(uri, conf, prefix, template, timeZone, cutOffSecs, cutOffSize,
       cutOffRecords, fileType, compressionCodec , compressionType, keyEL, generatorFactory, targetContext);
     Date now = getFixedDate();
@@ -444,7 +444,7 @@ public class TestRecordWriterManager {
     compressionCodec.setConf(conf);
     SequenceFile.CompressionType compressionType = null;
     String keyEL = null;
-    CharDataGeneratorFactory generatorFactory = new DummyDataGeneratorFactory(null);
+    DataGeneratorFactory generatorFactory = new DummyDataGeneratorFactory(null);
     RecordWriterManager mgr = new RecordWriterManager(uri, conf, prefix, template, timeZone, cutOffSecs, cutOffSize,
       cutOffRecords, fileType, compressionCodec , compressionType, keyEL, generatorFactory, targetContext);
     Date now = getFixedDate();
@@ -477,7 +477,7 @@ public class TestRecordWriterManager {
     compressionCodec.setConf(conf);
     SequenceFile.CompressionType compressionType = null;
     String keyEL = null;
-    CharDataGeneratorFactory generatorFactory = new DummyDataGeneratorFactory(null);
+    DataGeneratorFactory generatorFactory = new DummyDataGeneratorFactory(null);
 
     // up to seconds
     String template = getTestDir().toString() + "/${YYYY()}/${MM()}/${DD()}/${hh()}/${mm()}/${ss()}";
@@ -583,7 +583,7 @@ public class TestRecordWriterManager {
     compressionCodec.setConf(conf);
     SequenceFile.CompressionType compressionType = null;
     String keyEL = null;
-    CharDataGeneratorFactory generatorFactory = new DummyDataGeneratorFactory(null);
+    DataGeneratorFactory generatorFactory = new DummyDataGeneratorFactory(null);
 
     RecordWriterManager mgr = new RecordWriterManager(uri, conf, prefix, template, timeZone, cutOffSecs, cutOffSize,
       cutOffRecords, fileType, compressionCodec , compressionType, keyEL, generatorFactory, targetContext);

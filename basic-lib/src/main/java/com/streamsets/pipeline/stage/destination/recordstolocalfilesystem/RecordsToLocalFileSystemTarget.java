@@ -12,7 +12,7 @@ import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.base.BaseTarget;
 import com.streamsets.pipeline.api.el.ELEval;
 import com.streamsets.pipeline.api.el.ELEvalException;
-import com.streamsets.pipeline.lib.generator.CharDataGeneratorFactory;
+import com.streamsets.pipeline.lib.generator.DataGeneratorFactory;
 import com.streamsets.pipeline.lib.generator.DataGenerator;
 import com.streamsets.pipeline.lib.generator.DataGeneratorFactoryBuilder;
 import com.streamsets.pipeline.lib.generator.DataGeneratorFormat;
@@ -52,7 +52,7 @@ public class RecordsToLocalFileSystemTarget extends BaseTarget {
   private DirectoryStream.Filter<Path> fileFilter;
   private File activeFile;
   private CountingOutputStream countingOutputStream;
-  private CharDataGeneratorFactory generatorFactory;
+  private DataGeneratorFactory generatorFactory;
   private DataGenerator generator;
   private ELEval rotationMillisEvaluator;
 

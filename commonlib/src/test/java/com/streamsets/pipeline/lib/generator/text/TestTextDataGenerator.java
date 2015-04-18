@@ -31,21 +31,21 @@ public class TestTextDataGenerator {
   public void testFactory() throws Exception {
     Stage.Context context = ContextInfoCreator.createTargetContext("i", false, OnRecordError.TO_ERROR);
     DataFactory dataFactory = new DataGeneratorFactoryBuilder(context, DataGeneratorFormat.TEXT).build();
-    Assert.assertTrue(dataFactory instanceof TextCharDataGeneratorFactory);
-    TextCharDataGeneratorFactory factory = (TextCharDataGeneratorFactory) dataFactory;
-    TextDataGenerator generator = (TextDataGenerator) factory.getGenerator(new ByteArrayOutputStream());
+    Assert.assertTrue(dataFactory instanceof TextDataGeneratorFactory);
+    TextDataGeneratorFactory factory = (TextDataGeneratorFactory) dataFactory;
+    TextCharDataGenerator generator = (TextCharDataGenerator) factory.getGenerator(new ByteArrayOutputStream());
     Assert.assertEquals("", generator.getFieldPath());
     Assert.assertEquals(false, generator.isEmptyLineIfNull());
 
     dataFactory = new DataGeneratorFactoryBuilder(context, DataGeneratorFormat.TEXT)
-      .setConfig(TextCharDataGeneratorFactory.FIELD_PATH_KEY, "/foo")
-      .setConfig(TextCharDataGeneratorFactory.EMPTY_LINE_IF_NULL_KEY, true)
+      .setConfig(TextDataGeneratorFactory.FIELD_PATH_KEY, "/foo")
+      .setConfig(TextDataGeneratorFactory.EMPTY_LINE_IF_NULL_KEY, true)
       .setCharset(Charset.forName("UTF-16"))
       .build();
-    Assert.assertTrue(dataFactory instanceof TextCharDataGeneratorFactory);
-    factory = (TextCharDataGeneratorFactory) dataFactory;
+    Assert.assertTrue(dataFactory instanceof TextDataGeneratorFactory);
+    factory = (TextDataGeneratorFactory) dataFactory;
 
-    generator = (TextDataGenerator) factory.getGenerator(new ByteArrayOutputStream());
+    generator = (TextCharDataGenerator) factory.getGenerator(new ByteArrayOutputStream());
     Assert.assertEquals("/foo", generator.getFieldPath());
     Assert.assertEquals(true, generator.isEmptyLineIfNull());
 
@@ -58,7 +58,7 @@ public class TestTextDataGenerator {
   @Test
   public void testGeneratorNoEmptyLines() throws Exception {
     StringWriter writer = new StringWriter();
-    DataGenerator gen = new TextDataGenerator(writer, "", false);
+    DataGenerator gen = new TextCharDataGenerator(writer, "", false);
     Record record = RecordCreator.create();
     record.set(Field.create("Hello"));
     gen.write(record);
@@ -67,13 +67,13 @@ public class TestTextDataGenerator {
     record.set(Field.create("Bye"));
     gen.write(record);
     gen.close();
-    Assert.assertEquals("Hello" + TextDataGenerator.EOL + "Bye" + TextDataGenerator.EOL, writer.toString());
+    Assert.assertEquals("Hello" + TextCharDataGenerator.EOL + "Bye" + TextCharDataGenerator.EOL, writer.toString());
   }
 
   @Test
   public void testGeneratorEmptyLines() throws Exception {
     StringWriter writer = new StringWriter();
-    DataGenerator gen = new TextDataGenerator(writer, "", true);
+    DataGenerator gen = new TextCharDataGenerator(writer, "", true);
     Record record = RecordCreator.create();
     record.set(Field.create("Hello"));
     gen.write(record);
@@ -82,26 +82,26 @@ public class TestTextDataGenerator {
     record.set(Field.create("Bye"));
     gen.write(record);
     gen.close();
-    Assert.assertEquals("Hello" + TextDataGenerator.EOL + TextDataGenerator.EOL + "Bye" + TextDataGenerator.EOL,
+    Assert.assertEquals("Hello" + TextCharDataGenerator.EOL + TextCharDataGenerator.EOL + "Bye" + TextCharDataGenerator.EOL,
                         writer.toString());
   }
 
   @Test
   public void testFlush() throws Exception {
     StringWriter writer = new StringWriter();
-    DataGenerator gen = new TextDataGenerator(writer, "", true);
+    DataGenerator gen = new TextCharDataGenerator(writer, "", true);
     Record record = RecordCreator.create();
     record.set(Field.create("Hello"));
     gen.write(record);
     gen.flush();
-    Assert.assertEquals("Hello" + TextDataGenerator.EOL, writer.toString());
+    Assert.assertEquals("Hello" + TextCharDataGenerator.EOL, writer.toString());
     gen.close();
   }
 
   @Test
   public void testClose() throws Exception {
     StringWriter writer = new StringWriter();
-    DataGenerator gen = new TextDataGenerator(writer, "", true);
+    DataGenerator gen = new TextCharDataGenerator(writer, "", true);
     Record record = RecordCreator.create();
     record.set(Field.create("Hello"));
     gen.write(record);
@@ -112,7 +112,7 @@ public class TestTextDataGenerator {
   @Test(expected = IOException.class)
   public void testWriteAfterClose() throws Exception {
     StringWriter writer = new StringWriter();
-    DataGenerator gen = new TextDataGenerator(writer, "", true);
+    DataGenerator gen = new TextCharDataGenerator(writer, "", true);
     Record record = RecordCreator.create();
     record.set(Field.create("Hello"));
     gen.close();
@@ -122,7 +122,7 @@ public class TestTextDataGenerator {
   @Test(expected = IOException.class)
   public void testFlushAfterClose() throws Exception {
     StringWriter writer = new StringWriter();
-    DataGenerator gen = new TextDataGenerator(writer, "", true);
+    DataGenerator gen = new TextCharDataGenerator(writer, "", true);
     Record record = RecordCreator.create();
     record.set(Field.create("Hello"));
     gen.close();

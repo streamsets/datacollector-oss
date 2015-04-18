@@ -38,16 +38,16 @@ public class TestJsonDataGenerator {
 
     DataFactory dataFactory = new DataGeneratorFactoryBuilder(context, DataGeneratorFormat.JSON)
       .setMode(JsonMode.ARRAY_OBJECTS).setCharset(Charset.forName("UTF-16")).build();
-    Assert.assertTrue(dataFactory instanceof JsonCharDataGeneratorFactory);
-    JsonCharDataGeneratorFactory factory = (JsonCharDataGeneratorFactory) dataFactory;
-    JsonDataGenerator generator = (JsonDataGenerator) factory.getGenerator(new ByteArrayOutputStream());
+    Assert.assertTrue(dataFactory instanceof JsonDataGeneratorFactory);
+    JsonDataGeneratorFactory factory = (JsonDataGeneratorFactory) dataFactory;
+    JsonCharDataGenerator generator = (JsonCharDataGenerator) factory.getGenerator(new ByteArrayOutputStream());
     Assert.assertEquals(true, generator.isArrayObjects());
 
     dataFactory = new DataGeneratorFactoryBuilder(context, DataGeneratorFormat.JSON)
       .setMode(JsonMode.MULTIPLE_OBJECTS).setCharset(Charset.forName("UTF-16")).build();
-    Assert.assertTrue(dataFactory instanceof JsonCharDataGeneratorFactory);
-    factory = (JsonCharDataGeneratorFactory) dataFactory;
-    generator = (JsonDataGenerator) factory.getGenerator(new ByteArrayOutputStream());
+    Assert.assertTrue(dataFactory instanceof JsonDataGeneratorFactory);
+    factory = (JsonDataGeneratorFactory) dataFactory;
+    generator = (JsonCharDataGenerator) factory.getGenerator(new ByteArrayOutputStream());
     Assert.assertEquals(false, generator.isArrayObjects());
 
     Writer writer = factory.createWriter(new ByteArrayOutputStream());
@@ -59,7 +59,7 @@ public class TestJsonDataGenerator {
   @Test
   public void testGeneratorArrayObjects() throws Exception {
     StringWriter writer = new StringWriter();
-    DataGenerator gen = new JsonDataGenerator(writer, JsonMode.ARRAY_OBJECTS);
+    DataGenerator gen = new JsonCharDataGenerator(writer, JsonMode.ARRAY_OBJECTS);
     Record record = RecordCreator.create();
     record.set(Field.create("Hello"));
     gen.write(record);
@@ -81,7 +81,7 @@ public class TestJsonDataGenerator {
   @Test
   public void testGeneratorMultipleObjects() throws Exception {
     StringWriter writer = new StringWriter();
-    DataGenerator gen = new JsonDataGenerator(writer, JsonMode.MULTIPLE_OBJECTS);
+    DataGenerator gen = new JsonCharDataGenerator(writer, JsonMode.MULTIPLE_OBJECTS);
     Record record = RecordCreator.create();
     record.set(Field.create("Hello"));
     gen.write(record);
@@ -104,7 +104,7 @@ public class TestJsonDataGenerator {
   @Test
   public void testFlush() throws Exception {
     StringWriter writer = new StringWriter();
-    DataGenerator gen = new JsonDataGenerator(writer, JsonMode.MULTIPLE_OBJECTS);
+    DataGenerator gen = new JsonCharDataGenerator(writer, JsonMode.MULTIPLE_OBJECTS);
     Record record = RecordCreator.create();
     record.set(Field.create("Hello"));
     gen.write(record);
@@ -120,7 +120,7 @@ public class TestJsonDataGenerator {
   @Test
   public void testClose() throws Exception {
     StringWriter writer = new StringWriter();
-    DataGenerator gen = new JsonDataGenerator(writer, JsonMode.MULTIPLE_OBJECTS);
+    DataGenerator gen = new JsonCharDataGenerator(writer, JsonMode.MULTIPLE_OBJECTS);
     Record record = RecordCreator.create();
     record.set(Field.create("Hello"));
     gen.write(record);
@@ -131,7 +131,7 @@ public class TestJsonDataGenerator {
   @Test(expected = IOException.class)
   public void testWriteAfterClose() throws Exception {
     StringWriter writer = new StringWriter();
-    DataGenerator gen = new JsonDataGenerator(writer, JsonMode.MULTIPLE_OBJECTS);
+    DataGenerator gen = new JsonCharDataGenerator(writer, JsonMode.MULTIPLE_OBJECTS);
     Record record = RecordCreator.create();
     record.set(Field.create("Hello"));
     gen.close();
@@ -141,7 +141,7 @@ public class TestJsonDataGenerator {
   @Test(expected = IOException.class)
   public void testFlushAfterClose() throws Exception {
     StringWriter writer = new StringWriter();
-    DataGenerator gen = new JsonDataGenerator(writer, JsonMode.MULTIPLE_OBJECTS);
+    DataGenerator gen = new JsonCharDataGenerator(writer, JsonMode.MULTIPLE_OBJECTS);
     Record record = RecordCreator.create();
     record.set(Field.create("Hello"));
     gen.close();

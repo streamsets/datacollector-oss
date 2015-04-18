@@ -18,7 +18,7 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-public abstract class LogDataParser implements DataParser {
+public abstract class LogCharDataParser implements DataParser {
 
   static final String TEXT_FIELD_NAME = "originalLine";
   static final String TRUNCATED_FIELD_NAME = "truncated";
@@ -35,8 +35,8 @@ public abstract class LogDataParser implements DataParser {
   private int previousRead;
   private long currentOffset;
 
-  public LogDataParser(Stage.Context context, String readerId, OverrunReader reader, long readerOffset,
-                        int maxObjectLen, boolean retainOriginalText, int maxStackTraceLines) throws IOException {
+  public LogCharDataParser(Stage.Context context, String readerId, OverrunReader reader, long readerOffset,
+                           int maxObjectLen, boolean retainOriginalText, int maxStackTraceLines) throws IOException {
     this.context = context;
     this.readerId = readerId;
     this.reader = reader;

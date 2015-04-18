@@ -23,15 +23,15 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-public class JsonDataParser implements DataParser {
+public class JsonCharDataParser implements DataParser {
   private final Stage.Context context;
   private final String readerId;
   private final int maxObjectLen;
   private final OverrunStreamingJsonParser parser;
   private boolean eof;
 
-  public JsonDataParser(Stage.Context context, String readerId, OverrunReader reader, long readerOffset,
-      StreamingJsonParser.Mode mode, int maxObjectLen) throws IOException {
+  public JsonCharDataParser(Stage.Context context, String readerId, OverrunReader reader, long readerOffset,
+                            StreamingJsonParser.Mode mode, int maxObjectLen) throws IOException {
     this.context = context;
     this.readerId = readerId;
     this.maxObjectLen = maxObjectLen;

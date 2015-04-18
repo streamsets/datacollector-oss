@@ -8,7 +8,7 @@ package com.streamsets.pipeline.lib.parser.sdcrecord;
 import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.lib.common.SdcRecordDataFactoryUtil;
 import com.streamsets.pipeline.lib.io.OverrunReader;
-import com.streamsets.pipeline.lib.parser.CharDataParserFactory;
+import com.streamsets.pipeline.lib.parser.DataParserFactory;
 import com.streamsets.pipeline.lib.parser.DataParser;
 import com.streamsets.pipeline.lib.parser.DataParserException;
 import java.io.IOException;
@@ -17,11 +17,11 @@ import java.util.Collections;
 import java.util.Map;
 import java.util.Set;
 
-public class JsonSdcRecordCharDataParserFactory extends CharDataParserFactory {
+public class SdcRecordDataParserFactory extends DataParserFactory {
   public static final Map<String, Object> CONFIGS = Collections.emptyMap();
   public static final Set<Class<? extends Enum>> MODES = Collections.emptySet();
 
-  public JsonSdcRecordCharDataParserFactory(Settings settings) {
+  public SdcRecordDataParserFactory(Settings settings) {
     super(settings);
   }
 

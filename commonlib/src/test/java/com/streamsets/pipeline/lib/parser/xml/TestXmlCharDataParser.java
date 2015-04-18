@@ -18,7 +18,7 @@ import java.io.IOException;
 import java.io.StringReader;
 import java.util.Collections;
 
-public class TestXmlDataParser {
+public class TestXmlCharDataParser {
 
   private Stage.Context getContext() {
     return ContextInfoCreator.createSourceContext("i", false, OnRecordError.TO_ERROR, Collections.EMPTY_LIST);
@@ -27,7 +27,7 @@ public class TestXmlDataParser {
   @Test
   public void testParse() throws Exception {
     OverrunReader reader = new OverrunReader(new StringReader("<r><e>Hello</e><e>Bye</e></r>"), 1000, true);
-    DataParser parser = new XmlDataParser(getContext(), "id", reader, 0, "e", 100);
+    DataParser parser = new XmlCharDataParser(getContext(), "id", reader, 0, "e", 100);
     Assert.assertEquals(0, parser.getOffset());
     Record record = parser.parse();
     Assert.assertNotNull(record);
@@ -48,7 +48,7 @@ public class TestXmlDataParser {
   @Test
   public void testParseWithOffset() throws Exception {
     OverrunReader reader = new OverrunReader(new StringReader("<r><e>Hello</e><e>Bye</e></r>"), 1000, true);
-    DataParser parser = new XmlDataParser(getContext(), "id", reader, 18, "e", 100);
+    DataParser parser = new XmlCharDataParser(getContext(), "id", reader, 18, "e", 100);
     Assert.assertEquals(18, parser.getOffset());
     Record record = parser.parse();
     Assert.assertNotNull(record);
@@ -64,7 +64,7 @@ public class TestXmlDataParser {
   @Test(expected = IOException.class)
   public void testClose() throws Exception {
     OverrunReader reader = new OverrunReader(new StringReader("<r><e>Hello</e><e>Bye</e></r>"), 1000, true);
-    DataParser parser = new XmlDataParser(getContext(), "id", reader, 0, "e", 100);
+    DataParser parser = new XmlCharDataParser(getContext(), "id", reader, 0, "e", 100);
     parser.close();
     parser.parse();
   }

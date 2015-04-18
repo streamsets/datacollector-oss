@@ -6,7 +6,7 @@
 package com.streamsets.pipeline.lib.generator.text;
 
 import com.google.common.collect.ImmutableSet;
-import com.streamsets.pipeline.lib.generator.CharDataGeneratorFactory;
+import com.streamsets.pipeline.lib.generator.DataGeneratorFactory;
 import com.streamsets.pipeline.lib.generator.DataGenerator;
 import com.streamsets.pipeline.lib.generator.DataGeneratorException;
 
@@ -17,7 +17,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
-public class TextCharDataGeneratorFactory extends CharDataGeneratorFactory {
+public class TextDataGeneratorFactory extends DataGeneratorFactory {
   static final String KEY_PREFIX = "text.";
   public static final String FIELD_PATH_KEY = KEY_PREFIX + "fieldPath";
   static final String FIELD_PATH_DEFAULT = "";
@@ -40,7 +40,7 @@ public class TextCharDataGeneratorFactory extends CharDataGeneratorFactory {
   private final String fieldPath;
   private final boolean emptyLineIfNullDefault;
 
-  public TextCharDataGeneratorFactory(Settings settings) {
+  public TextDataGeneratorFactory(Settings settings) {
     super(settings);
     fieldPath = settings.getConfig(FIELD_PATH_KEY);
     emptyLineIfNullDefault = settings.getConfig(EMPTY_LINE_IF_NULL_KEY);
@@ -48,7 +48,7 @@ public class TextCharDataGeneratorFactory extends CharDataGeneratorFactory {
 
   @Override
   public DataGenerator getGenerator(OutputStream os) throws IOException, DataGeneratorException {
-    return new TextDataGenerator(createWriter(os), fieldPath, emptyLineIfNullDefault);
+    return new TextCharDataGenerator(createWriter(os), fieldPath, emptyLineIfNullDefault);
   }
 
 }

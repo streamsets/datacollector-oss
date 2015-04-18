@@ -10,7 +10,6 @@ import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.config.LogMode;
 import com.streamsets.pipeline.lib.data.DataFactory;
-import com.streamsets.pipeline.lib.io.OverrunReader;
 import com.streamsets.pipeline.lib.parser.DataParser;
 import com.streamsets.pipeline.lib.parser.DataParserException;
 import com.streamsets.pipeline.lib.parser.DataParserFactoryBuilder;
@@ -22,7 +21,6 @@ import org.junit.Test;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.StringReader;
 import java.util.Collections;
 
 public class TestCommonLogFormatParser {
@@ -171,10 +169,10 @@ public class TestCommonLogFormatParser {
     DataFactory dataFactory = dataParserFactoryBuilder
       .setMaxDataLen(maxObjectLength)
       .setMode(LogMode.COMMON_LOG_FORMAT)
-      .setConfig(LogCharDataParserFactory.RETAIN_ORIGINAL_TEXT_KEY, true)
+      .setConfig(LogDataParserFactory.RETAIN_ORIGINAL_TEXT_KEY, true)
       .build();
-    Assert.assertTrue(dataFactory instanceof LogCharDataParserFactory);
-    LogCharDataParserFactory factory = (LogCharDataParserFactory) dataFactory;
+    Assert.assertTrue(dataFactory instanceof LogDataParserFactory);
+    LogDataParserFactory factory = (LogDataParserFactory) dataFactory;
     return factory.getParser("id", is, readerOffset);
   }
 }

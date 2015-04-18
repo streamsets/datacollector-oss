@@ -21,7 +21,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-public class JsonDataGenerator implements DataGenerator {
+public class JsonCharDataGenerator implements DataGenerator {
   final static String EOL = System.getProperty("line.separator");
   private final JsonFactory JSON_FACTORY = new ObjectMapper().getFactory();
 
@@ -29,7 +29,7 @@ public class JsonDataGenerator implements DataGenerator {
   private final JsonGenerator generator;
   private boolean closed;
 
-  public JsonDataGenerator(Writer writer, JsonMode jsonMode)
+  public JsonCharDataGenerator(Writer writer, JsonMode jsonMode)
       throws IOException {
     isArray = jsonMode == JsonMode.ARRAY_OBJECTS;
     generator = JSON_FACTORY.createGenerator(writer);

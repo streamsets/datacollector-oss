@@ -18,9 +18,9 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
 
-public abstract class CharDataParserFactory extends DataFactory {
+public abstract class DataParserFactory extends DataFactory {
 
-  protected CharDataParserFactory(Settings settings) {
+  protected DataParserFactory(Settings settings) {
     super(settings);
     Utils.checkState(settings.getMaxRecordLen() != 0, "maxDataLen has not been set");
   }

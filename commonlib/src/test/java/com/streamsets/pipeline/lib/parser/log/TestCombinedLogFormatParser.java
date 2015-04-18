@@ -184,11 +184,11 @@ public class TestCombinedLogFormatParser {
     DataFactory dataFactory = dataParserFactoryBuilder
       .setMaxDataLen(maxObjectLength)
       .setMode(LogMode.COMBINED_LOG_FORMAT)
-      .setConfig(LogCharDataParserFactory.RETAIN_ORIGINAL_TEXT_KEY, true)
+      .setConfig(LogDataParserFactory.RETAIN_ORIGINAL_TEXT_KEY, true)
       .setOverRunLimit(1000)
       .build();
-    Assert.assertTrue(dataFactory instanceof LogCharDataParserFactory);
-    LogCharDataParserFactory factory = (LogCharDataParserFactory) dataFactory;
+    Assert.assertTrue(dataFactory instanceof LogDataParserFactory);
+    LogDataParserFactory factory = (LogDataParserFactory) dataFactory;
     return factory.getParser("id", is, readerOffset);
   }
 }
