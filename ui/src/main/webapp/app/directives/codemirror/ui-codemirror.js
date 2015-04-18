@@ -118,7 +118,11 @@ function uiCodemirrorDirective($timeout, uiCodemirrorConfig) {
     ngModel.$render = function() {
       //Code mirror expects a string so make sure it gets one
       //Although the formatter have already done this, it can be possible that another formatter returns undefined (for example the required directive)
-      var safeViewValue = ngModel.$viewValue || '';
+      var safeViewValue = ngModel.$viewValue;
+
+      if(safeViewValue === null || safeViewValue === undefined) {
+        safeViewValue = '';
+      }
 
       if(dataType === 'NUMBER' && !isNaN(safeViewValue)) {
         safeViewValue = safeViewValue + '';
@@ -132,8 +136,12 @@ function uiCodemirrorDirective($timeout, uiCodemirrorConfig) {
     codemirror.on('change', function(instance) {
       var newValue = instance.getValue();
 
-      if(dataType === 'NUMBER' && !isNaN(newValue)) {
-        newValue = parseInt(newValue);
+      if(dataType === 'NUMBER') {
+        if(newValue === '') {
+          newValue = 0;
+        } else if(!isNaN(newValue)) {
+          newValue = parseInt(newValue);
+        }
       }
 
       if (newValue !== ngModel.$viewValue) {

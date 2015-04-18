@@ -38,6 +38,7 @@
   <div class="controls col-lg-7 col-md-8">
 
     <div ui-codemirror
+         ng-class="{'codemirror-read-only': isPipelineReadOnly || isPipelineRunning}"
          focus-me="{{autoFocusConfigName === configDefinition.name}}"
          ng-model="detailPaneConfig.configuration[configIndex].value"
          ui-refresh="refreshCodemirror"
@@ -130,6 +131,7 @@
 
       <div class="col-xs-7">
         <div ui-codemirror
+             ng-class="{'codemirror-read-only': isPipelineReadOnly || isPipelineRunning}"
              ng-model="listValue[$index]"
              ui-refresh="refreshCodemirror"
              ui-codemirror-opts="getCodeMirrorOptions({
@@ -187,6 +189,7 @@
 
       <div class="col-xs-5">
         <div ui-codemirror
+             ng-class="{'codemirror-read-only': isPipelineReadOnly || isPipelineRunning}"
              ng-model="mapObject.value"
              ui-refresh="refreshCodemirror"
              ui-codemirror-opts="getCodeMirrorOptions({
@@ -312,7 +315,9 @@
 
       <div class="col-xs-9 expression-language">
 
-        <div ui-codemirror ng-model="lanePredicateMapping.predicate"
+        <div ui-codemirror
+             ng-class="{'codemirror-read-only': isPipelineReadOnly || isPipelineRunning || lanePredicateMapping.predicate === 'default'}"
+             ng-model="lanePredicateMapping.predicate"
              ui-refresh="refreshCodemirror"
              ui-codemirror-opts="getCodeMirrorOptions({
                 readOnly: isPipelineReadOnly || isPipelineRunning || lanePredicateMapping.predicate === 'default'
@@ -357,6 +362,7 @@
 
 <script type="text/ng-template" id="elStringComplexConfigurationTemplate">
   <div ui-codemirror
+       ng-class="{'codemirror-read-only': isPipelineReadOnly || isPipelineRunning}"
        ng-model="customFieldValue[customFieldConfigDefinition.name]"
        ui-refresh="refreshCodemirror"
        ui-codemirror-opts="getCodeMirrorOptions({
@@ -373,6 +379,7 @@
 
     <div ui-codemirror
          class="codemirror-editor"
+         ng-class="{'codemirror-read-only': isPipelineReadOnly || isPipelineRunning}"
          focus-me="{{autoFocusConfigName === configDefinition.name}}"
          ng-model="detailPaneConfig.configuration[configIndex].value"
          ui-refresh="refreshCodemirror"
