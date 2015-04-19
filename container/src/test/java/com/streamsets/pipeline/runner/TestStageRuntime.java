@@ -185,7 +185,7 @@ public class TestStageRuntime {
         Collections.<ConfigConfiguration>emptyList(), null, Collections.<String>emptyList(),
         Collections.<String>emptyList());
 
-    return new PipelineConfiguration(PipelineStoreTask.SCHEMA_VERSION, UUID.randomUUID(), pipelineConfigs, null,
+    return new PipelineConfiguration(PipelineStoreTask.SCHEMA_VERSION, UUID.randomUUID(), null, pipelineConfigs, null,
       stages, errorStage);
   }
 
@@ -249,7 +249,7 @@ public class TestStageRuntime {
       Collections.<ConfigConfiguration>emptyList(), null, Collections.<String>emptyList(),
       Collections.<String>emptyList());
 
-    return new PipelineConfiguration(PipelineStoreTask.SCHEMA_VERSION, UUID.randomUUID(), pipelineConfigs, null,
+    return new PipelineConfiguration(PipelineStoreTask.SCHEMA_VERSION, UUID.randomUUID(), null, pipelineConfigs, null,
       stages, errorStage);
   }
 

@@ -24,11 +24,12 @@ public class PipelineConfigurationJson {
   public PipelineConfigurationJson(
     @JsonProperty("schemaVersion") int schemaVersion,
     @JsonProperty("uuid") UUID uuid,
+    @JsonProperty("description") String description,
     @JsonProperty("configuration") List<ConfigConfigurationJson> configuration,
     @JsonProperty("uiInfo") Map<String, Object> uiInfo,
     @JsonProperty("stages") List<StageConfigurationJson> stages,
     @JsonProperty("errorStage") StageConfigurationJson errorStage) {
-    this.pipelineConfiguration = new com.streamsets.pipeline.config.PipelineConfiguration(schemaVersion, uuid,
+    this.pipelineConfiguration = new com.streamsets.pipeline.config.PipelineConfiguration(schemaVersion, uuid, description,
       BeanHelper.unwrapConfigConfiguration(configuration), uiInfo, BeanHelper.unwrapStageConfigurations(stages),
       BeanHelper.unwrapStageConfiguration(errorStage));
   }

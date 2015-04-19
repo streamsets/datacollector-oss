@@ -32,10 +32,11 @@ public class PipelineConfiguration {
   private MemoryLimitConfiguration memoryLimitConfiguration = new MemoryLimitConfiguration();
 
   @SuppressWarnings("unchecked")
-  public PipelineConfiguration(int schemaVersion, UUID uuid, List<ConfigConfiguration> configuration,
+  public PipelineConfiguration(int schemaVersion, UUID uuid, String description, List<ConfigConfiguration> configuration,
       Map<String, Object> uiInfo, List<StageConfiguration> stages, StageConfiguration errorStage) {
     this.schemaVersion = schemaVersion;
     this.uuid = Preconditions.checkNotNull(uuid, "uuid cannot be null");
+    this.description = description;
     this.configuration = configuration;
     this.uiInfo = uiInfo;
     this.stages = (stages != null) ? stages : Collections.<StageConfiguration>emptyList();

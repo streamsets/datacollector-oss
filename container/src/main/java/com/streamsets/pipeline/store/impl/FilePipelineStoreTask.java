@@ -141,8 +141,8 @@ public class FilePipelineStoreTask extends AbstractTask implements PipelineStore
     configuration.add(new ConfigConfiguration(PipelineDefConfigs.MEMORY_LIMIT_CONFIG,
       PipelineDefConfigs.MEMORY_LIMIT_DEFAULT));
 
-    PipelineConfiguration pipeline = new PipelineConfiguration(SCHEMA_VERSION, uuid, configuration, null, null, null);
-    pipeline.setDescription(description);
+    PipelineConfiguration pipeline = new PipelineConfiguration(SCHEMA_VERSION, uuid, description, configuration, null,
+      null, null);
     try {
       json.writeValue(getInfoFile(name), BeanHelper.wrapPipelineInfo(info));
       json.writeValue(getPipelineFile(name), BeanHelper.wrapPipelineConfiguration(pipeline));
