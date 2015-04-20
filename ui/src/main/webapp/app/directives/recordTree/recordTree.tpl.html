@@ -53,7 +53,7 @@
             record="record"
             record-value="_recordValue"
             diff-type="diffType"
-            diff-record-value="diffRecordValue[_fieldName]"
+            diff-record-value="diffRecordValue.value[_fieldName]"
             field-name="_fieldName"
             is-root="false"
             editable="editable"
@@ -64,7 +64,7 @@
         </div>
 
         <div ng-switch-when="DATE" class="clearfix">
-          <span class="field-type">{{recordValue.type}}</span>
+          <span class="field-type pull-left">{{recordValue.type}}</span>
 
           <span class="field-value pull-left {{recordValue.type}}"
                 ng-class="{'value-addition' : (diffType === 'output' && updatedValue), 'value-deletion' : (diffType === 'input' && updatedValue)}"
@@ -87,7 +87,7 @@
 
         <div ng-switch-when="DATETIME" class="clearfix">
 
-          <span class="field-type">{{recordValue.type}}</span>
+          <span class="field-type pull-left">{{recordValue.type}}</span>
 
           <span class="field-value pull-left {{recordValue.type}}"
                 ng-class="{'value-addition' : (diffType === 'output' && updatedValue), 'value-deletion' : (diffType === 'input' && updatedValue)}"
