@@ -6,6 +6,7 @@
 package com.streamsets.pipeline.lib.io;
 
 import com.streamsets.pipeline.api.impl.Utils;
+import com.streamsets.pipeline.lib.util.ThreadUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -138,11 +139,7 @@ public class LiveDirectoryScanner {
     } catch (NoSuchFileException ex) {
       // this could happen because there has been a file rotation/deletion after the search/filter/sort and before
       // the creation of the nen current. Lets sleep for 50ms and try again, if fails again give up.
-      try {
-        Thread.sleep(50);
-      } catch (InterruptedException iex) {
-        //NOP
-      }
+      ThreadUtil.sleep(50);
       return scanInternal(current);
     }
   }

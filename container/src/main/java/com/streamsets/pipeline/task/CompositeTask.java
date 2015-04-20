@@ -7,6 +7,7 @@ package com.streamsets.pipeline.task;
 
 import com.google.common.collect.ImmutableList;
 import com.streamsets.pipeline.api.impl.Utils;
+import com.streamsets.pipeline.lib.util.ThreadUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -58,11 +59,8 @@ public class CompositeTask extends AbstractTask {
                 }
               }
             }
-            try {
-              Thread.sleep(50);
-            } catch (InterruptedException ex) {
-              // NOP
-            }
+            // ignoring interrupts, we want to keep monitoring subtasks until they are all done.
+            ThreadUtil.sleep(50);
           }
         }
       };

@@ -8,6 +8,7 @@ package com.streamsets.pipeline.stage.origin.kafka;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.lib.Errors;
 import com.streamsets.pipeline.lib.KafkaBroker;
+import com.streamsets.pipeline.lib.util.ThreadUtil;
 import kafka.api.FetchRequest;
 import kafka.api.FetchRequestBuilder;
 import kafka.api.PartitionOffsetRequestInfo;
@@ -154,10 +155,7 @@ public class LowLevelKafkaConsumer {
 
     if(numberOfMessagesRead == 0) {
       //If no message was available, give kafka sometime.
-      try {
-        Thread.sleep(ONE_SECOND);
-      } catch (InterruptedException e) {
-      }
+      ThreadUtil.sleep(ONE_SECOND);
     }
     return partitionToPayloadMapArrayList;
   }
@@ -200,10 +198,7 @@ public class LowLevelKafkaConsumer {
         return new KafkaBroker(metadata.leader().host(), metadata.leader().port());
       }
       if (sleep) {
-        try {
-          Thread.sleep(ONE_SECOND);
-        } catch (InterruptedException e) {
-        }
+        ThreadUtil.sleep(ONE_SECOND);
       }
     }
     LOG.error(Errors.KAFKA_21.getMessage());

@@ -5,6 +5,7 @@
  */
 package com.streamsets.pipeline.restapi;
 
+import com.streamsets.pipeline.lib.util.ThreadUtil;
 import com.streamsets.pipeline.main.RuntimeInfo;
 import com.streamsets.pipeline.store.PipelineStoreException;
 
@@ -45,11 +46,8 @@ public class AdminResource {
     Thread thread = new Thread("Shutdown Request") {
       @Override
       public void run() {
-        try {
-          Thread.sleep(500);
-        } catch (InterruptedException ex) {
-          //NOP
-        }
+        // sleeping  500ms to allow the HTTP response to go back
+        ThreadUtil.sleep(500);
         runtimeInfo.shutdown();
       }
     };

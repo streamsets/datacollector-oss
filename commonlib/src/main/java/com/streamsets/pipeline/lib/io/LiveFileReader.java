@@ -6,6 +6,7 @@
 package com.streamsets.pipeline.lib.io;
 
 import com.streamsets.pipeline.api.impl.Utils;
+import com.streamsets.pipeline.lib.util.ThreadUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -183,9 +184,8 @@ public class LiveFileReader implements Closeable {
    * @param waitMillis milliseconds to block while waiting for more data, use zero for no wait.
    * @return a {@link LiveFileChunk} with a chunk of data, or <code>null</code> if no data is yet available.
    * @throws IOException thrown if there was a problem while reading the chunk of data
-   * @throws InterruptedException thrown if thread was interrupted while the reader was waiting for data.
    */
-  public LiveFileChunk next(long waitMillis) throws IOException, InterruptedException {
+  public LiveFileChunk next(long waitMillis) throws IOException {
     Utils.checkArgument(waitMillis >= 0, "waitMillis must equal or greater than zero");
     Utils.checkState(open, Utils.formatL("LiveFileReader for '{}' is not open", currentFile));
     Utils.checkState(hasNext(), Utils.formatL("LiveFileReader for '{}' has reached EOL", currentFile));
@@ -215,7 +215,10 @@ public class LiveFileReader implements Closeable {
         break;
       }
       //yielding CPU while in wait loop
-      Thread.sleep(YIELD_INTERVAL);
+      if (!ThreadUtil.sleep(YIELD_INTERVAL)) {
+        LOG.trace("File '{}' at offset '{} interrupted while yielding CPU", currentFile, channel.position());
+        break;
+      }
     }
     offset = channel.position() - buffer.position();
     return liveFileChunk;

@@ -14,6 +14,7 @@ import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageDef;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.base.BaseSource;
+import com.streamsets.pipeline.lib.util.ThreadUtil;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -65,10 +66,7 @@ public class RandomSource extends BaseSource {
     }
 
     if(delay > 0) {
-      try {
-        Thread.sleep(delay);
-      } catch (InterruptedException e) {
-      }
+        ThreadUtil.sleep(delay);
     }
 
     for (int i = 0; i < batchSize; i++ ) {

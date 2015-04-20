@@ -26,6 +26,7 @@ import com.streamsets.pipeline.lib.parser.DataParserException;
 import com.streamsets.pipeline.lib.parser.DataParserFactoryBuilder;
 import com.streamsets.pipeline.lib.parser.log.LogDataFormatValidator;
 import com.streamsets.pipeline.lib.parser.log.RegExConfig;
+import com.streamsets.pipeline.lib.util.ThreadUtil;
 
 import java.io.File;
 import java.io.IOException;
@@ -265,8 +266,8 @@ public class FileTailSource extends BaseSource {
           while (!exit && recordCounter < maxBatchSize && reader.hasNext()) {
             // non blocking read waiting up to the remaining batch timeout if not data arrives
             LiveFileChunk chunk = reader.next(getRemainingWaitTime(batchStartTime));
-            String liveFileStr = currentFile.serialize();
             if (chunk != null) {
+              String liveFileStr = currentFile.serialize();
               for (FileLine line : chunk.getLines()) {
                 String sourceId = liveFileStr + "::" + line.getFileOffset();
                 try (DataParser parser = parserFactory.getParser(sourceId, line.getChunkBuffer(), line.getOffset(),
@@ -287,18 +288,11 @@ public class FileTailSource extends BaseSource {
           exit = true;
         } catch (IOException ex) {
           throw new StageException(Errors.TAIL_08, reader.getLiveFile().getPath(), ex.getMessage(), ex);
-        } catch (InterruptedException ex) {
-          //NOP LOG debug
-          exit = true;
         }
       } else {
-        try {
-          // yielding CPU before looking to see if there is a reader again. MAX_YIELD_TIME default is 500 ms
-          Thread.sleep(Math.min(getRemainingWaitTime(batchStartTime), MAX_YIELD_TIME));
-        } catch (InterruptedException ex) {
-          // we got interrupted, lets exit
-          exit = true;
-        }
+        // yielding CPU before looking to see if there is a reader again. MAX_YIELD_TIME default is 500 ms
+        // if we didn't sleep the requested time it means we were interrupted.
+        exit = !ThreadUtil.sleep(Math.min(getRemainingWaitTime(batchStartTime), MAX_YIELD_TIME));
       }
       exit = exit || isTimeout(batchStartTime);
     }
