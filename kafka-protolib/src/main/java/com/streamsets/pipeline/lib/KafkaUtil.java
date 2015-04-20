@@ -6,8 +6,7 @@
 package com.streamsets.pipeline.lib;
 
 import com.streamsets.pipeline.api.Stage;
-import com.streamsets.pipeline.api.StageException;
-import kafka.common.ErrorMapping;
+import com.streamsets.pipeline.lib.util.ThreadUtil;
 import kafka.javaapi.TopicMetadata;
 import kafka.javaapi.TopicMetadataRequest;
 import kafka.javaapi.consumer.SimpleConsumer;
@@ -25,79 +24,56 @@ public class KafkaUtil {
   private static final int METADATA_READER_TIME_OUT = 10000;
   private static final int BUFFER_SIZE = 64 * 1024;
 
-  public static int findNUmberOfPartitions(String metadataBrokerList, String topic) throws StageException {
-    List<KafkaBroker> kafkaBrokers = getKafkaBrokers(metadataBrokerList);
-    TopicMetadata topicMetadata = getTopicMetadata(kafkaBrokers, topic);
-
-    //The following should not happen since its already validated.
-    //Unless something changes while the pipeline is running
-    if(topicMetadata == null) {
-      //Could not get topic metadata from any of the supplied brokers
-      LOG.error(Errors.KAFKA_03.getMessage(), topic, metadataBrokerList);
-      throw new StageException(Errors.KAFKA_03, topic, metadataBrokerList);
-    }
-    if(topicMetadata.errorCode()== ErrorMapping.UnknownTopicOrPartitionCode()) {
-      //Topic does not exist
-      LOG.error(Errors.KAFKA_04.getMessage(), topic);
-      throw new StageException(Errors.KAFKA_04, topic);
-    }
-    return topicMetadata.partitionsMetadata().size();
-  }
-
-  public static TopicMetadata getTopicMetadata(List<KafkaBroker> kafkaBrokers, String topic) {
-    SimpleConsumer simpleConsumer = null;
+  public static TopicMetadata getTopicMetadata(List<KafkaBroker> kafkaBrokers, String topic, int maxRetries,
+                                               long backOffms) throws KafkaConnectionException {
     TopicMetadata topicMetadata = null;
-    for(KafkaBroker broker : kafkaBrokers) {
-      try {
-        simpleConsumer = new SimpleConsumer(broker.getHost(), broker.getPort(), METADATA_READER_TIME_OUT, BUFFER_SIZE,
-          METADATA_READER_CLIENT);
+    boolean connectionError = true;
+    int retryCount = 0;
+    while (connectionError && retryCount <= maxRetries) {
+      for (KafkaBroker broker : kafkaBrokers) {
+        SimpleConsumer simpleConsumer = null;
+        try {
+          simpleConsumer = new SimpleConsumer(broker.getHost(), broker.getPort(), METADATA_READER_TIME_OUT, BUFFER_SIZE,
+            METADATA_READER_CLIENT);
 
-        List<String> topics = Collections.singletonList(topic);
-        TopicMetadataRequest req = new TopicMetadataRequest(topics);
-        kafka.javaapi.TopicMetadataResponse resp = simpleConsumer.send(req);
+          List<String> topics = Collections.singletonList(topic);
+          TopicMetadataRequest req = new TopicMetadataRequest(topics);
+          kafka.javaapi.TopicMetadataResponse resp = simpleConsumer.send(req);
 
-        List<TopicMetadata> topicMetadataList = resp.topicsMetadata();
-        if (topicMetadataList == null || topicMetadataList.isEmpty()) {
-          //This broker did not have any metadata. May not be in sync?
-          continue;
+          //No exception => no connection error
+          connectionError = false;
+
+          List<TopicMetadata> topicMetadataList = resp.topicsMetadata();
+          if (topicMetadataList == null || topicMetadataList.isEmpty()) {
+            //This broker did not have any metadata. May not be in sync?
+            continue;
+          }
+          topicMetadata = topicMetadataList.iterator().next();
+          if (topicMetadata != null) {
+            break;
+          }
+        } catch (Exception e) {
+          //could not connect to this broker, try others
+        } finally {
+          if (simpleConsumer != null) {
+            simpleConsumer.close();
+          }
         }
-        topicMetadata = topicMetadataList.iterator().next();
-        if(topicMetadata != null) {
+      }
+      if(connectionError) {
+        LOG.warn("Unable to connect to any of the kafka brokers. Waiting for '{}' seconds before retrying",
+          backOffms/1000);
+        retryCount++;
+        if(!ThreadUtil.sleep(backOffms)) {
           break;
-        }
-      } catch (Exception e) {
-        //try next broker from the list
-      } finally {
-        if (simpleConsumer != null) {
-          simpleConsumer.close();
         }
       }
     }
+    if(connectionError) {
+      //could not connect any broker even after retries. Fail with exception
+      throw new KafkaConnectionException(Errors.KAFKA_67, getKafkaBrokers(kafkaBrokers));
+    }
     return topicMetadata;
-  }
-
-  public static void validateTopic(List<Stage.ConfigIssue> issues, List<KafkaBroker> kafkaBrokers,
-                                   Stage.Context context, String confiGroupName, String configName,
-                                   String topic, String brokerList) {
-    if(topic == null || topic.isEmpty()) {
-      issues.add(context.createConfigIssue(confiGroupName, configName,
-        Errors.KAFKA_05));
-    }
-
-    TopicMetadata topicMetadata = KafkaUtil.getTopicMetadata(kafkaBrokers, topic);
-
-    if(topicMetadata == null) {
-      //Could not get topic metadata from any of the supplied brokers
-      issues.add(context.createConfigIssue(confiGroupName, configName,
-        Errors.KAFKA_03, topic, brokerList));
-      return;
-    }
-    if(topicMetadata.errorCode()== ErrorMapping.UnknownTopicOrPartitionCode()) {
-      //Topic does not exist
-      issues.add(context.createConfigIssue(confiGroupName, configName,
-        Errors.KAFKA_04, topic));
-      return;
-    }
   }
 
   public static List<KafkaBroker> validateBrokerList(List<Stage.ConfigIssue> issues, String brokerList,
@@ -125,15 +101,12 @@ public class KafkaUtil {
     return kafkaBrokers;
   }
 
-  private static List<KafkaBroker> getKafkaBrokers(String metadataBrokerList) {
-    //configurations are already validated so do not expect any exception
-    List<KafkaBroker> kafkaBrokers = new ArrayList<>();
-    String[] brokers = metadataBrokerList.split(",");
-    for(String broker : brokers) {
-      String[] brokerHostAndPort = broker.split(":");
-      kafkaBrokers.add(new KafkaBroker(brokerHostAndPort[0], Integer.parseInt(brokerHostAndPort[1])));
+  public static String getKafkaBrokers(List<KafkaBroker> kafkaBrokers) {
+    StringBuilder sb = new StringBuilder();
+    for(KafkaBroker k : kafkaBrokers) {
+      sb.append(k.getHost() + ":" + k.getPort()).append(", ");
     }
-    return kafkaBrokers;
+    sb.setLength(sb.length()-2);
+    return sb.toString();
   }
-
 }

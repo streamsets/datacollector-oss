@@ -35,6 +35,15 @@ import java.util.Map;
 @GenerateResourceBundle
 public class KafkaDTarget extends DTarget {
 
+  private static final String KAFKA_PRODUCER_OPTIONS_DEFAULT =
+    "[ " +
+      "{\"key\" : \"queue.buffering.max.ms\", \"value\" : \"5000\"}" +
+      ", " +
+      "{\"key\" : \"message.send.max.retries\", \"value\" : \"10\"}" +
+      ", " +
+      "{\"key\" : \"retry.backoff.ms\", \"value\" : \"1000\"}" +
+    " ]";
+
   @ConfigDef(
     required = true,
     type = ConfigDef.Type.STRING,
@@ -50,13 +59,55 @@ public class KafkaDTarget extends DTarget {
 
   @ConfigDef(
     required = true,
+    type = ConfigDef.Type.BOOLEAN,
+    defaultValue = "false",
+    label = "Runtime Topic Resolution",
+    description = "Resolve topic name at runtime based on the field values in the record",
+    displayPosition = 15,
+    group = "KAFKA"
+  )
+  public boolean runtimeTopicResolution;
+
+  @ConfigDef(
+    required = true,
+    type = ConfigDef.Type.STRING,
+    defaultValue = "${record:value('/topic')}",
+    label = "Topic Expression",
+    description = "An expression which resolves the name of the topic to which the record must be sent",
+    displayPosition = 20,
+    elDefs = {StringEL.class, RecordEL.class},
+    group = "KAFKA",
+    evaluation = ConfigDef.Evaluation.EXPLICIT,
+    dependsOn = "runtimeTopicResolution",
+    triggeredByValue = "true"
+  )
+  public String topicExpression;
+
+  @ConfigDef(
+    required = true,
+    type = ConfigDef.Type.TEXT,
+    lines = 5,
+    defaultValue = "*",
+    label = "Topic White List",
+    description = "A comma separated list of valid topic names to which the messages will be sent. '*' indicates that all topic names encountered will be valid.",
+    displayPosition = 23,
+    group = "KAFKA",
+    dependsOn = "runtimeTopicResolution",
+    triggeredByValue = "true"
+  )
+  public String topicWhiteList;
+
+  @ConfigDef(
+    required = true,
     type = ConfigDef.Type.STRING,
     defaultValue = "topicName",
     label = "Topic",
     description = "",
-    displayPosition = 20,
+    displayPosition = 25,
     elDefs = {StringEL.class},
-    group = "KAFKA"
+    group = "KAFKA",
+    dependsOn = "runtimeTopicResolution",
+    triggeredByValue = "false"
   )
   public String topic;
 
@@ -123,20 +174,6 @@ public class KafkaDTarget extends DTarget {
   )
   public boolean singleMessagePerBatch;
 
-  @ConfigDef(
-    required = false,
-    type = ConfigDef.Type.MAP,
-    defaultValue = "[ {\n" +
-      "        \"key\" : \"queue.buffering.max.ms\",\n" +
-      "        \"value\" : \"5000\"\n" +
-      "      } ]",
-    label = "Kafka Configuration",
-    description = "Additional Kafka properties to pass to the underlying Kafka producer",
-    displayPosition = 60,
-    group = "KAFKA"
-  )
-  public Map<String, String> kafkaProducerConfigs;
-
   /********  For DELIMITED Content  ***********/
 
   @ConfigDef(
@@ -152,6 +189,17 @@ public class KafkaDTarget extends DTarget {
   )
   @ValueChooser(CsvModeChooserValues.class)
   public CsvMode csvFileFormat;
+
+  @ConfigDef(
+    required = false,
+    type = ConfigDef.Type.MAP,
+    defaultValue = KAFKA_PRODUCER_OPTIONS_DEFAULT,
+    label = "Kafka Configuration",
+    description = "Additional Kafka properties to pass to the underlying Kafka producer",
+    displayPosition = 60,
+    group = "KAFKA"
+  )
+  public Map<String, String> kafkaProducerConfigs;
 
   @ConfigDef(
       required = true,
@@ -228,8 +276,8 @@ public class KafkaDTarget extends DTarget {
 
   @Override
   protected Target createTarget() {
-    return new KafkaTarget(metadataBrokerList, topic, partitionStrategy, partition, dataFormat, charset,
-      singleMessagePerBatch, kafkaProducerConfigs, csvFileFormat, csvHeader, csvReplaceNewLines, jsonMode,
-      textFieldPath, textEmptyLineIfNull);
+    return new KafkaTarget(metadataBrokerList, runtimeTopicResolution, topic, topicExpression, topicWhiteList,
+      partitionStrategy, partition, dataFormat, charset, singleMessagePerBatch, kafkaProducerConfigs, csvFileFormat,
+      csvHeader, csvReplaceNewLines, jsonMode, textFieldPath, textEmptyLineIfNull);
   }
 }

@@ -420,19 +420,19 @@ public class TestExpressionProcessor {
     /* All the field Paths in the record are
         /USA
         /USA[0]
-        /USA[0]/SantaMonica
-        /USA[0]/SantaMonica/noe
-        /USA[0]/SantaMonica/noe/streets
-        /USA[0]/SantaMonica/noe/streets[0]
-        /USA[0]/SantaMonica/noe/streets[0][0]
-        /USA[0]/SantaMonica/noe/streets[0][0]/name
-        /USA[0]/SantaMonica/noe/streets[0][1]
-        /USA[0]/SantaMonica/noe/streets[0][1]/name
-        /USA[0]/SantaMonica/noe/streets[1]
-        /USA[0]/SantaMonica/noe/streets[1][0]
-        /USA[0]/SantaMonica/noe/streets[1][0]/name
-        /USA[0]/SantaMonica/noe/streets[1][1]
-        /USA[0]/SantaMonica/noe/streets[1][1]/name
+        /USA[0]/SanFrancisco
+        /USA[0]/SanFrancisco/noe
+        /USA[0]/SanFrancisco/noe/streets
+        /USA[0]/SanFrancisco/noe/streets[0]
+        /USA[0]/SanFrancisco/noe/streets[0][0]
+        /USA[0]/SanFrancisco/noe/streets[0][0]/name
+        /USA[0]/SanFrancisco/noe/streets[0][1]
+        /USA[0]/SanFrancisco/noe/streets[0][1]/name
+        /USA[0]/SanFrancisco/noe/streets[1]
+        /USA[0]/SanFrancisco/noe/streets[1][0]
+        /USA[0]/SanFrancisco/noe/streets[1][0]/name
+        /USA[0]/SanFrancisco/noe/streets[1][1]
+        /USA[0]/SanFrancisco/noe/streets[1][1]/name
         /USA[1]
         /USA[1]/SantaMonica
         /USA[1]/SantaMonica/cole

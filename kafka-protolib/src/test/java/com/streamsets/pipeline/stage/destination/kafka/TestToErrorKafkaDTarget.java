@@ -83,6 +83,9 @@ public class TestToErrorKafkaDTarget {
       .addConfiguration("textFieldPath", "/")
       .addConfiguration("textEmptyLineIfNull", true)
       .addConfiguration("charset", "UTF-8")
+      .addConfiguration("runtimeTopicResolution", false)
+      .addConfiguration("topicExpression", null)
+      .addConfiguration("topicWhiteList", null)
       .build();
 
     targetRunner.runInit();

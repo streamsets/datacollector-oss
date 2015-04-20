@@ -251,6 +251,42 @@ public class KafkaTestUtil {
     return produce20Records();
   }
 
+  public static List<Record> createJsonRecordsWithTopicPartitionField(List<String> topics, int partitions) throws IOException {
+    int size = topics.size();
+    List<Record> list = new ArrayList<>();
+    for(String topic : topics) {
+      for (int i = 0; i < partitions; i++) {
+        Record record = RecordCreator.create();
+        Map<String, Field> map = new HashMap<>();
+        map.put("name", Field.create("NAME" + i));
+        map.put("lastStatusChange", Field.create(i));
+        int j = i % size;
+        map.put("topic", Field.create(topic));
+        map.put("partition", Field.create(i));
+        record.set(Field.create(map));
+        list.add(record);
+      }
+    }
+    return list;
+  }
+
+  public static List<Record> createJsonRecordsWithTopicField(List<String> topics) throws IOException {
+    int size = topics.size();
+    List<Record> list = new ArrayList<>();
+    for (int i = 0; i < size*3; i++) {
+      Record record = RecordCreator.create();
+      Map<String, Field> map = new HashMap<>();
+      map.put("name", Field.create("NAME" + i));
+      map.put("lastStatusChange", Field.create(i));
+      map.put("partition", Field.create(i%2));
+      int j = i % size;
+      map.put("topic", Field.create(topics.get(j)));
+      record.set(Field.create(map));
+      list.add(record);
+    }
+    return list;
+  }
+
   public static List<Record> createCsvRecords() throws IOException {
     List<Record> records = new ArrayList<>();
     String line;

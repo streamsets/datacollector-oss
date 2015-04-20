@@ -57,6 +57,14 @@ public enum Errors implements ErrorCode {
   KAFKA_58("Field cannot be empty"),
   KAFKA_59("Fields cannot be empty"),
   KAFKA_60("Cannot serialize record '{}'. All records from batch '{}' for partition '{}' are sent to error: {}"),
+  KAFKA_61("Invalid topic expression '{}': {}"),
+  KAFKA_62("Topic expression '{}' generated a null or empty topic for record '{}'"),
+  KAFKA_63("Error evaluating topic expression '{}' for record '{}': {}"),
+  KAFKA_64("Topic White List cannot be empty if topic is resolved at runtime"),
+  KAFKA_65("Topic '{}' resolved from record '{}' is not among the allowed topics"),
+  KAFKA_66("Kafka Producer configuration '{}' must be specified a valid {} value greater than or equal to 0"),
+  KAFKA_67("Error connecting to Kafka Brokers '{}'"),
+
 
   ;
   private final String msg;

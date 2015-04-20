@@ -16,7 +16,7 @@ import com.streamsets.pipeline.api.impl.Utils;
 
 public class RecordEL {
 
-  private static final String RECORD_EL_PREFIX = "record";
+  public static final String RECORD_EL_PREFIX = "record";
 
   private static final String RECORD_CONTEXT_VAR = "record";
 

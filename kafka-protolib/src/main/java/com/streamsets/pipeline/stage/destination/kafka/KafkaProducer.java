@@ -8,7 +8,7 @@ package com.streamsets.pipeline.stage.destination.kafka;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.config.DataFormat;
 import com.streamsets.pipeline.lib.Errors;
-import com.streamsets.pipeline.lib.KafkaUtil;
+import com.streamsets.pipeline.lib.KafkaConnectionException;
 import kafka.javaapi.producer.Producer;
 import kafka.producer.KeyedMessage;
 import kafka.producer.ProducerConfig;
@@ -39,7 +39,6 @@ public class KafkaProducer {
   private static final String EXPRESSION_PARTITIONER_CLASS = "com.streamsets.pipeline.stage.destination.kafka.ExpressionPartitioner";
 
   /*Topic to readData from*/
-  private final String topic;
   /*Host on which the seed broker is running*/
   private final String metadataBrokerList;
   private final Map<String, String> kafkaProducerConfigs;
@@ -47,11 +46,9 @@ public class KafkaProducer {
   private final PartitionStrategy partitionStrategy;
   private List<KeyedMessage<String, byte[]>> messageList;
   private Producer<String, byte[]> producer;
-  private int numberOfPartitions;
 
-  public KafkaProducer(String topic, String metadataBrokerList, DataFormat producerPayloadType,
+  public KafkaProducer(String metadataBrokerList, DataFormat producerPayloadType,
                        PartitionStrategy partitionStrategy, Map<String, String> kafkaProducerConfigs) {
-    this.topic = topic;
     this.metadataBrokerList = metadataBrokerList;
     this.producerPayloadType = producerPayloadType;
     this.partitionStrategy = partitionStrategy;
@@ -78,8 +75,6 @@ public class KafkaProducer {
 
     ProducerConfig config = new ProducerConfig(props);
     producer = new Producer<>(config);
-
-    numberOfPartitions = KafkaUtil.findNUmberOfPartitions(metadataBrokerList, topic);
   }
 
   public void destroy() {
@@ -88,8 +83,14 @@ public class KafkaProducer {
     }
   }
 
-  public void enqueueMessage(byte[] message, String partitionKey) {
+  public void enqueueMessage(String topic, byte[] message, String partitionKey) {
+    //Topic could be a record EL string. This is not a good place to evaluate expression
+    //Hence get topic as parameter
     messageList.add(new KeyedMessage<>(topic, partitionKey, message));
+  }
+
+  public List<KeyedMessage<String, byte[]>> getMessageList() {
+    return messageList;
   }
 
   public void write() throws StageException {
@@ -99,14 +100,12 @@ public class KafkaProducer {
     } catch (Exception e) {
       //Producer internally refreshes metadata and retries if there is any recoverable exception.
       //If retry fails, a FailedToSendMessageException is thrown.
+      //In this case we want to fail pipeline.
       LOG.error(Errors.KAFKA_50.getMessage(), e.getMessage(), e);
-      throw new StageException(Errors.KAFKA_50, e.getMessage(), e);
+      throw new KafkaConnectionException(Errors.KAFKA_50, e.getMessage(), e);
     }
   }
 
-  public int getNumberOfPartitions() {
-    return numberOfPartitions;
-  }
 
   private void configureSerializer(Properties props, DataFormat producerPayloadType) {
     if(producerPayloadType == DataFormat.TEXT) {

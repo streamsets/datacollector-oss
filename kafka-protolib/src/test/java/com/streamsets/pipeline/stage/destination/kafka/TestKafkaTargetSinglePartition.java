@@ -5,6 +5,7 @@
  */
 package com.streamsets.pipeline.stage.destination.kafka;
 
+import com.google.common.collect.ImmutableList;
 import com.streamsets.pipeline.api.OnRecordError;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
@@ -52,6 +53,15 @@ public class TestKafkaTargetSinglePartition {
   private static List<KafkaStream<byte[], byte[]>> kafkaStreams5;
   private static List<KafkaStream<byte[], byte[]>> kafkaStreams6;
   private static List<KafkaStream<byte[], byte[]>> kafkaStreams7;
+  private static List<KafkaStream<byte[], byte[]>> kafkaStreams8;
+  private static List<KafkaStream<byte[], byte[]>> kafkaStreams9;
+  private static List<KafkaStream<byte[], byte[]>> kafkaStreams10;
+  private static List<KafkaStream<byte[], byte[]>> kafkaStreams11;
+  private static List<KafkaStream<byte[], byte[]>> kafkaStreams12;
+  private static List<KafkaStream<byte[], byte[]>> kafkaStreams13;
+  private static List<KafkaStream<byte[], byte[]>> kafkaStreams14;
+  private static List<KafkaStream<byte[], byte[]>> kafkaStreams15;
+  private static List<KafkaStream<byte[], byte[]>> kafkaStreams16;
   private static int port;
 
   private static final String HOST = "localhost";
@@ -65,6 +75,15 @@ public class TestKafkaTargetSinglePartition {
   private static final String TOPIC5 = "test5";
   private static final String TOPIC6 = "test6";
   private static final String TOPIC7 = "test7";
+  private static final String TOPIC8 = "test8";
+  private static final String TOPIC9 = "test9";
+  private static final String TOPIC10 = "test10";
+  private static final String TOPIC11 = "test11";
+  private static final String TOPIC12 = "test12";
+  private static final String TOPIC13 = "test13";
+  private static final String TOPIC14 = "test14";
+  private static final String TOPIC15 = "test15";
+  private static final String TOPIC16 = "test16";
   private static final int TIME_OUT = 1000;
 
   @BeforeClass
@@ -76,6 +95,8 @@ public class TestKafkaTargetSinglePartition {
     // setup Broker
     port = TestUtils.choosePort();
     Properties props = TestUtils.createBrokerConfig(BROKER_ID, port);
+    //
+    props.put("auto.create.topics.enable", "false");
     kafkaServer = TestUtils.createServer(new KafkaConfig(props), new MockTime());
     // create topic
     AdminUtils.createTopic(zkClient, TOPIC1, PARTITIONS, REPLICATION_FACTOR, new Properties());
@@ -85,6 +106,15 @@ public class TestKafkaTargetSinglePartition {
     AdminUtils.createTopic(zkClient, TOPIC5, PARTITIONS, REPLICATION_FACTOR, new Properties());
     AdminUtils.createTopic(zkClient, TOPIC6, PARTITIONS, REPLICATION_FACTOR, new Properties());
     AdminUtils.createTopic(zkClient, TOPIC7, PARTITIONS, REPLICATION_FACTOR, new Properties());
+    AdminUtils.createTopic(zkClient, TOPIC8, PARTITIONS, REPLICATION_FACTOR, new Properties());
+    AdminUtils.createTopic(zkClient, TOPIC9, PARTITIONS, REPLICATION_FACTOR, new Properties());
+    AdminUtils.createTopic(zkClient, TOPIC10, PARTITIONS, REPLICATION_FACTOR, new Properties());
+    AdminUtils.createTopic(zkClient, TOPIC11, PARTITIONS, REPLICATION_FACTOR, new Properties());
+    AdminUtils.createTopic(zkClient, TOPIC12, PARTITIONS, REPLICATION_FACTOR, new Properties());
+    AdminUtils.createTopic(zkClient, TOPIC13, PARTITIONS, REPLICATION_FACTOR, new Properties());
+    AdminUtils.createTopic(zkClient, TOPIC14, PARTITIONS, REPLICATION_FACTOR, new Properties());
+    AdminUtils.createTopic(zkClient, TOPIC15, PARTITIONS, REPLICATION_FACTOR, new Properties());
+    AdminUtils.createTopic(zkClient, TOPIC16, PARTITIONS, REPLICATION_FACTOR, new Properties());
     List<KafkaServer> servers = new ArrayList<>();
     servers.add(kafkaServer);
     TestUtils.waitUntilMetadataIsPropagated(scala.collection.JavaConversions.asBuffer(servers), TOPIC1, 0, TIME_OUT);
@@ -94,6 +124,16 @@ public class TestKafkaTargetSinglePartition {
     TestUtils.waitUntilMetadataIsPropagated(scala.collection.JavaConversions.asBuffer(servers), TOPIC5, 0, TIME_OUT);
     TestUtils.waitUntilMetadataIsPropagated(scala.collection.JavaConversions.asBuffer(servers), TOPIC6, 0, TIME_OUT);
     TestUtils.waitUntilMetadataIsPropagated(scala.collection.JavaConversions.asBuffer(servers), TOPIC7, 0, TIME_OUT);
+    TestUtils.waitUntilMetadataIsPropagated(scala.collection.JavaConversions.asBuffer(servers), TOPIC8, 0, TIME_OUT);
+    TestUtils.waitUntilMetadataIsPropagated(scala.collection.JavaConversions.asBuffer(servers), TOPIC9, 0, TIME_OUT);
+    TestUtils.waitUntilMetadataIsPropagated(scala.collection.JavaConversions.asBuffer(servers), TOPIC10, 0, TIME_OUT);
+    TestUtils.waitUntilMetadataIsPropagated(scala.collection.JavaConversions.asBuffer(servers), TOPIC11, 0, TIME_OUT);
+    TestUtils.waitUntilMetadataIsPropagated(scala.collection.JavaConversions.asBuffer(servers), TOPIC12, 0, TIME_OUT);
+    TestUtils.waitUntilMetadataIsPropagated(scala.collection.JavaConversions.asBuffer(servers), TOPIC13, 0, TIME_OUT);
+    TestUtils.waitUntilMetadataIsPropagated(scala.collection.JavaConversions.asBuffer(servers), TOPIC14, 0, TIME_OUT);
+    TestUtils.waitUntilMetadataIsPropagated(scala.collection.JavaConversions.asBuffer(servers), TOPIC15, 0, TIME_OUT);
+    TestUtils.waitUntilMetadataIsPropagated(scala.collection.JavaConversions.asBuffer(servers), TOPIC16, 0, TIME_OUT);
+
 
     kafkaStreams1 = KafkaTestUtil.createKafkaStream(zkServer.connectString(), TOPIC1, PARTITIONS);
     kafkaStreams2 = KafkaTestUtil.createKafkaStream(zkServer.connectString(), TOPIC2, PARTITIONS);
@@ -102,6 +142,15 @@ public class TestKafkaTargetSinglePartition {
     kafkaStreams5 = KafkaTestUtil.createKafkaStream(zkServer.connectString(), TOPIC5, PARTITIONS);
     kafkaStreams6 = KafkaTestUtil.createKafkaStream(zkServer.connectString(), TOPIC6, PARTITIONS);
     kafkaStreams7 = KafkaTestUtil.createKafkaStream(zkServer.connectString(), TOPIC7, PARTITIONS);
+    kafkaStreams8 = KafkaTestUtil.createKafkaStream(zkServer.connectString(), TOPIC8, PARTITIONS);
+    kafkaStreams9 = KafkaTestUtil.createKafkaStream(zkServer.connectString(), TOPIC9, PARTITIONS);
+    kafkaStreams10 = KafkaTestUtil.createKafkaStream(zkServer.connectString(), TOPIC10, PARTITIONS);
+    kafkaStreams11 = KafkaTestUtil.createKafkaStream(zkServer.connectString(), TOPIC11, PARTITIONS);
+    kafkaStreams12 = KafkaTestUtil.createKafkaStream(zkServer.connectString(), TOPIC12, PARTITIONS);
+    kafkaStreams13 = KafkaTestUtil.createKafkaStream(zkServer.connectString(), TOPIC13, PARTITIONS);
+    kafkaStreams14 = KafkaTestUtil.createKafkaStream(zkServer.connectString(), TOPIC14, PARTITIONS);
+    kafkaStreams15 = KafkaTestUtil.createKafkaStream(zkServer.connectString(), TOPIC15, PARTITIONS);
+    kafkaStreams16 = KafkaTestUtil.createKafkaStream(zkServer.connectString(), TOPIC16, PARTITIONS);
   }
 
   @AfterClass
@@ -124,6 +173,9 @@ public class TestKafkaTargetSinglePartition {
       .addConfiguration("textFieldPath", "/")
       .addConfiguration("textEmptyLineIfNull", true)
       .addConfiguration("charset", "UTF-8")
+      .addConfiguration("runtimeTopicResolution", false)
+      .addConfiguration("topicExpression", null)
+      .addConfiguration("topicWhiteList", null)
       .build();
 
     targetRunner.runInit();
@@ -162,6 +214,9 @@ public class TestKafkaTargetSinglePartition {
       .addConfiguration("textFieldPath", "/")
       .addConfiguration("textEmptyLineIfNull", true)
       .addConfiguration("charset", "UTF-8")
+      .addConfiguration("runtimeTopicResolution", false)
+      .addConfiguration("topicExpression", null)
+      .addConfiguration("topicWhiteList", null)
       .build();
 
     targetRunner.runInit();
@@ -203,6 +258,9 @@ public class TestKafkaTargetSinglePartition {
       .addConfiguration("textFieldPath", "/name")
       .addConfiguration("textEmptyLineIfNull", true)
       .addConfiguration("charset", "UTF-8")
+      .addConfiguration("runtimeTopicResolution", false)
+      .addConfiguration("topicExpression", null)
+      .addConfiguration("topicWhiteList", null)
       .build();
 
     targetRunner.runInit();
@@ -245,6 +303,9 @@ public class TestKafkaTargetSinglePartition {
       .addConfiguration("textFieldPath", "/lastStatusChange") //this is number field, should be converted to string
       .addConfiguration("textEmptyLineIfNull", true)
       .addConfiguration("charset", "UTF-8")
+      .addConfiguration("runtimeTopicResolution", false)
+      .addConfiguration("topicExpression", null)
+      .addConfiguration("topicWhiteList", null)
       .build();
 
     targetRunner.runInit();
@@ -289,6 +350,9 @@ public class TestKafkaTargetSinglePartition {
       .addConfiguration("textFieldPath", "/") //this is map field, should not be converted to string
       .addConfiguration("textEmptyLineIfNull", true)
       .addConfiguration("charset", "UTF-8")
+      .addConfiguration("runtimeTopicResolution", false)
+      .addConfiguration("topicExpression", null)
+      .addConfiguration("topicWhiteList", null)
       .build();
 
     targetRunner.runInit();
@@ -328,6 +392,9 @@ public class TestKafkaTargetSinglePartition {
       .addConfiguration("singleMessagePerBatch", false)
       .addConfiguration("partitionStrategy", PartitionStrategy.EXPRESSION)
       .addConfiguration("charset", "UTF-8")
+      .addConfiguration("runtimeTopicResolution", false)
+      .addConfiguration("topicExpression", null)
+      .addConfiguration("topicWhiteList", null)
       .build();
 
     targetRunner.runInit();
@@ -374,6 +441,9 @@ public class TestKafkaTargetSinglePartition {
       .addConfiguration("csvHeader", CsvHeader.NO_HEADER)
       .addConfiguration("csvReplaceNewLines", false)
       .addConfiguration("charset", "UTF-8")
+      .addConfiguration("runtimeTopicResolution", false)
+      .addConfiguration("topicExpression", null)
+      .addConfiguration("topicWhiteList", null)
       .build();
 
     targetRunner.runInit();
@@ -394,4 +464,534 @@ public class TestKafkaTargetSinglePartition {
     Assert.assertEquals(28, messages.size());
 
   }
+
+  @Test
+  /**
+   * Tests runtime topic resolution from record where topics resolved are part of the white list.
+   * Tests for both 'single message per record' and 'single message per batch' options.
+   */
+  public void testTopicExpression1() throws InterruptedException, StageException, IOException {
+
+    Map<String, String> kafkaProducerConfig = new HashMap();
+    kafkaProducerConfig.put("request.required.acks", "2");
+    kafkaProducerConfig.put("request.timeout.ms", "2000");
+
+    TargetRunner targetRunner = new TargetRunner.Builder(KafkaDTarget.class)
+      .addConfiguration("topicExpression", "${record:value('/topic')}")
+      .addConfiguration("partition", "0")
+      .addConfiguration("metadataBrokerList", HOST + ":" + port)
+      .addConfiguration("kafkaProducerConfigs", kafkaProducerConfig)
+      .addConfiguration("dataFormat", DataFormat.SDC_JSON)
+      .addConfiguration("singleMessagePerBatch", false)
+      .addConfiguration("partitionStrategy", PartitionStrategy.EXPRESSION)
+      .addConfiguration("textEmptyLineIfNull", true)
+      .addConfiguration("charset", "UTF-8")
+      .addConfiguration("runtimeTopicResolution", true)
+      .addConfiguration("topic", null)
+      .addConfiguration("topicWhiteList", TOPIC8 + ", " + TOPIC9 + ", " + TOPIC10)
+      .build();
+
+    targetRunner.runInit();
+    List<Record> logRecords = KafkaTestUtil.createJsonRecordsWithTopicField(ImmutableList.of(TOPIC8, TOPIC9, TOPIC10));
+    targetRunner.runWrite(logRecords);
+    targetRunner.runDestroy();
+
+    List<String> messages = new ArrayList<>();
+    Assert.assertTrue(kafkaStreams8.size() == 1);
+    ConsumerIterator<byte[], byte[]> it = kafkaStreams8.get(0).iterator();
+    try {
+      while (it.hasNext()) {
+        messages.add(new String(it.next().message()));
+      }
+    } catch (kafka.consumer.ConsumerTimeoutException e) {
+      //no-op
+    }
+    Assert.assertEquals(3, messages.size());
+
+    messages = new ArrayList<>();
+    Assert.assertTrue(kafkaStreams9.size() == 1);
+    it = kafkaStreams9.get(0).iterator();
+    try {
+      while (it.hasNext()) {
+        messages.add(new String(it.next().message()));
+      }
+    } catch (kafka.consumer.ConsumerTimeoutException e) {
+      //no-op
+    }
+    Assert.assertEquals(3, messages.size());
+
+    messages = new ArrayList<>();
+    Assert.assertTrue(kafkaStreams10.size() == 1);
+    it = kafkaStreams10.get(0).iterator();
+    try {
+      while (it.hasNext()) {
+        messages.add(new String(it.next().message()));
+      }
+    } catch (kafka.consumer.ConsumerTimeoutException e) {
+      //no-op
+    }
+    Assert.assertEquals(3, messages.size());
+
+    //single message per batch
+    targetRunner = new TargetRunner.Builder(KafkaDTarget.class)
+      .addConfiguration("topicExpression", "${record:value('/topic')}")
+      .addConfiguration("partition", "0")
+      .addConfiguration("metadataBrokerList", HOST + ":" + port)
+      .addConfiguration("kafkaProducerConfigs", kafkaProducerConfig)
+      .addConfiguration("dataFormat", DataFormat.SDC_JSON)
+      .addConfiguration("singleMessagePerBatch", true)
+      .addConfiguration("partitionStrategy", PartitionStrategy.EXPRESSION)
+      .addConfiguration("textEmptyLineIfNull", true)
+      .addConfiguration("charset", "UTF-8")
+      .addConfiguration("runtimeTopicResolution", true)
+      .addConfiguration("topic", null)
+      .addConfiguration("topicWhiteList", TOPIC8 + ", " + TOPIC9 + ", " + TOPIC10)
+      .build();
+
+    targetRunner.runInit();
+    logRecords = KafkaTestUtil.createJsonRecordsWithTopicField(ImmutableList.of(TOPIC8, TOPIC9, TOPIC10));
+    targetRunner.runWrite(logRecords);
+    targetRunner.runDestroy();
+
+    messages = new ArrayList<>();
+    Assert.assertTrue(kafkaStreams8.size() == 1);
+    it = kafkaStreams8.get(0).iterator();
+    try {
+      while (it.hasNext()) {
+        messages.add(new String(it.next().message()));
+      }
+    } catch (kafka.consumer.ConsumerTimeoutException e) {
+      //no-op
+    }
+    Assert.assertEquals(1, messages.size());
+
+    messages = new ArrayList<>();
+    Assert.assertTrue(kafkaStreams9.size() == 1);
+    it = kafkaStreams9.get(0).iterator();
+    try {
+      while (it.hasNext()) {
+        messages.add(new String(it.next().message()));
+      }
+    } catch (kafka.consumer.ConsumerTimeoutException e) {
+      //no-op
+    }
+    Assert.assertEquals(1, messages.size());
+
+    messages = new ArrayList<>();
+    Assert.assertTrue(kafkaStreams10.size() == 1);
+    it = kafkaStreams10.get(0).iterator();
+    try {
+      while (it.hasNext()) {
+        messages.add(new String(it.next().message()));
+      }
+    } catch (kafka.consumer.ConsumerTimeoutException e) {
+      //no-op
+    }
+    Assert.assertEquals(1, messages.size());
+  }
+
+  @Test
+  /**
+   * Tests runtime topic resolution from record but where white list is "*". All topics should be allowed.
+   * Tests for both 'single message per record' and 'single message per batch' options.
+   */
+  public void testTopicExpression2() throws InterruptedException, StageException, IOException {
+
+    Map<String, String> kafkaProducerConfig = new HashMap();
+    kafkaProducerConfig.put("request.required.acks", "2");
+    kafkaProducerConfig.put("request.timeout.ms", "2000");
+
+    TargetRunner targetRunner = new TargetRunner.Builder(KafkaDTarget.class)
+      .addConfiguration("topicExpression", "${record:value('/topic')}")
+      .addConfiguration("partition", "0")
+      .addConfiguration("metadataBrokerList", HOST + ":" + port)
+      .addConfiguration("kafkaProducerConfigs", kafkaProducerConfig)
+      .addConfiguration("dataFormat", DataFormat.SDC_JSON)
+      .addConfiguration("singleMessagePerBatch", false)
+      .addConfiguration("partitionStrategy", PartitionStrategy.EXPRESSION)
+      .addConfiguration("textEmptyLineIfNull", true)
+      .addConfiguration("charset", "UTF-8")
+      .addConfiguration("runtimeTopicResolution", true)
+      .addConfiguration("topic", null)
+      .addConfiguration("topicWhiteList", "*")
+      .build();
+
+    targetRunner.runInit();
+    List<Record> logRecords = KafkaTestUtil.createJsonRecordsWithTopicField(ImmutableList.of(TOPIC12, TOPIC13, TOPIC14));
+    targetRunner.runWrite(logRecords);
+    targetRunner.runDestroy();
+
+    List<String> messages = new ArrayList<>();
+    Assert.assertTrue(kafkaStreams12.size() == 1);
+    ConsumerIterator<byte[], byte[]> it = kafkaStreams12.get(0).iterator();
+    try {
+      while (it.hasNext()) {
+        messages.add(new String(it.next().message()));
+      }
+    } catch (kafka.consumer.ConsumerTimeoutException e) {
+      //no-op
+    }
+    Assert.assertEquals(3, messages.size());
+
+    messages = new ArrayList<>();
+    Assert.assertTrue(kafkaStreams13.size() == 1);
+    it = kafkaStreams13.get(0).iterator();
+    try {
+      while (it.hasNext()) {
+        messages.add(new String(it.next().message()));
+      }
+    } catch (kafka.consumer.ConsumerTimeoutException e) {
+      //no-op
+    }
+    Assert.assertEquals(3, messages.size());
+
+    messages = new ArrayList<>();
+    Assert.assertTrue(kafkaStreams14.size() == 1);
+    it = kafkaStreams14.get(0).iterator();
+    try {
+      while (it.hasNext()) {
+        messages.add(new String(it.next().message()));
+      }
+    } catch (kafka.consumer.ConsumerTimeoutException e) {
+      //no-op
+    }
+    Assert.assertEquals(3, messages.size());
+
+    //single message per batch
+    targetRunner = new TargetRunner.Builder(KafkaDTarget.class)
+      .addConfiguration("topicExpression", "${record:value('/topic')}")
+      .addConfiguration("partition", "0")
+      .addConfiguration("metadataBrokerList", HOST + ":" + port)
+      .addConfiguration("kafkaProducerConfigs", kafkaProducerConfig)
+      .addConfiguration("dataFormat", DataFormat.SDC_JSON)
+      .addConfiguration("singleMessagePerBatch", true)
+      .addConfiguration("partitionStrategy", PartitionStrategy.EXPRESSION)
+      .addConfiguration("textEmptyLineIfNull", true)
+      .addConfiguration("charset", "UTF-8")
+      .addConfiguration("runtimeTopicResolution", true)
+      .addConfiguration("topic", null)
+      .addConfiguration("topicWhiteList", "*")
+      .build();
+
+    targetRunner.runInit();
+    logRecords = KafkaTestUtil.createJsonRecordsWithTopicField(ImmutableList.of(TOPIC12, TOPIC13, TOPIC14));
+    targetRunner.runWrite(logRecords);
+    targetRunner.runDestroy();
+
+    messages = new ArrayList<>();
+    Assert.assertTrue(kafkaStreams12.size() == 1);
+    it = kafkaStreams12.get(0).iterator();
+    try {
+      while (it.hasNext()) {
+        messages.add(new String(it.next().message()));
+      }
+    } catch (kafka.consumer.ConsumerTimeoutException e) {
+      //no-op
+    }
+    Assert.assertEquals(1, messages.size());
+
+    messages = new ArrayList<>();
+    Assert.assertTrue(kafkaStreams13.size() == 1);
+    it = kafkaStreams13.get(0).iterator();
+    try {
+      while (it.hasNext()) {
+        messages.add(new String(it.next().message()));
+      }
+    } catch (kafka.consumer.ConsumerTimeoutException e) {
+      //no-op
+    }
+    Assert.assertEquals(1, messages.size());
+
+    messages = new ArrayList<>();
+    Assert.assertTrue(kafkaStreams14.size() == 1);
+    it = kafkaStreams14.get(0).iterator();
+    try {
+      while (it.hasNext()) {
+        messages.add(new String(it.next().message()));
+      }
+    } catch (kafka.consumer.ConsumerTimeoutException e) {
+      //no-op
+    }
+    Assert.assertEquals(1, messages.size());
+  }
+
+  @Test
+  /**
+   * Tests runtime topic resolution from record but where the topic name resolved is not part of the white list
+   * All records are sent to error.
+   * Tests for both 'single message per record' and 'single message per batch' options.
+   */
+  public void testTopicExpression3() throws InterruptedException, StageException, IOException {
+
+    Map<String, String> kafkaProducerConfig = new HashMap();
+    kafkaProducerConfig.put("request.required.acks", "2");
+    kafkaProducerConfig.put("request.timeout.ms", "2000");
+
+    TargetRunner targetRunner = new TargetRunner.Builder(KafkaDTarget.class)
+      .setOnRecordError(OnRecordError.TO_ERROR)
+      .addConfiguration("topicExpression", "${record:value('/topic')}")
+      .addConfiguration("partition", "0")
+      .addConfiguration("metadataBrokerList", HOST + ":" + port)
+      .addConfiguration("kafkaProducerConfigs", kafkaProducerConfig)
+      .addConfiguration("dataFormat", DataFormat.SDC_JSON)
+      .addConfiguration("singleMessagePerBatch", false)
+      .addConfiguration("partitionStrategy", PartitionStrategy.EXPRESSION)
+      .addConfiguration("textEmptyLineIfNull", true)
+      .addConfiguration("charset", "UTF-8")
+      .addConfiguration("runtimeTopicResolution", true)
+      .addConfiguration("topic", null)
+      .addConfiguration("topicWhiteList", TOPIC15)
+      .build();
+
+    targetRunner.runInit();
+    List<Record> logRecords = KafkaTestUtil.createJsonRecordsWithTopicField(ImmutableList.of(TOPIC15, "BlackListTopic"));
+    targetRunner.runWrite(logRecords);
+
+    Assert.assertEquals(3, targetRunner.getErrorRecords().size());
+
+    targetRunner.runDestroy();
+
+    List<String> messages = new ArrayList<>();
+    Assert.assertTrue(kafkaStreams15.size() == 1);
+    ConsumerIterator<byte[], byte[]> it = kafkaStreams15.get(0).iterator();
+    try {
+      while (it.hasNext()) {
+        messages.add(new String(it.next().message()));
+      }
+    } catch (kafka.consumer.ConsumerTimeoutException e) {
+      //no-op
+    }
+    Assert.assertEquals(3, messages.size());
+
+    targetRunner = new TargetRunner.Builder(KafkaDTarget.class)
+      .setOnRecordError(OnRecordError.TO_ERROR)
+      .addConfiguration("topicExpression", "${record:value('/topic')}")
+      .addConfiguration("partition", "0")
+      .addConfiguration("metadataBrokerList", HOST + ":" + port)
+      .addConfiguration("kafkaProducerConfigs", kafkaProducerConfig)
+      .addConfiguration("dataFormat", DataFormat.SDC_JSON)
+      .addConfiguration("singleMessagePerBatch", true)
+      .addConfiguration("partitionStrategy", PartitionStrategy.EXPRESSION)
+      .addConfiguration("textEmptyLineIfNull", true)
+      .addConfiguration("charset", "UTF-8")
+      .addConfiguration("runtimeTopicResolution", true)
+      .addConfiguration("topic", null)
+      .addConfiguration("topicWhiteList", TOPIC15)
+      .build();
+
+    targetRunner.runInit();
+    logRecords = KafkaTestUtil.createJsonRecordsWithTopicField(ImmutableList.of(TOPIC15, "BlackListTopic"));
+    targetRunner.runWrite(logRecords);
+
+    Assert.assertEquals(3, targetRunner.getErrorRecords().size());
+
+    targetRunner.runDestroy();
+
+    messages = new ArrayList<>();
+    Assert.assertTrue(kafkaStreams15.size() == 1);
+    it = kafkaStreams15.get(0).iterator();
+    try {
+      while (it.hasNext()) {
+        messages.add(new String(it.next().message()));
+      }
+    } catch (kafka.consumer.ConsumerTimeoutException e) {
+      //no-op
+    }
+    Assert.assertEquals(1, messages.size());
+  }
+
+  @Test
+  /**
+   * Tests runtime topic resolution from record but where the topic name resolved is allowed but does not exist.
+   * All records are sent to error.
+   * Tests for both 'single message per record' and 'single message per batch' options.
+   */
+  public void testTopicExpression4() throws InterruptedException, StageException, IOException {
+
+    Map<String, String> kafkaProducerConfig = new HashMap();
+    kafkaProducerConfig.put("request.required.acks", "2");
+    kafkaProducerConfig.put("request.timeout.ms", "2000");
+
+    TargetRunner targetRunner = new TargetRunner.Builder(KafkaDTarget.class)
+      .setOnRecordError(OnRecordError.TO_ERROR)
+      .addConfiguration("topicExpression", "${record:value('/topic')}")
+      .addConfiguration("partition", "0")
+      .addConfiguration("metadataBrokerList", HOST + ":" + port)
+      .addConfiguration("kafkaProducerConfigs", kafkaProducerConfig)
+      .addConfiguration("dataFormat", DataFormat.SDC_JSON)
+      .addConfiguration("singleMessagePerBatch", false)
+      .addConfiguration("partitionStrategy", PartitionStrategy.EXPRESSION)
+      .addConfiguration("textEmptyLineIfNull", true)
+      .addConfiguration("charset", "UTF-8")
+      .addConfiguration("runtimeTopicResolution", true)
+      .addConfiguration("topic", null)
+      .addConfiguration("topicWhiteList", "*")
+      .build();
+
+    targetRunner.runInit();
+    List<Record> logRecords = KafkaTestUtil.createJsonRecordsWithTopicField(ImmutableList.of("InvalidTopic"));
+    targetRunner.runWrite(logRecords);
+
+    Assert.assertEquals(logRecords.size(), targetRunner.getErrorRecords().size());
+
+    targetRunner.runDestroy();
+
+    targetRunner = new TargetRunner.Builder(KafkaDTarget.class)
+      .setOnRecordError(OnRecordError.TO_ERROR)
+      .addConfiguration("topicExpression", "${record:value('/topic')}")
+      .addConfiguration("partition", "0")
+      .addConfiguration("metadataBrokerList", HOST + ":" + port)
+      .addConfiguration("kafkaProducerConfigs", kafkaProducerConfig)
+      .addConfiguration("dataFormat", DataFormat.SDC_JSON)
+      .addConfiguration("singleMessagePerBatch", true)
+      .addConfiguration("partitionStrategy", PartitionStrategy.EXPRESSION)
+      .addConfiguration("textEmptyLineIfNull", true)
+      .addConfiguration("charset", "UTF-8")
+      .addConfiguration("runtimeTopicResolution", true)
+      .addConfiguration("topic", null)
+      .addConfiguration("topicWhiteList", "*")
+      .build();
+
+    targetRunner.runInit();
+    logRecords = KafkaTestUtil.createJsonRecordsWithTopicField(ImmutableList.of("InvalidTopic"));
+    targetRunner.runWrite(logRecords);
+
+    Assert.assertEquals(logRecords.size(), targetRunner.getErrorRecords().size());
+
+    targetRunner.runDestroy();
+  }
+
+  @Test
+  /**
+   * Tests that message with invalid partition is sent to error
+   */
+  public void testInvalidPartition() throws InterruptedException, StageException, IOException {
+
+    Map<String, String> kafkaProducerConfig = new HashMap();
+    kafkaProducerConfig.put("request.required.acks", "2");
+    kafkaProducerConfig.put("request.timeout.ms", "2000");
+
+    TargetRunner targetRunner = new TargetRunner.Builder(KafkaDTarget.class)
+      .setOnRecordError(OnRecordError.TO_ERROR)
+      .addConfiguration("topicExpression", "${record:value('/topic')}")
+      .addConfiguration("partition", "${record:value('/partition')}")
+      .addConfiguration("metadataBrokerList", HOST + ":" + port)
+      .addConfiguration("kafkaProducerConfigs", kafkaProducerConfig)
+      .addConfiguration("dataFormat", DataFormat.SDC_JSON)
+      .addConfiguration("singleMessagePerBatch", false)
+      .addConfiguration("partitionStrategy", PartitionStrategy.EXPRESSION)
+      .addConfiguration("textEmptyLineIfNull", true)
+      .addConfiguration("charset", "UTF-8")
+      .addConfiguration("runtimeTopicResolution", true)
+      .addConfiguration("topic", null)
+      .addConfiguration("topicWhiteList", "*")
+      .build();
+
+    targetRunner.runInit();
+    List<Record> logRecords = KafkaTestUtil.createJsonRecordsWithTopicField(ImmutableList.of(TOPIC16));
+    targetRunner.runWrite(logRecords);
+
+    Assert.assertEquals(1, targetRunner.getErrorRecords().size());
+
+    targetRunner.runDestroy();
+
+    List<String> messages = new ArrayList<>();
+    Assert.assertTrue(kafkaStreams16.size() == 1);
+    ConsumerIterator<byte[], byte[]> it = kafkaStreams16.get(0).iterator();
+    try {
+      while (it.hasNext()) {
+        messages.add(new String(it.next().message()));
+      }
+    } catch (kafka.consumer.ConsumerTimeoutException e) {
+      //no-op
+    }
+    Assert.assertEquals(2, messages.size());
+  }
+
+  @Test
+  public void testTopicConstant() throws InterruptedException, StageException {
+
+    Map<String, String> kafkaProducerConfig = new HashMap();
+    kafkaProducerConfig.put("request.required.acks", "2");
+    kafkaProducerConfig.put("request.timeout.ms", "2000");
+
+    Map<String, Object> constants = new HashMap<>();
+    constants.put("TOPIC11", TOPIC11);
+
+    TargetRunner targetRunner = new TargetRunner.Builder(KafkaDTarget.class)
+      .addConfiguration("topic", "${TOPIC11}")
+      .addConfiguration("partition", "0")
+      .addConfiguration("metadataBrokerList", HOST + ":" + port)
+      .addConfiguration("kafkaProducerConfigs", kafkaProducerConfig)
+      .addConfiguration("dataFormat", DataFormat.TEXT)
+      .addConfiguration("singleMessagePerBatch", false)
+      .addConfiguration("partitionStrategy", PartitionStrategy.EXPRESSION)
+      .addConfiguration("textFieldPath", "/")
+      .addConfiguration("textEmptyLineIfNull", true)
+      .addConfiguration("charset", "UTF-8")
+      .addConfiguration("runtimeTopicResolution", false)
+      .addConfiguration("topicExpression", null)
+      .addConfiguration("topicWhiteList", null)
+      .addConstants(constants)
+      .build();
+
+    targetRunner.runInit();
+    List<Record> logRecords = KafkaTestUtil.createStringRecords();
+    targetRunner.runWrite(logRecords);
+    targetRunner.runDestroy();
+
+    List<String> messages = new ArrayList<>();
+    Assert.assertTrue(kafkaStreams11.size() == 1);
+    ConsumerIterator<byte[], byte[]> it = kafkaStreams11.get(0).iterator();
+    try {
+      while (it.hasNext()) {
+        messages.add(new String(it.next().message()));
+      }
+    } catch (kafka.consumer.ConsumerTimeoutException e) {
+      //no-op
+    }
+    Assert.assertEquals(9, messages.size());
+    for(int i = 0; i < logRecords.size(); i++) {
+      Assert.assertEquals(logRecords.get(i).get().getValueAsString(), messages.get(i).trim());
+    }
+  }
+
+  @Test
+  /**
+   * Tests that KafkaTarget validates the names of the topics present in the white list during init
+   */
+  public void testInvalidTopicWhiteList() throws InterruptedException, StageException {
+
+    Map<String, String> kafkaProducerConfig = new HashMap();
+    kafkaProducerConfig.put("request.required.acks", "2");
+    kafkaProducerConfig.put("request.timeout.ms", "2000");
+    kafkaProducerConfig.put("message.send.max.retries", "10");
+    kafkaProducerConfig.put("retry.backoff.ms", "1000");
+
+    //STOP PIPELINE
+    TargetRunner targetRunner = new TargetRunner.Builder(KafkaDTarget.class)
+      .setOnRecordError(OnRecordError.STOP_PIPELINE)
+      .addConfiguration("topic", null)
+      .addConfiguration("partition", "0")
+      .addConfiguration("metadataBrokerList", HOST + ":" + port)
+      .addConfiguration("kafkaProducerConfigs", kafkaProducerConfig)
+      .addConfiguration("dataFormat", DataFormat.TEXT)
+      .addConfiguration("singleMessagePerBatch", false)
+      .addConfiguration("partitionStrategy", PartitionStrategy.EXPRESSION)
+      .addConfiguration("textFieldPath", "/")
+      .addConfiguration("textEmptyLineIfNull", true)
+      .addConfiguration("charset", "UTF-8")
+      .addConfiguration("runtimeTopicResolution", true)
+      .addConfiguration("topicExpression", "hello")
+      .addConfiguration("topicWhiteList", "badTopic")
+      .build();
+
+    try {
+      targetRunner.runInit();
+      Assert.fail("Expected exception while validating topic white list, got none");
+    } catch (StageException e) {
+      //All good
+    }
+  }
+
 }
