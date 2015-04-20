@@ -47,7 +47,7 @@ public class RecordWriter {
   private boolean seqFile;
 
   private RecordWriter(Path path, long timeToLiveMillis, DataGeneratorFactory generatorFactory) {
-    this.expires = System.currentTimeMillis() + timeToLiveMillis;
+    this.expires = (timeToLiveMillis == Long.MAX_VALUE) ? timeToLiveMillis : System.currentTimeMillis() + timeToLiveMillis;
     this.path = path;
     this.generatorFactory = generatorFactory;
     LOG.debug("Path[{}] - Creating", path);

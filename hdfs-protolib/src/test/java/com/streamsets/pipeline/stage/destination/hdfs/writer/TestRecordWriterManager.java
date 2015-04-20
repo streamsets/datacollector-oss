@@ -568,9 +568,20 @@ public class TestRecordWriterManager {
     actual = new Date(actual.getTime() + 10);
     computed = mgr.getCeilingDateBasedOnTemplate(template, TimeZone.getTimeZone("UTC"), actual);
     Assert.assertEquals(expected.getTime(), computed.getTime());
+
+    // no date at all
+    template = getTestDir().toString() + "/foo";
+    mgr = new RecordWriterManager(uri, conf, prefix, template, timeZone, cutOffSecs, cutOffSize,
+                                  cutOffRecords, fileType, compressionCodec , compressionType, keyEL,
+                                  generatorFactory, targetContext);
+
+    actual = parseDate("2015-01-20T14:01:15Z");
+    computed = mgr.getCeilingDateBasedOnTemplate(template, TimeZone.getTimeZone("UTC"), actual);
+    Assert.assertNull(computed);
+
   }
 
-  private void testInvalidDirTemplate(String template) throws Exception {
+  private void testDirTemplate(String template) throws Exception {
     URI uri = new URI("file:///");
     Configuration conf = new HdfsConfiguration();
     String prefix = "prefix";
@@ -590,34 +601,34 @@ public class TestRecordWriterManager {
     mgr.getCeilingDateBasedOnTemplate(template, TimeZone.getDefault(), new Date());
   }
 
-  @Test(expected = IllegalArgumentException.class)
-  public void testInvalidDirTemplateNoYear() throws Exception {
-    testInvalidDirTemplate("/");
+  @Test
+  public void testNoTimeFunctions() throws Exception {
+    testDirTemplate("/");
   }
 
   @Test(expected = IllegalArgumentException.class)
   public void testInvalidDirTemplateGapInTokens1() throws Exception {
-    testInvalidDirTemplate("${MM()}");
+    testDirTemplate("${MM()}");
   }
 
   @Test(expected = IllegalArgumentException.class)
   public void testInvalidDirTemplateGapInTokens2() throws Exception {
-    testInvalidDirTemplate("${YY()}/${DD()}");
+    testDirTemplate("${YY()}/${DD()}");
   }
 
   @Test(expected = IllegalArgumentException.class)
   public void testInvalidDirTemplateGapInTokens3() throws Exception {
-    testInvalidDirTemplate("${YY()}/${MM()}/${hh()}");
+    testDirTemplate("${YY()}/${MM()}/${hh()}");
   }
 
   @Test(expected = IllegalArgumentException.class)
   public void testInvalidDirTemplateGapInTokens4() throws Exception {
-    testInvalidDirTemplate("${YY()}/${MM()}/${DD()}/${mm()}");
+    testDirTemplate("${YY()}/${MM()}/${DD()}/${mm()}");
   }
 
   @Test(expected = IllegalArgumentException.class)
   public void testInvalidDirTemplateGapInTokens5() throws Exception {
-    testInvalidDirTemplate("${YY()}/${MM()}/${DD()}/${hh()}/${ss()}");
+    testDirTemplate("${YY()}/${MM()}/${DD()}/${hh()}/${ss()}");
   }
 
 }

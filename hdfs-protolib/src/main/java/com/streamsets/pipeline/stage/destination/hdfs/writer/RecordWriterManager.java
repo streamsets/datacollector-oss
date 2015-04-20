@@ -169,20 +169,30 @@ public class RecordWriterManager {
   }
 
   static Date getCeilingDateBasedOnTemplate(String dirPathTemplate, TimeZone timeZone, Date date) {
-    Calendar calendar = Calendar.getInstance(timeZone);
-    calendar.setTime(date);
-    if (!dirPathTemplate.contains("${" + CONST_YY + "()}") && !dirPathTemplate.contains(CONST_YYYY)) {
-      throw  new IllegalArgumentException("dir path template must have a '${YY}' or '${YYYY}' token");
-    }
+    Calendar calendar = null;
     boolean done = false;
-    if (!dirPathTemplate.contains("${" + CONST_MM + "()}")) {
-      calendar.set(Calendar.MONTH, calendar.getActualMaximum(Calendar.MONTH));
-      calendar.set(Calendar.DAY_OF_MONTH, calendar.getActualMaximum(Calendar.DAY_OF_MONTH));
-      calendar.set(Calendar.HOUR_OF_DAY, calendar.getActualMaximum(Calendar.HOUR_OF_DAY));
-      calendar.set(Calendar.MINUTE, calendar.getActualMaximum(Calendar.MINUTE));
-      calendar.set(Calendar.SECOND, calendar.getActualMaximum(Calendar.SECOND));
-      calendar.set(Calendar.MILLISECOND, calendar.getActualMaximum(Calendar.MILLISECOND));
+    if (!dirPathTemplate.contains("${" + CONST_YY + "()}") && !dirPathTemplate.contains(CONST_YYYY)) {
       done = true;
+    } else {
+      calendar = Calendar.getInstance(timeZone);
+      calendar.setTime(date);
+    }
+    if (!dirPathTemplate.contains("${" + CONST_MM + "()}")) {
+      if (!done) {
+        calendar.set(Calendar.MONTH, calendar.getActualMaximum(Calendar.MONTH));
+        calendar.set(Calendar.DAY_OF_MONTH, calendar.getActualMaximum(Calendar.DAY_OF_MONTH));
+        calendar.set(Calendar.HOUR_OF_DAY, calendar.getActualMaximum(Calendar.HOUR_OF_DAY));
+        calendar.set(Calendar.MINUTE, calendar.getActualMaximum(Calendar.MINUTE));
+        calendar.set(Calendar.SECOND, calendar.getActualMaximum(Calendar.SECOND));
+        calendar.set(Calendar.MILLISECOND, calendar.getActualMaximum(Calendar.MILLISECOND));
+        done = true;
+      }
+    }
+    else {
+      if (done) {
+        throw new IllegalArgumentException(
+            "dir path template has the '${MM()}' token but does not have the '${YY()}' or '${YYYY()}' tokens");
+      }
     }
     if (!dirPathTemplate.contains("${" + CONST_DD + "()}")) {
       if (!done) {
@@ -195,7 +205,8 @@ public class RecordWriterManager {
       }
     } else {
       if (done) {
-        throw  new IllegalArgumentException("dir path template has the '${DD}' token but does not have the '${MM}' token");
+        throw new IllegalArgumentException(
+            "dir path template has the '${DD()}' token but does not have the '${MM()}' token");
       }
     }
     if (!dirPathTemplate.contains("${" + CONST_hh + "()}")) {
@@ -208,7 +219,8 @@ public class RecordWriterManager {
       }
     } else {
       if (done) {
-        throw  new IllegalArgumentException("dir path template has the '${hh}' token but does not have the '${DD}' token");
+        throw new IllegalArgumentException(
+            "dir path template has the '${hh()}' token but does not have the '${DD()}' token");
       }
     }
     if (!dirPathTemplate.contains("${" + CONST_mm + "()}")) {
@@ -220,7 +232,8 @@ public class RecordWriterManager {
       }
     } else {
       if (done) {
-        throw  new IllegalArgumentException("dir path template has the '${mm}' token but does not have the '${hh}' token");
+        throw new IllegalArgumentException(
+            "dir path template has the '${mm()}' token but does not have the '${hh()}' token");
       }
     }
     if (!dirPathTemplate.contains("${" + CONST_ss + "()}")) {
@@ -229,18 +242,23 @@ public class RecordWriterManager {
       }
     } else {
       if (done) {
-        throw  new IllegalArgumentException("dir path template has the '${ss}' token but does not have the '${ss}' token");
+        throw  new IllegalArgumentException(
+            "dir path template has the '${ss()}' token but does not have the '${mm()}' token");
       }
     }
-    calendar.set(Calendar.MILLISECOND, calendar.getActualMaximum(Calendar.MILLISECOND));
-    date = calendar.getTime();
+    if (calendar != null) {
+      calendar.set(Calendar.MILLISECOND, calendar.getActualMaximum(Calendar.MILLISECOND));
+      date = calendar.getTime();
+    } else {
+      return null;
+    }
     return date;
   }
 
   long getTimeToLiveMillis(Date now, Date recordDate) {
     // we up the record date to the greatest one based on the template
     recordDate = getCeilingDateBasedOnTemplate(dirPathTemplate, timeZone, recordDate);
-    return recordDate.getTime() + cutOffMillis - now.getTime();
+    return (recordDate != null) ? recordDate.getTime() + cutOffMillis - now.getTime() : Long.MAX_VALUE;
   }
 
   RecordWriter createWriter(FileSystem fs, Path path, long timeToLiveMillis) throws StageException, IOException {
