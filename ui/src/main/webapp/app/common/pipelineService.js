@@ -14,7 +14,7 @@ angular.module('dataCollectorApp.common')
         showCursorWhenSelecting: true,
         lineNumbers: false,
         matchBrackets: true,
-        autoCloseBrackets: true,
+        autoCloseBrackets: '(){}\'\'""',
         cursorHeight: 1,
         extraKeys: {
           'Ctrl-Space': 'autocomplete'

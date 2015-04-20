@@ -26,13 +26,13 @@ angular.module('dataCollectorApp.codemirrorDirectives')
             var cur = editor.getCursor(), curLine = editor.getLine(cur.line);
             var start = cur.ch, end = start;
 
-            while (end < curLine.length && /[\w:/$]+/.test(curLine.charAt(end))) {
+            while (end < curLine.length && /[\w:\[\]/$]+/.test(curLine.charAt(end))) {
               ++end;
             }
-            while (start && /[\w:/$]+/.test(curLine.charAt(start - 1))) {
+            while (start && /[\w:\[\]/$]+/.test(curLine.charAt(start - 1))) {
               --start;
             }
-            var curWord = start != end && curLine.slice(start, end);
+            var curWord = start != end && curLine.slice(start, end).replace('[', '\\[').replace(']', '\\]');
             var regex = new RegExp('^' + curWord, 'i');
             var completions =[];
 
