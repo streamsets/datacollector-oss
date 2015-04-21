@@ -8,6 +8,7 @@ package com.streamsets.pipeline.lib.io;
 import org.apache.commons.io.IOUtils;
 import org.junit.Assert;
 import org.junit.Test;
+import org.mockito.Mockito;
 
 import java.io.IOException;
 import java.io.Reader;
@@ -18,7 +19,9 @@ public class TestLiveFileChunk {
 
   @Test
   public void testChunkGetters() throws IOException {
-    LiveFileChunk chunk = new LiveFileChunk("Hola\nHello".getBytes(), Charset.forName("UTF-8"), 1, 9, true);
+    LiveFile file = Mockito.mock(LiveFile.class);
+    LiveFileChunk chunk = new LiveFileChunk(file, "Hola\nHello".getBytes(), Charset.forName("UTF-8"), 1, 9, true);
+    Assert.assertEquals(file, chunk.getFile());
     Assert.assertEquals("Hola", IOUtils.readLines(chunk.getReader()).get(0));
     Assert.assertEquals("Hell", IOUtils.readLines(chunk.getReader()).get(1));
     Assert.assertEquals(1, chunk.getOffset());
@@ -40,7 +43,7 @@ public class TestLiveFileChunk {
   @Test
   public void testChunkLinesLF() throws IOException {
     byte[] data = "Hello\nBye\n".getBytes(Charset.forName("UTF-8"));
-    LiveFileChunk chunk = new LiveFileChunk(data, Charset.forName("UTF-8"), 1, data.length, true);
+    LiveFileChunk chunk = new LiveFileChunk(null, data, Charset.forName("UTF-8"), 1, data.length, true);
     Assert.assertEquals(2, chunk.getLines().size());
     Assert.assertEquals("Hello\n", chunk.getLines().get(0).getText());
     Assert.assertEquals(1, chunk.getLines().get(0).getFileOffset());
@@ -51,7 +54,7 @@ public class TestLiveFileChunk {
   @Test
   public void testChunkLinesCRLF() throws IOException {
     byte[] data = "Hello\r\nBye\r\n".getBytes(Charset.forName("UTF-8"));
-    LiveFileChunk chunk = new LiveFileChunk(data, Charset.forName("UTF-8"), 1, data.length, true);
+    LiveFileChunk chunk = new LiveFileChunk(null, data, Charset.forName("UTF-8"), 1, data.length, true);
     Assert.assertEquals(2, chunk.getLines().size());
     Assert.assertEquals("Hello\r\n", chunk.getLines().get(0).getText());
     Assert.assertEquals(1, chunk.getLines().get(0).getFileOffset());

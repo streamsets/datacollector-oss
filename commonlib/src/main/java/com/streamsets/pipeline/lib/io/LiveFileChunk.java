@@ -17,18 +17,29 @@ import java.util.List;
  * full text lines.
  */
 public class LiveFileChunk {
+  private final LiveFile file;
   private final byte[] data;
   private final Charset charset;
   private final long initialOffset;
   private final int length;
   private final boolean truncated;
 
-  LiveFileChunk(byte[] data, Charset charset, long initialOffset, int length, boolean truncated) {
+  LiveFileChunk(LiveFile file, byte[] data, Charset charset, long initialOffset, int length, boolean truncated) {
+    this.file = file;
     this.data = data;
     this.charset = charset;
     this.initialOffset = initialOffset;
     this.length = length;
     this.truncated = truncated;
+  }
+
+  /**
+   * Returns the file the chunk was read from.
+   *
+   * @return the file the chunk was read from.
+   */
+  public LiveFile getFile() {
+    return file;
   }
 
   /**

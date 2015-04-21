@@ -5,6 +5,7 @@
  */
 package com.streamsets.pipeline.stage.origin.logtail;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.streamsets.pipeline.api.BatchMaker;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
@@ -15,39 +16,28 @@ import com.streamsets.pipeline.config.JsonMode;
 import com.streamsets.pipeline.config.LogMode;
 import com.streamsets.pipeline.config.OnParseError;
 import com.streamsets.pipeline.lib.io.FileLine;
-import com.streamsets.pipeline.lib.io.LiveDirectoryScanner;
-import com.streamsets.pipeline.lib.io.LiveFile;
 import com.streamsets.pipeline.lib.io.LiveFileChunk;
-import com.streamsets.pipeline.lib.io.LiveFileReader;
-import com.streamsets.pipeline.lib.io.RollMode;
+import com.streamsets.pipeline.lib.io.MultiDirectoryReader;
 import com.streamsets.pipeline.lib.parser.DataParserFactory;
 import com.streamsets.pipeline.lib.parser.DataParser;
 import com.streamsets.pipeline.lib.parser.DataParserException;
 import com.streamsets.pipeline.lib.parser.DataParserFactoryBuilder;
 import com.streamsets.pipeline.lib.parser.log.LogDataFormatValidator;
 import com.streamsets.pipeline.lib.parser.log.RegExConfig;
-import com.streamsets.pipeline.lib.util.ThreadUtil;
 
-import java.io.File;
 import java.io.IOException;
 import java.nio.charset.Charset;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 public class FileTailSource extends BaseSource {
-
-  private final static long MAX_YIELD_TIME = Integer.parseInt(System.getProperty("FileTailSource.yield.ms", "500"));
-
   private final DataFormat dataFormat;
   private final String charset;
-  private final String dirName;
-  private final String fileName;
-  private final String firstRolledFile;
+  private final List<FileInfo> fileInfos;
   private final int maxLineLength;
-  private final FilesRollMode filesRollMode;
-  private final String periodicFileRegEx;
   private final int batchSize;
   private final int maxWaitTimeSecs;
   private final LogMode logMode;
@@ -60,8 +50,8 @@ public class FileTailSource extends BaseSource {
   private final boolean enableLog4jCustomLogFormat;
   private final String log4jCustomLogFormat;
 
-  public FileTailSource(DataFormat dataFormat, String charset, String dirName, String fileName, String firstRolledFile,
-      FilesRollMode filesRollMode, String periodicFileRegEx, int maxLineLength, int batchSize, int maxWaitTimeSecs,
+  public FileTailSource(DataFormat dataFormat, String charset, List<FileInfo> fileInfos, int maxLineLength,
+      int batchSize, int maxWaitTimeSecs,
       LogMode logMode,
       boolean retainOriginalLine, String customLogFormat, String regex,
       List<RegExConfig> fieldPathsToGroupName,
@@ -69,11 +59,7 @@ public class FileTailSource extends BaseSource {
       String log4jCustomLogFormat) {
     this.dataFormat = dataFormat;
     this.charset = charset;
-    this.dirName = dirName;
-    this.fileName = fileName;
-    this.firstRolledFile = firstRolledFile;
-    this.filesRollMode = filesRollMode;
-    this.periodicFileRegEx = periodicFileRegEx;
+    this.fileInfos = fileInfos;
     this.maxLineLength = maxLineLength;
     this.batchSize = batchSize;
     this.maxWaitTimeSecs = maxWaitTimeSecs;
@@ -88,40 +74,42 @@ public class FileTailSource extends BaseSource {
     this.log4jCustomLogFormat = log4jCustomLogFormat;
   }
 
+  private MultiDirectoryReader multiDirReader;
+
   private LogDataFormatValidator logDataFormatValidator;
 
   private long maxWaitTimeMillis;
-  private RollMode rollMode;
-  private LiveDirectoryScanner scanner;
-  private LiveFile currentFile;
-  private LiveFileReader reader;
 
   private DataParserFactory parserFactory;
 
   @Override
   protected List<ConfigIssue> validateConfigs() throws StageException {
     List<ConfigIssue> issues = super.validateConfigs();
-    File dir = new File(dirName);
-    if (!dir.exists()) {
-      issues.add(getContext().createConfigIssue(Groups.FILE.name(), "dirName", Errors.TAIL_00, dir));
-    } else if (!dir.isDirectory()) {
-      issues.add(getContext().createConfigIssue(Groups.FILE.name(), "dirName", Errors.TAIL_01, dir));
-    }
-    rollMode = filesRollMode.createRollMode(periodicFileRegEx);
-    try {
-      scanner = new LiveDirectoryScanner(dirName, fileName, firstRolledFile, rollMode);
-    } catch (Exception ex) {
-      issues.add(getContext().createConfigIssue(Groups.FILE.name(), "", Errors.TAIL_02, ex.getMessage()));
+    if (fileInfos.isEmpty()) {
+      issues.add(getContext().createConfigIssue(Groups.FILE.name(), "fileInfos", Errors.TAIL_01));
+    } else {
+      List<MultiDirectoryReader.DirectoryInfo> dirInfos = new ArrayList<>();
+      for (FileInfo fileInfo : fileInfos) {
+        dirInfos.add(new MultiDirectoryReader.DirectoryInfo(fileInfo.dirName,
+                                                            fileInfo.fileRollMode.createRollMode(fileInfo.periodicFileRegEx),
+                                                            fileInfo.file, fileInfo.firstFile));
+      }
+      try {
+        multiDirReader = new MultiDirectoryReader(dirInfos, Charset.forName(charset), maxLineLength);
+      } catch (IOException ex) {
+        issues.add(getContext().createConfigIssue(Groups.FILE.name(), null, Errors.TAIL_02, ex.getMessage(), ex));
+      }
     }
     switch (dataFormat) {
       case TEXT:
       case JSON:
         break;
       case LOG:
-        logDataFormatValidator = new LogDataFormatValidator(logMode, maxLineLength,
-          logRetainOriginalLine, customLogFormat, regex, grokPatternDefinition, grokPattern,
-          enableLog4jCustomLogFormat, log4jCustomLogFormat,
-          OnParseError.ERROR, 0, Groups.LOG.name(), getFieldPathToGroupMap(fieldPathsToGroupName));
+        logDataFormatValidator = new LogDataFormatValidator(logMode, maxLineLength, logRetainOriginalLine,
+                                                            customLogFormat, regex, grokPatternDefinition, grokPattern,
+                                                            enableLog4jCustomLogFormat, log4jCustomLogFormat,
+                                                            OnParseError.ERROR, 0, Groups.LOG.name(),
+                                                            getFieldPathToGroupMap(fieldPathsToGroupName));
         logDataFormatValidator.validateLogFormatConfig(issues, getContext());
         break;
       default:
@@ -149,7 +137,7 @@ public class FileTailSource extends BaseSource {
         logDataFormatValidator.populateBuilder(builder);
         break;
       default:
-        throw new StageException(Errors.TAIL_02, "dataFormat", dataFormat);
+        throw new StageException(Errors.TAIL_03, "dataFormat", dataFormat);
     }
     parserFactory = builder.build();
   }
@@ -159,145 +147,108 @@ public class FileTailSource extends BaseSource {
     super.destroy();
   }
 
-  //extract and deserialize the LiveFile from the offset kept by the SDC
-  private LiveFile getLiveFile(String sourceOffset) throws StageException{
-    LiveFile file = null;
-    if (sourceOffset != null && !sourceOffset.isEmpty()) {
-      String[] split = sourceOffset.split("::", 2);
+
+  private final static ObjectMapper OBJECT_MAPPER = new ObjectMapper();
+
+  @SuppressWarnings("unchecked")
+  private Map<String, String> deserializeOffsetMap(String lastSourceOffset) throws StageException {
+    Map<String, String> map;
+    if (lastSourceOffset == null) {
+      map = new HashMap<>();
+    } else {
       try {
-        file = LiveFile.deserialize(split[1]);
+        map = OBJECT_MAPPER.readValue(lastSourceOffset, Map.class);
       } catch (IOException ex) {
-        throw new StageException(Errors.TAIL_05, sourceOffset, ex.getMessage(), ex);
+        throw new StageException(Errors.TAIL_10, ex.getMessage(), ex);
       }
     }
-    return file;
+    return map;
   }
 
-  //extract and deserialize the offset in file from the offset kept by the SDC
-  private long getFileOffset(String sourceOffset) throws StageException{
-    long fileOffset = 0;
-    if (sourceOffset != null && !sourceOffset.isEmpty()) {
-      String[] split = sourceOffset.split("::", 2);
-      try {
-        fileOffset = Long.parseLong(split[0]);
-      } catch (NumberFormatException ex) {
-        throw new StageException(Errors.TAIL_05, sourceOffset, ex.getMessage(), ex);
-      }
+  private String serializeOffsetMap(Map<String, String> map) throws StageException {
+    try {
+      return OBJECT_MAPPER.writeValueAsString(map);
+    } catch (IOException ex) {
+      throw new StageException(Errors.TAIL_13, ex.getMessage(), ex);
     }
-    return fileOffset;
   }
 
-  //encode LiveFile and offset to give to SDC
-  private String createSourceOffset(LiveFile file, long offset) {
-    return offset + "::" + file.serialize();
-  }
-
-  // if we are in batch timeout
+  // if we are in timeout
   private boolean isTimeout(long startTime) {
     return (System.currentTimeMillis() - startTime) > maxWaitTimeMillis;
   }
 
-  // remaining time till batch timeout, return zero if already in timeout
+  // remaining time till  timeout, return zero if already in timeout
   private long getRemainingWaitTime(long startTime) {
     long remaining = maxWaitTimeMillis - (System.currentTimeMillis() - startTime);
     return (remaining > 0) ? remaining : 0;
   }
 
-  // obtains the reader if available.
-  // TODO: this is in preparation for tailing multiple files concurrently
-  private LiveFileReader obtainReader(String lastSourceOffset) throws StageException {
-    if (reader == null) {
-      currentFile = getLiveFile(lastSourceOffset);
-      long fileOffset = getFileOffset(lastSourceOffset);
+  /*
+    When we start with a file (empty or not) the file offset is zero.
+    If the file is a rolled file, the file will be EOF immediately triggering a close of the reader and setting the
+    offset to Long.MAX_VALUE (this happens in the MultiDirectoryReader class). This is the signal that in the next
+    read a directory scan should be triggered to get the next rolled file or the live file if we were scanning the last
+    rolled file.
+    If the file you are starting is the live file, we don't get an EOF as we expect data to be appended. We just return
+    null chunks while there is no data. If the file is rolled we'll detect that and then do what is described in the
+    previous paragraph.
 
-      boolean needsToScan = currentFile == null || fileOffset == Long.MAX_VALUE;
-      if (needsToScan) {
-        try {
-          if (currentFile != null) {
-            // we need to refresh the file in case the name changed before scanning as the scanner does not refresh
-            currentFile = currentFile.refresh();
-          }
-          currentFile = scanner.scan(currentFile);
-          fileOffset = 0;
-        } catch (IOException ex) {
-          throw new StageException(Errors.TAIL_06, ex.getMessage(), ex);
-        }
-      }
-      if (currentFile != null) {
-        try {
-          reader = new LiveFileReader(rollMode, currentFile, Charset.forName(charset), fileOffset, maxLineLength);
-        } catch (IOException ex) {
-          throw new StageException(Errors.TAIL_07, currentFile.getPath(), ex.getMessage(), ex);
-        }
-      }
-    }
-    return reader;
-  }
+   When offset for  file is "" it means we never processed things in the directory, at that point we start from the
+   first file (according to the defined order) in the directory, or if a 'first file' as been set in the configuration,
+   we start from that file.
 
-  // returns the reader
-  // TODO: this is in preparation for tailing multiple files concurrently
-  private String releaseReader(LiveFileReader reader) throws IOException {
-    String newSourceOffset;
-    if (!reader.hasNext()) {
-      // reached EOF
-      reader.close();
-      this.reader = null;
-      //using Long.MAX_VALUE to signal we reach the end of the file and next iteration should get the next file.
-      newSourceOffset = createSourceOffset(currentFile, Long.MAX_VALUE);
-    } else {
-      newSourceOffset = createSourceOffset(currentFile, reader.getOffset());
-    }
-    return newSourceOffset;
-  }
-
+   We encode in lastSourceOffset the current file and offset from all directories in JSON.
+  */
   @Override
   public String produce(String lastSourceOffset, int maxBatchSize, BatchMaker batchMaker) throws StageException {
     int recordCounter = 0;
-    long batchStartTime = System.currentTimeMillis();
+    long startTime = System.currentTimeMillis();
     maxBatchSize = Math.min(batchSize, maxBatchSize);
 
-    boolean exit = false;
-    while (!exit) {
-      LiveFileReader reader = obtainReader(lastSourceOffset);
-      if (reader != null) {
-        try {
-          // even if in timeout, we do one non-blocking read on the reader
-          while (!exit && recordCounter < maxBatchSize && reader.hasNext()) {
-            // non blocking read waiting up to the remaining batch timeout if not data arrives
-            LiveFileChunk chunk = reader.next(getRemainingWaitTime(batchStartTime));
-            if (chunk != null) {
-              String liveFileStr = currentFile.serialize();
-              for (FileLine line : chunk.getLines()) {
-                String sourceId = liveFileStr + "::" + line.getFileOffset();
-                try (DataParser parser = parserFactory.getParser(sourceId, line.getChunkBuffer(), line.getOffset(),
-                                                                 line.getLength())) {
-                  Record record = parser.parse();
-                  if (record != null) {
-                    batchMaker.addRecord(record);
-                    recordCounter++;
-                  }
-                } catch (IOException|DataParserException ex) {
-                  handleException(sourceId, ex);
-                }
-              }
-            }
-            exit = isTimeout(batchStartTime);
-          }
-          lastSourceOffset = releaseReader(reader);
-          exit = true;
-        } catch (IOException ex) {
-          throw new StageException(Errors.TAIL_08, reader.getLiveFile().getPath(), ex.getMessage(), ex);
-        }
-      } else {
-        // yielding CPU before looking to see if there is a reader again. MAX_YIELD_TIME default is 500 ms
-        // if we didn't sleep the requested time it means we were interrupted.
-        exit = !ThreadUtil.sleep(Math.min(getRemainingWaitTime(batchStartTime), MAX_YIELD_TIME));
-      }
-      exit = exit || isTimeout(batchStartTime);
+    // deserializing offsets of all directories
+    Map<String, String> offsetMap = deserializeOffsetMap(lastSourceOffset);
+
+    try {
+      multiDirReader.setOffsets(offsetMap);
+    } catch (IOException ex) {
+      throw new StageException(Errors.TAIL_10, ex.getMessage(), ex);
     }
-    // we are returning "" instead of NULL because if the dir is empty when starting there will be no offset
-    // until there is a file and that will trigger a pipeline stop.
-    return (lastSourceOffset == null) ? "" : lastSourceOffset;
+
+
+    while (recordCounter < maxBatchSize && !isTimeout(startTime)) {
+      try {
+        LiveFileChunk chunk = multiDirReader.next(getRemainingWaitTime(startTime));
+
+        if (chunk != null) {
+          String liveFileStr = chunk.getFile().serialize();
+          for (FileLine line : chunk.getLines()) {
+            String sourceId = liveFileStr + "::" + line.getFileOffset();
+            try (DataParser parser = parserFactory.getParser(sourceId, line.getChunkBuffer(), line.getOffset(),
+                                                             line.getLength())) {
+              Record record = parser.parse();
+              if (record != null) {
+                batchMaker.addRecord(record);
+                recordCounter++;
+              }
+            } catch (IOException | DataParserException ex) {
+              handleException(sourceId, ex);
+            }
+          }
+        }
+      } catch (IOException ex) {
+        throw new StageException(Errors.TAIL_11, ex.getMessage(), ex);
+      }
+    }
+
+    try {
+      offsetMap = multiDirReader.getOffsets();
+    } catch (IOException ex) {
+      throw new StageException(Errors.TAIL_13, ex.getMessage(), ex);
+    }
+
+    // serializing offsets of all directories
+    return serializeOffsetMap(offsetMap);
   }
 
   private void handleException(String sourceId, Exception ex) throws StageException {
@@ -305,13 +256,13 @@ public class FileTailSource extends BaseSource {
       case DISCARD:
         break;
       case TO_ERROR:
-        getContext().reportError(Errors.TAIL_04, sourceId, ex.getMessage(), ex);
+        getContext().reportError(Errors.TAIL_12, sourceId, ex.getMessage(), ex);
         break;
       case STOP_PIPELINE:
         if (ex instanceof StageException) {
           throw (StageException) ex;
         } else {
-          throw new StageException(Errors.TAIL_04, sourceId, ex.getMessage(), ex);
+          throw new StageException(Errors.TAIL_12, sourceId, ex.getMessage(), ex);
         }
       default:
         throw new IllegalStateException(Utils.format("It should never happen. OnError '{}'",
@@ -329,4 +280,5 @@ public class FileTailSource extends BaseSource {
     }
     return fieldPathToGroup;
   }
+
 }

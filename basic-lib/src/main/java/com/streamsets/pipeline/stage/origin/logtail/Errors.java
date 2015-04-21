@@ -10,17 +10,14 @@ import com.streamsets.pipeline.api.GenerateResourceBundle;
 
 @GenerateResourceBundle
 public enum Errors implements ErrorCode {
-  TAIL_00("Path '{}' does not exist"),
-  TAIL_01("Path '{}' is not a directory"),
-  TAIL_02("Could not create the directory scanner: {}"),
+  TAIL_01("At least one directory must be specified"),
+  TAIL_02("Could not initialize multi-directory reader: {}"),
+  TAIL_03("Invalid data format '{}'"),
 
-  TAIL_05("Could not deserialize offset '{}': {}"),
-  TAIL_06("Could not scan the directory: {}"),
-  TAIL_07("Could not open file '{}': {}"),
-  TAIL_08("Error reading file '{}': {}"),
-
-  TAIL_03("Invalid data format '{}'. Use one of the following formats: {}"),
-  TAIL_04("Cannot parse record '{}': {}"),
+  TAIL_10("Could not deserialize offset: {}"),
+  TAIL_11("Error reading file '{}': {}"),
+  TAIL_12("Cannot parse record '{}': {}"),
+  TAIL_13("Could not serialize offset: {}"),
   ;
 
   private final String msg;

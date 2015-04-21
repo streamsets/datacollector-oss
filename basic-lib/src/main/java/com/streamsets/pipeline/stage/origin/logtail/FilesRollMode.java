@@ -13,14 +13,14 @@ import com.streamsets.pipeline.lib.io.RollMode;
 
 @GenerateResourceBundle
 public enum FilesRollMode implements Label {
-  REVERSE_COUNTER("Reverse Counter", LogRollMode.REVERSE_COUNTER, null),
-  DATE_YYYY_MM("Date: yyyy-MM", LogRollMode.DATE_YYYY_MM, null),
-  DATE_YYYY_MM_DD("Date: yyyy-MM-dd", LogRollMode.DATE_YYYY_MM_DD, null),
-  DATE_YYYY_MM_DD_HH("Date: yyyy-MM-dd-HH", LogRollMode.DATE_YYYY_MM_DD_HH, null),
-  DATE_YYYY_MM_DD_HH_MM("Date: yyyy-MM-dd-HH-mm", LogRollMode.DATE_YYYY_MM_DD_HH_MM, null),
-  DATE_YYYY_WW("Date: yyyy-ww", LogRollMode.DATE_YYYY_WW, null),
-  ALPHABETICAL("Alphabetical", LogRollMode.ALPHABETICAL, null),
-  PERIODIC("Periodic Files", null, PeriodicFilesRollMode.class),
+  REVERSE_COUNTER("Active File with Reverse Counter Files", LogRollMode.REVERSE_COUNTER, null),
+  DATE_YYYY_MM("Active File with .yyyy-MM Files", LogRollMode.DATE_YYYY_MM, null),
+  DATE_YYYY_MM_DD("Active File with .yyyy-MM-dd Files", LogRollMode.DATE_YYYY_MM_DD, null),
+  DATE_YYYY_MM_DD_HH("Active File with .yyyy-MM-dd-HH Files", LogRollMode.DATE_YYYY_MM_DD_HH, null),
+  DATE_YYYY_MM_DD_HH_MM("Active File with .yyyy-MM-dd-HH-mm Files", LogRollMode.DATE_YYYY_MM_DD_HH_MM, null),
+  DATE_YYYY_WW("Active File with .yyyy-ww Files", LogRollMode.DATE_YYYY_WW, null),
+  ALPHABETICAL("Active File with Alphabetical Files", LogRollMode.ALPHABETICAL, null),
+  PERIODIC("Periodic Files Only", null, PeriodicFilesRollMode.class),
 
   ;
 

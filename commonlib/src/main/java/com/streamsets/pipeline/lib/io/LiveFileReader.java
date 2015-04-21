@@ -22,7 +22,7 @@ import java.nio.file.Files;
 import java.nio.file.StandardOpenOption;
 
 /**
- * A <code>LiveFileReader</code> is a Reader that allows to read in a file in a 'tail -f' mode while keeping track
+ * A <code>LiveFileReader</code> is a Reader that allows to read a file in a 'tail -f' mode while keeping track
  * of the current offset and detecting if the file has been renamed.
  * <p/>
  * The <code>LiveFileReader</code> uses the <code>Iterator</code> pattern to get chunks of lines of the file.
@@ -282,7 +282,7 @@ public class LiveFileReader implements Closeable {
         buffer.get(chunkBytes, 0, chunkSize);
         // create reader with exactly the chunk
         Reader reader = new InputStreamReader(new ByteArrayInputStream(chunkBytes, 0, chunkSize), charset);
-        liveFileChunk = new LiveFileChunk(chunkBytes, charset, offset, chunkSize, false);
+        liveFileChunk = new LiveFileChunk(currentFile, chunkBytes, charset, offset, chunkSize, false);
       } else if (buffer.limit() == buffer.capacity()) {
         // buffer is full and we don't have an EOL, return truncated chunk and go into truncate mode.
         // we have an EOL in the buffer or we are at the end of the file
@@ -290,7 +290,7 @@ public class LiveFileReader implements Closeable {
         buffer.get(chunkBytes, 0, chunkSize);
         // create reader with exactly the chunk
         Reader reader = new InputStreamReader(new ByteArrayInputStream(chunkBytes, 0, chunkSize), charset);
-        liveFileChunk = new LiveFileChunk(chunkBytes, charset, offset, chunkSize, true);
+        liveFileChunk = new LiveFileChunk(currentFile, chunkBytes, charset, offset, chunkSize, true);
         truncateMode = true;
       } else {
         // we don't have an EOL and the buffer is not full, no chunk in this read

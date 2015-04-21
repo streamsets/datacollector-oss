@@ -58,63 +58,14 @@ public class FileTailDSource extends DSource {
 
   @ConfigDef(
       required = true,
-      type = ConfigDef.Type.STRING,
-      label = "Directory",
-      description = "Directory path for the file to tail",
-      displayPosition = 20,
-      group = "FILE"
-  )
-  public String dirName;
-
-  @ConfigDef(
-      required = true,
       type = ConfigDef.Type.MODEL,
-      defaultValue = "REVERSE_COUNTER",
-      label = "Rolled Files Naming",
-      description = "",
-      displayPosition = 30,
+      label = "Directories",
+      description = "Directories with files to tail",
+      displayPosition = 40,
       group = "FILE"
   )
-  @ValueChooser(RolledFilesModeChooserValues.class)
-  public FilesRollMode filesRollMode;
-
-  @ConfigDef(
-      required = true,
-      type = ConfigDef.Type.STRING,
-      label = "File to Tail",
-      description = "Name of the file to tail",
-      displayPosition = 40,
-      group = "FILE",
-      dependsOn = "filesRollMode",
-      triggeredByValue = {
-          "REVERSE_COUNTER", "DATE_YYYY_MM", "DATE_YYYY_MM_DD", "DATE_YYYY_MM_DD_HH",
-          "DATE_YYYY_MM_DD_HH_MM", "DATE_YYYY_WW", "ALPHABETICAL"
-      }
-  )
-  public String fileName;
-
-  @ConfigDef(
-      required = true,
-      type = ConfigDef.Type.STRING,
-      defaultValue = ".*",
-      label = "Periodic File Pattern",
-      description = "A Java regular expression matching the expected file names",
-      displayPosition = 40,
-      group = "FILE",
-      dependsOn = "filesRollMode",
-      triggeredByValue = "PERIODIC"
-  )
-  public String periodicFileRegEx;
-
-  @ConfigDef(
-      required = false,
-      type = ConfigDef.Type.STRING,
-      label = "First Rolled File",
-      description = "First rolled file to process. Leave empty for all.",
-      displayPosition = 50,
-      group = "FILE"
-  )
-  public String firstRolledFile;
+  @ComplexField
+  public List<FileInfo> fileInfos;
 
   @ConfigDef(
       required = true,
@@ -133,8 +84,8 @@ public class FileTailDSource extends DSource {
       required = true,
       type = ConfigDef.Type.NUMBER,
       defaultValue = "1000",
-      label = "Maximum Lines per Batch",
-      description = "The maximum number of file lines that will be sent in a single batch",
+      label = "Maximum Batch Size",
+      description = "Max number of lines that will be sent in a single batch",
       displayPosition = 80,
       group = "FILE",
       min = 0,
@@ -286,8 +237,7 @@ public class FileTailDSource extends DSource {
 
   @Override
   protected Source createSource() {
-    return new FileTailSource(dataFormat, charset, dirName, fileName, firstRolledFile, filesRollMode,
-                              periodicFileRegEx, maxLineLength,
+    return new FileTailSource(dataFormat, charset, fileInfos, maxLineLength,
                               batchSize, maxWaitTimeSecs, logMode, retainOriginalLine, customLogFormat,
                               regex, fieldPathsToGroupName, grokPatternDefinition, grokPattern,
                               enableLog4jCustomLogFormat, log4jCustomLogFormat);

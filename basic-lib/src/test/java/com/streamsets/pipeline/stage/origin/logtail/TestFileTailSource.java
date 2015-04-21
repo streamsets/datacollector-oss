@@ -33,8 +33,13 @@ public class TestFileTailSource {
   public void testInitDirDoesNotExist() throws Exception {
     File testDataDir = new File("target", UUID.randomUUID().toString());
 
-    FileTailSource source = new FileTailSource(DataFormat.TEXT, "UTF-8", testDataDir.getAbsolutePath(), "logFile.txt",
-                                               null, FilesRollMode.REVERSE_COUNTER, "", 1024, 25, 1, null,
+    FileInfo fileInfo = new FileInfo();
+    fileInfo.dirName = testDataDir.getAbsolutePath();
+    fileInfo.file = "logFile.txt";
+    fileInfo.fileRollMode = FilesRollMode.REVERSE_COUNTER;
+    fileInfo.firstFile = "";
+    fileInfo.periodicFileRegEx = "";
+    FileTailSource source = new FileTailSource(DataFormat.TEXT, "UTF-8", Arrays.asList(fileInfo), 1024, 25, 1, null,
                                                false, null, null, null, null, null, false, null);
     SourceRunner runner = new SourceRunner.Builder(FileTailDSource.class, source)
         .addOutputLane("lane")
@@ -52,8 +57,13 @@ public class TestFileTailSource {
     IOUtils.copy(is, os);
     is.close();
 
-    FileTailSource source = new FileTailSource(DataFormat.TEXT, "UTF-8", testDataDir.getAbsolutePath(), "logFile.txt",
-                                               null, FilesRollMode.REVERSE_COUNTER, "", 1024, 25, 1, null,
+    FileInfo fileInfo = new FileInfo();
+    fileInfo.dirName = testDataDir.getAbsolutePath();
+    fileInfo.file = "logFile.txt";
+    fileInfo.fileRollMode = FilesRollMode.REVERSE_COUNTER;
+    fileInfo.firstFile = "";
+    fileInfo.periodicFileRegEx = "";
+    FileTailSource source = new FileTailSource(DataFormat.TEXT, "UTF-8", Arrays.asList(fileInfo), 1024, 25, 1, null,
                                                false, null, null, null, null, null, false, null);
     SourceRunner runner = new SourceRunner.Builder(FileTailDSource.class, source)
         .addOutputLane("lane")
@@ -79,6 +89,47 @@ public class TestFileTailSource {
     }
   }
 
+  private static final Charset UTF8 = Charset.forName("UTF-8");
+
+  @Test
+  public void testTailLogMultipleDirs() throws Exception {
+    File testDataDir1 = new File("target", UUID.randomUUID().toString());
+    File testDataDir2 = new File("target", UUID.randomUUID().toString());
+    Assert.assertTrue(testDataDir1.mkdirs());
+    Assert.assertTrue(testDataDir2.mkdirs());
+    Files.write(new File(testDataDir1, "log1.txt").toPath(), Arrays.asList("Hello"), UTF8);
+    Files.write(new File(testDataDir2, "log2.txt").toPath(), Arrays.asList("Hola"), UTF8);
+
+    FileInfo fileInfo1 = new FileInfo();
+    fileInfo1.dirName = testDataDir1.getAbsolutePath();
+    fileInfo1.file = "log1.txt";
+    fileInfo1.fileRollMode = FilesRollMode.REVERSE_COUNTER;
+    fileInfo1.firstFile = "";
+    fileInfo1.periodicFileRegEx = "";
+    FileInfo fileInfo2 = new FileInfo();
+    fileInfo2.dirName = testDataDir2.getAbsolutePath();
+    fileInfo2.file = "log2.txt";
+    fileInfo2.fileRollMode = FilesRollMode.REVERSE_COUNTER;
+    fileInfo2.firstFile = "";
+    fileInfo2.periodicFileRegEx = "";
+    FileTailSource source = new FileTailSource(DataFormat.TEXT, "UTF-8", Arrays.asList(fileInfo1, fileInfo2), 1024, 25,
+                                               1, null, false, null, null, null, null, null, false, null);
+    SourceRunner runner = new SourceRunner.Builder(FileTailDSource.class, source)
+        .addOutputLane("lane")
+        .build();
+    runner.runInit();
+    try {
+      StageRunner.Output output = runner.runProduce(null, 1000);
+      Assert.assertEquals(2, output.getRecords().get("lane").size());
+      Record record = output.getRecords().get("lane").get(0);
+      Assert.assertEquals("Hello", record.get("/text").getValueAsString());
+      record = output.getRecords().get("lane").get(1);
+      Assert.assertEquals("Hola", record.get("/text").getValueAsString());
+    } finally {
+      runner.runDestroy();
+    }
+  }
+
   @Test
   public void testTailLogOffset() throws Exception {
     File testDataDir = new File("target", UUID.randomUUID().toString());
@@ -90,8 +141,13 @@ public class TestFileTailSource {
     is.close();
     os.close();
 
-    FileTailSource source = new FileTailSource(DataFormat.TEXT, "UTF-8", testDataDir.getAbsolutePath(), "logFile.txt",
-                                               null, FilesRollMode.REVERSE_COUNTER, "", 7, 1, 1, null,
+    FileInfo fileInfo = new FileInfo();
+    fileInfo.dirName = testDataDir.getAbsolutePath();
+    fileInfo.file = "logFile.txt";
+    fileInfo.fileRollMode = FilesRollMode.REVERSE_COUNTER;
+    fileInfo.firstFile = "";
+    fileInfo.periodicFileRegEx = "";
+    FileTailSource source = new FileTailSource(DataFormat.TEXT, "UTF-8", Arrays.asList(fileInfo), 7, 1, 1, null,
                                                false, null, null, null, null, null, false, null);
     SourceRunner runner = new SourceRunner.Builder(FileTailDSource.class, source)
         .addOutputLane("lane")
@@ -122,8 +178,13 @@ public class TestFileTailSource {
     Assert.assertTrue(testDataDir.mkdirs());
     File logFile = new File(testDataDir, "logFile.txt");
 
-    FileTailSource source = new FileTailSource(DataFormat.JSON, "UTF-8", testDataDir.getAbsolutePath(), "logFile.txt",
-                                               null, FilesRollMode.REVERSE_COUNTER, "", 1024, 25, 1, null,
+    FileInfo fileInfo = new FileInfo();
+    fileInfo.dirName = testDataDir.getAbsolutePath();
+    fileInfo.file = "logFile.txt";
+    fileInfo.fileRollMode = FilesRollMode.REVERSE_COUNTER;
+    fileInfo.firstFile = "";
+    fileInfo.periodicFileRegEx = "";
+    FileTailSource source = new FileTailSource(DataFormat.JSON, "UTF-8", Arrays.asList(fileInfo), 1024, 25, 1, null,
                                                false, null, null, null, null, null, false, null);
     SourceRunner runner = new SourceRunner.Builder(FileTailDSource.class, source)
         .addOutputLane("lane")
@@ -232,9 +293,14 @@ public class TestFileTailSource {
     Assert.assertTrue(testDataDir.mkdirs());
     File logFile = new File(testDataDir, "logFile.txt");
 
-    FileTailSource source = new FileTailSource(DataFormat.LOG, "UTF-8", testDataDir.getAbsolutePath(), "logFile.txt",
-                                               null, FilesRollMode.REVERSE_COUNTER, "", 1024, 25, 1, LogMode.LOG4J,
-                                               true, null, null, null, null, null, false, null);
+    FileInfo fileInfo = new FileInfo();
+    fileInfo.dirName = testDataDir.getAbsolutePath();
+    fileInfo.file = "logFile.txt";
+    fileInfo.fileRollMode = FilesRollMode.REVERSE_COUNTER;
+    fileInfo.firstFile = "";
+    fileInfo.periodicFileRegEx = "";
+    FileTailSource source = new FileTailSource(DataFormat.LOG, "UTF-8", Arrays.asList(fileInfo), 1024, 25, 1,
+                                               LogMode.LOG4J, true, null, null, null, null, null, false, null);
     SourceRunner runner = new SourceRunner.Builder(FileTailDSource.class, source)
       .addOutputLane("lane")
       .build();
@@ -246,7 +312,6 @@ public class TestFileTailSource {
       long end = System.currentTimeMillis();
       Assert.assertTrue(end - start >= 1000);
       Assert.assertNotNull(output.getNewOffset());
-//      Assert.assertEquals(source.getFileOffset() + "::2", output.getNewOffset());
       List<Record> records = output.getRecords().get("lane");
       Assert.assertEquals(2, records.size());
       Assert.assertFalse(records.get(0).has("/truncated"));
@@ -299,9 +364,14 @@ public class TestFileTailSource {
     Assert.assertTrue(testDataDir.mkdirs());
     File logFile = new File(testDataDir, "logFile.txt");
 
-    FileTailSource source = new FileTailSource(DataFormat.LOG, "UTF-8", testDataDir.getAbsolutePath(), "logFile.txt",
-                                               null, FilesRollMode.REVERSE_COUNTER, "", 2048, 100, 1, LogMode.LOG4J,
-                                               true, null, null, null, null, null, false, null);
+    FileInfo fileInfo = new FileInfo();
+    fileInfo.dirName = testDataDir.getAbsolutePath();
+    fileInfo.file = "logFile.txt";
+    fileInfo.fileRollMode = FilesRollMode.REVERSE_COUNTER;
+    fileInfo.firstFile = "";
+    fileInfo.periodicFileRegEx = "";
+    FileTailSource source = new FileTailSource(DataFormat.LOG, "UTF-8", Arrays.asList(fileInfo), 2048, 100, 1,
+                                               LogMode.LOG4J, true, null, null, null, null, null, false, null);
     SourceRunner runner = new SourceRunner.Builder(FileTailDSource.class, source)
       .addOutputLane("lane")
       .build();
