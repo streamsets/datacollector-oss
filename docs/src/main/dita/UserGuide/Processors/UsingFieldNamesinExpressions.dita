@@ -7,13 +7,15 @@
   <p>
    <codeblock>record:value("/&lt;field name>")</codeblock>
   </p>
+  <p>
+   <note>You can use single or double quotation marks to surround a field name.</note>
+  </p>
   <p>For example, the following expression concatenates the values from the DATE field with values
    from the TIME field:</p>
   <p>
-   <codeblock>${record:value("/DATE")} ${record:value("/TIME")}</codeblock>
+   <codeblock>${record:value('/DATE')} ${record:value('/TIME')}</codeblock>
   </p>
   <p>To reference a nested field, such as a field in a JSON object, use the path to the field as
-    follows:<codeblock>record:value("/&lt;path to field>/&lt;field name>")</codeblock><note>You can
-    use single or double quotation marks to surround a field name.</note></p>
+   follows:<codeblock>record:value("/&lt;path to field>/&lt;field name>")</codeblock></p>
  </conbody>
 </concept>

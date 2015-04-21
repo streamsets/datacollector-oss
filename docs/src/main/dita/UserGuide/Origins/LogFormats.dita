@@ -39,7 +39,8 @@
        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>. You can
       also define a custom grok pattern and then use it as part of the log format. </dd>
      <dd>For more information about supported grok patterns and defining custom grok patterns, see
-       <draft-comment author="Loretta">create new section and xref.</draft-comment></dd>
+       <draft-comment author="Loretta">Will create Grok appendix for the supported patterns after
+       getting info from Hari. </draft-comment></dd>
     </dlentry>
     <dlentry>
      <dt>log4j</dt>

@@ -57,9 +57,9 @@
                                 <row>
                                     <entry>Overrun Limit</entry>
                                     <entry>Maximum record size to process. Use to limit out of
-                                        memory errors.<draft-comment author="Loretta">What happens
-                                            if it's larger - skipped? can we call this Max Record
-                                            Size?</draft-comment></entry>
+                                        memory errors.<draft-comment author="Loretta">TUCU: What
+                                            happens if it's larger - skipped? can we call this Max
+                                            Record Size?</draft-comment></entry>
                                 </row>
                                 <row>
                                     <entry>Batch Size (recs)</entry>
@@ -288,7 +288,7 @@
                                             <li>Apache Error Log Format</li>
                                             <li>Apache Access Log Custom Format</li>
                                             <li>Regular Expression</li>
-                                            <li>Grok</li>
+                                            <li>Grok Pattern</li>
                                             <li>Log4j</li>
                                         </ul></entry>
                                 </row>

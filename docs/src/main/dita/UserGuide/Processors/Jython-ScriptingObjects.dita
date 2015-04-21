@@ -20,12 +20,6 @@
             element contains the data for the record. </dd>
           <dd>Map and list record fields are mapped to to Jython lists and dictionaries,
             respectively.</dd>
-          <dd>
-            <draft-comment author="Loretta">Data types are preserved for values that are not
-              modified. For values that are modified, the scripting engine might change the original
-              type. For example, for Java 7 JavaScript, modifying an Integer value converts it to a
-              Double. -- Is there a Jython example for this? </draft-comment>
-          </dd>
         </dlentry>
         <dlentry>
           <dt>out</dt>

@@ -7,8 +7,8 @@
             <p><indexterm>snapshot<indexterm>overview</indexterm></indexterm>You can capture a
                 snapshot of data when you monitor a pipeline. After you capture a snapshot, you can
                 view the snapshot data stage by stage or through a group of stages, like data
+                preview. You can also delete snapshot data or use it as source data for data
                 preview.</p>
-            <p>You can also delete snapshot data.</p>
         </context>
         <steps id="steps_esy_44p_tq">
             <step>
@@ -52,4 +52,7 @@
 
         </steps>
     </taskbody>
+    <related-links>
+        <link href="../Data_Preview/SourceData.dita#concept_rry_fkc_pr"/>
+    </related-links>
 </task>

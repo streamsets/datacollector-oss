@@ -19,19 +19,16 @@
      <dd>An object that represents a single record. Includes a single value element. The value
             element contains the data for the record. </dd>
      <dd>Map and list record fields are mapped to to JavaScript maps and arrays, respectively.</dd>
-          <dd>Null values </dd>
-     <dd>Data types are preserved for values that are not modified. For values that are modified,
-      the scripting engine might change the original type. For example, for Java 7 JavaScript,
-      modifying an Integer value converts it to a Double.</dd>
     </dlentry>
     <dlentry>
      <dt>out</dt>
      <dd>An object that writes the record to the output batch. Includes a write(records)
-            element.</dd>
+              element.<draft-comment author="Loretta">Is "element" the right word? What should I
+              use?</draft-comment></dd>
     </dlentry>
     <dlentry>
      <dt>err</dt>
-     <dd>An object that passes error records to the processor for error handling .  Includes a
+     <dd>An object that passes error records to the processor for error handling. Includes a
             write(records) element with an error message parameter.</dd>
     </dlentry>
    </dl></p>

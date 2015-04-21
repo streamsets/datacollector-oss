@@ -62,18 +62,21 @@
 
   </div>
 
+  <div class="p">
+   <div class="note note"><span class="notetitle">Note:</span> You can use single or double quotation marks to surround a field name.</div>
+
+  </div>
+
   <p class="p">For example, the following expression concatenates the values from the DATE field with values
    from the TIME field:</p>
 
   <div class="p">
-   <pre class="pre codeblock">${record:value("/DATE")} ${record:value("/TIME")}</pre>
+   <pre class="pre codeblock">${record:value('/DATE')} ${record:value('/TIME')}</pre>
 
   </div>
 
   <div class="p">To reference a nested field, such as a field in a JSON object, use the path to the field as
-    follows:<pre class="pre codeblock">record:value("/&lt;path to field&gt;/&lt;field name&gt;")</pre>
-<div class="note note"><span class="notetitle">Note:</span> You can
-    use single or double quotation marks to surround a field name.</div>
+   follows:<pre class="pre codeblock">record:value("/&lt;path to field&gt;/&lt;field name&gt;")</pre>
 </div>
 
  </div>

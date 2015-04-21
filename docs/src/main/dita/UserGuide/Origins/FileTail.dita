@@ -18,5 +18,7 @@
             while the pipeline was stopped. <note>You can use data preview to test stage and
                 pipeline behavior, but only when data is written to the file at the time of preview.
             </note></p>
+        <draft-comment author="Loretta">Still need to add log data format details for this
+            origin.</draft-comment>
  </conbody>
 </concept>

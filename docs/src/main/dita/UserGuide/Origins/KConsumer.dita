@@ -16,6 +16,7 @@
   <p>When you start a pipeline, the Kafka Consumer becomes a new consumer group for the topic and
    starts reading data from the topic based on the offset provided by the ZooKeeper.</p>
   <p>The Kafka Consumer processes data from all partitions in the topic. It saves the offset with
-   the ZooKeeper after passing data to destinations. </p>
+   the ZooKeeper after passing data to destinations. <draft-comment author="Loretta">Still need to
+    add log data format details for this origin.</draft-comment></p>
  </conbody>
 </concept>

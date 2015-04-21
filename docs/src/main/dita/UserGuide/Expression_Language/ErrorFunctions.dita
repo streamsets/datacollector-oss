@@ -2,8 +2,8 @@
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_ndj_43v_1r">
  <title>Error Functions</title>
- <shortdesc>Error functions provide information about error records. Use error functions to
-  reprocess error records.</shortdesc>
+ <shortdesc>Error functions provide information about error records. Use error functions to process
+  error records.</shortdesc>
  <conbody>
   <p><indexterm>functions<indexterm>error functions</indexterm></indexterm><indexterm>error
      functions<indexterm>in the expression language</indexterm></indexterm>For example, you might

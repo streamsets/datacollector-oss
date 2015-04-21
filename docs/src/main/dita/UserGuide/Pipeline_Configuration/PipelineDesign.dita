@@ -10,8 +10,6 @@
   <p>To define pipeline properties, such as the delivery guarantee, constants or error handling,
    click in any unused space of the canvas. To define the properties for a stage, select the
    stage.</p>
-  <p>You can configure metric or data alerts on the Rules tab of the pipeline properties panel.
-    <draft-comment author="Loretta">created a slack note to see if we can change it to
-    Alerts.</draft-comment></p>
+  <p>You can configure metric or data alerts on the Rules tab of the pipeline properties panel. </p>
  </conbody>
 </concept>

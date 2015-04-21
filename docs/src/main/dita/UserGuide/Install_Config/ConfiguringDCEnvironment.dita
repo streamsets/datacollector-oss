@@ -9,11 +9,10 @@
         environment configuration file. </shortdesc>
     <taskbody>
         <context>
-            <p><indexterm>Data Collector configuration
-                    file<indexterm>configuring</indexterm></indexterm><indexterm>sdc.properties
-                        file<indexterm>configuring</indexterm></indexterm><indexterm>email<indexterm>Data
-                        Collector configuration</indexterm></indexterm>Use a text editor to edit the
-                    <ph
+            <p><indexterm>Data Collector
+                    environment<indexterm>configuring</indexterm></indexterm><indexterm>sdc-env.sh
+                        file<indexterm>configuring</indexterm></indexterm>Use a text editor to edit
+                the <ph
                     conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
                 /> environment configuration file. After you edit the file, restart the <ph
                     conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
@@ -54,9 +53,9 @@
                                         conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
                                     />. <p>By default, the Xmx and Xms properties set the <ph
                                             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                                        /> Java heap size to 1024 MB. Also, the XX:PermSize is set
-                                        to 128 MB and XX:MaxPermSize is set to 256 MB.</p><p>You can
-                                        add any valid Java property.</p></entry>
+                                        /> Java heap size to 1024 MB. </p><p>By default, XX:PermSize
+                                        is set to 128 MB and XX:MaxPermSize is set to 256 MB.
+                                        </p><p>You can add any valid Java property.</p></entry>
                             </row>
                             <row>
                                 <entry>SDC_SECURITY_MANAGER_ENABLED</entry>

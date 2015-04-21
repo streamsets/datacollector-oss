@@ -3,8 +3,8 @@
 <concept id="concept_j1t_ntc_pr">
  <title>Processing Mode</title>
   <shortdesc>You can choose the processing mode to use with the Jython Evaluator. You can use the
-    same script in each processing mode. However, since the error handling differs in each mode, you
-    might want to write additional error handling for Record Batch mode.</shortdesc>
+    same script in each processing mode. However, you should include error handling in the script
+    before you run in batch mode.</shortdesc>
  <conbody>
     <p><indexterm>Jython Evaluator<indexterm>processing
         mode</indexterm></indexterm><indexterm>processing modes<indexterm>Jython
@@ -17,8 +17,7 @@
             processor for error handling. The processor handles error records based on the On Record
             Error property.</dd>
           <dd>Use this mode to avoid including error handling logic in the code. Since this mode
-            calls the script for each record, this might affect the performance of the
-            pipeline.</dd>
+            calls the script for each record, pipeline performance might be negatively affected. </dd>
         </dlentry>
         <dlentry>
           <dt>Record Batch</dt>

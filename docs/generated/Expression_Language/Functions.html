@@ -2,7 +2,7 @@
 <!DOCTYPE html
   SYSTEM "about:legacy-compat">
 <html xml:lang="en-us" lang="en-us">
-<head><meta name="description" content="The expression language provides the following types of functions: Record functions Error functions String functions Use record functions to get information about a record, such as the data type of a ..."></meta><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><meta name="copyright" content="(C) Copyright 2005"></meta><meta name="DC.rights.owner" content="(C) Copyright 2005"></meta><meta name="DC.Type" content="concept"></meta><meta name="DC.Title" content="Functions"></meta><meta name="abstract" content="The expression language provides the following types of functions:"></meta><meta name="description" content="The expression language provides the following types of functions:"></meta><meta name="DC.Relation" scheme="URI" content="../Expression_Language/ExpressionLanguage_title.html"></meta><meta name="DC.Format" content="XHTML"></meta><meta name="DC.Identifier" content="concept_lhz_pyp_1r"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/commonltr.css"><!----></link><title>Functions</title><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/webhelp_topic.css"><!----></link><link rel="stylesheet" type="text/css" href="../skin.css"></link><script type="text/javascript"><!--
+<head><meta name="description" content="The expression language provides the following types of functions: Record functions Error functions String functions Use record functions to get information about a record in the SDC data format, such ..."></meta><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><meta name="copyright" content="(C) Copyright 2005"></meta><meta name="DC.rights.owner" content="(C) Copyright 2005"></meta><meta name="DC.Type" content="concept"></meta><meta name="DC.Title" content="Functions"></meta><meta name="abstract" content="The expression language provides the following types of functions:"></meta><meta name="description" content="The expression language provides the following types of functions:"></meta><meta name="DC.Relation" scheme="URI" content="../Expression_Language/ExpressionLanguage_title.html"></meta><meta name="DC.Format" content="XHTML"></meta><meta name="DC.Identifier" content="concept_lhz_pyp_1r"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/commonltr.css"><!----></link><title>Functions</title><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/webhelp_topic.css"><!----></link><link rel="stylesheet" type="text/css" href="../skin.css"></link><script type="text/javascript"><!--
           
           var prefix = "../index.html";
           
@@ -32,11 +32,21 @@
  <h2 class="title topictitle2">Record Functions</h2>
 
  
- <div class="body conbody"><p class="shortdesc">Use record functions to get information about a record, such as the data type of a field
-  or the stage instance name for a record. </p>
+ <div class="body conbody"><p class="shortdesc">Use record functions to get information about a record in the SDC data format, such as
+  the data type of a field or the stage instance name for a record. </p>
 
-  <p class="p">The expression language
-   provides the following record functions:</p>
+  <div class="p">Records in SDC data
+   format include the following types of records:<ul class="ul" id="concept_p1z_ggv_1r__ul_gxc_rqv_tr">
+    <li class="li">Any record being processed by the pipeline.</li>
+
+    <li class="li">Error records.</li>
+
+    <li class="li">Records written to a destination in the SDC data format.</li>
+
+   </ul>
+</div>
+
+  <p class="p">The expression language provides the following record functions:</p>
 
   <dl class="dl">
    
@@ -44,8 +54,6 @@
 
     <dd class="dd">Returns the instance name of the stage that created the record, typically an origin stage.
      Data is stored in the stageCreator field of a record. </dd>
-
-    <dd class="dd">Use to process error records.</dd>
 
     <dd class="dd">Return type: String.</dd>
 
@@ -140,8 +148,8 @@
  <h2 class="title topictitle2">Error Functions</h2>
 
  
- <div class="body conbody"><p class="shortdesc">Error functions provide information about error records. Use error functions to
-  reprocess error records.</p>
+ <div class="body conbody"><p class="shortdesc">Error functions provide information about error records. Use error functions to process
+  error records.</p>
 
   <p class="p">For example, you might
    use error functions in a Stream Selector to pass data to different error handling pipelines based
@@ -223,9 +231,10 @@
  
  <div class="body conbody"><p class="shortdesc">Use string functions to transform string data. </p>
 
-  <p class="p">You can replace any
-   argument with a constant, or a field or expression that evaluates to an appropriate constant.
-   Strings should be enclosed in quotes. Indexes start at 0. </p>
+  <div class="p">You can replace any
+      argument with a constant, or a field or expression that evaluates to an appropriate constant.
+        <div class="note note"><span class="notetitle">Note:</span> Strings should be enclosed in quotation marks. Indexes start at 0. </div>
+</div>
 
   <p class="p">The expression language provides the following string functions:</p>
 
