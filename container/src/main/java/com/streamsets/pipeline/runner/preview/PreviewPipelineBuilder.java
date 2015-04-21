@@ -10,7 +10,6 @@ import com.streamsets.pipeline.config.PipelineConfiguration;
 import com.streamsets.pipeline.runner.PipelineRunner;
 import com.streamsets.pipeline.stagelibrary.StageLibraryTask;
 import com.streamsets.pipeline.util.ContainerError;
-import com.streamsets.pipeline.util.ValidationUtil;
 import com.streamsets.pipeline.validation.Issues;
 import com.streamsets.pipeline.validation.PipelineConfigurationValidator;
 import com.streamsets.pipeline.config.StageConfiguration;
@@ -69,15 +68,14 @@ public class PreviewPipelineBuilder {
       pipelineConf.setStages(stages);
     }
 
-    PipelineConfigurationValidator validator = new PipelineConfigurationValidator(stageLib, name, pipelineConf, true);
+    PipelineConfigurationValidator validator = new PipelineConfigurationValidator(stageLib, name, pipelineConf);
     if (validator.validate() || validator.canPreview()) {
       List<String> openLanes = validator.getOpenLanes();
       if (!openLanes.isEmpty()) {
         pipelineConf.getStages().add(createPlugStage(openLanes));
       }
     } else {
-      throw new PipelineRuntimeException(ContainerError.CONTAINER_0154, ValidationUtil.getFirstIssueAsString(name,
-        validator.getIssues()));
+      throw new PipelineRuntimeException(ContainerError.CONTAINER_0154, validator.getIssues());
     }
     Pipeline pipeline = new Pipeline.Builder(stageLib, name + ":preview", pipelineConf).build(runner);
     List<StageIssue> configIssues = pipeline.validateConfigs();

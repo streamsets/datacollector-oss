@@ -9,6 +9,7 @@ import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Sets;
 import com.streamsets.pipeline.api.ConfigDef;
+import com.streamsets.pipeline.api.OnRecordError;
 import com.streamsets.pipeline.api.el.ELEvalException;
 import com.streamsets.pipeline.api.impl.TextUtils;
 import com.streamsets.pipeline.api.impl.Utils;
@@ -20,11 +21,12 @@ import com.streamsets.pipeline.config.PipelineDefConfigs;
 import com.streamsets.pipeline.config.StageConfiguration;
 import com.streamsets.pipeline.config.StageDefinition;
 import com.streamsets.pipeline.config.StageType;
+import com.streamsets.pipeline.el.ELEvaluator;
+import com.streamsets.pipeline.runner.PipelineRuntimeException;
 import com.streamsets.pipeline.stagelibrary.StageLibraryTask;
 import com.streamsets.pipeline.store.PipelineStoreTask;
 import com.streamsets.pipeline.util.ContainerError;
 import com.streamsets.pipeline.util.ElUtil;
-import com.streamsets.pipeline.util.ValidationUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -50,11 +52,8 @@ public class PipelineConfigurationValidator {
   private final List<String> openLanes;
   private boolean validated;
   private boolean canPreview;
-  private final boolean evaluateElExpressions;
-  private final Map<String, Object> constants;
 
-  public PipelineConfigurationValidator(StageLibraryTask stageLibrary, String name,
-                                        PipelineConfiguration pipelineConfiguration, boolean evaluateElExpressions) {
+  public PipelineConfigurationValidator(StageLibraryTask stageLibrary, String name, PipelineConfiguration pipelineConfiguration) {
     Preconditions.checkNotNull(stageLibrary, "stageLibrary cannot be null");
     Preconditions.checkNotNull(name, "name cannot be null");
     Preconditions.checkNotNull(pipelineConfiguration, "pipelineConfiguration cannot be null");
@@ -63,13 +62,6 @@ public class PipelineConfigurationValidator {
     this.pipelineConfiguration = pipelineConfiguration;
     issues = new Issues();
     openLanes = new ArrayList<>();
-    this.evaluateElExpressions = evaluateElExpressions;
-    this.constants = ElUtil.getConstants(pipelineConfiguration);
-  }
-
-  public PipelineConfigurationValidator(StageLibraryTask stageLibrary, String name,
-                                        PipelineConfiguration pipelineConfiguration) {
-    this(stageLibrary, name, pipelineConfiguration, false /*do not evaluate*/);
   }
 
   boolean sortStages() {
@@ -139,37 +131,15 @@ public class PipelineConfigurationValidator {
       for (ConfigConfiguration config : configs) {
         if (PipelineDefConfigs.MEMORY_LIMIT_CONFIG.equals(config.getName())) {
           try {
-            //Memory limit configuration expects a long value.
-            //However the user could provide an El expression or refer to this value using an EL constant or
-            // ${runtime:conf("<memLimitVar>")}
-            //The EL expression should not be validated unless the user clicks on the validate button, tries to
-            //preview or tun the pipeline.
-            long memoryLimit = Integer.MIN_VALUE;
-            String memoryLimitString = String.valueOf(config.getValue());
-            if(ElUtil.isElString(memoryLimitString)) {
-              //validate only if required. This will be true during explicit validate , preview and run
-              if(evaluateElExpressions) {
-                try {
-                  memoryLimit = ValidationUtil.evaluateMemoryLimit(memoryLimitString, constants);
-                } catch (ELEvalException e) {
-                  issues.addP(new Issue(config.getName(), "", ValidationError.VALIDATION_0064, e.getMessage(), e));
-                  return false;
-                }
-              }
-            } else if (!ElUtil.isElString(memoryLimitString)) {
-              memoryLimit = Long.parseLong(memoryLimitString);
-            }
-
-            if(memoryLimit != Integer.MIN_VALUE) {
-              if (memoryLimit > PipelineDefConfigs.MEMORY_LIMIT_MAX) {
-                issues.addP(new Issue(config.getName(), "", ValidationError.VALIDATION_0063, memoryLimit,
-                  "above the maximum", PipelineDefConfigs.MEMORY_LIMIT_MAX));
-                return false;
-              } else if (memoryLimit < PipelineDefConfigs.MEMORY_LIMIT_MIN) {
-                issues.addP(new Issue(config.getName(), "", ValidationError.VALIDATION_0063, memoryLimit,
-                  "below the minimum", PipelineDefConfigs.MEMORY_LIMIT_MIN));
-                return false;
-              }
+            long memoryLimit = Long.parseLong(String.valueOf(config.getValue()));
+            if (memoryLimit > PipelineDefConfigs.MEMORY_LIMIT_MAX) {
+              issues.addP(new Issue(config.getName(), "", ValidationError.VALIDATION_0063, memoryLimit,
+                "above the maximum", PipelineDefConfigs.MEMORY_LIMIT_MAX));
+              return false;
+            } else if (memoryLimit < PipelineDefConfigs.MEMORY_LIMIT_MIN) {
+              issues.addP(new Issue(config.getName(), "", ValidationError.VALIDATION_0063, memoryLimit,
+                "below the minimum", PipelineDefConfigs.MEMORY_LIMIT_MIN));
+              return false;
             }
           } catch (NumberFormatException e) {
             issues.addP(new Issue(config.getName(), "", ValidationError.VALIDATION_0062, config.getValue()));
@@ -383,7 +353,7 @@ public class PipelineConfigurationValidator {
     }
     if (validateConfig && conf.getValue() != null) {
       //inject value into config configuration
-      if(inject && evaluateElExpressions) {
+      if(inject) {
         conf = injectConfiguration(conf, confDef, stageDef, stageConf, pipelineConfiguration, issueCreator);
       }
       switch (confDef.getType()) {
@@ -746,6 +716,7 @@ public class PipelineConfigurationValidator {
   private Object getValueToInject(Field var, Object configValue, ConfigDefinition confDef,
                                   StageDefinition stageDef, PipelineConfiguration pipelineConf) throws ELEvalException {
     Object value = configValue;
+    Map<String, Object> constants = ElUtil.getConstants(pipelineConf);
     if (configValue instanceof Map) {
       Map<Object, Object> evaluatedMap = new HashMap<>();
       for(Map.Entry<Object, Object> e : ((Map<Object, Object>)configValue).entrySet()) {

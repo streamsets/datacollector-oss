@@ -9,27 +9,18 @@ import com.google.common.annotations.VisibleForTesting;
 import com.streamsets.pipeline.api.Source;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.StageException;
-import com.streamsets.pipeline.api.el.ELEvalException;
 import com.streamsets.pipeline.api.impl.Utils;
-import com.streamsets.pipeline.config.ConfigConfiguration;
-import com.streamsets.pipeline.config.MemoryLimitConfiguration;
-import com.streamsets.pipeline.config.MemoryLimitExceeded;
 import com.streamsets.pipeline.config.PipelineConfiguration;
-import com.streamsets.pipeline.config.PipelineDefConfigs;
 import com.streamsets.pipeline.memory.MemoryUsageCollectorResourceBundle;
 import com.streamsets.pipeline.runner.production.BadRecordsHandler;
 import com.streamsets.pipeline.stagelibrary.StageLibraryTask;
 import com.streamsets.pipeline.util.ContainerError;
-import com.streamsets.pipeline.util.ElUtil;
-import com.streamsets.pipeline.util.ValidationUtil;
 import com.streamsets.pipeline.validation.StageIssue;
-import com.streamsets.pipeline.validation.ValidationError;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedHashSet;
 import java.util.List;
-import java.util.Locale;
 import java.util.Set;
 
 public class Pipeline {
@@ -137,8 +128,6 @@ public class Pipeline {
     }
 
     public Pipeline build(PipelineRunner runner) throws PipelineRuntimeException {
-      //inject actual values for parameters for pipeline configuration
-      injectPipelineConfiguration(pipelineConf);
       StageRuntime.Builder builder = new StageRuntime.Builder(stageLib, name, pipelineConf);
       StageRuntime[] stages = builder.build();
       StageRuntime errorStage = builder.buildErrorStage(pipelineConf);
@@ -209,59 +198,6 @@ public class Pipeline {
         }
       }
       return pipes.toArray(new Pipe[pipes.size()]);
-    }
-
-    private void injectPipelineConfiguration(PipelineConfiguration pipelineConfiguration)
-      throws PipelineRuntimeException {
-      //As of now only memory limit configuration can be parameterized.
-      List<ConfigConfiguration> configuration = pipelineConfiguration.getConfiguration();
-      MemoryLimitExceeded memoryLimitExceeded = null;
-      long memoryLimit = 0;
-      if (configuration != null) {
-        for (ConfigConfiguration config : configuration) {
-          if (PipelineDefConfigs.MEMORY_LIMIT_EXCEEDED_CONFIG.equals(config.getName())) {
-            try {
-              memoryLimitExceeded = MemoryLimitExceeded.valueOf(String.valueOf(config.getValue()).
-                toUpperCase(Locale.ENGLISH));
-            } catch (IllegalArgumentException e) {
-              //This should never happen.
-              String msg = "Invalid pipeline configuration: " + PipelineDefConfigs.MEMORY_LIMIT_EXCEEDED_CONFIG +
-                " value: '" + config.getValue() + "'. Should never happen, please report. : " + e;
-              throw new IllegalStateException(msg, e);
-            }
-          } else if (PipelineDefConfigs.MEMORY_LIMIT_CONFIG.equals(config.getName())) {
-            String memoryLimitString = String.valueOf(config.getValue());
-
-            if(ElUtil.isElString(memoryLimitString)) {
-              //Memory limit is an EL expression. Evaluate to get the value
-              try {
-                memoryLimit = ValidationUtil.evaluateMemoryLimit(memoryLimitString, ElUtil.getConstants(pipelineConfiguration));
-              } catch (ELEvalException e) {
-                throw new PipelineRuntimeException(ValidationError.VALIDATION_0064, e.getMessage(), e);
-              }
-            } else {
-              //Memory limit is not an EL expression. Parse it as long.
-              try {
-                memoryLimit = Long.parseLong(memoryLimitString);
-              } catch (NumberFormatException e) {
-                throw new PipelineRuntimeException(ValidationError.VALIDATION_0062, memoryLimitString);
-              }
-            }
-
-            if (memoryLimit > PipelineDefConfigs.MEMORY_LIMIT_MAX) {
-              throw new PipelineRuntimeException(ValidationError.VALIDATION_0063, memoryLimit,
-                "above the maximum", PipelineDefConfigs.MEMORY_LIMIT_MAX);
-            } else if (memoryLimit < PipelineDefConfigs.MEMORY_LIMIT_MIN) {
-              throw new PipelineRuntimeException(ValidationError.VALIDATION_0063, memoryLimit,
-                "below the minimum", PipelineDefConfigs.MEMORY_LIMIT_MIN);
-            }
-          }
-        }
-      }
-      if (memoryLimitExceeded != null && memoryLimit > 0) {
-        pipelineConfiguration.setMemoryLimitConfiguration(
-          new MemoryLimitConfiguration(memoryLimitExceeded, memoryLimit));
-      }
     }
 
   }

@@ -26,7 +26,6 @@ import com.streamsets.pipeline.config.StageDefinition;
 import com.streamsets.pipeline.stagelibrary.StageLibraryTask;
 import com.streamsets.pipeline.util.ContainerError;
 import com.streamsets.pipeline.util.ElUtil;
-import com.streamsets.pipeline.util.ValidationUtil;
 import com.streamsets.pipeline.validation.PipelineConfigurationValidator;
 import com.streamsets.pipeline.validation.StageIssue;
 
@@ -200,10 +199,9 @@ public class StageRuntime {
     }
 
     public StageRuntime[] build() throws PipelineRuntimeException {
-      PipelineConfigurationValidator validator = new PipelineConfigurationValidator(stageLib, name, pipelineConf, true);
+      PipelineConfigurationValidator validator = new PipelineConfigurationValidator(stageLib, name, pipelineConf);
       if (!validator.validate()) {
-        throw new PipelineRuntimeException(ContainerError.CONTAINER_0150, ValidationUtil.getFirstIssueAsString(name,
-          validator.getIssues()));
+        throw new PipelineRuntimeException(ContainerError.CONTAINER_0150, validator.getIssues());
       }
       try {
         StageRuntime[] runtimes = new StageRuntime[pipelineConf.getStages().size()];
