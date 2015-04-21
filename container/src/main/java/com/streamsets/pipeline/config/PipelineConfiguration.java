@@ -14,7 +14,6 @@ import com.streamsets.pipeline.validation.PipelineConfigurationValidator;
 
 import java.util.Collections;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 import java.util.UUID;
 
@@ -42,37 +41,6 @@ public class PipelineConfiguration {
     this.stages = (stages != null) ? stages : Collections.<StageConfiguration>emptyList();
     this.errorStage = errorStage;
     issues = new Issues();
-    configureMemoryLimit();
-  }
-
-  private void configureMemoryLimit() {
-    MemoryLimitExceeded memoryLimitExceeded = null;
-    long memoryLimit = 0;
-    if (configuration != null) {
-      for (ConfigConfiguration config : configuration) {
-        if (PipelineDefConfigs.MEMORY_LIMIT_EXCEEDED_CONFIG.equals(config.getName())) {
-          try {
-            memoryLimitExceeded = MemoryLimitExceeded.valueOf(String.valueOf(config.getValue()).
-              toUpperCase(Locale.ENGLISH));
-          } catch (IllegalArgumentException e) {
-            String msg = "Invalid pipeline configuration: " + PipelineDefConfigs.MEMORY_LIMIT_EXCEEDED_CONFIG +
-              " value: '" + config.getValue() + "'. Should never happen, please report. : " + e;
-            throw new IllegalStateException(msg, e);
-          }
-        } else if (PipelineDefConfigs.MEMORY_LIMIT_CONFIG.equals(config.getName())) {
-          try {
-            memoryLimit = Long.parseLong(String.valueOf(config.getValue())) * 1000 * 1000;
-          } catch (NumberFormatException e) {
-            String msg = "Invalid pipeline configuration: " + PipelineDefConfigs.MEMORY_LIMIT_CONFIG +
-              " value: '" + config.getValue() + "'. Should never happen, please report. : " + e;
-            throw new IllegalStateException(msg, e);
-          }
-        }
-      }
-    }
-    if (memoryLimitExceeded != null && memoryLimit > 0) {
-      this.memoryLimitConfiguration = new MemoryLimitConfiguration(memoryLimitExceeded, memoryLimit);
-    }
   }
 
   public void setInfo(PipelineInfo info) {
