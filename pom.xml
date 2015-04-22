@@ -94,6 +94,7 @@
     <module>aws-lib</module>
 
     <module>hbase-protolib</module>
+
     <module>spark-protolib</module>
     <module>spark-bootstrap</module>
 

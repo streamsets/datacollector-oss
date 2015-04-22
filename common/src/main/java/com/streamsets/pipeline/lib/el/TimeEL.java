@@ -26,6 +26,9 @@ public class TimeEL {
   @ElConstant(name = "MINUTES", description = "")
   public static final int MINUTES = 60;
 
+  @ElConstant(name = "SECONDS", description = "")
+  public static final int SECONDS = 1;
+
   @ElFunction(prefix = TIME_CONTEXT_VAR, name = "now", description = "")
   public static Date getTimeNowFunc() {
     Date now = (Date) ELEval.getVariablesInScope().getContextVariable(TIME_NOW_CONTEXT_VAR);

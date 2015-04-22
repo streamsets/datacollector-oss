@@ -9,6 +9,7 @@ import com.google.common.annotations.VisibleForTesting;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.concurrent.Callable;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.concurrent.ScheduledExecutorService;
@@ -98,6 +99,9 @@ public class SafeScheduledExecutorService {
   }
   public void schedule(Runnable command, long delay, TimeUnit unit) {
     scheduledExecutorService.schedule(new SafeRunnable(command, false), delay, unit);
+  }
+  public <V> ScheduledFuture<V> schedule(Callable<V> callable, long delay, TimeUnit unit) {
+    return scheduledExecutorService.schedule(callable, delay, unit);
   }
 
   private class SafeRunnable implements Runnable {
