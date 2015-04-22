@@ -196,15 +196,4 @@ public class BootstrapSpark {
       throw new IllegalStateException(msg, ex);
     }
   }
-  // for tests only
-  public static Long getRecordsProducedJVMWide() throws Exception {
-    Object result = Class.forName("com.streamsets.pipeline.stage.origin.SparkExecutorFunction", true,
-      sparkCL).getMethod("getRecordsProducedJVMWide").invoke(null);
-    if (result == null) {
-      throw new IllegalStateException("Result is null");
-    } else if (!(result instanceof Long)) {
-      throw new IllegalStateException("Result " + result.getClass().getName() + " is not Long");
-    }
-    return (Long)result;
-  }
 }
