@@ -102,18 +102,26 @@
       </tr>
 
       <tr ng-switch-when="TARGET"
-          ng-repeat="record in stagePreviewData.input">
+          ng-repeat="inputRecord in stagePreviewData.input">
         <td>
           <record-tree
-            record="record"
-            record-value="record.value"
+            record="inputRecord"
+            record-value="inputRecord.value"
             field-name="('global.form.record' | translate)+($index+1)"
             is-root="true"
             editable="false">
           </record-tree>
         </td>
         <td>
-
+          <div ng-repeat="record in errorsRecords = getErrorRecords(stagePreviewData.errorRecords, inputRecord)">
+            <record-tree
+              record="record"
+              record-value="record.value"
+              field-name="('global.form.record' | translate)+($parent.$index+1) + '-' + ('global.form.errorRecord' | translate) + ' ' + escapeHtml(record.header.errorMessage)"
+              is-root="true"
+              editable="false">
+            </record-tree>
+          </div>
         </td>
       </tr>
 
