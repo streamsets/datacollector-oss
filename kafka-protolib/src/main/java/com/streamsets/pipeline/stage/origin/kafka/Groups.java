@@ -10,12 +10,12 @@ import com.streamsets.pipeline.api.Label;
 
 @GenerateResourceBundle
 public enum Groups implements Label {
-  KAFKA("KAFKA"),
+  KAFKA("kafka"),
   TEXT("Text"),
   JSON("JSON"),
   DELIMITED("Delimited"),
   XML("XML"),
-  LOG("LOG")
+  LOG("Log")
 
   ;
 
