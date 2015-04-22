@@ -69,9 +69,6 @@ public class MemoryUsageCollector {
   }
 
   public synchronized static void initialize(Instrumentation sharedInstrumentation) {
-    if (MemoryUsageCollector.sharedInstrumentation != null) {
-      throw new IllegalStateException("Cannot be initialized twice");
-    }
     MemoryUsageCollector.sharedInstrumentation = sharedInstrumentation;
   }
 
