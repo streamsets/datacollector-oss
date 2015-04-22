@@ -339,7 +339,7 @@ public class PipelineConfigurationValidator {
       if(dependsOnConfig == null) {
         //complex field case?
         //look at the configurations in model definition
-        if(parentConf.containsKey(dependsOn)) {
+        if(parentConf != null && parentConf.containsKey(dependsOn)) {
           dependsOnConfig = new ConfigConfiguration(dependsOn, parentConf.get(dependsOn));
         }
       }
