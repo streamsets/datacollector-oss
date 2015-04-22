@@ -17,11 +17,15 @@ import com.streamsets.pipeline.alerts.AlertManager;
 import com.streamsets.pipeline.alerts.AlertsUtil;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
+import com.streamsets.pipeline.api.el.ELEvalException;
 import com.streamsets.pipeline.api.impl.ErrorMessage;
 import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.config.ConfigConfiguration;
 import com.streamsets.pipeline.config.DeliveryGuarantee;
+import com.streamsets.pipeline.config.MemoryLimitConfiguration;
+import com.streamsets.pipeline.config.MemoryLimitExceeded;
 import com.streamsets.pipeline.config.PipelineConfiguration;
+import com.streamsets.pipeline.config.PipelineDefConfigs;
 import com.streamsets.pipeline.config.RuleDefinition;
 import com.streamsets.pipeline.email.EmailSender;
 import com.streamsets.pipeline.json.ObjectMapperFactory;
@@ -31,10 +35,10 @@ import com.streamsets.pipeline.metrics.MetricsConfigurator;
 import com.streamsets.pipeline.metrics.MetricsEventListener;
 import com.streamsets.pipeline.metrics.MetricsEventRunnable;
 import com.streamsets.pipeline.runner.PipelineRuntimeException;
+import com.streamsets.pipeline.runner.production.DataObserverRunnable;
 import com.streamsets.pipeline.runner.production.MetricObserverRunnable;
 import com.streamsets.pipeline.runner.production.MetricsObserverRunner;
 import com.streamsets.pipeline.runner.production.ProductionObserver;
-import com.streamsets.pipeline.runner.production.DataObserverRunnable;
 import com.streamsets.pipeline.runner.production.ProductionPipeline;
 import com.streamsets.pipeline.runner.production.ProductionPipelineBuilder;
 import com.streamsets.pipeline.runner.production.ProductionPipelineRunnable;
@@ -53,16 +57,19 @@ import com.streamsets.pipeline.store.PipelineStoreException;
 import com.streamsets.pipeline.store.PipelineStoreTask;
 import com.streamsets.pipeline.task.AbstractTask;
 import com.streamsets.pipeline.util.ContainerError;
+import com.streamsets.pipeline.util.ElUtil;
 import com.streamsets.pipeline.util.PipelineDirectoryUtil;
+import com.streamsets.pipeline.util.ValidationUtil;
+import com.streamsets.pipeline.validation.ValidationError;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
 import java.io.File;
-import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ArrayBlockingQueue;
@@ -485,11 +492,65 @@ public class ProductionPipelineManagerTask extends AbstractTask {
 
     ProductionSourceOffsetTracker offsetTracker = new ProductionSourceOffsetTracker(name, rev, runtimeInfo);
     ProductionPipelineRunner runner = new ProductionPipelineRunner(runtimeInfo, snapshotStore,
-      deliveryGuarantee, name, rev, observeRequests, configuration, pipelineConfiguration.getMemoryLimitConfiguration());
+      deliveryGuarantee, name, rev, observeRequests, configuration, getMemoryLimitConfiguration(pipelineConfiguration));
 
     ProductionPipelineBuilder builder = new ProductionPipelineBuilder(stageLibrary, name, rev, runtimeInfo,
       pipelineConfiguration);
     return builder.build(runner, offsetTracker, observer);
+  }
+
+  private MemoryLimitConfiguration getMemoryLimitConfiguration(PipelineConfiguration pipelineConfiguration)
+    throws PipelineRuntimeException {
+    //Default memory limit configuration
+    MemoryLimitConfiguration memoryLimitConfiguration = new MemoryLimitConfiguration();
+
+    List<ConfigConfiguration> configuration = pipelineConfiguration.getConfiguration();
+    MemoryLimitExceeded memoryLimitExceeded = null;
+    long memoryLimit = 0;
+
+    if (configuration != null) {
+      for (ConfigConfiguration config : configuration) {
+        if (PipelineDefConfigs.MEMORY_LIMIT_EXCEEDED_CONFIG.equals(config.getName())) {
+          try {
+            memoryLimitExceeded = MemoryLimitExceeded.valueOf(String.valueOf(config.getValue()).
+              toUpperCase(Locale.ENGLISH));
+          } catch (IllegalArgumentException e) {
+            //This should never happen.
+            String msg = "Invalid pipeline configuration: " + PipelineDefConfigs.MEMORY_LIMIT_EXCEEDED_CONFIG +
+              " value: '" + config.getValue() + "'. Should never happen, please report. : " + e;
+            throw new IllegalStateException(msg, e);
+          }
+        } else if (PipelineDefConfigs.MEMORY_LIMIT_CONFIG.equals(config.getName())) {
+          String memoryLimitString = String.valueOf(config.getValue());
+
+          if(ElUtil.isElString(memoryLimitString)) {
+            //Memory limit is an EL expression. Evaluate to get the value
+            try {
+              memoryLimit = ValidationUtil.evaluateMemoryLimit(memoryLimitString, ElUtil.getConstants(pipelineConfiguration));
+            } catch (ELEvalException e) {
+              throw new PipelineRuntimeException(ValidationError.VALIDATION_0064, e.getMessage(), e);
+            }
+          } else {
+            //Memory limit is not an EL expression. Parse it as long.
+            try {
+              memoryLimit = Long.parseLong(memoryLimitString);
+            } catch (NumberFormatException e) {
+              throw new PipelineRuntimeException(ValidationError.VALIDATION_0062, memoryLimitString);
+            }
+          }
+
+          if (memoryLimit > PipelineDefConfigs.MEMORY_LIMIT_MAX) {
+            throw new PipelineRuntimeException(ValidationError.VALIDATION_0063, memoryLimit,
+              "above the maximum", PipelineDefConfigs.MEMORY_LIMIT_MAX);
+          }
+        }
+      }
+    }
+    if (memoryLimitExceeded != null && memoryLimit > 0) {
+      memoryLimitConfiguration = new MemoryLimitConfiguration(memoryLimitExceeded,
+        memoryLimit * 1000 * 1000 /*convert MB to bytes*/);
+    }
+    return memoryLimitConfiguration;
   }
 
   private void createPipeline(String name, String rev, ProductionObserver observer, BlockingQueue<Object> observeRequests)

@@ -75,6 +75,7 @@ public enum ValidationError implements ErrorCode {
   VALIDATION_0061("Define the directory for error record files"),
   VALIDATION_0062("Configured memory limit '{}' is not an integer"),
   VALIDATION_0063("Configured memory limit {} is {} allowed {}"),
+  VALIDATION_0064("Error resolving memory limit, {}"),
   ;
 
   private final String msg;
