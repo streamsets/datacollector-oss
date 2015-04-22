@@ -117,7 +117,7 @@
     <!-- Create an empty streamsets-libs -->
     <fileSet>
       <directory>${basedir}/src/main/emptydir</directory>
-      <outputDirectory>/streamsets-libs</outputDirectory>
+      <outputDirectory>/bootstrap-libs</outputDirectory>
     </fileSet>
 
     <!-- Create an empty user-libs -->
@@ -215,15 +215,21 @@
       <directory>${basedir}/../${elasticsearch_1_5_0-lib}/target/streamsets-libs/</directory>
       <outputDirectory>/streamsets-libs/</outputDirectory>
     </fileSet>
-  </fileSets>
 
+    <!-- Apache Spark lib -->
+    <fileSet>
+      <directory>${basedir}/../spark-protolib/target/streamsets-libs/</directory>
+      <outputDirectory>/streamsets-libs/</outputDirectory>
+    </fileSet>
+
+  </fileSets>
 
   <dependencySets>
 
     <dependencySet>
       <useProjectArtifact>false</useProjectArtifact>
       <useTransitiveDependencies>false</useTransitiveDependencies>
-      <outputDirectory>/bin</outputDirectory>
+      <outputDirectory>/libexec/bootstrap-libs/main</outputDirectory>
       <unpack>false</unpack>
       <scope>compile</scope>
       <includes>
@@ -256,6 +262,17 @@
       <excludes>
         <exclude>com.streamsets:streamsets-datacollector-api</exclude>
       </excludes>
+    </dependencySet>
+
+    <dependencySet>
+      <useProjectArtifact>false</useProjectArtifact>
+      <useTransitiveDependencies>false</useTransitiveDependencies>
+      <outputDirectory>/libexec/bootstrap-libs/spark</outputDirectory>
+      <unpack>false</unpack>
+      <scope>compile</scope>
+      <includes>
+        <include>com.streamsets:streamsets-datacollector-spark-bootstrap</include>
+      </includes>
     </dependencySet>
 
   </dependencySets>

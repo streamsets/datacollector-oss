@@ -23,6 +23,11 @@ public class LogConfigurator {
   }
 
   public void configure() {
+    if (Boolean.getBoolean("sdc.transient-env")) {
+      Logger log = LoggerFactory.getLogger(this.getClass());
+      log.info("SDC in transient environment, will not reconfigure log");
+      return;
+    }
     if (System.getProperty("log4j.configuration") == null) {
       URL log4fConfigUrl = null;
       System.setProperty("log4j.defaultInitOverride", "true");

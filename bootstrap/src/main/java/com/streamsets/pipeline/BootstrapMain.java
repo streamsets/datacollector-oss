@@ -11,12 +11,15 @@ import java.lang.instrument.Instrumentation;
 import java.lang.reflect.Method;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
 public class BootstrapMain {
+  /*
+   * Note:
+   * if you update this, you must also update stage-classloader.properties
+   */
   public static final String[] PACKAGES_BLACKLIST_FOR_STAGE_LIBRARIES = {
       "com.streamsets.pipeline.api.",
       "com.streamsets.pipeline.container",
@@ -67,6 +70,7 @@ public class BootstrapMain {
   @SuppressWarnings("unchecked")
   public static void main(String[] args) throws Exception {
     boolean debug = Boolean.getBoolean("pipeline.bootstrap.debug");
+    StageClassLoader.setDebug(debug);
     String mainClass = null;
     String apiClasspath = null;
     String containerClasspath = null;

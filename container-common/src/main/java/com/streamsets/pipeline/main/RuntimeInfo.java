@@ -76,12 +76,15 @@ public class RuntimeInfo {
   }
 
   public String getRuntimeDir() {
-    boolean isTransientEnv = false;
-    String transientEnv = System.getProperty(TRANSIENT_ENVIRONMENT);
-    if (transientEnv != null) {
-      isTransientEnv = Boolean.parseBoolean(transientEnv);
+    if (Boolean.getBoolean(TRANSIENT_ENVIRONMENT)) {
+      if (Boolean.getBoolean("sdc.testing-mode")) {
+        return System.getProperty("user.dir") + "/target/" + randomUUID;
+      } else {
+        return System.getProperty("user.dir") + "/" + randomUUID;
+      }
+    } else {
+      return System.getProperty("user.dir");
     }
-    return isTransientEnv ? System.getProperty("user.dir") + "/" + randomUUID : System.getProperty("user.dir");
   }
 
   public String getStaticWebDir() {

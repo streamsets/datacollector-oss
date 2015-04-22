@@ -3,27 +3,32 @@
  * be copied, modified, or distributed in whole or part without
  * written consent of StreamSets, Inc.
  */
-package com.streamsets.pipeline.stage.origin;
+package com.streamsets.pipeline.stage.origin.spark;
 
 import org.apache.spark.api.java.JavaRDD;
 import org.apache.spark.api.java.function.Function;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.io.Serializable;
+import java.util.Properties;
 
 /**
  * This function executes in the driver.
  */
 public class SparkDriverFunction implements Function<JavaRDD<String>, Void>, Serializable {
-  private static final Logger LOG = LoggerFactory.getLogger(SparkDriverFunction.class);
-  private final EmbeddedSDCConf sdcConf;
-  public SparkDriverFunction(EmbeddedSDCConf sdcConf) {
-    this.sdcConf = sdcConf;
+  private Properties properties;
+  private String pipelineJson;
+
+  public SparkDriverFunction(Properties properties, String pipelineJson) {
+    this.properties = properties;
+    this.pipelineJson = pipelineJson;
+    System.err.println("SparkDriverFunction.<init>");
+    Thread.dumpStack();
   }
   @Override
   public Void call(JavaRDD<String> stringJavaRDD) throws Exception {
-    stringJavaRDD.foreachPartition(new SparkExecutorFunction(sdcConf));
+    System.err.println("SparkDriverFunction.call");
+    Thread.dumpStack();
+    stringJavaRDD.foreachPartition(new BootstrapSparkFunction(properties, pipelineJson));
     return null;
   }
 

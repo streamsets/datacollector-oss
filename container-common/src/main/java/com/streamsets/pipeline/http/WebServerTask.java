@@ -360,10 +360,6 @@ public class WebServerTask extends AbstractTask {
       LOG.debug("Running on URI '{}', HTTPS '{}' ",server.getURI(), isSSLEnabled());
       for (Connector connector : server.getConnectors()) {
         if (connector instanceof ServerConnector) {
-//          if (port > 0) {
-//            String msg = "Two server connectors are not legal. Already found port: " + port;
-//            throw new IllegalStateException(msg);
-//          }
           port = ((ServerConnector)connector).getLocalPort();
         }
       }

@@ -5,48 +5,52 @@
  */
 package com.streamsets.pipeline.stage.origin;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.streamsets.pipeline.BlackListURLClassLoader;
-import com.streamsets.pipeline.BootstrapMain;
-import com.streamsets.pipeline.json.ObjectMapperFactory;
-import com.streamsets.pipeline.restapi.bean.PipelineConfigurationJson;
 
+import com.google.common.io.Resources;
+import com.streamsets.pipeline.BootstrapSpark;
+import com.streamsets.pipeline.main.EmbeddedPipelineFactory;
+import com.streamsets.pipeline.stage.origin.spark.SparkStreamingBinding;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.File;
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
+import java.io.FileOutputStream;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.Properties;
 import java.util.concurrent.TimeUnit;
 
 public class TestSparkStreamingSource {
-
+  private static final Logger LOG = LoggerFactory.getLogger(TestSparkStreamingSource.class);
   private TextServer textServer;
-  private SparkStreamingBinding sparkStreamingSource;
 
   @Before
   public void setup() throws Exception {
+    System.setProperty("sdc.testing-mode", "true");
+    System.setProperty("spark.master", "local[2]"); // must be 2, not 1 (or function will never be called)
+                                                    // not 3 (due to metric counter being jvm wide)
     textServer = new TextServer("msg");
     textServer.start();
-    List<URL> urls = new ArrayList<>();
-    urls.addAll(BootstrapMain.getClasspathUrls(System.getProperty("user.dir") + "/target/"));
-    ObjectMapper json = ObjectMapperFactory.get();
-    File pipelineFile = new File("/tmp/test.json"); // TODO we need a pipline json file, it should have a source of
-    // SparkStreamingSource and a destination of a *new* dev null source which is also in the spark-streaming
-    // jar. Once we figure out the classloader stuff we can use the dev null source inside basic-lib
-    String rawConfig = json.writeValueAsString(json.readValue(pipelineFile, Map.class).get("pipelineConfig"));
-    PipelineConfigurationJson pipelineConfigBean = json.readValue(rawConfig, PipelineConfigurationJson.class);
-    EmbeddedPipeline pipeline = new EmbeddedPipeline("test", "admin", "tag1", "what is this?",
-      pipelineConfigBean);
-    EmbeddedSDCConf sdcConf = new EmbeddedSDCConf(pipeline, urls);
-    sparkStreamingSource = new SparkStreamingBinding("local[2]", "localhost",
-      textServer.getPort(), sdcConf);
-    sparkStreamingSource.init();
+    File target = new File(System.getProperty("user.dir"), "target");
+    Properties properties = new Properties();
+    properties.setProperty(EmbeddedPipelineFactory.PIPELINE_NAME, "pipeline1");
+    properties.setProperty(EmbeddedPipelineFactory.PIPELINE_USER, "admin");
+    properties.setProperty(EmbeddedPipelineFactory.PIPELINE_DESCRIPTION, "not much to say");
+    properties.setProperty(EmbeddedPipelineFactory.PIPELINE_TAG, "unused");
+    properties.setProperty(SparkStreamingBinding.INPUT_TYPE, SparkStreamingBinding.TEXT_SERVER_INPUT_TYPE);
+    properties.setProperty(SparkStreamingBinding.TEXT_SERVER_HOSTNAME, "localhost");
+    properties.setProperty(SparkStreamingBinding.TEXT_SERVER_PORT, String.valueOf(textServer.getPort()));
+    File propertiesFile = new File(target, "sdc.properties");
+    propertiesFile.delete();
+    properties.store(new FileOutputStream(propertiesFile), null);
+    File pipelineJson = new File(target, "pipeline.json");
+    pipelineJson.delete();
+    Files.copy(Paths.get(Resources.getResource("SIMPLE_TRASH_PIPELINE.json").toURI()),
+      pipelineJson.toPath());
   }
 
   @After
@@ -54,16 +58,30 @@ public class TestSparkStreamingSource {
     if (textServer != null) {
       textServer.stop();
     }
-    if (sparkStreamingSource != null) {
-      sparkStreamingSource.destroy();
-    }
   }
-
 
   @Test
   public void test() throws Exception {
-    TimeUnit.SECONDS.sleep(20);
-    long actual = SparkExecutorFunction.getRecordsProducedJVMWide();
-    Assert.assertTrue("Expected between 7 and 11 but was: " + actual, actual >= 7 && actual <= 11);
+    Thread waiter = new Thread() {
+      public void run() {
+        try {
+          BootstrapSpark.main(new String[0]);
+        } catch (IllegalStateException ex) {
+          // ignored
+        } catch (Exception ex) {
+          LOG.error("Error in waiter thread: " + ex, ex);
+        }
+      }
+    };
+    waiter.setName(getClass().getName() + "-Waiter");
+    waiter.setDaemon(true);
+    waiter.start();
+    try {
+      TimeUnit.SECONDS.sleep(60);
+      long actual = SparkExecutorFunction.getRecordsProducedJVMWide();
+      Assert.assertTrue("Expected between 40 and 70 but was: " + actual, actual >= 40 && actual <= 70);
+    } finally {
+      waiter.interrupt();;
+    }
   }
 }

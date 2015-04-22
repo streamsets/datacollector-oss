@@ -75,7 +75,7 @@
     <module>hdfs-protolib</module>
     <module>cdh5_3_2-lib</module>
     <module>hdp_2_2_0-lib</module>
- 
+
     <module>kafka-protolib</module>
     <module>cdh5-kafka_0_8_2_0_kafka_1_2_0-lib</module>
 
@@ -91,6 +91,7 @@
     <module>cassandra_2_1_5-lib</module>
     <module>hbase-protolib</module>
     <module>spark-protolib</module>
+    <module>spark-bootstrap</module>
   </modules>
 
   <build>

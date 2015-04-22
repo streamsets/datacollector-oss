@@ -1,0 +1,158 @@
+{
+  "pipelineConfig" : {
+    "schemaVersion" : 1,
+    "uuid" : "428eb341-f059-462f-8d03-042ddb487c7d",
+    "configuration" : [ {
+      "name" : "deliveryGuarantee",
+      "value" : "AT_LEAST_ONCE"
+    }, {
+      "name" : "badRecordsHandling",
+      "value" : "streamsets-datacollector-spark-protolib::com_streamsets_pipeline_stage_origin_NullDTarget::1.0.0"
+    }, {
+      "name" : "constants",
+      "value" : [ ]
+    }, {
+      "name" : "memoryLimitExceeded",
+      "value" : "STOP_PIPELINE"
+    }, {
+      "name" : "memoryLimit",
+      "value" : 668
+    } ],
+    "uiInfo" : {
+      "previewConfig" : {
+        "previewSource" : "CONFIGURED_SOURCE",
+        "batchSize" : 10,
+        "skipTargets" : true
+      }
+    },
+    "stages" : [ {
+      "instanceName" : "com_streamsets_pipeline_stage_origin_SparkStreamingSource1429144092355",
+      "library" : "streamsets-datacollector-spark-protolib",
+      "stageName" : "com_streamsets_pipeline_stage_origin_SparkStreamingSource",
+      "stageVersion" : "1.0.0",
+      "configuration" : [ {
+        "name" : "stageOnRecordError",
+        "value" : "TO_ERROR"
+      } ],
+      "uiInfo" : {
+        "label" : "Spark Streaming Source 1",
+        "description" : "",
+        "xPos" : 60,
+        "yPos" : 50,
+        "stageType" : "SOURCE",
+        "icon" : "/rest/v1/definitions/stages/icon?name=com_streamsets_pipeline_stage_origin_SparkStreamingSource&library=streamsets-datacollector-spark-protolib&version=1.0.0"
+      },
+      "inputLanes" : [ ],
+      "outputLanes" : [ "com_streamsets_pipeline_stage_origin_SparkStreamingSource1429144092355OutputLane14291440923550" ]
+    }, {
+      "instanceName" : "com_streamsets_pipeline_stage_origin_NullDTarget1429144359362",
+      "library" : "streamsets-datacollector-spark-protolib",
+      "stageName" : "com_streamsets_pipeline_stage_origin_NullDTarget",
+      "stageVersion" : "1.0.0",
+      "configuration" : [ ],
+      "uiInfo" : {
+        "label" : "Trash 1",
+        "description" : "",
+        "xPos" : 280,
+        "yPos" : 50,
+        "stageType" : "TARGET",
+        "icon" : "/rest/v1/definitions/stages/icon?name=com_streamsets_pipeline_stage_origin_NullDTarget&library=streamsets-datacollector-spark-protolib&version=1.0.0"
+      },
+      "inputLanes" : [ "com_streamsets_pipeline_stage_origin_SparkStreamingSource1429144092355OutputLane14291440923550" ],
+      "outputLanes" : [ ]
+    } ],
+    "errorStage" : {
+      "instanceName" : "com_streamsets_pipeline_stage_origin_NullDTarget1429144344717",
+      "library" : "streamsets-datacollector-spark-protolib",
+      "stageName" : "com_streamsets_pipeline_stage_origin_NullDTarget",
+      "stageVersion" : "1.0.0",
+      "configuration" : [ ],
+      "uiInfo" : {
+        "label" : "Bad Records - Trash",
+        "description" : "",
+        "xPos" : 280,
+        "yPos" : 50,
+        "stageType" : "TARGET",
+        "icon" : "/rest/v1/definitions/stages/icon?name=com_streamsets_pipeline_stage_origin_NullDTarget&library=streamsets-datacollector-spark-protolib&version=1.0.0"
+      },
+      "inputLanes" : [ ],
+      "outputLanes" : [ ]
+    },
+    "issues" : {
+      "stageIssues" : { },
+      "issueCount" : 0,
+      "pipelineIssues" : [ ]
+    },
+    "info" : {
+      "name" : "test",
+      "description" : null,
+      "created" : 1429144081623,
+      "lastModified" : 1429144360388,
+      "creator" : "admin",
+      "lastModifier" : "admin",
+      "lastRev" : "0",
+      "uuid" : "428eb341-f059-462f-8d03-042ddb487c7d",
+      "valid" : true
+    },
+    "description" : null,
+    "valid" : true,
+    "previewable" : true
+  },
+  "pipelineRules" : {
+    "metricsRuleDefinitions" : [ {
+      "id" : "testbadRecords1429144081835",
+      "alertText" : "High incidence of Bad Records",
+      "metricId" : "pipeline.batchErrorRecords.meter",
+      "metricType" : "METER",
+      "metricElement" : "METER_COUNT",
+      "condition" : "${value() > 100}",
+      "sendEmail" : false,
+      "enabled" : false,
+      "valid" : true
+    }, {
+      "id" : "teststageErrors1429144081835",
+      "alertText" : "High incidence of Error Messages",
+      "metricId" : "pipeline.batchErrorMessages.meter",
+      "metricType" : "METER",
+      "metricElement" : "METER_COUNT",
+      "condition" : "${value() > 100}",
+      "sendEmail" : false,
+      "enabled" : false,
+      "valid" : true
+    }, {
+      "id" : "testidleGauge1429144081835",
+      "alertText" : "Pipeline is Idle",
+      "metricId" : "RuntimeStatsGauge.gauge",
+      "metricType" : "GAUGE",
+      "metricElement" : "TIME_OF_LAST_RECEIVED_RECORD",
+      "condition" : "${time:now() - value() > 120000}",
+      "sendEmail" : false,
+      "enabled" : false,
+      "valid" : true
+    }, {
+      "id" : "testbatchTime1429144081835",
+      "alertText" : "Batch taking more time to process",
+      "metricId" : "RuntimeStatsGauge.gauge",
+      "metricType" : "GAUGE",
+      "metricElement" : "CURRENT_BATCH_AGE",
+      "condition" : "${value() > 200}",
+      "sendEmail" : false,
+      "enabled" : false,
+      "valid" : true
+    }, {
+      "id" : "testmemoryLimit1429144081835",
+      "alertText" : "Memory limit for pipeline exceeded",
+      "metricId" : "pipeline.memoryConsumed.counter",
+      "metricType" : "COUNTER",
+      "metricElement" : "COUNTER_COUNT",
+      "condition" : "${value() > humanReadableToBytes('100MB')}",
+      "sendEmail" : false,
+      "enabled" : false,
+      "valid" : true
+    } ],
+    "dataRuleDefinitions" : [ ],
+    "emailIds" : [ ],
+    "uuid" : "595662c7-5c68-4014-a29e-173ffa0a098f",
+    "ruleIssues" : [ ]
+  }
+}

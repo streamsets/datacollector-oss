@@ -49,7 +49,7 @@ public class SparkStreamingSource extends BaseSource implements OffsetCommitter 
   public void commit(String offset) throws StageException {
     try {
       LOG.debug("In commit hook ");
-      queue.offer(offset, 5, TimeUnit.MINUTES);
+      queue.put(offset);
     } catch (InterruptedException e) {
       Thread.currentThread().interrupt();
     }
@@ -57,7 +57,7 @@ public class SparkStreamingSource extends BaseSource implements OffsetCommitter 
   public void put(List<String> batch) throws InterruptedException {
     LOG.debug("Adding batch ");
     queue.put(batch);
-    Object result = queue.poll(5, TimeUnit.MINUTES);
+    Object result = queue.take();
     if (result == null) {
       throw new IllegalStateException("Timed out waiting for response");
     } else if (result instanceof InterruptedException) {
@@ -74,7 +74,9 @@ public class SparkStreamingSource extends BaseSource implements OffsetCommitter 
     Throwable error = null;
     try {
       Object object;
-      if ((object = queue.poll(10, TimeUnit.SECONDS)) != null) {
+      // TODO implement periodic timeout if spark does not send empty batches
+      if ((object = queue.take()) != null) {
+        LOG.info("Batch = " + object);
         List<String> batch = null;
         if (object instanceof List) {
           batch = (List)object;
@@ -90,15 +92,13 @@ public class SparkStreamingSource extends BaseSource implements OffsetCommitter 
           batchMaker.addRecord(record);
           recordsProduced++;
         }
-      } else {
-        throw new IllegalStateException("Cannot poll from queue. This should never happen");
       }
     } catch (Throwable throwable) {
       error = throwable;
     } finally {
       if (error != null) {
         try {
-          queue.offer(error, 5, TimeUnit.MINUTES);
+          queue.put(error);
         } catch (InterruptedException e) {
           Thread.currentThread().interrupt();
         }

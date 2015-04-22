@@ -28,3 +28,6 @@ __MACOSX
 .DS_Store
 
 .gitreview
+
+# maven shade
+dependency-reduced-pom.xml
