@@ -13,6 +13,7 @@ public enum Errors implements ErrorCode {
   TAIL_01("At least one directory must be specified"),
   TAIL_02("Could not initialize multi-directory reader: {}"),
   TAIL_03("Invalid data format '{}'"),
+  TAIL_04("The same directory cannot be specified more than once '{}'"),
 
   TAIL_10("Could not deserialize offset: {}"),
   TAIL_11("Error reading file '{}': {}"),

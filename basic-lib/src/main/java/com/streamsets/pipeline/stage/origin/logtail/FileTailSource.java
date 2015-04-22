@@ -30,8 +30,10 @@ import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 public class FileTailSource extends BaseSource {
   private final DataFormat dataFormat;
@@ -88,16 +90,21 @@ public class FileTailSource extends BaseSource {
     if (fileInfos.isEmpty()) {
       issues.add(getContext().createConfigIssue(Groups.FILE.name(), "fileInfos", Errors.TAIL_01));
     } else {
+      Set<String> dirNames = new LinkedHashSet<>();
       List<MultiDirectoryReader.DirectoryInfo> dirInfos = new ArrayList<>();
       for (FileInfo fileInfo : fileInfos) {
         dirInfos.add(new MultiDirectoryReader.DirectoryInfo(fileInfo.dirName,
                                                             fileInfo.fileRollMode.createRollMode(fileInfo.periodicFileRegEx),
                                                             fileInfo.file, fileInfo.firstFile));
+        if (dirNames.contains(fileInfo.dirName)) {
+          issues.add(getContext().createConfigIssue(Groups.FILE.name(), "fileInfos", Errors.TAIL_04, fileInfo.dirName));
+        }
+        dirNames.add(fileInfo.dirName);
       }
       try {
         multiDirReader = new MultiDirectoryReader(dirInfos, Charset.forName(charset), maxLineLength);
       } catch (IOException ex) {
-        issues.add(getContext().createConfigIssue(Groups.FILE.name(), null, Errors.TAIL_02, ex.getMessage(), ex));
+        issues.add(getContext().createConfigIssue(Groups.FILE.name(), "fileInfos", Errors.TAIL_02, ex.getMessage(), ex));
       }
     }
     switch (dataFormat) {

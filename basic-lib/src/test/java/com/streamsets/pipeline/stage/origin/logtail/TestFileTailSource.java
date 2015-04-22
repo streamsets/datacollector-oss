@@ -92,6 +92,34 @@ public class TestFileTailSource {
   private static final Charset UTF8 = Charset.forName("UTF-8");
 
   @Test
+  public void testTailLogMultipleDirsSameDir() throws Exception {
+    File testDataDir1 = new File("target", UUID.randomUUID().toString());
+    Assert.assertTrue(testDataDir1.mkdirs());
+    Files.write(new File(testDataDir1, "log1.txt").toPath(), Arrays.asList("Hello"), UTF8);
+    Files.write(new File(testDataDir1, "log2.txt").toPath(), Arrays.asList("Hola"), UTF8);
+
+    FileInfo fileInfo1 = new FileInfo();
+    fileInfo1.dirName = testDataDir1.getAbsolutePath();
+    fileInfo1.file = "log1.txt";
+    fileInfo1.fileRollMode = FilesRollMode.REVERSE_COUNTER;
+    fileInfo1.firstFile = "";
+    fileInfo1.periodicFileRegEx = "";
+    FileInfo fileInfo2 = new FileInfo();
+    fileInfo2.dirName = testDataDir1.getAbsolutePath();
+    fileInfo2.file = "log2.txt";
+    fileInfo2.fileRollMode = FilesRollMode.REVERSE_COUNTER;
+    fileInfo2.firstFile = "";
+    fileInfo2.periodicFileRegEx = "";
+    FileTailSource source = new FileTailSource(DataFormat.TEXT, "UTF-8", Arrays.asList(fileInfo1, fileInfo2), 1024, 25,
+                                               1, null, false, null, null, null, null, null, false, null);
+    SourceRunner runner = new SourceRunner.Builder(FileTailDSource.class, source)
+        .addOutputLane("lane")
+        .build();
+    Assert.assertTrue(!runner.runValidateConfigs().isEmpty());
+    Assert.assertTrue(runner.runValidateConfigs().get(0).toString().contains("TAIL_04"));
+  }
+
+    @Test
   public void testTailLogMultipleDirs() throws Exception {
     File testDataDir1 = new File("target", UUID.randomUUID().toString());
     File testDataDir2 = new File("target", UUID.randomUUID().toString());

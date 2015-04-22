@@ -154,6 +154,10 @@ public class MultiDirectoryReader implements Closeable {
     dirNames = new LinkedHashSet<>();
     for (DirectoryInfo dirInfo : dirInfos) {
       dirContexts.add(new DirectoryContext(dirInfo, charset, maxLineLength));
+      if (dirNames.contains(dirInfo.dirName)) {
+        throw new IOException(Utils.format("Directory '{}' already specified, it cannot be added more than once",
+                                           dirInfo.dirName));
+      }
       dirNames.add(dirInfo.dirName);
     }
     open = true;

@@ -77,7 +77,20 @@ public class TestMultiDirectoryReader {
     mdr.close();
   }
 
-  @Test
+  @Test(expected = IOException.class)
+  public void testWithMultipleDirectoriesSameName() throws Exception {
+    Files.write(new File(testDir1, "f1.txt").toPath(), Arrays.asList("f1.0"), UTF8);
+    Files.write(new File(testDir1, "f2.txt").toPath(), Arrays.asList("f2.00"), UTF8);
+    MultiDirectoryReader.DirectoryInfo di1 = new MultiDirectoryReader.DirectoryInfo(testDir1.getAbsolutePath(),
+                                                                                    LogRollMode.REVERSE_COUNTER,
+                                                                                    "f1.txt", "");
+    MultiDirectoryReader.DirectoryInfo di2 = new MultiDirectoryReader.DirectoryInfo(testDir1.getAbsolutePath(),
+                                                                                    LogRollMode.REVERSE_COUNTER,
+                                                                                    "f2.txt", "");
+    MultiDirectoryReader mdr = new MultiDirectoryReader(Arrays.asList(di1, di2), UTF8, 1024);
+  }
+
+    @Test
   public void testWithMultipleDirectories() throws Exception {
     Files.write(new File(testDir1, "f1.txt").toPath(), Arrays.asList("f1.0"), UTF8);
     Files.write(new File(testDir2, "f2.txt").toPath(), Arrays.asList("f2.00"), UTF8);
