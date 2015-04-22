@@ -30,17 +30,20 @@ h1 {
 h2 {
 	font-family: 'Lato', Helvetica, Arial, Lucida, sans-serif;
 	font-size: 28px;
-	line-height: 48px;
+    line-height: 48px;
 	font-weight: 300;
+	/* lc added margin-top - not working. added Important now working */
+	margin-top: 20px !important;
 	margin-bottom: 10px;
 	color: #003399;
 }
 h3 {
 	font-family: 'Lato', Helvetica, Arial, Lucida, sans-serif !important;
-	font-size: 22px !important;
-	line-height: 34px;
-	font-weight: 300 !important;
-	margin-bottom: 5px;
+	font-size: 20px !important;
+    line-height: 32px;
+	font-weight: 400 !important;
+	margin-top: 25px !important;
+	margin-bottom: 12px !important;
 	color: #003399;
 }
 h4 {
@@ -88,7 +91,7 @@ p, .p {
 	font-size: 13px;
 	line-height: 1.65em;
 	color: #555;
-	margin: 0 0 15px 0;
+	margin: 14px 0 0 0;
 }
 
 
@@ -403,9 +406,10 @@ span.topic {
 }
 .codeblock {
   background-color: #eee;
+  margin: 5px 0 8px 0
 }
 .shortdesc {
-  margin: 0 0 15px 0;
+  margin: 0 0 0 0;
   font-size: 13px;
   font-weight: normal;
   text-shadow: none;
@@ -505,44 +509,61 @@ table.codetable td, table.codetable td p {
 ul, .ul, ol, .ol, dl, .dl {
   background: transparent;
   font-size: 13px;
-  line-height: 20px;
+/*  line-height: 20px; LC had this here before changing to body line height for testing*/
+  line-height: 1.65em;
   font-weight: normal;
   font-style: normal;
   text-shadow: none;
 }
+
 ul, .ul, ol, .ol {
 	padding-left: 20px;
-	margin: 5px 0 10px 0;
+	margin: 10px 0 0 0;
 }
 ul, .ul, dl, .dl  {
 	list-style-type: disc;
 }
 .ul .li {
-	margin: 2px 0;
+	margin: 10px 0 0 0;
+}	
+/* LC adding this to correct p spacing after a bullet */
+.ul .li p {
+	margin: 10px 0 0 0;
 }
+
+/* LC adding these to clean up numbered lists*/
+.ol .li {
+	margin: 10px 0 0 0;
+}	
+.ol .li p {
+	margin: 10px 0 0 0;
+}
+
 dl, .dl {
 	margin: 0;
 }
 .dt {
   background: transparent;
   font-weight: bold;
-  font-size: 14px;
-  margin: 20px 0 0 0;
+  font-size: 13px;
+  margin: 16px 0 0 0;
 }
 .dd {
   background-color: transparent;
-  font-weight: 400;
+  font-weight: normal;
   font-style: normal;
   font-size: 13px;
   font-variant: normal;
-  margin: 10px 0;
+  margin: 10px 0 0 0;
+  padding-left: 26px;
 }
+
 .dd p {
-	margin: 5px 0;
+	margin: 10px 0px 5px 0;
 }
 .ulchildlink {
-	margin-top: 0;
-	margin-bottom: 30px;
+/*	margin-top: 0;
+	margin-bottom: 10px; */
 }
 .ul .p, .ol .p, .dl .p {
 }
@@ -562,15 +583,31 @@ div.footer, .footer_separator {
 
 
 
+/* LC adding these context items - not sure they were necessary?
 
+.context {
+	margin: 14px 0 0 0;
+}
+
+.context p {
+	margin: 14px 0 0 0;
+}
+*/
+
+.steps {
+	margin: 14px 0 0 0;
+}
 
 .step {
-	margin-bottom: 15px;
+    margin: 10px 0 0 0;
+	margin-bottom: 10px;
 }
-.stepresult, .stepresult p, .info, .info p {
-	margin: 5px 0 ;
+/* LC adding .info .ul .li */
+.stepresult, .stepresult p, .info, .info p, .info .ul .li {
+	margin: 10px 0 0 0;
 	font-size: 13px;
 }
+
 .q {
   background-color: transparent;
   font-size: 13px;

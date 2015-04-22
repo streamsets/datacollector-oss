@@ -14,7 +14,8 @@
                     <li>The time the pipeline started or stopped</li>
                     <li>Related messages</li>
                     <li>Access to each run summary</li>
-                </ul>Click the <uicontrol>History</uicontrol> tab in the pipeline properties or
+                </ul></p>
+                <p>Click the <uicontrol>History</uicontrol> tab in the pipeline properties or
                 monitor panel to view the run history. The following image shows a sample run
                 history:</p>
             <p><image href="../Graphics/RunHistory.png" id="image_cy3_rbw_rr" scalefit="yes"/></p>

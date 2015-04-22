@@ -8,12 +8,13 @@
         />.</shortdesc>
     <taskbody>
         <context><p><indexterm>installation<indexterm>service
-                    start</indexterm></indexterm><indexterm>launch the Data
-                        Collector<indexterm>service start</indexterm></indexterm>Installing the <ph
+            start</indexterm></indexterm><indexterm>launch the Data
+                Collector<indexterm>service start</indexterm></indexterm>Installing the <ph
                     conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                /> as a service requires sudo privileges on the root directory.</p>This procedure
+                /> as a service requires sudo privileges on the root directory.</p>
+            <p>This procedure
             walks through setting the default directories, but you can alternatively use the
-            libexec/sdcd-env.sh script.</context>
+            libexec/sdcd-env.sh script.</p></context>
         <steps id="steps_wnx_444_1r">
             <step>
                 <cmd> Download the StreamSets SDC tarball and extract it to the desired location,

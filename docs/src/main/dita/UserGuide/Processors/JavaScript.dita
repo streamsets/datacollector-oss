@@ -13,7 +13,7 @@
         conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> passes a
       batch of data to the processor and converts the data to an expected format for processing. </p>
         <p>The JavaScript Evaluator supports the following versions of Java:<ul id="ul_xyk_lp2_qr">
-                <li>Java 7 - Supports ECMAScript 5 and partial support for JavaScript 1.8. Runs on
+                <li>Java 7 - Supports ECMAScript 5 and partially supports JavaScript 1.8. Runs on
                     the Rhino 1.7R3 JavaScript engine.</li>
                 <li>Java 8 - Supports ECMAScript 5.1. Runs on the Nashorn JavaScript engine.</li>
             </ul><note>Some Java 8 functionality is not available in Java 7. To ensure the

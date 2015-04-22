@@ -11,10 +11,10 @@
     <dlentry>
      <dt>Null values convert to String</dt>
      <dd>Regardless of the original data type of a field, when a null value is processed by the
-      JavaScript Evaluator it returns to the pipeline as a String. Because JavaScript does not
-      associate nulls with a data type, the processor uses String. </dd>
+      JavaScript Evaluator it returns to the pipeline as a string. Because JavaScript does not
+      associate nulls with a data type, the processor uses the String data type. </dd>
      <dd>To avoid type errors in downstream processing, you might use a Type Converter to ensure
-      that the necessary fields have data of the appropriate type. </dd>
+      that fields have data of the appropriate type. </dd>
     </dlentry>
    </dl>
    <dl>

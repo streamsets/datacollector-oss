@@ -123,41 +123,24 @@
 
  
  <div class="body conbody"><p class="shortdesc">Though Jython does not use type information when processing data, passing data to the
-  rest of the pipeline requires data types. Note the following type information before you configure
-  the remainder of the pipeline: </p>
+  rest of the pipeline requires data types. </p>
 
-  <div class="p">
-   <dl class="dl">
-    
-     <dt class="dt dlterm">Null values convert to String</dt>
+  <div class="p">Note the following type information before you configure the remainder of the pipeline: <ul class="ul" id="concept_szj_slw_tr__ul_e3h_1qc_5r">
+    <li class="li">Null values convert to String.<p class="p">Regardless of the original data type of a field, when a
+      null value is processed by the Jython Evaluator it returns to the pipeline as a string.
+      Because Jython does not associate nulls with a data type, the processor uses the String data
+      type.</p>
+<div class="note tip"><span class="tiptitle">Tip:</span> To avoid type errors in downstream processing, you might use a Type
+      Converter to ensure that fields have data of the appropriate type. </div>
+</li>
 
-     <dd class="dd">Regardless of the original data type of a field, when a null value is processed by the
-      Jython Evaluator it returns to the pipeline as a String. Because Jython does not associate
-      nulls with a data type, the processor uses String. </dd>
+    <li class="li">Non-null values that are not modified in the processor retain their original type.</li>
 
-     <dd class="dd">To avoid type errors in downstream processing, you might use a Type Converter to ensure
-      that the necessary fields have data of the appropriate type. </dd>
+    <li class="li">Numeric data that is modified becames a Double, other types of data retain their original
+     type.</li>
 
-    
-   </dl>
-
-   <dl class="dl">
-    
-     <dt class="dt dlterm">Non-null values that are not modified in the processor retain their original type</dt>
-
-     <dd class="dd"></dd>
-
-    
-    
-     <dt class="dt dlterm">Numeric data that is modified becames a Double, other types of data retain their original
-      type.</dt>
-
-     <dd class="dd">.</dd>
-
-    
-   </dl>
-
-  </div>
+   </ul>
+</div>
 
  </div>
 
@@ -182,9 +165,9 @@
                             
                             <thead class="thead" align="left">
                                 <tr class="row">
-                                    <th class="entry" valign="top" width="24.509803921568626%" id="d24902e270">General Property</th>
+                                    <th class="entry" valign="top" width="24.509803921568626%" id="d24910e250">General Property</th>
 
-                                    <th class="entry" valign="top" width="75.49019607843137%" id="d24902e273">Description</th>
+                                    <th class="entry" valign="top" width="75.49019607843137%" id="d24910e253">Description</th>
 
                                 </tr>
 
@@ -192,24 +175,24 @@
 
                             <tbody class="tbody">
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="24.509803921568626%" headers="d24902e270 ">Name</td>
+                                    <td class="entry" valign="top" width="24.509803921568626%" headers="d24910e250 ">Name</td>
 
-                                    <td class="entry" valign="top" width="75.49019607843137%" headers="d24902e273 ">Stage name.</td>
-
-                                </tr>
-
-                                <tr class="row">
-                                    <td class="entry" valign="top" width="24.509803921568626%" headers="d24902e270 ">Description</td>
-
-                                    <td class="entry" valign="top" width="75.49019607843137%" headers="d24902e273 ">Optional description.</td>
+                                    <td class="entry" valign="top" width="75.49019607843137%" headers="d24910e253 ">Stage name.</td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="24.509803921568626%" headers="d24902e270 ">Required Fields <a class="xref" href="../Pipeline_Configuration/PipelineDesign.html#concept_dnj_bkm_vq" title="You can configure required fields for any processor and most destination stages. A required field must exist in a record to allow the record to enter the stage for processing. When a record does not include a required field, the stage passes the record to the pipeline for error handling.">
+                                    <td class="entry" valign="top" width="24.509803921568626%" headers="d24910e250 ">Description</td>
+
+                                    <td class="entry" valign="top" width="75.49019607843137%" headers="d24910e253 ">Optional description.</td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="24.509803921568626%" headers="d24910e250 ">Required Fields <a class="xref" href="../Pipeline_Configuration/PipelineDesign.html#concept_dnj_bkm_vq" title="You can configure required fields for any processor and most destination stages. A required field must exist in a record to allow the record to enter the stage for processing. When a record does not include a required field, the stage passes the record to the pipeline for error handling.">
                                             <img class="image" id="task_fty_jwx_nr__d2242e292" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
 
-                                    <td class="entry" valign="top" width="75.49019607843137%" headers="d24902e273 ">Fields that must include data to be passed to the stage.
+                                    <td class="entry" valign="top" width="75.49019607843137%" headers="d24910e253 ">Fields that must include data to be passed to the stage.
                                             <div class="note tip"><span class="tiptitle">Tip:</span> You might include fields
                                             that the stage uses.</div>
 </td>
@@ -217,9 +200,9 @@
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="24.509803921568626%" headers="d24902e270 ">On Record Error</td>
+                                    <td class="entry" valign="top" width="24.509803921568626%" headers="d24910e250 ">On Record Error</td>
 
-                                    <td class="entry" valign="top" width="75.49019607843137%" headers="d24902e273 ">Error record handling for the stage: <ul class="ul" id="task_fty_jwx_nr__d2242e307">
+                                    <td class="entry" valign="top" width="75.49019607843137%" headers="d24910e253 ">Error record handling for the stage: <ul class="ul" id="task_fty_jwx_nr__d2242e307">
                                             <li class="li">Discard - Discards the record.</li>
 
                                             <li class="li">Send to Error - Sends the record to the pipeline for
@@ -249,9 +232,9 @@
                             
                             <thead class="thead" align="left">
                                 <tr class="row">
-                                    <th class="entry" valign="top" width="25.97402597402597%" id="d24902e363">Jython Property</th>
+                                    <th class="entry" valign="top" width="25.97402597402597%" id="d24910e343">Jython Property</th>
 
-                                    <th class="entry" valign="top" width="74.02597402597402%" id="d24902e366">Description</th>
+                                    <th class="entry" valign="top" width="74.02597402597402%" id="d24910e346">Description</th>
 
                                 </tr>
 
@@ -259,9 +242,9 @@
 
                             <tbody class="tbody">
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="25.97402597402597%" headers="d24902e363 ">Record Processing Mode</td>
+                                    <td class="entry" valign="top" width="25.97402597402597%" headers="d24910e343 ">Record Processing Mode</td>
 
-                                    <td class="entry" valign="top" width="74.02597402597402%" headers="d24902e366 ">Determines how the Jython Evaluator processes data:<ul class="ul" id="task_fty_jwx_nr__ul_tzg_vzx_nr">
+                                    <td class="entry" valign="top" width="74.02597402597402%" headers="d24910e346 ">Determines how the Jython Evaluator processes data:<ul class="ul" id="task_fty_jwx_nr__ul_tzg_vzx_nr">
                                             <li class="li">Record by Record - Processes records individually.
                                                 Performs error handling.</li>
 
@@ -274,9 +257,9 @@
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="25.97402597402597%" headers="d24902e363 ">Script</td>
+                                    <td class="entry" valign="top" width="25.97402597402597%" headers="d24910e343 ">Script</td>
 
-                                    <td class="entry" valign="top" width="74.02597402597402%" headers="d24902e366 ">Jython code to use in the processor.</td>
+                                    <td class="entry" valign="top" width="74.02597402597402%" headers="d24910e346 ">Jython code to use in the processor.</td>
 
                                 </tr>
 

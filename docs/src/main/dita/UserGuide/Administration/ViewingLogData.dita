@@ -25,7 +25,7 @@
             </step>
             <step>
                 <cmd>To download the latest log file, click <uicontrol>Download</uicontrol>. To
-                    download a specific log file, click<menucascade>
+                    download a specific log file, click <menucascade>
                         <uicontrol>Download</uicontrol>
                         <uicontrol>&lt;file name></uicontrol>
                     </menucascade>.</cmd>
