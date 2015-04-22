@@ -22,7 +22,7 @@
             </step>
             <step>
                 <cmd>In the Settings dialog box, you can configure the following options:</cmd>
-                <info>
+                <info>       
                     <table frame="all" rowsep="1" colsep="1" id="table_nn5_3px_pr">
                         <tgroup cols="2">
                             <colspec colname="c1" colnum="1" colwidth="1*"/>

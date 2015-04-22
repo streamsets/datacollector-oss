@@ -43,8 +43,8 @@
           <row>
             <entry>4</entry>
             <entry>Stage library</entry>
-            <entry>List of available stages. Use to add stages to the pipeline. You can drag a stage
-              to a location on canvas or click a stage to add it to the end of the pipeline.<p>You
+            <entry><p>List of available stages. Use to add stages to the pipeline. You can drag a stage
+              to a location on canvas or click a stage to add it to the end of the pipeline.</p><p>You
                 can view all stages, stages by type, or stages by library. You can also search for a
                 stage by name.</p></entry>
           </row>

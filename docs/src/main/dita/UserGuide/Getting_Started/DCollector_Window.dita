@@ -28,8 +28,8 @@
         <stentry>When you configure a pipeline, the Properties panel displays the properties of the
           pipeline or selected stage. You can resize, minimize and maximize the panel.<p>When you
             preview data, the Preview panel displays the input and output data for the selected
-            stage or group of stages.</p>When you monitor a running pipeline, the Monitor panel
-          displays real-time metrics and statistics. <p>
+            stage or group of stages.</p><p>When you monitor a running pipeline, the Monitor panel
+            displays real-time metrics and statistics. </p><p>
             <note
               conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/Note-OptionDispay"
             />

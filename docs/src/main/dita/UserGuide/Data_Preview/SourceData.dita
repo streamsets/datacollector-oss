@@ -4,20 +4,11 @@
  <title>Source Data for Data Preview</title>
  <conbody>
   <p><indexterm>data preview<indexterm>source data</indexterm></indexterm>You can use the following
-   types of data for a data preview:<dl>
-    <dlentry>
-     <dt>Data from the origin</dt>
-     <dd>You can preview data from the origin.</dd>
-    </dlentry>
-    <dlentry>
-     <dt>Data from a snapshot</dt>
-     <dd>You can use snapshot data exported from the same pipeline or another pipeline. Snapshot
-      data provides data from the origin of the snapshot pipeline.</dd>
-    </dlentry>
-    <dlentry>
-     <dt>User-defined data</dt>
-     <dd>You can enter or paste a set of data to use for the preview.</dd>
-    </dlentry>
-   </dl></p>
+   types of data for a data preview:<ul id="ul_n5r_22k_5r">
+    <li>Data from the origin - You can preview data from the origin.</li>
+    <li>Data from a snapshot - You can use snapshot data exported from the pipeline or another
+     pipeline. Snapshot data provides data from the origin of the snapshot pipeline.</li>
+    <li>User-defined data - You can enter or paste a set of data to use for the preview.</li>
+   </ul></p>
  </conbody>
 </concept>

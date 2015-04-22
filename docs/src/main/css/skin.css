@@ -359,14 +359,14 @@ span.topic {
 }
 .related-links {
 	margin-top: 20px;
-	
 }
+
 .related-links .ullinks {
 	padding-left: 0;
-	margin: 0;
 	padding-top: 30px;
 	border-top: 1px solid #eee;	
 }
+
 .related-links .ulchildlink {
 	margin-bottom: 20px;
 }
@@ -381,6 +381,7 @@ span.topic {
 .relinfo br {
 	display: none;
 }
+
 .related_link a.navheader_parent_path {
 	font-size: 13px;
 	color: #29b4e1;
@@ -388,6 +389,7 @@ span.topic {
 .related_link a.navheader_parent_path:hover {
 	color: #0079c2;
 }
+
 .title.sectiontitle, .title.topictitle2 {
 	background: none;
 	box-shadow: none;
@@ -399,15 +401,25 @@ span.topic {
 	line-height: 1.8em;
 	margin: 0 0 10px 0;
 	padding: 0;
-
 }
+
 .title.topictitle2 {
 	font-size: 24px;
 }
+
+/* LC added word-wrap removing color #eee - didn't work. reverting. */
 .codeblock {
   background-color: #eee;
-  margin: 5px 0 8px 0
+  margin: 5px 0 5px 0;
 }
+
+/* LC this didn't work - pausing for now
+span .codeph {
+	font-family: monospace;
+	font-size:  14px !important;
+	line-height: 100% !important;
+} */
+
 .shortdesc {
   margin: 0 0 0 0;
   font-size: 13px;
@@ -421,6 +433,7 @@ span.topic {
 	padding-left: 0;
 	background-image: none!important;
 }
+
 .note {
 	font-size: 13px;
 }
@@ -447,15 +460,26 @@ span.topic {
 	padding: 7px;
 	border: 1px solid #eee;
 }
+
 tr {
 	border: 1px solid #e1e1e1;
 }
-table .ul, table .ol, table .dl {
+
+/* LC adding these .stentry items to correct spacing in simple tables*/
+.stentry .ul, .stentry .ol, .stentry .dl {
 	padding-left: 20px;
+	margin: 8px 0 0 0;
 }
-table caption {
-	margin: 15px 0 5px;
+
+.stentry .ul .li, .stentry .ol .li {
+	margin: 6px 0 0 0 !important;
 }
+
+.stentry p, .stentry .note, .stentry .tip {
+	margin: 8px 0 0 0 !important;
+}
+
+
 .tablecap {
   background: none;
   color: #003399;
@@ -464,25 +488,51 @@ table caption {
   padding: 0;
   margin: 0;
 }
+
+
 .table {
   background: none;
-  margin: 0;
-  padding: 0;
+  margin: 15px 0;
+  padding: 0;	
+  clear: both;
+  float: none;
 }
+
 th, th.entry {
   background: #e6e6e6;
   border: 1px solid #bbb;
   padding: 7px;
 }
+
 td.entry {
   background: none;
   padding: 7px;
   border: 1px solid #bcbcbc;
   border-top: none;
 }
+
 td p, td .p {
 	margin: 0;
 }
+
+/* LC adding these .entry items for non-simple tables*/
+.entry .ul, .entry .ol, .entry .dl {
+	padding-left: 20px;
+	margin: 8px 0 0 0;
+}
+
+.entry .ul .li, .entry .ol .li {
+	margin: 6px 0 0 0 !important;
+}
+
+.entry p, .entry .note, .entry .tip {
+	margin: 8px 0 0 0 !important;
+}
+
+table caption {
+	margin: 15px 0 5px;
+}
+
 table .pre {
 	background: none;
 	padding: 0;
@@ -555,7 +605,7 @@ dl, .dl {
   font-size: 13px;
   font-variant: normal;
   margin: 10px 0 0 0;
-  padding-left: 26px;
+  padding-left: 30px;
 }
 
 .dd p {
@@ -603,9 +653,15 @@ div.footer, .footer_separator {
 	margin-bottom: 10px;
 }
 /* LC adding .info .ul .li */
-.stepresult, .stepresult p, .info, .info p, .info .ul .li {
+.stepresult, .stepresult p, .info, .info p, 
+.info .ul .li, .info .ol .li {
 	margin: 10px 0 0 0;
 	font-size: 13px;
+}
+
+.info .codeblock {
+	margin: 4px 0 0 0;
+
 }
 
 .q {
@@ -853,8 +909,9 @@ span.uicontrol {
   font-size: 13px;
 }
 span.wintitle {
-  font-style: normal;
+  font-weight: bold;
 }
+
 #undefined undefined {
   border-top-color: rgb(188, 188, 188);
   border-bottom-color: rgb(188, 188, 188);
