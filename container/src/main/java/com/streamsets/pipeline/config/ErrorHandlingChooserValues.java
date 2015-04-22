@@ -22,8 +22,7 @@ public class ErrorHandlingChooserValues implements ChooserValues {
         if (value) {
           list.add(def.getLibrary() + "::" + def.getName() + "::" + def.getVersion());
         } else {
-          //TODO: we'll need to localize 'Library' here
-          list.add(def.getErrorStageLabel() + " (Library: " + def.getLibraryLabel() + ")");
+          list.add(def.getLabel() + " (Library: " + def.getLibraryLabel() + ")");
         }
       }
     }

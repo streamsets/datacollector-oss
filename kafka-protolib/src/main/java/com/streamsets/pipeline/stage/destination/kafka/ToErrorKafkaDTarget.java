@@ -15,10 +15,10 @@ import com.streamsets.pipeline.config.DataFormat;
 
 @StageDef(
     version = "1.0.0",
-    label = "SDC Records Kafka Producer",
-    description = "Writes data to Kafka using SDC Record format",
-    icon = "kafka.png")
-@ErrorStage(label = "Write to Kafka")
+    label = "Write to Kafka",
+    description = "Writes records to Kafka as SDC Records",
+    icon = "")
+@ErrorStage
 @HideConfig(requiredFields = true, onErrorRecord = true, value = {"dataFormat", "charset"})
 @GenerateResourceBundle
 public class ToErrorKafkaDTarget extends KafkaDTarget {

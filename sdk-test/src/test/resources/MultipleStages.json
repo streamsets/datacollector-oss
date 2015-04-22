@@ -6,8 +6,6 @@
   "description" : "Produces twitter feeds",
   "type" : "SOURCE",
   "errorStage" : false,
-  "errorStageLabel" : null,
-  "errorStageDescription" : null,
   "requiredFields" : false,
   "onRecordError" : true,
   "configDefinitions" : [ {
@@ -107,8 +105,6 @@
   "description" : "processes twitter feeds",
   "type" : "PROCESSOR",
   "errorStage" : false,
-  "errorStageLabel" : null,
-  "errorStageDescription" : null,
   "requiredFields" : true,
   "onRecordError" : true,
   "configDefinitions" : [ {
@@ -189,8 +185,6 @@
   "description" : "processes twitter feeds",
   "type" : "PROCESSOR",
   "errorStage" : false,
-  "errorStageLabel" : null,
-  "errorStageDescription" : null,
   "requiredFields" : true,
   "onRecordError" : true,
   "configDefinitions" : [ {
@@ -233,8 +227,6 @@
   "description" : "Consumes twitter feeds",
   "type" : "TARGET",
   "errorStage" : false,
-  "errorStageLabel" : null,
-  "errorStageDescription" : null,
   "requiredFields" : true,
   "onRecordError" : true,
   "configDefinitions" : [ {

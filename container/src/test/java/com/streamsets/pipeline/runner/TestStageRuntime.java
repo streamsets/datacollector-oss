@@ -135,11 +135,11 @@ public class TestStageRuntime {
       ImmutableList.of("com.streamsets.pipeline.lib.el.StringEL"), ConfigDef.Evaluation.IMPLICIT, null);
     configDefs.add(configDef);
     StageDefinition sourceDef = new StageDefinition(
-      TSource.class.getName(), "source", "1.0.0", "label", "description", StageType.SOURCE, false, null, null, true,
+      TSource.class.getName(), "source", "1.0.0", "label", "description", StageType.SOURCE, false, true,
       true, configDefs, null/*raw source definition*/,"", null, false, 1, null);
     sourceDef.setLibrary("library", "", Thread.currentThread().getContextClassLoader());
     StageDefinition targetDef = new StageDefinition(
-      TTarget.class.getName(), "target", "1.0.0", "label", "description", StageType.TARGET, false, null, null, true,
+      TTarget.class.getName(), "target", "1.0.0", "label", "description", StageType.TARGET, false, true,
       true, Collections.<ConfigDefinition>emptyList(), null/*raw source definition*/,"", null, false, 0, null);
     targetDef.setLibrary("library", "", Thread.currentThread().getContextClassLoader());
     Mockito.when(lib.getStage(Mockito.eq("library"), Mockito.eq("source"), Mockito.eq("1.0.0"))).thenReturn(sourceDef);

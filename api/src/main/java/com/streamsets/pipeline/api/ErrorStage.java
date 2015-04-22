@@ -10,6 +10,4 @@ import java.lang.annotation.*;
 @Retention(RetentionPolicy.RUNTIME)
 @java.lang.annotation.Target(ElementType.TYPE)
 public @interface ErrorStage {
-  String label() default "";
-  String description() default "";
 }

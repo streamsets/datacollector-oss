@@ -222,16 +222,6 @@ public class PipelineAnnotationsProcessor extends AbstractProcessor {
 
     ErrorStage errorStage = typeElement.getAnnotation(ErrorStage.class);
     boolean isErrorStage = errorStage != null;
-    String errorStageLabel = stageDefAnnotation.label();
-    String errorStageDescription = stageDefAnnotation.description();
-    if (isErrorStage) {
-      if (!errorStage.label().isEmpty()) {
-        errorStageLabel = errorStage.label();
-      }
-      if (!errorStage.description().isEmpty()) {
-        errorStageDescription = errorStage.description();
-      }
-    }
     //Process all fields with ConfigDef annotation
     List< ConfigDefinition> configDefinitions = getConfigDefsFromTypeElement(typeElement);
 
@@ -262,8 +252,6 @@ public class PipelineAnnotationsProcessor extends AbstractProcessor {
           stageDefAnnotation.description(),
           stageType,
           isErrorStage,
-          errorStageLabel,
-          errorStageDescription,
           requiredFields,
           onRecordError,
           configDefinitions,

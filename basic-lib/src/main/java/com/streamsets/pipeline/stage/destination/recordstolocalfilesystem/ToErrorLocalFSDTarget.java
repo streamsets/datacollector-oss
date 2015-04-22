@@ -17,15 +17,15 @@ import com.streamsets.pipeline.lib.el.TimeEL;
 
 @StageDef(
     version = "1.0.0",
-    label = "SDC Record Files",
-    description = "Writes records to the local File System using 'SDC Record (JSON)' format",
-    icon="localfilesystem.png"
+    label = "Write To File",
+    description = "Writes records to a local File System as SDC records",
+    icon=""
 )
 @HideConfig(requiredFields = true, onErrorRecord = true)
-@ErrorStage(label = "Write to File")
+@ErrorStage
 @ConfigGroups(Groups.class)
 @GenerateResourceBundle
-public class RecordsToLocalFileSystemDTarget extends DTarget {
+public class ToErrorLocalFSDTarget extends DTarget {
 
   @ConfigDef(
       required = true,

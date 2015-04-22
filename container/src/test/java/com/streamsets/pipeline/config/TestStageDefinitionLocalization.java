@@ -44,8 +44,7 @@ public class TestStageDefinitionLocalization {
         (List)ImmutableList.of(ImmutableMap.of("label", "Group", "name", "GROUP"))
     );
     StageDefinition def = new StageDefinition(TProcessor.class.getName(), "stage", "1.0.0", "StageLabel",
-                                              "StageDescription", StageType.PROCESSOR, true, "ErrorStageLabel",
-                                              "ErrorStageDescription", true, true, configs,
+                                              "StageDescription", StageType.PROCESSOR, true, true, true, configs,
                                               rawSource, "", configGroup, false, 1,
                                               TOutput.class.getName());
     def.setLibrary("lib", "LIB", getClass().getClassLoader());
@@ -61,8 +60,7 @@ public class TestStageDefinitionLocalization {
     Assert.assertEquals(expected.get("stageDescription"), def.getDescription());
 
     //error stage
-    Assert.assertEquals(expected.get("errorStageLabel"), def.getErrorStageLabel());
-    Assert.assertEquals(expected.get("errorStageDescription"), def.getErrorStageDescription());
+    Assert.assertTrue(def.isErrorStage());
 
     //stage groups
     Assert.assertEquals(expected.get("stageGroup"), def.getConfigGroupDefinition().getGroupNameToLabelMapList().get(0).get(

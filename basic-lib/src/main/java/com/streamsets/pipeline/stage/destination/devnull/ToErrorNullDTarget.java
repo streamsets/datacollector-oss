@@ -14,16 +14,12 @@ import com.streamsets.pipeline.configurablestage.DTarget;
 
 @StageDef(
     version = "1.0.0",
-    label = "Trash",
+    label = "Discard",
     description = "Discards records",
-    icon="trash.png"
+    icon=""
 )
 @HideConfig(requiredFields = true, onErrorRecord = true)
+@ErrorStage
 @GenerateResourceBundle
-public class NullDTarget extends DTarget {
-
-  @Override
-  protected Target createTarget() {
-    return new NullTarget();
-  }
+public class ToErrorNullDTarget extends NullDTarget {
 }
