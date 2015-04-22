@@ -561,7 +561,7 @@ angular
         });
 
         $scope.targets = _.filter($scope.stageLibraries, function (stageLibrary) {
-          return (stageLibrary.type === pipelineConstant.TARGET_STAGE_TYPE);
+          return (stageLibrary.type === pipelineConstant.TARGET_STAGE_TYPE && !stageLibrary.errorStage);
         });
 
         //Pipelines
