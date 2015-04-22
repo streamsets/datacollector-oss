@@ -7,7 +7,7 @@
 // StreamSets Data Collector Policy File
 
 // StreamSets code base:
-grant codebase "file://${sdc.dist.dir}/bin/*" {
+grant codebase "file://${sdc.dist.dir}/libexec/bootstrap-libs/-" {
   permission java.security.AllPermission;
 };
 grant codebase "file://${sdc.dist.dir}/api-lib/*" {

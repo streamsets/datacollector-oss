@@ -114,12 +114,6 @@
       <outputDirectory>/docs/api</outputDirectory>
     </fileSet>
 
-    <!-- Create an empty streamsets-libs -->
-    <fileSet>
-      <directory>${basedir}/src/main/emptydir</directory>
-      <outputDirectory>/bootstrap-libs</outputDirectory>
-    </fileSet>
-
     <!-- Create an empty user-libs -->
     <fileSet>
       <directory>${basedir}/src/main/emptydir</directory>
