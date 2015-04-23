@@ -5,7 +5,6 @@
  */
 package com.streamsets.pipeline.stage.processor.identity;
 
-import com.google.common.collect.ImmutableList;
 import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
@@ -14,6 +13,8 @@ import com.streamsets.pipeline.sdk.RecordCreator;
 import com.streamsets.pipeline.sdk.StageRunner;
 import org.junit.Assert;
 import org.junit.Test;
+
+import java.util.Arrays;
 
 public class TestIdentityProcessor {
 
@@ -25,7 +26,7 @@ public class TestIdentityProcessor {
     try {
       Record record = RecordCreator.create();
       record.set(Field.create(true));
-      StageRunner.Output output = runner.runProcess(ImmutableList.of(record));
+      StageRunner.Output output = runner.runProcess(Arrays.asList(record));
       Assert.assertEquals(1, output.getRecords().get("a").size());
       Assert.assertEquals(true, output.getRecords().get("a").get(0).get().getValueAsBoolean());
     } finally {

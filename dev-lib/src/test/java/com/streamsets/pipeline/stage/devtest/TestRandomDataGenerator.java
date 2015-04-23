@@ -5,7 +5,6 @@
  */
 package com.streamsets.pipeline.stage.devtest;
 
-import com.google.common.collect.ImmutableList;
 import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
@@ -14,6 +13,7 @@ import com.streamsets.pipeline.sdk.StageRunner;
 import org.junit.Assert;
 import org.junit.Test;
 
+import java.util.Arrays;
 import java.util.List;
 
 public class TestRandomDataGenerator {
@@ -43,7 +43,7 @@ public class TestRandomDataGenerator {
 
 
     SourceRunner runner = new SourceRunner.Builder(RandomDataGenerator.class)
-      .addConfiguration("dataGenConfigs", ImmutableList.of(stringData, dateData, doubleData, longData, intData))
+      .addConfiguration("dataGenConfigs", Arrays.asList(stringData, dateData, doubleData, longData, intData))
       .addOutputLane("a")
       .build();
     runner.runInit();
