@@ -6,16 +6,16 @@
 package com.streamsets.pipeline.lib.generator.sdcrecord;
 
 import com.streamsets.pipeline.api.Record;
-import com.streamsets.pipeline.api.ext.JsonRecordWriter;
+import com.streamsets.pipeline.api.ext.RecordWriter;
 import com.streamsets.pipeline.lib.generator.DataGenerator;
 
 import java.io.IOException;
 
-public class JsonSdcRecordDataGenerator implements DataGenerator {
+public class SdcRecordDataGenerator implements DataGenerator {
 
-  private final JsonRecordWriter writer;
+  private final RecordWriter writer;
 
-  public JsonSdcRecordDataGenerator(JsonRecordWriter writer)
+  public SdcRecordDataGenerator(RecordWriter writer)
       throws IOException {
     this.writer = writer;
   }

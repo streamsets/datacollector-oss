@@ -6,14 +6,14 @@
 package com.streamsets.pipeline.api.ext;
 
 import java.io.IOException;
-import java.io.Reader;
-import java.io.Writer;
+import java.io.InputStream;
+import java.io.OutputStream;
 
 public interface ContextExtensions {
 
-  public JsonRecordReader createJsonRecordReader(Reader reader, long initialPosition, int maxObjectLen)
+  public RecordReader createRecordReader(InputStream inputStream, long initialPosition, int maxObjectLen)
       throws IOException;
 
-  public JsonRecordWriter createJsonRecordWriter(Writer writer) throws IOException;
+  public  RecordWriter createRecordWriter(OutputStream outputStream) throws IOException;
 
 }

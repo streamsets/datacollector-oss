@@ -9,7 +9,7 @@ import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.OnRecordError;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.ext.ContextExtensions;
-import com.streamsets.pipeline.api.ext.JsonRecordWriter;
+import com.streamsets.pipeline.api.ext.RecordWriter;
 import com.streamsets.pipeline.lib.json.StreamingJsonParser;
 import com.streamsets.pipeline.sdk.ContextInfoCreator;
 import com.streamsets.pipeline.sdk.RecordCreator;
@@ -29,6 +29,7 @@ import org.apache.commons.csv.CSVPrinter;
 import org.apache.commons.io.IOUtils;
 
 import java.io.BufferedReader;
+import java.io.ByteArrayOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.StringWriter;
@@ -201,11 +202,11 @@ public class KafkaTestUtil {
     ContextExtensions ctx = (ContextExtensions) ContextInfoCreator.createTargetContext("", false, OnRecordError.TO_ERROR);
     List<KeyedMessage<String, String>> messages = new ArrayList<>();
     for (Record record : produce20Records()) {
-      StringWriter writer = new StringWriter();
-      JsonRecordWriter rw = ctx.createJsonRecordWriter(writer);
+      ByteArrayOutputStream baos = new ByteArrayOutputStream();
+      RecordWriter rw = ctx.createRecordWriter(baos);
       rw.write(record);
       rw.close();
-      messages.add(new KeyedMessage<>(topic, partition, writer.toString()));
+      messages.add(new KeyedMessage<>(topic, partition, baos.toString()));
     }
     return messages;
   }

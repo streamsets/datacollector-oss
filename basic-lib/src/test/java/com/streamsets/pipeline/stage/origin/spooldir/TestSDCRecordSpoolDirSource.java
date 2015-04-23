@@ -12,10 +12,9 @@ import com.streamsets.pipeline.api.OnRecordError;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.Source;
 import com.streamsets.pipeline.api.ext.ContextExtensions;
-import com.streamsets.pipeline.api.ext.JsonRecordWriter;
+import com.streamsets.pipeline.api.ext.RecordWriter;
 import com.streamsets.pipeline.config.DataFormat;
 import com.streamsets.pipeline.config.OnParseError;
-import com.streamsets.pipeline.lib.common.SdcRecordDataFactoryUtil;
 import com.streamsets.pipeline.sdk.ContextInfoCreator;
 import com.streamsets.pipeline.sdk.RecordCreator;
 import com.streamsets.pipeline.sdk.SourceRunner;
@@ -25,7 +24,6 @@ import org.junit.Test;
 
 import java.io.File;
 import java.io.FileOutputStream;
-import java.io.OutputStreamWriter;
 import java.util.List;
 import java.util.UUID;
 
@@ -43,9 +41,7 @@ public class TestSDCRecordSpoolDirSource {
       ImmutableList.of("lane"));
 
     FileOutputStream fileOutputStream = new FileOutputStream(f);
-    SdcRecordDataFactoryUtil.writeHeader(fileOutputStream);
-    JsonRecordWriter jsonRecordWriter = ((ContextExtensions) sourceContext).createJsonRecordWriter(
-      new OutputStreamWriter(fileOutputStream));
+    RecordWriter jsonRecordWriter = ((ContextExtensions) sourceContext).createRecordWriter(fileOutputStream);
 
     Record r = RecordCreator.create("s", "c::1");
     r.set(Field.create("Hello"));

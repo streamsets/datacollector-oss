@@ -10,28 +10,28 @@ import com.streamsets.pipeline.api.OnRecordError;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.ext.ContextExtensions;
-import com.streamsets.pipeline.api.ext.JsonRecordWriter;
-import com.streamsets.pipeline.lib.io.OverrunReader;
+import com.streamsets.pipeline.api.ext.RecordWriter;
 import com.streamsets.pipeline.lib.parser.DataParser;
 import com.streamsets.pipeline.sdk.ContextInfoCreator;
 import com.streamsets.pipeline.sdk.RecordCreator;
 import org.junit.Assert;
 import org.junit.Test;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.io.StringReader;
-import java.io.StringWriter;
+import java.io.InputStream;
 import java.util.Collections;
 
-public class TestJsonSdcRecordDataParser {
+public class TestSdcRecordDataParser {
 
   private Stage.Context getContext() {
     return ContextInfoCreator.createSourceContext("i", false, OnRecordError.TO_ERROR, Collections.EMPTY_LIST);
   }
 
-  private String createJsonSdcRecordsString() throws Exception {
-    StringWriter writer = new StringWriter();
-    JsonRecordWriter recordWriter = ((ContextExtensions)getContext()).createJsonRecordWriter(writer);
+  private byte[] createJsonSdcRecordsBytes() throws Exception {
+    ByteArrayOutputStream writer = new ByteArrayOutputStream();
+    RecordWriter recordWriter = ((ContextExtensions)getContext()).createRecordWriter(writer);
     Record record = RecordCreator.create();
     record.set(Field.create("Hello"));
     recordWriter.write(record);
@@ -39,13 +39,14 @@ public class TestJsonSdcRecordDataParser {
     record.set(Field.create("Bye"));
     recordWriter.write(record);
     recordWriter.close();
-    return writer.toString();
+    return writer.toByteArray();
   }
 
   @Test
   public void testParse() throws Exception {
-    OverrunReader reader = new OverrunReader(new StringReader(createJsonSdcRecordsString()), 1000, true);
-    DataParser parser = new JsonSdcRecordDataParser(getContext(), reader, 0, 100);
+    byte[] data = createJsonSdcRecordsBytes();
+    InputStream reader = new ByteArrayInputStream(data);
+    DataParser parser = new SdcRecordDataParser(getContext(), reader, 0, 100);
     Assert.assertEquals(0, parser.getOffset());
     Record record = parser.parse();
     Assert.assertNotNull(record);
@@ -64,11 +65,11 @@ public class TestJsonSdcRecordDataParser {
 
   @Test
   public void testParseWithOffset() throws Exception {
-    String payload = createJsonSdcRecordsString();
+    byte[] data = createJsonSdcRecordsBytes();
+    InputStream reader = new ByteArrayInputStream(data);
 
     // find out offset of second record first
-    OverrunReader reader = new OverrunReader(new StringReader(payload), 1000, true);
-    DataParser parser = new JsonSdcRecordDataParser(getContext(), reader, 0, 100);
+    DataParser parser = new SdcRecordDataParser(getContext(), reader, 0, 100);
     Assert.assertEquals(0, parser.getOffset());
     Record record = parser.parse();
     Assert.assertNotNull(record);
@@ -76,8 +77,8 @@ public class TestJsonSdcRecordDataParser {
     long offset = parser.getOffset();
     parser.close();
 
-    reader = new OverrunReader(new StringReader(payload), 1000, true);
-    parser = new JsonSdcRecordDataParser(getContext(), reader, offset, 100);
+    reader = new ByteArrayInputStream(data);
+    parser = new SdcRecordDataParser(getContext(), reader, offset, 100);
     Assert.assertEquals(offset, parser.getOffset());
     record = parser.parse();
     Assert.assertNotNull(record);
@@ -91,8 +92,8 @@ public class TestJsonSdcRecordDataParser {
 
   @Test(expected = IOException.class)
   public void testClose() throws Exception {
-    OverrunReader reader = new OverrunReader(new StringReader(createJsonSdcRecordsString()), 1000, true);
-    DataParser parser = new JsonSdcRecordDataParser(getContext(), reader, 0, 100);
+    InputStream reader = new ByteArrayInputStream(createJsonSdcRecordsBytes());
+    DataParser parser = new SdcRecordDataParser(getContext(), reader, 0, 100);
     parser.close();
     parser.parse();
   }

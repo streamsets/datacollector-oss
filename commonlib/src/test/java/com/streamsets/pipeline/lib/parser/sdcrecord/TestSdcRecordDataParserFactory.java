@@ -10,8 +10,7 @@ import com.streamsets.pipeline.api.OnRecordError;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.ext.ContextExtensions;
-import com.streamsets.pipeline.api.ext.JsonRecordWriter;
-import com.streamsets.pipeline.lib.common.SdcRecordDataFactoryUtil;
+import com.streamsets.pipeline.api.ext.RecordWriter;
 import com.streamsets.pipeline.lib.data.DataFactory;
 import com.streamsets.pipeline.lib.parser.DataParser;
 import com.streamsets.pipeline.lib.parser.DataParserException;
@@ -25,7 +24,6 @@ import org.junit.Test;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
-import java.io.OutputStreamWriter;
 import java.util.Collections;
 
 public class TestSdcRecordDataParserFactory {
@@ -36,9 +34,7 @@ public class TestSdcRecordDataParserFactory {
 
   private byte[] createJsonSdcRecordsString() throws Exception {
     ByteArrayOutputStream baos = new ByteArrayOutputStream();
-    SdcRecordDataFactoryUtil.writeHeader(baos);
-    JsonRecordWriter recordWriter = ((ContextExtensions)getContext()).createJsonRecordWriter(
-      new OutputStreamWriter(baos));
+    RecordWriter recordWriter = ((ContextExtensions)getContext()).createRecordWriter(baos);
     Record record = RecordCreator.create();
     record.set(Field.create("Hello"));
     recordWriter.write(record);
@@ -52,8 +48,7 @@ public class TestSdcRecordDataParserFactory {
   private byte[] createJsonSdcRecordsStringWrongFormat() throws Exception {
     ByteArrayOutputStream baos = new ByteArrayOutputStream();
     baos.write(new byte[] {0,0,0,4});
-    JsonRecordWriter recordWriter = ((ContextExtensions)getContext()).createJsonRecordWriter(
-      new OutputStreamWriter(baos));
+    RecordWriter recordWriter = ((ContextExtensions)getContext()).createRecordWriter(baos);
     Record record = RecordCreator.create();
     record.set(Field.create("Hello"));
     recordWriter.write(record);

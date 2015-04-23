@@ -9,12 +9,11 @@ import com.streamsets.pipeline.api.OnRecordError;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.ext.ContextExtensions;
-import com.streamsets.pipeline.api.ext.JsonRecordReader;
+import com.streamsets.pipeline.api.ext.RecordReader;
 import com.streamsets.pipeline.config.CsvHeader;
 import com.streamsets.pipeline.config.CsvMode;
 import com.streamsets.pipeline.config.DataFormat;
 import com.streamsets.pipeline.lib.KafkaTestUtil;
-import com.streamsets.pipeline.lib.common.SdcRecordDataFactoryUtil;
 import com.streamsets.pipeline.sdk.ContextInfoCreator;
 import com.streamsets.pipeline.sdk.TargetRunner;
 import kafka.admin.AdminUtils;
@@ -35,7 +34,6 @@ import org.junit.Test;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -353,8 +351,7 @@ public class TestKafkaTargetSinglePartition {
     ContextExtensions ctx = (ContextExtensions) ContextInfoCreator.createTargetContext("", false, OnRecordError.TO_ERROR);
     for(int i = 0; i < logRecords.size(); i++) {
       ByteArrayInputStream bais = new ByteArrayInputStream(messages.get(i));
-      byte[] bytes = SdcRecordDataFactoryUtil.readHeader(bais);
-      JsonRecordReader rr = ctx.createJsonRecordReader(new InputStreamReader(bais), 0, Integer.MAX_VALUE);
+      RecordReader rr = ctx.createRecordReader(bais, 0, Integer.MAX_VALUE);
       Assert.assertEquals(logRecords.get(i), rr.readRecord());
       rr.close();
     }

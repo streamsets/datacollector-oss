@@ -8,20 +8,20 @@ package com.streamsets.pipeline.lib.parser.sdcrecord;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.ext.ContextExtensions;
-import com.streamsets.pipeline.api.ext.JsonRecordReader;
-import com.streamsets.pipeline.lib.io.OverrunReader;
+import com.streamsets.pipeline.api.ext.RecordReader;
 import com.streamsets.pipeline.lib.parser.DataParser;
 import com.streamsets.pipeline.lib.parser.DataParserException;
 
 import java.io.IOException;
+import java.io.InputStream;
 
-public class JsonSdcRecordDataParser implements DataParser {
-  private final JsonRecordReader recordReader;
+public class SdcRecordDataParser implements DataParser {
+  private final RecordReader recordReader;
   private boolean eof;
 
-  public JsonSdcRecordDataParser(Stage.Context context, OverrunReader reader, long readerOffset, int maxObjectLen)
+  public SdcRecordDataParser(Stage.Context context, InputStream inputStream, long readerOffset, int maxObjectLen)
       throws IOException {
-    recordReader = ((ContextExtensions)context).createJsonRecordReader(reader, readerOffset, maxObjectLen);
+    recordReader = ((ContextExtensions)context).createRecordReader(inputStream, readerOffset, maxObjectLen);
   }
 
   @Override

@@ -10,7 +10,7 @@ import com.streamsets.pipeline.api.OnRecordError;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.ext.ContextExtensions;
-import com.streamsets.pipeline.api.ext.JsonRecordReader;
+import com.streamsets.pipeline.api.ext.RecordReader;
 import com.streamsets.pipeline.lib.data.DataFactory;
 import com.streamsets.pipeline.lib.generator.DataGenerator;
 import com.streamsets.pipeline.lib.generator.DataGeneratorFactoryBuilder;
@@ -20,15 +20,14 @@ import com.streamsets.pipeline.sdk.RecordCreator;
 import org.junit.Assert;
 import org.junit.Test;
 
+import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
-import java.io.StringReader;
-import java.io.StringWriter;
 import java.io.Writer;
 import java.nio.charset.Charset;
 
-public class TestJsonSdcRecordDataGenerator {
+public class TestSdcRecordDataGenerator {
 
   private ContextExtensions getContextExtensions() {
     return(ContextExtensions) ContextInfoCreator.createTargetContext("i", false, OnRecordError.TO_ERROR);
@@ -42,7 +41,7 @@ public class TestJsonSdcRecordDataGenerator {
       .setCharset(Charset.forName("UTF-16")).build();
     Assert.assertTrue(dataFactory instanceof SdcRecordDataGeneratorFactory);
     SdcRecordDataGeneratorFactory factory = (SdcRecordDataGeneratorFactory) dataFactory;
-    JsonSdcRecordDataGenerator generator = (JsonSdcRecordDataGenerator) factory.getGenerator(new ByteArrayOutputStream());
+    SdcRecordDataGenerator generator = (SdcRecordDataGenerator) factory.getGenerator(new ByteArrayOutputStream());
     Assert.assertNotNull(generator);
 
     Writer writer = factory.createWriter(new ByteArrayOutputStream());
@@ -53,13 +52,14 @@ public class TestJsonSdcRecordDataGenerator {
 
   @Test
   public void testGenerate() throws Exception {
-    StringWriter writer = new StringWriter();
-    DataGenerator gen = new JsonSdcRecordDataGenerator(getContextExtensions().createJsonRecordWriter(writer));
+    ByteArrayOutputStream writer = new ByteArrayOutputStream();
+    DataGenerator gen = new SdcRecordDataGenerator(getContextExtensions().createRecordWriter(writer));
     Record record = RecordCreator.create();
     record.set(Field.create("Hello"));
     gen.write(record);
     gen.close();
-    JsonRecordReader reader = getContextExtensions().createJsonRecordReader(new StringReader(writer.toString()), 0, -1);
+    RecordReader reader = getContextExtensions().createRecordReader(new ByteArrayInputStream(writer.toByteArray()), 0,
+                                                                    -1);
     Record readRecord = reader.readRecord();
     Assert.assertNotNull(readRecord);
     Assert.assertNull(reader.readRecord());
@@ -68,8 +68,8 @@ public class TestJsonSdcRecordDataGenerator {
 
   @Test
   public void testClose() throws Exception {
-    StringWriter writer = new StringWriter();
-    DataGenerator gen = new JsonSdcRecordDataGenerator(getContextExtensions().createJsonRecordWriter(writer));
+    ByteArrayOutputStream writer = new ByteArrayOutputStream();
+    DataGenerator gen = new SdcRecordDataGenerator(getContextExtensions().createRecordWriter(writer));
     Record record = RecordCreator.create();
     record.set(Field.create("Hello"));
     gen.write(record);
@@ -79,8 +79,8 @@ public class TestJsonSdcRecordDataGenerator {
 
   @Test(expected = IOException.class)
   public void testWriteAfterClose() throws Exception {
-    StringWriter writer = new StringWriter();
-    DataGenerator gen = new JsonSdcRecordDataGenerator(getContextExtensions().createJsonRecordWriter(writer));
+    ByteArrayOutputStream writer = new ByteArrayOutputStream();
+    DataGenerator gen = new SdcRecordDataGenerator(getContextExtensions().createRecordWriter(writer));
     Record record = RecordCreator.create();
     record.set(Field.create("Hello"));
     gen.close();
@@ -89,8 +89,8 @@ public class TestJsonSdcRecordDataGenerator {
 
   @Test(expected = IOException.class)
   public void testFlushAfterClose() throws Exception {
-    StringWriter writer = new StringWriter();
-    DataGenerator gen = new JsonSdcRecordDataGenerator(getContextExtensions().createJsonRecordWriter(writer));
+    ByteArrayOutputStream writer = new ByteArrayOutputStream();
+    DataGenerator gen = new SdcRecordDataGenerator(getContextExtensions().createRecordWriter(writer));
     Record record = RecordCreator.create();
     record.set(Field.create("Hello"));
     gen.close();

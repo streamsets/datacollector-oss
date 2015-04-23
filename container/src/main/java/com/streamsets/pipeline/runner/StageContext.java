@@ -9,8 +9,6 @@ import com.codahale.metrics.Counter;
 import com.codahale.metrics.Meter;
 import com.codahale.metrics.MetricRegistry;
 import com.codahale.metrics.Timer;
-import com.fasterxml.jackson.core.JsonGenerator;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableList;
 import com.streamsets.pipeline.api.ErrorCode;
@@ -25,29 +23,24 @@ import com.streamsets.pipeline.api.el.ELEval;
 import com.streamsets.pipeline.api.el.ELEvalException;
 import com.streamsets.pipeline.api.el.ELVars;
 import com.streamsets.pipeline.api.ext.ContextExtensions;
-import com.streamsets.pipeline.api.ext.JsonRecordReader;
-import com.streamsets.pipeline.api.ext.JsonRecordWriter;
+import com.streamsets.pipeline.api.ext.RecordReader;
+import com.streamsets.pipeline.api.ext.RecordWriter;
 import com.streamsets.pipeline.api.impl.ErrorMessage;
 import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.config.ConfigDefinition;
 import com.streamsets.pipeline.config.StageType;
 import com.streamsets.pipeline.el.ELEvaluator;
 import com.streamsets.pipeline.el.ELVariables;
-import com.streamsets.pipeline.json.ObjectMapperFactory;
-import com.streamsets.pipeline.lib.io.CountingReader;
-import com.streamsets.pipeline.lib.json.OverrunStreamingJsonParser;
-import com.streamsets.pipeline.lib.json.StreamingJsonParser;
 import com.streamsets.pipeline.metrics.MetricsConfigurator;
 import com.streamsets.pipeline.record.RecordImpl;
-import com.streamsets.pipeline.restapi.bean.BeanHelper;
-import com.streamsets.pipeline.restapi.bean.RecordJson;
+import com.streamsets.pipeline.record.io.RecordWriterReaderFactory;
 import com.streamsets.pipeline.util.ContainerError;
 import com.streamsets.pipeline.util.ElUtil;
 import com.streamsets.pipeline.validation.StageIssue;
 
 import java.io.IOException;
-import java.io.Reader;
-import java.io.Writer;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -131,79 +124,15 @@ public class StageContext implements Source.Context, Target.Context, Processor.C
     return new ConfigIssueImpl(instanceName, configGroup, configName, errorCode, args);
   }
 
-  private static class RecordJsonReaderImpl extends OverrunStreamingJsonParser implements JsonRecordReader {
-    public RecordJsonReaderImpl(Reader reader, long initialPosition, int maxObjectLen) throws
-        IOException {
-      super(new CountingReader(reader), initialPosition, StreamingJsonParser.Mode.MULTIPLE_OBJECTS, maxObjectLen);
-    }
-    @Override
-    protected ObjectMapper getObjectMapper() {
-      return ObjectMapperFactory.get();
-    }
-
-    @Override
-    protected Class<?> getExpectedClass() {
-      return RecordJson.class;
-    }
-
-    @Override
-    public long getPosition() {
-      return getReaderPosition();
-    }
-
-    @Override
-    public Record readRecord() throws IOException {
-      RecordJson recordJson = (RecordJson) read();
-      return BeanHelper.unwrapRecord(recordJson);
-    }
-  }
-
-  private static class JsonRecordWriterImpl implements JsonRecordWriter {
-    private final Writer writer;
-    private final JsonGenerator generator;
-    private boolean closed;
-
-    public JsonRecordWriterImpl(Writer writer) throws IOException {
-      this.writer = writer;
-      generator = ObjectMapperFactory.getOneLine().getFactory().createGenerator(writer);
-    }
-
-    @Override
-    public void write(Record record) throws IOException {
-      if (closed) {
-        throw new IOException("writer has been closed");
-      }
-      generator.writeObject(BeanHelper.wrapRecord(record));
-    }
-
-    @Override
-    public void flush() throws IOException {
-      if (closed) {
-        throw new IOException("writer has been closed");
-      }
-      writer.flush();
-    }
-
-    @Override
-    public void close() {
-      closed = true;
-      try {
-        writer.close();
-      } catch (IOException ex) {
-        //NOP
-      }
-    }
+  @Override
+  public RecordReader createRecordReader(InputStream inputStream, long initialPosition, int maxObjectLen)
+      throws IOException {
+    return RecordWriterReaderFactory.createRecordReader(inputStream, initialPosition, maxObjectLen);
   }
 
   @Override
-  public JsonRecordReader createJsonRecordReader(Reader reader, long initialPosition,
-      int maxObjectLen) throws IOException {
-    return new RecordJsonReaderImpl(reader, initialPosition, maxObjectLen);
-  }
-
-  @Override
-  public JsonRecordWriter createJsonRecordWriter(Writer writer) throws IOException {
-    return new JsonRecordWriterImpl(writer);
+  public RecordWriter createRecordWriter(OutputStream outputStream) throws IOException {
+    return RecordWriterReaderFactory.createRecordWriter(RecordWriterReaderFactory.MAGIC_NUMBER_JSON, outputStream);
   }
 
   @Override

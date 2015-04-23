@@ -10,12 +10,12 @@ import com.streamsets.pipeline.api.Record;
 import java.io.Closeable;
 import java.io.IOException;
 
-public interface JsonRecordWriter extends Closeable {
+public interface RecordReader extends Closeable {
 
-  public void write(Record record) throws IOException;
+  public long getPosition();
 
-  public void flush() throws IOException;
+  public Record readRecord() throws IOException;
 
-  public void close();
+  public void close() throws IOException;
 
 }
