@@ -8,7 +8,8 @@
   <p><indexterm>origins<indexterm>overview</indexterm></indexterm>You can use the following types of
       origins in a pipeline: <ul id="ul_mxz_jxm_jq">
         <li>Directory - Reads files from a directory. </li>
-        <li>File Tail - Reads data as it is written to a text file. </li>
+        <li>File Tail - Reads data as it is written to an active file after reading related archived
+          files in the directory. </li>
         <li>Kafka Consumer - Reads data from Kafka.</li>
       </ul></p>
  </conbody>

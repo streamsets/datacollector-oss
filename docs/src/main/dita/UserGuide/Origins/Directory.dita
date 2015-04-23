@@ -10,7 +10,8 @@
             optionally begin processing with a specific file name. Then, it reads files with similar
             names in naturally ascending order. After processing a file, Directory can keep,
             archive, or delete the file. </p>
-        <draft-comment author="Loretta">This section to be updated after new streaming/other stuff
-            comes in.</draft-comment>
+        <p>When the pipeline stops, Directory notes where it stopped reading. When the pipeline
+            starts again, by default, Directory continues processing from where it left off. You can
+            reset the origin to process all specified files. </p>
  </conbody>
 </concept>

@@ -407,18 +407,18 @@ span.topic {
 	font-size: 24px;
 }
 
-/* LC added word-wrap removing color #eee */
+/* LC added word-wrap removing color #eee - didn't work. reverting. */
 .codeblock {
-  background-color: none !important;
+  background-color: #eee;
   margin: 5px 0 5px 0;
-  word-wrap: normal !important;
 }
 
+/* LC this didn't work - pausing for now
 span .codeph {
 	font-family: monospace;
 	font-size:  14px !important;
 	line-height: 100% !important;
-}
+} */
 
 .shortdesc {
   margin: 0 0 0 0;

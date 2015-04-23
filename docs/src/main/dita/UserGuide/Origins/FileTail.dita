@@ -2,23 +2,19 @@
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_n1y_qyp_5q">
  <title>File Tail</title>
- <shortdesc>The File Tail origin reads data as it is written to a file. As long as the pipeline
-  runs, File Tail captures text or JSON data that is written to the file. The File Tail origin does
-  not read data already in the file or data that is written to the file when the pipeline is not
-  running.</shortdesc>
+ <shortdesc>The File Tail origin reads data as it is written to an active file after reading related
+        archived files in the same directory. If the active file is archived, File Tail continues to
+        the new active file, reading all existing data in the file and tailing incoming data. </shortdesc>
  <conbody>
   <p><indexterm>File Tail
-          origin<indexterm>overview</indexterm></indexterm><indexterm>origins<indexterm>File
-          Tail</indexterm></indexterm>For example, you have a log file with 30 rows of data when you
-      start the pipeline. The File Tail origin ignores the existing data and begins processing with
-      the 31st row of data when it arrives. It continues capturing incoming data until you stop the
-      pipeline. </p>
-  <p>When you restart the pipeline, the File Tail origin begins processing with the next row of
-            incoming data. It does not try to process any rows that were written to the log file
-            while the pipeline was stopped. <note>You can use data preview to test stage and
-                pipeline behavior, but only when data is written to the file at the time of preview.
-            </note></p>
-        <draft-comment author="Loretta">Still need to add log data format details for this
-            origin.</draft-comment>
+                    origin<indexterm>overview</indexterm></indexterm><indexterm>origins<indexterm>File
+                    Tail</indexterm></indexterm>You can use File Tail to read active files and
+            related archived files in multiple directories. </p>
+        <p>When the pipeline stops, File Tail notes where it stopped reading. When the pipeline
+            starts again, by default, File Tail continues processing from where it left off. You can
+            reset the origin to process all available archived files before continuing to the active
+            file.</p>
+        <draft-comment author="Loretta">Check how multiple directories looks. Still need to add log
+            data format details for this origin.</draft-comment>
  </conbody>
 </concept>

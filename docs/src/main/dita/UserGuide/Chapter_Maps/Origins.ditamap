@@ -6,12 +6,11 @@
   <topicref href="../Origins/Origins_overview.dita" chunk="to-content">
     <topicmeta><shortdesc></shortdesc></topicmeta>
    <topicref href="../Origins/BatchSizeWaitTime.dita"/>
+   <topicref href="../Origins/LogFormats.dita"/>
   <topicref href="../Origins/PreviewingRawSourceData.dita"/></topicref>
   <topicref href="../Origins/Directory.dita" chunk="to-content">
    <topicmeta><shortdesc></shortdesc></topicmeta>
-   <topicref href="../Origins/Directory-DataFormat.dita">
-    <topicref href="../Origins/LogFormats.dita"/>
-   </topicref>
+   <topicref href="../Origins/Directory-DataFormat.dita"/>
    <topicref href="../Origins/Directory_FNamePattern.dita"/>
    <topicref href="../Origins/Directory_FirstFile.dita"/>
    <topicref href="../Origins/Directory-Configuring.dita"/>

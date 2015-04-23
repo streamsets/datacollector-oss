@@ -22,7 +22,9 @@
     <dlentry>
      <dt>Why isn't the Data Preview icon enabled?</dt>
      <dd>You can preview data after you connect all stages in the pipeline and configure required
-            properties. You can use any valid value as a placeholder. </dd>
+            properties. You can use any valid value as a placeholder. <draft-comment
+              author="Loretta">revisit all data preview items after clarifying when it's
+              available</draft-comment></dd>
     </dlentry>
     <dlentry>
      <dt>Why doesn't the data preview show any data?</dt>
@@ -30,8 +32,8 @@
        id="ul_uhn_pz2_xq">
        <li>The origin might not be configured correctly. In the Preview panel, check the Issues tab
         of the origin stage for related issues.</li>
-       <li>The origin might not have any data at the moment. For example, a File Tail origin can
-                only provide data preview when data is being written to the file. </li>
+       <li>The origin might not have any data at the moment. <draft-comment author="Loretta">delete
+                  this? This was for File Tail, but that's no longer true.</draft-comment></li>
       </ul></dd>
     </dlentry>
     <dlentry>

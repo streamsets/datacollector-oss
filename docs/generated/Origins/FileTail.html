@@ -2,7 +2,7 @@
 <!DOCTYPE html
   SYSTEM "about:legacy-compat">
 <html xml:lang="en-us" lang="en-us">
-<head><meta name="description" content="The File Tail origin reads data as it is written to a file. As long as the pipeline runs, File Tail captures text or JSON data that is written to the file. The File Tail origin does not read data ..."></meta><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><meta name="copyright" content="(C) Copyright 2005"></meta><meta name="DC.rights.owner" content="(C) Copyright 2005"></meta><meta name="DC.Type" content="concept"></meta><meta name="DC.Title" content="File Tail"></meta><meta name="abstract" content="The File Tail origin reads data as it is written to a file. As long as the pipeline runs, File Tail captures text or JSON data that is written to the file. The File Tail origin does not read data already in the file or data that is written to the file when the pipeline is not running."></meta><meta name="description" content="The File Tail origin reads data as it is written to a file. As long as the pipeline runs, File Tail captures text or JSON data that is written to the file. The File Tail origin does not read data already in the file or data that is written to the file when the pipeline is not running."></meta><meta name="DC.Relation" scheme="URI" content="../Origins/Origins_title.html"></meta><meta name="DC.Format" content="XHTML"></meta><meta name="DC.Identifier" content="concept_n1y_qyp_5q"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/commonltr.css"><!----></link><title>File Tail</title><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/webhelp_topic.css"><!----></link><link rel="stylesheet" type="text/css" href="../skin.css"></link><script type="text/javascript"><!--
+<head><meta name="description" content="The File Tail origin reads data as it is written to an active file after reading related archived files in the same directory. If the active file is archived, File Tail continues to the new active ..."></meta><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><meta name="copyright" content="(C) Copyright 2005"></meta><meta name="DC.rights.owner" content="(C) Copyright 2005"></meta><meta name="DC.Type" content="concept"></meta><meta name="DC.Title" content="File Tail"></meta><meta name="abstract" content="The File Tail origin reads data as it is written to an active file after reading related archived files in the same directory. If the active file is archived, File Tail continues to the new active file, reading all existing data in the file and tailing incoming data."></meta><meta name="description" content="The File Tail origin reads data as it is written to an active file after reading related archived files in the same directory. If the active file is archived, File Tail continues to the new active file, reading all existing data in the file and tailing incoming data."></meta><meta name="DC.Relation" scheme="URI" content="../Origins/Origins_title.html"></meta><meta name="DC.Format" content="XHTML"></meta><meta name="DC.Identifier" content="concept_n1y_qyp_5q"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/commonltr.css"><!----></link><title>File Tail</title><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/webhelp_topic.css"><!----></link><link rel="stylesheet" type="text/css" href="../skin.css"></link><script type="text/javascript"><!--
           
           var prefix = "../index.html";
           
@@ -14,22 +14,17 @@
  <h1 class="title topictitle1">File Tail</h1>
 
  
- <div class="body conbody"><p class="shortdesc">The File Tail origin reads data as it is written to a file. As long as the pipeline
-  runs, File Tail captures text or JSON data that is written to the file. The File Tail origin does
-  not read data already in the file or data that is written to the file when the pipeline is not
-  running.</p>
+ <div class="body conbody"><p class="shortdesc">The File Tail origin reads data as it is written to an active file after reading related
+        archived files in the same directory. If the active file is archived, File Tail continues to
+        the new active file, reading all existing data in the file and tailing incoming data. </p>
 
-  <p class="p">For example, you have a log file with 30 rows of data when you
-      start the pipeline. The File Tail origin ignores the existing data and begins processing with
-      the 31st row of data when it arrives. It continues capturing incoming data until you stop the
-      pipeline. </p>
+  <p class="p">You can use File Tail to read active files and
+            related archived files in multiple directories. </p>
 
-  <div class="p">When you restart the pipeline, the File Tail origin begins processing with the next row of
-            incoming data. It does not try to process any rows that were written to the log file
-            while the pipeline was stopped. <div class="note note"><span class="notetitle">Note:</span> You can use data preview to test stage and
-                pipeline behavior, but only when data is written to the file at the time of preview.
-            </div>
-</div>
+        <p class="p">When the pipeline stops, File Tail notes where it stopped reading. When the pipeline
+            starts again, by default, File Tail continues processing from where it left off. You can
+            reset the origin to process all available archived files before continuing to the active
+            file.</p>
 
         
  </div>
@@ -64,9 +59,9 @@
                             
                             <thead class="thead" align="left">
                                 <tr class="row">
-                                    <th class="entry" valign="top" width="24.509803921568626%" id="d14777e104">General Property</th>
+                                    <th class="entry" valign="top" width="24.509803921568626%" id="d14676e102">General Property</th>
 
-                                    <th class="entry" valign="top" width="75.49019607843137%" id="d14777e107">Description</th>
+                                    <th class="entry" valign="top" width="75.49019607843137%" id="d14676e105">Description</th>
 
                                 </tr>
 
@@ -74,23 +69,23 @@
 
                             <tbody class="tbody">
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="24.509803921568626%" headers="d14777e104 ">Name</td>
+                                    <td class="entry" valign="top" width="24.509803921568626%" headers="d14676e102 ">Name</td>
 
-                                    <td class="entry" valign="top" width="75.49019607843137%" headers="d14777e107 ">Stage name.</td>
-
-                                </tr>
-
-                                <tr class="row">
-                                    <td class="entry" valign="top" width="24.509803921568626%" headers="d14777e104 ">Description</td>
-
-                                    <td class="entry" valign="top" width="75.49019607843137%" headers="d14777e107 ">Optional description.</td>
+                                    <td class="entry" valign="top" width="75.49019607843137%" headers="d14676e105 ">Stage name.</td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="24.509803921568626%" headers="d14777e104 ">On Record Error</td>
+                                    <td class="entry" valign="top" width="24.509803921568626%" headers="d14676e102 ">Description</td>
 
-                                    <td class="entry" valign="top" width="75.49019607843137%" headers="d14777e107 ">Error record handling for the stage: <ul class="ul" id="task_unq_wdw_yq__d1567e209">
+                                    <td class="entry" valign="top" width="75.49019607843137%" headers="d14676e105 ">Optional description.</td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="24.509803921568626%" headers="d14676e102 ">On Record Error</td>
+
+                                    <td class="entry" valign="top" width="75.49019607843137%" headers="d14676e105 ">Error record handling for the stage: <ul class="ul" id="task_unq_wdw_yq__d1567e209">
                                             <li class="li">Discard - Discards the record.</li>
 
                                             <li class="li">Send to Error - Sends the record to the pipeline for
@@ -120,9 +115,9 @@
                             
                             <thead class="thead" align="left">
                                 <tr class="row">
-                                    <th class="entry" valign="top" width="35.3356890459364%" id="d14777e183">File Property</th>
+                                    <th class="entry" valign="top" width="35.3356890459364%" id="d14676e181">File Property</th>
 
-                                    <th class="entry" valign="top" width="64.66431095406361%" id="d14777e186">Description</th>
+                                    <th class="entry" valign="top" width="64.66431095406361%" id="d14676e184">Description</th>
 
                                 </tr>
 
@@ -130,9 +125,9 @@
 
                             <tbody class="tbody">
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="35.3356890459364%" headers="d14777e183 ">Data Format</td>
+                                    <td class="entry" valign="top" width="35.3356890459364%" headers="d14676e181 ">Data Format</td>
 
-                                    <td class="entry" valign="top" width="64.66431095406361%" headers="d14777e186 ">Format of data in the file. Use one of the following
+                                    <td class="entry" valign="top" width="64.66431095406361%" headers="d14676e184 ">Format of data in the file. Use one of the following
                                             options:<ul class="ul" id="task_unq_wdw_yq__ul_pwv_cr2_zq">
                                             <li class="li">Text</li>
 
@@ -144,24 +139,24 @@
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="35.3356890459364%" headers="d14777e183 ">File Path</td>
+                                    <td class="entry" valign="top" width="35.3356890459364%" headers="d14676e181 ">File Path</td>
 
-                                    <td class="entry" valign="top" width="64.66431095406361%" headers="d14777e186 ">Directory and name of the file to read.</td>
-
-                                </tr>
-
-                                <tr class="row">
-                                    <td class="entry" valign="top" width="35.3356890459364%" headers="d14777e183 ">Maximum Lines per Batch (recs)</td>
-
-                                    <td class="entry" valign="top" width="64.66431095406361%" headers="d14777e186 ">Maximum number of records to include in a batch. </td>
+                                    <td class="entry" valign="top" width="64.66431095406361%" headers="d14676e184 ">Directory and name of the file to read.</td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="35.3356890459364%" headers="d14777e183 ">Batch Wait Time (secs) <a class="xref" href="Origins_overview.html#concept_ypd_vgr_5q" title="For origin stages, the batch size determines the maximum number of records sent through the pipeline at one time. The batch wait time determines the time that the origin waits for data before sending a batch. At the end of the wait time, it sends the batch regardless of how many records the batch contains.">
+                                    <td class="entry" valign="top" width="35.3356890459364%" headers="d14676e181 ">Maximum Lines per Batch (recs)</td>
+
+                                    <td class="entry" valign="top" width="64.66431095406361%" headers="d14676e184 ">Maximum number of records to include in a batch. </td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="35.3356890459364%" headers="d14676e181 ">Batch Wait Time (secs) <a class="xref" href="Origins_overview.html#concept_ypd_vgr_5q" title="For origin stages, the batch size determines the maximum number of records sent through the pipeline at one time. The batch wait time determines the time that the origin waits for data before sending a batch. At the end of the wait time, it sends the batch regardless of how many records the batch contains.">
                                             <img class="image" id="task_unq_wdw_yq__image_ulc_2fm_cr" src="../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
 
-                                    <td class="entry" valign="top" width="64.66431095406361%" headers="d14777e186 ">Number of seconds to wait before sending a batch.</td>
+                                    <td class="entry" valign="top" width="64.66431095406361%" headers="d14676e184 ">Number of seconds to wait before sending a batch.</td>
 
                                 </tr>
 

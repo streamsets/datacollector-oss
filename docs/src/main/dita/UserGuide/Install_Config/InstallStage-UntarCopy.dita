@@ -16,7 +16,8 @@
                 <cmd>Copy the contents of the stage-libs directory to the Data Collector stage-libs
                     directory.</cmd>
                 <info>For
-                    example:<codeblock>cp -r streamsets-datacollector-1.0.0b1-SNAPSHOT/stage-libs/streamsets-datacollector-cdh5_3_0-lib/ /tmp/streamsets-datacollector-1.0.0b1-SNAPSHOT/stage-libs/</codeblock></info>
+                    example:<codeblock>cp -r streamsets-datacollector-1.0.0b1-SNAPSHOT/stage-libs/streamsets-datacollector-cdh5_3_0-lib/
+   /tmp/streamsets-datacollector-1.0.0b1-SNAPSHOT/stage-libs/</codeblock></info>
             </step>
             <step>
                 <cmd>Restart the <ph

@@ -9,15 +9,13 @@
         />.</shortdesc>
     <taskbody>
         <context>
-            <p><indexterm>pipelines<indexterm>starting</indexterm></indexterm>For a Directory
-                origin, when you restart a pipeline, the <ph
+            <p><indexterm>pipelines<indexterm>starting</indexterm></indexterm>For a Directory and
+                File Tail origin, when you restart a pipeline, the <ph
                     conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
                 /> starts the pipeline from where it last stopped by default. You can reset the
                 origin to read all available data.</p>
             <p>A Kafka Consumer origin starts processing data based on the offset passed from the
                 Kafka ZooKeeper. </p>
-            <p>A File Tail origin processes data that is written to the file after you start the
-                pipeline.</p>
         </context>
         <steps id="steps_f5j_mzr_5q">
             <step conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/PickPipeline">
