@@ -1,0 +1,284 @@
+/**
+ * This is the common application stylesheet. It should include or import all
+ * stylesheets used throughout the application as this is the only stylesheet in
+ * the Grunt configuration that is automatically processed.
+ */
+
+
+
+/**
+ * This is our main variables file. We must include it last so we can overwrite any variable
+ * definitions in our imported stylesheets.
+ */
+
+@import 'variables.less';
+
+/**
+ * Main Body
+ */
+
+[ng\:cloak], [ng-cloak], [data-ng-cloak], [x-ng-cloak],
+.ng-cloak, .x-ng-cloak,
+.ng-hide:not(.ng-hide-animate) {
+  display: none !important;
+}
+
+ng\:form {
+  display: block;
+}
+
+body {
+  overflow: hidden;
+
+  .navbar-fixed-top {
+    height: 50px;
+
+    a.logo {
+      padding: 0 20px;
+      display: inline-block;
+      width: 260px;
+      height: 50px;
+      overflow: hidden;
+
+      img {
+        width: 210px;
+        margin-top: -19px;
+      }
+    }
+
+    .navbar-nav {
+      padding-right: 2 * @defaultPadding;
+      >li {
+        >a {
+          font-size: 1.05em;
+          padding-top: @defaultPadding * 1.5;
+          padding-bottom: @defaultPadding * 1.5;
+        }
+
+        .dropdown-menu-radio-box {
+          padding-left: @defaultPadding;
+        }
+
+        .density-check-icon {
+          left: 10px;
+          position: absolute;
+          padding-top: 3px;
+        }
+      }
+    }
+  }
+
+
+  .dropdown-header {
+    font-size: 14px;
+  }
+
+
+  .page-panel {
+    margin-top: 50px;
+    height: 100%;
+
+    border: 0;
+    -webkit-box-shadow: none;
+    box-shadow: none;
+
+    .panel-title {
+      h3 {
+        margin: 0;
+        font-size: 20px;
+      }
+    }
+  }
+
+  .icon-danger {
+    color: @brand-danger;
+  }
+
+  .icon-success {
+    color: @brand-success;
+  }
+
+  .pointer {
+    cursor: pointer;
+  }
+
+  .modal-backdrop {
+    bottom: 0;
+  }
+
+  .tooltip {
+    word-wrap: break-word;
+  }
+
+  .btn-icon {
+    background-color: transparent;
+
+    &:hover {
+      background-color: transparent;
+    }
+
+    &:focus {
+      background-color: transparent;
+    }
+  }
+
+  .icon-button {
+    color: @streamsets-icon-btn-color;
+    margin-left: @defaultPadding;
+
+    &:hover {
+      color: @streamsets-icon-btn-hover-color;
+    }
+  }
+
+  .help-icon {
+    cursor: help;
+    font-size: 1.2em;
+    color: #CCCCCC;
+    padding-left: @smallPadding;
+  }
+
+  .dropdown-header {
+    padding: 3px 12px;
+  }
+
+
+  .form-group .help-block {
+    display: none;
+  }
+
+  .form-group.has-error .help-block {
+    display: inherit;
+  }
+
+  .fa-12x {
+    font-size: 1.2em;
+  }
+
+  .fa-13x {
+    font-size: 1.3em;
+  }
+
+  .fa-14x {
+    font-size: 1.4em;
+  }
+
+  .fa-15x {
+    font-size: 1.5em;
+  }
+
+  .fa-16x {
+    font-size: 1.6em;
+  }
+
+  .scrollable-menu {
+    height: auto;
+    max-height: 400px;
+    overflow-x: hidden;
+  }
+
+  .form-horizontal-checkbox {
+    input[type=checkbox] {
+      margin-left: 0;
+      margin-top: 11px;
+    }
+  }
+
+  .login-container {
+    background: #29b4e1 url('/assets/logo-watermark-big.png') no-repeat center bottom;
+    position: absolute;
+    top: 50px;
+    left: 0;
+    width: 100%;
+    height: calc(~"100% - 50px");
+    overflow: hidden;
+
+    .alert-danger {
+      visibility: hidden;
+      margin-top: 100px;
+    }
+
+    .form-login {
+      background-color: #ffffff;
+      padding: @defaultPadding @defaultPadding*2 @defaultPadding*2 @defaultPadding*2;
+      border-radius: 15px;
+      border: #d2d2d2 5px;
+      box-shadow:0 1px 0 #cfcfcf;
+
+      h4 {
+        border:0 solid #fff;
+        border-bottom-width:1px;
+        padding-bottom:10px;
+      }
+
+      input {
+        margin-bottom: @defaultPadding * 2;
+      }
+    }
+
+  }
+
+  .expression-language .form-control {
+    min-width: 200px;
+    border-color: #008000;
+  }
+
+  .CodeMirror {
+    border: solid 1px #008000;
+    min-height: 34px;
+    height: auto;
+    //min-width: 500px;
+    padding: @smallPadding @defaultPadding;
+    border-radius: 3px;
+    position: relative;
+    color: #555;
+    overflow: hidden;
+
+    .cm-string-2 {
+      color: inherit;
+    }
+  }
+
+  .CodeMirror-hints {
+    z-index: 1500;
+  }
+
+  .codemirror-editor {
+    .CodeMirror {
+      border: 1px solid #ccc;
+      min-height: 100px;
+      padding: 0;
+      height: auto;
+    }
+  }
+
+  .codemirror-read-only {
+    .CodeMirror {
+      background-color: #eee;
+      border: 1px solid #ccc;
+    }
+  }
+
+
+  .not-authorized-page {
+    display: none;
+    padding-top: 50px;
+    text-align: center;
+    color: @brand-danger;
+
+    .show {
+      display: block;
+    }
+  }
+}
+
+@import '../common/administration/sdcConfiguration/sdcConfiguration.less';
+@import '../common/administration/jvmMetrics/jvmMetrics.less';
+@import '../common/administration/logs/logs.less';
+@import '../common/directives/codemirror/codemirrorEL.less';
+@import '../common/directives/recordTree/recordTree.less';
+@import '../common/directives/loading/loading.less';
+@import '../common/directives/splitter/splitter.less';
+@import '../common/directives/tabs/tabs.less';
+@import '../common/directives/pipelineGraph/pipelineGraph.less';
+@import '../common/directives/jsonFormatter/json-formatter.less';

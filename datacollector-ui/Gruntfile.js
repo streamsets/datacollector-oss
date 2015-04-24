@@ -22,6 +22,7 @@ module.exports = function(grunt) {
     build_dir: 'target/dist',
     target_dir: 'target',
     base_dir: 'src/main/webapp/',
+    common_base_dir: '../common-ui/src/main/webapp/',
     docs_dir: '../docs/generated',
 
     /**
@@ -35,10 +36,11 @@ module.exports = function(grunt) {
      */
     app_files: {
       js: [ 'app/**/*.js', '!app/**/*.spec.js'],
+      cjs: [ 'common/**/*.js', '!common/**/*.spec.js'],
       jsunit: [ 'app/**/*.spec.js' ],
+      cjsunit: [ 'common/**/*.spec.js' ],
       atpl: [ 'app/**/*.tpl.html' ],
       ctpl: [ 'common/**/*.tpl.html' ],
-      html: [ 'login.html' ],
       less: 'less/app.less',
       i18n: ['i18n/*.json']
     },
@@ -183,6 +185,36 @@ module.exports = function(grunt) {
           }
         ]
       },
+      build_appjs: {
+        files: [
+          {
+            src: [ '<%= app_files.js %>', '<%= app_files.i18n %>' ],
+            dest: '<%= build_dir %>/',
+            cwd: '<%= base_dir %>',
+            expand: true
+          }
+        ]
+      },
+      build_common_app_assets: {
+        files: [
+          {
+            src: [ '**' ],
+            dest: '<%= build_dir %>/assets/',
+            cwd: '<%= common_base_dir %>assets',
+            expand: true
+          }
+        ]
+      },
+      build_common_appjs: {
+        files: [
+          {
+            src: [ '<%= app_files.cjs %>'],
+            dest: '<%= build_dir %>/',
+            cwd: '<%= common_base_dir %>',
+            expand: true
+          }
+        ]
+      },
       build_vendor_assets: {
         files: [
           {
@@ -202,26 +234,6 @@ module.exports = function(grunt) {
             cwd: '<%= target_dir %>',
             expand: true,
             flatten: true
-          }
-        ]
-      },
-      build_appjs: {
-        files: [
-          {
-            src: [ '<%= app_files.js %>', '<%= app_files.i18n %>' ],
-            dest: '<%= build_dir %>/',
-            cwd: '<%= base_dir %>',
-            expand: true
-          }
-        ]
-      },
-      build_apphtml: {
-        files: [
-          {
-            src: [ '<%= app_files.html %>'],
-            dest: '<%= build_dir %>/',
-            cwd: '<%= base_dir %>',
-            expand: true
           }
         ]
       },
@@ -271,9 +283,9 @@ module.exports = function(grunt) {
        */
       common: {
         options: {
-          base: '<%= base_dir %>'
+          base: '<%= common_base_dir %>'
         },
-        src: [ '<%= app_files.ctpl %>' ],
+        src: [ '<%= common_base_dir %><%= app_files.ctpl %>' ],
         dest: '<%= build_dir %>/templates-common.js'
       }
     },
@@ -311,7 +323,7 @@ module.exports = function(grunt) {
       compile: {
         files: [
           {
-            src: [ '<%= app_files.js %>' ],
+            src: [ '<%= app_files.js %>', '<%= app_files.cjs %>' ],
             cwd: '<%= build_dir %>',
             dest: '<%= build_dir %>',
             expand: true
@@ -366,7 +378,8 @@ module.exports = function(grunt) {
      */
     jshint: {
       src: [
-        '<%= base_dir %>/app/**/*.js'
+        '<%= base_dir %>/app/**/*.js',
+        '<%= common_base_dir %>/common/**/*.js'
       ],
       gruntfile: [
         'Gruntfile.js'
@@ -435,6 +448,7 @@ module.exports = function(grunt) {
         src: [
           '<%= vendor_files.js %>',
           'app/**/*.js',
+          'common/**/*.js',
           'templates-app.js',
           'templates-common.js',
           '<%= vendor_files.css %>',
@@ -516,7 +530,8 @@ module.exports = function(grunt) {
        */
       jssrc: {
         files: [
-          '<%= base_dir %>app/**/*.js'
+          '<%= base_dir %>app/**/*.js',
+          '<%= common_base_dir %>common/**/*.js'
         ],
         tasks: [ 'jshint:src', 'karma:unit:run', 'copy:build_appjs', 'index:build' ]
       },
@@ -526,7 +541,8 @@ module.exports = function(grunt) {
        */
       i18nsrc: {
         files: [
-          '<%= base_dir %>i18n/*.json'
+          '<%= base_dir %>i18n/*.json',
+          '<%= common_base_dir %>i18n/*.json'
         ],
         tasks: [ 'copy:build_appjs' ]
       },
@@ -535,7 +551,9 @@ module.exports = function(grunt) {
        * When index.html changes, we need to compile it.
        */
       html: {
-        files: [ '<%= base_dir %>index.html', '<%= base_dir %>login.html' ],
+        files: [
+          '<%= base_dir %>index.html', '<%= common_base_dir %>login.html'
+        ],
         tasks: [ 'index:build', 'login:build' ]
       },
 
@@ -545,7 +563,7 @@ module.exports = function(grunt) {
       tpls: {
         files: [
           '<%= base_dir %><%= app_files.atpl %>',
-          '<%= base_dir %><%= app_files.ctpl %>'
+          '<%= common_base_dir %><%= app_files.ctpl %>'
         ],
         tasks: [ 'html2js' ]
       },
@@ -600,8 +618,10 @@ module.exports = function(grunt) {
    */
   grunt.registerTask( 'build', [
     'clean', 'html2js', 'jshint', 'less:build', 'concat:build_css',
-    'copy:build_app_assets', 'copy:build_vendor_assets', 'copy:build_vendor_fonts',
-    'copy:build_appjs', 'copy:build_vendorjs', 'copy:build_docs', 'index:build', 'login:build', 'karmaconfig'
+    'copy:build_app_assets', 'copy:build_appjs',
+    'copy:build_common_app_assets', 'copy:build_common_appjs',
+    'copy:build_vendor_assets', 'copy:build_vendor_fonts',
+    'copy:build_vendorjs', 'copy:build_docs', 'index:build', 'login:build', 'karmaconfig'
     //,'karma:continuous'
   ]);
 
@@ -646,6 +666,7 @@ module.exports = function(grunt) {
 
     compileJSFiles.push('module.prefix');
     compileJSFiles.push(buildDir + '/app/**/*.js');
+    compileJSFiles.push(buildDir + '/common/**/*.js');
     compileJSFiles.push('<%= html2js.app.dest %>');
     compileJSFiles.push('<%= html2js.common.dest %>');
     compileJSFiles.push('module.suffix');
@@ -667,8 +688,6 @@ module.exports = function(grunt) {
 
     cssFiles.push('<%= build_dir %>/assets/<%= pkg.name %>-<%= pkg.version %>-<%= grunt.template.today("yyyy-mm-dd") %>.css');
 
-    console.log(cssFiles);
-
     return cssFiles;
 
   }
@@ -681,7 +700,6 @@ module.exports = function(grunt) {
    */
   grunt.registerMultiTask( 'index', 'Process index.html template', function () {
     var dirRE = new RegExp( '^('+grunt.config('build_dir')+'|'+grunt.config('compile_dir')+')\/', 'g' );
-    console.log(this.filesSrc);
     var jsFiles = filterForJS( this.filesSrc ).map( function ( file ) {
       return file.replace( dirRE, '' );
     });
@@ -711,7 +729,6 @@ module.exports = function(grunt) {
    */
   grunt.registerMultiTask( 'login', 'Process login.html template', function () {
     var dirRE = new RegExp( '^('+grunt.config('build_dir')+'|'+grunt.config('compile_dir')+')\/', 'g' );
-    console.log(this.filesSrc);
     var jsFiles = filterForJS( this.filesSrc ).map( function ( file ) {
       return file.replace( dirRE, '' );
     });
@@ -719,7 +736,7 @@ module.exports = function(grunt) {
       return file.replace( dirRE, '' );
     });
 
-    grunt.file.copy(grunt.config( 'base_dir' ) +'login.html', grunt.config( 'build_dir' ) + '/login.html', {
+    grunt.file.copy(grunt.config( 'common_base_dir' ) +'login.html', grunt.config( 'build_dir' ) + '/login.html', {
       process: function ( contents, path ) {
         return grunt.template.process( contents, {
           data: {
@@ -741,7 +758,7 @@ module.exports = function(grunt) {
   grunt.registerMultiTask( 'karmaconfig', 'Process karma config templates', function () {
     var jsFiles = filterForJS( this.filesSrc );
 
-    grunt.file.copy( grunt.config( 'base_dir' ) + 'karma/karma-conf.tpl.js', grunt.config( 'build_dir' ) + '/karma-conf.js', {
+    grunt.file.copy( grunt.config( 'common_base_dir' ) + 'karma/karma-conf.tpl.js', grunt.config( 'build_dir' ) + '/karma-conf.js', {
       process: function ( contents, path ) {
         return grunt.template.process( contents, {
           data: {

@@ -7,7 +7,7 @@ angular
   .config(['$routeProvider', function ($routeProvider) {
     $routeProvider.when('/collector/configuration',
       {
-        templateUrl: 'app/administration/sdcConfiguration/sdcConfiguration.tpl.html',
+        templateUrl: 'common/administration/sdcConfiguration/sdcConfiguration.tpl.html',
         controller: 'SDCConfigurationController',
         resolve: {
           myVar: function(authService) {

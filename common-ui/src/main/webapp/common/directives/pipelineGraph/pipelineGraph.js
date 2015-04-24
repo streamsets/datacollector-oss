@@ -8,7 +8,7 @@ angular.module('pipelineGraphDirectives', [])
       restrict: 'E',
       //replace: true,
       controller: 'PipelineGraphController',
-      templateUrl: 'app/directives/pipelineGraph/pipelineGraph.tpl.html'
+      templateUrl: 'common/directives/pipelineGraph/pipelineGraph.tpl.html'
     };
   })
   .controller('PipelineGraphController', function($scope, $rootScope, $element, _, $filter,

@@ -7,7 +7,7 @@ angular
   .config(['$routeProvider', function ($routeProvider) {
     $routeProvider.when('/collector/logs',
       {
-        templateUrl: 'app/administration/logs/logs.tpl.html',
+        templateUrl: 'common/administration/logs/logs.tpl.html',
         controller: 'LogsController',
         resolve: {
           myVar: function(authService) {

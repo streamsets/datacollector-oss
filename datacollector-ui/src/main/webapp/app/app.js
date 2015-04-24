@@ -87,7 +87,7 @@ angular.module('dataCollectorApp')
        */
       shutdownCollector: function() {
         $modal.open({
-          templateUrl: 'shutdownModalContent.html',
+          templateUrl: 'common/administration/shutdown/shutdownModal.tpl.html',
           controller: 'ShutdownModalInstanceController',
           size: '',
           backdrop: true
@@ -141,7 +141,7 @@ angular.module('dataCollectorApp')
 
       showSDCDirectories: function() {
         $modal.open({
-          templateUrl: 'app/administration/sdcDirectories/sdcDirectoriesModal.tpl.html',
+          templateUrl: 'common/administration/sdcDirectories/sdcDirectoriesModal.tpl.html',
           controller: 'SDCDirectoriesModalInstanceController',
           size: '',
           backdrop: true

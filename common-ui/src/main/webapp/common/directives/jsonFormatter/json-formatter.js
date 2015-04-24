@@ -106,7 +106,7 @@ angular.module('jsonFormatter', ['RecursionHelper'])
   }
 
   return {
-    templateUrl: 'app/directives/jsonFormatter/json-formatter.tpl.html',
+    templateUrl: 'common/directives/jsonFormatter/json-formatter.tpl.html',
     restrict: 'E',
     replace: true,
     scope: {

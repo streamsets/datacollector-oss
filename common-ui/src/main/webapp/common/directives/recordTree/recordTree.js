@@ -86,7 +86,7 @@ angular.module('recordTreeDirectives', ['RecursionHelper'])
         selectable: '=',
         selectedPath: '='
       },
-      templateUrl: 'app/directives/recordTree/recordTree.tpl.html',
+      templateUrl: 'common/directives/recordTree/recordTree.tpl.html',
       compile: function (element) {
         // Use the compile function from the RecursionHelper,
         // And return the linking function(s) which it returns

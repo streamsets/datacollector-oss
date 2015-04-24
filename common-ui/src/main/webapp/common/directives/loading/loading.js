@@ -11,6 +11,6 @@ angular.module('showLoadingDirectives', [])
       scope: {
         loading: '=showLoading'
       },
-      templateUrl: 'app/directives/loading/loading.tpl.html'
+      templateUrl: 'common/directives/loading/loading.tpl.html'
     };
   });
