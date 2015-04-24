@@ -449,7 +449,9 @@ public class HdfsTarget extends RecordTarget {
             throw new RuntimeException("It should never happen");
         }
       }
-    } catch (Exception ex) {
+    } catch (IOException ex) {
+      throw new StageException(Errors.HADOOPFS_14, record, ex.getMessage(), ex);
+    } catch (StageException ex) {
       throw new OnRecordErrorException(Errors.HADOOPFS_14, record, ex.getMessage(), ex);
     }
   }

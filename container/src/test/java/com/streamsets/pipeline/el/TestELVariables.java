@@ -19,7 +19,11 @@ public class TestELVariables {
 
   @Test
   public void testELVariables() {
-    ELVars elVars = new ELVariables();
+    Map<String, Object> constants = new HashMap<>();
+    constants.put("X", "x");
+    ELVars elVars = new ELVariables(constants);
+
+    Assert.assertEquals("x", elVars.getConstant("X"));
 
     elVars.addContextVariable(VAR_NAME, VAR_VALUE);
     Assert.assertTrue(elVars.hasContextVariable(VAR_NAME));

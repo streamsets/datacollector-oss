@@ -12,6 +12,8 @@ import java.io.IOException;
 
 public interface RecordReader extends Closeable {
 
+  public String getEncoding();
+
   public long getPosition();
 
   public Record readRecord() throws IOException;

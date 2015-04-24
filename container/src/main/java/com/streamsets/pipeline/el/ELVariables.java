@@ -36,6 +36,14 @@ public class ELVariables implements ELVars {
         "Name '{}' is defined as a constant, cannot be used as variable", name));
   }
 
+  public Object getConstant(String name) {
+    Utils.checkNotNull(name, "name");
+    Utils.checkArgument(TextUtils.isValidName(name), Utils.formatL("Invalid name '{}', must be '{}'",
+                                                                   name, TextUtils.VALID_NAME));
+    return constants.get(name);
+  }
+
+
   public void addVariable(String name, Object value) {
     checkVariableName(name);
     variables.put(name, value);

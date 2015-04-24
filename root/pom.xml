@@ -63,6 +63,7 @@
     <commons-csv.version>1.1</commons-csv.version>
     <javax.mail.version>1.4.7</javax.mail.version>
     <icegreen.version>1.4.0</icegreen.version>
+    <kryo.version>3.0.1</kryo.version>
   </properties>
 
   <dependencyManagement>
@@ -426,6 +427,12 @@
         <groupId>com.icegreen</groupId>
         <artifactId>greenmail</artifactId>
         <version>${icegreen.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>com.esotericsoftware</groupId>
+        <artifactId>kryo</artifactId>
+        <version>${kryo.version}</version>
       </dependency>
     </dependencies>
   </dependencyManagement>

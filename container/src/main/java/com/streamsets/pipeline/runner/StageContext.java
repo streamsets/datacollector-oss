@@ -132,7 +132,7 @@ public class StageContext implements Source.Context, Target.Context, Processor.C
 
   @Override
   public RecordWriter createRecordWriter(OutputStream outputStream) throws IOException {
-    return RecordWriterReaderFactory.createRecordWriter(RecordWriterReaderFactory.MAGIC_NUMBER_JSON, outputStream);
+    return RecordWriterReaderFactory.createRecordWriter(this, outputStream);
   }
 
   @Override

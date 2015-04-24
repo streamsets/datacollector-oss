@@ -19,11 +19,17 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 
 public class JsonRecordReader extends OverrunStreamingJsonParser implements RecordReader {
-  public JsonRecordReader(InputStream inputStream, long initialPosition, int maxObjectLen) throws
-      IOException {
+
+  public JsonRecordReader(InputStream inputStream, long initialPosition, int maxObjectLen) throws IOException {
     super(new CountingReader(new InputStreamReader(inputStream, "UTF-8")), initialPosition,
           Mode.MULTIPLE_OBJECTS, maxObjectLen);
   }
+
+  @Override
+  public String getEncoding() {
+    return RecordEncoding.JSON1.name();
+  }
+
   @Override
   protected ObjectMapper getObjectMapper() {
     return ObjectMapperFactory.get();

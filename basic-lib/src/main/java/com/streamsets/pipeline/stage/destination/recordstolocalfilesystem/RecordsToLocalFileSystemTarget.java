@@ -95,8 +95,8 @@ public class RecordsToLocalFileSystemTarget extends BaseTarget {
   @Override
   protected void init() throws StageException {
     super.init();
-    activeFile = new File(dir, "_tmp_records.json").getAbsoluteFile();
-    fileFilter = WildcardFilter.createRegex("records-[0-9][0-9][0-9][0-9][0-9][0-9].json");
+    activeFile = new File(dir, "_tmp_sdc-records").getAbsoluteFile();
+    fileFilter = WildcardFilter.createRegex("sdc-records-[0-9][0-9][0-9][0-9][0-9][0-9]");
     // if we had non graceful shutdown we may have a _tmp file around. new file is not created.
     rotate(false);
     generatorFactory = new DataGeneratorFactoryBuilder(getContext(), DataGeneratorFormat.SDC_RECORD)
@@ -146,12 +146,12 @@ public class RecordsToLocalFileSystemTarget extends BaseTarget {
       }
     }
     if (latest == null) {
-      latest = "records-000000.json";
+      latest = "sdc-records-000000";
     } else {
-      String countStr = latest.substring("records-".length(), "records-".length() + 6);
+      String countStr = latest.substring("sdc-records-".length(), "sdc-records-".length() + 6);
       try {
         int count = Integer.parseInt(countStr) + 1;
-        latest = String.format("records-%06d.json", count);
+        latest = String.format("sdc-records-%06d", count);
       } catch (NumberFormatException ex) {
         throw new StageException(Errors.RECORDFS_07, latest, ex.getMessage(), ex);
       }

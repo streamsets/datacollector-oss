@@ -7,6 +7,8 @@ package com.streamsets.pipeline.api.el;
 
 public interface ELVars {
 
+  public Object getConstant(String name);
+
   public void addVariable(String name, Object value);
 
   public void addContextVariable(String name, Object value);

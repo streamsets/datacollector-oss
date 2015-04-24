@@ -171,6 +171,10 @@ public class Field implements Cloneable {
   private Type type;
   private Object value;
 
+  // need default constructor for deserialization purposes (Kryo)
+  private Field() {
+  }
+
   private Field(Type type, Object value) {
     this.type = type;
     this.value = type.constructorCopy(value);

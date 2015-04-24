@@ -287,7 +287,7 @@ public class SpoolDirSource extends BaseSource {
         break;
       case SDC_JSON:
         builder.setMaxDataLen(-1);
-        filePattern = "records-??????.json";
+        filePattern = "*";
         initialFileToProcess = "";
         maxSpoolFiles = 10000;
         break;

@@ -12,6 +12,8 @@ import java.io.IOException;
 
 public interface RecordWriter extends Closeable {
 
+  public String getEncoding();
+
   public void write(Record record) throws IOException;
 
   public void flush() throws IOException;

@@ -21,6 +21,11 @@ public class RecordImpl implements Record {
   private final HeaderImpl header;
   private Field value;
 
+  // need default constructor for deserialization purposes (Kryo)
+  private RecordImpl() {
+    header = new HeaderImpl();
+  }
+
   public RecordImpl(HeaderImpl header, Field value) {
     this.header = header;
     this.value = value;

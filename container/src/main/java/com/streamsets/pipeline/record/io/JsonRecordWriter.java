@@ -27,6 +27,11 @@ public class JsonRecordWriter implements RecordWriter {
   }
 
   @Override
+  public String getEncoding() {
+    return RecordEncoding.JSON1.name();
+  }
+
+  @Override
   public void write(Record record) throws IOException {
     if (closed) {
       throw new IOException("writer has been closed");

@@ -5,35 +5,41 @@
  */
 package com.streamsets.pipeline.record.io;
 
+import com.streamsets.pipeline.api.Stage;
+import com.streamsets.pipeline.api.el.ELVars;
 import com.streamsets.pipeline.api.ext.RecordReader;
 import com.streamsets.pipeline.api.ext.RecordWriter;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
 public class RecordWriterReaderFactory {
+  public static final String DATA_COLLECTOR_RECORD_FORMAT = "DATA_COLLECTOR_RECORD_FORMAT";
 
-  //10100000
-  public static final byte MAGIC_NUMBER_BASE = (byte) 0xa0;
+  private static final Logger LOG = LoggerFactory.getLogger(RecordWriterReaderFactory.class);
 
-  //10100001
-  public static final byte MAGIC_NUMBER_JSON = MAGIC_NUMBER_BASE | (byte) 0x01;
-
-
-  public static RecordReader createRecordReader(InputStream is, long initialPosition, int maxObjectLen) throws IOException {
+  public static RecordReader createRecordReader(InputStream is, long initialPosition, int maxObjectLen)
+      throws IOException {
     RecordReader reader;
     int read = is.read();
     if (read > -1) {
       byte magicNumber = (byte) read;
-      if ((magicNumber & MAGIC_NUMBER_BASE) == MAGIC_NUMBER_BASE) {
-        switch (magicNumber) {
-          case MAGIC_NUMBER_JSON:
+      if ((magicNumber & RecordEncodingConstants.BASE_MAGIC_NUMBER) == RecordEncodingConstants.BASE_MAGIC_NUMBER) {
+        RecordEncoding encoding = RecordEncoding.getEncoding(magicNumber);
+        switch (encoding) {
+          case JSON1:
             reader = new JsonRecordReader(is, initialPosition, maxObjectLen);
             break;
+          case KRYO1:
+            reader = new KryoRecordReader(is, initialPosition);
+            break;
           default:
-            throw new IOException(String.format("Unsupported magic number '0x%X'", magicNumber));
+            throw new RuntimeException("It cannot happen");
         }
+        LOG.debug("Created reader using '{}' encoding", encoding);
       } else {
         throw new IOException(String.format("Invalid magic number '0x%X'", magicNumber));
       }
@@ -43,20 +49,27 @@ public class RecordWriterReaderFactory {
     return reader;
   }
 
-  public static RecordWriter createRecordWriter(byte magicNumber, OutputStream os) throws IOException {
+  public static RecordWriter createRecordWriter(Stage.Context context, OutputStream os) throws IOException {
+    ELVars constants = context.createELVars();
+    RecordEncoding encoding = RecordEncoding.getEncoding((String) constants.getConstant(DATA_COLLECTOR_RECORD_FORMAT));
+    return createRecordWriter(encoding, os);
+  }
+
+  static RecordWriter createRecordWriter(RecordEncoding encoding, OutputStream os) throws IOException {
     RecordWriter writer;
-    if ((magicNumber & MAGIC_NUMBER_BASE) == MAGIC_NUMBER_BASE) {
-      switch (magicNumber) {
-        case MAGIC_NUMBER_JSON:
-          os.write(MAGIC_NUMBER_JSON);
-          writer = new JsonRecordWriter(os);
-          break;
-        default:
-          throw new IOException(String.format("Unsupported magic number '0x%X'", magicNumber));
-      }
-    } else {
-      throw new IOException(String.format("Invalid magic number '0x%X'", magicNumber));
+    switch (encoding) {
+      case JSON1:
+        os.write(RecordEncodingConstants.JSON1_MAGIC_NUMBER);
+        writer = new JsonRecordWriter(os);
+        break;
+      case KRYO1:
+        os.write(RecordEncodingConstants.KRYO1_MAGIC_NUMBER);
+        writer = new KryoRecordWriter(os);
+        break;
+      default:
+        throw new RuntimeException("It cannot happen");
     }
+    LOG.debug("Created writer using '{}' encoding", encoding);
     return writer;
   }
 

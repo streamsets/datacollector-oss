@@ -36,7 +36,7 @@ public class TestSDCRecordSpoolDirSource {
   }
 
   private File createErrorRecordsFile() throws Exception {
-    File f = new File(createTestDir(), "errorrecords-0000.json");
+    File f = new File(createTestDir(), "sdc-records-000000");
     Source.Context sourceContext = ContextInfoCreator.createSourceContext("myInstance", false, OnRecordError.TO_ERROR,
       ImmutableList.of("lane"));
 
