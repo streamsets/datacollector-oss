@@ -91,8 +91,6 @@
     <module>cassandra_2_1_5-lib</module>
 
     <module>hbase-protolib</module>
-
-    <module>domainserver-container</module>
   </modules>
 
   <build>
@@ -144,7 +142,6 @@
       </activation>
       <modules>
         <module>datacollector-ui</module>
-        <module>domainserver-ui</module>
       </modules>
     </profile>
     <profile>

@@ -45,11 +45,6 @@
     </dependency>
     <dependency>
       <groupId>com.streamsets</groupId>
-      <artifactId>streamsets-domainserver-container</artifactId>
-      <scope>compile</scope>
-    </dependency>
-    <dependency>
-      <groupId>com.streamsets</groupId>
       <artifactId>streamsets-datacollector-bootstrap</artifactId>
       <scope>compile</scope>
     </dependency>
@@ -194,7 +189,6 @@
       <properties>
         <!-- trick to avoid pulling UI files if the 'ui' profile is not active -->
         <sdc.ui.dist-dir>${basedir}/../datacollector-ui/target/dist</sdc.ui.dist-dir>
-        <sds.ui.dist-dir>${basedir}/../domainserver-ui/target/dist</sds.ui.dist-dir>
         <!-- TODO: for now we copy committed generated docs  -->
         <docs.dist-dir>${basedir}/../docs/generated</docs.dist-dir>
       </properties>

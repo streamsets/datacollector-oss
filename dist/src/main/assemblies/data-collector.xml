@@ -102,17 +102,6 @@
       </excludes>
     </fileSet>
 
-    <!-- domain server static web -->
-    <fileSet>
-      <directory>${sds.ui.dist-dir}</directory>
-      <outputDirectory>/sds-static-web</outputDirectory>
-      <excludes>
-        <exclude>karma-conf.js</exclude>
-        <exclude>app/**</exclude>
-        <exclude>bower_components/**</exclude>
-      </excludes>
-    </fileSet>
-
     <!-- local docs -->
     <fileSet>
       <directory>${docs.dist-dir}</directory>
@@ -263,7 +252,6 @@
       <scope>compile</scope>
       <includes>
         <include>com.streamsets:streamsets-datacollector-container</include>
-        <include>com.streamsets:streamsets-domainserver-container</include>
       </includes>
       <excludes>
         <exclude>com.streamsets:streamsets-datacollector-api</exclude>
