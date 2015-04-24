@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
+<concept id="concept_atr_j4y_5r">
+ <title>Stage Error Record Handling</title>
+ <shortdesc>Most stages include error record handling options. When an error occurs when processing
+    a record, the <ph
+      conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> processes
+    records based on the stage error record handling property, <uicontrol>On Record
+      Error</uicontrol>. </shortdesc>
+ <conbody>
+  <p><indexterm>stages<indexterm>error record handling</indexterm></indexterm>Stages include the
+      following error handling options:<dl>
+        <dlentry>
+          <dt>Discard</dt>
+          <dd>The stage silently discards the record. The <ph
+              conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> does
+            not log information about the error or note the specific record that encountered an
+            error. The discarded record is not included in Monitor mode error record counts or
+            metrics. </dd>
+        </dlentry>
+        <dlentry>
+          <dt>Send to Error </dt>
+          <dd>The stage sends the record to the pipeline for error handling. The pipeline processes
+            the record based on the pipeline error handling configuration.</dd>
+          <dd>When you monitor the pipeline, you can view the most recent set of error records and
+            information about the errors on the Error Records tab for the stage. But this
+            information becomes unavailable after you stop the pipeline. </dd>
+        </dlentry>
+        <dlentry>
+          <dt>Stop Pipeline</dt>
+          <dd>The <ph
+              conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
+            stops the pipeline and logs information about the error. The error that stopped the
+            pipeline displays as an alert in Monitor mode and as an error in the pipeline history.
+          </dd>
+        </dlentry>
+      </dl></p>
+ </conbody>
+</concept>

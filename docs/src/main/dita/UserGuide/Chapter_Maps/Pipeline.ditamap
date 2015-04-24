@@ -40,7 +40,9 @@
    <topicmeta>
     <shortdesc/>
    </topicmeta>
-   <topicref href="../Pipeline_Configuration/SendToError.dita"/>
+   <topicref href="../Pipeline_Configuration/ErrorHandling-Stage.dita"/>
+   <topicref href="../Pipeline_Configuration/ErrorHandling-Pipeline.dita"/>
+   <topicref href="../Pipeline_Configuration/ErrorHandling-Example.dita"/>
    <topicref href="../Pipeline_Configuration/ReprocessingErrorRecords.dita"/>
   </topicref>
   <topicref href="../Pipeline_Configuration/Validation.dita">

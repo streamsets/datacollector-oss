@@ -49,17 +49,27 @@
                                         </ul></entry>
                                 </row>
                                 <row>
+                                    <entry>Files Charset</entry>
+                                    <entry>Character encoding of the data to be processed.</entry>
+                                </row>
+                                <row>
                                     <entry>Files Directory</entry>
                                     <entry>A directory local to the <ph
                                             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
                                         /> where source files are stored.</entry>
                                 </row>
                                 <row>
-                                    <entry>Overrun Limit</entry>
-                                    <entry>Maximum record size to process. Use to limit out of
-                                        memory errors.<draft-comment author="Loretta">TUCU: What
-                                            happens if it's larger - skipped? can we call this Max
-                                            Record Size?</draft-comment></entry>
+                                    <entry>Buffer Limit (KB) <xref
+                                        href="Directory-BufferLimit.dita#concept_zp2_fqs_5r">
+                                            <image href="../Graphics/icon_moreInfo.png" scale="10"
+                                                placement="inline" id="image_mfn_hwx_5r"
+                                        /></xref></entry>
+                                    <entry>Maximum buffer size. The buffer size determines the size
+                                        of the record that can be processed. <p>Decrease when memory
+                                            on the <ph
+                                                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                                            /> machine is limited. Increase to process larger
+                                            records when memory is available. </p></entry>
                                 </row>
                                 <row>
                                     <entry>Batch Size (recs)</entry>
@@ -75,25 +85,21 @@
                                     <entry>Number of seconds to wait before sending a batch.</entry>
                                 </row>
                                 <row>
-                                    <entry>File Name Pattern <xref
-                                            href="Directory_FNamePattern.dita#concept_bxt_ndl_5q">
-                                            <image href="../Graphics/icon_moreInfo.png" scale="10"
-                                                id="image_c4p_p5v_yq" placement="inline"/></xref>
-                                    </entry>
-                                    <entry>Regular expression that describes the file names. <p>You
-                                            can use UNIX-style wildcards, such as * or ?. For
-                                            example, *.log.</p></entry>
+                                    <entry>File Name Pattern</entry>
+                                    <entry>Regular expression that describes the pattern of the file
+                                        names to process.<p>You can use UNIX-style wildcards, such
+                                            as * or ?. For example, *.log.</p></entry>
                                 </row>
                                 <row>
                                     <entry>First File to Process <xref
-                                            href="Directory_FirstFile.dita#concept_ltv_r3l_5q">
+                                            href="Directory_FileProcessing.dita#concept_ltv_r3l_5q">
                                             <image href="../Graphics/icon_moreInfo.png" scale="10" placement="inline"
                                                 id="image_tcz_pj2_br"/></xref>
                                     </entry>
-                                    <entry>Name of the first file to process. Use a name that uses
-                                        the file name pattern. <p>When you enter a file name,
-                                            Directory reads the first file and other files in the
-                                            directory with ascending names.</p></entry>
+                                    <entry>Name of the first file to process. <p>When you do not
+                                            enter a first file name, Directory reads all files in
+                                            the directory with the specified file name
+                                        pattern.</p></entry>
                                 </row>
                                 <row>
                                     <entry>Max Files in Directory</entry>
@@ -125,8 +131,9 @@
                             <tbody>
                                 <row>
                                     <entry>Error Directory</entry>
-                                    <entry>The directory for files that were not completely
-                                        processed due to data handling errors.</entry>
+                                    <entry>The directory for files that cannot be fully processed
+                                        due to data handling errors.<p>Use to manage files for error
+                                            handling and reprocessing. </p></entry>
                                 </row>
                                 <row>
                                     <entry>File Post Processing</entry>
@@ -140,7 +147,8 @@
                                 </row>
                                 <row>
                                     <entry>Archiving Directory</entry>
-                                    <entry>The directory for processed files. </entry>
+                                    <entry>The directory for files that are fully processed. Use
+                                        when archiving processed files.</entry>
                                 </row>
                                 <row>
                                     <entry>Archive Retention Time (mins)</entry>
@@ -264,108 +272,8 @@
                     </table>
                 </info>
             </step>
-            <step>
-                <cmd>For log data, on the <wintitle>Log</wintitle> tab, configure the following
-                    properties:</cmd>
-                <info>
-                    <table frame="all" rowsep="1" colsep="1" id="table_ihc_3fs_sr">
-                        <tgroup cols="2">
-                            <colspec colname="c1" colnum="1" colwidth="1*"/>
-                            <colspec colname="c2" colnum="2" colwidth="1.82*"/>
-                            <thead>
-                                <row>
-                                    <entry>Log Property</entry>
-                                    <entry>Description</entry>
-                                </row>
-                            </thead>
-                            <tbody>
-                                <row>
-                                    <entry>Log Format</entry>
-                                    <entry>Format of the log files. Use one of the following
-                                            options:<ul id="ul_upc_mfs_sr">
-                                            <li>Common Log Format</li>
-                                            <li>Combined Log Format</li>
-                                            <li>Apache Error Log Format</li>
-                                            <li>Apache Access Log Custom Format</li>
-                                            <li>Regular Expression</li>
-                                            <li>Grok Pattern</li>
-                                            <li>Log4j</li>
-                                        </ul></entry>
-                                </row>
-                                <row>
-                                    <entry>Max Line Length</entry>
-                                    <entry>Maximum length of a log line. Directory truncates longer
-                                        lines. </entry>
-                                </row>
-                                <row>
-                                    <entry>Retain Original Line</entry>
-                                    <entry>Determines how to treat the original log line. Select to
-                                        include the original log line as a field in the resulting
-                                            record.<p>By default, the original line is
-                                            discarded.</p></entry>
-                                </row>
-                            </tbody>
-                        </tgroup>
-                    </table>
-                    <ul id="ul_mdk_djs_sr">
-                        <li>When you select <uicontrol>Apache Access Log Custom Format</uicontrol>,
-                            use Apache log format strings to define the <uicontrol>Custom Log
-                                Format</uicontrol>.</li>
-                        <li>When you select <uicontrol>Regular Expression</uicontrol>, enter the
-                            regular expression that describes the log format, and then map the
-                            fields that you want to include to each regular expression group.</li>
-                        <li>When you select <uicontrol>Grok Pattern</uicontrol>, you can define any
-                            custom grok patterns that you want to use in the <uicontrol>Grok Pattern
-                                Definition</uicontrol> field, and then enter the full grok pattern
-                            log file description in the <uicontrol>Grok Pattern</uicontrol>
-                                field.<p>For a list of supported grok patterns, see <draft-comment
-                                    author="Loretta">add xref to new grok pattern appendix when it's
-                                    ready. Or add to related links below.</draft-comment></p></li>
-                        <li>When you select <uicontrol>Log4j</uicontrol>, define the following properties:<p>
-                                <table frame="all" rowsep="1" colsep="1" id="table_pzm_rbt_sr">
-                                    <tgroup cols="2">
-                                        <colspec colname="c1" colnum="1" colwidth="1*"/>
-                                        <colspec colname="c2" colnum="2" colwidth="2.23*"/>
-                                        <thead>
-                                            <row>
-                                                <entry>Log4j Property</entry>
-                                                <entry>Description</entry>
-                                            </row>
-                                        </thead>
-                                        <tbody>
-                                            <row>
-                                                <entry>On Parse Error</entry>
-                                                <entry>Determines how to handle information that
-                                                  cannot be parsed:<ul id="ul_bvm_5bt_sr">
-                                                  <li>Skip and Log Error - Skips reading the line
-                                                  and logs a stage error.</li>
-                                                  <li>Skip, No Error - Skips reading the line and
-                                                  does not log an error.</li>
-                                                  <li>Include as Stack Trace - Includes information
-                                                  that cannot be parsed as a stack trace to the
-                                                  previously-read log line. The information is
-                                                  <draft-comment author="Loretta">added as a field?
-                                                  added to the message? - see what hari decides
-                                                  4/16</draft-comment></li>
-                                                  </ul></entry>
-                                            </row>
-                                            <row>
-                                                <entry>Use Custom Log Format</entry>
-                                                <entry>Allows you to define a custom log
-                                                  format.</entry>
-                                            </row>
-                                            <row>
-                                                <entry>Custom Format</entry>
-                                                <entry>Use log4j variables to define a custom log
-                                                  format.</entry>
-                                            </row>
-                                        </tbody>
-                                    </tgroup>
-                                </table>
-                            </p>
-                        </li>
-                    </ul>
-                </info>
+            <step conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/LogData_Log4j">
+                <cmd/>
             </step>
         </steps>
     </taskbody>

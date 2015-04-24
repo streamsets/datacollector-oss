@@ -95,6 +95,11 @@
                                         </ul></entry>
                                 </row>
                                 <row>
+                                    <entry>Messages Charset</entry>
+                                    <entry>Character encoding of the messages to be
+                                        processed.</entry>
+                                </row>
+                                <row>
                                     <entry>Produce Single Record</entry>
                                     <entry>Generates a single record for records that include
                                         multiple objects. <p>When not selected, Kafka Consumer

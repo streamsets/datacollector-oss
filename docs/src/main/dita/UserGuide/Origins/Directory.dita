@@ -2,16 +2,16 @@
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_qcq_54n_jq">
  <title>Directory</title>
- <shortdesc>The Directory origin reads data from files in a directory. </shortdesc>
+ <shortdesc>The Directory origin reads data from files in a directory. The file names must all share
+        a file name pattern. </shortdesc>
  <conbody>
   <p><indexterm>Directory
-                    origin<indexterm>overview</indexterm></indexterm><indexterm>origins<indexterm>Directory</indexterm></indexterm>Directory
-            reads the files in a directory with names that match a user-defined pattern. It can
-            optionally begin processing with a specific file name. Then, it reads files with similar
-            names in naturally ascending order. After processing a file, Directory can keep,
-            archive, or delete the file. </p>
-        <p>When the pipeline stops, Directory notes where it stopped reading. When the pipeline
-            starts again, by default, Directory continues processing from where it left off. You can
-            reset the origin to process all specified files. </p>
+                    origin<indexterm>overview</indexterm></indexterm><indexterm>origins<indexterm>Directory</indexterm></indexterm>When
+            you configure Directory, you define the directory to use, the file name pattern, and the
+            first file to process. These properties determine the files that Directory processes.
+            After processing a file, Directory can keep, archive, or delete the file. </p>
+        <p>When the pipeline stops, Directory notes where it stops reading. When the pipeline starts
+            again Directory continues processing from where it left off by default. You can reset
+            the origin to process all requested files. </p>
  </conbody>
 </concept>

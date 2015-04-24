@@ -3,18 +3,19 @@
 <concept id="concept_n1y_qyp_5q">
  <title>File Tail</title>
  <shortdesc>The File Tail origin reads data as it is written to an active file after reading related
-        archived files in the same directory. If the active file is archived, File Tail continues to
-        the new active file, reading all existing data in the file and tailing incoming data. </shortdesc>
+        archived files in the same directory. </shortdesc>
  <conbody>
-  <p><indexterm>File Tail
+        <p><indexterm>File Tail
                     origin<indexterm>overview</indexterm></indexterm><indexterm>origins<indexterm>File
-                    Tail</indexterm></indexterm>You can use File Tail to read active files and
-            related archived files in multiple directories. </p>
-        <p>When the pipeline stops, File Tail notes where it stopped reading. When the pipeline
-            starts again, by default, File Tail continues processing from where it left off. You can
-            reset the origin to process all available archived files before continuing to the active
-            file.</p>
-        <draft-comment author="Loretta">Check how multiple directories looks. Still need to add log
-            data format details for this origin.</draft-comment>
- </conbody>
+                    Tail</indexterm></indexterm>When you configure File Tail, you define the active
+            file name, the naming convention for archived files, and the first archived file to
+            process. These properties determine the files that File Tail processes. </p>
+        <p>When the pipeline stops, File Tail notes where it stops reading. When the pipeline starts
+            again, File Tail continues processing from where it left off by default. You can reset
+            the origin to process all requested files before continuing to the active file.</p>
+        <p>You can use File Tail to read related sets of files in multiple directories. Each
+            directory can include a single active file. When File Tail processes files in multiple
+            directories, it merges all data in the pipeline. <draft-comment author="Loretta">add
+                that it's line by line</draft-comment></p>
+    </conbody>
 </concept>

@@ -8,10 +8,12 @@
      destination<indexterm>overview</indexterm></indexterm><indexterm>destinations<indexterm>Cassandra</indexterm></indexterm>When
    you configure the Cassandra destination, you define connection information, optional user
    credentials, and map incoming fields to columns in the Cassandra table.</p>
-  <p>
-   <note>Due to Cassandra requirements, the data types of the incoming fields must exactly match the
-    types of the corresponding Cassandara columns. When appropriate, use a Type Converter processor
-    earlier in the pipeline to convert the necessary data types.</note>
-  </p>
+    <p><note>Due to Cassandra requirements, the data types of the incoming fields must exactly match
+        the types of the corresponding Cassandara columns. When appropriate, use a Type Converter
+        processor earlier in the pipeline to convert the necessary data types.</note>Batches written
+      to Cassandra are atomic - that is, the entire batch of records is either successfully written
+      to Cassandra, or fails. If an error occurs with one or more records in a batch, Cassandra
+      fails the entire batch. When a batch fails, all records in the batch are processed based on
+      the error handling configured for the Cassandra destination.</p>
  </conbody>
 </concept>

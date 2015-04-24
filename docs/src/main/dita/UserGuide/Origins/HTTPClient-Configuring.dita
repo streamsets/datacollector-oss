@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE task PUBLIC "-//OASIS//DTD DITA General Task//EN" "generalTask.dtd">
+<task id="task_akl_rkz_5r">
+    <title>Configuring an HTTP Client Origin</title>
+    <taskbody>
+        <context>
+            <p><indexterm>HTTP Client origin<indexterm>configuring</indexterm></indexterm>Configure
+                an HTTP Client origin to read JSON data from a streaming HTTP resource URL.</p>
+        </context>
+        <steps id="steps_xmt_2lz_5r">
+            <step>
+                <cmd>On the <wintitle>HTTP</wintitle> tab, configure the following properties:</cmd>
+                <info>
+                    <table frame="all" rowsep="1" colsep="1" id="table_hlz_3lz_5r">
+                        <tgroup cols="2">
+                            <colspec colname="c1" colnum="1" colwidth="1*"/>
+                            <colspec colname="c2" colnum="2" colwidth="3*"/>
+                            <thead>
+                                <row>
+                                    <entry>HTTP Property</entry>
+                                    <entry>Description</entry>
+                                </row>
+                            </thead>
+                            <tbody>
+                                <row>
+                                    <entry>Data Format</entry>
+                                    <entry>The HTTP Client reads JSON data.</entry>
+                                </row>
+                                <row>
+                                    <entry>Resource URL</entry>
+                                    <entry>URL where the data resides. </entry>
+                                </row>
+                                <row>
+                                    <entry>Request Timeout</entry>
+                                    <entry>Amount of time the origin waits for a response from the
+                                            server.<draft-comment author="Loretta">This isn't for
+                                            data, but just a ping back?</draft-comment></entry>
+                                </row>
+                                <row>
+                                    <entry>Mode</entry>
+                                    <entry>Processing mode:<ul id="ul_nfn_slz_5r">
+                                            <li>Streaming - Maintains a connection and processes
+                                                data as it becomes available.</li>
+                                            <li>Polling - Connects periodically to check for data.
+                                            </li>
+                                        </ul></entry>
+                                </row>
+                                <row>
+                                    <entry>Polling Interval (ms) </entry>
+                                    <entry>Number of milliseconds the origin waits before checking
+                                        for data. Used in the polling mode only. </entry>
+                                </row>
+                                <row>
+                                    <entry>Use OAuth</entry>
+                                    <entry>Determines whether OAuth credentials are used to connect
+                                        to the server. </entry>
+                                </row>
+                                <row>
+                                    <entry>Batch Size</entry>
+                                    <entry>Maximum number of JSON objects to include in a batch and
+                                        send through the pipeline at one time.</entry>
+                                </row>
+                                <row>
+                                    <entry>Batch Wait Time <xref
+                                            href="BatchSizeWaitTime.dita#concept_ypd_vgr_5q">
+                                            <image href="../Graphics/icon_moreInfo.png" scale="10"
+                                                id="image_mgp_2q3_br" placement="inline"
+                                        /></xref></entry>
+                                    <entry>Maximum amount of time to wait before sending a batch.
+                                    </entry>
+                                </row>
+                            </tbody>
+                        </tgroup>
+                    </table>
+                </info>
+            </step>
+            <step>
+                <cmd>When using OAuth, on the <wintitle>OAuth</wintitle> tab, configure the
+                    following properties:</cmd>
+                <info>
+                    <table frame="all" rowsep="1" colsep="1" id="table_c2b_f4z_5r">
+                        <tgroup cols="2">
+                            <colspec colname="c1" colnum="1" colwidth="1*"/>
+                            <colspec colname="c2" colnum="2" colwidth="2.39*"/>
+                            <thead>
+                                <row>
+                                    <entry>OAuth Property</entry>
+                                    <entry>Description</entry>
+                                </row>
+                            </thead>
+                            <tbody>
+                                <row>
+                                    <entry>Consumer Key</entry>
+                                    <entry>OAuth consumer key.</entry>
+                                </row>
+                                <row>
+                                    <entry>Consumer Secret</entry>
+                                    <entry>OAuth consumer secret.</entry>
+                                </row>
+                                <row>
+                                    <entry>Token</entry>
+                                    <entry>OAuth consumer token.</entry>
+                                </row>
+                                <row>
+                                    <entry>Token Secret</entry>
+                                    <entry>OAuth token secret.</entry>
+                                </row>
+                            </tbody>
+                        </tgroup>
+                    </table>
+                </info>
+            </step>
+            <step>
+                <cmd>On the <wintitle>JSON</wintitle> tab, configure the following properties:</cmd>
+                <info>
+                    <table frame="all" rowsep="1" colsep="1" id="table_ymj_44z_5r">
+                        <tgroup cols="2">
+                            <colspec colname="c1" colnum="1" colwidth="1*"/>
+                            <colspec colname="c2" colnum="2" colwidth="2.08*"/>
+                            <thead>
+                                <row>
+                                    <entry>JSON Property</entry>
+                                    <entry>Description</entry>
+                                </row>
+                            </thead>
+                            <tbody>
+                                <row>
+                                    <entry>JSON Content</entry>
+                                    <entry>Type of JSON content to be processed:<ul
+                                            id="ul_r32_q4z_5r">
+                                            <li>JSON Array of Objects - Use to process data in
+                                                polling mode. </li>
+                                            <li>Multiple JSON Objects - Use to process data in
+                                                streaming or polling mode.  </li>
+                                        </ul></entry>
+                                </row>
+                                <row>
+                                    <entry>Entity Delimeter</entry>
+                                    <entry>Delimiter to indicate the end of a JSON record, such as
+                                        \n or \r.  Used when processing multiple JSON objects.
+                                    </entry>
+                                </row>
+                            </tbody>
+                        </tgroup>
+                    </table>
+                </info>
+            </step>
+        </steps>
+    </taskbody>
+</task>

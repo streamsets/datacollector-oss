@@ -2,18 +2,18 @@
 <!DOCTYPE task PUBLIC "-//OASIS//DTD DITA General Task//EN" "generalTask.dtd">
 <task id="task_unq_wdw_yq">
     <title>Configuring a File Tail Origin</title>
-    <shortdesc>Configure a File Tail origin to read data as it is written to a file. You can read
-        text or JSON data.</shortdesc>
     <taskbody>
-        <context/>
+        <context><indexterm>File Tail origin<indexterm>configuring</indexterm></indexterm>Configure
+            a File Tail origin to read data as it is written to a file. You can read text or JSON
+            data.</context>
         <steps id="steps_cfd_j2w_yq">
             <step
                 conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/1stStepErrorHandling">
                 <cmd/>
             </step>
             <step>
-                <cmd><indexterm>File Tail origin<indexterm>configuring</indexterm></indexterm>On the
-                        <uicontrol>File</uicontrol> tab, configure the following properties:</cmd>
+                <cmd>On the <uicontrol>File</uicontrol> tab, configure the following
+                    properties:</cmd>
                 <info>
                     <table frame="all" rowsep="1" colsep="1" id="table_ld1_5fr_5q">
                         <tgroup cols="2">
@@ -27,16 +27,75 @@
                             </thead>
                             <tbody>
                                 <row>
-                                    <entry>Data Format</entry>
+                                    <entry>Data Format <xref
+                                        href="FileTail-DataFormats.dita#concept_pm4_b3q_5r">
+                                            <image href="../Graphics/icon_moreInfo.png" scale="10"
+                                                id="image_br4_fgs_5r"/></xref></entry>
                                     <entry>Format of data in the file. Use one of the following
                                             options:<ul id="ul_pwv_cr2_zq">
                                             <li>Text</li>
                                             <li>JSON</li>
+                                            <li>Log</li>
                                         </ul></entry>
                                 </row>
                                 <row>
-                                    <entry>File Path</entry>
-                                    <entry>Directory and name of the file to read.</entry>
+                                    <entry>Data Charset</entry>
+                                    <entry>Character encoding of the data to be processed.</entry>
+                                </row>
+                                <row>
+                                    <entry>Directory</entry>
+                                    <entry>Directory where the source files reside.<p>Click the
+                                                <uicontrol>Add</uicontrol> icon to enter more than
+                                            one directory.</p></entry>
+                                </row>
+                                <row>
+                                    <entry>Rolled Files Naming <xref
+                                        href="FileTail-FileProcessing.dita#concept_trt_thq_5r">
+                                            <image href="../Graphics/icon_moreInfo.png" scale="10"
+                                                id="image_bkg_sqr_5r"/></xref><draft-comment
+                                            author="Loretta">Can we call this: <p>"Archived File
+                                                Names"</p></draft-comment></entry>
+                                    <entry>Naming convention for archived files. Select the naming
+                                        convention that describes how the server generates file
+                                        names.</entry>
+                                </row>
+                                <row>
+                                    <entry>File to Tail<draft-comment author="Loretta">Can we call
+                                                this:<p> "Active File"</p></draft-comment></entry>
+                                    <entry>Static file name for the active file that contains the
+                                        latest data from the server.<p>Not used for Periodic
+                                                Files.<draft-comment author="Loretta">Can we call
+                                                Periodic Files => File Name
+                                            Pattern?</draft-comment></p></entry>
+                                </row>
+                                <row>
+                                    <entry>Periodic File Pattern<draft-comment author="Loretta">Then
+                                            can we call this <p>"Pattern" or "Name
+                                            Pattern"?</p></draft-comment></entry>
+                                    <entry>Regular expression that defines the file name pattern
+                                        used to create files. <p>You can use UNIX-style wildcards,
+                                            such as an asterisk or question mark. </p><p>Available
+                                            only for Periodic Files.</p></entry>
+                                </row>
+                                <row>
+                                    <entry>First Rolled File<draft-comment author="Loretta">Can we
+                                            call this: <p>First File to Process</p><p>Then it
+                                                matches Directory - same concept,
+                                            right?</p></draft-comment></entry>
+                                    <entry>Name of the first file to process. Use a name that uses
+                                        the file name pattern.<p>When you enter a file name, File
+                                            Tail reads the first file and other files in the
+                                            directory with alphabetically ascending names.
+                                            </p><p>When you do not enter a file name, File Tail
+                                            reads all files in the directory with the specified file
+                                            name pattern.</p></entry>
+                                </row>
+                                <row>
+                                    <entry>Max Line Length</entry>
+                                    <entry>Maximum number of characters in a record, including
+                                        end-of-line characters. <p>Longer text and log lines are
+                                            truncated. Longer JSON objects are sent to the stage for
+                                            error handling.</p></entry>
                                 </row>
                                 <row>
                                     <entry>Maximum Lines per Batch (recs)</entry>
@@ -53,6 +112,9 @@
                         </tgroup>
                     </table>
                 </info>
+            </step>
+            <step conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/LogData_Log4j">
+                <cmd/>
             </step>
         </steps>
     </taskbody>

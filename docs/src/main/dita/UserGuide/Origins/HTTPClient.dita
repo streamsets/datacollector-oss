@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
+<concept id="concept_wk4_bjz_5r">
+ <title>HTTP Client</title>
+ <shortdesc>The HTTP Client origin reads JSON data from a streaming HTTP resource URL.</shortdesc>
+ <conbody>
+  <p>When you configure HTTP Client, you specify the resource URL and other read properties.
+   Optionally, you can provide OAuth credentials to secure the connection. </p>
+  <p>HTTP Client can use one of the following processing modes to read source data:<dl>
+    <dlentry>
+     <dt>Streaming</dt>
+     <dd>HTTP Client maintains a connection and processes data as it becomes available. Use to
+      process streaming data in real time.</dd>
+    </dlentry>
+    <dlentry>
+     <dt>Polling</dt>
+     <dd>HTTP Client polls the server at the specified interval for available data. Use to access
+      data periodically, such as metrics and events at a REST endpoint. </dd>
+    </dlentry>
+   </dl></p>
+ </conbody>
+</concept>

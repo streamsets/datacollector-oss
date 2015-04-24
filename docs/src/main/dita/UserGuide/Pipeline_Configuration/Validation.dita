@@ -3,7 +3,8 @@
 <concept id="concept_azs_swf_jr">
  <title>Validation</title>
  <shortdesc>The <ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-  /> console provides two types of validation:</shortdesc>
+  /> console provides two types of validation:<draft-comment author="Loretta">check on all of
+   this</draft-comment></shortdesc>
  <conbody>
   <p>
    <dl>
