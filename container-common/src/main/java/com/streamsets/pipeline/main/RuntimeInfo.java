@@ -18,12 +18,14 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public class RuntimeInfo {
   public static final String SPLITTER = "|";
-  public static final String CONFIG_DIR = "sdc.conf.dir";
-  public static final String DATA_DIR = "sdc.data.dir";
-  public static final String LOG_DIR = "sdc.log.dir";
-  public static final String STATIC_WEB_DIR = "sdc.static-web.dir";
+  public static final String CONFIG_DIR = ".conf.dir";
+  public static final String DATA_DIR = ".data.dir";
+  public static final String LOG_DIR = ".log.dir";
+  public static final String STATIC_WEB_DIR = ".static-web.dir";
 
   public static final String LOG4J_CONFIGURATION_URL_ATTR = "log4j.configuration.url";
+  private static final String LOG4J_PROPERTIES = "-log4j.properties";
+
   private final MetricRegistry metrics;
   private final List<? extends ClassLoader> stageLibraryClassLoaders;
   private String id;
@@ -31,11 +33,17 @@ public class RuntimeInfo {
   private final Map<String, Object> attributes;
   private Runnable shutdownRunnable;
   private Map<String, String> authenticationTokens;
+  private final String propertyPrefix;
   private final String [] roles = { "admin", "creator", "manager", "guest" };
 
-  public RuntimeInfo(MetricRegistry metrics, List<? extends ClassLoader> stageLibraryClassLoaders) {
+  public RuntimeInfo(String propertyPrefix, MetricRegistry metrics, List<? extends ClassLoader> stageLibraryClassLoaders) {
     this.metrics = metrics;
-    this.stageLibraryClassLoaders = ImmutableList.copyOf(stageLibraryClassLoaders);
+    if(stageLibraryClassLoaders != null) {
+      this.stageLibraryClassLoaders = ImmutableList.copyOf(stageLibraryClassLoaders);
+    } else {
+      this.stageLibraryClassLoaders = null;
+    }
+    this.propertyPrefix = propertyPrefix;
     id = "UNDEF";
     httpUrl = "UNDEF";
     this.attributes = new ConcurrentHashMap<>();
@@ -68,19 +76,23 @@ public class RuntimeInfo {
   }
 
   public String getStaticWebDir() {
-    return System.getProperty(STATIC_WEB_DIR, getRuntimeDir() + "/static-web");
+    return System.getProperty(propertyPrefix + STATIC_WEB_DIR, getRuntimeDir() + "/" + propertyPrefix + "-static-web");
   }
 
   public String getConfigDir() {
-    return System.getProperty(CONFIG_DIR, getRuntimeDir() + "/etc");
+    return System.getProperty(propertyPrefix + CONFIG_DIR, getRuntimeDir() + "/etc");
   }
 
   public String getLogDir() {
-    return System.getProperty(LOG_DIR, getRuntimeDir() + "/log");
+    return System.getProperty(propertyPrefix + LOG_DIR, getRuntimeDir() + "/log");
+  }
+
+  public String getLog4jPropertiesFileName() {
+    return propertyPrefix + LOG4J_PROPERTIES;
   }
 
   public String getDataDir() {
-    return System.getProperty(DATA_DIR, getRuntimeDir() + "/var");
+    return System.getProperty(propertyPrefix + DATA_DIR, getRuntimeDir() + "/var");
   }
 
   public boolean hasAttribute(String key) {

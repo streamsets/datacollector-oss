@@ -17,6 +17,7 @@ import com.streamsets.pipeline.el.ELVariables;
 import com.streamsets.pipeline.lib.el.RecordEL;
 import com.streamsets.pipeline.lib.el.StringEL;
 import com.streamsets.pipeline.main.RuntimeInfo;
+import com.streamsets.pipeline.main.RuntimeModule;
 import com.streamsets.pipeline.metrics.MetricsConfigurator;
 import com.streamsets.pipeline.runner.LaneResolver;
 import com.streamsets.pipeline.util.Configuration;
@@ -44,7 +45,8 @@ public class TestDataRuleEvaluator {
     metrics = new MetricRegistry();
     variables = new ELVariables();
     elEvaluator = new ELEvaluator("TestDataRuleEvaluator", RecordEL.class, StringEL.class);
-    runtimeInfo = new RuntimeInfo(new MetricRegistry(), Arrays.asList(TestDataRuleEvaluator.class.getClassLoader()));
+    runtimeInfo = new RuntimeInfo(RuntimeModule.SDC_PROPERTY_PREFIX, new MetricRegistry(),
+      Arrays.asList(TestDataRuleEvaluator.class.getClassLoader()));
   }
 
   @Test

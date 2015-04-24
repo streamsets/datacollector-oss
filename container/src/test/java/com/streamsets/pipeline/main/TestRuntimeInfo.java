@@ -31,19 +31,20 @@ public class TestRuntimeInfo {
   @Before
   @After
   public void cleanUp() {
-    System.getProperties().remove(RuntimeInfo.CONFIG_DIR);
-    System.getProperties().remove(RuntimeInfo.LOG_DIR);
-    System.getProperties().remove(RuntimeInfo.DATA_DIR);
-    System.getProperties().remove(RuntimeInfo.STATIC_WEB_DIR);
+    System.getProperties().remove(RuntimeModule.SDC_PROPERTY_PREFIX + RuntimeInfo.CONFIG_DIR);
+    System.getProperties().remove(RuntimeModule.SDC_PROPERTY_PREFIX + RuntimeInfo.LOG_DIR);
+    System.getProperties().remove(RuntimeModule.SDC_PROPERTY_PREFIX + RuntimeInfo.DATA_DIR);
+    System.getProperties().remove(RuntimeModule.SDC_PROPERTY_PREFIX + RuntimeInfo.STATIC_WEB_DIR);
     System.getProperties().remove(RuntimeModule.DATA_COLLECTOR_BASE_HTTP_URL);
     System.getProperties().remove(RuntimeModule.DATA_COLLECTOR_ID);
   }
 
   @Test
   public void testInfoDefault() {
-    RuntimeInfo info = new RuntimeInfo(new MetricRegistry(), Arrays.asList(getClass().getClassLoader()));
+    RuntimeInfo info = new RuntimeInfo(RuntimeModule.SDC_PROPERTY_PREFIX, new MetricRegistry(),
+      Arrays.asList(getClass().getClassLoader()));
     Assert.assertEquals(System.getProperty("user.dir"), info.getRuntimeDir());
-    Assert.assertEquals(System.getProperty("user.dir") + "/static-web", info.getStaticWebDir());
+    Assert.assertEquals(System.getProperty("user.dir") + "/sdc-static-web", info.getStaticWebDir());
     Assert.assertEquals(System.getProperty("user.dir") + "/etc", info.getConfigDir());
     Assert.assertEquals(System.getProperty("user.dir") + "/log", info.getLogDir());
     Assert.assertEquals(System.getProperty("user.dir") + "/var", info.getDataDir());
@@ -54,13 +55,13 @@ public class TestRuntimeInfo {
 
   @Test
   public void testInfoCustom() {
-    System.setProperty(RuntimeInfo.STATIC_WEB_DIR, "w");
-    System.setProperty(RuntimeInfo.CONFIG_DIR, "x");
-    System.setProperty(RuntimeInfo.LOG_DIR, "y");
-    System.setProperty(RuntimeInfo.DATA_DIR, "z");
+    System.setProperty(RuntimeModule.SDC_PROPERTY_PREFIX + RuntimeInfo.STATIC_WEB_DIR, "w");
+    System.setProperty(RuntimeModule.SDC_PROPERTY_PREFIX + RuntimeInfo.CONFIG_DIR, "x");
+    System.setProperty(RuntimeModule.SDC_PROPERTY_PREFIX + RuntimeInfo.LOG_DIR, "y");
+    System.setProperty(RuntimeModule.SDC_PROPERTY_PREFIX + RuntimeInfo.DATA_DIR, "z");
 
     List<? extends ClassLoader> customCLs = Arrays.asList(new URLClassLoader(new URL[0], null));
-    RuntimeInfo info = new RuntimeInfo(new MetricRegistry(), customCLs);
+    RuntimeInfo info = new RuntimeInfo(RuntimeModule.SDC_PROPERTY_PREFIX, new MetricRegistry(), customCLs);
     Assert.assertEquals(System.getProperty("user.dir"), info.getRuntimeDir());
     Assert.assertEquals("w", info.getStaticWebDir());
     Assert.assertEquals("x", info.getConfigDir());
@@ -73,7 +74,8 @@ public class TestRuntimeInfo {
 
   @Test
   public void testAttributes() {
-    RuntimeInfo info = new RuntimeInfo(new MetricRegistry(), Arrays.asList(getClass().getClassLoader()));
+    RuntimeInfo info = new RuntimeInfo(RuntimeModule.SDC_PROPERTY_PREFIX, new MetricRegistry(),
+      Arrays.asList(getClass().getClassLoader()));
     Assert.assertFalse(info.hasAttribute("a"));
     info.setAttribute("a", 1);
     Assert.assertTrue(info.hasAttribute("a"));
@@ -101,7 +103,7 @@ public class TestRuntimeInfo {
   public void testConfigIdAndBaseHttpUrl() throws Exception {
     File dir = new File("target", UUID.randomUUID().toString());
     Assert.assertTrue(dir.mkdirs());
-    System.setProperty(RuntimeInfo.CONFIG_DIR, dir.getAbsolutePath());
+    System.setProperty(RuntimeModule.SDC_PROPERTY_PREFIX + RuntimeInfo.CONFIG_DIR, dir.getAbsolutePath());
     Properties props = new Properties();
     props.setProperty(RuntimeModule.DATA_COLLECTOR_BASE_HTTP_URL, "HTTP");
     props.setProperty(RuntimeModule.DATA_COLLECTOR_ID, "ID");

@@ -7,6 +7,7 @@ package com.streamsets.pipeline.prodmanager;
 
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.main.RuntimeInfo;
+import com.streamsets.pipeline.main.RuntimeModule;
 import com.streamsets.pipeline.runner.PipelineRuntimeException;
 import com.streamsets.pipeline.store.PipelineStoreException;
 import com.streamsets.pipeline.util.LogUtil;
@@ -32,20 +33,20 @@ public class TestProductionRunWithObserver {
 
   @BeforeClass
   public static void beforeClass() throws IOException {
-    System.setProperty(RuntimeInfo.DATA_DIR, "target/var");
-    File f = new File(System.getProperty(RuntimeInfo.DATA_DIR));
+    System.setProperty(RuntimeModule.SDC_PROPERTY_PREFIX + RuntimeInfo.DATA_DIR, "target/var");
+    File f = new File(System.getProperty(RuntimeModule.SDC_PROPERTY_PREFIX + RuntimeInfo.DATA_DIR));
     FileUtils.deleteDirectory(f);
     TestUtil.captureStagesForProductionRun();
   }
 
   @AfterClass
   public static void afterClass() throws IOException {
-    System.getProperties().remove(RuntimeInfo.DATA_DIR);
+    System.getProperties().remove(RuntimeModule.SDC_PROPERTY_PREFIX + RuntimeInfo.DATA_DIR);
   }
 
   @Before
   public void setUp() throws IOException, PipelineManagerException {
-    File f = new File(System.getProperty(RuntimeInfo.DATA_DIR));
+    File f = new File(System.getProperty(RuntimeModule.SDC_PROPERTY_PREFIX + RuntimeInfo.DATA_DIR));
     FileUtils.deleteDirectory(f);
     ObjectGraph g = ObjectGraph.create(TestUtil.TestProdManagerModule.class);
     manager = g.get(ProductionPipelineManagerTask.class);

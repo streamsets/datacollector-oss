@@ -24,6 +24,11 @@
   <dependencies>
     <dependency>
       <groupId>com.streamsets</groupId>
+      <artifactId>streamsets-datacollector-container-common</artifactId>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>com.streamsets</groupId>
       <artifactId>streamsets-datacollector-api</artifactId>
       <scope>provided</scope>
     </dependency>

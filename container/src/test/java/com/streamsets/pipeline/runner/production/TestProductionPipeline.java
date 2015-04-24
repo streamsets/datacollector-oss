@@ -22,6 +22,7 @@ import com.streamsets.pipeline.config.MemoryLimitConfiguration;
 import com.streamsets.pipeline.config.MemoryLimitExceeded;
 import com.streamsets.pipeline.config.PipelineConfiguration;
 import com.streamsets.pipeline.main.RuntimeInfo;
+import com.streamsets.pipeline.main.RuntimeModule;
 import com.streamsets.pipeline.memory.TestMemoryUsageCollector;
 import com.streamsets.pipeline.metrics.MetricsConfigurator;
 import com.streamsets.pipeline.runner.MockStages;
@@ -284,7 +285,8 @@ public class TestProductionPipeline {
   private ProductionPipeline createProductionPipeline(DeliveryGuarantee deliveryGuarantee,
                                                       boolean captureNextBatch, boolean sourceOffsetCommitter)
       throws PipelineRuntimeException, StageException {
-    RuntimeInfo runtimeInfo = new RuntimeInfo(runtimeInfoMetrics, Arrays.asList(getClass().getClassLoader()));
+    RuntimeInfo runtimeInfo = new RuntimeInfo(RuntimeModule.SDC_PROPERTY_PREFIX, runtimeInfoMetrics,
+      Arrays.asList(getClass().getClassLoader()));
     runtimeInfo.setId("id");
     SourceOffsetTracker tracker = new TestUtil.SourceOffsetTrackerImpl("1");
     FileSnapshotStore snapshotStore = Mockito.mock(FileSnapshotStore.class);

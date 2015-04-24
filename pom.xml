@@ -58,6 +58,7 @@
     <module>bootstrap</module>
     <module>api</module>
     <module>common</module>
+    <module>container-common</module>
     <module>container</module>
 
     <module>sdk</module>

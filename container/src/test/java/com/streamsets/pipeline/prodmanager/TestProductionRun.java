@@ -10,6 +10,7 @@ import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.impl.ErrorMessage;
 import com.streamsets.pipeline.main.RuntimeInfo;
+import com.streamsets.pipeline.main.RuntimeModule;
 import com.streamsets.pipeline.runner.PipelineRuntimeException;
 import com.streamsets.pipeline.snapshotstore.SnapshotInfo;
 import com.streamsets.pipeline.snapshotstore.SnapshotStatus;
@@ -44,20 +45,20 @@ public class TestProductionRun {
 
   @BeforeClass
   public static void beforeClass() throws IOException {
-    System.setProperty(RuntimeInfo.DATA_DIR, "target/var");
-    File f = new File(System.getProperty(RuntimeInfo.DATA_DIR));
+    System.setProperty(RuntimeModule.SDC_PROPERTY_PREFIX + RuntimeInfo.DATA_DIR, "target/var");
+    File f = new File(System.getProperty(RuntimeModule.SDC_PROPERTY_PREFIX + RuntimeInfo.DATA_DIR));
     FileUtils.deleteDirectory(f);
     TestUtil.captureStagesForProductionRun();
   }
 
   @AfterClass
   public static void afterClass() throws IOException {
-    System.getProperties().remove(RuntimeInfo.DATA_DIR);
+    System.getProperties().remove(RuntimeModule.SDC_PROPERTY_PREFIX + RuntimeInfo.DATA_DIR);
   }
 
   @Before
   public void setUp() throws IOException, PipelineManagerException {
-    File f = new File(System.getProperty(RuntimeInfo.DATA_DIR));
+    File f = new File(System.getProperty(RuntimeModule.SDC_PROPERTY_PREFIX + RuntimeInfo.DATA_DIR));
     FileUtils.deleteDirectory(f);
     ObjectGraph g = ObjectGraph.create(TestUtil.TestProdManagerModule.class);
     manager = g.get(ProductionPipelineManagerTask.class);
@@ -200,7 +201,7 @@ public class TestProductionRun {
     manager.stop();
     //copy pre-created pipelineState.json into the state directory and start manager
     InputStream in = getClass().getClassLoader().getResourceAsStream("testStartManagerAfterKill.json");
-    File f = new File(new File(System.getProperty(RuntimeInfo.DATA_DIR), "runInfo") , "pipelineState.json");
+    File f = new File(new File(System.getProperty(RuntimeModule.SDC_PROPERTY_PREFIX + RuntimeInfo.DATA_DIR), "runInfo") , "pipelineState.json");
     OutputStream out = new FileOutputStream(f);
     IOUtils.copy(in, out);
     in.close();

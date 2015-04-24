@@ -23,6 +23,7 @@ import java.util.List;
 public class RuntimeModule {
   public static final String DATA_COLLECTOR_ID = "sdc.id";
   public static final String DATA_COLLECTOR_BASE_HTTP_URL = "sdc.base.http.url";
+  public static final String SDC_PROPERTY_PREFIX = "sdc";
 
   private static List<ClassLoader> stageLibraryClassLoaders = ImmutableList.of(RuntimeModule.class.getClassLoader());
 
@@ -37,7 +38,7 @@ public class RuntimeModule {
 
   @Provides @Singleton
   public RuntimeInfo provideRuntimeInfo(MetricRegistry metrics) {
-    return new RuntimeInfo(metrics, stageLibraryClassLoaders);
+    return new RuntimeInfo(SDC_PROPERTY_PREFIX, metrics, stageLibraryClassLoaders);
   }
 
   @Provides @Singleton

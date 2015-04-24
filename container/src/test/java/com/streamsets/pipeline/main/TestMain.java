@@ -47,7 +47,7 @@ public class TestMain {
     }
   }
 
-  public static class TMain extends Main {
+  public static class TMain extends DataCollectorMain {
 
     public TMain() {
       super(TPipelineAgentModule.class);
@@ -70,13 +70,13 @@ public class TestMain {
 
   @Test
   public void testMainClassGetRuntime() {
-    Main main = new Main();
+    DataCollectorMain main = new DataCollectorMain();
     Assert.assertEquals(Runtime.getRuntime(), main.getRuntime());
   }
 
   @Test
   public void testOKFullRun() {
-    Main main = new TMain();
+    DataCollectorMain main = new TMain();
     Mockito.verifyZeroInteractions(runtime);
     Mockito.verifyZeroInteractions(logConfigurator);
     Mockito.verifyZeroInteractions(buildInfo);
@@ -95,7 +95,7 @@ public class TestMain {
   @Test
   public void testInitException() {
     Mockito.doThrow(new RuntimeException()).when(task).init();
-    Main main = new TMain();
+    DataCollectorMain main = new TMain();
     Assert.assertEquals(1, main.doMain());
     Mockito.verify(logConfigurator, Mockito.times(1)).configure();
     Mockito.verify(buildInfo, Mockito.times(1)).log(Mockito.any(Logger.class));
@@ -109,7 +109,7 @@ public class TestMain {
   @Test
   public void testRunException() {
     Mockito.doThrow(new RuntimeException()).when(task).run();
-    Main main = new TMain();
+    DataCollectorMain main = new TMain();
     Assert.assertEquals(1, main.doMain());
     Mockito.verify(logConfigurator, Mockito.times(1)).configure();
     Mockito.verify(buildInfo, Mockito.times(1)).log(Mockito.any(Logger.class));
@@ -123,7 +123,7 @@ public class TestMain {
   @Test
   public void testShutdownHook() {
     ArgumentCaptor<Thread> shutdownHookCaptor = ArgumentCaptor.forClass(Thread.class);
-    Main main = new TMain();
+    DataCollectorMain main = new TMain();
     Assert.assertEquals(0, main.doMain());
     Mockito.verify(runtime, Mockito.times(1)).addShutdownHook(shutdownHookCaptor.capture());
     Mockito.reset(task);

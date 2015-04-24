@@ -18,6 +18,7 @@ import com.streamsets.pipeline.config.MetricType;
 import com.streamsets.pipeline.config.MetricsRuleDefinition;
 import com.streamsets.pipeline.config.RuleDefinitions;
 import com.streamsets.pipeline.main.RuntimeInfo;
+import com.streamsets.pipeline.main.RuntimeModule;
 import com.streamsets.pipeline.metrics.MetricsConfigurator;
 import org.junit.Assert;
 import org.junit.Before;
@@ -43,7 +44,8 @@ public class TestMetricObserverRunner {
 
   @Before
   public void setUp() {
-    runtimeInfo = new RuntimeInfo(new MetricRegistry(), Arrays.asList(TestDataRuleEvaluator.class.getClassLoader()));
+    runtimeInfo = new RuntimeInfo(RuntimeModule.SDC_PROPERTY_PREFIX, new MetricRegistry(),
+      Arrays.asList(TestDataRuleEvaluator.class.getClassLoader()));
     metricObserverRunner = new MetricsObserverRunner(metrics, new AlertManager(PIPELINE_NAME, REVISION, null, metrics,
       runtimeInfo, null));
   }

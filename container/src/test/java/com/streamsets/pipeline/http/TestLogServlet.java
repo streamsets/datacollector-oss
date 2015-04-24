@@ -9,6 +9,7 @@ import com.streamsets.pipeline.json.ObjectMapperFactory;
 import com.streamsets.pipeline.log.LogUtils;
 import com.streamsets.pipeline.main.PipelineTaskModule;
 import com.streamsets.pipeline.main.RuntimeInfo;
+import com.streamsets.pipeline.main.RuntimeModule;
 import com.streamsets.pipeline.task.Task;
 import com.streamsets.pipeline.task.TaskWrapper;
 import com.streamsets.pipeline.util.Configuration;
@@ -62,18 +63,18 @@ public class TestLogServlet {
     Assert.assertTrue(new File(baseDir, "data").mkdir());
     Assert.assertTrue(new File(baseDir, "log").mkdir());
     Assert.assertTrue(new File(baseDir, "web").mkdir());
-    System.setProperty(RuntimeInfo.CONFIG_DIR, baseDir + "/etc");
-    System.setProperty(RuntimeInfo.DATA_DIR, baseDir + "/data");
-    System.setProperty(RuntimeInfo.LOG_DIR, baseDir + "/log");
-    System.setProperty(RuntimeInfo.STATIC_WEB_DIR, baseDir + "/web");
+    System.setProperty(RuntimeModule.SDC_PROPERTY_PREFIX + RuntimeInfo.CONFIG_DIR, baseDir + "/etc");
+    System.setProperty(RuntimeModule.SDC_PROPERTY_PREFIX + RuntimeInfo.DATA_DIR, baseDir + "/data");
+    System.setProperty(RuntimeModule.SDC_PROPERTY_PREFIX + RuntimeInfo.LOG_DIR, baseDir + "/log");
+    System.setProperty(RuntimeModule.SDC_PROPERTY_PREFIX + RuntimeInfo.STATIC_WEB_DIR, baseDir + "/web");
   }
 
   @After
   public void cleanup() {
-    System.getProperties().remove(RuntimeInfo.CONFIG_DIR);
-    System.getProperties().remove(RuntimeInfo.DATA_DIR);
-    System.getProperties().remove(RuntimeInfo.LOG_DIR);
-    System.getProperties().remove(RuntimeInfo.STATIC_WEB_DIR);
+    System.getProperties().remove(RuntimeModule.SDC_PROPERTY_PREFIX + RuntimeInfo.CONFIG_DIR);
+    System.getProperties().remove(RuntimeModule.SDC_PROPERTY_PREFIX + RuntimeInfo.DATA_DIR);
+    System.getProperties().remove(RuntimeModule.SDC_PROPERTY_PREFIX + RuntimeInfo.LOG_DIR);
+    System.getProperties().remove(RuntimeModule.SDC_PROPERTY_PREFIX + RuntimeInfo.STATIC_WEB_DIR);
   }
 
   private String startServer() throws  Exception {
@@ -95,7 +96,7 @@ public class TestLogServlet {
     Configuration conf = new Configuration();
     conf.set(WebServerTask.HTTP_PORT_KEY, port);
     conf.set(WebServerTask.AUTHENTICATION_KEY, "none");
-    writer = new FileWriter(new File(System.getProperty(RuntimeInfo.CONFIG_DIR), "sdc.properties"));
+    writer = new FileWriter(new File(System.getProperty(RuntimeModule.SDC_PROPERTY_PREFIX + RuntimeInfo.CONFIG_DIR), "sdc.properties"));
     conf.save(writer);
     writer.close();
     ObjectGraph dagger = ObjectGraph.create(PipelineTaskModule.class);

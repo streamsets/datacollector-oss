@@ -10,6 +10,7 @@ import com.google.common.collect.ImmutableList;
 import com.streamsets.pipeline.main.RuntimeInfo;
 import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.Record;
+import com.streamsets.pipeline.main.RuntimeModule;
 import com.streamsets.pipeline.record.RecordImpl;
 import com.streamsets.pipeline.runner.ErrorSink;
 import com.streamsets.pipeline.runner.StageOutput;
@@ -46,19 +47,20 @@ public class TestFileSnapshotStore {
 
   @BeforeClass
   public static void beforeClass() {
-    System.setProperty(RuntimeInfo.DATA_DIR, "./target/var");
+    System.setProperty(RuntimeModule.SDC_PROPERTY_PREFIX + RuntimeInfo.DATA_DIR, "./target/var");
   }
 
   @AfterClass
   public static void afterClass() {
-    System.getProperties().remove(RuntimeInfo.DATA_DIR);
+    System.getProperties().remove(RuntimeModule.SDC_PROPERTY_PREFIX + RuntimeInfo.DATA_DIR);
   }
 
   @Before
   public void setUp() throws IOException {
-    File f = new File(System.getProperty(RuntimeInfo.DATA_DIR));
+    File f = new File(System.getProperty(RuntimeModule.SDC_PROPERTY_PREFIX + RuntimeInfo.DATA_DIR));
     FileUtils.deleteDirectory(f);
-    RuntimeInfo info = new RuntimeInfo(new MetricRegistry(), ImmutableList.of(getClass().getClassLoader()));
+    RuntimeInfo info = new RuntimeInfo(RuntimeModule.SDC_PROPERTY_PREFIX, new MetricRegistry(),
+      ImmutableList.of(getClass().getClassLoader()));
     snapshotStore = new FileSnapshotStore(info);
     snapshotStore.setInProgress(PIPELINE_NAME, PIPELINE_REV, SNAPSHOT_NAME1, true);
   }

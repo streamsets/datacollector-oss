@@ -11,6 +11,7 @@ import com.streamsets.pipeline.http.WebServerTask;
 import com.streamsets.pipeline.log.LogUtils;
 import com.streamsets.pipeline.main.PipelineTaskModule;
 import com.streamsets.pipeline.main.RuntimeInfo;
+import com.streamsets.pipeline.main.RuntimeModule;
 import com.streamsets.pipeline.task.Task;
 import com.streamsets.pipeline.task.TaskWrapper;
 import com.streamsets.pipeline.util.Configuration;
@@ -69,18 +70,18 @@ public class TestRestApiAuthorization {
     Assert.assertTrue(new File(baseDir, "data").mkdir());
     Assert.assertTrue(new File(baseDir, "log").mkdir());
     Assert.assertTrue(new File(baseDir, "web").mkdir());
-    System.setProperty(RuntimeInfo.CONFIG_DIR, baseDir + "/etc");
-    System.setProperty(RuntimeInfo.DATA_DIR, baseDir + "/data");
-    System.setProperty(RuntimeInfo.LOG_DIR, baseDir + "/log");
-    System.setProperty(RuntimeInfo.STATIC_WEB_DIR, baseDir + "/web");
+    System.setProperty(RuntimeModule.SDC_PROPERTY_PREFIX + RuntimeInfo.CONFIG_DIR, baseDir + "/etc");
+    System.setProperty(RuntimeModule.SDC_PROPERTY_PREFIX + RuntimeInfo.DATA_DIR, baseDir + "/data");
+    System.setProperty(RuntimeModule.SDC_PROPERTY_PREFIX + RuntimeInfo.LOG_DIR, baseDir + "/log");
+    System.setProperty(RuntimeModule.SDC_PROPERTY_PREFIX + RuntimeInfo.STATIC_WEB_DIR, baseDir + "/web");
   }
 
   @After
   public void cleanup() {
-    System.getProperties().remove(RuntimeInfo.CONFIG_DIR);
-    System.getProperties().remove(RuntimeInfo.DATA_DIR);
-    System.getProperties().remove(RuntimeInfo.LOG_DIR);
-    System.getProperties().remove(RuntimeInfo.STATIC_WEB_DIR);
+    System.getProperties().remove(RuntimeModule.SDC_PROPERTY_PREFIX + RuntimeInfo.CONFIG_DIR);
+    System.getProperties().remove(RuntimeModule.SDC_PROPERTY_PREFIX + RuntimeInfo.DATA_DIR);
+    System.getProperties().remove(RuntimeModule.SDC_PROPERTY_PREFIX + RuntimeInfo.LOG_DIR);
+    System.getProperties().remove(RuntimeModule.SDC_PROPERTY_PREFIX + RuntimeInfo.STATIC_WEB_DIR);
   }
 
   private String startServer(boolean authzEnabled) throws  Exception {
@@ -88,10 +89,10 @@ public class TestRestApiAuthorization {
     Configuration conf = new Configuration();
     conf.set(WebServerTask.HTTP_PORT_KEY, port);
     conf.set(WebServerTask.AUTHENTICATION_KEY, (authzEnabled) ? "basic" : "none");
-    Writer writer = new FileWriter(new File(System.getProperty(RuntimeInfo.CONFIG_DIR), "sdc.properties"));
+    Writer writer = new FileWriter(new File(System.getProperty(RuntimeModule.SDC_PROPERTY_PREFIX + RuntimeInfo.CONFIG_DIR), "sdc.properties"));
     conf.save(writer);
     writer.close();
-    File realmFile = new File(System.getProperty(RuntimeInfo.CONFIG_DIR), "basic-realm.properties");
+    File realmFile = new File(System.getProperty(RuntimeModule.SDC_PROPERTY_PREFIX + RuntimeInfo.CONFIG_DIR), "basic-realm.properties");
     writer = new FileWriter(realmFile);
     IOUtils.copy(new InputStreamReader(getClass().getClassLoader().getResourceAsStream("basic-realm.properties")),
                  writer);

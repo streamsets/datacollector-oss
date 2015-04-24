@@ -21,6 +21,7 @@ import com.streamsets.pipeline.config.PipelineConfiguration;
 import com.streamsets.pipeline.config.RuleDefinitions;
 import com.streamsets.pipeline.config.ThresholdType;
 import com.streamsets.pipeline.main.RuntimeInfo;
+import com.streamsets.pipeline.main.RuntimeModule;
 import com.streamsets.pipeline.prodmanager.PipelineManagerException;
 import com.streamsets.pipeline.prodmanager.ProductionPipelineManagerTask;
 import com.streamsets.pipeline.prodmanager.State;
@@ -252,7 +253,8 @@ public class TestUtil {
 
     @Provides
     public RuntimeInfo provideRuntimeInfo() {
-      RuntimeInfo info = new RuntimeInfo(new MetricRegistry(), Arrays.asList(getClass().getClassLoader()));
+      RuntimeInfo info = new RuntimeInfo(RuntimeModule.SDC_PROPERTY_PREFIX, new MetricRegistry(),
+        Arrays.asList(getClass().getClassLoader()));
       return info;
     }
   }

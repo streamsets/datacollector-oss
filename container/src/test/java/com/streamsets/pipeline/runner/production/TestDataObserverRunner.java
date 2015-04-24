@@ -16,6 +16,7 @@ import com.streamsets.pipeline.config.DataRuleDefinition;
 import com.streamsets.pipeline.config.RuleDefinitions;
 import com.streamsets.pipeline.config.ThresholdType;
 import com.streamsets.pipeline.main.RuntimeInfo;
+import com.streamsets.pipeline.main.RuntimeModule;
 import com.streamsets.pipeline.metrics.MetricsConfigurator;
 import com.streamsets.pipeline.util.Configuration;
 import org.junit.Assert;
@@ -42,7 +43,7 @@ public class TestDataObserverRunner {
 
   @Before
   public void setUp() {
-    runtimeInfo = new RuntimeInfo(new MetricRegistry(), Arrays.asList(TestDataRuleEvaluator.class.getClassLoader()));
+    runtimeInfo = new RuntimeInfo(RuntimeModule.SDC_PROPERTY_PREFIX, new MetricRegistry(), Arrays.asList(TestDataRuleEvaluator.class.getClassLoader()));
     dataObserverRunner = new DataObserverRunner(metrics, new AlertManager(PIPELINE_NAME, REVISION, null, metrics,
       runtimeInfo, null), new Configuration());
   }

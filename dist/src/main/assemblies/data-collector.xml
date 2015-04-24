@@ -91,10 +91,10 @@
       <outputDirectory>/data</outputDirectory>
     </fileSet>
 
-    <!-- static web -->
+    <!-- data collector static web -->
     <fileSet>
-      <directory>${ui.dist-dir}</directory>
-      <outputDirectory>/static-web</outputDirectory>
+      <directory>${sdc.ui.dist-dir}</directory>
+      <outputDirectory>/sdc-static-web</outputDirectory>
       <excludes>
         <exclude>karma-conf.js</exclude>
         <exclude>app/**</exclude>
@@ -260,4 +260,4 @@
 
   </dependencySets>
 
-  </assembly>
+</assembly>

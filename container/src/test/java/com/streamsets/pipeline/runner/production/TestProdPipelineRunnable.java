@@ -12,6 +12,7 @@ import com.streamsets.pipeline.api.base.BaseSource;
 import com.streamsets.pipeline.config.DeliveryGuarantee;
 import com.streamsets.pipeline.config.MemoryLimitConfiguration;
 import com.streamsets.pipeline.main.RuntimeInfo;
+import com.streamsets.pipeline.main.RuntimeModule;
 import com.streamsets.pipeline.prodmanager.PipelineManagerException;
 import com.streamsets.pipeline.prodmanager.ProductionPipelineManagerTask;
 import com.streamsets.pipeline.prodmanager.State;
@@ -67,7 +68,8 @@ public class TestProdPipelineRunnable {
   @Before()
   public void setUp() {
     MockStages.resetStageCaptures();
-    info = new RuntimeInfo(new MetricRegistry(), Arrays.asList(getClass().getClassLoader()));
+    info = new RuntimeInfo(RuntimeModule.SDC_PROPERTY_PREFIX, new MetricRegistry(),
+      Arrays.asList(getClass().getClassLoader()));
     pipelineStoreTask = Mockito.mock(FilePipelineStoreTask.class);
     Mockito.when(pipelineStoreTask.hasPipeline(PIPELINE_NAME)).thenReturn(true);
     manager = new ProductionPipelineManagerTask(info, Mockito.mock(Configuration.class), pipelineStoreTask,

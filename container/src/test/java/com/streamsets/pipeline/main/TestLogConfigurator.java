@@ -58,6 +58,7 @@ public class TestLogConfigurator {
     File configDir = new File("target", UUID.randomUUID().toString());
     Assert.assertTrue(configDir.mkdirs());
     Mockito.when(runtimeInfo.getConfigDir()).thenReturn(configDir.getAbsolutePath());
+    Mockito.when(runtimeInfo.getLog4jPropertiesFileName()).thenReturn("log4j.properties");
     new LogConfigurator(runtimeInfo).configure();
     Mockito.verify(runtimeInfo, Mockito.times(1)).getConfigDir();
     for (Thread thread : Thread.getAllStackTraces().keySet()) {
@@ -78,6 +79,7 @@ public class TestLogConfigurator {
     is.close();
     os.close();
     Mockito.when(runtimeInfo.getConfigDir()).thenReturn(configDir.getAbsolutePath());
+    Mockito.when(runtimeInfo.getLog4jPropertiesFileName()).thenReturn("log4j.properties");
     new LogConfigurator(runtimeInfo).configure();
     Mockito.verify(runtimeInfo, Mockito.times(1)).getConfigDir();
     boolean foundFileWatcher = false;

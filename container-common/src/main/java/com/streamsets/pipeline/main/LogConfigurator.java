@@ -15,9 +15,6 @@ import java.net.MalformedURLException;
 import java.net.URL;
 
 public class LogConfigurator {
-
-  private static final String LOG4J_PROPERTIES = "log4j.properties";
-
   private final RuntimeInfo runtimeInfo;
 
   @Inject
@@ -31,7 +28,8 @@ public class LogConfigurator {
       System.setProperty("log4j.defaultInitOverride", "true");
       boolean foundConfig = false;
       boolean fromClasspath = true;
-      File log4jConf = new File(runtimeInfo.getConfigDir(), LOG4J_PROPERTIES).getAbsoluteFile();
+      String log4JProperties = runtimeInfo.getLog4jPropertiesFileName();
+      File log4jConf = new File(runtimeInfo.getConfigDir(), log4JProperties).getAbsoluteFile();
       if (log4jConf.exists()) {
         PropertyConfigurator.configureAndWatch(log4jConf.getPath(), 1000);
         fromClasspath = false;
@@ -43,7 +41,7 @@ public class LogConfigurator {
         }
       } else {
         ClassLoader cl = Thread.currentThread().getContextClassLoader();
-        URL log4jUrl = cl.getResource(LOG4J_PROPERTIES);
+        URL log4jUrl = cl.getResource(log4JProperties);
         if (log4jUrl != null) {
           PropertyConfigurator.configure(log4jUrl);
           foundConfig = true;
@@ -56,9 +54,9 @@ public class LogConfigurator {
       Logger log = LoggerFactory.getLogger(this.getClass());
       log.debug("Log starting, from configuration: {}", log4jConf.getAbsoluteFile());
       if (!foundConfig) {
-        log.warn("Log4j configuration file '{}' not found", LOG4J_PROPERTIES);
+        log.warn("Log4j configuration file '{}' not found", log4JProperties);
       } else if (fromClasspath) {
-        log.warn("Log4j configuration file '{}' read from classpath, reload not enabled", LOG4J_PROPERTIES);
+        log.warn("Log4j configuration file '{}' read from classpath, reload not enabled", log4JProperties);
       } else {
         log.debug("Log4j configuration file '{}', auto reload enabled", log4jConf.getAbsoluteFile());
       }

@@ -7,6 +7,7 @@ package com.streamsets.pipeline.el;
 
 import com.codahale.metrics.MetricRegistry;
 import com.streamsets.pipeline.main.RuntimeInfo;
+import com.streamsets.pipeline.main.RuntimeModule;
 import org.apache.commons.io.IOUtils;
 import org.junit.AfterClass;
 import org.junit.Assert;
@@ -32,19 +33,20 @@ public class TestRuntimeEL {
 
   @BeforeClass
   public static void beforeClass() throws IOException {
-    System.setProperty(RuntimeInfo.CONFIG_DIR, "./target/" + UUID.randomUUID().toString());
-    File f = new File(System.getProperty(RuntimeInfo.CONFIG_DIR));
+    System.setProperty(RuntimeModule.SDC_PROPERTY_PREFIX + RuntimeInfo.CONFIG_DIR, "./target/" + UUID.randomUUID().toString());
+    File f = new File(System.getProperty(RuntimeModule.SDC_PROPERTY_PREFIX + RuntimeInfo.CONFIG_DIR));
     f.mkdirs();
   }
 
   @AfterClass
   public static void afterClass() throws IOException {
-    System.getProperties().remove(RuntimeInfo.CONFIG_DIR);
+    System.getProperties().remove(RuntimeModule.SDC_PROPERTY_PREFIX + RuntimeInfo.CONFIG_DIR);
   }
 
   @Before()
   public void setUp() {
-    runtimeInfo = new RuntimeInfo(new MetricRegistry(), Arrays.asList(getClass().getClassLoader()));
+    runtimeInfo = new RuntimeInfo(RuntimeModule.SDC_PROPERTY_PREFIX,new MetricRegistry(),
+      Arrays.asList(getClass().getClassLoader()));
   }
 
   @Test

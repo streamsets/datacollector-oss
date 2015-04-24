@@ -7,6 +7,7 @@ package com.streamsets.pipeline.runner.production;
 
 import com.codahale.metrics.MetricRegistry;
 import com.streamsets.pipeline.main.RuntimeInfo;
+import com.streamsets.pipeline.main.RuntimeModule;
 import org.apache.commons.io.FileUtils;
 import org.junit.AfterClass;
 import org.junit.Assert;
@@ -24,20 +25,21 @@ public class TestProdSourceOffsetTracker {
 
   @BeforeClass
   public static void beforeClass() throws IOException {
-    System.setProperty(RuntimeInfo.DATA_DIR, "./target/var");
-    File f = new File(System.getProperty(RuntimeInfo.DATA_DIR));
+    System.setProperty(RuntimeModule.SDC_PROPERTY_PREFIX + RuntimeInfo.DATA_DIR, "./target/var");
+    File f = new File(System.getProperty(RuntimeModule.SDC_PROPERTY_PREFIX + RuntimeInfo.DATA_DIR));
     FileUtils.deleteDirectory(f);
   }
 
   @AfterClass
   public static void afterClass() {
-    System.getProperties().remove(RuntimeInfo.DATA_DIR);
+    System.getProperties().remove(RuntimeModule.SDC_PROPERTY_PREFIX + RuntimeInfo.DATA_DIR);
   }
 
   @Test
   public void testProductionSourceOffsetTracker() {
 
-    RuntimeInfo info = new RuntimeInfo(new MetricRegistry(), Arrays.asList(getClass().getClassLoader()));
+    RuntimeInfo info = new RuntimeInfo(RuntimeModule.SDC_PROPERTY_PREFIX, new MetricRegistry(),
+      Arrays.asList(getClass().getClassLoader()));
     ProductionSourceOffsetTracker offsetTracker = new ProductionSourceOffsetTracker(PIPELINE_NAME, PIPELINE_REV, info);
 
     Assert.assertEquals(false, offsetTracker.isFinished());
