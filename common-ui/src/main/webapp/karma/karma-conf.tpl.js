@@ -12,7 +12,8 @@ module.exports = function(config){
     files: [
       <% scripts.forEach( function ( file ) { %>'target/<%= file %>',
         <% }); %>
-      'src/main/webapp/app/**/*.js'
+      'src/main/webapp/app/**/*.js',
+      '../common-ui/src/main/webapp/common/**/*.js'
     ],
 
     autoWatch : false,

@@ -642,14 +642,33 @@ angular.module('dataCollectorApp.common')
      *
      * @param record
      * @param fieldPaths
+     * @param nonListAndMap
      */
-    this.getFieldPaths = function(record, fieldPaths) {
+    this.getFieldPaths = function(record, fieldPaths, nonListAndMap) {
       angular.forEach(record.value, function(value) {
-        if(value.path) {
+        if(value.type === 'MAP' || value.type === 'LIST') {
+          if(!nonListAndMap && value.path) {
+            fieldPaths.push(value.path);
+          }
+          self.getFieldPaths(value, fieldPaths);
+        } else if(value.path) {
           fieldPaths.push(value.path);
         }
+      });
+    };
+
+    /**
+     * Recursively add all the field paths and value to flatten map.
+     *
+     * @param record
+     * @param flattenRecord
+     */
+    this.getFlattenRecord = function(record, flattenRecord) {
+      angular.forEach(record.value, function(value) {
         if(value.type === 'MAP' || value.type === 'LIST') {
-          self.getFieldPaths(value, fieldPaths);
+          self.getFlattenRecord(value, flattenRecord);
+        } else if(value.path) {
+          flattenRecord[value.path] = value.value;
         }
       });
     };

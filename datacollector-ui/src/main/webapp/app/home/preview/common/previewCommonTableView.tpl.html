@@ -1,0 +1,77 @@
+<table class="table preview-tableview-table" ng-hide="showLoading" ng-controller="PreviewCommonTableViewController">
+  <thead>
+  <tr>
+    <th ng-if="inputFieldPaths.length" colspan="{{inputFieldPaths.length}}">
+      <span translate="home.previewPane.inputData">Input Data</span>
+    </th>
+
+    <th ng-if="outputFieldPaths.length" colspan="{{outputFieldPaths.length}}">
+      <span translate="home.previewPane.outputData">Output Data</span>
+    </th>
+
+  </tr>
+
+  <tr>
+    <th ng-repeat="fieldPath in inputFieldPaths">{{fieldPath}}</th>
+    <th ng-repeat="fieldPath in outputFieldPaths">{{fieldPath}}</th>
+  </tr>
+
+  </thead>
+  <tbody>
+
+  <tr ng-repeat-start="inputRecord in stagePreviewData.input"
+      ng-init="
+      outputRecords = getOutputRecords(stagePreviewData.output, inputRecord);
+      errorsRecords = getErrorRecords(stagePreviewData.errorRecords, inputRecord);
+      flattenInputRecord = getFlattenRecord(inputRecord);
+      flattenOutputRecord = getFlattenRecord(outputRecords[0])">
+
+    <td ng-repeat="fieldPath in inputFieldPaths">{{flattenInputRecord[fieldPath] + ''}}</td>
+
+    <td ng-if="flattenOutputRecord"
+      ng-repeat="fieldPath in outputFieldPaths">{{flattenOutputRecord[fieldPath] + ''}}</td>
+
+    <td colspan="{{outputFieldPaths.length}}" ng-if="errorsRecords && errorsRecords.length > 0">
+      <label class="label label-danger">
+        {{('global.form.record' | translate)+($parent.$index+1) + '-' + ('global.form.errorRecord' | translate) + ' ' + escapeHtml(errorsRecords[0].header.errorMessage)}}
+      </label>
+    </td>
+
+    <td colspan="{{outputFieldPaths.length}}" ng-if="outputRecords.length === 0 && errorsRecords.length === 0 && detailPaneConfig.uiInfo.stageType !== 'TARGET'">
+      <label class="label label-warning">{{'home.previewPane.noOutputWarning' | translate}}</label>
+    </td>
+
+  </tr>
+
+  <tr ng-repeat-end
+      ng-repeat="outputRecord in outputRecords"
+      ng-if="$index > 0"
+      ng-init="flattenRecord = getFlattenRecord(outputRecord)">
+    <td colspan="{{inputFieldPaths.length}}"></td>
+
+    <td ng-repeat="fieldPath in outputFieldPaths">{{flattenRecord[fieldPath] + ''}}</td>
+  </tr>
+
+  <tr ng-if="detailPaneConfig.uiInfo.stageType === 'SOURCE'"
+      ng-repeat="record in stagePreviewData.output"
+      ng-init="flattenRecord = getFlattenRecord(record)">
+    <td ng-repeat="fieldPath in inputFieldPaths">{{flattenRecord[fieldPath] + ''}}</td>
+    <td ng-repeat="fieldPath in outputFieldPaths">{{flattenRecord[fieldPath] + ''}}</td>
+  </tr>
+
+  <tr ng-if="stagePreviewData.input.length === 0 &&
+                stagePreviewData.output.length === 0 &&
+                stagePreviewData.errorRecords.length === 0">
+    <td colspan="2" class="no-records">
+      {{'home.previewPane.noRecords' | translate}}
+
+      <div ng-if="stagePreviewData.stageErrors && stagePreviewData.stageErrors.length">
+          <span translate="home.previewPane.stageErrorsWarning"
+                translate-values="{stageErrorsCount: stagePreviewData.stageErrors.length}"></span>
+      </div>
+
+    </td>
+  </tr>
+  </tbody>
+
+</table>
