@@ -34,6 +34,20 @@
   </div>
 </script>
 
+<script type="text/ng-template" id="passwordConfigurationTemplate">
+    <div class="controls col-lg-7 col-md-8">
+
+        <input type="password" class="form-control"
+               name="{{configDefinition.name}}"
+               focus-me="{{autoFocusConfigName === configDefinition.name}}"
+               ng-readonly="isPipelineReadOnly || isPipelineRunning"
+               ng-model="detailPaneConfig.configuration[configIndex].value"
+               ng-required="configDefinition.required">
+
+        <p class="help-block">{{getConfigurationIssueMessage(detailPaneConfig, configDefinition)}}</p>
+    </div>
+</script>
+
 <script type="text/ng-template" id="elStringConfigurationTemplate">
   <div class="controls col-lg-7 col-md-8">
 
@@ -358,6 +372,17 @@
          ng-model="customFieldValue[customFieldConfigDefinition.name]"
          ng-required="customFieldConfigDefinition.required">
 </script>
+
+
+<script type="text/ng-template" id="passwordComplexConfigurationTemplate">
+  <input type="password" class="form-control"
+         name="{{customFieldConfigDefinition.name + $index}}"
+         placeholder="{{customFieldConfigDefinition.label}}"
+         ng-readonly="isPipelineReadOnly || isPipelineRunning"
+         ng-model="customFieldValue[customFieldConfigDefinition.name]"
+         ng-required="customFieldConfigDefinition.required">
+</script>
+
 
 
 <script type="text/ng-template" id="elStringComplexConfigurationTemplate">
