@@ -141,11 +141,13 @@ public class KafkaTestUtil {
 
   }
 
-  public static Producer<String, String> createProducer(String host, int port) {
+  public static Producer<String, String> createProducer(String host, int port, boolean setPartitioner) {
     Properties props = new Properties();
     props.put("metadata.broker.list", host + ":" + port);
     props.put("serializer.class", "kafka.serializer.StringEncoder");
-    props.put("partitioner.class", "com.streamsets.pipeline.stage.destination.kafka.ExpressionPartitioner");
+    if (setPartitioner) {
+      props.put("partitioner.class", "com.streamsets.pipeline.stage.destination.kafka.ExpressionPartitioner");
+    }
     props.put("request.required.acks", "1");
     ProducerConfig config = new ProducerConfig(props);
 
@@ -304,6 +306,8 @@ public class KafkaTestUtil {
     }
     throw new IllegalArgumentException("Unsupported data type requested");
   }
+
+
 
   private static String createJson(StreamingJsonParser.Mode jsonMode) {
     switch (jsonMode) {

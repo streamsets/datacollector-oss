@@ -19,12 +19,12 @@ public class ProducerRunnable implements Runnable {
   private final DataType dataType;
   private final int partitions;
   private int lastPartition;
-  private static int counter = 0;
   private final StreamingJsonParser.Mode jsonMode;
+  private int noOfRecords;
 
   public ProducerRunnable(String topic, int partitions,
                           Producer<String, String> producer, CountDownLatch startLatch, DataType dataType,
-                          StreamingJsonParser.Mode jsonMode) {
+                          StreamingJsonParser.Mode jsonMode, int noOfRecords) {
     this.topic = topic;
     this.partitions = partitions;
     this.producer = producer;
@@ -32,6 +32,7 @@ public class ProducerRunnable implements Runnable {
     this.dataType = dataType;
     this.lastPartition = 0;
     this.jsonMode = jsonMode;
+    this.noOfRecords = noOfRecords;
   }
 
   @Override
@@ -43,8 +44,9 @@ public class ProducerRunnable implements Runnable {
     }
 
     int i = 0;
-    while(true) {
+    while(i < noOfRecords || noOfRecords == -1) {
       producer.send(new KeyedMessage<>(topic, getPartitionKey(), KafkaTestUtil.generateTestData(dataType, jsonMode)));
+      i++;
     }
   }
 

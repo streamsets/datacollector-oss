@@ -91,6 +91,7 @@
     <module>cassandra_2_1_5-lib</module>
     <module>hbase-protolib</module>
     <module>spark-protolib</module>
+    <module>spark_1_3_0-lib</module>
     <module>spark-bootstrap</module>
   </modules>
 

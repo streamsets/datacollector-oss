@@ -5,7 +5,9 @@
  */
 package com.streamsets.pipeline;
 
+
 import com.streamsets.pipeline.stage.origin.spark.SparkStreamingBinding;
+
 import org.apache.spark.api.java.function.VoidFunction;
 
 import java.io.File;
@@ -193,6 +195,24 @@ public class BootstrapSpark {
         sparkCL).getMethod("execute", Properties.class, String.class, Iterator.class);
     } catch (Exception ex) {
       String msg = "Error trying to obtain SparkExecutorFunction Class: " + ex;
+      throw new IllegalStateException(msg, ex);
+    }
+  }
+
+  /**
+   * Bootstrapping an Executor which is started as part of a spark kafka job<br/>
+   * Direction: Spark Executor -> Stage
+   * @return an instance of the real SparkExecutorFunction
+   * @throws Exception
+   */
+  public static Method getSparkKafkaExecutorFunction() throws Exception {
+    BootstrapSpark.initialize();
+    try {
+      Thread.currentThread().setContextClassLoader(sparkCL);
+      return Class.forName("com.streamsets.pipeline.stage.origin.SparkKafkaExecutorFunction", true,
+        sparkCL).getMethod("execute", Properties.class, String.class, Iterator.class);
+    } catch (Exception ex) {
+      String msg = "Error trying to obtain SparkKafkaExecutorFunction Class: " + ex;
       throw new IllegalStateException(msg, ex);
     }
   }

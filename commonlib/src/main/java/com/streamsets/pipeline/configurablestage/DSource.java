@@ -19,9 +19,13 @@ public abstract class DSource extends DStage<Source.Context> implements Source {
     return createSource();
   }
 
+  public Source getSource() {
+    return (Source)getStage();
+  }
+
   @Override
   public final String produce(String lastSourceOffset, int maxBatchSize, BatchMaker batchMaker) throws StageException {
-    return ((Source)getStage()).produce(lastSourceOffset, maxBatchSize, batchMaker);
+    return getSource().produce(lastSourceOffset, maxBatchSize, batchMaker);
   }
 
 }

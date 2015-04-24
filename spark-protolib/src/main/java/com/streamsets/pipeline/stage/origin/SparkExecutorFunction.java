@@ -8,6 +8,7 @@ import org.apache.spark.api.java.function.VoidFunction;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -42,12 +43,12 @@ public class SparkExecutorFunction implements VoidFunction<Iterator<String>>, Se
   public void call(Iterator<String> stringIterator) throws Exception {
     initialize();
     EmbeddedSDC embeddedSDC = sdcPool.getEmbeddedSDC();
-    LOG.info("Embedded sdc: " + embeddedSDC);
     List<String> batch = new ArrayList<>();
     while (stringIterator.hasNext()) {
       String msg = stringIterator.next();
       batch.add(msg);
-      LOG.info("Got message: " + msg);
+      // TODO - Remove this debug
+      LOG.debug("Got message: " + msg);
     }
     embeddedSDC.getSource().put(batch);
   }

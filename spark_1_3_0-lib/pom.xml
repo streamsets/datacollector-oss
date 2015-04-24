@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
- (c) 2015 StreamSets, Inc. All rights reserved. May not
+ (c) 2014 StreamSets, Inc. All rights reserved. May not
  be copied, modified, or distributed in whole or part without
  written consent of StreamSets, Inc.
 -->
@@ -15,18 +15,15 @@
     <relativePath>../root-lib</relativePath>
   </parent>
   <groupId>com.streamsets</groupId>
-  <artifactId>streamsets-datacollector-spark-protolib</artifactId>
+  <artifactId>streamsets-datacollector-spark_1_3_0-lib</artifactId>
   <version>1.0.0b2-SNAPSHOT</version>
-  <description>StreamSets Data Collector Spark ProtoLib</description>
-  <name>StreamSets Data Collector Spark ProtoLib</name>
+  <description>StreamSets Data Collector Spark Streaming 1.3.0 Lib</description>
+  <name>StreamSets Data Collector Spark Streaming 1.3.0</name>
   <packaging>jar</packaging>
 
   <properties>
     <spark.version>1.3.0</spark.version>
-    <guava.version>18.0</guava.version>
-    <xerces.version>2.11.0</xerces.version>
     <kafka.version>0.8.1.1</kafka.version>
-    <scala.version>2.10.4</scala.version>
   </properties>
 
   <dependencies>
@@ -34,6 +31,12 @@
       <groupId>com.streamsets</groupId>
       <artifactId>streamsets-datacollector-api</artifactId>
       <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>com.streamsets</groupId>
+      <artifactId>streamsets-datacollector-container</artifactId>
+      <version>1.0.0b2-SNAPSHOT</version> <!-- required since we are not supposed to do this -->
+      <scope>test</scope> <!-- DO NOT CHANGE, tests which require this should be moved to integration tests -->
     </dependency>
     <dependency>
       <groupId>log4j</groupId>
@@ -60,6 +63,7 @@
       <artifactId>streamsets-datacollector-sdk</artifactId>
       <scope>provided</scope>
     </dependency>
+
     <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
@@ -71,42 +75,12 @@
       <scope>test</scope>
     </dependency>
     <dependency>
-      <groupId>com.streamsets</groupId>
-      <artifactId>streamsets-datacollector-common</artifactId>
-      <scope>compile</scope>
-    </dependency>
-    <dependency>
-      <groupId>com.streamsets</groupId>
-      <artifactId>streamsets-datacollector-commonlib</artifactId>
-      <scope>compile</scope>
-    </dependency>
-    <dependency>
-      <groupId>com.streamsets</groupId>
-      <artifactId>streamsets-datacollector-spark-bootstrap</artifactId>
-      <scope>provided</scope>
-      <version>1.0.0b2-SNAPSHOT</version> <!-- required because we don't inherit from root and root-lib
-                                               does not define dep spark-bootstrap -->
-    </dependency>
-    <dependency>
-      <groupId>com.streamsets</groupId>
-      <artifactId>streamsets-datacollector-container</artifactId>
-      <version>1.0.0b2-SNAPSHOT</version> <!-- required since we are not supposed to do this -->
-      <scope>test</scope> <!-- DO NOT CHANGE, tests which require this should be moved to integration tests -->
-    </dependency>
-
-    <dependency>
-      <groupId>com.google.guava</groupId>
-      <artifactId>guava</artifactId>
-      <version>${guava.version}</version>
-      <scope>compile</scope>
-    </dependency>
-
-    <dependency>
       <groupId>org.apache.spark</groupId>
       <artifactId>spark-streaming_2.10</artifactId>
       <version>${spark.version}</version>
-      <scope>provided</scope>
+      <scope>compile</scope>
     </dependency>
+
     <dependency>
       <groupId>org.apache.kafka</groupId>
       <artifactId>kafka_2.10</artifactId>
@@ -117,10 +91,11 @@
     <dependency>
       <groupId>org.apache.kafka</groupId>
       <artifactId>kafka_2.10</artifactId>
-      <version>0.8.1.1</version>
+      <version>${kafka.version}</version>
       <classifier>test</classifier>
-      <scope>${kafka.version}</scope>
+      <scope>test</scope>
     </dependency>
+
     <dependency>
       <groupId>com.streamsets</groupId>
       <artifactId>streamsets-datacollector-kafka-protolib</artifactId>
@@ -144,57 +119,97 @@
     </dependency>
 
     <dependency>
-      <groupId>org.scala-lang</groupId>
-      <artifactId>scala-library</artifactId>
-      <version>${scala.version}</version>
-      <scope>provided</scope>
+      <groupId>com.streamsets</groupId>
+      <artifactId>streamsets-datacollector-spark-protolib</artifactId>
+      <version>${project.version}</version>
+      <scope>compile</scope>
+       <exclusions>
+        <exclusion>
+          <groupId>org.apache.spark</groupId>
+          <artifactId>spark-streaming_2.10</artifactId>
+        </exclusion>
+       </exclusions>
     </dependency>
     <dependency>
-      <groupId>xerces</groupId>
-      <artifactId>xercesImpl</artifactId>
-      <version>${xerces.version}</version>
-    </dependency>
+      <groupId>com.streamsets</groupId>
+      <artifactId>streamsets-datacollector-spark-bootstrap</artifactId>
+      <version>${project.version}</version>
+      <scope>test</scope>
+   </dependency>
   </dependencies>
 
   <build>
     <plugins>
       <plugin>
         <groupId>org.codehaus.mojo</groupId>
-        <artifactId>cobertura-maven-plugin</artifactId>
-        <configuration>
-          <check>
-            <haltOnFailure>true</haltOnFailure>
-            <branchRate>0</branchRate>
-            <lineRate>0</lineRate>
-            <totalBranchRate>98</totalBranchRate>
-            <totalLineRate>98</totalLineRate>
-            <packageLineRate>98</packageLineRate>
-            <packageBranchRate>98</packageBranchRate>
-          </check>
-        </configuration>
-      </plugin>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-assembly-plugin</artifactId>
+        <artifactId>build-helper-maven-plugin</artifactId>
         <executions>
           <execution>
-            <id>dist</id>
-            <phase>package</phase>
+            <id>add-test-source</id>
+            <phase>generate-test-sources</phase>
             <goals>
-              <goal>single</goal>
+              <goal>add-test-source</goal>
             </goals>
             <configuration>
-              <appendAssemblyId>false</appendAssemblyId>
-              <attach>false</attach>
-              <finalName>streamsets-libs</finalName>
-              <descriptors>
-                <descriptor>${basedir}/../root/src/main/assemblies/stage-lib.xml</descriptor>
-              </descriptors>
+              <sources>
+                <source>${basedir}/../spark-protolib/src/test/java</source>
+              </sources>
+            </configuration>
+          </execution>
+          <execution>
+            <id>add-test-resources</id>
+            <phase>generate-test-resources</phase>
+            <goals>
+              <goal>add-test-resource</goal>
+            </goals>
+            <configuration>
+              <resources>
+                <resource>
+                  <directory>${basedir}/../spark-protolib/src/test/resources</directory>
+                </resource>
+              </resources>
             </configuration>
           </execution>
         </executions>
       </plugin>
     </plugins>
   </build>
+
+  <profiles>
+    <profile>
+      <id>dist</id>
+      <activation>
+        <activeByDefault>false</activeByDefault>
+        <property>
+          <name>release</name>
+        </property>
+      </activation>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-assembly-plugin</artifactId>
+            <executions>
+              <execution>
+                <id>dist</id>
+                <phase>package</phase>
+                <goals>
+                  <goal>single</goal>
+                </goals>
+                <configuration>
+                  <appendAssemblyId>false</appendAssemblyId>
+                  <attach>false</attach>
+                  <finalName>streamsets-libs</finalName>
+                  <descriptors>
+                    <descriptor>${basedir}/../root/src/main/assemblies/stage-lib.xml</descriptor>
+                  </descriptors>
+                </configuration>
+              </execution>
+            </executions>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+  </profiles>
 
 </project>

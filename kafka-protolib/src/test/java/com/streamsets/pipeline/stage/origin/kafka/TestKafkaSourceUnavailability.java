@@ -58,7 +58,7 @@ public class TestKafkaSourceUnavailability {
     kafkaServer = TestUtils.createServer(new KafkaConfig(props), new MockTime());
     servers.add(kafkaServer);
 
-    producer = KafkaTestUtil.createProducer(HOST, port);
+    producer = KafkaTestUtil.createProducer(HOST, port, true);
   }
 
   @After

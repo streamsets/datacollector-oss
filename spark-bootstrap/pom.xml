@@ -52,6 +52,12 @@
       <version>${spark.version}</version>
       <scope>provided</scope>
     </dependency>
+    <dependency>
+      <groupId>org.apache.spark</groupId>
+      <artifactId>spark-streaming-kafka_2.10</artifactId>
+      <version>${spark.version}</version>
+      <scope>compile</scope>
+    </dependency>
   </dependencies>
 
   <build>

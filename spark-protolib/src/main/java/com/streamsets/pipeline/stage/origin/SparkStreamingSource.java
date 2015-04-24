@@ -24,20 +24,17 @@ import java.util.Map;
 import java.util.concurrent.SynchronousQueue;
 import java.util.concurrent.TimeUnit;
 
-@GenerateResourceBundle
-@StageDef(
-  version = "1.0.0",
-  label = "Spark Streaming",
-  description = "Ingests data from Spark Streaming",
-  icon = "")
-public class SparkStreamingSource extends BaseSource implements OffsetCommitter {
+/**
+ * Maintains a synchronous queue to which spark transformation function writes batch of RDD's
+ * The pipeline thread will consume from this queue and do the processing of the batch
+ *
+ */
+public abstract class SparkStreamingSource extends BaseSource implements OffsetCommitter {
   private static final Logger LOG = LoggerFactory.getLogger(SparkStreamingSource.class);
   private final SynchronousQueue<Object> queue = new SynchronousQueue<>();
-  private int recordsProduced = 0;
 
   @Override
   public void destroy() {
-
   }
 
   @Override
@@ -54,9 +51,11 @@ public class SparkStreamingSource extends BaseSource implements OffsetCommitter 
       Thread.currentThread().interrupt();
     }
   }
-  public void put(List<String> batch) throws InterruptedException {
+
+  protected <T> void put(List<T> batch) throws InterruptedException {
     LOG.debug("Adding batch ");
     queue.put(batch);
+    // TODO - poll for a configurable timeout
     Object result = queue.take();
     if (result == null) {
       throw new IllegalStateException("Timed out waiting for response");
@@ -69,51 +68,14 @@ public class SparkStreamingSource extends BaseSource implements OffsetCommitter 
     }
   }
 
-  @Override
-  public String produce(String lastSourceOffset, int maxBatchSize, BatchMaker batchMaker) throws StageException {
-    Throwable error = null;
-    try {
-      Object object;
-      // TODO implement periodic timeout if spark does not send empty batches
-      if ((object = queue.take()) != null) {
-        LOG.info("Batch = " + object);
-        List<String> batch = null;
-        if (object instanceof List) {
-          batch = (List)object;
-        } else {
-          throw new IllegalStateException("Producer expects List, got " + object.getClass().getSimpleName());
-        }
-        for (String line : batch) {
-          LOG.debug("Got line " + line);
-          Record record = getContext().createRecord("spark-streaming");
-          Map<String, Field> map = new HashMap<>();
-          map.put("text", Field.create(line));
-          record.set(Field.create(map));
-          batchMaker.addRecord(record);
-          recordsProduced++;
-        }
-      }
-    } catch (Throwable throwable) {
-      error = throwable;
-    } finally {
-      if (error != null) {
-        try {
-          queue.put(error);
-        } catch (InterruptedException e) {
-          Thread.currentThread().interrupt();
-        }
-        if (error instanceof InterruptedException) {
-          Thread.currentThread().interrupt();
-        }
-      }
-    }
-    if (error != null) {
-      Throwables.propagate(error);
-    }
-    return lastSourceOffset;
+  protected Object getElement(int timeout) throws InterruptedException {
+    return queue.poll(timeout, TimeUnit.MILLISECONDS);
   }
 
-  public long getRecordsProduced() {
-    return recordsProduced;
+  protected void putElement(Object object) throws InterruptedException {
+    queue.put(object);
   }
+
+  protected abstract long getRecordsProduced();
+
 }

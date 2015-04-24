@@ -33,7 +33,7 @@ public class TestPublishToKafka {
 
     ExecutorService executorService = Executors.newSingleThreadExecutor();
     executorService.submit(new ProducerRunnable(TOPIC, MULTIPLE_PARTITIONS, producer, startProducing, DataType.JSON,
-      StreamingJsonParser.Mode.ARRAY_OBJECTS));
+      StreamingJsonParser.Mode.ARRAY_OBJECTS, -1));
 
     startProducing.countDown();
 
