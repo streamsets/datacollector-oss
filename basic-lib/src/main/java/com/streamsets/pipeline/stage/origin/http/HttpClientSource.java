@@ -36,7 +36,9 @@ public class HttpClientSource extends BaseSource implements OffsetCommitter {
   private final static Logger LOG = LoggerFactory.getLogger(HttpClientSource.class);
 
   private final String resourceUrl;
-  private final long responseTimeoutMillis;
+  private final String httpMethod;
+  private final String requestData;
+  private final long requestTimeoutMillis;
 
   /** OAuth Parameters */
   private final String consumerKey;
@@ -62,73 +64,23 @@ public class HttpClientSource extends BaseSource implements OffsetCommitter {
   private HttpStreamConsumer httpConsumer;
 
   /**
-   * Constructor for unauthenticated clients. Requires only the resource URL.
-   * @param resourceUrl URL of the streaming JSON resource to ingest.
-   * @param responseTimeoutMillis timeout used for http requests and buffering.
-   * @param entityDelimiter String delimiter between records in the stream.
-   * @param batchSize Maximum records to queue before sending downstream.
-   * @param maxBatchWaitTime Maximum time to wait before sending a batch regardless of size.
+   * @param config Configuration object for the HTTP client
    */
-  public HttpClientSource(
-      final HttpClientMode httpMode,
-      final String resourceUrl,
-      final long responseTimeoutMillis,
-      final String entityDelimiter,
-      final int batchSize,
-      final long maxBatchWaitTime,
-      final long pollingInterval
-  ) {
-    this(httpMode,
-        resourceUrl,
-        responseTimeoutMillis,
-        entityDelimiter,
-        batchSize,
-        maxBatchWaitTime,
-        pollingInterval,
-        null,
-        null,
-        null,
-        null
-    );
-  }
-
-  /**
-   *
-   * @param resourceUrl URL of the streaming JSON resource to ingest.
-   * @param responseTimeoutMillis timeout used for http requests and buffering.
-   * @param entityDelimiter String delimiter between records in the stream.
-   * @param batchSize Maximum records to queue before sending downstream.
-   * @param maxBatchWaitTime Maximum time to wait before sending a batch regardless of size.
-   * @param consumerKey OAuth required parameter.
-   * @param consumerSecret OAuth required parameter.
-   * @param token OAuth required parameter.
-   * @param tokenSecret OAuth required parameter.
-   */
-  public HttpClientSource(
-      final HttpClientMode httpMode,
-      final String resourceUrl,
-      final long responseTimeoutMillis,
-      final String entityDelimiter,
-      final int batchSize,
-      final long maxBatchWaitTime,
-      final long pollingInterval,
-      final String consumerKey,
-      final String consumerSecret,
-      final String token,
-      final String tokenSecret
-  ) {
-    this.httpMode = httpMode;
-    this.resourceUrl = resourceUrl;
-    this.responseTimeoutMillis = responseTimeoutMillis;
-    this.entityDelimiter = entityDelimiter;
-    this.batchSize = batchSize;
-    this.maxBatchWaitTime = maxBatchWaitTime;
-    this.consumerKey = consumerKey;
-    this.consumerSecret = consumerSecret;
-    this.token = token;
-    this.tokenSecret = tokenSecret;
+  public HttpClientSource(final HttpClientConfig config) {
+    this.httpMode = config.getHttpMode();
+    this.resourceUrl = config.getResourceUrl();
+    this.requestTimeoutMillis = config.getRequestTimeoutMillis();
+    this.entityDelimiter = config.getEntityDelimiter();
+    this.batchSize = config.getBatchSize();
+    this.maxBatchWaitTime = config.getMaxBatchWaitTime();
+    this.consumerKey = config.getConsumerKey();
+    this.consumerSecret = config.getConsumerSecret();
+    this.token = config.getToken();
+    this.tokenSecret = config.getTokenSecret();
     this.jsonMode = JsonMode.MULTIPLE_OBJECTS;
-    this.pollingInterval = pollingInterval;
+    this.pollingInterval = config.getPollingInterval();
+    this.httpMethod = config.getHttpMethod().name();
+    this.requestData = config.getRequestData();
   }
 
   @Override
@@ -146,7 +98,9 @@ public class HttpClientSource extends BaseSource implements OffsetCommitter {
     if (token != null) {
       httpConsumer = new HttpStreamConsumer(
           resourceUrl,
-          responseTimeoutMillis,
+          requestTimeoutMillis,
+          httpMethod,
+          requestData,
           entityDelimiter,
           entityQueue,
           consumerKey,
@@ -157,7 +111,9 @@ public class HttpClientSource extends BaseSource implements OffsetCommitter {
     } else {
       httpConsumer = new HttpStreamConsumer(
           resourceUrl,
-          responseTimeoutMillis,
+          requestTimeoutMillis,
+          httpMethod,
+          requestData,
           entityDelimiter,
           entityQueue
       );
