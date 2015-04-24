@@ -51,6 +51,9 @@ public class JythonDProcessor extends DProcessor {
     "#\n" +
     "#  err.write(record, message): sends a record to error\n" +
     "#\n" +
+    "# Add additional module search paths:\n" +
+    "#import sys\n" +
+    "#sys.path.append('/some/other/dir/to/search')\n" +
     "\n" +
     "for record in records:\n" +
     "  \n" +
