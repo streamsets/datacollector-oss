@@ -345,16 +345,12 @@ angular.module('dataCollectorApp.common')
       previewPipeline: function(name, sourceOffset, batchSize, rev, skipTargets, stageOutputList, endStage) {
         var url;
 
-        if(!sourceOffset) {
-          sourceOffset = 0;
-        }
-
         if(!batchSize) {
           batchSize = 10;
         }
 
-        url = apiBase + '/pipeline-library/' + name + '/preview?sourceOffset=' + sourceOffset +
-          '&batchSize=' + batchSize + '&rev=' + rev + '&skipTargets=' + skipTargets;
+        url = apiBase + '/pipeline-library/' + name + '/preview?batchSize=' + batchSize + '&rev=' + rev +
+            '&skipTargets=' + skipTargets;
 
         if(endStage) {
           url += '&endStage=' + endStage;
