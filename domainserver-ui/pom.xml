@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ (c) 2014 StreamSets, Inc. All rights reserved. May not
+ be copied, modified, or distributed in whole or part without
+ written consent of StreamSets, Inc.
+-->
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <parent>
+    <artifactId>streamsets-datacollector-root</artifactId>
+    <groupId>com.streamsets</groupId>
+    <version>1.0.0b2-SNAPSHOT</version>
+    <relativePath>../root</relativePath>
+  </parent>
+  <modelVersion>4.0.0</modelVersion>
+
+  <groupId>com.streamsets</groupId>
+  <artifactId>streamsets-domainserver-ui</artifactId>
+  <version>1.0.0b2-SNAPSHOT</version>
+  <description>StreamSets Domain Server UI</description>
+  <name>StreamSets Domain Server UI</name>
+  <packaging>jar</packaging>
+
+  <properties>
+    <bowerInstallArgs>install</bowerInstallArgs>
+  </properties>
+
+  <dependencies>
+
+  </dependencies>
+
+
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-deploy-plugin</artifactId>
+        <configuration>
+          <skip>true</skip>
+        </configuration>
+      </plugin>
+      <plugin>
+        <groupId>com.github.trecloux</groupId>
+        <artifactId>yeoman-maven-plugin</artifactId>
+        <version>0.4</version>
+        <executions>
+          <execution>
+            <id>run-grunt</id>
+            <phase>generate-resources</phase>
+            <goals>
+              <goal>build</goal>
+            </goals>
+            <configuration>
+              <buildArgs>--force</buildArgs>
+              <bowerInstallArgs>${bowerInstallArgs}</bowerInstallArgs>
+            </configuration>
+          </execution>
+        </executions>
+        <configuration>
+          <yeomanProjectDirectory>${project.basedir}</yeomanProjectDirectory>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
+
+  <profiles>
+    <profile>
+      <id>offline</id>
+      <activation>
+        <activeByDefault>false</activeByDefault>
+      </activation>
+      <properties>
+        <bowerInstallArgs>install --offline</bowerInstallArgs>
+      </properties>
+    </profile>
+  </profiles>
+
+  </project>

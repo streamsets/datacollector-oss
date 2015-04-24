@@ -1,0 +1,41 @@
+{
+  "global": {
+    "title": "StreamSets Domain Server",
+    "menu": {
+      "account": {
+        "main": "Account",
+        "logout": "Logout"
+      },
+      "admin": {
+        "configuration": "Configuration",
+        "jvmMetrics": "JVM Metrics",
+        "logs": "Logs",
+        "main": "Administration",
+        "resetLocalStorage": "Reset Browser Local Storage",
+        "shutdown": "Shutdown"
+      },
+      "help": {
+        "about": "About",
+        "main": "Help",
+        "helpContents": "Help Contents",
+        "useHelp": "Help:",
+        "localHelp": "Local Help",
+        "hostedHelp": "Hosted Help"
+      },
+      "home": "Home"
+    },
+    "form": {
+
+    },
+    "messages": {
+      "info": {
+
+      },
+      "error": {
+
+      },
+      "validate": {
+      }
+    }
+  }
+}
