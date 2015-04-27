@@ -103,6 +103,7 @@
     <module>spark-protolib</module>
     <module>cdh5_4_0-lib</module>
     <module>spark-bootstrap</module>
+
   </modules>
 
   <build>

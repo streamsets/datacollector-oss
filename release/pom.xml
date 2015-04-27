@@ -207,7 +207,7 @@
               </descriptors>
             </configuration>
           </execution>
-           <execution>
+          <execution>
             <id>apache-kafka-0.8.1.1</id>
             <phase>package</phase>
             <goals>

@@ -1,0 +1,109 @@
+/*
+ * (c) 2015 StreamSets, Inc. All rights reserved. May not
+ * be copied, modified, or distributed in whole or part without
+ * written consent of StreamSets, Inc.
+ */
+
+package com.streamsets.pipeline.stage.origin.omniture;
+
+public class OmnitureConfig {
+
+  // The HTTP client mode (only polling for now)
+  HttpClientMode httpMode = null;
+
+  // URL of the streaming JSON resource to ingest.
+  String resourceUrl = null;
+
+  // timeout used for http requests and buffering.
+  long requestTimeoutMillis = 10000;
+
+  // Maximum records to queue before sending downstream.
+  int batchSize = 1;
+
+  // Maximum time to wait before sending a batch regardless of size.
+  long maxBatchWaitTime = 10000;
+
+  // Interval of time in milliseconds before another poll request is issued
+  long pollingInterval = 60000;
+
+  // Username for Omniture APIs
+  String username;
+
+  // Shared secret for Omniture APIs
+  String sharedSecret;
+
+  // JSON report description to define the request
+  String reportDescription;
+
+  public String getReportDescription() {
+    return reportDescription;
+  }
+
+  public void setReportDescription(String reportDescription) {
+    this.reportDescription = reportDescription;
+  }
+
+  public HttpClientMode getHttpMode() {
+    return httpMode;
+  }
+
+  public void setHttpMode(HttpClientMode httpMode) {
+    this.httpMode = httpMode;
+  }
+
+  public String getResourceUrl() {
+    return resourceUrl;
+  }
+
+  public void setResourceUrl(String resourceUrl) {
+    this.resourceUrl = resourceUrl;
+  }
+
+  public long getRequestTimeoutMillis() {
+    return requestTimeoutMillis;
+  }
+
+  public void setRequestTimeoutMillis(long requestTimeoutMillis) {
+    this.requestTimeoutMillis = requestTimeoutMillis;
+  }
+
+  public int getBatchSize() {
+    return batchSize;
+  }
+
+  public void setBatchSize(int batchSize) {
+    this.batchSize = batchSize;
+  }
+
+  public long getMaxBatchWaitTime() {
+    return maxBatchWaitTime;
+  }
+
+  public void setMaxBatchWaitTime(long maxBatchWaitTime) {
+    this.maxBatchWaitTime = maxBatchWaitTime;
+  }
+
+  public long getPollingInterval() {
+    return pollingInterval;
+  }
+
+  public void setPollingInterval(long pollingInterval) {
+    this.pollingInterval = pollingInterval;
+  }
+
+  public String getUsername() {
+    return username;
+  }
+
+  public void setUsername(String username) {
+    this.username = username;
+  }
+
+  public String getSharedSecret() {
+    return sharedSecret;
+  }
+
+  public void setSharedSecret(String sharedSecret) {
+    this.sharedSecret = sharedSecret;
+  }
+}
