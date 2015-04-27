@@ -100,7 +100,7 @@ public class LowLevelKafkaConsumer {
   public List<MessageAndOffset> read(long offset) throws StageException {
 
     FetchRequest req = buildFetchRequest(offset);
-    FetchResponse fetchResponse = null;
+    FetchResponse fetchResponse;
     try {
       fetchResponse = consumer.fetch(req);
     } catch (Exception e) {
@@ -138,7 +138,6 @@ public class LowLevelKafkaConsumer {
     }
 
     List<MessageAndOffset> partitionToPayloadMapArrayList = new ArrayList<>();
-    int numberOfMessagesRead = 0;
     for (kafka.message.MessageAndOffset messageAndOffset : fetchResponse.messageSet(topic, partition)) {
       long currentOffset = messageAndOffset.offset();
       if (currentOffset < offset) {
@@ -150,12 +149,6 @@ public class LowLevelKafkaConsumer {
       payload.get(bytes);
       MessageAndOffset partitionToPayloadMap = new MessageAndOffset(bytes, messageAndOffset.nextOffset(), partition);
       partitionToPayloadMapArrayList.add(partitionToPayloadMap);
-      numberOfMessagesRead++;
-    }
-
-    if(numberOfMessagesRead == 0) {
-      //If no message was available, give kafka sometime.
-      ThreadUtil.sleep(ONE_SECOND);
     }
     return partitionToPayloadMapArrayList;
   }
