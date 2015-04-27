@@ -34,7 +34,6 @@ public class MetricsConfigurator {
     return name + type;
   }
 
-
   //we need to use the AccessController.doPrivilege for sdcMetric calls because there are calls to JMX MBs
   //and user-libs stages fail otherwise due to lesser privileges
   public static Timer createTimer(MetricRegistry metrics, String name) {
@@ -195,6 +194,17 @@ public class MetricsConfigurator {
       });
     }
     sdcMetrics = null;
+  }
+
+  public static boolean resetCounter(MetricRegistry metrics, String name) {
+    Counter counter = getCounter(metrics, name);
+    boolean result = false;
+    if(counter != null) {
+      //there could be race condition with observer thread trying to update the counter. This should be ok.
+      counter.dec(counter.getCount());
+      result = true;
+    }
+    return result;
   }
 
 }

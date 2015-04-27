@@ -215,8 +215,8 @@ public class TestUtil {
           , pipelineConf);
 
         //create a DataRuleDefinition for one of the stages
-        DataRuleDefinition dataRuleDefinition = new DataRuleDefinition("myID", "myLabel", "p", 20, 10,
-          "${record:value(\"/\")==2}", true, "alertText", ThresholdType.COUNT, "20", 100, true, false, true);
+        DataRuleDefinition dataRuleDefinition = new DataRuleDefinition("myID", "myLabel", "s", 100, 10,
+          "${record:value(\"/name\") != null}", true, "alertText", ThresholdType.COUNT, "100", 100, true, false, true);
         List<DataRuleDefinition> dataRuleDefinitions = new ArrayList<>();
         dataRuleDefinitions.add(dataRuleDefinition);
 

@@ -41,10 +41,9 @@ public class AlertsUtil {
     return  ALERT_PREFIX + ruleId;
   }
 
-  public static String getUserMeterName(String ruleId) {
+  public static String getUserMetricName(String ruleId) {
     return  USER_PREFIX + ruleId;
   }
-
 
 
 }

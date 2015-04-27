@@ -71,7 +71,7 @@ public class TestDataObserverRunner {
     RulesConfigurationChangeRequest rulesConfigurationChangeRequest = createRulesConfigurationChangeRequest(false, true);
     dataObserverRunner.handleConfigurationChangeRequest(rulesConfigurationChangeRequest);
     dataObserverRunner.handleDataRulesEvaluationRequest(createProductionObserverRequest());
-    Meter meter = MetricsConfigurator.getMeter(metrics, AlertsUtil.getUserMeterName("myId"));
+    Meter meter = MetricsConfigurator.getMeter(metrics, AlertsUtil.getUserMetricName("myId"));
     Assert.assertNotNull(meter);
     Assert.assertEquals(3, meter.getCount());
   }
@@ -86,7 +86,7 @@ public class TestDataObserverRunner {
     Assert.assertEquals((long) 3, ((Map<String, Object>) gauge.getValue()).get("currentValue"));
     Assert.assertNotNull(((Map<String, Object>) gauge.getValue()).get("timestamp"));
 
-    Meter meter = MetricsConfigurator.getMeter(metrics, AlertsUtil.getUserMeterName("myId"));
+    Meter meter = MetricsConfigurator.getMeter(metrics, AlertsUtil.getUserMetricName("myId"));
     Assert.assertNotNull(meter);
     Assert.assertEquals(3, meter.getCount());
   }

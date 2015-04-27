@@ -614,9 +614,10 @@ public class ProductionPipelineManagerTask extends AbstractTask {
     stateTracker.deleteHistory(pipelineName, rev);
   }
 
-  public boolean deleteAlert(String alertId) throws PipelineManagerException {
+  public boolean deleteAlert(String ruleId) throws PipelineManagerException {
     checkState(getPipelineState().getState().equals(State.RUNNING), ContainerError.CONTAINER_0402);
-    return MetricsConfigurator.removeGauge(getMetrics(), AlertsUtil.getAlertGaugeName(alertId));
+    MetricsConfigurator.resetCounter(getMetrics(), AlertsUtil.getUserMetricName(ruleId));
+    return MetricsConfigurator.removeGauge(getMetrics(), AlertsUtil.getAlertGaugeName(ruleId));
   }
 
   @VisibleForTesting

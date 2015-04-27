@@ -5,9 +5,13 @@
  */
 package com.streamsets.pipeline.prodmanager;
 
+import com.codahale.metrics.Counter;
+import com.codahale.metrics.Gauge;
+import com.streamsets.pipeline.alerts.AlertsUtil;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.main.RuntimeInfo;
 import com.streamsets.pipeline.main.RuntimeModule;
+import com.streamsets.pipeline.metrics.MetricsConfigurator;
 import com.streamsets.pipeline.runner.PipelineRuntimeException;
 import com.streamsets.pipeline.store.PipelineStoreException;
 import com.streamsets.pipeline.util.LogUtil;
@@ -74,6 +78,46 @@ public class TestProductionRunWithObserver {
     //The pipeline could be stopping or has already been stopped by now
     Assert.assertTrue(manager.getPipelineState().getState() == State.STOPPING ||
         manager.getPipelineState().getState() == State.STOPPED);
+  }
+
+  @Test()
+  /**
+   * Tests pipeline with alerts. The triggered alert is then deleted and the counter is verified.
+   * Potentially flaky test - DataRuleDefinition has high threshold value to ensure it runs fine.
+   */
+  public void testPipelineWithAlerts() throws PipelineStoreException, PipelineManagerException,
+    PipelineRuntimeException, StageException, InterruptedException {
+    PipelineState pipelineState = manager.startPipeline(MY_PIPELINE, PIPELINE_REV);
+    Assert.assertEquals(State.RUNNING, pipelineState.getState());
+    Assert.assertEquals(State.RUNNING, manager.getPipelineState().getState());
+
+    Gauge alertGauge = MetricsConfigurator.getGauge(manager.getMetrics(), AlertsUtil.getAlertGaugeName("myID"));
+    //wait until alert triggers
+    while(alertGauge == null) {
+      Thread.sleep(200);
+      alertGauge = MetricsConfigurator.getGauge(manager.getMetrics(), AlertsUtil.getAlertGaugeName("myID"));
+    }
+
+    //the counter as of now should be >= 100
+    Counter counter = MetricsConfigurator.getCounter(manager.getMetrics(), AlertsUtil.getUserMetricName("myID"));
+    Assert.assertTrue(counter.getCount() >= 100);
+
+    //delete alert
+    manager.deleteAlert("myID");
+    alertGauge = MetricsConfigurator.getGauge(manager.getMetrics(), AlertsUtil.getAlertGaugeName("myID"));
+    counter = MetricsConfigurator.getCounter(manager.getMetrics(), AlertsUtil.getUserMetricName("myID"));
+
+    //gauge should be null and counter should be 0
+    //But since the pipeline is still running counter could be > 0.
+    Assert.assertTrue(alertGauge == null);
+    Assert.assertTrue(counter.getCount() < 100);
+
+    pipelineState = manager.stopPipeline(false);
+
+    Assert.assertEquals(State.STOPPING, pipelineState.getState());
+    //The pipeline could be stopping or has already been stopped by now
+    Assert.assertTrue(manager.getPipelineState().getState() == State.STOPPING ||
+      manager.getPipelineState().getState() == State.STOPPED);
   }
 
 }
