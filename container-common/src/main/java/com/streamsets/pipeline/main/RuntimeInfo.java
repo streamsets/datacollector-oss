@@ -78,7 +78,7 @@ public class RuntimeInfo {
   public String getRuntimeDir() {
     if (Boolean.getBoolean(TRANSIENT_ENVIRONMENT)) {
       if (Boolean.getBoolean("sdc.testing-mode")) {
-        return System.getProperty("user.dir") + "/target/" + randomUUID;
+        return System.getProperty("user.dir") + "/target/runtime-" + randomUUID;
       } else {
         return System.getProperty("user.dir") + "/" + randomUUID;
       }

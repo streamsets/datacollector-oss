@@ -18,11 +18,13 @@ import com.streamsets.pipeline.lib.ProducerRunnable;
 import com.streamsets.pipeline.main.EmbeddedPipelineFactory;
 import com.streamsets.pipeline.stage.origin.spark.SparkStreamingBinding;
 
+import org.apache.commons.io.FileUtils;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
 import java.io.File;
+import java.io.FilenameFilter;
 import java.util.Properties;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
@@ -58,10 +60,20 @@ public class TestSparkStreamingKafkaSource {
 
   @Before
   public void setup() throws Exception {
+    File[] files = (new File(System.getProperty("user.dir"), "target")).listFiles(new FilenameFilter() {
+      @Override
+      public boolean accept(File dir, String name) {
+        return name.startsWith("runtime-");
+      }
+    });
+    if (files != null) {
+      for (File file : files) {
+        FileUtils.deleteQuietly(file);
+      }
+    }
     System.setProperty("sdc.testing-mode", "true");
     System.setProperty("spark.master", "local[2]"); // must be 2, not 1 (or function will never be called)
                                                     // not 3 (due to metric counter being jvm wide)
-
     zkConnect = TestZKUtils.zookeeperConnect();
     zkServer = new EmbeddedZookeeper(zkConnect);
     zkClient = new ZkClient(zkServer.connectString(), 30000, 30000, ZKStringSerializer$.MODULE$);

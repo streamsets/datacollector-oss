@@ -21,13 +21,7 @@ import kafka.serializer.DefaultDecoder;
 public class SparkStreamingBinding {
   private static final Logger LOG = LoggerFactory.getLogger(SparkStreamingBinding.class);
   public static final String INPUT_TYPE = "streamsets.cluster.input.type";
-  public static final String HDFS_INPUT_TYPE = "hdfs-dir";
   public static final String KAFKA_INPUT_TYPE = "kafka";
-
-  // for tests
-  public static final String TEXT_SERVER_INPUT_TYPE = "text-server";
-  public static final String TEXT_SERVER_HOSTNAME = "streamsets.cluster.text.server.host";
-  public static final String TEXT_SERVER_PORT = "streamsets.cluster.text.server.port";
 
   private JavaStreamingContext ssc;
   private Properties properties;
@@ -58,17 +52,7 @@ public class SparkStreamingBinding {
       JavaPairInputDStream<byte[], byte[]> dStream = createDirectStreamForKafka();
       dStream.foreachRDD(new SparkKafkaDriverFunction(properties, pipelineJson));
     } else {
-      JavaDStream<String> dStream;
-      if (TEXT_SERVER_INPUT_TYPE.equalsIgnoreCase(inputType)) {
-        String textServerHostname = properties.getProperty(TEXT_SERVER_HOSTNAME);
-        int textServerPort = Integer.parseInt(properties.getProperty(TEXT_SERVER_PORT));
-        dStream = ssc.socketTextStream(textServerHostname, textServerPort);
-      } else if (HDFS_INPUT_TYPE.equalsIgnoreCase(inputType)) {
-        dStream = ssc.textFileStream("hdfs://node00.local:8020/user/ec2-user/input");
-      } else {
-        throw new IllegalStateException("Unknown input type: " + inputType);
-      }
-      dStream.foreachRDD(new SparkDriverFunction(properties, pipelineJson));
+      throw new IllegalStateException("Unknown input type: " + inputType);
     }
     ssc.start();
   }
@@ -108,5 +92,9 @@ public class SparkStreamingBinding {
 
   public void awaitTermination() {
     ssc.awaitTermination();
+  }
+
+  public void close() {
+    ssc.close();
   }
 }

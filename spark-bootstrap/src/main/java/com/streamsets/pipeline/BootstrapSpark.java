@@ -145,13 +145,15 @@ public class BootstrapSpark {
    */
   public static void main(String[] args) throws Exception {
     BootstrapSpark.initialize();
+    SparkStreamingBinding binding = new SparkStreamingBinding(properties, pipelineJson);
     try {
-      SparkStreamingBinding binding = new SparkStreamingBinding(properties, pipelineJson);
       binding.init();
       binding.awaitTermination();
     } catch (Exception ex) {
       String msg = "Error trying to invoke SparkStreamingBinding.main: " + ex;
       throw new IllegalStateException(msg, ex);
+    } finally {
+      binding.close();
     }
   }
 
