@@ -6,6 +6,7 @@
 package com.streamsets.pipeline.validation;
 
 import com.google.common.collect.Lists;
+import com.streamsets.pipeline.api.ExecutionMode;
 import com.streamsets.pipeline.api.impl.TextUtils;
 import com.streamsets.pipeline.config.ConfigConfiguration;
 import com.streamsets.pipeline.config.PipelineConfiguration;
@@ -68,6 +69,25 @@ public class TestPipelineConfigurationValidator {
     Assert.assertFalse(validator.canPreview());
     Assert.assertTrue(validator.getIssues().hasIssues());
     Assert.assertTrue(validator.getIssues().getPipelineIssues().get(0).getMessage().contains("VALIDATION_0000"));
+  }
+
+  @Test
+  public void testExecutionModes() {
+    StageLibraryTask lib = MockStages.createStageLibrary();
+
+    // cluster only stage can not preview/run as standalone
+    PipelineConfiguration conf = MockStages.createPipelineConfigurationWithClusterOnlyStage(ExecutionMode.STANDALONE);
+    PipelineConfigurationValidator validator = new PipelineConfigurationValidator(lib, "name", conf);
+    Assert.assertFalse(validator.validate());
+    Assert.assertFalse(validator.canPreview());
+    Assert.assertTrue(validator.getIssues().hasIssues());
+
+    // cluster only stage can preview  and run as cluster
+    conf = MockStages.createPipelineConfigurationWithClusterOnlyStage(ExecutionMode.CLUSTER);
+    validator = new PipelineConfigurationValidator(lib, "name", conf);
+    Assert.assertTrue(validator.validate());
+    Assert.assertTrue(validator.canPreview());
+    Assert.assertFalse(validator.getIssues().hasIssues());
   }
 
 }

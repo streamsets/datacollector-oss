@@ -14,6 +14,7 @@ import com.streamsets.pipeline.validation.PipelineConfigurationValidator;
 
 import java.io.Serializable;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -24,12 +25,12 @@ public class PipelineConfiguration implements Serializable{
   private PipelineInfo info;
   private String description;
   private List<ConfigConfiguration> configuration;
+  private Map<String, ConfigConfiguration> configurationMap;
   private final Map<String, Object> uiInfo;
   private List<StageConfiguration> stages;
   private StageConfiguration errorStage;
   private Issues issues;
   private boolean previewable;
-  private MemoryLimitConfiguration memoryLimitConfiguration = new MemoryLimitConfiguration();
 
   @SuppressWarnings("unchecked")
   public PipelineConfiguration(int schemaVersion, UUID uuid, String description, List<ConfigConfiguration> configuration,
@@ -38,6 +39,10 @@ public class PipelineConfiguration implements Serializable{
     this.uuid = Preconditions.checkNotNull(uuid, "uuid cannot be null");
     this.description = description;
     this.configuration = configuration;
+    configurationMap = new HashMap<>();
+    for (ConfigConfiguration conf : configuration) {
+      configurationMap.put(conf.getName(), conf);
+    }
     this.uiInfo = uiInfo;
     this.stages = (stages != null) ? stages : Collections.<StageConfiguration>emptyList();
     this.errorStage = errorStage;
@@ -97,14 +102,6 @@ public class PipelineConfiguration implements Serializable{
     //NOP, just for jackson
   }
 
-  public MemoryLimitConfiguration getMemoryLimitConfiguration() {
-    return memoryLimitConfiguration;
-  }
-
-  public void setMemoryLimitConfiguration(MemoryLimitConfiguration memoryLimitConfiguration) {
-    this.memoryLimitConfiguration = memoryLimitConfiguration;
-  }
-
   public void setValidation(PipelineConfigurationValidator validation) {
     issues = validation.getIssues();
     previewable = validation.canPreview();
@@ -131,6 +128,10 @@ public class PipelineConfiguration implements Serializable{
 
   public List<ConfigConfiguration> getConfiguration() {
     return configuration;
+  }
+
+  public ConfigConfiguration getConfiguration(String name) {
+    return configurationMap.get(name);
   }
 
   public Map<String, Object> getUiInfo() {

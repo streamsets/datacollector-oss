@@ -33,19 +33,21 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.List;
+import java.util.UUID;
 
 public class TestProductionRun {
 
   private static final String MY_PIPELINE = "my pipeline";
   private static final String PIPELINE_REV = "2.0";
   private static final String SNAPSHOT_NAME1 = "snapshot1";
-  private static final String SNAPSHOT_NAME2 = "snapshot2";
   private static final String MY_PROCESSOR = "p";
   private ProductionPipelineManagerTask manager;
 
   @BeforeClass
   public static void beforeClass() throws IOException {
-    System.setProperty(RuntimeModule.SDC_PROPERTY_PREFIX + RuntimeInfo.DATA_DIR, "target/var");
+    File testDir = new File("target", UUID.randomUUID().toString()).getAbsoluteFile();
+    Assert.assertTrue(testDir.mkdirs());
+    System.setProperty(RuntimeModule.SDC_PROPERTY_PREFIX + RuntimeInfo.DATA_DIR, testDir.getAbsolutePath());
     File f = new File(System.getProperty(RuntimeModule.SDC_PROPERTY_PREFIX + RuntimeInfo.DATA_DIR));
     FileUtils.deleteDirectory(f);
     TestUtil.captureStagesForProductionRun();

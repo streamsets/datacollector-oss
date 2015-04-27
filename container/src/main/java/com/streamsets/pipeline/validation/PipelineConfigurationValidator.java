@@ -9,6 +9,7 @@ import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Sets;
 import com.streamsets.pipeline.api.ConfigDef;
+import com.streamsets.pipeline.api.ExecutionMode;
 import com.streamsets.pipeline.api.el.ELEvalException;
 import com.streamsets.pipeline.api.impl.TextUtils;
 import com.streamsets.pipeline.api.impl.Utils;
@@ -114,6 +115,8 @@ public class PipelineConfigurationValidator {
       canPreview &= validatePipelineConfiguration(StageIssueCreator.getStageCreator());
       canPreview &= validatePipelineLanes(StageIssueCreator.getStageCreator());
       canPreview &= validateErrorStage();
+      canPreview &= validateStagesExecutionMode(StageIssueCreator.getStageCreator());
+
       if (LOG.isTraceEnabled() && issues.hasIssues()) {
         for (Issue issue : issues.getPipelineIssues()) {
           LOG.trace("Pipeline '{}', {}", name, issue);
@@ -131,6 +134,29 @@ public class PipelineConfigurationValidator {
                 pipelineConfiguration.getSchemaVersion());
     }
     return !issues.hasIssues();
+  }
+
+  private boolean validateStagesExecutionMode(StageIssueCreator issueCreator) {
+    boolean canPreview = true;
+    ConfigConfiguration conf = pipelineConfiguration.getConfiguration(PipelineDefConfigs.EXECUTION_MODE_CONFIG);
+    ExecutionMode executionMode = (conf == null) ? ExecutionMode.STANDALONE
+                                                 : ExecutionMode.valueOf((String) conf.getValue());
+    for (StageConfiguration stageConf : pipelineConfiguration.getStages()) {
+      StageDefinition stageDef = stageLibrary.getStage(stageConf.getLibrary(), stageConf.getStageName(),
+                                                       stageConf.getStageVersion());
+      if (stageDef != null) {
+        if (!stageDef.getExecutionModes().contains(executionMode)) {
+          issues.add(issueCreator.createStageIssue(stageConf.getInstanceName(), ValidationError.VALIDATION_0071,
+                                                   executionMode));
+          canPreview = false;
+        }
+      } else {
+        issues.add(issueCreator.createStageIssue(stageConf.getInstanceName(), ValidationError.VALIDATION_0006,
+                                                 stageConf.getLibrary(), stageConf.getStageName(),
+                                                 stageConf.getStageVersion()));
+      }
+    }
+    return canPreview;
   }
 
   private boolean validatePipelineMemoryConfiguration() {
