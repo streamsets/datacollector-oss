@@ -8,6 +8,7 @@ package com.streamsets.pipeline.sdk.annotationsprocessor.testData;
 
 import com.streamsets.pipeline.api.Batch;
 import com.streamsets.pipeline.api.ConfigDef;
+import com.streamsets.pipeline.api.ExecutionMode;
 import com.streamsets.pipeline.api.GenerateResourceBundle;
 import com.streamsets.pipeline.api.StageDef;
 import com.streamsets.pipeline.api.StageException;
@@ -18,7 +19,7 @@ import java.util.List;
 
 @GenerateResourceBundle
 @StageDef(description = "Consumes twitter feeds", label = "twitter_target"
-, version = "1.3")
+, version = "1.3", execution = ExecutionMode.CLUSTER)
 public class TwitterTarget implements Target {
 
   @ConfigDef(

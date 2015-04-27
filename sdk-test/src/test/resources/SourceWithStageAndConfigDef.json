@@ -28,6 +28,7 @@
         "required" : "true",
         "group" : ""
       }
-    ]
+    ],
+    "executionModes" : [ "STANDALONE", "CLUSTER" ]
   }
 ]

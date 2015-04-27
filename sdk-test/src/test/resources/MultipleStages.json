@@ -96,7 +96,7 @@
   "outputStreamLabelProviderClass" : "com.streamsets.pipeline.api.StageDef$DefaultOutputStreams",
   "library" : null,
   "libraryLabel" : null,
-  "outputStreamLabels" : null
+  "executionModes" : [ "STANDALONE", "CLUSTER" ]
 }, {
   "className" : "com.streamsets.pipeline.sdk.annotationsprocessor.testData.TwitterProcessor",
   "name" : "com_streamsets_pipeline_sdk_annotationsprocessor_testData_TwitterProcessor",
@@ -176,7 +176,7 @@
   "outputStreamLabelProviderClass" : "com.streamsets.pipeline.api.StageDef$DefaultOutputStreams",
   "library" : null,
   "libraryLabel" : null,
-  "outputStreamLabels" : null
+  "executionModes" : [ "STANDALONE", "CLUSTER" ]
 }, {
   "className" : "com.streamsets.pipeline.sdk.annotationsprocessor.testData.ExtendedTwitterProcessor",
   "name" : "com_streamsets_pipeline_sdk_annotationsprocessor_testData_ExtendedTwitterProcessor",
@@ -218,7 +218,7 @@
   "outputStreamLabelProviderClass" : "com.streamsets.pipeline.api.StageDef$DefaultOutputStreams",
   "library" : null,
   "libraryLabel" : null,
-  "outputStreamLabels" : null
+  "executionModes" : [ "STANDALONE", "CLUSTER" ]
 }, {
   "className" : "com.streamsets.pipeline.sdk.annotationsprocessor.testData.TwitterTarget",
   "name" : "com_streamsets_pipeline_sdk_annotationsprocessor_testData_TwitterTarget",
@@ -267,5 +267,5 @@
   "outputStreamLabelProviderClass" : "com.streamsets.pipeline.api.StageDef$DefaultOutputStreams",
   "library" : null,
   "libraryLabel" : null,
-  "outputStreamLabels" : null
+  "executionModes" : [ "STANDALONE", "CLUSTER" ]
 } ]

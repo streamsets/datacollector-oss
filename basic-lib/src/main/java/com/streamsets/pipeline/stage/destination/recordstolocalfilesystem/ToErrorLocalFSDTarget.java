@@ -8,6 +8,7 @@ package com.streamsets.pipeline.stage.destination.recordstolocalfilesystem;
 import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.ConfigGroups;
 import com.streamsets.pipeline.api.ErrorStage;
+import com.streamsets.pipeline.api.ExecutionMode;
 import com.streamsets.pipeline.api.GenerateResourceBundle;
 import com.streamsets.pipeline.api.HideConfig;
 import com.streamsets.pipeline.api.StageDef;
@@ -19,7 +20,8 @@ import com.streamsets.pipeline.lib.el.TimeEL;
     version = "1.0.0",
     label = "Write To File",
     description = "Writes records to a local File System as SDC records",
-    icon=""
+    icon="",
+    execution = ExecutionMode.STANDALONE
 )
 @HideConfig(requiredFields = true, onErrorRecord = true)
 @ErrorStage

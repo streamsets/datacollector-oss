@@ -42,6 +42,8 @@ public interface Stage<C extends Stage.Context> {
 
   public interface Context extends ELContext {
 
+    public ExecutionMode getExecutionMode();
+
     public boolean isPreview();
 
     // For now- TESTING execution mode

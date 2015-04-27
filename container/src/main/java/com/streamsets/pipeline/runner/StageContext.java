@@ -12,6 +12,7 @@ import com.codahale.metrics.Timer;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableList;
 import com.streamsets.pipeline.api.ErrorCode;
+import com.streamsets.pipeline.api.ExecutionMode;
 import com.streamsets.pipeline.api.OnRecordError;
 import com.streamsets.pipeline.api.Processor;
 import com.streamsets.pipeline.api.Record;
@@ -133,6 +134,11 @@ public class StageContext implements Source.Context, Target.Context, Processor.C
   @Override
   public RecordWriter createRecordWriter(OutputStream outputStream) throws IOException {
     return RecordWriterReaderFactory.createRecordWriter(this, outputStream);
+  }
+
+  @Override
+  public ExecutionMode getExecutionMode() {
+    return ExecutionMode.STANDALONE;
   }
 
   @Override

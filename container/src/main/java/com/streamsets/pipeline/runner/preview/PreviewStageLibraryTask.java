@@ -5,12 +5,14 @@
  */
 package com.streamsets.pipeline.runner.preview;
 
+import com.streamsets.pipeline.api.ExecutionMode;
 import com.streamsets.pipeline.config.ConfigDefinition;
 import com.streamsets.pipeline.config.StageDefinition;
 import com.streamsets.pipeline.config.StageType;
 import com.streamsets.pipeline.stagelibrary.StageLibraryTask;
 import com.streamsets.pipeline.task.TaskWrapper;
 
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -37,7 +39,7 @@ public class PreviewStageLibraryTask extends TaskWrapper implements StageLibrary
     if (LIBRARY.equals(library) && NAME.equals(name) && VERSION.equals(VERSION)) {
       def = new StageDefinition(PreviewPlugTarget.class.getName(), NAME, VERSION, "previewPlug", "Preview Plug",
           StageType.TARGET, false, false, false, Collections.<ConfigDefinition>emptyList(),
-        null/*raw source definition*/, "", null, false, 0, null);
+        null/*raw source definition*/, "", null, false, 0, null, Arrays.asList(ExecutionMode.STANDALONE));
       def.setLibrary(LIBRARY, "", getClass().getClassLoader());
     } else {
       def = this.library.getStage(library, name, version);

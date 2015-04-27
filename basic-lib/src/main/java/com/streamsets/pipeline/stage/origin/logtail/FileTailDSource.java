@@ -8,6 +8,7 @@ package com.streamsets.pipeline.stage.origin.logtail;
 import com.streamsets.pipeline.api.ComplexField;
 import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.ConfigGroups;
+import com.streamsets.pipeline.api.ExecutionMode;
 import com.streamsets.pipeline.api.GenerateResourceBundle;
 import com.streamsets.pipeline.api.RawSource;
 import com.streamsets.pipeline.api.Source;
@@ -26,7 +27,8 @@ import java.util.List;
     version="1.0.0",
     label="File Tail",
     description = "Tails a file. It handles rolling files within the same directory",
-    icon="fileTail.png"
+    icon="fileTail.png",
+    execution = ExecutionMode.STANDALONE
 )
 @RawSource(rawSourcePreviewer = FileRawSourcePreviewer.class)
 @ConfigGroups(Groups.class)

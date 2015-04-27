@@ -64,4 +64,6 @@ public @interface StageDef {
 
   Class<? extends Label> outputStreams() default DefaultOutputStreams.class;
 
+  ExecutionMode[] execution() default { ExecutionMode.STANDALONE, ExecutionMode.CLUSTER };
+
 }

@@ -10,6 +10,7 @@ import com.google.common.collect.Lists;
 import com.streamsets.pipeline.api.Batch;
 import com.streamsets.pipeline.api.BatchMaker;
 import com.streamsets.pipeline.api.ConfigDef;
+import com.streamsets.pipeline.api.ExecutionMode;
 import com.streamsets.pipeline.api.OffsetCommitter;
 import com.streamsets.pipeline.api.Processor;
 import com.streamsets.pipeline.api.Source;
@@ -27,6 +28,7 @@ import com.streamsets.pipeline.stagelibrary.StageLibraryTask;
 import com.streamsets.pipeline.store.PipelineStoreTask;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
@@ -286,34 +288,39 @@ public class MockStages {
         StageDefinition sDef = new StageDefinition(
           MSource.class.getName(), "sourceName", "1.0.0", "sourceLabel",
           "sourceDesc", StageType.SOURCE, false,  true, true, Collections.<ConfigDefinition>emptyList(),
-          null/*raw source definition*/, "", null, false, 1, null
+          null/*raw source definition*/, "", null, false, 1, null,
+          Arrays.asList(ExecutionMode.CLUSTER, ExecutionMode.STANDALONE)
         );
         sDef.setLibrary("default", "", Thread.currentThread().getContextClassLoader());
 
         StageDefinition socDef = new StageDefinition(
           MSourceOffsetCommitter.class.getName(), "sourceOffsetCommitterName", "1.0.0", "sourceOffsetCommitterLabel",
           "sourceDesc", StageType.SOURCE, false, true, true, Collections.<ConfigDefinition>emptyList(),
-          null/*raw source definition*/, "", null, false, 1, null
+          null/*raw source definition*/, "", null, false, 1, null,
+          Arrays.asList(ExecutionMode.CLUSTER, ExecutionMode.STANDALONE)
         );
         socDef.setLibrary("default", "", Thread.currentThread().getContextClassLoader());
 
         StageDefinition pDef = new StageDefinition(MProcessor.class.getName(), "processorName", "1.0.0", "sourcelabel",
           "sourceDescription", StageType.PROCESSOR, false, true, true, Collections.<ConfigDefinition>emptyList(),
           null/*raw source definition*/, "", null,
-          false, 1, null);
+          false, 1, null,
+          Arrays.asList(ExecutionMode.CLUSTER, ExecutionMode.STANDALONE));
         pDef.setLibrary("default", "", Thread.currentThread().getContextClassLoader());
 
         StageDefinition tDef = new StageDefinition(
           MTarget.class.getName(), "targetName", "1.0.0", "targetLabel",
           "targetDesc", StageType.TARGET, false, true, true, Collections.<ConfigDefinition>emptyList(),
-          null/*raw source definition*/, "", null, false, 0, null
+          null/*raw source definition*/, "", null, false, 0, null,
+          Arrays.asList(ExecutionMode.CLUSTER, ExecutionMode.STANDALONE)
         );
         tDef.setLibrary("default", "", Thread.currentThread().getContextClassLoader());
 
         StageDefinition eDef = new StageDefinition(
           ETarget.class.getName(), "errorTarget", "1.0.0", "errorTarget",
           "Error Target", StageType.TARGET, true, false, true,
-          Collections.<ConfigDefinition>emptyList(), null/*raw source definition*/, "", null, false, 0, null
+          Collections.<ConfigDefinition>emptyList(), null/*raw source definition*/, "", null, false, 0, null,
+          Arrays.asList(ExecutionMode.CLUSTER, ExecutionMode.STANDALONE)
         );
         eDef.setLibrary("default", "", Thread.currentThread().getContextClassLoader());
 
@@ -332,7 +339,8 @@ public class MockStages {
         StageDefinition swcDef = new StageDefinition(
           MSource.class.getName(), "sourceWithConfigsName", "1.0.0", "sourceWithConfigsLabel",
           "sourceWithConfigsDesc", StageType.SOURCE, false, true, true,
-          Lists.newArrayList(depConfDef, triggeredConfDef), null/*raw source definition*/, "", null, false, 1, null);
+          Lists.newArrayList(depConfDef, triggeredConfDef), null/*raw source definition*/, "", null, false, 1, null,
+          Arrays.asList(ExecutionMode.CLUSTER, ExecutionMode.STANDALONE));
         swcDef.setLibrary("default", "", Thread.currentThread().getContextClassLoader());
         StageDefinition[] stageDefs = new StageDefinition[]{sDef, socDef, pDef, tDef, swcDef, eDef};
         stages = new HashMap<>();
@@ -360,7 +368,8 @@ public class MockStages {
             oldDef.getDescription(), oldDef.getType(), oldDef.isErrorStage(), oldDef.hasRequiredFields(),
             oldDef.hasOnRecordError(), oldDef.getConfigDefinitions(),
             oldDef.getRawSourceDefinition(), oldDef.getIcon(), oldDef.getConfigGroupDefinition(),
-            oldDef.isVariableOutputStreams(), oldDef.getOutputStreams(), oldDef.getOutputStreamLabelProviderClass()
+            oldDef.isVariableOutputStreams(), oldDef.getOutputStreams(), oldDef.getOutputStreamLabelProviderClass(),
+            Arrays.asList(ExecutionMode.CLUSTER, ExecutionMode.STANDALONE)
           );
           newDef.setLibrary(oldDef.getLibrary(), oldDef.getLibraryLabel(), oldDef.getStageClassLoader());
           stages.put(name, newDef);

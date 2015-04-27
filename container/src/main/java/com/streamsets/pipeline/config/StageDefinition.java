@@ -5,6 +5,7 @@
  */
 package com.streamsets.pipeline.config;
 
+import com.streamsets.pipeline.api.ExecutionMode;
 import com.streamsets.pipeline.api.Label;
 import com.streamsets.pipeline.api.impl.LocalizableMessage;
 import com.streamsets.pipeline.api.impl.Utils;
@@ -43,13 +44,14 @@ public class StageDefinition {
   private final int outputStreams;
   private final String outputStreamLabelProviderClass;
   private List<String> outputStreamLabels;
+  private final List<ExecutionMode> executionModes;
 
   // localized version
   private StageDefinition(ClassLoader classLoader, String library, String libraryLabel, String className, String name,
       String version, String label, String description, StageType type, boolean errorStage, boolean requiredFields,
       boolean onRecordError, List<ConfigDefinition> configDefinitions, RawSourceDefinition rawSourceDefinition,
       String icon, ConfigGroupDefinition configGroupDefinition, boolean variableOutputStreams, int outputStreams,
-      List<String> outputStreamLabels) {
+      List<String> outputStreamLabels, List<ExecutionMode> executionModes) {
     this.classLoader = classLoader;
     this.library = library;
     this.libraryLabel = libraryLabel;
@@ -83,13 +85,14 @@ public class StageDefinition {
     this.outputStreams = outputStreams;
     this.outputStreamLabels = outputStreamLabels;
     outputStreamLabelProviderClass = null;
+    this.executionModes = executionModes;
   }
 
   public StageDefinition(String className, String name, String version, String label, String description,
       StageType type, boolean errorStage,  boolean requiredFields, boolean onRecordError,
       List<ConfigDefinition> configDefinitions, RawSourceDefinition rawSourceDefinition, String icon,
       ConfigGroupDefinition configGroupDefinition, boolean variableOutputStreams, int outputStreams,
-      String outputStreamLabelProviderClass) {
+      String outputStreamLabelProviderClass, List<ExecutionMode> executionModes) {
     this.className = className;
     this.name = name;
     this.version = version;
@@ -119,6 +122,7 @@ public class StageDefinition {
     this.variableOutputStreams = variableOutputStreams;
     this.outputStreams = outputStreams;
     this.outputStreamLabelProviderClass = outputStreamLabelProviderClass;
+    this.executionModes = executionModes;
   }
 
   public void setLibrary(String library, String label, ClassLoader classLoader) {
@@ -240,10 +244,12 @@ public class StageDefinition {
     return outputStreamLabels;
   }
 
+  public List<ExecutionMode> getExecutionModes() {
+    return executionModes;
+  }
+
   private final static String STAGE_LABEL = "stageLabel";
   private final static String STAGE_DESCRIPTION = "stageDescription";
-  private final static String ERROR_STAGE_LABEL = "errorStageLabel";
-  private final static String ERROR_STAGE_DESCRIPTION = "errorStageDescription";
 
   private static Map<String, String> getGroupToResourceBundle(ConfigGroupDefinition configGroupDefinition) {
     Map<String, String> map = new HashMap<>();
@@ -339,7 +345,7 @@ public class StageDefinition {
     return new StageDefinition(classLoader, getLibrary(), libraryLabel, getClassName(), getName(), getVersion(), label,
                                description, getType(), isErrorStage(),
                                hasRequiredFields(), hasOnRecordError(), configDefs, rawSourceDef, getIcon(), groupDefs,
-                               isVariableOutputStreams(), getOutputStreams(), streamLabels);
+                               isVariableOutputStreams(), getOutputStreams(), streamLabels, executionModes);
   }
 
   private List<String> _getOutputStreamLabels(ClassLoader classLoader, boolean localized) {

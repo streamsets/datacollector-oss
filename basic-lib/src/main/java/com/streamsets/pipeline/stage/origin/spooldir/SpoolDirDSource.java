@@ -8,6 +8,7 @@ package com.streamsets.pipeline.stage.origin.spooldir;
 import com.streamsets.pipeline.api.ComplexField;
 import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.ConfigGroups;
+import com.streamsets.pipeline.api.ExecutionMode;
 import com.streamsets.pipeline.api.GenerateResourceBundle;
 import com.streamsets.pipeline.api.RawSource;
 import com.streamsets.pipeline.api.Source;
@@ -36,7 +37,8 @@ import java.util.List;
     version = "1.0.0",
     label = "Directory",
     description = "Reads files from a directory",
-    icon="spoolDirSource.png"
+    icon="spoolDirSource.png",
+    execution = ExecutionMode.STANDALONE
 )
 @RawSource(rawSourcePreviewer = FileRawSourcePreviewer.class)
 @ConfigGroups(Groups.class)

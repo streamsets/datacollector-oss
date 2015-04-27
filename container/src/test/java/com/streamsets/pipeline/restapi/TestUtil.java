@@ -10,6 +10,7 @@ import com.google.common.collect.ImmutableList;
 import com.streamsets.pipeline.api.Batch;
 import com.streamsets.pipeline.api.BatchMaker;
 import com.streamsets.pipeline.api.ConfigDef;
+import com.streamsets.pipeline.api.ExecutionMode;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.base.BaseSource;
@@ -37,6 +38,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.security.Principal;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -122,12 +124,13 @@ public class TestUtil {
     StageDefinition sourceDef = new StageDefinition(
         TSource.class.getName(), "source", "1.0.0", "label", "description",
         StageType.SOURCE, false, true, true, configDefs, null/*raw source definition*/, "", null, false ,1,
-        null);
+        null, Arrays.asList(ExecutionMode.CLUSTER, ExecutionMode.STANDALONE));
     sourceDef.setLibrary("library", "", Thread.currentThread().getContextClassLoader());
     StageDefinition targetDef = new StageDefinition(
         TTarget.class.getName(), "target", "1.0.0", "label", "description",
         StageType.TARGET, false, true, true, Collections.<ConfigDefinition>emptyList(), null/*raw source definition*/,
-        "TargetIcon.svg", null, false, 0, null);
+        "TargetIcon.svg", null, false, 0, null, Arrays.asList(ExecutionMode.CLUSTER,
+                                                              ExecutionMode.STANDALONE));
     targetDef.setLibrary("library", "", Thread.currentThread().getContextClassLoader());
     Mockito.when(lib.getStage(Mockito.eq("library"), Mockito.eq("source"), Mockito.eq("1.0.0"))).thenReturn(sourceDef);
     Mockito.when(lib.getStage(Mockito.eq("library"), Mockito.eq("target"), Mockito.eq("1.0.0"))).thenReturn(targetDef);

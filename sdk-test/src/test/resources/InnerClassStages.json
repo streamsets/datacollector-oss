@@ -22,7 +22,9 @@
       "labels" : null
     }
   } ],
-  "stageClass" : null
+  "stageClass" : null,
+  "outputStreamLabels" : null,
+  "executionModes" : [ "STANDALONE", "CLUSTER" ]
 }, {
   "library" : null,
   "className" : "com.streamsets.pipeline.sdk.annotationsprocessor.testData.TwitterStages.TwitterSource",
@@ -57,7 +59,8 @@
     "fieldName" : "password",
     "model" : null
   } ],
-  "stageClass" : null
+  "stageClass" : null,
+  "executionModes" : [ "STANDALONE", "CLUSTER" ]
 }, {
   "library" : null,
   "className" : "com.streamsets.pipeline.sdk.annotationsprocessor.testData.TwitterStages.TwitterTarget",
@@ -87,5 +90,7 @@
     "fieldName" : "password",
     "model" : null
   } ],
-  "stageClass" : null
+  "stageClass" : null,
+  "outputStreamLabels" : null,
+  "executionModes" : [ "STANDALONE" ]
 } ]

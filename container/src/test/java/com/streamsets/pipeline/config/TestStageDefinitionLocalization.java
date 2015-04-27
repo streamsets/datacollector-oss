@@ -8,12 +8,14 @@ package com.streamsets.pipeline.config;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.streamsets.pipeline.api.ConfigDef;
+import com.streamsets.pipeline.api.ExecutionMode;
 import com.streamsets.pipeline.api.impl.LocaleInContext;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Test;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -46,7 +48,9 @@ public class TestStageDefinitionLocalization {
     StageDefinition def = new StageDefinition(TProcessor.class.getName(), "stage", "1.0.0", "StageLabel",
                                               "StageDescription", StageType.PROCESSOR, true, true, true, configs,
                                               rawSource, "", configGroup, false, 1,
-                                              TOutput.class.getName());
+                                              TOutput.class.getName(),
+                                              Arrays.asList(ExecutionMode.CLUSTER,
+                                                            ExecutionMode.STANDALONE));
     def.setLibrary("lib", "LIB", getClass().getClassLoader());
     return def;
   }

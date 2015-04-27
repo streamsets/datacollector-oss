@@ -11,6 +11,7 @@ import com.streamsets.pipeline.api.ComplexField;
 import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.ConfigGroups;
 import com.streamsets.pipeline.api.ErrorStage;
+import com.streamsets.pipeline.api.ExecutionMode;
 import com.streamsets.pipeline.api.FieldSelector;
 import com.streamsets.pipeline.api.FieldValueChooser;
 import com.streamsets.pipeline.api.GenerateResourceBundle;
@@ -54,6 +55,7 @@ import javax.tools.StandardLocation;
 import java.io.IOException;
 import java.lang.annotation.Annotation;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -237,6 +239,8 @@ public class PipelineAnnotationsProcessor extends AbstractProcessor {
       int outputStreams = getOutputStreams(typeElement, stageDefAnnotation);
       String outputStreamsLabelProviderClass = getOutputStreamLabelsProviderClass(stageDefAnnotation);
 
+      List<ExecutionMode> executionModes = getExecutionModes(stageDefAnnotation);
+
       StageType stageType = StageType.valueOf(getStageTypeFromElement(typeElement));
       HideConfig hideConfigAnnotation = typeElement.getAnnotation(HideConfig.class);
 
@@ -260,12 +264,17 @@ public class PipelineAnnotationsProcessor extends AbstractProcessor {
           getConfigOptionGroupsForStage(typeElement),
           variableOutputStreams,
           outputStreams,
-          outputStreamsLabelProviderClass
+          outputStreamsLabelProviderClass,
+          executionModes
       );
     } else {
       stageDefValidationError = true;
     }
     return stageDefinition;
+  }
+
+  private List<ExecutionMode> getExecutionModes(StageDef stageDefAnnotation) {
+    return Arrays.asList(stageDefAnnotation.execution());
   }
 
   private ConfigGroupDefinition getConfigOptionGroupsForStage(TypeElement typeElement) {

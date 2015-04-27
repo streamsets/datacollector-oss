@@ -9,6 +9,7 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.streamsets.pipeline.api.ExecutionMode;
 
 import java.util.List;
 
@@ -34,13 +35,14 @@ public class StageDefinitionJson {
     @JsonProperty("configGroupDefinition") ConfigGroupDefinitionJson configGroupDefinitionJson,
     @JsonProperty("variableOutputStreams") boolean variableOutputStreams,
     @JsonProperty("outputStreams") int outputStreams,
-    @JsonProperty("outputStreamLabelProviderClass") String outputStreamLabelProviderClass) {
+    @JsonProperty("outputStreamLabelProviderClass") String outputStreamLabelProviderClass,
+    @JsonProperty("executionModes") List<ExecutionMode> executionModes) {
     this.stageDefinition = new com.streamsets.pipeline.config.StageDefinition(className, name, version, label,
       description, BeanHelper.unwrapStageType(type), errorStage, requiredFields,
       onRecordError, BeanHelper.unwrapConfigDefinitions(configDefinitionJsons),
       BeanHelper.unwrapRawSourceDefinition(rawSourceDefinitionJson), icon,
       BeanHelper.unwrapConfigGroupDefinition(configGroupDefinitionJson), variableOutputStreams, outputStreams,
-      outputStreamLabelProviderClass);
+      outputStreamLabelProviderClass, executionModes);
   }
 
   public StageDefinitionJson(com.streamsets.pipeline.config.StageDefinition stageDefinition) {
@@ -123,6 +125,10 @@ public class StageDefinitionJson {
 
   public List<String> getOutputStreamLabels() {
     return stageDefinition.getOutputStreamLabels();
+  }
+
+  public List<ExecutionMode> getExecutionModes() {
+    return stageDefinition.getExecutionModes();
   }
 
   @JsonIgnore
