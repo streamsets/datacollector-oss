@@ -7,6 +7,7 @@ package com.streamsets.pipeline.config;
 
 
 import com.streamsets.pipeline.api.ConfigDef;
+import com.streamsets.pipeline.api.ExecutionMode;
 import com.streamsets.pipeline.api.GenerateResourceBundle;
 import com.streamsets.pipeline.api.Label;
 import com.streamsets.pipeline.api.Stage;
@@ -24,7 +25,9 @@ public abstract class PipelineDefConfigs implements Stage {
 
   public enum Groups implements Label {
     CONSTANTS("Constants"),
-    BAD_RECORDS("Error Records");
+    BAD_RECORDS("Error Records"),
+    CLUSTER("Cluster"),
+    ;
 
     private final String label;
 
@@ -53,6 +56,22 @@ public abstract class PipelineDefConfigs implements Stage {
   )
   @ValueChooser(DeliveryGuaranteeChooserValues.class)
   public DeliveryGuarantee deliveryGuarantee;
+
+  public static final String EXECUTION_MODE_CONFIG = "executionMode";
+  public static final String EXECUTION_MODE_LABEL = "Execution Mode";
+  public static final String EXECUTION_MODE_DESCRIPTION = "";
+
+  @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.MODEL,
+      defaultValue="",
+      label = EXECUTION_MODE_LABEL,
+      description = EXECUTION_MODE_DESCRIPTION,
+      displayPosition = 0,
+      group = ""
+  )
+  @ValueChooser(ExecutionModeChooserValues.class)
+  public ExecutionMode executionMode;
 
   public static final String ERROR_RECORDS_CONFIG = "badRecordsHandling";
   public static final String ERROR_RECORDS_LABEL = "Error Records";
@@ -134,4 +153,41 @@ public abstract class PipelineDefConfigs implements Stage {
   )
   @ValueChooser(MemoryLimitExceededChooserValues.class)
   public MemoryLimitExceeded memoryLimitExceeded;
+
+
+  public static final String CLUSTER_SLAVE_MEMORY_CONFIG = "clusterSlaveMemory";
+  public static final String CLUSTER_SLAVE_MEMORY_LABEL = "Slave Heap (MB)";
+  public static final String CLUSTER_SLAVE_MEMORY_DEFAULT = "512";
+  public static final String CLUSTER_SLAVE_MEMORY_DESCRIPTION = "";
+
+  @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.NUMBER,
+      label = CLUSTER_SLAVE_MEMORY_LABEL,
+      defaultValue = CLUSTER_SLAVE_MEMORY_DEFAULT,
+      description = CLUSTER_SLAVE_MEMORY_DESCRIPTION,
+      displayPosition = 10,
+      group = "CLUSTER",
+      dependsOn = EXECUTION_MODE_CONFIG,
+      triggeredByValue = "CLUSTER"
+  )
+  public boolean clusterSlaveMemory;
+
+  public static final String CLUSTER_LAUNCHER_ENV_CONFIG = "clusterLauncherEnv";
+  public static final String CLUSTER_LAUNCHER_ENV_LABEL = "Launcher ENV";
+  public static final String CLUSTER_LAUNCHER_ENV_DESCRIPTION =
+      "Sets additional environment variables for the cluster launcher";
+
+  @ConfigDef(
+      required = false,
+      type = ConfigDef.Type.MAP,
+      label = CLUSTER_LAUNCHER_ENV_LABEL,
+      description = CLUSTER_LAUNCHER_ENV_DESCRIPTION,
+      displayPosition = 20,
+      group = "CLUSTER",
+      dependsOn = EXECUTION_MODE_CONFIG,
+      triggeredByValue = "CLUSTER"
+  )
+  public Map clusterLauncherEnv;
+
 }

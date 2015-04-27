@@ -6,15 +6,16 @@
 package com.streamsets.pipeline.config;
 
 import com.google.common.annotations.VisibleForTesting;
-import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.streamsets.pipeline.api.ChooserValues;
 import com.streamsets.pipeline.api.ConfigDef;
+import com.streamsets.pipeline.api.ExecutionMode;
 import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.el.ElConstantDefinition;
 import com.streamsets.pipeline.el.ElFunctionDefinition;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -50,11 +51,20 @@ public class PipelineDefinition {
     groupDefinition = groupDef;
   }
 
+  private static List<ConfigDefinition> createPipelineConfigs() {
+    List<ConfigDefinition> defs = new ArrayList<>();
+    defs.add(createExecutionModeOption());
+    defs.add(createDeliveryGuaranteeOption());
+    defs.add(createBadRecordsHandlingConfigs());
+    defs.add(createConstantsConfigs());
+    defs.add(createMemoryLimitConfigs());
+    defs.add(createMemoryLimitExceededBehaviorConfigs());
+    defs.addAll(createClusterOptions());
+    return defs;
+  }
   @VisibleForTesting
   PipelineDefinition() {
-    this(ImmutableList.of(createDeliveryGuaranteeOption(), createBadRecordsHandlingConfigs(), createConstantsConfigs(),
-      createMemoryLimitConfigs(), createMemoryLimitExceededBehaviorConfigs()),
-         createConfigGroupDefinition());
+    this(createPipelineConfigs(), createConfigGroupDefinition());
   }
 
   /*Need this API for Jackson to serialize*/
@@ -87,6 +97,85 @@ public class PipelineDefinition {
     return new ConfigGroupDefinition(classNameToGroupsMap, groups);
   }
 
+  private static ConfigDefinition createExecutionModeOption() {
+
+    ChooserValues valueChooser = new ExecutionModeChooserValues();
+    ModelDefinition model = new ModelDefinition(ModelType.VALUE_CHOOSER, valueChooser.getClass().getName(),
+                                                valueChooser.getValues(), valueChooser.getLabels(), null);
+
+    return new ConfigDefinition(
+        PipelineDefConfigs.EXECUTION_MODE_CONFIG,
+        ConfigDef.Type.MODEL,
+        PipelineDefConfigs.EXECUTION_MODE_LABEL,
+        PipelineDefConfigs.EXECUTION_MODE_DESCRIPTION,
+        ExecutionMode.STANDALONE,
+        true,
+        "",
+        PipelineDefConfigs.EXECUTION_MODE_CONFIG,
+        model,
+        "",
+        new ArrayList<>(),
+        0,
+        Collections.<ElFunctionDefinition> emptyList(),
+        Collections.<ElConstantDefinition> emptyList(),
+        Long.MIN_VALUE,
+        Long.MAX_VALUE,
+        "",
+        0,
+        Collections.<String> emptyList(),
+        ConfigDef.Evaluation.IMPLICIT,
+        null);
+  }
+
+  private static List<ConfigDefinition> createClusterOptions() {
+    List<ConfigDefinition> list = new ArrayList<>();
+    list.add(new ConfigDefinition(
+        PipelineDefConfigs.CLUSTER_SLAVE_MEMORY_CONFIG,
+        ConfigDef.Type.NUMBER,
+        PipelineDefConfigs.CLUSTER_SLAVE_MEMORY_LABEL,
+        PipelineDefConfigs.CLUSTER_SLAVE_MEMORY_DESCRIPTION,
+        Integer.parseInt(PipelineDefConfigs.CLUSTER_SLAVE_MEMORY_DEFAULT),
+        true,
+        "CLUSTER",
+        PipelineDefConfigs.CLUSTER_SLAVE_MEMORY_CONFIG,
+        null,
+        PipelineDefConfigs.EXECUTION_MODE_CONFIG,
+        Arrays.asList((Object)ExecutionMode.CLUSTER),
+        10,
+        Collections.<ElFunctionDefinition> emptyList(),
+        Collections.<ElConstantDefinition> emptyList(),
+        256,
+        1024 * 1024,
+        "",
+        0,
+        Collections.<String> emptyList(),
+        ConfigDef.Evaluation.IMPLICIT,
+        (Map) ImmutableMap.of(PipelineDefConfigs.EXECUTION_MODE_CONFIG, Arrays.asList(ExecutionMode.CLUSTER.name()))));
+    list.add(new ConfigDefinition(
+        PipelineDefConfigs.CLUSTER_LAUNCHER_ENV_CONFIG,
+        ConfigDef.Type.MAP,
+        PipelineDefConfigs.CLUSTER_LAUNCHER_ENV_LABEL,
+        PipelineDefConfigs.CLUSTER_LAUNCHER_ENV_DESCRIPTION,
+        "",
+        false,
+        "CLUSTER",
+        PipelineDefConfigs.CLUSTER_LAUNCHER_ENV_CONFIG,
+        null,
+        PipelineDefConfigs.EXECUTION_MODE_CONFIG,
+        Arrays.asList((Object)ExecutionMode.CLUSTER),
+        20,
+        Collections.<ElFunctionDefinition> emptyList(),
+        Collections.<ElConstantDefinition> emptyList(),
+        Long.MIN_VALUE,
+        Long.MAX_VALUE,
+        "",
+        0,
+        Collections.<String> emptyList(),
+        ConfigDef.Evaluation.IMPLICIT,
+        (Map) ImmutableMap.of(PipelineDefConfigs.EXECUTION_MODE_CONFIG, Arrays.asList(ExecutionMode.CLUSTER.name()))));
+    return list;
+  }
+
   private static ConfigDefinition createDeliveryGuaranteeOption() {
 
     ChooserValues valueChooser = new DeliveryGuaranteeChooserValues();
@@ -105,7 +194,7 @@ public class PipelineDefinition {
       model,
       "",
       new ArrayList<>(),
-      0,
+      5,
       Collections.<ElFunctionDefinition> emptyList(),
       Collections.<ElConstantDefinition> emptyList(),
       Long.MIN_VALUE,

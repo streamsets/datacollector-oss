@@ -6,13 +6,16 @@
 package com.streamsets.pipeline.store.impl;
 
 import com.google.common.collect.ImmutableList;
+import com.streamsets.pipeline.api.ExecutionMode;
 import com.streamsets.pipeline.config.ConfigConfiguration;
 import com.streamsets.pipeline.config.DataRuleDefinition;
 import com.streamsets.pipeline.config.DeliveryGuarantee;
+import com.streamsets.pipeline.config.MemoryLimitExceeded;
 import com.streamsets.pipeline.config.MetricElement;
 import com.streamsets.pipeline.config.MetricType;
 import com.streamsets.pipeline.config.MetricsRuleDefinition;
 import com.streamsets.pipeline.config.PipelineConfiguration;
+import com.streamsets.pipeline.config.PipelineDefConfigs;
 import com.streamsets.pipeline.config.RuleDefinitions;
 import com.streamsets.pipeline.config.StageConfiguration;
 import com.streamsets.pipeline.config.ThresholdType;
@@ -30,6 +33,8 @@ import org.mockito.Mockito;
 
 import javax.inject.Singleton;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -344,6 +349,30 @@ public class TestFilePipelineStoreTask {
 
   private void createDefaultPipeline(PipelineStoreTask store) throws PipelineStoreException {
     store.create(DEFAULT_PIPELINE_NAME,DEFAULT_PIPELINE_DESCRIPTION, SYSTEM_USER);
+  }
+
+  @Test
+  public void testPipelineDefaults() throws Exception {
+    ObjectGraph dagger = ObjectGraph.create(new Module());
+    PipelineStoreTask store = dagger.get(FilePipelineStoreTask.class);
+    try {
+      store.init();
+      PipelineConfiguration pc = store.create(UUID.randomUUID().toString(),"", "foo");
+      Map<String, Object> confs = new HashMap<>();
+      for (ConfigConfiguration cc : pc.getConfiguration()) {
+        confs.put(cc.getName(), cc.getValue());
+      }
+      Assert.assertEquals(DeliveryGuarantee.AT_LEAST_ONCE, confs.get(PipelineDefConfigs.DELIVERY_GUARANTEE_CONFIG));
+      Assert.assertEquals(ExecutionMode.STANDALONE, confs.get(PipelineDefConfigs.EXECUTION_MODE_CONFIG));
+      Assert.assertEquals("", confs.get(PipelineDefConfigs.ERROR_RECORDS_CONFIG));
+      Assert.assertEquals(PipelineDefConfigs.MEMORY_LIMIT_DEFAULT, confs.get(PipelineDefConfigs.MEMORY_LIMIT_CONFIG));
+      Assert.assertEquals(MemoryLimitExceeded.STOP_PIPELINE, confs.get(PipelineDefConfigs.MEMORY_LIMIT_EXCEEDED_CONFIG));
+      Assert.assertEquals(Integer.parseInt(PipelineDefConfigs.CLUSTER_SLAVE_MEMORY_DEFAULT),
+                          confs.get(PipelineDefConfigs.CLUSTER_SLAVE_MEMORY_CONFIG));
+      Assert.assertEquals(Collections.emptyList(), confs.get(PipelineDefConfigs.CLUSTER_LAUNCHER_ENV_CONFIG));
+    } finally {
+      store.stop();
+    }
   }
 
 }

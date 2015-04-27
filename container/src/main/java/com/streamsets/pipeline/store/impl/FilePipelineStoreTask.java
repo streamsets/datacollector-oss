@@ -8,6 +8,7 @@ package com.streamsets.pipeline.store.impl;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.collect.ImmutableList;
+import com.streamsets.pipeline.api.ExecutionMode;
 import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.config.ConfigConfiguration;
 import com.streamsets.pipeline.config.DataRuleDefinition;
@@ -131,13 +132,18 @@ public class FilePipelineStoreTask extends AbstractTask implements PipelineStore
     UUID uuid = UUID.randomUUID();
     PipelineInfo info = new PipelineInfo(name, description, date, date, user, user, REV, uuid, false);
 
-    List<ConfigConfiguration> configuration = new ArrayList<>(3);
+    List<ConfigConfiguration> configuration = new ArrayList<>(4);
+    configuration.add(new ConfigConfiguration(PipelineDefConfigs.EXECUTION_MODE_CONFIG,
+                                              ExecutionMode.STANDALONE.name()));
+    configuration.add(new ConfigConfiguration(PipelineDefConfigs.CLUSTER_SLAVE_MEMORY_CONFIG,
+                                              Integer.parseInt(PipelineDefConfigs.CLUSTER_SLAVE_MEMORY_DEFAULT)));
+    configuration.add(new ConfigConfiguration(PipelineDefConfigs.CLUSTER_LAUNCHER_ENV_CONFIG, new ArrayList<>()));
     configuration.add(new ConfigConfiguration(PipelineDefConfigs.DELIVERY_GUARANTEE_CONFIG,
-      DeliveryGuarantee.AT_LEAST_ONCE));
+      DeliveryGuarantee.AT_LEAST_ONCE.name()));
     configuration.add(new ConfigConfiguration(PipelineDefConfigs.ERROR_RECORDS_CONFIG, ""));
-    configuration.add(new ConfigConfiguration("constants", new ArrayList<>()));
+    configuration.add(new ConfigConfiguration(PipelineDefConfigs.CONSTANTS_CONFIG, new ArrayList<>()));
     configuration.add(new ConfigConfiguration(PipelineDefConfigs.MEMORY_LIMIT_EXCEEDED_CONFIG,
-      MemoryLimitExceeded.STOP_PIPELINE));
+      MemoryLimitExceeded.STOP_PIPELINE.name()));
     configuration.add(new ConfigConfiguration(PipelineDefConfigs.MEMORY_LIMIT_CONFIG,
       PipelineDefConfigs.MEMORY_LIMIT_DEFAULT));
 
