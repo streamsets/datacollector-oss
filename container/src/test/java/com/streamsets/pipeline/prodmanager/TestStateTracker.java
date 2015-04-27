@@ -29,15 +29,15 @@ public class TestStateTracker {
 
   @BeforeClass
   public static void beforeClass() throws IOException {
-    System.setProperty(RuntimeInfo.DATA_DIR, "./target/var");
-    File f = new File(System.getProperty(RuntimeInfo.DATA_DIR));
+    System.setProperty(RuntimeModule.SDC_PROPERTY_PREFIX + RuntimeInfo.DATA_DIR, "./target/var");
+    File f = new File(System.getProperty(RuntimeModule.SDC_PROPERTY_PREFIX + RuntimeInfo.DATA_DIR));
     FileUtils.deleteDirectory(f);
     TestUtil.captureMockStages();
   }
 
   @AfterClass
   public static void afterClass() throws IOException {
-    System.getProperties().remove(RuntimeInfo.DATA_DIR);
+    System.getProperties().remove(RuntimeModule.SDC_PROPERTY_PREFIX + RuntimeInfo.DATA_DIR);
   }
 
   @Before()
