@@ -378,7 +378,7 @@ public class SpoolDirDSource extends DSource {
     type = ConfigDef.Type.STRING,
     defaultValue = "%h %l %u %t \"%r\" %>s %b",
     label = "Custom Log Format",
-    description = "Format built using the apache log format strings.",
+    description = "",
     displayPosition = 730,
     group = "LOG",
     dependsOn = "logMode",
@@ -448,24 +448,11 @@ public class SpoolDirDSource extends DSource {
 
   @ConfigDef(
     required = true,
-    type = ConfigDef.Type.BOOLEAN,
-    defaultValue = "false",
-    label = "Use Custom Log Format",
-    description = "Select this option to specify your own custom log4j format.",
-    displayPosition = 800,
-    group = "LOG",
-    dependsOn = "logMode",
-    triggeredByValue = "LOG4J"
-  )
-  public boolean enableLog4jCustomLogFormat;
-
-  @ConfigDef(
-    required = true,
     type = ConfigDef.Type.MODEL,
     defaultValue = "ERROR",
     label = "On Parse Error",
-    description = "",
-    displayPosition = 805,
+    description = "Action to take when a log line cannot be parsed.",
+    displayPosition = 790,
     group = "LOG",
     dependsOn = "logMode",
     triggeredByValue = "LOG4J"
@@ -480,7 +467,7 @@ public class SpoolDirDSource extends DSource {
     label = "Trim Stack Trace to Length",
     description = "Any line that does not match the expected pattern will be treated as a Stack trace and will be " +
       "trimmed to the specified number of lines.",
-    displayPosition = 810,
+    displayPosition = 800,
     group = "LOG",
     dependsOn = "onParseError",
     triggeredByValue = "INCLUDE_AS_STACK_TRACE",
@@ -491,9 +478,23 @@ public class SpoolDirDSource extends DSource {
 
   @ConfigDef(
     required = true,
+    type = ConfigDef.Type.BOOLEAN,
+    defaultValue = "false",
+    label = "Use Custom Log Format",
+    description = "",
+    displayPosition = 810,
+    group = "LOG",
+    dependsOn = "logMode",
+    triggeredByValue = "LOG4J"
+  )
+  public boolean enableLog4jCustomLogFormat;
+
+
+  @ConfigDef(
+    required = true,
     type = ConfigDef.Type.STRING,
     defaultValue = "%r [%t] %-5p %c %x - %m%n",
-    label = "Custom Log4J Format",
+    label = "Custom Format",
     description = "Specify your own custom log4j format.",
     displayPosition = 820,
     group = "LOG",
