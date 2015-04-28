@@ -14,7 +14,7 @@
       "value" : [ ]
     }, {
       "name" : "memoryLimitExceeded",
-      "value" : "STOP_PIPELINE"
+      "value" : "LOG"
     }, {
       "name" : "memoryLimit",
       "value" : 668

@@ -114,7 +114,7 @@ public class TestSparkStreamingKafkaSource {
     }
   }
 
-  @Test(timeout=60000)
+  @Test(timeout=120000)
   public void test123() throws Exception{
     Thread waiter = null;
     try {
@@ -134,8 +134,10 @@ public class TestSparkStreamingKafkaSource {
       while (i != 30) {
         try {
           i = SparkKafkaExecutorFunction.getRecordsProducedJVMWide();
+          LOG.info("i = " + i);
         } catch (Exception e) {
-          // Expected
+          String msg = "Expected exception: " + e;
+          LOG.info(msg, e);
         }
       }
     } finally {
