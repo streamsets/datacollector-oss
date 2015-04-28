@@ -60,7 +60,9 @@ public class SpoolDirDSource extends DSource {
       defaultValue = "UTF-8",
       label = "Files Charset",
       displayPosition = 5,
-      group = "FILES"
+      group = "FILES",
+      dependsOn = "dataFormat",
+      triggeredByValue = {"TEXT", "JSON", "DELIMITED", "XML", "LOG"}
   )
   @ValueChooser(CharsetChooserValues.class)
   public String charset;

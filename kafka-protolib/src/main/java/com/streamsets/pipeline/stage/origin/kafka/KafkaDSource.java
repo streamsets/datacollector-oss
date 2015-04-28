@@ -110,7 +110,9 @@ public class KafkaDSource extends DSourceOffsetCommitter {
       defaultValue = "UTF-8",
       label = "Messages Charset",
       displayPosition = 42,
-      group = "KAFKA"
+      group = "KAFKA",
+      dependsOn = "dataFormat",
+      triggeredByValue = {"TEXT", "JSON", "DELIMITED", "XML", "LOG"}
   )
   @ValueChooser(CharsetChooserValues.class)
   public String charset;
