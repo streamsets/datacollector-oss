@@ -10,10 +10,10 @@ import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.ConfigDef.Type;
 import com.streamsets.pipeline.api.ConfigGroups;
 import com.streamsets.pipeline.api.GenerateResourceBundle;
-import com.streamsets.pipeline.api.HideConfig;
 import com.streamsets.pipeline.api.Processor;
 import com.streamsets.pipeline.api.StageDef;
 import com.streamsets.pipeline.configurablestage.DProcessor;
+
 import java.util.List;
 
 @StageDef(
@@ -23,7 +23,6 @@ import java.util.List;
     icon="converter.png"
 )
 @ConfigGroups(Groups.class)
-@HideConfig(onErrorRecord = true)
 @GenerateResourceBundle
 public class FieldTypeConverterDProcessor extends DProcessor {
 

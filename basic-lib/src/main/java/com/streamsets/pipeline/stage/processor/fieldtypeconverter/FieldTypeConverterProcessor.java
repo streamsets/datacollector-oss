@@ -8,6 +8,7 @@ package com.streamsets.pipeline.stage.processor.fieldtypeconverter;
 import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
+import com.streamsets.pipeline.api.base.OnRecordErrorException;
 import com.streamsets.pipeline.api.base.SingleLaneRecordProcessor;
 import com.streamsets.pipeline.config.DateFormat;
 import com.streamsets.pipeline.lib.util.FieldRegexUtil;
@@ -58,9 +59,9 @@ public class FieldTypeConverterProcessor extends SingleLaneRecordProcessor {
                   record.set(matchingField, convertStringToTargetType(field, fieldTypeConverterConfig.targetType,
                     fieldTypeConverterConfig.getLocale(), dateMask));
                 } catch (ParseException | NumberFormatException e) {
-                  getContext().toError(record, Errors.CONVERTER_00, matchingField, field.getValueAsString(),
+                  throw new OnRecordErrorException(Errors.CONVERTER_00, matchingField, field.getValueAsString(),
                     fieldTypeConverterConfig.targetType.name(), e.getMessage(), e);
-                  return;
+
                 }
               }
             } else {
@@ -68,9 +69,8 @@ public class FieldTypeConverterProcessor extends SingleLaneRecordProcessor {
                 //use the built in type conversion provided by TypeSupport
                 record.set(matchingField, Field.create(fieldTypeConverterConfig.targetType, field.getValue()));
               } catch (IllegalArgumentException e) {
-                getContext().toError(record, Errors.CONVERTER_00, matchingField, field.getValueAsString(),
+                throw new OnRecordErrorException(Errors.CONVERTER_00, matchingField, field.getValueAsString(),
                   fieldTypeConverterConfig.targetType.name(), e.getMessage(), e);
-                return;
               }
             }
           }

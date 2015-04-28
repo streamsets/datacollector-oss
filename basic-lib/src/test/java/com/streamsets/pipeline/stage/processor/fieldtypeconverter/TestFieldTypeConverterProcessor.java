@@ -9,6 +9,7 @@ import com.google.common.collect.ImmutableList;
 import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
+import com.streamsets.pipeline.api.base.OnRecordErrorException;
 import com.streamsets.pipeline.config.DateFormat;
 import com.streamsets.pipeline.sdk.ProcessorRunner;
 import com.streamsets.pipeline.sdk.RecordCreator;
@@ -1028,15 +1029,16 @@ public class TestFieldTypeConverterProcessor {
       .addOutputLane("a").build();
     runner.runInit();
 
+    Map<String, Field> map = new LinkedHashMap<>();
+    map.put("invalidConversion", Field.create("float"));
+          Record record = RecordCreator.create("s", "s:1");
+    record.set(Field.create(map));
+
     try {
-      Map<String, Field> map = new LinkedHashMap<>();
-      map.put("invalidConversion", Field.create("float"));
-            Record record = RecordCreator.create("s", "s:1");
-      record.set(Field.create(map));
-
-      StageRunner.Output output = runner.runProcess(ImmutableList.of(record));
-      Assert.assertEquals(0, output.getRecords().get("a").size());
-
+      runner.runProcess(ImmutableList.of(record));
+      Assert.fail("Expected OnRecordException");
+    } catch(OnRecordErrorException e) {
+      //No-op
     } finally {
       runner.runDestroy();
     }
@@ -1056,16 +1058,16 @@ public class TestFieldTypeConverterProcessor {
       .addOutputLane("a").build();
     runner.runInit();
 
+    Map<String, Field> map = new LinkedHashMap<>();
+    map.put("invalidConversion", Field.create("Hello World"));
+          Record record = RecordCreator.create("s", "s:1");
+    record.set(Field.create(map));
+
     try {
-      Map<String, Field> map = new LinkedHashMap<>();
-      map.put("invalidConversion", Field.create("Hello World"));
-            Record record = RecordCreator.create("s", "s:1");
-      record.set(Field.create(map));
-
-      StageRunner.Output output = runner.runProcess(ImmutableList.of(record));
-      //Expect no output, record sent to error
-      Assert.assertEquals(0, output.getRecords().get("a").size());
-
+      runner.runProcess(ImmutableList.of(record));
+      Assert.fail("Expected OnRecordException");
+    } catch(OnRecordErrorException e) {
+      //No-op
     } finally {
       runner.runDestroy();
     }
@@ -1085,16 +1087,16 @@ public class TestFieldTypeConverterProcessor {
       .addOutputLane("a").build();
     runner.runInit();
 
+    Map<String, Field> map = new LinkedHashMap<>();
+    map.put("invalidConversion", Field.create(1.0));
+          Record record = RecordCreator.create("s", "s:1");
+    record.set(Field.create(map));
+
     try {
-      Map<String, Field> map = new LinkedHashMap<>();
-      map.put("invalidConversion", Field.create(1.0));
-            Record record = RecordCreator.create("s", "s:1");
-      record.set(Field.create(map));
-
-      StageRunner.Output output = runner.runProcess(ImmutableList.of(record));
-      //Expect no output, record sent to error
-      Assert.assertEquals(0, output.getRecords().get("a").size());
-
+      runner.runProcess(ImmutableList.of(record));
+      Assert.fail("Expected OnRecordException");
+    } catch(OnRecordErrorException e) {
+      //No-op
     } finally {
       runner.runDestroy();
     }
