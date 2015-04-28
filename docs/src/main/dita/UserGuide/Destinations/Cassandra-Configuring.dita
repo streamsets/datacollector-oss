@@ -48,12 +48,11 @@
                                         space>.&lt;table name>.</entry>
                                 </row>
                                 <row>
-                                    <entry>Field Mapping</entry>
-                                    <entry>Defines the mapping between record fields and Cassandra
-                                        columns. <p>Use the Add icon to create additional field
-                                            mappings. <note>The record field data type must match
-                                                the data type of the Cassandra
-                                        column.</note></p></entry>
+                                    <entry>Field to Column Mapping</entry>
+                                    <entry>Map fields from the record to Cassandra columns. Use the
+                                            <uicontrol>Add</uicontrol> icon to create additional
+                                        field mappings. <note>The record field data type must match
+                                            the data type of the Cassandra column.</note></entry>
                                 </row>
                             </tbody>
                         </tgroup>

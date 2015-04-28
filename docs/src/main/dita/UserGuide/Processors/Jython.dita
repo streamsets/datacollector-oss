@@ -11,7 +11,8 @@
      Evaluator</indexterm></indexterm>The Jython Evaluator can process data one record at a time or
    one batch at a time. </p>
   <p>When you use a Jython Evaluator in a pipeline, the <ph
-    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> passes a batch
-   of data to the processor and converts the data to an expected format for processing. </p>
+        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> passes a
+      batch of data to the processor and converts the data to a scripting-friendly data structure
+      for processing.</p>
  </conbody>
 </concept>

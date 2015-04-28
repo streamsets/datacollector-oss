@@ -4,8 +4,11 @@
  <title>HTTP Client</title>
  <shortdesc>The HTTP Client origin reads JSON data from a streaming HTTP resource URL.</shortdesc>
  <conbody>
-  <p>When you configure HTTP Client, you specify the resource URL and other read properties.
-   Optionally, you can provide OAuth credentials to secure the connection. </p>
+  <p><indexterm>HTTP Client
+          origin<indexterm>overview</indexterm></indexterm><indexterm>origins<indexterm>HTTP
+          Client</indexterm></indexterm>When you configure HTTP Client, you specify the resource URL
+      and other read properties. Optionally, you can provide OAuth credentials to secure the
+      connection. </p>
   <p>HTTP Client can use one of the following processing modes to read source data:<dl>
     <dlentry>
      <dt>Streaming</dt>

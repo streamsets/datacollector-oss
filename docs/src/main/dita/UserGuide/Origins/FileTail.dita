@@ -2,20 +2,34 @@
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_n1y_qyp_5q">
  <title>File Tail</title>
- <shortdesc>The File Tail origin reads data as it is written to an active file after reading related
-        archived files in the same directory. </shortdesc>
+ <shortdesc>The File Tail origin reads lines of data as they are written to an active file after
+        reading related archived files in the same directory. File Tail generates a record for each
+        line in the files. </shortdesc>
  <conbody>
         <p><indexterm>File Tail
                     origin<indexterm>overview</indexterm></indexterm><indexterm>origins<indexterm>File
                     Tail</indexterm></indexterm>When you configure File Tail, you define the active
             file name, the naming convention for archived files, and the first archived file to
-            process. These properties determine the files that File Tail processes. </p>
-        <p>When the pipeline stops, File Tail notes where it stops reading. When the pipeline starts
-            again, File Tail continues processing from where it left off by default. You can reset
-            the origin to process all requested files before continuing to the active file.</p>
+            process. These properties determine the files that File Tail processes and the order of
+            processing.</p>
+        <p>For example, a File Tail is configured to tail a log called server.log, starting with
+            server.log.3 with archive files named in reverse counter order. When the pipeline runs,
+            it starts reading lines from the beginning of server.log.3, ignoring older files such as
+            server.log.4. When it reaches the end of server.log.3, it continues processing data in
+            server.log.2, and so on, until it reaches server.log. When it completes reading existing
+            data in server.log, it begins tailing incoming data for the file.</p>
+        <p>When you stop a pipeline, File Tail notes the line where it stops reading. When you
+            restart the pipeline, File Tail continues processing from the line where it left off,
+            even if it has been archived to a different file. </p>
+        <p>In the previous example, say you stopped the pipeline as File Tail finished reading line
+            3 of server.log. By the time you restart the pipeline, the unprocessed data has been
+            archived to server.log.6. File Tail determines the location to start reading in
+            server.log.6 and progresses through the archived files to server.log again. </p>
+        <p>You can reset the origin to process all requested files before continuing to the active
+            file. When you reset the origin, the stage treats all properties as if you are starting
+            the pipeline for the first time. </p>
         <p>You can use File Tail to read related sets of files in multiple directories. Each
             directory can include a single active file. When File Tail processes files in multiple
-            directories, it merges all data in the pipeline. <draft-comment author="Loretta">add
-                that it's line by line</draft-comment></p>
+            directories, it merges all data in the pipeline. </p>
     </conbody>
 </concept>

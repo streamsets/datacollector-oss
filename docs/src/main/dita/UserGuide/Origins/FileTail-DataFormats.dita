@@ -20,8 +20,7 @@
      single line.</dd>
     <dd>When an object exceeds the maximum line length defined for the origin, File Tail processes
      the object based on the error handling configured for the origin.<draft-comment
-      author="Loretta">Note, this is not what the tooltip says. It says
-     truncate.</draft-comment></dd>
+      author="Loretta">Tucu said something - checking with him. </draft-comment></dd>
    </dlentry>
    <dlentry>
     <dt>Log</dt>

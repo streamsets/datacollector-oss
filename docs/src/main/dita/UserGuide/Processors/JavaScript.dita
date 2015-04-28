@@ -10,14 +10,15 @@
           Evaluator</indexterm></indexterm>The JavaScript Evaluator can process data one record at a
       time or one batch at a time. </p>
   <p>When you use a JavaScript Evaluator in a pipeline, the <ph
-        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> passes a
-      batch of data to the processor and converts the data to an expected format for processing. </p>
+                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
+            passes a batch of data to the processor and converts the data to a scripting-friendly
+            data structure for processing.</p>
         <p>The JavaScript Evaluator supports the following versions of Java:<ul id="ul_xyk_lp2_qr">
                 <li>Java 7 - Supports ECMAScript 5 and partially supports JavaScript 1.8. Runs on
                     the Rhino 1.7R3 JavaScript engine.</li>
                 <li>Java 8 - Supports ECMAScript 5.1. Runs on the Nashorn JavaScript engine.</li>
-            </ul><note>Some Java 8 functionality is not available in Java 7. To ensure the
-                JavaScript Evaluator performs as expected, use the same version of Java in
-                development and production.</note></p>
+            </ul><note>Some Java 8 JavaScript functionality is not available in Java 7 JavaScript.
+                To ensure the JavaScript Evaluator performs as expected, use the same version of
+                Java in development and production.</note></p>
  </conbody>
 </concept>

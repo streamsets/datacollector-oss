@@ -42,15 +42,21 @@
                                 <entry>http.port</entry>
                                 <entry>Port number to use for the <ph
                                         conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                                    /> console. <p>Default is 18630.</p></entry>
+                                    /> console. <p>Use 0 to have the <ph
+                                            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                                        /> use a random port number. </p><p>Default is
+                                    18630.</p></entry>
                             </row>
                             <row>
                                 <entry>https.port</entry>
                                 <entry>Secure port number for the <ph
                                         conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                                    /> console. Any number besides 0 enables the secure port number.
-                                        <p>If you use both port properties, the HTTP port bounces to
-                                        the HTTPS port.</p></entry>
+                                    /> console. Any number besides -1 enables the secure port
+                                    number. <p>Use 0 to have the <ph
+                                            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                                        /> use a random port number. </p><p>If you use both port
+                                        properties, the HTTP port bounces to the HTTPS
+                                    port.</p></entry>
                             </row>
                             <row>
                                 <entry>https.keystore.path</entry>

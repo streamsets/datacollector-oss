@@ -82,13 +82,15 @@
                                             call this: <p>First File to Process</p><p>Then it
                                                 matches Directory - same concept,
                                             right?</p></draft-comment></entry>
-                                    <entry>Name of the first file to process. Use a name that uses
-                                        the file name pattern.<p>When you enter a file name, File
-                                            Tail reads the first file and other files in the
-                                            directory with alphabetically ascending names.
-                                            </p><p>When you do not enter a file name, File Tail
-                                            reads all files in the directory with the specified file
-                                            name pattern.</p></entry>
+                                    <entry>Name of the first file to process when you start the
+                                        pipeline. Use a name that uses the file name pattern.<p>When
+                                            you enter a file name, File Tail reads the first file
+                                            and then progresses to the active file. </p><p>When you
+                                            do not enter a file name, File Tail reads all files in
+                                            the directory with the specified file name
+                                        pattern.</p>When you restart a stopped pipeline, File Tail
+                                        ignores this property. It starts where it left off
+                                        regardless of the file name unless you reset the origin. </entry>
                                 </row>
                                 <row>
                                     <entry>Max Line Length</entry>

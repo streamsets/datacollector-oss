@@ -27,18 +27,18 @@
          reverse order based on the selected date pattern before progressing to the active file.
         </p></li>
        <li><uicontrol>Alphabetical</uicontrol> - The server generates files in alphabetically
-        increasing order, such as a.json, b.json, c.json. You can also use this method to process
+        increasing order, such as a.json, b.json, c.json. You might use this method to process
+        Apache logs archived using the ogrotate utility. You can also use this method to process
         files with appended dates that do not match the provided date patterns.<p>File Tail
-         processes files in reverse alphabetical order before progressing to the active
-        file.</p></li>
+         processes files in alphabetical order before progressing to the active file.</p></li>
       </ul></dd>
     </dlentry>
     <dlentry>
-     <dt>The server writes creates a new active file as needed, archiving the previous active
-      file</dt>
+     <dt>The server writes creates a new active file as needed, archiving the previous file without
+      renaming</dt>
      <dd>The server writes to an active file, creating a new active file as necessary. When it
-      creates a new active file, it archives the previous active file. The active file changes, but
-      file names do not change. </dd>
+      creates a new active file, it archives the previous active file without renaming it. The
+      active file changes, but file names do not change. </dd>
      <dd>Files use a <uicontrol>File Name Pattern</uicontrol> naming convention. You use a regular
       expression to specify the pattern of the generated file names. </dd>
      <dd>When you select File Name Pattern as the the archive file naming convention, File Tail

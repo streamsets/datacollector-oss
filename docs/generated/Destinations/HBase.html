@@ -1,0 +1,279 @@
+
+<!DOCTYPE html
+  SYSTEM "about:legacy-compat">
+<html xml:lang="en-us" lang="en-us">
+<head><meta name="description" content="The HBase destination writes data to an HBase cluster. The destination writes data to HBase in text, binary or JSON format. You can define the format for each column written to HBase. When you ..."></meta><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><meta name="copyright" content="(C) Copyright 2005"></meta><meta name="DC.rights.owner" content="(C) Copyright 2005"></meta><meta name="DC.Type" content="concept"></meta><meta name="DC.Title" content="HBase"></meta><meta name="abstract" content="The HBase destination writes data to an HBase cluster. The destination writes data to HBase in text, binary or JSON format. You can define the format for each column written to HBase."></meta><meta name="description" content="The HBase destination writes data to an HBase cluster. The destination writes data to HBase in text, binary or JSON format. You can define the format for each column written to HBase."></meta><meta name="DC.Relation" scheme="URI" content="../Destinations/Destinations-title.html"></meta><meta name="DC.Format" content="XHTML"></meta><meta name="DC.Identifier" content="concept_wsz_5t5_vr"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/commonltr.css"><!----></link><title>HBase</title><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/webhelp_topic.css"><!----></link><link rel="stylesheet" type="text/css" href="../skin.css"></link><script type="text/javascript"><!--
+          
+          var prefix = "../index.html";
+          
+          --></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery-1.8.2.min.js"><!----></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery.cookie.js"><!----></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery-ui.custom.min.js"><!----></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery.highlight-3.js"><!----></script><script type="text/javascript" charset="utf-8" src="../oxygen-webhelp/resources/js/webhelp_topic.js"><!----></script></head>
+<body onload="highlightSearchTerm()" class="frmBody">
+<table class="nav"><tbody><tr><td colspan="2"><div id="printlink"><a href="javascript:window.print();" title="Print this page"></a></div><div id="permalink"><a href="#" title="Link to this page"></a></div></td></tr><tr><td width="75%"><a class="navheader_parent_path" href="../Destinations/Destinations-title.html" title="Destinations">Destinations</a></td><td><div class="navheader">
+<span class="navparent"><a class="link" href="../Destinations/Destinations-title.html" title="Destinations"><span class="navheader_label">Parent topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">Destinations</span></a></span>  </div></td></tr></tbody></table>
+<div class="nested0" id="concept_wsz_5t5_vr">
+ <h1 class="title topictitle1">HBase</h1>
+
+ 
+ <div class="body conbody"><p class="shortdesc">The HBase destination writes data to an HBase cluster. The destination writes data to
+  HBase in text, binary or JSON format. You can define the format for each column written to
+  HBase.</p>
+
+  <p class="p">When
+   you configure the HBase destination, you specify the HBase configuration properties, including
+   the ZooKeeper Quorum, parent znode, and table name. You specify the row key for the table, and
+   then map fields from the pipeline to HBase columns. </p>
+
+  <p class="p">When necessary, you can configure Kerberos authentication and add additional HBase
+   configuration properties.</p>
+
+ </div>
+
+<div class="related-links"></div>
+<div class="topic concept nested1" id="concept_tjp_v5l_zq">
+ <h2 class="title topictitle2">Additional HBase Properties</h2>
+
+ 
+ <div class="body conbody"><p class="shortdesc">You can add custom HBase configuration properties to the HBase destination.</p>
+
+  <p class="p">When you add an HBase
+            configuration property, enter the exact property name and the value. The HBase
+            destination does not validate the property names or values.</p>
+
+  <div class="note note"><span class="notetitle">Note:</span> The Kafka Producer uses the broker.host Kafka configuration property. The Kafka Consumer
+      ignores user-defined values for this property.</div>
+
+ </div>
+
+</div>
+<div class="topic task nested1" id="task_pyq_qx5_vr">
+    <h2 class="title topictitle2">Configuring an HBase Destination</h2>
+
+    
+    <div class="body taskbody"><p class="shortdesc"></p>
+
+        <div class="section context">
+            <p class="p">Configure
+                an HBase destination to write data to HBase. </p>
+
+        </div>
+
+        <ol class="ol steps" id="task_pyq_qx5_vr__steps_upj_std_br"><li class="li step stepexpand">
+                <span class="ph cmd">In the Properties panel, on the <span class="keyword wintitle">General</span> tab, configure the
+                    following properties:</span>
+                <div class="itemgroup info">
+                    
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_pyq_qx5_vr__d403e423" class="table" frame="border" border="1" rules="all">
+                            
+                            
+                            <thead class="thead" align="left">
+                                <tr class="row">
+                                    <th class="entry" valign="top" width="24.509803921568626%" id="d4457e116">General Property</th>
+
+                                    <th class="entry" valign="top" width="75.49019607843137%" id="d4457e119">Description</th>
+
+                                </tr>
+
+                            </thead>
+
+                            <tbody class="tbody">
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="24.509803921568626%" headers="d4457e116 ">Name</td>
+
+                                    <td class="entry" valign="top" width="75.49019607843137%" headers="d4457e119 ">Stage name.</td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="24.509803921568626%" headers="d4457e116 ">Description</td>
+
+                                    <td class="entry" valign="top" width="75.49019607843137%" headers="d4457e119 ">Optional description.</td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="24.509803921568626%" headers="d4457e116 ">Stage Library</td>
+
+                                    <td class="entry" valign="top" width="75.49019607843137%" headers="d4457e119 ">Library version that you want to use. </td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="24.509803921568626%" headers="d4457e116 ">Required Fields <a class="xref" href="../Pipeline_Configuration/PipelineDesign.html#concept_dnj_bkm_vq" title="You can configure required fields for any processor and most destination stages. A required field must exist in a record to allow the record to enter the stage for processing. When a record does not include a required field, the stage passes the record to the pipeline for error handling.">
+                                            <img class="image" id="task_pyq_qx5_vr__d403e478" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
+
+                                    <td class="entry" valign="top" width="75.49019607843137%" headers="d4457e119 ">Fields that must include data to be passed to the stage.
+                                            <div class="note tip"><span class="tiptitle">Tip:</span> You might include fields
+                                            that the stage uses.</div>
+</td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="24.509803921568626%" headers="d4457e116 ">On Record Error</td>
+
+                                    <td class="entry" valign="top" width="75.49019607843137%" headers="d4457e119 ">Error record handling for the stage: <ul class="ul" id="task_pyq_qx5_vr__d403e493">
+                                            <li class="li">Discard - Discards the record.</li>
+
+                                            <li class="li">Send to Error - Sends the record to the pipeline for
+                                                error handling.</li>
+
+                                            <li class="li">Stop Pipeline - Stops the pipeline. </li>
+
+                                        </ul>
+</td>
+
+                                </tr>
+
+                            </tbody>
+
+                        </table>
+</div>
+
+                </div>
+            </li>
+<li class="li step stepexpand">
+            <span class="ph cmd">On the <span class="ph uicontrol">HBase</span> tab, configure the following properties:</span>
+                <div class="itemgroup info">
+                    
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_pyq_qx5_vr__table_l5z_wcv_vr" class="table" frame="border" border="1" rules="all">
+                            
+                            
+                            <thead class="thead" align="left">
+                                <tr class="row">
+                                    <th class="entry" valign="top" width="34.96503496503497%" id="d4457e218">HBase Property</th>
+
+                                    <th class="entry" valign="top" width="65.03496503496503%" id="d4457e221">Description</th>
+
+                                </tr>
+
+                            </thead>
+
+                            <tbody class="tbody">
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="34.96503496503497%" headers="d4457e218 ">ZooKeeper Quorum</td>
+
+                                    <td class="entry" valign="top" width="65.03496503496503%" headers="d4457e221 ">Comma-separated list of servers in the ZooKeeper quorum.
+                                        Use the following format:
+                                            <samp class="ph codeph">&lt;host&gt;.&lt;domain&gt;.com</samp><p class="p">To ensure a
+                                            connection, enter additional broker URIs.</p>
+</td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="34.96503496503497%" headers="d4457e218 ">ZooKeeper Client Port</td>
+
+                                    <td class="entry" valign="top" width="65.03496503496503%" headers="d4457e221 ">Port number clients use to connect to the ZooKeeper
+                                        servers. 
+                                    </td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="34.96503496503497%" headers="d4457e218 ">ZooKeeper Parent Znode</td>
+
+                                    <td class="entry" valign="top" width="65.03496503496503%" headers="d4457e221 ">Root node that contains all znodes used by the HBase
+                                        cluster.</td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="34.96503496503497%" headers="d4457e218 ">Table Name</td>
+
+                                    <td class="entry" valign="top" width="65.03496503496503%" headers="d4457e221 ">Name of the HBase table to use.  Enter a table name or a
+                                        namespace and table name as follows:
+                                        &lt;namespace&gt;.&lt;tablename&gt;. <p class="p">If you do not enter a
+                                            table name, HBase uses the default namespace.
+                                        </p>
+</td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="34.96503496503497%" headers="d4457e218 ">Row Key</td>
+
+                                    <td class="entry" valign="top" width="65.03496503496503%" headers="d4457e221 ">Row key for the table. </td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="34.96503496503497%" headers="d4457e218 ">Storage Type</td>
+
+                                    <td class="entry" valign="top" width="65.03496503496503%" headers="d4457e221 ">Data type of the row key. Choose
+                                            <span class="ph uicontrol">Text</span> or
+                                            <span class="ph uicontrol">Binary</span>.</td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="34.96503496503497%" headers="d4457e218 ">Field to Column Mapping</td>
+
+                                    <td class="entry" valign="top" width="65.03496503496503%" headers="d4457e221 ">Map fields from pipeline records to HBase columns, and
+                                        then define the storage type for the column in HBase.<p class="p">Use
+                                            the <span class="ph uicontrol">Add</span> icon to create additional
+                                            field mappings. </p>
+</td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="34.96503496503497%" headers="d4457e218 ">Kerberos Authentication</td>
+
+                                    <td class="entry" valign="top" width="65.03496503496503%" headers="d4457e221 ">Indicates that HBase cluster uses Kerberos
+                                        authentication.</td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="34.96503496503497%" headers="d4457e218 ">Kerberos Principal</td>
+
+                                    <td class="entry" valign="top" width="65.03496503496503%" headers="d4457e221 ">
+                                        <p class="p">Kerberos principal used to connect to HBase. </p>
+
+                                    </td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="34.96503496503497%" headers="d4457e218 ">Kerberos Keytab</td>
+
+                                    <td class="entry" valign="top" width="65.03496503496503%" headers="d4457e221 ">
+                                        <p class="p">Location for the keytab file that contains the
+                                            credentials for the Kerberos principal. </p>
+
+                                    </td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="34.96503496503497%" headers="d4457e218 ">HBase Configuration</td>
+
+                                    <td class="entry" valign="top" width="65.03496503496503%" headers="d4457e221 ">
+                                        <p class="p">Additional HBase configuration properties to use. </p>
+
+                                        <p class="p">To add properties, click <span class="ph uicontrol">Add</span> and
+                                            define the HBase property name and value. Use the
+                                            property names and values as expected by HBase. </p>
+
+                                    </td>
+
+                                </tr>
+
+                            </tbody>
+
+                        </table>
+</div>
+
+                </div>
+        </li>
+</ol>
+
+      
+    </div>
+
+</div>
+</div>
+<div class="navfooter"><!---->
+<span class="navparent"><a class="link" href="../Destinations/Destinations-title.html" title="Destinations"><span class="navheader_label">Parent topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">Destinations</span></a></span>  </div><div class="footer"><div> </div><!-- © <a href="http://creativecommons.org/licenses/by-nc/4.0/legalcode">CC BY-NC 4.0.</a> StreamSets, 2015. --></div>
+</body>
+</html>

@@ -7,25 +7,22 @@
  <conbody>
   <p>
    <ol id="ol_sls_br5_tr">
-    <li><indexterm>expression completion<indexterm>tips</indexterm></indexterm>Field names display
-     at the top of the list when data preview is available. <p><image
-       href="../Graphics/ExComp-FieldsConstants.png" id="image_cvp_sdv_tr"/></p></li>
-    <li>When defined, pipeline constants display in the list with a purple Contants icon:</li>
-    <li>To invoke expression completion, place the cursor where you want to create an expression and
-     click <uicontrol>Ctrl + Spacebar</uicontrol>.<p>A list of expression elements valid at that
-      location displays. Scroll to view the entire list.</p><p><image
-       href="../Graphics/ExComp-List.png" id="image_ctc_rs5_tr"/></p></li>
+        <li><indexterm>expression completion<indexterm>tips</indexterm></indexterm>To invoke
+          expression completion, place the cursor where you want to create an expression and click
+            <uicontrol>Ctrl + Spacebar</uicontrol>.<p>A list of expression elements valid at that
+            location displays. Scroll to view the entire list.</p><p><image
+              href="../Graphics/ExComp-List.png" id="image_ctc_rs5_tr"/></p></li>
+    <li>Field names display at the top of the list when data preview is available. When defined,
+          pipeline constants display in the list with a purple Contants icon:<p><image
+              href="../Graphics/ExComp-FieldsConstants.png" id="image_cvp_sdv_tr"/></p></li>
     <li>To view more information about an element, click the element name:<p><image
-       href="../Graphics/ExComp-ListInfo.png" id="image_m2v_ht5_tr"/></p><draft-comment
-      author="Loretta">Is it possible to show the value for a pipeline constant when you click it?
-      Also, is it possible to show the data type of a field when you select it? It would be nice if
-      we could provide a little more info for those elements? </draft-comment></li>
-    <li>To add an element, double-click the element name.</li>
+              href="../Graphics/ExComp-ListInfo.png" id="image_m2v_ht5_tr"/></p></li>
+    <li>To add an element, double-click the element name or hit <uicontrol>Enter</uicontrol>. </li>
+        <li>You can filter the element list by typing the first letters of the element name. </li>
     <li>To view the syntax of a function, after you add the function, click within the parentheses.
        <p><image href="../Graphics/ExComp-Syntax.png" id="image_jq3_yw5_tr"/></p></li>
     <li>You can invoke expression completion at any location to view the valid expression
-      elements.<draft-comment author="Loretta">Should I add anything to this list?
-     </draft-comment></li>
+          elements.</li>
    </ol>
   </p>
  </conbody>

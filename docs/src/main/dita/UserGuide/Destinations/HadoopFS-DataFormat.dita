@@ -2,7 +2,7 @@
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_lww_3b3_kr">
  <title>Data Formats</title>
- <shortdesc>Hadoop FS proesses data differently based on the format of data being processed. Hadoop
+ <shortdesc>Hadoop FS processes data differently based on the format of data being processed. Hadoop
   FS processes the following data formats:</shortdesc>
  <conbody>
   <p>

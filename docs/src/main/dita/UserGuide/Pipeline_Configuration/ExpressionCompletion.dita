@@ -3,21 +3,19 @@
 <concept id="concept_tns_krz_sr">
  <title>Expression Completion</title>
  <shortdesc>Expression completion provides a list of expression elements that are valid for use at
-  that location. Use <uicontrol>Ctrl + Spacebar</uicontrol> to invoke expression completion for help
-  with writing an expression or condition.</shortdesc>
+    that location. Use <uicontrol>Ctrl + Spacebar</uicontrol> to invoke expression completion for
+    help with writing an expression or condition.</shortdesc>
  <conbody>
-  <p><indexterm>pipelines<indexterm>expression
-    completion</indexterm></indexterm><indexterm>expression
-     completion<indexterm>overview</indexterm></indexterm>When you invoke expression completion, a
-   list of valid data types, constants, fields, and functions display. The list includes pipeline
-   constants when defined, and available fields when the pipeline is valid for data preview.</p>
-  <p>From the list, you can click an element for more information and double-click the element to
-   add it to the expression. If an element does not display in the list, it is not a valid element
-   at the specified location.</p>
-  <draft-comment author="Loretta">Madhu, am I missing anything from the list in the 1st sentence?
-   And do you have any high level info I should add here? </draft-comment>
-  <draft-comment author="Loretta">Oh, and I'm talking about "expression elements" would "components"
-   be better? e.g. "... provides a list of expression components..." Any preferences? Either one
-   ok?</draft-comment>
- </conbody>
+    <p><indexterm>pipelines<indexterm>expression
+        completion</indexterm></indexterm><indexterm>expression
+          completion<indexterm>overview</indexterm></indexterm>When you invoke expression
+      completion, a list of valid data types, constants, fields, and functions display. The list
+      includes pipeline constants when defined, and available fields when the pipeline is valid for
+      data preview.</p>
+    <p>From the list, you can click an element for more information and double-click the element to
+      add it to the expression. Alternatively, you can use the arrow keys to scroll through the list
+      and click <uicontrol>Enter</uicontrol> to add it to the expression. </p>
+    <p>When an element does not display in the list, it is not a valid element at the specified
+      location.</p>
+  </conbody>
 </concept>

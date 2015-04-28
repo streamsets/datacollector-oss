@@ -8,28 +8,30 @@
           Evaluator</indexterm></indexterm>You can use the following scripting objects in the Jython Evaluator:<dl>
         <dlentry>
           <dt>records array</dt>
-          <dd>An array of records to process. The records object should include different elements
-            based on the processing mode that you use:<ul id="ul_fdm_5yk_sr">
-              <li>Record by Record - The records array should include one record element.</li>
-              <li>Batch by Batch - The records array should include all records in the batch.</li>
+          <dd>An array of records to process. The records object includes different elements based
+            on the processing mode that you use:<ul id="ul_fdm_5yk_sr">
+              <li>Record by Record - The records array includes one record element.</li>
+              <li>Batch by Batch - The records array includes all records in the batch.</li>
             </ul></dd>
         </dlentry>
         <dlentry>
           <dt>record</dt>
-          <dd>An object that represents a single record. Includes a single value element. The value
-            element contains the data for the record. </dd>
-          <dd>Map and list record fields are mapped to to Jython lists and dictionaries,
+          <dd>An object that represents a single record. Includes a single <codeph>value</codeph>
+            element. The <codeph>value</codeph> element contains the data for the record. </dd>
+          <dd>Map and list record fields are mapped to to Jython dictionaries and lists,
             respectively.</dd>
+          <dd>Data types are preserved for values that are not modified. For values that are
+            modified, the scripting engine might change the original type.</dd>
         </dlentry>
         <dlentry>
           <dt>out</dt>
-          <dd>An object that writes the record to the output batch. Includes a write(records)
-            element.</dd>
+          <dd>An object that writes the record to the output batch. Includes a
+              <codeph>write(records)</codeph> element.</dd>
         </dlentry>
         <dlentry>
           <dt>err</dt>
           <dd>An object that passes error records to the processor for error handling. Includes a
-            write(records) element with an error message parameter.</dd>
+              <codeph>write(records)</codeph> element with an error message parameter.</dd>
         </dlentry>
       </dl></p>
  </conbody>

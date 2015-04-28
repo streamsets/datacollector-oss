@@ -31,6 +31,13 @@
    <topicref href="../Destinations/HadoopFS-AdditionalProperties.dita"/>
    <topicref href="../Destinations/HadoopFS-Configuring.dita"/>
   </topicref>
+  <topicref href="../Destinations/HBase.dita" chunk='to-content'>
+   <topicmeta>
+    <shortdesc/>
+   </topicmeta>
+   <topicref href="../Destinations/HBase-AdditionalProperties.dita"/>
+   <topicref href="../Destinations/HBase-Configuring.dita"/>
+  </topicref>
   <topicref href="../Destinations/KProducer.dita" chunk="to-content">
    <topicmeta>
     <shortdesc/>
