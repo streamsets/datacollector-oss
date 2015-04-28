@@ -7,7 +7,7 @@ package com.streamsets.pipeline.restapi.configuration;
 
 import com.streamsets.pipeline.main.BuildInfo;
 import com.streamsets.pipeline.main.RuntimeInfo;
-import com.streamsets.pipeline.prodmanager.ProductionPipelineManagerTask;
+import com.streamsets.pipeline.prodmanager.PipelineManager;
 import com.streamsets.pipeline.stagelibrary.StageLibraryTask;
 import com.streamsets.pipeline.util.Configuration;
 import com.streamsets.pipeline.store.PipelineStoreTask;
@@ -31,7 +31,7 @@ public class RestAPIResourceConfig extends ResourceConfig {
         bindFactory(ConfigurationInjector.class).to(Configuration.class);
         bindFactory(RuntimeInfoInjector.class).to(RuntimeInfo.class);
         bindFactory(BuildInfoInjector.class).to(BuildInfo.class);
-        bindFactory(ProductionPipelineManagerInjector.class).to(ProductionPipelineManagerTask.class);
+        bindFactory(ProductionPipelineManagerInjector.class).to(PipelineManager.class);
       }
     });
     register(RolesAllowedDynamicFeature.class);

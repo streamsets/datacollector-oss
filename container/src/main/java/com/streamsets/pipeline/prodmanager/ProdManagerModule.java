@@ -22,8 +22,9 @@ public class ProdManagerModule {
 
   @Provides
   @Singleton
-  public ProductionPipelineManagerTask provideProdPipelineManager(RuntimeInfo runtimeInfo, Configuration configuration
+  public PipelineManager provideProdPipelineManager(RuntimeInfo runtimeInfo, Configuration configuration
       , PipelineStoreTask pipelineStore, StageLibraryTask stageLibrary) {
     return new ProductionPipelineManagerTask(runtimeInfo, configuration, pipelineStore, stageLibrary);
   }
+
 }

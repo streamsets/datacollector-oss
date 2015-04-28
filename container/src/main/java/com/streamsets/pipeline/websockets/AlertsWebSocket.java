@@ -6,7 +6,7 @@
 package com.streamsets.pipeline.websockets;
 
 import com.streamsets.pipeline.alerts.AlertEventListener;
-import com.streamsets.pipeline.prodmanager.ProductionPipelineManagerTask;
+import com.streamsets.pipeline.prodmanager.PipelineManager;
 import org.eclipse.jetty.websocket.api.Session;
 import org.eclipse.jetty.websocket.api.WebSocketAdapter;
 import org.slf4j.Logger;
@@ -18,11 +18,11 @@ import java.io.IOException;
 public class AlertsWebSocket extends WebSocketAdapter implements AlertEventListener{
   public static final String TYPE = "alerts";
   private final static Logger LOG = LoggerFactory.getLogger(AlertsWebSocket.class);
-  private final ProductionPipelineManagerTask pipelineManager;
+  private final PipelineManager pipelineManager;
   private Session webSocketSession = null;
 
 
-  public AlertsWebSocket(ProductionPipelineManagerTask pipelineManager) {
+  public AlertsWebSocket(PipelineManager pipelineManager) {
     this.pipelineManager = pipelineManager;
   }
 

@@ -10,8 +10,8 @@ import com.codahale.metrics.MetricRegistry;
 import com.streamsets.pipeline.main.BuildInfo;
 import com.streamsets.pipeline.main.RuntimeModule;
 import com.streamsets.pipeline.main.RuntimeInfo;
+import com.streamsets.pipeline.prodmanager.PipelineManager;
 import com.streamsets.pipeline.prodmanager.ProdManagerModule;
-import com.streamsets.pipeline.prodmanager.ProductionPipelineManagerTask;
 import com.streamsets.pipeline.restapi.configuration.ConfigurationInjector;
 import com.streamsets.pipeline.restapi.configuration.BuildInfoInjector;
 import com.streamsets.pipeline.restapi.configuration.PipelineStoreInjector;
@@ -121,12 +121,12 @@ public class WebServerModule {
 
   @Provides(type = Type.SET)
   ContextConfigurator provideWebSocketServlet(final Configuration configuration, final RuntimeInfo runtimeInfo,
-                                        final ProductionPipelineManagerTask pipelineStateManager) {
+                                        final PipelineManager pipelineManager) {
     return new ContextConfigurator() {
       @Override
       public void init(ServletContextHandler context) {
         ServletHolder holderEvents = new ServletHolder(new SDCWebSocketServlet(configuration, runtimeInfo,
-          pipelineStateManager));
+          pipelineManager));
         context.addServlet(holderEvents, "/rest/v1/webSocket");
       }
     };
@@ -189,11 +189,11 @@ public class WebServerModule {
   }
 
   @Provides(type = Type.SET)
-  ContextConfigurator providePipelineStateManager(final ProductionPipelineManagerTask pipelineStateManager) {
+  ContextConfigurator providePipelineStateManager(final PipelineManager pipelineManager) {
     return new ContextConfigurator() {
       @Override
       public void init(ServletContextHandler context) {
-        context.setAttribute(ProductionPipelineManagerInjector.PIPELINE_STATE_MGR, pipelineStateManager);
+        context.setAttribute(ProductionPipelineManagerInjector.PIPELINE_MANAGER_MGR, pipelineManager);
       }
     };
   }

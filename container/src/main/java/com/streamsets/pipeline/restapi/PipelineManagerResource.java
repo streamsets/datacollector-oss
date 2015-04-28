@@ -6,9 +6,9 @@
 package com.streamsets.pipeline.restapi;
 
 import com.streamsets.pipeline.api.StageException;
+import com.streamsets.pipeline.prodmanager.PipelineManager;
 import com.streamsets.pipeline.prodmanager.PipelineManagerException;
 import com.streamsets.pipeline.prodmanager.PipelineState;
-import com.streamsets.pipeline.prodmanager.ProductionPipelineManagerTask;
 import com.streamsets.pipeline.prodmanager.State;
 import com.streamsets.pipeline.restapi.bean.BeanHelper;
 import com.streamsets.pipeline.runner.PipelineRuntimeException;
@@ -36,10 +36,10 @@ import java.util.Collections;
 @DenyAll
 public class PipelineManagerResource {
 
-  private final ProductionPipelineManagerTask pipelineManager;
+  private final PipelineManager pipelineManager;
 
   @Inject
-  public PipelineManagerResource(ProductionPipelineManagerTask pipelineManager) {
+  public PipelineManagerResource(PipelineManager pipelineManager) {
     this.pipelineManager = pipelineManager;
 
   }

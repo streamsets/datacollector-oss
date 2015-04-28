@@ -78,7 +78,7 @@ import java.util.concurrent.Future;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 
-public class ProductionPipelineManagerTask extends AbstractTask {
+public class ProductionPipelineManagerTask extends AbstractTask implements PipelineManager {
 
   private static final Logger LOG = LoggerFactory.getLogger(ProductionPipelineManagerTask.class);
   private static final String PRODUCTION_PIPELINE_MANAGER = "productionPipelineManager";
@@ -143,6 +143,7 @@ public class ProductionPipelineManagerTask extends AbstractTask {
     return prodPipeline;
   }
 
+  @Override
   public PipelineState getPipelineState() {
     return stateTracker.getState();
   }
@@ -152,30 +153,37 @@ public class ProductionPipelineManagerTask extends AbstractTask {
     stateTracker.setState(name, rev, state, message, metricRegistry);
   }
 
+  @Override
   public void addStateEventListener(StateEventListener stateListener) {
     stateTracker.addStateEventListener(stateListener);
   }
 
+  @Override
   public void removeStateEventListener(StateEventListener stateListener) {
     stateTracker.removeStateEventListener(stateListener);
   }
 
+  @Override
   public void addAlertEventListener(AlertEventListener alertEventListener) {
     alertEventListenerList.add(alertEventListener);
   }
 
+  @Override
   public void removeAlertEventListener(AlertEventListener alertEventListener) {
     alertEventListenerList.remove(alertEventListener);
   }
 
+  @Override
   public void addMetricsEventListener(MetricsEventListener metricsEventListener) {
     metricsEventRunnable.addMetricsEventListener(metricsEventListener);
   }
 
+  @Override
   public void removeMetricsEventListener(MetricsEventListener metricsEventListener) {
     metricsEventRunnable.removeMetricsEventListener(metricsEventListener);
   }
 
+  @Override
   public void broadcastAlerts(RuleDefinition ruleDefinition) {
     if(alertEventListenerList.size() > 0) {
       try {
@@ -283,6 +291,7 @@ public class ProductionPipelineManagerTask extends AbstractTask {
     LOG.debug("Stopped Production Pipeline Manager");
   }
 
+  @Override
   public void resetOffset(String pipelineName, String rev) throws PipelineManagerException {
     PipelineState pState = getPipelineState();
     if(pState == null) {
@@ -297,6 +306,7 @@ public class ProductionPipelineManagerTask extends AbstractTask {
     offsetTracker.resetOffset(pipelineName, rev);
   }
 
+  @Override
   public List<SnapshotInfo> getSnapshotsInfo() throws PipelineStoreException{
     List<SnapshotInfo> snapshotInfos = new ArrayList<>();
     for(PipelineInfo pipelineInfo: pipelineStore.getPipelines()) {
@@ -305,6 +315,7 @@ public class ProductionPipelineManagerTask extends AbstractTask {
     return snapshotInfos;
   }
 
+  @Override
   public void captureSnapshot(String snapshotName, int batchSize) throws PipelineManagerException {
     LOG.debug("Capturing snapshot with batch size {}", batchSize);
     checkState(getPipelineState() != null && getPipelineState().getState().equals(State.RUNNING),
@@ -316,44 +327,52 @@ public class ProductionPipelineManagerTask extends AbstractTask {
     LOG.debug("Captured snapshot with batch size {}", batchSize);
   }
 
+  @Override
   public SnapshotStatus getSnapshotStatus(String snapshotName) {
     return snapshotStore.getSnapshotStatus(stateTracker.getState().getName(), stateTracker.getState().getRev(),
       snapshotName);
   }
 
+  @Override
   public InputStream getSnapshot(String pipelineName, String rev, String snapshotName) throws PipelineManagerException {
     validatePipelineExistence(pipelineName);
     return snapshotStore.getSnapshot(pipelineName, rev, snapshotName);
   }
 
+  @Override
   public List<Record> getErrorRecords(String instanceName, int size) throws PipelineManagerException {
     checkState(getPipelineState().getState().equals(State.RUNNING), ContainerError.CONTAINER_0106);
     return prodPipeline.getErrorRecords(instanceName, size);
   }
 
+  @Override
   public List<Record> getSampledRecords(String sampleDefinitionId, int size) throws PipelineManagerException {
     checkState(getPipelineState().getState().equals(State.RUNNING), ContainerError.CONTAINER_0106);
     return observerRunnable.getSampledRecords(sampleDefinitionId, size);
   }
 
+  @Override
   public List<ErrorMessage> getErrorMessages(String instanceName, int size) throws PipelineManagerException {
     checkState(getPipelineState() != null && getPipelineState().getState().equals(State.RUNNING),
       ContainerError.CONTAINER_0106);
     return prodPipeline.getErrorMessages(instanceName, size);
   }
 
+  @Override
   public List<PipelineState> getHistory(String pipelineName, String rev, boolean fromBeginning)
     throws PipelineManagerException {
     validatePipelineExistence(pipelineName);
     return stateTracker.getHistory(pipelineName, rev, fromBeginning);
   }
 
+  @Override
   public void deleteSnapshot(String pipelineName, String rev, String snapshotName) {
     LOG.debug("Deleting snapshot");
     snapshotStore.deleteSnapshot(pipelineName, rev, snapshotName);
     LOG.debug("Deleted snapshot");
   }
 
+  @Override
   public PipelineState startPipeline(String name, String rev) throws PipelineStoreException
       , PipelineManagerException, PipelineRuntimeException, StageException {
     synchronized (pipelineMutex) {
@@ -365,6 +384,7 @@ public class ProductionPipelineManagerTask extends AbstractTask {
     }
   }
 
+  @Override
   public PipelineState stopPipeline(boolean nodeProcessShutdown) throws PipelineManagerException {
     synchronized (pipelineMutex) {
       validateStateTransition(pipelineRunnable.getName(), pipelineRunnable.getRev(), State.STOPPING);
@@ -376,6 +396,7 @@ public class ProductionPipelineManagerTask extends AbstractTask {
     }
   }
 
+  @Override
   public MetricRegistry getMetrics() {
     if(prodPipeline != null) {
       return prodPipeline.getPipeline().getRunner().getMetrics();
@@ -602,6 +623,7 @@ public class ProductionPipelineManagerTask extends AbstractTask {
     }
   }
 
+  @Override
   public void deleteHistory(String pipelineName, String rev) throws PipelineManagerException {
     LOG.debug("Deleting history for pipeline {}", pipelineName);
     PipelineState pState = getPipelineState();
@@ -614,6 +636,7 @@ public class ProductionPipelineManagerTask extends AbstractTask {
     stateTracker.deleteHistory(pipelineName, rev);
   }
 
+  @Override
   public boolean deleteAlert(String ruleId) throws PipelineManagerException {
     checkState(getPipelineState().getState().equals(State.RUNNING), ContainerError.CONTAINER_0402);
     MetricsConfigurator.resetCounter(getMetrics(), AlertsUtil.getUserMetricName(ruleId));

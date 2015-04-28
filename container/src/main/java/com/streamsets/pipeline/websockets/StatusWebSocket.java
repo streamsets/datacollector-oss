@@ -5,6 +5,7 @@
  */
 package com.streamsets.pipeline.websockets;
 
+import com.streamsets.pipeline.prodmanager.PipelineManager;
 import com.streamsets.pipeline.prodmanager.ProductionPipelineManagerTask;
 import com.streamsets.pipeline.prodmanager.StateEventListener;
 import org.eclipse.jetty.websocket.api.Session;
@@ -17,11 +18,11 @@ import java.io.IOException;
 public class StatusWebSocket extends WebSocketAdapter implements StateEventListener{
   public static final String TYPE = "status";
   private final static Logger LOG = LoggerFactory.getLogger(StatusWebSocket.class);
-  private final ProductionPipelineManagerTask pipelineManager;
+  private final PipelineManager pipelineManager;
   private Session webSocketSession = null;
 
 
-  public StatusWebSocket(ProductionPipelineManagerTask pipelineManager) {
+  public StatusWebSocket(PipelineManager pipelineManager) {
     this.pipelineManager = pipelineManager;
   }
 

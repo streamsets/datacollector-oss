@@ -6,7 +6,7 @@
 package com.streamsets.pipeline.websockets;
 
 import com.streamsets.pipeline.metrics.MetricsEventListener;
-import com.streamsets.pipeline.prodmanager.ProductionPipelineManagerTask;
+import com.streamsets.pipeline.prodmanager.PipelineManager;
 import org.eclipse.jetty.websocket.api.Session;
 import org.eclipse.jetty.websocket.api.WebSocketAdapter;
 import org.slf4j.Logger;
@@ -17,11 +17,11 @@ import java.io.IOException;
 public class MetricsWebSocket extends WebSocketAdapter implements MetricsEventListener {
   public static final String TYPE = "metrics";
   private final static Logger LOG = LoggerFactory.getLogger(MetricsWebSocket.class);
-  private final ProductionPipelineManagerTask pipelineManager;
+  private final PipelineManager pipelineManager;
   private Session webSocketSession = null;
 
 
-  public MetricsWebSocket(ProductionPipelineManagerTask pipelineManager) {
+  public MetricsWebSocket(PipelineManager pipelineManager) {
     this.pipelineManager = pipelineManager;
   }
 

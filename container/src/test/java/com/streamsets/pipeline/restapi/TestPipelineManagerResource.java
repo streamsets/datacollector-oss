@@ -6,7 +6,7 @@
 package com.streamsets.pipeline.restapi;
 
 import com.codahale.metrics.MetricRegistry;
-import com.streamsets.pipeline.prodmanager.ProductionPipelineManagerTask;
+import com.streamsets.pipeline.prodmanager.PipelineManager;
 import com.streamsets.pipeline.restapi.bean.PipelineStateJson;
 import com.streamsets.pipeline.restapi.bean.SnapshotStatusJson;
 import com.streamsets.pipeline.restapi.bean.StateJson;
@@ -31,7 +31,6 @@ public class TestPipelineManagerResource extends JerseyTest {
   
   private static final String PIPELINE_NAME = "myPipeline";
   private static final String PIPELINE_REV = "2.0";
-  private static final String DEFAULT_PIPELINE_REV = "0";
 
   @Test
   public void testGetStatusAPI() {
@@ -173,7 +172,7 @@ public class TestPipelineManagerResource extends JerseyTest {
   static class PipelineManagerResourceConfig extends AbstractBinder {
     @Override
     protected void configure() {
-      bindFactory(TestUtil.PipelineManagerTestInjector.class).to(ProductionPipelineManagerTask.class);
+      bindFactory(TestUtil.PipelineManagerTestInjector.class).to(PipelineManager.class);
     }
   }
 }

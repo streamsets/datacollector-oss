@@ -6,6 +6,7 @@
 package com.streamsets.pipeline.websockets;
 
 import com.streamsets.pipeline.main.RuntimeInfo;
+import com.streamsets.pipeline.prodmanager.PipelineManager;
 import com.streamsets.pipeline.prodmanager.ProductionPipelineManagerTask;
 import com.streamsets.pipeline.restapi.AuthzRole;
 import com.streamsets.pipeline.util.Configuration;
@@ -23,7 +24,7 @@ import java.io.IOException;
 public class SDCWebSocketServlet extends WebSocketServlet implements WebSocketCreator {
   private final Configuration config;
   private final RuntimeInfo runtimeInfo;
-  private final ProductionPipelineManagerTask pipelineManager;
+  private final PipelineManager pipelineManager;
 
 
   private static final String MAX_WEB_SOCKETS_CONCURRENT_REQUESTS_KEY = "max.webSockets.concurrent.requests";
@@ -31,7 +32,7 @@ public class SDCWebSocketServlet extends WebSocketServlet implements WebSocketCr
   protected static volatile int webSocketClients;
 
   public SDCWebSocketServlet(Configuration configuration, RuntimeInfo runtimeInfo,
-                             ProductionPipelineManagerTask pipelineStateManager) {
+                             PipelineManager pipelineStateManager) {
     this.config = configuration;
     this.runtimeInfo = runtimeInfo;
     this.pipelineManager = pipelineStateManager;
