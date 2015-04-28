@@ -13,6 +13,7 @@ import com.streamsets.pipeline.api.impl.ErrorMessage;
 import com.streamsets.pipeline.config.RuleDefinition;
 import com.streamsets.pipeline.metrics.MetricsEventListener;
 import com.streamsets.pipeline.runner.PipelineRuntimeException;
+import com.streamsets.pipeline.runner.production.ProductionPipeline;
 import com.streamsets.pipeline.snapshotstore.SnapshotInfo;
 import com.streamsets.pipeline.snapshotstore.SnapshotStatus;
 import com.streamsets.pipeline.store.PipelineStoreException;
@@ -22,6 +23,8 @@ import java.io.InputStream;
 import java.util.List;
 
 public interface PipelineManager extends Task {
+
+  ProductionPipeline getProductionPipeline();
 
   PipelineState getPipelineState();
 

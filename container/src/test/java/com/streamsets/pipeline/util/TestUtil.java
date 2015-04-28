@@ -23,7 +23,7 @@ import com.streamsets.pipeline.config.ThresholdType;
 import com.streamsets.pipeline.main.RuntimeInfo;
 import com.streamsets.pipeline.main.RuntimeModule;
 import com.streamsets.pipeline.prodmanager.PipelineManagerException;
-import com.streamsets.pipeline.prodmanager.ProductionPipelineManagerTask;
+import com.streamsets.pipeline.prodmanager.StandalonePipelineManagerTask;
 import com.streamsets.pipeline.prodmanager.State;
 import com.streamsets.pipeline.runner.MockStages;
 import com.streamsets.pipeline.runner.SourceOffsetTracker;
@@ -259,7 +259,7 @@ public class TestUtil {
     }
   }
 
-  @Module(injects = ProductionPipelineManagerTask.class
+  @Module(injects = StandalonePipelineManagerTask.class
     , library = true, includes = {TestRuntimeModule.class, TestPipelineStoreModule.class
     , TestStageLibraryModule.class, TestConfigurationModule.class})
   public static class TestProdManagerModule {
@@ -268,9 +268,9 @@ public class TestUtil {
     }
 
     @Provides
-    public ProductionPipelineManagerTask provideStateManager(RuntimeInfo RuntimeInfo, Configuration configuration
+    public StandalonePipelineManagerTask provideStateManager(RuntimeInfo RuntimeInfo, Configuration configuration
       ,PipelineStoreTask pipelineStore, StageLibraryTask stageLibrary) {
-      return new ProductionPipelineManagerTask(RuntimeInfo, configuration, pipelineStore, stageLibrary);
+      return new StandalonePipelineManagerTask(RuntimeInfo, configuration, pipelineStore, stageLibrary);
     }
   }
 
@@ -278,7 +278,7 @@ public class TestUtil {
   /*************** Utility methods ************/
   /********************************************/
 
-  public static void stopPipelineIfNeeded(ProductionPipelineManagerTask manager) throws InterruptedException, PipelineManagerException {
+  public static void stopPipelineIfNeeded(StandalonePipelineManagerTask manager) throws InterruptedException, PipelineManagerException {
     if(manager.getPipelineState().getState() == State.RUNNING) {
       manager.stopPipeline(false);
     }

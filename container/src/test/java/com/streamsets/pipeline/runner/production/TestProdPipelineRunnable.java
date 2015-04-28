@@ -14,7 +14,7 @@ import com.streamsets.pipeline.config.MemoryLimitConfiguration;
 import com.streamsets.pipeline.main.RuntimeInfo;
 import com.streamsets.pipeline.main.RuntimeModule;
 import com.streamsets.pipeline.prodmanager.PipelineManagerException;
-import com.streamsets.pipeline.prodmanager.ProductionPipelineManagerTask;
+import com.streamsets.pipeline.prodmanager.StandalonePipelineManagerTask;
 import com.streamsets.pipeline.prodmanager.State;
 import com.streamsets.pipeline.runner.MockStages;
 import com.streamsets.pipeline.runner.PipelineRuntimeException;
@@ -49,7 +49,7 @@ public class TestProdPipelineRunnable {
   private static final String PIPELINE_NAME = "xyz";
   private static final String REVISION = "1.0";
   private static final String SNAPSHOT_NAME = "snapshot";
-  private ProductionPipelineManagerTask manager;
+  private StandalonePipelineManagerTask manager;
   private PipelineStoreTask pipelineStoreTask;
   private RuntimeInfo info;
 
@@ -72,7 +72,7 @@ public class TestProdPipelineRunnable {
       Arrays.asList(getClass().getClassLoader()));
     pipelineStoreTask = Mockito.mock(FilePipelineStoreTask.class);
     Mockito.when(pipelineStoreTask.hasPipeline(PIPELINE_NAME)).thenReturn(true);
-    manager = new ProductionPipelineManagerTask(info, Mockito.mock(Configuration.class), pipelineStoreTask,
+    manager = new StandalonePipelineManagerTask(info, Mockito.mock(Configuration.class), pipelineStoreTask,
       Mockito.mock(StageLibraryTask.class));
     manager.init();
   }

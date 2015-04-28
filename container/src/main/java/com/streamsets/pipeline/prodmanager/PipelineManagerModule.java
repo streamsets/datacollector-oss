@@ -18,13 +18,13 @@ import dagger.Provides;
 import javax.inject.Singleton;
 
 @Module(library = true, includes = {RuntimeModule.class, PipelineStoreModule.class, StageLibraryModule.class})
-public class ProdManagerModule {
+public class PipelineManagerModule {
 
   @Provides
   @Singleton
   public PipelineManager provideProdPipelineManager(RuntimeInfo runtimeInfo, Configuration configuration
       , PipelineStoreTask pipelineStore, StageLibraryTask stageLibrary) {
-    return new ProductionPipelineManagerTask(runtimeInfo, configuration, pipelineStore, stageLibrary);
+    return new StandalonePipelineManagerTask(runtimeInfo, configuration, pipelineStore, stageLibrary);
   }
 
 }

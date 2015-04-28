@@ -5,7 +5,7 @@ import com.streamsets.pipeline.api.Source;
 import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.config.PipelineConfiguration;
 import com.streamsets.pipeline.json.ObjectMapperFactory;
-import com.streamsets.pipeline.prodmanager.ProductionPipelineManagerTask;
+import com.streamsets.pipeline.prodmanager.PipelineManager;
 import com.streamsets.pipeline.restapi.bean.BeanHelper;
 import com.streamsets.pipeline.restapi.bean.PipelineConfigurationJson;
 import com.streamsets.pipeline.runner.BatchListener;
@@ -20,8 +20,6 @@ import dagger.ObjectGraph;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.File;
-import java.io.FileInputStream;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Random;
@@ -68,7 +66,7 @@ public class EmbeddedPipelineFactory {
     private String pipelineUser;
     private String pipelineTag;
     private String pipelineDescription;
-    private ProductionPipelineManagerTask productionPipelineManagerTask;
+    private PipelineManager pipelineManager;
     private ObjectGraph dagger;
     private Thread waitingThread;
     private PipelineConfigurationJson pipelineConfigBean;
@@ -104,7 +102,7 @@ public class EmbeddedPipelineFactory {
       dagger = ObjectGraph.create(PipelineTaskModule.class);
       final Task task = dagger.get(TaskWrapper.class);
       PipelineTask pipelineTask = (PipelineTask) ((TaskWrapper)task).getTask();
-      productionPipelineManagerTask = pipelineTask.getProductionPipelineManagerTask();
+      pipelineManager = pipelineTask.getProductionPipelineManagerTask();
       dagger.get(LogConfigurator.class).configure();
       LOG.info("-----------------------------------------------------------------");
       dagger.get(BuildInfo.class).log(LOG);
@@ -139,7 +137,7 @@ public class EmbeddedPipelineFactory {
       task.run();
 
       createAndSave(pipelineTask, piplineName);
-      productionPipelineManagerTask.startPipeline(piplineName, "1");
+      pipelineManager.startPipeline(piplineName, "1");
       // this thread waits until the pipeline is shutdown
       waitingThread = new Thread() {
         @Override
@@ -161,7 +159,7 @@ public class EmbeddedPipelineFactory {
       waitingThread.setName("Pipeline-" + piplineName);
       waitingThread.setDaemon(true);
       waitingThread.start();
-      return productionPipelineManagerTask.getProductionPipeline().getPipeline();
+      return pipelineManager.getProductionPipeline().getPipeline();
     }
   }
 }

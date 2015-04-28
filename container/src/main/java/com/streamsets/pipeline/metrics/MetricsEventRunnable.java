@@ -8,7 +8,7 @@ package com.streamsets.pipeline.metrics;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.streamsets.pipeline.json.ObjectMapperFactory;
-import com.streamsets.pipeline.prodmanager.ProductionPipelineManagerTask;
+import com.streamsets.pipeline.prodmanager.StandalonePipelineManagerTask;
 import com.streamsets.pipeline.prodmanager.State;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,9 +21,9 @@ public class MetricsEventRunnable implements Runnable {
   private final static Logger LOG = LoggerFactory.getLogger(MetricsEventRunnable.class);
   private List<MetricsEventListener> metricsEventListenerList = new ArrayList<>();
 
-  private final ProductionPipelineManagerTask pipelineManager;
+  private final StandalonePipelineManagerTask pipelineManager;
 
-  public MetricsEventRunnable(ProductionPipelineManagerTask pipelineManager) {
+  public MetricsEventRunnable(StandalonePipelineManagerTask pipelineManager) {
     this.pipelineManager = pipelineManager;
   }
 

@@ -11,7 +11,7 @@ import com.streamsets.pipeline.main.BuildInfo;
 import com.streamsets.pipeline.main.RuntimeModule;
 import com.streamsets.pipeline.main.RuntimeInfo;
 import com.streamsets.pipeline.prodmanager.PipelineManager;
-import com.streamsets.pipeline.prodmanager.ProdManagerModule;
+import com.streamsets.pipeline.prodmanager.PipelineManagerModule;
 import com.streamsets.pipeline.restapi.configuration.ConfigurationInjector;
 import com.streamsets.pipeline.restapi.configuration.BuildInfoInjector;
 import com.streamsets.pipeline.restapi.configuration.PipelineStoreInjector;
@@ -43,7 +43,7 @@ import javax.servlet.DispatcherType;
 import java.util.EnumSet;
 
 @Module(library = true, includes = {RuntimeModule.class, MetricsModule.class,
-    PipelineStoreModule.class, StageLibraryModule.class, ProdManagerModule.class})
+    PipelineStoreModule.class, StageLibraryModule.class, PipelineManagerModule.class})
 public class WebServerModule {
 
   @Provides(type = Type.SET)

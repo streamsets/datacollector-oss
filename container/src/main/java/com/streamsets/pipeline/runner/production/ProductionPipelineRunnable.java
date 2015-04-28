@@ -7,7 +7,7 @@ package com.streamsets.pipeline.runner.production;
 
 import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.prodmanager.PipelineManagerException;
-import com.streamsets.pipeline.prodmanager.ProductionPipelineManagerTask;
+import com.streamsets.pipeline.prodmanager.StandalonePipelineManagerTask;
 import com.streamsets.pipeline.prodmanager.State;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,7 +20,7 @@ public class ProductionPipelineRunnable implements Runnable {
   private static final Logger LOG = LoggerFactory.getLogger(ProductionPipelineRunnable.class);
   public static final String RUNNABLE_NAME = "ProductionPipelineRunnable";
 
-  private final ProductionPipelineManagerTask pipelineManager;
+  private final StandalonePipelineManagerTask pipelineManager;
   private final ProductionPipeline pipeline;
   private final String name;
   private final String rev;
@@ -31,7 +31,7 @@ public class ProductionPipelineRunnable implements Runnable {
 
 
   public ProductionPipelineRunnable(ThreadHealthReporter threadHealthReporter,
-                                    ProductionPipelineManagerTask pipelineManager, ProductionPipeline pipeline,
+                                    StandalonePipelineManagerTask pipelineManager, ProductionPipeline pipeline,
                                     String name, String rev, List<Future<?>> relatedTasks) {
     this.pipelineManager = pipelineManager;
     this.pipeline = pipeline;

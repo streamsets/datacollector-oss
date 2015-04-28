@@ -11,7 +11,7 @@ import com.streamsets.pipeline.config.RuleDefinition;
 import com.streamsets.pipeline.email.EmailSender;
 import com.streamsets.pipeline.main.RuntimeInfo;
 import com.streamsets.pipeline.metrics.MetricsConfigurator;
-import com.streamsets.pipeline.prodmanager.ProductionPipelineManagerTask;
+import com.streamsets.pipeline.prodmanager.StandalonePipelineManagerTask;
 import com.streamsets.pipeline.util.PipelineException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -57,10 +57,10 @@ public class AlertManager {
   private final EmailSender emailSender;
   private final MetricRegistry metrics;
   private final RuntimeInfo runtimeInfo;
-  private final ProductionPipelineManagerTask pipelineManager;
+  private final StandalonePipelineManagerTask pipelineManager;
 
   public AlertManager(String pipelineName, String revision, EmailSender emailSender, MetricRegistry metrics,
-                      RuntimeInfo runtimeInfo, ProductionPipelineManagerTask pipelineManager) {
+                      RuntimeInfo runtimeInfo, StandalonePipelineManagerTask pipelineManager) {
     this.pipelineName = pipelineName;
     this.revision = revision;
     this.emailSender = emailSender;

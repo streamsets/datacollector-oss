@@ -362,11 +362,11 @@ public class TestFilePipelineStoreTask {
       for (ConfigConfiguration cc : pc.getConfiguration()) {
         confs.put(cc.getName(), cc.getValue());
       }
-      Assert.assertEquals(DeliveryGuarantee.AT_LEAST_ONCE, confs.get(PipelineDefConfigs.DELIVERY_GUARANTEE_CONFIG));
-      Assert.assertEquals(ExecutionMode.STANDALONE, confs.get(PipelineDefConfigs.EXECUTION_MODE_CONFIG));
+      Assert.assertEquals(DeliveryGuarantee.AT_LEAST_ONCE.name(), confs.get(PipelineDefConfigs.DELIVERY_GUARANTEE_CONFIG));
+      Assert.assertEquals(ExecutionMode.STANDALONE.name(), confs.get(PipelineDefConfigs.EXECUTION_MODE_CONFIG));
       Assert.assertEquals("", confs.get(PipelineDefConfigs.ERROR_RECORDS_CONFIG));
       Assert.assertEquals(PipelineDefConfigs.MEMORY_LIMIT_DEFAULT, confs.get(PipelineDefConfigs.MEMORY_LIMIT_CONFIG));
-      Assert.assertEquals(MemoryLimitExceeded.STOP_PIPELINE, confs.get(PipelineDefConfigs.MEMORY_LIMIT_EXCEEDED_CONFIG));
+      Assert.assertEquals(MemoryLimitExceeded.STOP_PIPELINE.name(), confs.get(PipelineDefConfigs.MEMORY_LIMIT_EXCEEDED_CONFIG));
       Assert.assertEquals(Integer.parseInt(PipelineDefConfigs.CLUSTER_SLAVE_MEMORY_DEFAULT),
                           confs.get(PipelineDefConfigs.CLUSTER_SLAVE_MEMORY_CONFIG));
       Assert.assertEquals(Collections.emptyList(), confs.get(PipelineDefConfigs.CLUSTER_LAUNCHER_ENV_CONFIG));

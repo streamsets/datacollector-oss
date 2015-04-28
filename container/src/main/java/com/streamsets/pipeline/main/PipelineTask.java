@@ -8,7 +8,7 @@ package com.streamsets.pipeline.main;
 import com.google.common.collect.ImmutableList;
 import com.streamsets.pipeline.domainServer.DomainServerCallbackTask;
 import com.streamsets.pipeline.http.WebServerTask;
-import com.streamsets.pipeline.prodmanager.ProductionPipelineManagerTask;
+import com.streamsets.pipeline.prodmanager.PipelineManager;
 import com.streamsets.pipeline.stagelibrary.StageLibraryTask;
 import com.streamsets.pipeline.store.PipelineStoreTask;
 import com.streamsets.pipeline.task.CompositeTask;
@@ -17,12 +17,12 @@ import javax.inject.Inject;
 
 public class PipelineTask extends CompositeTask {
 
-  private final ProductionPipelineManagerTask productionPipelineManagerTask;
+  private final PipelineManager productionPipelineManagerTask;
   private final PipelineStoreTask pipelineStoreTask;
   private final StageLibraryTask stageLibraryTask;
 
   @Inject
-  public PipelineTask(StageLibraryTask library, PipelineStoreTask store, ProductionPipelineManagerTask pipelineManager,
+  public PipelineTask(StageLibraryTask library, PipelineStoreTask store, PipelineManager pipelineManager,
       WebServerTask webServer, DomainServerCallbackTask domainControllerCallbackTask) {
     super("pipelineNode", ImmutableList.of(library, store, pipelineManager, webServer, domainControllerCallbackTask),
       true);
@@ -31,7 +31,7 @@ public class PipelineTask extends CompositeTask {
     this.productionPipelineManagerTask = pipelineManager;
   }
 
-  public ProductionPipelineManagerTask getProductionPipelineManagerTask() {
+  public PipelineManager getProductionPipelineManagerTask() {
     return productionPipelineManagerTask;
   }
   public PipelineStoreTask getPipelineStoreTask() {

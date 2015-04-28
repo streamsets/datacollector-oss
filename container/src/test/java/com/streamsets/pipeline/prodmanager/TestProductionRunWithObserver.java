@@ -33,7 +33,7 @@ public class TestProductionRunWithObserver {
   private static final String MY_PIPELINE = "my pipeline";
   private static final String PIPELINE_REV = "2.0";
   private static final String MY_PROCESSOR = "p";
-  private ProductionPipelineManagerTask manager;
+  private StandalonePipelineManagerTask manager;
 
   @BeforeClass
   public static void beforeClass() throws IOException {
@@ -53,7 +53,7 @@ public class TestProductionRunWithObserver {
     File f = new File(System.getProperty(RuntimeModule.SDC_PROPERTY_PREFIX + RuntimeInfo.DATA_DIR));
     FileUtils.deleteDirectory(f);
     ObjectGraph g = ObjectGraph.create(TestUtil.TestProdManagerModule.class);
-    manager = g.get(ProductionPipelineManagerTask.class);
+    manager = g.get(StandalonePipelineManagerTask.class);
     manager.init();
     manager.setState(MY_PIPELINE, PIPELINE_REV, State.STOPPED, "Pipeline created", null);
     manager.getStateTracker().register(MY_PIPELINE, PIPELINE_REV);

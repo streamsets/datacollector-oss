@@ -6,7 +6,6 @@
 package com.streamsets.pipeline.websockets;
 
 import com.streamsets.pipeline.prodmanager.PipelineManager;
-import com.streamsets.pipeline.prodmanager.ProductionPipelineManagerTask;
 import com.streamsets.pipeline.prodmanager.StateEventListener;
 import org.eclipse.jetty.websocket.api.Session;
 import org.eclipse.jetty.websocket.api.WebSocketAdapter;

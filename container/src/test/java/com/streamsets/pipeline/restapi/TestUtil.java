@@ -23,7 +23,7 @@ import com.streamsets.pipeline.el.ElConstantDefinition;
 import com.streamsets.pipeline.el.ElFunctionDefinition;
 import com.streamsets.pipeline.prodmanager.PipelineManagerException;
 import com.streamsets.pipeline.prodmanager.PipelineState;
-import com.streamsets.pipeline.prodmanager.ProductionPipelineManagerTask;
+import com.streamsets.pipeline.prodmanager.StandalonePipelineManagerTask;
 import com.streamsets.pipeline.prodmanager.State;
 import com.streamsets.pipeline.record.RecordImpl;
 import com.streamsets.pipeline.runner.PipelineRuntimeException;
@@ -193,16 +193,16 @@ public class TestUtil {
 
   }
 
-  static class PipelineManagerTestInjector implements Factory<ProductionPipelineManagerTask> {
+  static class PipelineManagerTestInjector implements Factory<StandalonePipelineManagerTask> {
 
     public PipelineManagerTestInjector() {
     }
 
     @Singleton
     @Override
-    public ProductionPipelineManagerTask provide() {
+    public StandalonePipelineManagerTask provide() {
 
-      ProductionPipelineManagerTask pipelineManager = Mockito.mock(ProductionPipelineManagerTask.class);
+      StandalonePipelineManagerTask pipelineManager = Mockito.mock(StandalonePipelineManagerTask.class);
       try {
         Mockito.when(pipelineManager.startPipeline(PIPELINE_NAME, PIPELINE_REV)).thenReturn(new PipelineState(
           PIPELINE_NAME, "2.0", State.RUNNING, "The pipeline is now running", System.currentTimeMillis(), null));
@@ -270,7 +270,7 @@ public class TestUtil {
     }
 
     @Override
-    public void dispose(ProductionPipelineManagerTask pipelineManagerTask) {
+    public void dispose(StandalonePipelineManagerTask pipelineManagerTask) {
     }
   }
 }

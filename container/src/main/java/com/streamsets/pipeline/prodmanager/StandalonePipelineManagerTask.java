@@ -15,6 +15,7 @@ import com.google.common.collect.ImmutableSet;
 import com.streamsets.pipeline.alerts.AlertEventListener;
 import com.streamsets.pipeline.alerts.AlertManager;
 import com.streamsets.pipeline.alerts.AlertsUtil;
+import com.streamsets.pipeline.api.ExecutionMode;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.el.ELEvalException;
@@ -78,9 +79,9 @@ import java.util.concurrent.Future;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 
-public class ProductionPipelineManagerTask extends AbstractTask implements PipelineManager {
+public class StandalonePipelineManagerTask extends AbstractTask implements PipelineManager {
 
-  private static final Logger LOG = LoggerFactory.getLogger(ProductionPipelineManagerTask.class);
+  private static final Logger LOG = LoggerFactory.getLogger(StandalonePipelineManagerTask.class);
   private static final String PRODUCTION_PIPELINE_MANAGER = "productionPipelineManager";
   private static final String PRODUCTION_PIPELINE_RUNNER = "ProductionPipelineRunner";
   private static final String RUN_INFO_DIR = "runInfo";
@@ -127,7 +128,7 @@ public class ProductionPipelineManagerTask extends AbstractTask implements Pipel
 
 
   @Inject
-  public ProductionPipelineManagerTask(RuntimeInfo runtimeInfo,
+  public StandalonePipelineManagerTask(RuntimeInfo runtimeInfo,
       com.streamsets.pipeline.util.Configuration configuration, PipelineStoreTask pipelineStore,
       StageLibraryTask stageLibrary) {
     super(PRODUCTION_PIPELINE_MANAGER);
@@ -139,6 +140,7 @@ public class ProductionPipelineManagerTask extends AbstractTask implements Pipel
     snapshotStore = new FileSnapshotStore(runtimeInfo);
   }
 
+  @Override
   public ProductionPipeline getProductionPipeline() {
     return prodPipeline;
   }
@@ -378,9 +380,16 @@ public class ProductionPipelineManagerTask extends AbstractTask implements Pipel
     synchronized (pipelineMutex) {
       LOG.info("Starting pipeline {} {}", name, rev);
       validateStateTransition(name, rev, State.RUNNING);
-      handleStartRequest(name, rev);
-      setState(name, rev, State.RUNNING, null, null);
-      return getPipelineState();
+      PipelineConfiguration pipelineConf = pipelineStore.load(name, rev);
+      ExecutionMode executionMode = ExecutionMode.valueOf((String) pipelineConf.getConfiguration(
+          PipelineDefConfigs.EXECUTION_MODE_CONFIG).getValue());
+      if (executionMode == ExecutionMode.STANDALONE) {
+        handleStartRequest(name, rev);
+        setState(name, rev, State.RUNNING, null, null);
+        return getPipelineState();
+      } else {
+        throw new PipelineManagerException(ValidationError.VALIDATION_0072, name, rev);
+      }
     }
   }
 
