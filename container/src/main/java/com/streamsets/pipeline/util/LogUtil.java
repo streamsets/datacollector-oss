@@ -6,6 +6,7 @@
 package com.streamsets.pipeline.util;
 
 import com.streamsets.pipeline.api.impl.Utils;
+import com.streamsets.pipeline.prodmanager.Constants;
 import org.apache.log4j.Appender;
 import org.apache.log4j.Logger;
 import org.apache.log4j.PatternLayout;
@@ -68,11 +69,11 @@ public class LogUtil {
     } catch (IOException e) {
       throw new RuntimeException(e);
     }
-    int maxBackupIndex = configuration.get(com.streamsets.pipeline.prodmanager.Configuration.MAX_BACKUP_INDEX_KEY,
-      com.streamsets.pipeline.prodmanager.Configuration.MAX_BACKUP_INDEX_DEFAULT);
+    int maxBackupIndex = configuration.get(Constants.MAX_BACKUP_INDEX_KEY,
+      Constants.MAX_BACKUP_INDEX_DEFAULT);
     appender.setMaxBackupIndex(maxBackupIndex);
-    String maxFileSize = configuration.get(com.streamsets.pipeline.prodmanager.Configuration.MAX_ERROR_FILE_SIZE_KEY,
-      com.streamsets.pipeline.prodmanager.Configuration.MAX_ERROR_FILE_SIZE_DEFAULT);
+    String maxFileSize = configuration.get(Constants.MAX_ERROR_FILE_SIZE_KEY,
+      Constants.MAX_ERROR_FILE_SIZE_DEFAULT);
     appender.setMaxFileSize(maxFileSize);
     appender.setName(loggerName);
 

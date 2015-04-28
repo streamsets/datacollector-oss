@@ -23,7 +23,7 @@ import com.streamsets.pipeline.config.MemoryLimitExceeded;
 import com.streamsets.pipeline.config.StageType;
 import com.streamsets.pipeline.main.RuntimeInfo;
 import com.streamsets.pipeline.metrics.MetricsConfigurator;
-import com.streamsets.pipeline.prodmanager.Configuration;
+import com.streamsets.pipeline.prodmanager.Constants;
 import com.streamsets.pipeline.record.HeaderImpl;
 import com.streamsets.pipeline.record.RecordImpl;
 import com.streamsets.pipeline.runner.BatchListener;
@@ -45,7 +45,6 @@ import com.streamsets.pipeline.util.ContainerError;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.sql.Time;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -251,7 +250,7 @@ public class ProductionPipelineRunner implements PipelineRunner {
       pipeBatch = new FullPipeBatch(offsetTracker, snapshotBatchSize, true /*snapshot stage output*/);
     } else {
       pipeBatch = new FullPipeBatch(offsetTracker,
-        configuration.get(Configuration.MAX_BATCH_SIZE_KEY, Configuration.MAX_BATCH_SIZE_DEFAULT),
+        configuration.get(Constants.MAX_BATCH_SIZE_KEY, Constants.MAX_BATCH_SIZE_DEFAULT),
         false /*snapshot stage output*/);
     }
 
@@ -393,8 +392,8 @@ public class ProductionPipelineRunner implements PipelineRunner {
         EvictingQueue<Record> errorRecordList = stageToErrorRecordsMap.get(e.getKey());
         if (errorRecordList == null) {
           //replace with a data structure with an upper cap
-          errorRecordList = EvictingQueue.create(configuration.get(Configuration.MAX_ERROR_RECORDS_PER_STAGE_KEY,
-            Configuration.MAX_ERROR_RECORDS_PER_STAGE_DEFAULT));
+          errorRecordList = EvictingQueue.create(configuration.get(Constants.MAX_ERROR_RECORDS_PER_STAGE_KEY,
+            Constants.MAX_ERROR_RECORDS_PER_STAGE_DEFAULT));
           stageToErrorRecordsMap.put(e.getKey(), errorRecordList);
         }
         errorRecordList.addAll(errorRecords.get(e.getKey()));
@@ -403,8 +402,8 @@ public class ProductionPipelineRunner implements PipelineRunner {
         EvictingQueue<ErrorMessage> errorMessageList = stageToErrorMessagesMap.get(e.getKey());
         if (errorMessageList == null) {
           //replace with a data structure with an upper cap
-          errorMessageList = EvictingQueue.create(configuration.get(Configuration.MAX_PIPELINE_ERRORS_KEY,
-            Configuration.MAX_PIPELINE_ERRORS_DEFAULT));
+          errorMessageList = EvictingQueue.create(configuration.get(Constants.MAX_PIPELINE_ERRORS_KEY,
+            Constants.MAX_PIPELINE_ERRORS_DEFAULT));
           stageToErrorMessagesMap.put(e.getKey(), errorMessageList);
         }
         errorMessageList.addAll(errorMessages.get(e.getKey()));

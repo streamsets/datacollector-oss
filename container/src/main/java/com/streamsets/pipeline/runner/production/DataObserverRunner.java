@@ -13,6 +13,7 @@ import com.streamsets.pipeline.alerts.DataRuleEvaluator;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.config.DataRuleDefinition;
 import com.streamsets.pipeline.metrics.MetricsConfigurator;
+import com.streamsets.pipeline.prodmanager.Constants;
 import com.streamsets.pipeline.util.Configuration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -79,8 +80,8 @@ public class DataObserverRunner {
         int newSize = e.getValue();
 
         int maxSize = configuration.get(
-          com.streamsets.pipeline.prodmanager.Configuration.SAMPLED_RECORDS_MAX_CACHE_SIZE_KEY,
-          com.streamsets.pipeline.prodmanager.Configuration.SAMPLED_RECORDS_MAX_CACHE_SIZE_DEFAULT);
+          Constants.SAMPLED_RECORDS_MAX_CACHE_SIZE_KEY,
+          Constants.SAMPLED_RECORDS_MAX_CACHE_SIZE_DEFAULT);
         if(newSize > maxSize) {
           newSize = maxSize;
         }

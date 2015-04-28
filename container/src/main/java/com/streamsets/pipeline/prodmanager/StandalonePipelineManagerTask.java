@@ -57,6 +57,7 @@ import com.streamsets.pipeline.store.PipelineInfo;
 import com.streamsets.pipeline.store.PipelineStoreException;
 import com.streamsets.pipeline.store.PipelineStoreTask;
 import com.streamsets.pipeline.task.AbstractTask;
+import com.streamsets.pipeline.util.Configuration;
 import com.streamsets.pipeline.util.ContainerError;
 import com.streamsets.pipeline.util.ElUtil;
 import com.streamsets.pipeline.util.PipelineDirectoryUtil;
@@ -101,7 +102,7 @@ public class StandalonePipelineManagerTask extends AbstractTask implements Pipel
 
   private final RuntimeInfo runtimeInfo;
   private final StateTracker stateTracker;
-  private final com.streamsets.pipeline.util.Configuration configuration;
+  private final Configuration configuration;
   private final PipelineStoreTask pipelineStore;
   private final StageLibraryTask stageLibrary;
   private final SnapshotStore snapshotStore;
@@ -129,7 +130,7 @@ public class StandalonePipelineManagerTask extends AbstractTask implements Pipel
 
   @Inject
   public StandalonePipelineManagerTask(RuntimeInfo runtimeInfo,
-      com.streamsets.pipeline.util.Configuration configuration, PipelineStoreTask pipelineStore,
+      Configuration configuration, PipelineStoreTask pipelineStore,
       StageLibraryTask stageLibrary) {
     super(PRODUCTION_PIPELINE_MANAGER);
     this.runtimeInfo = runtimeInfo;
@@ -232,7 +233,7 @@ public class StandalonePipelineManagerTask extends AbstractTask implements Pipel
           //create the pipeline instance. This was the pipeline in the context before the manager shutdown previously
           try {
             BlockingQueue<Object> productionObserveRequests = new ArrayBlockingQueue<>(
-              configuration.get(Configuration.OBSERVER_QUEUE_SIZE_KEY, Configuration.OBSERVER_QUEUE_SIZE_DEFAULT),
+              configuration.get(Constants.OBSERVER_QUEUE_SIZE_KEY, Constants.OBSERVER_QUEUE_SIZE_DEFAULT),
               true /*FIFO*/);
             ProductionObserver observer = new ProductionObserver(productionObserveRequests, configuration);
             createPipeline(ps.getName(), ps.getRev(), observer, productionObserveRequests);
@@ -398,7 +399,7 @@ public class StandalonePipelineManagerTask extends AbstractTask implements Pipel
     synchronized (pipelineMutex) {
       validateStateTransition(pipelineRunnable.getName(), pipelineRunnable.getRev(), State.STOPPING);
       setState(pipelineRunnable.getName(), pipelineRunnable.getRev(), State.STOPPING,
-        Configuration.STOP_PIPELINE_MESSAGE, getMetrics());
+        Constants.STOP_PIPELINE_MESSAGE, getMetrics());
       PipelineState pipelineState = getPipelineState();
       handleStopRequest(nodeProcessShutdown);
       return pipelineState;
@@ -447,7 +448,7 @@ public class StandalonePipelineManagerTask extends AbstractTask implements Pipel
   */
 
     BlockingQueue<Object> productionObserveRequests = new ArrayBlockingQueue<>(
-      configuration.get(Configuration.OBSERVER_QUEUE_SIZE_KEY, Configuration.OBSERVER_QUEUE_SIZE_DEFAULT),
+      configuration.get(Constants.OBSERVER_QUEUE_SIZE_KEY, Constants.OBSERVER_QUEUE_SIZE_DEFAULT),
       true /*FIFO*/);
 
     ProductionObserver observer = new ProductionObserver(productionObserveRequests, configuration);
@@ -514,7 +515,7 @@ public class StandalonePipelineManagerTask extends AbstractTask implements Pipel
 
     DeliveryGuarantee deliveryGuarantee = DeliveryGuarantee.AT_LEAST_ONCE;
     for(ConfigConfiguration config : pipelineConfiguration.getConfiguration()) {
-      if(Configuration.DELIVERY_GUARANTEE.equals(config.getName())) {
+      if(Constants.DELIVERY_GUARANTEE.equals(config.getName())) {
         deliveryGuarantee = DeliveryGuarantee.valueOf((String)config.getValue());
       }
     }

@@ -8,7 +8,7 @@ package com.streamsets.pipeline.runner.production;
 import com.google.common.annotations.VisibleForTesting;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.config.DataRuleDefinition;
-import com.streamsets.pipeline.prodmanager.Configuration;
+import com.streamsets.pipeline.prodmanager.Constants;
 import com.streamsets.pipeline.record.RecordImpl;
 import com.streamsets.pipeline.runner.Observer;
 import com.streamsets.pipeline.runner.Pipe;
@@ -116,8 +116,8 @@ public class ProductionObserver implements Observer {
     boolean offered;
     try {
       offered = observeRequests.offer(new DataRulesEvaluationRequest(laneToRecordsMap, laneToRecordsSizeMap),
-        configuration.get(Configuration.MAX_OBSERVER_REQUEST_OFFER_WAIT_TIME_MS_KEY,
-        Configuration.MAX_OBSERVER_REQUEST_OFFER_WAIT_TIME_MS_DEFAULT), TimeUnit.MILLISECONDS);
+        configuration.get(Constants.MAX_OBSERVER_REQUEST_OFFER_WAIT_TIME_MS_KEY,
+        Constants.MAX_OBSERVER_REQUEST_OFFER_WAIT_TIME_MS_DEFAULT), TimeUnit.MILLISECONDS);
     } catch (InterruptedException e) {
       offered = false;
     }

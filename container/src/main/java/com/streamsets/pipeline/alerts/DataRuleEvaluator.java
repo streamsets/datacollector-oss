@@ -16,6 +16,7 @@ import com.streamsets.pipeline.el.ELEvaluator;
 import com.streamsets.pipeline.el.ELVariables;
 import com.streamsets.pipeline.lib.el.RuleELRegistry;
 import com.streamsets.pipeline.metrics.MetricsConfigurator;
+import com.streamsets.pipeline.prodmanager.Constants;
 import com.streamsets.pipeline.runner.LaneResolver;
 import com.streamsets.pipeline.util.Configuration;
 import com.streamsets.pipeline.util.ObserverException;
@@ -55,8 +56,8 @@ public class DataRuleEvaluator {
       EvictingQueue<Record> sampledRecords = ruleToSampledRecordsMap.get(dataRuleDefinition.getId());
       if (sampledRecords == null) {
         int maxSize = configuration.get(
-          com.streamsets.pipeline.prodmanager.Configuration.SAMPLED_RECORDS_MAX_CACHE_SIZE_KEY,
-          com.streamsets.pipeline.prodmanager.Configuration.SAMPLED_RECORDS_MAX_CACHE_SIZE_DEFAULT);
+          Constants.SAMPLED_RECORDS_MAX_CACHE_SIZE_KEY,
+          Constants.SAMPLED_RECORDS_MAX_CACHE_SIZE_DEFAULT);
         int size = dataRuleDefinition.getSamplingRecordsToRetain();
         if(size > maxSize) {
           size = maxSize;

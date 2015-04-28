@@ -5,7 +5,7 @@
  */
 package com.streamsets.pipeline.prodmanager;
 
-public class Configuration {
+public class Constants {
 
   /*pipeline configuration properties*/
   public static final String MAX_BATCH_SIZE_KEY = "production.maxBatchSize";
