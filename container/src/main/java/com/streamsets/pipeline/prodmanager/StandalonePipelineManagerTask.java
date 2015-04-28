@@ -85,12 +85,12 @@ public class StandalonePipelineManagerTask extends AbstractTask implements Pipel
   private static final Logger LOG = LoggerFactory.getLogger(StandalonePipelineManagerTask.class);
   private static final String PRODUCTION_PIPELINE_MANAGER = "productionPipelineManager";
   private static final String PRODUCTION_PIPELINE_RUNNER = "ProductionPipelineRunner";
-  private static final String RUN_INFO_DIR = "runInfo";
+  static final String RUN_INFO_DIR = "runInfo";
 
   private static final String REFRESH_INTERVAL_PROPERTY = "ui.refresh.interval.ms";
   private static final int REFRESH_INTERVAL_PROPERTY_DEFAULT = 2000;
 
-  private static final Map<State, Set<State>> VALID_TRANSITIONS = new ImmutableMap.Builder<State, Set<State>>()
+  static final Map<State, Set<State>> VALID_TRANSITIONS = new ImmutableMap.Builder<State, Set<State>>()
     .put(State.STOPPED, ImmutableSet.of(State.RUNNING))
     .put(State.FINISHED, ImmutableSet.of(State.RUNNING))
     .put(State.RUNNING, ImmutableSet.of(State.STOPPING, State.FINISHED))
@@ -442,7 +442,7 @@ public class StandalonePipelineManagerTask extends AbstractTask implements Pipel
     Other classes:
     - - - - - - - -
 
-    Alert Manager - responsible for creating alerts and sendign email.
+    Alert Manager - responsible for creating alerts and sending email.
 
 
   */
@@ -534,7 +534,7 @@ public class StandalonePipelineManagerTask extends AbstractTask implements Pipel
     return builder.build(runner, offsetTracker, observer);
   }
 
-  private MemoryLimitConfiguration getMemoryLimitConfiguration(PipelineConfiguration pipelineConfiguration)
+  static MemoryLimitConfiguration getMemoryLimitConfiguration(PipelineConfiguration pipelineConfiguration)
     throws PipelineRuntimeException {
     //Default memory limit configuration
     MemoryLimitConfiguration memoryLimitConfiguration = new MemoryLimitConfiguration();

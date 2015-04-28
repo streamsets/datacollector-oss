@@ -169,11 +169,18 @@ public class BootstrapMain {
     libsUrls.putAll(userLibsUrls);
 
     // Create all ClassLoaders
-    ClassLoader apiCL = new BlackListURLClassLoader("API", apiUrls, ClassLoader.getSystemClassLoader(), null);
-    ClassLoader containerCL = new BlackListURLClassLoader("Container", containerUrls, apiCL, null);
+    ClassLoader apiCL = new BlackListURLClassLoader("api-lib", "API", apiUrls, ClassLoader.getSystemClassLoader(), null);
+    ClassLoader containerCL = new BlackListURLClassLoader("container-lib", "Container", containerUrls, apiCL, null);
     List<ClassLoader> stageLibrariesCLs = new ArrayList<>();
     for (Map.Entry<String,List<URL>> entry : libsUrls.entrySet()) {
-      stageLibrariesCLs.add(new BlackListURLClassLoader(entry.getKey(), entry.getValue(), apiCL,
+      String[] parts = entry.getKey().split(FILE_SEPARATOR);
+      if (parts.length != 2) {
+        String msg = "Invalid library name: " + entry.getKey();
+        throw new IllegalStateException(msg);
+      }
+      String type = parts[0];
+      String name = parts[1];
+      stageLibrariesCLs.add(new BlackListURLClassLoader(type, name, entry.getValue(), apiCL,
                                                         PACKAGES_BLACKLIST_FOR_STAGE_LIBRARIES));
     }
 
@@ -210,7 +217,7 @@ public class BootstrapMain {
           sb.append(etc.getAbsolutePath()).append(FILE_SEPARATOR).append(CLASSPATH_SEPARATOR);
         }
         sb.append(jarsDir.getAbsolutePath()).append(FILE_SEPARATOR).append(JARS_WILDCARD);
-        map.put(libDir.getName(), getClasspathUrls(sb.toString()));
+        map.put(libDir.getParentFile().getName() + FILE_SEPARATOR + libDir.getName(), getClasspathUrls(sb.toString()));
       }
     } else {
       throw new IllegalArgumentException(String.format(MISSING_STAGE_LIBRARIES_DIR_MSG, baseDir));

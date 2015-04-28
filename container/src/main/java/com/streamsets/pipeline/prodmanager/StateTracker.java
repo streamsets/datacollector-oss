@@ -97,7 +97,8 @@ public class StateTracker {
       try {
         metricRegistryStr = objectMapper.writer().writeValueAsString(metricRegistry);
       } catch (JsonProcessingException e) {
-        e.printStackTrace();
+        String msg = "Error serializing metric registry: " + e;
+        LOG.error(msg, e);
       }
     }
 

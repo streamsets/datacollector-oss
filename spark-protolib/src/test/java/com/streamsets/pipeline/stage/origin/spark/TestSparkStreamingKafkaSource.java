@@ -130,8 +130,8 @@ public class TestSparkStreamingKafkaSource {
       long i = 0;
       while (i != 30) {
         try {
-          i = SparkKafkaExecutorFunction.getRecordsProducedJVMWide();
           Thread.sleep(1000);
+          i = SparkKafkaExecutorFunction.getRecordsProducedJVMWide();
           LOG.info(" No of records obtained till now " + i);
         } catch (Exception e) {
           String msg = "Expected exception: " + e;
@@ -152,8 +152,6 @@ public class TestSparkStreamingKafkaSource {
       public void run() {
         try {
           BootstrapSpark.main(new String[0]);
-        } catch (IllegalStateException ex) {
-          // ignored
         } catch (Exception ex) {
           LOG.error("Error in waiter thread: " + ex, ex);
         }

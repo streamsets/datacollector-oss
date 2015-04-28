@@ -95,9 +95,9 @@ public class StageClassLoader extends BlackListURLClassLoader {
   private final ClassLoader parent;
   private final List<String> systemClasses;
 
-  private StageClassLoader(String name, List<URL> urls, ClassLoader parent,
+  private StageClassLoader(String type, String name, List<URL> urls, ClassLoader parent,
                           List<String> systemClasses, String[] blacklistedPackages) {
-    super(name, urls, parent, blacklistedPackages);
+    super(type, name, urls, parent, blacklistedPackages);
     if (debug) {
       System.err.println(getClass().getSimpleName() + ": urls: " + Arrays.toString(urls.toArray()));
       System.err.println(getClass().getSimpleName() + ": system classes: " + systemClasses);
@@ -118,12 +118,12 @@ public class StageClassLoader extends BlackListURLClassLoader {
       System.err.println(getClass().getSimpleName() + ": system classes: " + this.systemClasses);
     }
   }
-  public StageClassLoader(String name, List<URL> urls, ClassLoader parent, String[] blacklistedPackages,
+  public StageClassLoader(String type, String name, List<URL> urls, ClassLoader parent, String[] blacklistedPackages,
                           String systemClasses) {
-    this(name, urls, parent, Arrays.asList(getTrimmedStrings(systemClasses)), blacklistedPackages);
+    this(type, name, urls, parent, Arrays.asList(getTrimmedStrings(systemClasses)), blacklistedPackages);
   }
-  public StageClassLoader(String name, List<URL> urls, ClassLoader parent, String[] blacklistedPackages) {
-    this(name, urls, parent, Collections.<String>emptyList(), blacklistedPackages);
+  public StageClassLoader(String type, String name, List<URL> urls, ClassLoader parent, String[] blacklistedPackages) {
+    this(type, name, urls, parent, Collections.<String>emptyList(), blacklistedPackages);
   }
 
   @Override

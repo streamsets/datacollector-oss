@@ -64,6 +64,7 @@
     <javax.mail.version>1.4.7</javax.mail.version>
     <icegreen.version>1.4.0</icegreen.version>
     <kryo.version>3.0.1</kryo.version>
+    <jtar.version>2.2</jtar.version>
   </properties>
 
   <dependencyManagement>
@@ -276,6 +277,11 @@
         <groupId>org.eclipse.jetty.websocket</groupId>
         <artifactId>websocket-servlet</artifactId>
         <version>${jetty.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.kamranzafar</groupId>
+        <artifactId>jtar</artifactId>
+        <version>${jtar.version}</version>
       </dependency>
       <dependency>
         <groupId>org.javassist</groupId>

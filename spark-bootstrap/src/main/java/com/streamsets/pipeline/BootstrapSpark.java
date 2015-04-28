@@ -8,16 +8,12 @@ package com.streamsets.pipeline;
 
 import com.streamsets.pipeline.stage.origin.spark.SparkStreamingBinding;
 
-import org.apache.spark.api.java.function.VoidFunction;
-
 import java.io.File;
 import java.io.FileInputStream;
-import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
-import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -36,7 +32,7 @@ import java.util.Properties;
  * </ol>
  */
 public class BootstrapSpark {
-  private static final String SPARK_PROTOLIB = "streamsets-datacollector-spark-protolib";
+  private static final String SPARK_PROTOLIB = "streamsets-libs/streamsets-datacollector-spark-protolib";
   /**
    * We might have to have a reset method for unit tests
    */
@@ -110,13 +106,20 @@ public class BootstrapSpark {
     if (parent == null) {
       parent = ClassLoader.getSystemClassLoader();
     }
-    apiCL = new StageClassLoader("API", apiUrls, parent, null,
+    apiCL = new StageClassLoader("api-lib", "API", apiUrls, parent, null,
       StageClassLoader.API_CLASSES_DEFAULT);
-    containerCL = new StageClassLoader("Container", containerUrls, apiCL, null,
+    containerCL = new StageClassLoader("container-lib", "Container", containerUrls, apiCL, null,
       StageClassLoader.CONTAINER_CLASSES_DEFAULT);
     stageLibrariesCLs = new ArrayList<ClassLoader>();
     for (Map.Entry<String,List<URL>> entry : libsUrls.entrySet()) {
-      StageClassLoader stageClassLoader = new StageClassLoader(entry.getKey(), entry.getValue(), apiCL,
+      String[] parts = entry.getKey().split(BootstrapMain.FILE_SEPARATOR);
+      if (parts.length != 2) {
+        String msg = "Invalid library name: " + entry.getKey();
+        throw new IllegalStateException(msg);
+      }
+      String type = parts[0];
+      String name = parts[1];
+      StageClassLoader stageClassLoader = new StageClassLoader(type, name, entry.getValue(), apiCL,
         BootstrapMain.PACKAGES_BLACKLIST_FOR_STAGE_LIBRARIES, StageClassLoader.STAGE_CLASSES_DEFAULT);
       // TODO add spark, scala, etc to blacklist
       if (SPARK_PROTOLIB.equals(entry.getKey())) {

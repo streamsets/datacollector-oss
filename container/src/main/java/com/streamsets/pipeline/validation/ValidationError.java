@@ -79,8 +79,8 @@ public enum ValidationError implements ErrorCode {
 
   VALIDATION_0070("Pipeline does not define its execution mode"),
   VALIDATION_0071("The stage does not support '{}' execution mode"),
-  VALIDATION_0072("Data collector is is a standalone mode, cannot run pipeline cluster mode"),
-  VALIDATION_0073("Data collector is is a cluster mode, cannot run pipeline standalone mode"),
+  VALIDATION_0072("Data collector is in standalone mode, cannot run pipeline cluster mode"),
+  VALIDATION_0073("Data collector is in cluster mode, cannot run pipeline standalone mode"),
   ;
 
   private final String msg;

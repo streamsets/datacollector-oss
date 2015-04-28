@@ -12,13 +12,26 @@ import java.lang.reflect.Method;
 public class StageLibraryUtils {
   private static final String LIBRARY_RB = "data-collector-library";
 
-  static String getLibraryName(ClassLoader cl) {
+  public static String getLibraryName(ClassLoader cl) {
     String name;
     try {
       Method method = cl.getClass().getMethod("getName");
       name = (String) method.invoke(cl);
     } catch (NoSuchMethodException ex ) {
       name = "default";
+    } catch (Exception ex ) {
+      throw new RuntimeException(ex);
+    }
+    return name;
+  }
+
+  public static String getLibraryType(ClassLoader cl) {
+    String name = null;
+    try {
+      Method method = cl.getClass().getMethod("getType");
+      name = (String) method.invoke(cl);
+    } catch (NoSuchMethodException ex ) {
+      // ignore
     } catch (Exception ex ) {
       throw new RuntimeException(ex);
     }

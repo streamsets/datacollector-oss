@@ -262,8 +262,11 @@ public class MockStages {
       }
     }
   }
+  public static StageLibraryTask createStageLibrary(ClassLoader cl) {
+    return new MockStageLibraryTask.Builder(cl).build();
+  }
   public static StageLibraryTask createStageLibrary() {
-    return new MockStageLibraryTask.Builder().build();
+    return createStageLibrary(Thread.currentThread().getContextClassLoader());
   }
 
   public static class MockStageLibraryTask implements StageLibraryTask {
@@ -320,13 +323,17 @@ public class MockStages {
       private final Map<String, StageDefinition> stages;
 
       public Builder() {
+        this(Thread.currentThread().getContextClassLoader());
+      }
+
+      public Builder(ClassLoader cl) {
         StageDefinition sDef = new StageDefinition(
           MSource.class.getName(), "sourceName", "1.0.0", "sourceLabel",
           "sourceDesc", StageType.SOURCE, false,  true, true, Collections.<ConfigDefinition>emptyList(),
           null/*raw source definition*/, "", null, false, 1, null,
           Arrays.asList(ExecutionMode.CLUSTER, ExecutionMode.STANDALONE)
         );
-        sDef.setLibrary("default", "", Thread.currentThread().getContextClassLoader());
+        sDef.setLibrary("default", "", cl);
 
         StageDefinition socDef = new StageDefinition(
           MSourceOffsetCommitter.class.getName(), "sourceOffsetCommitterName", "1.0.0", "sourceOffsetCommitterLabel",
@@ -334,13 +341,14 @@ public class MockStages {
           null/*raw source definition*/, "", null, false, 1, null,
           Arrays.asList(ExecutionMode.CLUSTER, ExecutionMode.STANDALONE)
         );
-        socDef.setLibrary("default", "", Thread.currentThread().getContextClassLoader());
+        socDef.setLibrary("default", "", cl);
 
         StageDefinition pDef = new StageDefinition(MProcessor.class.getName(), "processorName", "1.0.0", "sourcelabel",
           "sourceDescription", StageType.PROCESSOR, false, true, true, Collections.<ConfigDefinition>emptyList(),
           null/*raw source definition*/, "", null,
           false, 1, null,
           Arrays.asList(ExecutionMode.CLUSTER, ExecutionMode.STANDALONE));
+        pDef.setLibrary("default", "", cl);
         pDef.setLibrary("default", "", Thread.currentThread().getContextClassLoader());
 
         StageDefinition tDef = new StageDefinition(
@@ -349,7 +357,7 @@ public class MockStages {
           null/*raw source definition*/, "", null, false, 0, null,
           Arrays.asList(ExecutionMode.CLUSTER, ExecutionMode.STANDALONE)
         );
-        tDef.setLibrary("default", "", Thread.currentThread().getContextClassLoader());
+        tDef.setLibrary("default", "", cl);
 
         StageDefinition eDef = new StageDefinition(
           ETarget.class.getName(), "errorTarget", "1.0.0", "errorTarget",
@@ -357,7 +365,7 @@ public class MockStages {
           Collections.<ConfigDefinition>emptyList(), null/*raw source definition*/, "", null, false, 0, null,
           Arrays.asList(ExecutionMode.CLUSTER, ExecutionMode.STANDALONE)
         );
-        eDef.setLibrary("default", "", Thread.currentThread().getContextClassLoader());
+        eDef.setLibrary("default", "", cl);
 
         ConfigDefinition depConfDef = new ConfigDefinition(
           "dependencyConfName", ConfigDef.Type.NUMBER, "dependencyConfLabel", "dependencyConfDesc", "", true,
@@ -376,14 +384,14 @@ public class MockStages {
           "sourceWithConfigsDesc", StageType.SOURCE, false, true, true,
           Lists.newArrayList(depConfDef, triggeredConfDef), null/*raw source definition*/, "", null, false, 1, null,
           Arrays.asList(ExecutionMode.CLUSTER, ExecutionMode.STANDALONE));
-        swcDef.setLibrary("default", "", Thread.currentThread().getContextClassLoader());
+        swcDef.setLibrary("default", "", cl);
 
         StageDefinition clusterStageDef = new StageDefinition(
             ClusterMSource.class.getName(), "clusterSource", "1.0.0", "clusterSourceLabel",
             "clusterSourceDesc", StageType.SOURCE, false, true, true,
             Collections.<ConfigDefinition>emptyList(), null, "", null, false, 1, null,
             Arrays.asList(ExecutionMode.CLUSTER));
-        clusterStageDef.setLibrary("default", "", Thread.currentThread().getContextClassLoader());
+        clusterStageDef.setLibrary("default", "", cl);
 
 
         StageDefinition[] stageDefs = new StageDefinition[]{sDef, socDef, pDef, tDef, swcDef, eDef, clusterStageDef};

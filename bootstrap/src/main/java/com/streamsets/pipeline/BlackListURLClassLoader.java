@@ -12,12 +12,16 @@ import java.util.Enumeration;
 import java.util.List;
 
 public class BlackListURLClassLoader extends URLClassLoader {
+  private final String type;
   private final String name;
   private final String[] blacklistedPackages;
   private final String[] blacklistedDirs;
 
-  public BlackListURLClassLoader(String name, List<URL> urls, ClassLoader parent, String[] blacklistedPackages) {
+
+  public BlackListURLClassLoader(String type, String name, List<URL> urls, ClassLoader parent,
+                                 String[] blacklistedPackages) {
     super(urls.toArray(new URL[urls.size()]), parent);
+    this.type = type;
     this.name = name;
     this.blacklistedPackages = (blacklistedPackages != null) ? blacklistedPackages : new String[0];
     blacklistedDirs = new String[this.blacklistedPackages.length];
@@ -68,11 +72,15 @@ public class BlackListURLClassLoader extends URLClassLoader {
   }
 
   public String toString() {
-    return String.format("BlackListURLClassLoader '%s' : %s", name, super.toString());
+    return String.format("BlackListURLClassLoader %s '%s' : %s", type, name, super.toString());
   }
 
   public String getName() {
     return name;
+  }
+
+  public String getType() {
+    return type;
   }
 
 }
