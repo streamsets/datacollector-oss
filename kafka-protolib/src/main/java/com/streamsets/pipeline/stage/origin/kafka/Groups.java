@@ -16,7 +16,6 @@ public enum Groups implements Label {
   DELIMITED("Delimited"),
   XML("XML"),
   LOG("Log")
-
   ;
 
   private final String label;
@@ -25,6 +24,7 @@ public enum Groups implements Label {
     this.label = label;
   }
 
+  @Override
   public String getLabel() {
     return this.label;
   }

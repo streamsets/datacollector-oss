@@ -3,7 +3,7 @@
  * be copied, modified, or distributed in whole or part without
  * written consent of StreamSets, Inc.
  */
-package com.streamsets.pipeline.stage.origin;
+package com.streamsets.pipeline.stage.origin.spark;
 
 import com.streamsets.pipeline.api.ComplexField;
 import com.streamsets.pipeline.api.ConfigDef;
@@ -28,32 +28,48 @@ import com.streamsets.pipeline.config.OnParseError;
 import com.streamsets.pipeline.config.OnParseErrorChooserValues;
 import com.streamsets.pipeline.configurablestage.DSourceOffsetCommitter;
 import com.streamsets.pipeline.lib.parser.log.RegExConfig;
+import com.streamsets.pipeline.stage.origin.kafka.BaseKafkaSource;
+import com.streamsets.pipeline.stage.origin.kafka.Groups;
+import com.streamsets.pipeline.stage.origin.kafka.KafkaRawSourcePreviewer;
 
 import java.util.List;
 import java.util.Map;
 
+// FOR TESTING ONLY- COPIED FROM kafka-protolib
 @StageDef(
-   version = "1.0.0",
-   label = "Spark Streaming",
-   description = "Ingests data from Spark Streaming",
-   icon = "spark-streaming.png"
+    version = "1.0.0",
+    label = "Kafka Consumer",
+    description = "Reads data from Kafka",
+    icon = "kafka.png"
 )
+@RawSource(rawSourcePreviewer = KafkaRawSourcePreviewer.class, mimeType = "*/*")
 @ConfigGroups(value = Groups.class)
 @GenerateResourceBundle
-public class SparkStreamingKafkaDSource extends DSourceOffsetCommitter {
+public class KafkaDSource extends DSourceOffsetCommitter {
 
-  // 2 info required for spark streaming to create direct stream
+   //2 info required for spark streaming to create direct stream
   public static final String METADATA_BROKER_LIST= "metadataBrokerList";
+  // For now assuming only one topic will be there
   public static final String TOPICS = "topics";
+  private BaseKafkaSource baseKafkaSource;
 
-  // required for low level consumer API
+  @ConfigDef(
+    required = false,
+    type = ConfigDef.Type.STRING,
+    defaultValue = "localhost:9092",
+    label = "Kafka brokers",
+    description = "Comma-separated list of Kafka brokers (not Zookeeper) ",
+    displayPosition = 10,
+    group = "KAFKA"
+  )
+  public String metadataBrokerList;
 
-/*  @ConfigDef(
+  @ConfigDef(
     required = true,
     type = ConfigDef.Type.STRING,
     defaultValue = "localhost:2181",
     label = "ZooKeeper Connection String",
-    description = "Comma-separated list of the Zookeeper <HOST>:<PORT> used by the Kafka brokers",
+    description = "Comma-separated ist of the Zookeeper <HOST>:<PORT> used by the Kafka brokers",
     displayPosition = 10,
     group = "KAFKA"
   )
@@ -71,37 +87,15 @@ public class SparkStreamingKafkaDSource extends DSourceOffsetCommitter {
   public String consumerGroup;
 
   @ConfigDef(
-    required = false,
-    type = ConfigDef.Type.NUMBER,
-    defaultValue = "1",
-    label = "Partitions per topic",
-    description = "For ideal parallelism, this should correspond to the no of partitions a topic has",
-    displayPosition = 30,
-    group = "KAFKA"
-  )
-  public String partitionsPerTopic;*/
-
-  @ConfigDef(
-    required = true,
-    type = ConfigDef.Type.STRING,
-    defaultValue = "localhost:2181",
-    label = "Kafka brokers",
-    description = "Comma-separated list of Kafka brokers (not Zookeeper) ",
-    displayPosition = 10,
-    group = "SPARKSTREAMING_KAFKA"
-  )
-  public String metadataBrokerList;
-
-  @ConfigDef(
     required = true,
     type = ConfigDef.Type.STRING,
     defaultValue = "topicName",
-    label = "List of topics",
-    description = "Comma-separated list of topic names",
+    label = "Topic",
+    description = "",
     displayPosition = 30,
-    group = "SPARKSTREAMING_KAFKA"
+    group = "KAFKA"
   )
-  public String topics;
+  public String topic;
 
   @ConfigDef(
     required = true,
@@ -109,7 +103,7 @@ public class SparkStreamingKafkaDSource extends DSourceOffsetCommitter {
     label = "Data Format",
     description = "",
     displayPosition = 40,
-    group = "SPARKSTREAMING_KAFKA"
+    group = "KAFKA"
   )
   @ValueChooser(DataFormatChooserValues.class)
   public DataFormat dataFormat;
@@ -120,7 +114,7 @@ public class SparkStreamingKafkaDSource extends DSourceOffsetCommitter {
       defaultValue = "UTF-8",
       label = "Messages Charset",
       displayPosition = 42,
-      group = "SPARKSTREAMING_KAFKA"
+      group = "KAFKA"
   )
   @ValueChooser(CharsetChooserValues.class)
   public String charset;
@@ -132,22 +126,46 @@ public class SparkStreamingKafkaDSource extends DSourceOffsetCommitter {
       label = "Produce Single Record",
       description = "Generates a single record for multiple objects within a message",
       displayPosition = 45,
-      group = "SPARKSTREAMING_KAFKA"
+      group = "KAFKA"
   )
   public boolean produceSingleRecordPerMessage;
 
   @ConfigDef(
-    required = false,
+    required = true,
+    type = ConfigDef.Type.NUMBER,
+    defaultValue = "1000",
+    label = "Max Batch Size (messages)",
+    description = "Max number of records per batch",
+    displayPosition = 50,
+    group = "KAFKA",
+    min = 1,
+    max = Integer.MAX_VALUE
+  )
+  public int maxBatchSize;
+
+  @ConfigDef(
+    required = true,
     type = ConfigDef.Type.NUMBER,
     defaultValue = "1000",
     label = "Batch Wait Time (millisecs)",
     description = "Max time to wait for data before sending a batch",
     displayPosition = 60,
-    group = "SPARKSTREAMING_KAFKA",
+    group = "KAFKA",
     min = 1,
     max = Integer.MAX_VALUE
   )
   public int maxWaitTime;
+
+  @ConfigDef(
+    required = false,
+    type = ConfigDef.Type.MAP,
+    defaultValue = "",
+    label = "Kafka Configuration",
+    description = "Additional Kafka properties to pass to the underlying Kafka consumer",
+    displayPosition = 70,
+    group = "KAFKA"
+  )
+  public Map<String, String> kafkaConsumerConfigs;
 
   @ConfigDef(
       required = true,
@@ -440,12 +458,22 @@ public class SparkStreamingKafkaDSource extends DSourceOffsetCommitter {
 
   @Override
   protected Source createSource() {
-    return new SparkStreamingKafkaSource(topics, dataFormat, charset, produceSingleRecordPerMessage,
-                           maxWaitTime, textMaxLineLen, jsonContent,
+    baseKafkaSource = new BaseKafkaSource(metadataBrokerList, zookeeperConnect, consumerGroup, topic, dataFormat, charset, produceSingleRecordPerMessage,
+                           maxBatchSize, maxWaitTime, kafkaConsumerConfigs, textMaxLineLen, jsonContent,
                            jsonMaxObjectLen, csvFileFormat, csvHeader, csvMaxObjectLen, xmlRecordElement,
                            xmlMaxObjectLen, logMode, logMaxObjectLen, retainOriginalLine, customLogFormat, regex,
       fieldPathsToGroupName, grokPatternDefinition, grokPattern, enableLog4jCustomLogFormat, log4jCustomLogFormat,
       onParseError, maxStackTraceLines);
+    return baseKafkaSource;
+  }
+
+  @Override
+  public Source getSource() {
+    if (baseKafkaSource != null) {
+      return baseKafkaSource.getSource();
+    } else {
+      return super.getSource();
+    }
   }
 
 }

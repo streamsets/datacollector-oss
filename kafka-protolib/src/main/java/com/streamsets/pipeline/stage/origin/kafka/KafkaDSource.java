@@ -43,6 +43,23 @@ import java.util.Map;
 @GenerateResourceBundle
 public class KafkaDSource extends DSourceOffsetCommitter {
 
+  //2 info required for spark streaming to create direct stream
+  public static final String METADATA_BROKER_LIST= "metadataBrokerList";
+  //For now assuming only one topic will be there
+  public static final String TOPICS = "topics";
+  private BaseKafkaSource baseKafkaSource;
+
+  @ConfigDef(
+    required = false,
+    type = ConfigDef.Type.STRING,
+    defaultValue = "localhost:9092",
+    label = "Kafka brokers",
+    description = "Comma-separated list of Kafka brokers (not Zookeeper) ",
+    displayPosition = 10,
+    group = "KAFKA"
+  )
+  public String metadataBrokerList;
+
   @ConfigDef(
     required = true,
     type = ConfigDef.Type.STRING,
@@ -437,12 +454,23 @@ public class KafkaDSource extends DSourceOffsetCommitter {
 
   @Override
   protected Source createSource() {
-    return new KafkaSource(zookeeperConnect, consumerGroup, topic, dataFormat, charset, produceSingleRecordPerMessage,
+    baseKafkaSource = new BaseKafkaSource(metadataBrokerList, zookeeperConnect, consumerGroup, topic, dataFormat, charset, produceSingleRecordPerMessage,
                            maxBatchSize, maxWaitTime, kafkaConsumerConfigs, textMaxLineLen, jsonContent,
                            jsonMaxObjectLen, csvFileFormat, csvHeader, csvMaxObjectLen, xmlRecordElement,
                            xmlMaxObjectLen, logMode, logMaxObjectLen, retainOriginalLine, customLogFormat, regex,
       fieldPathsToGroupName, grokPatternDefinition, grokPattern, enableLog4jCustomLogFormat, log4jCustomLogFormat,
       onParseError, maxStackTraceLines);
+    return baseKafkaSource;
+  }
+
+  @Override
+  public Source getSource() {
+    if (baseKafkaSource!=null) {
+      return (Source)baseKafkaSource.getSource();
+    } else {
+      return super.getSource();
+    }
+
   }
 
 }

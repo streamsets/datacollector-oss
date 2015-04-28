@@ -44,6 +44,11 @@ public interface Stage<C extends Stage.Context> {
 
     public boolean isPreview();
 
+    // For now- TESTING execution mode
+    public boolean isStandalone();
+
+    public boolean isClusterMode();
+
     public ConfigIssue createConfigIssue(String configGroup, String configName, ErrorCode errorCode,
         Object... args);
 

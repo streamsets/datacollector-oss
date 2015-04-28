@@ -2,14 +2,15 @@
  * (c) 2015 StreamSets, Inc. All rights reserved. May not be copied, modified, or distributed in whole or part without
  * written consent of StreamSets, Inc.
  */
-package com.streamsets.pipeline.stage.origin;
+package com.streamsets.pipeline.stage.origin.spark;
 
 import org.apache.spark.api.java.function.VoidFunction;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import scala.Tuple2;
+import com.streamsets.pipeline.stage.origin.kafka.MessageAndOffset;
 
+import scala.Tuple2;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -49,7 +50,8 @@ public class SparkKafkaExecutorFunction implements VoidFunction<Iterator<Tuple2<
     List<MessageAndPartition> batch = new ArrayList<>();
     while (tupleIterator.hasNext()) {
       Tuple2<byte[], byte[]> tuple = tupleIterator.next();
-      batch.add(new MessageAndPartition(tuple._1(), tuple._2()));
+      // Get offset and partition from HasOffsetRange API
+      batch.add(new MessageAndPartition(tuple._1(), tuple._2));
       LOG.debug("Got message: " + new String(tuple._1()) + " " + new String(tuple._2()));
     }
     embeddedSDC.getSource().put(batch);

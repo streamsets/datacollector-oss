@@ -3,7 +3,7 @@
  * be copied, modified, or distributed in whole or part without
  * written consent of StreamSets, Inc.
  */
-package com.streamsets.pipeline.stage.origin;
+package com.streamsets.pipeline.stage.origin.spark;
 
 
 import com.google.common.collect.ImmutableList;
@@ -16,6 +16,8 @@ import com.streamsets.pipeline.lib.DataType;
 import com.streamsets.pipeline.lib.KafkaTestUtil;
 import com.streamsets.pipeline.lib.ProducerRunnable;
 import com.streamsets.pipeline.main.EmbeddedPipelineFactory;
+import com.streamsets.pipeline.stage.origin.kafka.KafkaDSource;
+import com.streamsets.pipeline.stage.origin.spark.SparkKafkaExecutorFunction;
 import com.streamsets.pipeline.stage.origin.spark.SparkStreamingBinding;
 
 import org.apache.commons.io.FileUtils;
@@ -29,7 +31,6 @@ import java.util.Properties;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-
 
 import kafka.admin.AdminUtils;
 import kafka.javaapi.producer.Producer;
@@ -60,17 +61,8 @@ public class TestSparkStreamingKafkaSource {
 
   @Before
   public void setup() throws Exception {
-    File[] files = (new File(System.getProperty("user.dir"), "target")).listFiles(new FilenameFilter() {
-      @Override
-      public boolean accept(File dir, String name) {
-        return name.startsWith("runtime-");
-      }
-    });
-    if (files != null) {
-      for (File file : files) {
-        FileUtils.deleteQuietly(file);
-      }
-    }
+    // Remove this
+    System.setProperty("sdc.clustermode", "true");
     System.setProperty("sdc.testing-mode", "true");
     System.setProperty("spark.master", "local[2]"); // must be 2, not 1 (or function will never be called)
                                                     // not 3 (due to metric counter being jvm wide)
@@ -90,11 +82,9 @@ public class TestSparkStreamingKafkaSource {
     properties.setProperty(EmbeddedPipelineFactory.PIPELINE_USER, "admin");
     properties.setProperty(EmbeddedPipelineFactory.PIPELINE_DESCRIPTION, "not much to say");
     properties.setProperty(EmbeddedPipelineFactory.PIPELINE_TAG, "unused");
-    properties.setProperty(SparkStreamingKafkaDSource.METADATA_BROKER_LIST, metadataBrokerURI);
-    properties.setProperty(SparkStreamingKafkaDSource.TOPICS, "testProduceStringRecords");
+    properties.setProperty(KafkaDSource.METADATA_BROKER_LIST, metadataBrokerURI);
+    properties.setProperty(KafkaDSource.TOPICS, "testProduceStringRecords");
     properties.setProperty(SparkStreamingBinding.INPUT_TYPE, SparkStreamingBinding.KAFKA_INPUT_TYPE);
-   // properties.setProperty(SparkStreamingBinding.TEXT_SERVER_HOSTNAME, "localhost");
-    //properties.setProperty(SparkStreamingBinding.TEXT_SERVER_PORT, String.valueOf(textServer.getPort()));
     propertiesFile = new File(target, "sdc.properties");
     propertiesFile.delete();
     properties.store(new FileOutputStream(propertiesFile), null);
@@ -115,7 +105,7 @@ public class TestSparkStreamingKafkaSource {
   }
 
   @Test(timeout=120000)
-  public void test123() throws Exception{
+  public void testSparkStreamingKafkaSource() throws Exception{
     Thread waiter = null;
     try {
       Producer<String, String> producer = KafkaTestUtil.createProducer("localhost", port, false);

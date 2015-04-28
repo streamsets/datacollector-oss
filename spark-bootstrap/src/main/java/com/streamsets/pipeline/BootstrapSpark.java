@@ -193,7 +193,7 @@ public class BootstrapSpark {
     BootstrapSpark.initialize();
     try {
       Thread.currentThread().setContextClassLoader(sparkCL);
-      return Class.forName("com.streamsets.pipeline.stage.origin.SparkExecutorFunction", true,
+      return Class.forName("com.streamsets.pipeline.stage.origin.spark.SparkExecutorFunction", true,
         sparkCL).getMethod("execute", Properties.class, String.class, Iterator.class);
     } catch (Exception ex) {
       String msg = "Error trying to obtain SparkExecutorFunction Class: " + ex;
@@ -211,7 +211,7 @@ public class BootstrapSpark {
     BootstrapSpark.initialize();
     try {
       Thread.currentThread().setContextClassLoader(sparkCL);
-      return Class.forName("com.streamsets.pipeline.stage.origin.SparkKafkaExecutorFunction", true,
+      return Class.forName("com.streamsets.pipeline.stage.origin.spark.SparkKafkaExecutorFunction", true,
         sparkCL).getMethod("execute", Properties.class, String.class, Iterator.class);
     } catch (Exception ex) {
       String msg = "Error trying to obtain SparkKafkaExecutorFunction Class: " + ex;

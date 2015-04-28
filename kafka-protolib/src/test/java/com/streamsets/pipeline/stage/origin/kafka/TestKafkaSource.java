@@ -77,6 +77,8 @@ public class TestKafkaSource {
     servers.add(kafkaServer);
 
     producer = KafkaTestUtil.createProducer(HOST, port, true);
+    // remove this
+    System.setProperty("sdc.clustermode", "false");
   }
 
   @AfterClass
@@ -98,6 +100,7 @@ public class TestKafkaSource {
 
     SourceRunner sourceRunner = new SourceRunner.Builder(KafkaDSource.class)
       .addOutputLane("lane")
+      .addConfiguration("metadataBrokerList", "dummyhost:1000")
       .addConfiguration("topic", "testProduceStringRecords")
       .addConfiguration("consumerGroup", CONSUMER_GROUP)
       .addConfiguration("zookeeperConnect", zkConnect)
@@ -151,6 +154,7 @@ public class TestKafkaSource {
 
     SourceRunner sourceRunner = new SourceRunner.Builder(KafkaDSource.class)
       .addOutputLane("lane")
+      .addConfiguration("metadataBrokerList", "dummyhost:1000")
       .addConfiguration("topic", "testProduceStringRecordsMultiplePartitions")
       .addConfiguration("consumerGroup", CONSUMER_GROUP)
       .addConfiguration("zookeeperConnect", zkConnect)
@@ -204,6 +208,7 @@ public class TestKafkaSource {
 
     SourceRunner sourceRunner = new SourceRunner.Builder(KafkaDSource.class)
         .addOutputLane("lane")
+        .addConfiguration("metadataBrokerList", "dummyhost:1000")
         .addConfiguration("topic", "testProduceJsonRecordsMultipleObjectsSingleRecord")
       .addConfiguration("consumerGroup", CONSUMER_GROUP)
       .addConfiguration("zookeeperConnect", zkConnect)
@@ -254,6 +259,7 @@ public class TestKafkaSource {
     SourceRunner sourceRunner = new SourceRunner.Builder(KafkaDSource.class)
         .addOutputLane("lane")
         .addConfiguration("topic", "testProduceJsonRecordsMultipleObjectsMultipleRecord")
+      .addConfiguration("metadataBrokerList", "dummyhost:1000")
       .addConfiguration("consumerGroup", CONSUMER_GROUP)
       .addConfiguration("zookeeperConnect", zkConnect)
       .addConfiguration("maxBatchSize", 9)
@@ -303,6 +309,7 @@ public class TestKafkaSource {
     SourceRunner sourceRunner = new SourceRunner.Builder(KafkaDSource.class)
         .addOutputLane("lane")
         .addConfiguration("topic", "testProduceJsonRecordsArrayObjects")
+      .addConfiguration("metadataBrokerList", "dummyhost:1000")
       .addConfiguration("consumerGroup", CONSUMER_GROUP)
       .addConfiguration("zookeeperConnect", zkConnect)
       .addConfiguration("maxBatchSize", 9)
@@ -352,6 +359,7 @@ public class TestKafkaSource {
     SourceRunner sourceRunner = new SourceRunner.Builder(KafkaDSource.class)
       .addOutputLane("lane")
       .addConfiguration("topic", "testProduceXmlRecords1")
+      .addConfiguration("metadataBrokerList", "dummyhost:1000")
       .addConfiguration("consumerGroup", CONSUMER_GROUP)
       .addConfiguration("zookeeperConnect", zkConnect)
       .addConfiguration("maxBatchSize", 9)
@@ -402,6 +410,7 @@ public class TestKafkaSource {
     SourceRunner sourceRunner = new SourceRunner.Builder(KafkaDSource.class)
         .addOutputLane("lane")
         .addConfiguration("topic", "testProduceXmlRecords2")
+        .addConfiguration("metadataBrokerList", "dummyhost:1000")
         .addConfiguration("consumerGroup", CONSUMER_GROUP)
         .addConfiguration("zookeeperConnect", zkConnect)
         .addConfiguration("maxBatchSize", 9)
@@ -446,6 +455,7 @@ public class TestKafkaSource {
         .addOutputLane("lane")
         .addConfiguration("topic", "testProduceXmlRecords3")
         .addConfiguration("consumerGroup", CONSUMER_GROUP)
+        .addConfiguration("metadataBrokerList", "dummyhost:1000")
         .addConfiguration("zookeeperConnect", zkConnect)
         .addConfiguration("maxBatchSize", 9)
         .addConfiguration("maxWaitTime", 5000)
@@ -482,6 +492,7 @@ public class TestKafkaSource {
     SourceRunner sourceRunner = new SourceRunner.Builder(KafkaDSource.class)
       .addOutputLane("lane")
       .addConfiguration("topic", "testProduceCsvRecords")
+      .addConfiguration("metadataBrokerList", "dummyhost:1000")
       .addConfiguration("consumerGroup", CONSUMER_GROUP)
       .addConfiguration("zookeeperConnect", zkConnect)
       .addConfiguration("maxBatchSize", 9)
@@ -531,6 +542,7 @@ public class TestKafkaSource {
     SourceRunner sourceRunner = new SourceRunner.Builder(KafkaDSource.class)
       .addOutputLane("lane")
       .addConfiguration("topic", "testProduceLogRecords")
+      .addConfiguration("metadataBrokerList", "dummyhost:1000")
       .addConfiguration("consumerGroup", CONSUMER_GROUP)
       .addConfiguration("zookeeperConnect", zkConnect)
       .addConfiguration("maxBatchSize", 9)
@@ -603,6 +615,7 @@ public class TestKafkaSource {
     SourceRunner sourceRunner = new SourceRunner.Builder(KafkaDSource.class)
       .addOutputLane("lane")
       .addConfiguration("topic", "testProduceLogRecordsWithStackTraceSameMessage")
+      .addConfiguration("metadataBrokerList", "dummyhost:1000")
       .addConfiguration("consumerGroup", CONSUMER_GROUP)
       .addConfiguration("zookeeperConnect", zkConnect)
       .addConfiguration("maxBatchSize", 9)

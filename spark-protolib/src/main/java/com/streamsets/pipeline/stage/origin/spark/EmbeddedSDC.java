@@ -3,13 +3,14 @@
  * be copied, modified, or distributed in whole or part without
  * written consent of StreamSets, Inc.
  */
-package com.streamsets.pipeline.stage.origin;
+package com.streamsets.pipeline.stage.origin.spark;
 
 
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**
- * Created by brock on 4/20/15.
+ * Embedded SDC providing access to the source
+ *
  */
 public class EmbeddedSDC {
   private static final AtomicInteger instanceIdCounter = new AtomicInteger(0);

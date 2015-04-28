@@ -1,14 +1,14 @@
 {
   "pipelineConfig" : {
     "schemaVersion" : 1,
-    "uuid" : "eb2f4e13-4c46-463b-9ec1-afd6695d90c9",
-    "description" : "admin",
+    "uuid" : "1059d809-5ac6-4d5b-875e-e1478f5cc5f0",
+    "description" : "",
     "configuration" : [ {
       "name" : "deliveryGuarantee",
       "value" : "AT_LEAST_ONCE"
     }, {
       "name" : "badRecordsHandling",
-      "value" : "streamsets-datacollector-spark-protolib::com_streamsets_pipeline_stage_origin_NullDTarget::1.0.0"
+      "value" : "streamsets-datacollector-spark-protolib::com_streamsets_pipeline_stage_origin_spark_NullDTarget::1.0.0"
     }, {
       "name" : "constants",
       "value" : [ ]
@@ -27,16 +27,22 @@
       }
     },
     "stages" : [ {
-      "instanceName" : "com_streamsets_pipeline_stage_origin_SparkStreamingKafkaDSource1429750919994",
+      "instanceName" : "com_streamsets_pipeline_stage_origin_spark_KafkaDSource1430202720669",
       "library" : "streamsets-datacollector-spark-protolib",
-      "stageName" : "com_streamsets_pipeline_stage_origin_SparkStreamingKafkaDSource",
+      "stageName" : "com_streamsets_pipeline_stage_origin_spark_KafkaDSource",
       "stageVersion" : "1.0.0",
       "configuration" : [ {
         "name" : "metadataBrokerList",
         "value" : "localhost:2181"
       }, {
-        "name" : "topics",
-        "value" : "testProduceSingleRecord"
+        "name" : "zookeeperConnect",
+        "value" : "localhost:2181"
+      }, {
+        "name" : "consumerGroup",
+        "value" : "streamsetsDataCollector"
+      }, {
+        "name" : "topic",
+        "value" : "topicName"
       }, {
         "name" : "dataFormat",
         "value" : "TEXT"
@@ -47,8 +53,14 @@
         "name" : "produceSingleRecordPerMessage",
         "value" : false
       }, {
+        "name" : "maxBatchSize",
+        "value" : 1000
+      }, {
         "name" : "maxWaitTime",
-        "value" : 600000
+        "value" : 1000
+      }, {
+        "name" : "kafkaConsumerConfigs",
+        "value" : [ ]
       }, {
         "name" : "textMaxLineLen",
         "value" : 1024
@@ -117,42 +129,59 @@
         "value" : "TO_ERROR"
       } ],
       "uiInfo" : {
-        "label" : "Spark Streaming 1",
+        "label" : "Kafka Consumer 1",
         "description" : "",
-        "xPos" : 67,
-        "yPos" : 81,
+        "xPos" : 60,
+        "yPos" : 50,
         "stageType" : "SOURCE",
-        "icon" : "/rest/v1/definitions/stages/icon?name=com_streamsets_pipeline_stage_origin_SparkStreamingKafkaDSource&library=streamsets-datacollector-spark-protolib&version=1.0.0"
+        "rawSource" : {
+          "configuration" : [ {
+            "name" : "brokerHost",
+            "value" : "localhost"
+          }, {
+            "name" : "brokerPort",
+            "value" : 9092
+          }, {
+            "name" : "topic",
+            "value" : "myTopic"
+          }, {
+            "name" : "partition"
+          }, {
+            "name" : "maxWaitTime",
+            "value" : 1000
+          } ]
+        },
+        "icon" : "/rest/v1/definitions/stages/icon?name=com_streamsets_pipeline_stage_origin_spark_KafkaDSource&library=streamsets-datacollector-spark-protolib&version=1.0.0"
       },
       "inputLanes" : [ ],
-      "outputLanes" : [ "com_streamsets_pipeline_stage_origin_SparkStreamingKafkaDSource1429750919994OutputLane14297509199940" ]
+      "outputLanes" : [ "com_streamsets_pipeline_stage_origin_spark_KafkaDSource1430202720669OutputLane14302027206690" ]
     }, {
-      "instanceName" : "com_streamsets_pipeline_stage_origin_NullDTarget1429750952942",
+      "instanceName" : "com_streamsets_pipeline_stage_origin_spark_NullDTarget1430202766893",
       "library" : "streamsets-datacollector-spark-protolib",
-      "stageName" : "com_streamsets_pipeline_stage_origin_NullDTarget",
+      "stageName" : "com_streamsets_pipeline_stage_origin_spark_NullDTarget",
       "stageVersion" : "1.0.0",
       "configuration" : [ ],
       "uiInfo" : {
         "label" : "Trash 1",
         "description" : "",
-        "xPos" : 293,
-        "yPos" : 78,
+        "xPos" : 280,
+        "yPos" : 50,
         "stageType" : "TARGET",
         "icon" : "/assets/stage/defaultTarget.svg"
       },
-      "inputLanes" : [ "com_streamsets_pipeline_stage_origin_SparkStreamingKafkaDSource1429750919994OutputLane14297509199940" ],
+      "inputLanes" : [ "com_streamsets_pipeline_stage_origin_spark_KafkaDSource1430202720669OutputLane14302027206690" ],
       "outputLanes" : [ ]
     } ],
     "errorStage" : {
-      "instanceName" : "com_streamsets_pipeline_stage_origin_NullDTarget1429751181023",
+      "instanceName" : "com_streamsets_pipeline_stage_origin_spark_NullDTarget1430202778261",
       "library" : "streamsets-datacollector-spark-protolib",
-      "stageName" : "com_streamsets_pipeline_stage_origin_NullDTarget",
+      "stageName" : "com_streamsets_pipeline_stage_origin_spark_NullDTarget",
       "stageVersion" : "1.0.0",
       "configuration" : [ ],
       "uiInfo" : {
         "label" : "Bad Records - Trash",
         "description" : "",
-        "xPos" : 513,
+        "xPos" : 500,
         "yPos" : 50,
         "stageType" : "TARGET",
         "icon" : "/assets/stage/defaultTarget.svg"
@@ -162,26 +191,26 @@
     },
     "info" : {
       "name" : "admin",
-      "description" : "admin",
-      "created" : 1429750887400,
-      "lastModified" : 1429751182052,
+      "description" : "",
+      "created" : 1430202692377,
+      "lastModified" : 1430202779290,
       "creator" : "admin",
       "lastModifier" : "admin",
       "lastRev" : "0",
-      "uuid" : "eb2f4e13-4c46-463b-9ec1-afd6695d90c9",
+      "uuid" : "1059d809-5ac6-4d5b-875e-e1478f5cc5f0",
       "valid" : true
     },
     "issues" : {
+      "issueCount" : 0,
       "pipelineIssues" : [ ],
-      "stageIssues" : { },
-      "issueCount" : 0
+      "stageIssues" : { }
     },
-    "previewable" : true,
-    "valid" : true
+    "valid" : true,
+    "previewable" : true
   },
   "pipelineRules" : {
     "metricsRuleDefinitions" : [ {
-      "id" : "adminbadRecords1429750887655",
+      "id" : "adminbadRecords1430202692631",
       "alertText" : "High incidence of Bad Records",
       "metricId" : "pipeline.batchErrorRecords.meter",
       "metricType" : "METER",
@@ -191,7 +220,7 @@
       "enabled" : false,
       "valid" : true
     }, {
-      "id" : "adminstageErrors1429750887655",
+      "id" : "adminstageErrors1430202692631",
       "alertText" : "High incidence of Error Messages",
       "metricId" : "pipeline.batchErrorMessages.meter",
       "metricType" : "METER",
@@ -201,7 +230,7 @@
       "enabled" : false,
       "valid" : true
     }, {
-      "id" : "adminidleGauge1429750887655",
+      "id" : "adminidleGauge1430202692631",
       "alertText" : "Pipeline is Idle",
       "metricId" : "RuntimeStatsGauge.gauge",
       "metricType" : "GAUGE",
@@ -211,7 +240,7 @@
       "enabled" : false,
       "valid" : true
     }, {
-      "id" : "adminbatchTime1429750887655",
+      "id" : "adminbatchTime1430202692631",
       "alertText" : "Batch taking more time to process",
       "metricId" : "RuntimeStatsGauge.gauge",
       "metricType" : "GAUGE",
@@ -221,7 +250,7 @@
       "enabled" : false,
       "valid" : true
     }, {
-      "id" : "adminmemoryLimit1429750887655",
+      "id" : "adminmemoryLimit1430202692631",
       "alertText" : "Memory limit for pipeline exceeded",
       "metricId" : "pipeline.memoryConsumed.counter",
       "metricType" : "COUNTER",
@@ -233,7 +262,7 @@
     } ],
     "dataRuleDefinitions" : [ ],
     "emailIds" : [ ],
-    "uuid" : "9cf96921-ca06-4605-81e4-d4c247b76eea",
+    "uuid" : "1a49a149-00d8-4a57-8123-98d3654461ed",
     "ruleIssues" : [ ]
   }
 }

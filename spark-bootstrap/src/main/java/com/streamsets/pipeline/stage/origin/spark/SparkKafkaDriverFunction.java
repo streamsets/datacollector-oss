@@ -6,10 +6,7 @@
 package com.streamsets.pipeline.stage.origin.spark;
 
 import org.apache.spark.api.java.JavaPairRDD;
-import org.apache.spark.api.java.JavaRDD;
 import org.apache.spark.api.java.function.Function;
-import org.apache.spark.streaming.kafka.HasOffsetRanges;
-import org.apache.spark.streaming.kafka.OffsetRange;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -36,6 +33,4 @@ public class SparkKafkaDriverFunction implements Function<JavaPairRDD<byte[], by
     byteArrayJavaRDD.foreachPartition(new BootstrapSparkKafkaFunction(properties, pipelineJson));
     return null;
   }
-
-
 }

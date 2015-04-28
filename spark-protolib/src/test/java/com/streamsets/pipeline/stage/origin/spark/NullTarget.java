@@ -3,14 +3,14 @@
  * be copied, modified, or distributed in whole or part without
  * written consent of StreamSets, Inc.
  */
-package com.streamsets.pipeline.stage.origin;
+package com.streamsets.pipeline.stage.origin.spark;
 
 import com.streamsets.pipeline.api.Batch;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.base.BaseTarget;
 
 import java.util.Iterator;
-//TODO - Remove from here
+//TODO - Only for testing, Remove from here
 public class NullTarget extends BaseTarget {
 
   @Override

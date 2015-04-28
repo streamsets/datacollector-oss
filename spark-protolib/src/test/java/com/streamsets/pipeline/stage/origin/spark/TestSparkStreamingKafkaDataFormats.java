@@ -3,7 +3,7 @@
  * be copied, modified, or distributed in whole or part without
  * written consent of StreamSets, Inc.
  */
-package com.streamsets.pipeline.stage.origin;
+package com.streamsets.pipeline.stage.origin.spark;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -11,6 +11,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import org.junit.Assert;
+import org.junit.BeforeClass;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,28 +22,39 @@ import com.streamsets.pipeline.config.CsvHeader;
 import com.streamsets.pipeline.config.CsvMode;
 import com.streamsets.pipeline.config.DataFormat;
 import com.streamsets.pipeline.config.JsonMode;
-import com.streamsets.pipeline.configurablestage.DStage;
+import com.streamsets.pipeline.configurablestage.DSource;
 import com.streamsets.pipeline.lib.DataType;
 import com.streamsets.pipeline.lib.KafkaTestUtil;
 import com.streamsets.pipeline.lib.json.StreamingJsonParser;
 import com.streamsets.pipeline.sdk.SourceRunner;
 import com.streamsets.pipeline.sdk.StageRunner;
+import com.streamsets.pipeline.stage.origin.kafka.KafkaDSource;
+import com.streamsets.pipeline.stage.origin.spark.MessageAndPartition;
+import com.streamsets.pipeline.stage.origin.spark.SparkStreamingKafkaSource;
 
 
 public class TestSparkStreamingKafkaDataFormats {
   private static final Logger LOG = LoggerFactory.getLogger(TestSparkStreamingKafkaDataFormats.class);
 
+  @BeforeClass
+  public static void setup() {
+    System.setProperty("sdc.clustermode", "true");
+  }
+
   @Test
   public void testProduceStringRecords() throws Exception {
-
-    SourceRunner sourceRunner = new SourceRunner.Builder(SparkStreamingKafkaDSource.class)
+    SourceRunner sourceRunner = new SourceRunner.Builder(KafkaDSource.class)
       .addOutputLane("lane")
       .addConfiguration("metadataBrokerList", "dummyhost:1281")
-      .addConfiguration("topics", "testProduceStringRecords")
+      .addConfiguration("zookeeperConnect", null)
+      .addConfiguration("consumerGroup", null)
+      .addConfiguration("topic", "testProduceStringRecords")
       .addConfiguration("maxWaitTime", 10000)
       .addConfiguration("dataFormat", DataFormat.TEXT)
       .addConfiguration("charset", "UTF-8")
       .addConfiguration("textMaxLineLen", 4096)
+      .addConfiguration("maxBatchSize",1000)
+      .addConfiguration("kafkaConsumerConfigs", null)
       .addConfiguration("produceSingleRecordPerMessage", false)
       .addConfiguration("regex", null)
       .addConfiguration("grokPatternDefinition", null)
@@ -77,10 +89,12 @@ public class TestSparkStreamingKafkaDataFormats {
         Assert.assertEquals(new String(list.get(i).getPayload()), records.get(i).get("/text").getValueAsString());
       }
 
-    } finally {
-      if (sourceRunner != null) {
-        sourceRunner.runDestroy();
-      }
+    if (sourceRunner != null) {
+      sourceRunner.runDestroy();
+    }}
+    finally {
+
+
       if (th != null) {
         th.interrupt();
       }
@@ -89,10 +103,14 @@ public class TestSparkStreamingKafkaDataFormats {
 
   @Test
   public void testProduceJsonRecordsMultipleObjectsMultipleRecord() throws StageException, IOException {
-    SourceRunner sourceRunner = new SourceRunner.Builder(SparkStreamingKafkaDSource.class)
+    SourceRunner sourceRunner = new SourceRunner.Builder(KafkaDSource.class)
       .addOutputLane("lane")
       .addConfiguration("metadataBrokerList", "dummyhost:1281")
-      .addConfiguration("topics", "testProduceStringRecords")
+      .addConfiguration("zookeeperConnect", null)
+      .addConfiguration("consumerGroup", null)
+      .addConfiguration("maxBatchSize",1000)
+      .addConfiguration("kafkaConsumerConfigs", null)
+      .addConfiguration("topic", "testProduceStringRecords")
       .addConfiguration("maxWaitTime", 10000)
       .addConfiguration("dataFormat", DataFormat.JSON)
       .addConfiguration("jsonContent", JsonMode.MULTIPLE_OBJECTS)
@@ -136,10 +154,14 @@ public class TestSparkStreamingKafkaDataFormats {
 
   @Test
   public void testProduceJsonRecordsArrayObjectsMultipleRecord() throws StageException, IOException {
-    SourceRunner sourceRunner = new SourceRunner.Builder(SparkStreamingKafkaDSource.class)
+    SourceRunner sourceRunner = new SourceRunner.Builder(KafkaDSource.class)
       .addOutputLane("lane")
       .addConfiguration("metadataBrokerList", "dummyhost:1281")
-      .addConfiguration("topics", "testProduceStringRecords")
+      .addConfiguration("zookeeperConnect", null)
+      .addConfiguration("consumerGroup", null)
+      .addConfiguration("maxBatchSize",1000)
+      .addConfiguration("kafkaConsumerConfigs", null)
+      .addConfiguration("topic", "testProduceStringRecords")
       .addConfiguration("maxWaitTime", 10000)
       .addConfiguration("dataFormat", DataFormat.JSON)
       .addConfiguration("jsonContent", JsonMode.ARRAY_OBJECTS)
@@ -182,10 +204,14 @@ public class TestSparkStreamingKafkaDataFormats {
 
   @Test
   public void testProduceJsonRecordsArrayObjectsSingleRecord() throws StageException, IOException {
-    SourceRunner sourceRunner = new SourceRunner.Builder(SparkStreamingKafkaDSource.class)
+    SourceRunner sourceRunner = new SourceRunner.Builder(KafkaDSource.class)
       .addOutputLane("lane")
       .addConfiguration("metadataBrokerList", "dummyhost:1281")
-      .addConfiguration("topics", "testProduceStringRecords")
+       .addConfiguration("zookeeperConnect", null)
+      .addConfiguration("consumerGroup", null)
+      .addConfiguration("maxBatchSize",1000)
+      .addConfiguration("kafkaConsumerConfigs", null)
+      .addConfiguration("topic", "testProduceStringRecords")
       .addConfiguration("maxWaitTime", 10000)
       .addConfiguration("dataFormat", DataFormat.JSON)
       .addConfiguration("jsonContent", JsonMode.ARRAY_OBJECTS)
@@ -228,10 +254,14 @@ public class TestSparkStreamingKafkaDataFormats {
 
   @Test
   public void testProduceXmlRecordsNoRecordElement() throws Exception {
-    SourceRunner sourceRunner = new SourceRunner.Builder(SparkStreamingKafkaDSource.class)
+    SourceRunner sourceRunner = new SourceRunner.Builder(KafkaDSource.class)
       .addOutputLane("lane")
       .addConfiguration("metadataBrokerList", "dummyhost:1281")
-      .addConfiguration("topics", "testProduceStringRecords")
+      .addConfiguration("zookeeperConnect", null)
+      .addConfiguration("consumerGroup", null)
+      .addConfiguration("maxBatchSize",1000)
+      .addConfiguration("kafkaConsumerConfigs", null)
+      .addConfiguration("topic", "testProduceStringRecords")
       .addConfiguration("maxWaitTime", 10000)
       .addConfiguration("dataFormat", DataFormat.XML)
       .addConfiguration("charset", "UTF-8")
@@ -276,10 +306,14 @@ public class TestSparkStreamingKafkaDataFormats {
 
   @Test
   public void testProduceXmlRecordsWithRecordElement() throws Exception {
-    SourceRunner sourceRunner = new SourceRunner.Builder(SparkStreamingKafkaDSource.class)
+    SourceRunner sourceRunner = new SourceRunner.Builder(KafkaDSource.class)
       .addOutputLane("lane")
       .addConfiguration("metadataBrokerList", "dummyhost:1281")
-      .addConfiguration("topics", "testProduceStringRecords")
+      .addConfiguration("zookeeperConnect", null)
+      .addConfiguration("consumerGroup", null)
+      .addConfiguration("maxBatchSize",1000)
+      .addConfiguration("kafkaConsumerConfigs", null)
+      .addConfiguration("topic", "testProduceStringRecords")
       .addConfiguration("maxWaitTime", 10000)
       .addConfiguration("dataFormat", DataFormat.XML)
       .addConfiguration("charset", "UTF-8")
@@ -323,10 +357,16 @@ public class TestSparkStreamingKafkaDataFormats {
 
   @Test
   public void testProduceCsvRecords() throws Exception {
-    SourceRunner sourceRunner = new SourceRunner.Builder(SparkStreamingKafkaDSource.class)
+    SourceRunner sourceRunner = new SourceRunner.Builder(KafkaDSource.class)
       .addOutputLane("lane")
       .addConfiguration("metadataBrokerList", "dummyhost:1281")
-      .addConfiguration("topics", "testProduceStringRecords")
+      .addConfiguration("zookeeperConnect", null)
+      .addConfiguration("consumerGroup", null)
+      .addConfiguration("maxBatchSize",1000)
+      .addConfiguration("kafkaConsumerConfigs", null)
+      .addConfiguration("topic", "testProduceStringRecords")
+      .addConfiguration("consumerGroup", null)
+      .addConfiguration("zookeeperConnect", "dummy")
       .addConfiguration("maxWaitTime", 10000)
       .addConfiguration("dataFormat", DataFormat.DELIMITED)
       .addConfiguration("charset", "UTF-8")
@@ -375,7 +415,7 @@ public class TestSparkStreamingKafkaDataFormats {
       public void run() {
         try {
           SparkStreamingKafkaSource source =
-            ((SparkStreamingKafkaSource) ((DStage) sourceRunner.getStage()).getStage());
+            ((SparkStreamingKafkaSource) ((DSource) sourceRunner.getStage()).getSource());
           source.put(list);
         } catch (IllegalStateException ex) {
           // ignored

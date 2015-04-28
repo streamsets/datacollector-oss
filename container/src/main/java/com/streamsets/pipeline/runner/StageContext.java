@@ -286,6 +286,7 @@ public class StageContext implements Source.Context, Target.Context, Processor.C
 
   //ElProvider interface implementation
 
+  @Override
   public void parseEL(String el) throws ELEvalException {
     ELEvaluator.parseEL(el);
   }
@@ -303,5 +304,24 @@ public class StageContext implements Source.Context, Target.Context, Processor.C
   @Override
   public ELEval createELEval(String configName, Class<?>... elDefClasses) {
     return new ELEvaluator(configName, constants, elDefClasses);
+  }
+
+  @Override
+  public boolean isStandalone() {
+    if (Boolean.getBoolean("sdc.clustermode")) {
+      return false;
+    } else {
+      return true;
+    }
+  }
+
+  @Override
+  public boolean isClusterMode() {
+    // TODO - Only for testing, Remove this once the execution modes are defined
+    if (Boolean.getBoolean("sdc.clustermode")) {
+      return true;
+    } else {
+      return false;
+    }
   }
 }

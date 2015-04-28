@@ -3,24 +3,15 @@
  * be copied, modified, or distributed in whole or part without
  * written consent of StreamSets, Inc.
  */
-package com.streamsets.pipeline.stage.origin;
+package com.streamsets.pipeline.stage.origin.spark;
 
 import com.google.common.base.Throwables;
-import com.streamsets.pipeline.api.BatchMaker;
-import com.streamsets.pipeline.api.Field;
-import com.streamsets.pipeline.api.GenerateResourceBundle;
-import com.streamsets.pipeline.api.OffsetCommitter;
-import com.streamsets.pipeline.api.Record;
-import com.streamsets.pipeline.api.StageDef;
 import com.streamsets.pipeline.api.StageException;
-import com.streamsets.pipeline.api.base.BaseSource;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.concurrent.SynchronousQueue;
 import java.util.concurrent.TimeUnit;
 
@@ -29,20 +20,10 @@ import java.util.concurrent.TimeUnit;
  * The pipeline thread will consume from this queue and do the processing of the batch
  *
  */
-public abstract class SparkStreamingSource extends BaseSource implements OffsetCommitter {
-  private static final Logger LOG = LoggerFactory.getLogger(SparkStreamingSource.class);
+public class SparkStreamingQueue {
+  private static final Logger LOG = LoggerFactory.getLogger(SparkStreamingQueue.class);
   private final SynchronousQueue<Object> queue = new SynchronousQueue<>();
 
-  @Override
-  public void destroy() {
-  }
-
-  @Override
-  public void init() throws StageException {
-    super.init();
-  }
-
-  @Override
   public void commit(String offset) throws StageException {
     try {
       LOG.debug("In commit hook ");
@@ -75,7 +56,5 @@ public abstract class SparkStreamingSource extends BaseSource implements OffsetC
   protected void putElement(Object object) throws InterruptedException {
     queue.put(object);
   }
-
-  protected abstract long getRecordsProduced();
 
 }
