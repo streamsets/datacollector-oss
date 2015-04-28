@@ -61,7 +61,7 @@ public class TestKafkaSource {
   private static final int MULTIPLE_PARTITIONS = 5;
   private static final int REPLICATION_FACTOR = 1;
   private static final String CONSUMER_GROUP = "SDC";
-  private static final int TIME_OUT = 2000;
+  private static final int TIME_OUT = 5000;
 
   @BeforeClass
   public static void setUp() {

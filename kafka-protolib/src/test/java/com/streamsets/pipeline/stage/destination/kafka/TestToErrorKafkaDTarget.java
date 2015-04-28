@@ -43,7 +43,7 @@ public class TestToErrorKafkaDTarget {
   private static final int PARTITIONS = 1;
   private static final int REPLICATION_FACTOR = 1;
   private static final String TOPIC1 = "test1";
-  private static final int TIME_OUT = 1000;
+  private static final int TIME_OUT = 5000;
 
   @BeforeClass
   public static void setUp() {

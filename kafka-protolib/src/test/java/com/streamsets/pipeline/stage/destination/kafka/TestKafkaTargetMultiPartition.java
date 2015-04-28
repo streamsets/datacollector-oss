@@ -69,7 +69,7 @@ public class TestKafkaTargetMultiPartition {
   private static final String TOPIC9 = "test9";
   private static final String TOPIC10 = "test10";
   private static final String TOPIC11 = "test11";
-  private static final int TIME_OUT = 1000;
+  private static final int TIME_OUT = 5000;
 
   @BeforeClass
   public static void setUp() {

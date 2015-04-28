@@ -84,7 +84,7 @@ public class TestKafkaTargetSinglePartition {
   private static final String TOPIC14 = "test14";
   private static final String TOPIC15 = "test15";
   private static final String TOPIC16 = "test16";
-  private static final int TIME_OUT = 1000;
+  private static final int TIME_OUT = 5000;
 
   @BeforeClass
   public static void setUp() {

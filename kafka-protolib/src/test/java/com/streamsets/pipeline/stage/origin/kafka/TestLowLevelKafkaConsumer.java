@@ -42,7 +42,7 @@ public class TestLowLevelKafkaConsumer {
   private static final int PARTITIONS = 1;
   private static final int REPLICATION_FACTOR = 1;
   private static final String TOPIC = "test";
-  private static final int TIME_OUT = 2000;
+  private static final int TIME_OUT = 5000;
 
   @Before
   public void setUp() {
