@@ -19,7 +19,6 @@ import com.streamsets.pipeline.configurablestage.DTarget;
     description = "Discards records"
 )
 @HideConfig(requiredFields = true, onErrorRecord = true)
-@ErrorStage(label = "Discard")
 @GenerateResourceBundle
 public class NullDTarget extends DTarget {
 

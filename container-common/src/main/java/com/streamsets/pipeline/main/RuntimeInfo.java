@@ -23,6 +23,7 @@ public class RuntimeInfo {
   public static final String DATA_DIR = ".data.dir";
   public static final String LOG_DIR = ".log.dir";
   public static final String STATIC_WEB_DIR = ".static-web.dir";
+  public static final String TRANSIENT_ENVIRONMENT = "sdc.transient-env";
 
   public static final String LOG4J_CONFIGURATION_URL_ATTR = "log4j.configuration.url";
   private static final String LOG4J_PROPERTIES = "-log4j.properties";
@@ -39,7 +40,6 @@ public class RuntimeInfo {
   private UUID randomUUID;
 
   public RuntimeInfo(String propertyPrefix, MetricRegistry metrics, List<? extends ClassLoader> stageLibraryClassLoaders) {
-  public RuntimeInfo(MetricRegistry metrics, List<? extends ClassLoader> stageLibraryClassLoaders) {
     this.metrics = metrics;
     if(stageLibraryClassLoaders != null) {
       this.stageLibraryClassLoaders = ImmutableList.copyOf(stageLibraryClassLoaders);
