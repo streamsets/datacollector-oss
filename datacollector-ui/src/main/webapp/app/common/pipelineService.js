@@ -650,7 +650,7 @@ angular.module('dataCollectorApp.common')
           if(!nonListAndMap && value.path) {
             fieldPaths.push(value.path);
           }
-          self.getFieldPaths(value, fieldPaths);
+          self.getFieldPaths(value, fieldPaths, nonListAndMap);
         } else if(value.path) {
           fieldPaths.push(value.path);
         }

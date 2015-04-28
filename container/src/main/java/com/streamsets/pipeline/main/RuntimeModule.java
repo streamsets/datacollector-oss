@@ -24,6 +24,8 @@ public class RuntimeModule {
   public static final String DATA_COLLECTOR_ID = "sdc.id";
   public static final String DATA_COLLECTOR_BASE_HTTP_URL = "sdc.base.http.url";
   public static final String SDC_PROPERTY_PREFIX = "sdc";
+  private static final String SDC_EXECUTION_MODE_KEY = "sdc.execution.mode";
+  private static final String SDC_EXECUTION_MODE_DEFAULT = "standalone";
 
   private static List<ClassLoader> stageLibraryClassLoaders = ImmutableList.of(RuntimeModule.class.getClassLoader());
 
@@ -51,6 +53,7 @@ public class RuntimeModule {
         conf.load(new FileReader(configFile));
         runtimeInfo.setId(conf.get(DATA_COLLECTOR_ID, runtimeInfo.getId()));
         runtimeInfo.setBaseHttpUrl(conf.get(DATA_COLLECTOR_BASE_HTTP_URL, runtimeInfo.getBaseHttpUrl()));
+        runtimeInfo.setExecutionMode(conf.get(SDC_EXECUTION_MODE_KEY, SDC_EXECUTION_MODE_DEFAULT));
       } catch (IOException ex) {
         throw new RuntimeException(ex);
       }

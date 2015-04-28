@@ -6,6 +6,7 @@
 package com.streamsets.pipeline.restapi;
 
 import com.streamsets.pipeline.api.impl.Utils;
+import com.streamsets.pipeline.main.RuntimeInfo;
 import com.streamsets.pipeline.restapi.bean.BeanHelper;
 import com.streamsets.pipeline.restapi.bean.PipelineConfigurationJson;
 import com.streamsets.pipeline.restapi.bean.RuleDefinitionsJson;
@@ -41,17 +42,20 @@ import java.util.Map;
 @Path("/v1/pipeline-library")
 @DenyAll
 public class PipelineStoreResource {
+  private final RuntimeInfo runtimeInfo;
   private final PipelineStoreTask store;
   private final StageLibraryTask stageLibrary;
   private final URI uri;
   private final String user;
 
   @Inject
-  public PipelineStoreResource(URI uri, Principal user, StageLibraryTask stageLibrary, PipelineStoreTask store) {
+  public PipelineStoreResource(URI uri, Principal user, StageLibraryTask stageLibrary, PipelineStoreTask store,
+                               RuntimeInfo runtimeInfo) {
     this.uri = uri;
     this.user = user.getName();
     this.stageLibrary = stageLibrary;
     this.store = store;
+    this.runtimeInfo = runtimeInfo;
   }
 
   @GET
@@ -110,6 +114,8 @@ public class PipelineStoreResource {
       @PathParam("name") String name,
       @QueryParam("description") @DefaultValue("") String description)
       throws PipelineStoreException, URISyntaxException {
+    Utils.checkState(runtimeInfo.getExecutionMode() != RuntimeInfo.ExecutionMode.SLAVE,
+      "This operation is not supported in SLAVE mode");
     com.streamsets.pipeline.config.PipelineConfiguration pipeline = store.create(name, description, user);
     PipelineConfigurationValidator validator = new PipelineConfigurationValidator(stageLibrary, name, pipeline);
     validator.validate();
@@ -125,6 +131,8 @@ public class PipelineStoreResource {
   public Response delete(
       @PathParam("name") String name)
       throws PipelineStoreException, URISyntaxException {
+    Utils.checkState(runtimeInfo.getExecutionMode() != RuntimeInfo.ExecutionMode.SLAVE,
+      "This operation is not supported in SLAVE mode");
     store.delete(name);
     store.deleteRules(name);
     return Response.ok().build();
@@ -141,6 +149,9 @@ public class PipelineStoreResource {
       @QueryParam("tagDescription") String tagDescription,
       PipelineConfigurationJson pipeline)
       throws PipelineStoreException, URISyntaxException {
+    Utils.checkState(runtimeInfo.getExecutionMode() != RuntimeInfo.ExecutionMode.SLAVE,
+      "This operation is not supported in SLAVE mode");
+
     com.streamsets.pipeline.config.PipelineConfiguration pipelineConfig = BeanHelper.unwrapPipelineConfiguration(
       pipeline);
     PipelineConfigurationValidator validator = new PipelineConfigurationValidator(stageLibrary, name, pipelineConfig);

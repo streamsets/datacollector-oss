@@ -67,6 +67,7 @@ angular.module('dataCollectorApp')
       title : defaultTitle,
       userName: 'Account',
       authenticationType: 'none',
+      sdcExecutionMode: pipelineConstant.STANDALONE,
       active: {
         home: 'active'
       },
@@ -175,6 +176,7 @@ angular.module('dataCollectorApp')
 
     configuration.init().then(function() {
       $rootScope.common.authenticationType = configuration.getAuthenticationType();
+      $rootScope.common.sdcExecutionMode = configuration.getSDCExecutionMode();
       if(configuration.isAnalyticsEnabled()) {
         Analytics.createAnalyticsScriptTag();
       }

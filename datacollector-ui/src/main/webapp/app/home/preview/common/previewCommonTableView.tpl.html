@@ -1,11 +1,12 @@
 <table class="table preview-tableview-table" ng-hide="showLoading" ng-controller="PreviewCommonTableViewController">
   <thead>
   <tr>
-    <th ng-if="inputFieldPaths.length" colspan="{{inputFieldPaths.length}}">
+    <th ng-if="inputFieldPaths.length || detailPaneConfig.uiInfo.stageType === pipelineConstant.PROCESSOR_STAGE_TYPE"
+        colspan="{{inputFieldPaths.length ? inputFieldPaths.length : 1}}">
       <span translate="home.previewPane.inputData">Input Data</span>
     </th>
 
-    <th ng-if="outputFieldPaths.length" colspan="{{outputFieldPaths.length}}">
+    <th colspan="{{outputFieldPaths.length ? outputFieldPaths.length : 1}}">
       <span translate="home.previewPane.outputData">Output Data</span>
     </th>
 

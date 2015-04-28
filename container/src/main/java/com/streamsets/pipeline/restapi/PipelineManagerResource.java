@@ -7,6 +7,8 @@ package com.streamsets.pipeline.restapi;
 
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.prodmanager.PipelineManager;
+import com.streamsets.pipeline.api.impl.Utils;
+import com.streamsets.pipeline.main.RuntimeInfo;
 import com.streamsets.pipeline.prodmanager.PipelineManagerException;
 import com.streamsets.pipeline.prodmanager.PipelineState;
 import com.streamsets.pipeline.prodmanager.State;
@@ -37,11 +39,12 @@ import java.util.Collections;
 public class PipelineManagerResource {
 
   private final PipelineManager pipelineManager;
+  private final RuntimeInfo runtimeInfo;
 
   @Inject
-  public PipelineManagerResource(PipelineManager pipelineManager) {
+  public PipelineManagerResource(PipelineManager pipelineManager, RuntimeInfo runtimeInfo) {
     this.pipelineManager = pipelineManager;
-
+    this.runtimeInfo = runtimeInfo;
   }
 
   @Path("/status")
@@ -61,6 +64,8 @@ public class PipelineManagerResource {
       @QueryParam("name") String name,
       @QueryParam("rev") @DefaultValue("0") String rev)
       throws PipelineStoreException, PipelineRuntimeException, StageException, PipelineManagerException {
+    Utils.checkState(runtimeInfo.getExecutionMode() != RuntimeInfo.ExecutionMode.SLAVE,
+      "This operation is not supported in SLAVE mode");
     try {
       PipelineState ps = pipelineManager.startPipeline(name, rev);
       return Response.ok().type(MediaType.APPLICATION_JSON).entity(BeanHelper.wrapPipelineState(ps)).build();
@@ -79,6 +84,8 @@ public class PipelineManagerResource {
   @Produces(MediaType.APPLICATION_JSON)
   @RolesAllowed({ AuthzRole.MANAGER, AuthzRole.ADMIN })
   public Response stopPipeline() throws PipelineManagerException {
+    Utils.checkState(runtimeInfo.getExecutionMode() != RuntimeInfo.ExecutionMode.SLAVE,
+      "This operation is not supported in SLAVE mode");
     PipelineState ps = pipelineManager.stopPipeline(false);
     return Response.ok().type(MediaType.APPLICATION_JSON).entity(BeanHelper.wrapPipelineState(ps)).build();
   }
@@ -90,6 +97,8 @@ public class PipelineManagerResource {
   public Response resetOffset(
       @PathParam("name") String name,
       @QueryParam("rev") @DefaultValue("0") String rev) throws PipelineManagerException {
+    Utils.checkState(runtimeInfo.getExecutionMode() != RuntimeInfo.ExecutionMode.SLAVE,
+      "This operation is not supported in SLAVE mode");
     pipelineManager.resetOffset(name, rev);
     return Response.ok().build();
   }

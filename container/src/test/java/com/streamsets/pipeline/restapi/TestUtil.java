@@ -21,6 +21,7 @@ import com.streamsets.pipeline.config.StageDefinition;
 import com.streamsets.pipeline.config.StageType;
 import com.streamsets.pipeline.el.ElConstantDefinition;
 import com.streamsets.pipeline.el.ElFunctionDefinition;
+import com.streamsets.pipeline.main.RuntimeInfo;
 import com.streamsets.pipeline.prodmanager.PipelineManagerException;
 import com.streamsets.pipeline.prodmanager.PipelineState;
 import com.streamsets.pipeline.prodmanager.StandalonePipelineManagerTask;
@@ -273,4 +274,36 @@ public class TestUtil {
     public void dispose(StandalonePipelineManagerTask pipelineManagerTask) {
     }
   }
+
+
+  public static class RuntimeInfoTestInjector implements Factory<RuntimeInfo> {
+    @Singleton
+    @Override
+    public RuntimeInfo provide() {
+      RuntimeInfo runtimeInfo = Mockito.mock(RuntimeInfo.class);
+      Mockito.when(runtimeInfo.getExecutionMode()).thenReturn(RuntimeInfo.ExecutionMode.STANDALONE);
+      return runtimeInfo;
+    }
+
+    @Override
+    public void dispose(RuntimeInfo runtimeInfo) {
+    }
+
+  }
+
+  public static class RuntimeInfoTestInjectorForSlaveMode implements Factory<RuntimeInfo> {
+    @Singleton
+    @Override
+    public RuntimeInfo provide() {
+      RuntimeInfo runtimeInfo = Mockito.mock(RuntimeInfo.class);
+      Mockito.when(runtimeInfo.getExecutionMode()).thenReturn(RuntimeInfo.ExecutionMode.SLAVE);
+      return runtimeInfo;
+    }
+
+    @Override
+    public void dispose(RuntimeInfo runtimeInfo) {
+    }
+
+  }
+
 }

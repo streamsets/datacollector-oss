@@ -6,7 +6,9 @@
 package com.streamsets.pipeline.restapi;
 
 import com.streamsets.pipeline.api.StageException;
+import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.config.PipelineConfiguration;
+import com.streamsets.pipeline.main.RuntimeInfo;
 import com.streamsets.pipeline.prodmanager.RawSourcePreviewHelper;
 import com.streamsets.pipeline.restapi.bean.BeanHelper;
 import com.streamsets.pipeline.restapi.bean.StageOutputJson;
@@ -57,12 +59,15 @@ public class PreviewResource {
   private final Configuration configuration;
   private final PipelineStoreTask store;
   private final StageLibraryTask stageLibrary;
+  private final RuntimeInfo runtimeInfo;
 
   @Inject
-  public PreviewResource(Configuration configuration, Principal user, StageLibraryTask stageLibrary, PipelineStoreTask store) {
+  public PreviewResource(Configuration configuration, Principal user, StageLibraryTask stageLibrary,
+                         PipelineStoreTask store, RuntimeInfo runtimeInfo) {
     this.configuration = configuration;
     this.stageLibrary = stageLibrary;
     this.store = store;
+    this.runtimeInfo = runtimeInfo;
   }
 
   @Path("/{name}/preview")
@@ -94,6 +99,10 @@ public class PreviewResource {
       @QueryParam("endStage") String endStageInstanceName,
       List<StageOutputJson> stageOutputsToOverrideJson)
       throws PipelineStoreException, PipelineRuntimeException, StageException {
+
+    Utils.checkState(runtimeInfo.getExecutionMode() != RuntimeInfo.ExecutionMode.SLAVE,
+      "This operation is not supported in SLAVE mode");
+
     int maxBatchSize = configuration.get(MAX_BATCH_SIZE_KEY, MAX_BATCH_SIZE_DEFAULT);
     batchSize = Math.min(maxBatchSize, batchSize);
     int maxBatches = configuration.get(MAX_BATCHES_KEY, MAX_BATCHES_DEFAULT);
@@ -136,7 +145,7 @@ public class PreviewResource {
   @GET
   @Produces(MediaType.APPLICATION_JSON)
   @RolesAllowed({ AuthzRole.CREATOR, AuthzRole.MANAGER, AuthzRole.ADMIN })
-  public Response preview(
+  public Response validateConfigs(
       @PathParam("name") String name,
       @QueryParam("rev") String rev)
       throws PipelineStoreException, PipelineRuntimeException, StageException {

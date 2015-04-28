@@ -48,6 +48,21 @@
             ng-click="onMaximizeDetailPane()"></span>
     </div>
 
+    <div class="pull-right btn-group toggle-toolbar" ng-show="!showLoading && !previewMultipleStages">
+      <label class="btn btn-default btn-sm" ng-model="listView" btn-radio="true"
+             tooltip-placement="bottom"
+             tooltip-append-to-body="true"
+             tooltip="{{'global.form.listView' | translate}}">
+        <i class="fa fa-list fa-12x"/>
+      </label>
+      <label class="btn btn-default btn-sm" ng-model="listView" btn-radio="false"
+             tooltip-placement="bottom"
+             tooltip-append-to-body="true"
+             tooltip="{{'global.form.tableView' | translate}}">
+        <i class="fa fa-table fa-12x"/>
+      </label>
+    </div>
+
     <div class="pull-right preview-toolbar btn-group" ng-if="!showLoading">
 
       <div ng-if="!previewMultipleStages && previousStageInstances.length > 1" class="dropdown pull-left btn-group">

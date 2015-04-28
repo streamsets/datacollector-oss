@@ -72,18 +72,12 @@
                 <span translate="global.menu.admin.logs">Logs</span>
               </a>
             </li>
-            <li ng-if="common.userName && isAuthorized([userRoles.admin])">
+            <li ng-if="common.userName && isAuthorized([userRoles.admin]) && common.sdcExecutionMode != pipelineConstant.SLAVE">
               <a href="javascript:;" ng-click="common.shutdownCollector()">
                 <i class="fa fa-stop"></i>
                 <span translate="global.menu.admin.shutdown">Shutdown</span>
               </a>
             </li>
-            <!--li>
-              <a href="javascript:;" ng-click="common.clearLocalStorage()">
-                <i class="fa fa-power-off"></i>
-                <span translate="global.menu.admin.resetLocalStorage">Clear Browser Local Storage</span>
-              </a>
-            </li-->
           </ul>
         </li>
 

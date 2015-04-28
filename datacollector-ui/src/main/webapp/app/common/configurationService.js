@@ -9,7 +9,8 @@ angular.module('dataCollectorApp.common')
       UI_LOCAL_HELP_BASE_URL = 'ui.local.help.base.url',
       UI_HOSTED_HELP_BASE_URL = 'ui.hosted.help.base.url',
       UI_ENABLE_USAGE_DATA_COLLECTION = 'ui.enable.usage.data.collection',
-      HTTP_AUTHENTICATION = 'http.authentication';
+      HTTP_AUTHENTICATION = 'http.authentication',
+      SDC_EXECUTION_MODE = 'sdc.execution.mode';
 
     this.initializeDefer = undefined;
     this.config = undefined;
@@ -107,6 +108,17 @@ angular.module('dataCollectorApp.common')
         return self.config[HTTP_AUTHENTICATION];
       }
       return 'form';
+    };
+
+    /**
+     * Returns SDC Execution Mode
+     * @returns {*}
+     */
+    this.getSDCExecutionMode = function() {
+      if(self.config) {
+        return self.config[SDC_EXECUTION_MODE];
+      }
+      return 'standalone';
     };
 
   });

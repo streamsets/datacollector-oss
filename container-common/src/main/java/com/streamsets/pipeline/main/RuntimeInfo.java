@@ -18,6 +18,8 @@ import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class RuntimeInfo {
+  public enum ExecutionMode { CLUSTER, STANDALONE, SLAVE };
+
   public static final String SPLITTER = "|";
   public static final String CONFIG_DIR = ".conf.dir";
   public static final String DATA_DIR = ".data.dir";
@@ -38,6 +40,7 @@ public class RuntimeInfo {
   private final String propertyPrefix;
   private final String [] roles = { "admin", "creator", "manager", "guest" };
   private UUID randomUUID;
+  private ExecutionMode executionMode;
 
   public RuntimeInfo(String propertyPrefix, MetricRegistry metrics, List<? extends ClassLoader> stageLibraryClassLoaders) {
     this.metrics = metrics;
@@ -177,6 +180,18 @@ public class RuntimeInfo {
   public void reloadAuthenticationToken() {
     for(String role: roles) {
       authenticationTokens.put(role, UUID.randomUUID().toString() + SPLITTER + role);
+    }
+  }
+
+  public ExecutionMode getExecutionMode() {
+    return executionMode;
+  }
+
+  public void setExecutionMode(String executionMode) {
+    try {
+      this.executionMode = ExecutionMode.valueOf(executionMode.toUpperCase());
+    } catch (IllegalArgumentException ex) {
+      this.executionMode = ExecutionMode.STANDALONE;
     }
   }
 }

@@ -6,6 +6,7 @@
 package com.streamsets.pipeline.restapi;
 
 import com.codahale.metrics.MetricRegistry;
+import com.streamsets.pipeline.main.RuntimeInfo;
 import com.streamsets.pipeline.prodmanager.PipelineManager;
 import com.streamsets.pipeline.restapi.bean.PipelineStateJson;
 import com.streamsets.pipeline.restapi.bean.SnapshotStatusJson;
@@ -173,6 +174,7 @@ public class TestPipelineManagerResource extends JerseyTest {
     @Override
     protected void configure() {
       bindFactory(TestUtil.PipelineManagerTestInjector.class).to(PipelineManager.class);
+      bindFactory(TestUtil.RuntimeInfoTestInjector.class).to(RuntimeInfo.class);
     }
   }
 }

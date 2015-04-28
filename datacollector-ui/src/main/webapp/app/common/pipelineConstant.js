@@ -17,5 +17,8 @@ angular.module('dataCollectorApp.common')
     HOSTED_HELP: 'HOSTED_HELP',
     CONFIGURED_SOURCE: 'CONFIGURED_SOURCE',
     SNAPSHOT_SOURCE: 'SNAPSHOT_SOURCE',
-    USER_PROVIDED: 'USER_PROVIDED'
+    USER_PROVIDED: 'USER_PROVIDED',
+    STANDALONE: 'standalone',
+    CLUSTER: 'cluster',
+    SLAVE: 'slave'
   });
