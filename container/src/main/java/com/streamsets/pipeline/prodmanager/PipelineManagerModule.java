@@ -5,6 +5,7 @@
  */
 package com.streamsets.pipeline.prodmanager;
 
+import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.main.RuntimeInfo;
 import com.streamsets.pipeline.main.RuntimeModule;
 import com.streamsets.pipeline.stagelibrary.StageLibraryModule;
@@ -24,7 +25,20 @@ public class PipelineManagerModule {
   @Singleton
   public PipelineManager provideProdPipelineManager(RuntimeInfo runtimeInfo, Configuration configuration
       , PipelineStoreTask pipelineStore, StageLibraryTask stageLibrary) {
-    return new StandalonePipelineManagerTask(runtimeInfo, configuration, pipelineStore, stageLibrary);
+    PipelineManager manager;
+    String runtimeMode = configuration.get("sdc.runtime.mode", "standalone");
+    switch (runtimeMode) {
+      case "standalone":
+      case "slave":
+        manager = new StandalonePipelineManagerTask(runtimeInfo, configuration, pipelineStore, stageLibrary);
+        break;
+      case "cluster":
+        manager = new ClusterPipelineManager(runtimeInfo, configuration, pipelineStore, stageLibrary);
+        break;
+      default:
+        throw new IllegalArgumentException(Utils.format("Invalid runtime mode '{}'", runtimeMode));
+    }
+    return manager;
   }
 
 }

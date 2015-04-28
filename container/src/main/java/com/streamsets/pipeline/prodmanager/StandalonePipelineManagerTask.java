@@ -389,7 +389,7 @@ public class StandalonePipelineManagerTask extends AbstractTask implements Pipel
         setState(name, rev, State.RUNNING, null, null);
         return getPipelineState();
       } else {
-        throw new PipelineManagerException(ValidationError.VALIDATION_0072, name, rev);
+        throw new PipelineManagerException(ValidationError.VALIDATION_0072);
       }
     }
   }
