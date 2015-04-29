@@ -128,7 +128,7 @@ public class KafkaTestUtil {
     Properties consumerProps = new Properties();
     consumerProps.put("zookeeper.connect", zookeeperConnectString);
     consumerProps.put("group.id", "testClient");
-    consumerProps.put("zookeeper.session.timeout.ms", "400");
+    consumerProps.put("zookeeper.session.timeout.ms", "6000");
     consumerProps.put("zookeeper.sync.time.ms", "200");
     consumerProps.put("auto.commit.interval.ms", "1000");
     consumerProps.put("consumer.timeout.ms", "500");
