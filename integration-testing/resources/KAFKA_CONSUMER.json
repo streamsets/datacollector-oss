@@ -1,0 +1,286 @@
+{
+  "pipelineConfig" : {
+    "schemaVersion" : 1,
+    "uuid" : "a86a8f65-f387-4eee-8012-0036f32ad1d1",
+    "configuration" : [ {
+      "name" : "executionMode",
+      "value" : "STANDALONE"
+    }, {
+      "name" : "deliveryGuarantee",
+      "value" : "AT_LEAST_ONCE"
+    }, {
+      "name" : "badRecordsHandling",
+      "value" : "streamsets-datacollector-basic-lib::com_streamsets_pipeline_stage_destination_devnull_NullDTarget::1.0.0"
+    }, {
+      "name" : "memoryLimitExceeded",
+      "value" : "STOP_PIPELINE"
+    }, {
+      "name" : "memoryLimit",
+      "value" : 150
+    }, {
+      "name" : "clusterSlaveMemory",
+      "value" : 1024
+    }, {
+      "name" : "clusterSlaveJavaOpts",
+      "value" : "-XX:PermSize=128M -XX:MaxPermSize=256M"
+    }, {
+      "name" : "clusterKerberos",
+      "value" : false
+    }, {
+      "name" : "kerberosPrincipal",
+      "value" : ""
+    }, {
+      "name" : "kerberosKeytab",
+      "value" : ""
+    }, {
+      "name" : "clusterLauncherEnv",
+      "value" : [ ]
+    } ],
+    "uiInfo" : {
+      "previewConfig" : {
+        "previewSource" : "CONFIGURED_SOURCE",
+        "batchSize" : 10,
+        "skipTargets" : true
+      }
+    },
+    "stages" : [ {
+      "instanceName" : "com_streamsets_pipeline_stage_origin_kafka_KafkaDSource1427993703274",
+      "library" : "streamsets-datacollector-cdh_kafka_1_2_0-lib",
+      "stageName" : "com_streamsets_pipeline_stage_origin_kafka_KafkaDSource",
+      "stageVersion" : "1.0.0",
+      "configuration" : [ {
+        "name" : "metadataBrokerList",
+        "value" : "node01.local:9092,node02.local:9092,node03.local:9092"
+      }, {
+        "name" : "zookeeperConnect",
+        "value" : "node00.local:2181"
+      }, {
+        "name" : "consumerGroup",
+        "value" : "streamsetsDataCollector"
+      }, {
+        "name" : "topic",
+        "value" : "TEST_TOPIC"
+      }, {
+        "name" : "dataFormat",
+        "value" : "SDC_JSON"
+      }, {
+        "name" : "charset",
+        "value" : "UTF-8"
+      }, {
+        "name" : "produceSingleRecordPerMessage",
+        "value" : false
+      }, {
+        "name" : "maxBatchSize",
+        "value" : 1000
+      }, {
+        "name" : "maxWaitTime",
+        "value" : 1000
+      }, {
+        "name" : "kafkaConsumerConfigs",
+        "value" : [ ]
+      }, {
+        "name" : "textMaxLineLen",
+        "value" : 1024
+      }, {
+        "name" : "jsonContent",
+        "value" : "MULTIPLE_OBJECTS"
+      }, {
+        "name" : "jsonMaxObjectLen",
+        "value" : 4096
+      }, {
+        "name" : "csvFileFormat",
+        "value" : "CSV"
+      }, {
+        "name" : "csvHeader",
+        "value" : "NO_HEADER"
+      }, {
+        "name" : "csvMaxObjectLen",
+        "value" : 1024
+      }, {
+        "name" : "xmlRecordElement",
+        "value" : null
+      }, {
+        "name" : "xmlMaxObjectLen",
+        "value" : 4096
+      }, {
+        "name" : "logMode",
+        "value" : "COMMON_LOG_FORMAT"
+      }, {
+        "name" : "logMaxObjectLen",
+        "value" : 1024
+      }, {
+        "name" : "retainOriginalLine",
+        "value" : false
+      }, {
+        "name" : "customLogFormat",
+        "value" : "%h %l %u %t \"%r\" %>s %b"
+      }, {
+        "name" : "regex",
+        "value" : "^(\\S+) (\\S+) (\\S+) \\[([\\w:/]+\\s[+\\-]\\d{4})\\] \"(\\S+) (\\S+) (\\S+)\" (\\d{3}) (\\d+)"
+      }, {
+        "name" : "fieldPathsToGroupName",
+        "value" : [ {
+          "fieldPath" : "/",
+          "group" : 1
+        } ]
+      }, {
+        "name" : "grokPatternDefinition",
+        "value" : null
+      }, {
+        "name" : "grokPattern",
+        "value" : "%{COMMONAPACHELOG}"
+      }, {
+        "name" : "enableLog4jCustomLogFormat",
+        "value" : false
+      }, {
+        "name" : "onParseError",
+        "value" : "ERROR"
+      }, {
+        "name" : "maxStackTraceLines",
+        "value" : 50
+      }, {
+        "name" : "log4jCustomLogFormat",
+        "value" : "%r [%t] %-5p %c %x - %m%n"
+      }, {
+        "name" : "stageOnRecordError",
+        "value" : "TO_ERROR"
+      } ],
+      "uiInfo" : {
+        "label" : "Kafka Consumer 1",
+        "description" : "",
+        "xPos" : 155,
+        "yPos" : 118,
+        "stageType" : "SOURCE",
+        "rawSource" : {
+          "configuration" : [ {
+            "name" : "brokerHost",
+            "value" : "localhost"
+          }, {
+            "name" : "brokerPort",
+            "value" : 9092
+          }, {
+            "name" : "topic",
+            "value" : "myTopic"
+          }, {
+            "name" : "partition"
+          }, {
+            "name" : "maxWaitTime",
+            "value" : 1000
+          } ]
+        },
+        "icon" : "/rest/v1/definitions/stages/icon?name=com_streamsets_pipeline_stage_origin_kafka_KafkaDSource&library=streamsets-datacollector-cdh_kafka_1_2_0-lib&version=1.0.0"
+      },
+      "inputLanes" : [ ],
+      "outputLanes" : [ "com_streamsets_pipeline_stage_origin_kafka_KafkaDSource1427993703274OutputLane14279937032740" ]
+    }, {
+      "instanceName" : "com_streamsets_pipeline_stage_destination_devnull_NullDTarget1427993710330",
+      "library" : "streamsets-datacollector-basic-lib",
+      "stageName" : "com_streamsets_pipeline_stage_destination_devnull_NullDTarget",
+      "stageVersion" : "1.0.0",
+      "configuration" : [ ],
+      "uiInfo" : {
+        "label" : "Trash 1",
+        "description" : "",
+        "xPos" : 450,
+        "yPos" : 123,
+        "stageType" : "TARGET",
+        "icon" : "/rest/v1/definitions/stages/icon?name=com_streamsets_pipeline_stage_destination_devnull_NullDTarget&library=streamsets-datacollector-basic-lib&version=1.0.0"
+      },
+      "inputLanes" : [ "com_streamsets_pipeline_stage_origin_kafka_KafkaDSource1427993703274OutputLane14279937032740" ],
+      "outputLanes" : [ ]
+    } ],
+    "errorStage" : {
+      "instanceName" : "com_streamsets_pipeline_stage_destination_devnull_NullDTarget1427993714885",
+      "library" : "streamsets-datacollector-basic-lib",
+      "stageName" : "com_streamsets_pipeline_stage_destination_devnull_NullDTarget",
+      "stageVersion" : "1.0.0",
+      "configuration" : [ ],
+      "uiInfo" : {
+        "label" : "Bad Records - Trash",
+        "description" : "",
+        "xPos" : 670,
+        "yPos" : 50,
+        "stageType" : "TARGET",
+        "icon" : "/rest/v1/definitions/stages/icon?name=com_streamsets_pipeline_stage_destination_devnull_NullDTarget&library=streamsets-datacollector-basic-lib&version=1.0.0"
+      },
+      "inputLanes" : [ ],
+      "outputLanes" : [ ]
+    },
+    "issues" : {
+      "issueCount" : 0,
+      "stageIssues" : { },
+      "pipelineIssues" : [ ]
+    },
+    "info" : {
+      "name" : "KAFKA_CONSUMER",
+      "description" : null,
+      "created" : 1427993697937,
+      "lastModified" : 1427993736599,
+      "creator" : "admin",
+      "lastModifier" : "admin",
+      "lastRev" : "0",
+      "uuid" : "a86a8f65-f387-4eee-8012-0036f32ad1d1",
+      "valid" : true
+    },
+    "description" : null,
+    "previewable" : true,
+    "valid" : true
+  },
+  "pipelineRules" : {
+    "metricsRuleDefinitions" : [ {
+      "id" : "KAFKA_CONSUMERbadRecords1427993698076",
+      "alertText" : "High incidence of Bad Records",
+      "metricId" : "pipeline.batchErrorRecords.meter",
+      "metricType" : "METER",
+      "metricElement" : "METER_COUNT",
+      "condition" : "${value() > 100}",
+      "sendEmail" : false,
+      "enabled" : false,
+      "valid" : true
+    }, {
+      "id" : "KAFKA_CONSUMERstageErrors1427993698076",
+      "alertText" : "High incidence of Error Messages",
+      "metricId" : "pipeline.batchErrorMessages.meter",
+      "metricType" : "METER",
+      "metricElement" : "METER_COUNT",
+      "condition" : "${value() > 100}",
+      "sendEmail" : false,
+      "enabled" : false,
+      "valid" : true
+    }, {
+      "id" : "KAFKA_CONSUMERidleGauge1427993698076",
+      "alertText" : "Pipeline is Idle",
+      "metricId" : "RuntimeStatsGauge.gauge",
+      "metricType" : "GAUGE",
+      "metricElement" : "TIME_OF_LAST_RECEIVED_RECORD",
+      "condition" : "${time:now() - value() > 120000}",
+      "sendEmail" : false,
+      "enabled" : false,
+      "valid" : true
+    }, {
+      "id" : "KAFKA_CONSUMERbatchTime1427993698076",
+      "alertText" : "Batch taking more time to process",
+      "metricId" : "RuntimeStatsGauge.gauge",
+      "metricType" : "GAUGE",
+      "metricElement" : "CURRENT_BATCH_AGE",
+      "condition" : "${value() > 200}",
+      "sendEmail" : false,
+      "enabled" : false,
+      "valid" : true
+    }, {
+      "id" : "KAFKA_CONSUMERmemoryLimit1427993698076",
+      "alertText" : "Memory limit for pipeline exceeded",
+      "metricId" : "pipeline.memoryConsumed.counter",
+      "metricType" : "COUNTER",
+      "metricElement" : "COUNTER_COUNT",
+      "condition" : "${value() > humanReadableToBytes('100MB')}",
+      "sendEmail" : false,
+      "enabled" : false,
+      "valid" : true
+    } ],
+    "dataRuleDefinitions" : [ ],
+    "emailIds" : [ ],
+    "uuid" : "e770b65d-abb6-4f22-8c49-24c3a8c3402b",
+    "ruleIssues" : [ ]
+  }
+}

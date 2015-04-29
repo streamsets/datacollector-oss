@@ -28,5 +28,15 @@ git show
 # compile and install
 mvn clean install -Pdist,all-libs,ui,rpm -Drelease -Dtest=DoesNotExist -DfailIfNoTests=false
 # package and run tests (if appropiate)
+set +e
 export JAVA_HOME=${TEST_JVM}
-mvn test -fae -Pdist,all-libs,ui,rpm -Drelease -Dmaven.main.skip=true -DlastModGranularityMs=604800000 ${PACKAGE_OPTS[@]}
+mvn package -fae -Pdist,all-libs,ui,rpm -Drelease -Dmaven.main.skip=true -DlastModGranularityMs=604800000 ${PACKAGE_OPTS[@]}
+exitCode=$?
+if git log --format=%B -n 1 HEAD | grep -q "RUN_IT_TESTS"
+then
+  set -e
+  bash ../infra/dev-support/ci-build-sdc-docker-image.sh
+  python -u /opt/scripts/systest-create-docker-environment.py
+  bash $DEV_SUPPORT/ci-run-it.sh
+fi
+exit $exitCode
