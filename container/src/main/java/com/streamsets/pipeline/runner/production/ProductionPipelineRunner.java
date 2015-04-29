@@ -96,7 +96,7 @@ public class ProductionPipelineRunner implements PipelineRunner {
   /**/
   private BlockingQueue<Object> observeRequests;
   private Observer observer;
-  private List<BatchListener> batchListenerList = new ArrayList<BatchListener>();
+  private List<BatchListener> batchListenerList = new CopyOnWriteArrayList<BatchListener>();
   private Object errorRecordsMutex;
   private final MemoryLimitConfiguration memoryLimitConfiguration;
   private long lastMemoryLimitNotification;

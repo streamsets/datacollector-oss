@@ -96,7 +96,7 @@ public class TestKafkaSource {
       REPLICATION_FACTOR, TIME_OUT);
     ExecutorService executorService = Executors.newSingleThreadExecutor();
     executorService.submit(new ProducerRunnable( "testProduceStringRecords", SINGLE_PARTITION,
-      producer, startLatch, DataType.TEXT, null, -1));
+      producer, startLatch, DataType.TEXT, null, -1, null));
 
     SourceRunner sourceRunner = new SourceRunner.Builder(KafkaDSource.class)
       .addOutputLane("lane")
@@ -150,7 +150,7 @@ public class TestKafkaSource {
       MULTIPLE_PARTITIONS, REPLICATION_FACTOR, TIME_OUT);
     ExecutorService executorService = Executors.newSingleThreadExecutor();
     executorService.submit(new ProducerRunnable( "testProduceStringRecordsMultiplePartitions",
-      MULTIPLE_PARTITIONS, producer, startProducing, DataType.TEXT, null, -1));
+      MULTIPLE_PARTITIONS, producer, startProducing, DataType.TEXT, null, -1, null));
 
     SourceRunner sourceRunner = new SourceRunner.Builder(KafkaDSource.class)
       .addOutputLane("lane")
@@ -204,7 +204,7 @@ public class TestKafkaSource {
       "testProduceJsonRecordsMultipleObjectsSingleRecord", SINGLE_PARTITION, REPLICATION_FACTOR, TIME_OUT);
     ExecutorService executorService = Executors.newSingleThreadExecutor();
     executorService.submit(new ProducerRunnable( "testProduceJsonRecordsMultipleObjectsSingleRecord", SINGLE_PARTITION,
-      producer, startLatch, DataType.JSON, StreamingJsonParser.Mode.MULTIPLE_OBJECTS, -1));
+      producer, startLatch, DataType.JSON, StreamingJsonParser.Mode.MULTIPLE_OBJECTS, -1, null));
 
     SourceRunner sourceRunner = new SourceRunner.Builder(KafkaDSource.class)
         .addOutputLane("lane")
@@ -254,7 +254,7 @@ public class TestKafkaSource {
       REPLICATION_FACTOR, TIME_OUT);
     ExecutorService executorService = Executors.newSingleThreadExecutor();
     executorService.submit(new ProducerRunnable( "testProduceJsonRecordsMultipleObjectsMultipleRecord", SINGLE_PARTITION,
-      producer, startLatch, DataType.JSON, StreamingJsonParser.Mode.MULTIPLE_OBJECTS, -1));
+      producer, startLatch, DataType.JSON, StreamingJsonParser.Mode.MULTIPLE_OBJECTS, -1, null));
 
     SourceRunner sourceRunner = new SourceRunner.Builder(KafkaDSource.class)
         .addOutputLane("lane")
@@ -304,7 +304,7 @@ public class TestKafkaSource {
       REPLICATION_FACTOR, TIME_OUT);
     ExecutorService executorService = Executors.newSingleThreadExecutor();
     executorService.submit(new ProducerRunnable( "testProduceJsonRecordsArrayObjects", SINGLE_PARTITION,
-      producer, startLatch, DataType.JSON, StreamingJsonParser.Mode.ARRAY_OBJECTS, -1));
+      producer, startLatch, DataType.JSON, StreamingJsonParser.Mode.ARRAY_OBJECTS, -1, null));
 
     SourceRunner sourceRunner = new SourceRunner.Builder(KafkaDSource.class)
         .addOutputLane("lane")
@@ -354,7 +354,7 @@ public class TestKafkaSource {
       REPLICATION_FACTOR, TIME_OUT);
     ExecutorService executorService = Executors.newSingleThreadExecutor();
     executorService.submit(new ProducerRunnable( "testProduceXmlRecords1", SINGLE_PARTITION,
-      producer, startLatch, DataType.XML, null, -1));
+      producer, startLatch, DataType.XML, null, -1, null));
 
     SourceRunner sourceRunner = new SourceRunner.Builder(KafkaDSource.class)
       .addOutputLane("lane")
@@ -405,7 +405,7 @@ public class TestKafkaSource {
                               REPLICATION_FACTOR, TIME_OUT);
     ExecutorService executorService = Executors.newSingleThreadExecutor();
     executorService.submit(new ProducerRunnable( "testProduceXmlRecords2", SINGLE_PARTITION,
-                                                 producer, startLatch, DataType.XML, null, -1));
+                                                 producer, startLatch, DataType.XML, null, -1, null));
 
     SourceRunner sourceRunner = new SourceRunner.Builder(KafkaDSource.class)
         .addOutputLane("lane")
@@ -487,7 +487,7 @@ public class TestKafkaSource {
       REPLICATION_FACTOR, TIME_OUT);
     ExecutorService executorService = Executors.newSingleThreadExecutor();
     executorService.submit(new ProducerRunnable( "testProduceCsvRecords", SINGLE_PARTITION,
-      producer, startLatch, DataType.CSV, null, -1));
+      producer, startLatch, DataType.CSV, null, -1, null));
 
     SourceRunner sourceRunner = new SourceRunner.Builder(KafkaDSource.class)
       .addOutputLane("lane")
@@ -537,7 +537,7 @@ public class TestKafkaSource {
       REPLICATION_FACTOR, TIME_OUT);
     ExecutorService executorService = Executors.newSingleThreadExecutor();
     executorService.submit(new ProducerRunnable( "testProduceLogRecords", SINGLE_PARTITION,
-      producer, startLatch, DataType.LOG, null, -1));
+      producer, startLatch, DataType.LOG, null, -1, null));
 
     SourceRunner sourceRunner = new SourceRunner.Builder(KafkaDSource.class)
       .addOutputLane("lane")
@@ -610,7 +610,7 @@ public class TestKafkaSource {
       REPLICATION_FACTOR, TIME_OUT);
     ExecutorService executorService = Executors.newSingleThreadExecutor();
     executorService.submit(new ProducerRunnable( "testProduceLogRecordsWithStackTraceSameMessage", SINGLE_PARTITION,
-      producer, startLatch, DataType.LOG_STACK_TRACE, null, -1));
+      producer, startLatch, DataType.LOG_STACK_TRACE, null, -1, null));
 
     SourceRunner sourceRunner = new SourceRunner.Builder(KafkaDSource.class)
       .addOutputLane("lane")

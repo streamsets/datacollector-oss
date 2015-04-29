@@ -81,9 +81,14 @@ public class SparkStreamingBinding {
     if (properties.getProperty("topics") == null) {
       throw new IllegalArgumentException("Topic cannot be null");
     }
+    String autoOffsetValue = properties.getProperty("auto.offset.reset");
+    if (autoOffsetValue != null) {
+      props.put("auto.offset.reset", autoOffsetValue);
+    }
     String[] topicList = properties.getProperty("topics").split(",");
     LOG.info("Meta data broker list " + properties.getProperty("metadataBrokerList"));
     LOG.info("topic list " + properties.getProperty("topics"));
+    LOG.info("Auto offset is set to " + autoOffsetValue);
     JavaPairInputDStream<byte[], byte[]> dStream =
       KafkaUtils.createDirectStream(ssc, byte[].class, byte[].class, DefaultDecoder.class, DefaultDecoder.class, props,
         new HashSet<String>(Arrays.asList(topicList)));

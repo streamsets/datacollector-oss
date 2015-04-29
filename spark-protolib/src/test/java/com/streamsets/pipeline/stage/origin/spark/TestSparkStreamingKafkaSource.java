@@ -12,6 +12,7 @@ import org.I0Itec.zkclient.ZkClient;
 
 import com.google.common.io.Resources;
 import com.streamsets.pipeline.BootstrapSpark;
+import com.streamsets.pipeline.api.ExecutionMode;
 import com.streamsets.pipeline.lib.DataType;
 import com.streamsets.pipeline.lib.KafkaTestUtil;
 import com.streamsets.pipeline.lib.ProducerRunnable;
@@ -82,8 +83,12 @@ public class TestSparkStreamingKafkaSource {
     properties.setProperty(EmbeddedPipelineFactory.PIPELINE_USER, "admin");
     properties.setProperty(EmbeddedPipelineFactory.PIPELINE_DESCRIPTION, "not much to say");
     properties.setProperty(EmbeddedPipelineFactory.PIPELINE_TAG, "unused");
+    // Set this to cluster mode once the code is changed to use that
+    // and change in the pipeline json file
+    //properties.setProperty("sdc.runtime.mode", ExecutionMode.CLUSTER.getLabel());
     properties.setProperty(KafkaDSource.METADATA_BROKER_LIST, metadataBrokerURI);
     properties.setProperty(KafkaDSource.TOPICS, "testProduceStringRecords");
+    properties.setProperty("auto.offset.reset", "smallest");
     properties.setProperty(SparkStreamingBinding.INPUT_TYPE, SparkStreamingBinding.KAFKA_INPUT_TYPE);
     propertiesFile = new File(target, "sdc.properties");
     propertiesFile.delete();
@@ -110,21 +115,24 @@ public class TestSparkStreamingKafkaSource {
     try {
       Producer<String, String> producer = KafkaTestUtil.createProducer("localhost", port, false);
       CountDownLatch startLatch = new CountDownLatch(1);
+      CountDownLatch doneSignal = new CountDownLatch(1);
       AdminUtils.createTopic(zkClient, "testProduceStringRecords", 1, 1, new Properties());
       TestUtils.waitUntilMetadataIsPropagated(scala.collection.JavaConversions.asScalaBuffer(ImmutableList.of(kafkaServer)),
         "testProduceStringRecords", 0, 2000);
       ExecutorService executorService = Executors.newSingleThreadExecutor();
-      waiter = startBootstrapSpark();
-      startLatch.countDown();
-      Thread.sleep(3000);
+      LOG.info("Start producing records");
       executorService.submit(new ProducerRunnable("testProduceStringRecords", 1, producer, startLatch, DataType.TEXT,
-        null, 30));
-      Thread.sleep(20000);
+        null, 30, doneSignal));
+      startLatch.countDown();
+      doneSignal.await();
+      LOG.info("Done producing all records");
+      waiter = startBootstrapSpark();
       long i = 0;
       while (i != 30) {
         try {
           i = SparkKafkaExecutorFunction.getRecordsProducedJVMWide();
-          LOG.info("i = " + i);
+          Thread.sleep(1000);
+          LOG.info(" No of records obtained till now " + i);
         } catch (Exception e) {
           String msg = "Expected exception: " + e;
           LOG.info(msg, e);
