@@ -2,8 +2,8 @@
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_hjk_b4l_vq">
  <title>Referencing Field Names</title>
- <shortdesc>To understand references to fields, think of the record as a root directory, and a
-    reference to a field as the path to the field. </shortdesc>
+ <shortdesc>To understand references to fields, think of the record as a root directory. A reference
+                to a field is the path to the field, or field path.</shortdesc>
  <conbody>
     <p><indexterm>processors<indexterm>referencing field
                 names</indexterm></indexterm><indexterm>field

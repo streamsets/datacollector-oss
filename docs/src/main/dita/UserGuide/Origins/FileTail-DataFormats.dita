@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_pm4_b3q_5r">
- <title>File Tail Data Formats</title>
+ <title>Data Formats</title>
  <conbody>
   <p><indexterm>data formats<indexterm>for File Tail</indexterm></indexterm><indexterm>File Tail
      origin<indexterm>data formats</indexterm></indexterm>The File Tail origin processes data
@@ -19,8 +19,7 @@
     <dd>Generates a record for each JSON object. Each JSON object must be written to file as a
      single line.</dd>
     <dd>When an object exceeds the maximum line length defined for the origin, File Tail processes
-     the object based on the error handling configured for the origin.<draft-comment
-      author="Loretta">Tucu said something - checking with him. </draft-comment></dd>
+     the object based on the error handling configured for the origin.</dd>
    </dlentry>
    <dlentry>
     <dt>Log</dt>

@@ -17,7 +17,7 @@
       the pipeline. Use this functionality to determine the types of error records to save for
       review and reprocessing. </p>
     <p>
-      <draft-comment author="Loretta">Anyone have a simpe example of error records you'd rather
+      <draft-comment author="Loretta">Anyone have a simple example of error records you'd rather
         discard at a stage level, and ones you want to write to file?</draft-comment>
     </p>
   </conbody>

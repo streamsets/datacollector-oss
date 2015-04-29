@@ -18,7 +18,7 @@
    usage exceeds the configured amount.</p>
   <p>
    <note>To avoid errors, you might create an alert to indicate when the memory usage approaches the
-    configured maximum.</note>
+    configured limit.</note>
   </p>
  </conbody>
  <related-links>

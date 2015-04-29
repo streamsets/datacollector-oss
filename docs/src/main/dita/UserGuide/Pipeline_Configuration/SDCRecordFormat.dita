@@ -2,20 +2,21 @@
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_qkk_mwk_br">
  <title>SDC Record Data Format</title>
- <shortdesc>SDC Record is a data format used by the <ph
-   conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> to generate
-  error record files for the pipeline. The  <ph
-   conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>  can also use
-  the SDC Record format to generate output files.</shortdesc>
+ <shortdesc>SDC Record is a proprietary data format that the <ph
+   conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> uses to
+  generate error records. You can also configure a pipeline to read or write SDC Record data. </shortdesc>
  <conbody>
   <p><indexterm>SDC Records<indexterm>data format</indexterm></indexterm><indexterm>Data
-     Collector<indexterm>data format</indexterm></indexterm>Use the SDC Record format to process
-   files produced by another <ph
-    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> pipeline, or
-   to produce files that you might pass to another <ph
-    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> pipeline.</p>
-  <p>The SDC Record Files destination writes all records using the SDC Record format. You can also
-   use Hadoop FS and the Kafka Producer to write files that use the SDC Record format.</p>
-  <p>You can use the Directory or Kafka Consumer origins to read SDC Record files. </p>
+     Collector<indexterm>data format</indexterm></indexterm>Use the SDC Record data format to
+   process data from another pipeline, or to generate data to be processed by another pipeline.</p>
+  <p>You can use the following origins to read SDC Record data: <ul id="ul_ep4_r2b_wr">
+    <li>Directory</li>
+    <li>Kafka Consumer</li>
+   </ul></p>
+  <p>You can use the following destinations to write SDC Record data:<ul id="ul_l1m_52b_wr">
+    <li>SDC Record Files</li>
+    <li>Hadoop FS</li>
+    <li>Kafka Producer</li>
+   </ul></p>
  </conbody>
 </concept>

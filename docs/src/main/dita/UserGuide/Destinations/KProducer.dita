@@ -2,16 +2,15 @@
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_oq2_5jl_zq">
  <title>Kafka Producer</title>
- <shortdesc>The Kafka Producer writes data to a Kafka cluster. The Kakfa Producer can write data to
-        Kafka as delimited, text, or JSON data. You can also use the Kafka Producer to write data
-        using the SDC Record format.</shortdesc>
+ <shortdesc>The Kafka Producer writes data to a Kafka cluster. </shortdesc>
  <conbody>
   <p><indexterm>Kafka Producer
-          destination<indexterm>overview</indexterm></indexterm><indexterm>destinations<indexterm>Kafka
-          Producer</indexterm></indexterm>When you configure a Kafka Producer, you configure the
-      brokers, topic, partition strategy, and data format to use. You can add additional Kafka
-      configuration properties as needed.</p>
+                    destination<indexterm>overview</indexterm></indexterm><indexterm>destinations<indexterm>Kafka
+                    Producer</indexterm></indexterm>When you configure a Kafka Producer, you define
+            connection information, the partition strategy, and data format to use. You can add
+            additional Kafka configuration properties as needed.</p>
   <p>The Kafka Producer passes data to partitions in the Kafka topic based on the partition strategy
-   that you choose. </p>
+            that you choose. You can optionally write a batch of records to the Kafka cluster as a
+            single message.</p>
  </conbody>
 </concept>

@@ -2,35 +2,39 @@
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_lww_3b3_kr">
  <title>Data Formats</title>
- <shortdesc>Kafka Producer proesses data differently based on the format of data being processed.
-  Kafka Producer processes the following data formats:</shortdesc>
  <conbody>
+  <p><indexterm>Kafka Producer<indexterm>data formats</indexterm></indexterm><indexterm>data
+     formats<indexterm>Kafka Producer</indexterm></indexterm>Kafka Producer writes data to
+   Kafkabased on the data format that you select. You can use the following data formats::</p>
   <p>
    <dl>
     <dlentry>
      <dt>Text</dt>
-     <dd><indexterm>Kafka Producer<indexterm>data formats</indexterm></indexterm><indexterm>data
-        formats<indexterm>Kafka Producer</indexterm></indexterm>Kafka Producer writes a single field
-      of text data to Kafka.</dd>
-     <dd>
-      <p>When you configure text data properties, you select the field to write. If necessary, merge
-       the data that you want to write to Kafka earlier in the pipeline. </p>
-     </dd>
+     <dd>Kafka Producer  writes a single field of a record. When you configure the destination, you
+      select the field to use. When necessary, merge data earlier in the pipeline. </dd>
     </dlentry>
     <dlentry>
      <dt>JSON</dt>
-     <dd>Kafka Producer writes JSON data as multiple JSON objects or a JSON array.</dd>
+     <dd>Kafka Producer writes records as JSON files. You can use one of the following formats:<ul
+       id="ul_dd1_5y1_wr">
+       <li>Array - Each file includes a single array. In the array, each element is a JSON
+        representation of each record.</li>
+       <li>Multiple objects - Each file includes multiple JSON objects. Each object is a JSON
+        representation of a record. </li>
+      </ul></dd>
     </dlentry>
     <dlentry>
      <dt>Delimited</dt>
-     <dd>Kafka Producer writes data to Kafka based on the field name metadata associated with each
-      field value. <draft-comment author="Loretta">When necessary, you can use what processor to set
-       the field names? </draft-comment></dd>
+     <dd>Kafka Producer writes records as delimited files. When you use this data format, you must
+      ensure that the data uses the following data structure:<ul id="ul_tr1_ms1_wr">
+       <li>A root field that contains an array of maps.</li>
+       <li>Each map includes a <term>value</term> element and an optional <term>header</term>
+        element.</li>
+      </ul></dd>
     </dlentry>
     <dlentry>
      <dt>SDC Record</dt>
-     <dd>Kafka Producer writes data to Kafka in the proprietary SDC record format. You can use the
-      Directory or Kafka Consumer origins to read SDC record data.</dd>
+     <dd>Kafka Producer writes data in the SDC Record data format. </dd>
     </dlentry>
    </dl>
   </p>

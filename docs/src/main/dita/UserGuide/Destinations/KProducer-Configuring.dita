@@ -79,6 +79,11 @@
                                             </ul></entry>
                                     </row>
                                     <row>
+                                        <entry>Messages Charset</entry>
+                                        <entry>Character encoding to use when writing data. <p>Not
+                                                used for the SDC Record data format.</p></entry>
+                                    </row>
+                                    <row>
                                         <entry>One Message per Batch</entry>
                                         <entry>Generates a single message for all records in the
                                             batch.</entry>
@@ -99,72 +104,14 @@
                     </p>
                 </info>
             </step>
-            <step>
-                <cmd>For delimited data, click the <wintitle>Delimited</wintitle> tab and configure
-                    the following properties:</cmd>
-                <info>
-                    <p>
-                        <table frame="all" rowsep="1" colsep="1" id="table_ebf_s53_br">
-                            <tgroup cols="2">
-                                <colspec colname="c1" colnum="1" colwidth="1*"/>
-                                <colspec colname="c2" colnum="2" colwidth="2.77*"/>
-                                <thead>
-                                    <row>
-                                        <entry>Delimited Property</entry>
-                                        <entry>Description</entry>
-                                    </row>
-                                </thead>
-                                <tbody>
-                                    <row>
-                                        <entry>Delimiter Format</entry>
-                                        <entry>Format to use for delimited data:<ul
-                                                id="ul_gfs_553_br">
-                                                <li>Basic CSV - File that includes comma-separated
-                                                  values. </li>
-                                                <li>MS Excel CSV - Microsoft Excel comma-separated
-                                                  file.</li>
-                                                <li>MySQL CSV - MySQL comma separated file. </li>
-                                                <li>RFC4180 CSV - Comma-separated file that strictly
-                                                  follows RFC4180 guidelines. </li>
-                                                <li>Tab-Separated Values - File that includes
-                                                  tab-separated values.</li>
-                                            </ul></entry>
-                                    </row>
-                                    <row>
-                                        <entry>Fields</entry>
-                                        <entry>Fields to include in the record.</entry>
-                                    </row>
-                                </tbody>
-                            </tgroup>
-                        </table>
-                    </p>
-                </info>
+            <step conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/TextProps">
+                <cmd/>
             </step>
-            <step>
-                <cmd>For log or text data, click the <wintitle>Text</wintitle> tab and configure the
-                    following property:</cmd>
-                <info>
-                    <p>
-                        <table frame="all" rowsep="1" colsep="1" id="table_qgh_dv3_br">
-                            <tgroup cols="2">
-                                <colspec colname="c1" colnum="1" colwidth="1*"/>
-                                <colspec colname="c2" colnum="2" colwidth="3.17*"/>
-                                <thead>
-                                    <row>
-                                        <entry>Text Property</entry>
-                                        <entry>Description</entry>
-                                    </row>
-                                </thead>
-                                <tbody>
-                                    <row>
-                                        <entry>Field</entry>
-                                        <entry>Single field to write data to Kafka. </entry>
-                                    </row>
-                                </tbody>
-                            </tgroup>
-                        </table>
-                    </p>
-                </info>
+            <step conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/JSONProps">
+                <cmd/>
+            </step>
+            <step conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/DelimProps">
+                <cmd/>
             </step>
         </steps>
     </taskbody>

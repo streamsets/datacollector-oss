@@ -24,11 +24,13 @@
    <topicref href="../Origins/FileTail-FileProcessing.dita"/>
    <topicref href="../Origins/FileTail-Configuring.dita"/>
   </topicref>
-  <topicref href="../Origins/HTTPClient.dita">
+  <topicref href="../Origins/HTTPClient.dita" chunk="to-content">
+   <topicmeta><shortdesc></shortdesc></topicmeta>
    <topicref href="../Origins/HTTPClient-Configuring.dita"/>
   </topicref>
   <topicref href="../Origins/KConsumer.dita" chunk="to-content">
    <topicmeta><shortdesc></shortdesc></topicmeta>
+   <topicref href="../Origins/KConsumer-DataFormats.dita"/>
    <topicref href="../Origins/KConsumer_AdditionalKProp.dita"/>
    <topicref href="../Origins/KConsumer-Configuring.dita"/>
   </topicref>

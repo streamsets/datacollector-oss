@@ -2,37 +2,38 @@
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_lww_3b3_kr">
  <title>Data Formats</title>
- <shortdesc>Hadoop FS processes data differently based on the format of data being processed. Hadoop
-  FS processes the following data formats:</shortdesc>
  <conbody>
-  <p>
-   <dl>
+  <p><indexterm>Hadoop FS<indexterm>data formats</indexterm></indexterm><indexterm>data
+     formats<indexterm>Hadoop FS</indexterm></indexterm>Hadoop FS writes data to the Hadoop file
+   system based on the data format that you select. You can use the following data formats: <dl>
     <dlentry>
      <dt>Text</dt>
-     <dd><indexterm>Hadoop FS<indexterm>data formats</indexterm></indexterm><indexterm>data
-        formats<indexterm>Hadoop FS</indexterm></indexterm>Hadoop FS writes a single field of text
-      data to Hadoop.</dd>
-     <dd>
-      <p>When you configure text data properties, you select the field to write. If necessary, merge
-       the data that you want to write to Hadoop earlier in the pipeline. </p>
-     </dd>
+     <dd>Hadoop FS writes a single field of a record. When you configure the destination, you select
+      the field to use. When necessary, merge data earlier in the pipeline. </dd>
     </dlentry>
     <dlentry>
      <dt>JSON</dt>
-     <dd>Hadoop FS writes JSON data as multiple JSON objects or a JSON array.</dd>
+     <dd>Hadoop FS writes records as JSON files. You can use one of the following formats:<ul
+       id="ul_dd1_5y1_wr">
+       <li>Array - Each file includes a single array. In the array, each element is a JSON
+        representation of each record.</li>
+       <li>Multiple objects - Each file includes multiple JSON objects. Each object is a JSON
+        representation of a record. </li>
+      </ul></dd>
     </dlentry>
     <dlentry>
      <dt>Delimited</dt>
-     <dd>Hadoop FS writes data to Hadoop based on the field name metadata associated with each field
-      value. <draft-comment author="Loretta">When necessary, you can use what processor to set the
-       field names? </draft-comment></dd>
+     <dd>Hadoop FS writes records as delimited files. When you use this data format, you must ensure
+            that the data uses the following data structure:<ul id="ul_tr1_ms1_wr">
+              <li>A root field that contains an array of maps.</li>
+              <li>Each map includes a <term>value</term> element and an optional <term>header</term>
+                element.</li>
+            </ul></dd>
     </dlentry>
     <dlentry>
      <dt>SDC Record</dt>
-     <dd>Hadoop FS writes data to Hadoop in the proprietary SDC record format. You can use the
-      Directory or Kafka Consumer origins to read SDC record data.</dd>
+     <dd>Hadoop FS writes records in the SDC Record data format. </dd>
     </dlentry>
-   </dl>
-  </p>
+   </dl></p>
  </conbody>
 </concept>

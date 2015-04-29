@@ -391,6 +391,128 @@
                     </ul>
                 </info>
             </step>
+            <step>
+                <cmd>
+                    <draft-comment author="Loretta">Use the following for the appropriate delimited
+                        destinations - currently Hadoop FS and Kafka Producer:</draft-comment>
+                </cmd>
+            </step>
+            <step id="DelimProps">
+                <cmd>For delimited data, on the <wintitle>Delimited</wintitle> tab, configure the
+                    following properties:</cmd>
+                <info>
+                    <table frame="all" rowsep="1" colsep="1" id="table_wb3_2kg_br">
+                        <tgroup cols="2">
+                            <colspec colname="c1" colnum="1" colwidth="1*"/>
+                            <colspec colname="c2" colnum="2" colwidth="2.53*"/>
+                            <thead>
+                                <row>
+                                    <entry>Delimited Property</entry>
+                                    <entry>Description</entry>
+                                </row>
+                            </thead>
+                            <tbody>
+                                <row>
+                                    <entry>CSV Format</entry>
+                                    <entry>Format for delimited data:<ul
+                                            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/ul_delFileTypes"
+                                            id="ul_k3j_vvf_jr">
+                                            <li/>
+                                        </ul></entry>
+                                </row>
+                                <row>
+                                    <entry>Header Line</entry>
+                                    <entry>Indicates whether to create a header line.</entry>
+                                </row>
+                                <row>
+                                    <entry>Remove New Line Characters</entry>
+                                    <entry>Removes new line characters from within a record.
+                                            <p>Recommended when writing data as a single line of
+                                            text.</p></entry>
+                                </row>
+                            </tbody>
+                        </tgroup>
+                    </table>
+                </info>
+            </step>
+            <step>
+                <cmd>
+                    <draft-comment author="Loretta">Using the following for Hadoop FS and Kafka
+                        Producer, like Delimited, above. This is for JSON
+                        properties:</draft-comment>
+                </cmd>
+            </step>
+            <step id="JSONProps">
+                <cmd>For JSON data, on the <uicontrol>JSON</uicontrol> tab, configure the following
+                    property:</cmd>
+                <info>
+                    <table frame="all" rowsep="1" colsep="1" id="table_lgq_53c_wr">
+                        <tgroup cols="2">
+                            <colspec colname="c1" colnum="1" colwidth="1*"/>
+                            <colspec colname="c2" colnum="2" colwidth="2.57*"/>
+                            <thead>
+                                <row>
+                                    <entry>JSON Property</entry>
+                                    <entry>Description</entry>
+                                </row>
+                            </thead>
+                            <tbody>
+                                <row>
+                                    <entry>JSON Content</entry>
+                                    <entry>Determines how JSON data is written:<ul
+                                            id="ul_mss_w3c_wr">
+                                            <li>JSON Array of Objects - Each file includes a single
+                                                array. In the array, each element is a JSON
+                                                representation of each record.</li>
+                                            <li>Multiple JSON Objects - Each file includes multiple
+                                                JSON objects. Each object is a JSON representation
+                                                of a record.</li>
+                                        </ul></entry>
+                                </row>
+                            </tbody>
+                        </tgroup>
+                    </table>
+                </info>
+            </step>
+            <step>
+                <cmd>
+                    <draft-comment author="Loretta">Using the following for Hadoop FS and Kafka
+                        Producer, like Delimited, above. This is for text
+                        properties:</draft-comment>
+                </cmd>
+            </step>
+            <step id="TextProps">
+                <cmd>For text data, on the <uicontrol>Text</uicontrol> tab, configure the following
+                    properties:</cmd>
+                <info>
+                    <table frame="all" rowsep="1" colsep="1" id="table_egv_3df_jr">
+                        <tgroup cols="2">
+                            <colspec colname="c1" colnum="1" colwidth="1*"/>
+                            <colspec colname="c2" colnum="2" colwidth="3.17*"/>
+                            <thead>
+                                <row>
+                                    <entry>Text Property</entry>
+                                    <entry>Description</entry>
+                                </row>
+                            </thead>
+                            <tbody>
+                                <row>
+                                    <entry>Text Field Path</entry>
+                                    <entry>Field that contains the text data to be written. All data
+                                        must be incorporated into the specified field. </entry>
+                                </row>
+                                <row>
+                                    <entry>Empty Line if No Text</entry>
+                                    <entry>Creates an empty line when a record does not include the
+                                        text field specified above. <p>When not selected, records
+                                            without the specified text field are
+                                        discarded.</p></entry>
+                                </row>
+                            </tbody>
+                        </tgroup>
+                    </table>
+                </info>
+            </step>
         </steps>
     </taskbody>
 </task>
