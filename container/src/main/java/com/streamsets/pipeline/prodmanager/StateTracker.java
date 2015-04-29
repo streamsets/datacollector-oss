@@ -8,7 +8,6 @@ package com.streamsets.pipeline.prodmanager;
 import com.codahale.metrics.MetricRegistry;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.MappingIterator;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.annotations.VisibleForTesting;
@@ -32,8 +31,8 @@ import java.io.IOException;
 import java.io.Reader;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.EventListener;
 import java.util.List;
+import java.util.Map;
 
 public class StateTracker {
 
@@ -85,7 +84,8 @@ public class StateTracker {
     return new File(stateDir, TEMP_STATE_FILE);
   }
 
-  public synchronized void setState(String name, String rev, State state, String message, MetricRegistry metricRegistry)
+  public synchronized void setState(String name, String rev, State state, String message, MetricRegistry metricRegistry,
+      Map<String, Object> attributes)
     throws PipelineManagerException {
     //Need to persist the state first and then update the pipeline state field.
     //Otherwise looking up the history after stopping the pipeline may or may not show the last STOPPED state
@@ -101,7 +101,8 @@ public class StateTracker {
       }
     }
 
-    PipelineState tempPipelineState = new PipelineState(name, rev, state, message, System.currentTimeMillis(),metricRegistryStr);
+    PipelineState tempPipelineState = new PipelineState(name, rev, state, message, System.currentTimeMillis(),
+                                                        metricRegistryStr, attributes);
     if(state != State.STOPPING) {
       persistPipelineState(tempPipelineState);
     }

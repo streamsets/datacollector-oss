@@ -31,7 +31,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.InputStream;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class ClusterPipelineManager extends AbstractTask implements PipelineManager {
   private static final Logger LOG = LoggerFactory.getLogger(StandalonePipelineManagerTask.class);
@@ -59,7 +61,8 @@ public class ClusterPipelineManager extends AbstractTask implements PipelineMana
       try {
         //TODO: check the cluster pipeline is still running and update stateTracker if not
         if (false) { //NOT RUNNING
-          stateTracker.setState(ps.getName(), ps.getRev(), State.ERROR, "Cluster Pipeline not running anymore", null);
+          stateTracker.setState(ps.getName(), ps.getRev(), State.ERROR, "Cluster Pipeline not running anymore", null,
+                                ps.getAttributes());
         }
       } catch (Exception ex) {
         throw new RuntimeException(ex);
@@ -178,7 +181,8 @@ public class ClusterPipelineManager extends AbstractTask implements PipelineMana
       //TODO start pipeline and update stateTracker
 
       //TODO: update message
-      stateTracker.setState(name, rev, State.RUNNING, "Starting cluster pipeline", null);
+      Map<String, Object> attributes = new HashMap<>();
+      stateTracker.setState(name, rev, State.RUNNING, "Starting cluster pipeline", null, attributes);
       return stateTracker.getState();
     } else {
       throw new PipelineManagerException(ValidationError.VALIDATION_0073);
@@ -191,7 +195,8 @@ public class ClusterPipelineManager extends AbstractTask implements PipelineMana
     if (!nodeProcessShutdown) {
       //TODO validate state transition
 
-      stateTracker.setState(state.getName(), getName(), State.STOPPED, "Stopping cluster pipeline", null);
+      stateTracker.setState(state.getName(), getName(), State.STOPPED, "Stopping cluster pipeline", null,
+                            state.getAttributes());
       return stateTracker.getState();
     }
     return state;

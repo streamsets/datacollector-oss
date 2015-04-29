@@ -206,20 +206,22 @@ public class TestUtil {
       StandalonePipelineManagerTask pipelineManager = Mockito.mock(StandalonePipelineManagerTask.class);
       try {
         Mockito.when(pipelineManager.startPipeline(PIPELINE_NAME, PIPELINE_REV)).thenReturn(new PipelineState(
-          PIPELINE_NAME, "2.0", State.RUNNING, "The pipeline is now running", System.currentTimeMillis(), null));
+          PIPELINE_NAME, "2.0", State.RUNNING, "The pipeline is now running", System.currentTimeMillis(), null, null));
       } catch (PipelineManagerException | StageException | PipelineRuntimeException | PipelineStoreException e) {
         e.printStackTrace();
       }
 
       try {
         Mockito.when(pipelineManager.stopPipeline(false)).thenReturn(
-          new PipelineState(PIPELINE_NAME, PIPELINE_REV, State.STOPPED, "The pipeline is not running", System.currentTimeMillis(), null));
+          new PipelineState(PIPELINE_NAME, PIPELINE_REV, State.STOPPED, "The pipeline is not running",
+                            System.currentTimeMillis(), null, null));
       } catch (PipelineManagerException e) {
         e.printStackTrace();
       }
 
-      Mockito.when(pipelineManager.getPipelineState()).thenReturn(new PipelineState(PIPELINE_NAME, PIPELINE_REV, State.STOPPED
-        , "Pipeline is not running", System.currentTimeMillis(), null));
+      Mockito.when(pipelineManager.getPipelineState()).thenReturn(new PipelineState(PIPELINE_NAME, PIPELINE_REV,
+                                                                                    State.STOPPED
+        , "Pipeline is not running", System.currentTimeMillis(), null, null));
 
       try {
         Mockito.when(pipelineManager.getSnapshot(PIPELINE_NAME, DEFAULT_PIPELINE_REV, SNAPSHOT_NAME))
@@ -234,9 +236,9 @@ public class TestUtil {
       Mockito.when(pipelineManager.getMetrics()).thenReturn(new MetricRegistry());
 
       List<PipelineState> states = new ArrayList<>();
-      states.add(new PipelineState(PIPELINE_NAME, "1", State.STOPPED, "", System.currentTimeMillis(), null));
-      states.add(new PipelineState(PIPELINE_NAME, "1", State.RUNNING, "", System.currentTimeMillis(), null));
-      states.add(new PipelineState(PIPELINE_NAME, "1", State.STOPPED, "", System.currentTimeMillis(), null));
+      states.add(new PipelineState(PIPELINE_NAME, "1", State.STOPPED, "", System.currentTimeMillis(), null, null));
+      states.add(new PipelineState(PIPELINE_NAME, "1", State.RUNNING, "", System.currentTimeMillis(), null, null));
+      states.add(new PipelineState(PIPELINE_NAME, "1", State.STOPPED, "", System.currentTimeMillis(), null, null));
       try {
         Mockito.when(pipelineManager.getHistory(PIPELINE_NAME, DEFAULT_PIPELINE_REV, false)).thenReturn(states);
       } catch (PipelineManagerException e) {

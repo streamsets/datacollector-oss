@@ -153,7 +153,7 @@ public class StandalonePipelineManagerTask extends AbstractTask implements Pipel
 
   public void setState(String name, String rev, State state, String message, MetricRegistry metricRegistry)
     throws PipelineManagerException {
-    stateTracker.setState(name, rev, state, message, metricRegistry);
+    stateTracker.setState(name, rev, state, message, metricRegistry, null);
   }
 
   @Override

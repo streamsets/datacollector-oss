@@ -6,6 +6,7 @@
 package com.streamsets.pipeline.prodmanager;
 
 import com.codahale.metrics.MetricRegistry;
+import com.google.common.collect.ImmutableMap;
 import com.streamsets.pipeline.main.RuntimeInfo;
 import com.streamsets.pipeline.main.RuntimeModule;
 import com.streamsets.pipeline.util.*;
@@ -22,6 +23,7 @@ import org.mockito.Mockito;
 import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.Map;
 import java.util.UUID;
 
 public class TestStateTracker {
@@ -78,7 +80,8 @@ public class TestStateTracker {
   @Test
   public void testSetState() throws PipelineManagerException {
     stateTracker.init();
-    stateTracker.setState("xyz", "2.0", State.RUNNING, "Started pipeline", null);
+    Map<String, Object> attributes = ImmutableMap.<String, Object>of("X", "x");
+    stateTracker.setState("xyz", "2.0", State.RUNNING, "Started pipeline", null, attributes);
 
     PipelineState state = stateTracker.getState();
 
@@ -86,6 +89,7 @@ public class TestStateTracker {
     Assert.assertEquals("2.0", state.getRev());
     Assert.assertEquals("Started pipeline", state.getMessage());
     Assert.assertEquals(State.RUNNING, state.getState());
+    Assert.assertEquals(attributes, state.getAttributes());
   }
 
   @Test
@@ -101,7 +105,7 @@ public class TestStateTracker {
     PipelineState state = stateTracker.getState();
     Assert.assertNull(state);
 
-    stateTracker.setState("xyz", "1.0", State.RUNNING, null, null);
+    stateTracker.setState("xyz", "1.0", State.RUNNING, null, null, null);
     state = stateTracker.getState();
     Assert.assertNotNull(state);
     Assert.assertEquals("xyz", state.getName());

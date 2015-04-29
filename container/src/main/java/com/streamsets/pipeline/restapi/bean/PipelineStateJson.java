@@ -9,6 +9,8 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import java.util.Map;
+
 public class PipelineStateJson {
 
   private final com.streamsets.pipeline.prodmanager.PipelineState pipelineState;
@@ -20,9 +22,10 @@ public class PipelineStateJson {
     @JsonProperty("state") StateJson stateJson,
     @JsonProperty("message") String message,
     @JsonProperty("lastStatusChange") long lastStatusChange,
-    @JsonProperty("metrics") String metrics) {
+    @JsonProperty("metrics") String metrics,
+    @JsonProperty("attributes") Map<String, Object> attributes) {
     pipelineState = new com.streamsets.pipeline.prodmanager.PipelineState(name, rev, BeanHelper.unwrapState(stateJson),
-      message, lastStatusChange, metrics);
+      message, lastStatusChange, metrics, attributes);
   }
 
   public PipelineStateJson(com.streamsets.pipeline.prodmanager.PipelineState pipelineState) {
@@ -51,6 +54,10 @@ public class PipelineStateJson {
 
   public String getMetrics() {
     return pipelineState.getMetrics();
+  }
+
+  public Map<String, Object> getAttributes() {
+    return pipelineState.getAttributes();
   }
 
   @JsonIgnore

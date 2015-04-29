@@ -90,7 +90,7 @@ public class TestProdPipelineRunnable {
     ProductionPipeline pipeline = createProductionPipeline(DeliveryGuarantee.AT_MOST_ONCE, true);
     ProductionPipelineRunnable runnable = new ProductionPipelineRunnable(null, manager, pipeline, PIPELINE_NAME, REVISION,
       Collections.<Future<?>>emptyList());
-    manager.getStateTracker().setState(PIPELINE_NAME, REVISION, State.RUNNING, null, null);
+    manager.getStateTracker().setState(PIPELINE_NAME, REVISION, State.RUNNING, null, null, null);
     runnable.run();
 
     //The source returns null offset because all the data from source was read
@@ -107,7 +107,7 @@ public class TestProdPipelineRunnable {
     ProductionPipeline pipeline = createProductionPipeline(DeliveryGuarantee.AT_MOST_ONCE, false);
     ProductionPipelineRunnable runnable = new ProductionPipelineRunnable(null, manager, pipeline, PIPELINE_NAME, REVISION,
       Collections.<Future<?>>emptyList());
-    manager.getStateTracker().setState(PIPELINE_NAME, REVISION, State.STOPPING, null, null);
+    manager.getStateTracker().setState(PIPELINE_NAME, REVISION, State.STOPPING, null, null, null);
     runnable.stop(false);
     Assert.assertTrue(pipeline.wasStopped());
 
@@ -194,7 +194,7 @@ public class TestProdPipelineRunnable {
         REVISION, runtimeInfo, MockStages.createPipelineConfigurationSourceProcessorTarget())
       .build(runner, tracker, null);
     manager.getStateTracker().register(PIPELINE_NAME, REVISION);
-    manager.getStateTracker().setState(PIPELINE_NAME, REVISION, State.STOPPED, null, null);
+    manager.getStateTracker().setState(PIPELINE_NAME, REVISION, State.STOPPED, null, null, null);
 
     if(captureNextBatch) {
       runner.captureNextBatch(SNAPSHOT_NAME, 1);
