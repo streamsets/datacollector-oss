@@ -22,6 +22,7 @@ import org.mockito.Mockito;
 import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.UUID;
 
 public class TestStateTracker {
 
@@ -51,6 +52,15 @@ public class TestStateTracker {
   @After
   public void tearDown() {
     stateTracker.getStateFile().delete();
+  }
+
+  @Test
+  public void testDirCreation() {
+    File dir = new File("target", UUID.randomUUID().toString()).getAbsoluteFile();
+    RuntimeInfo info = Mockito.mock(RuntimeInfo.class);
+    Mockito.when(info.getDataDir()).thenReturn(dir.getAbsolutePath());
+    new StateTracker(info, null);
+    Assert.assertTrue(dir.exists());
   }
 
   @Test

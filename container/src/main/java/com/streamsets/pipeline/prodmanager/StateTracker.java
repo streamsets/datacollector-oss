@@ -62,6 +62,11 @@ public class StateTracker {
   public StateTracker(RuntimeInfo runtimeInfo, com.streamsets.pipeline.util.Configuration configuration) {
     Preconditions.checkNotNull(runtimeInfo, "runtime info cannot be null");
     stateDir = new File(runtimeInfo.getDataDir(), STATE_DIR);
+    if (!stateDir.exists()) {
+      if (!stateDir.mkdirs()) {
+        throw new RuntimeException(Utils.format("Could not create directory '{}'", stateDir));
+      }
+    }
     this.configuration = configuration;
     this.runtimeInfo = runtimeInfo;
   }
