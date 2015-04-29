@@ -1,0 +1,245 @@
+{
+  "pipelineConfig" : {
+    "schemaVersion" : 1,
+    "uuid" : "e16ed017-db05-4efd-b32d-db52443c3a2a",
+    "configuration" : [ {
+     "name" : "executionMode",
+      "value" : "STANDALONE"
+    }, {
+      "name" : "deliveryGuarantee",
+      "value" : "AT_LEAST_ONCE"
+    }, {
+      "name" : "badRecordsHandling",
+      "value" : "streamsets-datacollector-basic-lib::com_streamsets_pipeline_stage_destination_devnull_NullDTarget::1.0.0"
+    }, {
+      "name" : "memoryLimitExceeded",
+      "value" : "STOP_PIPELINE"
+    }, {
+      "name" : "memoryLimit",
+      "value" : 150
+    }, {
+      "name" : "clusterSlaveMemory",
+      "value" : 1024
+    }, {
+      "name" : "clusterSlaveJavaOpts",
+      "value" : "-XX:PermSize=128M -XX:MaxPermSize=256M"
+    }, {
+      "name" : "clusterKerberos",
+      "value" : false
+    }, {
+      "name" : "kerberosPrincipal",
+      "value" : ""
+    }, {
+      "name" : "kerberosKeytab",
+      "value" : ""
+    }, {
+      "name" : "clusterLauncherEnv",
+      "value" : [ ]
+    } ],
+    "uiInfo" : {
+      "previewConfig" : {
+        "previewSource" : "CONFIGURED_SOURCE",
+        "batchSize" : 10,
+        "skipTargets" : true
+      }
+    },
+    "stages" : [ {
+      "instanceName" : "com_streamsets_pipeline_stage_devtest_RandomSource1427993628355",
+      "library" : "streamsets-datacollector-dev-lib",
+      "stageName" : "com_streamsets_pipeline_stage_devtest_RandomSource",
+      "stageVersion" : "1.0.0",
+      "configuration" : [ {
+        "name" : "fields",
+        "value" : "a,b,c"
+      }, {
+        "name" : "maxRecordsToGenerate",
+        "value" : 922337203685
+      }, {
+        "name" : "delay",
+        "value" : 120000
+      }, {
+        "name" : "stageOnRecordError",
+        "value" : "TO_ERROR"
+      } ],
+      "uiInfo" : {
+        "label" : "Dev Random Record Source 1",
+        "description" : "",
+        "xPos" : 167,
+        "yPos" : 106,
+        "stageType" : "SOURCE",
+        "icon" : "/rest/v1/definitions/stages/icon?name=com_streamsets_pipeline_stage_devtest_RandomSource&library=streamsets-datacollector-dev-lib&version=1.0.0"
+      },
+      "inputLanes" : [ ],
+      "outputLanes" : [ "com_streamsets_pipeline_stage_devtest_RandomSource1427993628355OutputLane14279936283550" ]
+    }, {
+      "instanceName" : "com_streamsets_pipeline_stage_destination_kafka_KafkaDTarget1427993635467",
+      "library" : "streamsets-datacollector-cdh_kafka_1_2_0-lib",
+      "stageName" : "com_streamsets_pipeline_stage_destination_kafka_KafkaDTarget",
+      "stageVersion" : "1.0.0",
+      "configuration" : [ {
+        "name" : "metadataBrokerList",
+        "value" : "node01.local:9092,node02.local:9092,node03.local:9092"
+       }, {
+        "name" : "runtimeTopicResolution",
+        "value" : false
+      }, {
+        "name" : "topic",
+        "value" : "TEST_TOPIC"
+      }, {
+        "name" : "topicExpression",
+        "value" : "${record:value('/topic')}"
+      }, {
+        "name" : "topicWhiteList",
+        "value" : "*"
+      }, {
+        "name" : "partitionStrategy",
+        "value" : "ROUND_ROBIN"
+      }, {
+        "name" : "partition",
+        "value" : "${0}"
+      }, {
+        "name" : "dataFormat",
+        "value" : "SDC_JSON"
+      }, {
+        "name" : "charset",
+        "value" : "UTF-8"
+      }, {
+        "name" : "singleMessagePerBatch",
+        "value" : false
+      }, {
+        "name" : "kafkaProducerConfigs",
+        "value" : [ {
+          "key" : "queue.buffering.max.ms",
+          "value" : "5000"
+        } ]
+      }, {
+        "name" : "csvFileFormat",
+        "value" : "CSV"
+      }, {
+        "name" : "csvHeader",
+        "value" : "NO_HEADER"
+      }, {
+        "name" : "csvReplaceNewLines",
+        "value" : true
+      }, {
+        "name" : "jsonMode",
+        "value" : "MULTIPLE_OBJECTS"
+      }, {
+        "name" : "textFieldPath",
+        "value" : "/"
+      }, {
+        "name" : "textEmptyLineIfNull",
+        "value" : false
+      }, {
+        "name" : "stageRequiredFields",
+        "value" : [ ]
+      }, {
+        "name" : "stageOnRecordError",
+        "value" : "TO_ERROR"
+      } ],
+      "uiInfo" : {
+        "label" : "Kafka Producer 1",
+        "description" : "",
+        "xPos" : 497,
+        "yPos" : 122,
+        "stageType" : "TARGET",
+        "icon" : "/rest/v1/definitions/stages/icon?name=com_streamsets_pipeline_stage_destination_kafka_KafkaDTarget&library=streamsets-datacollector-cdh_kafka_1_2_0-lib&version=1.0.0"
+      },
+      "inputLanes" : [ "com_streamsets_pipeline_stage_devtest_RandomSource1427993628355OutputLane14279936283550" ],
+      "outputLanes" : [ ]
+    } ],
+    "errorStage" : {
+      "instanceName" : "com_streamsets_pipeline_stage_destination_devnull_NullDTarget1427993659252",
+      "library" : "streamsets-datacollector-basic-lib",
+      "stageName" : "com_streamsets_pipeline_stage_destination_devnull_NullDTarget",
+      "stageVersion" : "1.0.0",
+      "configuration" : [ ],
+      "uiInfo" : {
+        "label" : "Bad Records - Trash",
+        "description" : "",
+        "xPos" : 717,
+        "yPos" : 50,
+        "stageType" : "TARGET",
+        "icon" : "/rest/v1/definitions/stages/icon?name=com_streamsets_pipeline_stage_destination_devnull_NullDTarget&library=streamsets-datacollector-basic-lib&version=1.0.0"
+      },
+      "inputLanes" : [ ],
+      "outputLanes" : [ ]
+    },
+    "issues" : {
+      "issueCount" : 0,
+      "stageIssues" : { },
+      "pipelineIssues" : [ ]
+    },
+    "info" : {
+      "name" : "RANDOM_KAFKA_PRODUCER",
+      "description" : null,
+      "created" : 1427993624955,
+      "lastModified" : 1427993680866,
+      "creator" : "admin",
+      "lastModifier" : "admin",
+      "lastRev" : "0",
+      "uuid" : "e16ed017-db05-4efd-b32d-db52443c3a2a",
+      "valid" : true
+    },
+    "description" : null,
+    "previewable" : true,
+    "valid" : true
+  },
+  "pipelineRules" : {
+    "metricsRuleDefinitions" : [ {
+      "id" : "RANDOM_KAFKA_PRODUCERbadRecords1427993625119",
+      "alertText" : "High incidence of Bad Records",
+      "metricId" : "pipeline.batchErrorRecords.meter",
+      "metricType" : "METER",
+      "metricElement" : "METER_COUNT",
+      "condition" : "${value() > 100}",
+      "sendEmail" : false,
+      "enabled" : false,
+      "valid" : true
+    }, {
+      "id" : "RANDOM_KAFKA_PRODUCERstageErrors1427993625119",
+      "alertText" : "High incidence of Error Messages",
+      "metricId" : "pipeline.batchErrorMessages.meter",
+      "metricType" : "METER",
+      "metricElement" : "METER_COUNT",
+      "condition" : "${value() > 100}",
+      "sendEmail" : false,
+      "enabled" : false,
+      "valid" : true
+    }, {
+      "id" : "RANDOM_KAFKA_PRODUCERidleGauge1427993625119",
+      "alertText" : "Pipeline is Idle",
+      "metricId" : "RuntimeStatsGauge.gauge",
+      "metricType" : "GAUGE",
+      "metricElement" : "TIME_OF_LAST_RECEIVED_RECORD",
+      "condition" : "${time:now() - value() > 120000}",
+      "sendEmail" : false,
+      "enabled" : false,
+      "valid" : true
+    }, {
+      "id" : "RANDOM_KAFKA_PRODUCERbatchTime1427993625119",
+      "alertText" : "Batch taking more time to process",
+      "metricId" : "RuntimeStatsGauge.gauge",
+      "metricType" : "GAUGE",
+      "metricElement" : "CURRENT_BATCH_AGE",
+      "condition" : "${value() > 200}",
+      "sendEmail" : false,
+      "enabled" : false,
+      "valid" : true
+    }, {
+      "id" : "RANDOM_KAFKA_PRODUCERmemoryLimit1427993625119",
+      "alertText" : "Memory limit for pipeline exceeded",
+      "metricId" : "pipeline.memoryConsumed.counter",
+      "metricType" : "COUNTER",
+      "metricElement" : "COUNTER_COUNT",
+      "condition" : "${value() > humanReadableToBytes('100MB')}",
+      "sendEmail" : false,
+      "enabled" : false,
+      "valid" : true
+    } ],
+    "dataRuleDefinitions" : [ ],
+    "emailIds" : [ ],
+    "uuid" : "331b7158-cdd2-4969-8bff-42a8e1dcdc7e",
+    "ruleIssues" : [ ]
+  }
+}

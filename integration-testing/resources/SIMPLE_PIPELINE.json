@@ -1,0 +1,204 @@
+{
+    "pipelineConfig": {
+        "schemaVersion": 1,
+        "uuid": "43e00848-a260-43cb-a6e0-1bf4f855290a",
+        "configuration": [
+            {
+                "name" : "executionMode",
+                "value" : "STANDALONE"
+            }, {
+                "name": "deliveryGuarantee",
+                "value": "AT_LEAST_ONCE"
+            },
+            {
+                "name": "badRecordsHandling",
+                "value": "streamsets-datacollector-basic-lib::com_streamsets_pipeline_stage_destination_devnull_NullDTarget::1.0.0"
+            },
+            {
+                "name": "memoryLimitExceeded",
+                "value": "STOP_PIPELINE"
+            },
+            {
+                "name": "memoryLimit",
+                "value": 150
+            }, {
+                "name" : "clusterSlaveMemory",
+                "value" : 1024
+            }, {
+                "name" : "clusterSlaveJavaOpts",
+                "value" : "-XX:PermSize=128M -XX:MaxPermSize=256M"
+            }, {
+                "name" : "clusterKerberos",
+                "value" : false
+            }, {
+                "name" : "kerberosPrincipal",
+                "value" : ""
+            }, {
+                "name" : "kerberosKeytab",
+                "value" : ""
+            }, {
+                "name" : "clusterLauncherEnv",
+                "value" : [ ]
+            }
+        ],
+        "uiInfo": {
+            "previewConfig": {
+                "previewSource": "CONFIGURED_SOURCE",
+                "batchSize": 10,
+                "skipTargets": true
+            }
+        },
+        "stages": [
+            {
+                "instanceName": "com_streamsets_pipeline_stage_devtest_RandomSource1427992842970",
+                "library": "streamsets-datacollector-dev-lib",
+                "stageName": "com_streamsets_pipeline_stage_devtest_RandomSource",
+                "stageVersion": "1.0.0",
+                "configuration": [
+                    {
+                        "name": "fields",
+                        "value": "a,b,c"
+                    },
+                    {
+                        "name": "delay",
+                        "value": 1000
+                    },
+                    {
+                        "name": "stageOnRecordError",
+                        "value": "TO_ERROR"
+                    }
+                ],
+                "uiInfo": {
+                    "label": "Dev Random Record Source 1",
+                    "description": "",
+                    "xPos": 112,
+                    "yPos": 96,
+                    "stageType": "SOURCE",
+                    "icon": "/rest/v1/definitions/stages/icon?name=com_streamsets_pipeline_stage_devtest_RandomSource&library=streamsets-datacollector-dev-lib&version=1.0.0"
+                },
+                "inputLanes": [],
+                "outputLanes": [
+                    "com_streamsets_pipeline_stage_devtest_RandomSource1427992842970OutputLane14279928429700"
+                ]
+            },
+            {
+                "instanceName": "com_streamsets_pipeline_stage_destination_devnull_NullDTarget1427992852147",
+                "library": "streamsets-datacollector-basic-lib",
+                "stageName": "com_streamsets_pipeline_stage_destination_devnull_NullDTarget",
+                "stageVersion": "1.0.0",
+                "configuration": [],
+                "uiInfo": {
+                    "label": "Trash 1",
+                    "description": "",
+                    "xPos": 400,
+                    "yPos": 108,
+                    "stageType": "TARGET",
+                    "icon": "/rest/v1/definitions/stages/icon?name=com_streamsets_pipeline_stage_destination_devnull_NullDTarget&library=streamsets-datacollector-basic-lib&version=1.0.0"
+                },
+                "inputLanes": [
+                    "com_streamsets_pipeline_stage_devtest_RandomSource1427992842970OutputLane14279928429700"
+                ],
+                "outputLanes": []
+            }
+        ],
+        "errorStage": {
+            "instanceName": "com_streamsets_pipeline_stage_destination_devnull_NullDTarget1427992860847",
+            "library": "streamsets-datacollector-basic-lib",
+            "stageName": "com_streamsets_pipeline_stage_destination_devnull_NullDTarget",
+            "stageVersion": "1.0.0",
+            "configuration": [],
+            "uiInfo": {
+                "label": "Bad Records - Trash",
+                "description": "",
+                "xPos": 620,
+                "yPos": 50,
+                "stageType": "TARGET",
+                "icon": "/rest/v1/definitions/stages/icon?name=com_streamsets_pipeline_stage_destination_devnull_NullDTarget&library=streamsets-datacollector-basic-lib&version=1.0.0"
+            },
+            "inputLanes": [],
+            "outputLanes": []
+        },
+        "issues": {
+            "issueCount": 0,
+            "stageIssues": {},
+            "pipelineIssues": []
+        },
+        "info": {
+            "name": "SIMPLE_PIPELINE",
+            "description": null,
+            "created": 1427992839357,
+            "lastModified": 1427992861870,
+            "creator": "admin",
+            "lastModifier": "admin",
+            "lastRev": "0",
+            "uuid": "43e00848-a260-43cb-a6e0-1bf4f855290a",
+            "valid": true
+        },
+        "description": null,
+        "previewable": true,
+        "valid": true
+    },
+    "pipelineRules": {
+        "metricsRuleDefinitions": [
+            {
+                "id": "SIMPLE_PIPELINEbadRecords1427992839504",
+                "alertText": "High incidence of Bad Records",
+                "metricId": "pipeline.batchErrorRecords.meter",
+                "metricType": "METER",
+                "metricElement": "METER_COUNT",
+                "condition": "${value() > 100}",
+                "sendEmail": false,
+                "enabled": false,
+                "valid": true
+            },
+            {
+                "id": "SIMPLE_PIPELINEstageErrors1427992839504",
+                "alertText": "High incidence of Error Messages",
+                "metricId": "pipeline.batchErrorMessages.meter",
+                "metricType": "METER",
+                "metricElement": "METER_COUNT",
+                "condition": "${value() > 100}",
+                "sendEmail": false,
+                "enabled": false,
+                "valid": true
+            },
+            {
+                "id": "SIMPLE_PIPELINEidleGauge1427992839504",
+                "alertText": "Pipeline is Idle",
+                "metricId": "RuntimeStatsGauge.gauge",
+                "metricType": "GAUGE",
+                "metricElement": "TIME_OF_LAST_RECEIVED_RECORD",
+                "condition": "${time:now() - value() > 120000}",
+                "sendEmail": false,
+                "enabled": false,
+                "valid": true
+            },
+            {
+                "id": "SIMPLE_PIPELINEbatchTime1427992839504",
+                "alertText": "Batch taking more time to process",
+                "metricId": "RuntimeStatsGauge.gauge",
+                "metricType": "GAUGE",
+                "metricElement": "CURRENT_BATCH_AGE",
+                "condition": "${value() > 200}",
+                "sendEmail": false,
+                "enabled": false,
+                "valid": true
+            },
+            {
+                "id": "SIMPLE_PIPELINEmemoryLimit1427992839504",
+                "alertText": "Memory limit for pipeline exceeded",
+                "metricId": "pipeline.memoryConsumed.counter",
+                "metricType": "COUNTER",
+                "metricElement": "COUNTER_COUNT",
+                "condition": "${value() > humanReadableToBytes('100MB')}",
+                "sendEmail": false,
+                "enabled": false,
+                "valid": true
+            }
+        ],
+        "dataRuleDefinitions": [],
+        "emailIds": [],
+        "uuid": "998421fa-b094-4cb5-8363-4b3b5a070168",
+        "ruleIssues": []
+    }
+}
