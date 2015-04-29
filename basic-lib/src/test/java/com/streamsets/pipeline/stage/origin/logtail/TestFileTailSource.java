@@ -24,6 +24,7 @@ import java.io.OutputStream;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
@@ -42,7 +43,7 @@ public class TestFileTailSource {
     FileTailSource source = new FileTailSource(DataFormat.TEXT, "UTF-8", Arrays.asList(fileInfo), 1024, 25, 1, null,
                                                false, null, null, null, null, null, false, null);
     SourceRunner runner = new SourceRunner.Builder(FileTailDSource.class, source)
-        .addOutputLane("lane")
+        .addOutputLane("lane").addOutputLane("metadata")
         .build();
     runner.runInit();
   }
@@ -66,7 +67,7 @@ public class TestFileTailSource {
     FileTailSource source = new FileTailSource(DataFormat.TEXT, "UTF-8", Arrays.asList(fileInfo), 1024, 25, 1, null,
                                                false, null, null, null, null, null, false, null);
     SourceRunner runner = new SourceRunner.Builder(FileTailDSource.class, source)
-        .addOutputLane("lane")
+        .addOutputLane("lane").addOutputLane("metadata")
         .build();
     runner.runInit();
     os.write("HELLO\n".getBytes());
@@ -113,7 +114,7 @@ public class TestFileTailSource {
     FileTailSource source = new FileTailSource(DataFormat.TEXT, "UTF-8", Arrays.asList(fileInfo1, fileInfo2), 1024, 25,
                                                1, null, false, null, null, null, null, null, false, null);
     SourceRunner runner = new SourceRunner.Builder(FileTailDSource.class, source)
-        .addOutputLane("lane")
+        .addOutputLane("lane").addOutputLane("metadata")
         .build();
     Assert.assertTrue(!runner.runValidateConfigs().isEmpty());
     Assert.assertTrue(runner.runValidateConfigs().get(0).toString().contains("TAIL_04"));
@@ -143,16 +144,32 @@ public class TestFileTailSource {
     FileTailSource source = new FileTailSource(DataFormat.TEXT, "UTF-8", Arrays.asList(fileInfo1, fileInfo2), 1024, 25,
                                                1, null, false, null, null, null, null, null, false, null);
     SourceRunner runner = new SourceRunner.Builder(FileTailDSource.class, source)
-        .addOutputLane("lane")
+        .addOutputLane("lane").addOutputLane("metadata")
         .build();
     runner.runInit();
     try {
+      Date now = new Date();
+      Thread.sleep(10);
       StageRunner.Output output = runner.runProduce(null, 1000);
       Assert.assertEquals(2, output.getRecords().get("lane").size());
       Record record = output.getRecords().get("lane").get(0);
       Assert.assertEquals("Hello", record.get("/text").getValueAsString());
       record = output.getRecords().get("lane").get(1);
       Assert.assertEquals("Hola", record.get("/text").getValueAsString());
+
+      Assert.assertEquals(2, output.getRecords().get("metadata").size());
+      Record metadata = output.getRecords().get("metadata").get(0);
+      Assert.assertEquals(new File(fileInfo1.dirName, fileInfo1.file).getAbsolutePath(),
+                          metadata.get("/fileName").getValueAsString());
+      Assert.assertEquals("START", metadata.get("/event").getValueAsString());
+      Assert.assertTrue(now.compareTo(metadata.get("/time").getValueAsDate()) < 0);
+      Assert.assertTrue(metadata.has("/inode"));
+      metadata = output.getRecords().get("metadata").get(1);
+      Assert.assertEquals(new File(fileInfo2.dirName, fileInfo2.file).getAbsolutePath(),
+                          metadata.get("/fileName").getValueAsString());
+      Assert.assertEquals("START", metadata.get("/event").getValueAsString());
+      Assert.assertTrue(now.compareTo(metadata.get("/time").getValueAsDate()) < 0);
+      Assert.assertTrue(metadata.has("/inode"));
     } finally {
       runner.runDestroy();
     }
@@ -178,7 +195,7 @@ public class TestFileTailSource {
     FileTailSource source = new FileTailSource(DataFormat.TEXT, "UTF-8", Arrays.asList(fileInfo), 7, 1, 1, null,
                                                false, null, null, null, null, null, false, null);
     SourceRunner runner = new SourceRunner.Builder(FileTailDSource.class, source)
-        .addOutputLane("lane")
+        .addOutputLane("lane").addOutputLane("metadata")
         .build();
     runner.runInit();
     try {
@@ -215,7 +232,7 @@ public class TestFileTailSource {
     FileTailSource source = new FileTailSource(DataFormat.JSON, "UTF-8", Arrays.asList(fileInfo), 1024, 25, 1, null,
                                                false, null, null, null, null, null, false, null);
     SourceRunner runner = new SourceRunner.Builder(FileTailDSource.class, source)
-        .addOutputLane("lane")
+        .addOutputLane("lane").addOutputLane("metadata")
         .build();
     runner.runInit();
     Files.write(logFile.toPath(), Arrays.asList("{\"a\": 1}", "[{\"b\": 2}]"), Charset.forName("UTF-8"));
@@ -330,7 +347,7 @@ public class TestFileTailSource {
     FileTailSource source = new FileTailSource(DataFormat.LOG, "UTF-8", Arrays.asList(fileInfo), 1024, 25, 1,
                                                LogMode.LOG4J, true, null, null, null, null, null, false, null);
     SourceRunner runner = new SourceRunner.Builder(FileTailDSource.class, source)
-      .addOutputLane("lane")
+      .addOutputLane("lane").addOutputLane("metadata")
       .build();
     runner.runInit();
     Files.write(logFile.toPath(), Arrays.asList(LINE1, LINE2), Charset.forName("UTF-8"));
@@ -401,7 +418,7 @@ public class TestFileTailSource {
     FileTailSource source = new FileTailSource(DataFormat.LOG, "UTF-8", Arrays.asList(fileInfo), 2048, 100, 1,
                                                LogMode.LOG4J, true, null, null, null, null, null, false, null);
     SourceRunner runner = new SourceRunner.Builder(FileTailDSource.class, source)
-      .addOutputLane("lane")
+      .addOutputLane("lane").addOutputLane("metadata")
       .build();
     runner.runInit();
     Files.write(logFile.toPath(), Arrays.asList(LOG_LINE_WITH_STACK_TRACE), Charset.forName("UTF-8"));

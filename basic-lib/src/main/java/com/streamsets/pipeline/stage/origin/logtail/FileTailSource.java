@@ -7,6 +7,7 @@ package com.streamsets.pipeline.stage.origin.logtail;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.streamsets.pipeline.api.BatchMaker;
+import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.base.BaseSource;
@@ -16,6 +17,7 @@ import com.streamsets.pipeline.config.JsonMode;
 import com.streamsets.pipeline.config.LogMode;
 import com.streamsets.pipeline.config.OnParseError;
 import com.streamsets.pipeline.lib.io.FileLine;
+import com.streamsets.pipeline.lib.io.LiveFile;
 import com.streamsets.pipeline.lib.io.LiveFileChunk;
 import com.streamsets.pipeline.lib.io.MultiDirectoryReader;
 import com.streamsets.pipeline.lib.parser.DataParserFactory;
@@ -29,6 +31,7 @@ import java.io.IOException;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -83,6 +86,8 @@ public class FileTailSource extends BaseSource {
   private long maxWaitTimeMillis;
 
   private DataParserFactory parserFactory;
+  private String outputLane;
+  private String metadataLane;
 
   @Override
   protected List<ConfigIssue> validateConfigs() throws StageException {
@@ -147,6 +152,9 @@ public class FileTailSource extends BaseSource {
         throw new StageException(Errors.TAIL_03, "dataFormat", dataFormat);
     }
     parserFactory = builder.build();
+
+    outputLane = getContext().getOutputLanes().get(0);
+    metadataLane = getContext().getOutputLanes().get(1);
   }
 
   @Override
@@ -235,7 +243,7 @@ public class FileTailSource extends BaseSource {
                                                              line.getLength())) {
               Record record = parser.parse();
               if (record != null) {
-                batchMaker.addRecord(record);
+                batchMaker.addRecord(record, outputLane);
                 recordCounter++;
               }
             } catch (IOException | DataParserException ex) {
@@ -246,6 +254,23 @@ public class FileTailSource extends BaseSource {
       } catch (IOException ex) {
         throw new StageException(Errors.TAIL_11, ex.getMessage(), ex);
       }
+    }
+
+    try {
+      Date now = new Date(startTime);
+      for (MultiDirectoryReader.Event event : multiDirReader.getEvents()) {
+        LiveFile file = event.getFile().refresh();
+        Record metadataRecord = getContext().createRecord("");
+        Map<String, Field> map = new HashMap<>();
+        map.put("fileName", Field.create(file.getPath().toString()));
+        map.put("inode", Field.create(file.getINode()));
+        map.put("time", Field.createDate(now));
+        map.put("event", Field.create((event.isStart() ? "START" : "END")));
+        metadataRecord.set(Field.create(map));
+        batchMaker.addRecord(metadataRecord, metadataLane);
+      }
+    } catch (IOException ex) {
+      throw new StageException(Errors.TAIL_14, ex.getMessage(), ex);
     }
 
     try {

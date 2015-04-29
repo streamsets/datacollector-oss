@@ -19,6 +19,7 @@ public enum Errors implements ErrorCode {
   TAIL_11("Error reading file '{}': {}"),
   TAIL_12("Cannot parse record '{}': {}"),
   TAIL_13("Could not serialize offset: {}"),
+  TAIL_14("Could not get file start/end events: {}"),
   ;
 
   private final String msg;

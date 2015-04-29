@@ -13,6 +13,7 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -90,10 +91,12 @@ public class TestMultiDirectoryReader {
     MultiDirectoryReader mdr = new MultiDirectoryReader(Arrays.asList(di1, di2), UTF8, 1024);
   }
 
-    @Test
+  @Test
   public void testWithMultipleDirectories() throws Exception {
-    Files.write(new File(testDir1, "f1.txt").toPath(), Arrays.asList("f1.0"), UTF8);
-    Files.write(new File(testDir2, "f2.txt").toPath(), Arrays.asList("f2.00"), UTF8);
+    Path f1 = new File(testDir1, "f1.txt").toPath().toAbsolutePath();
+    Path f2 = new File(testDir2, "f2.txt").toPath().toAbsolutePath();
+    Files.write(f1, Arrays.asList("f1.0"), UTF8);
+    Files.write(f2, Arrays.asList("f2.00"), UTF8);
     MultiDirectoryReader.DirectoryInfo di1 = new MultiDirectoryReader.DirectoryInfo(testDir1.getAbsolutePath(),
                                                                                     LogRollMode.REVERSE_COUNTER,
                                                                                     "f1.txt", "");
@@ -102,9 +105,15 @@ public class TestMultiDirectoryReader {
                                                                                     "f2.txt", "");
 
     MultiDirectoryReader mdr = new MultiDirectoryReader(Arrays.asList(di1, di2), UTF8, 1024);
+    // just open the multidir, no file events
+    Assert.assertTrue(mdr.getEvents().isEmpty());
 
     // reads first dir
     mdr.setOffsets(new HashMap<String, String>());
+
+    // after setOffset there should be no file events
+    Assert.assertTrue(mdr.getEvents().isEmpty());
+
     LiveFileChunk chunk = mdr.next(0);
     Assert.assertNotNull(chunk);
     Assert.assertEquals("f1.0\n", chunk.getLines().get(0).getText());
@@ -113,11 +122,26 @@ public class TestMultiDirectoryReader {
     Assert.assertTrue(mdr.getOffsets().get(testDir1.getAbsolutePath()).contains("f1.txt"));
     Assert.assertTrue(mdr.getOffsets().get(testDir2.getAbsolutePath()).isEmpty());
 
+    //after first read we should get 1st file start event
+    Assert.assertEquals(1, mdr.getEvents().size());
+    LiveFile lf1 = new LiveFile(f1);
+    Assert.assertEquals(new MultiDirectoryReader.Event(lf1, true), mdr.getEvents().get(0));
+
     Files.write(new File(testDir1, "f1.txt").toPath(), Arrays.asList("f1.01"), UTF8, StandardOpenOption.APPEND);
 
     // reads second dir even if first dir has new data (round robin to avoid starvation)
     mdr.setOffsets(mdr.getOffsets());
+
+    // after setOffset there should be no file events
+    Assert.assertTrue(mdr.getEvents().isEmpty());
+
     chunk = mdr.next(0);
+
+    //after first read we should get 2nd file start event
+    Assert.assertEquals(1, mdr.getEvents().size());
+    LiveFile lf2 = new LiveFile(f2);
+    Assert.assertEquals(new MultiDirectoryReader.Event(lf2, true), mdr.getEvents().get(0));
+
     Assert.assertNotNull(chunk);
     Assert.assertEquals("f2.00\n", chunk.getLines().get(0).getText());
     Assert.assertEquals(2, mdr.getOffsets().size());
@@ -135,6 +159,10 @@ public class TestMultiDirectoryReader {
     // no data in any dir
     mdr.setOffsets(mdr.getOffsets());
     chunk = mdr.next(0);
+
+    // no file events, we keep reading the same files
+    Assert.assertTrue(mdr.getEvents().isEmpty());
+
     Assert.assertNull(chunk);
 
     Files.write(new File(testDir2, "f2.txt").toPath(), Arrays.asList("f2.01"), UTF8, StandardOpenOption.APPEND);
@@ -142,6 +170,10 @@ public class TestMultiDirectoryReader {
     // reads any dir with data
     mdr.setOffsets(mdr.getOffsets());
     chunk = mdr.next(0);
+
+    // no file events, we keep reading the same files
+    Assert.assertTrue(mdr.getEvents().isEmpty());
+
     Assert.assertNotNull(chunk);
     Assert.assertEquals("f2.01\n", chunk.getLines().get(0).getText());
     Assert.assertEquals(2, mdr.getOffsets().size());
@@ -150,9 +182,18 @@ public class TestMultiDirectoryReader {
 
     Files.move(new File(testDir2, "f2.txt").toPath(), new File(testDir2, "f2.txt.1").toPath());
 
+    //lets sleep a bit more than the refresh interval in order to detect the rename
+    Thread.sleep(LiveFileReader.REFRESH_INTERVAL + 1);
+
     // reads rolled file from second dir
     mdr.setOffsets(mdr.getOffsets());
     chunk = mdr.next(0);
+
+    //after first read we should get 1 file end event for the original lf2
+    LiveFile oldLf2 = lf2.refresh(); //old because it is renamed
+    Assert.assertEquals(1, mdr.getEvents().size());
+    Assert.assertEquals(new MultiDirectoryReader.Event(oldLf2, false), mdr.getEvents().get(0));
+
     Assert.assertNotNull(chunk);
     Assert.assertEquals("f2.02\n", chunk.getLines().get(0).getText());
     Assert.assertEquals(2, mdr.getOffsets().size());
@@ -162,6 +203,10 @@ public class TestMultiDirectoryReader {
     // reads live file from second dir
     mdr.setOffsets(mdr.getOffsets());
     chunk = mdr.next(0);
+
+    //after first read we should get 1 file start event for the new lf2
+    Assert.assertEquals(1, mdr.getEvents().size());
+    Assert.assertEquals(new MultiDirectoryReader.Event(new LiveFile(f2), true), mdr.getEvents().get(0));
 
     long start = System.currentTimeMillis();
     while (chunk == null && System.currentTimeMillis() - start < 10000) {

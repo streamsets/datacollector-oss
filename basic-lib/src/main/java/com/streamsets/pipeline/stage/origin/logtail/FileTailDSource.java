@@ -28,7 +28,8 @@ import java.util.List;
     label="File Tail",
     description = "Tails a file. It handles rolling files within the same directory",
     icon="fileTail.png",
-    execution = ExecutionMode.STANDALONE
+    execution = ExecutionMode.STANDALONE,
+    outputStreams = FileTailOutputStreams.class
 )
 @RawSource(rawSourcePreviewer = FileRawSourcePreviewer.class)
 @ConfigGroups(Groups.class)
