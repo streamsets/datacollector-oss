@@ -18,6 +18,10 @@ import dagger.Provides;
 
 import javax.inject.Singleton;
 
+import static com.streamsets.pipeline.main.RuntimeInfo.ExecutionMode.STANDALONE;
+import static com.streamsets.pipeline.main.RuntimeInfo.ExecutionMode.SLAVE;
+import static com.streamsets.pipeline.main.RuntimeInfo.ExecutionMode.CLUSTER;
+
 @Module(library = true, includes = {RuntimeModule.class, PipelineStoreModule.class, StageLibraryModule.class})
 public class PipelineManagerModule {
 
@@ -26,17 +30,16 @@ public class PipelineManagerModule {
   public PipelineManager provideProdPipelineManager(RuntimeInfo runtimeInfo, Configuration configuration
       , PipelineStoreTask pipelineStore, StageLibraryTask stageLibrary) {
     PipelineManager manager;
-    String runtimeMode = configuration.get("sdc.runtime.mode", "standalone");
-    switch (runtimeMode) {
-      case "standalone":
-      case "slave":
+    switch (runtimeInfo.getExecutionMode()) {
+      case STANDALONE:
+      case SLAVE:
         manager = new StandalonePipelineManagerTask(runtimeInfo, configuration, pipelineStore, stageLibrary);
         break;
-      case "cluster":
+      case CLUSTER:
         manager = new ClusterPipelineManager(runtimeInfo, configuration, pipelineStore, stageLibrary);
         break;
       default:
-        throw new IllegalArgumentException(Utils.format("Invalid runtime mode '{}'", runtimeMode));
+        throw new IllegalArgumentException(Utils.format("Invalid runtime mode '{}'", runtimeInfo.getExecutionMode()));
     }
     return manager;
   }

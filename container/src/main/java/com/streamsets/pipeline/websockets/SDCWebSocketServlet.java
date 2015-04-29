@@ -7,7 +7,7 @@ package com.streamsets.pipeline.websockets;
 
 import com.streamsets.pipeline.main.RuntimeInfo;
 import com.streamsets.pipeline.prodmanager.PipelineManager;
-import com.streamsets.pipeline.restapi.AuthzRole;
+import com.streamsets.pipeline.util.AuthzRole;
 import com.streamsets.pipeline.util.Configuration;
 import org.eclipse.jetty.websocket.servlet.ServletUpgradeRequest;
 import org.eclipse.jetty.websocket.servlet.ServletUpgradeResponse;

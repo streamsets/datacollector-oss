@@ -13,6 +13,7 @@ import com.streamsets.pipeline.restapi.bean.RuleDefinitionsJson;
 import com.streamsets.pipeline.stagelibrary.StageLibraryTask;
 import com.streamsets.pipeline.store.PipelineStoreException;
 import com.streamsets.pipeline.store.PipelineStoreTask;
+import com.streamsets.pipeline.util.AuthzRole;
 import com.streamsets.pipeline.validation.PipelineConfigurationValidator;
 import com.streamsets.pipeline.validation.RuleDefinitionValidator;
 

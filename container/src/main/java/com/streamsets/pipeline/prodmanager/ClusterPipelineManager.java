@@ -8,6 +8,8 @@ package com.streamsets.pipeline.prodmanager;
 import com.codahale.metrics.MetricRegistry;
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.io.Files;
+import com.google.common.cache.Cache;
+import com.google.common.cache.CacheBuilder;
 import com.streamsets.pipeline.alerts.AlertEventListener;
 import com.streamsets.pipeline.api.ExecutionMode;
 import com.streamsets.pipeline.api.Record;
@@ -18,6 +20,7 @@ import com.streamsets.pipeline.cluster.ApplicationState;
 import com.streamsets.pipeline.cluster.SparkManager;
 import com.streamsets.pipeline.config.ConfigConfiguration;
 import com.streamsets.pipeline.config.DeliveryGuarantee;
+import com.streamsets.pipeline.callback.CallbackInfo;
 import com.streamsets.pipeline.config.PipelineConfiguration;
 import com.streamsets.pipeline.config.PipelineDefConfigs;
 import com.streamsets.pipeline.config.RuleDefinition;
@@ -44,11 +47,13 @@ import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.InputStream;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.TimeoutException;
+import java.util.concurrent.TimeUnit;
 
 public class ClusterPipelineManager extends AbstractTask implements PipelineManager {
   private static final Logger LOG = LoggerFactory.getLogger(StandalonePipelineManagerTask.class);
@@ -59,6 +64,7 @@ public class ClusterPipelineManager extends AbstractTask implements PipelineMana
   private final StageLibraryTask stageLibrary;
   private final StateTracker stateTracker;
   private final SparkManager sparkManager;
+  private Cache<String, CallbackInfo> slaveCallbackList;
 
   public ClusterPipelineManager(RuntimeInfo runtimeInfo, Configuration configuration, PipelineStoreTask pipelineStore,
       StageLibraryTask stageLibrary) {
@@ -69,6 +75,9 @@ public class ClusterPipelineManager extends AbstractTask implements PipelineMana
     this.stageLibrary = stageLibrary;
     stateTracker = new StateTracker(runtimeInfo, configuration);
     sparkManager = new SparkManager(Files.createTempDir());
+    slaveCallbackList = CacheBuilder.newBuilder()
+      .expireAfterWrite(1, TimeUnit.MINUTES)
+      .build();
   }
 
   @Override
@@ -218,6 +227,8 @@ public class ClusterPipelineManager extends AbstractTask implements PipelineMana
   public PipelineState startPipeline(String name, String rev) throws PipelineStoreException, PipelineManagerException,
       PipelineRuntimeException, StageException {
     validateStateTransition(name, rev, State.RUNNING);
+    //TODO validate state transition
+    runtimeInfo.reloadClusterToken();
     PipelineConfiguration pipelineConf = pipelineStore.load(name, rev);
     ExecutionMode executionMode = ExecutionMode.valueOf((String) pipelineConf.getConfiguration(
         PipelineDefConfigs.EXECUTION_MODE_CONFIG).getValue());
@@ -316,11 +327,25 @@ public class ClusterPipelineManager extends AbstractTask implements PipelineMana
   private void createPipelineDirIfNotExist(String name) throws PipelineManagerException {
     File pipelineDir = new File(new File(runtimeInfo.getDataDir(), StandalonePipelineManagerTask.RUN_INFO_DIR),
       PipelineDirectoryUtil.getEscapedPipelineName(name));
-    if(!pipelineDir.exists()) {
-      if(!pipelineDir.mkdirs()) {
+    if (!pipelineDir.exists()) {
+      if (!pipelineDir.mkdirs()) {
         throw new PipelineManagerException(ContainerError.CONTAINER_0110, name,
           Utils.format("'{}' mkdir failed", pipelineDir));
       }
     }
+  }
+
+  @Override
+  public void updateSlaveCallbackInfo(CallbackInfo callbackInfo) {
+    if(runtimeInfo.getClusterToken().equals(callbackInfo.getSdcClusterToken())) {
+      slaveCallbackList.put(callbackInfo.getSdcURL(), callbackInfo);
+    } else {
+      throw new RuntimeException("SDC Cluster token not matched");
+    }
+  }
+
+  @Override
+  public Collection<CallbackInfo> getSlaveCallbackList() {
+    return slaveCallbackList.asMap().values();
   }
 }

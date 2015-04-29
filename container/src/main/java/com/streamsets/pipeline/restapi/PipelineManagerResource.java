@@ -15,6 +15,7 @@ import com.streamsets.pipeline.prodmanager.State;
 import com.streamsets.pipeline.restapi.bean.BeanHelper;
 import com.streamsets.pipeline.runner.PipelineRuntimeException;
 import com.streamsets.pipeline.store.PipelineStoreException;
+import com.streamsets.pipeline.util.AuthzRole;
 import com.streamsets.pipeline.util.ContainerError;
 
 import javax.annotation.security.DenyAll;

@@ -8,6 +8,7 @@ package com.streamsets.pipeline.restapi;
 import com.streamsets.pipeline.log.LogStreamer;
 import com.streamsets.pipeline.log.LogUtils;
 import com.streamsets.pipeline.main.RuntimeInfo;
+import com.streamsets.pipeline.util.AuthzRole;
 
 import javax.annotation.security.DenyAll;
 import javax.annotation.security.RolesAllowed;

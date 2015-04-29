@@ -9,6 +9,7 @@ import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.lib.util.ThreadUtil;
 import com.streamsets.pipeline.main.RuntimeInfo;
 import com.streamsets.pipeline.store.PipelineStoreException;
+import com.streamsets.pipeline.util.AuthzRole;
 
 import javax.annotation.security.DenyAll;
 import javax.annotation.security.RolesAllowed;

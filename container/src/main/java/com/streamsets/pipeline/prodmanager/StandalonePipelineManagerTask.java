@@ -21,6 +21,7 @@ import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.el.ELEvalException;
 import com.streamsets.pipeline.api.impl.ErrorMessage;
 import com.streamsets.pipeline.api.impl.Utils;
+import com.streamsets.pipeline.callback.CallbackInfo;
 import com.streamsets.pipeline.config.ConfigConfiguration;
 import com.streamsets.pipeline.config.DeliveryGuarantee;
 import com.streamsets.pipeline.config.MemoryLimitConfiguration;
@@ -70,6 +71,7 @@ import javax.inject.Inject;
 import java.io.File;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -126,7 +128,6 @@ public class StandalonePipelineManagerTask extends AbstractTask implements Pipel
   private final Object pipelineMutex = new Object();
 
   private List<AlertEventListener> alertEventListenerList = new ArrayList<>();
-
 
   @Inject
   public StandalonePipelineManagerTask(RuntimeInfo runtimeInfo,
@@ -251,7 +252,7 @@ public class StandalonePipelineManagerTask extends AbstractTask implements Pipel
     long refreshInterval = configuration.get(REFRESH_INTERVAL_PROPERTY, REFRESH_INTERVAL_PROPERTY_DEFAULT);
 
     if(refreshInterval > 0) {
-      metricsEventRunnable = new MetricsEventRunnable(this);
+      metricsEventRunnable = new MetricsEventRunnable(this, runtimeInfo);
       executor.scheduleAtFixedRate(metricsEventRunnable, 0, refreshInterval, TimeUnit.MILLISECONDS);
     }
 
@@ -656,5 +657,15 @@ public class StandalonePipelineManagerTask extends AbstractTask implements Pipel
   @VisibleForTesting
   String getOffset() {
     return prodPipeline.getCommittedOffset();
+  }
+
+  @Override
+  public void updateSlaveCallbackInfo(CallbackInfo callbackInfo) {
+    throw new UnsupportedOperationException();
+  }
+
+  @Override
+  public Collection<CallbackInfo> getSlaveCallbackList() {
+    throw new UnsupportedOperationException();
   }
 }

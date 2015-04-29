@@ -6,6 +6,7 @@
 package com.streamsets.pipeline.restapi;
 
 import com.streamsets.pipeline.main.BuildInfo;
+import com.streamsets.pipeline.util.AuthzRole;
 import com.streamsets.pipeline.util.PipelineException;
 
 import javax.annotation.security.DenyAll;

@@ -10,6 +10,7 @@ import com.streamsets.pipeline.alerts.AlertEventListener;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.impl.ErrorMessage;
+import com.streamsets.pipeline.callback.CallbackInfo;
 import com.streamsets.pipeline.config.RuleDefinition;
 import com.streamsets.pipeline.metrics.MetricsEventListener;
 import com.streamsets.pipeline.runner.PipelineRuntimeException;
@@ -20,6 +21,7 @@ import com.streamsets.pipeline.store.PipelineStoreException;
 import com.streamsets.pipeline.task.Task;
 
 import java.io.InputStream;
+import java.util.Collection;
 import java.util.List;
 
 public interface PipelineManager extends Task {
@@ -73,4 +75,8 @@ public interface PipelineManager extends Task {
   void deleteHistory(String pipelineName, String rev) throws PipelineManagerException;
 
   boolean deleteAlert(String alertId) throws PipelineManagerException;
+
+  public void updateSlaveCallbackInfo(CallbackInfo callbackInfo);
+
+  public Collection<CallbackInfo> getSlaveCallbackList();
 }

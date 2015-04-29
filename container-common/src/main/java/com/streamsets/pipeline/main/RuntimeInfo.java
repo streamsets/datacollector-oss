@@ -9,8 +9,8 @@ import com.codahale.metrics.MetricRegistry;
 import com.google.common.collect.ImmutableList;
 import com.streamsets.pipeline.api.impl.Utils;
 
+import com.streamsets.pipeline.util.AuthzRole;
 import org.slf4j.Logger;
-
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -38,9 +38,9 @@ public class RuntimeInfo {
   private Runnable shutdownRunnable;
   private Map<String, String> authenticationTokens;
   private final String propertyPrefix;
-  private final String [] roles = { "admin", "creator", "manager", "guest" };
   private UUID randomUUID;
-  private ExecutionMode executionMode;
+  private ExecutionMode executionMode = ExecutionMode.STANDALONE;
+  private String clusterToken;
 
   public RuntimeInfo(String propertyPrefix, MetricRegistry metrics, List<? extends ClassLoader> stageLibraryClassLoaders) {
     this.metrics = metrics;
@@ -56,6 +56,7 @@ public class RuntimeInfo {
     authenticationTokens = new HashMap<>();
     reloadAuthenticationToken();
     randomUUID = UUID.randomUUID();
+    clusterToken = UUID.randomUUID().toString();
   }
 
   public MetricRegistry getMetrics() {
@@ -178,9 +179,13 @@ public class RuntimeInfo {
   }
 
   public void reloadAuthenticationToken() {
-    for(String role: roles) {
+    for(String role: AuthzRole.ALL_ROLES) {
       authenticationTokens.put(role, UUID.randomUUID().toString() + SPLITTER + role);
     }
+  }
+
+  public void reloadClusterToken() {
+    clusterToken = UUID.randomUUID().toString();
   }
 
   public ExecutionMode getExecutionMode() {
@@ -193,5 +198,9 @@ public class RuntimeInfo {
     } catch (IllegalArgumentException ex) {
       this.executionMode = ExecutionMode.STANDALONE;
     }
+  }
+
+  public String getClusterToken() {
+    return clusterToken;
   }
 }

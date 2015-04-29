@@ -5,6 +5,7 @@
  */
 package com.streamsets.pipeline.restapi.bean;
 
+import com.streamsets.pipeline.callback.CallbackInfo;
 import com.streamsets.pipeline.el.ElConstantDefinition;
 import com.streamsets.pipeline.el.ElFunctionArgumentDefinition;
 import com.streamsets.pipeline.el.ElFunctionDefinition;
@@ -1135,5 +1136,12 @@ public class BeanHelper {
       default:
         throw new IllegalArgumentException("Unrecognized model type");
     }
+  }
+
+  public static CallbackInfoJson wrapCallbackInfo(CallbackInfo callbackInfo) {
+    if(callbackInfo == null) {
+      return null;
+    }
+    return new CallbackInfoJson(callbackInfo);
   }
 }

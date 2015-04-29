@@ -3,7 +3,7 @@
  * be copied, modified, or distributed in whole or part without
  * written consent of StreamSets, Inc.
  */
-package com.streamsets.pipeline.domainServer;
+package com.streamsets.pipeline.callback;
 
 import com.streamsets.pipeline.main.RuntimeModule;
 import com.streamsets.pipeline.task.Task;
@@ -13,12 +13,12 @@ import dagger.Provides;
 import javax.inject.Singleton;
 
 @Module(library = true, includes = {RuntimeModule.class})
-public class DomainServerCallbackModule {
+public class CallbackServerModule {
 
   @Provides
   @Singleton
-  public Task provideDomainServerCallback(DomainServerCallbackTask domainServerCallbackTask) {
-    return domainServerCallbackTask;
+  public Task provideCallbackServer(CallbackServerTask callbackServerTask) {
+    return callbackServerTask;
   }
 
 }
