@@ -143,7 +143,7 @@ public class HttpClientSource extends BaseSource implements OffsetCommitter {
   @Override
   public void destroy() {
     super.destroy();
-    // We're okay terminating abruptly because we can't rewind to lost data anyway for this source.
+    httpConsumer.stop();
     switch (httpMode) {
       case STREAMING:
         executorService.shutdown();
