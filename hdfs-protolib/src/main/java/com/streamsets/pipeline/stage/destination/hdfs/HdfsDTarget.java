@@ -333,7 +333,7 @@ public class HdfsDTarget extends DTarget {
       dependsOn = "dataFormat",
       triggeredByValue = "DELIMITED"
   )
-  @ValueChooser(CsvHeaderChooserValues.class)
+  @ValueChooser(HdfsCsvHeaderChooserValues.class)
   public CsvHeader csvHeader;
 
   @ConfigDef(
