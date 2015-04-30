@@ -15,6 +15,7 @@ import com.streamsets.pipeline.configurablestage.DTarget;
 @StageDef(
     version = "1.0.0",
     label = "Trash",
+    icon="trash.png",
     description = "Discards records"
 )
 @HideConfig(requiredFields = true, onErrorRecord = true)

@@ -17,7 +17,7 @@ import com.streamsets.pipeline.api.ValueChooser;
 import com.streamsets.pipeline.configurablestage.DTarget;
 
 @GenerateResourceBundle
-@StageDef(version = "1.0.0", label = "Hbase Target", icon = "HbaseTarget.svg")
+@StageDef(version = "1.0.0", label = "Hbase Target", icon = "hbase.png")
 @ConfigGroups(Groups.class)
 public class HBaseDTarget extends DTarget {
 
