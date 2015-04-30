@@ -17,8 +17,8 @@ import com.streamsets.pipeline.stage.processor.scripting.ProcessingModeChooserVa
 
 @StageDef(
     version = "1.0.0",
-    label = "Jython 2.7",
-    description = "Jython script processor",
+    label = "Jython Evaluator",
+    description = "Processes records using Jython",
     icon="jython.png"
 )
 @ConfigGroups(Groups.class)
@@ -45,7 +45,7 @@ public class JythonDProcessor extends DProcessor {
     "# Available Objects:\n" +
     "# \n" +
     "#  records: an array of records to process, depending on Jython processor\n" +
-    "#           processing mode it may have 1 record or allthe records in the batch.\n" +
+    "#           processing mode it may have 1 record or all the records in the batch.\n" +
     "#\n" +
     "#  out.write(record): writes a record to processor output\n" +
     "#\n" +

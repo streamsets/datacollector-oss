@@ -17,8 +17,8 @@ import com.streamsets.pipeline.stage.processor.scripting.ProcessingModeChooserVa
 
 @StageDef(
     version = "1.0.0",
-    label = "JavaScript",
-    description = "JavaScript processor",
+    label = "JavaScript Evaluator",
+    description = "Processes records using JavaScript",
     icon="javascript.png"
 )
 @ConfigGroups(Groups.class)
