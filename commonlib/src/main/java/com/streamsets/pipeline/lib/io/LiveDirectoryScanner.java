@@ -87,7 +87,7 @@ public class LiveDirectoryScanner {
     Utils.checkArgument(this.rollMode.isFirstAcceptable(this.liveFileName, firstFileName),
                         Utils.formatL("liveFileName '{}' should be a prefix of firstFileName '{}'",
                                       this.liveFileName, firstFileName));
-    this.firstFile = (firstFileName == null) ? null : new File(dir, firstFileName).toPath();
+    this.firstFile = (firstFileName == null || firstFileName.isEmpty()) ? null : new File(dir, firstFileName).toPath();
 
     pathComparator = this.rollMode.getComparator(this.liveFileName);
 
