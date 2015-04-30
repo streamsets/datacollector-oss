@@ -49,12 +49,12 @@
                                             one directory.</p></entry>
                                 </row>
                                 <row>
-                                    <entry>Rolled Files Naming <xref
-                                        href="FileTail-FileProcessing.dita#concept_trt_thq_5r">
+                                    <entry>Files Naming <xref
+                                            href="FileTail-FileProcessing.dita#concept_trt_thq_5r">
                                             <image href="../Graphics/icon_moreInfo.png" scale="10"
                                                 id="image_bkg_sqr_5r"/></xref><draft-comment
-                                            author="Loretta">Can we call this: <p>"Archived File
-                                                Names"</p></draft-comment></entry>
+                                            author="Loretta">Can we call this:
+                                            <p>"Files"</p></draft-comment></entry>
                                     <entry>Naming convention for archived files. Select the naming
                                         convention that describes how the server generates file
                                         names.</entry>
@@ -64,24 +64,17 @@
                                                 this:<p> "Active File"</p></draft-comment></entry>
                                     <entry>Static file name for the active file that contains the
                                         latest data from the server.<p>Not used for Periodic
-                                                Files.<draft-comment author="Loretta">Can we call
-                                                Periodic Files => File Name
-                                            Pattern?</draft-comment></p></entry>
+                                            Files.</p></entry>
                                 </row>
                                 <row>
-                                    <entry>Periodic File Pattern<draft-comment author="Loretta">Then
-                                            can we call this <p>"Pattern" or "Name
-                                            Pattern"?</p></draft-comment></entry>
+                                    <entry>Periodic File Pattern</entry>
                                     <entry>Regular expression that defines the file name pattern
                                         used to create files. <p>You can use UNIX-style wildcards,
                                             such as an asterisk or question mark. </p><p>Available
-                                            only for Periodic Files.</p></entry>
+                                            only for periodic files.</p></entry>
                                 </row>
                                 <row>
-                                    <entry>First Rolled File<draft-comment author="Loretta">Can we
-                                            call this: <p>First File to Process</p><p>Then it
-                                                matches Directory - same concept,
-                                            right?</p></draft-comment></entry>
+                                    <entry>First File</entry>
                                     <entry>Name of the first file to process when you start the
                                         pipeline. Use a name that uses the file name pattern.<p>When
                                             you enter a file name, File Tail reads the first file

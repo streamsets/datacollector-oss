@@ -66,8 +66,8 @@
             </p>
             <p id="wildcard">You can use the asterisk wildcard to represent array indices and map
                   elements. <xref href="../Processors/WildcardsArraysMaps.dita#concept_vqr_sqc_wr"
-                              ><image href="../Graphics/icon_moreInfo.png" scale="10"
-                              id="image_h4p_p5v_yq"/></xref>
-                  <draft-comment author="Loretta">fix image link</draft-comment></p>
+                              ><image href="../Graphics/icon_moreInfo.png" scale="10"/>
+                  </xref>
+            </p>
       </conbody>
 </concept>

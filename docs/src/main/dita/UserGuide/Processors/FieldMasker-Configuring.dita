@@ -62,6 +62,19 @@
                                             characters in the specified location. Use any other
                                             character as a masking character.</p></entry>
                                 </row>
+                                <row>
+                                    <entry>Regular Expression</entry>
+                                    <entry>Regular expression that describes the data in the masked
+                                        fields. <p>If you want to display a group of data, use
+                                            parentheses to define groups within the pattern. For
+                                            example, ([0-9]{5}) - ([0-9]{3}-[0-9]{2}-[0-9]{4})
+                                        .</p></entry>
+                                </row>
+                                <row>
+                                    <entry>Groups to Show</entry>
+                                    <entry>Optional comma-separated list of groups to show. Use 1 to
+                                        represent the first group. </entry>
+                                </row>
                             </tbody>
                         </tgroup>
                     </table>

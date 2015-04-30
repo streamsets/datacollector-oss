@@ -31,7 +31,9 @@
                             <tbody>
                                 <row>
                                     <entry>Fields to Null</entry>
-                                    <entry>One or more fields to replace with null values.</entry>
+                                    <entry>One or more fields to replace with null values.<p
+                                            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/wildcard"
+                                        /></entry>
                                 </row>
                                 <row>
                                     <entry>Replace Null Values</entry>
@@ -41,7 +43,9 @@
                                             <li>Fields to Replace - Name of the field to use.</li>
                                             <li>Replacement Value - Constant to replace null values
                                                 in the field. </li>
-                                        </ul></entry>
+                                        </ul><p
+                                            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/wildcard"
+                                        /></entry>
                                 </row>
                                 <row>
                                     <entry>Field Does Not Exist</entry>

@@ -10,7 +10,7 @@
                     origin<indexterm>overview</indexterm></indexterm><indexterm>origins<indexterm>File
                     Tail</indexterm></indexterm>When you configure File Tail, you define the active
             file name, the naming convention for archived files, and the first archived file to
-            process. These properties determine the files that File Tail processes and the order of
+            process. These properties determine the files that are read and the order of
             processing.</p>
         <p>For example, a File Tail is configured to tail a log called server.log, starting with
             server.log.3 with archive files named in reverse counter order. When the pipeline runs,
@@ -28,6 +28,8 @@
         <p>You can reset the origin to process all requested files before continuing to the active
             file. When you reset the origin, the stage treats all properties as if you are starting
             the pipeline for the first time. </p>
+        <p>File Tail logs information about processed files and provides the details through the
+            metadata node. Processed records pass to the pipeline through the output node.</p>
         <p>You can use File Tail to read related sets of files in multiple directories. Each
             directory can include a single active file. When File Tail processes files in multiple
             directories, it merges all data in the pipeline. </p>

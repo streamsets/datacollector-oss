@@ -36,7 +36,9 @@
                                 </row>
                                 <row>
                                     <entry>Fields</entry>
-                                    <entry>List of fields to keep or remove.</entry>
+                                    <entry>List of fields to keep or remove.<p
+                                            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/wildcard"
+                                        /></entry>
                                 </row>
                             </tbody>
                         </tgroup>

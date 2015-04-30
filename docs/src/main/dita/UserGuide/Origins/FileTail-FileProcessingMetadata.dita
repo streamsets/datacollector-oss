@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
+<concept id="concept_svq_fzp_wr">
+ <title>File Processing Metadata</title>
+ <shortdesc>File Tail logs information information about file processing, such as a file name and
+  time it started or stopped processing a file. </shortdesc>
+ <conbody>
+  <p><indexterm>File Tail origin<indexterm>file processing
+     metadata</indexterm></indexterm><indexterm>metadata<indexterm>from processing files (File
+     Tail)</indexterm></indexterm>File Tail passes the information to the pipeline through the
+   metadata node. To retain this information for review, connect the metadata node to the pipeline
+   or a standard destination. If you do not require this information, connect the metadata node to
+   the Trash destination.</p>
+  <p>The file processing metadata includes the following fields:<dl>
+    <dlentry>
+     <dt>fileName</dt>
+     <dd>Name of the file. </dd>
+    </dlentry>
+    <dlentry>
+     <dt>inode</dt>
+     <dd>Index node information for the file. </dd>
+    </dlentry>
+    <dlentry>
+     <dt>time</dt>
+     <dd>Time that the event occurred.</dd>
+    </dlentry>
+    <dlentry>
+     <dt>event</dt>
+     <dd>Processing event. START indicates that File Tail started processing the specified file. END
+      indicates that File Tail completed processing the contents of the file. </dd>
+    </dlentry>
+   </dl></p>
+  <note>Note that file names can change when the server archives data and renames archived files.
+   The inode most reliably identifies a file. </note>
+ </conbody>
+</concept>
