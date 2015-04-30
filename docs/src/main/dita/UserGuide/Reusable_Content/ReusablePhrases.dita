@@ -59,5 +59,15 @@
                   Editor:</draft-comment>
             <p id="EEditor">Optionally, click <uicontrol>Ctrl + Spacebar</uicontrol> to invoke
                   expression completion for help with creating the expression. </p>
+            <p>
+                  <draft-comment author="Loretta">Using the following in the Configuring topic for
+                        several processors (Expression Evaluator, Field Converter, Field Hasher,  -
+                        whichever ones allow wildcard use:</draft-comment>
+            </p>
+            <p id="wildcard">You can use the asterisk wildcard to represent array indices and map
+                  elements. <xref href="../Processors/WildcardsArraysMaps.dita#concept_vqr_sqc_wr"
+                              ><image href="../Graphics/icon_moreInfo.png" scale="10"
+                              id="image_h4p_p5v_yq"/></xref>
+                  <draft-comment author="Loretta">fix image link</draft-comment></p>
       </conbody>
 </concept>

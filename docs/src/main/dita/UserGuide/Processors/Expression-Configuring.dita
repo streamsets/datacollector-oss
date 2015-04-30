@@ -34,6 +34,8 @@
                                             follows: /FieldName. </p>
                                         <p>If you use an existing field, the Expression Evaluator
                                             replaces existing values.</p>
+                                        <p
+                                            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/wildcard"/>
                                     </entry>
                                 </row>
                                 <row>

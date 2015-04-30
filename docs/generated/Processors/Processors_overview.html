@@ -54,8 +54,8 @@
  <h2 class="title topictitle2">Referencing Field Names</h2>
 
  
- <div class="body conbody"><p class="shortdesc">To understand references to fields, think of the record as a root directory, and a
-    reference to a field as the path to the field. </p>
+ <div class="body conbody"><p class="shortdesc">To understand references to fields, think of the record as a root directory. A reference
+                to a field is the path to the field, or field path.</p>
 
     <div class="p">When a record is a line of
             text, the fields are one level of subdirectories. A reference to a field in a text
@@ -83,6 +83,40 @@
 
  </div>
 
+<div class="topic concept nested2" id="concept_vqr_sqc_wr">
+  <h3 class="title topictitle3">Wildcard Use for Arrays and Maps</h3>
+
+  
+  <div class="body conbody"><p class="shortdesc">In some processor properties / When you list a set of fields in a processor, you can
+    use the asterisk wildcard (*) to represent an index in an array or a key value in a map. Use a
+    wildcard to help define the field path for fields in maps and arrays. </p>
+
+    
+    <div class="p">You can use the asterisk wildcard to represent all values as follows: <dl class="dl">
+        
+          <dt class="dt dlterm">[*]</dt>
+
+          <dd class="dd">Represents all values of an array index. For example, the wildcards in the following
+            field path allow you to mask the social security number of every employee in every
+            division in the company:<pre class="pre codeblock">Division[*]/Employee[*]/SSN</pre>
+</dd>
+
+        
+        
+          <dt class="dt dlterm">/*</dt>
+
+          <dd class="dd">Represents all values for an element of a map. For example,
+              <pre class="pre codeblock">Division[*]/Employee[*]</pre>
+</dd>
+
+        
+      </dl>
+
+    </div>
+
+  </div>
+
+</div>
 </div>
 <div class="topic concept nested1" id="concept_ywv_smf_zq">
  <h2 class="title topictitle2">Selecting Fields with Preview Data</h2>

@@ -30,7 +30,9 @@
                                 <row>
                                     <entry>Fields to Mask</entry>
                                     <entry>One or more String fields to mask with the same mask
-                                        type.</entry>
+                                            type.<p
+                                            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/wildcard"
+                                        /></entry>
                                 </row>
                                 <row>
                                     <entry>Mask Type <xref
@@ -45,6 +47,9 @@
                                                 length of the original value.</li>
                                             <li>Custom - Replaces values with a user-defined
                                                 mask.</li>
+                                            <li>Regular Expression - Replaces groups of values based
+                                                on the groups defined by the regular expression and
+                                                the groups to reveal. </li>
                                         </ul></entry>
                                 </row>
                                 <row>

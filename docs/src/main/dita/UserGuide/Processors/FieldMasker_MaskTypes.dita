@@ -77,6 +77,17 @@ L92m1sN3q0jaOmE67Ws</codeblock>
       </simpletable><note type="tip">To avoid confusing masking characters for real data, use one
        masking character instead of a mix of masking characters.</note></dd>
     </dlentry>
+    <dlentry>
+     <dt>Regular Expression</dt>
+     <dd>Replaces groups of values with a variable-length mask. You define the data structure with a
+      regular expression, using parentheses to define groups of values. Then, you specify any groups
+      that you want to reveal. If you do not specify groups to review, Field Masker masks all
+      groups. </dd>
+     <dd/>
+     <dd>
+      <draft-comment author="Loretta">put an example here. </draft-comment>
+     </dd>
+    </dlentry>
    </dl>
   </p>
  </conbody>

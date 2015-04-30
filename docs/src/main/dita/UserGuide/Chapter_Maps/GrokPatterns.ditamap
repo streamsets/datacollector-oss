@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE map PUBLIC "-//OASIS//DTD DITA Map//EN" "map.dtd">
+<map>
+ <title>Grok Patterns</title>
+ <topicref href="../Apx-GrokPatterns/GrokPatterns_title.dita">
+  <topicref href="../Apx-GrokPatterns/GrokPatterns.dita"/>
+  <topicref href="../Apx-GrokPatterns/GeneralPatterns.dita"/>
+  <topicref href="../Apx-GrokPatterns/NetworkingPatterns.dita"/>
+  <topicref href="../Apx-GrokPatterns/PathPatterns.dita"/>
+  <topicref href="../Apx-GrokPatterns/DateTimePatterns.dita"/>
+  <topicref href="../Apx-GrokPatterns/LogPatterns.dita"/>
+ </topicref>
+</map>

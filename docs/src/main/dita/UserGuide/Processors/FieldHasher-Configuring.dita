@@ -30,7 +30,9 @@
                                     <entry>Fields to Hash</entry>
                                     <entry>One or more String fields to hash with the same
                                             algorithm.<p>Use the <uicontrol>Add</uicontrol> icon to
-                                            configure more than one hash type.</p></entry>
+                                            configure more than one hash type.</p><p
+                                            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/wildcard"
+                                        /></entry>
                                 </row>
                                 <row>
                                     <entry>Hash Type</entry>

@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
+<concept id="concept_fny_xkk_wr">
+ <title>Log Grok Patterns</title>
+ <conbody>
+  <p>You can use the following log-related grok patterns to define the structure of log data:</p>
+  <dl>
+   <dlentry>
+    <dt>SYSLOGTIMESTAMP</dt>
+    <dd>%{MONTH} +%{MONTHDAY} %{TIME} PROG (?:[\w._/%-]+)</dd>
+   </dlentry>
+   <dlentry>
+    <dt>SYSLOGPROG</dt>
+    <dd>%{PROG:program}(?:\[%{POSINT:pid}\])?</dd>
+   </dlentry>
+   <dlentry>
+    <dt>SYSLOGHOST</dt>
+    <dd>%{IPORHOST}</dd>
+   </dlentry>
+   <dlentry>
+    <dt>SYSLOGFACILITY</dt>
+    <dd>&lt;%{NONNEGINT:facility}.%{NONNEGINT:priority}> </dd>
+   </dlentry>
+   <dlentry>
+    <dt>HTTPDATE</dt>
+    <dd>%{MONTHDAY}/%{MONTH}/%{YEAR}:%{TIME} %{INT} </dd>
+   </dlentry>
+   <dlentry>
+    <dt>QS</dt>
+    <dd>%{QUOTEDSTRING}<draft-comment author="Loretta">this was a standalone item under "shortcuts"
+      -- does it belong here or in the general list?</draft-comment></dd>
+   </dlentry>
+   <dlentry>
+    <dt>SYSLOGBASE</dt>
+    <dd>%{SYSLOGTIMESTAMP:timestamp} (?:%{SYSLOGFACILITY} )?%{SYSLOGHOST:logsource} %{SYSLOGPROG}:
+    </dd>
+   </dlentry>
+   <dlentry>
+    <dt>COMMONAPACHELOG</dt>
+    <dd>%{IPORHOST:clientip} %{USER:ident} %{USER:auth} \[%{HTTPDATE:timestamp}\] "(?:%{WORD:verb}
+     %{NOTSPACE:request}(?: HTTP/%{NUMBER:httpversion})?|%{DATA:rawrequest})" %{NUMBER:response}
+     (?:%{NUMBER:bytes}|-)</dd>
+   </dlentry>
+   <dlentry>
+    <dt>COMBINEDAPACHELOG</dt>
+    <dd>%{COMMONAPACHELOG} %{QS:referrer} %{QS:agent}</dd>
+   </dlentry>
+   <dlentry>
+    <dt>LOGLEVEL</dt>
+    <dd>
+     <p>([Aa]lert|ALERT|[Tt]race|TRACE|[Dd]ebug|DEBUG|[Nn]otice|NOTICE|[Ii]nfo|INFO|[Ww]arn?(?:ing)?|WARN?(?:ING)?|[Ee]rr?(?:or)?|ERR?(?:OR)?|[Cc]rit?(?:ical)?|CRIT?(?:ICAL)?|[Ff]atal|FATAL|[Ss]evere|SEVERE|EMERG(?:ENCY)?|[Ee]merg(?:ency)?)
+     </p>
+    </dd>
+   </dlentry>
+  </dl>
+ </conbody>
+</concept>

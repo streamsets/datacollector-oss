@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
+<concept id="concept_vdk_xjb_wr">
+ <title>Grok Patterns</title>
+ <shortdesc>You can use the grok patterns in this appendix to define the structure of log data. You
+  can use the patterns individually or as parts of a whole. You can also use valid sections of the
+  patterns.</shortdesc>
+</concept>

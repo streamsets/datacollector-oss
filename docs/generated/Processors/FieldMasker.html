@@ -127,6 +127,21 @@ L92m1sN3q0jaOmE67Ws</pre>
 </dd>
 
     
+    
+     <dt class="dt dlterm">Regular Expression</dt>
+
+     <dd class="dd">Replaces groups of values with a variable-length mask. You define the data structure with a
+      regular expression, using parentheses to define groups of values. Then, you specify any groups
+      that you want to reveal. If you do not specify groups to review, Field Masker masks all
+      groups. </dd>
+
+     <dd class="dd"></dd>
+
+     <dd class="dd">
+      
+     </dd>
+
+    
    </dl>
 
   </div>
@@ -147,14 +162,14 @@ L92m1sN3q0jaOmE67Ws</pre>
                     following properties:</span>
                 <div class="itemgroup info">
                     
-<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_vgg_z44_wq__d2470e246" class="table" frame="border" border="1" rules="all">
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_vgg_z44_wq__d2484e246" class="table" frame="border" border="1" rules="all">
                             
                             
                             <thead class="thead" align="left">
                                 <tr class="row">
-                                    <th class="entry" valign="top" width="24.509803921568626%" id="d25139e219">General Property</th>
+                                    <th class="entry" valign="top" width="24.509803921568626%" id="d26381e236">General Property</th>
 
-                                    <th class="entry" valign="top" width="75.49019607843137%" id="d25139e222">Description</th>
+                                    <th class="entry" valign="top" width="75.49019607843137%" id="d26381e239">Description</th>
 
                                 </tr>
 
@@ -162,24 +177,24 @@ L92m1sN3q0jaOmE67Ws</pre>
 
                             <tbody class="tbody">
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="24.509803921568626%" headers="d25139e219 ">Name</td>
+                                    <td class="entry" valign="top" width="24.509803921568626%" headers="d26381e236 ">Name</td>
 
-                                    <td class="entry" valign="top" width="75.49019607843137%" headers="d25139e222 ">Stage name.</td>
-
-                                </tr>
-
-                                <tr class="row">
-                                    <td class="entry" valign="top" width="24.509803921568626%" headers="d25139e219 ">Description</td>
-
-                                    <td class="entry" valign="top" width="75.49019607843137%" headers="d25139e222 ">Optional description.</td>
+                                    <td class="entry" valign="top" width="75.49019607843137%" headers="d26381e239 ">Stage name.</td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="24.509803921568626%" headers="d25139e219 ">Required Fields <a class="xref" href="../Pipeline_Configuration/PipelineDesign.html#concept_dnj_bkm_vq" title="You can configure required fields for any processor and most destination stages. A required field must exist in a record to allow the record to enter the stage for processing. When a record does not include a required field, the stage passes the record to the pipeline for error handling.">
-                                            <img class="image" id="task_vgg_z44_wq__d2470e292" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
+                                    <td class="entry" valign="top" width="24.509803921568626%" headers="d26381e236 ">Description</td>
 
-                                    <td class="entry" valign="top" width="75.49019607843137%" headers="d25139e222 ">Fields that must include data to be passed to the stage.
+                                    <td class="entry" valign="top" width="75.49019607843137%" headers="d26381e239 ">Optional description.</td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="24.509803921568626%" headers="d26381e236 ">Required Fields <a class="xref" href="../Pipeline_Configuration/PipelineDesign.html#concept_dnj_bkm_vq" title="You can configure required fields for any processor and most destination stages. A required field must exist in a record to allow the record to enter the stage for processing. When a record does not include a required field, the stage passes the record to the pipeline for error handling.">
+                                            <img class="image" id="task_vgg_z44_wq__d2484e292" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
+
+                                    <td class="entry" valign="top" width="75.49019607843137%" headers="d26381e239 ">Fields that must include data to be passed to the stage.
                                             <div class="note tip"><span class="tiptitle">Tip:</span> You might include fields
                                             that the stage uses.</div>
 </td>
@@ -187,9 +202,9 @@ L92m1sN3q0jaOmE67Ws</pre>
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="24.509803921568626%" headers="d25139e219 ">On Record Error</td>
+                                    <td class="entry" valign="top" width="24.509803921568626%" headers="d26381e236 ">On Record Error</td>
 
-                                    <td class="entry" valign="top" width="75.49019607843137%" headers="d25139e222 ">Error record handling for the stage: <ul class="ul" id="task_vgg_z44_wq__d2470e307">
+                                    <td class="entry" valign="top" width="75.49019607843137%" headers="d26381e239 ">Error record handling for the stage: <ul class="ul" id="task_vgg_z44_wq__d2484e307">
                                             <li class="li">Discard - Discards the record.</li>
 
                                             <li class="li">Send to Error - Sends the record to the pipeline for
@@ -219,9 +234,9 @@ L92m1sN3q0jaOmE67Ws</pre>
                             
                             <thead class="thead" align="left">
                                 <tr class="row">
-                                    <th class="entry" valign="top" width="30.76923076923077%" id="d25139e316">Field Masker Property</th>
+                                    <th class="entry" valign="top" width="30.76923076923077%" id="d26381e333">Field Masker Property</th>
 
-                                    <th class="entry" valign="top" width="69.23076923076923%" id="d25139e319">Description</th>
+                                    <th class="entry" valign="top" width="69.23076923076923%" id="d26381e336">Description</th>
 
                                 </tr>
 
@@ -229,18 +244,21 @@ L92m1sN3q0jaOmE67Ws</pre>
 
                             <tbody class="tbody">
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30.76923076923077%" headers="d25139e316 ">Fields to Mask</td>
+                                    <td class="entry" valign="top" width="30.76923076923077%" headers="d26381e333 ">Fields to Mask</td>
 
-                                    <td class="entry" valign="top" width="69.23076923076923%" headers="d25139e319 ">One or more String fields to mask with the same mask
-                                        type.</td>
+                                    <td class="entry" valign="top" width="69.23076923076923%" headers="d26381e336 ">One or more String fields to mask with the same mask
+                                            type.<p class="p">You can use the asterisk wildcard to represent array indices and map
+                  elements. <a class="xref" href="Processors_overview.html#concept_vqr_sqc_wr" title="In some processor properties / When you list a set of fields in a processor, you can use the asterisk wildcard (*) to represent an index in an array or a key value in a map. Use a wildcard to help define the field path for fields in maps and arrays."><img class="image" id="task_vgg_z44_wq__d2493e129" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12"></img></a>
+                  </p>
+</td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30.76923076923077%" headers="d25139e316 ">Mask Type <a class="xref" href="FieldMasker.html#concept_vwp_gh4_wq" title="You can use the following mask types to mask data:">
+                                    <td class="entry" valign="top" width="30.76923076923077%" headers="d26381e333 ">Mask Type <a class="xref" href="FieldMasker.html#concept_vwp_gh4_wq" title="You can use the following mask types to mask data:">
                                             <img class="image" src="../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
 
-                                    <td class="entry" valign="top" width="69.23076923076923%" headers="d25139e319 ">Mask type to hide field values. Select one of the
+                                    <td class="entry" valign="top" width="69.23076923076923%" headers="d26381e336 ">Mask type to hide field values. Select one of the
                                         following options:<ul class="ul" id="task_vgg_z44_wq__ul_kmd_rnk_wq">
                                             <li class="li">Fixed-length - Replaces values with a fixed-length
                                                 mask.</li>
@@ -251,16 +269,20 @@ L92m1sN3q0jaOmE67Ws</pre>
                                             <li class="li">Custom - Replaces values with a user-defined
                                                 mask.</li>
 
+                                            <li class="li">Regular Expression - Replaces groups of values based
+                                                on the groups defined by the regular expression and
+                                                the groups to reveal. </li>
+
                                         </ul>
 </td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30.76923076923077%" headers="d25139e316 ">Custom Mask <a class="xref" href="FieldMasker.html#concept_vwp_gh4_wq" title="You can use the following mask types to mask data:">
+                                    <td class="entry" valign="top" width="30.76923076923077%" headers="d26381e333 ">Custom Mask <a class="xref" href="FieldMasker.html#concept_vwp_gh4_wq" title="You can use the following mask types to mask data:">
                                             <img class="image" id="task_vgg_z44_wq__image_rx1_l1q_wq" src="../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
 
-                                    <td class="entry" valign="top" width="69.23076923076923%" headers="d25139e319 ">Mask pattern for a custom mask. Enter the pattern that
+                                    <td class="entry" valign="top" width="69.23076923076923%" headers="d26381e336 ">Mask pattern for a custom mask. Enter the pattern that
                                         you want to use.<p class="p">Use the hash mark (#) to display
                                             characters in the specified location. Use any other
                                             character as a masking character.</p>

@@ -42,6 +42,7 @@
     <appendix href="Chapter_Maps/Troubleshooting.ditamap" format="ditamap"/>
     <appendix href="Chapter_Maps/Glossary.ditamap" format="ditamap"/>
     <appendix href="Chapter_Maps/ExpressionLanguage.ditamap" format="ditamap" outputclass=""/>
+    <appendix href="Chapter_Maps/GrokPatterns.ditamap" format="ditamap"/>
     <appendix href="Chapter_Maps/ReusableContent.ditamap" format="ditamap"
         processing-role="resource-only"/>
     <backmatter>
