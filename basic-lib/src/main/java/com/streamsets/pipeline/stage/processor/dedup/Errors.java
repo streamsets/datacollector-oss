@@ -19,7 +19,7 @@ public enum Errors implements ErrorCode {
   DEDUP_01("Time window must be zero (disabled) or greater than zero, it is '{}'"),
   DEDUP_02("Specify at least one field for comparison"),
   DEDUP_03("The estimated required memory for '{}' records is '{}' MB. The current maximum heap is '{}' MB. The " +
-           "required memory must not exceed 1/3 of the maximum heap."),
+           "required memory must not exceed the maximum heap."),
   ;
 
 

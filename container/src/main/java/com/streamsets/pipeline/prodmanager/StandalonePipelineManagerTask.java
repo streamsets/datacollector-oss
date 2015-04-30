@@ -583,9 +583,10 @@ public class StandalonePipelineManagerTask extends AbstractTask implements Pipel
       }
     }
     if (memoryLimitExceeded != null && memoryLimit > 0) {
-      memoryLimitConfiguration = new MemoryLimitConfiguration(memoryLimitExceeded,
-        memoryLimit * 1000 * 1000 /*convert MB to bytes*/);
+      memoryLimitConfiguration = new MemoryLimitConfiguration(memoryLimitExceeded, memoryLimit);
     }
+    //update the pipeline memory configuration based on the calculated value
+    pipelineConfiguration.setMemoryLimitConfiguration(memoryLimitConfiguration);
     return memoryLimitConfiguration;
   }
 

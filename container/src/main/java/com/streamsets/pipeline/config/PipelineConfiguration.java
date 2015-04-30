@@ -31,6 +31,7 @@ public class PipelineConfiguration implements Serializable{
   private StageConfiguration errorStage;
   private Issues issues;
   private boolean previewable;
+  private MemoryLimitConfiguration memoryLimitConfiguration;
 
   @SuppressWarnings("unchecked")
   public PipelineConfiguration(int schemaVersion, UUID uuid, String description, List<ConfigConfiguration> configuration,
@@ -47,6 +48,7 @@ public class PipelineConfiguration implements Serializable{
     this.stages = (stages != null) ? stages : Collections.<StageConfiguration>emptyList();
     this.errorStage = errorStage;
     issues = new Issues();
+    memoryLimitConfiguration = new MemoryLimitConfiguration();
   }
 
   public void setInfo(PipelineInfo info) {
@@ -136,6 +138,15 @@ public class PipelineConfiguration implements Serializable{
 
   public Map<String, Object> getUiInfo() {
     return uiInfo;
+  }
+
+  public MemoryLimitConfiguration getMemoryLimitConfiguration() {
+    return memoryLimitConfiguration;
+  }
+
+  @JsonIgnore
+  public void setMemoryLimitConfiguration(MemoryLimitConfiguration memoryLimitConfiguration) {
+    this.memoryLimitConfiguration = memoryLimitConfiguration;
   }
 
   @Override

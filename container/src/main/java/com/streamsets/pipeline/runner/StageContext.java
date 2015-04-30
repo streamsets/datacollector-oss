@@ -29,6 +29,7 @@ import com.streamsets.pipeline.api.ext.RecordWriter;
 import com.streamsets.pipeline.api.impl.ErrorMessage;
 import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.config.ConfigDefinition;
+import com.streamsets.pipeline.config.MemoryLimitConfiguration;
 import com.streamsets.pipeline.config.StageType;
 import com.streamsets.pipeline.el.ELEvaluator;
 import com.streamsets.pipeline.el.ELVariables;
@@ -61,6 +62,7 @@ public class StageContext implements Source.Context, Target.Context, Processor.C
   private long lastBatchTime;
   private final Map<String, Class<?>[]> configToElDefMap;
   private final Map<String, Object> constants;
+  private final long pipelineMaxMemory;
 
   //for SDK
   public StageContext(String instanceName, StageType stageType, boolean isPreview, OnRecordError onRecordError,
@@ -75,10 +77,11 @@ public class StageContext implements Source.Context, Target.Context, Processor.C
     errorSink = new ErrorSink();
     this. configToElDefMap = configToElDefMap;
     this.constants = constants;
+    this.pipelineMaxMemory = new MemoryLimitConfiguration().getMemoryLimit();
   }
 
   public StageContext(List<Stage.Info> pipelineInfo, StageType stageType, boolean isPreview, MetricRegistry metrics,
-      StageRuntime stageRuntime) {
+      StageRuntime stageRuntime, long pipelineMaxMemory) {
     this.pipelineInfo = pipelineInfo;
     this.stageType = stageType;
     this.isPreview = isPreview;
@@ -88,6 +91,7 @@ public class StageContext implements Source.Context, Target.Context, Processor.C
     onRecordError = stageRuntime.getOnRecordError();
     this.configToElDefMap = getConfigToElDefMap(stageRuntime);
     this.constants = stageRuntime.getConstants();
+    this.pipelineMaxMemory = pipelineMaxMemory;
   }
 
   private Map<String, Class<?>[]> getConfigToElDefMap(StageRuntime stageRuntime) {
@@ -139,6 +143,11 @@ public class StageContext implements Source.Context, Target.Context, Processor.C
   @Override
   public ExecutionMode getExecutionMode() {
     return ExecutionMode.STANDALONE;
+  }
+
+  @Override
+  public long getPipelineMaxMemory() {
+    return pipelineMaxMemory;
   }
 
   @Override

@@ -21,11 +21,14 @@ import kafka.utils.ZKStringSerializer$;
 import kafka.zk.EmbeddedZookeeper;
 import org.I0Itec.zkclient.ZkClient;
 import org.junit.After;
+import org.junit.Assert;
 import org.junit.Before;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
+import java.util.UUID;
 
 public class TestKafkaSourceUnavailability {
 
@@ -45,9 +48,16 @@ public class TestKafkaSourceUnavailability {
   private static final String TOPIC = "test";
   private static final int TIME_OUT = 5000;
 
+  private static String originalTmpDir;
+
   @Before
   public void setUp() {
     //Init zookeeper
+    originalTmpDir = System.getProperty("java.io.tmpdir");
+    File testDir = new File("target", UUID.randomUUID().toString()).getAbsoluteFile();
+    Assert.assertTrue(testDir.mkdirs());
+    System.setProperty("java.io.tmpdir", testDir.getAbsolutePath());
+
     zkConnect = TestZKUtils.zookeeperConnect();
     zkServer = new EmbeddedZookeeper(zkConnect);
     zkClient = new ZkClient(zkServer.connectString(), 30000, 30000, ZKStringSerializer$.MODULE$);
@@ -66,6 +76,7 @@ public class TestKafkaSourceUnavailability {
     kafkaServer.shutdown();
     zkClient.close();
     zkServer.shutdown();
+    System.setProperty("java.io.tmpdir", originalTmpDir);
   }
 
   //The test is commented out as they take a long time to complete ~ 30 seconds

@@ -44,6 +44,12 @@ public interface Stage<C extends Stage.Context> {
 
     public ExecutionMode getExecutionMode();
 
+    /**
+     * Returns the pipeline max memory in MiB
+     * @return
+     */
+    public long getPipelineMaxMemory();
+
     public boolean isPreview();
 
     // For now- TESTING execution mode

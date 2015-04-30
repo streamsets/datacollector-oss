@@ -28,10 +28,18 @@ public class MemoryLimitConfiguration implements Serializable {
     this.memoryLimitExceeded = memoryLimitExceeded;
   }
 
+  /**
+   * Returns the memory limit in MiB
+   * @return
+   */
   public long getMemoryLimit() {
     return memoryLimit;
   }
 
+  /**
+   * Set the memory limit in MiB
+   * @param memoryLimit
+   */
   public void setMemoryLimit(long memoryLimit) {
     this.memoryLimit = memoryLimit;
   }

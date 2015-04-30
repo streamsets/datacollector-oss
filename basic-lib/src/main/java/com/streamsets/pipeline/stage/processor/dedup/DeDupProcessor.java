@@ -152,10 +152,11 @@ public class DeDupProcessor extends RecordProcessor {
     }
 
     long estimatedMemory = MEMORY_USAGE_PER_HASH * recordCountWindow;
-    if (estimatedMemory > Runtime.getRuntime().maxMemory() / 3) {
+    long maxPipelineMemoryBytes = getContext().getPipelineMaxMemory() * 1000 * 1000;
+    if (estimatedMemory > maxPipelineMemoryBytes) {
       issues.add(getContext().createConfigIssue(Groups.DE_DUP.name(), "recordCountWindow", Errors.DEDUP_03,
-                                                recordCountWindow, estimatedMemory / (1024 * 1024),
-                                                Runtime.getRuntime().maxMemory() / (1024 * 1024)));
+        recordCountWindow, estimatedMemory / (1000 * 1000), getContext().getPipelineMaxMemory()));
+        //MiB to bytes conversion, use  1000 * 1000 instead of 1024 * 1024
     }
     return issues;
   }

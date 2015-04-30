@@ -148,10 +148,10 @@ public class Pipeline {
       for (StageRuntime stage : stages) {
         infos.add(stage.getInfo());
         stage.setContext(new StageContext(infosUnmodifiable, stage.getDefinition().getType(), runner.isPreview(),
-                                          runner.getMetrics(), stage));
+          runner.getMetrics(), stage, pipelineConf.getMemoryLimitConfiguration().getMemoryLimit()));
       }
       errorStage.setContext(new StageContext(infosUnmodifiable, errorStage.getDefinition().getType(), runner.isPreview(),
-                                             runner.getMetrics(), errorStage));
+          runner.getMetrics(), errorStage, pipelineConf.getMemoryLimitConfiguration().getMemoryLimit()));
     }
 
     private Pipe[] createPipes(StageRuntime[] stages) throws PipelineRuntimeException {

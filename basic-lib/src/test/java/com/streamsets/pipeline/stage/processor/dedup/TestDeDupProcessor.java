@@ -76,7 +76,7 @@ public class TestDeDupProcessor {
 
   @Test(expected = StageException.class)
   public void testValidateConfigs5() throws Exception {
-    Processor processor = new DeDupProcessor((int) (Runtime.getRuntime().maxMemory() / 3 / 85 + 1), 0,
+    Processor processor = new DeDupProcessor((int) ( getDefaultMemoryLimitMiB() * 1000 * 1000 / 85 + 1), 0,
                                              SelectFields.ALL_FIELDS, Collections.EMPTY_LIST);
     ProcessorRunner runner = new ProcessorRunner.Builder(DeDupDProcessor.class, processor)
         .addOutputLane("unique")
@@ -87,7 +87,8 @@ public class TestDeDupProcessor {
 
   @Test
   public void testValidateConfigs6() throws Exception {
-    Processor processor = new DeDupProcessor((int) (Runtime.getRuntime().maxMemory() / 3 / 85 - 1), 0,
+
+    Processor processor = new DeDupProcessor((int) (getDefaultMemoryLimitMiB() * 1000 * 1000 / 85 - 1), 0,
                                              SelectFields.ALL_FIELDS, Collections.EMPTY_LIST);
     ProcessorRunner runner = new ProcessorRunner.Builder(DeDupDProcessor.class, processor)
         .addOutputLane("unique")
@@ -408,6 +409,11 @@ public class TestDeDupProcessor {
     record.set(Field.create(map));
 
     return record;
+  }
+
+  private long getDefaultMemoryLimitMiB() {
+    double maxMemoryMiB = Runtime.getRuntime().maxMemory() / 1000.0d / 1000.0d;
+    return (long)(maxMemoryMiB * 0.70d);
   }
 
 // //TO TEST MEMORY USAGE

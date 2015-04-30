@@ -34,12 +34,14 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 import java.io.ByteArrayInputStream;
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
+import java.util.UUID;
 
 public class TestKafkaTargetSinglePartition {
 
@@ -86,9 +88,16 @@ public class TestKafkaTargetSinglePartition {
   private static final String TOPIC16 = "test16";
   private static final int TIME_OUT = 5000;
 
+  private static String originalTmpDir;
+
   @BeforeClass
   public static void setUp() {
     //Init zookeeper
+    originalTmpDir = System.getProperty("java.io.tmpdir");
+    File testDir = new File("target", UUID.randomUUID().toString()).getAbsoluteFile();
+    Assert.assertTrue(testDir.mkdirs());
+    System.setProperty("java.io.tmpdir", testDir.getAbsolutePath());
+
     String zkConnect = TestZKUtils.zookeeperConnect();
     zkServer = new EmbeddedZookeeper(zkConnect);
     zkClient = new ZkClient(zkServer.connectString(), 30000, 30000, ZKStringSerializer$.MODULE$);
@@ -158,6 +167,7 @@ public class TestKafkaTargetSinglePartition {
     kafkaServer.shutdown();
     zkClient.close();
     zkServer.shutdown();
+    System.setProperty("java.io.tmpdir", originalTmpDir);
   }
 
   @Test

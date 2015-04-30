@@ -34,7 +34,7 @@ public class KafkaConsumer {
   public static final String ZOOKEEPER_CONNECT_KEY = "zookeeper.connect";
   public static final String GROUP_ID_KEY = "group.id";
   private static final String FETCH_MAX_WAIT_KEY = "fetch.wait.max.ms";
-  private static final String FETCH_MAX_WAIT_DEFAULT = "100";
+  private static final String FETCH_MAX_WAIT_DEFAULT = "1000";
   private static final String FETCH_MIN_BYTES_KEY = "fetch.min.bytes";
   private static final String FETCH_MIN_BYTES_DEFAULT = "1";
   private static final String ZK_CONNECTION_TIMEOUT_MS_KEY = "zookeeper.connection.timeout.ms";
