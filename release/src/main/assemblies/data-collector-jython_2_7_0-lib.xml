@@ -5,7 +5,7 @@
  written consent of StreamSets, Inc.
 -->
 <assembly>
-  <id>jython_2_7_b2-lib</id>
+  <id>jython_2_7_0-lib</id>
   <formats>
     <format>tar.gz</format>
   </formats>
@@ -21,7 +21,7 @@
 
     <!-- Library -->
     <fileSet>
-      <directory>${basedir}/../jython_2_7_b2-lib/target/streamsets-libs</directory>
+      <directory>${basedir}/../jython_2_7_0-lib/target/streamsets-libs</directory>
       <outputDirectory>/streamsets-datacollector-${project.version}/streamsets-libs</outputDirectory>
     </fileSet>
   </fileSets>

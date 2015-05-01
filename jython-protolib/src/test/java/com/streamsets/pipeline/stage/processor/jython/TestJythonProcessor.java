@@ -222,9 +222,13 @@ public class TestJythonProcessor {
 
   @Test
   public void testPrimitiveTypesPassthrough() throws Exception {
-    Processor processor = new JythonProcessor(ProcessingMode.RECORD,
-                                              "for record in records:\n" +
-                                              "  out.write(record)\n");
+    Processor processor = new JythonProcessor(
+        ProcessingMode.RECORD,
+        "import sys\n" +
+        "from datetime import datetime\n" + // Verify that site.py was processed properly and std modules on path
+        "for record in records:\n" +
+        "  out.write(record)\n"
+    );
     ProcessorRunner runner = new ProcessorRunner.Builder(JythonDProcessor.class, processor)
         .addOutputLane("lane")
         .build();

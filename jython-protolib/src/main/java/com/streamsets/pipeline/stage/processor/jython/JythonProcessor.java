@@ -6,8 +6,8 @@
 package com.streamsets.pipeline.stage.processor.jython;
 
 import com.streamsets.pipeline.api.Field;
-import com.streamsets.pipeline.stage.processor.scripting.ProcessingMode;
 import com.streamsets.pipeline.stage.processor.scripting.AbstractScriptingProcessor;
+import com.streamsets.pipeline.stage.processor.scripting.ProcessingMode;
 import com.streamsets.pipeline.stage.processor.scripting.ScriptObjectFactory;
 import org.python.core.PyDictionary;
 import org.python.core.PyList;

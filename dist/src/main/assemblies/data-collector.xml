@@ -196,7 +196,7 @@
 
     <!-- Jython libs -->
     <fileSet>
-      <directory>${basedir}/../${jython_2_7_b2-lib}/target/streamsets-libs/</directory>
+      <directory>${basedir}/../${jython_2_7_0-lib}/target/streamsets-libs/</directory>
       <outputDirectory>/streamsets-libs/</outputDirectory>
     </fileSet>
 

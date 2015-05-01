@@ -985,13 +985,13 @@
             </configuration>
           </execution>
           <execution>
-            <id>generate-jython-2.7b2-rpm</id>
+            <id>generate-jython-2.7.0-rpm</id>
             <goals>
               <goal>attached-rpm</goal>
             </goals>
             <configuration>
-              <name>streamsets-datacollector-jython-2.7b2-lib</name>
-              <classifier>jython-2.7b2-lib</classifier>
+              <name>streamsets-datacollector-jython-2.7.0-lib</name>
+              <classifier>jython-2.7.0-lib</classifier>
               <license>Proprietary</license>
               <distribution>el6</distribution>
               <group>Applications/System</group>
@@ -999,7 +999,7 @@
               <targetOS>linux</targetOS>
               <prefix>/opt</prefix>
               <provides>
-                <provide>streamsets-datacollector-jython-2.7b2</provide>
+                <provide>streamsets-datacollector-jython-2.7.0</provide>
               </provides>
               <requires>
                 <require>java</require>
@@ -1014,26 +1014,26 @@
               <mappings>
                 <!-- Separate mappings for dirs exist b/c of the Won't Fix for this JIRA https://jira.codehaus.org/browse/MRPM-8 -->
                 <mapping>
-                  <directory>${sdc.dir}/streamsets-datacollector-${project.version}/streamsets-libs/streamsets-datacollector-jython_2_7_b2-lib</directory>
+                  <directory>${sdc.dir}/streamsets-datacollector-${project.version}/streamsets-libs/streamsets-datacollector-jython_2_7_0-lib</directory>
                   <filemode>755</filemode>
                   <username>root</username>
                   <groupname>root</groupname>
                 </mapping>
                 <mapping>
-                  <directory>${sdc.dir}/streamsets-datacollector-${project.version}/streamsets-libs/streamsets-datacollector-jython_2_7_b2-lib/lib</directory>
+                  <directory>${sdc.dir}/streamsets-datacollector-${project.version}/streamsets-libs/streamsets-datacollector-jython_2_7_0-lib/lib</directory>
                   <filemode>755</filemode>
                   <username>root</username>
                   <groupname>root</groupname>
                 </mapping>
                 <mapping>
-                  <directory>${sdc.dir}/streamsets-datacollector-${project.version}/streamsets-libs/streamsets-datacollector-jython_2_7_b2-lib</directory>
+                  <directory>${sdc.dir}/streamsets-datacollector-${project.version}/streamsets-libs/streamsets-datacollector-jython_2_7_0-lib</directory>
                   <directoryIncluded>false</directoryIncluded>
                   <filemode>644</filemode>
                   <username>root</username>
                   <groupname>root</groupname>
                   <sources>
                     <source>
-                      <location>${sdc.distroot}/streamsets-datacollector-${project.version}/streamsets-libs/streamsets-datacollector-jython_2_7_b2-lib</location>
+                      <location>${sdc.distroot}/streamsets-datacollector-${project.version}/streamsets-libs/streamsets-datacollector-jython_2_7_0-lib</location>
                     </source>
                   </sources>
                 </mapping>

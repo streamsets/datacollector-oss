@@ -15,15 +15,14 @@
     <relativePath>../root-lib</relativePath>
   </parent>
   <groupId>com.streamsets</groupId>
-  <artifactId>streamsets-datacollector-jython_2_7_b2-lib</artifactId>
+  <artifactId>streamsets-datacollector-jython_2_7_0-lib</artifactId>
   <version>1.0.0b2-SNAPSHOT</version>
-  <description>StreamSets Data Collector Jython 2.7.b2 Lib</description>
-  <name>StreamSets Data Collector Jython 2.7.b2 Lib</name>
+  <description>StreamSets Data Collector Jython 2.7.0 Lib</description>
+  <name>StreamSets Data Collector Jython 2.7.0 Lib</name>
   <packaging>jar</packaging>
 
   <properties>
-    <!-- tried using 2.7-b4  (and b3) but engine is not loading and I'm getting NULL -->
-    <jython.version>2.7-b2</jython.version>
+    <jython.version>2.7.0</jython.version>
     <guava.version>18.0</guava.version>
   </properties>
 
@@ -80,6 +79,19 @@
       <groupId>com.streamsets</groupId>
       <artifactId>streamsets-datacollector-jython-protolib</artifactId>
       <version>${project.version}</version>
+      <scope>compile</scope>
+      <exclusions>
+        <exclusion>
+          <groupId>org.python</groupId>
+          <artifactId>jython-standalone</artifactId>
+        </exclusion>
+      </exclusions>
+    </dependency>
+
+    <dependency>
+      <groupId>org.python</groupId>
+      <artifactId>jython-standalone</artifactId>
+      <version>${jython.version}</version>
       <scope>compile</scope>
     </dependency>
 
@@ -149,6 +161,7 @@
                   <finalName>streamsets-libs</finalName>
                   <descriptors>
                     <descriptor>${basedir}/../root/src/main/assemblies/stage-lib.xml</descriptor>
+                    <descriptor>${basedir}/../root/src/main/assemblies/jython.xml</descriptor>
                   </descriptors>
                 </configuration>
               </execution>

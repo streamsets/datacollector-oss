@@ -18,20 +18,13 @@
   </fileSets>
 
   <dependencySets>
-
     <dependencySet>
-      <useProjectArtifact>true</useProjectArtifact>
-      <useTransitiveDependencies>true</useTransitiveDependencies>
-      <useTransitiveFiltering>true</useTransitiveFiltering>
+      <includes>
+        <include>org.python:jython-standalone</include>
+      </includes>
+      <outputFileNameMapping>jython.jar</outputFileNameMapping>
       <outputDirectory>/${project.artifactId}/lib</outputDirectory>
-      <unpack>false</unpack>
-      <scope>runtime</scope>
-      <!-- Jython must be packaged differently. -->
-      <excludes>
-        <exclude>org.python:jython-standalone</exclude>
-      </excludes>
     </dependencySet>
-
   </dependencySets>
 
 </assembly>

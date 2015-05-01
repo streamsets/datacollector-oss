@@ -75,7 +75,7 @@
     </dependency>
     <dependency>
       <groupId>com.streamsets</groupId>
-      <artifactId>streamsets-datacollector-jython_2_7_b2-lib</artifactId>
+      <artifactId>streamsets-datacollector-jython_2_7_0-lib</artifactId>
       <scope>provided</scope>
     </dependency>
     <dependency>
