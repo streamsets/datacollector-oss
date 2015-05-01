@@ -270,6 +270,28 @@ body {
       display: block;
     }
   }
+
+  .field-value {
+    margin-left: @defaultPadding;
+
+
+    &.LONG, &.INTEGER, &.FLOAT, &.DOUBLE {
+      color: blue;
+    }
+
+    &.STRING {
+      color: #008000;
+
+      &:after, &:before {
+        content: '"';
+      }
+
+    }
+
+    &.BOOLEAN {
+      color: #EC4242;
+    }
+  }
 }
 
 @import '../common/administration/sdcConfiguration/sdcConfiguration.less';

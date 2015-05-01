@@ -1,20 +1,47 @@
-<table class="table preview-tableview-table" ng-hide="showLoading" ng-controller="PreviewCommonTableViewController">
+<table class="table table-bordered table-striped preview-tableview-table" ng-hide="showLoading" ng-controller="PreviewCommonTableViewController">
   <thead>
   <tr>
-    <th ng-if="inputFieldPaths.length || detailPaneConfig.uiInfo.stageType === pipelineConstant.PROCESSOR_STAGE_TYPE"
-        colspan="{{inputFieldPaths.length ? inputFieldPaths.length : 1}}">
+    <th class="from-stage" ng-if="inputFieldPaths.length || detailPaneConfig.uiInfo.stageType === pipelineConstant.PROCESSOR_STAGE_TYPE"
+        colspan="{{inputLimit ? inputLimit : 1}}">
       <span translate="home.previewPane.inputData">Input Data</span>
     </th>
 
-    <th colspan="{{outputFieldPaths.length ? outputFieldPaths.length : 1}}">
+    <th class="to-stage" colspan="{{outputLimit ? outputLimit : 1}}">
       <span translate="home.previewPane.outputData">Output Data</span>
     </th>
 
   </tr>
 
   <tr>
-    <th ng-repeat="fieldPath in inputFieldPaths">{{fieldPath}}</th>
-    <th ng-repeat="fieldPath in outputFieldPaths">{{fieldPath}}</th>
+    <th class="from-stage" ng-repeat="fieldPath in inputFieldPaths | limitTo: inputLimit">
+      <span>{{fieldPath}}</span>
+
+      <div class="show-more pull-right" ng-if="$last && inputLimit < inputFieldPaths.length">
+        (<a href="btn btn-link" href=""
+           ng-click="onShowMoreInputClick($event);">Show More...</a>
+
+        <span class="separator">|</span>
+
+        <a href="btn btn-link" href=""
+           ng-click="onShowAllInputClick($event);">Show All...</a>)
+      </div>
+
+    </th>
+
+    <th class="to-stage" ng-repeat="fieldPath in outputFieldPaths | limitTo: outputLimit">
+      <span>{{fieldPath}}</span>
+
+      <div class="show-more pull-right" ng-if="$last && outputLimit < outputFieldPaths.length">
+        (<a href="btn btn-link" href=""
+           ng-click="onShowMoreOutputClick($event);">Show More...</a>
+
+        <span class="separator">|</span>
+
+        <a href="btn btn-link" href=""
+           ng-click="onShowAllOutputClick($event);">Show All...</a>)
+      </div>
+
+    </th>
   </tr>
 
   </thead>
@@ -27,18 +54,24 @@
       flattenInputRecord = getFlattenRecord(inputRecord);
       flattenOutputRecord = getFlattenRecord(outputRecords[0])">
 
-    <td ng-repeat="fieldPath in inputFieldPaths">{{flattenInputRecord[fieldPath] + ''}}</td>
+    <td ng-repeat="fieldPath in inputFieldPaths | limitTo: inputLimit"
+        ng-class="{'value-deletion': (detailPaneConfig.uiInfo.stageType === pipelineConstant.PROCESSOR_STAGE_TYPE && flattenInputRecord[fieldPath].value !== flattenOutputRecord[fieldPath].value) }"
+        class="field-value {{flattenInputRecord[fieldPath].type}}">{{flattenInputRecord[fieldPath].value + ''}}</td>
 
     <td ng-if="flattenOutputRecord"
-      ng-repeat="fieldPath in outputFieldPaths">{{flattenOutputRecord[fieldPath] + ''}}</td>
+        ng-repeat="fieldPath in outputFieldPaths | limitTo: outputLimit"
+        ng-class="{'value-addition': flattenInputRecord[fieldPath].value !== flattenOutputRecord[fieldPath].value }"
+      class="field-value {{flattenOutputRecord[fieldPath].type}}">{{flattenOutputRecord[fieldPath].value + ''}}</td>
 
     <td colspan="{{outputFieldPaths.length}}" ng-if="errorsRecords && errorsRecords.length > 0">
       <label class="label label-danger">
-        {{('global.form.record' | translate)+($parent.$index+1) + '-' + ('global.form.errorRecord' | translate) + ' ' + escapeHtml(errorsRecords[0].header.errorMessage)}}
+        {{('global.form.record' | translate)+($parent.$index+1) + '-' + ('global.form.errorRecord' | translate) + ' ' +
+        escapeHtml(errorsRecords[0].header.errorMessage)}}
       </label>
     </td>
 
-    <td colspan="{{outputFieldPaths.length}}" ng-if="outputRecords.length === 0 && errorsRecords.length === 0 && detailPaneConfig.uiInfo.stageType !== 'TARGET'">
+    <td colspan="{{outputFieldPaths.length}}"
+        ng-if="outputRecords.length === 0 && errorsRecords.length === 0 && detailPaneConfig.uiInfo.stageType !== pipelineConstant.TARGET_STAGE_TYPE">
       <label class="label label-warning">{{'home.previewPane.noOutputWarning' | translate}}</label>
     </td>
 
@@ -50,14 +83,16 @@
       ng-init="flattenRecord = getFlattenRecord(outputRecord)">
     <td colspan="{{inputFieldPaths.length}}"></td>
 
-    <td ng-repeat="fieldPath in outputFieldPaths">{{flattenRecord[fieldPath] + ''}}</td>
+    <td ng-repeat="fieldPath in outputFieldPaths">{{flattenRecord[fieldPath].value + ''}}</td>
   </tr>
 
-  <tr ng-if="detailPaneConfig.uiInfo.stageType === 'SOURCE'"
+  <tr ng-if="detailPaneConfig.uiInfo.stageType === pipelineConstant.SOURCE_STAGE_TYPE"
       ng-repeat="record in stagePreviewData.output"
       ng-init="flattenRecord = getFlattenRecord(record)">
-    <td ng-repeat="fieldPath in inputFieldPaths">{{flattenRecord[fieldPath] + ''}}</td>
-    <td ng-repeat="fieldPath in outputFieldPaths">{{flattenRecord[fieldPath] + ''}}</td>
+    <td ng-repeat="fieldPath in inputFieldPaths | limitTo: inputLimit"
+        class="field-value {{flattenRecord[fieldPath].type}}">{{flattenRecord[fieldPath].value + ''}}</td>
+    <td ng-repeat="fieldPath in outputFieldPaths | limitTo: outputLimit"
+        class="field-value {{flattenRecord[fieldPath].type}}">{{flattenRecord[fieldPath].value + ''}}</td>
   </tr>
 
   <tr ng-if="stagePreviewData.input.length === 0 &&

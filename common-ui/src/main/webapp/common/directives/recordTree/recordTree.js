@@ -47,21 +47,42 @@ angular.module('recordTreeDirectives', ['RecursionHelper'])
         },
 
 
+        /**
+         * On Record Value updated.
+         *
+         * @param recordUpdated
+         * @param recordValue
+         * @param dateRecordValue
+         */
         recordDateValueUpdated: function(recordUpdated, recordValue, dateRecordValue) {
           recordValue.value = dateRecordValue.getTime();
           scope.$emit('recordUpdated', recordUpdated, recordValue);
         },
 
+        /**
+         * Returns Date
+         * @param milliSeconds
+         * @returns {Date}
+         */
         getDate: function(milliSeconds) {
           return new Date(milliSeconds);
         },
 
-
+        /**
+         * Callback function when Show more link clicked.
+         *
+         * @param $event
+         */
         onShowMoreClick: function($event) {
           $event.preventDefault();
           scope.limit += mapListLimit;
         },
 
+        /**
+         * Callback function when Show all link clicked.
+         *
+         * @param $event
+         */
         onShowAllClick: function($event) {
           $event.preventDefault();
           scope.limit = scope.valueLength;

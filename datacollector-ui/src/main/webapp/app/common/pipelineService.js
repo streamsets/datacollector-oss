@@ -668,7 +668,7 @@ angular.module('dataCollectorApp.common')
         if(value.type === 'MAP' || value.type === 'LIST') {
           self.getFlattenRecord(value, flattenRecord);
         } else if(value.path) {
-          flattenRecord[value.path] = value.value;
+          flattenRecord[value.path] = value;
         }
       });
     };

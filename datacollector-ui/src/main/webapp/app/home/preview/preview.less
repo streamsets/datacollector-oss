@@ -123,6 +123,37 @@
       }
     }
   }
+
+}
+
+.preview-tableview-table {
+  th, td {
+    &.from-stage {
+      color: @default-pipeline-graph-start-node-color;
+    }
+
+    &.to-stage {
+      color: @default-pipeline-graph-end-node-color;
+    }
+
+
+    &.value-addition {
+      background-color: #eaffea;
+    }
+
+    &.value-deletion {
+      background-color: #ffecec;
+    }
+
+    .show-more {
+      a {
+        padding-left: @smallPadding;
+        padding-right: @smallPadding;
+      }
+    }
+
+
+  }
 }
 
 @import "configuration/previewConfig.less";
