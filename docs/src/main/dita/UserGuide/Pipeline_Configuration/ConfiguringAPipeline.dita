@@ -30,13 +30,23 @@
             </step>
             <step id="pipeProperties">
                 <cmd>In the Properties panel, on the <wintitle>General</wintitle> tab, configure the
-                        <uicontrol>Delivery Guarantee</uicontrol> property:</cmd>
+                    following properties:</cmd>
                 <info>
                     <simpletable frame="all" relcolwidth="1.0* 3.17*" id="simpletable_m1s_q1m_sq">
                         <sthead>
                             <stentry>Pipeline Property</stentry>
                             <stentry>Description</stentry>
                         </sthead>
+                        <strow>
+                            <stentry>Description</stentry>
+                            <stentry>Optional description of the pipeline.</stentry>
+                        </strow>
+                        <strow>
+                            <stentry>Execution Mode</stentry>
+                            <stentry>
+                                <draft-comment author="Loretta">come back to this</draft-comment>
+                            </stentry>
+                        </strow>
                         <strow>
                             <stentry>Delivery Guarantee <xref
                                     href="DeliveryGuarantee.dita#concept_ffz_hhw_kq">
@@ -53,6 +63,32 @@
                                         result in missing rows.</li>
                                 </ul><p>Default is <uicontrol>At least
                                 once</uicontrol>.</p></stentry>
+                        </strow>
+                        <strow>
+                            <stentry>Memory Limit Exceeded<draft-comment author="Loretta">Can we
+                                    reverse the order that these display in?  And call this On
+                                    Memory Error? (I don't love that, but it matches On Record
+                                    Error?) </draft-comment></stentry>
+                            <stentry>Action to take when the pipeline memory reaches the memory
+                                    limit:<ul id="ul_zbq_kyq_wr">
+                                    <li>Log - Logs a message in the pipeline history.</li>
+                                    <li>Log and Alert - Logs a message and triggers an alert that
+                                        displays in monitor mode and sends an alert email to any
+                                        provided email addresses.</li>
+                                </ul><ul id="ul_m4t_yyq_wr">
+                                    <li>Log, Alert and Stop Pipeline - Logs a message, triggers an
+                                        alert that displays in monitor mode and sends an alert email
+                                        to any provided email addresses. Stops the pipeline.</li>
+                                </ul></stentry>
+                        </strow>
+                        <strow>
+                            <stentry>Memory Limit <xref
+                                    href="PipelineMemory.dita#concept_twq_nhx_rr"><image href="../Graphics/icon_moreInfo.png" scale="10"></image></xref></stentry>
+                            <stentry>Maximum amount of memory for the pipeline to use. <p>Best
+                                    practice is to use up to 65% of the Java heap size defined for
+                                    the <ph
+                                        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                                    />. </p></stentry>
                         </strow>
                     </simpletable>
                 </info>
@@ -90,8 +126,8 @@
                 </info>
             </step>
             <step>
-                <cmd>On the <wintitle>Error Records - SDC Record Files</wintitle> tab, configure
-                    error file properties:</cmd>
+                <cmd>When writing error records to file, click the <wintitle>Error Records - Write
+                        to File</wintitle> tab and configure the following properties:</cmd>
                 <info>
                     <table frame="all" rowsep="1" colsep="1" id="table_gy3_1y4_1r">
                         <tgroup cols="2">
@@ -99,7 +135,7 @@
                             <colspec colname="c2" colnum="2" colwidth="3.15*"/>
                             <thead>
                                 <row>
-                                    <entry>Error File Property</entry>
+                                    <entry>Write to File Property</entry>
                                     <entry>Description</entry>
                                 </row>
                             </thead>
@@ -122,6 +158,43 @@
                                     <entry>Maximum size for error files. Exceeding this size creates
                                         a new error file. <p>Use 0 to write to avoid using this
                                             property.</p></entry>
+                                </row>
+                            </tbody>
+                        </tgroup>
+                    </table>
+                </info>
+            </step>
+            <step>
+                <cmd>When writing error records to Kafka, click the <wintitle>Error Records - Write
+                        to Kafka</wintitle> tab and configure the following
+                        properties:<draft-comment author="Loretta">reuse updated Kafka
+                        info.</draft-comment></cmd>
+            </step>
+            <step>
+                <cmd>When using the cluster execution mode, click the <uicontrol>Cluster</uicontrol>
+                    tab and configure the following properties:</cmd>
+                <info>
+                    <table frame="all" rowsep="1" colsep="1" id="table_mkj_kdr_wr">
+                        <tgroup cols="2">
+                            <colspec colname="c1" colnum="1" colwidth="1*"/>
+                            <colspec colname="c2" colnum="2" colwidth="2.57*"/>
+                            <thead>
+                                <row>
+                                    <entry>Cluster Property</entry>
+                                    <entry>Description</entry>
+                                </row>
+                            </thead>
+                            <tbody>
+                                <row>
+                                    <entry>Slave Heap (MB)</entry>
+                                    <entry>
+                                        <draft-comment author="Loretta">come back to
+                                            these.</draft-comment>
+                                    </entry>
+                                </row>
+                                <row>
+                                    <entry>Launcher Env</entry>
+                                    <entry/>
                                 </row>
                             </tbody>
                         </tgroup>

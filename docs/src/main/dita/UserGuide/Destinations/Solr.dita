@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
+<concept id="concept_z2g_q1r_wr">
+ <title>Solr</title>
+ <shortdesc>The Solr destination writes data to a Solr node or cluster. </shortdesc>
+ <conbody>
+  <p><indexterm>Solr
+     destination<indexterm>overview</indexterm></indexterm><indexterm>destinations<indexterm>Solr</indexterm></indexterm>When
+   you configure the Solr destination, you configure connection information for the node or cluster.
+   You also define the indexing mode and map incoming fields to Solr fields. Mapped fields should
+   have compatible data types.</p>
+  <p>You can configure the destination to index records individually or in batches. </p>
+ </conbody>
+</concept>

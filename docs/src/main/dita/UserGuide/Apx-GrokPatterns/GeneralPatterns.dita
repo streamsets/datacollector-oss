@@ -6,24 +6,16 @@
   <p>You can use the following general grok patterns to define the structure of log data:</p>
   <dl>
    <dlentry>
-    <dt>USERNAME</dt>
-    <dd>[a-zA-Z0-9._-]+ </dd>
-   </dlentry>
-   <dlentry>
     <dt>USER</dt>
     <dd>%{USERNAME} </dd>
    </dlentry>
    <dlentry>
-    <dt>INT</dt>
-    <dd>(?:[+-]?(?:[0-9]+)) </dd>
+    <dt>USERNAME</dt>
+    <dd>[a-zA-Z0-9._-]+ </dd>
    </dlentry>
    <dlentry>
     <dt>BASE10NUM</dt>
     <dd>(?&lt;![0-9.+-])(?>[+-]?(?:(?:[0-9]+(?:\.[0-9]+)?)|(?:\.[0-9]+)))</dd>
-   </dlentry>
-   <dlentry>
-    <dt>NUMBER</dt>
-    <dd>(?:%{BASE10NUM}) BASE16NUM (?&lt;![0-9A-Fa-f])(?:[+-]?(?:0x)?(?:[0-9A-Fa-f]+)) </dd>
    </dlentry>
    <dlentry>
     <dt>BASE16FLOAT</dt>
@@ -31,12 +23,20 @@
      \b(?&lt;![0-9A-Fa-f.])(?:[+-]?(?:0x)?(?:(?:[0-9A-Fa-f]+(?:\.[0-9A-Fa-f]*)?)|(?:\.[0-9A-Fa-f]+)))\b</dd>
    </dlentry>
    <dlentry>
-    <dt>POSINT</dt>
-    <dd>\b(?:[1-9][0-9]*)\b </dd>
+    <dt>INT</dt>
+    <dd>(?:[+-]?(?:[0-9]+)) </dd>
    </dlentry>
    <dlentry>
     <dt>NONNEGINT</dt>
     <dd>\b(?:[0-9]+)\b</dd>
+   </dlentry>
+   <dlentry>
+    <dt>NUMBER</dt>
+    <dd>(?:%{BASE10NUM}) BASE16NUM (?&lt;![0-9A-Fa-f])(?:[+-]?(?:0x)?(?:[0-9A-Fa-f]+)) </dd>
+   </dlentry>
+   <dlentry>
+    <dt>POSINT</dt>
+    <dd>\b(?:[1-9][0-9]*)\b </dd>
    </dlentry>
    <dlentry>
     <dt>WORD</dt>

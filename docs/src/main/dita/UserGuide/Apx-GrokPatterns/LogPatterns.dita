@@ -22,6 +22,11 @@
     <dd>&lt;%{NONNEGINT:facility}.%{NONNEGINT:priority}> </dd>
    </dlentry>
    <dlentry>
+    <dt>SYSLOGBASE</dt>
+    <dd>%{SYSLOGTIMESTAMP:timestamp} (?:%{SYSLOGFACILITY} )?%{SYSLOGHOST:logsource} %{SYSLOGPROG}:
+    </dd>
+   </dlentry>
+   <dlentry>
     <dt>HTTPDATE</dt>
     <dd>%{MONTHDAY}/%{MONTH}/%{YEAR}:%{TIME} %{INT} </dd>
    </dlentry>
@@ -29,11 +34,6 @@
     <dt>QS</dt>
     <dd>%{QUOTEDSTRING}<draft-comment author="Loretta">this was a standalone item under "shortcuts"
       -- does it belong here or in the general list?</draft-comment></dd>
-   </dlentry>
-   <dlentry>
-    <dt>SYSLOGBASE</dt>
-    <dd>%{SYSLOGTIMESTAMP:timestamp} (?:%{SYSLOGFACILITY} )?%{SYSLOGHOST:logsource} %{SYSLOGPROG}:
-    </dd>
    </dlentry>
    <dlentry>
     <dt>COMMONAPACHELOG</dt>

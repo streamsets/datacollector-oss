@@ -5,9 +5,10 @@
  <topicref href="../Apx-GrokPatterns/GrokPatterns_title.dita">
   <topicref href="../Apx-GrokPatterns/GrokPatterns.dita"/>
   <topicref href="../Apx-GrokPatterns/GeneralPatterns.dita"/>
+  <topicref href="../Apx-GrokPatterns/DateTimePatterns.dita"/>
+  <topicref href="../Apx-GrokPatterns/JavaPatterns.dita"/>
+  <topicref href="../Apx-GrokPatterns/LogPatterns.dita"/>
   <topicref href="../Apx-GrokPatterns/NetworkingPatterns.dita"/>
   <topicref href="../Apx-GrokPatterns/PathPatterns.dita"/>
-  <topicref href="../Apx-GrokPatterns/DateTimePatterns.dita"/>
-  <topicref href="../Apx-GrokPatterns/LogPatterns.dita"/>
  </topicref>
 </map>

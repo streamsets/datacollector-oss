@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE task PUBLIC "-//OASIS//DTD DITA General Task//EN" "generalTask.dtd">
+<task id="task_ld1_phr_wr">
+    <title>Configuring a Solr Destination</title>
+    <taskbody>
+        <context><indexterm>Solr destination<indexterm>configuring</indexterm></indexterm>Configure
+            a Solr destination to write data to an Solr node or cluster.</context>
+        <steps id="steps_tgy_3tv_4r">
+            <step
+                conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/1stStep-ReqField-ErrorHandling">
+                <cmd/>
+            </step>
+            <step>
+                <cmd>On the <wintitle>Solr</wintitle> tab, configure the following properties:</cmd>
+                <info>
+                    <table frame="all" rowsep="1" colsep="1" id="table_yhj_2kr_wr">
+                        <tgroup cols="2">
+                            <colspec colname="c1" colnum="1" colwidth="1*"/>
+                            <colspec colname="c2" colnum="2" colwidth="3.08*"/>
+                            <thead>
+                                <row>
+                                    <entry>Solr Property</entry>
+                                    <entry>Description</entry>
+                                </row>
+                            </thead>
+                            <tbody>
+                                <row>
+                                    <entry>Instance Type</entry>
+                                    <entry>Solr instance type to write to:<ul id="ul_ymy_ykr_wr">
+                                            <li>Single Node - Writes to single Solr node.</li>
+                                            <li>SolrCloud - Writes to Solr cluster.</li>
+                                        </ul></entry>
+                                </row>
+                                <row>
+                                    <entry>Solr URI</entry>
+                                    <entry>URI for the node.</entry>
+                                </row>
+                                <row>
+                                    <entry>ZooKeeper Connection String</entry>
+                                    <entry>Connection string for the ZooKeeper associated with the
+                                        cluster.</entry>
+                                </row>
+                                <row>
+                                    <entry>Record Indexing Mode<draft-comment author="Loretta">Can
+                                            we call this Index Mode?</draft-comment></entry>
+                                    <entry>Determines how records are indexed.</entry>
+                                </row>
+                                <row>
+                                    <entry>Fields<draft-comment author="Loretta">Can we call this
+                                            Field Mapping or Field Mappings or something like that?
+                                            Fields is quite generic.<p>Please note: the tooltip is
+                                                incorrect</p></draft-comment></entry>
+                                    <entry>Map fields from the record to Solr fields. Use the
+                                            <uicontrol>Add</uicontrol> icon to create additional
+                                        field mappings. </entry>
+                                </row>
+                            </tbody>
+                        </tgroup>
+                    </table>
+                </info>
+            </step>
+        </steps>
+    </taskbody>
+</task>

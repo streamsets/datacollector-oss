@@ -13,7 +13,7 @@
         processor earlier in the pipeline to convert the necessary data types.</note>Batches written
       to Cassandra are atomic - that is, the entire batch of records is either successfully written
       to Cassandra, or fails. If an error occurs with one or more records in a batch, Cassandra
-      fails the entire batch. When a batch fails, all records in the batch are processed based on
-      the error handling configured for the Cassandra destination.</p>
+      fails the entire batch. When a batch fails, the entire batch is sent to the stage for error
+      handling. </p>
  </conbody>
 </concept>

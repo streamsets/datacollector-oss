@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
+<concept id="concept_z4y_bgr_wr">
+ <title>Index Mode</title>
+ <shortdesc>The index mode determines how the Solr destination indexes records when uploading to
+  Solr. Index mode also determines how the destination handles errors. </shortdesc>
+ <conbody>
+  <p><indexterm>Solr destination<indexterm>index mode</indexterm></indexterm><indexterm>index
+     mode<indexterm>Solr</indexterm></indexterm>You can use the following index modes:<dl>
+    <dlentry>
+     <dt>Record</dt>
+     <dd>The destination indexes one record at a time, and then passes the record to Solr. </dd>
+     <dd>If an error occurs, the destination passes the record to the stage for error handling.
+     </dd>
+    </dlentry>
+    <dlentry>
+     <dt>Batch</dt>
+     <dd>The destination indexes a batch of records at one time, and then passes the batch to
+      Solr.</dd>
+     <dd>If an error occurs, the destination rolls back any records that were indexed and passes the
+      entire batch to the stage for error handling.</dd>
+    </dlentry>
+   </dl></p>
+ </conbody>
+</concept>

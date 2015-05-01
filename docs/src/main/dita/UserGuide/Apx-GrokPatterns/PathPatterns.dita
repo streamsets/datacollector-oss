@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_tpp_12k_wr">
- <title>Path Patterns</title>
+ <title>Path Grok Patterns</title>
  <conbody>
   <p>You can use the following path grok patterns to define the structure of log data:</p>
   <p>

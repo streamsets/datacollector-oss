@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
+<concept id="concept_xq3_3wq_wr">
+ <title>Java Grok Patterns</title>
+ <conbody>
+  <p>You can use the following Java-related grok patterns to define the structure of log data:<dl>
+    <dlentry>
+     <dt>JAVACLASS</dt>
+     <dd>(?:[a-zA-Z$_][a-zA-Z$_0-9]*\.)*[a-zA-Z$_][a-zA-Z$_0-9]*</dd>
+     <dd/>
+    </dlentry>
+    <dlentry>
+     <dt>JAVAFILE</dt>
+     <dd>(?:[A-Za-z0-9_. -]+)</dd>
+     <dd>A space character is allowed to match special cases, such as  Native Method or Unknown
+      Source.</dd>
+    </dlentry>
+    <dlentry>
+     <dt>JAVAMETHOD</dt>
+     <dd> (?:(&lt;init>)|[a-zA-Z$_][a-zA-Z$_0-9]*) </dd>
+    </dlentry>
+    <dlentry>
+     <dt>JAVASTACKTRACEPART</dt>
+     <dd>%{SPACE}at
+      %{JAVACLASS:class}\.%{JAVAMETHOD:method}\(%{JAVAFILE:file}(?::%{NUMBER:line})?\)</dd>
+     <dd>The line number is optional in special cases, such as Native Method or Unknown Source.</dd>
+    </dlentry>
+   </dl></p>
+ </conbody>
+</concept>

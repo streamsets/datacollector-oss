@@ -42,6 +42,13 @@
 
    
    
+    <dt class="dt dlterm">SYSLOGBASE</dt>
+
+    <dd class="dd">%{SYSLOGTIMESTAMP:timestamp} (?:%{SYSLOGFACILITY} )?%{SYSLOGHOST:logsource} %{SYSLOGPROG}:
+    </dd>
+
+   
+   
     <dt class="dt dlterm">HTTPDATE</dt>
 
     <dd class="dd">%{MONTHDAY}/%{MONTH}/%{YEAR}:%{TIME} %{INT} </dd>
@@ -51,13 +58,6 @@
     <dt class="dt dlterm">QS</dt>
 
     <dd class="dd">%{QUOTEDSTRING}</dd>
-
-   
-   
-    <dt class="dt dlterm">SYSLOGBASE</dt>
-
-    <dd class="dd">%{SYSLOGTIMESTAMP:timestamp} (?:%{SYSLOGFACILITY} )?%{SYSLOGHOST:logsource} %{SYSLOGPROG}:
-    </dd>
 
    
    

@@ -48,11 +48,11 @@
    <topicref href="../Destinations/KProducer-AdditionalKProperties.dita"/>
    <topicref href="../Destinations/KProducer-Configuring.dita"/>
   </topicref>
-  <topicref href="../Destinations/SDCRecordFiles.dita" chunk="to-content">
-   <topicmeta>
-    <shortdesc/>
-   </topicmeta>
-   <topicref href="../Destinations/SDCRecordFiles-Configuring.dita"/>
+  <topicref href="../Destinations/Solr.dita" chunk="to-content"><topicmeta>
+   <shortdesc/>
+  </topicmeta>
+   <topicref href="../Destinations/Solr-IndexMode.dita"/>
+   <topicref href="../Destinations/Solr-configuring.dita"/>
   </topicref>
   <topicref href="../Destinations/Error.dita" chunk="to-content"> <topicmeta>
    <shortdesc/>
