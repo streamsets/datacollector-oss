@@ -67,6 +67,7 @@ public enum ContainerError implements ErrorCode {
   CONTAINER_0204("Cannot save pipeline '{}': {}"),
   CONTAINER_0205("The provided pipeline UUID does not match the stored pipeline UUID - please reload the pipeline '{}'"),
   CONTAINER_0206("Cannot load details for pipeline '{}': {}"),
+  CONTAINER_0207("Definition for Stage '{}' from library '{}' with version '{}' is not available"),
 
   // AdminResource
   CONTAINER_0300("Reached maximum number of concurrent clients '{}'. Tailing the log through the REST API."),

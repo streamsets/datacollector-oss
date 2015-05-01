@@ -18,6 +18,8 @@ import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.Target;
 import com.streamsets.pipeline.config.ConfigConfiguration;
 import com.streamsets.pipeline.config.ConfigDefinition;
+import com.streamsets.pipeline.config.ModelDefinition;
+import com.streamsets.pipeline.config.ModelType;
 import com.streamsets.pipeline.config.PipelineConfiguration;
 import com.streamsets.pipeline.config.PipelineDefConfigs;
 import com.streamsets.pipeline.config.StageConfiguration;
@@ -87,6 +89,40 @@ public class MockStages {
   }
 
   public static class MSource implements Source {
+
+    @Override
+    public List<ConfigIssue> validateConfigs(Info info, Context context) throws StageException {
+      if (sourceCapture != null) {
+        return sourceCapture.validateConfigs(info, context);
+      } else {
+        return Collections.emptyList();
+      }
+    }
+
+    @Override
+    public void init(Info info, Context context) throws StageException {
+      if (sourceCapture != null) {
+        sourceCapture.init(info, context);
+      }
+    }
+
+    @Override
+    public void destroy() {
+      if (sourceCapture != null) {
+        sourceCapture.destroy();
+      }
+    }
+
+    @Override
+    public String produce(String lastSourceOffset, int maxBatchSize, BatchMaker batchMaker) throws StageException {
+      if (sourceCapture != null) {
+        return sourceCapture.produce(lastSourceOffset, -1, batchMaker);
+      }
+      return null;
+    }
+  }
+
+  public static class ComplexSource implements Source {
 
     @Override
     public List<ConfigIssue> validateConfigs(Info info, Context context) throws StageException {
@@ -232,6 +268,10 @@ public class MockStages {
 
   public static class ETarget implements Target {
 
+    //This field is required, even though its not used, to pass validation as it tries to inject value into a field
+    //with this name
+    public String errorTargetConfFieldName;
+
     @Override
     public List<ConfigIssue> validateConfigs(Info info, Target.Context context) throws StageException {
       if (errorCapture != null) {
@@ -359,23 +399,31 @@ public class MockStages {
         );
         tDef.setLibrary("default", "", cl);
 
+
+        //error target configurations
+        ConfigDefinition errorTargetConf = new ConfigDefinition(
+          "errorTargetConfName", ConfigDef.Type.STRING, "errorTargetConfLabel", "errorTargetConfDesc",
+          "/SDC_HOME/errorDir", true, "groupName", "errorTargetConfFieldName", null, "", null , 0,
+          Collections.<ElFunctionDefinition>emptyList(), Collections.<ElConstantDefinition>emptyList(), Long.MIN_VALUE, Long.MAX_VALUE, "text/plain", 0,
+          Collections.<String> emptyList(), ConfigDef.Evaluation.IMPLICIT, null);
+
         StageDefinition eDef = new StageDefinition(
           ETarget.class.getName(), "errorTarget", "1.0.0", "errorTarget",
           "Error Target", StageType.TARGET, true, false, true,
-          Collections.<ConfigDefinition>emptyList(), null/*raw source definition*/, "", null, false, 0, null,
+          Arrays.asList(errorTargetConf), null/*raw source definition*/, "", null, false, 0, null,
           Arrays.asList(ExecutionMode.CLUSTER, ExecutionMode.STANDALONE)
         );
         eDef.setLibrary("default", "", cl);
 
         ConfigDefinition depConfDef = new ConfigDefinition(
-          "dependencyConfName", ConfigDef.Type.NUMBER, "dependencyConfLabel", "dependencyConfDesc", "", true,
+          "dependencyConfName", ConfigDef.Type.NUMBER, "dependencyConfLabel", "dependencyConfDesc", 5, true,
           "groupName", "dependencyConfFieldName", null, "", null, 0, Collections.<ElFunctionDefinition>emptyList(),
           Collections.<ElConstantDefinition>emptyList(), Long.MIN_VALUE, Long.MAX_VALUE, "text/plain", 0, Collections.<String> emptyList(),
           ConfigDef.Evaluation.IMPLICIT, null);
         List<Object> triggeredBy = new ArrayList<>();
         triggeredBy.add(1);
         ConfigDefinition triggeredConfDef = new ConfigDefinition(
-          "triggeredConfName", ConfigDef.Type.NUMBER, "triggeredConfLabel", "triggeredConfDesc", "", true,
+          "triggeredConfName", ConfigDef.Type.NUMBER, "triggeredConfLabel", "triggeredConfDesc", 10, true,
           "groupName", "triggeredConfFieldName", null, "dependencyConfName", triggeredBy, 0,
           Collections.<ElFunctionDefinition>emptyList(), Collections.<ElConstantDefinition>emptyList(), Long.MIN_VALUE, Long.MAX_VALUE, "text/plain", 0,
           Collections.<String> emptyList(), ConfigDef.Evaluation.IMPLICIT, null);
@@ -394,7 +442,31 @@ public class MockStages {
         clusterStageDef.setLibrary("default", "", cl);
 
 
-        StageDefinition[] stageDefs = new StageDefinition[]{sDef, socDef, pDef, tDef, swcDef, eDef, clusterStageDef};
+        ConfigDefinition regularConf = new ConfigDefinition(
+          "regularConfName", ConfigDef.Type.NUMBER, "regularConfLabel", "regularConfDesc", 10, true,
+          "groupName", "regularConfFieldName", null, "", null, 0, Collections.<ElFunctionDefinition>emptyList(),
+          Collections.<ElConstantDefinition>emptyList(), Long.MIN_VALUE, Long.MAX_VALUE, "text/plain", 0, Collections.<String> emptyList(),
+          ConfigDef.Evaluation.IMPLICIT, null);
+
+        List<ConfigDefinition> list = new ArrayList<>();
+        list.add(regularConf);
+        ModelDefinition modelDefinition = new ModelDefinition(ModelType.COMPLEX_FIELD, null, Collections.<String>emptyList(),
+          Collections.<String>emptyList(), list);
+
+        ConfigDefinition complexConf = new ConfigDefinition(
+          "complexConfName", ConfigDef.Type.MODEL, "complexConfLabel", "complexConfDesc", null, true,
+          "groupName", "complexConfFieldName", modelDefinition, "", null, 0, Collections.<ElFunctionDefinition>emptyList(),
+          Collections.<ElConstantDefinition>emptyList(), Long.MIN_VALUE, Long.MAX_VALUE, "text/plain", 0, Collections.<String> emptyList(),
+          ConfigDef.Evaluation.IMPLICIT, null);
+
+        StageDefinition complexStage = new StageDefinition(
+          ComplexSource.class.getName(), "complexStageName", "1.0.0", "complexStageLabel",
+          "complexStageDesc", StageType.SOURCE, false, true, true,
+          Lists.newArrayList(complexConf), null/*raw source definition*/, "", null, false, 1, null,
+          Arrays.asList(ExecutionMode.CLUSTER, ExecutionMode.STANDALONE));
+        complexStage.setLibrary("default", "", Thread.currentThread().getContextClassLoader());
+
+        StageDefinition[] stageDefs = new StageDefinition[]{sDef, socDef, pDef, tDef, swcDef, eDef, clusterStageDef, complexStage};
         stages = new HashMap<>();
         for (StageDefinition def : stageDefs) {
           if (stages.containsKey(def.getName())) {
@@ -450,13 +522,15 @@ public class MockStages {
   @SuppressWarnings("unchecked")
   public static StageConfiguration getErrorStageConfig() {
     return new StageConfiguration("errorStage", "default", "errorTarget", "1.0.0",
-      Collections.<ConfigConfiguration>emptyList(), null, Collections.<String>emptyList(),
+      Arrays.asList(new ConfigConfiguration("errorTargetConfName", "/SDC_HOME/errorDir")), null, Collections.<String>emptyList(),
       Collections.<String>emptyList());
   }
 
   private static List<ConfigConfiguration> createPipelineConfigs() {
-    return Arrays.asList(new ConfigConfiguration(PipelineDefConfigs.EXECUTION_MODE_CONFIG,
+    List<ConfigConfiguration> pipelineConfig = new ArrayList<>();
+    pipelineConfig.add(new ConfigConfiguration(PipelineDefConfigs.EXECUTION_MODE_CONFIG,
                                                  ExecutionMode.STANDALONE.name()));
+    return pipelineConfig;
   }
 
   @SuppressWarnings("unchecked")
@@ -512,14 +586,29 @@ public class MockStages {
     List<String> lanes = ImmutableList.of("a");
     List<StageConfiguration> stages = new ArrayList<>();
     StageConfiguration source = new StageConfiguration("s", "default", "sourceName", "1.0.0",
-      Collections.<ConfigConfiguration>emptyList(), null, Collections.<String>emptyList(),
+      new ArrayList<ConfigConfiguration>(), null, new ArrayList<String>(),
       lanes);
     stages.add(source);
     StageConfiguration target = new StageConfiguration("t", "default", "targetName", "1.0.0",
-      Collections.<ConfigConfiguration>emptyList(), null, lanes, Collections.<String>emptyList());
+      new ArrayList<ConfigConfiguration>(), null, lanes, new ArrayList<String>());
     stages.add(target);
     return new PipelineConfiguration(PipelineStoreTask.SCHEMA_VERSION, UUID.randomUUID(), null, createPipelineConfigs(),
                                      null, stages, getErrorStageConfig());
+  }
+
+  @SuppressWarnings("unchecked")
+  public static PipelineConfiguration createPipelineConfigurationComplexSourceTarget() {
+    List<String> lanes = ImmutableList.of("a");
+    List<StageConfiguration> stages = new ArrayList<>();
+    StageConfiguration source = new StageConfiguration("s", "default", "complexStageName", "1.0.0",
+      new ArrayList<ConfigConfiguration>(), null, new ArrayList<String>(),
+      lanes);
+    stages.add(source);
+    StageConfiguration target = new StageConfiguration("t", "default", "targetName", "1.0.0",
+      new ArrayList<ConfigConfiguration>(), null, lanes, new ArrayList<String>());
+    stages.add(target);
+    return new PipelineConfiguration(PipelineStoreTask.SCHEMA_VERSION, UUID.randomUUID(), null, createPipelineConfigs(),
+      null, stages, getErrorStageConfig());
   }
 
   public static PipelineConfiguration createPipelineConfigurationSourceTwoTargets() {

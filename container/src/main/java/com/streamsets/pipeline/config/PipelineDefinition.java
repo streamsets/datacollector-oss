@@ -108,7 +108,7 @@ public class PipelineDefinition {
         ConfigDef.Type.MODEL,
         PipelineDefConfigs.EXECUTION_MODE_LABEL,
         PipelineDefConfigs.EXECUTION_MODE_DESCRIPTION,
-        ExecutionMode.STANDALONE,
+        ExecutionMode.STANDALONE.name(),
         true,
         "",
         PipelineDefConfigs.EXECUTION_MODE_CONFIG,

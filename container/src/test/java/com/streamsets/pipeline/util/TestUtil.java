@@ -191,15 +191,16 @@ public class TestUtil {
     }
   }
 
-  @Module(injects = PipelineStoreTask.class, library = true, includes = {TestRuntimeModule.class, TestConfigurationModule.class})
+  @Module(injects = PipelineStoreTask.class, library = true, includes = {TestRuntimeModule.class,
+    TestStageLibraryModule.class, TestConfigurationModule.class})
   public static class TestPipelineStoreModule {
 
     public TestPipelineStoreModule() {
     }
 
     @Provides
-    public PipelineStoreTask providePipelineStore(RuntimeInfo info, Configuration conf) {
-      FilePipelineStoreTask pipelineStoreTask = new FilePipelineStoreTask(info, conf);
+    public PipelineStoreTask providePipelineStore(RuntimeInfo info, StageLibraryTask stageLibraryTask) {
+      FilePipelineStoreTask pipelineStoreTask = new FilePipelineStoreTask(info, stageLibraryTask);
       pipelineStoreTask.init();
       try {
         //create an invalid pipeline
