@@ -13,7 +13,7 @@ angular
     'ui.bootstrap',
     'angularMoment',
     'nvd3ChartDirectives',
-    'abbreviateNumberFilter',
+    'dataCollectorApp.filters',
     'ngSanitize',
     'ui.select',
     'showLoadingDirectives',

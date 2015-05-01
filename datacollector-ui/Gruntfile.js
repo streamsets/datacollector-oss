@@ -533,7 +533,7 @@ module.exports = function(grunt) {
           '<%= base_dir %>app/**/*.js',
           '<%= common_base_dir %>common/**/*.js'
         ],
-        tasks: [ 'jshint:src', 'karma:unit:run', 'copy:build_appjs', 'index:build' ]
+        tasks: [ 'jshint:src', 'karma:unit:run', 'copy:build_appjs', 'copy:build_common_appjs', 'index:build' ]
       },
 
       /**
@@ -544,7 +544,7 @@ module.exports = function(grunt) {
           '<%= base_dir %>i18n/*.json',
           '<%= common_base_dir %>i18n/*.json'
         ],
-        tasks: [ 'copy:build_appjs' ]
+        tasks: [ 'copy:build_appjs', 'copy:build_common_appjs' ]
       },
 
       /**
@@ -572,7 +572,10 @@ module.exports = function(grunt) {
        * When the CSS files change, we need to compile and minify them.
        */
       less: {
-        files: [ 'src/**/*.less' ],
+        files: [
+          'src/**/*.less',
+          '<%= common_base_dir %>common/**/*.less'
+        ],
         tasks: [ 'less:build', 'concat:build_css' ]
       },
 

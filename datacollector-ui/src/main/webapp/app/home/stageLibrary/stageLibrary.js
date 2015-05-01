@@ -85,6 +85,7 @@ angular
         libraryList = _.chain($scope.stageLibraries)
           .pluck("library")
           .unique()
+          .sortBy('libraryLabel')
           .value(),
         libraryLabelList = _.chain($scope.stageLibraries)
           .pluck("libraryLabel")

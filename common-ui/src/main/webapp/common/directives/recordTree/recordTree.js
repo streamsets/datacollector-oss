@@ -7,10 +7,12 @@ angular.module('recordTreeDirectives', ['RecursionHelper'])
     'use strict';
 
     var linkFunction = function (scope) {
+      var mapListLimit = 50;
 
       angular.extend(scope, {
         updatedValue: false,
         updatedField: false,
+        limit: mapListLimit,
 
         onClick: function($event) {
           $event.preventDefault();
@@ -52,6 +54,17 @@ angular.module('recordTreeDirectives', ['RecursionHelper'])
 
         getDate: function(milliSeconds) {
           return new Date(milliSeconds);
+        },
+
+
+        onShowMoreClick: function($event) {
+          $event.preventDefault();
+          scope.limit += mapListLimit;
+        },
+
+        onShowAllClick: function($event) {
+          $event.preventDefault();
+          scope.limit = scope.valueLength;
         }
       });
 
@@ -67,6 +80,10 @@ angular.module('recordTreeDirectives', ['RecursionHelper'])
             scope.updatedField = true;
           }
         }
+      }
+
+      if(scope.recordValue.type === 'MAP' || scope.recordValue.type === 'LIST') {
+        scope.valueLength = _.size(scope.recordValue.value);
       }
 
     };

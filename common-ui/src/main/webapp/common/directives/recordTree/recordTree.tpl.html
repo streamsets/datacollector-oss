@@ -1,4 +1,4 @@
-<ul class="record-list" ng-init="isOpen=false">
+<ul class="record-list" ng-init="isOpen=false;">
   <li class="record-list-item"
       ng-class="{
         'field-addition' : (diffType === 'output' && (updatedField || updatedValue)),
@@ -29,7 +29,7 @@
 
           <record-tree
             ng-if="isOpen || (isRoot && record.expand)"
-            ng-repeat="(_fieldName, _recordValue) in recordValue.value"
+            ng-repeat="(_fieldName, _recordValue) in recordValue.value | objLimitTo: limit"
             record="record"
             record-value="_recordValue"
             diff-type="diffType"
@@ -49,7 +49,7 @@
 
           <record-tree
             ng-if="isOpen || (isRoot && record.expand)"
-            ng-repeat="(_fieldName, _recordValue) in recordValue.value"
+            ng-repeat="(_fieldName, _recordValue) in recordValue.value | limitTo: limit"
             record="record"
             record-value="_recordValue"
             diff-type="diffType"
@@ -62,6 +62,18 @@
           </record-tree>
 
         </div>
+
+
+        <div class="show-more" ng-if="(isOpen || (isRoot && record.expand)) && limit < valueLength">
+          <a href="btn btn-link" href=""
+             ng-click="onShowMoreClick($event);">Show More...</a>
+
+          <span class="separator">|</span>
+
+          <a href="btn btn-link" href=""
+             ng-click="onShowAllClick($event);">Show All...</a>
+        </div>
+
 
         <div ng-switch-when="DATE" class="clearfix">
           <span class="field-type pull-left">{{recordValue.type}}</span>
