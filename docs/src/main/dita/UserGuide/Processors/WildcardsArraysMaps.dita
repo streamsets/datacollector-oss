@@ -2,28 +2,23 @@
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_vqr_sqc_wr">
   <title>Wildcard Use for Arrays and Maps</title>
-  <shortdesc>In some processor properties / When you list a set of fields in a processor, you can
-    use the asterisk wildcard (*) to represent an index in an array or a key value in a map. Use a
-    wildcard to help define the field path for fields in maps and arrays. </shortdesc>
+  <shortdesc>In some processors, you can use the asterisk wildcard (*) as indices in an array or key
+    values in a map. Use a wildcard to help define the field paths for maps and arrays. </shortdesc>
   <conbody>
-    <draft-comment author="Loretta">
-      <p>** array index or map key ** Team [*]/Employee[*]/* (for all info about all employees on
-        all teams</p>
-    </draft-comment>
-    <p>You can use the asterisk wildcard to represent all values as follows: <dl>
+    <p>You can use the asterisk wildcard as follows: <draft-comment author="Loretta">is this wording
+        right?</draft-comment><dl>
         <dlentry>
           <dt>[*]</dt>
-          <dd>Represents all values of an array index. For example, the wildcards in the following
-            field path allow you to mask the social security number of every employee in every
-            division in the company:<codeblock>Division[*]/Employee[*]/SSN</codeblock></dd>
+          <dd>Represents all values for the specified index in an array. For example, with the
+            following field path allows you can hash the social security number of every employee in
+            every division:<codeblock>/Division[*]/Employee[*]/SSN</codeblock></dd>
         </dlentry>
         <dlentry>
           <dt>/*</dt>
-          <dd>Represents all values for an element of a map. For example,
-              <codeblock>Division[*]/Employee[*]</codeblock><draft-comment author="Loretta">is
-              element the right word?</draft-comment></dd>
+          <dd>Represents all values for the specified keys in a map. For example, with the following
+            field path you might mask all employee information in the first
+            division:<codeblock>/Division[0]/Employee[*]/*</codeblock></dd>
         </dlentry>
-      </dl>
-    </p>
+      </dl></p>
   </conbody>
 </concept>

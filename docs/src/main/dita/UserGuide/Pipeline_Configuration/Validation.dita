@@ -3,30 +3,27 @@
 <concept id="concept_azs_swf_jr">
  <title>Validation</title>
  <shortdesc>The <ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-  /> console provides two types of validation:<draft-comment author="Loretta">check on all of
-   this</draft-comment></shortdesc>
+  /> provides two types of validation:</shortdesc>
  <conbody>
   <p>
    <dl>
     <dlentry>
-     <dt>Logical validation</dt>
-     <dd>Logical validation occurs by default as the console saves your changes. Logical validation
-      lists missing or incomplete configuration, such as an unconnected stage or a required property
-      that has not been configured. Logical validation also lists information that uses incorrect
-      syntax, such as the wrong structure for a URI.</dd>
-     <dd>Errors found by logical validation display in the Issues list. </dd>
+     <dt>Static validation</dt>
+     <dd>Static validation occurs by default as the <ph
+       conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> console
+      saves your changes. Static validation lists missing or incomplete configuration, such as an
+      unconnected stage or a required property that has not been configured. </dd>
+     <dd>Errors found by logical validation display in the Issues list. Stages with a static
+      validation error display an error icon.</dd>
     </dlentry>
     <dlentry>
      <dt>Semantic validation</dt>
-     <dd>Semantic validation occurs on demand when you click the Validate icon. Semantic validation
-      becomes available when logical validation passes.</dd>
+     <dd>Semantic validation occurs on demand when you click the Validate icon, run data preview, or
+      start a pipeline. Semantic validation becomes available when logical validation passes.</dd>
      <dd>Semantic validation checks all configured values for validity and verifies whether the
       pipeline can run as configured. </dd>
-     <dd>For example, while logical validation checks for the syntax for a URI, semantic validation
-      tests the URI by connecting to the system. Similarly, while logical validation checks
-      expressions for invalid syntax, semantic validation verifies <draft-comment author="Loretta"
-       >what's the difference for expressions, or should I use a different example?
-      </draft-comment></dd>
+     <dd>For example, while static validation verifies that you entered a value for a URI, semantic
+      validation tests the URI by connecting to the system. </dd>
     </dlentry>
    </dl>
   </p>

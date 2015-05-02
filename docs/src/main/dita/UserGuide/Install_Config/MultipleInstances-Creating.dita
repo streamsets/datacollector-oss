@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE task PUBLIC "-//OASIS//DTD DITA General Task//EN" "generalTask.dtd">
+<task id="task_dpl_m1z_wr">
+    <title>Creating Multiple Instances</title>
+    <shortdesc/>
+    <taskbody>
+        <context>When you create an instance, you specify a directory. The <ph
+                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
+            creates the directory and copies several directories to that location. <draft-comment
+                author="Loretta">copies or creates? If something is configured in the original DC is
+                it carried over, e.g. email addresses? </draft-comment></context>
+        <steps id="steps_sbt_nbz_wr">
+            <step>
+                <cmd>From the command line, enter the following command:</cmd>
+                <info>
+                    <codeblock>create-sdc -home=&lt;new SDC directory> (-httpPort=&lt;SDC_HTTP_PORT> | -httpsPort=&lt;SDC_HTTPS_PORT>)</codeblock>
+                </info>
+                <info>
+                    <note>Enter a directory that does not exist. Also, configure the port number
+                        that you want to use. For more information about http and https, see <xref
+                            href="../Install_Config/HTTP_protocols.dita#concept_ecx_hkq_kr"
+                        />.</note>
+                </info>
+            </step>
+        </steps>
+    </taskbody>
+</task>

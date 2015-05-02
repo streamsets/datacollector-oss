@@ -30,18 +30,30 @@
           </row>
           <row>
             <entry>2</entry>
+            <entry>Pipeline Creation Help Bar</entry>
+            <entry>Offers lists of stages to help complete the pipeline. <p>You can use the help bar
+                to connect a stage to an open node. You can also add a stage between linked stages
+                by clicking the link. </p><p>Hide the help bar by selecting <uicontrol>Don't Show
+                  Again</uicontrol>. To show the help bar after hiding it, click <menucascade>
+                  <uicontrol>Help</uicontrol>
+                  <uicontrol>Settings</uicontrol>
+                </menucascade> and clear the <uicontrol>Hide Pipeline Creation Help Bar</uicontrol>
+                option.</p></entry>
+          </row>
+          <row>
+            <entry>3</entry>
             <entry>Stage list</entry>
             <entry>Lists the stages in the pipeline. Use to select a stage to configure. You can
               alternatively select the stage in the canvas.</entry>
           </row>
           <row>
-            <entry>3</entry>
+            <entry>4</entry>
             <entry>Properties panel</entry>
             <entry>Displays the properties of the pipeline or selected stage when you configure a
               pipeline. </entry>
           </row>
           <row>
-            <entry>4</entry>
+            <entry>5</entry>
             <entry>Stage library</entry>
             <entry><p>List of available stages. Use to add stages to the pipeline. You can drag a stage
               to a location on canvas or click a stage to add it to the end of the pipeline.</p><p>You

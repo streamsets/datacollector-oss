@@ -341,11 +341,11 @@
                             fields that you want to include to each regular expression group.</li>
                         <li>When you select <uicontrol>Grok Pattern</uicontrol>, you can define any
                             custom grok patterns that you want to use in the <uicontrol>Grok Pattern
-                                Definition</uicontrol> field, and then enter the full grok pattern
-                            log file description in the <uicontrol>Grok Pattern</uicontrol>
-                                field.<p>For a list of supported grok patterns, see <draft-comment
-                                    author="Loretta">add xref to new grok pattern appendix when it's
-                                    ready. Or add to related links below.</draft-comment></p></li>
+                                Definition</uicontrol> field, and then enter the grok pattern log
+                            file description in the <uicontrol>Grok Pattern</uicontrol> field.<p>For
+                                more information about supported grok patterns, see <xref
+                                    href="../Apx-GrokPatterns/GrokPatterns.dita#concept_vdk_xjb_wr"
+                                />.</p></li>
                         <li>When you select <uicontrol>Log4j</uicontrol>, define the following properties:<p>
                                 <table frame="all" rowsep="1" colsep="1" id="table_pzm_rbt_sr">
                                     <tgroup cols="2">

@@ -3,11 +3,6 @@
 <map>
  <title>Administration</title>
  <topicref href="../Administration/Administration_title.dita">
-  <topicref href="../Administration/DataCollectorAdministration.dita" chunk="to-content">
-   <topicmeta>
-    <shortdesc/>
-   </topicmeta>
-  </topicref>
   <topicref href="../Administration/ViewingDCConfigs.dita">
    <topicmeta>
     <shortdesc/>
@@ -27,7 +22,7 @@
    <topicmeta>
    <shortdesc/>
   </topicmeta>
-   <topicref href="../Administration/ViewingRESTResponse.dita"/>
+   <topicref href="../Administration/RESTResponse-Accessing.dita"/>
   </topicref>
   <topicref href="../Administration/ShuttingDown.dita">
    <topicmeta>

@@ -2,7 +2,7 @@
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_pm4_txm_vq">
   <title>Error Record Handling</title>
-  <shortdesc>You can configure error record handling at the stage level and at a pipeline level. </shortdesc>
+  <shortdesc>You can configure error record handling at a stage level and at a pipeline level. </shortdesc>
   <conbody>
     <p><indexterm>error record handling<indexterm>overview</indexterm></indexterm>When an error
       occurs while processing a record, the <ph
@@ -13,9 +13,9 @@
       the record based on the pipeline error record handling configuration. </p>
     <p>When you configure a pipeline, be aware that stage error handling takes precedence over
       pipeline error handling. That is, a pipeline might be configured to write error records to
-      file, but if a stage is configured to discard error records, those records are not passed to
-      the pipeline. Use this functionality to determine the types of error records to save for
-      review and reprocessing. </p>
+      file, but if a stage is configured to discard error records, those records are discarded. You
+      might use this functionality to reduce the types of error records that are saved for review
+      and reprocessing. </p>
     <p>
       <draft-comment author="Loretta">Anyone have a simple example of error records you'd rather
         discard at a stage level, and ones you want to write to file?</draft-comment>

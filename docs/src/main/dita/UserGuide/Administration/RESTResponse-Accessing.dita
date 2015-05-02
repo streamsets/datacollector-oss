@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE task PUBLIC "-//OASIS//DTD DITA General Task//EN" "generalTask.dtd">
+<task id="task_cyb_rpw_wr">
+    <title>Accessing a REST Response</title>
+    <taskbody>
+        <context>
+            <p><indexterm>REST responses<indexterm>accessing</indexterm></indexterm>You can access
+                REST response data from the following locations:<dl>
+                    <dlentry>
+                        <dt>Edit mode</dt>
+                        <dd>From the <wintitle>Properties</wintitle> panel, you can use the
+                                <uicontrol>More</uicontrol> icon to access the following REST
+                                responses:<ul id="ul_crx_spw_wr">
+                                <li>Pipeline Configuration</li>
+                                <li>Pipeline Rules</li>
+                                <li>Definitions</li>
+                            </ul></dd>
+                    </dlentry>
+                    <dlentry>
+                        <dt>Preview mode</dt>
+                        <dd>From the <wintitle>Preview</wintitle> panel, you can use the
+                                <uicontrol>More</uicontrol> icon access the pipeline preview REST
+                            response.</dd>
+                    </dlentry>
+                    <dlentry>
+                        <dt>Monitor mode</dt>
+                        <dd>From the <wintitle>Monitor</wintitle> panel, you can use the
+                                <uicontrol>More</uicontrol> icon to access the following REST
+                            responses: <ul id="ul_hrx_spw_wr">
+                                <li>Pipeline Configuration</li>
+                                <li>Pipeline Rules</li>
+                                <li>Definitions</li>
+                                <li>Pipeline Monitoring</li>
+                                <li>Pipeline Status</li>
+                            </ul></dd>
+                    </dlentry>
+                    <dlentry>
+                        <dt>JVM Metrics page</dt>
+                        <dd>From the <wintitle>JVM Metrics</wintitle> page, <menucascade>
+                                <uicontrol>Administration</uicontrol>
+                                <uicontrol>JVM Metrics</uicontrol>
+                            </menucascade> , you can use the <uicontrol>Settings</uicontrol> icon to
+                            access the JVM metrics REST response. </dd>
+                    </dlentry>
+                </dl></p>
+        </context>
+    </taskbody>
+</task>

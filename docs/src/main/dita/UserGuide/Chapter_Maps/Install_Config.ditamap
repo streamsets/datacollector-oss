@@ -44,5 +44,8 @@
    </topicref>
    <topicref href="../Install_Config/ConfiguringDCEnvironment.dita"/>
   </topicref>
+  <topicref href="../Install_Config/MultipleInstances.dita">
+   <topicref href="../Install_Config/MultipleInstances-Creating.dita"/>
+  </topicref>
   </topicref>
 </map>

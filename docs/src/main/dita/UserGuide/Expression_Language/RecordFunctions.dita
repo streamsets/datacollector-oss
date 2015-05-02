@@ -2,15 +2,15 @@
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_p1z_ggv_1r">
  <title>Record Functions</title>
- <shortdesc>Use record functions to get information about a record in the SDC data format, such as
-  the data type of a field or the stage instance name for a record. </shortdesc>
+ <shortdesc>Use record functions to get information about a record in the SDC Record data format,
+  such as the data type of a field or the stage instance name for a record. </shortdesc>
  <conbody>
   <p><indexterm>functions<indexterm>record functions</indexterm></indexterm><indexterm>record
-     functions<indexterm>in the expression language</indexterm></indexterm>Records in SDC data
-   format include the following types of records:<ul id="ul_gxc_rqv_tr">
+     functions<indexterm>in the expression language</indexterm></indexterm>Records in SDC Record
+   data format include the following types of records:<ul id="ul_gxc_rqv_tr">
     <li>Any record being processed by the pipeline.</li>
     <li>Error records.</li>
-    <li>Records written to a destination in the SDC data format.</li>
+    <li>Records written to a destination in the SDC Record data format.</li>
    </ul></p>
   <p>The expression language provides the following record functions:</p>
   <dl>

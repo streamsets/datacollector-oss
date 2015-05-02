@@ -10,7 +10,7 @@
   <p><indexterm>Data Collector console<indexterm>overview</indexterm></indexterm>The <ph
         conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> console
       includes the following general areas and icons:</p>
-  <p><image href="../Graphics/CanvasOverview.png" id="image_k5j_5pz_sq" scalefit="yes"/></p>
+  <p><image href="../Graphics/CanvasOverview.png" id="image_k5j_5pz_sq"/></p>
   <simpletable frame="all" id="simpletable_v4t_zhc_pq" relcolwidth="1.0* 5.23* 9.44*">
       <sthead>
         <stentry>No</stentry>

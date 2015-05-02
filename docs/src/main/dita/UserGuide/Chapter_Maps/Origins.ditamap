@@ -22,6 +22,7 @@
     <topicref href="../Origins/LogFormats.dita"/>
    </topicref>
    <topicref href="../Origins/FileTail-FileProcessing.dita"/>
+   <topicref href="../Origins/FileTail-FileProcessingMetadata.dita"/>
    <topicref href="../Origins/FileTail-Configuring.dita"/>
   </topicref>
   <topicref href="../Origins/HTTPClient.dita" chunk="to-content">

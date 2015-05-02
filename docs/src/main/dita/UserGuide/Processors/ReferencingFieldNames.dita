@@ -1,26 +1,24 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_hjk_b4l_vq">
- <title>Referencing Field Names</title>
- <shortdesc>To understand references to fields, think of the record as a root directory. A reference
-                to a field is the path to the field, or field path.</shortdesc>
+ <title>Referencing Field Names and Field Paths</title>
+ <shortdesc>When a pipeline is valid for preview, you can generally select fields from a list. When
+                a list is not available or when you are defining a new field name, you need to use
+                the appropriate format for the field name.  </shortdesc>
  <conbody>
     <p><indexterm>processors<indexterm>referencing field
-                names</indexterm></indexterm><indexterm>field
-                    names<indexterm>referencing</indexterm></indexterm>When a record is a line of
-            text, the fields are one level of subdirectories. A reference to a field in a text
-            record is simply: <codeblock>/&lt;field name></codeblock></p>
-    <p>So a field named CITY displays as /CITY. </p>
+                                names</indexterm></indexterm><indexterm>field
+                                        names<indexterm>referencing</indexterm></indexterm>If you
+                        think of the record as a root directory, a reference to a field is the path
+                        to the field, or field path. </p>
+                <p>When a record is a line of text, the fields are just one level removed from the
+                        root. So a reference to a field does not require a path. You can reference
+                        the field as follows:<codeblock>/&lt;field name></codeblock></p>
+    <p>So to reference a CITY field in a line of text, enter "/CITY".</p>
     <p>When a record is complex, like a JSON object, the root object might include many additional
-            objects. In this case, a reference to a field is the path to the field:
-            <codeblock>/&lt;path to field>/&lt;field name></codeblock></p>
-    <p>For example, a field in a JSON tweet might display as /users/followers_count. </p>
-    <p>After you preview data or select fields using preview data, you can generally select fields
-            from a list. When a list is not available or when defining a new field name, use the
-            appropriate format to reference the field. </p>
-  <p>For example, when you define an output field for an Expression Evaluator, you can select from a
-      list of fields passed from the previous stage. But to create a new field for the results of
-      the expression, you enter a field name, such as /Code. </p>
-  <p><image href="../Graphics/FieldName-referencing.png" id="image_gxw_d2m_xq" scale="50"/></p>
+                        objects. In this case, a reference to a field is the path to the field as
+                        follows:<codeblock>/&lt;path to field>/&lt;field name></codeblock></p>
+    <p>For example, the following field path describes an employeeName field several levels deep in
+                        a JSON object: /region/division/group/employeeName.</p>
  </conbody>
 </concept>
