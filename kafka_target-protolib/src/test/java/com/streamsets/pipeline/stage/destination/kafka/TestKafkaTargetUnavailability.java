@@ -45,7 +45,7 @@ public class TestKafkaTargetUnavailability {
   private static final int BROKER_ID = 0;
   private static final int PARTITIONS = 1;
   private static final int REPLICATION_FACTOR = 1;
-  private static final String TOPIC = "test";
+  private static final String TOPIC = "TestKafkaTargetUnavailability";
   private static final int TIME_OUT = 5000;
 
   @Before

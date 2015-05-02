@@ -60,17 +60,17 @@ public class TestKafkaTargetMultiPartition {
   private static final int BROKER_3_ID = 2;
   private static final int PARTITIONS = 3;
   private static final int REPLICATION_FACTOR = 2;
-  private static final String TOPIC1 = "test1";
-  private static final String TOPIC2 = "test2";
-  private static final String TOPIC3 = "test3";
-  private static final String TOPIC4 = "test4";
-  private static final String TOPIC5 = "test5";
-  private static final String TOPIC6 = "test6";
-  private static final String TOPIC7 = "test7";
-  private static final String TOPIC8 = "test8";
-  private static final String TOPIC9 = "test9";
-  private static final String TOPIC10 = "test10";
-  private static final String TOPIC11 = "test11";
+  private static final String TOPIC1 = "TestKafkaTargetMultiPartition1";
+  private static final String TOPIC2 = "TestKafkaTargetMultiPartition2";
+  private static final String TOPIC3 = "TestKafkaTargetMultiPartition3";
+  private static final String TOPIC4 = "TestKafkaTargetMultiPartition4";
+  private static final String TOPIC5 = "TestKafkaTargetMultiPartition5";
+  private static final String TOPIC6 = "TestKafkaTargetMultiPartition6";
+  private static final String TOPIC7 = "TestKafkaTargetMultiPartition7";
+  private static final String TOPIC8 = "TestKafkaTargetMultiPartition8";
+  private static final String TOPIC9 = "TestKafkaTargetMultiPartition9";
+  private static final String TOPIC10 = "TestKafkaTargetMultiPartition10";
+  private static final String TOPIC11 = "TestKafkaTargetMultiPartition11";
   private static final int TIME_OUT = 5000;
 
   private static String originalTmpDir;
