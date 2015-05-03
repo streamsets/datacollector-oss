@@ -1,0 +1,117 @@
+<table class="table table-bordered table-striped preview-tableview-table" ng-hide="showLoading" ng-controller="PreviewMultiStageTableViewController">
+  <thead>
+    <tr>
+      <th class="from-stage" colspan="{{outputLimit ? outputLimit : 1}}">
+        <select class="pull-left form-control input-sm" name="previewFromStage"
+                ng-model="fromStage.selected"
+                ng-options="stageInst.uiInfo.label for stageInst in pipelineConfig.stages | filter : filterSourceAndProcessors"
+                ng-change="onFromStageChange()">
+        </select>
+      </th>
+
+      <th class="to-stage" colspan="{{inputLimit ? inputLimit : 1}}">
+        <select class="pull-left form-control input-sm" name="previewToStage"
+                ng-model="toStage.selected"
+                ng-options="stageInst.uiInfo.label for stageInst in toStageList"
+                ng-change="onToStageChange()">
+        </select>
+      </th>
+
+    </tr>
+
+
+    <tr>
+
+      <th class="to-stage" ng-repeat="fieldPath in outputFieldPaths | limitTo: outputLimit">
+        <span>{{fieldPath}}</span>
+
+        <div class="show-more pull-right" ng-if="$last && outputLimit < outputFieldPaths.length">
+          (<a href="btn btn-link" href=""
+              ng-click="onShowMoreOutputClick($event);">Show More...</a>
+
+          <span class="separator">|</span>
+
+          <a href="btn btn-link" href=""
+             ng-click="onShowAllOutputClick($event);">Show All...</a>)
+        </div>
+
+      </th>
+
+
+      <th class="from-stage" ng-repeat="fieldPath in inputFieldPaths | limitTo: inputLimit">
+        <span>{{fieldPath}}</span>
+
+        <div class="show-more pull-right" ng-if="$last && inputLimit < inputFieldPaths.length">
+          (<a href="btn btn-link" href=""
+              ng-click="onShowMoreInputClick($event);">Show More...</a>
+
+          <span class="separator">|</span>
+
+          <a href="btn btn-link" href=""
+             ng-click="onShowAllInputClick($event);">Show All...</a>)
+        </div>
+
+      </th>
+
+    </tr>
+
+
+  </thead>
+
+  <tbody>
+
+  <tr ng-repeat-start="outputRecord in multiStagePreviewData.output"
+      ng-init="
+      inputRecords = getInputRecords(multiStagePreviewData.input, outputRecord);
+      errorsRecords = getErrorRecords(multiStagePreviewData.errorRecords, outputRecord);
+      flattenOutputRecord = getFlattenRecord(outputRecord);
+      flattenInputRecord = getFlattenRecord(inputRecords[0])">
+
+    <td ng-repeat="fieldPath in outputFieldPaths | limitTo: outputLimit"
+        ng-class="{'value-deletion': (flattenOutputRecord[fieldPath].value !== flattenInputRecord[fieldPath].value) }"
+        class="field-value {{flattenOutputRecord[fieldPath].type}}">{{flattenOutputRecord[fieldPath].value + ''}}</td>
+
+    <td ng-if="flattenInputRecord"
+        ng-repeat="fieldPath in inputFieldPaths | limitTo: inputLimit"
+        ng-class="{'value-addition': flattenInputRecord[fieldPath].value !== flattenOutputRecord[fieldPath].value }"
+        class="field-value {{flattenInputRecord[fieldPath].type}}">{{flattenInputRecord[fieldPath].value + ''}}</td>
+
+
+    <td colspan="{{inputLimit ? inputLimit : 1}}"
+        ng-if="inputRecords.length === 0">
+      <label class="label label-warning">{{'home.previewPane.noOutputWarning' | translate}}</label>
+    </td>
+
+  </tr>
+
+  <tr ng-repeat-end
+      ng-repeat="inputRecord in inputRecords"
+      ng-if="$index > 0"
+      ng-init="flattenRecord = getFlattenRecord(inputRecord)">
+    <td colspan="{{outputLimit ? outputLimit : 1}}"></td>
+
+    <td ng-repeat="fieldPath in inputFieldPaths">{{flattenRecord[fieldPath].value + ''}}</td>
+  </tr>
+
+
+  <tr ng-repeat="record in multiStagePreviewData.errorRecords">
+    <td colspan="{{outputLimit ? outputLimit : 1}}">
+      <label class="label label-danger">
+        {{('global.form.record' | translate)+ '-' + ('global.form.errorRecord' | translate) + ' ' + record.header.errorMessage}}
+      </label>
+    </td>
+
+    <td colspan="{{inputLimit ? inputLimit : 1}}"></td>
+  </tr>
+
+
+
+  <tr ng-if="multiStagePreviewData.input.length === 0 &&
+                      multiStagePreviewData.output.length === 0 &&
+                      multiStagePreviewData.errorRecords.length === 0">
+    <td colspan="2" class="no-records" translate="home.previewPane.noRecords">No Records to view.</td>
+  </tr>
+
+  </tbody>
+
+</table>

@@ -54,27 +54,13 @@
             ng-click="onMaximizeDetailPane()"></span>
     </div>
 
-    <div class="pull-right btn-group toggle-toolbar" ng-show="!showLoading && !previewMultipleStages">
-      <label class="btn btn-default btn-sm" ng-model="listView" btn-radio="true"
-             tooltip-placement="bottom"
-             tooltip-append-to-body="true"
-             tooltip="{{'global.form.listView' | translate}}">
-        <i class="fa fa-list fa-12x"/>
-      </label>
-      <label class="btn btn-default btn-sm" ng-model="listView" btn-radio="false"
-             tooltip-placement="bottom"
-             tooltip-append-to-body="true"
-             tooltip="{{'global.form.tableView' | translate}}">
-        <i class="fa fa-table fa-12x"/>
-      </label>
-    </div>
 
     <!-- Buttons for Single Stage Preview -->
 
     <div class="pull-right preview-toolbar btn-group" ng-if="!showLoading">
 
       <div ng-if="!previewMultipleStages && previousStageInstances.length > 1" class="dropdown pull-left btn-group">
-        <a type="button" class="btn btn-primary btn-sm"
+        <a type="button" class="btn btn-default btn-sm"
            tooltip-placement="bottom" tooltip="{{'global.form.previousStage' | translate}}"
            tooltip-popup-delay="500"
            tooltip-append-to-body="true"
@@ -90,7 +76,7 @@
         </ul>
       </div>
 
-      <a role="button" type="button" class="btn btn-primary btn-sm"
+      <a role="button" type="button" class="btn btn-default btn-sm"
          ng-if="!previewMultipleStages && previousStageInstances.length <= 1"
          tooltip-placement="bottom" tooltip="{{'global.form.previousStage' | translate}}"
          tooltip-popup-delay="500"
@@ -101,11 +87,11 @@
       </a>
 
       <div ng-if="!previewMultipleStages && nextStageInstances.length > 1" class="dropdown pull-left btn-group">
-        <a type="button" class="btn btn-primary btn-sm"
-                tooltip-placement="bottom" tooltip="{{'global.form.nextStage' | translate}}"
-                tooltip-popup-delay="500"
-                tooltip-append-to-body="true"
-                data-toggle="dropdown">
+        <a type="button" class="btn btn-default btn-sm"
+           tooltip-placement="bottom" tooltip="{{'global.form.nextStage' | translate}}"
+           tooltip-popup-delay="500"
+           tooltip-append-to-body="true"
+           data-toggle="dropdown">
           <span class="glyphicon glyphicon-arrow-right"></span>
         </a>
         <ul class="dropdown-menu pull-right" role="menu">
@@ -117,7 +103,7 @@
         </ul>
       </div>
 
-      <a type="button" class="btn btn-primary btn-sm"
+      <a type="button" class="btn btn-default btn-sm"
          ng-if="!previewMultipleStages && nextStageInstances.length <= 1"
          tooltip-placement="bottom" tooltip="{{'global.form.nextStage' | translate}}"
          tooltip-popup-delay="500"
@@ -127,7 +113,7 @@
         <span class="glyphicon glyphicon-arrow-right"></span>
       </a>
 
-      <a type="button" class="btn btn-primary btn-sm"
+      <a type="button" class="btn btn-default btn-sm"
          tooltip-placement="bottom" tooltip="{{'home.header.refreshPreview' | translate}}"
          tooltip-popup-delay="500"
          tooltip-append-to-body="true"
@@ -136,7 +122,7 @@
         <span class="fa fa-refresh"></span>
       </a>
 
-      <a type="button" class="btn btn-primary btn-sm"
+      <a type="button" class="btn btn-default btn-sm"
          tooltip-placement="bottom" tooltip="{{'global.form.step' | translate}}"
          tooltip-popup-delay="500"
          tooltip-append-to-body="true"
@@ -145,7 +131,7 @@
         <span class="fa fa-refresh"></span> *
       </a>
 
-      <a type="button" class="btn btn-primary btn-sm"
+      <a type="button" class="btn btn-default btn-sm"
          tooltip-placement="bottom" tooltip="{{'global.form.revertChanges' | translate}}"
          tooltip-popup-delay="500"
          tooltip-append-to-body="true"
@@ -154,6 +140,21 @@
         <span class="fa fa-undo"></span>
       </a>
 
+    </div>
+
+    <div class="pull-right btn-group toggle-toolbar" ng-show="!showLoading">
+      <label class="btn btn-default btn-sm" ng-model="listView" btn-radio="true"
+             tooltip-placement="bottom"
+             tooltip-append-to-body="true"
+             tooltip="{{'global.form.listView' | translate}}">
+        <i class="fa fa-list fa-12x"/>
+      </label>
+      <label class="btn btn-default btn-sm" ng-model="listView" btn-radio="false"
+             tooltip-placement="bottom"
+             tooltip-append-to-body="true"
+             tooltip="{{'global.form.tableView' | translate}}">
+        <i class="fa fa-table fa-12x"/>
+      </label>
     </div>
 
     <div class="pull-right btn-group toggle-toolbar" ng-show="!showLoading">

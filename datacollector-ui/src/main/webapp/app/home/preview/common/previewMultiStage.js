@@ -8,6 +8,10 @@ angular
     var stages = $scope.pipelineConfig.stages;
 
     angular.extend($scope, {
+      fromStage: {},
+
+      toStage: {},
+
       /**
        * Filter Callback for filtering Sources and Processors
        * @param stage
@@ -20,11 +24,11 @@ angular
 
       onFromStageChange: function() {
         $timeout(function() {
-          $scope.toStageList = previewService.getStageChildren($scope.fromStage, $scope.pipelineConfig);
+          $scope.toStageList = previewService.getStageChildren($scope.fromStage.selected, $scope.pipelineConfig);
           if($scope.toStageList && $scope.toStageList.length) {
-            $scope.toStage = $scope.toStageList[$scope.toStageList.length - 1];
+            $scope.toStage.selected = $scope.toStageList[$scope.toStageList.length - 1];
           }
-          updatePreviewData($scope.fromStage, $scope.toStage);
+          updatePreviewData($scope.fromStage.selected, $scope.toStage.selected);
         });
       },
 
@@ -36,7 +40,7 @@ angular
           stageErrors: []
         };
         $timeout(function() {
-          updatePreviewData($scope.fromStage, $scope.toStage);
+          updatePreviewData($scope.fromStage.selected, $scope.toStage.selected);
         });
       },
 
@@ -86,19 +90,19 @@ angular
     };
 
     if(stages && stages.length) {
-      $scope.fromStage = stages[0];
-      $scope.toStageList = previewService.getStageChildren($scope.fromStage, $scope.pipelineConfig);
+      $scope.fromStage.selected = stages[0];
+      $scope.toStageList = previewService.getStageChildren($scope.fromStage.selected, $scope.pipelineConfig);
 
       if($scope.toStageList && $scope.toStageList.length) {
-        $scope.toStage = $scope.toStageList[$scope.toStageList.length - 1];
+        $scope.toStage.selected = $scope.toStageList[$scope.toStageList.length - 1];
       }
 
-      updatePreviewData($scope.fromStage, $scope.toStage);
+      updatePreviewData($scope.fromStage.selected, $scope.toStage.selected);
     }
 
     $scope.$watch('previewData', function() {
       if(($scope.previewMode || $scope.snapshotMode) && $scope.previewMultipleStages) {
-        updatePreviewData($scope.fromStage, $scope.toStage);
+        updatePreviewData($scope.fromStage.selected, $scope.toStage.selected);
       }
     });
 

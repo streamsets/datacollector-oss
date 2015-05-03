@@ -48,29 +48,15 @@
             ng-click="onMaximizeDetailPane()"></span>
     </div>
 
-    <div class="pull-right btn-group toggle-toolbar" ng-show="!showLoading && !previewMultipleStages">
-      <label class="btn btn-default btn-sm" ng-model="listView" btn-radio="true"
-             tooltip-placement="bottom"
-             tooltip-append-to-body="true"
-             tooltip="{{'global.form.listView' | translate}}">
-        <i class="fa fa-list fa-12x"/>
-      </label>
-      <label class="btn btn-default btn-sm" ng-model="listView" btn-radio="false"
-             tooltip-placement="bottom"
-             tooltip-append-to-body="true"
-             tooltip="{{'global.form.tableView' | translate}}">
-        <i class="fa fa-table fa-12x"/>
-      </label>
-    </div>
 
     <div class="pull-right preview-toolbar btn-group" ng-if="!showLoading">
 
       <div ng-if="!previewMultipleStages && previousStageInstances.length > 1" class="dropdown pull-left btn-group">
-        <a role="button" class="btn btn-primary btn-sm"
-                tooltip-placement="bottom" tooltip="{{'global.form.previousStage' | translate}}"
-                tooltip-popup-delay="500"
-                tooltip-append-to-body="true"
-                data-toggle="dropdown">
+        <a role="button" class="btn btn-default btn-sm"
+           tooltip-placement="bottom" tooltip="{{'global.form.previousStage' | translate}}"
+           tooltip-popup-delay="500"
+           tooltip-append-to-body="true"
+           data-toggle="dropdown">
           <span class="glyphicon glyphicon-arrow-left"></span>
         </a>
         <ul class="dropdown-menu" role="menu" class="pull-left">
@@ -82,19 +68,19 @@
         </ul>
       </div>
 
-      <a role="button" class="btn btn-primary btn-sm"
+      <a role="button" class="btn btn-default btn-sm"
          ng-if="!previewMultipleStages && previousStageInstances.length <= 1"
          tooltip-placement="bottom" tooltip="{{'global.form.previousStage' | translate}}"
-              tooltip-popup-delay="500"
-              tooltip-append-to-body="true"
-              ng-click="previousStagePreview(previousStageInstances[0])"
-              ng-disabled="previousStageInstances.length === 0">
+         tooltip-popup-delay="500"
+         tooltip-append-to-body="true"
+         ng-click="previousStagePreview(previousStageInstances[0])"
+         ng-disabled="previousStageInstances.length === 0">
         <span class="glyphicon glyphicon-arrow-left"></span>
       </a>
 
 
       <div ng-if="!previewMultipleStages && nextStageInstances.length > 1" class="dropdown pull-left btn-group">
-        <a role="button" class="btn btn-primary btn-sm"
+        <a role="button" class="btn btn-default btn-sm"
            tooltip-placement="bottom" tooltip="{{'global.form.nextStage' | translate}}"
            tooltip-popup-delay="500"
            tooltip-append-to-body="true"
@@ -110,7 +96,7 @@
         </ul>
       </div>
 
-      <a role="button" class="btn btn-primary btn-sm"
+      <a role="button" class="btn btn-default btn-sm"
          ng-if="!previewMultipleStages && nextStageInstances.length <= 1"
          tooltip-placement="bottom" tooltip="{{'global.form.nextStage' | translate}}"
          tooltip-popup-delay="500"
@@ -120,7 +106,21 @@
         <span class="glyphicon glyphicon-arrow-right"></span>
       </a>
 
+    </div>
 
+    <div class="pull-right btn-group toggle-toolbar" ng-show="!showLoading">
+      <label class="btn btn-default btn-sm" ng-model="listView" btn-radio="true"
+             tooltip-placement="bottom"
+             tooltip-append-to-body="true"
+             tooltip="{{'global.form.listView' | translate}}">
+        <i class="fa fa-list fa-12x"/>
+      </label>
+      <label class="btn btn-default btn-sm" ng-model="listView" btn-radio="false"
+             tooltip-placement="bottom"
+             tooltip-append-to-body="true"
+             tooltip="{{'global.form.tableView' | translate}}">
+        <i class="fa fa-table fa-12x"/>
+      </label>
     </div>
 
     <div class="pull-right btn-group toggle-toolbar" ng-show="!showLoading">

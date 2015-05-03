@@ -1,0 +1,84 @@
+<table class="table preview-table" ng-hide="showLoading">
+  <thead>
+    <tr>
+      <th class="col-md-6 from-stage">
+        <select class="pull-left form-control input-sm" name="previewFromStage"
+                ng-model="fromStage.selected"
+                ng-options="stageInst.uiInfo.label for stageInst in pipelineConfig.stages | filter : filterSourceAndProcessors"
+                ng-change="onFromStageChange()">
+        </select>
+      </th>
+
+      <th class="col-md-6 to-stage">
+        <select class="pull-left form-control input-sm" name="previewToStage"
+                ng-model="toStage.selected"
+                ng-options="stageInst.uiInfo.label for stageInst in toStageList"
+                ng-change="onToStageChange()">
+        </select>
+      </th>
+
+    </tr>
+  </thead>
+
+  <tbody>
+  <tr ng-repeat="inputRecord in multiStagePreviewData.output"
+      ng-init="outputRecords = getInputRecords(multiStagePreviewData.input, inputRecord)">
+
+    <td>
+      <record-tree
+        record="inputRecord"
+        record-value="inputRecord.value"
+        diff-type="'input'"
+        diff-record="outputRecords"
+        diff-record-value="outputRecords[0].value"
+        field-name="('global.form.record' | translate)+($index+1) + getRecordAdditionalInfo(fromStage.selected, inputRecord, 'output')"
+        is-root="true"
+        editable="previewMode">
+      </record-tree>
+    </td>
+
+    <td>
+      <div ng-repeat="record in outputRecords">
+        <record-tree
+          record="record"
+          record-value="record.value"
+          diff-type="'output'"
+          diff-record="inputRecord"
+          diff-record-value="inputRecord.value"
+          field-name="('global.form.record' | translate)+($parent.$index+1)"
+          is-root="true"
+          editable="false">
+        </record-tree>
+      </div>
+    </td>
+
+  </tr>
+
+
+  <tr ng-repeat="record in multiStagePreviewData.errorRecords">
+
+    <td>
+      <record-tree
+        record="record"
+        record-value="record.value"
+        field-name="('global.form.record' | translate)+ '-' + ('global.form.errorRecord' | translate) + ' ' + record.header.errorMessage"
+        is-root="true"
+        editable="false">
+      </record-tree>
+    </td>
+
+    <td>
+
+    </td>
+
+  </tr>
+
+  <tr ng-if="multiStagePreviewData.input.length === 0 &&
+                      multiStagePreviewData.output.length === 0 &&
+                      multiStagePreviewData.errorRecords.length === 0">
+    <td colspan="2" class="no-records" translate="home.previewPane.noRecords">No Records to view.</td>
+  </tr>
+
+  </tbody>
+
+</table>
