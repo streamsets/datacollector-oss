@@ -92,7 +92,7 @@ public class StandalonePipelineManagerTask extends AbstractTask implements Pipel
   private static final String REFRESH_INTERVAL_PROPERTY = "ui.refresh.interval.ms";
   private static final int REFRESH_INTERVAL_PROPERTY_DEFAULT = 2000;
 
-  static final Map<State, Set<State>> VALID_TRANSITIONS = new ImmutableMap.Builder<State, Set<State>>()
+  private static final Map<State, Set<State>> VALID_TRANSITIONS = new ImmutableMap.Builder<State, Set<State>>()
     .put(State.STOPPED, ImmutableSet.of(State.RUNNING))
     .put(State.FINISHED, ImmutableSet.of(State.RUNNING))
     .put(State.RUNNING, ImmutableSet.of(State.STOPPING, State.FINISHED))
@@ -383,9 +383,11 @@ public class StandalonePipelineManagerTask extends AbstractTask implements Pipel
       LOG.info("Starting pipeline {} {}", name, rev);
       validateStateTransition(name, rev, State.RUNNING);
       PipelineConfiguration pipelineConf = pipelineStore.load(name, rev);
-      ExecutionMode executionMode = ExecutionMode.valueOf((String) pipelineConf.getConfiguration(
+      ExecutionMode pipelineExecutionMode = ExecutionMode.valueOf((String) pipelineConf.getConfiguration(
           PipelineDefConfigs.EXECUTION_MODE_CONFIG).getValue());
-      if (executionMode == ExecutionMode.STANDALONE) {
+      if (pipelineExecutionMode == ExecutionMode.STANDALONE ||
+        (pipelineExecutionMode == ExecutionMode.CLUSTER) &&
+          runtimeInfo.getExecutionMode() == RuntimeInfo.ExecutionMode.SLAVE) {
         handleStartRequest(name, rev);
         setState(name, rev, State.RUNNING, null, null);
         return getPipelineState();

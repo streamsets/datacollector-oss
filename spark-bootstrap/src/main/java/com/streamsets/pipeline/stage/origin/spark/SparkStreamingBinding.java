@@ -4,6 +4,7 @@
  * written consent of StreamSets, Inc.
  */
 package com.streamsets.pipeline.stage.origin.spark;
+import com.streamsets.pipeline.Utils;
 import org.apache.spark.*;
 import org.apache.spark.streaming.Duration;
 import org.apache.spark.streaming.api.java.*;
@@ -20,16 +21,14 @@ import kafka.serializer.DefaultDecoder;
 
 public class SparkStreamingBinding {
   private static final Logger LOG = LoggerFactory.getLogger(SparkStreamingBinding.class);
-  public static final String INPUT_TYPE = "streamsets.cluster.input.type";
-  public static final String KAFKA_INPUT_TYPE = "kafka";
 
   private JavaStreamingContext ssc;
   private Properties properties;
   private String pipelineJson;
 
   public SparkStreamingBinding(Properties properties, String pipelineJson) {
-    this.properties = properties;
-    this.pipelineJson = pipelineJson;
+    this.properties = Utils.checkNotNull(properties, "Properties");
+    this.pipelineJson = Utils.checkNotNull(pipelineJson, "Pipeline JSON");
   }
 
   public void init() throws Exception {
@@ -45,15 +44,8 @@ public class SparkStreamingBinding {
       }
     };
     Runtime.getRuntime().addShutdownHook(shutdownHookThread);
-
-    String inputType = properties.getProperty(INPUT_TYPE);
-
-    if (KAFKA_INPUT_TYPE.equalsIgnoreCase(inputType)) {
-      JavaPairInputDStream<byte[], byte[]> dStream = createDirectStreamForKafka();
-      dStream.foreachRDD(new SparkKafkaDriverFunction(properties, pipelineJson));
-    } else {
-      throw new IllegalStateException("Unknown input type: " + inputType);
-    }
+    JavaPairInputDStream<byte[], byte[]> dStream = createDirectStreamForKafka();
+    dStream.foreachRDD(new SparkKafkaDriverFunction(properties, pipelineJson));
     ssc.start();
   }
 
@@ -75,19 +67,19 @@ public class SparkStreamingBinding {
     // Check for null values
     // require only the broker list for direct stream API (low level consumer API)
     if (properties.getProperty("metadataBrokerList") == null) {
-      throw new IllegalArgumentException("Property metadata.broker.list cannot be null");
+      throw new IllegalArgumentException("Property metadataBrokerList cannot be null");
     }
     props.put("metadata.broker.list", properties.getProperty("metadataBrokerList"));
-    if (properties.getProperty("topics") == null) {
-      throw new IllegalArgumentException("Topic cannot be null");
+    if (properties.getProperty("topic") == null) {
+      throw new IllegalArgumentException("Property topic cannot be null");
     }
     String autoOffsetValue = properties.getProperty("auto.offset.reset");
     if (autoOffsetValue != null) {
       props.put("auto.offset.reset", autoOffsetValue);
     }
-    String[] topicList = properties.getProperty("topics").split(",");
+    String[] topicList = properties.getProperty("topic").split(",");
     LOG.info("Meta data broker list " + properties.getProperty("metadataBrokerList"));
-    LOG.info("topic list " + properties.getProperty("topics"));
+    LOG.info("topic list " + properties.getProperty("topic"));
     LOG.info("Auto offset is set to " + autoOffsetValue);
     JavaPairInputDStream<byte[], byte[]> dStream =
       KafkaUtils.createDirectStream(ssc, byte[].class, byte[].class, DefaultDecoder.class, DefaultDecoder.class, props,

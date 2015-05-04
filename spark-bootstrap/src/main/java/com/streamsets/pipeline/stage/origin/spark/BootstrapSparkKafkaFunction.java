@@ -7,12 +7,12 @@ package com.streamsets.pipeline.stage.origin.spark;
 
 import com.streamsets.pipeline.BootstrapSpark;
 
+import com.streamsets.pipeline.Utils;
 import org.apache.spark.api.java.function.VoidFunction;
 
 import scala.Tuple2;
 
 import java.io.Serializable;
-import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
 import java.util.Iterator;
 import java.util.Properties;
@@ -25,8 +25,8 @@ public class BootstrapSparkKafkaFunction implements VoidFunction<Iterator<Tuple2
   private String pipelineJson;
 
   public BootstrapSparkKafkaFunction(Properties properties, String pipelineJson) {
-    this.properties = properties;
-    this.pipelineJson = pipelineJson;
+    this.properties = Utils.checkNotNull(properties, "Properties");
+    this.pipelineJson = Utils.checkNotNull(pipelineJson, "Pipeline JSON");
     System.err.println("BootstrapSparkFunction.<init>");
     Thread.dumpStack();
   }

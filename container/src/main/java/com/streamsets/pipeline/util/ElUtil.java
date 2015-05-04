@@ -24,8 +24,6 @@ import java.util.Map;
 
 public class ElUtil {
 
-  private static final String KEY = "key";
-  private static final String VALUE = "value";
   private static final String EL_PREFIX = "${";
   private static final String CONSTANTS = "constants";
 
@@ -94,19 +92,7 @@ public class ElUtil {
   }
 
   public static Map<String, Object> getConstants(PipelineConfiguration pipelineConf) {
-    Map<String, Object> constants = new HashMap<>();
-    if(pipelineConf != null && pipelineConf.getConfiguration() != null) {
-      for (ConfigConfiguration configConfiguration : pipelineConf.getConfiguration()) {
-        if (configConfiguration.getName().equals(CONSTANTS) && configConfiguration.getValue() != null) {
-          List<Map<String, String>> consts = (List<Map<String, String>>) configConfiguration.getValue();
-          for (Map<String, String> constant : consts) {
-            constants.put(constant.get(KEY), constant.get(VALUE));
-          }
-          return constants;
-        }
-      }
-    }
-    return constants;
+    return PipelineConfigurationUtil.getFlattenedMap(CONSTANTS, pipelineConf);
   }
 
 }

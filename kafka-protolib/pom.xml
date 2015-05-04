@@ -101,6 +101,13 @@
       <scope>test</scope>
     </dependency>
     <dependency>
+      <groupId>com.streamsets</groupId>
+      <artifactId>streamsets-datacollector-spark-bootstrap</artifactId>
+      <scope>provided</scope>
+      <version>1.0.0b2-SNAPSHOT</version> <!-- required because we don't inherit from root and root-lib
+                                               does not define dep spark-bootstrap -->
+    </dependency>
+    <dependency>
       <groupId>org.scala-lang</groupId>
       <artifactId>scala-library</artifactId>
       <version>${scala.version}</version>

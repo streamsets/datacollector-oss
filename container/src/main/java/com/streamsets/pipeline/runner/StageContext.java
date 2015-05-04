@@ -332,6 +332,7 @@ public class StageContext implements Source.Context, Target.Context, Processor.C
 
   @Override
   public boolean isClusterMode() {
+    // TODO - does not appear to be used, can be removed?
     // TODO - Only for testing, Remove this once the execution modes are defined
     if (Boolean.getBoolean("sdc.clustermode")) {
       return true;

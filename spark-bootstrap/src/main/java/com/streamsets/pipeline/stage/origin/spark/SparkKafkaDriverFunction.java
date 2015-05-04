@@ -5,6 +5,7 @@
  */
 package com.streamsets.pipeline.stage.origin.spark;
 
+import com.streamsets.pipeline.Utils;
 import org.apache.spark.api.java.JavaPairRDD;
 import org.apache.spark.api.java.function.Function;
 import org.slf4j.Logger;
@@ -21,11 +22,12 @@ public class SparkKafkaDriverFunction implements Function<JavaPairRDD<byte[], by
   private Properties properties;
   private String pipelineJson;
   public SparkKafkaDriverFunction(Properties properties, String pipelineJson) {
-    this.properties = properties;
-    this.pipelineJson = pipelineJson;
+    this.properties = Utils.checkNotNull(properties, "Properties");
+    this.pipelineJson = Utils.checkNotNull(pipelineJson, "Pipeline JSON");
     System.err.println("SparkDriverFunction.<init>");
     Thread.dumpStack();
   }
+
   @Override
   public Void call(JavaPairRDD<byte[], byte[]> byteArrayJavaRDD) throws Exception {
     System.err.println("SparkDriverFunction.call");

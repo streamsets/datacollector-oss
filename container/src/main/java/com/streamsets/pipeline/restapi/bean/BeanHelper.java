@@ -12,6 +12,7 @@ import com.streamsets.pipeline.el.ElFunctionDefinition;
 import com.streamsets.pipeline.record.HeaderImpl;
 import com.streamsets.pipeline.record.RecordImpl;
 import com.streamsets.pipeline.runner.production.SourceOffset;
+import com.streamsets.pipeline.store.PipelineInfo;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -215,6 +216,13 @@ public class BeanHelper {
       return null;
     }
     return pipelineConfigurationJson.getPipelineConfiguration();
+  }
+
+  public static PipelineInfo unwrapPipelineInfo(PipelineInfoJson pipelineInfoJson) {
+    if(pipelineInfoJson == null) {
+      return null;
+    }
+    return pipelineInfoJson.getPipelineInfo();
   }
 
   public static PipelineInfoJson wrapPipelineInfo(com.streamsets.pipeline.store.PipelineInfo pipelineInfo) {

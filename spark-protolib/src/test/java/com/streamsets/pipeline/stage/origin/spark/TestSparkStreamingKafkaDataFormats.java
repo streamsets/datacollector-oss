@@ -417,8 +417,6 @@ public class TestSparkStreamingKafkaDataFormats {
           SparkStreamingKafkaSource source =
             ((SparkStreamingKafkaSource) ((DSource) sourceRunner.getStage()).getSource());
           source.put(list);
-        } catch (IllegalStateException ex) {
-          // ignored
         } catch (Exception ex) {
           LOG.error("Error in waiter thread: " + ex, ex);
         }

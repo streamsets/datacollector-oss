@@ -12,22 +12,16 @@ import org.I0Itec.zkclient.ZkClient;
 
 import com.google.common.io.Resources;
 import com.streamsets.pipeline.BootstrapSpark;
-import com.streamsets.pipeline.api.ExecutionMode;
 import com.streamsets.pipeline.lib.DataType;
 import com.streamsets.pipeline.lib.KafkaTestUtil;
 import com.streamsets.pipeline.lib.ProducerRunnable;
-import com.streamsets.pipeline.main.EmbeddedPipelineFactory;
 import com.streamsets.pipeline.stage.origin.kafka.KafkaDSource;
-import com.streamsets.pipeline.stage.origin.spark.SparkKafkaExecutorFunction;
-import com.streamsets.pipeline.stage.origin.spark.SparkStreamingBinding;
 
-import org.apache.commons.io.FileUtils;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
 import java.io.File;
-import java.io.FilenameFilter;
 import java.util.Properties;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
@@ -79,17 +73,12 @@ public class TestSparkStreamingKafkaSource {
     Properties properties;
     File propertiesFile;
     properties = new Properties();
-    properties.setProperty(EmbeddedPipelineFactory.PIPELINE_NAME, "pipeline1");
-    properties.setProperty(EmbeddedPipelineFactory.PIPELINE_USER, "admin");
-    properties.setProperty(EmbeddedPipelineFactory.PIPELINE_DESCRIPTION, "not much to say");
-    properties.setProperty(EmbeddedPipelineFactory.PIPELINE_TAG, "unused");
     // Set this to cluster mode once the code is changed to use that
     // and change in the pipeline json file
     //properties.setProperty("sdc.runtime.mode", ExecutionMode.CLUSTER.getLabel());
     properties.setProperty(KafkaDSource.METADATA_BROKER_LIST, metadataBrokerURI);
-    properties.setProperty(KafkaDSource.TOPICS, "testProduceStringRecords");
+    properties.setProperty(KafkaDSource.TOPIC, "testProduceStringRecords");
     properties.setProperty("auto.offset.reset", "smallest");
-    properties.setProperty(SparkStreamingBinding.INPUT_TYPE, SparkStreamingBinding.KAFKA_INPUT_TYPE);
     propertiesFile = new File(target, "sdc.properties");
     propertiesFile.delete();
     properties.store(new FileOutputStream(propertiesFile), null);

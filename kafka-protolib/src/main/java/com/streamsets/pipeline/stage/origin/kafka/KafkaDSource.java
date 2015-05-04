@@ -46,7 +46,7 @@ public class KafkaDSource extends DSourceOffsetCommitter {
   //2 info required for spark streaming to create direct stream
   public static final String METADATA_BROKER_LIST= "metadataBrokerList";
   //For now assuming only one topic will be there
-  public static final String TOPICS = "topics";
+  public static final String TOPIC = "topic";
   private BaseKafkaSource baseKafkaSource;
 
   @ConfigDef(

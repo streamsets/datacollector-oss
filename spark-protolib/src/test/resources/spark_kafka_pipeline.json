@@ -1,5 +1,4 @@
 {
-  "pipelineConfig" : {
     "schemaVersion" : 1,
     "uuid" : "1059d809-5ac6-4d5b-875e-e1478f5cc5f0",
     "description" : "",
@@ -211,62 +210,4 @@
     },
     "valid" : true,
     "previewable" : true
-  },
-  "pipelineRules" : {
-    "metricsRuleDefinitions" : [ {
-      "id" : "adminbadRecords1430202692631",
-      "alertText" : "High incidence of Bad Records",
-      "metricId" : "pipeline.batchErrorRecords.meter",
-      "metricType" : "METER",
-      "metricElement" : "METER_COUNT",
-      "condition" : "${value() > 100}",
-      "sendEmail" : false,
-      "enabled" : false,
-      "valid" : true
-    }, {
-      "id" : "adminstageErrors1430202692631",
-      "alertText" : "High incidence of Error Messages",
-      "metricId" : "pipeline.batchErrorMessages.meter",
-      "metricType" : "METER",
-      "metricElement" : "METER_COUNT",
-      "condition" : "${value() > 100}",
-      "sendEmail" : false,
-      "enabled" : false,
-      "valid" : true
-    }, {
-      "id" : "adminidleGauge1430202692631",
-      "alertText" : "Pipeline is Idle",
-      "metricId" : "RuntimeStatsGauge.gauge",
-      "metricType" : "GAUGE",
-      "metricElement" : "TIME_OF_LAST_RECEIVED_RECORD",
-      "condition" : "${time:now() - value() > 120000}",
-      "sendEmail" : false,
-      "enabled" : false,
-      "valid" : true
-    }, {
-      "id" : "adminbatchTime1430202692631",
-      "alertText" : "Batch taking more time to process",
-      "metricId" : "RuntimeStatsGauge.gauge",
-      "metricType" : "GAUGE",
-      "metricElement" : "CURRENT_BATCH_AGE",
-      "condition" : "${value() > 200}",
-      "sendEmail" : false,
-      "enabled" : false,
-      "valid" : true
-    }, {
-      "id" : "adminmemoryLimit1430202692631",
-      "alertText" : "Memory limit for pipeline exceeded",
-      "metricId" : "pipeline.memoryConsumed.counter",
-      "metricType" : "COUNTER",
-      "metricElement" : "COUNTER_COUNT",
-      "condition" : "${value() > humanReadableToBytes('100MB')}",
-      "sendEmail" : false,
-      "enabled" : false,
-      "valid" : true
-    } ],
-    "dataRuleDefinitions" : [ ],
-    "emailIds" : [ ],
-    "uuid" : "1a49a149-00d8-4a57-8123-98d3654461ed",
-    "ruleIssues" : [ ]
   }
-}

@@ -4,6 +4,7 @@
  */
 package com.streamsets.pipeline.stage.origin.spark;
 
+import com.streamsets.pipeline.api.impl.Utils;
 import org.apache.spark.api.java.function.VoidFunction;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -30,8 +31,8 @@ public class SparkKafkaExecutorFunction implements VoidFunction<Iterator<Tuple2<
   private String pipelineJson;
 
   public SparkKafkaExecutorFunction(Properties properties, String pipelineJson) {
-    this.properties = properties;
-    this.pipelineJson = pipelineJson;
+    this.properties = Utils.checkNotNull(properties, "Properties");
+    this.pipelineJson = Utils.checkNotNull(pipelineJson,  "Pipeline JSON");
   }
 
   private void initialize() throws Exception {

@@ -29,10 +29,12 @@ public class PipelineConfigurationJson implements Serializable{
     @JsonProperty("configuration") List<ConfigConfigurationJson> configuration,
     @JsonProperty("uiInfo") Map<String, Object> uiInfo,
     @JsonProperty("stages") List<StageConfigurationJson> stages,
-    @JsonProperty("errorStage") StageConfigurationJson errorStage) {
+    @JsonProperty("errorStage") StageConfigurationJson errorStage,
+    @JsonProperty("info") PipelineInfoJson pipelineInfo) {
     this.pipelineConfiguration = new com.streamsets.pipeline.config.PipelineConfiguration(schemaVersion, uuid, description,
       BeanHelper.unwrapConfigConfiguration(configuration), uiInfo, BeanHelper.unwrapStageConfigurations(stages),
       BeanHelper.unwrapStageConfiguration(errorStage));
+    this.pipelineConfiguration.setPipelineInfo(BeanHelper.unwrapPipelineInfo(pipelineInfo));
   }
 
   public PipelineConfigurationJson(com.streamsets.pipeline.config.PipelineConfiguration pipelineConfiguration) {

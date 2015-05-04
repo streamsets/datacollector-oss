@@ -27,7 +27,7 @@ public class TestEmbeddedSDCPool {
 
   @Test
   public void testEmbeddedSDC() throws Exception {
-    DummyEmbeddedSDCPool dummyEmbeddedSDCPool = new DummyEmbeddedSDCPool(null, null);
+    DummyEmbeddedSDCPool dummyEmbeddedSDCPool = new DummyEmbeddedSDCPool(new Properties(), "");
     Assert.assertEquals(1, dummyEmbeddedSDCPool.getTotalInstances().size());
     Assert.assertEquals(1, dummyEmbeddedSDCPool.size());
     // Now retrieve the created one

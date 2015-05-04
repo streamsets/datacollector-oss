@@ -3,14 +3,16 @@
  * be copied, modified, or distributed in whole or part without
  * written consent of StreamSets, Inc.
  */
-package com.streamsets.pipeline.util;
+package com.streamsets.pipeline.cluster;
+
+import com.streamsets.pipeline.util.SystemProcessFactory;
+import com.streamsets.pipeline.util.SystemProcess;
 
 import java.io.File;
 import java.util.List;
 
-public class SystemProcessFactory {
-
+public class MockSystemProcessFactory extends SystemProcessFactory {
   public SystemProcess create(String name, File tempDir, List<String> args) {
-    return new SystemProcessImpl(name, tempDir, args);
+    return new MockSystemProcess(tempDir);
   }
 }

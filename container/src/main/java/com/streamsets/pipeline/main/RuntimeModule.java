@@ -11,6 +11,8 @@ import com.streamsets.pipeline.metrics.MetricsModule;
 import com.streamsets.pipeline.util.Configuration;
 import dagger.Module;
 import dagger.Provides;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.inject.Singleton;
 import java.io.File;
@@ -21,10 +23,11 @@ import java.util.List;
 @Module(library = true, injects = {BuildInfo.class, RuntimeInfo.class, Configuration.class},
     includes = MetricsModule.class)
 public class RuntimeModule {
+  private static final Logger LOG = LoggerFactory.getLogger(RuntimeModule.class);
   public static final String DATA_COLLECTOR_ID = "sdc.id";
   public static final String DATA_COLLECTOR_BASE_HTTP_URL = "sdc.base.http.url";
   public static final String SDC_PROPERTY_PREFIX = "sdc";
-  private static final String SDC_EXECUTION_MODE_KEY = "sdc.execution.mode";
+  public static final String SDC_EXECUTION_MODE_KEY = "sdc.execution.mode";
   private static final String SDC_EXECUTION_MODE_DEFAULT = "standalone";
 
   private static List<ClassLoader> stageLibraryClassLoaders = ImmutableList.of(RuntimeModule.class.getClassLoader());
@@ -57,6 +60,8 @@ public class RuntimeModule {
       } catch (IOException ex) {
         throw new RuntimeException(ex);
       }
+    } else {
+      LOG.error("Error did not find sdc.properties at expected location: {}", configFile);
     }
     return conf;
   }

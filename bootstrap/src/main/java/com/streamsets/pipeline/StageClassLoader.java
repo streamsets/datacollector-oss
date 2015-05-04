@@ -99,15 +99,15 @@ public class StageClassLoader extends BlackListURLClassLoader {
                           List<String> systemClasses, String[] blacklistedPackages) {
     super(type, name, urls, parent, blacklistedPackages);
     if (debug) {
-      System.err.println(getClass().getSimpleName() + ": urls: " + Arrays.toString(urls.toArray()));
-      System.err.println(getClass().getSimpleName() + ": system classes: " + systemClasses);
+      System.err.println(getClass().getSimpleName() + " " + getName() + ": urls: " + Arrays.toString(urls.toArray()));
+      System.err.println(getClass().getSimpleName() + " " + getName() + ": system classes: " + systemClasses);
     }
     this.parent = parent;
     if (parent == null) {
       throw new IllegalArgumentException("No parent classloader!");
     }
     if (debug) {
-      System.err.println(getClass().getSimpleName() + ": parent classloader: " + parent);
+      System.err.println(getClass().getSimpleName() + " " + getName() + ": parent classloader: " + parent);
     }
     if (systemClasses == null) {
       throw new IllegalArgumentException("System classes cannot be null");
@@ -115,7 +115,7 @@ public class StageClassLoader extends BlackListURLClassLoader {
     // if the caller-specified system classes are null or empty, use the default
     this.systemClasses = systemClasses;
     if(debug) {
-      System.err.println(getClass().getSimpleName() + ": system classes: " + this.systemClasses);
+      System.err.println(getClass().getSimpleName() + " " + getName() + ": system classes: " + this.systemClasses);
     }
   }
   public StageClassLoader(String type, String name, List<URL> urls, ClassLoader parent, String[] blacklistedPackages,
@@ -134,7 +134,7 @@ public class StageClassLoader extends BlackListURLClassLoader {
       url= findResource(name);
       if (url == null && name.startsWith("/")) {
         if (debug) {
-          System.err.println(getClass().getSimpleName() + ": Remove leading / off " + name);
+          System.err.println(getClass().getSimpleName() + " " + getName() + ": Remove leading / off " + name);
         }
         url = findResource(name.substring(1));
       }
@@ -146,7 +146,7 @@ public class StageClassLoader extends BlackListURLClassLoader {
 
     if (url != null) {
       if (debug) {
-        System.err.println(getClass().getSimpleName() + ": getResource(" + name + ")=" + url);
+        System.err.println(getClass().getSimpleName() + " " + getName() + ": getResource(" + name + ")=" + url);
       }
     }
 
@@ -162,7 +162,7 @@ public class StageClassLoader extends BlackListURLClassLoader {
   protected synchronized Class<?> loadClass(String name, boolean resolve)
     throws ClassNotFoundException {
     if (debug) {
-      System.err.println(getClass().getSimpleName() + ": Loading class: " + name);
+      System.err.println(getClass().getSimpleName() + " " + getName() + ": Loading class: " + name);
     }
 
     Class<?> c = findLoadedClass(name);
@@ -175,11 +175,11 @@ public class StageClassLoader extends BlackListURLClassLoader {
       try {
         c = findClass(name);
         if (debug && c != null) {
-          System.err.println(getClass().getSimpleName() + ": Loaded class: " + name + " ");
+          System.err.println(getClass().getSimpleName() + " " + getName() + ": Loaded class: " + name + " ");
         }
       } catch (ClassNotFoundException e) {
         if (debug) {
-          System.err.println(getClass().getSimpleName() + ": " + e);
+          System.err.println(getClass().getSimpleName() + " " + getName() + ": " + e);
         }
         ex = e;
       }
@@ -188,7 +188,7 @@ public class StageClassLoader extends BlackListURLClassLoader {
     if (c == null) { // try parent
       c = parent.loadClass(name);
       if (debug && c != null) {
-        System.err.println(getClass().getSimpleName() + ": Loaded class from parent: " + name + " ");
+        System.err.println(getClass().getSimpleName() + " " + getName() + ": Loaded class from parent: " + name + " ");
       }
     }
 

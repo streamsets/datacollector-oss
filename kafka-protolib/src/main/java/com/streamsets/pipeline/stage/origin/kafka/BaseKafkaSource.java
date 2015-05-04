@@ -5,11 +5,11 @@
  */
 package com.streamsets.pipeline.stage.origin.kafka;
 
+import com.streamsets.pipeline.BootstrapSpark;
 import com.streamsets.pipeline.api.BatchMaker;
 import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.OffsetCommitter;
 import com.streamsets.pipeline.api.Record;
-import com.streamsets.pipeline.api.Source;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.base.BaseSource;
 import com.streamsets.pipeline.api.impl.Utils;
@@ -27,7 +27,6 @@ import com.streamsets.pipeline.lib.parser.DataParserFactoryBuilder;
 import com.streamsets.pipeline.lib.parser.log.LogDataFormatValidator;
 import com.streamsets.pipeline.lib.parser.log.RegExConfig;
 import com.streamsets.pipeline.lib.parser.xml.XmlDataParserFactory;
-import com.streamsets.pipeline.api.Stage;
 
 import org.apache.xerces.util.XMLChar;
 import org.slf4j.Logger;
@@ -36,7 +35,6 @@ import org.slf4j.LoggerFactory;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.lang.reflect.Constructor;
-import java.lang.reflect.Method;
 import java.nio.charset.Charset;
 import java.nio.charset.UnsupportedCharsetException;
 import java.util.ArrayList;
@@ -339,7 +337,7 @@ public class BaseKafkaSource extends BaseSource implements OffsetCommitter {
 
   private Object createInstanceClusterMode(String className) {
     try {
-      clusterModeClazz = Class.forName(className);
+      clusterModeClazz = BootstrapSpark.getClassFromSparkClassloader(className);
       Constructor ctor =
         clusterModeClazz.getConstructor(String.class, String.class, DataFormat.class, String.class, boolean.class,
           int.class, int.class, Map.class, int.class, JsonMode.class, int.class, CsvMode.class, CsvHeader.class,
@@ -353,7 +351,7 @@ public class BaseKafkaSource extends BaseSource implements OffsetCommitter {
             enableLog4jCustomLogFormat, log4jCustomLogFormat, onParseError, maxStackTraceLines };
       clusterModeInstance = (BaseKafkaSource) ctor.newInstance(arguments);
     } catch (Exception e) {
-      throw new IllegalStateException("Exception while invoking kafka instance in cluster mode" + e);
+      throw new IllegalStateException("Exception while invoking kafka instance in cluster mode: " + e, e);
     }
     return clusterModeInstance;
   }

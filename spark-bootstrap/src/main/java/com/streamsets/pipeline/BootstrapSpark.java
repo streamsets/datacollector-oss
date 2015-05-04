@@ -59,8 +59,9 @@ public class BootstrapSpark {
       libraryRoot = (new File(System.getProperty("user.dir"), "libs.tar.gz")).getAbsolutePath();
       etcRoot = (new File(System.getProperty("user.dir") + "/etc.tar.gz/etc/")).getAbsolutePath();
     }
+    System.setProperty("sdc.clustermode", "true");
     System.setProperty("sdc.transient-env", "true");
-    System.setProperty("sdc.static-web.dir", (new File(libraryRoot, "static-web")).getAbsolutePath());
+    System.setProperty("sdc.static-web.dir", (new File(libraryRoot, "sdc-static-web")).getAbsolutePath());
     System.setProperty("sdc.conf.dir", etcRoot);
     File sdcProperties = new File(etcRoot, "sdc.properties");
     if (!sdcProperties.isFile()) {
@@ -112,7 +113,7 @@ public class BootstrapSpark {
       StageClassLoader.CONTAINER_CLASSES_DEFAULT);
     stageLibrariesCLs = new ArrayList<ClassLoader>();
     for (Map.Entry<String,List<URL>> entry : libsUrls.entrySet()) {
-      String[] parts = entry.getKey().split(BootstrapMain.FILE_SEPARATOR);
+      String[] parts = entry.getKey().split(System.getProperty("file.separator"));
       if (parts.length != 2) {
         String msg = "Invalid library name: " + entry.getKey();
         throw new IllegalStateException(msg);
@@ -219,6 +220,14 @@ public class BootstrapSpark {
     } catch (Exception ex) {
       String msg = "Error trying to obtain SparkKafkaExecutorFunction Class: " + ex;
       throw new IllegalStateException(msg, ex);
+    }
+  }
+
+  public static Class getClassFromSparkClassloader(String name) throws Exception {
+    if (sparkCL == null) {
+      return Class.forName(name);
+    } else {
+      return Class.forName(name, true, sparkCL);
     }
   }
 }

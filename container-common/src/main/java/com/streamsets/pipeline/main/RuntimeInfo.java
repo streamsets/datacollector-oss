@@ -6,6 +6,7 @@
 package com.streamsets.pipeline.main;
 
 import com.codahale.metrics.MetricRegistry;
+import com.google.common.annotations.VisibleForTesting;
 import com.google.common.collect.ImmutableList;
 import com.streamsets.pipeline.api.impl.Utils;
 
@@ -16,8 +17,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
+import java.io.File;
 
 public class RuntimeInfo {
+  /**
+   * Note this differs from the Pipeline level enum named ExecutionMode
+   */
   public enum ExecutionMode { CLUSTER, STANDALONE, SLAVE };
 
   public static final String SPLITTER = "|";
@@ -38,11 +43,19 @@ public class RuntimeInfo {
   private Runnable shutdownRunnable;
   private Map<String, String> authenticationTokens;
   private final String propertyPrefix;
+  private final File baseDir;
   private UUID randomUUID;
   private ExecutionMode executionMode = ExecutionMode.STANDALONE;
   private String clusterToken;
 
-  public RuntimeInfo(String propertyPrefix, MetricRegistry metrics, List<? extends ClassLoader> stageLibraryClassLoaders) {
+  public RuntimeInfo(String propertyPrefix, MetricRegistry metrics,
+                     List<? extends ClassLoader> stageLibraryClassLoaders) {
+    this(propertyPrefix, metrics, stageLibraryClassLoaders, null);
+  }
+  @VisibleForTesting
+  public RuntimeInfo(String propertyPrefix, MetricRegistry metrics,
+                     List<? extends ClassLoader> stageLibraryClassLoaders,
+                     File baseDir) {
     this.metrics = metrics;
     if(stageLibraryClassLoaders != null) {
       this.stageLibraryClassLoaders = ImmutableList.copyOf(stageLibraryClassLoaders);
@@ -50,6 +63,7 @@ public class RuntimeInfo {
       this.stageLibraryClassLoaders = null;
     }
     this.propertyPrefix = propertyPrefix;
+    this.baseDir = baseDir;
     id = "UNDEF";
     httpUrl = "UNDEF";
     this.attributes = new ConcurrentHashMap<>();
@@ -80,6 +94,9 @@ public class RuntimeInfo {
   }
 
   public String getRuntimeDir() {
+    if (baseDir != null) {
+      return baseDir.getAbsolutePath();
+    }
     if (Boolean.getBoolean(TRANSIENT_ENVIRONMENT)) {
       if (Boolean.getBoolean("sdc.testing-mode")) {
         return System.getProperty("user.dir") + "/target/runtime-" + randomUUID;
@@ -194,7 +211,7 @@ public class RuntimeInfo {
 
   public void setExecutionMode(String executionMode) {
     try {
-      this.executionMode = ExecutionMode.valueOf(executionMode.toUpperCase());
+      this.executionMode = ExecutionMode.valueOf(executionMode.trim().toUpperCase());
     } catch (IllegalArgumentException ex) {
       this.executionMode = ExecutionMode.STANDALONE;
     }

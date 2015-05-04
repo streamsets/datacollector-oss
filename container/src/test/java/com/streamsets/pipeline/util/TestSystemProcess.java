@@ -35,7 +35,7 @@ public class TestSystemProcess {
     }
   }
 
-  private SystemProcess process;
+  private SystemProcessImpl process;
 
   @After
   public void tearDown() {
@@ -46,14 +46,14 @@ public class TestSystemProcess {
 
   @Test
   public void testStart() throws Exception {
-    process = new SystemProcess("sleep", tempDir, Arrays.
+    process = new SystemProcessImpl("sleep", tempDir, Arrays.
       asList("/bin/sleep", "1.1"));
     process.start();
     Assert.assertTrue(process.isAlive());
   }
   @Test
   public void testKill() throws Exception {
-    process = new SystemProcess("sleep", tempDir, Arrays.
+    process = new SystemProcessImpl("sleep", tempDir, Arrays.
       asList("/bin/sleep", "3.1"));
     process.start();
     long start = System.currentTimeMillis();
@@ -68,7 +68,7 @@ public class TestSystemProcess {
       System.getProperty("java.version", "").contains("1.7"));
     Assume.assumeTrue("Test only works on linux, not: " + System.getProperty("os.name"),
       System.getProperty("os.name", "").trim().toLowerCase().contains("linux"));
-    process = new SystemProcess("sleep", tempDir, Arrays.
+    process = new SystemProcessImpl("sleep", tempDir, Arrays.
       asList("/bin/bash", "-c", "trap true 15; sleep 3.1"));
     process.start();
     long start = System.currentTimeMillis();
@@ -80,7 +80,7 @@ public class TestSystemProcess {
 
   @Test
   public void testOutput() throws Exception {
-    process = new SystemProcess("output", tempDir, Arrays.
+    process = new SystemProcessImpl("output", tempDir, Arrays.
       asList("/bin/bash", "-c", "for i in {0..2}; do echo $i; done"));
     process.start();
     while(process.isAlive()) {
@@ -95,7 +95,7 @@ public class TestSystemProcess {
 
   @Test
   public void testError() throws Exception {
-    process = new SystemProcess("output", tempDir, Arrays.
+    process = new SystemProcessImpl("output", tempDir, Arrays.
       asList("/bin/bash", "-c", "for i in {0..2}; do echo $i 1>&2; done"));
     process.start();
     while(process.isAlive()) {

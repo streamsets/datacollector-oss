@@ -362,7 +362,7 @@ public class WebServerTask extends AbstractTask {
     try {
       server.start();
       port = server.getURI().getPort();
-      LOG.debug("Running on URI '{}', HTTPS '{}' ",server.getURI(), isSSLEnabled());
+      LOG.info("Running on URI '{}', HTTPS '{}' ",server.getURI(), isSSLEnabled());
       for (Connector connector : server.getConnectors()) {
         if (connector instanceof ServerConnector) {
           port = ((ServerConnector)connector).getLocalPort();

@@ -25,24 +25,12 @@ import java.util.Properties;
 import java.util.Random;
 
 public class EmbeddedPipelineFactory {
-  private static final String PREFIX = "streamsets.cluster.pipeline.";
-  public static final String PIPELINE_NAME = PREFIX + "name";
-  public static final String PIPELINE_DESCRIPTION = PREFIX + "description";
-  public static final String PIPELINE_USER = PREFIX + "user";
-  public static final String PIPELINE_TAG = PREFIX + "tag";
 
   public static Source createPipeline(Properties properties, String pipelineJson,
                                       final Runnable postBatchRunnable) throws Exception {
-    String pipelineName = Utils.checkNotNull(properties.getProperty(PIPELINE_NAME), PIPELINE_NAME);
-    String pipelineDesc = Utils.checkNotNull(properties.getProperty(PIPELINE_DESCRIPTION), PIPELINE_DESCRIPTION);
-    String pipelineUser = Utils.checkNotNull(properties.getProperty(PIPELINE_USER), PIPELINE_USER);
-    String pipelineTag = Utils.checkNotNull(properties.getProperty(PIPELINE_TAG), PIPELINE_TAG);
-    ObjectMapper json = ObjectMapperFactory.get();
-    // TODO fix this terrible hack
-    String rawPipelineConfig = json.writeValueAsString(json.readValue(pipelineJson, Map.class).get("pipelineConfig"));
-    PipelineConfigurationJson pipelineConfigBean = json.readValue(rawPipelineConfig, PipelineConfigurationJson.class);
-    EmbeddedPipeline embeddedPipeline = new EmbeddedPipeline(pipelineName, pipelineUser, pipelineTag,
-      pipelineDesc, pipelineConfigBean);
+    ObjectMapper json = ObjectMapperFactory.getOneLine();
+    PipelineConfigurationJson pipelineConfigBean = json.readValue(pipelineJson, PipelineConfigurationJson.class);
+    EmbeddedPipeline embeddedPipeline = new EmbeddedPipeline(pipelineConfigBean);
     Pipeline realPipeline = embeddedPipeline.create();
     realPipeline.getRunner().registerListener(new BatchListener() {
       @Override
@@ -63,37 +51,34 @@ public class EmbeddedPipelineFactory {
   private static class EmbeddedPipeline {
     private static final Logger LOG = LoggerFactory.getLogger(EmbeddedPipeline.class);
     private String piplineName;
-    private String pipelineUser;
-    private String pipelineTag;
-    private String pipelineDescription;
     private PipelineManager pipelineManager;
     private ObjectGraph dagger;
     private Thread waitingThread;
-    private PipelineConfigurationJson pipelineConfigBean;
+    private PipelineConfiguration realPipelineConfig;
 
-    public EmbeddedPipeline(String pipelineName, String pipelineUser, String pipelineTag, String pipelineDescription,
-                            PipelineConfigurationJson pipelineConfigBean) throws Exception {
-      this.piplineName = pipelineName + "-" + (new Random()).nextInt(Integer.MAX_VALUE);
-      this.pipelineUser = pipelineUser;
-      this.pipelineTag = pipelineTag;
-      this.pipelineDescription = pipelineDescription;
-      this.pipelineConfigBean = pipelineConfigBean;
+    public EmbeddedPipeline(PipelineConfigurationJson pipelineConfigBean) throws Exception {
+      realPipelineConfig = Utils.checkNotNull(BeanHelper.unwrapPipelineConfiguration(Utils.
+          checkNotNull(pipelineConfigBean, "Pipeline Config Bean")), "Pipeline Config");
+      this.piplineName = Utils.checkNotNull(realPipelineConfig.getInfo(), "Pipeline Info")
+        .getName() + "-" + (new Random()).nextInt(Integer.MAX_VALUE);
     }
 
     private void createAndSave(PipelineTask pipelineTask, String pipelineName) throws PipelineStoreException {
+      String user = realPipelineConfig.getInfo().getCreator();
+      String tag = realPipelineConfig.getInfo().getLastRev();
+      String desc = realPipelineConfig.getDescription();
       StageLibraryTask stageLibrary = pipelineTask.getStageLibraryTask();
       PipelineStoreTask store = pipelineTask.getPipelineStoreTask();
       PipelineConfiguration tmpPipelineConfig =
-        store.create(pipelineName, pipelineDescription, pipelineUser);
+        store.create(pipelineName, desc, user);
       // we might want to add an import API as now to import have to create one then update it
-      PipelineConfiguration realPipelineConfig = BeanHelper.unwrapPipelineConfiguration(pipelineConfigBean);
       realPipelineConfig.setUuid(tmpPipelineConfig.getUuid());
       PipelineConfigurationValidator validator =
         new PipelineConfigurationValidator(stageLibrary, pipelineName, realPipelineConfig);
       validator.validate();
       realPipelineConfig.setValidation(validator);
       realPipelineConfig =
-        store.save(pipelineName, pipelineUser, pipelineTag, pipelineDescription, realPipelineConfig);
+        store.save(pipelineName, user, tag, desc, realPipelineConfig);
     }
 
     private Pipeline create() throws Exception {

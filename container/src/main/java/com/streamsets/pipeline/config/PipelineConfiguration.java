@@ -6,6 +6,7 @@
 package com.streamsets.pipeline.config;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Preconditions;
 import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.store.PipelineInfo;
@@ -13,6 +14,7 @@ import com.streamsets.pipeline.validation.Issues;
 import com.streamsets.pipeline.validation.PipelineConfigurationValidator;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -53,6 +55,7 @@ public class PipelineConfiguration implements Serializable{
 
   public void setInfo(PipelineInfo info) {
     //NOP, just for jackson
+    // TODO - why is this a NOP? We really need this to be set correctly for embedded mode
   }
 
   @JsonIgnore
@@ -155,4 +158,19 @@ public class PipelineConfiguration implements Serializable{
                         isValid(), isPreviewable(), getConfiguration());
   }
 
+
+  @VisibleForTesting
+  @JsonIgnore
+  public PipelineConfiguration createWithNewConfig(String name, ConfigConfiguration replacement) {
+    List<ConfigConfiguration> newConfigurations = new ArrayList<>();
+    for (ConfigConfiguration candidate : this.configuration) {
+      if (name.equals(candidate.getName())) {
+        newConfigurations.add(replacement);
+      } else {
+        newConfigurations.add(candidate);
+      }
+    }
+    return new PipelineConfiguration(schemaVersion, uuid, description, newConfigurations, uiInfo, stages,
+      errorStage);
+  }
 }

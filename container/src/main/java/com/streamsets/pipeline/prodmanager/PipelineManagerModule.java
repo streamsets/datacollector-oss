@@ -18,10 +18,6 @@ import dagger.Provides;
 
 import javax.inject.Singleton;
 
-import static com.streamsets.pipeline.main.RuntimeInfo.ExecutionMode.STANDALONE;
-import static com.streamsets.pipeline.main.RuntimeInfo.ExecutionMode.SLAVE;
-import static com.streamsets.pipeline.main.RuntimeInfo.ExecutionMode.CLUSTER;
-
 @Module(library = true, includes = {RuntimeModule.class, PipelineStoreModule.class, StageLibraryModule.class})
 public class PipelineManagerModule {
 

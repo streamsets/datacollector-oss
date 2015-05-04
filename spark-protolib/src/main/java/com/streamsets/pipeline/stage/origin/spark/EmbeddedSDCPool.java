@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.concurrent.ConcurrentLinkedDeque;
 import java.util.concurrent.CopyOnWriteArrayList;
 
+import com.streamsets.pipeline.api.impl.Utils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -34,8 +35,8 @@ public class EmbeddedSDCPool {
    * @throws Exception
    */
   public EmbeddedSDCPool(Properties properties, String pipelineJson) throws Exception {
-    this.properties = properties;
-    this.pipelineJson = pipelineJson;
+    this.properties = Utils.checkNotNull(properties, "Properties");
+    this.pipelineJson = Utils.checkNotNull(pipelineJson,  "Pipeline JSON");
     addToQueues(createEmbeddedSDC());
   }
 

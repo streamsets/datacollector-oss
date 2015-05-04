@@ -25,7 +25,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.nio.charset.StandardCharsets;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.UUID;
 import java.util.jar.JarEntry;
@@ -95,13 +95,18 @@ public class TestTarFileCreator {
     File userLibsDir = new File(tempDir, "user-libs");
     URLClassLoader apiCl = new URLClassLoader(new URL[]{createJar(apiLibDir).toURL()});
     URLClassLoader containerCL = new URLClassLoader(new URL[]{createJar(containerLibDir).toURL()});
-    Map<String, URLClassLoader> streamsetsLibsCl = new HashMap<>();
-    Map<String, URLClassLoader> userLibsCL = new HashMap<>();
+    Map<String, URLClassLoader> streamsetsLibsCl = new LinkedHashMap<>();
+    Map<String, URLClassLoader> userLibsCL = new LinkedHashMap<>();
     streamsetsLibsCl.put("abc123", new URLClassLoader(new URL[]{createJar(new File(streamsetsLibsDir, "abc123"))
       .toURL()}));
+    streamsetsLibsCl.put("abc456", new URLClassLoader(new URL[]{createJar(new File(streamsetsLibsDir, "abc456"))
+      .toURL()}));
     userLibsCL.put("yxz456", new URLClassLoader(new URL[]{createJar(new File(userLibsDir, "yxz456")).toURL()}));
-    File tarFile = new File(tempDir, "libs.tar.gz");
-    TarFileCreator.createLibsTarGz(apiCl, containerCL, streamsetsLibsCl, userLibsCL, tarFile);
+    File staticWebDir = new File(tempDir, "static-web-dir");
+    Assert.assertTrue(staticWebDir.mkdir());
+    createJar(new File(staticWebDir, "subdir"));
+      File tarFile = new File(tempDir, "libs.tar.gz");
+    TarFileCreator.createLibsTarGz(apiCl, containerCL, streamsetsLibsCl, userLibsCL, staticWebDir, tarFile);
     TarInputStream tis = new TarInputStream(new GZIPInputStream(new FileInputStream(tarFile)));
     readDir("api-lib/", tis);
     readJar(tis);
@@ -111,9 +116,13 @@ public class TestTarFileCreator {
     readDir("streamsets-libs/abc123/", tis);
     readDir("streamsets-libs/abc123/lib/", tis);
     readJar(tis);
+    readDir("streamsets-libs/abc456/", tis);
+    readDir("streamsets-libs/abc456/lib/", tis);
+    readJar(tis);
     readDir("user-libs/", tis);
     readDir("user-libs/yxz456/", tis);
     readDir("user-libs/yxz456/lib/", tis);
+    readJar(tis);
     readJar(tis);
   }
 

@@ -27,6 +27,7 @@ public class TarFileCreator {
   public static void createLibsTarGz(URLClassLoader apiCl, URLClassLoader containerCL,
                                          Map<String, URLClassLoader> streamsetsLibsCl,
                                          Map<String, URLClassLoader> userLibsCL,
+                                         File staticWebDir,
                                          File outputFile) throws IOException {
     long now = System.currentTimeMillis() / 1000L;
     FileOutputStream dest = new FileOutputStream(outputFile);
@@ -40,6 +41,7 @@ public class TarFileCreator {
     addClasspath(prefix, out, containerCL.getURLs());
     addLibrary(ClasspathConstants.STREAMSETS_LIBS, now, out, streamsetsLibsCl);
     addLibrary(ClasspathConstants.USER_LIBS, now, out, userLibsCL);
+    tarFolder(null, staticWebDir.getAbsolutePath(), out);
     out.flush();
     out.close();
   }
@@ -51,6 +53,7 @@ public class TarFileCreator {
     long now = System.currentTimeMillis() / 1000L;
     FileOutputStream dest = new FileOutputStream(outputFile);
     TarOutputStream out = new TarOutputStream(new BufferedOutputStream(new GZIPOutputStream(dest), 65536));
+
     String prefix = ClasspathConstants.ETC;
     out.putNextEntry(new TarEntry(TarHeader.createHeader(prefix, 0L, now, true)));
     File[] files = etcDir.listFiles();
@@ -68,10 +71,11 @@ public class TarFileCreator {
     out.close();
   }
 
-  private static void addLibrary(String prefix, long now, TarOutputStream out, Map<String, URLClassLoader> lib)
-    throws IOException {
-    out.putNextEntry(new TarEntry(TarHeader.createHeader(prefix, 0L, now, true)));
+  private static void addLibrary(final String originalPrefix, long now, TarOutputStream out,
+                                 Map<String, URLClassLoader> lib) throws IOException {
+    out.putNextEntry(new TarEntry(TarHeader.createHeader(originalPrefix, 0L, now, true)));
     for (Map.Entry<String, URLClassLoader> entry : lib.entrySet()) {
+      String prefix = originalPrefix;
       prefix += "/" + entry.getKey();
       out.putNextEntry(new TarEntry(TarHeader.createHeader(prefix, 0L, now, true)));
       prefix += "/lib";
@@ -85,19 +89,60 @@ public class TarFileCreator {
       String dirname = null;
       for (URL url : urls) {
         File file = new File(url.getPath());
-        if (dirname == null) {
-          dirname = file.getParent();
-        } else if(!dirname.equals(file.getParent())) {
-          String msg = Utils.format("Expected {} to be a sub-directory of {}", file.getPath(), dirname);
-          throw new IllegalStateException(msg);
+        String name = file.getName();
+        // TODO improve excluding of slf4 and log4j
+        if (name.endsWith(".jar") && !name.startsWith("slf4j") && !name.startsWith("log4j")) {
+          if (dirname == null) {
+            dirname = file.getParent();
+          } else if (!dirname.equals(file.getParent())) {
+            String msg = Utils.format("Expected {} to be a sub-directory of {}", file.getPath(), dirname);
+            throw new IllegalStateException(msg);
+          }
+          out.putNextEntry(new TarEntry(file, prefix + "/" + file.getName()));
+          BufferedInputStream src = new BufferedInputStream(new FileInputStream(file), 65536);
+          IOUtils.copy(src, out);
+          src.close();
+          out.flush();
         }
-        out.putNextEntry(new TarEntry(file, prefix + "/" + file.getName()));
-        BufferedInputStream src = new BufferedInputStream(new FileInputStream(file), 65536);
-        IOUtils.copy(src, out);
-        src.close();
-        out.flush();
       }
     }
   }
 
+  /**
+   * Copied from https://raw.githubusercontent.com/kamranzafar/jtar/master/src/test/java/org/kamranzafar/jtar/JTarTest.java
+   */
+  private static void tarFolder(String parent, String path, TarOutputStream out) throws IOException {
+    BufferedInputStream src = null;
+    File f = new File(path);
+    String files[] = f.list();
+    // is file
+    if (files == null) {
+      files = new String[1];
+      files[0] = f.getName();
+    }
+    parent = ((parent == null) ? (f.isFile()) ? "" : f.getName() + "/" : parent + f.getName() + "/");
+    for (int i = 0; i < files.length; i++) {
+      File fe = f;
+      if (f.isDirectory()) {
+        fe = new File(f, files[i]);
+      }
+      if (fe.isDirectory()) {
+        String[] fl = fe.list();
+        if (fl != null && fl.length != 0) {
+          tarFolder(parent, fe.getPath(), out);
+        } else {
+          TarEntry entry = new TarEntry(fe, parent + files[i] + "/");
+          out.putNextEntry(entry);
+        }
+        continue;
+      }
+      FileInputStream fi = new FileInputStream(fe);
+      src = new BufferedInputStream(fi);
+      TarEntry entry = new TarEntry(fe, parent + files[i]);
+      out.putNextEntry(entry);
+      IOUtils.copy(src, out);
+      src.close();
+      out.flush();
+    }
+  }
 }
