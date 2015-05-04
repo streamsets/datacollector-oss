@@ -174,9 +174,13 @@ public class HttpClientSource extends BaseSource implements OffsetCommitter {
       String sourceId = getOffset();
       try (DataParser parser = parserFactory.getParser(sourceId, chunk.getBytes())) {
         Record record = parser.parse();
+        // A chunk only contains a single Record, so we only parse it once.
         if (record != null) {
           batchMaker.addRecord(record);
           recordCount++;
+        }
+        if (null != parser.parse()) {
+          throw new DataParserException(Errors.HTTP_02);
         }
       } catch (IOException | DataParserException ex) {
         switch (getContext().getOnErrorRecord()) {
