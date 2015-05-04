@@ -44,6 +44,7 @@
    </topicmeta>
    <topicref href="../Destinations/KProducer-DataFormat.dita"/>
    <topicref href="../Destinations/KafkaProducer_BrokerList.dita"/>
+   <topicref href="../Destinations/KProducer-RuntimeResolution.dita"/>
    <topicref href="../Destinations/KProducer-PartitionStrategy.dita"/>
    <topicref href="../Destinations/KProducer-AdditionalKProperties.dita"/>
    <topicref href="../Destinations/KProducer-Configuring.dita"/>

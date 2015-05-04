@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
+<concept id="concept_zjn_3tr_xr">
+ <title>Writing to Destinations</title>
+ <conbody>
+  <p>To avoid passing partially-processed data to destinations, data preview does not write data to
+   destinations by default. You can configure the preview to writing data to destinations. </p>
+ </conbody>
+</concept>

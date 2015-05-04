@@ -10,7 +10,7 @@
   <p>The following image shows the <ph
         conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> console in
       Monitor mode:</p>
-    <p><image href="../Graphics/DCConsole_Monitor.png" id="image_d3x_tf4_tq" scale="50"/></p>
+    <p><image href="../Graphics/DCConsole_Monitor.png" id="image_d3x_tf4_tq"/></p>
   <simpletable frame="all" relcolwidth="1.0* 1.46* 3.66*" id="simpletable_jb5_1k4_tq">
    <sthead>
     <stentry>Area / Icon</stentry>

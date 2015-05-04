@@ -39,8 +39,28 @@
                                             URIs.</p></entry>
                                     </row>
                                     <row>
+                                        <entry>Runtime Topic<xref
+                                                href="KProducer-RuntimeResolution.dita#concept_ok1_cwr_xr"
+                                                  ><image href="../Graphics/icon_moreInfo.png" scale="10"/></xref> Resolution</entry>
+                                        <entry>Evaluates an expression at runtime to determine the
+                                            topic to use for each record.</entry>
+                                    </row>
+                                    <row>
+                                        <entry>Topic Expression</entry>
+                                        <entry>Expression used to determine where each record is
+                                            written. Use an expression that evaluates to a topic
+                                            name. </entry>
+                                    </row>
+                                    <row>
+                                        <entry>Topic White List</entry>
+                                        <entry>List of topics to write to. Leave empty to allow
+                                            writing to all topics. <p>Use to avoid writing to
+                                                invalid topics.</p></entry>
+                                    </row>
+                                    <row>
                                         <entry>Topic</entry>
-                                        <entry>Kafka topic to use.</entry>
+                                        <entry>Kafka topic to use. <p>Not available when using
+                                                runtime topic resolution.</p></entry>
                                     </row>
                                     <row>
                                         <entry>Partition Strategy </entry>
@@ -94,9 +114,9 @@
                                                 <uicontrol>Add</uicontrol> icon and define the Kafka
                                             property name and value. <p>Use the property names and
                                                 values as expected by Kafka. Do not use the
-                                                broker.list property.</p><p>By default, the
-                                                queue.buffering.max.ms Kafka property is defined.
-                                                You can edit or delete the property. </p></entry>
+                                                broker.list property.</p><p>Several properties are
+                                                defined by default. You can edit or delete the
+                                                properties. </p></entry>
                                     </row>
                                 </tbody>
                             </tgroup>

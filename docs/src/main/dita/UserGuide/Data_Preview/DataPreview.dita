@@ -9,10 +9,7 @@
  <conbody>
     <p><indexterm>data preview<indexterm>overview</indexterm></indexterm><indexterm>previewing
           data<index-see>data preview</index-see></indexterm>Within the data preview, you can edit
-      data, pass it through the pipeline, and then examine the results. </p>
-    <p>You can also refresh the preview to use another set of data.<draft-comment author="Loretta"
-        >More changes coming - something about data preview to a particular stage? Or is that just
-        for inferencing?   -- need to doc: can configure stages/pipeline, skip targets, add update
-        validation info?</draft-comment></p>
+      data, pass it through the pipeline, and then examine the results. You can also edit stage
+      configuration and rerun the preview, and refresh the preview to use another set of data.</p>
   </conbody>
 </concept>

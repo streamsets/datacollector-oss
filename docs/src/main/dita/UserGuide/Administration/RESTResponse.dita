@@ -4,7 +4,7 @@
  <title>REST Response</title>
  <shortdesc>You can view REST response JSON data for different aspects of the <ph
       conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>, such as
-    pipeline configuration information or monitoring metrics. </shortdesc>
+    pipeline configuration information or monitoring details. </shortdesc>
  <conbody>
     <p><indexterm>REST responses<indexterm>overview</indexterm></indexterm>You can use the REST
       response information to provide <ph

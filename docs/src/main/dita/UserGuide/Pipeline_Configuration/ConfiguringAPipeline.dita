@@ -117,7 +117,10 @@
                                         as expected. Use one of the following options:<ul
                                             id="ul_ayr_y22_br">
                                             <li>Discard - Discards error records.</li>
-                                            <li>Write to File - Saves error records to a file.</li>
+                                            <li>Write to File - Writes error records to a file in
+                                                the specified directory</li>
+                                            <li>Write to Kafka - Writes error records to the
+                                                specified Kafka cluster.</li>
                                         </ul></entry>
                                 </row>
                             </tbody>

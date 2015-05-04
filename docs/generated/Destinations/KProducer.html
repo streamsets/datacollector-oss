@@ -16,9 +16,11 @@
  
  <div class="body conbody"><p class="shortdesc">The Kafka Producer writes data to a Kafka cluster. </p>
 
-  <p class="p">When you configure a Kafka Producer, you define
-            connection information, the partition strategy, and data format to use. You can add
-            additional Kafka configuration properties as needed.</p>
+  <p class="p">When you configure a Kafka
+                        Producer, you define connection information, the partition strategy, and
+                        data format to use. You can add additional Kafka configuration properties as
+                        needed. You can also configure Kafka Producer to determine the topic to
+                        write to at runtime.</p>
 
   <p class="p">The Kafka Producer passes data to partitions in the Kafka topic based on the partition strategy
             that you choose. You can optionally write a batch of records to the Kafka cluster as a
@@ -95,6 +97,22 @@
  </div>
 
 </div>
+<div class="topic concept nested1" id="concept_ok1_cwr_xr">
+ <h2 class="title topictitle2">Runtime Topic Resolution</h2>
+
+ 
+ <div class="body conbody"><p class="shortdesc">Kafka Producer can write a record to the topic based on an expression. When Kafka
+  Producer evaluates a record, it calculates the expression based on record values and writes the
+  record to the resulting topic. </p>
+
+  <p class="p">When performing runtime topic resolution, Kafka Producer can write to any topic by default. You
+   can create a white list of topics to limit the number of Kafka Producer attempts to use. When you
+   create a white list, any record that resolves to an unlisted topic is sent to the stage for error
+   handling. Use a white list when record data might resolve to invalid topic names.</p>
+
+ </div>
+
+</div>
 <div class="topic concept nested1" id="concept_qpm_xp4_4r">
  <h2 class="title topictitle2">Partition Strategy</h2>
 
@@ -150,6 +168,9 @@
             enter the exact property name and the value. The Kafka Consumer does not validate the
             property names or values.</p>
 
+        <p class="p">Several properties are defined by default, you can edit or remove the properties as
+            necessary.</p>
+
   <div class="note note"><span class="notetitle">Note:</span> The Kafka Producer uses the broker.host Kafka configuration property. The Kafka Consumer
       ignores user-defined values for this property.</div>
 
@@ -176,9 +197,9 @@
                             
                             <thead class="thead" align="left">
                                 <tr class="row">
-                                    <th class="entry" valign="top" width="24.509803921568626%" id="d7798e295">General Property</th>
+                                    <th class="entry" valign="top" width="24.509803921568626%" id="d7858e315">General Property</th>
 
-                                    <th class="entry" valign="top" width="75.49019607843137%" id="d7798e298">Description</th>
+                                    <th class="entry" valign="top" width="75.49019607843137%" id="d7858e318">Description</th>
 
                                 </tr>
 
@@ -186,31 +207,31 @@
 
                             <tbody class="tbody">
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="24.509803921568626%" headers="d7798e295 ">Name</td>
+                                    <td class="entry" valign="top" width="24.509803921568626%" headers="d7858e315 ">Name</td>
 
-                                    <td class="entry" valign="top" width="75.49019607843137%" headers="d7798e298 ">Stage name.</td>
-
-                                </tr>
-
-                                <tr class="row">
-                                    <td class="entry" valign="top" width="24.509803921568626%" headers="d7798e295 ">Description</td>
-
-                                    <td class="entry" valign="top" width="75.49019607843137%" headers="d7798e298 ">Optional description.</td>
+                                    <td class="entry" valign="top" width="75.49019607843137%" headers="d7858e318 ">Stage name.</td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="24.509803921568626%" headers="d7798e295 ">Stage Library</td>
+                                    <td class="entry" valign="top" width="24.509803921568626%" headers="d7858e315 ">Description</td>
 
-                                    <td class="entry" valign="top" width="75.49019607843137%" headers="d7798e298 ">Library version that you want to use. </td>
+                                    <td class="entry" valign="top" width="75.49019607843137%" headers="d7858e318 ">Optional description.</td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="24.509803921568626%" headers="d7798e295 ">Required Fields <a class="xref" href="../Pipeline_Configuration/PipelineDesign.html#concept_dnj_bkm_vq" title="You can configure required fields for any processor and most destination stages. A required field must exist in a record to allow the record to enter the stage for processing. When a record does not include a required field, the stage passes the record to the pipeline for error handling.">
+                                    <td class="entry" valign="top" width="24.509803921568626%" headers="d7858e315 ">Stage Library</td>
+
+                                    <td class="entry" valign="top" width="75.49019607843137%" headers="d7858e318 ">Library version that you want to use. </td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="24.509803921568626%" headers="d7858e315 ">Required Fields <a class="xref" href="../Pipeline_Configuration/PipelineDesign.html#concept_dnj_bkm_vq" title="You can configure required fields for any processor and most destination stages. A required field must exist in a record to allow the record to enter the stage for processing. When a record does not include a required field, the stage passes the record to the pipeline for error handling.">
                                             <img class="image" id="task_q4d_4yl_zq__d391e478" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
 
-                                    <td class="entry" valign="top" width="75.49019607843137%" headers="d7798e298 ">Fields that must include data to be passed to the stage.
+                                    <td class="entry" valign="top" width="75.49019607843137%" headers="d7858e318 ">Fields that must include data to be passed to the stage.
                                             <div class="note tip"><span class="tiptitle">Tip:</span> You might include fields
                                             that the stage uses.</div>
 </td>
@@ -218,9 +239,9 @@
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="24.509803921568626%" headers="d7798e295 ">On Record Error</td>
+                                    <td class="entry" valign="top" width="24.509803921568626%" headers="d7858e315 ">On Record Error</td>
 
-                                    <td class="entry" valign="top" width="75.49019607843137%" headers="d7798e298 ">Error record handling for the stage: <ul class="ul" id="task_q4d_4yl_zq__d391e493">
+                                    <td class="entry" valign="top" width="75.49019607843137%" headers="d7858e318 ">Error record handling for the stage: <ul class="ul" id="task_q4d_4yl_zq__d391e493">
                                             <li class="li">Discard - Discards the record.</li>
 
                                             <li class="li">Send to Error - Sends the record to the pipeline for
@@ -251,9 +272,9 @@
                                 
                                 <thead class="thead" align="left">
                                     <tr class="row">
-                                        <th class="entry" valign="top" width="23.980815347721823%" id="d7798e399">Kafka Properties</th>
+                                        <th class="entry" valign="top" width="23.980815347721823%" id="d7858e419">Kafka Properties</th>
 
-                                        <th class="entry" valign="top" width="76.01918465227818%" id="d7798e402">Description</th>
+                                        <th class="entry" valign="top" width="76.01918465227818%" id="d7858e422">Description</th>
 
                                     </tr>
 
@@ -261,9 +282,9 @@
 
                                 <tbody class="tbody">
                                     <tr class="row">
-                                        <td class="entry" valign="top" width="23.980815347721823%" headers="d7798e399 ">Broker URIs</td>
+                                        <td class="entry" valign="top" width="23.980815347721823%" headers="d7858e419 ">Broker URIs</td>
 
-                                        <td class="entry" valign="top" width="76.01918465227818%" headers="d7798e402 ">A comma-separated list of URIs for Kafka brokers that
+                                        <td class="entry" valign="top" width="76.01918465227818%" headers="d7858e422 ">A comma-separated list of URIs for Kafka brokers that
                                             write to the topic. Use the following format:
                                                 <samp class="ph codeph">&lt;host&gt;:&lt;port&gt;</samp>.<p class="p">To ensure a
                                                 connection, enter additional broker
@@ -273,16 +294,45 @@
                                     </tr>
 
                                     <tr class="row">
-                                        <td class="entry" valign="top" width="23.980815347721823%" headers="d7798e399 ">Topic</td>
+                                        <td class="entry" valign="top" width="23.980815347721823%" headers="d7858e419 ">Runtime Topic<a class="xref" href="KProducer.html#concept_ok1_cwr_xr" title="Kafka Producer can write a record to the topic based on an expression. When Kafka Producer evaluates a record, it calculates the expression based on record values and writes the record to the resulting topic."><img class="image" src="../Graphics/icon_moreInfo.png" height="12" width="12"></img></a> Resolution</td>
 
-                                        <td class="entry" valign="top" width="76.01918465227818%" headers="d7798e402 ">Kafka topic to use.</td>
+                                        <td class="entry" valign="top" width="76.01918465227818%" headers="d7858e422 ">Evaluates an expression at runtime to determine the
+                                            topic to use for each record.</td>
 
                                     </tr>
 
                                     <tr class="row">
-                                        <td class="entry" valign="top" width="23.980815347721823%" headers="d7798e399 ">Partition Strategy </td>
+                                        <td class="entry" valign="top" width="23.980815347721823%" headers="d7858e419 ">Topic Expression</td>
 
-                                        <td class="entry" valign="top" width="76.01918465227818%" headers="d7798e402 ">Strategy to use to write to partitions:<ul class="ul" id="task_q4d_4yl_zq__ul_tq2_yr3_br">
+                                        <td class="entry" valign="top" width="76.01918465227818%" headers="d7858e422 ">Expression used to determine where each record is
+                                            written. Use an expression that evaluates to a topic
+                                            name. </td>
+
+                                    </tr>
+
+                                    <tr class="row">
+                                        <td class="entry" valign="top" width="23.980815347721823%" headers="d7858e419 ">Topic White List</td>
+
+                                        <td class="entry" valign="top" width="76.01918465227818%" headers="d7858e422 ">List of topics to write to. Leave empty to allow
+                                            writing to all topics. <p class="p">Use to avoid writing to
+                                                invalid topics.</p>
+</td>
+
+                                    </tr>
+
+                                    <tr class="row">
+                                        <td class="entry" valign="top" width="23.980815347721823%" headers="d7858e419 ">Topic</td>
+
+                                        <td class="entry" valign="top" width="76.01918465227818%" headers="d7858e422 ">Kafka topic to use. <p class="p">Not available when using
+                                                runtime topic resolution.</p>
+</td>
+
+                                    </tr>
+
+                                    <tr class="row">
+                                        <td class="entry" valign="top" width="23.980815347721823%" headers="d7858e419 ">Partition Strategy </td>
+
+                                        <td class="entry" valign="top" width="76.01918465227818%" headers="d7858e422 ">Strategy to use to write to partitions:<ul class="ul" id="task_q4d_4yl_zq__ul_tq2_yr3_br">
                                                 <li class="li">Round Robin - Takes turns writing to different
                                                   partitions.</li>
 
@@ -297,10 +347,10 @@
                                     </tr>
 
                                     <tr class="row">
-                                        <td class="entry" valign="top" width="23.980815347721823%" headers="d7798e399 ">Expression <a class="xref" href="KProducer.html#concept_qpm_xp4_4r" title="The partition strategy determines how to write data to Kafka partitions. You can use a partition strategy to balance the work load or to write data semantically.">
+                                        <td class="entry" valign="top" width="23.980815347721823%" headers="d7858e419 ">Expression <a class="xref" href="KProducer.html#concept_qpm_xp4_4r" title="The partition strategy determines how to write data to Kafka partitions. You can use a partition strategy to balance the work load or to write data semantically.">
                                                 <img class="image" id="task_q4d_4yl_zq__image_hwy_43h_hr" src="../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
 
-                                        <td class="entry" valign="top" width="76.01918465227818%" headers="d7798e402 ">Expression to use to using the Expression partition
+                                        <td class="entry" valign="top" width="76.01918465227818%" headers="d7858e422 ">Expression to use to using the Expression partition
                                             strategy. <p class="p">Define the expression to evaluate to the
                                                 partition where you want each record written.
                                                 Partitions are numbered 0 - n.</p>
@@ -311,9 +361,9 @@
                                     </tr>
 
                                     <tr class="row">
-                                        <td class="entry" valign="top" width="23.980815347721823%" headers="d7798e399 ">Data Format</td>
+                                        <td class="entry" valign="top" width="23.980815347721823%" headers="d7858e419 ">Data Format</td>
 
-                                        <td class="entry" valign="top" width="76.01918465227818%" headers="d7798e402 ">Data format for output messages:<ul class="ul" id="task_q4d_4yl_zq__ul_wlj_353_br">
+                                        <td class="entry" valign="top" width="76.01918465227818%" headers="d7858e422 ">Data format for output messages:<ul class="ul" id="task_q4d_4yl_zq__ul_wlj_353_br">
                                                 <li class="li">Text</li>
 
                                                 <li class="li">JSON</li>
@@ -329,33 +379,33 @@
                                     </tr>
 
                                     <tr class="row">
-                                        <td class="entry" valign="top" width="23.980815347721823%" headers="d7798e399 ">Messages Charset</td>
+                                        <td class="entry" valign="top" width="23.980815347721823%" headers="d7858e419 ">Messages Charset</td>
 
-                                        <td class="entry" valign="top" width="76.01918465227818%" headers="d7798e402 ">Character encoding to use when writing data. <p class="p">Not
+                                        <td class="entry" valign="top" width="76.01918465227818%" headers="d7858e422 ">Character encoding to use when writing data. <p class="p">Not
                                                 used for the SDC Record data format.</p>
 </td>
 
                                     </tr>
 
                                     <tr class="row">
-                                        <td class="entry" valign="top" width="23.980815347721823%" headers="d7798e399 ">One Message per Batch</td>
+                                        <td class="entry" valign="top" width="23.980815347721823%" headers="d7858e419 ">One Message per Batch</td>
 
-                                        <td class="entry" valign="top" width="76.01918465227818%" headers="d7798e402 ">Generates a single message for all records in the
+                                        <td class="entry" valign="top" width="76.01918465227818%" headers="d7858e422 ">Generates a single message for all records in the
                                             batch.</td>
 
                                     </tr>
 
                                     <tr class="row">
-                                        <td class="entry" valign="top" width="23.980815347721823%" headers="d7798e399 ">Kafka Configuration</td>
+                                        <td class="entry" valign="top" width="23.980815347721823%" headers="d7858e419 ">Kafka Configuration</td>
 
-                                        <td class="entry" valign="top" width="76.01918465227818%" headers="d7798e402 ">Additional Kafka properties to use. Click the
+                                        <td class="entry" valign="top" width="76.01918465227818%" headers="d7858e422 ">Additional Kafka properties to use. Click the
                                                 <span class="ph uicontrol">Add</span> icon and define the Kafka
                                             property name and value. <p class="p">Use the property names and
                                                 values as expected by Kafka. Do not use the
                                                 broker.list property.</p>
-<p class="p">By default, the
-                                                queue.buffering.max.ms Kafka property is defined.
-                                                You can edit or delete the property. </p>
+<p class="p">Several properties are
+                                                defined by default. You can edit or delete the
+                                                properties. </p>
 </td>
 
                                     </tr>
@@ -379,9 +429,9 @@
                             
                             <thead class="thead" align="left">
                                 <tr class="row">
-                                    <th class="entry" valign="top" width="23.980815347721823%" id="d7798e573">Text Property</th>
+                                    <th class="entry" valign="top" width="23.980815347721823%" id="d7858e631">Text Property</th>
 
-                                    <th class="entry" valign="top" width="76.01918465227818%" id="d7798e576">Description</th>
+                                    <th class="entry" valign="top" width="76.01918465227818%" id="d7858e634">Description</th>
 
                                 </tr>
 
@@ -389,17 +439,17 @@
 
                             <tbody class="tbody">
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="23.980815347721823%" headers="d7798e573 ">Text Field Path</td>
+                                    <td class="entry" valign="top" width="23.980815347721823%" headers="d7858e631 ">Text Field Path</td>
 
-                                    <td class="entry" valign="top" width="76.01918465227818%" headers="d7798e576 ">Field that contains the text data to be written. All data
+                                    <td class="entry" valign="top" width="76.01918465227818%" headers="d7858e634 ">Field that contains the text data to be written. All data
                                         must be incorporated into the specified field. </td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="23.980815347721823%" headers="d7798e573 ">Empty Line if No Text</td>
+                                    <td class="entry" valign="top" width="23.980815347721823%" headers="d7858e631 ">Empty Line if No Text</td>
 
-                                    <td class="entry" valign="top" width="76.01918465227818%" headers="d7798e576 ">Creates an empty line when a record does not include the
+                                    <td class="entry" valign="top" width="76.01918465227818%" headers="d7858e634 ">Creates an empty line when a record does not include the
                                         text field specified above. <p class="p">When not selected, records
                                             without the specified text field are
                                         discarded.</p>
@@ -424,9 +474,9 @@
                             
                             <thead class="thead" align="left">
                                 <tr class="row">
-                                    <th class="entry" valign="top" width="28.011204481792717%" id="d7798e630">JSON Property</th>
+                                    <th class="entry" valign="top" width="28.011204481792717%" id="d7858e688">JSON Property</th>
 
-                                    <th class="entry" valign="top" width="71.98879551820728%" id="d7798e633">Description</th>
+                                    <th class="entry" valign="top" width="71.98879551820728%" id="d7858e691">Description</th>
 
                                 </tr>
 
@@ -434,9 +484,9 @@
 
                             <tbody class="tbody">
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="28.011204481792717%" headers="d7798e630 ">JSON Content</td>
+                                    <td class="entry" valign="top" width="28.011204481792717%" headers="d7858e688 ">JSON Content</td>
 
-                                    <td class="entry" valign="top" width="71.98879551820728%" headers="d7798e633 ">Determines how JSON data is written:<ul class="ul" id="task_q4d_4yl_zq__d391e862">
+                                    <td class="entry" valign="top" width="71.98879551820728%" headers="d7858e691 ">Determines how JSON data is written:<ul class="ul" id="task_q4d_4yl_zq__d391e862">
                                             <li class="li">JSON Array of Objects - Each file includes a single
                                                 array. In the array, each element is a JSON
                                                 representation of each record.</li>
@@ -467,9 +517,9 @@
                             
                             <thead class="thead" align="left">
                                 <tr class="row">
-                                    <th class="entry" valign="top" width="28.328611898016998%" id="d7798e684">Delimited Property</th>
+                                    <th class="entry" valign="top" width="28.328611898016998%" id="d7858e742">Delimited Property</th>
 
-                                    <th class="entry" valign="top" width="71.671388101983%" id="d7798e687">Description</th>
+                                    <th class="entry" valign="top" width="71.671388101983%" id="d7858e745">Description</th>
 
                                 </tr>
 
@@ -477,9 +527,9 @@
 
                             <tbody class="tbody">
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="28.328611898016998%" headers="d7798e684 ">CSV Format</td>
+                                    <td class="entry" valign="top" width="28.328611898016998%" headers="d7858e742 ">CSV Format</td>
 
-                                    <td class="entry" valign="top" width="71.671388101983%" headers="d7798e687 ">Format for delimited data:<ul class="ul" id="task_q4d_4yl_zq__ul_k3j_vvf_jr">
+                                    <td class="entry" valign="top" width="71.671388101983%" headers="d7858e745 ">Format for delimited data:<ul class="ul" id="task_q4d_4yl_zq__ul_k3j_vvf_jr">
                         <li class="li"><span class="ph uicontrol">Default CSV</span> - File that includes comma-separated
                               values. Ignores empty lines in the file.</li>
 
@@ -500,16 +550,16 @@
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="28.328611898016998%" headers="d7798e684 ">Header Line</td>
+                                    <td class="entry" valign="top" width="28.328611898016998%" headers="d7858e742 ">Header Line</td>
 
-                                    <td class="entry" valign="top" width="71.671388101983%" headers="d7798e687 ">Indicates whether to create a header line.</td>
+                                    <td class="entry" valign="top" width="71.671388101983%" headers="d7858e745 ">Indicates whether to create a header line.</td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="28.328611898016998%" headers="d7798e684 ">Remove New Line Characters</td>
+                                    <td class="entry" valign="top" width="28.328611898016998%" headers="d7858e742 ">Remove New Line Characters</td>
 
-                                    <td class="entry" valign="top" width="71.671388101983%" headers="d7798e687 ">Removes new line characters from within a record.
+                                    <td class="entry" valign="top" width="71.671388101983%" headers="d7858e745 ">Removes new line characters from within a record.
                                             <p class="p">Recommended when writing data as a single line of
                                             text.</p>
 </td>
