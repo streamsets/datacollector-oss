@@ -643,16 +643,25 @@ angular.module('dataCollectorApp.common')
      * @param record
      * @param fieldPaths
      * @param nonListAndMap
+     * @param fieldPathsType
      */
-    this.getFieldPaths = function(record, fieldPaths, nonListAndMap) {
+    this.getFieldPaths = function(record, fieldPaths, nonListAndMap, fieldPathsType) {
       angular.forEach(record.value, function(value) {
         if(value.type === 'MAP' || value.type === 'LIST') {
           if(!nonListAndMap && value.path) {
             fieldPaths.push(value.path);
+
+            if(fieldPathsType) {
+              fieldPathsType.push(value.type);
+            }
           }
-          self.getFieldPaths(value, fieldPaths, nonListAndMap);
+          self.getFieldPaths(value, fieldPaths, nonListAndMap, fieldPathsType);
         } else if(value.path) {
           fieldPaths.push(value.path);
+
+          if(fieldPathsType) {
+            fieldPathsType.push(value.type);
+          }
         }
       });
     };

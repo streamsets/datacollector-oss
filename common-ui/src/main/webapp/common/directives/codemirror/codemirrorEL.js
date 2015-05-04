@@ -19,7 +19,8 @@ angular.module('dataCollectorApp.codemirrorDirectives')
 
         return function postLink(scope, iElement, iAttrs) {
           var dictionary = {},
-            fieldPaths = [];
+            fieldPaths = [],
+            fieldPathsType = [];
 
           // Register our custom Codemirror hint plugin.
           window.CodeMirror.registerHelper('hint', 'dictionaryHint', function(editor, options, c) {
@@ -46,7 +47,9 @@ angular.module('dataCollectorApp.codemirrorDirectives')
                       text: pipelineConstant.key,
                       displayText: pipelineConstant.key,
                       className: 'CodeMirror-EL-completion CodeMirror-EL-completion-user-constant',
-                      data: pipelineConstant
+                      data: {
+                        description: 'Pipeline Constant with value - ' + pipelineConstant.value
+                      }
                     });
                   }
                 });
@@ -75,14 +78,14 @@ angular.module('dataCollectorApp.codemirrorDirectives')
                 }
               });
 
-              angular.forEach(fieldPaths, function(fieldPath) {
+              angular.forEach(fieldPaths, function(fieldPath, index) {
                 if(!curWord || fieldPath.match(regex)) {
                   completions.push({
                     text: fieldPath,
                     displayText: fieldPath,
                     className: 'CodeMirror-EL-completion CodeMirror-EL-completion-field-path',
                     data: {
-                      description: 'Field Path ' + fieldPath
+                      description: 'Field Path: ' + fieldPath + ' , Type: ' + fieldPathsType[index]
                     }
                   });
                 }
@@ -143,11 +146,13 @@ angular.module('dataCollectorApp.codemirrorDirectives')
           if (iAttrs.fieldPaths) {
             scope.$watch('iAttrs.fieldPaths', function() {
               fieldPaths = $parse(iAttrs.fieldPaths)(scope);
+              fieldPathsType = $parse(iAttrs.fieldPathsType)(scope);
             });
           }
 
-          scope.$on('fieldPathsUpdated', function(event, _fieldPaths) {
+          scope.$on('fieldPathsUpdated', function(event, _fieldPaths, _fieldPathsType) {
             fieldPaths = _fieldPaths;
+            fieldPathsType = _fieldPathsType;
           });
 
           // The ui-codemirror directive allows us to receive a reference to the Codemirror instance on demand.

@@ -25,6 +25,7 @@ angular
 
     angular.extend($scope, {
       fieldPaths: [],
+      fieldPathsType: [],
 
       /**
        * Callback function when tab is selected.
@@ -50,7 +51,7 @@ angular
        * Returns EL Functions and Constants Metadata.
        *
        * @param configDefinition
-       * @returns {{elFunctionDefinitions: (*|ConfigurationController.getCodeMirrorHints.elFunctionDefinitions|$scope.getCodeMirrorHints.elFunctionDefinitions|a.getCodeMirrorHints.elFunctionDefinitions), elConstantDefinitions: (*|ConfigurationController.getCodeMirrorHints.elConstantDefinitions|$scope.getCodeMirrorHints.elConstantDefinitions|a.getCodeMirrorHints.elConstantDefinitions)}}
+       * @returns {*}
        */
       getCodeMirrorHints: function(configDefinition) {
         var pipelineConfig = $scope.pipelineConfig,
@@ -530,10 +531,10 @@ angular
           then(function (inputRecords) {
             $scope.fieldPathsFetchInProgress = false;
             if(_.isArray(inputRecords) && inputRecords.length) {
-              var fieldPaths = [];
-              pipelineService.getFieldPaths(inputRecords[0].value, fieldPaths);
-              $scope.fieldPaths = fieldPaths;
-              $scope.$broadcast('fieldPathsUpdated', fieldPaths);
+              $scope.fieldPaths = [];
+              $scope.fieldPathsType = [];
+              pipelineService.getFieldPaths(inputRecords[0].value, $scope.fieldPaths, false, $scope.fieldPathsType);
+              $scope.$broadcast('fieldPathsUpdated', $scope.fieldPaths, $scope.fieldPathsType);
             }
           },
           function(res) {
@@ -577,6 +578,7 @@ angular
       initializeGroupInformation(options);
       if (options.type === pipelineConstant.STAGE_INSTANCE) {
         $scope.fieldPaths = [];
+        $scope.fieldPathsType = [];
       }
     });
 
