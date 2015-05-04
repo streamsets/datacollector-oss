@@ -19,7 +19,6 @@ public enum DataFormat implements Label {
   SDC_JSON("SDC Record", DataParserFormat.SDC_RECORD, DataGeneratorFormat.SDC_RECORD),
   LOG("Log", DataParserFormat.LOG, null),
 
-
   ;
 
   private final String label;

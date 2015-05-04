@@ -117,6 +117,13 @@
       <artifactId>jersey-client</artifactId>
       <version>${jersey.version}</version>
     </dependency>
+
+    <dependency>
+      <groupId>io.netty</groupId>
+      <artifactId>netty-transport</artifactId>
+      <version>${netty.version}</version>
+    </dependency>
+
     <dependency>
       <groupId>org.glassfish.jersey.security</groupId>
       <artifactId>oauth1-client</artifactId>
