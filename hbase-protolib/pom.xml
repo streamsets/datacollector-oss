@@ -50,6 +50,12 @@
       <groupId>com.streamsets</groupId>
       <artifactId>streamsets-datacollector-sdk</artifactId>
       <scope>provided</scope>
+      <exclusions>
+      <exclusion>
+          <groupId>com.google.guava</groupId>
+          <artifactId>guava</artifactId>
+      </exclusion>
+      </exclusions>
     </dependency>
 
     <dependency>

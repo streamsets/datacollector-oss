@@ -77,7 +77,7 @@ public class TestHBaseTarget {
     }
   }
 
-  @Test
+  @Test(timeout=60000)
   public void validateNoConfigIssues() throws Exception {
     TargetRunner targetRunner =
         new TargetRunner.Builder(HBaseDTarget.class)
@@ -96,7 +96,7 @@ public class TestHBaseTarget {
     assertTrue(targetRunner.runValidateConfigs().isEmpty());
   }
 
-  @Test
+  @Test(timeout=60000)
   public void testInvalidConfigs() throws Exception {
     HBaseDTarget dTarget = new ForTestHBaseTarget();
     configure(dTarget);
@@ -131,7 +131,7 @@ public class TestHBaseTarget {
     assertTrue(issues.get(0).toString().contains("HBASE_06"));
   }
 
-  @Test
+  @Test(timeout=60000)
   public void getGetHBaseConfiguration() throws Exception {
     HBaseDTarget dTarget = new ForTestHBaseTarget();
     configure(dTarget);
@@ -145,7 +145,7 @@ public class TestHBaseTarget {
     }
   }
 
-  @Test
+  @Test(timeout=60000)
   public void testHBaseConfigs() throws Exception {
     HBaseDTarget dTarget = new ForTestHBaseTarget();
     configure(dTarget);
@@ -159,7 +159,7 @@ public class TestHBaseTarget {
     }
   }
 
-  @Test
+  @Test(timeout=60000)
   public void testSingleRecordTextStorage() throws InterruptedException, StageException,
       IOException {
     List<HBaseFieldMappingConfig> fieldMappings =
@@ -196,7 +196,7 @@ public class TestHBaseTarget {
 
   }
 
-  @Test
+  @Test(timeout=60000)
   public void testSingleRecordBinaryStorage() throws InterruptedException, StageException,
       IOException {
     List<HBaseFieldMappingConfig> fieldMappings =
@@ -238,7 +238,7 @@ public class TestHBaseTarget {
 
   }
 
-  @Test
+  @Test(timeout=60000)
   public void testMultipleRecords() throws InterruptedException, StageException, IOException {
     // first two columns are binary, other are text
     List<HBaseFieldMappingConfig> fieldMappings =
@@ -298,7 +298,7 @@ public class TestHBaseTarget {
 
   }
 
-  @Test
+  @Test(timeout=60000)
   public void testCollectionTypes() throws InterruptedException, StageException, IOException {
     // first column binary, second text and last two are json string
     List<HBaseFieldMappingConfig> fieldMappings =
@@ -349,7 +349,7 @@ public class TestHBaseTarget {
     assertEquals(70, map.get("key_2").getValueAsInteger());
   }
 
-  @Test
+  @Test(timeout=60000)
   public void testWriteRecordsOnErrorDiscard() throws InterruptedException, StageException,
       IOException {
     List<HBaseFieldMappingConfig> fieldMappings =
@@ -388,7 +388,7 @@ public class TestHBaseTarget {
 
   }
 
-  @Test
+  @Test(timeout=60000)
   public void testWriteRecordsOnErrorToError() throws InterruptedException, StageException,
       IOException {
     List<HBaseFieldMappingConfig> fieldMappings =
@@ -427,7 +427,7 @@ public class TestHBaseTarget {
 
   }
 
-  @Test
+  @Test(timeout=60000)
   public void testWriteRecordsOnErrorToStopPipeline() throws InterruptedException, StageException,
       IOException {
     List<HBaseFieldMappingConfig> fieldMappings =
@@ -459,7 +459,7 @@ public class TestHBaseTarget {
     }
   }
 
-  @Test
+  @Test(timeout=60000)
   public void testMultipleRecordsOnError() throws InterruptedException, StageException, IOException {
     List<HBaseFieldMappingConfig> fieldMappings =
         ImmutableList.of(new HBaseFieldMappingConfig("cf:a", "[1]", StorageType.BINARY),
@@ -516,7 +516,7 @@ public class TestHBaseTarget {
     assertEquals("90", Bytes.toString(r.getValue(Bytes.toBytes(familyName), Bytes.toBytes("d"))));
   }
 
-  @Test
+  @Test(timeout=60000)
   public void testWriteRecordsWrongColumn() throws InterruptedException, StageException,
       IOException {
     List<HBaseFieldMappingConfig> fieldMappings =
