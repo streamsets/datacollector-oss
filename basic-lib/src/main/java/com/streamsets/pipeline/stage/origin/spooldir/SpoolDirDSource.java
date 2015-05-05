@@ -124,9 +124,7 @@ public class SpoolDirDSource extends DSource {
       description = "A glob or regular expression that defines the pattern of the file names in the directory. " +
                     "Files are processed in naturally ascending order.",
       displayPosition = 40,
-      group = "FILES",
-      dependsOn = "dataFormat",
-      triggeredByValue = { "TEXT", "JSON", "XML", "DELIMITED", "LOG"}
+      group = "FILES"
   )
   public String filePattern;
 

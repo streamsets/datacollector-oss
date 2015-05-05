@@ -19,8 +19,8 @@ import com.streamsets.pipeline.config.OnParseError;
 import com.streamsets.pipeline.lib.dirspooler.DirectorySpooler;
 import com.streamsets.pipeline.lib.io.ObjectLengthException;
 import com.streamsets.pipeline.lib.io.OverrunException;
-import com.streamsets.pipeline.lib.parser.DataParserFactory;
 import com.streamsets.pipeline.lib.parser.DataParser;
+import com.streamsets.pipeline.lib.parser.DataParserFactory;
 import com.streamsets.pipeline.lib.parser.DataParserFactoryBuilder;
 import com.streamsets.pipeline.lib.parser.log.LogDataFormatValidator;
 import com.streamsets.pipeline.lib.parser.log.RegExConfig;
@@ -237,11 +237,15 @@ public class SpoolDirSource extends BaseSource {
   }
 
   private void validateFilePattern(List<ConfigIssue> issues) {
-    try {
-      DirectorySpooler.createPathMatcher(filePattern);
-    } catch (Exception ex) {
-      issues.add(getContext().createConfigIssue(Groups.FILES.name(), "filePattern", Errors.SPOOLDIR_16, filePattern,
-                                                ex.getMessage(), ex));
+    if(filePattern == null || filePattern.trim().isEmpty()) {
+      issues.add(getContext().createConfigIssue(Groups.FILES.name(), "filePattern", Errors.SPOOLDIR_32, filePattern));
+    } else {
+      try {
+        DirectorySpooler.createPathMatcher(filePattern);
+      } catch (Exception ex) {
+        issues.add(getContext().createConfigIssue(Groups.FILES.name(), "filePattern", Errors.SPOOLDIR_16, filePattern,
+          ex.getMessage(), ex));
+      }
     }
   }
 
@@ -287,7 +291,6 @@ public class SpoolDirSource extends BaseSource {
         break;
       case SDC_JSON:
         builder.setMaxDataLen(-1);
-        filePattern = "*";
         initialFileToProcess = "";
         maxSpoolFiles = 10000;
         break;
