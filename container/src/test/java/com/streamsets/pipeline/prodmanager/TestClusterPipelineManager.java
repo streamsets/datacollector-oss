@@ -83,10 +83,10 @@ public class TestClusterPipelineManager {
     stateTracker = new StateTracker(runtimeInfo, conf);
     stateTracker.init();
     attributes = new HashMap<>();
-    pipelineStoreTask = new FilePipelineStoreTask(runtimeInfo, conf);
+    stageLibraryTask = MockStages.createStageLibrary(emptyCL);
+    pipelineStoreTask = new FilePipelineStoreTask(runtimeInfo, stageLibraryTask);
     pipelineStoreTask.init();
     pipelineStoreTask.create(NAME, "some desc", "admin");
-    stageLibraryTask = MockStages.createStageLibrary(emptyCL);
     sparkManager = new SparkManager(new MockSystemProcessFactory(), sparkProvider, tempDir, sparkManagerShell,
       emptyCL, emptyCL, 1);
     setExecMode(ExecutionMode.CLUSTER);
