@@ -20,5 +20,6 @@ angular.module('dataCollectorApp.common')
     USER_PROVIDED: 'USER_PROVIDED',
     STANDALONE: 'standalone',
     CLUSTER: 'cluster',
-    SLAVE: 'slave'
+    SLAVE: 'slave',
+    NON_LIST_MAP_ROOT: 'root'
   });

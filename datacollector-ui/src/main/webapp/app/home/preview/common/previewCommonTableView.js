@@ -87,6 +87,7 @@ angular
       $scope.inputFieldPaths = [];
       if(input && input.length) {
         pipelineService.getFieldPaths(input[0].value, $scope.inputFieldPaths, true);
+        $scope.inputFieldPaths.sort();
       }
 
       if(columnLimit > $scope.inputFieldPaths.length) {
@@ -99,6 +100,7 @@ angular
       $scope.outputFieldPaths = [];
       if(output && output.length) {
         pipelineService.getFieldPaths(output[0].value, $scope.outputFieldPaths, true);
+        $scope.outputFieldPaths.sort();
       }
 
       if(columnLimit > $scope.outputFieldPaths.length) {

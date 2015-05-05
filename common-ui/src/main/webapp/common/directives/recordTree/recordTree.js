@@ -103,7 +103,7 @@ angular.module('recordTreeDirectives', ['RecursionHelper'])
         }
       }
 
-      if(scope.recordValue.type === 'MAP' || scope.recordValue.type === 'LIST') {
+      if(scope.recordValue && (scope.recordValue.type === 'MAP' || scope.recordValue.type === 'LIST')) {
         scope.valueLength = _.size(scope.recordValue.value);
       }
 

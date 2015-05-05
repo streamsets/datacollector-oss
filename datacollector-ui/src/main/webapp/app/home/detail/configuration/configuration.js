@@ -76,7 +76,8 @@ angular
         return {
           elFunctionDefinitions: [],
           elConstantDefinitions: pipelineService.getTextELConstantDefinitions(),
-          pipelineConstants: []
+          pipelineConstants: [],
+          textMode: configDefinition.mode
         };
       },
 

@@ -94,7 +94,7 @@
 
 
       <select class="form-control stage-in-between" name="newPipelineProcessor"
-              ng-options="(stage.label + ' - ' +  stage.libraryLabel) for stage in processors"
+              ng-options="(stage.label + ' - ' +  stage.libraryLabel) for stage in processors | orderBy: 'label'"
               ng-model="insertStage.selected"
               ng-change="onInsertStageChange()">
         <option value="">

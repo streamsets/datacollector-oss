@@ -27,13 +27,16 @@ angular.module('dataCollectorApp.codemirrorDirectives')
             var cur = editor.getCursor(), curLine = editor.getLine(cur.line);
             var start = cur.ch, end = start;
 
-            while (end < curLine.length && /[\w:\[\]/$]+/.test(curLine.charAt(end))) {
+            while (end < curLine.length && /[\w:'\[\]/$]+/.test(curLine.charAt(end))) {
               ++end;
             }
-            while (start && /[\w:\[\]/$]+/.test(curLine.charAt(start - 1))) {
+            while (start && /[\w:'\[\]/$]+/.test(curLine.charAt(start - 1))) {
               --start;
             }
-            var curWord = start != end && curLine.slice(start, end).replace('[', '\\[').replace(']', '\\]');
+            var curWord = start != end && curLine.slice(start, end).
+                replace(/\[/g, '\\[').
+                replace(/\]g/, '\\]').
+                replace("'", "\\'");
             var regex = new RegExp('^' + curWord, 'i');
             var completions =[];
 
@@ -80,12 +83,18 @@ angular.module('dataCollectorApp.codemirrorDirectives')
 
               angular.forEach(fieldPaths, function(fieldPath, index) {
                 if(!curWord || fieldPath.match(regex)) {
+                  var desc = 'Field Path: ' + fieldPath;
+
+                  if(fieldPathsType && fieldPathsType.length > index) {
+                    desc += ' , Type: ' + fieldPathsType[index];
+                  }
+
                   completions.push({
                     text: fieldPath,
                     displayText: fieldPath,
                     className: 'CodeMirror-EL-completion CodeMirror-EL-completion-field-path',
                     data: {
-                      description: 'Field Path: ' + fieldPath + ' , Type: ' + fieldPathsType[index]
+                      description: desc
                     }
                   });
                 }
@@ -147,12 +156,14 @@ angular.module('dataCollectorApp.codemirrorDirectives')
             scope.$watch('iAttrs.fieldPaths', function() {
               fieldPaths = $parse(iAttrs.fieldPaths)(scope);
               fieldPathsType = $parse(iAttrs.fieldPathsType)(scope);
+              updatedFieldPaths();
             });
           }
 
           scope.$on('fieldPathsUpdated', function(event, _fieldPaths, _fieldPathsType) {
             fieldPaths = _fieldPaths;
             fieldPathsType = _fieldPathsType;
+            updatedFieldPaths();
           });
 
           // The ui-codemirror directive allows us to receive a reference to the Codemirror instance on demand.
@@ -183,6 +194,31 @@ angular.module('dataCollectorApp.codemirrorDirectives')
             });
 
           });
+
+          function updatedFieldPaths() {
+            if(dictionary && dictionary.textMode &&
+              (dictionary.textMode === 'text/javascript' || dictionary.textMode === 'text/x-python')) {
+              var fp = [];
+              angular.forEach(fieldPaths, function(fieldPath) {
+                var fieldPathArr = fieldPath.split('/');
+                var val = 'value';
+                angular.forEach(fieldPathArr, function(p, index) {
+                  if(p) {
+                    var listIndex = p.indexOf('[');
+                    if(listIndex === 0) {
+                      val += p;
+                    } else if(listIndex != -1) {
+                      val += '[\'' + p.substring(0, listIndex) + '\']' + p.substring(listIndex, p.length);
+                    } else {
+                      val += '[\'' + p + '\']';
+                    }
+                  }
+                });
+                fp.push(val);
+              });
+              fieldPaths = fp;
+            }
+          }
 
           function elt(tagname, cls /*, ... elts*/) {
             var e = document.createElement(tagname);
@@ -281,7 +317,7 @@ angular.module('dataCollectorApp.codemirrorDirectives')
             });
 
             if (!functionDefintion) {
-              console.log('No function definition found for name:' + functionDefintion);
+              //console.log('No function definition found for name:' + functionDefintion);
               return;
             }
 
