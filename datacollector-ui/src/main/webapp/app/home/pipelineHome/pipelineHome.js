@@ -53,6 +53,7 @@ angular
     });
 
     angular.extend($scope, {
+      _: _,
       isPipelineReadOnly: !authService.isAuthorized([userRoles.admin, userRoles.creator]),
       isPipelineRulesReadOnly: !authService.isAuthorized([userRoles.admin, userRoles.creator, userRoles.manager]),
       selectedType: pipelineConstant.PIPELINE,
