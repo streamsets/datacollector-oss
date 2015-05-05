@@ -231,8 +231,8 @@ public class ProductionPipelineRunner implements PipelineRunner {
     Preconditions.checkArgument(batchSize > 0);
     this.snapshotName = snapshotName;
     this.snapshotBatchSize = batchSize;
-    this.captureNextBatch = true;
     ((FileSnapshotStore)snapshotStore).setInProgress(pipelineName, revision, snapshotName, true);
+    this.captureNextBatch = true;
   }
 
   private void runBatch(Pipe[] pipes, BadRecordsHandler badRecordsHandler) throws PipelineRuntimeException, StageException {
