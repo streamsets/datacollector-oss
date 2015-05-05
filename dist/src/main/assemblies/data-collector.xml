@@ -162,6 +162,12 @@
       <outputDirectory>/streamsets-libs/</outputDirectory>
     </fileSet>
 
+    <!-- Apache Spark lib -->
+    <fileSet>
+      <directory>${basedir}/../${cdh_5_4_0-lib}/target/streamsets-libs/</directory>
+      <outputDirectory>/streamsets-libs/</outputDirectory>
+    </fileSet>
+
     <!-- HDP Libs -->
     <fileSet>
       <directory>${basedir}/../${hdp_2_2_0-lib}/target/streamsets-libs/</directory>
@@ -222,11 +228,6 @@
       <outputDirectory>/streamsets-libs/</outputDirectory>
     </fileSet>
 
-    <!-- Apache Spark lib -->
-    <fileSet>
-      <directory>${basedir}/../spark-protolib/target/streamsets-libs/</directory>
-      <outputDirectory>/streamsets-libs/</outputDirectory>
-    </fileSet>
 
   </fileSets>
 

@@ -1,0 +1,218 @@
+{
+  "schemaVersion" : 1,
+  "uuid" : "1a188336-2a4d-4587-8dbe-75deec0b0f5e",
+  "description" : "",
+  "configuration" : [ {
+    "name" : "executionMode",
+    "value" : "STANDALONE"
+  }, {
+    "name" : "clusterSlaveMemory",
+    "value" : 1024
+  }, {
+    "name" : "clusterLauncherEnv",
+    "value" : [ ]
+  }, {
+    "name" : "deliveryGuarantee",
+    "value" : "AT_LEAST_ONCE"
+  }, {
+    "name" : "badRecordsHandling",
+    "value" : "streamsets-datacollector-basic-lib::com_streamsets_pipeline_stage_destination_devnull_ToErrorNullDTarget::1.0.0"
+  }, {
+    "name" : "constants",
+    "value" : [ ]
+  }, {
+    "name" : "memoryLimitExceeded",
+    "value" : "STOP_PIPELINE"
+  }, {
+    "name" : "memoryLimit",
+    "value" : 668
+  } ],
+  "uiInfo" : {
+    "previewConfig" : {
+      "previewSource" : "CONFIGURED_SOURCE",
+      "batchSize" : 10,
+      "writeToDestinations" : false
+    }
+  },
+  "stages" : [ {
+    "instanceName" : "com_streamsets_pipeline_stage_origin_kafka_KafkaDSource1430942672563",
+    "library" : "streamsets-datacollector-cdh5_4_0-lib",
+    "stageName" : "com_streamsets_pipeline_stage_origin_kafka_KafkaDSource",
+    "stageVersion" : "1.0.0",
+    "configuration" : [ {
+      "name" : "metadataBrokerList",
+      "value" : "localhost:9092"
+    }, {
+      "name" : "zookeeperConnect",
+      "value" : "localhost:2181"
+    }, {
+      "name" : "consumerGroup",
+      "value" : "streamsetsDataCollector"
+    }, {
+      "name" : "topic",
+      "value" : "topicName"
+    }, {
+      "name" : "dataFormat",
+      "value" : "TEXT"
+    }, {
+      "name" : "charset",
+      "value" : "UTF-8"
+    }, {
+      "name" : "produceSingleRecordPerMessage",
+      "value" : false
+    }, {
+      "name" : "maxBatchSize",
+      "value" : 1000
+    }, {
+      "name" : "maxWaitTime",
+      "value" : 1000
+    }, {
+      "name" : "kafkaConsumerConfigs",
+      "value" : [ ]
+    }, {
+      "name" : "textMaxLineLen",
+      "value" : 1024
+    }, {
+      "name" : "jsonContent",
+      "value" : "MULTIPLE_OBJECTS"
+    }, {
+      "name" : "jsonMaxObjectLen",
+      "value" : 4096
+    }, {
+      "name" : "csvFileFormat",
+      "value" : "CSV"
+    }, {
+      "name" : "csvHeader",
+      "value" : "NO_HEADER"
+    }, {
+      "name" : "csvMaxObjectLen",
+      "value" : 1024
+    }, {
+      "name" : "xmlRecordElement",
+      "value" : null
+    }, {
+      "name" : "xmlMaxObjectLen",
+      "value" : 4096
+    }, {
+      "name" : "logMode",
+      "value" : "COMMON_LOG_FORMAT"
+    }, {
+      "name" : "logMaxObjectLen",
+      "value" : 1024
+    }, {
+      "name" : "retainOriginalLine",
+      "value" : false
+    }, {
+      "name" : "customLogFormat",
+      "value" : "%h %l %u %t \"%r\" %>s %b"
+    }, {
+      "name" : "regex",
+      "value" : "^(\\S+) (\\S+) (\\S+) \\[([\\w:/]+\\s[+\\-]\\d{4})\\] \"(\\S+) (\\S+) (\\S+)\" (\\d{3}) (\\d+)"
+    }, {
+      "name" : "fieldPathsToGroupName",
+      "value" : [ {
+        "fieldPath" : "/",
+        "group" : 1
+      } ]
+    }, {
+      "name" : "grokPatternDefinition",
+      "value" : null
+    }, {
+      "name" : "grokPattern",
+      "value" : "%{COMMONAPACHELOG}"
+    }, {
+      "name" : "onParseError",
+      "value" : "ERROR"
+    }, {
+      "name" : "maxStackTraceLines",
+      "value" : 50
+    }, {
+      "name" : "enableLog4jCustomLogFormat",
+      "value" : false
+    }, {
+      "name" : "log4jCustomLogFormat",
+      "value" : "%r [%t] %-5p %c %x - %m%n"
+    }, {
+      "name" : "stageOnRecordError",
+      "value" : "TO_ERROR"
+    } ],
+    "uiInfo" : {
+      "label" : "Kafka Consumer 1",
+      "description" : "",
+      "xPos" : 60,
+      "yPos" : 50,
+      "stageType" : "SOURCE",
+      "rawSource" : {
+        "configuration" : [ {
+          "name" : "brokerHost",
+          "value" : "localhost"
+        }, {
+          "name" : "brokerPort",
+          "value" : 9092
+        }, {
+          "name" : "topic",
+          "value" : "myTopic"
+        }, {
+          "name" : "partition"
+        }, {
+          "name" : "maxWaitTime",
+          "value" : 1000
+        } ]
+      },
+      "icon" : "/rest/v1/definitions/stages/icon?name=com_streamsets_pipeline_stage_origin_kafka_KafkaDSource&library=streamsets-datacollector-cdh5_4_0-lib&version=1.0.0"
+    },
+    "inputLanes" : [ ],
+    "outputLanes" : [ "com_streamsets_pipeline_stage_origin_kafka_KafkaDSource1430942672563OutputLane14309426725630" ]
+  }, {
+    "instanceName" : "com_streamsets_pipeline_stage_destination_devnull_NullDTarget1430942679537",
+    "library" : "streamsets-datacollector-basic-lib",
+    "stageName" : "com_streamsets_pipeline_stage_destination_devnull_NullDTarget",
+    "stageVersion" : "1.0.0",
+    "configuration" : [ ],
+    "uiInfo" : {
+      "label" : "Trash 1",
+      "description" : "",
+      "xPos" : 280,
+      "yPos" : 50,
+      "stageType" : "TARGET",
+      "icon" : "/rest/v1/definitions/stages/icon?name=com_streamsets_pipeline_stage_destination_devnull_NullDTarget&library=streamsets-datacollector-basic-lib&version=1.0.0"
+    },
+    "inputLanes" : [ "com_streamsets_pipeline_stage_origin_kafka_KafkaDSource1430942672563OutputLane14309426725630" ],
+    "outputLanes" : [ ]
+  } ],
+  "errorStage" : {
+    "instanceName" : "com_streamsets_pipeline_stage_destination_devnull_ToErrorNullDTarget1430942692669",
+    "library" : "streamsets-datacollector-basic-lib",
+    "stageName" : "com_streamsets_pipeline_stage_destination_devnull_ToErrorNullDTarget",
+    "stageVersion" : "1.0.0",
+    "configuration" : [ ],
+    "uiInfo" : {
+      "label" : "Bad Records - Discard",
+      "description" : "",
+      "xPos" : 500,
+      "yPos" : 50,
+      "stageType" : "TARGET",
+      "icon" : "/assets/stage/defaultTarget.svg"
+    },
+    "inputLanes" : [ ],
+    "outputLanes" : [ ]
+  },
+  "info" : {
+    "name" : "admin",
+    "description" : "",
+    "created" : 1430942668815,
+    "lastModified" : 1430942689993,
+    "creator" : "admin",
+    "lastModifier" : "admin",
+    "lastRev" : "0",
+    "uuid" : "d503b64b-52f4-482e-ae21-bf82a43627fc",
+    "valid" : false
+  },
+  "issues" : {
+    "pipelineIssues" : [ ],
+    "stageIssues" : { },
+    "issueCount" : 0
+  },
+  "previewable" : true,
+  "valid" : true
+}

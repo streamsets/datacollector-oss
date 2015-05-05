@@ -70,14 +70,26 @@
 
     <dependency>
       <groupId>com.streamsets</groupId>
-      <artifactId>streamsets-datacollector-kafka-protolib</artifactId>
+      <artifactId>streamsets-datacollector-kafka_source-protolib</artifactId>
       <version>${project.version}</version>
       <scope>compile</scope>
       <exclusions>
         <exclusion>
-          <groupId>org.apache.kafka</groupId>
-          <artifactId>kafka_2.8.0</artifactId>
+          <groupId>org.scala-lang</groupId>
+          <artifactId>scala-library</artifactId>
         </exclusion>
+        <exclusion>
+          <groupId>com.101tec</groupId>
+          <artifactId>zkclient</artifactId>
+        </exclusion>
+      </exclusions>
+    </dependency>
+    <dependency>
+      <groupId>com.streamsets</groupId>
+      <artifactId>streamsets-datacollector-kafka_target-protolib</artifactId>
+      <version>${project.version}</version>
+      <scope>compile</scope>
+      <exclusions>
         <exclusion>
           <groupId>org.scala-lang</groupId>
           <artifactId>scala-library</artifactId>
@@ -119,7 +131,8 @@
             </goals>
             <configuration>
               <sources>
-                <source>${basedir}/../kakfa-protolib/src/test/java</source>
+                <source>${basedir}/../kakfa_source-protolib/src/test/java</source>
+                <source>${basedir}/../kakfa_target-protolib/src/test/java</source>
               </sources>
             </configuration>
           </execution>
@@ -132,7 +145,8 @@
             <configuration>
               <resources>
                 <resource>
-                  <directory>${basedir}/../kafka-protolib/src/test/resources</directory>
+                  <directory>${basedir}/../kafka_source-protolib/src/test/resources</directory>
+                  <directory>${basedir}/../kafka_target-protolib/src/test/resources</directory>
                 </resource>
               </resources>
             </configuration>

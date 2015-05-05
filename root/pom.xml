@@ -205,7 +205,7 @@
       </dependency>
       <dependency>
         <groupId>com.streamsets</groupId>
-        <artifactId>streamsets-datacollector-spark-protolib</artifactId>
+        <artifactId>streamsets-datacollector-cdh5_4_0-lib</artifactId>
         <version>${project.version}</version>
       </dependency>
       <dependency>

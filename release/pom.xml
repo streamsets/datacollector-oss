@@ -178,6 +178,21 @@
             </configuration>
           </execution>
           <execution>
+            <id>cdh-5.4.0</id>
+            <phase>package</phase>
+            <goals>
+              <goal>single</goal>
+            </goals>
+            <configuration>
+              <appendAssemblyId>false</appendAssemblyId>
+              <attach>false</attach>
+              <finalName>streamsets-datacollector-cdh_5_4_0-lib-${project.version}</finalName>
+              <descriptors>
+                <descriptor>src/main/assemblies/data-collector-cdh_5_4_0-lib.xml</descriptor>
+              </descriptors>
+            </configuration>
+          </execution>
+          <execution>
             <id>hdp-2.2.0</id>
             <phase>package</phase>
             <goals>

@@ -5,16 +5,24 @@
  */
 package com.streamsets.pipeline.util;
 
+import com.fasterxml.jackson.core.JsonParseException;
+import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.el.ELEvalException;
 import com.streamsets.pipeline.config.ConfigConfiguration;
 import com.streamsets.pipeline.config.ConfigDefinition;
 import com.streamsets.pipeline.config.PipelineConfiguration;
+import com.streamsets.pipeline.config.StageConfiguration;
 import com.streamsets.pipeline.config.StageDefinition;
 import com.streamsets.pipeline.el.ELEvaluator;
 import com.streamsets.pipeline.el.ELVariables;
 import com.streamsets.pipeline.el.RuntimeEL;
+import com.streamsets.pipeline.json.ObjectMapperFactory;
+import com.streamsets.pipeline.restapi.bean.BeanHelper;
+import com.streamsets.pipeline.restapi.bean.PipelineConfigurationJson;
 
+import java.io.IOException;
 import java.lang.reflect.Field;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
@@ -47,6 +55,20 @@ public class PipelineConfigurationUtil {
       }
     }
     return constants;
+  }
+
+  public static String getSourceLibName(String pipelineJson) throws JsonParseException, JsonMappingException,
+    IOException {
+    ObjectMapper json = ObjectMapperFactory.getOneLine();
+    PipelineConfigurationJson pipelineConfigBean = json.readValue(pipelineJson, PipelineConfigurationJson.class);
+    PipelineConfiguration pipelineConf = BeanHelper.unwrapPipelineConfiguration(pipelineConfigBean);
+    for (int i = 0; i < pipelineConf.getStages().size(); i++) {
+      StageConfiguration stageConf = pipelineConf.getStages().get(i);
+      if (stageConf.getInputLanes().isEmpty()) {
+        return stageConf.getLibrary();
+      }
+    }
+    return null;
   }
 
 }

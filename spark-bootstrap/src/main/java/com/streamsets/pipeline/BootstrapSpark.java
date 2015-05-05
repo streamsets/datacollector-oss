@@ -32,7 +32,6 @@ import java.util.Properties;
  * </ol>
  */
 public class BootstrapSpark {
-  private static final String SPARK_PROTOLIB = "streamsets-libs/streamsets-datacollector-spark-protolib";
   /**
    * We might have to have a reset method for unit tests
    */
@@ -91,7 +90,7 @@ public class BootstrapSpark {
       streamsetsLibsUrls = new HashMap<String, List<URL>>();
       userLibsUrls = new HashMap<String, List<URL>>();
       // for now we pull in container in for testing mode
-      streamsetsLibsUrls.put(SPARK_PROTOLIB,
+      streamsetsLibsUrls.put("streamsets-libs/streamsets-datacollector-spark-protolib",
         BootstrapMain.getClasspathUrls(System.getProperty("user.dir") + "/target/"));
     } else {
       apiUrls = BootstrapMain.getClasspathUrls(libraryRoot + "/api-lib/*.jar");
@@ -112,6 +111,12 @@ public class BootstrapSpark {
     containerCL = new StageClassLoader("container-lib", "Container", containerUrls, apiCL, null,
       StageClassLoader.CONTAINER_CLASSES_DEFAULT);
     stageLibrariesCLs = new ArrayList<ClassLoader>();
+    String sparkLib = getSourceLibraryName(pipelineJson);
+    if (sparkLib == null) {
+      throw new IllegalStateException("Couldn't find the source library in pipeline file");
+    }
+    String lookupLib = "streamsets-libs" +"/" + sparkLib;
+    System.out.println("\n Lookup libe is " + lookupLib);
     for (Map.Entry<String,List<URL>> entry : libsUrls.entrySet()) {
       String[] parts = entry.getKey().split(System.getProperty("file.separator"));
       if (parts.length != 2) {
@@ -123,16 +128,16 @@ public class BootstrapSpark {
       StageClassLoader stageClassLoader = new StageClassLoader(type, name, entry.getValue(), apiCL,
         BootstrapMain.PACKAGES_BLACKLIST_FOR_STAGE_LIBRARIES, StageClassLoader.STAGE_CLASSES_DEFAULT);
       // TODO add spark, scala, etc to blacklist
-      if (SPARK_PROTOLIB.equals(entry.getKey())) {
+      if (lookupLib.equals(entry.getKey())) {
         if (sparkCL != null) {
-          throw new IllegalStateException("Found two classloaders for " + SPARK_PROTOLIB);
+          throw new IllegalStateException("Found two classloaders for " + lookupLib);
         }
         sparkCL = stageClassLoader;
       }
       stageLibrariesCLs.add(stageClassLoader);
     }
     if (sparkCL == null) {
-      throw new IllegalStateException("Could not find classloader for " + SPARK_PROTOLIB);
+      throw new IllegalStateException("Could not find classloader for " + lookupLib);
     }
     try {
       Class<?> runtimeModuleClz = Class.forName("com.streamsets.pipeline.main.RuntimeModule", true, containerCL);
@@ -186,6 +191,24 @@ public class BootstrapSpark {
       Thread.currentThread().setContextClassLoader(originalClassLoader);
     }
   }
+
+  private static String getSourceLibraryName(String pipelineJson) throws Exception {
+    ClassLoader originalClassLoader = Thread.currentThread().getContextClassLoader();
+    try {
+      Thread.currentThread().setContextClassLoader(containerCL);
+      Class pipelineConfigurationUtil =
+        Class.forName("com.streamsets.pipeline.util.PipelineConfigurationUtil", true, containerCL);
+      Method createPipelineMethod = pipelineConfigurationUtil.getMethod("getSourceLibName", String.class);
+      return (String) createPipelineMethod.invoke(null, pipelineJson);
+    } catch (Exception ex) {
+      String msg = "Error trying to retrieve library name from  pipeline json: " + ex;
+      throw new IllegalStateException(msg, ex);
+    } finally {
+      Thread.currentThread().setContextClassLoader(originalClassLoader);
+    }
+  }
+
+
 
   /**
    * Bootstrapping an Executor which is started as part of a spark job<br/>

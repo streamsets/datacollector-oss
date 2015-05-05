@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ (c) 2014 StreamSets, Inc. All rights reserved. May not
+ be copied, modified, or distributed in whole or part without
+ written consent of StreamSets, Inc.
+-->
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <parent>
+    <groupId>com.streamsets</groupId>
+    <artifactId>streamsets-datacollector-root-lib</artifactId>
+    <version>1.0.0b2-SNAPSHOT</version>
+    <relativePath>../root-lib</relativePath>
+  </parent>
+  <groupId>com.streamsets</groupId>
+  <artifactId>streamsets-datacollector-kafka-common</artifactId>
+  <version>1.0.0b2-SNAPSHOT</version>
+  <description>StreamSets Data Collector Kafka Common</description>
+  <name>StreamSets Data Collector Kafka Common</name>
+  <packaging>jar</packaging>
+
+  <properties>
+    <kafka.version>0.8.1.1</kafka.version>
+    <scala.version>2.8.0</scala.version>
+  </properties>
+
+  <dependencies>
+   <dependency>
+      <groupId>com.streamsets</groupId>
+      <artifactId>streamsets-datacollector-api</artifactId>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>log4j</groupId>
+      <artifactId>log4j</artifactId>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.slf4j</groupId>
+      <artifactId>slf4j-api</artifactId>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.slf4j</groupId>
+      <artifactId>slf4j-log4j12</artifactId>
+      <scope>provided</scope>
+    </dependency>
+   <dependency>
+      <groupId>com.streamsets</groupId>
+      <artifactId>streamsets-datacollector-sdk</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.mockito</groupId>
+      <artifactId>mockito-core</artifactId>
+      <scope>test</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>com.streamsets</groupId>
+      <artifactId>streamsets-datacollector-common</artifactId>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>com.streamsets</groupId>
+      <artifactId>streamsets-datacollector-commonlib</artifactId>
+      <scope>provided</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>org.apache.kafka</groupId>
+      <artifactId>kafka_2.8.0</artifactId>
+      <version>${kafka.version}</version>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.kafka</groupId>
+      <artifactId>kafka_2.8.0</artifactId>
+      <version>${kafka.version}</version>
+      <classifier>test</classifier>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.scala-lang</groupId>
+      <artifactId>scala-library</artifactId>
+      <version>${scala.version}</version>
+      <scope>provided</scope>
+      <!-- Changed the scope from test to compile so that it gets shipped in the dist.
+      without this lib i see class not found exception at times while starting pipeline.
+      Will investigate the problem.-->
+    </dependency>
+  </dependencies>
+
+  <build>
+    <plugins>
+       <plugin>
+         <groupId>org.apache.maven.plugins</groupId>
+         <artifactId>maven-jar-plugin</artifactId>
+         <executions>
+         <execution>
+         <goals>
+           <goal>test-jar</goal>
+         </goals>
+         </execution>
+         </executions>
+      </plugin>
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>cobertura-maven-plugin</artifactId>
+        <configuration>
+          <check>
+            <haltOnFailure>true</haltOnFailure>
+            <branchRate>0</branchRate>
+            <lineRate>0</lineRate>
+            <totalBranchRate>98</totalBranchRate>
+            <totalLineRate>98</totalLineRate>
+            <packageLineRate>98</packageLineRate>
+            <packageBranchRate>98</packageBranchRate>
+          </check>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
+
+</project>
