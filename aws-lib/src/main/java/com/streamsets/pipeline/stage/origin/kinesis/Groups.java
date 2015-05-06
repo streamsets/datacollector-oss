@@ -11,7 +11,6 @@ import com.streamsets.pipeline.api.Label;
 @GenerateResourceBundle
 public enum Groups implements Label {
   KINESIS("Kinesis"),
-  JSON("JSON")
   ;
 
   private final String label;

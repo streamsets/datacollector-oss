@@ -26,6 +26,7 @@ import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.base.BaseSource;
 import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.config.DataFormat;
+import com.streamsets.pipeline.config.JsonMode;
 import com.streamsets.pipeline.lib.parser.DataParser;
 import com.streamsets.pipeline.lib.parser.DataParserException;
 import com.streamsets.pipeline.lib.parser.DataParserFactory;
@@ -117,9 +118,18 @@ public class KinesisSource extends BaseSource implements OffsetCommitter {
 
     batchQueue = new LinkedTransferQueue<>();
 
-    parserFactory = new DataParserFactoryBuilder(getContext(), dataFormat.getParserFormat())
-        .setMaxDataLen(50 * 1024) // Max Message for Kinesis is 50KiB
-        .build();
+    DataParserFactoryBuilder builder = new DataParserFactoryBuilder(getContext(), dataFormat.getParserFormat())
+        .setMaxDataLen(50 * 1024); // Max Message for Kinesis is 50KiB
+
+    switch (dataFormat) {
+      case SDC_JSON:
+        break;
+      case JSON:
+        builder.setMode(JsonMode.MULTIPLE_OBJECTS);
+        break;
+    }
+
+    parserFactory = builder.build();
 
     executorService = Executors.newFixedThreadPool(1);
 
