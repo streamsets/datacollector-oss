@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
+<concept id="concept_kg4_mvh_yr">
+ <title>Random Port Number</title>
+ <shortdesc>You can configure the <ph
+   conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> to use a random
+  port number. By default, the <ph
+   conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> uses a static
+  port number defined in the <ph
+   conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> properties
+  file.</shortdesc>
+ <conbody>
+  <p><indexterm>HTTP protocol<indexterm>using a random port</indexterm></indexterm><indexterm>random
+     port<indexterm>using</indexterm></indexterm>Configure the <ph
+    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> to use a
+   random port when you want the operating system to supply a random port number or when you want to
+   run the <ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> in
+   cluster mode.</p>
+  <p>To determine the port number and URL to use to access the  <ph
+    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> console, check
+   the  <ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> log.
+   For example, the following message indicates that the <ph
+    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> is running on
+   http://192.168.130.5:18630:<codeblock>2015-06-06 10:41:07,764 DEBUG WebServerTask - Running on URI 'http://192.168.130.5:18630/', HTTPS 'false'</codeblock></p>
+  <p> The  <ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> log
+   is located in the following
+   location:<codeblock>&lt;DataCollector_installdir>/log/sdc.log</codeblock></p>
+ </conbody>
+</concept>

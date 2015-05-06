@@ -4,33 +4,36 @@
  <title>Data Formats</title>
  <conbody>
   <p><indexterm>Kafka Producer<indexterm>data formats</indexterm></indexterm><indexterm>data
-     formats<indexterm>Kafka Producer</indexterm></indexterm>Kafka Producer writes data to
-   Kafkabased on the data format that you select. You can use the following data formats::</p>
+          formats<indexterm>Kafka Producer</indexterm></indexterm>Kafka Producer writes data to
+      Kafka based on the data format that you select. You can use the following data
+        formats:<draft-comment author="Loretta">This list is identical to Hadoop FS - make sure
+        changes appear in both</draft-comment></p>
   <p>
    <dl>
     <dlentry>
      <dt>Text</dt>
-     <dd>Kafka Producer  writes a single field of a record. When you configure the destination, you
-      select the field to use. When necessary, merge data earlier in the pipeline. </dd>
+     <dd>Kafka Producer writes a single text field of a record. When you configure the destination,
+            you select the field to use. When necessary, merge record data into the field earlier in
+            the pipeline. </dd>
     </dlentry>
     <dlentry>
      <dt>JSON</dt>
-     <dd>Kafka Producer writes records as JSON files. You can use one of the following formats:<ul
-       id="ul_dd1_5y1_wr">
-       <li>Array - Each file includes a single array. In the array, each element is a JSON
-        representation of each record.</li>
-       <li>Multiple objects - Each file includes multiple JSON objects. Each object is a JSON
-        representation of a record. </li>
-      </ul></dd>
+     <dd>Kafka Producer writes records as JSON data. You can use one of the following formats:<ul
+              id="ul_dd1_5y1_wr">
+              <li>Array - Each file includes a single array. In the array, each element is a JSON
+                representation of each record.</li>
+              <li>Multiple objects - Each file includes multiple JSON objects. Each object is a JSON
+                representation of a record. </li>
+            </ul></dd>
     </dlentry>
     <dlentry>
      <dt>Delimited</dt>
-     <dd>Kafka Producer writes records as delimited files. When you use this data format, you must
-      ensure that the data uses the following data structure:<ul id="ul_tr1_ms1_wr">
-       <li>A root field that contains an array of maps.</li>
-       <li>Each map includes a <term>value</term> element and an optional <term>header</term>
-        element.</li>
-      </ul></dd>
+     <dd>Kafka Producer writes records as delimited data. When you use this data format, you must
+            ensure that the data uses the following data structure:<ul id="ul_tr1_ms1_wr">
+              <li>A root field that contains an array of maps.</li>
+              <li>Each map includes a <term>value</term> element and an optional <term>header</term>
+                element.</li>
+            </ul></dd>
     </dlentry>
     <dlentry>
      <dt>SDC Record</dt>

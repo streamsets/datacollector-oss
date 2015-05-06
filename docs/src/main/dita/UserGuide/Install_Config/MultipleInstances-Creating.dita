@@ -21,6 +21,30 @@
                             href="../Install_Config/HTTP_protocols.dita#concept_ecx_hkq_kr"
                         />.</note>
                 </info>
+                <stepresult>The <ph
+                        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                    /> creates another <ph
+                        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                    /> instance in the specified directory and installs <draft-comment
+                        author="Loretta">I think it installs the default config files - or is it the
+                        config files that were customized for the original
+                    DC?</draft-comment></stepresult>
+            </step>
+            <step>
+                <cmd>To launch the new <ph
+                        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                    />, navigate to the new <ph
+                        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                    /> directory and enter the following command:</cmd>
+                <info>
+                    <codeblock>sdc <draft-comment author="Loretta">or does it have to be /bin/sdc?</draft-comment></codeblock>
+                </info>
+                <stepresult>The new <ph
+                        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                    /> starts. Use the http host and port number to access the new <ph
+                        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                    />. <draft-comment author="Loretta">you can edit properties? treat this like
+                        just another data collector? what else here? </draft-comment></stepresult>
             </step>
         </steps>
     </taskbody>

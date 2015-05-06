@@ -11,7 +11,13 @@
             property names or values.</p>
         <p>Several properties are defined by default, you can edit or remove the properties as
             necessary.</p>
-  <note>The Kafka Producer uses the broker.host Kafka configuration property. The Kafka Consumer
-      ignores user-defined values for this property.</note>
+  <note>The Kafka Producer uses the several configuration properties. The Kafka Consumer ignores
+            user-defined values for the following properties:<ul id="ul_uqg_4ft_xr">
+                <li>key.serializer.class</li>
+                <li>metadata.broker.list</li>
+                <li>partitioner.class</li>
+                <li>producer.type</li>
+                <li>serializer.class</li>
+            </ul></note>
  </conbody>
 </concept>

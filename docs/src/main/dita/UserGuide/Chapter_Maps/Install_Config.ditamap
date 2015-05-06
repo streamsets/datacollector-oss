@@ -32,6 +32,9 @@
     <topicref href="../Install_Config/HTTP-GenSelfSignedCert.dita"/>
     <topicref href="../Install_Config/HTTP-GenAuthSignedCert.dita"/>
    </topicref>
+   <topicref href="../Install_Config/HTTP-RandomPortNo.dita" chunk="to-content"> <topicmeta>
+    <shortdesc/>
+   </topicmeta></topicref>
    <topicref href="../Install_Config/ConfiguringDataCollector.dita"/>
   </topicref>
   <topicref href="../Install_Config/DCEnvironmentConfig.dita" chunk="to-content">
@@ -44,7 +47,10 @@
    </topicref>
    <topicref href="../Install_Config/ConfiguringDCEnvironment.dita"/>
   </topicref>
-  <topicref href="../Install_Config/MultipleInstances.dita">
+  <topicref href="../Install_Config/MultipleInstances.dita" chunk="to-content"> 
+   <topicmeta>
+   <shortdesc/>
+  </topicmeta>
    <topicref href="../Install_Config/MultipleInstances-Creating.dita"/>
   </topicref>
   </topicref>

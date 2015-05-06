@@ -2,15 +2,15 @@
 <!DOCTYPE html
   SYSTEM "about:legacy-compat">
 <html xml:lang="en-us" lang="en-us">
-<head><meta name="description" content="You can create multiple Data Collector instances. Each instance uses the same executables, but can be configured differently and run different pipelines. You might create multiple instances when you ..."></meta><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><meta name="copyright" content="(C) Copyright 2005"></meta><meta name="DC.rights.owner" content="(C) Copyright 2005"></meta><meta name="DC.Type" content="concept"></meta><meta name="DC.Title" content="Multiple Data Collector Instances"></meta><meta name="abstract" content="You can create multiple Data Collector instances. Each instance uses the same executables, but can be configured differently and run different pipelines."></meta><meta name="description" content="You can create multiple Data Collector instances. Each instance uses the same executables, but can be configured differently and run different pipelines."></meta><meta name="DC.Relation" scheme="URI" content="../Install_Config/Install_Config_title.html"></meta><meta name="DC.Relation" scheme="URI" content="../Install_Config/MultipleInstances-Creating.html"></meta><meta name="DC.Format" content="XHTML"></meta><meta name="DC.Identifier" content="concept_sd3_z4y_wr"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/commonltr.css"><!----></link><title>Multiple Data Collector Instances</title><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/webhelp_topic.css"><!----></link><link rel="stylesheet" type="text/css" href="../skin.css"></link><script type="text/javascript"><!--
+<head><meta name="description" content="You can create multiple Data Collector instances. Each instance uses the same executables, but can be configured differently and run different pipelines. You might create multiple instances when you ..."></meta><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><meta name="copyright" content="(C) Copyright 2005"></meta><meta name="DC.rights.owner" content="(C) Copyright 2005"></meta><meta name="DC.Type" content="concept"></meta><meta name="DC.Title" content="Multiple Data Collector Instances"></meta><meta name="abstract" content="You can create multiple Data Collector instances. Each instance uses the same executables, but can be configured differently and run different pipelines."></meta><meta name="description" content="You can create multiple Data Collector instances. Each instance uses the same executables, but can be configured differently and run different pipelines."></meta><meta name="DC.Relation" scheme="URI" content="../Install_Config/Install_Config_title.html"></meta><meta name="DC.Format" content="XHTML"></meta><meta name="DC.Identifier" content="concept_sd3_z4y_wr"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/commonltr.css"><!----></link><title>Multiple Data Collector Instances</title><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/webhelp_topic.css"><!----></link><link rel="stylesheet" type="text/css" href="../skin.css"></link><script type="text/javascript"><!--
           
           var prefix = "../index.html";
           
           --></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery-1.8.2.min.js"><!----></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery.cookie.js"><!----></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery-ui.custom.min.js"><!----></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery.highlight-3.js"><!----></script><script type="text/javascript" charset="utf-8" src="../oxygen-webhelp/resources/js/webhelp_topic.js"><!----></script></head>
-<body onload="highlightSearchTerm()" class="frmBody" id="concept_sd3_z4y_wr">
+<body onload="highlightSearchTerm()" class="frmBody">
 <table class="nav"><tbody><tr><td colspan="2"><div id="printlink"><a href="javascript:window.print();" title="Print this page"></a></div><div id="permalink"><a href="#" title="Link to this page"></a></div></td></tr><tr><td width="75%"><a class="navheader_parent_path" href="../Install_Config/Install_Config_title.html" title="Installation and Configuration">Installation and Configuration</a></td><td><div class="navheader">
 <span class="navparent"><a class="link" href="../Install_Config/Install_Config_title.html" title="Installation and Configuration"><span class="navheader_label">Parent topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">Installation and Configuration</span></a></span>  </div></td></tr></tbody></table>
-
+<div class="nested0" id="concept_sd3_z4y_wr">
  <h1 class="title topictitle1">Multiple Data Collector Instances</h1>
 
  
@@ -28,11 +28,49 @@
 
  </div>
 
-<div class="related-links">
-<ul class="ullinks">
-<li class="link ulchildlink"><strong><a href="../Install_Config/MultipleInstances-Creating.html">Creating Multiple Instances</a></strong><br></br>
-</li>
-</ul>
+<div class="related-links"></div>
+<div class="topic task nested1" id="task_dpl_m1z_wr">
+    <h2 class="title topictitle2">Creating Multiple Instances</h2>
+
+    
+    <div class="body taskbody"><p class="shortdesc"></p>
+
+        <div class="section context">When you create an instance, you specify a directory. The <span class="ph">Data
+                  Collector</span>
+            creates the directory and copies several directories to that location. </div>
+
+        <ol class="ol steps" id="task_dpl_m1z_wr__steps_sbt_nbz_wr"><li class="li step stepexpand">
+                <span class="ph cmd">From the command line, enter the following command:</span>
+                <div class="itemgroup info">
+                    <pre class="pre codeblock">create-sdc -home=&lt;new SDC directory&gt; (-httpPort=&lt;SDC_HTTP_PORT&gt; | -httpsPort=&lt;SDC_HTTPS_PORT&gt;)</pre>
+
+                </div>
+                <div class="itemgroup info">
+                    <div class="note note"><span class="notetitle">Note:</span> Enter a directory that does not exist. Also, configure the port number
+                        that you want to use. For more information about http and https, see <a class="xref" href="DCConfig.html#concept_ecx_hkq_kr" title="You can configure the Data Collector to use HTTP or HTTPS. By default the Data Collector uses HTTP.">HTTP Protocols</a>.</div>
+
+                </div>
+                <div class="itemgroup stepresult">The <span class="ph">Data
+                  Collector</span> creates another <span class="ph">Data
+                  Collector</span> instance in the specified directory and installs </div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">To launch the new <span class="ph">Data
+                  Collector</span>, navigate to the new <span class="ph">Data
+                  Collector</span> directory and enter the following command:</span>
+                <div class="itemgroup info">
+                    <pre class="pre codeblock">sdc </pre>
+
+                </div>
+                <div class="itemgroup stepresult">The new <span class="ph">Data
+                  Collector</span> starts. Use the http host and port number to access the new <span class="ph">Data
+                  Collector</span>. </div>
+            </li>
+</ol>
+
+    </div>
+
+</div>
 </div>
 <div class="navfooter"><!---->
 <span class="navparent"><a class="link" href="../Install_Config/Install_Config_title.html" title="Installation and Configuration"><span class="navheader_label">Parent topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">Installation and Configuration</span></a></span>  </div><div class="footer"><div> </div><!-- © <a href="http://creativecommons.org/licenses/by-nc/4.0/legalcode">CC BY-NC 4.0.</a> StreamSets, 2015. --></div>

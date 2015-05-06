@@ -21,8 +21,10 @@
         </context>
         <steps id="steps_ody_3q4_1r">
             <step>
-                <cmd>Modify the properties file for the type of authentication that you use. </cmd>
-                <info>The file name is &lt;authentication type>-realm.properties. </info>
+                <cmd>To configure a user, modify the properties file for the type of authentication
+                    that you use. </cmd>
+                <info>The file name is <filepath>&lt;authentication
+                        type>-realm.properties</filepath>. </info>
                 <info>The file is located in the following directory:
                         <filepath>&lt;SDCinstalldir>/etc/</filepath>. When the <ph
                         conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"

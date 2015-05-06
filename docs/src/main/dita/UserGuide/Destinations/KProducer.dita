@@ -2,7 +2,7 @@
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_oq2_5jl_zq">
  <title>Kafka Producer</title>
- <shortdesc>The Kafka Producer writes data to a Kafka cluster. </shortdesc>
+ <shortdesc>The Kafka Producer destination writes data to a Kafka cluster. </shortdesc>
  <conbody>
   <p><indexterm>Kafka Producer
                                         destination<indexterm>overview</indexterm></indexterm><indexterm>destinations<indexterm>Kafka
