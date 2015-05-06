@@ -36,6 +36,7 @@ public enum Errors implements ErrorCode {
   HADOOPFS_19("Invalid time basis expression '{}': {}"),
   HADOOPFS_20("Invalid directory template: {}"),
   HADOOPFS_21("Invalid late record directory template: {}"),
+  HADOOPFS_22("Invalid URI '{}': {}"),
   ;
   private final String msg;
 

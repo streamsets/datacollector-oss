@@ -130,7 +130,7 @@ public class HdfsTarget extends RecordTarget {
   @Override
   protected List<ConfigIssue> validateConfigs() throws StageException {
     List<ConfigIssue> issues = super.validateConfigs();
-    validateHadoopFS(issues);
+    boolean validHadoopFsUri = validateHadoopFS(issues);
     try {
       lateRecordsLimitEvaluator = ElUtil.createLateRecordsLimitEval(getContext());
       getContext().parseEL(lateRecordsLimit);
@@ -184,11 +184,13 @@ public class HdfsTarget extends RecordTarget {
             compressionCodec = compression.getCodec().newInstance();
             break;
         }
-        RecordWriterManager mgr = new RecordWriterManager(new URI(hdfsUri), hdfsConfiguration, uniquePrefix,
-          dirPathTemplate, TimeZone.getTimeZone(timeZoneID), lateRecordsLimitSecs, maxFileSizeMBs * MEGA_BYTE,
-          maxRecordsPerFile, fileType, compressionCodec, compressionType, keyEl, generatorFactory, getContext());
+        if(validHadoopFsUri) {
+          RecordWriterManager mgr = new RecordWriterManager(new URI(hdfsUri), hdfsConfiguration, uniquePrefix,
+            dirPathTemplate, TimeZone.getTimeZone(timeZoneID), lateRecordsLimitSecs, maxFileSizeMBs * MEGA_BYTE,
+            maxRecordsPerFile, fileType, compressionCodec, compressionType, keyEl, generatorFactory, getContext());
 
-        currentWriters = new ActiveRecordWriters(mgr);
+          currentWriters = new ActiveRecordWriters(mgr);
+        }
       } catch (Exception ex) {
         issues.add(getContext().createConfigIssue(Groups.OUTPUT_FILES.name(), null, Errors.HADOOPFS_11, ex.getMessage(),
                                                   ex));
@@ -202,15 +204,17 @@ public class HdfsTarget extends RecordTarget {
       if (lateRecordsDirPathTemplate != null && !lateRecordsDirPathTemplate.isEmpty()) {
         RecordWriterManager.validateDirPathTemplate1(getContext(), lateRecordsDirPathTemplate);
         RecordWriterManager.validateDirPathTemplate2(getContext(), lateRecordsDirPathTemplate);
-        try {
-          RecordWriterManager mgr = new RecordWriterManager(new URI(hdfsUri), hdfsConfiguration, uniquePrefix,
-            lateRecordsDirPathTemplate, TimeZone.getTimeZone(timeZoneID), lateRecordsLimitSecs,
-            maxFileSizeMBs * MEGA_BYTE, maxRecordsPerFile, fileType, compressionCodec,compressionType, keyEl,
-            generatorFactory, getContext());
+        if(validHadoopFsUri) {
+          try {
+            RecordWriterManager mgr = new RecordWriterManager(new URI(hdfsUri), hdfsConfiguration, uniquePrefix,
+              lateRecordsDirPathTemplate, TimeZone.getTimeZone(timeZoneID), lateRecordsLimitSecs,
+              maxFileSizeMBs * MEGA_BYTE, maxRecordsPerFile, fileType, compressionCodec, compressionType, keyEl,
+              generatorFactory, getContext());
 
-          lateWriters = new ActiveRecordWriters(mgr);
-        } catch (Exception ex) {
-          issues.add(getContext().createConfigIssue(Groups.LATE_RECORDS.name(), null, Errors.HADOOPFS_17, ex.getMessage(), ex));
+            lateWriters = new ActiveRecordWriters(mgr);
+          } catch (Exception ex) {
+            issues.add(getContext().createConfigIssue(Groups.LATE_RECORDS.name(), null, Errors.HADOOPFS_17, ex.getMessage(), ex));
+          }
         }
       }
     } catch (Exception ex) {
@@ -233,17 +237,27 @@ public class HdfsTarget extends RecordTarget {
     return issues;
   }
 
-  private void validateHadoopFS(List<ConfigIssue> issues) {
+  private boolean validateHadoopFS(List<ConfigIssue> issues) {
+    boolean validHapoopFsUri = true;
+    if (hdfsUri.contains("://")) {
+      try {
+        new URI(hdfsUri);
+      } catch (Exception ex) {
+        issues.add(getContext().createConfigIssue(Groups.HADOOP_FS.name(), null, Errors.HADOOPFS_22, hdfsUri,
+          ex.getMessage(), ex));
+        validHapoopFsUri = false;
+      }
+    } else {
+      issues.add(getContext().createConfigIssue(Groups.HADOOP_FS.name(), "hdfsUri", Errors.HADOOPFS_18, hdfsUri));
+      validHapoopFsUri = false;
+    }
+
     try {
-      boolean skipFS = false;
       hdfsConfiguration = new HdfsConfiguration();
       for (Map.Entry<String, String> config : hdfsConfigs.entrySet()) {
         hdfsConfiguration.set(config.getKey(), config.getValue());
       }
-      if (!hdfsUri.contains("://")) {
-        issues.add(getContext().createConfigIssue(Groups.HADOOP_FS.name(), "hdfsUri", Errors.HADOOPFS_18, hdfsUri));
-        skipFS = true;
-      }
+
       hdfsConfiguration.set(CommonConfigurationKeys.FS_DEFAULT_NAME_KEY, hdfsUri);
       if (hdfsKerberos) {
         hdfsConfiguration.set(CommonConfigurationKeys.HADOOP_SECURITY_AUTHENTICATION,
@@ -258,7 +272,7 @@ public class HdfsTarget extends RecordTarget {
                               UserGroupInformation.AuthenticationMethod.SIMPLE.name());
         ugi = UserGroupInformation.getLoginUser();
       }
-      if (!skipFS) {
+      if (validHapoopFsUri) {
         ugi.doAs(new PrivilegedExceptionAction<Void>() {
           @Override
           public Void run() throws Exception {
@@ -272,6 +286,7 @@ public class HdfsTarget extends RecordTarget {
       issues.add(getContext().createConfigIssue(Groups.HADOOP_FS.name(), null, Errors.HADOOPFS_01, hdfsUri,
                                                 ex.getMessage(), ex));
     }
+    return validHapoopFsUri;
   }
 
 
