@@ -22,6 +22,9 @@ esac
 env
 git log --oneline | head
 git show
+/opt/scripts/docker-stop-all-running-containers.sh || true
+/opt/scripts/docker-delete-stopped-containers.sh || true
+/opt/scripts/docker-delete-local-images.sh || true
 # compile and install
 mvn clean install -Drelease -DskipTests
 # package and run tests (if appropiate)
