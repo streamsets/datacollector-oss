@@ -115,8 +115,8 @@ angular.module('dataCollectorApp.common')
      * @returns {*}
      */
     this.getSDCExecutionMode = function() {
-      if(self.config) {
-        return self.config[SDC_EXECUTION_MODE];
+      if(self.config && self.config[SDC_EXECUTION_MODE]) {
+        return self.config[SDC_EXECUTION_MODE].toLowerCase();
       }
       return 'standalone';
     };

@@ -78,11 +78,16 @@ angular
      * @returns {*}
      */
     var getDetailTabsList = function(type, isPipelineRunning) {
-      var tabsList = [];
+      var tabsList = [],
+        sdcExecutionMode = $rootScope.common.sdcExecutionMode;
       switch(type) {
         case pipelineConstant.PIPELINE:
           if(isPipelineRunning) {
-            tabsList = [summaryTab, errorTab, infoTab, configurationTab, rulesTab, historyTab];
+            if(sdcExecutionMode === pipelineConstant.CLUSTER ) {
+              tabsList = [summaryTab, infoTab, configurationTab, historyTab];
+            } else {
+              tabsList = [summaryTab, errorTab, infoTab, configurationTab, rulesTab, historyTab];
+            }
           } else {
             tabsList = [infoTab, configurationTab, rulesTab, historyTab];
           }
@@ -90,7 +95,11 @@ angular
           return tabsList;
         case pipelineConstant.STAGE_INSTANCE:
           if(isPipelineRunning) {
-            tabsList = [summaryTab, errorTab, infoTab, configurationTab];
+            if(sdcExecutionMode === pipelineConstant.CLUSTER ) {
+              tabsList = [summaryTab, infoTab, configurationTab];
+            } else {
+              tabsList = [summaryTab, errorTab, infoTab, configurationTab];
+            }
           } else {
             tabsList = [infoTab, configurationTab];
           }
@@ -102,7 +111,11 @@ angular
           return tabsList;
         case pipelineConstant.LINK:
           if(isPipelineRunning) {
-            return [dataSummaryTab, dataRulesTab, infoTab];
+            if(sdcExecutionMode === pipelineConstant.CLUSTER ) {
+              return [dataRulesTab, infoTab];
+            } else {
+              return [dataSummaryTab, dataRulesTab, infoTab];
+            }
           } else {
             return [infoTab, dataRulesTab];
           }

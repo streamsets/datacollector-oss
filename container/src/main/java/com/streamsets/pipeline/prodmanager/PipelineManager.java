@@ -25,6 +25,8 @@ import java.util.Collection;
 import java.util.List;
 
 public interface PipelineManager extends Task {
+  public static final String REFRESH_INTERVAL_PROPERTY = "ui.refresh.interval.ms";
+  public static final int REFRESH_INTERVAL_PROPERTY_DEFAULT = 2000;
 
   ProductionPipeline getProductionPipeline();
 

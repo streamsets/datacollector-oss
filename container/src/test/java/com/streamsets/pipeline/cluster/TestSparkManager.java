@@ -138,7 +138,7 @@ public class TestSparkManager {
     MockSystemProcess.output.add(" application_1429587312661_0025 ");
     URLClassLoader classLoader = new URLClassLoader(new URL[0]);
     StageLibraryTask stageLibrary = MockStages.createStageLibrary(classLoader);
-    SparkManager sparkManager = new SparkManager(new MockSystemProcessFactory(), new SparkProviderImpl(), tempDir,
+    SparkManager sparkManager = new SparkManager(new MockSystemProcessFactory(), new SparkProviderImpl(null), tempDir,
       sparkManagerShell, classLoader, classLoader, 1);
     try {
       sparkManager.submit(pipelineConf, stageLibrary, etcDir, webDir, bootstrapLibDir, EMPTY_MAP, EMPTY_MAP).get();
@@ -154,7 +154,7 @@ public class TestSparkManager {
     MockSystemProcess.output.add(" " + id + " ");
     URLClassLoader classLoader = new URLClassLoader(new URL[0]);
     StageLibraryTask stageLibrary = MockStages.createStageLibrary(classLoader);
-    SparkManager sparkManager = new SparkManager(new MockSystemProcessFactory(), new SparkProviderImpl(), tempDir,
+    SparkManager sparkManager = new SparkManager(new MockSystemProcessFactory(), new SparkProviderImpl(null), tempDir,
       sparkManagerShell, classLoader, classLoader, 1);
     sparkManager.submit(pipelineConf, stageLibrary, etcDir, webDir, bootstrapLibDir, EMPTY_MAP, EMPTY_MAP).get();
   }

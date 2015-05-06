@@ -9,6 +9,7 @@ import com.google.common.base.Joiner;
 import com.google.common.collect.Maps;
 import com.google.common.io.Files;
 import com.streamsets.pipeline.api.impl.Utils;
+import com.streamsets.pipeline.callback.CallbackServerTask;
 import com.streamsets.pipeline.config.ConfigConfiguration;
 import com.streamsets.pipeline.config.PipelineConfiguration;
 import com.streamsets.pipeline.config.StageConfiguration;
@@ -52,8 +53,13 @@ import java.util.regex.Pattern;
 public class SparkProviderImpl implements SparkProvider {
   private static final String RUN_FROM_SDC = "RUN_FROM_SDC";
   static final Pattern YARN_APPLICATION_ID_REGEX = Pattern.compile("\\s(application_[0-9]+_[0-9]+)\\s");
+  private final RuntimeInfo runtimeInfo;
 
   private static final Logger LOG = LoggerFactory.getLogger(SparkProviderImpl.class);
+
+  public SparkProviderImpl(RuntimeInfo runtimeInfo) {
+    this.runtimeInfo = runtimeInfo;
+  }
 
   @Override
   public void killPipeline(SystemProcessFactory systemProcessFactory, File sparkManager, File tempDir,
@@ -143,7 +149,17 @@ public class SparkProviderImpl implements SparkProvider {
       sdcInStream = new FileInputStream(sdcPropertiesFile);
       sdcProperties.load(sdcInStream);
       sdcProperties.setProperty(WebServerTask.HTTP_PORT_KEY, "0");
-      sdcProperties.setProperty(RuntimeModule.SDC_EXECUTION_MODE_KEY, RuntimeInfo.ExecutionMode.SLAVE.name());
+      sdcProperties.setProperty(RuntimeModule.SDC_EXECUTION_MODE_KEY,
+        RuntimeInfo.ExecutionMode.SLAVE.name().toLowerCase());
+
+      if(runtimeInfo != null) {
+        sdcProperties.setProperty(CallbackServerTask.SDC_CLUSTER_TOKEN_KEY, runtimeInfo.getClusterToken());
+        sdcProperties.setProperty(CallbackServerTask.CALLBACK_SERVER_URL_KEY, runtimeInfo.getClusterCallbackURL());
+      }
+
+      sdcProperties.setProperty(CallbackServerTask.CALLBACK_SERVER_PING_INTERVAL_KEY,
+        CallbackServerTask.CALLBACK_SERVER_PING_INTERVAL_DEFAULT + "");
+
       for (Map.Entry<String, String> entry : sourceConfigs.entrySet()) {
         sdcProperties.setProperty(entry.getKey(), entry.getValue());
       }

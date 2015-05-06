@@ -90,7 +90,7 @@ angular
             function (res) {
               $scope.moveGraphToCenter();
               startResponse = res.data;
-              return api.pipelineAgent.getPipelineMetrics();
+              //return api.pipelineAgent.getPipelineMetrics();
             },
             function (res) {
               $rootScope.common.errors = [res.data];
@@ -99,7 +99,7 @@ angular
             then(
             function (res) {
               if(res) {
-                $rootScope.common.pipelineMetrics = res.data;
+                //$rootScope.common.pipelineMetrics = res.data;
                 $rootScope.common.pipelineStatus = startResponse;
 
                 $timeout(function() {

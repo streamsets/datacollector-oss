@@ -89,9 +89,6 @@ public class StandalonePipelineManagerTask extends AbstractTask implements Pipel
   private static final String PRODUCTION_PIPELINE_RUNNER = "ProductionPipelineRunner";
   static final String RUN_INFO_DIR = "runInfo";
 
-  private static final String REFRESH_INTERVAL_PROPERTY = "ui.refresh.interval.ms";
-  private static final int REFRESH_INTERVAL_PROPERTY_DEFAULT = 2000;
-
   private static final Map<State, Set<State>> VALID_TRANSITIONS = new ImmutableMap.Builder<State, Set<State>>()
     .put(State.STOPPED, ImmutableSet.of(State.RUNNING))
     .put(State.FINISHED, ImmutableSet.of(State.RUNNING))

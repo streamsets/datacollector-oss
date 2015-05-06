@@ -6,40 +6,22 @@
 package com.streamsets.pipeline.cluster;
 
 import com.google.common.annotations.VisibleForTesting;
-import com.google.common.base.Joiner;
 import com.google.common.util.concurrent.ListenableFuture;
 import com.google.common.util.concurrent.ListeningExecutorService;
 import com.google.common.util.concurrent.MoreExecutors;
 import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.config.PipelineConfiguration;
-import com.streamsets.pipeline.config.StageConfiguration;
-import com.streamsets.pipeline.config.StageDefinition;
-import com.streamsets.pipeline.json.ObjectMapperFactory;
-import com.streamsets.pipeline.lib.util.ThreadUtil;
-import com.streamsets.pipeline.restapi.bean.BeanHelper;
+import com.streamsets.pipeline.main.RuntimeInfo;
 import com.streamsets.pipeline.stagelibrary.StageLibraryTask;
-import com.streamsets.pipeline.stagelibrary.StageLibraryUtils;
-import com.streamsets.pipeline.util.SystemProcess;
-import com.streamsets.pipeline.util.SystemProcessImpl;
 import com.streamsets.pipeline.util.SystemProcessFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.File;
-import java.io.IOException;
 import java.net.URLClassLoader;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.concurrent.Callable;
 import java.util.concurrent.Executors;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.TimeoutException;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 public class SparkManager {
   private static final Logger LOG = LoggerFactory.getLogger(SparkManager.class);
@@ -53,8 +35,8 @@ public class SparkManager {
   private URLClassLoader apiCL;
   private URLClassLoader containerCL;
 
-  public SparkManager(File tempDir) {
-    this(new SystemProcessFactory(), new SparkProviderImpl(), tempDir,
+  public SparkManager(RuntimeInfo runtimeInfo, File tempDir) {
+    this(new SystemProcessFactory(), new SparkProviderImpl(runtimeInfo), tempDir,
       new File(new File(System.getProperty("user.dir"), "libexec"), "spark-manager"), null, null, 180);
   }
 

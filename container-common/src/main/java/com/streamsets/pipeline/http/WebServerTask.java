@@ -26,8 +26,8 @@ import org.eclipse.jetty.server.HttpConfiguration;
 import org.eclipse.jetty.server.HttpConnectionFactory;
 import org.eclipse.jetty.server.SecureRequestCustomizer;
 import org.eclipse.jetty.server.Server;
-import org.eclipse.jetty.server.SessionManager;
 import org.eclipse.jetty.server.ServerConnector;
+import org.eclipse.jetty.server.SessionManager;
 import org.eclipse.jetty.server.SslConnectionFactory;
 import org.eclipse.jetty.server.handler.HandlerCollection;
 import org.eclipse.jetty.server.session.HashSessionManager;
@@ -44,15 +44,15 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
 import java.io.File;
 import java.io.IOException;
+import java.net.InetAddress;
 import java.net.URI;
 import java.net.URL;
+import java.net.UnknownHostException;
 import java.nio.file.Files;
 import java.nio.file.attribute.PosixFilePermission;
 import java.util.Collections;
-import java.util.Map;
 import java.util.Set;
 
 public class WebServerTask extends AbstractTask {
@@ -363,6 +363,19 @@ public class WebServerTask extends AbstractTask {
       server.start();
       port = server.getURI().getPort();
       LOG.info("Running on URI '{}', HTTPS '{}' ",server.getURI(), isSSLEnabled());
+      if(runtimeInfo.getBaseHttpUrl().equals(RuntimeInfo.UNDEF)) {
+        try {
+          String baseHttpUrl = "http://";
+          if (isSSLEnabled()) {
+            baseHttpUrl = "https://";
+          }
+          baseHttpUrl += InetAddress.getLocalHost().getHostName() + ":" + port;
+          runtimeInfo.setBaseHttpUrl(baseHttpUrl);
+        } catch(UnknownHostException ex) {
+          LOG.debug("Exception during hostname resolution: {}", ex);
+          runtimeInfo.setBaseHttpUrl(server.getURI().toString());
+        }
+      }
       for (Connector connector : server.getConnectors()) {
         if (connector instanceof ServerConnector) {
           port = ((ServerConnector)connector).getLocalPort();

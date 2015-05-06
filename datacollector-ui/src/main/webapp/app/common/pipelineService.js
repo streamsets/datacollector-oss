@@ -1143,6 +1143,10 @@ angular.module('dataCollectorApp.common')
      * @param pipelineMetrics
      */
     this.getTriggeredAlerts = function(pipelineRules, pipelineMetrics) {
+      if(!pipelineMetrics || !pipelineMetrics.gauges) {
+        return;
+      }
+
       var gauges = pipelineMetrics.gauges,
         alerts = [];
 

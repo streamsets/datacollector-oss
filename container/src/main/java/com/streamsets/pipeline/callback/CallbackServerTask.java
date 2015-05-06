@@ -23,7 +23,7 @@ public class CallbackServerTask extends AbstractTask {
   public static final String CALLBACK_SERVER_URL_KEY = "callback.server.url";
   public static final String CALLBACK_SERVER_URL_DEFAULT = null;
   public static final String CALLBACK_SERVER_PING_INTERVAL_KEY = "callback.server.ping.interval.ms";
-  public static final Long CALLBACK_SERVER_PING_INTERVAL_DEFAULT = 15000l;
+  public static final Long CALLBACK_SERVER_PING_INTERVAL_DEFAULT = 5000l;
   public static final String SDC_CLUSTER_TOKEN_KEY = "sdc.cluster.token";
 
   private final RuntimeInfo runtimeInfo;
@@ -59,6 +59,5 @@ public class CallbackServerTask extends AbstractTask {
     }
     LOG.debug("Stopped Callback Server Task");
   }
-
 
 }

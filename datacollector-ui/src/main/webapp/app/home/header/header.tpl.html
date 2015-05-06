@@ -162,7 +162,7 @@
           tooltip-placement="bottom" tooltip="{{'home.header.snapshots' | translate}}"
           tooltip-trigger="{{iconOnly ? 'mouseenter' : 'notooltip'}}"
           tooltip-popup-delay="500"
-          ng-if="isAuthorized([userRoles.admin, userRoles.manager])"
+          ng-if="isAuthorized([userRoles.admin, userRoles.manager]) && common.sdcExecutionMode != pipelineConstant.CLUSTER"
           ng-show="isPipelineRunning && !snapshotMode"
           ng-click="viewSnapshots()">
         <span class="glyphicon glyphicon-camera fa-14x"></span>
@@ -245,7 +245,7 @@
 
 
       <div class="btn-group notifications-dropdown"
-           ng-show="isPipelineRunning && !snapshotMode">
+           ng-show="isPipelineRunning && !snapshotMode && common.sdcExecutionMode != pipelineConstant.CLUSTER">
         <a class="btn btn-link dropdown-toggle"
            data-toggle="dropdown"
            tooltip-placement="top"

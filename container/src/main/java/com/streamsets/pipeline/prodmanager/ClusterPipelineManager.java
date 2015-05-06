@@ -27,8 +27,10 @@ import com.streamsets.pipeline.cluster.SparkManager;
 import com.streamsets.pipeline.config.PipelineConfiguration;
 import com.streamsets.pipeline.config.PipelineDefConfigs;
 import com.streamsets.pipeline.config.RuleDefinition;
+import com.streamsets.pipeline.lib.executor.SafeScheduledExecutorService;
 import com.streamsets.pipeline.main.RuntimeInfo;
 import com.streamsets.pipeline.metrics.MetricsEventListener;
+import com.streamsets.pipeline.metrics.MetricsEventRunnable;
 import com.streamsets.pipeline.runner.PipelineRuntimeException;
 import com.streamsets.pipeline.runner.production.ProductionPipeline;
 import com.streamsets.pipeline.snapshotstore.SnapshotInfo;
@@ -56,6 +58,7 @@ import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
 public class ClusterPipelineManager extends AbstractTask implements PipelineManager {
+  private static final String CLUSTER_PIPELINE_MANAGER = "ClusterPipelineManager";
   private static final Logger LOG = LoggerFactory.getLogger(StandalonePipelineManagerTask.class);
   static final String APPLICATION_STATE = "cluster.application.state";
 
@@ -75,6 +78,8 @@ public class ClusterPipelineManager extends AbstractTask implements PipelineMana
   private final File tempDir;
   private SparkManager sparkManager;
   private Cache<String, CallbackInfo> slaveCallbackList;
+  private SafeScheduledExecutorService executor;
+  private MetricsEventRunnable metricsEventRunnable;
 
   public ClusterPipelineManager(RuntimeInfo runtimeInfo, Configuration configuration, PipelineStoreTask pipelineStore,
                                 StageLibraryTask stageLibrary) {
@@ -94,7 +99,7 @@ public class ClusterPipelineManager extends AbstractTask implements PipelineMana
     this.tempDir = Files.createTempDir();
     this.sparkManager = sparkManager;
     if (this.sparkManager == null) {
-      this.sparkManager = new SparkManager(tempDir);
+      this.sparkManager = new SparkManager(runtimeInfo, tempDir);
     }
     slaveCallbackList = CacheBuilder.newBuilder()
         .expireAfterWrite(1, TimeUnit.MINUTES)
@@ -138,6 +143,15 @@ public class ClusterPipelineManager extends AbstractTask implements PipelineMana
         });
       }
     }
+
+    executor = new SafeScheduledExecutorService(4, CLUSTER_PIPELINE_MANAGER);
+    long refreshInterval = configuration.get(REFRESH_INTERVAL_PROPERTY, REFRESH_INTERVAL_PROPERTY_DEFAULT);
+
+    if(refreshInterval > 0) {
+      metricsEventRunnable = new MetricsEventRunnable(this, runtimeInfo);
+      executor.scheduleAtFixedRate(metricsEventRunnable, 0, refreshInterval, TimeUnit.MILLISECONDS);
+    }
+
   }
 
   @Override
@@ -173,12 +187,12 @@ public class ClusterPipelineManager extends AbstractTask implements PipelineMana
 
   @Override
   public void addMetricsEventListener(MetricsEventListener metricsEventListener) {
-    throw new UnsupportedOperationException();
+    metricsEventRunnable.addMetricsEventListener(metricsEventListener);
   }
 
   @Override
   public void removeMetricsEventListener(MetricsEventListener metricsEventListener) {
-    throw new UnsupportedOperationException();
+    metricsEventRunnable.removeMetricsEventListener(metricsEventListener);
   }
 
   @Override
@@ -408,7 +422,8 @@ public class ClusterPipelineManager extends AbstractTask implements PipelineMana
 
   @Override
   public void updateSlaveCallbackInfo(CallbackInfo callbackInfo) {
-    if(runtimeInfo.getClusterToken().equals(callbackInfo.getSdcClusterToken())) {
+    if(runtimeInfo.getClusterToken().equals(callbackInfo.getSdcClusterToken()) &&
+      !RuntimeInfo.UNDEF.equals(callbackInfo.getSdcURL())) {
       slaveCallbackList.put(callbackInfo.getSdcURL(), callbackInfo);
     } else {
       throw new RuntimeException("SDC Cluster token not matched");

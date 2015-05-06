@@ -31,6 +31,8 @@ public class RuntimeInfo {
   public static final String LOG_DIR = ".log.dir";
   public static final String STATIC_WEB_DIR = ".static-web.dir";
   public static final String TRANSIENT_ENVIRONMENT = "sdc.transient-env";
+  public static final String UNDEF = "UNDEF";
+  public static final String CALLBACK_URL = "/rest/v1/cluster/callback";
 
   public static final String LOG4J_CONFIGURATION_URL_ATTR = "log4j.configuration.url";
   private static final String LOG4J_PROPERTIES = "-log4j.properties";
@@ -64,8 +66,8 @@ public class RuntimeInfo {
     }
     this.propertyPrefix = propertyPrefix;
     this.baseDir = baseDir;
-    id = "UNDEF";
-    httpUrl = "UNDEF";
+    id = UNDEF;
+    httpUrl = UNDEF;
     this.attributes = new ConcurrentHashMap<>();
     authenticationTokens = new HashMap<>();
     reloadAuthenticationToken();
@@ -219,5 +221,9 @@ public class RuntimeInfo {
 
   public String getClusterToken() {
     return clusterToken;
+  }
+
+  public String getClusterCallbackURL() {
+    return getBaseHttpUrl() + CALLBACK_URL;
   }
 }

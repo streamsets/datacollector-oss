@@ -23,7 +23,7 @@
   </div>
 
   <div class="row">
-    <ng-include ng-repeat="(chartIndex, chart) in $storage.summaryChartList" src="chart.templateId">
+    <ng-include ng-repeat="(chartIndex, chart) in $storage.summaryPanelList" src="chart.templateId">
     </ng-include>
   </div>
 
@@ -32,7 +32,7 @@
 
 <script type="text/ng-template" id="summaryRecordPercentagePieChartTemplate">
   <div class="col-sm-4"
-       ng-if="selectedType === pipelineConstant.STAGE_INSTANCE"
+       ng-if="selectedType === pipelineConstant.STAGE_INSTANCE && common.sdcExecutionMode !== pipelineConstant.CLUSTER"
        ng-controller="RecordPercentagePieChartController">
     <div class="panel panel-default">
       <div class="panel-heading">
@@ -69,7 +69,9 @@
 
 
 <script type="text/ng-template" id="summaryRecordCountBarChartTemplate">
-  <div class="col-sm-4" ng-controller="RecordCountBarChartController">
+  <div class="col-sm-4"
+       ng-if="common.sdcExecutionMode !== pipelineConstant.CLUSTER"
+       ng-controller="RecordCountBarChartController">
     <div class="panel panel-default">
       <div class="panel-heading">
         <span title="{{'home.detailPane.summaryTab.recordCountBarChartTitle' | translate}}"
@@ -99,7 +101,9 @@
 </script>
 
 <script type="text/ng-template" id="summaryRecordsThroughputMeterBarChartTemplate">
-  <div class="col-sm-4" ng-controller="MeterBarChartController">
+  <div class="col-sm-4"
+       ng-if="common.sdcExecutionMode !== pipelineConstant.CLUSTER"
+       ng-controller="MeterBarChartController">
     <div class="panel panel-default">
       <div class="panel-heading">
         <span title="{{'home.detailPane.summaryTab.recordThroughput' | translate}}"
@@ -137,7 +141,7 @@
 
 <script type="text/ng-template" id="summaryBatchThroughputBarChartTemplate">
   <div class="col-sm-4"
-       ng-if="selectedType === pipelineConstant.PIPELINE"
+       ng-if="selectedType === pipelineConstant.PIPELINE && common.sdcExecutionMode !== pipelineConstant.CLUSTER"
        ng-controller="BatchCountBarChartController">
     <div class="panel panel-default">
       <div class="panel-heading">
@@ -170,7 +174,9 @@
 
 
 <script type="text/ng-template" id="summaryRecordHistogramTemplate">
-  <div class="col-sm-4">
+  <div class="col-sm-4"
+       ng-if="common.sdcExecutionMode !== pipelineConstant.CLUSTER"
+       ng-controller="HistogramChartController">
     <div class="panel panel-default">
       <div class="panel-heading">
         <span title="{{'global.form.histogram' | translate}}"
@@ -180,23 +186,21 @@
         </button>
       </div>
       <div class="panel-body">
-        <div ng-controller="HistogramChartController">
-          <nvd3-multi-bar-horizontal-chart
-            data="timerData"
-            id="histogramMixChartID"
-            height="250"
-            color="getColor()"
-            legendColor="getColor()"
-            showLegend="true"
-            showXAxis="true"
-            showYAxis="true"
-            showValues="false"
-            tooltips="true"
-            tooltipcontent="getTooltipContent()"
-            margin="{left:65,top:70,bottom:20,right:20}">
-            <svg></svg>
-          </nvd3-multi-bar-horizontal-chart>
-        </div>
+        <nvd3-multi-bar-horizontal-chart
+          data="timerData"
+          id="histogramMixChartID"
+          height="250"
+          color="getColor()"
+          legendColor="getColor()"
+          showLegend="true"
+          showXAxis="true"
+          showYAxis="true"
+          showValues="false"
+          tooltips="true"
+          tooltipcontent="getTooltipContent()"
+          margin="{left:65,top:70,bottom:20,right:20}">
+          <svg></svg>
+        </nvd3-multi-bar-horizontal-chart>
       </div>
     </div>
   </div>
@@ -205,6 +209,7 @@
 
 <script type="text/ng-template" id="summaryRecordsProcessedTemplate">
   <div class="col-sm-4"
+       ng-if="common.sdcExecutionMode !== pipelineConstant.CLUSTER"
        ng-controller="BatchTimerChartController">
     <div class="panel panel-default">
       <div class="panel-heading">
@@ -235,6 +240,7 @@
 
 <script type="text/ng-template" id="memoryConsumedLineChartTemplate">
   <div class="col-sm-4"
+       ng-if="common.sdcExecutionMode !== pipelineConstant.CLUSTER"
        ng-controller="MemoryConsumedLineChartController">
     <div class="panel panel-default">
       <div class="panel-heading">
@@ -272,7 +278,7 @@
 
 <script type="text/ng-template" id="summaryRuntimeStatisticsTemplate">
   <div class="col-sm-4"
-       ng-if="selectedType === pipelineConstant.PIPELINE">
+       ng-if="selectedType === pipelineConstant.PIPELINE && common.sdcExecutionMode !== pipelineConstant.CLUSTER">
     <div class="panel panel-default">
       <div class="panel-heading">
         <span title="{{'home.detailPane.summaryTab.runtimeStatistics' | translate}}"
@@ -326,6 +332,35 @@
 
         </ul>
 
+      </div>
+    </div>
+  </div>
+</script>
+
+
+<script type="text/ng-template" id="slaveSDCInstancesTemplate">
+  <div class="col-sm-4"
+       ng-if="common.sdcExecutionMode === pipelineConstant.CLUSTER">
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <span title="{{'home.detailPane.summaryTab.slaveSDCInstances' | translate}}"
+              translate="home.detailPane.summaryTab.slaveSDCInstances">Slave SDC Instances</span>
+        <button type="button" class="close" aria-label="Close" ng-click="removeChart(chart, chartIndex)">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="panel-body">
+        <ul class="table-properties">
+          <li ng-repeat="callbackInfo in common.pipelineMetrics">
+            <a href="{{callbackInfo.sdcURL}}" target="_blank">
+              {{callbackInfo.sdcURL}}
+            </a>
+          </li>
+
+          <li ng-if="!common.pipelineMetrics || common.pipelineMetrics.length === 0">
+            <span class="properties-label">No Record</span>
+          </li>
+        </ul>
       </div>
     </div>
   </div>

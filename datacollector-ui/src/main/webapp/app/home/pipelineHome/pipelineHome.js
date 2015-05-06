@@ -541,13 +541,12 @@ angular
      */
     $q.all([
       api.pipelineAgent.getPipelineStatus(),
-      api.pipelineAgent.getPipelineMetrics(),
+      //api.pipelineAgent.getPipelineMetrics(),
       pipelineService.init(),
       configuration.init()
     ])
       .then(function (results) {
-        var pipelineStatus = results[0].data,
-          pipelineMetrics= results[1].data;
+        var pipelineStatus = results[0].data;
 
         //Definitions
         $scope.pipelineConfigDefinition = pipelineService.getPipelineConfigDefinition();
@@ -569,7 +568,7 @@ angular
         $scope.pipelines = pipelineService.getPipelines();
 
         $rootScope.common.pipelineStatus = pipelineStatus;
-        $rootScope.common.pipelineMetrics = pipelineMetrics;
+        //$rootScope.common.pipelineMetrics = pipelineMetrics;
 
         $scope.activeConfigInfo = _.find($scope.pipelines, function(pipelineDefn) {
           return pipelineDefn.name === routeParamPipelineName;
@@ -577,7 +576,10 @@ angular
 
         refreshPipelineStatus();
         refreshPipelineMetrics();
-        initializeAlertWebSocket();
+
+        if($rootScope.common.sdcExecutionMode !== pipelineConstant.CLUSTER) {
+          initializeAlertWebSocket();
+        }
 
         if($scope.activeConfigInfo) {
           return $q.all([api.pipelineAgent.getPipelineConfig($scope.activeConfigInfo.name),

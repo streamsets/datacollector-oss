@@ -4,8 +4,8 @@
 
 angular
   .module('dataCollectorApp.home')
-  .controller('PreviewConfigModalInstanceController', function ($scope, $modalInstance, pipelineConfig,
-                                                                $timeout, pipelineService, api) {
+  .controller('PreviewConfigModalInstanceController', function ($scope, $rootScope, $modalInstance, pipelineConfig,
+                                                                $timeout, pipelineService, api, pipelineConstant) {
     angular.extend($scope, {
       previewConfig: angular.copy(pipelineConfig.uiInfo.previewConfig),
       refreshCodemirror: false,
@@ -41,18 +41,21 @@ angular
       $scope.refreshCodemirror = true;
     });
 
-    api.pipelineAgent.getSnapshotsInfo().then(function(res) {
-      if(res && res.data && res.data.length) {
-        $scope.snapshotsInfo = res.data;
-        $scope.snapshotsInfo = _.chain(res.data)
-          .filter(function(snapshotInfo) {
-            return snapshotInfo.captured != null;
-          })
-          .sortBy('snapshotName')
-          .value();
-      }
-    }, function(res) {
-      $scope.common.errors = [res.data];
-    });
+
+    if($rootScope.common.sdcExecutionMode !== pipelineConstant.CLUSTER) {
+      api.pipelineAgent.getSnapshotsInfo().then(function(res) {
+        if(res && res.data && res.data.length) {
+          $scope.snapshotsInfo = res.data;
+          $scope.snapshotsInfo = _.chain(res.data)
+            .filter(function(snapshotInfo) {
+              return snapshotInfo.captured != null;
+            })
+            .sortBy('snapshotName')
+            .value();
+        }
+      }, function(res) {
+        $scope.common.errors = [res.data];
+      });
+    }
 
   });

@@ -5,8 +5,12 @@
 angular
   .module('dataCollectorApp.home')
 
-  .controller('SummaryController', function ($scope, $rootScope, $modal, pipelineConstant) {
+  .controller('SummaryController', function ($scope, $rootScope, $modal, $http, pipelineConstant) {
     var chartList = [
+      {
+        label: 'home.detailPane.summaryTab.slaveSDCInstances',
+        templateId: 'slaveSDCInstancesTemplate'
+      },
       {
         label: 'home.detailPane.summaryTab.recordsProcessed',
         templateId: 'summaryRecordPercentagePieChartTemplate'
@@ -87,12 +91,29 @@ angular
       },
 
       removeChart: function(chart, index) {
-        $rootScope.$storage.summaryChartList.splice(index, 1);
+        $rootScope.$storage.summaryPanelList.splice(index, 1);
+      },
+
+      openSlave: function(callbackInfo, $event) {
+        $event.preventDefault();
+
+        $http({
+          method: 'jsonp',
+          url: callbackInfo.sdcURL + '?callback=JSON_CALLBACK',
+          headers: {
+            'auth-token': callbackInfo.adminToken
+          }
+        }).success(function() {
+          window.open(callbackInfo.sdcURL);
+        }).error(function(data){
+          console.log(data);
+        });
+
       }
     });
 
-    if(!$rootScope.$storage.summaryChartList) {
-      $rootScope.$storage.summaryChartList = chartList;
+    if(!$rootScope.$storage.summaryPanelList) {
+      $rootScope.$storage.summaryPanelList = chartList;
     }
 
     if(!$rootScope.$storage.counters) {
@@ -108,9 +129,10 @@ angular
         pipelineConfig = $scope.pipelineConfig,
         pipelineMetrics = $rootScope.common.pipelineMetrics,
         currentSelection = $scope.detailPaneConfig,
-        isStageSelected = $scope.stageSelected;
+        isStageSelected = $scope.stageSelected,
+        sdcExecutionMode = $rootScope.common.sdcExecutionMode;
 
-      if(angular.equals({},pipelineMetrics)) {
+      if(angular.equals({},pipelineMetrics) || sdcExecutionMode === pipelineConstant.CLUSTER) {
         return;
       }
 
@@ -281,7 +303,7 @@ angular
             return chartList;
           },
           selectedCharts: function() {
-            var selectedChartList = $rootScope.$storage.summaryChartList;
+            var selectedChartList = $rootScope.$storage.summaryPanelList;
             return _.filter(chartList, function(chart) {
               return _.find(selectedChartList, function(sChart) {
                 return sChart.label === chart.label;
@@ -292,7 +314,7 @@ angular
       });
 
       modalInstance.result.then(function (selectedCharts) {
-        $rootScope.$storage.summaryChartList = selectedCharts;
+        $rootScope.$storage.summaryPanelList = selectedCharts;
       }, function () {
 
       });
