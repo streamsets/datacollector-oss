@@ -62,7 +62,7 @@ public class KinesisDTarget extends DTarget {
   @ConfigDef(
       required = true,
       type = ConfigDef.Type.MODEL,
-      defaultValue = "Round Robin",
+      defaultValue = "ROUND_ROBIN",
       label = "Partitioning Strategy",
       description = "Partitioning strategy for partition key generation.",
       displayPosition = 26,
