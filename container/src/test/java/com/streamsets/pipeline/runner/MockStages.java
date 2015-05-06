@@ -120,6 +120,11 @@ public class MockStages {
       }
       return null;
     }
+
+    @Override
+    public int getParallelism() {
+      return 1;
+    }
   }
 
   public static class ComplexSource implements Source {
@@ -154,6 +159,11 @@ public class MockStages {
       }
       return null;
     }
+
+    @Override
+    public int getParallelism() {
+      return 0;
+    }
   }
 
   public static class ClusterMSource implements Source {
@@ -187,6 +197,11 @@ public class MockStages {
         return sourceCapture.produce(lastSourceOffset, -1, batchMaker);
       }
       return null;
+    }
+
+    @Override
+    public int getParallelism() {
+      return 25;
     }
   }
 

@@ -7,26 +7,17 @@ package com.streamsets.pipeline.stage.origin.spark;
 
 
 import com.google.common.collect.ImmutableList;
-
-import org.I0Itec.zkclient.ZkClient;
-
 import com.google.common.io.Resources;
 import com.streamsets.pipeline.BootstrapSpark;
+import com.streamsets.pipeline.api.StageException;
+import com.streamsets.pipeline.config.CsvHeader;
+import com.streamsets.pipeline.config.DataFormat;
+import com.streamsets.pipeline.config.JsonMode;
+import com.streamsets.pipeline.config.OnParseError;
 import com.streamsets.pipeline.lib.DataType;
 import com.streamsets.pipeline.lib.KafkaTestUtil;
 import com.streamsets.pipeline.lib.ProducerRunnable;
 import com.streamsets.pipeline.stage.origin.kafka.KafkaDSource;
-
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
-
-import java.io.File;
-import java.util.Properties;
-import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-
 import kafka.admin.AdminUtils;
 import kafka.javaapi.producer.Producer;
 import kafka.server.KafkaConfig;
@@ -36,13 +27,22 @@ import kafka.utils.TestUtils;
 import kafka.utils.TestZKUtils;
 import kafka.utils.ZKStringSerializer$;
 import kafka.zk.EmbeddedZookeeper;
-
+import org.I0Itec.zkclient.ZkClient;
+import org.junit.AfterClass;
+import org.junit.Assert;
+import org.junit.BeforeClass;
+import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.File;
 import java.io.FileOutputStream;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.Properties;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 // Todo - move this to integration test module
 public class TestSparkStreamingKafkaSource {
@@ -54,8 +54,8 @@ public class TestSparkStreamingKafkaSource {
 
   private static int port;
 
-  @Before
-  public void setup() throws Exception {
+  @BeforeClass
+  public static void setup() throws Exception {
     // Remove this
     System.setProperty("sdc.clustermode", "true");
     System.setProperty("sdc.testing-mode", "true");
@@ -70,6 +70,9 @@ public class TestSparkStreamingKafkaSource {
     kafkaServer = TestUtils.createServer(new KafkaConfig(props), new MockTime());
     String metadataBrokerURI = "localhost" + ":" + port;
     File target = new File(System.getProperty("user.dir"), "target");
+    if(!target.exists()) {
+      target.mkdirs();
+    }
     Properties properties;
     File propertiesFile;
     properties = new Properties();
@@ -80,16 +83,14 @@ public class TestSparkStreamingKafkaSource {
     properties.setProperty(KafkaDSource.TOPIC, "testProduceStringRecords");
     properties.setProperty("auto.offset.reset", "smallest");
     propertiesFile = new File(target, "sdc.properties");
-    propertiesFile.delete();
     properties.store(new FileOutputStream(propertiesFile), null);
     File pipelineJson = new File(target, "pipeline.json");
-    pipelineJson.delete();
     Files.copy(Paths.get(Resources.getResource("spark_kafka_pipeline.json").toURI()),
       pipelineJson.toPath());
   }
 
-  @After
-  public void tearDown() throws Exception {
+  @AfterClass
+  public static void tearDown() throws Exception {
     if (kafkaServer != null) {
       kafkaServer.shutdown();
     }
@@ -132,7 +133,23 @@ public class TestSparkStreamingKafkaSource {
        waiter.interrupt();
       }
     }
+  }
 
+  @Test
+  public void testSparkStreamingParallelism() throws StageException {
+    AdminUtils.createTopic(zkClient, "testSparkStreamingParallelism", 3, 1, new Properties());
+    TestUtils.waitUntilMetadataIsPropagated(scala.collection.JavaConversions.asScalaBuffer(ImmutableList.of(kafkaServer))
+      , "testSparkStreamingParallelism", 0, 5000);
+    TestUtils.waitUntilMetadataIsPropagated(scala.collection.JavaConversions.asScalaBuffer(ImmutableList.of(kafkaServer))
+      , "testSparkStreamingParallelism", 1, 5000);
+    TestUtils.waitUntilMetadataIsPropagated(scala.collection.JavaConversions.asScalaBuffer(ImmutableList.of(kafkaServer))
+      , "testSparkStreamingParallelism", 2, 5000);
+
+    SparkStreamingKafkaSource sparkStreamingKafkaSource = new SparkStreamingKafkaSource("localhost" + ":" + port,
+      "testSparkStreamingParallelism", DataFormat.JSON , "UTF-8", false, 10, 5000, null, 1024,
+      JsonMode.MULTIPLE_OBJECTS, 1024, null, CsvHeader.IGNORE_HEADER, 1024, null, 1024, null, 1024, false, null, null,
+      null, null, null, false, null, OnParseError.IGNORE, 10);
+    Assert.assertEquals(3, sparkStreamingKafkaSource.getParallelism());
   }
 
   private Thread startBootstrapSpark() {

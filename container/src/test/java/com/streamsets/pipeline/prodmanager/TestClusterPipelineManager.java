@@ -8,6 +8,7 @@ package com.streamsets.pipeline.prodmanager;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.io.Files;
 import com.streamsets.pipeline.api.ExecutionMode;
+import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.cluster.ApplicationState;
 import com.streamsets.pipeline.cluster.MockSparkProvider;
@@ -20,7 +21,9 @@ import com.streamsets.pipeline.config.PipelineDefConfigs;
 import com.streamsets.pipeline.lib.util.ThreadUtil;
 import com.streamsets.pipeline.main.RuntimeInfo;
 import com.streamsets.pipeline.runner.MockStages;
+import com.streamsets.pipeline.runner.PipelineRuntimeException;
 import com.streamsets.pipeline.stagelibrary.StageLibraryTask;
+import com.streamsets.pipeline.store.PipelineStoreException;
 import com.streamsets.pipeline.store.PipelineStoreTask;
 import com.streamsets.pipeline.store.impl.FilePipelineStoreTask;
 import com.streamsets.pipeline.util.Configuration;
@@ -98,10 +101,10 @@ public class TestClusterPipelineManager {
   }
 
   private void setExecMode(ExecutionMode mode) throws Exception {
-    PipelineConfiguration pipelineConf = pipelineStoreTask.load(NAME, REV).createWithNewConfig(
-      PipelineDefConfigs.EXECUTION_MODE_CONFIG, new ConfigConfiguration(PipelineDefConfigs.EXECUTION_MODE_CONFIG,
-        mode));
-    pipelineStoreTask.save(NAME, "admin", REV, "", pipelineConf);
+    PipelineConfiguration pipelineConf = pipelineStoreTask.load(NAME, REV);
+    PipelineConfiguration conf = MockStages.createPipelineConfigurationWithClusterOnlyStage(mode);
+    conf.setUuid(pipelineConf.getUuid());
+    pipelineStoreTask.save(NAME, "admin", REV, "", conf);
 
   }
   private PipelineState createPipelineState(State state) {
@@ -224,5 +227,16 @@ public class TestClusterPipelineManager {
     ApplicationState appState = (ApplicationState)stateTracker.getState().getAttributes().
       get(ClusterPipelineManager.APPLICATION_STATE);
     Assert.assertNull(appState);
+  }
+
+  @Test
+  public void testGetParallelism() throws PipelineRuntimeException, StageException, PipelineStoreException, PipelineManagerException {
+    clusterPipelineManager = createClusterPipelineManager();
+    clusterPipelineManager.initTask();
+    int originParallelism = clusterPipelineManager.getOriginParallelism(NAME, REV,
+      MockStages.createPipelineConfigurationWithClusterOnlyStage(ExecutionMode.CLUSTER) //creates ClusterMSource which
+      //has parallelism 25
+    );
+    Assert.assertEquals(25, originParallelism);
   }
 }

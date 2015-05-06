@@ -28,4 +28,9 @@ public abstract class DSource extends DStage<Source.Context> implements Source {
     return getSource().produce(lastSourceOffset, maxBatchSize, batchMaker);
   }
 
+  @Override
+  public int getParallelism() throws StageException {
+    return getSource().getParallelism();
+  }
+
 }

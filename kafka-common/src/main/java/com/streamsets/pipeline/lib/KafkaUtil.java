@@ -6,6 +6,7 @@
 package com.streamsets.pipeline.lib;
 
 import com.streamsets.pipeline.api.Stage;
+import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.lib.util.ThreadUtil;
 import kafka.javaapi.TopicMetadata;
 import kafka.javaapi.TopicMetadataRequest;
@@ -76,6 +77,20 @@ public class KafkaUtil {
     return topicMetadata;
   }
 
+  public static int getPartitionCount(String metadataBrokerList, String topic, int maxRetries,
+                                               long backOffms) throws KafkaConnectionException {
+    List<KafkaBroker> kafkaBrokers = getKafkaBrokers(metadataBrokerList);
+    if(kafkaBrokers.isEmpty()) {
+      new StageException(Errors.KAFKA_07, metadataBrokerList);
+    }
+    TopicMetadata topicMetadata;
+    topicMetadata = getTopicMetadata(kafkaBrokers, topic, maxRetries, backOffms);
+    if(topicMetadata == null) {
+      new StageException(Errors.KAFKA_03, topic, metadataBrokerList);
+    }
+    return topicMetadata.partitionsMetadata().size();
+  }
+
   public static List<KafkaBroker> validateBrokerList(List<Stage.ConfigIssue> issues, String brokerList,
                                                      String confiGroupName, String configName, Stage.Context context) {
     if(brokerList == null || brokerList.isEmpty()) {
@@ -91,8 +106,8 @@ public class KafkaUtil {
         issues.add(context.createConfigIssue(confiGroupName, configName, Errors.KAFKA_07, brokerList));
       } else {
         try {
-          int port = Integer.parseInt(brokerHostAndPort[1]);
-          kafkaBrokers.add(new KafkaBroker(brokerHostAndPort[0], port));
+          int port = Integer.parseInt(brokerHostAndPort[1].trim());
+          kafkaBrokers.add(new KafkaBroker(brokerHostAndPort[0].trim(), port));
         } catch (NumberFormatException e) {
           issues.add(context.createConfigIssue(confiGroupName, configName, Errors.KAFKA_07, brokerList));
         }
@@ -108,5 +123,24 @@ public class KafkaUtil {
     }
     sb.setLength(sb.length()-2);
     return sb.toString();
+  }
+
+  public static List<KafkaBroker> getKafkaBrokers(String brokerList) {
+    List<KafkaBroker> kafkaBrokers = new ArrayList<>();
+    if(brokerList != null && !brokerList.isEmpty()) {
+      String[] brokers = brokerList.split(",");
+      for (String broker : brokers) {
+        String[] brokerHostAndPort = broker.split(":");
+        if (brokerHostAndPort.length == 2) {
+          try {
+            int port = Integer.parseInt(brokerHostAndPort[1].trim());
+            kafkaBrokers.add(new KafkaBroker(brokerHostAndPort[0].trim(), port));
+          } catch (NumberFormatException e) {
+            //ignore broker
+          }
+        }
+      }
+    }
+    return kafkaBrokers;
   }
 }

@@ -222,5 +222,10 @@ public class TestMemoryIsolation {
     public void destroy() {
 
     }
+
+    @Override
+    public int getParallelism() {
+      return 1;
+    }
   }
 }

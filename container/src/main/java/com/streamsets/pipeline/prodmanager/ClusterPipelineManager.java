@@ -23,7 +23,10 @@ import com.streamsets.pipeline.api.impl.ErrorMessage;
 import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.callback.CallbackInfo;
 import com.streamsets.pipeline.cluster.ApplicationState;
+import com.streamsets.pipeline.cluster.ClusterModeConstants;
 import com.streamsets.pipeline.cluster.SparkManager;
+import com.streamsets.pipeline.config.DeliveryGuarantee;
+import com.streamsets.pipeline.config.MemoryLimitConfiguration;
 import com.streamsets.pipeline.config.PipelineConfiguration;
 import com.streamsets.pipeline.config.PipelineDefConfigs;
 import com.streamsets.pipeline.config.RuleDefinition;
@@ -33,6 +36,8 @@ import com.streamsets.pipeline.metrics.MetricsEventListener;
 import com.streamsets.pipeline.metrics.MetricsEventRunnable;
 import com.streamsets.pipeline.runner.PipelineRuntimeException;
 import com.streamsets.pipeline.runner.production.ProductionPipeline;
+import com.streamsets.pipeline.runner.production.ProductionPipelineBuilder;
+import com.streamsets.pipeline.runner.production.ProductionPipelineRunner;
 import com.streamsets.pipeline.snapshotstore.SnapshotInfo;
 import com.streamsets.pipeline.snapshotstore.SnapshotStatus;
 import com.streamsets.pipeline.stagelibrary.StageLibraryTask;
@@ -43,6 +48,8 @@ import com.streamsets.pipeline.util.Configuration;
 import com.streamsets.pipeline.util.ContainerError;
 import com.streamsets.pipeline.util.PipelineConfigurationUtil;
 import com.streamsets.pipeline.util.PipelineDirectoryUtil;
+import com.streamsets.pipeline.validation.Issues;
+import com.streamsets.pipeline.validation.StageIssue;
 import com.streamsets.pipeline.validation.ValidationError;
 import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
@@ -298,10 +305,18 @@ public class ClusterPipelineManager extends AbstractTask implements PipelineMana
       Map<String, String> sourceInfo = new HashMap<>();
       File bootstrapDir = new File(System.getProperty("user.dir"),
         "libexec/bootstrap-libs/");
+
+      //create pipeline and get the parallelism info from the source
+      String parallelism = String.valueOf(getOriginParallelism(name, rev, pipelineConf));
+      sourceInfo.put(ClusterModeConstants.NUM_EXECUTORS_KEY, parallelism);
+      //This is needed for UI
+      runtimeInfo.setAttribute(ClusterModeConstants.NUM_EXECUTORS_KEY, parallelism);
+
       ListenableFuture submitFuture = sparkManager.submit(pipelineConf, stageLibrary,
         new File(runtimeInfo.getConfigDir()), new File(runtimeInfo.getStaticWebDir()), bootstrapDir, environment,
         sourceInfo);
       // set state of running before adding callback which modified attributes
+
       Map<String, Object> attributes = new HashMap<>();
       PipelineState ps = stateTracker.getState();
       if (ps != null) {
@@ -445,4 +460,29 @@ public class ClusterPipelineManager extends AbstractTask implements PipelineMana
       }
     }
   }
+
+  @VisibleForTesting
+  int getOriginParallelism(String name, String rev, PipelineConfiguration pipelineConf)
+    throws PipelineRuntimeException, StageException, PipelineStoreException, PipelineManagerException {
+
+    ProductionPipeline p = createProductionPipeline(name, rev, pipelineConf);
+    List<StageIssue> stageIssues = p.getPipeline().validateConfigs();
+    if (!stageIssues.isEmpty()) {
+      Issues issues = new Issues(stageIssues);
+      throw new PipelineRuntimeException(issues);
+    }
+    p.getPipeline().init();
+    return p.getPipeline().getSource().getParallelism();
+  }
+
+  private ProductionPipeline createProductionPipeline(String name, String rev,
+                                                      PipelineConfiguration pipelineConfiguration)
+    throws PipelineStoreException, PipelineRuntimeException, StageException, PipelineManagerException {
+    ProductionPipelineRunner runner = new ProductionPipelineRunner(runtimeInfo, null,
+      DeliveryGuarantee.AT_LEAST_ONCE, name, rev, null, null, new MemoryLimitConfiguration());
+    ProductionPipelineBuilder builder = new ProductionPipelineBuilder(stageLibrary, name, rev, runtimeInfo,
+      pipelineConfiguration);
+    return builder.build(runner, null, null);
+  }
+
 }

@@ -28,10 +28,8 @@ import com.streamsets.pipeline.metrics.MetricsConfigurator;
 import com.streamsets.pipeline.runner.MockStages;
 import com.streamsets.pipeline.runner.PipelineRuntimeException;
 import com.streamsets.pipeline.runner.SourceOffsetTracker;
-import com.streamsets.pipeline.runner.StagePipe;
 import com.streamsets.pipeline.snapshotstore.SnapshotStatus;
 import com.streamsets.pipeline.snapshotstore.impl.FileSnapshotStore;
-import com.streamsets.pipeline.store.impl.FilePipelineStoreTask;
 import com.streamsets.pipeline.util.Configuration;
 import com.streamsets.pipeline.util.ContainerError;
 import com.streamsets.pipeline.util.TestUtil;
@@ -332,6 +330,11 @@ public class TestProductionPipeline {
     @Override
     public void destroy() {
 
+    }
+
+    @Override
+    public int getParallelism() {
+      return 1;
     }
   }
 

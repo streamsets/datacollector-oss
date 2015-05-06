@@ -78,7 +78,7 @@ public class BaseKafkaSource extends BaseSource implements OffsetCommitter {
   private final Map<String, String> kafkaConsumerConfigs;
   private StandaloneKafkaSource standaloneKafkaSource;
   private LogDataFormatValidator logDataFormatValidator;
-  private final String metadataBrokerList;
+  protected final String metadataBrokerList;
   private Class clusterModeClazz;
   private BaseKafkaSource clusterModeInstance;
 

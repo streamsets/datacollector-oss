@@ -18,4 +18,5 @@ public interface Source extends Stage<Source.Context> {
   // returns offset NULL if done
   public String produce(String lastSourceOffset, int maxBatchSize, BatchMaker batchMaker) throws StageException;
 
+  public int getParallelism() throws StageException;
 }

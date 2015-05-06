@@ -8,6 +8,7 @@ import com.google.common.base.Throwables;
 import com.streamsets.pipeline.api.BatchMaker;
 import com.streamsets.pipeline.api.OffsetCommitter;
 import com.streamsets.pipeline.api.Record;
+import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.config.CsvHeader;
 import com.streamsets.pipeline.config.CsvMode;
@@ -15,6 +16,9 @@ import com.streamsets.pipeline.config.DataFormat;
 import com.streamsets.pipeline.config.JsonMode;
 import com.streamsets.pipeline.config.LogMode;
 import com.streamsets.pipeline.config.OnParseError;
+import com.streamsets.pipeline.lib.KafkaBroker;
+import com.streamsets.pipeline.lib.KafkaConnectionException;
+import com.streamsets.pipeline.lib.KafkaUtil;
 import com.streamsets.pipeline.lib.parser.log.RegExConfig;
 import com.streamsets.pipeline.stage.origin.kafka.BaseKafkaSource;
 
@@ -56,6 +60,11 @@ public class SparkStreamingKafkaSource extends BaseKafkaSource implements Offset
   @Override
   public List<ConfigIssue> validateConfigs() throws StageException {
     return validateCommonConfigs(new ArrayList<ConfigIssue>());
+  }
+
+  @Override
+  public int getParallelism() throws StageException {
+    return KafkaUtil.getPartitionCount(metadataBrokerList, topic, 1, 0);
   }
 
   @Override

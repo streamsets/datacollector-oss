@@ -33,14 +33,14 @@ public class TarFileCreator {
     FileOutputStream dest = new FileOutputStream(outputFile);
     TarOutputStream out = new TarOutputStream(new BufferedOutputStream(new GZIPOutputStream(dest), 65536));
     // api-lib
-    String prefix = ClasspathConstants.API_LIB;
+    String prefix = ClusterModeConstants.API_LIB;
     out.putNextEntry(new TarEntry(TarHeader.createHeader(prefix, 0L, now, true)));
     addClasspath(prefix, out, apiCl.getURLs());
-    prefix = ClasspathConstants.CONTAINER_LIB;
+    prefix = ClusterModeConstants.CONTAINER_LIB;
     out.putNextEntry(new TarEntry(TarHeader.createHeader(prefix, 0L, now, true)));
     addClasspath(prefix, out, containerCL.getURLs());
-    addLibrary(ClasspathConstants.STREAMSETS_LIBS, now, out, streamsetsLibsCl);
-    addLibrary(ClasspathConstants.USER_LIBS, now, out, userLibsCL);
+    addLibrary(ClusterModeConstants.STREAMSETS_LIBS, now, out, streamsetsLibsCl);
+    addLibrary(ClusterModeConstants.USER_LIBS, now, out, userLibsCL);
     tarFolder(null, staticWebDir.getAbsolutePath(), out);
     out.flush();
     out.close();
@@ -54,14 +54,14 @@ public class TarFileCreator {
     FileOutputStream dest = new FileOutputStream(outputFile);
     TarOutputStream out = new TarOutputStream(new BufferedOutputStream(new GZIPOutputStream(dest), 65536));
 
-    String prefix = ClasspathConstants.ETC;
+    String prefix = ClusterModeConstants.ETC;
     out.putNextEntry(new TarEntry(TarHeader.createHeader(prefix, 0L, now, true)));
     File[] files = etcDir.listFiles();
     Utils.checkState(files != null, Utils.formatL("Directory {} could not be read", etcDir));
     Utils.checkState(files.length > 0, Utils.formatL("Directory {} is empty", etcDir));
     for (File file : files) {
       Utils.checkState(file.isFile(), Utils.formatL("All entries in {} must be files and {} is not",
-        ClasspathConstants.ETC, file));
+        ClusterModeConstants.ETC, file));
       out.putNextEntry(new TarEntry(file, prefix + "/" + file.getName()));
       BufferedInputStream src = new BufferedInputStream(new FileInputStream(file), 65536);
       IOUtils.copy(src, out);

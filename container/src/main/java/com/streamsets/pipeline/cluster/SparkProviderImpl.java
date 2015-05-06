@@ -7,7 +7,6 @@ package com.streamsets.pipeline.cluster;
 
 import com.google.common.base.Joiner;
 import com.google.common.collect.Maps;
-import com.google.common.io.Files;
 import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.callback.CallbackServerTask;
 import com.streamsets.pipeline.config.ConfigConfiguration;
@@ -206,7 +205,7 @@ public class SparkProviderImpl implements SparkProvider {
     for (StageDefinition stageDef : stageLibrary.getStages()) {
       String type = StageLibraryUtils.getLibraryType(stageDef.getStageClassLoader());
       String name = StageLibraryUtils.getLibraryName(stageDef.getStageClassLoader());
-      if (ClasspathConstants.STREAMSETS_LIBS.equals(type) && name.contains("spark")) {
+      if (ClusterModeConstants.STREAMSETS_LIBS.equals(type) && name.contains("spark")) {
         streamsetsLibsCl.put(name, (URLClassLoader) stageDef.getStageClassLoader());
       }
     }
@@ -223,9 +222,9 @@ public class SparkProviderImpl implements SparkProvider {
       }
       String type = StageLibraryUtils.getLibraryType(stageDef.getStageClassLoader());
       String name = StageLibraryUtils.getLibraryName(stageDef.getStageClassLoader());
-      if (ClasspathConstants.STREAMSETS_LIBS.equals(type)) {
+      if (ClusterModeConstants.STREAMSETS_LIBS.equals(type)) {
         streamsetsLibsCl.put(name, (URLClassLoader)stageDef.getStageClassLoader());
-      } else if (ClasspathConstants.USER_LIBS.equals(type)) {
+      } else if (ClusterModeConstants.USER_LIBS.equals(type)) {
         userLibsCL.put(name, (URLClassLoader)stageDef.getStageClassLoader());
       } else {
         throw new IllegalStateException(Utils.format("Error unknown stage library type: {} ", type));
@@ -283,6 +282,9 @@ public class SparkProviderImpl implements SparkProvider {
     // one single sdc per executor
     args.add("--executor-cores");
     args.add("1");
+    // Number of Executors based on the origin parallelism
+    args.add("--num-executors");
+    args.add(sourceInfo.get(ClusterModeConstants.NUM_EXECUTORS_KEY));
     // ship our stage libs and etc directory
     args.add("--archives");
     args.add(Joiner.on(",").join(libsTarGz.getAbsolutePath(), etcTarGz.getAbsolutePath()));
