@@ -75,7 +75,7 @@ public class TestSystemProcess {
     process.kill(5000);
     long elapsed = System.currentTimeMillis() - start;
     Assert.assertTrue("Expected elapsed time to be less than 3000: " + elapsed,
-      elapsed > 3000);
+      elapsed < 3000);
   }
 
   @Test
