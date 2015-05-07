@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
+<concept id="concept_gwn_wf4_yr">
+ <title>Viewing <ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+  /> Directories</title>
+ <shortdesc>You can view the directories that the <ph
+   conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> uses. You might
+  check the directories being used to access a file in the directory or to increase the amount of
+  available space for a directory. </shortdesc>
+ <conbody>
+  <p>To view <ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
+   directories, click <menucascade>
+    <uicontrol>Administration</uicontrol>
+    <uicontrol>SDC Directories</uicontrol>
+   </menucascade>. </p>
+  <p>The following table describes the <ph
+    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> directories
+   that display:<table frame="all" rowsep="1" colsep="1" id="table_zfp_qg4_yr">
+    <tgroup cols="3">
+     <colspec colname="c1" colnum="1" colwidth="1*"/>
+     <colspec colname="c2" colnum="2" colwidth="1.5*"/>
+     <colspec colname="c3" colnum="3" colwidth="1.25*"/>
+     <thead>
+      <row>
+       <entry>Directory </entry>
+       <entry>Includes</entry>
+       <entry>Default Location</entry>
+      </row>
+     </thead>
+     <tbody>
+      <row>
+       <entry>Configuration Directory</entry>
+       <entry>The <ph
+         conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
+        properties file (sdc.properties), and related help realm properties files and keystore
+        files. <p>Also includes the logj4 properties file.</p></entry>
+       <entry>&lt;SDCinstalldir>/etc</entry>
+      </row>
+      <row>
+       <entry>Data Directory</entry>
+       <entry>Pipeline configuration and run details. </entry>
+       <entry>&lt;SDCinstalldir>/data</entry>
+      </row>
+      <row>
+       <entry>Log Directory</entry>
+       <entry><ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
+        log file, sdc.log.</entry>
+       <entry>&lt;SDCinstalldir>/log</entry>
+      </row>
+      <row>
+       <entry>Run Time Directory</entry>
+       <entry>Base directory for <ph
+         conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
+        executables and related files.</entry>
+       <entry>&lt;SDCinstalldir></entry>
+      </row>
+      <row>
+       <entry>Static Web Directory</entry>
+       <entry>User-interface related files. <draft-comment author="Loretta">Are we going to display
+         this or hide for non-dev folks?</draft-comment></entry>
+       <entry>&lt;SDCinstalldir>/sdc-static-web</entry>
+      </row>
+     </tbody>
+    </tgroup>
+   </table></p>
+ </conbody>
+</concept>

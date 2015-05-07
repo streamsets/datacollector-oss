@@ -24,6 +24,10 @@
   </topicmeta>
    <topicref href="../Administration/RESTResponse-Accessing.dita"/>
   </topicref>
+  <topicref href="../Administration/ViewingDirectories.dita" chunk="to-content">  <topicmeta>
+   <shortdesc/>
+  </topicmeta>
+  </topicref>
   <topicref href="../Administration/ShuttingDown.dita">
    <topicmeta>
     <shortdesc/>

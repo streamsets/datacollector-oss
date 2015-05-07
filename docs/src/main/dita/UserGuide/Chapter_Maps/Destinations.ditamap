@@ -43,11 +43,17 @@
     <shortdesc/>
    </topicmeta>
    <topicref href="../Destinations/KProducer-DataFormat.dita"/>
-   <topicref href="../Destinations/KafkaProducer_BrokerList.dita"/>
+   <topicref href="../Destinations/KProducer_BrokerList.dita"/>
    <topicref href="../Destinations/KProducer-RuntimeResolution.dita"/>
    <topicref href="../Destinations/KProducer-PartitionStrategy.dita"/>
    <topicref href="../Destinations/KProducer-AdditionalKProperties.dita"/>
    <topicref href="../Destinations/KProducer-Configuring.dita"/>
+  </topicref>
+  <topicref href="../Destinations/KinProducer.dita" chunk="to-content">  
+   <topicmeta>
+   <shortdesc/>
+  </topicmeta>
+   <topicref href="../Destinations/KinProducer-Configuring.dita"/>
   </topicref>
   <topicref href="../Destinations/Solr.dita" chunk="to-content"><topicmeta>
    <shortdesc/>

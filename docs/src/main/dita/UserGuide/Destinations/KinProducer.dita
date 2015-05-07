@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
+<concept id="concept_swk_h1j_yr">
+ <title>Kinesis Producer</title>
+ <shortdesc>The Kinesis Producer destination writes data to an Amazon Kinesis cluster. You can write
+  JSON or SDC Record data to Kinesis.</shortdesc>
+ <conbody>
+  <p>When you configure Kinesis Producer, you specify the Amazon Web Services connection information
+   for your Kinesis cluster and the data format to use. </p>
+  <p>Kinesis Producer writes data to Amazon Kinesis using the following Amazon Kinesis guidelines:
+    <ul id="ul_oxf_zm4_yr">
+    <li>Writes a maximum of 500 messages and 4.5 MB in a batch</li>
+    <li>Allows a maximum of 50 kb/message - Larger messages are sent to the stage for error
+     handling</li>
+   </ul></p>
+ </conbody>
+</concept>

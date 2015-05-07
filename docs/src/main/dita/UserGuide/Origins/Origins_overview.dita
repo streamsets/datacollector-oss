@@ -12,6 +12,7 @@
           files in the directory. </li>
         <li>HTTP Client - Reads data from a streaming HTTP resource URL.</li>
         <li>Kafka Consumer - Reads data from Kafka.</li>
+        <li>Kinesis Consumer - Reads data from Kinesis.</li>
       </ul></p>
  </conbody>
 </concept>

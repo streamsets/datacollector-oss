@@ -22,8 +22,7 @@
    For example, the following message indicates that the <ph
     conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> is running on
    http://192.168.130.5:18630:<codeblock>2015-06-06 10:41:07,764 DEBUG WebServerTask - Running on URI 'http://192.168.130.5:18630/', HTTPS 'false'</codeblock></p>
-  <p> The  <ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> log
-   is located in the following
-   location:<codeblock>&lt;DataCollector_installdir>/log/sdc.log</codeblock></p>
+  <p> The <ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> log
+   is located in the following location:<codeblock>&lt;SDCinstalldir>/log/sdc.log</codeblock></p>
  </conbody>
 </concept>

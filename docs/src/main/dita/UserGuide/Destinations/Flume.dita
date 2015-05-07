@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
+<concept id="concept_pzn_hl4_yr">
+ <title>Flume</title>
+ <shortdesc>The Flume destinations writes data to Flume. </shortdesc>
+ <conbody>
+  <p></p>
+ </conbody>
+</concept>
