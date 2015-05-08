@@ -85,6 +85,9 @@ public class TestSparkStreamingKafkaSource {
     propertiesFile = new File(target, "sdc.properties");
     properties.store(new FileOutputStream(propertiesFile), null);
     File pipelineJson = new File(target, "pipeline.json");
+    if(pipelineJson.exists()) {
+      pipelineJson.delete();
+    }
     Files.copy(Paths.get(Resources.getResource("spark_kafka_pipeline.json").toURI()),
       pipelineJson.toPath());
   }

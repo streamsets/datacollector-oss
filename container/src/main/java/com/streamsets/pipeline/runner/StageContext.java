@@ -63,10 +63,11 @@ public class StageContext implements Source.Context, Target.Context, Processor.C
   private final Map<String, Class<?>[]> configToElDefMap;
   private final Map<String, Object> constants;
   private final long pipelineMaxMemory;
+  private final boolean isClusterMode;
 
   //for SDK
   public StageContext(String instanceName, StageType stageType, boolean isPreview, OnRecordError onRecordError,
-      List<String> outputLanes, Map<String, Class<?>[]> configToElDefMap, Map<String, Object> constants) {
+      List<String> outputLanes, Map<String, Class<?>[]> configToElDefMap, Map<String, Object> constants, boolean isClusterMode) {
     pipelineInfo = ImmutableList.of();
     this.stageType = stageType;
     this.isPreview = isPreview;
@@ -78,10 +79,11 @@ public class StageContext implements Source.Context, Target.Context, Processor.C
     this. configToElDefMap = configToElDefMap;
     this.constants = constants;
     this.pipelineMaxMemory = new MemoryLimitConfiguration().getMemoryLimit();
+    this.isClusterMode = isClusterMode;
   }
 
   public StageContext(List<Stage.Info> pipelineInfo, StageType stageType, boolean isPreview, MetricRegistry metrics,
-      StageRuntime stageRuntime, long pipelineMaxMemory) {
+      StageRuntime stageRuntime, long pipelineMaxMemory, boolean isClusterMode) {
     this.pipelineInfo = pipelineInfo;
     this.stageType = stageType;
     this.isPreview = isPreview;
@@ -92,6 +94,7 @@ public class StageContext implements Source.Context, Target.Context, Processor.C
     this.configToElDefMap = getConfigToElDefMap(stageRuntime);
     this.constants = stageRuntime.getConstants();
     this.pipelineMaxMemory = pipelineMaxMemory;
+    this.isClusterMode = isClusterMode;
   }
 
   private Map<String, Class<?>[]> getConfigToElDefMap(StageRuntime stageRuntime) {
@@ -322,22 +325,7 @@ public class StageContext implements Source.Context, Target.Context, Processor.C
   }
 
   @Override
-  public boolean isStandalone() {
-    if (Boolean.getBoolean("sdc.clustermode")) {
-      return false;
-    } else {
-      return true;
-    }
-  }
-
-  @Override
   public boolean isClusterMode() {
-    // TODO - does not appear to be used, can be removed?
-    // TODO - Only for testing, Remove this once the execution modes are defined
-    if (Boolean.getBoolean("sdc.clustermode")) {
-      return true;
-    } else {
-      return false;
-    }
+    return isClusterMode;
   }
 }

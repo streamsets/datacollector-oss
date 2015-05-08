@@ -5,17 +5,6 @@
  */
 package com.streamsets.pipeline.stage.origin.spark;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
-import org.junit.Assert;
-import org.junit.BeforeClass;
-import org.junit.Test;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.config.CsvHeader;
@@ -29,22 +18,25 @@ import com.streamsets.pipeline.lib.json.StreamingJsonParser;
 import com.streamsets.pipeline.sdk.SourceRunner;
 import com.streamsets.pipeline.sdk.StageRunner;
 import com.streamsets.pipeline.stage.origin.kafka.KafkaDSource;
-import com.streamsets.pipeline.stage.origin.spark.MessageAndPartition;
-import com.streamsets.pipeline.stage.origin.spark.SparkStreamingKafkaSource;
+import org.junit.Assert;
+import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 
 public class TestSparkStreamingKafkaDataFormats {
   private static final Logger LOG = LoggerFactory.getLogger(TestSparkStreamingKafkaDataFormats.class);
 
-  @BeforeClass
-  public static void setup() {
-    System.setProperty("sdc.clustermode", "true");
-  }
-
   @Test
   public void testProduceStringRecords() throws Exception {
     SourceRunner sourceRunner = new SourceRunner.Builder(KafkaDSource.class)
       .addOutputLane("lane")
+      .setClusterMode(true)
       .addConfiguration("metadataBrokerList", "dummyhost:1281")
       .addConfiguration("zookeeperConnect", null)
       .addConfiguration("consumerGroup", null)
@@ -105,6 +97,7 @@ public class TestSparkStreamingKafkaDataFormats {
   public void testProduceJsonRecordsMultipleObjectsMultipleRecord() throws StageException, IOException {
     SourceRunner sourceRunner = new SourceRunner.Builder(KafkaDSource.class)
       .addOutputLane("lane")
+      .setClusterMode(true)
       .addConfiguration("metadataBrokerList", "dummyhost:1281")
       .addConfiguration("zookeeperConnect", null)
       .addConfiguration("consumerGroup", null)
@@ -156,6 +149,7 @@ public class TestSparkStreamingKafkaDataFormats {
   public void testProduceJsonRecordsArrayObjectsMultipleRecord() throws StageException, IOException {
     SourceRunner sourceRunner = new SourceRunner.Builder(KafkaDSource.class)
       .addOutputLane("lane")
+      .setClusterMode(true)
       .addConfiguration("metadataBrokerList", "dummyhost:1281")
       .addConfiguration("zookeeperConnect", null)
       .addConfiguration("consumerGroup", null)
@@ -206,6 +200,7 @@ public class TestSparkStreamingKafkaDataFormats {
   public void testProduceJsonRecordsArrayObjectsSingleRecord() throws StageException, IOException {
     SourceRunner sourceRunner = new SourceRunner.Builder(KafkaDSource.class)
       .addOutputLane("lane")
+      .setClusterMode(true)
       .addConfiguration("metadataBrokerList", "dummyhost:1281")
        .addConfiguration("zookeeperConnect", null)
       .addConfiguration("consumerGroup", null)
@@ -256,6 +251,7 @@ public class TestSparkStreamingKafkaDataFormats {
   public void testProduceXmlRecordsNoRecordElement() throws Exception {
     SourceRunner sourceRunner = new SourceRunner.Builder(KafkaDSource.class)
       .addOutputLane("lane")
+      .setClusterMode(true)
       .addConfiguration("metadataBrokerList", "dummyhost:1281")
       .addConfiguration("zookeeperConnect", null)
       .addConfiguration("consumerGroup", null)
@@ -308,6 +304,7 @@ public class TestSparkStreamingKafkaDataFormats {
   public void testProduceXmlRecordsWithRecordElement() throws Exception {
     SourceRunner sourceRunner = new SourceRunner.Builder(KafkaDSource.class)
       .addOutputLane("lane")
+      .setClusterMode(true)
       .addConfiguration("metadataBrokerList", "dummyhost:1281")
       .addConfiguration("zookeeperConnect", null)
       .addConfiguration("consumerGroup", null)
@@ -359,6 +356,7 @@ public class TestSparkStreamingKafkaDataFormats {
   public void testProduceCsvRecords() throws Exception {
     SourceRunner sourceRunner = new SourceRunner.Builder(KafkaDSource.class)
       .addOutputLane("lane")
+      .setClusterMode(true)
       .addConfiguration("metadataBrokerList", "dummyhost:1281")
       .addConfiguration("zookeeperConnect", null)
       .addConfiguration("consumerGroup", null)

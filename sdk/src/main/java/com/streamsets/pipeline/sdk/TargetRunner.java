@@ -22,15 +22,16 @@ public class TargetRunner extends StageRunner<Target> {
 
   @SuppressWarnings("unchecked")
   public TargetRunner(Class<Target> targetClass, Target target, Map<String, Object> configuration, boolean isPreview,
-                      OnRecordError onRecordError, Map<String, Object> constants) {
+                      OnRecordError onRecordError, Map<String, Object> constants, boolean isClusterMode) {
     super(targetClass, target, StageType.TARGET, configuration, Collections.EMPTY_LIST, isPreview, onRecordError,
-      constants);
+      constants, isClusterMode);
   }
 
   @SuppressWarnings("unchecked")
   public TargetRunner(Class<Target> sourceClass, Map<String, Object> configuration, boolean isPreview,
-      OnRecordError onRecordError, Map<String, Object> constants) {
-    super(sourceClass, StageType.TARGET, configuration, Collections.EMPTY_LIST, isPreview, onRecordError, constants);
+      OnRecordError onRecordError, Map<String, Object> constants, boolean isClusterMode) {
+    super(sourceClass, StageType.TARGET, configuration, Collections.EMPTY_LIST, isPreview, onRecordError, constants,
+      isClusterMode);
   }
 
   public void runWrite(List<Record> inputRecords) throws StageException {
@@ -53,8 +54,9 @@ public class TargetRunner extends StageRunner<Target> {
     @Override
     public TargetRunner build() {
       Utils.checkState(outputLanes.isEmpty(), "A Target cannot have output streams");
-      return (stage != null) ? new TargetRunner(stageClass, stage, configs, isPreview, onRecordError, constants)
-                             : new TargetRunner(stageClass, configs, isPreview, onRecordError, constants);
+      return (stage != null) ?
+        new TargetRunner(stageClass, stage, configs, isPreview, onRecordError, constants, isClusterMode)
+        : new TargetRunner(stageClass, configs, isPreview, onRecordError, constants, isClusterMode);
     }
 
   }

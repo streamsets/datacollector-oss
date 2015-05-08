@@ -124,7 +124,7 @@ public class BaseKafkaSource extends BaseSource implements OffsetCommitter {
   @Override
   protected List<ConfigIssue> validateConfigs() throws StageException {
     List<ConfigIssue> issues;
-    if (getContext().isPreview() || getContext().isStandalone()) {
+    if (getContext().isPreview() || !getContext().isClusterMode()) {
       standaloneKafkaSource =
         new StandaloneKafkaSource(zookeeperConnect, consumerGroup, topic, dataFormat, charset,
           produceSingleRecordPerMessage, maxBatchSize, maxWaitTime, kafkaConsumerConfigs, textMaxLineLen, jsonContent,
@@ -245,7 +245,7 @@ public class BaseKafkaSource extends BaseSource implements OffsetCommitter {
 
   @Override
   public void init() throws StageException {
-    if (getContext().isPreview() || getContext().isStandalone()) {
+    if (getContext().isPreview() || !getContext().isClusterMode()) {
       standaloneKafkaSource.init();
     } else {
       clusterModeInstance.init();
@@ -255,7 +255,7 @@ public class BaseKafkaSource extends BaseSource implements OffsetCommitter {
 
   @Override
   public String produce(String lastSourceOffset, int maxBatchSize, BatchMaker batchMaker) throws StageException {
-    if(getContext().isPreview() || getContext().isStandalone()) {
+    if(getContext().isPreview() || !getContext().isClusterMode()) {
       return standaloneKafkaSource.produce(lastSourceOffset, maxBatchSize, batchMaker);
     } else {
       return clusterModeInstance.produce(lastSourceOffset, maxBatchSize, batchMaker);
@@ -318,7 +318,7 @@ public class BaseKafkaSource extends BaseSource implements OffsetCommitter {
 
   @Override
   public void commit(String offset) throws StageException {
-    if(getContext().isPreview() || getContext().isStandalone()) {
+    if(getContext().isPreview() || !getContext().isClusterMode()) {
       standaloneKafkaSource.commit(offset);
     } else {
       clusterModeInstance.commit(offset);
@@ -328,7 +328,7 @@ public class BaseKafkaSource extends BaseSource implements OffsetCommitter {
 
   @Override
   public void destroy() {
-    if (getContext().isPreview() || getContext().isStandalone()) {
+    if (getContext().isPreview() || !getContext().isClusterMode()) {
       standaloneKafkaSource.destroy();
     } else {
       clusterModeInstance.destroy();
@@ -337,7 +337,7 @@ public class BaseKafkaSource extends BaseSource implements OffsetCommitter {
 
   private Object createInstanceClusterMode(String className) {
     try {
-      clusterModeClazz = BootstrapSpark.getClassFromSparkClassloader(className);
+      clusterModeClazz = Class.forName(className);
       Constructor ctor =
         clusterModeClazz.getConstructor(String.class, String.class, DataFormat.class, String.class, boolean.class,
           int.class, int.class, Map.class, int.class, JsonMode.class, int.class, CsvMode.class, CsvHeader.class,

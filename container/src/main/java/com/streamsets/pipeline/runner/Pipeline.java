@@ -107,6 +107,9 @@ public class Pipeline {
   }
 
   public static class Builder {
+    private static final String EXECUTION_MODE_CONFIG_KEY = "executionMode";
+    private static final String EXECUTION_MODE_CLUSTER = "CLUSTER";
+
     private final StageLibraryTask stageLib;
     private final String name;
     private final PipelineConfiguration pipelineConf;
@@ -145,13 +148,25 @@ public class Pipeline {
     private void setStagesContext(StageRuntime[] stages, StageRuntime errorStage, PipelineRunner runner) {
       List<Stage.Info> infos = new ArrayList<>(stages.length);
       List<Stage.Info> infosUnmodifiable = Collections.unmodifiableList(infos);
+      boolean clusterMode = isClusterMode(pipelineConf);
       for (StageRuntime stage : stages) {
         infos.add(stage.getInfo());
         stage.setContext(new StageContext(infosUnmodifiable, stage.getDefinition().getType(), runner.isPreview(),
-          runner.getMetrics(), stage, pipelineConf.getMemoryLimitConfiguration().getMemoryLimit()));
+          runner.getMetrics(), stage, pipelineConf.getMemoryLimitConfiguration().getMemoryLimit(), clusterMode));
       }
       errorStage.setContext(new StageContext(infosUnmodifiable, errorStage.getDefinition().getType(), runner.isPreview(),
-          runner.getMetrics(), errorStage, pipelineConf.getMemoryLimitConfiguration().getMemoryLimit()));
+          runner.getMetrics(), errorStage, pipelineConf.getMemoryLimitConfiguration().getMemoryLimit(), clusterMode));
+    }
+
+    private boolean isClusterMode(PipelineConfiguration pipelineConf) {
+      boolean clusterMode = false;
+      if(pipelineConf.getConfiguration(EXECUTION_MODE_CONFIG_KEY) != null) {
+        String executionMode = (String) pipelineConf.getConfiguration(EXECUTION_MODE_CONFIG_KEY).getValue();
+        if (executionMode != null && !executionMode.isEmpty() && executionMode.equals(EXECUTION_MODE_CLUSTER)) {
+          clusterMode = true;
+        }
+      }
+      return clusterMode;
     }
 
     private Pipe[] createPipes(StageRuntime[] stages) throws PipelineRuntimeException {

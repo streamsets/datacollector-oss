@@ -174,14 +174,14 @@ public abstract class StageRunner<S extends Stage> {
 
   @SuppressWarnings("unchecked")
   StageRunner(Class<S> stageClass, StageType stageType, Map<String, Object> configuration, List<String> outputLanes,
-      boolean isPreview, OnRecordError onRecordError, Map<String, Object> constants) {
+      boolean isPreview, OnRecordError onRecordError, Map<String, Object> constants, boolean isClusterMode) {
     this(stageClass, (S) getStage(Utils.checkNotNull(stageClass, "stageClass")), stageType, configuration, outputLanes,
-      isPreview, onRecordError, constants);
+      isPreview, onRecordError, constants, isClusterMode);
   }
 
   StageRunner(Class<S> stageClass, S stage, StageType stageType, Map < String, Object > configuration,
               List< String > outputLanes, boolean isPreview, OnRecordError onRecordError,
-              Map<String, Object> constants) {
+              Map<String, Object> constants, boolean isClusterMode) {
     Utils.checkNotNull(stage, "stage");
     Utils.checkNotNull(configuration, "configuration");
     Utils.checkNotNull(outputLanes, "outputLanes");
@@ -203,7 +203,7 @@ public abstract class StageRunner<S extends Stage> {
       throw new RuntimeException(e);
     }
     context = new StageContext(instanceName, stageType ,isPreview, onRecordError, outputLanes, configToElDefMap,
-      constants);
+      constants, isClusterMode);
     status = Status.CREATED;
   }
 
@@ -327,6 +327,7 @@ public abstract class StageRunner<S extends Stage> {
     final Map<String, Object> configs;
     final Map<String, Object> constants;
     boolean isPreview;
+    boolean isClusterMode;
     OnRecordError onRecordError;
 
     protected Builder(Class<S> stageClass, S stage) {
@@ -341,6 +342,11 @@ public abstract class StageRunner<S extends Stage> {
     @SuppressWarnings("unchecked")
     public B setPreview(boolean isPreview) {
       this.isPreview = isPreview;
+      return (B) this;
+    }
+
+    public B setClusterMode(boolean isClusterMode) {
+      this.isClusterMode = isClusterMode;
       return (B) this;
     }
 
