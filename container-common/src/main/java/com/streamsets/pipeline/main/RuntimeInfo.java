@@ -12,6 +12,8 @@ import com.streamsets.pipeline.api.impl.Utils;
 
 import com.streamsets.pipeline.util.AuthzRole;
 import org.slf4j.Logger;
+
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -33,6 +35,7 @@ public class RuntimeInfo {
   public static final String TRANSIENT_ENVIRONMENT = "sdc.transient-env";
   public static final String UNDEF = "UNDEF";
   public static final String CALLBACK_URL = "/rest/v1/cluster/callback";
+  private final static String USER_ROLE = "user";
 
   public static final String LOG4J_CONFIGURATION_URL_ATTR = "log4j.configuration.url";
   private static final String LOG4J_PROPERTIES = "-log4j.properties";
@@ -179,22 +182,35 @@ public class RuntimeInfo {
   }
 
   public boolean isValidAuthenticationToken(String authToken) {
-    String [] strArr = authToken.split(SPLITTER);
-    if(strArr.length > 1) {
-      String role = strArr[1];
-      String tokenCache = authenticationTokens.get(role);
-      return authToken.equals(tokenCache);
+    String [] authTokens = authToken.split(",");
+    for(String token: authTokens) {
+      String [] strArr = token.split("\\" + SPLITTER);
+      if(strArr.length > 1) {
+        String role = strArr[1];
+        String tokenCache = authenticationTokens.get(role);
+        if(!token.equals(tokenCache)) {
+          return false;
+        }
+      } else {
+        return  false;
+      }
     }
-    return false;
+    return true;
   }
 
-  public String getRoleFromAuthenticationToken(String authToken) {
-    String [] strArr = authToken.split(SPLITTER);
-    if(strArr.length > 1) {
-      return strArr[1];
+  public String [] getRolesFromAuthenticationToken(String authToken) {
+    List<String> roles = new ArrayList<>();
+    roles.add(USER_ROLE);
+
+    String [] authTokens = authToken.split(",");
+    for(String token: authTokens) {
+      String [] strArr = token.split("\\" + SPLITTER);
+      if(strArr.length > 1) {
+        roles.add(strArr[1]);
+      }
     }
 
-    return null;
+    return roles.toArray(new String[roles.size()]);
   }
 
   public void reloadAuthenticationToken() {

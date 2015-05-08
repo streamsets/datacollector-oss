@@ -20,6 +20,9 @@ angular
       });
   }])
   .controller('HomeController', function ($scope, $rootScope, $q, $modal, $location, pipelineService, api) {
+    $location.search('auth_token', null);
+    $location.search('auth_user', null);
+
     angular.extend($scope, {
       loaded: false,
 

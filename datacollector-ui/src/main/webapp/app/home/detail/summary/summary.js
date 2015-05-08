@@ -5,7 +5,7 @@
 angular
   .module('dataCollectorApp.home')
 
-  .controller('SummaryController', function ($scope, $rootScope, $modal, $http, pipelineConstant) {
+  .controller('SummaryController', function ($scope, $rootScope, $modal, $http, pipelineConstant, authService) {
     var chartList = [
       {
         label: 'home.detailPane.summaryTab.slaveSDCInstances',
@@ -97,18 +97,21 @@ angular
       openSlave: function(callbackInfo, $event) {
         $event.preventDefault();
 
-        $http({
-          method: 'jsonp',
-          url: callbackInfo.sdcURL + '?callback=JSON_CALLBACK',
-          headers: {
-            'auth-token': callbackInfo.adminToken
+        var userRoles = authService.getUserRoles(),
+          userName = authService.getUserName(),
+          slaveURL = callbackInfo.sdcURL + '?auth_user=' + userName,
+          tokens = [];
+
+        angular.forEach(userRoles, function(userRole) {
+          var token = callbackInfo[userRole + 'Token'];
+          if(token) {
+            tokens.push(token);
           }
-        }).success(function() {
-          window.open(callbackInfo.sdcURL);
-        }).error(function(data){
-          console.log(data);
         });
 
+        slaveURL += '&auth_token=' + tokens.join(',');
+
+        window.open(slaveURL);
       }
     });
 

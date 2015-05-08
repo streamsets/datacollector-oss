@@ -7,6 +7,7 @@
 package com.streamsets.pipeline.metrics;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.streamsets.pipeline.callback.CallbackInfo;
 import com.streamsets.pipeline.json.ObjectMapperFactory;
 import com.streamsets.pipeline.main.RuntimeInfo;
 import com.streamsets.pipeline.prodmanager.PipelineManager;
@@ -16,7 +17,10 @@ import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class MetricsEventRunnable implements Runnable {
   private final static Logger LOG = LoggerFactory.getLogger(MetricsEventRunnable.class);
@@ -49,7 +53,15 @@ public class MetricsEventRunnable implements Runnable {
         if(runtimeInfo.getExecutionMode().equals(RuntimeInfo.ExecutionMode.CLUSTER)) {
           //In case of cluster mode return List of Slave node details
           // TODO: Return aggregated metrics from all slave nodes along with slave node details
-          metricsJSONStr = objectMapper.writer().writeValueAsString(pipelineManager.getSlaveCallbackList());
+
+          Collection<CallbackInfo> callbackInfoCollection = pipelineManager.getSlaveCallbackList();
+          Map<String, Object> clusterMetrics = new HashMap<>();
+          List<String> slaves = new ArrayList<>();
+          for(CallbackInfo callbackInfo : callbackInfoCollection) {
+            slaves.add(callbackInfo.getSdcURL());
+          }
+          clusterMetrics.put("slaves", slaves);
+          metricsJSONStr = objectMapper.writer().writeValueAsString(clusterMetrics);
         } else {
           metricsJSONStr = objectMapper.writer().writeValueAsString(pipelineManager.getMetrics());
         }

@@ -640,7 +640,8 @@ angular
      * @param config
      */
     var saveUpdates = function (config) {
-      if (configSaveInProgress || $scope.isPipelineReadOnly) {
+      if (configSaveInProgress || $scope.isPipelineReadOnly ||
+        $rootScope.common.sdcExecutionMode === pipelineConstant.SLAVE) {
         return;
       }
 

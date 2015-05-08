@@ -351,13 +351,13 @@
       </div>
       <div class="panel-body">
         <ul class="table-properties">
-          <li ng-repeat="callbackInfo in common.pipelineMetrics">
-            <a href="{{callbackInfo.sdcURL}}" target="_blank">
-              {{callbackInfo.sdcURL}}
+          <li ng-repeat="sdcURL in common.pipelineMetrics.slaves">
+            <a href="/rest/v1/cluster/redirectToSlave?sdcURL={{sdcURL}}" target="_blank">
+              {{sdcURL}}
             </a>
           </li>
 
-          <li ng-if="!common.pipelineMetrics || common.pipelineMetrics.length === 0">
+          <li ng-if="!common.pipelineMetrics || !common.pipelineMetrics.slaves || common.pipelineMetrics.slaves.length === 0">
             <span class="properties-label">No Record</span>
           </li>
         </ul>

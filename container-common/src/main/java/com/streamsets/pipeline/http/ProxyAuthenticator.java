@@ -25,8 +25,8 @@ public class ProxyAuthenticator extends LoginAuthenticator {
   private final RuntimeInfo runtimeInfo;
   private final LoginAuthenticator authenticator;
   private final static String AUTH_TOKEN = "auth_token";
+  private final static String AUTH_USER = "auth_user";
   private final static String TOKEN_AUTHENTICATION_USER_NAME = "admin";
-  private final static String USER_ROLE = "user";
 
   public ProxyAuthenticator(LoginAuthenticator authenticator, RuntimeInfo runtimeInfo) {
     this.authenticator = authenticator;
@@ -81,14 +81,24 @@ public class ProxyAuthenticator extends LoginAuthenticator {
 
     if (authentication == null) {
       String authToken = request.getHeader(AUTH_TOKEN);
-      if(authToken != null && runtimeInfo.isValidAuthenticationToken(authToken)) {
+      String authUser = request.getHeader(AUTH_USER);
 
+      if(authToken == null) {
+        authToken = request.getParameter(AUTH_TOKEN);
+        authUser = request.getParameter(AUTH_USER);
+
+        if(authUser == null) {
+          authUser = TOKEN_AUTHENTICATION_USER_NAME;
+        }
+      }
+
+      if(authToken != null && runtimeInfo.isValidAuthenticationToken(authToken)) {
         //TODO: Get user name from Request header and use that name for creating Principal
-        Principal userPrincipal = new MappedLoginService.KnownUser(TOKEN_AUTHENTICATION_USER_NAME, null);
+        Principal userPrincipal = new MappedLoginService.KnownUser(authUser, null);
         Subject subject = new Subject();
         subject.getPrincipals().add(userPrincipal);
         subject.setReadOnly();
-        String [] roles = { USER_ROLE, runtimeInfo.getRoleFromAuthenticationToken(authToken) };
+        String [] roles = runtimeInfo.getRolesFromAuthenticationToken(authToken);
         UserIdentity userIdentity = _identityService.newUserIdentity(subject,userPrincipal, roles);
 
         Authentication cached=new SessionAuthentication(getAuthMethod(), userIdentity, null);
