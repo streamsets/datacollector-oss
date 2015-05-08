@@ -555,8 +555,8 @@ public class FilePipelineStoreTask extends AbstractTask implements PipelineStore
   private boolean isComplexConfiguration(Map<String, Object> map) {
     if(!map.isEmpty()
       && map.keySet().size() == 2 //regular configuration contains 2 entries
-      && map.keySet().contains("key") //one of them with key "key"
-      && map.keySet().contains("value")) { //one of them with key "value"
+      && ((map.keySet().contains("key") && map.keySet().contains("value")) //one of them with key "key" & "value"
+      || (map.keySet().contains("outputLane") && map.keySet().contains("predicate")))) { //lanePredicate case
       return false;
     }
     return true;
