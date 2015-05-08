@@ -891,7 +891,7 @@ public class PipelineAnnotationsProcessor extends AbstractProcessor {
       }
       if (fieldType.getKind().equals(TypeKind.LONG)) {
         try {
-          Integer.parseInt(configDefAnnot.defaultValue());
+          Long.parseLong(configDefAnnot.defaultValue());
         } catch (NumberFormatException e) {
           printError("field.validation.default.value.not.long",
               "The type of the field {} is Long but the default value supplied is not Long.",
