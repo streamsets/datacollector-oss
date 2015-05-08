@@ -5,10 +5,10 @@
  <shortdesc>The JavaScript Evaluator processes data based on JavaScript code. Use the JavaScript
         processor to use JavaScript code to perform custom processing.</shortdesc>
  <conbody>
-  <p><indexterm>JavaScript
-          Evaluator<indexterm>overview</indexterm></indexterm><indexterm>processors<indexterm>JavaScript
-          Evaluator</indexterm></indexterm>The JavaScript Evaluator can process data one record at a
-      time or one batch at a time. </p>
+  <p><indexterm>JavaScript Evaluator
+                    processor<indexterm>overview</indexterm></indexterm><indexterm>processors<indexterm>JavaScript
+                    Evaluator</indexterm></indexterm>The JavaScript Evaluator can process data one
+            record at a time or one batch at a time. </p>
   <p>When you use a JavaScript Evaluator in a pipeline, the <ph
                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
             passes a batch of data to the processor and converts the data to a scripting-friendly

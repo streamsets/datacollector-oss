@@ -2,8 +2,16 @@
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_pzn_hl4_yr">
  <title>Flume</title>
- <shortdesc>The Flume destinations writes data to Flume. </shortdesc>
+ <shortdesc>The Flume destination writes data to Flume. </shortdesc>
  <conbody>
-  <p></p>
+  <p>When you configure a Flume destination, you can configure one or more Flume hosts to use,
+   connection and batch information, and the client type used by Flume. You also define the data
+   format of source data. </p>
+  <p>When you write data to Flume, you pass data to a source type. The Flume destination can write
+   data to the following Flume source types:<ul id="ul_evb_hbq_yr">
+    <li>Avro in failover mode</li>
+    <li>Avro in load balancing mode</li>
+    <li>Thrift</li>
+   </ul></p>
  </conbody>
 </concept>

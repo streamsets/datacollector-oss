@@ -55,6 +55,13 @@
   </topicmeta>
    <topicref href="../Destinations/KinProducer-Configuring.dita"/>
   </topicref>
+  <topicref href="../Destinations/Flume.dita" chunk="to-content"> 
+   <topicmeta>
+   <shortdesc/>
+  </topicmeta>
+   <topicref href="../Destinations/Flume-DataFormats.dita"/>
+   <topicref href="../Destinations/Flume-Configuring.dita"/>
+  </topicref>
   <topicref href="../Destinations/Solr.dita" chunk="to-content"><topicmeta>
    <shortdesc/>
   </topicmeta>

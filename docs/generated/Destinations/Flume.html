@@ -1,0 +1,316 @@
+
+<!DOCTYPE html
+  SYSTEM "about:legacy-compat">
+<html xml:lang="en-us" lang="en-us">
+<head><meta name="description" content="The Flume destination writes data to Flume. When you configure a Flume destination, you can configure one or more Flume hosts to use, connection and batch information, and the client type used by ..."></meta><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><meta name="copyright" content="(C) Copyright 2005"></meta><meta name="DC.rights.owner" content="(C) Copyright 2005"></meta><meta name="DC.Type" content="concept"></meta><meta name="DC.Title" content="Flume"></meta><meta name="abstract" content="The Flume destination writes data to Flume."></meta><meta name="description" content="The Flume destination writes data to Flume."></meta><meta name="DC.Relation" scheme="URI" content="../Destinations/Destinations-title.html"></meta><meta name="DC.Format" content="XHTML"></meta><meta name="DC.Identifier" content="concept_pzn_hl4_yr"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/commonltr.css"><!----></link><title>Flume</title><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/webhelp_topic.css"><!----></link><link rel="stylesheet" type="text/css" href="../skin.css"></link><script type="text/javascript"><!--
+          
+          var prefix = "../index.html";
+          
+          --></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery-1.8.2.min.js"><!----></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery.cookie.js"><!----></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery-ui.custom.min.js"><!----></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery.highlight-3.js"><!----></script><script type="text/javascript" charset="utf-8" src="../oxygen-webhelp/resources/js/webhelp_topic.js"><!----></script></head>
+<body onload="highlightSearchTerm()" class="frmBody">
+<table class="nav"><tbody><tr><td colspan="2"><div id="printlink"><a href="javascript:window.print();" title="Print this page"></a></div><div id="permalink"><a href="#" title="Link to this page"></a></div></td></tr><tr><td width="75%"><a class="navheader_parent_path" href="../Destinations/Destinations-title.html" title="Destinations">Destinations</a></td><td><div class="navheader">
+<span class="navparent"><a class="link" href="../Destinations/Destinations-title.html" title="Destinations"><span class="navheader_label">Parent topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">Destinations</span></a></span>  </div></td></tr></tbody></table>
+<div class="nested0" id="concept_pzn_hl4_yr">
+ <h1 class="title topictitle1">Flume</h1>
+
+ 
+ <div class="body conbody"><p class="shortdesc">The Flume destination writes data to Flume. </p>
+
+  <p class="p">When you configure a Flume destination, you can configure one or more Flume hosts to use,
+   connection and batch information, and the client type used by Flume. You also define the data
+   format of source data. </p>
+
+  <div class="p">When you write data to Flume, you pass data to a source type. The Flume destination can write
+   data to the following Flume source types:<ul class="ul" id="concept_pzn_hl4_yr__ul_evb_hbq_yr">
+    <li class="li">Avro in failover mode</li>
+
+    <li class="li">Avro in load balancing mode</li>
+
+    <li class="li">Thrift</li>
+
+   </ul>
+</div>
+
+ </div>
+
+<div class="related-links"></div>
+<div class="topic concept nested1" id="concept_dbh_2xp_yr">
+ <h2 class="title topictitle2">Data Formats</h2>
+
+ <div class="body conbody">
+  <div class="p">The Flume destination writes data
+   to Flume based on the data format that you select. You can use the following data formats: <dl class="dl">
+                        
+                              <dt class="dt dlterm">Text</dt>
+
+                              <dd class="dd">The destination writes a single text field of a record. When you
+                                    configure the stage, you select the field to use. When
+                                    necessary, merge record data into the field earlier in the
+                                    pipeline. </dd>
+
+                        
+                        
+                              <dt class="dt dlterm">JSON</dt>
+
+                              <dd class="dd">The destination writes records as JSON data. You can use one of
+                                    the following formats:<ul class="ul" id="concept_dbh_2xp_yr__d476e156">
+                                          <li class="li">Array - Each file includes a single array. In the
+                                                array, each element is a JSON representation of each
+                                                record.</li>
+
+                                          <li class="li">Multiple objects - Each file includes multiple JSON
+                                                objects. Each object is a JSON representation of a
+                                                record. </li>
+
+                                    </ul>
+</dd>
+
+                        
+                        
+                              <dt class="dt dlterm">Delimited</dt>
+
+                              <dd class="dd">The destination writes records as delimited data. When you use
+                                    this data format, you must ensure that the data uses the
+                                    following data structure:<ul class="ul" id="concept_dbh_2xp_yr__d476e173">
+                                          <li class="li">A root field that contains an array of maps.</li>
+
+                                          <li class="li">Each map includes a <dfn class="term">value</dfn> element and an
+                                                optional <dfn class="term">header</dfn> element.</li>
+
+                                    </ul>
+</dd>
+
+                        
+                        
+                              <dt class="dt dlterm">SDC Record</dt>
+
+                              <dd class="dd">The destination writes records in the SDC Record data format.
+                              </dd>
+
+                        
+                  </dl>
+</div>
+
+ </div>
+
+</div>
+<div class="topic task nested1" id="task_vft_g5p_yr">
+    <h2 class="title topictitle2">Configuring a Flume Destination</h2>
+
+    <div class="body taskbody">
+        <div class="section context">
+            <p class="p">Configure
+                a Flume destination to write data to Flume. </p>
+
+        </div>
+
+        <ol class="ol steps" id="task_vft_g5p_yr__steps_dmg_jyp_yr"><li class="li step stepexpand">
+                <span class="ph cmd">In the Properties panel, on the <span class="keyword wintitle">General</span> tab, configure the
+                    following properties:</span>
+                <div class="itemgroup info">
+                    
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_vft_g5p_yr__d453e246" class="table" frame="border" border="1" rules="all">
+                            
+                            
+                            <thead class="thead" align="left">
+                                <tr class="row">
+                                    <th class="entry" valign="top" width="24.509803921568626%" id="d5951e171">General Property</th>
+
+                                    <th class="entry" valign="top" width="75.49019607843137%" id="d5951e174">Description</th>
+
+                                </tr>
+
+                            </thead>
+
+                            <tbody class="tbody">
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="24.509803921568626%" headers="d5951e171 ">Name</td>
+
+                                    <td class="entry" valign="top" width="75.49019607843137%" headers="d5951e174 ">Stage name.</td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="24.509803921568626%" headers="d5951e171 ">Description</td>
+
+                                    <td class="entry" valign="top" width="75.49019607843137%" headers="d5951e174 ">Optional description.</td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="24.509803921568626%" headers="d5951e171 ">Required Fields <a class="xref" href="../Pipeline_Configuration/PipelineDesign.html#concept_dnj_bkm_vq" title="You can configure required fields for any processor and most destination stages. A required field must exist in a record to allow the record to enter the stage for processing. When a record does not include a required field, the stage passes the record to the pipeline for error handling.">
+                                            <img class="image" id="task_vft_g5p_yr__d453e292" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
+
+                                    <td class="entry" valign="top" width="75.49019607843137%" headers="d5951e174 ">Fields that must include data to be passed to the stage.
+                                            <div class="note tip"><span class="tiptitle">Tip:</span> You might include fields
+                                            that the stage uses.</div>
+</td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="24.509803921568626%" headers="d5951e171 ">On Record Error</td>
+
+                                    <td class="entry" valign="top" width="75.49019607843137%" headers="d5951e174 ">Error record handling for the stage: <ul class="ul" id="task_vft_g5p_yr__d453e307">
+                                            <li class="li">Discard - Discards the record.</li>
+
+                                            <li class="li">Send to Error - Sends the record to the pipeline for
+                                                error handling.</li>
+
+                                            <li class="li">Stop Pipeline - Stops the pipeline. </li>
+
+                                        </ul>
+</td>
+
+                                </tr>
+
+                            </tbody>
+
+                        </table>
+</div>
+
+                </div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">On the <span class="ph uicontrol">Flume</span> tab, configure the following
+                    properties:</span>
+                <div class="itemgroup info">
+                    
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_vft_g5p_yr__table_qpb_5yp_yr" class="table" frame="border" border="1" rules="all">
+                            
+                            
+                            <thead class="thead" align="left">
+                                <tr class="row">
+                                    <th class="entry" valign="top" width="26.525198938992045%" id="d5951e264">Flume Property</th>
+
+                                    <th class="entry" valign="top" width="73.47480106100795%" id="d5951e267">Description</th>
+
+                                </tr>
+
+                            </thead>
+
+                            <tbody class="tbody">
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="26.525198938992045%" headers="d5951e264 ">Host Configuration</td>
+
+                                    <td class="entry" valign="top" width="73.47480106100795%" headers="d5951e267 ">Flume host information:<ul class="ul" id="task_vft_g5p_yr__ul_al4_s1q_yr">
+                                            <li class="li">Name - Local alias for the Flume host. </li>
+
+                                            <li class="li">Flume host and port - Host name and port number for
+                                                the Flume agent. Use the following format: &lt;host
+                                                name&gt;:&lt;port number&gt;</li>
+
+                                        </ul>
+Click <span class="ph uicontrol">Add</span> to add additional host
+                                        configuration.</td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="26.525198938992045%" headers="d5951e264 ">Client Type</td>
+
+                                    <td class="entry" valign="top" width="73.47480106100795%" headers="d5951e267 ">Flume source client type:<ul class="ul" id="task_vft_g5p_yr__ul_qcr_fbq_yr">
+                                            <li class="li">Avro </li>
+
+                                        </ul>
+</td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="26.525198938992045%" headers="d5951e264 ">Backoff</td>
+
+                                    <td class="entry" valign="top" width="73.47480106100795%" headers="d5951e267 ">For Avro load balancing source types only. </td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="26.525198938992045%" headers="d5951e264 ">Max Backoff (ms)</td>
+
+                                    <td class="entry" valign="top" width="73.47480106100795%" headers="d5951e267 ">For Avro load balancing source types only. </td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="26.525198938992045%" headers="d5951e264 ">Host Selection Strategy</td>
+
+                                    <td class="entry" valign="top" width="73.47480106100795%" headers="d5951e267 ">For Avro load balancing source types only. </td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="26.525198938992045%" headers="d5951e264 ">Batch Size</td>
+
+                                    <td class="entry" valign="top" width="73.47480106100795%" headers="d5951e267 ">Maximum amount of records in a batch. </td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="26.525198938992045%" headers="d5951e264 ">Connection Timeout (ms)</td>
+
+                                    <td class="entry" valign="top" width="73.47480106100795%" headers="d5951e267 ">Milliseconds of inactivity allowed before ending the
+                                        Flume connection. </td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="26.525198938992045%" headers="d5951e264 ">Request Timeout (ms)</td>
+
+                                    <td class="entry" valign="top" width="73.47480106100795%" headers="d5951e267 ">Milliseconds to wait for a request response.</td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="26.525198938992045%" headers="d5951e264 ">Max Retry Attempts</td>
+
+                                    <td class="entry" valign="top" width="73.47480106100795%" headers="d5951e267 ">Maximum attempts to resend data to Flume before stopping
+                                        the pipeline. </td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="26.525198938992045%" headers="d5951e264 ">Wait Between Retries (ms)</td>
+
+                                    <td class="entry" valign="top" width="73.47480106100795%" headers="d5951e267 ">Milliseconds to wait before resending data to
+                                        Flume.</td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="26.525198938992045%" headers="d5951e264 ">Data Format</td>
+
+                                    <td class="entry" valign="top" width="73.47480106100795%" headers="d5951e267 "> </td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="26.525198938992045%" headers="d5951e264 ">Event Charset</td>
+
+                                    <td class="entry" valign="top" width="73.47480106100795%" headers="d5951e267 "> </td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="26.525198938992045%" headers="d5951e264 ">One Event per Batch</td>
+
+                                    <td class="entry" valign="top" width="73.47480106100795%" headers="d5951e267 "> </td>
+
+                                </tr>
+
+                            </tbody>
+
+                        </table>
+</div>
+
+                </div>
+            </li>
+</ol>
+
+    </div>
+
+</div>
+</div>
+<div class="navfooter"><!---->
+<span class="navparent"><a class="link" href="../Destinations/Destinations-title.html" title="Destinations"><span class="navheader_label">Parent topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">Destinations</span></a></span>  </div><div class="footer"><div> </div><!-- © <a href="http://creativecommons.org/licenses/by-nc/4.0/legalcode">CC BY-NC 4.0.</a> StreamSets, 2015. --></div>
+</body>
+</html>

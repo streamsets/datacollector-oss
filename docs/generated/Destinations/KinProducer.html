@@ -2,7 +2,7 @@
 <!DOCTYPE html
   SYSTEM "about:legacy-compat">
 <html xml:lang="en-us" lang="en-us">
-<head><meta name="description" content="The Kinesis Producer destination writes data to an Amazon Kinesis cluster. You can write JSON or SDC Record data to Kinesis. When you configure Kinesis Producer, you specify the Amazon Web Services ..."></meta><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><meta name="copyright" content="(C) Copyright 2005"></meta><meta name="DC.rights.owner" content="(C) Copyright 2005"></meta><meta name="DC.Type" content="concept"></meta><meta name="DC.Title" content="Kinesis Producer"></meta><meta name="abstract" content="The Kinesis Producer destination writes data to an Amazon Kinesis cluster. You can write JSON or SDC Record data to Kinesis."></meta><meta name="description" content="The Kinesis Producer destination writes data to an Amazon Kinesis cluster. You can write JSON or SDC Record data to Kinesis."></meta><meta name="DC.Relation" scheme="URI" content="../Destinations/Destinations-title.html"></meta><meta name="DC.Format" content="XHTML"></meta><meta name="DC.Identifier" content="concept_swk_h1j_yr"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/commonltr.css"><!----></link><title>Kinesis Producer</title><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/webhelp_topic.css"><!----></link><link rel="stylesheet" type="text/css" href="../skin.css"></link><script type="text/javascript"><!--
+<head><meta name="description" content="The Kinesis Producer destination writes data to an Amazon Kinesis cluster. You can write JSON objects or SDC Record data to Kinesis. Kinesis Producer writes JSON data to Kinesis as multiple objects. ..."></meta><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><meta name="copyright" content="(C) Copyright 2005"></meta><meta name="DC.rights.owner" content="(C) Copyright 2005"></meta><meta name="DC.Type" content="concept"></meta><meta name="DC.Title" content="Kinesis Producer"></meta><meta name="abstract" content="The Kinesis Producer destination writes data to an Amazon Kinesis cluster. You can write JSON objects or SDC Record data to Kinesis. Kinesis Producer writes JSON data to Kinesis as multiple objects. It does not write JSON arrays."></meta><meta name="description" content="The Kinesis Producer destination writes data to an Amazon Kinesis cluster. You can write JSON objects or SDC Record data to Kinesis. Kinesis Producer writes JSON data to Kinesis as multiple objects. It does not write JSON arrays."></meta><meta name="DC.Relation" scheme="URI" content="../Destinations/Destinations-title.html"></meta><meta name="DC.Format" content="XHTML"></meta><meta name="DC.Identifier" content="concept_swk_h1j_yr"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/commonltr.css"><!----></link><title>Kinesis Producer</title><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/webhelp_topic.css"><!----></link><link rel="stylesheet" type="text/css" href="../skin.css"></link><script type="text/javascript"><!--
           
           var prefix = "../index.html";
           
@@ -15,33 +15,36 @@
 
  
  <div class="body conbody"><p class="shortdesc">The Kinesis Producer destination writes data to an Amazon Kinesis cluster. You can write
-  JSON or SDC Record data to Kinesis.</p>
+    JSON objects or SDC Record data to Kinesis. Kinesis Producer writes JSON data to Kinesis as
+    multiple objects. It does not write JSON arrays.</p>
 
-  <p class="p">When you configure Kinesis Producer, you specify the Amazon Web Services connection information
-   for your Kinesis cluster and the data format to use. </p>
+    <p class="p">When you configure Kinesis Producer, you specify the
+      Amazon Web Services connection information for your Kinesis cluster and the data format to
+      use. </p>
 
-  <div class="p">Kinesis Producer writes data to Amazon Kinesis using the following Amazon Kinesis guidelines:
-    <ul class="ul" id="concept_swk_h1j_yr__ul_oxf_zm4_yr">
-    <li class="li">Writes a maximum of 500 messages and 4.5 MB in a batch</li>
+    <div class="p">Kinesis Producer writes data using the following Kinesis requirements: <ul class="ul" id="concept_swk_h1j_yr__ul_oxf_zm4_yr">
+        <li class="li">Writes a maximum of 500 messages and 4.5 MB in a batch.</li>
 
-    <li class="li">Allows a maximum of 50 kb/message - Larger messages are sent to the stage for error
-     handling</li>
+        <li class="li">Allows a maximum of 50 kb/message - Larger messages are sent to the stage for error
+          handling.</li>
 
-   </ul>
+      </ul>
 </div>
 
- </div>
+    <p class="p">Kinesis Producer writes data to the Kinesis cluster using a round-robin partition strategy.
+    </p>
+
+  </div>
 
 <div class="related-links"></div>
 <div class="topic task nested1" id="task_q2j_ml4_yr">
-    <h2 class="title topictitle2">Configuring a Kinesis Destination</h2>
+    <h2 class="title topictitle2">Configuring a Kinesis Producer Destination</h2>
 
-    
-    <div class="body taskbody"><p class="shortdesc">Configure a Kinesis destination to write JSON or SDC Record data to an Amazon Kinesis
-        cluster.</p>
-
+    <div class="body taskbody">
         <div class="section context">
-            <p class="p"></p>
+            <p class="p">Configure a Kinesis
+                Producer destination to write JSON or SDC Record data to an Amazon Kinesis
+                cluster.</p>
 
         </div>
 
@@ -55,9 +58,9 @@
                             
                             <thead class="thead" align="left">
                                 <tr class="row">
-                                    <th class="entry" valign="top" width="24.509803921568626%" id="d9363e84">General Property</th>
+                                    <th class="entry" valign="top" width="24.509803921568626%" id="d10030e97">General Property</th>
 
-                                    <th class="entry" valign="top" width="75.49019607843137%" id="d9363e87">Description</th>
+                                    <th class="entry" valign="top" width="75.49019607843137%" id="d10030e100">Description</th>
 
                                 </tr>
 
@@ -65,31 +68,31 @@
 
                             <tbody class="tbody">
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="24.509803921568626%" headers="d9363e84 ">Name</td>
+                                    <td class="entry" valign="top" width="24.509803921568626%" headers="d10030e97 ">Name</td>
 
-                                    <td class="entry" valign="top" width="75.49019607843137%" headers="d9363e87 ">Stage name.</td>
-
-                                </tr>
-
-                                <tr class="row">
-                                    <td class="entry" valign="top" width="24.509803921568626%" headers="d9363e84 ">Description</td>
-
-                                    <td class="entry" valign="top" width="75.49019607843137%" headers="d9363e87 ">Optional description.</td>
+                                    <td class="entry" valign="top" width="75.49019607843137%" headers="d10030e100 ">Stage name.</td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="24.509803921568626%" headers="d9363e84 ">Stage Library</td>
+                                    <td class="entry" valign="top" width="24.509803921568626%" headers="d10030e97 ">Description</td>
 
-                                    <td class="entry" valign="top" width="75.49019607843137%" headers="d9363e87 ">Library version that you want to use. </td>
+                                    <td class="entry" valign="top" width="75.49019607843137%" headers="d10030e100 ">Optional description.</td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="24.509803921568626%" headers="d9363e84 ">Required Fields <a class="xref" href="../Pipeline_Configuration/PipelineDesign.html#concept_dnj_bkm_vq" title="You can configure required fields for any processor and most destination stages. A required field must exist in a record to allow the record to enter the stage for processing. When a record does not include a required field, the stage passes the record to the pipeline for error handling.">
+                                    <td class="entry" valign="top" width="24.509803921568626%" headers="d10030e97 ">Stage Library</td>
+
+                                    <td class="entry" valign="top" width="75.49019607843137%" headers="d10030e100 ">Library version that you want to use. </td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="24.509803921568626%" headers="d10030e97 ">Required Fields <a class="xref" href="../Pipeline_Configuration/PipelineDesign.html#concept_dnj_bkm_vq" title="You can configure required fields for any processor and most destination stages. A required field must exist in a record to allow the record to enter the stage for processing. When a record does not include a required field, the stage passes the record to the pipeline for error handling.">
                                             <img class="image" id="task_q2j_ml4_yr__d453e478" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
 
-                                    <td class="entry" valign="top" width="75.49019607843137%" headers="d9363e87 ">Fields that must include data to be passed to the stage.
+                                    <td class="entry" valign="top" width="75.49019607843137%" headers="d10030e100 ">Fields that must include data to be passed to the stage.
                                             <div class="note tip"><span class="tiptitle">Tip:</span> You might include fields
                                             that the stage uses.</div>
 </td>
@@ -97,9 +100,9 @@
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="24.509803921568626%" headers="d9363e84 ">On Record Error</td>
+                                    <td class="entry" valign="top" width="24.509803921568626%" headers="d10030e97 ">On Record Error</td>
 
-                                    <td class="entry" valign="top" width="75.49019607843137%" headers="d9363e87 ">Error record handling for the stage: <ul class="ul" id="task_q2j_ml4_yr__d453e493">
+                                    <td class="entry" valign="top" width="75.49019607843137%" headers="d10030e100 ">Error record handling for the stage: <ul class="ul" id="task_q2j_ml4_yr__d453e493">
                                             <li class="li">Discard - Discards the record.</li>
 
                                             <li class="li">Send to Error - Sends the record to the pipeline for
@@ -124,14 +127,15 @@
                     properties:</span>
                 <div class="itemgroup info">
                     
+                    
 <div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_q2j_ml4_yr__table_cgq_yn4_yr" class="table" frame="border" border="1" rules="all">
                             
                             
                             <thead class="thead" align="left">
                                 <tr class="row">
-                                    <th class="entry" valign="top" width="50%" id="d9363e186"> </th>
+                                    <th class="entry" valign="top" width="27.027027027027025%" id="d10030e202">Kinesis Producer Property</th>
 
-                                    <th class="entry" valign="top" width="50%" id="d9363e188"> </th>
+                                    <th class="entry" valign="top" width="72.97297297297297%" id="d10030e205">Description</th>
 
                                 </tr>
 
@@ -139,23 +143,56 @@
 
                             <tbody class="tbody">
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="50%" headers="d9363e186 "> </td>
+                                    <td class="entry" valign="top" width="27.027027027027025%" headers="d10030e202 ">Endpoint</td>
 
-                                    <td class="entry" valign="top" width="50%" headers="d9363e188 "> </td>
-
-                                </tr>
-
-                                <tr class="row">
-                                    <td class="entry" valign="top" width="50%" headers="d9363e186 "> </td>
-
-                                    <td class="entry" valign="top" width="50%" headers="d9363e188 "> </td>
+                                    <td class="entry" valign="top" width="72.97297297297297%" headers="d10030e205 ">Amazon Web Services region that hosts the
+                                        cluster.</td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="50%" headers="d9363e186 "> </td>
+                                    <td class="entry" valign="top" width="27.027027027027025%" headers="d10030e202 ">Stream Name</td>
 
-                                    <td class="entry" valign="top" width="50%" headers="d9363e188 "> </td>
+                                    <td class="entry" valign="top" width="72.97297297297297%" headers="d10030e205 ">Kinesis stream name.</td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="27.027027027027025%" headers="d10030e202 ">Output Record Format</td>
+
+                                    <td class="entry" valign="top" width="72.97297297297297%" headers="d10030e205 ">Format of data to be written. Use one of the following
+                                            options:<ul class="ul" id="task_q2j_ml4_yr__ul_un2_cqd_br">
+                                            <li class="li">JSON</li>
+
+                                            <li class="li">SDC Record <a class="xref" href="../Pipeline_Configuration/SDCRecordFormat.html#concept_qkk_mwk_br" title="SDC Record is a proprietary data format that the Data Collector uses to generate error records. You can also configure a pipeline to read or write SDC Record data.">
+                                                  <img class="image" id="task_q2j_ml4_yr__image_wjh_ycl_br" src="../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></li>
+
+                                        </ul>
+</td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="27.027027027027025%" headers="d10030e202 ">Partition Strategy</td>
+
+                                    <td class="entry" valign="top" width="72.97297297297297%" headers="d10030e205 ">Strategy to write data to Kinesis shards. Kinesis
+                                        Producer uses a round-robin strategy.</td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="27.027027027027025%" headers="d10030e202 ">AWS Access Key ID</td>
+
+                                    <td class="entry" valign="top" width="72.97297297297297%" headers="d10030e205 ">AWS access key ID with privileges for the Kinesis
+                                        stream.</td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="27.027027027027025%" headers="d10030e202 ">AWS Secret Access Key</td>
+
+                                    <td class="entry" valign="top" width="72.97297297297297%" headers="d10030e205 ">AWS secret access key with privileges for the Kinesis
+                                        stream.</td>
 
                                 </tr>
 

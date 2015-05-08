@@ -4,8 +4,8 @@
     <title>Configuring a JavaScript Evaluator</title>
     <taskbody>
         <context>
-            <p><indexterm>JavaScript
-                Evaluator<indexterm>configuring</indexterm></indexterm>Configure a JavaScript
+            <p><indexterm>JavaScript Evaluator
+                    processor<indexterm>configuring</indexterm></indexterm>Configure a JavaScript
                 Evaluator to use custom JavaScript in a pipeline.</p>
         </context>
         <steps id="steps_q4w_jby_nr">

@@ -6,7 +6,7 @@
     same script in each processing mode. However, you should include error handling in the script
     before you run in batch mode.</shortdesc>
  <conbody>
-    <p><indexterm>Jython Evaluator<indexterm>processing
+    <p><indexterm>Jython Evaluator processor<indexterm>processing
         mode</indexterm></indexterm><indexterm>processing modes<indexterm>Jython
           Evaluator</indexterm></indexterm>The Jython Evaluator provides the following processing modes:<dl>
         <dlentry>
@@ -17,7 +17,8 @@
             processor for error handling. The processor handles error records based on the On Record
             Error property.</dd>
           <dd>Use this mode to avoid including error handling logic in the code. Since this mode
-            calls the script for each record, pipeline performance might be negatively affected. </dd>
+            calls the script for each record, pipeline performance might be negatively affected.
+          </dd>
         </dlentry>
         <dlentry>
           <dt>Record Batch</dt>

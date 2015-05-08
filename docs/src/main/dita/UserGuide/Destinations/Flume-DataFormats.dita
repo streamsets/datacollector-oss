@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
+<concept id="concept_dbh_2xp_yr">
+ <title>Data Formats</title>
+ <conbody>
+  <p><indexterm>Flume destination<indexterm>data formats</indexterm></indexterm><indexterm>data
+     formats<indexterm>Flume destinations</indexterm></indexterm>The Flume destination writes data
+   to Flume based on the data format that you select. You can use the following data formats: <dl
+    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/DataFormats-dest">
+    <dlentry>
+     <dt/>
+     <dd/>
+    </dlentry>
+   </dl></p>
+ </conbody>
+</concept>

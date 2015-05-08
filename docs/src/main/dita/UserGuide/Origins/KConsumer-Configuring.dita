@@ -82,8 +82,8 @@
                                 </row>
                                 <row>
                                     <entry>Data Format</entry>
-                                    <entry>Type of data in the topic. Use one of the following
-                                        options:<ul id="ul_qgm_tjw_yq">
+                                    <entry>Type of data to be read. Use one of the following
+                                            options:<ul id="ul_qgm_tjw_yq">
                                             <li>Text</li>
                                             <li>JSON</li>
                                             <li>Delimited</li>
@@ -111,9 +111,13 @@
                                     <entry>Maximum number of messages processed at one time.</entry>
                                 </row>
                                 <row>
-                                    <entry>Batch Wait Time (millisecs)</entry>
-                                    <entry>Number of milliseconds that the Kafka Consumer waits
-                                        before sending a partial or empty batch. </entry>
+                                    <entry>Batch Wait Time (millisecs) <xref
+                                            href="BatchSizeWaitTime.dita#concept_ypd_vgr_5q">
+                                            <image href="../Graphics/icon_moreInfo.png" scale="10"
+                                                id="image_mgp_2q3_br" placement="inline"
+                                        /></xref></entry>
+                                    <entry>Number of milliseconds to wait before sending a partial
+                                        or empty batch. </entry>
                                 </row>
                                 <row>
                                     <entry>Kafka Configuration <xref

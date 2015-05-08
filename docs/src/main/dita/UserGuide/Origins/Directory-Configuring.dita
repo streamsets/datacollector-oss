@@ -82,7 +82,8 @@
                                             <image href="../Graphics/icon_moreInfo.png" scale="10"
                                                 id="image_mgp_2q3_br" placement="inline"
                                         /></xref></entry>
-                                    <entry>Number of seconds to wait before sending a batch.</entry>
+                                    <entry>Number of seconds to wait before sending a partial or
+                                        empty batch.</entry>
                                 </row>
                                 <row>
                                     <entry>File Name Pattern</entry>

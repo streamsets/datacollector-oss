@@ -6,7 +6,7 @@
   same script in each processing mode. However, you should include error handling in the script
   before you run in batch mode.</shortdesc>
  <conbody>
-  <p><indexterm>JavaScript Evaluator<indexterm>processing
+  <p><indexterm>JavaScript Evaluator processor<indexterm>processing
     mode</indexterm></indexterm><indexterm>processing modes<indexterm>JavaScript
      Evaluator</indexterm></indexterm>The JavaScript Evaluator provides the following processing
    modes: </p>

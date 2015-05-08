@@ -39,9 +39,10 @@
                                             URIs.</p></entry>
                                     </row>
                                     <row>
-                                        <entry>Runtime Topic<xref
+                                        <entry>Runtime Topic Resolution <xref
                                                 href="KProducer-RuntimeResolution.dita#concept_ok1_cwr_xr"
-                                                  ><image href="../Graphics/icon_moreInfo.png" scale="10"/></xref> Resolution</entry>
+                                                  ><image href="../Graphics/icon_moreInfo.png"
+                                                  scale="10"/></xref></entry>
                                         <entry>Evaluates an expression at runtime to determine the
                                             topic to use for each record.</entry>
                                     </row>

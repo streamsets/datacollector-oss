@@ -2,10 +2,12 @@
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_szj_slw_tr">
  <title>Type Handling</title>
- <shortdesc>Though JavaScript does not use type information when processing data, passing data to
-  the rest of the pipeline requires data types. Note the following type information before you
-  configure the remainder of the pipeline: </shortdesc>
  <conbody>
+  <p><indexterm>JavaScript Evaluator processor<indexterm>type
+    handling</indexterm></indexterm><indexterm>type handling<indexterm>JavaScript
+     Evaluator</indexterm></indexterm>Though JavaScript does not use type information when
+   processing data, passing data to the rest of the pipeline requires data types. Note the following
+   type information before you configure the remainder of the pipeline: </p>
   <p>
    <dl>
     <dlentry>

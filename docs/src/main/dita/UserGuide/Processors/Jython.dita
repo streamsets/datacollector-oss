@@ -6,10 +6,10 @@
   Evaluator to incorporate custom Jython code in a pipeline. The Jython Evaluator supports Jython
   version 2.7.</shortdesc>
  <conbody>
-  <p><indexterm>Jython
-     Evaluator<indexterm>overview</indexterm></indexterm><indexterm>processors<indexterm>Jython
-     Evaluator</indexterm></indexterm>The Jython Evaluator can process data one record at a time or
-   one batch at a time. </p>
+  <p><indexterm>Jython Evaluator
+          processor<indexterm>overview</indexterm></indexterm><indexterm>processors<indexterm>Jython
+          Evaluator</indexterm></indexterm>The Jython Evaluator can process data one record at a
+      time or one batch at a time. </p>
   <p>When you use a Jython Evaluator in a pipeline, the <ph
         conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> passes a
       batch of data to the processor and converts the data to a scripting-friendly data structure

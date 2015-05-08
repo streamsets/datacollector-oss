@@ -3,7 +3,7 @@
 <concept id="concept_mqn_5vk_sr">
  <title>Jython Scripting Objects</title>
  <conbody>
-  <p><indexterm>Jython Evaluator<indexterm>scripting
+  <p><indexterm>Jython Evaluator processor<indexterm>scripting
         objects</indexterm></indexterm><indexterm>scripting objects<indexterm>Jython
           Evaluator</indexterm></indexterm>You can use the following scripting objects in the Jython Evaluator:<dl>
         <dlentry>

@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE task PUBLIC "-//OASIS//DTD DITA General Task//EN" "generalTask.dtd">
+<task id="task_vft_g5p_yr">
+    <title>Configuring a Flume Destination</title>
+    <taskbody>
+        <context>
+            <p><indexterm>Flume destinations<indexterm>configuring</indexterm></indexterm>Configure
+                a Flume destination to write data to Flume. </p>
+        </context>
+        <steps id="steps_dmg_jyp_yr">
+            <step
+                conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/1stStep-ReqField-ErrorHandling">
+                <cmd/>
+            </step>
+            <step>
+                <cmd>On the <uicontrol>Flume</uicontrol> tab, configure the following
+                    properties:</cmd>
+                <info>
+                    <table frame="all" rowsep="1" colsep="1" id="table_qpb_5yp_yr">
+                        <tgroup cols="2">
+                            <colspec colname="c1" colnum="1" colwidth="1*"/>
+                            <colspec colname="c2" colnum="2" colwidth="2.77*"/>
+                            <thead>
+                                <row>
+                                    <entry>Flume Property</entry>
+                                    <entry>Description</entry>
+                                </row>
+                            </thead>
+                            <tbody>
+                                <row>
+                                    <entry>Host Configuration<draft-comment author="Loretta"
+                                            >Currentlly called Flume Hosts Configuration - can we
+                                            update?</draft-comment></entry>
+                                    <entry>Flume host information:<ul id="ul_al4_s1q_yr">
+                                            <li>Name - Local alias for the Flume host. </li>
+                                            <li>Flume host and port - Host name and port number for
+                                                the Flume agent. Use the following format: &lt;host
+                                                name>:&lt;port number></li>
+                                        </ul>Click <uicontrol>Add</uicontrol> to add additional host
+                                        configuration.</entry>
+                                </row>
+                                <row>
+                                    <entry>Client Type</entry>
+                                    <entry>Flume source client type:<ul id="ul_qcr_fbq_yr">
+                                            <li>Avro </li>
+                                        </ul></entry>
+                                </row>
+                                <row>
+                                    <entry>Backoff</entry>
+                                    <entry>For Avro load balancing source types only. </entry>
+                                </row>
+                                <row>
+                                    <entry>Max Backoff (ms)</entry>
+                                    <entry>For Avro load balancing source types only. </entry>
+                                </row>
+                                <row>
+                                    <entry>Host Selection Strategy</entry>
+                                    <entry>For Avro load balancing source types only. </entry>
+                                </row>
+                                <row>
+                                    <entry>Batch Size</entry>
+                                    <entry>Maximum amount of records in a batch. </entry>
+                                </row>
+                                <row>
+                                    <entry>Connection Timeout (ms)</entry>
+                                    <entry>Milliseconds of inactivity allowed before ending the
+                                        Flume connection. </entry>
+                                </row>
+                                <row>
+                                    <entry>Request Timeout (ms)</entry>
+                                    <entry>Milliseconds to wait for a request response.</entry>
+                                </row>
+                                <row>
+                                    <entry>Max Retry Attempts</entry>
+                                    <entry>Maximum attempts to resend data to Flume before stopping
+                                        the pipeline. </entry>
+                                </row>
+                                <row>
+                                    <entry>Wait Between Retries (ms)</entry>
+                                    <entry>Milliseconds to wait before resending data to
+                                        Flume.</entry>
+                                </row>
+                                <row>
+                                    <entry>Data Format</entry>
+                                    <entry/>
+                                </row>
+                                <row>
+                                    <entry>Event Charset</entry>
+                                    <entry/>
+                                </row>
+                                <row>
+                                    <entry>One Event per Batch</entry>
+                                    <entry/>
+                                </row>
+                            </tbody>
+                        </tgroup>
+                    </table>
+                </info>
+            </step>
+        </steps>
+    </taskbody>
+</task>
