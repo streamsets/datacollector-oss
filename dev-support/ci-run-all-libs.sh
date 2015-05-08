@@ -26,6 +26,7 @@ git show
 /opt/scripts/docker-delete-stopped-containers.sh || true
 /opt/scripts/docker-delete-local-images.sh || true
 # compile and install
-mvn clean install -Drelease -DskipTests
+mvn clean install -Pdist,all-libs,ui,rpm -Drelease -Dtest=DoesNotExist -DfailIfNoTests=false
 # package and run tests (if appropiate)
-mvn clean package -fae -Pdist,all-libs,ui,rpm -Drelease ${PACKAGE_OPTS[@]}
+export JAVA_HOME=${TEST_JVM}
+mvn test -fae -Pdist,all-libs,ui,rpm -Drelease -Dmaven.main.skip=true -DlastModGranularityMs=604800000 ${PACKAGE_OPTS[@]}

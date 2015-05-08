@@ -21,11 +21,12 @@ PROFILE=${PROFILE#*-}
 # apply profile here
 case "$PROFILE" in
   java8)
-    export JAVA_HOME=$JAVA8_HOME
+    export TEST_JVM=${JAVA8_HOME}
     ;;
   *)
-    export JAVA_HOME=$JAVA7_HOME
+    export TEST_JVM=${JAVA7_HOME}
     ;;
 esac
-export PATH=$JAVA_HOME/bin:$M2_HOME/bin:$MAVEN_HOME/bin:$NODE_HOME/bin:$PATH
+export JAVA_HOME=${JAVA8_HOME}
+export PATH=${JAVA_HOME}/bin:${M2_HOME}/bin:${MAVEN_HOME}/bin:${NODE_HOME}/bin:$PATH
 echo $PATH
