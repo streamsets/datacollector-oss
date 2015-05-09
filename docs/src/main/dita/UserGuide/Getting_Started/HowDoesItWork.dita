@@ -17,7 +17,7 @@
    configure it to remove the newline character from the last field in the record.</p>
   <p>To make the data available to Hive, you connect the Expression Evaluator to a Hadoop FS
    destination stage. You might configure the stage to write the data as a JSON object (though you
-   can write it as delimited data as well). </p>
+   can use other data formats as well). </p>
   <p>You preview data to view source data move through the pipeline and notice that some fields have
    missing data. So you add a Value Replacer to replace null values in those fields. </p>
   <p>Now that the data flow is done, you configure the pipeline to save records that cannot be

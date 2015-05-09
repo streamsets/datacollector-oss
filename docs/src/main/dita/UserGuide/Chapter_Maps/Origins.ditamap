@@ -36,7 +36,7 @@
    <topicref href="../Origins/KConsumer-Configuring.dita"/>
   </topicref>
   <topicref href="../Origins/KinConsumer.dita" chunk="to-content">  <topicmeta><shortdesc></shortdesc></topicmeta>
-   <topicref href="../Origins/KinConsumer-ReadWaitTime.dita"/>
+   <topicref href="../Origins/KinConsumer-ReadInterval.dita"/>
    <topicref href="../Origins/KinConsumer-Configuring.dita"/></topicref>
  </topicref>
 </map>

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE map PUBLIC "-//OASIS//DTD DITA Map//EN" "map.dtd">
+<map>
+ <title>Cluster Mode</title>
+ <topicref href="../Cluster_Mode/ClusterMode-Title.dita">
+  <topicref href="../Cluster_Mode/ClusterMode-overview.dita" chunk="to-content">
+   <topicmeta>
+    <shortdesc/>
+   </topicmeta>
+  </topicref>
+  <topicref href="../Cluster_Mode/ClusterMode-Configuration.dita" chunk="to-content">
+   <topicmeta>
+    <shortdesc/>
+   </topicmeta>
+  </topicref>
+ </topicref>
+</map>

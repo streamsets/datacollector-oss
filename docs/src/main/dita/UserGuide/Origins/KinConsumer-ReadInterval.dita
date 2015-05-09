@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
+<concept id="concept_y55_dz4_yr">
+ <title>Read Interval</title>
+ <shortdesc>You can configure the read interval for the Kinesis Consumer. The read interval
+  determines how long Kinesis Consumer waits before requesting additional data from Kinesis shards.
+  By default, the Kinesis Consumer waits 1000 milliseconds - one second - between requests. </shortdesc>
+ <conbody>
+  <p><indexterm>Kinesis Consumer origin<indexterm>read interval</indexterm></indexterm>The minimum
+   read interval is 200 milliseconds. Amazon recommends 250 milliseconds. Below that number, you
+   might want to create additional shards for the cluster. </p>
+  <p>Adjust the read interval to adapt to the Kinesis data load. For example, you might reduce the
+   wait time to enable higher throughput or increase the wait time when the stream of data
+   slows.</p>
+  <p>Use the Read Interval property to define the time between data requests for each shard.</p>
+ </conbody>
+</concept>

@@ -4,8 +4,8 @@
  <title><ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
     Console</title>
  <shortdesc>The <ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-    /> console provides a user interface to configure pipelines, preview data, monitor pipelines,
-    and view a snapshot. </shortdesc>
+    /> provides a console to configure pipelines, preview data, monitor pipelines, and view
+    snapshots of data. </shortdesc>
  <conbody>
   <p><indexterm>Data Collector console<indexterm>overview</indexterm></indexterm>The <ph
         conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> console

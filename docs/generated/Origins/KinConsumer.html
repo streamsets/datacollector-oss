@@ -25,22 +25,22 @@
 
 <div class="related-links"></div>
 <div class="topic concept nested1" id="concept_y55_dz4_yr">
- <h2 class="title topictitle2">Read Wait Time</h2>
+ <h2 class="title topictitle2">Read Interval</h2>
 
  
- <div class="body conbody"><p class="shortdesc">You can configure how long Kinesis Consumer waits before requesting additional data from
-  Kinesis shards. By default, the Kinesis Consumer waits 1000 milliseconds - one second - between
-  requests. </p>
+ <div class="body conbody"><p class="shortdesc">You can configure the read interval for the Kinesis Consumer. The read interval
+  determines how long Kinesis Consumer waits before requesting additional data from Kinesis shards.
+  By default, the Kinesis Consumer waits 1000 milliseconds - one second - between requests. </p>
 
-  <p class="p">The minimum wait time is 200 milliseconds. Amazon recommends 250 milliseconds. Below that
-   number, you might create additional shards for the cluster. </p>
+  <p class="p">The minimum
+   read interval is 200 milliseconds. Amazon recommends 250 milliseconds. Below that number, you
+   might want to create additional shards for the cluster. </p>
 
-  <p class="p">Adjust the wait time to adapt to the data load that you need to process. For example, you might
-   reduce the wait time to enable higher throughput or increase the wait time when the stream of
-   data slows.</p>
+  <p class="p">Adjust the read interval to adapt to the Kinesis data load. For example, you might reduce the
+   wait time to enable higher throughput or increase the wait time when the stream of data
+   slows.</p>
 
-  <p class="p">Use the Read Wait Time property to define how long to wait before requesting more data from a
-   shard. </p>
+  <p class="p">Use the Read Interval property to define the time between data requests for each shard.</p>
 
  </div>
 
@@ -60,14 +60,14 @@
                     following properties:</span>
                 <div class="itemgroup info">
                     
-<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_p4b_vv4_yr__d1938e162" class="table" frame="border" border="1" rules="all">
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_p4b_vv4_yr__d2031e162" class="table" frame="border" border="1" rules="all">
                             
                             
                             <thead class="thead" align="left">
                                 <tr class="row">
-                                    <th class="entry" valign="top" width="24.509803921568626%" id="d21986e106">General Property</th>
+                                    <th class="entry" valign="top" width="24.509803921568626%" id="d22323e110">General Property</th>
 
-                                    <th class="entry" valign="top" width="75.49019607843137%" id="d21986e109">Description</th>
+                                    <th class="entry" valign="top" width="75.49019607843137%" id="d22323e113">Description</th>
 
                                 </tr>
 
@@ -75,23 +75,23 @@
 
                             <tbody class="tbody">
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="24.509803921568626%" headers="d21986e106 ">Name</td>
+                                    <td class="entry" valign="top" width="24.509803921568626%" headers="d22323e110 ">Name</td>
 
-                                    <td class="entry" valign="top" width="75.49019607843137%" headers="d21986e109 ">Stage name.</td>
-
-                                </tr>
-
-                                <tr class="row">
-                                    <td class="entry" valign="top" width="24.509803921568626%" headers="d21986e106 ">Description</td>
-
-                                    <td class="entry" valign="top" width="75.49019607843137%" headers="d21986e109 ">Optional description.</td>
+                                    <td class="entry" valign="top" width="75.49019607843137%" headers="d22323e113 ">Stage name.</td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="24.509803921568626%" headers="d21986e106 ">On Record Error</td>
+                                    <td class="entry" valign="top" width="24.509803921568626%" headers="d22323e110 ">Description</td>
 
-                                    <td class="entry" valign="top" width="75.49019607843137%" headers="d21986e109 ">Error record handling for the stage: <ul class="ul" id="task_p4b_vv4_yr__d1938e209">
+                                    <td class="entry" valign="top" width="75.49019607843137%" headers="d22323e113 ">Optional description.</td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="24.509803921568626%" headers="d22323e110 ">On Record Error</td>
+
+                                    <td class="entry" valign="top" width="75.49019607843137%" headers="d22323e113 ">Error record handling for the stage: <ul class="ul" id="task_p4b_vv4_yr__d2031e209">
                                             <li class="li">Discard - Discards the record.</li>
 
                                             <li class="li">Send to Error - Sends the record to the pipeline for
@@ -122,9 +122,9 @@
                             
                             <thead class="thead" align="left">
                                 <tr class="row">
-                                    <th class="entry" valign="top" width="31.746031746031743%" id="d21986e184">Kinesis Consumer Property</th>
+                                    <th class="entry" valign="top" width="31.746031746031743%" id="d22323e188">Kinesis Consumer Property</th>
 
-                                    <th class="entry" valign="top" width="68.25396825396825%" id="d21986e187"> </th>
+                                    <th class="entry" valign="top" width="68.25396825396825%" id="d22323e191"> </th>
 
                                 </tr>
 
@@ -132,24 +132,24 @@
 
                             <tbody class="tbody">
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="31.746031746031743%" headers="d21986e184 ">Endpoint</td>
+                                    <td class="entry" valign="top" width="31.746031746031743%" headers="d22323e188 ">Endpoint</td>
 
-                                    <td class="entry" valign="top" width="68.25396825396825%" headers="d21986e187 ">Amazon Web Services region that hosts the
+                                    <td class="entry" valign="top" width="68.25396825396825%" headers="d22323e191 ">Amazon Web Services region that hosts the
                                         cluster.</td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="31.746031746031743%" headers="d21986e184 ">Stream Name</td>
+                                    <td class="entry" valign="top" width="31.746031746031743%" headers="d22323e188 ">Stream Name</td>
 
-                                    <td class="entry" valign="top" width="68.25396825396825%" headers="d21986e187 ">Kinesis stream name.</td>
+                                    <td class="entry" valign="top" width="68.25396825396825%" headers="d22323e191 ">Kinesis stream name.</td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="31.746031746031743%" headers="d21986e184 ">Input Record Format</td>
+                                    <td class="entry" valign="top" width="31.746031746031743%" headers="d22323e188 ">Input Record Format</td>
 
-                                    <td class="entry" valign="top" width="68.25396825396825%" headers="d21986e187 ">Type of data to be read. Use one of the following
+                                    <td class="entry" valign="top" width="68.25396825396825%" headers="d22323e191 ">Type of data to be read. Use one of the following
                                             options:<ul class="ul" id="task_p4b_vv4_yr__ul_un2_cqd_br">
                                             <li class="li">JSON</li>
 
@@ -162,16 +162,17 @@
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="31.746031746031743%" headers="d21986e184 ">Max Batch Size (messages)</td>
+                                    <td class="entry" valign="top" width="31.746031746031743%" headers="d22323e188 ">Max Batch Size (messages)</td>
 
-                                    <td class="entry" valign="top" width="68.25396825396825%" headers="d21986e187 ">Maximum amount of messages allowed in a batch.</td>
+                                    <td class="entry" valign="top" width="68.25396825396825%" headers="d22323e191 ">Maximum amount of messages allowed in a batch.</td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="31.746031746031743%" headers="d21986e184 ">Idle Time Between Reads (ms) <a class="xref" href="KinConsumer.html#concept_y55_dz4_yr" title="You can configure how long Kinesis Consumer waits before requesting additional data from Kinesis shards. By default, the Kinesis Consumer waits 1000 milliseconds - one second - between requests."><img class="image" src="../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
+                                    <td class="entry" valign="top" width="31.746031746031743%" headers="d22323e188 ">Read Interval (ms) <a class="xref" href="KinConsumer.html#concept_y55_dz4_yr" title="You can configure the read interval for the Kinesis Consumer. The read interval determines how long Kinesis Consumer waits before requesting additional data from Kinesis shards. By default, the Kinesis Consumer waits 1000 milliseconds - one second - between requests.">
+                                                <img class="image" id="task_p4b_vv4_yr__image_hbn_t1x_yr" src="../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
 
-                                    <td class="entry" valign="top" width="68.25396825396825%" headers="d21986e187 ">Milliseconds to wait before requesting additional data
+                                    <td class="entry" valign="top" width="68.25396825396825%" headers="d22323e191 ">Milliseconds to wait before requesting additional data
                                         from a shard. <p class="p">Default is 1000 milliseconds. Amazon
                                             recommends 250 milliseconds. Minimum milliseconds is
                                             200.</p>
@@ -180,18 +181,18 @@
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="31.746031746031743%" headers="d21986e184 ">Batch Wait Time (ms) <a class="xref" href="Origins_overview.html#concept_ypd_vgr_5q" title="For origin stages, the batch size determines the maximum number of records sent through the pipeline at one time. The batch wait time determines the time that the origin waits for data before sending a batch. At the end of the wait time, it sends the batch regardless of how many records the batch contains.">
+                                    <td class="entry" valign="top" width="31.746031746031743%" headers="d22323e188 ">Batch Wait Time (ms) <a class="xref" href="Origins_overview.html#concept_ypd_vgr_5q" title="For origin stages, the batch size determines the maximum number of records sent through the pipeline at one time. The batch wait time determines the time that the origin waits for data before sending a batch. At the end of the wait time, it sends the batch regardless of how many records the batch contains.">
                                             <img class="image" id="task_p4b_vv4_yr__image_mgp_2q3_br" src="../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
 
-                                    <td class="entry" valign="top" width="68.25396825396825%" headers="d21986e187 ">Milliseconds to wait before sending a partial or empty
+                                    <td class="entry" valign="top" width="68.25396825396825%" headers="d22323e191 ">Milliseconds to wait before sending a partial or empty
                                         batch. </td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="31.746031746031743%" headers="d21986e184 ">Preview Batch Wait Time (ms)</td>
+                                    <td class="entry" valign="top" width="31.746031746031743%" headers="d22323e188 ">Preview Batch Wait Time (ms)</td>
 
-                                    <td class="entry" valign="top" width="68.25396825396825%" headers="d21986e187 ">Milliseconds to wait for data for a data preview.
+                                    <td class="entry" valign="top" width="68.25396825396825%" headers="d22323e191 ">Milliseconds to wait for data for a data preview.
                                             <p class="p">Amazon Kinesis can take 10-30 seconds to enable
                                             initial access. Configure this property as needed to
                                             avoid data preview timeouts.</p>
@@ -200,17 +201,17 @@
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="31.746031746031743%" headers="d21986e184 ">AWS Access Key ID</td>
+                                    <td class="entry" valign="top" width="31.746031746031743%" headers="d22323e188 ">AWS Access Key ID</td>
 
-                                    <td class="entry" valign="top" width="68.25396825396825%" headers="d21986e187 ">AWS access key ID with privileges for the Kinesis
+                                    <td class="entry" valign="top" width="68.25396825396825%" headers="d22323e191 ">AWS access key ID with privileges for the Kinesis
                                         stream.</td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="31.746031746031743%" headers="d21986e184 ">AWS Secret Access Key</td>
+                                    <td class="entry" valign="top" width="31.746031746031743%" headers="d22323e188 ">AWS Secret Access Key</td>
 
-                                    <td class="entry" valign="top" width="68.25396825396825%" headers="d21986e187 ">AWS secret access key with privileges for the Kinesis
+                                    <td class="entry" valign="top" width="68.25396825396825%" headers="d22323e191 ">AWS secret access key with privileges for the Kinesis
                                         stream.</td>
 
                                 </tr>

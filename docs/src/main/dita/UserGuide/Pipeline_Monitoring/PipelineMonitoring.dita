@@ -13,9 +13,15 @@
       the <ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> runs
       a pipeline, the console displays the pipeline in Monitor mode. In Monitor mode, you can
       perform the following tasks:<ul id="ul_c4s_w13_tq">
+        <li>View real-time stage and pipeline statistics </li>
+        <li>View stage and pipeline error information, including error records for each stage</li>
         <li>Take and review a snapshot of data</li>
-        <li>View stage and pipeline statistics</li>
-        <li>View the latest set of error records</li>
+        <li>Configure rules and alerts</li>
+        <li>View the pipeline history</li>
       </ul></p>
   </conbody>
+  <related-links>
+    <link href="../Alerts/Alerts_title.dita#concept_pgk_brx_rr"/>
+    <link href="../Pipeline_Maintenance/ViewingtheRunHistory.dita#task_p12_gbw_rr"/>
+  </related-links>
 </concept>

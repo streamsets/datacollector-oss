@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE task PUBLIC "-//OASIS//DTD DITA General Task//EN" "generalTask.dtd">
+<task id="task_gmd_msw_yr">
+    <title>Cluster Mode Configuration</title>
+    <taskbody>
+        <context>
+            <p><indexterm>cluster mode<indexterm>configuration</indexterm></indexterm>To run the <ph
+                    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                /> in cluster mode, perform the following steps:<ol id="ol_e32_llw_yr">
+                    <li>Install the <ph
+                            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                        /> on a Spark on YARN gateway node</li>
+                    <li>In the <ph
+                            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                        /> properties file, set the <uicontrol>sdc.execution.mode</uicontrol>
+                        property to <uicontrol>cluster</uicontrol>.</li>
+                    <li>In the pipeline properties - <menucascade>
+                            <uicontrol>Configuration</uicontrol>
+                            <uicontrol>General</uicontrol>
+                        </menucascade> tab - set the <uicontrol>Execution Mode</uicontrol> property
+                        to <uicontrol>Cluster</uicontrol>.</li>
+                    <li>Use a Kafka Consumer origin in the pipeline. </li>
+                </ol></p>
+        </context>
+    </taskbody>
+    <related-links>
+        <link href="../Install_Config/DCConfig.dita#concept_pq5_xjq_kr" type="topic"/>
+        <link href="../Pipeline_Configuration/ConfiguringAPipeline.dita#task_xlv_jdw_kq" type="topic"/>
+        <link href="../Origins/KConsumer.dita#concept_msz_wnr_5q" type="topic"/>
+    </related-links>
+</task>

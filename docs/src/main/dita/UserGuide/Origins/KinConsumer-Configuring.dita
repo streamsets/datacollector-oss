@@ -56,10 +56,10 @@
                                     <entry>Maximum amount of messages allowed in a batch.</entry>
                                 </row>
                                 <row>
-                                    <entry>Idle Time Between Reads (ms) <xref
-                                            href="KinConsumer-ReadWaitTime.dita#concept_y55_dz4_yr"
-                                            ><image href="../Graphics/icon_moreInfo.png" scale="10"/></xref><draft-comment author="Loretta">Can we call this: Read
-                                            Wait Time (ms)</draft-comment></entry>
+                                    <entry>Read Interval (ms) <xref href="KinConsumer-ReadInterval.dita#concept_y55_dz4_yr">
+                                                <image href="../Graphics/icon_moreInfo.png"
+                                                  scale="10" placement="inline"
+                                                  id="image_hbn_t1x_yr"/></xref></entry>
                                     <entry>Milliseconds to wait before requesting additional data
                                         from a shard. <p>Default is 1000 milliseconds. Amazon
                                             recommends 250 milliseconds. Minimum milliseconds is
