@@ -16,12 +16,15 @@ public class CallbackInfoJson {
 
   @JsonCreator
   public CallbackInfoJson(@JsonProperty("sdcClusterToken") String sdcClusterToken,
+                          @JsonProperty("sdcSlaveToken") String sdcSlaveToken,
                           @JsonProperty("sdcURL") String sdcURL,
                           @JsonProperty("adminToken") String adminToken,
                           @JsonProperty("creatorToken") String creatorToken,
                           @JsonProperty("managerToken") String managerToken,
-                          @JsonProperty("guestToken") String guestToken) {
-    this.callbackInfo = new CallbackInfo(sdcClusterToken, sdcURL, adminToken, creatorToken, managerToken, guestToken);
+                          @JsonProperty("guestToken") String guestToken,
+                          @JsonProperty("metrics") String metrics) {
+    this.callbackInfo = new CallbackInfo(sdcClusterToken, sdcSlaveToken, sdcURL, adminToken, creatorToken, managerToken,
+      guestToken, metrics);
   }
 
 
@@ -32,6 +35,11 @@ public class CallbackInfoJson {
   public String getSdcClusterToken() {
     return callbackInfo.getSdcClusterToken();
   }
+
+  public String getSdcSlaveToken() {
+    return callbackInfo.getSdcSlaveToken();
+  }
+
 
   public String getSdcURL() {
     return callbackInfo.getSdcURL();
@@ -51,6 +59,10 @@ public class CallbackInfoJson {
 
   public String getGuestToken() {
     return callbackInfo.getGuestToken();
+  }
+
+  public String getMetrics() {
+    return callbackInfo.getMetrics();
   }
 
   @JsonIgnore

@@ -6,18 +6,24 @@
 
 package com.streamsets.pipeline.metrics;
 
+import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.streamsets.pipeline.callback.CallbackInfo;
 import com.streamsets.pipeline.json.ObjectMapperFactory;
 import com.streamsets.pipeline.main.RuntimeInfo;
 import com.streamsets.pipeline.prodmanager.PipelineManager;
 import com.streamsets.pipeline.prodmanager.State;
+import com.streamsets.pipeline.restapi.bean.CounterJson;
+import com.streamsets.pipeline.restapi.bean.MeterJson;
+import com.streamsets.pipeline.restapi.bean.MetricRegistryJson;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.ws.rs.client.ClientBuilder;
+import javax.ws.rs.core.Response;
 import java.io.IOException;
+import java.net.URLEncoder;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -25,6 +31,7 @@ import java.util.Map;
 public class MetricsEventRunnable implements Runnable {
   private final static Logger LOG = LoggerFactory.getLogger(MetricsEventRunnable.class);
   private List<MetricsEventListener> metricsEventListenerList = new ArrayList<>();
+  private Map<String, MetricRegistryJson> slaveMetrics;
 
   private final PipelineManager pipelineManager;
   private final RuntimeInfo runtimeInfo;
@@ -32,6 +39,7 @@ public class MetricsEventRunnable implements Runnable {
   public MetricsEventRunnable(PipelineManager pipelineManager, RuntimeInfo runtimeInfo) {
     this.pipelineManager = pipelineManager;
     this.runtimeInfo = runtimeInfo;
+    slaveMetrics = new HashMap<>();
   }
 
   public void addMetricsEventListener(MetricsEventListener metricsEventListener) {
@@ -40,6 +48,10 @@ public class MetricsEventRunnable implements Runnable {
 
   public void removeMetricsEventListener(MetricsEventListener metricsEventListener) {
     metricsEventListenerList.remove(metricsEventListener);
+  }
+
+  public void clearSlaveMetrics() {
+    slaveMetrics.clear();
   }
 
   public void run() {
@@ -51,17 +63,8 @@ public class MetricsEventRunnable implements Runnable {
         String metricsJSONStr;
 
         if(runtimeInfo.getExecutionMode().equals(RuntimeInfo.ExecutionMode.CLUSTER)) {
-          //In case of cluster mode return List of Slave node details
-          // TODO: Return aggregated metrics from all slave nodes along with slave node details
-
-          Collection<CallbackInfo> callbackInfoCollection = pipelineManager.getSlaveCallbackList();
-          Map<String, Object> clusterMetrics = new HashMap<>();
-          List<String> slaves = new ArrayList<>();
-          for(CallbackInfo callbackInfo : callbackInfoCollection) {
-            slaves.add(callbackInfo.getSdcURL());
-          }
-          clusterMetrics.put("slaves", slaves);
-          metricsJSONStr = objectMapper.writer().writeValueAsString(clusterMetrics);
+          MetricRegistryJson metricRegistryJson = getAggregatedMetrics();
+          metricsJSONStr = objectMapper.writer().writeValueAsString(metricRegistryJson);
         } else {
           metricsJSONStr = objectMapper.writer().writeValueAsString(pipelineManager.getMetrics());
         }
@@ -77,5 +80,50 @@ public class MetricsEventRunnable implements Runnable {
     } catch (IOException ex) {
       LOG.warn("Error while serializing metrics, {}", ex.getMessage(), ex);
     }
+  }
+
+  private MetricRegistryJson getAggregatedMetrics() {
+    MetricRegistryJson aggregatedMetrics = new MetricRegistryJson();
+    Map<String, CounterJson> aggregatedCounters = null;
+    Map<String, MeterJson> aggregatedMeters = null;
+    List<String> slaves = new ArrayList<>();
+
+    for(CallbackInfo callbackInfo : pipelineManager.getSlaveCallbackList()) {
+      slaves.add(callbackInfo.getSdcURL());
+      MetricRegistryJson metricRegistryJson = callbackInfo.getMetricRegistryJson();
+      if(metricRegistryJson != null) {
+        slaveMetrics.put(callbackInfo.getSdcSlaveToken(), callbackInfo.getMetricRegistryJson());
+      }
+    }
+
+    for(String slaveSdcToken: slaveMetrics.keySet()) {
+      MetricRegistryJson metrics = slaveMetrics.get(slaveSdcToken);
+      if(aggregatedCounters == null) {
+        //First Slave Metrics
+        aggregatedCounters = metrics.getCounters();
+        aggregatedMeters = metrics.getMeters();
+      } else {
+        //Otherwise add to the aggregated Metrics
+        Map<String, CounterJson> slaveCounters = metrics.getCounters();
+        for(String meterName: aggregatedCounters.keySet()) {
+          CounterJson aggregatedCounter = aggregatedCounters.get(meterName);
+          CounterJson slaveCounter = slaveCounters.get(meterName);
+          aggregatedCounter.setCount(aggregatedCounter.getCount() + slaveCounter.getCount());
+        }
+
+        Map<String, MeterJson> slaveMeters = metrics.getMeters();
+        for(String meterName: aggregatedMeters.keySet()) {
+          MeterJson aggregatedMeter = aggregatedMeters.get(meterName);
+          MeterJson slaveMeter = slaveMeters.get(meterName);
+          aggregatedMeter.setCount(aggregatedMeter.getCount() + slaveMeter.getCount());
+        }
+      }
+    }
+
+    aggregatedMetrics.setCounters(aggregatedCounters);
+    aggregatedMetrics.setMeters(aggregatedMeters);
+    aggregatedMetrics.setSlaves(slaves);
+
+    return aggregatedMetrics;
   }
 }

@@ -6,7 +6,6 @@
 package com.streamsets.pipeline.main;
 
 import com.google.common.collect.ImmutableList;
-import com.streamsets.pipeline.callback.CallbackServerTask;
 import com.streamsets.pipeline.http.WebServerTask;
 import com.streamsets.pipeline.prodmanager.PipelineManager;
 import com.streamsets.pipeline.stagelibrary.StageLibraryTask;
@@ -23,8 +22,8 @@ public class PipelineTask extends CompositeTask {
 
   @Inject
   public PipelineTask(StageLibraryTask library, PipelineStoreTask store, PipelineManager pipelineManager,
-      WebServerTask webServer, CallbackServerTask callbackServerTask) {
-    super("pipelineNode", ImmutableList.of(library, store, pipelineManager, webServer, callbackServerTask),
+      WebServerTask webServer) {
+    super("pipelineNode", ImmutableList.of(library, store, pipelineManager, webServer),
       true);
     this.stageLibraryTask = library;
     this.pipelineStoreTask = store;

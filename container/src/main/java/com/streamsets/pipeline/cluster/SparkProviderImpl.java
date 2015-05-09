@@ -8,7 +8,6 @@ package com.streamsets.pipeline.cluster;
 import com.google.common.base.Joiner;
 import com.google.common.collect.Maps;
 import com.streamsets.pipeline.api.impl.Utils;
-import com.streamsets.pipeline.callback.CallbackServerTask;
 import com.streamsets.pipeline.config.ConfigConfiguration;
 import com.streamsets.pipeline.config.PipelineConfiguration;
 import com.streamsets.pipeline.config.StageConfiguration;
@@ -18,6 +17,7 @@ import com.streamsets.pipeline.json.ObjectMapperFactory;
 import com.streamsets.pipeline.lib.util.ThreadUtil;
 import com.streamsets.pipeline.main.RuntimeInfo;
 import com.streamsets.pipeline.main.RuntimeModule;
+import com.streamsets.pipeline.prodmanager.PipelineManager;
 import com.streamsets.pipeline.restapi.bean.BeanHelper;
 import com.streamsets.pipeline.stagelibrary.StageLibraryTask;
 import com.streamsets.pipeline.stagelibrary.StageLibraryUtils;
@@ -152,12 +152,9 @@ public class SparkProviderImpl implements SparkProvider {
         RuntimeInfo.ExecutionMode.SLAVE.name().toLowerCase());
 
       if(runtimeInfo != null) {
-        sdcProperties.setProperty(CallbackServerTask.SDC_CLUSTER_TOKEN_KEY, runtimeInfo.getClusterToken());
-        sdcProperties.setProperty(CallbackServerTask.CALLBACK_SERVER_URL_KEY, runtimeInfo.getClusterCallbackURL());
+        sdcProperties.setProperty(PipelineManager.SDC_CLUSTER_TOKEN_KEY, runtimeInfo.getSDCToken());
+        sdcProperties.setProperty(PipelineManager.CALLBACK_SERVER_URL_KEY, runtimeInfo.getClusterCallbackURL());
       }
-
-      sdcProperties.setProperty(CallbackServerTask.CALLBACK_SERVER_PING_INTERVAL_KEY,
-        CallbackServerTask.CALLBACK_SERVER_PING_INTERVAL_DEFAULT + "");
 
       for (Map.Entry<String, String> entry : sourceConfigs.entrySet()) {
         sdcProperties.setProperty(entry.getKey(), entry.getValue());

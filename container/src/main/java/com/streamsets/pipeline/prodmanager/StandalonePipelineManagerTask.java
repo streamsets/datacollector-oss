@@ -22,6 +22,7 @@ import com.streamsets.pipeline.api.el.ELEvalException;
 import com.streamsets.pipeline.api.impl.ErrorMessage;
 import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.callback.CallbackInfo;
+import com.streamsets.pipeline.callback.CallbackServerMetricsEventListener;
 import com.streamsets.pipeline.config.ConfigConfiguration;
 import com.streamsets.pipeline.config.DeliveryGuarantee;
 import com.streamsets.pipeline.config.MemoryLimitConfiguration;
@@ -125,6 +126,7 @@ public class StandalonePipelineManagerTask extends AbstractTask implements Pipel
   private final Object pipelineMutex = new Object();
 
   private List<AlertEventListener> alertEventListenerList = new ArrayList<>();
+  private CallbackServerMetricsEventListener callbackServerMetricsEventListener;
 
   @Inject
   public StandalonePipelineManagerTask(RuntimeInfo runtimeInfo,
@@ -251,6 +253,19 @@ public class StandalonePipelineManagerTask extends AbstractTask implements Pipel
     if(refreshInterval > 0) {
       metricsEventRunnable = new MetricsEventRunnable(this, runtimeInfo);
       executor.scheduleAtFixedRate(metricsEventRunnable, 0, refreshInterval, TimeUnit.MILLISECONDS);
+    }
+
+    //For Slave Callback to Cluster SDC Server
+    String callbackServerURL = configuration.get(CALLBACK_SERVER_URL_KEY, CALLBACK_SERVER_URL_DEFAULT);
+    String sdcClusterToken = configuration.get(SDC_CLUSTER_TOKEN_KEY, null);
+    if(runtimeInfo.getExecutionMode() == RuntimeInfo.ExecutionMode.SLAVE) {
+      if(callbackServerURL != null) {
+        callbackServerMetricsEventListener = new CallbackServerMetricsEventListener(runtimeInfo, callbackServerURL,
+          sdcClusterToken);
+        addMetricsEventListener(callbackServerMetricsEventListener);
+      } else {
+        throw new RuntimeException("No callback server URL is passed. SDC in Slave mode requires callback server URL (callback.server.url).");
+      }
     }
 
     LOG.debug("Initialized Production Pipeline Manager");

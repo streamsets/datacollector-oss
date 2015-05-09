@@ -59,10 +59,12 @@ import java.io.File;
 import java.io.InputStream;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.locks.ReentrantLock;
 
 public class ClusterPipelineManager extends AbstractTask implements PipelineManager {
   private static final String CLUSTER_PIPELINE_MANAGER = "ClusterPipelineManager";
@@ -87,6 +89,7 @@ public class ClusterPipelineManager extends AbstractTask implements PipelineMana
   private Cache<String, CallbackInfo> slaveCallbackList;
   private SafeScheduledExecutorService executor;
   private MetricsEventRunnable metricsEventRunnable;
+  private final ReentrantLock callbackCacheLock;
 
   public ClusterPipelineManager(RuntimeInfo runtimeInfo, Configuration configuration, PipelineStoreTask pipelineStore,
                                 StageLibraryTask stageLibrary) {
@@ -111,6 +114,7 @@ public class ClusterPipelineManager extends AbstractTask implements PipelineMana
     slaveCallbackList = CacheBuilder.newBuilder()
         .expireAfterWrite(1, TimeUnit.MINUTES)
         .build();
+    callbackCacheLock = new ReentrantLock();
   }
 
   @Override
@@ -288,7 +292,8 @@ public class ClusterPipelineManager extends AbstractTask implements PipelineMana
   public PipelineState startPipeline(final String name, final String rev) throws PipelineStoreException,
     PipelineManagerException, PipelineRuntimeException, StageException {
     validateStateTransition(name, rev, State.RUNNING);
-    runtimeInfo.reloadClusterToken();
+    runtimeInfo.reloadSDCToken();
+    metricsEventRunnable.clearSlaveMetrics();
     PipelineConfiguration pipelineConf = pipelineStore.load(name, rev);
     ExecutionMode executionMode = ExecutionMode.valueOf((String) pipelineConf.getConfiguration(
       PipelineDefConfigs.EXECUTION_MODE_CONFIG).getValue());
@@ -437,17 +442,29 @@ public class ClusterPipelineManager extends AbstractTask implements PipelineMana
 
   @Override
   public void updateSlaveCallbackInfo(CallbackInfo callbackInfo) {
-    if(runtimeInfo.getClusterToken().equals(callbackInfo.getSdcClusterToken()) &&
+    if(runtimeInfo.getSDCToken().equals(callbackInfo.getSdcClusterToken()) &&
       !RuntimeInfo.UNDEF.equals(callbackInfo.getSdcURL())) {
-      slaveCallbackList.put(callbackInfo.getSdcURL(), callbackInfo);
+      callbackCacheLock.lock();
+      try {
+        slaveCallbackList.put(callbackInfo.getSdcURL(), callbackInfo);
+      } finally {
+         callbackCacheLock.unlock();
+      }
     } else {
-      throw new RuntimeException("SDC Cluster token not matched");
+      LOG.warn("SDC Cluster token not matched");
     }
   }
 
   @Override
   public Collection<CallbackInfo> getSlaveCallbackList() {
-    return slaveCallbackList.asMap().values();
+    Set<CallbackInfo> callbackInfoSet;
+    callbackCacheLock.lock();
+    try {
+      callbackInfoSet = new HashSet<>(slaveCallbackList.asMap().values());
+    } finally {
+      callbackCacheLock.unlock();
+    }
+    return callbackInfoSet;
   }
 
   private void createPipelineDirIfNotExist(String name) throws PipelineManagerException {

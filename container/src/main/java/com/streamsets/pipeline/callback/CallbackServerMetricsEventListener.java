@@ -6,6 +6,7 @@
 package com.streamsets.pipeline.callback;
 
 import com.streamsets.pipeline.main.RuntimeInfo;
+import com.streamsets.pipeline.metrics.MetricsEventListener;
 import com.streamsets.pipeline.restapi.bean.BeanHelper;
 import com.streamsets.pipeline.util.AuthzRole;
 import org.slf4j.Logger;
@@ -16,33 +17,32 @@ import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.Response;
 import java.util.Map;
 
-public class CallbackServerRunnable implements Runnable {
-  private static final Logger LOG = LoggerFactory.getLogger(CallbackServerRunnable.class);
-  public static final String RUNNABLE_NAME = "CallbackServerRunnable";
-  public static final String SDC_CLUSTER_TOKEN = "sdcClusterToken";
 
+public class CallbackServerMetricsEventListener implements MetricsEventListener {
+  private static final Logger LOG = LoggerFactory.getLogger(CallbackServerMetricsEventListener.class);
   private final RuntimeInfo runtimeInfo;
   private final String callbackServerURL;
   private final String sdcClusterToken;
 
-  public CallbackServerRunnable(RuntimeInfo runtimeInfo, String callbackServerURL, String sdcClusterToken) {
+  public CallbackServerMetricsEventListener(RuntimeInfo runtimeInfo, String callbackServerURL, String sdcClusterToken) {
     this.runtimeInfo = runtimeInfo;
     this.callbackServerURL = callbackServerURL;
     this.sdcClusterToken = sdcClusterToken;
   }
 
   @Override
-  public void run() {
-    String originalName = Thread.currentThread().getName();
-    Thread.currentThread().setName(originalName + "-" + RUNNABLE_NAME);
+  public void notification(String metrics) {
     try {
+
       Map<String, String> authenticationToken = runtimeInfo.getAuthenticationTokens();
       CallbackInfo callbackInfo = new CallbackInfo(sdcClusterToken,
+        runtimeInfo.getSDCToken(),
         runtimeInfo.getBaseHttpUrl(),
         authenticationToken.get(AuthzRole.ADMIN),
         authenticationToken.get(AuthzRole.CREATOR),
         authenticationToken.get(AuthzRole.MANAGER),
-        authenticationToken.get(AuthzRole.GUEST));
+        authenticationToken.get(AuthzRole.GUEST),
+        metrics);
 
       Response response = ClientBuilder
         .newClient()
@@ -57,8 +57,6 @@ public class CallbackServerRunnable implements Runnable {
 
     } catch (Exception ex) {
       LOG.warn("Error while calling callback to Callback Server , {}", ex.getMessage(), ex);
-    } finally {
-      Thread.currentThread().setName(originalName);
     }
   }
 }

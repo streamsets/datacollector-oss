@@ -32,7 +32,7 @@
 
 <script type="text/ng-template" id="summaryRecordPercentagePieChartTemplate">
   <div class="col-sm-4"
-       ng-if="selectedType === pipelineConstant.STAGE_INSTANCE && common.sdcExecutionMode !== pipelineConstant.CLUSTER"
+       ng-if="selectedType === pipelineConstant.STAGE_INSTANCE"
        ng-controller="RecordPercentagePieChartController">
     <div class="panel panel-default">
       <div class="panel-heading">
@@ -70,7 +70,6 @@
 
 <script type="text/ng-template" id="summaryRecordCountBarChartTemplate">
   <div class="col-sm-4"
-       ng-if="common.sdcExecutionMode !== pipelineConstant.CLUSTER"
        ng-controller="RecordCountBarChartController">
     <div class="panel panel-default">
       <div class="panel-heading">
@@ -340,7 +339,7 @@
 
 <script type="text/ng-template" id="slaveSDCInstancesTemplate">
   <div class="col-sm-4"
-       ng-if="common.sdcExecutionMode === pipelineConstant.CLUSTER">
+       ng-if="selectedType === pipelineConstant.PIPELINE && common.sdcExecutionMode === pipelineConstant.CLUSTER">
     <div class="panel panel-default">
       <div class="panel-heading">
         <span title="{{'home.detailPane.summaryTab.slaveSDCInstances' | translate}}"
@@ -358,7 +357,7 @@
           </li>
 
           <li ng-if="!common.pipelineMetrics || !common.pipelineMetrics.slaves || common.pipelineMetrics.slaves.length === 0">
-            <span class="properties-label">No Record</span>
+            <span class="properties-label" translate="global.messages.info.noDataAvailable">No Data Available.</span>
           </li>
         </ul>
       </div>

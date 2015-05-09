@@ -51,7 +51,7 @@ public class RuntimeInfo {
   private final File baseDir;
   private UUID randomUUID;
   private ExecutionMode executionMode = ExecutionMode.STANDALONE;
-  private String clusterToken;
+  private String sdcToken;
 
   public RuntimeInfo(String propertyPrefix, MetricRegistry metrics,
                      List<? extends ClassLoader> stageLibraryClassLoaders) {
@@ -75,7 +75,7 @@ public class RuntimeInfo {
     authenticationTokens = new HashMap<>();
     reloadAuthenticationToken();
     randomUUID = UUID.randomUUID();
-    clusterToken = UUID.randomUUID().toString();
+    sdcToken = UUID.randomUUID().toString();
   }
 
   public MetricRegistry getMetrics() {
@@ -219,8 +219,8 @@ public class RuntimeInfo {
     }
   }
 
-  public void reloadClusterToken() {
-    clusterToken = UUID.randomUUID().toString();
+  public void reloadSDCToken() {
+    sdcToken = UUID.randomUUID().toString();
   }
 
   public ExecutionMode getExecutionMode() {
@@ -235,8 +235,8 @@ public class RuntimeInfo {
     }
   }
 
-  public String getClusterToken() {
-    return clusterToken;
+  public String getSDCToken() {
+    return sdcToken;
   }
 
   public String getClusterCallbackURL() {

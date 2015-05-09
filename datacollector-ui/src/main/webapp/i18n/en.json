@@ -112,6 +112,7 @@
       "info": {
         "graphErrorBadgeLabel": "Total Error records + Stage errors.",
         "noPipelineExists": "No Pipeline found with name '{{name}}'",
+        "noDataAvailable": "No Data Available.",
         "originExists": "Origin already exists.",
         "saveOperationInProgress" : "All Changes Saved",
         "savingConfiguration" : "Saving...",
