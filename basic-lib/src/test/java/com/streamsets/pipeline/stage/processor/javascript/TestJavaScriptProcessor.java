@@ -21,7 +21,9 @@ import org.junit.Test;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 public class TestJavaScriptProcessor {
 
@@ -52,6 +54,81 @@ public class TestJavaScriptProcessor {
       Assert.assertEquals("Bye", output.getRecords().get("lane").get(1).get().getValueAsString());
       Assert.assertEquals(1, runner.getErrorRecords().size());
       Assert.assertEquals("Error", runner.getErrorRecords().get(0).get().getValueAsString());
+    } finally {
+      runner.runDestroy();
+    }
+  }
+
+  @Test
+  public void testJavascriptAllTypes() throws Exception {
+    Processor processor = new JavaScriptProcessor(ProcessingMode.RECORD,
+        "var record = records[0];\n" +
+        "record.value['newField'] = {\n" +
+            "a: {\n" +
+              "b: record.value['beginner'], \n" +
+              "c: record.value['skilled']\n" +
+            "}, \n" +
+            "d: ['str1', 'str2'], \n" +
+            "e: record.value['expert'] \n" +
+          "};\n" +
+        "out.write(record);");
+    ProcessorRunner runner = new ProcessorRunner.Builder(JavaScriptDProcessor.class, processor)
+      .addOutputLane("lane")
+      .build();
+    runner.runInit();
+    try {
+      Map<String, Field> map = new LinkedHashMap<>();
+      map.put("beginner", Field.create("false"));
+      map.put("intermediate", Field.create("yes"));
+      map.put("advanced", Field.create("no"));
+      map.put("expert", Field.create(true));
+      map.put("skilled", Field.create(122345566));
+      map.put("null", Field.create(Field.Type.STRING, null));
+
+      List<Field> list = ImmutableList.of(Field.create("listString1"), Field.create("listString2"));
+      map.put("list", Field.create(list));
+
+      Record record = RecordCreator.create("s", "s:1");
+      record.set(Field.create(map));
+
+      StageRunner.Output output = runner.runProcess(ImmutableList.of(record));
+
+      Assert.assertEquals(1, output.getRecords().get("lane").size());
+      Field field = output.getRecords().get("lane").get(0).get();
+      Assert.assertTrue(field.getValue() instanceof Map);
+      Map<String, Field> result = field.getValueAsMap();
+      Assert.assertTrue(result.size() == 8);
+      Assert.assertTrue(result.containsKey("beginner"));
+      Assert.assertEquals("false", result.get("beginner").getValue());
+      Assert.assertTrue(result.containsKey("intermediate"));
+      Assert.assertEquals("yes", result.get("intermediate").getValue());
+      Assert.assertTrue(result.containsKey("advanced"));
+      Assert.assertEquals("no", result.get("advanced").getValue());
+      Assert.assertTrue(result.containsKey("expert"));
+      Assert.assertEquals(true, result.get("expert").getValue());
+      Assert.assertTrue(result.containsKey("skilled"));
+      Assert.assertEquals(122345566, result.get("skilled").getValue());
+      Assert.assertTrue(result.containsKey("null"));
+      Assert.assertEquals(null, result.get("null").getValue());
+      Assert.assertTrue(result.containsKey("list"));
+      List<Field> listField = result.get("list").getValueAsList();
+      Assert.assertTrue(listField.size() == 2);
+      Assert.assertEquals("listString1", listField.get(0).getValueAsString());
+      Assert.assertEquals("listString2", listField.get(1).getValueAsString());
+
+      //Field added by Javascript Evaluator
+      Assert.assertTrue(result.containsKey("newField"));
+      Map<String, Field> newField = result.get("newField").getValueAsMap();
+      Assert.assertTrue(newField.containsKey("a"));
+      Assert.assertTrue(newField.get("a").getValueAsMap().containsKey("b"));
+      Assert.assertEquals("false", newField.get("a").getValueAsMap().get("b").getValueAsString());
+      Assert.assertTrue(newField.get("a").getValueAsMap().containsKey("c"));
+      Assert.assertEquals(122345566, newField.get("a").getValueAsMap().get("c").getValue());
+      Assert.assertTrue(newField.containsKey("d"));
+      Assert.assertEquals("str1", newField.get("d").getValueAsList().get(0).getValueAsString());
+      Assert.assertEquals("str2", newField.get("d").getValueAsList().get(1).getValueAsString());
+      Assert.assertTrue(newField.containsKey("e"));
+      Assert.assertEquals(true, newField.get("e").getValueAsBoolean());
     } finally {
       runner.runDestroy();
     }
