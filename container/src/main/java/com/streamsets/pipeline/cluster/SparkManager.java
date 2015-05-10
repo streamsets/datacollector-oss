@@ -36,7 +36,7 @@ public class SparkManager {
 
   public SparkManager(RuntimeInfo runtimeInfo, File tempDir) {
     this(new SystemProcessFactory(), new SparkProviderImpl(runtimeInfo), tempDir,
-      new File(new File(System.getProperty("user.dir"), "libexec"), "spark-manager"), null, null);
+      new File(runtimeInfo.getLibexecDir(), "spark-manager"), null, null);
   }
 
   @VisibleForTesting

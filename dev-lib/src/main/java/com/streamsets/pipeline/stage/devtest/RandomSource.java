@@ -20,11 +20,14 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Random;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 @GenerateResourceBundle
 @StageDef(version="1.0.0", label="Dev Random Record Source",
           icon="random.png")
 public class RandomSource extends BaseSource {
-
+  private static final Logger LOG = LoggerFactory.getLogger(RandomSource.class);
   @ConfigDef(required = true, type = ConfigDef.Type.STRING,
     defaultValue = "a,b,c",
     label = "Record fields to generate, comma separated")
@@ -37,6 +40,13 @@ public class RandomSource extends BaseSource {
     max = Integer.MAX_VALUE)
   public int delay;
 
+  @ConfigDef(required = true, type = ConfigDef.Type.NUMBER,
+    defaultValue = "9223372036854775806", // Long max value - 1
+    label = "Max records to generate",
+    min = 0,
+    max = Long.MAX_VALUE)
+  public long maxRecordsToGenerate;
+
 
   private int batchCount;
   private int batchSize;
@@ -45,6 +55,7 @@ public class RandomSource extends BaseSource {
   private Random randomNulls;
   private String[] lanes;
   private Meter randomMeter;
+  private long recordsProduced;
 
   @Override
   protected void init() throws StageException {
@@ -70,7 +81,11 @@ public class RandomSource extends BaseSource {
     }
 
     for (int i = 0; i < batchSize; i++ ) {
+      if (recordsProduced >= maxRecordsToGenerate) {
+        break;
+      }
       batchMaker.addRecord(createRecord(lastSourceOffset, i), lanes[i % lanes.length]);
+      recordsProduced++;
     }
     return "random";
   }

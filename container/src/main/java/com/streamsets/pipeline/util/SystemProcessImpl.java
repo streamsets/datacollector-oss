@@ -40,7 +40,7 @@ public class SystemProcessImpl implements SystemProcess {
     }
     DESTROY_FORCIBLY = destroyForcibly;
   }
-  private final ImmutableList<String> args;
+  protected ImmutableList<String> args;
   private final File tempDir;
   private final File input = new File("/dev/null");
   private final File output;
@@ -48,6 +48,13 @@ public class SystemProcessImpl implements SystemProcess {
   private SimpleFileTailer outputTailer;
   private SimpleFileTailer errorTailer;
   private Process delegate;
+
+  SystemProcessImpl(String name, File tempDir, File logDir) {
+    String uuid = UUID.randomUUID().toString();
+    this.tempDir = tempDir;
+    output = new File(logDir, Utils.format("{}-{}.out", name, uuid));
+    error = new File(logDir, Utils.format("{}-{}.err", name, uuid));
+  }
 
   public SystemProcessImpl(String name, File tempDir, List<String> args) {
     String uuid = UUID.randomUUID().toString();
@@ -57,13 +64,18 @@ public class SystemProcessImpl implements SystemProcess {
     this.args = ImmutableList.copyOf(args);
   }
 
+  @Override
   public void start() throws IOException {
     start(new HashMap<String, String>());
   }
+
+  @Override
   public void start(Map<String, String> env) throws IOException {
     Utils.checkState(output.createNewFile(), Utils.formatL("Could not create output file: {}", output));
     Utils.checkState(error.createNewFile(), Utils.formatL("Could not create error file: {}", error));
     Utils.checkState(delegate == null, "start can only be called once");
+    LOG.info("Standard output for process written to file  " + output);
+    LOG.info("Standard error for process written to file " + error);
     ProcessBuilder processBuilder = new ProcessBuilder()
       .redirectInput(input)
       .redirectOutput(output)
@@ -77,14 +89,17 @@ public class SystemProcessImpl implements SystemProcess {
     errorTailer = new SimpleFileTailer(error);
   }
 
+  @Override
   public String getCommand() {
     return Joiner.on(" ").join(args);
   }
 
+  @Override
   public boolean isAlive() {
     return delegate != null && isAlive(delegate);
   }
 
+  @Override
   public void cleanup() {
     if (outputTailer != null) {
       outputTailer.close();
@@ -96,6 +111,7 @@ public class SystemProcessImpl implements SystemProcess {
     output.delete();
     kill(5000);
   }
+  @Override
   public List<String> getAllOutput() {
     List<String> result = new ArrayList<>();
     if (outputTailer != null) {
@@ -104,6 +120,7 @@ public class SystemProcessImpl implements SystemProcess {
     return result;
   }
 
+  @Override
   public List<String> getAllError() {
     List<String> result = new ArrayList<>();
     if (errorTailer != null) {
@@ -112,6 +129,7 @@ public class SystemProcessImpl implements SystemProcess {
     return result;
   }
 
+  @Override
   public List<String> getOutput() {
     List<String> result = new ArrayList<>();
     if (outputTailer != null) {
@@ -120,6 +138,7 @@ public class SystemProcessImpl implements SystemProcess {
     return result;
   }
 
+  @Override
   public List<String> getError() {
     List<String> result = new ArrayList<>();
     if (errorTailer != null) {
@@ -128,6 +147,7 @@ public class SystemProcessImpl implements SystemProcess {
     return result;
   }
 
+  @Override
   public void kill(long timeoutBeforeForceKill) {
     if (outputTailer != null) {
       outputTailer.close();
@@ -160,10 +180,12 @@ public class SystemProcessImpl implements SystemProcess {
     return Utils.format("SystemProcess: {} ", Joiner.on(" ").join(args));
   }
 
+  @Override
   public int exitValue() {
     return delegate.exitValue();
   }
 
+  @Override
   public boolean waitFor(long timeout, TimeUnit unit)
     throws InterruptedException {
     return waitFor(delegate, timeout, unit);

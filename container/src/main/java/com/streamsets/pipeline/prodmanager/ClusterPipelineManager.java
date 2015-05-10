@@ -631,8 +631,8 @@ public class ClusterPipelineManager extends AbstractTask implements PipelineMana
         CLUSTER_LAUNCHER_ENV_CONFIG, pipelineConf);
       environment.putAll(envConfigMap);
       Map<String, String> sourceInfo = new HashMap<>();
-      File bootstrapDir = new File(System.getProperty("user.dir"),
-        "libexec/bootstrap-libs/");
+      File bootstrapDir = new File(this.clusterPipelineManager.runtimeInfo.getLibexecDir(),
+        "bootstrap-libs");
       PipelineState ps = stateTracker.getState();
       try {
         //create pipeline and get the parallelism info from the source

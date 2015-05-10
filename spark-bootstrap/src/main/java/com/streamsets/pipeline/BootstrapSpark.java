@@ -191,7 +191,7 @@ public class BootstrapSpark {
     ClassLoader originalClassLoader = Thread.currentThread().getContextClassLoader();
     try {
       Thread.currentThread().setContextClassLoader(containerCL);
-      Class embeddedPipelineFactoryClz = Class.forName("com.streamsets.pipeline.main.EmbeddedPipelineFactory", true,
+      Class embeddedPipelineFactoryClz = Class.forName("com.streamsets.pipeline.datacollector.EmbeddedDataCollectorFactory", true,
         containerCL);
       Method createPipelineMethod = embeddedPipelineFactoryClz.getMethod("createPipeline", Properties.class,
         String.class, Runnable.class);

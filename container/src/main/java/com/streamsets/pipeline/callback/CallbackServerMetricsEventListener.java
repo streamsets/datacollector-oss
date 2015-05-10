@@ -21,6 +21,7 @@ import java.util.Map;
 
 public class CallbackServerMetricsEventListener implements MetricsEventListener {
   private static final Logger LOG = LoggerFactory.getLogger(CallbackServerMetricsEventListener.class);
+  private static final boolean IS_TRACE_ENABLED = LOG.isTraceEnabled();
   private final RuntimeInfo runtimeInfo;
   private final String callbackServerURL;
   private final String sdcClusterToken;
@@ -45,7 +46,9 @@ public class CallbackServerMetricsEventListener implements MetricsEventListener 
         authenticationToken.get(AuthzRole.MANAGER),
         authenticationToken.get(AuthzRole.GUEST),
         metrics);
-
+      if (IS_TRACE_ENABLED) {
+        LOG.trace("Calling back on " + callbackServerURL + " with the sdc url of " + runtimeInfo.getBaseHttpUrl());
+      }
       Response response = ClientBuilder
         .newClient()
         .target(callbackServerURL)

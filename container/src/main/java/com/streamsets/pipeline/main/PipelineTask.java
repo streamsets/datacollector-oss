@@ -19,12 +19,14 @@ public class PipelineTask extends CompositeTask {
   private final PipelineManager productionPipelineManagerTask;
   private final PipelineStoreTask pipelineStoreTask;
   private final StageLibraryTask stageLibraryTask;
+  private final WebServerTask webServerTask;
 
   @Inject
   public PipelineTask(StageLibraryTask library, PipelineStoreTask store, PipelineManager pipelineManager,
-      WebServerTask webServer) {
-    super("pipelineNode", ImmutableList.of(library, store, pipelineManager, webServer),
+      WebServerTask webServerTask) {
+    super("pipelineNode", ImmutableList.of(library, store, pipelineManager, webServerTask),
       true);
+    this.webServerTask = webServerTask;
     this.stageLibraryTask = library;
     this.pipelineStoreTask = store;
     this.productionPipelineManagerTask = pipelineManager;
@@ -39,4 +41,8 @@ public class PipelineTask extends CompositeTask {
   public StageLibraryTask getStageLibraryTask() {
     return stageLibraryTask;
   }
+  public WebServerTask getWebServerTask() {
+    return webServerTask;
+  }
+
 }

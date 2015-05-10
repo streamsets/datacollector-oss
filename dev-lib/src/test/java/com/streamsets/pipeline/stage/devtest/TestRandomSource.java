@@ -19,6 +19,7 @@ public class TestRandomSource {
   @Test
   public void testRandomSource() throws Exception{
     SourceRunner runner = new SourceRunner.Builder(RandomSource.class)
+      .addConfiguration("maxRecordsToGenerate", 1000)
       .addConfiguration("fields", "a,b")
       .addConfiguration("delay", 0)
       .addOutputLane("a")

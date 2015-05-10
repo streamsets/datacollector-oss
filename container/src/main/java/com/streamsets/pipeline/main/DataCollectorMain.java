@@ -10,6 +10,7 @@ import com.streamsets.pipeline.memory.MemoryUsageCollector;
 import java.lang.instrument.Instrumentation;
 import java.util.List;
 
+//TODO - Make this implement DataCollector interface
 public class DataCollectorMain extends Main {
 
   public DataCollectorMain() {

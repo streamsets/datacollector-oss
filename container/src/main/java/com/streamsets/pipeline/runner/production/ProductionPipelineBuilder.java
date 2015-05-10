@@ -56,7 +56,6 @@ public class ProductionPipelineBuilder {
       Issues issues = new Issues(configIssues);
       throw new PipelineRuntimeException(issues);
     }
-
     if (pipeline.getSource() instanceof OffsetCommitter) {
       runner.setOffsetTracker(new ProductionSourceOffsetCommitterOffsetTracker(name, rev, runtimeInfo,
         (OffsetCommitter) pipeline.getSource()));

@@ -63,7 +63,8 @@
     <module>common</module>
     <module>container-common</module>
     <module>container</module>
-
+    <module>miniSDC</module>
+    <module>miniIT</module>
     <module>sdk</module>
     <module>sdk-test</module>
 

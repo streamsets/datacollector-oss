@@ -239,6 +239,16 @@
         <version>${project.version}</version>
       </dependency>
       <dependency>
+        <groupId>com.streamsets</groupId>
+        <artifactId>streamsets-datacollector-miniIT</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.streamsets</groupId>
+        <artifactId>streamsets-datacollector-miniSDC</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
         <groupId>com.google.guava</groupId>
         <artifactId>guava</artifactId>
         <version>${guava.version}</version>

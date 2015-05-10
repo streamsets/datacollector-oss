@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ (c) 2014 StreamSets, Inc. All rights reserved. May not
+ be copied, modified, or distributed in whole or part without
+ written consent of StreamSets, Inc.
+-->
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <parent>
+    <groupId>com.streamsets</groupId>
+    <artifactId>streamsets-datacollector-root</artifactId>
+    <version>1.0.0b2-SNAPSHOT</version>
+    <relativePath>../root</relativePath>
+  </parent>
+  <groupId>com.streamsets</groupId>
+  <artifactId>streamsets-datacollector-miniSDC</artifactId>
+  <version>1.0.0b2-SNAPSHOT</version>
+  <description>StreamSets Data Collector Mini SDC</description>
+  <name>StreamSets Data Collector Mini SDC</name>
+  <packaging>jar</packaging>
+
+  <dependencies>
+    <dependency>
+      <groupId>com.streamsets</groupId>
+      <artifactId>streamsets-datacollector-bootstrap</artifactId>
+      <scope>provided</scope>
+	</dependency>
+     <dependency>
+      <groupId>log4j</groupId>
+      <artifactId>log4j</artifactId>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.slf4j</groupId>
+      <artifactId>slf4j-api</artifactId>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.slf4j</groupId>
+      <artifactId>slf4j-log4j12</artifactId>
+      <scope>provided</scope>
+    </dependency>
+  </dependencies>
+
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-deploy-plugin</artifactId>
+        <configuration>
+          <skip>true</skip>
+        </configuration>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-jar-plugin</artifactId>
+      </plugin>
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>cobertura-maven-plugin</artifactId>
+        <configuration>
+          <check>
+            <haltOnFailure>true</haltOnFailure>
+            <branchRate>0</branchRate>
+            <lineRate>0</lineRate>
+            <totalBranchRate>98</totalBranchRate>
+            <totalLineRate>98</totalLineRate>
+            <packageLineRate>98</packageLineRate>
+            <packageBranchRate>98</packageBranchRate>
+          </check>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
+
+</project>

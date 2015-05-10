@@ -35,6 +35,7 @@ public class RuntimeInfo {
   public static final String CONFIG_DIR = ".conf.dir";
   public static final String DATA_DIR = ".data.dir";
   public static final String LOG_DIR = ".log.dir";
+  public static final String LIBEXEC_DIR = ".libexec.dir";
   public static final String STATIC_WEB_DIR = ".static-web.dir";
   public static final String TRANSIENT_ENVIRONMENT = "sdc.transient-env";
   public static final String UNDEF = "UNDEF";
@@ -145,6 +146,9 @@ public class RuntimeInfo {
         return System.getProperty("user.dir") + "/" + randomUUID;
       }
     } else {
+      if (Boolean.getBoolean("sdc.testing-mode")) {
+        return System.getProperty("test.data.dir") + "/runtime-" + randomUUID;
+      }
       return System.getProperty("user.dir");
     }
   }
@@ -167,6 +171,10 @@ public class RuntimeInfo {
 
   public String getDataDir() {
     return System.getProperty(propertyPrefix + DATA_DIR, getRuntimeDir() + "/var");
+  }
+
+  public String getLibexecDir() {
+    return System.getProperty(propertyPrefix + LIBEXEC_DIR, getRuntimeDir() + "/libexec");
   }
 
   public boolean hasAttribute(String key) {

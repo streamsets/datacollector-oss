@@ -26,6 +26,7 @@ import com.streamsets.pipeline.stagelibrary.StageLibraryTask;
 import com.streamsets.pipeline.stagelibrary.StageLibraryUtils;
 import com.streamsets.pipeline.util.SystemProcess;
 import com.streamsets.pipeline.util.SystemProcessFactory;
+
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
@@ -40,9 +41,11 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.URL;
 import java.net.URLClassLoader;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
@@ -266,6 +269,7 @@ public class SparkProviderImpl implements SparkProvider {
       ObjectMapperFactory.getOneLine().writeValue(pipelineFile, BeanHelper.
         wrapPipelineConfiguration(pipelineConfiguration));
       File sdcPropertiesFile = new File(etcDir, "sdc.properties");
+
       rewriteProperties(sdcPropertiesFile, sourceConfigs);
       TarFileCreator.createEtcTarGz(etcDir, etcTarGz);
     } catch (Exception ex) {
@@ -289,7 +293,7 @@ public class SparkProviderImpl implements SparkProvider {
         IOUtils.closeQuietly(clusterLog4jProperties);
       }
     }
-    ImmutableList.Builder<String> args = ImmutableList.builder();
+    List<String> args = new ArrayList<>();
     args.add(sparkManager.getAbsolutePath());
     args.add("start");
     // we only support yarn-cluster mode
@@ -321,7 +325,7 @@ public class SparkProviderImpl implements SparkProvider {
     args.add("--class");
     args.add("com.streamsets.pipeline.BootstrapSpark");
     args.add(sparkBootstrapJar.getAbsolutePath());
-    SystemProcess process = systemProcessFactory.create(SparkManager.class.getSimpleName(), tempDir, args.build());
+    SystemProcess process = systemProcessFactory.create(SparkManager.class.getSimpleName(), tempDir, args);
     LOG.info("Starting: " + process);
     try {
       try {
@@ -334,6 +338,7 @@ public class SparkProviderImpl implements SparkProvider {
       Set<String> applicationIds = new HashSet<>();
       while (true) {
         long elapsedSeconds = TimeUnit.SECONDS.convert(System.currentTimeMillis() - start, TimeUnit.MILLISECONDS);
+        LOG.debug("Elapsed seconds till an application id is found are " + elapsedSeconds);
         if (applicationIds.size() > 1) {
           logOutput("unknown", process);
           throw new IllegalStateException(errorString("Found more than one application id: {}", applicationIds));
@@ -351,6 +356,7 @@ public class SparkProviderImpl implements SparkProvider {
         for (String line : process.getOutput()) {
           Matcher m = YARN_APPLICATION_ID_REGEX.matcher(line);
           if (m.find()) {
+            LOG.info("Found application id " + m.group(1));
             applicationIds.add(m.group(1));
           }
         }
