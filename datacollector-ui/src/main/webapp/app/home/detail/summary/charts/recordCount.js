@@ -44,7 +44,7 @@ angular
         switch(stageInstance.uiInfo.stageType) {
           case pipelineConstant.SOURCE_STAGE_TYPE:
             valueList.push(["Output" , outputRecordsMeter.count ]);
-            valueList.push(["Bad" , errorRecordsMeter.count ]);
+            valueList.push(["Error" , errorRecordsMeter.count ]);
             break;
           case pipelineConstant.PROCESSOR_STAGE_TYPE:
             valueList.push(["Input" , inputRecordsMeter.count ]);
@@ -61,7 +61,7 @@ angular
               });
             }
 
-            valueList.push(["Bad" , errorRecordsMeter.count ]);
+            valueList.push(["Error" , errorRecordsMeter.count ]);
             break;
           case pipelineConstant.TARGET_STAGE_TYPE:
             valueList.push(["Input" , inputRecordsMeter.count ]);
