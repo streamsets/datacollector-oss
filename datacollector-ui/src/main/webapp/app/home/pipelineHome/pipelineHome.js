@@ -30,7 +30,6 @@ angular
       rulesDirty = false,
       rulesSaveInProgress = false,
       ignoreUpdate = false,
-      pipelineStatusTimer,
       pipelineMetricsTimer,
       edges = [],
       destroyed = false,
@@ -39,8 +38,6 @@ angular
       loc = window.location,
       webSocketBaseURL = ((loc.protocol === "https:") ?
           "wss://" : "ws://") + loc.hostname + (((loc.port != 80) && (loc.port != 443)) ? ":" + loc.port : ""),
-      webSocketStatusURL = webSocketBaseURL + '/rest/v1/webSocket?type=status',
-      statusWebSocket,
       webSocketMetricsURL = webSocketBaseURL + '/rest/v1/webSocket?type=metrics',
       metricsWebSocket,
       webSocketAlertsURL = webSocketBaseURL + '/rest/v1/webSocket?type=alerts',
@@ -574,7 +571,6 @@ angular
           return pipelineDefn.name === routeParamPipelineName;
         });
 
-        refreshPipelineStatus();
         refreshPipelineMetrics();
 
         if($rootScope.common.sdcExecutionMode !== pipelineConstant.CLUSTER) {
@@ -930,71 +926,6 @@ angular
         $scope.$broadcast('show-errors-check-validity');
       }, 1000);
     };
-
-
-    /**
-     * Fetch the Pipeline Status every configured refresh interval.
-     *
-     */
-    var refreshPipelineStatus = function() {
-      if(destroyed) {
-        return;
-      }
-
-      if(isWebSocketSupported) {
-        //WebSocket to get Pipeline Status
-
-        statusWebSocket = new WebSocket(webSocketStatusURL);
-
-        statusWebSocket.onmessage = function (evt) {
-          var received_msg = evt.data;
-
-          $rootScope.$apply(function() {
-            $rootScope.common.pipelineStatus = JSON.parse(received_msg);
-          });
-        };
-
-        statusWebSocket.onerror = function (evt) {
-          isWebSocketSupported = false;
-          refreshPipelineStatus();
-        };
-
-      } else {
-        //WebSocket is not support use polling to get Pipeline Status
-
-        pipelineStatusTimer = $timeout(
-          function() {
-            //console.log( "Pipeline Status Timeout executed", Date.now() );
-          },
-          configuration.getRefreshInterval()
-        );
-
-        pipelineStatusTimer.then(
-          function() {
-            api.pipelineAgent.getPipelineStatus()
-              .success(function(data) {
-                if(!_.isObject(data) && _.isString(data) && data.indexOf('<!doctype html>') !== -1) {
-                  //Session invalidated
-                  window.location.reload();
-                  return;
-                }
-
-                $rootScope.common.pipelineStatus = data;
-
-                refreshPipelineStatus();
-              })
-              .error(function(data, status, headers, config) {
-                $rootScope.common.errors = [data];
-              });
-          },
-          function() {
-            //console.log( "Timer rejected!" );
-          }
-        );
-      }
-
-    };
-
 
     /**
      * Fetch the Pipeline Status for every configured refresh interval.
@@ -1371,11 +1302,9 @@ angular
 
     $scope.$on('$destroy', function() {
       if(isWebSocketSupported) {
-        statusWebSocket.close();
         metricsWebSocket.close();
         alertsWebSocket.close();
       } else {
-        $timeout.cancel(pipelineStatusTimer);
         $timeout.cancel(pipelineMetricsTimer);
       }
 
@@ -1387,15 +1316,11 @@ angular
         if(isWebSocketSupported) {
           metricsWebSocket.close();
         } else {
-          $timeout.cancel(pipelineStatusTimer);
           $timeout.cancel(pipelineMetricsTimer);
         }
         pageHidden = true;
       } else {
         refreshPipelineMetrics();
-        if(!isWebSocketSupported) {
-          refreshPipelineStatus();
-        }
         pageHidden = false;
       }
     });

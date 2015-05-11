@@ -54,7 +54,14 @@ angular.module('dataCollectorApp')
   })
   .run(function ($location, $rootScope, $modal, api, pipelineConstant, $localStorage, contextHelpService,
                  $translate, authService, userRoles, configuration, Analytics) {
-    var defaultTitle = 'StreamSets Data Collector';
+    var defaultTitle = 'StreamSets Data Collector',
+      pipelineStatusTimer,
+      isWebSocketSupported = (typeof(WebSocket) === "function"),
+      loc = window.location,
+      webSocketBaseURL = ((loc.protocol === "https:") ?
+          "wss://" : "ws://") + loc.hostname + (((loc.port != 80) && (loc.port != 443)) ? ":" + loc.port : ""),
+      webSocketStatusURL = webSocketBaseURL + '/rest/v1/webSocket?type=status',
+      statusWebSocket;
 
     $rootScope.pipelineConstant = pipelineConstant;
     $rootScope.$storage = $localStorage.$default({
@@ -165,6 +172,73 @@ angular.module('dataCollectorApp')
       }
     };
 
+    /**
+     * Fetch the Pipeline Status every configured refresh interval.
+     *
+     */
+    var refreshPipelineStatus = function() {
+
+      if(isWebSocketSupported) {
+        //WebSocket to get Pipeline Status
+
+        statusWebSocket = new WebSocket(webSocketStatusURL);
+
+        statusWebSocket.onmessage = function (evt) {
+          var received_msg = evt.data;
+
+          $rootScope.$apply(function() {
+            $rootScope.common.pipelineStatus = JSON.parse(received_msg);
+          });
+        };
+
+        statusWebSocket.onerror = function (evt) {
+          isWebSocketSupported = false;
+          refreshPipelineStatus();
+        };
+
+        statusWebSocket.onclose = function(evt) {
+          //On Close try calling REST API so that if server is down it will reload the page.
+          api.pipelineAgent.getPipelineStatus();
+        };
+
+      } else {
+        //WebSocket is not support use polling to get Pipeline Status
+
+        pipelineStatusTimer = $timeout(
+          function() {
+            //console.log( "Pipeline Status Timeout executed", Date.now() );
+          },
+          configuration.getRefreshInterval()
+        );
+
+        pipelineStatusTimer.then(
+          function() {
+            api.pipelineAgent.getPipelineStatus()
+              .success(function(data) {
+                if(!_.isObject(data) && _.isString(data) && data.indexOf('<!doctype html>') !== -1) {
+                  //Session invalidated
+                  window.location.reload();
+                  return;
+                }
+
+                $rootScope.common.pipelineStatus = data;
+
+                refreshPipelineStatus();
+              })
+              .error(function(data, status, headers, config) {
+                $rootScope.common.errors = [data];
+              });
+          },
+          function() {
+            //console.log( "Timer rejected!" );
+          }
+        );
+      }
+
+    };
+
+    refreshPipelineStatus();
+
     var logMessages = [];
 
     authService.init().then(function() {
@@ -209,6 +283,20 @@ angular.module('dataCollectorApp')
 
     window.onbeforeunload = function (event) {
       //Check if there was any change, if no changes, then simply let the user leave
+
+      if(isWebSocketSupported) {
+        statusWebSocket.close();
+      } else {
+        $timeout.cancel(pipelineStatusTimer);
+      }
+
+      setTimeout(function() {
+        setTimeout(function() {
+          //If user clicked cancel for reload the page
+          refreshPipelineStatus();
+        }, 1000);
+      },1);
+
       if($rootScope.common.saveOperationInProgress <= 0){
         return;
       }
