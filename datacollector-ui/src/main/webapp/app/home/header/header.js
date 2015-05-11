@@ -160,6 +160,9 @@ angular
           resolve: {
             pipelineConfig: function () {
               return $scope.pipelineConfig;
+            },
+            isPipelineRunning: function() {
+              return $scope.isPipelineRunning;
             }
           }
         });

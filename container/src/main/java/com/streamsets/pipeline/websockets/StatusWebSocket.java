@@ -43,7 +43,7 @@ public class StatusWebSocket extends WebSocketAdapter implements StateEventListe
   @Override
   public void onWebSocketError(Throwable cause) {
     super.onWebSocketError(cause);
-    LOG.warn("MetricsWebSocket error: {}", cause.getMessage(), cause);
+    LOG.warn("StatusWebSocket error: {}", cause.getMessage(), cause);
     pipelineManager.removeStateEventListener(this);
     SDCWebSocketServlet.webSocketClients--;
     webSocketSession = null;

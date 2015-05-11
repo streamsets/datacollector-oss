@@ -73,6 +73,13 @@
             </a>
           </li>
 
+          <li role="presentation"
+              ng-if="!isPipelineRunning && isAuthorized([userRoles.admin, userRoles.manager]) && common.sdcExecutionMode != pipelineConstant.CLUSTER">
+            <a href="#" dropdown-toggle ng-click="viewSnapshots()">
+              <i class="glyphicon glyphicon-camera"></i> {{'home.header.snapshots' | translate}}
+            </a>
+          </li>
+
           <li role="presentation" ng-if="isPipelineRunning && !monitoringPaused">
             <a href="#" dropdown-toggle ng-click="pauseMonitoring()">
               <i class="fa fa-pause"></i> {{'home.header.pauseMonitoring' | translate}}
@@ -89,7 +96,7 @@
       </div>
 
       <div class="btn-group issues-dropdown"
-           ng-show="pipelineConfig && pipelineConfig.issues.issueCount > 0 && !previewMode">
+           ng-show="pipelineConfig && pipelineConfig.issues.issueCount > 0 && !previewMode && !snapshotMode">
         <a class="btn btn-link dropdown-toggle" data-toggle="dropdown"
            tooltip-placement="top"
            tooltip="{{'home.header.issues' | translate}}"
@@ -131,7 +138,7 @@
          tooltip="{{selectedType === pipelineConstant.STAGE_INSTANCE ?
           ('global.form.deleteStage' | translate) + ' ' + selectedObject.uiInfo.label : ('global.form.deleteStream' | translate)}}"
          tooltip-popup-delay="500"
-         ng-hide="isPipelineRunning || previewMode || selectedType === pipelineConstant.PIPELINE"
+         ng-hide="isPipelineRunning || previewMode || snapshotMode || selectedType === pipelineConstant.PIPELINE"
          ng-if="isAuthorized([userRoles.admin, userRoles.creator]) && common.sdcExecutionMode != pipelineConstant.SLAVE"
          ng-click="deleteSelection()">
         <span class="fa fa-trash fa-14x"></span>
@@ -141,7 +148,7 @@
          tooltip-placement="bottom"
          tooltip="{{('global.form.duplicateStage' | translate) + ' ' + selectedObject.uiInfo.label}}"
          tooltip-popup-delay="500"
-         ng-hide="isPipelineRunning || previewMode || selectedType !== pipelineConstant.STAGE_INSTANCE ||
+         ng-hide="isPipelineRunning || previewMode || snapshotMode || selectedType !== pipelineConstant.STAGE_INSTANCE ||
          selectedObject.uiInfo.stageType === pipelineConstant.SOURCE_STAGE_TYPE"
          ng-if="isAuthorized([userRoles.admin, userRoles.creator]) && common.sdcExecutionMode != pipelineConstant.SLAVE"
          ng-click="duplicateStage()">
@@ -182,7 +189,7 @@
           tooltip-placement="bottom" tooltip="{{'home.header.preview' | translate}}"
           tooltip-trigger="{{iconOnly ? 'mouseenter' : 'notooltip'}}"
           tooltip-popup-delay="500"
-          ng-hide="isPipelineRunning || previewMode"
+          ng-hide="isPipelineRunning || previewMode || snapshotMode"
           ng-if="isAuthorized([userRoles.admin, userRoles.creator]) && common.sdcExecutionMode != pipelineConstant.SLAVE"
           ng-click="previewPipeline()"
           ng-disabled="!pipelineConfig.previewable">
@@ -205,7 +212,7 @@
          tooltip-trigger="mouseenter"
          tooltip-popup-delay="500"
          ng-if="isAuthorized([userRoles.admin, userRoles.creator]) && common.sdcExecutionMode != pipelineConstant.SLAVE"
-         ng-hide="isPipelineRunning || previewMode"
+         ng-hide="isPipelineRunning || previewMode || snapshotMode"
          ng-disabled="!pipelineConfig.valid"
          ng-click="validatePipeline()">
         <span class="glyphicon glyphicon-ok-circle fa-14x"></span>
@@ -215,7 +222,7 @@
           tooltip-placement="bottom" tooltip="{{'home.header.start' | translate}}"
           tooltip-trigger="{{iconOnly ? 'mouseenter' : 'notooltip'}}"
           tooltip-popup-delay="500"
-          ng-hide="isPipelineRunning || previewMode"
+          ng-hide="isPipelineRunning || previewMode || snapshotMode"
           ng-if="isAuthorized([userRoles.admin, userRoles.manager])"
           ng-disabled="!pipelineConfig.valid"
           ng-click="startPipeline()">
@@ -238,7 +245,7 @@
          tooltip-popup-delay="500"
          ng-if="common.sdcExecutionMode != pipelineConstant.SLAVE"
          ng-class="{'btn-selected': $storage.hideStageLibraryPanel}"
-         ng-hide="isPipelineRunning || previewMode"
+         ng-hide="isPipelineRunning || previewMode || snapshotMode"
          ng-click="$storage.hideStageLibraryPanel = !$storage.hideStageLibraryPanel">
         <span class="fa fa-th fa-14x"></span>
       </a>

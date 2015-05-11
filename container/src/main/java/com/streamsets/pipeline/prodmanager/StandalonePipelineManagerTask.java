@@ -399,7 +399,7 @@ public class StandalonePipelineManagerTask extends AbstractTask implements Pipel
     synchronized (pipelineMutex) {
       validateStateTransition(pipelineRunnable.getName(), pipelineRunnable.getRev(), State.STOPPING);
       setState(pipelineRunnable.getName(), pipelineRunnable.getRev(), State.STOPPING,
-        Constants.STOP_PIPELINE_MESSAGE, getMetrics());
+        Constants.STOP_PIPELINE_MESSAGE, null);
       PipelineState pipelineState = getPipelineState();
       handleStopRequest(nodeProcessShutdown);
       return pipelineState;

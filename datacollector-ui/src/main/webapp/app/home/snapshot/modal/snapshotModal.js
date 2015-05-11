@@ -4,7 +4,7 @@
 
 angular
   .module('dataCollectorApp.home')
-  .controller('SnapshotModalInstanceController', function ($scope, $modalInstance, pipelineConfig,
+  .controller('SnapshotModalInstanceController', function ($scope, $modalInstance, pipelineConfig, isPipelineRunning,
                                                            api, $timeout) {
     var defaultSnapshotName = 'Snapshot1',
       snapshotBatchSize = 10,
@@ -17,6 +17,7 @@ angular
       snapshotsInfo: [],
       showLoading: true,
       snapshotInProgress: false,
+      isPipelineRunning: isPipelineRunning,
 
       /**
        * Capture Snapshot
