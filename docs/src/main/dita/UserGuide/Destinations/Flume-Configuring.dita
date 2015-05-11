@@ -28,9 +28,7 @@
                             </thead>
                             <tbody>
                                 <row>
-                                    <entry>Host Configuration<draft-comment author="Loretta"
-                                            >Currentlly called Flume Hosts Configuration - can we
-                                            update?</draft-comment></entry>
+                                    <entry>Host Configuration</entry>
                                     <entry>Flume host information:<ul id="ul_al4_s1q_yr">
                                             <li>Name - Local alias for the Flume host. </li>
                                             <li>Flume host and port - Host name and port number for
@@ -42,55 +40,87 @@
                                 <row>
                                     <entry>Client Type</entry>
                                     <entry>Flume source client type:<ul id="ul_qcr_fbq_yr">
-                                            <li>Avro </li>
+                                            <li>Avro Failover - Apache Avro Failover RPC
+                                                Client.</li>
+                                            <li>Avro Load Balancing - Apache Avro LoadBalancing RPC
+                                                Client.</li>
+                                            <li>Thrift - Apache Thrift RPC Client.</li>
                                         </ul></entry>
                                 </row>
                                 <row>
                                     <entry>Backoff</entry>
-                                    <entry>For Avro load balancing source types only. </entry>
+                                    <entry>Temporarily avoid writing to a failed host.<p>Avro Load
+                                            Balancing client only. </p></entry>
                                 </row>
                                 <row>
                                     <entry>Max Backoff (ms)</entry>
-                                    <entry>For Avro load balancing source types only. </entry>
+                                    <entry>The maximum amount of time to avoid writing to a failed
+                                        host. <draft-comment author="Loretta">after which what
+                                            happens?</draft-comment><p>Enter the number of
+                                            milliseconds between 0 and 65536. </p><p>Use 0 to
+                                            trigger the Flume default value of 30000 milliseconds -
+                                            30 seconds. </p><p>Avro Load Balancing client only.
+                                        </p></entry>
                                 </row>
                                 <row>
                                     <entry>Host Selection Strategy</entry>
-                                    <entry>For Avro load balancing source types only. </entry>
+                                    <entry><p>Strategy to select the Flume host to use.</p>Avro Load
+                                        Balancing client only. </entry>
                                 </row>
                                 <row>
-                                    <entry>Batch Size</entry>
-                                    <entry>Maximum amount of records in a batch. </entry>
+                                    <entry>Flume Batch Size (events)</entry>
+                                    <entry>Maximum amount of events that the Flume client writes to
+                                        a Flume host at one time. The Flume client can split a <ph
+                                            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                                        /> batch into multiple Flume batches that pass data to the
+                                        Flume host.</entry>
                                 </row>
                                 <row>
-                                    <entry>Connection Timeout (ms)</entry>
-                                    <entry>Milliseconds of inactivity allowed before ending the
-                                        Flume connection. </entry>
+                                    <entry>Flume Client Connection Timeout (ms)</entry>
+                                    <entry>Maximum amount of time for the Flume client to connect to
+                                        the Flume host. </entry>
                                 </row>
                                 <row>
-                                    <entry>Request Timeout (ms)</entry>
-                                    <entry>Milliseconds to wait for a request response.</entry>
+                                    <entry>Flume Client Request Timeout (ms)</entry>
+                                    <entry>Milliseconds the Flume client waits for a response after
+                                        sending data to the Flume host. When the client does not
+                                        receive a response in time, the Flume destination resends
+                                        the batch, up to the number configured for Max Retry
+                                        Attempts.</entry>
                                 </row>
                                 <row>
                                     <entry>Max Retry Attempts</entry>
-                                    <entry>Maximum attempts to resend data to Flume before stopping
-                                        the pipeline. </entry>
+                                    <entry>Maximum number of times the Flume destination resends
+                                        data to Flume and waits for a response before stopping the
+                                        pipeline. </entry>
                                 </row>
                                 <row>
-                                    <entry>Wait Between Retries (ms)</entry>
+                                    <entry>Retry Wait Time (ms)</entry>
                                     <entry>Milliseconds to wait before resending data to
                                         Flume.</entry>
                                 </row>
                                 <row>
                                     <entry>Data Format</entry>
-                                    <entry/>
+                                    <entry>Data format for output events:<ul id="ul_ssq_sks_zr">
+                                            <li>Text</li>
+                                            <li>JSON</li>
+                                            <li>Delimited</li>
+                                            <li>SDC Record  <xref
+                                                  href="../Pipeline_Configuration/SDCRecordFormat.dita#concept_qkk_mwk_br">
+                                                  <image href="../Graphics/icon_moreInfo.png"
+                                                  scale="10" id="image_ucp_chr_br"/></xref></li>
+                                        </ul></entry>
                                 </row>
                                 <row>
                                     <entry>Event Charset</entry>
-                                    <entry/>
+                                    <entry>Character encoding of the events to be processed.</entry>
                                 </row>
                                 <row>
                                     <entry>One Event per Batch</entry>
-                                    <entry/>
+                                    <entry>
+                                        <p>Generates a single event for all records in the batch.
+                                        </p>
+                                    </entry>
                                 </row>
                             </tbody>
                         </tgroup>

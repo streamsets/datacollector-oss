@@ -29,15 +29,13 @@
                                     <entry>ZooKeeper Quorum</entry>
                                     <entry>Comma-separated list of servers in the ZooKeeper quorum.
                                         Use the following format:
-                                            <codeph>&lt;host>.&lt;domain>.com</codeph><p>To ensure a
-                                            connection, enter additional broker URIs.</p></entry>
+                                            <codeph>&lt;host>.&lt;domain>.com</codeph>.<p>To ensure
+                                            a connection, enter additional broker URIs.</p></entry>
                                 </row>
                                 <row>
                                     <entry>ZooKeeper Client Port</entry>
                                     <entry>Port number clients use to connect to the ZooKeeper
-                                        servers. <draft-comment author="Loretta">Is this correct?
-                                        </draft-comment>
-                                    </entry>
+                                        servers.  </entry>
                                 </row>
                                 <row>
                                     <entry>ZooKeeper Parent Znode</entry>

@@ -66,10 +66,19 @@
                             </thead>
                             <tbody>
                                 <row>
-                                    <entry>ZooKeeper Connection String</entry>
+                                    <entry>Kafka Broker URI</entry>
+                                    <entry>Connection string for Kafka brokers. Use the following
+                                        format: <codeph>&lt;host>:&lt;port></codeph>.  <p>To ensure
+                                            a connection, enter a comma-separated list of additional
+                                            broker URI.</p></entry>
+                                </row>
+                                <row>
+                                    <entry>ZooKeeper URI</entry>
                                     <entry>Connection string for the ZooKeeper of the Kafka cluster.
-                                        To use a ZooKeeper quorum, enter a comma-separated
-                                        list.</entry>
+                                        Use the following format:
+                                            <codeph>&lt;host>:&lt;port></codeph>. <p>To use a
+                                            ZooKeeper quorum, enter a comma-separated list.
+                                        </p></entry>
                                 </row>  <row>
                                     <entry>Consumer Group</entry>
                                     <entry>Kakfa consumer group that the <ph
@@ -107,11 +116,11 @@
                                             multiple objects.</p></entry>
                                 </row>
                                 <row>
-                                    <entry>Max Batch Size (messages)</entry>
-                                    <entry>Maximum number of messages processed at one time.</entry>
+                                    <entry>Max Batch Size (records)</entry>
+                                    <entry>Maximum number of records processed at one time. </entry>
                                 </row>
                                 <row>
-                                    <entry>Batch Wait Time (millisecs) <xref
+                                    <entry>Batch Wait Time (ms) <xref
                                             href="BatchSizeWaitTime.dita#concept_ypd_vgr_5q">
                                             <image href="../Graphics/icon_moreInfo.png" scale="10"
                                                 id="image_mgp_2q3_br" placement="inline"

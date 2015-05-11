@@ -22,8 +22,9 @@
     <stentry>Pipeline canvas</stentry>
     <stentry>Displays the pipeline that the <ph
             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> is
-          running. You can click a stage to view statistics about the stage. Click an unused section
-          of the canvas to view pipeline statistics.</stentry>
+          running. <p>You can click a stage to view statistics about the stage. Click an unused
+            section of the canvas to view pipeline statistics. Or, you can use the stage list to
+            select the information that you want to view.</p></stentry>
    </strow>
    <strow>
     <stentry>2</stentry>
@@ -43,7 +44,7 @@
         <stentry><image href="../Graphics/icon_MonDataAlert.png" id="image_twl_st5_br" scale="60"
           /></stentry>
         <stentry>Monitoring Stream</stentry>
-        <stentry>Select to create a data rule or alert.</stentry>
+        <stentry>Select to view or configure a data rule or alert.</stentry>
       </strow>
    <strow>
     <stentry><image href="../Graphics/icon_MonInspect.png" id="image_gz1_rk4_tq" scale="70"
@@ -59,8 +60,8 @@
     <stentry><image href="../Graphics/icon_MonSnapshot.png" id="image_w1q_zl4_tq" scale="70"
           /></stentry>
     <stentry>Snapshot icon</stentry>
-    <stentry>Captures a snapshot of data passing through the pipeline so you can review the data,
-          like data preview.</stentry>
+    <stentry>Captures a snapshot of data passing through the pipeline so you can review the
+          data.</stentry>
    </strow>
    <strow>
     <stentry><image href="../Graphics/icon_MonStop.png" id="image_klq_1m4_tq" scale="70"/>

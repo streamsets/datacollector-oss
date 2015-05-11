@@ -2,7 +2,7 @@
 <!DOCTYPE html
   SYSTEM "about:legacy-compat">
 <html xml:lang="en-us" lang="en-us">
-<head><meta name="description" content="The Flume destination writes data to Flume. When you configure a Flume destination, you can configure one or more Flume hosts to use, connection and batch information, and the client type used by ..."></meta><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><meta name="copyright" content="(C) Copyright 2005"></meta><meta name="DC.rights.owner" content="(C) Copyright 2005"></meta><meta name="DC.Type" content="concept"></meta><meta name="DC.Title" content="Flume"></meta><meta name="abstract" content="The Flume destination writes data to Flume."></meta><meta name="description" content="The Flume destination writes data to Flume."></meta><meta name="DC.Relation" scheme="URI" content="../Destinations/Destinations-title.html"></meta><meta name="DC.Format" content="XHTML"></meta><meta name="DC.Identifier" content="concept_pzn_hl4_yr"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/commonltr.css"><!----></link><title>Flume</title><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/webhelp_topic.css"><!----></link><link rel="stylesheet" type="text/css" href="../skin.css"></link><script type="text/javascript"><!--
+<head><meta name="description" content="The Flume destination writes data to Flume. When you write data to Flume, you pass data to a Flume client. The Flume client passes data to Flume hosts based on Flume client configuration properties. ..."></meta><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><meta name="copyright" content="(C) Copyright 2005"></meta><meta name="DC.rights.owner" content="(C) Copyright 2005"></meta><meta name="DC.Type" content="concept"></meta><meta name="DC.Title" content="Flume"></meta><meta name="abstract" content="The Flume destination writes data to Flume. When you write data to Flume, you pass data to a Flume client. The Flume client passes data to Flume hosts based on Flume client configuration properties."></meta><meta name="description" content="The Flume destination writes data to Flume. When you write data to Flume, you pass data to a Flume client. The Flume client passes data to Flume hosts based on Flume client configuration properties."></meta><meta name="DC.Relation" scheme="URI" content="../Destinations/Destinations-title.html"></meta><meta name="DC.Format" content="XHTML"></meta><meta name="DC.Identifier" content="concept_pzn_hl4_yr"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/commonltr.css"><!----></link><title>Flume</title><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/webhelp_topic.css"><!----></link><link rel="stylesheet" type="text/css" href="../skin.css"></link><script type="text/javascript"><!--
           
           var prefix = "../index.html";
           
@@ -14,19 +14,20 @@
  <h1 class="title topictitle1">Flume</h1>
 
  
- <div class="body conbody"><p class="shortdesc">The Flume destination writes data to Flume. </p>
+ <div class="body conbody"><p class="shortdesc">The Flume destination writes data to Flume. When you write data to Flume, you pass data
+  to a Flume client. The Flume client passes data to Flume hosts based on Flume client configuration
+  properties. </p>
 
   <p class="p">When you configure a Flume destination, you can configure one or more Flume hosts to use,
-   connection and batch information, and the client type used by Flume. You also define the data
-   format of source data. </p>
+   connection information, the Flume client type, and the data format to use. You can also configure
+   some Flume client properties, such as the Flume batch size or connection timeout.</p>
 
-  <div class="p">When you write data to Flume, you pass data to a source type. The Flume destination can write
-   data to the following Flume source types:<ul class="ul" id="concept_pzn_hl4_yr__ul_evb_hbq_yr">
-    <li class="li">Avro in failover mode</li>
+  <div class="p">The Flume destination can write data to the following Flume client types:<ul class="ul" id="concept_pzn_hl4_yr__ul_evb_hbq_yr">
+    <li class="li">Apache Avro Failover RPC Client</li>
 
-    <li class="li">Avro in load balancing mode</li>
+    <li class="li">Apache Avro LoadBalancing RPC Client</li>
 
-    <li class="li">Thrift</li>
+    <li class="li">Apache Thrift</li>
 
    </ul>
 </div>
@@ -114,9 +115,9 @@
                             
                             <thead class="thead" align="left">
                                 <tr class="row">
-                                    <th class="entry" valign="top" width="24.509803921568626%" id="d6292e171">General Property</th>
+                                    <th class="entry" valign="top" width="24.509803921568626%" id="d6282e171">General Property</th>
 
-                                    <th class="entry" valign="top" width="75.49019607843137%" id="d6292e174">Description</th>
+                                    <th class="entry" valign="top" width="75.49019607843137%" id="d6282e174">Description</th>
 
                                 </tr>
 
@@ -124,24 +125,24 @@
 
                             <tbody class="tbody">
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="24.509803921568626%" headers="d6292e171 ">Name</td>
+                                    <td class="entry" valign="top" width="24.509803921568626%" headers="d6282e171 ">Name</td>
 
-                                    <td class="entry" valign="top" width="75.49019607843137%" headers="d6292e174 ">Stage name.</td>
-
-                                </tr>
-
-                                <tr class="row">
-                                    <td class="entry" valign="top" width="24.509803921568626%" headers="d6292e171 ">Description</td>
-
-                                    <td class="entry" valign="top" width="75.49019607843137%" headers="d6292e174 ">Optional description.</td>
+                                    <td class="entry" valign="top" width="75.49019607843137%" headers="d6282e174 ">Stage name.</td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="24.509803921568626%" headers="d6292e171 ">Required Fields <a class="xref" href="../Pipeline_Configuration/PipelineDesign.html#concept_dnj_bkm_vq" title="You can configure required fields for any processor and most destination stages. A required field must exist in a record to allow the record to enter the stage for processing. When a record does not include a required field, the stage passes the record to the pipeline for error handling.">
+                                    <td class="entry" valign="top" width="24.509803921568626%" headers="d6282e171 ">Description</td>
+
+                                    <td class="entry" valign="top" width="75.49019607843137%" headers="d6282e174 ">Optional description.</td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="24.509803921568626%" headers="d6282e171 ">Required Fields <a class="xref" href="../Pipeline_Configuration/PipelineDesign.html#concept_dnj_bkm_vq" title="You can configure required fields for any processor and most destination stages. A required field must exist in a record to allow the record to enter the stage for processing. When a record does not include a required field, the stage passes the record to the pipeline for error handling.">
                                             <img class="image" id="task_vft_g5p_yr__d546e292" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
 
-                                    <td class="entry" valign="top" width="75.49019607843137%" headers="d6292e174 ">Fields that must include data to be passed to the stage.
+                                    <td class="entry" valign="top" width="75.49019607843137%" headers="d6282e174 ">Fields that must include data to be passed to the stage.
                                             <div class="note tip"><span class="tiptitle">Tip:</span> You might include fields
                                             that the stage uses.</div>
 </td>
@@ -149,9 +150,9 @@
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="24.509803921568626%" headers="d6292e171 ">On Record Error</td>
+                                    <td class="entry" valign="top" width="24.509803921568626%" headers="d6282e171 ">On Record Error</td>
 
-                                    <td class="entry" valign="top" width="75.49019607843137%" headers="d6292e174 ">Error record handling for the stage: <ul class="ul" id="task_vft_g5p_yr__d546e307">
+                                    <td class="entry" valign="top" width="75.49019607843137%" headers="d6282e174 ">Error record handling for the stage: <ul class="ul" id="task_vft_g5p_yr__d546e307">
                                             <li class="li">Discard - Discards the record.</li>
 
                                             <li class="li">Send to Error - Sends the record to the pipeline for
@@ -181,9 +182,9 @@
                             
                             <thead class="thead" align="left">
                                 <tr class="row">
-                                    <th class="entry" valign="top" width="26.525198938992045%" id="d6292e264">Flume Property</th>
+                                    <th class="entry" valign="top" width="26.525198938992045%" id="d6282e264">Flume Property</th>
 
-                                    <th class="entry" valign="top" width="73.47480106100795%" id="d6292e267">Description</th>
+                                    <th class="entry" valign="top" width="73.47480106100795%" id="d6282e267">Description</th>
 
                                 </tr>
 
@@ -191,9 +192,9 @@
 
                             <tbody class="tbody">
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="26.525198938992045%" headers="d6292e264 ">Host Configuration</td>
+                                    <td class="entry" valign="top" width="26.525198938992045%" headers="d6282e264 ">Host Configuration</td>
 
-                                    <td class="entry" valign="top" width="73.47480106100795%" headers="d6292e267 ">Flume host information:<ul class="ul" id="task_vft_g5p_yr__ul_al4_s1q_yr">
+                                    <td class="entry" valign="top" width="73.47480106100795%" headers="d6282e267 ">Flume host information:<ul class="ul" id="task_vft_g5p_yr__ul_al4_s1q_yr">
                                             <li class="li">Name - Local alias for the Flume host. </li>
 
                                             <li class="li">Flume host and port - Host name and port number for
@@ -207,10 +208,16 @@ Click <span class="ph uicontrol">Add</span> to add additional host
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="26.525198938992045%" headers="d6292e264 ">Client Type</td>
+                                    <td class="entry" valign="top" width="26.525198938992045%" headers="d6282e264 ">Client Type</td>
 
-                                    <td class="entry" valign="top" width="73.47480106100795%" headers="d6292e267 ">Flume source client type:<ul class="ul" id="task_vft_g5p_yr__ul_qcr_fbq_yr">
-                                            <li class="li">Avro </li>
+                                    <td class="entry" valign="top" width="73.47480106100795%" headers="d6282e267 ">Flume source client type:<ul class="ul" id="task_vft_g5p_yr__ul_qcr_fbq_yr">
+                                            <li class="li">Avro Failover - Apache Avro Failover RPC
+                                                Client.</li>
+
+                                            <li class="li">Avro Load Balancing - Apache Avro LoadBalancing RPC
+                                                Client.</li>
+
+                                            <li class="li">Thrift - Apache Thrift RPC Client.</li>
 
                                         </ul>
 </td>
@@ -218,82 +225,117 @@ Click <span class="ph uicontrol">Add</span> to add additional host
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="26.525198938992045%" headers="d6292e264 ">Backoff</td>
+                                    <td class="entry" valign="top" width="26.525198938992045%" headers="d6282e264 ">Backoff</td>
 
-                                    <td class="entry" valign="top" width="73.47480106100795%" headers="d6292e267 ">For Avro load balancing source types only. </td>
-
-                                </tr>
-
-                                <tr class="row">
-                                    <td class="entry" valign="top" width="26.525198938992045%" headers="d6292e264 ">Max Backoff (ms)</td>
-
-                                    <td class="entry" valign="top" width="73.47480106100795%" headers="d6292e267 ">For Avro load balancing source types only. </td>
+                                    <td class="entry" valign="top" width="73.47480106100795%" headers="d6282e267 ">Temporarily avoid writing to a failed host.<p class="p">Avro Load
+                                            Balancing client only. </p>
+</td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="26.525198938992045%" headers="d6292e264 ">Host Selection Strategy</td>
+                                    <td class="entry" valign="top" width="26.525198938992045%" headers="d6282e264 ">Max Backoff (ms)</td>
 
-                                    <td class="entry" valign="top" width="73.47480106100795%" headers="d6292e267 ">For Avro load balancing source types only. </td>
-
-                                </tr>
-
-                                <tr class="row">
-                                    <td class="entry" valign="top" width="26.525198938992045%" headers="d6292e264 ">Batch Size</td>
-
-                                    <td class="entry" valign="top" width="73.47480106100795%" headers="d6292e267 ">Maximum amount of records in a batch. </td>
-
-                                </tr>
-
-                                <tr class="row">
-                                    <td class="entry" valign="top" width="26.525198938992045%" headers="d6292e264 ">Connection Timeout (ms)</td>
-
-                                    <td class="entry" valign="top" width="73.47480106100795%" headers="d6292e267 ">Milliseconds of inactivity allowed before ending the
-                                        Flume connection. </td>
+                                    <td class="entry" valign="top" width="73.47480106100795%" headers="d6282e267 ">The maximum amount of time to avoid writing to a failed
+                                        host. <p class="p">Enter the number of
+                                            milliseconds between 0 and 65536. </p>
+<p class="p">Use 0 to
+                                            trigger the Flume default value of 30000 milliseconds -
+                                            30 seconds. </p>
+<p class="p">Avro Load Balancing client only.
+                                        </p>
+</td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="26.525198938992045%" headers="d6292e264 ">Request Timeout (ms)</td>
+                                    <td class="entry" valign="top" width="26.525198938992045%" headers="d6282e264 ">Host Selection Strategy</td>
 
-                                    <td class="entry" valign="top" width="73.47480106100795%" headers="d6292e267 ">Milliseconds to wait for a request response.</td>
-
-                                </tr>
-
-                                <tr class="row">
-                                    <td class="entry" valign="top" width="26.525198938992045%" headers="d6292e264 ">Max Retry Attempts</td>
-
-                                    <td class="entry" valign="top" width="73.47480106100795%" headers="d6292e267 ">Maximum attempts to resend data to Flume before stopping
-                                        the pipeline. </td>
+                                    <td class="entry" valign="top" width="73.47480106100795%" headers="d6282e267 "><p class="p">Strategy to select the Flume host to use.</p>
+Avro Load
+                                        Balancing client only. </td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="26.525198938992045%" headers="d6292e264 ">Wait Between Retries (ms)</td>
+                                    <td class="entry" valign="top" width="26.525198938992045%" headers="d6282e264 ">Flume Batch Size (events)</td>
 
-                                    <td class="entry" valign="top" width="73.47480106100795%" headers="d6292e267 ">Milliseconds to wait before resending data to
+                                    <td class="entry" valign="top" width="73.47480106100795%" headers="d6282e267 ">Maximum amount of events that the Flume client writes to
+                                        a Flume host at one time. The Flume client can split a <span class="ph">Data
+                  Collector</span> batch into multiple Flume batches that pass data to the
+                                        Flume host.</td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="26.525198938992045%" headers="d6282e264 ">Flume Client Connection Timeout (ms)</td>
+
+                                    <td class="entry" valign="top" width="73.47480106100795%" headers="d6282e267 ">Maximum amount of time for the Flume client to connect to
+                                        the Flume host. </td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="26.525198938992045%" headers="d6282e264 ">Flume Client Request Timeout (ms)</td>
+
+                                    <td class="entry" valign="top" width="73.47480106100795%" headers="d6282e267 ">Milliseconds the Flume client waits for a response after
+                                        sending data to the Flume host. When the client does not
+                                        receive a response in time, the Flume destination resends
+                                        the batch, up to the number configured for Max Retry
+                                        Attempts.</td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="26.525198938992045%" headers="d6282e264 ">Max Retry Attempts</td>
+
+                                    <td class="entry" valign="top" width="73.47480106100795%" headers="d6282e267 ">Maximum number of times the Flume destination resends
+                                        data to Flume and waits for a response before stopping the
+                                        pipeline. </td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="26.525198938992045%" headers="d6282e264 ">Retry Wait Time (ms)</td>
+
+                                    <td class="entry" valign="top" width="73.47480106100795%" headers="d6282e267 ">Milliseconds to wait before resending data to
                                         Flume.</td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="26.525198938992045%" headers="d6292e264 ">Data Format</td>
+                                    <td class="entry" valign="top" width="26.525198938992045%" headers="d6282e264 ">Data Format</td>
 
-                                    <td class="entry" valign="top" width="73.47480106100795%" headers="d6292e267 "> </td>
+                                    <td class="entry" valign="top" width="73.47480106100795%" headers="d6282e267 ">Data format for output events:<ul class="ul" id="task_vft_g5p_yr__ul_ssq_sks_zr">
+                                            <li class="li">Text</li>
+
+                                            <li class="li">JSON</li>
+
+                                            <li class="li">Delimited</li>
+
+                                            <li class="li">SDC Record  <a class="xref" href="../Pipeline_Configuration/SDCRecordFormat.html#concept_qkk_mwk_br" title="SDC Record is a proprietary data format that the Data Collector uses to generate error records. You can also configure a pipeline to read or write SDC Record data.">
+                                                  <img class="image" id="task_vft_g5p_yr__image_ucp_chr_br" src="../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></li>
+
+                                        </ul>
+</td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="26.525198938992045%" headers="d6292e264 ">Event Charset</td>
+                                    <td class="entry" valign="top" width="26.525198938992045%" headers="d6282e264 ">Event Charset</td>
 
-                                    <td class="entry" valign="top" width="73.47480106100795%" headers="d6292e267 "> </td>
+                                    <td class="entry" valign="top" width="73.47480106100795%" headers="d6282e267 ">Character encoding of the events to be processed.</td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="26.525198938992045%" headers="d6292e264 ">One Event per Batch</td>
+                                    <td class="entry" valign="top" width="26.525198938992045%" headers="d6282e264 ">One Event per Batch</td>
 
-                                    <td class="entry" valign="top" width="73.47480106100795%" headers="d6292e267 "> </td>
+                                    <td class="entry" valign="top" width="73.47480106100795%" headers="d6282e267 ">
+                                        <p class="p">Generates a single event for all records in the batch.
+                                        </p>
+
+                                    </td>
 
                                 </tr>
 

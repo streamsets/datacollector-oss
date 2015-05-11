@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
+<concept id="concept_pd3_crv_yr">
+  <title>Monitoring Errors</title>
+  <shortdesc>When you monitor a pipeline, you can view error statistics for the pipeline and each
+    stage. You can also view a sampling of the error records. </shortdesc>
+  <conbody>
+    <p>The <uicontrol>Errors</uicontrol> tab in the <wintitle>Monitor</wintitle> panel displays
+      pipeline errors by default: <image href="../Graphics/Mon-PipelineErrors.png"
+        id="image_z1g_pvv_yr"/></p>
+  </conbody>
+</concept>

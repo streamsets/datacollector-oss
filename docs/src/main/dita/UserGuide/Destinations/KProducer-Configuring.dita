@@ -31,12 +31,12 @@
                                 </thead>
                                 <tbody>
                                     <row>
-                                        <entry>Broker URIs</entry>
+                                        <entry>Broker URI</entry>
                                         <entry>A comma-separated list of URIs for Kafka brokers that
                                             write to the topic. Use the following format:
                                                 <codeph>&lt;host>:&lt;port></codeph>.<p>To ensure a
-                                                connection, enter additional broker
-                                            URIs.</p></entry>
+                                                connection, enter a comma-separated list of
+                                                additional broker URI.</p></entry>
                                     </row>
                                     <row>
                                         <entry>Runtime Topic Resolution <xref
@@ -54,9 +54,12 @@
                                     </row>
                                     <row>
                                         <entry>Topic White List</entry>
-                                        <entry>List of topics to write to. Leave empty to allow
-                                            writing to all topics. <p>Use to avoid writing to
-                                                invalid topics.</p></entry>
+                                        <entry>List of valid topic names to write to. Use to avoid
+                                            writing to invalid topics. Records that resolve to
+                                            invalid topic names are passed the stage for error
+                                            handling. <p>Use an asterisk (*) to allow writing to any
+                                                topic name. By default, all topic names are
+                                                valid.</p></entry>
                                     </row>
                                     <row>
                                         <entry>Topic</entry>

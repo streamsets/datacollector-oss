@@ -13,9 +13,11 @@
     <shortdesc/>
    </topicmeta>
   </topicref>
-  <topicref href="../Pipeline_Monitoring/PipelineStageErrors.dita" chunk="to-content">  <topicmeta>
+  <topicref href="../Pipeline_Monitoring/MonitoringErrors.dita" chunk="to-content">  
+   <topicmeta>
    <shortdesc/>
   </topicmeta>
+   <topicref href="../Pipeline_Monitoring/Stage-RelatedErrors.dita"/>
   </topicref>
   <topicref href="../Pipeline_Monitoring/Snapshots.dita" chunk="to-content"> 
    <topicmeta>

@@ -11,8 +11,8 @@
       Like data preview, you can view how snapshot data moves through a pipeline stage by stage or
       across multiple stages. You can drill down to review the values of each record to determine if
       the stage or group of stages transforms data as expected.</p>
-    <p>Unlike data preview, you cannot edit data to perform testing when you review the snapshot.
-      But you can use the snapshot as source data for data preview. You might use a snapshot in data
-      preview as part of pipeline testing and development.</p>
+    <p>Unlike data preview, you cannot edit data to perform testing when you review a snapshot.
+      Instead, you can use the snapshot as source data for data preview. You might use a snapshot
+      for data preview to test the pipeline with production data. </p>
  </conbody>
 </concept>
