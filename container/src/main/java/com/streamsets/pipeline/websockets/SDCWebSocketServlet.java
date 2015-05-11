@@ -5,8 +5,12 @@
  */
 package com.streamsets.pipeline.websockets;
 
+import com.streamsets.pipeline.alerts.AlertEventListener;
+import com.streamsets.pipeline.lib.executor.SafeScheduledExecutorService;
 import com.streamsets.pipeline.main.RuntimeInfo;
+import com.streamsets.pipeline.metrics.MetricsEventListener;
 import com.streamsets.pipeline.prodmanager.PipelineManager;
+import com.streamsets.pipeline.prodmanager.StateEventListener;
 import com.streamsets.pipeline.util.AuthzRole;
 import com.streamsets.pipeline.util.Configuration;
 import org.eclipse.jetty.websocket.servlet.ServletUpgradeRequest;
@@ -14,17 +18,25 @@ import org.eclipse.jetty.websocket.servlet.ServletUpgradeResponse;
 import org.eclipse.jetty.websocket.servlet.WebSocketCreator;
 import org.eclipse.jetty.websocket.servlet.WebSocketServlet;
 import org.eclipse.jetty.websocket.servlet.WebSocketServletFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.concurrent.ArrayBlockingQueue;
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.TimeUnit;
 
 public class SDCWebSocketServlet extends WebSocketServlet implements WebSocketCreator {
+  private final static Logger LOG = LoggerFactory.getLogger(SDCWebSocketServlet.class);
+
   private final Configuration config;
   private final RuntimeInfo runtimeInfo;
   private final PipelineManager pipelineManager;
-
+  private BlockingQueue<WebSocketMessage> queue;
+  private SafeScheduledExecutorService executorService;
 
   private static final String MAX_WEB_SOCKETS_CONCURRENT_REQUESTS_KEY = "max.webSockets.concurrent.requests";
   private static final int MAX_WEB_SOCKETS_CONCURRENT_REQUESTS_DEFAULT = 50;
@@ -37,6 +49,35 @@ public class SDCWebSocketServlet extends WebSocketServlet implements WebSocketCr
     this.pipelineManager = pipelineStateManager;
   }
 
+  @Override
+  public void init() throws ServletException {
+    super.init();
+    queue = new ArrayBlockingQueue<>(10000);
+    executorService = new SafeScheduledExecutorService(1, "WebSocket");
+    executorService.submit(new Runnable() {
+      @Override
+      public void run() {
+        while (!executorService.isShutdown()) {
+          try {
+            WebSocketMessage message = queue.poll(100, TimeUnit.MILLISECONDS);
+            if (message != null) {
+              message.send();
+            }
+          } catch (InterruptedException ex) {
+            //NOP
+          } catch (IOException ex) {
+            LOG.warn("Faile to send WebSocket messsage: {}", ex.getMessage(), ex);
+          }
+        }
+      }
+    });
+  }
+
+  @Override
+  public void destroy() {
+    executorService.shutdownNow();
+    super.destroy();
+  }
 
   @Override
   public void configure(WebSocketServletFactory factory) {
@@ -53,11 +94,41 @@ public class SDCWebSocketServlet extends WebSocketServlet implements WebSocketCr
         case LogMessageWebSocket.TYPE:
           return new LogMessageWebSocket(config, runtimeInfo);
         case StatusWebSocket.TYPE:
-          return new StatusWebSocket(pipelineManager);
+          return new StatusWebSocket(new ListenerManager<StateEventListener>() {
+            @Override
+            public void register(StateEventListener listener) {
+              pipelineManager.addStateEventListener(listener);
+            }
+
+            @Override
+            public void unregister(StateEventListener listener) {
+              pipelineManager.removeStateEventListener(listener);
+            }
+          }, queue);
         case MetricsWebSocket.TYPE:
-          return new MetricsWebSocket(pipelineManager);
+          return new MetricsWebSocket(new ListenerManager<MetricsEventListener>() {
+            @Override
+            public void register(MetricsEventListener listener) {
+              pipelineManager.addMetricsEventListener(listener);
+            }
+
+            @Override
+            public void unregister(MetricsEventListener listener) {
+              pipelineManager.removeMetricsEventListener(listener);
+            }
+          }, queue);
         case AlertsWebSocket.TYPE:
-          return new AlertsWebSocket(pipelineManager);
+          return new AlertsWebSocket(new ListenerManager<AlertEventListener>() {
+            @Override
+            public void register(AlertEventListener listener) {
+              pipelineManager.addAlertEventListener(listener);
+            }
+
+            @Override
+            public void unregister(AlertEventListener listener) {
+              pipelineManager.removeAlertEventListener(listener);
+            }
+          }, queue);
       }
     }
     return null;
