@@ -28,8 +28,8 @@ public class HBaseFieldMappingConfig {
       required = true,
       type = ConfigDef.Type.MODEL,
       defaultValue = "/",
-      label = "Field-path",
-      description = "The field-path in the incoming record to output",
+      label = "Field Path",
+      description = "The field path in the incoming record to output",
       displayPosition = 10)
   @FieldSelector(singleValued = true)
   public String columnValue;
@@ -39,8 +39,8 @@ public class HBaseFieldMappingConfig {
       type = ConfigDef.Type.STRING,
       defaultValue = "",
       label = "Column",
-      description = "The column (columnfamily:qualifier) to write this field into. Make sure "
-          + "the column family exist",
+      description = "The column to write this field into. Use format <COLUMNFAMILY>:<QUALIFIER>. " +
+        "The column family must exist",
       displayPosition = 20)
   public String columnName;
 
@@ -48,8 +48,8 @@ public class HBaseFieldMappingConfig {
       required = true,
       type = ConfigDef.Type.MODEL,
       defaultValue = "TEXT",
-      label = "Storage type",
-      description = "The storage type for column. It can be either text, binary or json string",
+      label = "Storage Type",
+      description = "The storage type for column",
       displayPosition = 30)
   @ValueChooser(StorageTypeChooserValues.class)
   public StorageType columnStorageType;

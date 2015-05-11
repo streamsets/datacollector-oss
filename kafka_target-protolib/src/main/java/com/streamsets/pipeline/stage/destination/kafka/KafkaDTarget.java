@@ -48,7 +48,7 @@ public class KafkaDTarget extends DTarget {
     required = true,
     type = ConfigDef.Type.STRING,
     defaultValue = "localhost:9092",
-    label = "Broker URIs",
+    label = "Broker URI",
     description = "Comma-separated list of URIs for brokers that write to the topic.  Use the format " +
       "<HOST>:<PORT>. To ensure a connection, enter as many as possible.",
     displayPosition = 10,
@@ -62,7 +62,7 @@ public class KafkaDTarget extends DTarget {
     type = ConfigDef.Type.BOOLEAN,
     defaultValue = "false",
     label = "Runtime Topic Resolution",
-    description = "Resolve topic name at runtime based on the field values in the record",
+    description = "Select topic at runtime based on the field values in the record",
     displayPosition = 15,
     group = "KAFKA"
   )
@@ -73,7 +73,7 @@ public class KafkaDTarget extends DTarget {
     type = ConfigDef.Type.STRING,
     defaultValue = "${record:value('/topic')}",
     label = "Topic Expression",
-    description = "An expression which resolves the name of the topic to which the record must be sent",
+    description = "An expression that resolves to the name of the topic to use",
     displayPosition = 20,
     elDefs = {StringEL.class, RecordEL.class},
     group = "KAFKA",
@@ -89,7 +89,9 @@ public class KafkaDTarget extends DTarget {
     lines = 5,
     defaultValue = "*",
     label = "Topic White List",
-    description = "A comma separated list of valid topic names to which the messages will be sent. '*' indicates that all topic names encountered will be valid.",
+    description = "A comma-separated list of valid topic names. " +
+      "Records with invalid topic names are treated as error records. " +
+      "'*' indicates that all topic names are allowed.",
     displayPosition = 23,
     group = "KAFKA",
     dependsOn = "runtimeTopicResolution",

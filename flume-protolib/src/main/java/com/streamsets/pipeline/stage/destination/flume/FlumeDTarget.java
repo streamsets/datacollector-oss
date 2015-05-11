@@ -27,7 +27,7 @@ import java.util.Map;
 
 @StageDef(
   version = "1.0.0",
-  label = "Flume Destination",
+  label = "Flume",
   description = "Writes data to Flume Source",
   icon = "flume.png")
 @ConfigGroups(value = Groups.class)
@@ -41,8 +41,8 @@ public class FlumeDTarget extends DTarget {
       "        \"key\" : \"h1\",\n" +
       "        \"value\" : \"localhost:41414\"\n" +
       "      } ]",
-    label = "Flume Hosts Configuration",
-    description = "Flume host alias and the address in the form 'host:port'",
+    label = "Hosts Configuration",
+    description = "Flume host alias and the address in the form <HOST>:<PORT>",
     displayPosition = 10,
     group = "FLUME"
   )
@@ -64,7 +64,7 @@ public class FlumeDTarget extends DTarget {
     type = ConfigDef.Type.BOOLEAN,
     defaultValue = "false",
     label = "Backoff",
-    description = "Indicates whether the client should temporarily blacklist a failed host",
+    description = "Temporarily avoid writing to a failed host",
     displayPosition = 40,
     group = "FLUME",
     dependsOn = "clientType",
@@ -76,8 +76,8 @@ public class FlumeDTarget extends DTarget {
     required = false,
     type = ConfigDef.Type.NUMBER,
     defaultValue = "0",
-    label = "Max Backoff (millisecs)",
-    description = "Max timeout in millis that a client will remain inactive due to a previous failure with that host " +
+    label = "Max Backoff (ms)",
+    description = "Max ms that a client will remain inactive due to a previous failure with that host " +
       "(default: 0, which effectively becomes 30000)",
     displayPosition = 50,
     group = "FLUME",
@@ -91,7 +91,7 @@ public class FlumeDTarget extends DTarget {
     type = ConfigDef.Type.MODEL,
     defaultValue = "ROUND_ROBIN",
     label = "Host Selection Strategy",
-    description = "The host selection strategy used when load-balancing among hosts",
+    description = "Strategy used to load balance between hosts",
     displayPosition = 60,
     group = "FLUME",
     dependsOn = "clientType",
@@ -104,8 +104,7 @@ public class FlumeDTarget extends DTarget {
     required = false,
     type = ConfigDef.Type.NUMBER,
     defaultValue = "100",
-    label = "Batch Size",
-    description = "",
+    label = "Flume Batch Size (events)",
     displayPosition = 70,
     group = "FLUME"
   )
@@ -115,8 +114,7 @@ public class FlumeDTarget extends DTarget {
     required = false,
     type = ConfigDef.Type.NUMBER,
     defaultValue = "20000",
-    label = "Connection Timeout (millisecs)",
-    description = "",
+    label = "Flume Client Connection Timeout (ms)",
     displayPosition = 80,
     group = "FLUME"
   )
@@ -126,7 +124,7 @@ public class FlumeDTarget extends DTarget {
     required = false,
     type = ConfigDef.Type.NUMBER,
     defaultValue = "20000",
-    label = "Request Timeout (millisecs)",
+    label = "Flume Client Request Timeout (ms)",
     description = "",
     displayPosition = 90,
     group = "FLUME"
@@ -138,7 +136,7 @@ public class FlumeDTarget extends DTarget {
     type = ConfigDef.Type.NUMBER,
     defaultValue = "5",
     label = "Max Retry Attempts",
-    description = "Number of times to attempt resending data to flume agent in case of a failure.",
+    description = "Number of times to resend data to the Flume agent in case of failures",
     displayPosition = 100,
     group = "FLUME"
   )
@@ -148,8 +146,8 @@ public class FlumeDTarget extends DTarget {
     required = false,
     type = ConfigDef.Type.NUMBER,
     defaultValue = "120000", //2 minutes
-    label = "Wait Between Retries in milliseconds",
-    description = "The time sdc waits between attempts to resend data to flume agent in case of a failure.",
+    label = "Retry Wait Time (ms)",
+    description = "Time to wait before resending data to Flume",
     displayPosition = 110,
     group = "FLUME"
   )

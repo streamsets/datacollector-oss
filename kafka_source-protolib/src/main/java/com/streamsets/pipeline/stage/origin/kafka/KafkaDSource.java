@@ -53,8 +53,8 @@ public class KafkaDSource extends DSourceOffsetCommitter {
     required = false,
     type = ConfigDef.Type.STRING,
     defaultValue = "localhost:9092",
-    label = "Kafka brokers",
-    description = "Comma-separated list of Kafka brokers (not Zookeeper) ",
+    label = "Broker URI",
+    description = "Comma-separated list of Kafka brokers. Use format <HOST>:<PORT>",
     displayPosition = 10,
     group = "KAFKA"
   )
@@ -64,8 +64,8 @@ public class KafkaDSource extends DSourceOffsetCommitter {
     required = true,
     type = ConfigDef.Type.STRING,
     defaultValue = "localhost:2181",
-    label = "ZooKeeper Connection String",
-    description = "Comma-separated ist of the Zookeeper <HOST>:<PORT> used by the Kafka brokers",
+    label = "ZooKeeper URI",
+    description = "Comma-separated list of ZooKeepers. Use format <HOST>:<PORT>",
     displayPosition = 10,
     group = "KAFKA"
   )
@@ -76,7 +76,6 @@ public class KafkaDSource extends DSourceOffsetCommitter {
     type = ConfigDef.Type.STRING,
     defaultValue = "streamsetsDataCollector",
     label = "Consumer Group",
-    description = "Pipeline consumer group",
     displayPosition = 20,
     group = "KAFKA"
   )
@@ -87,7 +86,6 @@ public class KafkaDSource extends DSourceOffsetCommitter {
     type = ConfigDef.Type.STRING,
     defaultValue = "topicName",
     label = "Topic",
-    description = "",
     displayPosition = 30,
     group = "KAFKA"
   )
@@ -97,7 +95,6 @@ public class KafkaDSource extends DSourceOffsetCommitter {
     required = true,
     type = ConfigDef.Type.MODEL,
     label = "Data Format",
-    description = "",
     displayPosition = 40,
     group = "KAFKA"
   )
@@ -132,7 +129,7 @@ public class KafkaDSource extends DSourceOffsetCommitter {
     required = true,
     type = ConfigDef.Type.NUMBER,
     defaultValue = "1000",
-    label = "Max Batch Size (messages)",
+    label = "Max Batch Size (records)",
     description = "Max number of records per batch",
     displayPosition = 50,
     group = "KAFKA",
@@ -145,8 +142,8 @@ public class KafkaDSource extends DSourceOffsetCommitter {
     required = true,
     type = ConfigDef.Type.NUMBER,
     defaultValue = "1000",
-    label = "Batch Wait Time (millisecs)",
-    description = "Max time to wait for data before sending a batch",
+    label = "Batch Wait Time (ms)",
+    description = "Max time to wait for data before sending a partial or empty batch",
     displayPosition = 60,
     group = "KAFKA",
     min = 1,
@@ -358,7 +355,7 @@ public class KafkaDSource extends DSourceOffsetCommitter {
     type = ConfigDef.Type.MODEL,
     defaultValue = "",
     label = "Field Path To RegEx Group Mapping",
-    description = "Map groups in the regular expression to field paths.",
+    description = "Map groups in the regular expression to field paths",
     displayPosition = 750,
     group = "LOG",
     dependsOn = "logMode",
@@ -388,7 +385,7 @@ public class KafkaDSource extends DSourceOffsetCommitter {
     type = ConfigDef.Type.STRING,
     defaultValue = "%{COMMONAPACHELOG}",
     label = "Grok Pattern",
-    description = "The grok pattern which is used to parse the log line.",
+    description = "The grok pattern which is used to parse the log line",
     displayPosition = 780,
     group = "LOG",
     dependsOn = "logMode",
