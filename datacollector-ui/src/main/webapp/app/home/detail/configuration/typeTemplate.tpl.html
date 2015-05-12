@@ -56,7 +56,10 @@
          ng-model="detailPaneConfig.configuration[configIndex].value"
          ui-refresh="refreshCodemirror"
          ui-codemirror-opts="getCodeMirrorOptions({
-                readOnly: isPipelineReadOnly || isPipelineRunning
+                readOnly: isPipelineReadOnly || isPipelineRunning,
+                extraKeys: {
+                  'Tab': false
+                }
               })"
          codemirror-el="getCodeMirrorHints(configDefinition)"
          field-paths="fieldPaths"
@@ -148,7 +151,10 @@
              ng-model="listValue[$index]"
              ui-refresh="refreshCodemirror"
              ui-codemirror-opts="getCodeMirrorOptions({
-                readOnly: isPipelineReadOnly || isPipelineRunning
+                readOnly: isPipelineReadOnly || isPipelineRunning,
+                extraKeys: {
+                  'Tab': false
+                }
               })"
              codemirror-el="getCodeMirrorHints(configDefinition)"
              field-paths="fieldPaths"
@@ -206,7 +212,10 @@
              ng-model="mapObject.value"
              ui-refresh="refreshCodemirror"
              ui-codemirror-opts="getCodeMirrorOptions({
-                readOnly: isPipelineReadOnly || isPipelineRunning
+                readOnly: isPipelineReadOnly || isPipelineRunning,
+                extraKeys: {
+                  'Tab': false
+                }
               })"
              codemirror-el="getCodeMirrorHints(configDefinition)"
              field-paths="fieldPaths"
@@ -333,7 +342,10 @@
              ng-model="lanePredicateMapping.predicate"
              ui-refresh="refreshCodemirror"
              ui-codemirror-opts="getCodeMirrorOptions({
-                readOnly: isPipelineReadOnly || isPipelineRunning || lanePredicateMapping.predicate === 'default'
+                readOnly: isPipelineReadOnly || isPipelineRunning || lanePredicateMapping.predicate === 'default',
+                extraKeys: {
+                  'Tab': false
+                }
               })"
              codemirror-el="getCodeMirrorHints(configDefinition)"
              field-paths="fieldPaths">
@@ -390,7 +402,10 @@
        ng-model="customFieldValue[customFieldConfigDefinition.name]"
        ui-refresh="refreshCodemirror"
        ui-codemirror-opts="getCodeMirrorOptions({
-                readOnly: isPipelineReadOnly || isPipelineRunning
+                readOnly: isPipelineReadOnly || isPipelineRunning,
+                extraKeys: {
+                  'Tab': false
+                }
               })"
        codemirror-el="getCodeMirrorHints(customFieldConfigDefinition)"
        field-paths="fieldPaths">
