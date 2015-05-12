@@ -17,7 +17,9 @@ import com.streamsets.pipeline.config.OnParseError;
 import com.streamsets.pipeline.lib.DataType;
 import com.streamsets.pipeline.lib.KafkaTestUtil;
 import com.streamsets.pipeline.lib.ProducerRunnable;
+import com.streamsets.pipeline.main.RuntimeModule;
 import com.streamsets.pipeline.stage.origin.kafka.KafkaDSource;
+
 import kafka.admin.AdminUtils;
 import kafka.javaapi.producer.Producer;
 import kafka.server.KafkaConfig;
@@ -27,6 +29,7 @@ import kafka.utils.TestUtils;
 import kafka.utils.TestZKUtils;
 import kafka.utils.ZKStringSerializer$;
 import kafka.zk.EmbeddedZookeeper;
+
 import org.I0Itec.zkclient.ZkClient;
 import org.junit.AfterClass;
 import org.junit.Assert;
@@ -82,6 +85,7 @@ public class TestSparkStreamingKafkaSource {
     properties.setProperty(KafkaDSource.METADATA_BROKER_LIST, metadataBrokerURI);
     properties.setProperty(KafkaDSource.TOPIC, "testProduceStringRecords");
     properties.setProperty("auto.offset.reset", "smallest");
+    properties.setProperty(RuntimeModule.SDC_EXECUTION_MODE_KEY, "slave");
     propertiesFile = new File(target, "sdc.properties");
     properties.store(new FileOutputStream(propertiesFile), null);
     File pipelineJson = new File(target, "pipeline.json");
