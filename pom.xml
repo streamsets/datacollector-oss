@@ -38,19 +38,19 @@
     <cdh_5_2_4-lib>none</cdh_5_2_4-lib>
     <cdh_5_3_0-lib>none</cdh_5_3_0-lib>
     <cdh_5_3_1-lib>none</cdh_5_3_1-lib>
-    <cdh_5_3_2-lib>cdh5_3_2-lib</cdh_5_3_2-lib>
-    <cdh_5_4_0-lib>cdh5_4_0-lib</cdh_5_4_0-lib>
-    <hdp_2_2_0-lib>hdp_2_2_0-lib</hdp_2_2_0-lib>
-    <cdh_5_4_0-kafka_0_8_1_1-lib>cdh5_4_0-kafka_0_8_1_1-lib</cdh_5_4_0-kafka_0_8_1_1-lib>
-    <cdh5-kafka_0_8_2_0_kafka_1_2_0-lib>cdh5-kafka_0_8_2_0_kafka_1_2_0-lib</cdh5-kafka_0_8_2_0_kafka_1_2_0-lib>
+    <cdh_5_3_2-lib>none</cdh_5_3_2-lib>
+    <cdh_5_4_0-lib>none</cdh_5_4_0-lib>
+    <hdp_2_2_0-lib>none</hdp_2_2_0-lib>
+    <cdh5-kafka_0_8_2_0_kafka_1_2_0-lib>none</cdh5-kafka_0_8_2_0_kafka_1_2_0-lib>
+    <cdh_5_4_0-kafka_0_8_1_1-lib>none</cdh_5_4_0-kafka_0_8_1_1-lib>
     <apache-kafka_0_8_1_1-lib>none</apache-kafka_0_8_1_1-lib>
     <apache-kafka_0_8_2_0-lib>none</apache-kafka_0_8_2_0-lib>
     <apache-kafka_0_8_2_1-lib>none</apache-kafka_0_8_2_1-lib>
-    <jython_2_7_0-lib>jython_2_7_0-lib</jython_2_7_0-lib>
+    <jython_2_7_0-lib>none</jython_2_7_0-lib>
     <elasticsearch_1_4_4-lib>none</elasticsearch_1_4_4-lib>
-    <elasticsearch_1_5_0-lib>elasticsearch_1_5_0-lib</elasticsearch_1_5_0-lib>
-    <apache-flume_1_5_0-lib>apache-flume_1_5_0-lib</apache-flume_1_5_0-lib>
-    <cassandra_2_1_5-lib>cassandra_2_1_5-lib</cassandra_2_1_5-lib>
+    <elasticsearch_1_5_0-lib>none</elasticsearch_1_5_0-lib>
+    <apache-flume_1_5_0-lib>none</apache-flume_1_5_0-lib>
+    <cassandra_2_1_5-lib>none</cassandra_2_1_5-lib>
   </properties>
 
   <modules>
@@ -76,34 +76,25 @@
     <module>basic-lib</module>
 
     <module>hdfs-protolib</module>
-    <module>cdh5_3_2-lib</module>
-    <module>hdp_2_2_0-lib</module>
 
     <module>kafka-common</module>
     <module>kafka_source-protolib</module>
     <module>kafka_target-protolib</module>
-    <module>cdh5-kafka_0_8_2_0_kafka_1_2_0-lib</module>
 
     <module>jython-protolib</module>
-    <module>jython_2_7_0-lib</module>
 
     <module>elasticsearch-protolib</module>
-    <module>elasticsearch_1_5_0-lib</module>
 
     <module>solr-protolib</module>
 
     <module>cassandra-protolib</module>
-    <module>cassandra_2_1_5-lib</module>
 
     <module>flume-protolib</module>
-    <module>apache-flume_1_5_0-lib</module>
 
     <module>aws-lib</module>
 
     <module>hbase-protolib</module>
     <module>spark-protolib</module>
-    <module>cdh5_4_0-lib</module>
-    <module>cdh5_4_0-kafka_0_8_1_1-lib</module>
     <module>spark-bootstrap</module>
 
   </modules>
@@ -255,6 +246,38 @@
         <module>elasticsearch_1_4_4-lib</module>
       </modules>
     </profile>
+
+    <profile>
+      <id>sample-dev-libs</id>
+      <activation>
+        <property>
+          <name>!protolibs-only</name>
+        </property>
+      </activation>
+      <properties>
+        <cdh_5_3_2-lib>cdh5_3_2-lib</cdh_5_3_2-lib>
+        <cdh_5_4_0-lib>cdh5_4_0-lib</cdh_5_4_0-lib>
+        <hdp_2_2_0-lib>hdp_2_2_0-lib</hdp_2_2_0-lib>
+        <cdh5-kafka_0_8_2_0_kafka_1_2_0-lib>cdh5-kafka_0_8_2_0_kafka_1_2_0-lib</cdh5-kafka_0_8_2_0_kafka_1_2_0-lib>
+        <jython_2_7_0-lib>jython_2_7_0-lib</jython_2_7_0-lib>
+        <elasticsearch_1_5_0-lib>elasticsearch_1_5_0-lib</elasticsearch_1_5_0-lib>
+        <apache-flume_1_5_0-lib>apache-flume_1_5_0-lib</apache-flume_1_5_0-lib>
+        <cassandra_2_1_5-lib>cassandra_2_1_5-lib</cassandra_2_1_5-lib>
+        <cdh5_4_0-kafka_0_8_1_1-lib>cdh5_4_0-kafka_0_8_1_1-lib</cdh5_4_0-kafka_0_8_1_1-lib>
+      </properties>
+      <modules>
+        <module>cdh5_3_2-lib</module>
+        <module>cdh5_4_0-lib</module>
+        <module>hdp_2_2_0-lib</module>
+        <module>jython_2_7_0-lib</module>
+        <module>elasticsearch_1_5_0-lib</module>
+        <module>cassandra_2_1_5-lib</module>
+        <module>apache-flume_1_5_0-lib</module>
+        <module>cdh5-kafka_0_8_2_0_kafka_1_2_0-lib</module>
+        <module>cdh5_4_0-kafka_0_8_1_1-lib</module>
+      </modules>
+    </profile>
+
   </profiles>
 
 </project>

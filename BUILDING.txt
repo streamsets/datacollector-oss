@@ -30,6 +30,9 @@ Maven Properties (use -D<property-name>):
 * release : produces release tarballs for sdc and stage libraries under release/target/ directory.
 
             it activates dist, docs, all-libs, ui
+
+* protolibs-only: it skips stage-libs modules for distro versions. Useful for shorter test runs.
+
 -------
 
 
