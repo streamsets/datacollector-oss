@@ -5,6 +5,7 @@
  */
 package com.streamsets.pipeline.cluster;
 
+import com.google.common.collect.ImmutableSet;
 import com.google.common.io.Files;
 import com.streamsets.pipeline.api.impl.Utils;
 import org.apache.commons.io.FileUtils;
@@ -97,8 +98,9 @@ public class TestTarFileCreator {
     URLClassLoader containerCL = new URLClassLoader(new URL[]{createJar(containerLibDir).toURL()});
     Map<String, URLClassLoader> streamsetsLibsCl = new LinkedHashMap<>();
     Map<String, URLClassLoader> userLibsCL = new LinkedHashMap<>();
+    File excludedJar = createJar(new File(streamsetsLibsDir, "abc123"));
     streamsetsLibsCl.put("abc123", new URLClassLoader(new URL[]{createJar(new File(streamsetsLibsDir, "abc123"))
-      .toURL()}));
+      .toURL(), excludedJar.toURL()}));
     streamsetsLibsCl.put("abc456", new URLClassLoader(new URL[]{createJar(new File(streamsetsLibsDir, "abc456"))
       .toURL()}));
     userLibsCL.put("yxz456", new URLClassLoader(new URL[]{createJar(new File(userLibsDir, "yxz456")).toURL()}));
@@ -106,7 +108,8 @@ public class TestTarFileCreator {
     Assert.assertTrue(staticWebDir.mkdir());
     createJar(new File(staticWebDir, "subdir"));
       File tarFile = new File(tempDir, "libs.tar.gz");
-    TarFileCreator.createLibsTarGz(apiCl, containerCL, streamsetsLibsCl, userLibsCL, staticWebDir, tarFile);
+    TarFileCreator.createLibsTarGz(apiCl, containerCL, streamsetsLibsCl, userLibsCL,
+      ImmutableSet.<String>of(FilenameUtils.getBaseName(excludedJar.getName())), staticWebDir, tarFile);
     TarInputStream tis = new TarInputStream(new GZIPInputStream(new FileInputStream(tarFile)));
     readDir("api-lib/", tis);
     readJar(tis);

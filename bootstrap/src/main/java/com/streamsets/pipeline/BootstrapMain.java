@@ -56,6 +56,9 @@ public class BootstrapMain {
 
   private static Instrumentation instrumentation;
 
+  public static Instrumentation getInstrumentation() {
+    return instrumentation;
+  }
   /**
    * Visible due to JVM requirements only
    */

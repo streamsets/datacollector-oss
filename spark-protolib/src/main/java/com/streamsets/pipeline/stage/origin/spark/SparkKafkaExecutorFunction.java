@@ -9,8 +9,6 @@ import org.apache.spark.api.java.function.VoidFunction;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.streamsets.pipeline.stage.origin.kafka.MessageAndOffset;
-
 import scala.Tuple2;
 
 import java.io.Serializable;
@@ -25,6 +23,8 @@ import java.util.Properties;
  */
 public class SparkKafkaExecutorFunction implements VoidFunction<Iterator<Tuple2<byte[],byte[]>>>, Serializable {
   private static final Logger LOG = LoggerFactory.getLogger(SparkKafkaExecutorFunction.class);
+  private static final char[] HEX_CHARS = "0123456789abcdef".toCharArray();
+  private static final boolean IS_TRACE_ENABLED = LOG.isTraceEnabled();
   private static volatile EmbeddedSDCPool sdcPool;
   private static final Object poolCreationLock = new Object();
   private Properties properties;
@@ -52,10 +52,25 @@ public class SparkKafkaExecutorFunction implements VoidFunction<Iterator<Tuple2<
     while (tupleIterator.hasNext()) {
       Tuple2<byte[], byte[]> tuple = tupleIterator.next();
       // Get offset and partition from HasOffsetRange API
-      batch.add(new MessageAndPartition(tuple._1(), tuple._2));
-      LOG.debug("Got message: " + new String(tuple._1()) + " " + new String(tuple._2()));
+      batch.add(new MessageAndPartition(tuple._2, tuple._1));
+      if (IS_TRACE_ENABLED) {
+        LOG.trace("Got message: 1: {}, 2: {}", toString(tuple._1), toString(tuple._2));
+      }
     }
     embeddedSDC.getSource().put(batch);
+  }
+
+  private static String toString(byte[] buf) {
+    if (buf == null) {
+      return "null";
+    }
+    char[] chars = new char[2 * buf.length];
+    for (int i = 0; i < buf.length; ++i)
+    {
+      chars[2 * i] = HEX_CHARS[(buf[i] & 0xF0) >>> 4];
+      chars[2 * i + 1] = HEX_CHARS[buf[i] & 0x0F];
+    }
+    return new String(chars);
   }
 
   public static void

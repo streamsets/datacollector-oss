@@ -7,6 +7,7 @@ package com.streamsets.pipeline.restapi;
 
 import com.google.common.annotations.VisibleForTesting;
 import com.streamsets.pipeline.alerts.DataRuleEvaluator;
+import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.config.PipelineDefinition;
 import com.streamsets.pipeline.config.StageDefinition;
 import com.streamsets.pipeline.restapi.bean.BeanHelper;
@@ -86,7 +87,8 @@ public class StageLibraryResource {
   public Response getIcon(@QueryParam("name") String name,
                           @QueryParam("library") String library,
                           @QueryParam("version") String version) {
-    StageDefinition stage = stageLibrary.getStage(library, name, version);
+    StageDefinition stage = Utils.checkNotNull(stageLibrary.getStage(library, name, version),
+      Utils.formatL("Could not find stage library: {}, name: {}, version: {}", library, name, version));
     String iconFile = DEFAULT_ICON_FILE;
     String responseType = SVG_MEDIA_TYPE;
 

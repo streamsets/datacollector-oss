@@ -20,6 +20,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.Map;
+import java.util.Set;
 import java.util.zip.GZIPOutputStream;
 
 public class TarFileCreator {
@@ -27,6 +28,7 @@ public class TarFileCreator {
   public static void createLibsTarGz(URLClassLoader apiCl, URLClassLoader containerCL,
                                          Map<String, URLClassLoader> streamsetsLibsCl,
                                          Map<String, URLClassLoader> userLibsCL,
+                                          Set<String> excludedJarPrefixes,
                                          File staticWebDir,
                                          File outputFile) throws IOException {
     long now = System.currentTimeMillis() / 1000L;
@@ -35,12 +37,12 @@ public class TarFileCreator {
     // api-lib
     String prefix = ClusterModeConstants.API_LIB;
     out.putNextEntry(new TarEntry(TarHeader.createHeader(prefix, 0L, now, true)));
-    addClasspath(prefix, out, apiCl.getURLs());
+    addClasspath(prefix, out, apiCl.getURLs(), excludedJarPrefixes);
     prefix = ClusterModeConstants.CONTAINER_LIB;
     out.putNextEntry(new TarEntry(TarHeader.createHeader(prefix, 0L, now, true)));
-    addClasspath(prefix, out, containerCL.getURLs());
-    addLibrary(ClusterModeConstants.STREAMSETS_LIBS, now, out, streamsetsLibsCl);
-    addLibrary(ClusterModeConstants.USER_LIBS, now, out, userLibsCL);
+    addClasspath(prefix, out, containerCL.getURLs(), excludedJarPrefixes);
+    addLibrary(ClusterModeConstants.STREAMSETS_LIBS, now, out, streamsetsLibsCl, excludedJarPrefixes);
+    addLibrary(ClusterModeConstants.USER_LIBS, now, out, userLibsCL, excludedJarPrefixes);
     tarFolder(null, staticWebDir.getAbsolutePath(), out);
     out.flush();
     out.close();
@@ -72,7 +74,7 @@ public class TarFileCreator {
   }
 
   private static void addLibrary(final String originalPrefix, long now, TarOutputStream out,
-                                 Map<String, URLClassLoader> lib) throws IOException {
+                                 Map<String, URLClassLoader> lib, Set<String> excludedJarPrefixes) throws IOException {
     out.putNextEntry(new TarEntry(TarHeader.createHeader(originalPrefix, 0L, now, true)));
     for (Map.Entry<String, URLClassLoader> entry : lib.entrySet()) {
       String prefix = originalPrefix;
@@ -80,29 +82,38 @@ public class TarFileCreator {
       out.putNextEntry(new TarEntry(TarHeader.createHeader(prefix, 0L, now, true)));
       prefix += "/lib";
       out.putNextEntry(new TarEntry(TarHeader.createHeader(prefix, 0L, now, true)));
-      addClasspath(prefix, out, entry.getValue().getURLs());
+      addClasspath(prefix, out, entry.getValue().getURLs(), excludedJarPrefixes);
     }
   }
 
-  private static void addClasspath(String prefix, TarOutputStream out, URL[] urls) throws IOException {
+  private static void addClasspath(String prefix, TarOutputStream out, URL[] urls, Set<String> excludedJarPrefixes)
+    throws IOException {
     if (urls != null) {
       String dirname = null;
       for (URL url : urls) {
         File file = new File(url.getPath());
         String name = file.getName();
-        // TODO improve excluding of slf4 and log4j
-        if (name.endsWith(".jar") && !name.startsWith("slf4j") && !name.startsWith("log4j")) {
-          if (dirname == null) {
-            dirname = file.getParent();
-          } else if (!dirname.equals(file.getParent())) {
-            String msg = Utils.format("Expected {} to be a sub-directory of {}", file.getPath(), dirname);
-            throw new IllegalStateException(msg);
+        if (name.endsWith(".jar")) {
+          boolean include = true;
+          for (String excludedPrefix : excludedJarPrefixes) {
+            if (name.startsWith(excludedPrefix)) {
+              include = false;
+              break;
+            }
           }
-          out.putNextEntry(new TarEntry(file, prefix + "/" + file.getName()));
-          BufferedInputStream src = new BufferedInputStream(new FileInputStream(file), 65536);
-          IOUtils.copy(src, out);
-          src.close();
-          out.flush();
+          if (include) {
+            if (dirname == null) {
+              dirname = file.getParent();
+            } else if (!dirname.equals(file.getParent())) {
+              String msg = Utils.format("Expected {} to be a sub-directory of {}", file.getPath(), dirname);
+              throw new IllegalStateException(msg);
+            }
+            out.putNextEntry(new TarEntry(file, prefix + "/" + file.getName()));
+            BufferedInputStream src = new BufferedInputStream(new FileInputStream(file), 65536);
+            IOUtils.copy(src, out);
+            src.close();
+            out.flush();
+          }
         }
       }
     }

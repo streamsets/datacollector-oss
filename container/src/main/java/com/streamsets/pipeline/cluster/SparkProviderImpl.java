@@ -5,11 +5,13 @@
  */
 package com.streamsets.pipeline.cluster;
 
+import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Joiner;
 import com.google.common.collect.Maps;
 import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.config.ConfigConfiguration;
 import com.streamsets.pipeline.config.PipelineConfiguration;
+import com.streamsets.pipeline.config.PipelineDefConfigs;
 import com.streamsets.pipeline.config.StageConfiguration;
 import com.streamsets.pipeline.config.StageDefinition;
 import com.streamsets.pipeline.http.WebServerTask;
@@ -35,6 +37,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -56,6 +59,10 @@ public class SparkProviderImpl implements SparkProvider {
 
   private static final Logger LOG = LoggerFactory.getLogger(SparkProviderImpl.class);
 
+  @VisibleForTesting
+  SparkProviderImpl() {
+    this(null);
+  }
   public SparkProviderImpl(RuntimeInfo runtimeInfo) {
     this.runtimeInfo = runtimeInfo;
   }
@@ -203,15 +210,24 @@ public class SparkProviderImpl implements SparkProvider {
     List<StageConfiguration> stageConfigurations = new ArrayList<>();
     stageConfigurations.addAll(pipelineConfiguration.getStages());
     stageConfigurations.add(pipelineConfiguration.getErrorStage());
+    String pathToSparkKafkaJar = null;
     for (StageConfiguration stageConf : stageConfigurations) {
       StageDefinition stageDef = stageLibrary.getStage(stageConf.getLibrary(), stageConf.getStageName(),
         stageConf.getStageVersion());
       if (stageConf.getInputLanes().isEmpty()) {
+        // set all the simple properties as config properties
         for (ConfigConfiguration conf : stageConf.getConfiguration()) {
           if (conf.getValue() instanceof String || conf.getValue() instanceof Number) {
             sourceConfigs.put(conf.getName(), String.valueOf(conf.getValue()));
           } else {
-            // TODO should we add others, perhaps as JSON?S
+            // TODO should we add others, perhaps as JSON?
+          }
+        }
+        // find the spark-kafka jar
+        for (URL jarUrl : ((URLClassLoader)stageDef.getStageClassLoader()).getURLs()) {
+          File jarFile = new File(jarUrl.getPath());
+          if (jarFile.getName().startsWith(ClusterModeConstants.SPARK_KAFKA_JAR_PREFIX)) {
+            pathToSparkKafkaJar = jarFile.getAbsolutePath();
           }
         }
       }
@@ -225,10 +241,12 @@ public class SparkProviderImpl implements SparkProvider {
         throw new IllegalStateException(Utils.format("Error unknown stage library type: {} ", type));
       }
     }
+    Utils.checkState(pathToSparkKafkaJar != null, "Could not find spark kafka jar");
     Utils.checkState(staticWebDir.isDirectory(), Utils.format("Expected {} to be a directory", staticWebDir));
     File libsTarGz = new File(tempDir, "libs.tar.gz");
     try {
-      TarFileCreator.createLibsTarGz(apiCL, containerCL, streamsetsLibsCl, userLibsCL, staticWebDir, libsTarGz);
+      TarFileCreator.createLibsTarGz(apiCL, containerCL, streamsetsLibsCl, userLibsCL,
+        ClusterModeConstants.EXCLUDED_JAR_PREFIXES, staticWebDir, libsTarGz);
     } catch (Exception ex) {
       String msg = errorString("serializing classpath: {}", ex);
       throw new RuntimeException(msg, ex);
@@ -253,7 +271,7 @@ public class SparkProviderImpl implements SparkProvider {
     File bootstrapJar = getBootstrapJar(new File(bootstrapDir, "main"), "streamsets-datacollector-bootstrap");
     File sparkBootstrapJar = getBootstrapJar(new File(bootstrapDir, "spark"),
       "streamsets-datacollector-spark-bootstrap");
-    File log4jProperties = new File(tempDir, "cluster-log4j.properties");
+    File log4jProperties = new File(tempDir, "log4j.properties");
     InputStream clusterLog4jProperties = null;
     try {
       clusterLog4jProperties = Utils.checkNotNull(getClass().getResourceAsStream("/cluster-log4j.properties"),
@@ -273,23 +291,25 @@ public class SparkProviderImpl implements SparkProvider {
     // we only support yarn-cluster mode
     args.add("--master");
     args.add("yarn-cluster");
-    // TODO use memory configuration
+    ConfigConfiguration slaveMemory = Utils.checkNotNull(pipelineConfiguration.getConfiguration(PipelineDefConfigs.
+      CLUSTER_SLAVE_MEMORY_CONFIG), "Could not obtain cluster slave memory");
+    args.add("--executor-memory");
+    args.add(slaveMemory.getValue() + "m");
     // one single sdc per executor
     args.add("--executor-cores");
     args.add("1");
     // Number of Executors based on the origin parallelism
     args.add("--num-executors");
-    args.add(sourceInfo.get(ClusterModeConstants.NUM_EXECUTORS_KEY));
+    args.add(Utils.checkNotNull(sourceInfo.get(ClusterModeConstants.NUM_EXECUTORS_KEY),
+      "Number of executors not found"));
     // ship our stage libs and etc directory
     args.add("--archives");
     args.add(Joiner.on(",").join(libsTarGz.getAbsolutePath(), etcTarGz.getAbsolutePath()));
     // required or else we won't be able to log on cluster
     args.add("--files");
     args.add(log4jProperties.getAbsolutePath());
-    // yes spark-examples is really where the kafka integration is in
-    // TODO can we get spark examples via maven and include in our stage lib?
     args.add("--jars");
-    args.add(Joiner.on(",").join(bootstrapJar.getAbsoluteFile(), "$SPARK_HOME/lib/spark-examples.jar"));
+    args.add(Joiner.on(",").join(bootstrapJar.getAbsoluteFile(), pathToSparkKafkaJar));
     // use our javaagent
     args.add("--conf");
     args.add("\"spark.executor.extraJavaOptions=-javaagent:./" + bootstrapJar.getName() + "\"");

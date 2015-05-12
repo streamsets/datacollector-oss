@@ -158,11 +158,13 @@ public class TestBootstrapMain {
     String baseDir = getBaseDir();
     String stageLibsDir = baseDir + BootstrapMain.FILE_SEPARATOR + "streamsets-libs";
     Map<String, List<URL>> libs = BootstrapMain.getStageLibrariesClasspaths(stageLibsDir);
-    Assert.assertEquals(2, libs.size());
+    Assert.assertEquals(String.valueOf(libs), 2, libs.size());
     Assert.assertNotNull(String.valueOf(libs.keySet()), libs.get("streamsets-libs/stage1"));
     Assert.assertNotNull(String.valueOf(libs.keySet()), libs.get("streamsets-libs/stage2"));
-    Assert.assertEquals(3, libs.get("streamsets-libs/stage1").size());
-    Assert.assertEquals(2, libs.get("streamsets-libs/stage2").size());
+    Assert.assertEquals(String.valueOf(libs.get("streamsets-libs/stage1")), 3,
+      libs.get("streamsets-libs/stage1").size());
+    Assert.assertEquals(String.valueOf(libs.get("streamsets-libs/stage2")), 2,
+      libs.get("streamsets-libs/stage2").size());
   }
 
   @Test(expected = IllegalArgumentException.class)

@@ -10,6 +10,7 @@ import com.streamsets.pipeline.stage.origin.spark.SparkStreamingBinding;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.lang.instrument.Instrumentation;
 import java.lang.reflect.Method;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
@@ -116,7 +117,7 @@ public class BootstrapSpark {
       throw new IllegalStateException("Couldn't find the source library in pipeline file");
     }
     String lookupLib = "streamsets-libs" +"/" + sparkLib;
-    System.out.println("\n Lookup libe is " + lookupLib);
+    System.out.println("\n Lookup lib is " + lookupLib);
     for (Map.Entry<String,List<URL>> entry : libsUrls.entrySet()) {
       String[] parts = entry.getKey().split(System.getProperty("file.separator"));
       if (parts.length != 2) {
@@ -138,6 +139,17 @@ public class BootstrapSpark {
     }
     if (sparkCL == null) {
       throw new IllegalStateException("Could not find classloader for " + lookupLib);
+    }
+    try {
+      Instrumentation instrumentation = BootstrapMain.getInstrumentation();
+      if (instrumentation != null) {
+        Method memoryUsageCollectorInitialize = Class.forName("com.streamsets.pipeline.memory.MemoryUsageCollector", true, containerCL).
+          getMethod("initialize", Instrumentation.class);
+        memoryUsageCollectorInitialize.invoke(null, instrumentation);
+      }
+    } catch (Exception ex) {
+      String msg = "Error trying to initialize MemoryUsageCollector: " + ex;
+      throw new IllegalStateException(msg, ex);
     }
     try {
       Class<?> runtimeModuleClz = Class.forName("com.streamsets.pipeline.main.RuntimeModule", true, containerCL);
@@ -201,32 +213,13 @@ public class BootstrapSpark {
       Method createPipelineMethod = pipelineConfigurationUtil.getMethod("getSourceLibName", String.class);
       return (String) createPipelineMethod.invoke(null, pipelineJson);
     } catch (Exception ex) {
-      String msg = "Error trying to retrieve library name from  pipeline json: " + ex;
+      String msg = "Error trying to retrieve library name from pipeline json: " + ex;
       throw new IllegalStateException(msg, ex);
     } finally {
       Thread.currentThread().setContextClassLoader(originalClassLoader);
     }
   }
 
-
-
-  /**
-   * Bootstrapping an Executor which is started as part of a spark job<br/>
-   * Direction: Spark Executor -> Stage
-   * @return an instance of the real SparkExecutorFunction
-   * @throws Exception
-   */
-  public static Method getSparkExecutorFunction() throws Exception {
-    BootstrapSpark.initialize();
-    try {
-      Thread.currentThread().setContextClassLoader(sparkCL);
-      return Class.forName("com.streamsets.pipeline.stage.origin.spark.SparkExecutorFunction", true,
-        sparkCL).getMethod("execute", Properties.class, String.class, Iterator.class);
-    } catch (Exception ex) {
-      String msg = "Error trying to obtain SparkExecutorFunction Class: " + ex;
-      throw new IllegalStateException(msg, ex);
-    }
-  }
 
   /**
    * Bootstrapping an Executor which is started as part of a spark kafka job<br/>
@@ -236,6 +229,7 @@ public class BootstrapSpark {
    */
   public static Method getSparkKafkaExecutorFunction() throws Exception {
     BootstrapSpark.initialize();
+    ClassLoader originalClassLoader = Thread.currentThread().getContextClassLoader();
     try {
       Thread.currentThread().setContextClassLoader(sparkCL);
       return Class.forName("com.streamsets.pipeline.stage.origin.spark.SparkKafkaExecutorFunction", true,
@@ -243,14 +237,8 @@ public class BootstrapSpark {
     } catch (Exception ex) {
       String msg = "Error trying to obtain SparkKafkaExecutorFunction Class: " + ex;
       throw new IllegalStateException(msg, ex);
-    }
-  }
-
-  public static Class getClassFromSparkClassloader(String name) throws Exception {
-    if (sparkCL == null) {
-      return Class.forName(name);
-    } else {
-      return Class.forName(name, true, sparkCL);
+    } finally {
+      Thread.currentThread().setContextClassLoader(originalClassLoader);
     }
   }
 }

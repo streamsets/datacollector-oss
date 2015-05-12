@@ -22,14 +22,7 @@ SPARK_HOME=${SPARK_HOME:-$(cd -P $(dirname $(readlink -f $SPARK_SUBMIT))/../lib/
 
 if [[ $command == "start" ]]
 then
-  # resolve any references to env variables
-  args=()
-  for arg in $@
-  do
-    eval "arg=$arg"
-    args+=($arg)
-  done
-  exec $SPARK_SUBMIT ${args[@]}
+  exec $SPARK_SUBMIT $@
 elif [[ $command == "kill" ]]
 then
   exec $YARN_COMMAND application -kill $@

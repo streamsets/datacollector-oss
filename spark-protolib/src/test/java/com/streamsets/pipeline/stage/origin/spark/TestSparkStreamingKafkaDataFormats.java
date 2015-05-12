@@ -70,7 +70,7 @@ public class TestSparkStreamingKafkaDataFormats {
       StageRunner.Output output = sourceRunner.runProduce(null, 5);
 
       String newOffset = output.getNewOffset();
-      Assert.assertNull(newOffset);
+      Assert.assertEquals("3", newOffset);
       List<Record> records = output.getRecords().get("lane");
       Assert.assertEquals(3, records.size());
 
@@ -131,7 +131,7 @@ public class TestSparkStreamingKafkaDataFormats {
       StageRunner.Output output = sourceRunner.runProduce(null, 10);
 
       String newOffset = output.getNewOffset();
-      Assert.assertNull(newOffset);
+      Assert.assertEquals("1", newOffset);
       List<Record> records = output.getRecords().get("lane");
       // 4 records in jsonData
       Assert.assertEquals(4, records.size());
@@ -183,7 +183,7 @@ public class TestSparkStreamingKafkaDataFormats {
       StageRunner.Output output = sourceRunner.runProduce(null, 10);
 
       String newOffset = output.getNewOffset();
-      Assert.assertNull(newOffset);
+      Assert.assertEquals("1", newOffset);
       List<Record> records = output.getRecords().get("lane");
       Assert.assertEquals(4, records.size());
     } finally {
@@ -234,7 +234,7 @@ public class TestSparkStreamingKafkaDataFormats {
       StageRunner.Output output = sourceRunner.runProduce(null, 10);
 
       String newOffset = output.getNewOffset();
-      Assert.assertNull(newOffset);
+      Assert.assertEquals("1", newOffset);
       List<Record> records = output.getRecords().get("lane");
       Assert.assertEquals(1, records.size());
     } finally {
@@ -286,7 +286,7 @@ public class TestSparkStreamingKafkaDataFormats {
       StageRunner.Output output = sourceRunner.runProduce(null, 10);
 
       String newOffset = output.getNewOffset();
-      Assert.assertNull(newOffset);
+      Assert.assertEquals("1", newOffset);
       List<Record> records = output.getRecords().get("lane");
       Assert.assertEquals(1, records.size());
     } finally {
@@ -339,7 +339,7 @@ public class TestSparkStreamingKafkaDataFormats {
       StageRunner.Output output = sourceRunner.runProduce(null, 10);
 
       String newOffset = output.getNewOffset();
-      Assert.assertNull(newOffset);
+      Assert.assertEquals("1", newOffset);
       List<Record> records = output.getRecords().get("lane");
       Assert.assertEquals(2, records.size());
     } finally {
@@ -394,7 +394,7 @@ public class TestSparkStreamingKafkaDataFormats {
       StageRunner.Output output = sourceRunner.runProduce(null, 10);
 
       String newOffset = output.getNewOffset();
-      Assert.assertNull(newOffset);
+      Assert.assertEquals("1", newOffset);
       List<Record> records = output.getRecords().get("lane");
       Assert.assertEquals(1, records.size());
     } finally {
