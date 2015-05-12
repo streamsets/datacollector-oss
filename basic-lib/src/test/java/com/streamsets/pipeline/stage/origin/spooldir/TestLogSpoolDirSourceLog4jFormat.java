@@ -10,6 +10,7 @@ import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.config.DataFormat;
 import com.streamsets.pipeline.config.LogMode;
 import com.streamsets.pipeline.config.OnParseError;
+import com.streamsets.pipeline.config.PostProcessingOptions;
 import com.streamsets.pipeline.lib.parser.DataParserException;
 import com.streamsets.pipeline.lib.parser.log.Constants;
 import com.streamsets.pipeline.lib.parser.log.RegExConfig;

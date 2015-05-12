@@ -8,22 +8,13 @@ package com.streamsets.pipeline.stage.origin.udp;
 import com.streamsets.pipeline.api.BatchMaker;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
-import com.streamsets.pipeline.config.CsvHeader;
-import com.streamsets.pipeline.config.CsvMode;
-import com.streamsets.pipeline.config.DataFormat;
-import com.streamsets.pipeline.config.JsonMode;
-import com.streamsets.pipeline.config.OnParseError;
 import com.streamsets.pipeline.sdk.SourceRunner;
 import com.streamsets.pipeline.sdk.StageRunner;
-import com.streamsets.pipeline.stage.origin.spooldir.PostProcessingOptions;
-import com.streamsets.pipeline.stage.origin.spooldir.SpoolDirSource;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.InputStreamReader;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
@@ -31,7 +22,6 @@ import java.net.ServerSocket;
 import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
 public class TestUDPSource {
   private static final File TEN_PACKETS = new File(System.getProperty("user.dir") +

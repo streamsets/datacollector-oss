@@ -6,6 +6,7 @@
 package com.streamsets.pipeline.lib.io;
 
 import com.streamsets.pipeline.api.impl.Utils;
+import com.streamsets.pipeline.config.PostProcessingOptions;
 import com.streamsets.pipeline.lib.util.ThreadUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -13,6 +14,9 @@ import org.slf4j.LoggerFactory;
 import java.io.Closeable;
 import java.io.IOException;
 import java.nio.charset.Charset;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashSet;
@@ -78,18 +82,14 @@ public class MultiDirectoryReader implements Closeable {
    */
   private class DirectoryContext {
     private final DirectoryInfo dirInfo;
-    private final Charset charset;
-    private final int maxLineLength;
     private final LiveDirectoryScanner scanner;
     private LiveFile currentFile;
     private LiveFileReader reader;
     private LiveFile startingCurrentFileName;
     private long startingOffset;
 
-    public DirectoryContext(DirectoryInfo dirInfo, Charset charset, int maxLineLength) throws IOException {
+    public DirectoryContext(DirectoryInfo dirInfo) throws IOException {
       this.dirInfo = dirInfo;
-      this.charset = charset;
-      this.maxLineLength = maxLineLength;
       scanner = new LiveDirectoryScanner(dirInfo.dirName, dirInfo.fileName, dirInfo.firstFile, dirInfo.rollMode);
     }
 
@@ -131,7 +131,27 @@ public class MultiDirectoryReader implements Closeable {
         startingOffset = Long.MAX_VALUE;
 
         // adding file end event
-        events.add(new Event(currentFile.refresh(), false));
+        LiveFile file = currentFile.refresh();
+        events.add(new Event(file, false));
+        switch (postProcessing) {
+          case NONE:
+            LOG.debug("File '{}' processing completed, post processing action 'NONE'", file);
+            break;
+          case DELETE:
+            Files.delete(file.getPath());
+            LOG.debug("File '{}' processing completed, post processing action 'DELETED'", file);
+            break;
+          case ARCHIVE:
+            Path fileArchive = Paths.get(archiveDir, file.getPath().toString());
+            try {
+              Files.createDirectories(fileArchive.getParent());
+              Files.move(file.getPath(), fileArchive);
+              LOG.debug("File '{}' processing completed, post processing action 'ARCHIVED' as", file);
+            } catch (IOException ex) {
+              throw new IOException(Utils.format("Could not archive '{}': {}", file, ex.getMessage()), ex);
+            }
+            break;
+        }
       } else {
         startingCurrentFileName = currentFile;
         startingOffset = reader.getOffset();
@@ -141,6 +161,10 @@ public class MultiDirectoryReader implements Closeable {
 
   private final List<DirectoryContext> dirContexts;
   private final Set<String> dirNames;
+  private final Charset charset;
+  private final int maxLineLength;
+  private final PostProcessingOptions postProcessing;
+  private final String archiveDir;
   private int startingIdx;
   private final List<Event> events;
   private boolean open;
@@ -153,21 +177,33 @@ public class MultiDirectoryReader implements Closeable {
    * @param maxLineLength the maximum line length (for all files)
    * @throws IOException thrown if there was an IO error while creating the reader.
    */
-  public MultiDirectoryReader(List<DirectoryInfo> dirInfos, Charset charset, int maxLineLength) throws IOException {
+  public MultiDirectoryReader(List<DirectoryInfo> dirInfos, Charset charset, int maxLineLength,
+      PostProcessingOptions postProcessing, String archiveDir) throws IOException {
     Utils.checkNotNull(dirInfos, "dirInfos");
     Utils.checkArgument(!dirInfos.isEmpty(), "dirInfos cannot be empty");
     Utils.checkNotNull(charset, "charset");
     Utils.checkArgument(maxLineLength > 1, "maxLineLength must be greater than one");
+    Utils.checkNotNull(postProcessing, "postProcessing");
+    Utils.checkArgument(postProcessing != PostProcessingOptions.ARCHIVE || (archiveDir != null && !archiveDir.isEmpty()),
+                        "archiveDir cannot be empty if postProcessing is ARCHIVE");
     dirContexts = new ArrayList<>();
     dirNames = new LinkedHashSet<>();
+
+    this.charset = charset;
+    this.maxLineLength = maxLineLength;
+    this.postProcessing = postProcessing;
+    this.archiveDir = (postProcessing == PostProcessingOptions.ARCHIVE) ? archiveDir : null;
+
     for (DirectoryInfo dirInfo : dirInfos) {
-      dirContexts.add(new DirectoryContext(dirInfo, charset, maxLineLength));
+      dirContexts.add(new DirectoryContext(dirInfo));
       if (dirNames.contains(dirInfo.dirName)) {
         throw new IOException(Utils.format("Directory '{}' already specified, it cannot be added more than once",
                                            dirInfo.dirName));
       }
       dirNames.add(dirInfo.dirName);
     }
+
+
     events = new ArrayList<>(dirInfos.size() * 2);
     open = true;
     LOG.debug("Opening directories: {}", dirNames);

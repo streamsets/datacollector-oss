@@ -14,6 +14,9 @@ public enum Errors implements ErrorCode {
   TAIL_02("Could not initialize multi-directory reader: {}"),
   TAIL_03("Invalid data format '{}'"),
   TAIL_04("The same directory cannot be specified more than once '{}'"),
+  TAIL_05("Archive directory cannot be empty"),
+  TAIL_06("Archive directory does not exist"),
+  TAIL_07("Archive directory path is not a directory"),
 
   TAIL_10("Could not deserialize offset: {}"),
   TAIL_11("Error reading file '{}': {}"),

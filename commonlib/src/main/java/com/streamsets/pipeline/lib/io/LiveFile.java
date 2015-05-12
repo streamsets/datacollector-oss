@@ -135,10 +135,9 @@ public class LiveFile {
   /**
    * Refreshes the <code>LiveFile</code>, if the file was renamed, the path will have the new name..
    *
-   * @return <code>true</code> if the <code>LiveFile</code> name has changed, <code>false</code> if not.
+   * @return the refreshed file if the file has been renamed, or itself if the file has not been rename or the file
+   * does not exist in the directory anymore.
    * @throws IOException thrown if the LiveFile could not be refreshed
-   * @throws NoSuchFileException thrown if the file could not be found
-   * (i.e. it has been deleted or moved to a different directory).
    */
   public LiveFile refresh() throws IOException, NoSuchFileException {
     LiveFile refresh = this;
@@ -156,12 +155,8 @@ public class LiveFile {
           String fileiNodeStr = Files.readAttributes(path, BasicFileAttributes.class).fileKey().toString();
           if (fileiNodeStr.equals(iNode)) {
             refresh = new LiveFile(path, iNode);
-            found = true;
             break;
           }
-        }
-        if (!found) {
-          throw new NoSuchFileException("Could not find file for iNode '" + iNode + "', old file name '" + path + "'");
         }
       }
     }

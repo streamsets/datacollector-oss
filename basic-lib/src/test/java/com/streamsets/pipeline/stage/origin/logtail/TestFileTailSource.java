@@ -9,6 +9,7 @@ import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.config.DataFormat;
 import com.streamsets.pipeline.config.LogMode;
+import com.streamsets.pipeline.config.PostProcessingOptions;
 import com.streamsets.pipeline.lib.parser.DataParserException;
 import com.streamsets.pipeline.lib.parser.log.Constants;
 import com.streamsets.pipeline.sdk.SourceRunner;
@@ -40,7 +41,8 @@ public class TestFileTailSource {
     fileInfo.fileRollMode = FilesRollMode.REVERSE_COUNTER;
     fileInfo.firstFile = "";
     fileInfo.periodicFileRegEx = "";
-    FileTailSource source = new FileTailSource(DataFormat.TEXT, "UTF-8", Arrays.asList(fileInfo), 1024, 25, 1, null,
+    FileTailSource source = new FileTailSource(DataFormat.TEXT, "UTF-8", 1024, 25, 1, Arrays.asList(fileInfo),
+                                               PostProcessingOptions.NONE, null, null,
                                                false, null, null, null, null, null, false, null);
     SourceRunner runner = new SourceRunner.Builder(FileTailDSource.class, source)
         .addOutputLane("lane").addOutputLane("metadata")
@@ -64,7 +66,8 @@ public class TestFileTailSource {
     fileInfo.fileRollMode = FilesRollMode.REVERSE_COUNTER;
     fileInfo.firstFile = "";
     fileInfo.periodicFileRegEx = "";
-    FileTailSource source = new FileTailSource(DataFormat.TEXT, "UTF-8", Arrays.asList(fileInfo), 1024, 25, 1, null,
+    FileTailSource source = new FileTailSource(DataFormat.TEXT, "UTF-8", 1024, 25, 1, Arrays.asList(fileInfo),
+                                               PostProcessingOptions.NONE, null, null,
                                                false, null, null, null, null, null, false, null);
     SourceRunner runner = new SourceRunner.Builder(FileTailDSource.class, source)
         .addOutputLane("lane").addOutputLane("metadata")
@@ -111,8 +114,9 @@ public class TestFileTailSource {
     fileInfo2.fileRollMode = FilesRollMode.REVERSE_COUNTER;
     fileInfo2.firstFile = "";
     fileInfo2.periodicFileRegEx = "";
-    FileTailSource source = new FileTailSource(DataFormat.TEXT, "UTF-8", Arrays.asList(fileInfo1, fileInfo2), 1024, 25,
-                                               1, null, false, null, null, null, null, null, false, null);
+    FileTailSource source = new FileTailSource(DataFormat.TEXT, "UTF-8", 1024, 25, 1, Arrays.asList(fileInfo1, fileInfo2),
+                                               PostProcessingOptions.NONE, null,
+                                               null, false, null, null, null, null, null, false, null);
     SourceRunner runner = new SourceRunner.Builder(FileTailDSource.class, source)
         .addOutputLane("lane").addOutputLane("metadata")
         .build();
@@ -141,8 +145,9 @@ public class TestFileTailSource {
     fileInfo2.fileRollMode = FilesRollMode.REVERSE_COUNTER;
     fileInfo2.firstFile = "";
     fileInfo2.periodicFileRegEx = "";
-    FileTailSource source = new FileTailSource(DataFormat.TEXT, "UTF-8", Arrays.asList(fileInfo1, fileInfo2), 1024, 25,
-                                               1, null, false, null, null, null, null, null, false, null);
+    FileTailSource source = new FileTailSource(DataFormat.TEXT, "UTF-8", 1024, 25, 1, Arrays.asList(fileInfo1, fileInfo2),
+                                               PostProcessingOptions.NONE, null,
+                                               null, false, null, null, null, null, null, false, null);
     SourceRunner runner = new SourceRunner.Builder(FileTailDSource.class, source)
         .addOutputLane("lane").addOutputLane("metadata")
         .build();
@@ -192,7 +197,8 @@ public class TestFileTailSource {
     fileInfo.fileRollMode = FilesRollMode.REVERSE_COUNTER;
     fileInfo.firstFile = "";
     fileInfo.periodicFileRegEx = "";
-    FileTailSource source = new FileTailSource(DataFormat.TEXT, "UTF-8", Arrays.asList(fileInfo), 7, 1, 1, null,
+    FileTailSource source = new FileTailSource(DataFormat.TEXT, "UTF-8", 7, 1, 1, Arrays.asList(fileInfo),
+                                               PostProcessingOptions.NONE, null, null,
                                                false, null, null, null, null, null, false, null);
     SourceRunner runner = new SourceRunner.Builder(FileTailDSource.class, source)
         .addOutputLane("lane").addOutputLane("metadata")
@@ -229,7 +235,8 @@ public class TestFileTailSource {
     fileInfo.fileRollMode = FilesRollMode.REVERSE_COUNTER;
     fileInfo.firstFile = "";
     fileInfo.periodicFileRegEx = "";
-    FileTailSource source = new FileTailSource(DataFormat.JSON, "UTF-8", Arrays.asList(fileInfo), 1024, 25, 1, null,
+    FileTailSource source = new FileTailSource(DataFormat.JSON, "UTF-8", 1024, 25, 1, Arrays.asList(fileInfo),
+                                               PostProcessingOptions.NONE, null, null,
                                                false, null, null, null, null, null, false, null);
     SourceRunner runner = new SourceRunner.Builder(FileTailDSource.class, source)
         .addOutputLane("lane").addOutputLane("metadata")
@@ -344,7 +351,8 @@ public class TestFileTailSource {
     fileInfo.fileRollMode = FilesRollMode.REVERSE_COUNTER;
     fileInfo.firstFile = "";
     fileInfo.periodicFileRegEx = "";
-    FileTailSource source = new FileTailSource(DataFormat.LOG, "UTF-8", Arrays.asList(fileInfo), 1024, 25, 1,
+    FileTailSource source = new FileTailSource(DataFormat.LOG, "UTF-8", 1024, 25, 1, Arrays.asList(fileInfo),
+                                               PostProcessingOptions.NONE, null,
                                                LogMode.LOG4J, true, null, null, null, null, null, false, null);
     SourceRunner runner = new SourceRunner.Builder(FileTailDSource.class, source)
       .addOutputLane("lane").addOutputLane("metadata")
@@ -415,7 +423,8 @@ public class TestFileTailSource {
     fileInfo.fileRollMode = FilesRollMode.REVERSE_COUNTER;
     fileInfo.firstFile = "";
     fileInfo.periodicFileRegEx = "";
-    FileTailSource source = new FileTailSource(DataFormat.LOG, "UTF-8", Arrays.asList(fileInfo), 2048, 100, 1,
+    FileTailSource source = new FileTailSource(DataFormat.LOG, "UTF-8", 2048, 100, 1, Arrays.asList(fileInfo),
+                                               PostProcessingOptions.NONE, null,
                                                LogMode.LOG4J, true, null, null, null, null, null, false, null);
     SourceRunner runner = new SourceRunner.Builder(FileTailDSource.class, source)
       .addOutputLane("lane").addOutputLane("metadata")

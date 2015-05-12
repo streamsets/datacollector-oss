@@ -16,6 +16,7 @@ import com.streamsets.pipeline.config.DataFormat;
 import com.streamsets.pipeline.config.JsonMode;
 import com.streamsets.pipeline.config.LogMode;
 import com.streamsets.pipeline.config.OnParseError;
+import com.streamsets.pipeline.config.PostProcessingOptions;
 import com.streamsets.pipeline.lib.dirspooler.DirectorySpooler;
 import com.streamsets.pipeline.lib.io.ObjectLengthException;
 import com.streamsets.pipeline.lib.io.OverrunException;
@@ -325,7 +326,8 @@ public class SpoolDirSource extends BaseSource {
     }
 
     DirectorySpooler.Builder builder = DirectorySpooler.builder().setDir(spoolDir).setFilePattern(filePattern).
-        setMaxSpoolFiles(maxSpoolFiles).setPostProcessing(postProcessing.getSpoolerAction());
+        setMaxSpoolFiles(maxSpoolFiles).
+        setPostProcessing(DirectorySpooler.FilePostProcessing.valueOf(postProcessing.name()));
     if (postProcessing == PostProcessingOptions.ARCHIVE) {
       builder.setArchiveDir(archiveDir);
       builder.setArchiveRetention(retentionTimeMins);

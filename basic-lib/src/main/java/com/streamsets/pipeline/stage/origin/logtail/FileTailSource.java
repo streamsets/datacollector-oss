@@ -16,6 +16,7 @@ import com.streamsets.pipeline.config.DataFormat;
 import com.streamsets.pipeline.config.JsonMode;
 import com.streamsets.pipeline.config.LogMode;
 import com.streamsets.pipeline.config.OnParseError;
+import com.streamsets.pipeline.config.PostProcessingOptions;
 import com.streamsets.pipeline.lib.io.FileLine;
 import com.streamsets.pipeline.lib.io.LiveFile;
 import com.streamsets.pipeline.lib.io.LiveFileChunk;
@@ -27,6 +28,7 @@ import com.streamsets.pipeline.lib.parser.DataParserFactoryBuilder;
 import com.streamsets.pipeline.lib.parser.log.LogDataFormatValidator;
 import com.streamsets.pipeline.lib.parser.log.RegExConfig;
 
+import java.io.File;
 import java.io.IOException;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
@@ -41,10 +43,12 @@ import java.util.Set;
 public class FileTailSource extends BaseSource {
   private final DataFormat dataFormat;
   private final String charset;
-  private final List<FileInfo> fileInfos;
   private final int maxLineLength;
   private final int batchSize;
   private final int maxWaitTimeSecs;
+  private final List<FileInfo> fileInfos;
+  private final PostProcessingOptions postProcessing;
+  private final String archiveDir;
   private final LogMode logMode;
   private final boolean logRetainOriginalLine;
   private final String customLogFormat;
@@ -55,8 +59,8 @@ public class FileTailSource extends BaseSource {
   private final boolean enableLog4jCustomLogFormat;
   private final String log4jCustomLogFormat;
 
-  public FileTailSource(DataFormat dataFormat, String charset, List<FileInfo> fileInfos, int maxLineLength,
-      int batchSize, int maxWaitTimeSecs,
+  public FileTailSource(DataFormat dataFormat, String charset, int maxLineLength, int batchSize,
+      int maxWaitTimeSecs, List<FileInfo> fileInfos, PostProcessingOptions postProcessing, String archiveDir,
       LogMode logMode,
       boolean retainOriginalLine, String customLogFormat, String regex,
       List<RegExConfig> fieldPathsToGroupName,
@@ -64,10 +68,12 @@ public class FileTailSource extends BaseSource {
       String log4jCustomLogFormat) {
     this.dataFormat = dataFormat;
     this.charset = charset;
-    this.fileInfos = fileInfos;
     this.maxLineLength = maxLineLength;
     this.batchSize = batchSize;
     this.maxWaitTimeSecs = maxWaitTimeSecs;
+    this.fileInfos = fileInfos;
+    this.postProcessing = postProcessing;
+    this.archiveDir = archiveDir;
     this.logMode = logMode;
     this.logRetainOriginalLine = retainOriginalLine;
     this.customLogFormat = customLogFormat;
@@ -92,8 +98,21 @@ public class FileTailSource extends BaseSource {
   @Override
   protected List<ConfigIssue> validateConfigs() throws StageException {
     List<ConfigIssue> issues = super.validateConfigs();
+    if (postProcessing == PostProcessingOptions.ARCHIVE) {
+      if (archiveDir == null || archiveDir.isEmpty()) {
+        issues.add(getContext().createConfigIssue(Groups.POST_PROCESSING.name(), "archiveDir", Errors.TAIL_05));
+      } else {
+        File dir = new File(archiveDir);
+        if (!dir.exists()) {
+          issues.add(getContext().createConfigIssue(Groups.POST_PROCESSING.name(), "archiveDir", Errors.TAIL_06));
+        }
+        if (!dir.isDirectory()) {
+          issues.add(getContext().createConfigIssue(Groups.POST_PROCESSING.name(), "archiveDir", Errors.TAIL_07));
+        }
+      }
+    }
     if (fileInfos.isEmpty()) {
-      issues.add(getContext().createConfigIssue(Groups.FILE.name(), "fileInfos", Errors.TAIL_01));
+      issues.add(getContext().createConfigIssue(Groups.FILES.name(), "fileInfos", Errors.TAIL_01));
     } else {
       Set<String> dirNames = new LinkedHashSet<>();
       List<MultiDirectoryReader.DirectoryInfo> dirInfos = new ArrayList<>();
@@ -102,14 +121,15 @@ public class FileTailSource extends BaseSource {
                                                             fileInfo.fileRollMode.createRollMode(fileInfo.periodicFileRegEx),
                                                             fileInfo.file, fileInfo.firstFile));
         if (dirNames.contains(fileInfo.dirName)) {
-          issues.add(getContext().createConfigIssue(Groups.FILE.name(), "fileInfos", Errors.TAIL_04, fileInfo.dirName));
+          issues.add(getContext().createConfigIssue(Groups.FILES.name(), "fileInfos", Errors.TAIL_04, fileInfo.dirName));
         }
         dirNames.add(fileInfo.dirName);
       }
       try {
-        multiDirReader = new MultiDirectoryReader(dirInfos, Charset.forName(charset), maxLineLength);
+        multiDirReader = new MultiDirectoryReader(dirInfos, Charset.forName(charset), maxLineLength,
+                                                  postProcessing, archiveDir);
       } catch (IOException ex) {
-        issues.add(getContext().createConfigIssue(Groups.FILE.name(), "fileInfos", Errors.TAIL_02, ex.getMessage(), ex));
+        issues.add(getContext().createConfigIssue(Groups.FILES.name(), "fileInfos", Errors.TAIL_02, ex.getMessage(), ex));
       }
     }
     switch (dataFormat) {
@@ -125,7 +145,7 @@ public class FileTailSource extends BaseSource {
         logDataFormatValidator.validateLogFormatConfig(issues, getContext());
         break;
       default:
-        issues.add(getContext().createConfigIssue(Groups.FILE.name(), "dataFormat", Errors.TAIL_03, dataFormat,
+        issues.add(getContext().createConfigIssue(Groups.FILES.name(), "dataFormat", Errors.TAIL_03, dataFormat,
                                                   Arrays.asList(DataFormat.TEXT, DataFormat.JSON)));
     }
     return issues;

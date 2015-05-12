@@ -12,6 +12,7 @@ import com.streamsets.pipeline.config.CsvMode;
 import com.streamsets.pipeline.config.DataFormat;
 import com.streamsets.pipeline.config.JsonMode;
 import com.streamsets.pipeline.config.OnParseError;
+import com.streamsets.pipeline.config.PostProcessingOptions;
 import com.streamsets.pipeline.sdk.SourceRunner;
 import com.streamsets.pipeline.sdk.StageRunner;
 import org.apache.commons.io.IOUtils;

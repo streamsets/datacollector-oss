@@ -29,6 +29,8 @@ import com.streamsets.pipeline.config.LogModeChooserValues;
 import com.streamsets.pipeline.config.OnParseError;
 import com.streamsets.pipeline.config.OnParseErrorChooserValues;
 import com.streamsets.pipeline.configurablestage.DSource;
+import com.streamsets.pipeline.config.PostProcessingOptions;
+import com.streamsets.pipeline.config.PostProcessingOptionsChooserValues;
 import com.streamsets.pipeline.lib.parser.log.RegExConfig;
 
 import java.util.List;

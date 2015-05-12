@@ -67,13 +67,13 @@ public class TestLiveFile {
     LiveFile.deserialize("foo");
   }
 
-  @Test(expected = NoSuchFileException.class)
+  @Test
   public void testSerDeserNotFound() throws IOException {
     Path path = Files.createFile(new File(testDir, "1.txt").toPath());
     LiveFile inf = new LiveFile(path);
     String ser = inf.serialize();
     Files.delete(path);
-    LiveFile.deserialize(ser).refresh();
+    Assert.assertEquals(inf, LiveFile.deserialize(ser).refresh());
   }
 
   @Test
@@ -108,12 +108,12 @@ public class TestLiveFile {
 
   }
 
-  @Test(expected = NoSuchFileException.class)
+  @Test
   public void testRefreshDeleted() throws IOException {
     Path path = Files.createFile(new File(testDir, "1.txt").toPath());
     LiveFile lf = new LiveFile(path);
     Files.delete(path);
-    lf.refresh();
+    Assert.assertEquals(lf, lf.refresh());
   }
 
 }

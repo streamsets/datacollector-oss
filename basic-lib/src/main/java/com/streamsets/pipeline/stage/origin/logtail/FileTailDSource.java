@@ -19,6 +19,8 @@ import com.streamsets.pipeline.config.DataFormat;
 import com.streamsets.pipeline.config.LogMode;
 import com.streamsets.pipeline.config.LogModeChooserValues;
 import com.streamsets.pipeline.configurablestage.DSource;
+import com.streamsets.pipeline.config.PostProcessingOptions;
+import com.streamsets.pipeline.config.PostProcessingOptionsChooserValues;
 import com.streamsets.pipeline.lib.parser.log.RegExConfig;
 
 import java.util.List;
@@ -42,7 +44,7 @@ public class FileTailDSource extends DSource {
       label = "Data Format",
       description = "The data format in the files (IMPORTANT: if Log, Log4j files with stack traces are not handled)",
       displayPosition = 10,
-      group = "FILE"
+      group = "FILES"
   )
   @ValueChooser(DataFormatChooserValues.class)
   public DataFormat dataFormat;
@@ -53,22 +55,11 @@ public class FileTailDSource extends DSource {
       defaultValue = "UTF-8",
       label = "Data Charset",
       description = "",
-      displayPosition = 15,
-      group = "FILE"
+      displayPosition = 20,
+      group = "FILES"
   )
   @ValueChooser(LFCRLFCharsetChooserValues.class)
   public String charset;
-
-  @ConfigDef(
-      required = true,
-      type = ConfigDef.Type.MODEL,
-      label = "Directories",
-      description = "Directories with files to tail",
-      displayPosition = 40,
-      group = "FILE"
-  )
-  @ComplexField
-  public List<FileInfo> fileInfos;
 
   @ConfigDef(
       required = true,
@@ -76,8 +67,8 @@ public class FileTailDSource extends DSource {
       defaultValue = "1024",
       label = "Max Line Length",
       description = "Including EOL characters. Longer lines will be truncated.",
-      displayPosition = 70,
-      group = "FILE",
+      displayPosition = 30,
+      group = "FILES",
       min = 0,
       max = 10 * 1024 * 1024 // 10MB
   )
@@ -89,8 +80,8 @@ public class FileTailDSource extends DSource {
       defaultValue = "1000",
       label = "Maximum Batch Size",
       description = "Max number of lines that will be sent in a single batch",
-      displayPosition = 80,
-      group = "FILE",
+      displayPosition = 40,
+      group = "FILES",
       min = 0,
       max = Integer.MAX_VALUE
   )
@@ -102,12 +93,50 @@ public class FileTailDSource extends DSource {
       defaultValue = "5",
       label = "Batch Wait Time (secs)",
       description = " Maximum amount of time to wait to fill a batch before sending it",
-      displayPosition = 90,
-      group = "FILE",
+      displayPosition = 50,
+      group = "FILES",
       min = 1,
       max = Integer.MAX_VALUE
   )
   public int maxWaitTimeSecs;
+
+  @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.MODEL,
+      label = "Directories",
+      description = "Directories with files to tail",
+      displayPosition = 60,
+      group = "FILES"
+  )
+  @ComplexField
+  public List<FileInfo> fileInfos;
+
+  // Post processing
+
+  @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.MODEL,
+      defaultValue = "NONE",
+      label = "File Post Processing",
+      description = "Action to take after processing a file",
+      displayPosition = 110,
+      group = "POST_PROCESSING"
+  )
+  @ValueChooser(PostProcessingOptionsChooserValues.class)
+  public PostProcessingOptions postProcessing;
+
+  @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.STRING,
+      label = "Archive Directory",
+      description = "Directory to archive files after they have been processed",
+      displayPosition = 200,
+      group = "POST_PROCESSING",
+      dependsOn = "postProcessing",
+      triggeredByValue = "ARCHIVE"
+  )
+  public String archiveDir;
+
 
   // LOG Configuration
 
@@ -240,8 +269,8 @@ public class FileTailDSource extends DSource {
 
   @Override
   protected Source createSource() {
-    return new FileTailSource(dataFormat, charset, fileInfos, maxLineLength,
-                              batchSize, maxWaitTimeSecs, logMode, retainOriginalLine, customLogFormat,
+    return new FileTailSource(dataFormat, charset, maxLineLength, batchSize, maxWaitTimeSecs, fileInfos,
+                              postProcessing, archiveDir, logMode, retainOriginalLine, customLogFormat,
                               regex, fieldPathsToGroupName, grokPatternDefinition, grokPattern,
                               enableLog4jCustomLogFormat, log4jCustomLogFormat);
   }

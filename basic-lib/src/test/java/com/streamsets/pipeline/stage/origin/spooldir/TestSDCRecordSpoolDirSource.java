@@ -15,6 +15,7 @@ import com.streamsets.pipeline.api.ext.ContextExtensions;
 import com.streamsets.pipeline.api.ext.RecordWriter;
 import com.streamsets.pipeline.config.DataFormat;
 import com.streamsets.pipeline.config.OnParseError;
+import com.streamsets.pipeline.config.PostProcessingOptions;
 import com.streamsets.pipeline.sdk.ContextInfoCreator;
 import com.streamsets.pipeline.sdk.RecordCreator;
 import com.streamsets.pipeline.sdk.SourceRunner;

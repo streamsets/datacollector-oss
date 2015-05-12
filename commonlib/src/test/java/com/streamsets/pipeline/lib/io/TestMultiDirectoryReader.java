@@ -5,6 +5,7 @@
  */
 package com.streamsets.pipeline.lib.io;
 
+import com.streamsets.pipeline.config.PostProcessingOptions;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -14,6 +15,7 @@ import java.io.IOException;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -37,7 +39,7 @@ public class TestMultiDirectoryReader {
     MultiDirectoryReader.DirectoryInfo di = new MultiDirectoryReader.DirectoryInfo(testDir1.getAbsolutePath(),
                                                                                    LogRollMode.REVERSE_COUNTER,
                                                                                    "file.txt", "");
-    MultiDirectoryReader mdr = new MultiDirectoryReader(Arrays.asList(di), UTF8, 1024);
+    MultiDirectoryReader mdr = new MultiDirectoryReader(Arrays.asList(di), UTF8, 1024, PostProcessingOptions.NONE, null);
     mdr.setOffsets(new HashMap<String, String>());
     long start = System.currentTimeMillis();
     Assert.assertNull(mdr.next(20));
@@ -53,7 +55,7 @@ public class TestMultiDirectoryReader {
     MultiDirectoryReader.DirectoryInfo di = new MultiDirectoryReader.DirectoryInfo(testDir1.getAbsolutePath(),
                                                                                    LogRollMode.REVERSE_COUNTER,
                                                                                    "file.txt", "");
-    MultiDirectoryReader mdr = new MultiDirectoryReader(Arrays.asList(di), UTF8, 1024);
+    MultiDirectoryReader mdr = new MultiDirectoryReader(Arrays.asList(di), UTF8, 1024, PostProcessingOptions.NONE, null);
     mdr.setOffsets(new HashMap<String, String>());
     long start = System.currentTimeMillis();
     LiveFileChunk chunk = mdr.next(1000);
@@ -88,7 +90,8 @@ public class TestMultiDirectoryReader {
     MultiDirectoryReader.DirectoryInfo di2 = new MultiDirectoryReader.DirectoryInfo(testDir1.getAbsolutePath(),
                                                                                     LogRollMode.REVERSE_COUNTER,
                                                                                     "f2.txt", "");
-    MultiDirectoryReader mdr = new MultiDirectoryReader(Arrays.asList(di1, di2), UTF8, 1024);
+    MultiDirectoryReader mdr = new MultiDirectoryReader(Arrays.asList(di1, di2), UTF8, 1024, PostProcessingOptions.NONE,
+                                                        null);
   }
 
   @Test
@@ -104,7 +107,8 @@ public class TestMultiDirectoryReader {
                                                                                     LogRollMode.REVERSE_COUNTER,
                                                                                     "f2.txt", "");
 
-    MultiDirectoryReader mdr = new MultiDirectoryReader(Arrays.asList(di1, di2), UTF8, 1024);
+    MultiDirectoryReader mdr = new MultiDirectoryReader(Arrays.asList(di1, di2), UTF8, 1024, PostProcessingOptions.NONE,
+                                                        null);
     // just open the multidir, no file events
     Assert.assertTrue(mdr.getEvents().isEmpty());
 
@@ -222,6 +226,72 @@ public class TestMultiDirectoryReader {
     Assert.assertEquals(2, mdr.getOffsets().size());
 
     Assert.assertNull(mdr.next(0));
+    mdr.close();
+  }
+
+  @Test
+  public void testPostProcessingDelete() throws Exception {
+    Path f1 = new File(testDir1, "f1.txt").toPath().toAbsolutePath();
+    Path f2 = new File(testDir1, "f2.txt").toPath().toAbsolutePath();
+    Files.write(f1, Arrays.asList("f1"), UTF8);
+    PeriodicFilesRollMode rollMode = new PeriodicFilesRollMode();
+    rollMode.setPattern("f.\\.txt");
+    MultiDirectoryReader.DirectoryInfo di1 = new MultiDirectoryReader.DirectoryInfo(testDir1.getAbsolutePath(),
+                                                                                    rollMode,  "", "");
+
+    MultiDirectoryReader mdr = new MultiDirectoryReader(Arrays.asList(di1), UTF8, 1024, PostProcessingOptions.DELETE,
+                                                        null);
+
+    Assert.assertTrue(Files.exists(f1));
+    mdr.setOffsets(new HashMap<String, String>());
+
+    //read file content
+    Assert.assertNotNull(mdr.next(0));
+
+    //triggers a periodic 'roll'
+    Files.createFile(f2);
+
+    //sleeps to trigger a livefile refresh
+    Thread.sleep(LiveFileReader.REFRESH_INTERVAL + 1);
+
+    //reach eof
+    Assert.assertNull(mdr.next(0));
+
+    Assert.assertFalse(Files.exists(f1));
+    mdr.close();
+  }
+
+  @Test
+  public void testPostProcessingArchive() throws Exception {
+    Path f1 = new File(testDir1, "f1.txt").toPath().toAbsolutePath();
+    Path f2 = new File(testDir1, "f2.txt").toPath().toAbsolutePath();
+    Files.write(f1, Arrays.asList("f1"), UTF8);
+    PeriodicFilesRollMode rollMode = new PeriodicFilesRollMode();
+    rollMode.setPattern("f.\\.txt");
+    MultiDirectoryReader.DirectoryInfo di1 = new MultiDirectoryReader.DirectoryInfo(testDir1.getAbsolutePath(),
+                                                                                    rollMode,  "", "");
+
+    MultiDirectoryReader mdr = new MultiDirectoryReader(Arrays.asList(di1), UTF8, 1024, PostProcessingOptions.ARCHIVE,
+                                                        testDir2.getAbsolutePath());
+
+    Assert.assertTrue(Files.exists(f1));
+    mdr.setOffsets(new HashMap<String, String>());
+
+    //read file content
+    Assert.assertNotNull(mdr.next(0));
+
+    //triggers a periodic 'roll'
+    Files.createFile(f2);
+
+    //sleeps to trigger a livefile refresh
+    Thread.sleep(LiveFileReader.REFRESH_INTERVAL + 1);
+
+    //reach eof
+    Assert.assertNull(mdr.next(0));
+
+    Assert.assertFalse(Files.exists(f1));
+    Path f1Archived = Paths.get(testDir2.getAbsolutePath(), f1.toString());
+    Assert.assertTrue(Files.exists(f1Archived));
     mdr.close();
   }
 
