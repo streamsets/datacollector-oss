@@ -122,7 +122,7 @@ public class TestPreviewRun {
       @Override
       protected void process(Record record, SingleLaneBatchMaker batchMaker) throws StageException {
         record.set(Field.create(2));
-        batchMaker.addRecord(record);
+        //batchMaker.addRecord(record);
       }
     });
 
@@ -137,7 +137,45 @@ public class TestPreviewRun {
     List<StageOutput> output = previewOutput.getBatchesOutput().get(0);
 
     Assert.assertEquals(1, output.size());
+
+
+    //Complex graph
+    runner = new PreviewPipelineRunner(tracker, -1, 1, true);
+    pipelineConfiguration = MockStages.createPipelineConfigurationComplexSourceProcessorTarget();
+    pipeline = new PreviewPipelineBuilder(MockStages.createStageLibrary(), "name",
+      pipelineConfiguration, "p1").build(runner);
+    previewOutput = pipeline.run();
+    output = previewOutput.getBatchesOutput().get(0);
+    Assert.assertEquals(1, output.size());
     Assert.assertEquals(1, output.get(0).getOutput().get("s").get(0).get().getValue());
+
+
+    runner = new PreviewPipelineRunner(tracker, -1, 1, true);
+    pipelineConfiguration = MockStages.createPipelineConfigurationComplexSourceProcessorTarget();
+    pipeline = new PreviewPipelineBuilder(MockStages.createStageLibrary(), "name",
+      pipelineConfiguration, "p5").build(runner);
+    previewOutput = pipeline.run();
+    output = previewOutput.getBatchesOutput().get(0);
+    Assert.assertEquals(2, output.size());
+    Assert.assertEquals(1, output.get(0).getOutput().get("s").get(0).get().getValue());
+
+
+    runner = new PreviewPipelineRunner(tracker, -1, 1, true);
+    pipelineConfiguration = MockStages.createPipelineConfigurationComplexSourceProcessorTarget();
+    pipeline = new PreviewPipelineBuilder(MockStages.createStageLibrary(), "name1",
+      pipelineConfiguration, "p6").build(runner);
+    previewOutput = pipeline.run();
+    output = previewOutput.getBatchesOutput().get(0);
+    Assert.assertEquals(3, output.size());
+
+    runner = new PreviewPipelineRunner(tracker, -1, 1, true);
+    pipelineConfiguration = MockStages.createPipelineConfigurationComplexSourceProcessorTarget();
+    pipeline = new PreviewPipelineBuilder(MockStages.createStageLibrary(), "name1",
+      pipelineConfiguration, "t").build(runner);
+    previewOutput = pipeline.run();
+    output = previewOutput.getBatchesOutput().get(0);
+    Assert.assertEquals(7, output.size());
+
   }
 
 

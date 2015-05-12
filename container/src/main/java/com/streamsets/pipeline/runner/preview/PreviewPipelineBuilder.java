@@ -20,7 +20,10 @@ import com.streamsets.pipeline.validation.StageIssue;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
+import java.util.ListIterator;
+import java.util.Set;
 import java.util.UUID;
 
 public class PreviewPipelineBuilder {
@@ -60,12 +63,35 @@ public class PreviewPipelineBuilder {
   public PreviewPipeline build(PipelineRunner runner) throws PipelineRuntimeException, StageException {
     if(endStageInstanceName != null && endStageInstanceName.trim().length() > 0) {
       List<StageConfiguration> stages = new ArrayList<>();
+      Set<String> allowedOutputLanes = new HashSet<>();
       for(StageConfiguration stageConfiguration: pipelineConf.getStages()) {
         if (stageConfiguration.getInstanceName().equals(endStageInstanceName)) {
+          allowedOutputLanes.addAll(stageConfiguration.getInputLanes());
           break;
         }
         stages.add(stageConfiguration);
       }
+
+      ListIterator li = stages.listIterator(stages.size());
+
+      while(li.hasPrevious()) {
+        StageConfiguration stageConfiguration = (StageConfiguration) li.previous();
+        boolean contains = false;
+        List<String> outputLanes = stageConfiguration.getOutputLanes();
+        for(String outputLane :outputLanes) {
+          if(allowedOutputLanes.contains(outputLane)){
+            contains = true;
+            break;
+          }
+        }
+
+        if(contains) {
+          allowedOutputLanes.addAll(stageConfiguration.getInputLanes());
+        } else {
+          li.remove();
+        }
+      }
+
       pipelineConf.setStages(stages);
     }
 

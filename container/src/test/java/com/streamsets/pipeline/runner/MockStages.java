@@ -534,6 +534,10 @@ public class MockStages {
     return createPipelineConfigurationSourceProcessorTarget(PipelineStoreTask.SCHEMA_VERSION);
   }
 
+  public static PipelineConfiguration createPipelineConfigurationComplexSourceProcessorTarget() {
+    return createPipelineConfigurationComplexSourceProcessorTarget(PipelineStoreTask.SCHEMA_VERSION);
+  }
+
   @SuppressWarnings("unchecked")
   public static StageConfiguration getErrorStageConfig() {
     return new StageConfiguration("errorStage", "default", "errorTarget", "1.0.0",
@@ -563,6 +567,54 @@ public class MockStages {
 
     return new PipelineConfiguration(schemaVersion, UUID.randomUUID(), null, createPipelineConfigs(),
         null, stages, getErrorStageConfig());
+  }
+
+
+  @SuppressWarnings("unchecked")
+  /**
+   *     p1 -  p4
+   *  s  p2 -  p5  t
+   *     p3 -` p6
+   */
+  public static PipelineConfiguration createPipelineConfigurationComplexSourceProcessorTarget(int schemaVersion) {
+    List<StageConfiguration> stages = new ArrayList<>();
+
+    StageConfiguration source = new StageConfiguration("s", "default", "sourceName", "1.0.0",
+      Collections.<ConfigConfiguration>emptyList(), null, Collections.<String>emptyList(), ImmutableList.of("s"));
+    stages.add(source);
+
+    StageConfiguration processor1 = new StageConfiguration("p1", "default", "processorName", "1.0.0",
+      Collections.<ConfigConfiguration>emptyList(), null, ImmutableList.of("s"), ImmutableList.of("p1"));
+    stages.add(processor1);
+
+    StageConfiguration processor2 = new StageConfiguration("p2", "default", "processorName", "1.0.0",
+      Collections.<ConfigConfiguration>emptyList(), null, ImmutableList.of("s"), ImmutableList.of("p2"));
+    stages.add(processor2);
+
+    StageConfiguration processor3 = new StageConfiguration("p3", "default", "processorName", "1.0.0",
+      Collections.<ConfigConfiguration>emptyList(), null, ImmutableList.of("s"), ImmutableList.of("p3"));
+    stages.add(processor3);
+
+
+    StageConfiguration processor4 = new StageConfiguration("p4", "default", "processorName", "1.0.0",
+      Collections.<ConfigConfiguration>emptyList(), null, ImmutableList.of("p1"), ImmutableList.of("p4"));
+    stages.add(processor4);
+
+    StageConfiguration processor5 = new StageConfiguration("p5", "default", "processorName", "1.0.0",
+      Collections.<ConfigConfiguration>emptyList(), null, ImmutableList.of("p2"), ImmutableList.of("p5"));
+    stages.add(processor5);
+
+    StageConfiguration processor6 = new StageConfiguration("p6", "default", "processorName", "1.0.0",
+      Collections.<ConfigConfiguration>emptyList(), null, ImmutableList.of("p2", "p3"), ImmutableList.of("p6"));
+    stages.add(processor6);
+
+
+    StageConfiguration target = new StageConfiguration("t", "default", "targetName", "1.0.0",
+      Collections.<ConfigConfiguration>emptyList(), null, ImmutableList.of("p4", "p5", "p6"), Collections.<String>emptyList());
+    stages.add(target);
+
+    return new PipelineConfiguration(schemaVersion, UUID.randomUUID(), null, createPipelineConfigs(),
+      null, stages, getErrorStageConfig());
   }
 
   @SuppressWarnings("unchecked")
