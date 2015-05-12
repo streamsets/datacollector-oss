@@ -218,7 +218,7 @@ public class StageClassLoader extends BlackListURLClassLoader {
     if (systemClasses != null) {
       String canonicalName = name.replace('/', '.');
       while (canonicalName.startsWith(".")) {
-        canonicalName=canonicalName.substring(1);
+        canonicalName = canonicalName.substring(1);
       }
       for (String c : systemClasses) {
         boolean shouldInclude = true;

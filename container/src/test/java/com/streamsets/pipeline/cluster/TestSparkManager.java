@@ -152,7 +152,11 @@ public class TestSparkManager {
     String id = "application_1429587312661_0025";
     MockSystemProcess.output.add(" " + id + " ");
     MockSystemProcess.output.add(" " + id + " ");
-    URLClassLoader classLoader = new URLClassLoader(new URL[0]);
+    URLClassLoader classLoader = new URLClassLoader(new URL[0]) {
+      public String getType() {
+        return ClusterModeConstants.USER_LIBS;
+      }
+    };
     StageLibraryTask stageLibrary = MockStages.createStageLibrary(classLoader);
     SparkManager sparkManager = new SparkManager(new MockSystemProcessFactory(), new SparkProviderImpl(null), tempDir,
       sparkManagerShell, classLoader, classLoader, 1);

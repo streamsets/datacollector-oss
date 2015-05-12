@@ -29,6 +29,7 @@ public class StageLibraryUtils {
     String name = null;
     try {
       Method method = cl.getClass().getMethod("getType");
+      method.setAccessible(true);
       name = (String) method.invoke(cl);
     } catch (NoSuchMethodException ex ) {
       // ignore

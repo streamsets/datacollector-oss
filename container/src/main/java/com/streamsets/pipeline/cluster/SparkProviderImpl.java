@@ -202,21 +202,19 @@ public class SparkProviderImpl implements SparkProvider {
     // create libs.tar.gz file for pipeline
     Map<String, URLClassLoader > streamsetsLibsCl = new HashMap<>();
     Map<String, URLClassLoader > userLibsCL = new HashMap<>();
-    for (StageDefinition stageDef : stageLibrary.getStages()) {
-      String type = StageLibraryUtils.getLibraryType(stageDef.getStageClassLoader());
-      String name = StageLibraryUtils.getLibraryName(stageDef.getStageClassLoader());
-      if (ClusterModeConstants.STREAMSETS_LIBS.equals(type) && name.contains("spark")) {
-        streamsetsLibsCl.put(name, (URLClassLoader) stageDef.getStageClassLoader());
-      }
-    }
     Map<String, String> sourceConfigs = new HashMap<>();
-    for (StageConfiguration stageConf : pipelineConfiguration.getStages()) {
+    List<StageConfiguration> stageConfigurations = new ArrayList<>();
+    stageConfigurations.addAll(pipelineConfiguration.getStages());
+    stageConfigurations.add(pipelineConfiguration.getErrorStage());
+    for (StageConfiguration stageConf : stageConfigurations) {
       StageDefinition stageDef = stageLibrary.getStage(stageConf.getLibrary(), stageConf.getStageName(),
         stageConf.getStageVersion());
       if (stageConf.getInputLanes().isEmpty()) {
         for (ConfigConfiguration conf : stageConf.getConfiguration()) {
-          if (conf.getValue() instanceof String) {
+          if (conf.getValue() instanceof String || conf.getValue() instanceof Number) {
             sourceConfigs.put(conf.getName(), String.valueOf(conf.getValue()));
+          } else {
+            // TODO should we add others, perhaps as JSON?S
           }
         }
       }
