@@ -19,11 +19,13 @@ angular.module('dataCollectorApp.codemirrorDirectives')
 
         return function postLink(scope, iElement, iAttrs) {
           var dictionary = {},
+            keywords = [],
             fieldPaths = [],
             fieldPathsType = [];
 
           // Register our custom Codemirror hint plugin.
           window.CodeMirror.registerHelper('hint', 'dictionaryHint', function(editor, options, c) {
+            var mode = editor.doc.modeOption;
             var cur = editor.getCursor(), curLine = editor.getLine(cur.line);
             var start = cur.ch, end = start;
 
@@ -41,7 +43,6 @@ angular.module('dataCollectorApp.codemirrorDirectives')
             var completions =[];
 
             if(curWord || options.ctrlSpaceKey) {
-
 
               if(dictionary.pipelineConstants && dictionary.pipelineConstants.length) {
                 angular.forEach(dictionary.pipelineConstants, function(pipelineConstant) {
@@ -95,6 +96,20 @@ angular.module('dataCollectorApp.codemirrorDirectives')
                     className: 'CodeMirror-EL-completion CodeMirror-EL-completion-field-path',
                     data: {
                       description: desc
+                    }
+                  });
+                }
+              });
+
+              keywords = getKeywords(mode);
+              angular.forEach(keywords, function(value, keyword) {
+                if(!curWord || keyword.match(regex)) {
+                  completions.push({
+                    text: keyword.toUpperCase(),
+                    displayText: keyword.toUpperCase(),
+                    className: 'CodeMirror-EL-completion CodeMirror-EL-completion-keyword',
+                    data: {
+                      description: 'Keyword - ' + keyword.toUpperCase()
                     }
                   });
                 }
@@ -374,6 +389,12 @@ angular.module('dataCollectorApp.codemirrorDirectives')
             activeArgHints = makeTooltip(place.right + 1, place.bottom, tip);
           }
 
+          function getKeywords(mode) {
+            if(mode && mode.name === 'text/x-sql') {
+              return CodeMirror.resolveMode(mode).keywords;
+            }
+            return [];
+          }
         };
       }
     };
