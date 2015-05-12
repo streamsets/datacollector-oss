@@ -537,62 +537,6 @@
             </configuration>
           </execution>
           <execution>
-            <id>generate-cdh5-5.2.2-rpm</id>
-            <goals>
-              <goal>attached-rpm</goal>
-            </goals>
-            <configuration>
-              <name>streamsets-datacollector-cdh5-5.2.2-lib</name>
-              <classifier>cdh5-5.2.2-lib</classifier>
-              <license>Proprietary</license>
-              <distribution>el6</distribution>
-              <group>Applications/System</group>
-              <packager>StreamSets</packager>
-              <targetOS>linux</targetOS>
-              <prefix>/opt</prefix>
-              <provides>
-                <provide>streamsets-datacollector-cdh5-5.2.2</provide>
-              </provides>
-              <requires>
-                <require>java</require>
-                <require>streamsets-datacollector</require>
-              </requires>
-              <defineStatements>
-                <defineStatement>_unpackaged_files_terminate_build 0</defineStatement>
-                <defineStatement>service_user ${sdc.user}</defineStatement>
-                <defineStatement>service_group ${sdc.group}</defineStatement>
-                <defineStatement>install_dir ${sdc.dir}</defineStatement>
-              </defineStatements>
-              <mappings>
-                <!-- Separate mappings for dirs exist b/c of the Won't Fix for this JIRA https://jira.codehaus.org/browse/MRPM-8 -->
-                <mapping>
-                  <directory>${sdc.dir}/streamsets-datacollector-${project.version}/streamsets-libs/streamsets-datacollector-cdh5_2_2-lib</directory>
-                  <filemode>755</filemode>
-                  <username>root</username>
-                  <groupname>root</groupname>
-                </mapping>
-                <mapping>
-                  <directory>${sdc.dir}/streamsets-datacollector-${project.version}/streamsets-libs/streamsets-datacollector-cdh5_2_2-lib/lib</directory>
-                  <filemode>755</filemode>
-                  <username>root</username>
-                  <groupname>root</groupname>
-                </mapping>
-                <mapping>
-                  <directory>${sdc.dir}/streamsets-datacollector-${project.version}/streamsets-libs/streamsets-datacollector-cdh5_2_2-lib</directory>
-                  <directoryIncluded>false</directoryIncluded>
-                  <filemode>644</filemode>
-                  <username>root</username>
-                  <groupname>root</groupname>
-                  <sources>
-                    <source>
-                      <location>${sdc.distroot}/streamsets-datacollector-${project.version}/streamsets-libs/streamsets-datacollector-cdh5_2_2-lib</location>
-                    </source>
-                  </sources>
-                </mapping>
-              </mappings>
-            </configuration>
-          </execution>
-          <execution>
             <id>generate-cdh5-5.2.3-rpm</id>
             <goals>
               <goal>attached-rpm</goal>

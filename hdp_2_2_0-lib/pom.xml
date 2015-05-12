@@ -23,6 +23,9 @@
 
   <properties>
     <hadoop.version>2.6.0.2.2.0.0-2041</hadoop.version>
+    <flume.version>1.5.2.2.2.0.0-2041</flume.version>
+    <thrift.version>0.9.0</thrift.version>
+    <hbase.version>0.98.4.2.2.0.0-2041-hadoop2</hbase.version>
   </properties>
 
   <repositories>
@@ -90,6 +93,12 @@
       <groupId>com.streamsets</groupId>
       <artifactId>streamsets-datacollector-sdk</artifactId>
       <scope>provided</scope>
+      <exclusions>
+        <exclusion>
+          <groupId>com.google.guava</groupId>
+          <artifactId>guava</artifactId>
+        </exclusion>
+      </exclusions>
     </dependency>
 
     <dependency>
@@ -163,6 +172,80 @@
       <version>${hadoop.version}</version>
       <scope>test</scope>
     </dependency>
+
+    <!-- HBase related -->
+
+    <dependency>
+      <groupId>com.streamsets</groupId>
+      <artifactId>streamsets-datacollector-hbase-protolib</artifactId>
+      <version>${project.version}</version>
+      <scope>compile</scope>
+      <exclusions>
+        <exclusion>
+          <groupId>org.apache.hbase</groupId>
+          <artifactId>hbase-client</artifactId>
+        </exclusion>
+      </exclusions>
+    </dependency>
+
+    <dependency>
+      <groupId>org.apache.hbase</groupId>
+      <artifactId>hbase-client</artifactId>
+      <version>${hbase.version}</version>
+      <scope>compile</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>org.apache.hbase</groupId>
+      <artifactId>hbase-testing-util</artifactId>
+      <version>${hbase.version}</version>
+      <scope>test</scope>
+    </dependency>
+
+    <!-- Flume related -->
+
+    <dependency>
+      <groupId>com.streamsets</groupId>
+      <artifactId>streamsets-datacollector-flume-protolib</artifactId>
+      <version>${project.version}</version>
+      <scope>compile</scope>
+      <exclusions>
+        <exclusion>
+          <groupId>org.apache.flume</groupId>
+          <artifactId>flume-ng-sdk</artifactId>
+        </exclusion>
+      </exclusions>
+    </dependency>
+
+    <!-- Explicitly add dependency on thrift version 0.9.0 -->
+    <dependency>
+      <groupId>org.apache.thrift</groupId>
+      <artifactId>libthrift</artifactId>
+      <version>${thrift.version}</version>
+      <scope>compile</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>org.apache.flume</groupId>
+      <artifactId>flume-ng-sdk</artifactId>
+      <version>${flume.version}</version>
+      <scope>compile</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>org.apache.flume</groupId>
+      <artifactId>flume-ng-core</artifactId>
+      <version>${flume.version}</version>
+      <scope>test</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>org.apache.flume</groupId>
+      <artifactId>flume-ng-configuration</artifactId>
+      <version>${flume.version}</version>
+      <scope>test</scope>
+    </dependency>
+
   </dependencies>
 
   <build>
@@ -180,6 +263,8 @@
             <configuration>
               <sources>
                 <source>${basedir}/../hdfs-protolib/src/test/java</source>
+                <source>${basedir}/../hbase-protolib/src/test/java</source>
+                <source>${basedir}/../flume-protolib/src/test/java</source>
               </sources>
             </configuration>
           </execution>
@@ -193,6 +278,12 @@
               <resources>
                 <resource>
                   <directory>${basedir}/../hdfs-protolib/src/test/resources</directory>
+                </resource>
+                <resource>
+                  <directory>${basedir}/../hbase-protolib/src/test/resources</directory>
+                </resource>
+                <resource>
+                  <directory>${basedir}/../flume-protolib/src/test/resources</directory>
                 </resource>
               </resources>
             </configuration>

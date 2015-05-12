@@ -98,11 +98,6 @@
       <artifactId>streamsets-datacollector-spark-bootstrap</artifactId>
       <scope>provided</scope>
     </dependency>
-    <dependency>
-      <groupId>com.streamsets</groupId>
-      <artifactId>streamsets-datacollector-apache-flume_1_5_0-lib</artifactId>
-      <scope>provided</scope>
-    </dependency>
   </dependencies>
 
   <build>
@@ -144,11 +139,6 @@
         <dependency>
           <groupId>com.streamsets</groupId>
           <artifactId>streamsets-datacollector-cdh5_2_1-lib</artifactId>
-          <scope>provided</scope>
-        </dependency>
-        <dependency>
-          <groupId>com.streamsets</groupId>
-          <artifactId>streamsets-datacollector-cdh5_2_2-lib</artifactId>
           <scope>provided</scope>
         </dependency>
         <dependency>

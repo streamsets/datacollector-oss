@@ -33,7 +33,6 @@
 
   <properties>
     <cdh_5_2_1-lib>none</cdh_5_2_1-lib>
-    <cdh_5_2_2-lib>none</cdh_5_2_2-lib>
     <cdh_5_2_3-lib>none</cdh_5_2_3-lib>
     <cdh_5_2_4-lib>none</cdh_5_2_4-lib>
     <cdh_5_3_0-lib>none</cdh_5_3_0-lib>
@@ -49,7 +48,6 @@
     <jython_2_7_0-lib>none</jython_2_7_0-lib>
     <elasticsearch_1_4_4-lib>none</elasticsearch_1_4_4-lib>
     <elasticsearch_1_5_0-lib>none</elasticsearch_1_5_0-lib>
-    <apache-flume_1_5_0-lib>none</apache-flume_1_5_0-lib>
     <cassandra_2_1_5-lib>none</cassandra_2_1_5-lib>
   </properties>
 
@@ -223,7 +221,6 @@
       </activation>
       <properties>
         <cdh_5_2_1-lib>cdh5_2_1-lib</cdh_5_2_1-lib>
-        <cdh_5_2_2-lib>cdh5_2_2-lib</cdh_5_2_2-lib>
         <cdh_5_2_3-lib>cdh5_2_3-lib</cdh_5_2_3-lib>
         <cdh_5_2_4-lib>cdh5_2_4-lib</cdh_5_2_4-lib>
         <cdh_5_3_0-lib>cdh5_3_0-lib</cdh_5_3_0-lib>
@@ -236,7 +233,6 @@
       </properties>
       <modules>
         <module>cdh5_2_1-lib</module>
-        <module>cdh5_2_2-lib</module>
         <module>cdh5_2_3-lib</module>
         <module>cdh5_2_4-lib</module>
         <module>cdh5_3_0-lib</module>
@@ -262,7 +258,6 @@
         <cdh5-kafka_0_8_2_0_kafka_1_2_0-lib>cdh5-kafka_0_8_2_0_kafka_1_2_0-lib</cdh5-kafka_0_8_2_0_kafka_1_2_0-lib>
         <jython_2_7_0-lib>jython_2_7_0-lib</jython_2_7_0-lib>
         <elasticsearch_1_5_0-lib>elasticsearch_1_5_0-lib</elasticsearch_1_5_0-lib>
-        <apache-flume_1_5_0-lib>apache-flume_1_5_0-lib</apache-flume_1_5_0-lib>
         <cassandra_2_1_5-lib>cassandra_2_1_5-lib</cassandra_2_1_5-lib>
         <cdh5_4_0-kafka_0_8_1_1-lib>cdh5_4_0-kafka_0_8_1_1-lib</cdh5_4_0-kafka_0_8_1_1-lib>
       </properties>
@@ -273,7 +268,6 @@
         <module>jython_2_7_0-lib</module>
         <module>elasticsearch_1_5_0-lib</module>
         <module>cassandra_2_1_5-lib</module>
-        <module>apache-flume_1_5_0-lib</module>
         <module>cdh5-kafka_0_8_2_0_kafka_1_2_0-lib</module>
         <module>cdh5_4_0-kafka_0_8_1_1-lib</module>
       </modules>

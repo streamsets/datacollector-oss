@@ -138,10 +138,6 @@
       <outputDirectory>/streamsets-libs/</outputDirectory>
     </fileSet>
     <fileSet>
-      <directory>${basedir}/../${cdh_5_2_2-lib}/target/streamsets-libs/</directory>
-      <outputDirectory>/streamsets-libs/</outputDirectory>
-    </fileSet>
-    <fileSet>
       <directory>${basedir}/../${cdh_5_2_3-lib}/target/streamsets-libs/</directory>
       <outputDirectory>/streamsets-libs/</outputDirectory>
     </fileSet>
@@ -225,13 +221,6 @@
       <directory>${basedir}/../${elasticsearch_1_5_0-lib}/target/streamsets-libs/</directory>
       <outputDirectory>/streamsets-libs/</outputDirectory>
     </fileSet>
-
-    <!-- Apache Flume libs -->
-    <fileSet>
-      <directory>${basedir}/../${apache-flume_1_5_0-lib}/target/streamsets-libs/</directory>
-      <outputDirectory>/streamsets-libs/</outputDirectory>
-    </fileSet>
-
 
   </fileSets>
 

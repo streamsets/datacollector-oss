@@ -110,11 +110,6 @@
       </dependency>
       <dependency>
         <groupId>com.streamsets</groupId>
-        <artifactId>streamsets-datacollector-cdh5_2_2-lib</artifactId>
-        <version>${project.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>com.streamsets</groupId>
         <artifactId>streamsets-datacollector-cdh5_2_3-lib</artifactId>
         <version>${project.version}</version>
       </dependency>
@@ -181,11 +176,6 @@
       <dependency>
         <groupId>com.streamsets</groupId>
         <artifactId>streamsets-datacollector-cassandra_2_1_5-lib</artifactId>
-        <version>${project.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>com.streamsets</groupId>
-        <artifactId>streamsets-datacollector-apache-flume_1_5_0-lib</artifactId>
         <version>${project.version}</version>
       </dependency>
       <dependency>
