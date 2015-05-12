@@ -122,9 +122,8 @@ public class ProductionObserver implements Observer {
       offered = false;
     }
     if(!offered) {
-      LOG.error("Dropping batch as observer queue is full. " +
+      LOG.error("Dropping DataRules Evaluation Request as observer queue is full. " +
         "Please resize the observer queue or decrease the sampling percentage.");
-      //raise alert to say that we dropped batch
       //reconfigure queue size or tune sampling %
     }
   }
