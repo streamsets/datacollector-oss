@@ -17,7 +17,7 @@ public @interface ConfigDef {
 
   public enum Type { BOOLEAN, NUMBER, STRING, LIST, MAP, MODEL, CHARACTER, TEXT, PASSWORD }
 
-  public enum Mode {JAVA, JAVASCRIPT, JSON, PLAIN_TEXT, PYTHON, RUBY, SCALA}
+  public enum Mode {JAVA, JAVASCRIPT, JSON, PLAIN_TEXT, PYTHON, RUBY, SCALA, SQL}
 
   public enum Evaluation {IMPLICIT, EXPLICIT}
 

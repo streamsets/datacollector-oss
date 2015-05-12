@@ -414,6 +414,8 @@ public class PipelineAnnotationsProcessor extends AbstractProcessor {
         return "text/x-java";
       case SCALA:
         return "text/x-scala";
+      case SQL:
+        return "text/x-sql";
       default:
         return null;
     }
