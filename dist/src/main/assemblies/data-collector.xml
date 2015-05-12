@@ -162,9 +162,13 @@
       <outputDirectory>/streamsets-libs/</outputDirectory>
     </fileSet>
 
-    <!-- Apache Spark lib -->
-    <fileSet>
+	<fileSet>
       <directory>${basedir}/../${cdh_5_4_0-lib}/target/streamsets-libs/</directory>
+      <outputDirectory>/streamsets-libs/</outputDirectory>
+    </fileSet>
+    <!-- CDH Spark Kafka lib -->
+    <fileSet>
+      <directory>${basedir}/../${cdh_5_4_0-kafka_0_8_1_1-lib}/target/streamsets-libs/</directory>
       <outputDirectory>/streamsets-libs/</outputDirectory>
     </fileSet>
 

@@ -129,9 +129,9 @@
     <dependency>
       <groupId>org.apache.kafka</groupId>
       <artifactId>kafka_2.10</artifactId>
-      <version>0.8.1.1</version>
+      <version>${kafka.version}</version>
       <classifier>test</classifier>
-      <scope>${kafka.version}</scope>
+      <scope>test</scope>
     </dependency>
     <dependency>
       <groupId>com.streamsets</groupId>
