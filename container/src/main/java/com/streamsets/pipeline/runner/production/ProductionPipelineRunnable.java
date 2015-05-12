@@ -50,13 +50,15 @@ public class ProductionPipelineRunnable implements Runnable {
         runningThread = Thread.currentThread();
         pipeline.run();
       } catch (Exception e) {
-        LOG.error("An exception occurred while running the pipeline, {}", e.getMessage(), e);
-        try {
-          pipelineManager.setState(name, rev, State.ERROR, e.getMessage(), pipelineManager.getMetrics());
-        } catch (PipelineManagerException ex) {
-          LOG.error("An exception occurred while committing the state, {}", ex.getMessage(), e);
+        if(!pipeline.wasStopped()) {
+          LOG.error("An exception occurred while running the pipeline, {}", e.getMessage(), e);
+          try {
+            pipelineManager.setState(name, rev, State.ERROR, e.getMessage(), pipelineManager.getMetrics());
+          } catch (PipelineManagerException ex) {
+            LOG.error("An exception occurred while committing the state, {}", ex.getMessage(), e);
+          }
+          exception = true;
         }
-        exception = true;
       } catch (Error e) {
         LOG.error("A JVM error occurred while running the pipeline, {}", e.getMessage(), e);
         try {
