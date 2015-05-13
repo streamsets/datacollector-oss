@@ -15,7 +15,6 @@ import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.lib.el.RecordEL;
 import com.streamsets.pipeline.lib.el.TimeEL;
 import com.streamsets.pipeline.lib.generator.DataGeneratorFactory;
-import com.streamsets.pipeline.stage.destination.hdfs.ElUtil;
 import com.streamsets.pipeline.stage.destination.hdfs.Errors;
 import com.streamsets.pipeline.stage.destination.hdfs.HdfsFileType;
 import org.apache.hadoop.conf.Configuration;
@@ -48,7 +47,7 @@ public class RecordWriterManager {
   }
 
   public static void validateDirPathTemplate2(Target.Context context, String pathTemplate) throws ELEvalException {
-    ELEval dirPathTemplateEval = ElUtil.createDirPathTemplateEval(context);
+    ELEval dirPathTemplateEval = context.createELEval("dirPathTemplate");
     ELVars vars = context.createELVars();
     RecordEL.setRecordInContext(vars, context.createRecord("validateDirPathTemplate"));
     Calendar calendar = Calendar.getInstance(TimeZone.getDefault());
@@ -91,7 +90,7 @@ public class RecordWriterManager {
     this.keyEL = keyEL;
     this.generatorFactory = generatorFactory;
     this.context = context;
-    dirPathTemplateElEval = ElUtil.createDirPathTemplateEval(context);
+    dirPathTemplateElEval = context.createELEval("dirPathTemplate");
     getCeilingDateBasedOnTemplate(dirPathTemplate, timeZone, new Date());
   }
 

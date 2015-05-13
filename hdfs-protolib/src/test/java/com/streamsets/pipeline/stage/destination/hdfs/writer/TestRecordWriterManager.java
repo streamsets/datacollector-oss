@@ -14,6 +14,7 @@ import com.streamsets.pipeline.lib.generator.DataGenerator;
 import com.streamsets.pipeline.lib.generator.DataGeneratorException;
 import com.streamsets.pipeline.sdk.ContextInfoCreator;
 import com.streamsets.pipeline.sdk.RecordCreator;
+import com.streamsets.pipeline.stage.destination.hdfs.HdfsDTarget;
 import com.streamsets.pipeline.stage.destination.hdfs.HdfsFileType;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.FileSystem;
@@ -45,8 +46,8 @@ import java.util.UUID;
 
 public class TestRecordWriterManager {
   private static Path testDir;
-  private static Target.Context targetContext = ContextInfoCreator.createTargetContext("testWritersLifecycle", false,
-    OnRecordError.TO_ERROR);
+  private static Target.Context targetContext = ContextInfoCreator.createTargetContext(HdfsDTarget.class,
+    "testWritersLifecycle", false, OnRecordError.TO_ERROR);
 
 
   public static class DummyDataGeneratorFactory extends DataGeneratorFactory {

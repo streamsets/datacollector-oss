@@ -35,9 +35,6 @@ public interface Stage<C extends Stage.Context> {
 
     public ELEval createELEval(String configName);
 
-    @Deprecated
-    public ELEval createELEval(String configName, Class<?>... elDefClasses) ;
-
   }
 
   public interface Context extends ELContext {

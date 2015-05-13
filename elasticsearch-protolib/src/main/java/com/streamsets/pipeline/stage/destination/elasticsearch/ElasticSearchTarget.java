@@ -93,9 +93,9 @@ public class ElasticSearchTarget extends BaseTarget {
   protected List<ConfigIssue> validateConfigs() throws StageException {
     List<ConfigIssue> issues = super.validateConfigs();
 
-    indexEval = ElUtil.createIndexEval(getContext());
-    typeEval = ElUtil.createTypeEval(getContext());
-    docIdEval = ElUtil.createDocIdEval(getContext());
+    indexEval = getContext().createELEval("indexTemplate");
+    typeEval = getContext().createELEval("typeTemplate");
+    docIdEval = getContext().createELEval("docIdTemplate");
 
     validateEL(indexEval, indexTemplate, "indexTemplate", Errors.ELASTICSEARCH_00, Errors.ELASTICSEARCH_01, issues);
     validateEL(typeEval, typeTemplate, "typeTemplate", Errors.ELASTICSEARCH_02, Errors.ELASTICSEARCH_03, issues);

@@ -320,11 +320,6 @@ public class StageContext implements Source.Context, Target.Context, Processor.C
   }
 
   @Override
-  public ELEval createELEval(String configName, Class<?>... elDefClasses) {
-    return new ELEvaluator(configName, constants, elDefClasses);
-  }
-
-  @Override
   public boolean isClusterMode() {
     return isClusterMode;
   }

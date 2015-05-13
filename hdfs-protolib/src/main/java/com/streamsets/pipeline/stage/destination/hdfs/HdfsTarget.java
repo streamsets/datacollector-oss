@@ -132,7 +132,7 @@ public class HdfsTarget extends RecordTarget {
     List<ConfigIssue> issues = super.validateConfigs();
     boolean validHadoopFsUri = validateHadoopFS(issues);
     try {
-      lateRecordsLimitEvaluator = ElUtil.createLateRecordsLimitEval(getContext());
+      lateRecordsLimitEvaluator = getContext().createELEval("lateRecordsLimit");
       getContext().parseEL(lateRecordsLimit);
       lateRecordsLimitSecs = lateRecordsLimitEvaluator.eval(getContext().createELVars(),
         lateRecordsLimit, Long.class);
@@ -222,7 +222,7 @@ public class HdfsTarget extends RecordTarget {
                                                 Errors.HADOOPFS_21, ex.getMessage(), ex));
     }
 
-    timeDriverElEval = ElUtil.createTimeDriverEval(getContext());
+    timeDriverElEval = getContext().createELEval("timeDriver");
     try {
       ELVars variables = getContext().createELVars();
       RecordEL.setRecordInContext(variables, getContext().createRecord("validationConfigs"));

@@ -8,7 +8,6 @@ package com.streamsets.pipeline.sdk;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Sets;
 import com.streamsets.pipeline.api.BatchMaker;
-import com.streamsets.pipeline.api.ComplexField;
 import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.OnRecordError;
 import com.streamsets.pipeline.api.Record;
@@ -23,8 +22,6 @@ import com.streamsets.pipeline.sdk.annotationsprocessor.StageHelper;
 import com.streamsets.pipeline.util.ContainerError;
 
 import java.lang.reflect.Field;
-import java.lang.reflect.ParameterizedType;
-import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -196,9 +193,9 @@ public abstract class StageRunner<S extends Stage> {
     String version = getVersion(stage.getClass());
     String instanceName = name + "_1";
     info = ContextInfoCreator.createInfo(name, version, instanceName);
-    Map<String, Class<?>[]> configToElDefMap = null;
+    Map<String, Class<?>[]> configToElDefMap;
     try {
-      configToElDefMap = getConfigToElDefMap(stageClass);
+      configToElDefMap = ElUtil.getConfigToElDefMap(stageClass);
     } catch (Exception e) {
       throw new RuntimeException(e);
     }
@@ -206,38 +203,6 @@ public abstract class StageRunner<S extends Stage> {
       constants, isClusterMode);
     status = Status.CREATED;
   }
-
-  private Map<String, Class<?>[]> getConfigToElDefMap(Class<S> stageClass) throws Exception {
-    Map<String, Class<?>[]> configToElDefMap = new HashMap<>();
-    for (Field field : stageClass.getFields()) {
-      if (field.isAnnotationPresent(ConfigDef.class)) {
-        ConfigDef configDef = field.getAnnotation(ConfigDef.class);
-        if(configDef.elDefs().length > 0) {
-          configToElDefMap.put(field.getName(), configDef.elDefs());
-        }
-        if(field.getAnnotation(ComplexField.class) != null) {
-          Type genericType = field.getGenericType();
-          Class<?> klass;
-          if (genericType instanceof ParameterizedType) {
-            Type[] typeArguments = ((ParameterizedType) genericType).getActualTypeArguments();
-            klass = (Class<?>) typeArguments[0];
-          } else {
-            klass = (Class<?>) genericType;
-          }
-          for (Field f : klass.getFields()) {
-            if (f.isAnnotationPresent(ConfigDef.class)) {
-              ConfigDef configDefinition = f.getAnnotation(ConfigDef.class);
-              if (configDefinition.elDefs().length > 0) {
-                configToElDefMap.put(f.getName(), configDefinition.elDefs());
-              }
-            }
-          }
-        }
-      }
-    }
-    return configToElDefMap;
-  }
-
 
   void ensureStatus(Status status) {
     Utils.checkState(this.status == status, Utils.format("Current status '{}', expected '{}'", this.status, status));
