@@ -17,8 +17,10 @@ import com.streamsets.pipeline.sdk.RecordCreator;
 import com.streamsets.pipeline.stage.destination.hdfs.HdfsDTarget;
 import com.streamsets.pipeline.stage.destination.hdfs.HdfsFileType;
 import org.apache.hadoop.conf.Configuration;
+import org.apache.hadoop.fs.FileStatus;
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
+import org.apache.hadoop.fs.PathFilter;
 import org.apache.hadoop.hdfs.HdfsConfiguration;
 import org.apache.hadoop.io.SequenceFile;
 import org.apache.hadoop.io.Text;
@@ -177,8 +179,8 @@ public class TestRecordWriterManager {
     Date date = getFixedDate();
     Record record = RecordCreator.create();
     record.set(Field.create("a"));
-    Assert.assertEquals(new Path(getTestDir(), "2015/15/01/20/09/56/01/a/_" + prefix + "_tmp" + mgr.getExtension()),
-                        mgr.getPath(date, record));
+    Assert.assertTrue(mgr.getPath(date, record).toString().startsWith(
+        new Path(getTestDir(), "2015/15/01/20/09/56/01/a/_tmp_" + prefix).toString()));
   }
 
   private void testTextFile(CompressionCodec compressionCodec) throws Exception {
@@ -283,7 +285,7 @@ public class TestRecordWriterManager {
   public void testGetWriter() throws Exception {
     URI uri = new URI("file:///");
     Configuration conf = new HdfsConfiguration();
-    String prefix = "prefix";
+    final String prefix = "prefix";
     String template = getTestDir().toString() + "/${YYYY()}/${MM()}/${DD()}/${hh()}/${mm()}/${ss()}/${record:value('/')}";
     TimeZone timeZone = TimeZone.getTimeZone("UTC");
     long cutOffSecs = 10;
@@ -316,14 +318,14 @@ public class TestRecordWriterManager {
     Path finalPath = mgr.commitWriter(writer);
     //committing a closed writer is a NOP
     Assert.assertNull(mgr.commitWriter(writer));
-    Assert.assertTrue(fs.exists(finalPath));
-    Assert.assertTrue(finalPath.getName().equals(prefix + "-000000" + compressionCodec.getDefaultExtension()));
+
+    Assert.assertEquals(1, getFinalFileNameCount(fs, tempPath.getParent(), prefix));
 
     // record qualifies, second file
     writer = mgr.getWriter(now, recordDate, record);
     finalPath = mgr.commitWriter(writer);
-    Assert.assertTrue(fs.exists(finalPath));
-    Assert.assertTrue(finalPath.getName().equals(prefix + "-000001" + compressionCodec.getDefaultExtension()));
+
+    Assert.assertEquals(2, getFinalFileNameCount(fs, tempPath.getParent(), prefix));
 
     // record qualifies, leaving temp file
     writer = mgr.getWriter(now, recordDate, record);
@@ -333,10 +335,7 @@ public class TestRecordWriterManager {
     writer = mgr.getWriter(now, recordDate, record);
     finalPath = mgr.commitWriter(writer);
     Assert.assertFalse(fs.exists(tempPath));
-    Assert.assertTrue(fs.exists(finalPath));
-    Assert.assertTrue(fs.exists(new Path(finalPath.getParent(),
-                                         prefix + "-000002" + compressionCodec.getDefaultExtension())));
-    Assert.assertTrue(finalPath.getName().equals(prefix + "-000003" + compressionCodec.getDefaultExtension()));
+    Assert.assertEquals(4, getFinalFileNameCount(fs, tempPath.getParent(), prefix));
 
     // verifying thresholds because of record count
     writer = mgr.getWriter(now, recordDate, record);
@@ -360,6 +359,14 @@ public class TestRecordWriterManager {
     mgr.commitWriter(writer);
   }
 
+  private int getFinalFileNameCount(FileSystem fs, Path dir, final String prefix) throws IOException {
+    return fs.listStatus(dir, new PathFilter() {
+      @Override
+      public boolean accept(Path path) {
+        return path.getName().startsWith(prefix);
+      }
+    }).length;
+  }
 
   @Test
   public void testThresholdRecords() throws Exception {

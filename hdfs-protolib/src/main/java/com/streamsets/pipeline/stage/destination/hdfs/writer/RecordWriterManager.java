@@ -18,7 +18,6 @@ import com.streamsets.pipeline.lib.generator.DataGeneratorFactory;
 import com.streamsets.pipeline.stage.destination.hdfs.Errors;
 import com.streamsets.pipeline.stage.destination.hdfs.HdfsFileType;
 import org.apache.hadoop.conf.Configuration;
-import org.apache.hadoop.fs.FileStatus;
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.io.SequenceFile;
@@ -30,14 +29,10 @@ import org.slf4j.LoggerFactory;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.net.URI;
-import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Collections;
 import java.util.Date;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
 import java.util.TimeZone;
+import java.util.UUID;
 
 public class RecordWriterManager {
   private final static Logger LOG = LoggerFactory.getLogger(RecordWriterManager.class);
@@ -132,39 +127,18 @@ public class RecordWriterManager {
   }
 
   public Path getPath(Date recordDate, Record record) throws StageException {
-    return new Path(getDirPath(recordDate, record), "_" + uniquePrefix + "_tmp" + getExtension());
+    // runUuid is fixed for the current pipeline run. it avoids collisions with other SDCs running the same/similar
+    // pipeline
+    return new Path(getDirPath(recordDate, record), "_tmp_" + uniquePrefix + getExtension());
   }
 
-  Path renameTempToNextPart(FileSystem fs, Path tempPath) throws IOException {
+  Path renameToFinalName(FileSystem fs, Path tempPath) throws IOException {
     Path parent = tempPath.getParent();
-    FileStatus[] status = fs.globStatus(new Path(parent, uniquePrefix + "-[0-9][0-9][0-9][0-9][0-9][0-9]" +
-                                                         getExtension()));
-    int count = 0;
-    if (status.length > 0) {
-      List<FileStatus> list = new ArrayList<>(status.length);
-      Collections.addAll(list, status);
-
-      Collections.sort(list);
-      String name = list.get(list.size() - 1).getPath().getName();
-      String countStr = name.substring(uniquePrefix.length() + 1, uniquePrefix.length() + 1 + 6);
-      count = Integer.parseInt(countStr) + 1;
-    }
-    Path finalPath = new Path(parent, String.format("%s-%06d%s", uniquePrefix, count, getExtension()));
+    Path finalPath = new Path(parent, uniquePrefix + "_" + UUID.randomUUID().toString() + getExtension());
     if (!fs.rename(tempPath, finalPath)) {
       throw new IOException(Utils.format("Could not rename '{}' to '{}'", tempPath, finalPath));
     }
     return finalPath;
-  }
-
-  private final static Set<String> TIME_CONSTANTS = new HashSet<>();
-  static {
-    TIME_CONSTANTS.add(CONST_YYYY);
-    TIME_CONSTANTS.add(CONST_YY);
-    TIME_CONSTANTS.add(CONST_MM);
-    TIME_CONSTANTS.add(CONST_DD);
-    TIME_CONSTANTS.add(CONST_hh);
-    TIME_CONSTANTS.add(CONST_mm);
-    TIME_CONSTANTS.add(CONST_ss);
   }
 
   static Date getCeilingDateBasedOnTemplate(String dirPathTemplate, TimeZone timeZone, Date date) {
@@ -288,7 +262,7 @@ public class RecordWriterManager {
     if (writerTimeToLive > 0) {
       FileSystem fs = FileSystem.get(hdfsUri, hdfsConf);
       if (fs.exists(tempPath)) {
-        Path path = renameTempToNextPart(fs, tempPath);
+        Path path = renameToFinalName(fs, tempPath);
         LOG.warn("Path[{}] - Found previous file '{}', committing it", tempPath, path);
       }
       LOG.debug("Path[{}] - Create writer,  time to live '{}ms'", tempPath, writerTimeToLive);
@@ -304,7 +278,7 @@ public class RecordWriterManager {
     if (!writer.isClosed()) {
       writer.close();
       FileSystem fs = FileSystem.get(hdfsUri, hdfsConf);
-      path = renameTempToNextPart(fs, writer.getPath());
+      path = renameToFinalName(fs, writer.getPath());
       LOG.debug("Path[{}] - Committing Writer to '{}'", writer.getPath(), path);
     }
     return path;
