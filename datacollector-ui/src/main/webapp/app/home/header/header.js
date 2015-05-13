@@ -85,27 +85,17 @@ angular
           $scope.$storage.maximizeDetailPane = false;
           $scope.$storage.minimizeDetailPane = false;
           $scope.$storage.readNotifications = [];
+          $rootScope.common.pipelineMetrics = {};
           api.pipelineAgent.startPipeline($scope.activeConfigInfo.name, 0).
             then(
             function (res) {
               $scope.moveGraphToCenter();
-              startResponse = res.data;
-              //return api.pipelineAgent.getPipelineMetrics();
-            },
-            function (res) {
-              $rootScope.common.errors = [res.data];
-            }
-          ).
-            then(
-            function (res) {
-              if(res) {
-                //$rootScope.common.pipelineMetrics = res.data;
-                $rootScope.common.pipelineStatus = startResponse;
+              $rootScope.common.pipelineStatus = res.data;
 
-                $timeout(function() {
-                  $scope.refreshGraph();
-                });
-              }
+              $timeout(function() {
+                $scope.refreshGraph();
+              });
+
             },
             function (res) {
               $rootScope.common.errors = [res.data];
