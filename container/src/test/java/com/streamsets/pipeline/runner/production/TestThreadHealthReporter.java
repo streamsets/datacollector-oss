@@ -127,7 +127,7 @@ public class TestThreadHealthReporter {
     Assert.assertNotNull(value);
     Assert.assertEquals(MY_THREAD, value.getThreadName());
     Assert.assertEquals(100, value.getScheduledDelay());
-    Assert.assertEquals(notMyThreadTime, value.getTimestamp());
+    Assert.assertEquals(myThreadTime, value.getTimestamp());
 
     gauge = (Gauge<ThreadHealthReporter.ThreadHealthReport>) MetricsConfigurator.getGauge(metricRegistry,
       ThreadHealthReporter.getHealthGaugeName(NOT_MY_THREAD));
