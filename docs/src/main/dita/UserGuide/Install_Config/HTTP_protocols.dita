@@ -28,7 +28,7 @@
               conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>. </dd>
           <dd>Store the keystore file in the following
             location:<codeblock>&lt;SDCinstalldir>/etc</codeblock></dd>
-          <dd>The default keystore file is <filepath>sdc-keystore.jks</filepath>.</dd>
+          <dd>The default keystore file is <filepath>keystore.jks</filepath>.</dd>
         </dlentry>
         <dlentry>
           <dt>keystore password file</dt>
@@ -37,7 +37,7 @@
               conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>. </dd>
           <dd>Store the keystore password file in the following
             location:<codeblock>&lt;SDCinstalldir>/etc</codeblock></dd>
-          <dd>The default keystore file is <filepath>sdc-keystore-password.txt</filepath>.</dd>
+          <dd>The default keystore file is <filepath>keystore-password.txt</filepath>.</dd>
         </dlentry>
       </dl></p>
  </conbody>

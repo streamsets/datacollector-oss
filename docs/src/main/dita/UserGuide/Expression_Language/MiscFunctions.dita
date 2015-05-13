@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
+<concept id="concept_ddw_ld1_1s">
+ <title>Miscellaneous Functions</title>
+ <conbody>
+  <p><indexterm>functions<indexterm>miscellaneous
+    functions</indexterm></indexterm><indexterm>miscellaneous functions<indexterm>in the expression
+     language</indexterm></indexterm>The expression language includes the following miscellaneous
+   functions:</p>
+  <dl>
+   <dlentry>
+    <dt>emptyList</dt>
+    <dd>Creates an empty list.</dd>
+   </dlentry>
+   <dlentry>
+    <dt>emptyMap</dt>
+    <dd>Creates an empty map. </dd>
+   </dlentry>
+   <dlentry>
+    <dt>runtime.conf("&lt;runtime configuration name>")</dt>
+    <dd>Returns the value for the specified runtime configuration. </dd>
+    <dd>Uses the following argument:<ul id="ul_vqc_2h1_1s">
+      <li>runtime configuration name - Name of the configuration property to use. The property must
+       defined in the sdc.properties file or in a runtime configuration file specified in the
+       sdc.properties file. </li>
+     </ul></dd>
+   </dlentry>
+  </dl>
+ </conbody>
+</concept>

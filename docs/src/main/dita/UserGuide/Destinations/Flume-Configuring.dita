@@ -49,31 +49,32 @@
                                 </row>
                                 <row>
                                     <entry>Backoff</entry>
-                                    <entry>Temporarily avoid writing to a failed host.<p>Avro Load
-                                            Balancing client only. </p></entry>
+                                    <entry>The Avro load balancing client temporarily avoids writing
+                                        to a failed host.</entry>
                                 </row>
                                 <row>
                                     <entry>Max Backoff (ms)</entry>
-                                    <entry>The maximum amount of time to avoid writing to a failed
-                                        host. <draft-comment author="Loretta">after which what
-                                            happens?</draft-comment><p>Enter the number of
-                                            milliseconds between 0 and 65536. </p><p>Use 0 to
+                                    <entry>The maximum amount of time that the Avro load balancing
+                                        client avoids writing to a failed host. <p>Enter the number
+                                            of milliseconds between 0 and 65536. </p><p>Use 0 to
                                             trigger the Flume default value of 30000 milliseconds -
-                                            30 seconds. </p><p>Avro Load Balancing client only.
-                                        </p></entry>
+                                            30 seconds. </p></entry>
                                 </row>
                                 <row>
                                     <entry>Host Selection Strategy</entry>
-                                    <entry><p>Strategy to select the Flume host to use.</p>Avro Load
-                                        Balancing client only. </entry>
+                                    <entry>
+                                        <p>Strategy the Avro load balancing client uses to select a
+                                            Flume host.</p>
+                                    </entry>
                                 </row>
                                 <row>
                                     <entry>Flume Batch Size (events)</entry>
                                     <entry>Maximum amount of events that the Flume client writes to
-                                        a Flume host at one time. The Flume client can split a <ph
-                                            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                                        /> batch into multiple Flume batches that pass data to the
-                                        Flume host.</entry>
+                                        a Flume host at one time. <p>The Flume client can split a
+                                                <ph
+                                                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                                            /> batch into multiple Flume batches before passing
+                                            Flume batches to the Flume host.</p></entry>
                                 </row>
                                 <row>
                                     <entry>Flume Client Connection Timeout (ms)</entry>
@@ -83,10 +84,10 @@
                                 <row>
                                     <entry>Flume Client Request Timeout (ms)</entry>
                                     <entry>Milliseconds the Flume client waits for a response after
-                                        sending data to the Flume host. When the client does not
-                                        receive a response in time, the Flume destination resends
-                                        the batch, up to the number configured for Max Retry
-                                        Attempts.</entry>
+                                        sending data to the Flume host. <p>When the client does not
+                                            receive a response in time, the Flume destination
+                                            resends the batch. It resends up to the number
+                                            configured for Max Retry Attempts.</p></entry>
                                 </row>
                                 <row>
                                     <entry>Max Retry Attempts</entry>

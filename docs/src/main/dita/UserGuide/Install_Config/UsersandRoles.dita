@@ -25,21 +25,21 @@
             snapshots, and start or stop the <ph
               conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
             />.</dd>
-          <dd>The login for the admin user account is admin/admin.</dd>
+          <dd>The login for the admin user account is <codeph>admin/admin.</codeph></dd>
         </dlentry>
         <dlentry>
           <dt>manager</dt>
           <dd>Allows you to manage pipelines. As a manager, you can start and stop pipelines,
             monitor pipelines, configure and reset alerts, and view snapshots. You cannot configure
             pipelines or perform data preview.</dd>
-          <dd>The login for the manager user account is manager/manager.</dd>
+          <dd>The login for the manager user account is <codeph>manager/manager</codeph>.</dd>
         </dlentry>
         <dlentry>
           <dt>creator</dt>
           <dd>Allows you to configure pipelines. As a creator, you can configure pipelines and
             alerts, perform data preview, and monitor the pipeline. You cannot view snapshots or
             reset alerts.</dd>
-          <dd>The login for the creator user account is creator/creator.</dd>
+          <dd>The login for the creator user account is <filepath>creator/creator</filepath>.</dd>
         </dlentry>
         <dlentry>
           <dt>guest</dt>
@@ -48,7 +48,7 @@
             a guest, you can view pipeline and alert configuration, view general monitoring and log
             information. You cannot view data preview or snapshots, or configure pipelines or
             alerts.</dd>
-          <dd>The login for the guest user account is guest/guest.</dd>
+          <dd>The login for the guest user account is <filepath>guest/guest.</filepath></dd>
         </dlentry>
       </dl></p>
  </conbody>

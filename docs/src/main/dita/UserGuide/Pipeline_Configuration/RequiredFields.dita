@@ -4,8 +4,8 @@
  <title>Required Fields</title>
  <shortdesc>You can configure required fields for any processor and most destination stages. A
         required field must exist in a record to allow the record to enter the stage for processing.
-        When a record does not include a required field, the stage passes the record to the pipeline
-        for error handling. </shortdesc>
+        When a record does not include a required field, the record is passed to the pipeline for
+        error handling. </shortdesc>
  <conbody>
   <p><indexterm>pipelines<indexterm>required fields</indexterm></indexterm><indexterm>required
                fields<indexterm>overview</indexterm></indexterm>You can configure different required

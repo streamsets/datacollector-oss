@@ -15,32 +15,32 @@
   <p>The expression language provides the following record functions:</p>
   <dl>
    <dlentry>
-    <dt>${record:creator()}</dt>
+    <dt>record:creator()</dt>
     <dd>Returns the instance name of the stage that created the record, typically an origin stage.
      Data is stored in the stageCreator field of a record. </dd>
     <dd>Return type: String.</dd>
    </dlentry>
    <dlentry>
-    <dt>${record:exists('&lt;field path>')}</dt>
+    <dt>record:exists('&lt;field path>')</dt>
     <dd>Determines if the specified field is in a record. When the field is not in the record,
      returns 0. When the field is in the record, returns 1. </dd>
     <dd>Return type: Boolean.</dd>
    </dlentry>
    <dlentry>
-    <dt>${record:id()}</dt>
+    <dt>record:id()</dt>
     <dd>Returns the ID of the stage that created the record, typically an origin stage. Data is
      stored in the sourceId field of a  record. </dd>
     <dd>Return type: String.</dd>
    </dlentry>
    <dlentry>
-    <dt>${record:path()}</dt>
+    <dt>record:path()</dt>
     <dd>Returns the stages in the pipeline that processed a record. Data is stored in the stagesPath
      field of a record. The field path uses the following
      format:<codeblock>&lt;origin instance name>:&lt;next stage instance name>:&lt;next stage instance name>:... </codeblock></dd>
     <dd>Return type: String.</dd>
    </dlentry>
    <dlentry>
-    <dt>${record:type('&lt;field path>')}</dt>
+    <dt>record:type('&lt;field path>')</dt>
     <dd>Checks the data type of a field. Possible return values are: <ul id="ul_lmr_2hv_1r">
       <li>Boolean</li>
       <li>Char</li>
@@ -61,7 +61,7 @@
     <dd>Return type: String. </dd>
    </dlentry>
    <dlentry>
-    <dt>${record:value('&lt;field path>')}</dt>
+    <dt>record:value('&lt;field path>')</dt>
     <dd>Returns the value of the field in the appropriate data type.</dd>
     <dd>Return type: Variable, based on the field value.</dd>
    </dlentry>

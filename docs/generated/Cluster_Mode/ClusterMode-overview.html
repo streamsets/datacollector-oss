@@ -21,12 +21,15 @@
   <p class="p">When a <span class="ph">Data
                   Collector</span> runs in
       cluster mode, it runs as an application within Spark. Spark is an open source
-      cluster-computing application that is installed as part of the Kafka CDH. Within Spark, the
+      cluster-computing application that is installed as part of the Kafka CDH. </p>
+
+    <p class="p">Within Spark, the <span class="ph">Data
+                  Collector</span> spawns a
         <span class="ph">Data
-                  Collector</span> spawns
-      a <span class="ph">Data
                   Collector</span>
-      instance to process data from each partition in the Kafka cluster. </p>
+      instance for each partition in the Kafka cluster. So each partition has a <span class="ph">Data
+                  Collector</span> instance
+      to process data.  </p>
 
   <p class="p">In cluster mode, you can preview data and monitor each <span class="ph">Data
                   Collector</span> in the

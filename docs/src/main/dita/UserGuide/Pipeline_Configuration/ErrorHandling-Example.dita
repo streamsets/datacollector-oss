@@ -5,10 +5,10 @@
  <shortdesc></shortdesc>
  <conbody>
   <p>A Kafka Consumer origin stage reads JSON data with a maximum object length of 4096 characters
-   and the stage encounters an object with 5000 characters. Based on stage error handling
-   configuration, the <ph
-    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> either
-   discards the record, stops the pipeline, or passes the record to the pipeline for error handling. </p>
+      and the stage encounters an object with 5000 characters. Based on the stage configuration, the
+        <ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> either
+      discards the record, stops the pipeline, or passes the record to the pipeline for error record
+      handling. </p>
   <p>When the stage is configured to send the record to the pipeline, one of the following occurs
    based on how you configure the pipeline error handling: <ul id="ul_a3h_mjy_5r">
     <li>When the pipeline discards error records, the <ph

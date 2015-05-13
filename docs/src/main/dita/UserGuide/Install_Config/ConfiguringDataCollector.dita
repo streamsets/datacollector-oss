@@ -70,10 +70,11 @@
                                 <entry>https.keystore.password</entry>
                                 <entry>File that contains the password to the keystore file. <p>By
                                         default, the file name is
-                                            <filepath>sdc-keystore-password.txt</filepath> and
-                                        expected in the same directory as the <ph
+                                            <filepath>keystore-password.txt</filepath> and expected
+                                        in the same directory as the <ph
                                             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                                        /> configuration file.</p></entry>
+                                        /> configuration file.</p><p>When appropriate, you can
+                                        replace the default file name.</p></entry>
                             </row>
                             <row>
                                 <entry>http.authentication</entry>
@@ -202,7 +203,13 @@
                             </row>
                             <row>
                                 <entry>xmail.password</entry>
-                                <entry>Password for the email account to send alert email.</entry>
+                                <entry>File that contains the password for the email account.<p>By
+                                        default, the file name is
+                                            <filepath>email-password.txt</filepath> and expected in
+                                        the same directory as the <ph
+                                            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                                        /> configuration file.</p><p>When appropriate, you can
+                                        replace the default file name.</p></entry>
                             </row>
                             <row>
                                 <entry>xmail.from.address</entry>

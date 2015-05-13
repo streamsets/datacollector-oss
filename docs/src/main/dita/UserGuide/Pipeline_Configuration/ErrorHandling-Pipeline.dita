@@ -11,10 +11,9 @@
       provides the following error record handling options:<dl>
         <dlentry>
           <dt>Discard</dt>
-          <dd>The pipeline silently discards the record. The <ph
-              conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> does
-            not log information about the error or note the specific record that encountered an
-            error. The discarded record is not included in error record counts or metrics. </dd>
+          <dd>The pipeline discards the record. The <ph
+              conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
+            includes the records in error record counts and metrics. </dd>
         </dlentry>
         <dlentry>
           <dt>Write to File</dt>

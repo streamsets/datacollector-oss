@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
+<concept id="concept_aqc_dbt_zr">
+ <title>Storing and Referencing Sensitive Values</title>
+ <shortdesc>For increased security you can keep sensitive configuration values, such as passwords,
+    in files instead of saving them in the <ph
+      conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
+    configuration file. By default, the <ph
+      conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> expects the
+    email password and keystore file password in separate files. </shortdesc>
+ <conbody>
+  <p><indexterm>Data Collector configuration file<indexterm>storing passwords and other sensitive
+          values</indexterm></indexterm><indexterm>passwords<indexterm>storing in
+        files</indexterm></indexterm>To store and reference sensitive information: <ol
+        id="ol_vws_tbt_zr">
+        <li>Create a text file for each configuration value that you want to safeguard.</li>
+        <li>Include only one configuration value in each file. <p>You can store any configuration
+            value in a separate file, but do not include more than one configuration value in a
+            file.</p></li>
+        <li>Save the file in the same directory as the <ph
+            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
+          configuration file: <filepath>&lt;SDC_installdir>/etc</filepath>.</li>
+        <li>In the <ph
+            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
+          configuration file, set the relevant value to the appropriate file name. Surround the file
+          name with @ symbols as follows:<codeph> @&lt;filename>@</codeph>.</li>
+      </ol>For example, if you configure xmail.username as follows, the <ph
+        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> checks the
+      xmail_username.txt file for the user
+      name:<codeblock><b>xmail.username</b>=@xmail_username.txt@</codeblock></p>
+ </conbody>
+</concept>

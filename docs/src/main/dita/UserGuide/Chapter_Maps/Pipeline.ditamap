@@ -36,6 +36,14 @@
     <shortdesc/>
    </topicmeta>
   </topicref>
+  <topicref href="../Pipeline_Configuration/RuntimeProperties.dita" chunk="to-content">
+   <topicmeta>
+    <shortdesc/>
+   </topicmeta>
+   <topicref href="../Pipeline_Configuration/RuntimeProperties-Defining.dita"/>
+   <topicref href="../Pipeline_Configuration/RuntimeProperties-Using.dita"/>
+   <topicref href="../Pipeline_Configuration/RuntimeProperties-Example.dita"/>
+  </topicref>
   <topicref href="../Pipeline_Configuration/ErrorHandling.dita" chunk="to-content">
    <topicmeta>
     <shortdesc/>

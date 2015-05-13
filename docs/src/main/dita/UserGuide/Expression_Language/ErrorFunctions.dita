@@ -13,12 +13,12 @@
   <p>
    <dl>
     <dlentry>
-     <dt>${record:errorCode()}</dt>
+     <dt>record:errorCode()</dt>
      <dd>Returns the error code for the error record.</dd>
      <dd>Return type: String.</dd>
     </dlentry>
     <dlentry>
-     <dt>${record:errorCollectorId()}</dt>
+     <dt>record:errorCollectorId()</dt>
      <dd>Returns the ID of the <ph
        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> that sent
       the record to error. </dd>
@@ -29,23 +29,23 @@
      <dd>Return type: String.</dd>
     </dlentry>
     <dlentry>
-     <dt>${record:errorMessage()}</dt>
+     <dt>record:errorMessage()</dt>
      <dd>Returns the error message for the error record.</dd>
      <dd>Return type: String.</dd>
     </dlentry>
     <dlentry>
-     <dt>${record:errorPipeline()}</dt>
+     <dt>record:errorPipeline()</dt>
      <dd>The name of pipeline that sent the record to error.</dd>
      <dd>Return type: String.</dd>
     </dlentry>
     <dlentry>
-     <dt>${record:errorStage()}</dt>
+     <dt>record:errorStage()</dt>
      <dd>Returns the instance name of the stage that sent the record to error. </dd>
      <dd>You can verify the instance name on the General tab of the stage. </dd>
      <dd>Return type: String.</dd>
     </dlentry>
     <dlentry>
-     <dt>${record:errorTime()}</dt>
+     <dt>record:errorTime()</dt>
      <dd>The time the record was sent to error.</dd>
      <dd>Return type: Long.</dd>
     </dlentry>

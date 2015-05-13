@@ -9,10 +9,13 @@
   <p><indexterm>cluster mode<indexterm>overview</indexterm></indexterm>When a <ph
         conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> runs in
       cluster mode, it runs as an application within Spark. Spark is an open source
-      cluster-computing application that is installed as part of the Kafka CDH. Within Spark, the
-        <ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> spawns
-      a <ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
-      instance to process data from each partition in the Kafka cluster. </p>
+      cluster-computing application that is installed as part of the Kafka CDH. </p>
+    <p>Within Spark, the <ph
+        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> spawns a
+        <ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
+      instance for each partition in the Kafka cluster. So each partition has a <ph
+        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> instance
+      to process data.  </p>
   <p>In cluster mode, you can preview data and monitor each <ph
     conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> in the
    cluster.</p>

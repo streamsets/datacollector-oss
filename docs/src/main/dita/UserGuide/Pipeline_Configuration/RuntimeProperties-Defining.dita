@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
+<concept id="concept_dys_tp1_1s">
+ <title>Defining Runtime Properties</title>
+ <shortdesc>You can define runtime properties in the <ph
+   conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> configuration
+  file or in a separate runtime properties file local to the <ph
+   conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>.</shortdesc>
+ <conbody>
+  <p>
+   <dl>
+    <dlentry>
+     <dt>Using the <ph
+       conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
+      configuration file</dt>
+     <dd>Use the following steps to define runtime properties in the <ph
+       conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
+      configuration file:<ol id="ol_l2b_jq1_1s">
+       <li>In the <ph
+         conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
+        configuration file, configure the <codeph>runtime.conf.location</codeph> property as
+        follows:<codeblock>runtime.conf.location=embedded</codeblock></li>
+       <li>Use the following format to define runtime properties:
+        <codeblock>runtime.conf_&lt;property name>=&lt;value></codeblock>For example, the following
+        runtime property defines an Hadoop FS directory template location:
+        <codeblock>runtime.conf_HDFSDirTemplate=/HDFS/DirectoryTemplate</codeblock></li>
+      </ol></dd>
+    </dlentry>
+    <dlentry>
+     <dt>Using a separate runtime properties file</dt>
+     <dd>Use the following steps to define runtime properties in a separate file:<ol
+       id="ol_szl_ww1_1s">
+       <li>Create a text file and save it in a directory local to the <ph
+         conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>.</li>
+       <li>In the <ph
+         conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
+        configuration file, configure the <codeph>runtime.conf.location</codeph> property to point
+        to the file. </li>
+       <li>In the text file, list the runtime properties that you want to define using the following
+        format:<codeblock>&lt;property name>=&lt;value></codeblock>For example, you would define the
+        same Hadoop FS directory template runtime property in a separate runtime properties file as
+        follows:<codeblock>HDFSDirTemplate=/HDFS/DirectoryTemplate</codeblock></li>
+      </ol></dd>
+    </dlentry>
+   </dl>
+  </p>
+ </conbody>
+</concept>

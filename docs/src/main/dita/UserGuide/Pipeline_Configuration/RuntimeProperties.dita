@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
+<concept id="concept_fjx_g31_1s">
+ <title>Runtime Properties</title>
+ <shortdesc>Runtime properties are properties that you define in a file local to the <ph
+   conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> and call from
+  within a pipeline. With runtime properties, you can define different sets of values for the
+  properties for different <ph
+   conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>s.</shortdesc>
+ <conbody>
+  <p><indexterm>runtime properties<indexterm>overview</indexterm></indexterm>You can use runtime
+   properties to define values for stage and pipeline properties. For example, you can define a
+   Error Directory runtime property that points to different directories on a test machine and a
+   production machine. Similarly, you might create two sets of runtime properties for the origin and
+   destination of a pipeline. </p>
+  <p>To implement runtime properties, perform the following steps:<ol id="ol_m24_1bh_1s">
+    <li>Define runtime properties. </li>
+    <li>Use runtime properties in the pipeline.</li>
+   </ol></p>
+ </conbody>
+</concept>

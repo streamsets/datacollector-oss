@@ -37,5 +37,6 @@
    <topicref href="../Expression_Language/ErrorFunctions.dita"/>
    <topicref href="../Expression_Language/StringFunctions.dita"/>
   </topicref>
+  <topicref href="../Expression_Language/MiscFunctions.dita"/>
  </topicref>
 </map>

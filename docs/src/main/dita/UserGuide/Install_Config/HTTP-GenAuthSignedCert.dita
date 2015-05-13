@@ -18,7 +18,7 @@
             <step>
                 <cmd>Enter the following command:</cmd>
                 <info>
-                    <codeblock>$ keytool -certreq -v -alias sdc -keyalg RSA -keystore sdc-keystore.jks</codeblock>
+                    <codeblock>$ keytool -certreq -v -alias sdc -keyalg RSA -keystore keystore.jks</codeblock>
                 </info>
             </step>
             <step>
@@ -36,28 +36,28 @@
                 </info>
             </step>
             <step>
-                <cmd>To import the response to the <filepath>sdc-keystore.jks</filepath> file, use
-                    the following command and enter the keystore password when requested:</cmd>
+                <cmd>To import the response to the <filepath>keystore.jks</filepath> file, use the
+                    following command and enter the keystore password when requested:</cmd>
                 <info>
-                    <codeblock>$ keytool -v -import -trustcacerts -keystore sdc-keystore.jks -file certificate-reply-file -alias sdc</codeblock>
+                    <codeblock>$ keytool -v -import -trustcacerts -keystore keystore.jks -file certificate-reply-file -alias sdc</codeblock>
                 </info>
             </step>
             <step>
                 <cmd>To verify the imported certificate, use the following command and enter the
                     keystore password when requested:</cmd>
                 <info>
-                    <codeblock>$ keytool -v -list -keystore sdc-keystore.jks</codeblock>
+                    <codeblock>$ keytool -v -list -keystore keystore.jks</codeblock>
                 </info>
             </step>
             <step>
                 <cmd>Enter the keystore password in the keystore password file: </cmd>
                 <info>
-                    <codeblock>&lt;SDCinstalldir>/etc/sdc-keystore-password.txt</codeblock>
+                    <codeblock>&lt;SDCinstalldir>/etc/keystore-password.txt</codeblock>
                 </info>
             </step>
             <step>
-                <cmd>Save a copy of the <filepath>sdc-keystore.jks</filepath> and
-                        <filepath>sdc-keystore-password.txt</filepath> files.</cmd>
+                <cmd>Save a copy of the <filepath>keystore.jks</filepath> and
+                        <filepath>keystore-password.txt</filepath> files.</cmd>
             </step>
         </steps>
     </taskbody>

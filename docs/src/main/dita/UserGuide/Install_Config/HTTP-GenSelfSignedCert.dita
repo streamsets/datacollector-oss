@@ -15,8 +15,7 @@
                 </info>
             </step>
             <step>
-                <cmd>Optionally, save a backup of the <filepath>sdc-keystore.jks</filepath> file.
-                </cmd>
+                <cmd>Optionally, save a backup of the <filepath>keystore.jks</filepath> file. </cmd>
             </step>
             <step>
                 <cmd>Delete the file. </cmd>
@@ -24,7 +23,7 @@
             <step>
                 <cmd>Enter the following command:</cmd>
                 <info>
-                    <codeblock>$ keytool -genkey -alias sdc -keyalg RSA -keystore sdc-keystore.jks -storepass &lt;password> -keypass &lt;password></codeblock>
+                    <codeblock>$ keytool -genkey -alias sdc -keyalg RSA -keystore keystore.jks -storepass &lt;password> -keypass &lt;password></codeblock>
                     <note>Use the same password for the <codeph>-storepass</codeph> and
                             <codeph>-keypass</codeph> parameters.</note>
                 </info>
@@ -44,18 +43,18 @@
             <step>
                 <cmd>When keytool requests verification that the information is correct, enter yes
                     if it is correct.</cmd>
-                <stepresult>The tool generates a <filepath>sdc-keystore.jks</filepath> file with the
+                <stepresult>The tool generates a <filepath>keystore.jks</filepath> file with the
                     signed certificate. </stepresult>
             </step>
             <step>
                 <cmd>Enter the keystore password in the keystore password file:</cmd>
                 <info>
-                    <codeblock>&lt;SDCinstalldir>/etc/sdc-keystore-password.txt</codeblock>
+                    <codeblock>&lt;SDCinstalldir>/etc/keystore-password.txt</codeblock>
                 </info>
             </step>
             <step>
-                <cmd>Save a copy of the <filepath>sdc-keystore.jks</filepath> and
-                        <filepath>sdc-keystore-password.txt</filepath> files.</cmd>
+                <cmd>Save a copy of the <filepath>keystore.jks</filepath> and
+                        <filepath>keystore-password.txt</filepath> files.</cmd>
             </step>
         </steps>
     </taskbody>

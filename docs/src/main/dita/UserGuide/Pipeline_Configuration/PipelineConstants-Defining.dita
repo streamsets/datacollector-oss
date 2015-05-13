@@ -3,22 +3,20 @@
 <task id="task_ogd_zj3_wq">
     <title>Defining Pipeline Constants</title>
     <taskbody>
-        <context><indexterm>pipeline constants<indexterm>defining</indexterm></indexterm>You can
-            define pipeline constants for constant values that you want to reuse within the pipeline
-            or to easily update. After defining a constant, you can use it in any stage in the
-                pipeline.<draft-comment author="Loretta">check back on where it can be
-                used.</draft-comment></context>
+        <context><indexterm>pipeline constants<indexterm>defining</indexterm></indexterm>Define a
+            pipeline constant to represent a constant that you want to reuse within the pipeline or
+            to update easily. <p>You can enter any text as the value for a pipeline constant, but
+                the value that you enter is treated as a literal constant. </p></context>
         <steps id="steps_apc_qrz_qr">
             <step>
-                <cmd>To define a constant for the pipeline, in the Pipeline properties panel, click
-                    the <wintitle>Constants</wintitle> tab.</cmd>
+                <cmd>To define a pipeline constant, in the Pipeline properties panel, click the
+                        <wintitle>Constants</wintitle> tab.</cmd>
             </step>
             <step>
-                <cmd>On the <wintitle>Constants</wintitle> tab, click <uicontrol>Add</uicontrol>.
-                </cmd>
+                <cmd>Enter a name and value for the pipeline constant. </cmd>
             </step>
             <step>
-                <cmd>Enter a name and value for the constant.</cmd>
+                <cmd>To create additional pipeline constants, click <uicontrol>Add</uicontrol>. </cmd>
             </step>
         </steps>
     </taskbody>

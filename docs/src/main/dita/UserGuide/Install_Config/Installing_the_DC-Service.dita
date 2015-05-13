@@ -12,9 +12,8 @@
                 Collector<indexterm>service start</indexterm></indexterm>Installing the <ph
                     conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
                 /> as a service requires sudo privileges on the root directory.</p>
-            <p>This procedure
-            walks through setting the default directories, but you can alternatively use the
-            libexec/sdcd-env.sh script.</p></context>
+            <p>This procedure walks through setting the default directories, but you can
+                alternatively use the<filepath> libexec/sdcd-env.sh</filepath> script.</p></context>
         <steps id="steps_wnx_444_1r">
             <step>
                 <cmd> Download the StreamSets SDC tarball and extract it to the desired location,

@@ -5,7 +5,7 @@
   <shortdesc>You can configure error record handling at a stage level and at a pipeline level. </shortdesc>
   <conbody>
     <p><indexterm>error record handling<indexterm>overview</indexterm></indexterm>When an error
-      occurs while processing a record, the <ph
+      occurs as a stage processes a record, the <ph
         conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> handles
       the record based on the stage configuration. One of the stage options is to pass the record to
       the pipeline for error handling. When you select that option, the <ph
@@ -15,10 +15,10 @@
       pipeline error handling. That is, a pipeline might be configured to write error records to
       file, but if a stage is configured to discard error records, those records are discarded. You
       might use this functionality to reduce the types of error records that are saved for review
-      and reprocessing. </p>
-    <p>
-      <draft-comment author="Loretta">Anyone have a simple example of error records you'd rather
-        discard at a stage level, and ones you want to write to file?</draft-comment>
-    </p>
+      and reprocessing. <draft-comment author="Loretta">Anyone have a simple example of error
+        records you'd rather discard at a stage level, and ones you want to write to
+        file?</draft-comment></p>
+    <p>Note that records that do not include required fields do not enter the stage with the field
+      requirement, so they are passed directly to the pipeline for error handling.</p>
   </conbody>
 </concept>
