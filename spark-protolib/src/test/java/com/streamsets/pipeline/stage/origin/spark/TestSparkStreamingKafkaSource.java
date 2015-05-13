@@ -18,6 +18,7 @@ import com.streamsets.pipeline.lib.DataType;
 import com.streamsets.pipeline.lib.KafkaTestUtil;
 import com.streamsets.pipeline.lib.ProducerRunnable;
 import com.streamsets.pipeline.main.RuntimeModule;
+import com.streamsets.pipeline.prodmanager.PipelineManager;
 import com.streamsets.pipeline.stage.origin.kafka.KafkaDSource;
 
 import kafka.admin.AdminUtils;
@@ -86,6 +87,7 @@ public class TestSparkStreamingKafkaSource {
     properties.setProperty(KafkaDSource.TOPIC, "testProduceStringRecords");
     properties.setProperty("auto.offset.reset", "smallest");
     properties.setProperty(RuntimeModule.SDC_EXECUTION_MODE_KEY, "slave");
+    properties.setProperty(PipelineManager.CALLBACK_SERVER_URL_KEY, "http://localhost:80/");
     propertiesFile = new File(target, "sdc.properties");
     properties.store(new FileOutputStream(propertiesFile), null);
     File pipelineJson = new File(target, "pipeline.json");
