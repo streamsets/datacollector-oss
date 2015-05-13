@@ -31,16 +31,12 @@ public class TestSolrTarget  extends SolrJettyTestBase {
 
   @BeforeClass
   public static void beforeTest() throws Exception {
-    try {
-      File solrHomeDir = new File("target", UUID.randomUUID().toString());
-      Assert.assertTrue(solrHomeDir.mkdirs());
-      URL url = Thread.currentThread().getContextClassLoader().getResource("solr/");
-      Assert.assertNotNull(url);
-      FileUtils.copyDirectoryToDirectory(new File(url.toURI()), solrHomeDir);
-      createJetty(solrHomeDir.getAbsolutePath() + "/solr", null, null);
-    } catch (Exception ex) {
-      ex.printStackTrace();
-    }
+    File solrHomeDir = new File("target", UUID.randomUUID().toString());
+    Assert.assertTrue(solrHomeDir.mkdirs());
+    URL url = Thread.currentThread().getContextClassLoader().getResource("solr/");
+    Assert.assertNotNull(url);
+    FileUtils.copyDirectoryToDirectory(new File(url.toURI()), solrHomeDir);
+    createJetty(solrHomeDir.getAbsolutePath() + "/solr", null, null);
   }
 
   @Test
