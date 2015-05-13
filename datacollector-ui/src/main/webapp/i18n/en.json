@@ -302,6 +302,8 @@
         "batchThroughput": "Batch Throughput",
         "chartsLabel": "Charts",
         "chartsPlaceholder": "Select Chart",
+        "pipelineStartTime": "Pipeline Start Time",
+        "pipelineStopTime": "Pipeline Stop Time",
         "recordsProcessed": "Records Processed (since last startup)",
         "recordCountBarChartTitle": "Record Count (since last startup)",
         "recordThroughput": "Record Throughput",
@@ -326,6 +328,7 @@
         "timeInCurrentStage": "Time in Current Stage",
         "timeOfLastReceivedRecord": "Last Record Received",
         "batchStartTime": "Batch Start Time"
+
       }
     },
     "previewPane": {

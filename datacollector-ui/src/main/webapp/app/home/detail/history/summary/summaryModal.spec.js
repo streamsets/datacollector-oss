@@ -30,6 +30,7 @@ describe('Controller: SummaryModalInstanceController', function() {
       $scope: $scope,
       pipelineConfig: mockPipeline,
       $modalInstance: {},
+      prevHistory: mockHistory,
       history: mockHistory,
       pipelineConstant: pipelineConstant
     });

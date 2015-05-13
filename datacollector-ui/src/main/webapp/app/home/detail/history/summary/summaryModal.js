@@ -4,12 +4,17 @@
 
 angular
   .module('dataCollectorApp.home')
-  .controller('SummaryModalInstanceController', function ($scope, $modalInstance, pipelineConfig, history, pipelineConstant) {
+  .controller('SummaryModalInstanceController', function ($scope, $modalInstance, pipelineConfig, history, prevHistory,
+                                                          pipelineConstant) {
+    console.log(prevHistory);
 
     var isStageSelected = false,
-      pipelineMetrics = JSON.parse(history.metrics);
+      pipelineMetrics = JSON.parse(history.metrics),
+      startTime = (prevHistory && prevHistory.state === 'RUNNING') ? prevHistory.lastStatusChange : undefined;
 
     angular.extend($scope, {
+      pipelineStartTime: startTime,
+      pipelineStopTime: history.lastStatusChange,
       selectedType: pipelineConstant.PIPELINE,
       summaryMeters: {},
       pipelineConfig: pipelineConfig,
@@ -20,7 +25,7 @@ angular
       recordsColor: {
         'Input' :'#1f77b4',
         'Output': '#5cb85c',
-        'Bad':'#FF3333',
+        'Error':'#FF3333',
         'Output 1': '#5cb85c',
         'Output 2': '#B2EC5D',
         'Output 3': '#77DD77',

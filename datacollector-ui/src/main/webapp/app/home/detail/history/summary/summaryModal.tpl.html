@@ -4,7 +4,7 @@
       <span aria-hidden="true">&times;</span>
       <span class="sr-only">Close</span>
     </button>
-    <h3 class="modal-title" translate="home.detailPane.summary">Snapshots</h3>
+    <h3 class="modal-title" translate="home.detailPane.summary">Summary</h3>
   </div>
   <div class="modal-body">
 
@@ -69,49 +69,35 @@
         <div class="panel panel-default">
           <div class="panel-heading">
         <span title="{{'home.detailPane.summaryTab.runtimeStatistics' | translate}}"
-              translate="home.detailPane.summaryTab.runtimeStatistics">Runtime Statistics</span>
+              translate="home.detailPane.summary">Summary</span>
           </div>
           <div class="panel-body">
 
             <ul class="table-properties">
 
               <li>
-                <span class="properties-label">{{'home.detailPane.summaryTab.timeOfLastReceivedRecord' | translate}}:</span>
-            <span class="properties-value"
-                  ng-if="common.pipelineMetrics.gauges['RuntimeStatsGauge.gauge'].value.timeOfLastReceivedRecord"
-              >{{common.pipelineMetrics.gauges['RuntimeStatsGauge.gauge'].value.timeOfLastReceivedRecord  | date:'medium'}}</span>
+                <span class="properties-label">{{'home.detailPane.summaryTab.pipelineStartTime' | translate}}:</span>
+                <span class="properties-value"> {{pipelineStartTime | date:'medium'}}</span>
+              </li>
+
+              <li>
+                <span class="properties-label">{{'home.detailPane.summaryTab.pipelineStopTime' | translate}}:</span>
+                <span class="properties-value"> {{pipelineStopTime | date:'medium'}}</span>
+              </li>
+
+              <li>
+                <span class="properties-label">
+                  {{'home.detailPane.summaryTab.timeOfLastReceivedRecord' | translate}}:
+                </span>
+                <span class="properties-value"
+                  ng-if="common.pipelineMetrics.gauges['RuntimeStatsGauge.gauge'].value.timeOfLastReceivedRecord">
+                  {{common.pipelineMetrics.gauges['RuntimeStatsGauge.gauge'].value.timeOfLastReceivedRecord  | date:'medium'}}
+                </span>
               </li>
 
               <li>
                 <span class="properties-label">{{'home.detailPane.summaryTab.batchCount' | translate}}:</span>
                 <span class="properties-value">{{common.pipelineMetrics.gauges['RuntimeStatsGauge.gauge'].value.batchCount}}</span>
-              </li>
-
-              <li>
-                <span class="properties-label">{{'home.detailPane.summaryTab.batchStartTime' | translate}}:</span>
-            <span class="properties-value"
-                  ng-if="common.pipelineMetrics.gauges['RuntimeStatsGauge.gauge'].value.batchStartTime"
-              >{{common.pipelineMetrics.gauges['RuntimeStatsGauge.gauge'].value.batchStartTime  | date:'medium'}}</span>
-              </li>
-
-              <li>
-                <span class="properties-label">{{'home.detailPane.summaryTab.currentBatchAge' | translate}}:</span>
-                <span class="properties-value">{{common.pipelineMetrics.gauges['RuntimeStatsGauge.gauge'].value.currentBatchAge}}</span>
-              </li>
-
-              <li>
-                <span class="properties-label">{{'home.detailPane.summaryTab.currentSourceOffset' | translate}}:</span>
-                <span class="properties-value">{{common.pipelineMetrics.gauges['RuntimeStatsGauge.gauge'].value.currentSourceOffset}}</span>
-              </li>
-
-              <li>
-                <span class="properties-label">{{'home.detailPane.summaryTab.currentStage' | translate}}:</span>
-                <span class="properties-value">{{stageNameToLabelMap[common.pipelineMetrics.gauges['RuntimeStatsGauge.gauge'].value.currentStage]}}</span>
-              </li>
-
-              <li>
-                <span class="properties-label">{{'home.detailPane.summaryTab.timeInCurrentStage' | translate}}:</span>
-                <span class="properties-value">{{common.pipelineMetrics.gauges['RuntimeStatsGauge.gauge'].value.timeInCurrentStage}}</span>
               </li>
 
             </ul>

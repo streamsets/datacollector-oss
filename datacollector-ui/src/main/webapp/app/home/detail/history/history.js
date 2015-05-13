@@ -10,11 +10,26 @@ angular
       showLoading: false,
       runHistory: [],
 
+      /**
+       * Refresh the History by fetching from server.
+       */
       refreshHistory: function() {
         updateHistory($scope.activeConfigInfo.name);
       },
 
-      viewSummary: function(history) {
+      /**
+       * Show summary of the pipeline run.
+       *
+       * @param history
+       * @param $index
+       */
+      viewSummary: function(history, $index) {
+        var prevHistory;
+
+        if($index + 1 < $scope.runHistory.length) {
+          prevHistory = $scope.runHistory[$index + 1];
+        }
+
         $modal.open({
           templateUrl: 'app/home/detail/history/summary/summaryModal.tpl.html',
           controller: 'SummaryModalInstanceController',
@@ -26,6 +41,9 @@ angular
             },
             history: function () {
               return history;
+            },
+            prevHistory: function() {
+              return prevHistory;
             }
           }
         });
