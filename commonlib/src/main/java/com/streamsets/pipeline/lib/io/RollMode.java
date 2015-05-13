@@ -11,19 +11,18 @@ import java.util.Comparator;
 
 public interface RollMode {
 
-  public void setPattern(String filePattern);
-
-  public String getLiveFileName(String liveFileName);
-
-  public boolean isFirstAcceptable(String liveFileName, String firstFileName);
-
-  public boolean isCurrentAcceptable(String liveFileName, String currentName);
-
-  public boolean isFileRolled(LiveFile liveFile, LiveFile currentFile) throws IOException;
-
-  public Comparator<Path> getComparator(String liveFileName);
+  public String getLiveFileName();
 
   //must be a PathMatcher glob: or regex: pattern
-  public String getPattern(String liveFile);
+  public String getPattern();
+
+  public boolean isFirstAcceptable(String firstFileName);
+
+  public boolean isCurrentAcceptable(String currentName);
+
+  public boolean isFileRolled(LiveFile currentFile) throws IOException;
+
+  public Comparator<Path> getComparator();
+
 
 }

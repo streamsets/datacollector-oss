@@ -58,21 +58,17 @@ public class MultiDirectoryReader implements Closeable {
   public static class DirectoryInfo {
     private final String dirName;
     private final RollMode rollMode;
-    private final String fileName;
     private final String firstFile;
 
     /**
      * Creates a <code>DirectoryInfo</code>
-     *
      * @param dirName directory path.
      * @param rollMode file roll mode.
-     * @param fileName live file name.
      * @param firstFile first file to read.
      */
-    public DirectoryInfo(String dirName, RollMode rollMode, String fileName, String firstFile) {
+    public DirectoryInfo(String dirName, RollMode rollMode, String firstFile) {
       this.dirName = dirName;
       this.rollMode = rollMode;
-      this.fileName = fileName;
       this.firstFile = firstFile;
     }
   }
@@ -90,7 +86,7 @@ public class MultiDirectoryReader implements Closeable {
 
     public DirectoryContext(DirectoryInfo dirInfo) throws IOException {
       this.dirInfo = dirInfo;
-      scanner = new LiveDirectoryScanner(dirInfo.dirName, dirInfo.fileName, dirInfo.firstFile, dirInfo.rollMode);
+      scanner = new LiveDirectoryScanner(dirInfo.dirName, dirInfo.firstFile, dirInfo.rollMode);
     }
 
     // prepares and gets the reader if available before a read.

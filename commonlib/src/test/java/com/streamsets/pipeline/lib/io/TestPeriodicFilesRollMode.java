@@ -26,20 +26,19 @@ public class TestPeriodicFilesRollMode {
     Files.createFile(f1);
     Files.createFile(f2);
 
-    RollMode rollMode = new PeriodicFilesRollMode();
-    rollMode.setPattern("x.x");
-    Assert.assertNull(rollMode.getLiveFileName("foo"));
-    Assert.assertFalse(rollMode.isFirstAcceptable(null, "x"));
-    Assert.assertFalse(rollMode.isFirstAcceptable(null, "xx"));
-    Assert.assertTrue(rollMode.isFirstAcceptable(null, ""));
-    Assert.assertTrue(rollMode.isFirstAcceptable(null, null));
-    Assert.assertTrue(rollMode.isFirstAcceptable(null, "xCx"));
-    Assert.assertFalse(rollMode.isCurrentAcceptable(null, "x"));
-    Assert.assertTrue(rollMode.isCurrentAcceptable(null, "xDx"));
-    Assert.assertTrue(rollMode.isFileRolled(null, new LiveFile(f1)));
-    Assert.assertFalse(rollMode.isFileRolled(null, new LiveFile(f2)));
+    RollMode rollMode = new PeriodicFilesRollModeFactory().get("x.x");
+    Assert.assertNull(rollMode.getLiveFileName());
+    Assert.assertFalse(rollMode.isFirstAcceptable("x"));
+    Assert.assertFalse(rollMode.isFirstAcceptable("xx"));
+    Assert.assertTrue(rollMode.isFirstAcceptable(""));
+    Assert.assertTrue(rollMode.isFirstAcceptable(null));
+    Assert.assertTrue(rollMode.isFirstAcceptable("xCx"));
+    Assert.assertFalse(rollMode.isCurrentAcceptable("x"));
+    Assert.assertTrue(rollMode.isCurrentAcceptable("xDx"));
+    Assert.assertTrue(rollMode.isFileRolled(new LiveFile(f1)));
+    Assert.assertFalse(rollMode.isFileRolled(new LiveFile(f2)));
 
-    Assert.assertTrue(rollMode.getComparator(null).compare(f1, f2) < 0);
+    Assert.assertTrue(rollMode.getComparator().compare(f1, f2) < 0);
 
   }
 

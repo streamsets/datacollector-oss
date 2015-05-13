@@ -311,7 +311,7 @@ public class LiveFileReader implements Closeable {
         if (!currentFile.equals(originalFile)) {
           LOG.debug("Original file '{}' refreshed to '{}'", originalFile, currentFile);
         }
-        rolled = rollMode.isFileRolled(originalFile, currentFile);
+        rolled = rollMode.isFileRolled(currentFile);
         lastLiveFileRefresh = System.currentTimeMillis();
       }
     }

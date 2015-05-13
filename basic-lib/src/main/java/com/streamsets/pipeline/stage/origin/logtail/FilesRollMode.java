@@ -7,31 +7,30 @@ package com.streamsets.pipeline.stage.origin.logtail;
 
 import com.streamsets.pipeline.api.GenerateResourceBundle;
 import com.streamsets.pipeline.api.Label;
-import com.streamsets.pipeline.lib.io.LogRollMode;
-import com.streamsets.pipeline.lib.io.PeriodicFilesRollMode;
+import com.streamsets.pipeline.lib.io.LogRollModeFactory;
+import com.streamsets.pipeline.lib.io.PeriodicFilesRollModeFactory;
 import com.streamsets.pipeline.lib.io.RollMode;
+import com.streamsets.pipeline.lib.io.RollModeFactory;
 
 @GenerateResourceBundle
 public enum FilesRollMode implements Label {
-  REVERSE_COUNTER("Active File with Reverse Counter Files", LogRollMode.REVERSE_COUNTER, null),
-  DATE_YYYY_MM("Active File with .yyyy-MM Files", LogRollMode.DATE_YYYY_MM, null),
-  DATE_YYYY_MM_DD("Active File with .yyyy-MM-dd Files", LogRollMode.DATE_YYYY_MM_DD, null),
-  DATE_YYYY_MM_DD_HH("Active File with .yyyy-MM-dd-HH Files", LogRollMode.DATE_YYYY_MM_DD_HH, null),
-  DATE_YYYY_MM_DD_HH_MM("Active File with .yyyy-MM-dd-HH-mm Files", LogRollMode.DATE_YYYY_MM_DD_HH_MM, null),
-  DATE_YYYY_WW("Active File with .yyyy-ww Files", LogRollMode.DATE_YYYY_WW, null),
-  ALPHABETICAL("Active File with Alphabetical Files", LogRollMode.ALPHABETICAL, null),
-  PERIODIC("Periodic Files Only", null, PeriodicFilesRollMode.class),
+  REVERSE_COUNTER("Active File with Reverse Counter Files", LogRollModeFactory.REVERSE_COUNTER),
+  DATE_YYYY_MM("Active File with .yyyy-MM Files", LogRollModeFactory.DATE_YYYY_MM),
+  DATE_YYYY_MM_DD("Active File with .yyyy-MM-dd Files", LogRollModeFactory.DATE_YYYY_MM_DD),
+  DATE_YYYY_MM_DD_HH("Active File with .yyyy-MM-dd-HH Files", LogRollModeFactory.DATE_YYYY_MM_DD_HH),
+  DATE_YYYY_MM_DD_HH_MM("Active File with .yyyy-MM-dd-HH-mm Files", LogRollModeFactory.DATE_YYYY_MM_DD_HH_MM),
+  DATE_YYYY_WW("Active File with .yyyy-ww Files", LogRollModeFactory.DATE_YYYY_WW),
+  ALPHABETICAL("Active File with Alphabetical Files", LogRollModeFactory.ALPHABETICAL),
+  PERIODIC("Periodic Files Only", new PeriodicFilesRollModeFactory()),
 
   ;
 
   private final String label;
-  private final RollMode mode;
-  private final Class<? extends RollMode> klass;
+  private final RollModeFactory factory;
 
-  FilesRollMode(String label, RollMode mode, Class<? extends RollMode> klass) {
+  FilesRollMode(String label, RollModeFactory factory) {
     this.label = label;
-    this.mode = mode;
-    this.klass = klass;
+    this.factory = factory;
   }
 
   @Override
@@ -40,19 +39,7 @@ public enum FilesRollMode implements Label {
   }
 
   public RollMode createRollMode(String filePattern) {
-    if (mode != null) {
-      return mode;
-    }
-    if (klass != null) {
-      try {
-        RollMode mode = klass.newInstance();
-        mode.setPattern(filePattern);
-        return mode;
-      } catch (Exception ex) {
-        throw new RuntimeException(ex);
-      }
-    }
-    throw new RuntimeException("mode and klass are both NULL");
+    return factory.get(filePattern);
   }
 
 }

@@ -59,12 +59,11 @@ public class LiveDirectoryScanner {
    * Creates a <code>LiveDirectoryScanner</code> instance.
    *
    * @param dirName directory to scan.
-   * @param liveFileName name of 'live' file.
    * @param firstFileName first 'rolled' file to look for if [@link #scan()} is invoked with <code>null</code>.
    * @param rollMode rolled files mode to use for ordering rolled files.
    * @throws IOException thrown if the scanner could not be created due to an IO error.
    */
-  public LiveDirectoryScanner(String dirName, String liveFileName, String firstFileName, RollMode rollMode)
+  public LiveDirectoryScanner(String dirName, String firstFileName, RollMode rollMode)
       throws IOException {
     Utils.checkNotNull(dirName, "dirName");
     Utils.checkArgument(!dirName.isEmpty(), "dirName cannot be empty");
@@ -81,18 +80,18 @@ public class LiveDirectoryScanner {
     this.rollMode = rollMode;
 
     // liveFileName needs to be massaged by roll mode
-    this.liveFileName = rollMode.getLiveFileName(liveFileName);
+    this.liveFileName = rollMode.getLiveFileName();
 
     // firstFileName needs to be verified by roll mode
-    Utils.checkArgument(this.rollMode.isFirstAcceptable(this.liveFileName, firstFileName),
+    Utils.checkArgument(this.rollMode.isFirstAcceptable(firstFileName),
                         Utils.formatL("liveFileName '{}' should be a prefix of firstFileName '{}'",
                                       this.liveFileName, firstFileName));
     this.firstFile = (firstFileName == null || firstFileName.isEmpty()) ? null : new File(dir, firstFileName).toPath();
 
-    pathComparator = this.rollMode.getComparator(this.liveFileName);
+    pathComparator = this.rollMode.getComparator();
 
     //TODO check if we need to escape liveFileName
-    fileMatcher = FileSystems.getDefault().getPathMatcher(this.rollMode.getPattern(this.liveFileName));
+    fileMatcher = FileSystems.getDefault().getPathMatcher(this.rollMode.getPattern());
 
   }
 
@@ -145,8 +144,8 @@ public class LiveDirectoryScanner {
   }
 
   private LiveFile scanInternal(LiveFile current) throws IOException {
-    Utils.checkArgument(current == null || rollMode.isCurrentAcceptable(liveFileName,
-                                                                        current.getPath().getFileName().toString()),
+    Utils.checkArgument(current == null || rollMode.isCurrentAcceptable(
+                            current.getPath().getFileName().toString()),
                         Utils.formatL("Current file '{}' is not acceptable for live file '{}' using '{}'",
                                       current, liveFileName, rollMode));
     FileFilter filter ;

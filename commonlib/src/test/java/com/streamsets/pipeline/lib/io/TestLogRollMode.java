@@ -30,24 +30,31 @@ public class TestLogRollMode {
     Files.createFile(f1);
     Files.createFile(f2);
 
-    RollMode rollMode = LogRollMode.ALPHABETICAL;
-    Assert.assertEquals("foo", rollMode.getLiveFileName("foo"));
-    Assert.assertFalse(rollMode.isFirstAcceptable("x", "x"));
-    Assert.assertFalse(rollMode.isFirstAcceptable("x", "xx"));
-    Assert.assertTrue(rollMode.isFirstAcceptable("x", ""));
-    Assert.assertTrue(rollMode.isFirstAcceptable("x", null));
-    Assert.assertTrue(rollMode.isFirstAcceptable("x", "x.1"));
-    Assert.assertFalse(rollMode.isCurrentAcceptable("x", "x"));
-    Assert.assertTrue(rollMode.isCurrentAcceptable("x", "y"));
-    Assert.assertTrue(rollMode.isCurrentAcceptable("x", null));
-    Assert.assertFalse(rollMode.isFileRolled(new LiveFile(f1), new LiveFile(f1)));
-    Assert.assertTrue(rollMode.isFileRolled(new LiveFile(f2), new LiveFile(f1)));
+    RollMode rollMode = LogRollModeFactory.ALPHABETICAL.get("foo");
+    Assert.assertEquals("foo", rollMode.getLiveFileName());
 
+    rollMode = LogRollModeFactory.ALPHABETICAL.get("x");
+    Assert.assertFalse(rollMode.isFirstAcceptable("x"));
+    Assert.assertFalse(rollMode.isFirstAcceptable("xx"));
+    Assert.assertTrue(rollMode.isFirstAcceptable(""));
+    Assert.assertTrue(rollMode.isFirstAcceptable(null));
+    Assert.assertTrue(rollMode.isFirstAcceptable("x.1"));
+    Assert.assertFalse(rollMode.isCurrentAcceptable("x"));
+    Assert.assertTrue(rollMode.isCurrentAcceptable("y"));
+    Assert.assertTrue(rollMode.isCurrentAcceptable(null));
+
+    rollMode = LogRollModeFactory.ALPHABETICAL.get(f1.getFileName().toString());
+    Assert.assertFalse(rollMode.isFileRolled(new LiveFile(f1)));
+
+    rollMode = LogRollModeFactory.ALPHABETICAL.get(f2.getFileName().toString());
+    Assert.assertTrue(rollMode.isFileRolled(new LiveFile(f1)));
+
+    rollMode = LogRollModeFactory.ALPHABETICAL.get("x");
     //for ALPHABETICAL and all DATE_...
-    Assert.assertTrue(rollMode.getComparator("x").compare(f1, f2) < 0);
+    Assert.assertTrue(rollMode.getComparator().compare(f1, f2) < 0);
 
     //for REVERSE_COUNTER
-    Assert.assertTrue(rollMode.getComparator("x").compare(f1, f2) < 0);
+    Assert.assertTrue(rollMode.getComparator().compare(f1, f2) < 0);
   }
 
   @Test
@@ -55,35 +62,35 @@ public class TestLogRollMode {
   public void testRolledFilesModePatterns() throws Exception {
     String name = new File("target/" + UUID.randomUUID().toString(), "my.log").getAbsolutePath();
 
-    Map<LogRollMode, String> MATCH = (Map) ImmutableMap.builder()
-                                                       .put(LogRollMode.ALPHABETICAL, name + ".a")
-                                                       .put(LogRollMode.REVERSE_COUNTER, name + ".124")
-                                                       .put(LogRollMode.DATE_YYYY_MM, name + ".2015-12")
-                                                       .put(LogRollMode.DATE_YYYY_MM_DD, name + ".2015-12-01")
-                                                       .put(LogRollMode.DATE_YYYY_MM_DD_HH, name + ".2015-12-01-23")
-                                                       .put(LogRollMode.DATE_YYYY_MM_DD_HH_MM, name + ".2015-12-01-23-59")
-                                                       .put(LogRollMode.DATE_YYYY_WW, name + ".2015-40")
+    Map<LogRollModeFactory, String> MATCH = (Map) ImmutableMap.builder()
+                                                       .put(LogRollModeFactory.ALPHABETICAL, name + ".a")
+                                                       .put(LogRollModeFactory.REVERSE_COUNTER, name + ".124")
+                                                       .put(LogRollModeFactory.DATE_YYYY_MM, name + ".2015-12")
+                                                       .put(LogRollModeFactory.DATE_YYYY_MM_DD, name + ".2015-12-01")
+                                                       .put(LogRollModeFactory.DATE_YYYY_MM_DD_HH, name + ".2015-12-01-23")
+                                                       .put(LogRollModeFactory.DATE_YYYY_MM_DD_HH_MM, name + ".2015-12-01-23-59")
+                                                       .put(LogRollModeFactory.DATE_YYYY_WW, name + ".2015-40")
                                                        .build();
 
-    Map<LogRollMode, String> NO_MATCH = (Map) ImmutableMap.builder()
-                                                          .put(LogRollMode.ALPHABETICAL, name)
-                                                          .put(LogRollMode.REVERSE_COUNTER, name + ".124x")
-                                                          .put(LogRollMode.DATE_YYYY_MM, name + ".2015-13")
-                                                          .put(LogRollMode.DATE_YYYY_MM_DD, name + ".2015-12-01x")
-                                                          .put(LogRollMode.DATE_YYYY_MM_DD_HH, name + ".2015-12-x1-23")
-                                                          .put(LogRollMode.DATE_YYYY_MM_DD_HH_MM, name + ".2015-2-01-23-59")
-                                                          .put(LogRollMode.DATE_YYYY_WW, name + "2015-40")
+    Map<LogRollModeFactory, String> NO_MATCH = (Map) ImmutableMap.builder()
+                                                          .put(LogRollModeFactory.ALPHABETICAL, name)
+                                                          .put(LogRollModeFactory.REVERSE_COUNTER, name + ".124x")
+                                                          .put(LogRollModeFactory.DATE_YYYY_MM, name + ".2015-13")
+                                                          .put(LogRollModeFactory.DATE_YYYY_MM_DD, name + ".2015-12-01x")
+                                                          .put(LogRollModeFactory.DATE_YYYY_MM_DD_HH, name + ".2015-12-x1-23")
+                                                          .put(LogRollModeFactory.DATE_YYYY_MM_DD_HH_MM, name + ".2015-2-01-23-59")
+                                                          .put(LogRollModeFactory.DATE_YYYY_WW, name + "2015-40")
                                                           .build();
 
-    for (Map.Entry<LogRollMode, String> entry : MATCH.entrySet()) {
+    for (Map.Entry<LogRollModeFactory, String> entry : MATCH.entrySet()) {
       Path path = new File(entry.getValue()).toPath();
-      PathMatcher fileMatcher = FileSystems.getDefault().getPathMatcher(entry.getKey().getPattern(name));
+      PathMatcher fileMatcher = FileSystems.getDefault().getPathMatcher(entry.getKey().get(name).getPattern());
       Assert.assertTrue(fileMatcher.matches(path));
     }
 
-    for (Map.Entry<LogRollMode, String> entry : NO_MATCH.entrySet()) {
+    for (Map.Entry<LogRollModeFactory, String> entry : NO_MATCH.entrySet()) {
       Path path = new File(entry.getValue()).toPath();
-      PathMatcher fileMatcher = FileSystems.getDefault().getPathMatcher(entry.getKey().getPattern(name));
+      PathMatcher fileMatcher = FileSystems.getDefault().getPathMatcher(entry.getKey().get(name).getPattern());
       Assert.assertFalse(fileMatcher.matches(path));
     }
 

@@ -21,6 +21,7 @@ import com.streamsets.pipeline.lib.io.FileLine;
 import com.streamsets.pipeline.lib.io.LiveFile;
 import com.streamsets.pipeline.lib.io.LiveFileChunk;
 import com.streamsets.pipeline.lib.io.MultiDirectoryReader;
+import com.streamsets.pipeline.lib.io.PeriodicFilesRollModeFactory;
 import com.streamsets.pipeline.lib.parser.DataParserFactory;
 import com.streamsets.pipeline.lib.parser.DataParser;
 import com.streamsets.pipeline.lib.parser.DataParserException;
@@ -117,9 +118,12 @@ public class FileTailSource extends BaseSource {
       Set<String> dirNames = new LinkedHashSet<>();
       List<MultiDirectoryReader.DirectoryInfo> dirInfos = new ArrayList<>();
       for (FileInfo fileInfo : fileInfos) {
+        // the UI uses a different config for PERIODIC files and LOG files, so we have to get the right one here
+        String fileNamePattern = (fileInfo.fileRollMode == FilesRollMode.PERIODIC)
+                                 ? fileInfo.periodicFileRegEx : fileInfo.file;
         dirInfos.add(new MultiDirectoryReader.DirectoryInfo(fileInfo.dirName,
-                                                            fileInfo.fileRollMode.createRollMode(fileInfo.periodicFileRegEx),
-                                                            fileInfo.file, fileInfo.firstFile));
+                                                            fileInfo.fileRollMode.createRollMode(fileNamePattern),
+                                                            fileInfo.firstFile));
         if (dirNames.contains(fileInfo.dirName)) {
           issues.add(getContext().createConfigIssue(Groups.FILES.name(), "fileInfos", Errors.TAIL_04, fileInfo.dirName));
         }

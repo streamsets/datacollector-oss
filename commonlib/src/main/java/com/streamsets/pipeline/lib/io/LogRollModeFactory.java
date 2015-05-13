@@ -26,7 +26,7 @@ class LogRollModeConstants {
  * <p/>
  * The assumption for all these roll modes is that the live file name is always the same.
  */
-public enum LogRollMode implements RollMode {
+public enum LogRollModeFactory implements RollModeFactory {
   REVERSE_COUNTER(ReverseCounterComparator.class, "regex:", "\\.[0-9]+$"),
   DATE_YYYY_MM(StringComparator.class, "regex:", LogRollModeConstants.YYYY_MM_REGEX + "$"),
   DATE_YYYY_MM_DD(StringComparator.class, "regex:", LogRollModeConstants.YYYY_MM_DD_REGEX + "$"),
@@ -40,64 +40,76 @@ public enum LogRollMode implements RollMode {
   private final String patternPostfix;
   private final Class comparatorClass;
 
-  LogRollMode(Class comparatorClass, String patternPrefix, String patternPostfix) {
+  LogRollModeFactory(Class comparatorClass, String patternPrefix, String patternPostfix) {
     this.comparatorClass = comparatorClass;
     this.patternPrefix = patternPrefix;
     this.patternPostfix = patternPostfix;
   }
 
-
   @Override
-  public void setPattern(String filePattern) {
-    //NOP
+  public RollMode get(String fileNamePattern) {
+    return new LogRollMode(patternPrefix, patternPostfix, comparatorClass, fileNamePattern);
   }
 
-  @Override
-  public String getLiveFileName(String liveFileName) {
-    Utils.checkNotNull(liveFileName, "liveFileName");
-    Utils.checkArgument(!liveFileName.isEmpty(), "liveFileName cannot be empty");
-    return liveFileName;
-  }
+  private class LogRollMode implements RollMode {
+    private final String patternPrefix;
+    private final String patternPostfix;
+    private final Class comparatorClass;
+    private final String liveFileName;
 
-  @Override
-  public boolean isFirstAcceptable(String liveFileName, String firstFileName) {
-    Utils.checkNotNull(liveFileName, "liveFileName");
-    return firstFileName == null || firstFileName.isEmpty() || firstFileName.startsWith(liveFileName + ".");
-  }
-
-  @Override
-  public boolean isCurrentAcceptable(String liveFileName, String currentName) {
-    return !liveFileName.equals(currentName);
-  }
-
-  @Override
-  public boolean isFileRolled(LiveFile liveFile, LiveFile currentFile) {
-    return !currentFile.equals(liveFile);
-  }
-
-
-  @Override
-  @SuppressWarnings("unchecked")
-  public Comparator<Path> getComparator(String liveFileName) {
-    try {
-      Object obj = comparatorClass.newInstance();
-      ((LiveFileNameSetter)obj).setName(liveFileName);
-      return (Comparator<Path>) obj;
-    } catch (Exception ex) {
-      throw new RuntimeException("It should not happen: " + ex.getMessage(), ex);
+    private LogRollMode(String patternPrefix, String patternPostfix, Class comparatorClass, String liveFileName) {
+      this.patternPrefix = patternPrefix;
+      this.patternPostfix = patternPostfix;
+      this.comparatorClass = comparatorClass;
+      this.liveFileName = liveFileName;
     }
-  }
 
-  @Override
-  public String getPattern(String liveFileName) {
-    return patternPrefix + liveFileName + patternPostfix;
-  }
+    @Override
+    public String getLiveFileName() {
+      Utils.checkNotNull(liveFileName, "liveFileName");
+      Utils.checkArgument(!liveFileName.isEmpty(), "liveFileName cannot be empty");
+      return liveFileName;
+    }
 
-  @Override
-  public String toString() {
-    return "LogRollMode[" + name() + "]";
-  }
+    @Override
+    public boolean isFirstAcceptable(String firstFileName) {
+      Utils.checkNotNull(liveFileName, "liveFileName");
+      return firstFileName == null || firstFileName.isEmpty() || firstFileName.startsWith(liveFileName + ".");
+    }
 
+    @Override
+    public boolean isCurrentAcceptable(String currentName) {
+      return !liveFileName.equals(currentName);
+    }
+
+    @Override
+    public boolean isFileRolled(LiveFile currentFile) {
+      return !liveFileName.equals(currentFile.getPath().getFileName().toString());
+    }
+
+    @Override
+    @SuppressWarnings("unchecked")
+    public Comparator<Path> getComparator() {
+      try {
+        Object obj = comparatorClass.newInstance();
+        ((LiveFileNameSetter) obj).setName(liveFileName);
+        return (Comparator<Path>) obj;
+      } catch (Exception ex) {
+        throw new RuntimeException("It should not happen: " + ex.getMessage(), ex);
+      }
+    }
+
+    @Override
+    public String getPattern() {
+      return patternPrefix + liveFileName + patternPostfix;
+    }
+
+    @Override
+    public String toString() {
+      return "LogRollMode[" + name() + "]";
+    }
+
+  }
 
   private interface LiveFileNameSetter {
 
