@@ -160,9 +160,12 @@ public class ELEvaluator extends ELEval {
     try {
       return (T) EVALUATOR.evaluate(expression, returnType, variableResolver, functionMapper);
     } catch (ELException e) {
-      throw new ELEvalException(CommonError.CMN_0104, expression, e.getMessage(), e);
+      Throwable t = e;
+      if(e.getRootCause() != null) {
+        t = e.getRootCause();
+      }
+      throw new ELEvalException(CommonError.CMN_0104, expression, t.getMessage(), e);
     }
-
   }
 
   private static String getFunctionName(String functionNamespace,String functionName) {

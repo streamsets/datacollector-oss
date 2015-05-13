@@ -7,6 +7,7 @@ package com.streamsets.pipeline.el;
 
 import com.streamsets.pipeline.api.ElFunction;
 import com.streamsets.pipeline.api.ElParam;
+import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.main.RuntimeInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -32,10 +33,16 @@ public class RuntimeEL {
     description = "Retrieves the value of the config property from sdc runtime configuration")
   public static String conf(
     @ElParam("conf") String conf) throws IOException {
-    if(RUNTIME_CONF_PROPS == null) {
-      return null;
+    String value = null;
+    if(RUNTIME_CONF_PROPS != null) {
+      value = RUNTIME_CONF_PROPS.getProperty(conf);
     }
-    return RUNTIME_CONF_PROPS.getProperty(conf);
+    if(value == null) {
+      //Returning a null value instead of throwing an exception results in coercion of the value to the expected
+      //return type. This leads to counter intuitive validation error messages.
+      throw new IllegalArgumentException(Utils.format("Could not resolve property '{}'", conf).toString());
+    }
+    return value;
   }
 
   public static void loadRuntimeConfiguration(RuntimeInfo runtimeInfo) throws IOException {

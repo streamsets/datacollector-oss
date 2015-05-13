@@ -70,7 +70,7 @@ public class PipelineConfigurationValidator {
 
   public PipelineConfigurationValidator(StageLibraryTask stageLibrary, String name,
                                         PipelineConfiguration pipelineConfiguration) {
-    this(stageLibrary, name, pipelineConfiguration, false /*do not evaluate*/);
+    this(stageLibrary, name, pipelineConfiguration, true /*evaluate expressions*/);
   }
 
   boolean sortStages() {
@@ -409,6 +409,9 @@ public class PipelineConfigurationValidator {
       if(inject && evaluateElExpressions) {
         conf = injectConfiguration(conf, confDef, stageDef, stageConf, pipelineConfiguration, issueCreator);
       }
+      if(conf == null) {
+        return false;
+      }
       switch (confDef.getType()) {
         case BOOLEAN:
           if (!(conf.getValue() instanceof Boolean)) {
@@ -523,7 +526,7 @@ public class PipelineConfigurationValidator {
         } catch (ELEvalException e) {
           issues.add(issueCreator.createConfigIssue(stageConf.getInstanceName(), confDef.getGroup(), confDef.getName(),
             ValidationError.VALIDATION_0033, e.getMessage(), e));
-          return conf;
+          return null;
         }
     }
   }
