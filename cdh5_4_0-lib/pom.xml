@@ -142,6 +142,15 @@
     </dependency>
 
     <dependency>
+      <groupId>com.streamsets</groupId>
+      <artifactId>streamsets-datacollector-solr-protolib</artifactId>
+      <type>test-jar</type>
+      <version>${project.version}</version>
+      <scope>test</scope>
+    </dependency>
+
+
+    <dependency>
       <groupId>org.apache.hadoop</groupId>
       <artifactId>hadoop-client</artifactId>
       <version>${hadoop.version}</version>
@@ -277,7 +286,6 @@
               <sources>
                 <source>${basedir}/../hdfs-protolib/src/test/java</source>
                 <source>${basedir}/../hbase-protolib/src/test/java</source>
-                <source>${basedir}/../solr-protolib/src/test/java</source>
               </sources>
             </configuration>
           </execution>
