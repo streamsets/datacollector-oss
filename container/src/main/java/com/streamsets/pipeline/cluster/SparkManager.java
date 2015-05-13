@@ -31,19 +31,18 @@ public class SparkManager {
   private final SparkProvider sparkProvider;
   private final File tempDir;
   private final File sparkManager;
-  private final int timeToWaitForFailure;
   private URLClassLoader apiCL;
   private URLClassLoader containerCL;
 
   public SparkManager(RuntimeInfo runtimeInfo, File tempDir) {
     this(new SystemProcessFactory(), new SparkProviderImpl(runtimeInfo), tempDir,
-      new File(new File(System.getProperty("user.dir"), "libexec"), "spark-manager"), null, null, 180);
+      new File(new File(System.getProperty("user.dir"), "libexec"), "spark-manager"), null, null);
   }
 
   @VisibleForTesting
   public SparkManager(SystemProcessFactory systemProcessFactory, SparkProvider sparkProvider,
                       File tempDir, File sparkManager, URLClassLoader apiCL,
-                      URLClassLoader containerCL, int timeToWaitForFailure) {
+                      URLClassLoader containerCL) {
     this.systemProcessFactory = systemProcessFactory;
     this.sparkProvider = sparkProvider;
     this.tempDir = tempDir;
@@ -58,7 +57,6 @@ public class SparkManager {
     } else {
       this.apiCL = apiCL;
     }
-    this.timeToWaitForFailure = timeToWaitForFailure;
     Utils.checkState(tempDir.isDirectory(), errorString("Temp directory does not exist: {}", tempDir));
     Utils.checkState(sparkManager.isFile(), errorString("spark-manager does not exist: {}", sparkManager));
     Utils.checkState(sparkManager.canExecute(), errorString("spark-manager is not executable: {}", sparkManager));
@@ -72,11 +70,8 @@ public class SparkManager {
     return executorService.submit(new Callable<ApplicationState>() {
       @Override
       public ApplicationState call() throws Exception {
-        ApplicationState state = new ApplicationState();
-        state.setId(sparkProvider.startPipeline(systemProcessFactory, sparkManager, tempDir, environment, sourceInfo,
-          pipelineConfiguration, stageLibrary, etcDir, staticWebDir, bootstrapDir, apiCL, containerCL,
-          timeToWaitForFailure));
-        return state;
+        return sparkProvider.startPipeline(systemProcessFactory, sparkManager, tempDir, environment, sourceInfo,
+          pipelineConfiguration, stageLibrary, etcDir, staticWebDir, bootstrapDir, apiCL, containerCL);
       }
     });
   }

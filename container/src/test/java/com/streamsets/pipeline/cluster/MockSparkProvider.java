@@ -8,6 +8,8 @@ package com.streamsets.pipeline.cluster;
 import com.streamsets.pipeline.config.PipelineConfiguration;
 import com.streamsets.pipeline.stagelibrary.StageLibraryTask;
 import com.streamsets.pipeline.util.SystemProcessFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.net.URLClassLoader;
@@ -15,7 +17,7 @@ import java.util.Map;
 import java.util.concurrent.TimeoutException;
 
 public class MockSparkProvider implements SparkProvider {
-
+  private static final Logger LOG = LoggerFactory.getLogger(MockSparkProvider.class);
   public boolean killTimesOut = false;
   public boolean submitTimesOut = false;
   public boolean isRunningTimesOut = false;
@@ -25,6 +27,7 @@ public class MockSparkProvider implements SparkProvider {
   @Override
   public void killPipeline(SystemProcessFactory systemProcessFactory, File sparkManager, File tempDir, String appId)
     throws TimeoutException {
+    LOG.info("killPipeline");
     if (killTimesOut) {
       throw new TimeoutException();
     }
@@ -33,6 +36,7 @@ public class MockSparkProvider implements SparkProvider {
   @Override
   public boolean isRunning(SystemProcessFactory systemProcessFactory, File sparkManager, File tempDir, String appId)
     throws TimeoutException {
+    LOG.info("isRunning");
     if (isRunningTimesOut) {
       throw new TimeoutException();
     }
@@ -40,15 +44,18 @@ public class MockSparkProvider implements SparkProvider {
   }
 
   @Override
-  public String startPipeline(SystemProcessFactory systemProcessFactory, File sparkManager, File tempDir,
+  public ApplicationState startPipeline(SystemProcessFactory systemProcessFactory, File sparkManager, File tempDir,
                               Map<String, String> environment, Map<String, String> sourceInfo,
                               PipelineConfiguration pipelineConfiguration, StageLibraryTask stageLibrary,
                               File etcDir, File staticWebDir, File bootstrapDir, URLClassLoader apiCL,
-                              URLClassLoader containerCL, int timeToWaitForFailure)
+                              URLClassLoader containerCL)
   throws TimeoutException {
+    LOG.info("startPipeline");
     if (submitTimesOut) {
       throw new TimeoutException();
     }
-    return appId;
+    ApplicationState applicationState = new ApplicationState();
+    applicationState.setId(appId);
+    return applicationState;
   }
 }

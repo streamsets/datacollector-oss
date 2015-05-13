@@ -13,7 +13,7 @@ import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 
-public class CallbackInfo {
+public class CallbackInfo implements Comparable<CallbackInfo> {
   private final static Logger LOG = LoggerFactory.getLogger(CallbackInfo.class);
   private final String sdcClusterToken;
   private final String sdcSlaveToken;
@@ -79,5 +79,10 @@ public class CallbackInfo {
       }
     }
     return metricRegistryJson;
+  }
+
+  @Override
+  public int compareTo(CallbackInfo o) {
+    return sdcURL.compareToIgnoreCase(o.sdcURL);
   }
 }

@@ -263,7 +263,7 @@
               <attach>false</attach>
               <finalName>streamsets-datacollector-cdh5_4_0-kafka_0_8_1_1-lib-${project.version}</finalName>
               <descriptors>
-                <descriptor>src/main/assemblies/data-collector-cdh_5_4_0-kafka_0_8_1_1-lib.xml</descriptor>
+                <descriptor>src/main/assemblies/data-collector-cdh5_4_0-kafka_0_8_1_1-lib.xml</descriptor>
               </descriptors>
             </configuration>
           </execution>

@@ -78,7 +78,6 @@ public class RuntimeInfo {
     authenticationTokens = new HashMap<>();
     reloadAuthenticationToken();
     randomUUID = UUID.randomUUID();
-    sdcToken = UUID.randomUUID().toString();
   }
 
   public void init() {
@@ -253,10 +252,6 @@ public class RuntimeInfo {
     }
   }
 
-  public void reloadSDCToken() {
-    sdcToken = UUID.randomUUID().toString();
-  }
-
   public ExecutionMode getExecutionMode() {
     return executionMode;
   }
@@ -267,6 +262,10 @@ public class RuntimeInfo {
     } catch (IllegalArgumentException ex) {
       this.executionMode = ExecutionMode.STANDALONE;
     }
+  }
+
+  public void setSDCToken(String sdcToken) {
+    this.sdcToken = sdcToken;
   }
 
   public String getSDCToken() {

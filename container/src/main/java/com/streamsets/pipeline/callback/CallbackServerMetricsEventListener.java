@@ -5,6 +5,7 @@
  */
 package com.streamsets.pipeline.callback;
 
+import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.main.RuntimeInfo;
 import com.streamsets.pipeline.metrics.MetricsEventListener;
 import com.streamsets.pipeline.restapi.bean.BeanHelper;
@@ -33,10 +34,11 @@ public class CallbackServerMetricsEventListener implements MetricsEventListener 
   @Override
   public void notification(String metrics) {
     try {
-
+      // this is in the slave, as such getSDCToken returns the slave token
+      String sdcSlaveToken = Utils.checkNotNull(runtimeInfo.getSDCToken(), "SDC Slave Token");
       Map<String, String> authenticationToken = runtimeInfo.getAuthenticationTokens();
       CallbackInfo callbackInfo = new CallbackInfo(sdcClusterToken,
-        runtimeInfo.getSDCToken(),
+        sdcSlaveToken,
         runtimeInfo.getBaseHttpUrl(),
         authenticationToken.get(AuthzRole.ADMIN),
         authenticationToken.get(AuthzRole.CREATOR),

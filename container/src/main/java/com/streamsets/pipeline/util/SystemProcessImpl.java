@@ -56,6 +56,7 @@ public class SystemProcessImpl implements SystemProcess {
     this.tempDir = tempDir;
     this.args = ImmutableList.copyOf(args);
   }
+
   public void start() throws IOException {
     start(new HashMap<String, String>());
   }

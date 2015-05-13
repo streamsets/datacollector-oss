@@ -10,6 +10,7 @@ import com.google.common.io.Files;
 import com.streamsets.pipeline.api.ExecutionMode;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.impl.Utils;
+import com.streamsets.pipeline.callback.CallbackInfo;
 import com.streamsets.pipeline.cluster.ApplicationState;
 import com.streamsets.pipeline.cluster.MockSparkProvider;
 import com.streamsets.pipeline.cluster.MockSystemProcess;
@@ -33,17 +34,21 @@ import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
 public class TestClusterPipelineManager {
+  private static final Logger LOG = LoggerFactory.getLogger(TestClusterPipelineManager.class);
   private static final String APPID = "123";
   private static final String NAME = "p1";
   private static final String REV = "1";
@@ -81,17 +86,17 @@ public class TestClusterPipelineManager {
     MockSystemProcess.output.clear();
     MockSystemProcess.error.clear();
     runtimeInfo = new RuntimeInfo("dummy", null, Arrays.asList(emptyCL), tempDir);
+    runtimeInfo.setSDCToken("myToken");
     sparkProvider = new MockSparkProvider();
     conf = new Configuration();
     stateTracker = new StateTracker(runtimeInfo, conf);
-    stateTracker.init();
     attributes = new HashMap<>();
     stageLibraryTask = MockStages.createStageLibrary(emptyCL);
     pipelineStoreTask = new FilePipelineStoreTask(runtimeInfo, stageLibraryTask);
     pipelineStoreTask.init();
     pipelineStoreTask.create(NAME, "some desc", "admin");
     sparkManager = new SparkManager(new MockSystemProcessFactory(), sparkProvider, tempDir, sparkManagerShell,
-      emptyCL, emptyCL, 1);
+      emptyCL, emptyCL);
     setExecMode(ExecutionMode.CLUSTER);
   }
 
@@ -107,12 +112,9 @@ public class TestClusterPipelineManager {
     pipelineStoreTask.save(NAME, "admin", REV, "", conf);
 
   }
-  private PipelineState createPipelineState(State state) {
-    return new PipelineState(NAME, REV, state, "some state", System.currentTimeMillis(), null, attributes);
-  }
 
   private State getState() throws Exception {
-    Utils.checkState(ThreadUtil.sleep(20), "sleep was interrupted");
+    Utils.checkState(ThreadUtil.sleep(100), "sleep was interrupted");
     return Utils.checkNotNull(stateTracker.getState(), "state").getState();
   }
   private void setState(State state) throws Exception {
@@ -140,7 +142,7 @@ public class TestClusterPipelineManager {
 
   @Test
   public void testInitPipelineStateRunning() throws Exception {
-    attributes.put(ClusterPipelineManager.APPLICATION_STATE, APPLICATION_STATE);
+    attributes.put(ClusterPipelineManager.APPLICATION_STATE, APPLICATION_STATE.getMap());
     sparkProvider.isRunning = true;
     setState(State.RUNNING);
     clusterPipelineManager = createClusterPipelineManager();
@@ -149,8 +151,22 @@ public class TestClusterPipelineManager {
   }
 
   @Test
-  public void testInitPipelineStateNotRunning() throws Exception {
-    attributes.put(ClusterPipelineManager.APPLICATION_STATE, APPLICATION_STATE);
+  public void testPipelineUnexpectedlyStops() throws Exception {
+    attributes.put(ClusterPipelineManager.APPLICATION_STATE, APPLICATION_STATE.getMap());
+    sparkProvider.isRunning = true;
+    setState(State.RUNNING);
+    clusterPipelineManager = createClusterPipelineManager();
+    clusterPipelineManager.initTask();
+    Assert.assertEquals(State.RUNNING, getState());
+    sparkProvider.isRunning = false;
+    setState(State.RUNNING);
+    clusterPipelineManager.getManagerRunnable().forceCheckPipelineState();
+    Assert.assertEquals(State.ERROR, getState());
+  }
+
+  @Test
+  public void testInitDoesNotStartPipelineWhenNotRunning() throws Exception {
+    attributes.put(ClusterPipelineManager.APPLICATION_STATE, APPLICATION_STATE.getMap());
     sparkProvider.isRunning = false;
     setState(State.RUNNING);
     clusterPipelineManager = createClusterPipelineManager();
@@ -160,7 +176,7 @@ public class TestClusterPipelineManager {
 
   @Test
   public void testInitPipelineStateRunningTimesOut() throws Exception {
-    attributes.put(ClusterPipelineManager.APPLICATION_STATE, APPLICATION_STATE);
+    attributes.put(ClusterPipelineManager.APPLICATION_STATE, APPLICATION_STATE.getMap());
     sparkProvider.isRunningTimesOut = true;
     setState(State.RUNNING);
     clusterPipelineManager = createClusterPipelineManager();
@@ -175,8 +191,11 @@ public class TestClusterPipelineManager {
   public void testInitPipelineStateOtherStates() throws Exception {
     Set<State> states = new HashSet<>(ALL_STATES);
     states.remove(State.RUNNING);
+    states.remove(State.STOPPING);
     for (State state : states) {
+      LOG.info("Setting state: " + state);
       setState(state);
+      LOG.info("State after set: " + getState());
       clusterPipelineManager = createClusterPipelineManager();
       clusterPipelineManager.initTask();
       Assert.assertEquals(state, getState());
@@ -186,7 +205,7 @@ public class TestClusterPipelineManager {
   @Test(expected = PipelineManagerException.class)
   public void testStartPipelineStandaloneMode() throws Exception {
     setExecMode(ExecutionMode.STANDALONE);
-    attributes.put(ClusterPipelineManager.APPLICATION_STATE, APPLICATION_STATE);
+    attributes.put(ClusterPipelineManager.APPLICATION_STATE, APPLICATION_STATE.getMap());
     setState(State.STOPPED);
     clusterPipelineManager = createClusterPipelineManager();
     clusterPipelineManager.initTask();
@@ -200,10 +219,16 @@ public class TestClusterPipelineManager {
     setState(State.STOPPED);
     clusterPipelineManager = createClusterPipelineManager();
     clusterPipelineManager.initTask();
+    CallbackInfo callbackInfo = new CallbackInfo("clusterToken", runtimeInfo.getSDCToken(), "", "", "", "", "", "");
+    clusterPipelineManager.updateSlaveCallbackInfo(callbackInfo);
     clusterPipelineManager.startPipeline(NAME, REV);
     Assert.assertEquals(State.RUNNING, getState());
-    ApplicationState appState = (ApplicationState)stateTracker.getState().getAttributes().
-      get(ClusterPipelineManager.APPLICATION_STATE);
+    Collection<CallbackInfo> slaves = clusterPipelineManager.getSlaveCallbackList();
+    Assert.assertTrue(String.valueOf(slaves), slaves.isEmpty());
+    Assert.assertTrue(ThreadUtil.sleep(1000));
+    ApplicationState appState = new ApplicationState((Map)stateTracker.getState().getAttributes().
+      get(ClusterPipelineManager.APPLICATION_STATE));
+    appState.setId(APPID);
     Assert.assertEquals(APPID, appState.getId());
     clusterPipelineManager.stopPipeline(false);
     Assert.assertEquals(State.STOPPED, getState());
@@ -224,13 +249,14 @@ public class TestClusterPipelineManager {
     pipelineConf = pipelineStoreTask.save(NAME, "admin", REV, "", pipelineConf);
     clusterPipelineManager.startPipeline(NAME, REV);
     Assert.assertEquals(State.ERROR, getState());
-    ApplicationState appState = (ApplicationState)stateTracker.getState().getAttributes().
-      get(ClusterPipelineManager.APPLICATION_STATE);
-    Assert.assertNull(appState);
+    ApplicationState appState = new ApplicationState((Map)stateTracker.getState().getAttributes().
+      get(ClusterPipelineManager.APPLICATION_STATE));
+    Assert.assertNull(appState.getId());
   }
 
   @Test
-  public void testGetParallelism() throws PipelineRuntimeException, StageException, PipelineStoreException, PipelineManagerException {
+  public void testGetParallelism() throws PipelineRuntimeException, StageException, PipelineStoreException,
+    PipelineManagerException {
     clusterPipelineManager = createClusterPipelineManager();
     clusterPipelineManager.initTask();
     int originParallelism = clusterPipelineManager.getOriginParallelism(NAME, REV,
@@ -238,5 +264,29 @@ public class TestClusterPipelineManager {
       //has parallelism 25
     );
     Assert.assertEquals(25, originParallelism);
+  }
+
+  @Test
+  public void testManagerRunnableStart() throws Exception {
+    clusterPipelineManager = createClusterPipelineManager();
+    clusterPipelineManager.initTask();
+    clusterPipelineManager.getManagerExecutor().shutdownNow();
+    ClusterPipelineManager.ManagerRunnable managerRunnable = clusterPipelineManager.getManagerRunnable();
+    setState(State.RUNNING);
+    ApplicationState appState = new ApplicationState((Map)stateTracker.getState().getAttributes().
+      get(ClusterPipelineManager.APPLICATION_STATE));
+    ClusterPipelineManager.StateTransitionRequest request;
+    PipelineConfiguration pipelineConfiguration = pipelineStoreTask.load(NAME, REV);
+    // transitions to running state when already running
+    request = new ClusterPipelineManager.StateTransitionRequest(State.RUNNING, appState, pipelineConfiguration);
+    sparkProvider.isRunning = true;
+    managerRunnable.start(request);
+    Assert.assertEquals(State.RUNNING, getState());
+    // still in running state when already running
+    setState(State.RUNNING);
+    request = new ClusterPipelineManager.StateTransitionRequest(State.RUNNING, appState, pipelineConfiguration);
+    sparkProvider.isRunning = true;
+    managerRunnable.start(request);
+    Assert.assertEquals(State.RUNNING, getState());
   }
 }

@@ -7,6 +7,7 @@ package com.streamsets.pipeline.cluster;
 
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Joiner;
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Maps;
 import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.config.ConfigConfiguration;
@@ -39,14 +40,13 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.URL;
 import java.net.URLClassLoader;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
+import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 import java.util.regex.Matcher;
@@ -72,11 +72,11 @@ public class SparkProviderImpl implements SparkProvider {
                     String appId) throws TimeoutException {
     Map<String, String> environment = new HashMap<>();
     environment.put(RUN_FROM_SDC, Boolean.TRUE.toString());
-    List<String> args = new ArrayList<>();
+    ImmutableList.Builder<String> args = ImmutableList.builder();
     args.add(sparkManager.getAbsolutePath());
     args.add("kill");
     args.add(appId);
-    SystemProcess process = systemProcessFactory.create(SparkManager.class.getSimpleName(), tempDir, args);
+    SystemProcess process = systemProcessFactory.create(SparkManager.class.getSimpleName(), tempDir, args.build());
     try {
       process.start(environment);
       if (!process.waitFor(30, TimeUnit.SECONDS)) {
@@ -113,11 +113,11 @@ public class SparkProviderImpl implements SparkProvider {
                     String appId) throws TimeoutException {
     Map<String, String> environment = new HashMap<>();
     environment.put(RUN_FROM_SDC, Boolean.TRUE.toString());
-    List<String> args = new ArrayList<>();
+    ImmutableList.Builder<String> args = ImmutableList.builder();
     args.add(sparkManager.getAbsolutePath());
     args.add("status");
     args.add(appId);
-    SystemProcess process = systemProcessFactory.create(SparkManager.class.getSimpleName(), tempDir, args);
+    SystemProcess process = systemProcessFactory.create(SparkManager.class.getSimpleName(), tempDir, args.build());
     try {
       process.start(environment);
       if (!process.waitFor(30, TimeUnit.SECONDS)) {
@@ -196,22 +196,26 @@ public class SparkProviderImpl implements SparkProvider {
   }
 
   @Override
-  public String startPipeline(SystemProcessFactory systemProcessFactory, File sparkManager, File tempDir,
+  public ApplicationState startPipeline(SystemProcessFactory systemProcessFactory, File sparkManager, File tempDir,
                        Map<String, String> environment, Map<String, String> sourceInfo,
                        PipelineConfiguration pipelineConfiguration, StageLibraryTask stageLibrary,
                        File etcDir, File staticWebDir, File bootstrapDir, URLClassLoader apiCL,
-                       URLClassLoader containerCL, int timeToWaitForFailure) throws TimeoutException {
+                       URLClassLoader containerCL) throws TimeoutException {
     environment = Maps.newHashMap(environment);
     environment.put(RUN_FROM_SDC, Boolean.TRUE.toString());
     // create libs.tar.gz file for pipeline
     Map<String, URLClassLoader > streamsetsLibsCl = new HashMap<>();
     Map<String, URLClassLoader > userLibsCL = new HashMap<>();
     Map<String, String> sourceConfigs = new HashMap<>();
-    List<StageConfiguration> stageConfigurations = new ArrayList<>();
+    ImmutableList.Builder<StageConfiguration> stageConfigurations = ImmutableList.builder();
     stageConfigurations.addAll(pipelineConfiguration.getStages());
     stageConfigurations.add(pipelineConfiguration.getErrorStage());
+    String sdcClusterToken = UUID.randomUUID().toString();
+    if (runtimeInfo != null) {
+      runtimeInfo.setSDCToken(sdcClusterToken);
+    }
     String pathToSparkKafkaJar = null;
-    for (StageConfiguration stageConf : stageConfigurations) {
+    for (StageConfiguration stageConf : stageConfigurations.build()) {
       StageDefinition stageDef = stageLibrary.getStage(stageConf.getLibrary(), stageConf.getStageName(),
         stageConf.getStageVersion());
       if (stageConf.getInputLanes().isEmpty()) {
@@ -285,7 +289,7 @@ public class SparkProviderImpl implements SparkProvider {
         IOUtils.closeQuietly(clusterLog4jProperties);
       }
     }
-    List<String> args = new ArrayList<>();
+    ImmutableList.Builder<String> args = ImmutableList.builder();
     args.add(sparkManager.getAbsolutePath());
     args.add("start");
     // we only support yarn-cluster mode
@@ -312,12 +316,12 @@ public class SparkProviderImpl implements SparkProvider {
     args.add(Joiner.on(",").join(bootstrapJar.getAbsoluteFile(), pathToSparkKafkaJar));
     // use our javaagent
     args.add("--conf");
-    args.add("\"spark.executor.extraJavaOptions=-javaagent:./" + bootstrapJar.getName() + "\"");
+    args.add("spark.executor.extraJavaOptions=-javaagent:./" + bootstrapJar.getName());
     // main class
     args.add("--class");
     args.add("com.streamsets.pipeline.BootstrapSpark");
     args.add(sparkBootstrapJar.getAbsolutePath());
-    SystemProcess process = systemProcessFactory.create(SparkManager.class.getSimpleName(), tempDir, args);
+    SystemProcess process = systemProcessFactory.create(SparkManager.class.getSimpleName(), tempDir, args.build());
     LOG.info("Starting: " + process);
     try {
       try {
@@ -333,10 +337,13 @@ public class SparkProviderImpl implements SparkProvider {
         if (applicationIds.size() > 1) {
           logOutput("unknown", process);
           throw new IllegalStateException(errorString("Found more than one application id: {}", applicationIds));
-        } else if (!applicationIds.isEmpty() && elapsedSeconds > timeToWaitForFailure) {
+        } else if (!applicationIds.isEmpty()) {
           String appId = applicationIds.iterator().next();
           logOutput(appId, process);
-          return appId;
+          ApplicationState applicationState = new ApplicationState();
+          applicationState.setId(appId);
+          applicationState.setSdcToken(sdcClusterToken);
+          return applicationState;
         }
         if (!ThreadUtil.sleep(1000)) {
           throw new IllegalStateException("Interrupted while waiting for pipeline to start");

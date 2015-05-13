@@ -41,7 +41,7 @@
     <cdh_5_4_0-lib>none</cdh_5_4_0-lib>
     <hdp_2_2_0-lib>none</hdp_2_2_0-lib>
     <cdh5-kafka_0_8_2_0_kafka_1_2_0-lib>none</cdh5-kafka_0_8_2_0_kafka_1_2_0-lib>
-    <cdh_5_4_0-kafka_0_8_1_1-lib>none</cdh_5_4_0-kafka_0_8_1_1-lib>
+    <cdh5_4_0-kafka_0_8_1_1-lib>none</cdh5_4_0-kafka_0_8_1_1-lib>
     <apache-kafka_0_8_1_1-lib>none</apache-kafka_0_8_1_1-lib>
     <apache-kafka_0_8_2_0-lib>none</apache-kafka_0_8_2_0-lib>
     <apache-kafka_0_8_2_1-lib>none</apache-kafka_0_8_2_1-lib>
@@ -229,7 +229,7 @@
         <apache-kafka_0_8_2_0-lib>apache-kafka_0_8_2_0-lib</apache-kafka_0_8_2_0-lib>
         <apache-kafka_0_8_2_1-lib>apache-kafka_0_8_2_1-lib</apache-kafka_0_8_2_1-lib>
         <elasticsearch_1_4_4-lib>elasticsearch_1_4_4-lib</elasticsearch_1_4_4-lib>
-        <cdh_5_4_0-kafka_0_8_1_1-lib>cdh_5_4_0-kafka_0_8_1_1-lib</cdh_5_4_0-kafka_0_8_1_1-lib>
+        <cdh5_4_0-kafka_0_8_1_1-lib>cdh5_4_0-kafka_0_8_1_1-lib</cdh5_4_0-kafka_0_8_1_1-lib>
       </properties>
       <modules>
         <module>cdh5_2_1-lib</module>

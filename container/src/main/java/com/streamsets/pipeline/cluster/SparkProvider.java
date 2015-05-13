@@ -24,9 +24,9 @@ public interface SparkProvider {
                                    String appId) throws TimeoutException;
 
 
-  String startPipeline(SystemProcessFactory systemProcessFactory, File sparkManager, File tempDir,
+  ApplicationState startPipeline(SystemProcessFactory systemProcessFactory, File sparkManager, File tempDir,
                                       Map<String, String> environment, Map<String, String> sourceInfo,
                                       PipelineConfiguration pipelineConfiguration, StageLibraryTask stageLibrary,
                                       File etcDir, File staticWebDir, File bootstrapDir, URLClassLoader apiCL,
-                                      URLClassLoader containerCL, int timeToWaitForFailure) throws TimeoutException;
+                                      URLClassLoader containerCL) throws TimeoutException;
 }

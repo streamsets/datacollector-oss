@@ -19,6 +19,7 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.List;
+import java.util.UUID;
 
 @Module(library = true, injects = {BuildInfo.class, RuntimeInfo.class, Configuration.class},
     includes = MetricsModule.class)
@@ -57,6 +58,9 @@ public class RuntimeModule {
         conf.load(new FileReader(configFile));
         runtimeInfo.setBaseHttpUrl(conf.get(DATA_COLLECTOR_BASE_HTTP_URL, runtimeInfo.getBaseHttpUrl()));
         runtimeInfo.setExecutionMode(conf.get(SDC_EXECUTION_MODE_KEY, SDC_EXECUTION_MODE_DEFAULT));
+        if (runtimeInfo.getExecutionMode() == RuntimeInfo.ExecutionMode.SLAVE) {
+          runtimeInfo.setSDCToken(UUID.randomUUID().toString());
+        }
       } catch (IOException ex) {
         throw new RuntimeException(ex);
       }

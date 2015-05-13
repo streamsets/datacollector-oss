@@ -7,6 +7,7 @@ package com.streamsets.pipeline.prodmanager;
 
 import com.codahale.metrics.MetricRegistry;
 import com.google.common.collect.ImmutableMap;
+import com.streamsets.pipeline.cluster.ApplicationState;
 import com.streamsets.pipeline.main.RuntimeInfo;
 import com.streamsets.pipeline.main.RuntimeModule;
 import com.streamsets.pipeline.util.*;
@@ -45,10 +46,14 @@ public class TestStateTracker {
 
   @Before()
   public void setUp() {
-    RuntimeInfo info = new RuntimeInfo(RuntimeModule.SDC_PROPERTY_PREFIX, new MetricRegistry(), Arrays.asList(getClass().getClassLoader()));
-    com.streamsets.pipeline.util.Configuration configuration = new com.streamsets.pipeline.util.Configuration();
+    stateTracker = createStateTracker();
+  }
 
-    stateTracker = new StateTracker(info, configuration);
+  private static StateTracker createStateTracker() {
+    RuntimeInfo info = new RuntimeInfo(RuntimeModule.SDC_PROPERTY_PREFIX, new MetricRegistry(),
+      Arrays.asList(TestStateTracker.class.getClassLoader()));
+    com.streamsets.pipeline.util.Configuration configuration = new com.streamsets.pipeline.util.Configuration();
+    return new StateTracker(info, configuration);
   }
 
   @After
@@ -80,11 +85,12 @@ public class TestStateTracker {
   @Test
   public void testSetState() throws PipelineManagerException {
     stateTracker.init();
-    Map<String, Object> attributes = ImmutableMap.<String, Object>of("X", "x");
+    Map<String, Object> attributes = ImmutableMap.<String, Object>of("two", "2", ClusterPipelineManager.APPLICATION_STATE,
+      ImmutableMap.<String, Object>of("one", 1));
     stateTracker.setState("xyz", "2.0", State.RUNNING, "Started pipeline", null, attributes);
-
+    stateTracker = createStateTracker();
+    stateTracker.init();
     PipelineState state = stateTracker.getState();
-
     Assert.assertNotNull(state);
     Assert.assertEquals("2.0", state.getRev());
     Assert.assertEquals("Started pipeline", state.getMessage());
