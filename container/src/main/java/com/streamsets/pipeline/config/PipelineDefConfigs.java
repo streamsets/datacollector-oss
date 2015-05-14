@@ -156,7 +156,7 @@ public abstract class PipelineDefConfigs implements Stage {
 
 
   public static final String CLUSTER_SLAVE_MEMORY_CONFIG = "clusterSlaveMemory";
-  public static final String CLUSTER_SLAVE_MEMORY_LABEL = "Slave Heap (MB)";
+  public static final String CLUSTER_SLAVE_MEMORY_LABEL = "Worker Memory (MB)";
   public static final String CLUSTER_SLAVE_MEMORY_DEFAULT = "1024";
   public static final String CLUSTER_SLAVE_MEMORY_DESCRIPTION = "";
 

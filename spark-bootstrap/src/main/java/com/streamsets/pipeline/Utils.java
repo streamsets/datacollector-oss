@@ -5,9 +5,6 @@
  */
 package com.streamsets.pipeline;
 
-/**
- * Created by brock on 5/4/15.
- */
 public class Utils {
 
   public static <T> T checkNotNull(T value, Object varName) {

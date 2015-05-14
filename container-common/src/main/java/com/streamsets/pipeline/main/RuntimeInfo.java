@@ -82,13 +82,17 @@ public class RuntimeInfo {
 
   public void init() {
     this.id = getSdcId(getDataDir());
-    // inject SDC ID into the API sdc:id EL function
-    Utils.setSdcIdCallable(new Callable<String>() {
-      @Override
-      public String call() throws Exception {
-        return RuntimeInfo.this.id;
-      }
-    });
+    // in transient environment, the SDC ID Callable must be set
+    // by the cluster environment such as the spark executor function
+    if (!Boolean.getBoolean(TRANSIENT_ENVIRONMENT)) {
+      // inject SDC ID into the API sdc:id EL function
+      Utils.setSdcIdCallable(new Callable<String>() {
+        @Override
+        public String call() throws Exception {
+          return RuntimeInfo.this.id;
+        }
+      });
+    }
   }
 
   protected String getSdcId(String dir) {

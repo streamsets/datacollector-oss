@@ -5,6 +5,7 @@
 package com.streamsets.pipeline.stage.origin.spark;
 
 import com.streamsets.pipeline.api.impl.Utils;
+import org.apache.spark.TaskContext;
 import org.apache.spark.api.java.function.VoidFunction;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -12,10 +13,12 @@ import org.slf4j.LoggerFactory;
 import scala.Tuple2;
 
 import java.io.Serializable;
+import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Properties;
+import java.util.concurrent.Callable;
 
 
 /**
@@ -26,7 +29,8 @@ public class SparkKafkaExecutorFunction implements VoidFunction<Iterator<Tuple2<
   private static final char[] HEX_CHARS = "0123456789abcdef".toCharArray();
   private static final boolean IS_TRACE_ENABLED = LOG.isTraceEnabled();
   private static volatile EmbeddedSDCPool sdcPool;
-  private static final Object poolCreationLock = new Object();
+  private static final Object staticLock = new Object();
+  private static volatile boolean initialized = false;
   private Properties properties;
   private String pipelineJson;
 
@@ -36,9 +40,22 @@ public class SparkKafkaExecutorFunction implements VoidFunction<Iterator<Tuple2<
   }
 
   private void initialize() throws Exception {
-    synchronized (poolCreationLock) {
-      if (sdcPool == null) {
+    synchronized (staticLock) {
+      if (!initialized) {
+        // must occur before creating the EmbeddedSDCPool as
+        // the hdfs target validation evaluates the sdc:id EL
+        NumberFormat numberFormat = NumberFormat.getInstance();
+        numberFormat.setMinimumIntegerDigits(6);
+        numberFormat.setGroupingUsed(false);
+        final String sdcId = numberFormat.format(TaskContext.get().partitionId());
+        Utils.setSdcIdCallable(new Callable<String>() {
+          @Override
+          public String call() {
+            return sdcId;
+          }
+        });
         sdcPool = new EmbeddedSDCPool(properties, pipelineJson);
+        initialized = true;
       }
     }
   }
