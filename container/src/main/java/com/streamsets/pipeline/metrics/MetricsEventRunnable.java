@@ -82,7 +82,7 @@ public class MetricsEventRunnable implements Runnable {
     }
   }
 
-  private MetricRegistryJson getAggregatedMetrics() {
+  public MetricRegistryJson getAggregatedMetrics() {
     MetricRegistryJson aggregatedMetrics = new MetricRegistryJson();
     Map<String, CounterJson> aggregatedCounters = null;
     Map<String, MeterJson> aggregatedMeters = null;

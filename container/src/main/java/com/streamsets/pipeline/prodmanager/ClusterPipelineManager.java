@@ -343,8 +343,8 @@ public class ClusterPipelineManager extends AbstractTask implements PipelineMana
   }
 
   @Override
-  public MetricRegistry getMetrics() {
-    throw new UnsupportedOperationException();
+  public Object getMetrics() {
+    return metricsEventRunnable.getAggregatedMetrics();
   }
 
   @Override

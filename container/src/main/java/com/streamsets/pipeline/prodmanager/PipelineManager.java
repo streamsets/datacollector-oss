@@ -75,7 +75,7 @@ public interface PipelineManager extends Task {
 
   PipelineState stopPipeline(boolean nodeProcessShutdown) throws PipelineManagerException;
 
-  MetricRegistry getMetrics();
+  Object getMetrics();
 
   void deleteHistory(String pipelineName, String rev) throws PipelineManagerException;
 
