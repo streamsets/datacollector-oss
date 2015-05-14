@@ -20,14 +20,14 @@
    you configure the Cassandra destination, you define connection information, optional user
    credentials, and map incoming fields to columns in the Cassandra table.</p>
 
-    <div class="p"><div class="note note"><span class="notetitle">Note:</span> Due to Cassandra requirements, the data types of the incoming fields must exactly match
-        the types of the corresponding Cassandara columns. When appropriate, use a Type Converter
-        processor earlier in the pipeline to convert the necessary data types.</div>
-Batches written
-      to Cassandra are atomic - that is, the entire batch of records is either successfully written
-      to Cassandra, or fails. If an error occurs with one or more records in a batch, Cassandra
-      fails the entire batch. When a batch fails, the entire batch is sent to the stage for error
-      handling. </div>
+    <div class="p">Batches written to Cassandra are atomic - that is, the entire batch of records is either
+      successfully written to Cassandra, or fails. If an error occurs with one or more records in a
+      batch, Cassandra fails the entire batch. When a batch fails, the entire batch is sent to the
+      stage for error handling. <div class="note note"><span class="notetitle">Note:</span> Due to Cassandra requirements, the data types of the incoming
+        fields must exactly match the types of the corresponding Cassandara columns. When
+        appropriate, use a Type Converter processor earlier in the pipeline to convert the necessary
+        data types.</div>
+</div>
 
  </div>
 
