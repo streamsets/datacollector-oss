@@ -12,12 +12,14 @@ import com.streamsets.pipeline.api.el.ELEval;
 import com.streamsets.pipeline.api.el.ELEvalException;
 import com.streamsets.pipeline.api.el.ELVars;
 import com.streamsets.pipeline.api.impl.Utils;
+import com.streamsets.pipeline.lib.el.FakeRecordEL;
 import com.streamsets.pipeline.lib.el.RecordEL;
 import com.streamsets.pipeline.lib.el.TimeEL;
 import com.streamsets.pipeline.lib.generator.DataGeneratorFactory;
 import com.streamsets.pipeline.stage.destination.hdfs.Errors;
 import com.streamsets.pipeline.stage.destination.hdfs.HdfsFileType;
 import org.apache.hadoop.conf.Configuration;
+import org.apache.hadoop.fs.FileStatus;
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.io.SequenceFile;
@@ -29,8 +31,10 @@ import org.slf4j.LoggerFactory;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.net.URI;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 import java.util.TimeZone;
 import java.util.UUID;
 
@@ -126,10 +130,14 @@ public class RecordWriterManager {
     return (compressionCodec == null) ? "" : compressionCodec.getDefaultExtension();
   }
 
+  String getTempFileName() {
+    return "_tmp_" + uniquePrefix + getExtension();
+  }
+
   public Path getPath(Date recordDate, Record record) throws StageException {
     // runUuid is fixed for the current pipeline run. it avoids collisions with other SDCs running the same/similar
     // pipeline
-    return new Path(getDirPath(recordDate, record), "_tmp_" + uniquePrefix + getExtension());
+    return new Path(getDirPath(recordDate, record), getTempFileName());
   }
 
   Path renameToFinalName(FileSystem fs, Path tempPath) throws IOException {
@@ -293,5 +301,90 @@ public class RecordWriterManager {
     }
     return over;
   }
+
+  // returns the time procession of the directory template
+  int getTimeIncrement(String template) {
+    if (template.contains("${" + CONST_ss + "()}")) {
+      return Calendar.SECOND;
+    }
+    if (template.contains("${" + CONST_mm + "()}")) {
+      return Calendar.MINUTE;
+    }
+    if (template.contains("${" + CONST_hh + "()}")) {
+      return Calendar.HOUR;
+    }
+    if (template.contains("${" + CONST_DD + "()}")) {
+      return Calendar.DATE;
+    }
+    if (template.contains("${" + CONST_MM + "()}")) {
+      return Calendar.MONTH;
+    }
+    if (template.contains("${" + CONST_YY + "()}")) {
+      return Calendar.YEAR;
+    }
+    if (template.contains("${" + CONST_YYYY + "()}")) {
+      return Calendar.YEAR;
+    }
+    return -1;
+  }
+
+  Date incrementDate(Date date, int timeIncrement) {
+    Calendar calendar = Calendar.getInstance(timeZone);
+    calendar.setTime(date);
+    calendar.add(timeIncrement, 1);
+    return calendar.getTime();
+  }
+
+  String createGlob(Calendar calendar) throws ELEvalException {
+    ELVars vars = context.createELVars();
+    ELEval elEval = context.createELEval("dirPathTemplate", FakeRecordEL.class);
+    TimeEL.setCalendarInContext(vars, calendar);
+    String dirGlob = elEval.eval(vars, dirPathTemplate, String.class);
+    return dirGlob + "/" + getTempFileName();
+  }
+
+  List<String> getGlobs() throws ELEvalException {
+    List<String> globs = new ArrayList<>();
+    int timeIncrement = getTimeIncrement(dirPathTemplate);
+    Calendar endCalendar = Calendar.getInstance(timeZone);
+    if (timeIncrement > -1) {
+
+      // we need to scan dirs from last batch minus the cutOff time
+      Calendar calendar = Calendar.getInstance(timeZone);
+      calendar.setTime(new Date(context.getLastBatchTime()));
+      calendar.add(Calendar.MILLISECOND, (int) -cutOffMillis);
+      // adding an extra hour to scan
+      calendar.add(Calendar.HOUR, -1);
+
+      LOG.info("Looking for uncommitted files from '{}' onwards", calendar.getTime());
+
+      // iterate from last batch time until now at the dir template minimum time precision increments
+      // we create a glob for each template time tick
+      for (; calendar.compareTo(endCalendar) < 0; calendar.add(timeIncrement, 1)) {
+        globs.add(createGlob(calendar));
+      }
+    } else {
+      // in this case we don't use the calendar at all as the dir template does not use time functions
+      globs.add(createGlob(endCalendar));
+    }
+    return globs;
+  }
+
+  public void commitOldFiles(FileSystem fs) throws IOException, ELEvalException {
+    // if getLastBatchTime() is zero it means we never run, nothing to commit
+    if (context.getLastBatchTime() > 0) {
+      for (String glob : getGlobs()) {
+        LOG.debug("Looking for uncommitted files using glob '{}'", glob);
+        FileStatus[] globStatus = fs.globStatus(new Path(glob));
+        if (globStatus != null) {
+          for (FileStatus status : globStatus) {
+            LOG.debug("Found uncommitted file '{}'", status.getPath());
+            renameToFinalName(fs, status.getPath());
+          }
+        }
+      }
+    }
+  }
+
 
 }

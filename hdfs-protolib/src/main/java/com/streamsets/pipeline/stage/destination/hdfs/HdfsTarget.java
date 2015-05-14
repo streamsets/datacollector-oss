@@ -293,7 +293,15 @@ public class HdfsTarget extends RecordTarget {
   @Override
   protected void init() throws StageException {
     super.init();
-
+    try {
+      FileSystem fs = getFileSystemForInitDestroy();
+      getCurrentWriters().commitOldFiles(fs);
+      if (getLateWriters() != null) {
+        getLateWriters().commitOldFiles(fs);
+      }
+    } catch (IOException ex) {
+      throw new StageException(Errors.HADOOPFS_23, ex.getMessage(), ex);
+    }
     toHdfsRecordsCounter = getContext().createCounter("toHdfsRecords");
     toHdfsRecordsMeter = getContext().createMeter("toHdfsRecords");
     lateRecordsCounter = getContext().createCounter("lateRecords");

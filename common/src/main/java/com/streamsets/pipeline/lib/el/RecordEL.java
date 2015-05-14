@@ -14,6 +14,7 @@ import com.streamsets.pipeline.api.el.ELEval;
 import com.streamsets.pipeline.api.el.ELVars;
 import com.streamsets.pipeline.api.impl.Utils;
 
+//IMPORTANT: make sure to keep in sync defined EL functions with FakeRecordEL
 public class RecordEL {
 
   public static final String RECORD_EL_PREFIX = "record";

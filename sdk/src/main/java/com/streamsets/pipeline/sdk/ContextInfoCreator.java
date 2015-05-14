@@ -73,4 +73,7 @@ public class ContextInfoCreator {
     return createContext(null, instanceName, isPreview, onRecordError, Collections.EMPTY_LIST);
   }
 
+  public static void setLastBatch(Stage.Context context, long lastBatch) {
+    ((StageContext)context).setLastBatchTime(lastBatch);
+  }
 }

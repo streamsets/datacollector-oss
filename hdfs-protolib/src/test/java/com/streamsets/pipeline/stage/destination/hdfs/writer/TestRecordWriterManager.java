@@ -5,10 +5,12 @@
  */
 package com.streamsets.pipeline.stage.destination.hdfs.writer;
 
+import com.google.common.collect.ImmutableSet;
 import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.OnRecordError;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.Target;
+import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.lib.generator.DataGeneratorFactory;
 import com.streamsets.pipeline.lib.generator.DataGenerator;
 import com.streamsets.pipeline.lib.generator.DataGeneratorException;
@@ -40,11 +42,18 @@ import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
 import java.net.URI;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 import java.util.TimeZone;
 import java.util.UUID;
+import java.util.concurrent.TimeUnit;
 
 public class TestRecordWriterManager {
   private static Path testDir;
@@ -637,6 +646,136 @@ public class TestRecordWriterManager {
   @Test(expected = IllegalArgumentException.class)
   public void testInvalidDirTemplateGapInTokens5() throws Exception {
     testDirTemplate("${YY()}/${MM()}/${DD()}/${hh()}/${ss()}");
+  }
+
+
+  private RecordWriterManager getRecordWriterManager(String dirTemplate, long cutOffSecs) throws Exception {
+    URI uri = new URI("file:///");
+    Configuration conf = new HdfsConfiguration();
+    String prefix = "prefix";
+    TimeZone timeZone = TimeZone.getTimeZone("UTC");
+    long cutOffSize = 20;
+    long cutOffRecords = 2;
+    HdfsFileType fileType = HdfsFileType.TEXT;
+    SequenceFile.CompressionType compressionType = null;
+    String keyEL = null;
+    DefaultCodec compressionCodec = new DefaultCodec();
+    DataGeneratorFactory generatorFactory = new DummyDataGeneratorFactory(null);
+
+    return new RecordWriterManager(uri, conf, prefix, dirTemplate, timeZone, cutOffSecs, cutOffSize,
+                                   cutOffRecords, fileType, compressionCodec, compressionType, keyEL,
+                                   generatorFactory, targetContext);
+  }
+
+  @Test
+  public void testGetTimeIncrement() throws Exception {
+    RecordWriterManager mgr = getRecordWriterManager("/", 0);
+    Assert.assertEquals(Calendar.YEAR, mgr.getTimeIncrement("/${YYYY()}"));
+    Assert.assertEquals(Calendar.YEAR, mgr.getTimeIncrement("/${YY()}"));
+    Assert.assertEquals(Calendar.MONTH, mgr.getTimeIncrement("/${MM()}"));
+    Assert.assertEquals(Calendar.DATE, mgr.getTimeIncrement("/${DD()}"));
+    Assert.assertEquals(Calendar.HOUR, mgr.getTimeIncrement("/${hh()}"));
+    Assert.assertEquals(Calendar.MINUTE, mgr.getTimeIncrement("/${mm()}"));
+    Assert.assertEquals(Calendar.SECOND, mgr.getTimeIncrement("/${ss()}"));
+    Assert.assertEquals(-1, mgr.getTimeIncrement("/foo"));
+  }
+
+  @Test
+  public void testIncrementDate() throws Exception {
+    RecordWriterManager mgr = getRecordWriterManager("/", 0);
+    Date date = new Date();
+    Date inc = mgr.incrementDate(date, Calendar.HOUR);
+    Assert.assertEquals(TimeUnit.HOURS.toMillis(1), inc.getTime() - date.getTime());
+  }
+
+  @Test
+  public void testCreateGlobs() throws Exception {
+    Calendar calendar = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
+    calendar.setTime(Utils.parse("2015-05-07T12:35Z"));
+
+    RecordWriterManager mgr = getRecordWriterManager("/foo", 0);
+    Assert.assertEquals("/foo/" + mgr.getTempFileName(), mgr.createGlob(calendar));
+
+    mgr = getRecordWriterManager("/foo/${YYYY()}/${YY()}/${MM()}/${DD()}/${hh()}/${mm()}/${ss()}", 0);
+    Assert.assertEquals("/foo/2015/15/05/07/12/35/00/" + mgr.getTempFileName(), mgr.createGlob(calendar));
+
+    mgr = getRecordWriterManager("/foo/${YYYY()}/${record:value('/foo')}", 0);
+    Assert.assertEquals("/foo/2015/*/" + mgr.getTempFileName(), mgr.createGlob(calendar));
+  }
+
+  @Test
+  public void testGetGlobsAndCommitOldFiles() throws Exception {
+    Calendar calendar = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
+    calendar.add(Calendar.HOUR, -2);
+    Date lastBatch = calendar.getTime();
+    ContextInfoCreator.setLastBatch(targetContext, lastBatch.getTime());
+
+    calendar.add(Calendar.HOUR, -1);
+    Date beforeLastBatchWithinCutOff = calendar.getTime();
+
+    calendar.add(Calendar.DATE, -1);
+    Date beforeLastBatchOutsideCutOff = calendar.getTime();
+
+    calendar.add(Calendar.DATE, 2);
+    Date future = calendar.getTime();
+
+    File testDir = new File("target", UUID.randomUUID().toString()).getAbsoluteFile();
+    Assert.assertTrue(testDir.mkdirs());
+
+    // using 1 hour cutoff
+    RecordWriterManager mgr = getRecordWriterManager(testDir.getAbsolutePath() +
+                                                     "/${YY()}_${MM()}_${DD()}_${hh()}/${record:value('/')}", 3600);
+
+    //this one should not show up when globing
+    String f1 = createTempFile(mgr, beforeLastBatchOutsideCutOff, "a");
+
+    //all this should show up when globing
+    String f2 = createTempFile(mgr, beforeLastBatchWithinCutOff, "b");
+    String f3 = createTempFile(mgr, beforeLastBatchWithinCutOff, "c");
+    String f4 = createTempFile(mgr, lastBatch, "d");
+
+    //this one should not show up when globing
+    String f5 = createTempFile(mgr, future, "e");
+
+    Set<String> expected = ImmutableSet.of(f2, f3, f4);
+
+    Set<String> got = new HashSet<>();
+    URI uri = new URI("file:///");
+    Configuration conf = new HdfsConfiguration();
+    FileSystem fs = FileSystem.get(uri, conf);
+
+    // verifying getGlobs() returned are within the search boundaries
+    List<String> globs = mgr.getGlobs();
+    for (String glob : globs) {
+      FileStatus[] status = fs.globStatus(new Path("file://" + glob));
+      for (FileStatus s : status) {
+        got.add(s.getPath().toString().substring("file:".length()));
+      }
+    }
+    Assert.assertEquals(expected, got);
+
+    // committing all temps within search boundaries
+    mgr.commitOldFiles(fs);
+
+    // verifying there are not temps within search boundaries after committing
+    for (String glob : globs) {
+      FileStatus[] status = fs.globStatus(new Path("file://" + glob));
+      for (FileStatus s : status) {
+        Assert.fail();
+      }
+    }
+
+    // verifying temps outside boundaries are still there
+    Assert.assertTrue(new File(f1).exists());
+    Assert.assertTrue(new File(f5).exists());
+
+  }
+
+  private String createTempFile(RecordWriterManager mgr, Date date, String subDir) throws Exception {
+    String path = mgr.getDirPath(date, RecordCreator.create());
+    path += "/" + subDir + "/";
+    Files.createDirectories(Paths.get(path));
+    return Files.createFile(Paths.get(path + mgr.getTempFileName())).toString();
   }
 
 }

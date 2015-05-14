@@ -43,6 +43,8 @@ import com.streamsets.pipeline.validation.StageIssue;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -317,6 +319,19 @@ public class StageContext implements Source.Context, Target.Context, Processor.C
   @Override
   public ELEval createELEval(String configName) {
     return new ELEvaluator(configName, constants, configToElDefMap.get(configName));
+  }
+
+  @Override
+  public ELEval createELEval(String configName, Class<?>... elDefClasses) {
+    List<Class> classes = new ArrayList<>();
+    Class[] configClasses = configToElDefMap.get(configName);
+    if (configClasses != null) {
+      Collections.addAll(classes, configClasses);
+    }
+    if (elDefClasses != null) {
+      Collections.addAll(classes, elDefClasses);
+    }
+    return new ELEvaluator(configName, constants, classes.toArray(new Class[classes.size()]));
   }
 
   @Override
