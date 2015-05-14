@@ -18,21 +18,21 @@ angular.module('dataCollectorApp.codemirrorDirectives')
         }
 
         return function postLink(scope, iElement, iAttrs) {
-          var dictionary = {},
-            keywords = [],
-            fieldPaths = [],
+          var fieldPaths = [],
             fieldPathsType = [];
 
           // Register our custom Codemirror hint plugin.
           window.CodeMirror.registerHelper('hint', 'dictionaryHint', function(editor, options, c) {
+            var dictionary = editor.options.dictionary;
+            var dictRegex = dictionary.regex || /[\w:'\[\]/$]+/;
             var mode = editor.doc.modeOption;
             var cur = editor.getCursor(), curLine = editor.getLine(cur.line);
             var start = cur.ch, end = start;
 
-            while (end < curLine.length && /[\w:'\[\]/$]+/.test(curLine.charAt(end))) {
+            while (end < curLine.length && dictRegex.test(curLine.charAt(end))) {
               ++end;
             }
-            while (start && /[\w:'\[\]/$]+/.test(curLine.charAt(start - 1))) {
+            while (start && dictRegex.test(curLine.charAt(start - 1))) {
               --start;
             }
             var curWord = start != end && curLine.slice(start, end).
@@ -82,7 +82,9 @@ angular.module('dataCollectorApp.codemirrorDirectives')
                 }
               });
 
-              angular.forEach(fieldPaths, function(fieldPath, index) {
+              var fieldPathList = getFieldPaths(dictionary);
+
+              angular.forEach(fieldPathList, function(fieldPath, index) {
                 if(!curWord || fieldPath.match(regex)) {
                   var desc = 'Field Path: ' + fieldPath;
 
@@ -101,7 +103,7 @@ angular.module('dataCollectorApp.codemirrorDirectives')
                 }
               });
 
-              keywords = getKeywords(mode);
+              var keywords = getKeywords(mode);
               angular.forEach(keywords, function(value, keyword) {
                 if(!curWord || keyword.match(regex)) {
                   completions.push({
@@ -161,24 +163,16 @@ angular.module('dataCollectorApp.codemirrorDirectives')
             'on a ui-codemirror element or an element with the ui-codemirror attribute set.');
           }
 
-          if (iAttrs.codemirrorEl) {
-            scope.$watch('iAttrs.codemirrorEl', function() {
-              dictionary = $parse(iAttrs.codemirrorEl)(scope);
-            });
-          }
-
           if (iAttrs.fieldPaths) {
             scope.$watch('iAttrs.fieldPaths', function() {
               fieldPaths = $parse(iAttrs.fieldPaths)(scope);
               fieldPathsType = $parse(iAttrs.fieldPathsType)(scope);
-              updatedFieldPaths();
             });
           }
 
           scope.$on('fieldPathsUpdated', function(event, _fieldPaths, _fieldPathsType) {
             fieldPaths = _fieldPaths;
             fieldPathsType = _fieldPathsType;
-            updatedFieldPaths();
           });
 
           // The ui-codemirror directive allows us to receive a reference to the Codemirror instance on demand.
@@ -210,7 +204,7 @@ angular.module('dataCollectorApp.codemirrorDirectives')
 
           });
 
-          function updatedFieldPaths() {
+          function getFieldPaths(dictionary) {
             if(dictionary && dictionary.textMode &&
               (dictionary.textMode === 'text/javascript' || dictionary.textMode === 'text/x-python')) {
               var fp = [];
@@ -231,7 +225,9 @@ angular.module('dataCollectorApp.codemirrorDirectives')
                 });
                 fp.push(val);
               });
-              fieldPaths = fp;
+              return fp;
+            } else {
+              return fieldPaths;
             }
           }
 
@@ -266,6 +262,7 @@ angular.module('dataCollectorApp.codemirrorDirectives')
           }
 
           function updateArgHints(cm) {
+            var dictionary = cm.options.dictionary;
             closeArgHints();
 
             if (cm.somethingSelected() || activeAutoComplete) {

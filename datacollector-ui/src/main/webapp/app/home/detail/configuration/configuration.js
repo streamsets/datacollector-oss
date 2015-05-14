@@ -43,8 +43,20 @@ angular
        * @param options
        * @returns {*}
        */
-      getCodeMirrorOptions: function(options) {
-        return angular.extend({}, pipelineService.getDefaultELEditorOptions(), options);
+      getCodeMirrorOptions: function(options, configDefinition) {
+        var codeMirrorOptions = {};
+
+        if(configDefinition.type !== 'TEXT') {
+          codeMirrorOptions = {
+            dictionary: $scope.getCodeMirrorHints(configDefinition)
+          };
+        } else {
+          codeMirrorOptions = {
+            dictionary: $scope.getTextCodeMirrorHints(configDefinition)
+          };
+        }
+
+        return angular.extend(codeMirrorOptions, pipelineService.getDefaultELEditorOptions(), options);
       },
 
       /**
@@ -62,7 +74,8 @@ angular
         return {
           elFunctionDefinitions: configDefinition.elFunctionDefinitions,
           elConstantDefinitions: configDefinition.elConstantDefinitions,
-          pipelineConstants: pipelineConstants ? pipelineConstants.value : []
+          pipelineConstants: pipelineConstants ? pipelineConstants.value : [],
+          regex: /[\w:/$]+/
         };
       },
 
@@ -77,7 +90,8 @@ angular
           elFunctionDefinitions: [],
           elConstantDefinitions: pipelineService.getTextELConstantDefinitions(),
           pipelineConstants: [],
-          textMode: configDefinition.mode
+          textMode: configDefinition.mode,
+          regex: /[\w:'\[\]/$]+/
         };
       },
 

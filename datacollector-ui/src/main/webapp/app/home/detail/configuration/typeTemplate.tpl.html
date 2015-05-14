@@ -58,10 +58,11 @@
          ui-codemirror-opts="getCodeMirrorOptions({
                 readOnly: isPipelineReadOnly || isPipelineRunning,
                 extraKeys: {
-                  'Tab': false
+                  'Tab': false,
+                  'Ctrl-Space': 'autocomplete'
                 }
-              })"
-         codemirror-el="getCodeMirrorHints(configDefinition)"
+              }, configDefinition)"
+         codemirror-el
          field-paths="fieldPaths"
          data-type="configDefinition.type">
     </div>
@@ -153,10 +154,11 @@
              ui-codemirror-opts="getCodeMirrorOptions({
                 readOnly: isPipelineReadOnly || isPipelineRunning,
                 extraKeys: {
-                  'Tab': false
+                  'Tab': false,
+                  'Ctrl-Space': 'autocomplete'
                 }
-              })"
-             codemirror-el="getCodeMirrorHints(configDefinition)"
+              }, configDefinition)"
+             codemirror-el
              field-paths="fieldPaths"
              data-type="'STRING'">
         </div>
@@ -214,10 +216,11 @@
              ui-codemirror-opts="getCodeMirrorOptions({
                 readOnly: isPipelineReadOnly || isPipelineRunning,
                 extraKeys: {
-                  'Tab': false
+                  'Tab': false,
+                  'Ctrl-Space': 'autocomplete'
                 }
-              })"
-             codemirror-el="getCodeMirrorHints(configDefinition)"
+              }, configDefinition)"
+             codemirror-el
              field-paths="fieldPaths"
              data-type="'STRING'">
         </div>
@@ -344,10 +347,11 @@
              ui-codemirror-opts="getCodeMirrorOptions({
                 readOnly: isPipelineReadOnly || isPipelineRunning || lanePredicateMapping.predicate === 'default',
                 extraKeys: {
-                  'Tab': false
+                  'Tab': false,
+                  'Ctrl-Space': 'autocomplete'
                 }
-              })"
-             codemirror-el="getCodeMirrorHints(configDefinition)"
+              }, configDefinition)"
+             codemirror-el
              field-paths="fieldPaths">
         </div>
 
@@ -404,9 +408,10 @@
        ui-codemirror-opts="getCodeMirrorOptions({
                 readOnly: isPipelineReadOnly || isPipelineRunning,
                 extraKeys: {
-                  'Tab': false
+                  'Tab': false,
+                  'Ctrl-Space': 'autocomplete'
                 }
-              })"
+              }, configDefinition)"
        codemirror-el="getCodeMirrorHints(customFieldConfigDefinition)"
        field-paths="fieldPaths">
   </div>
@@ -428,8 +433,8 @@
                   name: configDefinition.mode
                 },
                 lineNumbers: true
-              })"
-         codemirror-el="getTextCodeMirrorHints(configDefinition)"
+              }, configDefinition)"
+         codemirror-el
          field-paths="fieldPaths">
     </div>
 
