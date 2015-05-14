@@ -13,6 +13,7 @@ import com.streamsets.pipeline.api.GenerateResourceBundle;
 import com.streamsets.pipeline.api.HideConfig;
 import com.streamsets.pipeline.api.StageDef;
 import com.streamsets.pipeline.api.Target;
+import com.streamsets.pipeline.api.el.SdcEL;
 import com.streamsets.pipeline.configurablestage.DTarget;
 import com.streamsets.pipeline.lib.el.TimeEL;
 
@@ -41,6 +42,18 @@ public class ToErrorLocalFSDTarget extends DTarget {
   public String directory;
 
   @ConfigDef(
+      required = false,
+      type = ConfigDef.Type.STRING,
+      defaultValue = "sdc-${sdc:id()}",
+      label = "Files Prefix",
+      description = "File name prefix",
+      displayPosition = 20,
+      group = "FILES",
+      elDefs = SdcEL.class
+  )
+  public String uniquePrefix;
+
+  @ConfigDef(
       required = true,
       type = ConfigDef.Type.STRING,
       defaultValue = "${1 * HOURS}",
@@ -48,7 +61,7 @@ public class ToErrorLocalFSDTarget extends DTarget {
       description = "Max time to wait for error records before creating a new error file. \n" +
                     "Enter the time in seconds or use the default expression to enter the time limit in minutes. " +
                     "You can also use HOURS in the expression to enter the limit in hours.",
-      displayPosition = 20,
+      displayPosition = 30,
       group = "FILES",
       elDefs = {TimeEL.class},
       evaluation = ConfigDef.Evaluation.EXPLICIT
@@ -61,7 +74,7 @@ public class ToErrorLocalFSDTarget extends DTarget {
       defaultValue = "512",
       label = "Max File Size (MB)",
       description = "Max file size to trigger the creation of a new file. Use 0 to opt out.",
-      displayPosition = 30,
+      displayPosition = 40,
       group = "FILES",
       min = 0,
       max = Integer.MAX_VALUE
@@ -71,7 +84,7 @@ public class ToErrorLocalFSDTarget extends DTarget {
 
   @Override
   protected Target createTarget() {
-    return new RecordsToLocalFileSystemTarget(directory, rotationIntervalSecs, maxFileSizeMbs);
+    return new RecordsToLocalFileSystemTarget(directory, uniquePrefix, rotationIntervalSecs, maxFileSizeMbs);
   }
 
 }

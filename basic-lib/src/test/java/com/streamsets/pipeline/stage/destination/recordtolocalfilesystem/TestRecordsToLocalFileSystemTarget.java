@@ -33,7 +33,7 @@ public class TestRecordsToLocalFileSystemTarget {
   public void testTargetLifecycleTimeRotation() throws Exception {
     File dir = new File("target", UUID.randomUUID().toString());
     Assert.assertTrue(dir.mkdirs());
-    Target target = new RecordsToLocalFileSystemTarget(dir.getAbsolutePath(), "${900}", 0);
+    Target target = new RecordsToLocalFileSystemTarget(dir.getAbsolutePath(), "x", "${900}", 0);
     TargetRunner runner = new TargetRunner.Builder(ToErrorLocalFSDTarget.class, target).build();
     List<Record> input = new ArrayList<>();
     input.add(createRecord("a"));
@@ -58,7 +58,7 @@ public class TestRecordsToLocalFileSystemTarget {
   public void testTargetLifecycleSizeRotation() throws Exception {
     File dir = new File("target", UUID.randomUUID().toString());
     Assert.assertTrue(dir.mkdirs());
-    Target target = new RecordsToLocalFileSystemTarget(dir.getAbsolutePath(), "${10}", 1);
+    Target target = new RecordsToLocalFileSystemTarget(dir.getAbsolutePath(), "x", "${10}", 1);
     TargetRunner runner = new TargetRunner.Builder(ToErrorLocalFSDTarget.class, target).build();
     List<Record> input = new ArrayList<>();
     for (int i = 0; i < 5000; i++) {
@@ -80,7 +80,7 @@ public class TestRecordsToLocalFileSystemTarget {
   public void testTargetLifecycleSizeTimeRotation() throws Exception {
     File dir = new File("target", UUID.randomUUID().toString());
     Assert.assertTrue(dir.mkdirs());
-    Target target = new RecordsToLocalFileSystemTarget(dir.getAbsolutePath(), "${1}", 1);
+    Target target = new RecordsToLocalFileSystemTarget(dir.getAbsolutePath(), "x", "${1}", 1);
     TargetRunner runner = new TargetRunner.Builder(ToErrorLocalFSDTarget.class, target).build();
     List<Record> input = new ArrayList<>();
     for (int i = 0; i < 5000; i++) {

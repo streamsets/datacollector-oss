@@ -16,7 +16,6 @@ import com.streamsets.pipeline.lib.generator.DataGeneratorFactory;
 import com.streamsets.pipeline.lib.generator.DataGenerator;
 import com.streamsets.pipeline.lib.generator.DataGeneratorFactoryBuilder;
 import com.streamsets.pipeline.lib.generator.DataGeneratorFormat;
-import com.streamsets.pipeline.lib.io.WildcardFilter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -25,22 +24,24 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.charset.Charset;
-import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
-import java.nio.file.Path;
 import java.util.Iterator;
 import java.util.List;
+import java.util.UUID;
 
 public class RecordsToLocalFileSystemTarget extends BaseTarget {
   private final static Logger LOG = LoggerFactory.getLogger(RecordsToLocalFileSystemTarget.class);
   private static final String CHARSET_UTF8 = "UTF-8";
 
   private final String directory;
+  private final String uniquePrefix;
   private final String rotationIntervalSecs;
   private final int maxFileSizeMbs;
 
-  public RecordsToLocalFileSystemTarget(String directory, String rotationIntervalSecs, int maxFileSizeMbs) {
+  public RecordsToLocalFileSystemTarget(String directory, String uniquePrefix, String rotationIntervalSecs,
+      int maxFileSizeMbs) {
     this.directory = directory;
+    this.uniquePrefix = (uniquePrefix == null) ? "" : uniquePrefix;
     this.rotationIntervalSecs = rotationIntervalSecs;
     this.maxFileSizeMbs = maxFileSizeMbs;
   }
@@ -49,7 +50,6 @@ public class RecordsToLocalFileSystemTarget extends BaseTarget {
   private long rotationMillis;
   private int maxFileSizeBytes;
   private long lastRotation;
-  private DirectoryStream.Filter<Path> fileFilter;
   private File activeFile;
   private CountingOutputStream countingOutputStream;
   private DataGeneratorFactory generatorFactory;
@@ -95,8 +95,7 @@ public class RecordsToLocalFileSystemTarget extends BaseTarget {
   @Override
   protected void init() throws StageException {
     super.init();
-    activeFile = new File(dir, "_tmp_sdc-records").getAbsoluteFile();
-    fileFilter = WildcardFilter.createRegex("sdc-records-[0-9][0-9][0-9][0-9][0-9][0-9]");
+    activeFile = new File(dir, "_tmp_" + uniquePrefix + ".sdc").getAbsoluteFile();
     // if we had non graceful shutdown we may have a _tmp file around. new file is not created.
     rotate(false);
     generatorFactory = new DataGeneratorFactoryBuilder(getContext(), DataGeneratorFormat.SDC_RECORD)
@@ -133,30 +132,7 @@ public class RecordsToLocalFileSystemTarget extends BaseTarget {
   }
 
   private File findFinalName() throws StageException, IOException {
-    String latest = null;
-    try (DirectoryStream<Path> stream = Files.newDirectoryStream(dir.toPath(), fileFilter)) {
-      for (Path file : stream) {
-        String name = file.getFileName().toString();
-        if (latest == null) {
-          latest = name;
-        }
-        if (name.compareTo(latest) > 0) {
-          latest = name;
-        }
-      }
-    }
-    if (latest == null) {
-      latest = "sdc-records-000000";
-    } else {
-      String countStr = latest.substring("sdc-records-".length(), "sdc-records-".length() + 6);
-      try {
-        int count = Integer.parseInt(countStr) + 1;
-        latest = String.format("sdc-records-%06d", count);
-      } catch (NumberFormatException ex) {
-        throw new StageException(Errors.RECORDFS_07, latest, ex.getMessage(), ex);
-      }
-    }
-    return new File(dir, latest).getAbsoluteFile();
+    return new File(dir, uniquePrefix + "_" + UUID.randomUUID().toString() + ".sdc").getAbsoluteFile();
   }
 
   private void rotate(boolean createNewFile) throws StageException {
