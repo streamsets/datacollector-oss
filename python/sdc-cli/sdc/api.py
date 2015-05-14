@@ -40,7 +40,9 @@ class DataCollector:
             'form': self._auth_form,
         }
 
-        setup_auth[auth_type](sdc_user, sdc_password)
+        # When a user asks for --help we shouldn't require auth.
+        if auth_type is not None:
+            setup_auth[auth_type](sdc_user, sdc_password)
 
         self._json_headers = {'content-type': 'application/json'}
         # The trailing slash is required for urljoin to work properly.

@@ -60,13 +60,14 @@ def library():
     is_flag=True,
     help='Output the full pipeline description, not just the name.'
 )
+@click.option('--pretty', is_flag=True, help='Pretty prints JSON when specified.')
 @pass_api
-def list_pipelines(sdc_api, full):
+def list_pipelines(sdc_api, full, pretty):
     """Lists the pipelines stored in the pipeline library."""
     if full:
-        click.echo(json.dumps(sdc_api.list_pipelines()))
+        _print_json(sdc_api.list_pipelines(), pretty)
     else:
-        click.echo(json.dumps(sdc_api.list_pipeline_names()))
+        _print_json(sdc_api.list_pipeline_names(), pretty)
 
 
 @library.command('import')
