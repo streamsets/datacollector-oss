@@ -26,6 +26,8 @@
     <hbase.version>1.0.0-cdh5.4.0</hbase.version>
     <solr.version>4.10.3-cdh5.4.0</solr.version>
     <solr.test.jetty.version>8.1.10.v20130312</solr.test.jetty.version>
+    <flume.version>1.5.0-cdh5.4.0</flume.version>
+    <thrift.version>0.9.2</thrift.version>
  </properties>
 
   <repositories>
@@ -268,6 +270,59 @@
       <scope>test</scope>
     </dependency>
 
+    <!-- Flume related -->
+
+    <dependency>
+      <groupId>com.streamsets</groupId>
+      <artifactId>streamsets-datacollector-flume-protolib</artifactId>
+      <version>${project.version}</version>
+      <scope>compile</scope>
+      <exclusions>
+        <exclusion>
+          <groupId>org.apache.flume</groupId>
+          <artifactId>flume-ng-sdk</artifactId>
+        </exclusion>
+      </exclusions>
+    </dependency>
+
+    <!-- Explicitly add dependency on thrift version 0.9.0-cdh5-2 because maven shows dependency on thrift 0.7.0
+    which is not correct -->
+    <dependency>
+      <groupId>org.apache.thrift</groupId>
+      <artifactId>libthrift</artifactId>
+      <version>${thrift.version}</version>
+      <scope>compile</scope>
+      <!-- This exclusion is required because thrift brings in an older version of httpcore but solr needs a newer
+      version which it brings along with it -->
+      <exclusions>
+        <exclusion>
+          <groupId>org.apache.httpcomponents</groupId>
+          <artifactId>httpcore</artifactId>
+        </exclusion>
+      </exclusions>
+    </dependency>
+
+    <dependency>
+      <groupId>org.apache.flume</groupId>
+      <artifactId>flume-ng-sdk</artifactId>
+      <version>${flume.version}</version>
+      <scope>compile</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>org.apache.flume</groupId>
+      <artifactId>flume-ng-core</artifactId>
+      <version>${flume.version}</version>
+      <scope>test</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>org.apache.flume</groupId>
+      <artifactId>flume-ng-configuration</artifactId>
+      <version>${flume.version}</version>
+      <scope>test</scope>
+    </dependency>
+
   </dependencies>
 
   <build>
@@ -286,6 +341,7 @@
               <sources>
                 <source>${basedir}/../hdfs-protolib/src/test/java</source>
                 <source>${basedir}/../hbase-protolib/src/test/java</source>
+                <source>${basedir}/../flume-protolib/src/test/java</source>
               </sources>
             </configuration>
           </execution>
@@ -305,6 +361,9 @@
                 </resource>
                 <resource>
                   <directory>${basedir}/../solr-protolib/src/test/resources</directory>
+                </resource>
+                <resource>
+                  <directory>${basedir}/../flume-protolib/src/test/resources</directory>
                 </resource>
              </resources>
             </configuration>
