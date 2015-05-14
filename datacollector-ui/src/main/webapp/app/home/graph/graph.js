@@ -60,7 +60,7 @@ angular
         if(e && stage) {
           $scope.addStageInstance({
             stage: stage,
-            relativeXPos: e.x,
+            relativeXPos: e.x - 130,
             relativeYPos: e.y
           });
         }

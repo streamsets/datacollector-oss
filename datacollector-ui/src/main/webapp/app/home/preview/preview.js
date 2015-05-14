@@ -10,7 +10,7 @@ angular
 
     angular.extend($scope, {
       previewMultipleStages: false,
-      listView: true,
+      listView: false,
       showLoading: false,
       previewSourceOffset: null,
       previewBatchSize: 10,
@@ -55,13 +55,24 @@ angular
       },
 
       /**
+       * On Record Value updated.
+       *
+       * @param recordUpdated
+       * @param recordValue
+       * @param dateRecordValue
+       */
+      recordDateValueUpdated: function(recordUpdated, recordValue, dateRecordValue) {
+        recordValue.value = dateRecordValue.getTime();
+        $scope.recordValueUpdated(recordUpdated, recordValue);
+      },
+
+      /**
        * Set dirty flag to true when record is updated in Preview Mode.
        *
        * @param recordUpdated
        * @param recordValue
-       * @param stageInstance
        */
-      recordValueUpdated: function(recordUpdated, recordValue, stageInstance) {
+      recordValueUpdated: function(recordUpdated, recordValue) {
         $scope.previewDataUpdated = true;
         recordUpdated.dirty = true;
         recordValue.dirty = true;
