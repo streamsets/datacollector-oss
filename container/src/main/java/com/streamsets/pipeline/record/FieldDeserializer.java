@@ -50,8 +50,20 @@ public class FieldDeserializer extends JsonDeserializer<FieldJson> {
             value = fList;
             break;
           case BYTE_ARRAY:
-            byte[] bytes = Base64.decodeBase64((String) value);
-            value = bytes;
+            value = Base64.decodeBase64((String) value);
+            break;
+          case INTEGER:
+            value = Integer.parseInt((String) value);
+            break;
+          case LONG:
+            value = Long.parseLong((String) value);
+            break;
+          case FLOAT:
+            value = Float.parseFloat((String) value);
+            break;
+          case DOUBLE:
+            value = Double.parseDouble((String) value);
+            break;
           default:
             break;
         }

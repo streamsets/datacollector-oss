@@ -113,7 +113,18 @@ public class RecordImpl implements Record {
     }
 
     public Object getValue() {
-      return value;
+      Object v = value;
+      if (value != null) {
+        switch (type) {
+          case INTEGER:
+          case LONG:
+          case FLOAT:
+          case DOUBLE:
+            v = value.toString();
+            break;
+        }
+      }
+      return v;
     }
 
     @Override
