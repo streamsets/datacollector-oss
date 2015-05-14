@@ -225,7 +225,7 @@ public class StandalonePipelineManagerTask extends AbstractTask implements Pipel
             //We need to change state here
             startPipeline(ps.getName(), ps.getRev());
           } catch (Exception e) {
-            throw new RuntimeException(e);
+            handleExceptionOnRestart(ps, e);
           }
           break;
         default:
@@ -277,7 +277,7 @@ public class StandalonePipelineManagerTask extends AbstractTask implements Pipel
       //Note that the state is already "RUNNING" in this case. No need to change state.
       handleStartRequest(ps.getName(), ps.getRev());
     } catch (Exception e) {
-      throw new RuntimeException(e);
+      handleExceptionOnRestart(ps, e);
     }
   }
 
@@ -646,6 +646,17 @@ public class StandalonePipelineManagerTask extends AbstractTask implements Pipel
         throw new PipelineManagerException(ContainerError.CONTAINER_0110, name,
           Utils.format("'{}' mkdir failed", pipelineDir));
       }
+    }
+  }
+
+  private void handleExceptionOnRestart(PipelineState ps, Exception e) {
+    //If there is an exception while restarting the pipeline [origin/target is down] then do not shutdown sdc.
+    //Change state to error and log message
+    LOG.error("An exception occurred while running the pipeline, {}", e.getMessage(), e);
+    try {
+      setState(ps.getName(), ps.getRev(), State.ERROR, e.getMessage(), getMetrics());
+    } catch (PipelineManagerException ex) {
+      LOG.error("An exception occurred while committing the state, {}", ex.getMessage(), e);
     }
   }
 
