@@ -251,6 +251,7 @@ angular.module('dataCollectorApp')
     configuration.init().then(function() {
       $rootScope.common.authenticationType = configuration.getAuthenticationType();
       $rootScope.common.sdcExecutionMode = configuration.getSDCExecutionMode();
+      $rootScope.common.sdcClusterManagerURL = configuration.getSDCClusterManagerURL();
       if(configuration.isAnalyticsEnabled()) {
         Analytics.createAnalyticsScriptTag();
       }

@@ -1302,8 +1302,12 @@ angular
 
     $scope.$on('$destroy', function() {
       if(isWebSocketSupported) {
-        metricsWebSocket.close();
-        alertsWebSocket.close();
+        if(metricsWebSocket) {
+          metricsWebSocket.close();
+        }
+        if(alertsWebSocket) {
+          alertsWebSocket.close();
+        }
       } else {
         $timeout.cancel(pipelineMetricsTimer);
       }
@@ -1313,9 +1317,9 @@ angular
 
     $scope.$on('visibilityChange', function(event, isHidden) {
       if (isHidden) {
-        if(isWebSocketSupported) {
+        if(isWebSocketSupported && metricsWebSocket) {
           metricsWebSocket.close();
-        } else {
+        } else if(!isWebSocketSupported){
           $timeout.cancel(pipelineMetricsTimer);
         }
         pageHidden = true;

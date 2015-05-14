@@ -10,7 +10,8 @@ angular.module('dataCollectorApp.common')
       UI_HOSTED_HELP_BASE_URL = 'ui.hosted.help.base.url',
       UI_ENABLE_USAGE_DATA_COLLECTION = 'ui.enable.usage.data.collection',
       HTTP_AUTHENTICATION = 'http.authentication',
-      SDC_EXECUTION_MODE = 'sdc.execution.mode';
+      SDC_EXECUTION_MODE = 'sdc.execution.mode',
+      CALLBACK_SERVER_URL = 'callback.server.url';
 
     this.initializeDefer = undefined;
     this.config = undefined;
@@ -119,6 +120,17 @@ angular.module('dataCollectorApp.common')
         return self.config[SDC_EXECUTION_MODE].toLowerCase();
       }
       return 'standalone';
+    };
+
+    /**
+     * Returns SDC Cluster Manager URL
+     * @returns {*}
+     */
+    this.getSDCClusterManagerURL = function() {
+      if(self.config && self.config[CALLBACK_SERVER_URL]) {
+        return self.config[CALLBACK_SERVER_URL].replace('/rest/v1/cluster/callback', '');
+      }
+      return 'http://localhost:18630';
     };
 
   });

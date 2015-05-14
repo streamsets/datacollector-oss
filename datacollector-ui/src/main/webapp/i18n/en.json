@@ -14,6 +14,7 @@
         "resetLocalStorage": "Reset Browser Local Storage",
         "shutdown": "Shutdown"
       },
+      "clusterManager": "Cluster Manager",
       "help": {
         "about": "About",
         "main": "Help",
@@ -139,6 +140,7 @@
       "continueMonitoring": "Continue Monitoring",
       "closePreview": "Close Preview",
       "closeSnapshot": "Close Snapshot",
+      "clusterManagerNode": "Cluster Manager:",
       "comfortable": "Comfortable",
       "compact": "Compact",
       "cozy": "Cozy",
@@ -171,7 +173,8 @@
       "targets": "Destinations",
       "toggleLibraryPane": "Toggle Library Pane",
       "uptime": "Uptime",
-      "validate": "Validate"
+      "validate": "Validate",
+      "workerNode": "Worker:"
     },
     "graphPane": {
       "startErrorMessage": "Pipeline definition '{{name}}' is running. Pipeline Agent supports running only one Pipeline Definition.",
