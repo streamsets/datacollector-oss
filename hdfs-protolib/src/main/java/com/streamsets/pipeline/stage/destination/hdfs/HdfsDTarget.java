@@ -11,9 +11,9 @@ import com.streamsets.pipeline.api.GenerateResourceBundle;
 import com.streamsets.pipeline.api.StageDef;
 import com.streamsets.pipeline.api.Target;
 import com.streamsets.pipeline.api.ValueChooser;
+import com.streamsets.pipeline.api.el.SdcEL;
 import com.streamsets.pipeline.config.CharsetChooserValues;
 import com.streamsets.pipeline.config.CsvHeader;
-import com.streamsets.pipeline.config.CsvHeaderChooserValues;
 import com.streamsets.pipeline.config.CsvMode;
 import com.streamsets.pipeline.config.CsvModeChooserValues;
 import com.streamsets.pipeline.config.DataFormat;
@@ -95,11 +95,12 @@ public class HdfsDTarget extends DTarget {
   @ConfigDef(
       required = false,
       type = ConfigDef.Type.STRING,
-      defaultValue = "sdc",
+      defaultValue = "sdc-${sdc:id()}",
       label = "Files Prefix",
       description = "File name prefix",
       displayPosition = 105,
-      group = "OUTPUT_FILES"
+      group = "OUTPUT_FILES",
+      elDefs = SdcEL.class
   )
   public String uniquePrefix;
 

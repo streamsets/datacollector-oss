@@ -9,12 +9,16 @@ import com.streamsets.pipeline.task.Task;
 import com.streamsets.pipeline.task.TaskWrapper;
 import dagger.Module;
 import dagger.Provides;
+import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mockito;
 import org.slf4j.Logger;
+
+import java.io.File;
+import java.util.UUID;
 
 public class TestMain {
   private static Runtime runtime = Mockito.mock(Runtime.class);
@@ -61,6 +65,9 @@ public class TestMain {
 
   @Before
   public void before() {
+    File dir = new File("target", UUID.randomUUID().toString());
+    Assert.assertTrue(dir.mkdirs());
+    System.setProperty(RuntimeModule.SDC_PROPERTY_PREFIX + RuntimeInfo.DATA_DIR, dir.getAbsolutePath());
     Mockito.reset(runtime);
     Mockito.reset(logConfigurator);
     Mockito.reset(buildInfo);
@@ -68,6 +75,10 @@ public class TestMain {
     Mockito.reset(task);
   }
 
+  @After
+  public void after() {
+    System.getProperties().remove(RuntimeModule.SDC_PROPERTY_PREFIX + RuntimeInfo.DATA_DIR);
+  }
   @Test
   public void testMainClassGetRuntime() {
     DataCollectorMain main = new DataCollectorMain();

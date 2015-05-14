@@ -24,7 +24,6 @@ import java.util.List;
     includes = MetricsModule.class)
 public class RuntimeModule {
   private static final Logger LOG = LoggerFactory.getLogger(RuntimeModule.class);
-  public static final String DATA_COLLECTOR_ID = "sdc.id";
   public static final String DATA_COLLECTOR_BASE_HTTP_URL = "sdc.base.http.url";
   public static final String SDC_PROPERTY_PREFIX = "sdc";
   public static final String SDC_EXECUTION_MODE_KEY = "sdc.execution.mode";
@@ -43,7 +42,9 @@ public class RuntimeModule {
 
   @Provides @Singleton
   public RuntimeInfo provideRuntimeInfo(MetricRegistry metrics) {
-    return new RuntimeInfo(SDC_PROPERTY_PREFIX, metrics, stageLibraryClassLoaders);
+    RuntimeInfo info = new RuntimeInfo(SDC_PROPERTY_PREFIX, metrics, stageLibraryClassLoaders);
+    info.init();
+    return info;
   }
 
   @Provides @Singleton
@@ -54,7 +55,6 @@ public class RuntimeModule {
     if (configFile.exists()) {
       try {
         conf.load(new FileReader(configFile));
-        runtimeInfo.setId(conf.get(DATA_COLLECTOR_ID, runtimeInfo.getId()));
         runtimeInfo.setBaseHttpUrl(conf.get(DATA_COLLECTOR_BASE_HTTP_URL, runtimeInfo.getBaseHttpUrl()));
         runtimeInfo.setExecutionMode(conf.get(SDC_EXECUTION_MODE_KEY, SDC_EXECUTION_MODE_DEFAULT));
       } catch (IOException ex) {

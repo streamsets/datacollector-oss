@@ -54,7 +54,7 @@ public class ElUtil {
   }
 
   public static boolean isElString(Object value) {
-    if(value instanceof String && ((String) value).startsWith(EL_PREFIX)) {
+    if(value instanceof String && ((String) value).contains(EL_PREFIX)) {
       return true;
     }
     return false;

@@ -8,16 +8,20 @@ package com.streamsets.pipeline.main;
 import com.codahale.metrics.MetricRegistry;
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.collect.ImmutableList;
+import com.google.common.io.Files;
 import com.streamsets.pipeline.api.impl.Utils;
 
 import com.streamsets.pipeline.util.AuthzRole;
 import org.slf4j.Logger;
 
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+import java.util.concurrent.Callable;
 import java.util.concurrent.ConcurrentHashMap;
 import java.io.File;
 
@@ -25,7 +29,7 @@ public class RuntimeInfo {
   /**
    * Note this differs from the Pipeline level enum named ExecutionMode
    */
-  public enum ExecutionMode { CLUSTER, STANDALONE, SLAVE };
+  public enum ExecutionMode { CLUSTER, STANDALONE, SLAVE }
 
   public static final String SPLITTER = "|";
   public static final String CONFIG_DIR = ".conf.dir";
@@ -69,7 +73,6 @@ public class RuntimeInfo {
     }
     this.propertyPrefix = propertyPrefix;
     this.baseDir = baseDir;
-    id = UNDEF;
     httpUrl = UNDEF;
     this.attributes = new ConcurrentHashMap<>();
     authenticationTokens = new HashMap<>();
@@ -78,12 +81,42 @@ public class RuntimeInfo {
     sdcToken = UUID.randomUUID().toString();
   }
 
-  public MetricRegistry getMetrics() {
-    return metrics;
+  public void init() {
+    this.id = getSdcId(getDataDir());
+    // inject SDC ID into the API sdc:id EL function
+    Utils.setSdcIdCallable(new Callable<String>() {
+      @Override
+      public String call() throws Exception {
+        return RuntimeInfo.this.id;
+      }
+    });
   }
 
-  public void setId(String id) {
-    this.id = id;
+  protected String getSdcId(String dir) {
+    File dataDir = new File(dir);
+    if (!dataDir.exists()) {
+      if (!dataDir.mkdirs()) {
+        throw new RuntimeException(Utils.format("Could not create data directory '{}'", dataDir));
+      }
+    }
+    File idFile = new File(dataDir, "sdc.id");
+    if (!idFile.exists()) {
+      try {
+        Files.write(UUID.randomUUID().toString(), idFile, StandardCharsets.UTF_8);
+      } catch (IOException ex) {
+        throw new RuntimeException(Utils.format("Could not create SDC ID file '{}': {}", idFile, ex.getMessage(), ex));
+      }
+    }
+    try {
+      return Files.readFirstLine(idFile, StandardCharsets.UTF_8).trim();
+    } catch (IOException ex) {
+      throw new RuntimeException(Utils.format("Could not read SDC ID file '{}': {}", idFile, ex.getMessage(), ex));
+    }
+  }
+
+
+  public MetricRegistry getMetrics() {
+    return metrics;
   }
 
   public void setBaseHttpUrl(String url) {
@@ -143,7 +176,7 @@ public class RuntimeInfo {
     attributes.put(key, value);
   }
 
-  public <T> void removeAttribute(String key) {
+  public void removeAttribute(String key) {
     Utils.checkNotNull(key, "key");
     attributes.remove(key);
   }
@@ -161,6 +194,7 @@ public class RuntimeInfo {
   public void log(Logger log) {
     log.info("Runtime info:");
     log.info("  Java version : {}", System.getProperty("java.runtime.version"));
+    log.info("  SDC ID       : {}", getId());
     log.info("  Runtime dir  : {}", getRuntimeDir());
     log.info("  Config dir   : {}", getConfigDir());
     log.info("  Data dir     : {}", getDataDir());

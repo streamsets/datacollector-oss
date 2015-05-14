@@ -57,6 +57,7 @@ public class TestProductionPipeline {
   private static final String SNAPSHOT_NAME = "snapshot";
   private MetricRegistry runtimeInfoMetrics;
   private MemoryLimitConfiguration memoryLimit;
+  private RuntimeInfo runtimeInfo;
 
   @BeforeClass
   public static void beforeClass() throws Exception {
@@ -75,6 +76,9 @@ public class TestProductionPipeline {
   @Before
   public void setUp() {
     runtimeInfoMetrics = new MetricRegistry();
+    runtimeInfo = new RuntimeInfo(RuntimeModule.SDC_PROPERTY_PREFIX, runtimeInfoMetrics,
+                                  Arrays.asList(getClass().getClassLoader()));
+    runtimeInfo.init();
     memoryLimit = new MemoryLimitConfiguration();
   }
 
@@ -283,9 +287,6 @@ public class TestProductionPipeline {
   private ProductionPipeline createProductionPipeline(DeliveryGuarantee deliveryGuarantee,
                                                       boolean captureNextBatch, boolean sourceOffsetCommitter)
       throws PipelineRuntimeException, StageException {
-    RuntimeInfo runtimeInfo = new RuntimeInfo(RuntimeModule.SDC_PROPERTY_PREFIX, runtimeInfoMetrics,
-      Arrays.asList(getClass().getClassLoader()));
-    runtimeInfo.setId("id");
     SourceOffsetTracker tracker = new TestUtil.SourceOffsetTrackerImpl("1");
     FileSnapshotStore snapshotStore = Mockito.mock(FileSnapshotStore.class);
 
@@ -410,14 +411,14 @@ public class TestProductionPipeline {
     ProductionPipeline pipeline = createProductionPipeline(DeliveryGuarantee.AT_MOST_ONCE, true, true);
     pipeline.run();
     Assert.assertEquals(4, errorStage.records.size());
-    assertErrorRecord(errorStage.records.get(0), "id", PIPELINE_NAME, Field.create("E0"), TestErrors.ERROR_S.name(),
-      "s");
-    assertErrorRecord(errorStage.records.get(1), "id", PIPELINE_NAME, Field.create("OK0"), TestErrors.ERROR_P.name(),
-      "p");
-    assertErrorRecord(errorStage.records.get(2), "id", PIPELINE_NAME, Field.create("E1"), TestErrors.ERROR_S.name(),
-      "s");
-    assertErrorRecord(errorStage.records.get(3), "id", PIPELINE_NAME, Field.create("OK1"), TestErrors.ERROR_P.name(),
-      "p");
+    assertErrorRecord(errorStage.records.get(0), runtimeInfo.getId(), PIPELINE_NAME, Field.create("E0"),
+                      TestErrors.ERROR_S.name(), "s");
+    assertErrorRecord(errorStage.records.get(1), runtimeInfo.getId(), PIPELINE_NAME, Field.create("OK0"),
+                      TestErrors.ERROR_P.name(), "p");
+    assertErrorRecord(errorStage.records.get(2), runtimeInfo.getId(), PIPELINE_NAME, Field.create("E1"),
+                      TestErrors.ERROR_S.name(), "s");
+    assertErrorRecord(errorStage.records.get(3), runtimeInfo.getId(), PIPELINE_NAME, Field.create("OK1"),
+                      TestErrors.ERROR_P.name(), "p");
   }
 
   private void assertErrorRecord(Record record, String sdcId, String pipelineName, Field field, String errorCode,

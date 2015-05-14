@@ -14,6 +14,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.TimeZone;
+import java.util.concurrent.Callable;
 import java.util.concurrent.ConcurrentHashMap;
 
 public final class Utils {
@@ -166,4 +167,20 @@ public final class Utils {
       return Long.parseLong(lower);
     }
   }
+
+  private static Callable<String> sdcIdCallable;
+
+  public static void setSdcIdCallable(Callable<String> callable) {
+    sdcIdCallable = callable;
+  }
+
+  public static String getSdcId() {
+    Utils.checkState(sdcIdCallable != null, "sdcIdCallable has not been set");
+    try {
+      return sdcIdCallable.call();
+    } catch (Exception ex) {
+      throw new RuntimeException(Utils.format("SDC ID Callable threw an unexpected exception: {}", ex.getMessage(), ex));
+    }
+  }
+
 }

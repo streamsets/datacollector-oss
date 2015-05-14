@@ -17,7 +17,6 @@ import org.slf4j.Logger;
 
 import java.io.File;
 import java.io.FileWriter;
-import java.io.IOException;
 import java.io.Writer;
 import java.net.URL;
 import java.net.URLClassLoader;
@@ -29,6 +28,13 @@ import java.util.UUID;
 public class TestRuntimeInfo {
 
   @Before
+  public void before() {
+    System.setProperty(RuntimeModule.SDC_PROPERTY_PREFIX + RuntimeInfo.STATIC_WEB_DIR, "target/w");
+    System.setProperty(RuntimeModule.SDC_PROPERTY_PREFIX + RuntimeInfo.CONFIG_DIR, "target/x");
+    System.setProperty(RuntimeModule.SDC_PROPERTY_PREFIX + RuntimeInfo.LOG_DIR, "target/y");
+    System.setProperty(RuntimeModule.SDC_PROPERTY_PREFIX + RuntimeInfo.DATA_DIR, "target/z");
+  }
+
   @After
   public void cleanUp() {
     System.getProperties().remove(RuntimeModule.SDC_PROPERTY_PREFIX + RuntimeInfo.CONFIG_DIR);
@@ -36,21 +42,6 @@ public class TestRuntimeInfo {
     System.getProperties().remove(RuntimeModule.SDC_PROPERTY_PREFIX + RuntimeInfo.DATA_DIR);
     System.getProperties().remove(RuntimeModule.SDC_PROPERTY_PREFIX + RuntimeInfo.STATIC_WEB_DIR);
     System.getProperties().remove(RuntimeModule.DATA_COLLECTOR_BASE_HTTP_URL);
-    System.getProperties().remove(RuntimeModule.DATA_COLLECTOR_ID);
-  }
-
-  @Test
-  public void testInfoDefault() {
-    RuntimeInfo info = new RuntimeInfo(RuntimeModule.SDC_PROPERTY_PREFIX, new MetricRegistry(),
-      Arrays.asList(getClass().getClassLoader()));
-    Assert.assertEquals(System.getProperty("user.dir"), info.getRuntimeDir());
-    Assert.assertEquals(System.getProperty("user.dir") + "/sdc-static-web", info.getStaticWebDir());
-    Assert.assertEquals(System.getProperty("user.dir") + "/etc", info.getConfigDir());
-    Assert.assertEquals(System.getProperty("user.dir") + "/log", info.getLogDir());
-    Assert.assertEquals(System.getProperty("user.dir") + "/var", info.getDataDir());
-    Assert.assertEquals(Arrays.asList(getClass().getClassLoader()), info.getStageLibraryClassLoaders());
-    Logger log = Mockito.mock(Logger.class);
-    info.log(log);
   }
 
   @Test
@@ -88,7 +79,6 @@ public class TestRuntimeInfo {
   public void testDefaultIdAndBaseHttpUrl() {
     ObjectGraph og  = ObjectGraph.create(RuntimeModule.class);
     RuntimeInfo info = og.get(RuntimeInfo.class);
-    Assert.assertEquals("UNDEF", info.getId());
     Assert.assertEquals("UNDEF", info.getBaseHttpUrl());
   }
 
@@ -106,15 +96,37 @@ public class TestRuntimeInfo {
     System.setProperty(RuntimeModule.SDC_PROPERTY_PREFIX + RuntimeInfo.CONFIG_DIR, dir.getAbsolutePath());
     Properties props = new Properties();
     props.setProperty(RuntimeModule.DATA_COLLECTOR_BASE_HTTP_URL, "HTTP");
-    props.setProperty(RuntimeModule.DATA_COLLECTOR_ID, "ID");
     Writer writer = new FileWriter(new File(dir, "sdc.properties"));
     props.store(writer, "");
     writer.close();
     ObjectGraph og  = ObjectGraph.create(RuntimeModule.class);
     og.get(Configuration.class);
     RuntimeInfo info = og.get(RuntimeInfo.class);
-    Assert.assertEquals("ID", info.getId());
     Assert.assertEquals("HTTP", info.getBaseHttpUrl());
+  }
+
+  @Test
+  public void testRuntimeInfoSdcId() {
+    System.setProperty(RuntimeModule.SDC_PROPERTY_PREFIX + RuntimeInfo.STATIC_WEB_DIR, "w");
+    System.setProperty(RuntimeModule.SDC_PROPERTY_PREFIX + RuntimeInfo.CONFIG_DIR, "x");
+    System.setProperty(RuntimeModule.SDC_PROPERTY_PREFIX + RuntimeInfo.LOG_DIR, "y");
+    System.setProperty(RuntimeModule.SDC_PROPERTY_PREFIX + RuntimeInfo.DATA_DIR,
+                       new File("target", UUID.randomUUID().toString()).getAbsolutePath());
+
+    List<? extends ClassLoader> customCLs = Arrays.asList(new URLClassLoader(new URL[0], null));
+    RuntimeInfo info = new RuntimeInfo(RuntimeModule.SDC_PROPERTY_PREFIX, new MetricRegistry(), customCLs);
+    info.init();
+    String id = info.getId();
+    Assert.assertNotNull(id);
+    info = new RuntimeInfo(RuntimeModule.SDC_PROPERTY_PREFIX, new MetricRegistry(), customCLs);
+    info.init();
+    Assert.assertEquals(id, info.getId());
+
+    System.setProperty(RuntimeModule.SDC_PROPERTY_PREFIX + RuntimeInfo.DATA_DIR,
+                       new File("target", UUID.randomUUID().toString()).getAbsolutePath());
+    info = new RuntimeInfo(RuntimeModule.SDC_PROPERTY_PREFIX, new MetricRegistry(), customCLs);
+    info.init();
+    Assert.assertNotEquals(id, info.getId());
   }
 
 }
