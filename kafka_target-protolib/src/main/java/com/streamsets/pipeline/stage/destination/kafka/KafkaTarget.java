@@ -503,11 +503,19 @@ public class KafkaTarget extends BaseTarget {
     }
   }
 
-  private void validateTopicExistence(List<ConfigIssue> issues, String topic) throws KafkaConnectionException {
+  private void validateTopicExistence(List<ConfigIssue> issues, String topic) {
     if(topic == null || topic.isEmpty()) {
       issues.add(getContext().createConfigIssue(Groups.KAFKA.name(), "topic", Errors.KAFKA_05));
     } else {
-      TopicMetadata topicMetadata = KafkaUtil.getTopicMetadata(kafkaBrokers, topic, 1, 0);
+      TopicMetadata topicMetadata;
+      try {
+        topicMetadata = KafkaUtil.getTopicMetadata(kafkaBrokers, topic, 1, 0);
+      } catch (KafkaConnectionException e) {
+        //Could not connect to kafka with the given metadata broker list
+        issues.add(getContext().createConfigIssue(Groups.KAFKA.name(), "metadataBrokerList", Errors.KAFKA_67,
+          metadataBrokerList));
+        return;
+      }
 
       if(topicMetadata == null) {
         //Could not get topic metadata from any of the supplied brokers
