@@ -6,9 +6,11 @@
   Producer evaluates a record, it calculates the expression based on record values and writes the
   record to the resulting topic. </shortdesc>
  <conbody>
-  <p>When performing runtime topic resolution, Kafka Producer can write to any topic by default. You
-   can create a white list of topics to limit the number of Kafka Producer attempts to use. When you
-   create a white list, any record that resolves to an unlisted topic is sent to the stage for error
-   handling. Use a white list when record data might resolve to invalid topic names.</p>
+  <p><indexterm>Kafka Producer destination<indexterm>runtime topic
+    resolution</indexterm></indexterm>When performing runtime topic resolution, Kafka Producer can
+   write to any topic by default. You can create a white list of topics to limit the number of Kafka
+   Producer attempts to use. When you create a white list, any record that resolves to an unlisted
+   topic is sent to the stage for error handling. Use a white list when record data might resolve to
+   invalid topic names.</p>
  </conbody>
 </concept>

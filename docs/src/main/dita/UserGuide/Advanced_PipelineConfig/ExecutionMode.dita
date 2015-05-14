@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
+<concept id="concept_hmh_kfn_1s">
+ <title>Execution Mode</title>
+ <shortdesc>
+  <draft-comment author="Loretta">how do I talk about standalone mode?  as a single process? as a
+   single what? </draft-comment>
+ </shortdesc>
+ <conbody>
+  <p><indexterm>execution mode<indexterm>standalone and cluster
+    modes</indexterm></indexterm><indexterm>cluster
+    mode<indexterm>description</indexterm></indexterm><indexterm>standalone
+     mode<indexterm>description</indexterm></indexterm>The <ph
+    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> can run
+   standalone mode or cluster mode. In standalone mode, the <ph
+    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> runs as a
+   standalone product &lt;&lt;add more info>>. The <ph
+    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> runs in
+   standalone mode by default. </p>
+  <p>In cluster mode, the <ph
+    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> runs as an
+   application within Spark, allowing it to process large volumes of data from a Kafka CDH cluster. </p>
+  <p>Spark is an open source cluster-computing application that is installed as part of the Kafka
+   CDH. Within Spark, the <ph
+    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> spawns a <ph
+    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> worker for
+   each partition in the Kafka cluster. So each partition has a <ph
+    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> worker to
+   process data. </p>
+  <p>
+   <note>If you add a partition to the topic being read by the <ph
+     conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>, restart the
+    pipeline to enable the <ph
+     conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> to generate a
+    new worker to read from the new partition.</note>
+  </p>
+ </conbody>
+</concept>

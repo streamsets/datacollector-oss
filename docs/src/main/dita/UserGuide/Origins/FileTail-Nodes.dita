@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
+<concept id="concept_e53_gr4_1s">
+ <title>File Tail Nodes</title>
+ <conbody>
+  <p><indexterm>File Tail origin<indexterm>nodes</indexterm></indexterm>File Tail provides two nodes
+   to connect to the rest of the pipeline:<dl>
+    <dlentry>
+     <dt>Output Node</dt>
+     <dd>Passes records read from the origin.</dd>
+    </dlentry>
+    <dlentry>
+     <dt>Metadata Node</dt>
+     <dd>Passes information generated about file processing. If you do not require this information,
+      connect the metadata node to the Trash destination. To retain this information for review,
+      connect the metadata node any other destination or route the data as necessary.</dd>
+     <dd>File processing metadata includes the following fields:<ul id="ul_hnd_1s4_1s">
+       <li>fileName - Name of the file.</li>
+       <li>inode - Index information for the file.</li>
+       <li>time - Time that the event occurred.</li>
+       <li>event - Processing event. START indicates that File Tail started processing the specified
+        file. END indicates that File Tail completed processing the contents of the file. </li>
+      </ul></dd>
+     <dd>
+      <note>File names can change when a server renames archived files. When this occurs, inode most
+       reliably identifies a file. </note>
+     </dd>
+    </dlentry>
+   </dl></p>
+ </conbody>
+</concept>

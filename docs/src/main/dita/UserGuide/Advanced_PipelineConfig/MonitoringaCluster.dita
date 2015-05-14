@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
+<concept id="concept_fk4_gd4_1s">
+ <title>Monitoring a Cluster</title>
+ <conbody>
+  <p><indexterm>cluster mode<indexterm>monitoring</indexterm></indexterm>After you start a pipeline,
+   the <ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> console
+   displays basic monitoring information for the cluster and a list of <ph
+    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> workers in the
+   cluster. To monitor a <ph
+    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> worker, select
+   the worker from the list. </p>
+ </conbody>
+</concept>

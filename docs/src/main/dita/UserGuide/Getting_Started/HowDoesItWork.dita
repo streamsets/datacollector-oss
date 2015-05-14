@@ -29,9 +29,8 @@
    close look at what's going on, you take a snapshot of the pipeline so you can examine how a set
    of data passed through the pipeline. You can also inspect data - configure rules to provide
    details about data as it moves from stage to stage - and configure rule-based alerts. </p>
-  <p>And what about those error records being saved? They're saved with error details. The <ph
-    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> can move them
-   to an external directory so you can create an error pipeline to reprocess that data. Voila!</p>
+  <p>And what about those error records being saved? They're saved with error details, so you can
+   create an error pipeline to reprocess that data. Voila!</p>
   <p>The <ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> is a
    powerful tool, but we're making it as simple as possible to use. So give it a try, click the Help
    icon for information, and call us if you need a hand. </p>

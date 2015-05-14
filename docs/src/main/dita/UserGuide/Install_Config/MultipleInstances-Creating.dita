@@ -4,22 +4,24 @@
     <title>Creating Multiple Instances</title>
     <shortdesc/>
     <taskbody>
-        <context>When you create an instance, you specify a directory. The <ph
-                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
-            creates the directory and copies several directories to that location. <draft-comment
+        <context>When you create an instance, you specify a directory and http or https port number.
+            The <ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+            /> creates the directory and copies several directories to that location. <draft-comment
                 author="Loretta">copies or creates? If something is configured in the original DC is
                 it carried over, e.g. email addresses? </draft-comment></context>
         <steps id="steps_sbt_nbz_wr">
             <step>
-                <cmd>From the command line, enter the following command:</cmd>
+                <cmd>From the command line, if necessary, change to the <ph
+                        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                    /> installation directory. </cmd>
+            </step>
+            <step>
+                <cmd>Enter the following command:</cmd>
                 <info>
-                    <codeblock>create-sdc -home=&lt;new SDC directory> (-httpPort=&lt;SDC_HTTP_PORT> | -httpsPort=&lt;SDC_HTTPS_PORT>)</codeblock>
+                    <codeblock>bin/create-sdc -home=&lt;new SDC directory> (-httpPort=&lt;SDC_HTTP_PORT> | -httpsPort=&lt;SDC_HTTPS_PORT>)</codeblock>
                 </info>
                 <info>
-                    <note>Enter a directory that does not exist. Also, configure the port number
-                        that you want to use. For more information about http and https, see <xref
-                            href="../Install_Config/HTTP_protocols.dita#concept_ecx_hkq_kr"
-                        />.</note>
+                    <note>Enter a directory that does not exist. </note>
                 </info>
                 <stepresult>The <ph
                         conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
@@ -35,7 +37,7 @@
                         conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
                     />, navigate to the new <ph
                         conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                    /> directory and enter the following command:</cmd>
+                    /> installation directory and enter the following command:</cmd>
                 <info>
                     <codeblock>sdc <draft-comment author="Loretta">or does it have to be /bin/sdc?</draft-comment></codeblock>
                 </info>

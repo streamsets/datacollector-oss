@@ -42,8 +42,9 @@
                             <stentry>Optional description of the pipeline.</stentry>
                         </strow>
                         <strow>
-                            <stentry>Execution Mode<draft-comment author="Loretta">add link to
-                                    writeup.</draft-comment></stentry>
+                            <stentry>Execution Mode <xref
+                                    href="../Advanced_PipelineConfig/ExecutionMode.dita#concept_hmh_kfn_1s"
+                                ><image href="../Graphics/icon_moreInfo.png" scale="10"></image></xref></stentry>
                             <stentry>Execution mode of the pipeline:<ul id="ul_bn5_jsz_zr">
                                     <li>Standalone - You plan to run the pipeline with a <ph
                                             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
@@ -71,23 +72,6 @@
                                 once</uicontrol>.</p></stentry>
                         </strow>
                         <strow>
-                            <stentry>Memory Limit Exceeded<draft-comment author="Loretta">Can we
-                                    reverse the order that these display in?  And call this On
-                                    Memory Error? (I don't love that, but it matches On Record
-                                    Error?) </draft-comment></stentry>
-                            <stentry>Action to take when the pipeline memory reaches the memory
-                                    limit:<ul id="ul_zbq_kyq_wr">
-                                    <li>Log - Logs a message in the pipeline history.</li>
-                                    <li>Log and Alert - Logs a message and triggers an alert that
-                                        displays in monitor mode and sends an alert email to any
-                                        provided email addresses.</li>
-                                </ul><ul id="ul_m4t_yyq_wr">
-                                    <li>Log, Alert and Stop Pipeline - Logs a message, triggers an
-                                        alert that displays in monitor mode and sends an alert email
-                                        to any provided email addresses. Stops the pipeline.</li>
-                                </ul></stentry>
-                        </strow>
-                        <strow>
                             <stentry>Memory Limit <xref
                                     href="PipelineMemory.dita#concept_twq_nhx_rr"><image href="../Graphics/icon_moreInfo.png" scale="10"></image></xref></stentry>
                             <stentry>Maximum amount of memory for the pipeline to use. <p>Best
@@ -95,6 +79,20 @@
                                     the <ph
                                         conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
                                     />. </p></stentry>
+                        </strow>
+                        <strow>
+                            <stentry>Memory Exceeded</stentry>
+                            <stentry>Action to take when the pipeline memory reaches the memory
+                                    limit:<ul id="ul_vsf_3k4_1s">
+                                    <li>Log - Logs a message in the pipeline history.</li>
+                                    <li>Log and Alert - Logs a message and triggers an alert that
+                                        displays in monitor mode and sends an alert email to any
+                                        provided email addresses.</li>
+                                </ul><ul id="ul_mtf_3k4_1s">
+                                    <li>Log, Alert and Stop Pipeline - Logs a message, triggers an
+                                        alert that displays in monitor mode and sends an alert email
+                                        to any provided email addresses. Stops the pipeline.</li>
+                                </ul></stentry>
                         </strow>
                     </simpletable>
                 </info>
@@ -175,9 +173,20 @@
             </step>
             <step>
                 <cmd>When writing error records to Kafka, click the <wintitle>Error Records - Write
-                        to Kafka</wintitle> tab and configure the following
-                        properties:<draft-comment author="Loretta">reuse updated Kafka
-                        info.</draft-comment></cmd>
+                        to Kafka</wintitle> tab and configure the following properties:</cmd>
+                <info>
+                    <table
+                        conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/KafkaTableProperties"
+                        id="table_asn_5l4_1s">
+                        <tgroup cols="cols_xmn_5l4_1s">
+                            <tbody>
+                                <row>
+                                    <entry/>
+                                </row>
+                            </tbody>
+                        </tgroup>
+                    </table>
+                </info>
             </step>
             <step>
                 <cmd>When using the cluster execution mode, click the <uicontrol>Cluster</uicontrol>
@@ -195,15 +204,22 @@
                             </thead>
                             <tbody>
                                 <row>
-                                    <entry>Slave Heap (MB)</entry>
-                                    <entry>
-                                        <draft-comment author="Loretta">come back to
-                                            these.</draft-comment>
-                                    </entry>
+                                    <entry>Worker Memory (MB)</entry>
+                                    <entry>Maximum amount of memory allocated to each <ph
+                                            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                                        /> worker in the cluster.<p>Default is 1024 MB.</p></entry>
                                 </row>
                                 <row>
-                                    <entry>Launcher Env</entry>
-                                    <entry/>
+                                    <entry>Launcher Env<draft-comment author="Loretta">name?
+                                        </draft-comment></entry>
+                                    <entry>
+                                        <p>Additional &lt;&lt;?>>  properties to use. Click the
+                                                <uicontrol>Add</uicontrol> icon and define the
+                                            property name and value. </p>
+                                        <p>Use the property names and values as expected by
+                                            &lt;&lt;?>>. <draft-comment author="Loretta">come back
+                                                to this.</draft-comment></p>
+                                    </entry>
                                 </row>
                             </tbody>
                         </tgroup>

@@ -9,14 +9,16 @@
    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> provides the
   crucial connection between hops in the stream. </shortdesc>
  <conbody>
-  <p>You can use a single <ph
-        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> or an
-      array of <ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-      />s to solve your ingest requirements.</p>
-  <p>For example, you might install a single <ph
+  <p>To solve your ingest needs, you can use a single <ph
+        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> or a set
+      of <ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>s. For
+      example, you might install a single <ph
         conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> to stream
-      log file data from a web server to HDFS. Or, you might install an array of <ph
+      log file data from a web server to HDFS. Or, you might install a set of <ph
         conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>s to stream
-      data from discrete files into a Kafka cluster. </p>
+      data from multiple servers into a Hadoop file system. </p>
+    <p>To make things really interesting, you can use the <ph
+        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> in cluster
+      mode to read large volumes of data from a Kafka CDH cluster. </p>
  </conbody>
 </concept>

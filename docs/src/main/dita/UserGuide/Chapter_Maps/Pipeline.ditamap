@@ -14,49 +14,37 @@
    <topicref href="../Pipeline_Configuration/ReplicatingStreams.dita"/>
    <topicref href="../Pipeline_Configuration/MergingStreams.dita"/>
    <topicref href="../Pipeline_Configuration/RequiredFields.dita"/>
-   <topicref href="../Pipeline_Configuration/PipelineConstants.dita">
-    <topicref href="../Pipeline_Configuration/PipelineConstants-Defining.dita"/>
+   <topicref href="../Pipeline_Configuration/SDCRecordFormat.dita">
+    <topicmeta>
+     <shortdesc/>
+    </topicmeta>
    </topicref>
    <topicref href="../Pipeline_Configuration/ExpressionCompletion.dita">
     <topicref href="../Pipeline_Configuration/ExpressionCompletion-Tips.dita"/>
    </topicref>
   </topicref>
-  <topicref href="../Pipeline_Configuration/DeliveryGuarantee.dita">
+  <topicref href="../Pipeline_Configuration/PipelineProperties.dita">
    <topicmeta>
     <shortdesc/>
    </topicmeta>
-  </topicref>
-  <topicref href="../Pipeline_Configuration/PipelineMemory.dita">
-   <topicmeta>
-    <shortdesc/>
-   </topicmeta>
-  </topicref>
-  <topicref href="../Pipeline_Configuration/SDCRecordFormat.dita">
-   <topicmeta>
-    <shortdesc/>
-   </topicmeta>
-  </topicref>
-  <topicref href="../Pipeline_Configuration/RuntimeProperties.dita" chunk="to-content">
-   <topicmeta>
-    <shortdesc/>
-   </topicmeta>
-   <topicref href="../Pipeline_Configuration/RuntimeProperties-Defining.dita"/>
-   <topicref href="../Pipeline_Configuration/RuntimeProperties-Using.dita"/>
-   <topicref href="../Pipeline_Configuration/RuntimeProperties-Example.dita"/>
-  </topicref>
-  <topicref href="../Pipeline_Configuration/ErrorHandling.dita" chunk="to-content">
-   <topicmeta>
-    <shortdesc/>
-   </topicmeta>
-   <topicref href="../Pipeline_Configuration/ErrorHandling-Stage.dita"/>
-   <topicref href="../Pipeline_Configuration/ErrorHandling-Pipeline.dita"/>
-   <topicref href="../Pipeline_Configuration/ErrorHandling-Example.dita"/>
-   <topicref href="../Pipeline_Configuration/ReprocessingErrorRecords.dita"/>
+   <topicref href="../Pipeline_Configuration/DeliveryGuarantee.dita"/>
+   <topicref href="../Pipeline_Configuration/PipelineMemory.dita"/>
+   <topicref href="../Pipeline_Configuration/PipelineConstants.dita">
+    <topicref href="../Pipeline_Configuration/PipelineConstants-Defining.dita"/>
+   </topicref>
   </topicref>
   <topicref href="../Pipeline_Configuration/Validation.dita">
    <topicmeta>
     <shortdesc/>
    </topicmeta>
+  </topicref>
+  <topicref href="../Pipeline_Configuration/ErrorHandling.dita" chunk="to-content">
+   <topicmeta>
+    <shortdesc/>
+   </topicmeta>
+   <topicref href="../Pipeline_Configuration/ErrorHandling-Pipeline.dita"/>
+   <topicref href="../Pipeline_Configuration/ErrorHandling-Stage.dita"/>
+   <topicref href="../Pipeline_Configuration/ErrorHandling-Example.dita"/>
   </topicref>
   <topicref href="../Pipeline_Configuration/ConfiguringAPipeline.dita">
    <topicmeta><shortdesc></shortdesc></topicmeta></topicref>

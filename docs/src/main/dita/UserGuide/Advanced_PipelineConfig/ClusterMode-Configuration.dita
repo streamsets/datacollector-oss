@@ -13,7 +13,7 @@
                     <li>In the <ph
                             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
                         /> properties file, set the <uicontrol>sdc.execution.mode</uicontrol>
-                        property to <uicontrol>cluster</uicontrol>.</li>
+                        property to <uicontrol>Cluster</uicontrol>.</li>
                     <li>In the pipeline properties, on the <wintitle>General</wintitle> tab, set the
                             <uicontrol>Execution Mode</uicontrol> property to
                             <uicontrol>Cluster</uicontrol>.</li>

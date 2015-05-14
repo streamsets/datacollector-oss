@@ -4,9 +4,4 @@
  <title>Pipeline Properties</title>
  <shortdesc>Pipeline properties apply to the entire pipeline. Pipeline properties display in the
   Properties panel when you click on the pipeline canvas.</shortdesc>
- <conbody>
-  <p>You can configure the following pipeline properties:<ul id="ul_ixj_pvl_sq">
-    <li>Delivery Guarantee</li>
-   </ul></p>
- </conbody>
 </concept>

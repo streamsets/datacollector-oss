@@ -2,7 +2,9 @@
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_kx2_21h_1s">
  <title>Example</title>
- <shortdesc/>
+ <shortdesc>
+  <draft-comment author="Loretta">come back to this</draft-comment>
+ </shortdesc>
  <conbody>
   <p><image href="../Graphics/RuntimePropertiesExample.png" id="image_tty_33h_1s"/></p>
  </conbody>

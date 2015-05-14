@@ -18,11 +18,15 @@
                   Collector</span> instances. Each
   instance uses the same executables, but can be configured differently and run different pipelines. </p>
 
-  <p class="p">You might create multiple instances when you want to run several <span class="ph">Data
+  <p class="p">You might create
+      multiple instances when you want to run several <span class="ph">Data
                   Collector</span>s on the
       same host machine. You can run the <span class="ph">Data
                   Collector</span> instances
       at the same time, as long as the host machine has enough resources.</p>
+
+    <p class="p">When the <span class="ph">Data
+                  Collector</span> creates a new instance, it </p>
 
  </div>
 
@@ -33,19 +37,22 @@
     
     <div class="body taskbody"><p class="shortdesc"></p>
 
-        <div class="section context">When you create an instance, you specify a directory. The <span class="ph">Data
-                  Collector</span>
-            creates the directory and copies several directories to that location. </div>
+        <div class="section context">When you create an instance, you specify a directory and http or https port number.
+            The <span class="ph">Data
+                  Collector</span> creates the directory and copies several directories to that location. </div>
 
         <ol class="ol steps" id="task_dpl_m1z_wr__steps_sbt_nbz_wr"><li class="li step stepexpand">
-                <span class="ph cmd">From the command line, enter the following command:</span>
+                <span class="ph cmd">From the command line, if necessary, change to the <span class="ph">Data
+                  Collector</span> installation directory. </span>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">Enter the following command:</span>
                 <div class="itemgroup info">
-                    <pre class="pre codeblock">create-sdc -home=&lt;new SDC directory&gt; (-httpPort=&lt;SDC_HTTP_PORT&gt; | -httpsPort=&lt;SDC_HTTPS_PORT&gt;)</pre>
+                    <pre class="pre codeblock">bin/create-sdc -home=&lt;new SDC directory&gt; (-httpPort=&lt;SDC_HTTP_PORT&gt; | -httpsPort=&lt;SDC_HTTPS_PORT&gt;)</pre>
 
                 </div>
                 <div class="itemgroup info">
-                    <div class="note note"><span class="notetitle">Note:</span> Enter a directory that does not exist. Also, configure the port number
-                        that you want to use. For more information about http and https, see <a class="xref" href="DCConfig.html#concept_ecx_hkq_kr" title="You can configure the Data Collector to use HTTP or HTTPS. By default the Data Collector uses HTTP.">HTTP Protocols</a>.</div>
+                    <div class="note note"><span class="notetitle">Note:</span> Enter a directory that does not exist. </div>
 
                 </div>
                 <div class="itemgroup stepresult">The <span class="ph">Data
@@ -55,7 +62,7 @@
 <li class="li step stepexpand">
                 <span class="ph cmd">To launch the new <span class="ph">Data
                   Collector</span>, navigate to the new <span class="ph">Data
-                  Collector</span> directory and enter the following command:</span>
+                  Collector</span> installation directory and enter the following command:</span>
                 <div class="itemgroup info">
                     <pre class="pre codeblock">sdc </pre>
 

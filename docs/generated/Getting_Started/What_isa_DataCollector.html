@@ -56,16 +56,19 @@
                   Collector</span> provides the
   crucial connection between hops in the stream. </p>
 
-  <p class="p">You can use a single <span class="ph">Data
-                  Collector</span> or an
-      array of <span class="ph">Data
-                  Collector</span>s to solve your ingest requirements.</p>
-
-  <p class="p">For example, you might install a single <span class="ph">Data
+  <p class="p">To solve your ingest needs, you can use a single <span class="ph">Data
+                  Collector</span> or a set
+      of <span class="ph">Data
+                  Collector</span>s. For
+      example, you might install a single <span class="ph">Data
                   Collector</span> to stream
-      log file data from a web server to HDFS. Or, you might install an array of <span class="ph">Data
+      log file data from a web server to HDFS. Or, you might install a set of <span class="ph">Data
                   Collector</span>s to stream
-      data from discrete files into a Kafka cluster. </p>
+      data from multiple servers into a Hadoop file system. </p>
+
+    <p class="p">To make things really interesting, you can use the <span class="ph">Data
+                  Collector</span> in cluster
+      mode to read large volumes of data from a Kafka CDH cluster. </p>
 
  </div>
 
@@ -110,9 +113,8 @@
    of data passed through the pipeline. You can also inspect data - configure rules to provide
    details about data as it moves from stage to stage - and configure rule-based alerts. </p>
 
-  <p class="p">And what about those error records being saved? They're saved with error details. The <span class="ph">Data
-                  Collector</span> can move them
-   to an external directory so you can create an error pipeline to reprocess that data. Voila!</p>
+  <p class="p">And what about those error records being saved? They're saved with error details, so you can
+   create an error pipeline to reprocess that data. Voila!</p>
 
   <p class="p">The <span class="ph">Data
                   Collector</span> is a

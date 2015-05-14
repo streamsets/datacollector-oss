@@ -1,12 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_pdh_glg_1s">
- <title>Using Runtime Properties</title>
+ <title>Using Runtime Properties in the Pipeline</title>
  <shortdesc>Use the runtime:conf function to call a runtime property. You can use runtime properties
-  to represent any stage or pipeline property that allows the use of the expression language. </shortdesc>
+    to represent any stage or pipeline property that allows the use of the expression language. </shortdesc>
  <conbody>
-  <p>To call a runtime property, use the following syntax: <codeph>runtime:conf('&lt;property
-    name>')</codeph>. </p>
+  <p><indexterm>runtime properties<indexterm>using in the pipeline</indexterm></indexterm>To call a
+      runtime property, use the following syntax: <codeph>runtime:conf('&lt;property
+        name>')</codeph>. </p>
   <p>For example, to use a Directory runtime property that represents the directory that the
    Directory origin accesses, you would enter the following syntax for the Files Directory
    property:<codeblock>${runtime:conf('Directory')}</codeblock></p>

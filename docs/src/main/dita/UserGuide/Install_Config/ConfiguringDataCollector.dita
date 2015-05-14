@@ -10,8 +10,7 @@
             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
         configuration file. </shortdesc>
     <taskbody>
-        <context>
-            <p><indexterm>Data Collector configuration
+        <context><p><indexterm>Data Collector configuration
                     file<indexterm>configuring</indexterm></indexterm><indexterm>sdc.properties
                         file<indexterm>configuring</indexterm></indexterm><indexterm>email<indexterm>Data
                         Collector configuration</indexterm></indexterm>Use a text editor to edit the
@@ -19,12 +18,11 @@
                     conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
                 /> configuration file. After you edit the file, restart the <ph
                     conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                /> to enable the changes. </p>
-            <p>The <ph
+                /> to enable the changes. </p><p>The <ph
                     conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
                 /> configuration file, <filepath>sdc.properties</filepath>, is located in the
-                following location:<codeblock>&lt;SDCinstalldir>/etc/sdc.properties</codeblock></p>
-            <p>The <ph
+                following
+                location:<codeblock>&lt;SDCinstalldir>/etc/sdc.properties</codeblock></p><p>The <ph
                     conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
                 /> configuration file includes the following general properties:<table frame="all"
                     rowsep="1" colsep="1" id="table_eyq_gkw_1r">
@@ -87,14 +85,14 @@
                                         10.</p></entry>
                             </row>
                             <row>
-                                <entry>production.maxBatchSize</entry>
-                                <entry>Maximum number of records included in a batch when the
-                                    pipeline runs.<p>Default is 1000.</p></entry>
-                            </row>
-                            <row>
                                 <entry>preview.maxBatches</entry>
                                 <entry>Maximum number of batches used to preview data. <p>Default is
                                         10.</p></entry>
+                            </row>
+                            <row>
+                                <entry>production.maxBatchSize</entry>
+                                <entry>Maximum number of records included in a batch when the
+                                    pipeline runs.<p>Default is 1000.</p></entry>
                             </row>
                             <row>
                                 <entry>production.maxErrorRecordsPerStage</entry>
@@ -147,10 +145,9 @@
                             </row>
                         </tbody>
                     </tgroup>
-                </table></p>
-            <p>The <ph
+                </table></p><p>The <ph
                     conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                /> configuration file also includes the following properties for sending email
+                /> configuration file includes the following properties for sending email
                     alerts:<table frame="all" rowsep="1" colsep="1" id="table_ulz_3pw_1r">
                     <tgroup cols="2">
                         <colspec colname="c1" colnum="1" colwidth="1*"/>
@@ -217,8 +214,62 @@
                             </row>
                         </tbody>
                     </tgroup>
-                </table></p>
-            <draft-comment author="Loretta">need to add 4 new properties at the end of the file. </draft-comment>
-        </context>
+                </table></p>The <ph
+                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
+            configuration file includes the following advanced properties:<table frame="all"
+                rowsep="1" colsep="1" id="table_xb5_4rn_1s">
+                <tgroup cols="2">
+                    <colspec colname="c1" colnum="1" colwidth="1*"/>
+                    <colspec colname="c2" colnum="2" colwidth="2.23*"/>
+                    <thead>
+                        <row>
+                            <entry>Advanced Property</entry>
+                            <entry>Description</entry>
+                        </row>
+                    </thead>
+                    <tbody>
+                        <row>
+                            <entry>runtime.conf.location <xref
+                                    href="../Advanced_PipelineConfig/RuntimeProperties.dita#concept_fjx_g31_1s"
+                                        ><image href="../Graphics/icon_moreInfo.png" scale="10"/>
+                                </xref></entry>
+                            <entry>Location of runtime properties. Use to declare where runtime
+                                properties are defined:<ul id="ul_mh4_rrn_1s">
+                                    <li>Embedded - The runtime properties are defined in the file.
+                                            <p>Use the following naming convention to define runtime
+                                            properties in the <ph
+                                                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                                            /> configuration file: runtime.conf_&lt;property
+                                            name>.</p></li>
+                                    <li>&lt;file path> - The directory and file name where runtime
+                                        properties are defined. The runtime properties file must be
+                                        local to the <ph
+                                            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                                        />. <p>When you define runtime properties in a separate
+                                            file, the property names do not require a special
+                                            prefix.</p></li>
+                                </ul></entry>
+                        </row>
+                        <row>
+                            <entry>sdc.execution.mode <xref
+                                    href="../Advanced_PipelineConfig/ExecutionMode.dita#concept_hmh_kfn_1s"
+                                        ><image href="../Graphics/icon_moreInfo.png" scale="10"
+                                    /></xref></entry>
+                            <entry>Execution mode for the <ph
+                                    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                                    />:<ul id="ul_icj_t5n_1s">
+                                    <li>Standalone - Runs the <ph
+                                            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                                        /> in the default mode, allowing it to read and write from
+                                        all endpoints.</li>
+                                    <li>Cluster - Runs the <ph
+                                            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                                        /> in cluster mode, reading only from Kafka CDH
+                                        clusters.</li>
+                                </ul></entry>
+                        </row>
+                    </tbody>
+                </tgroup>
+            </table></context>
     </taskbody>
 </task>

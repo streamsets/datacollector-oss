@@ -9,7 +9,5 @@
                     properties<indexterm>HBase</indexterm></indexterm>When you add an HBase
             configuration property, enter the exact property name and the value. The HBase
             destination does not validate the property names or values.</p>
-  <note>The Kafka Producer uses the broker.host Kafka configuration property. The Kafka Consumer
-      ignores user-defined values for this property.</note>
  </conbody>
 </concept>

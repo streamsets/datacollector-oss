@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_tns_krz_sr">
- <title>Expression Completion</title>
- <shortdesc>Expression completion provides a list of expression elements that are valid for use at
-    that location. Use <uicontrol>Ctrl + Spacebar</uicontrol> to invoke expression completion for
-    help with writing an expression or condition.</shortdesc>
+ <title>Expression Completion in Properties</title>
+ <shortdesc>You can use the expression language in any stage or pipeline property that represents a
+    numeric or string value. Expression completion provides a list of expression elements that are
+    valid for use at that location. Use <uicontrol>Ctrl + Spacebar</uicontrol> to invoke expression
+    completion for help with writing an expression or condition.</shortdesc>
  <conbody>
     <p><indexterm>pipelines<indexterm>expression
-        completion</indexterm></indexterm><indexterm>expression
-          completion<indexterm>overview</indexterm></indexterm>When you invoke expression
-      completion, a list of valid data types, constants, fields, and functions display. The list
-      includes pipeline constants when defined, and available fields when the pipeline is valid for
-      data preview.</p>
+          completion</indexterm></indexterm><indexterm>expressions<indexterm>in
+          properties</indexterm></indexterm>When you invoke expression completion, a list of valid
+      data types, constants, fields, and functions display. The list includes pipeline constants
+      when defined, and available fields when the pipeline is valid for data preview.</p>
     <p>From the list, you can click an element for more information and double-click the element to
       add it to the expression. Alternatively, you can use the arrow keys to scroll through the list
       and click <uicontrol>Enter</uicontrol> to add it to the expression. </p>

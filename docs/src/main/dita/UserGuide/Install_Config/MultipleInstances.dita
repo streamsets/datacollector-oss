@@ -6,12 +6,16 @@
    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> instances. Each
   instance uses the same executables, but can be configured differently and run different pipelines. </shortdesc>
  <conbody>
-  <p>You might create multiple instances when you want to run several <ph
+  <p><indexterm>Data Collector<indexterm>multiple instances</indexterm></indexterm>You might create
+      multiple instances when you want to run several <ph
         conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>s on the
       same host machine. You can run the <ph
         conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> instances
-      at the same time, as long as the host machine has enough resources.<draft-comment
-        author="Loretta">should I be saying this? Any other limitations? What should I highlight? I
-        ran the same pipeline on both, but I don't need to talk about that!</draft-comment></p>
+      at the same time, as long as the host machine has enough resources.</p>
+    <p>When the <ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+      /> creates a new instance, it <draft-comment author="Loretta">talk about coping directories?
+        talk about copying the sdc. properties with the updated port no.
+        </draft-comment><draft-comment author="Loretta">Any other limitations? Anything else to
+        highlight as a reason to use it?</draft-comment></p>
  </conbody>
 </concept>

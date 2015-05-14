@@ -43,28 +43,51 @@
                                     <entry>Character encoding of the data to be processed.</entry>
                                 </row>
                                 <row>
+                                    <entry>Max Line Length</entry>
+                                    <entry>Maximum number of characters in a record, including
+                                        end-of-line characters. <p>Longer text and log lines are
+                                            truncated. Longer JSON objects are sent to the stage for
+                                            error handling.</p></entry>
+                                </row>
+                                <row>
+                                    <entry>Max Batch Size</entry>
+                                    <entry>Maximum number of lines to include in a batch. </entry>
+                                </row>
+                                <row>
+                                    <entry>Batch Wait Time (secs) <xref
+                                            href="BatchSizeWaitTime.dita#concept_ypd_vgr_5q">
+                                            <image href="../Graphics/icon_moreInfo.png"
+                                                id="image_ulc_2fm_cr" scale="10"/></xref></entry>
+                                    <entry>Number of seconds to wait before sending a batch.</entry>
+                                </row>
+                                <row>
+                                    <entry>Directories</entry>
+                                    <entry>Directories and files to process. Click the
+                                            <uicontrol>Add</uicontrol> icon to enter more than one
+                                        set of information.</entry>
+                                </row>
+                                <row>
                                     <entry>Directory</entry>
-                                    <entry>Directory where the source files reside.<p>Click the
-                                                <uicontrol>Add</uicontrol> icon to enter more than
-                                            one directory.</p></entry>
+                                    <entry>Directory where the source files reside.</entry>
+                                </row>
+                                <row>
+                                    <entry>File to Tail<draft-comment author="Loretta">Can we call
+                                                this:<p> "Active File" -- and move it below Files
+                                                Naming</p></draft-comment></entry>
+                                    <entry>Static file name for the active file that contains the
+                                        latest data from the server.<p>Not used for Periodic
+                                            Files.</p></entry>
                                 </row>
                                 <row>
                                     <entry>Files Naming <xref
                                             href="FileTail-FileProcessing.dita#concept_trt_thq_5r">
                                             <image href="../Graphics/icon_moreInfo.png" scale="10"
                                                 id="image_bkg_sqr_5r"/></xref><draft-comment
-                                            author="Loretta">Can we call this:
-                                            <p>"Files"</p></draft-comment></entry>
+                                            author="Loretta">Can we call this "File Naming" at
+                                            least?</draft-comment></entry>
                                     <entry>Naming convention for archived files. Select the naming
                                         convention that describes how the server generates file
                                         names.</entry>
-                                </row>
-                                <row>
-                                    <entry>File to Tail<draft-comment author="Loretta">Can we call
-                                                this:<p> "Active File"</p></draft-comment></entry>
-                                    <entry>Static file name for the active file that contains the
-                                        latest data from the server.<p>Not used for Periodic
-                                            Files.</p></entry>
                                 </row>
                                 <row>
                                     <entry>Periodic File Pattern</entry>
@@ -83,25 +106,44 @@
                                             the directory with the specified file name
                                         pattern.</p>When you restart a stopped pipeline, File Tail
                                         ignores this property. It starts where it left off
-                                        regardless of the file name unless you reset the origin. </entry>
+                                        regardless of the file name unless you reset the origin.
+                                    </entry>
+                                </row>
+                            </tbody>
+                        </tgroup>
+                    </table>
+                </info>
+            </step>
+            <step>
+                <cmd>On the <wintitle>Post Processing</wintitle> tab, configure the following
+                    properties:</cmd>
+                <info>
+                    <table frame="all" rowsep="1" colsep="1" id="table_rtj_kfp_1s">
+                        <tgroup cols="2">
+                            <colspec colname="c1" colnum="1" colwidth="1*"/>
+                            <colspec colname="c2" colnum="2" colwidth="1.78*"/>
+                            <thead>
+                                <row>
+                                    <entry>Post Processing Property</entry>
+                                    <entry>Description</entry>
+                                </row>
+                            </thead>
+                            <tbody>
+                                <row>
+                                    <entry>File Post Processing</entry>
+                                    <entry>
+                                        <p>The action taken after processing a file: <ul
+                                                id="ul_gyx_nfp_1s">
+                                                <li>None - Keeps the file in place.</li>
+                                                <li>Archive - Moves the file to the archive
+                                                  directory. </li>
+                                                <li>Delete - Deletes the file. </li>
+                                            </ul></p>
+                                    </entry>
                                 </row>
                                 <row>
-                                    <entry>Max Line Length</entry>
-                                    <entry>Maximum number of characters in a record, including
-                                        end-of-line characters. <p>Longer text and log lines are
-                                            truncated. Longer JSON objects are sent to the stage for
-                                            error handling.</p></entry>
-                                </row>
-                                <row>
-                                    <entry>Maximum Lines per Batch (recs)</entry>
-                                    <entry>Maximum number of records to include in a batch. </entry>
-                                </row>
-                                <row>
-                                    <entry>Batch Wait Time (secs) <xref
-                                            href="BatchSizeWaitTime.dita#concept_ypd_vgr_5q">
-                                            <image href="../Graphics/icon_moreInfo.png"
-                                                id="image_ulc_2fm_cr" scale="10"/></xref></entry>
-                                    <entry>Number of seconds to wait before sending a batch.</entry>
+                                    <entry>Archive Directory</entry>
+                                    <entry>Directory for archived files. </entry>
                                 </row>
                             </tbody>
                         </tgroup>

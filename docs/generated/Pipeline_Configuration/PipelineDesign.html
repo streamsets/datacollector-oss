@@ -93,69 +93,50 @@
  </div>
 
 </div>
-<div class="topic concept nested1" id="concept_rjh_ntz_qr">
- <h2 class="title topictitle2">Pipeline Constants</h2>
+<div class="topic concept nested1" id="concept_qkk_mwk_br">
+ <h2 class="title topictitle2">SDC Record Data Format</h2>
 
  
- <div class="body conbody"><p class="shortdesc">A pipeline constant is a constant that you define for the pipeline and that you can use
-  in any stage in the pipeline. Define a pipeline constant when you have a constant that you want to
-  update easily or to use more than once. </p>
+ <div class="body conbody"><p class="shortdesc">SDC Record is a proprietary data format that the <span class="ph">Data
+                  Collector</span> can use to
+    read and write data. The <span class="ph">Data
+                  Collector</span> also uses
+    SDC Record to generate error records. </p>
 
-  <div class="p">For example, you might have an Expression Evaluator processor
-   that calculates the total income for employees using .01 as a bonus percentage, as
-   follows:<pre class="pre codeblock">${(record:value("/SALARY")) + (record:value("/SALARY")*.01)}</pre>
+  <p class="p">Use the SDC Record data format to
+   process data from another pipeline, or to generate data to be processed by another pipeline.</p>
+
+  <div class="p">You can use the following origins to read SDC Record data: <ul class="ul" id="concept_qkk_mwk_br__ul_ep4_r2b_wr">
+    <li class="li">Directory</li>
+
+    <li class="li">Kafka Consumer</li>
+
+   </ul>
 </div>
 
-  <p class="p">However, the bonus percentage changes regularly. So instead of using .01 directly in the
-   expression, you can create a constant named Bonus with a value of .01.</p>
+  <div class="p">You can use the following destinations to write SDC Record data:<ul class="ul" id="concept_qkk_mwk_br__ul_l1m_52b_wr">
+    <li class="li">Hadoop FS</li>
 
-  <p class="p">Then, you can use the Bonus constant in an expression as follows:</p>
+    <li class="li">Kafka Producer</li>
 
-  <div class="p">
-   <pre class="pre codeblock">${record:value("/SALARY")+(record:value("/SALARY")*BONUS)}</pre>
-
-  </div>
+   </ul>
+</div>
 
  </div>
 
-<div class="topic task nested2" id="task_ogd_zj3_wq">
-    <h3 class="title topictitle3">Defining Pipeline Constants</h3>
-
-    <div class="body taskbody">
-        <div class="section context">Define a
-            pipeline constant to represent a constant that you want to reuse within the pipeline or
-            to update easily. <p class="p">You can enter any text as the value for a pipeline constant, but
-                the value that you enter is treated as a literal constant. </p>
-</div>
-
-        <ol class="ol steps" id="task_ogd_zj3_wq__steps_apc_qrz_qr"><li class="li step">
-                <span class="ph cmd">To define a pipeline constant, in the Pipeline properties panel, click the
-                        <span class="keyword wintitle">Constants</span> tab.</span>
-            </li>
-<li class="li step">
-                <span class="ph cmd">Enter a name and value for the pipeline constant. </span>
-            </li>
-<li class="li step">
-                <span class="ph cmd">To create additional pipeline constants, click <span class="ph uicontrol">Add</span>. </span>
-            </li>
-</ol>
-
-    </div>
-
-</div>
 </div>
 <div class="topic concept nested1" id="concept_tns_krz_sr">
- <h2 class="title topictitle2">Expression Completion</h2>
+ <h2 class="title topictitle2">Expression Completion in Properties</h2>
 
  
- <div class="body conbody"><p class="shortdesc">Expression completion provides a list of expression elements that are valid for use at
-    that location. Use <span class="ph uicontrol">Ctrl + Spacebar</span> to invoke expression completion for
-    help with writing an expression or condition.</p>
+ <div class="body conbody"><p class="shortdesc">You can use the expression language in any stage or pipeline property that represents a
+    numeric or string value. Expression completion provides a list of expression elements that are
+    valid for use at that location. Use <span class="ph uicontrol">Ctrl + Spacebar</span> to invoke expression
+    completion for help with writing an expression or condition.</p>
 
-    <p class="p">When you invoke expression
-      completion, a list of valid data types, constants, fields, and functions display. The list
-      includes pipeline constants when defined, and available fields when the pipeline is valid for
-      data preview.</p>
+    <p class="p">When you invoke expression completion, a list of valid
+      data types, constants, fields, and functions display. The list includes pipeline constants
+      when defined, and available fields when the pipeline is valid for data preview.</p>
 
     <p class="p">From the list, you can click an element for more information and double-click the element to
       add it to the expression. Alternatively, you can use the arrow keys to scroll through the list

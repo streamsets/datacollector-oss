@@ -513,6 +513,128 @@
                     </table>
                 </info>
             </step>
+            <step>
+                <cmd>
+                    <draft-comment author="Loretta">The following Kafka Producer - Kafka tab
+                        properties are also used for pipeline error handling - writing to Kafka.
+                        Whole step used in Kafka Producer, just the table by the pipeline error
+                        handling.</draft-comment>
+                </cmd>
+            </step>
+            <step id="KafkaConfig">
+                <cmd>On the <wintitle>Kafka</wintitle> tab, configure the following
+                    properties:</cmd>
+                <info>
+                    <p>
+                        <table frame="all" rowsep="1" colsep="1" id="KafkaTableProperties">
+                            <tgroup cols="2">
+                                <colspec colname="c1" colnum="1" colwidth="1*"/>
+                                <colspec colname="c2" colnum="2" colwidth="3.17*"/>
+                                <thead>
+                                    <row>
+                                        <entry>Kafka Properties</entry>
+                                        <entry>Description</entry>
+                                    </row>
+                                </thead>
+                                <tbody>
+                                    <row>
+                                        <entry>Broker URI</entry>
+                                        <entry>A comma-separated list of URIs for Kafka brokers that
+                                            write to the topic. Use the following format:
+                                                <codeph>&lt;host>:&lt;port></codeph>.<p>To ensure a
+                                                connection, enter a comma-separated list of
+                                                additional broker URI.</p></entry>
+                                    </row>
+                                    <row>
+                                        <entry>Runtime Topic Resolution <xref
+                                                href="../Destinations/KProducer-RuntimeResolution.dita"
+                                                  ><image href="../Graphics/icon_moreInfo.png"
+                                                      scale="10" id="image_upq_nbp_1s"/></xref></entry>
+                                        <entry>Evaluates an expression at runtime to determine the
+                                            topic to use for each record.</entry>
+                                    </row>
+                                    <row>
+                                        <entry>Topic Expression</entry>
+                                        <entry>Expression used to determine where each record is
+                                            written. Use an expression that evaluates to a topic
+                                            name. </entry>
+                                    </row>
+                                    <row>
+                                        <entry>Topic White List</entry>
+                                        <entry>List of valid topic names to write to. Use to avoid
+                                            writing to invalid topics. Records that resolve to
+                                            invalid topic names are passed the stage for error
+                                            handling. <p>Use an asterisk (*) to allow writing to any
+                                                topic name. By default, all topic names are
+                                                valid.</p></entry>
+                                    </row>
+                                    <row>
+                                        <entry>Topic</entry>
+                                        <entry>Kafka topic to use. <p>Not available when using
+                                                runtime topic resolution.</p></entry>
+                                    </row>
+                                    <row>
+                                        <entry>Partition Strategy </entry>
+                                        <entry>Strategy to use to write to partitions:<ul
+                                                id="ul_tq2_yr3_br">
+                                                <li>Round Robin - Takes turns writing to different
+                                                  partitions.</li>
+                                                <li>Random - Writes to partitions randomly.</li>
+                                                <li>Expression - Uses an expression to write data to
+                                                  different partitions. </li>
+                                            </ul></entry>
+                                    </row>
+                                    <row>
+                                        <entry>Expression <xref
+                                                href="../Destinations/KProducer-PartitionStrategy.dita#concept_qpm_xp4_4r">
+                                                <image href="../Graphics/icon_moreInfo.png"
+                                                  scale="10"/></xref></entry>
+                                        <entry>Expression to use to using the Expression partition
+                                            strategy. <p>Define the expression to evaluate to the
+                                                partition where you want each record written.
+                                                Partitions are numbered 0 - n.</p><p
+                                                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/EEditor"
+                                            /></entry>
+                                    </row>
+                                    <row>
+                                        <entry>Data Format</entry>
+                                        <entry>Data format for output messages:<ul
+                                                id="ul_wlj_353_br">
+                                                <li>Text</li>
+                                                <li>JSON</li>
+                                                <li>Delimited</li>
+                                                <li>SDC Record <xref
+                                                  href="../Pipeline_Configuration/SDCRecordFormat.dita#concept_qkk_mwk_br">
+                                                  <image href="../Graphics/icon_moreInfo.png"
+                                                  scale="10" id="image_ucp_chr_br"/></xref></li>
+                                            </ul></entry>
+                                    </row>
+                                    <row>
+                                        <entry>Messages Charset</entry>
+                                        <entry>Character encoding to use when writing data. <p>Not
+                                                used for the SDC Record data format.</p></entry>
+                                    </row>
+                                    <row>
+                                        <entry>One Message per Batch</entry>
+                                        <entry>Generates a single message for all records in the
+                                            batch.</entry>
+                                    </row>
+                                    <row>
+                                        <entry>Kafka Configuration</entry>
+                                        <entry>Additional Kafka properties to use. Click the
+                                                <uicontrol>Add</uicontrol> icon and define the Kafka
+                                            property name and value. <p>Use the property names and
+                                                values as expected by Kafka. Do not use the
+                                                broker.list property.</p><p>Several properties are
+                                                defined by default. You can edit or delete the
+                                                properties. </p></entry>
+                                    </row>
+                                </tbody>
+                            </tgroup>
+                        </table>
+                    </p>
+                </info>
+            </step>
         </steps>
     </taskbody>
 </task>

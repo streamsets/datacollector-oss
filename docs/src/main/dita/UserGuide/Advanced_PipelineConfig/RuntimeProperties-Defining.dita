@@ -2,17 +2,17 @@
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_dys_tp1_1s">
  <title>Defining Runtime Properties</title>
- <shortdesc>You can define runtime properties in the <ph
-   conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> configuration
-  file or in a separate runtime properties file local to the <ph
-   conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>.</shortdesc>
  <conbody>
+    <p><indexterm>runtime properties<indexterm>defining</indexterm></indexterm>You can define
+      runtime properties in the <ph
+        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
+      configuration file or in a separate runtime properties file local to the <ph
+        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>.</p>
   <p>
    <dl>
     <dlentry>
-     <dt>Using the <ph
-       conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
-      configuration file</dt>
+     <dt><ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
+            configuration file</dt>
      <dd>Use the following steps to define runtime properties in the <ph
        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
       configuration file:<ol id="ol_l2b_jq1_1s">
@@ -27,7 +27,7 @@
       </ol></dd>
     </dlentry>
     <dlentry>
-     <dt>Using a separate runtime properties file</dt>
+     <dt>Separate runtime properties file</dt>
      <dd>Use the following steps to define runtime properties in a separate file:<ol
        id="ol_szl_ww1_1s">
        <li>Create a text file and save it in a directory local to the <ph

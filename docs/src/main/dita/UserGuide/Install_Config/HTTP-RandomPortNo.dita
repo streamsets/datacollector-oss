@@ -13,9 +13,7 @@
   <p><indexterm>HTTP protocol<indexterm>using a random port</indexterm></indexterm><indexterm>random
      port<indexterm>using</indexterm></indexterm>Configure the <ph
     conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> to use a
-   random port when you want the operating system to supply a random port number or when you want to
-   run the <ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> in
-   cluster mode.</p>
+   random port when you want the operating system to supply a random port number.  </p>
   <p>To determine the port number and URL to use to access the  <ph
     conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> console, check
    the  <ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> log.
@@ -24,5 +22,11 @@
    http://192.168.130.5:18630:<codeblock>2015-06-06 10:41:07,764 DEBUG WebServerTask - Running on URI 'http://192.168.130.5:18630/', HTTPS 'false'</codeblock></p>
   <p> The <ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> log
    is located in the following location:<codeblock>&lt;SDCinstalldir>/log/sdc.log</codeblock></p>
+  <p>When you configure the <ph
+    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> to run in
+   cluster excecution mode, it automatically generates random port numbers for each worker. You do
+   not need to configure the <ph
+    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> to use random
+   ports. </p>
  </conbody>
 </concept>

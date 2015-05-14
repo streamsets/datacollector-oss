@@ -13,6 +13,9 @@
                 conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/1stStep-StageLib-ReqField-EHandling">
                 <cmd/>
             </step>
+            <step conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/KafkaConfig">
+                <cmd/>
+            </step>
             
             <step>
                 <cmd>On the <wintitle>Kafka</wintitle> tab, configure the following
@@ -117,10 +120,13 @@
                                         <entry>Additional Kafka properties to use. Click the
                                                 <uicontrol>Add</uicontrol> icon and define the Kafka
                                             property name and value. <p>Use the property names and
-                                                values as expected by Kafka. Do not use the
-                                                broker.list property.</p><p>Several properties are
-                                                defined by default. You can edit or delete the
-                                                properties. </p></entry>
+                                                values as expected by Kafka. </p><p>Several
+                                                properties are defined by default - you can edit or
+                                                delete the properties. Also, several properties are
+                                                used by Kafka Producer and cannot be overridden. For
+                                                a list of these properties, see <xref
+                                                  href="KProducer-AdditionalKProperties.dita#concept_tjp_v5l_zq"
+                                                />.</p></entry>
                                     </row>
                                 </tbody>
                             </tgroup>

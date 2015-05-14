@@ -20,6 +20,13 @@
    </topicmeta>
    <topicref href="../Destinations/Elasticsearch-Configuring.dita"/>
   </topicref>
+  <topicref href="../Destinations/Flume.dita" chunk="to-content">
+   <topicmeta>
+    <shortdesc/>
+   </topicmeta>
+   <topicref href="../Destinations/Flume-DataFormats.dita"/>
+   <topicref href="../Destinations/Flume-Configuring.dita"/>
+  </topicref>
   <topicref href="../Destinations/HadoopFS.dita" chunk="to-content">
    <topicmeta>
     <shortdesc/>
@@ -55,27 +62,17 @@
   </topicmeta>
    <topicref href="../Destinations/KinProducer-Configuring.dita"/>
   </topicref>
-  <topicref href="../Destinations/Flume.dita" chunk="to-content"> 
-   <topicmeta>
-   <shortdesc/>
-  </topicmeta>
-   <topicref href="../Destinations/Flume-DataFormats.dita"/>
-   <topicref href="../Destinations/Flume-Configuring.dita"/>
-  </topicref>
   <topicref href="../Destinations/Solr.dita" chunk="to-content"><topicmeta>
    <shortdesc/>
   </topicmeta>
    <topicref href="../Destinations/Solr-IndexMode.dita"/>
    <topicref href="../Destinations/Solr-configuring.dita"/>
   </topicref>
-  <topicref href="../Destinations/Error.dita" chunk="to-content"> <topicmeta>
-   <shortdesc/>
-  </topicmeta>
-  </topicref>
   <topicref href="../Destinations/Trash.dita" chunk="to-content">
    <topicmeta>
     <shortdesc/>
    </topicmeta>
   </topicref>
+  <topicref href="../Destinations/ToError.dita"/>
  </topicref>
 </map>

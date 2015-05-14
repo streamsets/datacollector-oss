@@ -6,10 +6,4 @@
  <shortdesc>You can edit the <ph
    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> environment
   configuration file, sdc-env.sh, to configure Java options. </shortdesc>
- <conbody>
-  <p>
-   <draft-comment author="Loretta">This structure is here to keep the organization parallel. It will
-    make more sense when we add the  Security Manager.</draft-comment>
-  </p>
- </conbody>
 </concept>

@@ -2,7 +2,7 @@
 <!DOCTYPE html
   SYSTEM "about:legacy-compat">
 <html xml:lang="en-us" lang="en-us">
-<head><meta name="description" content="You can edit the Data Collector environment configuration file, sdc-env.sh, to configure Java options. You can edit the Data Collector environment file, sdc-env.sh, to add or update Java configuration ..."></meta><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><meta name="copyright" content="(C) Copyright 2005"></meta><meta name="DC.rights.owner" content="(C) Copyright 2005"></meta><meta name="DC.Type" content="concept"></meta><meta name="DC.Title" content="Data Collector Environment Configuration"></meta><meta name="abstract" content="You can edit the Data Collector environment configuration file, sdc-env.sh, to configure Java options."></meta><meta name="description" content="You can edit the Data Collector environment configuration file, sdc-env.sh, to configure Java options."></meta><meta name="DC.Relation" scheme="URI" content="../Install_Config/Install_Config_title.html"></meta><meta name="DC.Format" content="XHTML"></meta><meta name="DC.Identifier" content="concept_rng_qym_qr"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/commonltr.css"><!----></link><title>Data Collector Environment Configuration</title><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/webhelp_topic.css"><!----></link><link rel="stylesheet" type="text/css" href="../skin.css"></link><script type="text/javascript"><!--
+<head><meta name="description" content="You can edit the Data Collector environment file, sdc-env.sh, to add or update Java configuration options. The Data Collector environment configuration file includes the following Java configuration ..."></meta><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><meta name="copyright" content="(C) Copyright 2005"></meta><meta name="DC.rights.owner" content="(C) Copyright 2005"></meta><meta name="DC.Type" content="concept"></meta><meta name="DC.Title" content="Data Collector Environment Configuration"></meta><meta name="abstract" content="You can edit the Data Collector environment configuration file, sdc-env.sh, to configure Java options."></meta><meta name="description" content="You can edit the Data Collector environment configuration file, sdc-env.sh, to configure Java options."></meta><meta name="DC.Relation" scheme="URI" content="../Install_Config/Install_Config_title.html"></meta><meta name="DC.Format" content="XHTML"></meta><meta name="DC.Identifier" content="concept_rng_qym_qr"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/commonltr.css"><!----></link><title>Data Collector Environment Configuration</title><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/webhelp_topic.css"><!----></link><link rel="stylesheet" type="text/css" href="../skin.css"></link><script type="text/javascript"><!--
           
           var prefix = "../index.html";
           
@@ -15,16 +15,9 @@
                   Collector</span>
   Environment Configuration</h1>
 
- 
- <div class="body conbody"><p class="shortdesc">You can edit the <span class="ph">Data
+ <p class="shortdesc">You can edit the <span class="ph">Data
                   Collector</span> environment
   configuration file, sdc-env.sh, to configure Java options. </p>
-
-  <p class="p">
-   
-  </p>
-
- </div>
 
 <div class="related-links"></div>
 <div class="topic concept nested1" id="concept_vrx_4fg_qr">
@@ -179,9 +172,9 @@ The <span class="ph">Data
                         
                         <thead class="thead" align="left">
                             <tr class="row">
-                                <th class="entry" valign="top" width="50%" id="d15914e289">Environment Configuration Property</th>
+                                <th class="entry" valign="top" width="50%" id="d16821e280">Environment Configuration Property</th>
 
-                                <th class="entry" valign="top" width="50%" id="d15914e292">Description</th>
+                                <th class="entry" valign="top" width="50%" id="d16821e283">Description</th>
 
                             </tr>
 
@@ -189,27 +182,27 @@ The <span class="ph">Data
 
                         <tbody class="tbody">
                             <tr class="row">
-                                <td class="entry" valign="top" width="50%" headers="d15914e289 ">SDC_PRE_CLASSPATH</td>
+                                <td class="entry" valign="top" width="50%" headers="d16821e280 ">SDC_PRE_CLASSPATH</td>
 
-                                <td class="entry" valign="top" width="50%" headers="d15914e292 ">Path to a directory of Java classes that can be called by
+                                <td class="entry" valign="top" width="50%" headers="d16821e283 ">Path to a directory of Java classes that can be called by
                                     custom stages. Classes in this list load before the
                                     post-classpath list.</td>
 
                             </tr>
 
                             <tr class="row">
-                                <td class="entry" valign="top" width="50%" headers="d15914e289 ">SDC_POST_CLASSPATH</td>
+                                <td class="entry" valign="top" width="50%" headers="d16821e280 ">SDC_POST_CLASSPATH</td>
 
-                                <td class="entry" valign="top" width="50%" headers="d15914e292 ">Path to a directory of Java classes that can be called by
+                                <td class="entry" valign="top" width="50%" headers="d16821e283 ">Path to a directory of Java classes that can be called by
                                     custom stages. Classes in this list load after the pre-classpath
                                     list.</td>
 
                             </tr>
 
                             <tr class="row">
-                                <td class="entry" valign="top" width="50%" headers="d15914e289 ">SDC_JAVA_OPTS</td>
+                                <td class="entry" valign="top" width="50%" headers="d16821e280 ">SDC_JAVA_OPTS</td>
 
-                                <td class="entry" valign="top" width="50%" headers="d15914e292 ">Additional Java options for the <span class="ph">Data
+                                <td class="entry" valign="top" width="50%" headers="d16821e283 ">Additional Java options for the <span class="ph">Data
                   Collector</span>. <p class="p">By default, the Xmx and Xms properties set the <span class="ph">Data
                   Collector</span> Java heap size to 1024 MB. </p>
 <p class="p">By default, XX:PermSize
@@ -221,9 +214,9 @@ The <span class="ph">Data
                             </tr>
 
                             <tr class="row">
-                                <td class="entry" valign="top" width="50%" headers="d15914e289 ">SDC_SECURITY_MANAGER_ENABLED</td>
+                                <td class="entry" valign="top" width="50%" headers="d16821e280 ">SDC_SECURITY_MANAGER_ENABLED</td>
 
-                                <td class="entry" valign="top" width="50%" headers="d15914e292 ">Default is True. Do not change this property. </td>
+                                <td class="entry" valign="top" width="50%" headers="d16821e283 ">Default is True. Do not change this property. </td>
 
                             </tr>
 

@@ -13,24 +13,19 @@
             process. These properties determine the files that are read and the order of
             processing.</p>
         <p>For example, a File Tail is configured to tail a log called server.log, starting with
-            server.log.1 with archive files named in reverse counter order. When the pipeline runs,
-            it starts reading lines from the beginning of server.log.1, ignoring older files. When
-            it reaches the end of server.log.1, it continues processing data in server.log. When it
-            completes reading existing data in server.log, it begins tailing incoming data for the
-            file.</p>
+            server.log.1, expecting archived files named in reverse counter order. When the pipeline
+            runs, it starts reading lines from the beginning of server.log.1, ignoring older files.
+            When it reaches the end of server.log.1, it continues processing data in server.log.
+            When it completes reading existing data in server.log, it begins tailing incoming data
+            for the file.</p>
         <p>When you stop a pipeline, File Tail notes the line where it stops reading. When you
             restart the pipeline, File Tail continues processing from the line where it left off,
             even if it has been archived to a different file. </p>
         <p>In the previous example, say you stopped the pipeline as File Tail was tailing
             server.log. By the time you restart the pipeline, the unprocessed data has been archived
-            to server.log.4. File Tail starts reading in server.log.4.</p>
-        <p>You can reset the origin to process all requested files before continuing to the active
-            file. When you reset the origin, the stage treats all properties as if you are starting
-            the pipeline for the first time. </p>
-        <p>File Tail logs information about processed files and provides the details through the
-            metadata node. Processed records pass to the pipeline through the output node.</p>
-        <p>You can use File Tail to read related sets of files in multiple directories. Each
-            directory can include a single active file. When File Tail processes files in multiple
-            directories, it merges all data in the pipeline. </p>
+            to server.log.4. File Tail cleverly starts reading in server.log.4.</p>
+        <p>You can reset the origin for File Tail. When you reset the origin, the File Tail treats
+            all properties as if you are starting the pipeline for the first time - processing all
+            requested files before continuing to the active file. </p>
     </conbody>
 </concept>
