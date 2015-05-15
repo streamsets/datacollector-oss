@@ -52,7 +52,9 @@ while test $# -gt 0; do
       shift
       ;;
     -help)
-      echo "createsdc -home=<SDC_HOME_DIR> (-httpPort=<SDC_HTTP_PORT> | -httpsPort=<SDC_HTTPS_PORT>)"
+      echo "create-sdc -home=<SDC_HOME_DIR> (-httpPort=<SDC_HTTP_PORT> | -httpsPort=<SDC_HTTPS_PORT>)"
+      echo ""
+      echo "  The <SDC_HOME_DIR> directory must not exist."
       echo ""
       exit 0
       ;;
