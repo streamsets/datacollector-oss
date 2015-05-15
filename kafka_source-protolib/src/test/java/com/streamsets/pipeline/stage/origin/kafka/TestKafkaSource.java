@@ -33,6 +33,7 @@ import org.I0Itec.zkclient.ZkClient;
 import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.io.File;
@@ -45,6 +46,7 @@ import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+@Ignore
 public class TestKafkaSource {
 
   private static List<KafkaServer> kafkaServers;
