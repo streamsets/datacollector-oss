@@ -3,7 +3,7 @@
  * be copied, modified, or distributed in whole or part without
  * written consent of StreamSets, Inc.
  */
-package com.streamsets.pipeline.stage.origin.spark;
+package com.streamsets.pipeline.stage.origin.kafka.cluster;
 
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Throwables;
@@ -15,10 +15,10 @@ import org.slf4j.LoggerFactory;
 import java.util.Collections;
 import java.util.List;
 
-public class SparkStreamingQueueConsumer {
-  private static final Logger LOG = LoggerFactory.getLogger(SparkStreamingQueueConsumer.class);
+public class ClusterQueueConsumer {
+  private static final Logger LOG = LoggerFactory.getLogger(ClusterQueueConsumer.class);
   private static final boolean IS_TRACE_ENABLED = LOG.isDebugEnabled();
-  private SparkStreamingQueue queue;
+  private ClusterQueue queue;
   /**
    * The last committed offset is used to detect cases where we timeout waiting
    * for a patch and as such we should not call commit on the queue
@@ -34,7 +34,7 @@ public class SparkStreamingQueueConsumer {
   private String lastCommittedOffset;
   private int recordsProduced;
 
-  SparkStreamingQueueConsumer(SparkStreamingQueue queue) {
+  ClusterQueueConsumer(ClusterQueue queue) {
     this.queue = queue;
     this.recordsProduced = 0;
     this.lastCommittedOffset = "";

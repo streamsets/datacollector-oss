@@ -107,8 +107,10 @@ public class SystemProcessImpl implements SystemProcess {
     if (errorTailer != null) {
       errorTailer.close();
     }
-    error.delete();
-    output.delete();
+    if (!Boolean.getBoolean("sdc.testing-mode")) {
+      error.delete();
+      output.delete();
+    }
     kill(5000);
   }
   @Override

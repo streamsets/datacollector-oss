@@ -2,7 +2,7 @@
  * (c) 2015 StreamSets, Inc. All rights reserved. May not be copied, modified, or distributed in whole or part without
  * written consent of StreamSets, Inc.
  */
-package com.streamsets.pipeline.stage.origin.spark;
+package com.streamsets.pipeline.stage.origin.kafka.cluster;
 
 import com.streamsets.pipeline.api.impl.Utils;
 import org.apache.spark.TaskContext;
@@ -22,7 +22,7 @@ import java.util.concurrent.Callable;
 
 
 /**
- * This function is serailized and pushed over the write to all executors
+ * This function is serialized and pushed over the write to all executors
  */
 public class SparkKafkaExecutorFunction implements VoidFunction<Iterator<Tuple2<byte[],byte[]>>>, Serializable {
   private static final Logger LOG = LoggerFactory.getLogger(SparkKafkaExecutorFunction.class);
@@ -82,8 +82,7 @@ public class SparkKafkaExecutorFunction implements VoidFunction<Iterator<Tuple2<
       return "null";
     }
     char[] chars = new char[2 * buf.length];
-    for (int i = 0; i < buf.length; ++i)
-    {
+    for (int i = 0; i < buf.length; ++i) {
       chars[2 * i] = HEX_CHARS[(buf[i] & 0xF0) >>> 4];
       chars[2 * i + 1] = HEX_CHARS[buf[i] & 0x0F];
     }
@@ -103,7 +102,7 @@ public class SparkKafkaExecutorFunction implements VoidFunction<Iterator<Tuple2<
       throw new RuntimeException("Embedded SDC pool is not initialized");
     }
     for (EmbeddedSDC sdc : sdcPool.getTotalInstances()) {
-      result += ((SparkStreamingKafkaSource) sdc.getSource()).getRecordsProduced();
+      result += ((ClusterKafkaSource) sdc.getSource()).getRecordsProduced();
     }
     return result;
   }

@@ -3,7 +3,7 @@
  * be copied, modified, or distributed in whole or part without
  * written consent of StreamSets, Inc.
  */
-package com.streamsets.pipeline.stage.origin.spark;
+package com.streamsets.pipeline.stage.origin.kafka.cluster;
 
 import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.lib.util.ThreadUtil;
@@ -17,18 +17,18 @@ import org.slf4j.LoggerFactory;
 import java.util.Arrays;
 import java.util.Random;
 
-public class TestSparkStreamingQueue {
-  private static final Logger LOG = LoggerFactory.getLogger(TestSparkStreamingQueue.class);
+public class TestClusterQueue {
+  private static final Logger LOG = LoggerFactory.getLogger(TestClusterQueue.class);
   private static final int MAX_WAIT_TIME = 50;
 
-  private SparkStreamingQueue queue;
-  private SparkStreamingQueueConsumer source;
+  private ClusterQueue queue;
+  private ClusterQueueConsumer source;
   private MockSourceRunner sourceRunner;
 
   @Before
   public void setup() {
-    queue = new SparkStreamingQueue();
-    source = new SparkStreamingQueueConsumer(queue);
+    queue = new ClusterQueue();
+    source = new ClusterQueueConsumer(queue);
     sourceRunner = new MockSourceRunner(source);
   }
 
@@ -110,7 +110,7 @@ public class TestSparkStreamingQueue {
   }
 
   private static class MockSourceRunner extends Thread {
-    SparkStreamingQueueConsumer source;
+    ClusterQueueConsumer source;
     Throwable capturedThrowable;
     /**
      * Simulates an error thrown during pipeline execution
@@ -119,7 +119,7 @@ public class TestSparkStreamingQueue {
     volatile boolean stop;
     volatile int iterations;
 
-    MockSourceRunner(SparkStreamingQueueConsumer source) {
+    MockSourceRunner(ClusterQueueConsumer source) {
       this.source = source;
       this.iterations = 0;
     }

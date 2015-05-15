@@ -3,7 +3,7 @@
  * be copied, modified, or distributed in whole or part without
  * written consent of StreamSets, Inc.
  */
-package com.streamsets.pipeline.stage.origin.spark;
+package com.streamsets.pipeline.stage.origin.kafka.cluster;
 
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
@@ -43,8 +43,8 @@ import java.util.Properties;
 import java.util.UUID;
 
 
-public class TestSparkStreamingKafkaDataFormats {
-  private static final Logger LOG = LoggerFactory.getLogger(TestSparkStreamingKafkaDataFormats.class);
+public class TestClusterModeDataFormats {
+  private static final Logger LOG = LoggerFactory.getLogger(TestClusterModeDataFormats.class);
 
   private static List<KafkaServer> kafkaServers;
   private static ZkClient zkClient;
@@ -57,10 +57,10 @@ public class TestSparkStreamingKafkaDataFormats {
   private static final int SINGLE_PARTITION = 1;
   private static final int SINGLE_REPLICATION_FACTOR = 1;
   private static final String TOPIC1 = "TestKafkaSource1";
-  private static String metadataBrokerList;
-
   private static final int TIME_OUT = 5000;
-private static String originalTmpDir;
+
+  private static String metadataBrokerList;
+  private static String originalTmpDir;
 
   @BeforeClass
   public static void setUp() {
@@ -153,8 +153,6 @@ private static String originalTmpDir;
       sourceRunner.runDestroy();
     }}
     finally {
-
-
       if (th != null) {
         th.interrupt();
       }
@@ -242,6 +240,7 @@ private static String originalTmpDir;
       .addConfiguration("maxStackTraceLines", -1)
       .build();
     Thread th = null;
+    boolean error = true;
     try {
       sourceRunner.runInit();
       String jsonData = KafkaTestUtil.generateTestData(DataType.JSON, StreamingJsonParser.Mode.ARRAY_OBJECTS);
@@ -254,9 +253,17 @@ private static String originalTmpDir;
       Assert.assertEquals("1", newOffset);
       List<Record> records = output.getRecords().get("lane");
       Assert.assertEquals(4, records.size());
+      error = false;
     } finally {
       if (sourceRunner != null) {
-        sourceRunner.runDestroy();
+        try {
+          sourceRunner.runDestroy();
+        } catch(Exception ex) {
+          LOG.error("Error during destroy: " + ex, ex);
+          if (!error) {
+            throw ex;
+          }
+        }
       }
       if (th != null) {
         th.interrupt();
@@ -293,6 +300,7 @@ private static String originalTmpDir;
       .addConfiguration("maxStackTraceLines", -1)
       .build();
     Thread th = null;
+    boolean error = true;
     try {
       sourceRunner.runInit();
       String jsonData = KafkaTestUtil.generateTestData(DataType.JSON, StreamingJsonParser.Mode.ARRAY_OBJECTS);
@@ -305,9 +313,15 @@ private static String originalTmpDir;
       Assert.assertEquals("1", newOffset);
       List<Record> records = output.getRecords().get("lane");
       Assert.assertEquals(1, records.size());
+      error = false;
     } finally {
-      if (sourceRunner != null) {
+      try {
         sourceRunner.runDestroy();
+      } catch(Exception ex) {
+        LOG.error("Error during destroy: " + ex, ex);
+        if (!error) {
+          throw ex;
+        }
       }
       if (th != null) {
         th.interrupt();
@@ -345,6 +359,7 @@ private static String originalTmpDir;
       .addConfiguration("maxStackTraceLines", -1)
       .build();
     Thread th = null;
+    boolean error = true;
     try {
       sourceRunner.runInit();
       String xmlData = KafkaTestUtil.generateTestData(DataType.XML, null);
@@ -357,9 +372,15 @@ private static String originalTmpDir;
       Assert.assertEquals("1", newOffset);
       List<Record> records = output.getRecords().get("lane");
       Assert.assertEquals(1, records.size());
+      error = false;
     } finally {
-      if (sourceRunner != null) {
+      try {
         sourceRunner.runDestroy();
+      } catch(Exception ex) {
+        LOG.error("Error during destroy: " + ex, ex);
+        if (!error) {
+          throw ex;
+        }
       }
       if (th != null) {
         th.interrupt();
@@ -398,6 +419,7 @@ private static String originalTmpDir;
       .addConfiguration("maxStackTraceLines", -1)
       .build();
     Thread th = null;
+    boolean error = true;
     try {
       sourceRunner.runInit();
       String xmlData = KafkaTestUtil.generateTestData(DataType.XML, null);
@@ -410,9 +432,15 @@ private static String originalTmpDir;
       Assert.assertEquals("1", newOffset);
       List<Record> records = output.getRecords().get("lane");
       Assert.assertEquals(2, records.size());
+      error = false;
     } finally {
-      if (sourceRunner != null) {
+      try {
         sourceRunner.runDestroy();
+      } catch(Exception ex) {
+        LOG.error("Error during destroy: " + ex, ex);
+        if (!error) {
+          throw ex;
+        }
       }
       if (th != null) {
         th.interrupt();
@@ -453,6 +481,7 @@ private static String originalTmpDir;
       .addConfiguration("maxStackTraceLines", -1)
       .build();
     Thread th = null;
+    boolean error = true;
     try {
       sourceRunner.runInit();
       String csvData = KafkaTestUtil.generateTestData(DataType.CSV, null);
@@ -465,9 +494,15 @@ private static String originalTmpDir;
       Assert.assertEquals("1", newOffset);
       List<Record> records = output.getRecords().get("lane");
       Assert.assertEquals(1, records.size());
+      error = false;
     } finally {
-      if (sourceRunner != null) {
+      try {
         sourceRunner.runDestroy();
+      } catch(Exception ex) {
+        LOG.error("Error during destroy: " + ex, ex);
+        if (!error) {
+          throw ex;
+        }
       }
       if (th != null) {
         th.interrupt();
@@ -480,8 +515,8 @@ private static String originalTmpDir;
       @Override
       public void run() {
         try {
-          SparkStreamingKafkaSource source =
-            ((SparkStreamingKafkaSource) ((DSource) sourceRunner.getStage()).getSource());
+          ClusterKafkaSource source =
+            ((ClusterKafkaSource) ((DSource) sourceRunner.getStage()).getSource());
           source.put(list);
         } catch (Exception ex) {
           LOG.error("Error in waiter thread: " + ex, ex);

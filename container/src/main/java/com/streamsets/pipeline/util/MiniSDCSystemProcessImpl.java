@@ -7,9 +7,12 @@ package com.streamsets.pipeline.util;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Map;
 
+import com.google.common.base.Joiner;
+import com.google.common.io.Files;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -18,7 +21,9 @@ import com.google.common.collect.ImmutableList;
 // TODO - move this and subclass to bootstrap
 public class MiniSDCSystemProcessImpl extends SystemProcessImpl {
   private static final Logger LOG = LoggerFactory.getLogger(SystemProcessImpl.class);
+  private static final String YARN_COMMAND_TEXT = Joiner.on("\n").join("#!/bin/bash", "echo \"$@\"", "echo RUNNING", "");
   private final File testDir;
+  private final String yarnCommand;
 
   public MiniSDCSystemProcessImpl(String name, File tempDir, List<String> args, File testDir) {
     super(name, tempDir, testDir);
@@ -29,6 +34,19 @@ public class MiniSDCSystemProcessImpl extends SystemProcessImpl {
       LOG.debug("Spark property file is at " + System.getProperty("SPARK_PROPERTY_FILE"));
       args.add(index + 1, System.getProperty("SPARK_PROPERTY_FILE"));
     }
+    File yarnCommand = new File(tempDir, "yarn-command");
+    if (!yarnCommand.isFile() || !yarnCommand.canExecute()) {
+      yarnCommand.delete();
+      try {
+        Files.write(YARN_COMMAND_TEXT, yarnCommand, StandardCharsets.UTF_8);
+      } catch (IOException e) {
+        throw new RuntimeException(e);
+      }
+      if (!yarnCommand.canExecute() && !yarnCommand.setExecutable(true)) {
+        throw new RuntimeException("Could not set " + yarnCommand + " executable");
+      }
+    }
+    this.yarnCommand = yarnCommand.getAbsolutePath();
     this.args = ImmutableList.copyOf(args);
     this.testDir = testDir;
   }
@@ -41,6 +59,7 @@ public class MiniSDCSystemProcessImpl extends SystemProcessImpl {
     env.put("SPARK_SUBMIT", new File(sparkHomeDir, "bin/spark-submit").getAbsolutePath());
     // need to set some this prop, actual value doesn't matter
     env.put("YARN_CONF_DIR", testDir.getAbsolutePath());
+    env.put("YARN_COMMAND",  yarnCommand);
     super.start(env);
   }
 

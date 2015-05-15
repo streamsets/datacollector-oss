@@ -5,9 +5,6 @@
  */
 package com.streamsets.pipeline.stage.origin.kafka;
 
-import com.streamsets.pipeline.BootstrapSpark;
-import com.streamsets.pipeline.api.BatchMaker;
-import com.streamsets.pipeline.api.ErrorListener;
 import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.OffsetCommitter;
 import com.streamsets.pipeline.api.Record;
@@ -30,37 +27,37 @@ import com.streamsets.pipeline.lib.parser.log.RegExConfig;
 import com.streamsets.pipeline.lib.parser.xml.XmlDataParserFactory;
 
 import org.apache.xerces.util.XMLChar;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import java.lang.reflect.Constructor;
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.nio.charset.UnsupportedCharsetException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class BaseKafkaSource extends BaseSource implements OffsetCommitter, ErrorListener {
-  private static final Logger LOG = LoggerFactory.getLogger(BaseKafkaSource.class);
-  private static final String CLUSTER_MODE_CLASS = "com.streamsets.pipeline.stage.origin.spark.SparkStreamingKafkaSource";
+public abstract class BaseKafkaSource extends BaseSource implements OffsetCommitter {
+  // required in children
+  protected final String metadataBrokerList;
+  protected final String zookeeperConnect;
+  protected final String consumerGroup;
+  protected final int maxBatchSize;
+  protected final Map<String, String> kafkaConsumerConfigs;
   protected final String topic;
-  private final DataFormat dataFormat;
-  private final String charset;
-  private boolean produceSingleRecordPerMessage;
-
-  private int textMaxLineLen;
+  protected final DataFormat dataFormat;
+  protected final String charset;
+  protected final boolean produceSingleRecordPerMessage;
+  // required only in self
+  private final int textMaxLineLen;
   private final JsonMode jsonContent;
-  private int jsonMaxObjectLen;
+  private final int jsonMaxObjectLen;
   private final CsvMode csvFileFormat;
   private final CsvHeader csvHeader;
-  private int csvMaxObjectLen;
+  private final int csvMaxObjectLen;
   private final String xmlRecordElement;
-  private int xmlMaxObjectLen;
-  protected int maxWaitTime;
-
+  private final int xmlMaxObjectLen;
   private final LogMode logMode;
   private final int logMaxObjectLen;
   private final boolean logRetainOriginalLine;
@@ -73,74 +70,43 @@ public class BaseKafkaSource extends BaseSource implements OffsetCommitter, Erro
   private final String log4jCustomLogFormat;
   private final int maxStackTraceLines;
   private final OnParseError onParseError;
-  private final String zookeeperConnect;
-  private final String consumerGroup;
-  private final int maxBatchSize;
-  private final Map<String, String> kafkaConsumerConfigs;
-  private StandaloneKafkaSource standaloneKafkaSource;
+
+  protected int maxWaitTime;
   private LogDataFormatValidator logDataFormatValidator;
-  protected final String metadataBrokerList;
-  private Class clusterModeClazz;
-  private BaseKafkaSource clusterModeInstance;
+  private Charset messageCharset;
+  private DataParserFactory parserFactory;
 
-  public BaseKafkaSource(String metadataBrokerList, String zookeeperConnect, String consumerGroup, String topic, DataFormat dataFormat, String charset,
-      boolean produceSingleRecordPerMessage, int maxBatchSize, int maxWaitTime, Map<String, String> kafkaConsumerConfigs,
-      int textMaxLineLen, JsonMode jsonContent, int jsonMaxObjectLen, CsvMode csvFileFormat, CsvHeader csvHeader,
-      int csvMaxObjectLen, String xmlRecordElement, int xmlMaxObjectLen, LogMode logMode, int logMaxObjectLen,
-      boolean retainOriginalLine, String customLogFormat, String regex, List<RegExConfig> fieldPathsToGroupName,
-      String grokPatternDefinition, String grokPattern, boolean enableLog4jCustomLogFormat,
-      String log4jCustomLogFormat, OnParseError onParseError, int maxStackTraceLines) {
-    this.metadataBrokerList = metadataBrokerList;
-    this.zookeeperConnect = zookeeperConnect;
-    this.consumerGroup = consumerGroup;
-    this.maxBatchSize = maxBatchSize;
-    this.kafkaConsumerConfigs = kafkaConsumerConfigs;
-    this.topic = topic;
-    this.dataFormat = dataFormat;
-    this.charset = charset;
-    this.produceSingleRecordPerMessage = produceSingleRecordPerMessage;
-    this.maxWaitTime = maxWaitTime;
-    this.textMaxLineLen = textMaxLineLen;
-    this.jsonContent = jsonContent;
-    this.jsonMaxObjectLen = jsonMaxObjectLen;
-    this.csvFileFormat = csvFileFormat;
-    this.csvHeader = csvHeader;
-    this.csvMaxObjectLen = csvMaxObjectLen;
-    this.xmlRecordElement = xmlRecordElement;
-    this.xmlMaxObjectLen = xmlMaxObjectLen;
-    this.logMode = logMode;
-    this.logMaxObjectLen = logMaxObjectLen;
-    this.logRetainOriginalLine = retainOriginalLine;
-    this.customLogFormat = customLogFormat;
-    this.regex = regex;
-    this.fieldPathsToGroupName = fieldPathsToGroupName;
-    this.grokPatternDefinition = grokPatternDefinition;
-    this.grokPattern = grokPattern;
-    this.enableLog4jCustomLogFormat = enableLog4jCustomLogFormat;
-    this.log4jCustomLogFormat = log4jCustomLogFormat;
-    this.maxStackTraceLines = maxStackTraceLines;
-    this.onParseError = onParseError;
-  }
-
-  @Override
-  protected List<ConfigIssue> validateConfigs() throws StageException {
-    List<ConfigIssue> issues = new ArrayList<>();
-    if (getContext().isPreview() || !getContext().isClusterMode()) {
-      //preview can run only in standalone mode
-      standaloneKafkaSource = new StandaloneKafkaSource(zookeeperConnect, consumerGroup, topic, dataFormat, charset,
-          produceSingleRecordPerMessage, maxBatchSize, maxWaitTime, kafkaConsumerConfigs, textMaxLineLen, jsonContent,
-          jsonMaxObjectLen, csvFileFormat, csvHeader, csvMaxObjectLen, xmlRecordElement, xmlMaxObjectLen, logMode,
-          logMaxObjectLen, logRetainOriginalLine, customLogFormat, regex, fieldPathsToGroupName, grokPatternDefinition,
-          grokPattern, enableLog4jCustomLogFormat, log4jCustomLogFormat, onParseError, maxStackTraceLines);
-      issues.addAll(standaloneKafkaSource.validateConfigs(this.getInfo(), this.getContext()));
-      //Should validate cluster mode configs even though preview is run in standalone mode
-      if(getContext().isClusterMode()) {
-        issues.addAll(validateClusterModeConfigs());
-      }
-    } else {
-      issues.addAll(validateClusterModeConfigs());
-    }
-    return issues;
+  public BaseKafkaSource(SourceArguments args) {
+    this.metadataBrokerList = args.getMetadataBrokerList();
+    this.zookeeperConnect = args.getZookeeperConnect();
+    this.consumerGroup = args.getConsumerGroup();
+    this.maxBatchSize = args.getMaxBatchSize();
+    this.kafkaConsumerConfigs = args.getKafkaConsumerConfigs();
+    this.topic = args.getTopic();
+    this.dataFormat = args.getDataFormat();
+    this.charset = args.getCharset();
+    this.produceSingleRecordPerMessage = args.isProduceSingleRecordPerMessage();
+    this.maxWaitTime = args.getMaxWaitTime();
+    this.textMaxLineLen = args.getTextMaxLineLen();
+    this.jsonContent = args.getJsonContent();
+    this.jsonMaxObjectLen = args.getJsonMaxObjectLen();
+    this.csvFileFormat = args.getCsvFileFormat();
+    this.csvHeader = args.getCsvHeader();
+    this.csvMaxObjectLen = args.getCsvMaxObjectLen();
+    this.xmlRecordElement = args.getXmlRecordElement();
+    this.xmlMaxObjectLen = args.getXmlMaxObjectLen();
+    this.logMode = args.getLogMode();
+    this.logMaxObjectLen = args.getLogMaxObjectLen();
+    this.logRetainOriginalLine = args.isRetainOriginalLine();
+    this.customLogFormat = args.getCustomLogFormat();
+    this.regex = args.getRegex();
+    this.fieldPathsToGroupName = args.getFieldPathsToGroupName();
+    this.grokPatternDefinition = args.getGrokPatternDefinition();
+    this.grokPattern = args.getGrokPattern();
+    this.enableLog4jCustomLogFormat = args.isEnableLog4jCustomLogFormat();
+    this.log4jCustomLogFormat = args.getLog4jCustomLogFormat();
+    this.maxStackTraceLines = args.getMaxStackTraceLines();
+    this.onParseError = args.getOnParseError();
   }
 
   protected List<ConfigIssue> validateCommonConfigs(List<ConfigIssue> issues) throws StageException {
@@ -206,13 +172,13 @@ public class BaseKafkaSource extends BaseSource implements OffsetCommitter, Erro
 
   private void validateParserFactoryConfigs(List<ConfigIssue> issues) {
     DataParserFactoryBuilder builder = new DataParserFactoryBuilder(getContext(), dataFormat.getParserFormat())
-        .setCharset(Charset.defaultCharset());
+      .setCharset(Charset.defaultCharset());
 
     try {
       messageCharset = Charset.forName(charset);
     } catch (UnsupportedCharsetException ex) {
       // setting it to a valid one so the parser factory can be configured and tested for more errors
-      messageCharset = Charset.forName("UTF-8");
+      messageCharset = StandardCharsets.UTF_8;
       issues.add(getContext().createConfigIssue(Groups.KAFKA.name(), "charset", Errors.KAFKA_08, charset));
     }
     builder.setCharset(messageCharset);
@@ -244,27 +210,7 @@ public class BaseKafkaSource extends BaseSource implements OffsetCommitter, Erro
     parserFactory = builder.build();
   }
 
-  Charset messageCharset;
-  DataParserFactory parserFactory;
 
-  @Override
-  public void init() throws StageException {
-    if (getContext().isPreview() || !getContext().isClusterMode()) {
-      standaloneKafkaSource.init();
-    } else {
-      clusterModeInstance.init();
-    }
-  }
-
-
-  @Override
-  public String produce(String lastSourceOffset, int maxBatchSize, BatchMaker batchMaker) throws StageException {
-    if(getContext().isPreview() || !getContext().isClusterMode()) {
-      return standaloneKafkaSource.produce(lastSourceOffset, maxBatchSize, batchMaker);
-    } else {
-      return clusterModeInstance.produce(lastSourceOffset, maxBatchSize, batchMaker);
-    }
-  }
 
   protected List<Record> processKafkaMessage(String messageId, byte[] payload) throws StageException {
     List<Record> records = new ArrayList<>();
@@ -318,70 +264,6 @@ public class BaseKafkaSource extends BaseSource implements OffsetCommitter, Erro
       fieldPathToGroup.put(r.fieldPath, r.group);
     }
     return fieldPathToGroup;
-  }
-
-  @Override
-  public void commit(String offset) throws StageException {
-    if(getContext().isPreview() || !getContext().isClusterMode()) {
-      standaloneKafkaSource.commit(offset);
-    } else {
-      clusterModeInstance.commit(offset);
-    }
-
-  }
-
-  @Override
-  public void destroy() {
-    if (getContext().isPreview() || !getContext().isClusterMode()) {
-      standaloneKafkaSource.destroy();
-    } else {
-      clusterModeInstance.destroy();
-    }
-  }
-
-  private Object createInstanceClusterMode(String className) {
-    try {
-      clusterModeClazz = Class.forName(className);
-      Constructor ctor =
-        clusterModeClazz.getConstructor(String.class, String.class, DataFormat.class, String.class, boolean.class,
-          int.class, int.class, Map.class, int.class, JsonMode.class, int.class, CsvMode.class, CsvHeader.class,
-          int.class, String.class, int.class, LogMode.class, int.class, boolean.class, String.class, String.class,
-          List.class, String.class, String.class, boolean.class, String.class, OnParseError.class, int.class);
-      Object[] arguments =
-        { metadataBrokerList, topic, dataFormat, charset, produceSingleRecordPerMessage, maxBatchSize, maxWaitTime,
-            kafkaConsumerConfigs, textMaxLineLen, jsonContent, jsonMaxObjectLen, csvFileFormat, csvHeader,
-            csvMaxObjectLen, xmlRecordElement, xmlMaxObjectLen, logMode, logMaxObjectLen, logRetainOriginalLine,
-            customLogFormat, regex, fieldPathsToGroupName, grokPatternDefinition, grokPattern,
-            enableLog4jCustomLogFormat, log4jCustomLogFormat, onParseError, maxStackTraceLines };
-      clusterModeInstance = (BaseKafkaSource) ctor.newInstance(arguments);
-    } catch (Exception e) {
-      throw new IllegalStateException("Exception while invoking kafka instance in cluster mode: " + e, e);
-    }
-    return clusterModeInstance;
-  }
-
-  public BaseKafkaSource getSource() {
-    if (clusterModeInstance != null) {
-      return clusterModeInstance;
-    } else {
-      return standaloneKafkaSource;
-    }
-  }
-
-  @Override
-  public void errorNotification(Throwable throwable) {
-    BaseKafkaSource source = getSource();
-    if (source == null) {
-      String msg = "Source is null when throwing to handle error notification: " + throwable;
-      LOG.error(msg, throwable);
-    } else {
-      source.errorNotification(throwable);
-    }
-  }
-
-  private List<ConfigIssue> validateClusterModeConfigs() throws StageException {
-    createInstanceClusterMode(CLUSTER_MODE_CLASS);
-    return clusterModeInstance.validateConfigs(this.getInfo(), this.getContext());
   }
 
 }

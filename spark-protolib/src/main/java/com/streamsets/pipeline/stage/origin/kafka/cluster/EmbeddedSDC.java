@@ -3,7 +3,7 @@
  * be copied, modified, or distributed in whole or part without
  * written consent of StreamSets, Inc.
  */
-package com.streamsets.pipeline.stage.origin.spark;
+package com.streamsets.pipeline.stage.origin.kafka.cluster;
 
 
 import java.util.concurrent.atomic.AtomicInteger;
@@ -15,7 +15,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 public class EmbeddedSDC {
   private static final AtomicInteger instanceIdCounter = new AtomicInteger(0);
   private final int instanceId;
-  private SparkStreamingSource source;
+  private ClusterSource source;
 
   public EmbeddedSDC() {
     instanceId = instanceIdCounter.getAndIncrement();
@@ -25,11 +25,11 @@ public class EmbeddedSDC {
     return instanceId;
   }
 
-  public SparkStreamingSource getSource() {
+  public ClusterSource getSource() {
     return source;
   }
 
-  public void setSource(SparkStreamingSource source) {
+  public void setSource(ClusterSource source) {
     this.source = source;
   }
 
