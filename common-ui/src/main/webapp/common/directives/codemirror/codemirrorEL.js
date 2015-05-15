@@ -178,8 +178,7 @@ angular.module('dataCollectorApp.codemirrorDirectives')
           // The ui-codemirror directive allows us to receive a reference to the Codemirror instance on demand.
           scope.$broadcast('CodeMirror', function(cm) {
             cm.on('change', function(instance, change) {
-              var isVisible = $(instance. getWrapperElement()).is(':visible');
-              if (isVisible && change.origin !== 'complete') {
+              if (change.origin !== 'complete' && change.origin !== 'setValue') {
                 instance.showHint({ hint: window.CodeMirror.hint.dictionaryHint, completeSingle: false });
               }
               $timeout(function() {});
