@@ -5,7 +5,28 @@
  */
 package com.streamsets.pipeline.prodmanager;
 
-import com.codahale.metrics.MetricRegistry;
+import java.io.File;
+import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.concurrent.ArrayBlockingQueue;
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ThreadFactory;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.locks.ReentrantLock;
+
+import javax.validation.constraints.NotNull;
+
+import org.apache.commons.io.FileUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Optional;
 import com.google.common.base.Strings;
@@ -51,28 +72,6 @@ import com.streamsets.pipeline.util.PipelineDirectoryUtil;
 import com.streamsets.pipeline.validation.Issues;
 import com.streamsets.pipeline.validation.StageIssue;
 import com.streamsets.pipeline.validation.ValidationError;
-import org.apache.commons.io.FileUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import javax.validation.constraints.NotNull;
-import java.io.File;
-import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.concurrent.ArrayBlockingQueue;
-import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.Executor;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ThreadFactory;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.locks.ReentrantLock;
 
 public class ClusterPipelineManager extends AbstractTask implements PipelineManager {
   private static final String CLUSTER_PIPELINE_MANAGER = "ClusterPipelineManager";
@@ -291,14 +290,22 @@ public class ClusterPipelineManager extends AbstractTask implements PipelineMana
     //Creating directory eagerly also avoids the need of synchronization
     createPipelineDirIfNotExist(name);
     PipelineState ps = stateTracker.getState();
-    if (ps.getState() != State.RUNNING) {
+    if (ps == null) {
+      validatePipelineExistence(name);
+    } else if (ps.getState() != State.RUNNING) {
       validateStateTransition(name, rev, State.RUNNING);
     }
-    ApplicationState appState = new ApplicationState((Map)ps.getAttributes().get(APPLICATION_STATE));
-    if (metricsEventRunnable != null) {
-      metricsEventRunnable.clearSlaveMetrics();
+    ApplicationState appState;
+    if (ps == null) {
+      stateTracker.setState(name, rev, State.RUNNING, "Starting cluster pipeline", null, null);
+      appState = new ApplicationState();
+    } else {
+      appState = new ApplicationState((Map) ps.getAttributes().get(APPLICATION_STATE));
+      if (metricsEventRunnable != null) {
+        metricsEventRunnable.clearSlaveMetrics();
+      }
+      stateTracker.setState(name, rev, State.RUNNING, "Starting cluster pipeline", null, ps.getAttributes());
     }
-    stateTracker.setState(name, rev, State.RUNNING, "Starting cluster pipeline", null, ps.getAttributes());
     PipelineConfiguration pipelineConf = pipelineStore.load(name, rev);
     ExecutionMode executionMode = ExecutionMode.valueOf((String) pipelineConf.getConfiguration(
       PipelineDefConfigs.EXECUTION_MODE_CONFIG).getValue());
@@ -509,6 +516,7 @@ public class ClusterPipelineManager extends AbstractTask implements PipelineMana
       this.pipelineStore = clusterPipelineManager.pipelineStore;
     }
 
+    @Override
     public void run() {
       while (true) {
         try {
@@ -547,7 +555,7 @@ public class ClusterPipelineManager extends AbstractTask implements PipelineMana
     private void checkStatus() throws PipelineManagerException {
       Boolean running = null;
       PipelineState ps = stateTracker.getState();
-      if (ps.getState() == State.RUNNING) {
+      if (ps != null && ps.getState() == State.RUNNING) {
         ApplicationState appState = new ApplicationState((Map)ps.getAttributes().get(APPLICATION_STATE));
         try {
           running = sparkManager.isRunning(appState).get(60, TimeUnit.SECONDS);
