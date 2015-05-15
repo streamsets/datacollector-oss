@@ -11,11 +11,19 @@
         conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>s on the
       same host machine. You can run the <ph
         conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> instances
-      at the same time, as long as the host machine has enough resources.</p>
-    <p>When the <ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-      /> creates a new instance, it <draft-comment author="Loretta">talk about coping directories?
-        talk about copying the sdc. properties with the updated port no.
-        </draft-comment><draft-comment author="Loretta">Any other limitations? Anything else to
-        highlight as a reason to use it?</draft-comment></p>
+      at the same time, as long as the host machine has enough resources.<draft-comment
+        author="Loretta">Any other limitations? Anything else to highlight as a reason to use
+        it?</draft-comment></p>
+    <p>When you create an additional <ph
+        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> instance,
+      the new instance includes any <ph
+        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
+      customization that you have implemented. When the <ph
+        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> creates a
+      new instance, it copies the etc and libexec directories to the new <ph
+        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> instance.
+      This includes the existing <ph
+        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
+      configuration file and related files, and the environment configuration file. </p>
  </conbody>
 </concept>

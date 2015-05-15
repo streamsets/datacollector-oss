@@ -9,10 +9,10 @@
     />s.</shortdesc>
  <conbody>
   <p><indexterm>runtime properties<indexterm>overview</indexterm></indexterm>You can use runtime
-      properties to define values for stage and pipeline properties. For example, you can define a
-      Error Directory runtime property that points to different directories on a test machine and a
+      properties to define values for stage and pipeline properties. For example, you can define an
+      error directory runtime property that points to different directories on a test machine and a
       production machine. Similarly, you might create test and production runtime properties for the
-      origin and destination of a pipeline. </p>
+      origin and destination stages. </p>
     <p>You can use runtime properties for any pipeline property that allows the use of the
       expression language. You can, for example, use runtime properties to represent batch sizes and
       timeouts, directories, URI, and advanced properties. You cannot use runtime properties to
