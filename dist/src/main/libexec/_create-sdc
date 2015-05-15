@@ -52,14 +52,16 @@ while test $# -gt 0; do
       shift
       ;;
     -help)
-      echo "create-sdc -home=<SDC_HOME_DIR> (-httpPort=<SDC_HTTP_PORT> | -httpsPort=<SDC_HTTPS_PORT>)"
+      echo ""
+      echo "streamsets create-dc -home=<SDC_HOME_DIR> (-httpPort=<SDC_HTTP_PORT> | -httpsPort=<SDC_HTTPS_PORT>)"
       echo ""
       echo "  The <SDC_HOME_DIR> directory must not exist."
       echo ""
       exit 0
       ;;
     *)
-      echo "Invalid arguments, run 'createsdc -help'"
+      echo ""
+      echo "Invalid arguments, run 'streamsets create-dc -help'"
       echo ""
       $0 -help
       exit 1
@@ -69,7 +71,8 @@ done
 
 if [[ -z "${SDC_HOME}" ]]
 then
-  echo "Missing arguments, run 'createsdc -help'"
+  echo ""
+  echo "Missing arguments, run 'streamsets create-dc -help'"
   echo ""
   $0 -help
   exit 1
@@ -77,7 +80,8 @@ fi
 
 if [[ -z "${SDC_HTTP_PORT}" && -z "${SDC_HTTPS_PORT}" ]]
 then
-  echo "Missing arguments, run 'createsdc -help'"
+  echo ""
+  echo "Missing arguments, run 'streamsets create-dc -help'"
   echo ""
   $0 -help
   exit 1
@@ -85,13 +89,14 @@ fi
 
 if [ -d "${SDC_HOME}" ]
 then
-  echo "Specified home directory must not exist"
+  echo ""
+  echo "The specified home directory must not exist"
   echo ""
   exit 1
 fi
 
-SDC_HTTP_PORT=${SDC_HTTP_PORT:="0"}
-SDC_HTTPS_PORT=${SDC_HTTPS_PORT:="0"}
+SDC_HTTP_PORT=${SDC_HTTP_PORT:="-1"}
+SDC_HTTPS_PORT=${SDC_HTTPS_PORT:="-1"}
 
 
 run mkdir "${SDC_HOME}"
@@ -100,22 +105,38 @@ SDC_HOME=`cd ${SDC_HOME};pwd`
 run mkdir "${SDC_HOME}/bin"
 run mkdir "${SDC_HOME}/etc"
 run mkdir "${SDC_HOME}/libexec"
-run sed -e "s|#SDC_HOME#|${SDC_HOME}|" -e "s|#SDC_DIST#|${SDC_DIST}|" \
-    < "${SDC_DIST}/bin/_sdc_prototype" > "${SDC_HOME}/bin/sdc"
 
-run echo "#!/bin/bash" > "${SDC_HOME}/bin/sdc"
-run echo "#" >> "${SDC_HOME}/bin/sdc"
-run echo "# (c) 2014 StreamSets, Inc. All rights reserved. May not" >> "${SDC_HOME}/bin/sdc"
-run echo "# be copied, modified, or distributed in whole or part without" >> "${SDC_HOME}/bin/sdc"
-run echo "# written consent of StreamSets, Inc." >> "${SDC_HOME}/bin/sdc"
-run echo "#" >> "${SDC_HOME}/bin/sdc"
-run echo "" >> "${SDC_HOME}/bin/sdc"
-run echo "export SDC_HOME=${SDC_HOME}" >> "${SDC_HOME}/bin/sdc"
-run echo "exec ${SDC_DIST}/bin/sdc" >> "${SDC_HOME}/bin/sdc"
-run echo "" >> "${SDC_HOME}/bin/sdc"
+SCRIPT="${SDC_HOME}/bin/streamsets"
+
+run echo "#!/bin/bash" > ${SCRIPT}
+run echo "#" >> ${SCRIPT}
+run echo "# (c) 2014 StreamSets, Inc. All rights reserved. May not" >> ${SCRIPT}
+run echo "# be copied, modified, or distributed in whole or part without" >> ${SCRIPT}
+run echo "# written consent of StreamSets, Inc." >> ${SCRIPT}
+run echo "#" >> ${SCRIPT}
+run echo "if [[ \"\$1\" == \"\" ]]" >> ${SCRIPT}
+run echo "then" >> ${SCRIPT}
+run echo "  echo """ >> ${SCRIPT}
+run echo "  echo \"Missing sub-command, 'dc' sub-command is required from instance directories\"" >> ${SCRIPT}
+run echo "  echo """ >> ${SCRIPT}
+run echo "  exit 1" >> ${SCRIPT}
+run echo "fi" >> ${SCRIPT}
+run echo "" >> ${SCRIPT}
+run echo "if [[ \"\$1\" != \"dc\" ]]" >> ${SCRIPT}
+run echo "then" >> ${SCRIPT}
+run echo "  echo """ >> ${SCRIPT}
+run echo "  echo \"Invalid sub-command, only 'dc' sub-command is supported from instance directories\"" >> ${SCRIPT}
+run echo "  echo """ >> ${SCRIPT}
+run echo "  exit 1" >> ${SCRIPT}
+run echo "fi" >> ${SCRIPT}
+run echo "" >> ${SCRIPT}
+run echo "shift" >> ${SCRIPT}
+run echo "export SDC_HOME=${SDC_HOME}" >> ${SCRIPT}
+run echo "exec ${SDC_DIST}/bin/streamsets dc \"\$@\"" >> ${SCRIPT}
+run echo "" >> ${SCRIPT}
 
 
-run chmod a+x "${SDC_HOME}/bin/sdc"
+run chmod a+x ${SCRIPT}
 run cp -r -p "${SDC_DIST}/etc/"* "${SDC_HOME}/etc/"
 run cp -r -p "${SDC_DIST}/libexec/"* "${SDC_HOME}/libexec/"
 run rm "${SDC_HOME}/etc/sdc.properties"
@@ -134,8 +155,8 @@ fi
 run sed ${SED_OPTIONS} < "${SDC_DIST}/etc/sdc.properties" > "${SDC_HOME}/etc/sdc.properties"
 
 echo ""
-echo "New sdc created at ${SDC_HOME} on HTTP port ${SDC_HTTP_PORT} and HTTPS port ${SDC_HTTPS_PORT}"
+echo "New Data Collector created at ${SDC_HOME} on HTTP port ${SDC_HTTP_PORT} and HTTPS port ${SDC_HTTPS_PORT}"
 echo ""
-echo "Use '${SDC_HOME}/bin/sdc' to run the new sdc"
+echo "Use '${SDC_HOME}/bin/streamsets dc' to run the new Data Collector"
 echo ""
 exit 0

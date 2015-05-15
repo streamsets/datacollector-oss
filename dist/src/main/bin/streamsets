@@ -1,0 +1,65 @@
+#!/bin/bash
+#
+# (c) 2014 StreamSets, Inc. All rights reserved. May not
+# be copied, modified, or distributed in whole or part without
+# written consent of StreamSets, Inc.
+#
+
+# resolve links - $0 may be a softlink
+PRG="${0}"
+
+while [ -h "${PRG}" ]; do
+  ls=`ls -ld "${PRG}"`
+  link=`expr "$ls" : '.*-> \(.*\)$'`
+  if expr "$link" : '/.*' > /dev/null; then
+    PRG="$link"
+  else
+    PRG=`dirname "${PRG}"`/"$link"
+  fi
+done
+
+BASEDIR=`dirname ${PRG}`
+BASEDIR=`cd ${BASEDIR}/..;pwd`
+
+while test $# -gt 0; do
+  case "$1" in
+    dc)
+      shift
+      exec ${BASEDIR}/libexec/_sdc "$@"
+      ;;
+    create-dc)
+      shift
+      exec ${BASEDIR}/libexec/_create-sdc "$@"
+      ;;
+    help)
+      ${PRG} --help
+      exit 0
+      ;;
+    -help)
+      ${PRG} --help
+      exit 0
+      ;;
+    --help)
+      echo ""
+      echo "streamsets <SUB_COMAND> [<SUB_COMMAND_ARGUMENTS>]"
+      echo ""
+      echo "  Sub-commands:"
+      echo ""
+      echo "    dc: starts the Data Collector"
+      echo "    create-dc: creates a Data Collector instance"
+      echo ""
+      exit 0
+      ;;
+    *)
+      echo ""
+      echo "Invalid sub-command"
+      ${PRG} -help
+      exit 1
+      ;;
+  esac
+done
+
+echo ""
+echo "Missing sub-command"
+${PRG} -help
+exit 1

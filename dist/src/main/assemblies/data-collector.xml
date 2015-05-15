@@ -20,7 +20,6 @@
       <includes>
         <include>bin/*</include>
       </includes>
-      <filtered>true</filtered>
       <fileMode>0755</fileMode>
     </fileSet>
 
@@ -55,6 +54,7 @@
         <include>libexec/*</include>
       </includes>
       <fileMode>0755</fileMode>
+      <filtered>true</filtered>
     </fileSet>
 
     <!-- configuration -->
