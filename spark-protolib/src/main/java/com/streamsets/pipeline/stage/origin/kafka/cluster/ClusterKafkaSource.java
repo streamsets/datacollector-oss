@@ -2,56 +2,39 @@
  * (c) 2015 StreamSets, Inc. All rights reserved. May not be copied, modified, or distributed in whole or part without
  * written consent of StreamSets, Inc.
  */
-package com.streamsets.pipeline.stage.origin.spark;
+package com.streamsets.pipeline.stage.origin.kafka.cluster;
 
 import com.streamsets.pipeline.api.BatchMaker;
 import com.streamsets.pipeline.api.ErrorListener;
 import com.streamsets.pipeline.api.OffsetCommitter;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
-import com.streamsets.pipeline.config.CsvHeader;
-import com.streamsets.pipeline.config.CsvMode;
-import com.streamsets.pipeline.config.DataFormat;
-import com.streamsets.pipeline.config.JsonMode;
-import com.streamsets.pipeline.config.LogMode;
-import com.streamsets.pipeline.config.OnParseError;
 import com.streamsets.pipeline.lib.Errors;
 import com.streamsets.pipeline.lib.KafkaConnectionException;
 import com.streamsets.pipeline.lib.KafkaUtil;
-import com.streamsets.pipeline.lib.parser.log.RegExConfig;
 import com.streamsets.pipeline.stage.origin.kafka.BaseKafkaSource;
 import com.streamsets.pipeline.stage.origin.kafka.Groups;
+import com.streamsets.pipeline.stage.origin.kafka.SourceArguments;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Ingests kafka produce data from spark streaming
  */
-public class SparkStreamingKafkaSource extends BaseKafkaSource implements OffsetCommitter, SparkStreamingSource, ErrorListener {
-  private static final Logger LOG = LoggerFactory.getLogger(SparkStreamingKafkaSource.class);
+public class ClusterKafkaSource extends BaseKafkaSource implements OffsetCommitter, ClusterSource, ErrorListener {
+  private static final Logger LOG = LoggerFactory.getLogger(ClusterKafkaSource.class);
 
-  private SparkStreamingQueue sparkStreamingQueue;
-  private SparkStreamingQueueConsumer sparkStreamingQueueConsumer;
+  private final ClusterQueue clusterQueue;
+  private final ClusterQueueConsumer clusterQueueConsumer;
   private int originParallelism = 0;
 
-  public SparkStreamingKafkaSource(String metadataBrokerList, String topic, DataFormat dataFormat, String charset,
-    boolean produceSingleRecordPerMessage, int maxBatchSize, int maxWaitTime, Map<String, String> kafkaConsumerConfigs,
-    int textMaxLineLen, JsonMode jsonContent, int jsonMaxObjectLen, CsvMode csvFileFormat, CsvHeader csvHeader,
-    int csvMaxObjectLen, String xmlRecordElement, int xmlMaxObjectLen, LogMode logMode, int logMaxObjectLen,
-    boolean retainOriginalLine, String customLogFormat, String regex, List<RegExConfig> fieldPathsToGroupName,
-    String grokPatternDefinition, String grokPattern, boolean enableLog4jCustomLogFormat, String log4jCustomLogFormat,
-    OnParseError onParseError, int maxStackTraceLines) {
-    super(metadataBrokerList, null, null, topic, dataFormat, charset, produceSingleRecordPerMessage, maxBatchSize,
-      maxWaitTime, kafkaConsumerConfigs, textMaxLineLen, jsonContent, jsonMaxObjectLen, csvFileFormat, csvHeader,
-      csvMaxObjectLen, xmlRecordElement, xmlMaxObjectLen, logMode, logMaxObjectLen, retainOriginalLine,
-      customLogFormat, regex, fieldPathsToGroupName, grokPatternDefinition, grokPattern, enableLog4jCustomLogFormat,
-      log4jCustomLogFormat, onParseError, maxStackTraceLines);
-    this.sparkStreamingQueue = new SparkStreamingQueue();
-    this.sparkStreamingQueueConsumer = new SparkStreamingQueueConsumer(sparkStreamingQueue);
+  public ClusterKafkaSource(SourceArguments args) {
+    super(args);
+    this.clusterQueue = new ClusterQueue();
+    this.clusterQueueConsumer = new ClusterQueueConsumer(clusterQueue);
   }
 
   private String getRecordId(String topic) {
@@ -92,11 +75,10 @@ public class SparkStreamingKafkaSource extends BaseKafkaSource implements Offset
   @Override
   public String produce(String lastSourceOffset, int maxBatchSize, BatchMaker batchMaker) throws StageException {
     // Ignore the batch size
-    LOG.info("Source is " + this);
-    OffsetAndResult<MessageAndPartition> offsetAndResult = sparkStreamingQueueConsumer.produce(maxWaitTime);
+    OffsetAndResult<MessageAndPartition> offsetAndResult = clusterQueueConsumer.produce(maxWaitTime);
     for (MessageAndPartition messageAndPartition : offsetAndResult.getResult()) {
       String messageId = getRecordId(topic);
-      List<Record> records = super.processKafkaMessage(messageId, messageAndPartition.getPayload());
+      List<Record> records = processKafkaMessage(messageId, messageAndPartition.getPayload());
       for (Record record : records) {
         batchMaker.addRecord(record);
       }
@@ -106,12 +88,12 @@ public class SparkStreamingKafkaSource extends BaseKafkaSource implements Offset
 
   @Override
   public long getRecordsProduced() {
-    return sparkStreamingQueueConsumer.getRecordsProduced();
+    return clusterQueueConsumer.getRecordsProduced();
   }
 
   @Override
   public void init() {
-    //
+    LOG.info("Successfully initialized Spark Kafka Consumer");
   }
 
   @Override
@@ -121,21 +103,21 @@ public class SparkStreamingKafkaSource extends BaseKafkaSource implements Offset
 
   @Override
   public void commit(String offset) throws StageException {
-    sparkStreamingQueueConsumer.commit(offset);
+    clusterQueueConsumer.commit(offset);
   }
 
   @Override
   public <T> void put(List<T> batch) throws InterruptedException {
-    sparkStreamingQueue.putData(batch);
+    clusterQueue.putData(batch);
   }
 
   @Override
   public void errorNotification(Throwable throwable) {
-    sparkStreamingQueueConsumer.errorNotification(throwable);
+    clusterQueueConsumer.errorNotification(throwable);
   }
 
   @Override
   public boolean inErrorState() {
-    return sparkStreamingQueue.inErrorState();
+    return clusterQueue.inErrorState();
   }
 }

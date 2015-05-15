@@ -6,7 +6,7 @@
 package com.streamsets.pipeline;
 
 
-import com.streamsets.pipeline.stage.origin.spark.SparkStreamingBinding;
+import com.streamsets.pipeline.stage.origin.kafka.cluster.SparkStreamingBinding;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -32,7 +32,7 @@ import java.util.Properties;
  *   <li>Obtaining a reference on the dummy source which is used to feed a pipeline</li>
  * </ol>
  */
-public class BootstrapSpark {
+public class BootstrapCluster {
   /**
    * We might have to have a reset method for unit tests
    */
@@ -164,7 +164,7 @@ public class BootstrapSpark {
    * Bootstrapping the Driver which starts a spark job on cluster
    */
   public static void main(String[] args) throws Exception {
-    BootstrapSpark.initialize();
+    BootstrapCluster.initialize();
     SparkStreamingBinding binding = new SparkStreamingBinding(properties, pipelineJson);
     try {
       binding.init();
@@ -186,7 +186,7 @@ public class BootstrapSpark {
    */
   public static /*Source*/ Object createPipeline(Properties properties, String pipelineJson,
                                                  Runnable postBatchRunnable) throws Exception {
-    BootstrapSpark.initialize();
+    BootstrapCluster.initialize();
     ClassLoader originalClassLoader = Thread.currentThread().getContextClassLoader();
     try {
       Thread.currentThread().setContextClassLoader(containerCL);
@@ -227,11 +227,11 @@ public class BootstrapSpark {
    * @throws Exception
    */
   public static Method getSparkKafkaExecutorFunction() throws Exception {
-    BootstrapSpark.initialize();
+    BootstrapCluster.initialize();
     ClassLoader originalClassLoader = Thread.currentThread().getContextClassLoader();
     try {
       Thread.currentThread().setContextClassLoader(sparkCL);
-      return Class.forName("com.streamsets.pipeline.stage.origin.spark.SparkKafkaExecutorFunction", true,
+      return Class.forName("com.streamsets.pipeline.stage.origin.kafka.cluster.SparkKafkaExecutorFunction", true,
         sparkCL).getMethod("execute", Properties.class, String.class, Iterator.class);
     } catch (Exception ex) {
       String msg = "Error trying to obtain SparkKafkaExecutorFunction Class: " + ex;

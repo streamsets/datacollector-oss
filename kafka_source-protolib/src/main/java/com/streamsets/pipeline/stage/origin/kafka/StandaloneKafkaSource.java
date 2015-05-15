@@ -7,7 +7,6 @@ package com.streamsets.pipeline.stage.origin.kafka;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,39 +14,16 @@ import org.slf4j.LoggerFactory;
 import com.streamsets.pipeline.api.BatchMaker;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
-import com.streamsets.pipeline.api.Stage.ConfigIssue;
-import com.streamsets.pipeline.config.CsvHeader;
-import com.streamsets.pipeline.config.CsvMode;
-import com.streamsets.pipeline.config.DataFormat;
-import com.streamsets.pipeline.config.JsonMode;
-import com.streamsets.pipeline.config.LogMode;
-import com.streamsets.pipeline.config.OnParseError;
 import com.streamsets.pipeline.lib.Errors;
 import com.streamsets.pipeline.lib.KafkaBroker;
 import com.streamsets.pipeline.lib.KafkaUtil;
-import com.streamsets.pipeline.lib.parser.log.RegExConfig;
 
 public class StandaloneKafkaSource extends BaseKafkaSource {
-
   private static final Logger LOG = LoggerFactory.getLogger(StandaloneKafkaSource.class);
-  private final String consumerGroup;
-  private final String zookeeperConnect;
   private KafkaConsumer kafkaConsumer;
-  private final int maxBatchSize;
-  private final Map<String, String> kafkaConsumerConfigs;
 
-  public StandaloneKafkaSource(String zookeeperConnect, String consumerGroup, String topic, DataFormat dataFormat,
-    String charset, boolean produceSingleRecordPerMessage, int maxBatchSize, int maxWaitTime,
-    Map<String, String> kafkaConsumerConfigs, int textMaxLineLen, JsonMode jsonContent, int jsonMaxObjectLen,
-    CsvMode csvFileFormat, CsvHeader csvHeader, int csvMaxObjectLen, String xmlRecordElement, int xmlMaxObjectLen,
-    LogMode logMode, int logMaxObjectLen, boolean retainOriginalLine, String customLogFormat, String regex,
-    List<RegExConfig> fieldPathsToGroupName, String grokPatternDefinition, String grokPattern,
-    boolean enableLog4jCustomLogFormat, String log4jCustomLogFormat, OnParseError onParseError, int maxStackTraceLines) {
-    super(null, zookeeperConnect, consumerGroup, topic, dataFormat, charset, produceSingleRecordPerMessage, maxBatchSize, maxWaitTime, kafkaConsumerConfigs, textMaxLineLen, jsonContent, jsonMaxObjectLen, csvFileFormat, csvHeader, csvMaxObjectLen, xmlRecordElement, xmlMaxObjectLen, logMode, logMaxObjectLen, retainOriginalLine, customLogFormat, regex, fieldPathsToGroupName, grokPatternDefinition, grokPattern, enableLog4jCustomLogFormat, log4jCustomLogFormat, onParseError, maxStackTraceLines);
-    this.zookeeperConnect = zookeeperConnect;
-    this.consumerGroup = consumerGroup;
-    this.maxBatchSize = maxBatchSize;
-    this.kafkaConsumerConfigs = kafkaConsumerConfigs;
+  public StandaloneKafkaSource(SourceArguments args) {
+    super(args);
   }
 
   @Override
@@ -115,6 +91,4 @@ public class StandaloneKafkaSource extends BaseKafkaSource {
   public void commit(String offset) throws StageException {
     kafkaConsumer.commit();
   }
-
-
 }

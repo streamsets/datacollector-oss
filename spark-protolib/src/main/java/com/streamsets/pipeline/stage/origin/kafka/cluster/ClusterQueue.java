@@ -3,7 +3,7 @@
  * be copied, modified, or distributed in whole or part without
  * written consent of StreamSets, Inc.
  */
-package com.streamsets.pipeline.stage.origin.spark;
+package com.streamsets.pipeline.stage.origin.kafka.cluster;
 
 import com.google.common.base.Throwables;
 import com.streamsets.pipeline.api.StageException;
@@ -22,15 +22,15 @@ import java.util.concurrent.atomic.AtomicInteger;
  * The pipeline thread will consume from this queue and do the processing of the batch
  *
  */
-public class SparkStreamingQueue {
-  private static final Logger LOG = LoggerFactory.getLogger(SparkStreamingQueue.class);
+public class ClusterQueue {
+  private static final Logger LOG = LoggerFactory.getLogger(ClusterQueue.class);
   private static final boolean IS_TRACE_ENABLED = LOG.isTraceEnabled();
   private static final AtomicInteger INSTANCE_COUNTER = new AtomicInteger();
   private final SynchronousQueue<Object> queue = new SynchronousQueue<>();
   private final int instanceId;
   private Throwable pipelineError;
 
-  public SparkStreamingQueue() {
+  public ClusterQueue() {
     instanceId = INSTANCE_COUNTER.incrementAndGet();
   }
 

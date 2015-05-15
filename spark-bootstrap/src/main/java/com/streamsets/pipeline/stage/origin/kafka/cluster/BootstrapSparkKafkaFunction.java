@@ -3,9 +3,9 @@
  * be copied, modified, or distributed in whole or part without
  * written consent of StreamSets, Inc.
  */
-package com.streamsets.pipeline.stage.origin.spark;
+package com.streamsets.pipeline.stage.origin.kafka.cluster;
 
-import com.streamsets.pipeline.BootstrapSpark;
+import com.streamsets.pipeline.BootstrapCluster;
 
 import com.streamsets.pipeline.Utils;
 import org.apache.spark.api.java.function.VoidFunction;
@@ -33,7 +33,7 @@ public class BootstrapSparkKafkaFunction implements VoidFunction<Iterator<Tuple2
     if (initialized) {
       return;
     }
-    sparkExecutorFunctionMethod = BootstrapSpark.getSparkKafkaExecutorFunction();
+    sparkExecutorFunctionMethod = BootstrapCluster.getSparkKafkaExecutorFunction();
     initialized = true;
   }
 

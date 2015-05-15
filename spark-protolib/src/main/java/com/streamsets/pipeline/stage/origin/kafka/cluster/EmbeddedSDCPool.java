@@ -2,7 +2,7 @@
  * (c) 2015 StreamSets, Inc. All rights reserved. May not be copied, modified, or distributed in whole or part without
  * written consent of StreamSets, Inc.
  */
-package com.streamsets.pipeline.stage.origin.spark;
+package com.streamsets.pipeline.stage.origin.kafka.cluster;
 
 import java.util.List;
 import java.util.concurrent.ConcurrentLinkedDeque;
@@ -14,7 +14,7 @@ import org.slf4j.LoggerFactory;
 
 import java.util.Properties;
 
-import com.streamsets.pipeline.BootstrapSpark;
+import com.streamsets.pipeline.BootstrapCluster;
 import com.streamsets.pipeline.configurablestage.DSource;
 
 /**
@@ -47,26 +47,26 @@ public class EmbeddedSDCPool {
    */
   protected EmbeddedSDC createEmbeddedSDC() throws Exception {
     final EmbeddedSDC embeddedSDC = new EmbeddedSDC();
-    Object source = BootstrapSpark.createPipeline(properties, pipelineJson, new Runnable() { // post-batch runnable
-        @Override
-        public void run() {
-          if (!embeddedSDC.inErrorState()) {
-            LOG.debug("Returning SDC instance {} back to queue", embeddedSDC.getInstanceId());
-            returnEmbeddedSDC(embeddedSDC);
-          } else {
-            LOG.info("SDC is in error state, not returning to pool");
-          }
+    Object source = BootstrapCluster.createPipeline(properties, pipelineJson, new Runnable() { // post-batch runnable
+      @Override
+      public void run() {
+        if (!embeddedSDC.inErrorState()) {
+          LOG.debug("Returning SDC instance {} back to queue", embeddedSDC.getInstanceId());
+          returnEmbeddedSDC(embeddedSDC);
+        } else {
+          LOG.info("SDC is in error state, not returning to pool");
         }
-      });
+      }
+    });
 
     if (source instanceof DSource) {
       source = ((DSource) source).getSource();
     }
 
-    if (!(source instanceof SparkStreamingSource)) {
+    if (!(source instanceof ClusterSource)) {
       throw new IllegalArgumentException("Source is not of type SparkStreamingSource: " + source.getClass().getName());
     }
-    embeddedSDC.setSource((SparkStreamingSource) source);
+    embeddedSDC.setSource((ClusterSource) source);
     return embeddedSDC;
   }
 

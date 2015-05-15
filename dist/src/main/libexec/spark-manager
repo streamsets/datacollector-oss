@@ -36,7 +36,7 @@ then
   exec $YARN_COMMAND application -kill "$@"
 elif [[ $command == "status" ]]
 then
-  tmp=$($MKTEMP_COMMAND)
+  tmp=$($MKTEMP_COMMAND /tmp/sdc-cluster.XXXXXXX)
   trap "rm -f $tmp" EXIT
   status=""
   $YARN_COMMAND application -status "$@" &>$tmp

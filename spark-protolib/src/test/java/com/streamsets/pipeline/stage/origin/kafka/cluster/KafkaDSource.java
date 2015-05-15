@@ -3,7 +3,7 @@
  * be copied, modified, or distributed in whole or part without
  * written consent of StreamSets, Inc.
  */
-package com.streamsets.pipeline.stage.origin.spark;
+package com.streamsets.pipeline.stage.origin.kafka.cluster;
 
 import com.streamsets.pipeline.api.ComplexField;
 import com.streamsets.pipeline.api.ConfigDef;
@@ -28,9 +28,12 @@ import com.streamsets.pipeline.config.OnParseError;
 import com.streamsets.pipeline.config.OnParseErrorChooserValues;
 import com.streamsets.pipeline.configurablestage.DSourceOffsetCommitter;
 import com.streamsets.pipeline.lib.parser.log.RegExConfig;
-import com.streamsets.pipeline.stage.origin.kafka.BaseKafkaSource;
+import com.streamsets.pipeline.stage.origin.kafka.ClusterKafkaSourceFactory;
+import com.streamsets.pipeline.stage.origin.kafka.DelegatingKafkaSource;
 import com.streamsets.pipeline.stage.origin.kafka.Groups;
 import com.streamsets.pipeline.stage.origin.kafka.KafkaRawSourcePreviewer;
+import com.streamsets.pipeline.stage.origin.kafka.SourceArguments;
+import com.streamsets.pipeline.stage.origin.kafka.StandaloneKafkaSourceFactory;
 
 import java.util.List;
 import java.util.Map;
@@ -51,7 +54,7 @@ public class KafkaDSource extends DSourceOffsetCommitter {
   public static final String METADATA_BROKER_LIST= "metadataBrokerList";
   // For now assuming only one topic will be there
   public static final String TOPICS = "topics";
-  private BaseKafkaSource baseKafkaSource;
+  private DelegatingKafkaSource delegatingKafkaSource;
 
   @ConfigDef(
     required = false,
@@ -460,22 +463,14 @@ public class KafkaDSource extends DSourceOffsetCommitter {
 
   @Override
   protected Source createSource() {
-    baseKafkaSource = new BaseKafkaSource(metadataBrokerList, zookeeperConnect, consumerGroup, topic, dataFormat, charset, produceSingleRecordPerMessage,
-                           maxBatchSize, maxWaitTime, kafkaConsumerConfigs, textMaxLineLen, jsonContent,
-                           jsonMaxObjectLen, csvFileFormat, csvHeader, csvMaxObjectLen, xmlRecordElement,
-                           xmlMaxObjectLen, logMode, logMaxObjectLen, retainOriginalLine, customLogFormat, regex,
-      fieldPathsToGroupName, grokPatternDefinition, grokPattern, enableLog4jCustomLogFormat, log4jCustomLogFormat,
-      onParseError, maxStackTraceLines);
-    return baseKafkaSource;
+    SourceArguments args = new SourceArguments(metadataBrokerList,
+      zookeeperConnect, consumerGroup, topic, dataFormat, charset, produceSingleRecordPerMessage, maxBatchSize, maxWaitTime,
+      textMaxLineLen, jsonContent, jsonMaxObjectLen, csvFileFormat, csvHeader,
+      csvMaxObjectLen, xmlRecordElement, xmlMaxObjectLen, logMode, logMaxObjectLen, retainOriginalLine,
+      customLogFormat, regex, grokPatternDefinition, grokPattern, fieldPathsToGroupName,
+      enableLog4jCustomLogFormat, log4jCustomLogFormat, maxStackTraceLines, onParseError, kafkaConsumerConfigs);
+    delegatingKafkaSource = new DelegatingKafkaSource(new StandaloneKafkaSourceFactory(args),
+      new ClusterKafkaSourceFactory(args));
+    return delegatingKafkaSource;
   }
-
-  @Override
-  public Source getSource() {
-    if (baseKafkaSource != null) {
-      return baseKafkaSource.getSource();
-    } else {
-      return super.getSource();
-    }
-  }
-
 }

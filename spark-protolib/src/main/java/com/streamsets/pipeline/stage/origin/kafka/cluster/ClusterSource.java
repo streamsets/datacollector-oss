@@ -1,13 +1,12 @@
-package com.streamsets.pipeline.stage.origin.spark;
+package com.streamsets.pipeline.stage.origin.kafka.cluster;
 
 import java.util.List;
 
 /**
  * Spark streaming source which should be implemented by any source which has
  * spark support
- *
  */
-public interface SparkStreamingSource {
+public interface ClusterSource {
 
   /**
    * Writes batch of data to the source

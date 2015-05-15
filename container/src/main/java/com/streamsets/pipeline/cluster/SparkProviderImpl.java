@@ -107,6 +107,9 @@ public class SparkProviderImpl implements SparkProvider {
 
   private static void logOutput(String appId, SystemProcess process) {
     try {
+      // TODO fix bug where calling this is required before getAll* works
+      process.getError();
+      process.getOutput();
       LOG.info("YARN status command standard error: {} ", Joiner.on("\n").join(process.getAllError()));
       LOG.info("YARN status command standard output: {} ", Joiner.on("\n").join(process.getAllOutput()));
     } catch (Exception e) {
@@ -358,7 +361,7 @@ public class SparkProviderImpl implements SparkProvider {
       javaOpts.getValue()));
     // main class
     args.add("--class");
-    args.add("com.streamsets.pipeline.BootstrapSpark");
+    args.add("com.streamsets.pipeline.BootstrapCluster");
     args.add(sparkBootstrapJar.getAbsolutePath());
     SystemProcess process = systemProcessFactory.create(SparkManager.class.getSimpleName(), tempDir, args);
     LOG.info("Starting: " + process);
