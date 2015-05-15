@@ -26,4 +26,8 @@ public abstract class TypeSupport<T> {
     return value;
   }
 
+  public boolean equals(Object value1, Object value2) {
+    return (value1 == value2) || (value1 != null && value2 != null && value1.equals(value2));
+  }
+
 }

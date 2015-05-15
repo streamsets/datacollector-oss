@@ -78,6 +78,10 @@ public class Field implements Cloneable {
       return (value != null) ? supporter.convert(value, targetType.supporter) : null;
     }
 
+    private boolean equals(Object value1, Object value2) {
+      return supporter.equals(value1, value2);
+    }
+
     @SuppressWarnings("unchecked")
     private <T> T constructorCopy(T value) {
       return (value != null) ? (T) supporter.create(value) : null;
@@ -276,7 +280,7 @@ public class Field implements Cloneable {
       if (obj instanceof Field) {
         Field other = (Field) obj;
         if (type == other.type) {
-          eq = (value == other.value) || (value != null && value.equals(other.value));
+          eq = (value == other.value) || type.equals(value, other.value);
         }
       }
     }

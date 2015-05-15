@@ -178,6 +178,17 @@ public class TestField {
     Assert.assertFalse(f3.equals(f1));
   }
 
+  @Test
+  public void testEqualsWithByteArray() {
+    Field f0 = Field.create(new byte[] { 0, 1, 2 });
+    Field f1 = Field.create(new byte[] { 0, 1, 2 });
+    Field f2 = Field.create(Type.BYTE_ARRAY, null);
+    Field f3 = Field.create(new byte[] { 1, 1, 2 });
+    Assert.assertTrue(f0.equals(f1));
+    Assert.assertFalse(f0.equals(f2));
+    Assert.assertFalse(f0.equals(f3));
+  }
+
   private static final Date DATE_VALUE = new Date(System.currentTimeMillis() + 100);
   private static final Date DATETIME_VALUE = new Date(System.currentTimeMillis() - 100);
 

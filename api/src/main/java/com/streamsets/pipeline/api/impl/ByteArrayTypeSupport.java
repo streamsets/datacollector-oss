@@ -43,4 +43,22 @@ public class ByteArrayTypeSupport extends TypeSupport<byte[]> {
     return ((byte[])value).clone();
   }
 
+  @Override
+  public boolean equals(Object value1, Object value2) {
+    return (value1 == value2) || (value1 != null && value2 != null && arrayEquals((byte[])value1, (byte[])value2));
+  }
+
+  private boolean arrayEquals(byte[] arr1, byte[] arr2) {
+    boolean eq = false;
+    if (arr1.length == arr2.length) {
+      eq = true;
+      for (int i = 0; eq && i < arr1.length; i++) {
+        if (arr1[i] != arr2[i]) {
+          eq = false;
+        }
+      }
+    }
+    return eq;
+  }
+
 }
