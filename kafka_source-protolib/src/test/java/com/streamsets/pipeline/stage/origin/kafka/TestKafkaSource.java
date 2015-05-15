@@ -45,6 +45,7 @@ import java.util.UUID;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 
 @Ignore
 public class TestKafkaSource {
@@ -142,7 +143,7 @@ public class TestKafkaSource {
   }
 
   @Test
-  public void testProduceStringRecords() throws StageException {
+  public void testProduceStringRecords() throws StageException, InterruptedException {
 
     CountDownLatch startLatch = new CountDownLatch(1);
 
@@ -177,7 +178,7 @@ public class TestKafkaSource {
 
     startLatch.countDown();
     StageRunner.Output output = sourceRunner.runProduce(null, 5);
-    executorService.shutdown();
+    shutDownExecutorService(executorService);
 
     String newOffset = output.getNewOffset();
     Assert.assertNull(newOffset);
@@ -195,7 +196,7 @@ public class TestKafkaSource {
   }
 
   @Test
-  public void testProduceStringRecordsMultiplePartitions() throws StageException {
+  public void testProduceStringRecordsMultiplePartitions() throws StageException, InterruptedException {
 
     CountDownLatch startProducing = new CountDownLatch(1);
 
@@ -231,7 +232,7 @@ public class TestKafkaSource {
 
     startProducing.countDown();
     StageRunner.Output output = sourceRunner.runProduce(null, 9);
-    executorService.shutdown();
+    shutDownExecutorService(executorService);
 
     String newOffset = output.getNewOffset();
     Assert.assertNull(newOffset);
@@ -248,7 +249,7 @@ public class TestKafkaSource {
   }
 
   @Test
-  public void testProduceJsonRecordsMultipleObjectsSingleRecord() throws StageException, IOException {
+  public void testProduceJsonRecordsMultipleObjectsSingleRecord() throws StageException, IOException, InterruptedException {
 
     CountDownLatch startLatch = new CountDownLatch(1);
     ExecutorService executorService = Executors.newSingleThreadExecutor();
@@ -284,7 +285,7 @@ public class TestKafkaSource {
 
     startLatch.countDown();
     StageRunner.Output output = sourceRunner.runProduce(null, 9);
-    executorService.shutdown();
+    shutDownExecutorService(executorService);
 
     String newOffset = output.getNewOffset();
     Assert.assertNull(newOffset);
@@ -296,7 +297,7 @@ public class TestKafkaSource {
   }
 
   @Test
-  public void testProduceJsonRecordsMultipleObjectsMultipleRecord() throws StageException, IOException {
+  public void testProduceJsonRecordsMultipleObjectsMultipleRecord() throws StageException, IOException, InterruptedException {
 
     CountDownLatch startLatch = new CountDownLatch(1);
     ExecutorService executorService = Executors.newSingleThreadExecutor();
@@ -332,7 +333,7 @@ public class TestKafkaSource {
 
     startLatch.countDown();
     StageRunner.Output output = sourceRunner.runProduce(null, 12);
-    executorService.shutdown();
+    shutDownExecutorService(executorService);
 
     String newOffset = output.getNewOffset();
     Assert.assertNull(newOffset);
@@ -344,7 +345,7 @@ public class TestKafkaSource {
   }
 
   @Test
-  public void testProduceJsonRecordsArrayObjects() throws StageException, IOException {
+  public void testProduceJsonRecordsArrayObjects() throws StageException, IOException, InterruptedException {
 
     CountDownLatch startLatch = new CountDownLatch(1);
     ExecutorService executorService = Executors.newSingleThreadExecutor();
@@ -380,7 +381,7 @@ public class TestKafkaSource {
 
     startLatch.countDown();
     StageRunner.Output output = sourceRunner.runProduce(null, 9);
-    executorService.shutdown();
+    shutDownExecutorService(executorService);
 
     String newOffset = output.getNewOffset();
     Assert.assertNull(newOffset);
@@ -393,7 +394,7 @@ public class TestKafkaSource {
 
 
   @Test
-  public void testProduceXmlRecordsNoRecordElement() throws StageException, IOException {
+  public void testProduceXmlRecordsNoRecordElement() throws StageException, IOException, InterruptedException {
 
     CountDownLatch startLatch = new CountDownLatch(1);
     ExecutorService executorService = Executors.newSingleThreadExecutor();
@@ -430,7 +431,7 @@ public class TestKafkaSource {
 
     startLatch.countDown();
     StageRunner.Output output = sourceRunner.runProduce(null, 9);
-    executorService.shutdown();
+    shutDownExecutorService(executorService);
 
     String newOffset = output.getNewOffset();
     Assert.assertNull(newOffset);
@@ -442,7 +443,7 @@ public class TestKafkaSource {
   }
 
   @Test
-  public void testProduceXmlRecordsRecordElement() throws StageException, IOException {
+  public void testProduceXmlRecordsRecordElement() throws StageException, IOException, InterruptedException {
 
     CountDownLatch startLatch = new CountDownLatch(1);
     ExecutorService executorService = Executors.newSingleThreadExecutor();
@@ -479,7 +480,7 @@ public class TestKafkaSource {
 
     startLatch.countDown();
     StageRunner.Output output = sourceRunner.runProduce(null, 9);
-    executorService.shutdown();
+    shutDownExecutorService(executorService);
 
     String newOffset = output.getNewOffset();
     Assert.assertNull(newOffset);
@@ -523,7 +524,7 @@ public class TestKafkaSource {
   }
 
   @Test
-  public void testProduceCsvRecords() throws StageException, IOException {
+  public void testProduceCsvRecords() throws StageException, IOException, InterruptedException {
     CountDownLatch startLatch = new CountDownLatch(1);
     ExecutorService executorService = Executors.newSingleThreadExecutor();
     executorService.submit(new ProducerRunnable(TOPIC9, SINGLE_PARTITION,
@@ -559,7 +560,7 @@ public class TestKafkaSource {
 
     startLatch.countDown();
     StageRunner.Output output = sourceRunner.runProduce(null, 9);
-    executorService.shutdown();
+    shutDownExecutorService(executorService);
 
     String newOffset = output.getNewOffset();
     Assert.assertNull(newOffset);
@@ -570,7 +571,7 @@ public class TestKafkaSource {
   }
 
   @Test
-  public void testProduceLogRecords() throws StageException, IOException {
+  public void testProduceLogRecords() throws StageException, IOException, InterruptedException {
 
     CountDownLatch startLatch = new CountDownLatch(1);
     ExecutorService executorService = Executors.newSingleThreadExecutor();
@@ -610,7 +611,7 @@ public class TestKafkaSource {
 
     startLatch.countDown();
     StageRunner.Output output = sourceRunner.runProduce(null, 9);
-    executorService.shutdown();
+    shutDownExecutorService(executorService);
 
     String newOffset = output.getNewOffset();
     Assert.assertNull(newOffset);
@@ -641,7 +642,7 @@ public class TestKafkaSource {
   }
 
   @Test
-  public void testProduceLogRecordsWithStackTraceSameMessage() throws StageException, IOException {
+  public void testProduceLogRecordsWithStackTraceSameMessage() throws StageException, IOException, InterruptedException {
 
     CountDownLatch startLatch = new CountDownLatch(1);
     ExecutorService executorService = Executors.newSingleThreadExecutor();
@@ -681,7 +682,7 @@ public class TestKafkaSource {
 
     startLatch.countDown();
     StageRunner.Output output = sourceRunner.runProduce(null, 9);
-    executorService.shutdown();
+    shutDownExecutorService(executorService);
 
     String newOffset = output.getNewOffset();
     Assert.assertNull(newOffset);
@@ -710,6 +711,14 @@ public class TestKafkaSource {
     }
 
     sourceRunner.runDestroy();
+  }
+
+  private void shutDownExecutorService(ExecutorService executorService) throws InterruptedException {
+    executorService.shutdownNow();
+    if(!executorService.awaitTermination(5000, TimeUnit.MILLISECONDS)) {
+      //If it cant be stopped then throw exception
+      throw new RuntimeException("Could not shutdown Executor service");
+    }
   }
 
 }
