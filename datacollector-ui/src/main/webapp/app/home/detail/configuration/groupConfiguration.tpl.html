@@ -54,17 +54,20 @@
     <ng-include src="'elStringConfigurationTemplate'"></ng-include>
   </div>
 
-  <div ng-switch-when="LIST">
+  <div ng-switch-when="LIST"
+       ng-click="onFieldSelectorFocus(detailPaneConfig)">
     <ng-include src="'labelConfigurationTemplate'"></ng-include>
     <ng-include src="'listConfigurationTemplate'"></ng-include>
   </div>
 
-  <div ng-switch-when="MAP">
+  <div ng-switch-when="MAP"
+       ng-click="onFieldSelectorFocus(detailPaneConfig)">
     <ng-include src="'labelConfigurationTemplate'"></ng-include>
     <ng-include src="'mapConfigurationTemplate'"></ng-include>
   </div>
 
-  <div ng-switch-when="TEXT" ng-click="onFieldSelectorFocus(detailPaneConfig)">
+  <div ng-switch-when="TEXT"
+       ng-click="onFieldSelectorFocus(detailPaneConfig)">
     <ng-include src="'labelConfigurationTemplate'"></ng-include>
     <ng-include src="'textConfigurationTemplate'"></ng-include>
   </div>
@@ -128,11 +131,15 @@
 
               <div ng-if="(!customFieldConfigDefinition.dependsOn || verifyCustomFieldDependsOn(detailPaneConfig, customFieldValue, customFieldConfigDefinition))"
                    ng-switch="customFieldConfigDefinition.type">
-                <div ng-switch-when="NUMBER" class="expression-language">
+                <div ng-switch-when="NUMBER"
+                     ng-click="onFieldSelectorFocus(detailPaneConfig)"
+                     class="expression-language">
                   <ng-include src="'elStringComplexConfigurationTemplate'"></ng-include>
                 </div>
 
-                <div ng-switch-when="STRING" class="expression-language">
+                <div ng-switch-when="STRING"
+                     ng-click="onFieldSelectorFocus(detailPaneConfig)"
+                     class="expression-language">
                   <ng-include src="'elStringComplexConfigurationTemplate'"></ng-include>
                 </div>
 
