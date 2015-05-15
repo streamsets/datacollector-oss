@@ -24,8 +24,7 @@ angular
        * Callback function for Create New Data Rule button.
        */
       createDataRule: function() {
-        if((!$scope.fieldPaths || $scope.fieldPaths.length === 0 ) &&
-          $scope.selectedType === pipelineConstant.LINK) {
+        if((!$scope.fieldPaths || $scope.fieldPaths.length === 0 ) && $scope.selectedType === pipelineConstant.LINK) {
           updateFieldDataForStage($scope.selectedObject);
         }
 
@@ -73,7 +72,7 @@ angular
           $event.stopPropagation();
         }
 
-        if(!$scope.fieldPaths || $scope.fieldPaths.length === 0 ) {
+        if((!$scope.fieldPaths || $scope.fieldPaths.length === 0) && $scope.selectedType === pipelineConstant.LINK) {
           updateFieldDataForStage($scope.selectedObject);
         }
 
@@ -175,7 +174,8 @@ angular
   })
 
   .controller('CreateDataRuleModalInstanceController', function ($scope, $modalInstance, $translate, $timeout,
-                                                                 pipelineService, laneName, rulesElMetadata, fieldPaths, streamLabelMap) {
+                                                                 pipelineService, laneName, rulesElMetadata, fieldPaths,
+                                                                 streamLabelMap) {
 
     angular.extend($scope, {
       showLoading: false,
@@ -203,14 +203,19 @@ angular
       streamLabelMap: streamLabelMap,
 
       getCodeMirrorOptions: function() {
-        return pipelineService.getDefaultELEditorOptions();
-      },
+        var codeMirrorOptions = {
+          dictionary: rulesElMetadata,
+          extraKeys: {
+            'Tab': false,
+            'Ctrl-Space': 'autocomplete'
+          }
+        };
 
-      getRulesElMetadata: function() {
         $timeout(function() {
           $scope.refreshCodemirror = true;
         });
-        return rulesElMetadata;
+
+        return angular.extend({}, pipelineService.getDefaultELEditorOptions(), codeMirrorOptions);
       },
 
       save : function () {
@@ -225,7 +230,8 @@ angular
   })
 
   .controller('EditDataRuleModalInstanceController', function ($scope, $modalInstance, $translate, pipelineService,
-                                                               $timeout, dataRuleDefn, rulesElMetadata, fieldPaths, streamLabelMap) {
+                                                               $timeout, dataRuleDefn, rulesElMetadata, fieldPaths,
+                                                               streamLabelMap) {
 
     angular.extend($scope, {
       showLoading: false,
@@ -238,14 +244,19 @@ angular
       streamLabelMap: streamLabelMap,
 
       getCodeMirrorOptions: function() {
-        return pipelineService.getDefaultELEditorOptions();
-      },
+        var codeMirrorOptions = {
+          dictionary: rulesElMetadata,
+          extraKeys: {
+            'Tab': false,
+            'Ctrl-Space': 'autocomplete'
+          }
+        };
 
-      getRulesElMetadata: function() {
         $timeout(function() {
           $scope.refreshCodemirror = true;
         });
-        return rulesElMetadata;
+
+        return angular.extend({}, pipelineService.getDefaultELEditorOptions(), codeMirrorOptions);
       },
 
       save : function () {

@@ -161,14 +161,19 @@ angular
       refreshCodemirror: false,
 
       getCodeMirrorOptions: function() {
-        return pipelineService.getDefaultELEditorOptions();
-      },
+        var codeMirrorOptions = {
+          dictionary: rulesElMetadata,
+          extraKeys: {
+            'Tab': false,
+            'Ctrl-Space': 'autocomplete'
+          }
+        };
 
-      getRulesElMetadata: function() {
         $timeout(function() {
           $scope.refreshCodemirror = true;
         });
-        return rulesElMetadata;
+
+        return angular.extend({}, pipelineService.getDefaultELEditorOptions(), codeMirrorOptions);
       },
 
       save : function () {
@@ -197,14 +202,19 @@ angular
       refreshCodemirror: false,
 
       getCodeMirrorOptions: function() {
-        return pipelineService.getDefaultELEditorOptions();
-      },
+        var codeMirrorOptions = {
+          dictionary: rulesElMetadata,
+          extraKeys: {
+            'Tab': false,
+            'Ctrl-Space': 'autocomplete'
+          }
+        };
 
-      getRulesElMetadata: function() {
         $timeout(function() {
           $scope.refreshCodemirror = true;
         });
-        return rulesElMetadata;
+
+        return angular.extend({}, pipelineService.getDefaultELEditorOptions(), codeMirrorOptions);
       },
 
       save : function () {
