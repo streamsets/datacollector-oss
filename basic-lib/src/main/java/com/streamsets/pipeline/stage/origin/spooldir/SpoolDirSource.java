@@ -161,17 +161,14 @@ public class SpoolDirSource extends BaseSource {
       validateDir(errorArchiveDir, Groups.POST_PROCESSING.name(), "errorArchiveDir", issues);
     }
 
-    if (errorArchiveDir != null && !errorArchiveDir.isEmpty()) {
-      validateDir(errorArchiveDir, Groups.POST_PROCESSING.name(), "errorArchiveDir", issues);
-    }
-
     if (postProcessing == PostProcessingOptions.ARCHIVE) {
       if (archiveDir != null && !archiveDir.isEmpty()) {
         validateDir(archiveDir, Groups.POST_PROCESSING.name(), "archiveDir", issues);
       } else {
-        if (retentionTimeMins < 1) {
-          issues.add(getContext().createConfigIssue(Groups.POST_PROCESSING.name(), "retentionTimeMins", Errors.SPOOLDIR_19));
-        }
+        issues.add(getContext().createConfigIssue(Groups.POST_PROCESSING.name(), "archiveDir", Errors.SPOOLDIR_11));
+      }
+      if (retentionTimeMins < 1) {
+        issues.add(getContext().createConfigIssue(Groups.POST_PROCESSING.name(), "retentionTimeMins", Errors.SPOOLDIR_19));
       }
     }
 
