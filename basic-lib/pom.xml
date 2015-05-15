@@ -22,12 +22,13 @@
   <packaging>jar</packaging>
 
   <properties>
-    <guava.version>18.0</guava.version>
     <commons-io.version>2.4</commons-io.version>
     <commons-lang.version>3.4</commons-lang.version>
+    <guava.version>18.0</guava.version>
     <jackson.version>2.4.3</jackson.version>
-    <xerces.version>2.11.0</xerces.version>
     <jersey.version>2.17</jersey.version>
+    <netty.version>4.0.27.Final</netty.version>
+    <xerces.version>2.11.0</xerces.version>
   </properties>
 
   <dependencies>
@@ -121,6 +122,12 @@
     <dependency>
       <groupId>io.netty</groupId>
       <artifactId>netty-transport</artifactId>
+      <version>${netty.version}</version>
+    </dependency>
+
+    <dependency>
+      <groupId>io.netty</groupId>
+      <artifactId>netty-buffer</artifactId>
       <version>${netty.version}</version>
     </dependency>
 
