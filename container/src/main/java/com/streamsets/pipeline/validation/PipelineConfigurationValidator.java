@@ -427,6 +427,18 @@ public class PipelineConfigurationValidator {
               confDef.getName(), ValidationError.VALIDATION_0009,
               confDef.getType()));
             preview = false;
+            break;
+          }
+          Long value = ((Number) conf.getValue()).longValue();
+          if(value > confDef.getMax()) {
+            issues.add(issueCreator.createConfigIssue(stageConf.getInstanceName(), confDef.getGroup(),
+              confDef.getName(), ValidationError.VALIDATION_0034, confDef.getName(), confDef.getMax()));
+            preview = false;
+          }
+          if(value < confDef.getMin()) {
+            issues.add(issueCreator.createConfigIssue(stageConf.getInstanceName(), confDef.getGroup(),
+              confDef.getName(), ValidationError.VALIDATION_0035, confDef.getName(), confDef.getMin()));
+            preview = false;
           }
           break;
         case STRING:

@@ -59,6 +59,9 @@ public enum ValidationError implements ErrorCode {
   VALIDATION_0032("Stage must have at least one output stream"),
   VALIDATION_0033("Invalid Configuration, {}"),
 
+  VALIDATION_0034("Value for configuration '{}' cannot be greater then '{}'"),
+  VALIDATION_0035("Value for configuration '{}' cannot be less then '{}'"),
+
   //Rule Validation Errors
   VALIDATION_0040("The data rule property '{}' must be defined"),
   VALIDATION_0041("The Sampling Percentage property must have a value between 0 and 100"),
