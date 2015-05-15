@@ -31,6 +31,7 @@ import com.streamsets.pipeline.config.StageType;
 import com.streamsets.pipeline.el.ElConstantDefinition;
 import com.streamsets.pipeline.el.ElFunctionDefinition;
 import com.streamsets.pipeline.restapi.bean.BeanHelper;
+import com.streamsets.pipeline.util.ElUtil;
 
 import javax.annotation.processing.AbstractProcessor;
 import javax.annotation.processing.RoundEnvironment;
@@ -438,6 +439,9 @@ public class PipelineAnnotationsProcessor extends AbstractProcessor {
    * @return
    */
   private Object getDefaultValue(VariableElement variableElement, String defaultValue) {
+    if(ElUtil.isElString(defaultValue)) {
+      return defaultValue;
+    }
     TypeKind typeKind = variableElement.asType().getKind();
     if(typeKind.equals(TypeKind.BOOLEAN)) {
       return Boolean.parseBoolean(defaultValue);
@@ -866,7 +870,7 @@ public class PipelineAnnotationsProcessor extends AbstractProcessor {
       }
       if (fieldType.getKind().equals(TypeKind.BOOLEAN)) {
         String value = configDefAnnot.defaultValue();
-        if(!value.equalsIgnoreCase("true") && !value.equalsIgnoreCase("false")) {
+        if(!value.equalsIgnoreCase("true") && !value.equalsIgnoreCase("false") && !ElUtil.isElString(value)) {
           printError("field.validation.default.value.not.boolean",
               "The type of the field {} is Boolean but the default value supplied is not true or false.",
               typeElement.getSimpleName().toString() + SEPARATOR + variableElement.getSimpleName().toString());
@@ -881,7 +885,7 @@ public class PipelineAnnotationsProcessor extends AbstractProcessor {
         valid = false;
       }
       //validate the default values
-      if (fieldType.getKind().equals(TypeKind.INT)) {
+      if (fieldType.getKind().equals(TypeKind.INT) && !ElUtil.isElString(configDefAnnot.defaultValue())) {
         try {
           Integer.parseInt(configDefAnnot.defaultValue());
         } catch (NumberFormatException e) {
@@ -891,7 +895,7 @@ public class PipelineAnnotationsProcessor extends AbstractProcessor {
           valid = false;
         }
       }
-      if (fieldType.getKind().equals(TypeKind.LONG)) {
+      if (fieldType.getKind().equals(TypeKind.LONG) && !ElUtil.isElString(configDefAnnot.defaultValue())) {
         try {
           Long.parseLong(configDefAnnot.defaultValue());
         } catch (NumberFormatException e) {
@@ -1616,5 +1620,4 @@ public class PipelineAnnotationsProcessor extends AbstractProcessor {
     }
     return false;
   }
-
 }
