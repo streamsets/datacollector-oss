@@ -454,26 +454,26 @@
               <mappings>
                 <!-- Separate mappings for dirs exist b/c of the Won't Fix for this JIRA https://jira.codehaus.org/browse/MRPM-8 -->
                 <mapping>
-                  <directory>${sdc.dir}/streamsets-datacollector-${project.version}/streamsets-libs/streamsets-datacollector-cdh5-kafka_0_8_2_0_kafka_1_2_0-lib</directory>
+                  <directory>${sdc.dir}/streamsets-datacollector-${project.version}/streamsets-libs/streamsets-datacollector-cdh_kafka_1_2_0-lib</directory>
                   <filemode>755</filemode>
                   <username>root</username>
                   <groupname>root</groupname>
                 </mapping>
                 <mapping>
-                  <directory>${sdc.dir}/streamsets-datacollector-${project.version}/streamsets-libs/streamsets-datacollector-cdh5-kafka_0_8_2_0_kafka_1_2_0-lib/lib</directory>
+                  <directory>${sdc.dir}/streamsets-datacollector-${project.version}/streamsets-libs/streamsets-datacollector-cdh_kafka_1_2_0-lib/lib</directory>
                   <filemode>755</filemode>
                   <username>root</username>
                   <groupname>root</groupname>
                 </mapping>
                 <mapping>
-                  <directory>${sdc.dir}/streamsets-datacollector-${project.version}/streamsets-libs/streamsets-datacollector-cdh5-kafka_0_8_2_0_kafka_1_2_0-lib</directory>
+                  <directory>${sdc.dir}/streamsets-datacollector-${project.version}/streamsets-libs/streamsets-datacollector-cdh_kafka_1_2_0-lib</directory>
                   <directoryIncluded>false</directoryIncluded>
                   <filemode>644</filemode>
                   <username>root</username>
                   <groupname>root</groupname>
                   <sources>
                     <source>
-                      <location>${sdc.distroot}/streamsets-datacollector-${project.version}/streamsets-libs/streamsets-datacollector-cdh5-kafka_0_8_2_0_kafka_1_2_0-lib</location>
+                      <location>${sdc.distroot}/streamsets-datacollector-${project.version}/streamsets-libs/streamsets-datacollector-cdh_kafka_1_2_0-lib</location>
                     </source>
                   </sources>
                 </mapping>

@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
- (c) 2015 StreamSets, Inc. All rights reserved. May not
+ (c) 2014 StreamSets, Inc. All rights reserved. May not
  be copied, modified, or distributed in whole or part without
  written consent of StreamSets, Inc.
 -->
 <assembly>
-  <id>cdh5.4.0-kafka_0_8_1_1-lib</id>
+  <id>apache-kafka_0.8.2.1-lib</id>
   <formats>
     <format>tar.gz</format>
   </formats>
@@ -21,7 +21,7 @@
 
     <!-- Library -->
     <fileSet>
-      <directory>${basedir}/../cdh5_4_0-kafka_0_8_1_1-lib/target/streamsets-libs</directory>
+      <directory>${basedir}/../cdh_kafka_1_2_0-lib/target/streamsets-libs</directory>
       <outputDirectory>/streamsets-datacollector-${project.version}/streamsets-libs</outputDirectory>
     </fileSet>
   </fileSets>

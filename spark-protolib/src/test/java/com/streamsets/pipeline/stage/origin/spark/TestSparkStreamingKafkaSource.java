@@ -70,7 +70,7 @@ public class TestSparkStreamingKafkaSource {
     zkClient = new ZkClient(zkServer.connectString(), 30000, 30000, ZKStringSerializer$.MODULE$);
     // setup Broker
     port = TestUtils.choosePort();
-    Properties props = TestUtils.createBrokerConfig(0, port);
+    Properties props = TestUtils.createBrokerConfig(0, port, true);
     kafkaServer = TestUtils.createServer(new KafkaConfig(props), new MockTime());
     String metadataBrokerURI = "localhost" + ":" + port;
     File target = new File(System.getProperty("user.dir"), "target");
