@@ -52,12 +52,6 @@ angular
         iconClass: 'fa fa-list',
         helpId: 'data-rules-tab'
       },
-      metricAlertRulesTab = {
-        name:'metricAlertRules',
-        template:'app/home/detail/rules/metricAlert/metricAlert.tpl.html',
-        iconClass: 'fa fa-list',
-        helpId: 'metric-rules-tab'
-      },
       rulesTab = {
         name:'rules',
         template:'app/home/detail/rules/rules.tpl.html',
@@ -209,7 +203,7 @@ angular
        */
       selectRulesTab: function(triggeredAlert) {
         angular.forEach($scope.detailPaneTabs, function(tab) {
-          if(tab.name === 'dataRules' || tab.name === 'metricAlertRules') {
+          if(tab.name === 'rules' || tab.name === 'dataRules') {
             tab.active = true;
           }
         });
