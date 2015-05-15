@@ -67,14 +67,72 @@
       flattenOutputRecord = getFlattenRecord(outputRecord);
       flattenInputRecord = getFlattenRecord(inputRecords[0])">
 
-    <td ng-repeat="fieldPath in outputFieldPaths | limitTo: outputLimit"
+
+
+    <!--td ng-repeat="fieldPath in outputFieldPaths | limitTo: outputLimit"
         ng-class="{'value-deletion': (flattenOutputRecord[fieldPath].value !== flattenInputRecord[fieldPath].value) }"
-        class="field-value {{flattenOutputRecord[fieldPath].type}}">{{flattenOutputRecord[fieldPath].value + ''}}</td>
+        class="field-value {{flattenOutputRecord[fieldPath].type}}">{{flattenOutputRecord[fieldPath].value + ''}}</td-->
+
+
+
+    <!--Input -->
+
+    <td ng-repeat="fieldPath in outputFieldPaths | limitTo: outputLimit">
+
+      <span class="pull-right glyphicon glyphicon-asterisk dirty-icon" ng-if="flattenOutputRecord[fieldPath].dirty"></span>
+
+      <div ng-if="flattenOutputRecord[fieldPath].type === 'DATETIME' || flattenOutputRecord[fieldPath].type === 'DATE'" class="clearfix">
+
+        <span class="field-value pull-left {{flattenOutputRecord[fieldPath].type}}"
+              ng-class="{'value-deletion': (flattenOutputRecord[fieldPath].value !== flattenInputRecord[fieldPath].value) }"
+          >{{flattenOutputRecord[fieldPath].value + '' | date:'medium'}} </span>
+
+        <div class="dropdown pull-left" ng-show="previewMode"
+             ng-init="dateRecordValue = flattenOutputRecord[fieldPath].value; dropdownSelector = 'dropdownSelector' + $parent.$index + $parent.$parent.$index">
+          <a class="record-date-toggle dropdown-toggle {{dropdownSelector}}" role="button" data-toggle="dropdown" data-target="#" href="">
+            <i class="fa fa-calendar"></i>
+          </a>
+          <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
+            <datetimepicker data-ng-model="dateRecordValue"
+                            data-on-set-time="recordDateValueUpdated(outputRecord, flattenOutputRecord[fieldPath], dateRecordValue)"
+                            data-datetimepicker-config="{ dropdownSelector: '.' + dropdownSelector }"></datetimepicker>
+          </ul>
+        </div>
+      </div>
+
+
+      <div ng-if="flattenOutputRecord[fieldPath].type !== 'DATETIME' && flattenOutputRecord[fieldPath].type !== 'DATE'"
+           contenteditable="{{previewMode}}"
+           ng-model="flattenOutputRecord[fieldPath].value"
+           ng-change="recordValueUpdated(outputRecord, flattenOutputRecord[fieldPath])"
+           ng-class="{'value-deletion': (flattenOutputRecord[fieldPath].value !== flattenInputRecord[fieldPath].value) }"
+           class="field-value {{flattenOutputRecord[fieldPath].type}}">
+      </div>
+
+    </td>
+
+
+
+
+
+
+    <!--td ng-if="flattenInputRecord"
+        ng-repeat="fieldPath in inputFieldPaths | limitTo: inputLimit"
+        ng-class="{'value-addition': flattenInputRecord[fieldPath].value !== flattenOutputRecord[fieldPath].value }"
+        class="field-value {{flattenInputRecord[fieldPath].type}}">{{flattenInputRecord[fieldPath].value + ''}}</td-->
+
+
+
+
+    <!--Output -->
 
     <td ng-if="flattenInputRecord"
         ng-repeat="fieldPath in inputFieldPaths | limitTo: inputLimit"
         ng-class="{'value-addition': flattenInputRecord[fieldPath].value !== flattenOutputRecord[fieldPath].value }"
-        class="field-value {{flattenInputRecord[fieldPath].type}}">{{flattenInputRecord[fieldPath].value + ''}}</td>
+        class="field-value {{flattenInputRecord[fieldPath].type}}"
+      >{{(flattenInputRecord[fieldPath].type === 'DATETIME' || flattenInputRecord[fieldPath].type === 'DATE') ? (flattenInputRecord[fieldPath].value + '' | date:'medium') : (flattenInputRecord[fieldPath].value + '')}}</td>
+
+
 
 
     <td colspan="{{inputLimit ? inputLimit : 1}}"
@@ -90,7 +148,11 @@
       ng-init="flattenRecord = getFlattenRecord(inputRecord)">
     <td colspan="{{outputLimit ? outputLimit : 1}}"></td>
 
-    <td ng-repeat="fieldPath in inputFieldPaths">{{flattenRecord[fieldPath].value + ''}}</td>
+    <td ng-repeat="fieldPath in inputFieldPaths | limitTo: inputLimit"
+        class="field-value {{flattenRecord[fieldPath].type}}"
+      >{{(flattenRecord[fieldPath].type === 'DATETIME' || flattenRecord[fieldPath].type === 'DATE') ? (flattenRecord[fieldPath].value + '' | date:'medium') : (flattenRecord[fieldPath].value + '')}}
+    </td>
+
   </tr>
 
 
@@ -109,7 +171,7 @@
   <tr ng-if="multiStagePreviewData.input.length === 0 &&
                       multiStagePreviewData.output.length === 0 &&
                       multiStagePreviewData.errorRecords.length === 0">
-    <td colspan="2" class="no-records" translate="home.previewPane.noRecords">No Records to view.</td>
+    <td colspan="inputLimit + outputLimit" class="no-records" translate="home.previewPane.noRecords">No Records to view.</td>
   </tr>
 
   </tbody>

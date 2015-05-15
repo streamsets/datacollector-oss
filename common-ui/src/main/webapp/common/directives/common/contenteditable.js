@@ -22,7 +22,7 @@ angular.module('dataCollectorApp.commonDirectives')
         }
 
         ngModel.$render = function() {
-          if(ngModel.$viewValue !== undefined || ngModel.$viewValue !== null) {
+          if(ngModel.$viewValue !== undefined) {
             element.text(ngModel.$viewValue + '');
           } else {
             element.text('');

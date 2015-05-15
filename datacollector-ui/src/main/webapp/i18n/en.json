@@ -323,7 +323,7 @@
         "runtimeStatistics": "Runtime Statistics",
         "memoryConsumed": "Heap Memory Usage",
         "settingsTitle": "Monitoring Settings",
-        "slaveSDCInstances": "Slave SDC Instances",
+        "slaveSDCInstances": "Worker SDC Instances",
         "batchCount": "Batch Count",
         "currentSourceOffset": "Current Source Offset",
         "currentBatchAge": "Current Batch Age",

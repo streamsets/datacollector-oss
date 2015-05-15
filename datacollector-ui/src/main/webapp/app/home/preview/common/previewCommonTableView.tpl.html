@@ -54,10 +54,7 @@
       flattenInputRecord = getFlattenRecord(inputRecord);
       flattenOutputRecord = getFlattenRecord(outputRecords[0])">
 
-
     <!--Input -->
-
-
 
     <td ng-repeat="fieldPath in inputFieldPaths | limitTo: inputLimit">
 
@@ -102,14 +99,14 @@
         class="field-value {{flattenOutputRecord[fieldPath].type}}"
       >{{(flattenInputRecord[fieldPath].type === 'DATETIME' || flattenInputRecord[fieldPath].type === 'DATE') ? (flattenOutputRecord[fieldPath].value + '' | date:'medium') : (flattenOutputRecord[fieldPath].value + '')}}</td>
 
-    <td colspan="{{outputFieldPaths.length}}" ng-if="errorsRecords && errorsRecords.length > 0">
+    <td colspan="{{outputLimit}}" ng-if="errorsRecords && errorsRecords.length > 0">
       <label class="label label-danger">
         {{('global.form.record' | translate)+($parent.$index+1) + '-' + ('global.form.errorRecord' | translate) + ' ' +
         escapeHtml(errorsRecords[0].header.errorMessage)}}
       </label>
     </td>
 
-    <td colspan="{{outputFieldPaths.length}}"
+    <td colspan="{{outputLimit}}"
         ng-if="outputRecords.length === 0 && errorsRecords.length === 0 && detailPaneConfig.uiInfo.stageType !== pipelineConstant.TARGET_STAGE_TYPE">
       <label class="label label-warning">{{'home.previewPane.noOutputWarning' | translate}}</label>
     </td>
@@ -120,9 +117,10 @@
       ng-repeat="outputRecord in outputRecords"
       ng-if="$index > 0"
       ng-init="flattenRecord = getFlattenRecord(outputRecord)">
-    <td colspan="{{inputFieldPaths.length}}"></td>
+    <td colspan="{{inputLimit}}"></td>
 
-    <td ng-repeat="fieldPath in outputFieldPaths"
+    <td ng-repeat="fieldPath in outputFieldPaths | limitTo: outputLimit"
+        class="field-value {{flattenRecord[fieldPath].type}}"
       >{{(flattenRecord[fieldPath].type === 'DATETIME' || flattenRecord[fieldPath].type === 'DATE') ? (flattenRecord[fieldPath].value + '' | date:'medium') : (flattenRecord[fieldPath].value + '')}}
     </td>
   </tr>
@@ -141,7 +139,7 @@
   <tr ng-if="stagePreviewData.input.length === 0 &&
                 stagePreviewData.output.length === 0 &&
                 stagePreviewData.errorRecords.length === 0">
-    <td colspan="2" class="no-records">
+    <td colspan="inputLimit + outputLimit" class="no-records">
       {{'home.previewPane.noRecords' | translate}}
 
       <div ng-if="stagePreviewData.stageErrors && stagePreviewData.stageErrors.length">
