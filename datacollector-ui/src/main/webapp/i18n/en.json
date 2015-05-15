@@ -502,8 +502,8 @@
   },
   "sdcSettings": {
     "title": "Settings",
-    "helpBar": "Don't Show Pipeline Creation Help Bar",
-    "restResponse": "Don't Show REST Response Dropdown Menu"
+    "helpBar": "Hide Pipeline Creation Help Bar",
+    "restResponse": "Hide REST Response Menu"
   },
   "sdcDirectories" : {
     "title": "SDC Directories",

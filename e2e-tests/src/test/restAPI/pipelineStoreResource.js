@@ -156,7 +156,7 @@ frisby.create('Login to StreamSets Data Collector')
 
         expect(pipelineJSON.schemaVersion).toEqual(1);
         expect(pipelineJSON.uuid).toBeDefined();
-        expect(pipelineJSON.configuration.length).toEqual(5);
+        expect(pipelineJSON.configuration.length).toEqual(8);
         expect(pipelineJSON.stages.length).toEqual(0);
         expect(pipelineJSON.errorStage).toEqual(null);
 
