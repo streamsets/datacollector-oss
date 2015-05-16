@@ -3,8 +3,8 @@
 <concept id="concept_n1y_qyp_5q">
  <title>File Tail</title>
  <shortdesc>The File Tail origin reads lines of data as they are written to an active file after
-        reading related archived files in the same directory. File Tail generates a record for each
-        line in the files. </shortdesc>
+        reading related archived files in the same directory. You can read data from multiple
+        directories. File Tail generates a record for each line in the files. </shortdesc>
  <conbody>
         <p><indexterm>File Tail
                     origin<indexterm>overview</indexterm></indexterm><indexterm>origins<indexterm>File

@@ -13,12 +13,14 @@
             location displays. Scroll to view the entire list.</p><p><image
               href="../Graphics/ExComp-List.png" id="image_ctc_rs5_tr"/></p></li>
     <li>Field names display at the top of the list when data preview is available. When defined,
-          pipeline constants display in the list with a purple Contants icon:<p><image
+          pipeline constants display in the list with a purple Contants icon.<p>In the following
+            example, Bonus is a pipeline constant:</p><p><image
               href="../Graphics/ExComp-FieldsConstants.png" id="image_cvp_sdv_tr"/></p></li>
-    <li>To view more information about an element, click the element name:<p><image
+    <li>To view more information about an element, click the element name: <p><image
               href="../Graphics/ExComp-ListInfo.png" id="image_m2v_ht5_tr"/></p></li>
-    <li>To add an element, double-click the element name or hit <uicontrol>Enter</uicontrol>. </li>
-        <li>You can filter the element list by typing the first letters of the element name. </li>
+    <li>To add an element to an expression, double-click the element name or hit
+            <uicontrol>Enter</uicontrol>. </li>
+        <li>You can filter the element list by typing the first few letters of the element name. </li>
     <li>To view the syntax of a function, after you add the function, click within the parentheses.
        <p><image href="../Graphics/ExComp-Syntax.png" id="image_jq3_yw5_tr"/></p></li>
     <li>You can invoke expression completion at any location to view the valid expression

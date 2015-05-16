@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE task PUBLIC "-//OASIS//DTD DITA General Task//EN" "generalTask.dtd">
+<task id="task_of4_wpw_1s">
+    <title>Configuring an Omniture Origin</title>
+    <shortdesc/>
+    <taskbody>
+        <context>
+            <p><indexterm>Omniture origin<indexterm>configuring</indexterm></indexterm>Configure an
+                Omniture origin to process web usage reports from Omniture reporting APIs.</p>
+        </context>
+        <steps id="steps_lfw_crw_1s">
+            <step
+                conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/1stStepErrorHandling">
+                <cmd/>
+            </step>
+            <step>
+                <cmd>On the <uicontrol>Omniture</uicontrol> tab, configure the following
+                    properties:</cmd>
+                <info>
+                    <table frame="all" rowsep="1" colsep="1" id="table_nkn_jrw_1s">
+                        <tgroup cols="2">
+                            <colspec colname="c1" colnum="1" colwidth="1*"/>
+                            <colspec colname="c2" colnum="2" colwidth="2.7*"/>
+                            <thead>
+                                <row>
+                                    <entry>Omniture Property</entry>
+                                    <entry>Description</entry>
+                                </row>
+                            </thead>
+                            <tbody>
+                                <row>
+                                    <entry>Omniture REST URL</entry>
+                                    <entry>REST URL for the Omniture reporting API to use. </entry>
+                                </row>
+                                <row>
+                                    <entry>User Name</entry>
+                                    <entry>Omniture user name.</entry>
+                                </row>
+                                <row>
+                                    <entry>Shared Secret <draft-comment author="Loretta">can we move
+                                            this here? appears lower </draft-comment></entry>
+                                    <entry>Omniture shared secret.</entry>
+                                </row>
+                                <row>
+                                    <entry>Request Timeout (ms)</entry>
+                                    <entry>Connection timeout.</entry>
+                                </row>
+                                <row>
+                                    <entry>Mode</entry>
+                                    <entry>Omniture polls the reporting APIs for reports.</entry>
+                                </row>
+                                <row>
+                                    <entry>Report Request Interval (ms)<draft-comment
+                                            author="Loretta">Can we use this
+                                        name?</draft-comment></entry>
+                                    <entry>Milliseconds to wait between requests. <p>When necessary,
+                                            the origin delays a request until the API responds to
+                                            the previous request.</p></entry>
+                                </row>
+                                <row>
+                                    <entry>Max Batch Size<draft-comment author="Loretta">Change from
+                                            Batch Size?</draft-comment></entry>
+                                    <entry>Maximum number of reports to include in a batch.
+                                            <p>Default is 1.</p></entry>
+                                </row>
+                                <row>
+                                    <entry>Batch Wait Time (ms)</entry>
+                                    <entry>Time to wait before sending an empty or partial
+                                        batch.</entry>
+                                </row>
+                            </tbody>
+                        </tgroup>
+                    </table>
+                </info>
+            </step>
+            <step>
+                <cmd>On the <uicontrol>Report</uicontrol> tab, enter a description of the Omniture
+                    report.</cmd>
+            </step>
+        </steps>
+    </taskbody>
+</task>

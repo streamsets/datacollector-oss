@@ -26,8 +26,8 @@
                 /> environment configuration file includes the following properties:<table
                     frame="all" rowsep="1" colsep="1" id="table_hby_1bn_qr">
                     <tgroup cols="2">
-                        <colspec colname="c1" colnum="1" colwidth="1.0*"/>
-                        <colspec colname="c2" colnum="2" colwidth="1.0*"/>
+                        <colspec colname="c1" colnum="1" colwidth="1*"/>
+                        <colspec colname="c2" colnum="2" colwidth="1.64*"/>
                         <thead>
                             <row>
                                 <entry>Environment Configuration Property</entry>

@@ -64,12 +64,12 @@
                                             context-sensitive help.</p></entry>
                                 </row>
                                 <row>
-                                    <entry>Hide the Pipeline Creation Help Bar </entry>
+                                    <entry>Hide Pipeline Creation Help Bar </entry>
                                     <entry>Hides the pipeline configuration help bar that displays
                                         by default when a pipeline is incomplete. </entry>
                                 </row>
                                 <row>
-                                    <entry>Hide the REST Response Menu</entry>
+                                    <entry>Hide REST Response Menu</entry>
                                     <entry>Hides the REST Response menu so you cannot request REST
                                         API response information.</entry>
                                 </row>

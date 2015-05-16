@@ -6,9 +6,12 @@
     <taskbody>
         <context>When you create an instance, you specify a directory and http or https port number.
             The <ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-            /> creates the directory and copies several directories to that location. <draft-comment
-                author="Loretta">copies or creates? If something is configured in the original DC is
-                it carried over, e.g. email addresses? </draft-comment></context>
+            /> creates the directory and copies several directories and configuration files to the
+            directory. It copies files from the <ph
+                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
+            etc and libexec directories to the new <ph
+                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
+            instance and updates the http/https port number. </context>
         <steps id="steps_sbt_nbz_wr">
             <step>
                 <cmd>From the command line, if necessary, change to the <ph
@@ -18,19 +21,17 @@
             <step>
                 <cmd>Enter the following command:</cmd>
                 <info>
-                    <codeblock>bin/create-sdc -home=&lt;new SDC directory> (-httpPort=&lt;SDC_HTTP_PORT> | -httpsPort=&lt;SDC_HTTPS_PORT>)</codeblock>
+                    <codeblock>bin/streamsets create-dc -home=&lt;new SDC directory> (-httpPort=&lt;SDC_HTTP_PORT> | -httpsPort=&lt;SDC_HTTPS_PORT>)</codeblock>
                 </info>
                 <info>
-                    <note>Enter a directory that does not exist. </note>
+                    <note>Enter a directory that does not yet exist. </note>
                 </info>
                 <stepresult>The <ph
                         conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
                     /> creates another <ph
                         conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                    /> instance in the specified directory and installs <draft-comment
-                        author="Loretta">I think it installs the default config files - or is it the
-                        config files that were customized for the original
-                    DC?</draft-comment></stepresult>
+                    /> instance in the specified directory, creating a bin directory and copying the
+                    etc and libexec directories to the new instance. </stepresult>
             </step>
             <step>
                 <cmd>To launch the new <ph
@@ -39,14 +40,13 @@
                         conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
                     /> installation directory and enter the following command:</cmd>
                 <info>
-                    <codeblock>sdc <draft-comment author="Loretta">or does it have to be /bin/sdc?</draft-comment></codeblock>
+                    <codeblock>bin/streamsets dc</codeblock>
                 </info>
                 <stepresult>The new <ph
                         conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                    /> starts. Use the http host and port number to access the new <ph
+                    /> starts running. Use the http host and port number to access the new <ph
                         conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                    />. <draft-comment author="Loretta">you can edit properties? treat this like
-                        just another data collector? what else here? </draft-comment></stepresult>
+                    /> instance. </stepresult>
             </step>
         </steps>
     </taskbody>

@@ -73,7 +73,7 @@
                         </strow>
                         <strow>
                             <stentry>Memory Limit <xref
-                                    href="PipelineMemory.dita#concept_twq_nhx_rr"><image href="../Graphics/icon_moreInfo.png" scale="10"></image></xref></stentry>
+                                href="PipelineMemory.dita#concept_twq_nhx_rr"><image href="../Graphics/icon_moreInfo.png" scale="10"></image></xref></stentry>
                             <stentry>Maximum amount of memory for the pipeline to use. <p>Best
                                     practice is to use up to 65% of the Java heap size defined for
                                     the <ph
@@ -152,6 +152,21 @@
                                     <entry>Local directory for error record files. </entry>
                                 </row>
                                 <row>
+                                    <entry>File Prefix</entry>
+                                    <entry>Prefix used for error record files. Use to differentiate
+                                        error record files from other files in the directory.<p>Uses
+                                            the prefix sdc-${sdc:id()} by default. The prefix
+                                            evaluates to sdc-&lt;<ph
+                                                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                                            /> ID>. This provides default differentiation in case
+                                            multiple <ph
+                                                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                                            />s write to the same directory. </p><p>The <ph
+                                                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                                            /> ID is stored in the following file:
+                                                <filepath>&lt;SDCinstalldir>/data/sdc.id</filepath>.</p></entry>
+                                </row>
+                                <row>
                                     <entry>File Wait Time (secs)</entry>
                                     <entry>Number of seconds the <ph
                                             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
@@ -210,15 +225,16 @@
                                         /> worker in the cluster.<p>Default is 1024 MB.</p></entry>
                                 </row>
                                 <row>
-                                    <entry>Launcher Env<draft-comment author="Loretta">name?
+                                    <entry>Launcher Env<draft-comment author="Loretta">Launcher
+                                            Configuration? Launcher Env Configuration?
                                         </draft-comment></entry>
                                     <entry>
-                                        <p>Additional &lt;&lt;?>>  properties to use. Click the
-                                                <uicontrol>Add</uicontrol> icon and define the
-                                            property name and value. </p>
-                                        <p>Use the property names and values as expected by
-                                            &lt;&lt;?>>. <draft-comment author="Loretta">come back
-                                                to this.</draft-comment></p>
+                                        <p>Additional configuration properties for the cluster.
+                                            Click the <uicontrol>Add</uicontrol> icon and define the
+                                            property name and value.  </p>
+                                        <draft-comment author="Loretta">come back when it's clear if
+                                            this is spark or something else. Use the property names
+                                            and values as expected by &lt;&lt;?>>.</draft-comment>
                                     </entry>
                                 </row>
                             </tbody>

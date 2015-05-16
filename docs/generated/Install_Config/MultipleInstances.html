@@ -21,21 +21,21 @@
   <p class="p">You might create
       multiple instances when you want to run several <span class="ph">Data
                   Collector</span>s on the
-      same host machine. You can run the <span class="ph">Data
+      same  machine. You can run <span class="ph">Data
                   Collector</span> instances
-      at the same time, as long as the host machine has enough resources.</p>
+      at the same time as long as sufficient resources are available.</p>
 
     <p class="p">When you create an additional <span class="ph">Data
                   Collector</span> instance,
       the new instance includes any <span class="ph">Data
                   Collector</span>
-      customization that you have implemented. When the <span class="ph">Data
-                  Collector</span> creates a
-      new instance, it copies the etc and libexec directories to the new <span class="ph">Data
-                  Collector</span> instance.
-      This includes the existing <span class="ph">Data
+      customization implemented in the <span class="ph">Data
                   Collector</span>
-      configuration file and related files, and the environment configuration file. </p>
+      configuration file and etc directory, as well as the <span class="ph">Data
+                  Collector</span>
+      environment configuration file. You can customize the configuration for the new <span class="ph">Data
+                  Collector</span> instance
+      after creating it.</p>
 
  </div>
 
@@ -48,7 +48,12 @@
 
         <div class="section context">When you create an instance, you specify a directory and http or https port number.
             The <span class="ph">Data
-                  Collector</span> creates the directory and copies several directories to that location. </div>
+                  Collector</span> creates the directory and copies several directories and configuration files to the
+            directory. It copies files from the <span class="ph">Data
+                  Collector</span>
+            etc and libexec directories to the new <span class="ph">Data
+                  Collector</span>
+            instance and updates the http/https port number. </div>
 
         <ol class="ol steps" id="task_dpl_m1z_wr__steps_sbt_nbz_wr"><li class="li step stepexpand">
                 <span class="ph cmd">From the command line, if necessary, change to the <span class="ph">Data
@@ -57,28 +62,29 @@
 <li class="li step stepexpand">
                 <span class="ph cmd">Enter the following command:</span>
                 <div class="itemgroup info">
-                    <pre class="pre codeblock">bin/create-sdc -home=&lt;new SDC directory&gt; (-httpPort=&lt;SDC_HTTP_PORT&gt; | -httpsPort=&lt;SDC_HTTPS_PORT&gt;)</pre>
+                    <pre class="pre codeblock">bin/streamsets create-dc -home=&lt;new SDC directory&gt; (-httpPort=&lt;SDC_HTTP_PORT&gt; | -httpsPort=&lt;SDC_HTTPS_PORT&gt;)</pre>
 
                 </div>
                 <div class="itemgroup info">
-                    <div class="note note"><span class="notetitle">Note:</span> Enter a directory that does not exist. </div>
+                    <div class="note note"><span class="notetitle">Note:</span> Enter a directory that does not yet exist. </div>
 
                 </div>
                 <div class="itemgroup stepresult">The <span class="ph">Data
                   Collector</span> creates another <span class="ph">Data
-                  Collector</span> instance in the specified directory and installs </div>
+                  Collector</span> instance in the specified directory, creating a bin directory and copying the
+                    etc and libexec directories to the new instance. </div>
             </li>
 <li class="li step stepexpand">
                 <span class="ph cmd">To launch the new <span class="ph">Data
                   Collector</span>, navigate to the new <span class="ph">Data
                   Collector</span> installation directory and enter the following command:</span>
                 <div class="itemgroup info">
-                    <pre class="pre codeblock">sdc </pre>
+                    <pre class="pre codeblock">bin/streamsets dc</pre>
 
                 </div>
                 <div class="itemgroup stepresult">The new <span class="ph">Data
-                  Collector</span> starts. Use the http host and port number to access the new <span class="ph">Data
-                  Collector</span>. </div>
+                  Collector</span> starts running. Use the http host and port number to access the new <span class="ph">Data
+                  Collector</span> instance. </div>
             </li>
 </ol>
 

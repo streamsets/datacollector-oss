@@ -8,14 +8,12 @@
  <conbody>
   <p><indexterm>pipeline
      constants<indexterm>overview</indexterm></indexterm><indexterm>constants<indexterm>pipeline
-     constants</indexterm></indexterm>For example, you might have an Expression Evaluator processor
-   that calculates the total income for employees using .01 as a bonus percentage, as
-   follows:<codeblock>${(record:value("/SALARY")) + (record:value("/SALARY")*.01)}</codeblock></p>
-  <p>However, the bonus percentage changes regularly. So instead of using .01 directly in the
-   expression, you can create a constant named Bonus with a value of .01.</p>
-  <p>Then, you can use the Bonus constant in an expression as follows:</p>
-  <p>
-   <codeblock>${record:value("/SALARY")+(record:value("/SALARY")*BONUS)}</codeblock>
-  </p>
+     constants</indexterm></indexterm>For example, if you have a bonus percentage that you update
+   quarterly, you might create a Bonus constant so you can update the value easily in the pipeline
+   properties and have the value propagated throughout the pipeline. Or, if you use a common root
+   directory that you use for source files and error files, you might create a Root constant that
+   you use as a basis for both directories, e.g. Root/log and Root/error.</p>
+  <p>You can enter any text as the value for a pipeline constant. When the pipeline runs, the value
+   replaces the name of the pipeline constant wherever it is used.</p>
  </conbody>
 </concept>

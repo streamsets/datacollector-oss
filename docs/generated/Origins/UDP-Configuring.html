@@ -1,0 +1,147 @@
+
+<!DOCTYPE html
+  SYSTEM "about:legacy-compat">
+<html xml:lang="en-us" lang="en-us">
+<head><meta name="description" content="Configure a UDP Source origin to process NetFlow messages from a UPD source. In the Properties panel, on the General tab, configure the following properties: General Property Description Name Stage ..."></meta><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><meta name="copyright" content="(C) Copyright 2005"></meta><meta name="DC.rights.owner" content="(C) Copyright 2005"></meta><meta name="DC.Type" content="task"></meta><meta name="DC.Title" content="Configuring a UDP Source"></meta><meta name="abstract" content="Configure a UDP Source origin to process NetFlow messages from a UPD source."></meta><meta name="description" content="Configure a UDP Source origin to process NetFlow messages from a UPD source."></meta><meta name="DC.Relation" scheme="URI" content="../Origins/UDP.html"></meta><meta name="DC.Format" content="XHTML"></meta><meta name="DC.Identifier" content="task_kgn_rcv_1s"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/commonltr.css"><!----></link><title>Configuring a UDP Source</title><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/webhelp_topic.css"><!----></link><link rel="stylesheet" type="text/css" href="../skin.css"></link><script type="text/javascript"><!--
+          
+          var prefix = "../index.html";
+          
+          --></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery-1.8.2.min.js"><!----></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery.cookie.js"><!----></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery-ui.custom.min.js"><!----></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery.highlight-3.js"><!----></script><script type="text/javascript" charset="utf-8" src="../oxygen-webhelp/resources/js/webhelp_topic.js"><!----></script></head>
+<body onload="highlightSearchTerm()" class="frmBody" id="task_kgn_rcv_1s">
+<table class="nav"><tbody><tr><td colspan="2"><div id="printlink"><a href="javascript:window.print();" title="Print this page"></a></div><div id="permalink"><a href="#" title="Link to this page"></a></div></td></tr><tr><td width="75%"><a class="navheader_parent_path" href="../Origins/../Origins/Origins_title.html" title="Origins">Origins</a> / <a class="navheader_parent_path" href="../Origins/UDP.html" title="The UDP Source origin reads NetFlow messages from one or more UDP ports. UDP Source generates a record for every NetFlow message. UDP Source reads NetFlow Version 5 data.">UDP Source</a></td><td><div class="navheader">
+<span class="navparent"><a class="link" href="../Origins/UDP.html" title="The UDP Source origin reads NetFlow messages from one or more UDP ports. UDP Source generates a record for every NetFlow message. UDP Source reads NetFlow Version 5 data."><span class="navheader_label">Parent topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">UDP Source</span></a></span>  </div></td></tr></tbody></table>
+
+    <h1 class="title topictitle1">Configuring a UDP Source</h1>
+
+    
+    <div class="body taskbody"><p class="shortdesc">Configure a UDP Source origin to process NetFlow messages from a UPD
+        source.</p>
+
+        <div class="section context">
+            <p class="p"></p>
+
+        </div>
+
+        <ol class="ol steps" id="task_kgn_rcv_1s__steps_ejy_1dv_1s"><li class="li step stepexpand">
+                <span class="ph cmd">In the Properties panel, on the <span class="keyword wintitle">General</span> tab, configure the
+                    following properties:</span>
+                <div class="itemgroup info">
+                    
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_kgn_rcv_1s__d2429e162" class="table" frame="border" border="1" rules="all">
+                            
+                            
+                            <thead class="thead" align="left">
+                                <tr class="row">
+                                    <th class="entry" valign="top" width="24.509803921568626%" id="d25276e48">General Property</th>
+
+                                    <th class="entry" valign="top" width="75.49019607843137%" id="d25276e51">Description</th>
+
+                                </tr>
+
+                            </thead>
+
+                            <tbody class="tbody">
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="24.509803921568626%" headers="d25276e48 ">Name</td>
+
+                                    <td class="entry" valign="top" width="75.49019607843137%" headers="d25276e51 ">Stage name.</td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="24.509803921568626%" headers="d25276e48 ">Description</td>
+
+                                    <td class="entry" valign="top" width="75.49019607843137%" headers="d25276e51 ">Optional description.</td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="24.509803921568626%" headers="d25276e48 ">On Record Error</td>
+
+                                    <td class="entry" valign="top" width="75.49019607843137%" headers="d25276e51 ">Error record handling for the stage: <ul class="ul" id="task_kgn_rcv_1s__d2429e209">
+                                            <li class="li">Discard - Discards the record.</li>
+
+                                            <li class="li">Send to Error - Sends the record to the pipeline for
+                                                error handling.</li>
+
+                                            <li class="li">Stop Pipeline - Stops the pipeline. </li>
+
+                                        </ul>
+</td>
+
+                                </tr>
+
+                            </tbody>
+
+                        </table>
+</div>
+
+                </div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">On the <span class="keyword wintitle">UDP</span> tab, configure the following properties:</span>
+                <div class="itemgroup info">
+                    
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_kgn_rcv_1s__table_ovk_ndv_1s" class="table" frame="border" border="1" rules="all">
+                            
+                            
+                            <thead class="thead" align="left">
+                                <tr class="row">
+                                    <th class="entry" valign="top" width="25.510204081632654%" id="d25276e123">UDP Property</th>
+
+                                    <th class="entry" valign="top" width="74.48979591836735%" id="d25276e126">Description</th>
+
+                                </tr>
+
+                            </thead>
+
+                            <tbody class="tbody">
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="25.510204081632654%" headers="d25276e123 ">Port</td>
+
+                                    <td class="entry" valign="top" width="74.48979591836735%" headers="d25276e126 ">Port to listen on for data. To list additional ports,
+                                        click the<span class="ph uicontrol"> Add</span> icon.</td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="25.510204081632654%" headers="d25276e123 ">Data Format</td>
+
+                                    <td class="entry" valign="top" width="74.48979591836735%" headers="d25276e126 ">Data format passed by UDP. UDP Source reads NetFlow
+                                        messages.</td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="25.510204081632654%" headers="d25276e123 ">Max Batch Size (messages)</td>
+
+                                    <td class="entry" valign="top" width="74.48979591836735%" headers="d25276e126 ">Maximum number of messages include in a batch and pass
+                                        through the pipeline at one time. </td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="25.510204081632654%" headers="d25276e123 ">Batch Wait Time (ms)  <a class="xref" href="Origins_overview.html#concept_ypd_vgr_5q" title="For origin stages, the batch size determines the maximum number of records sent through the pipeline at one time. The batch wait time determines the time that the origin waits for data before sending a batch. At the end of the wait time, it sends the batch regardless of how many records the batch contains.">
+                                            <img class="image" id="task_kgn_rcv_1s__image_mgp_2q3_br" src="../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
+
+                                    <td class="entry" valign="top" width="74.48979591836735%" headers="d25276e126 ">Milliseconds to wait before sending a partial or empty
+                                        batch.</td>
+
+                                </tr>
+
+                            </tbody>
+
+                        </table>
+</div>
+
+                </div>
+            </li>
+</ol>
+
+    </div>
+
+<div class="related-links"></div>
+<div class="navfooter"><!---->
+<span class="navparent"><a class="link" href="../Origins/UDP.html" title="The UDP Source origin reads NetFlow messages from one or more UDP ports. UDP Source generates a record for every NetFlow message. UDP Source reads NetFlow Version 5 data."><span class="navheader_label">Parent topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">UDP Source</span></a></span>  </div><div class="footer"><div> </div><!-- © <a href="http://creativecommons.org/licenses/by-nc/4.0/legalcode">CC BY-NC 4.0.</a> StreamSets, 2015. --></div>
+</body>
+</html>

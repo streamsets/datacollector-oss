@@ -8,11 +8,13 @@
   <p><indexterm>origins<indexterm>overview</indexterm></indexterm>You can use the following types of
       origins in a pipeline: <ul id="ul_mxz_jxm_jq">
         <li>Directory - Reads files from a directory. </li>
-        <li>File Tail - Reads data as it is written to an active file after reading related archived
-          files in the directory. </li>
+        <li>File Tail - Reads lines of data as it is written to an active file after reading related
+          archived files in the directory. </li>
         <li>HTTP Client - Reads data from a streaming HTTP resource URL.</li>
-        <li>Kafka Consumer - Reads data from Kafka.</li>
+        <li>Kafka Consumer - Reads messages from Kafka.</li>
         <li>Kinesis Consumer - Reads data from Kinesis.</li>
+        <li>Omniture - Reads web usage reports from the Omniture reporting API.</li>
+        <li>UDP - Reads messages from a UDP port. </li>
       </ul></p>
  </conbody>
 </concept>

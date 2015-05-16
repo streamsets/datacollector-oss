@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE task PUBLIC "-//OASIS//DTD DITA General Task//EN" "generalTask.dtd">
+<task id="task_kgn_rcv_1s">
+    <title>Configuring a UDP Source</title>
+    <shortdesc>Configure a UDP Source origin to process NetFlow messages from a UPD
+        source.</shortdesc>
+    <taskbody>
+        <context>
+            <p><indexterm>UDP Source origin<indexterm>configuring</indexterm></indexterm></p>
+        </context>
+        <steps id="steps_ejy_1dv_1s">
+            <step
+                conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/1stStepErrorHandling">
+                <cmd/>
+            </step>
+            <step>
+                <cmd>On the <wintitle>UDP</wintitle> tab, configure the following properties:</cmd>
+                <info>
+                    <table frame="all" rowsep="1" colsep="1" id="table_ovk_ndv_1s">
+                        <tgroup cols="2">
+                            <colspec colname="c1" colnum="1" colwidth="1*"/>
+                            <colspec colname="c2" colnum="2" colwidth="2.92*"/>
+                            <thead>
+                                <row>
+                                    <entry>UDP Property</entry>
+                                    <entry>Description</entry>
+                                </row>
+                            </thead>
+                            <tbody>
+                                <row>
+                                    <entry>Port</entry>
+                                    <entry>Port to listen on for data. To list additional ports,
+                                        click the<uicontrol> Add</uicontrol> icon.</entry>
+                                </row>
+                                <row>
+                                    <entry>Data Format</entry>
+                                    <entry>Data format passed by UDP. UDP Source reads NetFlow
+                                        messages.</entry>
+                                </row>
+                                <row>
+                                    <entry>Max Batch Size (messages)</entry>
+                                    <entry>Maximum number of messages include in a batch and pass
+                                        through the pipeline at one time. </entry>
+                                </row>
+                                <row>
+                                    <entry>Batch Wait Time (ms)  <xref
+                                            href="BatchSizeWaitTime.dita#concept_ypd_vgr_5q">
+                                            <image href="../Graphics/icon_moreInfo.png" scale="10"
+                                                id="image_mgp_2q3_br" placement="inline"
+                                        /></xref></entry>
+                                    <entry>Milliseconds to wait before sending a partial or empty
+                                        batch.</entry>
+                                </row>
+                            </tbody>
+                        </tgroup>
+                    </table>
+                </info>
+            </step>
+        </steps>
+    </taskbody>
+</task>
