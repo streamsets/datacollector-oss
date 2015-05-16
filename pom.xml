@@ -39,9 +39,11 @@
     <cdh_5_3_1-lib>none</cdh_5_3_1-lib>
     <cdh_5_3_2-lib>none</cdh_5_3_2-lib>
     <cdh_5_4_0-lib>none</cdh_5_4_0-lib>
+    <cdh_5_4_1-lib>none</cdh_5_4_1-lib>
     <hdp_2_2_0-lib>none</hdp_2_2_0-lib>
     <cdh_kafka_1_2_0-lib>none</cdh_kafka_1_2_0-lib>
     <cdh5_4_0-cluster-cdh_kafka_1_2_0-lib>none</cdh5_4_0-cluster-cdh_kafka_1_2_0-lib>
+    <cdh5_4_1-cluster-cdh_kafka_1_2_0-lib>none</cdh5_4_1-cluster-cdh_kafka_1_2_0-lib>
     <apache-kafka_0_8_1_1-lib>none</apache-kafka_0_8_1_1-lib>
     <apache-kafka_0_8_2_0-lib>none</apache-kafka_0_8_2_0-lib>
     <apache-kafka_0_8_2_1-lib>none</apache-kafka_0_8_2_1-lib>
@@ -225,11 +227,13 @@
         <cdh_5_2_4-lib>cdh5_2_4-lib</cdh_5_2_4-lib>
         <cdh_5_3_0-lib>cdh5_3_0-lib</cdh_5_3_0-lib>
         <cdh_5_3_1-lib>cdh5_3_1-lib</cdh_5_3_1-lib>
+        <cdh_5_4_0-lib>cdh5_4_0-lib</cdh_5_4_0-lib>
         <apache-kafka_0_8_1_1-lib>apache-kafka_0_8_1_1-lib</apache-kafka_0_8_1_1-lib>
         <apache-kafka_0_8_2_0-lib>apache-kafka_0_8_2_0-lib</apache-kafka_0_8_2_0-lib>
         <apache-kafka_0_8_2_1-lib>apache-kafka_0_8_2_1-lib</apache-kafka_0_8_2_1-lib>
         <elasticsearch_1_4_4-lib>elasticsearch_1_4_4-lib</elasticsearch_1_4_4-lib>
         <cdh5_4_0-cluster-cdh_kafka_1_2_0-lib>cdh5_4_0-cluster-cdh_kafka_1_2_0-lib</cdh5_4_0-cluster-cdh_kafka_1_2_0-lib>
+        <cdh5_4_1-cluster-cdh_kafka_1_2_0-lib>cdh5_4_1-cluster-cdh_kafka_1_2_0-lib</cdh5_4_1-cluster-cdh_kafka_1_2_0-lib>
       </properties>
       <modules>
         <module>cdh5_2_1-lib</module>
@@ -237,6 +241,7 @@
         <module>cdh5_2_4-lib</module>
         <module>cdh5_3_0-lib</module>
         <module>cdh5_3_1-lib</module>
+        <module>cdh5_4_0-lib</module>
         <module>apache-kafka_0_8_1_1-lib</module>
         <module>apache-kafka_0_8_2_0-lib</module>
         <module>apache-kafka_0_8_2_1-lib</module>
@@ -253,23 +258,24 @@
       </activation>
       <properties>
         <cdh_5_3_2-lib>cdh5_3_2-lib</cdh_5_3_2-lib>
-        <cdh_5_4_0-lib>cdh5_4_0-lib</cdh_5_4_0-lib>
+        <cdh_5_4_1-lib>cdh5_4_1-lib</cdh_5_4_1-lib>
         <hdp_2_2_0-lib>hdp_2_2_0-lib</hdp_2_2_0-lib>
         <cdh_kafka_1_2_0-lib>cdh_kafka_1_2_0-lib</cdh_kafka_1_2_0-lib>
         <jython_2_7_0-lib>jython_2_7_0-lib</jython_2_7_0-lib>
         <elasticsearch_1_5_0-lib>elasticsearch_1_5_0-lib</elasticsearch_1_5_0-lib>
         <cassandra_2_1_5-lib>cassandra_2_1_5-lib</cassandra_2_1_5-lib>
-        <cdh5_4_0-cluster-cdh_kafka_1_2_0-lib>cdh5_4_0-cluster-cdh_kafka_1_2_0-lib</cdh5_4_0-cluster-cdh_kafka_1_2_0-lib>
+        <cdh5_4_1-cluster-cdh_kafka_1_2_0-lib>cdh5_4_1-cluster-cdh_kafka_1_2_0-lib</cdh5_4_1-cluster-cdh_kafka_1_2_0-lib>
       </properties>
       <modules>
         <module>cdh5_3_2-lib</module>
-        <module>cdh5_4_0-lib</module>
+        <module>cdh5_4_1-lib</module>
         <module>hdp_2_2_0-lib</module>
         <module>jython_2_7_0-lib</module>
         <module>elasticsearch_1_5_0-lib</module>
         <module>cassandra_2_1_5-lib</module>
         <module>cdh_kafka_1_2_0-lib</module>
         <module>cdh5_4_0-cluster-cdh_kafka_1_2_0-lib</module>
+        <module>cdh5_4_1-cluster-cdh_kafka_1_2_0-lib</module>
       </modules>
     </profile>
 

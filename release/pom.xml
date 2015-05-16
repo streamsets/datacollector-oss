@@ -178,6 +178,21 @@
             </configuration>
           </execution>
           <execution>
+            <id>cdh-5.4.1</id>
+            <phase>package</phase>
+            <goals>
+              <goal>single</goal>
+            </goals>
+            <configuration>
+              <appendAssemblyId>false</appendAssemblyId>
+              <attach>false</attach>
+              <finalName>streamsets-datacollector-cdh_5_4_1-lib-${project.version}</finalName>
+              <descriptors>
+                <descriptor>src/main/assemblies/data-collector-cdh_5_4_1-lib.xml</descriptor>
+              </descriptors>
+            </configuration>
+          </execution>
+          <execution>
             <id>hdp-2.2.0</id>
             <phase>package</phase>
             <goals>
@@ -253,7 +268,7 @@
             </configuration>
           </execution>
           <execution>
-            <id>cdh5_4_0-kafka-0.8.1.1</id>
+            <id>cdh5_4_0-cluster-cdh_kafka_1_2_0-lib</id>
             <phase>package</phase>
             <goals>
               <goal>single</goal>
@@ -264,6 +279,21 @@
               <finalName>streamsets-datacollector-cdh5_4_0-cluster-cdh_kafka_1_2_0-lib-${project.version}</finalName>
               <descriptors>
                 <descriptor>src/main/assemblies/data-collector-cdh5_4_0-cluster-cdh_kafka_1_2_0-lib.xml</descriptor>
+              </descriptors>
+            </configuration>
+          </execution>
+          <execution>
+            <id>cdh5_4_1-cluster-cdh_kafka_1_2_0-lib</id>
+            <phase>package</phase>
+            <goals>
+              <goal>single</goal>
+            </goals>
+            <configuration>
+              <appendAssemblyId>false</appendAssemblyId>
+              <attach>false</attach>
+              <finalName>streamsets-datacollector-cdh5_4_1-cluster-cdh_kafka_1_2_0-lib-${project.version}</finalName>
+              <descriptors>
+                <descriptor>src/main/assemblies/data-collector-cdh5_4_1-cluster-cdh_kafka_1_2_0-lib.xml</descriptor>
               </descriptors>
             </configuration>
           </execution>

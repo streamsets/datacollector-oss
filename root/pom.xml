@@ -200,7 +200,17 @@
       </dependency>
       <dependency>
         <groupId>com.streamsets</groupId>
+        <artifactId>streamsets-datacollector-cdh5_4_1-lib</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.streamsets</groupId>
         <artifactId>streamsets-datacollector-cdh5_4_0-cluster-cdh_kafka_1_2_0-lib</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.streamsets</groupId>
+        <artifactId>streamsets-datacollector-cdh5_4_1-cluster-cdh_kafka_1_2_0-lib</artifactId>
         <version>${project.version}</version>
       </dependency>
       <dependency>
