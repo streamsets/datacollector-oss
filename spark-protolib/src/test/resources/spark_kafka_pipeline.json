@@ -45,7 +45,7 @@
         "value" : "streamsetsDataCollector"
       }, {
         "name" : "topic",
-        "value" : "topicName"
+        "value" : "testProduceStringRecords"
       }, {
         "name" : "dataFormat",
         "value" : "TEXT"

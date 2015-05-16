@@ -438,7 +438,12 @@ public class ClusterPipelineManager extends AbstractTask implements PipelineMana
       throw new PipelineRuntimeException(issues);
     }
     p.getPipeline().init();
-    return p.getPipeline().getSource().getParallelism();
+
+    int parallelism = p.getPipeline().getSource().getParallelism();
+    if(parallelism < 1) {
+      throw new PipelineRuntimeException(ContainerError.CONTAINER_0112);
+    }
+    return parallelism;
   }
 
   private ProductionPipeline createProductionPipeline(String name, String rev,

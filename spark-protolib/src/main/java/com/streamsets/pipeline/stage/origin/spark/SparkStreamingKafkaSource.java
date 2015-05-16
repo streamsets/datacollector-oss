@@ -4,22 +4,21 @@
  */
 package com.streamsets.pipeline.stage.origin.spark;
 
-import com.google.common.base.Throwables;
 import com.streamsets.pipeline.api.BatchMaker;
 import com.streamsets.pipeline.api.OffsetCommitter;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
-import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.config.CsvHeader;
 import com.streamsets.pipeline.config.CsvMode;
 import com.streamsets.pipeline.config.DataFormat;
 import com.streamsets.pipeline.config.JsonMode;
 import com.streamsets.pipeline.config.LogMode;
 import com.streamsets.pipeline.config.OnParseError;
+import com.streamsets.pipeline.lib.Errors;
 import com.streamsets.pipeline.lib.KafkaUtil;
 import com.streamsets.pipeline.lib.parser.log.RegExConfig;
 import com.streamsets.pipeline.stage.origin.kafka.BaseKafkaSource;
-
+import com.streamsets.pipeline.stage.origin.kafka.Groups;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -35,6 +34,7 @@ public class SparkStreamingKafkaSource extends BaseKafkaSource implements Offset
 
   private SparkStreamingQueue sparkStreamingQueue;
   private SparkStreamingQueueConsumer sparkStreamingQueueConsumer;
+  private int originParallelism = 0;
 
   public SparkStreamingKafkaSource(String metadataBrokerList, String topic, DataFormat dataFormat, String charset,
     boolean produceSingleRecordPerMessage, int maxBatchSize, int maxWaitTime, Map<String, String> kafkaConsumerConfigs,
@@ -58,12 +58,30 @@ public class SparkStreamingKafkaSource extends BaseKafkaSource implements Offset
 
   @Override
   public List<ConfigIssue> validateConfigs() throws StageException {
-    return validateCommonConfigs(new ArrayList<ConfigIssue>());
+    List<ConfigIssue> issues = validateCommonConfigs(new ArrayList<ConfigIssue>());
+    try {
+      int partitionCount = KafkaUtil.getPartitionCount(metadataBrokerList, topic, 1, 0);
+      if(partitionCount < 1) {
+        issues.add(getContext().createConfigIssue(Groups.KAFKA.name(), "topic",
+          Errors.KAFKA_42, topic));
+      } else {
+        //cache the partition count as parallelism for future use
+        originParallelism = partitionCount;
+      }
+    } catch (StageException e) {
+      issues.add(getContext().createConfigIssue(Groups.KAFKA.name(), "topic",
+        Errors.KAFKA_41, topic, e.getMessage(), e));
+    }
+    return issues;
   }
 
   @Override
   public int getParallelism() throws StageException {
-    return KafkaUtil.getPartitionCount(metadataBrokerList, topic, 1, 0);
+    if(originParallelism == 0) {
+      //origin parallelism is not yet calculated
+      originParallelism = KafkaUtil.getPartitionCount(metadataBrokerList, topic, 1, 0);
+    }
+    return originParallelism;
   }
 
   @Override

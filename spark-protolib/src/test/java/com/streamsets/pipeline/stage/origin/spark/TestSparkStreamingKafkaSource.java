@@ -20,7 +20,6 @@ import com.streamsets.pipeline.lib.ProducerRunnable;
 import com.streamsets.pipeline.main.RuntimeModule;
 import com.streamsets.pipeline.prodmanager.PipelineManager;
 import com.streamsets.pipeline.stage.origin.kafka.KafkaDSource;
-
 import kafka.admin.AdminUtils;
 import kafka.javaapi.producer.Producer;
 import kafka.server.KafkaConfig;
@@ -30,8 +29,8 @@ import kafka.utils.TestUtils;
 import kafka.utils.TestZKUtils;
 import kafka.utils.ZKStringSerializer$;
 import kafka.zk.EmbeddedZookeeper;
-
 import org.I0Itec.zkclient.ZkClient;
+import org.apache.commons.io.FileUtils;
 import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.BeforeClass;
@@ -41,8 +40,6 @@ import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.FileOutputStream;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.Properties;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
@@ -94,8 +91,10 @@ public class TestSparkStreamingKafkaSource {
     if(pipelineJson.exists()) {
       pipelineJson.delete();
     }
-    Files.copy(Paths.get(Resources.getResource("spark_kafka_pipeline.json").toURI()),
-      pipelineJson.toPath());
+    String pipelineConf = FileUtils.readFileToString(
+        new File(Resources.getResource("spark_kafka_pipeline.json").toURI()), "UTF-8");
+    pipelineConf = pipelineConf.replaceAll("localhost:2181", metadataBrokerURI);
+    FileUtils.writeStringToFile(pipelineJson, pipelineConf, "UTF-8");
   }
 
   @AfterClass
@@ -106,6 +105,7 @@ public class TestSparkStreamingKafkaSource {
     if (zkClient != null) {
       zkClient.close();
     }
+    zkServer.shutdown();
   }
 
   @Test(timeout=120000)

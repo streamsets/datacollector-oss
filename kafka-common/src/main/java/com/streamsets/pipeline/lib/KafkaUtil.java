@@ -85,7 +85,7 @@ public class KafkaUtil {
     }
     TopicMetadata topicMetadata;
     topicMetadata = getTopicMetadata(kafkaBrokers, topic, maxRetries, backOffms);
-    if(topicMetadata == null) {
+    if(topicMetadata == null || topicMetadata.errorCode() != 0) {
       new StageException(Errors.KAFKA_03, topic, metadataBrokerList);
     }
     return topicMetadata.partitionsMetadata().size();

@@ -306,10 +306,13 @@ public class SparkProviderImpl implements SparkProvider {
     // one single sdc per executor
     args.add("--executor-cores");
     args.add("1");
+
     // Number of Executors based on the origin parallelism
+    String numExecutors = sourceInfo.get(ClusterModeConstants.NUM_EXECUTORS_KEY);
+    checkNumExecutors(numExecutors);
     args.add("--num-executors");
-    args.add(Utils.checkNotNull(sourceInfo.get(ClusterModeConstants.NUM_EXECUTORS_KEY),
-      "Number of executors not found"));
+    args.add(numExecutors);
+
     // ship our stage libs and etc directory
     args.add("--archives");
     args.add(Joiner.on(",").join(libsTarGz.getAbsolutePath(), etcTarGz.getAbsolutePath()));
@@ -364,5 +367,16 @@ public class SparkProviderImpl implements SparkProvider {
     } finally {
       process.cleanup();
     }
+  }
+
+  private void checkNumExecutors(String numExecutorsString) {
+    Utils.checkNotNull(numExecutorsString,"Number of executors not found");
+    int numExecutors;
+    try {
+      numExecutors = Integer.parseInt(numExecutorsString);
+    } catch (NumberFormatException e) {
+      throw new IllegalArgumentException("Number of executors is not a valid integer");
+    }
+    Utils.checkArgument(numExecutors > 0, "Number of executors cannot be less than 1");
   }
 }

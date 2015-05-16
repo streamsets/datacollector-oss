@@ -44,7 +44,8 @@ public enum Errors implements ErrorCode {
   KAFKA_38("Max data object length cannot be less than 1"),
   KAFKA_39("Unsupported data format '{}'"),
   KAFKA_40("Messages with XML data cannot have multiple XML documents in a single message"),
-
+  KAFKA_41("Could not get partition count for topic '{}' : {}"),
+  KAFKA_42("Could not get partition count for topic '{}'"),
 
   //Kafka target messages
   KAFKA_50("Error writing data to the Kafka broker: {}"),

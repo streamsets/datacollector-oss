@@ -18,29 +18,97 @@ import com.streamsets.pipeline.lib.json.StreamingJsonParser;
 import com.streamsets.pipeline.sdk.SourceRunner;
 import com.streamsets.pipeline.sdk.StageRunner;
 import com.streamsets.pipeline.stage.origin.kafka.KafkaDSource;
+import kafka.admin.AdminUtils;
+import kafka.server.KafkaConfig;
+import kafka.server.KafkaServer;
+import kafka.utils.MockTime;
+import kafka.utils.TestUtils;
+import kafka.utils.TestZKUtils;
+import kafka.utils.ZKStringSerializer$;
+import kafka.zk.EmbeddedZookeeper;
+import org.I0Itec.zkclient.ZkClient;
+import org.junit.AfterClass;
 import org.junit.Assert;
+import org.junit.BeforeClass;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Properties;
+import java.util.UUID;
 
 
 public class TestSparkStreamingKafkaDataFormats {
   private static final Logger LOG = LoggerFactory.getLogger(TestSparkStreamingKafkaDataFormats.class);
+
+  private static List<KafkaServer> kafkaServers;
+  private static ZkClient zkClient;
+  private static EmbeddedZookeeper zkServer;
+  private static int port;
+  private static String zkConnect;
+
+  private static final String HOST = "localhost";
+  private static final int BROKER_1_ID = 0;
+  private static final int SINGLE_PARTITION = 1;
+  private static final int SINGLE_REPLICATION_FACTOR = 1;
+  private static final String TOPIC1 = "TestKafkaSource1";
+  private static String metadataBrokerList;
+
+  private static final int TIME_OUT = 5000;
+private static String originalTmpDir;
+
+  @BeforeClass
+  public static void setUp() {
+    //Init zookeeper
+    originalTmpDir = System.getProperty("java.io.tmpdir");
+    File testDir = new File("target", UUID.randomUUID().toString()).getAbsoluteFile();
+    Assert.assertTrue(testDir.mkdirs());
+    System.setProperty("java.io.tmpdir", testDir.getAbsolutePath());
+
+    zkConnect = TestZKUtils.zookeeperConnect();
+    zkServer = new EmbeddedZookeeper(zkConnect);
+
+    LOG.info("ZooKeeper log dir : " + zkServer.logDir().getAbsolutePath());
+    zkClient = new ZkClient(zkServer.connectString(), 30000, 30000, ZKStringSerializer$.MODULE$);
+    // setup Broker
+    port = TestUtils.choosePort();
+    kafkaServers = new ArrayList<>(3);
+    Properties props1 = TestUtils.createBrokerConfig(BROKER_1_ID, port, true);
+
+    kafkaServers.add(TestUtils.createServer(new KafkaConfig(props1), new MockTime()));
+    // create topic
+    AdminUtils.createTopic(zkClient, TOPIC1, SINGLE_PARTITION, SINGLE_REPLICATION_FACTOR, new Properties());
+    TestUtils.waitUntilMetadataIsPropagated(scala.collection.JavaConversions.asScalaBuffer(kafkaServers), TOPIC1, 0, TIME_OUT);
+
+    metadataBrokerList = "localhost:" + port;
+
+  }
+
+  @AfterClass
+  public static void tearDown() {
+    for(KafkaServer kafkaServer : kafkaServers) {
+      kafkaServer.shutdown();
+    }
+    zkClient.close();
+    zkServer.shutdown();
+    System.setProperty("java.io.tmpdir", originalTmpDir);
+  }
+
 
   @Test
   public void testProduceStringRecords() throws Exception {
     SourceRunner sourceRunner = new SourceRunner.Builder(KafkaDSource.class)
       .addOutputLane("lane")
       .setClusterMode(true)
-      .addConfiguration("metadataBrokerList", "dummyhost:1281")
+      .addConfiguration("metadataBrokerList", metadataBrokerList)
       .addConfiguration("zookeeperConnect", null)
       .addConfiguration("consumerGroup", null)
-      .addConfiguration("topic", "testProduceStringRecords")
+      .addConfiguration("topic", TOPIC1)
       .addConfiguration("maxWaitTime", 10000)
       .addConfiguration("dataFormat", DataFormat.TEXT)
       .addConfiguration("charset", "UTF-8")
@@ -98,12 +166,12 @@ public class TestSparkStreamingKafkaDataFormats {
     SourceRunner sourceRunner = new SourceRunner.Builder(KafkaDSource.class)
       .addOutputLane("lane")
       .setClusterMode(true)
-      .addConfiguration("metadataBrokerList", "dummyhost:1281")
+      .addConfiguration("metadataBrokerList", metadataBrokerList)
       .addConfiguration("zookeeperConnect", null)
       .addConfiguration("consumerGroup", null)
       .addConfiguration("maxBatchSize",1000)
       .addConfiguration("kafkaConsumerConfigs", null)
-      .addConfiguration("topic", "testProduceStringRecords")
+      .addConfiguration("topic", TOPIC1)
       .addConfiguration("maxWaitTime", 10000)
       .addConfiguration("dataFormat", DataFormat.JSON)
       .addConfiguration("jsonContent", JsonMode.MULTIPLE_OBJECTS)
@@ -127,7 +195,7 @@ public class TestSparkStreamingKafkaDataFormats {
       String jsonData = KafkaTestUtil.generateTestData(DataType.JSON, StreamingJsonParser.Mode.MULTIPLE_OBJECTS);
       th =
         createThreadForAddingBatch(sourceRunner,
-          new ArrayList<MessageAndPartition>(Arrays.asList(new MessageAndPartition(jsonData.getBytes(), "1".getBytes()))));
+          new ArrayList<>(Arrays.asList(new MessageAndPartition(jsonData.getBytes(), "1".getBytes()))));
       StageRunner.Output output = sourceRunner.runProduce(null, 10);
 
       String newOffset = output.getNewOffset();
@@ -150,12 +218,12 @@ public class TestSparkStreamingKafkaDataFormats {
     SourceRunner sourceRunner = new SourceRunner.Builder(KafkaDSource.class)
       .addOutputLane("lane")
       .setClusterMode(true)
-      .addConfiguration("metadataBrokerList", "dummyhost:1281")
+      .addConfiguration("metadataBrokerList", metadataBrokerList)
       .addConfiguration("zookeeperConnect", null)
       .addConfiguration("consumerGroup", null)
       .addConfiguration("maxBatchSize",1000)
       .addConfiguration("kafkaConsumerConfigs", null)
-      .addConfiguration("topic", "testProduceStringRecords")
+      .addConfiguration("topic", TOPIC1)
       .addConfiguration("maxWaitTime", 10000)
       .addConfiguration("dataFormat", DataFormat.JSON)
       .addConfiguration("jsonContent", JsonMode.ARRAY_OBJECTS)
@@ -179,7 +247,7 @@ public class TestSparkStreamingKafkaDataFormats {
       String jsonData = KafkaTestUtil.generateTestData(DataType.JSON, StreamingJsonParser.Mode.ARRAY_OBJECTS);
       th =
         createThreadForAddingBatch(sourceRunner,
-          new ArrayList<MessageAndPartition>(Arrays.asList(new MessageAndPartition(jsonData.getBytes(), "1".getBytes()))));
+          new ArrayList<>(Arrays.asList(new MessageAndPartition(jsonData.getBytes(), "1".getBytes()))));
       StageRunner.Output output = sourceRunner.runProduce(null, 10);
 
       String newOffset = output.getNewOffset();
@@ -201,12 +269,12 @@ public class TestSparkStreamingKafkaDataFormats {
     SourceRunner sourceRunner = new SourceRunner.Builder(KafkaDSource.class)
       .addOutputLane("lane")
       .setClusterMode(true)
-      .addConfiguration("metadataBrokerList", "dummyhost:1281")
+      .addConfiguration("metadataBrokerList", metadataBrokerList)
        .addConfiguration("zookeeperConnect", null)
       .addConfiguration("consumerGroup", null)
       .addConfiguration("maxBatchSize",1000)
       .addConfiguration("kafkaConsumerConfigs", null)
-      .addConfiguration("topic", "testProduceStringRecords")
+      .addConfiguration("topic", TOPIC1)
       .addConfiguration("maxWaitTime", 10000)
       .addConfiguration("dataFormat", DataFormat.JSON)
       .addConfiguration("jsonContent", JsonMode.ARRAY_OBJECTS)
@@ -252,12 +320,12 @@ public class TestSparkStreamingKafkaDataFormats {
     SourceRunner sourceRunner = new SourceRunner.Builder(KafkaDSource.class)
       .addOutputLane("lane")
       .setClusterMode(true)
-      .addConfiguration("metadataBrokerList", "dummyhost:1281")
+      .addConfiguration("metadataBrokerList", metadataBrokerList)
       .addConfiguration("zookeeperConnect", null)
       .addConfiguration("consumerGroup", null)
       .addConfiguration("maxBatchSize",1000)
       .addConfiguration("kafkaConsumerConfigs", null)
-      .addConfiguration("topic", "testProduceStringRecords")
+      .addConfiguration("topic", TOPIC1)
       .addConfiguration("maxWaitTime", 10000)
       .addConfiguration("dataFormat", DataFormat.XML)
       .addConfiguration("charset", "UTF-8")
@@ -305,12 +373,12 @@ public class TestSparkStreamingKafkaDataFormats {
     SourceRunner sourceRunner = new SourceRunner.Builder(KafkaDSource.class)
       .addOutputLane("lane")
       .setClusterMode(true)
-      .addConfiguration("metadataBrokerList", "dummyhost:1281")
+      .addConfiguration("metadataBrokerList", metadataBrokerList)
       .addConfiguration("zookeeperConnect", null)
       .addConfiguration("consumerGroup", null)
       .addConfiguration("maxBatchSize",1000)
       .addConfiguration("kafkaConsumerConfigs", null)
-      .addConfiguration("topic", "testProduceStringRecords")
+      .addConfiguration("topic", TOPIC1)
       .addConfiguration("maxWaitTime", 10000)
       .addConfiguration("dataFormat", DataFormat.XML)
       .addConfiguration("charset", "UTF-8")
@@ -357,12 +425,12 @@ public class TestSparkStreamingKafkaDataFormats {
     SourceRunner sourceRunner = new SourceRunner.Builder(KafkaDSource.class)
       .addOutputLane("lane")
       .setClusterMode(true)
-      .addConfiguration("metadataBrokerList", "dummyhost:1281")
+      .addConfiguration("metadataBrokerList", metadataBrokerList)
       .addConfiguration("zookeeperConnect", null)
       .addConfiguration("consumerGroup", null)
       .addConfiguration("maxBatchSize",1000)
       .addConfiguration("kafkaConsumerConfigs", null)
-      .addConfiguration("topic", "testProduceStringRecords")
+      .addConfiguration("topic", TOPIC1)
       .addConfiguration("consumerGroup", null)
       .addConfiguration("zookeeperConnect", "dummy")
       .addConfiguration("maxWaitTime", 10000)
