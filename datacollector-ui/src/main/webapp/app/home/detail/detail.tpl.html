@@ -113,7 +113,8 @@
 
   <div class="panel-body">
     <tabset class="detail-tabs-left tabs-left">
-      <tab ng-repeat="tab in detailPaneTabs track by $index" active="tab.active" disabled="tab.disabled">
+      <tab ng-repeat="tab in detailPaneTabs track by $index" active="tab.active" disabled="tab.disabled"
+           select="onTabSelect(tab)">
         <tab-heading>  <!--tooltip-placement="right" tooltip="{{tab.label}}" -->
           <i class="fa fa-exclamation-triangle icon-danger"
              ng-show="showWarning(tab)"></i>

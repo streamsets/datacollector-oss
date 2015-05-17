@@ -31,6 +31,7 @@ angular
        */
       onSelectSourceChange: function() {
         var selectedStage = $scope.selectedSource.selected;
+        $scope.trackEvent(pipelineConstant.STAGE_CATEGORY, pipelineConstant.ADD_ACTION, selectedStage.label, 1);
         $scope.pipelineConfig.issues = [];
         $scope.selectedSource = {};
         $scope.addStageInstance({
@@ -43,6 +44,7 @@ angular
        */
       onConnectStageChange: function() {
         var connectStage = $scope.connectStage.selected;
+        $scope.trackEvent(pipelineConstant.STAGE_CATEGORY, pipelineConstant.CONNECT_ACTION, connectStage.label, 1);
         $scope.addStageInstance({
           stage: connectStage,
           firstOpenLane: $scope.firstOpenLane
@@ -55,6 +57,7 @@ angular
        * Validate Pipeline
        */
       validatePipeline: function() {
+        $scope.trackEvent(pipelineConstant.BUTTON_CATEGORY, pipelineConstant.CLICK_ACTION, 'Validate Pipeline', 1);
         $scope.$storage.maximizeDetailPane = false;
         $scope.$storage.minimizeDetailPane = false;
         $rootScope.common.infoList.push({
@@ -80,6 +83,7 @@ angular
        *
        */
       startPipeline: function() {
+        $scope.trackEvent(pipelineConstant.BUTTON_CATEGORY, pipelineConstant.CLICK_ACTION, 'Start Pipeline', 1);
         if($rootScope.common.pipelineStatus.state !== 'RUNNING') {
           var startResponse;
           $scope.$storage.maximizeDetailPane = false;
@@ -115,6 +119,7 @@ angular
        *
        */
       stopPipeline: function() {
+        $scope.trackEvent(pipelineConstant.BUTTON_CATEGORY, pipelineConstant.CLICK_ACTION, 'Stop Pipeline', 1);
         var modalInstance = $modal.open({
           templateUrl: 'app/home/header/stop/stopConfirmation.tpl.html',
           controller: 'StopConfirmationModalInstanceController',
@@ -142,6 +147,7 @@ angular
        *
        */
       viewSnapshots: function() {
+        $scope.trackEvent(pipelineConstant.BUTTON_CATEGORY, pipelineConstant.CLICK_ACTION, 'View Snapshots', 1);
         var modalInstance = $modal.open({
           templateUrl: 'app/home/snapshot/modal/snapshotModal.tpl.html',
           controller: 'SnapshotModalInstanceController',
@@ -173,6 +179,7 @@ angular
        *
        */
       resetOffset: function() {
+        $scope.trackEvent(pipelineConstant.BUTTON_CATEGORY, pipelineConstant.CLICK_ACTION, 'Reset Offset', 1);
         var modalInstance = $modal.open({
           templateUrl: 'app/home/resetOffset/resetOffset.tpl.html',
           controller: 'ResetOffsetModalInstanceController',
@@ -192,6 +199,7 @@ angular
        * @param alert
        */
       onNotificationClick: function(alert) {
+        $scope.trackEvent(pipelineConstant.BUTTON_CATEGORY, pipelineConstant.CLICK_ACTION, 'Notification Message', 1);
         var edges = $scope.edges,
           edge;
         $scope.$storage.maximizeDetailPane = false;
@@ -221,6 +229,7 @@ angular
        * Delete Selected Stage Instance/Stream
        */
       deleteSelection: function() {
+        $scope.trackEvent(pipelineConstant.BUTTON_CATEGORY, pipelineConstant.CLICK_ACTION, 'Delete Selection', 1);
         $rootScope.$broadcast('deleteSelectionInGraph');
       },
 
@@ -228,6 +237,7 @@ angular
        * Duplicate Stage
        */
       duplicateStage: function() {
+        $scope.trackEvent(pipelineConstant.BUTTON_CATEGORY, pipelineConstant.CLICK_ACTION, 'Duplicate Stage', 1);
         if($scope.selectedType === pipelineConstant.STAGE_INSTANCE) {
           $scope.$emit('onPasteNode', $scope.selectedObject);
         }
@@ -237,6 +247,7 @@ angular
        * Auto arrange stages
        */
       autoArrange: function() {
+        $scope.trackEvent(pipelineConstant.BUTTON_CATEGORY, pipelineConstant.CLICK_ACTION, 'Auto Arrange', 1);
         pipelineService.autoArrange($scope.pipelineConfig);
         $scope.refreshGraph();
       },
@@ -245,6 +256,7 @@ angular
        * Delete Pipeline Configuration
        */
       deletePipelineConfig: function(pipelineInfo, $event) {
+        $scope.trackEvent(pipelineConstant.BUTTON_CATEGORY, pipelineConstant.CLICK_ACTION, 'Delete Pipeline', 1);
         pipelineService.deletePipelineConfigCommand(pipelineInfo, $event);
       },
 
@@ -252,6 +264,7 @@ angular
        * Duplicate Pipeline Configuration
        */
       duplicatePipelineConfig: function(pipelineInfo, $event) {
+        $scope.trackEvent(pipelineConstant.BUTTON_CATEGORY, pipelineConstant.CLICK_ACTION, 'Duplicate Pipeline', 1);
         pipelineService.duplicatePipelineConfigCommand(pipelineInfo, $event);
       },
 
@@ -259,6 +272,7 @@ angular
        * Import link command handler
        */
       importPipelineConfig: function(pipelineInfo, $event) {
+        $scope.trackEvent(pipelineConstant.BUTTON_CATEGORY, pipelineConstant.CLICK_ACTION, 'Import Pipeline', 1);
         pipelineService.importPipelineConfigCommand(pipelineInfo, $event);
       },
 
@@ -266,6 +280,7 @@ angular
        * Export link command handler
        */
       exportPipelineConfig: function(pipelineInfo, $event) {
+        $scope.trackEvent(pipelineConstant.BUTTON_CATEGORY, pipelineConstant.CLICK_ACTION, 'Export Pipeline', 1);
         api.pipelineAgent.exportPipelineConfig(pipelineInfo.name);
       }
     });

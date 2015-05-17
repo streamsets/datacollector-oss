@@ -1,5 +1,5 @@
 /**
- * Service for providing access to the Preview/Snapshot utility functions.
+ * Data Collector Constants.
  */
 angular.module('dataCollectorApp.common')
   .constant('pipelineConstant', {
@@ -21,5 +21,13 @@ angular.module('dataCollectorApp.common')
     STANDALONE: 'standalone',
     CLUSTER: 'cluster',
     SLAVE: 'slave',
-    NON_LIST_MAP_ROOT: 'root'
+    NON_LIST_MAP_ROOT: 'root',
+
+    BUTTON_CATEGORY: 'button',
+    TAB_CATEGORY: 'tab',
+    STAGE_CATEGORY: 'stage',
+    CLICK_ACTION: 'click',
+    SELECT_ACTION: 'select',
+    ADD_ACTION: 'add',
+    CONNECT_ACTION: 'connect'
   });

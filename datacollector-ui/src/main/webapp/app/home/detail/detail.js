@@ -243,6 +243,14 @@ angular
        */
       launchSettings: function() {
         $scope.$broadcast('launchSummarySettings');
+      },
+
+      /**
+       * On Tab Select
+       * @param tab
+       */
+      onTabSelect: function(tab) {
+        $scope.trackEvent(pipelineConstant.TAB_CATEGORY, pipelineConstant.SELECT_ACTION, tab.label, 1);
       }
     });
 

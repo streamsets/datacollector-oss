@@ -22,6 +22,7 @@ angular
       createMetricAlertRule: function() {
         if($scope.selectedType !== pipelineConstant.LINK) {
 
+          $scope.trackEvent(pipelineConstant.BUTTON_CATEGORY, pipelineConstant.CLICK_ACTION, 'Add Metric Alert Rule', 1);
           var modalInstance = $modal.open({
             templateUrl: 'app/home/detail/rules/metricAlert/editMetricAlertRule.tpl.html',
             controller: 'CreateMetricAlertRuleModalInstanceController',
@@ -44,7 +45,7 @@ angular
           });
 
           modalInstance.result.then(function (metricAlertRuleDefn) {
-
+            $scope.trackEvent(pipelineConstant.BUTTON_CATEGORY, pipelineConstant.CLICK_ACTION, 'Save Metric Alert Rule', 1);
             $scope.pipelineRules.metricsRuleDefinitions.push(metricAlertRuleDefn);
           }, function () {
 

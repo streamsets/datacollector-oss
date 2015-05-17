@@ -45,7 +45,7 @@ angular
 
     configuration.init().then(function() {
       if(configuration.isAnalyticsEnabled()) {
-        Analytics.trackPage('/collector/pipeline/' + routeParamPipelineName);
+        Analytics.trackPage('/collector/pipeline/pipelineName');
       }
     });
 
@@ -114,6 +114,8 @@ angular
         if($scope.isPipelineReadOnly) {
           return;
         }
+
+        $scope.trackEvent(pipelineConstant.STAGE_CATEGORY, pipelineConstant.ADD_ACTION, stage.label, 1);
 
         if(stage.type === pipelineConstant.SOURCE_STAGE_TYPE) {
           var sourceExists = false;
@@ -211,6 +213,7 @@ angular
        *
        */
       previewPipeline: function () {
+        $scope.trackEvent(pipelineConstant.BUTTON_CATEGORY, pipelineConstant.CLICK_ACTION, 'Preview Pipeline Configuration', 1);
         var modalInstance = $modal.open({
           templateUrl: 'app/home/preview/configuration/previewConfigModal.tpl.html',
           controller: 'PreviewConfigModalInstanceController',
@@ -224,6 +227,7 @@ angular
         });
 
         modalInstance.result.then(function () {
+          $scope.trackEvent(pipelineConstant.BUTTON_CATEGORY, pipelineConstant.CLICK_ACTION, 'Run Preview', 1);
           $scope.previewMode = true;
           $rootScope.$storage.maximizeDetailPane = false;
           $rootScope.$storage.minimizeDetailPane = false;
@@ -250,6 +254,7 @@ angular
        *
        */
       viewSnapshot: function(snapshotName) {
+        $scope.trackEvent(pipelineConstant.BUTTON_CATEGORY, pipelineConstant.CLICK_ACTION, 'View Snapshot', 1);
         $scope.snapshotMode = true;
         $scope.snapshotName = snapshotName;
         $rootScope.$storage.maximizeDetailPane = false;
@@ -528,6 +533,20 @@ angular
           .error(function(data, status, headers, config) {
             $rootScope.common.errors = [data];
           });
+      },
+
+      /**
+       * Google Analytics Track Event
+       *
+       * @param category Typically the object that was interacted with (e.g. button)
+       * @param action The type of interaction (e.g. click)
+       * @param label Useful for categorizing events (e.g. nav buttons)
+       * @param value Values must be non-negative. Useful to pass counts (e.g. 4 times)
+       */
+      trackEvent: function(category, action, label, value) {
+        if(configuration.isAnalyticsEnabled()) {
+          Analytics.trackEvent(category, action, label, value);
+        }
       }
     });
 

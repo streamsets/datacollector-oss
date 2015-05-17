@@ -28,6 +28,8 @@ angular
           updateFieldDataForStage($scope.selectedObject);
         }
 
+        $scope.trackEvent(pipelineConstant.BUTTON_CATEGORY, pipelineConstant.CLICK_ACTION, 'Add Data Rule', 1);
+
         var modalInstance = $modal.open({
           templateUrl: 'app/home/detail/rules/dataRules/editDataRule.tpl.html',
           controller: 'CreateDataRuleModalInstanceController',
@@ -56,6 +58,7 @@ angular
         });
 
         modalInstance.result.then(function (newDataRuleDefn) {
+          $scope.trackEvent(pipelineConstant.BUTTON_CATEGORY, pipelineConstant.CLICK_ACTION, 'Save Data Rule', 1);
           $scope.pipelineRules.dataRuleDefinitions.push(newDataRuleDefn);
         }, function () {
 
