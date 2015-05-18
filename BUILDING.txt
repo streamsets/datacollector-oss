@@ -69,17 +69,23 @@ Preparing a Release:
 
   $ mvn versions:set -Pdist,ui,docs,template-lib,cloudera -DnewVersion=<RELEASE_VERSION>-SNAPSHOT
 
+  If necessary update manually any POM that has not been updated (expected ones: e2e-tests & rbgen-maven-plugin)
+
 * Cut a release branch in GIT and tag master branch
 
 * Update POM versions in master branch
 
-  $ mvn versions:set -Pdist,ui,docs,template-lib,cloudera -DnewVersion=<NEW_DEV_VERSION>-SNAPSHOT
+  $ mvn versions:set -Drelease -DnewVersion=<NEW_DEV_VERSION>-SNAPSHOT
+
+  If necessary update manually any POM that has not been updated (expected ones: e2e-tests & rbgen-maven-plugin)
 
 * Stabilize the release branch
 
 * Update POM version in release branch with final version
 
-  $ mvn versions:set -Pdist,ui,docs,template-lib,cloudera -DnewVersion=<RELEASE_VERSION>
+  $ mvn versions:set -Drelease -DnewVersion=<RELEASE_VERSION>
+
+  If necessary update manually any POM that has not been updated (expected ones: e2e-tests & rbgen-maven-plugin)
 
 * Tag release branch
 
