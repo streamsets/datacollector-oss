@@ -22,7 +22,6 @@ import com.streamsets.pipeline.stage.lib.kinesis.AWSRegionChooserValues;
     description = "Reads data from Kinesis",
     icon = "kinesis.png"
 )
-//@RawSource(rawSourcePreviewer = KafkaRawSourcePreviewer.class, mimeType = "*/*")
 @ConfigGroups(value = Groups.class)
 @GenerateResourceBundle
 public class KinesisDSource extends DSourceOffsetCommitter {
@@ -31,7 +30,6 @@ public class KinesisDSource extends DSourceOffsetCommitter {
       type = ConfigDef.Type.MODEL,
       defaultValue = "US_WEST_2",
       label = "Endpoint",
-      description = "The AWS region you wish to use.",
       displayPosition = 10,
       group = "KINESIS"
   )
@@ -42,7 +40,6 @@ public class KinesisDSource extends DSourceOffsetCommitter {
       required = true,
       type = ConfigDef.Type.STRING,
       label = "Stream Name",
-      description = "The name of the stream in Kinesis",
       displayPosition = 20,
       group = "KINESIS"
   )
@@ -52,8 +49,8 @@ public class KinesisDSource extends DSourceOffsetCommitter {
       required = true,
       type = ConfigDef.Type.MODEL,
       defaultValue = "SDC_JSON",
-      label = "Input record format",
-      description = "Record format to use when receiving records from Kinesis.",
+      label = "Input Record Format",
+      description = "Record format to use when receiving records from Kinesis",
       displayPosition = 30,
       group = "KINESIS"
   )
@@ -65,7 +62,7 @@ public class KinesisDSource extends DSourceOffsetCommitter {
       type = ConfigDef.Type.NUMBER,
       defaultValue = "500",
       label = "Max Batch Size (messages)",
-      description = "Max number of records per batch. Note Kinesis will not return more than 2MB/s/shard.",
+      description = "Max number of records per batch. Kinesis will not return more than 2MB/s/shard.",
       displayPosition = 40,
       group = "KINESIS",
       min = 1,
@@ -77,7 +74,7 @@ public class KinesisDSource extends DSourceOffsetCommitter {
       required = true,
       type = ConfigDef.Type.NUMBER,
       defaultValue = "1000",
-      label = "Idle time between reads (ms)",
+      label = "Read Interval (ms)",
       description = "Time KCL should wait between requests per shard. Cannot be set below 200ms. >250ms recommended.",
       displayPosition = 50,
       group = "KINESIS",
@@ -118,7 +115,6 @@ public class KinesisDSource extends DSourceOffsetCommitter {
       required = true,
       type = ConfigDef.Type.STRING,
       label = "AWS Access Key ID",
-      description = "AWS Access Key ID in Kinesis with privileges to this Kinesis Stream",
       displayPosition = 70,
       group = "KINESIS"
   )
@@ -128,7 +124,6 @@ public class KinesisDSource extends DSourceOffsetCommitter {
       required = true,
       type = ConfigDef.Type.STRING,
       label = "AWS Secret Access Key",
-      description = "AWS Secret Access Key with privileges to this Kinesis Stream",
       displayPosition = 80,
       group = "KINESIS"
   )

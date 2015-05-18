@@ -23,14 +23,12 @@ import com.streamsets.pipeline.stage.lib.kinesis.AWSRegionChooserValues;
     icon = "kinesis.png")
 @ConfigGroups(value = Groups.class)
 @GenerateResourceBundle
-
 public class KinesisDTarget extends DTarget {
   @ConfigDef(
       required = true,
       type = ConfigDef.Type.MODEL,
       defaultValue = "US_WEST_2",
       label = "Endpoint",
-      description = "The AWS region you wish to use.",
       displayPosition = 10,
       group = "KINESIS"
   )
@@ -41,7 +39,6 @@ public class KinesisDTarget extends DTarget {
       required = true,
       type = ConfigDef.Type.STRING,
       label = "Stream Name",
-      description = "The name of the stream in Kinesis",
       displayPosition = 20,
       group = "KINESIS"
   )
@@ -51,8 +48,8 @@ public class KinesisDTarget extends DTarget {
       required = true,
       type = ConfigDef.Type.MODEL,
       defaultValue = "SDC_JSON",
-      label = "Output record format",
-      description = "Record format to use when publishing to Kinesis.",
+      label = "Output Record Format",
+      description = "Record format to use when publishing to Kinesis",
       displayPosition = 25,
       group = "KINESIS"
   )
@@ -64,7 +61,7 @@ public class KinesisDTarget extends DTarget {
       type = ConfigDef.Type.MODEL,
       defaultValue = "ROUND_ROBIN",
       label = "Partitioning Strategy",
-      description = "Partitioning strategy for partition key generation.",
+      description = "Partitioning strategy for partition key generation",
       displayPosition = 26,
       group = "KINESIS"
   )
@@ -77,7 +74,6 @@ public class KinesisDTarget extends DTarget {
       required = true,
       type = ConfigDef.Type.STRING,
       label = "AWS Access Key ID",
-      description = "AWS Access Key ID in Kinesis with privileges to this Kinesis Stream",
       displayPosition = 30,
       group = "KINESIS"
   )
@@ -87,7 +83,6 @@ public class KinesisDTarget extends DTarget {
       required = true,
       type = ConfigDef.Type.STRING,
       label = "AWS Secret Access Key",
-      description = "AWS Secret Access Key with privileges to this Kinesis Stream",
       displayPosition = 40,
       group = "KINESIS"
   )
