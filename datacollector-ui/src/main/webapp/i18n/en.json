@@ -187,7 +187,7 @@
     },
     "detailPane": {
       "alerts": "Alerts",
-      "batchesPerSecond": "( batches / sec)",
+      "batchesPerSecond": "( batches / sec )",
       "emailIDs": "Email IDs",
       "errors": "Errors",
       "badRecords": "Error Records",
@@ -249,7 +249,7 @@
       "pipelineRulesJSONData": "Pipeline Rules",
       "pipelineStatusJSONData": "Pipeline Status",
       "rawPreview": "Raw Preview",
-      "recordsPerSecond": "(records / sec)",
+      "recordsPerSecond": "( records / sec )",
       "restURL": "REST Response",
       "rules": "Rules",
       "rulesTab": {
@@ -330,8 +330,10 @@
         "currentStage": "Current Stage",
         "timeInCurrentStage": "Time in Current Stage",
         "timeOfLastReceivedRecord": "Last Record Received",
-        "batchStartTime": "Batch Start Time"
-
+        "batchStartTime": "Batch Start Time",
+        "stageBatchProcessingTimer": "Stage Batch Processing Timer (in seconds)",
+        "stageBatchProcessingTimerYAxis": "( Mean Timer Percentiles )",
+        "stageMemoryConsumed": "Stage Heap Memory Usage"
       }
     },
     "previewPane": {

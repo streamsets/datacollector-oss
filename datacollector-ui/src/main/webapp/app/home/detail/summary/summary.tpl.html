@@ -364,3 +364,70 @@
     </div>
   </div>
 </script>
+
+
+<script type="text/ng-template" id="summaryAllStageBatchTimerBarChartTemplate">
+  <div class="col-sm-12"
+       ng-if="selectedType === pipelineConstant.PIPELINE && common.sdcExecutionMode !== pipelineConstant.CLUSTER"
+       ng-controller="AllStageBatchTimerChartController">
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <span title="{{'home.detailPane.summaryTab.stageBatchProcessingTimer' | translate}}"
+              translate="home.detailPane.summaryTab.stageBatchProcessingTimer">Stage Batch Processing Timer (in seconds)</span>
+        <button type="button" class="close" aria-label="Close" ng-click="removeChart(chart, chartIndex)">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="panel-body">
+        <nvd3-discrete-bar-chart
+          data="chartData"
+          id="SummaryAllStageBatchTimerBarChartTemplateID"
+          height="250"
+          yaxislabel="{{'home.detailPane.summaryTab.stageBatchProcessingTimerYAxis' | translate}}"
+          yaxislabeldistance="40"
+          staggerLabels="true"
+          showXAxis="true"
+          showYAxis="true"
+          showValues="false"
+          showLegend="true"
+          tooltips="true"
+          tooltipcontent="getTooltipContent()"
+          margin="{left:50,top:20,bottom:40,right:20}">
+        </nvd3-discrete-bar-chart>
+      </div>
+    </div>
+  </div>
+</script>
+
+<script type="text/ng-template" id="summaryAllStageMemoryConsumedBarChartTemplate">
+  <div class="col-sm-12"
+       ng-if="selectedType === pipelineConstant.PIPELINE && common.sdcExecutionMode !== pipelineConstant.CLUSTER"
+       ng-controller="AllStageMemoryConsumedChartController">
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <span title="{{'home.detailPane.summaryTab.stageMemoryConsumed' | translate}}"
+              translate="home.detailPane.summaryTab.stageMemoryConsumed">Stage Heap Memory Usage</span>
+        <button type="button" class="close" aria-label="Close" ng-click="removeChart(chart, chartIndex)">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="panel-body">
+        <nvd3-discrete-bar-chart
+          data="chartData"
+          id="SummaryAllStageMemoryConsumedBarChartTemplateID"
+          height="250"
+          yaxislabeldistance="40"
+          yAxisTickFormat="sizeFormat()"
+          staggerLabels="true"
+          showXAxis="true"
+          showYAxis="true"
+          showValues="false"
+          showLegend="true"
+          tooltips="true"
+          tooltipcontent="getTooltipContent()"
+          margin="{left:60,top:20,bottom:40,right:20}">
+        </nvd3-discrete-bar-chart>
+      </div>
+    </div>
+  </div>
+</script>
