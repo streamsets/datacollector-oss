@@ -124,18 +124,21 @@ public class BaseKafkaSource extends BaseSource implements OffsetCommitter, Erro
 
   @Override
   protected List<ConfigIssue> validateConfigs() throws StageException {
-    List<ConfigIssue> issues;
+    List<ConfigIssue> issues = new ArrayList<>();
     if (getContext().isPreview() || !getContext().isClusterMode()) {
-      standaloneKafkaSource =
-        new StandaloneKafkaSource(zookeeperConnect, consumerGroup, topic, dataFormat, charset,
+      //preview can run only in standalone mode
+      standaloneKafkaSource = new StandaloneKafkaSource(zookeeperConnect, consumerGroup, topic, dataFormat, charset,
           produceSingleRecordPerMessage, maxBatchSize, maxWaitTime, kafkaConsumerConfigs, textMaxLineLen, jsonContent,
           jsonMaxObjectLen, csvFileFormat, csvHeader, csvMaxObjectLen, xmlRecordElement, xmlMaxObjectLen, logMode,
           logMaxObjectLen, logRetainOriginalLine, customLogFormat, regex, fieldPathsToGroupName, grokPatternDefinition,
           grokPattern, enableLog4jCustomLogFormat, log4jCustomLogFormat, onParseError, maxStackTraceLines);
-      issues = standaloneKafkaSource.validateConfigs(this.getInfo(), this.getContext());
+      issues.addAll(standaloneKafkaSource.validateConfigs(this.getInfo(), this.getContext()));
+      //Should validate cluster mode configs even though preview is run in standalone mode
+      if(getContext().isClusterMode()) {
+        issues.addAll(validateClusterModeConfigs());
+      }
     } else {
-      createInstanceClusterMode(CLUSTER_MODE_CLASS);
-      issues = clusterModeInstance.validateConfigs(this.getInfo(), this.getContext());
+      issues.addAll(validateClusterModeConfigs());
     }
     return issues;
   }
@@ -375,4 +378,10 @@ public class BaseKafkaSource extends BaseSource implements OffsetCommitter, Erro
       source.errorNotification(throwable);
     }
   }
+
+  private List<ConfigIssue> validateClusterModeConfigs() throws StageException {
+    createInstanceClusterMode(CLUSTER_MODE_CLASS);
+    return clusterModeInstance.validateConfigs(this.getInfo(), this.getContext());
+  }
+
 }

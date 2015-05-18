@@ -16,6 +16,7 @@ import com.streamsets.pipeline.config.JsonMode;
 import com.streamsets.pipeline.config.LogMode;
 import com.streamsets.pipeline.config.OnParseError;
 import com.streamsets.pipeline.lib.Errors;
+import com.streamsets.pipeline.lib.KafkaConnectionException;
 import com.streamsets.pipeline.lib.KafkaUtil;
 import com.streamsets.pipeline.lib.parser.log.RegExConfig;
 import com.streamsets.pipeline.stage.origin.kafka.BaseKafkaSource;
@@ -69,6 +70,9 @@ public class SparkStreamingKafkaSource extends BaseKafkaSource implements Offset
         //cache the partition count as parallelism for future use
         originParallelism = partitionCount;
       }
+    } catch (KafkaConnectionException e) {
+      issues.add(getContext().createConfigIssue(Groups.KAFKA.name(), "metadataBrokerList",
+        Errors.KAFKA_67, metadataBrokerList, e));
     } catch (StageException e) {
       issues.add(getContext().createConfigIssue(Groups.KAFKA.name(), "topic",
         Errors.KAFKA_41, topic, e.getMessage(), e));

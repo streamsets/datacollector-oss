@@ -205,11 +205,14 @@ public class TestUtil {
       try {
         //create an invalid pipeline
         pipelineStoreTask.create("invalid", "invalid cox its empty", "tag");
+        PipelineConfiguration pipelineConf = pipelineStoreTask.load("invalid", PIPELINE_REV);
+        PipelineConfiguration mockPipelineConf = MockStages.createPipelineConfigurationSourceProcessorTarget();
+        pipelineConf.setErrorStage(mockPipelineConf.getErrorStage());
 
         //create a valid pipeline
         pipelineStoreTask.create(MY_PIPELINE, "description", "tag");
-        PipelineConfiguration pipelineConf = pipelineStoreTask.load(MY_PIPELINE, PIPELINE_REV);
-        PipelineConfiguration mockPipelineConf = MockStages.createPipelineConfigurationSourceProcessorTarget();
+        pipelineConf = pipelineStoreTask.load(MY_PIPELINE, PIPELINE_REV);
+        mockPipelineConf = MockStages.createPipelineConfigurationSourceProcessorTarget();
         pipelineConf.setStages(mockPipelineConf.getStages());
         pipelineConf.setErrorStage(mockPipelineConf.getErrorStage());
         pipelineStoreTask.save(MY_PIPELINE, "admin", "tag", "description"

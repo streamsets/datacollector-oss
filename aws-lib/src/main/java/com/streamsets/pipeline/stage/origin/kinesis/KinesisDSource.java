@@ -8,6 +8,7 @@ package com.streamsets.pipeline.stage.origin.kinesis;
 import com.amazonaws.regions.Regions;
 import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.ConfigGroups;
+import com.streamsets.pipeline.api.ExecutionMode;
 import com.streamsets.pipeline.api.GenerateResourceBundle;
 import com.streamsets.pipeline.api.Source;
 import com.streamsets.pipeline.api.StageDef;
@@ -20,7 +21,8 @@ import com.streamsets.pipeline.stage.lib.kinesis.AWSRegionChooserValues;
     version = "1.0.0",
     label = "Kinesis Consumer",
     description = "Reads data from Kinesis",
-    icon = "kinesis.png"
+    icon = "kinesis.png",
+    execution = ExecutionMode.STANDALONE
 )
 @ConfigGroups(value = Groups.class)
 @GenerateResourceBundle

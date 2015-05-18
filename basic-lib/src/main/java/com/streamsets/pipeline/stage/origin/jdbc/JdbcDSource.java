@@ -7,6 +7,7 @@ package com.streamsets.pipeline.stage.origin.jdbc;
 
 import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.ConfigGroups;
+import com.streamsets.pipeline.api.ExecutionMode;
 import com.streamsets.pipeline.api.GenerateResourceBundle;
 import com.streamsets.pipeline.api.Source;
 import com.streamsets.pipeline.api.StageDef;
@@ -19,7 +20,8 @@ import java.util.Map;
     version = "1.0.0",
     label = "JDBC Consumer",
     description = "Reads data from a JDBC source.",
-    icon = "rdbms.png"
+    icon = "rdbms.png",
+    execution = ExecutionMode.STANDALONE
 )
 @ConfigGroups(value = Groups.class)
 @GenerateResourceBundle

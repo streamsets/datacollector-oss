@@ -8,6 +8,7 @@ package com.streamsets.pipeline.stage.origin.http;
 
 import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.ConfigGroups;
+import com.streamsets.pipeline.api.ExecutionMode;
 import com.streamsets.pipeline.api.GenerateResourceBundle;
 import com.streamsets.pipeline.api.Source;
 import com.streamsets.pipeline.api.StageDef;
@@ -22,7 +23,8 @@ import org.apache.commons.lang3.StringEscapeUtils;
   version = "1.0.0",
   label = "HTTP Client",
   description = "Uses an HTTP client to read records from an URL.",
-  icon="httpclient.png"
+  icon="httpclient.png",
+  execution = ExecutionMode.STANDALONE
 )
 
 @ConfigGroups(Groups.class)

@@ -8,21 +8,19 @@ package com.streamsets.pipeline.stage.origin.omniture;
 
 import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.ConfigGroups;
+import com.streamsets.pipeline.api.ExecutionMode;
 import com.streamsets.pipeline.api.GenerateResourceBundle;
 import com.streamsets.pipeline.api.Source;
 import com.streamsets.pipeline.api.StageDef;
 import com.streamsets.pipeline.api.ValueChooser;
-import com.streamsets.pipeline.config.DataFormat;
-import com.streamsets.pipeline.config.JsonMode;
-import com.streamsets.pipeline.config.JsonModeChooserValues;
 import com.streamsets.pipeline.configurablestage.DSource;
-import org.apache.commons.lang3.StringEscapeUtils;
 
 @StageDef(
     version = "1.0.0",
     label = "Omniture",
     description = "Retrieves Omniture reports via the REST API.",
-    icon="omniture_icon.png"
+    icon="omniture_icon.png",
+    execution = ExecutionMode.STANDALONE
 )
 
 @ConfigGroups(Groups.class)

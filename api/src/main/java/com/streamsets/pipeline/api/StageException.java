@@ -20,16 +20,22 @@ public class StageException extends Exception {
 
   private final ErrorCode errorCode;
   private final ErrorMessage errorMessage;
+  private final Object[] params;
 
   // last parameter can be an exception cause
   public StageException(ErrorCode errorCode, Object... params) {
     super(getCause(params));
     this.errorCode = errorCode;
+    this.params = params;
     errorMessage = new ErrorMessage(errorCode, params);
   }
 
   public ErrorCode getErrorCode() {
     return errorCode;
+  }
+
+  public Object[] getParams() {
+    return params;
   }
 
   @Override

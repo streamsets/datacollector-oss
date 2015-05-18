@@ -33,6 +33,7 @@ import java.lang.reflect.Field;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -115,7 +116,7 @@ public class PipelineConfigurationValidator {
       canPreview &= validatePipelineConfiguration(StageIssueCreator.getStageCreator());
       canPreview &= validatePipelineLanes(StageIssueCreator.getStageCreator());
       canPreview &= validateErrorStage();
-      canPreview &= validateStagesExecutionMode(StageIssueCreator.getStageCreator());
+      canPreview &= validateStagesExecutionMode(StageIssueCreator.getStageCreator(), pipelineConfiguration.getStages());
 
       if (LOG.isTraceEnabled() && issues.hasIssues()) {
         for (Issue issue : issues.getPipelineIssues()) {
@@ -136,12 +137,12 @@ public class PipelineConfigurationValidator {
     return !issues.hasIssues();
   }
 
-  private boolean validateStagesExecutionMode(StageIssueCreator issueCreator) {
+  private boolean validateStagesExecutionMode(StageIssueCreator issueCreator, List<StageConfiguration> stageConfigs) {
     boolean canPreview = true;
     ConfigConfiguration conf = pipelineConfiguration.getConfiguration(PipelineDefConfigs.EXECUTION_MODE_CONFIG);
     ExecutionMode executionMode = (conf == null) ? ExecutionMode.STANDALONE
                                                  : ExecutionMode.valueOf((String) conf.getValue());
-    for (StageConfiguration stageConf : pipelineConfiguration.getStages()) {
+    for (StageConfiguration stageConf : stageConfigs) {
       StageDefinition stageDef = stageLibrary.getStage(stageConf.getLibrary(), stageConf.getStageName(),
                                                        stageConf.getStageVersion());
       if (stageDef != null) {
@@ -776,7 +777,9 @@ public class PipelineConfigurationValidator {
       preview = false;
     } else {
       StageConfiguration errorStage = pipelineConfiguration.getErrorStage();
-      preview &= validateStageConfiguration(false, errorStage, true, StageIssueCreator.getErrorStageCreator());
+      StageIssueCreator errorStageCreator = StageIssueCreator.getErrorStageCreator();
+      preview &= validateStageConfiguration(false, errorStage, true, errorStageCreator);
+      preview &= validateStagesExecutionMode(errorStageCreator, Arrays.asList(errorStage));
     }
     return preview;
   }

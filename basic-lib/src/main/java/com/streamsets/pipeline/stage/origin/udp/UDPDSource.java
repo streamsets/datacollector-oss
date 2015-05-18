@@ -7,6 +7,7 @@ package com.streamsets.pipeline.stage.origin.udp;
 
 import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.ConfigGroups;
+import com.streamsets.pipeline.api.ExecutionMode;
 import com.streamsets.pipeline.api.GenerateResourceBundle;
 import com.streamsets.pipeline.api.Source;
 import com.streamsets.pipeline.api.StageDef;
@@ -20,7 +21,8 @@ import java.util.List;
   version = "1.0.0",
   label = "UDP Source",
   description = "Listens for UDP messages on a single port",
-  icon="udp.png"
+  icon="udp.png",
+  execution = ExecutionMode.STANDALONE
 )
 
 @ConfigGroups(Groups.class)
