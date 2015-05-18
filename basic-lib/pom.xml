@@ -24,6 +24,7 @@
   <properties>
     <commons-io.version>2.4</commons-io.version>
     <commons-lang.version>3.4</commons-lang.version>
+    <geoip2.version>2.1.0</geoip2.version>
     <guava.version>18.0</guava.version>
     <jackson.version>2.4.3</jackson.version>
     <jersey.version>2.17</jersey.version>
@@ -129,6 +130,7 @@
       <artifactId>oauth1-client</artifactId>
       <version>${jersey.version}</version>
     </dependency>
+
     <dependency>
       <groupId>org.apache.commons</groupId>
       <artifactId>commons-lang3</artifactId>
@@ -162,6 +164,12 @@
       <artifactId>jersey-test-framework-provider-grizzly2</artifactId>
       <version>${jersey.version}</version>
       <scope>test</scope>
+    </dependency>
+
+    <dependency>
+        <groupId>com.maxmind.geoip2</groupId>
+        <artifactId>geoip2</artifactId>
+        <version>${geoip2.version}</version>
     </dependency>
 
   </dependencies>
