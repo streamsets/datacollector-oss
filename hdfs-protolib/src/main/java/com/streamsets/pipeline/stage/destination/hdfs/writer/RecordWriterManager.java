@@ -5,6 +5,10 @@
  */
 package com.streamsets.pipeline.stage.destination.hdfs.writer;
 
+import com.google.common.cache.Cache;
+import com.google.common.cache.CacheBuilder;
+import com.google.common.cache.CacheLoader;
+import com.google.common.cache.LoadingCache;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.Target;
@@ -37,6 +41,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.TimeZone;
 import java.util.UUID;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeUnit;
 
 public class RecordWriterManager {
   private final static Logger LOG = LoggerFactory.getLogger(RecordWriterManager.class);
@@ -70,6 +76,8 @@ public class RecordWriterManager {
   private String keyEL;
   private DataGeneratorFactory generatorFactory;
   private Target.Context context;
+  private final Path tempFilePath;
+  private final LoadingCache<String, Path> dirPathCache;
 
   public RecordWriterManager(URI hdfsUri, Configuration hdfsConf, String uniquePrefix, String dirPathTemplate,
       TimeZone timeZone, long cutOffSecs, long cutOffSizeBytes, long cutOffRecords, HdfsFileType fileType,
@@ -91,6 +99,16 @@ public class RecordWriterManager {
     this.context = context;
     dirPathTemplateElEval = context.createELEval("dirPathTemplate");
     getCeilingDateBasedOnTemplate(dirPathTemplate, timeZone, new Date());
+
+    // we use/reuse Path as they are expensive to create (it increases the performance by at least 3%)
+    tempFilePath = new Path(getTempFileName());
+    dirPathCache = CacheBuilder.newBuilder().expireAfterAccess(1, TimeUnit.MINUTES).build(
+        new CacheLoader<String, org.apache.hadoop.fs.Path>() {
+          @Override
+          public Path load(String key) throws Exception {
+            return new Path(key, tempFilePath);
+          }
+        });
   }
 
   public long getCutOffMillis() {
@@ -137,7 +155,15 @@ public class RecordWriterManager {
   public Path getPath(Date recordDate, Record record) throws StageException {
     // runUuid is fixed for the current pipeline run. it avoids collisions with other SDCs running the same/similar
     // pipeline
-    return new Path(getDirPath(recordDate, record), getTempFileName());
+    try {
+      return dirPathCache.get(getDirPath(recordDate, record));
+    } catch (ExecutionException ex) {
+      if (ex.getCause() instanceof StageException) {
+        throw (StageException) ex.getCause();
+      } else{
+        throw new StageException(Errors.HADOOPFS_24, ex.getMessage(), ex);
+      }
+    }
   }
 
   Path renameToFinalName(FileSystem fs, Path tempPath) throws IOException {

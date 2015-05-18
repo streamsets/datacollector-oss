@@ -38,6 +38,9 @@ public enum Errors implements ErrorCode {
   HADOOPFS_21("Invalid late record directory template: {}"),
   HADOOPFS_22("Invalid URI '{}': {}"),
   HADOOPFS_23("Could not commit old files: {}"),
+
+  HADOOPFS_24("Could nto evaluate EL for directory path: {}"),
+
   ;
   private final String msg;
 
