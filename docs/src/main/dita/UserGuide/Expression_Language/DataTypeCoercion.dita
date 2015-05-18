@@ -3,7 +3,7 @@
 <concept id="concept_fmr_ggh_fr">
  <title>Data Type Coercion</title>
  <shortdesc>When an expression requires it, the expression language attempts implicit data type
-  conversion - a.k.a data type coercion. When coercion is not possible, the <ph
+  conversion - a.k.a. data type coercion. When coercion is not possible, the <ph
    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> passes the
   error records to the stage for error handling.</shortdesc>
  <conbody>

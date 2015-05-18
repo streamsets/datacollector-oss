@@ -57,7 +57,7 @@
             <draft-comment author="Loretta">Use the following for invoking the expression editor. So
                   far, using in Config Expression Evaluator, Config Stream Selector, and Expression
                   Editor:</draft-comment>
-            <p id="EEditor">Optionally, click <uicontrol>Ctrl + Spacebar</uicontrol> for help with
+            <p id="EEditor">Optionally, click <uicontrol>Ctrl + Space Bar</uicontrol> for help with
                   creating the expression. </p>
             <p>
                   <draft-comment author="Loretta">Using the following in the Configuring topic for

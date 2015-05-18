@@ -16,7 +16,7 @@
             use a Type Converter to ensure that fields have data of the appropriate type.
           </note></li>
         <li>Non-null values that are not modified in the processor retain their original type.</li>
-        <li>Numeric data that is modified becames a Double, other types of data retain their
+        <li>Numeric data that is modified becomes a Double, other types of data retain their
           original type.</li>
       </ul></p>
  </conbody>

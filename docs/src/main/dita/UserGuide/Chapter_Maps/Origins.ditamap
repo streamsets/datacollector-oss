@@ -9,7 +9,7 @@
   <topicref href="../Origins/PreviewingRawSourceData.dita"/></topicref>
   <topicref href="../Origins/Directory.dita" chunk="to-content">
    <topicmeta><shortdesc></shortdesc></topicmeta>
-   <topicref href="../Origins/Directory_FirstFile.dita"/>
+   <topicref href="../Origins/Directory_FileProcessing.dita"/>
    <topicref href="../Origins/Directory-BufferLimit.dita"/>
    <topicref href="../Origins/Directory-DataFormat.dita">
     <topicref href="../Origins/LogFormats.dita"/>

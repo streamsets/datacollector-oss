@@ -15,9 +15,9 @@
                 md5sum on Linux. </p>
             <p>For basic and form authentication, you can encrypt the password. For example:
                 <codeblock>echo -n "&lt;password>" | md5</codeblock></p>
-            <p>For digest authentication, you can hash the combination of
-                &lt;username>:&lt;realm>:&lt;password>. For example:
-                <codeblock>echo -n "&lt;username>:&lt;realm>:&lt;password>" | md5</codeblock></p>
+            <p>For digest authentication, you can hash the combination of &lt;user
+                name>:&lt;realm>:&lt;password>. For example:
+                <codeblock>echo -n "&lt;user name>:&lt;realm>:&lt;password>" | md5</codeblock></p>
         </context>
         <steps id="steps_ody_3q4_1r">
             <step>
@@ -34,7 +34,7 @@
             <step>
                 <cmd>For each new user, add a user definition using the following format:</cmd>
                 <info>
-                    <codeblock>&lt;username>: &lt;password>, user, &lt;role> [, &lt;additional role>, &lt;additional role>...]</codeblock>
+                    <codeblock>&lt;user name>: &lt;password>, user, &lt;role> [, &lt;additional role>, &lt;additional role>...]</codeblock>
                 </info>
                 <info>
                     <note>Assign one or more roles for each user. Be sure to include "user" in every

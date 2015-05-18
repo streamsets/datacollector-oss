@@ -5,11 +5,16 @@
  <shortdesc>Directory processes files in a directory that match the configured file name pattern. </shortdesc>
  <conbody>
   <p><indexterm>First processing<indexterm>for Directory</indexterm></indexterm><indexterm>Directory
-                                        origin<indexterm>file processing</indexterm></indexterm>When
-                        you define a first file to process, it starts processing with the specified
-                        file and continues processing files in naturally ascending order. When you
-                        do not specify a first file, Directory processes all files in the directory
-                        with that match the file name pattern.</p>
+                                        origin<indexterm>file
+                                processing</indexterm></indexterm><indexterm>first file to
+                                        process<indexterm>Directory
+                                property</indexterm></indexterm><indexterm>file name
+                                        pattern<indexterm>Directory
+                        property</indexterm></indexterm>When you define a first file to process, it
+                        starts processing with the specified file and continues processing files in
+                        naturally ascending order. When you do not specify a first file, Directory
+                        processes all files in the directory with that match the file name
+                        pattern.</p>
                 <p>Configure a first file for processing when you want Directory to ignore older
                         files in the directory.</p>
   <p>For example, the file directory includes the following files: File.log, File1.log, File2.log,

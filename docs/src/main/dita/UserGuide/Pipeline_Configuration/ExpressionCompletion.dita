@@ -4,7 +4,7 @@
  <title>Expression Completion in Properties</title>
  <shortdesc>You can use the expression language in any stage or pipeline property that represents a
     numeric or string value. Expression completion provides a list of expression elements that are
-    valid for use at that location. Use <uicontrol>Ctrl + Spacebar</uicontrol> to invoke expression
+    valid for use at that location. Use <uicontrol>Ctrl + Space Bar</uicontrol> to invoke expression
     completion for help with writing an expression or condition.</shortdesc>
  <conbody>
     <p><indexterm>pipelines<indexterm>expression

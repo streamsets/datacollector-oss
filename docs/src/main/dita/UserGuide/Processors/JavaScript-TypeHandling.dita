@@ -25,7 +25,7 @@
      <dd>
       <ul id="ul_u3c_vsw_tr">
        <li>Non-null values that are not modified in the processor retain their original type.</li>
-       <li>Numeric data that is modified becames a Double.</li>
+       <li>Numeric data that is modified becomes a Double.</li>
        <li>Other modified data retains their original type.</li>
       </ul>
      </dd>

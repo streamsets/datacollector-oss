@@ -4,7 +4,7 @@
  <title>Data Formats</title>
  <shortdesc></shortdesc>
  <conbody>
-  <p><indexterm>data formats<indexterm>for Kafka Consuemr</indexterm></indexterm><indexterm>Kafka
+  <p><indexterm>data formats<indexterm>for Kafka Consumer</indexterm></indexterm><indexterm>Kafka
     Consumer origin<indexterm>data formats</indexterm></indexterm>The Kafka Consumer origin
    processes data differently based on the type of data in the file. Kafka Consumer can process the
    following types of data:<draft-comment author="Loretta">Updates to this section should be ported

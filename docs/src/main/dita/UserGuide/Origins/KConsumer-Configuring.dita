@@ -81,7 +81,7 @@
                                         </p></entry>
                                 </row>  <row>
                                     <entry>Consumer Group</entry>
-                                    <entry>Kakfa consumer group that the <ph
+                                    <entry>Kafka consumer group that the <ph
                                             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
                                         /> is a member of.</entry>
                                 </row>

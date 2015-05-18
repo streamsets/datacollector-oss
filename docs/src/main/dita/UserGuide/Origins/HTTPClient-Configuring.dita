@@ -135,7 +135,7 @@
                                         </ul></entry>
                                 </row>
                                 <row>
-                                    <entry>Entity Delimeter</entry>
+                                    <entry>Entity Delimiter</entry>
                                     <entry>Delimiter to indicate the end of a JSON record, such as
                                         \n or \r.  Used when processing multiple JSON objects.
                                     </entry>

@@ -12,7 +12,7 @@
         <li>Flume - Writes data to Flume.</li>
         <li>Hadoop FS - Writes data to a file system on Hadoop.</li>
         <li>HBase - Writes data to an HBase cluster.</li>
-        <li>Kafka Producer - Writes data to a Kakfa cluster.</li>
+        <li>Kafka Producer - Writes data to a Kafka cluster.</li>
         <li>Kinesis Producer - Writes data to a Kinesis cluster.</li>
         <li>Solr - Writes data to a Solr node or cluster.</li>
         <li>To Error - Passes records to the pipeline for error handling.</li>
