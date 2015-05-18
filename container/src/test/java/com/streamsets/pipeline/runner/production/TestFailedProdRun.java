@@ -6,6 +6,7 @@
 package com.streamsets.pipeline.runner.production;
 
 import com.streamsets.pipeline.api.BatchMaker;
+import com.streamsets.pipeline.api.ErrorListener;
 import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
@@ -20,6 +21,7 @@ import com.streamsets.pipeline.runner.PipelineRuntimeException;
 import com.streamsets.pipeline.runner.SourceOffsetTracker;
 import com.streamsets.pipeline.snapshotstore.impl.FileSnapshotStore;
 import com.streamsets.pipeline.util.Configuration;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
@@ -68,6 +70,55 @@ public class TestFailedProdRun {
     ProductionPipeline pipeline = new ProductionPipelineBuilder(MockStages.createStageLibrary(),
         PIPELINE_NAME, REVISION, runtimeInfo, pipelineConfiguration).build(runner, tracker, null);
 
+  }
+
+
+  private static class ErrorListeningSource extends BaseSource implements ErrorListener {
+    static Throwable capturedError;
+    static RuntimeException thrownError;
+
+    @Override
+    public void errorNotification(Throwable throwable) {
+      capturedError = throwable;
+    }
+
+    @Override
+    public String produce(String lastSourceOffset, int maxBatchSize, BatchMaker batchMaker) throws StageException {
+      if (thrownError != null) {
+        throw thrownError;
+      }
+      return null;
+    }
+  }
+
+  static class SomeException extends RuntimeException {
+    SomeException(String msg) {
+      super(msg);
+    }
+  }
+
+  @Test
+  public void testPipelineError() throws PipelineRuntimeException, StageException {
+    String msg = "ERROR YALL";
+    ErrorListeningSource.thrownError = new SomeException(msg);
+    RuntimeInfo runtimeInfo = Mockito.mock(RuntimeInfo.class);
+    Mockito.when(runtimeInfo.getId()).thenReturn("id");
+    MockStages.setSourceCapture(new ErrorListeningSource());
+    SourceOffsetTracker tracker = Mockito.mock(SourceOffsetTracker.class);
+    BlockingQueue<Object> productionObserveRequests = new ArrayBlockingQueue<>(100, true /*FIFO*/);
+    ProductionPipelineRunner runner = new ProductionPipelineRunner(runtimeInfo, Mockito.mock(FileSnapshotStore.class),
+      DeliveryGuarantee.AT_MOST_ONCE, PIPELINE_NAME, REVISION, productionObserveRequests, new Configuration(),
+      new MemoryLimitConfiguration());
+    PipelineConfiguration pipelineConfiguration = MockStages.createPipelineConfigurationSourceProcessorTarget();
+    ProductionPipeline pipeline = new ProductionPipelineBuilder(MockStages.createStageLibrary(),
+      PIPELINE_NAME, REVISION, runtimeInfo, pipelineConfiguration).build(runner, tracker, null);
+    try {
+      pipeline.run();
+    } catch (SomeException ex) {
+      Assert.assertSame(ex, ErrorListeningSource.thrownError);
+    }
+    Assert.assertSame(ErrorListeningSource.thrownError, ErrorListeningSource.capturedError);
+    Assert.assertEquals(msg, ErrorListeningSource.capturedError.getMessage());
   }
 
 }

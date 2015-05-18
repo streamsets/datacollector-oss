@@ -22,4 +22,9 @@ public interface SparkStreamingSource {
    */
   long getRecordsProduced();
 
+  /**
+   * Return true if a unrecoverable error has occured
+   * @return
+   */
+  boolean inErrorState();
 }

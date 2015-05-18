@@ -5,6 +5,7 @@
 package com.streamsets.pipeline.stage.origin.spark;
 
 import com.streamsets.pipeline.api.BatchMaker;
+import com.streamsets.pipeline.api.ErrorListener;
 import com.streamsets.pipeline.api.OffsetCommitter;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
@@ -29,7 +30,7 @@ import java.util.Map;
 /**
  * Ingests kafka produce data from spark streaming
  */
-public class SparkStreamingKafkaSource extends BaseKafkaSource implements OffsetCommitter, SparkStreamingSource {
+public class SparkStreamingKafkaSource extends BaseKafkaSource implements OffsetCommitter, SparkStreamingSource, ErrorListener {
   private static final Logger LOG = LoggerFactory.getLogger(SparkStreamingKafkaSource.class);
 
   private SparkStreamingQueue sparkStreamingQueue;
@@ -124,4 +125,13 @@ public class SparkStreamingKafkaSource extends BaseKafkaSource implements Offset
     sparkStreamingQueue.putData(batch);
   }
 
+  @Override
+  public void errorNotification(Throwable throwable) {
+    sparkStreamingQueueConsumer.errorNotification(throwable);
+  }
+
+  @Override
+  public boolean inErrorState() {
+    return sparkStreamingQueue.inErrorState();
+  }
 }

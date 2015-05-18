@@ -32,4 +32,8 @@ public class EmbeddedSDC {
   public void setSource(SparkStreamingSource source) {
     this.source = source;
   }
+
+  public boolean inErrorState() {
+    return source != null && source.inErrorState();
+  }
 }

@@ -28,6 +28,7 @@ public class SparkStreamingQueue {
   private static final AtomicInteger INSTANCE_COUNTER = new AtomicInteger();
   private final SynchronousQueue<Object> queue = new SynchronousQueue<>();
   private final int instanceId;
+  private Throwable pipelineError;
 
   public SparkStreamingQueue() {
     instanceId = INSTANCE_COUNTER.incrementAndGet();
@@ -48,7 +49,24 @@ public class SparkStreamingQueue {
     if(IS_TRACE_ENABLED) {
       LOG.trace("{}: {}: putData batch of size: {}", instanceId, Thread.currentThread().getName(), batch.size());
     }
+    // check for an error before we call put
+    // should not occur unless the source.produce
+    // throws an error before getData is called
+    // which is a small window
+    Throwable error;
+    error = pipelineError;
+    if (error != null) {
+      throw Throwables.propagate(error);
+    }
     queue.put(batch);
+    // re-check for an error state after we call put since
+    // put is a blocking operation, since the pipeline
+    // takes some time to run, most errors will be caught
+    // in the block below where we poll from the queue
+    error = pipelineError;
+    if (error != null) {
+      throw Throwables.propagate(error);
+    }
     if (batch.isEmpty()) {
       LOG.debug("Received empty batch from spark");
     } else {
@@ -87,7 +105,12 @@ public class SparkStreamingQueue {
     if(IS_TRACE_ENABLED) {
       LOG.trace("{}: {}: putError", instanceId, Thread.currentThread().getName());
     }
+    pipelineError = throwable;
     queue.put(throwable);
+  }
+
+  public boolean inErrorState() {
+    return pipelineError != null;
   }
 
 }

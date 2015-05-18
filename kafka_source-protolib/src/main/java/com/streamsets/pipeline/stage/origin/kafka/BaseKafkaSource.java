@@ -7,6 +7,7 @@ package com.streamsets.pipeline.stage.origin.kafka;
 
 import com.streamsets.pipeline.BootstrapSpark;
 import com.streamsets.pipeline.api.BatchMaker;
+import com.streamsets.pipeline.api.ErrorListener;
 import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.OffsetCommitter;
 import com.streamsets.pipeline.api.Record;
@@ -42,7 +43,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class BaseKafkaSource extends BaseSource implements OffsetCommitter {
+public class BaseKafkaSource extends BaseSource implements OffsetCommitter, ErrorListener {
   private static final Logger LOG = LoggerFactory.getLogger(BaseKafkaSource.class);
   private static final String CLUSTER_MODE_CLASS = "com.streamsets.pipeline.stage.origin.spark.SparkStreamingKafkaSource";
   protected final String topic;
@@ -361,6 +362,17 @@ public class BaseKafkaSource extends BaseSource implements OffsetCommitter {
       return clusterModeInstance;
     } else {
       return standaloneKafkaSource;
+    }
+  }
+
+  @Override
+  public void errorNotification(Throwable throwable) {
+    BaseKafkaSource source = getSource();
+    if (source == null) {
+      String msg = "Source is null when throwing to handle error notification: " + throwable;
+      LOG.error(msg, throwable);
+    } else {
+      source.errorNotification(throwable);
     }
   }
 }

@@ -88,6 +88,17 @@ public class SparkStreamingQueueConsumer {
     }
   }
 
+  public void errorNotification(Throwable throwable) {
+    String msg = "Received error notification: " + throwable;
+    LOG.error(msg, throwable);
+    try {
+      queue.putError(throwable);
+    } catch (InterruptedException ex) {
+      LOG.error("Interrupted while putting error on queue: " + throwable, ex);
+      Thread.currentThread().interrupt();
+    }
+  }
+
   @VisibleForTesting
   public String getLastCommittedOffset() {
     return lastCommittedOffset;

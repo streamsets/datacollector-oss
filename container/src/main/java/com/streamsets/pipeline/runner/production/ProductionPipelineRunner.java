@@ -13,7 +13,9 @@ import com.codahale.metrics.Timer;
 import com.google.common.base.Preconditions;
 import com.google.common.base.Throwables;
 import com.google.common.collect.EvictingQueue;
+import com.streamsets.pipeline.api.ErrorListener;
 import com.streamsets.pipeline.api.Record;
+import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.impl.ErrorMessage;
 import com.streamsets.pipeline.api.impl.Utils;
@@ -174,9 +176,24 @@ public class ProductionPipelineRunner implements PipelineRunner {
         }
       } catch (Throwable throwable) {
         sendPipelineErrorNotificationRequest(throwable);
+        errorNotification(pipes, throwable);
         Throwables.propagateIfInstanceOf(throwable, StageException.class);
         Throwables.propagateIfInstanceOf(throwable, PipelineRuntimeException.class);
         Throwables.propagate(throwable);
+      }
+    }
+  }
+
+  private void errorNotification(Pipe[] pipes, Throwable throwable) throws StageException {
+    for (Pipe pipe : pipes) {
+      Stage stage = pipe.getStage().getStage();
+      if (stage instanceof ErrorListener) {
+        try {
+          ((ErrorListener) stage).errorNotification(throwable);
+        } catch (Exception ex) {
+          String msg = Utils.format("Error in calling ErrorListenerStage {}: {}", stage.getClass().getName(), ex);
+          LOG.error(msg, ex);
+        }
       }
     }
   }

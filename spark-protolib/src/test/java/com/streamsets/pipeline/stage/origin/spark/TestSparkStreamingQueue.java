@@ -5,7 +5,6 @@
  */
 package com.streamsets.pipeline.stage.origin.spark;
 
-import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.lib.util.ThreadUtil;
 import org.junit.Assert;
@@ -16,8 +15,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
 import java.util.Random;
 
 public class TestSparkStreamingQueue {
@@ -40,6 +37,26 @@ public class TestSparkStreamingQueue {
     if (sourceRunner != null) {
       sourceRunner.stop = true;
       sourceRunner.interrupt();
+    }
+  }
+
+  static class SomeException extends RuntimeException {
+    SomeException(String msg) {
+      super(msg);
+    }
+  }
+
+  @Test(timeout = 60000)
+  public void testErrorHanding() throws InterruptedException{
+    String msg = "ERROR YAR";
+    SomeException expectedException = new SomeException(msg);
+    sourceRunner.pipelineError = expectedException;
+    sourceRunner.start();
+    Utils.checkState(ThreadUtil.sleep(100), "Interrupted while sleeping");
+    try {
+      queue.putData(Arrays.asList(1));
+    } catch (SomeException ex) {
+      Assert.assertSame(ex, expectedException);
     }
   }
 
@@ -94,7 +111,11 @@ public class TestSparkStreamingQueue {
 
   private static class MockSourceRunner extends Thread {
     SparkStreamingQueueConsumer source;
-    Throwable throwable;
+    Throwable capturedThrowable;
+    /**
+     * Simulates an error thrown during pipeline execution
+     */
+    Throwable pipelineError;
     volatile boolean stop;
     volatile int iterations;
 
@@ -106,11 +127,14 @@ public class TestSparkStreamingQueue {
     public void run() {
       try {
         for (; !stop; iterations++) {
+          if (pipelineError != null) {
+            source.errorNotification(pipelineError);
+          }
           OffsetAndResult offsetAndResult = source.produce(MAX_WAIT_TIME);
           source.commit(offsetAndResult.getOffset());
         }
       } catch (Throwable throwable) {
-        this.throwable = throwable;
+        this.capturedThrowable = throwable;
         if (throwable instanceof InterruptedException) {
           LOG.info("Interrupted while getting data from queue: " + throwable, throwable);
         } else {

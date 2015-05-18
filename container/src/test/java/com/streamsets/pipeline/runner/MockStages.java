@@ -10,6 +10,7 @@ import com.google.common.collect.Lists;
 import com.streamsets.pipeline.api.Batch;
 import com.streamsets.pipeline.api.BatchMaker;
 import com.streamsets.pipeline.api.ConfigDef;
+import com.streamsets.pipeline.api.ErrorListener;
 import com.streamsets.pipeline.api.ExecutionMode;
 import com.streamsets.pipeline.api.OffsetCommitter;
 import com.streamsets.pipeline.api.Processor;
@@ -88,7 +89,7 @@ public class MockStages {
     errorCapture = t;
   }
 
-  public static class MSource implements Source {
+  public static class MSource implements Source, ErrorListener {
 
     @Override
     public List<ConfigIssue> validateConfigs(Info info, Context context) throws StageException {
@@ -124,6 +125,13 @@ public class MockStages {
     @Override
     public int getParallelism() {
       return 1;
+    }
+
+    @Override
+    public void errorNotification(Throwable throwable) {
+      if (sourceCapture != null && sourceCapture instanceof ErrorListener) {
+        ((ErrorListener)sourceCapture).errorNotification(throwable);
+      }
     }
   }
 
@@ -203,6 +211,7 @@ public class MockStages {
     public int getParallelism() {
       return 25;
     }
+
   }
 
   public static class MSourceOffsetCommitter extends MSource implements OffsetCommitter {
