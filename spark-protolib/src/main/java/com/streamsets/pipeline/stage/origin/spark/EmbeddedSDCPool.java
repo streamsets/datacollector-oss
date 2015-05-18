@@ -103,7 +103,9 @@ public class EmbeddedSDCPool {
    * @param embeddedSDC
    */
   public void returnEmbeddedSDC(EmbeddedSDC embeddedSDC) {
-    concurrentQueue.offer(embeddedSDC);
+    if (!concurrentQueue.contains(embeddedSDC)) {
+      concurrentQueue.offer(embeddedSDC);
+    }
     LOG.debug("After returning an SDC, size of queue is " + concurrentQueue.size());
   }
 

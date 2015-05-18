@@ -47,5 +47,9 @@ public class TestEmbeddedSDCPool {
     dummyEmbeddedSDCPool.returnEmbeddedSDC(embeddedSDC2);
     Assert.assertEquals(2, dummyEmbeddedSDCPool.size());
     Assert.assertEquals(2, dummyEmbeddedSDCPool.getTotalInstances().size());
+
+    // Return the same instance back again
+    dummyEmbeddedSDCPool.returnEmbeddedSDC(embeddedSDC1);
+    Assert.assertEquals(2, dummyEmbeddedSDCPool.size());
   }
 }
