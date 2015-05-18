@@ -27,8 +27,6 @@ public class BootstrapSparkKafkaFunction implements VoidFunction<Iterator<Tuple2
   public BootstrapSparkKafkaFunction(Properties properties, String pipelineJson) {
     this.properties = Utils.checkNotNull(properties, "Properties");
     this.pipelineJson = Utils.checkNotNull(pipelineJson, "Pipeline JSON");
-    System.err.println("BootstrapSparkFunction.<init>");
-    Thread.dumpStack();
   }
 
   private static synchronized void initialize() throws Exception {
@@ -42,8 +40,6 @@ public class BootstrapSparkKafkaFunction implements VoidFunction<Iterator<Tuple2
   @Override
   public void call(Iterator<Tuple2<byte[],byte[]>> tupleIterator) throws Exception {
     BootstrapSparkKafkaFunction.initialize();
-    System.err.println("BootstrapSparkKafkaFunction.call");
-    Thread.dumpStack();
     sparkExecutorFunctionMethod.invoke(null, properties, pipelineJson, tupleIterator);
   }
 

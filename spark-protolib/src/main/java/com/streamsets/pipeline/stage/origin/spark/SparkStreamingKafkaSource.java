@@ -89,7 +89,7 @@ public class SparkStreamingKafkaSource extends BaseKafkaSource implements Offset
   public String produce(String lastSourceOffset, int maxBatchSize, BatchMaker batchMaker) throws StageException {
     // Ignore the batch size
     LOG.info("Source is " + this);
-    OffsetAndResult<MessageAndPartition> offsetAndResult = sparkStreamingQueueConsumer.produce(maxBatchSize);
+    OffsetAndResult<MessageAndPartition> offsetAndResult = sparkStreamingQueueConsumer.produce(maxWaitTime);
     for (MessageAndPartition messageAndPartition : offsetAndResult.getResult()) {
       String messageId = getRecordId(topic);
       List<Record> records = super.processKafkaMessage(messageId, messageAndPartition.getPayload());

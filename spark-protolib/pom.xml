@@ -99,18 +99,6 @@
       <version>1.0.0b2-SNAPSHOT</version> <!-- required because we don't inherit from root and root-lib
                                                does not define dep spark-bootstrap -->
     </dependency>
-    <dependency>
-      <groupId>com.streamsets</groupId>
-      <artifactId>streamsets-datacollector-container</artifactId>
-      <version>1.0.0b2-SNAPSHOT</version> <!-- required since we are not supposed to do this -->
-      <scope>test</scope> <!-- DO NOT CHANGE, tests which require this should be moved to integration tests -->
-    </dependency>
-    <dependency>
-      <groupId>com.streamsets</groupId>
-      <artifactId>streamsets-datacollector-container-common</artifactId>
-      <version>1.0.0b2-SNAPSHOT</version> <!-- required since we are not supposed to do this -->
-      <scope>test</scope> <!-- DO NOT CHANGE, tests which require this should be moved to integration tests -->
-    </dependency>
 
     <dependency>
       <groupId>com.google.guava</groupId>

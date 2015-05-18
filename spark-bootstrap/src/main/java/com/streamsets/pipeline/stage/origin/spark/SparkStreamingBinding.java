@@ -20,6 +20,10 @@ import java.util.Properties;
 import kafka.serializer.DefaultDecoder;
 
 public class SparkStreamingBinding {
+  private static final String MAX_WAIT_TIME = "maxWaitTime";
+  private static final String METADATA_BROKER_LIST = "metadataBrokerList";
+  private static final String TOPIC = "topic";
+  private static final String AUTO_OFFSET_RESET = "auto.offset.reset";
   private static final Logger LOG = LoggerFactory.getLogger(SparkStreamingBinding.class);
 
   private JavaStreamingContext ssc;
@@ -34,7 +38,15 @@ public class SparkStreamingBinding {
   public void init() throws Exception {
     SparkConf conf = new SparkConf().setAppName("StreamSets Data Collector");
     conf.set("spark.serializer", "org.apache.spark.serializer.KryoSerializer");
-    ssc = new JavaStreamingContext(conf, new Duration(10000));
+    long duration;
+    String durationAsString = getProperty(MAX_WAIT_TIME);
+    try {
+      duration = Long.parseLong(durationAsString);
+    } catch (NumberFormatException ex) {
+      String msg = "Invalid " + MAX_WAIT_TIME  + " '" + durationAsString + "' : " + ex;
+      throw new IllegalArgumentException(msg, ex);
+    }
+    ssc = new JavaStreamingContext(conf, new Duration(duration));
     final Thread shutdownHookThread = new Thread("Spark.shutdownHook") {
       @Override
       public void run() {
@@ -49,37 +61,26 @@ public class SparkStreamingBinding {
     ssc.start();
   }
 
+  private String getProperty(String name) {
+    Utils.checkArgumentNotNull(properties.getProperty(name),
+      "Property " + name +" cannot be null");
+    return properties.getProperty(name).trim();
+  }
+
   private JavaPairInputDStream<byte[], byte[]> createDirectStreamForKafka() {
-
-
-    // If using the createStream(High level Kafka consumer API) - doesn't have access to metadata
-    // so use new API
-    /*
-    props.put("zookeeper.connect", properties.getProperty("zookeeperConnect"));
-    props.put("group.id", properties.getProperty("consumerGroup"));
-    topics.put("topic name", <No of partitions);
-    // The old api
-    JavaPairReceiverInputDStream<byte[], byte[]> stream =
-      KafkaUtils.createStream(ssc, byte[].class, byte[].class, DefaultDecoder.class, DefaultDecoder.class, props, topics, StorageLevel.MEMORY_ONLY_SER()
-        );*/
-
     HashMap<String, String> props = new HashMap<String, String>();
     // Check for null values
     // require only the broker list for direct stream API (low level consumer API)
-    if (properties.getProperty("metadataBrokerList") == null) {
-      throw new IllegalArgumentException("Property metadataBrokerList cannot be null");
+    String metaDataBrokerList = getProperty(METADATA_BROKER_LIST);
+    String topic = getProperty(TOPIC);
+    props.put("metadata.broker.list", metaDataBrokerList);
+    String autoOffsetValue = properties.getProperty(AUTO_OFFSET_RESET, "").trim();
+    if (!autoOffsetValue.isEmpty()) {
+      props.put(AUTO_OFFSET_RESET, autoOffsetValue);
     }
-    props.put("metadata.broker.list", properties.getProperty("metadataBrokerList"));
-    if (properties.getProperty("topic") == null) {
-      throw new IllegalArgumentException("Property topic cannot be null");
-    }
-    String autoOffsetValue = properties.getProperty("auto.offset.reset");
-    if (autoOffsetValue != null) {
-      props.put("auto.offset.reset", autoOffsetValue);
-    }
-    String[] topicList = properties.getProperty("topic").split(",");
-    LOG.info("Meta data broker list " + properties.getProperty("metadataBrokerList"));
-    LOG.info("topic list " + properties.getProperty("topic"));
+    String[] topicList = topic.split(",");
+    LOG.info("Meta data broker list " + metaDataBrokerList);
+    LOG.info("topic list " + topic);
     LOG.info("Auto offset is set to " + autoOffsetValue);
     JavaPairInputDStream<byte[], byte[]> dStream =
       KafkaUtils.createDirectStream(ssc, byte[].class, byte[].class, DefaultDecoder.class, DefaultDecoder.class, props,
@@ -92,6 +93,8 @@ public class SparkStreamingBinding {
   }
 
   public void close() {
-    ssc.close();
+    if (ssc != null) {
+      ssc.close();
+    }
   }
 }

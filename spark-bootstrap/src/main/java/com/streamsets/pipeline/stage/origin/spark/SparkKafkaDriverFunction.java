@@ -24,14 +24,10 @@ public class SparkKafkaDriverFunction implements Function<JavaPairRDD<byte[], by
   public SparkKafkaDriverFunction(Properties properties, String pipelineJson) {
     this.properties = Utils.checkNotNull(properties, "Properties");
     this.pipelineJson = Utils.checkNotNull(pipelineJson, "Pipeline JSON");
-    System.err.println("SparkDriverFunction.<init>");
-    Thread.dumpStack();
   }
 
   @Override
   public Void call(JavaPairRDD<byte[], byte[]> byteArrayJavaRDD) throws Exception {
-    System.err.println("SparkDriverFunction.call");
-    Thread.dumpStack();
     byteArrayJavaRDD.foreachPartition(new BootstrapSparkKafkaFunction(properties, pipelineJson));
     return null;
   }

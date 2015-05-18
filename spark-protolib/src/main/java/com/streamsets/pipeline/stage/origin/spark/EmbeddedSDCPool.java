@@ -50,7 +50,7 @@ public class EmbeddedSDCPool {
     Object source = BootstrapSpark.createPipeline(properties, pipelineJson, new Runnable() { // post-batch runnable
         @Override
         public void run() {
-          if (embeddedSDC.inErrorState()) {
+          if (!embeddedSDC.inErrorState()) {
             LOG.debug("Returning SDC instance {} back to queue", embeddedSDC.getInstanceId());
             returnEmbeddedSDC(embeddedSDC);
           } else {

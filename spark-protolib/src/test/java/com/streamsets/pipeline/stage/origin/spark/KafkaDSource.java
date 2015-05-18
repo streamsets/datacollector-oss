@@ -148,7 +148,7 @@ public class KafkaDSource extends DSourceOffsetCommitter {
   @ConfigDef(
     required = true,
     type = ConfigDef.Type.NUMBER,
-    defaultValue = "1000",
+    defaultValue = "2000",
     label = "Batch Wait Time (millisecs)",
     description = "Max time to wait for data before sending a batch",
     displayPosition = 60,

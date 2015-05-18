@@ -224,10 +224,13 @@ public class SparkProviderImpl implements SparkProvider {
       if (stageConf.getInputLanes().isEmpty()) {
         // set all the simple properties as config properties
         for (ConfigConfiguration conf : stageConf.getConfiguration()) {
-          if (conf.getValue() instanceof String || conf.getValue() instanceof Number) {
-            sourceConfigs.put(conf.getName(), String.valueOf(conf.getValue()));
-          } else {
-            // TODO should we add others, perhaps as JSON?
+          if (conf.getValue() != null) {
+            if (conf.getValue() instanceof String || conf.getValue() instanceof Number ||
+              conf.getValue().getClass().isPrimitive()) {
+              sourceConfigs.put(conf.getName(), String.valueOf(conf.getValue()));
+            } else {
+              // TODO should we add others, perhaps as JSON?
+            }
           }
         }
         // find the spark-kafka jar
