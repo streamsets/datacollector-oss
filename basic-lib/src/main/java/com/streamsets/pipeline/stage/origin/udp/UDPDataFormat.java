@@ -14,7 +14,7 @@ import com.streamsets.pipeline.api.Label;
  */
 @GenerateResourceBundle
 public enum UDPDataFormat implements Label {
-  NETFLOW("Netflow"),
+  NETFLOW("NetFlow"),
   ;
 
   private final String label;
