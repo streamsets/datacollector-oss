@@ -232,9 +232,8 @@
                                         <p>Additional configuration properties for the cluster.
                                             Click the <uicontrol>Add</uicontrol> icon and define the
                                             property name and value.  </p>
-                                        <draft-comment author="Loretta">come back when it's clear if
-                                            this is spark or something else. Use the property names
-                                            and values as expected by &lt;&lt;?>>.</draft-comment>
+                                        <draft-comment author="Loretta">Should we specify Spark
+                                            here? Or keep it vague? </draft-comment>
                                     </entry>
                                 </row>
                             </tbody>

@@ -14,8 +14,8 @@
     conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> can run
    standalone mode or cluster mode. In standalone mode, the <ph
     conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> runs as a
-   standalone product &lt;&lt;add more info>>. The <ph
-    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> runs in
+   standalone product.<draft-comment author="Loretta">more in this sentence above.</draft-comment>
+   The <ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> runs in
    standalone mode by default. </p>
   <p>In cluster mode, the <ph
     conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> runs as an
