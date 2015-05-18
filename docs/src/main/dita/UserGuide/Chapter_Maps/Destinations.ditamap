@@ -73,6 +73,10 @@
     <shortdesc/>
    </topicmeta>
   </topicref>
-  <topicref href="../Destinations/ToError.dita"/>
+  <topicref href="../Destinations/ToError.dita"> 
+   <topicmeta>
+   <shortdesc/>
+  </topicmeta>
+  </topicref>
  </topicref>
 </map>

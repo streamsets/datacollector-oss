@@ -23,7 +23,7 @@
     <topicref href="../Pipeline_Configuration/ExpressionCompletion-Tips.dita"/>
    </topicref>
   </topicref>
-  <topicref href="../Pipeline_Configuration/PipelineProperties.dita">
+  <topicref href="../Pipeline_Configuration/PipelineProperties.dita" chunk="to-content">
    <topicmeta>
     <shortdesc/>
    </topicmeta>

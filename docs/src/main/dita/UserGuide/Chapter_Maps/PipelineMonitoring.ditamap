@@ -8,7 +8,12 @@
     <shortdesc/>
    </topicmeta>
   </topicref>
-  <topicref href="../Pipeline_Monitoring/DataCollectorWindow-Monitor.dita">
+  <topicref href="../Pipeline_Monitoring/DataCollectorWindow-Monitor.dita" chunk="to-content">
+   <topicmeta>
+    <shortdesc/>
+   </topicmeta>
+  </topicref>
+  <topicref href="../Pipeline_Monitoring/ViewingPipelineStageStatistics.dita" chunk="to-content">
    <topicmeta>
     <shortdesc/>
    </topicmeta>
@@ -28,11 +33,6 @@
      <shortdesc/>
     </topicmeta>
    </topicref>
-  </topicref>
-  <topicref href="../Pipeline_Monitoring/ViewingPipelineStageStatistics.dita">
-   <topicmeta>
-    <shortdesc/>
-   </topicmeta>
   </topicref>
  </topicref>
 </map>

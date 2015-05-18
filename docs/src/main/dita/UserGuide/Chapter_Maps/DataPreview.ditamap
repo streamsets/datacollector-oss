@@ -8,6 +8,7 @@
     <shortdesc/>
    </topicmeta>
    <topicref href="../Data_Preview/SourceData.dita"/>
+   <topicref href="../Data_Preview/WritingToDestinations.dita"/>
    <topicref href="../Data_Preview/DataPreviewAvailability.dita"/>
    <topicref href="../Data_Preview/EditingPreviewData.dita">
     <topicmeta>
@@ -15,7 +16,6 @@
     </topicmeta>
    </topicref>
   </topicref>
-  <topicref href="../Data_Preview/WritingToDestinations.dita"/>
   <topicref href="../Data_Preview/DataCollectorWindow-Preview.dita" chunk="to-content">
    <topicmeta>
     <shortdesc/>

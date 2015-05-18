@@ -38,13 +38,16 @@
    <topicref href="../Origins/KConsumer_AdditionalKProp.dita"/>
    <topicref href="../Origins/KConsumer-Configuring.dita"/>
   </topicref>
-  <topicref href="../Origins/KinConsumer.dita" chunk="to-content">  <topicmeta><shortdesc></shortdesc></topicmeta>
+  <topicref href="../Origins/KinConsumer.dita" chunk="to-content">  
+   <topicmeta><shortdesc></shortdesc></topicmeta>
    <topicref href="../Origins/KinConsumer-ReadInterval.dita"/>
    <topicref href="../Origins/KinConsumer-Configuring.dita"/></topicref>
-  <topicref href="../Origins/Omniture.dita">
+  <topicref href="../Origins/Omniture.dita" chunk="to-content">
+   <topicmeta><shortdesc></shortdesc></topicmeta>
    <topicref href="../Origins/Omniture-Configuring.dita"/>
   </topicref>
-  <topicref href="../Origins/UDP.dita">
+  <topicref href="../Origins/UDP.dita" chunk="to-content">
+   <topicmeta><shortdesc></shortdesc></topicmeta>
    <topicref href="../Origins/UDP-Configuring.dita"/>
   </topicref>
  </topicref>

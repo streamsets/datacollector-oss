@@ -14,9 +14,10 @@
    part of data preview or a monitor snapshot.  </p>
   <p>For example, the following pipeline uses the Stream Selector to route data to the Kafka
    Producer and Hadoop FS targets based on different conditions. The Stream Selector routes all
-   records that are not included in either of the other conditions to the Trash destination. </p>
+   records that are not included in either of the other conditions to the Trash destination.
+    <draft-comment author="Loretta">retake.</draft-comment></p>
   <p>
-   <image href="../Graphics/TrashPipeline.png" id="image_djp_2fj_wq" scale="50"/></p>
+   <image href="../Graphics/TrashPipeline.png" id="image_djp_2fj_wq"/></p>
   <p>The Trash destination has no configuration options. To use the Trash destination in a pipeline,
    simply add the stage and connect it to the pipeline. </p>
  </conbody>
