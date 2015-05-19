@@ -8,11 +8,14 @@ package com.streamsets.pipeline.stage.origin.udp;
 import com.streamsets.pipeline.api.BatchMaker;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
+import com.streamsets.pipeline.lib.util.ThreadUtil;
 import com.streamsets.pipeline.sdk.SourceRunner;
 import com.streamsets.pipeline.sdk.StageRunner;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.net.DatagramPacket;
@@ -26,16 +29,20 @@ import java.util.List;
 public class TestUDPSource {
   private static final File TEN_PACKETS = new File(System.getProperty("user.dir") +
     "/src/test/resources/netflow-v5-file-1");
-  private List<String> ports;
+  private static final Logger LOG = LoggerFactory.getLogger(TestUDPSource.class);
 
   @Before
   public void setup() throws Exception {
-    ports = new ArrayList<>();
+  }
+
+  private List<String> genPorts() throws Exception {
+    List<String> ports = new ArrayList<>();
     for (int i = 0; i < 2; i++) {
       ServerSocket socket = new ServerSocket(0);
       ports.add(String.valueOf(socket.getLocalPort()));
       socket.close();;
     }
+    return ports;
   }
 
   public static class TUDPSource extends UDPSource {
@@ -53,8 +60,35 @@ public class TestUDPSource {
     }
   }
 
+  /**
+   * This test runs three times because UDP is delivery is not
+   * guaranteed. If it fails all three times, then we actually fail.
+   */
   @Test
   public void testBasic() throws Exception {
+    int maxRuns = 3;
+    List<AssertionError> failures = new ArrayList<>();
+    for (int i = 0; i < maxRuns; i++) {
+      try {
+        doBasicTest();
+      } catch (Exception ex) {
+        // we don't expect exceptions to be thrown,
+        // even when udp messages are lost
+        throw ex;
+      } catch (AssertionError failure) {
+        String msg = "Test failed on iteration: " + i;
+        LOG.error(msg, failure);
+        failures.add(failure);
+        Assert.assertTrue("Interrupted while sleeping", ThreadUtil.sleep(30 * 1000));
+      }
+    }
+    if (failures.size() >= maxRuns) {
+      throw failures.get(0);
+    }
+  }
+
+  private void doBasicTest() throws Exception {
+    List<String> ports = genPorts();
     TUDPSource source = new TUDPSource(ports, 20, 100L);
     SourceRunner runner = new SourceRunner.Builder(TUDPSource.class, source).addOutputLane("lane").build();
     runner.runInit();
@@ -85,5 +119,4 @@ public class TestUDPSource {
       runner.runDestroy();
     }
   }
-
 }
