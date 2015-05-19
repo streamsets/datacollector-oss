@@ -713,6 +713,62 @@ public class TestKafkaSource {
     sourceRunner.runDestroy();
   }
 
+  // Check whether auto.offset.reset config set to smallest works for preview or not
+  @Test
+  public void testAutoOffsetResetSmallestConfig() throws Exception {
+      CountDownLatch startLatch = new CountDownLatch(1);
+      ExecutorService executorService = Executors.newSingleThreadExecutor();
+      CountDownLatch countDownLatch = new CountDownLatch(1);
+      executorService.submit(new ProducerRunnable(TOPIC11, SINGLE_PARTITION, producer, startLatch,
+        DataType.LOG_STACK_TRACE, null, 10, countDownLatch));
+      // produce all 10 records first before starting the source(KafkaConsumer)
+      startLatch.countDown();
+      countDownLatch.await();
+
+      SourceRunner sourceRunner = new SourceRunner.Builder(KafkaDSource.class)
+        .addOutputLane("lane")
+        .addConfiguration("topic", TOPIC11)
+        .addConfiguration("metadataBrokerList", "dummyhost:1000")
+        .addConfiguration("consumerGroup", CONSUMER_GROUP)
+        .addConfiguration("zookeeperConnect", zkConnect)
+        .addConfiguration("maxBatchSize", 100)
+        .addConfiguration("maxWaitTime", 10000)
+        .addConfiguration("dataFormat", DataFormat.LOG)
+        .addConfiguration("charset", "UTF-8")
+        .addConfiguration("jsonContent", null)
+        .addConfiguration("kafkaConsumerConfigs", null)
+        .addConfiguration("produceSingleRecordPerMessage", false)
+        .addConfiguration("xmlRecordElement", "")
+        .addConfiguration("xmlMaxObjectLen", null)
+        .addConfiguration("logMode", LogMode.LOG4J)
+        .addConfiguration("logMaxObjectLen", 10000)
+        .addConfiguration("regex", null)
+        .addConfiguration("grokPatternDefinition", null)
+        .addConfiguration("enableLog4jCustomLogFormat", false)
+        .addConfiguration("customLogFormat", null)
+        .addConfiguration("fieldPathsToGroupName", null)
+        .addConfiguration("log4jCustomLogFormat", null)
+        .addConfiguration("grokPattern", null)
+        .addConfiguration("onParseError", OnParseError.INCLUDE_AS_STACK_TRACE)
+        .addConfiguration("maxStackTraceLines", 100)
+        .addConfiguration("retainOriginalLine", true)
+        // Set mode to preview
+        .setPreview(true)
+        .build();
+
+      sourceRunner.runInit();
+
+      StageRunner.Output output = sourceRunner.runProduce(null, 10);
+      shutDownExecutorService(executorService);
+
+      String newOffset = output.getNewOffset();
+      Assert.assertNull(newOffset);
+
+      List<Record> records = output.getRecords().get("lane");
+      Assert.assertEquals(10, records.size());
+  }
+
+
   private void shutDownExecutorService(ExecutorService executorService) throws InterruptedException {
     executorService.shutdownNow();
     if(!executorService.awaitTermination(5000, TimeUnit.MILLISECONDS)) {

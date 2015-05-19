@@ -41,6 +41,8 @@ public class KafkaConsumer {
   private static final String ZK_SESSION_TIMEOUT_MS_KEY = "zookeeper.session.timeout.ms";
   private static final String ZK_CONNECTION_TIMEOUT_MS_DEFAULT = "6000";
   private static final String ZK_SESSION_TIMEOUT_MS_DEFAULT = "6000";
+  private static final String AUTO_OFFSET_RESET_KEY = "auto.offset.reset";
+  private static final String AUTO_OFFSET_RESET_PREVIEW = "smallest";
 
   private static final Logger LOG = LoggerFactory.getLogger(KafkaConsumer.class);
 
@@ -188,6 +190,11 @@ public class KafkaConsumer {
 
     props.put(ZK_CONNECTION_TIMEOUT_MS_KEY, ZK_CONNECTION_TIMEOUT_MS_DEFAULT);
     props.put(ZK_SESSION_TIMEOUT_MS_KEY, ZK_SESSION_TIMEOUT_MS_DEFAULT);
+    if (this.context.isPreview()) {
+      // Set to smallest value only for preview mode
+      // When running actual pipeline, the default configs from kafka client should be picked up.
+      props.put(AUTO_OFFSET_RESET_KEY, AUTO_OFFSET_RESET_PREVIEW);
+    }
 
     addUserConfiguredProperties(props);
   }
