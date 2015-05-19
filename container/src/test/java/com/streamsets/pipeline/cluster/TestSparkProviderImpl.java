@@ -99,7 +99,7 @@ public class TestSparkProviderImpl {
     MockSystemProcess.output.add(" application_1429587312661_0024 ");
     MockSystemProcess.output.add(" application_1429587312661_0025 ");
     Assert.assertNotNull(sparkProvider.startPipeline(new MockSystemProcessFactory(), sparkManagerShell, tempDir, env,
-      sourceInfo, pipelineConf, stageLibrary, etcDir, webDir, bootstrapLibDir, classLoader, classLoader).getId());
+      sourceInfo, pipelineConf, stageLibrary, etcDir, webDir, bootstrapLibDir, classLoader, classLoader, 60).getId());
   }
 
   @Test
@@ -108,6 +108,6 @@ public class TestSparkProviderImpl {
     MockSystemProcess.output.add(" " + id + " ");
     MockSystemProcess.output.add(" " + id + " ");
     Assert.assertEquals(id, sparkProvider.startPipeline(new MockSystemProcessFactory(), sparkManagerShell, tempDir, env,
-      sourceInfo, pipelineConf, stageLibrary, etcDir, webDir, bootstrapLibDir, classLoader, classLoader).getId());
+      sourceInfo, pipelineConf, stageLibrary, etcDir, webDir, bootstrapLibDir, classLoader, classLoader, 60).getId());
   }
 }

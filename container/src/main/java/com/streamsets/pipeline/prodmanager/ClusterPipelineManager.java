@@ -77,6 +77,7 @@ public class ClusterPipelineManager extends AbstractTask implements PipelineMana
   private static final String CLUSTER_PIPELINE_MANAGER = "ClusterPipelineManager";
   private static final Logger LOG = LoggerFactory.getLogger(ClusterPipelineManager.class);
   static final String APPLICATION_STATE = "cluster.application.state";
+  private static final long SUBMIT_TIMEOUT_SECS = 60;
 
   static final Map<State, Set<State>> VALID_TRANSITIONS = new ImmutableMap.Builder<State, Set<State>>()
     .put(State.STOPPED, ImmutableSet.of(State.RUNNING))
@@ -649,11 +650,12 @@ public class ClusterPipelineManager extends AbstractTask implements PipelineMana
         clusterPipelineManager.clearSlaveList();
         ListenableFuture<ApplicationState> submitFuture = sparkManager.submit(pipelineConf, clusterPipelineManager.stageLibrary,
           new File(runtimeInfo.getConfigDir()), new File(runtimeInfo.getStaticWebDir()), bootstrapDir, environment,
-          sourceInfo);
+          sourceInfo, SUBMIT_TIMEOUT_SECS);
         // set state of running before adding callback which modified attributes
         Map<String, Object> attributes = new HashMap<>();
         attributes.putAll(ps.getAttributes());
-        ApplicationState applicationState = submitFuture.get(60, TimeUnit.SECONDS);
+        // add an extra 10 sec wait to the actual timeout value passed to SparkManager#submit
+        ApplicationState applicationState = submitFuture.get(SUBMIT_TIMEOUT_SECS + 10, TimeUnit.SECONDS);
         attributes.put(APPLICATION_STATE, applicationState.getMap());
         stateTracker.setState(name, rev, State.RUNNING, "Starting cluster pipeline", null, attributes);
       } catch (Exception ex) {

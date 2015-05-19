@@ -28,5 +28,5 @@ public interface SparkProvider {
                                       Map<String, String> environment, Map<String, String> sourceInfo,
                                       PipelineConfiguration pipelineConfiguration, StageLibraryTask stageLibrary,
                                       File etcDir, File staticWebDir, File bootstrapDir, URLClassLoader apiCL,
-                                      URLClassLoader containerCL) throws TimeoutException;
+                                      URLClassLoader containerCL, long timeToWaitForFailure) throws TimeoutException;
 }

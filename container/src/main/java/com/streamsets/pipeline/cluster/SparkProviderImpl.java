@@ -203,7 +203,7 @@ public class SparkProviderImpl implements SparkProvider {
                        Map<String, String> environment, Map<String, String> sourceInfo,
                        PipelineConfiguration pipelineConfiguration, StageLibraryTask stageLibrary,
                        File etcDir, File staticWebDir, File bootstrapDir, URLClassLoader apiCL,
-                       URLClassLoader containerCL) throws TimeoutException {
+                       URLClassLoader containerCL, long timeToWaitForFailure) throws TimeoutException {
     environment = Maps.newHashMap(environment);
     environment.put(RUN_FROM_SDC, Boolean.TRUE.toString());
     // create libs.tar.gz file for pipeline
@@ -364,6 +364,16 @@ public class SparkProviderImpl implements SparkProvider {
           if (m.find()) {
             LOG.info("Found application id " + m.group(1));
             applicationIds.add(m.group(1));
+          }
+        }
+        if (elapsedSeconds > timeToWaitForFailure) {
+          if (process.isAlive()) {
+            throw new IllegalStateException(
+              "Exiting before the pipeline can start as the process submitting the spark job is running "
+                + "for more than" + elapsedSeconds);
+          } else {
+            throw new IllegalStateException("Process submitting the spark job is dead and "
+              + "couldn't retrieve the YARN application id");
           }
         }
       }

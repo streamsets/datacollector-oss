@@ -48,7 +48,7 @@ public class MockSparkProvider implements SparkProvider {
                               Map<String, String> environment, Map<String, String> sourceInfo,
                               PipelineConfiguration pipelineConfiguration, StageLibraryTask stageLibrary,
                               File etcDir, File staticWebDir, File bootstrapDir, URLClassLoader apiCL,
-                              URLClassLoader containerCL)
+                              URLClassLoader containerCL, long timeout)
   throws TimeoutException {
     LOG.info("startPipeline");
     if (submitTimesOut) {
