@@ -11,12 +11,12 @@
   <parent>
     <groupId>com.streamsets</groupId>
     <artifactId>streamsets-datacollector-root-lib</artifactId>
-    <version>1.0.0b2-SNAPSHOT</version>
+    <version>1.0.0b2</version>
     <relativePath>../root-lib</relativePath>
   </parent>
   <groupId>com.streamsets</groupId>
   <artifactId>streamsets-datacollector-dev-lib</artifactId>
-  <version>1.0.0b2-SNAPSHOT</version>
+  <version>1.0.0b2</version>
   <description>StreamSets Data Collector Dev Lib</description>
   <name>StreamSets Data Collector Dev Lib</name>
   <packaging>jar</packaging>
