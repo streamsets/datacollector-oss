@@ -856,7 +856,6 @@ angular
         stageLibraryList = [],
         optionsLength = Object.keys(options).length;
 
-
       if(!$scope.previewMode && !$scope.snapshotMode && $scope.selectedType === type && $scope.selectedObject && selectedObject && optionsLength <= 2 &&
         ((type === pipelineConstant.PIPELINE && $scope.selectedObject.info.name === selectedObject.info.name) ||
           (type === pipelineConstant.STAGE_INSTANCE && $scope.selectedObject.instanceName === selectedObject.instanceName))) {
@@ -939,6 +938,7 @@ angular
         }
       }
 
+      $scope.firstOpenLane = $rootScope.$storage.dontShowHelpAlert ? {} : getFirstOpenLane();
       $scope.$broadcast('onSelectionChange', options);
 
       $timeout(function () {
@@ -1060,13 +1060,16 @@ angular
 
     var getFirstOpenLane = function() {
       var pipelineConfig = $scope.pipelineConfig,
+        selectedType = $scope.selectedType,
+        selectedObject = $scope.selectedObject,
         firstOpenLane = {},
         issueObj,
         firstOpenLaneStageInstanceName;
 
       if(pipelineConfig && pipelineConfig.issues && pipelineConfig.issues.stageIssues) {
         angular.forEach(pipelineConfig.issues.stageIssues, function(issues, instanceName) {
-          if(!firstOpenLaneStageInstanceName) {
+          if(!firstOpenLaneStageInstanceName ||
+            (selectedType === pipelineConstant.STAGE_INSTANCE && selectedObject.instanceName === instanceName)) {
             angular.forEach(issues, function(issue) {
               if(issue.message.indexOf('VALIDATION_0011') !== -1) {
                 issueObj = issue;
