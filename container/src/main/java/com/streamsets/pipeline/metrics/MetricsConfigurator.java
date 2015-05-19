@@ -27,6 +27,8 @@ public class MetricsConfigurator {
   private static final String TIMER_SUFFIX = ".timer";
   private static final String GAUGE_SUFFIX = ".gauge";
 
+  private static MetricRegistry sdcMetrics;
+
   private static String metricName(String name, String type) {
     if (name.endsWith(type)) {
       return name;
@@ -39,11 +41,12 @@ public class MetricsConfigurator {
   public static Timer createTimer(MetricRegistry metrics, String name) {
     final String timerName = metricName(name, TIMER_SUFFIX);
     final Timer timer = new Timer(new SlidingTimeWindowReservoir(60, TimeUnit.SECONDS));
-    if (sdcMetrics != null) {
+    final MetricRegistry metricRegistry = sdcMetrics;
+    if (metricRegistry != null) {
       AccessController.doPrivileged(new PrivilegedAction<Void>() {
         @Override
         public Void run() {
-          sdcMetrics.register(JMX_PREFIX + timerName, timer);
+          metricRegistry.register(JMX_PREFIX + timerName, timer);
           return null;
         }
       });
@@ -54,11 +57,12 @@ public class MetricsConfigurator {
   public static Meter createMeter(MetricRegistry metrics, String name) {
     final String meterName = metricName(name, METER_SUFFIX);
     final ExtendedMeter meter = new ExtendedMeter();
-    if (sdcMetrics != null) {
+    final MetricRegistry metricRegistry = sdcMetrics;
+    if (metricRegistry != null) {
       AccessController.doPrivileged(new PrivilegedAction<Void>() {
         @Override
         public Void run() {
-          sdcMetrics.register(JMX_PREFIX + meterName, meter);
+          metricRegistry.register(JMX_PREFIX + meterName, meter);
           return null;
         }
       });
@@ -69,11 +73,12 @@ public class MetricsConfigurator {
   public static Counter createCounter(MetricRegistry metrics, String name) {
     final String counterName = metricName(name, COUNTER_SUFFIX);
     final Counter counter = new Counter();
-    if (sdcMetrics != null) {
+    final MetricRegistry metricRegistry = sdcMetrics;
+    if (metricRegistry != null) {
       AccessController.doPrivileged(new PrivilegedAction<Void>() {
         @Override
         public Void run() {
-          sdcMetrics.register(JMX_PREFIX + counterName, counter);
+          metricRegistry.register(JMX_PREFIX + counterName, counter);
           return null;
         }
       });
@@ -84,11 +89,12 @@ public class MetricsConfigurator {
   public static Histogram createHistogram5Min(MetricRegistry metrics, String name) {
     final String histogramName = metricName(name, HISTOGRAM_M5_SUFFIX);
     final Histogram histogram = new Histogram(new ExponentiallyDecayingReservoir());
-    if (sdcMetrics != null) {
+    final MetricRegistry metricRegistry = sdcMetrics;
+    if (metricRegistry != null) {
       AccessController.doPrivileged(new PrivilegedAction<Void>() {
         @Override
         public Void run() {
-          sdcMetrics.register(JMX_PREFIX + histogramName, histogram);
+          metricRegistry.register(JMX_PREFIX + histogramName, histogram);
           return null;
         }
       });
@@ -98,11 +104,12 @@ public class MetricsConfigurator {
 
   public static Gauge createGauge(MetricRegistry metrics, String name, final Gauge guage) {
     final String gaugeName = metricName(name, GAUGE_SUFFIX);
-    if (sdcMetrics != null) {
+    final MetricRegistry metricRegistry = sdcMetrics;
+    if (metricRegistry != null) {
       AccessController.doPrivileged(new PrivilegedAction<Void>() {
         @Override
         public Void run() {
-          sdcMetrics.register(JMX_PREFIX + gaugeName, guage);
+          metricRegistry.register(JMX_PREFIX + gaugeName, guage);
           return null;
         }
       });
@@ -132,11 +139,12 @@ public class MetricsConfigurator {
 
   public static boolean removeGauge(MetricRegistry metrics, String name) {
     final String gaugeName = metricName(name, GAUGE_SUFFIX);
-    if (sdcMetrics != null) {
+    final MetricRegistry metricRegistry = sdcMetrics;
+    if (metricRegistry != null) {
       AccessController.doPrivileged(new PrivilegedAction<Void>() {
         @Override
         public Void run() {
-          sdcMetrics.remove(JMX_PREFIX + gaugeName);
+          metricRegistry.remove(JMX_PREFIX + gaugeName);
           return null;
         }
       });
@@ -146,11 +154,12 @@ public class MetricsConfigurator {
 
   public static boolean removeMeter(MetricRegistry metrics, String name) {
     final String meterName = metricName(name, METER_SUFFIX);
-    if (sdcMetrics != null) {
+    final MetricRegistry metricRegistry = sdcMetrics;
+    if (metricRegistry != null) {
       AccessController.doPrivileged(new PrivilegedAction<Void>() {
         @Override
         public Void run() {
-          sdcMetrics.remove(JMX_PREFIX + meterName);
+          metricRegistry.remove(JMX_PREFIX + meterName);
           return null;
         }
       });
@@ -160,11 +169,12 @@ public class MetricsConfigurator {
 
   public static boolean removeCounter(MetricRegistry metrics, String name) {
     final String counterName = metricName(name, COUNTER_SUFFIX);
-    if (sdcMetrics != null) {
+    final MetricRegistry metricRegistry = sdcMetrics;
+    if (metricRegistry != null) {
       AccessController.doPrivileged(new PrivilegedAction<Void>() {
         @Override
         public Void run() {
-          sdcMetrics.remove(JMX_PREFIX + counterName);
+          metricRegistry.remove(JMX_PREFIX + counterName);
           return null;
         }
       });
@@ -172,28 +182,27 @@ public class MetricsConfigurator {
     return metrics.remove(counterName);
   }
 
-  private static MetricRegistry sdcMetrics = null;
-
-  public static void registerJmxMetrics(MetricRegistry metrics) {
+  public static synchronized void registerJmxMetrics(MetricRegistry metrics) {
     cleanUpJmxMetrics();
     sdcMetrics = metrics;
   }
 
-  public static void cleanUpJmxMetrics() {
-    if (sdcMetrics != null) {
+  public static synchronized void cleanUpJmxMetrics() {
+    final MetricRegistry metricRegistry = sdcMetrics;
+    sdcMetrics = null;
+    if (metricRegistry != null) {
       AccessController.doPrivileged(new PrivilegedAction<Void>() {
         @Override
         public Void run() {
-          for (String name : sdcMetrics.getNames()) {
+          for (String name : metricRegistry.getNames()) {
             if (name.startsWith(JMX_PREFIX)) {
-              sdcMetrics.remove(name);
+              metricRegistry.remove(name);
             }
           }
           return null;
         }
       });
     }
-    sdcMetrics = null;
   }
 
   public static boolean resetCounter(MetricRegistry metrics, String name) {
