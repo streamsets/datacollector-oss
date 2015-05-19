@@ -109,8 +109,6 @@ angular
 
       $scope.outputFieldPaths = [];
       if(output && output.length) {
-
-
         fieldPathsList = [];
         angular.forEach(output, function(record) {
           fieldPaths = [];
