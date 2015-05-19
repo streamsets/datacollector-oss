@@ -82,11 +82,21 @@ angular
 
     var updateFieldPaths = function() {
       var output = $scope.stagePreviewData.output,
-        input = $scope.stagePreviewData.input;
+        input = $scope.stagePreviewData.input,
+        fieldPathsList,
+        fieldPaths;
 
       $scope.inputFieldPaths = [];
       if(input && input.length) {
-        pipelineService.getFieldPaths(input[0].value, $scope.inputFieldPaths, true);
+
+        fieldPathsList = [];
+        angular.forEach(input, function(record) {
+          fieldPaths = [];
+          pipelineService.getFieldPaths(record.value, fieldPaths, true);
+          fieldPathsList.push(fieldPaths);
+        });
+
+        $scope.inputFieldPaths = _.union.apply(_, fieldPathsList);
         $scope.inputFieldPaths.sort();
       }
 
@@ -99,7 +109,16 @@ angular
 
       $scope.outputFieldPaths = [];
       if(output && output.length) {
-        pipelineService.getFieldPaths(output[0].value, $scope.outputFieldPaths, true);
+
+
+        fieldPathsList = [];
+        angular.forEach(output, function(record) {
+          fieldPaths = [];
+          pipelineService.getFieldPaths(record.value, fieldPaths, true);
+          fieldPathsList.push(fieldPaths);
+        });
+
+        $scope.outputFieldPaths = _.union.apply(_, fieldPathsList);
         $scope.outputFieldPaths.sort();
       }
 
