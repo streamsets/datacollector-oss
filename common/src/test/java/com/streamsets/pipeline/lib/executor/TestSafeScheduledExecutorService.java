@@ -5,6 +5,8 @@
  */
 package com.streamsets.pipeline.lib.executor;
 
+import com.streamsets.pipeline.api.impl.Utils;
+import com.streamsets.pipeline.lib.util.ThreadUtil;
 import org.junit.Test;
 import org.junit.Assert;
 import org.slf4j.Logger;
@@ -24,17 +26,17 @@ public class TestSafeScheduledExecutorService {
     Runnable sleepy = new Runnable() {
       @Override
       public void run() {
-        try {
-          TimeUnit.MILLISECONDS.sleep(110);
-        } catch (Exception e) {}
+        Utils.checkState(ThreadUtil.sleep(110), "Interrupted while sleeping");
       }
     };
-    executorService.submit(sleepy);
-    Future<?> future = executorService.submitReturnFuture(sleepy);
-    future.get();
+    Future<?> future1 = executorService.submitReturnFuture(sleepy);
+    Future<?> future2 = executorService.submitReturnFuture(sleepy);
+    future1.get();
+    future2.get();
     long elapsed = System.currentTimeMillis() - start;
-    Assert.assertTrue("Elapsed was "  + elapsed + "expected between 200 and 300",
-      elapsed > 200 && elapsed < 300);
+    // the important aspect of this test is that the time is over 200
+    Assert.assertTrue("Elapsed was "  + elapsed + " expected between 200 and 30000",
+      elapsed > 200 && elapsed < 30000);
   }
   static class RunnableWhichThrows implements Runnable {
     @Override
