@@ -84,6 +84,7 @@ public class WebServerTask extends AbstractTask {
   private int port;
   private Server server;
   private Server redirector;
+  private HashSessionManager hashSessionManager;
 
   @Inject
   public WebServerTask(RuntimeInfo runtimeInfo, Configuration conf, Set<ContextConfigurator> contextConfigurators) {
@@ -111,9 +112,8 @@ public class WebServerTask extends AbstractTask {
   private ServletContextHandler configureAppContext() {
     ServletContextHandler context = new ServletContextHandler(ServletContextHandler.SESSIONS);
 
-    SessionManager sm = new HashSessionManager();
-    ((HashSessionManager)sm).setSessionCookie(JSESSIONID_COOKIE + port);
-    context.setSessionHandler(new SessionHandler(sm));
+    hashSessionManager = new HashSessionManager();
+    context.setSessionHandler(new SessionHandler(hashSessionManager));
 
     context.setContextPath("/");
     for (ContextConfigurator cc : contextConfigurators) {
@@ -362,6 +362,7 @@ public class WebServerTask extends AbstractTask {
     try {
       server.start();
       port = server.getURI().getPort();
+      hashSessionManager.setSessionCookie(JSESSIONID_COOKIE + port);
       LOG.info("Running on URI '{}', HTTPS '{}' ",server.getURI(), isSSLEnabled());
       if(runtimeInfo.getBaseHttpUrl().equals(RuntimeInfo.UNDEF)) {
         try {
