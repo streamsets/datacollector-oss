@@ -68,7 +68,10 @@
       "value" : 1000
     }, {
       "name" : "kafkaConsumerConfigs",
-      "value" : [ ]
+      "value" : [{
+        "key" : "auto.offset.reset",
+        "value" : "smallest"
+      }]
     }, {
       "name" : "textMaxLineLen",
       "value" : 1024

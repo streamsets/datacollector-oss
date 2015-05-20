@@ -67,7 +67,6 @@ public class TestSparkOnYarn {
   private static final String TESTNAME = "SparkOnYarnKafkaSource";
   private static MiniSDCTestingUtility miniSDCTestingUtility;
   private static String pipelineJson;
-  private static Map<String, String> kafkaProps = new HashMap<String, String>();
   private static final String SPARK_PROPERTY_FILE = "SPARK_PROPERTY_FILE";
   private static final String SPARK_TEST_HOME = "SPARK_TEST_HOME";
   // This should be the same topic as in cluster_pipeline.json
@@ -125,7 +124,6 @@ public class TestSparkOnYarn {
     for (File file : sparkBin.listFiles()) {
       MiniSDCTestingUtility.setExecutePermission(file.toPath());
     }
-
   }
 
   private static void setupKafka() {
@@ -139,7 +137,6 @@ public class TestSparkOnYarn {
     String metadataBrokerURI = "localhost" + ":" + port;
     LOG.info("Setting metadataBrokerList and auto.offset.reset for test case");
 
-    kafkaProps.put("auto.offset.reset", "smallest");
     // remove this hack once we bring in container classes for parsing json
     if (!pipelineJson.contains("localhost:9092"))  {
       throw new RuntimeException("Bailing out, default value of metadataBrokerlist must have changed in pipeline json file");
@@ -210,7 +207,7 @@ public class TestSparkOnYarn {
 
     MiniSDC miniSDC = null;
     try {
-      miniSDC = miniSDCTestingUtility.startMiniSDC(pipelineJson, ExecutionMode.CLUSTER, kafkaProps);
+      miniSDC = miniSDCTestingUtility.startMiniSDC(pipelineJson, ExecutionMode.CLUSTER);
       URI serverURI = miniSDC.getServerURI();
       LOG.info("Starting on URI " + serverURI);
       // TODO - Start a new thread listening for slave metrics
@@ -219,9 +216,9 @@ public class TestSparkOnYarn {
       assertTrue(list != null && !list.isEmpty());
       Map<String, Map<String, Integer>> countersMap = VerifyUtils.getCounters(list);
       assertNotNull(countersMap);
-      assertEquals("Output records counters for source should be equal to" + expectedRecords, expectedRecords,
+      assertEquals("Output records counters for source should be equal to " + expectedRecords, expectedRecords,
         VerifyUtils.getSourceCounters(countersMap));
-      assertEquals("Output records counters for target should be equal to" + expectedRecords, expectedRecords,
+      assertEquals("Output records counters for target should be equal to " + expectedRecords, expectedRecords,
         VerifyUtils.getTargetCounters(countersMap));
     } finally {
       if (miniSDC != null) {
