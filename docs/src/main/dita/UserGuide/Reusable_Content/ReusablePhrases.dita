@@ -14,7 +14,11 @@
             <p>
                   <note id="Note-OptionDispay">Some buttons and options might not display in the
                         console. The items that display are based on the task that you are
-                        performing and roles assigned to your user account. </note>
+                        performing and roles assigned to your user account. For example, the Copy
+                        icon displays only when you select stage that can be copied, it does not
+                        display when you select a link or the pipeline. Alternatively, if you log in
+                        with only the Manager role, most configuration-related icons are not
+                        available.</note>
             </p>
             <p>
                   <draft-comment author="Loretta">

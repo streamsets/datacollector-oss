@@ -1,0 +1,366 @@
+
+<!DOCTYPE html
+  SYSTEM "about:legacy-compat">
+<html xml:lang="en-us" lang="en-us">
+<head><meta name="description" content="The JDBC Consumer origin uses JDBC to read database data. JDBC Consumer returns data as a map with column names and field values. When you configure JDBC Consumer, you specify connection information, ..."></meta><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><meta name="copyright" content="(C) Copyright 2005"></meta><meta name="DC.rights.owner" content="(C) Copyright 2005"></meta><meta name="DC.Type" content="concept"></meta><meta name="DC.Title" content="JDBC Consumer"></meta><meta name="abstract" content="The JDBC Consumer origin uses JDBC to read database data. JDBC Consumer returns data as a map with column names and field values."></meta><meta name="description" content="The JDBC Consumer origin uses JDBC to read database data. JDBC Consumer returns data as a map with column names and field values."></meta><meta name="DC.Relation" scheme="URI" content="../Origins/Origins_title.html"></meta><meta name="DC.Format" content="XHTML"></meta><meta name="DC.Identifier" content="concept_qhf_hjr_bs"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/commonltr.css"><!----></link><title>JDBC Consumer</title><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/webhelp_topic.css"><!----></link><link rel="stylesheet" type="text/css" href="../skin.css"></link><script type="text/javascript"><!--
+          
+          var prefix = "../index.html";
+          
+          --></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery-1.8.2.min.js"><!----></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery.cookie.js"><!----></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery-ui.custom.min.js"><!----></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery.highlight-3.js"><!----></script><script type="text/javascript" charset="utf-8" src="../oxygen-webhelp/resources/js/webhelp_topic.js"><!----></script></head>
+<body onload="highlightSearchTerm()" class="frmBody">
+<table class="nav"><tbody><tr><td colspan="2"><div id="printlink"><a href="javascript:window.print();" title="Print this page"></a></div><div id="permalink"><a href="#" title="Link to this page"></a></div></td></tr><tr><td width="75%"><a class="navheader_parent_path" href="../Origins/Origins_title.html" title="Origins">Origins</a></td><td><div class="navheader">
+<span class="navparent"><a class="link" href="../Origins/Origins_title.html" title="Origins"><span class="navheader_label">Parent topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">Origins</span></a></span>  </div></td></tr></tbody></table>
+<div class="nested0" id="concept_qhf_hjr_bs">
+ <h1 class="title topictitle1">JDBC Consumer</h1>
+
+ 
+ <div class="body conbody"><p class="shortdesc">The JDBC Consumer origin uses JDBC to read database data. JDBC Consumer returns data as
+  a map with column names and field values. </p>
+
+    <p class="p">When you configure JDBC Consumer, you
+      specify connection information, query interval, and custom JDBC configuration properties to
+      determine how JDBC Consumer connect to the database. You configure the query mode, offset
+      column, initial offset value, and SQL query to define the data returned by the database.</p>
+
+    <p class="p">You can also configure additional properties for driver versions earlier than 4.0.</p>
+
+  </div>
+
+<div class="related-links"></div>
+<div class="topic concept nested1" id="concept_ets_gnr_bs">
+ <h2 class="title topictitle2">Full or Incremental Queries</h2>
+
+ 
+ <div class="body conbody"><p class="shortdesc">JDBC Consumer runs in incremental mode by default. </p>
+
+  <p class="p">When you start the pipeline for the first time, JDBC Consumer starts reading with the initial
+   offset. When you stop the pipeline, the <span class="ph">Data
+                  Collector</span> notes where it
+   stopped reading as an offset. When you restart the pipeline, the <span class="ph">Data
+                  Collector</span> uses the
+   offset information in the query to read from where it stopped earlier. </p>
+
+  <p class="p">In incremental mode, you can reset the origin to use the initial offset the next time you start
+   the pipeline. Or, to perform a full query each time you start the pipeline, clear the
+    <span class="ph uicontrol">Incremental Mode</span> property. </p>
+
+  
+ </div>
+
+</div>
+<div class="topic concept nested1" id="concept_nxz_2kz_bs">
+ <h2 class="title topictitle2">Offset Column and Offset Value</h2>
+
+ 
+ <div class="body conbody"><p class="shortdesc">JDBC Consumer uses an offset column and initial offset value to determine where to start
+  reading data within a table. The offset column is a column in the table with unique values. The
+  initial offset value is a value within the offset column where you want JDBC Consumer to start
+  reading.</p>
+
+  <p class="p">When you configure the SQL query for the JDBC Consumer, you use the offset column and offset
+   value in a WHERE clause that specifies the data to be read. Use "${offset}" to represent the
+   offset value, for example: <samp class="ph codeph">SELECT * from &lt;table&gt; WHERE &lt;offset column&gt; &gt;
+    ${offset}</samp>. </p>
+
+  <p class="p">JDBC Consumer uses the offset to determine where to continue after a deliberate or unexpected
+   stop. As JDBC Consumer reads, it updates the offset value internally. When the pipeline stops,
+   JDBC Consumer notes where it stopped reading data. When you restart the pipeline, it continues
+   from the last-saved offset by default. You can reset the origin to use the initial offset
+   value.</p>
+
+  <div class="p"><div class="note note"><span class="notetitle">Note:</span> </div>
+To reduce the chance of duplicate reads, use a primary key or index column for the
+   offset column and include the offset column in an ORDER BY clause.</div>
+
+ </div>
+
+</div>
+<div class="topic concept nested1" id="concept_uj4_mxy_bs">
+ <h2 class="title topictitle2">SQL Query</h2>
+
+ 
+ <div class="body conbody"><p class="shortdesc">The SQL query defines the data returned from the database. </p>
+
+  <div class="p">When you define the SQL query, use the following guidelines:<dl class="dl">
+    
+     <dt class="dt dlterm">In the WHERE clause, include the offset column and the ${offset} offset value</dt>
+
+     <dd class="dd">JDBC Consumer uses an offset column and value to determine the data that is returned.
+      Include both in the WHERE clause of the query. </dd>
+
+     <dd class="dd">For example, when you start a pipeline, the following query returns all data from the table
+      where the data in the offset column is greater than the initial offset value.
+      <pre class="pre codeblock">SELECT * FROM &lt;tablename&gt; WHERE &lt;offset column&gt; &gt; ${offset}</pre>
+</dd>
+
+    
+    
+     <dt class="dt dlterm">In the ORDER BY clause, include the offset column as the first column</dt>
+
+     <dd class="dd">To avoid returning duplicate data, use the offset column as the first column in the ORDER
+      BY clause.</dd>
+
+    
+    
+     <dt class="dt dlterm">If using a LIMIT, make sure it is less than the batch size</dt>
+
+     <dd class="dd">
+      
+     </dd>
+
+    
+   </dl>
+</div>
+
+ </div>
+
+</div>
+<div class="topic task nested1" id="task_ryz_tkr_bs">
+    <h2 class="title topictitle2">Configuring a JDBC Consumer</h2>
+
+    <div class="body taskbody">
+        <div class="section context">
+            <p class="p">Configure a
+                JDBC Consumer origin to use a JDBC driver to read database data. </p>
+
+        </div>
+
+        <ol class="ol steps" id="task_ryz_tkr_bs__steps_hhn_vkr_bs"><li class="li step stepexpand">
+                <span class="ph cmd">In the Properties panel, on the <span class="keyword wintitle">General</span> tab, configure the
+                    following properties:</span>
+                <div class="itemgroup info">
+                    
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_ryz_tkr_bs__d2429e162" class="table" frame="border" border="1" rules="all">
+                            
+                            
+                            <thead class="thead" align="left">
+                                <tr class="row">
+                                    <th class="entry" valign="top" width="24.509803921568626%" id="d22481e202">General Property</th>
+
+                                    <th class="entry" valign="top" width="75.49019607843137%" id="d22481e205">Description</th>
+
+                                </tr>
+
+                            </thead>
+
+                            <tbody class="tbody">
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="24.509803921568626%" headers="d22481e202 ">Name</td>
+
+                                    <td class="entry" valign="top" width="75.49019607843137%" headers="d22481e205 ">Stage name.</td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="24.509803921568626%" headers="d22481e202 ">Description</td>
+
+                                    <td class="entry" valign="top" width="75.49019607843137%" headers="d22481e205 ">Optional description.</td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="24.509803921568626%" headers="d22481e202 ">On Record Error</td>
+
+                                    <td class="entry" valign="top" width="75.49019607843137%" headers="d22481e205 ">Error record handling for the stage: <ul class="ul" id="task_ryz_tkr_bs__d2429e209">
+                                            <li class="li">Discard - Discards the record.</li>
+
+                                            <li class="li">Send to Error - Sends the record to the pipeline for
+                                                error handling.</li>
+
+                                            <li class="li">Stop Pipeline - Stops the pipeline. </li>
+
+                                        </ul>
+</td>
+
+                                </tr>
+
+                            </tbody>
+
+                        </table>
+</div>
+
+                </div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">On the JDBC tab, configure the following properties:</span>
+                <div class="itemgroup info">
+                    
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_ryz_tkr_bs__table_nkm_dlr_bs" class="table" frame="border" border="1" rules="all">
+                            
+                            
+                            <thead class="thead" align="left">
+                                <tr class="row">
+                                    <th class="entry" valign="top" width="25.510204081632654%" id="d22481e274">JDBC Property</th>
+
+                                    <th class="entry" valign="top" width="74.48979591836735%" id="d22481e277">Description</th>
+
+                                </tr>
+
+                            </thead>
+
+                            <tbody class="tbody">
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="25.510204081632654%" headers="d22481e274 ">JDBC Connection String</td>
+
+                                    <td class="entry" valign="top" width="74.48979591836735%" headers="d22481e277 ">JDBC connection string for the JDBC</td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="25.510204081632654%" headers="d22481e274 ">Incremental Mode <a class="xref" href="JDBCConsumer.html#concept_ets_gnr_bs" title="JDBC Consumer runs in incremental mode by default."><img class="image" id="task_ryz_tkr_bs__image_u2t_w1s_bs" src="../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
+
+                                    <td class="entry" valign="top" width="74.48979591836735%" headers="d22481e277 ">Query mode. Enabled by default. </td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="25.510204081632654%" headers="d22481e274 ">SQL Query</td>
+
+                                    <td class="entry" valign="top" width="74.48979591836735%" headers="d22481e277 ">SQL query to use when reading data from the
+                                        database.</td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="25.510204081632654%" headers="d22481e274 ">Initial Offset</td>
+
+                                    <td class="entry" valign="top" width="74.48979591836735%" headers="d22481e277 "> </td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="25.510204081632654%" headers="d22481e274 ">Offset Column</td>
+
+                                    <td class="entry" valign="top" width="74.48979591836735%" headers="d22481e277 "> </td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="25.510204081632654%" headers="d22481e274 ">Query Interval</td>
+
+                                    <td class="entry" valign="top" width="74.48979591836735%" headers="d22481e277 "> </td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="25.510204081632654%" headers="d22481e274 ">Use Credentials</td>
+
+                                    <td class="entry" valign="top" width="74.48979591836735%" headers="d22481e277 "> </td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="25.510204081632654%" headers="d22481e274 ">Additional JDBC Configuration</td>
+
+                                    <td class="entry" valign="top" width="74.48979591836735%" headers="d22481e277 ">
+                                        <p class="p">Additional JDBC configuration properties to use. To add
+                                            properties, click <span class="ph uicontrol">Add</span> and define
+                                            the JDBC property name and value. </p>
+
+                                        <p class="p">Use the property names and values as expected by JDBC.
+                                        </p>
+
+                                    </td>
+
+                                </tr>
+
+                            </tbody>
+
+                        </table>
+</div>
+
+                </div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">If using JDBC credentials, on the <span class="ph uicontrol">Credentials</span> tab,
+                    configure the following properties:</span>
+                <div class="itemgroup info">
+                    
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_ryz_tkr_bs__table_mb1_kfs_bs" class="table" frame="border" border="1" rules="all">
+                            
+                            
+                            <thead class="thead" align="left">
+                                <tr class="row">
+                                    <th class="entry" valign="top" width="34.72222222222222%" id="d22481e395">Credentials Property</th>
+
+                                    <th class="entry" valign="top" width="65.27777777777779%" id="d22481e398">Description</th>
+
+                                </tr>
+
+                            </thead>
+
+                            <tbody class="tbody">
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="34.72222222222222%" headers="d22481e395 ">Username</td>
+
+                                    <td class="entry" valign="top" width="65.27777777777779%" headers="d22481e398 ">User name for the JDBC connection.</td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="34.72222222222222%" headers="d22481e395 ">Password</td>
+
+                                    <td class="entry" valign="top" width="65.27777777777779%" headers="d22481e398 ">Password for the JDBC account</td>
+
+                                </tr>
+
+                            </tbody>
+
+                        </table>
+</div>
+
+                </div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">If using drivers older than version 4.0, on the <span class="ph uicontrol">Legacy
+                        Drivers</span> tab, optionally configure the following
+                    properties:</span>
+                <div class="itemgroup info">
+                    
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_ryz_tkr_bs__table_ojq_d4s_bs" class="table" frame="border" border="1" rules="all">
+                            
+                            
+                            <thead class="thead" align="left">
+                                <tr class="row">
+                                    <th class="entry" valign="top" width="36.496350364963504%" id="d22481e450">Legacy Driver Property</th>
+
+                                    <th class="entry" valign="top" width="63.503649635036496%" id="d22481e453">Description</th>
+
+                                </tr>
+
+                            </thead>
+
+                            <tbody class="tbody">
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="36.496350364963504%" headers="d22481e450 ">JDBC Class Driver Name</td>
+
+                                    <td class="entry" valign="top" width="63.503649635036496%" headers="d22481e453 ">Class name for the JDBC driver. Use only for versions
+                                        older than version 4.0.</td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="36.496350364963504%" headers="d22481e450 ">Connection Health Test Query</td>
+
+                                    <td class="entry" valign="top" width="63.503649635036496%" headers="d22481e453 ">Optional query to test the health of a connection to a
+                                        driver version older than 4.0.</td>
+
+                                </tr>
+
+                            </tbody>
+
+                        </table>
+</div>
+
+                </div>
+            </li>
+</ol>
+
+    </div>
+
+</div>
+</div>
+<div class="navfooter"><!---->
+<span class="navparent"><a class="link" href="../Origins/Origins_title.html" title="Origins"><span class="navheader_label">Parent topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">Origins</span></a></span>  </div><div class="footer"><div> </div><!-- © <a href="http://creativecommons.org/licenses/by-nc/4.0/legalcode">CC BY-NC 4.0.</a> StreamSets, 2015. --></div>
+</body>
+</html>

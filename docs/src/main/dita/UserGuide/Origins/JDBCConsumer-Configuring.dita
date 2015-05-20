@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE task PUBLIC "-//OASIS//DTD DITA General Task//EN" "generalTask.dtd">
+<task id="task_ryz_tkr_bs">
+    <title>Configuring a JDBC Consumer</title>
+    <taskbody>
+        <context>
+            <p><indexterm>JDBC Consumer<indexterm>configuring</indexterm></indexterm>Configure a
+                JDBC Consumer origin to use a JDBC driver to read database data. </p>
+        </context>
+        <steps id="steps_hhn_vkr_bs">
+            <step
+                conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/1stStepErrorHandling">
+                <cmd/>
+            </step>
+            <step>
+                <cmd>On the JDBC tab, configure the following properties:</cmd>
+                <info>
+                    <table frame="all" rowsep="1" colsep="1" id="table_nkm_dlr_bs">
+                        <tgroup cols="2">
+                            <colspec colname="c1" colnum="1" colwidth="1*"/>
+                            <colspec colname="c2" colnum="2" colwidth="2.92*"/>
+                            <thead>
+                                <row>
+                                    <entry>JDBC Property</entry>
+                                    <entry>Description</entry>
+                                </row>
+                            </thead>
+                            <tbody>
+                                <row>
+                                    <entry>JDBC Connection String</entry>
+                                    <entry>JDBC connection string for the JDBC</entry>
+                                </row>
+                                <row>
+                                    <entry>Incremental Mode <xref
+                                            href="JDBCConsumer-Full-IncrementalQueries.dita#concept_ets_gnr_bs"
+                                                ><image href="../Graphics/icon_moreInfo.png"
+                                                id="image_u2t_w1s_bs" scale="10"/></xref></entry>
+                                    <entry>Query mode. Enabled by default. </entry>
+                                </row>
+                                <row>
+                                    <entry>SQL Query</entry>
+                                    <entry>SQL query to use when reading data from the
+                                        database.</entry>
+                                </row>
+                                <row>
+                                    <entry>Initial Offset</entry>
+                                    <entry/>
+                                </row>
+                                <row>
+                                    <entry>Offset Column</entry>
+                                    <entry/>
+                                </row>
+                                <row>
+                                    <entry>Query Interval</entry>
+                                    <entry/>
+                                </row>
+                                <row>
+                                    <entry>Use Credentials</entry>
+                                    <entry/>
+                                </row>
+                                <row>
+                                    <entry>Additional JDBC Configuration</entry>
+                                    <entry>
+                                        <p>Additional JDBC configuration properties to use. To add
+                                            properties, click <uicontrol>Add</uicontrol> and define
+                                            the JDBC property name and value. </p>
+                                        <p>Use the property names and values as expected by JDBC.
+                                        </p>
+                                    </entry>
+                                </row>
+                            </tbody>
+                        </tgroup>
+                    </table>
+                </info>
+            </step>
+            <step>
+                <cmd>If using JDBC credentials, on the <uicontrol>Credentials</uicontrol> tab,
+                    configure the following properties:</cmd>
+                <info>
+                    <table frame="all" rowsep="1" colsep="1" id="table_mb1_kfs_bs">
+                        <tgroup cols="2">
+                            <colspec colname="c1" colnum="1" colwidth="1*"/>
+                            <colspec colname="c2" colnum="2" colwidth="1.88*"/>
+                            <thead>
+                                <row>
+                                    <entry>Credentials Property</entry>
+                                    <entry>Description</entry>
+                                </row>
+                            </thead>
+                            <tbody>
+                                <row>
+                                    <entry>Username</entry>
+                                    <entry>User name for the JDBC connection.</entry>
+                                </row>
+                                <row>
+                                    <entry>Password</entry>
+                                    <entry>Password for the JDBC account</entry>
+                                </row>
+                            </tbody>
+                        </tgroup>
+                    </table>
+                </info>
+            </step>
+            <step>
+                <cmd>If using drivers older than version 4.0, on the <uicontrol>Legacy
+                        Drivers</uicontrol> tab, optionally configure the following
+                    properties:</cmd>
+                <info>
+                    <table frame="all" rowsep="1" colsep="1" id="table_ojq_d4s_bs">
+                        <tgroup cols="2">
+                            <colspec colname="c1" colnum="1" colwidth="1*"/>
+                            <colspec colname="c2" colnum="2" colwidth="1.74*"/>
+                            <thead>
+                                <row>
+                                    <entry>Legacy Driver Property</entry>
+                                    <entry>Description</entry>
+                                </row>
+                            </thead>
+                            <tbody>
+                                <row>
+                                    <entry>JDBC Class Driver Name</entry>
+                                    <entry>Class name for the JDBC driver. Use only for versions
+                                        older than version 4.0.</entry>
+                                </row>
+                                <row>
+                                    <entry>Connection Health Test Query</entry>
+                                    <entry>Optional query to test the health of a connection to a
+                                        driver version older than 4.0.</entry>
+                                </row>
+                            </tbody>
+                        </tgroup>
+                    </table>
+                </info>
+            </step>
+        </steps>
+    </taskbody>
+</task>

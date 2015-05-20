@@ -358,25 +358,25 @@ span.topic {
   line-height: 1em;
 }
 .related-links {
-	margin-top: 20px;
+	margin-top: 18px;
 }
 
 .related-links .ullinks {
 	padding-left: 0;
-	padding-top: 30px;
+	padding-top: 1px;
 	border-top: 1px solid #eee;	
 }
 
 .related-links .ulchildlink {
-	margin-bottom: 20px;
+	margin-bottom: 15px;
 }
 .related-links .ulchildlink br {
 	display: none;
 }
 .relinfo {
-	padding-top: 15px;
+	padding-top: 10px;
 /*	border-top: 1px solid #e1e1e1; LC not liking the rule */
-	margin-top: 30px;
+	margin-top: 18px;
 }
 .relinfo br {
 	display: none;

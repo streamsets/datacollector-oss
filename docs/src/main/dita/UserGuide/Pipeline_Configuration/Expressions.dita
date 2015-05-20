@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
+<concept id="concept_ofb_1cm_xq">
+ <title>Expressions</title>
+ <shortdesc>Use the expression language to configure expressions and conditions in processors, such
+    as the Expression Evaluator or Stream Selector. Some destination properties also require the
+    expression language, such as the directory template for Hadoop FS. </shortdesc>
+ <conbody>
+  <p><indexterm>processors<indexterm>configuring expressions and
+      conditions</indexterm></indexterm>Optionally, you can use the expression language to define
+      any stage or pipeline property that represents a numeric or string value. This allows you to
+      use constants or runtime properties throughout the pipeline. You can use expression completion
+      determine where you can use an expression and the  expression elements that you can use in
+      that location. </p>
+    <p>You can use the following elements in an expression:<ul id="ul_wrf_fjm_xq">
+        <li>Constants</li>
+        <li>Field names</li>
+        <li>Functions</li>
+        <li>Literals</li>
+        <li>Operators</li>
+        <li>Runtime properties</li>
+      </ul></p>
+ </conbody>
+  <related-links>
+    <link href="../Advanced_PipelineConfig/RuntimeProperties.dita#concept_fjx_g31_1s"/>
+    <link href="PipelineConstants.dita#concept_rjh_ntz_qr"/>
+    <link href="../Expression_Language/ExpressionLanguage_overview.dita#concept_p54_4kl_vq"/>
+  </related-links>
+</concept>

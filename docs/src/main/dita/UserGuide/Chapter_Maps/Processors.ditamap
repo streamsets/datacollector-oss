@@ -74,10 +74,5 @@
    <topicmeta><shortdesc></shortdesc></topicmeta>
    <topicref href="../Processors/ValueReplacer-Configuring.dita"/>
   </topicref>
-  <topicref href="../Processors/ConfiguringExpressionsConditions.dita" chunk="to-content">
-   <topicmeta><shortdesc></shortdesc></topicmeta>
-   <topicref href="../Processors/BasicSyntax.dita"/>
-   <topicref href="../Processors/UsingFieldNamesinExpressions.dita"/>
-  </topicref>
  </topicref>
 </map>

@@ -19,9 +19,6 @@
      <shortdesc/>
     </topicmeta>
    </topicref>
-   <topicref href="../Pipeline_Configuration/ExpressionCompletion.dita">
-    <topicref href="../Pipeline_Configuration/ExpressionCompletion-Tips.dita"/>
-   </topicref>
   </topicref>
   <topicref href="../Pipeline_Configuration/PipelineProperties.dita" chunk="to-content">
    <topicmeta>
@@ -37,6 +34,16 @@
    <topicmeta>
     <shortdesc/>
    </topicmeta>
+  </topicref>
+  <topicref href="../Pipeline_Configuration/Expressions.dita" chunk="to-content">
+   <topicmeta>
+    <shortdesc/>
+   </topicmeta>
+   <topicref href="../Pipeline_Configuration/Expressions-BasicSyntax.dita"/>
+   <topicref href="../Pipeline_Configuration/Expressions-FieldName.dita"/>
+   <topicref href="../Pipeline_Configuration/Expressions-ExpComp.dita">
+    <topicref href="../Pipeline_Configuration/Expressions-ExpCompTips.dita"/>
+   </topicref>
   </topicref>
   <topicref href="../Pipeline_Configuration/ErrorHandling.dita" chunk="to-content">
    <topicmeta>
