@@ -25,26 +25,34 @@ import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
 /**
- * A {@link URLClassLoader} for application isolation. Classes from the
- * application JARs are loaded in preference to the parent loader.
+ * A {@link URLClassLoader} for application isolation. There are two
+ * configuration types supported by StageClassLoader. The first
+ * is System classes which are always delegated to the parent
+ * and the second is application classes which are never delegated
+ * to the parent.
  */
-public class StageClassLoader extends BlackListURLClassLoader {
+public class SDCClassLoader extends BlackListURLClassLoader {
   /**
    * Default value of the system classes if the user did not override them.
    * JDK classes, hadoop classes and resources, and some select third-party
    * classes are considered system classes, and are not loaded by the
    * application classloader.
    */
-  public static final String API_CLASSES_DEFAULT;
-  public static final String CONTAINER_CLASSES_DEFAULT;
-  public static final String STAGE_CLASSES_DEFAULT;
-  private static final String BASE_CLASSES_DEFAULT;
+  public static final String SYSTEM_API_CLASSES_DEFAULT;
+  public static final String SYSTEM_CONTAINER_CLASSES_DEFAULT;
+  public static final String SYSTEM_STAGE_CLASSES_DEFAULT;
+  private static final String SYSTEM_BASE_CLASSES_DEFAULT;
+  public static final String APPLICATION_API_CLASSES_DEFAULT;
+  public static final String APPLICATION_CONTAINER_CLASSES_DEFAULT;
+  public static final String APPLICATION_STAGE_CLASSES_DEFAULT;
+  private static final String APPLICATION_BASE_CLASSES_DEFAULT;
   private static String API = "api";
   private static String BASE = "base";
   private static String CONTAINER = "container";
@@ -52,21 +60,27 @@ public class StageClassLoader extends BlackListURLClassLoader {
   private static final String[] CLASSLOADER_TYPES = new String[] {
     API, BASE, CONTAINER, STAGE
   };
+  private static final String CLASS_FILE_SUFFIX = ".class";
+  static final String SERVICES_PREFIX = "/META-INF/services/";
 
   private static final String SYSTEM_CLASSES_DEFAULT_KEY =
     "system.classes.default";
 
+  private static final String APPLICATION_CLASSES_DEFAULT_KEY =
+    "application.classes.default";
+
   private static boolean debug = true;
 
   public static void setDebug(boolean debug) {
-    StageClassLoader.debug = debug;
+    SDCClassLoader.debug = debug;
   }
 
   static {
-    Map<String, String> classesDefaultsMap = new HashMap<>();
+    Map<String, String> systemClassesDefaultsMap = new HashMap<>();
+    Map<String, String> applicationClassesDefaultsMap = new HashMap<>();
     for (String classLoaderType : CLASSLOADER_TYPES) {
       String propertiesFile = classLoaderType + "-classloader.properties";
-      try (InputStream is = StageClassLoader.class.getClassLoader()
+      try (InputStream is = SDCClassLoader.class.getClassLoader()
         .getResourceAsStream(propertiesFile);) {
         if (is == null) {
           throw new ExceptionInInitializerError("properties file " +
@@ -81,22 +95,29 @@ public class StageClassLoader extends BlackListURLClassLoader {
           throw new ExceptionInInitializerError("property " +
             SYSTEM_CLASSES_DEFAULT_KEY + " is not found");
         }
-        classesDefaultsMap.put(classLoaderType, systemClassesDefault);
+        systemClassesDefaultsMap.put(classLoaderType, systemClassesDefault);
+        applicationClassesDefaultsMap.put(classLoaderType, props.
+          getProperty(APPLICATION_CLASSES_DEFAULT_KEY, "").trim());
       } catch (IOException e) {
         throw new ExceptionInInitializerError(e);
       }
     }
-    BASE_CLASSES_DEFAULT = checkNotNull(classesDefaultsMap.get(BASE), BASE);
-    API_CLASSES_DEFAULT = checkNotNull(classesDefaultsMap.get(API), API) + "," + BASE_CLASSES_DEFAULT;
-    CONTAINER_CLASSES_DEFAULT = checkNotNull(classesDefaultsMap.get(CONTAINER), CONTAINER) + "," + BASE_CLASSES_DEFAULT;
-    STAGE_CLASSES_DEFAULT = checkNotNull(classesDefaultsMap.get(STAGE), STAGE) + "," + BASE_CLASSES_DEFAULT;
+    SYSTEM_BASE_CLASSES_DEFAULT = checkNotNull(systemClassesDefaultsMap.get(BASE), BASE);
+    SYSTEM_API_CLASSES_DEFAULT = checkNotNull(systemClassesDefaultsMap.get(API), API) + "," + SYSTEM_BASE_CLASSES_DEFAULT;
+    SYSTEM_CONTAINER_CLASSES_DEFAULT = checkNotNull(systemClassesDefaultsMap.get(CONTAINER), CONTAINER) + "," + SYSTEM_BASE_CLASSES_DEFAULT;
+    SYSTEM_STAGE_CLASSES_DEFAULT = checkNotNull(systemClassesDefaultsMap.get(STAGE), STAGE) + "," + SYSTEM_BASE_CLASSES_DEFAULT;
+    APPLICATION_BASE_CLASSES_DEFAULT = checkNotNull(applicationClassesDefaultsMap.get(BASE), BASE);
+    APPLICATION_API_CLASSES_DEFAULT = checkNotNull(applicationClassesDefaultsMap.get(API), API) + "," + APPLICATION_BASE_CLASSES_DEFAULT;
+    APPLICATION_CONTAINER_CLASSES_DEFAULT = checkNotNull(applicationClassesDefaultsMap.get(CONTAINER), CONTAINER) + "," + APPLICATION_BASE_CLASSES_DEFAULT;
+    APPLICATION_STAGE_CLASSES_DEFAULT = checkNotNull(applicationClassesDefaultsMap.get(STAGE), STAGE) + "," + APPLICATION_BASE_CLASSES_DEFAULT;
   }
 
   private final ClassLoader parent;
   private final List<String> systemClasses;
+  private final List<String> applicationClasses;
 
-  private StageClassLoader(String type, String name, List<URL> urls, ClassLoader parent,
-                          List<String> systemClasses, String[] blacklistedPackages) {
+  private SDCClassLoader(String type, String name, List<URL> urls, ClassLoader parent,
+                         List<String> systemClasses, List<String> applicationClasses, String[] blacklistedPackages) {
     super(type, name, urls, parent, blacklistedPackages);
     if (debug) {
       System.err.println(getClass().getSimpleName() + " " + getName() + ": urls: " + Arrays.toString(urls.toArray()));
@@ -117,21 +138,24 @@ public class StageClassLoader extends BlackListURLClassLoader {
     if(debug) {
       System.err.println(getClass().getSimpleName() + " " + getName() + ": system classes: " + this.systemClasses);
     }
+    this.applicationClasses = applicationClasses;
+    if(debug) {
+      System.err.println(getClass().getSimpleName() + " " + getName() + ": application classes: " + this.applicationClasses);
+    }
   }
-  public StageClassLoader(String type, String name, List<URL> urls, ClassLoader parent, String[] blacklistedPackages,
-                          String systemClasses) {
-    this(type, name, urls, parent, Arrays.asList(getTrimmedStrings(systemClasses)), blacklistedPackages);
-  }
-  public StageClassLoader(String type, String name, List<URL> urls, ClassLoader parent, String[] blacklistedPackages) {
-    this(type, name, urls, parent, Collections.<String>emptyList(), blacklistedPackages);
+
+  public SDCClassLoader(String type, String name, List<URL> urls, ClassLoader parent,
+                        String[] blacklistedPackages, String systemClasses, String applicationClasses) {
+    this(type, name, urls, parent, Arrays.asList(getTrimmedStrings(systemClasses)),
+      Arrays.asList(getTrimmedStrings(applicationClasses)), blacklistedPackages);
   }
 
   @Override
   public URL getResource(String name) {
     URL url = null;
 
-    if (!isSystemClass(name, systemClasses)) {
-      url= findResource(name);
+    if (!isClassInList(name, systemClasses)) {
+      url = findResource(name);
       if (url == null && name.startsWith("/")) {
         if (debug) {
           System.err.println(getClass().getSimpleName() + " " + getName() + ": Remove leading / off " + name);
@@ -140,7 +164,7 @@ public class StageClassLoader extends BlackListURLClassLoader {
       }
     }
 
-    if (url == null) {
+    if (url == null && !isClassInList(name, applicationClasses)) {
       url = parent.getResource(name);
     }
 
@@ -151,6 +175,96 @@ public class StageClassLoader extends BlackListURLClassLoader {
     }
 
     return url;
+  }
+
+  @Override
+  public Enumeration<URL> getResources(String name) throws IOException {
+    if (debug) {
+      System.err.println("getResources(" + name + ")");
+    }
+    Enumeration<URL> result = null;
+    if (!isClassInList(name, systemClasses)) {
+      // Search local repositories
+      if (debug) {
+        System.err.println("  Searching local repositories");
+      }
+      result = findResources(name);
+      if (result != null && result.hasMoreElements()) {
+        if (debug) {
+          System.err.println("  --> Returning result from local");
+        }
+        return result;
+      }
+      if (isClassInList(name, applicationClasses)) {
+        if (debug) {
+          System.err.println("  --> application class, returning empty enumeration");
+        }
+        return Collections.emptyEnumeration();
+      }
+    }
+    // Delegate to parent unconditionally
+    if (debug) {
+      System.err.println("  Delegating to parent classloader unconditionally " + parent);
+    }
+    result = super.getResources(name);
+    if (result != null && result.hasMoreElements()) {
+      if (debug) {
+        System.err.println("  --> Returning result from parent");
+      }
+      return result;
+    }
+    // (4) Resource was not found
+    if (debug) {
+      System.err.println("  --> Resource not found, returning empty enumeration");
+    }
+    return Collections.emptyEnumeration();
+  }
+
+  @Override
+  public InputStream getResourceAsStream(String name) {
+    if (debug) {
+      System.err.println("getResourceAsStream(" + name + ")");
+    }
+    InputStream stream = null;
+    if (!isClassInList(name, systemClasses)) {
+      // Search local repositories
+      if (debug) {
+        System.err.println("  Searching local repositories");
+      }
+      URL url = findResource(name);
+      if (url != null) {
+        if (debug) {
+          System.err.println("  --> Returning stream from local");
+        }
+        try {
+          return url.openStream();
+        } catch (IOException e) {
+          // Ignore
+        }
+      }
+      if (isClassInList(name, applicationClasses)) {
+        if (debug) {
+          System.err.println("  --> application class, returning null");
+        }
+        return null;
+      }
+    }
+    // Delegate to parent unconditionally
+    if (debug) {
+      System.err.println("  Delegating to parent classloader unconditionally " + parent);
+    }
+    stream = parent.getResourceAsStream(name);
+    if (stream != null) {
+      if (debug) {
+        System.err.println("  --> Returning stream from parent");
+      }
+      return stream;
+    }
+    // (4) Resource was not found
+    if (debug) {
+      System.err.println("  --> Resource not found, returning null");
+    }
+    return null;
   }
 
   @Override
@@ -168,7 +282,7 @@ public class StageClassLoader extends BlackListURLClassLoader {
     Class<?> c = findLoadedClass(name);
     ClassNotFoundException ex = null;
 
-    if (c == null && !isSystemClass(name, systemClasses)) {
+    if (c == null && !isClassInList(name, systemClasses)) {
       // Try to load class from this classloader's URLs. Note that this is like
       // the servlet spec, not the usual Java 2 behaviour where we ask the
       // parent to attempt to load first.
@@ -185,7 +299,7 @@ public class StageClassLoader extends BlackListURLClassLoader {
       }
     }
 
-    if (c == null) { // try parent
+    if (c == null && !isClassInList(name, applicationClasses)) { // try parent
       c = parent.loadClass(name);
       if (debug && c != null) {
         System.err.println(getClass().getSimpleName() + " " + getName() + ": Loaded class from parent: " + name + " ");
@@ -210,17 +324,21 @@ public class StageClassLoader extends BlackListURLClassLoader {
    * patterns and none of the negative ones.
    *
    * @param name the class name to check
-   * @param systemClasses a list of system class configurations.
+   * @param classList a list of system class configurations.
    * @return true if the class is a system class
    */
-  public static boolean isSystemClass(String name, List<String> systemClasses) {
+  public static boolean isClassInList(String name, List<String> classList) {
     boolean result = false;
-    if (systemClasses != null) {
-      String canonicalName = name.replace('/', '.');
+    if (classList != null) {
+      String canonicalName = name;
+      if (canonicalName.startsWith(SERVICES_PREFIX)) {
+        canonicalName = canonicalName.substring(SERVICES_PREFIX.length());
+      }
+      canonicalName = canonicalName.replace('/', '.');
       while (canonicalName.startsWith(".")) {
         canonicalName = canonicalName.substring(1);
       }
-      for (String c : systemClasses) {
+      for (String c : classList) {
         boolean shouldInclude = true;
         if (c.startsWith("-")) {
           c = c.substring(1);

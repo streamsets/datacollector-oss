@@ -73,7 +73,7 @@ public class BootstrapMain {
   @SuppressWarnings("unchecked")
   public static void main(String[] args) throws Exception {
     boolean debug = Boolean.getBoolean("pipeline.bootstrap.debug");
-    StageClassLoader.setDebug(debug);
+    SDCClassLoader.setDebug(debug);
     String mainClass = null;
     String apiClasspath = null;
     String containerClasspath = null;
@@ -172,8 +172,10 @@ public class BootstrapMain {
     libsUrls.putAll(userLibsUrls);
 
     // Create all ClassLoaders
-    ClassLoader apiCL = new BlackListURLClassLoader("api-lib", "API", apiUrls, ClassLoader.getSystemClassLoader(), null);
-    ClassLoader containerCL = new BlackListURLClassLoader("container-lib", "Container", containerUrls, apiCL, null);
+    ClassLoader apiCL = new SDCClassLoader("api-lib", "API", apiUrls, ClassLoader.getSystemClassLoader(), null,
+      SDCClassLoader.SYSTEM_API_CLASSES_DEFAULT, SDCClassLoader.APPLICATION_API_CLASSES_DEFAULT);
+    ClassLoader containerCL = new SDCClassLoader("container-lib", "Container", containerUrls, apiCL, null,
+      SDCClassLoader.SYSTEM_CONTAINER_CLASSES_DEFAULT, SDCClassLoader.APPLICATION_CONTAINER_CLASSES_DEFAULT);
     List<ClassLoader> stageLibrariesCLs = new ArrayList<>();
     for (Map.Entry<String,List<URL>> entry : libsUrls.entrySet()) {
       String[] parts = entry.getKey().split(FILE_SEPARATOR);
@@ -183,8 +185,9 @@ public class BootstrapMain {
       }
       String type = parts[0];
       String name = parts[1];
-      stageLibrariesCLs.add(new BlackListURLClassLoader(type, name, entry.getValue(), apiCL,
-                                                        PACKAGES_BLACKLIST_FOR_STAGE_LIBRARIES));
+      stageLibrariesCLs.add(new SDCClassLoader(type, name, entry.getValue(), apiCL,
+                                                        PACKAGES_BLACKLIST_FOR_STAGE_LIBRARIES,
+        SDCClassLoader.SYSTEM_STAGE_CLASSES_DEFAULT, SDCClassLoader.SYSTEM_STAGE_CLASSES_DEFAULT));
     }
 
     // Bootstrap container

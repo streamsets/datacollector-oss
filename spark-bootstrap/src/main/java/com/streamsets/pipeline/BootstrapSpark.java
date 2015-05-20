@@ -107,10 +107,10 @@ public class BootstrapSpark {
     if (parent == null) {
       parent = ClassLoader.getSystemClassLoader();
     }
-    apiCL = new StageClassLoader("api-lib", "API", apiUrls, parent, null,
-      StageClassLoader.API_CLASSES_DEFAULT);
-    containerCL = new StageClassLoader("container-lib", "Container", containerUrls, apiCL, null,
-      StageClassLoader.CONTAINER_CLASSES_DEFAULT);
+    apiCL = new SDCClassLoader("api-lib", "API", apiUrls, parent, null,
+      SDCClassLoader.SYSTEM_API_CLASSES_DEFAULT, SDCClassLoader.APPLICATION_API_CLASSES_DEFAULT);
+    containerCL = new SDCClassLoader("container-lib", "Container", containerUrls, apiCL, null,
+      SDCClassLoader.SYSTEM_CONTAINER_CLASSES_DEFAULT, SDCClassLoader.APPLICATION_CONTAINER_CLASSES_DEFAULT);
     stageLibrariesCLs = new ArrayList<ClassLoader>();
     String sparkLib = getSourceLibraryName(pipelineJson);
     if (sparkLib == null) {
@@ -126,16 +126,17 @@ public class BootstrapSpark {
       }
       String type = parts[0];
       String name = parts[1];
-      StageClassLoader stageClassLoader = new StageClassLoader(type, name, entry.getValue(), apiCL,
-        BootstrapMain.PACKAGES_BLACKLIST_FOR_STAGE_LIBRARIES, StageClassLoader.STAGE_CLASSES_DEFAULT);
+      SDCClassLoader sdcClassLoader = new SDCClassLoader(type, name, entry.getValue(), apiCL,
+        BootstrapMain.PACKAGES_BLACKLIST_FOR_STAGE_LIBRARIES, SDCClassLoader.SYSTEM_STAGE_CLASSES_DEFAULT,
+        SDCClassLoader.APPLICATION_STAGE_CLASSES_DEFAULT);
       // TODO add spark, scala, etc to blacklist
       if (lookupLib.equals(entry.getKey())) {
         if (sparkCL != null) {
           throw new IllegalStateException("Found two classloaders for " + lookupLib);
         }
-        sparkCL = stageClassLoader;
+        sparkCL = sdcClassLoader;
       }
-      stageLibrariesCLs.add(stageClassLoader);
+      stageLibrariesCLs.add(sdcClassLoader);
     }
     if (sparkCL == null) {
       throw new IllegalStateException("Could not find classloader for " + lookupLib);
