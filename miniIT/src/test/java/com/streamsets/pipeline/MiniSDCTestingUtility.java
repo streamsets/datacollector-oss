@@ -189,7 +189,7 @@ public class MiniSDCTestingUtility {
     File sdcDistFile = new File(sdcDistRoot);
     if (!sdcDistFile.exists()) {
       throw new RuntimeException("SDC dist root dir " + sdcDistFile.getAbsolutePath()
-        + "doesn't exist, mvn install needs to be run");
+        + "doesn't exist");
     }
     LOG.info("SDC dist root at " + sdcDistFile.getAbsolutePath());
     sdcInStream.close();

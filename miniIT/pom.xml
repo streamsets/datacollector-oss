@@ -77,6 +77,30 @@
       <scope>test</scope>
     </dependency>
 
+    <dependency>
+      <groupId>com.streamsets</groupId>
+      <artifactId>streamsets-datacollector-dist</artifactId>
+      <scope>test</scope>
+      <exclusions>
+        <exclusion>
+         <groupId>com.streamsets</groupId>
+         <artifactId>streamsets-datacollector-api</artifactId>
+        </exclusion>
+        <exclusion>
+         <groupId>com.streamsets</groupId>
+         <artifactId>streamsets-datacollector-container</artifactId>
+        </exclusion>
+        <exclusion>
+         <groupId>com.streamsets</groupId>
+         <artifactId>streamsets-datacollector-container-common</artifactId>
+        </exclusion>
+        <exclusion>
+         <groupId>com.streamsets</groupId>
+         <artifactId>streamsets-datacollector-bootstrap</artifactId>
+        </exclusion>
+      </exclusions>
+    </dependency>
+
      <dependency>
       <groupId>log4j</groupId>
       <artifactId>log4j</artifactId>
