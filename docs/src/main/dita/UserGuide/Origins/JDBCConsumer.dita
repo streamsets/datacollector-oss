@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
+<concept id="concept_qhf_hjr_bs">
+ <title>JDBC Consumer</title>
+ <shortdesc>The JDBC Consumer origin uses JDBC to read database data. JDBC Consumer returns data as
+  a map with column names and field values. <draft-comment author="Loretta">should I say JSON
+   map?</draft-comment></shortdesc>
+ <conbody>
+    <p><indexterm>origins<indexterm>JDBC Consumer</indexterm></indexterm><indexterm>JDBC Consumer
+          origin<indexterm>overview</indexterm></indexterm>When you configure JDBC Consumer, you
+      specify connection information, query interval, and custom JDBC configuration properties to
+      determine how JDBC Consumer connect to the database. You configure the query mode, offset
+      column, initial offset value, and SQL query to define the data returned by the database.</p>
+    <p>You can also configure additional properties for driver versions earlier than 4.0.</p>
+  </conbody>
+</concept>

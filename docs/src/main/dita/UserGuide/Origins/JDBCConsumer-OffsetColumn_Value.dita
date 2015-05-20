@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
+<concept id="concept_nxz_2kz_bs">
+ <title>Offset Column and Offset Value</title>
+ <shortdesc>JDBC Consumer uses an offset column and initial offset value to determine where to start
+  reading data within a table. The offset column is a column in the table with unique values. The
+  initial offset value is a value within the offset column where you want JDBC Consumer to start
+  reading.</shortdesc>
+ <conbody>
+  <p>When you configure the SQL query for the JDBC Consumer, you use the offset column and offset
+   value in a WHERE clause that specifies the data to be read. Use "${offset}" to represent the
+   offset value, for example: <codeph>SELECT * from &lt;table> WHERE &lt;offset column> >
+    ${offset}</codeph>. </p>
+  <p>JDBC Consumer uses the offset to determine where to continue after a deliberate or unexpected
+   stop. As JDBC Consumer reads, it updates the offset value internally. When the pipeline stops,
+   JDBC Consumer notes where it stopped reading data. When you restart the pipeline, it continues
+   from the last-saved offset by default. You can reset the origin to use the initial offset
+   value.</p>
+  <p><note/>To reduce the chance of duplicate reads, use a primary key or index column for the
+   offset column and include the offset column in an ORDER BY clause.</p>
+ </conbody>
+</concept>

@@ -56,8 +56,8 @@
         </steps>
     </taskbody>
     <related-links>
-        <link href="../Pipeline_Configuration/ExpressionCompletion.dita#concept_tns_krz_sr"/>
-        <link href="ConfiguringExpressionsConditions.dita#concept_ofb_1cm_xq"/>
+        <link href="../Pipeline_Configuration/Expressions-ExpComp.dita#concept_tns_krz_sr"/>
+        <link href="../Pipeline_Configuration/Expressions.dita#concept_ofb_1cm_xq"/>
         <link href="../Expression_Language/ExpressionLanguage_overview.dita#concept_p54_4kl_vq"/>
     </related-links>
 </task>

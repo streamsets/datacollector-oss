@@ -11,11 +11,11 @@
         <prodinfo>
             <prodname>Data Collector</prodname>
             <vrmlist>
-                <vrm version="1" release="0" modification="0 Beta"/>
+                <vrm version="1" release="0" modification="0 Beta 2"/>
             </vrmlist>
         </prodinfo>
         <bookid>
-            <bookpartno>SDC-UG-000-0000-001B</bookpartno>
+            <bookpartno>SDC-UG-000-0000-001B2</bookpartno>
         </bookid>
         <bookrights>
             <bookowner>
@@ -42,7 +42,7 @@
     <chapter href="Chapter_Maps/Administration.ditamap" format="ditamap"/>
     <appendix href="Chapter_Maps/Troubleshooting.ditamap" format="ditamap"/>
     <appendix href="Chapter_Maps/Glossary.ditamap" format="ditamap"/>
-    <appendix href="Chapter_Maps/ExpressionLanguage.ditamap" format="ditamap" outputclass=""/>
+    <appendix href="Chapter_Maps/ExpressionLanguage.ditamap" format="ditamap"/>
     <appendix href="Chapter_Maps/GrokPatterns.ditamap" format="ditamap"/>
     <appendix href="Chapter_Maps/ReusableContent.ditamap" format="ditamap"
         processing-role="resource-only"/>

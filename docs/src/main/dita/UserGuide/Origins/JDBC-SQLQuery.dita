@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
+<concept id="concept_uj4_mxy_bs">
+ <title>SQL Query</title>
+ <shortdesc>The SQL query defines the data returned from the database. </shortdesc>
+ <conbody>
+  <p>When you define the SQL query, use the following guidelines:<dl>
+    <dlentry>
+     <dt>In the WHERE clause, include the offset column and the ${offset} offset value</dt>
+     <dd>JDBC Consumer uses an offset column and value to determine the data that is returned.
+      Include both in the WHERE clause of the query. </dd>
+     <dd>For example, when you start a pipeline, the following query returns all data from the table
+      where the data in the offset column is greater than the initial offset value.
+      <codeblock>SELECT * FROM &lt;tablename> WHERE &lt;offset column> > ${offset}</codeblock></dd>
+    </dlentry>
+    <dlentry>
+     <dt>In the ORDER BY clause, include the offset column as the first column</dt>
+     <dd>To avoid returning duplicate data, use the offset column as the first column in the ORDER
+      BY clause.</dd>
+    </dlentry>
+    <dlentry>
+     <dt>If using a LIMIT, make sure it is less than the batch size</dt>
+     <dd>
+      <draft-comment author="Loretta">reword this</draft-comment>
+     </dd>
+    </dlentry>
+   </dl></p>
+ </conbody>
+</concept>

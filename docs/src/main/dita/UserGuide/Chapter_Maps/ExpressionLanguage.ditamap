@@ -7,8 +7,8 @@
    <topicmeta>
     <shortdesc/>
    </topicmeta>
-   <topicref href="../Processors/BasicSyntax.dita"/>
-   <topicref href="../Processors/UsingFieldNamesinExpressions.dita"/>
+   <topicref href="../Pipeline_Configuration/Expressions-BasicSyntax.dita"/>
+   <topicref href="../Pipeline_Configuration/Expressions-FieldName.dita"/>
    <topicref href="../Expression_Language/DataTypeCoercion.dita"/>
    <topicref href="../Expression_Language/StageInstanceName.dita"/>
    <topicref href="../Expression_Language/StagePaths.dita"/>

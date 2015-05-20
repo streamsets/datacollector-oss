@@ -34,7 +34,7 @@
   </section>
  </conbody>
  <related-links>
-  <link href="ConfiguringExpressionsConditions.dita#concept_ofb_1cm_xq"/>
+  <link href="../Pipeline_Configuration/Expressions.dita#concept_ofb_1cm_xq"/>
   <link href="../Expression_Language/ExpressionLanguage_overview.dita#concept_p54_4kl_vq"/>
  </related-links>
 </concept>
