@@ -222,14 +222,20 @@ public class SparkProviderImpl implements SparkProvider {
       StageDefinition stageDef = stageLibrary.getStage(stageConf.getLibrary(), stageConf.getStageName(),
         stageConf.getStageVersion());
       if (stageConf.getInputLanes().isEmpty()) {
-        // set all the simple properties as config properties
         for (ConfigConfiguration conf : stageConf.getConfiguration()) {
           if (conf.getValue() != null) {
-            if (conf.getValue() instanceof String || conf.getValue() instanceof Number ||
-              conf.getValue().getClass().isPrimitive()) {
+            if (canCastToString(conf.getValue())) {
+              LOG.debug("Adding to source configs " + conf.getName() + "=" + conf.getValue());
               sourceConfigs.put(conf.getName(), String.valueOf(conf.getValue()));
+            } else if (conf.getValue() instanceof List) {
+              List<Map<String, Object>> arrayListValues = (List<Map<String, Object>>) conf.getValue();
+              if (!arrayListValues.isEmpty()) {
+                addToSourceConfigs(sourceConfigs, arrayListValues);
+              } else {
+                LOG.debug("Conf value for " + conf.getName() + " is empty");
+              }
             } else {
-              // TODO should we add others, perhaps as JSON?
+              LOG.warn("Conf value is of unknown type " + conf.getValue());
             }
           }
         }
@@ -380,6 +386,38 @@ public class SparkProviderImpl implements SparkProvider {
     } finally {
       process.cleanup();
     }
+  }
+
+  private void addToSourceConfigs(Map<String, String> sourceConfigs, List<Map<String, Object>> arrayListValues) {
+    for (Map<String, Object> map : arrayListValues) {
+      String confKey = null;
+      String confValue = null;
+      for (Map.Entry<String, Object> mapEntry : map.entrySet()) {
+        String mapKey = mapEntry.getKey();
+        Object mapValue = mapEntry.getValue();
+        if (mapKey.equals("key")) {
+          // Assuming the key is always string
+          confKey = String.valueOf(mapValue);
+        } else if (mapKey.equals("value")) {
+          confValue = canCastToString(mapValue) ? String.valueOf(mapValue) : null;
+        } else {
+          confKey = mapKey;
+          confValue = canCastToString(mapValue) ? String.valueOf(mapValue) : null;
+        }
+        if (confKey != null && confValue != null) {
+          LOG.debug("Adding to source configs " + confKey + "=" + confValue);
+          sourceConfigs.put(confKey, confValue);
+        }
+      }
+    }
+  }
+
+  private boolean canCastToString(Object value) {
+    if (value instanceof String || value instanceof Number || value.getClass().isPrimitive()
+      || value instanceof Boolean) {
+      return true;
+    }
+    return false;
   }
 
   private void checkNumExecutors(String numExecutorsString) {

@@ -160,26 +160,15 @@ public class MiniSDCTestingUtility {
     return ntries < 5;
   }
 
-  /**
-   * Start mini sdc
-   * @param pipelineJson the pipeline json file
-   * @param executionMode execution mode (standalone or cluster)
-   * @return
-   * @throws Exception
-   */
-  public MiniSDC startMiniSDC(String pipelineJson, ExecutionMode executionMode) throws Exception {
-    return startMiniSDC(pipelineJson, executionMode, new HashMap<String, String>());
-  }
 
   /**
    * Start mini SDC
    * @param pipelineJson the pipeline json file
    * @param executionMode the Execution mode - could be standalone or cluster
-   * @param props any additional props (for cluster mode)
    * @return
    * @throws Exception
    */
-  public MiniSDC startMiniSDC(String pipelineJson, ExecutionMode executionMode, Map<String, String> props)
+  public MiniSDC startMiniSDC(String pipelineJson, ExecutionMode executionMode)
     throws Exception {
     Properties miniITProps = new Properties();
     File miniITProperties = new File(Resources.getResource("miniIT.properties").toURI());
@@ -221,7 +210,7 @@ public class MiniSDCTestingUtility {
     System.setProperty("sdc.conf.dir", targetRoot + "/etc");
     System.setProperty("sdc.libexec.dir", targetRoot + "/libexec");
     System.setProperty("sdc.static-web.dir", targetRoot + "/static-web");
-    rewriteProperties(sdcProperties, executionMode, props);
+    rewriteProperties(sdcProperties, executionMode);
     this.miniSDC = new MiniSDC(sdcDistRoot);
     this.miniSDC.start(pipelineJson);
     return this.miniSDC;
@@ -268,7 +257,7 @@ public class MiniSDCTestingUtility {
     return commonProps;
   }
 
-  private void rewriteProperties(File sdcPropertiesFile, ExecutionMode executionMode, Map<String, String> props)
+  private void rewriteProperties(File sdcPropertiesFile, ExecutionMode executionMode)
     throws IOException {
     InputStream sdcInStream = null;
     OutputStream sdcOutStream = null;
@@ -281,9 +270,6 @@ public class MiniSDCTestingUtility {
         sdcProperties.setProperty(mapEntry.getKey(), mapEntry.getValue());
       }
 
-      for (Map.Entry<String, String> mapEntry : props.entrySet()) {
-        sdcProperties.setProperty(mapEntry.getKey(), mapEntry.getValue());
-      }
       sdcProperties.setProperty("sdc.execution.mode", executionMode.name());
 
       sdcOutStream = new FileOutputStream(sdcPropertiesFile);
