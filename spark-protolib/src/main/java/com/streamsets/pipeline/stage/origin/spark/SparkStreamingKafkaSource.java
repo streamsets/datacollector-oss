@@ -62,7 +62,7 @@ public class SparkStreamingKafkaSource extends BaseKafkaSource implements Offset
   public List<ConfigIssue> validateConfigs() throws StageException {
     List<ConfigIssue> issues = validateCommonConfigs(new ArrayList<ConfigIssue>());
     try {
-      int partitionCount = KafkaUtil.getPartitionCount(metadataBrokerList, topic, 1, 0);
+      int partitionCount = KafkaUtil.getPartitionCount(metadataBrokerList, topic, 3, 1000);
       if(partitionCount < 1) {
         issues.add(getContext().createConfigIssue(Groups.KAFKA.name(), "topic",
           Errors.KAFKA_42, topic));
@@ -72,7 +72,7 @@ public class SparkStreamingKafkaSource extends BaseKafkaSource implements Offset
       }
     } catch (KafkaConnectionException e) {
       issues.add(getContext().createConfigIssue(Groups.KAFKA.name(), "metadataBrokerList",
-        Errors.KAFKA_67, metadataBrokerList, e));
+        e.getErrorCode(), metadataBrokerList, e));
     } catch (StageException e) {
       issues.add(getContext().createConfigIssue(Groups.KAFKA.name(), "topic",
         Errors.KAFKA_41, topic, e.getMessage(), e));
@@ -84,7 +84,7 @@ public class SparkStreamingKafkaSource extends BaseKafkaSource implements Offset
   public int getParallelism() throws StageException {
     if(originParallelism == 0) {
       //origin parallelism is not yet calculated
-      originParallelism = KafkaUtil.getPartitionCount(metadataBrokerList, topic, 1, 0);
+      originParallelism = KafkaUtil.getPartitionCount(metadataBrokerList, topic, 3, 1000);
     }
     return originParallelism;
   }
