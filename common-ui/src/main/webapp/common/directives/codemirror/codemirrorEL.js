@@ -24,7 +24,7 @@ angular.module('dataCollectorApp.codemirrorDirectives')
           // Register our custom Codemirror hint plugin.
           window.CodeMirror.registerHelper('hint', 'dictionaryHint', function(editor, options, c) {
             var dictionary = editor.options.dictionary;
-            var dictRegex = dictionary.regex || /[\w:'\[\]/$]+/;
+            var dictRegex = (dictionary.regex && dictionary.regex === 'wordColonSlash') ? /[\w:/$]+/ : /[\w:'\[\]/$]+/;
             var mode = editor.doc.modeOption;
             var cur = editor.getCursor(), curLine = editor.getLine(cur.line);
             var start = cur.ch, end = start;

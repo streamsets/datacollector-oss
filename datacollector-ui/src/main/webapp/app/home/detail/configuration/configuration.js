@@ -75,7 +75,7 @@ angular
           elFunctionDefinitions: configDefinition.elFunctionDefinitions,
           elConstantDefinitions: configDefinition.elConstantDefinitions,
           pipelineConstants: pipelineConstants ? pipelineConstants.value : [],
-          regex: /[\w:/$]+/
+          regex: 'wordColonSlash'
         };
       },
 
@@ -91,7 +91,7 @@ angular
           elConstantDefinitions: pipelineService.getTextELConstantDefinitions(),
           pipelineConstants: [],
           textMode: configDefinition.mode,
-          regex: /[\w:'\[\]/$]+/
+          regex: "wordColonSlashBracket"
         };
       },
 
