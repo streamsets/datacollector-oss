@@ -291,6 +291,13 @@ public class ClusterPipelineManager extends AbstractTask implements PipelineMana
     //Creating directory eagerly also avoids the need of synchronization
     createPipelineDirIfNotExist(name);
     PipelineState ps = stateTracker.getState();
+    LOG.debug("State of pipeline is " + ps);
+    PipelineConfiguration pipelineConf = pipelineStore.load(name, rev);
+    ExecutionMode executionMode = ExecutionMode.valueOf((String) pipelineConf.getConfiguration(
+      PipelineDefConfigs.EXECUTION_MODE_CONFIG).getValue());
+    if (executionMode != ExecutionMode.CLUSTER) {
+      throw new PipelineManagerException(ValidationError.VALIDATION_0073);
+    }
     if (ps == null) {
       validatePipelineExistence(name);
     } else if (ps.getState() != State.RUNNING) {
@@ -307,15 +314,8 @@ public class ClusterPipelineManager extends AbstractTask implements PipelineMana
       }
       stateTracker.setState(name, rev, State.RUNNING, "Starting cluster pipeline", null, ps.getAttributes());
     }
-    PipelineConfiguration pipelineConf = pipelineStore.load(name, rev);
-    ExecutionMode executionMode = ExecutionMode.valueOf((String) pipelineConf.getConfiguration(
-      PipelineDefConfigs.EXECUTION_MODE_CONFIG).getValue());
-    if (executionMode == ExecutionMode.CLUSTER) {
-      managerRunnable.requestTransition(State.RUNNING, appState, pipelineConf);
-      return stateTracker.getState();
-    } else {
-      throw new PipelineManagerException(ValidationError.VALIDATION_0073);
-    }
+    managerRunnable.requestTransition(State.RUNNING, appState, pipelineConf);
+    return stateTracker.getState();
   }
 
   @Override
