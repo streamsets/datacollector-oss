@@ -61,7 +61,9 @@ angular.module('dataCollectorApp')
       webSocketBaseURL = ((loc.protocol === "https:") ?
           "wss://" : "ws://") + loc.hostname + (((loc.port != 80) && (loc.port != 443)) ? ":" + loc.port : ""),
       webSocketStatusURL = webSocketBaseURL + '/rest/v1/webSocket?type=status',
-      statusWebSocket;
+      statusWebSocket,
+      BACKSPACE_KEY = 8,
+      DELETE_KEY = 46;
 
     $rootScope.pipelineConstant = pipelineConstant;
     $rootScope.$storage = $localStorage.$default({
@@ -169,7 +171,18 @@ angular.module('dataCollectorApp')
        */
       clearLocalStorage: function() {
         $localStorage.$reset();
+      },
+
+      bodyKeyEvent: function($event) {
+        if($event.target === $event.currentTarget &&
+          ($event.keyCode === BACKSPACE_KEY || $event.keyCode === DELETE_KEY)) {
+          $event.preventDefault();
+          $event.stopPropagation();
+
+          $rootScope.$broadcast('bodyDeleteKeyPressed');
+        }
       }
+
     };
 
     /**
