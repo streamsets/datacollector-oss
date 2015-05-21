@@ -20,7 +20,7 @@
         </span>
       </button>
 
-      <div class="btn-group" ng-if="logFiles && logFiles.length">
+      <div class="btn-group download-btn-group" ng-if="logFiles && logFiles.length">
         <a href="/rest/v1/log/files/{{logFiles[0].file}}?attachment=true" target="_self"
            class="btn btn-primary btn-sm">{{'logs.download' | translate}}</a>
         <button type="button" class="btn btn-primary btn-sm dropdown-toggle" data-toggle="dropdown" aria-expanded="false">

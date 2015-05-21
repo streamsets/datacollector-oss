@@ -53,7 +53,7 @@ angular.module('dataCollectorApp')
 
   })
   .run(function ($location, $rootScope, $modal, api, pipelineConstant, $localStorage, contextHelpService,
-                 $translate, authService, userRoles, configuration, Analytics) {
+                 $timeout, $translate, authService, userRoles, configuration, Analytics) {
     var defaultTitle = 'StreamSets Data Collector',
       pipelineStatusTimer,
       isWebSocketSupported = (typeof(WebSocket) === "function"),
