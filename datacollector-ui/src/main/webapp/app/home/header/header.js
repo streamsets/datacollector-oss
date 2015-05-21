@@ -285,4 +285,9 @@ angular
       }
     });
 
+
+    $scope.$on('bodyDeleteKeyPressed', function() {
+      $scope.deleteSelection();
+    });
+
   });

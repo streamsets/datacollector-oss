@@ -1083,15 +1083,15 @@ angular
           issueObj.additionalInfo && issueObj.additionalInfo.openStreams) {
           var stageInstance = _.find(pipelineConfig.stages, function(stage) {
               return stage.instanceName === firstOpenLaneStageInstanceName;
-            }),
-            laneName = issueObj.additionalInfo.openStreams[0],
-            laneIndex = _.indexOf(stageInstance.outputLanes, laneName);
+            });
 
-          firstOpenLane = {
-            stageInstance: stageInstance,
-            laneName: laneName,
-            laneIndex: laneIndex
-          };
+          if(stageInstance) {
+            firstOpenLane = {
+              stageInstance: stageInstance,
+              laneName: issueObj.additionalInfo.openStreams[0],
+              laneIndex: _.indexOf(stageInstance.outputLanes, issueObj.additionalInfo.openStreams[0])
+            };
+          }
         }
       }
 
