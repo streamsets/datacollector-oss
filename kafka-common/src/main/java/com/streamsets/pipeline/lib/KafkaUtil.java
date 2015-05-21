@@ -29,8 +29,9 @@ public class KafkaUtil {
                                                long backOffms) throws KafkaConnectionException {
     TopicMetadata topicMetadata = null;
     boolean connectionError = true;
+    boolean retry = true;
     int retryCount = 0;
-    while (connectionError && retryCount <= maxRetries) {
+    while (retry && retryCount <= maxRetries) {
       for (KafkaBroker broker : kafkaBrokers) {
         SimpleConsumer simpleConsumer = null;
         try {
@@ -41,7 +42,7 @@ public class KafkaUtil {
           TopicMetadataRequest req = new TopicMetadataRequest(topics);
           kafka.javaapi.TopicMetadataResponse resp = simpleConsumer.send(req);
 
-          //No exception => no connection error
+          // No exception => no connection error
           connectionError = false;
 
           List<TopicMetadata> topicMetadataList = resp.topicsMetadata();
@@ -50,8 +51,8 @@ public class KafkaUtil {
             continue;
           }
           topicMetadata = topicMetadataList.iterator().next();
-          if (topicMetadata != null) {
-            break;
+          if (topicMetadata != null && topicMetadata.errorCode() == 0) {
+            retry = false;
           }
         } catch (Exception e) {
           //could not connect to this broker, try others
@@ -61,8 +62,8 @@ public class KafkaUtil {
           }
         }
       }
-      if(connectionError) {
-        LOG.warn("Unable to connect to any of the kafka brokers. Waiting for '{}' seconds before retrying",
+      if(retry) {
+        LOG.warn("Unable to connect or cannot fetch topic metadata. Waiting for '{}' seconds before retrying",
           backOffms/1000);
         retryCount++;
         if(!ThreadUtil.sleep(backOffms)) {
@@ -78,15 +79,14 @@ public class KafkaUtil {
   }
 
   public static int getPartitionCount(String metadataBrokerList, String topic, int maxRetries,
-                                               long backOffms) throws KafkaConnectionException {
+                                               long backOffms) throws StageException {
     List<KafkaBroker> kafkaBrokers = getKafkaBrokers(metadataBrokerList);
     if(kafkaBrokers.isEmpty()) {
-      new StageException(Errors.KAFKA_07, metadataBrokerList);
+      throw new KafkaConnectionException(Errors.KAFKA_07, metadataBrokerList);
     }
-    TopicMetadata topicMetadata;
-    topicMetadata = getTopicMetadata(kafkaBrokers, topic, maxRetries, backOffms);
+    TopicMetadata topicMetadata = getTopicMetadata(kafkaBrokers, topic, maxRetries, backOffms);
     if(topicMetadata == null || topicMetadata.errorCode() != 0) {
-      new StageException(Errors.KAFKA_03, topic, metadataBrokerList);
+      throw new StageException(Errors.KAFKA_03, topic, metadataBrokerList);
     }
     return topicMetadata.partitionsMetadata().size();
   }
