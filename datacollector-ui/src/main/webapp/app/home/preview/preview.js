@@ -10,7 +10,7 @@ angular
 
     angular.extend($scope, {
       previewMultipleStages: false,
-      listView: false,
+      listView: true,
       showLoading: false,
       previewSourceOffset: null,
       previewBatchSize: 10,
