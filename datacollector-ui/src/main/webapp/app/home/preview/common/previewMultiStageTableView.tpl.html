@@ -150,8 +150,7 @@
 
     <td ng-repeat="fieldPath in inputFieldPaths | limitTo: inputLimit"
         class="field-value {{flattenRecord[fieldPath].type}}"
-      >{{(flattenRecord[fieldPath].type === 'DATETIME' || flattenRecord[fieldPath].type === 'DATE') ? (flattenRecord[fieldPath].value + '' | date:'medium') : (flattenRecord[fieldPath].value + '')}}
-    </td>
+      >{{(flattenRecord[fieldPath].type === 'DATETIME' || flattenRecord[fieldPath].type === 'DATE') ? (flattenRecord[fieldPath].value + '' | date:'medium') : (flattenRecord[fieldPath].value + '')}}</td>
 
   </tr>
 
