@@ -24,8 +24,8 @@ import java.security.Principal;
 public class ProxyAuthenticator extends LoginAuthenticator {
   private final RuntimeInfo runtimeInfo;
   private final LoginAuthenticator authenticator;
-  private final static String AUTH_TOKEN = "auth_token";
-  private final static String AUTH_USER = "auth_user";
+  public final static String AUTH_TOKEN = "auth_token";
+  public final static String AUTH_USER = "auth_user";
   private final static String TOKEN_AUTHENTICATION_USER_NAME = "admin";
 
   public ProxyAuthenticator(LoginAuthenticator authenticator, RuntimeInfo runtimeInfo) {
