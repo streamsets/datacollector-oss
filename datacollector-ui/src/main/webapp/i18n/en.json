@@ -333,7 +333,7 @@
         "batchStartTime": "Batch Start Time",
         "stageBatchProcessingTimer": "Stage Batch Processing Timer (in seconds)",
         "stageBatchProcessingTimerYAxis": "( Mean Timer Percentiles )",
-        "stageMemoryConsumed": "Stage Heap Memory Usage"
+        "stageMemoryConsumed": "Stage Heap Memory Usage (in MB)"
       }
     },
     "previewPane": {
