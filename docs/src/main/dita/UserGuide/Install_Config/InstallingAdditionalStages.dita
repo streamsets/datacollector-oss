@@ -9,7 +9,7 @@
   <p><indexterm>stages<indexterm>installing
           additional</indexterm></indexterm><indexterm>installation<indexterm>additional
           stages</indexterm></indexterm>At this time, you can install the following additional
-      stages: <table frame="all" rowsep="1" colsep="1" id="table_izz_npf_cr">
+      functionality: <table frame="all" rowsep="1" colsep="1" id="table_izz_npf_cr">
         <tgroup cols="2">
           <colspec colname="c1" colnum="1" colwidth="1*"/>
           <colspec colname="c2" colnum="2" colwidth="1.85*"/>
@@ -21,21 +21,61 @@
           </thead>
           <tbody>
             <row>
-              <entry>
-                <p>Cloudera CDH version 5.3.1</p>
-                <p>Cloudera CDH version 5.3.0</p>
-                <p>Cloudera CDH version 5.2.1</p>
-              </entry>
-              <entry><p>Use to write to the Cloudera distribution of Apache Hadoop.</p> <p>Provides a
-                  Cloudera CDH destination for the installed version.</p></entry>
+              <entry>Cassandra 2.1.5</entry>
+              <entry>Use to write to Cassandra version 2.1.5. <p>Provides a Cassandra
+                  destination.</p></entry>
             </row>
             <row>
-              <entry>Kafka version 0.8.2.0<p>Kafka version 0.8.1.1</p></entry>
-              <entry>Use to access Kafka clusters. <p>Provides a Kafka origin and destination for
-                  the installed version.</p></entry>
+              <entry>CDH Kafka 1.2.0 (0.8.2.0)</entry>
+              <entry>Use access the Cloudera version 1.2.0 distribution of Apache Kafka 0.8.2.0.
+                  <p>Provides a Kafka Consumer origin and Kafka Producer destination.</p></entry>
+            </row>
+            <row>
+              <entry>CDH 5.4.1 Cluster Kafka 1.2.0 </entry>
+              <entry>Use to read from the Cloudera version 5.4.1 distribution of the Apache Kafka
+                version 1.2.0. <p>Provides a Kafka Consumer origin. </p><p><ph
+                    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                  /> cluster mode only. </p></entry>
+            </row>
+            <row>
+              <entry>CDH 5.3.2<p>CDH 5.4.1</p></entry>
+              <entry>Use to write to the Cloudera CDH versions 5.3.2 and 5.4.1 distribution of
+                Apache Hadoop. <p>Provides the following destinations:</p><ul id="ul_exh_55f_cs">
+                  <li>Flume</li>
+                  <li>Hadoop FS</li>
+                  <li>HBase</li>
+                  <li>Solr</li>
+                </ul></entry>
+            </row>
+            <row>
+              <entry>Elasticsearch 1.5.0</entry>
+              <entry>Use to write to Elasticsearch version 1.5.0. <p>Provides an Elasticsearch
+                  destination. </p></entry>
+            </row>
+            <row>
+              <entry>HDP 2.2.0</entry>
+              <entry>Use to write to the Hortonworks version 2.2.0 distribution of Apache Hadoop.
+                  <p>Provides the following destinations:<ul id="ul_ffk_y3g_cs">
+                    <li>Flume</li>
+                    <li>Hadoop FS</li>
+                    <li>HBase</li>
+                  </ul></p></entry>
+            </row>
+            <row>
+              <entry>Jython 2.7.0</entry>
+              <entry>Use to process scripts written in Jython version 2.7.0.<p>Provides a Jython
+                  Evaluator processor. </p></entry>
+            </row>
+            <row>
+              <entry>Kinesis 1.2.1</entry>
+              <entry>Use to access Amazon Kinesis version 1.2.1.<p>Provides a Kinesis origin and
+                  destination.</p></entry>
             </row>
           </tbody>
         </tgroup>
       </table></p>
+    <draft-comment author="Loretta">Is this table missing anything? I assembled by looking at
+      libraries and stage versions. I got a few additional stage versions from Brock that I didn't
+      see in either place?</draft-comment>
  </conbody>
 </concept>

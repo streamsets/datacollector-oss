@@ -19,11 +19,11 @@
             file.</p></li>
         <li>Save the file in the same directory as the <ph
             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
-          configuration file: <filepath>&lt;SDC_installdir>/etc</filepath>.</li>
+          configuration file: <codeblock>&lt;SDC_installdir>/etc</codeblock></li>
         <li>In the <ph
             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
           configuration file, set the relevant value to the appropriate file name. Surround the file
-          name with @ symbols as follows:<codeph> @&lt;filename>@</codeph>.</li>
+          name with @ symbols as follows:<codeblock>@&lt;filename>@</codeblock></li>
       </ol>For example, if you configure xmail.username as follows, the <ph
         conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> checks the
       xmail_username.txt file for the user

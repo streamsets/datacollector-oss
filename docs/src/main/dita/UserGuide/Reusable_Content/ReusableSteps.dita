@@ -18,10 +18,53 @@
                 <cmd>From the pipeline canvas, click <uicontrol>Preview</uicontrol>.</cmd>
                 <info>If the Preview icon is disabled, check the Issues list for unconnected stages
                     and required properties that are not defined.</info>
-                <stepresult>The Preview panel highlights the origin stage and displays preview
-                    records in the Output Data column. Since this is the origin of the pipeline, no
-                    input data displays. <p>You can drill down to view the details of a record.
-                    </p></stepresult>
+            </step>
+            <step id="Preview-Source">
+                <cmd>In the <wintitle>Preview Configuration</wintitle> dialog box, configure the
+                    following properties, then click <uicontrol>Run Preview</uicontrol>.</cmd>
+                <info>
+                    <table frame="all" rowsep="1" colsep="1" id="table_mjq_mfm_cs">
+                        <tgroup cols="2">
+                            <colspec colname="c1" colnum="1" colwidth="1*"/>
+                            <colspec colname="c2" colnum="2" colwidth="1.67*"/>
+                            <thead>
+                                <row>
+                                    <entry>Preview Property</entry>
+                                    <entry>Description</entry>
+                                </row>
+                            </thead>
+                            <tbody>
+                                <row>
+                                    <entry>Preview Source</entry>
+                                    <entry>Source data for the preview:<ul id="ul_db2_4fm_cs">
+                                            <li>Configured Source - Provides data from the origin
+                                                system.</li>
+                                            <li>Snapshot Data - Uses available snapshot data.</li>
+                                        </ul></entry>
+                                </row>
+                                <row>
+                                    <entry>Preview Batch Size</entry>
+                                    <entry>Number of records to use in the preview.</entry>
+                                </row>
+                                <row>
+                                    <entry>Write to Destinations</entry>
+                                    <entry>Determines whether the preview writes data to pipeline
+                                        destinations. <p>By default, does not write data to
+                                            destinations. </p></entry>
+                                </row>
+                                <row>
+                                    <entry>Snapshot Data</entry>
+                                    <entry>When using a snapshot for source data, select the
+                                        snapshot to use. </entry>
+                                </row>
+                            </tbody>
+                        </tgroup>
+                    </table>
+                </info>
+                <stepresult>The Preview panel highlights the origin stage and displays preview data
+                    in table view. Since this is the origin of the pipeline, no input data displays.
+                        <p>To view preview data in list view, click the <uicontrol>List
+                            View</uicontrol> icon. </p></stepresult>
             </step>
             <step id="DeletePreviewRecord">
                 <cmd>To delete a record that you do not want to use, click the
@@ -546,10 +589,11 @@
                                                 additional broker URI.</p></entry>
                                     </row>
                                     <row>
-                                        <entry>Runtime Topic Resolution <xref
+                                        <entry>Runtime Topic Resolution  <xref
                                                 href="../Destinations/KProducer-RuntimeResolution.dita"
                                                   ><image href="../Graphics/icon_moreInfo.png"
-                                                      scale="10" id="image_upq_nbp_1s"/></xref></entry>
+                                                  scale="10" id="image_ekt_x5g_cs"/>
+                                            </xref></entry>
                                         <entry>Evaluates an expression at runtime to determine the
                                             topic to use for each record.</entry>
                                     </row>

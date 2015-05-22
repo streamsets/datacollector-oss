@@ -22,9 +22,9 @@
                     following text in the address bar of your browser: </cmd>
                 <info>
                     <codeblock>localhost:18630</codeblock>
-                    <p>If you customized the <ph
+                    <p>If you edited the default <ph
                             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                        />, use the following format:
+                        /> configuration, use the following format:
                         <codeblock>&lt;host name>:&lt;port no></codeblock></p>
                 </info>
             </step>
@@ -46,7 +46,7 @@
         </steps>
         <postreq>For the steps to configure a pipeline, continue with step <xref
                 href="../Pipeline_Configuration/ConfiguringAPipeline.dita#task_xlv_jdw_kq/pipeProperties"
-                >5 in "Configuring a Pipeline"</xref>.</postreq>
+                >3 in "Configuring a Pipeline"</xref>.</postreq>
     </taskbody>
     <related-links>
         <link href="../Pipeline_Configuration/What_isa_Pipeline.dita#concept_isl_w44_kq"/>

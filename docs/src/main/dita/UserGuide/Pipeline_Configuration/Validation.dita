@@ -1,31 +1,29 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_azs_swf_jr">
- <title>Validation</title>
- <shortdesc>The <ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-  /> provides two types of validation:</shortdesc>
+ <title>Implicit and Explicit Validation</title>
  <conbody>
-  <p>
-   <dl>
+  <p><indexterm>validation<indexterm>implicit and explicit</indexterm></indexterm>The <ph
+    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> performs two
+   types of validation:<dl>
     <dlentry>
-     <dt>Static validation</dt>
-     <dd>Static validation occurs by default as the <ph
+     <dt>implicit validation</dt>
+     <dd>Implicit validation occurs by default as the <ph
        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> console
-      saves your changes. Static validation lists missing or incomplete configuration, such as an
+      saves your changes. Implicit validation lists missing or incomplete configuration, such as an
       unconnected stage or a required property that has not been configured. </dd>
      <dd>Errors found by logical validation display in the Issues list. Stages with a static
       validation error display an error icon.</dd>
     </dlentry>
     <dlentry>
-     <dt>Semantic validation</dt>
-     <dd>Semantic validation occurs on demand when you click the Validate icon, run data preview, or
-      start a pipeline. Semantic validation becomes available when logical validation passes.</dd>
-     <dd>Semantic validation checks all configured values for validity and verifies whether the
-      pipeline can run as configured. </dd>
-     <dd>For example, while static validation verifies that you entered a value for a URI, semantic
+     <dt>explicit validation</dt>
+     <dd>Explicit validation occurs on demand when you click the Validate icon, run data preview, or
+      start a pipeline. Explicit validation becomes available when logical validation passes.</dd>
+     <dd>Explicit validation is a semantic validation that checks all configured values for validity
+      and verifies whether the pipeline can run as configured. </dd>
+     <dd>For example, while implicit validation verifies that you entered a value for a URI,explicit
       validation tests the URI by connecting to the system. </dd>
     </dlentry>
-   </dl>
-  </p>
+   </dl></p>
  </conbody>
 </concept>

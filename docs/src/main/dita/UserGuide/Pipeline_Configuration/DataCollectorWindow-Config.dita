@@ -9,7 +9,8 @@
         conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> console
       when you configure a pipeline:</p>
    <p>
-      <image href="../Graphics/CanvasConfig.png" id="image_u5b_1mb_rr"/></p>
+      <image href="../Graphics/CanvasConfig.png" id="image_u5b_1mb_rr"/><draft-comment
+        author="Loretta">export from Gimp 100%</draft-comment></p>
     <table frame="all" rowsep="1" colsep="1" id="table_qwf_byk_sq">
       <tgroup cols="3">
         <colspec colname="c1" colnum="1" colwidth=".5*"/>
@@ -98,7 +99,7 @@
           <row>
             <entry><image href="../Graphics/icon-ConfigValidate.png" id="image_axt_lbx_rr"/></entry>
             <entry>Validate icon</entry>
-            <entry>Validates the pipeline.</entry>
+            <entry>Validates the pipeline. Performs explicit validation.</entry>
           </row>
           <row>
             <entry><image href="../Graphics/icon-ConfigStartPipeline.png" id="image_lvj_qbx_rr"
@@ -128,5 +129,8 @@
       </tgroup>
     </table>
     <note conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/Note-OptionDispay"/>
+    <p>For example, the Copy icon displays only when you select stage that can be copied, it does
+      not display when you select a link or the pipeline. Alternatively, if you log in with only the
+      Manager role, most configuration-related icons are not available.</p>
  </conbody>
 </concept>

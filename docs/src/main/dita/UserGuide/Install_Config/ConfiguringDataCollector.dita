@@ -28,7 +28,7 @@
                     rowsep="1" colsep="1" id="table_eyq_gkw_1r">
                     <tgroup cols="2">
                         <colspec colname="c1" colnum="1" colwidth="1*"/>
-                        <colspec colname="c2" colnum="2" colwidth="1.39*"/>
+                        <colspec colname="c2" colnum="2" colwidth="1.63*"/>
                         <thead>
                             <row>
                                 <entry>General Property</entry>
@@ -97,15 +97,15 @@
                             <row>
                                 <entry>production.maxErrorRecordsPerStage</entry>
                                 <entry>Maximum number of error records to save in memory for each
-                                    stage to display during monitoring. When the limit is reached,
+                                    stage to display in monitor mode. When the limit is reached,
                                     older error records are discarded.<p>Default is 100.
                                     </p></entry>
                             </row>
                             <row>
                                 <entry>production.maxPipelineErrors</entry>
                                 <entry>Maximum number of pipeline errors to save in memory to
-                                    display during monitoring. When the limit is reached, older
-                                    errors are discarded. <p>Default is 100. </p></entry>
+                                    display in monitor mode. When the limit is reached, older errors
+                                    are discarded. <p>Default is 100. </p></entry>
                             </row>
                             <row>
                                 <entry>max.logtail.concurrent.requests</entry>
@@ -122,7 +122,7 @@
                             </row>
                             <row>
                                 <entry>ui.hosted.help.base.url</entry>
-                                <entry>Base URL for the help project hosted at the StreamSets
+                                <entry>Base URL for the help project hosted by the StreamSets
                                     website. <p>Do not change this value.</p></entry>
                             </row>
                             <row>
@@ -229,7 +229,7 @@
                     </thead>
                     <tbody>
                         <row>
-                            <entry>runtime.conf.location <xref
+                            <entry>runtime.conf.location  <xref
                                     href="../Advanced_PipelineConfig/RuntimeProperties.dita#concept_fjx_g31_1s"
                                         ><image href="../Graphics/icon_moreInfo.png" scale="10"/>
                                 </xref></entry>
@@ -251,10 +251,11 @@
                                 </ul></entry>
                         </row>
                         <row>
-                            <entry>sdc.execution.mode <xref
-                                    href="../Advanced_PipelineConfig/ExecutionMode.dita#concept_hmh_kfn_1s"
+                            <entry>sdc.execution.mode  <xref
+                                    href="../Advanced_PipelineConfig/ExecutionMode.dita"
                                         ><image href="../Graphics/icon_moreInfo.png" scale="10"
-                                    /></xref></entry>
+                                        id="image_o5j_f5g_cs"/>
+                                </xref><p> </p></entry>
                             <entry>Execution mode for the <ph
                                     conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
                                     />:<ul id="ul_icj_t5n_1s">
