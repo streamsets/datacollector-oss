@@ -3,13 +3,14 @@
 <concept id="concept_jtn_s3m_lq">
  <title>Data Preview</title>
  <shortdesc>You can preview data to help build or fine-tune a pipeline. When you preview data, the
-      <ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> passes
-    data through through the pipeline. You can examine input and output data for one stage at a time
-    or for a group of stages. </shortdesc>
+            <ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
+        passes data through through the pipeline. </shortdesc>
  <conbody>
     <p><indexterm>data preview<indexterm>overview</indexterm></indexterm><indexterm>previewing
-          data<index-see>data preview</index-see></indexterm>Within the data preview, you can edit
-      data, pass it through the pipeline, and then examine the results. You can also edit stage
-      configuration and rerun the preview, and refresh the preview to use another set of data.</p>
+                    data<index-see>data preview</index-see></indexterm>You can examine input and
+            output data in list or table view, and for one stage at a time or for a group of stages. </p>
+        <p>Within the data preview, you can edit data, pass it through the pipeline, and then
+            examine the results. You can also edit stage configuration and rerun the preview, and
+            refresh the preview to use another set of data.</p>
   </conbody>
 </concept>

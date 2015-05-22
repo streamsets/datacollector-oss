@@ -8,7 +8,6 @@
     <li>Data from the origin - You can preview data from the origin.</li>
     <li>Data from a snapshot - You can use snapshot data exported from the pipeline or another
      pipeline. Snapshot data provides data from the origin of the snapshot pipeline.</li>
-    <li>User-defined data - You can enter or paste a set of data to use for the preview.</li>
    </ul></p>
  </conbody>
 </concept>

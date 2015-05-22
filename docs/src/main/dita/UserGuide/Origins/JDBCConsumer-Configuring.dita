@@ -32,9 +32,10 @@
                                 </row>
                                 <row>
                                     <entry>Incremental Mode <xref
-                                            href="JDBCConsumer-Full-IncrementalQueries.dita#concept_ets_gnr_bs"
+                                            href="JDBCConsumer-Full-IncrementalQueries.dita"
                                                 ><image href="../Graphics/icon_moreInfo.png"
-                                                id="image_u2t_w1s_bs" scale="10"/></xref></entry>
+                                                scale="10" id="image_mm5_tvg_cs"/>
+                                        </xref></entry>
                                     <entry>Query mode. Enabled by default. </entry>
                                 </row>
                                 <row>

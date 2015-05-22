@@ -12,7 +12,7 @@
       configuration file.</p>
     <p>You can define runtime properties in the <ph
         conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
-      configuration file, or in a separate file. For more information, see <xref
+      configuration file or in a separate file. For more information, see <xref
         href="../Advanced_PipelineConfig/RuntimeProperties.dita#concept_fjx_g31_1s"/>. </p>
   </conbody>
 </concept>

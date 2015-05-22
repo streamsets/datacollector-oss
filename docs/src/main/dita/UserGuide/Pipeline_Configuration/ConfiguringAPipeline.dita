@@ -42,9 +42,11 @@
                             <stentry>Optional description of the pipeline.</stentry>
                         </strow>
                         <strow>
-                            <stentry>Execution Mode <xref
-                                    href="../Advanced_PipelineConfig/ExecutionMode.dita#concept_hmh_kfn_1s"
-                                ><image href="../Graphics/icon_moreInfo.png" scale="10"></image></xref></stentry>
+                            <stentry>Execution Mode  <xref
+                                    href="../Advanced_PipelineConfig/RuntimeProperties.dita#concept_fjx_g31_1s"
+                                        ><image href="../Graphics/icon_moreInfo.png" scale="10"
+                                        id="image_zfp_n5g_cs"/>
+                                </xref></stentry>
                             <stentry>Execution mode of the pipeline:<ul id="ul_bn5_jsz_zr">
                                     <li>Standalone - You plan to run the pipeline with a <ph
                                             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
@@ -72,8 +74,11 @@
                                 once</uicontrol>.</p></stentry>
                         </strow>
                         <strow>
-                            <stentry>Memory Limit <xref
-                                href="PipelineMemory.dita#concept_twq_nhx_rr"><image href="../Graphics/icon_moreInfo.png" scale="10"></image></xref></stentry>
+                            <stentry>Memory Limit  <xref
+                                    href="../Pipeline_Configuration/PipelineMemory.dita"><image
+                                        href="../Graphics/icon_moreInfo.png" scale="10"
+                                        id="image_ldk_s5g_cs"/>
+                                </xref></stentry>
                             <stentry>Maximum amount of memory for the pipeline to use. <p>Best
                                     practice is to use up to 65% of the Java heap size defined for
                                     the <ph

@@ -95,26 +95,27 @@
    configure it to remove the newline character from the last field in the record.</p>
 
   <p class="p">To make the data available to Hive, you connect the Expression Evaluator to a Hadoop FS
-   destination stage. You might configure the stage to write the data as a JSON object (though you
-   can use other data formats as well). </p>
+   destination stage. You configure the stage to write the data as a JSON object (though you can use
+   other data formats as well). </p>
 
   <p class="p">You preview data to view source data move through the pipeline and notice that some fields have
    missing data. So you add a Value Replacer to replace null values in those fields. </p>
 
-  <p class="p">Now that the data flow is done, you configure the pipeline to save records that cannot be
-   processed correctly and configure an email alert to let you know when the pipeline generates more
-   than 100 error records. Then, you start the pipeline and the <span class="ph">Data
+  <p class="p">Now that the data flow is done, you configure the pipeline error record handling to write error
+   records to file, and you configure an email alert to let you know when the pipeline generates
+   more than 100 error records. Then, you start the pipeline and the <span class="ph">Data
                   Collector</span> goes to work. </p>
 
   <p class="p">The <span class="ph">Data
                   Collector</span>
    console goes into Monitor mode and displays summary and error statistics immediately. To get a
-   close look at what's going on, you take a snapshot of the pipeline so you can examine how a set
-   of data passed through the pipeline. You can also inspect data - configure rules to provide
-   details about data as it moves from stage to stage - and configure rule-based alerts. </p>
+   close look at the activity, you take a snapshot of the pipeline so you can examine how a set of
+   data passed through the pipeline. You see some unexpected data in the pipeline, so you create a
+   data rule for a link between two stages to gather  information about similar data and set an
+   alert to notify you when the numbers get too high.</p>
 
-  <p class="p">And what about those error records being saved? They're saved with error details, so you can
-   create an error pipeline to reprocess that data. Voila!</p>
+  <p class="p">And what about those error records being written to file? They're saved with error details, so
+   you can create an error pipeline to reprocess that data. Et voila!</p>
 
   <p class="p">The <span class="ph">Data
                   Collector</span> is a

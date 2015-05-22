@@ -9,11 +9,11 @@
   <p><indexterm>Data Collector<indexterm>multiple instances</indexterm></indexterm>You might create
       multiple instances when you want to run several <ph
         conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>s on the
-      same  machine. You can run <ph
+      same machine. You can run <ph
         conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> instances
       at the same time as long as sufficient resources are available.<draft-comment author="Loretta"
-        >Any other limitations? Anything else to highlight as a reason to use
-      it?</draft-comment></p>
+        >Tucu/Team: Any other limitations? Anything else to highlight as a reason to use
+        it?</draft-comment></p>
     <p>When you create an additional <ph
         conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> instance,
       the new instance includes any <ph
