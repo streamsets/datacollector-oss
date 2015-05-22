@@ -41,7 +41,7 @@ public class RandomSource extends BaseSource {
   public int delay;
 
   @ConfigDef(required = true, type = ConfigDef.Type.NUMBER,
-    defaultValue = "9223372036854775806", // Long max value - 1
+    defaultValue = "922337203685", // Long max value - 1
     label = "Max records to generate",
     min = 0,
     max = Long.MAX_VALUE)
