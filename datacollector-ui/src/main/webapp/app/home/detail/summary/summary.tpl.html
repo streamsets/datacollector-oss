@@ -367,7 +367,7 @@
 
 
 <script type="text/ng-template" id="summaryAllStageBatchTimerBarChartTemplate">
-  <div class="col-sm-12"
+  <div class="col-sm-4"
        ng-if="selectedType === pipelineConstant.PIPELINE && common.sdcExecutionMode !== pipelineConstant.CLUSTER"
        ng-controller="AllStageBatchTimerChartController">
     <div class="panel panel-default">
@@ -379,28 +379,39 @@
         </button>
       </div>
       <div class="panel-body">
-        <nvd3-discrete-bar-chart
+
+        <nvd3-pie-chart
           data="chartData"
           id="SummaryAllStageBatchTimerBarChartTemplateID"
-          height="250"
-          yaxislabel="{{'home.detailPane.summaryTab.stageBatchProcessingTimerYAxis' | translate}}"
-          yaxislabeldistance="40"
-          staggerLabels="true"
-          showXAxis="true"
-          showYAxis="true"
-          showValues="false"
+          height="500"
+          x="getLabel()"
+          y="getValue()"
+          showLabels="true"
           showLegend="true"
           tooltips="true"
           tooltipcontent="getTooltipContent()"
-          margin="{left:50,top:20,bottom:40,right:20}">
-        </nvd3-discrete-bar-chart>
+          labelType="value"
+          donut="true"
+          donutRatio=".35"
+          donutLabelsOutside="true"
+          margin="{left:20,top:0,bottom:20,right:20}">
+          <svg></svg>
+        </nvd3-pie-chart>
+
+        <ul class="properties">
+          <li>
+            <span class="properties-label"> Total:</span>
+            <span class="properties-value">{{totalValue}} seconds</span>
+          </li>
+        </ul>
+
       </div>
     </div>
   </div>
 </script>
 
 <script type="text/ng-template" id="summaryAllStageMemoryConsumedBarChartTemplate">
-  <div class="col-sm-12"
+  <div class="col-sm-4"
        ng-if="selectedType === pipelineConstant.PIPELINE && common.sdcExecutionMode !== pipelineConstant.CLUSTER"
        ng-controller="AllStageMemoryConsumedChartController">
     <div class="panel panel-default">
@@ -412,21 +423,32 @@
         </button>
       </div>
       <div class="panel-body">
-        <nvd3-discrete-bar-chart
+        <nvd3-pie-chart
           data="chartData"
           id="SummaryAllStageMemoryConsumedBarChartTemplateID"
-          height="250"
-          yaxislabeldistance="40"
-          yAxisTickFormat="sizeFormat()"
-          staggerLabels="true"
-          showXAxis="true"
-          showYAxis="true"
-          showValues="false"
+          height="500"
+          x="getLabel()"
+          y="getValue()"
+          showLabels="true"
           showLegend="true"
           tooltips="true"
           tooltipcontent="getTooltipContent()"
-          margin="{left:60,top:20,bottom:40,right:20}">
-        </nvd3-discrete-bar-chart>
+          labelType="value"
+          labelThreshold=".05"
+          donut="true"
+          donutRatio=".35"
+          donutLabelsOutside="true"
+          margin="{left:20,top:0,bottom:20,right:20}">
+          <svg></svg>
+        </nvd3-pie-chart>
+
+        <ul class="properties">
+          <li>
+            <span class="properties-label"> Total:</span>
+            <span class="properties-value">{{totalValue}} MB</span>
+          </li>
+        </ul>
+
       </div>
     </div>
   </div>
