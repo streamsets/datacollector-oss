@@ -37,10 +37,12 @@ import com.streamsets.pipeline.store.PipelineStoreTask;
 import com.streamsets.pipeline.task.AbstractTask;
 import com.streamsets.pipeline.util.ContainerError;
 import com.streamsets.pipeline.util.PipelineDirectoryUtil;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
+
 import java.io.File;
 import java.io.FilenameFilter;
 import java.io.IOException;
@@ -141,8 +143,10 @@ public class FilePipelineStoreTask extends AbstractTask implements PipelineStore
     PipelineInfo info = new PipelineInfo(name, description, date, date, user, user, REV, uuid, false);
 
     List<ConfigConfiguration> configuration = new ArrayList<>(4);
+    String executionMode = runtimeInfo.getExecutionMode() == RuntimeInfo.ExecutionMode.STANDALONE ?
+      ExecutionMode.STANDALONE.name() : ExecutionMode.CLUSTER.name();
     configuration.add(new ConfigConfiguration(PipelineDefConfigs.EXECUTION_MODE_CONFIG,
-                                              ExecutionMode.STANDALONE.name()));
+      executionMode));
     configuration.add(new ConfigConfiguration(PipelineDefConfigs.CLUSTER_SLAVE_MEMORY_CONFIG,
                                               Integer.parseInt(PipelineDefConfigs.CLUSTER_SLAVE_MEMORY_DEFAULT)));
     configuration.add(new ConfigConfiguration(PipelineDefConfigs.CLUSTER_LAUNCHER_ENV_CONFIG, new ArrayList<>()));
@@ -385,7 +389,7 @@ public class FilePipelineStoreTask extends AbstractTask implements PipelineStore
 
   private List<ConfigConfiguration> syncPipelineConf(PipelineConfiguration pipelineConfig, String name,
                                                      String tagOrRev) {
-    PipelineDefinition pipelineDef = PipelineDefinition.getPipelineDef();
+    PipelineDefinition pipelineDef = PipelineDefinition.getPipelineDef(runtimeInfo);
     Set<String> configsToRemove = getNamesFromConfigConf(pipelineConfig.getConfiguration());
 
     List<ConfigConfiguration> configuration = new ArrayList<>(pipelineConfig.getConfiguration());

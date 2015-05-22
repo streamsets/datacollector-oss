@@ -5,15 +5,19 @@
  */
 package com.streamsets.pipeline.restapi;
 
+import com.streamsets.pipeline.main.RuntimeInfo;
 import com.streamsets.pipeline.stagelibrary.StageLibraryTask;
+
 import org.glassfish.hk2.utilities.binding.AbstractBinder;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.test.JerseyTest;
 import org.junit.Assert;
 import org.junit.Test;
+
 import javax.ws.rs.core.Application;
 import javax.ws.rs.core.GenericType;
 import javax.ws.rs.core.Response;
+
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
@@ -33,6 +37,7 @@ public class TestStageLibraryResource extends JerseyTest {
     @Override
     protected void configure() {
       bindFactory(TestUtil.StageLibraryTestInjector.class).to(StageLibraryTask.class);
+      bindFactory(TestUtil.RuntimeInfoTestInjector.class).to(RuntimeInfo.class);
     }
   }
 
