@@ -5,11 +5,16 @@
  */
 package com.streamsets.pipeline.config;
 
+import com.codahale.metrics.MetricRegistry;
 import com.streamsets.pipeline.api.impl.LocaleInContext;
+import com.streamsets.pipeline.main.RuntimeInfo;
+import com.streamsets.pipeline.main.RuntimeModule;
+
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Test;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
@@ -21,9 +26,10 @@ public class TestPipelineDefinitionLocalization {
     LocaleInContext.set(null);
   }
 
-
   private void testMessages(Locale locale, Map<String, String> expected) {
-    PipelineDefinition def = new PipelineDefinition();
+    RuntimeInfo runtimeInfo = new RuntimeInfo(RuntimeModule.SDC_PROPERTY_PREFIX, new MetricRegistry(),
+      Arrays.asList(TestPipelineDefinitionLocalization.class.getClassLoader()));
+    PipelineDefinition def = new PipelineDefinition(runtimeInfo);
     LocaleInContext.set(locale);
     def = def.localize();
 

@@ -13,6 +13,7 @@ import com.streamsets.pipeline.api.ExecutionMode;
 import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.el.ElConstantDefinition;
 import com.streamsets.pipeline.el.ElFunctionDefinition;
+import com.streamsets.pipeline.main.RuntimeInfo;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -27,8 +28,8 @@ public class PipelineDefinition {
   private List<ConfigDefinition> configDefinitions;
   private ConfigGroupDefinition groupDefinition;
 
-  public static PipelineDefinition getPipelineDef() {
-    return new PipelineDefinition().localize();
+  public static PipelineDefinition getPipelineDef(RuntimeInfo runtimeInfo) {
+    return new PipelineDefinition(runtimeInfo).localize();
   }
 
   public PipelineDefinition localize() {
@@ -51,9 +52,9 @@ public class PipelineDefinition {
     groupDefinition = groupDef;
   }
 
-  private static List<ConfigDefinition> createPipelineConfigs() {
+  private static List<ConfigDefinition> createPipelineConfigs(RuntimeInfo runtimeInfo) {
     List<ConfigDefinition> defs = new ArrayList<>();
-    defs.add(createExecutionModeOption());
+    defs.add(createExecutionModeOption(runtimeInfo));
     defs.add(createDeliveryGuaranteeOption());
     defs.add(createBadRecordsHandlingConfigs());
     defs.add(createConstantsConfigs());
@@ -63,8 +64,8 @@ public class PipelineDefinition {
     return defs;
   }
   @VisibleForTesting
-  PipelineDefinition() {
-    this(createPipelineConfigs(), createConfigGroupDefinition());
+  PipelineDefinition(RuntimeInfo runtimeInfo) {
+    this(createPipelineConfigs(runtimeInfo), createConfigGroupDefinition());
   }
 
   /*Need this API for Jackson to serialize*/
@@ -97,8 +98,9 @@ public class PipelineDefinition {
     return new ConfigGroupDefinition(classNameToGroupsMap, groups);
   }
 
-  private static ConfigDefinition createExecutionModeOption() {
-
+  private static ConfigDefinition createExecutionModeOption(RuntimeInfo runtimeInfo) {
+    String executionMode = runtimeInfo.getExecutionMode() == RuntimeInfo.ExecutionMode.STANDALONE ?
+      ExecutionMode.STANDALONE.name() : ExecutionMode.CLUSTER.name();
     ChooserValues valueChooser = new ExecutionModeChooserValues();
     ModelDefinition model = new ModelDefinition(ModelType.VALUE_CHOOSER, valueChooser.getClass().getName(),
                                                 valueChooser.getValues(), valueChooser.getLabels(), null);
@@ -108,7 +110,7 @@ public class PipelineDefinition {
         ConfigDef.Type.MODEL,
         PipelineDefConfigs.EXECUTION_MODE_LABEL,
         PipelineDefConfigs.EXECUTION_MODE_DESCRIPTION,
-        ExecutionMode.STANDALONE.name(),
+        executionMode,
         true,
         "",
         PipelineDefConfigs.EXECUTION_MODE_CONFIG,
