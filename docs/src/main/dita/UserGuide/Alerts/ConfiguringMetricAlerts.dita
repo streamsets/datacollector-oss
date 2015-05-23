@@ -43,6 +43,7 @@
                                     </entry>
                                     <entry>Type of metric information the alert is based on:<ul
                                             id="ul_fwn_zbk_br">
+                                            <li>Gauge</li>
                                             <li>Counter</li>
                                             <li>Histogram</li>
                                             <li>Meter</li>

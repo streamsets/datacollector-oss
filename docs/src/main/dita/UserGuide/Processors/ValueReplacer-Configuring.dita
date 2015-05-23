@@ -53,8 +53,8 @@
                                             fields:<ul id="ul_jx1_4w2_jr">
                                             <li>Continue - Passes the record with as much processing
                                                 as possible.</li>
-                                            <li>Send to error. Passes the record to the pipeline for
-                                                error handling.</li>
+                                            <li>Send to error - Passes the record to the pipeline
+                                                for error handling.</li>
                                         </ul></entry>
                                 </row>
                             </tbody>

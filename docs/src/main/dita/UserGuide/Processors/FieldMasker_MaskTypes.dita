@@ -84,8 +84,8 @@ L92m1sN3q0jaOmE67Ws</codeblock>
       any groups of data that you do not want to mask. If you do not specify groups, Field Masker
       masks all groups. </dd>
      <dd>For example, you use the following regular expression to describe data that appends a
-      five-digit code to a social security number:<draft-comment author="Loretta">come back to all
-       this</draft-comment><codeblock>([0-9]{5}) - ([0-9]{3}-[0-9]{2}-[0-9]{4}) </codeblock></dd>
+      five-digit code to a social security
+      number:<codeblock>([0-9]{5}) - ([0-9]{3}-[0-9]{2}-[0-9]{4}) </codeblock></dd>
      <dd>The parentheses creates two groups of data. If you configure the stage to reveal the first
       group, then the results of the mask might look as
       follows:<codeblock><b>Regex Mask</b>

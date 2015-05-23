@@ -42,13 +42,13 @@
             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>. </stentry>
       </strow>
       <strow>
-        <stentry><image href="../Graphics/icon_LibraryToggle.png" id="image_kgq_klq_rq" scale="70"
+        <stentry><image href="../Graphics/icon_LibraryToggle.png" id="image_kgq_klq_rq"
           /></stentry>
         <stentry>Toggle Library icon</stentry>
         <stentry>Icon to display or hide the library.</stentry>
       </strow>
       <strow>
-        <stentry><image href="../Graphics/icon_PipelineOptions.png" id="image_vd2_jpq_rq" scale="70"
+        <stentry><image href="../Graphics/icon_PipelineOptions.png" id="image_vd2_jpq_rq"
           /></stentry>
         <stentry>Actions icon</stentry>
         <stentry>Allows you to import, export, duplicate, or delete the pipeline.</stentry>
