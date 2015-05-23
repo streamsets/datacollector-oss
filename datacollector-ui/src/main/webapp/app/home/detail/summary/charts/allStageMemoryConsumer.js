@@ -18,7 +18,11 @@ angular
 
       getValue: function() {
         return function(d){
-          return d.value.toFixed(2);
+          if(d.value > 0) {
+            return d.value.toFixed(2);
+          } else {
+            return 0;
+          }
         };
       },
 
