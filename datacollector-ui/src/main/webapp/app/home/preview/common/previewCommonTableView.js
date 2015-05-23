@@ -97,7 +97,6 @@ angular
         });
 
         $scope.inputFieldPaths = _.union.apply(_, fieldPathsList);
-        $scope.inputFieldPaths.sort();
       }
 
       if(columnLimit > $scope.inputFieldPaths.length) {
@@ -117,7 +116,6 @@ angular
         });
 
         $scope.outputFieldPaths = _.union.apply(_, fieldPathsList);
-        $scope.outputFieldPaths.sort();
       }
 
       if(columnLimit > $scope.outputFieldPaths.length) {
