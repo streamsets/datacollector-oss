@@ -55,9 +55,9 @@ public class TestPipelineDefinitionLocalization {
     Assert.assertEquals(expected.get("clusterSlaveMemoryLabel"), def.getConfigDefinitions().get(6).getLabel());
     Assert.assertEquals(expected.get("clusterSlaveMemoryDescription"),
                         def.getConfigDefinitions().get(6).getDescription());
-    Assert.assertEquals(expected.get("clusterLauncherEnvLabel"), def.getConfigDefinitions().get(7).getLabel());
+    Assert.assertEquals(expected.get("clusterLauncherEnvLabel"), def.getConfigDefinitions().get(11).getLabel());
     Assert.assertEquals(expected.get("clusterLauncherEnvDescription"),
-                        def.getConfigDefinitions().get(7).getDescription());
+                        def.getConfigDefinitions().get(11).getDescription());
 
   }
 

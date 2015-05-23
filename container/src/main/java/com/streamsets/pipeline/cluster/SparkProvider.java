@@ -18,10 +18,10 @@ import java.util.concurrent.TimeoutException;
 public interface SparkProvider {
 
   void killPipeline(SystemProcessFactory systemProcessFactory, File sparkManager, File tempDir,
-                                   String appId) throws TimeoutException;
+                                   String appId, PipelineConfiguration pipelineConfiguration) throws TimeoutException;
 
   boolean isRunning(SystemProcessFactory systemProcessFactory, File sparkManager, File tempDir,
-                                   String appId) throws TimeoutException;
+                                   String appId, PipelineConfiguration pipelineConfiguration) throws TimeoutException;
 
 
   ApplicationState startPipeline(SystemProcessFactory systemProcessFactory, File sparkManager, File tempDir,

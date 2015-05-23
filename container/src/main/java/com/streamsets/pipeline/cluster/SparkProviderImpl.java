@@ -57,6 +57,9 @@ import java.util.regex.Pattern;
 
 public class SparkProviderImpl implements SparkProvider {
   private static final String RUN_FROM_SDC = "RUN_FROM_SDC";
+  private static final String KERBEROS_AUTH = "KERBEROS_AUTH";
+  private static final String KERBEROS_KEYTAB = "KERBEROS_KEYTAB";
+  private static final String KERBEROS_PRINCIPAL = "KERBEROS_PRINCIPAL";
   static final Pattern YARN_APPLICATION_ID_REGEX = Pattern.compile("\\s(application_[0-9]+_[0-9]+)\\s");
   private final RuntimeInfo runtimeInfo;
 
@@ -72,9 +75,10 @@ public class SparkProviderImpl implements SparkProvider {
 
   @Override
   public void killPipeline(SystemProcessFactory systemProcessFactory, File sparkManager, File tempDir,
-                    String appId) throws TimeoutException {
+                    String appId, PipelineConfiguration pipelineConfiguration) throws TimeoutException {
     Map<String, String> environment = new HashMap<>();
     environment.put(RUN_FROM_SDC, Boolean.TRUE.toString());
+    addKerberosConfiguration(environment, pipelineConfiguration);
     ImmutableList.Builder<String> args = ImmutableList.builder();
     args.add(sparkManager.getAbsolutePath());
     args.add("kill");
@@ -113,9 +117,10 @@ public class SparkProviderImpl implements SparkProvider {
 
   @Override
   public boolean isRunning(SystemProcessFactory systemProcessFactory, File sparkManager, File tempDir,
-                    String appId) throws TimeoutException {
+                    String appId, PipelineConfiguration pipelineConfiguration) throws TimeoutException {
     Map<String, String> environment = new HashMap<>();
     environment.put(RUN_FROM_SDC, Boolean.TRUE.toString());
+    addKerberosConfiguration(environment, pipelineConfiguration);
     ImmutableList.Builder<String> args = ImmutableList.builder();
     args.add(sparkManager.getAbsolutePath());
     args.add("status");
@@ -196,6 +201,20 @@ public class SparkProviderImpl implements SparkProvider {
     Utils.checkState(canidates.length == 1, Utils.format("Did not find exactly one bootstrap jar: {}",
       Arrays.toString(canidates)));
     return canidates[0];
+  }
+
+  private void addKerberosConfiguration(Map<String, String> environment, PipelineConfiguration pipelineConfiguration) {
+    ConfigConfiguration clusterKerberos = Utils.checkNotNull(pipelineConfiguration.getConfiguration(PipelineDefConfigs.
+      CLUSTER_KERBEROS_AUTH_CONFIG), "Could not obtain cluster kerberos auth");
+    ConfigConfiguration kerberosPrincipal = Utils.checkNotNull(pipelineConfiguration.getConfiguration(PipelineDefConfigs.
+      CLUSTER_KERBEROS_PRINCIPAL_CONFIG), "Could not obtain cluster kerberos principal");
+    ConfigConfiguration kerberosKeytab = Utils.checkNotNull(pipelineConfiguration.getConfiguration(PipelineDefConfigs.
+      CLUSTER_KERBEROS_KEYTAB_CONFIG), "Could not obtain cluster kerberos keytab");
+    environment.put(KERBEROS_AUTH, String.valueOf(clusterKerberos.getValue()));
+    if ((Boolean)clusterKerberos.getValue()) {
+      environment.put(KERBEROS_PRINCIPAL, String.valueOf(kerberosPrincipal.getValue()));
+      environment.put(KERBEROS_KEYTAB, String.valueOf(kerberosKeytab.getValue()));
+    }
   }
 
   @Override
@@ -302,6 +321,7 @@ public class SparkProviderImpl implements SparkProvider {
         IOUtils.closeQuietly(clusterLog4jProperties);
       }
     }
+    addKerberosConfiguration(environment, pipelineConfiguration);
     List<String> args = new ArrayList<>();
     args.add(sparkManager.getAbsolutePath());
     args.add("start");
@@ -330,9 +350,12 @@ public class SparkProviderImpl implements SparkProvider {
     args.add(log4jProperties.getAbsolutePath());
     args.add("--jars");
     args.add(Joiner.on(",").join(bootstrapJar.getAbsoluteFile(), pathToSparkKafkaJar));
-    // use our javaagent
+    ConfigConfiguration javaOpts = Utils.checkNotNull(pipelineConfiguration.getConfiguration(PipelineDefConfigs.
+      CLUSTER_SLAVE_JAVA_OPTS_CONFIG), "Could not obtain cluster worker java options");
+    // use our javaagent and java opt configs
     args.add("--conf");
-    args.add("spark.executor.extraJavaOptions=-javaagent:./" + bootstrapJar.getName());
+    args.add("spark.executor.extraJavaOptions=" + Joiner.on(" ").join("-javaagent:./" + bootstrapJar.getName(),
+      javaOpts.getValue()));
     // main class
     args.add("--class");
     args.add("com.streamsets.pipeline.BootstrapSpark");

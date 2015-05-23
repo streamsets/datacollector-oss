@@ -7,6 +7,7 @@ package com.streamsets.pipeline.validation;
 
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Preconditions;
+import com.google.common.base.Strings;
 import com.google.common.collect.Sets;
 import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.ExecutionMode;
@@ -41,6 +42,7 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.io.File;
 
 public class PipelineConfigurationValidator {
   private static final Logger LOG = LoggerFactory.getLogger(PipelineConfigurationValidator.class);
@@ -117,6 +119,7 @@ public class PipelineConfigurationValidator {
       canPreview &= validatePipelineLanes(StageIssueCreator.getStageCreator());
       canPreview &= validateErrorStage();
       canPreview &= validateStagesExecutionMode(StageIssueCreator.getStageCreator(), pipelineConfiguration.getStages());
+      canPreview &= validateClusterModeConfig();
 
       if (LOG.isTraceEnabled() && issues.hasIssues()) {
         for (Issue issue : issues.getPipelineIssues()) {
@@ -136,7 +139,35 @@ public class PipelineConfigurationValidator {
     }
     return !issues.hasIssues();
   }
-
+  private boolean validateClusterModeConfig() {
+    ConfigConfiguration executionConfigMode = pipelineConfiguration.getConfiguration(PipelineDefConfigs.
+      EXECUTION_MODE_CONFIG);
+    ExecutionMode executionMode = (executionConfigMode == null) ? ExecutionMode.STANDALONE
+      : ExecutionMode.valueOf((String) executionConfigMode.getValue());
+    ConfigConfiguration kerberosAuth = pipelineConfiguration.getConfiguration(PipelineDefConfigs.
+      CLUSTER_KERBEROS_AUTH_CONFIG);
+    if (executionMode == ExecutionMode.CLUSTER && kerberosAuth != null && (Boolean)kerberosAuth.getValue()) {
+      ConfigConfiguration kerberosPrinc = pipelineConfiguration.getConfiguration(PipelineDefConfigs.
+        CLUSTER_KERBEROS_PRINCIPAL_CONFIG);
+      ConfigConfiguration kerberosKeytab = pipelineConfiguration.getConfiguration(PipelineDefConfigs.
+        CLUSTER_KERBEROS_KEYTAB_CONFIG);
+      if (Strings.nullToEmpty((String)kerberosPrinc.getValue()).trim().isEmpty()) {
+        issues.addP(new Issue(kerberosPrinc.getName(), "CLUSTER", ValidationError.VALIDATION_0033,
+          "Kerberos Principal is empty"));
+      }
+      if (Strings.nullToEmpty((String)kerberosKeytab.getValue()).trim().isEmpty()) {
+        issues.addP(new Issue(kerberosKeytab.getName(), "CLUSTER", ValidationError.VALIDATION_0033,
+          "Kerberos Keytab is empty"));
+      } else {
+        File keyTab = new File((String)kerberosKeytab.getValue());
+        if (!keyTab.isFile() || !keyTab.canRead()) {
+          issues.addP(new Issue(kerberosKeytab.getName(), "CLUSTER", ValidationError.VALIDATION_0033,
+            "Kerberos Keytab file does not exist or cannot be read"));
+        }
+      }
+    }
+    return true;
+  }
   private boolean validateStagesExecutionMode(StageIssueCreator issueCreator, List<StageConfiguration> stageConfigs) {
     boolean canPreview = true;
     ConfigConfiguration conf = pipelineConfiguration.getConfiguration(PipelineDefConfigs.EXECUTION_MODE_CONFIG);

@@ -9,6 +9,18 @@
     "name" : "clusterSlaveMemory",
     "value" : 1024
   }, {
+    "name" : "clusterSlaveJavaOpts",
+    "value" : "-XX:PermSize=128M -XX:MaxPermSize=256M"
+  }, {
+    "name" : "clusterKerberos",
+    "value" : false
+  }, {
+    "name" : "kerberosPrincipal",
+    "value" : ""
+  }, {
+    "name" : "kerberosKeytab",
+    "value" : ""
+  }, {
     "name" : "clusterLauncherEnv",
     "value" : [ ]
   }, {

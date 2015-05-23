@@ -338,7 +338,15 @@ public class ClusterPipelineManager extends AbstractTask implements PipelineMana
               validateStateTransition(ps.getName(), ps.getRev(), State.STOPPING);
               stateTracker.setState(ps.getName(), ps.getRev(), State.STOPPING, "Stopping cluster pipeline", null,
                 ps.getAttributes());
-              managerRunnable.requestTransition(State.STOPPED, appState);
+              PipelineConfiguration pipelineConf = null;
+              try {
+                pipelineConf = pipelineStore.load(ps.getName(), ps.getRev());
+              } catch (PipelineStoreException e) {
+                String msg = Utils.format(ContainerError.CONTAINER_0150.getMessage(), e);
+                transitionToError(ps, msg);
+                throw new PipelineManagerException(ContainerError.CONTAINER_0150, ps.getState(), e.toString(), e);
+              }
+              managerRunnable.requestTransition(State.STOPPED, appState, pipelineConf);
             }
             break;
           default:
@@ -546,10 +554,6 @@ public class ClusterPipelineManager extends AbstractTask implements PipelineMana
       Utils.checkState(queue.add(Optional.<StateTransitionRequest>absent()), "Could not add to queue");
     }
 
-    private void requestTransition(State canidateState, ApplicationState applicationState) {
-      requestTransition(canidateState, applicationState, null);
-    }
-
     private void requestTransition(State canidateState, ApplicationState applicationState,
                                   PipelineConfiguration pipelineConfiguration) {
       StateTransitionRequest request = new StateTransitionRequest(canidateState, applicationState, pipelineConfiguration);
@@ -564,7 +568,8 @@ public class ClusterPipelineManager extends AbstractTask implements PipelineMana
       if (ps != null && ps.getState() == State.RUNNING) {
         ApplicationState appState = new ApplicationState((Map)ps.getAttributes().get(APPLICATION_STATE));
         try {
-          running = sparkManager.isRunning(appState).get(60, TimeUnit.SECONDS);
+          PipelineConfiguration pipelineConf = pipelineStore.load(ps.getName(), ps.getRev());
+          running = sparkManager.isRunning(appState, pipelineConf).get(60, TimeUnit.SECONDS);
         } catch (Exception ex) {
           String msg = "Error getting application status: " + ex;
           clusterPipelineManager.transitionToError(ps, msg);
@@ -606,7 +611,7 @@ public class ClusterPipelineManager extends AbstractTask implements PipelineMana
       } else {
         Boolean running = null;
         try {
-          running = sparkManager.isRunning(appState).get(60, TimeUnit.SECONDS);
+          running = sparkManager.isRunning(appState, pipelineConf).get(60, TimeUnit.SECONDS);
         } catch (Exception ex) {
           String msg = "Error getting application status: " + ex;
           clusterPipelineManager.transitionToError(ps, msg);
@@ -674,7 +679,7 @@ public class ClusterPipelineManager extends AbstractTask implements PipelineMana
       attributes.putAll(ps.getAttributes());
       attributes.remove(APPLICATION_STATE);
       try {
-        sparkManager.kill(request.applicationState).get(60, TimeUnit.SECONDS);
+        sparkManager.kill(request.applicationState, request.pipelineConf).get(60, TimeUnit.SECONDS);
         stopped = true;
       } catch (Exception ex) {
         String msg = "Error stopping cluster: " + ex;

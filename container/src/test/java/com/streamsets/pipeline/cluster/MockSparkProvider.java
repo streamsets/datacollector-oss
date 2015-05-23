@@ -25,7 +25,8 @@ public class MockSparkProvider implements SparkProvider {
   public String appId = null;
 
   @Override
-  public void killPipeline(SystemProcessFactory systemProcessFactory, File sparkManager, File tempDir, String appId)
+  public void killPipeline(SystemProcessFactory systemProcessFactory, File sparkManager, File tempDir, String appId,
+                           PipelineConfiguration pipelineConfiguration)
     throws TimeoutException {
     LOG.info("killPipeline");
     if (killTimesOut) {
@@ -34,8 +35,8 @@ public class MockSparkProvider implements SparkProvider {
   }
 
   @Override
-  public boolean isRunning(SystemProcessFactory systemProcessFactory, File sparkManager, File tempDir, String appId)
-    throws TimeoutException {
+  public boolean isRunning(SystemProcessFactory systemProcessFactory, File sparkManager, File tempDir, String appId,
+                           PipelineConfiguration pipelineConfiguration) throws TimeoutException {
     LOG.info("isRunning");
     if (isRunningTimesOut) {
       throw new TimeoutException();

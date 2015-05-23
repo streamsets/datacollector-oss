@@ -363,6 +363,9 @@ public class TestFilePipelineStoreTask {
       Assert.assertEquals(MemoryLimitExceeded.STOP_PIPELINE.name(), confs.get(PipelineDefConfigs.MEMORY_LIMIT_EXCEEDED_CONFIG));
       Assert.assertEquals(Integer.parseInt(PipelineDefConfigs.CLUSTER_SLAVE_MEMORY_DEFAULT),
                           confs.get(PipelineDefConfigs.CLUSTER_SLAVE_MEMORY_CONFIG));
+      Assert.assertEquals(false, confs.get(PipelineDefConfigs.CLUSTER_KERBEROS_AUTH_CONFIG));
+      Assert.assertEquals("", confs.get(PipelineDefConfigs.CLUSTER_KERBEROS_PRINCIPAL_CONFIG));
+      Assert.assertEquals("", confs.get(PipelineDefConfigs.CLUSTER_KERBEROS_KEYTAB_CONFIG));
       Assert.assertEquals(Collections.emptyList(), confs.get(PipelineDefConfigs.CLUSTER_LAUNCHER_ENV_CONFIG));
     } finally {
       store.stop();
@@ -396,10 +399,10 @@ public class TestFilePipelineStoreTask {
 
     /*
      * AFTER SYNC -
-     * Pipeline has 8 configurations with default values, the unexpected config option is removed
+     * Pipeline has 12 configurations with default values, the unexpected config option is removed
      */
 
-    Assert.assertEquals(8, expectedPipelineConfig.getConfiguration().size());
+    Assert.assertEquals(12, expectedPipelineConfig.getConfiguration().size());
 
     Assert.assertEquals(PipelineDefConfigs.EXECUTION_MODE_CONFIG,
       expectedPipelineConfig.getConfiguration().get(0).getName());
@@ -421,8 +424,8 @@ public class TestFilePipelineStoreTask {
 
     Assert.assertEquals(PipelineDefConfigs.MEMORY_LIMIT_CONFIG,
       expectedPipelineConfig.getConfiguration().get(4).getName());
-    //This is machine dependent
-    //Assert.assertEquals(2672l, expectedPipelineConfig.getConfiguration().get(4).getValue());
+    Assert.assertEquals(PipelineDefConfigs.MEMORY_LIMIT_DEFAULT,
+      expectedPipelineConfig.getConfiguration().get(4).getValue());
 
     Assert.assertEquals(PipelineDefConfigs.MEMORY_LIMIT_EXCEEDED_CONFIG,
       expectedPipelineConfig.getConfiguration().get(5).getName());
@@ -433,9 +436,27 @@ public class TestFilePipelineStoreTask {
       expectedPipelineConfig.getConfiguration().get(6).getName());
     Assert.assertEquals(1024, expectedPipelineConfig.getConfiguration().get(6).getValue());
 
-    Assert.assertEquals(PipelineDefConfigs.CLUSTER_LAUNCHER_ENV_CONFIG,
+
+    Assert.assertEquals(PipelineDefConfigs.CLUSTER_SLAVE_JAVA_OPTS_CONFIG,
       expectedPipelineConfig.getConfiguration().get(7).getName());
-    Assert.assertEquals("", expectedPipelineConfig.getConfiguration().get(7).getValue());
+    Assert.assertEquals(PipelineDefConfigs.CLUSTER_SLAVE_JAVA_OPTS_DEFAULT,
+      expectedPipelineConfig.getConfiguration().get(7).getValue());
+
+    Assert.assertEquals(PipelineDefConfigs.CLUSTER_KERBEROS_AUTH_CONFIG,
+      expectedPipelineConfig.getConfiguration().get(8).getName());
+    Assert.assertEquals("false", expectedPipelineConfig.getConfiguration().get(8).getValue());
+
+    Assert.assertEquals(PipelineDefConfigs.CLUSTER_KERBEROS_PRINCIPAL_CONFIG,
+      expectedPipelineConfig.getConfiguration().get(9).getName());
+    Assert.assertEquals("", expectedPipelineConfig.getConfiguration().get(9).getValue());
+
+    Assert.assertEquals(PipelineDefConfigs.CLUSTER_KERBEROS_KEYTAB_CONFIG,
+      expectedPipelineConfig.getConfiguration().get(10).getName());
+    Assert.assertEquals("", expectedPipelineConfig.getConfiguration().get(10).getValue());
+
+    Assert.assertEquals(PipelineDefConfigs.CLUSTER_LAUNCHER_ENV_CONFIG,
+      expectedPipelineConfig.getConfiguration().get(11).getName());
+    Assert.assertEquals("", expectedPipelineConfig.getConfiguration().get(11).getValue());
   }
 
   @Test
@@ -479,8 +500,8 @@ public class TestFilePipelineStoreTask {
      * 4. Target has 0 configs
      */
 
-    //pipeline config should have 2 configs - delivery guarantee and execution mode
-    Assert.assertEquals(8, expectedPipelineConfig.getConfiguration().size());
+    //pipeline config should have 12 configs
+    Assert.assertEquals(12, expectedPipelineConfig.getConfiguration().size());
 
     //error stage has an expected config
     Assert.assertEquals(1, expectedPipelineConfig.getErrorStage().getConfiguration().size());

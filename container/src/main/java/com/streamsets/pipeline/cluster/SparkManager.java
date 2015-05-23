@@ -76,21 +76,25 @@ public class SparkManager {
     });
   }
 
-  public ListenableFuture<Void> kill(final ApplicationState applicationState) {
+  public ListenableFuture<Void> kill(final ApplicationState applicationState,
+                                     final PipelineConfiguration pipelineConfiguration) {
     return executorService.submit(new Callable<Void>() {
       @Override
       public Void call() throws Exception {
-        sparkProvider.killPipeline(systemProcessFactory, sparkManager, tempDir, applicationState.getId());
+        sparkProvider.killPipeline(systemProcessFactory, sparkManager, tempDir, applicationState.getId(),
+          pipelineConfiguration);
         return null;
       }
     });
   }
 
-  public ListenableFuture<Boolean> isRunning(final ApplicationState applicationState) {
+  public ListenableFuture<Boolean> isRunning(final ApplicationState applicationState,
+                                             final PipelineConfiguration pipelineConfiguration) {
     return executorService.submit(new Callable<Boolean>() {
       @Override
       public Boolean call() throws Exception {
-        return sparkProvider.isRunning(systemProcessFactory, sparkManager, tempDir, applicationState.getId());
+        return sparkProvider.isRunning(systemProcessFactory, sparkManager, tempDir, applicationState.getId(),
+          pipelineConfiguration);
       }
     });
   }
