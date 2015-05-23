@@ -61,7 +61,7 @@ public class HdfsDTarget extends DTarget {
   @ConfigDef(
       required = false,
       type = ConfigDef.Type.STRING,
-      label = "Kerberos principal",
+      label = "Kerberos Principal",
       description = "",
       displayPosition = 30,
       group = "HADOOP_FS",
@@ -72,8 +72,8 @@ public class HdfsDTarget extends DTarget {
 
   @ConfigDef(required = false,
       type = ConfigDef.Type.STRING,
-      label = "Kerberos keytab",
-      description = "Keytab file path",
+      label = "Kerberos Keytab (file)",
+      description = "",
       displayPosition = 40,
       group = "HADOOP_FS",
       dependsOn = "hdfsKerberos",

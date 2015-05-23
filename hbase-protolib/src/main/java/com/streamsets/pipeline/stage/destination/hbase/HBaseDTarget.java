@@ -113,8 +113,8 @@ public class HBaseDTarget extends DTarget {
 
   @ConfigDef(required = false,
       type = ConfigDef.Type.STRING,
-      label = "Kerberos Keytab",
-      description = "Keytab file path",
+      label = "Kerberos Keytab (file)",
+      description = "",
       displayPosition = 100, group = "HBASE",
       dependsOn = "kerberosAuth",
       triggeredByValue = "true")

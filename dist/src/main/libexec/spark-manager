@@ -16,22 +16,30 @@ env
 command=$1
 shift
 MKTEMP_COMMAND=${MKTEMP_COMMAND:-mktemp}
+KINIT_COMMAND=${KINIT_COMMAND:-kinit}
 YARN_COMMAND=${YARN_COMMAND:-/usr/bin/yarn}
 SPARK_SUBMIT=${SPARK_SUBMIT:-/usr/bin/spark-submit}
 SPARK_HOME=${SPARK_HOME:-$(cd -P $(dirname $(readlink -f $SPARK_SUBMIT))/../lib/spark/ && pwd)}
 
+if [[ "$KERBEROS_AUTH" == "true" ]]
+then
+  set -e
+  $KINIT_COMMAND -kt $KERBEROS_KEYTAB $KERBEROS_PRINCIPAL
+  set +e
+fi
+
 if [[ $command == "start" ]]
 then
-  exec $SPARK_SUBMIT $@
+  exec $SPARK_SUBMIT "$@"
 elif [[ $command == "kill" ]]
 then
-  exec $YARN_COMMAND application -kill $@
+  exec $YARN_COMMAND application -kill "$@"
 elif [[ $command == "status" ]]
 then
   tmp=$($MKTEMP_COMMAND)
   trap "rm -f $tmp" EXIT
   status=""
-  $YARN_COMMAND application -status $@ &>$tmp
+  $YARN_COMMAND application -status "$@" &>$tmp
   exitCode=$?
   cat $tmp 1>&2
   if [[ $exitCode -ne 0 ]]

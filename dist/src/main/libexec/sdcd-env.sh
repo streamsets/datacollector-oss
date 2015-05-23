@@ -32,7 +32,7 @@ export SDC_CONF=/etc/sdc
 
 # JVM options for the data collector process
 #
-export SDC_JAVA_OPTS="-Xmx1024m -server ${SDC_JAVA_OPTS}"
+export SDC_JAVA_OPTS="-Xmx1024m -XX:PermSize=128M -XX:MaxPermSize=256M -server ${SDC_JAVA_OPTS}"
 
 # Enables/disables the JVM security manager
 #

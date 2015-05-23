@@ -149,6 +149,12 @@ public class FilePipelineStoreTask extends AbstractTask implements PipelineStore
       executionMode));
     configuration.add(new ConfigConfiguration(PipelineDefConfigs.CLUSTER_SLAVE_MEMORY_CONFIG,
                                               Integer.parseInt(PipelineDefConfigs.CLUSTER_SLAVE_MEMORY_DEFAULT)));
+    configuration.add(new ConfigConfiguration(PipelineDefConfigs.CLUSTER_SLAVE_JAVA_OPTS_CONFIG,
+      PipelineDefConfigs.CLUSTER_SLAVE_JAVA_OPTS_DEFAULT));
+    configuration.add(new ConfigConfiguration(PipelineDefConfigs.CLUSTER_KERBEROS_AUTH_CONFIG,
+      false));
+    configuration.add(new ConfigConfiguration(PipelineDefConfigs.CLUSTER_KERBEROS_PRINCIPAL_CONFIG, ""));
+    configuration.add(new ConfigConfiguration(PipelineDefConfigs.CLUSTER_KERBEROS_KEYTAB_CONFIG, ""));
     configuration.add(new ConfigConfiguration(PipelineDefConfigs.CLUSTER_LAUNCHER_ENV_CONFIG, new ArrayList<>()));
     configuration.add(new ConfigConfiguration(PipelineDefConfigs.DELIVERY_GUARANTEE_CONFIG,
       DeliveryGuarantee.AT_LEAST_ONCE.name()));

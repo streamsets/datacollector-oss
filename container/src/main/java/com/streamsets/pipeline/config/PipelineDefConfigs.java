@@ -171,23 +171,93 @@ public abstract class PipelineDefConfigs implements Stage {
       dependsOn = EXECUTION_MODE_CONFIG,
       triggeredByValue = "CLUSTER"
   )
-  public boolean clusterSlaveMemory;
+  public String clusterSlaveMemory;
+
+  public static final String CLUSTER_SLAVE_JAVA_OPTS_CONFIG = "clusterSlaveJavaOpts";
+  public static final String CLUSTER_SLAVE_JAVA_OPTS_LABEL = "Worker Java Options";
+  public static final String CLUSTER_SLAVE_JAVA_OPTS_DEFAULT = "-XX:PermSize=128M -XX:MaxPermSize=256M";
+  public static final String CLUSTER_SLAVE_JAVA_OPTS_DESCRIPTION = "";
+
+  @ConfigDef(
+    required = true,
+    type = ConfigDef.Type.STRING,
+    label = CLUSTER_SLAVE_JAVA_OPTS_LABEL,
+    defaultValue = CLUSTER_SLAVE_JAVA_OPTS_DEFAULT,
+    description = CLUSTER_SLAVE_JAVA_OPTS_DESCRIPTION,
+    displayPosition = 10,
+    group = "CLUSTER",
+    dependsOn = EXECUTION_MODE_CONFIG,
+    triggeredByValue = "CLUSTER"
+  )
+  public String clusterSlaveJavaOpts;
+
+  public static final String CLUSTER_KERBEROS_AUTH_CONFIG = "clusterKerberos";
+  public static final String CLUSTER_KERBEROS_AUTH_LABEL = "Kerberos Authentication";
+  public static final String CLUSTER_KERBEROS_AUTH_DEFAULT = "false";
+  public static final String CLUSTER_KERBEROS_AUTH_DESCRIPTION = "";
+
+  @ConfigDef(
+    required = true,
+    type = ConfigDef.Type.BOOLEAN,
+    label = CLUSTER_KERBEROS_AUTH_LABEL,
+    defaultValue = CLUSTER_KERBEROS_AUTH_DEFAULT,
+    description = CLUSTER_KERBEROS_AUTH_DESCRIPTION,
+    displayPosition = 20,
+    group = "CLUSTER",
+    dependsOn = EXECUTION_MODE_CONFIG,
+    triggeredByValue = "CLUSTER"
+  )
+  public boolean clusterKerberos;
+
+  public static final String CLUSTER_KERBEROS_PRINCIPAL_CONFIG = "kerberosPrincipal";
+  public static final String CLUSTER_KERBEROS_PRINCIPAL_LABEL = "Kerberos Principal";
+  public static final String CLUSTER_KERBEROS_PRINCIPAL_DEFAULT = "";
+  public static final String CLUSTER_KERBEROS_PRINCIPAL_DESCRIPTION = "";
+
+  @ConfigDef(
+    required = false,
+    type = ConfigDef.Type.STRING,
+    label = CLUSTER_KERBEROS_PRINCIPAL_LABEL,
+    defaultValue = CLUSTER_KERBEROS_PRINCIPAL_DEFAULT,
+    description = CLUSTER_KERBEROS_PRINCIPAL_DESCRIPTION,
+    displayPosition = 30,
+    group = "CLUSTER",
+    dependsOn = CLUSTER_KERBEROS_AUTH_CONFIG,
+    triggeredByValue = "true"
+  )
+  public String kerberosPrincipal;
+
+  public static final String CLUSTER_KERBEROS_KEYTAB_CONFIG = "kerberosKeytab";
+  public static final String CLUSTER_KERBEROS_KEYTAB_LABEL = "Kerberos Keytab (file)";
+  public static final String CLUSTER_KERBEROS_KEYTAB_DEFAULT = "";
+  public static final String CLUSTER_KERBEROS_KEYTAB_DESCRIPTION = "";
+
+  @ConfigDef(required = false,
+    type = ConfigDef.Type.STRING,
+    label = CLUSTER_KERBEROS_KEYTAB_LABEL,
+    defaultValue = CLUSTER_KERBEROS_KEYTAB_DEFAULT,
+    description = CLUSTER_KERBEROS_KEYTAB_DESCRIPTION,
+    displayPosition = 40,
+    group = "CLUSTER",
+    dependsOn = CLUSTER_KERBEROS_AUTH_CONFIG,
+    triggeredByValue = "true"
+  )
+  public String kerberosKeytab;
 
   public static final String CLUSTER_LAUNCHER_ENV_CONFIG = "clusterLauncherEnv";
   public static final String CLUSTER_LAUNCHER_ENV_LABEL = "Launcher ENV";
   public static final String CLUSTER_LAUNCHER_ENV_DESCRIPTION =
-      "Sets additional environment variables for the cluster launcher";
+    "Sets additional environment variables for the cluster launcher";
 
   @ConfigDef(
-      required = false,
-      type = ConfigDef.Type.MAP,
-      label = CLUSTER_LAUNCHER_ENV_LABEL,
-      description = CLUSTER_LAUNCHER_ENV_DESCRIPTION,
-      displayPosition = 20,
-      group = "CLUSTER",
-      dependsOn = EXECUTION_MODE_CONFIG,
-      triggeredByValue = "CLUSTER"
+    required = false,
+    type = ConfigDef.Type.MAP,
+    label = CLUSTER_LAUNCHER_ENV_LABEL,
+    description = CLUSTER_LAUNCHER_ENV_DESCRIPTION,
+    displayPosition = 20,
+    group = "CLUSTER",
+    dependsOn = EXECUTION_MODE_CONFIG,
+    triggeredByValue = "CLUSTER"
   )
   public Map clusterLauncherEnv;
-
 }
