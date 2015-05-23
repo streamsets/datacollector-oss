@@ -286,7 +286,7 @@
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
-      <div class="panel-body">
+      <div class="panel-body double-size-panel">
 
         <ul class="table-properties">
 
@@ -327,6 +327,38 @@
           <li>
             <span class="properties-label">{{'home.detailPane.summaryTab.timeInCurrentStage' | translate}}:</span>
             <span class="properties-value">{{common.pipelineMetrics.gauges['RuntimeStatsGauge.gauge'].value.timeInCurrentStage}}</span>
+          </li>
+
+        </ul>
+
+        <ul class="table-properties">
+          <li>
+            <span class="properties-value">{{'home.detailPane.summaryTab.threadLastRun' | translate}}</span>
+          </li>
+
+          <li>
+            <span class="properties-label">{{'home.detailPane.summaryTab.productionPipelineRunnable' | translate}}:</span>
+            <span class="properties-value">{{common.pipelineMetrics.gauges['health.ProductionPipelineRunnable.gauge'].value.timestamp  | date:'medium'}}</span>
+          </li>
+
+          <li>
+            <span class="properties-label">{{'home.detailPane.summaryTab.rulesConfigLoaderRunnable' | translate}}:</span>
+            <span class="properties-value">{{common.pipelineMetrics.gauges['health.RulesConfigLoaderRunnable.gauge'].value.timestamp  | date:'medium'}}</span>
+          </li>
+
+          <li>
+            <span class="properties-label">{{'home.detailPane.summaryTab.dataObserverRunnable' | translate}}:</span>
+            <span class="properties-value">{{common.pipelineMetrics.gauges['health.DataObserverRunnable.gauge'].value.timestamp  | date:'medium'}}</span>
+          </li>
+
+          <li>
+            <span class="properties-label">{{'home.detailPane.summaryTab.metricObserverRunnable' | translate}}:</span>
+            <span class="properties-value">{{common.pipelineMetrics.gauges['health.MetricObserverRunnable.gauge'].value.timestamp  | date:'medium'}}</span>
+          </li>
+
+          <li>
+            <span class="properties-label">{{'home.detailPane.summaryTab.metricsEventRunnable' | translate}}:</span>
+            <span class="properties-value">{{common.pipelineMetrics.gauges['health.MetricsEventRunnable.gauge'].value.timestamp  | date:'medium'}}</span>
           </li>
 
         </ul>
