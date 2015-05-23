@@ -162,9 +162,9 @@ public class ClusterPipelineManager extends AbstractTask implements PipelineMana
 
       }
     }
-    long refreshInterval = configuration.get(REFRESH_INTERVAL_PROPERTY, REFRESH_INTERVAL_PROPERTY_DEFAULT);
+    int refreshInterval = configuration.get(REFRESH_INTERVAL_PROPERTY, REFRESH_INTERVAL_PROPERTY_DEFAULT);
     if(refreshInterval > 0) {
-      metricsEventRunnable = new MetricsEventRunnable(this, runtimeInfo);
+      metricsEventRunnable = new MetricsEventRunnable(this, runtimeInfo, refreshInterval);
       scheduledExecutor.scheduleAtFixedRate(metricsEventRunnable, 0, refreshInterval, TimeUnit.MILLISECONDS);
     }
 
