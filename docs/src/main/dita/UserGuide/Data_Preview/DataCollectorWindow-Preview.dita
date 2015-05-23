@@ -34,42 +34,80 @@
             <row>
               <entry>2</entry>
               <entry>Preview panel</entry>
-              <entry>Displays input and output data.</entry>
+              <entry>Displays information based on the selected tab.</entry>
+            </row>
+            <row>
+              <entry><image href="../Graphics/icon_PrevRecords.png" id="image_b2s_rz5_cs"/></entry>
+              <entry>Records icon</entry>
+              <entry>Displays data preview records.</entry>
+            </row>
+            <row>
+              <entry><image href="../Graphics/icon_PrevStageConfig.png" id="image_ydt_m1v_cs"/>
+              </entry>
+              <entry>Stage Configuration icon</entry>
+              <entry>Displays stage properties.</entry>
+            </row>
+            <row>
+              <entry><image href="../Graphics/icon_PrevPreviewConfig.png" id="image_h2c_f1v_cs"/>
+              </entry>
+              <entry>Preview Configuration icon</entry>
+              <entry>Displays data preview properties. </entry>
+            </row>
+            <row>
+              <entry><image href="../Graphics/icon_PrevSingle.png" id="image_arm_fd5_cs"/></entry>
+              <entry>Single button</entry>
+              <entry>Displays input and output data for a single stage.</entry>
+            </row>
+            <row>
+              <entry><image href="../Graphics/icon_PrevMultiple.png" id="image_hqh_gd5_cs"/></entry>
+              <entry>Multiple button</entry>
+              <entry>Displays input and output data for a group of stages.</entry>
+            </row>
+            <row>
+              <entry><image href="../Graphics/icon_PrevListView.png" id="image_dmf_d25_cs"/></entry>
+              <entry>List View icon</entry>
+              <entry>Displays preview data in a list.</entry>
+            </row>
+            <row>
+              <entry><image href="../Graphics/icon_PrevTableView.png" id="image_epx_d25_cs"
+                /></entry>
+              <entry>Table View icon</entry>
+              <entry>Displays preview data in a table. </entry>
             </row>
             <row>
               <entry><image href="../Graphics/icon_PrevPrevStage.png" id="image_usm_kxn_tq"
-                  scale="70"/></entry>
+               /></entry>
               <entry>Previous Stage icon</entry>
               <entry>Moves the preview to the previous stage. </entry>
             </row>
             <row>
               <entry><image href="../Graphics/icon_PrevNextStage.png" id="image_jf4_3xn_tq"
-                  scale="70"/></entry>
+               /></entry>
               <entry>Next Stage icon</entry>
               <entry>Moves the preview to the next stage.</entry>
             </row>
             <row>
-              <entry><image href="../Graphics/icon_PrevRefresh.png" id="image_cfn_5mr_br" scale="95"
+              <entry><image href="../Graphics/icon_PrevRefresh.png" id="image_cfn_5mr_br" 
                 /></entry>
               <entry>Refresh Preview icon</entry>
-              <entry>Refreshes the preview with a fresh set of data from the origin.</entry>
+              <entry>Provides a fresh set of data from the origin.</entry>
             </row>
             <row>
               <entry><image href="../Graphics/icon_PreviewRerun.png" id="image_nzs_2nr_br"
-                  scale="95"/></entry>
+                  /></entry>
               <entry>Run Preview with Changes icon</entry>
               <entry>Runs the data preview using changed data. Use to see how edited data is
                 processed by the pipeline. </entry>
             </row>
             <row>
               <entry><image href="../Graphics/icon_PrevRevertChanges.png" id="image_xnr_f4r_br"
-                  scale="95"/></entry>
+              /></entry>
               <entry>Revert Changes icon</entry>
               <entry>Reverts all changes to preview data and returns the preview to the origin.
               </entry>
             </row>
             <row>
-              <entry><image href="../Graphics/icon_PrevClose.png" id="image_cjl_jmr_br" scale="85"
+              <entry><image href="../Graphics/icon_PrevClose.png" id="image_cjl_jmr_br" 
                 /></entry>
               <entry>Close Preview icon</entry>
               <entry>Closes the data preview.</entry>

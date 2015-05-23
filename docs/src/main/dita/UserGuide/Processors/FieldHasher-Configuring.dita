@@ -29,8 +29,7 @@
                                 <row>
                                     <entry>Fields to Hash</entry>
                                     <entry>One or more String fields to hash with the same
-                                            algorithm.<p>Use the <uicontrol>Add</uicontrol> icon to
-                                            configure more than one hash type.</p><p
+                                            algorithm.<p
                                             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/wildcard"
                                         /></entry>
                                 </row>
@@ -59,6 +58,10 @@
                         </tgroup>
                     </table>
                 </info>
+            </step>
+            <step>
+                <cmd>To hash another field, click the <uicontrol>Add</uicontrol> icon, and then
+                    repeat the previous step. </cmd>
             </step>
         </steps>
     </taskbody>

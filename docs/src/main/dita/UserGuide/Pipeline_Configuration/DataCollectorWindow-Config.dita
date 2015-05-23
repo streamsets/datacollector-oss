@@ -62,7 +62,7 @@
                 stage by name.</p></entry>
           </row>
           <row>
-            <entry><image href="../Graphics/icon_Issues.png" id="image_lmk_p4z_sq" scale="80"
+            <entry><image href="../Graphics/icon_Issues.png" id="image_lmk_p4z_sq" 
               /></entry>
             <entry>Issues icon</entry>
             <entry>Displays the number of validation issues in the pipeline. Click to view a
@@ -108,7 +108,7 @@
             <entry>Starts the pipeline.</entry>
           </row>
           <row>
-            <entry><image href="../Graphics/icon-StageLibrary.png" id="image_ftx_sjb_cr" scale="80"
+            <entry><image href="../Graphics/icon-StageLibrary.png" id="image_ftx_sjb_cr" 
               /></entry>
             <entry>Stage Library icon</entry>
             <entry>Toggles the display of the stage library.</entry>

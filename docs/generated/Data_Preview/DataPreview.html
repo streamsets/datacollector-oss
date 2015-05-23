@@ -2,7 +2,7 @@
 <!DOCTYPE html
   SYSTEM "about:legacy-compat">
 <html xml:lang="en-us" lang="en-us">
-<head><meta name="description" content="You can preview data to help build or fine-tune a pipeline. When you preview data, the Data Collector passes data through through the pipeline. You can examine input and output data in list or table ..."></meta><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><meta name="copyright" content="(C) Copyright 2005"></meta><meta name="DC.rights.owner" content="(C) Copyright 2005"></meta><meta name="DC.Type" content="concept"></meta><meta name="DC.Title" content="Data Preview"></meta><meta name="abstract" content="You can preview data to help build or fine-tune a pipeline. When you preview data, the Data Collector passes data through through the pipeline."></meta><meta name="description" content="You can preview data to help build or fine-tune a pipeline. When you preview data, the Data Collector passes data through through the pipeline."></meta><meta name="DC.Relation" scheme="URI" content="../Data_Preview/DataPreview_Title.html"></meta><meta name="DC.Format" content="XHTML"></meta><meta name="DC.Identifier" content="concept_jtn_s3m_lq"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/commonltr.css"><!----></link><title>Data Preview</title><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/webhelp_topic.css"><!----></link><link rel="stylesheet" type="text/css" href="../skin.css"></link><script type="text/javascript"><!--
+<head><meta name="description" content="You can preview data to help build or fine-tune a pipeline. When you preview data, the Data Collector passes data through the pipeline and allows you to review how the data passes through each stage. ..."></meta><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><meta name="copyright" content="(C) Copyright 2005"></meta><meta name="DC.rights.owner" content="(C) Copyright 2005"></meta><meta name="DC.Type" content="concept"></meta><meta name="DC.Title" content="Data Preview"></meta><meta name="abstract" content="You can preview data to help build or fine-tune a pipeline. When you preview data, the Data Collector passes data through the pipeline and allows you to review how the data passes through each stage."></meta><meta name="description" content="You can preview data to help build or fine-tune a pipeline. When you preview data, the Data Collector passes data through the pipeline and allows you to review how the data passes through each stage."></meta><meta name="DC.Relation" scheme="URI" content="../Data_Preview/DataPreview_Title.html"></meta><meta name="DC.Format" content="XHTML"></meta><meta name="DC.Identifier" content="concept_jtn_s3m_lq"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/commonltr.css"><!----></link><title>Data Preview</title><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/webhelp_topic.css"><!----></link><link rel="stylesheet" type="text/css" href="../skin.css"></link><script type="text/javascript"><!--
           
           var prefix = "../index.html";
           
@@ -17,14 +17,21 @@
  <div class="body conbody"><p class="shortdesc">You can preview data to help build or fine-tune a pipeline. When you preview data, the
             <span class="ph">Data
                   Collector</span>
-        passes data through through the pipeline. </p>
+        passes data through the pipeline and allows you to review how the data passes through each
+        stage. </p>
 
-    <p class="p">You can examine input and
-            output data in list or table view, and for one stage at a time or for a group of stages. </p>
+    <p class="p">You can use data preview to
+            help you configure the pipeline. After you configure the origin and link the stages that
+            you want to review, you start the data preview. In preview mode, you cannot add or
+            delete stages, but you can edit stage properties and rerun the preview to view how your
+            changes affect the data. </p>
 
-        <p class="p">Within the data preview, you can edit data, pass it through the pipeline, and then
-            examine the results. You can also edit stage configuration and rerun the preview, and
-            refresh the preview to use another set of data.</p>
+        <p class="p">You can also use data preview to tune pipeline configuration by editing preview data and
+            examining the results. </p>
+
+        <p class="p">You can view preview data in list or table view, and for one stage at a time or for a
+            group of stages. You can also refresh the preview to view an entirely different set of
+            data. </p>
 
   </div>
 
@@ -35,10 +42,9 @@
  <div class="body conbody">
   <div class="p">You can use the following
    types of data for a data preview:<ul class="ul" id="concept_rry_fkc_pr__ul_n5r_22k_5r">
-    <li class="li">Data from the origin - You can preview data from the origin.</li>
+    <li class="li">Data from the origin - Use available data from the origin. </li>
 
-    <li class="li">Data from a snapshot - You can use snapshot data exported from the pipeline or another
-     pipeline. Snapshot data provides data from the origin of the snapshot pipeline.</li>
+    <li class="li">Data from a snapshot - Use snapshot data from same pipeline or another pipeline. </li>
 
    </ul>
 </div>
@@ -50,9 +56,9 @@
  <h2 class="title topictitle2">Writing to Destinations</h2>
 
  <div class="body conbody">
-  <p class="p">To avoid
-      passing partially-processed data to destinations, data preview does not write data to
-      destinations by default. You can configure the preview to writing data to destinations. </p>
+  <p class="p">As a tool for
+            development, data preview does not write data to destinations by default. If necessary,
+            you can configure the preview to write data to destinations.</p>
 
  </div>
 

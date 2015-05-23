@@ -2,9 +2,10 @@
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_qqc_s3h_tq">
  <title>Preview Codes</title>
- <shortdesc>When you preview data, the Preview panel uses different colors to represent different
-  types of data. The Preview panel also uses colors, italics, and asterisks to highlight the field
-  values and records that you have changed for testing.</shortdesc>
+ <shortdesc>In preview mode, the <ph
+   conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> console uses
+  different colors to represent different types of data. The console uses other codes and formating
+  to highlight changed fields.</shortdesc>
  <conbody>
   <p><indexterm>data preview<indexterm>color codes</indexterm></indexterm>The following table
    describes the color and asterisk coding:<simpletable frame="all" id="simpletable_ryj_wjh_tq">
@@ -37,6 +38,10 @@
      <stentry>Fields that contain edited data</stentry>
     </strow>
     <strow>
+     <stentry>Light red background</stentry>
+     <stentry>Fields removed by a stage</stentry>
+    </strow>
+    <strow>
      <stentry>Italic values</stentry>
      <stentry>Edited data</stentry>
     </strow>
@@ -49,5 +54,7 @@
      <stentry>Last stage in a multiple-stage preview</stentry>
     </strow>
    </simpletable></p>
+  <draft-comment author="Loretta">Missing anything? Is there a background color for added
+   fields?</draft-comment>
  </conbody>
 </concept>

@@ -5,18 +5,17 @@
   <shortdesc>In some processors, you can use the asterisk wildcard (*) as indices in an array or key
     values in a map. Use a wildcard to help define the field paths for maps and arrays. </shortdesc>
   <conbody>
-    <p>You can use the asterisk wildcard as follows: <draft-comment author="Loretta">is this wording
-        right?</draft-comment><dl>
+    <p>You can use the asterisk wildcard as follows: <dl>
         <dlentry>
           <dt>[*]</dt>
-          <dd>Represents all values for the specified index in an array. For example, with the
-            following field path allows you can hash the social security number of every employee in
-            every division:<codeblock>/Division[*]/Employee[*]/SSN</codeblock></dd>
+          <dd>Represents all values for the specified index in an array. For example, the following
+            field path can hash the social security number of every employee in every
+            division:<codeblock>/Division[*]/Employee[*]/SSN</codeblock></dd>
         </dlentry>
         <dlentry>
           <dt>/*</dt>
-          <dd>Represents all values for the specified keys in a map. For example, with the following
-            field path you might mask all employee information in the first
+          <dd>Represents all values for the specified keys in a map. For example, the following
+            field path can mask all employee information in the first
             division:<codeblock>/Division[0]/Employee[*]/*</codeblock></dd>
         </dlentry>
       </dl></p>

@@ -11,6 +11,13 @@
   <p>
       <dl>
         <dlentry>
+          <dt>Gauge</dt>
+          <dd>Provides metric alerts based on the age of the current batch, the amount of time a
+            stage takes to process a batch, or the time the <ph
+              conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> last
+            received a record from the origin.</dd>
+        </dlentry>
+        <dlentry>
           <dt>Counter</dt>
           <dd>Provides metric alerts based on a count of different record types and of stage errors
             for any stage in the pipeline.</dd>

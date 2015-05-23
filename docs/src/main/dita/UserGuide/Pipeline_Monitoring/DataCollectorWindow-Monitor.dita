@@ -41,13 +41,13 @@
           view.</stentry>
    </strow>
       <strow>
-        <stentry><image href="../Graphics/icon_MonDataAlert.png" id="image_twl_st5_br" scale="60"
+        <stentry><image href="../Graphics/icon_MonDataAlert.png" id="image_twl_st5_br"
           /></stentry>
         <stentry>Monitoring Stream</stentry>
         <stentry>Select to view or configure a data rule or alert.</stentry>
       </strow>
    <strow>
-    <stentry><image href="../Graphics/icon_MonInspect.png" id="image_gz1_rk4_tq" scale="70"
+    <stentry><image href="../Graphics/icon_MonInspect.png" id="image_gz1_rk4_tq"
           /></stentry>
     <stentry>Inspect Data icon</stentry>
     <stentry>Indicates when alerts are configured on the stream:<ul id="ul_is1_tq5_br">
@@ -57,20 +57,20 @@
           </ul></stentry>
    </strow>
    <strow>
-    <stentry><image href="../Graphics/icon_MonSnapshot.png" id="image_w1q_zl4_tq" scale="70"
+    <stentry><image href="../Graphics/icon_MonSnapshot.png" id="image_w1q_zl4_tq"
           /></stentry>
     <stentry>Snapshot icon</stentry>
     <stentry>Captures a snapshot of data passing through the pipeline so you can review the
           data.</stentry>
    </strow>
    <strow>
-    <stentry><image href="../Graphics/icon_MonStop.png" id="image_klq_1m4_tq" scale="70"/>
+    <stentry><image href="../Graphics/icon_MonStop.png" id="image_klq_1m4_tq"/>
         </stentry>
     <stentry>Stop icon</stentry>
     <stentry>Stops the pipeline.</stentry>
    </strow>
       <strow>
-        <stentry><image href="../Graphics/icon_MonAlert.png" id="image_kjm_xn5_br" scale="90"
+        <stentry><image href="../Graphics/icon_MonAlert.png" id="image_kjm_xn5_br"
           /></stentry>
         <stentry>Alert icon</stentry>
         <stentry>Indicates an alert has been triggered.</stentry>
