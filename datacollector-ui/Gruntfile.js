@@ -89,7 +89,6 @@ module.exports = function(grunt) {
         'bower_components/moment/moment.js',
         'bower_components/angular-moment/angular-moment.js',
         'bower_components/nvd3/nv.d3.js',
-        'bower_components/angularjs-nvd3-directives/dist/angularjs-nvd3-directives.js',
         'bower_components/angular-ui-select/dist/select.js',
         'bower_components/ngstorage/ngStorage.js',
         'bower_components/angular-bootstrap-datetimepicker/src/js/datetimepicker.js',

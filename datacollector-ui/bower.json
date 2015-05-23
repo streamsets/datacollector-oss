@@ -22,7 +22,6 @@
     "angular-moment": "~0.8.2",
     "moment": "2.9.0",
     "nvd3": "~1.1.15-beta",
-    "angularjs-nvd3-directives": "~0.0.7",
     "angular-ui-select": "0.11.1",
     "ngstorage": "~0.3.0",
     "codemirror": "4.8.0"
