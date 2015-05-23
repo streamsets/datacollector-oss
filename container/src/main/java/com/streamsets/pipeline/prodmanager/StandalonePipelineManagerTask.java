@@ -248,10 +248,10 @@ public class StandalonePipelineManagerTask extends AbstractTask implements Pipel
       }
     }
 
-    long refreshInterval = configuration.get(REFRESH_INTERVAL_PROPERTY, REFRESH_INTERVAL_PROPERTY_DEFAULT);
+    int refreshInterval = configuration.get(REFRESH_INTERVAL_PROPERTY, REFRESH_INTERVAL_PROPERTY_DEFAULT);
 
     if(refreshInterval > 0) {
-      metricsEventRunnable = new MetricsEventRunnable(this, runtimeInfo);
+      metricsEventRunnable = new MetricsEventRunnable(this, runtimeInfo, refreshInterval);
       executor.scheduleAtFixedRate(metricsEventRunnable, 0, refreshInterval, TimeUnit.MILLISECONDS);
     }
 
@@ -487,6 +487,11 @@ public class StandalonePipelineManagerTask extends AbstractTask implements Pipel
     threadHealthReporter.register(MetricObserverRunnable.RUNNABLE_NAME);
     threadHealthReporter.register(DataObserverRunnable.RUNNABLE_NAME);
     threadHealthReporter.register(ProductionPipelineRunnable.RUNNABLE_NAME);
+    threadHealthReporter.register(MetricsEventRunnable.RUNNABLE_NAME);
+
+    if(metricsEventRunnable != null) {
+      metricsEventRunnable.setThreadHealthReporter(threadHealthReporter);
+    }
 
     configLoaderRunnable = new RulesConfigLoaderRunnable(threadHealthReporter, rulesConfigLoader, observer);
     ScheduledFuture<?> configLoaderFuture =
@@ -515,6 +520,11 @@ public class StandalonePipelineManagerTask extends AbstractTask implements Pipel
       pipelineRunnable.stop(nodeProcessShutdown);
       pipelineRunnable = null;
     }
+
+    if(metricsEventRunnable != null) {
+      metricsEventRunnable.setThreadHealthReporter(null);
+    }
+
     threadHealthReporter.destroy();
     threadHealthReporter = null;
     LOG.debug("Stopped pipeline");

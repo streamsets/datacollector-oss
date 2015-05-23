@@ -6,7 +6,6 @@
 
 package com.streamsets.pipeline.metrics;
 
-import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.streamsets.pipeline.callback.CallbackInfo;
 import com.streamsets.pipeline.json.ObjectMapperFactory;
@@ -16,29 +15,33 @@ import com.streamsets.pipeline.prodmanager.State;
 import com.streamsets.pipeline.restapi.bean.CounterJson;
 import com.streamsets.pipeline.restapi.bean.MeterJson;
 import com.streamsets.pipeline.restapi.bean.MetricRegistryJson;
+import com.streamsets.pipeline.runner.production.ThreadHealthReporter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.ws.rs.client.ClientBuilder;
-import javax.ws.rs.core.Response;
 import java.io.IOException;
-import java.net.URLEncoder;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 public class MetricsEventRunnable implements Runnable {
+  public static final String RUNNABLE_NAME = "MetricsEventRunnable";
   private final static Logger LOG = LoggerFactory.getLogger(MetricsEventRunnable.class);
   private List<MetricsEventListener> metricsEventListenerList = new ArrayList<>();
   private Map<String, MetricRegistryJson> slaveMetrics;
 
   private final PipelineManager pipelineManager;
   private final RuntimeInfo runtimeInfo;
+  private ThreadHealthReporter threadHealthReporter;
+  private final int scheduledDelay;
 
-  public MetricsEventRunnable(PipelineManager pipelineManager, RuntimeInfo runtimeInfo) {
+  public MetricsEventRunnable(PipelineManager pipelineManager, RuntimeInfo runtimeInfo, int scheduledDelay) {
     this.pipelineManager = pipelineManager;
     this.runtimeInfo = runtimeInfo;
+    this.scheduledDelay = (int)scheduledDelay/1000;
     slaveMetrics = new HashMap<>();
   }
 
@@ -54,8 +57,20 @@ public class MetricsEventRunnable implements Runnable {
     slaveMetrics.clear();
   }
 
+  public void setThreadHealthReporter(ThreadHealthReporter threadHealthReporter) {
+    this.threadHealthReporter = threadHealthReporter;
+  }
+
   public void run() {
+    //Added log trace to debug SDC-725
+    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
+    Date now = new Date();
+    LOG.trace("MetricsEventRunnable Run - " + sdf.format(now));
     try {
+      if(threadHealthReporter != null) {
+        threadHealthReporter.reportHealth(RUNNABLE_NAME, scheduledDelay, System.currentTimeMillis());
+      }
+
       if (metricsEventListenerList.size() > 0 && pipelineManager.getPipelineState() != null &&
         pipelineManager.getPipelineState().getState() == State.RUNNING) {
         ObjectMapper objectMapper = ObjectMapperFactory.get();
