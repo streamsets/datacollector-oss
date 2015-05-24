@@ -31,10 +31,7 @@ angular
        * Callback function when tab is selected.
        */
       onTabSelect: function() {
-        $scope.refreshCodemirror = true;
-        $timeout(function () {
-          $scope.refreshCodemirror = false;
-        }, 100);
+        refreshCodemirrorWidget();
       },
 
       /**
@@ -533,6 +530,16 @@ angular
     });
 
     /**
+     * Refresh Codemirror widget
+     */
+    var refreshCodemirrorWidget = function() {
+      $scope.refreshCodemirror = true;
+      $timeout(function () {
+        $scope.refreshCodemirror = false;
+      }, 100);
+    };
+
+    /**
      * Update Stage Preview Data when stage selection changed.
      *
      * @param stageInstance
@@ -603,6 +610,9 @@ angular
       initializeGroupInformation({});
     }
 
+    $scope.$watch('previewMode', function() {
+      refreshCodemirrorWidget();
+    });
   }).
 
   controller('FieldSelectorModalInstanceController', function ($scope, $timeout, $modalInstance, previewService,
