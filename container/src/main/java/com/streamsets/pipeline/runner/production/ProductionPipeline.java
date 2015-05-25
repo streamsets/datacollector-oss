@@ -8,6 +8,7 @@ package com.streamsets.pipeline.runner.production;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.impl.ErrorMessage;
+import com.streamsets.pipeline.config.PipelineConfiguration;
 import com.streamsets.pipeline.main.RuntimeInfo;
 import com.streamsets.pipeline.metrics.MetricsConfigurator;
 import com.streamsets.pipeline.runner.Pipeline;
@@ -17,11 +18,13 @@ import java.util.List;
 
 public class ProductionPipeline {
   private final RuntimeInfo runtimeInfo;
+  private final PipelineConfiguration pipelineConf;
   private final Pipeline pipeline;
   private final ProductionPipelineRunner pipelineRunner;
 
-  public ProductionPipeline(RuntimeInfo runtimeInfo, Pipeline pipeline) {
+  public ProductionPipeline(RuntimeInfo runtimeInfo, PipelineConfiguration pipelineConf, Pipeline pipeline) {
     this.runtimeInfo = runtimeInfo;
+    this.pipelineConf = pipelineConf;
     this.pipeline = pipeline;
     this.pipelineRunner =  (ProductionPipelineRunner)pipeline.getRunner();
   }
@@ -38,6 +41,10 @@ public class ProductionPipeline {
     } finally {
       MetricsConfigurator.cleanUpJmxMetrics();
     }
+  }
+
+  public PipelineConfiguration getPipelineConf() {
+    return pipelineConf;
   }
 
   public Pipeline getPipeline() {

@@ -59,6 +59,7 @@ import com.streamsets.pipeline.store.PipelineInfo;
 import com.streamsets.pipeline.store.PipelineStoreException;
 import com.streamsets.pipeline.store.PipelineStoreTask;
 import com.streamsets.pipeline.task.AbstractTask;
+import com.streamsets.pipeline.updatechecker.UpdateChecker;
 import com.streamsets.pipeline.util.Configuration;
 import com.streamsets.pipeline.util.ContainerError;
 import com.streamsets.pipeline.util.ElUtil;
@@ -127,6 +128,8 @@ public class StandalonePipelineManagerTask extends AbstractTask implements Pipel
 
   private List<AlertEventListener> alertEventListenerList = new ArrayList<>();
   private CallbackServerMetricsEventListener callbackServerMetricsEventListener;
+
+  private UpdateChecker updateChecker;
 
   @Inject
   public StandalonePipelineManagerTask(RuntimeInfo runtimeInfo,
@@ -268,7 +271,15 @@ public class StandalonePipelineManagerTask extends AbstractTask implements Pipel
       }
     }
 
+    // update checker
+    updateChecker = new UpdateChecker(runtimeInfo, configuration,  this);
+    executor.scheduleAtFixedRate(updateChecker, 1, 24 * 60, TimeUnit.MINUTES);
+
     LOG.debug("Initialized Production Pipeline Manager");
+  }
+
+  public Map getUpdateInfo() {
+    return updateChecker.getUpdateInfo();
   }
 
   private void restartPipeline(PipelineState ps) {
