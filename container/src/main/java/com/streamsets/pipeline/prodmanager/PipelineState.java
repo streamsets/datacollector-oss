@@ -9,6 +9,7 @@ import com.google.common.collect.ImmutableMap;
 import com.streamsets.pipeline.api.impl.Utils;
 
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.Map;
 
 public class PipelineState {
@@ -29,7 +30,7 @@ public class PipelineState {
     this.message = message;
     this.lastStatusChange = lastStatusChange;
     this.metrics = metrics;
-    this.attributes = (Map) ((attributes != null) ? ImmutableMap.copyOf(attributes) : Collections.emptyMap());
+      this.attributes = (Map) ((attributes != null) ? new HashMap<>(attributes) : new HashMap<>());
   }
 
   public String getRev() {

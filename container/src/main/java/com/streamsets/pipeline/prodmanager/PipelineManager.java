@@ -23,6 +23,7 @@ import com.streamsets.pipeline.task.Task;
 import java.io.InputStream;
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 
 public interface PipelineManager extends Task {
   public static final String REFRESH_INTERVAL_PROPERTY = "ui.refresh.interval.ms";
@@ -84,4 +85,7 @@ public interface PipelineManager extends Task {
   public void updateSlaveCallbackInfo(CallbackInfo callbackInfo);
 
   public Collection<CallbackInfo> getSlaveCallbackList();
+
+  public Map getUpdateInfo();
+
 }

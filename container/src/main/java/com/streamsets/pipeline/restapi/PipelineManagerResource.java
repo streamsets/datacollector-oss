@@ -53,8 +53,11 @@ public class PipelineManagerResource {
   @Produces(MediaType.APPLICATION_JSON)
   @PermitAll
   public Response getStatus() throws PipelineManagerException {
-    return Response.ok().type(MediaType.APPLICATION_JSON).entity(
-      BeanHelper.wrapPipelineState(pipelineManager.getPipelineState())).build();
+    PipelineState ps  = pipelineManager.getPipelineState();
+    if (ps != null) {
+      ps.getAttributes().put("sdc.updateInfo", pipelineManager.getUpdateInfo());
+    }
+    return Response.ok().type(MediaType.APPLICATION_JSON).entity(BeanHelper.wrapPipelineState(ps)).build();
   }
 
   @Path("/start")

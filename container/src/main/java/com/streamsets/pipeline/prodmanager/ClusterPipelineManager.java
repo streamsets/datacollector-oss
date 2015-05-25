@@ -24,6 +24,7 @@ import java.util.concurrent.locks.ReentrantLock;
 import javax.validation.constraints.NotNull;
 
 import com.streamsets.pipeline.lib.util.ThreadUtil;
+import com.streamsets.pipeline.updatechecker.UpdateChecker;
 import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -102,6 +103,8 @@ public class ClusterPipelineManager extends AbstractTask implements PipelineMana
   private MetricsEventRunnable metricsEventRunnable;
   private final ReentrantLock callbackCacheLock;
 
+  private UpdateChecker updateChecker;
+
   public ClusterPipelineManager(RuntimeInfo runtimeInfo, Configuration configuration, PipelineStoreTask pipelineStore,
                                 StageLibraryTask stageLibrary) {
     this(runtimeInfo, configuration, pipelineStore, stageLibrary, null,
@@ -144,10 +147,10 @@ public class ClusterPipelineManager extends AbstractTask implements PipelineMana
     stateTracker.init();
     final PipelineState ps = getPipelineState();
     LOG.info("State on initTask: " + ps);
-    if(ps != null && ps.getState() == State.RUNNING) {
+    if (ps != null && ps.getState() == State.RUNNING) {
       final Map<String, Object> attributes = new HashMap<>();
       attributes.putAll(ps.getAttributes());
-      ApplicationState appState = new ApplicationState((Map)attributes.get(APPLICATION_STATE));
+      ApplicationState appState = new ApplicationState((Map) attributes.get(APPLICATION_STATE));
       if (appState.getId() == null) {
         String msg = "Pipeline is supposed to be running but not application id can be found";
         transitionToError(ps, msg);
@@ -164,12 +167,21 @@ public class ClusterPipelineManager extends AbstractTask implements PipelineMana
       }
     }
     int refreshInterval = configuration.get(REFRESH_INTERVAL_PROPERTY, REFRESH_INTERVAL_PROPERTY_DEFAULT);
-    if(refreshInterval > 0) {
+    if (refreshInterval > 0) {
       metricsEventRunnable = new MetricsEventRunnable(this, runtimeInfo, refreshInterval);
       scheduledExecutor.scheduleAtFixedRate(metricsEventRunnable, 0, refreshInterval, TimeUnit.MILLISECONDS);
     }
 
+    // update checker
+    updateChecker = new UpdateChecker(runtimeInfo, configuration, this);
+    scheduledExecutor
+        .scheduleAtFixedRate(new UpdateChecker(runtimeInfo, configuration, this), 1, 24 * 60, TimeUnit.MINUTES);
   }
+
+  public Map getUpdateInfo() {
+    return updateChecker.getUpdateInfo();
+  }
+
   private void transitionToError(PipelineState ps, String msg) {
     final Map<String, Object> attributes = new HashMap<>();
     attributes.putAll(ps.getAttributes());

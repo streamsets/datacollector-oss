@@ -62,7 +62,7 @@ public class ProductionPipelineBuilder {
     } else {
       runner.setOffsetTracker(offsetTracker);
     }
-    return new ProductionPipeline(runtimeInfo, pipeline);
+    return new ProductionPipeline(runtimeInfo, pipelineConf, pipeline);
   }
 
 }
