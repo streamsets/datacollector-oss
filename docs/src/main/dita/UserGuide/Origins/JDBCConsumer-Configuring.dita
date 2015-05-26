@@ -5,7 +5,7 @@
     <taskbody>
         <context>
             <p><indexterm>JDBC Consumer<indexterm>configuring</indexterm></indexterm>Configure a
-                JDBC Consumer origin to use a JDBC driver to read database data. </p>
+                JDBC Consumer origin to use a JDBC connection to read database data. </p>
         </context>
         <steps id="steps_hhn_vkr_bs">
             <step
@@ -18,7 +18,7 @@
                     <table frame="all" rowsep="1" colsep="1" id="table_nkm_dlr_bs">
                         <tgroup cols="2">
                             <colspec colname="c1" colnum="1" colwidth="1*"/>
-                            <colspec colname="c2" colnum="2" colwidth="2.92*"/>
+                            <colspec colname="c2" colnum="2" colwidth="2.96*"/>
                             <thead>
                                 <row>
                                     <entry>JDBC Property</entry>
@@ -28,36 +28,48 @@
                             <tbody>
                                 <row>
                                     <entry>JDBC Connection String</entry>
-                                    <entry>JDBC connection string for the JDBC</entry>
+                                    <entry>JDBC connection string.</entry>
                                 </row>
                                 <row>
-                                    <entry>Incremental Mode <xref
-                                            href="JDBCConsumer-Full-IncrementalQueries.dita"
-                                                ><image href="../Graphics/icon_moreInfo.png"
-                                                scale="10" id="image_mm5_tvg_cs"/>
+                                    <entry>Incremental Mode  <xref
+                                            href="JDBCConsumer-Full-IncrementalQueries.dita"><image
+                                                href="../Graphics/icon_moreInfo.png" scale="10"
+                                                id="image_mm5_tvg_cs"/>
                                         </xref></entry>
-                                    <entry>Query mode. Enabled by default. </entry>
+                                    <entry>Defines how JDBC Consumer queries the database. Select to
+                                        perform incremental queries. Clear to perform full queries.
+                                            <p>Default is incremental mode. </p></entry>
                                 </row>
                                 <row>
-                                    <entry>SQL Query</entry>
+                                    <entry>SQL Query  <xref href="JDBC-SQLQuery.dita"><image
+                                                href="../Graphics/icon_moreInfo.png" scale="10"
+                                                id="image_yxz_srq_ds"/>
+                                        </xref></entry>
                                     <entry>SQL query to use when reading data from the
                                         database.</entry>
                                 </row>
                                 <row>
-                                    <entry>Initial Offset</entry>
-                                    <entry/>
+                                    <entry>Initial Offset </entry>
+                                    <entry>Offset value to use when the pipeline starts.</entry>
                                 </row>
                                 <row>
-                                    <entry>Offset Column</entry>
-                                    <entry/>
+                                    <entry>Offset Column  <xref
+                                            href="JDBCConsumer-OffsetColumn_Value.dita"><image
+                                                href="../Graphics/icon_moreInfo.png" scale="10"
+                                                id="image_rqs_srq_ds"/>
+                                        </xref></entry>
+                                    <entry>Column to use for the offset value.</entry>
                                 </row>
                                 <row>
                                     <entry>Query Interval</entry>
-                                    <entry/>
+                                    <entry>Amount of time to wait between queries. Enter an
+                                        expression based on a unit of time. You can use SECONDS,
+                                        MINUTES, or HOURS.<p>Default is 10 seconds: ${10 * SECONDS}.
+                                        </p></entry>
                                 </row>
                                 <row>
                                     <entry>Use Credentials</entry>
-                                    <entry/>
+                                    <entry>Whether to use a login to access the database.</entry>
                                 </row>
                                 <row>
                                     <entry>Additional JDBC Configuration</entry>
@@ -72,10 +84,15 @@
                             </tbody>
                         </tgroup>
                     </table>
+                    <draft-comment author="Loretta">Adam: I wonder if the order of properties might
+                        be nicer as follows: Offset Column, Initial Offset, SQL Query, Incremental
+                        Mode? Or ... Incremental Mode, SQL Query?  -- Just chewing on how folks
+                        might think about it - whatever you think is best is fine with
+                        me!</draft-comment>
                 </info>
             </step>
             <step>
-                <cmd>If using JDBC credentials, on the <uicontrol>Credentials</uicontrol> tab,
+                <cmd>When using JDBC credentials, on the <uicontrol>Credentials</uicontrol> tab,
                     configure the following properties:</cmd>
                 <info>
                     <table frame="all" rowsep="1" colsep="1" id="table_mb1_kfs_bs">
@@ -103,7 +120,7 @@
                 </info>
             </step>
             <step>
-                <cmd>If using drivers older than version 4.0, on the <uicontrol>Legacy
+                <cmd>When using drivers older than version 4.0, on the <uicontrol>Legacy
                         Drivers</uicontrol> tab, optionally configure the following
                     properties:</cmd>
                 <info>

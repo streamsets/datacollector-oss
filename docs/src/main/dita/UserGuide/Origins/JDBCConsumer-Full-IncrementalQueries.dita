@@ -1,19 +1,29 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_ets_gnr_bs">
- <title>Full or Incremental Queries</title>
- <shortdesc>JDBC Consumer runs in incremental mode by default. </shortdesc>
+ <title>Full and Incremental Mode</title>
  <conbody>
-  <p>When you start the pipeline for the first time, JDBC Consumer starts reading with the initial
-   offset. When you stop the pipeline, the <ph
-    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> notes where it
-   stopped reading as an offset. When you restart the pipeline, the <ph
-    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> uses the
-   offset information in the query to read from where it stopped earlier. </p>
-  <p>In incremental mode, you can reset the origin to use the initial offset the next time you start
-   the pipeline. Or, to perform a full query each time you start the pipeline, clear the
-    <uicontrol>Incremental Mode</uicontrol> property. </p>
-  <draft-comment author="Loretta">rewrite this to discuss At most once - and other things from
-   meeting with Adam</draft-comment>
+  <p><indexterm>JDBC Consumer origin<indexterm>full or incremental modes for
+    queries</indexterm></indexterm>JDBC Consumer can perform queries in two modes:  </p>
+  <p>
+   <dl>
+    <dlentry>
+     <dt>Incremental mode</dt>
+     <dd>When the JDBC Consumer performs an incremental query, it uses the initial offset as the
+      offset value in the first SQL query. As JDBC Consumer completes processing the results of the
+      first query, it saves the last offset value that it processes. When it requests a subsequent
+      query, it returns data after the last-saved offset. You can reset the origin to use the
+      initial offset value. </dd>
+     <dd>Use incremental mode when data is appended to the table between queries. By default, JDBC
+      Consumer uses incremental mode. </dd>
+    </dlentry>
+    <dlentry>
+     <dt>Full mode</dt>
+     <dd>When the JDBC Consumer performs a full query, it uses the initial offset as the offset
+      value in the SQL query each time it requests data.</dd>
+     <dd>Use a full mode when data can change across the table between queries. </dd>
+    </dlentry>
+   </dl>
+  </p>
  </conbody>
 </concept>

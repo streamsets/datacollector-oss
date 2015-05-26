@@ -2,7 +2,7 @@
 <!DOCTYPE html
   SYSTEM "about:legacy-compat">
 <html xml:lang="en-us" lang="en-us">
-<head><meta name="description" content="The Data Collector performs two types of validation: implicit validation Implicit validation occurs by default as the Data Collector console saves your changes. Implicit validation lists missing or ..."></meta><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><meta name="copyright" content="(C) Copyright 2005"></meta><meta name="DC.rights.owner" content="(C) Copyright 2005"></meta><meta name="DC.Type" content="concept"></meta><meta name="DC.Title" content="Implicit and Explicit Validation"></meta><meta name="DC.Relation" scheme="URI" content="../Pipeline_Configuration/PipelineConfiguration_title.html"></meta><meta name="DC.Format" content="XHTML"></meta><meta name="DC.Identifier" content="concept_azs_swf_jr"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/commonltr.css"><!----></link><title>Implicit and Explicit Validation</title><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/webhelp_topic.css"><!----></link><link rel="stylesheet" type="text/css" href="../skin.css"></link><script type="text/javascript"><!--
+<head><meta name="description" content="The Data Collector performs two types of validation: Implicit validation Implicit validation occurs by default as the Data Collector console saves your changes. Implicit validation lists missing or ..."></meta><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><meta name="copyright" content="(C) Copyright 2005"></meta><meta name="DC.rights.owner" content="(C) Copyright 2005"></meta><meta name="DC.Type" content="concept"></meta><meta name="DC.Title" content="Implicit and Explicit Validation"></meta><meta name="DC.Relation" scheme="URI" content="../Pipeline_Configuration/PipelineConfiguration_title.html"></meta><meta name="DC.Format" content="XHTML"></meta><meta name="DC.Identifier" content="concept_azs_swf_jr"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/commonltr.css"><!----></link><title>Implicit and Explicit Validation</title><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/webhelp_topic.css"><!----></link><link rel="stylesheet" type="text/css" href="../skin.css"></link><script type="text/javascript"><!--
           
           var prefix = "../index.html";
           
@@ -18,28 +18,29 @@
                   Collector</span> performs two
    types of validation:<dl class="dl">
     
-     <dt class="dt dlterm">implicit validation</dt>
+     <dt class="dt dlterm">Implicit validation</dt>
 
      <dd class="dd">Implicit validation occurs by default as the <span class="ph">Data
                   Collector</span> console
       saves your changes. Implicit validation lists missing or incomplete configuration, such as an
       unconnected stage or a required property that has not been configured. </dd>
 
-     <dd class="dd">Errors found by logical validation display in the Issues list. Stages with a static
-      validation error display an error icon.</dd>
+     <dd class="dd">Errors found by logical validation display in the Issues list. An error icon displays on
+            stages with static validation errors.</dd>
 
     
     
-     <dt class="dt dlterm">explicit validation</dt>
+     <dt class="dt dlterm">Explicit validation</dt>
 
-     <dd class="dd">Explicit validation occurs on demand when you click the Validate icon, run data preview, or
-      start a pipeline. Explicit validation becomes available when logical validation passes.</dd>
+     <dd class="dd">Explicit validation occurs when you click the Validate icon, request data preview, or start
+            the pipeline. Explicit validation becomes available when implicit validation
+            passes.</dd>
 
      <dd class="dd">Explicit validation is a semantic validation that checks all configured values for validity
       and verifies whether the pipeline can run as configured. </dd>
 
-     <dd class="dd">For example, while implicit validation verifies that you entered a value for a URI,explicit
-      validation tests the URI by connecting to the system. </dd>
+     <dd class="dd">For example, while implicit validation verifies that you entered a value for a URI,
+            explicit validation tests the validity of the URI by connecting to the system. </dd>
 
     
    </dl>

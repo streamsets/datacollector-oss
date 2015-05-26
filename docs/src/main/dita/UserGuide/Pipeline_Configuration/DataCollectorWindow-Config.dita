@@ -9,8 +9,7 @@
         conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> console
       when you configure a pipeline:</p>
    <p>
-      <image href="../Graphics/CanvasConfig.png" id="image_u5b_1mb_rr"/><draft-comment
-        author="Loretta">export from Gimp 100%</draft-comment></p>
+      <image href="../Graphics/CanvasConfig.png" id="image_u5b_1mb_rr"/></p>
     <table frame="all" rowsep="1" colsep="1" id="table_qwf_byk_sq">
       <tgroup cols="3">
         <colspec colname="c1" colnum="1" colwidth=".5*"/>
@@ -34,18 +33,13 @@
             <entry>Pipeline Creation Help Bar</entry>
             <entry>Offers lists of stages to help complete the pipeline. <p>You can use the help bar
                 to connect a stage to an open node. You can also add a stage between linked stages
-                by clicking the link. </p><p>Hide the help bar by selecting <uicontrol>Don't Show
-                  Again</uicontrol>. To show the help bar after hiding it, click <menucascade>
-                  <uicontrol>Help</uicontrol>
-                  <uicontrol>Settings</uicontrol>
-                </menucascade> and clear the <uicontrol>Hide Pipeline Creation Help Bar</uicontrol>
-                option.</p></entry>
+                by clicking the link. </p></entry>
           </row>
           <row>
             <entry>3</entry>
             <entry>Stage list</entry>
-            <entry>Lists the stages in the pipeline. Use to select a stage to configure. You can
-              alternatively select the stage in the canvas.</entry>
+            <entry>Lists the stages in the pipeline. Use to select a stage to configure. , You can
+              also select the stage in the canvas.</entry>
           </row>
           <row>
             <entry>4</entry>
@@ -72,7 +66,7 @@
             <entry><image href="../Graphics/icon-ConfigMore.png" id="image_mwf_yzw_rr"/></entry>
             <entry>More icon</entry>
             <entry>Provides additional actions for the pipeline. Use to reset the origin for the
-              pipeline.</entry>
+              pipeline. Or to view or delete snapshot data.</entry>
           </row>
           <row>
             <entry><image href="../Graphics/icon-ConfigDelete.png" id="image_mhh_31x_rr"/></entry>
@@ -94,7 +88,7 @@
             <entry><image href="../Graphics/icon-ConfigDataPreview.png" id="image_f5t_gbx_rr"
               /></entry>
             <entry>Preview icon</entry>
-            <entry>Starts a data preview.</entry>
+            <entry>Starts a data preview. </entry>
           </row>
           <row>
             <entry><image href="../Graphics/icon-ConfigValidate.png" id="image_axt_lbx_rr"/></entry>
@@ -130,7 +124,7 @@
     </table>
     <note conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/Note-OptionDispay"/>
     <p>For example, the Copy icon displays only when you select stage that can be copied, it does
-      not display when you select a link or the pipeline. Alternatively, if you log in with only the
-      Manager role, most configuration-related icons are not available.</p>
+      not display when you select a link or an origin. Or, if you log in with the Manager role, most
+      configuration-related icons are not available.</p>
  </conbody>
 </concept>

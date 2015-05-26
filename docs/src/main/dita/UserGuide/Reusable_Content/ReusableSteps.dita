@@ -333,8 +333,8 @@
                 </cmd>
             </step>
             <step id="LogData_Log4j">
-                <cmd>For log data, on the <wintitle>Log</wintitle> tab, configure the following
-                    properties:</cmd>
+                <cmd>For log data, click the <wintitle>Log</wintitle> tab and configure the
+                    following properties:</cmd>
                 <info>
                     <table frame="all" rowsep="1" colsep="1" id="table_ihc_3fs_sr">
                         <tgroup cols="2">
@@ -660,8 +660,8 @@
                                     </row>
                                     <row>
                                         <entry>One Message per Batch</entry>
-                                        <entry>Generates a single message for all records in the
-                                            batch.</entry>
+                                        <entry>Writes the records a batch to each partition as a
+                                            single message. </entry>
                                     </row>
                                     <row>
                                         <entry>Kafka Configuration</entry>

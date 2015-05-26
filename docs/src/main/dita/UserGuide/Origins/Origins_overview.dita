@@ -15,7 +15,7 @@
         <li>Kafka Consumer - Reads messages from Kafka.</li>
         <li>Kinesis Consumer - Reads data from Kinesis.</li>
         <li>Omniture - Reads web usage reports from the Omniture reporting API.</li>
-        <li>UDP - Reads messages from a UDP port. </li>
+        <li>UDP Source - Reads messages from a UDP port. </li>
       </ul></p>
  </conbody>
 </concept>

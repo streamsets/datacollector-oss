@@ -7,22 +7,23 @@
     conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> performs two
    types of validation:<dl>
     <dlentry>
-     <dt>implicit validation</dt>
+     <dt>Implicit validation</dt>
      <dd>Implicit validation occurs by default as the <ph
        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> console
       saves your changes. Implicit validation lists missing or incomplete configuration, such as an
       unconnected stage or a required property that has not been configured. </dd>
-     <dd>Errors found by logical validation display in the Issues list. Stages with a static
-      validation error display an error icon.</dd>
+     <dd>Errors found by logical validation display in the Issues list. An error icon displays on
+            stages with static validation errors.</dd>
     </dlentry>
     <dlentry>
-     <dt>explicit validation</dt>
-     <dd>Explicit validation occurs on demand when you click the Validate icon, run data preview, or
-      start a pipeline. Explicit validation becomes available when logical validation passes.</dd>
+     <dt>Explicit validation</dt>
+     <dd>Explicit validation occurs when you click the Validate icon, request data preview, or start
+            the pipeline. Explicit validation becomes available when implicit validation
+            passes.</dd>
      <dd>Explicit validation is a semantic validation that checks all configured values for validity
       and verifies whether the pipeline can run as configured. </dd>
-     <dd>For example, while implicit validation verifies that you entered a value for a URI,explicit
-      validation tests the URI by connecting to the system. </dd>
+     <dd>For example, while implicit validation verifies that you entered a value for a URI,
+            explicit validation tests the validity of the URI by connecting to the system. </dd>
     </dlentry>
    </dl></p>
  </conbody>

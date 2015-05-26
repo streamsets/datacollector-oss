@@ -22,8 +22,7 @@
         file. END indicates that File Tail completed processing the contents of the file. </li>
       </ul></dd>
      <dd>
-      <note>File names can change when a server renames archived files. When this occurs, inode most
-       reliably identifies a file. </note>
+      <note>Inode most reliably identifies a file when a server renames archived files. </note>
      </dd>
     </dlentry>
    </dl></p>

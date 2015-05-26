@@ -15,8 +15,8 @@
   <p>The data from the Stream Selector default stream and all data from Value Replacer pass to
    Expression Evaluator for further processing, but in no particular order and with no record
    merging.</p>
-  <note>The pipeline validation does not prevent duplicate data. To avoid writing duplicate data to
-   destinations, configure pipeline logic to remove duplicate data or to prevent the generation of
-   duplicate data.</note>
+  <note>Pipeline validation does not prevent duplicate data. To avoid writing duplicate data to
+   destinations, configure the pipeline logic to remove duplicate data or to prevent the generation
+   of duplicate data.</note>
  </conbody>
 </concept>

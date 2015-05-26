@@ -17,8 +17,7 @@
  <div class="body conbody"><p class="shortdesc">When you design a pipeline, you define and link the stages that you want to use. </p>
 
   <p class="p">To add stages to the canvas, you can use the stage library and connect stages manually, or you
-   can use the Pipeline Creation Help Bar to automatically link a selected stage to the
-   pipeline.</p>
+   can use the Pipeline Creation Help Bar to automatically link a new stage to the pipeline.</p>
 
   <p class="p">To define pipeline properties, such as the delivery guarantee, constants or error handling,
    click in any unused space of the canvas. To define the properties for a stage, select the
@@ -67,9 +66,9 @@
    Expression Evaluator for further processing, but in no particular order and with no record
    merging.</p>
 
-  <div class="note note"><span class="notetitle">Note:</span> The pipeline validation does not prevent duplicate data. To avoid writing duplicate data to
-   destinations, configure pipeline logic to remove duplicate data or to prevent the generation of
-   duplicate data.</div>
+  <div class="note note"><span class="notetitle">Note:</span> Pipeline validation does not prevent duplicate data. To avoid writing duplicate data to
+   destinations, configure the pipeline logic to remove duplicate data or to prevent the generation
+   of duplicate data.</div>
 
  </div>
 
@@ -78,17 +77,16 @@
  <h2 class="title topictitle2">Required Fields</h2>
 
  
- <div class="body conbody"><p class="shortdesc">You can configure required fields for any processor and most destination stages. A
-        required field must exist in a record to allow the record to enter the stage for processing.
-        When a record does not include a required field, the record is passed to the pipeline for
-        error handling. </p>
+ <div class="body conbody"><p class="shortdesc">You can define required fields for any processor and most destination stages. A required
+        field must exist in a record to allow the record to enter the stage for processing. When a
+        record does not include a required field, the record is passed to the pipeline for error
+        handling. </p>
 
-  <p class="p">You can configure different required
-         fields in different stages. Configure required fields based on your business requirements
-         or in order to minimize processing errors. </p>
+  <p class="p"> Configure required fields as
+            part of the overall pipeline logic or to minimize processing errors. </p>
 
-  <p class="p">For example, a Field Hasher encodes social security data in the /SSN field. To ensure
-      processing only records that include social security numbers, make /SSN a required field. </p>
+        <p class="p">For example, a Field Hasher encodes social security data in the /SSN field. To ensure all
+            records include social security numbers, make /SSN a required field for the stage.</p>
 
  </div>
 
@@ -98,13 +96,14 @@
 
  
  <div class="body conbody"><p class="shortdesc">SDC Record is a proprietary data format that the <span class="ph">Data
-                  Collector</span> can use to
-    read and write data. The <span class="ph">Data
-                  Collector</span> also uses
-    SDC Record to generate error records. </p>
+                  Collector</span> uses to
+    generate error records.  The <span class="ph">Data
+                  Collector</span> can also use
+    the data format to read and write data. </p>
 
   <p class="p">Use the SDC Record data format to
-   process data from another pipeline, or to generate data to be processed by another pipeline.</p>
+      process data from another pipeline or to generate data to be processed by another
+      pipeline.</p>
 
   <div class="p">You can use the following origins to read SDC Record data: <ul class="ul" id="concept_qkk_mwk_br__ul_ep4_r2b_wr">
     <li class="li">Directory</li>

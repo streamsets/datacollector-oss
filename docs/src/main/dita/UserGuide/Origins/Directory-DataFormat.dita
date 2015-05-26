@@ -7,8 +7,8 @@
           origin<indexterm>data formats</indexterm></indexterm>The Directory origin processes data
       differently based on the type of data in the file. Directory can process the following types
       of data:</p>
-    <draft-comment author="Loretta">Updates to this section should be ported over to KConsumer-Data
-      Formats - the origins handle data formats the same way. 4/28/15</draft-comment>
+    <draft-comment author="Loretta">Doc reminder: Updates to this section should be ported over to
+      KConsumer-Data Formats - the origins handle data formats the same way. 4/28/15</draft-comment>
   <dl>
    <dlentry>
     <dt>Text</dt>

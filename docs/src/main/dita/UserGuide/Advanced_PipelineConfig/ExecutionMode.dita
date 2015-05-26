@@ -2,21 +2,17 @@
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_hmh_kfn_1s">
  <title>Execution Mode</title>
- <shortdesc>
-  <draft-comment author="Loretta">how do I talk about standalone mode?  as a single process? as a
-   single what? </draft-comment>
- </shortdesc>
+ <shortdesc>The <ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+  /> can run standalone mode or cluster mode. In standalone mode, the <ph
+   conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> runs as a
+  single <ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
+  process. The <ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
+  runs in standalone mode by default. </shortdesc>
  <conbody>
   <p><indexterm>execution mode<indexterm>standalone and cluster
     modes</indexterm></indexterm><indexterm>cluster
     mode<indexterm>description</indexterm></indexterm><indexterm>standalone
-     mode<indexterm>description</indexterm></indexterm>The <ph
-    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> can run
-   standalone mode or cluster mode. In standalone mode, the <ph
-    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> runs as a
-   standalone product.<draft-comment author="Loretta">more in this sentence above.</draft-comment>
-   The <ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> runs in
-   standalone mode by default. </p>
+     mode<indexterm>description</indexterm></indexterm></p>
   <p>In cluster mode, the <ph
     conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> runs as an
    application within Spark, allowing it to process large volumes of data from a Kafka CDH cluster. </p>
@@ -28,9 +24,7 @@
     conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> worker to
    process data. </p>
   <p>
-   <note>If you add a partition to the topic being read by the <ph
-     conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>, restart the
-    pipeline to enable the <ph
+   <note>When you add a partition to the Kafka topic, restart the pipeline to enable the <ph
      conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> to generate a
     new worker to read from the new partition.</note>
   </p>
