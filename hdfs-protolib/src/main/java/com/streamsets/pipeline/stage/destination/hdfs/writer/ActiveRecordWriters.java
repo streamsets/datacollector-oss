@@ -25,6 +25,7 @@ import java.util.concurrent.TimeUnit;
 
 public class ActiveRecordWriters {
   private final static Logger LOG = LoggerFactory.getLogger(ActiveRecordWriters.class);
+  private final static boolean IS_TRACE_ENABLED = LOG.isTraceEnabled();
 
   private static class DelayedRecordWriter implements Delayed {
     private RecordWriter writer;
@@ -69,11 +70,15 @@ public class ActiveRecordWriters {
   }
 
   public void purge() throws IOException {
-    LOG.debug("Purge");
+    if (IS_TRACE_ENABLED) {
+      LOG.trace("Purge");
+    }
     DelayedRecordWriter delayedWriter = cutOffQueue.poll();
     while (delayedWriter != null) {
       if (!delayedWriter.getWriter().isClosed()) {
-        LOG.debug("Purging '{}'", delayedWriter.getWriter().getPath());
+        if (IS_TRACE_ENABLED) {
+          LOG.trace("Purging '{}'", delayedWriter.getWriter().getPath());
+        }
         writers.remove(delayedWriter.getWriter().getPath().toString());
         manager.commitWriter(delayedWriter.getWriter());
       }
@@ -87,7 +92,9 @@ public class ActiveRecordWriters {
     if (writer == null) {
       writer = manager.getWriter(now, recordDate, record);
       if (writer != null) {
-        LOG.debug("Got '{}'", writer.getPath());
+        if (IS_TRACE_ENABLED) {
+          LOG.trace("Got '{}'", writer.getPath());
+        }
         writers.put(path, writer);
         cutOffQueue.add(new DelayedRecordWriter(writer));
       }
@@ -102,7 +109,9 @@ public class ActiveRecordWriters {
 
   public void release(RecordWriter writer) throws IOException {
     if (manager.isOverThresholds(writer)) {
-      LOG.debug("Release '{}'", writer.getPath());
+      if (IS_TRACE_ENABLED) {
+        LOG.trace("Release '{}'", writer.getPath());
+      }
       writers.remove(writer.getPath().toString());
       manager.commitWriter(writer);
     }
@@ -116,7 +125,8 @@ public class ActiveRecordWriters {
         try {
           manager.commitWriter(writer);
         } catch (IOException ex) {
-          //TODO LOG
+          String msg = Utils.format("Error closing writer {} : {}", writer, ex);
+          LOG.info(msg, ex);
         }
       }
     }
