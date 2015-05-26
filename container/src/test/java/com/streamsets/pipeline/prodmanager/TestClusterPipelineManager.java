@@ -46,6 +46,9 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 
 public class TestClusterPipelineManager {
   private static final Logger LOG = LoggerFactory.getLogger(TestClusterPipelineManager.class);
@@ -69,10 +72,12 @@ public class TestClusterPipelineManager {
   private MockSparkProvider sparkProvider;
   private ClusterPipelineManager clusterPipelineManager;
   private Map<String, Object> attributes;
+  private ExecutorService executorService;
 
   @Before
   public void setup() throws Exception {
     LogUtil.unregisterAllLoggers();
+    executorService = Executors.newCachedThreadPool();
     emptyCL = new URLClassLoader(new URL[0]);
     tempDir = Files.createTempDir();
     System.setProperty(RuntimeInfo.TRANSIENT_ENVIRONMENT, "true");
@@ -103,6 +108,9 @@ public class TestClusterPipelineManager {
   @After
   public void tearDown() {
     FileUtils.deleteQuietly(tempDir);
+    if (executorService != null) {
+      executorService.shutdownNow();
+    }
   }
 
   private void setExecMode(ExecutionMode mode) throws Exception {
@@ -235,6 +243,46 @@ public class TestClusterPipelineManager {
     clusterPipelineManager.stopPipeline(false);
     Assert.assertEquals(State.STOPPED, getState());
     setState(State.STOPPED);
+  }
+
+  @Test
+  public void testTryStopWhenAppIdIsNotReady() throws Exception {
+    setState(State.STOPPED);
+    clusterPipelineManager = createClusterPipelineManager();
+    clusterPipelineManager.initTask();
+    clusterPipelineManager.startPipeline(NAME, REV);
+    Assert.assertEquals(State.RUNNING, getState());
+    Future<?> future = executorService.submit(new Runnable() {
+      @Override
+      public void run() {
+        Assert.assertTrue(ThreadUtil.sleep(1000));
+        ApplicationState appState = new ApplicationState((Map)stateTracker.getState().getAttributes().
+          get(ClusterPipelineManager.APPLICATION_STATE));
+        appState.setId(APPID);
+        attributes.put(ClusterPipelineManager.APPLICATION_STATE, appState.getMap());
+        try {
+          setState(State.RUNNING);
+        } catch (Exception ex) {
+          throw new RuntimeException(ex);
+        }
+      }
+    });
+    boolean error = true;
+    try {
+      clusterPipelineManager.stopPipeline(false); // should block but not throw an exception
+      error = false;
+    } finally {
+      try {
+        future.get();
+      } catch (Exception ex) {
+        LOG.error("Error caught in runnable: " + ex, ex);
+        if (!error) {
+          String msg = "An error occurred in runnable but not in stopPipeline which should not happen: " + ex;
+          throw new AssertionError(msg, ex);
+        }
+      }
+    }
+    Assert.assertEquals(State.STOPPED, getState());
   }
 
   @Test
