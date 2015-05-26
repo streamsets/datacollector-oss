@@ -10,6 +10,7 @@ import com.streamsets.pipeline.alerts.DataRuleEvaluator;
 import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.config.PipelineDefinition;
 import com.streamsets.pipeline.config.StageDefinition;
+import com.streamsets.pipeline.el.RuntimeEL;
 import com.streamsets.pipeline.main.RuntimeInfo;
 import com.streamsets.pipeline.restapi.bean.BeanHelper;
 import com.streamsets.pipeline.stagelibrary.StageLibraryTask;
@@ -48,6 +49,8 @@ public class StageLibraryResource {
   static final String EL_CONSTANT_DEFS = "elConstantDefinitions";
   @VisibleForTesting
   static final String EL_FUNCTION_DEFS = "elFunctionDefinitions";
+  @VisibleForTesting
+  static final String RUNTIME_CONFIGS = "runtimeConfigs";
 
   private final StageLibraryTask stageLibrary;
   private final RuntimeInfo runtimeInfo;
@@ -80,6 +83,8 @@ public class StageLibraryResource {
     map.put(EL_FUNCTION_DEFS, BeanHelper.wrapElFunctionDefinitions(DataRuleEvaluator.getElEvaluator().getElFunctionDefinitions()));
     map.put(EL_CONSTANT_DEFS, BeanHelper.wrapElConstantDefinitions(DataRuleEvaluator.getElEvaluator().getElConstantDefinitions()));
     definitions.put(RULES_EL_METADATA, map);
+
+    definitions.put(RUNTIME_CONFIGS, RuntimeEL.getRuntimeConfKeys());
 
     return Response.ok().type(MediaType.APPLICATION_JSON).entity(definitions).build();
   }
