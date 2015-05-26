@@ -101,7 +101,6 @@
 
 <script type="text/ng-template" id="summaryRecordsThroughputMeterBarChartTemplate">
   <div class="col-sm-4"
-       ng-if="common.sdcExecutionMode !== pipelineConstant.CLUSTER"
        ng-controller="MeterBarChartController">
     <div class="panel panel-default">
       <div class="panel-heading">
@@ -140,7 +139,7 @@
 
 <script type="text/ng-template" id="summaryBatchThroughputBarChartTemplate">
   <div class="col-sm-4"
-       ng-if="selectedType === pipelineConstant.PIPELINE && common.sdcExecutionMode !== pipelineConstant.CLUSTER"
+       ng-if="selectedType === pipelineConstant.PIPELINE"
        ng-controller="BatchCountBarChartController">
     <div class="panel panel-default">
       <div class="panel-heading">
