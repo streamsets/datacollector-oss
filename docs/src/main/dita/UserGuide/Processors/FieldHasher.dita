@@ -2,8 +2,8 @@
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_ivv_c3k_wq">
  <title>Field Hasher</title>
- <shortdesc>The Field Hasher processor uses an algorithm to encode values in a field. The Field
-  Hasher can use MD5, SHA1 or SHA2 to hash field values. </shortdesc>
+ <shortdesc>The Field Hasher uses an algorithm to encode values in a field. The Field Hasher can use
+  MD5, SHA1 or SHA2 to hash field values. </shortdesc>
  <conbody>
   <p><indexterm>Field Hasher
      processor<indexterm>overview</indexterm></indexterm><indexterm>processors<indexterm>Field

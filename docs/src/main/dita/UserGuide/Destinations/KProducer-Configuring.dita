@@ -6,7 +6,7 @@
         <context>
             <p><indexterm>Kafka Producer
                 destination<indexterm>configuring</indexterm></indexterm>Configure a Kafka Producer
-                to write data to Kafka. </p>
+                to write data to a Kafka cluster. </p>
         </context>
         <steps id="steps_upj_std_br">
             <step

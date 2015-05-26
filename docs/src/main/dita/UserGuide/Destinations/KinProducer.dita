@@ -3,8 +3,8 @@
 <concept id="concept_swk_h1j_yr">
  <title>Kinesis Producer</title>
  <shortdesc>The Kinesis Producer destination writes data to an Amazon Kinesis cluster. You can write
-    JSON objects or SDC Record data to Kinesis. Kinesis Producer writes JSON data to Kinesis as
-    multiple objects. It does not write JSON arrays.</shortdesc>
+    JSON or SDC Record data to Kinesis. Kinesis Producer writes JSON data to Kinesis as multiple
+    objects. It does not write JSON arrays.</shortdesc>
  <conbody>
     <p><indexterm>Kinesis Producer
           destination<indexterm>overview</indexterm></indexterm><indexterm>destinations<indexterm>Kinesis
@@ -13,7 +13,7 @@
       use. </p>
     <p>Kinesis Producer writes data using the following Kinesis requirements: <ul id="ul_oxf_zm4_yr">
         <li>Writes a maximum of 500 messages and 4.5 MB in a batch.</li>
-        <li>Allows a maximum of 50 kb/message - Larger messages are sent to the stage for error
+        <li>Allows a maximum of 50 kb/message. Larger messages are sent to the stage for error
           handling.</li>
       </ul></p>
     <p>Kinesis Producer writes data to the Kinesis cluster using a round-robin partition strategy.

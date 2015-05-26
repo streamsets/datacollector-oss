@@ -12,8 +12,7 @@
   <p><indexterm>execution mode<indexterm>standalone and cluster
     modes</indexterm></indexterm><indexterm>cluster
     mode<indexterm>description</indexterm></indexterm><indexterm>standalone
-     mode<indexterm>description</indexterm></indexterm></p>
-  <p>In cluster mode, the <ph
+     mode<indexterm>description</indexterm></indexterm>In cluster mode, the <ph
     conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> runs as an
    application within Spark, allowing it to process large volumes of data from a Kafka CDH cluster. </p>
   <p>Spark is an open source cluster-computing application that is installed as part of the Kafka

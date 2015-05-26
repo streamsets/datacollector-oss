@@ -441,8 +441,8 @@
                 </cmd>
             </step>
             <step id="DelimProps">
-                <cmd>For delimited data, on the <wintitle>Delimited</wintitle> tab, configure the
-                    following properties:</cmd>
+                <cmd>For delimited data, click the <wintitle>Delimited</wintitle> tab and configure
+                    the following properties:</cmd>
                 <info>
                     <table frame="all" rowsep="1" colsep="1" id="table_wb3_2kg_br">
                         <tgroup cols="2">
@@ -486,8 +486,8 @@
                 </cmd>
             </step>
             <step id="JSONProps">
-                <cmd>For JSON data, on the <uicontrol>JSON</uicontrol> tab, configure the following
-                    property:</cmd>
+                <cmd>For JSON data, click the <uicontrol>JSON</uicontrol> tab and configure the
+                    following property:</cmd>
                 <info>
                     <table frame="all" rowsep="1" colsep="1" id="table_lgq_53c_wr">
                         <tgroup cols="2">
@@ -525,8 +525,8 @@
                 </cmd>
             </step>
             <step id="TextProps">
-                <cmd>For text data, on the <uicontrol>Text</uicontrol> tab, configure the following
-                    properties:</cmd>
+                <cmd>For text data, click the <uicontrol>Text</uicontrol> tab and configure the
+                    following properties:</cmd>
                 <info>
                     <table frame="all" rowsep="1" colsep="1" id="table_egv_3df_jr">
                         <tgroup cols="2">
@@ -601,7 +601,7 @@
                                         <entry>Topic Expression</entry>
                                         <entry>Expression used to determine where each record is
                                             written. Use an expression that evaluates to a topic
-                                            name. </entry>
+                                            name. <p>For runtime topic resolution only. </p></entry>
                                     </row>
                                     <row>
                                         <entry>Topic White List</entry>
@@ -610,7 +610,8 @@
                                             invalid topic names are passed the stage for error
                                             handling. <p>Use an asterisk (*) to allow writing to any
                                                 topic name. By default, all topic names are
-                                                valid.</p></entry>
+                                                valid.</p><p>For runtime topic resolution only.
+                                            </p></entry>
                                     </row>
                                     <row>
                                         <entry>Topic</entry>
@@ -629,16 +630,17 @@
                                             </ul></entry>
                                     </row>
                                     <row>
-                                        <entry>Expression <xref
+                                        <entry>Partition Expression <xref
                                                 href="../Destinations/KProducer-PartitionStrategy.dita#concept_qpm_xp4_4r">
                                                 <image href="../Graphics/icon_moreInfo.png"
                                                   scale="10"/></xref></entry>
-                                        <entry>Expression to use to using the Expression partition
-                                            strategy. <p>Define the expression to evaluate to the
-                                                partition where you want each record written.
-                                                Partitions are numbered 0 - n.</p><p
+                                        <entry>Expression to use to write to partitions. <p>Define
+                                                the expression to evaluate to the partition where
+                                                you want each record written. Partitions are
+                                                numbered 0 - n.</p><p
                                                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/EEditor"
-                                            /></entry>
+                                                /><p>For the expression partition strategy only.
+                                            </p></entry>
                                     </row>
                                     <row>
                                         <entry>Data Format</entry>
@@ -660,8 +662,8 @@
                                     </row>
                                     <row>
                                         <entry>One Message per Batch</entry>
-                                        <entry>Writes the records a batch to each partition as a
-                                            single message. </entry>
+                                        <entry>For each batch, writes the records to each partition
+                                            as a single message. </entry>
                                     </row>
                                     <row>
                                         <entry>Kafka Configuration</entry>

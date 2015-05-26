@@ -7,9 +7,9 @@
   clause of the SQL query.</shortdesc>
  <conbody>
   <p><indexterm>JDBC Consumer origin<indexterm>offset column and
-    value</indexterm></indexterm><indexterm>offset column and value<indexterm>JDBC
-     Consumer</indexterm></indexterm>Ideally, the offset column is a column in the table with unique
-   values, such as a primary key or index column. The initial offset value is a value within the
-   offset column where you want JDBC Consumer to start reading.</p>
+        value</indexterm></indexterm><indexterm>offset column and value<indexterm>JDBC
+          Consumer</indexterm></indexterm>Ideally, the offset column is a column in the table with
+      unique values, such as a primary key or indexed column. The initial offset value is a value
+      within the offset column where you want JDBC Consumer to start reading.</p>
  </conbody>
 </concept>

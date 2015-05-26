@@ -23,7 +23,7 @@
       column, initial offset value, and SQL query to define the data returned by the database.</p>
 
     <p class="p">You can also configure add custom properties that your driver requires and configure
-      additional properties for older driver versions.</p>
+      additional properties for JDBC versions older than 4.0.</p>
 
   </div>
 
@@ -36,9 +36,9 @@
   reading data within a table. Include both the offset column and the offset value in the WHERE
   clause of the SQL query.</p>
 
-  <p class="p">Ideally, the offset column is a column in the table with unique
-   values, such as a primary key or index column. The initial offset value is a value within the
-   offset column where you want JDBC Consumer to start reading.</p>
+  <p class="p">Ideally, the offset column is a column in the table with
+      unique values, such as a primary key or indexed column. The initial offset value is a value
+      within the offset column where you want JDBC Consumer to start reading.</p>
 
  </div>
 
@@ -49,13 +49,11 @@
  
  <div class="body conbody"><p class="shortdesc">JDBC Consumer uses offset values in the offset column to determine where to continue
   processing after a deliberate or unexpected stop. To ensure seamless recovery, use a primary key
-  or index column as the offset column.</p>
+  or indexed column as the offset column.</p>
 
   <p class="p">As JDBC Consumer processes data, it tracks the offset value
    internally. When the pipeline stops, JDBC Consumer notes where it stopped processing data. When
    you restart the pipeline, it continues from the last-saved offset. </p>
-
-  <p class="p">JDBC Consumer performs recovery in both full and incremental mode. </p>
 
  </div>
 
@@ -77,8 +75,8 @@
       query, it returns data after the last-saved offset. You can reset the origin to use the
       initial offset value. </dd>
 
-     <dd class="dd">Use incremental mode when data is appended to the table between queries. By default, JDBC
-      Consumer uses incremental mode. </dd>
+     <dd class="dd">Use incremental mode for append-only tables or when you do not need to capture changes to
+      older rows. By default, JDBC Consumer uses incremental mode. </dd>
 
     
     
@@ -87,7 +85,8 @@
      <dd class="dd">When the JDBC Consumer performs a full query, it uses the initial offset as the offset
       value in the SQL query each time it requests data.</dd>
 
-     <dd class="dd">Use a full mode when data can change across the table between queries. </dd>
+     <dd class="dd">Use a full mode to capture all row updates. You might use a Record Deduplicator in the
+      pipeline to minimize repeated rows. Not ideal for large tables.</dd>
 
     
    </dl>
@@ -104,21 +103,21 @@
     <div class="p">The SQL query defines the data
       returned from the database. When you define the SQL query, use the following guidelines:<dl class="dl">
         
-          <dt class="dt dlterm">In the WHERE clause, include the offset column and the offset value - </dt>
+          <dt class="dt dlterm">In the WHERE clause, include the offset column and the offset value</dt>
 
           <dd class="dd">JDBC Consumer uses an offset column and value to determine the data that is returned.
             Include both in the WHERE clause of the query. </dd>
 
         
         
-          <dt class="dt dlterm">Use ${offset} to represent the offset value</dt>
+          <dt class="dt dlterm">Use ${OFFSET} to represent the offset value</dt>
 
-          <dd class="dd">In the WHERE clause, use ${offset} to represent the offset value. </dd>
+          <dd class="dd">In the WHERE clause, use ${OFFSET} to represent the offset value. </dd>
 
           <dd class="dd">For example, when you start a pipeline, the following query returns all data from the
             table where the data in the offset column is greater than the initial offset value.
-              <pre class="pre codeblock">SELECT * FROM &lt;tablename&gt; WHERE &lt;offset column&gt; &gt; ${offset}</pre>
-<div class="note tip"><span class="tiptitle">Tip:</span> When the offset values are strings, enclose ${offset} in quotation
+              <pre class="pre codeblock">SELECT * FROM &lt;tablename&gt; WHERE &lt;offset column&gt; &gt; ${OFFSET}</pre>
+<div class="note tip"><span class="tiptitle">Tip:</span> When the offset values are strings, enclose ${OFFSET} in single quotation
               marks.</div>
 </dd>
 
@@ -130,8 +129,8 @@
             ORDER BY clause.</dd>
 
           <dd class="dd">
-            <div class="note note"><span class="notetitle">Note:</span> Using a non-key or non-index column in the ORDER BY clause can slow
-              performance.</div>
+            <div class="note note"><span class="notetitle">Note:</span> Using column that is not a primary key or indexed column in the ORDER BY clause
+              can slow performance.</div>
 
           </dd>
 
@@ -162,9 +161,9 @@
                             
                             <thead class="thead" align="left">
                                 <tr class="row">
-                                    <th class="entry" valign="top" width="24.509803921568626%" id="d22802e252">General Property</th>
+                                    <th class="entry" valign="top" width="24.509803921568626%" id="d22845e249">General Property</th>
 
-                                    <th class="entry" valign="top" width="75.49019607843137%" id="d22802e255">Description</th>
+                                    <th class="entry" valign="top" width="75.49019607843137%" id="d22845e252">Description</th>
 
                                 </tr>
 
@@ -172,23 +171,23 @@
 
                             <tbody class="tbody">
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="24.509803921568626%" headers="d22802e252 ">Name</td>
+                                    <td class="entry" valign="top" width="24.509803921568626%" headers="d22845e249 ">Name</td>
 
-                                    <td class="entry" valign="top" width="75.49019607843137%" headers="d22802e255 ">Stage name.</td>
-
-                                </tr>
-
-                                <tr class="row">
-                                    <td class="entry" valign="top" width="24.509803921568626%" headers="d22802e252 ">Description</td>
-
-                                    <td class="entry" valign="top" width="75.49019607843137%" headers="d22802e255 ">Optional description.</td>
+                                    <td class="entry" valign="top" width="75.49019607843137%" headers="d22845e252 ">Stage name.</td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="24.509803921568626%" headers="d22802e252 ">On Record Error</td>
+                                    <td class="entry" valign="top" width="24.509803921568626%" headers="d22845e249 ">Description</td>
 
-                                    <td class="entry" valign="top" width="75.49019607843137%" headers="d22802e255 ">Error record handling for the stage: <ul class="ul" id="task_ryz_tkr_bs__d2465e298">
+                                    <td class="entry" valign="top" width="75.49019607843137%" headers="d22845e252 ">Optional description.</td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="24.509803921568626%" headers="d22845e249 ">On Record Error</td>
+
+                                    <td class="entry" valign="top" width="75.49019607843137%" headers="d22845e252 ">Error record handling for the stage: <ul class="ul" id="task_ryz_tkr_bs__d2465e298">
                                             <li class="li">Discard - Discards the record.</li>
 
                                             <li class="li">Send to Error - Sends the record to the pipeline for
@@ -217,9 +216,9 @@
                             
                             <thead class="thead" align="left">
                                 <tr class="row">
-                                    <th class="entry" valign="top" width="25.252525252525253%" id="d22802e324">JDBC Property</th>
+                                    <th class="entry" valign="top" width="25.252525252525253%" id="d22845e321">JDBC Property</th>
 
-                                    <th class="entry" valign="top" width="74.74747474747475%" id="d22802e327">Description</th>
+                                    <th class="entry" valign="top" width="74.74747474747475%" id="d22845e324">Description</th>
 
                                 </tr>
 
@@ -227,17 +226,17 @@
 
                             <tbody class="tbody">
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="25.252525252525253%" headers="d22802e324 ">JDBC Connection String</td>
+                                    <td class="entry" valign="top" width="25.252525252525253%" headers="d22845e321 ">JDBC Connection String</td>
 
-                                    <td class="entry" valign="top" width="74.74747474747475%" headers="d22802e327 ">JDBC connection string.</td>
+                                    <td class="entry" valign="top" width="74.74747474747475%" headers="d22845e324 ">JDBC connection string.</td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="25.252525252525253%" headers="d22802e324 ">Incremental Mode  <a class="xref" href="JDBCConsumer.html#concept_ets_gnr_bs"><img class="image" id="task_ryz_tkr_bs__image_mm5_tvg_cs" src="../Graphics/icon_moreInfo.png" height="12" width="12"></img>
+                                    <td class="entry" valign="top" width="25.252525252525253%" headers="d22845e321 ">Incremental Mode  <a class="xref" href="JDBCConsumer.html#concept_ets_gnr_bs"><img class="image" id="task_ryz_tkr_bs__image_mm5_tvg_cs" src="../Graphics/icon_moreInfo.png" height="12" width="12"></img>
                                         </a></td>
 
-                                    <td class="entry" valign="top" width="74.74747474747475%" headers="d22802e327 ">Defines how JDBC Consumer queries the database. Select to
+                                    <td class="entry" valign="top" width="74.74747474747475%" headers="d22845e324 ">Defines how JDBC Consumer queries the database. Select to
                                         perform incremental queries. Clear to perform full queries.
                                             <p class="p">Default is incremental mode. </p>
 </td>
@@ -245,33 +244,33 @@
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="25.252525252525253%" headers="d22802e324 ">SQL Query  <a class="xref" href="JDBCConsumer.html#concept_uj4_mxy_bs"><img class="image" id="task_ryz_tkr_bs__image_yxz_srq_ds" src="../Graphics/icon_moreInfo.png" height="12" width="12"></img>
+                                    <td class="entry" valign="top" width="25.252525252525253%" headers="d22845e321 ">SQL Query  <a class="xref" href="JDBCConsumer.html#concept_uj4_mxy_bs"><img class="image" id="task_ryz_tkr_bs__image_yxz_srq_ds" src="../Graphics/icon_moreInfo.png" height="12" width="12"></img>
                                         </a></td>
 
-                                    <td class="entry" valign="top" width="74.74747474747475%" headers="d22802e327 ">SQL query to use when reading data from the
+                                    <td class="entry" valign="top" width="74.74747474747475%" headers="d22845e324 ">SQL query to use when reading data from the
                                         database.</td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="25.252525252525253%" headers="d22802e324 ">Initial Offset </td>
+                                    <td class="entry" valign="top" width="25.252525252525253%" headers="d22845e321 ">Initial Offset </td>
 
-                                    <td class="entry" valign="top" width="74.74747474747475%" headers="d22802e327 ">Offset value to use when the pipeline starts.</td>
+                                    <td class="entry" valign="top" width="74.74747474747475%" headers="d22845e324 ">Offset value to use when the pipeline starts.</td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="25.252525252525253%" headers="d22802e324 ">Offset Column  <a class="xref" href="JDBCConsumer.html#concept_nxz_2kz_bs" title="JDBC Consumer uses an offset column and initial offset value to determine where to start reading data within a table. Include both the offset column and the offset value in the WHERE clause of the SQL query."><img class="image" id="task_ryz_tkr_bs__image_rqs_srq_ds" src="../Graphics/icon_moreInfo.png" height="12" width="12"></img>
+                                    <td class="entry" valign="top" width="25.252525252525253%" headers="d22845e321 ">Offset Column  <a class="xref" href="JDBCConsumer.html#concept_nxz_2kz_bs" title="JDBC Consumer uses an offset column and initial offset value to determine where to start reading data within a table. Include both the offset column and the offset value in the WHERE clause of the SQL query."><img class="image" id="task_ryz_tkr_bs__image_rqs_srq_ds" src="../Graphics/icon_moreInfo.png" height="12" width="12"></img>
                                         </a></td>
 
-                                    <td class="entry" valign="top" width="74.74747474747475%" headers="d22802e327 ">Column to use for the offset value.</td>
+                                    <td class="entry" valign="top" width="74.74747474747475%" headers="d22845e324 ">Column to use for the offset value.</td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="25.252525252525253%" headers="d22802e324 ">Query Interval</td>
+                                    <td class="entry" valign="top" width="25.252525252525253%" headers="d22845e321 ">Query Interval</td>
 
-                                    <td class="entry" valign="top" width="74.74747474747475%" headers="d22802e327 ">Amount of time to wait between queries. Enter an
+                                    <td class="entry" valign="top" width="74.74747474747475%" headers="d22845e324 ">Amount of time to wait between queries. Enter an
                                         expression based on a unit of time. You can use SECONDS,
                                         MINUTES, or HOURS.<p class="p">Default is 10 seconds: ${10 * SECONDS}.
                                         </p>
@@ -280,16 +279,17 @@
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="25.252525252525253%" headers="d22802e324 ">Use Credentials</td>
+                                    <td class="entry" valign="top" width="25.252525252525253%" headers="d22845e321 ">Use Credentials</td>
 
-                                    <td class="entry" valign="top" width="74.74747474747475%" headers="d22802e327 ">Whether to use a login to access the database.</td>
+                                    <td class="entry" valign="top" width="74.74747474747475%" headers="d22845e324 ">Indicates whether to use a login to access the
+                                        database.</td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="25.252525252525253%" headers="d22802e324 ">Additional JDBC Configuration</td>
+                                    <td class="entry" valign="top" width="25.252525252525253%" headers="d22845e321 ">Additional JDBC Configuration</td>
 
-                                    <td class="entry" valign="top" width="74.74747474747475%" headers="d22802e327 ">
+                                    <td class="entry" valign="top" width="74.74747474747475%" headers="d22845e324 ">
                                         <p class="p">Additional JDBC configuration properties to use. To add
                                             properties, click <span class="ph uicontrol">Add</span> and define
                                             the JDBC property name and value. </p>
@@ -319,9 +319,9 @@
                             
                             <thead class="thead" align="left">
                                 <tr class="row">
-                                    <th class="entry" valign="top" width="34.72222222222222%" id="d22802e465">Credentials Property</th>
+                                    <th class="entry" valign="top" width="34.72222222222222%" id="d22845e462">Credentials Property</th>
 
-                                    <th class="entry" valign="top" width="65.27777777777779%" id="d22802e468">Description</th>
+                                    <th class="entry" valign="top" width="65.27777777777779%" id="d22845e465">Description</th>
 
                                 </tr>
 
@@ -329,16 +329,16 @@
 
                             <tbody class="tbody">
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="34.72222222222222%" headers="d22802e465 ">Username</td>
+                                    <td class="entry" valign="top" width="34.72222222222222%" headers="d22845e462 ">Username</td>
 
-                                    <td class="entry" valign="top" width="65.27777777777779%" headers="d22802e468 ">User name for the JDBC connection.</td>
+                                    <td class="entry" valign="top" width="65.27777777777779%" headers="d22845e465 ">User name for the JDBC connection.</td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="34.72222222222222%" headers="d22802e465 ">Password</td>
+                                    <td class="entry" valign="top" width="34.72222222222222%" headers="d22845e462 ">Password</td>
 
-                                    <td class="entry" valign="top" width="65.27777777777779%" headers="d22802e468 ">Password for the JDBC account</td>
+                                    <td class="entry" valign="top" width="65.27777777777779%" headers="d22845e465 ">Password for the JDBC account</td>
 
                                 </tr>
 
@@ -350,7 +350,7 @@
                 </div>
             </li>
 <li class="li step stepexpand">
-                <span class="ph cmd">When using drivers older than version 4.0, on the <span class="ph uicontrol">Legacy
+                <span class="ph cmd">When using JDBC versions older than 4.0, on the <span class="ph uicontrol">Legacy
                         Drivers</span> tab, optionally configure the following
                     properties:</span>
                 <div class="itemgroup info">
@@ -360,9 +360,9 @@
                             
                             <thead class="thead" align="left">
                                 <tr class="row">
-                                    <th class="entry" valign="top" width="36.496350364963504%" id="d22802e520">Legacy Driver Property</th>
+                                    <th class="entry" valign="top" width="36.496350364963504%" id="d22845e517">Legacy Driver Property</th>
 
-                                    <th class="entry" valign="top" width="63.503649635036496%" id="d22802e523">Description</th>
+                                    <th class="entry" valign="top" width="63.503649635036496%" id="d22845e520">Description</th>
 
                                 </tr>
 
@@ -370,18 +370,18 @@
 
                             <tbody class="tbody">
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="36.496350364963504%" headers="d22802e520 ">JDBC Class Driver Name</td>
+                                    <td class="entry" valign="top" width="36.496350364963504%" headers="d22845e517 ">JDBC Class Driver Name</td>
 
-                                    <td class="entry" valign="top" width="63.503649635036496%" headers="d22802e523 ">Class name for the JDBC driver. Use only for versions
-                                        older than version 4.0.</td>
+                                    <td class="entry" valign="top" width="63.503649635036496%" headers="d22845e520 ">Class name for the JDBC driver. Required for JDBC
+                                        versions older than version 4.0.</td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="36.496350364963504%" headers="d22802e520 ">Connection Health Test Query</td>
+                                    <td class="entry" valign="top" width="36.496350364963504%" headers="d22845e517 ">Connection Health Test Query</td>
 
-                                    <td class="entry" valign="top" width="63.503649635036496%" headers="d22802e523 ">Optional query to test the health of a connection to a
-                                        driver version older than 4.0.</td>
+                                    <td class="entry" valign="top" width="63.503649635036496%" headers="d22845e520 ">Optional query to test the health of a connection.
+                                        Recommended only when the JDBC version is older than 4.0. </td>
 
                                 </tr>
 

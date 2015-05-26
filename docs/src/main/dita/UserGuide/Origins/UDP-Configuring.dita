@@ -33,8 +33,8 @@
                                 </row>
                                 <row>
                                     <entry>Data Format</entry>
-                                    <entry>Data format passed by UDP. UDP Source reads NetFlow
-                                        messages.</entry>
+                                    <entry>Data format passed by UDP. UDP Source reads only NetFlow
+                                        Version 5 messages at this time. </entry>
                                 </row>
                                 <row>
                                     <entry>Max Batch Size (messages)</entry>

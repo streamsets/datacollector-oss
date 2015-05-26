@@ -7,17 +7,17 @@
           query<indexterm>JDBC Cponsumer</indexterm></indexterm>The SQL query defines the data
       returned from the database. When you define the SQL query, use the following guidelines:<dl>
         <dlentry>
-          <dt>In the WHERE clause, include the offset column and the offset value - </dt>
+          <dt>In the WHERE clause, include the offset column and the offset value</dt>
           <dd>JDBC Consumer uses an offset column and value to determine the data that is returned.
             Include both in the WHERE clause of the query. </dd>
         </dlentry>
         <dlentry>
-          <dt>Use ${offset} to represent the offset value</dt>
-          <dd>In the WHERE clause, use ${offset} to represent the offset value. </dd>
+          <dt>Use ${OFFSET} to represent the offset value</dt>
+          <dd>In the WHERE clause, use ${OFFSET} to represent the offset value. </dd>
           <dd>For example, when you start a pipeline, the following query returns all data from the
             table where the data in the offset column is greater than the initial offset value.
-              <codeblock>SELECT * FROM &lt;tablename> WHERE &lt;offset column> > ${offset}</codeblock><note
-              type="tip">When the offset values are strings, enclose ${offset} in quotation
+              <codeblock>SELECT * FROM &lt;tablename> WHERE &lt;offset column> > ${OFFSET}</codeblock><note
+              type="tip">When the offset values are strings, enclose ${OFFSET} in single quotation
               marks.</note></dd>
         </dlentry>
         <dlentry>
@@ -25,8 +25,8 @@
           <dd>To avoid returning duplicate data, use the offset column as the first column in the
             ORDER BY clause.</dd>
           <dd>
-            <note>Using a non-key or non-index column in the ORDER BY clause can slow
-              performance.</note>
+            <note>Using column that is not a primary key or indexed column in the ORDER BY clause
+              can slow performance.</note>
           </dd>
         </dlentry>
       </dl></p>

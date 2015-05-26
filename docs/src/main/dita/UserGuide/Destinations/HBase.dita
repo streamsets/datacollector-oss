@@ -3,8 +3,8 @@
 <concept id="concept_wsz_5t5_vr">
  <title>HBase</title>
  <shortdesc>The HBase destination writes data to an HBase cluster. The destination writes data to
-  HBase in text, binary or JSON format. You can define the format for each column written to
-  HBase.</shortdesc>
+    HBase in text, binary, or JSON format. You can define the data format for each column written to
+    HBase.</shortdesc>
  <conbody>
   <p><indexterm>HBase
      origin<indexterm>overview</indexterm></indexterm><indexterm>origins<indexterm>HBase</indexterm></indexterm>When

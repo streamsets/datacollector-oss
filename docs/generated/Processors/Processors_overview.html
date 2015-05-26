@@ -20,7 +20,7 @@
     <div class="p">The <span class="ph">Data
                   Collector</span> provides
       the following processors:<ul class="ul" id="concept_hpr_twm_jq__ul_mxz_jxm_jq">
-        <li class="li">Expression Evaluator - Performs calculations on a row-by-row basis.</li>
+        <li class="li">Expression Evaluator - Performs calculations and appends the results to the record.</li>
 
         <li class="li">Field Converter - Converts the data type of a field.</li>
 
@@ -90,8 +90,8 @@
         
           <dt class="dt dlterm">[*]</dt>
 
-          <dd class="dd">Represents all values for the specified index in an array. For example, the following
-            field path can hash the social security number of every employee in every
+          <dd class="dd">Matches all values for the specified index in an array. For example, the following
+            field path represents the social security number of every employee in every
             division:<pre class="pre codeblock">/Division[*]/Employee[*]/SSN</pre>
 </dd>
 
@@ -99,8 +99,8 @@
         
           <dt class="dt dlterm">/*</dt>
 
-          <dd class="dd">Represents all values for the specified keys in a map. For example, the following
-            field path can mask all employee information in the first
+          <dd class="dd">Matches all values for the specified keys in a map. For example, the following field
+            path represents all employee information in the first
             division:<pre class="pre codeblock">/Division[0]/Employee[*]/*</pre>
 </dd>
 

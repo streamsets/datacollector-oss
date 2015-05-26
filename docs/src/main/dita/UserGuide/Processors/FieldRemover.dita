@@ -4,8 +4,8 @@
  <title>Field Remover</title>
  <conbody>
   <p><indexterm>Field Remover
-     processor<indexterm>overview</indexterm></indexterm><indexterm>processors<indexterm>Field
-     Remover</indexterm></indexterm>The Field Remover removes fields from the pipeline. Use the
-   Field Remover to discard data that you do not need in the pipeline. </p>
+          processor<indexterm>overview</indexterm></indexterm><indexterm>processors<indexterm>Field
+          Remover</indexterm></indexterm>The Field Remover removes fields from records. Use the
+      Field Remover to discard field data that you do not need in the pipeline. </p>
  </conbody>
 </concept>
