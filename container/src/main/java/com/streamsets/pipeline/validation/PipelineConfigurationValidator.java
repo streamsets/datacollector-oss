@@ -22,6 +22,7 @@ import com.streamsets.pipeline.config.PipelineDefConfigs;
 import com.streamsets.pipeline.config.StageConfiguration;
 import com.streamsets.pipeline.config.StageDefinition;
 import com.streamsets.pipeline.config.StageType;
+import com.streamsets.pipeline.main.RuntimeInfo;
 import com.streamsets.pipeline.stagelibrary.StageLibraryTask;
 import com.streamsets.pipeline.store.PipelineStoreTask;
 import com.streamsets.pipeline.util.ContainerError;
@@ -146,7 +147,8 @@ public class PipelineConfigurationValidator {
       : ExecutionMode.valueOf((String) executionConfigMode.getValue());
     ConfigConfiguration kerberosAuth = pipelineConfiguration.getConfiguration(PipelineDefConfigs.
       CLUSTER_KERBEROS_AUTH_CONFIG);
-    if (executionMode == ExecutionMode.CLUSTER && kerberosAuth != null && (Boolean)kerberosAuth.getValue()) {
+    if (executionMode == ExecutionMode.CLUSTER && kerberosAuth != null && (Boolean)kerberosAuth.getValue()
+      && !Boolean.getBoolean(RuntimeInfo.TRANSIENT_ENVIRONMENT)) {
       ConfigConfiguration kerberosPrinc = pipelineConfiguration.getConfiguration(PipelineDefConfigs.
         CLUSTER_KERBEROS_PRINCIPAL_CONFIG);
       ConfigConfiguration kerberosKeytab = pipelineConfiguration.getConfiguration(PipelineDefConfigs.

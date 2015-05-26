@@ -51,6 +51,15 @@ public class Issues implements Serializable {
     }
   }
 
+  public List<Issue> getIssues() {
+    List<Issue> result = new ArrayList<>();
+    result.addAll(pipeline);
+    for (List<StageIssue> stageIssues : stages.values()) {
+      result.addAll(stageIssues);
+    }
+    return pipeline;
+  }
+
   public List<Issue> getPipelineIssues() {
     return pipeline;
   }

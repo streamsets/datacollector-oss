@@ -19,11 +19,13 @@ import com.streamsets.pipeline.util.ValidationUtil;
 import com.streamsets.pipeline.validation.Issues;
 import com.streamsets.pipeline.validation.PipelineConfigurationValidator;
 import com.streamsets.pipeline.validation.StageIssue;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.List;
 
 public class ProductionPipelineBuilder {
-
+  private static final Logger LOG = LoggerFactory.getLogger(ProductionPipelineBuilder.class);
   private static final String PRODUCTION_PIPELINE_SUFFIX = ":production";
 
   private final StageLibraryTask stageLib;
@@ -54,6 +56,9 @@ public class ProductionPipelineBuilder {
     List<StageIssue> configIssues = pipeline.validateConfigs();
     if (!configIssues.isEmpty()) {
       Issues issues = new Issues(configIssues);
+      for (StageIssue stageIssue : configIssues) {
+        LOG.warn(String.valueOf(stageIssue));
+      }
       throw new PipelineRuntimeException(issues);
     }
     if (pipeline.getSource() instanceof OffsetCommitter) {
