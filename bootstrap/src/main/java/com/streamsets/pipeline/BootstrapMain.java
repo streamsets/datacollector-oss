@@ -187,7 +187,7 @@ public class BootstrapMain {
       String name = parts[1];
       stageLibrariesCLs.add(new SDCClassLoader(type, name, entry.getValue(), apiCL,
                                                         PACKAGES_BLACKLIST_FOR_STAGE_LIBRARIES,
-        SDCClassLoader.SYSTEM_STAGE_CLASSES_DEFAULT, SDCClassLoader.SYSTEM_STAGE_CLASSES_DEFAULT));
+        SDCClassLoader.SYSTEM_STAGE_CLASSES_DEFAULT, SDCClassLoader.APPLICATION_STAGE_CLASSES_DEFAULT));
     }
 
     // Bootstrap container
