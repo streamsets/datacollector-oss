@@ -19,5 +19,12 @@ public interface DataCollector {
 
   public void startPipeline(String pipelineJson) throws Exception;
 
+  public void createPipeline(String pipelineJson) throws Exception;
+
+  public void startPipeline() throws Exception;
+
+  public void stopPipeline() throws Exception;
+
   public List<URI> getWorkerList() throws URISyntaxException;
+
 }

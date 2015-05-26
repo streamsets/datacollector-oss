@@ -5,7 +5,6 @@
  */
 package com.streamsets.pipeline.lib;
 
-import com.google.common.io.Resources;
 import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.OnRecordError;
 import com.streamsets.pipeline.api.Record;
@@ -14,7 +13,6 @@ import com.streamsets.pipeline.api.ext.RecordWriter;
 import com.streamsets.pipeline.lib.json.StreamingJsonParser;
 import com.streamsets.pipeline.sdk.ContextInfoCreator;
 import com.streamsets.pipeline.sdk.RecordCreator;
-
 import kafka.admin.AdminUtils;
 import kafka.consumer.Consumer;
 import kafka.consumer.ConsumerConfig;
@@ -23,13 +21,19 @@ import kafka.javaapi.consumer.ConsumerConnector;
 import kafka.javaapi.producer.Producer;
 import kafka.producer.KeyedMessage;
 import kafka.producer.ProducerConfig;
+import kafka.server.KafkaConfig;
 import kafka.server.KafkaServer;
+import kafka.utils.MockTime;
 import kafka.utils.TestUtils;
-
+import kafka.utils.TestZKUtils;
+import kafka.utils.ZKStringSerializer$;
+import kafka.zk.EmbeddedZookeeper;
 import org.I0Itec.zkclient.ZkClient;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVPrinter;
 import org.apache.commons.io.IOUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
@@ -127,6 +131,74 @@ public class KafkaTestUtil {
   public static final String LOG_LINE = "2015-03-20 15:53:31,161 DEBUG PipelineConfigurationValidator - " +
     "Pipeline 'test:preview' validation. valid=true, canPreview=true, issuesCount=0";
 
+  private static final Logger LOG = LoggerFactory.getLogger(KafkaTestUtil.class);
+  private static final long TIME_OUT = 5000;
+
+  private static ZkClient zkClient;
+  private static List<KafkaServer> kafkaServers;
+  private static Map<String, String> kafkaProps;
+  private static String metadataBrokerURI;
+  private static String zkConnect;
+  private static EmbeddedZookeeper zkServer;
+
+  public KafkaTestUtil() {
+  }
+
+  public static String getMetadataBrokerURI() {
+    return metadataBrokerURI;
+  }
+
+  public static String getZkConnect() {
+    return zkConnect;
+  }
+
+  public static List<KafkaServer> getKafkaServers() {
+    return kafkaServers;
+  }
+
+  public static EmbeddedZookeeper getZkServer() {
+    return zkServer;
+  }
+
+  public static void startZookeeper() {
+    zkConnect = TestZKUtils.zookeeperConnect();
+    zkServer = new EmbeddedZookeeper(zkConnect);
+    zkClient = new ZkClient(zkServer.connectString(), 30000, 30000, ZKStringSerializer$.MODULE$);
+  }
+
+  public static void startKafkaBrokers(int numberOfBrokers) {
+    kafkaServers = new ArrayList<>(numberOfBrokers);
+    kafkaProps = new HashMap<>();
+    // setup Broker
+    StringBuilder sb = new StringBuilder();
+    for(int i = 0; i < numberOfBrokers; i ++) {
+      int port = TestUtils.choosePort();
+      Properties props = TestUtils.createBrokerConfig(i, port);
+      props.put("auto.create.topics.enable", "false");
+      kafkaServers.add(TestUtils.createServer(new KafkaConfig(props), new MockTime()));
+      sb.append("localhost:" + port).append(",");
+    }
+    metadataBrokerURI = sb.deleteCharAt(sb.length()-1).toString();
+    LOG.info("Setting metadataBrokerList and auto.offset.reset for test case");
+    kafkaProps.put("auto.offset.reset", "smallest");
+  }
+
+  public static void createTopic(String topic, int partitions, int replicationFactor) {
+    AdminUtils.createTopic(zkClient, topic, partitions, replicationFactor, new Properties());
+    TestUtils.waitUntilMetadataIsPropagated(scala.collection.JavaConversions.asScalaBuffer(kafkaServers), topic, 0, TIME_OUT);
+  }
+
+  public static void shutdown() {
+    for(KafkaServer kafkaServer : kafkaServers) {
+      kafkaServer.shutdown();
+    }
+    zkClient.close();
+    zkServer.shutdown();
+    metadataBrokerURI = null;
+    zkConnect = null;
+    kafkaProps = null;
+  }
+
   public static List<KafkaStream<byte[], byte[]>> createKafkaStream(String zookeeperConnectString, String topic, int partitions) {
     //create consumer
     Properties consumerProps = new Properties();
@@ -145,9 +217,9 @@ public class KafkaTestUtil {
 
   }
 
-  public static Producer<String, String> createProducer(String host, int port, boolean setPartitioner) {
+  public static Producer<String, String> createProducer(String metadataBrokerURI, boolean setPartitioner) {
     Properties props = new Properties();
-    props.put("metadata.broker.list", host + ":" + port);
+    props.put("metadata.broker.list", metadataBrokerURI);
     props.put("serializer.class", "kafka.serializer.StringEncoder");
     if (setPartitioner) {
       props.put("partitioner.class", "com.streamsets.pipeline.lib.ExpressionPartitioner");
@@ -183,10 +255,20 @@ public class KafkaTestUtil {
     return records;
   }
 
-  public static List<KeyedMessage<String, String>> produceStringMessages(String topic, String partition) {
+  public static List<KeyedMessage<String, String>> produceStringMessages(String topic, String partition, int number) {
     List<KeyedMessage<String, String>> messages = new ArrayList<>();
-    for (int i = 0; i < 9; i++) {
+    for (int i = 0; i < number; i++) {
       messages.add(new KeyedMessage<>(topic, partition, (TEST_STRING + i)));
+    }
+    return messages;
+  }
+
+  public static List<KeyedMessage<String, String>> produceStringMessages(String topic, int partitions, int number) {
+    List<KeyedMessage<String, String>> messages = new ArrayList<>();
+    int partition = 0;
+    for (int i = 0; i < number; i++) {
+      partition = (partition + 1) % partitions;
+      messages.add(new KeyedMessage<>(topic, String.valueOf(partition), (TEST_STRING + i)));
     }
     return messages;
   }
@@ -313,7 +395,7 @@ public class KafkaTestUtil {
   public static void createTopic(ZkClient zkClient, List<KafkaServer> kafkaServers, String topic, int partitions,
                                  int replicationFactor, int timeout) {
     AdminUtils.createTopic(zkClient, topic, partitions, replicationFactor, new Properties());
-    TestUtils.waitUntilMetadataIsPropagated(scala.collection.JavaConversions.asBuffer(kafkaServers), topic, 0, timeout);
+    TestUtils.waitUntilMetadataIsPropagated(scala.collection.JavaConversions.asScalaBuffer(kafkaServers), topic, 0, timeout);
   }
 
   /*public static String generateTestData(DataType dataType) {

@@ -5,18 +5,18 @@
  */
 package com.streamsets.pipeline;
 
-import static org.junit.Assert.assertEquals;
+import com.google.common.io.Resources;
+import com.streamsets.pipeline.MiniSDC.ExecutionMode;
+import com.streamsets.pipeline.util.VerifyUtils;
+import org.junit.Test;
+
 import java.net.URI;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Map;
 
-import org.junit.Test;
-
-import com.google.common.io.Resources;
-import com.streamsets.pipeline.MiniSDC.ExecutionMode;
-import com.streamsets.pipeline.util.VerifyUtils;
+import static org.junit.Assert.assertEquals;
 
 public class TestSimpleMiniSDC {
 
@@ -28,14 +28,16 @@ public class TestSimpleMiniSDC {
     String pipelineJson = new String(Files.readAllBytes(Paths.get(uri)), StandardCharsets.UTF_8);
     MiniSDCTestingUtility miniSDCTestingUtility = new MiniSDCTestingUtility();
     try {
-      MiniSDC miniSDC = miniSDCTestingUtility.startMiniSDC(pipelineJson, ExecutionMode.STANDALONE);
+      MiniSDC miniSDC = miniSDCTestingUtility.createMiniSDC(ExecutionMode.STANDALONE);
+      miniSDC.startSDC();
+      miniSDC.createAndStartPipeline(pipelineJson);
       URI serverURI = miniSDC.getServerURI();
       Thread.sleep(10000);
-      Map<String, Map<String, Integer>> countersMap = VerifyUtils.getCounters(serverURI);
+      Map<String, Map<String, Integer>> countersMap = VerifyUtils.getMetrics(serverURI);
       assertEquals("Output records counter for source should be equal to" + expectedRecords, expectedRecords,
-        VerifyUtils.getSourceCounters(countersMap));
+        VerifyUtils.getSourceOutputRecords(countersMap));
       assertEquals("Output records counter for target should be equal to" + expectedRecords, expectedRecords,
-        VerifyUtils.getTargetCounters(countersMap));
+        VerifyUtils.getTargetOutputRecords(countersMap));
     } finally {
       miniSDCTestingUtility.stopMiniSDC();
     }

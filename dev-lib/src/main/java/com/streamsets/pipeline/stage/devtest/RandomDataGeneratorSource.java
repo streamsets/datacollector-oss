@@ -15,6 +15,7 @@ import com.streamsets.pipeline.api.StageDef;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.ValueChooser;
 import com.streamsets.pipeline.api.base.BaseSource;
+import com.streamsets.pipeline.lib.util.ThreadUtil;
 
 import java.util.Date;
 import java.util.GregorianCalendar;
@@ -27,7 +28,7 @@ import java.util.UUID;
 @GenerateResourceBundle
 @StageDef(version="1.0.0", label="Dev Data Generator",
   icon="random.png")
-public class RandomDataGenerator extends BaseSource {
+public class RandomDataGeneratorSource extends BaseSource {
 
   private Random random = new Random();
 
@@ -41,6 +42,7 @@ public class RandomDataGenerator extends BaseSource {
     for(int i =0; i < maxBatchSize; i++) {
       batchMaker.addRecord(createRecord(lastSourceOffset, i));
     }
+    ThreadUtil.sleep(500);
     return "random";
   }
 

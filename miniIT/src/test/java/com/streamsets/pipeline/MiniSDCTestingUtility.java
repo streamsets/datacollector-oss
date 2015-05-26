@@ -4,6 +4,15 @@
  */
 package com.streamsets.pipeline;
 
+import com.google.common.io.Resources;
+import com.streamsets.pipeline.MiniSDC.ExecutionMode;
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.IOUtils;
+import org.apache.hadoop.yarn.conf.YarnConfiguration;
+import org.apache.hadoop.yarn.server.MiniYARNCluster;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -20,16 +29,6 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
 import java.util.UUID;
-
-import org.apache.commons.io.FileUtils;
-import org.apache.commons.io.IOUtils;
-import org.apache.hadoop.yarn.conf.YarnConfiguration;
-import org.apache.hadoop.yarn.server.MiniYARNCluster;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import com.google.common.io.Resources;
-import com.streamsets.pipeline.MiniSDC.ExecutionMode;
 
 public class MiniSDCTestingUtility {
 
@@ -160,15 +159,13 @@ public class MiniSDCTestingUtility {
     return ntries < 5;
   }
 
-
   /**
    * Start mini SDC
-   * @param pipelineJson the pipeline json file
    * @param executionMode the Execution mode - could be standalone or cluster
    * @return
    * @throws Exception
    */
-  public MiniSDC startMiniSDC(String pipelineJson, ExecutionMode executionMode)
+  public MiniSDC createMiniSDC(ExecutionMode executionMode)
     throws Exception {
     Properties miniITProps = new Properties();
     File miniITProperties = new File(Resources.getResource("miniIT.properties").toURI());
@@ -214,7 +211,6 @@ public class MiniSDCTestingUtility {
     System.setProperty("sdc.static-web.dir", targetRoot + "/static-web");
     rewriteProperties(sdcProperties, executionMode);
     this.miniSDC = new MiniSDC(sdcDistRoot);
-    this.miniSDC.start(pipelineJson);
     return this.miniSDC;
   }
 

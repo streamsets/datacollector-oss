@@ -26,8 +26,8 @@
       <groupId>com.streamsets</groupId>
       <artifactId>streamsets-datacollector-bootstrap</artifactId>
       <scope>provided</scope>
-	</dependency>
-     <dependency>
+    </dependency>
+    <dependency>
       <groupId>log4j</groupId>
       <artifactId>log4j</artifactId>
       <scope>provided</scope>

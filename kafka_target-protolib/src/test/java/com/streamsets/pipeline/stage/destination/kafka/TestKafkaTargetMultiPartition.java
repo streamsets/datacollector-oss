@@ -13,34 +13,19 @@ import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.config.DataFormat;
 import com.streamsets.pipeline.lib.KafkaTestUtil;
 import com.streamsets.pipeline.sdk.TargetRunner;
-import kafka.admin.AdminUtils;
 import kafka.consumer.ConsumerIterator;
 import kafka.consumer.KafkaStream;
-import kafka.server.KafkaConfig;
-import kafka.server.KafkaServer;
-import kafka.utils.MockTime;
-import kafka.utils.TestUtils;
-import kafka.utils.TestZKUtils;
-import kafka.utils.ZKStringSerializer$;
-import kafka.zk.EmbeddedZookeeper;
-import org.I0Itec.zkclient.ZkClient;
 import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Properties;
-import java.util.UUID;
 
 public class TestKafkaTargetMultiPartition {
 
-  private static List<KafkaServer> kafkaServers;
-  private static ZkClient zkClient;
-  private static EmbeddedZookeeper zkServer;
   private static List<KafkaStream<byte[], byte[]>> kafkaStreams1;
   private static List<KafkaStream<byte[], byte[]>> kafkaStreams2;
   private static List<KafkaStream<byte[], byte[]>> kafkaStreams3;
@@ -52,12 +37,8 @@ public class TestKafkaTargetMultiPartition {
   private static List<KafkaStream<byte[], byte[]>> kafkaStreams9;
   private static List<KafkaStream<byte[], byte[]>> kafkaStreams10;
   private static List<KafkaStream<byte[], byte[]>> kafkaStreams11;
-  private static int port;
 
   private static final String HOST = "localhost";
-  private static final int BROKER_1_ID = 0;
-  private static final int BROKER_2_ID = 1;
-  private static final int BROKER_3_ID = 2;
   private static final int PARTITIONS = 3;
   private static final int REPLICATION_FACTOR = 2;
   private static final String TOPIC1 = "TestKafkaTargetMultiPartition1";
@@ -71,75 +52,40 @@ public class TestKafkaTargetMultiPartition {
   private static final String TOPIC9 = "TestKafkaTargetMultiPartition9";
   private static final String TOPIC10 = "TestKafkaTargetMultiPartition10";
   private static final String TOPIC11 = "TestKafkaTargetMultiPartition11";
-  private static final int TIME_OUT = 5000;
-
-  private static String originalTmpDir;
 
   @BeforeClass
   public static void setUp() {
-    //Init zookeeper
-    originalTmpDir = System.getProperty("java.io.tmpdir");
-    File testDir = new File("target", UUID.randomUUID().toString()).getAbsoluteFile();
-    Assert.assertTrue(testDir.mkdirs());
-    System.setProperty("java.io.tmpdir", testDir.getAbsolutePath());
-
-    String zkConnect = TestZKUtils.zookeeperConnect();
-    zkServer = new EmbeddedZookeeper(zkConnect);
-    zkClient = new ZkClient(zkServer.connectString(), 30000, 30000, ZKStringSerializer$.MODULE$);
-    // setup Broker
-    port = TestUtils.choosePort();
-    kafkaServers = new ArrayList<>(3);
-    Properties props1 = TestUtils.createBrokerConfig(BROKER_1_ID, port);
-    kafkaServers.add(TestUtils.createServer(new KafkaConfig(props1), new MockTime()));
-    Properties props2 = TestUtils.createBrokerConfig(BROKER_2_ID, TestUtils.choosePort());
-    kafkaServers.add(TestUtils.createServer(new KafkaConfig(props2), new MockTime()));
-    Properties props3 = TestUtils.createBrokerConfig(BROKER_3_ID, TestUtils.choosePort());
-    kafkaServers.add(TestUtils.createServer(new KafkaConfig(props3), new MockTime()));
+    KafkaTestUtil.startZookeeper();
+    KafkaTestUtil.startKafkaBrokers(3);
     // create topic
-    AdminUtils.createTopic(zkClient, TOPIC1, PARTITIONS, REPLICATION_FACTOR, new Properties());
-    AdminUtils.createTopic(zkClient, TOPIC2, PARTITIONS, REPLICATION_FACTOR, new Properties());
-    AdminUtils.createTopic(zkClient, TOPIC3, PARTITIONS, REPLICATION_FACTOR, new Properties());
-    AdminUtils.createTopic(zkClient, TOPIC4, PARTITIONS, REPLICATION_FACTOR, new Properties());
-    AdminUtils.createTopic(zkClient, TOPIC5, PARTITIONS, REPLICATION_FACTOR, new Properties());
-    AdminUtils.createTopic(zkClient, TOPIC6, PARTITIONS, REPLICATION_FACTOR, new Properties());
-    AdminUtils.createTopic(zkClient, TOPIC7, PARTITIONS, REPLICATION_FACTOR, new Properties());
-    AdminUtils.createTopic(zkClient, TOPIC8, PARTITIONS, REPLICATION_FACTOR, new Properties());
-    AdminUtils.createTopic(zkClient, TOPIC9, PARTITIONS, REPLICATION_FACTOR, new Properties());
-    AdminUtils.createTopic(zkClient, TOPIC10, PARTITIONS, REPLICATION_FACTOR, new Properties());
-    AdminUtils.createTopic(zkClient, TOPIC11, PARTITIONS, REPLICATION_FACTOR, new Properties());
-    TestUtils.waitUntilMetadataIsPropagated(scala.collection.JavaConversions.asBuffer(kafkaServers), TOPIC1, 0, TIME_OUT);
-    TestUtils.waitUntilMetadataIsPropagated(scala.collection.JavaConversions.asBuffer(kafkaServers), TOPIC2, 0, TIME_OUT);
-    TestUtils.waitUntilMetadataIsPropagated(scala.collection.JavaConversions.asBuffer(kafkaServers), TOPIC3, 0, TIME_OUT);
-    TestUtils.waitUntilMetadataIsPropagated(scala.collection.JavaConversions.asBuffer(kafkaServers), TOPIC4, 0, TIME_OUT);
-    TestUtils.waitUntilMetadataIsPropagated(scala.collection.JavaConversions.asBuffer(kafkaServers), TOPIC5, 0, TIME_OUT);
-    TestUtils.waitUntilMetadataIsPropagated(scala.collection.JavaConversions.asBuffer(kafkaServers), TOPIC6, 0, TIME_OUT);
-    TestUtils.waitUntilMetadataIsPropagated(scala.collection.JavaConversions.asBuffer(kafkaServers), TOPIC7, 0, TIME_OUT);
-    TestUtils.waitUntilMetadataIsPropagated(scala.collection.JavaConversions.asBuffer(kafkaServers), TOPIC8, 0, TIME_OUT);
-    TestUtils.waitUntilMetadataIsPropagated(scala.collection.JavaConversions.asBuffer(kafkaServers), TOPIC9, 0, TIME_OUT);
-    TestUtils.waitUntilMetadataIsPropagated(scala.collection.JavaConversions.asBuffer(kafkaServers), TOPIC10, 0, TIME_OUT);
-    TestUtils.waitUntilMetadataIsPropagated(scala.collection.JavaConversions.asBuffer(kafkaServers), TOPIC11, 0, TIME_OUT);
+    KafkaTestUtil.createTopic(TOPIC1, PARTITIONS, REPLICATION_FACTOR);
+    KafkaTestUtil.createTopic(TOPIC2, PARTITIONS, REPLICATION_FACTOR);
+    KafkaTestUtil.createTopic(TOPIC3, PARTITIONS, REPLICATION_FACTOR);
+    KafkaTestUtil.createTopic(TOPIC4, PARTITIONS, REPLICATION_FACTOR);
+    KafkaTestUtil.createTopic(TOPIC5, PARTITIONS, REPLICATION_FACTOR);
+    KafkaTestUtil.createTopic(TOPIC6, PARTITIONS, REPLICATION_FACTOR);
+    KafkaTestUtil.createTopic(TOPIC7, PARTITIONS, REPLICATION_FACTOR);
+    KafkaTestUtil.createTopic(TOPIC8, PARTITIONS, REPLICATION_FACTOR);
+    KafkaTestUtil.createTopic(TOPIC9, PARTITIONS, REPLICATION_FACTOR);
+    KafkaTestUtil.createTopic(TOPIC10, PARTITIONS, REPLICATION_FACTOR);
+    KafkaTestUtil.createTopic(TOPIC11, PARTITIONS, REPLICATION_FACTOR);
 
-    kafkaStreams1 = KafkaTestUtil.createKafkaStream(zkServer.connectString(), TOPIC1, PARTITIONS);
-    kafkaStreams2 = KafkaTestUtil.createKafkaStream(zkServer.connectString(), TOPIC2, PARTITIONS);
-    kafkaStreams3 = KafkaTestUtil.createKafkaStream(zkServer.connectString(), TOPIC3, PARTITIONS);
-    kafkaStreams4 = KafkaTestUtil.createKafkaStream(zkServer.connectString(), TOPIC4, PARTITIONS);
-    kafkaStreams5 = KafkaTestUtil.createKafkaStream(zkServer.connectString(), TOPIC5, PARTITIONS);
-    kafkaStreams6 = KafkaTestUtil.createKafkaStream(zkServer.connectString(), TOPIC6, PARTITIONS);
-    kafkaStreams7 = KafkaTestUtil.createKafkaStream(zkServer.connectString(), TOPIC7, PARTITIONS);
-    kafkaStreams8 = KafkaTestUtil.createKafkaStream(zkServer.connectString(), TOPIC8, PARTITIONS);
-    kafkaStreams9 = KafkaTestUtil.createKafkaStream(zkServer.connectString(), TOPIC9, PARTITIONS);
-    kafkaStreams10 = KafkaTestUtil.createKafkaStream(zkServer.connectString(), TOPIC10, PARTITIONS);
-    kafkaStreams11 = KafkaTestUtil.createKafkaStream(zkServer.connectString(), TOPIC11, PARTITIONS);
+    kafkaStreams1 = KafkaTestUtil.createKafkaStream(KafkaTestUtil.getZkServer().connectString(), TOPIC1, PARTITIONS);
+    kafkaStreams2 = KafkaTestUtil.createKafkaStream(KafkaTestUtil.getZkServer().connectString(), TOPIC2, PARTITIONS);
+    kafkaStreams3 = KafkaTestUtil.createKafkaStream(KafkaTestUtil.getZkServer().connectString(), TOPIC3, PARTITIONS);
+    kafkaStreams4 = KafkaTestUtil.createKafkaStream(KafkaTestUtil.getZkServer().connectString(), TOPIC4, PARTITIONS);
+    kafkaStreams5 = KafkaTestUtil.createKafkaStream(KafkaTestUtil.getZkServer().connectString(), TOPIC5, PARTITIONS);
+    kafkaStreams6 = KafkaTestUtil.createKafkaStream(KafkaTestUtil.getZkServer().connectString(), TOPIC6, PARTITIONS);
+    kafkaStreams7 = KafkaTestUtil.createKafkaStream(KafkaTestUtil.getZkServer().connectString(), TOPIC7, PARTITIONS);
+    kafkaStreams8 = KafkaTestUtil.createKafkaStream(KafkaTestUtil.getZkServer().connectString(), TOPIC8, PARTITIONS);
+    kafkaStreams9 = KafkaTestUtil.createKafkaStream(KafkaTestUtil.getZkServer().connectString(), TOPIC9, PARTITIONS);
+    kafkaStreams10 = KafkaTestUtil.createKafkaStream(KafkaTestUtil.getZkServer().connectString(), TOPIC10, PARTITIONS);
+    kafkaStreams11 = KafkaTestUtil.createKafkaStream(KafkaTestUtil.getZkServer().connectString(), TOPIC11, PARTITIONS);
   }
 
   @AfterClass
   public static void tearDown() {
-    for(KafkaServer kafkaServer : kafkaServers) {
-      kafkaServer.shutdown();
-    }
-    zkClient.close();
-    zkServer.shutdown();
-    System.setProperty("java.io.tmpdir", originalTmpDir);
+    KafkaTestUtil.shutdown();
   }
 
   @Test
@@ -148,7 +94,7 @@ public class TestKafkaTargetMultiPartition {
     TargetRunner targetRunner = new TargetRunner.Builder(KafkaDTarget.class)
       .addConfiguration("topic", TOPIC1)
       .addConfiguration("partition", "-1")
-      .addConfiguration("metadataBrokerList", HOST + ":" + port)
+      .addConfiguration("metadataBrokerList", KafkaTestUtil.getMetadataBrokerURI())
       .addConfiguration("kafkaProducerConfigs", null)
       .addConfiguration("dataFormat", DataFormat.TEXT)
       .addConfiguration("singleMessagePerBatch", false)
@@ -195,7 +141,7 @@ public class TestKafkaTargetMultiPartition {
     TargetRunner targetRunner = new TargetRunner.Builder(KafkaDTarget.class)
       .addConfiguration("topic", TOPIC2)
       .addConfiguration("partition", "-1")
-      .addConfiguration("metadataBrokerList", HOST + ":" + port)
+      .addConfiguration("metadataBrokerList", KafkaTestUtil.getMetadataBrokerURI())
       .addConfiguration("kafkaProducerConfigs", null)
       .addConfiguration("dataFormat", DataFormat.TEXT)
       .addConfiguration("singleMessagePerBatch", false)
@@ -249,7 +195,7 @@ public class TestKafkaTargetMultiPartition {
       //record has a map which contains an integer field with key "partitionKey",
       //kafka has 3 partitions. Expression distributes the record to partition based on the condition
       .addConfiguration("partition", "${record:value('/') % 3}")
-      .addConfiguration("metadataBrokerList", HOST + ":" + port)
+      .addConfiguration("metadataBrokerList", KafkaTestUtil.getMetadataBrokerURI())
       .addConfiguration("kafkaProducerConfigs", null)
       .addConfiguration("dataFormat", DataFormat.TEXT)
       .addConfiguration("singleMessagePerBatch", false)
@@ -300,7 +246,7 @@ public class TestKafkaTargetMultiPartition {
         //record has a map which contains an integer field with key "partitionKey",
         //kafka has 3 partitions. Expression distributes the record to partition based on the condition
       .addConfiguration("partition", "${value('/') % 3}")
-      .addConfiguration("metadataBrokerList", HOST + ":" + port)
+      .addConfiguration("metadataBrokerList", KafkaTestUtil.getMetadataBrokerURI())
       .addConfiguration("kafkaProducerConfigs", null)
       .addConfiguration("dataFormat", DataFormat.TEXT)
       .addConfiguration("singleMessagePerBatch", false)
@@ -327,7 +273,7 @@ public class TestKafkaTargetMultiPartition {
         //record has a map which contains an integer field with key "partitionKey",
         //kafka has 3 partitions. Expression distributes the record to partition based on the condition
       .addConfiguration("partition", "${record:value('/') % 3}")
-      .addConfiguration("metadataBrokerList", HOST + ":" + port)
+      .addConfiguration("metadataBrokerList", KafkaTestUtil.getMetadataBrokerURI())
       .addConfiguration("kafkaProducerConfigs", null)
       .addConfiguration("dataFormat", DataFormat.TEXT)
       .addConfiguration("singleMessagePerBatch", false)
@@ -359,7 +305,7 @@ public class TestKafkaTargetMultiPartition {
         //record has a map which contains an integer field with key "partitionKey",
         //kafka has 3 partitions. Expression distributes the record to partition based on the condition
       .addConfiguration("partition", "13")
-      .addConfiguration("metadataBrokerList", HOST + ":" + port)
+      .addConfiguration("metadataBrokerList", KafkaTestUtil.getMetadataBrokerURI())
       .addConfiguration("kafkaProducerConfigs", null)
       .addConfiguration("dataFormat", DataFormat.TEXT)
       .addConfiguration("singleMessagePerBatch", false)
@@ -390,7 +336,7 @@ public class TestKafkaTargetMultiPartition {
         //record has a map which contains an integer field with key "partitionKey",
         //kafka has 3 partitions. Expression distributes the record to partition based on the condition
       .addConfiguration("partition", "${record:value('/')}")
-      .addConfiguration("metadataBrokerList", HOST + ":" + port)
+      .addConfiguration("metadataBrokerList", KafkaTestUtil.getMetadataBrokerURI())
       .addConfiguration("kafkaProducerConfigs", null)
       .addConfiguration("dataFormat", DataFormat.TEXT)
       .addConfiguration("singleMessagePerBatch", false)
@@ -421,7 +367,7 @@ public class TestKafkaTargetMultiPartition {
         //record has a map which contains an integer field with key "partitionKey",
         //kafka has 3 partitions. Expression distributes the record to partition based on the condition
       .addConfiguration("partition", "${record:value('/') % 3}")
-      .addConfiguration("metadataBrokerList", HOST + ":" + port)
+      .addConfiguration("metadataBrokerList", KafkaTestUtil.getMetadataBrokerURI())
       .addConfiguration("kafkaProducerConfigs", null)
       .addConfiguration("dataFormat", DataFormat.TEXT)
       .addConfiguration("singleMessagePerBatch", true)
@@ -468,7 +414,7 @@ public class TestKafkaTargetMultiPartition {
         //record has a map which contains an integer field with key "partitionKey",
         //kafka has 3 partitions. Expression distributes the record to partition based on the condition
       .addConfiguration("partition", "${record:value('/partition') % 3}")
-      .addConfiguration("metadataBrokerList", HOST + ":" + port)
+      .addConfiguration("metadataBrokerList", KafkaTestUtil.getMetadataBrokerURI())
       .addConfiguration("kafkaProducerConfigs", null)
       .addConfiguration("dataFormat", DataFormat.TEXT)
       .addConfiguration("singleMessagePerBatch", true)

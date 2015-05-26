@@ -5,70 +5,45 @@
  */
 package com.streamsets.pipeline.spark;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
-
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.net.URI;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Properties;
-import java.util.concurrent.TimeUnit;
-
-import kafka.admin.AdminUtils;
+import com.google.common.io.Resources;
+import com.streamsets.pipeline.MiniSDC;
+import com.streamsets.pipeline.MiniSDC.ExecutionMode;
+import com.streamsets.pipeline.MiniSDCTestingUtility;
+import com.streamsets.pipeline.lib.KafkaTestUtil;
+import com.streamsets.pipeline.util.ClusterUtil;
+import com.streamsets.pipeline.util.VerifyUtils;
 import kafka.javaapi.producer.Producer;
 import kafka.producer.KeyedMessage;
-import kafka.server.KafkaConfig;
-import kafka.server.KafkaServer;
-import kafka.utils.MockTime;
-import kafka.utils.TestUtils;
-import kafka.utils.TestZKUtils;
-import kafka.utils.ZKStringSerializer$;
-import kafka.zk.EmbeddedZookeeper;
-
-import org.I0Itec.zkclient.ZkClient;
-import org.apache.commons.io.FileUtils;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.yarn.conf.YarnConfiguration;
 import org.apache.hadoop.yarn.server.MiniYARNCluster;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import org.slf4j.LoggerFactory;
 import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import com.google.common.collect.ImmutableList;
-import com.google.common.io.Resources;
-import com.streamsets.pipeline.MiniSDC;
-import com.streamsets.pipeline.MiniSDC.ExecutionMode;
-import com.streamsets.pipeline.MiniSDCTestingUtility;
-import com.streamsets.pipeline.lib.KafkaTestUtil;
-import com.streamsets.pipeline.util.UntarUtility;
-import com.streamsets.pipeline.util.VerifyUtils;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.net.URI;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.List;
+import java.util.Map;
+import java.util.Properties;
+import java.util.concurrent.TimeUnit;
+
+import static org.junit.Assert.*;
 
 public class TestSparkOnYarn {
   private static final Logger LOG = LoggerFactory.getLogger(TestSparkOnYarn.class);
   private static MiniYARNCluster miniYarnCluster;
-  private static ZkClient zkClient;
-  private static KafkaServer kafkaServer;
-  private static int port;
   private Producer<String, String> producer;
-  private static final String TESTNAME = "SparkOnYarnKafkaSource";
+  private static final String TEST_NAME = "SparkOnYarnKafkaSource";
   private static MiniSDCTestingUtility miniSDCTestingUtility;
   private static String pipelineJson;
   private static final String SPARK_PROPERTY_FILE = "SPARK_PROPERTY_FILE";
-  private static final String SPARK_TEST_HOME = "SPARK_TEST_HOME";
   // This should be the same topic as in cluster_pipeline.json
   private static final String TOPIC_NAME = "testProduceStringRecords";
 
@@ -77,15 +52,10 @@ public class TestSparkOnYarn {
     System.setProperty(MiniSDCTestingUtility.PRESERVE_TEST_DIR, "true");
     miniSDCTestingUtility = new MiniSDCTestingUtility();
     File dataTestDir = miniSDCTestingUtility.getDataTestDir();
-    File sparkDir = new File(new File(System.getProperty("user.dir"), "target"), "spark");
-    if (!sparkDir.exists()) {
-      throw new RuntimeException("'Cannot find spark assembly dir at location " + sparkDir.getAbsolutePath());
-    }
-    File sparkHome = new File(dataTestDir, "spark");
-    System.setProperty(SPARK_TEST_HOME, sparkHome.getAbsolutePath());
-    FileUtils.copyDirectory(sparkDir, sparkHome);
 
-    miniYarnCluster = miniSDCTestingUtility.startMiniYarnCluster(TESTNAME, 1, 1, 1);
+    File sparkHome = ClusterUtil.createSparkHome(dataTestDir);
+
+    miniYarnCluster = miniSDCTestingUtility.startMiniYarnCluster(TEST_NAME, 1, 1, 1);
 
     Configuration config = miniYarnCluster.getConfig();
     long deadline = System.currentTimeMillis() + TimeUnit.SECONDS.toMillis(10);
@@ -103,7 +73,6 @@ public class TestSparkOnYarn {
     for (Map.Entry<String, String> entry : config) {
       sparkHadoopProps.setProperty("spark.hadoop." + entry.getKey(), entry.getValue());
     }
-
 
     LOG.debug("Creating spark properties file at " + dataTestDir);
     File propertiesFile =  new File(dataTestDir, "spark.properties");
@@ -127,74 +96,22 @@ public class TestSparkOnYarn {
   }
 
   private static void setupKafka() {
-    String zkConnect = TestZKUtils.zookeeperConnect();
-    EmbeddedZookeeper zkServer = new EmbeddedZookeeper(zkConnect);
-    zkClient = new ZkClient(zkServer.connectString(), 30000, 30000, ZKStringSerializer$.MODULE$);
-    // setup Broker
-    port = TestUtils.choosePort();
-    Properties props = TestUtils.createBrokerConfig(0, port);
-    kafkaServer = TestUtils.createServer(new KafkaConfig(props), new MockTime());
-    String metadataBrokerURI = "localhost" + ":" + port;
-    LOG.info("Setting metadataBrokerList and auto.offset.reset for test case");
-
-    // remove this hack once we bring in container classes for parsing json
-    if (!pipelineJson.contains("localhost:9092"))  {
-      throw new RuntimeException("Bailing out, default value of metadataBrokerlist must have changed in pipeline json file");
-    }
-    if (!pipelineJson.contains("localhost:2181")) {
-      throw new RuntimeException("Bailing out, default value of zookeeperConnect must have changed in pipeline json file");
-    }
-    pipelineJson  = pipelineJson.replaceAll("localhost:9092", metadataBrokerURI);
-    pipelineJson  = pipelineJson.replaceAll("localhost:2181", zkConnect);
+    KafkaTestUtil.startZookeeper();
+    KafkaTestUtil.startKafkaBrokers(1);
+    pipelineJson  = pipelineJson.replaceAll("localhost:9092", KafkaTestUtil.getMetadataBrokerURI());
+    pipelineJson  = pipelineJson.replaceAll("localhost:2181", KafkaTestUtil.getZkConnect());
   }
 
   @AfterClass
   public static void tearDown() throws Exception {
     if (miniSDCTestingUtility != null) {
       miniSDCTestingUtility.stopMiniSDC();
-      killYarnApp();
+      ClusterUtil.killYarnApp(TEST_NAME);
       miniSDCTestingUtility.stopMiniYarnCluster();
       miniSDCTestingUtility.cleanupTestDir();
-      cleanUpYarnDirs();
+      ClusterUtil.cleanUpYarnDirs(TEST_NAME);
     }
-    if (kafkaServer != null) {
-      kafkaServer.shutdown();
-    }
-    if (zkClient != null) {
-      zkClient.close();
-    }
-
-  }
-
-  private static void cleanUpYarnDirs() throws IOException {
-    if (!Boolean.getBoolean(MiniSDCTestingUtility.PRESERVE_TEST_DIR)) {
-      MiniSDCTestingUtility.deleteDir(new File(new File(System.getProperty("user.dir"), "target"), TESTNAME));
-    }
-  }
-
-  private static void killYarnApp() throws Exception {
-    // TODO - remove this hack
-    // We dont know app id, but yarn creates its data dir under $HOME/target/TESTNAME, so kill the process by
-    // grep for the yarn testname
-    String killCmd = signalCommand(TESTNAME, "SIGKILL");
-    LOG.info("Signal kill command to yarn app " + killCmd);
-    String[] killCommand = new String[] { "/usr/bin/env", "bash", "-c", killCmd };
-    Process p = Runtime.getRuntime().exec(killCommand);
-    p.waitFor();
-    BufferedReader reader = new BufferedReader(new InputStreamReader(p.getInputStream()));
-    String line = "";
-    LOG.info("Process output is ");
-    while ((line = reader.readLine()) != null) {
-      LOG.debug(line + "\n");
-    }
-  }
-
-  private static String findPidCommand(String service) {
-    return String.format("ps aux | grep %s | grep -v grep | tr -s ' ' | cut -d ' ' -f2", service);
-  }
-
-  private static String signalCommand(String service, String signal) {
-    return String.format("%s | xargs kill -s %s", findPidCommand(service), signal);
+    KafkaTestUtil.shutdown();
   }
 
   @Test (timeout=240000)
@@ -207,7 +124,9 @@ public class TestSparkOnYarn {
 
     MiniSDC miniSDC = null;
     try {
-      miniSDC = miniSDCTestingUtility.startMiniSDC(pipelineJson, ExecutionMode.CLUSTER);
+      miniSDC = miniSDCTestingUtility.createMiniSDC(ExecutionMode.CLUSTER);
+      miniSDC.startSDC();
+      miniSDC.createAndStartPipeline(pipelineJson);
       URI serverURI = miniSDC.getServerURI();
       LOG.info("Starting on URI " + serverURI);
       // TODO - Start a new thread listening for slave metrics
@@ -217,9 +136,9 @@ public class TestSparkOnYarn {
       Map<String, Map<String, Integer>> countersMap = VerifyUtils.getCounters(list);
       assertNotNull(countersMap);
       assertEquals("Output records counters for source should be equal to " + expectedRecords, expectedRecords,
-        VerifyUtils.getSourceCounters(countersMap));
+        VerifyUtils.getSourceOutputRecords(countersMap));
       assertEquals("Output records counters for target should be equal to " + expectedRecords, expectedRecords,
-        VerifyUtils.getTargetCounters(countersMap));
+        VerifyUtils.getTargetOutputRecords(countersMap));
     } finally {
       if (miniSDC != null) {
         miniSDC.stop();
@@ -228,11 +147,8 @@ public class TestSparkOnYarn {
   }
 
   private void produceRecords(int records) throws InterruptedException {
-    producer = KafkaTestUtil.createProducer("localhost", port, false);
-    AdminUtils.createTopic(zkClient, TOPIC_NAME, 1, 1, new Properties());
-    TestUtils.waitUntilMetadataIsPropagated(
-      scala.collection.JavaConversions.asScalaBuffer(ImmutableList.of(kafkaServer)), TOPIC_NAME, 0,
-      2000);
+    producer = KafkaTestUtil.createProducer(KafkaTestUtil.getMetadataBrokerURI(), false);
+    KafkaTestUtil.createTopic(TOPIC_NAME, 1, 1);
     LOG.info("Start producing records");
     int i = 0;
     while (i < records) {

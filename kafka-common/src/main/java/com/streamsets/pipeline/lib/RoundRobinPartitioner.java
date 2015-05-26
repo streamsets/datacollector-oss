@@ -3,7 +3,7 @@
  * be copied, modified, or distributed in whole or part without
  * written consent of StreamSets, Inc.
  */
-package com.streamsets.pipeline.stage.destination.kafka;
+package com.streamsets.pipeline.lib;
 
 import kafka.producer.Partitioner;
 import kafka.utils.VerifiableProperties;

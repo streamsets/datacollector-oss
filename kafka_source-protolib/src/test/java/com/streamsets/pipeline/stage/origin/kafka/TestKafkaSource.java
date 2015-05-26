@@ -20,44 +20,21 @@ import com.streamsets.pipeline.lib.json.StreamingJsonParser;
 import com.streamsets.pipeline.lib.parser.log.Constants;
 import com.streamsets.pipeline.sdk.SourceRunner;
 import com.streamsets.pipeline.sdk.StageRunner;
-import kafka.admin.AdminUtils;
 import kafka.javaapi.producer.Producer;
-import kafka.server.KafkaConfig;
-import kafka.server.KafkaServer;
-import kafka.utils.MockTime;
-import kafka.utils.TestUtils;
-import kafka.utils.TestZKUtils;
-import kafka.utils.ZKStringSerializer$;
-import kafka.zk.EmbeddedZookeeper;
-import org.I0Itec.zkclient.ZkClient;
 import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.BeforeClass;
-import org.junit.Ignore;
 import org.junit.Test;
 
-import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Properties;
-import java.util.UUID;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
-@Ignore
 public class TestKafkaSource {
 
-  private static List<KafkaServer> kafkaServers;
-  private static ZkClient zkClient;
-  private static EmbeddedZookeeper zkServer;
-  private static int port;
-  private static String zkConnect;
-
-  private static final String HOST = "localhost";
-  private static final int BROKER_1_ID = 0;
   private static final int SINGLE_PARTITION = 1;
   private static final int MULTIPLE_PARTITIONS = 5;
   private static final int SINGLE_REPLICATION_FACTOR = 1;
@@ -73,73 +50,39 @@ public class TestKafkaSource {
   private static final String TOPIC9 = "TestKafkaSource9";
   private static final String TOPIC10 = "TestKafkaSource10";
   private static final String TOPIC11 = "TestKafkaSource11";
-  private static final int TIME_OUT = 5000;
   private static final String CONSUMER_GROUP = "SDC";
 
   private static Producer<String, String> producer;
-
-  private static String originalTmpDir;
+  private static String zkConnect;
 
   @BeforeClass
   public static void setUp() {
-    //Init zookeeper
-    originalTmpDir = System.getProperty("java.io.tmpdir");
-    File testDir = new File("target", UUID.randomUUID().toString()).getAbsoluteFile();
-    Assert.assertTrue(testDir.mkdirs());
-    System.setProperty("java.io.tmpdir", testDir.getAbsolutePath());
+    KafkaTestUtil.startZookeeper();
+    KafkaTestUtil.startKafkaBrokers(3);
 
-    zkConnect = TestZKUtils.zookeeperConnect();
-    zkServer = new EmbeddedZookeeper(zkConnect);
+    zkConnect = KafkaTestUtil.getZkConnect();
 
-    System.out.println("ZooKeeper log dir : " + zkServer.logDir().getAbsolutePath());
-    zkClient = new ZkClient(zkServer.connectString(), 30000, 30000, ZKStringSerializer$.MODULE$);
-    // setup Broker
-    port = TestUtils.choosePort();
-    kafkaServers = new ArrayList<>(3);
-    Properties props1 = TestUtils.createBrokerConfig(BROKER_1_ID, port);
+    KafkaTestUtil.createTopic(TOPIC1, SINGLE_PARTITION, SINGLE_REPLICATION_FACTOR);
+    KafkaTestUtil.createTopic(TOPIC2, MULTIPLE_PARTITIONS, MULTIPLE_REPLICATION_FACTOR);
+    KafkaTestUtil.createTopic(TOPIC3, SINGLE_PARTITION, SINGLE_REPLICATION_FACTOR);
+    KafkaTestUtil.createTopic(TOPIC4, SINGLE_PARTITION, SINGLE_REPLICATION_FACTOR);
+    KafkaTestUtil.createTopic(TOPIC5, SINGLE_PARTITION, SINGLE_REPLICATION_FACTOR);
+    KafkaTestUtil.createTopic(TOPIC6, SINGLE_PARTITION, SINGLE_REPLICATION_FACTOR);
+    KafkaTestUtil.createTopic(TOPIC7, SINGLE_PARTITION, SINGLE_REPLICATION_FACTOR);
+    KafkaTestUtil.createTopic(TOPIC8, SINGLE_PARTITION, SINGLE_REPLICATION_FACTOR);
+    KafkaTestUtil.createTopic(TOPIC9, SINGLE_PARTITION, SINGLE_REPLICATION_FACTOR);
+    KafkaTestUtil.createTopic(TOPIC10, SINGLE_PARTITION, SINGLE_REPLICATION_FACTOR);
+    KafkaTestUtil.createTopic(TOPIC11, SINGLE_PARTITION, SINGLE_REPLICATION_FACTOR);
 
-    kafkaServers.add(TestUtils.createServer(new KafkaConfig(props1), new MockTime()));
-    // create topic
-    AdminUtils.createTopic(zkClient, TOPIC1, SINGLE_PARTITION, SINGLE_REPLICATION_FACTOR, new Properties());
-    AdminUtils.createTopic(zkClient, TOPIC2, MULTIPLE_PARTITIONS, MULTIPLE_REPLICATION_FACTOR, new Properties());
-    AdminUtils.createTopic(zkClient, TOPIC3, SINGLE_PARTITION, SINGLE_REPLICATION_FACTOR, new Properties());
-    AdminUtils.createTopic(zkClient, TOPIC4, SINGLE_PARTITION, SINGLE_REPLICATION_FACTOR, new Properties());
-    AdminUtils.createTopic(zkClient, TOPIC5, SINGLE_PARTITION, SINGLE_REPLICATION_FACTOR, new Properties());
-    AdminUtils.createTopic(zkClient, TOPIC6, SINGLE_PARTITION, SINGLE_REPLICATION_FACTOR, new Properties());
-    AdminUtils.createTopic(zkClient, TOPIC7, SINGLE_PARTITION, SINGLE_REPLICATION_FACTOR, new Properties());
-    AdminUtils.createTopic(zkClient, TOPIC8, SINGLE_PARTITION, SINGLE_REPLICATION_FACTOR, new Properties());
-    AdminUtils.createTopic(zkClient, TOPIC9, SINGLE_PARTITION, SINGLE_REPLICATION_FACTOR, new Properties());
-    AdminUtils.createTopic(zkClient, TOPIC10, SINGLE_PARTITION, SINGLE_REPLICATION_FACTOR, new Properties());
-    AdminUtils.createTopic(zkClient, TOPIC11, SINGLE_PARTITION, SINGLE_REPLICATION_FACTOR, new Properties());
-    TestUtils.waitUntilMetadataIsPropagated(scala.collection.JavaConversions.asBuffer(kafkaServers), TOPIC1, 0, TIME_OUT);
-    TestUtils.waitUntilMetadataIsPropagated(scala.collection.JavaConversions.asBuffer(kafkaServers), TOPIC2, 0, TIME_OUT);
-    TestUtils.waitUntilMetadataIsPropagated(scala.collection.JavaConversions.asBuffer(kafkaServers), TOPIC2, 1, TIME_OUT);
-    TestUtils.waitUntilMetadataIsPropagated(scala.collection.JavaConversions.asBuffer(kafkaServers), TOPIC2, 2, TIME_OUT);
-    TestUtils.waitUntilMetadataIsPropagated(scala.collection.JavaConversions.asBuffer(kafkaServers), TOPIC2, 3, TIME_OUT);
-    TestUtils.waitUntilMetadataIsPropagated(scala.collection.JavaConversions.asBuffer(kafkaServers), TOPIC2, 4, TIME_OUT);
-    TestUtils.waitUntilMetadataIsPropagated(scala.collection.JavaConversions.asBuffer(kafkaServers), TOPIC3, 0, TIME_OUT);
-    TestUtils.waitUntilMetadataIsPropagated(scala.collection.JavaConversions.asBuffer(kafkaServers), TOPIC4, 0, TIME_OUT);
-    TestUtils.waitUntilMetadataIsPropagated(scala.collection.JavaConversions.asBuffer(kafkaServers), TOPIC5, 0, TIME_OUT);
-    TestUtils.waitUntilMetadataIsPropagated(scala.collection.JavaConversions.asBuffer(kafkaServers), TOPIC6, 0, TIME_OUT);
-    TestUtils.waitUntilMetadataIsPropagated(scala.collection.JavaConversions.asBuffer(kafkaServers), TOPIC7, 0, TIME_OUT);
-    TestUtils.waitUntilMetadataIsPropagated(scala.collection.JavaConversions.asBuffer(kafkaServers), TOPIC8, 0, TIME_OUT);
-    TestUtils.waitUntilMetadataIsPropagated(scala.collection.JavaConversions.asBuffer(kafkaServers), TOPIC9, 0, TIME_OUT);
-    TestUtils.waitUntilMetadataIsPropagated(scala.collection.JavaConversions.asBuffer(kafkaServers), TOPIC10, 0, TIME_OUT);
-    TestUtils.waitUntilMetadataIsPropagated(scala.collection.JavaConversions.asBuffer(kafkaServers), TOPIC11, 0, TIME_OUT);
+    producer = KafkaTestUtil.createProducer(KafkaTestUtil.getMetadataBrokerURI(), true);
 
-    producer = KafkaTestUtil.createProducer(HOST, port, true);
     // remove this
     System.setProperty("sdc.clustermode", "false");
   }
 
   @AfterClass
   public static void tearDown() {
-    for(KafkaServer kafkaServer : kafkaServers) {
-      kafkaServer.shutdown();
-    }
-    zkClient.close();
-    zkServer.shutdown();
-    System.setProperty("java.io.tmpdir", originalTmpDir);
+    KafkaTestUtil.shutdown();
   }
 
   @Test
@@ -153,7 +96,7 @@ public class TestKafkaSource {
 
     SourceRunner sourceRunner = new SourceRunner.Builder(KafkaDSource.class)
       .addOutputLane("lane")
-      .addConfiguration("metadataBrokerList", "localhost:"+port)
+      .addConfiguration("metadataBrokerList", KafkaTestUtil.getMetadataBrokerURI())
       .addConfiguration("topic", TOPIC1)
       .addConfiguration("consumerGroup", CONSUMER_GROUP)
       .addConfiguration("zookeeperConnect", zkConnect)
@@ -206,7 +149,7 @@ public class TestKafkaSource {
 
     SourceRunner sourceRunner = new SourceRunner.Builder(KafkaDSource.class)
       .addOutputLane("lane")
-      .addConfiguration("metadataBrokerList", "localhost:"+port)
+      .addConfiguration("metadataBrokerList", KafkaTestUtil.getMetadataBrokerURI())
       .addConfiguration("topic", TOPIC2)
       .addConfiguration("consumerGroup", CONSUMER_GROUP)
       .addConfiguration("zookeeperConnect", zkConnect)
@@ -258,7 +201,7 @@ public class TestKafkaSource {
 
     SourceRunner sourceRunner = new SourceRunner.Builder(KafkaDSource.class)
       .addOutputLane("lane")
-      .addConfiguration("metadataBrokerList", "localhost:"+port)
+      .addConfiguration("metadataBrokerList", KafkaTestUtil.getMetadataBrokerURI())
       .addConfiguration("topic", TOPIC3)
       .addConfiguration("consumerGroup", CONSUMER_GROUP)
       .addConfiguration("zookeeperConnect", zkConnect)
@@ -307,7 +250,7 @@ public class TestKafkaSource {
     SourceRunner sourceRunner = new SourceRunner.Builder(KafkaDSource.class)
       .addOutputLane("lane")
       .addConfiguration("topic", TOPIC4)
-      .addConfiguration("metadataBrokerList", "localhost:"+port)
+      .addConfiguration("metadataBrokerList", KafkaTestUtil.getMetadataBrokerURI())
       .addConfiguration("consumerGroup", CONSUMER_GROUP)
       .addConfiguration("zookeeperConnect", zkConnect)
       .addConfiguration("maxBatchSize", 9)
@@ -355,7 +298,7 @@ public class TestKafkaSource {
     SourceRunner sourceRunner = new SourceRunner.Builder(KafkaDSource.class)
       .addOutputLane("lane")
       .addConfiguration("topic", TOPIC5)
-      .addConfiguration("metadataBrokerList", "localhost:"+port)
+      .addConfiguration("metadataBrokerList", KafkaTestUtil.getMetadataBrokerURI())
       .addConfiguration("consumerGroup", CONSUMER_GROUP)
       .addConfiguration("zookeeperConnect", zkConnect)
       .addConfiguration("maxBatchSize", 9)
@@ -404,7 +347,7 @@ public class TestKafkaSource {
     SourceRunner sourceRunner = new SourceRunner.Builder(KafkaDSource.class)
       .addOutputLane("lane")
       .addConfiguration("topic", TOPIC6)
-      .addConfiguration("metadataBrokerList", "localhost:"+port)
+      .addConfiguration("metadataBrokerList", KafkaTestUtil.getMetadataBrokerURI())
       .addConfiguration("consumerGroup", CONSUMER_GROUP)
       .addConfiguration("zookeeperConnect", zkConnect)
       .addConfiguration("maxBatchSize", 9)
@@ -453,7 +396,7 @@ public class TestKafkaSource {
     SourceRunner sourceRunner = new SourceRunner.Builder(KafkaDSource.class)
       .addOutputLane("lane")
       .addConfiguration("topic", TOPIC7)
-      .addConfiguration("metadataBrokerList", "localhost:"+port)
+      .addConfiguration("metadataBrokerList", KafkaTestUtil.getMetadataBrokerURI())
       .addConfiguration("consumerGroup", CONSUMER_GROUP)
       .addConfiguration("zookeeperConnect", zkConnect)
       .addConfiguration("maxBatchSize", 9)
@@ -498,7 +441,7 @@ public class TestKafkaSource {
       .addOutputLane("lane")
       .addConfiguration("topic", TOPIC8)
       .addConfiguration("consumerGroup", CONSUMER_GROUP)
-      .addConfiguration("metadataBrokerList", "localhost:"+port)
+      .addConfiguration("metadataBrokerList", KafkaTestUtil.getMetadataBrokerURI())
       .addConfiguration("zookeeperConnect", zkConnect)
       .addConfiguration("maxBatchSize", 9)
       .addConfiguration("maxWaitTime", 5000)
@@ -533,7 +476,7 @@ public class TestKafkaSource {
     SourceRunner sourceRunner = new SourceRunner.Builder(KafkaDSource.class)
       .addOutputLane("lane")
       .addConfiguration("topic", TOPIC9)
-      .addConfiguration("metadataBrokerList", "localhost:"+port)
+      .addConfiguration("metadataBrokerList", KafkaTestUtil.getMetadataBrokerURI())
       .addConfiguration("consumerGroup", CONSUMER_GROUP)
       .addConfiguration("zookeeperConnect", zkConnect)
       .addConfiguration("maxBatchSize", 9)
@@ -581,7 +524,7 @@ public class TestKafkaSource {
     SourceRunner sourceRunner = new SourceRunner.Builder(KafkaDSource.class)
       .addOutputLane("lane")
       .addConfiguration("topic", TOPIC10)
-      .addConfiguration("metadataBrokerList", "localhost:"+port)
+      .addConfiguration("metadataBrokerList", KafkaTestUtil.getMetadataBrokerURI())
       .addConfiguration("consumerGroup", CONSUMER_GROUP)
       .addConfiguration("zookeeperConnect", zkConnect)
       .addConfiguration("maxBatchSize", 9)
@@ -652,7 +595,7 @@ public class TestKafkaSource {
     SourceRunner sourceRunner = new SourceRunner.Builder(KafkaDSource.class)
       .addOutputLane("lane")
       .addConfiguration("topic", TOPIC11)
-      .addConfiguration("metadataBrokerList", "localhost:"+port)
+      .addConfiguration("metadataBrokerList", KafkaTestUtil.getMetadataBrokerURI())
       .addConfiguration("consumerGroup", CONSUMER_GROUP)
       .addConfiguration("zookeeperConnect", zkConnect)
       .addConfiguration("maxBatchSize", 9)
@@ -728,7 +671,7 @@ public class TestKafkaSource {
       SourceRunner sourceRunner = new SourceRunner.Builder(KafkaDSource.class)
         .addOutputLane("lane")
         .addConfiguration("topic", TOPIC11)
-        .addConfiguration("metadataBrokerList", "localhost:"+port)
+        .addConfiguration("metadataBrokerList", KafkaTestUtil.getMetadataBrokerURI())
         .addConfiguration("consumerGroup", CONSUMER_GROUP)
         .addConfiguration("zookeeperConnect", zkConnect)
         .addConfiguration("maxBatchSize", 100)

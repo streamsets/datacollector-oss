@@ -701,7 +701,7 @@ public class StandalonePipelineManagerTask extends AbstractTask implements Pipel
       return;
     }
     if(pState.getName().equals(pipelineName) && pState.getState() == State.RUNNING) {
-      throw new PipelineManagerException(ContainerError.CONTAINER_0111, pipelineName);
+      throw new PipelineManagerException(ContainerError.CONTAINER_0113, pipelineName);
     }
     stateTracker.deleteHistory(pipelineName, rev);
   }

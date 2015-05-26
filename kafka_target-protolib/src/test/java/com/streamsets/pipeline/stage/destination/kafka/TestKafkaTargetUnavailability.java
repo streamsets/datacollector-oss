@@ -13,65 +13,40 @@ import com.streamsets.pipeline.lib.Errors;
 import com.streamsets.pipeline.lib.KafkaConnectionException;
 import com.streamsets.pipeline.lib.KafkaTestUtil;
 import com.streamsets.pipeline.sdk.TargetRunner;
-import kafka.admin.AdminUtils;
 import kafka.consumer.KafkaStream;
-import kafka.server.KafkaConfig;
 import kafka.server.KafkaServer;
-import kafka.utils.MockTime;
-import kafka.utils.TestUtils;
-import kafka.utils.TestZKUtils;
-import kafka.utils.ZKStringSerializer$;
-import kafka.zk.EmbeddedZookeeper;
-import org.I0Itec.zkclient.ZkClient;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Properties;
 
 public class TestKafkaTargetUnavailability {
 
-  private static KafkaServer kafkaServer;
-  private static ZkClient zkClient;
-  private static EmbeddedZookeeper zkServer;
   private static List<KafkaStream<byte[], byte[]>> kafkaStreams;
-  private static int port;
 
   private static final String HOST = "localhost";
-  private static final int BROKER_ID = 0;
   private static final int PARTITIONS = 1;
   private static final int REPLICATION_FACTOR = 1;
   private static final String TOPIC = "TestKafkaTargetUnavailability";
-  private static final int TIME_OUT = 5000;
+  private static KafkaServer kafkaServer;
 
   @Before
   public void setUp() {
-    //Init zookeeper
-    String zkConnect = TestZKUtils.zookeeperConnect();
-    zkServer = new EmbeddedZookeeper(zkConnect);
-    zkClient = new ZkClient(zkServer.connectString(), 30000, 30000, ZKStringSerializer$.MODULE$);
-    // setup Broker
-    port = TestUtils.choosePort();
-    Properties props = TestUtils.createBrokerConfig(BROKER_ID, port);
-    kafkaServer = TestUtils.createServer(new KafkaConfig(props), new MockTime());
+    KafkaTestUtil.startZookeeper();
+    KafkaTestUtil.startKafkaBrokers(1);
+    kafkaServer = KafkaTestUtil.getKafkaServers().get(0);
     // create topic
-    AdminUtils.createTopic(zkClient, TOPIC, PARTITIONS, REPLICATION_FACTOR, new Properties());
-    List<KafkaServer> servers = new ArrayList<>();
-    servers.add(kafkaServer);
-    TestUtils.waitUntilMetadataIsPropagated(scala.collection.JavaConversions.asBuffer(servers), TOPIC, 0, TIME_OUT);
+    KafkaTestUtil.createTopic(TOPIC, PARTITIONS, REPLICATION_FACTOR);
 
-    kafkaStreams = KafkaTestUtil.createKafkaStream(zkServer.connectString(), TOPIC, PARTITIONS);
+    kafkaStreams = KafkaTestUtil.createKafkaStream(KafkaTestUtil.getZkServer().connectString(), TOPIC, PARTITIONS);
   }
 
   @After
   public void tearDown() {
-    kafkaServer.shutdown();
-    zkClient.close();
-    zkServer.shutdown();
+    KafkaTestUtil.shutdown();
   }
 
   //The following tests are commented out as they take a long time to complete ~ 10 seconds
@@ -96,7 +71,7 @@ public class TestKafkaTargetUnavailability {
       .setOnRecordError(OnRecordError.STOP_PIPELINE)
       .addConfiguration("topic", TOPIC)
       .addConfiguration("partition", "0")
-      .addConfiguration("metadataBrokerList", HOST + ":" + port)
+      .addConfiguration("metadataBrokerList", KafkaTestUtil.getMetadataBrokerURI())
       .addConfiguration("kafkaProducerConfigs", kafkaProducerConfig)
       .addConfiguration("dataFormat", DataFormat.TEXT)
       .addConfiguration("singleMessagePerBatch", false)
@@ -144,7 +119,7 @@ public class TestKafkaTargetUnavailability {
       .setOnRecordError(OnRecordError.TO_ERROR)
       .addConfiguration("topic", TOPIC)
       .addConfiguration("partition", "0")
-      .addConfiguration("metadataBrokerList", HOST + ":" + port)
+      .addConfiguration("metadataBrokerList", KafkaTestUtil.getMetadataBrokerURI())
       .addConfiguration("kafkaProducerConfigs", kafkaProducerConfig)
       .addConfiguration("dataFormat", DataFormat.TEXT)
       .addConfiguration("singleMessagePerBatch", false)
@@ -192,7 +167,7 @@ public class TestKafkaTargetUnavailability {
       .setOnRecordError(OnRecordError.DISCARD)
       .addConfiguration("topic", TOPIC)
       .addConfiguration("partition", "0")
-      .addConfiguration("metadataBrokerList", HOST + ":" + port)
+      .addConfiguration("metadataBrokerList", KafkaTestUtil.getMetadataBrokerURI())
       .addConfiguration("kafkaProducerConfigs", kafkaProducerConfig)
       .addConfiguration("dataFormat", DataFormat.TEXT)
       .addConfiguration("singleMessagePerBatch", false)
@@ -241,7 +216,7 @@ public class TestKafkaTargetUnavailability {
       .setOnRecordError(OnRecordError.TO_ERROR)
       .addConfiguration("topic", null)
       .addConfiguration("partition", "0")
-      .addConfiguration("metadataBrokerList", HOST + ":" + port)
+      .addConfiguration("metadataBrokerList", KafkaTestUtil.getMetadataBrokerURI())
       .addConfiguration("kafkaProducerConfigs", kafkaProducerConfig)
       .addConfiguration("dataFormat", DataFormat.TEXT)
       .addConfiguration("singleMessagePerBatch", false)
@@ -290,7 +265,7 @@ public class TestKafkaTargetUnavailability {
       .setOnRecordError(OnRecordError.DISCARD)
       .addConfiguration("topic", null)
       .addConfiguration("partition", "0")
-      .addConfiguration("metadataBrokerList", HOST + ":" + port)
+      .addConfiguration("metadataBrokerList", KafkaTestUtil.getMetadataBrokerURI())
       .addConfiguration("kafkaProducerConfigs", kafkaProducerConfig)
       .addConfiguration("dataFormat", DataFormat.TEXT)
       .addConfiguration("singleMessagePerBatch", false)
@@ -325,8 +300,7 @@ public class TestKafkaTargetUnavailability {
     TargetRunner targetRunner = new TargetRunner.Builder(KafkaDTarget.class)
       .addConfiguration("topic", TOPIC)
       .addConfiguration("partition", "0")
-      .addConfiguration("brokerHost", HOST)
-      .addConfiguration("brokerPort", port)
+      .addConfiguration("metadataBrokerList", KafkaTestUtil.getMetadataBrokerURI())
       .addConfiguration("kafkaProducerConfigs", null)
       .addConfiguration("payloadType", DataFormat.TEXT)
       .addConfiguration("partitionStrategy", PartitionStrategy.EXPRESSION)
@@ -340,7 +314,7 @@ public class TestKafkaTargetUnavailability {
     targetRunner.runInit();
     List<Record> logRecords = KafkaTestUtil.createStringRecords();
 
-    zkServer.shutdown();
+    KafkaTestUtil.getZkServer().shutdown();
     Thread.sleep(500);
     try {
       targetRunner.runWrite(logRecords);

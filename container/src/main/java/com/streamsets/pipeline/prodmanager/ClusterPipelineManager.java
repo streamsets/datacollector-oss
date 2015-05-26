@@ -77,7 +77,7 @@ public class ClusterPipelineManager extends AbstractTask implements PipelineMana
   private static final String CLUSTER_PIPELINE_MANAGER = "ClusterPipelineManager";
   private static final Logger LOG = LoggerFactory.getLogger(ClusterPipelineManager.class);
   static final String APPLICATION_STATE = "cluster.application.state";
-  private static final long SUBMIT_TIMEOUT_SECS = 60;
+  private static final long SUBMIT_TIMEOUT_SECS = 120;
 
   static final Map<State, Set<State>> VALID_TRANSITIONS = new ImmutableMap.Builder<State, Set<State>>()
     .put(State.STOPPED, ImmutableSet.of(State.RUNNING))
