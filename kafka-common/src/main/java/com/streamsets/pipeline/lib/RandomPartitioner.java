@@ -3,19 +3,23 @@
  * be copied, modified, or distributed in whole or part without
  * written consent of StreamSets, Inc.
  */
-package com.streamsets.pipeline.stage.destination.kafka;
+package com.streamsets.pipeline.lib;
 
 import kafka.producer.Partitioner;
 import kafka.utils.VerifiableProperties;
 
-public class ExpressionPartitioner implements Partitioner {
+import java.util.Random;
 
-  public ExpressionPartitioner(VerifiableProperties props) {
+public class RandomPartitioner implements Partitioner {
 
+  private Random random;
+
+  public RandomPartitioner (VerifiableProperties props) {
+    random = new Random();
   }
 
   public int partition(Object key, int numPartitions) {
-    return Integer.valueOf((String)key);
+    return random.nextInt(numPartitions);
   }
 
 }

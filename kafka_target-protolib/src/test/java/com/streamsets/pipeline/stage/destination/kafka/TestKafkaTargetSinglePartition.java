@@ -18,19 +18,9 @@ import com.streamsets.pipeline.config.DataFormat;
 import com.streamsets.pipeline.lib.KafkaTestUtil;
 import com.streamsets.pipeline.sdk.ContextInfoCreator;
 import com.streamsets.pipeline.sdk.TargetRunner;
-
-import kafka.admin.AdminUtils;
 import kafka.consumer.ConsumerIterator;
 import kafka.consumer.KafkaStream;
-import kafka.server.KafkaConfig;
-import kafka.server.KafkaServer;
-import kafka.utils.MockTime;
-import kafka.utils.TestUtils;
-import kafka.utils.TestZKUtils;
-import kafka.utils.ZKStringSerializer$;
 import kafka.zk.EmbeddedZookeeper;
-
-import org.I0Itec.zkclient.ZkClient;
 import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.BeforeClass;
@@ -43,13 +33,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Properties;
-import java.util.UUID;
 
 public class TestKafkaTargetSinglePartition {
 
-  private static KafkaServer kafkaServer;
-  private static ZkClient zkClient;
   private static EmbeddedZookeeper zkServer;
   private static List<KafkaStream<byte[], byte[]>> kafkaStreams1;
   private static List<KafkaStream<byte[], byte[]>> kafkaStreams2;
@@ -67,10 +53,8 @@ public class TestKafkaTargetSinglePartition {
   private static List<KafkaStream<byte[], byte[]>> kafkaStreams14;
   private static List<KafkaStream<byte[], byte[]>> kafkaStreams15;
   private static List<KafkaStream<byte[], byte[]>> kafkaStreams16;
-  private static int port;
 
   private static final String HOST = "localhost";
-  private static final int BROKER_ID = 0;
   private static final int PARTITIONS = 1;
   private static final int REPLICATION_FACTOR = 1;
   private static final String TOPIC1 = "TestKafkaTargetSinglePartition1";
@@ -89,63 +73,29 @@ public class TestKafkaTargetSinglePartition {
   private static final String TOPIC14 = "TestKafkaTargetSinglePartition14";
   private static final String TOPIC15 = "TestKafkaTargetSinglePartition15";
   private static final String TOPIC16 = "TestKafkaTargetSinglePartition16";
-  private static final int TIME_OUT = 5000;
-
-  private static String originalTmpDir;
 
   @BeforeClass
   public static void setUp() {
-    //Init zookeeper
-    originalTmpDir = System.getProperty("java.io.tmpdir");
-    File testDir = new File("target", UUID.randomUUID().toString()).getAbsoluteFile();
-    Assert.assertTrue(testDir.mkdirs());
-    System.setProperty("java.io.tmpdir", testDir.getAbsolutePath());
-
-    String zkConnect = TestZKUtils.zookeeperConnect();
-    zkServer = new EmbeddedZookeeper(zkConnect);
-    zkClient = new ZkClient(zkServer.connectString(), 30000, 30000, ZKStringSerializer$.MODULE$);
-    // setup Broker
-    port = TestUtils.choosePort();
-    Properties props = TestUtils.createBrokerConfig(BROKER_ID, port);
-    //
-    props.put("auto.create.topics.enable", "false");
-    kafkaServer = TestUtils.createServer(new KafkaConfig(props), new MockTime());
+    KafkaTestUtil.startZookeeper();
+    KafkaTestUtil.startKafkaBrokers(1);
+    zkServer = KafkaTestUtil.getZkServer();
     // create topic
-    AdminUtils.createTopic(zkClient, TOPIC1, PARTITIONS, REPLICATION_FACTOR, new Properties());
-    AdminUtils.createTopic(zkClient, TOPIC2, PARTITIONS, REPLICATION_FACTOR, new Properties());
-    AdminUtils.createTopic(zkClient, TOPIC3, PARTITIONS, REPLICATION_FACTOR, new Properties());
-    AdminUtils.createTopic(zkClient, TOPIC4, PARTITIONS, REPLICATION_FACTOR, new Properties());
-    AdminUtils.createTopic(zkClient, TOPIC5, PARTITIONS, REPLICATION_FACTOR, new Properties());
-    AdminUtils.createTopic(zkClient, TOPIC6, PARTITIONS, REPLICATION_FACTOR, new Properties());
-    AdminUtils.createTopic(zkClient, TOPIC7, PARTITIONS, REPLICATION_FACTOR, new Properties());
-    AdminUtils.createTopic(zkClient, TOPIC8, PARTITIONS, REPLICATION_FACTOR, new Properties());
-    AdminUtils.createTopic(zkClient, TOPIC9, PARTITIONS, REPLICATION_FACTOR, new Properties());
-    AdminUtils.createTopic(zkClient, TOPIC10, PARTITIONS, REPLICATION_FACTOR, new Properties());
-    AdminUtils.createTopic(zkClient, TOPIC11, PARTITIONS, REPLICATION_FACTOR, new Properties());
-    AdminUtils.createTopic(zkClient, TOPIC12, PARTITIONS, REPLICATION_FACTOR, new Properties());
-    AdminUtils.createTopic(zkClient, TOPIC13, PARTITIONS, REPLICATION_FACTOR, new Properties());
-    AdminUtils.createTopic(zkClient, TOPIC14, PARTITIONS, REPLICATION_FACTOR, new Properties());
-    AdminUtils.createTopic(zkClient, TOPIC15, PARTITIONS, REPLICATION_FACTOR, new Properties());
-    AdminUtils.createTopic(zkClient, TOPIC16, PARTITIONS, REPLICATION_FACTOR, new Properties());
-    List<KafkaServer> servers = new ArrayList<>();
-    servers.add(kafkaServer);
-    TestUtils.waitUntilMetadataIsPropagated(scala.collection.JavaConversions.asBuffer(servers), TOPIC1, 0, TIME_OUT);
-    TestUtils.waitUntilMetadataIsPropagated(scala.collection.JavaConversions.asBuffer(servers), TOPIC2, 0, TIME_OUT);
-    TestUtils.waitUntilMetadataIsPropagated(scala.collection.JavaConversions.asBuffer(servers), TOPIC3, 0, TIME_OUT);
-    TestUtils.waitUntilMetadataIsPropagated(scala.collection.JavaConversions.asBuffer(servers), TOPIC4, 0, TIME_OUT);
-    TestUtils.waitUntilMetadataIsPropagated(scala.collection.JavaConversions.asBuffer(servers), TOPIC5, 0, TIME_OUT);
-    TestUtils.waitUntilMetadataIsPropagated(scala.collection.JavaConversions.asBuffer(servers), TOPIC6, 0, TIME_OUT);
-    TestUtils.waitUntilMetadataIsPropagated(scala.collection.JavaConversions.asBuffer(servers), TOPIC7, 0, TIME_OUT);
-    TestUtils.waitUntilMetadataIsPropagated(scala.collection.JavaConversions.asBuffer(servers), TOPIC8, 0, TIME_OUT);
-    TestUtils.waitUntilMetadataIsPropagated(scala.collection.JavaConversions.asBuffer(servers), TOPIC9, 0, TIME_OUT);
-    TestUtils.waitUntilMetadataIsPropagated(scala.collection.JavaConversions.asBuffer(servers), TOPIC10, 0, TIME_OUT);
-    TestUtils.waitUntilMetadataIsPropagated(scala.collection.JavaConversions.asBuffer(servers), TOPIC11, 0, TIME_OUT);
-    TestUtils.waitUntilMetadataIsPropagated(scala.collection.JavaConversions.asBuffer(servers), TOPIC12, 0, TIME_OUT);
-    TestUtils.waitUntilMetadataIsPropagated(scala.collection.JavaConversions.asBuffer(servers), TOPIC13, 0, TIME_OUT);
-    TestUtils.waitUntilMetadataIsPropagated(scala.collection.JavaConversions.asBuffer(servers), TOPIC14, 0, TIME_OUT);
-    TestUtils.waitUntilMetadataIsPropagated(scala.collection.JavaConversions.asBuffer(servers), TOPIC15, 0, TIME_OUT);
-    TestUtils.waitUntilMetadataIsPropagated(scala.collection.JavaConversions.asBuffer(servers), TOPIC16, 0, TIME_OUT);
-
+    KafkaTestUtil.createTopic(TOPIC1, PARTITIONS, REPLICATION_FACTOR);
+    KafkaTestUtil.createTopic(TOPIC2, PARTITIONS, REPLICATION_FACTOR);
+    KafkaTestUtil.createTopic(TOPIC3, PARTITIONS, REPLICATION_FACTOR);
+    KafkaTestUtil.createTopic(TOPIC4, PARTITIONS, REPLICATION_FACTOR);
+    KafkaTestUtil.createTopic(TOPIC5, PARTITIONS, REPLICATION_FACTOR);
+    KafkaTestUtil.createTopic(TOPIC6, PARTITIONS, REPLICATION_FACTOR);
+    KafkaTestUtil.createTopic(TOPIC7, PARTITIONS, REPLICATION_FACTOR);
+    KafkaTestUtil.createTopic(TOPIC8, PARTITIONS, REPLICATION_FACTOR);
+    KafkaTestUtil.createTopic(TOPIC9, PARTITIONS, REPLICATION_FACTOR);
+    KafkaTestUtil.createTopic(TOPIC10, PARTITIONS, REPLICATION_FACTOR);
+    KafkaTestUtil.createTopic(TOPIC11, PARTITIONS, REPLICATION_FACTOR);
+    KafkaTestUtil.createTopic(TOPIC12, PARTITIONS, REPLICATION_FACTOR);
+    KafkaTestUtil.createTopic(TOPIC13, PARTITIONS, REPLICATION_FACTOR);
+    KafkaTestUtil.createTopic(TOPIC14, PARTITIONS, REPLICATION_FACTOR);
+    KafkaTestUtil.createTopic(TOPIC15, PARTITIONS, REPLICATION_FACTOR);
+    KafkaTestUtil.createTopic(TOPIC16, PARTITIONS, REPLICATION_FACTOR);
 
     kafkaStreams1 = KafkaTestUtil.createKafkaStream(zkServer.connectString(), TOPIC1, PARTITIONS);
     kafkaStreams2 = KafkaTestUtil.createKafkaStream(zkServer.connectString(), TOPIC2, PARTITIONS);
@@ -167,10 +117,7 @@ public class TestKafkaTargetSinglePartition {
 
   @AfterClass
   public static void tearDown() {
-    kafkaServer.shutdown();
-    zkClient.close();
-    zkServer.shutdown();
-    System.setProperty("java.io.tmpdir", originalTmpDir);
+    KafkaTestUtil.shutdown();
   }
 
   @Test
@@ -178,7 +125,7 @@ public class TestKafkaTargetSinglePartition {
     TargetRunner targetRunner = new TargetRunner.Builder(KafkaDTarget.class)
       .addConfiguration("topic", TOPIC1)
       .addConfiguration("partition", "0")
-      .addConfiguration("metadataBrokerList", HOST + ":" + port)
+      .addConfiguration("metadataBrokerList", KafkaTestUtil.getMetadataBrokerURI())
       .addConfiguration("kafkaProducerConfigs", null)
       .addConfiguration("dataFormat", DataFormat.TEXT)
       .addConfiguration("singleMessagePerBatch", false)
@@ -219,7 +166,7 @@ public class TestKafkaTargetSinglePartition {
     TargetRunner targetRunner = new TargetRunner.Builder(KafkaDTarget.class)
       .addConfiguration("topic", TOPIC2)
       .addConfiguration("partition", "0")
-      .addConfiguration("metadataBrokerList", HOST + ":" + port)
+      .addConfiguration("metadataBrokerList", KafkaTestUtil.getMetadataBrokerURI())
       .addConfiguration("kafkaProducerConfigs", kafkaProducerConfig)
       .addConfiguration("dataFormat", DataFormat.TEXT)
       .addConfiguration("singleMessagePerBatch", false)
@@ -263,7 +210,7 @@ public class TestKafkaTargetSinglePartition {
     TargetRunner targetRunner = new TargetRunner.Builder(KafkaDTarget.class)
       .addConfiguration("topic", TOPIC3)
       .addConfiguration("partition", "0")
-      .addConfiguration("metadataBrokerList", HOST + ":" + port)
+      .addConfiguration("metadataBrokerList", KafkaTestUtil.getMetadataBrokerURI())
       .addConfiguration("kafkaProducerConfigs", kafkaProducerConfig)
       .addConfiguration("dataFormat", DataFormat.TEXT)
       .addConfiguration("singleMessagePerBatch", false)
@@ -308,7 +255,7 @@ public class TestKafkaTargetSinglePartition {
     TargetRunner targetRunner = new TargetRunner.Builder(KafkaDTarget.class)
       .addConfiguration("topic", TOPIC4)
       .addConfiguration("partition", "0")
-      .addConfiguration("metadataBrokerList", HOST + ":" + port)
+      .addConfiguration("metadataBrokerList", KafkaTestUtil.getMetadataBrokerURI())
       .addConfiguration("kafkaProducerConfigs", kafkaProducerConfig)
       .addConfiguration("dataFormat", DataFormat.TEXT)
       .addConfiguration("singleMessagePerBatch", false)
@@ -355,7 +302,7 @@ public class TestKafkaTargetSinglePartition {
       .setOnRecordError(OnRecordError.TO_ERROR)
       .addConfiguration("topic", TOPIC5)
       .addConfiguration("partition", "0")
-      .addConfiguration("metadataBrokerList", HOST + ":" + port)
+      .addConfiguration("metadataBrokerList", KafkaTestUtil.getMetadataBrokerURI())
       .addConfiguration("kafkaProducerConfigs", kafkaProducerConfig)
       .addConfiguration("dataFormat", DataFormat.TEXT)
       .addConfiguration("singleMessagePerBatch", false)
@@ -399,7 +346,7 @@ public class TestKafkaTargetSinglePartition {
     TargetRunner targetRunner = new TargetRunner.Builder(KafkaDTarget.class)
       .addConfiguration("topic", TOPIC6)
       .addConfiguration("partition", "0")
-      .addConfiguration("metadataBrokerList", HOST + ":" + port)
+      .addConfiguration("metadataBrokerList", KafkaTestUtil.getMetadataBrokerURI())
       .addConfiguration("kafkaProducerConfigs", null)
       .addConfiguration("dataFormat", DataFormat.SDC_JSON)
       .addConfiguration("singleMessagePerBatch", false)
@@ -445,7 +392,7 @@ public class TestKafkaTargetSinglePartition {
     TargetRunner targetRunner = new TargetRunner.Builder(KafkaDTarget.class)
       .addConfiguration("topic", TOPIC7)
       .addConfiguration("partition", "0")
-      .addConfiguration("metadataBrokerList", HOST + ":" + port)
+      .addConfiguration("metadataBrokerList", KafkaTestUtil.getMetadataBrokerURI())
       .addConfiguration("kafkaProducerConfigs", null)
       .addConfiguration("dataFormat", DataFormat.DELIMITED)
       .addConfiguration("singleMessagePerBatch", false)
@@ -493,7 +440,7 @@ public class TestKafkaTargetSinglePartition {
     TargetRunner targetRunner = new TargetRunner.Builder(KafkaDTarget.class)
       .addConfiguration("topicExpression", "${record:value('/topic')}")
       .addConfiguration("partition", "0")
-      .addConfiguration("metadataBrokerList", HOST + ":" + port)
+      .addConfiguration("metadataBrokerList", KafkaTestUtil.getMetadataBrokerURI())
       .addConfiguration("kafkaProducerConfigs", kafkaProducerConfig)
       .addConfiguration("dataFormat", DataFormat.SDC_JSON)
       .addConfiguration("singleMessagePerBatch", false)
@@ -550,7 +497,7 @@ public class TestKafkaTargetSinglePartition {
     targetRunner = new TargetRunner.Builder(KafkaDTarget.class)
       .addConfiguration("topicExpression", "${record:value('/topic')}")
       .addConfiguration("partition", "0")
-      .addConfiguration("metadataBrokerList", HOST + ":" + port)
+      .addConfiguration("metadataBrokerList", KafkaTestUtil.getMetadataBrokerURI())
       .addConfiguration("kafkaProducerConfigs", kafkaProducerConfig)
       .addConfiguration("dataFormat", DataFormat.SDC_JSON)
       .addConfiguration("singleMessagePerBatch", true)
@@ -618,7 +565,7 @@ public class TestKafkaTargetSinglePartition {
     TargetRunner targetRunner = new TargetRunner.Builder(KafkaDTarget.class)
       .addConfiguration("topicExpression", "${record:value('/topic')}")
       .addConfiguration("partition", "0")
-      .addConfiguration("metadataBrokerList", HOST + ":" + port)
+      .addConfiguration("metadataBrokerList", KafkaTestUtil.getMetadataBrokerURI())
       .addConfiguration("kafkaProducerConfigs", kafkaProducerConfig)
       .addConfiguration("dataFormat", DataFormat.SDC_JSON)
       .addConfiguration("singleMessagePerBatch", false)
@@ -675,7 +622,7 @@ public class TestKafkaTargetSinglePartition {
     targetRunner = new TargetRunner.Builder(KafkaDTarget.class)
       .addConfiguration("topicExpression", "${record:value('/topic')}")
       .addConfiguration("partition", "0")
-      .addConfiguration("metadataBrokerList", HOST + ":" + port)
+      .addConfiguration("metadataBrokerList", KafkaTestUtil.getMetadataBrokerURI())
       .addConfiguration("kafkaProducerConfigs", kafkaProducerConfig)
       .addConfiguration("dataFormat", DataFormat.SDC_JSON)
       .addConfiguration("singleMessagePerBatch", true)
@@ -745,7 +692,7 @@ public class TestKafkaTargetSinglePartition {
       .setOnRecordError(OnRecordError.TO_ERROR)
       .addConfiguration("topicExpression", "${record:value('/topic')}")
       .addConfiguration("partition", "0")
-      .addConfiguration("metadataBrokerList", HOST + ":" + port)
+      .addConfiguration("metadataBrokerList", KafkaTestUtil.getMetadataBrokerURI())
       .addConfiguration("kafkaProducerConfigs", kafkaProducerConfig)
       .addConfiguration("dataFormat", DataFormat.SDC_JSON)
       .addConfiguration("singleMessagePerBatch", false)
@@ -781,7 +728,7 @@ public class TestKafkaTargetSinglePartition {
       .setOnRecordError(OnRecordError.TO_ERROR)
       .addConfiguration("topicExpression", "${record:value('/topic')}")
       .addConfiguration("partition", "0")
-      .addConfiguration("metadataBrokerList", HOST + ":" + port)
+      .addConfiguration("metadataBrokerList", KafkaTestUtil.getMetadataBrokerURI())
       .addConfiguration("kafkaProducerConfigs", kafkaProducerConfig)
       .addConfiguration("dataFormat", DataFormat.SDC_JSON)
       .addConfiguration("singleMessagePerBatch", true)
@@ -830,7 +777,7 @@ public class TestKafkaTargetSinglePartition {
       .setOnRecordError(OnRecordError.TO_ERROR)
       .addConfiguration("topicExpression", "${record:value('/topic')}")
       .addConfiguration("partition", "0")
-      .addConfiguration("metadataBrokerList", HOST + ":" + port)
+      .addConfiguration("metadataBrokerList", KafkaTestUtil.getMetadataBrokerURI())
       .addConfiguration("kafkaProducerConfigs", kafkaProducerConfig)
       .addConfiguration("dataFormat", DataFormat.SDC_JSON)
       .addConfiguration("singleMessagePerBatch", false)
@@ -854,7 +801,7 @@ public class TestKafkaTargetSinglePartition {
       .setOnRecordError(OnRecordError.TO_ERROR)
       .addConfiguration("topicExpression", "${record:value('/topic')}")
       .addConfiguration("partition", "0")
-      .addConfiguration("metadataBrokerList", HOST + ":" + port)
+      .addConfiguration("metadataBrokerList", KafkaTestUtil.getMetadataBrokerURI())
       .addConfiguration("kafkaProducerConfigs", kafkaProducerConfig)
       .addConfiguration("dataFormat", DataFormat.SDC_JSON)
       .addConfiguration("singleMessagePerBatch", true)
@@ -889,7 +836,7 @@ public class TestKafkaTargetSinglePartition {
       .setOnRecordError(OnRecordError.TO_ERROR)
       .addConfiguration("topicExpression", "${record:value('/topic')}")
       .addConfiguration("partition", "${record:value('/partition')}")
-      .addConfiguration("metadataBrokerList", HOST + ":" + port)
+      .addConfiguration("metadataBrokerList", KafkaTestUtil.getMetadataBrokerURI())
       .addConfiguration("kafkaProducerConfigs", kafkaProducerConfig)
       .addConfiguration("dataFormat", DataFormat.SDC_JSON)
       .addConfiguration("singleMessagePerBatch", false)
@@ -935,7 +882,7 @@ public class TestKafkaTargetSinglePartition {
     TargetRunner targetRunner = new TargetRunner.Builder(KafkaDTarget.class)
       .addConfiguration("topic", "${TOPIC11}")
       .addConfiguration("partition", "0")
-      .addConfiguration("metadataBrokerList", HOST + ":" + port)
+      .addConfiguration("metadataBrokerList", KafkaTestUtil.getMetadataBrokerURI())
       .addConfiguration("kafkaProducerConfigs", kafkaProducerConfig)
       .addConfiguration("dataFormat", DataFormat.TEXT)
       .addConfiguration("singleMessagePerBatch", false)
@@ -987,7 +934,7 @@ public class TestKafkaTargetSinglePartition {
       .setOnRecordError(OnRecordError.STOP_PIPELINE)
       .addConfiguration("topic", null)
       .addConfiguration("partition", "0")
-      .addConfiguration("metadataBrokerList", HOST + ":" + port)
+      .addConfiguration("metadataBrokerList", KafkaTestUtil.getMetadataBrokerURI())
       .addConfiguration("kafkaProducerConfigs", kafkaProducerConfig)
       .addConfiguration("dataFormat", DataFormat.TEXT)
       .addConfiguration("singleMessagePerBatch", false)

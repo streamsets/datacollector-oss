@@ -247,11 +247,12 @@ public class StageRuntime {
     private void configureStage(StageDefinition stageDef, StageConfiguration stageConf, Class klass, Stage stage,
                                 Map<String, Object> constants)
         throws PipelineRuntimeException {
+      List<ConfigConfiguration> newConfigToAdd = new ArrayList<>();
       for (ConfigDefinition confDef : stageDef.getConfigDefinitions()) {
         ConfigConfiguration confConf = stageConf.getConfig(confDef.getName());
         if (confConf == null) {
-          throw new PipelineRuntimeException(ContainerError.CONTAINER_0153,
-                                             stageDef.getClassName(), stageConf.getInstanceName(), confDef.getName());
+          confConf = new ConfigConfiguration(confDef.getName(), confDef.getDefaultValue());
+          newConfigToAdd.add(confConf);
         }
         Object value = confConf.getValue();
         String instanceVar = confDef.getFieldName();
@@ -282,6 +283,10 @@ public class StageRuntime {
                                                  value, ex.getMessage(), ex);
             }
         }
+      }
+      if(!newConfigToAdd.isEmpty()) {
+        newConfigToAdd.addAll(stageConf.getConfiguration());
+        stageConf.setConfig(newConfigToAdd);
       }
     }
 

@@ -21,28 +21,28 @@ public class TestRandomDataGenerator {
   @Test
   public void testRandomDataGenerator() throws StageException {
 
-    RandomDataGenerator.DataGeneratorConfig stringData = new RandomDataGenerator.DataGeneratorConfig();
+    RandomDataGeneratorSource.DataGeneratorConfig stringData = new RandomDataGeneratorSource.DataGeneratorConfig();
     stringData.field = "name";
-    stringData.type = RandomDataGenerator.Type.STRING;
+    stringData.type = RandomDataGeneratorSource.Type.STRING;
 
-    RandomDataGenerator.DataGeneratorConfig intData = new RandomDataGenerator.DataGeneratorConfig();
+    RandomDataGeneratorSource.DataGeneratorConfig intData = new RandomDataGeneratorSource.DataGeneratorConfig();
     intData.field = "age";
-    intData.type = RandomDataGenerator.Type.INTEGER;
+    intData.type = RandomDataGeneratorSource.Type.INTEGER;
 
-    RandomDataGenerator.DataGeneratorConfig longData = new RandomDataGenerator.DataGeneratorConfig();
+    RandomDataGeneratorSource.DataGeneratorConfig longData = new RandomDataGeneratorSource.DataGeneratorConfig();
     longData.field = "milliSecondsSinceBirth";
-    longData.type = RandomDataGenerator.Type.LONG;
+    longData.type = RandomDataGeneratorSource.Type.LONG;
 
-    RandomDataGenerator.DataGeneratorConfig dateData = new RandomDataGenerator.DataGeneratorConfig();
+    RandomDataGeneratorSource.DataGeneratorConfig dateData = new RandomDataGeneratorSource.DataGeneratorConfig();
     dateData.field = "dob";
-    dateData.type = RandomDataGenerator.Type.DATE;
+    dateData.type = RandomDataGeneratorSource.Type.DATE;
 
-    RandomDataGenerator.DataGeneratorConfig doubleData = new RandomDataGenerator.DataGeneratorConfig();
+    RandomDataGeneratorSource.DataGeneratorConfig doubleData = new RandomDataGeneratorSource.DataGeneratorConfig();
     doubleData.field = "salary";
-    doubleData.type = RandomDataGenerator.Type.DOUBLE;
+    doubleData.type = RandomDataGeneratorSource.Type.DOUBLE;
 
 
-    SourceRunner runner = new SourceRunner.Builder(RandomDataGenerator.class)
+    SourceRunner runner = new SourceRunner.Builder(RandomDataGeneratorSource.class)
       .addConfiguration("dataGenConfigs", Arrays.asList(stringData, dateData, doubleData, longData, intData))
       .addOutputLane("a")
       .build();

@@ -16,10 +16,6 @@ import java.util.List;
 import java.util.Map;
 
 
-import com.streamsets.pipeline.BlackListURLClassLoader;
-import com.streamsets.pipeline.BootstrapMain;
-
-
 public class MiniSDC {
   // Duplicate this here from container
   public enum ExecutionMode {CLUSTER, STANDALONE, SLAVE};
@@ -35,7 +31,7 @@ public class MiniSDC {
     this.libraryRoot = libraryRoot;
   }
 
-  public void start(String pipelineJson) throws Exception {
+  public void startSDC() throws Exception {
     if (dataCollector != null) {
       throw new IllegalStateException("Data collector has already started");
     }
@@ -68,15 +64,41 @@ public class MiniSDC {
     try {
       Thread.currentThread().setContextClassLoader(containerCL);
       dataCollector =
-        (DataCollector) Class.forName("com.streamsets.pipeline.datacollector.EmbeddedDataCollector", true, containerCL)
+        (DataCollector) Class.forName("com.streamsets.pipeline.datacollector.MiniITDataCollector", true, containerCL)
           .getConstructor().newInstance();
       dataCollector.init();
-      dataCollector.startPipeline(pipelineJson);
     } finally {
       Thread.currentThread().setContextClassLoader(originalClassLoader);
     }
   }
 
+  public void createAndStartPipeline(String pipelineJson) throws Exception {
+    if(dataCollector == null) {
+      throw new IllegalStateException("DataCollector is not initialized.");
+    }
+    dataCollector.startPipeline(pipelineJson);
+  }
+
+  public void createPipeline(String pipelineJson) throws Exception {
+    if(dataCollector == null) {
+      throw new IllegalStateException("DataCollector is not initialized.");
+    }
+    dataCollector.createPipeline(pipelineJson);
+  }
+
+  public void startPipeline() throws Exception {
+    if(dataCollector == null) {
+      throw new IllegalStateException("DataCollector is not initialized.");
+    }
+    dataCollector.startPipeline();
+  }
+
+  public void stopPipeline() throws Exception {
+    if(dataCollector == null) {
+      throw new IllegalStateException("DataCollector is not initialized.");
+    }
+    dataCollector.stopPipeline();
+  }
 
   private void injectStageLibraries(ClassLoader containerCL, List<ClassLoader> stageLibrariesCLs) {
     ClassLoader originalClassLoader = Thread.currentThread().getContextClassLoader();
@@ -104,7 +126,5 @@ public class MiniSDC {
   public List<URI> getListOfSlaveSDCURI() throws URISyntaxException {
     return dataCollector.getWorkerList();
   }
-
-
 
 }

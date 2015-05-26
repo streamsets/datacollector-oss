@@ -45,6 +45,7 @@ public enum ContainerError implements ErrorCode {
   CONTAINER_0110("Cannot create pipeline '{}': {}"),
   CONTAINER_0111("Cannot delete errors for pipeline '{}' when the pipeline is running"),
   CONTAINER_0112("Origin Parallelism cannot be less than 1"),
+  CONTAINER_0113("Cannot delete history for pipeline '{}' when the pipeline is running"),
 
   // PipelineRunners
   CONTAINER_0150("Pipeline configuration error: {}"),

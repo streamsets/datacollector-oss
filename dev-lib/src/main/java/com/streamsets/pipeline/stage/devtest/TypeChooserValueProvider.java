@@ -20,7 +20,7 @@ public class TypeChooserValueProvider implements ChooserValues {
   @Override
   public List<String> getValues() {
     List<String> values = new ArrayList<>();
-    for (RandomDataGenerator.Type type : RandomDataGenerator.Type.values()) {
+    for (RandomDataGeneratorSource.Type type : RandomDataGeneratorSource.Type.values()) {
       values.add(type.toString());
     }
     return values;
@@ -29,7 +29,7 @@ public class TypeChooserValueProvider implements ChooserValues {
   @Override
   public List<String> getLabels() {
     List<String> labels = new ArrayList<>();
-    for (RandomDataGenerator.Type type : RandomDataGenerator.Type.values()) {
+    for (RandomDataGeneratorSource.Type type : RandomDataGeneratorSource.Type.values()) {
       labels.add(type.toString());
     }
     return labels;

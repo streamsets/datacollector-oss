@@ -24,7 +24,7 @@
   <properties>
     <kafka.version>0.8.1.1</kafka.version>
     <tec.version>0.3</tec.version>
-    <scala.version>2.8.0</scala.version>
+    <scala.version>2.10.4</scala.version>
     <xerces.version>2.11.0</xerces.version>
   </properties>
 
@@ -102,13 +102,13 @@
     </dependency>
     <dependency>
       <groupId>org.apache.kafka</groupId>
-      <artifactId>kafka_2.8.0</artifactId>
+      <artifactId>kafka_2.10</artifactId>
       <version>${kafka.version}</version>
       <scope>provided</scope>
     </dependency>
     <dependency>
       <groupId>org.apache.kafka</groupId>
-      <artifactId>kafka_2.8.0</artifactId>
+      <artifactId>kafka_2.10</artifactId>
       <version>${kafka.version}</version>
       <classifier>test</classifier>
       <scope>test</scope>

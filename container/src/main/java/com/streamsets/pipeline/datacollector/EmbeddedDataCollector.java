@@ -36,7 +36,6 @@ import com.streamsets.pipeline.store.PipelineStoreTask;
 import com.streamsets.pipeline.task.Task;
 import com.streamsets.pipeline.task.TaskWrapper;
 import com.streamsets.pipeline.validation.PipelineConfigurationValidator;
-
 import dagger.ObjectGraph;
 
 public class EmbeddedDataCollector implements DataCollector {
@@ -82,6 +81,21 @@ public class EmbeddedDataCollector implements DataCollector {
     pipelineManager.startPipeline(pipelineName, "1");
   }
 
+  @Override
+  public void createPipeline(String pipelineJson) throws Exception {
+    throw new UnsupportedOperationException("This method is not supported. Use \"startPipeline\" method");
+
+  }
+
+  @Override
+  public void startPipeline() throws Exception {
+    throw new UnsupportedOperationException("This method is not supported. Use \"startPipeline\" method");
+  }
+
+  @Override
+  public void stopPipeline() throws Exception {
+    throw new UnsupportedOperationException("This method is not supported. Use \"startPipeline\" method");
+  }
 
   @Override
   public void init() {
@@ -176,6 +190,5 @@ public class EmbeddedDataCollector implements DataCollector {
     }
     return sdcURLList;
   }
-
 
 }

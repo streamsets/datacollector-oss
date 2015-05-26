@@ -34,9 +34,9 @@ public class KafkaProducer {
   private static final String DEFAULT_ENCODER_CLASS = "kafka.serializer.DefaultEncoder";
   private static final String STRING_ENCODER_CLASS = "kafka.serializer.StringEncoder";
   private static final String PARTITIONER_CLASS_KEY = "partitioner.class";
-  private static final String RANDOM_PARTITIONER_CLASS = "com.streamsets.pipeline.stage.destination.kafka.RandomPartitioner";
-  private static final String ROUND_ROBIN_PARTITIONER_CLASS = "com.streamsets.pipeline.stage.destination.kafka.RoundRobinPartitioner";
-  private static final String EXPRESSION_PARTITIONER_CLASS = "com.streamsets.pipeline.stage.destination.kafka.ExpressionPartitioner";
+  private static final String RANDOM_PARTITIONER_CLASS = "com.streamsets.pipeline.lib.RandomPartitioner";
+  private static final String ROUND_ROBIN_PARTITIONER_CLASS = "com.streamsets.pipeline.lib.RoundRobinPartitioner";
+  private static final String EXPRESSION_PARTITIONER_CLASS = "com.streamsets.pipeline.lib.ExpressionPartitioner";
 
   /*Topic to readData from*/
   /*Host on which the seed broker is running*/

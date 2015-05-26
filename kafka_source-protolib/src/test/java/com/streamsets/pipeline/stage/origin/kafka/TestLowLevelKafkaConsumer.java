@@ -5,90 +5,56 @@
  */
 package com.streamsets.pipeline.stage.origin.kafka;
 
-import com.google.common.collect.ImmutableList;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.lib.KafkaBroker;
 import com.streamsets.pipeline.lib.KafkaTestUtil;
 import kafka.javaapi.producer.Producer;
 import kafka.producer.KeyedMessage;
-import kafka.server.KafkaConfig;
 import kafka.server.KafkaServer;
-import kafka.utils.MockTime;
-import kafka.utils.TestUtils;
-import kafka.utils.TestZKUtils;
-import kafka.utils.ZKStringSerializer$;
-import kafka.zk.EmbeddedZookeeper;
-import org.I0Itec.zkclient.ZkClient;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.io.File;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Properties;
-import java.util.UUID;
 
 public class TestLowLevelKafkaConsumer {
-
-  private static KafkaServer kafkaServer;
-  private static ZkClient zkClient;
-  private static EmbeddedZookeeper zkServer;
-  private static int port;
 
   private static Producer<String, String> producer;
 
   private static final String HOST = "localhost";
-  private static final int BROKER_ID = 0;
   private static final int PARTITIONS = 1;
   private static final int REPLICATION_FACTOR = 1;
-  private static final String TOPIC = "test";
-  private static final int TIME_OUT = 5000;
-
-  private static String originalTmpDir;
+  private static KafkaServer kafkaServer;
+  private static int port;
 
   @Before
   public void setUp() {
-    //Init zookeeper
-    originalTmpDir = System.getProperty("java.io.tmpdir");
-    File testDir = new File("target", UUID.randomUUID().toString()).getAbsoluteFile();
-    Assert.assertTrue(testDir.mkdirs());
-    System.setProperty("java.io.tmpdir", testDir.getAbsolutePath());
-
-    String zkConnect = TestZKUtils.zookeeperConnect();
-    zkServer = new EmbeddedZookeeper(zkConnect);
-    zkClient = new ZkClient(zkServer.connectString(), 30000, 30000, ZKStringSerializer$.MODULE$);
-    // setup Broker
-    port = TestUtils.choosePort();
-    Properties props = TestUtils.createBrokerConfig(BROKER_ID, port);
-    List<KafkaServer> servers = new ArrayList<>();
-    kafkaServer = TestUtils.createServer(new KafkaConfig(props), new MockTime());
-    servers.add(kafkaServer);
-
-    producer = KafkaTestUtil.createProducer(HOST, port, true);
+    KafkaTestUtil.startZookeeper();
+    KafkaTestUtil.startKafkaBrokers(1);
+    producer = KafkaTestUtil.createProducer(KafkaTestUtil.getMetadataBrokerURI(), true);
+    kafkaServer = KafkaTestUtil.getKafkaServers().get(0);
+    String[] split = KafkaTestUtil.getMetadataBrokerURI().split(":");
+    port = Integer.parseInt(split[1]);
   }
 
   @After
   public void tearDown() {
-    kafkaServer.shutdown();
-    zkClient.close();
-    zkServer.shutdown();
-    System.setProperty("java.io.tmpdir", originalTmpDir);
+    KafkaTestUtil.shutdown();
   }
 
   @Test(expected = StageException.class)
   public void testReadAfterKafkaShutdown() throws Exception {
-    KafkaTestUtil.createTopic(zkClient, ImmutableList.of(kafkaServer), "testReadAfterZookeeperShutdown", PARTITIONS,
-      REPLICATION_FACTOR, TIME_OUT);
-    List<KeyedMessage<String, String>> data = KafkaTestUtil.produceStringMessages("testProduceStringRecords",
-      String.valueOf(0));
+    KafkaTestUtil.createTopic("testReadAfterZookeeperShutdown", PARTITIONS, REPLICATION_FACTOR);
+    List<KeyedMessage<String, String>> data = KafkaTestUtil.produceStringMessages("testReadAfterZookeeperShutdown",
+      String.valueOf(0), 9);
     //writes 9 messages to kafka topic
     for(KeyedMessage<String, String> d : data) {
       producer.send(d);
     }
 
-    LowLevelKafkaConsumer kafkaConsumer = new LowLevelKafkaConsumer("testReadAfterZookeeperShutdown", 0, new KafkaBroker(HOST, port), 0, 8000,
+    LowLevelKafkaConsumer kafkaConsumer = new LowLevelKafkaConsumer("testReadAfterZookeeperShutdown", 0,
+      new KafkaBroker(HOST, port), 0, 8000,
       2000, "testKafkaConsumer" + "_client");
     kafkaConsumer.init();
     //shutdown zookeeper server
@@ -99,10 +65,9 @@ public class TestLowLevelKafkaConsumer {
 
   @Test(expected = StageException.class)
   public void testGetOffsetAfterKafkaShutdown() throws Exception {
-    KafkaTestUtil.createTopic(zkClient, ImmutableList.of(kafkaServer), "testGetOffsetAfterZookeeperShutdown", PARTITIONS,
-      REPLICATION_FACTOR, TIME_OUT);
+    KafkaTestUtil.createTopic("testGetOffsetAfterZookeeperShutdown", PARTITIONS, REPLICATION_FACTOR);
     List<KeyedMessage<String, String>> data = KafkaTestUtil.produceStringMessages("testGetOffsetAfterZookeeperShutdown",
-      String.valueOf(0));
+      String.valueOf(0), 9);
     //writes 9 messages to kafka topic
     for(KeyedMessage<String, String> d : data) {
       producer.send(d);
@@ -119,10 +84,9 @@ public class TestLowLevelKafkaConsumer {
 
   @Test
   public void testReadInvalidOffset() throws Exception {
-    KafkaTestUtil.createTopic(zkClient, ImmutableList.of(kafkaServer), "testReadInvalidOffset", PARTITIONS,
-      REPLICATION_FACTOR, TIME_OUT);
+    KafkaTestUtil.createTopic("testReadInvalidOffset", PARTITIONS, REPLICATION_FACTOR);
     List<KeyedMessage<String, String>> data = KafkaTestUtil.produceStringMessages("testReadInvalidOffset",
-      String.valueOf(0));
+      String.valueOf(0), 9);
     //writes 9 messages to kafka topic
     for(KeyedMessage<String, String> d : data) {
       producer.send(d);
@@ -138,10 +102,9 @@ public class TestLowLevelKafkaConsumer {
 
   @Test
   public void testReadValidOffset() throws Exception {
-    KafkaTestUtil.createTopic(zkClient, ImmutableList.of(kafkaServer), "testReadValidOffset", PARTITIONS,
-      REPLICATION_FACTOR, TIME_OUT);
+    KafkaTestUtil.createTopic("testReadValidOffset", PARTITIONS, REPLICATION_FACTOR);
     List<KeyedMessage<String, String>> data = KafkaTestUtil.produceStringMessages("testReadValidOffset",
-      String.valueOf(0));
+      String.valueOf(0), 9);
     //writes 9 messages to kafka topic
     for(KeyedMessage<String, String> d : data) {
       producer.send(d);
