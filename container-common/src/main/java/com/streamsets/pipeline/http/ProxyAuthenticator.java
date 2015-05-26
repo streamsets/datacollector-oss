@@ -19,6 +19,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.security.Principal;
+import java.util.Map;
 
 
 public class ProxyAuthenticator extends LoginAuthenticator {
@@ -93,13 +94,9 @@ public class ProxyAuthenticator extends LoginAuthenticator {
       }
 
       if(authToken != null && runtimeInfo.isValidAuthenticationToken(authToken)) {
-        //TODO: Get user name from Request header and use that name for creating Principal
-        Principal userPrincipal = new MappedLoginService.KnownUser(authUser, null);
-        Subject subject = new Subject();
-        subject.getPrincipals().add(userPrincipal);
-        subject.setReadOnly();
-        String [] roles = runtimeInfo.getRolesFromAuthenticationToken(authToken);
-        UserIdentity userIdentity = _identityService.newUserIdentity(subject,userPrincipal, roles);
+        HashLoginService loginService = (HashLoginService)getLoginService();
+        Map<String, UserIdentity> usersMap = loginService.getUsers();
+        UserIdentity userIdentity = usersMap.get(authUser);
 
         Authentication cached=new SessionAuthentication(getAuthMethod(), userIdentity, null);
         session.setAttribute(SessionAuthentication.__J_AUTHENTICATED, cached);

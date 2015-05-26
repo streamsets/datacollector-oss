@@ -1,0 +1,763 @@
+{
+  "version" : "3.0.0",
+  "gauges" : {
+    "RuntimeStatsGauge.gauge" : {
+      "value" : {
+        "batchCount" : 9,
+        "currentSourceOffset" : "random",
+        "currentBatchAge" : 0,
+        "currentStage" : "com_streamsets_pipeline_stage_devtest_RandomSource1432492071220",
+        "timeInCurrentStage" : 0,
+        "timeOfLastReceivedRecord" : 1432577864199,
+        "batchStartTime" : 1432577864212
+      }
+    },
+    "health.DataObserverRunnable.gauge" : {
+      "value" : {
+        "threadName" : "DataObserverRunnable",
+        "scheduledDelay" : -1,
+        "timestamp" : 1432577863874
+      }
+    },
+    "health.MetricObserverRunnable.gauge" : {
+      "value" : {
+        "threadName" : "MetricObserverRunnable",
+        "scheduledDelay" : 1,
+        "timestamp" : 1432577863855
+      }
+    },
+    "health.MetricsEventRunnable.gauge" : {
+      "value" : {
+        "threadName" : "MetricsEventRunnable",
+        "scheduledDelay" : 2,
+        "timestamp" : 1432577863640
+      }
+    },
+    "health.ProductionPipelineRunnable.gauge" : {
+      "value" : {
+        "threadName" : "ProductionPipelineRunnable",
+        "scheduledDelay" : -1,
+        "timestamp" : 1432577864212
+      }
+    },
+    "health.RulesConfigLoaderRunnable.gauge" : {
+      "value" : {
+        "threadName" : "RulesConfigLoaderRunnable",
+        "scheduledDelay" : 2,
+        "timestamp" : 1432577863855
+      }
+    }
+  },
+  "counters" : {
+    "pipeline.memoryConsumed.counter" : {
+      "count" : 364440
+    },
+    "stage.com_streamsets_pipeline_stage_destination_devnull_NullDTarget1432510114123.errorRecords.counter" : {
+      "count" : 0
+    },
+    "stage.com_streamsets_pipeline_stage_destination_devnull_NullDTarget1432510114123.inputRecords.counter" : {
+      "count" : 12498
+    },
+    "stage.com_streamsets_pipeline_stage_destination_devnull_NullDTarget1432510114123.memoryConsumed.counter" : {
+      "count" : 364440
+    },
+    "stage.com_streamsets_pipeline_stage_destination_devnull_NullDTarget1432510114123.outputRecords.counter" : {
+      "count" : 12498
+    },
+    "stage.com_streamsets_pipeline_stage_destination_devnull_NullDTarget1432510114123.stageErrors.counter" : {
+      "count" : 0
+    },
+    "stage.com_streamsets_pipeline_stage_devtest_RandomErrorProcessor1432492075926.errorRecords.counter" : {
+      "count" : 1491
+    },
+    "stage.com_streamsets_pipeline_stage_devtest_RandomErrorProcessor1432492075926.inputRecords.counter" : {
+      "count" : 8964
+    },
+    "stage.com_streamsets_pipeline_stage_devtest_RandomErrorProcessor1432492075926.memoryConsumed.counter" : {
+      "count" : 147024
+    },
+    "stage.com_streamsets_pipeline_stage_devtest_RandomErrorProcessor1432492075926.outputRecords.counter" : {
+      "count" : 6249
+    },
+    "stage.com_streamsets_pipeline_stage_devtest_RandomErrorProcessor1432492075926.stageErrors.counter" : {
+      "count" : 6
+    },
+    "stage.com_streamsets_pipeline_stage_devtest_RandomSource1432492071220.errorRecords.counter" : {
+      "count" : 0
+    },
+    "stage.com_streamsets_pipeline_stage_devtest_RandomSource1432492071220.inputRecords.counter" : {
+      "count" : 0
+    },
+    "stage.com_streamsets_pipeline_stage_devtest_RandomSource1432492071220.memoryConsumed.counter" : {
+      "count" : 147696
+    },
+    "stage.com_streamsets_pipeline_stage_devtest_RandomSource1432492071220.outputRecords.counter" : {
+      "count" : 8964
+    },
+    "stage.com_streamsets_pipeline_stage_devtest_RandomSource1432492071220.stageErrors.counter" : {
+      "count" : 0
+    },
+    "stage.com_streamsets_pipeline_stage_devtest_RecordCreatorProcessor1432577847134.errorRecords.counter" : {
+      "count" : 0
+    },
+    "stage.com_streamsets_pipeline_stage_devtest_RecordCreatorProcessor1432577847134.inputRecords.counter" : {
+      "count" : 6249
+    },
+    "stage.com_streamsets_pipeline_stage_devtest_RecordCreatorProcessor1432577847134.memoryConsumed.counter" : {
+      "count" : 146976
+    },
+    "stage.com_streamsets_pipeline_stage_devtest_RecordCreatorProcessor1432577847134.outputRecords.counter" : {
+      "count" : 12498
+    },
+    "stage.com_streamsets_pipeline_stage_devtest_RecordCreatorProcessor1432577847134.stageErrors.counter" : {
+      "count" : 0
+    }
+  },
+  "histograms" : {
+    "pipeline.errorRecordsPerBatch.histogramM5" : {
+      "count" : 9,
+      "max" : 188,
+      "mean" : 165.89939237200105,
+      "min" : 146,
+      "p50" : 165.0,
+      "p75" : 171.0,
+      "p95" : 188.0,
+      "p98" : 188.0,
+      "p99" : 188.0,
+      "p999" : 188.0,
+      "stddev" : 10.92413250037197
+    },
+    "pipeline.errorsPerBatch.histogramM5" : {
+      "count" : 9,
+      "max" : 1,
+      "mean" : 0.6572979374537407,
+      "min" : 0,
+      "p50" : 1.0,
+      "p75" : 1.0,
+      "p95" : 1.0,
+      "p98" : 1.0,
+      "p99" : 1.0,
+      "p999" : 1.0,
+      "stddev" : 0.47461285156725275
+    },
+    "pipeline.inputRecordsPerBatch.histogramM5" : {
+      "count" : 9,
+      "max" : 1000,
+      "mean" : 996.2801386852376,
+      "min" : 964,
+      "p50" : 1000.0,
+      "p75" : 1000.0,
+      "p95" : 1000.0,
+      "p98" : 1000.0,
+      "p99" : 1000.0,
+      "p999" : 1000.0,
+      "stddev" : 10.957994302352152
+    },
+    "pipeline.outputRecordsPerBatch.histogramM5" : {
+      "count" : 9,
+      "max" : 1430,
+      "mean" : 1389.3062297100676,
+      "min" : 1322,
+      "p50" : 1396.0,
+      "p75" : 1414.0,
+      "p95" : 1430.0,
+      "p98" : 1430.0,
+      "p99" : 1430.0,
+      "p999" : 1430.0,
+      "stddev" : 31.74202582257841
+    },
+    "stage.com_streamsets_pipeline_stage_destination_devnull_NullDTarget1432510114123.errorRecords.histogramM5" : {
+      "count" : 9,
+      "max" : 0,
+      "mean" : 0.0,
+      "min" : 0,
+      "p50" : 0.0,
+      "p75" : 0.0,
+      "p95" : 0.0,
+      "p98" : 0.0,
+      "p99" : 0.0,
+      "p999" : 0.0,
+      "stddev" : 0.0
+    },
+    "stage.com_streamsets_pipeline_stage_destination_devnull_NullDTarget1432510114123.inputRecords.histogramM5" : {
+      "count" : 9,
+      "max" : 1430,
+      "mean" : 1389.3062297100676,
+      "min" : 1322,
+      "p50" : 1396.0,
+      "p75" : 1414.0,
+      "p95" : 1430.0,
+      "p98" : 1430.0,
+      "p99" : 1430.0,
+      "p999" : 1430.0,
+      "stddev" : 31.74202582257841
+    },
+    "stage.com_streamsets_pipeline_stage_destination_devnull_NullDTarget1432510114123.outputRecords.histogramM5" : {
+      "count" : 9,
+      "max" : 1430,
+      "mean" : 1389.3062297100676,
+      "min" : 1322,
+      "p50" : 1396.0,
+      "p75" : 1414.0,
+      "p95" : 1430.0,
+      "p98" : 1430.0,
+      "p99" : 1430.0,
+      "p999" : 1430.0,
+      "stddev" : 31.74202582257841
+    },
+    "stage.com_streamsets_pipeline_stage_destination_devnull_NullDTarget1432510114123.stageErrors.histogramM5" : {
+      "count" : 9,
+      "max" : 0,
+      "mean" : 0.0,
+      "min" : 0,
+      "p50" : 0.0,
+      "p75" : 0.0,
+      "p95" : 0.0,
+      "p98" : 0.0,
+      "p99" : 0.0,
+      "p999" : 0.0,
+      "stddev" : 0.0
+    },
+    "stage.com_streamsets_pipeline_stage_devtest_RandomErrorProcessor1432492075926.errorRecords.histogramM5" : {
+      "count" : 9,
+      "max" : 188,
+      "mean" : 165.89939237200105,
+      "min" : 146,
+      "p50" : 165.0,
+      "p75" : 171.0,
+      "p95" : 188.0,
+      "p98" : 188.0,
+      "p99" : 188.0,
+      "p999" : 188.0,
+      "stddev" : 10.92413250037197
+    },
+    "stage.com_streamsets_pipeline_stage_devtest_RandomErrorProcessor1432492075926.inputRecords.histogramM5" : {
+      "count" : 9,
+      "max" : 1000,
+      "mean" : 996.2801386852377,
+      "min" : 964,
+      "p50" : 1000.0,
+      "p75" : 1000.0,
+      "p95" : 1000.0,
+      "p98" : 1000.0,
+      "p99" : 1000.0,
+      "p999" : 1000.0,
+      "stddev" : 10.957994302352153
+    },
+    "stage.com_streamsets_pipeline_stage_devtest_RandomErrorProcessor1432492075926.outputRecords.histogramM5" : {
+      "count" : 9,
+      "max" : 715,
+      "mean" : 694.6531148550338,
+      "min" : 661,
+      "p50" : 698.0,
+      "p75" : 707.0,
+      "p95" : 715.0,
+      "p98" : 715.0,
+      "p99" : 715.0,
+      "p999" : 715.0,
+      "stddev" : 15.871012911289204
+    },
+    "stage.com_streamsets_pipeline_stage_devtest_RandomErrorProcessor1432492075926.stageErrors.histogramM5" : {
+      "count" : 9,
+      "max" : 1,
+      "mean" : 0.6572979374537407,
+      "min" : 0,
+      "p50" : 1.0,
+      "p75" : 1.0,
+      "p95" : 1.0,
+      "p98" : 1.0,
+      "p99" : 1.0,
+      "p999" : 1.0,
+      "stddev" : 0.47461285156725275
+    },
+    "stage.com_streamsets_pipeline_stage_devtest_RandomSource1432492071220.errorRecords.histogramM5" : {
+      "count" : 9,
+      "max" : 0,
+      "mean" : 0.0,
+      "min" : 0,
+      "p50" : 0.0,
+      "p75" : 0.0,
+      "p95" : 0.0,
+      "p98" : 0.0,
+      "p99" : 0.0,
+      "p999" : 0.0,
+      "stddev" : 0.0
+    },
+    "stage.com_streamsets_pipeline_stage_devtest_RandomSource1432492071220.inputRecords.histogramM5" : {
+      "count" : 9,
+      "max" : 0,
+      "mean" : 0.0,
+      "min" : 0,
+      "p50" : 0.0,
+      "p75" : 0.0,
+      "p95" : 0.0,
+      "p98" : 0.0,
+      "p99" : 0.0,
+      "p999" : 0.0,
+      "stddev" : 0.0
+    },
+    "stage.com_streamsets_pipeline_stage_devtest_RandomSource1432492071220.outputRecords.histogramM5" : {
+      "count" : 9,
+      "max" : 1000,
+      "mean" : 996.2741430970859,
+      "min" : 964,
+      "p50" : 1000.0,
+      "p75" : 1000.0,
+      "p95" : 1000.0,
+      "p98" : 1000.0,
+      "p99" : 1000.0,
+      "p999" : 1000.0,
+      "stddev" : 10.965803155442375
+    },
+    "stage.com_streamsets_pipeline_stage_devtest_RandomSource1432492071220.stageErrors.histogramM5" : {
+      "count" : 9,
+      "max" : 0,
+      "mean" : 0.0,
+      "min" : 0,
+      "p50" : 0.0,
+      "p75" : 0.0,
+      "p95" : 0.0,
+      "p98" : 0.0,
+      "p99" : 0.0,
+      "p999" : 0.0,
+      "stddev" : 0.0
+    },
+    "stage.com_streamsets_pipeline_stage_devtest_RecordCreatorProcessor1432577847134.errorRecords.histogramM5" : {
+      "count" : 9,
+      "max" : 0,
+      "mean" : 0.0,
+      "min" : 0,
+      "p50" : 0.0,
+      "p75" : 0.0,
+      "p95" : 0.0,
+      "p98" : 0.0,
+      "p99" : 0.0,
+      "p999" : 0.0,
+      "stddev" : 0.0
+    },
+    "stage.com_streamsets_pipeline_stage_devtest_RecordCreatorProcessor1432577847134.inputRecords.histogramM5" : {
+      "count" : 9,
+      "max" : 715,
+      "mean" : 694.6531148550338,
+      "min" : 661,
+      "p50" : 698.0,
+      "p75" : 707.0,
+      "p95" : 715.0,
+      "p98" : 715.0,
+      "p99" : 715.0,
+      "p999" : 715.0,
+      "stddev" : 15.871012911289204
+    },
+    "stage.com_streamsets_pipeline_stage_devtest_RecordCreatorProcessor1432577847134.outputRecords.histogramM5" : {
+      "count" : 9,
+      "max" : 1430,
+      "mean" : 1389.3062297100676,
+      "min" : 1322,
+      "p50" : 1396.0,
+      "p75" : 1414.0,
+      "p95" : 1430.0,
+      "p98" : 1430.0,
+      "p99" : 1430.0,
+      "p999" : 1430.0,
+      "stddev" : 31.74202582257841
+    },
+    "stage.com_streamsets_pipeline_stage_devtest_RecordCreatorProcessor1432577847134.stageErrors.histogramM5" : {
+      "count" : 9,
+      "max" : 0,
+      "mean" : 0.0,
+      "min" : 0,
+      "p50" : 0.0,
+      "p75" : 0.0,
+      "p95" : 0.0,
+      "p98" : 0.0,
+      "p99" : 0.0,
+      "p999" : 0.0,
+      "stddev" : 0.0
+    }
+  },
+  "meters" : {
+    "custom.com_streamsets_pipeline_stage_devtest_RandomSource1432492071220.randomizer.meter" : {
+      "count" : -253783818299,
+      "m1_rate" : -1.36374696992E10,
+      "m5_rate" : -1.36374696992E10,
+      "m15_rate" : -1.36374696992E10,
+      "m30_rate" : -1.36374696992E10,
+      "h1_rate" : -1.36374696992E10,
+      "h6_rate" : -1.36374696992E10,
+      "h12_rate" : -1.36374696992E10,
+      "h24_rate" : -1.36374696992E10,
+      "mean_rate" : -2.6351627976372196E10,
+      "units" : "events/second"
+    },
+    "pipeline.batchCount.meter" : {
+      "count" : 9,
+      "m1_rate" : 0.8,
+      "m5_rate" : 0.8,
+      "m15_rate" : 0.8,
+      "m30_rate" : 0.8,
+      "h1_rate" : 0.8,
+      "h6_rate" : 0.8,
+      "h12_rate" : 0.8,
+      "h24_rate" : 0.8,
+      "mean_rate" : 0.9341576007442194,
+      "units" : "events/second"
+    },
+    "pipeline.batchErrorMessages.meter" : {
+      "count" : 6,
+      "m1_rate" : 0.8,
+      "m5_rate" : 0.8,
+      "m15_rate" : 0.8,
+      "m30_rate" : 0.8,
+      "h1_rate" : 0.8,
+      "h6_rate" : 0.8,
+      "h12_rate" : 0.8,
+      "h24_rate" : 0.8,
+      "mean_rate" : 0.6227738698911195,
+      "units" : "events/second"
+    },
+    "pipeline.batchErrorRecords.meter" : {
+      "count" : 1491,
+      "m1_rate" : 126.8,
+      "m5_rate" : 126.8,
+      "m15_rate" : 126.8,
+      "m30_rate" : 126.8,
+      "h1_rate" : 126.8,
+      "h6_rate" : 126.8,
+      "h12_rate" : 126.8,
+      "h24_rate" : 126.8,
+      "mean_rate" : 154.7591046234906,
+      "units" : "events/second"
+    },
+    "pipeline.batchInputRecords.meter" : {
+      "count" : 8964,
+      "m1_rate" : 792.8,
+      "m5_rate" : 792.8,
+      "m15_rate" : 792.8,
+      "m30_rate" : 792.8,
+      "h1_rate" : 792.8,
+      "h6_rate" : 792.8,
+      "h12_rate" : 792.8,
+      "h24_rate" : 792.8,
+      "mean_rate" : 930.4215112486859,
+      "units" : "events/second"
+    },
+    "pipeline.batchOutputRecords.meter" : {
+      "count" : 12498,
+      "m1_rate" : 1102.0,
+      "m5_rate" : 1102.0,
+      "m15_rate" : 1102.0,
+      "m30_rate" : 1102.0,
+      "h1_rate" : 1102.0,
+      "h6_rate" : 1102.0,
+      "h12_rate" : 1102.0,
+      "h24_rate" : 1102.0,
+      "mean_rate" : 1297.2348100026281,
+      "units" : "events/second"
+    },
+    "stage.com_streamsets_pipeline_stage_destination_devnull_NullDTarget1432510114123.errorRecords.meter" : {
+      "count" : 0,
+      "m1_rate" : 0.0,
+      "m5_rate" : 0.0,
+      "m15_rate" : 0.0,
+      "m30_rate" : 0.0,
+      "h1_rate" : 0.0,
+      "h6_rate" : 0.0,
+      "h12_rate" : 0.0,
+      "h24_rate" : 0.0,
+      "mean_rate" : 0.0,
+      "units" : "events/second"
+    },
+    "stage.com_streamsets_pipeline_stage_destination_devnull_NullDTarget1432510114123.inputRecords.meter" : {
+      "count" : 12498,
+      "m1_rate" : 1102.0,
+      "m5_rate" : 1102.0,
+      "m15_rate" : 1102.0,
+      "m30_rate" : 1102.0,
+      "h1_rate" : 1102.0,
+      "h6_rate" : 1102.0,
+      "h12_rate" : 1102.0,
+      "h24_rate" : 1102.0,
+      "mean_rate" : 1298.4409298210217,
+      "units" : "events/second"
+    },
+    "stage.com_streamsets_pipeline_stage_destination_devnull_NullDTarget1432510114123.outputRecords.meter" : {
+      "count" : 12498,
+      "m1_rate" : 1102.0,
+      "m5_rate" : 1102.0,
+      "m15_rate" : 1102.0,
+      "m30_rate" : 1102.0,
+      "h1_rate" : 1102.0,
+      "h6_rate" : 1102.0,
+      "h12_rate" : 1102.0,
+      "h24_rate" : 1102.0,
+      "mean_rate" : 1298.450168476356,
+      "units" : "events/second"
+    },
+    "stage.com_streamsets_pipeline_stage_destination_devnull_NullDTarget1432510114123.stageErrors.meter" : {
+      "count" : 0,
+      "m1_rate" : 0.0,
+      "m5_rate" : 0.0,
+      "m15_rate" : 0.0,
+      "m30_rate" : 0.0,
+      "h1_rate" : 0.0,
+      "h6_rate" : 0.0,
+      "h12_rate" : 0.0,
+      "h24_rate" : 0.0,
+      "mean_rate" : 0.0,
+      "units" : "events/second"
+    },
+    "stage.com_streamsets_pipeline_stage_devtest_RandomErrorProcessor1432492075926.errorRecords.meter" : {
+      "count" : 1491,
+      "m1_rate" : 126.8,
+      "m5_rate" : 126.8,
+      "m15_rate" : 126.8,
+      "m30_rate" : 126.8,
+      "h1_rate" : 126.8,
+      "h6_rate" : 126.8,
+      "h12_rate" : 126.8,
+      "h24_rate" : 126.8,
+      "mean_rate" : 154.8645366795499,
+      "units" : "events/second"
+    },
+    "stage.com_streamsets_pipeline_stage_devtest_RandomErrorProcessor1432492075926.inputRecords.meter" : {
+      "count" : 8964,
+      "m1_rate" : 792.8,
+      "m5_rate" : 792.8,
+      "m15_rate" : 792.8,
+      "m30_rate" : 792.8,
+      "h1_rate" : 792.8,
+      "h6_rate" : 792.8,
+      "h12_rate" : 792.8,
+      "h24_rate" : 792.8,
+      "mean_rate" : 931.0374271112984,
+      "units" : "events/second"
+    },
+    "stage.com_streamsets_pipeline_stage_devtest_RandomErrorProcessor1432492075926.outputRecords.meter" : {
+      "count" : 6249,
+      "m1_rate" : 551.0,
+      "m5_rate" : 551.0,
+      "m15_rate" : 551.0,
+      "m30_rate" : 551.0,
+      "h1_rate" : 551.0,
+      "h6_rate" : 551.0,
+      "h12_rate" : 551.0,
+      "h24_rate" : 551.0,
+      "mean_rate" : 649.0539505737786,
+      "units" : "events/second"
+    },
+    "stage.com_streamsets_pipeline_stage_devtest_RandomErrorProcessor1432492075926.stageErrors.meter" : {
+      "count" : 6,
+      "m1_rate" : 0.8,
+      "m5_rate" : 0.8,
+      "m15_rate" : 0.8,
+      "m30_rate" : 0.8,
+      "h1_rate" : 0.8,
+      "h6_rate" : 0.8,
+      "h12_rate" : 0.8,
+      "h24_rate" : 0.8,
+      "mean_rate" : 0.6232052197971599,
+      "units" : "events/second"
+    },
+    "stage.com_streamsets_pipeline_stage_devtest_RandomSource1432492071220.errorRecords.meter" : {
+      "count" : 0,
+      "m1_rate" : 0.0,
+      "m5_rate" : 0.0,
+      "m15_rate" : 0.0,
+      "m30_rate" : 0.0,
+      "h1_rate" : 0.0,
+      "h6_rate" : 0.0,
+      "h12_rate" : 0.0,
+      "h24_rate" : 0.0,
+      "mean_rate" : 0.0,
+      "units" : "events/second"
+    },
+    "stage.com_streamsets_pipeline_stage_devtest_RandomSource1432492071220.inputRecords.meter" : {
+      "count" : 0,
+      "m1_rate" : 0.0,
+      "m5_rate" : 0.0,
+      "m15_rate" : 0.0,
+      "m30_rate" : 0.0,
+      "h1_rate" : 0.0,
+      "h6_rate" : 0.0,
+      "h12_rate" : 0.0,
+      "h24_rate" : 0.0,
+      "mean_rate" : 0.0,
+      "units" : "events/second"
+    },
+    "stage.com_streamsets_pipeline_stage_devtest_RandomSource1432492071220.outputRecords.meter" : {
+      "count" : 8964,
+      "m1_rate" : 792.8,
+      "m5_rate" : 792.8,
+      "m15_rate" : 792.8,
+      "m30_rate" : 792.8,
+      "h1_rate" : 792.8,
+      "h6_rate" : 792.8,
+      "h12_rate" : 792.8,
+      "h24_rate" : 792.8,
+      "mean_rate" : 930.901542128753,
+      "units" : "events/second"
+    },
+    "stage.com_streamsets_pipeline_stage_devtest_RandomSource1432492071220.stageErrors.meter" : {
+      "count" : 0,
+      "m1_rate" : 0.0,
+      "m5_rate" : 0.0,
+      "m15_rate" : 0.0,
+      "m30_rate" : 0.0,
+      "h1_rate" : 0.0,
+      "h6_rate" : 0.0,
+      "h12_rate" : 0.0,
+      "h24_rate" : 0.0,
+      "mean_rate" : 0.0,
+      "units" : "events/second"
+    },
+    "stage.com_streamsets_pipeline_stage_devtest_RecordCreatorProcessor1432577847134.errorRecords.meter" : {
+      "count" : 0,
+      "m1_rate" : 0.0,
+      "m5_rate" : 0.0,
+      "m15_rate" : 0.0,
+      "m30_rate" : 0.0,
+      "h1_rate" : 0.0,
+      "h6_rate" : 0.0,
+      "h12_rate" : 0.0,
+      "h24_rate" : 0.0,
+      "mean_rate" : 0.0,
+      "units" : "events/second"
+    },
+    "stage.com_streamsets_pipeline_stage_devtest_RecordCreatorProcessor1432577847134.inputRecords.meter" : {
+      "count" : 6249,
+      "m1_rate" : 551.0,
+      "m5_rate" : 551.0,
+      "m15_rate" : 551.0,
+      "m30_rate" : 551.0,
+      "h1_rate" : 551.0,
+      "h6_rate" : 551.0,
+      "h12_rate" : 551.0,
+      "h24_rate" : 551.0,
+      "mean_rate" : 649.1395495193661,
+      "units" : "events/second"
+    },
+    "stage.com_streamsets_pipeline_stage_devtest_RecordCreatorProcessor1432577847134.outputRecords.meter" : {
+      "count" : 12498,
+      "m1_rate" : 1102.0,
+      "m5_rate" : 1102.0,
+      "m15_rate" : 1102.0,
+      "m30_rate" : 1102.0,
+      "h1_rate" : 1102.0,
+      "h6_rate" : 1102.0,
+      "h12_rate" : 1102.0,
+      "h24_rate" : 1102.0,
+      "mean_rate" : 1298.2836111948372,
+      "units" : "events/second"
+    },
+    "stage.com_streamsets_pipeline_stage_devtest_RecordCreatorProcessor1432577847134.stageErrors.meter" : {
+      "count" : 0,
+      "m1_rate" : 0.0,
+      "m5_rate" : 0.0,
+      "m15_rate" : 0.0,
+      "m30_rate" : 0.0,
+      "h1_rate" : 0.0,
+      "h6_rate" : 0.0,
+      "h12_rate" : 0.0,
+      "h24_rate" : 0.0,
+      "mean_rate" : 0.0,
+      "units" : "events/second"
+    }
+  },
+  "timers" : {
+    "pipeline.batchProcessing.timer" : {
+      "count" : 9,
+      "max" : 1.09,
+      "mean" : 1.039777777777778,
+      "min" : 1.0210000000000001,
+      "p50" : 1.032,
+      "p75" : 1.0495,
+      "p95" : 1.09,
+      "p98" : 1.09,
+      "p99" : 1.09,
+      "p999" : 1.09,
+      "stddev" : 0.02136456047861609,
+      "m15_rate" : 0.8,
+      "m1_rate" : 0.8,
+      "m5_rate" : 0.8,
+      "mean_rate" : 0.9341335130139561,
+      "duration_units" : "seconds",
+      "rate_units" : "calls/second"
+    },
+    "stage.com_streamsets_pipeline_stage_destination_devnull_NullDTarget1432510114123.batchProcessing.timer" : {
+      "count" : 9,
+      "max" : 0.0,
+      "mean" : 0.0,
+      "min" : 0.0,
+      "p50" : 0.0,
+      "p75" : 0.0,
+      "p95" : 0.0,
+      "p98" : 0.0,
+      "p99" : 0.0,
+      "p999" : 0.0,
+      "stddev" : 0.0,
+      "m15_rate" : 0.8,
+      "m1_rate" : 0.8,
+      "m5_rate" : 0.8,
+      "mean_rate" : 0.9349678574251533,
+      "duration_units" : "seconds",
+      "rate_units" : "calls/second"
+    },
+    "stage.com_streamsets_pipeline_stage_devtest_RandomErrorProcessor1432492075926.batchProcessing.timer" : {
+      "count" : 9,
+      "max" : 0.057,
+      "mean" : 0.011000000000000001,
+      "min" : 0.003,
+      "p50" : 0.005,
+      "p75" : 0.008,
+      "p95" : 0.057,
+      "p98" : 0.057,
+      "p99" : 0.057,
+      "p999" : 0.057,
+      "stddev" : 0.01734935157289747,
+      "m15_rate" : 0.8,
+      "m1_rate" : 0.8,
+      "m5_rate" : 0.8,
+      "mean_rate" : 0.9346969687091965,
+      "duration_units" : "seconds",
+      "rate_units" : "calls/second"
+    },
+    "stage.com_streamsets_pipeline_stage_devtest_RandomSource1432492071220.batchProcessing.timer" : {
+      "count" : 9,
+      "max" : 1.0170000000000001,
+      "mean" : 1.0121111111111112,
+      "min" : 1.0090000000000001,
+      "p50" : 1.0110000000000001,
+      "p75" : 1.0150000000000001,
+      "p95" : 1.0170000000000001,
+      "p98" : 1.0170000000000001,
+      "p99" : 1.0170000000000001,
+      "p999" : 1.0170000000000001,
+      "stddev" : 0.0030595932917809703,
+      "m15_rate" : 0.8,
+      "m1_rate" : 0.8,
+      "m5_rate" : 0.8,
+      "mean_rate" : 0.9345607484255551,
+      "duration_units" : "seconds",
+      "rate_units" : "calls/second"
+    },
+    "stage.com_streamsets_pipeline_stage_devtest_RecordCreatorProcessor1432577847134.batchProcessing.timer" : {
+      "count" : 9,
+      "max" : 0.025,
+      "mean" : 0.011222222222222222,
+      "min" : 0.004,
+      "p50" : 0.011000000000000001,
+      "p75" : 0.015000000000000001,
+      "p95" : 0.025,
+      "p98" : 0.025,
+      "p99" : 0.025,
+      "p999" : 0.025,
+      "stddev" : 0.006514940095230688,
+      "m15_rate" : 0.8,
+      "m1_rate" : 0.8,
+      "m5_rate" : 0.8,
+      "mean_rate" : 0.9348283254994376,
+      "duration_units" : "seconds",
+      "rate_units" : "calls/second"
+    }
+  }
+}
