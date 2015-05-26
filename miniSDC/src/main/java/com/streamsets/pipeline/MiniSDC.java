@@ -44,9 +44,8 @@ public class MiniSDC {
     streamsetsLibsUrls = BootstrapMain.getStageLibrariesClasspaths(libraryRoot + "/streamsets-libs");
     userLibsUrls = BootstrapMain.getStageLibrariesClasspaths(libraryRoot + "/user-libs");
 
-    ClassLoader apiCL =
-      new BlackListURLClassLoader("api-lib", "API", apiUrls, ClassLoader.getSystemClassLoader(), null);
-    ClassLoader containerCL = new BlackListURLClassLoader("container-lib", "Container", containerUrls, apiCL, null);
+    ClassLoader apiCL = SDCClassLoader.getAPIClassLoader(apiUrls, ClassLoader.getSystemClassLoader());
+    ClassLoader containerCL = SDCClassLoader.getContainerCLassLoader(containerUrls, apiCL);
     List<ClassLoader> stageLibrariesCLs = new ArrayList<>();
     Map<String, List<URL>> libsUrls = new LinkedHashMap<>();
     libsUrls.putAll(streamsetsLibsUrls);
@@ -59,8 +58,7 @@ public class MiniSDC {
       }
       String type = parts[0];
       String name = parts[1];
-      stageLibrariesCLs.add(new BlackListURLClassLoader(type, name, entry.getValue(), apiCL,
-        BootstrapMain.PACKAGES_BLACKLIST_FOR_STAGE_LIBRARIES));
+      stageLibrariesCLs.add(SDCClassLoader.getStageClassLoader(type, name, entry.getValue(), apiCL));
     }
 
    injectStageLibraries(containerCL, stageLibrariesCLs);

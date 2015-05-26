@@ -107,10 +107,10 @@ public class BootstrapSpark {
     if (parent == null) {
       parent = ClassLoader.getSystemClassLoader();
     }
-    apiCL = new SDCClassLoader("api-lib", "API", apiUrls, parent, null,
-      SDCClassLoader.SYSTEM_API_CLASSES_DEFAULT, SDCClassLoader.APPLICATION_API_CLASSES_DEFAULT);
-    containerCL = new SDCClassLoader("container-lib", "Container", containerUrls, apiCL, null,
-      SDCClassLoader.SYSTEM_CONTAINER_CLASSES_DEFAULT, SDCClassLoader.APPLICATION_CONTAINER_CLASSES_DEFAULT);
+
+    apiCL = SDCClassLoader.getAPIClassLoader(apiUrls, parent);
+    containerCL = SDCClassLoader.getContainerCLassLoader(containerUrls, apiCL);
+
     stageLibrariesCLs = new ArrayList<ClassLoader>();
     String sparkLib = getSourceLibraryName(pipelineJson);
     if (sparkLib == null) {
@@ -126,9 +126,7 @@ public class BootstrapSpark {
       }
       String type = parts[0];
       String name = parts[1];
-      SDCClassLoader sdcClassLoader = new SDCClassLoader(type, name, entry.getValue(), apiCL,
-        BootstrapMain.PACKAGES_BLACKLIST_FOR_STAGE_LIBRARIES, SDCClassLoader.SYSTEM_STAGE_CLASSES_DEFAULT,
-        SDCClassLoader.APPLICATION_STAGE_CLASSES_DEFAULT);
+      SDCClassLoader sdcClassLoader = SDCClassLoader.getStageClassLoader(type, name, entry.getValue(), apiCL);
       // TODO add spark, scala, etc to blacklist
       if (lookupLib.equals(entry.getKey())) {
         if (sparkCL != null) {
