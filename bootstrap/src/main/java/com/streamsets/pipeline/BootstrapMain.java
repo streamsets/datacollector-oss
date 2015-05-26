@@ -16,17 +16,6 @@ import java.util.List;
 import java.util.Map;
 
 public class BootstrapMain {
-  /*
-   * Note:
-   * if you update this, you must also update stage-classloader.properties
-   */
-  public static final String[] PACKAGES_BLACKLIST_FOR_STAGE_LIBRARIES = {
-      "com.streamsets.pipeline.api.",
-      "com.streamsets.pipeline.container",
-      "com.codehale.metrics.",
-      "org.slf4j.",
-      "org.apache.log4j."
-  };
 
   private static final String MAIN_CLASS_OPTION = "-mainClass";
   private static final String API_CLASSPATH_OPTION = "-apiClasspath";
@@ -172,10 +161,8 @@ public class BootstrapMain {
     libsUrls.putAll(userLibsUrls);
 
     // Create all ClassLoaders
-    ClassLoader apiCL = new SDCClassLoader("api-lib", "API", apiUrls, ClassLoader.getSystemClassLoader(), null,
-      SDCClassLoader.SYSTEM_API_CLASSES_DEFAULT, SDCClassLoader.APPLICATION_API_CLASSES_DEFAULT);
-    ClassLoader containerCL = new SDCClassLoader("container-lib", "Container", containerUrls, apiCL, null,
-      SDCClassLoader.SYSTEM_CONTAINER_CLASSES_DEFAULT, SDCClassLoader.APPLICATION_CONTAINER_CLASSES_DEFAULT);
+    ClassLoader apiCL = SDCClassLoader.getAPIClassLoader(apiUrls, ClassLoader.getSystemClassLoader());
+    ClassLoader containerCL = SDCClassLoader.getContainerCLassLoader(containerUrls, apiCL);
     List<ClassLoader> stageLibrariesCLs = new ArrayList<>();
     for (Map.Entry<String,List<URL>> entry : libsUrls.entrySet()) {
       String[] parts = entry.getKey().split(FILE_SEPARATOR);
@@ -185,9 +172,7 @@ public class BootstrapMain {
       }
       String type = parts[0];
       String name = parts[1];
-      stageLibrariesCLs.add(new SDCClassLoader(type, name, entry.getValue(), apiCL,
-                                                        PACKAGES_BLACKLIST_FOR_STAGE_LIBRARIES,
-        SDCClassLoader.SYSTEM_STAGE_CLASSES_DEFAULT, SDCClassLoader.APPLICATION_STAGE_CLASSES_DEFAULT));
+      stageLibrariesCLs.add(SDCClassLoader.getStageClassLoader(type, name, entry.getValue(), apiCL));
     }
 
     // Bootstrap container

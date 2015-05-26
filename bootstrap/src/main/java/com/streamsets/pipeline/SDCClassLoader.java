@@ -39,19 +39,32 @@ import java.util.Properties;
  * to the parent.
  */
 public class SDCClassLoader extends BlackListURLClassLoader {
+
+  /*
+   * Note:
+   * if you update this, you must also update stage-classloader.properties
+   */
+  private static final String[] PACKAGES_BLACKLIST_FOR_STAGE_LIBRARIES = {
+      "com.streamsets.pipeline.api.",
+      "com.streamsets.pipeline.container",
+      "com.codehale.metrics.",
+      "org.slf4j.",
+      "org.apache.log4j."
+  };
+
   /**
    * Default value of the system classes if the user did not override them.
    * JDK classes, hadoop classes and resources, and some select third-party
    * classes are considered system classes, and are not loaded by the
    * application classloader.
    */
-  public static final String SYSTEM_API_CLASSES_DEFAULT;
-  public static final String SYSTEM_CONTAINER_CLASSES_DEFAULT;
-  public static final String SYSTEM_STAGE_CLASSES_DEFAULT;
+  private static final String SYSTEM_API_CLASSES_DEFAULT;
+  private static final String SYSTEM_CONTAINER_CLASSES_DEFAULT;
+  private static final String SYSTEM_STAGE_CLASSES_DEFAULT;
   private static final String SYSTEM_BASE_CLASSES_DEFAULT;
-  public static final String APPLICATION_API_CLASSES_DEFAULT;
-  public static final String APPLICATION_CONTAINER_CLASSES_DEFAULT;
-  public static final String APPLICATION_STAGE_CLASSES_DEFAULT;
+  private static final String APPLICATION_API_CLASSES_DEFAULT;
+  private static final String APPLICATION_CONTAINER_CLASSES_DEFAULT;
+  private static final String APPLICATION_STAGE_CLASSES_DEFAULT;
   private static final String APPLICATION_BASE_CLASSES_DEFAULT;
   private static String API = "api";
   private static String BASE = "base";
@@ -373,5 +386,22 @@ public class SDCClassLoader extends BlackListURLClassLoader {
       return new String[0];
     }
     return str.trim().split("\\s*,\\s*");
+  }
+
+  public static SDCClassLoader getAPIClassLoader(List<URL> apiURLs, ClassLoader parent) {
+    return new SDCClassLoader("api-lib", "API", apiURLs, parent, null,
+      SDCClassLoader.SYSTEM_API_CLASSES_DEFAULT, SDCClassLoader.APPLICATION_API_CLASSES_DEFAULT);
+  }
+
+  public static SDCClassLoader getContainerCLassLoader(List<URL> containerURLs, ClassLoader apiCL) {
+    return new SDCClassLoader("container-lib", "Container", containerURLs, apiCL, null,
+      SDCClassLoader.SYSTEM_CONTAINER_CLASSES_DEFAULT, SDCClassLoader.APPLICATION_CONTAINER_CLASSES_DEFAULT);
+
+  }
+
+  public static SDCClassLoader getStageClassLoader(String type, String name, List<URL> libURLs, ClassLoader apiCL) {
+    return new SDCClassLoader(type, name, libURLs, apiCL, PACKAGES_BLACKLIST_FOR_STAGE_LIBRARIES,
+      SDCClassLoader.SYSTEM_STAGE_CLASSES_DEFAULT, SDCClassLoader.APPLICATION_STAGE_CLASSES_DEFAULT);
+
   }
 }
