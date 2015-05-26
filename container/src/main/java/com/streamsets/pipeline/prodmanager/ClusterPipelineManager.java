@@ -23,6 +23,7 @@ import java.util.concurrent.locks.ReentrantLock;
 
 import javax.validation.constraints.NotNull;
 
+import com.streamsets.pipeline.lib.util.ThreadUtil;
 import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -331,23 +332,7 @@ public class ClusterPipelineManager extends AbstractTask implements PipelineMana
             // do nothing
             break;
           case RUNNING:
-            ApplicationState appState = new ApplicationState((Map)ps.getAttributes().get(APPLICATION_STATE));
-            if (appState.getId() == null) {
-              throw new PipelineManagerException(ContainerError.CONTAINER_0101, "for cluster application");
-            } else {
-              validateStateTransition(ps.getName(), ps.getRev(), State.STOPPING);
-              stateTracker.setState(ps.getName(), ps.getRev(), State.STOPPING, "Stopping cluster pipeline", null,
-                ps.getAttributes());
-              PipelineConfiguration pipelineConf = null;
-              try {
-                pipelineConf = pipelineStore.load(ps.getName(), ps.getRev());
-              } catch (PipelineStoreException e) {
-                String msg = Utils.format(ContainerError.CONTAINER_0150.getMessage(), e);
-                transitionToError(ps, msg);
-                throw new PipelineManagerException(ContainerError.CONTAINER_0150, ps.getState(), e.toString(), e);
-              }
-              managerRunnable.requestTransition(State.STOPPED, appState, pipelineConf);
-            }
+            tryStopPipeline();
             break;
           default:
             throw new PipelineManagerException(ContainerError.CONTAINER_0102, ps.getState(), State.STOPPED);
@@ -358,6 +343,43 @@ public class ClusterPipelineManager extends AbstractTask implements PipelineMana
     return stateTracker.getState();
   }
 
+  /**
+   * Block for up to 10 seconds while attempting to get an application id.
+   * Provides a better behavior when trying to stop a pipeline which just
+   * started without introducing a new state.
+   */
+  private void tryStopPipeline() throws PipelineManagerException {
+    long start = System.currentTimeMillis();
+    String appId;
+    PipelineState ps;
+    do {
+      ps = Utils.checkNotNull(stateTracker.getState(), "Pipeline state cannot be null");
+      ApplicationState appState = new ApplicationState((Map)ps.getAttributes().get(APPLICATION_STATE));
+      appId = appState.getId();
+      if (appId == null) {
+        Utils.checkState(ThreadUtil.sleep(500), "Interrupted while sleeping");
+      } else {
+        break;
+      }
+    } while (TimeUnit.MILLISECONDS.toSeconds(Math.max(0, System.currentTimeMillis() - start)) < 10);
+    if (appId == null) {
+      throw new PipelineManagerException(ContainerError.CONTAINER_0101, "for cluster application");
+    } else {
+      ApplicationState appState = new ApplicationState((Map)ps.getAttributes().get(APPLICATION_STATE));
+      validateStateTransition(ps.getName(), ps.getRev(), State.STOPPING);
+      stateTracker.setState(ps.getName(), ps.getRev(), State.STOPPING, "Stopping cluster pipeline", null,
+        ps.getAttributes());
+      PipelineConfiguration pipelineConf = null;
+      try {
+        pipelineConf = pipelineStore.load(ps.getName(), ps.getRev());
+      } catch (PipelineStoreException e) {
+        String msg = Utils.format(ContainerError.CONTAINER_0150.getMessage(), e);
+        transitionToError(ps, msg);
+        throw new PipelineManagerException(ContainerError.CONTAINER_0150, ps.getState(), e.toString(), e);
+      }
+      managerRunnable.requestTransition(State.STOPPED, appState, pipelineConf);
+    }
+  }
   @Override
   public Object getMetrics() {
     return metricsEventRunnable.getAggregatedMetrics();
