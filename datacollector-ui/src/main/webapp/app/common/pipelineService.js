@@ -39,6 +39,7 @@ angular.module('dataCollectorApp.common')
             self.pipelineConfigDefinition = definitions.pipeline[0];
             self.stageDefintions = definitions.stages;
             self.rulesElMetadata = definitions.rulesElMetadata;
+            self.runtimeConfigs = definitions.runtimeConfigs;
 
             //Pipelines
             self.pipelines = pipelines;
@@ -100,6 +101,16 @@ angular.module('dataCollectorApp.common')
         }]
       };
     };
+
+    /**
+     * Return Runtime Config Keyset.
+     *
+     * @returns {*}
+     */
+    this.getRuntimeConfigs = function() {
+      return self.runtimeConfigs;
+    };
+
 
     /**
      * Returns list of Pipelines

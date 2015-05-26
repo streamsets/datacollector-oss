@@ -72,6 +72,7 @@ angular
           elFunctionDefinitions: configDefinition.elFunctionDefinitions,
           elConstantDefinitions: configDefinition.elConstantDefinitions,
           pipelineConstants: pipelineConstants ? pipelineConstants.value : [],
+          runtimeConfigs: pipelineService.getRuntimeConfigs(),
           regex: 'wordColonSlash'
         };
       },

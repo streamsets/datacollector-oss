@@ -46,13 +46,28 @@ angular.module('dataCollectorApp.codemirrorDirectives')
 
               if(dictionary.pipelineConstants && dictionary.pipelineConstants.length) {
                 angular.forEach(dictionary.pipelineConstants, function(pipelineConstant) {
-                  if(!curWord || pipelineConstant.key.match(regex)) {
+                  if(pipelineConstant.key && (!curWord || pipelineConstant.key.match(regex))) {
                     completions.push({
                       text: pipelineConstant.key,
                       displayText: pipelineConstant.key,
                       className: 'CodeMirror-EL-completion CodeMirror-EL-completion-user-constant',
                       data: {
                         description: 'Pipeline Constant with value - ' + pipelineConstant.value
+                      }
+                    });
+                  }
+                });
+              }
+
+              if(dictionary.runtimeConfigs && dictionary.runtimeConfigs.length) {
+                angular.forEach(dictionary.runtimeConfigs, function(runtimeConfig) {
+                  if(runtimeConfig && (!curWord || runtimeConfig.match(regex))) {
+                    completions.push({
+                      text: runtimeConfig,
+                      displayText: runtimeConfig,
+                      className: 'CodeMirror-EL-completion CodeMirror-EL-completion-runtime-config',
+                      data: {
+                        description: 'Runtime Config'
                       }
                     });
                   }

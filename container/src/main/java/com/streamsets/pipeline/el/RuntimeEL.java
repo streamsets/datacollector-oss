@@ -17,6 +17,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
+import java.util.Set;
 
 public class RuntimeEL {
 
@@ -84,6 +85,10 @@ public class RuntimeEL {
         throw e;
       }
     }
+  }
+
+  public static Set<Object> getRuntimeConfKeys() {
+    return RUNTIME_CONF_PROPS.keySet();
   }
 
 }
