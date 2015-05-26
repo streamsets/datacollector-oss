@@ -86,8 +86,8 @@
                                 <tr class="row">
                                     <td class="entry" valign="top" width="25%" headers="d22253e106 ">Request Timeout</td>
 
-                                    <td class="entry" valign="top" width="75%" headers="d22253e109 ">Amount of time the origin waits for a response from the
-                                            server.</td>
+                                    <td class="entry" valign="top" width="75%" headers="d22253e109 ">Milliseconds to wait for the server to verify the
+                                        connection. </td>
 
                                 </tr>
 
@@ -109,8 +109,8 @@
                                 <tr class="row">
                                     <td class="entry" valign="top" width="25%" headers="d22253e106 ">Polling Interval (ms) </td>
 
-                                    <td class="entry" valign="top" width="75%" headers="d22253e109 ">Number of milliseconds the origin waits before checking
-                                        for data. Used in the polling mode only. </td>
+                                    <td class="entry" valign="top" width="75%" headers="d22253e109 ">Milliseconds the origin waits before checking for new
+                                        data. Used in the polling mode only. </td>
 
                                 </tr>
 
@@ -156,9 +156,9 @@
                             
                             <thead class="thead" align="left">
                                 <tr class="row">
-                                    <th class="entry" valign="top" width="29.49852507374631%" id="d22253e233">OAuth Property</th>
+                                    <th class="entry" valign="top" width="29.49852507374631%" id="d22253e231">OAuth Property</th>
 
-                                    <th class="entry" valign="top" width="70.50147492625369%" id="d22253e236">Description</th>
+                                    <th class="entry" valign="top" width="70.50147492625369%" id="d22253e234">Description</th>
 
                                 </tr>
 
@@ -166,30 +166,30 @@
 
                             <tbody class="tbody">
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="29.49852507374631%" headers="d22253e233 ">Consumer Key</td>
+                                    <td class="entry" valign="top" width="29.49852507374631%" headers="d22253e231 ">Consumer Key</td>
 
-                                    <td class="entry" valign="top" width="70.50147492625369%" headers="d22253e236 ">OAuth consumer key.</td>
-
-                                </tr>
-
-                                <tr class="row">
-                                    <td class="entry" valign="top" width="29.49852507374631%" headers="d22253e233 ">Consumer Secret</td>
-
-                                    <td class="entry" valign="top" width="70.50147492625369%" headers="d22253e236 ">OAuth consumer secret.</td>
+                                    <td class="entry" valign="top" width="70.50147492625369%" headers="d22253e234 ">OAuth consumer key.</td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="29.49852507374631%" headers="d22253e233 ">Token</td>
+                                    <td class="entry" valign="top" width="29.49852507374631%" headers="d22253e231 ">Consumer Secret</td>
 
-                                    <td class="entry" valign="top" width="70.50147492625369%" headers="d22253e236 ">OAuth consumer token.</td>
+                                    <td class="entry" valign="top" width="70.50147492625369%" headers="d22253e234 ">OAuth consumer secret.</td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="29.49852507374631%" headers="d22253e233 ">Token Secret</td>
+                                    <td class="entry" valign="top" width="29.49852507374631%" headers="d22253e231 ">Token</td>
 
-                                    <td class="entry" valign="top" width="70.50147492625369%" headers="d22253e236 ">OAuth token secret.</td>
+                                    <td class="entry" valign="top" width="70.50147492625369%" headers="d22253e234 ">OAuth consumer token.</td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="29.49852507374631%" headers="d22253e231 ">Token Secret</td>
+
+                                    <td class="entry" valign="top" width="70.50147492625369%" headers="d22253e234 ">OAuth token secret.</td>
 
                                 </tr>
 
@@ -209,9 +209,9 @@
                             
                             <thead class="thead" align="left">
                                 <tr class="row">
-                                    <th class="entry" valign="top" width="32.467532467532465%" id="d22253e306">JSON Property</th>
+                                    <th class="entry" valign="top" width="32.467532467532465%" id="d22253e304">JSON Property</th>
 
-                                    <th class="entry" valign="top" width="67.53246753246754%" id="d22253e309">Description</th>
+                                    <th class="entry" valign="top" width="67.53246753246754%" id="d22253e307">Description</th>
 
                                 </tr>
 
@@ -219,9 +219,9 @@
 
                             <tbody class="tbody">
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="32.467532467532465%" headers="d22253e306 ">JSON Content</td>
+                                    <td class="entry" valign="top" width="32.467532467532465%" headers="d22253e304 ">JSON Content</td>
 
-                                    <td class="entry" valign="top" width="67.53246753246754%" headers="d22253e309 ">Type of JSON content to be processed:<ul class="ul" id="task_akl_rkz_5r__ul_r32_q4z_5r">
+                                    <td class="entry" valign="top" width="67.53246753246754%" headers="d22253e307 ">Type of JSON content to be processed:<ul class="ul" id="task_akl_rkz_5r__ul_r32_q4z_5r">
                                             <li class="li">JSON Array of Objects - Use to process data in
                                                 polling mode. </li>
 
@@ -234,9 +234,9 @@
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="32.467532467532465%" headers="d22253e306 ">Entity Delimiter</td>
+                                    <td class="entry" valign="top" width="32.467532467532465%" headers="d22253e304 ">Entity Delimiter</td>
 
-                                    <td class="entry" valign="top" width="67.53246753246754%" headers="d22253e309 ">Delimiter to indicate the end of a JSON record, such as
+                                    <td class="entry" valign="top" width="67.53246753246754%" headers="d22253e307 ">Delimiter to indicate the end of a JSON record, such as
                                         \n or \r.  Used when processing multiple JSON objects.
                                     </td>
 

@@ -244,7 +244,7 @@
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="24.509803921568626%" headers="d9912e332 ">Required Fields <a class="xref" href="../Pipeline_Configuration/PipelineDesign.html#concept_dnj_bkm_vq" title="You can configure required fields for any processor and most destination stages. A required field must exist in a record to allow the record to enter the stage for processing. When a record does not include a required field, the record is passed to the pipeline for error handling.">
+                                    <td class="entry" valign="top" width="24.509803921568626%" headers="d9912e332 ">Required Fields <a class="xref" href="../Pipeline_Configuration/PipelineDesign.html#concept_dnj_bkm_vq" title="You can define required fields for any processor and most destination stages. A required field must exist in a record to allow the record to enter the stage for processing. When a record does not include a required field, the record is passed to the pipeline for error handling.">
                                             <img class="image" id="task_q4d_4yl_zq__d728e567" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
 
                                     <td class="entry" valign="top" width="75.49019607843137%" headers="d9912e335 ">Fields that must include data to be passed to the stage.
@@ -390,7 +390,7 @@
 
                                                 <li class="li">Delimited</li>
 
-                                                <li class="li">SDC Record <a class="xref" href="../Pipeline_Configuration/PipelineDesign.html#concept_qkk_mwk_br" title="SDC Record is a proprietary data format that the Data Collector can use to read and write data. The Data Collector also uses SDC Record to generate error records.">
+                                                <li class="li">SDC Record <a class="xref" href="../Pipeline_Configuration/PipelineDesign.html#concept_qkk_mwk_br" title="SDC Record is a proprietary data format that the Data Collector uses to generate error records. The Data Collector can also use the data format to read and write data.">
                                                   <img class="image" id="task_q4d_4yl_zq__d728e1191" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></li>
 
                                             </ul>
@@ -410,8 +410,8 @@
                                     <tr class="row">
                                         <td class="entry" valign="top" width="23.980815347721823%" headers="d9912e436 ">One Message per Batch</td>
 
-                                        <td class="entry" valign="top" width="76.01918465227818%" headers="d9912e439 ">Generates a single message for all records in the
-                                            batch.</td>
+                                        <td class="entry" valign="top" width="76.01918465227818%" headers="d9912e439 ">Writes the records a batch to each partition as a
+                                            single message. </td>
 
                                     </tr>
 

@@ -20,15 +20,15 @@
           <dd>The pipeline writes error records and related details to a local directory. The <ph
               conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
             includes the records in error record counts and metrics.</dd>
-          <dd>You can specify the directory to use and the maximum file size. Error files are named
-            as follows: <codeph>records-&lt;file number>.json.</codeph></dd>
+          <dd>You define the directory to use and the maximum file size. Error files are named as
+            follows: <codeph>records-&lt;file number>.json.</codeph></dd>
         </dlentry>
         <dlentry>
           <dt>Write to Kafka</dt>
           <dd>The pipeline writes error records and related details to Kafka. The <ph
               conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
             includes the records in error record counts and metrics.</dd>
-          <dd>You can specify the configuration properties for the Kafka cluster to use. </dd>
+          <dd>You define the configuration properties for the Kafka cluster to use. </dd>
         </dlentry>
       </dl></p>
   <p>When a <ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>

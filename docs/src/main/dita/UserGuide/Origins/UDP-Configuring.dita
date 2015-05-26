@@ -2,11 +2,10 @@
 <!DOCTYPE task PUBLIC "-//OASIS//DTD DITA General Task//EN" "generalTask.dtd">
 <task id="task_kgn_rcv_1s">
     <title>Configuring a UDP Source</title>
-    <shortdesc>Configure a UDP Source origin to process NetFlow messages from a UPD
-        source.</shortdesc>
     <taskbody>
         <context>
-            <p><indexterm>UDP Source origin<indexterm>configuring</indexterm></indexterm></p>
+            <p><indexterm>UDP Source origin<indexterm>configuring</indexterm></indexterm>Configure a
+                UDP Source origin to process NetFlow messages from a UPD source.</p>
         </context>
         <steps id="steps_ejy_1dv_1s">
             <step
@@ -29,7 +28,7 @@
                             <tbody>
                                 <row>
                                     <entry>Port</entry>
-                                    <entry>Port to listen on for data. To list additional ports,
+                                    <entry>Port to listen to for data. To list additional ports,
                                         click the<uicontrol> Add</uicontrol> icon.</entry>
                                 </row>
                                 <row>

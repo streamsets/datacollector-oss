@@ -17,8 +17,8 @@
    When you configure the pipeline, you can also configure the action to take when pipeline memory
    usage exceeds the configured amount.</p>
   <p>
-   <note>To avoid errors, you might create an alert to indicate when the memory usage approaches the
-    configured limit.</note>
+   <note type="tip">To avoid errors, you might create an alert to indicate when the memory usage
+    approaches the configured limit.</note>
   </p>
  </conbody>
  <related-links>

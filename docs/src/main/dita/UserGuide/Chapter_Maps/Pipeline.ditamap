@@ -26,9 +26,7 @@
    </topicmeta>
    <topicref href="../Pipeline_Configuration/DeliveryGuarantee.dita"/>
    <topicref href="../Pipeline_Configuration/PipelineMemory.dita"/>
-   <topicref href="../Pipeline_Configuration/PipelineConstants.dita">
-    <topicref href="../Pipeline_Configuration/PipelineConstants-Defining.dita"/>
-   </topicref>
+   <topicref href="../Pipeline_Configuration/PipelineConstants.dita"/>
   </topicref>
   <topicref href="../Pipeline_Configuration/Validation.dita">
    <topicmeta>

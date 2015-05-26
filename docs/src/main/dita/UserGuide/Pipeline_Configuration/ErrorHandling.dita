@@ -15,10 +15,12 @@
       pipeline error handling. That is, a pipeline might be configured to write error records to
       file, but if a stage is configured to discard error records, those records are discarded. You
       might use this functionality to reduce the types of error records that are saved for review
-      and reprocessing. <draft-comment author="Loretta">Anyone have a simple example of error
-        records you'd rather discard at a stage level, and ones you want to write to
-        file?</draft-comment></p>
-    <p>Note that records that do not include required fields do not enter the stage with the field
-      requirement, so they are passed directly to the pipeline for error handling.</p>
+      and reprocessing. <draft-comment author="Loretta">Anyone have a simple example this to add
+        here?</draft-comment></p>
+    <p>Note that records missing required fields do not enter the stage. They are passed directly to
+      the pipeline for error handling.</p>
   </conbody>
+  <related-links>
+    <link href="RequiredFields.dita#concept_dnj_bkm_vq"/>
+  </related-links>
 </concept>

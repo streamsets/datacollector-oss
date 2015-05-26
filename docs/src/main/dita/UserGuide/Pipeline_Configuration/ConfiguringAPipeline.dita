@@ -70,8 +70,7 @@
                                     <li>At Most Once - Ensures that data is not reprocessed to
                                         prevent writing duplicate data to the destination. Might
                                         result in missing rows.</li>
-                                </ul><p>Default is <uicontrol>At least
-                                once</uicontrol>.</p></stentry>
+                                </ul><p>Default is At Least Once.</p></stentry>
                         </strow>
                         <strow>
                             <stentry>Memory Limit  <xref
@@ -101,6 +100,11 @@
                         </strow>
                     </simpletable>
                 </info>
+            </step>
+            <step>
+                <cmd>To define pipeline constants, on the <wintitle>Constants</wintitle> tab, click
+                    the <uicontrol>Add</uicontrol> icon and define the name and the value for each
+                    constant.</cmd>
             </step>
             <step>
                 <cmd>Click the <wintitle>Error Records</wintitle> tab and configure the following

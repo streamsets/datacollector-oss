@@ -5,8 +5,7 @@
  <shortdesc>Most stages include error record handling options. When an error occurs when processing
     a record, the <ph
       conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> processes
-    records based on the stage error record handling property, <uicontrol>On Record
-      Error</uicontrol>. </shortdesc>
+    records based on the On Record Error property for the stage.</shortdesc>
  <conbody>
   <p><indexterm>stages<indexterm>error record handling</indexterm></indexterm>Stages include the
       following error handling options:<dl>

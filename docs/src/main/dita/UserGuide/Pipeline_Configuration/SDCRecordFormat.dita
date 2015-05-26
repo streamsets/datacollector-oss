@@ -3,14 +3,15 @@
 <concept id="concept_qkk_mwk_br">
  <title>SDC Record Data Format</title>
  <shortdesc>SDC Record is a proprietary data format that the <ph
-      conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> can use to
-    read and write data. The <ph
-      conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> also uses
-    SDC Record to generate error records. </shortdesc>
+      conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> uses to
+    generate error records.  The <ph
+      conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> can also use
+    the data format to read and write data. </shortdesc>
  <conbody>
   <p><indexterm>SDC Records<indexterm>data format</indexterm></indexterm><indexterm>Data
-     Collector<indexterm>data format</indexterm></indexterm>Use the SDC Record data format to
-   process data from another pipeline, or to generate data to be processed by another pipeline.</p>
+          Collector<indexterm>data format</indexterm></indexterm>Use the SDC Record data format to
+      process data from another pipeline or to generate data to be processed by another
+      pipeline.</p>
   <p>You can use the following origins to read SDC Record data: <ul id="ul_ep4_r2b_wr">
     <li>Directory</li>
     <li>Kafka Consumer</li>

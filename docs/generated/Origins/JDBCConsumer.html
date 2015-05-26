@@ -2,7 +2,7 @@
 <!DOCTYPE html
   SYSTEM "about:legacy-compat">
 <html xml:lang="en-us" lang="en-us">
-<head><meta name="description" content="The JDBC Consumer origin uses JDBC to read database data. JDBC Consumer returns data as a map with column names and field values. When you configure JDBC Consumer, you specify connection information, ..."></meta><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><meta name="copyright" content="(C) Copyright 2005"></meta><meta name="DC.rights.owner" content="(C) Copyright 2005"></meta><meta name="DC.Type" content="concept"></meta><meta name="DC.Title" content="JDBC Consumer"></meta><meta name="abstract" content="The JDBC Consumer origin uses JDBC to read database data. JDBC Consumer returns data as a map with column names and field values."></meta><meta name="description" content="The JDBC Consumer origin uses JDBC to read database data. JDBC Consumer returns data as a map with column names and field values."></meta><meta name="DC.Relation" scheme="URI" content="../Origins/Origins_title.html"></meta><meta name="DC.Format" content="XHTML"></meta><meta name="DC.Identifier" content="concept_qhf_hjr_bs"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/commonltr.css"><!----></link><title>JDBC Consumer</title><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/webhelp_topic.css"><!----></link><link rel="stylesheet" type="text/css" href="../skin.css"></link><script type="text/javascript"><!--
+<head><meta name="description" content="The JDBC Consumer origin uses a JDBC connection to read database data. JDBC Consumer returns data as a map with column names and field values. When you configure JDBC Consumer, you specify connection ..."></meta><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><meta name="copyright" content="(C) Copyright 2005"></meta><meta name="DC.rights.owner" content="(C) Copyright 2005"></meta><meta name="DC.Type" content="concept"></meta><meta name="DC.Title" content="JDBC Consumer"></meta><meta name="abstract" content="The JDBC Consumer origin uses a JDBC connection to read database data. JDBC Consumer returns data as a map with column names and field values."></meta><meta name="description" content="The JDBC Consumer origin uses a JDBC connection to read database data. JDBC Consumer returns data as a map with column names and field values."></meta><meta name="DC.Relation" scheme="URI" content="../Origins/Origins_title.html"></meta><meta name="DC.Format" content="XHTML"></meta><meta name="DC.Identifier" content="concept_qhf_hjr_bs"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/commonltr.css"><!----></link><title>JDBC Consumer</title><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/webhelp_topic.css"><!----></link><link rel="stylesheet" type="text/css" href="../skin.css"></link><script type="text/javascript"><!--
           
           var prefix = "../index.html";
           
@@ -14,105 +14,132 @@
  <h1 class="title topictitle1">JDBC Consumer</h1>
 
  
- <div class="body conbody"><p class="shortdesc">The JDBC Consumer origin uses JDBC to read database data. JDBC Consumer returns data as
-  a map with column names and field values. </p>
+ <div class="body conbody"><p class="shortdesc">The JDBC Consumer origin uses a JDBC connection to read database data. JDBC Consumer
+    returns data as a map with column names and field values. </p>
 
     <p class="p">When you configure JDBC Consumer, you
       specify connection information, query interval, and custom JDBC configuration properties to
-      determine how JDBC Consumer connect to the database. You configure the query mode, offset
+      determine how JDBC Consumer connects to the database. You configure the query mode, offset
       column, initial offset value, and SQL query to define the data returned by the database.</p>
 
-    <p class="p">You can also configure additional properties for driver versions earlier than 4.0.</p>
+    <p class="p">You can also configure add custom properties that your driver requires and configure
+      additional properties for older driver versions.</p>
 
   </div>
 
 <div class="related-links"></div>
-<div class="topic concept nested1" id="concept_ets_gnr_bs">
- <h2 class="title topictitle2">Full or Incremental Queries</h2>
-
- 
- <div class="body conbody"><p class="shortdesc">JDBC Consumer runs in incremental mode by default. </p>
-
-  <p class="p">When you start the pipeline for the first time, JDBC Consumer starts reading with the initial
-   offset. When you stop the pipeline, the <span class="ph">Data
-                  Collector</span> notes where it
-   stopped reading as an offset. When you restart the pipeline, the <span class="ph">Data
-                  Collector</span> uses the
-   offset information in the query to read from where it stopped earlier. </p>
-
-  <p class="p">In incremental mode, you can reset the origin to use the initial offset the next time you start
-   the pipeline. Or, to perform a full query each time you start the pipeline, clear the
-    <span class="ph uicontrol">Incremental Mode</span> property. </p>
-
-  
- </div>
-
-</div>
 <div class="topic concept nested1" id="concept_nxz_2kz_bs">
  <h2 class="title topictitle2">Offset Column and Offset Value</h2>
 
  
  <div class="body conbody"><p class="shortdesc">JDBC Consumer uses an offset column and initial offset value to determine where to start
-  reading data within a table. The offset column is a column in the table with unique values. The
-  initial offset value is a value within the offset column where you want JDBC Consumer to start
-  reading.</p>
+  reading data within a table. Include both the offset column and the offset value in the WHERE
+  clause of the SQL query.</p>
 
-  <p class="p">When you configure the SQL query for the JDBC Consumer, you use the offset column and offset
-   value in a WHERE clause that specifies the data to be read. Use "${offset}" to represent the
-   offset value, for example: <samp class="ph codeph">SELECT * from &lt;table&gt; WHERE &lt;offset column&gt; &gt;
-    ${offset}</samp>. </p>
+  <p class="p">Ideally, the offset column is a column in the table with unique
+   values, such as a primary key or index column. The initial offset value is a value within the
+   offset column where you want JDBC Consumer to start reading.</p>
 
-  <p class="p">JDBC Consumer uses the offset to determine where to continue after a deliberate or unexpected
-   stop. As JDBC Consumer reads, it updates the offset value internally. When the pipeline stops,
-   JDBC Consumer notes where it stopped reading data. When you restart the pipeline, it continues
-   from the last-saved offset by default. You can reset the origin to use the initial offset
-   value.</p>
+ </div>
 
-  <div class="p"><div class="note note"><span class="notetitle">Note:</span> </div>
-To reduce the chance of duplicate reads, use a primary key or index column for the
-   offset column and include the offset column in an ORDER BY clause.</div>
+</div>
+<div class="topic concept nested1" id="concept_hcm_gdq_ds">
+ <h2 class="title topictitle2">Recovery</h2>
+
+ 
+ <div class="body conbody"><p class="shortdesc">JDBC Consumer uses offset values in the offset column to determine where to continue
+  processing after a deliberate or unexpected stop. To ensure seamless recovery, use a primary key
+  or index column as the offset column.</p>
+
+  <p class="p">As JDBC Consumer processes data, it tracks the offset value
+   internally. When the pipeline stops, JDBC Consumer notes where it stopped processing data. When
+   you restart the pipeline, it continues from the last-saved offset. </p>
+
+  <p class="p">JDBC Consumer performs recovery in both full and incremental mode. </p>
+
+ </div>
+
+</div>
+<div class="topic concept nested1" id="concept_ets_gnr_bs">
+ <h2 class="title topictitle2">Full and Incremental Mode</h2>
+
+ <div class="body conbody">
+  <p class="p">JDBC Consumer can perform queries in two modes:  </p>
+
+  <div class="p">
+   <dl class="dl">
+    
+     <dt class="dt dlterm">Incremental mode</dt>
+
+     <dd class="dd">When the JDBC Consumer performs an incremental query, it uses the initial offset as the
+      offset value in the first SQL query. As JDBC Consumer completes processing the results of the
+      first query, it saves the last offset value that it processes. When it requests a subsequent
+      query, it returns data after the last-saved offset. You can reset the origin to use the
+      initial offset value. </dd>
+
+     <dd class="dd">Use incremental mode when data is appended to the table between queries. By default, JDBC
+      Consumer uses incremental mode. </dd>
+
+    
+    
+     <dt class="dt dlterm">Full mode</dt>
+
+     <dd class="dd">When the JDBC Consumer performs a full query, it uses the initial offset as the offset
+      value in the SQL query each time it requests data.</dd>
+
+     <dd class="dd">Use a full mode when data can change across the table between queries. </dd>
+
+    
+   </dl>
+
+  </div>
 
  </div>
 
 </div>
 <div class="topic concept nested1" id="concept_uj4_mxy_bs">
- <h2 class="title topictitle2">SQL Query</h2>
+  <h2 class="title topictitle2">SQL Query</h2>
 
- 
- <div class="body conbody"><p class="shortdesc">The SQL query defines the data returned from the database. </p>
+  <div class="body conbody">
+    <div class="p">The SQL query defines the data
+      returned from the database. When you define the SQL query, use the following guidelines:<dl class="dl">
+        
+          <dt class="dt dlterm">In the WHERE clause, include the offset column and the offset value - </dt>
 
-  <div class="p">When you define the SQL query, use the following guidelines:<dl class="dl">
-    
-     <dt class="dt dlterm">In the WHERE clause, include the offset column and the ${offset} offset value</dt>
+          <dd class="dd">JDBC Consumer uses an offset column and value to determine the data that is returned.
+            Include both in the WHERE clause of the query. </dd>
 
-     <dd class="dd">JDBC Consumer uses an offset column and value to determine the data that is returned.
-      Include both in the WHERE clause of the query. </dd>
+        
+        
+          <dt class="dt dlterm">Use ${offset} to represent the offset value</dt>
 
-     <dd class="dd">For example, when you start a pipeline, the following query returns all data from the table
-      where the data in the offset column is greater than the initial offset value.
-      <pre class="pre codeblock">SELECT * FROM &lt;tablename&gt; WHERE &lt;offset column&gt; &gt; ${offset}</pre>
+          <dd class="dd">In the WHERE clause, use ${offset} to represent the offset value. </dd>
+
+          <dd class="dd">For example, when you start a pipeline, the following query returns all data from the
+            table where the data in the offset column is greater than the initial offset value.
+              <pre class="pre codeblock">SELECT * FROM &lt;tablename&gt; WHERE &lt;offset column&gt; &gt; ${offset}</pre>
+<div class="note tip"><span class="tiptitle">Tip:</span> When the offset values are strings, enclose ${offset} in quotation
+              marks.</div>
 </dd>
 
-    
-    
-     <dt class="dt dlterm">In the ORDER BY clause, include the offset column as the first column</dt>
+        
+        
+          <dt class="dt dlterm">In the ORDER BY clause, include the offset column as the first column.</dt>
 
-     <dd class="dd">To avoid returning duplicate data, use the offset column as the first column in the ORDER
-      BY clause.</dd>
+          <dd class="dd">To avoid returning duplicate data, use the offset column as the first column in the
+            ORDER BY clause.</dd>
 
-    
-    
-     <dt class="dt dlterm">If using a LIMIT, make sure it is less than the batch size</dt>
+          <dd class="dd">
+            <div class="note note"><span class="notetitle">Note:</span> Using a non-key or non-index column in the ORDER BY clause can slow
+              performance.</div>
 
-     <dd class="dd">
-      
-     </dd>
+          </dd>
 
-    
-   </dl>
+        
+      </dl>
 </div>
 
- </div>
+  </div>
 
 </div>
 <div class="topic task nested1" id="task_ryz_tkr_bs">
@@ -121,7 +148,7 @@ To reduce the chance of duplicate reads, use a primary key or index column for t
     <div class="body taskbody">
         <div class="section context">
             <p class="p">Configure a
-                JDBC Consumer origin to use a JDBC driver to read database data. </p>
+                JDBC Consumer origin to use a JDBC connection to read database data. </p>
 
         </div>
 
@@ -135,9 +162,9 @@ To reduce the chance of duplicate reads, use a primary key or index column for t
                             
                             <thead class="thead" align="left">
                                 <tr class="row">
-                                    <th class="entry" valign="top" width="24.509803921568626%" id="d22802e202">General Property</th>
+                                    <th class="entry" valign="top" width="24.509803921568626%" id="d22802e252">General Property</th>
 
-                                    <th class="entry" valign="top" width="75.49019607843137%" id="d22802e205">Description</th>
+                                    <th class="entry" valign="top" width="75.49019607843137%" id="d22802e255">Description</th>
 
                                 </tr>
 
@@ -145,23 +172,23 @@ To reduce the chance of duplicate reads, use a primary key or index column for t
 
                             <tbody class="tbody">
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="24.509803921568626%" headers="d22802e202 ">Name</td>
+                                    <td class="entry" valign="top" width="24.509803921568626%" headers="d22802e252 ">Name</td>
 
-                                    <td class="entry" valign="top" width="75.49019607843137%" headers="d22802e205 ">Stage name.</td>
-
-                                </tr>
-
-                                <tr class="row">
-                                    <td class="entry" valign="top" width="24.509803921568626%" headers="d22802e202 ">Description</td>
-
-                                    <td class="entry" valign="top" width="75.49019607843137%" headers="d22802e205 ">Optional description.</td>
+                                    <td class="entry" valign="top" width="75.49019607843137%" headers="d22802e255 ">Stage name.</td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="24.509803921568626%" headers="d22802e202 ">On Record Error</td>
+                                    <td class="entry" valign="top" width="24.509803921568626%" headers="d22802e252 ">Description</td>
 
-                                    <td class="entry" valign="top" width="75.49019607843137%" headers="d22802e205 ">Error record handling for the stage: <ul class="ul" id="task_ryz_tkr_bs__d2465e298">
+                                    <td class="entry" valign="top" width="75.49019607843137%" headers="d22802e255 ">Optional description.</td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="24.509803921568626%" headers="d22802e252 ">On Record Error</td>
+
+                                    <td class="entry" valign="top" width="75.49019607843137%" headers="d22802e255 ">Error record handling for the stage: <ul class="ul" id="task_ryz_tkr_bs__d2465e298">
                                             <li class="li">Discard - Discards the record.</li>
 
                                             <li class="li">Send to Error - Sends the record to the pipeline for
@@ -190,9 +217,9 @@ To reduce the chance of duplicate reads, use a primary key or index column for t
                             
                             <thead class="thead" align="left">
                                 <tr class="row">
-                                    <th class="entry" valign="top" width="25.510204081632654%" id="d22802e274">JDBC Property</th>
+                                    <th class="entry" valign="top" width="25.252525252525253%" id="d22802e324">JDBC Property</th>
 
-                                    <th class="entry" valign="top" width="74.48979591836735%" id="d22802e277">Description</th>
+                                    <th class="entry" valign="top" width="74.74747474747475%" id="d22802e327">Description</th>
 
                                 </tr>
 
@@ -200,60 +227,69 @@ To reduce the chance of duplicate reads, use a primary key or index column for t
 
                             <tbody class="tbody">
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="25.510204081632654%" headers="d22802e274 ">JDBC Connection String</td>
+                                    <td class="entry" valign="top" width="25.252525252525253%" headers="d22802e324 ">JDBC Connection String</td>
 
-                                    <td class="entry" valign="top" width="74.48979591836735%" headers="d22802e277 ">JDBC connection string for the JDBC</td>
+                                    <td class="entry" valign="top" width="74.74747474747475%" headers="d22802e327 ">JDBC connection string.</td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="25.510204081632654%" headers="d22802e274 ">Incremental Mode <a class="xref" href="JDBCConsumer.html#concept_ets_gnr_bs" title="JDBC Consumer runs in incremental mode by default."><img class="image" id="task_ryz_tkr_bs__image_mm5_tvg_cs" src="../Graphics/icon_moreInfo.png" height="12" width="12"></img>
+                                    <td class="entry" valign="top" width="25.252525252525253%" headers="d22802e324 ">Incremental Mode  <a class="xref" href="JDBCConsumer.html#concept_ets_gnr_bs"><img class="image" id="task_ryz_tkr_bs__image_mm5_tvg_cs" src="../Graphics/icon_moreInfo.png" height="12" width="12"></img>
                                         </a></td>
 
-                                    <td class="entry" valign="top" width="74.48979591836735%" headers="d22802e277 ">Query mode. Enabled by default. </td>
+                                    <td class="entry" valign="top" width="74.74747474747475%" headers="d22802e327 ">Defines how JDBC Consumer queries the database. Select to
+                                        perform incremental queries. Clear to perform full queries.
+                                            <p class="p">Default is incremental mode. </p>
+</td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="25.510204081632654%" headers="d22802e274 ">SQL Query</td>
+                                    <td class="entry" valign="top" width="25.252525252525253%" headers="d22802e324 ">SQL Query  <a class="xref" href="JDBCConsumer.html#concept_uj4_mxy_bs"><img class="image" id="task_ryz_tkr_bs__image_yxz_srq_ds" src="../Graphics/icon_moreInfo.png" height="12" width="12"></img>
+                                        </a></td>
 
-                                    <td class="entry" valign="top" width="74.48979591836735%" headers="d22802e277 ">SQL query to use when reading data from the
+                                    <td class="entry" valign="top" width="74.74747474747475%" headers="d22802e327 ">SQL query to use when reading data from the
                                         database.</td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="25.510204081632654%" headers="d22802e274 ">Initial Offset</td>
+                                    <td class="entry" valign="top" width="25.252525252525253%" headers="d22802e324 ">Initial Offset </td>
 
-                                    <td class="entry" valign="top" width="74.48979591836735%" headers="d22802e277 "> </td>
-
-                                </tr>
-
-                                <tr class="row">
-                                    <td class="entry" valign="top" width="25.510204081632654%" headers="d22802e274 ">Offset Column</td>
-
-                                    <td class="entry" valign="top" width="74.48979591836735%" headers="d22802e277 "> </td>
+                                    <td class="entry" valign="top" width="74.74747474747475%" headers="d22802e327 ">Offset value to use when the pipeline starts.</td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="25.510204081632654%" headers="d22802e274 ">Query Interval</td>
+                                    <td class="entry" valign="top" width="25.252525252525253%" headers="d22802e324 ">Offset Column  <a class="xref" href="JDBCConsumer.html#concept_nxz_2kz_bs" title="JDBC Consumer uses an offset column and initial offset value to determine where to start reading data within a table. Include both the offset column and the offset value in the WHERE clause of the SQL query."><img class="image" id="task_ryz_tkr_bs__image_rqs_srq_ds" src="../Graphics/icon_moreInfo.png" height="12" width="12"></img>
+                                        </a></td>
 
-                                    <td class="entry" valign="top" width="74.48979591836735%" headers="d22802e277 "> </td>
-
-                                </tr>
-
-                                <tr class="row">
-                                    <td class="entry" valign="top" width="25.510204081632654%" headers="d22802e274 ">Use Credentials</td>
-
-                                    <td class="entry" valign="top" width="74.48979591836735%" headers="d22802e277 "> </td>
+                                    <td class="entry" valign="top" width="74.74747474747475%" headers="d22802e327 ">Column to use for the offset value.</td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="25.510204081632654%" headers="d22802e274 ">Additional JDBC Configuration</td>
+                                    <td class="entry" valign="top" width="25.252525252525253%" headers="d22802e324 ">Query Interval</td>
 
-                                    <td class="entry" valign="top" width="74.48979591836735%" headers="d22802e277 ">
+                                    <td class="entry" valign="top" width="74.74747474747475%" headers="d22802e327 ">Amount of time to wait between queries. Enter an
+                                        expression based on a unit of time. You can use SECONDS,
+                                        MINUTES, or HOURS.<p class="p">Default is 10 seconds: ${10 * SECONDS}.
+                                        </p>
+</td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="25.252525252525253%" headers="d22802e324 ">Use Credentials</td>
+
+                                    <td class="entry" valign="top" width="74.74747474747475%" headers="d22802e327 ">Whether to use a login to access the database.</td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="25.252525252525253%" headers="d22802e324 ">Additional JDBC Configuration</td>
+
+                                    <td class="entry" valign="top" width="74.74747474747475%" headers="d22802e327 ">
                                         <p class="p">Additional JDBC configuration properties to use. To add
                                             properties, click <span class="ph uicontrol">Add</span> and define
                                             the JDBC property name and value. </p>
@@ -270,10 +306,11 @@ To reduce the chance of duplicate reads, use a primary key or index column for t
                         </table>
 </div>
 
+                    
                 </div>
             </li>
 <li class="li step stepexpand">
-                <span class="ph cmd">If using JDBC credentials, on the <span class="ph uicontrol">Credentials</span> tab,
+                <span class="ph cmd">When using JDBC credentials, on the <span class="ph uicontrol">Credentials</span> tab,
                     configure the following properties:</span>
                 <div class="itemgroup info">
                     
@@ -282,9 +319,9 @@ To reduce the chance of duplicate reads, use a primary key or index column for t
                             
                             <thead class="thead" align="left">
                                 <tr class="row">
-                                    <th class="entry" valign="top" width="34.72222222222222%" id="d22802e396">Credentials Property</th>
+                                    <th class="entry" valign="top" width="34.72222222222222%" id="d22802e465">Credentials Property</th>
 
-                                    <th class="entry" valign="top" width="65.27777777777779%" id="d22802e399">Description</th>
+                                    <th class="entry" valign="top" width="65.27777777777779%" id="d22802e468">Description</th>
 
                                 </tr>
 
@@ -292,16 +329,16 @@ To reduce the chance of duplicate reads, use a primary key or index column for t
 
                             <tbody class="tbody">
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="34.72222222222222%" headers="d22802e396 ">Username</td>
+                                    <td class="entry" valign="top" width="34.72222222222222%" headers="d22802e465 ">Username</td>
 
-                                    <td class="entry" valign="top" width="65.27777777777779%" headers="d22802e399 ">User name for the JDBC connection.</td>
+                                    <td class="entry" valign="top" width="65.27777777777779%" headers="d22802e468 ">User name for the JDBC connection.</td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="34.72222222222222%" headers="d22802e396 ">Password</td>
+                                    <td class="entry" valign="top" width="34.72222222222222%" headers="d22802e465 ">Password</td>
 
-                                    <td class="entry" valign="top" width="65.27777777777779%" headers="d22802e399 ">Password for the JDBC account</td>
+                                    <td class="entry" valign="top" width="65.27777777777779%" headers="d22802e468 ">Password for the JDBC account</td>
 
                                 </tr>
 
@@ -313,7 +350,7 @@ To reduce the chance of duplicate reads, use a primary key or index column for t
                 </div>
             </li>
 <li class="li step stepexpand">
-                <span class="ph cmd">If using drivers older than version 4.0, on the <span class="ph uicontrol">Legacy
+                <span class="ph cmd">When using drivers older than version 4.0, on the <span class="ph uicontrol">Legacy
                         Drivers</span> tab, optionally configure the following
                     properties:</span>
                 <div class="itemgroup info">
@@ -323,9 +360,9 @@ To reduce the chance of duplicate reads, use a primary key or index column for t
                             
                             <thead class="thead" align="left">
                                 <tr class="row">
-                                    <th class="entry" valign="top" width="36.496350364963504%" id="d22802e451">Legacy Driver Property</th>
+                                    <th class="entry" valign="top" width="36.496350364963504%" id="d22802e520">Legacy Driver Property</th>
 
-                                    <th class="entry" valign="top" width="63.503649635036496%" id="d22802e454">Description</th>
+                                    <th class="entry" valign="top" width="63.503649635036496%" id="d22802e523">Description</th>
 
                                 </tr>
 
@@ -333,17 +370,17 @@ To reduce the chance of duplicate reads, use a primary key or index column for t
 
                             <tbody class="tbody">
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="36.496350364963504%" headers="d22802e451 ">JDBC Class Driver Name</td>
+                                    <td class="entry" valign="top" width="36.496350364963504%" headers="d22802e520 ">JDBC Class Driver Name</td>
 
-                                    <td class="entry" valign="top" width="63.503649635036496%" headers="d22802e454 ">Class name for the JDBC driver. Use only for versions
+                                    <td class="entry" valign="top" width="63.503649635036496%" headers="d22802e523 ">Class name for the JDBC driver. Use only for versions
                                         older than version 4.0.</td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="36.496350364963504%" headers="d22802e451 ">Connection Health Test Query</td>
+                                    <td class="entry" valign="top" width="36.496350364963504%" headers="d22802e520 ">Connection Health Test Query</td>
 
-                                    <td class="entry" valign="top" width="63.503649635036496%" headers="d22802e454 ">Optional query to test the health of a connection to a
+                                    <td class="entry" valign="top" width="63.503649635036496%" headers="d22802e523 ">Optional query to test the health of a connection to a
                                         driver version older than 4.0.</td>
 
                                 </tr>

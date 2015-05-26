@@ -11,5 +11,6 @@
   <p>The request interval is the amount of time the Omniture origin waits before requesting another
    report. However, if the Omniture API has not yet responded to the previous request, the origin
    waits until it receives a response, and then sends a new request immediately. </p>
+    <p>For information about Omniture reports, see the Adobe Marketing Cloud documentation. </p>
  </conbody>
 </concept>

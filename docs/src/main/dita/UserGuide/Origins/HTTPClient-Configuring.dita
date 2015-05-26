@@ -32,9 +32,8 @@
                                 </row>
                                 <row>
                                     <entry>Request Timeout</entry>
-                                    <entry>Amount of time the origin waits for a response from the
-                                            server.<draft-comment author="Loretta">Is this for data
-                                            or a ping back?</draft-comment></entry>
+                                    <entry>Milliseconds to wait for the server to verify the
+                                        connection. </entry>
                                 </row>
                                 <row>
                                     <entry>Mode</entry>
@@ -47,8 +46,8 @@
                                 </row>
                                 <row>
                                     <entry>Polling Interval (ms) </entry>
-                                    <entry>Number of milliseconds the origin waits before checking
-                                        for data. Used in the polling mode only. </entry>
+                                    <entry>Milliseconds the origin waits before checking for new
+                                        data. Used in the polling mode only. </entry>
                                 </row>
                                 <row>
                                     <entry>Use OAuth</entry>

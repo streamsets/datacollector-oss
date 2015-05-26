@@ -38,35 +38,38 @@
                                 </row>
                                 <row>
                                     <entry>Shared Secret <draft-comment author="Loretta">can we move
-                                            this here? appears lower </draft-comment></entry>
+                                            this here? appears after request
+                                        timeout</draft-comment></entry>
                                     <entry>Omniture shared secret.</entry>
                                 </row>
                                 <row>
                                     <entry>Request Timeout (ms)</entry>
-                                    <entry>Connection timeout.</entry>
+                                    <entry>Milliseconds before the connection times out.</entry>
                                 </row>
                                 <row>
                                     <entry>Mode</entry>
-                                    <entry>Omniture polls the reporting APIs for reports.</entry>
+                                    <entry>Mode used to request reports. <p>Default is
+                                        Polling.</p></entry>
                                 </row>
                                 <row>
                                     <entry>Report Request Interval (ms)<draft-comment
-                                            author="Loretta">Can we use this
-                                        name?</draft-comment></entry>
+                                            author="Loretta">Can we use this name? Currently "Delay
+                                            between report requests"</draft-comment></entry>
                                     <entry>Milliseconds to wait between requests. <p>When necessary,
                                             the origin delays a request until the API responds to
-                                            the previous request.</p></entry>
+                                            the previous request.</p><p>Default is
+                                        5,000.</p></entry>
                                 </row>
                                 <row>
-                                    <entry>Max Batch Size<draft-comment author="Loretta">Change from
-                                            Batch Size?</draft-comment></entry>
+                                    <entry>Max Batch Size (reports)<draft-comment author="Loretta"
+                                            >Change from Batch Size?</draft-comment></entry>
                                     <entry>Maximum number of reports to include in a batch.
                                             <p>Default is 1.</p></entry>
                                 </row>
                                 <row>
                                     <entry>Batch Wait Time (ms)</entry>
-                                    <entry>Time to wait before sending an empty or partial
-                                        batch.</entry>
+                                    <entry>Milliseconds to wait before sending an empty or partial
+                                            batch.<p>Default is 5,000.</p></entry>
                                 </row>
                             </tbody>
                         </tgroup>
@@ -75,7 +78,7 @@
             </step>
             <step>
                 <cmd>On the <uicontrol>Report</uicontrol> tab, enter a description of the Omniture
-                    report.</cmd>
+                    report description. </cmd>
             </step>
         </steps>
     </taskbody>

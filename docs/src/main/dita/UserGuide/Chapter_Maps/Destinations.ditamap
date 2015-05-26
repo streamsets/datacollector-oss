@@ -68,15 +68,15 @@
    <topicref href="../Destinations/Solr-IndexMode.dita"/>
    <topicref href="../Destinations/Solr-configuring.dita"/>
   </topicref>
-  <topicref href="../Destinations/Trash.dita" chunk="to-content">
+  <topicref href="../Destinations/ToError.dita">
    <topicmeta>
     <shortdesc/>
    </topicmeta>
   </topicref>
-  <topicref href="../Destinations/ToError.dita"> 
+  <topicref href="../Destinations/Trash.dita" chunk="to-content">
    <topicmeta>
-   <shortdesc/>
-  </topicmeta>
+    <shortdesc/>
+   </topicmeta>
   </topicref>
  </topicref>
 </map>

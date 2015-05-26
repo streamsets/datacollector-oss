@@ -31,8 +31,9 @@
    <topicref href="../Origins/HTTPClient-Configuring.dita"/>
   </topicref>
   <topicref href="../Origins/JDBCConsumer.dita" chunk="to-content"> <topicmeta><shortdesc></shortdesc></topicmeta>
-   <topicref href="../Origins/JDBCConsumer-Full-IncrementalQueries.dita"/>
    <topicref href="../Origins/JDBCConsumer-OffsetColumn_Value.dita"/>
+   <topicref href="../Origins/JDBCConsumer-Recovery.dita"/>
+   <topicref href="../Origins/JDBCConsumer-Full-IncrementalQueries.dita"/>
    <topicref href="../Origins/JDBC-SQLQuery.dita"/>
    <topicref href="../Origins/JDBCConsumer-Configuring.dita"/>
   </topicref>
