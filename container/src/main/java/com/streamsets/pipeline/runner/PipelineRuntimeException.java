@@ -6,6 +6,7 @@
 package com.streamsets.pipeline.runner;
 
 import com.streamsets.pipeline.api.ErrorCode;
+import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.util.ContainerError;
 import com.streamsets.pipeline.util.PipelineException;
 import com.streamsets.pipeline.validation.Issue;
@@ -24,7 +25,7 @@ public class PipelineRuntimeException extends PipelineException {
   }
 
   public PipelineRuntimeException(Issues issues) {
-    super(ContainerError.CONTAINER_0165);
+    super(ContainerError.CONTAINER_0165, issues.getIssues());
     this.issues = issues;
   }
 

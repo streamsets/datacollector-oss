@@ -15,6 +15,7 @@ import com.streamsets.pipeline.api.base.RecordTarget;
 import com.streamsets.pipeline.api.el.ELEval;
 import com.streamsets.pipeline.api.el.ELEvalException;
 import com.streamsets.pipeline.api.el.ELVars;
+import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.config.CsvHeader;
 import com.streamsets.pipeline.config.CsvMode;
 import com.streamsets.pipeline.config.DataFormat;
@@ -293,19 +294,33 @@ public class HdfsTarget extends RecordTarget {
       validHapoopFsUri = false;
     }
 
+    StringBuilder logMessage = new StringBuilder();
     try {
       hdfsConfiguration = getHadoopConfiguration(issues);
 
       hdfsConfiguration.set(CommonConfigurationKeys.FS_DEFAULT_NAME_KEY, hdfsUri);
       if (hdfsKerberos) {
-        hdfsConfiguration.set(CommonConfigurationKeys.HADOOP_SECURITY_AUTHENTICATION,
-                              UserGroupInformation.AuthenticationMethod.KERBEROS.name());
-        UserGroupInformation.setConfiguration(hdfsConfiguration);
-        ugi = UserGroupInformation.loginUserFromKeytabAndReturnUGI(kerberosPrincipal, kerberosKeytab);
-        if (ugi.getAuthenticationMethod() != UserGroupInformation.AuthenticationMethod.KERBEROS) {
-          issues.add(getContext().createConfigIssue(Groups.HADOOP_FS.name(), "hdfsKerberos", Errors.HADOOPFS_00));
+        logMessage.append("Using Kerberos: ");
+        if (Boolean.getBoolean("sdc.transient-env")) {
+          Utils.checkState(getContext().isClusterMode(), "Transient environment implies cluster mode");
+          Utils.checkState(!getContext().isPreview(), "Transient environment implies pipeline is not in preview");
+          logMessage.append("via delegation token: " + System.getenv("HADOOP_TOKEN_FILE_LOCATION"));
+          // use delegation token
+          UserGroupInformation.setConfiguration(hdfsConfiguration);
+          ugi = UserGroupInformation.getCurrentUser();
+        } else {
+          logMessage.append("via keytab");
+          hdfsConfiguration.set(CommonConfigurationKeys.HADOOP_SECURITY_AUTHENTICATION,
+            UserGroupInformation.AuthenticationMethod.KERBEROS.name());
+          UserGroupInformation.setConfiguration(hdfsConfiguration);
+          ugi = UserGroupInformation.loginUserFromKeytabAndReturnUGI(kerberosPrincipal, kerberosKeytab);
+          if (ugi.getAuthenticationMethod() != UserGroupInformation.AuthenticationMethod.KERBEROS) {
+            issues.add(getContext().createConfigIssue(Groups.HADOOP_FS.name(), "hdfsKerberos", Errors.HADOOPFS_00,
+              ugi.getAuthenticationMethod(), UserGroupInformation.AuthenticationMethod.KERBEROS));
+          }
         }
       } else {
+        logMessage.append("Using Simple");
         hdfsConfiguration.set(CommonConfigurationKeys.HADOOP_SECURITY_AUTHENTICATION,
                               UserGroupInformation.AuthenticationMethod.SIMPLE.name());
         ugi = UserGroupInformation.getLoginUser();
@@ -324,6 +339,7 @@ public class HdfsTarget extends RecordTarget {
       issues.add(getContext().createConfigIssue(Groups.HADOOP_FS.name(), null, Errors.HADOOPFS_01, hdfsUri,
                                                 ex.getMessage(), ex));
     }
+    LOG.info("Authentication Config: " + logMessage);
     return validHapoopFsUri;
   }
 

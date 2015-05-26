@@ -141,7 +141,7 @@ public class SparkProviderImpl implements SparkProvider {
           process.exitValue()));
       }
       logOutput(appId, process);
-      for (String line : process.getOutput()) {
+      for (String line : process.getAllOutput()) {
         if (line.trim().equals("RUNNING")) {
           return true;
         }
@@ -376,7 +376,7 @@ public class SparkProviderImpl implements SparkProvider {
       Set<String> applicationIds = new HashSet<>();
       while (true) {
         long elapsedSeconds = TimeUnit.SECONDS.convert(System.currentTimeMillis() - start, TimeUnit.MILLISECONDS);
-        LOG.debug("Elapsed seconds till an application id is found are " + elapsedSeconds);
+        LOG.debug("Waiting for application id, elapsed seconds: " + elapsedSeconds);
         if (applicationIds.size() > 1) {
           logOutput("unknown", process);
           throw new IllegalStateException(errorString("Found more than one application id: {}", applicationIds));

@@ -7,6 +7,7 @@ package com.streamsets.pipeline.cluster;
 
 
 import com.google.common.collect.ImmutableMap;
+import com.streamsets.pipeline.api.impl.Utils;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -54,4 +55,8 @@ public class ApplicationState {
     return ImmutableMap.copyOf(backingMap);
   }
 
+  @Override
+  public String toString() {
+    return Utils.format("ApplicationState = {}", backingMap);
+  }
 }

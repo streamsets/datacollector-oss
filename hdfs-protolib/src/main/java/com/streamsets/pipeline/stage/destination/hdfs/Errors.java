@@ -10,7 +10,7 @@ import com.streamsets.pipeline.api.GenerateResourceBundle;
 
 @GenerateResourceBundle
 public enum Errors implements ErrorCode {
-  HADOOPFS_00("Hadoop UserGroupInformation reports Simple authentication, it should be Kerberos"),
+  HADOOPFS_00("Hadoop UserGroupInformation reports '{}' authentication, it should be '{}'"),
   HADOOPFS_01("Failed to configure or connect to the '{}' Hadoop file system: {}"),
   HADOOPFS_02("Invalid dir path template '{}', {}"),
 

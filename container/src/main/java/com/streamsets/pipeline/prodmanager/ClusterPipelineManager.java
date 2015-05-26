@@ -373,7 +373,7 @@ public class ClusterPipelineManager extends AbstractTask implements PipelineMana
       } else {
         break;
       }
-    } while (TimeUnit.MILLISECONDS.toSeconds(Math.max(0, System.currentTimeMillis() - start)) < 10);
+    } while (TimeUnit.MILLISECONDS.toSeconds(Math.max(0, System.currentTimeMillis() - start)) < 30);
     if (appId == null) {
       throw new PipelineManagerException(ContainerError.CONTAINER_0101, "for cluster application");
     } else {
@@ -475,11 +475,6 @@ public class ClusterPipelineManager extends AbstractTask implements PipelineMana
     throws PipelineRuntimeException, StageException, PipelineStoreException, PipelineManagerException {
 
     ProductionPipeline p = createProductionPipeline(name, rev, pipelineConf);
-    List<StageIssue> stageIssues = p.getPipeline().validateConfigs();
-    if (!stageIssues.isEmpty()) {
-      Issues issues = new Issues(stageIssues);
-      throw new PipelineRuntimeException(issues);
-    }
     p.getPipeline().init();
 
     int parallelism = p.getPipeline().getSource().getParallelism();
@@ -698,6 +693,7 @@ public class ClusterPipelineManager extends AbstractTask implements PipelineMana
         attributes.put(APPLICATION_STATE, applicationState.getMap());
         stateTracker.setState(name, rev, State.RUNNING, "Starting cluster pipeline", null, attributes);
       } catch (Exception ex) {
+        // TODO if PipelineRuntimeException fails we should send validation issues back to client
         String msg = "Error starting application: " + ex;
         clusterPipelineManager.transitionToError(ps, msg);
         LOG.error(msg, ex);
