@@ -2,7 +2,7 @@
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_hpr_twm_jq">
  <title>Origins</title>
- <shortdesc>An origin stage represents the source data for the pipeline. You can use a single origin
+ <shortdesc>An origin stage represents the source for the pipeline. You can use a single origin
     stage in a pipeline.</shortdesc>
  <conbody>
   <p><indexterm>origins<indexterm>overview</indexterm></indexterm>You can use the following types of

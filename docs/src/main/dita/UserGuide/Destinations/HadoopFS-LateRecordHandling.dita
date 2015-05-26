@@ -12,8 +12,9 @@
       output directories based on the timestamp of the event, and it has a time limit of one day.
       Any records that arrive more than a day after the hourly output directory window are
       considered late. </p>
-  <p>You can send late records to a late records file, to the pipeline for error handling, or
-   discard the records. When you send records to a late records file, you define a late records
-   directory template. </p>
+  <p>You can send late records to a late records file or to the pipeline for error handling. When
+            you send records to a late records file, you define a late records directory template.
+                <draft-comment author="Loretta">checking with Tucu about whether it goes to the
+                stage or pipeline for error handling - 5/26</draft-comment></p>
  </conbody>
 </concept>

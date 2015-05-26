@@ -7,11 +7,11 @@
   <p><indexterm>Kafka Producer destination<indexterm>additional
                 properties</indexterm></indexterm><indexterm>custom properties<indexterm>Kafka
                     Producer</indexterm></indexterm>When you add a Kafka configuration property,
-            enter the exact property name and the value. The Kafka Consumer does not validate the
+            enter the exact property name and the value. The Kafka Producer does not validate the
             property names or values.</p>
         <p>Several properties are defined by default, you can edit or remove the properties as
             necessary.</p>
-  <note>The Kafka Producer uses the several configuration properties. The Kafka Consumer ignores
+  <note>The Kafka Producer uses the several configuration properties. The Kafka Producer ignores
             user-defined values for the following properties:<ul id="ul_uqg_4ft_xr">
                 <li>key.serializer.class</li>
                 <li>metadata.broker.list</li>

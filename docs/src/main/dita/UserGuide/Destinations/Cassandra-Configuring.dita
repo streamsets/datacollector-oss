@@ -29,8 +29,8 @@
                                 <row>
                                     <entry>Cassandra Contact Points</entry>
                                     <entry>Host names for nodes in Cassandra cluster. To ensure a
-                                        connection, use the Add icon to enter several host
-                                        names.</entry>
+                                        connection, use the <uicontrol>Add</uicontrol> icon to enter
+                                        several host names.</entry>
                                 </row>
                                 <row>
                                     <entry>Cassandra Port</entry>
@@ -38,8 +38,8 @@
                                 </row>
                                 <row>
                                     <entry>Use Credentials</entry>
-                                    <entry>Indicates whether you want to enter user credentials to
-                                        access the cluster.</entry>
+                                    <entry>Indicates whether to use credentials to access the
+                                        cluster.</entry>
                                 </row>
                                 <row>
                                     <entry>Fully-Qualified Table Name</entry>

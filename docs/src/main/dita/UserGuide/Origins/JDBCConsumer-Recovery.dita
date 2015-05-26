@@ -4,13 +4,12 @@
  <title>Recovery</title>
  <shortdesc>JDBC Consumer uses offset values in the offset column to determine where to continue
   processing after a deliberate or unexpected stop. To ensure seamless recovery, use a primary key
-  or index column as the offset column.</shortdesc>
+  or indexed column as the offset column.</shortdesc>
  <conbody>
   <p><indexterm>JDBC Consumer
      origin<indexterm>recovery</indexterm></indexterm><indexterm>recovery<indexterm>JDBC
      Consumer</indexterm></indexterm>As JDBC Consumer processes data, it tracks the offset value
    internally. When the pipeline stops, JDBC Consumer notes where it stopped processing data. When
    you restart the pipeline, it continues from the last-saved offset. </p>
-  <p>JDBC Consumer performs recovery in both full and incremental mode. </p>
  </conbody>
 </concept>

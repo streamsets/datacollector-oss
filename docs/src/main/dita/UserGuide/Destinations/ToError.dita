@@ -15,6 +15,6 @@
    destination and you can create metric and data alerts. You can also examine the data sent to the
    destination as part of data preview or a monitor snapshot. </p>
   <p>The To Error destination has no configuration options. To use the destination in a pipeline,
-   simply add the stage and connect it to the pipeline. </p>
+   simply add the stage and connect the pipeline to the stage.</p>
  </conbody>
 </concept>

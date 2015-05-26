@@ -5,7 +5,7 @@
     <taskbody>
         <context>
             <p><indexterm>HTTP Client origin<indexterm>configuring</indexterm></indexterm>Configure
-                an HTTP Client origin to read JSON data from a streaming HTTP resource URL.</p>
+                an HTTP Client origin to read JSON data from an HTTP resource URL.</p>
         </context>
         <steps id="steps_xmt_2lz_5r">
             <step>
@@ -24,7 +24,7 @@
                             <tbody>
                                 <row>
                                     <entry>Data Format</entry>
-                                    <entry>The HTTP Client reads JSON data.</entry>
+                                    <entry>HTTP Client reads JSON data.</entry>
                                 </row>
                                 <row>
                                     <entry>Resource URL</entry>
@@ -32,8 +32,8 @@
                                 </row>
                                 <row>
                                     <entry>Request Timeout</entry>
-                                    <entry>Milliseconds to wait for the server to verify the
-                                        connection. </entry>
+                                    <entry>Milliseconds to wait for the server to begin sending a
+                                        response. </entry>
                                 </row>
                                 <row>
                                     <entry>Mode</entry>

@@ -56,7 +56,7 @@
                                 </row>
                                 <row>
                                     <entry>Storage Type</entry>
-                                    <entry>Data type of the row key. Choose
+                                    <entry>Storage type of the row key. Choose
                                             <uicontrol>Text</uicontrol> or
                                             <uicontrol>Binary</uicontrol>.</entry>
                                 </row>

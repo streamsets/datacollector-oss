@@ -17,8 +17,7 @@
             processor for error handling. The processor handles error records based on the On Record
             Error property.</dd>
           <dd>Use this mode to avoid including error handling logic in the code. Since this mode
-            calls the script for each record, pipeline performance might be negatively affected.
-          </dd>
+            calls the script for each record, pipeline performance will be negatively affected. </dd>
         </dlentry>
         <dlentry>
           <dt>Record Batch</dt>

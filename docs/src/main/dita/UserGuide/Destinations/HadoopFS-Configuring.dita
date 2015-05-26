@@ -80,6 +80,7 @@
                                     <entry>Data Format</entry>
                                     <entry>Format of data to be written. Use one of the following
                                             options:<ul id="ul_un2_cqd_br">
+                                            <li>Text</li>
                                             <li>JSON</li>
                                             <li>Delimited</li>
                                             <li>SDC Record <xref
@@ -98,7 +99,11 @@
                                 <row>
                                     <entry>Files Prefix</entry>
                                     <entry>Prefix to use for output files. Use when writing to a
-                                        directory that receives files from other sources.</entry>
+                                        directory that receives files from other sources.<p>Uses the
+                                            prefix sdc-${sdc:id()} by default. The prefix evaluates
+                                            to sdc-&lt;Data Collector ID>. </p><p>The Data Collector
+                                            ID is stored in the following file:
+                                            &lt;SDCinstalldir>/data/sdc.id. </p></entry>
                                 </row>
                                 <row>
                                     <entry>Data Charset</entry>
@@ -214,7 +219,10 @@
                                                 error handling. </li>
                                             <li>Send to late records file - Sends the record to a
                                                 late records file.</li>
-                                        </ul></entry>
+                                        </ul><p>
+                                            <draft-comment author="Loretta">Tucu - stage or pipeline
+                                                for the first point?</draft-comment>
+                                        </p></entry>
                                 </row>
                                 <row>
                                     <entry>Late Record Directory Template <xref

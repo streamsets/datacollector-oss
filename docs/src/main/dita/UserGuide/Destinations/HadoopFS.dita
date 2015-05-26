@@ -10,8 +10,8 @@
      FS</indexterm></indexterm>When you configure a Hadoop FS destination, you define the output
    directory template. Hadoop FS creates output directories based the template and the time basis.
    Hadoop FS writes records to the directories based on the time basis as well.</p>
-  <p>You can determine the amount of time that a record can be written to its associated time-based
-   directory, and define what happens to late records. </p>
+  <p>You can specify the amount of time that a record can be written to its associated directory and
+      what happens to late records. </p>
     <p>When necessary, you can configure Kerberos authentication and add additional Hadoop
       configuration properties.</p>
  </conbody>

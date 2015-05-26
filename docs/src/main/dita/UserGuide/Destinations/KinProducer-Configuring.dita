@@ -11,7 +11,7 @@
         </context>
         <steps id="steps_dsb_sn4_yr">
             <step
-                conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/1stStep-StageLib-ReqField-EHandling">
+                conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/1stStep-ReqField-ErrorHandling">
                 <cmd/>
             </step>
             <step>
@@ -50,12 +50,14 @@
                                                   href="../Pipeline_Configuration/SDCRecordFormat.dita#concept_qkk_mwk_br">
                                                   <image href="../Graphics/icon_moreInfo.png"
                                                   scale="10" id="image_wjh_ycl_br"/></xref></li>
-                                        </ul></entry>
+                                        </ul><draft-comment author="Loretta">Can we call it JSON
+                                            Object? Just to be clear, in case no one reads the doc?
+                                            Logging a bug.</draft-comment></entry>
                                 </row>
                                 <row>
                                     <entry>Partition Strategy</entry>
                                     <entry>Strategy to write data to Kinesis shards. Kinesis
-                                        Producer uses a round-robin strategy.</entry>
+                                        Producer uses a round-robin strategy at this tie. </entry>
                                 </row>
                                 <row>
                                     <entry>AWS Access Key ID</entry>

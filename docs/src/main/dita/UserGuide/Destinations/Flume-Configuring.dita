@@ -5,11 +5,11 @@
     <taskbody>
         <context>
             <p><indexterm>Flume destinations<indexterm>configuring</indexterm></indexterm>Configure
-                a Flume destination to write data to Flume. </p>
+                a Flume destination to write data to a Flume source. </p>
         </context>
         <steps id="steps_dmg_jyp_yr">
             <step
-                conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/1stStep-ReqField-ErrorHandling">
+                conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/1stStep-StageLib-ReqField-EHandling">
                 <cmd/>
             </step>
             <step>
@@ -28,14 +28,14 @@
                             </thead>
                             <tbody>
                                 <row>
-                                    <entry>Host Configuration</entry>
+                                    <entry>Hosts Configuration</entry>
                                     <entry>Flume host information:<ul id="ul_al4_s1q_yr">
                                             <li>Name - Local alias for the Flume host. </li>
                                             <li>Flume host and port - Host name and port number for
                                                 the Flume agent. Use the following format: &lt;host
-                                                name>:&lt;port number></li>
-                                        </ul>Click <uicontrol>Add</uicontrol> to add additional host
-                                        configuration.</entry>
+                                                name>:&lt;port number>.</li>
+                                        </ul>Click the <uicontrol>Add</uicontrol> icon to add
+                                        additional host configuration.</entry>
                                 </row>
                                 <row>
                                     <entry>Client Type</entry>
@@ -56,9 +56,8 @@
                                     <entry>Max Backoff (ms)</entry>
                                     <entry>The maximum amount of time that the Avro load balancing
                                         client avoids writing to a failed host. <p>Enter the number
-                                            of milliseconds between 0 and 65536. </p><p>Use 0 to
-                                            trigger the Flume default value of 30000 milliseconds -
-                                            30 seconds. </p></entry>
+                                            of milliseconds between 1 and 65536. </p>Use 0 to use
+                                        the Flume default of 30000 milliseconds - 30 seconds. </entry>
                                 </row>
                                 <row>
                                     <entry>Host Selection Strategy</entry>
@@ -69,22 +68,21 @@
                                 </row>
                                 <row>
                                     <entry>Flume Batch Size (events)</entry>
-                                    <entry>Maximum amount of events that the Flume client writes to
-                                        a Flume host at one time. <p>The Flume client can split a
-                                                <ph
+                                    <entry>Maximum number of events that the Flume client writes to
+                                        a host at one time. <p>The client can split a <ph
                                                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                                            /> batch into multiple Flume batches before passing
-                                            Flume batches to the Flume host.</p></entry>
+                                            /> batch into multiple Flume batches before passing the
+                                            batches to the host.</p></entry>
                                 </row>
                                 <row>
                                     <entry>Flume Client Connection Timeout (ms)</entry>
-                                    <entry>Maximum amount of time for the Flume client to connect to
-                                        the Flume host. </entry>
+                                    <entry>Milliseconds that the client can wait for a connection to
+                                        the host.</entry>
                                 </row>
                                 <row>
                                     <entry>Flume Client Request Timeout (ms)</entry>
-                                    <entry>Milliseconds the Flume client waits for a response after
-                                        sending data to the Flume host. <p>When the client does not
+                                    <entry>Milliseconds the client can wait for a response after
+                                        sending data to the host. <p>When the client does not
                                             receive a response in time, the Flume destination
                                             resends the batch. It resends up to the number
                                             configured for Max Retry Attempts.</p></entry>
@@ -92,13 +90,11 @@
                                 <row>
                                     <entry>Max Retry Attempts</entry>
                                     <entry>Maximum number of times the Flume destination resends
-                                        data to Flume and waits for a response before stopping the
-                                        pipeline. </entry>
+                                        data and waits for a response before stopping the pipeline. </entry>
                                 </row>
                                 <row>
                                     <entry>Retry Wait Time (ms)</entry>
-                                    <entry>Milliseconds to wait before resending data to
-                                        Flume.</entry>
+                                    <entry>Milliseconds to wait before resending data.</entry>
                                 </row>
                                 <row>
                                     <entry>Data Format</entry>

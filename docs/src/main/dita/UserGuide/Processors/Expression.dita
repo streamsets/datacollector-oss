@@ -2,8 +2,8 @@
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_zm2_pp3_wq">
  <title>Expression Evaluator</title>
- <shortdesc>The Expression Evaluator performs calculations on a record-by-record basis. It writes
-    the results of the calculations to the expression output fields. </shortdesc>
+ <shortdesc>The Expression Evaluator performs calculations with record data. It writes the results
+    of the calculations to new or existing fields in the record.</shortdesc>
  <conbody>
   <p><indexterm>processors<indexterm>Expression
         Evaluator</indexterm></indexterm><indexterm>Expression Evaluator

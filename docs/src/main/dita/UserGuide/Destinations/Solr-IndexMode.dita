@@ -2,8 +2,8 @@
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_z4y_bgr_wr">
  <title>Index Mode</title>
- <shortdesc>The index mode determines how the Solr destination indexes records when uploading to
-  Solr. Index mode also determines how the destination handles errors. </shortdesc>
+ <shortdesc>The index mode determines how the Solr destination indexes records when writing to Solr.
+  Index mode also determines how the destination handles errors. </shortdesc>
  <conbody>
   <p><indexterm>Solr destination<indexterm>index mode</indexterm></indexterm><indexterm>index
      mode<indexterm>Solr</indexterm></indexterm>You can use the following index modes:<dl>

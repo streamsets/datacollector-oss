@@ -69,7 +69,8 @@
                                 </row>
                                 <row>
                                     <entry>Use Credentials</entry>
-                                    <entry>Whether to use a login to access the database.</entry>
+                                    <entry>Indicates whether to use a login to access the
+                                        database.</entry>
                                 </row>
                                 <row>
                                     <entry>Additional JDBC Configuration</entry>
@@ -84,11 +85,8 @@
                             </tbody>
                         </tgroup>
                     </table>
-                    <draft-comment author="Loretta">Adam: I wonder if the order of properties might
-                        be nicer as follows: Offset Column, Initial Offset, SQL Query, Incremental
-                        Mode? Or ... Incremental Mode, SQL Query?  -- Just chewing on how folks
-                        might think about it - whatever you think is best is fine with
-                        me!</draft-comment>
+                    <draft-comment author="Loretta">Check back for any changes in order. Logged a
+                        bug 5/26.</draft-comment>
                 </info>
             </step>
             <step>
@@ -120,7 +118,7 @@
                 </info>
             </step>
             <step>
-                <cmd>When using drivers older than version 4.0, on the <uicontrol>Legacy
+                <cmd>When using JDBC versions older than 4.0, on the <uicontrol>Legacy
                         Drivers</uicontrol> tab, optionally configure the following
                     properties:</cmd>
                 <info>
@@ -137,13 +135,13 @@
                             <tbody>
                                 <row>
                                     <entry>JDBC Class Driver Name</entry>
-                                    <entry>Class name for the JDBC driver. Use only for versions
-                                        older than version 4.0.</entry>
+                                    <entry>Class name for the JDBC driver. Required for JDBC
+                                        versions older than version 4.0.</entry>
                                 </row>
                                 <row>
                                     <entry>Connection Health Test Query</entry>
-                                    <entry>Optional query to test the health of a connection to a
-                                        driver version older than 4.0.</entry>
+                                    <entry>Optional query to test the health of a connection.
+                                        Recommended only when the JDBC version is older than 4.0. </entry>
                                 </row>
                             </tbody>
                         </tgroup>

@@ -14,14 +14,15 @@
       first query, it saves the last offset value that it processes. When it requests a subsequent
       query, it returns data after the last-saved offset. You can reset the origin to use the
       initial offset value. </dd>
-     <dd>Use incremental mode when data is appended to the table between queries. By default, JDBC
-      Consumer uses incremental mode. </dd>
+     <dd>Use incremental mode for append-only tables or when you do not need to capture changes to
+      older rows. By default, JDBC Consumer uses incremental mode. </dd>
     </dlentry>
     <dlentry>
      <dt>Full mode</dt>
      <dd>When the JDBC Consumer performs a full query, it uses the initial offset as the offset
       value in the SQL query each time it requests data.</dd>
-     <dd>Use a full mode when data can change across the table between queries. </dd>
+     <dd>Use a full mode to capture all row updates. You might use a Record Deduplicator in the
+      pipeline to minimize repeated rows. Not ideal for large tables.</dd>
     </dlentry>
    </dl>
   </p>

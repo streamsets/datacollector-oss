@@ -8,14 +8,14 @@
     <p>You can use the asterisk wildcard as follows: <dl>
         <dlentry>
           <dt>[*]</dt>
-          <dd>Represents all values for the specified index in an array. For example, the following
-            field path can hash the social security number of every employee in every
+          <dd>Matches all values for the specified index in an array. For example, the following
+            field path represents the social security number of every employee in every
             division:<codeblock>/Division[*]/Employee[*]/SSN</codeblock></dd>
         </dlentry>
         <dlentry>
           <dt>/*</dt>
-          <dd>Represents all values for the specified keys in a map. For example, the following
-            field path can mask all employee information in the first
+          <dd>Matches all values for the specified keys in a map. For example, the following field
+            path represents all employee information in the first
             division:<codeblock>/Division[0]/Employee[*]/*</codeblock></dd>
         </dlentry>
       </dl></p>

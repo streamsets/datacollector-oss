@@ -20,9 +20,7 @@
       for error handling. The processor handles error records based on the On Record Error
       property.</dd>
      <dd>Use this mode to avoid including error handling logic in the code. Since this mode calls
-      the script for each record, pipeline performance might be negatively affected. <draft-comment
-       author="Loretta">Is there any other up side to this mode besides avoidance of error handling
-       logic?</draft-comment></dd>
+      the script for each record, pipeline performance will be negatively affected. </dd>
     </dlentry>
     <dlentry>
      <dt>Batch by Batch</dt>
@@ -31,8 +29,7 @@
      <dd>Include error handling logic in the script. Without custom error handling logic, a single
       error record sends the entire batch to the processor for error handling. The processor handles
       error records based on the On Record Error property.</dd>
-     <dd>Use this mode to improve performance by processing a batch of data at a time.<draft-comment
-       author="Loretta">Other reasons to use batch mode?</draft-comment></dd>
+     <dd>Use this mode to improve performance by processing a batch of data at a time.</dd>
     </dlentry>
    </dl>
   </p>

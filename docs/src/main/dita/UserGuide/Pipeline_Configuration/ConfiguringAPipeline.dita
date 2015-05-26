@@ -234,15 +234,11 @@
                                         /> worker in the cluster.<p>Default is 1024 MB.</p></entry>
                                 </row>
                                 <row>
-                                    <entry>Launcher Env<draft-comment author="Loretta">Launcher
-                                            Configuration? Launcher Env Configuration?
-                                        </draft-comment></entry>
+                                    <entry>Launcher Env Configuration</entry>
                                     <entry>
-                                        <p>Additional configuration properties for the cluster.
-                                            Click the <uicontrol>Add</uicontrol> icon and define the
-                                            property name and value.  </p>
-                                        <draft-comment author="Loretta">Should we specify Spark
-                                            here? Or keep it vague? </draft-comment>
+                                        <p>Additional configuration properties for the cluster
+                                            launcher. Click the <uicontrol>Add</uicontrol> icon and
+                                            define the property name and value. </p>
                                     </entry>
                                 </row>
                             </tbody>

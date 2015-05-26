@@ -8,7 +8,7 @@
     <p><indexterm>processors<indexterm>overview</indexterm></indexterm>The <ph
         conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> provides
       the following processors:<ul id="ul_mxz_jxm_jq">
-        <li>Expression Evaluator - Performs calculations on a row-by-row basis.</li>
+        <li>Expression Evaluator - Performs calculations and appends the results to the record.</li>
         <li>Field Converter - Converts the data type of a field.</li>
         <li>Field Hasher - Uses an algorithm to encode sensitive string data.</li>
         <li>Field Masker - Masks sensitive string data.</li>

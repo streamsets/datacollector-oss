@@ -7,7 +7,7 @@
             a Solr destination to write data to an Solr node or cluster.</context>
         <steps id="steps_tgy_3tv_4r">
             <step
-                conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/1stStep-ReqField-ErrorHandling">
+                conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/1stStep-StageLib-ReqField-EHandling">
                 <cmd/>
             </step>
             <step>
@@ -41,15 +41,11 @@
                                         cluster.</entry>
                                 </row>
                                 <row>
-                                    <entry>Record Indexing Mode<draft-comment author="Loretta">Can
-                                            we call this Index Mode?</draft-comment></entry>
+                                    <entry>Record Indexing Mode</entry>
                                     <entry>Determines how records are indexed.</entry>
                                 </row>
                                 <row>
-                                    <entry>Fields<draft-comment author="Loretta">Can we call this
-                                            Field Mapping or Field Mappings or something like that?
-                                            Fields is quite generic.<p>Please note: the tooltip is
-                                                incorrect</p></draft-comment></entry>
+                                    <entry>Fields</entry>
                                     <entry>Map fields from the record to Solr fields. Use the
                                             <uicontrol>Add</uicontrol> icon to create additional
                                         field mappings. </entry>
