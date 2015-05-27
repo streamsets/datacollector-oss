@@ -13,7 +13,7 @@ public class RuleELRegistry {
     return new Class[] {
       RecordEL.class,
       StringEL.class,
-      ConditionUtilEL.class
+      DataUnitsEL.class
     };
   }
 }
