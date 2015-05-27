@@ -35,6 +35,7 @@ public class RuntimeInfo {
   public static final String CONFIG_DIR = ".conf.dir";
   public static final String DATA_DIR = ".data.dir";
   public static final String LOG_DIR = ".log.dir";
+  public static final String RESOURCES_DIR = ".resources.dir";
   public static final String LIBEXEC_DIR = ".libexec.dir";
   public static final String STATIC_WEB_DIR = ".static-web.dir";
   public static final String TRANSIENT_ENVIRONMENT = "sdc.transient-env";
@@ -176,6 +177,11 @@ public class RuntimeInfo {
   public String getLibexecDir() {
     return System.getProperty(propertyPrefix + LIBEXEC_DIR, getRuntimeDir() + "/libexec");
   }
+
+  public String getResourcesDir() {
+    return System.getProperty(propertyPrefix + RESOURCES_DIR, getRuntimeDir() + "/resources");
+  }
+
 
   public boolean hasAttribute(String key) {
     Utils.checkNotNull(key, "key");

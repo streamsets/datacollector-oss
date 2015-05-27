@@ -143,6 +143,11 @@ public class ProductionPipelineRunner implements PipelineRunner {
   }
 
   @Override
+  public RuntimeInfo getRuntimeInfo() {
+    return runtimeInfo;
+  }
+
+  @Override
   public boolean isPreview() {
     return false;
   }

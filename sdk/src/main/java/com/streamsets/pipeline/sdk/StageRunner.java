@@ -171,14 +171,14 @@ public abstract class StageRunner<S extends Stage> {
 
   @SuppressWarnings("unchecked")
   StageRunner(Class<S> stageClass, StageType stageType, Map<String, Object> configuration, List<String> outputLanes,
-      boolean isPreview, OnRecordError onRecordError, Map<String, Object> constants, boolean isClusterMode) {
+      boolean isPreview, OnRecordError onRecordError, Map<String, Object> constants, boolean isClusterMode, String resourcesDir) {
     this(stageClass, (S) getStage(Utils.checkNotNull(stageClass, "stageClass")), stageType, configuration, outputLanes,
-      isPreview, onRecordError, constants, isClusterMode);
+      isPreview, onRecordError, constants, isClusterMode, resourcesDir);
   }
 
   StageRunner(Class<S> stageClass, S stage, StageType stageType, Map < String, Object > configuration,
               List< String > outputLanes, boolean isPreview, OnRecordError onRecordError,
-              Map<String, Object> constants, boolean isClusterMode) {
+              Map<String, Object> constants, boolean isClusterMode, String resourcesDir) {
     Utils.checkNotNull(stage, "stage");
     Utils.checkNotNull(configuration, "configuration");
     Utils.checkNotNull(outputLanes, "outputLanes");
@@ -200,7 +200,7 @@ public abstract class StageRunner<S extends Stage> {
       throw new RuntimeException(e);
     }
     context = new StageContext(instanceName, stageType ,isPreview, onRecordError, outputLanes, configToElDefMap,
-      constants, isClusterMode);
+      constants, isClusterMode, resourcesDir);
     status = Status.CREATED;
   }
 
@@ -294,6 +294,7 @@ public abstract class StageRunner<S extends Stage> {
     boolean isPreview;
     boolean isClusterMode;
     OnRecordError onRecordError;
+    String resourcesDir;
 
     protected Builder(Class<S> stageClass, S stage) {
       this.stageClass =stageClass;
@@ -312,6 +313,11 @@ public abstract class StageRunner<S extends Stage> {
 
     public B setClusterMode(boolean isClusterMode) {
       this.isClusterMode = isClusterMode;
+      return (B) this;
+    }
+
+    public B setResourcesDir(String resourcesDir) {
+      this.resourcesDir = resourcesDir;
       return (B) this;
     }
 

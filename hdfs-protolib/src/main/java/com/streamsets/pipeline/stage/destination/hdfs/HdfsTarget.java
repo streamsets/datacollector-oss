@@ -31,6 +31,7 @@ import com.streamsets.pipeline.stage.destination.hdfs.writer.RecordWriterManager
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.CommonConfigurationKeys;
 import org.apache.hadoop.fs.FileSystem;
+import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.hdfs.HdfsConfiguration;
 import org.apache.hadoop.io.SequenceFile;
 import org.apache.hadoop.io.compress.CompressionCodec;
@@ -38,6 +39,7 @@ import org.apache.hadoop.security.UserGroupInformation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.File;
 import java.io.IOException;
 import java.net.URI;
 import java.nio.charset.Charset;
@@ -55,6 +57,7 @@ public class HdfsTarget extends RecordTarget {
   private final boolean hdfsKerberos;
   private final String kerberosPrincipal;
   private final String kerberosKeytab;
+  private final String hadoopConfDir;
   private final Map<String, String> hdfsConfigs;
   private String uniquePrefix;
   private final String dirPathTemplate;
@@ -80,17 +83,20 @@ public class HdfsTarget extends RecordTarget {
   private String charset;
 
   public HdfsTarget(String hdfsUri, boolean hdfsKerberos, String kerberosPrincipal, String kerberosKeytab,
-      Map<String, String> hdfsConfigs, String uniquePrefix, String dirPathTemplate, String timeZoneID,
+      String hadoopConfDir, Map<String, String> hdfsConfigs, String uniquePrefix, String dirPathTemplate,
+      String timeZoneID,
       String timeDriver, long maxRecordsPerFile, long maxFileSize, CompressionMode compression, String otherCompression,
       HdfsFileType fileType, String keyEl,
       HdfsSequenceFileCompressionType seqFileCompressionType, String lateRecordsLimit,
       LateRecordsAction lateRecordsAction, String lateRecordsDirPathTemplate,
-      DataFormat dataFormat, String charset, CsvMode csvFileFormat, CsvHeader csvHeader, boolean csvReplaceNewLines, JsonMode jsonMode,
+      DataFormat dataFormat, String charset, CsvMode csvFileFormat, CsvHeader csvHeader, boolean csvReplaceNewLines,
+      JsonMode jsonMode,
       String textFieldPath, boolean textEmptyLineIfNull) {
     this.hdfsUri = hdfsUri;
     this.hdfsKerberos = hdfsKerberos;
     this.kerberosPrincipal = kerberosPrincipal;
     this.kerberosKeytab = kerberosKeytab;
+    this.hadoopConfDir = hadoopConfDir;
     this.hdfsConfigs = hdfsConfigs;
     this.uniquePrefix = uniquePrefix;
     this.dirPathTemplate = dirPathTemplate;
@@ -237,6 +243,41 @@ public class HdfsTarget extends RecordTarget {
     return issues;
   }
 
+  Configuration getHadoopConfiguration(List<ConfigIssue> issues) {
+    Configuration conf = new Configuration();
+    if (hadoopConfDir != null && !hadoopConfDir.isEmpty()) {
+      File hadoopConfigDir = new File(getContext().getResourcesDirectory(), hadoopConfDir).getAbsoluteFile();
+      if (!hadoopConfigDir.exists()) {
+        issues.add(getContext().createConfigIssue(Groups.HADOOP_FS.name(), "hadoopConfDir", Errors.HADOOPFS_25,
+                                                  hadoopConfDir));
+      } else if (!hadoopConfigDir.isDirectory()) {
+        issues.add(getContext().createConfigIssue(Groups.HADOOP_FS.name(), "hadoopConfDir", Errors.HADOOPFS_26,
+                                                  hadoopConfDir));
+      } else {
+        File coreSite = new File(hadoopConfigDir, "core-site.xml");
+        if (coreSite.exists()) {
+          if (!coreSite.isFile()) {
+            issues.add(getContext().createConfigIssue(Groups.HADOOP_FS.name(), "hadoopConfDir", Errors.HADOOPFS_27,
+                                                      hadoopConfDir, "core-site.xml"));
+          }
+          conf.addResource(new Path(coreSite.getAbsolutePath()));
+        }
+        File hdfsSite = new File(hadoopConfigDir, "hdfs-site.xml");
+        if (hdfsSite.exists()) {
+          if (!hdfsSite.isFile()) {
+            issues.add(getContext().createConfigIssue(Groups.HADOOP_FS.name(), "hadoopConfDir", Errors.HADOOPFS_27,
+                                                      hadoopConfDir, "hdfs-site.xml"));
+          }
+          conf.addResource(new Path(hdfsSite.getAbsolutePath()));
+        }
+      }
+    }
+    for (Map.Entry<String, String> config : hdfsConfigs.entrySet()) {
+      conf.set(config.getKey(), config.getValue());
+    }
+    return conf;
+  }
+
   private boolean validateHadoopFS(List<ConfigIssue> issues) {
     boolean validHapoopFsUri = true;
     if (hdfsUri.contains("://")) {
@@ -253,10 +294,7 @@ public class HdfsTarget extends RecordTarget {
     }
 
     try {
-      hdfsConfiguration = new HdfsConfiguration();
-      for (Map.Entry<String, String> config : hdfsConfigs.entrySet()) {
-        hdfsConfiguration.set(config.getKey(), config.getValue());
-      }
+      hdfsConfiguration = getHadoopConfiguration(issues);
 
       hdfsConfiguration.set(CommonConfigurationKeys.FS_DEFAULT_NAME_KEY, hdfsUri);
       if (hdfsKerberos) {

@@ -9,6 +9,7 @@ import com.codahale.metrics.MetricRegistry;
 import com.codahale.metrics.Timer;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.config.StageType;
+import com.streamsets.pipeline.main.RuntimeInfo;
 import com.streamsets.pipeline.metrics.MetricsConfigurator;
 import com.streamsets.pipeline.runner.BatchListener;
 import com.streamsets.pipeline.runner.FullPipeBatch;
@@ -32,6 +33,7 @@ import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 public class PreviewPipelineRunner implements PipelineRunner {
+  private final RuntimeInfo runtimeInfo;
   private final SourceOffsetTracker offsetTracker;
   private final int batchSize;
   private final int batches;
@@ -43,7 +45,9 @@ public class PreviewPipelineRunner implements PipelineRunner {
   private Timer processingTimer;
   private List<BatchListener> batchListenerList = new ArrayList<BatchListener>();
 
-  public PreviewPipelineRunner(SourceOffsetTracker offsetTracker, int batchSize, int batches, boolean skipTargets) {
+  public PreviewPipelineRunner(RuntimeInfo runtimeInfo, SourceOffsetTracker offsetTracker, int batchSize, int batches,
+      boolean skipTargets) {
+    this.runtimeInfo = runtimeInfo;
     this.offsetTracker = offsetTracker;
     this.batchSize = batchSize;
     this.batches = batches;
@@ -51,6 +55,11 @@ public class PreviewPipelineRunner implements PipelineRunner {
     this.metrics = new MetricRegistry();
     processingTimer = MetricsConfigurator.createTimer(metrics, "pipeline.batchProcessing");
     batchesOutput = new ArrayList<>();
+  }
+
+  @Override
+  public RuntimeInfo getRuntimeInfo() {
+    return runtimeInfo;
   }
 
   @Override

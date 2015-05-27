@@ -20,7 +20,11 @@ export SDC_GROUP=sdc
 
 # directory where the data collector will store pipelines and their runtime information
 #
-export SDC_DATA=/var/run/sdc
+export SDC_DATA=/var/lib/sdc
+
+ directory where the data collector will read pipeline resource files from
+#
+export SDC_RESOURCES=/var/lib/sdc-resources
 
 # directory where the data collector write its logs
 #

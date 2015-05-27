@@ -66,10 +66,12 @@ public class StageContext implements Source.Context, Target.Context, Processor.C
   private final Map<String, Object> constants;
   private final long pipelineMaxMemory;
   private final boolean isClusterMode;
+  private final String resourcesDir;
 
   //for SDK
   public StageContext(String instanceName, StageType stageType, boolean isPreview, OnRecordError onRecordError,
-      List<String> outputLanes, Map<String, Class<?>[]> configToElDefMap, Map<String, Object> constants, boolean isClusterMode) {
+      List<String> outputLanes, Map<String, Class<?>[]> configToElDefMap, Map<String, Object> constants,
+      boolean isClusterMode, String resourcesDir) {
     pipelineInfo = ImmutableList.of();
     this.stageType = stageType;
     this.isPreview = isPreview;
@@ -82,10 +84,11 @@ public class StageContext implements Source.Context, Target.Context, Processor.C
     this.constants = constants;
     this.pipelineMaxMemory = new MemoryLimitConfiguration().getMemoryLimit();
     this.isClusterMode = isClusterMode;
+    this.resourcesDir = resourcesDir;
   }
 
   public StageContext(List<Stage.Info> pipelineInfo, StageType stageType, boolean isPreview, MetricRegistry metrics,
-      StageRuntime stageRuntime, long pipelineMaxMemory, boolean isClusterMode) {
+      StageRuntime stageRuntime, long pipelineMaxMemory, boolean isClusterMode, String resourcesDir) {
     this.pipelineInfo = pipelineInfo;
     this.stageType = stageType;
     this.isPreview = isPreview;
@@ -97,6 +100,7 @@ public class StageContext implements Source.Context, Target.Context, Processor.C
     this.constants = stageRuntime.getConstants();
     this.pipelineMaxMemory = pipelineMaxMemory;
     this.isClusterMode = isClusterMode;
+    this.resourcesDir = resourcesDir;
   }
 
   private Map<String, Class<?>[]> getConfigToElDefMap(StageRuntime stageRuntime) {
@@ -274,6 +278,11 @@ public class StageContext implements Source.Context, Target.Context, Processor.C
   @Override
   public long getLastBatchTime() {
     return lastBatchTime;
+  }
+
+  @Override
+  public String getResourcesDirectory() {
+    return resourcesDir;
   }
 
   public void setLastBatchTime(long lastBatchTime) {

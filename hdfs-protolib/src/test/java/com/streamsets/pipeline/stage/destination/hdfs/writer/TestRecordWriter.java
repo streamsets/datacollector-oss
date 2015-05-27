@@ -136,7 +136,7 @@ public class TestRecordWriter {
       long expires = System.currentTimeMillis() + timeToLive;
       RecordWriter writer = new RecordWriter(file, timeToLive, seqFile, keyEL, new DummyDataGeneratorFactory(null),
         ContextInfoCreator.createTargetContext(HdfsDTarget.class, "testWritersLifecycle", false,
-          OnRecordError.TO_ERROR));
+          OnRecordError.TO_ERROR, null));
       Assert.assertFalse(writer.isTextFile());
       Assert.assertTrue(writer.isSeqFile());
       Assert.assertEquals(file, writer.getPath());

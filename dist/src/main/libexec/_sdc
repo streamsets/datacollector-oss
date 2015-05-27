@@ -37,6 +37,7 @@ SDC_HOSTNAME=`hostname -f`
 SDC_CONF=${SDC_CONF:=${SDC_HOME}/etc}
 SDC_DATA=${SDC_DATA:=${SDC_HOME}/data}
 SDC_LOG=${SDC_LOG:=${SDC_HOME}/log}
+SDC_RESOURCES=${SDC_RESOURCES:=${SDC_HOME}/resources}
 SDC_JAVA_OPTS=${SDC_JAVA_OPTS:="-Xmx1024m"}
 SDC_MAIN_CLASS=${SDC_MAIN_CLASS:="com.streamsets.pipeline.main.DataCollectorMain"}
 SDC_SECURITY_MANAGER_ENABLED=${SDC_SECURITY_MANAGER_ENABLED:="true"}
@@ -96,6 +97,7 @@ then
   echo "  CONF                     : ${SDC_CONF}"
   echo "  DATA                     : ${SDC_DATA}"
   echo "  LOG                      : ${SDC_LOG}"
+  echo "  RESOURCES                : ${SDC_RESOURCES}"
   echo "  SECURITY MANAGER POLICY  : ${SDC_POLICY_FILE}"
   echo "  JAVA PATH                : ${JAVA}"
   echo "  BOOTSTRAP_CLASSPATH      : ${BOOTSTRAP_CLASSPATH}"

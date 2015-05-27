@@ -25,16 +25,16 @@ public class TestStageRunner {
   public static class DummyStageRunner extends StageRunner<DummyStage> {
 
     DummyStageRunner(Class<DummyStage> stageClass, Map<String, Object> configuration, List<String> outputLanes,
-        boolean isPreview, Map<String, Object> constants, boolean isClusterMode) {
+        boolean isPreview, Map<String, Object> constants, boolean isClusterMode, String resourcesDir) {
       super(stageClass, StageType.SOURCE, configuration, outputLanes, isPreview, OnRecordError.TO_ERROR, constants,
-        isClusterMode);
+        isClusterMode, resourcesDir);
     }
 
     DummyStageRunner(Class<DummyStage> stageClass, DummyStage stage, Map<String, Object> configuration,
                      List<String> outputLanes, boolean isPreview, Map<String, Object> constants,
-                     boolean isClusterMode) {
+                     boolean isClusterMode, String resourcesDir) {
       super(stageClass, stage, StageType.SOURCE, configuration, outputLanes, isPreview, OnRecordError.TO_ERROR,
-        constants, isClusterMode);
+        constants, isClusterMode, resourcesDir);
     }
 
     public static class Builder extends StageRunner.Builder<DummyStage, DummyStageRunner, Builder> {
@@ -51,8 +51,9 @@ public class TestStageRunner {
       @Override
       public DummyStageRunner build() {
         return (stage != null) ?
-          new DummyStageRunner(stageClass, stage, configs, outputLanes, isPreview, constants, isClusterMode)
-          : new DummyStageRunner(stageClass, configs, outputLanes, isPreview, constants, isClusterMode);
+          new DummyStageRunner(stageClass, stage, configs, outputLanes, isPreview, constants, isClusterMode,
+                               resourcesDir)
+          : new DummyStageRunner(stageClass, configs, outputLanes, isPreview, constants, isClusterMode, resourcesDir);
       }
     }
   }
@@ -130,6 +131,13 @@ public class TestStageRunner {
     Assert.assertTrue(runner.getContext().isClusterMode());
   }
 
+  @Test
+  public void testResourcesDir() {
+    DummyStageRunner.Builder builder = new DummyStageRunner.Builder(DummyStage1.class);
+    builder.setResourcesDir("foo");
+    DummyStageRunner runner = builder.build();
+    Assert.assertEquals("foo", runner.getContext().getResourcesDirectory());
+  }
 
   @Test
   public void testBuilderWithInstance() {

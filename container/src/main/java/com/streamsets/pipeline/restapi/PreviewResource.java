@@ -110,7 +110,7 @@ public class PreviewResource {
     batches = Math.min(maxBatches, batches);
     PipelineConfiguration pipelineConf = store.load(name, rev);
     SourceOffsetTracker tracker = new PreviewSourceOffsetTracker(sourceOffset);
-    PreviewPipelineRunner runner = new PreviewPipelineRunner(tracker, batchSize, batches, skipTargets);
+    PreviewPipelineRunner runner = new PreviewPipelineRunner(runtimeInfo, tracker, batchSize, batches, skipTargets);
     try {
       PreviewPipeline pipeline = new PreviewPipelineBuilder(stageLibrary, name, pipelineConf,
         endStageInstanceName).build(runner);
@@ -152,7 +152,7 @@ public class PreviewResource {
       throws PipelineStoreException, PipelineRuntimeException, StageException {
     PipelineConfiguration pipelineConf = store.load(name, rev);
     SourceOffsetTracker tracker = new PreviewSourceOffsetTracker("");
-    PreviewPipelineRunner runner = new PreviewPipelineRunner(tracker, 10, 1, true);
+    PreviewPipelineRunner runner = new PreviewPipelineRunner(runtimeInfo, tracker, 10, 1, true);
     try {
       PreviewPipeline pipeline = new PreviewPipelineBuilder(stageLibrary, name, pipelineConf, null).build(runner);
       return Response.ok().type(MediaType.APPLICATION_JSON)
