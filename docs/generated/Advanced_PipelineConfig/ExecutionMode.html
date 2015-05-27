@@ -25,22 +25,25 @@
 
   <p class="p">In cluster mode, the <span class="ph">Data
                   Collector</span> runs as an
-   application within Spark, allowing it to process large volumes of data from a Kafka CDH cluster. </p>
+   application within Spark Streaming, allowing it to process large volumes of data from a Kafka CDH
+   cluster. </p>
 
-  <p class="p">Spark is an open source cluster-computing application that is installed as part of the Kafka
-   CDH. Within Spark, the <span class="ph">Data
+  <p class="p">Spark Streaming is an open source cluster-computing application that is installed as part of
+   the Kafka CDH. Within Spark Streaming, the <span class="ph">Data
                   Collector</span> spawns a <span class="ph">Data
                   Collector</span> worker for
    each partition in the Kafka cluster. So each partition has a <span class="ph">Data
                   Collector</span> worker to
    process data. </p>
 
-  <div class="p">
-   <div class="note note"><span class="notetitle">Note:</span> When you add a partition to the Kafka topic, restart the pipeline to enable the <span class="ph">Data
-                  Collector</span> to generate a
-    new worker to read from the new partition.</div>
-
-  </div>
+  <p class="p">An example architecture might be as follows. Say you want to ingest logs from applications
+   servers and perform a computationally expensive transformation. To accomplish this, use a
+   standalone <span class="ph">Data
+                  Collector</span>
+   on each application server to push the log records to Kafka. Then on the Kafka cluster, use the
+    <span class="ph">Data
+                  Collector</span> in cluster
+   mode to perform the expensive transformation.</p>
 
  </div>
 
@@ -53,7 +56,7 @@
             <div class="p">To run the <span class="ph">Data
                   Collector</span> in cluster mode, perform the following steps:<ol class="ol" id="task_gmd_msw_yr__ol_e32_llw_yr">
                     <li class="li">Install the <span class="ph">Data
-                  Collector</span> on a Spark on YARN gateway node.</li>
+                  Collector</span> on a Spark Streaming on YARN gateway node.</li>
 
                     <li class="li">In the <span class="ph">Data
                   Collector</span> properties file, set the <span class="ph uicontrol">sdc.execution.mode</span>
@@ -66,6 +69,9 @@
                     <li class="li">Use a Kafka Consumer origin in the pipeline. </li>
 
                 </ol>
+<div class="note note"><span class="notetitle">Note:</span> When you add a partition to the Kafka topic, restart the pipeline to
+                    enable the <span class="ph">Data
+                  Collector</span> to generate a new worker to read from the new partition. </div>
 </div>
 
         </div>

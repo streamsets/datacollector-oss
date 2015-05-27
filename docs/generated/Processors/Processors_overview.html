@@ -58,24 +58,68 @@
                 a list is not available or when you are defining a new field name, you need to use
                 the appropriate format for the field name.  </p>
 
-    <p class="p">If you
-                        think of the record as a root directory, a reference to a field is the path
-                        to the field, or field path. </p>
+    <p class="p">To
+                        reference a field, you specify the path of the field. A field path describes
+                        a data element in a record using a syntax similar to files in directories.
+                        The complexity of a field path differs based on the type of data in the
+                        record:</p>
 
-                <div class="p">When a record is a line of text, the fields are just one level removed from the
-                        root. So a reference to a field does not require a path. You can reference
-                        the field as follows:<pre class="pre codeblock">/&lt;field name&gt;</pre>
+                <div class="p">
+                        <dl class="dl">
+                                
+                                        <dt class="dt dlterm">Delimited data, simple maps or JSON objects</dt>
+
+                                        <dd class="dd">
+                                                <div class="p">With delimited data or simple JSON objects, the
+                                                  fields are one level removed from the root.
+                                                  Reference the field as
+                                                  follows:<pre class="pre codeblock">/&lt;field name&gt;</pre>
 </div>
 
-    <p class="p">So to reference a CITY field in a line of text, enter "/CITY".</p>
+                                                <p class="p">So, to reference a CITY field in a delimited
+                                                  record, enter /CITY.</p>
 
-    <div class="p">When a record is complex, like a JSON object, the root object might include many additional
-                        objects. In this case, a reference to a field is the path to the field as
-                        follows:<pre class="pre codeblock">/&lt;path to field&gt;/&lt;field name&gt;</pre>
+                                        </dd>
+
+                                
+                                
+                                        <dt class="dt dlterm">Complex maps or JSON objects</dt>
+
+                                        <dd class="dd">
+                                                <div class="p">To reference a field in a complex map or JSON
+                                                  object, include the path to the field, as follows:
+                                                  <pre class="pre codeblock">/&lt;path to field&gt;/&lt;field name&gt;</pre>
 </div>
 
-    <p class="p">For example, the following field path describes an employeeName field several levels deep in
-                        a JSON object: /region/division/group/employeeName.</p>
+                                                <p class="p">For example, the following field path describes
+                                                  an employeeName field several levels deep in a
+                                                  JSON object:<span class="ph filepath">
+                                                  /region/division/group/employeeName</span>.</p>
+
+                                        </dd>
+
+                                
+                                
+                                        <dt class="dt dlterm">Arrays or lists</dt>
+
+                                        <dd class="dd">To reference a field in an array or list, include the
+                                                index and path to the field, as
+                                                follows:<pre class="pre codeblock">[&lt;index value&gt;]/&lt;path to field&gt;/&lt;field name&gt;</pre>
+</dd>
+
+                                
+                                
+                                        <dt class="dt dlterm">Text</dt>
+
+                                        <dd class="dd">To reference text when a record is a line of text, use
+                                                the following field name:
+                                                <pre class="pre codeblock">/text</pre>
+</dd>
+
+                                
+                        </dl>
+
+                </div>
 
  </div>
 

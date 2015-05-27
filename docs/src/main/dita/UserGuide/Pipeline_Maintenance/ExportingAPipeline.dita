@@ -2,9 +2,8 @@
 <!DOCTYPE task PUBLIC "-//OASIS//DTD DITA General Task//EN" "generalTask.dtd">
 <task id="task_dtz_4tr_5q">
     <title>Exporting a Pipeline</title>
-    <shortdesc>Export a pipeline when you want to use the pipeline with another <ph
-            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>. You
-        might also export pipelines to keep a backup.</shortdesc>
+    <shortdesc>Export a pipeline to create a backup or to use the pipeline with another <ph
+            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>. </shortdesc>
     <taskbody>
         <context>
             <p><indexterm>pipelines<indexterm>exporting</indexterm></indexterm>When you export a

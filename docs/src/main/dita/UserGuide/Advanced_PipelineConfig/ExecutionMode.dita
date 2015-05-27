@@ -14,18 +14,20 @@
     mode<indexterm>description</indexterm></indexterm><indexterm>standalone
      mode<indexterm>description</indexterm></indexterm>In cluster mode, the <ph
     conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> runs as an
-   application within Spark, allowing it to process large volumes of data from a Kafka CDH cluster. </p>
-  <p>Spark is an open source cluster-computing application that is installed as part of the Kafka
-   CDH. Within Spark, the <ph
+   application within Spark Streaming, allowing it to process large volumes of data from a Kafka CDH
+   cluster. </p>
+  <p>Spark Streaming is an open source cluster-computing application that is installed as part of
+   the Kafka CDH. Within Spark Streaming, the <ph
     conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> spawns a <ph
     conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> worker for
    each partition in the Kafka cluster. So each partition has a <ph
     conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> worker to
    process data. </p>
-  <p>
-   <note>When you add a partition to the Kafka topic, restart the pipeline to enable the <ph
-     conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> to generate a
-    new worker to read from the new partition.</note>
-  </p>
+  <p>An example architecture might be as follows. Say you want to ingest logs from applications
+   servers and perform a computationally expensive transformation. To accomplish this, use a
+   standalone <ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
+   on each application server to push the log records to Kafka. Then on the Kafka cluster, use the
+    <ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> in cluster
+   mode to perform the expensive transformation.</p>
  </conbody>
 </concept>
