@@ -21,6 +21,7 @@ public class MockSparkProvider implements SparkProvider {
   public boolean killTimesOut = false;
   public boolean submitTimesOut = false;
   public boolean isRunningTimesOut = false;
+  public boolean isRunningCommandFails = false;
   public boolean isRunning = false;
   public String appId = null;
 
@@ -40,6 +41,9 @@ public class MockSparkProvider implements SparkProvider {
     LOG.info("isRunning");
     if (isRunningTimesOut) {
       throw new TimeoutException();
+    }
+    if (isRunningCommandFails) {
+      throw new RuntimeException("Mocking failure of isRunning");
     }
     return isRunning;
   }
