@@ -6,6 +6,7 @@
 package com.streamsets.pipeline.el;
 
 import com.codahale.metrics.MetricRegistry;
+import com.google.common.collect.ImmutableSet;
 import com.streamsets.pipeline.main.RuntimeInfo;
 import com.streamsets.pipeline.main.RuntimeModule;
 import org.apache.commons.io.IOUtils;
@@ -20,6 +21,11 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.attribute.PosixFilePermission;
 import java.util.Arrays;
 import java.util.UUID;
 
@@ -29,18 +35,23 @@ public class TestRuntimeEL {
   private static final String EMBEDDED_SDC_HOME_VALUE = "../sdc-embedded";
   private static final String REMOTE_SDC_HOME_VALUE = "../sdc-remote";
 
+  private static File resourcesDir;
   private static RuntimeInfo runtimeInfo;
 
   @BeforeClass
   public static void beforeClass() throws IOException {
-    System.setProperty(RuntimeModule.SDC_PROPERTY_PREFIX + RuntimeInfo.CONFIG_DIR, "./target/" + UUID.randomUUID().toString());
-    File f = new File(System.getProperty(RuntimeModule.SDC_PROPERTY_PREFIX + RuntimeInfo.CONFIG_DIR));
-    f.mkdirs();
+    File configDir = new File("target", UUID.randomUUID().toString()).getAbsoluteFile();
+    Assert.assertTrue(configDir.mkdirs());
+    resourcesDir = new File("target", UUID.randomUUID().toString()).getAbsoluteFile();
+    Assert.assertTrue(resourcesDir.mkdirs());
+    System.setProperty(RuntimeModule.SDC_PROPERTY_PREFIX + RuntimeInfo.CONFIG_DIR, configDir.getPath());
+    System.setProperty(RuntimeModule.SDC_PROPERTY_PREFIX + RuntimeInfo.RESOURCES_DIR, resourcesDir.getPath());
   }
 
   @AfterClass
   public static void afterClass() throws IOException {
     System.getProperties().remove(RuntimeModule.SDC_PROPERTY_PREFIX + RuntimeInfo.CONFIG_DIR);
+    System.getProperties().remove(RuntimeModule.SDC_PROPERTY_PREFIX + RuntimeInfo.RESOURCES_DIR);
   }
 
   @Before()
@@ -85,4 +96,26 @@ public class TestRuntimeEL {
     IOUtils.copy(is, os);
     is.close();
   }
+
+  @Test
+  public void testLoadResource() throws Exception {
+    Path fooFile = Paths.get(resourcesDir.getPath(), "foo.txt");
+    Files.write(fooFile, "Hello".getBytes(StandardCharsets.UTF_8));
+    RuntimeEL.loadRuntimeConfiguration(runtimeInfo);
+    Assert.assertNull(RuntimeEL.loadResource("bar.txt", false));
+    Assert.assertNull(RuntimeEL.loadResource("bar.txt", true));
+    Assert.assertEquals("Hello", RuntimeEL.loadResource("foo.txt", false));
+    try {
+      RuntimeEL.loadResource("foo.txt", true);
+      Assert.fail();
+    } catch (IllegalArgumentException ex) {
+      //nop
+    } catch (Exception ex) {
+      Assert.fail();
+    }
+    Files.setPosixFilePermissions(fooFile, ImmutableSet.of(PosixFilePermission.OWNER_READ,
+                                                           PosixFilePermission.OTHERS_WRITE));
+    Assert.assertEquals("Hello", RuntimeEL.loadResource("foo.txt", true));
+  }
+
 }

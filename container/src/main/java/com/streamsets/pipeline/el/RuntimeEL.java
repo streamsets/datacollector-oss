@@ -16,6 +16,9 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.attribute.PosixFilePermission;
 import java.util.Properties;
 import java.util.Set;
 
@@ -27,6 +30,7 @@ public class RuntimeEL {
   private static final String RUNTIME_CONF_LOCATION_DEFAULT = "embedded";
   private static final String RUNTIME_CONF_PREFIX = "runtime.conf_";
   private static Properties RUNTIME_CONF_PROPS = null;
+  private static RuntimeInfo runtimeInfo;
 
   @ElFunction(
     prefix = "runtime",
@@ -46,7 +50,42 @@ public class RuntimeEL {
     return value;
   }
 
+  private static final String EOL = System.getProperty("line.separator");
+
+  @ElFunction(prefix = "runtime", name = "loadResource",
+      description = "Loads the contents of a file under the Data Collector resources directory. " +
+                    "If restricted is set to 'true', the file must be readable only by its owner."
+  )
+  public static String loadResource(
+      @ElParam("fileName") String fileName,
+      @ElParam("restricted") boolean restricted) {
+    String resource = null;
+    try {
+      if (fileName != null && !fileName.isEmpty()) {
+        File file = new File(runtimeInfo.getResourcesDir(), fileName);
+        if (file.exists() && file.isFile()) {
+          if (restricted) {
+            Set<PosixFilePermission> permissions = Files.getPosixFilePermissions(file.toPath());
+            if (permissions.contains(PosixFilePermission.GROUP_READ) ||
+                permissions.contains(PosixFilePermission.OTHERS_READ)) {
+              throw new IllegalArgumentException(Utils.format("File '{}' should be owner readable only", file));
+            }
+          }
+        }
+        byte[] bytes = Files.readAllBytes(file.toPath());
+        resource = new String(bytes, StandardCharsets.UTF_8);
+      }
+    } catch (IllegalArgumentException ex) {
+      throw ex;
+    } catch (Exception ex) {
+      LOG.warn("Could not load resource '{}': {}", fileName, ex.getMessage(), ex);
+    }
+    return resource;
+  }
+
   public static void loadRuntimeConfiguration(RuntimeInfo runtimeInfo) throws IOException {
+    RuntimeEL.runtimeInfo = runtimeInfo;
+
     /*
 
     The sdc.properties file has a property 'runtime.conf.location' with possible values - 'embedded' or 'properties
