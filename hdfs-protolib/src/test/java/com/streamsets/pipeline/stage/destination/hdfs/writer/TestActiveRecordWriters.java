@@ -89,7 +89,8 @@ public class TestActiveRecordWriters {
     DataGeneratorFactory generatorFactory = new DummyDataGeneratorFactory(null);
     RecordWriterManager mgr = new RecordWriterManager(uri, conf, prefix, template, timeZone, cutOffSecs, cutOffSize,
       cutOffRecords, fileType, compressionCodec , compressionType, keyEL, generatorFactory,
-      ContextInfoCreator.createTargetContext(HdfsDTarget.class, "testWritersLifecycle", false, OnRecordError.TO_ERROR));
+      ContextInfoCreator.createTargetContext(HdfsDTarget.class, "testWritersLifecycle", false, OnRecordError.TO_ERROR,
+                                             null));
     ActiveRecordWriters writers = new ActiveRecordWriters(mgr);
 
     Date now = new Date();

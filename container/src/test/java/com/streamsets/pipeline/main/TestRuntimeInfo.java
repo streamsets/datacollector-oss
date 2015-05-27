@@ -33,6 +33,7 @@ public class TestRuntimeInfo {
     System.setProperty(RuntimeModule.SDC_PROPERTY_PREFIX + RuntimeInfo.CONFIG_DIR, "target/x");
     System.setProperty(RuntimeModule.SDC_PROPERTY_PREFIX + RuntimeInfo.LOG_DIR, "target/y");
     System.setProperty(RuntimeModule.SDC_PROPERTY_PREFIX + RuntimeInfo.DATA_DIR, "target/z");
+    System.setProperty(RuntimeModule.SDC_PROPERTY_PREFIX + RuntimeInfo.RESOURCES_DIR, "target/R");
   }
 
   @After
@@ -41,6 +42,7 @@ public class TestRuntimeInfo {
     System.getProperties().remove(RuntimeModule.SDC_PROPERTY_PREFIX + RuntimeInfo.LOG_DIR);
     System.getProperties().remove(RuntimeModule.SDC_PROPERTY_PREFIX + RuntimeInfo.DATA_DIR);
     System.getProperties().remove(RuntimeModule.SDC_PROPERTY_PREFIX + RuntimeInfo.STATIC_WEB_DIR);
+    System.getProperties().remove(RuntimeModule.SDC_PROPERTY_PREFIX + RuntimeInfo.RESOURCES_DIR);
     System.getProperties().remove(RuntimeModule.DATA_COLLECTOR_BASE_HTTP_URL);
   }
 
@@ -50,6 +52,7 @@ public class TestRuntimeInfo {
     System.setProperty(RuntimeModule.SDC_PROPERTY_PREFIX + RuntimeInfo.CONFIG_DIR, "x");
     System.setProperty(RuntimeModule.SDC_PROPERTY_PREFIX + RuntimeInfo.LOG_DIR, "y");
     System.setProperty(RuntimeModule.SDC_PROPERTY_PREFIX + RuntimeInfo.DATA_DIR, "z");
+    System.setProperty(RuntimeModule.SDC_PROPERTY_PREFIX + RuntimeInfo.RESOURCES_DIR, "r");
 
     List<? extends ClassLoader> customCLs = Arrays.asList(new URLClassLoader(new URL[0], null));
     RuntimeInfo info = new RuntimeInfo(RuntimeModule.SDC_PROPERTY_PREFIX, new MetricRegistry(), customCLs);
@@ -58,6 +61,7 @@ public class TestRuntimeInfo {
     Assert.assertEquals("x", info.getConfigDir());
     Assert.assertEquals("y", info.getLogDir());
     Assert.assertEquals("z", info.getDataDir());
+    Assert.assertEquals("r", info.getResourcesDir());
     Assert.assertEquals(customCLs, info.getStageLibraryClassLoaders());
     Logger log = Mockito.mock(Logger.class);
     info.log(log);
@@ -110,6 +114,7 @@ public class TestRuntimeInfo {
     System.setProperty(RuntimeModule.SDC_PROPERTY_PREFIX + RuntimeInfo.STATIC_WEB_DIR, "w");
     System.setProperty(RuntimeModule.SDC_PROPERTY_PREFIX + RuntimeInfo.CONFIG_DIR, "x");
     System.setProperty(RuntimeModule.SDC_PROPERTY_PREFIX + RuntimeInfo.LOG_DIR, "y");
+    System.setProperty(RuntimeModule.SDC_PROPERTY_PREFIX + RuntimeInfo.RESOURCES_DIR, "r");
     System.setProperty(RuntimeModule.SDC_PROPERTY_PREFIX + RuntimeInfo.DATA_DIR,
                        new File("target", UUID.randomUUID().toString()).getAbsolutePath());
 

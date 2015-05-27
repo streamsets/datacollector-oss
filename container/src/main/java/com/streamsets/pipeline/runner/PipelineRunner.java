@@ -7,11 +7,14 @@ package com.streamsets.pipeline.runner;
 
 import com.codahale.metrics.MetricRegistry;
 import com.streamsets.pipeline.api.StageException;
+import com.streamsets.pipeline.main.RuntimeInfo;
 import com.streamsets.pipeline.runner.production.BadRecordsHandler;
 
 import java.util.List;
 
 public interface PipelineRunner {
+
+  public RuntimeInfo getRuntimeInfo();
 
   public boolean isPreview();
 

@@ -22,15 +22,16 @@ public class ProcessorRunner extends StageRunner<Processor> {
 
   public ProcessorRunner(Class<Processor> processorClass, Processor processor, Map<String, Object> configuration,
                          List<String> outputLanes, boolean isPreview, OnRecordError onRecordError,
-                         Map<String, Object> constants, boolean isClusterMode) {
+                         Map<String, Object> constants, boolean isClusterMode,String resourcesDir) {
     super(processorClass, processor, StageType.PROCESSOR, configuration, outputLanes, isPreview, onRecordError,
-      constants, isClusterMode);
+      constants, isClusterMode, resourcesDir);
   }
 
   public ProcessorRunner(Class<Processor> processorClass, Map<String, Object> configuration, List<String> outputLanes,
-      boolean isPreview, OnRecordError onRecordError, Map<String, Object> constants, boolean isClusterMode) {
+      boolean isPreview, OnRecordError onRecordError, Map<String, Object> constants, boolean isClusterMode,
+      String resourcesDir) {
     super(processorClass, StageType.PROCESSOR, configuration, outputLanes, isPreview, onRecordError, constants,
-      isClusterMode);
+      isClusterMode, resourcesDir);
   }
 
   public Output runProcess(List<Record> inputRecords) throws StageException {
@@ -56,8 +57,10 @@ public class ProcessorRunner extends StageRunner<Processor> {
     public ProcessorRunner build() {
       Utils.checkState(!outputLanes.isEmpty(), "A Processor must have at least one output stream");
       return  (stage != null) ?
-        new ProcessorRunner(stageClass, stage, configs, outputLanes, isPreview, onRecordError, constants, isClusterMode)
-        : new ProcessorRunner(stageClass, configs, outputLanes, isPreview, onRecordError, constants, isClusterMode);
+        new ProcessorRunner(stageClass, stage, configs, outputLanes, isPreview, onRecordError, constants, isClusterMode,
+                            resourcesDir)
+        : new ProcessorRunner(stageClass, configs, outputLanes, isPreview, onRecordError, constants, isClusterMode,
+                              resourcesDir);
     }
 
   }

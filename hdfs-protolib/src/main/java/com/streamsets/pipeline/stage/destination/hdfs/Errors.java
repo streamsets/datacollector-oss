@@ -41,6 +41,10 @@ public enum Errors implements ErrorCode {
 
   HADOOPFS_24("Could nto evaluate EL for directory path: {}"),
 
+  HADOOPFS_25("Hadoop configuration directory '{}' under SDC resources does not exist"),
+  HADOOPFS_26("Hadoop configuration directory '{}' path under  SDC resources is not a directory"),
+  HADOOPFS_27("Hadoop configuration file '{}/{}' under SDC resources is not a file"),
+
   ;
   private final String msg;
 

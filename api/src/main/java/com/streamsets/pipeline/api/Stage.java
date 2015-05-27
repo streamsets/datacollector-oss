@@ -86,6 +86,8 @@ public interface Stage<C extends Stage.Context> {
 
     public long getLastBatchTime();
 
+    public String getResourcesDirectory();
+
   }
 
   public interface ConfigIssue {

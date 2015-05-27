@@ -85,6 +85,12 @@
       <outputDirectory>/log</outputDirectory>
     </fileSet>
 
+    <!-- resources dir -->
+    <fileSet>
+      <directory>${basedir}/src/main/emptydir</directory>
+      <outputDirectory>/resources</outputDirectory>
+    </fileSet>
+
     <!-- data dir -->
     <fileSet>
       <directory>${basedir}/src/main/emptydir</directory>

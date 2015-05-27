@@ -58,7 +58,7 @@ import java.util.concurrent.TimeUnit;
 public class TestRecordWriterManager {
   private static Path testDir;
   private static Target.Context targetContext = ContextInfoCreator.createTargetContext(HdfsDTarget.class,
-    "testWritersLifecycle", false, OnRecordError.TO_ERROR);
+    "testWritersLifecycle", false, OnRecordError.TO_ERROR, null);
 
 
   public static class DummyDataGeneratorFactory extends DataGeneratorFactory {

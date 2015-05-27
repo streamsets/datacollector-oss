@@ -152,10 +152,12 @@ public class Pipeline {
       for (StageRuntime stage : stages) {
         infos.add(stage.getInfo());
         stage.setContext(new StageContext(infosUnmodifiable, stage.getDefinition().getType(), runner.isPreview(),
-          runner.getMetrics(), stage, pipelineConf.getMemoryLimitConfiguration().getMemoryLimit(), clusterMode));
+          runner.getMetrics(), stage, pipelineConf.getMemoryLimitConfiguration().getMemoryLimit(), clusterMode,
+          runner.getRuntimeInfo().getResourcesDir()));
       }
       errorStage.setContext(new StageContext(infosUnmodifiable, errorStage.getDefinition().getType(), runner.isPreview(),
-          runner.getMetrics(), errorStage, pipelineConf.getMemoryLimitConfiguration().getMemoryLimit(), clusterMode));
+          runner.getMetrics(), errorStage, pipelineConf.getMemoryLimitConfiguration().getMemoryLimit(), clusterMode,
+          runner.getRuntimeInfo().getResourcesDir()));
     }
 
     private boolean isClusterMode(PipelineConfiguration pipelineConf) {

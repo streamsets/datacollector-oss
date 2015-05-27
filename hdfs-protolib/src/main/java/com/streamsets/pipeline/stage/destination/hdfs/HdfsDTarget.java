@@ -83,14 +83,26 @@ public class HdfsDTarget extends DTarget {
 
   @ConfigDef(
       required = false,
-      type = ConfigDef.Type.MAP,
-      label = "Hadoop FS Configuration",
-      description = "Additional Hadoop properties to pass to the underlying Hadoop FileSystem",
+      type = ConfigDef.Type.STRING,
+      defaultValue = "",
+      label = "Hadoop FS Configuration Directory",
+      description = "Directory under SDC resources directory to load core-site.xml and hdfs-site.xml files " +
+                    "to configure the Hadoop FileSystem.",
       displayPosition = 50,
       group = "HADOOP_FS"
   )
-  public Map<String, String> hdfsConfigs;
+  public String hdfsConfDir;
 
+  @ConfigDef(
+      required = false,
+      type = ConfigDef.Type.MAP,
+      label = "Hadoop FS Configuration",
+      description = "Additional Hadoop properties to pass to the underlying Hadoop FileSystem. These properties " +
+                    "have precedence over properties loaded via the 'Hadoop FS Configuration Directory' property.",
+      displayPosition = 60,
+      group = "HADOOP_FS"
+  )
+  public Map<String, String> hdfsConfigs;
 
   @ConfigDef(
       required = false,
@@ -402,6 +414,7 @@ public class HdfsDTarget extends DTarget {
       hdfsKerberos,
       kerberosPrincipal,
       kerberosKeytab,
+      hdfsConfDir,
       hdfsConfigs,
       uniquePrefix,
       dirPathTemplate,

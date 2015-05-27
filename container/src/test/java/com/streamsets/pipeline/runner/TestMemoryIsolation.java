@@ -19,6 +19,7 @@ import com.streamsets.pipeline.config.ConfigConfiguration;
 import com.streamsets.pipeline.config.DeliveryGuarantee;
 import com.streamsets.pipeline.config.PipelineConfiguration;
 import com.streamsets.pipeline.config.StageConfiguration;
+import com.streamsets.pipeline.main.RuntimeInfo;
 import com.streamsets.pipeline.memory.MemoryUsageCollector;
 import com.streamsets.pipeline.memory.TestMemoryUsageCollector;
 import com.streamsets.pipeline.stagelibrary.StageLibraryTask;
@@ -69,6 +70,8 @@ public class TestMemoryIsolation {
     PipelineRunner runner = Mockito.mock(PipelineRunner.class);
     MetricRegistry metrics = Mockito.mock(MetricRegistry.class);
     Mockito.when(runner.getMetrics()).thenReturn(metrics);
+    Mockito.when(runner.getRuntimeInfo()).thenReturn(Mockito.mock(RuntimeInfo.class));
+
     Set<Stage> stages = new HashSet<>();
     Pipeline pipeline = builder.build(runner);
     pipeline.init();

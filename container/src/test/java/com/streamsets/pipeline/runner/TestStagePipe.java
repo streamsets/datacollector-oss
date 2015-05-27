@@ -13,6 +13,7 @@ import com.streamsets.pipeline.api.Processor;
 import com.streamsets.pipeline.api.Source;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.Target;
+import com.streamsets.pipeline.main.RuntimeInfo;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -50,7 +51,7 @@ public class TestStagePipe {
       }
 
       @Override
-      public void init(Info info, Context context) throws StageException {
+      public void init(Info info, Source.Context context) throws StageException {
       }
 
       @Override
@@ -65,6 +66,7 @@ public class TestStagePipe {
     });
     PipelineRunner pipelineRunner = Mockito.mock(PipelineRunner.class);
     Mockito.when(pipelineRunner.getMetrics()).thenReturn(new MetricRegistry());
+    Mockito.when(pipelineRunner.getRuntimeInfo()).thenReturn(Mockito.mock(RuntimeInfo.class));
     Pipeline pipeline = new Pipeline.Builder(MockStages.createStageLibrary(), "name",
                                              MockStages.createPipelineConfigurationSourceProcessorTarget())
         .build(pipelineRunner);
@@ -123,6 +125,7 @@ public class TestStagePipe {
     });
     PipelineRunner pipelineRunner = Mockito.mock(PipelineRunner.class);
     Mockito.when(pipelineRunner.getMetrics()).thenReturn(new MetricRegistry());
+    Mockito.when(pipelineRunner.getRuntimeInfo()).thenReturn(Mockito.mock(RuntimeInfo.class));
     Pipeline pipeline = new Pipeline.Builder(MockStages.createStageLibrary(), "name",
                                              MockStages.createPipelineConfigurationSourceProcessorTarget())
         .build(pipelineRunner);
@@ -181,6 +184,7 @@ public class TestStagePipe {
 
     PipelineRunner pipelineRunner = Mockito.mock(PipelineRunner.class);
     Mockito.when(pipelineRunner.getMetrics()).thenReturn(new MetricRegistry());
+    Mockito.when(pipelineRunner.getRuntimeInfo()).thenReturn(Mockito.mock(RuntimeInfo.class));
     Pipeline pipeline = new Pipeline.Builder(MockStages.createStageLibrary(), "name",
                                              MockStages.createPipelineConfigurationSourceProcessorTarget())
         .build(pipelineRunner);
