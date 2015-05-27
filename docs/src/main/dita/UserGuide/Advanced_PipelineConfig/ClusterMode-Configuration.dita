@@ -9,7 +9,7 @@
                 /> in cluster mode, perform the following steps:<ol id="ol_e32_llw_yr">
                     <li>Install the <ph
                             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                        /> on a Spark on YARN gateway node.</li>
+                        /> on a Spark Streaming on YARN gateway node.</li>
                     <li>In the <ph
                             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
                         /> properties file, set the <uicontrol>sdc.execution.mode</uicontrol>
@@ -18,7 +18,10 @@
                             <uicontrol>Execution Mode</uicontrol> property to
                             <uicontrol>Cluster</uicontrol>.</li>
                     <li>Use a Kafka Consumer origin in the pipeline. </li>
-                </ol></p>
+                </ol><note>When you add a partition to the Kafka topic, restart the pipeline to
+                    enable the <ph
+                        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                    /> to generate a new worker to read from the new partition. </note></p>
         </context>
     </taskbody>
     <related-links>

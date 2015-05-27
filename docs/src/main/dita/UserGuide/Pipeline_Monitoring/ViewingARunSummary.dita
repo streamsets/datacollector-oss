@@ -17,8 +17,8 @@
                         processed, the time the last record was received, and the source offset when
                         available.</li>
                 </ul></p>
-            <p>To view a run summary, on the History tab of the pipeline, click <uicontrol>View
-                    Summary</uicontrol>.</p>
+            <p>To view a run summary, on the <wintitle>History</wintitle> tab of the pipeline, click
+                    <uicontrol>View Summary</uicontrol>.</p>
         </context>
     </taskbody>
 </task>
