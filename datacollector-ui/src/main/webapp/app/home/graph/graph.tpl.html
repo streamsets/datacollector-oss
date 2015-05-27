@@ -3,34 +3,30 @@
 
   <div class="panel-body" droppable drop="stageDrop">
 
-    <div ng-if="!isPipelineReadOnly && !$storage.maximizeDetailPane"
-      ng-repeat="issues in pipelineConfig.issues.pipelineIssues">
+    <div ng-if="!sourceExists && !isPipelineReadOnly && !$storage.maximizeDetailPane && !$storage.dontShowHelpAlert"
+         class="alert alert-dismissible alert-warning alert-select-stage" role="alert">
 
-      <div class="alert alert-dismissible alert-warning alert-select-stage" role="alert"
-           ng-if="issues.message.indexOf('VALIDATION_0001') !== -1 && !$storage.dontShowHelpAlert">
+      <button type="button" class="close" data-dismiss="alert">
+        <span aria-hidden="true">&times;</span>
+        <span class="sr-only">Close</span>
+      </button>
 
-        <button type="button" class="close" data-dismiss="alert">
-          <span aria-hidden="true">&times;</span>
-          <span class="sr-only">Close</span>
-        </button>
+      <span  class="validation-message">{{'home.graphPane.originMissing' | translate}}</span>
 
-        <span  class="validation-message">{{issues.message}}</span>
+      <select class="form-control" name="newPipelineSource"
+          ng-options="(stage.label + ' - ' +  stage.libraryLabel) for stage in sources | orderBy: 'label'"
+          ng-model="selectedSource.selected"
+          ng-change="onSelectSourceChange()">
+        <option value="">
+          {{'home.library.sourcePlaceholder' | translate}}
+        </option>
+      </select>
 
-        <select class="form-control" name="newPipelineSource"
-            ng-options="(stage.label + ' - ' +  stage.libraryLabel) for stage in sources | orderBy: 'label'"
-            ng-model="selectedSource.selected"
-            ng-change="onSelectSourceChange()">
-          <option value="">
-            {{'home.library.sourcePlaceholder' | translate}}
-          </option>
-        </select>
-
-        <div class="pull-right checkbox dont-show-again">
-          <label>
-            <input type="checkbox" name="dontShowHelpAgain"
-                   ng-model="$storage.dontShowHelpAlert">  {{'home.graphPane.dontShowAgain' | translate}}
-          </label>
-        </div>
+      <div class="pull-right checkbox dont-show-again">
+        <label>
+          <input type="checkbox" name="dontShowHelpAgain"
+                 ng-model="$storage.dontShowHelpAlert">  {{'home.graphPane.dontShowAgain' | translate}}
+        </label>
       </div>
 
     </div>
