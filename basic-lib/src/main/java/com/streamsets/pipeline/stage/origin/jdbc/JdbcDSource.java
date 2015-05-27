@@ -116,7 +116,7 @@ public class JdbcDSource extends DSource {
 
   @ConfigDef(
       required = true,
-      type = ConfigDef.Type.PASSWORD,
+      type = ConfigDef.Type.STRING,
       dependsOn = "useCredentials",
       triggeredByValue = "true",
       label = "Password",
