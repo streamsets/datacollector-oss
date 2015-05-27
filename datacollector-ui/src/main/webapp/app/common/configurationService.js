@@ -9,6 +9,7 @@ angular.module('dataCollectorApp.common')
       UI_LOCAL_HELP_BASE_URL = 'ui.local.help.base.url',
       UI_HOSTED_HELP_BASE_URL = 'ui.hosted.help.base.url',
       UI_ENABLE_USAGE_DATA_COLLECTION = 'ui.enable.usage.data.collection',
+      UI_ENABLE_WEB_SOCKET = 'ui.enable.webSocket',
       HTTP_AUTHENTICATION = 'http.authentication',
       SDC_EXECUTION_MODE = 'sdc.execution.mode',
       CALLBACK_SERVER_URL = 'callback.server.url';
@@ -95,7 +96,7 @@ angular.module('dataCollectorApp.common')
      */
     this.isAnalyticsEnabled = function() {
       if(self.config) {
-        return self.config[UI_ENABLE_USAGE_DATA_COLLECTION];
+        return self.config[UI_ENABLE_USAGE_DATA_COLLECTION] === 'true';
       }
       return false;
     };
@@ -127,10 +128,21 @@ angular.module('dataCollectorApp.common')
      * @returns {*}
      */
     this.getSDCClusterManagerURL = function() {
-      if(self.config && self.config[CALLBACK_SERVER_URL]) {
+      if (self.config && self.config[CALLBACK_SERVER_URL]) {
         return self.config[CALLBACK_SERVER_URL].replace('/rest/v1/cluster/callback', '');
       }
       return 'http://localhost:18630';
+    };
+
+    /*
+     * Returns ui.enable.webSocket flag value
+     * @returns {*}
+     */
+    this.isWebSocketUseEnabled = function() {
+      if(self.config) {
+        return self.config[UI_ENABLE_WEB_SOCKET] === 'true';
+      }
+      return true;
     };
 
   });

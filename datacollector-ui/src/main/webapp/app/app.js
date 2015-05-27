@@ -56,7 +56,7 @@ angular.module('dataCollectorApp')
                  $timeout, $translate, authService, userRoles, configuration, Analytics) {
     var defaultTitle = 'StreamSets Data Collector',
       pipelineStatusTimer,
-      isWebSocketSupported = (typeof(WebSocket) === "function"),
+      isWebSocketSupported,
       loc = window.location,
       webSocketBaseURL = ((loc.protocol === "https:") ?
           "wss://" : "ws://") + loc.hostname + (((loc.port != 80) && (loc.port != 443)) ? ":" + loc.port : ""),
@@ -250,8 +250,6 @@ angular.module('dataCollectorApp')
 
     };
 
-    refreshPipelineStatus();
-
     var logMessages = [];
 
     authService.init().then(function() {
@@ -268,6 +266,9 @@ angular.module('dataCollectorApp')
       if(configuration.isAnalyticsEnabled()) {
         Analytics.createAnalyticsScriptTag();
       }
+
+      isWebSocketSupported = (typeof(WebSocket) === "function") && configuration.isWebSocketUseEnabled();
+      refreshPipelineStatus();
     });
 
     // set actions to be taken each time the user navigates
