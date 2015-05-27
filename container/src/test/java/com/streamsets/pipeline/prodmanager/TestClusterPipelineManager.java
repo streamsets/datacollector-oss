@@ -183,6 +183,20 @@ public class TestClusterPipelineManager {
   }
 
   @Test
+  public void testPipelineCheckStatus() throws Exception {
+    attributes.put(ClusterPipelineManager.APPLICATION_STATE, APPLICATION_STATE.getMap());
+    // Simulate an exception
+    sparkProvider.isRunningCommandFails = true;
+    setState(State.RUNNING);
+    createClusterPipelineManager().getManagerRunnable().checkStatus();
+    Assert.assertEquals(State.RUNNING, getState());
+    sparkProvider.isRunningCommandFails = false;
+    sparkProvider.isRunning = false;
+    createClusterPipelineManager().getManagerRunnable().checkStatus();
+    Assert.assertEquals(State.ERROR, getState());
+  }
+
+  @Test
   public void testInitPipelineStateRunningTimesOut() throws Exception {
     attributes.put(ClusterPipelineManager.APPLICATION_STATE, APPLICATION_STATE.getMap());
     sparkProvider.isRunningTimesOut = true;

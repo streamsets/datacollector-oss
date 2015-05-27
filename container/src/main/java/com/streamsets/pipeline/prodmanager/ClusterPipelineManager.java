@@ -596,7 +596,8 @@ public class ClusterPipelineManager extends AbstractTask implements PipelineMana
       }
     }
 
-    private void checkStatus() throws PipelineManagerException {
+    @VisibleForTesting
+    void checkStatus() throws PipelineManagerException {
       Boolean running = null;
       PipelineState ps = stateTracker.getState();
       if (ps != null && ps.getState() == State.RUNNING) {
@@ -606,8 +607,7 @@ public class ClusterPipelineManager extends AbstractTask implements PipelineMana
           running = sparkManager.isRunning(appState, pipelineConf).get(60, TimeUnit.SECONDS);
         } catch (Exception ex) {
           String msg = "Error getting application status: " + ex;
-          clusterPipelineManager.transitionToError(ps, msg);
-          LOG.error(msg, ex);
+          LOG.warn(msg, ex);
         }
         if (running == null) {
           // error occurred, do nothing
