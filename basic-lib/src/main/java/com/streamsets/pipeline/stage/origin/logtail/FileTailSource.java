@@ -21,10 +21,10 @@ import com.streamsets.pipeline.lib.io.FileLine;
 import com.streamsets.pipeline.lib.io.LiveFile;
 import com.streamsets.pipeline.lib.io.LiveFileChunk;
 import com.streamsets.pipeline.lib.io.MultiDirectoryReader;
-import com.streamsets.pipeline.lib.io.PeriodicFilesRollModeFactory;
-import com.streamsets.pipeline.lib.parser.DataParserFactory;
+import com.streamsets.pipeline.lib.io.RollMode;
 import com.streamsets.pipeline.lib.parser.DataParser;
 import com.streamsets.pipeline.lib.parser.DataParserException;
+import com.streamsets.pipeline.lib.parser.DataParserFactory;
 import com.streamsets.pipeline.lib.parser.DataParserFactoryBuilder;
 import com.streamsets.pipeline.lib.parser.log.LogDataFormatValidator;
 import com.streamsets.pipeline.lib.parser.log.RegExConfig;
@@ -115,19 +115,30 @@ public class FileTailSource extends BaseSource {
     if (fileInfos.isEmpty()) {
       issues.add(getContext().createConfigIssue(Groups.FILES.name(), "fileInfos", Errors.TAIL_01));
     } else {
-      Set<String> dirNames = new LinkedHashSet<>();
+      Set<String> fileKeys = new LinkedHashSet<>();
       List<MultiDirectoryReader.DirectoryInfo> dirInfos = new ArrayList<>();
       for (FileInfo fileInfo : fileInfos) {
         // the UI uses a different config for PERIODIC files and LOG files, so we have to get the right one here
         String fileNamePattern = (fileInfo.fileRollMode == FilesRollMode.PERIODIC)
                                  ? fileInfo.periodicFileRegEx : fileInfo.file;
-        dirInfos.add(new MultiDirectoryReader.DirectoryInfo(fileInfo.dirName,
-                                                            fileInfo.fileRollMode.createRollMode(fileNamePattern),
-                                                            fileInfo.firstFile));
-        if (dirNames.contains(fileInfo.dirName)) {
-          issues.add(getContext().createConfigIssue(Groups.FILES.name(), "fileInfos", Errors.TAIL_04, fileInfo.dirName));
+
+        RollMode fileRollMode = fileInfo.fileRollMode.createRollMode(fileNamePattern);
+        MultiDirectoryReader.DirectoryInfo directoryInfo = new MultiDirectoryReader.DirectoryInfo(
+            fileInfo.dirName,
+            fileRollMode,
+            fileInfo.firstFile
+        );
+        dirInfos.add(directoryInfo);
+        if (fileKeys.contains(directoryInfo.getFileKey())) {
+          issues.add(getContext().createConfigIssue(
+              Groups.FILES.name(),
+              "fileInfos",
+              Errors.TAIL_04,
+              fileRollMode.getPattern(),
+              fileInfo.dirName
+          ));
         }
-        dirNames.add(fileInfo.dirName);
+        fileKeys.add(directoryInfo.getFileKey());
       }
       try {
         multiDirReader = new MultiDirectoryReader(dirInfos, Charset.forName(charset), maxLineLength,
