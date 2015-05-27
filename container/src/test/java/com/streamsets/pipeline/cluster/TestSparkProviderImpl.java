@@ -31,7 +31,9 @@ import java.util.UUID;
 public class TestSparkProviderImpl {
 
   private File tempDir;
+  private File providerTemp;
   private File etcDir;
+  private File resourcesDir;
   private File webDir;
   private File bootstrapLibDir;
   private PipelineConfiguration pipelineConf;
@@ -49,6 +51,8 @@ public class TestSparkProviderImpl {
     sparkManagerShell = new File(tempDir, "spark-manager");
     Assert.assertTrue(tempDir.delete());
     Assert.assertTrue(tempDir.mkdir());
+    providerTemp = new File(tempDir, "provider-temp");
+    Assert.assertTrue(providerTemp.mkdir());
     Assert.assertTrue(sparkManagerShell.createNewFile());
     sparkManagerShell.setExecutable(true);
     MockSystemProcess.isAlive = false;
@@ -58,6 +62,10 @@ public class TestSparkProviderImpl {
     Assert.assertTrue(etcDir.mkdir());
     File sdcProperties = new File(etcDir, "sdc.properties");
     Assert.assertTrue(sdcProperties.createNewFile());
+    resourcesDir = new File(tempDir, "resources-src");
+    Assert.assertTrue(resourcesDir.mkdir());
+    Assert.assertTrue((new File(resourcesDir, "dir")).mkdir());
+    Assert.assertTrue((new File(resourcesDir, "file")).createNewFile());
     webDir = new File(tempDir, "static-web-dir-src");
     Assert.assertTrue(webDir.mkdir());
     File someWebFile = new File(webDir, "somefile");
@@ -102,8 +110,9 @@ public class TestSparkProviderImpl {
   public void testMoreThanOneAppId() throws Throwable {
     MockSystemProcess.output.add(" application_1429587312661_0024 ");
     MockSystemProcess.output.add(" application_1429587312661_0025 ");
-    Assert.assertNotNull(sparkProvider.startPipeline(new MockSystemProcessFactory(), sparkManagerShell, tempDir, env,
-      sourceInfo, pipelineConf, stageLibrary, etcDir, webDir, bootstrapLibDir, classLoader, classLoader, 60).getId());
+    Assert.assertNotNull(sparkProvider.startPipeline(new MockSystemProcessFactory(), sparkManagerShell,
+      providerTemp, env, sourceInfo, pipelineConf, stageLibrary, etcDir, resourcesDir, webDir,
+      bootstrapLibDir, classLoader, classLoader,  60).getId());
   }
 
   @Test
@@ -111,7 +120,8 @@ public class TestSparkProviderImpl {
     String id = "application_1429587312661_0025";
     MockSystemProcess.output.add(" " + id + " ");
     MockSystemProcess.output.add(" " + id + " ");
-    Assert.assertEquals(id, sparkProvider.startPipeline(new MockSystemProcessFactory(), sparkManagerShell, tempDir, env,
-      sourceInfo, pipelineConf, stageLibrary, etcDir, webDir, bootstrapLibDir, classLoader, classLoader, 60).getId());
+    Assert.assertEquals(id, sparkProvider.startPipeline(new MockSystemProcessFactory(), sparkManagerShell,
+      providerTemp, env, sourceInfo, pipelineConf, stageLibrary, etcDir, resourcesDir, webDir,
+      bootstrapLibDir, classLoader, classLoader, 60).getId());
   }
 }

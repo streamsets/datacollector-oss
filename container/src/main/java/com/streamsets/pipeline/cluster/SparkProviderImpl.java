@@ -220,11 +220,19 @@ public class SparkProviderImpl implements SparkProvider {
     }
   }
 
+  private static File createDirectoryClone(File srcDir, File tempDir) throws IOException {
+    File tempSrcDir = new File(tempDir, srcDir.getName());
+    FileUtils.deleteQuietly(tempSrcDir);
+    Utils.checkState(tempSrcDir.mkdir(), Utils.formatL("Could not create {}", tempSrcDir));
+    FileUtils.copyDirectory(srcDir, tempSrcDir);
+    return tempSrcDir;
+  }
+
   @Override
   public ApplicationState startPipeline(SystemProcessFactory systemProcessFactory, File sparkManager, File tempDir,
                        Map<String, String> environment, Map<String, String> sourceInfo,
                        PipelineConfiguration pipelineConfiguration, StageLibraryTask stageLibrary,
-                       File etcDir, File staticWebDir, File bootstrapDir, URLClassLoader apiCL,
+                       File etcDir, File resourcesDir, File staticWebDir, File bootstrapDir, URLClassLoader apiCL,
                        URLClassLoader containerCL, long timeToWaitForFailure) throws TimeoutException {
     environment = Maps.newHashMap(environment);
     environment.put(RUN_FROM_SDC, Boolean.TRUE.toString());
@@ -289,20 +297,23 @@ public class SparkProviderImpl implements SparkProvider {
       String msg = errorString("serializing classpath: {}", ex);
       throw new RuntimeException(msg, ex);
     }
+    File resourcesTarGz = new File(tempDir, "resources.tar.gz");
+    try {
+      resourcesDir = createDirectoryClone(resourcesDir, tempDir);
+      TarFileCreator.createTarGz(resourcesDir, resourcesTarGz);
+    } catch (Exception ex) {
+      String msg = errorString("serializing resourcs directory: {}", resourcesDir.getName(), ex);
+      throw new RuntimeException(msg, ex);
+    }
     File etcTarGz = new File(tempDir, "etc.tar.gz");
     try {
-      File tempEtcDir = new File(tempDir, "etc");
-      FileUtils.deleteQuietly(tempEtcDir);
-      Utils.checkState(tempEtcDir.mkdir(), Utils.formatL("Could not create {}", tempEtcDir));
-      FileUtils.copyDirectory(etcDir, tempEtcDir);
-      etcDir = tempEtcDir;
+      etcDir = createDirectoryClone(etcDir, tempDir);
       File pipelineFile = new File(etcDir, "pipeline.json");
       ObjectMapperFactory.getOneLine().writeValue(pipelineFile, BeanHelper.
         wrapPipelineConfiguration(pipelineConfiguration));
       File sdcPropertiesFile = new File(etcDir, "sdc.properties");
-
       rewriteProperties(sdcPropertiesFile, sourceConfigs);
-      TarFileCreator.createEtcTarGz(etcDir, etcTarGz);
+      TarFileCreator.createTarGz(etcDir, etcTarGz);
     } catch (Exception ex) {
       String msg = errorString("serializing etc directory: {}", ex);
       throw new RuntimeException(msg, ex);
@@ -347,7 +358,8 @@ public class SparkProviderImpl implements SparkProvider {
 
     // ship our stage libs and etc directory
     args.add("--archives");
-    args.add(Joiner.on(",").join(libsTarGz.getAbsolutePath(), etcTarGz.getAbsolutePath()));
+    args.add(Joiner.on(",").join(libsTarGz.getAbsolutePath(), etcTarGz.getAbsolutePath(),
+      resourcesTarGz.getAbsolutePath()));
     // required or else we won't be able to log on cluster
     args.add("--files");
     args.add(log4jProperties.getAbsolutePath());

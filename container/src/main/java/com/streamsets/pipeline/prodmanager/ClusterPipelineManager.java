@@ -695,8 +695,9 @@ public class ClusterPipelineManager extends AbstractTask implements PipelineMana
         RuntimeInfo runtimeInfo = clusterPipelineManager.runtimeInfo;
         runtimeInfo.setAttribute(ClusterModeConstants.NUM_EXECUTORS_KEY, parallelism);
         clusterPipelineManager.clearSlaveList();
-        ListenableFuture<ApplicationState> submitFuture = sparkManager.submit(pipelineConf, clusterPipelineManager.stageLibrary,
-          new File(runtimeInfo.getConfigDir()), new File(runtimeInfo.getStaticWebDir()), bootstrapDir, environment,
+        ListenableFuture<ApplicationState> submitFuture = sparkManager.submit(pipelineConf,
+          clusterPipelineManager.stageLibrary,  new File(runtimeInfo.getConfigDir()),
+          new File(runtimeInfo.getResourcesDir()), new File(runtimeInfo.getStaticWebDir()), bootstrapDir, environment,
           sourceInfo, SUBMIT_TIMEOUT_SECS);
         // set state of running before adding callback which modified attributes
         Map<String, Object> attributes = new HashMap<>();

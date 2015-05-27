@@ -19,6 +19,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.URL;
 import java.net.URLClassLoader;
+import java.util.Arrays;
 import java.util.Map;
 import java.util.Set;
 import java.util.zip.GZIPOutputStream;
@@ -48,28 +49,17 @@ public class TarFileCreator {
     out.close();
   }
 
-  public static void createEtcTarGz(File etcDir,
-                                     File outputFile) throws IOException {
-    Utils.checkState(etcDir.isDirectory(), Utils.formatL("Path {} is not a directory", etcDir));
-    Utils.checkState(etcDir.canRead(), Utils.formatL("Directory {} cannot be read", etcDir));
+  public static void createTarGz(File dir,
+                                 File outputFile) throws IOException {
+    Utils.checkState(dir.isDirectory(), Utils.formatL("Path {} is not a directory", dir));
+    Utils.checkState(dir.canRead(), Utils.formatL("Directory {} cannot be read", dir));
     long now = System.currentTimeMillis() / 1000L;
     FileOutputStream dest = new FileOutputStream(outputFile);
     TarOutputStream out = new TarOutputStream(new BufferedOutputStream(new GZIPOutputStream(dest), 65536));
-
-    String prefix = ClusterModeConstants.ETC;
-    out.putNextEntry(new TarEntry(TarHeader.createHeader(prefix, 0L, now, true)));
-    File[] files = etcDir.listFiles();
-    Utils.checkState(files != null, Utils.formatL("Directory {} could not be read", etcDir));
-    Utils.checkState(files.length > 0, Utils.formatL("Directory {} is empty", etcDir));
-    for (File file : files) {
-      Utils.checkState(file.isFile(), Utils.formatL("All entries in {} must be files and {} is not",
-        ClusterModeConstants.ETC, file));
-      out.putNextEntry(new TarEntry(file, prefix + "/" + file.getName()));
-      BufferedInputStream src = new BufferedInputStream(new FileInputStream(file), 65536);
-      IOUtils.copy(src, out);
-      src.close();
-      out.flush();
-    }
+    File[] files = dir.listFiles();
+    Utils.checkState(files != null, Utils.formatL("Directory {} could not be read", dir));
+    Utils.checkState(files.length > 0, Utils.formatL("Directory {} is empty", dir));
+    tarFolder(null, dir.getAbsolutePath(), out);
     out.close();
   }
 

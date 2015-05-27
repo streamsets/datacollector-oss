@@ -8,8 +8,6 @@ package com.streamsets.pipeline.cluster;
 import com.google.common.collect.ImmutableSet;
 
 public class ClusterModeConstants {
-  public static final String ETC = "etc";
-
   public static final String API_LIB = "api-lib";
   public static final String CONTAINER_LIB = "container-lib";
   public static final String STREAMSETS_LIBS = "streamsets-libs";
