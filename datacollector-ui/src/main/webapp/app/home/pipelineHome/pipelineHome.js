@@ -34,8 +34,8 @@ angular
       edges = [],
       destroyed = false,
       pageHidden = false,
-      isWebSocketSupported = (typeof(WebSocket) === "function"),
       loc = window.location,
+      isWebSocketSupported,
       webSocketBaseURL = ((loc.protocol === "https:") ?
           "wss://" : "ws://") + loc.hostname + (((loc.port != 80) && (loc.port != 443)) ? ":" + loc.port : ""),
       webSocketMetricsURL = webSocketBaseURL + '/rest/v1/webSocket?type=metrics',
@@ -563,6 +563,8 @@ angular
     ])
       .then(function (results) {
         var pipelineStatus = results[0].data;
+
+        isWebSocketSupported = (typeof(WebSocket) === "function") && configuration.isWebSocketUseEnabled();
 
         //Definitions
         $scope.pipelineConfigDefinition = pipelineService.getPipelineConfigDefinition();

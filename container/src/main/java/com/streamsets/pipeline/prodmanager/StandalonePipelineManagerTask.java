@@ -212,7 +212,7 @@ public class StandalonePipelineManagerTask extends AbstractTask implements Pipel
   public void initTask() {
     LOG.debug("Initializing Production Pipeline Manager");
     stateTracker.init();
-    executor = new SafeScheduledExecutorService(4, PRODUCTION_PIPELINE_RUNNER);
+    executor = new SafeScheduledExecutorService(5, PRODUCTION_PIPELINE_RUNNER);
     PipelineState ps = getPipelineState();
     if(ps != null) {
       switch (ps.getState()) {
