@@ -14,11 +14,6 @@
     <ng-include src="'elStringConfigurationTemplate'"></ng-include>
   </div>
 
-  <div ng-switch-when="PASSWORD">
-    <ng-include src="'labelConfigurationTemplate'"></ng-include>
-    <ng-include src="'passwordConfigurationTemplate'"></ng-include>
-  </div>
-
   <div ng-switch-when="CHARACTER">
     <ng-include src="'labelConfigurationTemplate'"></ng-include>
     <ng-include src="'characterConfigurationTemplate'"></ng-include>
@@ -141,10 +136,6 @@
                      ng-click="onFieldSelectorFocus(detailPaneConfig)"
                      class="expression-language">
                   <ng-include src="'elStringComplexConfigurationTemplate'"></ng-include>
-                </div>
-
-                <div ng-switch-when="PASSWORD">
-                  <ng-include src="'passwordComplexConfigurationTemplate'"></ng-include>
                 </div>
 
                 <div ng-switch-when="EL_STRING" class="expression-language"
