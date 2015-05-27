@@ -177,13 +177,14 @@
       "workerNode": "Worker:"
     },
     "graphPane": {
-      "startErrorMessage": "Pipeline definition '{{name}}' is running. Pipeline Agent supports running only one Pipeline Definition.",
-      "viewStackTrace": "View Stack Trace",
       "errorStackTrace": "Error Stack Trace",
       "dontShowAgain": "Don't show again.",
+      "originMissing": "Origin missing",
       "selectProcessor": "Select Processor to connect...",
+      "selectProcessorToAddInBetween": "Select Processor to add in between the selected stream...",
       "selectTarget": "Select Destination to connect...",
-      "selectProcessorToAddInBetween": "Select Processor to add in between the selected stream..."
+      "startErrorMessage": "Pipeline definition '{{name}}' is running. Pipeline Agent supports running only one Pipeline Definition.",
+      "viewStackTrace": "View Stack Trace"
     },
     "detailPane": {
       "alerts": "Alerts",
