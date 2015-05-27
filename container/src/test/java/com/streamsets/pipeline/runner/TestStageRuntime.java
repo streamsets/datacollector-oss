@@ -25,6 +25,7 @@ import com.streamsets.pipeline.el.ElConstantDefinition;
 import com.streamsets.pipeline.el.ElFunctionDefinition;
 import com.streamsets.pipeline.stagelibrary.StageLibraryTask;
 import com.streamsets.pipeline.store.PipelineStoreTask;
+
 import org.junit.Assert;
 import org.junit.Test;
 import org.mockito.Mockito;
@@ -140,12 +141,12 @@ public class TestStageRuntime {
       TSource.class.getName(), "source", "1.0.0", "label", "description", StageType.SOURCE, false, true,
       true, configDefs, null/*raw source definition*/,"", null, false, 1, null,
       Arrays.asList(ExecutionMode.CLUSTER, ExecutionMode.STANDALONE));
-    sourceDef.setLibrary("library", "", Thread.currentThread().getContextClassLoader());
+    sourceDef.setLibrary("library", "", Arrays.asList(ExecutionMode.values()), Thread.currentThread().getContextClassLoader());
     StageDefinition targetDef = new StageDefinition(
       TTarget.class.getName(), "target", "1.0.0", "label", "description", StageType.TARGET, false, true,
       true, Collections.<ConfigDefinition>emptyList(), null/*raw source definition*/,"", null, false, 0, null,
       Arrays.asList(ExecutionMode.CLUSTER, ExecutionMode.STANDALONE));
-    targetDef.setLibrary("library", "", Thread.currentThread().getContextClassLoader());
+    targetDef.setLibrary("library", "", Arrays.asList(ExecutionMode.values()), Thread.currentThread().getContextClassLoader());
     Mockito.when(lib.getStage(Mockito.eq("library"), Mockito.eq("source"), Mockito.eq("1.0.0"))).thenReturn(sourceDef);
     Mockito.when(lib.getStage(Mockito.eq("library"), Mockito.eq("target"), Mockito.eq("1.0.0"))).thenReturn(targetDef);
     Mockito.when(lib.getStage(Mockito.eq("library"), Mockito.eq("errorTarget"), Mockito.eq("1.0.0"))).thenReturn(targetDef);

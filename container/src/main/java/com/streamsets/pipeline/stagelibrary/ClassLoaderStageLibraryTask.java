@@ -13,6 +13,7 @@ import com.google.common.cache.LoadingCache;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.streamsets.pipeline.api.ConfigDef;
+import com.streamsets.pipeline.api.ExecutionMode;
 import com.streamsets.pipeline.api.OnRecordError;
 import com.streamsets.pipeline.api.OnRecordErrorChooserValues;
 import com.streamsets.pipeline.api.impl.LocaleInContext;
@@ -22,6 +23,7 @@ import com.streamsets.pipeline.config.ErrorHandlingChooserValues;
 import com.streamsets.pipeline.config.ModelDefinition;
 import com.streamsets.pipeline.config.ModelType;
 import com.streamsets.pipeline.config.StageDefinition;
+import com.streamsets.pipeline.config.StageType;
 import com.streamsets.pipeline.el.ELEvaluator;
 import com.streamsets.pipeline.el.ElConstantDefinition;
 import com.streamsets.pipeline.el.ElFunctionDefinition;
@@ -31,10 +33,12 @@ import com.streamsets.pipeline.main.RuntimeInfo;
 import com.streamsets.pipeline.restapi.bean.BeanHelper;
 import com.streamsets.pipeline.restapi.bean.StageDefinitionJson;
 import com.streamsets.pipeline.task.AbstractTask;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.Field;
@@ -48,12 +52,23 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Properties;
 import java.util.concurrent.ExecutionException;
 
 public class ClassLoaderStageLibraryTask extends AbstractTask implements StageLibraryTask {
   private static final Logger LOG = LoggerFactory.getLogger(ClassLoaderStageLibraryTask.class);
 
   private static final String PIPELINE_STAGES_JSON = "PipelineStages.json";
+  private static final String DATA_COLLECTOR_LIBRARY_PROPERTIES = "data-collector-library.properties";
+  private static final String LIBRARY_EXECUTION_MODE = "library.execution.mode";
+  private static final String LIBRARY_EXECUTION_MODE_CLUSTER = LIBRARY_EXECUTION_MODE + ".cluster";
+  private static final String LIBRARY_EXECUTION_MODE_CLUSTER_SOURCE = LIBRARY_EXECUTION_MODE_CLUSTER + ".source";
+  private static final String LIBRARY_EXECUTION_MODE_CLUSTER_TARGET = LIBRARY_EXECUTION_MODE_CLUSTER + ".target";
+  private static final String LIBRARY_EXECUTION_MODE_CLUSTER_PROCESSOR = LIBRARY_EXECUTION_MODE_CLUSTER + ".processor";
+  private static final String LIBRARY_EXECUTION_MODE_STANDALONE = LIBRARY_EXECUTION_MODE + ".standalone";
+  private static final String LIBRARY_EXECUTION_MODE_STANDALONE_SOURCE = LIBRARY_EXECUTION_MODE_STANDALONE + ".source";
+  private static final String LIBRARY_EXECUTION_MODE_STANDALONE_TARGET = LIBRARY_EXECUTION_MODE_STANDALONE + ".target";
+  private static final String LIBRARY_EXECUTION_MODE_STANDALONE_PROCESSOR = LIBRARY_EXECUTION_MODE_STANDALONE + ".processor";
 
   private final RuntimeInfo runtimeInfo;
   private List<? extends ClassLoader> stageClassLoaders;
@@ -116,8 +131,15 @@ public class ClassLoaderStageLibraryTask extends AbstractTask implements StageLi
         String libraryName = StageLibraryUtils.getLibraryName(cl);
         String libraryLabel = StageLibraryUtils.getLibraryLabel(cl);
         LOG.debug("Loading stages from library '{}'", libraryName);
+        Properties dataCollectorProperties = new Properties();
         try {
           Enumeration<URL> resources = cl.getResources(PIPELINE_STAGES_JSON);
+          InputStream inputStream = cl.getResourceAsStream(DATA_COLLECTOR_LIBRARY_PROPERTIES);
+          if (inputStream != null) {
+            dataCollectorProperties.load(inputStream);
+          } else {
+            LOG.warn("Cannot find file " + DATA_COLLECTOR_LIBRARY_PROPERTIES + " through classloader: " + cl);
+          }
           while (resources.hasMoreElements()) {
             Map<String, String> stagesInLibrary = new HashMap<>();
             URL url = resources.nextElement();
@@ -126,7 +148,19 @@ public class ClassLoaderStageLibraryTask extends AbstractTask implements StageLi
               json.readValue(is, StageDefinitionJson[].class);
             for (StageDefinitionJson stageDef : stages) {
               StageDefinition stage = BeanHelper.unwrapStageDefinition(stageDef);
-              stage.setLibrary(libraryName, libraryLabel, cl);
+              List<ExecutionMode> executionModes = null;
+              switch (stage.getType()) {
+                case PROCESSOR:
+                  executionModes = getProcessorExecutionModes(dataCollectorProperties);
+                  break;
+                case SOURCE:
+                  executionModes = getSourceExecutionModes(dataCollectorProperties);
+                  break;
+                case TARGET:
+                  executionModes = getTargetExecutionModes(dataCollectorProperties);
+                  break;
+              }
+              stage.setLibrary(libraryName, libraryLabel, executionModes, cl);
               String key = createKey(libraryName, stage.getName(), stage.getVersion());
               LOG.debug("Loaded stage '{}' (library:name:version)", key);
               if (stagesInLibrary.containsKey(key)) {
@@ -155,6 +189,42 @@ public class ClassLoaderStageLibraryTask extends AbstractTask implements StageLi
     } finally {
       LocaleInContext.set(null);
     }
+  }
+
+  private List<ExecutionMode> getProcessorExecutionModes(Properties dataCollectorProperties) {
+    List<ExecutionMode> executionModes = new ArrayList<ExecutionMode>();
+    // By default, all library support both cluster and standalone mode
+    if (Boolean.parseBoolean(dataCollectorProperties.getProperty(LIBRARY_EXECUTION_MODE_CLUSTER_PROCESSOR, "true"))) {
+      executionModes.add(ExecutionMode.CLUSTER);
+    }
+    if (Boolean.parseBoolean(dataCollectorProperties.getProperty(LIBRARY_EXECUTION_MODE_STANDALONE_PROCESSOR, "true"))) {
+      executionModes.add(ExecutionMode.STANDALONE);
+    }
+    return executionModes;
+  }
+
+  private List<ExecutionMode> getSourceExecutionModes(Properties dataCollectorProperties) {
+    List<ExecutionMode> executionModes = new ArrayList<ExecutionMode>();
+    // By default, all library support both cluster and standalone mode
+    if (Boolean.parseBoolean(dataCollectorProperties.getProperty(LIBRARY_EXECUTION_MODE_CLUSTER_SOURCE, "true"))) {
+      executionModes.add(ExecutionMode.CLUSTER);
+    }
+    if (Boolean.parseBoolean(dataCollectorProperties.getProperty(LIBRARY_EXECUTION_MODE_STANDALONE_SOURCE, "true"))) {
+      executionModes.add(ExecutionMode.STANDALONE);
+    }
+    return executionModes;
+  }
+
+  private List<ExecutionMode> getTargetExecutionModes(Properties dataCollectorProperties) {
+    List<ExecutionMode> executionModes = new ArrayList<ExecutionMode>();
+    // By default, all library support both cluster and standalone mode
+    if (Boolean.parseBoolean(dataCollectorProperties.getProperty(LIBRARY_EXECUTION_MODE_CLUSTER_TARGET, "true"))) {
+      executionModes.add(ExecutionMode.CLUSTER);
+    }
+    if (Boolean.parseBoolean(dataCollectorProperties.getProperty(LIBRARY_EXECUTION_MODE_STANDALONE_TARGET, "true"))) {
+      executionModes.add(ExecutionMode.STANDALONE);
+    }
+    return executionModes;
   }
 
   private void computeDependsOnChain(StageDefinition stageDefinition) {

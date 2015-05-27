@@ -49,6 +49,10 @@ public class Issue implements Serializable {
     return message.getLocalized();
   }
 
+  public String getErrorCode() {
+    return ((ErrorMessage)message).getErrorCode();
+  }
+
   public String getConfigGroup() {
     return configGroup;
   }
@@ -57,6 +61,7 @@ public class Issue implements Serializable {
     return configName;
   }
 
+  @Override
   public String toString() {
     return Utils.format("Issue[message='{}']", message.getNonLocalized());
   }
