@@ -12,6 +12,7 @@ import com.streamsets.pipeline.json.ObjectMapperFactory;
 import com.streamsets.pipeline.main.BuildInfo;
 import com.streamsets.pipeline.main.RuntimeInfo;
 import com.streamsets.pipeline.prodmanager.PipelineManager;
+import com.streamsets.pipeline.prodmanager.PipelineState;
 import com.streamsets.pipeline.prodmanager.State;
 import com.streamsets.pipeline.util.Configuration;
 import org.apache.commons.codec.binary.Base64;
@@ -97,33 +98,37 @@ public class UpdateChecker implements Runnable {
   @Override
   public void run() {
     updateInfo = null;
-    if (manager.getPipelineState().getState() == State.RUNNING) {
-      if (url != null) {
-        Map uploadInfo = getUploadInfo();
-        HttpURLConnection conn = null;
-        try {
-          conn = (HttpURLConnection) url.openConnection();
-          conn.setConnectTimeout(2000);
-          conn.setReadTimeout(2000);
-          conn.setDoOutput(true);
-          conn.setDoInput(true);
-          conn.setRequestProperty("content-type", APPLICATION_JSON_MIME);
-          ObjectMapperFactory.getOneLine().writeValue(conn.getOutputStream(), uploadInfo);
-          if (conn.getResponseCode() == HttpURLConnection.HTTP_OK) {
-            String responseContentType = conn.getHeaderField("content-type");
-            if (APPLICATION_JSON_MIME.equals(responseContentType)) {
-              updateInfo = ObjectMapperFactory.get().readValue(conn.getInputStream(), Map.class);
+    PipelineState ps = manager.getPipelineState();
+    // it can be null if we never run a pipeline yet
+    if (ps != null) {
+      if (ps.getState() == State.RUNNING) {
+        if (url != null) {
+          Map uploadInfo = getUploadInfo();
+          HttpURLConnection conn = null;
+          try {
+            conn = (HttpURLConnection) url.openConnection();
+            conn.setConnectTimeout(2000);
+            conn.setReadTimeout(2000);
+            conn.setDoOutput(true);
+            conn.setDoInput(true);
+            conn.setRequestProperty("content-type", APPLICATION_JSON_MIME);
+            ObjectMapperFactory.getOneLine().writeValue(conn.getOutputStream(), uploadInfo);
+            if (conn.getResponseCode() == HttpURLConnection.HTTP_OK) {
+              String responseContentType = conn.getHeaderField("content-type");
+              if (APPLICATION_JSON_MIME.equals(responseContentType)) {
+                updateInfo = ObjectMapperFactory.get().readValue(conn.getInputStream(), Map.class);
+              } else {
+                LOG.trace("Got invalid content-type '{}' from from update-check server", responseContentType);
+              }
             } else {
-              LOG.trace("Got invalid content-type '{}' from from update-check server", responseContentType);
+              LOG.trace("Got '{} : {}' from update-check server", conn.getResponseCode(), conn.getResponseMessage());
             }
-          } else {
-            LOG.trace("Got '{} : {}' from update-check server", conn.getResponseCode(), conn.getResponseMessage());
-          }
-        } catch (Exception ex) {
-          LOG.trace("Could not do an update check: {}", ex.getMessage(), ex);
-        } finally {
-          if (conn != null) {
-            conn.disconnect();
+          } catch (Exception ex) {
+            LOG.trace("Could not do an update check: {}", ex.getMessage(), ex);
+          } finally {
+            if (conn != null) {
+              conn.disconnect();
+            }
           }
         }
       }
