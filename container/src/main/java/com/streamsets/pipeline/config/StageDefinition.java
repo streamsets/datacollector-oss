@@ -21,8 +21,6 @@ import java.util.Map;
  *
  */
 public class StageDefinition {
-  private String library;
-  private String libraryLabel;
   private ClassLoader classLoader;
   private Class klass;
 
@@ -45,16 +43,16 @@ public class StageDefinition {
   private final String outputStreamLabelProviderClass;
   private List<String> outputStreamLabels;
   private final List<ExecutionMode> executionModes;
+  private LibraryInfo libraryInfo;
 
   // localized version
-  private StageDefinition(ClassLoader classLoader, String library, String libraryLabel, String className, String name,
+  private StageDefinition(ClassLoader classLoader, String libraryName, String libraryLabel, List<ExecutionMode> libraryExecutionModes, String className, String name,
       String version, String label, String description, StageType type, boolean errorStage, boolean requiredFields,
       boolean onRecordError, List<ConfigDefinition> configDefinitions, RawSourceDefinition rawSourceDefinition,
       String icon, ConfigGroupDefinition configGroupDefinition, boolean variableOutputStreams, int outputStreams,
       List<String> outputStreamLabels, List<ExecutionMode> executionModes) {
     this.classLoader = classLoader;
-    this.library = library;
-    this.libraryLabel = libraryLabel;
+    this.libraryInfo = new LibraryInfo(libraryName, libraryLabel, libraryExecutionModes);
     this.className = className;
     this.name = name;
     this.version = version;
@@ -125,9 +123,8 @@ public class StageDefinition {
     this.executionModes = executionModes;
   }
 
-  public void setLibrary(String library, String label, ClassLoader classLoader) {
-    this.library = library;
-    this.libraryLabel = label;
+  public void setLibrary(String libraryName, String libraryLabel, List<ExecutionMode> executionModes, ClassLoader classLoader) {
+    this.libraryInfo = new LibraryInfo(libraryName, libraryLabel, executionModes);
     this.classLoader = classLoader;
     this.outputStreamLabels = getOutputStreamLabels(classLoader);
     try {
@@ -137,16 +134,20 @@ public class StageDefinition {
     }
   }
 
+  public List<ExecutionMode> getLibraryExecutionModes() {
+    return libraryInfo.getLibraryExecutionModes();
+  }
+
   public ConfigGroupDefinition getConfigGroupDefinition() {
     return configGroupDefinition;
   }
 
   public String getLibrary() {
-    return library;
+    return libraryInfo != null ? libraryInfo.getLibraryName() : null;
   }
 
   public String getLibraryLabel() {
-    return libraryLabel;
+    return libraryInfo != null ? libraryInfo.getLibraryLabel() : null;
   }
 
   public ClassLoader getStageClassLoader() {
@@ -342,7 +343,7 @@ public class StageDefinition {
       streamLabels = getLocalizedOutputStreamLabels(classLoader);
     }
 
-    return new StageDefinition(classLoader, getLibrary(), libraryLabel, getClassName(), getName(), getVersion(), label,
+    return new StageDefinition(classLoader, getLibrary(), libraryLabel, getLibraryExecutionModes(), getClassName(), getName(), getVersion(), label,
                                description, getType(), isErrorStage(),
                                hasRequiredFields(), hasOnRecordError(), configDefs, rawSourceDef, getIcon(), groupDefs,
                                isVariableOutputStreams(), getOutputStreams(), streamLabels, executionModes);
@@ -378,4 +379,30 @@ public class StageDefinition {
     return _getOutputStreamLabels(classLoader, true);
   }
 
+  private static class LibraryInfo {
+    private String libraryName;
+    private String libraryLabel;
+    private List<ExecutionMode> libraryExecutionModes;
+
+    public LibraryInfo(String libraryName, String libraryLabel, List<ExecutionMode> libraryExecutionModes) {
+      this.libraryName =  Utils.checkNotNull(libraryName, "LibraryName");
+      this.libraryLabel = Utils.checkNotNull(libraryLabel, "libraryLabel");
+      this.libraryExecutionModes = Utils.checkNotNull(libraryExecutionModes, "libraryExecutionModes");
+    }
+
+    public List<ExecutionMode> getLibraryExecutionModes() {
+      return libraryExecutionModes;
+    }
+
+    public String getLibraryName() {
+      return libraryName;
+    }
+
+    public String getLibraryLabel() {
+      return libraryLabel;
+    }
+  }
+
 }
+
+

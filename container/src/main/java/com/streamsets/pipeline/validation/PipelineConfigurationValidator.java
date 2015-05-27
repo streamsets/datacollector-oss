@@ -181,13 +181,24 @@ public class PipelineConfigurationValidator {
       if (stageDef != null) {
         if (!stageDef.getExecutionModes().contains(executionMode)) {
           issues.add(issueCreator.createStageIssue(stageConf.getInstanceName(), ValidationError.VALIDATION_0071,
-                                                   executionMode));
+            executionMode));
+          canPreview = false;
+        } else if (!stageDef.getLibraryExecutionModes().contains(executionMode)) {
+          String type;
+          if (stageDef.getType() == StageType.SOURCE) {
+            type = "Origin";
+          } else if (stageDef.getType() == StageType.TARGET) {
+            type = "Destination";
+          } else {
+            type = "Processor";
+          }
+          issues.add(issueCreator.createStageIssue(stageConf.getInstanceName(), ValidationError.VALIDATION_0074,
+            stageDef.getLibraryLabel(), executionMode.getLabel(), type));
           canPreview = false;
         }
       } else {
         issues.add(issueCreator.createStageIssue(stageConf.getInstanceName(), ValidationError.VALIDATION_0006,
-                                                 stageConf.getLibrary(), stageConf.getStageName(),
-                                                 stageConf.getStageVersion()));
+          stageConf.getLibrary(), stageConf.getStageName(), stageConf.getStageVersion()));
       }
     }
     return canPreview;

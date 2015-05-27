@@ -10,6 +10,7 @@ import com.google.common.collect.ImmutableMap;
 import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.ExecutionMode;
 import com.streamsets.pipeline.api.impl.LocaleInContext;
+
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Test;
@@ -51,7 +52,7 @@ public class TestStageDefinitionLocalization {
                                               TOutput.class.getName(),
                                               Arrays.asList(ExecutionMode.CLUSTER,
                                                             ExecutionMode.STANDALONE));
-    def.setLibrary("lib", "LIB", getClass().getClassLoader());
+    def.setLibrary("lib", "LIB", Arrays.asList(ExecutionMode.values()), getClass().getClassLoader());
     return def;
   }
 

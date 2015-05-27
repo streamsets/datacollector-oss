@@ -397,7 +397,7 @@ public class MockStages {
           null/*raw source definition*/, "", null, false, 1, null,
           Arrays.asList(ExecutionMode.CLUSTER, ExecutionMode.STANDALONE)
         );
-        sDef.setLibrary("default", "", cl);
+        sDef.setLibrary("default", "", Arrays.asList(ExecutionMode.values()), cl);
 
         StageDefinition socDef = new StageDefinition(
           MSourceOffsetCommitter.class.getName(), "sourceOffsetCommitterName", "1.0.0", "sourceOffsetCommitterLabel",
@@ -405,15 +405,15 @@ public class MockStages {
           null/*raw source definition*/, "", null, false, 1, null,
           Arrays.asList(ExecutionMode.CLUSTER, ExecutionMode.STANDALONE)
         );
-        socDef.setLibrary("default", "", cl);
+        socDef.setLibrary("default", "", Arrays.asList(ExecutionMode.values()), cl);
 
         StageDefinition pDef = new StageDefinition(MProcessor.class.getName(), "processorName", "1.0.0", "sourcelabel",
           "sourceDescription", StageType.PROCESSOR, false, true, true, Collections.<ConfigDefinition>emptyList(),
           null/*raw source definition*/, "", null,
           false, 1, null,
           Arrays.asList(ExecutionMode.CLUSTER, ExecutionMode.STANDALONE));
-        pDef.setLibrary("default", "", cl);
-        pDef.setLibrary("default", "", Thread.currentThread().getContextClassLoader());
+        pDef.setLibrary("default", "", Arrays.asList(ExecutionMode.values()), cl);
+        pDef.setLibrary("default", "", Arrays.asList(ExecutionMode.values()), Thread.currentThread().getContextClassLoader());
 
         StageDefinition tDef = new StageDefinition(
           MTarget.class.getName(), "targetName", "1.0.0", "targetLabel",
@@ -421,7 +421,7 @@ public class MockStages {
           null/*raw source definition*/, "", null, false, 0, null,
           Arrays.asList(ExecutionMode.CLUSTER, ExecutionMode.STANDALONE)
         );
-        tDef.setLibrary("default", "", cl);
+        tDef.setLibrary("default", "", Arrays.asList(ExecutionMode.values()), cl);
 
 
         //error target configurations
@@ -437,7 +437,7 @@ public class MockStages {
           Arrays.asList(errorTargetConf), null/*raw source definition*/, "", null, false, 0, null,
           Arrays.asList(ExecutionMode.CLUSTER, ExecutionMode.STANDALONE)
         );
-        eDef.setLibrary("default", "", cl);
+        eDef.setLibrary("default", "", Arrays.asList(ExecutionMode.values()), cl);
 
         ConfigDefinition depConfDef = new ConfigDefinition(
           "dependencyConfName", ConfigDef.Type.NUMBER, "dependencyConfLabel", "dependencyConfDesc", 5, true,
@@ -456,15 +456,28 @@ public class MockStages {
           "sourceWithConfigsDesc", StageType.SOURCE, false, true, true,
           Lists.newArrayList(depConfDef, triggeredConfDef), null/*raw source definition*/, "", null, false, 1, null,
           Arrays.asList(ExecutionMode.CLUSTER, ExecutionMode.STANDALONE));
-        swcDef.setLibrary("default", "", cl);
+        swcDef.setLibrary("default", "", Arrays.asList(ExecutionMode.values()), cl);
 
         StageDefinition clusterStageDef = new StageDefinition(
             ClusterMSource.class.getName(), "clusterSource", "1.0.0", "clusterSourceLabel",
             "clusterSourceDesc", StageType.SOURCE, false, true, true,
             Collections.<ConfigDefinition>emptyList(), null, "", null, false, 1, null,
             Arrays.asList(ExecutionMode.CLUSTER));
-        clusterStageDef.setLibrary("default", "", cl);
+        clusterStageDef.setLibrary("default", "", Arrays.asList(ExecutionMode.values()), cl);
 
+        StageDefinition clusterLibraryStageDef = new StageDefinition(
+          ClusterMSource.class.getName(), "clusterLibrarySource", "1.0.0", "clusterSourceLabel",
+          "clusterSourceDesc", StageType.SOURCE, false, true, true,
+          Collections.<ConfigDefinition>emptyList(), null, "", null, false, 1, null,
+          Arrays.asList(ExecutionMode.CLUSTER, ExecutionMode.STANDALONE));
+        clusterLibraryStageDef.setLibrary("default", "", Arrays.asList(ExecutionMode.STANDALONE), cl);
+
+        StageDefinition commonLibraryTargetDef = new StageDefinition(
+          MTarget.class.getName(), "commonLibraryTarget", "1.0.0", "commonLibraryTargetLabel",
+          "commonLibraryTargetDesc", StageType.TARGET, false, true, true,
+          Collections.<ConfigDefinition>emptyList(), null, "", null, false, 1, null,
+          Arrays.asList(ExecutionMode.CLUSTER, ExecutionMode.STANDALONE));
+        commonLibraryTargetDef.setLibrary("default", "", Arrays.asList(ExecutionMode.values()), cl);
 
         ConfigDefinition regularConf = new ConfigDefinition(
           "regularConfName", ConfigDef.Type.NUMBER, "regularConfLabel", "regularConfDesc", 10, true,
@@ -488,9 +501,11 @@ public class MockStages {
           "complexStageDesc", StageType.SOURCE, false, true, true,
           Lists.newArrayList(complexConf), null/*raw source definition*/, "", null, false, 1, null,
           Arrays.asList(ExecutionMode.CLUSTER, ExecutionMode.STANDALONE));
-        complexStage.setLibrary("default", "", Thread.currentThread().getContextClassLoader());
+        complexStage.setLibrary("default", "", Arrays.asList(ExecutionMode.values()), Thread.currentThread().getContextClassLoader());
 
-        StageDefinition[] stageDefs = new StageDefinition[]{sDef, socDef, pDef, tDef, swcDef, eDef, clusterStageDef, complexStage};
+        StageDefinition[] stageDefs =
+          new StageDefinition[] { sDef, socDef, pDef, tDef, swcDef, eDef, clusterStageDef, complexStage,
+              clusterLibraryStageDef, commonLibraryTargetDef };
         stages = new HashMap<>();
         for (StageDefinition def : stageDefs) {
           if (stages.containsKey(def.getName())) {
@@ -519,7 +534,7 @@ public class MockStages {
             oldDef.isVariableOutputStreams(), oldDef.getOutputStreams(), oldDef.getOutputStreamLabelProviderClass(),
             Arrays.asList(ExecutionMode.CLUSTER, ExecutionMode.STANDALONE)
           );
-          newDef.setLibrary(oldDef.getLibrary(), oldDef.getLibraryLabel(), oldDef.getStageClassLoader());
+          newDef.setLibrary(oldDef.getLibrary(), oldDef.getLibraryLabel(), Arrays.asList(ExecutionMode.values()), oldDef.getStageClassLoader());
           stages.put(name, newDef);
         } else {
           throw new IllegalStateException("Expected stage at " + name);
@@ -719,5 +734,45 @@ public class MockStages {
                                                                            executionMode.name())), null, stages,
                                      getErrorStageConfig());
   }
+
+  @SuppressWarnings("unchecked")
+  public static PipelineConfiguration createPipelineConfigurationWithExectutionClusterOnlyStageLibrary(
+    String stageInstance, ExecutionMode executionMode) {
+    List<String> lanes = ImmutableList.of("a");
+    List<StageConfiguration> stages = new ArrayList<>();
+    // Stagedef for 'clusterLibrarySource' is created in MockStageLibraryTask
+    StageConfiguration source =
+      new StageConfiguration(stageInstance, "default", "clusterLibrarySource", "1.0.0",
+        Collections.<ConfigConfiguration> emptyList(), null, Collections.<String> emptyList(), lanes);
+    stages.add(source);
+    StageConfiguration target =
+      new StageConfiguration("t", "default", "targetName", "1.0.0", Collections.<ConfigConfiguration> emptyList(),
+        null, lanes, Collections.<String> emptyList());
+    stages.add(target);
+    return new PipelineConfiguration(PipelineStoreTask.SCHEMA_VERSION, UUID.randomUUID(), null,
+      Arrays.asList(new ConfigConfiguration(PipelineDefConfigs.EXECUTION_MODE_CONFIG, executionMode.name())), null,
+      stages, getErrorStageConfig());
+  }
+
+  @SuppressWarnings("unchecked")
+  public static PipelineConfiguration createPipelineConfigurationWithBothExectutionModeStageLibrary(
+    ExecutionMode executionMode) {
+    List<String> lanes = ImmutableList.of("a");
+    List<StageConfiguration> stages = new ArrayList<>();
+    StageConfiguration source =
+      new StageConfiguration("s", "default", "clusterSource", "1.0.0", Collections.<ConfigConfiguration> emptyList(),
+        null, Collections.<String> emptyList(), lanes);
+    stages.add(source);
+
+    // Stagedef for 'commonLibraryTarget' is created in MockStageLibraryTask
+    StageConfiguration target =
+      new StageConfiguration("t", "default", "commonLibraryTarget", "1.0.0",
+        Collections.<ConfigConfiguration> emptyList(), null, lanes, Collections.<String> emptyList());
+    stages.add(target);
+    return new PipelineConfiguration(PipelineStoreTask.SCHEMA_VERSION, UUID.randomUUID(), null,
+      Arrays.asList(new ConfigConfiguration(PipelineDefConfigs.EXECUTION_MODE_CONFIG, executionMode.name())), null,
+      stages, getErrorStageConfig());
+  }
+
 
 }
