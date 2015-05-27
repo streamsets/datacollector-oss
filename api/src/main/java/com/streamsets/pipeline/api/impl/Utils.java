@@ -145,29 +145,6 @@ public final class Utils {
     return prefix + oneDecimal.format(result) + suffix;
   }
 
-  public static long humanReadableToBytes(String number) {
-    String lower = number.toLowerCase();
-    if (lower.endsWith("kb")) {
-      return Long.parseLong(lower.substring(0, lower.length() - 2).trim()) * 1000;
-    } else if (lower.endsWith("mb")) {
-      return Long.parseLong(lower.substring(0, lower.length() - 2).trim()) * 1000 * 1000;
-    } else if (lower.endsWith("gb")) {
-      return Long.parseLong(lower.substring(0, lower.length() - 2).trim()) * 1000 * 1000 * 1000;
-    } else if (lower.endsWith("tb")) {
-      return Long.parseLong(lower.substring(0, lower.length() - 2).trim()) * 1000 * 1000 * 1000 * 1000;
-    } else if (lower.endsWith("kib")) {
-      return Long.parseLong(lower.substring(0, lower.length() - 3).trim()) * 1024;
-    } else if (lower.endsWith("mib")) {
-      return Long.parseLong(lower.substring(0, lower.length() - 3).trim()) * 1024 * 1024;
-    } else if (lower.endsWith("gib")) {
-      return Long.parseLong(lower.substring(0, lower.length() - 3).trim()) * 1024 * 1024 * 1024;
-    } else if (lower.endsWith("tib")) {
-      return Long.parseLong(lower.substring(0, lower.length() - 3).trim()) * 1024 * 1024 * 1024 * 1024;
-    } else {// no suffix, so it's just a number in bytes
-      return Long.parseLong(lower);
-    }
-  }
-
   private static Callable<String> sdcIdCallable;
 
   public static void setSdcIdCallable(Callable<String> callable) {

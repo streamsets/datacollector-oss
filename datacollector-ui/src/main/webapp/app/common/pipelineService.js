@@ -1037,7 +1037,7 @@ angular.module('dataCollectorApp.common')
         COUNTER: [
             {
               value: 'pipeline.memoryConsumed.counter',
-              label: 'Pipeline Memory Consumption Counter'
+              label: 'Pipeline Memory Consumption Counter (bytes)'
             }
         ],
         HISTOGRAM: [
@@ -1260,7 +1260,7 @@ angular.module('dataCollectorApp.common')
           metricId: "pipeline.memoryConsumed.counter",
           metricType: "COUNTER",
           metricElement: "COUNTER_COUNT",
-          condition: "${value() > humanReadableToBytes('100MB')}",
+          condition: "${value() > 100 * MB}",
           sendEmail: false,
           enabled: false,
           valid: true
