@@ -7,8 +7,12 @@ package com.streamsets.pipeline.stage.origin.kafka.cluster;
 import java.util.List;
 import java.util.concurrent.ConcurrentLinkedDeque;
 import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.concurrent.TimeUnit;
 
+import com.google.common.annotations.VisibleForTesting;
+import com.google.common.base.Stopwatch;
 import com.streamsets.pipeline.api.impl.Utils;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -27,7 +31,7 @@ public class EmbeddedSDCPool {
   private final List<EmbeddedSDC> totalInstances = new CopyOnWriteArrayList<>();
   private Properties properties;
   private String pipelineJson;
-
+  private boolean infiniteSDCPool;
   /**
    * Create a pool. For now, there is only instance being created
    * @param properties the properties file
@@ -37,6 +41,7 @@ public class EmbeddedSDCPool {
   public EmbeddedSDCPool(Properties properties, String pipelineJson) throws Exception {
     this.properties = Utils.checkNotNull(properties, "Properties");
     this.pipelineJson = Utils.checkNotNull(pipelineJson,  "Pipeline JSON");
+    infiniteSDCPool = Boolean.valueOf(properties.getProperty("sdc.pool.size.infinite", "false"));
     addToQueues(createEmbeddedSDC());
   }
 
@@ -85,11 +90,21 @@ public class EmbeddedSDCPool {
     LOG.debug("Before polling, size of queue is " + concurrentQueue.size());
     EmbeddedSDC embeddedSDC;
     if (concurrentQueue.size() == 0) {
-      LOG.debug("No SDC found in queue, creating new one");
-      embeddedSDC = createEmbeddedSDC();
-      addToQueues(embeddedSDC);
+      if (infiniteSDCPool) {
+        LOG.warn("Creating new SDC as no SDC found in queue, This should be called only during testing");
+        embeddedSDC = createEmbeddedSDC();
+        addToQueues(embeddedSDC);
+        embeddedSDC = concurrentQueue.poll();
+      } else {
+        // wait for a minute for sdc to be returned back
+        embeddedSDC = waitForSDC(60000);
+      }
+    } else {
+      embeddedSDC = concurrentQueue.poll();
     }
-    embeddedSDC = concurrentQueue.poll();
+    if (embeddedSDC == null) {
+      throw new IllegalStateException("Cannot find SDC, this should never happen");
+    }
     return embeddedSDC;
   }
 
@@ -124,4 +139,32 @@ public class EmbeddedSDCPool {
   public List<EmbeddedSDC> getTotalInstances() {
     return totalInstances;
   }
+
+  @VisibleForTesting
+  EmbeddedSDC waitForSDC(long timeout) throws InterruptedException {
+    EmbeddedSDC embeddedSDC = null;
+    if (timeout < 0) throw new IllegalArgumentException("Timeout shouldn't be less than zero");
+    Stopwatch stopwatch = Stopwatch.createStarted();
+    long sleepTime = stopwatch.elapsed(TimeUnit.MILLISECONDS);
+    int counter = 1000;
+    try {
+      while (sleepTime < timeout) {
+        embeddedSDC = concurrentQueue.poll();
+        if (embeddedSDC != null) {
+          break;
+        }
+        Thread.sleep(50);
+        sleepTime = stopwatch.elapsed(TimeUnit.MILLISECONDS);
+        if (sleepTime > counter) {
+          LOG.warn("Have been waiting for sdc for " + sleepTime + "ms");
+          // as we want to print messages every second
+          counter = counter + 1000;
+        }
+      }
+    } finally {
+      stopwatch.stop();
+    }
+    return embeddedSDC;
+  }
+
 }
