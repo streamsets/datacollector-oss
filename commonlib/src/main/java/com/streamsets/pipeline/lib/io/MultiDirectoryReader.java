@@ -71,6 +71,10 @@ public class MultiDirectoryReader implements Closeable {
       this.rollMode = rollMode;
       this.firstFile = firstFile;
     }
+
+    public String getFileKey() {
+      return dirName + "||" + rollMode.getPattern();
+    }
   }
 
   /**
@@ -156,7 +160,7 @@ public class MultiDirectoryReader implements Closeable {
   }
 
   private final List<DirectoryContext> dirContexts;
-  private final Set<String> dirNames;
+  private final Set<String> fileKeys;
   private final Charset charset;
   private final int maxLineLength;
   private final PostProcessingOptions postProcessing;
@@ -183,7 +187,7 @@ public class MultiDirectoryReader implements Closeable {
     Utils.checkArgument(postProcessing != PostProcessingOptions.ARCHIVE || (archiveDir != null && !archiveDir.isEmpty()),
                         "archiveDir cannot be empty if postProcessing is ARCHIVE");
     dirContexts = new ArrayList<>();
-    dirNames = new LinkedHashSet<>();
+    fileKeys = new LinkedHashSet<>();
 
     this.charset = charset;
     this.maxLineLength = maxLineLength;
@@ -192,17 +196,17 @@ public class MultiDirectoryReader implements Closeable {
 
     for (DirectoryInfo dirInfo : dirInfos) {
       dirContexts.add(new DirectoryContext(dirInfo));
-      if (dirNames.contains(dirInfo.dirName)) {
-        throw new IOException(Utils.format("Directory '{}' already specified, it cannot be added more than once",
-                                           dirInfo.dirName));
+      if (fileKeys.contains(dirInfo.getFileKey())) {
+        throw new IOException(Utils.format("File '{}' already specified, it cannot be added more than once",
+            dirInfo.getFileKey()));
       }
-      dirNames.add(dirInfo.dirName);
+      fileKeys.add(dirInfo.getFileKey());
     }
 
 
     events = new ArrayList<>(dirInfos.size() * 2);
     open = true;
-    LOG.debug("Opening directories: {}", dirNames);
+    LOG.debug("Opening files: {}", fileKeys);
   }
 
   /**
@@ -220,7 +224,7 @@ public class MultiDirectoryReader implements Closeable {
     Utils.checkNotNull(offsets, "offsets");
     // retrieve file:offset for each directory
     for (DirectoryContext dirContext : dirContexts) {
-      String offset = offsets.get(dirContext.dirInfo.dirName);
+      String offset = offsets.get(dirContext.dirInfo.getFileKey());
       LiveFile file = null;
       long fileOffset = 0;
       if (offset != null && !offset.isEmpty()) {
@@ -264,10 +268,14 @@ public class MultiDirectoryReader implements Closeable {
         fileOffset = Long.MAX_VALUE;
       }
       String offset = (file == null) ? "" : Long.toString(fileOffset) + "::" + file.serialize();
-      map.put(dirContext.dirInfo.dirName, offset);
+      map.put(dirContext.dirInfo.getFileKey(), offset);
       if (LOG.isTraceEnabled()) {
-        LOG.trace("Reporting offset: directory '{}', file '{}', offset '{}'", dirContext.dirInfo.dirName, file,
-                  fileOffset);
+        LOG.trace("Reporting offset: directory '{}', pattern: '{}', file '{}', offset '{}'",
+            dirContext.dirInfo.dirName,
+            dirContext.dirInfo.rollMode.getPattern(),
+            file,
+            fileOffset
+        );
       }
     }
     return map;
@@ -419,7 +427,7 @@ public class MultiDirectoryReader implements Closeable {
   public void close() {
     if (open) {
       open = false;
-      LOG.debug("Closing directories: {}", dirNames);
+      LOG.debug("Closing files: {}", fileKeys);
       for (DirectoryContext dirContext : dirContexts) {
         try {
           if (dirContext.reader != null) {
@@ -431,5 +439,4 @@ public class MultiDirectoryReader implements Closeable {
       }
     }
   }
-
 }

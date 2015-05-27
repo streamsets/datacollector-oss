@@ -96,11 +96,11 @@ public class TestFileTailSource {
   private static final Charset UTF8 = Charset.forName("UTF-8");
 
   @Test
-  public void testTailLogMultipleDirsSameDir() throws Exception {
+  public void testTailLogSameFilesInSameDir() throws Exception {
     File testDataDir1 = new File("target", UUID.randomUUID().toString());
     Assert.assertTrue(testDataDir1.mkdirs());
     Files.write(new File(testDataDir1, "log1.txt").toPath(), Arrays.asList("Hello"), UTF8);
-    Files.write(new File(testDataDir1, "log2.txt").toPath(), Arrays.asList("Hola"), UTF8);
+    Files.write(new File(testDataDir1, "log1.txt").toPath(), Arrays.asList("Hola"), UTF8);
 
     FileInfo fileInfo1 = new FileInfo();
     fileInfo1.dirName = testDataDir1.getAbsolutePath();
@@ -110,7 +110,7 @@ public class TestFileTailSource {
     fileInfo1.periodicFileRegEx = "";
     FileInfo fileInfo2 = new FileInfo();
     fileInfo2.dirName = testDataDir1.getAbsolutePath();
-    fileInfo2.file = "log2.txt";
+    fileInfo2.file = "log1.txt";
     fileInfo2.fileRollMode = FilesRollMode.REVERSE_COUNTER;
     fileInfo2.firstFile = "";
     fileInfo2.periodicFileRegEx = "";
