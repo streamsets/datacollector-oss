@@ -186,8 +186,9 @@ public class MiniSDCTestingUtility {
     File target = getDataTestDir();
     String targetRoot = target.getAbsolutePath();
     File etcTarget = new File(target, "etc");
-
+    File resourcesTarget = new File(target, "resources");
     FileUtils.copyDirectory(new File(sdcDistRoot + "/etc"), etcTarget);
+    FileUtils.copyDirectory(new File(sdcDistRoot + "/resources"), resourcesTarget);
     FileUtils.copyDirectory(new File(sdcDistRoot + "/libexec"), new File(target, "libexec"));
     // Set execute permissions back on script
     Set<PosixFilePermission> set = new HashSet<PosixFilePermission>();
@@ -207,7 +208,8 @@ public class MiniSDCTestingUtility {
     Files.copy(Paths.get(Resources.getResource("log4j.properties").toURI()), log4jProperties.toPath());
 
     File sdcProperties = new File(etcTarget, "sdc.properties");
-    System.setProperty("sdc.conf.dir", targetRoot + "/etc");
+    System.setProperty("sdc.conf.dir", etcTarget.getAbsolutePath());
+    System.setProperty("sdc.resources.dir", resourcesTarget.getAbsolutePath());
     System.setProperty("sdc.libexec.dir", targetRoot + "/libexec");
     System.setProperty("sdc.static-web.dir", targetRoot + "/static-web");
     rewriteProperties(sdcProperties, executionMode);

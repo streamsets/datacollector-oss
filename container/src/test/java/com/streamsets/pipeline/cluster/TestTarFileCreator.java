@@ -54,7 +54,7 @@ public class TestTarFileCreator {
   public void testCreateEtcTarGzDirDoesNotExist() throws Exception {
     File etcDir = new File(tempDir, "etc");
     File tarFile = new File(tempDir, "etc.tar.gz");
-    TarFileCreator.createEtcTarGz(etcDir, tarFile);
+    TarFileCreator.createTarGz(etcDir, tarFile);
   }
 
   @Test(expected = IllegalStateException.class)
@@ -62,7 +62,7 @@ public class TestTarFileCreator {
     File etcDir = new File(tempDir, "etc");
     Assert.assertTrue(etcDir.mkdir());
     File tarFile = new File(tempDir, "etc.tar.gz");
-    TarFileCreator.createEtcTarGz(etcDir, tarFile);
+    TarFileCreator.createTarGz(etcDir, tarFile);
   }
 
   @Test(expected = IllegalStateException.class)
@@ -71,7 +71,7 @@ public class TestTarFileCreator {
     Assert.assertTrue(etcDir.mkdir());
     etcDir.setReadable(false);
     File tarFile = new File(tempDir, "etc.tar.gz");
-    TarFileCreator.createEtcTarGz(etcDir, tarFile);
+    TarFileCreator.createTarGz(etcDir, tarFile);
   }
 
   @Test
@@ -81,9 +81,8 @@ public class TestTarFileCreator {
     createJar(etcDir);
     createJar(etcDir);
     File tarFile = new File(tempDir, "etc.tar.gz");
-    TarFileCreator.createEtcTarGz(etcDir, tarFile);
+    TarFileCreator.createTarGz(etcDir, tarFile);
     TarInputStream tis = new TarInputStream(new GZIPInputStream(new FileInputStream(tarFile)));
-    readDir("etc/", tis);
     readJar(tis);
     readJar(tis);
   }

@@ -52,7 +52,7 @@ public class MockSparkProvider implements SparkProvider {
   public ApplicationState startPipeline(SystemProcessFactory systemProcessFactory, File sparkManager, File tempDir,
                               Map<String, String> environment, Map<String, String> sourceInfo,
                               PipelineConfiguration pipelineConfiguration, StageLibraryTask stageLibrary,
-                              File etcDir, File staticWebDir, File bootstrapDir, URLClassLoader apiCL,
+                              File etcDir, File resourcesDir, File staticWebDir, File bootstrapDir, URLClassLoader apiCL,
                               URLClassLoader containerCL, long timeout)
   throws TimeoutException {
     LOG.info("startPipeline");

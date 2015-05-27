@@ -64,14 +64,15 @@ public class SparkManager {
 
   public ListenableFuture<ApplicationState> submit(final PipelineConfiguration pipelineConfiguration,
                                          final StageLibraryTask stageLibrary,
-                                         final File etcDir, final File staticWebDir, final File bootstrapDir,
-                                         final Map<String, String> environment,
+                                         final File etcDir, final File resourcesDir, final File staticWebDir,
+                                         final File bootstrapDir, final Map<String, String> environment,
                                          final Map<String, String> sourceInfo, final long timeout) {
     return executorService.submit(new Callable<ApplicationState>() {
       @Override
       public ApplicationState call() throws Exception {
         return sparkProvider.startPipeline(systemProcessFactory, sparkManager, tempDir, environment, sourceInfo,
-          pipelineConfiguration, stageLibrary, etcDir, staticWebDir, bootstrapDir, apiCL, containerCL, timeout);
+          pipelineConfiguration, stageLibrary, etcDir, resourcesDir, staticWebDir, bootstrapDir, apiCL, containerCL,
+          timeout);
       }
     });
   }

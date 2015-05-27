@@ -52,17 +52,21 @@ public class BootstrapCluster {
     boolean isTestingMode = Boolean.getBoolean("sdc.testing-mode");
     String libraryRoot;
     String etcRoot;
+    String resourcesRoot;
     if (isTestingMode) {
       libraryRoot = (new File(System.getProperty("user.dir"), "target")).getAbsolutePath();
       etcRoot = (new File(System.getProperty("user.dir"), "target")).getAbsolutePath();
+      resourcesRoot = (new File(System.getProperty("user.dir"), "target")).getAbsolutePath();
     } else {
       libraryRoot = (new File(System.getProperty("user.dir"), "libs.tar.gz")).getAbsolutePath();
       etcRoot = (new File(System.getProperty("user.dir") + "/etc.tar.gz/etc/")).getAbsolutePath();
+      resourcesRoot = (new File(System.getProperty("user.dir") + "/resources.tar.gz/resources/")).getAbsolutePath();
     }
     System.setProperty("sdc.clustermode", "true");
     System.setProperty("sdc.transient-env", "true");
     System.setProperty("sdc.static-web.dir", (new File(libraryRoot, "sdc-static-web")).getAbsolutePath());
     System.setProperty("sdc.conf.dir", etcRoot);
+    System.setProperty("sdc.resources.dir", resourcesRoot);
     File sdcProperties = new File(etcRoot, "sdc.properties");
     if (!sdcProperties.isFile()) {
       String msg = "SDC Properties file does not exist at expected location: " + sdcProperties;
