@@ -18,7 +18,8 @@ public class RuleELRegistry {
       RecordEL.class,
       StringEL.class,
       DataUnitsEL.class,
-      RuntimeEL.class
+      RuntimeEL.class,
+      JvmEL.class
     };
   }
 }

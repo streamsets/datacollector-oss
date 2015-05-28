@@ -128,11 +128,4 @@ public class RuntimeEL {
     return RUNTIME_CONF_PROPS.keySet();
   }
 
-  @ElFunction(prefix = "runtime", name = "jvmMaxMemory",
-      description = "JVM Maximum Heap size, in bytes"
-  )
-  public static long jvmMaxMemory() {
-    return  Runtime.getRuntime().maxMemory();
-  }
-
 }
