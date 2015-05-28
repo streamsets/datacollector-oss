@@ -85,7 +85,7 @@ angular.module('dataCollectorApp.common')
      */
     this.getMetricRulesElMetadata = function() {
       return {
-        elConstantDefinitions: [],
+        elConstantDefinitions: self.rulesElMetadata.elConstantDefinitions,
         elFunctionDefinitions:[{
           name: "value",
           description: "Returns the value of the metric in context",
