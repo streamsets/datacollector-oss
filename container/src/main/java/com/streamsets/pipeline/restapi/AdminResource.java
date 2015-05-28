@@ -91,6 +91,7 @@ public class AdminResource {
     map.put("dataDir", runtimeInfo.getDataDir());
     map.put("logDir", runtimeInfo.getLogDir());
     map.put("staticWebDir", runtimeInfo.getStaticWebDir());
+    map.put("resourcesDir", runtimeInfo.getResourcesDir());
     return Response.ok(map).build();
   }
 }

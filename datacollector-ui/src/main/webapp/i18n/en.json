@@ -519,6 +519,7 @@
     "configDir": "Configuration Directory",
     "dataDir": "Data Directory",
     "logDir": "Log Directory",
+    "resourcesDir": "Resources Directory",
     "runtimeDir": "Runtime Directory",
     "staticWebDir": "Static Web Directory"
 
