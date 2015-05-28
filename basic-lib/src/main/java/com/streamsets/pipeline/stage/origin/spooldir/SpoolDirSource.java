@@ -43,7 +43,8 @@ import java.util.concurrent.TimeUnit;
 public class SpoolDirSource extends BaseSource {
   private final static Logger LOG = LoggerFactory.getLogger(SpoolDirSource.class);
   private static final String OFFSET_SEPARATOR = "::";
-  private static final int MIN_OVERRUN_LIMIT = 64 * 1024;
+  private static final int MIN_OVERRUN_LIMIT = 64 * 1000;
+  private static final int MAX_OVERRUN_LIMIT = 1000 * 1000;
 
   private final DataFormat dataFormat;
   private String charset;
@@ -90,7 +91,7 @@ public class SpoolDirSource extends BaseSource {
       String log4jCustomLogFormat, OnParseError onParseError, int maxStackTraceLines) {
     this.dataFormat = dataFormat;
     this.charset = charset;
-    this.overrunLimit = overrunLimit * 1024;
+    this.overrunLimit = overrunLimit * 1000;
     this.spoolDir = spoolDir;
     this.batchSize = batchSize;
     this.poolingTimeoutSecs = poolingTimeoutSecs;
@@ -136,9 +137,8 @@ public class SpoolDirSource extends BaseSource {
 
     validateDir(spoolDir, Groups.FILES.name(), "spoolDir", issues);
 
-    if (overrunLimit < MIN_OVERRUN_LIMIT) {
-      issues.add(getContext().createConfigIssue(Groups.FILES.name(), "overrunLimit", Errors.SPOOLDIR_14,
-                                                overrunLimit / 1024, MIN_OVERRUN_LIMIT));
+    if (overrunLimit < MIN_OVERRUN_LIMIT || overrunLimit >= MAX_OVERRUN_LIMIT) {
+      issues.add(getContext().createConfigIssue(Groups.FILES.name(), "overrunLimit", Errors.SPOOLDIR_06));
     }
 
     if (batchSize < 1) {
