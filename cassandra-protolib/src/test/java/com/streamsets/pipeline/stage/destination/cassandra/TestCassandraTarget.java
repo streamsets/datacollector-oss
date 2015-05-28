@@ -12,12 +12,12 @@ import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.sdk.RecordCreator;
 import com.streamsets.pipeline.sdk.TargetRunner;
-import org.junit.Assert;
 import org.apache.cassandra.exceptions.ConfigurationException;
 import org.apache.thrift.transport.TTransportException;
 import org.cassandraunit.utils.EmbeddedCassandraServerHelper;
 import org.junit.After;
 import org.junit.AfterClass;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -32,23 +32,25 @@ public class TestCassandraTarget {
   private static final Logger LOG = LoggerFactory.getLogger(TestCassandraTarget.class);
 
   private static final Double EPSILON = 1e-15;
+  private static final long CASSANDRA_STARTUP_TIMEOUT = 20000;
+  private static int CASSANDRA_NATIVE_PORT = 9142;
 
   private static Cluster cluster = null;
   private static Session session = null;
 
+  @SuppressWarnings("unchecked")
   @BeforeClass
   public static void setUpClass() throws InterruptedException, TTransportException, ConfigurationException, IOException {
-    EmbeddedCassandraServerHelper.startEmbeddedCassandra();
-
-    cluster = Cluster.builder().addContactPoint("localhost").withPort(9142).build();
+    EmbeddedCassandraServerHelper.startEmbeddedCassandra(CASSANDRA_STARTUP_TIMEOUT);
+    cluster = Cluster.builder().addContactPoint("localhost").withPort(CASSANDRA_NATIVE_PORT).build();
     session = cluster.connect();
   }
 
   @AfterClass
   public static void tearDownClass() {
+    EmbeddedCassandraServerHelper.cleanEmbeddedCassandra();
     session.close();
     cluster.close();
-    EmbeddedCassandraServerHelper.cleanEmbeddedCassandra();
   }
 
   @Before
@@ -94,7 +96,7 @@ public class TestCassandraTarget {
         .addConfiguration("useCredentials", false)
         .addConfiguration("qualifiedTableName", tableName)
         .addConfiguration("columnNames", fieldMappings)
-        .addConfiguration("port", 9142)
+        .addConfiguration("port", CASSANDRA_NATIVE_PORT)
         .build();
 
     List<Record> emptyBatch = ImmutableList.of();
@@ -119,7 +121,7 @@ public class TestCassandraTarget {
         .addConfiguration("useCredentials", false)
         .addConfiguration("qualifiedTableName", tableName)
         .addConfiguration("columnNames", fieldMappings)
-        .addConfiguration("port", 9142)
+        .addConfiguration("port", CASSANDRA_NATIVE_PORT)
         .build();
 
     Record record = RecordCreator.create();
@@ -167,7 +169,7 @@ public class TestCassandraTarget {
         .addConfiguration("useCredentials", false)
         .addConfiguration("qualifiedTableName", tableName)
         .addConfiguration("columnNames", fieldMappings)
-        .addConfiguration("port", 9142)
+        .addConfiguration("port", CASSANDRA_NATIVE_PORT)
         .build();
 
     Record record = RecordCreator.create();
@@ -213,7 +215,7 @@ public class TestCassandraTarget {
         .addConfiguration("useCredentials", false)
         .addConfiguration("qualifiedTableName", tableName)
         .addConfiguration("columnNames", fieldMappings)
-        .addConfiguration("port", 9142)
+        .addConfiguration("port", CASSANDRA_NATIVE_PORT)
         .setOnRecordError(OnRecordError.DISCARD)
         .build();
 
@@ -257,7 +259,7 @@ public class TestCassandraTarget {
         .addConfiguration("useCredentials", false)
         .addConfiguration("qualifiedTableName", tableName)
         .addConfiguration("columnNames", fieldMappings)
-        .addConfiguration("port", 9142)
+        .addConfiguration("port", CASSANDRA_NATIVE_PORT)
         .setOnRecordError(OnRecordError.TO_ERROR)
         .build();
 
@@ -301,7 +303,7 @@ public class TestCassandraTarget {
         .addConfiguration("useCredentials", false)
         .addConfiguration("qualifiedTableName", tableName)
         .addConfiguration("columnNames", fieldMappings)
-        .addConfiguration("port", 9142)
+        .addConfiguration("port", CASSANDRA_NATIVE_PORT)
         .setOnRecordError(OnRecordError.STOP_PIPELINE)
         .build();
 
