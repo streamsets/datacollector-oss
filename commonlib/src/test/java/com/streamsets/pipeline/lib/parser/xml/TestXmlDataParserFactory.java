@@ -29,11 +29,12 @@ public class TestXmlDataParserFactory {
   @Test
   public void testGetParserString() throws Exception {
 
-    DataParserFactoryBuilder dataParserFactoryBuilder = new DataParserFactoryBuilder(getContext(), DataParserFormat.XML);
+    DataParserFactoryBuilder dataParserFactoryBuilder =
+        new DataParserFactoryBuilder(getContext(), DataParserFormat.XML);
     DataFactory dataFactory = dataParserFactoryBuilder
-      .setMaxDataLen(20)
-      .setConfig(XmlDataParserFactory.RECORD_ELEMENT_KEY, "e")
-      .build();
+        .setMaxDataLen(20)
+        .setConfig(XmlDataParserFactory.RECORD_ELEMENT_KEY, "e")
+        .build();
     Assert.assertTrue(dataFactory instanceof XmlDataParserFactory);
     XmlDataParserFactory factory = (XmlDataParserFactory) dataFactory;
 
@@ -48,10 +49,11 @@ public class TestXmlDataParserFactory {
 
   @Test
   public void testGetParserNoRecordElement() throws Exception {
-    DataParserFactoryBuilder dataParserFactoryBuilder = new DataParserFactoryBuilder(getContext(), DataParserFormat.XML);
+    DataParserFactoryBuilder dataParserFactoryBuilder =
+        new DataParserFactoryBuilder(getContext(), DataParserFormat.XML);
     DataFactory dataFactory = dataParserFactoryBuilder
-      .setMaxDataLen(40)
-      .build();
+        .setMaxDataLen(40)
+        .build();
     Assert.assertTrue(dataFactory instanceof XmlDataParserFactory);
     XmlDataParserFactory factory = (XmlDataParserFactory) dataFactory;
 
@@ -68,11 +70,12 @@ public class TestXmlDataParserFactory {
 
   @Test
   public void testGetParserReader() throws Exception {
-    DataParserFactoryBuilder dataParserFactoryBuilder = new DataParserFactoryBuilder(getContext(), DataParserFormat.XML);
+    DataParserFactoryBuilder dataParserFactoryBuilder =
+        new DataParserFactoryBuilder(getContext(), DataParserFormat.XML);
     DataFactory dataFactory = dataParserFactoryBuilder
-      .setMaxDataLen(20)
-      .setConfig(XmlDataParserFactory.RECORD_ELEMENT_KEY, "e")
-      .build();
+        .setMaxDataLen(20)
+        .setConfig(XmlDataParserFactory.RECORD_ELEMENT_KEY, "e")
+        .build();
     Assert.assertTrue(dataFactory instanceof XmlDataParserFactory);
     XmlDataParserFactory factory = (XmlDataParserFactory) dataFactory;
 
@@ -88,11 +91,12 @@ public class TestXmlDataParserFactory {
 
   @Test
   public void testGetParserReaderWithOffset() throws Exception {
-    DataParserFactoryBuilder dataParserFactoryBuilder = new DataParserFactoryBuilder(getContext(), DataParserFormat.XML);
+    DataParserFactoryBuilder dataParserFactoryBuilder =
+        new DataParserFactoryBuilder(getContext(), DataParserFormat.XML);
     DataFactory dataFactory = dataParserFactoryBuilder
-      .setMaxDataLen(20)
-      .setConfig(XmlDataParserFactory.RECORD_ELEMENT_KEY, "e")
-      .build();
+        .setMaxDataLen(20)
+        .setConfig(XmlDataParserFactory.RECORD_ELEMENT_KEY, "e")
+        .build();
     Assert.assertTrue(dataFactory instanceof XmlDataParserFactory);
     XmlDataParserFactory factory = (XmlDataParserFactory) dataFactory;
 
@@ -104,5 +108,26 @@ public class TestXmlDataParserFactory {
     Assert.assertTrue(record.has(""));
     Assert.assertEquals(29, parser.getOffset());
     parser.close();
+  }
+
+  @Test
+  public void testCharacterBaseParserMethod() throws Exception {
+    DataParserFactoryBuilder dataParserFactoryBuilder =
+        new DataParserFactoryBuilder(getContext(), DataParserFormat.XML);
+    DataFactory dataFactory = dataParserFactoryBuilder
+        .setMaxDataLen(20)
+        .setConfig(XmlDataParserFactory.RECORD_ELEMENT_KEY, "e")
+        .build();
+    Assert.assertTrue(dataFactory instanceof XmlDataParserFactory);
+    XmlDataParserFactory factory = (XmlDataParserFactory) dataFactory;
+
+    DataParser parser = factory.getParser("id", "<r><e>Hello</e><e>Bye</e></r>");
+    Assert.assertEquals(0, parser.getOffset());
+    Record record = parser.parse();
+    Assert.assertNotNull(record);
+    Assert.assertTrue(record.has(""));
+    Assert.assertEquals(18, parser.getOffset());
+    parser.close();
+
   }
 }

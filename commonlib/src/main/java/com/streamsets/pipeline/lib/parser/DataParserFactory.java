@@ -17,6 +17,7 @@ import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
+import java.io.StringReader;
 
 public abstract class DataParserFactory extends DataFactory {
 
@@ -33,6 +34,14 @@ public abstract class DataParserFactory extends DataFactory {
     return getParser(id, data, 0, data.length);
   }
 
+  public DataParser getParser(String id, String data) throws DataParserException {
+    return getParser(id, new StringReader(data));
+  }
+
+  public DataParser getParser(String id, Reader reader) throws DataParserException {
+    return getParser(id, reader, 0);
+  }
+
   public DataParser getParser(File file, long fileOffset)
     throws DataParserException {
     try {
@@ -44,9 +53,19 @@ public abstract class DataParserFactory extends DataFactory {
 
   public abstract DataParser getParser(String id, InputStream is, long offset) throws DataParserException;
 
+  public abstract DataParser getParser(String id, Reader reader, long offset) throws DataParserException;
+
   protected OverrunReader createReader(InputStream is) {
     Reader bufferedReader = new BufferedReader(new InputStreamReader(is, getSettings().getCharset()));
     OverrunReader overrunReader = new OverrunReader(bufferedReader, getSettings().getOverRunLimit(), false);
+    return overrunReader;
+  }
+
+  protected OverrunReader createReader(Reader reader) {
+    if (!(reader instanceof BufferedReader)) {
+      reader = new BufferedReader(reader);
+    }
+    OverrunReader overrunReader = new OverrunReader(reader, getSettings().getOverRunLimit(), false);
     return overrunReader;
   }
 

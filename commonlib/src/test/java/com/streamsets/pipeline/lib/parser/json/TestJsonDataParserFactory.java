@@ -29,11 +29,12 @@ public class TestJsonDataParserFactory {
 
   @Test
   public void testGetParserString() throws Exception {
-    DataParserFactoryBuilder dataParserFactoryBuilder = new DataParserFactoryBuilder(getContext(), DataParserFormat.JSON);
+    DataParserFactoryBuilder dataParserFactoryBuilder =
+        new DataParserFactoryBuilder(getContext(), DataParserFormat.JSON);
     DataFactory dataFactory = dataParserFactoryBuilder
-      .setMaxDataLen(1000)
-      .setMode(JsonMode.MULTIPLE_OBJECTS)
-      .build();
+        .setMaxDataLen(1000)
+        .setMode(JsonMode.MULTIPLE_OBJECTS)
+        .build();
     Assert.assertTrue(dataFactory instanceof JsonDataParserFactory);
     JsonDataParserFactory factory = (JsonDataParserFactory) dataFactory;
 
@@ -47,11 +48,12 @@ public class TestJsonDataParserFactory {
 
   @Test
   public void testGetParserReader() throws Exception {
-    DataParserFactoryBuilder dataParserFactoryBuilder = new DataParserFactoryBuilder(getContext(), DataParserFormat.JSON);
+    DataParserFactoryBuilder dataParserFactoryBuilder =
+        new DataParserFactoryBuilder(getContext(), DataParserFormat.JSON);
     DataFactory dataFactory = dataParserFactoryBuilder
-      .setMaxDataLen(1000)
-      .setMode(JsonMode.MULTIPLE_OBJECTS)
-      .build();
+        .setMaxDataLen(1000)
+        .setMode(JsonMode.MULTIPLE_OBJECTS)
+        .build();
     Assert.assertTrue(dataFactory instanceof JsonDataParserFactory);
     JsonDataParserFactory factory = (JsonDataParserFactory) dataFactory;
 
@@ -66,11 +68,12 @@ public class TestJsonDataParserFactory {
 
   @Test
   public void testGetParserReaderWithOffset() throws Exception {
-    DataParserFactoryBuilder dataParserFactoryBuilder = new DataParserFactoryBuilder(getContext(), DataParserFormat.JSON);
+    DataParserFactoryBuilder dataParserFactoryBuilder =
+        new DataParserFactoryBuilder(getContext(), DataParserFormat.JSON);
     DataFactory dataFactory = dataParserFactoryBuilder
-      .setMaxDataLen(1000)
-      .setMode(JsonMode.ARRAY_OBJECTS)
-      .build();
+        .setMaxDataLen(1000)
+        .setMode(JsonMode.ARRAY_OBJECTS)
+        .build();
     Assert.assertTrue(dataFactory instanceof JsonDataParserFactory);
     JsonDataParserFactory factory = (JsonDataParserFactory) dataFactory;
 
@@ -82,4 +85,24 @@ public class TestJsonDataParserFactory {
     Assert.assertEquals(12, parser.getOffset());
     parser.close();
   }
+
+  @Test
+  public void testCharacterBaseParserMethod() throws Exception {
+    DataParserFactoryBuilder dataParserFactoryBuilder =
+        new DataParserFactoryBuilder(getContext(), DataParserFormat.JSON);
+    DataFactory dataFactory = dataParserFactoryBuilder
+        .setMaxDataLen(1000)
+        .setMode(JsonMode.ARRAY_OBJECTS)
+        .build();
+    Assert.assertTrue(dataFactory instanceof JsonDataParserFactory);
+    JsonDataParserFactory factory = (JsonDataParserFactory) dataFactory;
+
+    DataParser parser = factory.getParser("id", "[[\"Hello\"],[\"Bye\"]]\n");
+    Assert.assertEquals(0, parser.getOffset());
+    Record record = parser.parse();
+    Assert.assertTrue(record.has(""));
+    Assert.assertEquals(9, parser.getOffset());
+    parser.close();
+  }
+
 }
