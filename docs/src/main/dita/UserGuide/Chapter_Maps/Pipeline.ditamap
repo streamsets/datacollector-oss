@@ -39,9 +39,13 @@
    </topicmeta>
    <topicref href="../Pipeline_Configuration/Expressions-BasicSyntax.dita"/>
    <topicref href="../Pipeline_Configuration/Expressions-FieldName.dita"/>
+   <topicref href="../Pipeline_Configuration/ReferencingFieldNames.dita">
+    <topicref href="../Pipeline_Configuration/WildcardsArraysMaps.dita"/>
+   </topicref>
    <topicref href="../Pipeline_Configuration/Expressions-ExpComp.dita">
     <topicref href="../Pipeline_Configuration/Expressions-ExpCompTips.dita"/>
    </topicref>
+   <topicref href="../Pipeline_Configuration/DataTypeCoercion.dita"/>
   </topicref>
   <topicref href="../Pipeline_Configuration/ErrorHandling.dita" chunk="to-content">
    <topicmeta>

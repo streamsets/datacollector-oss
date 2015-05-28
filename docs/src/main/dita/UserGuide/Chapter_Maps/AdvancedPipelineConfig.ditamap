@@ -2,20 +2,20 @@
 <!DOCTYPE map PUBLIC "-//OASIS//DTD DITA Map//EN" "map.dtd">
 <map>
  <title>Advanced Configuration</title>
- <topicref href="../Advanced_PipelineConfig/AdvancedPipelineConfig-title.dita">
-  <topicref href="../Advanced_PipelineConfig/ExecutionMode.dita" chunk="to-content">
+ <topicref href="../Advanced_Config/AdvancedPipelineConfig-title.dita">
+  <topicref href="../Advanced_Config/ExecutionMode.dita" chunk="to-content">
    <topicmeta>
     <shortdesc/>
    </topicmeta>
-   <topicref href="../Advanced_PipelineConfig/ClusterMode-Configuration.dita"/>
-   <topicref href="../Advanced_PipelineConfig/MonitoringaCluster.dita"/>
+   <topicref href="../Advanced_Config/ClusterMode-Configuration.dita"/>
+   <topicref href="../Advanced_Config/MonitoringaCluster.dita"/>
   </topicref>
-  <topicref href="../Advanced_PipelineConfig/RuntimeProperties.dita" chunk="to-content">
+  <topicref href="../Advanced_Config/RuntimeProperties.dita" chunk="to-content">
    <topicmeta>
     <shortdesc/>
    </topicmeta>
-   <topicref href="../Advanced_PipelineConfig/RuntimeProperties-Defining.dita"/>
-   <topicref href="../Advanced_PipelineConfig/RuntimeProperties-Using.dita"/>
+   <topicref href="../Advanced_Config/RuntimeProperties-Defining.dita"/>
+   <topicref href="../Advanced_Config/RuntimeProperties-Using.dita"/>
   </topicref>
  </topicref>
 </map>

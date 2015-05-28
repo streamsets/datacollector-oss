@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
+<concept id="concept_vxd_tsm_tq">
+  <title>Pipeline Basics</title>
+  <shortdesc/>
+  <conbody>
+    <p><indexterm>Data
+          Collector<indexterm>troubleshooting</indexterm></indexterm><indexterm>troubleshooting<indexterm>pipeline
+          basics</indexterm></indexterm>Use the following tips to help you with pipeline basics. </p>
+    <p>
+      <dl>
+        <dlentry>
+          <dt>When I go to the <ph
+              conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
+            console, I get a "Webpage not available" error message.</dt>
+          <dd>The <ph
+              conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> is
+            not running. Start the <ph
+              conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+            />.</dd>
+        </dlentry>
+        <dlentry>
+          <dt>Why isn't the Start icon enabled? </dt>
+          <dd>You can start a pipeline when it is valid. Use the Issues icon to review the list of
+            issues in your pipeline. When you resolve the issues, the Start icon becomes
+            enabled.</dd>
+        </dlentry>
+        <dlentry>
+          <dt>Why doesn't the Select Fields with Preview Data option work? No preview data
+            displays.</dt>
+          <dd>Select Fields with Preview Data can provide preview data when the pipeline is valid
+            for data preview. Make sure all stages are connected. You might also need to enter
+            temporary values for required properties to enable data preview.</dd>
+          <dd>
+            <draft-comment author="Loretta">From Hari: "Why is there no data in my pipeline" or "why
+              is the throughput very low". User could trouble shoot by looking at the metric charts
+              and figure out whether source is producing records or if a stage is taking more
+              time.User could follow up by tuning the throughput/latency parameters for origin
+              stages [batch size vs batch time] or even tune the external source.</draft-comment>
+          </dd>
+        </dlentry>
+      </dl>
+    </p>
+    <section>
+      <title>Data Preview</title>
+      <dl>
+        <dlentry>
+          <dt>Why isn't the Data Preview icon enabled?</dt>
+          <dd>You can preview data after you connect all stages in the pipeline and configure
+            required properties. You can use any valid value as a placeholder. </dd>
+        </dlentry>
+        <dlentry>
+          <dt>Why doesn't the data preview show any data?</dt>
+          <dd>If data preview doesn't show any data, one of the following issues might have
+              occurred:<ul id="ul_r5n_jgm_2s">
+              <li>The origin might not be configured correctly. In the Preview panel, check the
+                Issues tab of the origin stage for related issues.</li>
+              <li>The origin might not have any data at the moment. </li>
+            </ul></dd>
+        </dlentry>
+        <dlentry>
+          <dt>Why can't I edit preview data?</dt>
+          <dd>When you can edit preview data in the following locations in a pipeline. <ul
+              conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/ul_EditPreview"
+              id="ul_t5n_jgm_2s">
+              <li/>
+            </ul></dd>
+          <dd>Edit preview data to test or debug pipeline processing.</dd>
+        </dlentry>
+      </dl>
+    </section>
+  </conbody>
+</concept>

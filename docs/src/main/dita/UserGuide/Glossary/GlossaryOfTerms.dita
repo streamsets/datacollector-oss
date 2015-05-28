@@ -5,9 +5,16 @@
  <conbody>
   <dl>
       <dlentry>
+        <dt>cluster mode</dt>
+        <dd><indexterm>glossary<indexterm>Data Collector terms</indexterm></indexterm><ph
+            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
+          execution mode that allows you to process large volumes of data from a Kafka CDH
+          cluster.</dd>
+      </dlentry>
+      <dlentry>
         <dt>data alerts</dt>
-        <dd><indexterm>glossary<indexterm>Data Collector terms</indexterm></indexterm>Alerts based
-          on rules that gather information about the data that passes between two stages.</dd>
+        <dd>Alerts based on rules that gather information about the data that passes between two
+          stages.</dd>
       </dlentry>
    <dlentry>
     <dt>destination</dt>
@@ -41,7 +48,7 @@
       <dlentry>
         <dt>snapshot</dt>
         <dd>A snapshot of data that has been processed by the pipeline. You can step through the
-          snapshot like data preview.</dd>
+          snapshot like data preview. You can also use it as a source for data preview.</dd>
       </dlentry>
   </dl>
  </conbody>

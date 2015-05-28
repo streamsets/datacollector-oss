@@ -34,7 +34,10 @@
     </topicmeta>
    </topicref>
   </topicref>
-  <topicref href="../Pipeline_Monitoring/ViewingtheRunHistory.dita">
+  <topicref href="../Pipeline_Monitoring/ViewingtheRunHistory.dita" chunk="to-content">   
+   <topicmeta>
+   <shortdesc/>
+  </topicmeta>
    <topicref href="../Pipeline_Monitoring/ViewingARunSummary.dita"/>
   </topicref>
  </topicref>

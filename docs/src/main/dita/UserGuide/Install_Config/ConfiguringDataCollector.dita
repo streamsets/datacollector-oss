@@ -230,7 +230,7 @@
                     <tbody>
                         <row>
                             <entry>runtime.conf.location  <xref
-                                    href="../Advanced_PipelineConfig/RuntimeProperties.dita#concept_fjx_g31_1s"
+                                    href="../Advanced_Config/RuntimeProperties.dita#concept_fjx_g31_1s"
                                         ><image href="../Graphics/icon_moreInfo.png" scale="10"/>
                                 </xref></entry>
                             <entry>Location of runtime properties. Use to declare where runtime
@@ -252,7 +252,7 @@
                         </row>
                         <row>
                             <entry>sdc.execution.mode  <xref
-                                    href="../Advanced_PipelineConfig/ExecutionMode.dita"
+                                    href="../Advanced_Config/ExecutionMode.dita"
                                         ><image href="../Graphics/icon_moreInfo.png" scale="10"
                                         id="image_o5j_f5g_cs"/>
                                 </xref><p> </p></entry>

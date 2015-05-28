@@ -46,24 +46,24 @@
             </ul></dd>
         </dlentry>
         <dlentry>
-          <dt>str:replaceChar("&lt;string>", "&lt;oldChar>", "&lt;newChar>")</dt>
+          <dt>str:replace("&lt;string>", "&lt;oldChar>", "&lt;newChar>")</dt>
           <dd>Replaces all instances of a specified character in a string with a new character. </dd>
           <dd>Uses the following arguments:<ul id="ul_ryc_pnk_br">
               <li>string - The string for character replacement. </li>
               <li>oldChar - Character to replace.</li>
               <li>newChar - Character to use for replacement.</li>
             </ul></dd>
-          <dd>For example, ${str:replaceChar("lecucereche", "e", "a")} returns: lacucaracha.</dd>
+          <dd>For example, ${str:replace("lecucereche", "e", "a")} returns: lacucaracha.</dd>
         </dlentry>
         <dlentry>
-          <dt>str:replaceString("&lt;string>", "&lt;oldString>", "&lt;newString>")</dt>
+          <dt>str:replaceAll("&lt;string>", "&lt;regEx>", "&lt;newString>")</dt>
           <dd>Replaces a set of characters in a string with a new set of characters.</dd>
           <dd>Uses the following arguments:<ul id="ul_eqg_tnk_br">
               <li>string - The string for the replacement of a group of characters.</li>
-              <li>oldString - The set of characters to replace.</li>
+              <li>regEx - A regular expression that describes the string to replace.</li>
               <li>newString - The set of characters to use for replacement.</li>
-            </ul><p>For example, ${str:replaceString("my shoes","my", "your")} returns: your
-              shoes.</p></dd>
+            </ul><p>For example, ${str:replaceAll("shoes(*)","footwear")} returns:
+            footwear.</p></dd>
         </dlentry>
         <dlentry>
           <dt>str:startsWith("&lt;string>", "&lt;subset>")</dt>

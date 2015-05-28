@@ -2,7 +2,7 @@
 <!DOCTYPE html
   SYSTEM "about:legacy-compat">
 <html xml:lang="en-us" lang="en-us">
-<head><meta name="description" content="The StreamSets expression language enables you to create expressions that evaluate or modify data. The StreamSets expression language is based on the JSP 2.0 expression language. Use the expression ..."></meta><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><meta name="copyright" content="(C) Copyright 2005"></meta><meta name="DC.rights.owner" content="(C) Copyright 2005"></meta><meta name="DC.Type" content="concept"></meta><meta name="DC.Title" content="Expression Language"></meta><meta name="abstract" content="The StreamSets expression language enables you to create expressions that evaluate or modify data. The StreamSets expression language is based on the JSP 2.0 expression language."></meta><meta name="description" content="The StreamSets expression language enables you to create expressions that evaluate or modify data. The StreamSets expression language is based on the JSP 2.0 expression language."></meta><meta name="DC.Relation" scheme="URI" content="../Expression_Language/ExpressionLanguage_title.html"></meta><meta name="DC.Format" content="XHTML"></meta><meta name="DC.Identifier" content="concept_p54_4kl_vq"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/commonltr.css"><!----></link><title>Expression Language</title><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/webhelp_topic.css"><!----></link><link rel="stylesheet" type="text/css" href="../skin.css"></link><script type="text/javascript"><!--
+<head><meta name="description" content="The StreamSets expression language enables you to create expressions that evaluate or modify data. The StreamSets expression language is based on the JSP 2.0 expression language. Use the expression ..."></meta><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><meta name="copyright" content="(C) Copyright 2005"></meta><meta name="DC.rights.owner" content="(C) Copyright 2005"></meta><meta name="DC.Type" content="concept"></meta><meta name="DC.Title" content="Expression Language"></meta><meta name="DC.Relation" scheme="URI" content="../Expression_Language/ExpressionLanguage_title.html"></meta><meta name="DC.Relation" scheme="URI" content="../Pipeline_Configuration/Expressions.html#concept_ofb_1cm_xq"></meta><meta name="DC.Format" content="XHTML"></meta><meta name="DC.Identifier" content="concept_p54_4kl_vq"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/commonltr.css"><!----></link><title>Expression Language</title><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/webhelp_topic.css"><!----></link><link rel="stylesheet" type="text/css" href="../skin.css"></link><script type="text/javascript"><!--
           
           var prefix = "../index.html";
           
@@ -13,137 +13,41 @@
 <div class="nested0" id="concept_p54_4kl_vq">
  <h1 class="title topictitle1">Expression Language</h1>
 
- 
- <div class="body conbody"><p class="shortdesc">The StreamSets expression language enables you to create expressions that evaluate or
-    modify data. The StreamSets expression language is based on the JSP 2.0 expression language. </p>
+ <div class="body conbody">
+  <p class="p">The StreamSets expression language
+      enables you to create expressions that evaluate or modify data. The StreamSets expression
+      language is based on the JSP 2.0 expression language. </p>
 
-  <p class="p">Use the expression language to create
-      expressions and conditions in the pipeline. For example, you can use the expression language
-      when you configure a Stream Selector, data rules, Hadoop FS output file options, and the Kafka
-      Producer partition strategy.</p>
+    <p class="p">Use the expression language to configure expressions and conditions in
+                  processors, such as the Expression Evaluator or Stream Selector. Some destination
+                  properties also require the expression language, such as the directory template
+                  for Hadoop FS. </p>
+<p class="p">Optionally, you can use the expression language to define any stage or
+                  pipeline property that represents a numeric or string value. This allows you to
+                  use constants or runtime properties throughout the pipeline. You can use
+                  expression completion determine where you can use an expression and the expression
+                  elements that you can use in that location. </p>
+<div class="p">You can use the following elements in an expression:<ul class="ul" id="concept_p54_4kl_vq__d996e215">
+                        <li class="li">Constants</li>
 
-  <div class="p">You can use the following elements in an expression or condition:<ul class="ul" id="concept_p54_4kl_vq__ul_wrf_fjm_xq">
-    <li class="li">Field names</li>
+                        <li class="li">Field names</li>
 
-    <li class="li">Constants</li>
+                        <li class="li">Functions</li>
 
-    <li class="li">Literals</li>
+                        <li class="li">Literals</li>
 
-    <li class="li">Operators</li>
+                        <li class="li">Operators</li>
 
-    <li class="li">Functions</li>
+                        <li class="li">Runtime properties</li>
 
-   </ul>
+                  </ul>
 </div>
 
  </div>
 
-<div class="related-links"></div>
-<div class="topic concept nested1" id="concept_bkb_tcm_xq">
- <h2 class="title topictitle2">Basic Syntax</h2>
-
- 
- <div class="body conbody"><p class="shortdesc">Precede all expressions with a dollar sign and enclose them with curly brackets, as
-  follows: <samp class="ph codeph">${&lt;expression&gt;}</samp>.</p>
-
-  <p class="p">For example, to add 2
-   +2, use the following syntax: ${2+2}.</p>
-
- </div>
-
+  <div class="related-links"><div class="relinfo relconcepts"><strong>Related concepts</strong><br></br>
+<div class="related_link"><a class="navheader_parent_path" href="../Pipeline_Configuration/Expressions.html#concept_ofb_1cm_xq" title="Precede all expressions with a dollar sign and enclose them with curly brackets, as follows: ${&lt;expression&gt;}.When you use a field name in an expression, use the following syntax:When a pipeline is valid for preview, you can generally select fields from a list. When a list is not available or when you are defining a new field name, you need to use the appropriate format for the field name. In some processors, you can use the asterisk wildcard (*) as indices in an array or key values in a map. Use a wildcard to help define the field paths for maps and arrays. Use the following information and tips when you invoke expression completion:When an expression requires, the expression language attempts implicit data type conversion - a.k.a. data type coercion. When coercion is not possible, the Data Collector passes the error records to the stage for error handling.">Expression Configuration</a></div>
 </div>
-<div class="topic concept nested1" id="concept_kk2_mbm_xq">
- <h2 class="title topictitle2">Using Field Names in Expressions</h2>
-
- 
- <div class="body conbody"><p class="shortdesc">When you use a field name in an expression, use the following syntax:</p>
-
-  <div class="p">
-   <pre class="pre codeblock">record:value("/&lt;field name&gt;")</pre>
-
-  </div>
-
-  <div class="p">
-   <div class="note note"><span class="notetitle">Note:</span> You can use single or double quotation marks to surround a field name.</div>
-
-  </div>
-
-  <p class="p">For example, the following expression concatenates the values from the DATE field with values
-   from the TIME field:</p>
-
-  <div class="p">
-   <pre class="pre codeblock">${record:value('/DATE')} ${record:value('/TIME')}</pre>
-
-  </div>
-
-  <div class="p">To reference a nested field, such as a field in a complex JSON object, use the path to the
-   field as follows:<pre class="pre codeblock">record:value("/&lt;path to field&gt;/&lt;field name&gt;")</pre>
-</div>
-
- </div>
-
-</div>
-<div class="topic concept nested1" id="concept_fmr_ggh_fr">
- <h2 class="title topictitle2">Data Type Coercion</h2>
-
- 
- <div class="body conbody"><p class="shortdesc">When an expression requires it, the expression language attempts implicit data type
-  conversion - a.k.a. data type coercion. When coercion is not possible, the <span class="ph">Data
-                  Collector</span> passes the
-  error records to the stage for error handling.</p>
-
-  <p class="p">For example, you have an Expression Evaluator stage configured to send error records to the
-   pipeline for error handling, and the pipeline writes error records to a file.  The Expression
-   Evaluator includes an expression that treats string data as integers. When the field includes
-   integer or valid numeric data, the expression language coerces the data type. If the field
-   includes a date, that record is written to the error records file.</p>
-
-  <p class="p">To avoid coercion errors, you can use the Field Converter earlier in the pipeline to convert
-   data to the appropriate data type.</p>
-
- </div>
-
-</div>
-<div class="topic concept nested1" id="concept_e1r_5vc_br">
- <h2 class="title topictitle2">Stage Instance Name</h2>
-
- 
- <div class="body conbody"><p class="shortdesc">The stage instance name is the name used for a stage within an error record file. You
-  can also verify the stage instance name on the General tab for the stage. </p>
-
-  <p class="p">You can use an error
-   function to return the stage instance name that sent the record to the error record file. You
-   might use stage instance names in expressions or conditions when you configure an error pipeline. </p>
-
-  <p class="p">Stage instances names use the following format: </p>
-
-  <div class="p">
-   <pre class="pre codeblock">&lt;internal information&gt;_&lt;internal stage name&gt;&lt;ID&gt;</pre>
-
-  </div>
-
-  <p class="p">For example:
-   com_streamsets_pipeline_lib_stage_processor_splitter_SplitterProcessor1423694184108.</p>
-
- </div>
-
-</div>
-<div class="topic concept nested1" id="concept_ynz_stc_br">
- <h2 class="title topictitle2">Stage Paths</h2>
-
- 
- <div class="body conbody"><p class="shortdesc">Stage paths indicate the path that a record took through the pipeline. </p>
-
-  <p class="p">You can use record functions and
-   error functions to return stage paths. You might use a stage path in expressions or conditions in
-   error pipelines. </p>
-
-  <div class="p">Stage paths use the following
-   format:<pre class="pre codeblock">&lt;origin instance name&gt;:&lt;next stage instance name&gt;:&lt;next stage instance name&gt;:...</pre>
-</div>
-
- </div>
-
 </div>
 </div>
 <div class="navfooter"><!---->

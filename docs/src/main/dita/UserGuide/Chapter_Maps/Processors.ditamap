@@ -5,10 +5,6 @@
  <topicref href="../Processors/Processors_title.dita">
   <topicref href="../Processors/Processors_overview.dita" chunk="to-content">
    <topicmeta><shortdesc></shortdesc></topicmeta>
-   <topicref href="../Processors/ReferencingFieldNames.dita">
-    <topicref href="../Processors/WildcardsArraysMaps.dita"/>
-   </topicref>
-   <topicref href="../Processors/SelectingFieldswithPreviewData.dita"/>
   </topicref>
   <topicref href="../Processors/Expression.dita" chunk="to-content">
    <topicmeta><shortdesc></shortdesc></topicmeta>
