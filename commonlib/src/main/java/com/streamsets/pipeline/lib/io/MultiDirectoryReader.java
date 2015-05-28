@@ -56,17 +56,20 @@ public class MultiDirectoryReader implements Closeable {
    * The <code>DirectoryInfo</code> encapsulates all the information regarding a directory to read from.
    */
   public static class DirectoryInfo {
+    private final String tag;
     private final String dirName;
     private final RollMode rollMode;
     private final String firstFile;
 
     /**
      * Creates a <code>DirectoryInfo</code>
+     * @param tag file tag.
      * @param dirName directory path.
      * @param rollMode file roll mode.
      * @param firstFile first file to read.
      */
-    public DirectoryInfo(String dirName, RollMode rollMode, String firstFile) {
+    public DirectoryInfo(String tag, String dirName, RollMode rollMode, String firstFile) {
+      this.tag = tag;
       this.dirName = dirName;
       this.rollMode = rollMode;
       this.firstFile = firstFile;
@@ -109,7 +112,7 @@ public class MultiDirectoryReader implements Closeable {
           fileOffset = 0;
         }
         if (currentFile != null) {
-          reader = new LiveFileReader(dirInfo.rollMode, currentFile, charset, fileOffset, maxLineLength);
+          reader = new LiveFileReader(dirInfo.rollMode, dirInfo.tag, currentFile, charset, fileOffset, maxLineLength);
           if (fileOffset == 0) {
             // adding file start event
             events.add(new Event(currentFile, true));

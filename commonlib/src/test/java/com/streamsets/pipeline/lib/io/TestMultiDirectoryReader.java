@@ -38,7 +38,7 @@ public class TestMultiDirectoryReader {
   public void testEmptyDirectory() throws IOException {
     RollMode rollMode = LogRollModeFactory.REVERSE_COUNTER.get("file.txt");
     MultiDirectoryReader.DirectoryInfo di =
-        new MultiDirectoryReader.DirectoryInfo(testDir1.getAbsolutePath(),
+        new MultiDirectoryReader.DirectoryInfo(null, testDir1.getAbsolutePath(),
                                                rollMode, "");
     MultiDirectoryReader mdr =
         new MultiDirectoryReader(Arrays.asList(di), UTF8, 1024, PostProcessingOptions.NONE, null);
@@ -58,7 +58,7 @@ public class TestMultiDirectoryReader {
     Files.write(new File(testDir1, "file.txt").toPath(), Arrays.asList("Hello"), UTF8);
     RollMode rollMode = LogRollModeFactory.REVERSE_COUNTER.get("file.txt");
     MultiDirectoryReader.DirectoryInfo di =
-        new MultiDirectoryReader.DirectoryInfo(testDir1.getAbsolutePath(),
+        new MultiDirectoryReader.DirectoryInfo("tag", testDir1.getAbsolutePath(),
                                                rollMode, "");
     MultiDirectoryReader mdr =
         new MultiDirectoryReader(Arrays.asList(di), UTF8, 1024, PostProcessingOptions.NONE, null);
@@ -69,6 +69,7 @@ public class TestMultiDirectoryReader {
     String fileKey = testDir1.getAbsolutePath() + "||" + rollMode.getPattern();
     Assert.assertTrue(System.currentTimeMillis() - start < 1000);
     Assert.assertNotNull(chunk);
+    Assert.assertEquals("tag", chunk.getTag());
     Assert.assertEquals("Hello\n", chunk.getLines().get(0).getText());
     Assert.assertEquals(1, mdr.getOffsets().size());
     Assert.assertTrue(mdr.getOffsets().get(fileKey).startsWith("6"));
@@ -92,10 +93,10 @@ public class TestMultiDirectoryReader {
   public void testWithMultipleFilesInSameDirectoryWithSameName() throws Exception {
     Files.write(new File(testDir1, "f1.txt").toPath(), Arrays.asList("f1.0"), UTF8);
     MultiDirectoryReader.DirectoryInfo di1 =
-        new MultiDirectoryReader.DirectoryInfo(testDir1.getAbsolutePath(),
+        new MultiDirectoryReader.DirectoryInfo(null, testDir1.getAbsolutePath(),
                                                LogRollModeFactory.REVERSE_COUNTER.get("f1.txt"), "");
     MultiDirectoryReader.DirectoryInfo di2 =
-        new MultiDirectoryReader.DirectoryInfo(testDir1.getAbsolutePath(),
+        new MultiDirectoryReader.DirectoryInfo(null, testDir1.getAbsolutePath(),
                                                LogRollModeFactory.REVERSE_COUNTER.get("f1.txt"), "");
     new MultiDirectoryReader(Arrays.asList(di1, di2), UTF8, 1024, PostProcessingOptions.NONE, null);
   }
@@ -111,12 +112,14 @@ public class TestMultiDirectoryReader {
     RollMode file2RollMode = LogRollModeFactory.REVERSE_COUNTER.get("f2.txt");
     MultiDirectoryReader.DirectoryInfo di1 =
         new MultiDirectoryReader.DirectoryInfo(
+            "tag1",
             testDir1.getAbsolutePath(),
             file1RollMode,
             ""
         );
     MultiDirectoryReader.DirectoryInfo di2 =
         new MultiDirectoryReader.DirectoryInfo(
+            "tag2",
             testDir2.getAbsolutePath(),
             file2RollMode,
             ""
@@ -132,6 +135,7 @@ public class TestMultiDirectoryReader {
 
     String file1Key = testDir1.getAbsolutePath() + "||" + file1RollMode.getPattern();
     String file2Key = testDir2.getAbsolutePath() + "||" + file2RollMode.getPattern();
+
     // just open the multidir, no file events
     Assert.assertTrue(mdr.getEvents().isEmpty());
 
@@ -143,6 +147,7 @@ public class TestMultiDirectoryReader {
 
     LiveFileChunk chunk = mdr.next(0);
     Assert.assertNotNull(chunk);
+    Assert.assertEquals("tag1", chunk.getTag());
     Assert.assertEquals("f1.0\n", chunk.getLines().get(0).getText());
     Assert.assertEquals(2, mdr.getOffsets().size());
     Assert.assertTrue(mdr.getOffsets().get(file1Key).startsWith("5"));
@@ -170,6 +175,7 @@ public class TestMultiDirectoryReader {
     Assert.assertEquals(new MultiDirectoryReader.Event(lf2, true), mdr.getEvents().get(0));
 
     Assert.assertNotNull(chunk);
+    Assert.assertEquals("tag2", chunk.getTag());
     Assert.assertEquals("f2.00\n", chunk.getLines().get(0).getText());
     Assert.assertEquals(2, mdr.getOffsets().size());
     Assert.assertTrue(mdr.getOffsets().get(file1Key).startsWith("5"));
@@ -181,6 +187,7 @@ public class TestMultiDirectoryReader {
     mdr.setOffsets(mdr.getOffsets());
     chunk = mdr.next(0);
     Assert.assertNotNull(chunk);
+    Assert.assertEquals("tag1", chunk.getTag());
     Assert.assertEquals("f1.01\n", chunk.getLines().get(0).getText());
 
     // no data in any dir
@@ -202,6 +209,7 @@ public class TestMultiDirectoryReader {
     Assert.assertTrue(mdr.getEvents().isEmpty());
 
     Assert.assertNotNull(chunk);
+    Assert.assertEquals("tag2", chunk.getTag());
     Assert.assertEquals("f2.01\n", chunk.getLines().get(0).getText());
     Assert.assertEquals(2, mdr.getOffsets().size());
 
@@ -222,6 +230,7 @@ public class TestMultiDirectoryReader {
     Assert.assertEquals(new MultiDirectoryReader.Event(oldLf2, false), mdr.getEvents().get(0));
 
     Assert.assertNotNull(chunk);
+    Assert.assertEquals("tag2", chunk.getTag());
     Assert.assertEquals("f2.02\n", chunk.getLines().get(0).getText());
     Assert.assertEquals(2, mdr.getOffsets().size());
 
@@ -246,6 +255,7 @@ public class TestMultiDirectoryReader {
     }
 
     Assert.assertNotNull(chunk);
+    Assert.assertEquals("tag2", chunk.getTag());
     Assert.assertFalse(chunk.getLines().isEmpty());
     Assert.assertEquals("f2.03\n", chunk.getLines().get(0).getText());
     Assert.assertEquals(2, mdr.getOffsets().size());
@@ -260,7 +270,7 @@ public class TestMultiDirectoryReader {
     Path f1 = new File(testDir1, "f1.txt.1").toPath().toAbsolutePath();
     Files.write(f1, Arrays.asList("f1"), UTF8);
     RollMode rollMode = LogRollModeFactory.REVERSE_COUNTER.get("f1.txt");
-    MultiDirectoryReader.DirectoryInfo di1 = new MultiDirectoryReader.DirectoryInfo(testDir1.getAbsolutePath(),
+    MultiDirectoryReader.DirectoryInfo di1 = new MultiDirectoryReader.DirectoryInfo(null, testDir1.getAbsolutePath(),
                                                                                     rollMode, "");
 
     MultiDirectoryReader mdr = new MultiDirectoryReader(Arrays.asList(di1), UTF8, 1024, PostProcessingOptions.DELETE,
@@ -285,7 +295,7 @@ public class TestMultiDirectoryReader {
     Path f2 = new File(testDir1, "f2.txt").toPath().toAbsolutePath();
     Files.write(f1, Arrays.asList("f1"), UTF8);
     RollMode rollMode = new PeriodicFilesRollModeFactory().get("f.\\.txt");
-    MultiDirectoryReader.DirectoryInfo di1 = new MultiDirectoryReader.DirectoryInfo(testDir1.getAbsolutePath(),
+    MultiDirectoryReader.DirectoryInfo di1 = new MultiDirectoryReader.DirectoryInfo(null, testDir1.getAbsolutePath(),
                                                                                     rollMode, "");
 
     MultiDirectoryReader mdr = new MultiDirectoryReader(Arrays.asList(di1), UTF8, 1024, PostProcessingOptions.DELETE,
@@ -316,7 +326,7 @@ public class TestMultiDirectoryReader {
     Path f2 = new File(testDir1, "f2.txt").toPath().toAbsolutePath();
     Files.write(f1, Arrays.asList("f1"), UTF8);
     RollMode rollMode = new PeriodicFilesRollModeFactory().get("f.\\.txt");
-    MultiDirectoryReader.DirectoryInfo di1 = new MultiDirectoryReader.DirectoryInfo(testDir1.getAbsolutePath(),
+    MultiDirectoryReader.DirectoryInfo di1 = new MultiDirectoryReader.DirectoryInfo(null, testDir1.getAbsolutePath(),
                                                                                     rollMode, "");
 
     MultiDirectoryReader mdr = new MultiDirectoryReader(Arrays.asList(di1), UTF8, 1024, PostProcessingOptions.ARCHIVE,

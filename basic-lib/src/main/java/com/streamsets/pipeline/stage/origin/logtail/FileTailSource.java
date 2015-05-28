@@ -22,9 +22,9 @@ import com.streamsets.pipeline.lib.io.LiveFile;
 import com.streamsets.pipeline.lib.io.LiveFileChunk;
 import com.streamsets.pipeline.lib.io.MultiDirectoryReader;
 import com.streamsets.pipeline.lib.io.RollMode;
+import com.streamsets.pipeline.lib.parser.DataParserFactory;
 import com.streamsets.pipeline.lib.parser.DataParser;
 import com.streamsets.pipeline.lib.parser.DataParserException;
-import com.streamsets.pipeline.lib.parser.DataParserFactory;
 import com.streamsets.pipeline.lib.parser.DataParserFactoryBuilder;
 import com.streamsets.pipeline.lib.parser.log.LogDataFormatValidator;
 import com.streamsets.pipeline.lib.parser.log.RegExConfig;
@@ -124,6 +124,7 @@ public class FileTailSource extends BaseSource {
 
         RollMode fileRollMode = fileInfo.fileRollMode.createRollMode(fileNamePattern);
         MultiDirectoryReader.DirectoryInfo directoryInfo = new MultiDirectoryReader.DirectoryInfo(
+            fileInfo.tag,
             fileInfo.dirName,
             fileRollMode,
             fileInfo.firstFile
@@ -271,12 +272,17 @@ public class FileTailSource extends BaseSource {
         LiveFileChunk chunk = multiDirReader.next(getRemainingWaitTime(startTime));
 
         if (chunk != null) {
+          String tag = chunk.getTag();
+          tag = (tag != null && tag.isEmpty()) ? null : tag;
           String liveFileStr = chunk.getFile().serialize();
           for (FileLine line : chunk.getLines()) {
             String sourceId = liveFileStr + "::" + line.getFileOffset();
             try (DataParser parser = parserFactory.getParser(sourceId, line.getChunkBuffer(), line.getOffset(),
                                                              line.getLength())) {
               Record record = parser.parse();
+              if (tag != null) {
+                record.getHeader().setAttribute("tag", tag);
+              }
               if (record != null) {
                 batchMaker.addRecord(record, outputLane);
                 recordCounter++;

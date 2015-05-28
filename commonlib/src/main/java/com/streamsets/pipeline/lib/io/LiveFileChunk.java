@@ -17,6 +17,7 @@ import java.util.List;
  * full text lines.
  */
 public class LiveFileChunk {
+  private final String tag;
   private final LiveFile file;
   private final byte[] data;
   private final Charset charset;
@@ -24,13 +25,24 @@ public class LiveFileChunk {
   private final int length;
   private final boolean truncated;
 
-  LiveFileChunk(LiveFile file, byte[] data, Charset charset, long initialOffset, int length, boolean truncated) {
+  LiveFileChunk(String tag, LiveFile file, byte[] data, Charset charset, long initialOffset, int length,
+      boolean truncated) {
+    this.tag = tag;
     this.file = file;
     this.data = data;
     this.charset = charset;
     this.initialOffset = initialOffset;
     this.length = length;
     this.truncated = truncated;
+  }
+
+  /**
+   * Returns the tag associated with file where the chunk was read from.
+   *
+   * @return the tag associated with file where the chunk was read from.
+   */
+  public String getTag() {
+      return tag;
   }
 
   /**

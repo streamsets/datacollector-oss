@@ -134,12 +134,14 @@ public class TestFileTailSource {
     Files.write(new File(testDataDir2, "log2.txt").toPath(), Arrays.asList("Hola"), UTF8);
 
     FileInfo fileInfo1 = new FileInfo();
+    fileInfo1.tag = "tag1";
     fileInfo1.dirName = testDataDir1.getAbsolutePath();
     fileInfo1.file = "log1.txt";
     fileInfo1.fileRollMode = FilesRollMode.REVERSE_COUNTER;
     fileInfo1.firstFile = "";
     fileInfo1.periodicFileRegEx = "";
     FileInfo fileInfo2 = new FileInfo();
+    fileInfo2.tag = "";
     fileInfo2.dirName = testDataDir2.getAbsolutePath();
     fileInfo2.file = "log2.txt";
     fileInfo2.fileRollMode = FilesRollMode.REVERSE_COUNTER;
@@ -159,8 +161,10 @@ public class TestFileTailSource {
       Assert.assertEquals(2, output.getRecords().get("lane").size());
       Record record = output.getRecords().get("lane").get(0);
       Assert.assertEquals("Hello", record.get("/text").getValueAsString());
+      Assert.assertEquals("tag1", record.getHeader().getAttribute("tag"));
       record = output.getRecords().get("lane").get(1);
       Assert.assertEquals("Hola", record.get("/text").getValueAsString());
+      Assert.assertNull(record.getHeader().getAttribute("tag"));
 
       Assert.assertEquals(2, output.getRecords().get("metadata").size());
       Record metadata = output.getRecords().get("metadata").get(0);
