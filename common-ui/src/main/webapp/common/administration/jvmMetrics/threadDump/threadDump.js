@@ -11,10 +11,8 @@ angular
         errors: []
       },
       threads: [],
-      columnSort: {
-        sortColumn: 'jvmMetrics.threads.id',
-        reverse: false
-      },
+      sortColumn: 'threadId',
+      sortReverse: false,
 
       close : function () {
         $modalInstance.dismiss('cancel');
@@ -31,6 +29,15 @@ angular
       api.admin.getThreadDump().then(function(res) {
         $scope.showLoading = false;
         $scope.threads = res.data;
+        
+        angular.forEach($scope.threads, function(thread) {
+          thread.threadId = thread.threadInfo.threadId;
+          thread.threadName = thread.threadInfo.threadName;
+          thread.threadState = thread.threadInfo.threadState;
+          thread.blockedCount = thread.threadInfo.blockedCount;
+          thread.waitedCount = thread.threadInfo.waitedCount;
+        });
+        
       }, function(res) {
         $scope.showLoading = false;
       });

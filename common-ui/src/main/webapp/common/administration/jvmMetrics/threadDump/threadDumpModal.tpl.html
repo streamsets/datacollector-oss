@@ -4,6 +4,13 @@
       <span aria-hidden="true">&times;</span>
       <span class="sr-only">Close</span>
     </button>
+
+
+    <input type="search" class="form-control search-thread" placeholder="Type to search"
+           ng-model="searchInput"
+           ng-change="onStageFilterGroupChange()">
+
+
     <h3 class="modal-title" translate="jvmMetrics.threads.threadDump">Thread Dump</h3>
   </div>
   <div class="modal-body">
@@ -17,34 +24,75 @@
                     ng-click="expandAll = !expandAll">
               </span>
           </th>
-          <th class="id-col">{{'jvmMetrics.threads.id' | translate}}</th>
-          <th>{{'jvmMetrics.threads.threadName' | translate}}</th>
-          <th>{{'jvmMetrics.threads.state' | translate}}</th>
-
-          <th>{{'jvmMetrics.threads.userTime' | translate}}</th>
-          <th>{{'jvmMetrics.threads.cpuTime' | translate}}</th>
-          <th>{{'jvmMetrics.threads.blockedCount' | translate}}</th>
-          <th>{{'jvmMetrics.threads.waitedCount' | translate}}</th>
+          <th class="id-col">
+            <a href="#" ng-click="sortColumn = 'threadId'; sortReverse = !sortReverse">
+              {{'jvmMetrics.threads.id' | translate}}
+              <span ng-show="sortColumn == 'threadId' && !sortReverse" class="fa fa-caret-down"></span>
+              <span ng-show="sortColumn == 'threadId' && sortReverse" class="fa fa-caret-up"></span>
+            </a>
+          </th>
+          <th class="id-col">
+            <a href="#" ng-click="sortColumn = 'threadName'; sortReverse = !sortReverse">
+              {{'jvmMetrics.threads.threadName' | translate}}
+              <span ng-show="sortColumn == 'threadName' && !sortReverse" class="fa fa-caret-down"></span>
+              <span ng-show="sortColumn == 'threadName' && sortReverse" class="fa fa-caret-up"></span>
+            </a>
+          </th>
+          <th class="id-col">
+            <a href="#" ng-click="sortColumn = 'threadState'; sortReverse = !sortReverse">
+              {{'jvmMetrics.threads.state' | translate}}
+              <span ng-show="sortColumn == 'threadState' && !sortReverse" class="fa fa-caret-down"></span>
+              <span ng-show="sortColumn == 'threadState' && sortReverse" class="fa fa-caret-up"></span>
+            </a>
+          </th>
+          <th class="id-col">
+            <a href="#" ng-click="sortColumn = 'userTimeNanosecs'; sortReverse = !sortReverse">
+              {{'jvmMetrics.threads.userTime' | translate}}
+              <span ng-show="sortColumn == 'userTimeNanosecs' && !sortReverse" class="fa fa-caret-down"></span>
+              <span ng-show="sortColumn == 'userTimeNanosecs' && sortReverse" class="fa fa-caret-up"></span>
+            </a>
+          </th>
+          <th class="id-col">
+            <a href="#" ng-click="sortColumn = 'cpuTimeNanosecs'; sortReverse = !sortReverse">
+              {{'jvmMetrics.threads.cpuTime' | translate}}
+              <span ng-show="sortColumn == 'cpuTimeNanosecs' && !sortReverse" class="fa fa-caret-down"></span>
+              <span ng-show="sortColumn == 'cpuTimeNanosecs' && sortReverse" class="fa fa-caret-up"></span>
+            </a>
+          </th>
+          <th class="id-col">
+            <a href="#" ng-click="sortColumn = 'blockedCount'; sortReverse = !sortReverse">
+              {{'jvmMetrics.threads.blockedCount' | translate}}
+              <span ng-show="sortColumn == 'blockedCount' && !sortReverse" class="fa fa-caret-down"></span>
+              <span ng-show="sortColumn == 'blockedCount' && sortReverse" class="fa fa-caret-up"></span>
+            </a>
+          </th>
+          <th class="id-col">
+            <a href="#" ng-click="sortColumn = 'waitedCount'; sortReverse = !sortReverse">
+              {{'jvmMetrics.threads.waitedCount' | translate}}
+              <span ng-show="sortColumn == 'waitedCount' && !sortReverse" class="fa fa-caret-down"></span>
+              <span ng-show="sortColumn == 'waitedCount' && sortReverse" class="fa fa-caret-up"></span>
+            </a>
+          </th>
         </tr>
       </thead>
 
       <tbody>
         <tr class="pointer"
-            ng-repeat-start="thread in threads"
+            ng-repeat-start="thread in threads | orderBy:sortColumn:sortReverse | filter: searchInput"
             ng-init="isOpen=false;"
             ng-click="isOpen = !isOpen">
           <td>
             <span class="pointer toggler {{isOpen || expandAll ? 'open' : ''}}"
                   ng-click="isOpen = !isOpen; $event.stopPropagation()"></span>
           </td>
-          <td>{{thread.threadInfo.threadId}}</td>
-          <td>{{thread.threadInfo.threadName}}</td>
-          <td>{{thread.threadInfo.threadState}}</td>
+          <td>{{thread.threadId}}</td>
+          <td>{{thread.threadName}}</td>
+          <td>{{thread.threadState}}</td>
 
           <td>{{thread.userTimeNanosecs}}</td>
           <td>{{thread.cpuTimeNanosecs}}</td>
-          <td>{{thread.threadInfo.blockedCount}}</td>
-          <td>{{thread.threadInfo.waitedCount}}</td>
+          <td>{{thread.blockedCount}}</td>
+          <td>{{thread.waitedCount}}</td>
         </tr>
 
         <tr ng-repeat-end ng-if="isOpen || expandAll" class="expand-row">
