@@ -11,8 +11,8 @@
     <p>Batches written to Cassandra are atomic - you can only write entire batches of records to
       Cassandra. If an error occurs with one or more records in a batch, Cassandra fails the entire
       batch. When a batch fails, all records are sent to the stage for error handling. <note>Due to
-        Cassandra requirements, the data types of the incoming fields must exactly match the data
-        types of the corresponding Cassandra columns. When appropriate, use a Type Converter
-        processor earlier in the pipeline to convert data types.</note></p>
+        Cassandra requirements, the data types of the incoming fields must match the data types of
+        the corresponding Cassandra columns. When appropriate, use a Type Converter processor
+        earlier in the pipeline to convert data types.</note></p>
  </conbody>
 </concept>

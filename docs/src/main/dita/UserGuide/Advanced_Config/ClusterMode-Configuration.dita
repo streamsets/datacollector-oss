@@ -9,7 +9,7 @@
                 /> in cluster mode, perform the following steps:<ol id="ol_e32_llw_yr">
                     <li>Install the <ph
                             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                        /> on a Spark Streaming on YARN gateway node.</li>
+                        /> on a Spark on YARN gateway node.</li>
                     <li>In the <ph
                             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
                         /> properties file, set the <uicontrol>sdc.execution.mode</uicontrol>

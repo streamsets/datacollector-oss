@@ -51,21 +51,32 @@
     
     <div class="body taskbody"><p class="shortdesc">You can reset the origin when you want the <span class="ph">Data
                   Collector</span> to
-        process all available data. You can reset the origin for Directory origins. Reset the origin
-        when the pipeline is not running.</p>
+        process all available data instead of processing data from the last-saved offset. Reset the
+        origin when the pipeline is not running. </p>
 
         <div class="section context">
-            <p class="p">For the
-                Directory origin, the <span class="ph">Data
-                  Collector</span> notes where it stopped processing data when you stop a pipeline. When you restart
-                the pipeline, it continues from where it left off by default. </p>
+            <div class="p">You can reset the origin for the following
+                origin stages:<ul class="ul" id="task_hdg_j1s_5q__ul_k1q_35k_2s">
+                    <li class="li">Directory</li>
 
-            <p class="p">When you want the <span class="ph">Data
+                    <li class="li">File Tail</li>
+
+                    <li class="li">JDBC Consumer</li>
+
+                    <li class="li">Kinesis Consumer</li>
+
+                </ul>
+For these origins, when you stop the pipeline, the <span class="ph">Data
+                  Collector</span> notes where it stopped processing data. When you restart the pipeline, it
+                continues from where it left off by default. When you want the <span class="ph">Data
                   Collector</span> to process all available data instead of continuing from where it stopped, reset
-                the origin.</p>
+                the origin.</div>
 
-            <p class="p">To change the starting point for a Kafka Consumer, you need to change the offset in
-                the Kafka ZooKeeper. For details, see the Kafka documentation.</p>
+            <p class="p">To change the starting point for a Kafka Consumer, update the offset in the Kafka
+                ZooKeeper. For details, see the Kafka documentation. The remaining origin stages
+                process transient data where resetting the origin has no effect.</p>
+
+            <p class="p">To reset the origin:</p>
 
         </div>
 

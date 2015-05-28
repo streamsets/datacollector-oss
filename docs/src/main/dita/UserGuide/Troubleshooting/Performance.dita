@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
+<concept id="concept_ay2_w1l_2s">
+ <title>Performance Issues</title>
+ <shortdesc></shortdesc>
+ <conbody>
+  <p>
+   <dl>
+    <dlentry>
+     <dt>How can I improve the general pipeline performance? </dt>
+     <dd>You might improve performance by increasing the batch size used by the pipeline. The batch
+      size determines how much data passes throught the pipeline at one time. By default, the batch
+      size is 1000 records. When </dd>
+    </dlentry>
+   </dl>
+   <draft-comment author="Loretta">From Hari: Output data is not as expected [some fields are
+    missing or have unexpected value or even type [expected integer but got string]].Trouble shoot
+    by previewing and stepping through stages [data debugging :)].</draft-comment>
+  </p>
+ </conbody>
+</concept>

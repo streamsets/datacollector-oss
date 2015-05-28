@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
+<concept id="concept_zjl_nnl_2s">
+ <title>Cluster Mode </title>
+ <shortdesc></shortdesc>
+ <conbody>
+  <p>
+   <dl>
+    <dlentry>
+     <dt>Why isn't the <ph
+       conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> reading
+      data from my new partition?</dt>
+     <dd>If you create a new partition in the Kafka topic, to launch a new <ph
+       conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> worker to
+      read from the partition, you need to restart the pipeline.</dd>
+    </dlentry>
+   </dl>
+  </p>
+  <draft-comment author="Loretta">see brock's email</draft-comment>
+ </conbody>
+</concept>

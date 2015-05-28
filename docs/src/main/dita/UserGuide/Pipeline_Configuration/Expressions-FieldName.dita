@@ -15,7 +15,5 @@
   <p>
    <codeblock>${record:value('/DATE')} ${record:value('/TIME')}</codeblock>
   </p>
-  <p>To reference a nested field, such as a field in a complex JSON object, use the path to the
-   field as follows:<codeblock>record:value("/&lt;path to field>/&lt;field name>")</codeblock></p>
  </conbody>
 </concept>

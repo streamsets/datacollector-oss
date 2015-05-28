@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
+<concept id="concept_ivc_mll_2s">
+ <title>Accessing Error Messages</title>
+ <conbody>
+  <p><indexterm>error
+     messages<indexterm>accessing</indexterm></indexterm><indexterm>troubleshooting<indexterm>accessing
+     error messages</indexterm></indexterm>The <ph
+    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> provides
+   different types of information in different locations. When you encounter an error or just want
+   some information, go to the appropriate location.</p>
+  <p>
+   <dl>
+    <dlentry>
+     <dt>Pipeline configuration issues</dt>
+     <dd>The <ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
+      console provides guidance and error details in the UI as follows:<ul id="ul_ht3_cml_2s">
+       <li>Required properties are outlined in green.</li>
+       <li>Required properties that are not defined ar outlined in red.</li>
+       <li>All issues captured by implicit validation display in the Issues list, accessible through
+        the Issues icon: <image href="../Graphics/icon_Issues.png" id="image_i21_qml_2s"/>.</li>
+       <li>In addition, an issue icon displays at the stage where the issue occurs or on the canvas
+        for pipeline configuration issues. </li>
+      </ul></dd>
+    </dlentry>
+    <dlentry>
+     <dt>Runtime error information - console</dt>
+     <dd>You can view error information when you monitor a running pipeline. The pipeline displays
+      error record counts for each stage that generates error records. </dd>
+     <dd>On the Errors tab, you can view error record statistics and the latest set of error records
+      with error messages.</dd>
+     <dd>
+      <note>This information becomes unavailable when you stop the pipeline. To preserve information
+       about error records, use the Error Records pipeline property to save error records.</note>
+     </dd>
+    </dlentry>
+    <dlentry>
+     <dt>Error record information</dt>
+     <dd>When you use the Error Records pipeline property to save error records, the <ph
+       conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> saves error
+      records and related information. The following fields can help you determine the problem that
+       occurred:<ul id="ul_gqp_1dm_2s">
+       <li>errorStage - The stage in the pipeline that generated the error.</li>
+       <li>errorCode - The error code associated with the error message.</li>
+       <li>errorMessage - The text of the error message. </li>
+      </ul></dd>
+    </dlentry>
+    <dlentry>
+     <dt><ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
+      errors</dt>
+     <dd>You can view information and errors related to the general <ph
+       conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
+      functionality in the <ph
+       conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> log.
+      (Administration > Logs.)</dd>
+    </dlentry>
+   </dl>
+  </p>
+ </conbody>
+</concept>

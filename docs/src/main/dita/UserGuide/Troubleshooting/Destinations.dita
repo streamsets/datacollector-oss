@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
+<concept id="concept_m4g_qyk_2s">
+ <title>Destinations </title>
+ <conbody>
+  <p><indexterm>Data
+     Collector<indexterm>troubleshooting</indexterm></indexterm><indexterm>troubleshooting<indexterm>destinations</indexterm></indexterm>Use
+   the following tips to help you with destination stages and systems. </p>
+  <section>
+   <title>Cassandra</title>
+   <dl>
+    <dlentry>
+     <dt>Why is the pipeline failing entire batches when only a few records have a problem?</dt>
+     <dd>Due to Cassandra requirements, when you write to a Cassandra cluster, batches are atomic.
+      This means than an error in a one or more records causes the entire batch to fail.</dd>
+    </dlentry>
+    <dlentry>
+     <dt>Why is all of my data being sent to error? Every batch is failing.</dt>
+     <dd>When every batch fails, you might have a data type mismatch. Cassandra requires the data
+      type of the data to exactly match the data type of the Cassandra column. </dd>
+     <dd>To determine the issue, check the error messages associated with the error records.  If you
+      see a message like the following, you have a data type mismatch. The following error message
+      indicates that data type mismatch is for Integer data being unsucessfully written to a Varchar
+      column:
+      <codeblock>CASSANDRA_06 - Could not prepare record 'sdk:': 
+Invalid type for value 0 of CQL type varchar, expecting class java.lang.String but class java.lang. 
+Integer provided`</codeblock></dd>
+     <dd>To correct the problem, you might use a Field Converter processor to convert field data
+      types. In this case, you could convert the integer data to string.</dd>
+    </dlentry>
+   </dl>
+  </section>
+  <section>
+   <title>Kafka</title>
+   <dl>
+    <dlentry>
+     <dt>Can the Kafka Producer create topics?</dt>
+     <dd>The Kafka Producer can create a topic when all of the following are true:<ul
+       id="ul_j4q_25y_3r">
+       <li>You configure the Kafka Producer to write to a topic name that does not exist.</li>
+       <li>At least one of the Kafka brokers defined for the Kafka Producer has the
+        auto.create.topics.enable property enabled.</li>
+       <li>The broker with the enabled property is up and available when the Kafka Producer looks
+        for the topic.</li>
+      </ul></dd>
+    </dlentry>
+    <dlentry>
+     <dt>How can I reset the offset for a Kafka Consumer?</dt>
+     <dd>Since the offset for a Kakfa Consumer is stored with the ZooKeeper for the Kafka cluster,
+      you cannot reset the offset through the <ph
+       conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>. For
+      information about resetting an offset through Kafka, see the Apache Kafka documentation. </dd>
+    </dlentry>
+   </dl>
+  </section>
+  </conbody>
+</concept>

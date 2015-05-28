@@ -65,7 +65,7 @@
                         whichever ones allow wildcard use:</draft-comment>
             </p>
             <p id="wildcard">You can use the asterisk wildcard to represent array indices and map
-                  elements. <xref href="../Processors/WildcardsArraysMaps.dita#concept_vqr_sqc_wr"
+                  elements. <xref href="../Pipeline_Configuration/WildcardsArraysMaps.dita#concept_vqr_sqc_wr"
                               ><image href="../Graphics/icon_moreInfo.png" scale="10"/>
                   </xref>
             </p>
@@ -109,5 +109,29 @@
                         </dlentry>
                   </dl>
             </p>
+            <p>
+                  <draft-comment author="Loretta">The following paragraphs are used for Expressions
+                        (Pipeline Config chapter) and Expression Language (appendix).
+                  </draft-comment>
+            </p>
+            <p id="EXP-p1">Use the expression language to configure expressions and conditions in
+                  processors, such as the Expression Evaluator or Stream Selector. Some destination
+                  properties also require the expression language, such as the directory template
+                  for Hadoop FS. </p>
+            <p id="EXP-p2">Optionally, you can use the expression language to define any stage or
+                  pipeline property that represents a numeric or string value. This allows you to
+                  use constants or runtime properties throughout the pipeline. You can use
+                  expression completion determine where you can use an expression and the expression
+                  elements that you can use in that location. </p>
+            <p id="EXP-p3">You can use the following elements in an expression:<ul
+                        id="ul_w34_vxl_2s">
+                        <li>Constants</li>
+                        <li>Field names</li>
+                        <li>Functions</li>
+                        <li>Literals</li>
+                        <li>Operators</li>
+                        <li>Runtime properties</li>
+                  </ul></p>
+            <p/>
       </conbody>
 </concept>

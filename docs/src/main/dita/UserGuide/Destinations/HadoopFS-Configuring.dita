@@ -215,14 +215,11 @@
                                     <entry>Late Record Handling</entry>
                                     <entry>Determines how to handle late records:<ul
                                             id="ul_gx4_c12_br">
-                                            <li>Send to error - Sends the record to the pipeline for
+                                            <li>Send to error - Sends the record to the stage for
                                                 error handling. </li>
                                             <li>Send to late records file - Sends the record to a
                                                 late records file.</li>
-                                        </ul><p>
-                                            <draft-comment author="Loretta">Tucu - stage or pipeline
-                                                for the first point?</draft-comment>
-                                        </p></entry>
+                                        </ul></entry>
                                 </row>
                                 <row>
                                     <entry>Late Record Directory Template <xref
