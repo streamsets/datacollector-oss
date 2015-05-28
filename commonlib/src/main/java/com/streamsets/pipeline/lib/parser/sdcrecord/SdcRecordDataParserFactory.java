@@ -5,11 +5,14 @@
  */
 package com.streamsets.pipeline.lib.parser.sdcrecord;
 
+import com.streamsets.pipeline.api.impl.Utils;
+import com.streamsets.pipeline.lib.io.OverrunReader;
 import com.streamsets.pipeline.lib.parser.DataParserFactory;
 import com.streamsets.pipeline.lib.parser.DataParser;
 import com.streamsets.pipeline.lib.parser.DataParserException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.Reader;
 import java.util.Collections;
 import java.util.Map;
 import java.util.Set;
@@ -31,4 +34,10 @@ public class SdcRecordDataParserFactory extends DataParserFactory {
       throw new DataParserException(Errors.SDC_RECORD_PARSER_00, id, offset, ex.getMessage(), ex);
     }
   }
+
+  @Override
+  public DataParser getParser(String id, Reader reader, long offset) throws DataParserException {
+    throw new UnsupportedOperationException(Utils.format("{} does not support character based data", getClass().getName()));
+  }
+
 }

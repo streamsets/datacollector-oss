@@ -14,6 +14,7 @@ import com.streamsets.pipeline.lib.parser.DataParserException;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.Reader;
 import java.util.Collections;
 import java.util.Map;
 import java.util.Set;
@@ -32,7 +33,15 @@ public class XmlDataParserFactory extends DataParserFactory {
 
   @Override
   public DataParser getParser(String id, InputStream is, long offset) throws DataParserException {
-    OverrunReader reader = createReader(is);
+    return createParser(id, createReader(is), offset);
+  }
+
+  @Override
+  public DataParser getParser(String id, Reader reader, long offset) throws DataParserException {
+    return createParser(id, createReader(reader), offset);
+  }
+
+  private DataParser createParser(String id, OverrunReader reader, long offset) throws DataParserException {
     Utils.checkState(reader.getPos() == 0, Utils.formatL("reader must be in position '0', it is at '{}'",
       reader.getPos()));
     try {

@@ -80,6 +80,22 @@ public class TestTextDataParserFactory {
     parser.close();
   }
 
+  @Test
+  public void testCharacterBaseParserMethod() throws Exception {
+    DataParserFactoryBuilder dataParserFactoryBuilder = new DataParserFactoryBuilder(getContext(), DataParserFormat.TEXT);
+    DataFactory dataFactory = dataParserFactoryBuilder
+        .setMaxDataLen(1000)
+        .build();
+    Assert.assertTrue(dataFactory instanceof TextDataParserFactory);
+    TextDataParserFactory factory = (TextDataParserFactory) dataFactory;
+    DataParser parser = factory.getParser("id", "Hello\nBye");
+    Assert.assertEquals(0, parser.getOffset());
+    Record record = parser.parse();
+    Assert.assertTrue(record.has("/text"));
+    Assert.assertEquals(6, parser.getOffset());
+    parser.close();
+  }
+
   /*@Test
   public void testTruncateWithFile() throws Exception {
     File testDir = new File("target", UUID.randomUUID().toString());

@@ -24,6 +24,7 @@ import org.junit.Test;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
+import java.io.StringReader;
 import java.util.Collections;
 
 public class TestSdcRecordDataParserFactory {
@@ -34,7 +35,7 @@ public class TestSdcRecordDataParserFactory {
 
   private byte[] createJsonSdcRecordsString() throws Exception {
     ByteArrayOutputStream baos = new ByteArrayOutputStream();
-    RecordWriter recordWriter = ((ContextExtensions)getContext()).createRecordWriter(baos);
+    RecordWriter recordWriter = ((ContextExtensions) getContext()).createRecordWriter(baos);
     Record record = RecordCreator.create();
     record.set(Field.create("Hello"));
     recordWriter.write(record);
@@ -47,8 +48,8 @@ public class TestSdcRecordDataParserFactory {
 
   private byte[] createJsonSdcRecordsStringWrongFormat() throws Exception {
     ByteArrayOutputStream baos = new ByteArrayOutputStream();
-    baos.write(new byte[] {0,0,0,4});
-    RecordWriter recordWriter = ((ContextExtensions)getContext()).createRecordWriter(baos);
+    baos.write(new byte[]{0, 0, 0, 4});
+    RecordWriter recordWriter = ((ContextExtensions) getContext()).createRecordWriter(baos);
     Record record = RecordCreator.create();
     record.set(Field.create("Hello"));
     recordWriter.write(record);
@@ -62,10 +63,10 @@ public class TestSdcRecordDataParserFactory {
   @Test
   public void testGetParserString() throws Exception {
     DataParserFactoryBuilder dataParserFactoryBuilder = new DataParserFactoryBuilder(getContext(),
-      DataParserFormat.SDC_RECORD);
+                                                                                     DataParserFormat.SDC_RECORD);
     DataFactory dataFactory = dataParserFactoryBuilder
-      .setMaxDataLen(1000)
-      .build();
+        .setMaxDataLen(1000)
+        .build();
     Assert.assertTrue(dataFactory instanceof SdcRecordDataParserFactory);
     SdcRecordDataParserFactory factory = (SdcRecordDataParserFactory) dataFactory;
 
@@ -81,10 +82,10 @@ public class TestSdcRecordDataParserFactory {
   @Test
   public void testGetParserReader() throws Exception {
     DataParserFactoryBuilder dataParserFactoryBuilder = new DataParserFactoryBuilder(getContext(),
-      DataParserFormat.SDC_RECORD);
+                                                                                     DataParserFormat.SDC_RECORD);
     DataFactory dataFactory = dataParserFactoryBuilder
-      .setMaxDataLen(1000)
-      .build();
+        .setMaxDataLen(1000)
+        .build();
     Assert.assertTrue(dataFactory instanceof SdcRecordDataParserFactory);
     SdcRecordDataParserFactory factory = (SdcRecordDataParserFactory) dataFactory;
 
@@ -103,10 +104,10 @@ public class TestSdcRecordDataParserFactory {
     byte[] payload = createJsonSdcRecordsString();
 
     DataParserFactoryBuilder dataParserFactoryBuilder = new DataParserFactoryBuilder(getContext(),
-      DataParserFormat.SDC_RECORD);
+                                                                                     DataParserFormat.SDC_RECORD);
     DataFactory dataFactory = dataParserFactoryBuilder
-      .setMaxDataLen(1000)
-      .build();
+        .setMaxDataLen(1000)
+        .build();
     Assert.assertTrue(dataFactory instanceof SdcRecordDataParserFactory);
     SdcRecordDataParserFactory factory = (SdcRecordDataParserFactory) dataFactory;
 
@@ -118,8 +119,8 @@ public class TestSdcRecordDataParserFactory {
     parser.close();
 
     dataFactory = dataParserFactoryBuilder
-      .setMaxDataLen(1000)
-      .build();
+        .setMaxDataLen(1000)
+        .build();
     Assert.assertTrue(dataFactory instanceof SdcRecordDataParserFactory);
     factory = (SdcRecordDataParserFactory) dataFactory;
 
@@ -138,14 +139,27 @@ public class TestSdcRecordDataParserFactory {
     byte[] payload = createJsonSdcRecordsStringWrongFormat();
 
     DataParserFactoryBuilder dataParserFactoryBuilder = new DataParserFactoryBuilder(getContext(),
-      DataParserFormat.SDC_RECORD);
+                                                                                     DataParserFormat.SDC_RECORD);
     DataFactory dataFactory = dataParserFactoryBuilder
-      .setMaxDataLen(1000)
-      .build();
+        .setMaxDataLen(1000)
+        .build();
     Assert.assertTrue(dataFactory instanceof SdcRecordDataParserFactory);
     SdcRecordDataParserFactory factory = (SdcRecordDataParserFactory) dataFactory;
 
     InputStream is = new ByteArrayInputStream(payload);
     factory.getParser("id", is, 0);
   }
+
+  @Test(expected = UnsupportedOperationException.class)
+  public void testCharacterBaseParserMethod() throws Exception {
+    DataParserFactoryBuilder dataParserFactoryBuilder = new DataParserFactoryBuilder(getContext(),
+                                                                                     DataParserFormat.SDC_RECORD);
+    DataFactory dataFactory = dataParserFactoryBuilder
+        .setMaxDataLen(1000)
+        .build();
+    Assert.assertTrue(dataFactory instanceof SdcRecordDataParserFactory);
+    SdcRecordDataParserFactory factory = (SdcRecordDataParserFactory) dataFactory;
+    factory.getParser("id", new StringReader(""), 0);
+  }
+
 }
