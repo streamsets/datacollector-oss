@@ -39,7 +39,7 @@ import java.util.List;
     version = "1.0.0",
     label = "Directory",
     description = "Reads files from a directory",
-    icon="spoolDirSource.png",
+    icon="directory.png",
     execution = ExecutionMode.STANDALONE
 )
 @RawSource(rawSourcePreviewer = FileRawSourcePreviewer.class)
