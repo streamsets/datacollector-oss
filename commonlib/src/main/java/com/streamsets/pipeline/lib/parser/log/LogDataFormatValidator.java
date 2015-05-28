@@ -5,7 +5,6 @@
  */
 package com.streamsets.pipeline.lib.parser.log;
 
-import com.streamsets.pipeline.api.Source;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.config.LogMode;
 import com.streamsets.pipeline.config.OnParseError;
@@ -70,8 +69,8 @@ public class LogDataFormatValidator {
       .setMode(logMode);
   }
 
-  public void validateLogFormatConfig(List<Stage.ConfigIssue> issues, Source.Context context) {
-    if (logMaxObjectLen < 1) {
+  public void validateLogFormatConfig(List<Stage.ConfigIssue> issues, Stage.Context context) {
+    if (logMaxObjectLen == 0 || logMaxObjectLen < -1) {
       issues.add(context.createConfigIssue(groupName, "logMaxObjectLen", Errors.LOG_PARSER_04, logMaxObjectLen));
     }
     if(maxStackTraceLines < 0) {
@@ -88,7 +87,7 @@ public class LogDataFormatValidator {
     }
   }
 
-  private void validateApacheCustomLogFormat(List<Stage.ConfigIssue> issues, Source.Context context) {
+  private void validateApacheCustomLogFormat(List<Stage.ConfigIssue> issues, Stage.Context context) {
     if(customLogFormat == null || customLogFormat.isEmpty()) {
       issues.add(context.createConfigIssue(groupName, "customLogFormat", Errors.LOG_PARSER_05, customLogFormat));
       return;
@@ -101,7 +100,7 @@ public class LogDataFormatValidator {
     }
   }
 
-  private void validateLog4jCustomLogFormat(List<Stage.ConfigIssue> issues, Source.Context context) {
+  private void validateLog4jCustomLogFormat(List<Stage.ConfigIssue> issues, Stage.Context context) {
     if(enableLog4jCustomLogFormat) {
       if (log4jCustomLogFormat == null || log4jCustomLogFormat.isEmpty()) {
         issues.add(context.createConfigIssue(groupName, "log4jCustomLogFormat", Errors.LOG_PARSER_05,
@@ -117,7 +116,7 @@ public class LogDataFormatValidator {
     }
   }
 
-  private void validateRegExFormat(List<Stage.ConfigIssue> issues, Source.Context context) {
+  private void validateRegExFormat(List<Stage.ConfigIssue> issues, Stage.Context context) {
     try {
       Pattern compile = Pattern.compile(regex);
       Matcher matcher = compile.matcher(" ");
@@ -135,7 +134,7 @@ public class LogDataFormatValidator {
     }
   }
 
-  private void validateGrokPattern(List<Stage.ConfigIssue> issues, Source.Context context) {
+  private void validateGrokPattern(List<Stage.ConfigIssue> issues, Stage.Context context) {
     try {
       GrokDictionary grokDictionary = new GrokDictionary();
       grokDictionary.addDictionary(getClass().getClassLoader().getResourceAsStream(Constants.GROK_PATTERNS_FILE_NAME));

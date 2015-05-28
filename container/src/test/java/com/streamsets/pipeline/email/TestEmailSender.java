@@ -44,5 +44,4 @@ public class TestEmailSender {
     Assert.assertEquals("BODY", GreenMailUtil.getBody(server.getReceivedMessages()[0]));
   }
 
-
 }
