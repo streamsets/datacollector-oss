@@ -144,9 +144,17 @@ public class StandalonePipelineManagerTask extends AbstractTask implements Pipel
     snapshotStore = new FileSnapshotStore(runtimeInfo);
   }
 
-  @Override
   public ProductionPipeline getProductionPipeline() {
     return prodPipeline;
+  }
+
+  @Override
+  public PipelineConfiguration getPipelineConfiguration() {
+    PipelineConfiguration pipelineConf = null;
+    if (prodPipeline != null) {
+      pipelineConf = prodPipeline.getPipelineConf();
+    }
+    return pipelineConf;
   }
 
   @Override

@@ -351,4 +351,25 @@ public class TestClusterPipelineManager {
     managerRunnable.start(request);
     Assert.assertEquals(State.RUNNING, getState());
   }
+
+  @Test
+  public void testGetPipelineConf() throws Exception {
+    clusterPipelineManager = createClusterPipelineManager();
+    clusterPipelineManager.initTask();
+    clusterPipelineManager.getManagerExecutor().shutdownNow();
+    ClusterPipelineManager.ManagerRunnable managerRunnable = clusterPipelineManager.getManagerRunnable();
+    Assert.assertNull(clusterPipelineManager.getPipelineConfiguration());
+    setState(State.RUNNING);
+    ApplicationState appState = new ApplicationState((Map)stateTracker.getState().getAttributes().
+        get(ClusterPipelineManager.APPLICATION_STATE));
+    ClusterPipelineManager.StateTransitionRequest request;
+    PipelineConfiguration pipelineConfiguration = pipelineStoreTask.load(NAME, REV);
+    // transitions to running state when already running
+    request = new ClusterPipelineManager.StateTransitionRequest(State.RUNNING, appState, pipelineConfiguration);
+    sparkProvider.isRunning = true;
+    managerRunnable.start(request);
+    Assert.assertEquals(State.RUNNING, getState());
+    Assert.assertNotNull(clusterPipelineManager.getPipelineConfiguration());
+  }
+
 }

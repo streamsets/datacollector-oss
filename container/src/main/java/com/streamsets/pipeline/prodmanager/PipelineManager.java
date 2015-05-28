@@ -11,6 +11,7 @@ import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.impl.ErrorMessage;
 import com.streamsets.pipeline.callback.CallbackInfo;
+import com.streamsets.pipeline.config.PipelineConfiguration;
 import com.streamsets.pipeline.config.RuleDefinition;
 import com.streamsets.pipeline.metrics.MetricsEventListener;
 import com.streamsets.pipeline.runner.PipelineRuntimeException;
@@ -32,7 +33,7 @@ public interface PipelineManager extends Task {
   public static final String CALLBACK_SERVER_URL_DEFAULT = null;
   public static final String SDC_CLUSTER_TOKEN_KEY = "sdc.cluster.token";
 
-  ProductionPipeline getProductionPipeline();
+  PipelineConfiguration getPipelineConfiguration();
 
   PipelineState getPipelineState();
 

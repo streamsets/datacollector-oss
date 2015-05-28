@@ -68,31 +68,34 @@ public class UpdateChecker implements Runnable {
   @SuppressWarnings("unchecked")
   @VisibleForTesting
   Map getUploadInfo() {
-    PipelineConfiguration pipelineConf = manager.getProductionPipeline().getPipelineConf();
+    Map uploadInfo = null;
+    PipelineConfiguration pipelineConf = manager.getPipelineConfiguration();
+    if (pipelineConf != null) {
+      List stages = new ArrayList();
 
-    List stages = new ArrayList();
-
-    // error stage
-    Map stage = new LinkedHashMap();
-    stage.put("name", pipelineConf.getErrorStage().getStageName());
-    stage.put("version", pipelineConf.getErrorStage().getStageVersion());
-    stage.put("library", pipelineConf.getErrorStage().getLibrary());
-    stages.add(stage);
-
-    // pipeline stages
-    for (StageConfiguration stageConf : pipelineConf.getStages()) {
-      stage = new LinkedHashMap();
-      stage.put("name", stageConf.getStageName());
-      stage.put("version", stageConf.getStageVersion());
-      stage.put("library", stageConf.getLibrary());
+      // error stage
+      Map stage = new LinkedHashMap();
+      stage.put("name", pipelineConf.getErrorStage().getStageName());
+      stage.put("version", pipelineConf.getErrorStage().getStageVersion());
+      stage.put("library", pipelineConf.getErrorStage().getLibrary());
       stages.add(stage);
+
+      // pipeline stages
+      for (StageConfiguration stageConf : pipelineConf.getStages()) {
+        stage = new LinkedHashMap();
+        stage.put("name", stageConf.getStageName());
+        stage.put("version", stageConf.getStageVersion());
+        stage.put("library", stageConf.getLibrary());
+        stages.add(stage);
+      }
+
+      uploadInfo = new LinkedHashMap();
+      uploadInfo.put("sdc.sha256", getSha256(runtimeInfo.getSDCToken()));
+      uploadInfo.put("sdc.buildInfo", new BuildInfo());
+      uploadInfo.put("sdc.stages", stages);
     }
 
-    Map map = new LinkedHashMap();
-    map.put("sdc.sha256", getSha256(runtimeInfo.getSDCToken()));
-    map.put("sdc.buildInfo", new BuildInfo());
-    map.put("sdc.stages", stages);
-    return map;
+    return uploadInfo;
   }
 
   @Override
@@ -104,30 +107,32 @@ public class UpdateChecker implements Runnable {
       if (ps.getState() == State.RUNNING) {
         if (url != null) {
           Map uploadInfo = getUploadInfo();
-          HttpURLConnection conn = null;
-          try {
-            conn = (HttpURLConnection) url.openConnection();
-            conn.setConnectTimeout(2000);
-            conn.setReadTimeout(2000);
-            conn.setDoOutput(true);
-            conn.setDoInput(true);
-            conn.setRequestProperty("content-type", APPLICATION_JSON_MIME);
-            ObjectMapperFactory.getOneLine().writeValue(conn.getOutputStream(), uploadInfo);
-            if (conn.getResponseCode() == HttpURLConnection.HTTP_OK) {
-              String responseContentType = conn.getHeaderField("content-type");
-              if (APPLICATION_JSON_MIME.equals(responseContentType)) {
-                updateInfo = ObjectMapperFactory.get().readValue(conn.getInputStream(), Map.class);
+          if (uploadInfo != null) {
+            HttpURLConnection conn = null;
+            try {
+              conn = (HttpURLConnection) url.openConnection();
+              conn.setConnectTimeout(2000);
+              conn.setReadTimeout(2000);
+              conn.setDoOutput(true);
+              conn.setDoInput(true);
+              conn.setRequestProperty("content-type", APPLICATION_JSON_MIME);
+              ObjectMapperFactory.getOneLine().writeValue(conn.getOutputStream(), uploadInfo);
+              if (conn.getResponseCode() == HttpURLConnection.HTTP_OK) {
+                String responseContentType = conn.getHeaderField("content-type");
+                if (APPLICATION_JSON_MIME.equals(responseContentType)) {
+                  updateInfo = ObjectMapperFactory.get().readValue(conn.getInputStream(), Map.class);
+                } else {
+                  LOG.trace("Got invalid content-type '{}' from from update-check server", responseContentType);
+                }
               } else {
-                LOG.trace("Got invalid content-type '{}' from from update-check server", responseContentType);
+                LOG.trace("Got '{} : {}' from update-check server", conn.getResponseCode(), conn.getResponseMessage());
               }
-            } else {
-              LOG.trace("Got '{} : {}' from update-check server", conn.getResponseCode(), conn.getResponseMessage());
-            }
-          } catch (Exception ex) {
-            LOG.trace("Could not do an update check: {}", ex.getMessage(), ex);
-          } finally {
-            if (conn != null) {
-              conn.disconnect();
+            } catch (Exception ex) {
+              LOG.trace("Could not do an update check: {}", ex.getMessage(), ex);
+            } finally {
+              if (conn != null) {
+                conn.disconnect();
+              }
             }
           }
         }

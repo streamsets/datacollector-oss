@@ -10,6 +10,7 @@ import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.streamsets.pipeline.prodmanager.StandalonePipelineManagerTask;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -164,7 +165,7 @@ public class EmbeddedDataCollector implements DataCollector {
   }
 
   public Pipeline getPipeline() {
-    return pipelineManager.getProductionPipeline().getPipeline();
+    return ((StandalonePipelineManagerTask)pipelineManager).getProductionPipeline().getPipeline();
   }
 
   @Override

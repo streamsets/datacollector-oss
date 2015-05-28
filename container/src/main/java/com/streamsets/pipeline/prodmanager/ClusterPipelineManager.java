@@ -71,8 +71,6 @@ import com.streamsets.pipeline.util.Configuration;
 import com.streamsets.pipeline.util.ContainerError;
 import com.streamsets.pipeline.util.PipelineConfigurationUtil;
 import com.streamsets.pipeline.util.PipelineDirectoryUtil;
-import com.streamsets.pipeline.validation.Issues;
-import com.streamsets.pipeline.validation.StageIssue;
 import com.streamsets.pipeline.validation.ValidationError;
 
 public class ClusterPipelineManager extends AbstractTask implements PipelineManager {
@@ -413,8 +411,17 @@ public class ClusterPipelineManager extends AbstractTask implements PipelineMana
   }
 
   @Override
-  public ProductionPipeline getProductionPipeline() {
-    throw new UnsupportedOperationException();
+  public PipelineConfiguration getPipelineConfiguration() {
+    PipelineConfiguration pipelineConf = null;
+    try {
+      PipelineState ps = getPipelineState();
+      if (ps != null && ps.getState() == State.RUNNING) {
+        pipelineConf = pipelineStore.load(getPipelineState().getName(), getPipelineState().getRev());
+      }
+    } catch (Exception ex) {
+      LOG.error(ex.getMessage(), ex);
+    }
+    return pipelineConf;
   }
 
   @Override
@@ -663,6 +670,8 @@ public class ClusterPipelineManager extends AbstractTask implements PipelineMana
         }
       }
     }
+
+    ProductionPipeline prodPipeline;
 
     private void doStart(String name, String rev, PipelineConfiguration pipelineConf) throws PipelineManagerException {
       stateTracker.register(name, rev);

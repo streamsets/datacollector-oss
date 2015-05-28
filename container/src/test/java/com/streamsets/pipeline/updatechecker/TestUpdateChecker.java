@@ -13,7 +13,6 @@ import com.streamsets.pipeline.prodmanager.PipelineManager;
 import com.streamsets.pipeline.prodmanager.PipelineState;
 import com.streamsets.pipeline.prodmanager.State;
 import com.streamsets.pipeline.runner.MockStages;
-import com.streamsets.pipeline.runner.production.ProductionPipeline;
 import com.streamsets.pipeline.util.Configuration;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.servlet.ServletContextHandler;
@@ -58,10 +57,8 @@ public class TestUpdateChecker {
     RuntimeInfo runtimeInfo = Mockito.mock(RuntimeInfo.class);
     Mockito.when(runtimeInfo.getSDCToken()).thenReturn("hello");
     Configuration conf = new Configuration();
-    ProductionPipeline pipeline = Mockito.mock(ProductionPipeline.class);
-    Mockito.when(pipeline.getPipelineConf()).thenReturn(pipelineConf);
     PipelineManager manager = Mockito.mock(PipelineManager.class);
-    Mockito.when(manager.getProductionPipeline()).thenReturn(pipeline);
+    Mockito.when(manager.getPipelineConfiguration()).thenReturn(pipelineConf);
     UpdateChecker checker = new UpdateChecker(runtimeInfo, conf, manager);
     Map uploadInfo = checker.getUploadInfo();
     Assert.assertNotNull(uploadInfo);
@@ -86,10 +83,8 @@ public class TestUpdateChecker {
     RuntimeInfo runtimeInfo = Mockito.mock(RuntimeInfo.class);
     Mockito.when(runtimeInfo.getSDCToken()).thenReturn("hello");
     Configuration conf = new Configuration();
-    ProductionPipeline pipeline = Mockito.mock(ProductionPipeline.class);
-    Mockito.when(pipeline.getPipelineConf()).thenReturn(pipelineConf);
     PipelineManager manager = Mockito.mock(PipelineManager.class);
-    Mockito.when(manager.getProductionPipeline()).thenReturn(pipeline);
+    Mockito.when(manager.getPipelineConfiguration()).thenReturn(pipelineConf);
     PipelineState state = Mockito.mock(PipelineState.class);
     Mockito.when(state.getState()).thenReturn(State.STOPPED);
     Mockito.when(manager.getPipelineState()).thenReturn(state);
@@ -105,10 +100,8 @@ public class TestUpdateChecker {
     RuntimeInfo runtimeInfo = Mockito.mock(RuntimeInfo.class);
     Mockito.when(runtimeInfo.getSDCToken()).thenReturn("hello");
     Configuration conf = new Configuration();
-    ProductionPipeline pipeline = Mockito.mock(ProductionPipeline.class);
-    Mockito.when(pipeline.getPipelineConf()).thenReturn(pipelineConf);
     PipelineManager manager = Mockito.mock(PipelineManager.class);
-    Mockito.when(manager.getProductionPipeline()).thenReturn(pipeline);
+    Mockito.when(manager.getPipelineConfiguration()).thenReturn(pipelineConf);
     PipelineState state = Mockito.mock(PipelineState.class);
 
     //running unreachable update checker site
@@ -157,10 +150,8 @@ public class TestUpdateChecker {
       Mockito.when(runtimeInfo.getSDCToken()).thenReturn("hello");
       Configuration conf = new Configuration();
       conf.set(UpdateChecker.URL_KEY, "http://localhost:" + port + "/updatecheck");
-      ProductionPipeline pipeline = Mockito.mock(ProductionPipeline.class);
-      Mockito.when(pipeline.getPipelineConf()).thenReturn(pipelineConf);
       PipelineManager manager = Mockito.mock(PipelineManager.class);
-      Mockito.when(manager.getProductionPipeline()).thenReturn(pipeline);
+      Mockito.when(manager.getPipelineConfiguration()).thenReturn(pipelineConf);
       PipelineState state = Mockito.mock(PipelineState.class);
 
       Mockito.when(state.getState()).thenReturn(State.RUNNING);
