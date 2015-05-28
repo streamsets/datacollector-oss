@@ -1260,7 +1260,7 @@ angular.module('dataCollectorApp.common')
           metricId: "pipeline.memoryConsumed.counter",
           metricType: "COUNTER",
           metricElement: "COUNTER_COUNT",
-          condition: "${value() > 100 * MB}",
+          condition: "${value() > (runtime:jvmMaxMemory() * 0.65)}",
           sendEmail: false,
           enabled: false,
           valid: true

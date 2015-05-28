@@ -14,7 +14,7 @@ import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.config.DataRuleDefinition;
 import com.streamsets.pipeline.el.ELEvaluator;
 import com.streamsets.pipeline.el.ELVariables;
-import com.streamsets.pipeline.lib.el.RuleELRegistry;
+import com.streamsets.pipeline.el.RuleELRegistry;
 import com.streamsets.pipeline.metrics.MetricsConfigurator;
 import com.streamsets.pipeline.prodmanager.Constants;
 import com.streamsets.pipeline.runner.LaneResolver;
