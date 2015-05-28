@@ -83,11 +83,12 @@ angular
     var updateStageGroups = function() {
       var stageGroups = [],
         libraryList = _.chain($scope.stageLibraries)
+          .sortBy('libraryLabel')
           .pluck("library")
           .unique()
-          .sortBy('libraryLabel')
           .value(),
         libraryLabelList = _.chain($scope.stageLibraries)
+          .sortBy('libraryLabel')
           .pluck("libraryLabel")
           .unique()
           .value();
