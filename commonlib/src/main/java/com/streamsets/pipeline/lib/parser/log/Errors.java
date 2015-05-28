@@ -10,7 +10,7 @@ public enum Errors implements ErrorCode {
   LOG_PARSER_02("Unsupported format {} encountered"),
   LOG_PARSER_03("Log line {} does not confirm to {}"),
 
-  LOG_PARSER_04("Max data object length cannot be less than 1"),
+  LOG_PARSER_04("Max data object length can be -1 or greater than 0"),
   LOG_PARSER_05("Custom Log Format field cannot be empty"),
   LOG_PARSER_06("Error parsing custom log format string {}, reason {}"),
   LOG_PARSER_07("Error parsing regex {}, reason {}"),
