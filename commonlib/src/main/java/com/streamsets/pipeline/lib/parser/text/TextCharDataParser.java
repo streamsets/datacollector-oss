@@ -47,6 +47,7 @@ public class TextCharDataParser implements DataParser {
 
   @Override
   public Record parse() throws IOException, DataParserException {
+    reader.resetCount();
     long offset = reader.getPos();
     sb.setLength(0);
     int read = readLine(sb);

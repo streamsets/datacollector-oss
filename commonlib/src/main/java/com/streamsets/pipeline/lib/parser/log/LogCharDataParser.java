@@ -58,6 +58,8 @@ public abstract class LogCharDataParser implements DataParser {
 
   @Override
   public Record parse() throws IOException, DataParserException {
+    reader.resetCount();
+
     //In order to detect stack trace / multi line error messages, the parser reads the next line and attempts
     //a pattern match. If it fails then the line is treated a a stack trace and associated with the previous line.
     //If the pattern matches then its a valid log line and is saved for the next round.

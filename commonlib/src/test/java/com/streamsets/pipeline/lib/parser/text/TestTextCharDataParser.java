@@ -8,6 +8,7 @@ package com.streamsets.pipeline.lib.parser.text;
 import com.streamsets.pipeline.api.OnRecordError;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.Stage;
+import com.streamsets.pipeline.lib.io.OverrunException;
 import com.streamsets.pipeline.lib.io.OverrunReader;
 import com.streamsets.pipeline.lib.parser.DataParser;
 import com.streamsets.pipeline.sdk.ContextInfoCreator;
@@ -94,6 +95,35 @@ public class TestTextCharDataParser {
     Assert.assertNull(record);
     Assert.assertEquals(-1, parser.getOffset());
     parser.close();
+  }
+
+  private String createTextLines(int underLimitLength, int underLimitLines, int overLimitLength) {
+    StringBuilder sb = new StringBuilder(underLimitLength * underLimitLength + overLimitLength + underLimitLines + 1);
+    for (int line = 0; line < underLimitLines; line++) {
+      for (int len = 0; len < underLimitLength; len++) {
+        sb.append((char) (len % 28 + 65));
+      }
+      sb.append('\n');
+    }
+    for (int len = 0; len < overLimitLength; len++) {
+      sb.append((char) (len % 28 + 65));
+    }
+    sb.append('\n');
+    return sb.toString();
+  }
+
+  @Test(expected = OverrunException.class)
+  public void testOverrun() throws Exception {
+    OverrunReader reader = new OverrunReader(new StringReader(createTextLines(1000, 20, 5000)), 2 * 1000, true);
+    int lines = 0;
+    try (DataParser parser = new TextCharDataParser(getContext(), "id", reader, 0, 3, "text", "truncated")) {
+      // we read 20 lines under the limit then one over the limit
+      while (parser.parse() != null) {
+        lines++;
+      }
+    } finally {
+      Assert.assertEquals(20, lines);
+    }
   }
 
 }
