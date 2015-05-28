@@ -34,9 +34,9 @@ public class FileInfo {
       required = true,
       type = ConfigDef.Type.MODEL,
       defaultValue = "REVERSE_COUNTER",
-      label = "Files Naming",
+      label = "File Naming",
       description = "",
-      displayPosition = 30,
+      displayPosition = 20,
       group = "FILE"
   )
   @ValueChooser(RolledFilesModeChooserValues.class)
@@ -45,9 +45,9 @@ public class FileInfo {
   @ConfigDef(
       required = true,
       type = ConfigDef.Type.STRING,
-      label = "File to Tail",
+      label = "Active File",
       description = "Name of the file to tail",
-      displayPosition = 20,
+      displayPosition = 30,
       group = "FILE",
       dependsOn = "fileRollMode",
       triggeredByValue = {
