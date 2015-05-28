@@ -340,13 +340,13 @@ public class TestClusterPipelineManager {
     ClusterPipelineManager.StateTransitionRequest request;
     PipelineConfiguration pipelineConfiguration = pipelineStoreTask.load(NAME, REV);
     // transitions to running state when already running
-    request = new ClusterPipelineManager.StateTransitionRequest(State.RUNNING, appState, pipelineConfiguration);
+    request = new ClusterPipelineManager.StateTransitionRequest(State.RUNNING, appState, pipelineConfiguration, 1);
     sparkProvider.isRunning = true;
     managerRunnable.start(request);
     Assert.assertEquals(State.RUNNING, getState());
     // still in running state when already running
     setState(State.RUNNING);
-    request = new ClusterPipelineManager.StateTransitionRequest(State.RUNNING, appState, pipelineConfiguration);
+    request = new ClusterPipelineManager.StateTransitionRequest(State.RUNNING, appState, pipelineConfiguration, 1);
     sparkProvider.isRunning = true;
     managerRunnable.start(request);
     Assert.assertEquals(State.RUNNING, getState());
@@ -365,7 +365,7 @@ public class TestClusterPipelineManager {
     ClusterPipelineManager.StateTransitionRequest request;
     PipelineConfiguration pipelineConfiguration = pipelineStoreTask.load(NAME, REV);
     // transitions to running state when already running
-    request = new ClusterPipelineManager.StateTransitionRequest(State.RUNNING, appState, pipelineConfiguration);
+    request = new ClusterPipelineManager.StateTransitionRequest(State.RUNNING, appState, pipelineConfiguration, 1);
     sparkProvider.isRunning = true;
     managerRunnable.start(request);
     Assert.assertEquals(State.RUNNING, getState());
