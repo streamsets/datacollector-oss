@@ -186,7 +186,6 @@ public class StagePipe extends Pipe<StagePipe.Context> {
     getStage().destroy();
   }
 
-  @Override
   public long getMemoryConsumed() {
     return memoryConsumedCounter.getCount();
 }
