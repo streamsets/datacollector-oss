@@ -100,8 +100,8 @@ public class ClusterPipelineManager extends AbstractTask implements PipelineMana
   private Cache<String, CallbackInfo> slaveCallbackList;
   private MetricsEventRunnable metricsEventRunnable;
   private final ReentrantLock callbackCacheLock;
-
   private UpdateChecker updateChecker;
+  private ProductionPipeline prodPipeline;
 
   public ClusterPipelineManager(RuntimeInfo runtimeInfo, Configuration configuration, PipelineStoreTask pipelineStore,
                                 StageLibraryTask stageLibrary) {
@@ -314,6 +314,7 @@ public class ClusterPipelineManager extends AbstractTask implements PipelineMana
     } else if (ps.getState() != State.RUNNING) {
       validateStateTransition(name, rev, State.RUNNING);
     }
+    int parallelisim = getOriginParallelism(name, rev, pipelineConf);
     ApplicationState appState;
     if (ps == null) {
       stateTracker.setState(name, rev, State.RUNNING, "Starting cluster pipeline", null, null);
@@ -325,7 +326,7 @@ public class ClusterPipelineManager extends AbstractTask implements PipelineMana
       }
       stateTracker.setState(name, rev, State.RUNNING, "Starting cluster pipeline", null, ps.getAttributes());
     }
-    managerRunnable.requestTransition(State.RUNNING, appState, pipelineConf);
+    managerRunnable.requestTransition(State.RUNNING, appState, pipelineConf, parallelisim);
     return stateTracker.getState();
   }
 
@@ -387,7 +388,7 @@ public class ClusterPipelineManager extends AbstractTask implements PipelineMana
         transitionToError(ps, msg);
         throw new PipelineManagerException(ContainerError.CONTAINER_0150, ps.getState(), e.toString(), e);
       }
-      managerRunnable.requestTransition(State.STOPPED, appState, pipelineConf);
+      managerRunnable.requestTransition(State.STOPPED, appState, pipelineConf, -1);
     }
   }
   @Override
@@ -535,12 +536,14 @@ public class ClusterPipelineManager extends AbstractTask implements PipelineMana
     final State canidateState;
     final ApplicationState applicationState;
     final PipelineConfiguration pipelineConf;
+    final int parallelisim;
 
     public StateTransitionRequest(@NotNull State canidateState, @NotNull ApplicationState applicationState,
-                                  PipelineConfiguration pipelineConf) {
+                                  PipelineConfiguration pipelineConf, int parallelisim) {
       this.canidateState = canidateState;
       this.applicationState = applicationState;
       this.pipelineConf = pipelineConf;
+      this.parallelisim = parallelisim;
     }
 
     @Override
@@ -548,6 +551,8 @@ public class ClusterPipelineManager extends AbstractTask implements PipelineMana
       return "StateTransitionRequest{" +
         "canidateState=" + canidateState +
         ", applicationState=" + applicationState +
+        ", pipelineConf=" + pipelineConf +
+        ", parallelisim=" + parallelisim +
         '}';
     }
   }
@@ -589,10 +594,10 @@ public class ClusterPipelineManager extends AbstractTask implements PipelineMana
     void forceCheckPipelineState() {
       Utils.checkState(queue.add(Optional.<StateTransitionRequest>absent()), "Could not add to queue");
     }
-
     private void requestTransition(State canidateState, ApplicationState applicationState,
-                                  PipelineConfiguration pipelineConfiguration) {
-      StateTransitionRequest request = new StateTransitionRequest(canidateState, applicationState, pipelineConfiguration);
+                                   PipelineConfiguration pipelineConfiguration, int parallelisim) {
+      StateTransitionRequest request = new StateTransitionRequest(canidateState, applicationState,
+        pipelineConfiguration, parallelisim);
       if(!queue.add(Optional.of(request))) {
         LOG.error(Utils.format("Could not add state transition request to queue: {}", request));
       }
@@ -643,7 +648,7 @@ public class ClusterPipelineManager extends AbstractTask implements PipelineMana
       attributes.putAll(ps.getAttributes());
       PipelineConfiguration pipelineConf = Utils.checkNotNull(request.pipelineConf, "PipelineConfiguration cannot be null");
       if (appState.getId() == null) {
-        doStart(ps.getName(), ps.getRev(), pipelineConf);
+        doStart(ps.getName(), ps.getRev(), pipelineConf, request.parallelisim);
       } else {
         Boolean running = null;
         try {
@@ -666,14 +671,14 @@ public class ClusterPipelineManager extends AbstractTask implements PipelineMana
           String msg = "Pipeline is supposed to be running but has died";
           clusterPipelineManager.transitionToError(ps, msg);
         } else {
-          doStart(ps.getName(), ps.getRev(), pipelineConf);
+          doStart(ps.getName(), ps.getRev(), pipelineConf, request.parallelisim);
         }
       }
     }
 
-    ProductionPipeline prodPipeline;
 
-    private void doStart(String name, String rev, PipelineConfiguration pipelineConf) throws PipelineManagerException {
+    private void doStart(String name, String rev, PipelineConfiguration pipelineConf, int parallelism)
+      throws PipelineManagerException {
       stateTracker.register(name, rev);
       Map<String, String> environment = new HashMap<>();
       Map<String, String> envConfigMap = PipelineConfigurationUtil.getFlattenedStringMap(PipelineDefConfigs.
@@ -685,8 +690,7 @@ public class ClusterPipelineManager extends AbstractTask implements PipelineMana
       PipelineState ps = stateTracker.getState();
       try {
         //create pipeline and get the parallelism info from the source
-        String parallelism = String.valueOf(clusterPipelineManager.getOriginParallelism(name, rev, pipelineConf));
-        sourceInfo.put(ClusterModeConstants.NUM_EXECUTORS_KEY, parallelism);
+        sourceInfo.put(ClusterModeConstants.NUM_EXECUTORS_KEY, String.valueOf(parallelism));
         //This is needed for UI
         RuntimeInfo runtimeInfo = clusterPipelineManager.runtimeInfo;
         runtimeInfo.setAttribute(ClusterModeConstants.NUM_EXECUTORS_KEY, parallelism);
