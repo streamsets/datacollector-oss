@@ -13,7 +13,7 @@ import com.codahale.metrics.Timer;
 import com.streamsets.pipeline.config.MetricsRuleDefinition;
 import com.streamsets.pipeline.el.ELEvaluator;
 import com.streamsets.pipeline.el.ELVariables;
-import com.streamsets.pipeline.lib.el.RuleELRegistry;
+import com.streamsets.pipeline.el.RuleELRegistry;
 import com.streamsets.pipeline.metrics.ExtendedMeter;
 import com.streamsets.pipeline.metrics.MetricsConfigurator;
 import com.streamsets.pipeline.runner.RuntimeStats;

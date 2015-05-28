@@ -50,8 +50,6 @@ public class RuntimeEL {
     return value;
   }
 
-  private static final String EOL = System.getProperty("line.separator");
-
   @ElFunction(prefix = "runtime", name = "loadResource",
       description = "Loads the contents of a file under the Data Collector resources directory. " +
                     "If restricted is set to 'true', the file must be readable only by its owner."
@@ -128,6 +126,13 @@ public class RuntimeEL {
 
   public static Set<Object> getRuntimeConfKeys() {
     return RUNTIME_CONF_PROPS.keySet();
+  }
+
+  @ElFunction(prefix = "runtime", name = "jvmMaxMemory",
+      description = "JVM Maximum Heap size, in bytes"
+  )
+  public static long jvmMaxMemory() {
+    return  Runtime.getRuntime().maxMemory();
   }
 
 }

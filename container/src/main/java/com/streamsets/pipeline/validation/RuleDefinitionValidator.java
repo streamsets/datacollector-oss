@@ -16,7 +16,7 @@ import com.streamsets.pipeline.config.ThresholdType;
 import com.streamsets.pipeline.el.ELEvaluator;
 import com.streamsets.pipeline.el.ELVariables;
 import com.streamsets.pipeline.lib.el.RecordEL;
-import com.streamsets.pipeline.lib.el.RuleELRegistry;
+import com.streamsets.pipeline.el.RuleELRegistry;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
