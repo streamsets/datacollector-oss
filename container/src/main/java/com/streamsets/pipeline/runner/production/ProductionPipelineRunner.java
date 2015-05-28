@@ -39,6 +39,7 @@ import com.streamsets.pipeline.runner.PipelineRuntimeException;
 import com.streamsets.pipeline.runner.SourceOffsetTracker;
 import com.streamsets.pipeline.runner.StageContext;
 import com.streamsets.pipeline.runner.StageOutput;
+import com.streamsets.pipeline.runner.StagePipe;
 import com.streamsets.pipeline.snapshotstore.SnapshotStatus;
 import com.streamsets.pipeline.snapshotstore.SnapshotStore;
 import com.streamsets.pipeline.snapshotstore.impl.FileSnapshotStore;
@@ -290,8 +291,9 @@ public class ProductionPipelineRunner implements PipelineRunner {
         committed = true;
       }
       pipe.process(pipeBatch);
-      long memory = pipe.getMemoryConsumed();
-      memoryConsumedByStage.put(pipe.getStage().getInfo().getInstanceName(), memory);
+      if (pipe instanceof StagePipe) {
+        memoryConsumedByStage.put(pipe.getStage().getInfo().getInstanceName(), ((StagePipe)pipe).getMemoryConsumed());
+      }
     }
     enforceMemoryLimit(memoryConsumedByStage);
     badRecordsHandler.handle(newSourceOffset, getBadRecords(pipeBatch.getErrorSink()));
@@ -365,7 +367,7 @@ public class ProductionPipelineRunner implements PipelineRunner {
       long elapsedTimeSinceLastTriggerMins = TimeUnit.MILLISECONDS.
         toMinutes(System.currentTimeMillis() - lastMemoryLimitNotification);
       lastMemoryLimitNotification = System.currentTimeMillis();
-      if (elapsedTimeSinceLastTriggerMins < 60 ) {
+      if (elapsedTimeSinceLastTriggerMins < 60) {
         if (LOG.isDebugEnabled()) {
           LOG.debug("Memory limit has been triggered, will take {} in {} mins",
             memoryLimitConfiguration.getMemoryLimitExceeded(), (60 - elapsedTimeSinceLastTriggerMins));

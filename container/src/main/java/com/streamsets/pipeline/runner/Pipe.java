@@ -43,10 +43,6 @@ public abstract class Pipe<C extends Pipe.Context> {
 
   public abstract void destroy();
 
-  public long getMemoryConsumed() {
-    return 0;
-  }
-
   public interface Context {
 
   }
