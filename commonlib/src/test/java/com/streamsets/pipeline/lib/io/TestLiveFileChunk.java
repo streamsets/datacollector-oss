@@ -11,8 +11,6 @@ import org.junit.Test;
 import org.mockito.Mockito;
 
 import java.io.IOException;
-import java.io.Reader;
-import java.io.StringReader;
 import java.nio.charset.Charset;
 
 public class TestLiveFileChunk {
@@ -20,7 +18,8 @@ public class TestLiveFileChunk {
   @Test
   public void testChunkGetters() throws IOException {
     LiveFile file = Mockito.mock(LiveFile.class);
-    LiveFileChunk chunk = new LiveFileChunk(file, "Hola\nHello".getBytes(), Charset.forName("UTF-8"), 1, 9, true);
+    LiveFileChunk chunk = new LiveFileChunk("tag", file, "Hola\nHello".getBytes(), Charset.forName("UTF-8"), 1, 9, true);
+    Assert.assertEquals("tag", chunk.getTag());
     Assert.assertEquals(file, chunk.getFile());
     Assert.assertEquals("Hola", IOUtils.readLines(chunk.getReader()).get(0));
     Assert.assertEquals("Hell", IOUtils.readLines(chunk.getReader()).get(1));
@@ -43,7 +42,7 @@ public class TestLiveFileChunk {
   @Test
   public void testChunkLinesLF() throws IOException {
     byte[] data = "Hello\nBye\n".getBytes(Charset.forName("UTF-8"));
-    LiveFileChunk chunk = new LiveFileChunk(null, data, Charset.forName("UTF-8"), 1, data.length, true);
+    LiveFileChunk chunk = new LiveFileChunk(null, null, data, Charset.forName("UTF-8"), 1, data.length, true);
     Assert.assertEquals(2, chunk.getLines().size());
     Assert.assertEquals("Hello\n", chunk.getLines().get(0).getText());
     Assert.assertEquals(1, chunk.getLines().get(0).getFileOffset());
@@ -54,7 +53,7 @@ public class TestLiveFileChunk {
   @Test
   public void testChunkLinesCRLF() throws IOException {
     byte[] data = "Hello\r\nBye\r\n".getBytes(Charset.forName("UTF-8"));
-    LiveFileChunk chunk = new LiveFileChunk(null, data, Charset.forName("UTF-8"), 1, data.length, true);
+    LiveFileChunk chunk = new LiveFileChunk(null, null, data, Charset.forName("UTF-8"), 1, data.length, true);
     Assert.assertEquals(2, chunk.getLines().size());
     Assert.assertEquals("Hello\r\n", chunk.getLines().get(0).getText());
     Assert.assertEquals(1, chunk.getLines().get(0).getFileOffset());

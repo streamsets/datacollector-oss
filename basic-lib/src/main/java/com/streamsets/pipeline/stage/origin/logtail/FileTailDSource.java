@@ -103,9 +103,9 @@ public class FileTailDSource extends DSource {
   @ConfigDef(
       required = true,
       type = ConfigDef.Type.MODEL,
-      label = "Directories",
-      description = "Directories with files to tail",
-      displayPosition = 60,
+      label = "File Sets to Tail",
+      description = "",
+      displayPosition  = 60,
       group = "FILES"
   )
   @ComplexField

@@ -45,6 +45,7 @@ public class LiveFileReader implements Closeable {
 
   private final RollMode rollMode;
   private final LiveFile originalFile;
+  private String tag;
   private LiveFile currentFile;
   private final Charset charset;
 
@@ -68,6 +69,8 @@ public class LiveFileReader implements Closeable {
   /**
    * Creates a <code>LiveFileReader</code>.
    *
+   * @param rollMode {@link RollMode} the file roll mode.
+   * @param tag the file tag.
    * @param file {@link LiveFile} of the file to read.
    * @param charset {@link Charset} of the file, the returned {@link LiveFileChunk} will have a {@link Reader}
    *                               using this character set.
@@ -81,7 +84,7 @@ public class LiveFileReader implements Closeable {
    * @throws IllegalArgumentException thrown if the the provided charset must encode LF and CR as '0x0A' and '0x0D'
    * respectively.
    */
-  public LiveFileReader(RollMode rollMode, LiveFile file, Charset charset, long offset, int maxLineLen)
+  public LiveFileReader(RollMode rollMode, String tag, LiveFile file, Charset charset, long offset, int maxLineLen)
       throws IOException {
     Utils.checkNotNull(rollMode, "rollMode");
     Utils.checkNotNull(file, "file");
@@ -90,6 +93,7 @@ public class LiveFileReader implements Closeable {
     validateCharset(charset, '\n', "\\n");
     validateCharset(charset, '\r', "\\r");
     this.rollMode = rollMode;
+    this.tag = tag;
     this.originalFile = file;
     this.charset = charset;
 
@@ -282,7 +286,7 @@ public class LiveFileReader implements Closeable {
         buffer.get(chunkBytes, 0, chunkSize);
         // create reader with exactly the chunk
         Reader reader = new InputStreamReader(new ByteArrayInputStream(chunkBytes, 0, chunkSize), charset);
-        liveFileChunk = new LiveFileChunk(currentFile, chunkBytes, charset, offset, chunkSize, false);
+        liveFileChunk = new LiveFileChunk(tag, currentFile, chunkBytes, charset, offset, chunkSize, false);
       } else if (buffer.limit() == buffer.capacity()) {
         // buffer is full and we don't have an EOL, return truncated chunk and go into truncate mode.
         // we have an EOL in the buffer or we are at the end of the file
@@ -290,7 +294,7 @@ public class LiveFileReader implements Closeable {
         buffer.get(chunkBytes, 0, chunkSize);
         // create reader with exactly the chunk
         Reader reader = new InputStreamReader(new ByteArrayInputStream(chunkBytes, 0, chunkSize), charset);
-        liveFileChunk = new LiveFileChunk(currentFile, chunkBytes, charset, offset, chunkSize, true);
+        liveFileChunk = new LiveFileChunk(tag, currentFile, chunkBytes, charset, offset, chunkSize, true);
         truncateMode = true;
       } else {
         // we don't have an EOL and the buffer is not full, no chunk in this read

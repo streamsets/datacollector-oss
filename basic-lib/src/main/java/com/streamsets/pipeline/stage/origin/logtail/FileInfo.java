@@ -11,6 +11,16 @@ import com.streamsets.pipeline.api.ValueChooser;
 public class FileInfo {
 
   @ConfigDef(
+      required = false,
+      type = ConfigDef.Type.STRING,
+      label = "Tag",
+      description = "Metadata tag",
+      displayPosition = 5,
+      group = "FILE"
+  )
+  public String tag;
+
+  @ConfigDef(
       required = true,
       type = ConfigDef.Type.STRING,
       label = "Directory",
