@@ -3,7 +3,7 @@
 
   <div class="panel-body" droppable drop="stageDrop">
 
-    <div ng-if="!sourceExists && !isPipelineReadOnly && !$storage.maximizeDetailPane && !$storage.dontShowHelpAlert"
+    <div ng-if="!sourceExists && pipelineConfig && !isPipelineReadOnly && !$storage.maximizeDetailPane && !$storage.dontShowHelpAlert"
          class="alert alert-dismissible alert-warning alert-select-stage" role="alert">
 
       <button type="button" class="close" data-dismiss="alert">
