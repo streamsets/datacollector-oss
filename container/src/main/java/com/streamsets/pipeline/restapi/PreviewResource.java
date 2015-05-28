@@ -78,12 +78,11 @@ public class PreviewResource {
   public Response preview(
     @PathParam("name") String name,
     @QueryParam("rev") String rev,
-    @QueryParam("sourceOffset") String sourceOffset,
     @QueryParam("batchSize") @DefaultValue("" + Integer.MAX_VALUE) int batchSize,
     @QueryParam("batches") @DefaultValue("1") int batches,
     @QueryParam("skipTargets") @DefaultValue("true") boolean skipTargets)
     throws PipelineStoreException, PipelineRuntimeException, StageException {
-    return previewWithOverride(name, rev, sourceOffset, batchSize, batches, skipTargets, null, Collections.EMPTY_LIST);
+    return previewWithOverride(name, rev, batchSize, batches, skipTargets, null, Collections.EMPTY_LIST);
   }
 
   @Path("/{name}/preview")
@@ -93,7 +92,6 @@ public class PreviewResource {
   public Response previewWithOverride(
       @PathParam("name") String name,
       @QueryParam("rev") String rev,
-      @QueryParam("sourceOffset") String sourceOffset,
       @QueryParam("batchSize") @DefaultValue("" + Integer.MAX_VALUE) int batchSize,
       @QueryParam("batches") @DefaultValue("1") int batches,
       @QueryParam("skipTargets") @DefaultValue("true") boolean skipTargets,
@@ -109,7 +107,7 @@ public class PreviewResource {
     int maxBatches = configuration.get(MAX_BATCHES_KEY, MAX_BATCHES_DEFAULT);
     batches = Math.min(maxBatches, batches);
     PipelineConfiguration pipelineConf = store.load(name, rev);
-    SourceOffsetTracker tracker = new PreviewSourceOffsetTracker(sourceOffset);
+    SourceOffsetTracker tracker = new PreviewSourceOffsetTracker(null);
     PreviewPipelineRunner runner = new PreviewPipelineRunner(runtimeInfo, tracker, batchSize, batches, skipTargets);
     try {
       PreviewPipeline pipeline = new PreviewPipelineBuilder(stageLibrary, name, pipelineConf,
