@@ -121,18 +121,54 @@ public class HBaseDTarget extends DTarget {
   public String kerberosKeytab;
 
   @ConfigDef(required = false,
+    type = ConfigDef.Type.STRING,
+    label = "Master Kerberos Principal",
+    description = "The Kerberos principal name that should be used to run the HBase Master process. "
+        + "The principal name should be in the form: user/hostname@DOMAIN. "
+        + "If \"_HOST\" is used as the hostname portion, it will be replaced with the actual hostname of the running instance "
+        + "Eg. hbase/_HOST@EXAMPLE.COM ",
+    displayPosition = 110,
+    group = "HBASE",
+    dependsOn = "kerberosAuth",
+    triggeredByValue = "true")
+  public String masterPrincipal;
+
+  @ConfigDef(required = false,
+    type = ConfigDef.Type.STRING,
+    label = "RegionServer Kerberos Principal",
+    description = "The Kerberos principal name that should be used to run the HBase RegionServer process. "
+      + "The principal name should be in the form: user/hostname@DOMAIN. "
+      + "If \"_HOST\" is used as the hostname portion, it will be replaced with the actual hostname of the running instance. "
+      + "Eg. hbase/_HOST@EXAMPLE.COM ",
+    displayPosition = 120,
+    group = "HBASE",
+    dependsOn = "kerberosAuth",
+    triggeredByValue = "true")
+  public String regionServerPrincipal;
+
+  @ConfigDef(
+    required = false,
+    type = ConfigDef.Type.STRING,
+    defaultValue = "",
+    label = "HBase Configuration Directory",
+    description = "An absolute path or a directory under SDC resources directory to load hbase-site.xml configuration file",
+    displayPosition = 130,
+    group = "HBASE")
+  public String hbaseConfDir;
+
+  @ConfigDef(required = false,
       type = ConfigDef.Type.MAP,
       label = "HBase Configuration",
       description = "Additional HBase client properties",
-      displayPosition = 110,
+      displayPosition = 140,
       group = "HBASE")
   public Map<String, String> hbaseConfigs;
 
   @Override
   protected Target createTarget() {
     return new HBaseTarget(zookeeperQuorum, clientPort, zookeeperParentZnode, tableName, hbaseRowKey,
-        rowKeyStorageType, hbaseFieldColumnMapping, kerberosAuth, kerberosPrincipal,
-        kerberosKeytab, hbaseConfigs);
+        rowKeyStorageType, hbaseFieldColumnMapping, kerberosAuth, kerberosPrincipal, kerberosKeytab, masterPrincipal, regionServerPrincipal,
+        hbaseConfDir, hbaseConfigs);
   }
 
 }

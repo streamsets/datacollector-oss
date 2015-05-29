@@ -18,6 +18,7 @@ import com.streamsets.pipeline.config.CsvMode;
 import com.streamsets.pipeline.config.DataFormat;
 import com.streamsets.pipeline.sdk.ContextInfoCreator;
 import com.streamsets.pipeline.sdk.RecordCreator;
+
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.hdfs.HdfsConfiguration;
 import org.apache.hadoop.hdfs.MiniDFSCluster;
@@ -149,7 +150,7 @@ public class TestBaseHdfsTarget {
   }
 
   @Test
-  public void getGetHdfsConfigurationWithResources() throws Exception {
+  public void testGetHdfsConfigurationWithResources() throws Exception {
     File resourcesDir = new File("target", UUID.randomUUID().toString());
     File fooDir = new File(resourcesDir, "foo");
     Assert.assertTrue(fooDir.mkdirs());
@@ -168,6 +169,29 @@ public class TestBaseHdfsTarget {
       Configuration conf = target.getHdfsConfiguration();
       Assert.assertEquals("XX", conf.get("xx"));
       Assert.assertEquals("YY", conf.get("yy"));
+    } finally {
+      target.destroy();
+    }
+
+    // Provide HDFS config dir as an absolute path
+    File absoluteFilePath = new File(new File("target", UUID.randomUUID().toString()), "foo");
+    Assert.assertTrue(absoluteFilePath.mkdirs());
+    Files.write("<configuration><property><name>zz</name><value>ZZ</value></property></configuration>",
+      new File(absoluteFilePath, "core-site.xml"), StandardCharsets.UTF_8);
+    Files.write("<configuration><property><name>aa</name><value>AA</value></property></configuration>",
+      new File(absoluteFilePath, "hdfs-site.xml"), StandardCharsets.UTF_8);
+
+    dTarget = new ForTestHdfsTarget();
+    configure(dTarget);
+    dTarget.hdfsConfDir = absoluteFilePath.getAbsolutePath();
+    target = (HdfsTarget) dTarget.createTarget();
+    try {
+      target.validateConfigs(null, ContextInfoCreator.createTargetContext(HdfsDTarget.class, "n", false,
+                                                                          OnRecordError.TO_ERROR,
+                                                                          resourcesDir.getAbsolutePath()));
+      Configuration conf = target.getHdfsConfiguration();
+      Assert.assertEquals("ZZ", conf.get("zz"));
+      Assert.assertEquals("AA", conf.get("aa"));
     } finally {
       target.destroy();
     }

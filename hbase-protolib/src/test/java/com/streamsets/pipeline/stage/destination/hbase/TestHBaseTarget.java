@@ -9,11 +9,14 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
+import java.io.File;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.hbase.HBaseConfiguration;
@@ -34,6 +37,7 @@ import org.junit.Test;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
+import com.google.common.io.Files;
 import com.streamsets.pipeline.api.Batch;
 import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.OnRecordError;
@@ -47,6 +51,7 @@ import com.streamsets.pipeline.sdk.ContextInfoCreator;
 import com.streamsets.pipeline.sdk.RecordCreator;
 import com.streamsets.pipeline.sdk.TargetRunner;
 import com.streamsets.pipeline.stage.destination.hbase.HBaseFieldMappingConfig;
+
 
 public class TestHBaseTarget {
 
@@ -88,8 +93,10 @@ public class TestHBaseTarget {
             .addConfiguration("hbaseRowKey", "[0]")
             .addConfiguration("hbaseFieldColumnMapping",
               ImmutableList.of(new HBaseFieldMappingConfig("cf:a", "[1]", StorageType.TEXT)))
-            .addConfiguration("kerberosAuth", false).addConfiguration("kerberosPrincipal", "")
+            .addConfiguration("kerberosAuth", false)
+            .addConfiguration("kerberosPrincipal", "")
             .addConfiguration("hbaseConfigs", new HashMap<String, String>())
+            .addConfiguration("hbaseConfDir", "")
             .addConfiguration("kerberosKeytab", "")
             .addConfiguration("rowKeyStorageType", StorageType.BINARY)
             .setOnRecordError(OnRecordError.DISCARD).build();
@@ -558,12 +565,51 @@ public class TestHBaseTarget {
     @Override
     protected Target createTarget() {
       return new HBaseTarget(zookeeperQuorum, clientPort, zookeeperParentZnode, tableName, hbaseRowKey,
-          rowKeyStorageType, hbaseFieldColumnMapping, kerberosAuth, kerberosPrincipal,
-          kerberosKeytab, hbaseConfigs) {
+        rowKeyStorageType, hbaseFieldColumnMapping, kerberosAuth, kerberosPrincipal, masterPrincipal,
+        regionServerPrincipal, kerberosKeytab, hbaseConfDir, hbaseConfigs) {
         @Override
         public void write(Batch batch) throws StageException {
         }
       };
+    }
+  }
+
+  @Test
+  public void testGetHBaseConfigurationWithResources() throws Exception {
+    File resourcesDir = new File("target", UUID.randomUUID().toString());
+    File fooDir = new File(resourcesDir, "foo");
+    Assert.assertTrue(fooDir.mkdirs());
+    Files.write("<configuration><property><name>xx</name><value>XX</value></property></configuration>",
+                new File(fooDir, "hbase-site.xml"), StandardCharsets.UTF_8);
+    HBaseDTarget dTarget = new ForTestHBaseTarget();
+    configure(dTarget);
+    dTarget.hbaseConfDir = fooDir.getName();
+    HBaseTarget target = (HBaseTarget) dTarget.createTarget();
+    try {
+      target.validateConfigs(null, ContextInfoCreator.createTargetContext(HBaseDTarget.class, "n", false,
+                                                                          OnRecordError.TO_ERROR,
+                                                                          resourcesDir.getAbsolutePath()));
+      Configuration conf = target.getHBaseConfiguration();
+      Assert.assertEquals("XX", conf.get("xx"));
+    } finally {
+      target.destroy();
+    }
+
+    // Provide hbaseConfDir as an absolute path
+    File absoluteFilePath = new File(new File("target", UUID.randomUUID().toString()), "foo");
+    Assert.assertTrue(absoluteFilePath.mkdirs());
+    Files.write("<configuration><property><name>zz</name><value>ZZ</value></property></configuration>",
+      new File(absoluteFilePath, "hbase-site.xml"), StandardCharsets.UTF_8);
+    dTarget.hbaseConfDir = absoluteFilePath.getAbsolutePath();
+    target = (HBaseTarget) dTarget.createTarget();
+    try {
+      target.validateConfigs(null, ContextInfoCreator.createTargetContext(HBaseDTarget.class, "n", false,
+                                                                          OnRecordError.TO_ERROR,
+                                                                          resourcesDir.getAbsolutePath()));
+      Configuration conf = target.getHBaseConfiguration();
+      Assert.assertEquals("ZZ", conf.get("zz"));
+    } finally {
+      target.destroy();
     }
   }
 
@@ -591,6 +637,7 @@ public class TestHBaseTarget {
             .addConfiguration("tableName", tableName).addConfiguration("hbaseRowKey", "[0]")
             .addConfiguration("hbaseFieldColumnMapping", fieldMappings)
             .addConfiguration("kerberosAuth", false).addConfiguration("kerberosPrincipal", "")
+            .addConfiguration("hbaseConfDir", "")
             .addConfiguration("hbaseConfigs", new HashMap<String, String>())
             .addConfiguration("kerberosKeytab", "")
             .addConfiguration("rowKeyStorageType", storageType).setOnRecordError(onRecordError)

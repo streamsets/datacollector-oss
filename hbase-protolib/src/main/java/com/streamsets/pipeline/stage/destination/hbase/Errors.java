@@ -27,7 +27,12 @@ public enum Errors implements ErrorCode {
   HBASE_15("Invalid column storage type: {}"),
   HBASE_16("Hadoop UserGroupInformation should return kerberos authentication, it is set to: {}"),
   HBASE_17("Failed to configure or connect to the HBase cluster: {}"),
-  HBASE_18("HBase column mapping is undefined. There should be atleast one column")
+  HBASE_18("HBase column mapping is undefined. There should be atleast one column"),
+  HBASE_19("HBase configuration directory '{}' under SDC resources does not exist"),
+  HBASE_20("HBase configuration directory '{}' path under  SDC resources is not a directory"),
+  HBASE_21("HBase configuration file '{}/{}' under SDC resources is not a file"),
+  HBASE_22("Cannot find the value of HBase Master principal (hbase.master.kerberos.principal)"),
+  HBASE_23("Cannot find the value of HBase RegionServer principal (hbase.regionserver.kerberos.principal)"),
   ;
   private final String msg;
 

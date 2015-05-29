@@ -246,8 +246,12 @@ public class HdfsTarget extends RecordTarget {
 
   Configuration getHadoopConfiguration(List<ConfigIssue> issues) {
     Configuration conf = new Configuration();
+
     if (hadoopConfDir != null && !hadoopConfDir.isEmpty()) {
-      File hadoopConfigDir = new File(getContext().getResourcesDirectory(), hadoopConfDir).getAbsoluteFile();
+      File hadoopConfigDir = new File(hadoopConfDir);
+      if (!hadoopConfigDir.isAbsolute()) {
+        hadoopConfigDir = new File(getContext().getResourcesDirectory(), hadoopConfDir).getAbsoluteFile();
+      }
       if (!hadoopConfigDir.exists()) {
         issues.add(getContext().createConfigIssue(Groups.HADOOP_FS.name(), "hadoopConfDir", Errors.HADOOPFS_25,
                                                   hadoopConfDir));
