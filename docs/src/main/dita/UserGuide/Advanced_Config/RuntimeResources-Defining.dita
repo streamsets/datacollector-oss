@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
+<concept id="concept_jh2_ysm_2s">
+ <title>Defining Runtime Resources</title>
+ <conbody>
+  <p><indexterm>runtime resources<indexterm>defining</indexterm></indexterm>Use the following steps
+   to define a runtime resources:<ol id="ol_j2q_ftm_2s">
+    <li>For each resource, create a text file for and save it in the following
+      directory:<codeblock>&lt;SDCinstalldir>/resources</codeblock><p>A file must contain one piece
+      of information to be used when the resource is called.</p></li>
+    <li>Optionally, restrict the permissions for the file. <p>Generally, anyone can read a file. To
+      restrict permissions, configure the file so only the owner has read or write permissions for
+      the file - in octals, that's 600 or 400. </p><p>When you use the resource in the pipeline, you
+      specify whether the file is restricted.</p></li>
+   </ol></p>
+ </conbody>
+</concept>
