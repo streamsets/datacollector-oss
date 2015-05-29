@@ -186,6 +186,21 @@ public class RecordEL {
     return getFromHeader(HeaderProperty.ERROR_TIME);
   }
 
+  @ElFunction(
+      prefix = RECORD_EL_PREFIX,
+      name = "attribute",
+      description = "Returns a record header attribute")
+  public static String getAttribute(
+      @ElParam("name") String name
+  ) {
+    String attribute = null;
+    Record record = getRecordInContext();
+    if (record != null) {
+      attribute = record.getHeader().getAttribute(name);
+    }
+    return attribute;
+  }
+
   //Declare field types as constants
   @ElConstant(name = "NUMBER", description = "Field Type Integer")
   public static Field.Type INTEGER = Field.Type.INTEGER;

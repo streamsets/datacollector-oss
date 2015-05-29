@@ -23,6 +23,7 @@ public class TestRecordEL {
     Mockito.when(header.getSourceId()).thenReturn("id");
     Mockito.when(header.getStageCreator()).thenReturn("creator");
     Mockito.when(header.getStagesPath()).thenReturn("path");
+    Mockito.when(header.getAttribute(Mockito.eq("foo"))).thenReturn("bar");
     Record record = Mockito.mock(Record.class);
     Mockito.when(record.getHeader()).thenReturn(header);
     Mockito.when(record.get(Mockito.eq(""))).thenReturn(Field.create(1));
@@ -40,6 +41,7 @@ public class TestRecordEL {
     Assert.assertEquals("path", eval.eval(variables, "${record:path()}", String.class));
     Assert.assertEquals(true, eval.eval(variables, "${record:exists('/x')}", boolean.class));
     Assert.assertEquals(false, eval.eval(variables, "${record:exists('/y')}", boolean.class));
+    Assert.assertEquals("bar", eval.eval(variables, "${record:attribute('foo')}", String.class));
   }
 
   @Test
