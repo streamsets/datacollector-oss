@@ -22,7 +22,11 @@ angular
       getFlattenRecord: function(record) {
         if(record) {
           var flattenRecord = {};
-          pipelineService.getFlattenRecord(record.value, flattenRecord);
+          if(pipelineService.isCSVRecord(record.value)) {
+            pipelineService.getFlattenRecordForCSVRecord(record.value, flattenRecord);
+          } else {
+            pipelineService.getFlattenRecord(record.value, flattenRecord);
+          }
           return flattenRecord;
         }
       },
@@ -84,15 +88,27 @@ angular
       var output = $scope.stagePreviewData.output,
         input = $scope.stagePreviewData.input,
         fieldPathsList,
-        fieldPaths;
+        fieldPaths,
+        isCSVRecord;
 
       $scope.inputFieldPaths = [];
       if(input && input.length) {
 
         fieldPathsList = [];
-        angular.forEach(input, function(record) {
+        angular.forEach(input, function(record, index) {
+
+          if(index === 0) {
+            isCSVRecord = pipelineService.isCSVRecord(record.value);
+          }
+
           fieldPaths = [];
-          pipelineService.getFieldPaths(record.value, fieldPaths, true);
+
+          if(isCSVRecord) {
+            pipelineService.getFieldPathsForCSVRecord(record.value, fieldPaths);
+          } else {
+            pipelineService.getFieldPaths(record.value, fieldPaths, true);
+          }
+
           fieldPathsList.push(fieldPaths);
         });
 
@@ -109,9 +125,20 @@ angular
       $scope.outputFieldPaths = [];
       if(output && output.length) {
         fieldPathsList = [];
-        angular.forEach(output, function(record) {
+        angular.forEach(output, function(record, index) {
+
+          if(index === 0) {
+            isCSVRecord = pipelineService.isCSVRecord(record.value);
+          }
+
           fieldPaths = [];
-          pipelineService.getFieldPaths(record.value, fieldPaths, true);
+
+          if(isCSVRecord) {
+            pipelineService.getFieldPathsForCSVRecord(record.value, fieldPaths);
+          } else {
+            pipelineService.getFieldPaths(record.value, fieldPaths, true);
+          }
+
           fieldPathsList.push(fieldPaths);
         });
 

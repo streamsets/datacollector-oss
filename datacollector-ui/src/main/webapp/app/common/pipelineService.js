@@ -647,6 +647,13 @@ angular.module('dataCollectorApp.common')
       return defaultELEditorOptions;
     };
 
+    /**
+     * Returns true if record is CSV with header information.
+     */
+    this.isCSVRecord = function(record) {
+      return record && record.type === 'LIST' && record.value.length > 0 && record.value[0].type === 'MAP' &&
+        record.value[0].value.header;
+    };
 
     /**
      * Recursively add all the field paths to list.
@@ -707,6 +714,20 @@ angular.module('dataCollectorApp.common')
     };
 
     /**
+     * Special handling for CSV Record.
+     * Recursively add all the field paths to list.
+     *
+     * @param record
+     * @param fieldPaths
+     */
+    this.getFieldPathsForCSVRecord = function(record, fieldPaths) {
+      angular.forEach(record.value, function(value) {
+        fieldPaths.push(value.value.header.value);
+      });
+    };
+
+
+    /**
      * Recursively add all the field paths and value to flatten map.
      *
      * @param record
@@ -726,6 +747,19 @@ angular.module('dataCollectorApp.common')
       }
     };
 
+
+    /**
+     * Recursively add all the field paths and value to flatten map.
+     * Special handling for CSV Record.
+     *
+     * @param record
+     * @param flattenRecord
+     */
+    this.getFlattenRecordForCSVRecord = function(record, flattenRecord) {
+      angular.forEach(record.value, function(value) {
+        flattenRecord[value.value.header.value] = value.value.value;
+      });
+    };
 
     /**
      * Auto Arrange the stages in the pipeline config

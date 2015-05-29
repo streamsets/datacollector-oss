@@ -129,10 +129,16 @@
   th, td {
     &.from-stage {
       color: @default-pipeline-graph-start-node-color;
+      select {
+        color: @default-pipeline-graph-start-node-color;
+      }
     }
 
     &.to-stage {
       color: @default-pipeline-graph-end-node-color;
+      select {
+        color: @default-pipeline-graph-end-node-color;
+      }
     }
 
 
