@@ -22,7 +22,7 @@
 
     <tr>
 
-      <th class="to-stage" ng-repeat="fieldPath in outputFieldPaths | limitTo: outputLimit">
+      <th class="from-stage" ng-repeat="fieldPath in outputFieldPaths | limitTo: outputLimit">
         <span>{{fieldPath}}</span>
 
         <div class="show-more pull-right" ng-if="$last && outputLimit < outputFieldPaths.length">
@@ -38,7 +38,7 @@
       </th>
 
 
-      <th class="from-stage" ng-repeat="fieldPath in inputFieldPaths | limitTo: inputLimit">
+      <th class="to-stage" ng-repeat="fieldPath in inputFieldPaths | limitTo: inputLimit">
         <span>{{fieldPath}}</span>
 
         <div class="show-more pull-right" ng-if="$last && inputLimit < inputFieldPaths.length">
