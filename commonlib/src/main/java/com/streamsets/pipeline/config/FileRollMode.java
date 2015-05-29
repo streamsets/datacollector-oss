@@ -3,7 +3,7 @@
  * be copied, modified, or distributed in whole or part without
  * written consent of StreamSets, Inc.
  */
-package com.streamsets.pipeline.stage.origin.logtail;
+package com.streamsets.pipeline.config;
 
 import com.streamsets.pipeline.api.GenerateResourceBundle;
 import com.streamsets.pipeline.api.Label;
@@ -13,7 +13,7 @@ import com.streamsets.pipeline.lib.io.RollMode;
 import com.streamsets.pipeline.lib.io.RollModeFactory;
 
 @GenerateResourceBundle
-public enum FilesRollMode implements Label {
+public enum FileRollMode implements Label {
   REVERSE_COUNTER("Active File with Reverse Counter Files", LogRollModeFactory.REVERSE_COUNTER),
   DATE_YYYY_MM("Active File with .yyyy-MM Files", LogRollModeFactory.DATE_YYYY_MM),
   DATE_YYYY_MM_DD("Active File with .yyyy-MM-dd Files", LogRollModeFactory.DATE_YYYY_MM_DD),
@@ -21,14 +21,14 @@ public enum FilesRollMode implements Label {
   DATE_YYYY_MM_DD_HH_MM("Active File with .yyyy-MM-dd-HH-mm Files", LogRollModeFactory.DATE_YYYY_MM_DD_HH_MM),
   DATE_YYYY_WW("Active File with .yyyy-ww Files", LogRollModeFactory.DATE_YYYY_WW),
   ALPHABETICAL("Active File with Alphabetical Files", LogRollModeFactory.ALPHABETICAL),
-  PERIODIC("Periodic Files Only", new PeriodicFilesRollModeFactory()),
+  PATTERN("Files matching a pattern", new PeriodicFilesRollModeFactory()),
 
   ;
 
   private final String label;
   private final RollModeFactory factory;
 
-  FilesRollMode(String label, RollModeFactory factory) {
+  FileRollMode(String label, RollModeFactory factory) {
     this.label = label;
     this.factory = factory;
   }
@@ -38,8 +38,12 @@ public enum FilesRollMode implements Label {
     return label;
   }
 
-  public RollMode createRollMode(String filePattern) {
-    return factory.get(filePattern);
+  public RollMode createRollMode(String fileName, String pattern) {
+    return factory.get(fileName, pattern);
+  }
+
+  public String getTokenForPattern() {
+    return factory.getTokenForPattern();
   }
 
 }

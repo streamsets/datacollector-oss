@@ -7,6 +7,8 @@ package com.streamsets.pipeline.lib.io;
 
 public interface RollModeFactory {
 
-  public RollMode get(String fileNamePattern);
+  public String getTokenForPattern();
+
+  public RollMode get(String fileName, String periodicPattern);
 
 }
