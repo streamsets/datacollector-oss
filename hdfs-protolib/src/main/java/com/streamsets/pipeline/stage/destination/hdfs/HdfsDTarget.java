@@ -86,7 +86,7 @@ public class HdfsDTarget extends DTarget {
       type = ConfigDef.Type.STRING,
       defaultValue = "",
       label = "Hadoop FS Configuration Directory",
-      description = "Directory under SDC resources directory to load core-site.xml and hdfs-site.xml files " +
+      description = "An absolute path or a directory under SDC resources directory to load core-site.xml and hdfs-site.xml files " +
                     "to configure the Hadoop FileSystem.",
       displayPosition = 50,
       group = "HADOOP_FS"

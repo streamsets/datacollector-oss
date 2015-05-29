@@ -4,6 +4,7 @@
  */
 package com.streamsets.pipeline.stage.destination.hbase;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InterruptedIOException;
 import java.io.PrintWriter;
@@ -19,6 +20,7 @@ import java.util.TreeMap;
 import org.apache.commons.lang.StringUtils;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.CommonConfigurationKeys;
+import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.hbase.HBaseConfiguration;
 import org.apache.hadoop.hbase.HConstants;
 import org.apache.hadoop.hbase.KeyValue;
@@ -55,17 +57,23 @@ public class HBaseTarget extends BaseTarget {
   final private List<HBaseFieldMappingConfig> hbaseFieldColumnMapping;
   final private boolean kerberosAuth;
   final private String kerberosPrincipal;
+  //master and regionserver principals are not defined in HBase constants, so do it here
+  final private String MASTER_KERBEROS_PRINCIPAL = "hbase.master.kerberos.principal";
+  final private String REGIONSERVER_KERBEROS_PRINCIPAL = "hbase.regionserver.kerberos.principal";
   final private SortedMap<String, ColumnInfo> columnMappings = new TreeMap<>();
   private Configuration hbaseConf;
   final private Map<String, String> hbaseConfigs;
   final private StorageType rowKeyStorageType;
   final private String kerberosKeytab;
   private UserGroupInformation ugi;
+  final private String masterPrincipal;
+  final private String regionServerPrincipal;
+  final private String hbaseConfDir;
 
   public HBaseTarget(String zookeeperQuorum, int clientPort, String zookeeperParentZnode,
       String tableName, String hbaseRowKey, StorageType rowKeyStorageType,
       List<HBaseFieldMappingConfig> hbaseFieldColumnMapping, boolean kerberosAuth,
-      String kerberosPrincipal, String kerberosKeytab, Map<String, String> hbaseConfigs) {
+      String kerberosPrincipal, String kerberosKeytab, String masterPrincipal, String regionServerPrincipal, String hbaseConfDir, Map<String, String> hbaseConfigs) {
     this.zookeeperQuorum = zookeeperQuorum;
     this.clientPort = clientPort;
     this.zookeeperParentZnode = zookeeperParentZnode;
@@ -77,6 +85,9 @@ public class HBaseTarget extends BaseTarget {
     this.hbaseConfigs = hbaseConfigs;
     this.rowKeyStorageType = rowKeyStorageType;
     this.kerberosKeytab = kerberosKeytab;
+    this.regionServerPrincipal = regionServerPrincipal;
+    this.masterPrincipal = masterPrincipal;
+    this.hbaseConfDir = hbaseConfDir;
   }
 
   @Override
@@ -91,9 +102,12 @@ public class HBaseTarget extends BaseTarget {
   @Override
   protected List<ConfigIssue> validateConfigs() throws StageException {
     List<ConfigIssue> issues = super.validateConfigs();
-    hbaseConf = HBaseConfiguration.create();
-    for (Map.Entry<String, String> config : hbaseConfigs.entrySet()) {
-      hbaseConf.set(config.getKey(), config.getValue());
+    hbaseConf = getHBaseConfiguration(issues);
+
+    if (getContext().isPreview()) {
+      // by default the retry number is set to 35 which is too much for preview mode
+      LOG.debug("Setting hbase client retries to 3 for preview");
+      hbaseConf.set(HConstants.HBASE_CLIENT_RETRIES_NUMBER, "3");
     }
     validateQuorumConfigs(issues);
     validateSecurityConfigs(issues);
@@ -105,6 +119,36 @@ public class HBaseTarget extends BaseTarget {
     }
     validateStorageTypes(issues);
     return issues;
+  }
+
+  private Configuration getHBaseConfiguration(List<ConfigIssue> issues) {
+    Configuration hbaseConf = HBaseConfiguration.create();
+    if (hbaseConfDir != null && !hbaseConfDir.isEmpty()) {
+    File hbaseConfigDir = new File(hbaseConfDir);
+      if (!hbaseConfigDir.isAbsolute()) {
+        hbaseConfigDir = new File(getContext().getResourcesDirectory(), hbaseConfDir).getAbsoluteFile();
+      }
+      if (!hbaseConfigDir.exists()) {
+        issues.add(getContext().createConfigIssue(Groups.HBASE.name(), "hbaseConfDir", Errors.HBASE_19,
+          hbaseConfDir));
+      } else if (!hbaseConfigDir.isDirectory()) {
+        issues.add(getContext().createConfigIssue(Groups.HBASE.name(), "hbaseConfDir", Errors.HBASE_20,
+          hbaseConfDir));
+      } else {
+        File hbaseSiteXml = new File(hbaseConfigDir, "hbase-site.xml");
+        if (hbaseSiteXml.exists()) {
+          if (!hbaseSiteXml.isFile()) {
+            issues.add(getContext().createConfigIssue(Groups.HBASE.name(), "hbaseConfDir", Errors.HBASE_21,
+              hbaseConfDir, "hbase-site.xml"));
+          }
+          hbaseConf.addResource(new Path(hbaseSiteXml.getAbsolutePath()));
+        }
+      }
+    }
+    for (Map.Entry<String, String> config : hbaseConfigs.entrySet()) {
+      hbaseConf.set(config.getKey(), config.getValue());
+    }
+    return hbaseConf;
   }
 
   private void validateQuorumConfigs(List<ConfigIssue> issues) {
@@ -131,6 +175,20 @@ public class HBaseTarget extends BaseTarget {
       if (kerberosAuth) {
         hbaseConf.set(User.HBASE_SECURITY_CONF_KEY,
           UserGroupInformation.AuthenticationMethod.KERBEROS.name());
+        hbaseConf.set(CommonConfigurationKeys.HADOOP_SECURITY_AUTHENTICATION, UserGroupInformation.AuthenticationMethod.KERBEROS.name());
+        if (masterPrincipal != null && !masterPrincipal.isEmpty()) {
+          hbaseConf.set(MASTER_KERBEROS_PRINCIPAL, masterPrincipal);
+        }
+        if (regionServerPrincipal != null && !regionServerPrincipal.isEmpty()) {
+          hbaseConf.set(REGIONSERVER_KERBEROS_PRINCIPAL, regionServerPrincipal);
+        }
+        if (hbaseConf.get(MASTER_KERBEROS_PRINCIPAL) == null) {
+          issues.add(getContext().createConfigIssue(Groups.HBASE.name(), "masterPrincipal", Errors.HBASE_22));
+        }
+        if (hbaseConf.get(REGIONSERVER_KERBEROS_PRINCIPAL) == null) {
+          issues.add(getContext().createConfigIssue(Groups.HBASE.name(), "regionServerPrincipal", Errors.HBASE_23));
+        }
+
         UserGroupInformation.setConfiguration(hbaseConf);
         ugi = UserGroupInformation.loginUserFromKeytabAndReturnUGI(kerberosPrincipal, kerberosKeytab);
         if (ugi.getAuthenticationMethod() != UserGroupInformation.AuthenticationMethod.KERBEROS) {
@@ -154,23 +212,23 @@ public class HBaseTarget extends BaseTarget {
       ugi.doAs(new PrivilegedExceptionAction<Void>() {
         @Override
         public Void run() throws Exception {
+          LOG.debug("Validating connection to hbase cluster and whether table " + tableName + " exists and is enabled");
+          HBaseAdmin hbaseAdmin = null;
           try {
-            LOG.debug("Validating connection to hbase cluster and whether table " + tableName
-                + " exists and is enabled");
             HBaseAdmin.checkHBaseAvailable(hbaseConf);
-            HBaseAdmin hbaseAdmin = new HBaseAdmin(hbaseConf);
+            hbaseAdmin = new HBaseAdmin(hbaseConf);
             if (!hbaseAdmin.tableExists(tableName)) {
-              issues.add(getContext().createConfigIssue(Groups.HBASE.name(), null, Errors.HBASE_07,
-                tableName));
+              issues.add(getContext().createConfigIssue(Groups.HBASE.name(), null, Errors.HBASE_07, tableName));
             } else if (!hbaseAdmin.isTableEnabled(tableName)) {
-              issues.add(getContext().createConfigIssue(Groups.HBASE.name(), null, Errors.HBASE_08,
-                tableName));
+              issues.add(getContext().createConfigIssue(Groups.HBASE.name(), null, Errors.HBASE_08, tableName));
             }
-            hbaseAdmin.close();
           } catch (Exception ex) {
             LOG.warn("Received exception while connecting to cluster: ", ex);
-            issues.add(getContext().createConfigIssue(Groups.HBASE.name(), null, Errors.HBASE_06,
-              ex.getMessage(), ex));
+            issues.add(getContext().createConfigIssue(Groups.HBASE.name(), null, Errors.HBASE_06, ex.getMessage(), ex));
+          } finally {
+            if (hbaseAdmin != null) {
+              hbaseAdmin.close();
+            }
           }
           return null;
         }
@@ -246,6 +304,7 @@ public class HBaseTarget extends BaseTarget {
   @Override
   public void write(final Batch batch) throws StageException {
     try {
+      ugi.checkTGTAndReloginFromKeytab();
       ugi.doAs(new PrivilegedExceptionAction<Void>() {
         @Override
         public Void run() throws Exception {
