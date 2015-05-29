@@ -31,16 +31,13 @@
           <dd>Select Fields with Preview Data can provide preview data when the pipeline is valid
             for data preview. Make sure all stages are connected. You might also need to enter
             temporary values for required properties to enable data preview.</dd>
-          <dd>
-            <draft-comment author="Loretta">From Hari: "Why is there no data in my pipeline" or "why
-              is the throughput very low". User could trouble shoot by looking at the metric charts
-              and figure out whether source is producing records or if a stage is taking more
-              time.User could follow up by tuning the throughput/latency parameters for origin
-              stages [batch size vs batch time] or even tune the external source.</draft-comment>
-          </dd>
+          <dd/>
         </dlentry>
       </dl>
     </p>
+    <draft-comment author="Loretta">From Hari: Output data is not as expected [some fields are
+      missing or have unexpected value or even type [expected integer but got string]].Trouble shoot
+      by previewing and stepping through stages [data debugging :)].</draft-comment>
     <section>
       <title>Data Preview</title>
       <dl>

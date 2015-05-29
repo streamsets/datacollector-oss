@@ -2,7 +2,7 @@
 <!DOCTYPE html
   SYSTEM "about:legacy-compat">
 <html xml:lang="en-us" lang="en-us">
-<head><meta name="description" content="How can I improve the general pipeline performance? You might improve performance by increasing the batch size used by the pipeline. The batch size determines how much data passes throught the ..."></meta><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><meta name="copyright" content="(C) Copyright 2005"></meta><meta name="DC.rights.owner" content="(C) Copyright 2005"></meta><meta name="DC.Type" content="concept"></meta><meta name="DC.Title" content="Performance Issues"></meta><meta name="abstract" content=""></meta><meta name="description" content=""></meta><meta name="DC.Relation" scheme="URI" content="../Troubleshooting/Troubleshooting_title.html"></meta><meta name="DC.Format" content="XHTML"></meta><meta name="DC.Identifier" content="concept_ay2_w1l_2s"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/commonltr.css"><!----></link><title>Performance Issues</title><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/webhelp_topic.css"><!----></link><link rel="stylesheet" type="text/css" href="../skin.css"></link><script type="text/javascript"><!--
+<head><meta name="description" content="Use the following tips to help you with performance issues. How can I tell what's slowing down my pipeline? How can I improve the general pipeline performance? You might improve performance by ..."></meta><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><meta name="copyright" content="(C) Copyright 2005"></meta><meta name="DC.rights.owner" content="(C) Copyright 2005"></meta><meta name="DC.Type" content="concept"></meta><meta name="DC.Title" content="Performance Issues"></meta><meta name="DC.Relation" scheme="URI" content="../Troubleshooting/Troubleshooting_title.html"></meta><meta name="DC.Format" content="XHTML"></meta><meta name="DC.Identifier" content="concept_ay2_w1l_2s"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/commonltr.css"><!----></link><title>Performance Issues</title><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/webhelp_topic.css"><!----></link><link rel="stylesheet" type="text/css" href="../skin.css"></link><script type="text/javascript"><!--
           
           var prefix = "../index.html";
           
@@ -13,23 +13,36 @@
 
  <h1 class="title topictitle1">Performance Issues</h1>
 
- 
- <div class="body conbody"><p class="shortdesc"></p>
+ <div class="body conbody">
+  <div class="p">Use
+   the following tips to help you with performance issues. <dl class="dl">
+    
+     <dt class="dt dlterm">How can I tell what's slowing down my pipeline?</dt>
 
-  <div class="p">
-   <dl class="dl">
+     <dd class="dd"></dd>
+
+    
     
      <dt class="dt dlterm">How can I improve the general pipeline performance? </dt>
 
-     <dd class="dd">You might improve performance by increasing the batch size used by the pipeline. The batch
+     <dd class="dd">You might improve performance by adjusting the batch size used by the pipeline. The batch
       size determines how much data passes throught the pipeline at one time. By default, the batch
-      size is 1000 records. When </dd>
+      size is 1000 records. </dd>
+
+     <dd class="dd">You might adjust the batch size based on the size of the records or the speed of their
+      arrival. For example, if your records are extremely big, you might reduce the batch size to
+      increase the processing speed. Or if the records are small and arrive quickly, you might
+      increase the batch size.</dd>
+
+     <dd class="dd">Experiment with the batch size and review the results in Monitor mode. </dd>
+
+     <dd class="dd">To change the batch size, configure the production.maxBatchSize property in the <span class="ph">Data
+                  Collector</span>
+      configuration file. </dd>
 
     
    </dl>
-
-   
-  </div>
+</div>
 
  </div>
 

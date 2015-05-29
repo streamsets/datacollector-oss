@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
+<concept id="concept_bs4_5nm_2s">
+ <title>Runtime Resources</title>
+ <shortdesc>Similar to runtime properties, runtime resources are values that load from a file at
+  runtime. Unlike runtime properties, you can restrict the permissions for the files to secure
+  sensitive information. Use runtime properties to load sensitive information from files at
+  runtime.</shortdesc>
+ <conbody>
+  <p><indexterm>runtime resources<indexterm>overview</indexterm></indexterm>You can use runtime
+   resources for any pipeline property that allows the use of the expression language. You can, for
+   example, use runtime resources to represent user names and passwords, or Kerberos or OAuth
+   authentication information. </p>
+  <p>To implement runtime resources, perform the following steps: <ol id="ol_jzr_4sm_2s">
+    <li>Define each runtime resource. </li>
+    <li>Use the runtime resource in the pipeline.</li>
+   </ol></p>
+ </conbody>
+</concept>

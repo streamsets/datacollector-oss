@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_pdh_glg_1s">
- <title>Using Runtime Properties in the Pipeline</title>
+ <title>Using Runtime Properties</title>
  <shortdesc>Use the <cmdname>runtime:conf</cmdname> function to call a runtime property. You can use
     runtime properties to represent any stage or pipeline property that allows the use of the
     expression language. </shortdesc>

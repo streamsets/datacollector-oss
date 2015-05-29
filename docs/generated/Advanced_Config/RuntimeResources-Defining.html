@@ -1,0 +1,41 @@
+
+<!DOCTYPE html
+  SYSTEM "about:legacy-compat">
+<html xml:lang="en-us" lang="en-us">
+<head><meta name="description" content="Use the following steps to define a runtime resources: For each resource, create a text file for and save it in the following directory: &lt;SDCinstalldir&gt;/resources A file must contain one piece of ..."></meta><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><meta name="copyright" content="(C) Copyright 2005"></meta><meta name="DC.rights.owner" content="(C) Copyright 2005"></meta><meta name="DC.Type" content="concept"></meta><meta name="DC.Title" content="Defining Runtime Resources"></meta><meta name="DC.Relation" scheme="URI" content="../Advanced_Config/RuntimeResources.html"></meta><meta name="DC.Format" content="XHTML"></meta><meta name="DC.Identifier" content="concept_jh2_ysm_2s"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/commonltr.css"><!----></link><title>Defining Runtime Resources</title><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/webhelp_topic.css"><!----></link><link rel="stylesheet" type="text/css" href="../skin.css"></link><script type="text/javascript"><!--
+          
+          var prefix = "../index.html";
+          
+          --></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery-1.8.2.min.js"><!----></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery.cookie.js"><!----></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery-ui.custom.min.js"><!----></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery.highlight-3.js"><!----></script><script type="text/javascript" charset="utf-8" src="../oxygen-webhelp/resources/js/webhelp_topic.js"><!----></script></head>
+<body onload="highlightSearchTerm()" class="frmBody" id="concept_jh2_ysm_2s">
+<table class="nav"><tbody><tr><td colspan="2"><div id="printlink"><a href="javascript:window.print();" title="Print this page"></a></div><div id="permalink"><a href="#" title="Link to this page"></a></div></td></tr><tr><td width="75%"><a class="navheader_parent_path" href="../Advanced_Config/../Advanced_Config/AdvancedPipelineConfig-title.html" title="Advanced Configuration">Advanced Configuration</a> / <a class="navheader_parent_path" href="../Advanced_Config/RuntimeResources.html" title="Similar to runtime properties, runtime resources are values that you can load from a file at runtime. Unlike runtime properties, you can restrict the permissions for the files to secure sensitive information. Use runtime properties to load sensitive information from files at runtime.">Runtime Resources</a></td><td><div class="navheader">
+<span class="navparent"><a class="link" href="../Advanced_Config/RuntimeResources.html" title="Similar to runtime properties, runtime resources are values that you can load from a file at runtime. Unlike runtime properties, you can restrict the permissions for the files to secure sensitive information. Use runtime properties to load sensitive information from files at runtime."><span class="navheader_label">Parent topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">Runtime Resources</span></a></span>  </div></td></tr></tbody></table>
+
+ <h1 class="title topictitle1">Defining Runtime Resources</h1>
+
+ <div class="body conbody">
+  <div class="p">Use the following steps
+   to define a runtime resources:<ol class="ol" id="concept_jh2_ysm_2s__ol_j2q_ftm_2s">
+    <li class="li">For each resource, create a text file for and save it in the following
+      directory:<pre class="pre codeblock">&lt;SDCinstalldir&gt;/resources</pre>
+<p class="p">A file must contain one piece
+      of information to be used when the resource is called.</p>
+</li>
+
+    <li class="li">Optionally, restrict the permissions for the file. <p class="p">Generally, anyone can read a file. To
+      restrict permissions, configure the file so only the owner has read or write permissions for
+      the file - in octals, that's 600 or 400. </p>
+<p class="p">When you use the resource in the pipeline, you
+      specify whether the file is restricted.</p>
+</li>
+
+   </ol>
+</div>
+
+ </div>
+
+<div class="related-links"></div>
+<div class="navfooter"><!---->
+<span class="navparent"><a class="link" href="../Advanced_Config/RuntimeResources.html" title="Similar to runtime properties, runtime resources are values that you can load from a file at runtime. Unlike runtime properties, you can restrict the permissions for the files to secure sensitive information. Use runtime properties to load sensitive information from files at runtime."><span class="navheader_label">Parent topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">Runtime Resources</span></a></span>  </div><div class="footer"><div> </div><!-- © <a href="http://creativecommons.org/licenses/by-nc/4.0/legalcode">CC BY-NC 4.0.</a> StreamSets, 2015. --></div>
+</body>
+</html>

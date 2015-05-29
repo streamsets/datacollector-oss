@@ -17,5 +17,9 @@
    <topicref href="../Advanced_Config/RuntimeProperties-Defining.dita"/>
    <topicref href="../Advanced_Config/RuntimeProperties-Using.dita"/>
   </topicref>
+  <topicref href="../Advanced_Config/RuntimeResources.dita">
+   <topicref href="../Advanced_Config/RuntimeResources-Defining.dita"/>
+   <topicref href="../Advanced_Config/RuntimeResources-Using.dita"/>
+  </topicref>
  </topicref>
 </map>
