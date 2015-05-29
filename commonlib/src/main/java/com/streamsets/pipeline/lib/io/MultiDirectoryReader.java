@@ -6,6 +6,7 @@
 package com.streamsets.pipeline.lib.io;
 
 import com.streamsets.pipeline.api.impl.Utils;
+import com.streamsets.pipeline.config.FileRollMode;
 import com.streamsets.pipeline.config.PostProcessingOptions;
 import com.streamsets.pipeline.lib.util.ThreadUtil;
 import org.slf4j.Logger;
@@ -57,26 +58,29 @@ public class MultiDirectoryReader implements Closeable {
    */
   public static class DirectoryInfo {
     private final String tag;
-    private final String dirName;
-    private final RollMode rollMode;
+    private final String fileFullPath;
+    private final FileRollMode fileRollMode;
+    private final String pattern;
     private final String firstFile;
 
     /**
      * Creates a <code>DirectoryInfo</code>
      * @param tag file tag.
-     * @param dirName directory path.
-     * @param rollMode file roll mode.
+     * @param fileFullPath file full path.
+     * @param fileRollMode file roll mode.
+     * @param pattern file pattern, if any.
      * @param firstFile first file to read.
      */
-    public DirectoryInfo(String tag, String dirName, RollMode rollMode, String firstFile) {
+    public DirectoryInfo(String tag, String fileFullPath, FileRollMode fileRollMode, String pattern, String firstFile) {
       this.tag = tag;
-      this.dirName = dirName;
-      this.rollMode = rollMode;
+      this.fileFullPath = fileFullPath;
+      this.fileRollMode = fileRollMode;
+      this.pattern = pattern;
       this.firstFile = firstFile;
     }
 
     public String getFileKey() {
-      return dirName + "||" + rollMode.getPattern();
+      return fileFullPath + "||" + pattern;
     }
   }
 
@@ -90,10 +94,15 @@ public class MultiDirectoryReader implements Closeable {
     private LiveFileReader reader;
     private LiveFile startingCurrentFileName;
     private long startingOffset;
+    private RollMode rollMode;
 
     public DirectoryContext(DirectoryInfo dirInfo) throws IOException {
       this.dirInfo = dirInfo;
-      scanner = new LiveDirectoryScanner(dirInfo.dirName, dirInfo.firstFile, dirInfo.rollMode);
+      Path fullPath = Paths.get(dirInfo.fileFullPath);
+      Path dir = fullPath.getParent();
+      Path name = fullPath.getFileName();
+      rollMode = dirInfo.fileRollMode.createRollMode(name.toString(), dirInfo.pattern);
+      scanner = new LiveDirectoryScanner(dir.toString(), dirInfo.firstFile, rollMode);
     }
 
     // prepares and gets the reader if available before a read.
@@ -112,7 +121,7 @@ public class MultiDirectoryReader implements Closeable {
           fileOffset = 0;
         }
         if (currentFile != null) {
-          reader = new LiveFileReader(dirInfo.rollMode, dirInfo.tag, currentFile, charset, fileOffset, maxLineLength);
+          reader = new LiveFileReader(rollMode, dirInfo.tag, currentFile, charset, fileOffset, maxLineLength);
           if (fileOffset == 0) {
             // adding file start event
             events.add(new Event(currentFile, true));
@@ -238,7 +247,7 @@ public class MultiDirectoryReader implements Closeable {
       dirContext.startingCurrentFileName = file;
       dirContext.startingOffset = fileOffset;
       if (LOG.isTraceEnabled()) {
-        LOG.trace("Setting offset: directory '{}', file '{}', offset '{}'", dirContext.dirInfo.dirName, file,
+        LOG.trace("Setting offset: directory '{}', file '{}', offset '{}'", dirContext.dirInfo.fileFullPath, file,
                   fileOffset);
       }
     }
@@ -274,8 +283,8 @@ public class MultiDirectoryReader implements Closeable {
       map.put(dirContext.dirInfo.getFileKey(), offset);
       if (LOG.isTraceEnabled()) {
         LOG.trace("Reporting offset: directory '{}', pattern: '{}', file '{}', offset '{}'",
-            dirContext.dirInfo.dirName,
-            dirContext.dirInfo.rollMode.getPattern(),
+            dirContext.dirInfo.fileFullPath,
+            dirContext.rollMode.getPattern(),
             file,
             fileOffset
         );
@@ -387,19 +396,19 @@ public class MultiDirectoryReader implements Closeable {
         if (reader.hasNext()) {
           chunk = reader.next(0);
           if (LOG.isTraceEnabled()) {
-            LOG.trace("next(): directory '{}', file '{}', offset '{}' got data '{}'", dirContext.dirInfo.dirName,
+            LOG.trace("next(): directory '{}', file '{}', offset '{}' got data '{}'", dirContext.dirInfo.fileFullPath,
                       reader.getLiveFile(), reader.getOffset(), chunk != null);
           }
         } else {
           if (LOG.isTraceEnabled()) {
-            LOG.trace("next(): directory '{}', file '{}', offset '{}' EOF reached", dirContext.dirInfo.dirName,
+            LOG.trace("next(): directory '{}', file '{}', offset '{}' EOF reached", dirContext.dirInfo.fileFullPath,
                       reader.getLiveFile(), reader.getOffset());
           }
         }
         dirContext.releaseReader();
       } else {
         if (LOG.isTraceEnabled()) {
-          LOG.trace("next(): directory '{}', no reader available", dirContext.dirInfo.dirName);
+          LOG.trace("next(): directory '{}', no reader available", dirContext.dirInfo.fileFullPath);
         }
       }
 

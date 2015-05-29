@@ -7,6 +7,8 @@ package com.streamsets.pipeline.stage.origin.logtail;
 
 import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.ValueChooser;
+import com.streamsets.pipeline.config.FileRollMode;
+import com.streamsets.pipeline.config.FileRollModeChooserValues;
 
 public class FileInfo {
 
@@ -15,7 +17,7 @@ public class FileInfo {
       type = ConfigDef.Type.STRING,
       label = "Tag",
       description = "Metadata tag",
-      displayPosition = 5,
+      displayPosition = 60,
       group = "FILE"
   )
   public String tag;
@@ -23,53 +25,39 @@ public class FileInfo {
   @ConfigDef(
       required = true,
       type = ConfigDef.Type.STRING,
-      label = "Directory",
-      description = "Directory path for the file to tail",
+      label = "Path",
+      description = "Full path of the file to tail. If using 'Files matching a pattern' as file naming you must use " +
+                    "'" + PatternEL.TOKEN + "' token in the file name of the file path.",
       displayPosition = 10,
-      group = "FILE"
+      group = "FILE",
+      elDefs = PatternEL.class
   )
-  public String dirName;
+  public String fileFullPath;
 
   @ConfigDef(
       required = true,
       type = ConfigDef.Type.MODEL,
       defaultValue = "REVERSE_COUNTER",
-      label = "File Naming",
+      label = "Naming",
       description = "",
       displayPosition = 20,
       group = "FILE"
   )
-  @ValueChooser(RolledFilesModeChooserValues.class)
-  public FilesRollMode fileRollMode;
-
-  @ConfigDef(
-      required = true,
-      type = ConfigDef.Type.STRING,
-      label = "Active File",
-      description = "Name of the file to tail",
-      displayPosition = 30,
-      group = "FILE",
-      dependsOn = "fileRollMode",
-      triggeredByValue = {
-          "REVERSE_COUNTER", "DATE_YYYY_MM", "DATE_YYYY_MM_DD", "DATE_YYYY_MM_DD_HH",
-          "DATE_YYYY_MM_DD_HH_MM", "DATE_YYYY_WW", "ALPHABETICAL"
-      }
-  )
-  public String file;
-
+  @ValueChooser(FileRollModeChooserValues.class)
+  public FileRollMode fileRollMode;
 
   @ConfigDef(
       required = true,
       type = ConfigDef.Type.STRING,
       defaultValue = ".*",
-      label = "Periodic File Pattern",
-      description = "A Java regular expression matching the expected file names",
+      label = "Pattern",
+      description = "A Java regular expression to match the '" + PatternEL.TOKEN + "' section in the file name",
       displayPosition = 40,
       group = "FILE",
       dependsOn = "fileRollMode",
-      triggeredByValue = "PERIODIC"
+      triggeredByValue = "PATTERN"
   )
-  public String periodicFileRegEx;
+  public String patternForToken;
 
   @ConfigDef(
       required = false,

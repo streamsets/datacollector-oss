@@ -13,6 +13,7 @@ import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.base.BaseSource;
 import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.config.DataFormat;
+import com.streamsets.pipeline.config.FileRollMode;
 import com.streamsets.pipeline.config.JsonMode;
 import com.streamsets.pipeline.config.LogMode;
 import com.streamsets.pipeline.config.OnParseError;
@@ -21,7 +22,6 @@ import com.streamsets.pipeline.lib.io.FileLine;
 import com.streamsets.pipeline.lib.io.LiveFile;
 import com.streamsets.pipeline.lib.io.LiveFileChunk;
 import com.streamsets.pipeline.lib.io.MultiDirectoryReader;
-import com.streamsets.pipeline.lib.io.RollMode;
 import com.streamsets.pipeline.lib.parser.DataParserFactory;
 import com.streamsets.pipeline.lib.parser.DataParser;
 import com.streamsets.pipeline.lib.parser.DataParserException;
@@ -32,6 +32,7 @@ import com.streamsets.pipeline.lib.parser.log.RegExConfig;
 import java.io.File;
 import java.io.IOException;
 import java.nio.charset.Charset;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
@@ -40,6 +41,8 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.regex.Pattern;
+import java.util.regex.PatternSyntaxException;
 
 public class FileTailSource extends BaseSource {
   private final DataFormat dataFormat;
@@ -96,6 +99,32 @@ public class FileTailSource extends BaseSource {
   private String outputLane;
   private String metadataLane;
 
+  private boolean validateFileInfo(FileInfo fileInfo, List<ConfigIssue> issues) {
+    boolean ok = true;
+    String fileName = Paths.get(fileInfo.fileFullPath).getFileName().toString();
+    if (!fileName.contains(fileInfo.fileRollMode.getTokenForPattern())) {
+      ok = false;
+      issues.add(getContext().createConfigIssue(Groups.FILES.name(), "fileInfo", Errors.TAIL_08, fileInfo.fileFullPath,
+                                                fileInfo.fileRollMode.getTokenForPattern(), fileName));
+    }
+    if (fileInfo.fileRollMode == FileRollMode.PATTERN) {
+      if (fileInfo.patternForToken == null || fileInfo.patternForToken.isEmpty()) {
+        ok = false;
+        issues.add(getContext().createConfigIssue(Groups.FILES.name(), "fileInfo", Errors.TAIL_08, fileInfo.fileFullPath));
+      } else {
+        try {
+          Pattern.compile(fileInfo.patternForToken);
+        } catch (PatternSyntaxException ex) {
+          ok = false;
+          issues.add(getContext().createConfigIssue(Groups.FILES.name(), "fileInfo", Errors.TAIL_09,
+                                                    fileInfo.fileFullPath, fileInfo.patternForToken,
+                                                    ex.getMessage()));
+        }
+      }
+    }
+    return ok;
+  }
+
   @Override
   protected List<ConfigIssue> validateConfigs() throws StageException {
     List<ConfigIssue> issues = super.validateConfigs();
@@ -118,34 +147,33 @@ public class FileTailSource extends BaseSource {
       Set<String> fileKeys = new LinkedHashSet<>();
       List<MultiDirectoryReader.DirectoryInfo> dirInfos = new ArrayList<>();
       for (FileInfo fileInfo : fileInfos) {
-        // the UI uses a different config for PERIODIC files and LOG files, so we have to get the right one here
-        String fileNamePattern = (fileInfo.fileRollMode == FilesRollMode.PERIODIC)
-                                 ? fileInfo.periodicFileRegEx : fileInfo.file;
-
-        RollMode fileRollMode = fileInfo.fileRollMode.createRollMode(fileNamePattern);
-        MultiDirectoryReader.DirectoryInfo directoryInfo = new MultiDirectoryReader.DirectoryInfo(
-            fileInfo.tag,
-            fileInfo.dirName,
-            fileRollMode,
-            fileInfo.firstFile
-        );
-        dirInfos.add(directoryInfo);
-        if (fileKeys.contains(directoryInfo.getFileKey())) {
-          issues.add(getContext().createConfigIssue(
-              Groups.FILES.name(),
-              "fileInfos",
-              Errors.TAIL_04,
-              fileRollMode.getPattern(),
-              fileInfo.dirName
-          ));
+        if (validateFileInfo(fileInfo, issues)) {
+          MultiDirectoryReader.DirectoryInfo directoryInfo = new MultiDirectoryReader.DirectoryInfo(
+              fileInfo.tag,
+              fileInfo.fileFullPath,
+              fileInfo.fileRollMode,
+              fileInfo.patternForToken,
+              fileInfo.firstFile
+          );
+          dirInfos.add(directoryInfo);
+          if (fileKeys.contains(directoryInfo.getFileKey())) {
+            issues.add(getContext().createConfigIssue(
+                Groups.FILES.name(),
+                "fileInfos",
+                Errors.TAIL_04,
+                fileInfo.fileFullPath
+            ));
+          }
+          fileKeys.add(directoryInfo.getFileKey());
         }
-        fileKeys.add(directoryInfo.getFileKey());
       }
-      try {
-        multiDirReader = new MultiDirectoryReader(dirInfos, Charset.forName(charset), maxLineLength,
-                                                  postProcessing, archiveDir);
-      } catch (IOException ex) {
-        issues.add(getContext().createConfigIssue(Groups.FILES.name(), "fileInfos", Errors.TAIL_02, ex.getMessage(), ex));
+      if (!dirInfos.isEmpty()) {
+        try {
+          multiDirReader = new MultiDirectoryReader(dirInfos, Charset.forName(charset), maxLineLength,
+                                                    postProcessing, archiveDir);
+        } catch (IOException ex) {
+          issues.add(getContext().createConfigIssue(Groups.FILES.name(), "fileInfos", Errors.TAIL_02, ex.getMessage(), ex));
+        }
       }
     }
     switch (dataFormat) {

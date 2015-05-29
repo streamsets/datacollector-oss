@@ -103,10 +103,11 @@ public class FileTailDSource extends DSource {
   @ConfigDef(
       required = true,
       type = ConfigDef.Type.MODEL,
-      label = "File Sets to Tail",
+      label = "File to Tail",
       description = "",
       displayPosition  = 60,
-      group = "FILES"
+      group = "FILES",
+      elDefs = PatternEL.class
   )
   @ComplexField
   public List<FileInfo> fileInfos;

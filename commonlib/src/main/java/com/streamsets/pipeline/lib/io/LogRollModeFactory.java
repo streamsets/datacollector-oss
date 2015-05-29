@@ -46,9 +46,15 @@ public enum LogRollModeFactory implements RollModeFactory {
     this.patternPostfix = patternPostfix;
   }
 
+
   @Override
-  public RollMode get(String fileNamePattern) {
-    return new LogRollMode(patternPrefix, patternPostfix, comparatorClass, fileNamePattern);
+  public String getTokenForPattern() {
+    return "";
+  }
+
+  @Override
+  public RollMode get(String fileName, String periodicPattern) {
+    return new LogRollMode(patternPrefix, patternPostfix, comparatorClass, fileName);
   }
 
   private class LogRollMode implements RollMode {

@@ -27,7 +27,7 @@ public class TestLiveDirectoryScanner {
   @Test
   public void testNoFilesInSpoolDir() throws Exception {
     LiveDirectoryScanner spooler = new LiveDirectoryScanner(testDir.getAbsolutePath(), null,
-                                                            LogRollModeFactory.REVERSE_COUNTER.get("my.log"));
+                                                            LogRollModeFactory.REVERSE_COUNTER.get("my.log", ""));
     Assert.assertNull(spooler.scan(null));
   }
 
@@ -36,7 +36,7 @@ public class TestLiveDirectoryScanner {
     Path file = new File(testDir, "my.log").toPath();
     Files.createFile(file);
     LiveDirectoryScanner spooler = new LiveDirectoryScanner(testDir.getAbsolutePath(), null,
-                                                            LogRollModeFactory.REVERSE_COUNTER.get(file.getFileName().toString()));
+                                                            LogRollModeFactory.REVERSE_COUNTER.get(file.getFileName().toString(), ""));
     LiveFile lf = spooler.scan(null);
     Assert.assertNotNull(lf);
     Assert.assertEquals(new LiveFile(file), lf);
@@ -47,7 +47,7 @@ public class TestLiveDirectoryScanner {
     Path file = new File(testDir, "my.log").toPath();
     Files.createFile(file);
     LiveDirectoryScanner spooler = new LiveDirectoryScanner(testDir.getAbsolutePath(), null,
-                                                            LogRollModeFactory.REVERSE_COUNTER.get(file.getFileName().toString()));
+                                                            LogRollModeFactory.REVERSE_COUNTER.get(file.getFileName().toString(), ""));
     spooler.scan(new LiveFile(file));
   }
 
@@ -57,7 +57,7 @@ public class TestLiveDirectoryScanner {
     Files.createFile(rolledFile);
     Path liveFile = new File(testDir, "my.log").toPath();
     LiveDirectoryScanner spooler = new LiveDirectoryScanner(testDir.getAbsolutePath(), null,
-                                                            LogRollModeFactory.REVERSE_COUNTER.get(liveFile.getFileName().toString()));
+                                                            LogRollModeFactory.REVERSE_COUNTER.get(liveFile.getFileName().toString(), ""));
     LiveFile lf = spooler.scan(null);
     Assert.assertNotNull(lf);
     Assert.assertEquals(new LiveFile(rolledFile), lf);
@@ -72,7 +72,7 @@ public class TestLiveDirectoryScanner {
     Path liveFile = new File(testDir, "my.log").toPath();
     Files.createFile(liveFile);
     LiveDirectoryScanner spooler = new LiveDirectoryScanner(testDir.getAbsolutePath(), null,
-                                                            LogRollModeFactory.REVERSE_COUNTER.get(liveFile.getFileName().toString()));
+                                                            LogRollModeFactory.REVERSE_COUNTER.get(liveFile.getFileName().toString(), ""));
     LiveFile lf = spooler.scan(null);
     Assert.assertNotNull(lf);
     Assert.assertEquals(new LiveFile(rolledFile), lf);
@@ -90,7 +90,7 @@ public class TestLiveDirectoryScanner {
     Path liveFile = new File(testDir, "my.log").toPath();
     Files.createFile(liveFile);
     LiveDirectoryScanner spooler = new LiveDirectoryScanner(testDir.getAbsolutePath(), null,
-                                                            LogRollModeFactory.REVERSE_COUNTER.get(liveFile.getFileName().toString()));
+                                                            LogRollModeFactory.REVERSE_COUNTER.get(liveFile.getFileName().toString(), ""));
     LiveFile lf = spooler.scan(null);
     Assert.assertNotNull(lf);
     Assert.assertEquals(new LiveFile(rolledFile1), lf);
@@ -111,7 +111,7 @@ public class TestLiveDirectoryScanner {
     Path liveFile = new File(testDir, "my.log").toPath();
     Files.createFile(liveFile);
     LiveDirectoryScanner spooler = new LiveDirectoryScanner(testDir.getAbsolutePath(), null,
-                                                            LogRollModeFactory.ALPHABETICAL.get(liveFile.getFileName().toString()));
+                                                            LogRollModeFactory.ALPHABETICAL.get(liveFile.getFileName().toString(), ""));
     LiveFile lf = spooler.scan(null);
     Assert.assertNotNull(lf);
     Assert.assertEquals(new LiveFile(rolledFile1), lf);
@@ -132,7 +132,7 @@ public class TestLiveDirectoryScanner {
     Path liveFile = new File(testDir, "my.log").toPath();
     Files.createFile(liveFile);
     LiveDirectoryScanner spooler = new LiveDirectoryScanner(testDir.getAbsolutePath(), null,
-                                                            LogRollModeFactory.REVERSE_COUNTER.get(liveFile.getFileName().toString()));
+                                                            LogRollModeFactory.REVERSE_COUNTER.get(liveFile.getFileName().toString(), ""));
 
     LiveFile lf = spooler.scan(null);
     Assert.assertNotNull(lf);
@@ -164,7 +164,7 @@ public class TestLiveDirectoryScanner {
     Files.createFile(liveFile);
     LiveDirectoryScanner spooler = new LiveDirectoryScanner(testDir.getAbsolutePath(),
                                                             rolledFile2.getFileName().toString(),
-                                                            LogRollModeFactory.ALPHABETICAL.get(liveFile.getFileName().toString()));
+                                                            LogRollModeFactory.ALPHABETICAL.get(liveFile.getFileName().toString(), ""));
     LiveFile lf = spooler.scan(null);
     Assert.assertEquals(new LiveFile(rolledFile2), lf);
     lf = spooler.scan(lf);

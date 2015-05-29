@@ -8,6 +8,7 @@ package com.streamsets.pipeline.stage.origin.logtail;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.config.DataFormat;
+import com.streamsets.pipeline.config.FileRollMode;
 import com.streamsets.pipeline.config.LogMode;
 import com.streamsets.pipeline.config.PostProcessingOptions;
 import com.streamsets.pipeline.lib.parser.DataParserException;
@@ -36,11 +37,10 @@ public class TestFileTailSource {
     File testDataDir = new File("target", UUID.randomUUID().toString());
 
     FileInfo fileInfo = new FileInfo();
-    fileInfo.dirName = testDataDir.getAbsolutePath();
-    fileInfo.file = "logFile.txt";
-    fileInfo.fileRollMode = FilesRollMode.REVERSE_COUNTER;
+    fileInfo.fileFullPath = testDataDir.getAbsolutePath() + "/logFile.txt";
+    fileInfo.fileRollMode = FileRollMode.REVERSE_COUNTER;
     fileInfo.firstFile = "";
-    fileInfo.periodicFileRegEx = "";
+    fileInfo.patternForToken = "";
     FileTailSource source = new FileTailSource(DataFormat.TEXT, "UTF-8", 1024, 25, 1, Arrays.asList(fileInfo),
                                                PostProcessingOptions.NONE, null, null,
                                                false, null, null, null, null, null, false, null);
@@ -61,11 +61,10 @@ public class TestFileTailSource {
     is.close();
 
     FileInfo fileInfo = new FileInfo();
-    fileInfo.dirName = testDataDir.getAbsolutePath();
-    fileInfo.file = "logFile.txt";
-    fileInfo.fileRollMode = FilesRollMode.REVERSE_COUNTER;
+    fileInfo.fileFullPath = testDataDir.getAbsolutePath() + "/logFile.txt";
+    fileInfo.fileRollMode = FileRollMode.REVERSE_COUNTER;
     fileInfo.firstFile = "";
-    fileInfo.periodicFileRegEx = "";
+    fileInfo.patternForToken = "";
     FileTailSource source = new FileTailSource(DataFormat.TEXT, "UTF-8", 1024, 25, 1, Arrays.asList(fileInfo),
                                                PostProcessingOptions.NONE, null, null,
                                                false, null, null, null, null, null, false, null);
@@ -103,17 +102,15 @@ public class TestFileTailSource {
     Files.write(new File(testDataDir1, "log1.txt").toPath(), Arrays.asList("Hola"), UTF8);
 
     FileInfo fileInfo1 = new FileInfo();
-    fileInfo1.dirName = testDataDir1.getAbsolutePath();
-    fileInfo1.file = "log1.txt";
-    fileInfo1.fileRollMode = FilesRollMode.REVERSE_COUNTER;
+    fileInfo1.fileFullPath = testDataDir1.getAbsolutePath() + "/log1.txt";
+    fileInfo1.fileRollMode = FileRollMode.REVERSE_COUNTER;
     fileInfo1.firstFile = "";
-    fileInfo1.periodicFileRegEx = "";
+    fileInfo1.patternForToken = "";
     FileInfo fileInfo2 = new FileInfo();
-    fileInfo2.dirName = testDataDir1.getAbsolutePath();
-    fileInfo2.file = "log1.txt";
-    fileInfo2.fileRollMode = FilesRollMode.REVERSE_COUNTER;
+    fileInfo2.fileFullPath = testDataDir1.getAbsolutePath() + "/log1.txt";
+    fileInfo2.fileRollMode = FileRollMode.REVERSE_COUNTER;
     fileInfo2.firstFile = "";
-    fileInfo2.periodicFileRegEx = "";
+    fileInfo2.patternForToken = "";
     FileTailSource source = new FileTailSource(DataFormat.TEXT, "UTF-8", 1024, 25, 1, Arrays.asList(fileInfo1, fileInfo2),
                                                PostProcessingOptions.NONE, null,
                                                null, false, null, null, null, null, null, false, null);
@@ -135,18 +132,16 @@ public class TestFileTailSource {
 
     FileInfo fileInfo1 = new FileInfo();
     fileInfo1.tag = "tag1";
-    fileInfo1.dirName = testDataDir1.getAbsolutePath();
-    fileInfo1.file = "log1.txt";
-    fileInfo1.fileRollMode = FilesRollMode.REVERSE_COUNTER;
+    fileInfo1.fileFullPath = testDataDir1.getAbsolutePath() + "/log1.txt";
+    fileInfo1.fileRollMode = FileRollMode.REVERSE_COUNTER;
     fileInfo1.firstFile = "";
-    fileInfo1.periodicFileRegEx = "";
+    fileInfo1.patternForToken = "";
     FileInfo fileInfo2 = new FileInfo();
     fileInfo2.tag = "";
-    fileInfo2.dirName = testDataDir2.getAbsolutePath();
-    fileInfo2.file = "log2.txt";
-    fileInfo2.fileRollMode = FilesRollMode.REVERSE_COUNTER;
+    fileInfo2.fileFullPath = testDataDir2.getAbsolutePath() + "/log2.txt";
+    fileInfo2.fileRollMode = FileRollMode.REVERSE_COUNTER;
     fileInfo2.firstFile = "";
-    fileInfo2.periodicFileRegEx = "";
+    fileInfo2.patternForToken = "";
     FileTailSource source = new FileTailSource(DataFormat.TEXT, "UTF-8", 1024, 25, 1, Arrays.asList(fileInfo1, fileInfo2),
                                                PostProcessingOptions.NONE, null,
                                                null, false, null, null, null, null, null, false, null);
@@ -168,13 +163,13 @@ public class TestFileTailSource {
 
       Assert.assertEquals(2, output.getRecords().get("metadata").size());
       Record metadata = output.getRecords().get("metadata").get(0);
-      Assert.assertEquals(new File(fileInfo1.dirName, fileInfo1.file).getAbsolutePath(),
+      Assert.assertEquals(new File(fileInfo1.fileFullPath).getAbsolutePath(),
                           metadata.get("/fileName").getValueAsString());
       Assert.assertEquals("START", metadata.get("/event").getValueAsString());
       Assert.assertTrue(now.compareTo(metadata.get("/time").getValueAsDate()) < 0);
       Assert.assertTrue(metadata.has("/inode"));
       metadata = output.getRecords().get("metadata").get(1);
-      Assert.assertEquals(new File(fileInfo2.dirName, fileInfo2.file).getAbsolutePath(),
+      Assert.assertEquals(new File(fileInfo2.fileFullPath).getAbsolutePath(),
                           metadata.get("/fileName").getValueAsString());
       Assert.assertEquals("START", metadata.get("/event").getValueAsString());
       Assert.assertTrue(now.compareTo(metadata.get("/time").getValueAsDate()) < 0);
@@ -196,11 +191,10 @@ public class TestFileTailSource {
     os.close();
 
     FileInfo fileInfo = new FileInfo();
-    fileInfo.dirName = testDataDir.getAbsolutePath();
-    fileInfo.file = "logFile.txt";
-    fileInfo.fileRollMode = FilesRollMode.REVERSE_COUNTER;
+    fileInfo.fileFullPath = testDataDir.getAbsolutePath() + "/logFile.txt";
+    fileInfo.fileRollMode = FileRollMode.REVERSE_COUNTER;
     fileInfo.firstFile = "";
-    fileInfo.periodicFileRegEx = "";
+    fileInfo.patternForToken = "";
     FileTailSource source = new FileTailSource(DataFormat.TEXT, "UTF-8", 7, 1, 1, Arrays.asList(fileInfo),
                                                PostProcessingOptions.NONE, null, null,
                                                false, null, null, null, null, null, false, null);
@@ -234,11 +228,10 @@ public class TestFileTailSource {
     File logFile = new File(testDataDir, "logFile.txt");
 
     FileInfo fileInfo = new FileInfo();
-    fileInfo.dirName = testDataDir.getAbsolutePath();
-    fileInfo.file = "logFile.txt";
-    fileInfo.fileRollMode = FilesRollMode.REVERSE_COUNTER;
+    fileInfo.fileFullPath = testDataDir.getAbsolutePath() + "/logFile.txt";
+    fileInfo.fileRollMode = FileRollMode.REVERSE_COUNTER;
     fileInfo.firstFile = "";
-    fileInfo.periodicFileRegEx = "";
+    fileInfo.patternForToken = "";
     FileTailSource source = new FileTailSource(DataFormat.JSON, "UTF-8", 1024, 25, 1, Arrays.asList(fileInfo),
                                                PostProcessingOptions.NONE, null, null,
                                                false, null, null, null, null, null, false, null);
@@ -350,11 +343,10 @@ public class TestFileTailSource {
     File logFile = new File(testDataDir, "logFile.txt");
 
     FileInfo fileInfo = new FileInfo();
-    fileInfo.dirName = testDataDir.getAbsolutePath();
-    fileInfo.file = "logFile.txt";
-    fileInfo.fileRollMode = FilesRollMode.REVERSE_COUNTER;
+    fileInfo.fileFullPath = testDataDir.getAbsolutePath() + "/logFile.txt";
+    fileInfo.fileRollMode = FileRollMode.REVERSE_COUNTER;
     fileInfo.firstFile = "";
-    fileInfo.periodicFileRegEx = "";
+    fileInfo.patternForToken = "";
     FileTailSource source = new FileTailSource(DataFormat.LOG, "UTF-8", 1024, 25, 1, Arrays.asList(fileInfo),
                                                PostProcessingOptions.NONE, null,
                                                LogMode.LOG4J, true, null, null, null, null, null, false, null);
@@ -422,11 +414,10 @@ public class TestFileTailSource {
     File logFile = new File(testDataDir, "logFile.txt");
 
     FileInfo fileInfo = new FileInfo();
-    fileInfo.dirName = testDataDir.getAbsolutePath();
-    fileInfo.file = "logFile.txt";
-    fileInfo.fileRollMode = FilesRollMode.REVERSE_COUNTER;
+    fileInfo.fileFullPath = testDataDir.getAbsolutePath() + "/logFile.txt";
+    fileInfo.fileRollMode = FileRollMode.REVERSE_COUNTER;
     fileInfo.firstFile = "";
-    fileInfo.periodicFileRegEx = "";
+    fileInfo.patternForToken = "";
     FileTailSource source = new FileTailSource(DataFormat.LOG, "UTF-8", 2048, 100, 1, Arrays.asList(fileInfo),
                                                PostProcessingOptions.NONE, null,
                                                LogMode.LOG4J, true, null, null, null, null, null, false, null);

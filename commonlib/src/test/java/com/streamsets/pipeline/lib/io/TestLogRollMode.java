@@ -30,10 +30,10 @@ public class TestLogRollMode {
     Files.createFile(f1);
     Files.createFile(f2);
 
-    RollMode rollMode = LogRollModeFactory.ALPHABETICAL.get("foo");
+    RollMode rollMode = LogRollModeFactory.ALPHABETICAL.get("foo", "");
     Assert.assertEquals("foo", rollMode.getLiveFileName());
 
-    rollMode = LogRollModeFactory.ALPHABETICAL.get("x");
+    rollMode = LogRollModeFactory.ALPHABETICAL.get("x", "");
     Assert.assertFalse(rollMode.isFirstAcceptable("x"));
     Assert.assertFalse(rollMode.isFirstAcceptable("xx"));
     Assert.assertTrue(rollMode.isFirstAcceptable(""));
@@ -43,13 +43,13 @@ public class TestLogRollMode {
     Assert.assertTrue(rollMode.isCurrentAcceptable("y"));
     Assert.assertTrue(rollMode.isCurrentAcceptable(null));
 
-    rollMode = LogRollModeFactory.ALPHABETICAL.get(f1.getFileName().toString());
+    rollMode = LogRollModeFactory.ALPHABETICAL.get(f1.getFileName().toString(), "");
     Assert.assertFalse(rollMode.isFileRolled(new LiveFile(f1)));
 
-    rollMode = LogRollModeFactory.ALPHABETICAL.get(f2.getFileName().toString());
+    rollMode = LogRollModeFactory.ALPHABETICAL.get(f2.getFileName().toString(), "");
     Assert.assertTrue(rollMode.isFileRolled(new LiveFile(f1)));
 
-    rollMode = LogRollModeFactory.ALPHABETICAL.get("x");
+    rollMode = LogRollModeFactory.ALPHABETICAL.get("x", "");
     //for ALPHABETICAL and all DATE_...
     Assert.assertTrue(rollMode.getComparator().compare(f1, f2) < 0);
 
@@ -84,13 +84,13 @@ public class TestLogRollMode {
 
     for (Map.Entry<LogRollModeFactory, String> entry : MATCH.entrySet()) {
       Path path = new File(entry.getValue()).toPath();
-      PathMatcher fileMatcher = FileSystems.getDefault().getPathMatcher(entry.getKey().get(name).getPattern());
+      PathMatcher fileMatcher = FileSystems.getDefault().getPathMatcher(entry.getKey().get(name, "").getPattern());
       Assert.assertTrue(fileMatcher.matches(path));
     }
 
     for (Map.Entry<LogRollModeFactory, String> entry : NO_MATCH.entrySet()) {
       Path path = new File(entry.getValue()).toPath();
-      PathMatcher fileMatcher = FileSystems.getDefault().getPathMatcher(entry.getKey().get(name).getPattern());
+      PathMatcher fileMatcher = FileSystems.getDefault().getPathMatcher(entry.getKey().get(name, "").getPattern());
       Assert.assertFalse(fileMatcher.matches(path));
     }
 

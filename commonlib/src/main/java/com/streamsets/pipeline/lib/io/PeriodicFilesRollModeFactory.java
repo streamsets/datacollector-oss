@@ -15,12 +15,23 @@ import java.nio.file.Path;
 import java.nio.file.PathMatcher;
 import java.nio.file.Paths;
 import java.util.Comparator;
+import java.util.regex.Pattern;
 
 public class PeriodicFilesRollModeFactory implements RollModeFactory {
 
   @Override
-  public RollMode get(String fileNamePattern) {
-    return new PeriodicRollMode(fileNamePattern);
+  public String getTokenForPattern() {
+    return "${pattern}";
+  }
+
+  @Override
+  public RollMode get(String fileName, String periodicPattern) {
+    int tokenStart = fileName.indexOf(getTokenForPattern());
+    int tokenEnd = tokenStart + getTokenForPattern().length();
+    String preToken = fileName.substring(0, tokenStart);
+    String postToken = fileName.substring(tokenEnd);
+    String name = Pattern.quote(preToken) + periodicPattern + Pattern.quote(postToken);
+    return new PeriodicRollMode(name);
   }
 
   private static class PeriodicRollMode implements RollMode {
