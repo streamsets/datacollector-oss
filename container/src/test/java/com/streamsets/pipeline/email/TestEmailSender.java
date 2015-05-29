@@ -8,18 +8,23 @@ package com.streamsets.pipeline.email;
 import com.google.common.collect.ImmutableList;
 import com.icegreen.greenmail.util.GreenMail;
 import com.icegreen.greenmail.util.GreenMailUtil;
+import com.icegreen.greenmail.util.ServerSetup;
 import com.streamsets.pipeline.util.Configuration;
 import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import java.io.IOException;
+import java.net.ServerSocket;
+
 public class TestEmailSender {
   private static GreenMail server;
 
   @BeforeClass
   public static void setUp() throws Exception {
-    server = new GreenMail();
+    ServerSetup serverSetup = new ServerSetup(getFreePort(), "localhost", "smtp");
+    server = new GreenMail(serverSetup);
     server.setUser("user@x", "user", "password");
     server.start();
   }
@@ -27,6 +32,13 @@ public class TestEmailSender {
   @AfterClass
   public static void tearDown() throws Exception {
     server.stop();
+  }
+
+  public static int getFreePort() throws IOException {
+    ServerSocket serverSocket = new ServerSocket(0);
+    int port = serverSocket.getLocalPort();
+    serverSocket.close();
+    return port;
   }
 
   @Test
