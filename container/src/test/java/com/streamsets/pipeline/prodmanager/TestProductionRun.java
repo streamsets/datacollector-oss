@@ -12,6 +12,7 @@ import com.streamsets.pipeline.api.impl.ErrorMessage;
 import com.streamsets.pipeline.main.RuntimeInfo;
 import com.streamsets.pipeline.main.RuntimeModule;
 import com.streamsets.pipeline.runner.PipelineRuntimeException;
+import com.streamsets.pipeline.runner.production.ProductionSourceOffsetTracker;
 import com.streamsets.pipeline.snapshotstore.SnapshotInfo;
 import com.streamsets.pipeline.snapshotstore.SnapshotStatus;
 import com.streamsets.pipeline.store.PipelineStoreException;
@@ -32,6 +33,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
@@ -42,6 +44,7 @@ public class TestProductionRun {
   private static final String SNAPSHOT_NAME1 = "snapshot1";
   private static final String MY_PROCESSOR = "p";
   private StandalonePipelineManagerTask manager;
+  private RuntimeInfo runtimeInfo;
 
   @BeforeClass
   public static void beforeClass() throws IOException {
@@ -62,6 +65,8 @@ public class TestProductionRun {
   public void setUp() throws IOException, PipelineManagerException {
     File f = new File(System.getProperty(RuntimeModule.SDC_PROPERTY_PREFIX + RuntimeInfo.DATA_DIR));
     FileUtils.deleteDirectory(f);
+    runtimeInfo = new RuntimeInfo(RuntimeModule.SDC_PROPERTY_PREFIX, new MetricRegistry(),
+      Arrays.asList(getClass().getClassLoader()));
     ObjectGraph g = ObjectGraph.create(TestUtil.TestProdManagerModule.class);
     manager = g.get(StandalonePipelineManagerTask.class);
     manager.init();
@@ -270,7 +275,9 @@ public class TestProductionRun {
     Assert.assertNotNull(manager.getOffset());
 
     manager.resetOffset(MY_PIPELINE, PIPELINE_REV);
-    Assert.assertNull(manager.getOffset());
+
+    ProductionSourceOffsetTracker offsetTracker = new ProductionSourceOffsetTracker(MY_PIPELINE, PIPELINE_REV, runtimeInfo);
+    Assert.assertNull(offsetTracker.getOffset());
   }
 
   @Test(expected = PipelineManagerException.class)

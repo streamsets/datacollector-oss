@@ -34,6 +34,7 @@ public class ProductionSourceOffsetTracker implements SourceOffsetTracker {
     this.pipelineName = pipelineName;
     this.rev = rev;
     this.runtimeInfo = runtimeInfo;
+    this.currentOffset = getSourceOffset(pipelineName, rev).getOffset();
   }
 
   @Override
@@ -43,7 +44,7 @@ public class ProductionSourceOffsetTracker implements SourceOffsetTracker {
 
   @Override
   public String getOffset() {
-    return getSourceOffset(pipelineName, rev).getOffset();
+    return currentOffset;
   }
 
   @Override
