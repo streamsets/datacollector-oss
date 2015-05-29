@@ -326,6 +326,7 @@ public class HdfsTarget extends RecordTarget {
         ugi = UserGroupInformation.getLoginUser();
       }
       if (validHapoopFsUri) {
+        // we just login, the TGT won't expire yet, no need to relogin
         ugi.doAs(new PrivilegedExceptionAction<Void>() {
           @Override
           public Void run() throws Exception {
@@ -364,6 +365,8 @@ public class HdfsTarget extends RecordTarget {
 
   private FileSystem getFileSystemForInitDestroy() throws IOException {
     try {
+      // we need to relogin if the TGT is expiring
+      ugi.checkTGTAndReloginFromKeytab();
       return ugi.doAs(new PrivilegedExceptionAction<FileSystem>() {
         @Override
         public FileSystem run() throws Exception {
@@ -454,6 +457,8 @@ public class HdfsTarget extends RecordTarget {
   public void write(final Batch batch) throws StageException {
     setBatchTime();
     try {
+      // we need to relogin if the TGT is expiring
+      ugi.checkTGTAndReloginFromKeytab();
       ugi.doAs(new PrivilegedExceptionAction<Void>() {
         @Override
         public Void run() throws Exception {
