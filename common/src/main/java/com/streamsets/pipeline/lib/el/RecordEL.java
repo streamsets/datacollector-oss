@@ -14,6 +14,12 @@ import com.streamsets.pipeline.api.el.ELEval;
 import com.streamsets.pipeline.api.el.ELVars;
 import com.streamsets.pipeline.api.impl.Utils;
 
+import java.util.HashSet;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
 //IMPORTANT: make sure to keep in sync defined EL functions with FakeRecordEL
 public class RecordEL {
 
@@ -199,6 +205,197 @@ public class RecordEL {
       attribute = record.getHeader().getAttribute(name);
     }
     return attribute;
+  }
+
+  @ElFunction(
+      prefix = RECORD_EL_PREFIX,
+      name = "dValue",
+      description = "Returns the value of the specified column name")
+  public static String getDelimitedValue(
+      @ElParam("header") String header) {
+    String value = null;
+    Record record = getRecordInContext();
+    if (record != null) {
+      Field root = record.get();
+      if (root != null && root.getType() == Field.Type.LIST && root.getValue() != null) {
+        List<Field> list = root.getValueAsList();
+        for (Field element : list) {
+          if (element.getType() == Field.Type.MAP && element.getValue() != null) {
+            Map<String, Field> map = element.getValueAsMap();
+            if (map.containsKey("header")) {
+              Field headerField = map.get("header");
+              if (headerField.getType() == Field.Type.STRING && headerField.getValue() != null) {
+                if (headerField.getValueAsString().equals(header)) {
+                  if (map.containsKey("value")) {
+                    Field valueField = map.get("value");
+                    if (valueField.getType() == Field.Type.STRING && valueField.getValue() != null) {
+                      value = valueField.getValueAsString();
+                      break;
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+    return value;
+  }
+
+  @ElFunction(
+      prefix = RECORD_EL_PREFIX,
+      name = "dExists",
+      description = "Returns the value of the specified column name")
+  public static boolean getDelimitedExists(
+      @ElParam("header") String header) {
+    return getDelimitedValue(header) != null;
+  }
+
+  @ElFunction(
+      prefix = RECORD_EL_PREFIX,
+      name = "dValueAt",
+      description = "Returns the value of the specified column name")
+  public static String getDelimitedValueAt(
+      @ElParam("index") int index) {
+    String value = null;
+    if (index >= 0) {
+      Record record = getRecordInContext();
+      if (record != null) {
+        Field root = record.get();
+        if (root != null && root.getType() == Field.Type.LIST && root.getValue() != null) {
+          List<Field> list = root.getValueAsList();
+          if (index < list.size()) {
+            Field element = list.get(index);
+            if (element.getType() == Field.Type.MAP && element.getValue() != null) {
+              Map<String, Field> map = element.getValueAsMap();
+              if (map.containsKey("value")) {
+                Field valueField = map.get("value");
+                if (valueField.getType() == Field.Type.STRING && valueField.getValue() != null) {
+                  value = valueField.getValueAsString();
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+    return value;
+  }
+
+  @ElFunction(
+      prefix = RECORD_EL_PREFIX,
+      name = "dToMap",
+      description = "Converts Columns to a Map")
+  public static Map getDelimitedAsMap() {
+    Map<String, Field> asMap = new LinkedHashMap<>();
+    Record record = getRecordInContext();
+    if (record != null) {
+      Field root = record.get();
+      if (root != null && root.getType() == Field.Type.LIST && root.getValue() != null) {
+        List<Field> list = root.getValueAsList();
+        for (int i = 0; i < list.size(); i++) {
+          Field element = list.get(i);
+          if (element.getType() == Field.Type.MAP && element.getValue() != null) {
+            Map<String, Field> map = element.getValueAsMap();
+            Field nameField = map.get("header");
+            String name;
+            if (nameField != null && nameField.getType() == Field.Type.STRING && nameField.getValue() != null) {
+              name = nameField.getValueAsString();
+            } else {
+              name = Integer.toString(i);
+            }
+            asMap.put(name, map.get("value"));
+          }
+        }
+      }
+    }
+    return asMap;
+  }
+
+  @ElFunction(
+      prefix = RECORD_EL_PREFIX,
+      name = "dIndex",
+      description = "Returns the index of the specific column name")
+  public static int getDelimitedIndex(
+      @ElParam("header") String header
+  ) {
+    return getDelimitedIndex(header, 0);
+  }
+
+  @ElFunction(
+      prefix = RECORD_EL_PREFIX,
+      name = "dIsDupHeader",
+      description = "Returns if a column header is more than once")
+  public static boolean isDelimitedDuplicateHeader(
+      @ElParam("header") String header
+  ) {
+    boolean dup = false;
+    int idx = getDelimitedIndex(header, 0);
+    if (idx > -1) {
+      dup = getDelimitedIndex(header, idx + 1) > 0;
+    }
+    return dup;
+  }
+
+  @ElFunction(
+      prefix = RECORD_EL_PREFIX,
+      name = "dHasDupHeaders",
+      description = "Returns if there are duplicate headers")
+  public static boolean hasDelimitedDuplicateHeaders() {
+    boolean dup = false;
+    Record record = getRecordInContext();
+    if (record != null) {
+      Field root = record.get();
+      if (root != null && root.getType() == Field.Type.LIST && root.getValue() != null) {
+        Set<String> headers = new HashSet<>();
+        List<Field> list = root.getValueAsList();
+        for (int i = 0; i < list.size(); i++) {
+          Field element = list.get(i);
+          if (element.getType() == Field.Type.MAP && element.getValue() != null) {
+            Map<String, Field> map = element.getValueAsMap();
+            Field nameField = map.get("header");
+            String name;
+            if (nameField != null && nameField.getType() == Field.Type.STRING && nameField.getValue() != null) {
+              name = nameField.getValueAsString();
+              if (headers.contains(name)) {
+                dup = true;
+                break;
+              } else {
+                headers.add(name);
+              }
+            }
+          }
+        }
+      }
+    }
+    return dup;
+  }
+
+  private static int getDelimitedIndex(String header, int startIndex) {
+    int index = -1;
+    Record record = getRecordInContext();
+    if (record != null) {
+      Field root = record.get();
+      if (root != null && root.getType() == Field.Type.LIST && root.getValue() != null) {
+        List<Field> list = root.getValueAsList();
+        for (int i= startIndex; index == -1 && i < list.size(); i++) {
+          Field element = list.get(i);
+          if (element.getType() == Field.Type.MAP && element.getValue() != null) {
+            Map<String, Field> map = element.getValueAsMap();
+            if (map.containsKey("header")) {
+              Field headerField = map.get("header");
+              if (headerField.getType() == Field.Type.STRING && headerField.getValue() != null) {
+                if (headerField.getValueAsString().equals(header)) {
+                  index = i;
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+    return index;
   }
 
   //Declare field types as constants
