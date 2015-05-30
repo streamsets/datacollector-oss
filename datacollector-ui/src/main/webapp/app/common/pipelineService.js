@@ -39,6 +39,24 @@ angular.module('dataCollectorApp.common')
             self.pipelineConfigDefinition = definitions.pipeline[0];
             self.stageDefintions = definitions.stages;
             self.rulesElMetadata = definitions.rulesElMetadata;
+
+            self.metricRulesELMetadata = angular.copy(definitions.rulesElMetadata);
+            self.metricRulesELMetadata.elFunctionDefinitions.push({
+              name: "value",
+              description: "Returns the value of the metric in context",
+              group: "",
+              returnType: "long",
+              elFunctionArgumentDefinition: []
+            });
+
+            self.metricRulesELMetadata.elFunctionDefinitions.push({
+              name: "time:now",
+              description: "Returns the current time in milliseconds.",
+              group: "",
+              returnType: "long",
+              elFunctionArgumentDefinition: []
+            });
+
             self.runtimeConfigs = definitions.runtimeConfigs;
 
             //Pipelines
@@ -84,22 +102,7 @@ angular.module('dataCollectorApp.common')
      * Returns Metric Rules EL Metadata
      */
     this.getMetricRulesElMetadata = function() {
-      return {
-        elConstantDefinitions: self.rulesElMetadata.elConstantDefinitions,
-        elFunctionDefinitions:[{
-          name: "value",
-          description: "Returns the value of the metric in context",
-          group: "",
-          returnType: "long",
-          elFunctionArgumentDefinition: []
-        },{
-          name: "time:now",
-          description: "Returns the current time in milliseconds.",
-          group: "",
-          returnType: "long",
-          elFunctionArgumentDefinition: []
-        }]
-      };
+      return self.metricRulesELMetadata;
     };
 
     /**

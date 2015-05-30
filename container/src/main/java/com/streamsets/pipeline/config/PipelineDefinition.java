@@ -11,8 +11,11 @@ import com.streamsets.pipeline.api.ChooserValues;
 import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.ExecutionMode;
 import com.streamsets.pipeline.api.impl.Utils;
+import com.streamsets.pipeline.el.ELEvaluator;
 import com.streamsets.pipeline.el.ElConstantDefinition;
 import com.streamsets.pipeline.el.ElFunctionDefinition;
+import com.streamsets.pipeline.el.RuntimeEL;
+import com.streamsets.pipeline.lib.el.StringEL;
 import com.streamsets.pipeline.main.RuntimeInfo;
 
 import java.util.ArrayList;
@@ -53,14 +56,20 @@ public class PipelineDefinition {
   }
 
   private static List<ConfigDefinition> createPipelineConfigs(RuntimeInfo runtimeInfo) {
+
+    Class<?>[] elClasses = {RuntimeEL.class, StringEL.class};
+    ELEvaluator elEval = new ELEvaluator("pipelineDefinition", elClasses);
+    List<ElFunctionDefinition> elFunctionDefinitions = elEval.getElFunctionDefinitions();
+    List<ElConstantDefinition> elConstantDefinitions = elEval.getElConstantDefinitions();
+
     List<ConfigDefinition> defs = new ArrayList<>();
     defs.add(createExecutionModeOption(runtimeInfo));
     defs.add(createDeliveryGuaranteeOption());
     defs.add(createBadRecordsHandlingConfigs());
-    defs.add(createConstantsConfigs());
-    defs.add(createMemoryLimitConfigs());
+    defs.add(createConstantsConfigs(elFunctionDefinitions, elConstantDefinitions));
+    defs.add(createMemoryLimitConfigs(elFunctionDefinitions, elConstantDefinitions));
     defs.add(createMemoryLimitExceededBehaviorConfigs());
-    defs.addAll(createClusterOptions());
+    defs.addAll(createClusterOptions(elFunctionDefinitions, elConstantDefinitions));
     return defs;
   }
   @VisibleForTesting
@@ -129,7 +138,8 @@ public class PipelineDefinition {
         null);
   }
 
-  private static List<ConfigDefinition> createClusterOptions() {
+  private static List<ConfigDefinition> createClusterOptions(List<ElFunctionDefinition> elFunctionDefinitions,
+                                                             List<ElConstantDefinition> elConstantDefinitions) {
     List<ConfigDefinition> list = new ArrayList<>();
     list.add(new ConfigDefinition(
         PipelineDefConfigs.CLUSTER_SLAVE_MEMORY_CONFIG,
@@ -144,8 +154,8 @@ public class PipelineDefinition {
         PipelineDefConfigs.EXECUTION_MODE_CONFIG,
         Arrays.asList((Object)ExecutionMode.CLUSTER),
         10,
-        Collections.<ElFunctionDefinition> emptyList(),
-        Collections.<ElConstantDefinition> emptyList(),
+        elFunctionDefinitions,
+        elConstantDefinitions,
         256,
         1024 * 1024,
         "",
@@ -166,8 +176,8 @@ public class PipelineDefinition {
       PipelineDefConfigs.EXECUTION_MODE_CONFIG,
       Arrays.asList((Object)ExecutionMode.CLUSTER),
       20,
-      Collections.<ElFunctionDefinition> emptyList(),
-      Collections.<ElConstantDefinition> emptyList(),
+      elFunctionDefinitions,
+      elConstantDefinitions,
       Long.MIN_VALUE,
       Long.MAX_VALUE,
       "",
@@ -211,8 +221,8 @@ public class PipelineDefinition {
       PipelineDefConfigs.EXECUTION_MODE_CONFIG,
       Arrays.asList((Object)ExecutionMode.CLUSTER),
       30,
-      Collections.<ElFunctionDefinition> emptyList(),
-      Collections.<ElConstantDefinition> emptyList(),
+      elFunctionDefinitions,
+      elConstantDefinitions,
       Long.MIN_VALUE,
       Long.MAX_VALUE,
       "",
@@ -233,8 +243,8 @@ public class PipelineDefinition {
       PipelineDefConfigs.EXECUTION_MODE_CONFIG,
       Arrays.asList((Object)ExecutionMode.CLUSTER),
       40,
-      Collections.<ElFunctionDefinition> emptyList(),
-      Collections.<ElConstantDefinition> emptyList(),
+      elFunctionDefinitions,
+      elConstantDefinitions,
       Long.MIN_VALUE,
       Long.MAX_VALUE,
       "",
@@ -255,8 +265,8 @@ public class PipelineDefinition {
         PipelineDefConfigs.EXECUTION_MODE_CONFIG,
         Arrays.asList((Object)ExecutionMode.CLUSTER),
         50,
-        Collections.<ElFunctionDefinition> emptyList(),
-        Collections.<ElConstantDefinition> emptyList(),
+        elFunctionDefinitions,
+        elConstantDefinitions,
         Long.MIN_VALUE,
         Long.MAX_VALUE,
         "",
@@ -325,7 +335,8 @@ public class PipelineDefinition {
         null);
   }
 
-  private static ConfigDefinition createConstantsConfigs() {
+  private static ConfigDefinition createConstantsConfigs(List<ElFunctionDefinition> elFunctionDefinitions,
+                                                         List<ElConstantDefinition> elConstantDefinitions ) {
     return new ConfigDefinition(
       PipelineDefConfigs.CONSTANTS_CONFIG,
       ConfigDef.Type.MAP,
@@ -339,8 +350,8 @@ public class PipelineDefinition {
       "",
       new ArrayList<>(),
       10,
-      Collections.<ElFunctionDefinition> emptyList(),
-      Collections.<ElConstantDefinition> emptyList(),
+      elFunctionDefinitions,
+      elConstantDefinitions,
       Long.MIN_VALUE,
       Long.MAX_VALUE,
       "",
@@ -378,7 +389,8 @@ public class PipelineDefinition {
       ConfigDef.Evaluation.IMPLICIT,
       null);
   }
-  private static ConfigDefinition createMemoryLimitConfigs() {
+  private static ConfigDefinition createMemoryLimitConfigs(List<ElFunctionDefinition> elFunctionDefinitions,
+                                                           List<ElConstantDefinition> elConstantDefinitions) {
 
     return new ConfigDefinition(
       PipelineDefConfigs.MEMORY_LIMIT_CONFIG,
@@ -393,8 +405,8 @@ public class PipelineDefinition {
       "",
       new ArrayList<>(),
       20,
-      Collections.<ElFunctionDefinition> emptyList(),
-      Collections.<ElConstantDefinition> emptyList(),
+      elFunctionDefinitions,
+      elConstantDefinitions,
       Long.MIN_VALUE,
       Long.MAX_VALUE,
       "",

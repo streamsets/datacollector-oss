@@ -29,6 +29,7 @@ import com.streamsets.pipeline.el.ElConstantDefinition;
 import com.streamsets.pipeline.el.ElFunctionDefinition;
 import com.streamsets.pipeline.el.RuntimeEL;
 import com.streamsets.pipeline.json.ObjectMapperFactory;
+import com.streamsets.pipeline.lib.el.StringEL;
 import com.streamsets.pipeline.main.RuntimeInfo;
 import com.streamsets.pipeline.restapi.bean.BeanHelper;
 import com.streamsets.pipeline.restapi.bean.StageDefinitionJson;
@@ -431,6 +432,7 @@ public class ClassLoaderStageLibraryTask extends AbstractTask implements StageLi
     //Add the RuntimeEL class for every config property that has text box
     if(configDefinition.getType() != ConfigDef.Type.BOOLEAN && configDefinition.getType() != ConfigDef.Type.MODEL) {
       classes.add(RuntimeEL.class);
+      classes.add(StringEL.class);
     }
 
     if(!classes.isEmpty()) {
