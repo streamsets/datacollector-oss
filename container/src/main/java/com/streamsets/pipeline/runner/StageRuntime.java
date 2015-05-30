@@ -366,11 +366,13 @@ public class StageRuntime {
 
   private static void validateMapAsList(List list, String stageName, String instanceName, String configName)
       throws PipelineRuntimeException {
-    for (Map map : (List<Map>) list) {
-      String key = (String) map.get("key");
-      String value = (String) map.get("value");
-      if (!(key instanceof String) || !(value instanceof String)) {
-        throw new PipelineRuntimeException(ContainerError.CONTAINER_0164, stageName, instanceName, configName);
+    for (Map<String, String> map : (List<Map>) list) {
+      if (!map.isEmpty()) {
+        String key = map.get("key");
+        String value = map.get("value");
+        if (!(key instanceof String) || !(value instanceof String)) {
+          throw new PipelineRuntimeException(ContainerError.CONTAINER_0164, stageName, instanceName, configName);
+        }
       }
     }
   }
@@ -380,11 +382,13 @@ public class StageRuntime {
     throws PipelineRuntimeException, ELEvalException, ClassNotFoundException {
     Map<String, String> map = new HashMap<>();
     for (Map element : list) {
-      String key = (String) element.get("key");
-      String value = (String) element.get("value");
-      Object evaluatedValue = ElUtil.evaluate(value, var, stageDef, confDef, constants);
-      checkForString(evaluatedValue, stageDef.getName(), instanceName, confDef.getName());
-      map.put(key, (String)evaluatedValue);
+      if (!element.isEmpty()) {
+        String key = (String) element.get("key");
+        String value = (String) element.get("value");
+        Object evaluatedValue = ElUtil.evaluate(value, var, stageDef, confDef, constants);
+        checkForString(evaluatedValue, stageDef.getName(), instanceName, confDef.getName());
+        map.put(key, (String) evaluatedValue);
+      }
     }
     return map;
   }
