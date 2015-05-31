@@ -23,12 +23,12 @@ import com.streamsets.pipeline.config.ErrorHandlingChooserValues;
 import com.streamsets.pipeline.config.ModelDefinition;
 import com.streamsets.pipeline.config.ModelType;
 import com.streamsets.pipeline.config.StageDefinition;
-import com.streamsets.pipeline.config.StageType;
 import com.streamsets.pipeline.el.ELEvaluator;
 import com.streamsets.pipeline.el.ElConstantDefinition;
 import com.streamsets.pipeline.el.ElFunctionDefinition;
 import com.streamsets.pipeline.el.RuntimeEL;
 import com.streamsets.pipeline.json.ObjectMapperFactory;
+import com.streamsets.pipeline.lib.el.RecordEL;
 import com.streamsets.pipeline.lib.el.StringEL;
 import com.streamsets.pipeline.main.RuntimeInfo;
 import com.streamsets.pipeline.restapi.bean.BeanHelper;
@@ -259,6 +259,18 @@ public class ClassLoaderStageLibraryTask extends AbstractTask implements StageLi
       Collections.<ElConstantDefinition>emptyList(), Long.MIN_VALUE, Long.MAX_VALUE, "text/plain", 0,
     Collections.<String>emptyList(), ConfigDef.Evaluation.IMPLICIT, null);
 
+  private static final ELEvaluator PRECONDITIONS_EVALUATOR =
+      new ELEvaluator(ConfigDefinition.PRECONDITIONS, RecordEL.class, StringEL.class);
+
+  //Group name needs to be empty for UI to show the config in General Group.
+  private static final ConfigDefinition PRECONDITIONS_CONFIG = new ConfigDefinition(
+      ConfigDefinition.PRECONDITIONS, ConfigDef.Type.LIST, "Preconditions",
+      "Records that don't satisfy all the preconditions are sent to error",
+      null, false, "", null, null,
+      "", new ArrayList<>(), 10, PRECONDITIONS_EVALUATOR.getElFunctionDefinitions(),
+      PRECONDITIONS_EVALUATOR.getElConstantDefinitions(), Long.MIN_VALUE, Long.MAX_VALUE, "text/plain", 0,
+      Collections.<String>emptyList(), ConfigDef.Evaluation.EXPLICIT, null);
+
   //Group name needs to be empty for UI to show the config in General Group.
   private static final ConfigDefinition ON_RECORD_ERROR_CONFIG = new ConfigDefinition(
       ConfigDefinition.ON_RECORD_ERROR, ConfigDef.Type.MODEL, "On Record Error",
@@ -274,6 +286,9 @@ public class ClassLoaderStageLibraryTask extends AbstractTask implements StageLi
   private void addSystemConfigurations(StageDefinition stage) {
     if (stage.hasRequiredFields()) {
       stage.addConfiguration(REQUIRED_FIELDS_CONFIG);
+    }
+    if (stage.hasRequiredFields()) {
+      stage.addConfiguration(PRECONDITIONS_CONFIG);
     }
     if (stage.hasOnRecordError()) {
       stage.addConfiguration(ON_RECORD_ERROR_CONFIG);

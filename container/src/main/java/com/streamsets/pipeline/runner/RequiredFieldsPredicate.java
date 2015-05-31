@@ -8,44 +8,24 @@ package com.streamsets.pipeline.runner;
 import com.google.common.base.Preconditions;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.impl.ErrorMessage;
-import com.streamsets.pipeline.api.impl.Utils;
-import com.streamsets.pipeline.record.RecordImpl;
 import com.streamsets.pipeline.util.ContainerError;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class RequiredFieldsErrorPredicateSink implements FilterRecordBatch.Predicate, FilterRecordBatch.Sink {
-
+public class RequiredFieldsPredicate implements FilterRecordBatch.Predicate {
   private final List<String> requiredFields;
-  private final String instanceName;
-  private final ErrorSink errorSink;
   private final List<String> missingFields;
-  private int counter;
 
-  public RequiredFieldsErrorPredicateSink(String instanceName, List<String> requiredFields, ErrorSink errorSink) {
+  public RequiredFieldsPredicate(List<String> requiredFields) {
     this.requiredFields = requiredFields;
-    this.instanceName = instanceName;
-    this.errorSink = errorSink;
     missingFields = new ArrayList<>();
-  }
-
-  @Override
-  public void add(Record record, ErrorMessage reason) {
-    RecordImpl recordImpl = (RecordImpl) record;
-    recordImpl.getHeader().setError(instanceName, reason);
-    errorSink.addRecord(instanceName, recordImpl);
-    counter++;
-  }
-
-  public int size() {
-    return counter;
   }
 
   @Override
   public boolean evaluate(Record record) {
     boolean eval = true;
-    if (requiredFields != null) {
+    if (requiredFields != null && !requiredFields.isEmpty()) {
       missingFields.clear();
       for (String field : requiredFields) {
         if (!record.has(field)) {
@@ -61,11 +41,6 @@ public class RequiredFieldsErrorPredicateSink implements FilterRecordBatch.Predi
   public ErrorMessage getRejectedMessage() {
     Preconditions.checkState(!missingFields.isEmpty(), "Called for record that passed the predicate check");
     return new ErrorMessage(ContainerError.CONTAINER_0050, missingFields);
-  }
-
-  @Override
-  public String toString() {
-    return Utils.format("RequiredFieldsPredicateSink[fields='{}' size='{}']", requiredFields, size());
   }
 
 }

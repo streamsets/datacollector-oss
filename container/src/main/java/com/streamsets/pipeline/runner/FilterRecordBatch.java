@@ -15,7 +15,7 @@ import java.util.Iterator;
 
 public class FilterRecordBatch implements Batch {
   private final Batch batch;
-  private final Predicate predicate;
+  private final Predicate[] predicates;
   private final Sink filteredOutRecordsSink;
 
   public interface Predicate {
@@ -32,9 +32,9 @@ public class FilterRecordBatch implements Batch {
 
   }
 
-  public FilterRecordBatch(Batch batch, Predicate predicate, Sink filteredOutRecordsSink) {
+  public FilterRecordBatch(Batch batch, Predicate[] predicates, Sink filteredOutRecordsSink) {
     this.batch = batch;
-    this.predicate = predicate;
+    this.predicates = predicates;
     this.filteredOutRecordsSink = filteredOutRecordsSink;
   }
 
@@ -59,11 +59,20 @@ public class FilterRecordBatch implements Batch {
     protected Record computeNext() {
       Record next = null;
       while (next == null && iterator.hasNext()) {
+        boolean passed = true;
+        ErrorMessage rejectedMessage = null;
         Record record = iterator.next();
-        if (predicate.evaluate(record)) {
+        for (Predicate predicate : predicates) {
+          passed = predicate.evaluate(record);
+          if (!passed) {
+            rejectedMessage = predicate.getRejectedMessage();
+            break;
+          }
+        }
+        if (passed) {
           next = record;
         } else {
-          filteredOutRecordsSink.add(record, predicate.getRejectedMessage());
+          filteredOutRecordsSink.add(record, rejectedMessage);
         }
       }
       if (next == null && !iterator.hasNext()) {
@@ -73,8 +82,4 @@ public class FilterRecordBatch implements Batch {
     }
   }
 
-  @Override
-  public String toString() {
-    return Utils.format("FilterRecordBatch[batch='{}' predicate='{}']", batch, predicate);
-  }
 }

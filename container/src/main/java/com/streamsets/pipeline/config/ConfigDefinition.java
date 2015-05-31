@@ -25,7 +25,8 @@ public class ConfigDefinition {
 
   public static final String REQUIRED_FIELDS = "stageRequiredFields";
   public static final String ON_RECORD_ERROR = "stageOnRecordError";
-  public static final Set<String> SYSTEM_CONFIGS = ImmutableSet.of(REQUIRED_FIELDS, ON_RECORD_ERROR);
+  public static final String PRECONDITIONS = "stageRecordPreconditions";
+  public static final Set<String> SYSTEM_CONFIGS = ImmutableSet.of(REQUIRED_FIELDS, PRECONDITIONS, ON_RECORD_ERROR);
 
   private final String name;
   private final ConfigDef.Type type;
