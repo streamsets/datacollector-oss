@@ -11,7 +11,10 @@ import com.google.common.base.Strings;
 import com.google.common.collect.Sets;
 import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.ExecutionMode;
+import com.streamsets.pipeline.api.Record;
+import com.streamsets.pipeline.api.el.ELEval;
 import com.streamsets.pipeline.api.el.ELEvalException;
+import com.streamsets.pipeline.api.el.ELVars;
 import com.streamsets.pipeline.api.impl.TextUtils;
 import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.config.ConfigConfiguration;
@@ -22,7 +25,13 @@ import com.streamsets.pipeline.config.PipelineDefConfigs;
 import com.streamsets.pipeline.config.StageConfiguration;
 import com.streamsets.pipeline.config.StageDefinition;
 import com.streamsets.pipeline.config.StageType;
+import com.streamsets.pipeline.config.SystemStageConfigs;
+import com.streamsets.pipeline.el.ELEvaluator;
+import com.streamsets.pipeline.el.ELVariables;
+import com.streamsets.pipeline.lib.el.RecordEL;
+import com.streamsets.pipeline.lib.el.StringEL;
 import com.streamsets.pipeline.main.RuntimeInfo;
+import com.streamsets.pipeline.record.RecordImpl;
 import com.streamsets.pipeline.stagelibrary.StageLibraryTask;
 import com.streamsets.pipeline.store.PipelineStoreTask;
 import com.streamsets.pipeline.util.ContainerError;
@@ -400,9 +409,43 @@ public class PipelineConfigurationValidator {
       for (ConfigConfiguration conf : stageConf.getConfiguration()) {
         ConfigDefinition confDef = stageDef.getConfigDefinition(conf.getName());
         preview &= validateConfigDefinition(confDef, conf, stageConf, stageDef, null, issueCreator, true/*inject*/);
+        if (stageDef.hasRequiredFields() && confDef.getName().equals(ConfigDefinition.PRECONDITIONS)) {
+          preview &= validatePreconditions(stageConf.getInstanceName(), confDef, conf, issues, issueCreator);
+        }
       }
     }
     return preview;
+  }
+
+  private static final Record PRECONDITION_RECORD = new RecordImpl("dummy", "dummy", null, null);
+  private static final ELVars PRECONDITION_VARS = new ELVariables();
+  private static final ELEval PRECONDITION_EVAL = new ELEvaluator(ConfigDefinition.PRECONDITIONS,
+                                                                  RecordEL.class, StringEL.class);
+
+  boolean validatePreconditions(String instanceName, ConfigDefinition confDef, ConfigConfiguration conf, Issues issues,
+      StageIssueCreator issueCreator) {
+    boolean valid = true;
+    if (conf.getValue() != null && conf.getValue() instanceof List) {
+      List<String> list = (List<String>) conf.getValue();
+      for (String precondition : list) {
+        precondition = precondition.trim();
+        if (!precondition.startsWith("${") || !precondition.endsWith("}")) {
+          issues.add(issueCreator.createConfigIssue(instanceName, confDef.getGroup(), confDef.getName(),
+                                                    ValidationError.VALIDATION_0080, precondition));
+          valid = false;
+        } else {
+          RecordEL.setRecordInContext(PRECONDITION_VARS, PRECONDITION_RECORD);
+          try {
+            PRECONDITION_EVAL.eval(PRECONDITION_VARS, precondition, Boolean.class);
+          } catch (ELEvalException ex) {
+            issues.add(issueCreator.createConfigIssue(instanceName, confDef.getGroup(), confDef.getName(),
+                                                      ValidationError.VALIDATION_0081, precondition, ex.getMessage()));
+            valid = false;
+          }
+        }
+      }
+    }
+    return valid;
   }
 
   private boolean validateConfigDefinition(ConfigDefinition confDef, ConfigConfiguration conf,
@@ -565,6 +608,7 @@ public class PipelineConfigurationValidator {
     switch (confDef.getName()) {
       case ConfigDefinition.REQUIRED_FIELDS:
       case ConfigDefinition.ON_RECORD_ERROR:
+      case ConfigDefinition.PRECONDITIONS:
         return conf;
       default:
         try {

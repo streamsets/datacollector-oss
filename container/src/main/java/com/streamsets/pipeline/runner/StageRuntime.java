@@ -45,15 +45,17 @@ public class StageRuntime {
   private final Stage stage;
   private final Stage.Info info;
   private final List<String> requiredFields;
+  private final List<String> preconditions;
   private final OnRecordError onRecordError;
   private StageContext context;
   private final Map<String, Object> constants;
 
   private StageRuntime(final StageDefinition def, final StageConfiguration conf, List<String> requiredFields,
-      OnRecordError onRecordError, Stage stage, Map<String, Object> constants) {
+      List<String> preconditions, OnRecordError onRecordError, Stage stage, Map<String, Object> constants) {
     this.def = def;
     this.conf = conf;
     this.requiredFields = requiredFields;
+    this.preconditions = preconditions;
     this.onRecordError = onRecordError;
     this.stage = stage;
     this.constants = constants;
@@ -90,6 +92,10 @@ public class StageRuntime {
 
   public List<String> getRequiredFields() {
     return requiredFields;
+  }
+
+  public List<String> getPreconditions() {
+    return preconditions;
   }
 
   public OnRecordError getOnRecordError() {
@@ -190,6 +196,7 @@ public class StageRuntime {
     private final String name;
     private final PipelineConfiguration pipelineConf;
     private List<String> requiredFields;
+    private List<String> preconditions;
     private OnRecordError onRecordError;
 
     public Builder(StageLibraryTask stageLib, String name, PipelineConfiguration pipelineConf) {
@@ -230,7 +237,7 @@ public class StageRuntime {
         Stage stage = (Stage) klass.newInstance();
         Map<String, Object> constants = ElUtil.getConstants(pipelineConf);
         configureStage(def, conf, klass, stage, constants);
-        return new StageRuntime(def, conf, requiredFields, onRecordError, stage, constants);
+        return new StageRuntime(def, conf, requiredFields, preconditions, onRecordError, stage, constants);
       } catch (Exception ex) {
         throw new PipelineRuntimeException(ContainerError.CONTAINER_0151, ex.getMessage(), ex);
       }
@@ -251,6 +258,9 @@ public class StageRuntime {
         switch (confDef.getName()) {
           case ConfigDefinition.REQUIRED_FIELDS:
             requiredFields = (List<String>) value;
+            break;
+          case ConfigDefinition.PRECONDITIONS:
+            preconditions = (List<String>) value;
             break;
           case ConfigDefinition.ON_RECORD_ERROR:
             onRecordError = OnRecordError.valueOf(value.toString());
