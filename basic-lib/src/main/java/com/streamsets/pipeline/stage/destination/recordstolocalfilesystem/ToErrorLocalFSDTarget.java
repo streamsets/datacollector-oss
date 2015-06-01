@@ -24,7 +24,7 @@ import com.streamsets.pipeline.lib.el.TimeEL;
     icon="",
     execution = ExecutionMode.STANDALONE
 )
-@HideConfig(requiredFields = true, onErrorRecord = true)
+@HideConfig(preconditions = true, onErrorRecord = true)
 @ErrorStage
 @ConfigGroups(Groups.class)
 @GenerateResourceBundle

@@ -17,7 +17,7 @@ import com.streamsets.pipeline.configurablestage.DTarget;
     description = "Sends records to the pipeline configured error records handling",
     icon="toerror.png"
 )
-@HideConfig(requiredFields = true, onErrorRecord = true)
+@HideConfig(preconditions = true, onErrorRecord = true)
 @GenerateResourceBundle
 public class ToErrorDTarget extends DTarget {
 

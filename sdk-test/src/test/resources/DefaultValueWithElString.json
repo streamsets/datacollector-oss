@@ -6,7 +6,7 @@
   "description" : "ELString As Default Value",
   "type" : "SOURCE",
   "errorStage" : false,
-  "requiredFields" : false,
+  "preconditions" : false,
   "onRecordError" : true,
   "configDefinitions" : [ {
     "name" : "intConfig",

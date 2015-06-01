@@ -31,7 +31,7 @@ public class StageDefinition {
   private final String description;
   private final StageType type;
   private final boolean errorStage;
-  private final boolean requiredFields;
+  private final boolean preconditions;
   private final boolean onRecordError;
   private final RawSourceDefinition rawSourceDefinition;
   private List<ConfigDefinition> configDefinitions;
@@ -47,7 +47,7 @@ public class StageDefinition {
 
   // localized version
   private StageDefinition(ClassLoader classLoader, String libraryName, String libraryLabel, List<ExecutionMode> libraryExecutionModes, String className, String name,
-      String version, String label, String description, StageType type, boolean errorStage, boolean requiredFields,
+      String version, String label, String description, StageType type, boolean errorStage, boolean preconditions,
       boolean onRecordError, List<ConfigDefinition> configDefinitions, RawSourceDefinition rawSourceDefinition,
       String icon, ConfigGroupDefinition configGroupDefinition, boolean variableOutputStreams, int outputStreams,
       List<String> outputStreamLabels, List<ExecutionMode> executionModes) {
@@ -60,7 +60,7 @@ public class StageDefinition {
     this.description = description;
     this.type = type;
     this.errorStage = errorStage;
-    this.requiredFields = requiredFields;
+    this.preconditions = preconditions;
     this.onRecordError = onRecordError;
     this.configDefinitions = configDefinitions;
     this.rawSourceDefinition = rawSourceDefinition;
@@ -87,7 +87,7 @@ public class StageDefinition {
   }
 
   public StageDefinition(String className, String name, String version, String label, String description,
-      StageType type, boolean errorStage,  boolean requiredFields, boolean onRecordError,
+      StageType type, boolean errorStage,  boolean preconditions, boolean onRecordError,
       List<ConfigDefinition> configDefinitions, RawSourceDefinition rawSourceDefinition, String icon,
       ConfigGroupDefinition configGroupDefinition, boolean variableOutputStreams, int outputStreams,
       String outputStreamLabelProviderClass, List<ExecutionMode> executionModes) {
@@ -98,7 +98,7 @@ public class StageDefinition {
     this.description = description;
     this.type = type;
     this.errorStage = errorStage;
-    this.requiredFields = requiredFields;
+    this.preconditions = preconditions;
     this.onRecordError = onRecordError;
     this.configDefinitions = configDefinitions;
     this.rawSourceDefinition = rawSourceDefinition;
@@ -190,8 +190,8 @@ public class StageDefinition {
     return errorStage;
   }
 
-  public boolean hasRequiredFields() {
-    return requiredFields;
+  public boolean hasPreconditions() {
+    return preconditions;
   }
 
   public boolean hasOnRecordError() {
@@ -345,7 +345,7 @@ public class StageDefinition {
 
     return new StageDefinition(classLoader, getLibrary(), libraryLabel, getLibraryExecutionModes(), getClassName(), getName(), getVersion(), label,
                                description, getType(), isErrorStage(),
-                               hasRequiredFields(), hasOnRecordError(), configDefs, rawSourceDef, getIcon(), groupDefs,
+                               hasPreconditions(), hasOnRecordError(), configDefs, rawSourceDef, getIcon(), groupDefs,
                                isVariableOutputStreams(), getOutputStreams(), streamLabels, executionModes);
   }
 

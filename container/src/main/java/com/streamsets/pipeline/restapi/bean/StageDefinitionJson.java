@@ -27,7 +27,7 @@ public class StageDefinitionJson {
     @JsonProperty("description") String description,
     @JsonProperty("type") StageTypeJson type,
     @JsonProperty("errorStage") boolean errorStage,
-    @JsonProperty("requiredFields") boolean requiredFields,
+    @JsonProperty("preconditions") boolean preconditions,
     @JsonProperty("onRecordError") boolean onRecordError,
     @JsonProperty("configDefinitions") List<ConfigDefinitionJson> configDefinitionJsons,
     @JsonProperty("rawSourceDefinition") RawSourceDefinitionJson rawSourceDefinitionJson,
@@ -38,7 +38,7 @@ public class StageDefinitionJson {
     @JsonProperty("outputStreamLabelProviderClass") String outputStreamLabelProviderClass,
     @JsonProperty("executionModes") List<ExecutionMode> executionModes) {
     this.stageDefinition = new com.streamsets.pipeline.config.StageDefinition(className, name, version, label,
-      description, BeanHelper.unwrapStageType(type), errorStage, requiredFields,
+      description, BeanHelper.unwrapStageType(type), errorStage, preconditions,
       onRecordError, BeanHelper.unwrapConfigDefinitions(configDefinitionJsons),
       BeanHelper.unwrapRawSourceDefinition(rawSourceDefinitionJson), icon,
       BeanHelper.unwrapConfigGroupDefinition(configGroupDefinitionJson), variableOutputStreams, outputStreams,
@@ -85,9 +85,9 @@ public class StageDefinitionJson {
     return stageDefinition.isErrorStage();
   }
 
-  @JsonProperty("requiredFields")
+  @JsonProperty("preconditions")
   public boolean hasRequiredFields() {
-    return stageDefinition.hasRequiredFields();
+    return stageDefinition.hasPreconditions();
   }
 
   @JsonProperty("onRecordError")

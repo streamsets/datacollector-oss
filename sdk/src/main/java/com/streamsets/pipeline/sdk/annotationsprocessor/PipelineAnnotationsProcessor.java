@@ -245,8 +245,8 @@ public class PipelineAnnotationsProcessor extends AbstractProcessor {
       StageType stageType = StageType.valueOf(getStageTypeFromElement(typeElement));
       HideConfig hideConfigAnnotation = typeElement.getAnnotation(HideConfig.class);
 
-      boolean requiredFields = stageType != StageType.SOURCE &&
-                               (hideConfigAnnotation == null || !hideConfigAnnotation.requiredFields());
+      boolean preconditions = stageType != StageType.SOURCE &&
+                               (hideConfigAnnotation == null || !hideConfigAnnotation.preconditions());
       boolean onRecordError = hideConfigAnnotation == null || !hideConfigAnnotation.onErrorRecord();
       String stageName = StageHelper.getStageNameFromClassName(typeElement.getQualifiedName().toString());
       stageDefinition = new StageDefinition(
@@ -257,7 +257,7 @@ public class PipelineAnnotationsProcessor extends AbstractProcessor {
           stageDefAnnotation.description(),
           stageType,
           isErrorStage,
-          requiredFields,
+          preconditions,
           onRecordError,
           configDefinitions,
           rawSourceDefinition,

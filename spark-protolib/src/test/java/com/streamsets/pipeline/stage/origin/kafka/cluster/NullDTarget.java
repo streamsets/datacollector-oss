@@ -17,7 +17,7 @@ import com.streamsets.pipeline.configurablestage.DTarget;
     label = "Trash",
     description = "Discards records"
 )
-@HideConfig(requiredFields = true, onErrorRecord = true)
+@HideConfig(preconditions = true, onErrorRecord = true)
 @GenerateResourceBundle
 public class NullDTarget extends DTarget {
 
