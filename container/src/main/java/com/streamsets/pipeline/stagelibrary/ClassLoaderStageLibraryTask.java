@@ -445,7 +445,8 @@ public class ClassLoaderStageLibraryTask extends AbstractTask implements StageLi
     }
 
     //Add the RuntimeEL class for every config property that has text box
-    if(configDefinition.getType() != ConfigDef.Type.BOOLEAN && configDefinition.getType() != ConfigDef.Type.MODEL) {
+    if(configDefinition.getType() != ConfigDef.Type.BOOLEAN && (configDefinition.getType() != ConfigDef.Type.MODEL ||
+      configDefinition.getModel().getModelType() == ModelType.LANE_PREDICATE_MAPPING)) {
       classes.add(RuntimeEL.class);
       classes.add(StringEL.class);
     }
