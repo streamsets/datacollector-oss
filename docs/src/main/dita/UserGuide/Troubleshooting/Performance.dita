@@ -8,7 +8,9 @@
    the following tips to help you with performance issues. <dl>
     <dlentry>
      <dt>How can I tell what's slowing down my pipeline?</dt>
-     <dd/>
+     <dd>
+      <draft-comment author="Loretta">check this out.</draft-comment>
+     </dd>
     </dlentry>
     <dlentry>
      <dt>How can I improve the general pipeline performance? </dt>
