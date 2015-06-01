@@ -9,8 +9,6 @@ import com.streamsets.pipeline.api.ErrorStage;
 import com.streamsets.pipeline.api.GenerateResourceBundle;
 import com.streamsets.pipeline.api.HideConfig;
 import com.streamsets.pipeline.api.StageDef;
-import com.streamsets.pipeline.api.Target;
-import com.streamsets.pipeline.configurablestage.DTarget;
 
 @StageDef(
     version = "1.0.0",
@@ -18,7 +16,7 @@ import com.streamsets.pipeline.configurablestage.DTarget;
     description = "Discards records",
     icon=""
 )
-@HideConfig(requiredFields = true, onErrorRecord = true)
+@HideConfig(preconditions = true, onErrorRecord = true)
 @ErrorStage
 @GenerateResourceBundle
 public class ToErrorNullDTarget extends NullDTarget {

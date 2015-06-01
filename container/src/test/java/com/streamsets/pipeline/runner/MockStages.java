@@ -528,7 +528,7 @@ public class MockStages {
           StageDefinition oldDef = stages.get(name);
           StageDefinition newDef = new StageDefinition(
             className, oldDef.getName(), oldDef.getVersion(), oldDef.getLabel(),
-            oldDef.getDescription(), oldDef.getType(), oldDef.isErrorStage(), oldDef.hasRequiredFields(),
+            oldDef.getDescription(), oldDef.getType(), oldDef.isErrorStage(), oldDef.hasPreconditions(),
             oldDef.hasOnRecordError(), oldDef.getConfigDefinitions(),
             oldDef.getRawSourceDefinition(), oldDef.getIcon(), oldDef.getConfigGroupDefinition(),
             oldDef.isVariableOutputStreams(), oldDef.getOutputStreams(), oldDef.getOutputStreamLabelProviderClass(),

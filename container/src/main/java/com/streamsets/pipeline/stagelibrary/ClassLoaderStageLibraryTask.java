@@ -284,10 +284,10 @@ public class ClassLoaderStageLibraryTask extends AbstractTask implements StageLi
     Collections.<String>emptyList(), ConfigDef.Evaluation.IMPLICIT, null);
 
   private void addSystemConfigurations(StageDefinition stage) {
-    if (stage.hasRequiredFields()) {
+    if (stage.hasPreconditions()) {
       stage.addConfiguration(REQUIRED_FIELDS_CONFIG);
     }
-    if (stage.hasRequiredFields()) {
+    if (stage.hasPreconditions()) {
       stage.addConfiguration(PRECONDITIONS_CONFIG);
     }
     if (stage.hasOnRecordError()) {

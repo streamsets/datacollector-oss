@@ -6,7 +6,7 @@
   "description" : "Produces twitter feeds",
   "type" : "SOURCE",
   "errorStage" : false,
-  "requiredFields" : false,
+  "preconditions" : false,
   "onRecordError" : true,
   "configDefinitions" : [ {
     "name" : "username",
@@ -105,7 +105,7 @@
   "description" : "processes twitter feeds",
   "type" : "PROCESSOR",
   "errorStage" : false,
-  "requiredFields" : true,
+  "preconditions" : true,
   "onRecordError" : true,
   "configDefinitions" : [ {
     "name" : "regEx",
@@ -185,7 +185,7 @@
   "description" : "processes twitter feeds",
   "type" : "PROCESSOR",
   "errorStage" : false,
-  "requiredFields" : true,
+  "preconditions" : true,
   "onRecordError" : true,
   "configDefinitions" : [ {
     "name" : "regEx",
@@ -227,7 +227,7 @@
   "description" : "Consumes twitter feeds",
   "type" : "TARGET",
   "errorStage" : false,
-  "requiredFields" : true,
+  "preconditions" : true,
   "onRecordError" : true,
   "configDefinitions" : [ {
     "name" : "username",

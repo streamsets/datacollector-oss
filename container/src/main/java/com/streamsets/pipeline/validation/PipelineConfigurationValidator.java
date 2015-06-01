@@ -25,7 +25,6 @@ import com.streamsets.pipeline.config.PipelineDefConfigs;
 import com.streamsets.pipeline.config.StageConfiguration;
 import com.streamsets.pipeline.config.StageDefinition;
 import com.streamsets.pipeline.config.StageType;
-import com.streamsets.pipeline.config.SystemStageConfigs;
 import com.streamsets.pipeline.el.ELEvaluator;
 import com.streamsets.pipeline.el.ELVariables;
 import com.streamsets.pipeline.lib.el.RecordEL;
@@ -409,7 +408,7 @@ public class PipelineConfigurationValidator {
       for (ConfigConfiguration conf : stageConf.getConfiguration()) {
         ConfigDefinition confDef = stageDef.getConfigDefinition(conf.getName());
         preview &= validateConfigDefinition(confDef, conf, stageConf, stageDef, null, issueCreator, true/*inject*/);
-        if (stageDef.hasRequiredFields() && confDef.getName().equals(ConfigDefinition.PRECONDITIONS)) {
+        if (stageDef.hasPreconditions() && confDef.getName().equals(ConfigDefinition.PRECONDITIONS)) {
           preview &= validatePreconditions(stageConf.getInstanceName(), confDef, conf, issues, issueCreator);
         }
       }
