@@ -431,13 +431,17 @@ public class StandalonePipelineManagerTask extends AbstractTask implements Pipel
   @Override
   public PipelineState stopPipeline(boolean nodeProcessShutdown) throws PipelineManagerException {
     synchronized (pipelineMutex) {
-      validateStateTransition(pipelineRunnable.getName(), pipelineRunnable.getRev(), State.STOPPING);
-      setState(pipelineRunnable.getName(), pipelineRunnable.getRev(), State.STOPPING,
-        Constants.STOP_PIPELINE_MESSAGE, null);
-      PipelineState pipelineState = getPipelineState();
-      handleStopRequest(nodeProcessShutdown);
-      return pipelineState;
+      if(pipelineRunnable != null ) {
+        validateStateTransition(pipelineRunnable.getName(), pipelineRunnable.getRev(), State.STOPPING);
+        setState(pipelineRunnable.getName(), pipelineRunnable.getRev(), State.STOPPING,
+          Constants.STOP_PIPELINE_MESSAGE, null);
+        PipelineState pipelineState = getPipelineState();
+        handleStopRequest(nodeProcessShutdown);
+        return pipelineState;
+      }
     }
+
+    return null;
   }
 
   @Override
