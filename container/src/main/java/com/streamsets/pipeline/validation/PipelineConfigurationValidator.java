@@ -14,7 +14,6 @@ import com.streamsets.pipeline.api.ExecutionMode;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.el.ELEval;
 import com.streamsets.pipeline.api.el.ELEvalException;
-import com.streamsets.pipeline.api.el.ELVars;
 import com.streamsets.pipeline.api.impl.TextUtils;
 import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.config.ConfigConfiguration;
@@ -27,6 +26,7 @@ import com.streamsets.pipeline.config.StageDefinition;
 import com.streamsets.pipeline.config.StageType;
 import com.streamsets.pipeline.el.ELEvaluator;
 import com.streamsets.pipeline.el.ELVariables;
+import com.streamsets.pipeline.el.RuntimeEL;
 import com.streamsets.pipeline.lib.el.RecordEL;
 import com.streamsets.pipeline.lib.el.StringEL;
 import com.streamsets.pipeline.main.RuntimeInfo;
@@ -417,9 +417,6 @@ public class PipelineConfigurationValidator {
   }
 
   private static final Record PRECONDITION_RECORD = new RecordImpl("dummy", "dummy", null, null);
-  private static final ELVars PRECONDITION_VARS = new ELVariables();
-  private static final ELEval PRECONDITION_EVAL = new ELEvaluator(ConfigDefinition.PRECONDITIONS,
-                                                                  RecordEL.class, StringEL.class);
 
   boolean validatePreconditions(String instanceName, ConfigDefinition confDef, ConfigConfiguration conf, Issues issues,
       StageIssueCreator issueCreator) {
@@ -433,9 +430,12 @@ public class PipelineConfigurationValidator {
                                                     ValidationError.VALIDATION_0080, precondition));
           valid = false;
         } else {
-          RecordEL.setRecordInContext(PRECONDITION_VARS, PRECONDITION_RECORD);
+          ELVariables elVars = new ELVariables();
+          RecordEL.setRecordInContext(elVars, PRECONDITION_RECORD);
           try {
-            PRECONDITION_EVAL.eval(PRECONDITION_VARS, precondition, Boolean.class);
+            ELEval elEval = new ELEvaluator(ConfigDefinition.PRECONDITIONS, constants,
+                                            RecordEL.class, StringEL.class, RuntimeEL.class);
+            elEval.eval(elVars, precondition, Boolean.class);
           } catch (ELEvalException ex) {
             issues.add(issueCreator.createConfigIssue(instanceName, confDef.getGroup(), confDef.getName(),
                                                       ValidationError.VALIDATION_0081, precondition, ex.getMessage()));

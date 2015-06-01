@@ -41,7 +41,7 @@ public class ELEvaluator extends ELEval {
 
   public ELEvaluator(String configName, Map<String, Object> constants, Class<?>... elFuncConstDefClasses) {
     this.configName = configName;
-    this.constants = constants;
+    this.constants = new HashMap<>(constants);
     functions = new HashMap<>();
     elFunctionDefinitions = new ArrayList<>();
     elConstantDefinitions = new ArrayList<>();

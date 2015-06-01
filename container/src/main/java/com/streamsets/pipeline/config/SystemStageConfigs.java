@@ -13,6 +13,7 @@ import com.streamsets.pipeline.api.OnRecordError;
 import com.streamsets.pipeline.api.OnRecordErrorChooserValues;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.ValueChooser;
+import com.streamsets.pipeline.el.RuntimeEL;
 import com.streamsets.pipeline.lib.el.RecordEL;
 import com.streamsets.pipeline.lib.el.StringEL;
 
@@ -59,7 +60,7 @@ public abstract class SystemStageConfigs implements Stage {
       displayPosition = 20,
       group = "",
       evaluation = ConfigDef.Evaluation.EXPLICIT,
-      elDefs = { RecordEL.class, StringEL.class }
+      elDefs = { RecordEL.class, StringEL.class, RuntimeEL.class }
   )
   public List<String> stageRecordPreconditions;
 
