@@ -7,6 +7,7 @@ package com.streamsets.pipeline.runner;
 
 import com.google.common.base.Preconditions;
 import com.streamsets.pipeline.api.Record;
+import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.el.ELEval;
 import com.streamsets.pipeline.api.el.ELEvalException;
 import com.streamsets.pipeline.api.el.ELVars;
@@ -14,6 +15,7 @@ import com.streamsets.pipeline.api.impl.ErrorMessage;
 import com.streamsets.pipeline.config.ConfigDefinition;
 import com.streamsets.pipeline.el.ELEvaluator;
 import com.streamsets.pipeline.el.ELVariables;
+import com.streamsets.pipeline.el.RuntimeEL;
 import com.streamsets.pipeline.lib.el.RecordEL;
 import com.streamsets.pipeline.lib.el.StringEL;
 import com.streamsets.pipeline.util.ContainerError;
@@ -27,10 +29,10 @@ public class PreconditionsPredicate implements FilterRecordBatch.Predicate  {
   private String failedPrecondition;
   private Exception exception;
 
-  public PreconditionsPredicate(List<String> preconditions) {
+  public PreconditionsPredicate(Stage.Context context, List<String> preconditions) {
     this.preconditions = preconditions;
-    elVars = new ELVariables();
-    elEval = new ELEvaluator(ConfigDefinition.PRECONDITIONS, RecordEL.class, StringEL.class);
+    elVars = context.createELVars();
+    elEval = context.createELEval(ConfigDefinition.PRECONDITIONS, RecordEL.class, StringEL.class, RuntimeEL.class);
   }
 
   @Override

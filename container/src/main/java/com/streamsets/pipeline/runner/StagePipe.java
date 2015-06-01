@@ -130,7 +130,7 @@ public class StagePipe extends Pipe<StagePipe.Context> {
     FilterRecordBatch.Predicate[] predicates = new FilterRecordBatch.Predicate[2];
 
     predicates[0] = new RequiredFieldsPredicate(getStage().getRequiredFields());
-    predicates[1] = new PreconditionsPredicate(getStage().getPreconditions());
+    predicates[1] = new PreconditionsPredicate(getStage().getContext(), getStage().getPreconditions());
 
     Batch batch = new FilterRecordBatch(batchImpl, predicates, instanceErrorSink);
 

@@ -24,7 +24,7 @@ public class ELVariables implements ELVars {
   }
 
   public ELVariables(Map<String, Object> constants) {
-    this.constants = constants;
+    this.constants = new HashMap<>(constants);
     variables = new HashMap<>();
   }
 
