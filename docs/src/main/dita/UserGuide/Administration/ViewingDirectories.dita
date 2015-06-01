@@ -48,17 +48,16 @@
        <entry>&lt;SDCinstalldir>/log</entry>
       </row>
       <row>
+       <entry>Resources Directory</entry>
+       <entry>Directory for runtime resource files. </entry>
+       <entry>&lt;SDCinstalldir>/resources</entry>
+      </row>
+      <row>
        <entry>Run Time Directory</entry>
        <entry>Base directory for <ph
          conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
         executables and related files.</entry>
        <entry>&lt;SDCinstalldir></entry>
-      </row>
-      <row>
-       <entry>Static Web Directory</entry>
-       <entry>User-interface related files. <draft-comment author="Loretta">Are we going to display
-         this or hide for non-dev folks?</draft-comment></entry>
-       <entry>&lt;SDCinstalldir>/sdc-static-web</entry>
       </row>
      </tbody>
     </tgroup>

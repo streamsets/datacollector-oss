@@ -40,21 +40,15 @@
                                 <entry>http.port</entry>
                                 <entry>Port number to use for the <ph
                                         conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                                    /> console. <p>Use 0 to have the <ph
-                                            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                                        /> use a random port number. </p><p>Default is
-                                    18630.</p></entry>
+                                    /> console. <p>Default is 18630.</p></entry>
                             </row>
                             <row>
                                 <entry>https.port</entry>
                                 <entry>Secure port number for the <ph
                                         conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
                                     /> console. Any number besides -1 enables the secure port
-                                    number. <p>Use 0 to have the <ph
-                                            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                                        /> use a random port number. </p><p>If you use both port
-                                        properties, the HTTP port bounces to the HTTPS
-                                        port.</p><p>Default is -1.</p></entry>
+                                    number. <p>If you use both port properties, the HTTP port
+                                        bounces to the HTTPS port.</p><p>Default is -1.</p></entry>
                             </row>
                             <row>
                                 <entry>https.keystore.path</entry>
@@ -117,13 +111,16 @@
                             </row>
                             <row>
                                 <entry>ui.help.base.url</entry>
-                                <entry>Base URL for the local help project. <p>Do not change this
-                                        value.</p></entry>
+                                <entry>Base URL for the local <ph
+                                        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                                    /> online help. <p>Do not change this value.</p></entry>
                             </row>
                             <row>
                                 <entry>ui.hosted.help.base.url</entry>
-                                <entry>Base URL for the help project hosted by the StreamSets
-                                    website. <p>Do not change this value.</p></entry>
+                                <entry>Base URL for the <ph
+                                        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                                    /> online help hosted by the StreamSets website. <p>Do not
+                                        change this value.</p></entry>
                             </row>
                             <row>
                                 <entry>ui.refresh.interval.ms</entry>
@@ -251,11 +248,7 @@
                                 </ul></entry>
                         </row>
                         <row>
-                            <entry>sdc.execution.mode  <xref
-                                    href="../Advanced_Config/ExecutionMode.dita"
-                                        ><image href="../Graphics/icon_moreInfo.png" scale="10"
-                                        id="image_o5j_f5g_cs"/>
-                                </xref><p> </p></entry>
+                            <entry>sdc.execution.mode<p> </p></entry>
                             <entry>Execution mode for the <ph
                                     conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
                                     />:<ul id="ul_icj_t5n_1s">
@@ -265,8 +258,11 @@
                                         all endpoints.</li>
                                     <li>Cluster - Runs the <ph
                                             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                                        /> in cluster mode, reading only from Kafka CDH
-                                        clusters.</li>
+                                        /> in cluster mode, reading only from Kafka CDH clusters.
+                                            <xref href="../Advanced_Config/ExecutionMode.dita"
+                                                ><image href="../Graphics/icon_moreInfo.png"
+                                                scale="10" id="image_o5j_f5g_cs"/>
+                                        </xref></li>
                                 </ul></entry>
                         </row>
                     </tbody>

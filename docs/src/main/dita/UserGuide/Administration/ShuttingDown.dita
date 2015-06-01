@@ -10,12 +10,18 @@
                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> to
             apply changes to the <ph
                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
-            configuration file, environment configuration file, or user logins. </context>
+            configuration file, environment configuration file, or user logins. <p>To use the
+                command line to shut down the <ph
+                    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                />, use the <ph
+                    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                /> process ID in the following
+                command:<codeblock>kill -3 &lt;process ID></codeblock></p><p>To use the <ph
+                    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                /> console for shut down:</p></context>
         <steps id="steps_hqp_kjk_br">
             <step>
-                <cmd>In <ph
-                        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                    /> console, click <menucascade>
+                <cmd>Click <menucascade>
                         <uicontrol>Administration</uicontrol>
                         <uicontrol>Shut Down</uicontrol>
                     </menucascade>.</cmd>

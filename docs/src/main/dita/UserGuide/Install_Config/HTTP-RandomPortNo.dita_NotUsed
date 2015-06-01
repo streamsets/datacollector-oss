@@ -2,7 +2,8 @@
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_kg4_mvh_yr">
  <title>Random Port Number</title>
- <shortdesc>You can configure the <ph
+ <shortdesc><draft-comment author="Loretta">Tucu nixed this from the doc 5/29. Keeping in case we
+   want it later.</draft-comment>You can configure the <ph
    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> to use a random
   port number. By default, the <ph
    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> uses a static

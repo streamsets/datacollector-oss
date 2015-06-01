@@ -7,9 +7,9 @@
  <conbody>
   <p><indexterm>origins<indexterm>overview</indexterm></indexterm>You can use the following types of
       origins in a pipeline: <ul id="ul_mxz_jxm_jq">
-        <li>Directory - Reads files from a directory. </li>
-        <li>File Tail - Reads lines of data as it is written to an active file after reading related
-          archived files in the directory. </li>
+        <li>Directory - Reads fully-written files from a directory. </li>
+        <li>File Tail - Reads lines of data from an active file after reading related archived files
+          in the directory. </li>
         <li>HTTP Client - Reads data from a streaming HTTP resource URL.</li>
         <li>JDBC Consumer - Reads database data through a JDBC connection.</li>
         <li>Kafka Consumer - Reads messages from Kafka.</li>

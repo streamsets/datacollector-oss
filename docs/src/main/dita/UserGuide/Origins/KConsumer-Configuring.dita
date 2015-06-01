@@ -115,10 +115,10 @@
                                 </row>
                                 <row>
                                     <entry>Produce Single Record</entry>
-                                    <entry>Generates a single record for records that include
-                                        multiple objects. <p>When not selected, Kafka Consumer
-                                            generates multiple records when a record includes
-                                            multiple objects.</p></entry>
+                                    <entry>For each partition, generates a single record for records
+                                        that include multiple objects. <p>When not selected, Kafka
+                                            Consumer generates multiple records when a record
+                                            includes multiple objects.</p></entry>
                                 </row>
                                 <row>
                                     <entry>Max Batch Size (records)</entry>
@@ -201,10 +201,8 @@
                                 <row>
                                     <entry>Max Object Length (chars) </entry>
                                     <entry>The maximum number of characters in a JSON
-                                            object.<p>Longer objects are passed to the pipeline for
-                                            error handling. <draft-comment author="Loretta">Tucu:
-                                                Looks like we are keeping this, yes? You were gonna
-                                                check. </draft-comment></p></entry>
+                                            object.<p>Longer objects are diverted to the pipeline
+                                            for error handling. </p></entry>
                                 </row>
                             </tbody>
                         </tgroup>

@@ -196,9 +196,9 @@
                                             href="../Pipeline_Configuration/RequiredFields.dita#concept_dnj_bkm_vq">
                                             <image href="../Graphics/icon_moreInfo.png" scale="10"
                                                 id="image_h4p_p5v_yq"/></xref></entry>
-                                    <entry>Fields that must include data to be passed to the stage.
-                                            <note outputclass="" type="tip">You might include fields
-                                            that the stage uses.</note></entry>
+                                    <entry>Fields that must include data to be passed into the
+                                        stage. <note outputclass="" type="tip">You might include
+                                            fields that the stage uses.</note></entry>
                                 </row>
                                 <row>
                                     <entry>On Record Error</entry>
@@ -249,9 +249,9 @@
                                             href="../Pipeline_Configuration/RequiredFields.dita#concept_dnj_bkm_vq">
                                             <image href="../Graphics/icon_moreInfo.png" scale="10"
                                                 id="image_nkk_pfh_hr"/></xref></entry>
-                                    <entry>Fields that must include data to be passed to the stage.
-                                            <note outputclass="" type="tip">You might include fields
-                                            that the stage uses.</note></entry>
+                                    <entry>Fields that must include data to be passed into the
+                                        stage. <note outputclass="" type="tip">You might include
+                                            fields that the stage uses.</note></entry>
                                 </row>
                             </tbody>
                         </tgroup>
@@ -297,9 +297,9 @@
                                             href="../Pipeline_Configuration/RequiredFields.dita#concept_dnj_bkm_vq">
                                             <image href="../Graphics/icon_moreInfo.png" scale="10"
                                                 id="image_hwy_43h_hr"/></xref></entry>
-                                    <entry>Fields that must include data to be passed to the stage.
-                                            <note outputclass="" type="tip">You might include fields
-                                            that the stage uses.</note></entry>
+                                    <entry>Fields that must include data to be passed into the
+                                        stage. <note outputclass="" type="tip">You might include
+                                            fields that the stage uses.</note></entry>
                                 </row>
                                 <row>
                                     <entry>On Record Error</entry>

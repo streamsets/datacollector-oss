@@ -61,33 +61,36 @@
                                     <entry>Number of seconds to wait before sending a batch.</entry>
                                 </row>
                                 <row>
-                                    <entry>Directories</entry>
-                                    <entry>Directories and files to process. Click the
-                                            <uicontrol>Add</uicontrol> icon to enter more than one
-                                        set of information.</entry>
+                                    <entry>File Sets to Tail</entry>
+                                    <entry>Directories and sets of files to process. Click the
+                                            <uicontrol>Add</uicontrol> icon to enter additional sets
+                                        of information.</entry>
+                                </row>
+                                <row>
+                                    <entry>Tag</entry>
+                                    <entry>
+                                        <draft-comment author="Loretta">come back to
+                                            this.</draft-comment>
+                                    </entry>
                                 </row>
                                 <row>
                                     <entry>Directory</entry>
                                     <entry>Directory where the source files reside.</entry>
                                 </row>
                                 <row>
-                                    <entry>File to Tail<draft-comment author="Loretta">Can we call
-                                                this:<p> "Active File" -- and move it below Files
-                                                Naming</p></draft-comment></entry>
-                                    <entry>Static file name for the active file that contains the
-                                        latest data from the server.<p>Not used for Periodic
-                                            Files.</p></entry>
-                                </row>
-                                <row>
-                                    <entry>Files Naming <xref
+                                    <entry>File Naming <xref
                                             href="FileTail-FileProcessing.dita#concept_trt_thq_5r">
                                             <image href="../Graphics/icon_moreInfo.png" scale="10"
-                                                id="image_bkg_sqr_5r"/></xref><draft-comment
-                                            author="Loretta">Can we call this "File Naming" at
-                                            least?</draft-comment></entry>
+                                                id="image_ckc_4ks_2s"/></xref></entry>
                                     <entry>Naming convention for archived files. Select the naming
                                         convention that describes how the server generates file
                                         names.</entry>
+                                </row>
+                                <row>
+                                    <entry>Active File</entry>
+                                    <entry>Static file name for the active file that contains the
+                                        latest data from the server.<p>Not used for Periodic
+                                            Files.</p></entry>
                                 </row>
                                 <row>
                                     <entry>Periodic File Pattern</entry>

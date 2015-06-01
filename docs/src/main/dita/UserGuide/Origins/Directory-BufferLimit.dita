@@ -2,10 +2,11 @@
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_zp2_fqs_5r">
  <title>Buffer Limit and Error Handling</title>
- <shortdesc>Directory passes each record to a buffer. The size of the buffer determines the maximum
-    size of the record that can be processed. Decrease the buffer limit when memory on the <ph
-      conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> machine is
-    limited. Increase the buffer limit to process larger records when memory is available. </shortdesc>
+ <shortdesc>The Directory origin passes each record to a buffer. The size of the buffer determines
+    the maximum size of the record that can be processed. Decrease the buffer limit when memory on
+    the <ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
+    machine is limited. Increase the buffer limit to process larger records when memory is
+    available. </shortdesc>
  <conbody>
   <p><indexterm>Directory origin<indexterm>buffer limit and error
         handling</indexterm></indexterm><indexterm>buffer limit and error handling<indexterm>for
@@ -24,7 +25,8 @@
               message includes the file and offset where the buffer overrun error occurred. The
               information displays in the pipeline history and displays as an alert when you monitor
               the pipeline. </p><p>If an error directory is configured for the stage, Directory
-              writes the file to the directory and continues processing the next file. </p></dd>
+              moves the file to the error directory and continues processing the next file.
+            </p></dd>
         </dlentry>
         <dlentry>
           <dt>Stop Pipeline</dt>

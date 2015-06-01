@@ -3,10 +3,7 @@
 <map>
  <title>Troubleshooting</title>
  <topicref href="../Troubleshooting/Troubleshooting_title.dita">
-  <topicref href="../Troubleshooting/AccessingErrorMessages.dita">
-   <topicref href="../Troubleshooting/StageInstanceName.dita"/>
-   <topicref href="../Troubleshooting/StagePaths.dita"/>
-  </topicref>
+  <topicref href="../Troubleshooting/AccessingErrorMessages.dita"/>
   <topicref href="../Troubleshooting/PipelineBasics.dita">
    <topicmeta>
     <shortdesc/>

@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE task PUBLIC "-//OASIS//DTD DITA General Task//EN" "generalTask.dtd">
 <task id="task_ihv_p5f_cr">
-    <title>Installing New Stages (Untar-Copy)</title>
-    <shortdesc>You can install a new stage by untarring the stage library and copying
+    <title>Installing a Stage Library (Untar-Copy)</title>
+    <shortdesc>You can install a stage library by untarring the library and copying
         files.</shortdesc>
     <taskbody>
         <context/>
@@ -10,14 +10,14 @@
             <step>
                 <cmd>Download the stage library and untar the file.</cmd>
                 <info>For
-                    example:<codeblock>tar xvzf streamsets-datacollector-cdh_5_3_0-lib-1.0.0b1-SNAPSHOT.tar.gz</codeblock></info>
+                    example:<codeblock>tar xvzf streamsets-datacollector-cdh_5_3_0-lib-1.0.0.tar.gz</codeblock></info>
             </step>
             <step>
                 <cmd>Copy the contents of the stage-libs directory to the Data Collector stage-libs
                     directory.</cmd>
                 <info>For
-                    example:<codeblock>cp -r streamsets-datacollector-1.0.0b1-SNAPSHOT/stage-libs/streamsets-datacollector-cdh5_3_0-lib/
-   /tmp/streamsets-datacollector-1.0.0b1-SNAPSHOT/stage-libs/</codeblock></info>
+                    example:<codeblock>cp -r streamsets-datacollector-1.0.0/stage-libs/streamsets-datacollector-cdh5_3_0-lib/
+   /tmp/streamsets-datacollector-1.0.0/stage-libs/</codeblock></info>
             </step>
             <step>
                 <cmd>Restart the <ph
