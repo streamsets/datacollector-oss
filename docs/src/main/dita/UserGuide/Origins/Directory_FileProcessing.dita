@@ -2,7 +2,8 @@
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_ltv_r3l_5q">
  <title>File Processing</title>
- <shortdesc>Directory processes files in a directory that match the configured file name pattern. </shortdesc>
+ <shortdesc>The Directory origin processes files in a directory that match the configured file name
+                pattern. </shortdesc>
  <conbody>
   <p><indexterm>First processing<indexterm>for Directory</indexterm></indexterm><indexterm>Directory
                                         origin<indexterm>file

@@ -4,8 +4,7 @@
  <title>Multiple Directories</title>
  <conbody>
   <p><indexterm>File Tail origin<indexterm>multiple directories</indexterm></indexterm>You can use
-   File Tail to read related sets of files in multiple directories. Each directory can include a
-   single active file. When File Tail processes files in multiple directories, it merges all data in
-   the pipeline. </p>
+      File Tail to read related sets of files in multiple directories. When File Tail processes
+      files in multiple directories, it merges all data in the pipeline. </p>
  </conbody>
 </concept>

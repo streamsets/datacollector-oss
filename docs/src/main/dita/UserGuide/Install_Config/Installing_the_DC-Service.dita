@@ -48,7 +48,11 @@
                     sdc:sdc.</cmd>
             </step>
             <step>
-                <cmd>Create the SDC data directory at /var/run/sdc and change the owner to
+                <cmd>Create the SDC data directory at /var/lib/sdc and change the owner to
+                    sdc:sdc.</cmd>
+            </step>
+            <step>
+                <cmd>Create the SDC data directory at /var/lib/sdc-resources and change the owner to
                     sdc:sdc.</cmd>
             </step>
             <step>

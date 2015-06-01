@@ -7,6 +7,9 @@
             <p><indexterm>cluster mode<indexterm>configuration</indexterm></indexterm>To run the <ph
                     conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
                 /> in cluster mode, perform the following steps:<ol id="ol_e32_llw_yr">
+                    <li>Install Kafka, Spark Streaming, and YARN from the Cloudera
+                            CDH.<draft-comment author="Loretta">or should I say Cloudera
+                            Manager.</draft-comment></li>
                     <li>Install the <ph
                             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
                         /> on a Spark on YARN gateway node.</li>

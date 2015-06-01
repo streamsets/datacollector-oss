@@ -5,7 +5,7 @@
  <shortdesc>A pipeline describes the flow of data for the <ph
       conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>. </shortdesc>
  <conbody>
-  <p><indexterm>pipelines<indexterm>overview</indexterm></indexterm>Configure a pipeline on the
+  <p><indexterm>pipelines<indexterm>overview</indexterm></indexterm>Create a pipeline on the
         <term>pipeline canvas</term>. To configure a pipeline, you add and configure a single origin
       stage to represent source data, processor stages to perform processing and routing, and one or
       more destination stages to represent target data. Connect the stages to create the flow of

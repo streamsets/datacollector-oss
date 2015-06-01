@@ -1,81 +1,95 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_zhl_k4f_cr">
- <title>Installing Additional Stages</title>
+ <title>Installing Additional Stage Libraries</title>
  <shortdesc>The <ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
     /> includes a wide range of stages for pipeline development, but you might find a need for
-    additional functionality. </shortdesc>
+    additional functionality. You can install additional stage libraries to provide access to
+    additional stages.</shortdesc>
  <conbody>
-  <p><indexterm>stages<indexterm>installing
-          additional</indexterm></indexterm><indexterm>installation<indexterm>additional
-          stages</indexterm></indexterm>At this time, you can install the following additional
-      functionality: <table frame="all" rowsep="1" colsep="1" id="table_izz_npf_cr">
-        <tgroup cols="2">
-          <colspec colname="c1" colnum="1" colwidth="1*"/>
-          <colspec colname="c2" colnum="2" colwidth="1.85*"/>
+  <p><indexterm>stage libraries<indexterm>installing
+          additional</indexterm></indexterm><indexterm>installation<indexterm>additional stage
+          libraries</indexterm></indexterm><indexterm>libraries<indexterm>installing stage
+          libraries</indexterm></indexterm>At this time, you can install the following stage
+      libraries: <table frame="all" rowsep="1" colsep="1" id="table_izz_npf_cr">
+        <tgroup cols="3">
+          <colspec colname="c1" colnum="1" colwidth="1.3*"/>
+          <colspec colname="newCol2" colnum="2" colwidth="1*"/>
+          <colspec colname="c2" colnum="3" colwidth="2.7*"/>
           <thead>
             <row>
-              <entry>Additional Functionality</entry>
+              <entry>Stage Library</entry>
+              <entry>Available Versions</entry>
               <entry>Description</entry>
             </row>
           </thead>
           <tbody>
             <row>
-              <entry>Cassandra 2.1.5</entry>
-              <entry>Use to write to Cassandra version 2.1.5. <p>Provides a Cassandra
-                  destination.</p></entry>
+              <entry>Apache Kafka</entry>
+              <entry>0.8.1.1<p>0.8.2.0</p><p>0.8.2.1</p></entry>
+              <entry>Use to access Kafka. <p>Provides a Kafka Consumer and Kafka
+                Producer.</p></entry>
             </row>
             <row>
-              <entry>CDH Kafka 1.2.0 (0.8.2.0)</entry>
-              <entry>Use access the Cloudera version 1.2.0 distribution of Apache Kafka 0.8.2.0.
-                  <p>Provides a Kafka Consumer origin and Kafka Producer destination.</p></entry>
+              <entry>CDH </entry>
+              <entry>5.2.1, 5.2.3, 5.2.4<p>5.3.0, 5.3.1, 5.3.2</p><p>5.4.0, 5.4.1</p></entry>
+              <entry>Use to write to the Cloudera CDH distribution of Hadoop. <p>Provides the
+                  following destinations:<ul id="ul_gw5_y1t_2s">
+                    <li>Flume</li>
+                    <li>Hadoop FS</li>
+                    <li>HBase</li>
+                    <li>Solr</li>
+                  </ul></p></entry>
             </row>
             <row>
-              <entry>CDH 5.4.1 Cluster Kafka 1.2.0 </entry>
-              <entry>Use to read from the Cloudera version 5.4.1 distribution of the Apache Kafka
-                version 1.2.0. <p>Provides a Kafka Consumer origin. </p><p><ph
+              <entry>CDH Cluster Kafka 1.2.0 </entry>
+              <entry>5.4.0<p>5.4.1</p></entry>
+              <entry>Use to read from the Cloudera distribution of the Apache Kafka 1.2.0.
+                  <p>Provides a Kafka Consumer origin. </p><p><ph
                     conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
                   /> cluster mode only. </p></entry>
             </row>
             <row>
-              <entry>CDH 5.3.2<p>CDH 5.4.1</p></entry>
-              <entry>Use to write to the Cloudera CDH versions 5.3.2 and 5.4.1 distribution of
-                Apache Hadoop. <p>Provides the following destinations:</p><ul id="ul_exh_55f_cs">
-                  <li>Flume</li>
-                  <li>Hadoop FS</li>
-                  <li>HBase</li>
-                  <li>Solr</li>
-                </ul></entry>
+              <entry>CDH Kafka </entry>
+              <entry>1.2.0 (0.8.2.0)</entry>
+              <entry>Use access the Cloudera distribution of Apache Kafka 1.2.0 (0.8.2.0).
+                  <p>Provides a Kafka Consumer origin and Kafka Producer destination.</p></entry>
             </row>
             <row>
-              <entry>Elasticsearch 1.5.0</entry>
-              <entry>Use to write to Elasticsearch version 1.5.0. <p>Provides an Elasticsearch
-                  destination. </p></entry>
+              <entry>Cassandra </entry>
+              <entry>2.1.5</entry>
+              <entry>Use to write to Cassandra. <p>Provides a Cassandra destination.</p></entry>
             </row>
             <row>
-              <entry>HDP 2.2.0</entry>
-              <entry>Use to write to the Hortonworks version 2.2.0 distribution of Apache Hadoop.
-                  <p>Provides the following destinations:<ul id="ul_ffk_y3g_cs">
+              <entry>Elasticsearch</entry>
+              <entry>1.4.4<p>1.5.0</p></entry>
+              <entry>Use to write to Elasticsearch.<p>Provides an Elasticsearch destination.
+                </p></entry>
+            </row>
+            <row>
+              <entry>HDP</entry>
+              <entry>2.2.0</entry>
+              <entry>Use to write to the Hortonworks distribution of Apache Hadoop. <p>Provides the
+                  following destinations:<ul id="ul_ffk_y3g_cs">
                     <li>Flume</li>
                     <li>Hadoop FS</li>
                     <li>HBase</li>
                   </ul></p></entry>
             </row>
             <row>
-              <entry>Jython 2.7.0</entry>
-              <entry>Use to process scripts written in Jython version 2.7.0.<p>Provides a Jython
-                  Evaluator processor. </p></entry>
+              <entry>Jython</entry>
+              <entry>2.7.0</entry>
+              <entry>Use to process scripts written in Jython.<p>Provides a Jython Evaluator
+                  processor. </p></entry>
             </row>
             <row>
-              <entry>Kinesis 1.2.1</entry>
-              <entry>Use to access Amazon Kinesis version 1.2.1.<p>Provides a Kinesis origin and
-                  destination.</p></entry>
+              <entry>Kinesis</entry>
+              <entry>1.2.1</entry>
+              <entry>Use to access Amazon Kinesis.<p>Provides a Kinesis origin and
+                destination.</p></entry>
             </row>
           </tbody>
         </tgroup>
       </table></p>
-    <draft-comment author="Loretta">Is this table missing anything? I assembled by looking at
-      libraries and stage versions. I got a few additional stage versions from Brock that I didn't
-      see in either place?</draft-comment>
  </conbody>
 </concept>

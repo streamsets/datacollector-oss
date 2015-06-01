@@ -41,9 +41,9 @@
         
         <thead class="thead" align="left">
           <tr class="row">
-            <th class="entry" valign="top" width="28.49002849002849%" id="d17731e68">Requirement</th>
+            <th class="entry" valign="top" width="28.49002849002849%" id="d17673e68">Requirement</th>
 
-            <th class="entry" valign="top" width="71.5099715099715%" id="d17731e75">Description</th>
+            <th class="entry" valign="top" width="71.5099715099715%" id="d17673e75">Description</th>
 
           </tr>
 
@@ -51,9 +51,9 @@
 
         <tbody class="tbody">
           <tr class="row">
-            <td class="entry" valign="top" width="28.49002849002849%" headers="d17731e68 ">Operating Systems</td>
+            <td class="entry" valign="top" width="28.49002849002849%" headers="d17673e68 ">Operating Systems</td>
 
-            <td class="entry" valign="top" width="71.5099715099715%" headers="d17731e75 ">Use one of the following operating systems and versions:<ul class="ul" id="concept_vzg_n2p_kq__ul_cjh_sw4_1r">
+            <td class="entry" valign="top" width="71.5099715099715%" headers="d17673e75 ">Use one of the following operating systems and versions:<ul class="ul" id="concept_vzg_n2p_kq__ul_cjh_sw4_1r">
                 <li class="li">Mac OS X</li>
 
                 <li class="li">Linux CentOS 6 or 7</li>
@@ -68,16 +68,16 @@
           </tr>
 
           <tr class="row">
-            <td class="entry" valign="top" width="28.49002849002849%" headers="d17731e68 ">Java</td>
+            <td class="entry" valign="top" width="28.49002849002849%" headers="d17673e68 ">Java</td>
 
-            <td class="entry" valign="top" width="71.5099715099715%" headers="d17731e75 ">Java 7 or 8</td>
+            <td class="entry" valign="top" width="71.5099715099715%" headers="d17673e75 ">Java 7 or 8</td>
 
           </tr>
 
           <tr class="row">
-            <td class="entry" valign="top" width="28.49002849002849%" headers="d17731e68 ">Browser</td>
+            <td class="entry" valign="top" width="28.49002849002849%" headers="d17673e68 ">Browser</td>
 
-            <td class="entry" valign="top" width="71.5099715099715%" headers="d17731e75 ">Use the latest version of one of the following browsers:<ul class="ul" id="concept_vzg_n2p_kq__ul_cvr_bx4_1r">
+            <td class="entry" valign="top" width="71.5099715099715%" headers="d17673e75 ">Use the latest version of one of the following browsers:<ul class="ul" id="concept_vzg_n2p_kq__ul_cvr_bx4_1r">
                 <li class="li">Chrome</li>
 
                 <li class="li">Firefox</li>
@@ -117,12 +117,18 @@
                     environment variables:</span>
                 <div class="itemgroup info">
                     <ul class="ul" id="task_bt1_zcp_kq__ul_vbv_b44_1r">
-                        <li class="li">SDC_CONF - SDC configuration directory.</li>
+                        <li class="li">SDC_CONF - The <span class="ph">Data
+                  Collector</span> configuration directory.</li>
 
-                        <li class="li">SDC_DATA - SDC data directory where pipeline state and configuration are
-                            stored.</li>
+                        <li class="li">SDC_DATA - The <span class="ph">Data
+                  Collector</span> directory for pipeline state and configuration information.</li>
 
-                        <li class="li">SDC_LOG - SDC logging directory.</li>
+                        <li class="li">SDC_LOG - The <span class="ph">Data
+                  Collector</span> directory for <span class="ph">Data
+                  Collector</span> logs.</li>
+
+                        <li class="li">SDC_RESOURCES - The <span class="ph">Data
+                  Collector</span> directory for runtime resource files. </li>
 
                     </ul>
 
@@ -131,7 +137,7 @@
 <li class="li step stepexpand">
                 <span class="ph cmd">Use the following command to launch the <span class="ph">Data Collector</span>:</span>
                 <div class="itemgroup info">
-                    <pre class="pre codeblock">&lt;SDCinstalldir&gt;/bin/streamsets dc &amp;</pre>
+                    <pre class="pre codeblock">&lt;SDCinstalldir&gt;/bin/streamsets dc</pre>
 
                 </div>
                 <div class="itemgroup info">Or, use the following command to launch the <span class="ph">Data Collector</span> and run it
@@ -192,7 +198,11 @@
                     sdc:sdc.</span>
             </li>
 <li class="li step stepexpand">
-                <span class="ph cmd">Create the SDC data directory at /var/run/sdc and change the owner to
+                <span class="ph cmd">Create the SDC data directory at /var/lib/sdc and change the owner to
+                    sdc:sdc.</span>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">Create the SDC data directory at /var/lib/sdc-resources and change the owner to
                     sdc:sdc.</span>
             </li>
 <li class="li step stepexpand">

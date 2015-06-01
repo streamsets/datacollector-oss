@@ -33,18 +33,17 @@
                                     <entry>REST URL for the Omniture reporting API to use. </entry>
                                 </row>
                                 <row>
-                                    <entry>User Name</entry>
+                                    <entry>Username</entry>
                                     <entry>Omniture user name.</entry>
-                                </row>
-                                <row>
-                                    <entry>Shared Secret <draft-comment author="Loretta">can we move
-                                            this here? appears after request
-                                        timeout</draft-comment></entry>
-                                    <entry>Omniture shared secret.</entry>
                                 </row>
                                 <row>
                                     <entry>Request Timeout (ms)</entry>
                                     <entry>Milliseconds before the connection times out.</entry>
+                                </row>
+                                <row>
+                                    <entry>Shared Secret <draft-comment author="Loretta">can we move
+                                            this below user name?</draft-comment></entry>
+                                    <entry>Omniture shared secret.</entry>
                                 </row>
                                 <row>
                                     <entry>Mode</entry>
@@ -52,17 +51,17 @@
                                         Polling.</p></entry>
                                 </row>
                                 <row>
-                                    <entry>Report Request Interval (ms)<draft-comment
-                                            author="Loretta">Can we use this name? Currently "Delay
-                                            between report requests"</draft-comment></entry>
+                                    <entry>Delay Between Report Requests (ms)<draft-comment
+                                            author="Loretta">Can we use Report Request Interval (ms)
+                                        </draft-comment></entry>
                                     <entry>Milliseconds to wait between requests. <p>When necessary,
                                             the origin delays a request until the API responds to
                                             the previous request.</p><p>Default is
                                         5,000.</p></entry>
                                 </row>
                                 <row>
-                                    <entry>Max Batch Size (reports)<draft-comment author="Loretta"
-                                            >Change from Batch Size?</draft-comment></entry>
+                                    <entry>Batch Size (reports)<draft-comment author="Loretta">Can
+                                            we use Max Batch Size (reports)</draft-comment></entry>
                                     <entry>Maximum number of reports to include in a batch.
                                             <p>Default is 1.</p></entry>
                                 </row>
@@ -77,8 +76,8 @@
                 </info>
             </step>
             <step>
-                <cmd>On the <uicontrol>Report</uicontrol> tab, enter a description of the Omniture
-                    report description. </cmd>
+                <cmd>On the <uicontrol>Report</uicontrol> tab, enter the description of the Omniture
+                    report. </cmd>
             </step>
         </steps>
     </taskbody>

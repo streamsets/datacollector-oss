@@ -3,13 +3,15 @@
 <concept id="concept_qcq_54n_jq">
  <title>Directory</title>
  <shortdesc>The Directory origin reads data from files in a directory. The file names must all share
-        a file name pattern. </shortdesc>
+        a file name pattern and be fully written. To read data from an active file that is still
+        being written to, use the File Tail origin.</shortdesc>
  <conbody>
   <p><indexterm>Directory
                     origin<indexterm>overview</indexterm></indexterm><indexterm>origins<indexterm>Directory</indexterm></indexterm>When
-            you configure Directory, you define the directory to use, the file name pattern, and the
-            first file to process. These properties determine the files that Directory processes.
-            After processing a file, Directory can keep, archive, or delete the file. </p>
+            you configure the Directory origin, you define the directory to use, the file name
+            pattern, and the first file to process. These properties determine the files that the
+            origin processes. After processing a file, Directory can keep, archive, or delete the
+            file. </p>
         <p>When the pipeline stops, Directory notes where it stops reading. When the pipeline starts
             again, Directory continues processing from where it stopped by default. You can reset
             the origin to process all requested files. </p>

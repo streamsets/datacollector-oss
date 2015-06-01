@@ -5,7 +5,7 @@
     <shortdesc>Configure a Directory origin to read data from files in a directory. </shortdesc>
     <taskbody>
         <context><indexterm>Directory origin<indexterm>configuring</indexterm></indexterm>When you
-            configure a Directory, you define file properties, including the data format to process.
+            configure Directory, you define file properties, including the data format to process.
             Then, you define post-processing options and the properties specific to the data
             format.</context>
         <steps id="steps_tvn_b5v_yq">
@@ -133,8 +133,10 @@
                                 <row>
                                     <entry>Error Directory</entry>
                                     <entry>The directory for files that cannot be fully processed
-                                        due to data handling errors.<p>Use to manage files for error
-                                            handling and reprocessing. </p></entry>
+                                        due to data handling errors. <p>When you specify an error
+                                            directory, files that cannot be fully processed are
+                                            moved to this directory. </p><p>Use to manage files for
+                                            error handling and reprocessing. </p></entry>
                                 </row>
                                 <row>
                                     <entry>File Post Processing</entry>
@@ -148,8 +150,10 @@
                                 </row>
                                 <row>
                                     <entry>Archiving Directory</entry>
-                                    <entry>The directory for files that are fully processed. Use
-                                        when archiving processed files.</entry>
+                                    <entry>The directory for files that are fully processed. <p>When
+                                            you specify an archiving directory, files are moved to
+                                            this directory after being fully processed.</p>Use to
+                                        archive processed files.</entry>
                                 </row>
                                 <row>
                                     <entry>Archive Retention Time (mins)</entry>
@@ -266,7 +270,7 @@
                                 <row>
                                     <entry>Maximum Record Length (chars)</entry>
                                     <entry>Maximum number of characters for a record. Longer records
-                                        are passed to the pipeline for error handling.</entry>
+                                        are diverted to the pipeline for error handling.</entry>
                                 </row>
                             </tbody>
                         </tgroup>

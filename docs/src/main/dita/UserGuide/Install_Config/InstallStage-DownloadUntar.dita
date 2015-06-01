@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE task PUBLIC "-//OASIS//DTD DITA General Task//EN" "generalTask.dtd">
 <task id="task_zvt_f4f_cr">
-    <title>Installing a Stage (Download-Untar)</title>
-    <shortdesc>You can install a stage by downloading the stage library to the appropriate directory
-        and untarring it. </shortdesc>
+    <title>Installing a Stage Library (Download-Untar)</title>
+    <shortdesc>You can install a stage library by downloading the library to the appropriate
+        directory and untarring it. </shortdesc>
     <taskbody>
         <context/>
         <steps id="steps_bsl_5tf_cr">
@@ -19,7 +19,7 @@
             <step>
                 <cmd>Untar the file.</cmd>
                 <info>For
-                    example:<codeblock>tar xvzf streamsets-datacollector-cdh_5_3_0-lib-1.0.0b1-SNAPSHOT.tar.gz</codeblock></info>
+                    example:<codeblock>tar xvzf streamsets-datacollector-cdh_5_3_0-lib-1.0.0.tar.gz</codeblock></info>
             </step>
             <step>
                 <cmd>Stop and restart the <ph

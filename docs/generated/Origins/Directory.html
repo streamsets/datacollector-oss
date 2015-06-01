@@ -2,7 +2,7 @@
 <!DOCTYPE html
   SYSTEM "about:legacy-compat">
 <html xml:lang="en-us" lang="en-us">
-<head><meta name="description" content="The Directory origin reads data from files in a directory. The file names must all share a file name pattern. When you configure Directory, you define the directory to use, the file name pattern, and ..."></meta><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><meta name="copyright" content="(C) Copyright 2005"></meta><meta name="DC.rights.owner" content="(C) Copyright 2005"></meta><meta name="DC.Type" content="concept"></meta><meta name="DC.Title" content="Directory"></meta><meta name="abstract" content="The Directory origin reads data from files in a directory. The file names must all share a file name pattern."></meta><meta name="description" content="The Directory origin reads data from files in a directory. The file names must all share a file name pattern."></meta><meta name="DC.Relation" scheme="URI" content="../Origins/Origins_title.html"></meta><meta name="DC.Format" content="XHTML"></meta><meta name="DC.Identifier" content="concept_qcq_54n_jq"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/commonltr.css"><!----></link><title>Directory</title><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/webhelp_topic.css"><!----></link><link rel="stylesheet" type="text/css" href="../skin.css"></link><script type="text/javascript"><!--
+<head><meta name="description" content="The Directory origin reads data from files in a directory. The file names must all share a file name pattern and be fully written. To read data from an active file that is still being written to, use ..."></meta><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><meta name="copyright" content="(C) Copyright 2005"></meta><meta name="DC.rights.owner" content="(C) Copyright 2005"></meta><meta name="DC.Type" content="concept"></meta><meta name="DC.Title" content="Directory"></meta><meta name="abstract" content="The Directory origin reads data from files in a directory. The file names must all share a file name pattern and be fully written. To read data from an active file that is still being written to, use the File Tail origin."></meta><meta name="description" content="The Directory origin reads data from files in a directory. The file names must all share a file name pattern and be fully written. To read data from an active file that is still being written to, use the File Tail origin."></meta><meta name="DC.Relation" scheme="URI" content="../Origins/Origins_title.html"></meta><meta name="DC.Format" content="XHTML"></meta><meta name="DC.Identifier" content="concept_qcq_54n_jq"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/commonltr.css"><!----></link><title>Directory</title><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/webhelp_topic.css"><!----></link><link rel="stylesheet" type="text/css" href="../skin.css"></link><script type="text/javascript"><!--
           
           var prefix = "../index.html";
           
@@ -15,12 +15,14 @@
 
  
  <div class="body conbody"><p class="shortdesc">The Directory origin reads data from files in a directory. The file names must all share
-        a file name pattern. </p>
+        a file name pattern and be fully written. To read data from an active file that is still
+        being written to, use the File Tail origin.</p>
 
   <p class="p">When
-            you configure Directory, you define the directory to use, the file name pattern, and the
-            first file to process. These properties determine the files that Directory processes.
-            After processing a file, Directory can keep, archive, or delete the file. </p>
+            you configure the Directory origin, you define the directory to use, the file name
+            pattern, and the first file to process. These properties determine the files that the
+            origin processes. After processing a file, Directory can keep, archive, or delete the
+            file. </p>
 
         <p class="p">When the pipeline stops, Directory notes where it stops reading. When the pipeline starts
             again, Directory continues processing from where it stopped by default. You can reset
@@ -33,7 +35,8 @@
  <h2 class="title topictitle2">File Processing</h2>
 
  
- <div class="body conbody"><p class="shortdesc">Directory processes files in a directory that match the configured file name pattern. </p>
+ <div class="body conbody"><p class="shortdesc">The Directory origin processes files in a directory that match the configured file name
+                pattern. </p>
 
   <p class="p">When you define a first file to process, it
                         starts processing with the specified file and continues processing files in
@@ -56,10 +59,12 @@
  <h2 class="title topictitle2">Buffer Limit and Error Handling</h2>
 
  
- <div class="body conbody"><p class="shortdesc">Directory passes each record to a buffer. The size of the buffer determines the maximum
-    size of the record that can be processed. Decrease the buffer limit when memory on the <span class="ph">Data
-                  Collector</span> machine is
-    limited. Increase the buffer limit to process larger records when memory is available. </p>
+ <div class="body conbody"><p class="shortdesc">The Directory origin passes each record to a buffer. The size of the buffer determines
+    the maximum size of the record that can be processed. Decrease the buffer limit when memory on
+    the <span class="ph">Data
+                  Collector</span>
+    machine is limited. Increase the buffer limit to process larger records when memory is
+    available. </p>
 
   <div class="p">When a record is larger than the specified limit,
       Directory processes the source file based on the stage error handling:<dl class="dl">
@@ -80,7 +85,8 @@
               information displays in the pipeline history and displays as an alert when you monitor
               the pipeline. </p>
 <p class="p">If an error directory is configured for the stage, Directory
-              writes the file to the directory and continues processing the next file. </p>
+              moves the file to the error directory and continues processing the next file.
+            </p>
 </dd>
 
         
@@ -291,7 +297,7 @@
     <div class="body taskbody"><p class="shortdesc">Configure a Directory origin to read data from files in a directory. </p>
 
         <div class="section context">When you
-            configure a Directory, you define file properties, including the data format to process.
+            configure Directory, you define file properties, including the data format to process.
             Then, you define post-processing options and the properties specific to the data
             format.</div>
 
@@ -300,14 +306,14 @@
                     following properties:</span>
                 <div class="itemgroup info">
                     
-<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_gfj_ssv_yq__d2497e251" class="table" frame="border" border="1" rules="all">
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_gfj_ssv_yq__d2467e251" class="table" frame="border" border="1" rules="all">
                             
                             
                             <thead class="thead" align="left">
                                 <tr class="row">
-                                    <th class="entry" valign="top" width="24.509803921568626%" id="d19313e435">General Property</th>
+                                    <th class="entry" valign="top" width="24.509803921568626%" id="d19419e435">General Property</th>
 
-                                    <th class="entry" valign="top" width="75.49019607843137%" id="d19313e438">Description</th>
+                                    <th class="entry" valign="top" width="75.49019607843137%" id="d19419e438">Description</th>
 
                                 </tr>
 
@@ -315,23 +321,23 @@
 
                             <tbody class="tbody">
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="24.509803921568626%" headers="d19313e435 ">Name</td>
+                                    <td class="entry" valign="top" width="24.509803921568626%" headers="d19419e435 ">Name</td>
 
-                                    <td class="entry" valign="top" width="75.49019607843137%" headers="d19313e438 ">Stage name.</td>
-
-                                </tr>
-
-                                <tr class="row">
-                                    <td class="entry" valign="top" width="24.509803921568626%" headers="d19313e435 ">Description</td>
-
-                                    <td class="entry" valign="top" width="75.49019607843137%" headers="d19313e438 ">Optional description.</td>
+                                    <td class="entry" valign="top" width="75.49019607843137%" headers="d19419e438 ">Stage name.</td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="24.509803921568626%" headers="d19313e435 ">On Record Error</td>
+                                    <td class="entry" valign="top" width="24.509803921568626%" headers="d19419e435 ">Description</td>
 
-                                    <td class="entry" valign="top" width="75.49019607843137%" headers="d19313e438 ">Error record handling for the stage: <ul class="ul" id="task_gfj_ssv_yq__d2497e298">
+                                    <td class="entry" valign="top" width="75.49019607843137%" headers="d19419e438 ">Optional description.</td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="24.509803921568626%" headers="d19419e435 ">On Record Error</td>
+
+                                    <td class="entry" valign="top" width="75.49019607843137%" headers="d19419e438 ">Error record handling for the stage: <ul class="ul" id="task_gfj_ssv_yq__d2467e298">
                                             <li class="li">Discard - Discards the record.</li>
 
                                             <li class="li">Send to Error - Sends the record to the pipeline for
@@ -361,9 +367,9 @@
                             
                             <thead class="thead" align="left">
                                 <tr class="row">
-                                    <th class="entry" valign="top" width="25.641025641025646%" id="d19313e510">File Property</th>
+                                    <th class="entry" valign="top" width="25.641025641025646%" id="d19419e510">File Property</th>
 
-                                    <th class="entry" valign="top" width="74.35897435897436%" id="d19313e513">Description</th>
+                                    <th class="entry" valign="top" width="74.35897435897436%" id="d19419e513">Description</th>
 
                                 </tr>
 
@@ -371,11 +377,11 @@
 
                             <tbody class="tbody">
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="25.641025641025646%" headers="d19313e510 ">Data Format <a class="xref" href="Directory.html#concept_gz5_dqw_yq" title="When you use an origin to read log data, you define the format of the log files to be read.">
+                                    <td class="entry" valign="top" width="25.641025641025646%" headers="d19419e510 ">Data Format <a class="xref" href="Directory.html#concept_gz5_dqw_yq" title="When you use an origin to read log data, you define the format of the log files to be read.">
                                             <img class="image" src="../Graphics/icon_moreInfo.png" height="12" width="12"></img>
                                         </a></td>
 
-                                    <td class="entry" valign="top" width="74.35897435897436%" headers="d19313e513 ">Data format for source files. Use one of the following
+                                    <td class="entry" valign="top" width="74.35897435897436%" headers="d19419e513 ">Data format for source files. Use one of the following
                                             formats:<ul class="ul" id="task_gfj_ssv_yq__ul_y1t_wql_5q">
                                             <li class="li">Text</li>
 
@@ -396,25 +402,25 @@
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="25.641025641025646%" headers="d19313e510 ">Files Charset</td>
+                                    <td class="entry" valign="top" width="25.641025641025646%" headers="d19419e510 ">Files Charset</td>
 
-                                    <td class="entry" valign="top" width="74.35897435897436%" headers="d19313e513 ">Character encoding of the data to be processed.</td>
+                                    <td class="entry" valign="top" width="74.35897435897436%" headers="d19419e513 ">Character encoding of the data to be processed.</td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="25.641025641025646%" headers="d19313e510 ">Files Directory</td>
+                                    <td class="entry" valign="top" width="25.641025641025646%" headers="d19419e510 ">Files Directory</td>
 
-                                    <td class="entry" valign="top" width="74.35897435897436%" headers="d19313e513 ">A directory local to the <span class="ph">Data
+                                    <td class="entry" valign="top" width="74.35897435897436%" headers="d19419e513 ">A directory local to the <span class="ph">Data
                   Collector</span> where source files are stored.</td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="25.641025641025646%" headers="d19313e510 ">Buffer Limit (KB) <a class="xref" href="Directory.html#concept_zp2_fqs_5r" title="Directory passes each record to a buffer. The size of the buffer determines the maximum size of the record that can be processed. Decrease the buffer limit when memory on the Data Collector machine is limited. Increase the buffer limit to process larger records when memory is available.">
+                                    <td class="entry" valign="top" width="25.641025641025646%" headers="d19419e510 ">Buffer Limit (KB) <a class="xref" href="Directory.html#concept_zp2_fqs_5r" title="The Directory origin passes each record to a buffer. The size of the buffer determines the maximum size of the record that can be processed. Decrease the buffer limit when memory on the Data Collector machine is limited. Increase the buffer limit to process larger records when memory is available.">
                                             <img class="image" id="task_gfj_ssv_yq__image_mfn_hwx_5r" src="../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
 
-                                    <td class="entry" valign="top" width="74.35897435897436%" headers="d19313e513 ">Maximum buffer size. The buffer size determines the size
+                                    <td class="entry" valign="top" width="74.35897435897436%" headers="d19419e513 ">Maximum buffer size. The buffer size determines the size
                                         of the record that can be processed. <p class="p">Decrease when memory
                                             on the <span class="ph">Data
                   Collector</span> machine is limited. Increase to process larger
@@ -424,26 +430,26 @@
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="25.641025641025646%" headers="d19313e510 ">Batch Size (recs)</td>
+                                    <td class="entry" valign="top" width="25.641025641025646%" headers="d19419e510 ">Batch Size (recs)</td>
 
-                                    <td class="entry" valign="top" width="74.35897435897436%" headers="d19313e513 ">Number of records to pass through the pipeline at one
+                                    <td class="entry" valign="top" width="74.35897435897436%" headers="d19419e513 ">Number of records to pass through the pipeline at one
                                         time. </td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="25.641025641025646%" headers="d19313e510 ">Batch Wait Time (secs) <a class="xref" href="Origins_overview.html#concept_ypd_vgr_5q" title="For origin stages, the batch size determines the maximum number of records sent through the pipeline at one time. The batch wait time determines the time that the origin waits for data before sending a batch. At the end of the wait time, it sends the batch regardless of how many records the batch contains.">
+                                    <td class="entry" valign="top" width="25.641025641025646%" headers="d19419e510 ">Batch Wait Time (secs) <a class="xref" href="Origins_overview.html#concept_ypd_vgr_5q" title="For origin stages, the batch size determines the maximum number of records sent through the pipeline at one time. The batch wait time determines the time that the origin waits for data before sending a batch. At the end of the wait time, it sends the batch regardless of how many records the batch contains.">
                                             <img class="image" id="task_gfj_ssv_yq__image_mgp_2q3_br" src="../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
 
-                                    <td class="entry" valign="top" width="74.35897435897436%" headers="d19313e513 ">Number of seconds to wait before sending a partial or
+                                    <td class="entry" valign="top" width="74.35897435897436%" headers="d19419e513 ">Number of seconds to wait before sending a partial or
                                         empty batch.</td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="25.641025641025646%" headers="d19313e510 ">File Name Pattern</td>
+                                    <td class="entry" valign="top" width="25.641025641025646%" headers="d19419e510 ">File Name Pattern</td>
 
-                                    <td class="entry" valign="top" width="74.35897435897436%" headers="d19313e513 ">Regular expression that describes the pattern of the file
+                                    <td class="entry" valign="top" width="74.35897435897436%" headers="d19419e513 ">Regular expression that describes the pattern of the file
                                         names to process.<p class="p">You can use UNIX-style wildcards, such
                                             as * or ?. For example, *.log.</p>
 </td>
@@ -451,11 +457,11 @@
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="25.641025641025646%" headers="d19313e510 ">First File to Process <a class="xref" href="Directory.html#concept_ltv_r3l_5q" title="Directory processes files in a directory that match the configured file name pattern.">
+                                    <td class="entry" valign="top" width="25.641025641025646%" headers="d19419e510 ">First File to Process <a class="xref" href="Directory.html#concept_ltv_r3l_5q" title="The Directory origin processes files in a directory that match the configured file name pattern.">
                                             <img class="image" id="task_gfj_ssv_yq__image_tcz_pj2_br" src="../Graphics/icon_moreInfo.png" height="12" width="12"></img></a>
                                     </td>
 
-                                    <td class="entry" valign="top" width="74.35897435897436%" headers="d19313e513 ">Name of the first file to process. <p class="p">When you do not
+                                    <td class="entry" valign="top" width="74.35897435897436%" headers="d19419e513 ">Name of the first file to process. <p class="p">When you do not
                                             enter a first file name, Directory reads all files in
                                             the directory with the specified file name
                                         pattern.</p>
@@ -464,9 +470,9 @@
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="25.641025641025646%" headers="d19313e510 ">Max Files in Directory</td>
+                                    <td class="entry" valign="top" width="25.641025641025646%" headers="d19419e510 ">Max Files in Directory</td>
 
-                                    <td class="entry" valign="top" width="74.35897435897436%" headers="d19313e513 ">
+                                    <td class="entry" valign="top" width="74.35897435897436%" headers="d19419e513 ">
                                         <p class="p">The maximum number of files that match the file name
                                             pattern that are allowed in the directory. When the
                                             directory contains more files, the pipeline fails.</p>
@@ -492,9 +498,9 @@
                             
                             <thead class="thead" align="left">
                                 <tr class="row">
-                                    <th class="entry" valign="top" width="21.88183807439825%" id="d19313e711">Post Processing Property</th>
+                                    <th class="entry" valign="top" width="21.88183807439825%" id="d19419e711">Post Processing Property</th>
 
-                                    <th class="entry" valign="top" width="78.11816192560174%" id="d19313e714">Description</th>
+                                    <th class="entry" valign="top" width="78.11816192560174%" id="d19419e714">Description</th>
 
                                 </tr>
 
@@ -502,19 +508,22 @@
 
                             <tbody class="tbody">
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="21.88183807439825%" headers="d19313e711 ">Error Directory</td>
+                                    <td class="entry" valign="top" width="21.88183807439825%" headers="d19419e711 ">Error Directory</td>
 
-                                    <td class="entry" valign="top" width="78.11816192560174%" headers="d19313e714 ">The directory for files that cannot be fully processed
-                                        due to data handling errors.<p class="p">Use to manage files for error
-                                            handling and reprocessing. </p>
+                                    <td class="entry" valign="top" width="78.11816192560174%" headers="d19419e714 ">The directory for files that cannot be fully processed
+                                        due to data handling errors. <p class="p">When you specify an error
+                                            directory, files that cannot be fully processed are
+                                            moved to this directory. </p>
+<p class="p">Use to manage files for
+                                            error handling and reprocessing. </p>
 </td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="21.88183807439825%" headers="d19313e711 ">File Post Processing</td>
+                                    <td class="entry" valign="top" width="21.88183807439825%" headers="d19419e711 ">File Post Processing</td>
 
-                                    <td class="entry" valign="top" width="78.11816192560174%" headers="d19313e714 ">The action taken after processing a file: <ul class="ul" id="task_gfj_ssv_yq__ul_wsr_h4l_5q">
+                                    <td class="entry" valign="top" width="78.11816192560174%" headers="d19419e714 ">The action taken after processing a file: <ul class="ul" id="task_gfj_ssv_yq__ul_wsr_h4l_5q">
                                             <li class="li">None - Keeps the file in place.</li>
 
                                             <li class="li">Archive - Moves the file to the archive
@@ -528,17 +537,20 @@
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="21.88183807439825%" headers="d19313e711 ">Archiving Directory</td>
+                                    <td class="entry" valign="top" width="21.88183807439825%" headers="d19419e711 ">Archiving Directory</td>
 
-                                    <td class="entry" valign="top" width="78.11816192560174%" headers="d19313e714 ">The directory for files that are fully processed. Use
-                                        when archiving processed files.</td>
+                                    <td class="entry" valign="top" width="78.11816192560174%" headers="d19419e714 ">The directory for files that are fully processed. <p class="p">When
+                                            you specify an archiving directory, files are moved to
+                                            this directory after being fully processed.</p>
+Use to
+                                        archive processed files.</td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="21.88183807439825%" headers="d19313e711 ">Archive Retention Time (mins)</td>
+                                    <td class="entry" valign="top" width="21.88183807439825%" headers="d19419e711 ">Archive Retention Time (mins)</td>
 
-                                    <td class="entry" valign="top" width="78.11816192560174%" headers="d19313e714 ">Number of minutes processed files are saved in the
+                                    <td class="entry" valign="top" width="78.11816192560174%" headers="d19419e714 ">Number of minutes processed files are saved in the
                                         archive directory. Use 0 to keep archived files
                                         indefinitely.</td>
 
@@ -561,9 +573,9 @@
                             
                             <thead class="thead" align="left">
                                 <tr class="row">
-                                    <th class="entry" valign="top" width="22.123893805309734%" id="d19313e797">Text Property</th>
+                                    <th class="entry" valign="top" width="22.123893805309734%" id="d19419e802">Text Property</th>
 
-                                    <th class="entry" valign="top" width="77.87610619469028%" id="d19313e800">Description</th>
+                                    <th class="entry" valign="top" width="77.87610619469028%" id="d19419e805">Description</th>
 
                                 </tr>
 
@@ -571,17 +583,17 @@
 
                             <tbody class="tbody">
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="22.123893805309734%" headers="d19313e797 ">Max Line Length</td>
+                                    <td class="entry" valign="top" width="22.123893805309734%" headers="d19419e802 ">Max Line Length</td>
 
-                                    <td class="entry" valign="top" width="77.87610619469028%" headers="d19313e800 ">Maximum number of characters allowed for a line. Longer
+                                    <td class="entry" valign="top" width="77.87610619469028%" headers="d19419e805 ">Maximum number of characters allowed for a line. Longer
                                         lines are truncated.</td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="22.123893805309734%" headers="d19313e797 ">Use Truncated Flag</td>
+                                    <td class="entry" valign="top" width="22.123893805309734%" headers="d19419e802 ">Use Truncated Flag</td>
 
-                                    <td class="entry" valign="top" width="77.87610619469028%" headers="d19313e800 ">Adds a boolean field to the record to indicate if a
+                                    <td class="entry" valign="top" width="77.87610619469028%" headers="d19419e805 ">Adds a boolean field to the record to indicate if a
                                         record was truncated. The field name is Truncated.
                                             <p class="p">Possible values are True for a truncated record, and
                                             False for untruncated values.</p>
@@ -606,9 +618,9 @@
      
      <thead class="thead" align="left">
       <tr class="row">
-       <th class="entry" valign="top" width="19.37984496124031%" id="d19313e854">JSON Property</th>
+       <th class="entry" valign="top" width="19.37984496124031%" id="d19419e859">JSON Property</th>
 
-       <th class="entry" valign="top" width="80.62015503875969%" id="d19313e857">Description</th>
+       <th class="entry" valign="top" width="80.62015503875969%" id="d19419e862">Description</th>
 
       </tr>
 
@@ -616,10 +628,10 @@
 
      <tbody class="tbody">
       <tr class="row">
-       <td class="entry" valign="top" width="19.37984496124031%" headers="d19313e854 ">JSON Content</td>
+       <td class="entry" valign="top" width="19.37984496124031%" headers="d19419e859 ">JSON Content</td>
 
-       <td class="entry" valign="top" width="80.62015503875969%" headers="d19313e857 ">Type of content in JSON files. Use one of the following options: <div class="p">
-         <ul class="ul" id="task_gfj_ssv_yq__d2522e50">
+       <td class="entry" valign="top" width="80.62015503875969%" headers="d19419e862 ">Type of content in JSON files. Use one of the following options: <div class="p">
+         <ul class="ul" id="task_gfj_ssv_yq__d2492e50">
           <li class="li">Array of Objects </li>
 
           <li class="li">Multiple Objects</li>
@@ -632,9 +644,9 @@
       </tr>
 
       <tr class="row">
-       <td class="entry" valign="top" width="19.37984496124031%" headers="d19313e854 ">Maximum Object Length (chars)</td>
+       <td class="entry" valign="top" width="19.37984496124031%" headers="d19419e859 ">Maximum Object Length (chars)</td>
 
-       <td class="entry" valign="top" width="80.62015503875969%" headers="d19313e857 ">Maximum number of characters in a JSON object. <p class="p">Longer objects are passed to the
+       <td class="entry" valign="top" width="80.62015503875969%" headers="d19419e862 ">Maximum number of characters in a JSON object. <p class="p">Longer objects are diverted to the
          pipeline for error handling. </p>
 </td>
 
@@ -657,9 +669,9 @@
                             
                             <thead class="thead" align="left">
                                 <tr class="row">
-                                    <th class="entry" valign="top" width="20.61855670103093%" id="d19313e923">Delimited Property</th>
+                                    <th class="entry" valign="top" width="20.61855670103093%" id="d19419e928">Delimited Property</th>
 
-                                    <th class="entry" valign="top" width="79.38144329896907%" id="d19313e926">Description</th>
+                                    <th class="entry" valign="top" width="79.38144329896907%" id="d19419e931">Description</th>
 
                                 </tr>
 
@@ -667,9 +679,9 @@
 
                             <tbody class="tbody">
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="20.61855670103093%" headers="d19313e923 ">File Type</td>
+                                    <td class="entry" valign="top" width="20.61855670103093%" headers="d19419e928 ">File Type</td>
 
-                                    <td class="entry" valign="top" width="79.38144329896907%" headers="d19313e926 ">File type. Use one of the following options: <ul class="ul" id="task_gfj_ssv_yq__ul_s5z_b3z_3r">
+                                    <td class="entry" valign="top" width="79.38144329896907%" headers="d19419e931 ">File type. Use one of the following options: <ul class="ul" id="task_gfj_ssv_yq__ul_s5z_b3z_3r">
                         <li class="li"><span class="ph uicontrol">Default CSV</span> - File that includes comma-separated
                               values. Ignores empty lines in the file.</li>
 
@@ -690,9 +702,9 @@
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="20.61855670103093%" headers="d19313e923 ">Header Line</td>
+                                    <td class="entry" valign="top" width="20.61855670103093%" headers="d19419e928 ">Header Line</td>
 
-                                    <td class="entry" valign="top" width="79.38144329896907%" headers="d19313e926 ">Indicates whether a file contains a header line, and
+                                    <td class="entry" valign="top" width="79.38144329896907%" headers="d19419e931 ">Indicates whether a file contains a header line, and
                                         whether to use the header line.</td>
 
                                 </tr>
@@ -714,9 +726,9 @@
                             
                             <thead class="thead" align="left">
                                 <tr class="row">
-                                    <th class="entry" valign="top" width="37.49999999999999%" id="d19313e1005">XML Property</th>
+                                    <th class="entry" valign="top" width="37.49999999999999%" id="d19419e1010">XML Property</th>
 
-                                    <th class="entry" valign="top" width="62.5%" id="d19313e1008">Description</th>
+                                    <th class="entry" valign="top" width="62.5%" id="d19419e1013">Description</th>
 
                                 </tr>
 
@@ -724,17 +736,17 @@
 
                             <tbody class="tbody">
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="37.49999999999999%" headers="d19313e1005 ">Delimiter Element</td>
+                                    <td class="entry" valign="top" width="37.49999999999999%" headers="d19419e1010 ">Delimiter Element</td>
 
-                                    <td class="entry" valign="top" width="62.5%" headers="d19313e1008 ">XML element that acts as a record delimiter. </td>
+                                    <td class="entry" valign="top" width="62.5%" headers="d19419e1013 ">XML element that acts as a record delimiter. </td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="37.49999999999999%" headers="d19313e1005 ">Maximum Record Length (chars)</td>
+                                    <td class="entry" valign="top" width="37.49999999999999%" headers="d19419e1010 ">Maximum Record Length (chars)</td>
 
-                                    <td class="entry" valign="top" width="62.5%" headers="d19313e1008 ">Maximum number of characters for a record. Longer records
-                                        are passed to the pipeline for error handling.</td>
+                                    <td class="entry" valign="top" width="62.5%" headers="d19419e1013 ">Maximum number of characters for a record. Longer records
+                                        are diverted to the pipeline for error handling.</td>
 
                                 </tr>
 
@@ -750,14 +762,14 @@
                     following properties:</span>
                 <div class="itemgroup info">
                     
-<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_gfj_ssv_yq__d2497e638" class="table" frame="border" border="1" rules="all">
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_gfj_ssv_yq__d2467e638" class="table" frame="border" border="1" rules="all">
                             
                             
                             <thead class="thead" align="left">
                                 <tr class="row">
-                                    <th class="entry" valign="top" width="35.46099290780141%" id="d19313e1060">Log Property</th>
+                                    <th class="entry" valign="top" width="35.46099290780141%" id="d19419e1065">Log Property</th>
 
-                                    <th class="entry" valign="top" width="64.53900709219857%" id="d19313e1063">Description</th>
+                                    <th class="entry" valign="top" width="64.53900709219857%" id="d19419e1068">Description</th>
 
                                 </tr>
 
@@ -765,10 +777,10 @@
 
                             <tbody class="tbody">
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="35.46099290780141%" headers="d19313e1060 ">Log Format</td>
+                                    <td class="entry" valign="top" width="35.46099290780141%" headers="d19419e1065 ">Log Format</td>
 
-                                    <td class="entry" valign="top" width="64.53900709219857%" headers="d19313e1063 ">Format of the log files. Use one of the following
-                                            options:<ul class="ul" id="task_gfj_ssv_yq__d2497e667">
+                                    <td class="entry" valign="top" width="64.53900709219857%" headers="d19419e1068 ">Format of the log files. Use one of the following
+                                            options:<ul class="ul" id="task_gfj_ssv_yq__d2467e667">
                                             <li class="li">Common Log Format</li>
 
                                             <li class="li">Combined Log Format</li>
@@ -789,17 +801,17 @@
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="35.46099290780141%" headers="d19313e1060 ">Max Line Length</td>
+                                    <td class="entry" valign="top" width="35.46099290780141%" headers="d19419e1065 ">Max Line Length</td>
 
-                                    <td class="entry" valign="top" width="64.53900709219857%" headers="d19313e1063 ">Maximum length of a log line. The origin truncates longer
+                                    <td class="entry" valign="top" width="64.53900709219857%" headers="d19419e1068 ">Maximum length of a log line. The origin truncates longer
                                         lines. </td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="35.46099290780141%" headers="d19313e1060 ">Retain Original Line</td>
+                                    <td class="entry" valign="top" width="35.46099290780141%" headers="d19419e1065 ">Retain Original Line</td>
 
-                                    <td class="entry" valign="top" width="64.53900709219857%" headers="d19313e1063 ">Determines how to treat the original log line. Select to
+                                    <td class="entry" valign="top" width="64.53900709219857%" headers="d19419e1068 ">Determines how to treat the original log line. Select to
                                         include the original log line as a field in the resulting
                                             record.<p class="p">By default, the original line is
                                             discarded.</p>
@@ -812,7 +824,7 @@
                         </table>
 </div>
 
-                    <ul class="ul" id="task_gfj_ssv_yq__d2497e716">
+                    <ul class="ul" id="task_gfj_ssv_yq__d2467e716">
                         <li class="li">When you select <span class="ph uicontrol">Apache Access Log Custom Format</span>,
                             use Apache log format strings to define the <span class="ph uicontrol">Custom Log
                                 Format</span>.</li>
@@ -830,14 +842,14 @@
 
                         <li class="li">When you select <span class="ph uicontrol">Log4j</span>, define the following properties:<div class="p">
                                 
-<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_gfj_ssv_yq__d2497e756" class="table" frame="border" border="1" rules="all">
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_gfj_ssv_yq__d2467e756" class="table" frame="border" border="1" rules="all">
                                         
                                         
                                         <thead class="thead" align="left">
                                             <tr class="row">
-                                                <th class="entry" valign="top" width="30.959752321981426%" id="d19313e1183">Log4j Property</th>
+                                                <th class="entry" valign="top" width="30.959752321981426%" id="d19419e1188">Log4j Property</th>
 
-                                                <th class="entry" valign="top" width="69.04024767801857%" id="d19313e1186">Description</th>
+                                                <th class="entry" valign="top" width="69.04024767801857%" id="d19419e1191">Description</th>
 
                                             </tr>
 
@@ -845,10 +857,10 @@
 
                                         <tbody class="tbody">
                                             <tr class="row">
-                                                <td class="entry" valign="top" width="30.959752321981426%" headers="d19313e1183 ">On Parse Error</td>
+                                                <td class="entry" valign="top" width="30.959752321981426%" headers="d19419e1188 ">On Parse Error</td>
 
-                                                <td class="entry" valign="top" width="69.04024767801857%" headers="d19313e1186 ">Determines how to handle information that
-                                                  cannot be parsed:<ul class="ul" id="task_gfj_ssv_yq__d2497e785">
+                                                <td class="entry" valign="top" width="69.04024767801857%" headers="d19419e1191 ">Determines how to handle information that
+                                                  cannot be parsed:<ul class="ul" id="task_gfj_ssv_yq__d2467e785">
                                                   <li class="li">Skip and Log Error - Skips reading the line
                                                   and logs a stage error.</li>
 
@@ -867,17 +879,17 @@
                                             </tr>
 
                                             <tr class="row">
-                                                <td class="entry" valign="top" width="30.959752321981426%" headers="d19313e1183 ">Use Custom Log Format</td>
+                                                <td class="entry" valign="top" width="30.959752321981426%" headers="d19419e1188 ">Use Custom Log Format</td>
 
-                                                <td class="entry" valign="top" width="69.04024767801857%" headers="d19313e1186 ">Allows you to define a custom log
+                                                <td class="entry" valign="top" width="69.04024767801857%" headers="d19419e1191 ">Allows you to define a custom log
                                                   format.</td>
 
                                             </tr>
 
                                             <tr class="row">
-                                                <td class="entry" valign="top" width="30.959752321981426%" headers="d19313e1183 ">Custom Format</td>
+                                                <td class="entry" valign="top" width="30.959752321981426%" headers="d19419e1188 ">Custom Format</td>
 
-                                                <td class="entry" valign="top" width="69.04024767801857%" headers="d19313e1186 ">Use log4j variables to define a custom log
+                                                <td class="entry" valign="top" width="69.04024767801857%" headers="d19419e1191 ">Use log4j variables to define a custom log
                                                   format.</td>
 
                                             </tr>

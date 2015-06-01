@@ -2,7 +2,7 @@
 <!DOCTYPE html
   SYSTEM "about:legacy-compat">
 <html xml:lang="en-us" lang="en-us">
-<head><meta name="description" content="The Data Collector can run standalone mode or cluster mode. In standalone mode, the Data Collector runs as a single Data Collector process. The Data Collector runs in standalone mode by default. In ..."></meta><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><meta name="copyright" content="(C) Copyright 2005"></meta><meta name="DC.rights.owner" content="(C) Copyright 2005"></meta><meta name="DC.Type" content="concept"></meta><meta name="DC.Title" content="Execution Mode"></meta><meta name="abstract" content="The Data Collector can run standalone mode or cluster mode. In standalone mode, the Data Collector runs as a single Data Collector process. The Data Collector runs in standalone mode by default."></meta><meta name="description" content="The Data Collector can run standalone mode or cluster mode. In standalone mode, the Data Collector runs as a single Data Collector process. The Data Collector runs in standalone mode by default."></meta><meta name="DC.Relation" scheme="URI" content="../Advanced_Config/AdvancedPipelineConfig-title.html"></meta><meta name="DC.Format" content="XHTML"></meta><meta name="DC.Identifier" content="concept_hmh_kfn_1s"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/commonltr.css"><!----></link><title>Execution Mode</title><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/webhelp_topic.css"><!----></link><link rel="stylesheet" type="text/css" href="../skin.css"></link><script type="text/javascript"><!--
+<head><meta name="description" content="The Data Collector can run standalone mode or cluster mode. In standalone mode, the Data Collector runs as a single Data Collector process. The Data Collector runs in standalone mode by default. In ..."></meta><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><meta name="copyright" content="(C) Copyright 2005"></meta><meta name="DC.rights.owner" content="(C) Copyright 2005"></meta><meta name="DC.Type" content="concept"></meta><meta name="DC.Title" content="Cluster Execution Mode"></meta><meta name="abstract" content="The Data Collector can run standalone mode or cluster mode. In standalone mode, the Data Collector runs as a single Data Collector process. The Data Collector runs in standalone mode by default."></meta><meta name="description" content="The Data Collector can run standalone mode or cluster mode. In standalone mode, the Data Collector runs as a single Data Collector process. The Data Collector runs in standalone mode by default."></meta><meta name="DC.Relation" scheme="URI" content="../Advanced_Config/AdvancedPipelineConfig-title.html"></meta><meta name="DC.Format" content="XHTML"></meta><meta name="DC.Identifier" content="concept_hmh_kfn_1s"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/commonltr.css"><!----></link><title>Cluster Execution Mode</title><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/webhelp_topic.css"><!----></link><link rel="stylesheet" type="text/css" href="../skin.css"></link><script type="text/javascript"><!--
           
           var prefix = "../index.html";
           
@@ -11,7 +11,7 @@
 <table class="nav"><tbody><tr><td colspan="2"><div id="printlink"><a href="javascript:window.print();" title="Print this page"></a></div><div id="permalink"><a href="#" title="Link to this page"></a></div></td></tr><tr><td width="75%"><a class="navheader_parent_path" href="../Advanced_Config/AdvancedPipelineConfig-title.html" title="Advanced Configuration">Advanced Configuration</a></td><td><div class="navheader">
 <span class="navparent"><a class="link" href="../Advanced_Config/AdvancedPipelineConfig-title.html" title="Advanced Configuration"><span class="navheader_label">Parent topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">Advanced Configuration</span></a></span>  </div></td></tr></tbody></table>
 <div class="nested0" id="concept_hmh_kfn_1s">
- <h1 class="title topictitle1">Execution Mode</h1>
+ <h1 class="title topictitle1">Cluster Execution Mode</h1>
 
  
  <div class="body conbody"><p class="shortdesc">The <span class="ph">Data
@@ -25,12 +25,13 @@
 
   <p class="p">In cluster mode, the <span class="ph">Data
                   Collector</span> runs as an
-   application within Spark Streaming, allowing it to process large volumes of data from a Kafka CDH
+   application within Spark Streaming, allowing it to process large volumes of data from a Kafka
    cluster. </p>
 
-  <p class="p">Spark Streaming is an open source cluster-computing application that is installed as part of
-   the Kafka CDH. Within Spark Streaming, the <span class="ph">Data
-                  Collector</span> spawns a <span class="ph">Data
+  <p class="p">Spark Streaming is an open source cluster-computing application. Within Spark Streaming, the
+    <span class="ph">Data
+                  Collector</span> spawns a
+    <span class="ph">Data
                   Collector</span> worker for
    each partition in the Kafka cluster. So each partition has a <span class="ph">Data
                   Collector</span> worker to
@@ -45,6 +46,8 @@
                   Collector</span> in cluster
    mode to perform the expensive transformation.</p>
 
+  <p class="p">Cluster mode is supported on Kafka CDH at this time. </p>
+
  </div>
 
 <div class="related-links"></div>
@@ -55,6 +58,9 @@
         <div class="section context">
             <div class="p">To run the <span class="ph">Data
                   Collector</span> in cluster mode, perform the following steps:<ol class="ol" id="task_gmd_msw_yr__ol_e32_llw_yr">
+                    <li class="li">Install Kafka, Spark Streaming, and YARN from the Cloudera
+                            CDH.</li>
+
                     <li class="li">Install the <span class="ph">Data
                   Collector</span> on a Spark on YARN gateway node.</li>
 

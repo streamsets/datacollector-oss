@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_hmh_kfn_1s">
- <title>Execution Mode</title>
+ <title>Cluster Execution Mode</title>
  <shortdesc>The <ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
   /> can run standalone mode or cluster mode. In standalone mode, the <ph
    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> runs as a
@@ -14,12 +14,11 @@
     mode<indexterm>description</indexterm></indexterm><indexterm>standalone
      mode<indexterm>description</indexterm></indexterm>In cluster mode, the <ph
     conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> runs as an
-   application within Spark Streaming, allowing it to process large volumes of data from a Kafka CDH
+   application within Spark Streaming, allowing it to process large volumes of data from a Kafka
    cluster. </p>
-  <p>Spark Streaming is an open source cluster-computing application that is installed as part of
-   the Kafka CDH. Within Spark Streaming, the <ph
-    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> spawns a <ph
-    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> worker for
+  <p>Spark Streaming is an open source cluster-computing application. Within Spark Streaming, the
+    <ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> spawns a
+    <ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> worker for
    each partition in the Kafka cluster. So each partition has a <ph
     conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> worker to
    process data. </p>
@@ -29,5 +28,6 @@
    on each application server to push the log records to Kafka. Then on the Kafka cluster, use the
     <ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> in cluster
    mode to perform the expensive transformation.</p>
+  <p>Cluster mode is supported on Kafka CDH at this time. </p>
  </conbody>
 </concept>

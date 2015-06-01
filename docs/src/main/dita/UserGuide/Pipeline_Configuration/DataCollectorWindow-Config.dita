@@ -38,7 +38,7 @@
           <row>
             <entry>3</entry>
             <entry>Stage list</entry>
-            <entry>Lists the stages in the pipeline. Use to select a stage to configure. , You can
+            <entry>Lists the stages in the pipeline. Use to select a stage to configure. You can
               also select the stage in the canvas.</entry>
           </row>
           <row>
@@ -59,8 +59,8 @@
             <entry><image href="../Graphics/icon_Issues.png" id="image_lmk_p4z_sq" 
               /></entry>
             <entry>Issues icon</entry>
-            <entry>Displays the number of validation issues in the pipeline. Click to view a
-              detailed list of issues.</entry>
+            <entry>Displays the number of implicit validation issues in the pipeline. Click to view
+              a detailed list of issues found during implicit validation.</entry>
           </row>
           <row>
             <entry><image href="../Graphics/icon-ConfigMore.png" id="image_mwf_yzw_rr"/></entry>
@@ -116,8 +116,12 @@
           <row>
             <entry><image href="../Graphics/icon-ConfigStageIssue.png" id="image_o3b_lcx_rr"
               /></entry>
-            <entry>Validation Error icon</entry>
-            <entry>Indicates a validation error exists in the indicated stage.</entry>
+            <entry>Error icon</entry>
+            <entry>Indicates that one or more required properties are not defined. Can display on a
+              stage for stage properties or in the canvas for pipeline properties. <p>Related error
+                messages display when you hover over the icon. You can also view the messages in the
+                Issues list.</p><p>The icon can also display on tabs in the properties panel to
+                indicate the location of missing properties. </p></entry>
           </row>
         </tbody>
       </tgroup>

@@ -20,8 +20,8 @@
           <dd>The pipeline writes error records and related details to a local directory. The <ph
               conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
             includes the records in error record counts and metrics.</dd>
-          <dd>You define the directory to use and the maximum file size. Error files are named as
-            follows: <codeph>records-&lt;file number>.json.</codeph></dd>
+          <dd>You define the directory to use and the maximum file size. Error files are named based
+            on the File Prefix pipeline property. </dd>
         </dlentry>
         <dlentry>
           <dt>Write to Kafka</dt>

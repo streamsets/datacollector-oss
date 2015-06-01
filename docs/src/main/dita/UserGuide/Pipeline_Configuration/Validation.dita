@@ -12,8 +12,8 @@
        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> console
       saves your changes. Implicit validation lists missing or incomplete configuration, such as an
       unconnected stage or a required property that has not been configured. </dd>
-     <dd>Errors found by logical validation display in the Issues list. An error icon displays on
-            stages with static validation errors.</dd>
+     <dd>Errors found by logical validation display in the Issues list. An error icons display on
+            stages with undefined  required properties and on the canvas when for pipeline issues. </dd>
     </dlentry>
     <dlentry>
      <dt>Explicit validation</dt>
@@ -24,6 +24,8 @@
       and verifies whether the pipeline can run as configured. </dd>
      <dd>For example, while implicit validation verifies that you entered a value for a URI,
             explicit validation tests the validity of the URI by connecting to the system. </dd>
+          <dd>Errors found by explicit validation display in a list from the validation error
+            message. </dd>
     </dlentry>
    </dl></p>
  </conbody>
