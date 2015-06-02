@@ -36,7 +36,7 @@ public class SelectorDProcessor extends DProcessor {
       description = "Records that match the condition pass to the stream",
       displayPosition = 10,
       group = "CONDITIONS",
-      elDefs = {RecordEL.class, StringEL.class}
+      elDefs = {RecordEL.class}
   )
   @LanePredicateMapping
   public List<Map<String, String>> lanePredicates;

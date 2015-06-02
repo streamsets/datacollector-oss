@@ -31,7 +31,7 @@ public class ExpressionProcessorConfig {
       label = "Expression",
       description = "Use the expression language to modify values in a field.",
       displayPosition = 20,
-      elDefs = {RecordEL.class, StringEL.class, ELSupport.class},
+      elDefs = {RecordEL.class, ELSupport.class},
       evaluation = ConfigDef.Evaluation.EXPLICIT
   )
   public String expression;

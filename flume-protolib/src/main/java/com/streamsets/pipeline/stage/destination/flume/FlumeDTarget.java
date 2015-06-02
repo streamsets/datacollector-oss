@@ -259,8 +259,7 @@ public class FlumeDTarget extends DTarget {
     displayPosition = 190,
     group = "TEXT",
     dependsOn = "dataFormat",
-    triggeredByValue = "TEXT",
-    elDefs = {StringEL.class}
+    triggeredByValue = "TEXT"
   )
   @FieldSelector(singleValued = true)
   public String textFieldPath;
