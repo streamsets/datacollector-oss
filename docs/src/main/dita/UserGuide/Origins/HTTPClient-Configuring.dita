@@ -31,6 +31,11 @@
                                     <entry>URL where the data resides. </entry>
                                 </row>
                                 <row>
+                                    <entry>HTTP Method</entry>
+                                    <entry>HTTP method to use to request data from the
+                                        server.</entry>
+                                </row>
+                                <row>
                                     <entry>Request Timeout</entry>
                                     <entry>Milliseconds to wait for the server to begin sending a
                                         response. </entry>

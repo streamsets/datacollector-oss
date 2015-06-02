@@ -2,7 +2,7 @@
 <!DOCTYPE html
   SYSTEM "about:legacy-compat">
 <html xml:lang="en-us" lang="en-us">
-<head><meta name="description" content="The HTTP Client origin reads JSON data from an HTTP resource URL. When you configure HTTP Client, you specify the resource URL and other read properties. You can also provide OAuth credentials when ..."></meta><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><meta name="copyright" content="(C) Copyright 2005"></meta><meta name="DC.rights.owner" content="(C) Copyright 2005"></meta><meta name="DC.Type" content="concept"></meta><meta name="DC.Title" content="HTTP Client"></meta><meta name="abstract" content="The HTTP Client origin reads JSON data from an HTTP resource URL."></meta><meta name="description" content="The HTTP Client origin reads JSON data from an HTTP resource URL."></meta><meta name="DC.Relation" scheme="URI" content="../Origins/Origins_title.html"></meta><meta name="DC.Format" content="XHTML"></meta><meta name="DC.Identifier" content="concept_wk4_bjz_5r"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/commonltr.css"><!----></link><title>HTTP Client</title><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/webhelp_topic.css"><!----></link><link rel="stylesheet" type="text/css" href="../skin.css"></link><script type="text/javascript"><!--
+<head><meta name="description" content="The HTTP Client origin reads JSON data from an HTTP resource URL. When you configure HTTP Client, you specify the resource URL and other read properties. When required, you can provide OAuth ..."></meta><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><meta name="copyright" content="(C) Copyright 2005"></meta><meta name="DC.rights.owner" content="(C) Copyright 2005"></meta><meta name="DC.Type" content="concept"></meta><meta name="DC.Title" content="HTTP Client"></meta><meta name="abstract" content="The HTTP Client origin reads JSON data from an HTTP resource URL."></meta><meta name="description" content="The HTTP Client origin reads JSON data from an HTTP resource URL."></meta><meta name="DC.Relation" scheme="URI" content="../Origins/Origins_title.html"></meta><meta name="DC.Relation" scheme="URI" content="../Advanced_Config/RuntimeResources.html#concept_bs4_5nm_2s"></meta><meta name="DC.Format" content="XHTML"></meta><meta name="DC.Identifier" content="concept_wk4_bjz_5r"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/commonltr.css"><!----></link><title>HTTP Client</title><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/webhelp_topic.css"><!----></link><link rel="stylesheet" type="text/css" href="../skin.css"></link><script type="text/javascript"><!--
           
           var prefix = "../index.html";
           
@@ -17,9 +17,21 @@
  <div class="body conbody"><p class="shortdesc">The HTTP Client origin reads JSON data from an HTTP resource URL.</p>
 
   <p class="p">When you configure HTTP Client, you specify the resource URL
-      and other read properties. You can also provide OAuth credentials when required. </p>
+      and other read properties. When required, you can provide OAuth credentials or use runtime
+      resources to save OAuth credentials in restricted files for runtime-only access.</p>
 
-  <div class="p">HTTP Client can use one of the following processing modes to read source data:<dl class="dl">
+ </div>
+
+  <div class="related-links"><div class="relinfo relconcepts"><strong>Related concepts</strong><br></br>
+<div class="related_link"><a class="navheader_parent_path" href="../Advanced_Config/RuntimeResources.html#concept_bs4_5nm_2s" title="Similar to runtime properties, runtime resources are values that load from a file at runtime. Unlike runtime properties, you can restrict the permissions for the files to secure sensitive information. Use runtime properties to load sensitive information from files at runtime.">Runtime Resources</a></div>
+</div>
+</div>
+<div class="topic concept nested1" id="concept_erx_tjp_fs">
+ <h2 class="title topictitle2">Processing Mode</h2>
+
+ <div class="body conbody">
+  <div class="p">HTTP Client can use one of the following processing modes to read
+   source data:<dl class="dl">
     
      <dt class="dt dlterm">Streaming</dt>
 
@@ -39,7 +51,32 @@
 
  </div>
 
-<div class="related-links"></div>
+</div>
+<div class="topic concept nested1" id="concept_zyc_53p_fs">
+ <h2 class="title topictitle2">HTTP Method</h2>
+
+ <div class="body conbody">
+  <p class="p">To request data
+      from an HTTP resource URL, specify the request method to use. Most servers require a GET
+      request, but you should verify the request required by the server you want to access.</p>
+
+  <div class="p">You can use the following methods:<ul class="ul" id="concept_zyc_53p_fs__ul_kn3_gkp_fs">
+    <li class="li">GET</li>
+
+    <li class="li">PUT</li>
+
+    <li class="li">POST</li>
+
+    <li class="li">DELETE</li>
+
+    <li class="li">HEAD</li>
+
+   </ul>
+</div>
+
+ </div>
+
+</div>
 <div class="topic task nested1" id="task_akl_rkz_5r">
     <h2 class="title topictitle2">Configuring an HTTP Client Origin</h2>
 
@@ -59,9 +96,9 @@
                             
                             <thead class="thead" align="left">
                                 <tr class="row">
-                                    <th class="entry" valign="top" width="25%" id="d22576e106">HTTP Property</th>
+                                    <th class="entry" valign="top" width="25%" id="d22972e174">HTTP Property</th>
 
-                                    <th class="entry" valign="top" width="75%" id="d22576e109">Description</th>
+                                    <th class="entry" valign="top" width="75%" id="d22972e177">Description</th>
 
                                 </tr>
 
@@ -69,31 +106,39 @@
 
                             <tbody class="tbody">
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="25%" headers="d22576e106 ">Data Format</td>
+                                    <td class="entry" valign="top" width="25%" headers="d22972e174 ">Data Format</td>
 
-                                    <td class="entry" valign="top" width="75%" headers="d22576e109 ">HTTP Client reads JSON data.</td>
-
-                                </tr>
-
-                                <tr class="row">
-                                    <td class="entry" valign="top" width="25%" headers="d22576e106 ">Resource URL</td>
-
-                                    <td class="entry" valign="top" width="75%" headers="d22576e109 ">URL where the data resides. </td>
+                                    <td class="entry" valign="top" width="75%" headers="d22972e177 ">HTTP Client reads JSON data.</td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="25%" headers="d22576e106 ">Request Timeout</td>
+                                    <td class="entry" valign="top" width="25%" headers="d22972e174 ">Resource URL</td>
 
-                                    <td class="entry" valign="top" width="75%" headers="d22576e109 ">Milliseconds to wait for the server to begin sending a
+                                    <td class="entry" valign="top" width="75%" headers="d22972e177 ">URL where the data resides. </td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="25%" headers="d22972e174 ">HTTP Method</td>
+
+                                    <td class="entry" valign="top" width="75%" headers="d22972e177 ">HTTP method to use to request data from the
+                                        server.</td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="25%" headers="d22972e174 ">Request Timeout</td>
+
+                                    <td class="entry" valign="top" width="75%" headers="d22972e177 ">Milliseconds to wait for the server to begin sending a
                                         response. </td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="25%" headers="d22576e106 ">Mode</td>
+                                    <td class="entry" valign="top" width="25%" headers="d22972e174 ">Mode</td>
 
-                                    <td class="entry" valign="top" width="75%" headers="d22576e109 ">Processing mode:<ul class="ul" id="task_akl_rkz_5r__ul_nfn_slz_5r">
+                                    <td class="entry" valign="top" width="75%" headers="d22972e177 ">Processing mode:<ul class="ul" id="task_akl_rkz_5r__ul_nfn_slz_5r">
                                             <li class="li">Streaming - Maintains a connection and processes
                                                 data as it becomes available.</li>
 
@@ -106,34 +151,34 @@
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="25%" headers="d22576e106 ">Polling Interval (ms) </td>
+                                    <td class="entry" valign="top" width="25%" headers="d22972e174 ">Polling Interval (ms) </td>
 
-                                    <td class="entry" valign="top" width="75%" headers="d22576e109 ">Milliseconds the origin waits before checking for new
+                                    <td class="entry" valign="top" width="75%" headers="d22972e177 ">Milliseconds the origin waits before checking for new
                                         data. Used in the polling mode only. </td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="25%" headers="d22576e106 ">Use OAuth</td>
+                                    <td class="entry" valign="top" width="25%" headers="d22972e174 ">Use OAuth</td>
 
-                                    <td class="entry" valign="top" width="75%" headers="d22576e109 ">Determines whether OAuth credentials are used to connect
+                                    <td class="entry" valign="top" width="75%" headers="d22972e177 ">Determines whether OAuth credentials are used to connect
                                         to the server. </td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="25%" headers="d22576e106 ">Batch Size</td>
+                                    <td class="entry" valign="top" width="25%" headers="d22972e174 ">Batch Size</td>
 
-                                    <td class="entry" valign="top" width="75%" headers="d22576e109 ">Maximum number of JSON objects to include in a batch and
+                                    <td class="entry" valign="top" width="75%" headers="d22972e177 ">Maximum number of JSON objects to include in a batch and
                                         send through the pipeline at one time.</td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="25%" headers="d22576e106 ">Batch Wait Time (ms)  <a class="xref" href="Origins_overview.html#concept_ypd_vgr_5q" title="For origin stages, the batch size determines the maximum number of records sent through the pipeline at one time. The batch wait time determines the time that the origin waits for data before sending a batch. At the end of the wait time, it sends the batch regardless of how many records the batch contains.">
+                                    <td class="entry" valign="top" width="25%" headers="d22972e174 ">Batch Wait Time (ms)  <a class="xref" href="Origins_overview.html#concept_ypd_vgr_5q" title="For origin stages, the batch size determines the maximum number of records sent through the pipeline at one time. The batch wait time determines the time that the origin waits for data before sending a batch. At the end of the wait time, it sends the batch regardless of how many records the batch contains.">
                                             <img class="image" id="task_akl_rkz_5r__image_mgp_2q3_br" src="../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
 
-                                    <td class="entry" valign="top" width="75%" headers="d22576e109 ">Maximum amount of time to wait before sending a partial
+                                    <td class="entry" valign="top" width="75%" headers="d22972e177 ">Maximum amount of time to wait before sending a partial
                                         or empty batch. </td>
 
                                 </tr>
@@ -155,9 +200,9 @@
                             
                             <thead class="thead" align="left">
                                 <tr class="row">
-                                    <th class="entry" valign="top" width="29.49852507374631%" id="d22576e231">OAuth Property</th>
+                                    <th class="entry" valign="top" width="29.49852507374631%" id="d22972e308">OAuth Property</th>
 
-                                    <th class="entry" valign="top" width="70.50147492625369%" id="d22576e234">Description</th>
+                                    <th class="entry" valign="top" width="70.50147492625369%" id="d22972e311">Description</th>
 
                                 </tr>
 
@@ -165,30 +210,30 @@
 
                             <tbody class="tbody">
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="29.49852507374631%" headers="d22576e231 ">Consumer Key</td>
+                                    <td class="entry" valign="top" width="29.49852507374631%" headers="d22972e308 ">Consumer Key</td>
 
-                                    <td class="entry" valign="top" width="70.50147492625369%" headers="d22576e234 ">OAuth consumer key.</td>
-
-                                </tr>
-
-                                <tr class="row">
-                                    <td class="entry" valign="top" width="29.49852507374631%" headers="d22576e231 ">Consumer Secret</td>
-
-                                    <td class="entry" valign="top" width="70.50147492625369%" headers="d22576e234 ">OAuth consumer secret.</td>
+                                    <td class="entry" valign="top" width="70.50147492625369%" headers="d22972e311 ">OAuth consumer key.</td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="29.49852507374631%" headers="d22576e231 ">Token</td>
+                                    <td class="entry" valign="top" width="29.49852507374631%" headers="d22972e308 ">Consumer Secret</td>
 
-                                    <td class="entry" valign="top" width="70.50147492625369%" headers="d22576e234 ">OAuth consumer token.</td>
+                                    <td class="entry" valign="top" width="70.50147492625369%" headers="d22972e311 ">OAuth consumer secret.</td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="29.49852507374631%" headers="d22576e231 ">Token Secret</td>
+                                    <td class="entry" valign="top" width="29.49852507374631%" headers="d22972e308 ">Token</td>
 
-                                    <td class="entry" valign="top" width="70.50147492625369%" headers="d22576e234 ">OAuth token secret.</td>
+                                    <td class="entry" valign="top" width="70.50147492625369%" headers="d22972e311 ">OAuth consumer token.</td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="29.49852507374631%" headers="d22972e308 ">Token Secret</td>
+
+                                    <td class="entry" valign="top" width="70.50147492625369%" headers="d22972e311 ">OAuth token secret.</td>
 
                                 </tr>
 
@@ -208,9 +253,9 @@
                             
                             <thead class="thead" align="left">
                                 <tr class="row">
-                                    <th class="entry" valign="top" width="32.467532467532465%" id="d22576e304">JSON Property</th>
+                                    <th class="entry" valign="top" width="32.467532467532465%" id="d22972e381">JSON Property</th>
 
-                                    <th class="entry" valign="top" width="67.53246753246754%" id="d22576e307">Description</th>
+                                    <th class="entry" valign="top" width="67.53246753246754%" id="d22972e384">Description</th>
 
                                 </tr>
 
@@ -218,9 +263,9 @@
 
                             <tbody class="tbody">
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="32.467532467532465%" headers="d22576e304 ">JSON Content</td>
+                                    <td class="entry" valign="top" width="32.467532467532465%" headers="d22972e381 ">JSON Content</td>
 
-                                    <td class="entry" valign="top" width="67.53246753246754%" headers="d22576e307 ">Type of JSON content to be processed:<ul class="ul" id="task_akl_rkz_5r__ul_r32_q4z_5r">
+                                    <td class="entry" valign="top" width="67.53246753246754%" headers="d22972e384 ">Type of JSON content to be processed:<ul class="ul" id="task_akl_rkz_5r__ul_r32_q4z_5r">
                                             <li class="li">JSON Array of Objects - Use to process data in
                                                 polling mode. </li>
 
@@ -233,9 +278,9 @@
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="32.467532467532465%" headers="d22576e304 ">Entity Delimiter</td>
+                                    <td class="entry" valign="top" width="32.467532467532465%" headers="d22972e381 ">Entity Delimiter</td>
 
-                                    <td class="entry" valign="top" width="67.53246753246754%" headers="d22576e307 ">Delimiter to indicate the end of a JSON record, such as
+                                    <td class="entry" valign="top" width="67.53246753246754%" headers="d22972e384 ">Delimiter to indicate the end of a JSON record, such as
                                         \n or \r.  Used when processing multiple JSON objects.
                                     </td>
 

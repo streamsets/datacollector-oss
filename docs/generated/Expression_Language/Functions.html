@@ -2,7 +2,7 @@
 <!DOCTYPE html
   SYSTEM "about:legacy-compat">
 <html xml:lang="en-us" lang="en-us">
-<head><meta name="description" content="The expression language provides the following types of functions: Record functions Error functions String functions Miscellaneous functions Use record functions to get information about a record in ..."></meta><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><meta name="copyright" content="(C) Copyright 2005"></meta><meta name="DC.rights.owner" content="(C) Copyright 2005"></meta><meta name="DC.Type" content="concept"></meta><meta name="DC.Title" content="Functions"></meta><meta name="abstract" content="The expression language provides the following types of functions:"></meta><meta name="description" content="The expression language provides the following types of functions:"></meta><meta name="DC.Relation" scheme="URI" content="../Expression_Language/ExpressionLanguage_title.html"></meta><meta name="DC.Format" content="XHTML"></meta><meta name="DC.Identifier" content="concept_lhz_pyp_1r"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/commonltr.css"><!----></link><title>Functions</title><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/webhelp_topic.css"><!----></link><link rel="stylesheet" type="text/css" href="../skin.css"></link><script type="text/javascript"><!--
+<head><meta name="description" content="The expression language provides the following types of functions: Record functions Error functions String functions Miscellaneous functions Use record functions to determine information about a ..."></meta><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><meta name="copyright" content="(C) Copyright 2005"></meta><meta name="DC.rights.owner" content="(C) Copyright 2005"></meta><meta name="DC.Type" content="concept"></meta><meta name="DC.Title" content="Functions"></meta><meta name="abstract" content="The expression language provides the following types of functions:"></meta><meta name="description" content="The expression language provides the following types of functions:"></meta><meta name="DC.Relation" scheme="URI" content="../Expression_Language/ExpressionLanguage_title.html"></meta><meta name="DC.Format" content="XHTML"></meta><meta name="DC.Identifier" content="concept_lhz_pyp_1r"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/commonltr.css"><!----></link><title>Functions</title><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/webhelp_topic.css"><!----></link><link rel="stylesheet" type="text/css" href="../skin.css"></link><script type="text/javascript"><!--
           
           var prefix = "../index.html";
           
@@ -34,23 +34,19 @@
  <h2 class="title topictitle2">Record Functions</h2>
 
  
- <div class="body conbody"><p class="shortdesc">Use record functions to get information about a record in the SDC Record data format,
-  such as the data type of a field or the stage instance name for a record. </p>
+ <div class="body conbody"><p class="shortdesc">Use record functions to determine information about a record, such as the stage that
+  created it or whether a field exists in the record. </p>
 
-  <div class="p">Records in SDC Record
-   data format include the following types of records:<ul class="ul" id="concept_p1z_ggv_1r__ul_gxc_rqv_tr">
-    <li class="li">Any record being processed by the pipeline.</li>
-
-    <li class="li">Error records.</li>
-
-    <li class="li">Records written to a destination in the SDC Record data format.</li>
-
-   </ul>
-</div>
-
-  <p class="p">The expression language provides the following record functions:</p>
+  <p class="p">The expression language provides the
+   following general record functions:</p>
 
   <dl class="dl">
+   
+    <dt class="dt dlterm">record:attribute('&lt;attribute name'&gt;)</dt>
+
+    <dd class="dd">Returns the value of the specified record attribute. </dd>
+
+   
    
     <dt class="dt dlterm">record:creator()</dt>
 
@@ -73,7 +69,7 @@
     <dt class="dt dlterm">record:id()</dt>
 
     <dd class="dd">Returns the ID of the stage that created the record, typically an origin stage. Data is
-     stored in the sourceId field of a  record. </dd>
+     stored in the sourceId field of a record. </dd>
 
     <dd class="dd">Return type: String.</dd>
 
@@ -139,23 +135,95 @@
    
   </dl>
 
-  <p class="p"> </p>
+ </div>
 
-  <p class="p"> </p>
+<div class="topic concept nested2" id="concept_s2c_q14_fs">
+ <h3 class="title topictitle3">Delimited Data Functions</h3>
+
+ 
+ <div class="body conbody"><p class="shortdesc">When reading delimited data, the <span class="ph">Data
+                  Collector</span> generates
+  records of the List data format with a map of the header and value. Use delimited data functions
+  to process delimited data, such as returning the value associated with a header or checking for
+  duplicate headers. </p>
+
+  <p class="p">For more information about the delimited
+   data record format, see <a class="xref" href="../Pipeline_Configuration/PipelineDesign.html#concept_zcg_bm4_fs" title="When reading delimited data, the Data Collector converts each row of delimited data to a record in List data format. To perform additional processing on the record, you can use the general expression language with your knowledge of the resulting record format or you can use delimited data functions.">Delimited Data Record Structure</a>.</p>
+
+  <div class="p">The expression language provides the following delimited data functions:<dl class="dl">
+    
+     <dt class="dt dlterm">record:dExists('&lt;header&gt;')</dt>
+
+     <dd class="dd">Determines if the specified header exists in the record.</dd>
+
+     <dd class="dd">Return type: Boolean.</dd>
+
+    
+    
+     <dt class="dt dlterm">record:dHasDupHeader()</dt>
+
+     <dd class="dd">Determines if the record has duplicate headers. </dd>
+
+     <dd class="dd">Return type: Boolean.</dd>
+
+    
+    
+     <dt class="dt dlterm">record:dIndex('&lt;header&gt;')</dt>
+
+     <dd class="dd">Returns the index associated with the specified header. Use to find the position of a
+      header in the record. </dd>
+
+     <dd class="dd">Return type: Integer, starting with 0 for the first position.</dd>
+
+    
+    
+     <dt class="dt dlterm">record:dIsDupHeader('&lt;header&gt;')</dt>
+
+     <dd class="dd">Determines if the specified header is used more than once in a record. </dd>
+
+     <dd class="dd">Return type: Boolean.</dd>
+
+    
+    
+     <dt class="dt dlterm">record:dToMap()</dt>
+
+     <dd class="dd">Converts the record to a JSON map using headers as keys.</dd>
+
+     <dd class="dd">Return type: Record in map format.</dd>
+
+    
+    
+     <dt class="dt dlterm">record:dValue('&lt;header&gt;')</dt>
+
+     <dd class="dd">Returns the value associated with the specified header. </dd>
+
+     <dd class="dd">Return type: String.</dd>
+
+    
+    
+     <dt class="dt dlterm">record:dValueAt(&lt;header index&gt;)</dt>
+
+     <dd class="dd">Returns the value at the specified header index position.</dd>
+
+     <dd class="dd">Return type: String.</dd>
+
+    
+   </dl>
+</div>
 
  </div>
 
 </div>
-<div class="topic concept nested1" id="concept_ndj_43v_1r">
- <h2 class="title topictitle2">Error Functions</h2>
+<div class="topic concept nested2" id="concept_ndj_43v_1r">
+ <h3 class="title topictitle3">Error Record Functions</h3>
 
  
- <div class="body conbody"><p class="shortdesc">Error functions provide information about error records. Use error functions to process
-  error records.</p>
+ <div class="body conbody"><p class="shortdesc">Error record functions provide information about error records. Use error functions to
+  process error records.</p>
 
-  <p class="p">For example, you might
-   use error functions in a Stream Selector to pass data to different error handling pipelines based
-   on the type of error that occurred. </p>
+  <p class="p">For example, you might use error
+   functions in a Stream Selector to pass data to different error handling pipelines based on the
+   type of error that occurred. </p>
 
   <p class="p">The expression language provides the following error functions:</p>
 
@@ -227,15 +295,16 @@
  </div>
 
 </div>
+</div>
 <div class="topic concept nested1" id="concept_ahp_f4v_1r">
  <h2 class="title topictitle2">String Functions</h2>
 
  
  <div class="body conbody"><p class="shortdesc">Use string functions to transform string data. </p>
 
-  <div class="p">You can replace any
-      argument with a constant, or a field or expression that evaluates to an appropriate constant.
-        <div class="note note"><span class="notetitle">Note:</span> Strings should be enclosed in quotation marks. Indexes start at 0. </div>
+  <div class="p">You can replace any argument with a
+      constant, or a field or expression that evaluates to an appropriate constant. <div class="note note"><span class="notetitle">Note:</span> Strings
+        should be enclosed in quotation marks. Indexes start at 0. </div>
 </div>
 
   <p class="p">The expression language provides the following string functions:</p>
@@ -439,8 +508,8 @@
  <h2 class="title topictitle2">Miscellaneous Functions</h2>
 
  <div class="body conbody">
-  <p class="p">The expression language includes the following miscellaneous
-   functions:</p>
+  <p class="p">The expression language provides
+      the following miscellaneous functions:</p>
 
   <dl class="dl">
    

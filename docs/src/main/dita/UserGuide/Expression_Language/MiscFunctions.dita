@@ -4,9 +4,9 @@
  <title>Miscellaneous Functions</title>
  <conbody>
   <p><indexterm>functions<indexterm>miscellaneous
-    functions</indexterm></indexterm><indexterm>miscellaneous functions<indexterm>in the expression
-     language</indexterm></indexterm>The expression language includes the following miscellaneous
-   functions:</p>
+        functions</indexterm></indexterm><indexterm>miscellaneous
+          functions<indexterm>description</indexterm></indexterm>The expression language provides
+      the following miscellaneous functions:</p>
   <dl>
    <dlentry>
     <dt>emptyList</dt>

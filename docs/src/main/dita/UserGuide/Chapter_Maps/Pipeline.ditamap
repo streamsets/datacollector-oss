@@ -14,10 +14,14 @@
    <topicref href="../Pipeline_Configuration/ReplicatingStreams.dita"/>
    <topicref href="../Pipeline_Configuration/MergingStreams.dita"/>
    <topicref href="../Pipeline_Configuration/RequiredFields.dita"/>
+   <topicref href="../Pipeline_Configuration/Preconditions.dita"/>
    <topicref href="../Pipeline_Configuration/SDCRecordFormat.dita">
     <topicmeta>
      <shortdesc/>
     </topicmeta>
+   </topicref>
+   <topicref href="../Pipeline_Configuration/DelimitedDataRecordStructure.dita">
+    <topicref href="../Pipeline_Configuration/DelimitedData-Processing.dita"/>
    </topicref>
   </topicref>
   <topicref href="../Pipeline_Configuration/PipelineProperties.dita" chunk="to-content">

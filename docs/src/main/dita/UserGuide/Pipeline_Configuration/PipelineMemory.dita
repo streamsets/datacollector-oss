@@ -6,7 +6,7 @@
   /> uses memory when it runs a pipeline. To avoid causing out-of-memory errors on the host machine,
   you can configure the maximum amount of memory that can be used for the pipeline. </shortdesc>
  <conbody>
-  <p><indexterm>pipelines<indexterm>maximum
+  <p><indexterm>pipeline properties<indexterm>maximum
      memory</indexterm></indexterm><indexterm>memory<indexterm>maximum for a
     pipeline</indexterm></indexterm>Best practice is to configure the pipeline to use up to 65% of
    the Java heap size defined for the <ph

@@ -8,9 +8,9 @@
       conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> can also use
     the data format to read and write data. </shortdesc>
  <conbody>
-  <p><indexterm>SDC Records<indexterm>data format</indexterm></indexterm><indexterm>Data
-          Collector<indexterm>data format</indexterm></indexterm>Use the SDC Record data format to
-      process data from another pipeline or to generate data to be processed by another
+  <p><indexterm>SDC Records<indexterm>data format</indexterm></indexterm><indexterm>pipeline
+          design<indexterm>SDC Record data format</indexterm></indexterm>Use the SDC Record data
+      format to process data from another pipeline or to generate data to be processed by another
       pipeline.</p>
   <p>You can use the following origins to read SDC Record data: <ul id="ul_ep4_r2b_wr">
     <li>Directory</li>

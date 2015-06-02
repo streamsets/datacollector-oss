@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
+<concept id="concept_eqz_t14_fs">
+ <title>SDC Record Functions</title>
+ <shortdesc>Use SDC Record functions to get information about a record in the SDC Record data
+  format, such as the ID of the stage that created a record. You might use these functions in a
+  pipeline that processes error records based on the types of errors that occurred.</shortdesc>
+ <conbody>
+  <p><indexterm>functions<indexterm>SDC Record</indexterm></indexterm><indexterm>SDC Record
+     functions<indexterm>description</indexterm></indexterm>The following types of records are in
+   SDC Record data format:<ul id="ul_gxc_rqv_tr">
+    <li>Any record being processed by the pipeline.</li>
+    <li>Error records.</li>
+    <li>Records written to a destination in the SDC Record data format.</li>
+   </ul></p>
+  <p>The expression language provides the following SDC Record functions<dl/></p>
+ </conbody>
+</concept>

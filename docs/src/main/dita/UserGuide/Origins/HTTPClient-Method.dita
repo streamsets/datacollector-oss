@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
+<concept id="concept_zyc_53p_fs">
+ <title>HTTP Method</title>
+ <conbody>
+  <p><indexterm>HTTP Client origin<indexterm>request method</indexterm></indexterm>To request data
+      from an HTTP resource URL, specify the request method to use. Most servers require a GET
+      request, but you should verify the request required by the server you want to access.</p>
+  <p>You can use the following methods:<ul id="ul_kn3_gkp_fs">
+    <li>GET</li>
+    <li>PUT</li>
+    <li>POST</li>
+    <li>DELETE</li>
+    <li>HEAD</li>
+   </ul></p>
+ </conbody>
+</concept>

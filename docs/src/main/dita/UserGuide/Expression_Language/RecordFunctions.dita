@@ -2,18 +2,18 @@
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_p1z_ggv_1r">
  <title>Record Functions</title>
- <shortdesc>Use record functions to get information about a record in the SDC Record data format,
-  such as the data type of a field or the stage instance name for a record. </shortdesc>
+ <shortdesc>Use record functions to determine information about a record, such as the stage that
+  created it or whether a field exists in the record. </shortdesc>
  <conbody>
   <p><indexterm>functions<indexterm>record functions</indexterm></indexterm><indexterm>record
-     functions<indexterm>in the expression language</indexterm></indexterm>Records in SDC Record
-   data format include the following types of records:<ul id="ul_gxc_rqv_tr">
-    <li>Any record being processed by the pipeline.</li>
-    <li>Error records.</li>
-    <li>Records written to a destination in the SDC Record data format.</li>
-   </ul></p>
-  <p>The expression language provides the following record functions:</p>
+     functions<indexterm>description</indexterm></indexterm>The expression language provides the
+   following general record functions:</p>
   <dl>
+   <dlentry>
+    <dt>record:attribute('&lt;attribute name'>)</dt>
+    <dd>Returns the value of the specified record attribute. <draft-comment author="Loretta">what's
+      this? </draft-comment></dd>
+   </dlentry>
    <dlentry>
     <dt>record:creator()</dt>
     <dd>Returns the instance name of the stage that created the record, typically an origin stage.
@@ -29,7 +29,7 @@
    <dlentry>
     <dt>record:id()</dt>
     <dd>Returns the ID of the stage that created the record, typically an origin stage. Data is
-     stored in the sourceId field of a  record. </dd>
+     stored in the sourceId field of a record. </dd>
     <dd>Return type: String.</dd>
    </dlentry>
    <dlentry>
@@ -66,7 +66,5 @@
     <dd>Return type: Variable, based on the field value.</dd>
    </dlentry>
   </dl>
-  <p> </p>
-  <p> </p>
  </conbody>
 </concept>

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
+<concept id="concept_msl_yd4_fs">
+ <title>Preconditions</title>
+ <shortdesc>Preconditions are expressions that you can define to determine the records that pass
+  into a stage. Like required fields, if a record does not meet a precondition, it is diverted to
+  the pipeline for error handling. You can define preconditions for any processor and most
+  destination stages. </shortdesc>
+ <conbody>
+  <p><indexterm>preconditions<indexterm>description</indexterm></indexterm><indexterm>pipeline
+          design<indexterm>preconditions</indexterm></indexterm>When you create more than one
+      precondition in a stage, a record must pass all conditions to enter the stage. You can use
+      most functions, pipeline constants, and runtime properties in preconditions. </p>
+  <p>Configure preconditions as part of the overall pipeline logic or  to minimize processing
+   errors. For example, you might use the following expression to exclude records that originate
+   from outside the United States:<codeblock> ${record:value('/COUNTRY') = 'US'}</codeblock></p>
+ </conbody>
+</concept>

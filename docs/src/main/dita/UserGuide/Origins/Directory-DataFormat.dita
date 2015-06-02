@@ -35,8 +35,12 @@
           </ul></dd>
         <dd>When a record exceeds the maximum record length defined for the origin, Directory
           processes the object based on the error handling configured for the origin. </dd>
-    <dd>Directory can convert a file to a map based on the header line of the file. If the file does
-          not include a header, Directory creates the map based on column number.</dd>
+    <dd>The resulting record is a List with header and value maps. Directory can convert a file to a
+          map based on the header line of the file. If the file does not include a header, Directory
+          creates the map based on column number.</dd>
+        <dd>For more information about the delimited data record structure, see <xref
+            href="../Pipeline_Configuration/DelimitedDataRecordStructure.dita#concept_zcg_bm4_fs"
+          />.</dd>
    </dlentry>
    <dlentry>
     <dt>XML</dt>

@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
+<concept id="concept_s2c_q14_fs">
+ <title>Delimited Data Functions</title>
+ <shortdesc>When reading delimited data, the <ph
+   conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> generates
+  records of the List data format with a map of the header and value. Use delimited data functions
+  to process delimited data, such as returning the value associated with a header or checking for
+  duplicate headers. </shortdesc>
+ <conbody>
+  <p><indexterm>functions<indexterm>delimited data</indexterm></indexterm><indexterm>delimited data
+     functions<indexterm>description</indexterm></indexterm>For more information about the delimited
+   data record format, see <xref
+    href="../Pipeline_Configuration/DelimitedDataRecordStructure.dita#concept_zcg_bm4_fs"/>.</p>
+  <p>The expression language provides the following delimited data functions:<dl>
+    <dlentry>
+     <dt>record:dExists('&lt;header>')</dt>
+     <dd>Determines if the specified header exists in the record.</dd>
+     <dd>Return type: Boolean.</dd>
+    </dlentry>
+    <dlentry>
+     <dt>record:dHasDupHeader()</dt>
+     <dd>Determines if the record has duplicate headers. </dd>
+     <dd>Return type: Boolean.</dd>
+    </dlentry>
+    <dlentry>
+     <dt>record:dIndex('&lt;header>')</dt>
+     <dd>Returns the index associated with the specified header. Use to find the position of a
+      header in the record. </dd>
+     <dd>Return type: Integer, starting with 0 for the first position.</dd>
+    </dlentry>
+    <dlentry>
+     <dt>record:dIsDupHeader('&lt;header>')</dt>
+     <dd>Determines if the specified header is used more than once in a record. </dd>
+     <dd>Return type: Boolean.</dd>
+    </dlentry>
+    <dlentry>
+     <dt>record:dToMap()</dt>
+     <dd>Converts the record to a JSON map using headers as keys.</dd>
+     <dd>Return type: Record in map format.</dd>
+    </dlentry>
+    <dlentry>
+     <dt>record:dValue('&lt;header>')</dt>
+     <dd>Returns the value associated with the specified header. </dd>
+     <dd>Return type: String.</dd>
+    </dlentry>
+    <dlentry>
+     <dt>record:dValueAt(&lt;header index>)</dt>
+     <dd>Returns the value at the specified header index position.</dd>
+     <dd>Return type: String.</dd>
+    </dlentry>
+   </dl></p>
+ </conbody>
+</concept>

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
+<concept id="concept_opc_32q_fs">
+ <title>Specifying the Root Field</title>
+ <shortdesc/>
+ <conbody>
+  <p>If the record includes other fields besides the log line to be parsed, those fields </p>
+ </conbody>
+</concept>

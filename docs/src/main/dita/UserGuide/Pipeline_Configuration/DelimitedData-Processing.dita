@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
+<concept id="concept_hrt_tt4_fs">
+ <title>Processing Delimited Data</title>
+ <shortdesc>To process delimited data, you can use delimited data functions or standard record
+  functions. </shortdesc>
+ <conbody>
+  <p><indexterm>delimited data<indexterm>processing</indexterm></indexterm>The expression language
+   provides delimited data functions to enable easier access to record details, such as the value of
+   a header or whether the record includes duplicate headers. </p>
+  <p>For example, you can use the <codeph>record:dValue('&lt;header>')</codeph> delimited data
+      function to return the value associated with the specified header. Continuing with the example
+      above, the following function returns user ID information:</p>
+  <codeblock>${record:dValue('UserID')}</codeblock>
+  <p>With the User ID header index, you can use the <codeph>record:dValueAt(&lt;header
+        index>)</codeph> function to return the same information, as
+      follows:<codeblock>${record:dValueAt([2])</codeblock></p>
+  <p>But if you prefer, you can use the field path to the data with the standard record function,
+        <codeph>record:value('&lt;field
+      path>')</codeph>:<codeblock>${record:value('[2]/value>')}</codeblock></p>
+  <p>Note that the field path references the column index and the "value" key.</p>
+  <p>
+   <note type="tip">You can use the <codeph>record:dToMap()</codeph> function to convert the record
+    to a map, and then use standard functions for record processing.</note>
+  </p>
+  <p>For the full list of delimited data record functions and their syntax, see <xref
+        href="../Expression_Language/RecordFunc-Delimited.dita#concept_s2c_q14_fs"/>.</p>
+ </conbody>
+</concept>
