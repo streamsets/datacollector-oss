@@ -28,10 +28,16 @@
         <dlentry>
           <dt>Why doesn't the Select Fields with Preview Data option work? No preview data
             displays.</dt>
-          <dd>Select Fields with Preview Data can provide preview data when the pipeline is valid
-            for data preview. Make sure all stages are connected. You might also need to enter
-            temporary values for required properties to enable data preview.</dd>
-          <dd/>
+          <dd>Select Fields with Preview Data works when the pipeline is valid for data preview.
+            Make sure all stages are connected. You might also need to enter temporary values for
+            required properties to enable data preview.</dd>
+        </dlentry>
+        <dlentry>
+          <dt>Sometimes I get a list of available fields and sometimes I don't. What's up with
+            that?</dt>
+          <dd>The pipeline can display a list of available fields when the pipeline is valid for
+            data preview. Make sure all stages are connected. You might also need to enter temporary
+            values for required properties to enable data preview.</dd>
         </dlentry>
       </dl>
     </p>
@@ -56,13 +62,18 @@
             </ul></dd>
         </dlentry>
         <dlentry>
-          <dt>Why can't I edit preview data?</dt>
-          <dd>When you can edit preview data in the following locations in a pipeline. <ul
-              conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/ul_EditPreview"
-              id="ul_t5n_jgm_2s">
-              <li/>
-            </ul></dd>
-          <dd>Edit preview data to test or debug pipeline processing.</dd>
+          <dt>Why am I only getting 10 records to preview when I'm asking for more?</dt>
+          <dd>The <ph
+              conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
+            maximum preview batch size overrides the data preview batch size. The <ph
+              conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
+            default is 10 records. </dd>
+          <dd>When you request data preview, you can request up to the <ph
+              conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
+            preview batch size, or you can increase the <codeph>preview.maxBatchSize</codeph>
+            property in the <ph
+              conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
+            configuration file. </dd>
         </dlentry>
       </dl>
     </section>

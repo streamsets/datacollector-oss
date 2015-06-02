@@ -11,9 +11,9 @@
             <p><indexterm>users<indexterm>creating</indexterm></indexterm>Configure users in the
                 properties file for the type of authentication that you use. For example, if you use
                 basic authentication, use the basic-realm.properties file.</p>
-            <p>To encrypt login information, you can use an md5 program such as md5 on Mac OS X or
+            <p>To hash login information, you can use an md5 program such as md5 on Mac OS X or
                 md5sum on Linux. </p>
-            <p>For basic and form authentication, you can encrypt the password. For example:
+            <p>For basic and form authentication, you can hash the password alone. For example:
                 <codeblock>echo -n "&lt;password>" | md5</codeblock></p>
             <p>For digest authentication, you can hash the combination of &lt;user
                 name>:&lt;realm>:&lt;password>. For example:
@@ -42,8 +42,7 @@
                 </info>
             </step>
             <step>
-                <cmd>To use a password that is not stored in plain text, use the following format
-                    for the password: </cmd>
+                <cmd>To store a hashed password, prefix it with MD5, as follows: </cmd>
                 <info>
                     <codeblock>MD5:&lt;hashed password></codeblock>
                 </info>

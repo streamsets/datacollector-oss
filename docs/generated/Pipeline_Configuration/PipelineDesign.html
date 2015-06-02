@@ -95,10 +95,10 @@
  <h2 class="title topictitle2">Preconditions</h2>
 
  
- <div class="body conbody"><p class="shortdesc">Preconditions are expressions that you can define to determine the records that pass
-  into a stage. Like required fields, if a record does not meet a precondition, it is diverted to
-  the pipeline for error handling. You can define preconditions for any processor and most
-  destination stages. </p>
+ <div class="body conbody"><p class="shortdesc">Preconditions are conditions that a record must satisfy to enter the stage for
+        processing. Like required fields, if a record does not meet a precondition, it is diverted
+        to the pipeline for error handling. You can define preconditions for any processor and most
+        destination stages. </p>
 
   <p class="p">When you create more than one
       precondition in a stage, a record must pass all conditions to enter the stage. You can use
@@ -160,14 +160,14 @@
   <div class="p">A record
             generated from delimited data results in list with an index for the header position and
             a map with each header and associated value, as
-            follows:<pre class="pre codeblock">[0] /header = &lt;first header&gt;
-    /value = &lt;value for first header&gt;
+            follows:<pre class="pre codeblock">[0]/header = &lt;first header&gt;
+   /value = &lt;value for first header&gt;
 
-[1] /header = &lt;second header&gt;
-    /value = &lt;value for second header&gt;
+[1]/header = &lt;second header&gt;
+   /value = &lt;value for second header&gt;
 
-[2] /header = &lt;third header&gt;
-    /value = &lt;value for third header&gt;
+[2]/header = &lt;third header&gt;
+   /value = &lt;value for third header&gt;
 .
 .
 .</pre>
@@ -183,19 +183,19 @@
   </div>
 
   <div class="p">are converted to records as
-   follows:<pre class="pre codeblock">[0] /header = TransactionID
-    /value = 0003420303
-[1] /header = Type
-    /value = 04
-[2] /header = UserID
-    /value = 362
+            follows:<pre class="pre codeblock">[0]/header = TransactionID
+   /value = 0003420303
+[1]/header = Type
+   /value = 04
+[2]/header = UserID
+   /value = 362
 
-[0] /header = TransactionID
-    /value = 0003420304
-[1] /header = Type
-    /value = 08
-[2] /header = UserID
-    /value = 1008</pre>
+[0]/header = TransactionID
+   /value = 0003420304
+[1]/header = Type
+   /value = 08
+[2]/header = UserID
+   /value = 1008</pre>
 </div>
 
  </div>
@@ -218,13 +218,13 @@
   <pre class="pre codeblock">${record:dValue('UserID')}</pre>
 
   <div class="p">With the User ID header index, you can use the <samp class="ph codeph">record:dValueAt(&lt;header
-        index&gt;)</samp> function to return the same information, as
-      follows:<pre class="pre codeblock">${record:dValueAt([2])</pre>
+                index&gt;)</samp> function to return the same information, as
+            follows:<pre class="pre codeblock">${record:dValueAt(2)</pre>
 </div>
 
   <div class="p">But if you prefer, you can use the field path to the data with the standard record function,
-        <samp class="ph codeph">record:value('&lt;field
-      path&gt;')</samp>:<pre class="pre codeblock">${record:value('[2]/value&gt;')}</pre>
+                <samp class="ph codeph">record:value('&lt;field
+            path&gt;')</samp>:<pre class="pre codeblock">${record:value('[2]/value')}</pre>
 </div>
 
   <p class="p">Note that the field path references the column index and the "value" key.</p>

@@ -49,22 +49,22 @@
                     following properties:</span>
                 <div class="itemgroup info">
                     <table cellpadding="4" cellspacing="0" summary="" id="task_xlv_jdw_kq__simpletable_m1s_q1m_sq" border="1" class="simpletable"><tr class="sthead">
-                            <th valign="bottom" align="left" id="d27964e88" class="stentry" width="23.980815347721823%">Pipeline Property</th>
+                            <th valign="bottom" align="left" id="d28076e88" class="stentry" width="23.980815347721823%">Pipeline Property</th>
 
-                            <th valign="bottom" align="left" id="d27964e91" class="stentry" width="76.01918465227817%">Description</th>
-
-                        </tr>
-<tr class="strow">
-                            <td valign="top" headers="d27964e88" class="stentry">Description</td>
-
-                            <td valign="top" headers="d27964e91" class="stentry">Optional description of the pipeline.</td>
+                            <th valign="bottom" align="left" id="d28076e91" class="stentry" width="76.01918465227817%">Description</th>
 
                         </tr>
 <tr class="strow">
-                            <td valign="top" headers="d27964e88" class="stentry">Execution Mode  <a class="xref" href="../Advanced_Config/ExecutionMode.html#concept_hmh_kfn_1s" title="The Data Collector can run standalone mode or cluster mode. In standalone mode, the Data Collector runs as a single Data Collector process. The Data Collector runs in standalone mode by default."><img class="image" id="task_xlv_jdw_kq__image_zfp_n5g_cs" src="../Graphics/icon_moreInfo.png" height="12" width="12"></img>
+                            <td valign="top" headers="d28076e88" class="stentry">Description</td>
+
+                            <td valign="top" headers="d28076e91" class="stentry">Optional description of the pipeline.</td>
+
+                        </tr>
+<tr class="strow">
+                            <td valign="top" headers="d28076e88" class="stentry">Execution Mode  <a class="xref" href="../Advanced_Config/ExecutionMode.html#concept_hmh_kfn_1s" title="The Data Collector can run standalone mode or cluster mode. In standalone mode, the Data Collector runs as a single Data Collector process. The Data Collector runs in standalone mode by default."><img class="image" id="task_xlv_jdw_kq__image_zfp_n5g_cs" src="../Graphics/icon_moreInfo.png" height="12" width="12"></img>
                                 </a></td>
 
-                            <td valign="top" headers="d27964e91" class="stentry">Execution mode of the pipeline:<ul class="ul" id="task_xlv_jdw_kq__ul_bn5_jsz_zr">
+                            <td valign="top" headers="d28076e91" class="stentry">Execution mode of the pipeline:<ul class="ul" id="task_xlv_jdw_kq__ul_bn5_jsz_zr">
                                     <li class="li">Standalone - You plan to run the pipeline with a <span class="ph">Data
                   Collector</span> instance in standalone mode.</li>
 
@@ -76,10 +76,10 @@
 
                         </tr>
 <tr class="strow">
-                            <td valign="top" headers="d27964e88" class="stentry">Delivery Guarantee <a class="xref" href="PipelineProperties.html#concept_ffz_hhw_kq" title="When you configure a pipeline, you define how you want data to be treated: Do you want to prevent the loss of data or the duplication of data?">
+                            <td valign="top" headers="d28076e88" class="stentry">Delivery Guarantee <a class="xref" href="PipelineProperties.html#concept_ffz_hhw_kq" title="When you configure a pipeline, you define how you want data to be treated: Do you want to prevent the loss of data or the duplication of data?">
                                     <img class="image" src="../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
 
-                            <td valign="top" headers="d27964e91" class="stentry">Determines how the <span class="ph">Data
+                            <td valign="top" headers="d28076e91" class="stentry">Determines how the <span class="ph">Data
                   Collector</span> handles data after an unexpected event causes the pipeline to
                                 stop running:<ul class="ul" id="task_xlv_jdw_kq__ul_b4v_51m_sq">
                                     <li class="li">At Least Once - Ensures all data is processed and written to
@@ -95,25 +95,25 @@
 
                         </tr>
 <tr class="strow">
-                            <td valign="top" headers="d27964e88" class="stentry">Memory Limit  <a class="xref" href="PipelineProperties.html#concept_twq_nhx_rr" title="The Data Collector uses memory when it runs a pipeline. To avoid causing out-of-memory errors on the host machine, you can configure the maximum amount of memory that can be used for the pipeline."><img class="image" id="task_xlv_jdw_kq__image_ldk_s5g_cs" src="../Graphics/icon_moreInfo.png" height="12" width="12"></img>
+                            <td valign="top" headers="d28076e88" class="stentry">Memory Limit  <a class="xref" href="PipelineProperties.html#concept_twq_nhx_rr" title="The Data Collector uses memory when it runs a pipeline. To avoid causing out-of-memory errors on the host machine, you can configure the maximum amount of memory that can be used for the pipeline."><img class="image" id="task_xlv_jdw_kq__image_ldk_s5g_cs" src="../Graphics/icon_moreInfo.png" height="12" width="12"></img>
                                 </a></td>
 
-                            <td valign="top" headers="d27964e91" class="stentry">Maximum amount of memory for the pipeline to use. <p class="p">Best
+                            <td valign="top" headers="d28076e91" class="stentry">Maximum amount of memory for the pipeline to use. <p class="p">Best
                                     practice is to use up to 65% of the Java heap size defined for
                                     the <span class="ph">Data
                   Collector</span>. </p>
-<div class="p">You can use the following function to set the memory
-                                    limit based on the specified percentage of the <span class="ph">Data
+<div class="p">You can use the following expression to set the
+                                    memory limit based on the specified percentage of the <span class="ph">Data
                   Collector</span> Java heap
-                                    size:<pre class="pre codeblock"> ${jvm:maxMemory(&lt;percentage&gt;)}</pre>
+                                    size:<pre class="pre codeblock"> ${jvm:maxMemory() * &lt;percentage&gt;}</pre>
 </div>
 </td>
 
                         </tr>
 <tr class="strow">
-                            <td valign="top" headers="d27964e88" class="stentry">Memory Exceeded</td>
+                            <td valign="top" headers="d28076e88" class="stentry">Memory Exceeded</td>
 
-                            <td valign="top" headers="d27964e91" class="stentry">Action to take when the pipeline memory reaches the memory
+                            <td valign="top" headers="d28076e91" class="stentry">Action to take when the pipeline memory reaches the memory
                                     limit:<ul class="ul" id="task_xlv_jdw_kq__ul_vsf_3k4_1s">
                                     <li class="li">Log - Logs a message in the pipeline history.</li>
 
@@ -150,9 +150,9 @@
                             
                             <thead class="thead" align="left">
                                 <tr class="row">
-                                    <th class="entry" valign="top" width="25.97402597402597%" id="d27964e266">Error Records Property</th>
+                                    <th class="entry" valign="top" width="25.97402597402597%" id="d28076e266">Error Records Property</th>
 
-                                    <th class="entry" valign="top" width="74.02597402597402%" id="d27964e269">Description</th>
+                                    <th class="entry" valign="top" width="74.02597402597402%" id="d28076e269">Description</th>
 
                                 </tr>
 
@@ -160,10 +160,10 @@
 
                             <tbody class="tbody">
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="25.97402597402597%" headers="d27964e266 ">Error Record Handling <a class="xref" href="ErrorHandling.html#concept_pm4_txm_vq" title="You can configure error record handling at a stage level and at a pipeline level.">
+                                    <td class="entry" valign="top" width="25.97402597402597%" headers="d28076e266 ">Error Record Handling <a class="xref" href="ErrorHandling.html#concept_pm4_txm_vq" title="You can configure error record handling at a stage level and at a pipeline level.">
                                             <img class="image" src="../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
 
-                                    <td class="entry" valign="top" width="74.02597402597402%" headers="d27964e269 ">Determines how to handle records that cannot be processed
+                                    <td class="entry" valign="top" width="74.02597402597402%" headers="d28076e269 ">Determines how to handle records that cannot be processed
                                         as expected. Use one of the following options:<ul class="ul" id="task_xlv_jdw_kq__ul_ayr_y22_br">
                                             <li class="li">Discard - Discards error records.</li>
 
@@ -195,9 +195,9 @@
                             
                             <thead class="thead" align="left">
                                 <tr class="row">
-                                    <th class="entry" valign="top" width="24.096385542168672%" id="d27964e331">Write to File Property</th>
+                                    <th class="entry" valign="top" width="24.096385542168672%" id="d28076e331">Write to File Property</th>
 
-                                    <th class="entry" valign="top" width="75.90361445783131%" id="d27964e334">Description</th>
+                                    <th class="entry" valign="top" width="75.90361445783131%" id="d28076e334">Description</th>
 
                                 </tr>
 
@@ -205,16 +205,16 @@
 
                             <tbody class="tbody">
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="24.096385542168672%" headers="d27964e331 ">Directory</td>
+                                    <td class="entry" valign="top" width="24.096385542168672%" headers="d28076e331 ">Directory</td>
 
-                                    <td class="entry" valign="top" width="75.90361445783131%" headers="d27964e334 ">Local directory for error record files. </td>
+                                    <td class="entry" valign="top" width="75.90361445783131%" headers="d28076e334 ">Local directory for error record files. </td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="24.096385542168672%" headers="d27964e331 ">File Prefix</td>
+                                    <td class="entry" valign="top" width="24.096385542168672%" headers="d28076e331 ">File Prefix</td>
 
-                                    <td class="entry" valign="top" width="75.90361445783131%" headers="d27964e334 ">Prefix used for error record files. Use to differentiate
+                                    <td class="entry" valign="top" width="75.90361445783131%" headers="d28076e334 ">Prefix used for error record files. Use to differentiate
                                         error record files from other files in the directory.<p class="p">Uses
                                             the prefix sdc-${sdc:id()} by default. The prefix
                                             evaluates to sdc-&lt;<span class="ph">Data
@@ -229,9 +229,9 @@
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="24.096385542168672%" headers="d27964e331 ">File Wait Time (secs)</td>
+                                    <td class="entry" valign="top" width="24.096385542168672%" headers="d28076e331 ">File Wait Time (secs)</td>
 
-                                    <td class="entry" valign="top" width="75.90361445783131%" headers="d27964e334 ">Number of seconds the <span class="ph">Data
+                                    <td class="entry" valign="top" width="75.90361445783131%" headers="d28076e334 ">Number of seconds the <span class="ph">Data
                   Collector</span> waits for error records. After that time, it creates a
                                         new error record file. <p class="p">You can enter a number of seconds
                                             or use the default expression to enter the time in
@@ -241,9 +241,9 @@
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="24.096385542168672%" headers="d27964e331 ">Max File Size (MB)</td>
+                                    <td class="entry" valign="top" width="24.096385542168672%" headers="d28076e331 ">Max File Size (MB)</td>
 
-                                    <td class="entry" valign="top" width="75.90361445783131%" headers="d27964e334 ">Maximum size for error files. Exceeding this size creates
+                                    <td class="entry" valign="top" width="75.90361445783131%" headers="d28076e334 ">Maximum size for error files. Exceeding this size creates
                                         a new error file. <p class="p">Use 0 to write to avoid using this
                                             property.</p>
 </td>
@@ -267,9 +267,9 @@
                                 
                                 <thead class="thead" align="left">
                                     <tr class="row">
-                                        <th class="entry" valign="top" width="23.980815347721823%" id="d27964e427">Kafka Properties</th>
+                                        <th class="entry" valign="top" width="23.980815347721823%" id="d28076e427">Kafka Properties</th>
 
-                                        <th class="entry" valign="top" width="76.01918465227818%" id="d27964e430">Description</th>
+                                        <th class="entry" valign="top" width="76.01918465227818%" id="d28076e430">Description</th>
 
                                     </tr>
 
@@ -277,9 +277,9 @@
 
                                 <tbody class="tbody">
                                     <tr class="row">
-                                        <td class="entry" valign="top" width="23.980815347721823%" headers="d27964e427 ">Broker URI</td>
+                                        <td class="entry" valign="top" width="23.980815347721823%" headers="d28076e427 ">Broker URI</td>
 
-                                        <td class="entry" valign="top" width="76.01918465227818%" headers="d27964e430 ">A comma-separated list of URIs for Kafka brokers that
+                                        <td class="entry" valign="top" width="76.01918465227818%" headers="d28076e430 ">A comma-separated list of URIs for Kafka brokers that
                                             write to the topic. Use the following format:
                                                 <samp class="ph codeph">&lt;host&gt;:&lt;port&gt;</samp>.<p class="p">To ensure a
                                                 connection, enter a comma-separated list of
@@ -289,18 +289,18 @@
                                     </tr>
 
                                     <tr class="row">
-                                        <td class="entry" valign="top" width="23.980815347721823%" headers="d27964e427 ">Runtime Topic Resolution  <a class="xref" href="../Destinations/KProducer.html#concept_ok1_cwr_xr" title="Kafka Producer can write a record to the topic based on an expression. When Kafka Producer evaluates a record, it calculates the expression based on record values and writes the record to the resulting topic."><img class="image" id="task_xlv_jdw_kq__d2799e1141" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12"></img>
+                                        <td class="entry" valign="top" width="23.980815347721823%" headers="d28076e427 ">Runtime Topic Resolution  <a class="xref" href="../Destinations/KProducer.html#concept_ok1_cwr_xr" title="Kafka Producer can write a record to the topic based on an expression. When Kafka Producer evaluates a record, it calculates the expression based on record values and writes the record to the resulting topic."><img class="image" id="task_xlv_jdw_kq__d2933e1147" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12"></img>
                                             </a></td>
 
-                                        <td class="entry" valign="top" width="76.01918465227818%" headers="d27964e430 ">Evaluates an expression at runtime to determine the
+                                        <td class="entry" valign="top" width="76.01918465227818%" headers="d28076e430 ">Evaluates an expression at runtime to determine the
                                             topic to use for each record.</td>
 
                                     </tr>
 
                                     <tr class="row">
-                                        <td class="entry" valign="top" width="23.980815347721823%" headers="d27964e427 ">Topic Expression</td>
+                                        <td class="entry" valign="top" width="23.980815347721823%" headers="d28076e427 ">Topic Expression</td>
 
-                                        <td class="entry" valign="top" width="76.01918465227818%" headers="d27964e430 ">Expression used to determine where each record is
+                                        <td class="entry" valign="top" width="76.01918465227818%" headers="d28076e430 ">Expression used to determine where each record is
                                             written. Use an expression that evaluates to a topic
                                             name. <p class="p">For runtime topic resolution only. </p>
 </td>
@@ -308,9 +308,9 @@
                                     </tr>
 
                                     <tr class="row">
-                                        <td class="entry" valign="top" width="23.980815347721823%" headers="d27964e427 ">Topic White List</td>
+                                        <td class="entry" valign="top" width="23.980815347721823%" headers="d28076e427 ">Topic White List</td>
 
-                                        <td class="entry" valign="top" width="76.01918465227818%" headers="d27964e430 ">List of valid topic names to write to. Use to avoid
+                                        <td class="entry" valign="top" width="76.01918465227818%" headers="d28076e430 ">List of valid topic names to write to. Use to avoid
                                             writing to invalid topics. Records that resolve to
                                             invalid topic names are passed the stage for error
                                             handling. <p class="p">Use an asterisk (*) to allow writing to any
@@ -323,18 +323,18 @@
                                     </tr>
 
                                     <tr class="row">
-                                        <td class="entry" valign="top" width="23.980815347721823%" headers="d27964e427 ">Topic</td>
+                                        <td class="entry" valign="top" width="23.980815347721823%" headers="d28076e427 ">Topic</td>
 
-                                        <td class="entry" valign="top" width="76.01918465227818%" headers="d27964e430 ">Kafka topic to use. <p class="p">Not available when using
+                                        <td class="entry" valign="top" width="76.01918465227818%" headers="d28076e430 ">Kafka topic to use. <p class="p">Not available when using
                                                 runtime topic resolution.</p>
 </td>
 
                                     </tr>
 
                                     <tr class="row">
-                                        <td class="entry" valign="top" width="23.980815347721823%" headers="d27964e427 ">Partition Strategy </td>
+                                        <td class="entry" valign="top" width="23.980815347721823%" headers="d28076e427 ">Partition Strategy </td>
 
-                                        <td class="entry" valign="top" width="76.01918465227818%" headers="d27964e430 ">Strategy to use to write to partitions:<ul class="ul" id="task_xlv_jdw_kq__d2799e1191">
+                                        <td class="entry" valign="top" width="76.01918465227818%" headers="d28076e430 ">Strategy to use to write to partitions:<ul class="ul" id="task_xlv_jdw_kq__d2933e1197">
                                                 <li class="li">Round Robin - Takes turns writing to different
                                                   partitions.</li>
 
@@ -349,10 +349,10 @@
                                     </tr>
 
                                     <tr class="row">
-                                        <td class="entry" valign="top" width="23.980815347721823%" headers="d27964e427 ">Partition Expression <a class="xref" href="../Destinations/KProducer.html#concept_qpm_xp4_4r" title="The partition strategy determines how to write data to Kafka partitions. You can use a partition strategy to balance the work load or to write data semantically.">
+                                        <td class="entry" valign="top" width="23.980815347721823%" headers="d28076e427 ">Partition Expression <a class="xref" href="../Destinations/KProducer.html#concept_qpm_xp4_4r" title="The partition strategy determines how to write data to Kafka partitions. You can use a partition strategy to balance the work load or to write data semantically.">
                                                 <img class="image" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
 
-                                        <td class="entry" valign="top" width="76.01918465227818%" headers="d27964e430 ">Expression to use to write to partitions. <p class="p">Define
+                                        <td class="entry" valign="top" width="76.01918465227818%" headers="d28076e430 ">Expression to use to write to partitions. <p class="p">Define
                                                 the expression to evaluate to the partition where
                                                 you want each record written. Partitions are
                                                 numbered 0 - n.</p>
@@ -365,9 +365,9 @@
                                     </tr>
 
                                     <tr class="row">
-                                        <td class="entry" valign="top" width="23.980815347721823%" headers="d27964e427 ">Data Format</td>
+                                        <td class="entry" valign="top" width="23.980815347721823%" headers="d28076e427 ">Data Format</td>
 
-                                        <td class="entry" valign="top" width="76.01918465227818%" headers="d27964e430 ">Data format for output messages:<ul class="ul" id="task_xlv_jdw_kq__d2799e1228">
+                                        <td class="entry" valign="top" width="76.01918465227818%" headers="d28076e430 ">Data format for output messages:<ul class="ul" id="task_xlv_jdw_kq__d2933e1234">
                                                 <li class="li">Text</li>
 
                                                 <li class="li">JSON</li>
@@ -375,7 +375,7 @@
                                                 <li class="li">Delimited</li>
 
                                                 <li class="li">SDC Record <a class="xref" href="PipelineDesign.html#concept_qkk_mwk_br" title="SDC Record is a proprietary data format that the Data Collector uses to generate error records. The Data Collector can also use the data format to read and write data.">
-                                                  <img class="image" id="task_xlv_jdw_kq__d2799e1243" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></li>
+                                                  <img class="image" id="task_xlv_jdw_kq__d2933e1249" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></li>
 
                                             </ul>
 </td>
@@ -383,26 +383,26 @@
                                     </tr>
 
                                     <tr class="row">
-                                        <td class="entry" valign="top" width="23.980815347721823%" headers="d27964e427 ">Messages Charset</td>
+                                        <td class="entry" valign="top" width="23.980815347721823%" headers="d28076e427 ">Messages Charset</td>
 
-                                        <td class="entry" valign="top" width="76.01918465227818%" headers="d27964e430 ">Character encoding to use when writing data. <p class="p">Not
+                                        <td class="entry" valign="top" width="76.01918465227818%" headers="d28076e430 ">Character encoding to use when writing data. <p class="p">Not
                                                 used for the SDC Record data format.</p>
 </td>
 
                                     </tr>
 
                                     <tr class="row">
-                                        <td class="entry" valign="top" width="23.980815347721823%" headers="d27964e427 ">One Message per Batch</td>
+                                        <td class="entry" valign="top" width="23.980815347721823%" headers="d28076e427 ">One Message per Batch</td>
 
-                                        <td class="entry" valign="top" width="76.01918465227818%" headers="d27964e430 ">For each batch, writes the records to each partition
+                                        <td class="entry" valign="top" width="76.01918465227818%" headers="d28076e430 ">For each batch, writes the records to each partition
                                             as a single message. </td>
 
                                     </tr>
 
                                     <tr class="row">
-                                        <td class="entry" valign="top" width="23.980815347721823%" headers="d27964e427 ">Kafka Configuration</td>
+                                        <td class="entry" valign="top" width="23.980815347721823%" headers="d28076e427 ">Kafka Configuration</td>
 
-                                        <td class="entry" valign="top" width="76.01918465227818%" headers="d27964e430 ">Additional Kafka properties to use. Click the
+                                        <td class="entry" valign="top" width="76.01918465227818%" headers="d28076e430 ">Additional Kafka properties to use. Click the
                                                 <span class="ph uicontrol">Add</span> icon and define the Kafka
                                             property name and value. <p class="p">Use the property names and
                                                 values as expected by Kafka. Do not use the
@@ -431,9 +431,9 @@
                             
                             <thead class="thead" align="left">
                                 <tr class="row">
-                                    <th class="entry" valign="top" width="28.011204481792717%" id="d27964e647">Cluster Property</th>
+                                    <th class="entry" valign="top" width="28.011204481792717%" id="d28076e647">Cluster Property</th>
 
-                                    <th class="entry" valign="top" width="71.98879551820728%" id="d27964e650">Description</th>
+                                    <th class="entry" valign="top" width="71.98879551820728%" id="d28076e650">Description</th>
 
                                 </tr>
 
@@ -441,18 +441,18 @@
 
                             <tbody class="tbody">
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="28.011204481792717%" headers="d27964e647 ">Worker Memory (MB)</td>
+                                    <td class="entry" valign="top" width="28.011204481792717%" headers="d28076e647 ">Worker Memory (MB)</td>
 
-                                    <td class="entry" valign="top" width="71.98879551820728%" headers="d27964e650 ">Maximum amount of memory allocated to each <span class="ph">Data
+                                    <td class="entry" valign="top" width="71.98879551820728%" headers="d28076e650 ">Maximum amount of memory allocated to each <span class="ph">Data
                   Collector</span> worker in the cluster.<p class="p">Default is 1024 MB.</p>
 </td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="28.011204481792717%" headers="d27964e647 ">Launcher Env Configuration</td>
+                                    <td class="entry" valign="top" width="28.011204481792717%" headers="d28076e647 ">Launcher Env Configuration</td>
 
-                                    <td class="entry" valign="top" width="71.98879551820728%" headers="d27964e650 ">
+                                    <td class="entry" valign="top" width="71.98879551820728%" headers="d28076e650 ">
                                         <p class="p">Additional configuration properties for the cluster
                                             launcher. Click the <span class="ph uicontrol">Add</span> icon and
                                             define the property name and value. </p>

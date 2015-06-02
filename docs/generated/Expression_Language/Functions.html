@@ -525,11 +525,17 @@
 
    
       
-        <dt class="dt dlterm">jvm:maxMemory(&lt;percentage&gt;)</dt>
+        <dt class="dt dlterm">jvm:maxMemory()</dt>
 
-        <dd class="dd">Defines the maximum amount of memory a pipeline can use as a percentage of the Java heap
-          size allocated to the <span class="ph">Data
-                  Collector</span>.</dd>
+        <dd class="dd">Returns the Java heap size allocated to the <span class="ph">Data
+                  Collector</span>. You
+          can use this function in an expression to specify the maximum amount of memory a pipeline
+          can use. </dd>
+
+        <dd class="dd">For example, since 65% of the Java heap size is the recommended maximum, you might use
+          the following expression in the pipeline memory limit property:
+          <pre class="pre codeblock">${jvm:maxMemory() * 0.65}</pre>
+</dd>
 
       
    
@@ -559,10 +565,15 @@
               <pre class="pre codeblock">&lt;SDCinstalldir&gt;/resources</pre>
 </li>
 
-            <li class="li">restricted - Whether the file has restricted permissions. </li>
+            <li class="li">restricted - Whether the file has restricted permissions. If set to true, the file
+              must be owned by the system user who runs the <span class="ph">Data
+                  Collector</span>
+              and read and writable only by the owner.</li>
 
           </ul>
 </dd>
+
+        <dd class="dd">For more information about runtime resources, see <a class="xref" href="../Advanced_Config/RuntimeResources.html#concept_bs4_5nm_2s" title="Similar to runtime properties, runtime resources are values that load from a file at runtime. Unlike runtime properties, you can restrict the permissions for the files to secure sensitive information. Use runtime properties to load sensitive information from files at runtime.">Runtime Resources</a>.</dd>
 
       
       

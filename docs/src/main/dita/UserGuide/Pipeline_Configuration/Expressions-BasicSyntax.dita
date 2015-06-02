@@ -6,6 +6,6 @@
   follows: <codeph>${&lt;expression>}</codeph>.</shortdesc>
  <conbody>
   <p><indexterm>basic syntax<indexterm>for expressions</indexterm></indexterm>For example, to add 2
-   +2, use the following syntax: ${2+2}.</p>
+   + 2, use the following syntax: ${2 + 2}.</p>
  </conbody>
 </concept>

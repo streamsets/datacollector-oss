@@ -19,7 +19,7 @@
           <thead>
             <row>
               <entry>Stage Library</entry>
-              <entry>Available Versions</entry>
+              <entry>Available Client Library Versions</entry>
               <entry>Description</entry>
             </row>
           </thead>
@@ -57,8 +57,9 @@
             </row>
             <row>
               <entry>Cassandra </entry>
-              <entry>2.1.5</entry>
-              <entry>Use to write to Cassandra. <p>Provides a Cassandra destination.</p></entry>
+              <entry>2.1.5 </entry>
+              <entry>Use to write to Apache Cassandra 1.2, 2.0, and 2.1.<p>Provides a Cassandra
+                  destination.</p></entry>
             </row>
             <row>
               <entry>Elasticsearch</entry>

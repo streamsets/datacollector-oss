@@ -6,8 +6,11 @@
   based on the specified log format. </shortdesc>
  <conbody>
   <p><indexterm>Log Parser
-     processor<indexterm>overview</indexterm></indexterm><indexterm>processors<indexterm>Log
-     Parser</indexterm></indexterm>When you configure the Log Parser, you define the text field that
-   contains the log line and the root field for parsed fields. </p>
+          processor<indexterm>overview</indexterm></indexterm><indexterm>processors<indexterm>Log
+          Parser</indexterm></indexterm>When you configure the Log Parser, you define the text field
+      that contains the log line and the location for parsed fields. </p>
+    <p>If the record contains fields in addition to the text field to be parsed, those fields are
+      passed through by default. Parsed fields are written to the specified location, overwriting
+      any existing data. </p>
  </conbody>
 </concept>

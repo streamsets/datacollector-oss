@@ -51,7 +51,12 @@
                                 </row>
                                 <row>
                                     <entry>Max Batch Size</entry>
-                                    <entry>Maximum number of lines to include in a batch. </entry>
+                                    <entry>Maximum number of lines to include in a batch. Honors
+                                        values up to the <ph
+                                            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                                        /> maximum batch size. <p>Default is 1000. The <ph
+                                                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                                            /> default is 1000.</p></entry>
                                 </row>
                                 <row>
                                     <entry>Batch Wait Time (secs) <xref

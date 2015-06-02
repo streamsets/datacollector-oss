@@ -13,11 +13,11 @@
       above, the following function returns user ID information:</p>
   <codeblock>${record:dValue('UserID')}</codeblock>
   <p>With the User ID header index, you can use the <codeph>record:dValueAt(&lt;header
-        index>)</codeph> function to return the same information, as
-      follows:<codeblock>${record:dValueAt([2])</codeblock></p>
+                index>)</codeph> function to return the same information, as
+            follows:<codeblock>${record:dValueAt(2)</codeblock></p>
   <p>But if you prefer, you can use the field path to the data with the standard record function,
-        <codeph>record:value('&lt;field
-      path>')</codeph>:<codeblock>${record:value('[2]/value>')}</codeblock></p>
+                <codeph>record:value('&lt;field
+            path>')</codeph>:<codeblock>${record:value('[2]/value')}</codeblock></p>
   <p>Note that the field path references the column index and the "value" key.</p>
   <p>
    <note type="tip">You can use the <codeph>record:dToMap()</codeph> function to convert the record

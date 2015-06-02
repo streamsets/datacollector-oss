@@ -12,14 +12,14 @@
                     design<indexterm>delimited data record structure</indexterm></indexterm>A record
             generated from delimited data results in list with an index for the header position and
             a map with each header and associated value, as
-            follows:<codeblock>[0] /header = &lt;first header>
-    /value = &lt;value for first header>
+            follows:<codeblock>[0]/header = &lt;first header>
+   /value = &lt;value for first header>
 
-[1] /header = &lt;second header>
-    /value = &lt;value for second header>
+[1]/header = &lt;second header>
+   /value = &lt;value for second header>
 
-[2] /header = &lt;third header>
-    /value = &lt;value for third header>
+[2]/header = &lt;third header>
+   /value = &lt;value for third header>
 .
 .
 .</codeblock></p>
@@ -30,18 +30,18 @@
 0003420304,08,1008</b></codeblock>
   </p>
   <p>are converted to records as
-   follows:<codeblock>[0] /header = TransactionID
-    /value = 0003420303
-[1] /header = Type
-    /value = 04
-[2] /header = UserID
-    /value = 362
+            follows:<codeblock>[0]/header = TransactionID
+   /value = 0003420303
+[1]/header = Type
+   /value = 04
+[2]/header = UserID
+   /value = 362
 
-[0] /header = TransactionID
-    /value = 0003420304
-[1] /header = Type
-    /value = 08
-[2] /header = UserID
-    /value = 1008</codeblock></p>
+[0]/header = TransactionID
+   /value = 0003420304
+[1]/header = Type
+   /value = 08
+[2]/header = UserID
+   /value = 1008</codeblock></p>
  </conbody>
 </concept>

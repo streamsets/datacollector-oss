@@ -94,10 +94,10 @@
                 properties file for the type of authentication that you use. For example, if you use
                 basic authentication, use the basic-realm.properties file.</p>
 
-            <p class="p">To encrypt login information, you can use an md5 program such as md5 on Mac OS X or
+            <p class="p">To hash login information, you can use an md5 program such as md5 on Mac OS X or
                 md5sum on Linux. </p>
 
-            <div class="p">For basic and form authentication, you can encrypt the password. For example:
+            <div class="p">For basic and form authentication, you can hash the password alone. For example:
                 <pre class="pre codeblock">echo -n "&lt;password&gt;" | md5</pre>
 </div>
 
@@ -131,8 +131,7 @@
                 </div>
             </li>
 <li class="li step stepexpand">
-                <span class="ph cmd">To use a password that is not stored in plain text, use the following format
-                    for the password: </span>
+                <span class="ph cmd">To store a hashed password, prefix it with MD5, as follows: </span>
                 <div class="itemgroup info">
                     <pre class="pre codeblock">MD5:&lt;hashed password&gt;</pre>
 

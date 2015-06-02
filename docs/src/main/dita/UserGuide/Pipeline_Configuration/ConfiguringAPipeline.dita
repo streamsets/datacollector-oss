@@ -82,11 +82,11 @@
                                     practice is to use up to 65% of the Java heap size defined for
                                     the <ph
                                         conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                                    />. </p><p>You can use the following function to set the memory
-                                    limit based on the specified percentage of the <ph
+                                    />. </p><p>You can use the following expression to set the
+                                    memory limit based on the specified percentage of the <ph
                                         conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
                                     /> Java heap
-                                    size:<codeblock> ${jvm:maxMemory(&lt;percentage>)}</codeblock></p></stentry>
+                                    size:<codeblock> ${jvm:maxMemory() * &lt;percentage>}</codeblock></p></stentry>
                         </strow>
                         <strow>
                             <stentry>Memory Exceeded</stentry>
