@@ -16,14 +16,14 @@
                 <p>
                         <dl>
                                 <dlentry>
-                                        <dt>Delimited data, simple maps or JSON objects</dt>
+                                        <dt>Simple maps or JSON objects</dt>
                                         <dd>
-                                                <p>With delimited data or simple JSON objects, the
-                                                  fields are one level removed from the root.
-                                                  Reference the field as
+                                                <p>With simple maps or JSON objects, the fields are
+                                                  one level removed from the root. Reference the
+                                                  field as
                                                   follows:<codeblock>/&lt;field name></codeblock></p>
-                                                <p>So, to reference a CITY field in a delimited
-                                                  record, enter /CITY.</p>
+                                                <p>So, to reference a CITY field in a simple JSON
+                                                  object, enter /CITY.</p>
                                         </dd>
                                 </dlentry>
                                 <dlentry>
@@ -53,4 +53,7 @@
                         </dl>
                 </p>
  </conbody>
+        <related-links>
+                <link href="DelimitedDataRecordStructure.dita#concept_zcg_bm4_fs"/>
+        </related-links>
 </concept>
