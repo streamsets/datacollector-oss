@@ -122,7 +122,12 @@
                                 </row>
                                 <row>
                                     <entry>Max Batch Size (records)</entry>
-                                    <entry>Maximum number of records processed at one time. </entry>
+                                    <entry>Maximum number of records processed at one time. Honors
+                                        values up to the <ph
+                                            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                                        /> maximum batch size. <p>Default is 1000. The <ph
+                                                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                                            /> default is 1000.</p></entry>
                                 </row>
                                 <row>
                                     <entry>Batch Wait Time (ms) <xref

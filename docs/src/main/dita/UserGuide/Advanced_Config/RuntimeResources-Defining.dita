@@ -9,9 +9,12 @@
       directory:<codeblock>&lt;SDCinstalldir>/resources</codeblock><p>A file must contain one piece
       of information to be used when the resource is called.</p></li>
     <li>Optionally, restrict the permissions for the file. <p>Generally, anyone can read a file. To
-      restrict permissions, configure the file so only the owner has read or write permissions for
-      the file - in octals, that's 600 or 400. </p><p>When you use the resource in the pipeline, you
-      specify whether the file is restricted.</p></li>
+            restrict permissions, configure the file so only the owner has read or write permissions
+            for the file - in octals, that's 600 or 400. And the owner must be the system user that
+            runs the <ph
+              conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>.
+            </p><p>When you use the resource in the pipeline, you specify whether the file is
+            restricted.</p></li>
    </ol></p>
  </conbody>
 </concept>

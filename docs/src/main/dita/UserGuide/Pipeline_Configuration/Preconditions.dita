@@ -2,10 +2,10 @@
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_msl_yd4_fs">
  <title>Preconditions</title>
- <shortdesc>Preconditions are expressions that you can define to determine the records that pass
-  into a stage. Like required fields, if a record does not meet a precondition, it is diverted to
-  the pipeline for error handling. You can define preconditions for any processor and most
-  destination stages. </shortdesc>
+ <shortdesc>Preconditions are conditions that a record must satisfy to enter the stage for
+        processing. Like required fields, if a record does not meet a precondition, it is diverted
+        to the pipeline for error handling. You can define preconditions for any processor and most
+        destination stages. </shortdesc>
  <conbody>
   <p><indexterm>preconditions<indexterm>description</indexterm></indexterm><indexterm>pipeline
           design<indexterm>preconditions</indexterm></indexterm>When you create more than one

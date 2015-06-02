@@ -75,7 +75,7 @@
                             </row>
                             <row>
                                 <entry>preview.maxBatchSize</entry>
-                                <entry>Maximum number of records used to preview data.<p>Default is
+                                <entry>Maximum number of records used to preview data. <p>Default is
                                         10.</p></entry>
                             </row>
                             <row>
@@ -243,8 +243,8 @@
                                         local to the <ph
                                             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
                                         />. <p>When you define runtime properties in a separate
-                                            file, the property names do not require a special
-                                            prefix.</p></li>
+                                            file, do not prefix the property names with
+                                            runtime.conf_ .</p></li>
                                 </ul></entry>
                         </row>
                         <row>
@@ -258,10 +258,10 @@
                                         all endpoints.</li>
                                     <li>Cluster - Runs the <ph
                                             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                                        /> in cluster mode, reading only from Kafka CDH clusters.
-                                            <xref href="../Advanced_Config/ExecutionMode.dita"
-                                                ><image href="../Graphics/icon_moreInfo.png"
-                                                scale="10" id="image_o5j_f5g_cs"/>
+                                        /> in cluster mode, reading only from Kafka clusters. <xref
+                                            href="../Advanced_Config/ExecutionMode.dita"><image
+                                                href="../Graphics/icon_moreInfo.png" scale="10"
+                                                id="image_o5j_f5g_cs"/>
                                         </xref></li>
                                 </ul></entry>
                         </row>

@@ -43,11 +43,18 @@
           <dt class="dt dlterm">Why doesn't the Select Fields with Preview Data option work? No preview data
             displays.</dt>
 
-          <dd class="dd">Select Fields with Preview Data can provide preview data when the pipeline is valid
-            for data preview. Make sure all stages are connected. You might also need to enter
-            temporary values for required properties to enable data preview.</dd>
+          <dd class="dd">Select Fields with Preview Data works when the pipeline is valid for data preview.
+            Make sure all stages are connected. You might also need to enter temporary values for
+            required properties to enable data preview.</dd>
 
-          <dd class="dd"></dd>
+        
+        
+          <dt class="dt dlterm">Sometimes I get a list of available fields and sometimes I don't. What's up with
+            that?</dt>
+
+          <dd class="dd">The pipeline can display a list of available fields when the pipeline is valid for
+            data preview. Make sure all stages are connected. You might also need to enter temporary
+            values for required properties to enable data preview.</dd>
 
         
       </dl>
@@ -80,17 +87,20 @@
 
         
         
-          <dt class="dt dlterm">Why can't I edit preview data?</dt>
+          <dt class="dt dlterm">Why am I only getting 10 records to preview when I'm asking for more?</dt>
 
-          <dd class="dd">When you can edit preview data in the following locations in a pipeline. <ul class="ul" id="concept_vxd_tsm_tq__ul_t5n_jgm_2s">
-                  <li class="li">The output data column for an origin.</li>
+          <dd class="dd">The <span class="ph">Data
+                  Collector</span>
+            maximum preview batch size overrides the data preview batch size. The <span class="ph">Data
+                  Collector</span>
+            default is 10 records. </dd>
 
-                  <li class="li">The input data column for processors.</li>
-
-            </ul>
-</dd>
-
-          <dd class="dd">Edit preview data to test or debug pipeline processing.</dd>
+          <dd class="dd">When you request data preview, you can request up to the <span class="ph">Data
+                  Collector</span>
+            preview batch size, or you can increase the <samp class="ph codeph">preview.maxBatchSize</samp>
+            property in the <span class="ph">Data
+                  Collector</span>
+            configuration file. </dd>
 
         
       </dl>

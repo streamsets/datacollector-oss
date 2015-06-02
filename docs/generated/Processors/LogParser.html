@@ -2,7 +2,7 @@
 <!DOCTYPE html
   SYSTEM "about:legacy-compat">
 <html xml:lang="en-us" lang="en-us">
-<head><meta name="description" content="The Log Parser processor generates a record for every log line and parses log lines based on the specified log format. When you configure the Log Parser, you define the text field that contains the ..."></meta><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><meta name="copyright" content="(C) Copyright 2005"></meta><meta name="DC.rights.owner" content="(C) Copyright 2005"></meta><meta name="DC.Type" content="concept"></meta><meta name="DC.Title" content="Log Parser"></meta><meta name="abstract" content="The Log Parser processor generates a record for every log line and parses log lines based on the specified log format."></meta><meta name="description" content="The Log Parser processor generates a record for every log line and parses log lines based on the specified log format."></meta><meta name="DC.Relation" scheme="URI" content="../Processors/Processors_title.html"></meta><meta name="DC.Relation" scheme="URI" content="../Processors/LogParser-RootField.html"></meta><meta name="DC.Relation" scheme="URI" content="../Origins/LogFormats.html"></meta><meta name="DC.Format" content="XHTML"></meta><meta name="DC.Identifier" content="concept_ulm_qdq_fs"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/commonltr.css"><!----></link><title>Log Parser</title><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/webhelp_topic.css"><!----></link><link rel="stylesheet" type="text/css" href="../skin.css"></link><script type="text/javascript"><!--
+<head><meta name="description" content="The Log Parser processor generates a record for every log line and parses log lines based on the specified log format. When you configure the Log Parser, you define the text field that contains the ..."></meta><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><meta name="copyright" content="(C) Copyright 2005"></meta><meta name="DC.rights.owner" content="(C) Copyright 2005"></meta><meta name="DC.Type" content="concept"></meta><meta name="DC.Title" content="Log Parser"></meta><meta name="abstract" content="The Log Parser processor generates a record for every log line and parses log lines based on the specified log format."></meta><meta name="description" content="The Log Parser processor generates a record for every log line and parses log lines based on the specified log format."></meta><meta name="DC.Relation" scheme="URI" content="../Processors/Processors_title.html"></meta><meta name="DC.Relation" scheme="URI" content="../Origins/LogFormats.html"></meta><meta name="DC.Format" content="XHTML"></meta><meta name="DC.Identifier" content="concept_ulm_qdq_fs"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/commonltr.css"><!----></link><title>Log Parser</title><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/webhelp_topic.css"><!----></link><link rel="stylesheet" type="text/css" href="../skin.css"></link><script type="text/javascript"><!--
           
           var prefix = "../index.html";
           
@@ -17,15 +17,17 @@
  <div class="body conbody"><p class="shortdesc">The Log Parser processor  generates a record for every log line and parses log lines
   based on the specified log format. </p>
 
-  <p class="p">When you configure the Log Parser, you define the text field that
-   contains the log line and the root field for parsed fields. </p>
+  <p class="p">When you configure the Log Parser, you define the text field
+      that contains the log line and the location for parsed fields. </p>
+
+    <p class="p">If the record contains fields in addition to the text field to be parsed, those fields are
+      passed through by default. Parsed fields are written to the specified location, overwriting
+      any existing data. </p>
 
  </div>
 
 <div class="related-links">
 <ul class="ullinks">
-<li class="link ulchildlink"><strong><a href="../Processors/LogParser-RootField.html">Specifying the Root Field</a></strong><br></br>
-</li>
 <li class="link ulchildlink"><strong><a href="../Origins/LogFormats.html">Log Formats</a></strong><br></br>
 When you use an origin to read log data, you define the format of the log files to be   read. </li>
 </ul>

@@ -17,10 +17,14 @@
     <dd>Creates an empty map. </dd>
    </dlentry>
       <dlentry>
-        <dt>jvm:maxMemory(&lt;percentage>)</dt>
-        <dd>Defines the maximum amount of memory a pipeline can use as a percentage of the Java heap
-          size allocated to the <ph
-            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>.</dd>
+        <dt>jvm:maxMemory()</dt>
+        <dd>Returns the Java heap size allocated to the <ph
+            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>. You
+          can use this function in an expression to specify the maximum amount of memory a pipeline
+          can use. </dd>
+        <dd>For example, since 65% of the Java heap size is the recommended maximum, you might use
+          the following expression in the pipeline memory limit property:
+          <codeblock>${jvm:maxMemory() * 0.65}</codeblock></dd>
       </dlentry>
    <dlentry>
     <dt>runtime:conf("&lt;runtime configuration name>")</dt>
@@ -40,8 +44,13 @@
             <li>file name - Name of the file that contains the information to be loaded. The file
               should reside in the following location:
               <codeblock>&lt;SDCinstalldir>/resources</codeblock></li>
-            <li>restricted - Whether the file has restricted permissions. </li>
+            <li>restricted - Whether the file has restricted permissions. If set to true, the file
+              must be owned by the system user who runs the <ph
+                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
+              and read and writable only by the owner.</li>
           </ul></dd>
+        <dd>For more information about runtime resources, see <xref
+            href="../Advanced_Config/RuntimeResources.dita#concept_bs4_5nm_2s"/>.</dd>
       </dlentry>
       <dlentry>
         <dt>sdc:id()</dt>

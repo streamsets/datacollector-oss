@@ -23,7 +23,7 @@
                   use constants or runtime properties throughout the pipeline. You can use
                   expression completion determine where you can use an expression and the expression
                   elements that you can use in that location. </p>
-<div class="p">You can use the following elements in an expression:<ul class="ul" id="concept_ofb_1cm_xq__d2718e215">
+<div class="p">You can use the following elements in an expression:<ul class="ul" id="concept_ofb_1cm_xq__d2852e215">
                         <li class="li">Constants</li>
 
                         <li class="li">Field names</li>
@@ -55,7 +55,7 @@
   follows: <samp class="ph codeph">${&lt;expression&gt;}</samp>.</p>
 
   <p class="p">For example, to add 2
-   +2, use the following syntax: ${2+2}.</p>
+   + 2, use the following syntax: ${2 + 2}.</p>
 
  </div>
 
@@ -104,17 +104,17 @@
                 <div class="p">
                         <dl class="dl">
                                 
-                                        <dt class="dt dlterm">Delimited data, simple maps or JSON objects</dt>
+                                        <dt class="dt dlterm">Simple maps or JSON objects</dt>
 
                                         <dd class="dd">
-                                                <div class="p">With delimited data or simple JSON objects, the
-                                                  fields are one level removed from the root.
-                                                  Reference the field as
+                                                <div class="p">With simple maps or JSON objects, the fields are
+                                                  one level removed from the root. Reference the
+                                                  field as
                                                   follows:<pre class="pre codeblock">/&lt;field name&gt;</pre>
 </div>
 
-                                                <p class="p">So, to reference a CITY field in a delimited
-                                                  record, enter /CITY.</p>
+                                                <p class="p">So, to reference a CITY field in a simple JSON
+                                                  object, enter /CITY.</p>
 
                                         </dd>
 
@@ -160,6 +160,10 @@
 
  </div>
 
+        <div class="related-links"><div class="relinfo relconcepts"><strong>Related concepts</strong><br></br>
+<div class="related_link"><a class="navheader_parent_path" href="PipelineDesign.html#concept_zcg_bm4_fs" title="When reading delimited data, the Data Collector converts each row of delimited data to a record in List data format. To perform additional processing on the record, you can use the general expression language with your knowledge of the resulting record format or you can use delimited data functions.">Delimited Data Record Structure</a></div>
+</div>
+</div>
 <div class="topic concept nested2" id="concept_vqr_sqc_wr">
   <h3 class="title topictitle3">Wildcard Use for Arrays and Maps</h3>
 

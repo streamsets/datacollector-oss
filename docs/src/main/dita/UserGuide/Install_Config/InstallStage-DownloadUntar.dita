@@ -19,7 +19,7 @@
             <step>
                 <cmd>Untar the file.</cmd>
                 <info>For
-                    example:<codeblock>tar xvzf streamsets-datacollector-cdh_5_3_0-lib-1.0.0.tar.gz</codeblock></info>
+                    example:<codeblock>tar xvf streamsets-datacollector-cdh_5_3_0-lib-1.0.0.tar.gz</codeblock></info>
             </step>
             <step>
                 <cmd>Stop and restart the <ph

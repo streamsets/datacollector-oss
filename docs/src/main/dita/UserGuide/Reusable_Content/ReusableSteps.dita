@@ -44,7 +44,12 @@
                                 </row>
                                 <row>
                                     <entry>Preview Batch Size</entry>
-                                    <entry>Number of records to use in the preview.</entry>
+                                    <entry>Number of records to use in the preview. Honors values up
+                                        to the <ph
+                                            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                                        /> preview batch size. <p>Default is 10. The <ph
+                                                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                                            /> default is 10.</p></entry>
                                 </row>
                                 <row>
                                     <entry>Write to Destinations</entry>

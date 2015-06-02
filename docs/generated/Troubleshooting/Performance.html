@@ -2,7 +2,7 @@
 <!DOCTYPE html
   SYSTEM "about:legacy-compat">
 <html xml:lang="en-us" lang="en-us">
-<head><meta name="description" content="Use the following tips to help you with performance issues. How can I tell what's slowing down my pipeline? How can I improve the general pipeline performance? You might improve performance by ..."></meta><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><meta name="copyright" content="(C) Copyright 2005"></meta><meta name="DC.rights.owner" content="(C) Copyright 2005"></meta><meta name="DC.Type" content="concept"></meta><meta name="DC.Title" content="Performance Issues"></meta><meta name="DC.Relation" scheme="URI" content="../Troubleshooting/Troubleshooting_title.html"></meta><meta name="DC.Format" content="XHTML"></meta><meta name="DC.Identifier" content="concept_ay2_w1l_2s"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/commonltr.css"><!----></link><title>Performance Issues</title><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/webhelp_topic.css"><!----></link><link rel="stylesheet" type="text/css" href="../skin.css"></link><script type="text/javascript"><!--
+<head><meta name="description" content="Use the following tips to help you with performance issues. Why is my batch size only 1000 records when I configured my origin for larger batches? The Data Collector maximum batch size overrides the ..."></meta><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><meta name="copyright" content="(C) Copyright 2005"></meta><meta name="DC.rights.owner" content="(C) Copyright 2005"></meta><meta name="DC.Type" content="concept"></meta><meta name="DC.Title" content="Performance Issues"></meta><meta name="DC.Relation" scheme="URI" content="../Troubleshooting/Troubleshooting_title.html"></meta><meta name="DC.Format" content="XHTML"></meta><meta name="DC.Identifier" content="concept_ay2_w1l_2s"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/commonltr.css"><!----></link><title>Performance Issues</title><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/webhelp_topic.css"><!----></link><link rel="stylesheet" type="text/css" href="../skin.css"></link><script type="text/javascript"><!--
           
           var prefix = "../index.html";
           
@@ -16,6 +16,23 @@
  <div class="body conbody">
   <div class="p">Use
    the following tips to help you with performance issues. <dl class="dl">
+    
+     <dt class="dt dlterm">Why is my batch size only 1000 records when I configured my origin for larger batches?</dt>
+
+     <dd class="dd">The <span class="ph">Data
+                  Collector</span>
+      maximum batch size overrides the maximum batch size configured in origins. The <span class="ph">Data
+                  Collector</span> default is
+      1000 records. </dd>
+
+     <dd class="dd">When you configure the origin batch size, you can request up to the <span class="ph">Data
+                  Collector</span> maximum
+      batch size, or you can increase the <samp class="ph codeph">production.maxBatchSize</samp> property in the
+       <span class="ph">Data
+                  Collector</span>
+      configuration file. </dd>
+
+    
     
      <dt class="dt dlterm">How can I tell what's slowing down my pipeline?</dt>
 

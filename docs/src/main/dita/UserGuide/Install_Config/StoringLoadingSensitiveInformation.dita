@@ -26,7 +26,7 @@
           name with @ symbols as follows:<codeblock>@&lt;filename>@</codeblock></li>
       </ol>For example, if you configure xmail.username as follows, the <ph
         conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> checks the
-      xmail_username.txt file for the user
-      name:<codeblock><b>xmail.username</b>=@xmail_username.txt@</codeblock></p>
+      email_username.txt file for the user
+      name:<codeblock><b>xmail.username</b>=@email_username.txt@</codeblock></p>
  </conbody>
 </concept>

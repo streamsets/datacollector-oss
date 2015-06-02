@@ -7,6 +7,18 @@
      Collector<indexterm>troubleshooting</indexterm></indexterm><indexterm>troubleshooting<indexterm>destinations</indexterm></indexterm>Use
    the following tips to help you with performance issues. <dl>
     <dlentry>
+     <dt>Why is my batch size only 1000 records when I configured my origin for larger batches?</dt>
+     <dd>The <ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
+      maximum batch size overrides the maximum batch size configured in origins. The <ph
+       conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> default is
+      1000 records. </dd>
+     <dd>When you configure the origin batch size, you can request up to the <ph
+       conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> maximum
+      batch size, or you can increase the <codeph>production.maxBatchSize</codeph> property in the
+       <ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
+      configuration file. </dd>
+    </dlentry>
+    <dlentry>
      <dt>How can I tell what's slowing down my pipeline?</dt>
      <dd>
       <draft-comment author="Loretta">check this out.</draft-comment>
