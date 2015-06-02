@@ -348,6 +348,7 @@ public class FilePipelineStoreTask extends AbstractTask implements PipelineStore
 
   @Override
   public boolean deleteRules(String name) throws PipelineStoreException {
+    pipelineToRuleDefinitionMap.remove(getPipelineKey(name, REV));
     if(hasPipeline(name) && getRulesFile(name) != null && getRulesFile(name).exists()) {
       return getRulesFile(name).delete();
     }
