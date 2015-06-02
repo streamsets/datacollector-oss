@@ -48,6 +48,7 @@ describe('StreamSets Data Collector App', function() {
     });
 
     it('should be able to import pipeline', function() {
+      browser.sleep(1000);
       element.all(by.css('.import-pipeline-btn')).then(function(elements) {
         var importBtnElement = elements[elements.length - 1];
         importBtnElement.click();
@@ -70,7 +71,7 @@ describe('StreamSets Data Collector App', function() {
 
 
     it('should be able to create new pipeline', function() {
-      browser.sleep(500);
+      browser.sleep(1000);
       element(by.css('[ng-click="toggleLibraryPanel()"]')).click();
 
       element.all(by.css('.create-pipeline-btn')).then(function(elements) {
@@ -126,7 +127,7 @@ describe('StreamSets Data Collector App', function() {
 
 
     it('should be able to delete pipeline', function() {
-      browser.sleep(500);
+      browser.sleep(1000);
       //Toggle Library Pane
       element(by.css('[ng-click="toggleLibraryPanel()"]')).click();
 
@@ -151,7 +152,7 @@ describe('StreamSets Data Collector App', function() {
           element(by.css('[ng-click="yes()"]')).click();
 
 
-          browser.sleep(1000);
+          browser.sleep(1500);
 
           element(by.css('[ng-click="toggleLibraryPanel()"]')).click();
 

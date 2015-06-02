@@ -733,13 +733,6 @@ angular
             writeToDestinations: false
           }
         };
-
-        //Load Metric Rules
-
-        if(!pipelineRules.metricsRuleDefinitions || pipelineRules.metricsRuleDefinitions.length === 0) {
-          pipelineRules.metricsRuleDefinitions = pipelineService.getPredefinedMetricAlertRules($scope.pipelineConfig.info.name);
-          saveRulesUpdate(pipelineRules);
-        }
       }
 
       //Update Pipeline Info list

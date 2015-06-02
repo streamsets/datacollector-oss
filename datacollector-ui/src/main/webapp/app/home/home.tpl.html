@@ -8,7 +8,7 @@
       <span translate="home.createPipeline">Create Pipeline</span>
     </button>
 
-    <button class="btn btn-primary pull-lef import-pipeline-btn"
+    <button class="btn btn-primary pull-left import-pipeline-btn"
             ng-disabled="!isAuthorized([userRoles.admin, userRoles.creator]) || common.sdcExecutionMode == pipelineConstant.SLAVE"
             ng-click="importPipelineConfig()">
       <span class="fa fa-arrow-circle-down"></span>

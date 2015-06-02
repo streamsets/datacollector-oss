@@ -6,6 +6,12 @@
 package com.streamsets.pipeline.restapi;
 
 import com.streamsets.pipeline.api.impl.Utils;
+import com.streamsets.pipeline.config.DataRuleDefinition;
+import com.streamsets.pipeline.config.MetricElement;
+import com.streamsets.pipeline.config.MetricType;
+import com.streamsets.pipeline.config.MetricsRuleDefinition;
+import com.streamsets.pipeline.config.PipelineConfiguration;
+import com.streamsets.pipeline.config.RuleDefinitions;
 import com.streamsets.pipeline.main.RuntimeInfo;
 import com.streamsets.pipeline.restapi.bean.BeanHelper;
 import com.streamsets.pipeline.restapi.bean.PipelineConfigurationJson;
@@ -37,12 +43,41 @@ import javax.ws.rs.core.UriBuilder;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.security.Principal;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @Path("/v1/pipeline-library")
 @DenyAll
 public class PipelineStoreResource {
+  private static final String HIGH_BAD_RECORDS_ID = "badRecordsAlertID";
+  private static final String HIGH_BAD_RECORDS_TEXT = "High incidence of Bad Records";
+  private static final String HIGH_BAD_RECORDS_METRIC_ID = "pipeline.batchErrorRecords.meter";
+  private static final String HIGH_BAD_RECORDS_CONDITION = "${value() > 100}";
+
+  private static final String HIGH_STAGE_ERRORS_ID = "stageErrorAlertID";
+  private static final String HIGH_STAGE_ERRORS_TEXT = "High incidence of Error Messages";
+  private static final String HIGH_STAGE_ERRORS_METRIC_ID = "pipeline.batchErrorMessages.meter";
+  private static final String HIGH_STAGE_ERRORS_CONDITION = "${value() > 100}";
+
+  private static final String PIPELINE_IDLE_ID = "idleGaugeID";
+  private static final String PIPELINE_IDLE_TEXT = "Pipeline is Idle";
+  private static final String PIPELINE_IDLE_METRIC_ID = "RuntimeStatsGauge.gauge";
+  private static final String PIPELINE_IDLE_CONDITION = "${time:now() - value() > 120000}";
+
+  private static final String BATCH_TIME_ID = "batchTimeAlertID";
+  private static final String BATCH_TIME_TEXT = "Batch taking more time to process";
+  private static final String BATCH_TIME_METRIC_ID = "RuntimeStatsGauge.gauge";
+  private static final String BATCH_TIME_CONDITION = "${value() > 200}";
+
+  private static final String MEMORY_LIMIt_ID = "memoryLimitAlertID";
+  private static final String MEMORY_LIMIt_TEXT = "Memory limit for pipeline exceeded";
+  private static final String MEMORY_LIMIt_METRIC_ID = "pipeline.memoryConsumed.counter";
+  private static final String MEMORY_LIMIt_CONDITION = "${value() > (jvm:maxMemory() * 0.65)}";
+
+
   private final RuntimeInfo runtimeInfo;
   private final PipelineStoreTask store;
   private final StageLibraryTask stageLibrary;
@@ -79,7 +114,7 @@ public class PipelineStoreResource {
       throws PipelineStoreException, URISyntaxException {
     Object data;
     if (get.equals("pipeline")) {
-      com.streamsets.pipeline.config.PipelineConfiguration pipeline = store.load(name, rev);
+      PipelineConfiguration pipeline = store.load(name, rev);
       PipelineConfigurationValidator validator = new PipelineConfigurationValidator(stageLibrary, name, pipeline);
       validator.validate();
       pipeline.setValidation(validator);
@@ -117,7 +152,33 @@ public class PipelineStoreResource {
       throws PipelineStoreException, URISyntaxException {
     Utils.checkState(runtimeInfo.getExecutionMode() != RuntimeInfo.ExecutionMode.SLAVE,
       "This operation is not supported in SLAVE mode");
-    com.streamsets.pipeline.config.PipelineConfiguration pipeline = store.create(name, description, user);
+    PipelineConfiguration pipeline = store.create(name, description, user);
+
+    //Add predefined Metric Rules to the pipeline
+    List<MetricsRuleDefinition> metricsRuleDefinitions = new ArrayList<>();
+
+    metricsRuleDefinitions.add(new MetricsRuleDefinition(HIGH_BAD_RECORDS_ID, HIGH_BAD_RECORDS_TEXT,
+      HIGH_BAD_RECORDS_METRIC_ID, MetricType.METER, MetricElement.METER_COUNT, HIGH_BAD_RECORDS_CONDITION, false,
+      false));
+
+    metricsRuleDefinitions.add(new MetricsRuleDefinition(HIGH_STAGE_ERRORS_ID, HIGH_STAGE_ERRORS_TEXT,
+      HIGH_STAGE_ERRORS_METRIC_ID, MetricType.METER, MetricElement.METER_COUNT, HIGH_STAGE_ERRORS_CONDITION, false,
+      false));
+
+    metricsRuleDefinitions.add(new MetricsRuleDefinition(PIPELINE_IDLE_ID, PIPELINE_IDLE_TEXT,
+      PIPELINE_IDLE_METRIC_ID, MetricType.GAUGE, MetricElement.TIME_OF_LAST_RECEIVED_RECORD, PIPELINE_IDLE_CONDITION,
+      false, false));
+
+    metricsRuleDefinitions.add(new MetricsRuleDefinition(BATCH_TIME_ID, BATCH_TIME_TEXT, BATCH_TIME_METRIC_ID,
+      MetricType.GAUGE, MetricElement.CURRENT_BATCH_AGE, BATCH_TIME_CONDITION, false, false));
+
+    metricsRuleDefinitions.add(new MetricsRuleDefinition(MEMORY_LIMIt_ID, MEMORY_LIMIt_TEXT, MEMORY_LIMIt_METRIC_ID,
+      MetricType.COUNTER, MetricElement.COUNTER_COUNT, MEMORY_LIMIt_CONDITION, false, false));
+
+    RuleDefinitions ruleDefinitions = new RuleDefinitions(metricsRuleDefinitions,
+      Collections.<DataRuleDefinition>emptyList(), Collections.<String>emptyList(), null);
+    store.storeRules(name, "0", ruleDefinitions);
+
     PipelineConfigurationValidator validator = new PipelineConfigurationValidator(stageLibrary, name, pipeline);
     validator.validate();
     pipeline.setValidation(validator);
@@ -153,7 +214,7 @@ public class PipelineStoreResource {
     Utils.checkState(runtimeInfo.getExecutionMode() != RuntimeInfo.ExecutionMode.SLAVE,
       "This operation is not supported in SLAVE mode");
 
-    com.streamsets.pipeline.config.PipelineConfiguration pipelineConfig = BeanHelper.unwrapPipelineConfiguration(
+    PipelineConfiguration pipelineConfig = BeanHelper.unwrapPipelineConfiguration(
       pipeline);
     PipelineConfigurationValidator validator = new PipelineConfigurationValidator(stageLibrary, name, pipelineConfig);
     validator.validate();
