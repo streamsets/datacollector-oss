@@ -18,6 +18,9 @@ import com.streamsets.pipeline.config.JsonMode;
 import com.streamsets.pipeline.config.LogMode;
 import com.streamsets.pipeline.config.OnParseError;
 import com.streamsets.pipeline.lib.Errors;
+import com.streamsets.pipeline.lib.KafkaBroker;
+import com.streamsets.pipeline.lib.KafkaConnectionException;
+import com.streamsets.pipeline.lib.KafkaUtil;
 import com.streamsets.pipeline.lib.parser.DataParserFactory;
 import com.streamsets.pipeline.lib.parser.DataParser;
 import com.streamsets.pipeline.lib.parser.DataParserException;
@@ -70,11 +73,13 @@ public abstract class BaseKafkaSource extends BaseSource implements OffsetCommit
   private final String log4jCustomLogFormat;
   private final int maxStackTraceLines;
   private final OnParseError onParseError;
+  protected KafkaConsumer kafkaConsumer;
 
   protected int maxWaitTime;
   private LogDataFormatValidator logDataFormatValidator;
   private Charset messageCharset;
   private DataParserFactory parserFactory;
+  private int originParallelism = 0;
 
   public BaseKafkaSource(SourceArguments args) {
     this.metadataBrokerList = args.getMetadataBrokerList();
@@ -109,7 +114,9 @@ public abstract class BaseKafkaSource extends BaseSource implements OffsetCommit
     this.onParseError = args.getOnParseError();
   }
 
-  protected List<ConfigIssue> validateCommonConfigs(List<ConfigIssue> issues) throws StageException {
+  @Override
+  protected List<ConfigIssue> validateConfigs() throws StageException {
+    List<ConfigIssue> issues = new ArrayList<ConfigIssue>();
     if(topic == null || topic.isEmpty()) {
       issues.add(getContext().createConfigIssue(Groups.KAFKA.name(), "topic",
         Errors.KAFKA_05));
@@ -164,11 +171,53 @@ public abstract class BaseKafkaSource extends BaseSource implements OffsetCommit
 
     validateParserFactoryConfigs(issues);
 
-    //kafka consumer configs
-    //We do not validate this, just pass it down to Kafka
+    // Validate broker config
+    try {
+      int partitionCount = KafkaUtil.getPartitionCount(metadataBrokerList, topic, 3, 1000);
+      if(partitionCount < 1) {
+        issues.add(getContext().createConfigIssue(Groups.KAFKA.name(), "topic",
+          Errors.KAFKA_42, topic));
+      } else {
+        //cache the partition count as parallelism for future use
+        originParallelism = partitionCount;
+      }
+    } catch (KafkaConnectionException e) {
+      issues.add(getContext().createConfigIssue(Groups.KAFKA.name(), "metadataBrokerList",
+        e.getErrorCode(), metadataBrokerList, e));
+    } catch (StageException e) {
+      issues.add(getContext().createConfigIssue(Groups.KAFKA.name(), "topic",
+        Errors.KAFKA_41, topic, e.getMessage(), e));
+    }
 
-    return issues;
+    // Validate zookeeper config
+
+    List<KafkaBroker> kafkaBrokers = KafkaUtil.validateConnectionString(issues, zookeeperConnect, Groups.KAFKA.name(),
+      "zookeeperConnect", getContext());
+
+     //validate connecting to kafka
+     if(kafkaBrokers != null && !kafkaBrokers.isEmpty() && topic !=null && !topic.isEmpty()) {
+       kafkaConsumer = new KafkaConsumer(zookeeperConnect, topic, consumerGroup, maxBatchSize, maxWaitTime,
+         kafkaConsumerConfigs, getContext());
+       kafkaConsumer.validate(issues, getContext());
+     }
+
+     //consumerGroup
+     if(consumerGroup == null || consumerGroup.isEmpty()) {
+       issues.add(getContext().createConfigIssue(Groups.KAFKA.name(), "consumerGroup",
+         Errors.KAFKA_33));
+     }
+     return issues;
   }
+
+  @Override
+  public int getParallelism() throws StageException {
+    if(originParallelism == 0) {
+      //origin parallelism is not yet calculated
+      originParallelism = KafkaUtil.getPartitionCount(metadataBrokerList, topic, 3, 1000);
+    }
+    return originParallelism;
+  }
+
 
   private void validateParserFactoryConfigs(List<ConfigIssue> issues) {
     DataParserFactoryBuilder builder = new DataParserFactoryBuilder(getContext(), dataFormat.getParserFormat())

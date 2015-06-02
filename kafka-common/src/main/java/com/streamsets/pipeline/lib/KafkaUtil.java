@@ -91,25 +91,25 @@ public class KafkaUtil {
     return topicMetadata.partitionsMetadata().size();
   }
 
-  public static List<KafkaBroker> validateBrokerList(List<Stage.ConfigIssue> issues, String brokerList,
+  public static List<KafkaBroker> validateConnectionString(List<Stage.ConfigIssue> issues, String connectionString,
                                                      String confiGroupName, String configName, Stage.Context context) {
-    if(brokerList == null || brokerList.isEmpty()) {
+    if(connectionString == null || connectionString.isEmpty()) {
       issues.add(context.createConfigIssue(confiGroupName, configName,
         Errors.KAFKA_06, configName));
       return null;
     }
     List<KafkaBroker> kafkaBrokers = new ArrayList<>();
-    String[] brokers = brokerList.split(",");
+    String[] brokers = connectionString.split(",");
     for(String broker : brokers) {
       String[] brokerHostAndPort = broker.split(":");
       if(brokerHostAndPort.length != 2) {
-        issues.add(context.createConfigIssue(confiGroupName, configName, Errors.KAFKA_07, brokerList));
+        issues.add(context.createConfigIssue(confiGroupName, configName, Errors.KAFKA_07, connectionString));
       } else {
         try {
           int port = Integer.parseInt(brokerHostAndPort[1].trim());
           kafkaBrokers.add(new KafkaBroker(brokerHostAndPort[0].trim(), port));
         } catch (NumberFormatException e) {
-          issues.add(context.createConfigIssue(confiGroupName, configName, Errors.KAFKA_07, brokerList));
+          issues.add(context.createConfigIssue(confiGroupName, configName, Errors.KAFKA_07, connectionString));
         }
       }
     }

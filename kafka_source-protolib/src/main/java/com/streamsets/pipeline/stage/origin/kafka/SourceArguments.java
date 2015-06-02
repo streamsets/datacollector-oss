@@ -7,6 +7,7 @@ package com.streamsets.pipeline.stage.origin.kafka;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.Maps;
 import com.streamsets.pipeline.config.CsvHeader;
 import com.streamsets.pipeline.config.CsvMode;
 import com.streamsets.pipeline.config.DataFormat;
@@ -94,7 +95,7 @@ public class SourceArguments {
     this.maxStackTraceLines = maxStackTraceLines;
     this.onParseError = onParseError;
     this.maxBatchSize = maxBatchSize;
-    this.kafkaConsumerConfigs = ImmutableMap.copyOf(kafkaConsumerConfigs == null ?
+    this.kafkaConsumerConfigs = Maps.newHashMap(kafkaConsumerConfigs == null ?
       Collections.<String, String>emptyMap() : kafkaConsumerConfigs);
   }
 

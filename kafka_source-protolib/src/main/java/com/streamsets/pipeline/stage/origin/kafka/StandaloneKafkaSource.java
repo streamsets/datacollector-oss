@@ -5,7 +5,6 @@
  */
 package com.streamsets.pipeline.stage.origin.kafka;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -14,38 +13,13 @@ import org.slf4j.LoggerFactory;
 import com.streamsets.pipeline.api.BatchMaker;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
-import com.streamsets.pipeline.lib.Errors;
-import com.streamsets.pipeline.lib.KafkaBroker;
-import com.streamsets.pipeline.lib.KafkaUtil;
+
 
 public class StandaloneKafkaSource extends BaseKafkaSource {
   private static final Logger LOG = LoggerFactory.getLogger(StandaloneKafkaSource.class);
-  private KafkaConsumer kafkaConsumer;
 
   public StandaloneKafkaSource(SourceArguments args) {
     super(args);
-  }
-
-  @Override
-  protected List<ConfigIssue> validateConfigs() throws StageException {
-  List<ConfigIssue> issues =  new ArrayList<ConfigIssue>();
-
-  List<KafkaBroker> kafkaBrokers = KafkaUtil.validateBrokerList(issues, zookeeperConnect, Groups.KAFKA.name(),
-    "zookeeperConnect", getContext());
-
-   //validate connecting to kafka
-   if(kafkaBrokers != null && !kafkaBrokers.isEmpty() && topic !=null && !topic.isEmpty()) {
-     kafkaConsumer = new KafkaConsumer(zookeeperConnect, topic, consumerGroup, maxBatchSize, maxWaitTime,
-       kafkaConsumerConfigs, getContext());
-     kafkaConsumer.validate(issues, getContext());
-   }
-
-   //consumerGroup
-   if(consumerGroup == null || consumerGroup.isEmpty()) {
-     issues.add(getContext().createConfigIssue(Groups.KAFKA.name(), "consumerGroup",
-       Errors.KAFKA_33));
-   }
-   return validateCommonConfigs(issues);
   }
 
   @Override

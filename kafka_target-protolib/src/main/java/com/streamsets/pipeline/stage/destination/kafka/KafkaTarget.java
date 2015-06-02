@@ -127,7 +127,7 @@ public class KafkaTarget extends BaseTarget {
     allowAllTopics = false;
 
     //metadata broker list should be one or more <host>:<port> separated by a comma
-    kafkaBrokers = KafkaUtil.validateBrokerList(issues, metadataBrokerList,
+    kafkaBrokers = KafkaUtil.validateConnectionString(issues, metadataBrokerList,
                                                                   Groups.KAFKA.name(), "metadataBrokerList",
                                                                   getContext());
 

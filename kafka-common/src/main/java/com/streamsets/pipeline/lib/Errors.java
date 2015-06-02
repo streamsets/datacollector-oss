@@ -17,7 +17,7 @@ public enum Errors implements ErrorCode {
   KAFKA_03("Cannot find metadata for topic '{}' from the broker list '{}'"),
   KAFKA_04("Topic '{}' does not exist"),
   KAFKA_05("Topic cannot be empty"),
-  KAFKA_06("Broker URIs cannot be empty"),
+  KAFKA_06("Zookeeper URI cannot be empty"),
   KAFKA_07("Invalid broker URI '{}'"),
   KAFKA_08("Unsupported charset '{}'"),
 

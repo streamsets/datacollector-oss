@@ -9,16 +9,10 @@ import com.streamsets.pipeline.api.ErrorListener;
 import com.streamsets.pipeline.api.OffsetCommitter;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
-import com.streamsets.pipeline.lib.Errors;
-import com.streamsets.pipeline.lib.KafkaConnectionException;
-import com.streamsets.pipeline.lib.KafkaUtil;
 import com.streamsets.pipeline.stage.origin.kafka.BaseKafkaSource;
-import com.streamsets.pipeline.stage.origin.kafka.Groups;
 import com.streamsets.pipeline.stage.origin.kafka.SourceArguments;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -29,7 +23,6 @@ public class ClusterKafkaSource extends BaseKafkaSource implements OffsetCommitt
 
   private final ClusterQueue clusterQueue;
   private final ClusterQueueConsumer clusterQueueConsumer;
-  private int originParallelism = 0;
 
   public ClusterKafkaSource(SourceArguments args) {
     super(args);
@@ -39,37 +32,6 @@ public class ClusterKafkaSource extends BaseKafkaSource implements OffsetCommitt
 
   private String getRecordId(String topic) {
     return "spark-streaming" + "::" + topic;
-  }
-
-  @Override
-  public List<ConfigIssue> validateConfigs() throws StageException {
-    List<ConfigIssue> issues = validateCommonConfigs(new ArrayList<ConfigIssue>());
-    try {
-      int partitionCount = KafkaUtil.getPartitionCount(metadataBrokerList, topic, 3, 1000);
-      if(partitionCount < 1) {
-        issues.add(getContext().createConfigIssue(Groups.KAFKA.name(), "topic",
-          Errors.KAFKA_42, topic));
-      } else {
-        //cache the partition count as parallelism for future use
-        originParallelism = partitionCount;
-      }
-    } catch (KafkaConnectionException e) {
-      issues.add(getContext().createConfigIssue(Groups.KAFKA.name(), "metadataBrokerList",
-        e.getErrorCode(), metadataBrokerList, e));
-    } catch (StageException e) {
-      issues.add(getContext().createConfigIssue(Groups.KAFKA.name(), "topic",
-        Errors.KAFKA_41, topic, e.getMessage(), e));
-    }
-    return issues;
-  }
-
-  @Override
-  public int getParallelism() throws StageException {
-    if(originParallelism == 0) {
-      //origin parallelism is not yet calculated
-      originParallelism = KafkaUtil.getPartitionCount(metadataBrokerList, topic, 3, 1000);
-    }
-    return originParallelism;
   }
 
   @Override
