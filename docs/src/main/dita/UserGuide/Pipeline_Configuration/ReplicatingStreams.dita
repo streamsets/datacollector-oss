@@ -6,7 +6,7 @@
       You can configure required fields for a stage to discard records before they enter the stage,
       but by default all records are passed.</shortdesc>
  <conbody>
-  <p><indexterm>pipelines<indexterm>replicating
+  <p><indexterm>pipeline design<indexterm>replicating
           streams</indexterm></indexterm><indexterm>replicating<indexterm>streams in a
           pipeline</indexterm></indexterm>For example, in the following pipeline, all of the data
       from the Directory origin passes to both branches of the pipeline for different types of

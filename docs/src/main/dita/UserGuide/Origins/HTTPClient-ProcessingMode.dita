@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
+<concept id="concept_erx_tjp_fs">
+ <title>Processing Mode</title>
+ <conbody>
+  <p><indexterm>HTTP Client origin<indexterm>processing
+    mode</indexterm></indexterm><indexterm>processing mode<indexterm>HTTP
+    Client</indexterm></indexterm>HTTP Client can use one of the following processing modes to read
+   source data:<dl>
+    <dlentry>
+     <dt>Streaming</dt>
+     <dd>HTTP Client maintains a connection and processes data as it becomes available. Use to
+      process streaming data in real time.</dd>
+    </dlentry>
+    <dlentry>
+     <dt>Polling</dt>
+     <dd>HTTP Client polls the server at the specified interval for available data. Use to access
+      data periodically, such as metrics and events at a REST endpoint. </dd>
+    </dlentry>
+   </dl></p>
+ </conbody>
+</concept>

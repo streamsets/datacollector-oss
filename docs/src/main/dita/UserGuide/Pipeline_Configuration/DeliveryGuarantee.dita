@@ -6,7 +6,7 @@
     to prevent the loss of data or the duplication of data?</shortdesc>
  <conbody>
   <p><indexterm>delivery guarantee<indexterm>pipeline
-          property</indexterm></indexterm><indexterm>pipelines<indexterm>delivery
+        property</indexterm></indexterm><indexterm>pipeline properties<indexterm>delivery
           guarantee</indexterm></indexterm>The Delivery Guarantee pipeline property offers the
       following choices:<dl>
         <dlentry>

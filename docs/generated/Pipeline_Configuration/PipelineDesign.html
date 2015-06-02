@@ -77,16 +77,37 @@
  <h2 class="title topictitle2">Required Fields</h2>
 
  
- <div class="body conbody"><p class="shortdesc">You can define required fields for any processor and most destination stages. A required
-        field must exist in a record to allow the record to enter the stage for processing. When a
-        record does not include a required field, the record is passed to the pipeline for error
-        handling. </p>
+ <div class="body conbody"><p class="shortdesc">A required field is a field that must exist in a record to allow it into the stage for
+        processing. When a record does not include a required field, the record is diverted to the
+        pipeline for error handling. You can define required fields for any processor and most
+        destination stages. </p>
 
-  <p class="p"> Configure required fields as
-            part of the overall pipeline logic or to minimize processing errors. </p>
+  <p class="p"> Configure
+                        required fields as part of the overall pipeline logic or to minimize
+                        processing errors. For example, if a Field Hasher encodes social security
+                        data in the /SSN field. To ensure all records include social security
+                        numbers, you can make /SSN a required field for the stage.</p>
 
-        <p class="p">For example, a Field Hasher encodes social security data in the /SSN field. To ensure all
-            records include social security numbers, make /SSN a required field for the stage.</p>
+ </div>
+
+</div>
+<div class="topic concept nested1" id="concept_msl_yd4_fs">
+ <h2 class="title topictitle2">Preconditions</h2>
+
+ 
+ <div class="body conbody"><p class="shortdesc">Preconditions are expressions that you can define to determine the records that pass
+  into a stage. Like required fields, if a record does not meet a precondition, it is diverted to
+  the pipeline for error handling. You can define preconditions for any processor and most
+  destination stages. </p>
+
+  <p class="p">When you create more than one
+      precondition in a stage, a record must pass all conditions to enter the stage. You can use
+      most functions, pipeline constants, and runtime properties in preconditions. </p>
+
+  <div class="p">Configure preconditions as part of the overall pipeline logic or  to minimize processing
+   errors. For example, you might use the following expression to exclude records that originate
+   from outside the United States:<pre class="pre codeblock"> ${record:value('/COUNTRY') = 'US'}</pre>
+</div>
 
  </div>
 
@@ -101,8 +122,8 @@
                   Collector</span> can also use
     the data format to read and write data. </p>
 
-  <p class="p">Use the SDC Record data format to
-      process data from another pipeline or to generate data to be processed by another
+  <p class="p">Use the SDC Record data
+      format to process data from another pipeline or to generate data to be processed by another
       pipeline.</p>
 
   <div class="p">You can use the following origins to read SDC Record data: <ul class="ul" id="concept_qkk_mwk_br__ul_ep4_r2b_wr">
@@ -125,6 +146,100 @@
 
  </div>
 
+</div>
+<div class="topic concept nested1" id="concept_zcg_bm4_fs">
+ <h2 class="title topictitle2">Delimited Data Record Structure</h2>
+
+ 
+ <div class="body conbody"><p class="shortdesc">When reading delimited data, the <span class="ph">Data
+                  Collector</span>
+        converts each row of delimited data to a record in List data format. To perform additional
+        processing on the record, you can use the general expression language with your knowledge of
+        the resulting record format or you can use delimited data functions. </p>
+
+  <div class="p">A record
+            generated from delimited data results in list with an index for the header position and
+            a map with each header and associated value, as
+            follows:<pre class="pre codeblock">[0] /header = &lt;first header&gt;
+    /value = &lt;value for first header&gt;
+
+[1] /header = &lt;second header&gt;
+    /value = &lt;value for second header&gt;
+
+[2] /header = &lt;third header&gt;
+    /value = &lt;value for third header&gt;
+.
+.
+.</pre>
+</div>
+
+  <p class="p">For example, the following delimited rows:</p>
+
+  <div class="p">
+   <pre class="pre codeblock"><strong class="ph b">TransactionID,Type,UserID
+0003420303,04,362
+0003420304,08,1008</strong></pre>
+
+  </div>
+
+  <div class="p">are converted to records as
+   follows:<pre class="pre codeblock">[0] /header = TransactionID
+    /value = 0003420303
+[1] /header = Type
+    /value = 04
+[2] /header = UserID
+    /value = 362
+
+[0] /header = TransactionID
+    /value = 0003420304
+[1] /header = Type
+    /value = 08
+[2] /header = UserID
+    /value = 1008</pre>
+</div>
+
+ </div>
+
+<div class="topic concept nested2" id="concept_hrt_tt4_fs">
+ <h3 class="title topictitle3">Processing Delimited Data</h3>
+
+ 
+ <div class="body conbody"><p class="shortdesc">To process delimited data, you can use delimited data functions or standard record
+  functions. </p>
+
+  <p class="p">The expression language
+   provides delimited data functions to enable easier access to record details, such as the value of
+   a header or whether the record includes duplicate headers. </p>
+
+  <p class="p">For example, you can use the <samp class="ph codeph">record:dValue('&lt;header&gt;')</samp> delimited data
+      function to return the value associated with the specified header. Continuing with the example
+      above, the following function returns user ID information:</p>
+
+  <pre class="pre codeblock">${record:dValue('UserID')}</pre>
+
+  <div class="p">With the User ID header index, you can use the <samp class="ph codeph">record:dValueAt(&lt;header
+        index&gt;)</samp> function to return the same information, as
+      follows:<pre class="pre codeblock">${record:dValueAt([2])</pre>
+</div>
+
+  <div class="p">But if you prefer, you can use the field path to the data with the standard record function,
+        <samp class="ph codeph">record:value('&lt;field
+      path&gt;')</samp>:<pre class="pre codeblock">${record:value('[2]/value&gt;')}</pre>
+</div>
+
+  <p class="p">Note that the field path references the column index and the "value" key.</p>
+
+  <div class="p">
+   <div class="note tip"><span class="tiptitle">Tip:</span> You can use the <samp class="ph codeph">record:dToMap()</samp> function to convert the record
+    to a map, and then use standard functions for record processing.</div>
+
+  </div>
+
+  <p class="p">For the full list of delimited data record functions and their syntax, see <a class="xref" href="../Expression_Language/Functions.html#concept_s2c_q14_fs" title="When reading delimited data, the Data Collector generates records of the List data format with a map of the header and value. Use delimited data functions to process delimited data, such as returning the value associated with a header or checking for duplicate headers.">Delimited Data Functions</a>.</p>
+
+ </div>
+
+</div>
 </div>
 </div>
 <div class="navfooter"><!---->

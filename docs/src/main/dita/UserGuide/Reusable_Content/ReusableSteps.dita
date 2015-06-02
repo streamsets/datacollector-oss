@@ -165,7 +165,7 @@
             <step>
                 <cmd>
                     <draft-comment author="Loretta">Use this step for processors that have error
-                        handling</draft-comment>
+                        handling - should be all I think? s</draft-comment>
                 </cmd>
             </step>
             <step id="1stStep-ReqField-ErrorHandling">
@@ -199,6 +199,16 @@
                                     <entry>Fields that must include data to be passed into the
                                         stage. <note outputclass="" type="tip">You might include
                                             fields that the stage uses.</note></entry>
+                                </row>
+                                <row>
+                                    <entry>Preconditions <xref
+                                            href="../Pipeline_Configuration/Preconditions.dita">
+                                            <image href="../Graphics/icon_moreInfo.png" scale="10"
+                                                id="image_f3b_khp_fs"/></xref></entry>
+                                    <entry>Conditions that must evaluate to TRUE to allow a record
+                                        to enter the stage for processing. Click
+                                            <uicontrol>Add</uicontrol> to create additional
+                                        preconditions. </entry>
                                 </row>
                                 <row>
                                     <entry>On Record Error</entry>
@@ -253,6 +263,16 @@
                                         stage. <note outputclass="" type="tip">You might include
                                             fields that the stage uses.</note></entry>
                                 </row>
+                                <row>
+                                    <entry>Preconditions <xref
+                                            href="../Pipeline_Configuration/Preconditions.dita">
+                                            <image href="../Graphics/icon_moreInfo.png" scale="10"
+                                                id="image_pbl_thp_fs"/></xref></entry>
+                                    <entry>Conditions that must evaluate to TRUE to allow a record
+                                        to enter the stage for processing. Click
+                                            <uicontrol>Add</uicontrol> to create additional
+                                        preconditions. </entry>
+                                </row>
                             </tbody>
                         </tgroup>
                     </table>
@@ -300,6 +320,16 @@
                                     <entry>Fields that must include data to be passed into the
                                         stage. <note outputclass="" type="tip">You might include
                                             fields that the stage uses.</note></entry>
+                                </row>
+                                <row>
+                                    <entry>Preconditions <xref
+                                            href="../Pipeline_Configuration/Preconditions.dita">
+                                            <image href="../Graphics/icon_moreInfo.png" scale="10"
+                                                id="image_rfz_thp_fs"/></xref></entry>
+                                    <entry>Conditions that must evaluate to TRUE to allow a record
+                                        to enter the stage for processing. Click
+                                            <uicontrol>Add</uicontrol> to create additional
+                                        preconditions. </entry>
                                 </row>
                                 <row>
                                     <entry>On Record Error</entry>

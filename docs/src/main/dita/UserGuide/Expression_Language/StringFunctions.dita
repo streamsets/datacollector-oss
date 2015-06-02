@@ -5,9 +5,9 @@
  <shortdesc>Use string functions to transform string data. </shortdesc>
  <conbody>
   <p><indexterm>functions<indexterm>string functions</indexterm></indexterm><indexterm>string
-          functions<indexterm>in the expression language</indexterm></indexterm>You can replace any
-      argument with a constant, or a field or expression that evaluates to an appropriate constant.
-        <note>Strings should be enclosed in quotation marks. Indexes start at 0. </note></p>
+          functions<indexterm>description</indexterm></indexterm>You can replace any argument with a
+      constant, or a field or expression that evaluates to an appropriate constant. <note>Strings
+        should be enclosed in quotation marks. Indexes start at 0. </note></p>
   <p>The expression language provides the following string functions:</p>
   <p>
    <dl>
@@ -39,10 +39,7 @@
               <li>string - The string that contains a pattern of characters.</li>
               <li>regex pattern - The Java regex pattern to parse the string into groups.</li>
               <li>group - The number of the group to return, where 1 represents the first group, 2
-                represents the second group, etc. 0 returns the entire string.<draft-comment
-                  author="Loretta">update the following two items from replaceChar => replace and
-                  replaceString => replaceAll? -- replaceAll has regEx instead of old string new
-                  string.</draft-comment></li>
+                represents the second group, etc. 0 returns the entire string.</li>
             </ul></dd>
         </dlentry>
         <dlentry>

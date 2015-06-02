@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
+<concept id="concept_ulm_qdq_fs">
+ <title>Log Parser</title>
+ <shortdesc>The Log Parser processor  generates a record for every log line and parses log lines
+  based on the specified log format. </shortdesc>
+ <conbody>
+  <p><indexterm>Log Parser
+     processor<indexterm>overview</indexterm></indexterm><indexterm>processors<indexterm>Log
+     Parser</indexterm></indexterm>When you configure the Log Parser, you define the text field that
+   contains the log line and the root field for parsed fields. </p>
+ </conbody>
+</concept>
