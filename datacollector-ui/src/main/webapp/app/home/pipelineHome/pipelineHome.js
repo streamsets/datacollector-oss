@@ -213,20 +213,32 @@ angular
        *
        */
       previewPipeline: function () {
-        $scope.trackEvent(pipelineConstant.BUTTON_CATEGORY, pipelineConstant.CLICK_ACTION, 'Preview Pipeline Configuration', 1);
-        var modalInstance = $modal.open({
-          templateUrl: 'app/home/preview/configuration/previewConfigModal.tpl.html',
-          controller: 'PreviewConfigModalInstanceController',
-          size: '',
-          backdrop: 'static',
-          resolve: {
-            pipelineConfig: function () {
-              return $scope.pipelineConfig;
+        if(!$scope.pipelineConfig.uiInfo.previewConfig.rememberMe) {
+          $scope.trackEvent(pipelineConstant.BUTTON_CATEGORY, pipelineConstant.CLICK_ACTION, 'Preview Pipeline Configuration', 1);
+          var modalInstance = $modal.open({
+            templateUrl: 'app/home/preview/configuration/previewConfigModal.tpl.html',
+            controller: 'PreviewConfigModalInstanceController',
+            size: '',
+            backdrop: 'static',
+            resolve: {
+              pipelineConfig: function () {
+                return $scope.pipelineConfig;
+              }
             }
-          }
-        });
+          });
 
-        modalInstance.result.then(function () {
+          modalInstance.result.then(function () {
+            $scope.trackEvent(pipelineConstant.BUTTON_CATEGORY, pipelineConstant.CLICK_ACTION, 'Run Preview', 1);
+            $scope.previewMode = true;
+            $rootScope.$storage.maximizeDetailPane = false;
+            $rootScope.$storage.minimizeDetailPane = false;
+            $scope.setGraphReadOnly(true);
+            $scope.setGraphPreviewMode(true);
+            $scope.$broadcast('previewPipeline');
+          }, function () {
+
+          });
+        } else {
           $scope.trackEvent(pipelineConstant.BUTTON_CATEGORY, pipelineConstant.CLICK_ACTION, 'Run Preview', 1);
           $scope.previewMode = true;
           $rootScope.$storage.maximizeDetailPane = false;
@@ -234,9 +246,7 @@ angular
           $scope.setGraphReadOnly(true);
           $scope.setGraphPreviewMode(true);
           $scope.$broadcast('previewPipeline');
-        }, function () {
-
-        });
+        }
       },
 
       /**
@@ -730,7 +740,8 @@ angular
           previewConfig : {
             previewSource: pipelineConstant.CONFIGURED_SOURCE,
             batchSize: 10,
-            writeToDestinations: false
+            writeToDestinations: false,
+            rememberMe: false
           }
         };
       }

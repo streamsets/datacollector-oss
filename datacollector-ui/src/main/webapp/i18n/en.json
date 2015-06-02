@@ -356,6 +356,7 @@
       "outputData": "Output Data",
       "noOutputWarning": "No output records produced.",
       "noRecords": "No Records to view.",
+      "rememberMe": "Remember the configuration",
       "runPreview": "Run Preview",
       "skipTargets": "Skip Targets",
       "snapshotSource": "Snapshot Data",
