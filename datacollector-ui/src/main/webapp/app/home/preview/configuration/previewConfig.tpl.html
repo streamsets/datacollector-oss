@@ -44,4 +44,15 @@
     </div>
   </div>
 
+  <div class="form-group">
+    <label class="col-lg-3 col-md-4 control-label">
+      {{'home.previewPane.rememberMe' | translate}}
+    </label>
+    <div class="controls col-md-1">
+      <input type="checkbox" name="rememberMe"
+             ng-disabled="isPipelineRunning"
+             ng-model="pipelineConfig.uiInfo.previewConfig.rememberMe">
+    </div>
+  </div>
+
 </form>
