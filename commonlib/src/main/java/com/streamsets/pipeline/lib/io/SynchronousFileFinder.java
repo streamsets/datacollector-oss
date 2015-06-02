@@ -1,0 +1,148 @@
+/**
+ * (c) 2015 StreamSets, Inc. All rights reserved. May not
+ * be copied, modified, or distributed in whole or part without
+ * written consent of StreamSets, Inc.
+ */
+package com.streamsets.pipeline.lib.io;
+
+import com.streamsets.pipeline.api.impl.Utils;
+
+import java.io.IOException;
+import java.nio.file.DirectoryStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.regex.Pattern;
+
+/**
+ * It finds files matching the specified glob path pattern. Except for '**' all glob wildcards are supported at
+ * any depth.
+ * <p/>
+ * This is a synchronous implementation.
+ */
+public class SynchronousFileFinder implements FileFinder {
+  private final static Pattern DOUBLE_WILDCARD = Pattern.compile(".*[^\\\\]\\*\\*.*");
+  private final Path pivotPath;
+  private final Path wildcardPath;
+  private final Set<Path> foundPaths;
+  private final DirectoryStream.Filter<Path> filter;
+
+  public SynchronousFileFinder(Path globPath) {
+    Utils.checkNotNull(globPath, "path");
+    Utils.checkArgument(globPath.isAbsolute(), Utils.formatL("Path '{}' must be absolute", globPath));
+    pivotPath = getPivotPath(globPath);
+    wildcardPath = getWildcardPath(globPath);
+    Utils.checkArgument(!DOUBLE_WILDCARD.matcher(globPath.toString()).matches(),
+                        Utils.formatL("Path '{}' canot have double '*' wildcard", globPath));
+    foundPaths = Collections.synchronizedSet(new HashSet<Path>());
+
+    if (wildcardPath == null) {
+      filter = new DirectoryStream.Filter<Path>() {
+        @Override
+        public boolean accept(Path entry) throws IOException {
+          return !foundPaths.contains(entry);
+        }
+      };
+    } else {
+      filter = new DirectoryStream.Filter<Path>() {
+        @Override
+        public boolean accept(Path entry) throws IOException {
+          return !foundPaths.contains(entry) && Files.isRegularFile(entry);
+        }
+      };
+    }
+  }
+
+  static boolean hasWildcard(String name) {
+    boolean escaped = false;
+    for (char c: name.toCharArray()) {
+      if (c == '\\') {
+        escaped = true;
+      } else {
+        if (!escaped) {
+          switch (c) {
+            case '*':
+            case '?':
+            case '{':
+            case '[':
+              return true;
+          }
+        } else {
+          escaped = false;
+        }
+      }
+    }
+    return false;
+  }
+
+  private Path getSubPath(Path path, int from, int to, boolean isPivot) {
+    Path subPath = null;
+    if (to - from > 0) {
+      String baseName = path.getName(from).toString();
+      baseName = (from == 0 && isPivot) ? "/" + baseName : baseName;
+      String[] extraNames = new String[to - from -1];
+      for (int i = from + 1; i < to; i++) {
+        extraNames[i - from - 1] = path.getName(i).toString();
+      }
+      subPath = Paths.get(baseName, extraNames);
+    } else if (isPivot) {
+      subPath = Paths.get("/");
+    }
+    return subPath;
+  }
+
+  private Path getPivotPath(Path path) {
+    int nameCount = path.getNameCount();
+    int wildcardIdx = 0;
+    for (; wildcardIdx < nameCount && !hasWildcard(path.getName(wildcardIdx).toString()); wildcardIdx++);
+    return getSubPath(path, 0, wildcardIdx, true);
+  }
+
+  private Path getWildcardPath(Path path) {
+    int nameCount = path.getNameCount();
+    int wildcardIdx = 0;
+    for (; wildcardIdx < nameCount && !hasWildcard(path.getName(wildcardIdx).toString()); wildcardIdx++);
+    return getSubPath(path, wildcardIdx, nameCount, false);
+  }
+
+  Path getPivotPath() {
+    return pivotPath;
+  }
+
+  Path getWildcardPath() {
+    return wildcardPath;
+  }
+
+  @Override
+  public Set<Path> find() throws IOException {
+    Set<Path> newFound = new HashSet<>();
+    if (getWildcardPath() != null || foundPaths.size() == 0) {
+      if (getWildcardPath() == null) {
+        if (Files.exists(getPivotPath()) && Files.isRegularFile(getPivotPath())) {
+          newFound.add(getPivotPath());
+          foundPaths.add(getPivotPath());
+        }
+      } else {
+        try (DirectoryStream<Path> matches = new GlobDirectoryStream(getPivotPath(), getWildcardPath(), filter)) {
+          for (Path found : matches) {
+            newFound.add(found);
+            foundPaths.add(found);
+          }
+        }
+      }
+    }
+    return newFound;
+  }
+
+  @Override
+  public boolean forget(Path path) {
+    return foundPaths.remove(path);
+  }
+
+  @Override
+  public void close() {
+  }
+}
