@@ -37,7 +37,7 @@
   </repositories>
 
   <dependencies>
-    <dependency>
+   <dependency>
       <groupId>com.streamsets</groupId>
       <artifactId>streamsets-datacollector-api</artifactId>
       <scope>provided</scope>

@@ -48,5 +48,8 @@ then
   elif grep -Eq "State\s*:\s+ACCEPTED" $tmp || grep -Eq "State\s*:\s+RUNNING" $tmp
   then
     echo "RUNNING"
+  elif grep -Eq "State\s*:\s+SUCCEEDED" $tmp
+  then
+    echo "SUCCEEDED"
   fi
 fi

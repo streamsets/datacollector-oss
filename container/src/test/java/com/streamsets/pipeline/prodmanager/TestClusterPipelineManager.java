@@ -21,6 +21,7 @@ import com.streamsets.pipeline.config.PipelineConfiguration;
 import com.streamsets.pipeline.definition.PipelineDefConfigs;
 import com.streamsets.pipeline.lib.util.ThreadUtil;
 import com.streamsets.pipeline.main.RuntimeInfo;
+import com.streamsets.pipeline.prodmanager.ClusterPipelineManager.ClusterSourceInfo;
 import com.streamsets.pipeline.runner.MockStages;
 import com.streamsets.pipeline.runner.PipelineRuntimeException;
 import com.streamsets.pipeline.stagelibrary.StageLibraryTask;
@@ -29,6 +30,7 @@ import com.streamsets.pipeline.store.PipelineStoreTask;
 import com.streamsets.pipeline.store.impl.FilePipelineStoreTask;
 import com.streamsets.pipeline.util.Configuration;
 import com.streamsets.pipeline.util.LogUtil;
+
 import org.apache.commons.io.FileUtils;
 import org.junit.After;
 import org.junit.Assert;
@@ -172,6 +174,21 @@ public class TestClusterPipelineManager {
     setState(State.RUNNING);
     clusterPipelineManager.getManagerRunnable().forceCheckPipelineState();
     Assert.assertEquals(State.ERROR, getState());
+  }
+
+  @Test
+  public void testPipelineFinished() throws Exception {
+    attributes.put(ClusterPipelineManager.APPLICATION_STATE, APPLICATION_STATE.getMap());
+    sparkProvider.isRunning = true;
+    setState(State.RUNNING);
+    clusterPipelineManager = createClusterPipelineManager();
+    clusterPipelineManager.initTask();
+    Assert.assertEquals(State.RUNNING, getState());
+    sparkProvider.isRunning = false;
+    sparkProvider.isSucceeded = true;
+    setState(State.RUNNING);
+    clusterPipelineManager.getManagerRunnable().forceCheckPipelineState();
+    Assert.assertEquals(State.FINISHED, getState());
   }
 
   @Test
@@ -323,11 +340,12 @@ public class TestClusterPipelineManager {
     PipelineManagerException {
     clusterPipelineManager = createClusterPipelineManager();
     clusterPipelineManager.initTask();
-    int originParallelism = clusterPipelineManager.getOriginParallelism(NAME, REV,
+    ClusterSourceInfo clusterSourceInfo = clusterPipelineManager.getClusterSourceInfo(NAME, REV,
       MockStages.createPipelineConfigurationWithClusterOnlyStage(ExecutionMode.CLUSTER) //creates ClusterMSource which
       //has parallelism 25
     );
-    Assert.assertEquals(25, originParallelism);
+    Assert.assertEquals(25, clusterSourceInfo.getParallelism());
+    Assert.assertEquals("ClusterMSource", clusterSourceInfo.getClusterSourceName());
   }
 
   @Test
@@ -342,14 +360,18 @@ public class TestClusterPipelineManager {
     ClusterPipelineManager.StateTransitionRequest request;
     PipelineConfiguration pipelineConfiguration = pipelineStoreTask.load(NAME, REV);
     // transitions to running state when already running
-    request = new ClusterPipelineManager.StateTransitionRequest(State.RUNNING, appState, pipelineConfiguration, 1);
+    request =
+      new ClusterPipelineManager.StateTransitionRequest(State.RUNNING, appState, pipelineConfiguration,
+        new ClusterSourceInfo("MockSource", 1, false, new HashMap<String, String>()));
     sparkProvider.isRunning = true;
     managerRunnable.start(request);
     Assert.assertEquals(State.RUNNING, getState());
     // still in running state when already running
     setState(State.RUNNING);
-    request = new ClusterPipelineManager.StateTransitionRequest(State.RUNNING, appState, pipelineConfiguration, 1);
-    sparkProvider.isRunning = true;
+    request =
+      new ClusterPipelineManager.StateTransitionRequest(State.RUNNING, appState, pipelineConfiguration,
+        new ClusterSourceInfo("MockSource", 1, false, new HashMap<String, String>()));
+   sparkProvider.isRunning = true;
     managerRunnable.start(request);
     Assert.assertEquals(State.RUNNING, getState());
   }
@@ -367,7 +389,9 @@ public class TestClusterPipelineManager {
     ClusterPipelineManager.StateTransitionRequest request;
     PipelineConfiguration pipelineConfiguration = pipelineStoreTask.load(NAME, REV);
     // transitions to running state when already running
-    request = new ClusterPipelineManager.StateTransitionRequest(State.RUNNING, appState, pipelineConfiguration, 1);
+    request =
+      new ClusterPipelineManager.StateTransitionRequest(State.RUNNING, appState, pipelineConfiguration,
+        new ClusterSourceInfo("MockSource", 1, false, new HashMap<String, String>()));
     sparkProvider.isRunning = true;
     managerRunnable.start(request);
     Assert.assertEquals(State.RUNNING, getState());

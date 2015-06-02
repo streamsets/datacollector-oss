@@ -89,12 +89,12 @@ public class SparkManager {
     });
   }
 
-  public ListenableFuture<Boolean> isRunning(final ApplicationState applicationState,
+  public ListenableFuture<ClusterPipelineStatus> getStatus(final ApplicationState applicationState,
                                              final PipelineConfiguration pipelineConfiguration) {
-    return executorService.submit(new Callable<Boolean>() {
+    return executorService.submit(new Callable<ClusterPipelineStatus>() {
       @Override
-      public Boolean call() throws Exception {
-        return sparkProvider.isRunning(systemProcessFactory, sparkManager, tempDir, applicationState.getId(),
+      public ClusterPipelineStatus call() throws Exception {
+        return sparkProvider.getStatus(systemProcessFactory, sparkManager, tempDir, applicationState.getId(),
           pipelineConfiguration);
       }
     });

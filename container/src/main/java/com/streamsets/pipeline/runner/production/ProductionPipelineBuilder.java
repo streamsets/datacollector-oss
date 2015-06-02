@@ -57,7 +57,7 @@ public class ProductionPipelineBuilder {
     if (!configIssues.isEmpty()) {
       Issues issues = new Issues(configIssues);
       for (StageIssue stageIssue : configIssues) {
-        LOG.warn(String.valueOf(stageIssue));
+        LOG.warn("Stage Issue: + " + String.valueOf(stageIssue));
       }
       throw new PipelineRuntimeException(issues);
     }

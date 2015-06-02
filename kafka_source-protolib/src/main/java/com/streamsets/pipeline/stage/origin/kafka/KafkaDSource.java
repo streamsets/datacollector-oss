@@ -26,7 +26,7 @@ import com.streamsets.pipeline.config.LogMode;
 import com.streamsets.pipeline.config.LogModeChooserValues;
 import com.streamsets.pipeline.config.OnParseError;
 import com.streamsets.pipeline.config.OnParseErrorChooserValues;
-import com.streamsets.pipeline.configurablestage.DSourceOffsetCommitter;
+import com.streamsets.pipeline.configurablestage.DClusterSourceOffsetCommitter;
 import com.streamsets.pipeline.lib.parser.log.RegExConfig;
 
 import java.util.List;
@@ -42,7 +42,7 @@ import java.util.Map;
 @RawSource(rawSourcePreviewer = KafkaRawSourcePreviewer.class, mimeType = "*/*")
 @ConfigGroups(value = Groups.class)
 @GenerateResourceBundle
-public class KafkaDSource extends DSourceOffsetCommitter {
+public class KafkaDSource extends DClusterSourceOffsetCommitter {
 
   //2 info required for spark streaming to create direct stream
   public static final String METADATA_BROKER_LIST= "metadataBrokerList";

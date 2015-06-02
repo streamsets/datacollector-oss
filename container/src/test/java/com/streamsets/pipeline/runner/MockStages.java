@@ -9,6 +9,7 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 import com.streamsets.pipeline.api.Batch;
 import com.streamsets.pipeline.api.BatchMaker;
+import com.streamsets.pipeline.api.ClusterSource;
 import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.ErrorListener;
 import com.streamsets.pipeline.api.ExecutionMode;
@@ -224,7 +225,7 @@ public class MockStages {
     }
   }
 
-  public static class ClusterMSource implements Source {
+  public static class ClusterMSource implements ClusterSource {
 
     @Override
     public List<ConfigIssue> validateConfigs(Info info, Context context) throws StageException {
@@ -260,6 +261,39 @@ public class MockStages {
     @Override
     public int getParallelism() {
       return 25;
+    }
+
+    @Override
+    public <T> void put(List<T> batch) throws InterruptedException {
+      // TODO Auto-generated method stub
+
+    }
+
+    @Override
+    public long getRecordsProduced() {
+      // TODO Auto-generated method stub
+      return 0;
+    }
+
+    @Override
+    public boolean inErrorState() {
+      // TODO Auto-generated method stub
+      return false;
+    }
+
+    @Override
+    public String getName() {
+      return "ClusterMSource";
+    }
+
+    @Override
+    public boolean isInBatchMode() {
+      return false;
+    }
+
+    @Override
+    public Map<String, String> getConfigsToShip() {
+      return new HashMap<String, String>();
     }
 
   }

@@ -97,6 +97,7 @@ public class TestSparkProviderImpl {
     env = new HashMap<>();
     sourceInfo = new HashMap<>();
     sourceInfo.put(ClusterModeConstants.NUM_EXECUTORS_KEY, "64");
+    sourceInfo.put(ClusterModeConstants.CLUSTER_SOURCE_NAME, "kafka");
     sparkProvider = new SparkProviderImpl();
   }
 

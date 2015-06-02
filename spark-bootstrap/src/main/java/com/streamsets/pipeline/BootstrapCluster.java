@@ -5,9 +5,6 @@
  */
 package com.streamsets.pipeline;
 
-
-import com.streamsets.pipeline.stage.origin.kafka.cluster.SparkStreamingBinding;
-
 import java.io.File;
 import java.io.FileInputStream;
 import java.lang.instrument.Instrumentation;
@@ -171,7 +168,7 @@ public class BootstrapCluster {
    */
   public static void main(String[] args) throws Exception {
     BootstrapCluster.initialize();
-    SparkStreamingBinding binding = new SparkStreamingBinding(properties, pipelineJson);
+    DelegatingClusterBinding binding = new DelegatingClusterBinding(properties, pipelineJson);
     try {
       binding.init();
       binding.awaitTermination();
@@ -227,20 +224,20 @@ public class BootstrapCluster {
 
 
   /**
-   * Bootstrapping an Executor which is started as part of a spark kafka job<br/>
+   * Bootstrapping an Executor which is started as part of a spark kafka/hdfs job<br/>
    * Direction: Spark Executor -> Stage
    * @return an instance of the real SparkExecutorFunction
    * @throws Exception
    */
-  public static Method getSparkKafkaExecutorFunction() throws Exception {
+  public static Method getSparkExecutorFunction() throws Exception {
     BootstrapCluster.initialize();
     ClassLoader originalClassLoader = Thread.currentThread().getContextClassLoader();
     try {
       Thread.currentThread().setContextClassLoader(sparkCL);
-      return Class.forName("com.streamsets.pipeline.stage.origin.kafka.cluster.SparkKafkaExecutorFunction", true,
+      return Class.forName("com.streamsets.pipeline.spark.SparkExecutorFunction", true,
         sparkCL).getMethod("execute", Properties.class, String.class, Iterator.class);
     } catch (Exception ex) {
-      String msg = "Error trying to obtain SparkKafkaExecutorFunction Class: " + ex;
+      String msg = "Error trying to obtain SparkExecutorFunction Class: " + ex;
       throw new IllegalStateException(msg, ex);
     } finally {
       Thread.currentThread().setContextClassLoader(originalClassLoader);

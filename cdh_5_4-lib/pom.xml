@@ -106,6 +106,13 @@
 
     <dependency>
       <groupId>com.streamsets</groupId>
+      <artifactId>streamsets-datacollector-cluster-hdfs-protolib</artifactId>
+      <version>${project.version}</version>
+      <scope>compile</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>com.streamsets</groupId>
       <artifactId>streamsets-datacollector-hdfs-protolib</artifactId>
       <version>${project.version}</version>
       <scope>compile</scope>
@@ -174,22 +181,6 @@
           <groupId>io.dropwizard.metrics</groupId>
           <artifactId>metrics-core</artifactId>
         </exclusion>
-        <exclusion>
-          <groupId>org.apache.hadoop</groupId>
-          <artifactId>hadoop-yarn-api</artifactId>
-        </exclusion>
-        <exclusion>
-          <groupId>org.apache.hadoop</groupId>
-          <artifactId>hadoop-mapreduce-client-core</artifactId>
-        </exclusion>
-        <exclusion>
-          <groupId>org.apache.hadoop</groupId>
-          <artifactId>hadoop-mapreduce-client-jobclient</artifactId>
-        </exclusion>
-        <exclusion>
-          <groupId>org.apache.hadoop</groupId>
-          <artifactId>hadoop-mapreduce-client-app</artifactId>
-        </exclusion>
       </exclusions>
     </dependency>
 
@@ -205,6 +196,12 @@
       <artifactId>hbase-client</artifactId>
       <version>${hbase.version}</version>
       <scope>compile</scope>
+      <exclusions>
+      <exclusion>
+          <groupId>org.apache.hadoop</groupId>
+          <artifactId>hadoop-core</artifactId>
+      </exclusion>
+      </exclusions>
      </dependency>
 
     <dependency>
@@ -351,6 +348,7 @@
                 <source>${basedir}/../hdfs-protolib/src/test/java</source>
                 <source>${basedir}/../hbase-protolib/src/test/java</source>
                 <source>${basedir}/../flume-protolib/src/test/java</source>
+                <source>${basedir}/../cluster-hdfs-protolib/src/test/java</source>
               </sources>
             </configuration>
           </execution>
@@ -373,6 +371,9 @@
                 </resource>
                 <resource>
                   <directory>${basedir}/../flume-protolib/src/test/resources</directory>
+                </resource>
+                <resource>
+                  <directory>${basedir}/../cluster-hdfs-protolib/src/test/resources</directory>
                 </resource>
              </resources>
             </configuration>

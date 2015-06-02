@@ -22,6 +22,7 @@ public class MockSparkProvider implements SparkProvider {
   public boolean submitTimesOut = false;
   public boolean isRunningTimesOut = false;
   public boolean isRunningCommandFails = false;
+  public boolean isSucceeded = false;
   public boolean isRunning = false;
   public String appId = null;
 
@@ -36,7 +37,7 @@ public class MockSparkProvider implements SparkProvider {
   }
 
   @Override
-  public boolean isRunning(SystemProcessFactory systemProcessFactory, File sparkManager, File tempDir, String appId,
+  public ClusterPipelineStatus getStatus(SystemProcessFactory systemProcessFactory, File sparkManager, File tempDir, String appId,
                            PipelineConfiguration pipelineConfiguration) throws TimeoutException {
     LOG.info("isRunning");
     if (isRunningTimesOut) {
@@ -45,7 +46,14 @@ public class MockSparkProvider implements SparkProvider {
     if (isRunningCommandFails) {
       throw new RuntimeException("Mocking failure of isRunning");
     }
-    return isRunning;
+    if (isSucceeded) {
+      return ClusterPipelineStatus.SUCCEEDED;
+    }
+    if (isRunning){
+     return ClusterPipelineStatus.RUNNING;
+    } else {
+      return ClusterPipelineStatus.FAILED;
+    }
   }
 
   @Override

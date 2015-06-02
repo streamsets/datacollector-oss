@@ -20,7 +20,7 @@ public interface SparkProvider {
   void killPipeline(SystemProcessFactory systemProcessFactory, File sparkManager, File tempDir,
                                    String appId, PipelineConfiguration pipelineConfiguration) throws TimeoutException;
 
-  boolean isRunning(SystemProcessFactory systemProcessFactory, File sparkManager, File tempDir,
+  ClusterPipelineStatus getStatus(SystemProcessFactory systemProcessFactory, File sparkManager, File tempDir,
                                    String appId, PipelineConfiguration pipelineConfiguration) throws TimeoutException;
 
 

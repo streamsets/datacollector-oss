@@ -9,6 +9,8 @@ import com.streamsets.pipeline.util.VerifyUtils;
 import org.junit.Assert;
 import org.junit.FixMethodOrder;
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.net.URI;
@@ -18,6 +20,7 @@ import java.util.Map;
 
 @FixMethodOrder
 public abstract class TestPipelineOperationsBase {
+  private static final Logger LOG = LoggerFactory.getLogger(TestPipelineOperationsBase.class);
 
   protected abstract URI getServerURI();
 
@@ -67,12 +70,14 @@ public abstract class TestPipelineOperationsBase {
     Assert.assertNotNull(stageOutputs);
 
     for (Map<String, Object> stageOutput : stageOutputs) {
+      LOG.info("stageOutput = " + stageOutput.keySet());
       Map<String, Object> output = (Map<String, Object>) stageOutput.get("output");
       for (Map.Entry<String, Object> e : output.entrySet()) {
+        LOG.info("output key = " + e.getKey());
         Assert.assertTrue(e.getValue() instanceof List);
-        Assert.assertTrue(((List<?>) e.getValue()).size() > 0);
-        //This is the list of records
         List<Map<String, Object>> records = (List<Map<String, Object>>) e.getValue();
+        Assert.assertFalse("Records were empty", records.isEmpty());
+        //This is the list of records
         for (Map<String, Object> record : records) {
           //each record has header and value
           Map<String, Object> val = (Map<String, Object>) record.get("value");

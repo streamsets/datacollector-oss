@@ -5,18 +5,23 @@
  */
 package com.streamsets.pipeline.configurablestage;
 
+import com.streamsets.pipeline.api.ClusterSource;
 import com.streamsets.pipeline.api.OffsetCommitter;
 import com.streamsets.pipeline.api.Source;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.impl.Utils;
 
+import java.util.List;
+import java.util.Map;
+
 public abstract class DSourceOffsetCommitter extends DSource implements OffsetCommitter {
-  private OffsetCommitter offsetCommitter;
+  protected OffsetCommitter offsetCommitter;
+  protected Source source;
 
   @Override
   Stage<Source.Context> createStage() {
-    Source source = (Source) super.createStage();
+    source = (Source) super.createStage();
     if (!(source instanceof OffsetCommitter)) {
       throw new RuntimeException(Utils.format("Stage '{}' does not implement '{}'", source.getClass().getName(),
                                               OffsetCommitter.class.getName()));
@@ -29,5 +34,4 @@ public abstract class DSourceOffsetCommitter extends DSource implements OffsetCo
   public final void commit(String offset) throws StageException {
     offsetCommitter.commit(offset);
   }
-
 }

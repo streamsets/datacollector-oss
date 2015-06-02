@@ -88,10 +88,10 @@
     <module>flume-protolib</module>
 
     <module>aws-lib</module>
-
+    <module>cluster-hdfs-protolib</module>
     <module>hbase-protolib</module>
-
-    <module>spark-protolib</module>
+    <module>cluster-common</module>
+    <module>cluster-kafka-protolib</module>
     <module>spark-bootstrap</module>
   </modules>
 

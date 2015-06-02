@@ -62,6 +62,7 @@ public class SparkProviderImpl implements SparkProvider {
   private static final String KERBEROS_PRINCIPAL = "KERBEROS_PRINCIPAL";
   static final Pattern YARN_APPLICATION_ID_REGEX = Pattern.compile("\\s(application_[0-9]+_[0-9]+)\\s");
   private final RuntimeInfo runtimeInfo;
+  private String clusterOrigin;
 
   private static final Logger LOG = LoggerFactory.getLogger(SparkProviderImpl.class);
 
@@ -119,7 +120,7 @@ public class SparkProviderImpl implements SparkProvider {
   }
 
   @Override
-  public boolean isRunning(SystemProcessFactory systemProcessFactory, File sparkManager, File tempDir,
+  public ClusterPipelineStatus getStatus(SystemProcessFactory systemProcessFactory, File sparkManager, File tempDir,
                     String appId, PipelineConfiguration pipelineConfiguration) throws TimeoutException {
     Map<String, String> environment = new HashMap<>();
     environment.put(RUN_FROM_SDC, Boolean.TRUE.toString());
@@ -142,11 +143,17 @@ public class SparkProviderImpl implements SparkProvider {
       }
       logOutput(appId, process);
       for (String line : process.getAllOutput()) {
-        if (line.trim().equals("RUNNING")) {
-          return true;
+        line = line.trim();
+        LOG.debug("Status of pipeline is " + line);
+        if (line.equals("RUNNING")) {
+          return ClusterPipelineStatus.RUNNING;
+        }
+        if (line.equals("SUCCEEDED")) {
+          return ClusterPipelineStatus.SUCCEEDED;
         }
       }
-      return false;
+      // TODO - differentiate between Yarn killed and Yarn failed
+      return ClusterPipelineStatus.FAILED;
     } catch (IOException e) {
       String msg = errorString("Could not get job status: {}", e);
       throw new RuntimeException(msg, e);
@@ -158,7 +165,7 @@ public class SparkProviderImpl implements SparkProvider {
     }
   }
 
-  private void rewriteProperties(File sdcPropertiesFile, Map<String, String> sourceConfigs) throws IOException{
+  private void rewriteProperties(File sdcPropertiesFile, Map<String, String> sourceConfigs, Map<String, String> sourceInfo) throws IOException{
     InputStream sdcInStream = null;
     OutputStream sdcOutStream = null;
     Properties sdcProperties = new Properties();
@@ -177,6 +184,11 @@ public class SparkProviderImpl implements SparkProvider {
       for (Map.Entry<String, String> entry : sourceConfigs.entrySet()) {
         sdcProperties.setProperty(entry.getKey(), entry.getValue());
       }
+
+      for (Map.Entry<String, String> entry : sourceInfo.entrySet()) {
+        sdcProperties.setProperty(entry.getKey(), entry.getValue());
+      }
+
       sdcOutStream = new FileOutputStream(sdcPropertiesFile);
       sdcProperties.store(sdcOutStream, null);
       sdcOutStream.flush();
@@ -277,6 +289,8 @@ public class SparkProviderImpl implements SparkProvider {
           }
         }
       }
+      clusterOrigin = Utils.checkNotNull(sourceInfo.
+        get(ClusterModeConstants.CLUSTER_SOURCE_NAME), ClusterModeConstants.CLUSTER_SOURCE_NAME);
       String type = StageLibraryUtils.getLibraryType(stageDef.getStageClassLoader());
       String name = StageLibraryUtils.getLibraryName(stageDef.getStageClassLoader());
       if (ClusterModeConstants.STREAMSETS_LIBS.equals(type)) {
@@ -287,7 +301,9 @@ public class SparkProviderImpl implements SparkProvider {
         throw new IllegalStateException(Utils.format("Error unknown stage library type: {} ", type));
       }
     }
-    Utils.checkState(pathToSparkKafkaJar != null, "Could not find spark kafka jar");
+    if (clusterOrigin.equals("kafka")) {
+      Utils.checkState(pathToSparkKafkaJar != null, "Could not find spark kafka jar");
+    }
     Utils.checkState(staticWebDir.isDirectory(), Utils.format("Expected {} to be a directory", staticWebDir));
     File libsTarGz = new File(tempDir, "libs.tar.gz");
     try {
@@ -312,7 +328,7 @@ public class SparkProviderImpl implements SparkProvider {
       ObjectMapperFactory.getOneLine().writeValue(pipelineFile, BeanHelper.
         wrapPipelineConfiguration(pipelineConfiguration));
       File sdcPropertiesFile = new File(etcDir, "sdc.properties");
-      rewriteProperties(sdcPropertiesFile, sourceConfigs);
+      rewriteProperties(sdcPropertiesFile, sourceConfigs, sourceInfo);
       TarFileCreator.createTarGz(etcDir, etcTarGz);
     } catch (Exception ex) {
       String msg = errorString("serializing etc directory: {}", ex);
@@ -364,7 +380,7 @@ public class SparkProviderImpl implements SparkProvider {
     args.add("--files");
     args.add(log4jProperties.getAbsolutePath());
     args.add("--jars");
-    args.add(Joiner.on(",").join(bootstrapJar.getAbsoluteFile(), pathToSparkKafkaJar));
+    args.add(Joiner.on(",").skipNulls().join(bootstrapJar.getAbsoluteFile(), pathToSparkKafkaJar));
     ConfigConfiguration javaOpts = Utils.checkNotNull(pipelineConfiguration.getConfiguration(PipelineDefConfigs.
       CLUSTER_SLAVE_JAVA_OPTS_CONFIG), "Could not obtain cluster worker java options");
     // use our javaagent and java opt configs

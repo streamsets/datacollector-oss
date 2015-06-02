@@ -24,8 +24,6 @@ import java.util.concurrent.locks.ReentrantLock;
 
 import javax.validation.constraints.NotNull;
 
-import com.streamsets.pipeline.lib.util.ThreadUtil;
-import com.streamsets.pipeline.updatechecker.UpdateChecker;
 import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -40,21 +38,25 @@ import com.google.common.collect.ImmutableSet;
 import com.google.common.io.Files;
 import com.google.common.util.concurrent.ListenableFuture;
 import com.streamsets.pipeline.alerts.AlertEventListener;
+import com.streamsets.pipeline.api.ClusterSource;
 import com.streamsets.pipeline.api.ExecutionMode;
 import com.streamsets.pipeline.api.Record;
+import com.streamsets.pipeline.api.Source;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.impl.ErrorMessage;
 import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.callback.CallbackInfo;
 import com.streamsets.pipeline.cluster.ApplicationState;
 import com.streamsets.pipeline.cluster.ClusterModeConstants;
+import com.streamsets.pipeline.cluster.ClusterPipelineStatus;
 import com.streamsets.pipeline.cluster.SparkManager;
 import com.streamsets.pipeline.config.DeliveryGuarantee;
 import com.streamsets.pipeline.config.MemoryLimitConfiguration;
 import com.streamsets.pipeline.config.PipelineConfiguration;
-import com.streamsets.pipeline.definition.PipelineDefConfigs;
 import com.streamsets.pipeline.config.RuleDefinition;
+import com.streamsets.pipeline.definition.PipelineDefConfigs;
 import com.streamsets.pipeline.lib.executor.SafeScheduledExecutorService;
+import com.streamsets.pipeline.lib.util.ThreadUtil;
 import com.streamsets.pipeline.main.RuntimeInfo;
 import com.streamsets.pipeline.metrics.MetricsEventListener;
 import com.streamsets.pipeline.metrics.MetricsEventRunnable;
@@ -68,6 +70,7 @@ import com.streamsets.pipeline.stagelibrary.StageLibraryTask;
 import com.streamsets.pipeline.store.PipelineStoreException;
 import com.streamsets.pipeline.store.PipelineStoreTask;
 import com.streamsets.pipeline.task.AbstractTask;
+import com.streamsets.pipeline.updatechecker.UpdateChecker;
 import com.streamsets.pipeline.util.Configuration;
 import com.streamsets.pipeline.util.ContainerError;
 import com.streamsets.pipeline.util.PipelineConfigurationUtil;
@@ -82,7 +85,8 @@ public class ClusterPipelineManager extends AbstractTask implements PipelineMana
 
   static final Map<State, Set<State>> VALID_TRANSITIONS = new ImmutableMap.Builder<State, Set<State>>()
     .put(State.STOPPED, ImmutableSet.of(State.RUNNING))
-    .put(State.RUNNING, ImmutableSet.of(State.STOPPING, State.ERROR))
+    .put(State.FINISHED, ImmutableSet.of(State.RUNNING))
+    .put(State.RUNNING, ImmutableSet.of(State.STOPPING, State.ERROR, State.FINISHED))
     .put(State.STOPPING, ImmutableSet.of(State.STOPPING /*Try stopping many times, this should be no-op*/
       , State.STOPPED, State.ERROR))
     .put(State.ERROR, ImmutableSet.of(State.RUNNING, State.STOPPED))
@@ -177,6 +181,7 @@ public class ClusterPipelineManager extends AbstractTask implements PipelineMana
         .scheduleAtFixedRate(new UpdateChecker(runtimeInfo, configuration, this), 1, 24 * 60, TimeUnit.MINUTES);
   }
 
+  @Override
   public Map getUpdateInfo() {
     return updateChecker.getUpdateInfo();
   }
@@ -188,6 +193,18 @@ public class ClusterPipelineManager extends AbstractTask implements PipelineMana
       validateStateTransition(ps.getName(), ps.getRev(), State.ERROR);
       attributes.remove(APPLICATION_STATE);
       stateTracker.setState(ps.getName(), ps.getRev(), State.ERROR, msg, null, attributes);
+    } catch(Exception ex) {
+      LOG.error("Error transitioning to {}: {}", State.ERROR, ex, ex);
+    }
+  }
+
+  private void transitionToFinished(PipelineState ps, String msg) {
+    final Map<String, Object> attributes = new HashMap<>();
+    attributes.putAll(ps.getAttributes());
+    try {
+      validateStateTransition(ps.getName(), ps.getRev(), State.FINISHED);
+      attributes.remove(APPLICATION_STATE);
+      stateTracker.setState(ps.getName(), ps.getRev(), State.FINISHED, msg, null, attributes);
     } catch(Exception ex) {
       LOG.error("Error transitioning to {}: {}", State.ERROR, ex, ex);
     }
@@ -315,7 +332,7 @@ public class ClusterPipelineManager extends AbstractTask implements PipelineMana
     } else if (ps.getState() != State.RUNNING) {
       validateStateTransition(name, rev, State.RUNNING);
     }
-    int parallelisim = getOriginParallelism(name, rev, pipelineConf);
+    ClusterSourceInfo clusterSourceInfo = getClusterSourceInfo(name, rev, pipelineConf);
     ApplicationState appState;
     if (ps == null) {
       stateTracker.setState(name, rev, State.RUNNING, "Starting cluster pipeline", null, null);
@@ -327,7 +344,7 @@ public class ClusterPipelineManager extends AbstractTask implements PipelineMana
       }
       stateTracker.setState(name, rev, State.RUNNING, "Starting cluster pipeline", null, ps.getAttributes());
     }
-    managerRunnable.requestTransition(State.RUNNING, appState, pipelineConf, parallelisim);
+    managerRunnable.requestTransition(State.RUNNING, appState, pipelineConf, clusterSourceInfo);
     return stateTracker.getState();
   }
 
@@ -389,7 +406,7 @@ public class ClusterPipelineManager extends AbstractTask implements PipelineMana
         transitionToError(ps, msg);
         throw new PipelineManagerException(ContainerError.CONTAINER_0150, ps.getState(), e.toString(), e);
       }
-      managerRunnable.requestTransition(State.STOPPED, appState, pipelineConf, -1);
+      managerRunnable.requestTransition(State.STOPPED, appState, pipelineConf, null);
     }
   }
   @Override
@@ -480,17 +497,57 @@ public class ClusterPipelineManager extends AbstractTask implements PipelineMana
   }
 
   @VisibleForTesting
-  int getOriginParallelism(String name, String rev, PipelineConfiguration pipelineConf)
+  ClusterSourceInfo getClusterSourceInfo(String name, String rev, PipelineConfiguration pipelineConf)
     throws PipelineRuntimeException, StageException, PipelineStoreException, PipelineManagerException {
 
     ProductionPipeline p = createProductionPipeline(name, rev, pipelineConf);
     p.getPipeline().init();
+    Source source = p.getPipeline().getSource();
+    ClusterSource clusterSource;
+    if (source instanceof ClusterSource) {
+      clusterSource = (ClusterSource)source;
+    } else {
+      throw new RuntimeException(Utils.format("Stage '{}' does not implement '{}'", source.getClass().getName(),
+        ClusterSource.class.getName()));
+    }
 
-    int parallelism = p.getPipeline().getSource().getParallelism();
+    int parallelism = clusterSource.getParallelism();
+    String clusterSourceName  = clusterSource.getName();
     if(parallelism < 1) {
       throw new PipelineRuntimeException(ContainerError.CONTAINER_0112);
     }
-    return parallelism;
+    return new ClusterSourceInfo(clusterSourceName, parallelism, clusterSource.isInBatchMode(), clusterSource.getConfigsToShip());
+  }
+
+  static class ClusterSourceInfo {
+    private int parallelism;
+    private String clusterSourceName;
+    private boolean isInBatchMode;
+    private Map<String, String> configsToShip;
+
+    ClusterSourceInfo(String clusterSourceName, int parallelism, boolean isInBatchMode, Map<String, String> configsToShip) {
+      this.parallelism = parallelism;
+      this.clusterSourceName = clusterSourceName;
+      this.isInBatchMode = isInBatchMode;
+      this.configsToShip = configsToShip;
+    }
+
+    int getParallelism() {
+      return parallelism;
+    }
+
+    String getClusterSourceName() {
+      return clusterSourceName;
+    }
+
+    boolean isInBatchMode() {
+      return isInBatchMode;
+    }
+
+    Map<String, String> getConfigsToShip() {
+      return configsToShip;
+    }
+
   }
 
   private ProductionPipeline createProductionPipeline(String name, String rev,
@@ -537,14 +594,14 @@ public class ClusterPipelineManager extends AbstractTask implements PipelineMana
     final State canidateState;
     final ApplicationState applicationState;
     final PipelineConfiguration pipelineConf;
-    final int parallelisim;
+    final ClusterSourceInfo clusterSourceInfo;
 
     public StateTransitionRequest(@NotNull State canidateState, @NotNull ApplicationState applicationState,
-                                  PipelineConfiguration pipelineConf, int parallelisim) {
+                                  PipelineConfiguration pipelineConf, ClusterSourceInfo clusterSourceInfo) {
       this.canidateState = canidateState;
       this.applicationState = applicationState;
       this.pipelineConf = pipelineConf;
-      this.parallelisim = parallelisim;
+      this.clusterSourceInfo = clusterSourceInfo;
     }
 
     @Override
@@ -553,8 +610,10 @@ public class ClusterPipelineManager extends AbstractTask implements PipelineMana
         "canidateState=" + canidateState +
         ", applicationState=" + applicationState +
         ", pipelineConf=" + pipelineConf +
-        ", parallelisim=" + parallelisim +
-        '}';
+        ", clusterOriginName = " +
+        (clusterSourceInfo != null ? clusterSourceInfo.getClusterSourceName() : "") +
+        ", parallelism="
+        + (clusterSourceInfo != null ? clusterSourceInfo.getParallelism() : "")     +'}';
     }
   }
   public static class ManagerRunnable implements Runnable {
@@ -596,9 +655,9 @@ public class ClusterPipelineManager extends AbstractTask implements PipelineMana
       Utils.checkState(queue.add(Optional.<StateTransitionRequest>absent()), "Could not add to queue");
     }
     private void requestTransition(State canidateState, ApplicationState applicationState,
-                                   PipelineConfiguration pipelineConfiguration, int parallelisim) {
+                                   PipelineConfiguration pipelineConfiguration, ClusterSourceInfo clusterSourceInfo) {
       StateTransitionRequest request = new StateTransitionRequest(canidateState, applicationState,
-        pipelineConfiguration, parallelisim);
+        pipelineConfiguration, clusterSourceInfo);
       if(!queue.add(Optional.of(request))) {
         LOG.error(Utils.format("Could not add state transition request to queue: {}", request));
       }
@@ -606,23 +665,25 @@ public class ClusterPipelineManager extends AbstractTask implements PipelineMana
 
     @VisibleForTesting
     void checkStatus() throws PipelineManagerException {
-      Boolean running = null;
+      ClusterPipelineStatus clusterPipelineState = null;
       PipelineState ps = stateTracker.getState();
       if (ps != null && ps.getState() == State.RUNNING) {
         ApplicationState appState = new ApplicationState((Map)ps.getAttributes().get(APPLICATION_STATE));
         try {
           PipelineConfiguration pipelineConf = pipelineStore.load(ps.getName(), ps.getRev());
-          running = sparkManager.isRunning(appState, pipelineConf).get(60, TimeUnit.SECONDS);
+          clusterPipelineState = sparkManager.getStatus(appState, pipelineConf).get(60, TimeUnit.SECONDS);
         } catch (Exception ex) {
           ex = removeExecutionExceptionIfPossible(ex);
           String msg = "Error getting application status: " + ex;
           LOG.warn(msg, ex);
         }
-        if (running == null) {
+        if (clusterPipelineState == null) {
           // error occurred, do nothing
-        } else if (!running) {
+        } else if (clusterPipelineState == ClusterPipelineStatus.FAILED) {
           String msg = "Pipeline unexpectedly stopped";
           clusterPipelineManager.transitionToError(ps, msg);
+        } else if (clusterPipelineState == ClusterPipelineStatus.SUCCEEDED) {
+          clusterPipelineManager.transitionToFinished(ps, "Completed successfully");
         }
       }
     }
@@ -657,11 +718,11 @@ public class ClusterPipelineManager extends AbstractTask implements PipelineMana
       attributes.putAll(ps.getAttributes());
       PipelineConfiguration pipelineConf = Utils.checkNotNull(request.pipelineConf, "PipelineConfiguration cannot be null");
       if (appState.getId() == null) {
-        doStart(ps.getName(), ps.getRev(), pipelineConf, request.parallelisim);
+        doStart(ps.getName(), ps.getRev(), pipelineConf, request.clusterSourceInfo);
       } else {
-        Boolean running = null;
+        ClusterPipelineStatus pipelineStatus = null;
         try {
-          running = sparkManager.isRunning(appState, pipelineConf).get(60, TimeUnit.SECONDS);
+          pipelineStatus = sparkManager.getStatus(appState, pipelineConf).get(60, TimeUnit.SECONDS);
         } catch (Exception ex) {
           ex = removeExecutionExceptionIfPossible(ex);
           String msg = "Error getting application status: " + ex;
@@ -669,26 +730,32 @@ public class ClusterPipelineManager extends AbstractTask implements PipelineMana
           LOG.error(msg, ex);
         }
 
-        if (running == null) {
+        if (pipelineStatus == null) {
           // error occurred, do nothing
-        } else if (running) {
+        } else if (pipelineStatus == ClusterPipelineStatus.RUNNING) {
           if (ps.getState() != State.RUNNING) {
             clusterPipelineManager.validateStateTransition(ps.getName(), ps.getRev(), State.RUNNING);
             stateTracker.setState(ps.getName(), ps.getRev(), State.RUNNING, null, null, attributes);
+          }
+        } else if (pipelineStatus == ClusterPipelineStatus.SUCCEEDED) {
+          if (ps.getState() != State.FINISHED) {
+            clusterPipelineManager.validateStateTransition(ps.getName(), ps.getRev(), State.FINISHED);
+            stateTracker.setState(ps.getName(), ps.getRev(), State.FINISHED, null, null, attributes);
           }
         } else if (ps.getState() == State.RUNNING) {
           // not running but state is running, this is an error
           String msg = "Pipeline is supposed to be running but has died";
           clusterPipelineManager.transitionToError(ps, msg);
         } else {
-          doStart(ps.getName(), ps.getRev(), pipelineConf, request.parallelisim);
+          doStart(ps.getName(), ps.getRev(), pipelineConf, request.clusterSourceInfo);
         }
       }
     }
 
 
-    private void doStart(String name, String rev, PipelineConfiguration pipelineConf, int parallelism)
+    private void doStart(String name, String rev, PipelineConfiguration pipelineConf, ClusterSourceInfo clusterSourceInfo)
       throws PipelineManagerException {
+      Utils.checkNotNull(clusterSourceInfo, "clusterSourceInfo");
       stateTracker.register(name, rev);
       Map<String, String> environment = new HashMap<>();
       Map<String, String> envConfigMap = PipelineConfigurationUtil.getFlattenedStringMap(PipelineDefConfigs.
@@ -700,10 +767,16 @@ public class ClusterPipelineManager extends AbstractTask implements PipelineMana
       PipelineState ps = stateTracker.getState();
       try {
         //create pipeline and get the parallelism info from the source
-        sourceInfo.put(ClusterModeConstants.NUM_EXECUTORS_KEY, String.valueOf(parallelism));
+        sourceInfo.put(ClusterModeConstants.NUM_EXECUTORS_KEY, String.valueOf(clusterSourceInfo.getParallelism()));
+        sourceInfo.put(ClusterModeConstants.CLUSTER_SOURCE_NAME, clusterSourceInfo.getClusterSourceName());
+        sourceInfo.put(ClusterModeConstants.CLUSTER_SOURCE_BATCHMODE, String.valueOf(clusterSourceInfo.isInBatchMode()));
+        for (Map.Entry<String, String> configsToShip : clusterSourceInfo.getConfigsToShip().entrySet()) {
+          LOG.info("Config to ship " + configsToShip.getKey() + ":" + configsToShip.getValue());
+          sourceInfo.put(configsToShip.getKey(), configsToShip.getValue());
+        }
         //This is needed for UI
         RuntimeInfo runtimeInfo = clusterPipelineManager.runtimeInfo;
-        runtimeInfo.setAttribute(ClusterModeConstants.NUM_EXECUTORS_KEY, parallelism);
+        runtimeInfo.setAttribute(ClusterModeConstants.NUM_EXECUTORS_KEY, clusterSourceInfo.getParallelism());
         clusterPipelineManager.clearSlaveList();
         ListenableFuture<ApplicationState> submitFuture = sparkManager.submit(pipelineConf,
           clusterPipelineManager.stageLibrary,  new File(runtimeInfo.getConfigDir()),
