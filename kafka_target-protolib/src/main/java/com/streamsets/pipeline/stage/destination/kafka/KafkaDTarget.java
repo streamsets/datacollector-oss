@@ -52,7 +52,6 @@ public class KafkaDTarget extends DTarget {
     description = "Comma-separated list of URIs for brokers that write to the topic.  Use the format " +
       "<HOST>:<PORT>. To ensure a connection, enter as many as possible.",
     displayPosition = 10,
-    elDefs = {StringEL.class},
     group = "KAFKA"
   )
   public String metadataBrokerList;
@@ -75,7 +74,7 @@ public class KafkaDTarget extends DTarget {
     label = "Topic Expression",
     description = "An expression that resolves to the name of the topic to use",
     displayPosition = 20,
-    elDefs = {StringEL.class, RecordEL.class},
+    elDefs = {RecordEL.class},
     group = "KAFKA",
     evaluation = ConfigDef.Evaluation.EXPLICIT,
     dependsOn = "runtimeTopicResolution",
@@ -106,7 +105,6 @@ public class KafkaDTarget extends DTarget {
     label = "Topic",
     description = "",
     displayPosition = 25,
-    elDefs = {StringEL.class},
     group = "KAFKA",
     dependsOn = "runtimeTopicResolution",
     triggeredByValue = "false"
@@ -135,7 +133,7 @@ public class KafkaDTarget extends DTarget {
     group = "KAFKA",
     dependsOn = "partitionStrategy",
     triggeredByValue = "EXPRESSION",
-    elDefs = {RecordEL.class, StringEL.class},
+    elDefs = {RecordEL.class},
     evaluation = ConfigDef.Evaluation.EXPLICIT
   )
   public String partition;

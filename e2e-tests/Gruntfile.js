@@ -31,20 +31,34 @@ module.exports = function(grunt) {
           }
         }
       },
-      local: {
+      chrome: {
         options: {
           args: {
-            baseUrl: 'http://localhost:18630/'
+            baseUrl: 'http://localhost:18630/',
+            browser: 'chrome'
+          }
+        }
+      },
+      firefox: {
+        options: {
+          args: {
+            baseUrl: 'http://localhost:18630/',
+            browser: 'firefox'
           }
         }
       }
+
     }
   });
 
   grunt.registerTask( 'test', ['shell:dockerBuild', 'shell:dockerComposeUp', 'protractor:docker',
     'shell:dockerComposeStop']);
 
-  grunt.registerTask( 'local', ['protractor:local']);
+  grunt.registerTask( 'chrome', ['protractor:chrome']);
+
+  grunt.registerTask( 'firefox', ['protractor:firefox']);
+
+
 };
 
 
