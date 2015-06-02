@@ -18,10 +18,12 @@ import com.streamsets.pipeline.config.JsonMode;
 import com.streamsets.pipeline.config.LogMode;
 import com.streamsets.pipeline.config.OnParseError;
 import com.streamsets.pipeline.config.PostProcessingOptions;
+import com.streamsets.pipeline.lib.io.FileEvent;
 import com.streamsets.pipeline.lib.io.FileLine;
 import com.streamsets.pipeline.lib.io.LiveFile;
 import com.streamsets.pipeline.lib.io.LiveFileChunk;
-import com.streamsets.pipeline.lib.io.MultiDirectoryReader;
+import com.streamsets.pipeline.lib.io.MultiFileInfo;
+import com.streamsets.pipeline.lib.io.MultiFileReader;
 import com.streamsets.pipeline.lib.parser.DataParserFactory;
 import com.streamsets.pipeline.lib.parser.DataParser;
 import com.streamsets.pipeline.lib.parser.DataParserException;
@@ -89,7 +91,7 @@ public class FileTailSource extends BaseSource {
     this.log4jCustomLogFormat = log4jCustomLogFormat;
   }
 
-  private MultiDirectoryReader multiDirReader;
+  private MultiFileReader multiDirReader;
 
   private LogDataFormatValidator logDataFormatValidator;
 
@@ -145,10 +147,10 @@ public class FileTailSource extends BaseSource {
       issues.add(getContext().createConfigIssue(Groups.FILES.name(), "fileInfos", Errors.TAIL_01));
     } else {
       Set<String> fileKeys = new LinkedHashSet<>();
-      List<MultiDirectoryReader.DirectoryInfo> dirInfos = new ArrayList<>();
+      List<MultiFileInfo> dirInfos = new ArrayList<>();
       for (FileInfo fileInfo : fileInfos) {
         if (validateFileInfo(fileInfo, issues)) {
-          MultiDirectoryReader.DirectoryInfo directoryInfo = new MultiDirectoryReader.DirectoryInfo(
+          MultiFileInfo directoryInfo = new MultiFileInfo(
               fileInfo.tag,
               fileInfo.fileFullPath,
               fileInfo.fileRollMode,
@@ -169,7 +171,7 @@ public class FileTailSource extends BaseSource {
       }
       if (!dirInfos.isEmpty()) {
         try {
-          multiDirReader = new MultiDirectoryReader(dirInfos, Charset.forName(charset), maxLineLength,
+          multiDirReader = new MultiFileReader(dirInfos, Charset.forName(charset), maxLineLength,
                                                     postProcessing, archiveDir);
         } catch (IOException ex) {
           issues.add(getContext().createConfigIssue(Groups.FILES.name(), "fileInfos", Errors.TAIL_02, ex.getMessage(), ex));
@@ -327,7 +329,7 @@ public class FileTailSource extends BaseSource {
 
     try {
       Date now = new Date(startTime);
-      for (MultiDirectoryReader.Event event : multiDirReader.getEvents()) {
+      for (FileEvent event : multiDirReader.getEvents()) {
         LiveFile file = event.getFile().refresh();
         Record metadataRecord = getContext().createRecord("");
         Map<String, Field> map = new HashMap<>();

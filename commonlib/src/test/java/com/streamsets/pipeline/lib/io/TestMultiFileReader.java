@@ -22,7 +22,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.UUID;
 
-public class TestMultiDirectoryReader {
+public class TestMultiFileReader {
   private static final Charset UTF8 = Charset.forName("UTF-8");
   private File testDir1;
   private File testDir2;
@@ -38,10 +38,10 @@ public class TestMultiDirectoryReader {
   @Test
   public void testEmptyDirectory() throws IOException {
     File file = new File(testDir1, "file.txt");
-    MultiDirectoryReader.DirectoryInfo di =
-        new MultiDirectoryReader.DirectoryInfo(null, file.getPath(), FileRollMode.REVERSE_COUNTER, "", "");
-    MultiDirectoryReader mdr =
-        new MultiDirectoryReader(Arrays.asList(di), UTF8, 1024, PostProcessingOptions.NONE, null);
+    MultiFileInfo di =
+        new MultiFileInfo(null, file.getPath(), FileRollMode.REVERSE_COUNTER, "", "");
+    MultiFileReader mdr =
+        new MultiFileReader(Arrays.asList(di), UTF8, 1024, PostProcessingOptions.NONE, null);
     mdr.setOffsets(new HashMap<String, String>());
     long start = System.currentTimeMillis();
 
@@ -56,10 +56,10 @@ public class TestMultiDirectoryReader {
   public void testWithOneDirectory() throws IOException {
     File file = new File(testDir1, "file.txt");
     Files.write(file.toPath(), Arrays.asList("Hello"), UTF8);
-    MultiDirectoryReader.DirectoryInfo di =
-        new MultiDirectoryReader.DirectoryInfo("tag", file.getPath(), FileRollMode.REVERSE_COUNTER, "", "");
-    MultiDirectoryReader mdr =
-        new MultiDirectoryReader(Arrays.asList(di), UTF8, 1024, PostProcessingOptions.NONE, null);
+    MultiFileInfo di =
+        new MultiFileInfo("tag", file.getPath(), FileRollMode.REVERSE_COUNTER, "", "");
+    MultiFileReader mdr =
+        new MultiFileReader(Arrays.asList(di), UTF8, 1024, PostProcessingOptions.NONE, null);
     mdr.setOffsets(new HashMap<String, String>());
     long start = System.currentTimeMillis();
     LiveFileChunk chunk = mdr.next(1000);
@@ -90,11 +90,11 @@ public class TestMultiDirectoryReader {
   public void testWithMultipleFilesInSameDirectoryWithSameName() throws Exception {
     File file1 = new File(testDir1, "f1.txt");
     Files.write(file1.toPath(), Arrays.asList("f1.0"), UTF8);
-    MultiDirectoryReader.DirectoryInfo di1 =
-        new MultiDirectoryReader.DirectoryInfo(null, file1.getPath(), FileRollMode.REVERSE_COUNTER, "", "");
-    MultiDirectoryReader.DirectoryInfo di2 =
-        new MultiDirectoryReader.DirectoryInfo(null, file1.getPath(), FileRollMode.REVERSE_COUNTER, "", "");
-    new MultiDirectoryReader(Arrays.asList(di1, di2), UTF8, 1024, PostProcessingOptions.NONE, null);
+    MultiFileInfo di1 =
+        new MultiFileInfo(null, file1.getPath(), FileRollMode.REVERSE_COUNTER, "", "");
+    MultiFileInfo di2 =
+        new MultiFileInfo(null, file1.getPath(), FileRollMode.REVERSE_COUNTER, "", "");
+    new MultiFileReader(Arrays.asList(di1, di2), UTF8, 1024, PostProcessingOptions.NONE, null);
   }
 
   @Test
@@ -103,11 +103,11 @@ public class TestMultiDirectoryReader {
     File file2 = new File(testDir1, "f2.txt");
     Files.write(file1.toPath(), Arrays.asList("f1.0"), UTF8);
     Files.write(file2.toPath(), Arrays.asList("f2.00"), UTF8);
-    MultiDirectoryReader.DirectoryInfo di1 =
-        new MultiDirectoryReader.DirectoryInfo("tag1", file1.getPath(), FileRollMode.REVERSE_COUNTER, "", "");
-    MultiDirectoryReader.DirectoryInfo di2 =
-        new MultiDirectoryReader.DirectoryInfo("tag2", file2.getPath(), FileRollMode.REVERSE_COUNTER, "", "");
-    MultiDirectoryReader mdr = new MultiDirectoryReader(
+    MultiFileInfo di1 =
+        new MultiFileInfo("tag1", file1.getPath(), FileRollMode.REVERSE_COUNTER, "", "");
+    MultiFileInfo di2 =
+        new MultiFileInfo("tag2", file2.getPath(), FileRollMode.REVERSE_COUNTER, "", "");
+    MultiFileReader mdr = new MultiFileReader(
         Arrays.asList(di1, di2),
         UTF8,
         1024,
@@ -137,7 +137,7 @@ public class TestMultiDirectoryReader {
     //after first read we should get 1st file start event
     Assert.assertEquals(1, mdr.getEvents().size());
     LiveFile lf1 = new LiveFile(file1.toPath());
-    Assert.assertEquals(new MultiDirectoryReader.Event(lf1, true), mdr.getEvents().get(0));
+    Assert.assertEquals(new FileEvent(lf1, true), mdr.getEvents().get(0));
 
     Files.write(file1.toPath(), Arrays.asList("f1.01"), UTF8, StandardOpenOption.APPEND);
 
@@ -152,7 +152,7 @@ public class TestMultiDirectoryReader {
     //after first read we should get 2nd file start event
     Assert.assertEquals(1, mdr.getEvents().size());
     LiveFile lf2 = new LiveFile(file2.toPath());
-    Assert.assertEquals(new MultiDirectoryReader.Event(lf2, true), mdr.getEvents().get(0));
+    Assert.assertEquals(new FileEvent(lf2, true), mdr.getEvents().get(0));
 
     Assert.assertNotNull(chunk);
     Assert.assertEquals("tag2", chunk.getTag());
@@ -207,7 +207,7 @@ public class TestMultiDirectoryReader {
     //after first read we should get 1 file end event for the original lf2
     LiveFile oldLf2 = lf2.refresh(); //old because it is renamed
     Assert.assertEquals(1, mdr.getEvents().size());
-    Assert.assertEquals(new MultiDirectoryReader.Event(oldLf2, false), mdr.getEvents().get(0));
+    Assert.assertEquals(new FileEvent(oldLf2, false), mdr.getEvents().get(0));
 
     Assert.assertNotNull(chunk);
     Assert.assertEquals("tag2", chunk.getTag());
@@ -222,7 +222,7 @@ public class TestMultiDirectoryReader {
 
     //after first read we should get 1 file start event for the new lf2
     Assert.assertEquals(1, mdr.getEvents().size());
-    Assert.assertEquals(new MultiDirectoryReader.Event(new LiveFile(file2.toPath()), true), mdr.getEvents().get(0));
+    Assert.assertEquals(new FileEvent(new LiveFile(file2.toPath()), true), mdr.getEvents().get(0));
 
     long start = System.currentTimeMillis();
     while (chunk == null && System.currentTimeMillis() - start < 10000) {
@@ -250,9 +250,9 @@ public class TestMultiDirectoryReader {
     File file = new File(testDir1, "f1.txt");
     File file1 = new File(testDir1, "f1.txt.1");
     Files.write(file1.toPath(), Arrays.asList("f1"), UTF8);
-    MultiDirectoryReader.DirectoryInfo di1 =
-        new MultiDirectoryReader.DirectoryInfo(null, file.getPath(), FileRollMode.REVERSE_COUNTER, "", "");
-    MultiDirectoryReader mdr = new MultiDirectoryReader(Arrays.asList(di1), UTF8, 1024, PostProcessingOptions.DELETE,
+    MultiFileInfo di1 =
+        new MultiFileInfo(null, file.getPath(), FileRollMode.REVERSE_COUNTER, "", "");
+    MultiFileReader mdr = new MultiFileReader(Arrays.asList(di1), UTF8, 1024, PostProcessingOptions.DELETE,
                                                         null);
 
     Assert.assertTrue(file1.exists());
@@ -273,11 +273,11 @@ public class TestMultiDirectoryReader {
     File file1 = new File(testDir1, "f1.txt");
     File file2 = new File(testDir1, "f2.txt");
     Files.write(file1.toPath(), Arrays.asList("f1"), UTF8);
-    MultiDirectoryReader.DirectoryInfo di1 =
-        new MultiDirectoryReader.DirectoryInfo(null, new File(testDir1, "f${pattern}.txt").getPath(),
+    MultiFileInfo di1 =
+        new MultiFileInfo(null, new File(testDir1, "f${pattern}.txt").getPath(),
                                                FileRollMode.PATTERN, ".", "");
 
-    MultiDirectoryReader mdr = new MultiDirectoryReader(Arrays.asList(di1), UTF8, 1024, PostProcessingOptions.DELETE,
+    MultiFileReader mdr = new MultiFileReader(Arrays.asList(di1), UTF8, 1024, PostProcessingOptions.DELETE,
                                                         null);
 
     Assert.assertTrue(file1.exists());
@@ -304,11 +304,11 @@ public class TestMultiDirectoryReader {
     File file1 = new File(testDir1, "f1.txt");
     File file2 = new File(testDir1, "f2.txt");
     Files.write(file1.toPath(), Arrays.asList("f1"), UTF8);
-    MultiDirectoryReader.DirectoryInfo di1 =
-        new MultiDirectoryReader.DirectoryInfo(null, new File(testDir1, "f${pattern}.txt").getPath(),
+    MultiFileInfo di1 =
+        new MultiFileInfo(null, new File(testDir1, "f${pattern}.txt").getPath(),
                                                FileRollMode.PATTERN, ".", "");
 
-    MultiDirectoryReader mdr = new MultiDirectoryReader(Arrays.asList(di1), UTF8, 1024, PostProcessingOptions.ARCHIVE,
+    MultiFileReader mdr = new MultiFileReader(Arrays.asList(di1), UTF8, 1024, PostProcessingOptions.ARCHIVE,
                                                         testDir2.getAbsolutePath());
 
     Assert.assertTrue(file1.exists());
