@@ -15,11 +15,8 @@ import java.io.Closeable;
 import java.io.IOException;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 /**
  * The <code>MultiFileReader</code> is a Reader that allows to read multiple files in a 'tail -f' mode while
@@ -49,9 +46,7 @@ public class MultiFileReader implements Closeable {
 
   private final static long MAX_YIELD_TIME = Integer.parseInt(System.getProperty("MultiFileReader.yield.ms", "500"));
 
-  private final List<FileContext> fileContexts;
-  private final Set<String> fileKeys;
-  private int startingIdx;
+  private final FileContextProvider fileContextProvider;
   private final List<FileEvent> events;
   private boolean open;
 
@@ -73,11 +68,10 @@ public class MultiFileReader implements Closeable {
     Utils.checkArgument(
         postProcessing != PostProcessingOptions.ARCHIVE || (archiveDir != null && !archiveDir.isEmpty()),
         "archiveDir cannot be empty if postProcessing is ARCHIVE");
-    fileContexts = new ArrayList<>();
-    fileKeys = new LinkedHashSet<>();
 
     archiveDir = (postProcessing == PostProcessingOptions.ARCHIVE) ? archiveDir : null;
 
+    events = new ArrayList<>(fileInfos.size() * 2);
     FileEventPublisher eventPublisher = new FileEventPublisher() {
       @Override
       public void publish(FileEvent event) {
@@ -85,23 +79,13 @@ public class MultiFileReader implements Closeable {
       }
     };
 
-    for (MultiFileInfo dirInfo : fileInfos) {
-      fileContexts.add(new FileContext(dirInfo, charset, maxLineLength, postProcessing, archiveDir, eventPublisher));
-      if (fileKeys.contains(dirInfo.getFileKey())) {
-        throw new IOException(Utils.format("File '{}' already specified, it cannot be added more than once",
-            dirInfo.getFileKey()));
-      }
-      fileKeys.add(dirInfo.getFileKey());
-    }
-
-
-    events = new ArrayList<>(fileInfos.size() * 2);
+    fileContextProvider = new FileContextProvider(fileInfos, charset, maxLineLength, postProcessing, archiveDir,
+                                                  eventPublisher);
     open = true;
-    LOG.debug("Opening files: {}", fileKeys);
   }
 
   /**
-   * Sets the directory offsets to use for the next read. To work correctly, the last return offsets should be used or
+   * Sets the file offsets to use for the next read. To work correctly, the last return offsets should be used or
    * an empty <code>Map</code> if there is none.
    * <p/>
    * If a reader is already live, the corresponding set offset is ignored as we cache all the contextual information
@@ -112,65 +96,20 @@ public class MultiFileReader implements Closeable {
    */
   public void setOffsets(Map<String, String> offsets) throws IOException {
     Utils.checkState(open, "Not open");
-    Utils.checkNotNull(offsets, "offsets");
-    // retrieve file:offset for each directory
-    for (FileContext fileContext : fileContexts) {
-      String offset = offsets.get(fileContext.getMultiFileInfo().getFileKey());
-      LiveFile file = null;
-      long fileOffset = 0;
-      if (offset != null && !offset.isEmpty()) {
-        String[] split = offset.split("::", 2);
-        file = LiveFile.deserialize(split[1]).refresh();
-        fileOffset = Long.parseLong(split[0]);
-      }
-      fileContext.setStartingCurrentFileName(file);
-      fileContext.setStartingOffset(fileOffset);
-      if (LOG.isTraceEnabled()) {
-        LOG.trace("Setting offset: directory '{}', file '{}', offset '{}'", fileContext.getMultiFileInfo()
-                                                                                      .getFileFullPath(), file,
-                  fileOffset);
-      }
-    }
-
+    fileContextProvider.setOffsets(offsets);
     // we reset the events on every setOffsets().
     events.clear();
   }
 
   /**
-   * Returns the current directory offsets. The returned offsets should be set before the next read.
+   * Returns the current file offsets. The returned offsets should be set before the next read.
    *
-   * @return the current directory offsets.
+   * @return the current file offsets.
    * @throws IOException thrown if there was an IO error while preparing file offsets.
    */
   public Map<String, String> getOffsets() throws IOException {
     Utils.checkState(open, "Not open");
-    Map<String, String> map = new HashMap<>();
-    // produce file:offset for each directory taking into account a current reader and its file state.
-    for (FileContext fileContext : fileContexts) {
-      LiveFile file;
-      long fileOffset;
-      if (!fileContext.hasReader()) {
-        file = fileContext.getStartingCurrentFileName();
-        fileOffset = fileContext.getStartingOffset();
-      } else if (fileContext.getReader().hasNext()) {
-        file = fileContext.getReader().getLiveFile();
-        fileOffset = fileContext.getReader().getOffset();
-      } else {
-        file = fileContext.getReader().getLiveFile();
-        fileOffset = Long.MAX_VALUE;
-      }
-      String offset = (file == null) ? "" : Long.toString(fileOffset) + "::" + file.serialize();
-      map.put(fileContext.getMultiFileInfo().getFileKey(), offset);
-      if (LOG.isTraceEnabled()) {
-        LOG.trace("Reporting offset: directory '{}', pattern: '{}', file '{}', offset '{}'",
-                  fileContext.getMultiFileInfo().getFileFullPath(),
-                  fileContext.getRollMode().getPattern(),
-                  file,
-                  fileOffset
-        );
-      }
-    }
-    return map;
+    return fileContextProvider.getOffsets();
   }
 
   /**
@@ -206,9 +145,8 @@ public class MultiFileReader implements Closeable {
     long startTime = System.currentTimeMillis();
     LiveFileChunk chunk = null;
     boolean exit = false;
-    int emptyReadAttempts = 0;
     while (!exit) {
-      FileContext fileContext = fileContexts.get(startingIdx);
+      FileContext fileContext = fileContextProvider.next();
       LiveFileReader reader = fileContext.getReader();
       if (reader != null) {
         if (reader.hasNext()) {
@@ -232,21 +170,17 @@ public class MultiFileReader implements Closeable {
         }
       }
 
-      // update startingIdx for future next() call (effective if we exit the while loop in this iteration)
-      startingIdx = (startingIdx + 1) % fileContexts.size();
-
       // check exit conditions (we have a chunk, or we timed-out waitMillis)
       exit = chunk != null;
       if (!exit) {
-        emptyReadAttempts++;
         // if we looped thru all dir contexts in this call we yield CPU
-        if (emptyReadAttempts == fileContexts.size()) {
+        if (fileContextProvider.didFullLoop()) {
           exit = isTimeout(startTime, waitMillis);
           if (!exit && LOG.isTraceEnabled()) {
             LOG.trace("next(): looped through all directories, yielding CPU");
           }
           exit = exit || !ThreadUtil.sleep(Math.min(getRemainingWaitTime(startTime, waitMillis), MAX_YIELD_TIME));
-          emptyReadAttempts = 0;
+          fileContextProvider.startNewLoop();
         }
       }
     }
@@ -259,16 +193,7 @@ public class MultiFileReader implements Closeable {
   public void close() {
     if (open) {
       open = false;
-      LOG.debug("Closing files: {}", fileKeys);
-      for (FileContext fileContext : fileContexts) {
-        try {
-          if (fileContext.hasReader()) {
-            fileContext.getReader().close();
-          }
-        } catch (IOException ex) {
-          //TODO LOG
-        }
-      }
+      fileContextProvider.close();
     }
   }
 }
