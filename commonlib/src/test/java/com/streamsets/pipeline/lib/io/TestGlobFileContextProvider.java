@@ -26,8 +26,10 @@ public class TestGlobFileContextProvider {
   public void testProvider() throws Exception {
     File testDir1 = new File("target", UUID.randomUUID().toString()).getAbsoluteFile();
     Assert.assertTrue(testDir1.mkdirs());
+    File testDir2 = new File("target", UUID.randomUUID().toString()).getAbsoluteFile();
+    Assert.assertTrue(testDir2.mkdirs());
     File file1 = new File(testDir1, "f1.txt");
-    File file2 = new File(testDir1, "f2.txt");
+    File file2 = new File(testDir2, "f2.txt");
     File file3 = new File(testDir1, "f3.txt");
     MultiFileInfo di1 = new MultiFileInfo("tag1", file1.getPath(), FileRollMode.REVERSE_COUNTER, "", "");
     MultiFileInfo di2 = new MultiFileInfo("tag2", file2.getPath(), FileRollMode.REVERSE_COUNTER, "", "");
@@ -45,7 +47,6 @@ public class TestGlobFileContextProvider {
 
 
     // do full loop with no files
-    Thread.sleep(2000);
     provider.setOffsets(new HashMap<String, String>());
     Assert.assertTrue(provider.didFullLoop());
     provider.getOffsets();
@@ -92,6 +93,18 @@ public class TestGlobFileContextProvider {
     provider.setOffsets(new HashMap<String, String>());
     Assert.assertFalse(provider.didFullLoop());
     provider.next().getMultiFileInfo().getSource();
+    Assert.assertFalse(provider.didFullLoop());
+    provider.next().getMultiFileInfo().getSource();
+    Assert.assertFalse(provider.didFullLoop());
+    provider.next().getMultiFileInfo().getSource();
+    Assert.assertTrue(provider.didFullLoop());
+    provider.getOffsets();
+
+    Files.delete(file2.toPath());
+    Files.delete(testDir2.toPath());
+
+    // do full loop now with 2 files
+    provider.setOffsets(new HashMap<String, String>());
     Assert.assertFalse(provider.didFullLoop());
     provider.next().getMultiFileInfo().getSource();
     Assert.assertFalse(provider.didFullLoop());

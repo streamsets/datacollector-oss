@@ -40,6 +40,7 @@ public class AsynchronousFileFinder implements FileFinder {
     this(globPath, scanIntervalSec, null);
   }
 
+  // if a null executor is given the finder will create its own instance and destroy it on close()
   public AsynchronousFileFinder(final Path globPath, int scanIntervalSec, SafeScheduledExecutorService executor) {
     this.path = globPath;
     fileFinder = new SynchronousFileFinder(globPath);
@@ -74,7 +75,7 @@ public class AsynchronousFileFinder implements FileFinder {
     if (!found.isEmpty()) {
       if (firstFind) {
         //the first time we run find() we don't cap the files to return so we have everything there is at the moment
-        firstFind = true;
+        firstFind = false;
         found.drainTo(newFound);
       } else {
         found.drainTo(newFound, MAX_DRAIN_SIZE);

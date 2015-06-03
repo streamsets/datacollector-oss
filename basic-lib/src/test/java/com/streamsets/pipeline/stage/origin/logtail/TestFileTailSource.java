@@ -31,8 +31,9 @@ import java.util.List;
 import java.util.UUID;
 
 public class TestFileTailSource {
+  private final static int SCAN_INTERVAL = 0; //using zero forces synchronous file discovery
 
-  @Test(expected = StageException.class)
+  @Test
   public void testInitDirDoesNotExist() throws Exception {
     File testDataDir = new File("target", UUID.randomUUID().toString());
 
@@ -43,11 +44,12 @@ public class TestFileTailSource {
     fileInfo.patternForToken = "";
     FileTailSource source = new FileTailSource(DataFormat.TEXT, "UTF-8", 1024, 25, 1, Arrays.asList(fileInfo),
                                                PostProcessingOptions.NONE, null, null,
-                                               false, null, null, null, null, null, false, null);
+                                               false, null, null, null, null, null, false, null, SCAN_INTERVAL);
     SourceRunner runner = new SourceRunner.Builder(FileTailDSource.class, source)
         .addOutputLane("lane").addOutputLane("metadata")
         .build();
     runner.runInit();
+    runner.runDestroy();
   }
 
   @Test
@@ -67,7 +69,7 @@ public class TestFileTailSource {
     fileInfo.patternForToken = "";
     FileTailSource source = new FileTailSource(DataFormat.TEXT, "UTF-8", 1024, 25, 1, Arrays.asList(fileInfo),
                                                PostProcessingOptions.NONE, null, null,
-                                               false, null, null, null, null, null, false, null);
+                                               false, null, null, null, null, null, false, null, SCAN_INTERVAL);
     SourceRunner runner = new SourceRunner.Builder(FileTailDSource.class, source)
         .addOutputLane("lane").addOutputLane("metadata")
         .build();
@@ -113,7 +115,7 @@ public class TestFileTailSource {
     fileInfo2.patternForToken = "";
     FileTailSource source = new FileTailSource(DataFormat.TEXT, "UTF-8", 1024, 25, 1, Arrays.asList(fileInfo1, fileInfo2),
                                                PostProcessingOptions.NONE, null,
-                                               null, false, null, null, null, null, null, false, null);
+                                               null, false, null, null, null, null, null, false, null, SCAN_INTERVAL);
     SourceRunner runner = new SourceRunner.Builder(FileTailDSource.class, source)
         .addOutputLane("lane").addOutputLane("metadata")
         .build();
@@ -144,7 +146,7 @@ public class TestFileTailSource {
     fileInfo2.patternForToken = "";
     FileTailSource source = new FileTailSource(DataFormat.TEXT, "UTF-8", 1024, 25, 1, Arrays.asList(fileInfo1, fileInfo2),
                                                PostProcessingOptions.NONE, null,
-                                               null, false, null, null, null, null, null, false, null);
+                                               null, false, null, null, null, null, null, false, null, SCAN_INTERVAL);
     SourceRunner runner = new SourceRunner.Builder(FileTailDSource.class, source)
         .addOutputLane("lane").addOutputLane("metadata")
         .build();
@@ -197,7 +199,7 @@ public class TestFileTailSource {
     fileInfo.patternForToken = "";
     FileTailSource source = new FileTailSource(DataFormat.TEXT, "UTF-8", 7, 1, 1, Arrays.asList(fileInfo),
                                                PostProcessingOptions.NONE, null, null,
-                                               false, null, null, null, null, null, false, null);
+                                               false, null, null, null, null, null, false, null, SCAN_INTERVAL);
     SourceRunner runner = new SourceRunner.Builder(FileTailDSource.class, source)
         .addOutputLane("lane").addOutputLane("metadata")
         .build();
@@ -234,7 +236,7 @@ public class TestFileTailSource {
     fileInfo.patternForToken = "";
     FileTailSource source = new FileTailSource(DataFormat.JSON, "UTF-8", 1024, 25, 1, Arrays.asList(fileInfo),
                                                PostProcessingOptions.NONE, null, null,
-                                               false, null, null, null, null, null, false, null);
+                                               false, null, null, null, null, null, false, null, SCAN_INTERVAL);
     SourceRunner runner = new SourceRunner.Builder(FileTailDSource.class, source)
         .addOutputLane("lane").addOutputLane("metadata")
         .build();
@@ -349,7 +351,7 @@ public class TestFileTailSource {
     fileInfo.patternForToken = "";
     FileTailSource source = new FileTailSource(DataFormat.LOG, "UTF-8", 1024, 25, 1, Arrays.asList(fileInfo),
                                                PostProcessingOptions.NONE, null,
-                                               LogMode.LOG4J, true, null, null, null, null, null, false, null);
+                                               LogMode.LOG4J, true, null, null, null, null, null, false, null, SCAN_INTERVAL);
     SourceRunner runner = new SourceRunner.Builder(FileTailDSource.class, source)
       .addOutputLane("lane").addOutputLane("metadata")
       .build();
@@ -420,7 +422,7 @@ public class TestFileTailSource {
     fileInfo.patternForToken = "";
     FileTailSource source = new FileTailSource(DataFormat.LOG, "UTF-8", 2048, 100, 1, Arrays.asList(fileInfo),
                                                PostProcessingOptions.NONE, null,
-                                               LogMode.LOG4J, true, null, null, null, null, null, false, null);
+                                               LogMode.LOG4J, true, null, null, null, null, null, false, null, SCAN_INTERVAL);
     SourceRunner runner = new SourceRunner.Builder(FileTailDSource.class, source)
       .addOutputLane("lane").addOutputLane("metadata")
       .build();

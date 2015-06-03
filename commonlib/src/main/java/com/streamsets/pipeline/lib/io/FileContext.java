@@ -33,9 +33,12 @@ public class FileContext {
   private LiveFile startingCurrentFileName;
   private long startingOffset;
   private RollMode rollMode;
+  private final Path dir;
+  private boolean open;
 
   public FileContext(MultiFileInfo multiFileInfo, Charset charset, int maxLineLength,
       PostProcessingOptions postProcessing, String archiveDir, FileEventPublisher eventPublisher) throws IOException {
+    open = true;
     this.multiFileInfo = multiFileInfo;
     this.charset = charset;
     this.maxLineLength = maxLineLength;
@@ -43,18 +46,41 @@ public class FileContext {
     this.archiveDir = archiveDir;
     this.eventPublisher = eventPublisher;
     Path fullPath = Paths.get(multiFileInfo.getFileFullPath());
-    Path dir = fullPath.getParent();
+    dir = fullPath.getParent();
     Path name = fullPath.getFileName();
     rollMode = multiFileInfo.getFileRollMode().createRollMode(name.toString(), multiFileInfo.getPattern());
     scanner = new LiveDirectoryScanner(dir.toString(), multiFileInfo.getFirstFile(), getRollMode());
   }
 
+  public String toString() {
+    return Utils.format("FileContext[path={} rollMode={}]", multiFileInfo.getFileFullPath(), rollMode);
+  }
+
   public boolean hasReader() {
+    Utils.checkState(open, "FileContext is closed");
     return reader != null;
+  }
+
+  // a file context is active while its parent directory exists.
+  public boolean isActive() {
+    Utils.checkState(open, "FileContext is closed");
+    return Files.exists(dir);
+  }
+
+  public void close() throws IOException {
+    if (open && reader != null) {
+      open = false;
+      try {
+        reader.close();
+      } finally {
+        reader = null;
+      }
+    }
   }
 
   // prepares and gets the reader if available before a read.
   public LiveFileReader getReader() throws IOException {
+    Utils.checkState(open, "FileContext is closed");
     if (reader == null) {
       currentFile = getStartingCurrentFileName();
       long fileOffset = getStartingOffset();
@@ -82,6 +108,7 @@ public class FileContext {
 
   // updates reader and offsets after a read.
   public void releaseReader() throws IOException {
+    Utils.checkState(open, "FileContext is closed");
     // update starting offsets for next invocation either cold (no reader) or hot (reader)
     if (!getReader().hasNext()) {
       // reached EOF
@@ -120,26 +147,32 @@ public class FileContext {
   }
 
   public MultiFileInfo getMultiFileInfo() {
+    Utils.checkState(open, "FileContext is closed");
     return multiFileInfo;
   }
 
   public LiveFile getStartingCurrentFileName() {
+    Utils.checkState(open, "FileContext is closed");
     return startingCurrentFileName;
   }
 
   public long getStartingOffset() {
+    Utils.checkState(open, "FileContext is closed");
     return startingOffset;
   }
 
   public RollMode getRollMode() {
+    Utils.checkState(open, "FileContext is closed");
     return rollMode;
   }
 
   public void setStartingCurrentFileName(LiveFile startingCurrentFileName) {
+    Utils.checkState(open, "FileContext is closed");
     this.startingCurrentFileName = startingCurrentFileName;
   }
 
   public void setStartingOffset(long startingOffset) {
+    Utils.checkState(open, "FileContext is closed");
     this.startingOffset = startingOffset;
   }
 }

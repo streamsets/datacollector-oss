@@ -68,6 +68,7 @@ public class FileTailSource extends BaseSource {
   private final List<RegExConfig> fieldPathsToGroupName;
   private final boolean enableLog4jCustomLogFormat;
   private final String log4jCustomLogFormat;
+  private final int scanIntervalSecs;
 
   public FileTailSource(DataFormat dataFormat, String charset, int maxLineLength, int batchSize,
       int maxWaitTimeSecs, List<FileInfo> fileInfos, PostProcessingOptions postProcessing, String archiveDir,
@@ -76,6 +77,19 @@ public class FileTailSource extends BaseSource {
       List<RegExConfig> fieldPathsToGroupName,
       String grokPatternDefinition, String grokPattern, boolean enableLog4jCustomLogFormat,
       String log4jCustomLogFormat) {
+    this(dataFormat, charset, maxLineLength, batchSize, maxWaitTimeSecs, fileInfos, postProcessing, archiveDir,
+         logMode, retainOriginalLine, customLogFormat, regex, fieldPathsToGroupName, grokPatternDefinition,
+         grokPattern, enableLog4jCustomLogFormat, log4jCustomLogFormat, 20);
+  }
+
+
+  FileTailSource(DataFormat dataFormat, String charset, int maxLineLength, int batchSize,
+      int maxWaitTimeSecs, List<FileInfo> fileInfos, PostProcessingOptions postProcessing, String archiveDir,
+      LogMode logMode,
+      boolean retainOriginalLine, String customLogFormat, String regex,
+      List<RegExConfig> fieldPathsToGroupName,
+      String grokPatternDefinition, String grokPattern, boolean enableLog4jCustomLogFormat,
+      String log4jCustomLogFormat, int scanIntervalSecs) {
     this.dataFormat = dataFormat;
     this.charset = charset;
     this.maxLineLength = maxLineLength;
@@ -93,6 +107,7 @@ public class FileTailSource extends BaseSource {
     this.grokPattern = grokPattern;
     this.enableLog4jCustomLogFormat = enableLog4jCustomLogFormat;
     this.log4jCustomLogFormat = log4jCustomLogFormat;
+    this.scanIntervalSecs = scanIntervalSecs;
   }
 
   private MultiFileReader multiDirReader;
@@ -175,7 +190,7 @@ public class FileTailSource extends BaseSource {
       }
       if (!dirInfos.isEmpty()) {
         try {
-          int scanIntervalSecs = (getContext().isPreview()) ? 0 : 10;
+          int scanIntervalSecs = (getContext().isPreview()) ? 0 : this.scanIntervalSecs;
           multiDirReader = new MultiFileReader(dirInfos, Charset.forName(charset), maxLineLength,
                                                     postProcessing, archiveDir, true, scanIntervalSecs);
         } catch (IOException ex) {
