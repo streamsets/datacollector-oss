@@ -6,6 +6,7 @@
 package com.streamsets.pipeline.lib.io;
 
 import com.google.common.annotations.VisibleForTesting;
+import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.lib.executor.SafeScheduledExecutorService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,10 +27,11 @@ import java.util.concurrent.TimeUnit;
  */
 public class AsynchronousFileFinder implements FileFinder {
   private final static Logger LOG = LoggerFactory.getLogger(AsynchronousFileFinder.class);
+
   private final static int MAX_QUEUE_SIZE = 1000;
   private final static int MAX_DRAIN_SIZE = 20;
 
-  private final Path path;
+  private final Path globPath;
   private final FileFinder fileFinder;
   private final BlockingQueue<Path> found;
   private final SafeScheduledExecutorService executor;
@@ -42,7 +44,8 @@ public class AsynchronousFileFinder implements FileFinder {
 
   // if a null executor is given the finder will create its own instance and destroy it on close()
   public AsynchronousFileFinder(final Path globPath, int scanIntervalSec, SafeScheduledExecutorService executor) {
-    this.path = globPath;
+    Utils.checkArgument(scanIntervalSec > 0, Utils.formatL("scanInterval must be greater than zero", scanIntervalSec));
+    this.globPath = globPath;
     fileFinder = new SynchronousFileFinder(globPath);
     found = new LinkedBlockingDeque<>();
     this.executor = (executor != null) ? executor : new SafeScheduledExecutorService(1, "FileFinder");
@@ -67,6 +70,7 @@ public class AsynchronousFileFinder implements FileFinder {
     //doing a first run synchronous to have everything for the initial find.
     finder.run();
     this.executor.scheduleAtFixedRate(finder, scanIntervalSec, scanIntervalSec, TimeUnit.SECONDS);
+    LOG.trace("<init>(globPath={}, scanInterval={})", globPath, scanIntervalSec);
   }
 
   @Override
@@ -81,13 +85,17 @@ public class AsynchronousFileFinder implements FileFinder {
         found.drainTo(newFound, MAX_DRAIN_SIZE);
       }
     }
-    LOG.debug("Returning '{}' new files for '{}'", newFound.size(), path);
+    if (LOG.isTraceEnabled()) {
+      LOG.trace("Found '{}' new files for '{}'", newFound.size(), globPath);
+    }
     return newFound;
   }
 
   @Override
   public boolean forget(Path path) {
-    LOG.debug("Forgetting '{}' for '{}'", path, path);
+    if (LOG.isTraceEnabled()) {
+      LOG.trace("Forgetting '{}' for '{}'", path, path);
+    }
     return fileFinder.forget(path);
   }
 

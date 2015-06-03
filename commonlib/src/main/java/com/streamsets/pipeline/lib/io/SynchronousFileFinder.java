@@ -6,6 +6,8 @@
 package com.streamsets.pipeline.lib.io;
 
 import com.streamsets.pipeline.api.impl.Utils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.nio.file.DirectoryStream;
@@ -24,7 +26,10 @@ import java.util.regex.Pattern;
  * This is a synchronous implementation.
  */
 public class SynchronousFileFinder implements FileFinder {
+  private final static Logger LOG = LoggerFactory.getLogger(SynchronousFileFinder.class);
+
   private final static Pattern DOUBLE_WILDCARD = Pattern.compile(".*[^\\\\]\\*\\*.*");
+  private final Path globPath;
   private final Path pivotPath;
   private final Path wildcardPath;
   private final Set<Path> foundPaths;
@@ -33,6 +38,7 @@ public class SynchronousFileFinder implements FileFinder {
   public SynchronousFileFinder(Path globPath) {
     Utils.checkNotNull(globPath, "path");
     Utils.checkArgument(globPath.isAbsolute(), Utils.formatL("Path '{}' must be absolute", globPath));
+    this.globPath = globPath;
     pivotPath = getPivotPath(globPath);
     wildcardPath = getWildcardPath(globPath);
     Utils.checkArgument(!DOUBLE_WILDCARD.matcher(globPath.toString()).matches(),
@@ -54,6 +60,7 @@ public class SynchronousFileFinder implements FileFinder {
         }
       };
     }
+    LOG.trace("<init>(globPath={})", globPath);
   }
 
   static boolean hasWildcard(String name) {
@@ -134,11 +141,17 @@ public class SynchronousFileFinder implements FileFinder {
         }
       }
     }
+    if (LOG.isTraceEnabled()) {
+      LOG.trace("Found '{}' new files for '{}'", newFound.size(), globPath);
+    }
     return newFound;
   }
 
   @Override
   public boolean forget(Path path) {
+    if (LOG.isTraceEnabled()) {
+      LOG.trace("Forgetting '{}' for '{}'", path, path);
+    }
     return foundPaths.remove(path);
   }
 

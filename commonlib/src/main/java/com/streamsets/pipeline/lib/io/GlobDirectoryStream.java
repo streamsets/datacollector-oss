@@ -6,6 +6,8 @@
 package com.streamsets.pipeline.lib.io;
 
 import com.streamsets.pipeline.api.impl.Utils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.nio.file.DirectoryStream;
@@ -19,6 +21,8 @@ import java.util.Iterator;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class GlobDirectoryStream implements DirectoryStream<Path> {
+  private static final Logger LOG = LoggerFactory.getLogger(GlobDirectoryStream.class);
+
   private final AtomicInteger openCounter;
   private final DirectoryStream<Path> directoryStream;
   private final Iterator<Path> iterator;
@@ -45,6 +49,7 @@ public class GlobDirectoryStream implements DirectoryStream<Path> {
     Utils.checkNotNull(basePath, "basePath");
     Utils.checkNotNull(globPath, "globPath");
     Utils.checkNotNull(filter, "filter");
+    LOG.trace("<init>(basePath={}, globPath={}", basePath, globPath);
     this.openCounter = openCounter;
     if (globPath.getNameCount() == 1) {
       final PathMatcher matcher = FileSystems.getDefault().getPathMatcher("glob:" + globPath.getName(0).toString());
