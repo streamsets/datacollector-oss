@@ -118,8 +118,8 @@
                                     <entry>
                                         <p>Additional HBase configuration properties to use. </p>
                                         <p>To add properties, click <uicontrol>Add</uicontrol> and
-                                            define the HBase property name and value. Use the
-                                            property names and values as expected by HBase. </p>
+                                            define the property name and value. Use the property
+                                            names and values as expected by HBase. </p>
                                     </entry>
                                 </row>
                             </tbody>

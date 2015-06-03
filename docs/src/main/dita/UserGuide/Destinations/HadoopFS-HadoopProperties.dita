@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
+<concept id="concept_xh5_y4d_br">
+ <title>Hadoop Properties and Configuration Files</title>
+    <shortdesc>You can configure the Hadoop destination to use HDFS properties. </shortdesc>
+    <conbody>
+        <p><indexterm>Hadoop FS destination<indexterm>additional
+                properties</indexterm></indexterm><indexterm>custom properties<indexterm>Hadoop
+                    FS</indexterm></indexterm>The Hadoop FS destination provides the following
+            options for specifying HDFS properties:<dl>
+                <dlentry>
+                    <dt>HDFS configuration files: core-site.xml and hdfs-site.xml</dt>
+                    <dd>You can store the core-site.xml and hdfs-site.xml configuration files in a
+                        directory local to the <ph
+                            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                        /> and specify the path in the destination.</dd>
+                </dlentry>
+                <dlentry>
+                    <dt>Individual properties</dt>
+                    <dd>You can configure individual HDFS properties in the destination. To add an
+                        HDFS property, you specify the exact property name and the value. The Hadoop
+                        FS destination does not validate the property names or
+                            values.<note>Individual properties override properties defined in the
+                            HDFS configuration file. </note></dd>
+                </dlentry>
+            </dl></p>
+    </conbody>
+</concept>

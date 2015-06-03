@@ -73,11 +73,10 @@
                                 </row>
                                 <row>
                                     <entry>Path</entry>
-                                    <entry>Full path to the active file to tail. <draft-comment
-                                            author="Loretta">Fro Active File doc previously: Static
-                                            file name for the active file that contains the latest
-                                            data from the server.<p>Not used for Periodic
-                                            Files.</p></draft-comment></entry>
+                                    <entry>Full path to the active file to tail. <p>You can use
+                                            wildcards to define glob patterns. </p><draft-comment
+                                            author="Loretta">Figure out what else needs to be added
+                                            here.</draft-comment></entry>
                                 </row>
                                 <row>
                                     <entry>Naming <xref
@@ -93,20 +92,19 @@
                                     <entry>Regular expression that defines the file name pattern
                                         used to create files. <p>You can use UNIX-style wildcards,
                                             such as an asterisk or question mark. </p><p>Available
-                                            only for periodic files.</p></entry>
+                                            only for the Files Matching a Pattern naming
+                                        option.</p></entry>
                                 </row>
                                 <row>
                                     <entry>First File</entry>
                                     <entry>Name of the first file to process when you start the
-                                        pipeline. Use a name that uses the file name pattern.<p>When
-                                            you enter a file name, File Tail reads the first file
-                                            and then progresses to the active file. </p><p>When you
-                                            do not enter a file name, File Tail reads all files in
-                                            the directory with the specified file name
-                                        pattern.</p>When you restart a stopped pipeline, File Tail
+                                        pipeline. Use a name that uses the file name pattern. Leave
+                                        empty to read all files in the directory with the specified
+                                        naming convention.<p>When you enter a file name, File Tail
+                                            reads the first file and then progresses to the active
+                                            file. </p>When you restart a stopped pipeline, File Tail
                                         ignores this property. It starts where it left off
-                                        regardless of the file name unless you reset the origin.
-                                    </entry>
+                                        regardless of the file name unless you reset the origin. </entry>
                                 </row>
                                 <row>
                                     <entry>Tag <xref

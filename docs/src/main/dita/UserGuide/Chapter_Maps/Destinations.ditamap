@@ -35,7 +35,7 @@
    <topicref href="../Destinations/HadoopFS-DirectoryTemplates.dita"/>
    <topicref href="../Destinations/HadoopFS-TimeBasis.dita"/>
    <topicref href="../Destinations/HadoopFS-LateRecordHandling.dita"/>
-   <topicref href="../Destinations/HadoopFS-AdditionalProperties.dita"/>
+   <topicref href="../Destinations/HadoopFS-HadoopProperties.dita"/>
    <topicref href="../Destinations/HadoopFS-Configuring.dita"/>
   </topicref>
   <topicref href="../Destinations/HBase.dita" chunk='to-content'>

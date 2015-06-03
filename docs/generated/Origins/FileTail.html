@@ -2,7 +2,7 @@
 <!DOCTYPE html
   SYSTEM "about:legacy-compat">
 <html xml:lang="en-us" lang="en-us">
-<head><meta name="description" content="The File Tail origin reads lines of data as they are written to an active file after reading related archived files in the same directory. You can read data from multiple directories. File Tail ..."></meta><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><meta name="copyright" content="(C) Copyright 2005"></meta><meta name="DC.rights.owner" content="(C) Copyright 2005"></meta><meta name="DC.Type" content="concept"></meta><meta name="DC.Title" content="File Tail"></meta><meta name="abstract" content="The File Tail origin reads lines of data as they are written to an active file after reading related archived files in the same directory. You can read data from multiple directories. File Tail generates a record for each line in the files."></meta><meta name="description" content="The File Tail origin reads lines of data as they are written to an active file after reading related archived files in the same directory. You can read data from multiple directories. File Tail generates a record for each line in the files."></meta><meta name="DC.Relation" scheme="URI" content="../Origins/Origins_title.html"></meta><meta name="DC.Format" content="XHTML"></meta><meta name="DC.Identifier" content="concept_n1y_qyp_5q"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/commonltr.css"><!----></link><title>File Tail</title><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/webhelp_topic.css"><!----></link><link rel="stylesheet" type="text/css" href="../skin.css"></link><script type="text/javascript"><!--
+<head><meta name="description" content="The File Tail origin reads lines of data as they are written to an active file after reading related archived files in the same directory. File Tail generates a record for each line of data. When you ..."></meta><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><meta name="copyright" content="(C) Copyright 2005"></meta><meta name="DC.rights.owner" content="(C) Copyright 2005"></meta><meta name="DC.Type" content="concept"></meta><meta name="DC.Title" content="File Tail"></meta><meta name="abstract" content="The File Tail origin reads lines of data as they are written to an active file after reading related archived files in the same directory. File Tail generates a record for each line of data."></meta><meta name="description" content="The File Tail origin reads lines of data as they are written to an active file after reading related archived files in the same directory. File Tail generates a record for each line of data."></meta><meta name="DC.Relation" scheme="URI" content="../Origins/Origins_title.html"></meta><meta name="DC.Format" content="XHTML"></meta><meta name="DC.Identifier" content="concept_n1y_qyp_5q"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/commonltr.css"><!----></link><title>File Tail</title><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/webhelp_topic.css"><!----></link><link rel="stylesheet" type="text/css" href="../skin.css"></link><script type="text/javascript"><!--
           
           var prefix = "../index.html";
           
@@ -15,24 +15,24 @@
 
  
  <div class="body conbody"><p class="shortdesc">The File Tail origin reads lines of data as they are written to an active file after
-        reading related archived files in the same directory. You can read data from multiple
-        directories. File Tail generates a record for each line in the files. </p>
+        reading related archived files in the same directory. File Tail generates a record for each
+        line of data.</p>
 
         <p class="p">When you configure File Tail, you define the full
             path to the active file, the naming convention for archived files, and the first
-            archived file to process. These properties determine the files that are read and the
-            order of processing.</p>
+            archived file to process. These properties determine the set of files that are read and
+            the order of processing.</p>
 
         <p class="p">For example, a File Tail is configured to tail a log called server.log, starting with
             server.log.1, expecting archived files named in reverse counter order. When the pipeline
             runs, it starts reading lines from the beginning of server.log.1, ignoring older files.
             When it reaches the end of server.log.1, it continues processing data in server.log.
-            When it completes reading existing data in server.log, it begins tailing incoming data
-            for the file.</p>
+            When it completes reading existing data in server.log, it tails incoming data for the
+            file.</p>
 
-        <p class="p">When you stop a pipeline, File Tail notes the line where it stops reading. When you
-            restart the pipeline, File Tail continues processing from the line where it left off,
-            even if it has been archived to a different file. </p>
+        <p class="p">When you stop a pipeline, File Tail notes where it stops reading. When you restart the
+            pipeline, File Tail continues processing from the line where it left off, even if it has
+            been archived to a different file. </p>
 
         <p class="p">You can reset the origin for File Tail. When you reset the origin, the File Tail treats
             all properties as if you are starting the pipeline for the first time - processing all
@@ -42,24 +42,52 @@
 
 <div class="related-links"></div>
 <div class="topic concept nested1" id="concept_cyz_kr4_1s">
- <h2 class="title topictitle2">Multiple Directories and File Sets</h2>
+ <h2 class="title topictitle2">Multiple Paths and File Sets</h2>
 
     
- <div class="body conbody"><p class="shortdesc">File Tail can read related sets of files in multiple directories. When File Tail
-        processes files in multiple directories, it merges all data in the pipeline. </p>
+ <div class="body conbody"><p class="shortdesc">File Tail can read sets of files in different directories. When File Tail processes
+        different sets of files, it merges all data in the pipeline. If you need to separate the
+        records later, you can use the tag record attribute.</p>
 
-  <p class="p">When you define a directory, you specify the full path
-            to the active file. For example: <samp class="ph codeph">/webserver/log/log.txt</samp>.</p>
+  <p class="p">To define a set of files to be processed, you specify
+            the full path to an active file and related properties. You can define additional file
+            sets by configuring a set of properties for each set of files.</p>
 
-        <div class="p">You can define multiple directories by creating a set of configuration properties for
-            each set of files. You can also use wildcards to define glob patterns that represent
-            multiple directories. For example, the following directory can represent sets of
-            activity logs generated by different
-            servers:<pre class="pre codeblock">/*/log/activity.log</pre>
+        <p class="p">You can also use wildcards to define glob patterns in the path definition to represent
+            multiple paths and active files. </p>
+
+        <div class="p">For example, the following path can represent sets of activity logs generated by
+            different servers:<pre class="pre codeblock">/*/log/activity.log</pre>
 </div>
 
  </div>
 
+<div class="topic concept nested2" id="concept_crd_tlx_fs">
+ <h3 class="title topictitle3">Defining and Using a Tag</h3>
+
+ 
+ <div class="body conbody"><p class="shortdesc">A tag is an optional record attribute that you can define for sets of files. In the
+  pipeline, you can use a function to return the value of the tag. </p>
+
+  <p class="p">Define a tag so you
+   can easily reference tagged records. You can define a tag for files specified by a path. Note
+   that when you use wildcards or glob patterns in a path to represent several sets of files, those
+   files would all use the same tag.</p>
+
+  <div class="p">In the pipeline, you can use the following expression to return the tag
+   attribute:<pre class="pre codeblock">record:attribute('tag')</pre>
+</div>
+
+  <div class="p">For example, when you use two different paths to tail files from two servers, you can tag the
+   records ServerA and ServerB. In the Stream Selector, you can use the following conditions to
+   separate the data to two different branches of the
+   pipeline:<pre class="pre codeblock">${record:attribute('tag')='ServerA'}</pre>
+<pre class="pre codeblock">${record:attribute('tag')='ServerB'}</pre>
+</div>
+
+ </div>
+
+</div>
 </div>
 <div class="topic concept nested1" id="concept_trt_thq_5r">
  <h2 class="title topictitle2">File Processing and Archived File Names</h2>
@@ -140,31 +168,12 @@
  <div class="body conbody">
   <p class="p">When you use the Files Matching a Pattern naming option, use the
    PATTERN constant as a placeholder for the file name pattern. Then you use the Pattern property to
-   define the PATTERN constant.  For example, the following properties processes data in files named
-    weblog_&lt;yyyy&gt;-&lt;mm&gt;-&lt;dd&gt;.json:</p>
+   define the PATTERN constant. </p>
 
- </div>
+  <p class="p">For example, the following properties process data in files named
+   weblog_&lt;yyyy&gt;-&lt;mm&gt;-&lt;dd&gt;.json and add a "webservers" tag attribute to each record:</p>
 
-</div>
-<div class="topic concept nested1" id="concept_crd_tlx_fs">
- <h2 class="title topictitle2">Tag Attribute</h2>
-
- 
- <div class="body conbody"><p class="shortdesc">A tag is an optional record attribute that you can define. Define a tag when you want to
-  indicate the source for the record and use that information to differentiate between records.  You
-  can add a tag for each group of files defined in the stage. </p>
-
-  <div class="p">In the pipeline, you
-   can use the following expression to return the tag
-   attribute:<pre class="pre codeblock">record:attribute('tag')</pre>
-</div>
-
-  <div class="p">For example, if you use File Tail to tail log files from two servers, you can tag the records
-   ServerA and ServerB. In the Stream Selector, you can use the following conditions to separate the
-   data to two different branches of the
-   pipeline:<pre class="pre codeblock">${record:attribute('tag')='ServerA'}
-${record:attribute('tag')='ServerB'}</pre>
-</div>
+  <p class="p"><img class="image" id="concept_d5j_vrx_fs__image_plp_y2d_gs" src="../Graphics/FileTail-Properties.png" height="139" width="520"></img></p>
 
  </div>
 
@@ -352,14 +361,14 @@ ${record:attribute('tag')='ServerB'}</pre>
                     following properties:</span>
                 <div class="itemgroup info">
                     
-<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_unq_wdw_yq__d2549e257" class="table" frame="border" border="1" rules="all">
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_unq_wdw_yq__d2563e257" class="table" frame="border" border="1" rules="all">
                             
                             
                             <thead class="thead" align="left">
                                 <tr class="row">
-                                    <th class="entry" valign="top" width="24.509803921568626%" id="d21779e492">General Property</th>
+                                    <th class="entry" valign="top" width="24.509803921568626%" id="d21735e500">General Property</th>
 
-                                    <th class="entry" valign="top" width="75.49019607843137%" id="d21779e495">Description</th>
+                                    <th class="entry" valign="top" width="75.49019607843137%" id="d21735e503">Description</th>
 
                                 </tr>
 
@@ -367,23 +376,23 @@ ${record:attribute('tag')='ServerB'}</pre>
 
                             <tbody class="tbody">
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="24.509803921568626%" headers="d21779e492 ">Name</td>
+                                    <td class="entry" valign="top" width="24.509803921568626%" headers="d21735e500 ">Name</td>
 
-                                    <td class="entry" valign="top" width="75.49019607843137%" headers="d21779e495 ">Stage name.</td>
-
-                                </tr>
-
-                                <tr class="row">
-                                    <td class="entry" valign="top" width="24.509803921568626%" headers="d21779e492 ">Description</td>
-
-                                    <td class="entry" valign="top" width="75.49019607843137%" headers="d21779e495 ">Optional description.</td>
+                                    <td class="entry" valign="top" width="75.49019607843137%" headers="d21735e503 ">Stage name.</td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="24.509803921568626%" headers="d21779e492 ">On Record Error</td>
+                                    <td class="entry" valign="top" width="24.509803921568626%" headers="d21735e500 ">Description</td>
 
-                                    <td class="entry" valign="top" width="75.49019607843137%" headers="d21779e495 ">Error record handling for the stage: <ul class="ul" id="task_unq_wdw_yq__d2549e304">
+                                    <td class="entry" valign="top" width="75.49019607843137%" headers="d21735e503 ">Optional description.</td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="24.509803921568626%" headers="d21735e500 ">On Record Error</td>
+
+                                    <td class="entry" valign="top" width="75.49019607843137%" headers="d21735e503 ">Error record handling for the stage: <ul class="ul" id="task_unq_wdw_yq__d2563e304">
                                             <li class="li">Discard - Discards the record.</li>
 
                                             <li class="li">Send to Error - Sends the record to the pipeline for
@@ -413,9 +422,9 @@ ${record:attribute('tag')='ServerB'}</pre>
                             
                             <thead class="thead" align="left">
                                 <tr class="row">
-                                    <th class="entry" valign="top" width="35.3356890459364%" id="d21779e567">File Property</th>
+                                    <th class="entry" valign="top" width="35.3356890459364%" id="d21735e575">File Property</th>
 
-                                    <th class="entry" valign="top" width="64.66431095406361%" id="d21779e570">Description</th>
+                                    <th class="entry" valign="top" width="64.66431095406361%" id="d21735e578">Description</th>
 
                                 </tr>
 
@@ -423,10 +432,10 @@ ${record:attribute('tag')='ServerB'}</pre>
 
                             <tbody class="tbody">
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="35.3356890459364%" headers="d21779e567 ">Data Format <a class="xref" href="FileTail.html#concept_pm4_b3q_5r" title="When you use an origin to read log data, you define the format of the log files to be read.">
+                                    <td class="entry" valign="top" width="35.3356890459364%" headers="d21735e575 ">Data Format <a class="xref" href="FileTail.html#concept_pm4_b3q_5r" title="When you use an origin to read log data, you define the format of the log files to be read.">
                                             <img class="image" id="task_unq_wdw_yq__image_br4_fgs_5r" src="../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
 
-                                    <td class="entry" valign="top" width="64.66431095406361%" headers="d21779e570 ">Format of data in the file. Use one of the following
+                                    <td class="entry" valign="top" width="64.66431095406361%" headers="d21735e578 ">Format of data in the file. Use one of the following
                                             options:<ul class="ul" id="task_unq_wdw_yq__ul_pwv_cr2_zq">
                                             <li class="li">Text</li>
 
@@ -440,16 +449,16 @@ ${record:attribute('tag')='ServerB'}</pre>
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="35.3356890459364%" headers="d21779e567 ">Data Charset</td>
+                                    <td class="entry" valign="top" width="35.3356890459364%" headers="d21735e575 ">Data Charset</td>
 
-                                    <td class="entry" valign="top" width="64.66431095406361%" headers="d21779e570 ">Character encoding of the data to be processed.</td>
+                                    <td class="entry" valign="top" width="64.66431095406361%" headers="d21735e578 ">Character encoding of the data to be processed.</td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="35.3356890459364%" headers="d21779e567 ">Max Line Length</td>
+                                    <td class="entry" valign="top" width="35.3356890459364%" headers="d21735e575 ">Max Line Length</td>
 
-                                    <td class="entry" valign="top" width="64.66431095406361%" headers="d21779e570 ">Maximum number of characters in a record, including
+                                    <td class="entry" valign="top" width="64.66431095406361%" headers="d21735e578 ">Maximum number of characters in a record, including
                                         end-of-line characters. <p class="p">Longer text and log lines are
                                             truncated. Longer JSON objects are sent to the stage for
                                             error handling.</p>
@@ -458,9 +467,9 @@ ${record:attribute('tag')='ServerB'}</pre>
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="35.3356890459364%" headers="d21779e567 ">Max Batch Size</td>
+                                    <td class="entry" valign="top" width="35.3356890459364%" headers="d21735e575 ">Max Batch Size</td>
 
-                                    <td class="entry" valign="top" width="64.66431095406361%" headers="d21779e570 ">Maximum number of lines to include in a batch. Honors
+                                    <td class="entry" valign="top" width="64.66431095406361%" headers="d21735e578 ">Maximum number of lines to include in a batch. Honors
                                         values up to the <span class="ph">Data
                   Collector</span> maximum batch size. <p class="p">Default is 1000. The <span class="ph">Data
                   Collector</span> default is 1000.</p>
@@ -469,74 +478,74 @@ ${record:attribute('tag')='ServerB'}</pre>
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="35.3356890459364%" headers="d21779e567 ">Batch Wait Time (secs) <a class="xref" href="Origins_overview.html#concept_ypd_vgr_5q" title="For origin stages, the batch size determines the maximum number of records sent through the pipeline at one time. The batch wait time determines the time that the origin waits for data before sending a batch. At the end of the wait time, it sends the batch regardless of how many records the batch contains.">
+                                    <td class="entry" valign="top" width="35.3356890459364%" headers="d21735e575 ">Batch Wait Time (secs) <a class="xref" href="Origins_overview.html#concept_ypd_vgr_5q" title="For origin stages, the batch size determines the maximum number of records sent through the pipeline at one time. The batch wait time determines the time that the origin waits for data before sending a batch. At the end of the wait time, it sends the batch regardless of how many records the batch contains.">
                                             <img class="image" id="task_unq_wdw_yq__image_ulc_2fm_cr" src="../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
 
-                                    <td class="entry" valign="top" width="64.66431095406361%" headers="d21779e570 ">Number of seconds to wait before sending a batch.</td>
+                                    <td class="entry" valign="top" width="64.66431095406361%" headers="d21735e578 ">Number of seconds to wait before sending a batch.</td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="35.3356890459364%" headers="d21779e567 ">File to Tail</td>
+                                    <td class="entry" valign="top" width="35.3356890459364%" headers="d21735e575 ">File to Tail</td>
 
-                                    <td class="entry" valign="top" width="64.66431095406361%" headers="d21779e570 ">Directories and sets of files to process. Click the
+                                    <td class="entry" valign="top" width="64.66431095406361%" headers="d21735e578 ">Directories and sets of files to process. Click the
                                             <span class="ph uicontrol">Add</span> icon to enter additional sets
                                         of information. </td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="35.3356890459364%" headers="d21779e567 ">Path</td>
+                                    <td class="entry" valign="top" width="35.3356890459364%" headers="d21735e575 ">Path</td>
 
-                                    <td class="entry" valign="top" width="64.66431095406361%" headers="d21779e570 ">Full path to the active file to tail. </td>
+                                    <td class="entry" valign="top" width="64.66431095406361%" headers="d21735e578 ">Full path to the active file to tail. <p class="p">You can use
+                                            wildcards to define glob patterns. </p>
+</td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="35.3356890459364%" headers="d21779e567 ">Naming <a class="xref" href="FileTail.html#concept_trt_thq_5r" title="File Tail processes the active file and archived files based on how the source server generates files. When you specify the naming convention for archived files, File Tail determines the file generation method and processes the data accordingly.">
+                                    <td class="entry" valign="top" width="35.3356890459364%" headers="d21735e575 ">Naming <a class="xref" href="FileTail.html#concept_trt_thq_5r" title="File Tail processes the active file and archived files based on how the source server generates files. When you specify the naming convention for archived files, File Tail determines the file generation method and processes the data accordingly.">
                                             <img class="image" id="task_unq_wdw_yq__image_ckc_4ks_2s" src="../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
 
-                                    <td class="entry" valign="top" width="64.66431095406361%" headers="d21779e570 ">Naming convention for archived files. Select the naming
+                                    <td class="entry" valign="top" width="64.66431095406361%" headers="d21735e578 ">Naming convention for archived files. Select the naming
                                         convention that describes how the server generates file
                                         names.</td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="35.3356890459364%" headers="d21779e567 ">Pattern</td>
+                                    <td class="entry" valign="top" width="35.3356890459364%" headers="d21735e575 ">Pattern</td>
 
-                                    <td class="entry" valign="top" width="64.66431095406361%" headers="d21779e570 ">Regular expression that defines the file name pattern
+                                    <td class="entry" valign="top" width="64.66431095406361%" headers="d21735e578 ">Regular expression that defines the file name pattern
                                         used to create files. <p class="p">You can use UNIX-style wildcards,
                                             such as an asterisk or question mark. </p>
 <p class="p">Available
-                                            only for periodic files.</p>
+                                            only for the Files Matching a Pattern naming
+                                        option.</p>
 </td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="35.3356890459364%" headers="d21779e567 ">First File</td>
+                                    <td class="entry" valign="top" width="35.3356890459364%" headers="d21735e575 ">First File</td>
 
-                                    <td class="entry" valign="top" width="64.66431095406361%" headers="d21779e570 ">Name of the first file to process when you start the
-                                        pipeline. Use a name that uses the file name pattern.<p class="p">When
-                                            you enter a file name, File Tail reads the first file
-                                            and then progresses to the active file. </p>
-<p class="p">When you
-                                            do not enter a file name, File Tail reads all files in
-                                            the directory with the specified file name
-                                        pattern.</p>
+                                    <td class="entry" valign="top" width="64.66431095406361%" headers="d21735e578 ">Name of the first file to process when you start the
+                                        pipeline. Use a name that uses the file name pattern. Leave
+                                        empty to read all files in the directory with the specified
+                                        naming convention.<p class="p">When you enter a file name, File Tail
+                                            reads the first file and then progresses to the active
+                                            file. </p>
 When you restart a stopped pipeline, File Tail
                                         ignores this property. It starts where it left off
-                                        regardless of the file name unless you reset the origin.
-                                    </td>
+                                        regardless of the file name unless you reset the origin. </td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="35.3356890459364%" headers="d21779e567 ">Tag <a class="xref" href="FileTail.html#concept_crd_tlx_fs" title="A tag is an optional record attribute that you can define. Define a tag when you want to indicate the source for the record and use that information to differentiate between records. You can add a tag for each group of files defined in the stage.">
+                                    <td class="entry" valign="top" width="35.3356890459364%" headers="d21735e575 ">Tag <a class="xref" href="FileTail.html#concept_crd_tlx_fs" title="A tag is an optional record attribute that you can define for sets of files. In the pipeline, you can use a function to return the value of the tag.">
                                             <img class="image" id="task_unq_wdw_yq__image_gs4_vnx_fs" src="../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
 
-                                    <td class="entry" valign="top" width="64.66431095406361%" headers="d21779e570 ">An optional attribute defined for the record to help you
+                                    <td class="entry" valign="top" width="64.66431095406361%" headers="d21735e578 ">An optional attribute defined for the record to help you
                                         differentiate between different sets of records. </td>
 
                                 </tr>
@@ -558,9 +567,9 @@ When you restart a stopped pipeline, File Tail
                             
                             <thead class="thead" align="left">
                                 <tr class="row">
-                                    <th class="entry" valign="top" width="35.97122302158273%" id="d21779e769">Post Processing Property</th>
+                                    <th class="entry" valign="top" width="35.97122302158273%" id="d21735e775">Post Processing Property</th>
 
-                                    <th class="entry" valign="top" width="64.02877697841726%" id="d21779e772">Description</th>
+                                    <th class="entry" valign="top" width="64.02877697841726%" id="d21735e778">Description</th>
 
                                 </tr>
 
@@ -568,9 +577,9 @@ When you restart a stopped pipeline, File Tail
 
                             <tbody class="tbody">
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="35.97122302158273%" headers="d21779e769 ">File Post Processing</td>
+                                    <td class="entry" valign="top" width="35.97122302158273%" headers="d21735e775 ">File Post Processing</td>
 
-                                    <td class="entry" valign="top" width="64.02877697841726%" headers="d21779e772 ">
+                                    <td class="entry" valign="top" width="64.02877697841726%" headers="d21735e778 ">
                                         <div class="p">The action taken after processing a file: <ul class="ul" id="task_unq_wdw_yq__ul_gyx_nfp_1s">
                                                 <li class="li">None - Keeps the file in place.</li>
 
@@ -587,9 +596,9 @@ When you restart a stopped pipeline, File Tail
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="35.97122302158273%" headers="d21779e769 ">Archive Directory</td>
+                                    <td class="entry" valign="top" width="35.97122302158273%" headers="d21735e775 ">Archive Directory</td>
 
-                                    <td class="entry" valign="top" width="64.02877697841726%" headers="d21779e772 ">Directory for archived files. </td>
+                                    <td class="entry" valign="top" width="64.02877697841726%" headers="d21735e778 ">Directory for archived files. </td>
 
                                 </tr>
 
@@ -605,14 +614,14 @@ When you restart a stopped pipeline, File Tail
                     following properties:</span>
                 <div class="itemgroup info">
                     
-<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_unq_wdw_yq__d2549e690" class="table" frame="border" border="1" rules="all">
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_unq_wdw_yq__d2563e690" class="table" frame="border" border="1" rules="all">
                             
                             
                             <thead class="thead" align="left">
                                 <tr class="row">
-                                    <th class="entry" valign="top" width="35.46099290780141%" id="d21779e838">Log Property</th>
+                                    <th class="entry" valign="top" width="35.46099290780141%" id="d21735e844">Log Property</th>
 
-                                    <th class="entry" valign="top" width="64.53900709219857%" id="d21779e841">Description</th>
+                                    <th class="entry" valign="top" width="64.53900709219857%" id="d21735e847">Description</th>
 
                                 </tr>
 
@@ -620,10 +629,10 @@ When you restart a stopped pipeline, File Tail
 
                             <tbody class="tbody">
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="35.46099290780141%" headers="d21779e838 ">Log Format</td>
+                                    <td class="entry" valign="top" width="35.46099290780141%" headers="d21735e844 ">Log Format</td>
 
-                                    <td class="entry" valign="top" width="64.53900709219857%" headers="d21779e841 ">Format of the log files. Use one of the following
-                                            options:<ul class="ul" id="task_unq_wdw_yq__d2549e719">
+                                    <td class="entry" valign="top" width="64.53900709219857%" headers="d21735e847 ">Format of the log files. Use one of the following
+                                            options:<ul class="ul" id="task_unq_wdw_yq__d2563e719">
                                             <li class="li">Common Log Format</li>
 
                                             <li class="li">Combined Log Format</li>
@@ -644,17 +653,17 @@ When you restart a stopped pipeline, File Tail
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="35.46099290780141%" headers="d21779e838 ">Max Line Length</td>
+                                    <td class="entry" valign="top" width="35.46099290780141%" headers="d21735e844 ">Max Line Length</td>
 
-                                    <td class="entry" valign="top" width="64.53900709219857%" headers="d21779e841 ">Maximum length of a log line. The origin truncates longer
+                                    <td class="entry" valign="top" width="64.53900709219857%" headers="d21735e847 ">Maximum length of a log line. The origin truncates longer
                                         lines. </td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="35.46099290780141%" headers="d21779e838 ">Retain Original Line</td>
+                                    <td class="entry" valign="top" width="35.46099290780141%" headers="d21735e844 ">Retain Original Line</td>
 
-                                    <td class="entry" valign="top" width="64.53900709219857%" headers="d21779e841 ">Determines how to treat the original log line. Select to
+                                    <td class="entry" valign="top" width="64.53900709219857%" headers="d21735e847 ">Determines how to treat the original log line. Select to
                                         include the original log line as a field in the resulting
                                             record.<p class="p">By default, the original line is
                                             discarded.</p>
@@ -667,7 +676,7 @@ When you restart a stopped pipeline, File Tail
                         </table>
 </div>
 
-                    <ul class="ul" id="task_unq_wdw_yq__d2549e768">
+                    <ul class="ul" id="task_unq_wdw_yq__d2563e768">
                         <li class="li">When you select
                                 <span class="ph uicontrol">Apache Access Log Custom Format</span>, use Apache
                             log format strings to define the <span class="ph uicontrol">Custom Log
@@ -686,14 +695,14 @@ When you restart a stopped pipeline, File Tail
 
                         <li class="li">When you select <span class="ph uicontrol">Log4j</span>, define the following properties:<div class="p">
                                 
-<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_unq_wdw_yq__d2549e810" class="table" frame="border" border="1" rules="all">
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_unq_wdw_yq__d2563e810" class="table" frame="border" border="1" rules="all">
                                         
                                         
                                         <thead class="thead" align="left">
                                             <tr class="row">
-                                                <th class="entry" valign="top" width="30.959752321981426%" id="d21779e963">Log4j Property</th>
+                                                <th class="entry" valign="top" width="30.959752321981426%" id="d21735e969">Log4j Property</th>
 
-                                                <th class="entry" valign="top" width="69.04024767801857%" id="d21779e966">Description</th>
+                                                <th class="entry" valign="top" width="69.04024767801857%" id="d21735e972">Description</th>
 
                                             </tr>
 
@@ -701,10 +710,10 @@ When you restart a stopped pipeline, File Tail
 
                                         <tbody class="tbody">
                                             <tr class="row">
-                                                <td class="entry" valign="top" width="30.959752321981426%" headers="d21779e963 ">On Parse Error</td>
+                                                <td class="entry" valign="top" width="30.959752321981426%" headers="d21735e969 ">On Parse Error</td>
 
-                                                <td class="entry" valign="top" width="69.04024767801857%" headers="d21779e966 ">Determines how to handle information that
-                                                  cannot be parsed:<ul class="ul" id="task_unq_wdw_yq__d2549e839">
+                                                <td class="entry" valign="top" width="69.04024767801857%" headers="d21735e972 ">Determines how to handle information that
+                                                  cannot be parsed:<ul class="ul" id="task_unq_wdw_yq__d2563e839">
                                                   <li class="li">Skip and Log Error - Skips reading the line
                                                   and logs a stage error.</li>
 
@@ -723,17 +732,17 @@ When you restart a stopped pipeline, File Tail
                                             </tr>
 
                                             <tr class="row">
-                                                <td class="entry" valign="top" width="30.959752321981426%" headers="d21779e963 ">Use Custom Log Format</td>
+                                                <td class="entry" valign="top" width="30.959752321981426%" headers="d21735e969 ">Use Custom Log Format</td>
 
-                                                <td class="entry" valign="top" width="69.04024767801857%" headers="d21779e966 ">Allows you to define a custom log
+                                                <td class="entry" valign="top" width="69.04024767801857%" headers="d21735e972 ">Allows you to define a custom log
                                                   format.</td>
 
                                             </tr>
 
                                             <tr class="row">
-                                                <td class="entry" valign="top" width="30.959752321981426%" headers="d21779e963 ">Custom Format</td>
+                                                <td class="entry" valign="top" width="30.959752321981426%" headers="d21735e969 ">Custom Format</td>
 
-                                                <td class="entry" valign="top" width="69.04024767801857%" headers="d21779e966 ">Use log4j variables to define a custom log
+                                                <td class="entry" valign="top" width="69.04024767801857%" headers="d21735e972 ">Use log4j variables to define a custom log
                                                   format.</td>
 
                                             </tr>
