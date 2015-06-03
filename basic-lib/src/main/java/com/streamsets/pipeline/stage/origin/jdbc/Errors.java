@@ -17,9 +17,8 @@ public enum Errors implements ErrorCode {
   JDBC_03("Failed to parse column '{}' to field with value {}."),
   JDBC_04("Query is failed to execute: '{}' Error: {}"),
   JDBC_05("Query must include '{}' in WHERE clause and in ORDER BY clause before other columns."),
-  JDBC_07("Failed to load JDBC driver. If driver is not JDBC 4 compliant you must specify 'Driver Class Name' in" +
-      "the Legacy configuration tab. Error: {}"),
-  JDBC_09("The query interval expression must be greater than or equal to zero."),
+  JDBC_06("Failed to initialize connection pool: {}"),
+  JDBC_07("The query interval expression must be greater than or equal to zero."),
   ;
   private final String msg;
 
