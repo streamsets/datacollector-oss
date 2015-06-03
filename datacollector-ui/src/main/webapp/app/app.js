@@ -63,7 +63,9 @@ angular.module('dataCollectorApp')
       webSocketStatusURL = webSocketBaseURL + '/rest/v1/webSocket?type=status',
       statusWebSocket,
       BACKSPACE_KEY = 8,
-      DELETE_KEY = 46;
+      DELETE_KEY = 46,
+      Z_KEY = 90,
+      Y_KEY = 89;
 
     $rootScope.pipelineConstant = pipelineConstant;
     $rootScope.$storage = $localStorage.$default({
@@ -173,13 +175,29 @@ angular.module('dataCollectorApp')
         $localStorage.$reset();
       },
 
+      /**
+       * Key Event on body DOM element.
+       *
+       * @param $event
+       */
       bodyKeyEvent: function($event) {
-        if($event.target === $event.currentTarget &&
+        if($event.target === $event.currentTarget && $event.shiftKey !== true &&
           ($event.keyCode === BACKSPACE_KEY || $event.keyCode === DELETE_KEY)) {
+
+          //Delete Operation
+
           $event.preventDefault();
           $event.stopPropagation();
 
           $rootScope.$broadcast('bodyDeleteKeyPressed');
+        } else if(($event.metaKey && $event.shiftKey && ($event.keyCode === Z_KEY)) ||
+          ($event.ctrlKey && $event.keyCode === Y_KEY))  {
+
+          //REDO Operation
+          $rootScope.$broadcast('bodyRedoKeyPressed');
+        } else if(($event.metaKey || $event.ctrlKey) && $event.keyCode === Z_KEY) {
+          //UNDO Operation
+          $rootScope.$broadcast('bodyUndoKeyPressed');
         }
       }
 
