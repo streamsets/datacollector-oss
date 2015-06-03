@@ -1,18 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_crd_tlx_fs">
- <title>Tag Attribute</title>
- <shortdesc>A tag is an optional record attribute that you can define. Define a tag when you want to
-  indicate the source for the record and use that information to differentiate between records.  You
-  can add a tag for each group of files defined in the stage. </shortdesc>
+ <title>Defining and Using a Tag</title>
+ <shortdesc>A tag is an optional record attribute that you can define for sets of files. In the
+  pipeline, you can use a function to return the value of the tag. </shortdesc>
  <conbody>
-  <p><indexterm>File Tail origin<indexterm>tag attribute</indexterm></indexterm>In the pipeline, you
-   can use the following expression to return the tag
+  <p><indexterm>File Tail origin<indexterm>tag attribute</indexterm></indexterm>Define a tag so you
+   can easily reference tagged records. You can define a tag for files specified by a path. Note
+   that when you use wildcards or glob patterns in a path to represent several sets of files, those
+   files would all use the same tag.</p>
+  <p>In the pipeline, you can use the following expression to return the tag
    attribute:<codeblock>record:attribute('tag')</codeblock></p>
-  <p>For example, if you use File Tail to tail log files from two servers, you can tag the records
-   ServerA and ServerB. In the Stream Selector, you can use the following conditions to separate the
-   data to two different branches of the
-   pipeline:<codeblock>${record:attribute('tag')='ServerA'}
-${record:attribute('tag')='ServerB'}</codeblock></p>
+  <p>For example, when you use two different paths to tail files from two servers, you can tag the
+   records ServerA and ServerB. In the Stream Selector, you can use the following conditions to
+   separate the data to two different branches of the
+   pipeline:<codeblock>${record:attribute('tag')='ServerA'}</codeblock><codeblock>${record:attribute('tag')='ServerB'}</codeblock></p>
  </conbody>
 </concept>

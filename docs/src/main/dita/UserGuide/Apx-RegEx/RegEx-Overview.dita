@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
+<concept id="concept_vd4_nsc_gs">
+ <title>Regular Expressions</title>
+ <shortdesc></shortdesc>
+ <conbody>
+  <p>You can use regular expressions in the following locations:<ul id="ul_vfy_4sc_gs">
+    <li>Directory - File Name Pattern property</li>
+    <li>All origins that process log data (Directory, Kafka Consumer, File Tail) and the Log Parser
+     - Regular expression log format</li>
+    <li>File Tail origin - Files Matching Pattern archive method - regular expression to define the
+     ${PATTERN}</li>
+    <li>Field Masker - Regular expression field mask type</li>
+    <li>String functions - replaceAll uses regex for the string to replace, regexCapture </li>
+   </ul></p>
+ </conbody>
+</concept>

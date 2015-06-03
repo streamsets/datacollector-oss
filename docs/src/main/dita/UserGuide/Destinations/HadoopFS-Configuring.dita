@@ -6,7 +6,7 @@
         <context>
             <p><indexterm>Hadoop FS
                 destination<indexterm>configuring</indexterm></indexterm>Configure a Hadoop FS
-                destination to write data to a Hadoop file system.</p>
+                destination to write data to HDFS.</p>
         </context>
         <steps id="steps_ljw_44d_br">
             <step
@@ -31,17 +31,15 @@
                             <tbody>
                                 <row>
                                     <entry>Hadoop FS URI</entry>
-                                    <entry>URI of the Hadoop file system.</entry>
+                                    <entry>HDFS URI.</entry>
                                 </row>
                                 <row>
                                     <entry>Kerberos Authentication</entry>
-                                    <entry>Indicates that the Hadoop file system uses Kerberos
-                                        authentication.</entry>
+                                    <entry>Indicates that HDFS uses Kerberos authentication.</entry>
                                 </row>
                                 <row>
                                     <entry>Kerberos Principal</entry>
-                                    <entry>Kerberos principal used to connect to the Hadoop file
-                                        system.</entry>
+                                    <entry>Kerberos principal used to connect to HDFS.</entry>
                                 </row>
                                 <row>
                                     <entry>Kerberos Keytab</entry>
@@ -49,12 +47,23 @@
                                         credentials for the Kerberos principal.</entry>
                                 </row>
                                 <row>
+                                    <entry>Hadoop FS Configuration Directory <xref
+                                            href="HadoopFS-HadoopProperties.dita">
+                                            <image href="../Graphics/icon_moreInfo.png" scale="10"
+                                                id="image_br4_fgs_5r"/></xref></entry>
+                                    <entry>Directory for a local HDFS configuration files. <p>Use to
+                                            enable the Hadoop FS destination to use the
+                                            core-site.xml and hdfs-site.xml configuration
+                                            files.</p><p><note/>Properties in the configuration
+                                            files are overridden by individual properties defined in
+                                            the stage.</p></entry>
+                                </row>
+                                <row>
                                     <entry>Hadoop FS Configuration</entry>
-                                    <entry>Additional Hadoop configuration properties to use. <p>To
-                                            add properties, click <uicontrol>Add</uicontrol> and
-                                            define the Hadoop property name and value. Use the
-                                            property names and values as expected by
-                                        Hadoop.</p></entry>
+                                    <entry>Additional HDFS properties to use. <p>To add properties,
+                                            click <uicontrol>Add</uicontrol> and define the property
+                                            name and value. Use the property names and values as
+                                            expected by HDFS.</p></entry>
                                 </row>
                             </tbody>
                         </tgroup>

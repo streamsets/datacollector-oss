@@ -6,8 +6,9 @@
   <p><indexterm>File Tail origin<indexterm>PATTERN constant for file name
     patterns</indexterm></indexterm>When you use the Files Matching a Pattern naming option, use the
    PATTERN constant as a placeholder for the file name pattern. Then you use the Pattern property to
-   define the PATTERN constant.  For example, the following properties processes data in files named
-    weblog_&lt;yyyy>-&lt;mm>-&lt;dd>.json:<draft-comment author="Loretta">screenshot of config when
-    tucu clarifies which way to do it.</draft-comment></p>
+   define the PATTERN constant. </p>
+  <p>For example, the following properties process data in files named
+   weblog_&lt;yyyy>-&lt;mm>-&lt;dd>.json and add a "webservers" tag attribute to each record:</p>
+  <p><image href="../Graphics/FileTail-Properties.png" id="image_plp_y2d_gs" scale="80"/></p>
  </conbody>
 </concept>

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_tjp_v5l_zq">
- <title>HBase Properties</title>
+ <title>HBase Properties and Configuration File</title>
  <shortdesc>You can configure the HBase destination to use HBase properties. </shortdesc>
  <conbody>
   <p><indexterm>HBase destination<indexterm>additional
@@ -9,19 +9,19 @@
                     properties<indexterm>HBase</indexterm></indexterm>The HBase destination provides
             the following options for specifying HBase properties:<dl>
                 <dlentry>
-                    <dt>Use the hbase-site.xml HBase configuration file </dt>
+                    <dt>HBase configuration file, hbase-site.xml </dt>
                     <dd>You can store the hbase-site.xml configuration file in a directory local to
                         the <ph
                             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
                         /> and specify the path in the destination.</dd>
                 </dlentry>
                 <dlentry>
-                    <dt>Specify individual properties</dt>
-                    <dd>You can add custom HBase configuration properties to the HBase destination.
-                        When you add an HBase configuration property, enter the exact property name
-                        and the value. The HBase destination does not validate the property names or
-                            values.<note>Any individual properties that you configure override
-                            properties defined in the HBase configuration file. </note></dd>
+                    <dt>Individual properties</dt>
+                    <dd>You can configure individual HBase properties in the HBase destination. To
+                        add an HBase property, you specify the exact property name and the value.
+                        The HBase destination does not validate the property names or
+                            values.<note>Individual properties override properties defined in the
+                            HBase configuration file. </note></dd>
                 </dlentry>
             </dl></p>
  </conbody>

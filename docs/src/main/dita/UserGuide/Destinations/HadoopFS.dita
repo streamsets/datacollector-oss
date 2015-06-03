@@ -2,8 +2,8 @@
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_awl_4km_zq">
  <title>Hadoop FS</title>
- <shortdesc>The Hadoop FS destination writes data to a Hadoop file system. You can write the data to
-    the Hadoop file system as flat files or Hadoop sequence files. </shortdesc>
+ <shortdesc>The Hadoop FS destination writes data to the Hadoop Distributed File System (HDFS). You
+    can write the data to HDFS as flat files or Hadoop sequence files. </shortdesc>
  <conbody>
   <p><indexterm>Hadoop FS
      destination<indexterm>overview</indexterm></indexterm><indexterm>destinations<indexterm>Hadoop
@@ -12,7 +12,7 @@
    Hadoop FS writes records to the directories based on the time basis as well.</p>
   <p>You can specify the amount of time that a record can be written to its associated directory and
       what happens to late records. </p>
-    <p>When necessary, you can configure Kerberos authentication and add additional Hadoop
-      configuration properties.</p>
+    <p>When necessary, you can configure Kerberos authentication. You can also implement HDFS
+      properties.</p>
  </conbody>
 </concept>
