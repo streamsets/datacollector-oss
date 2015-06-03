@@ -1,8 +1,14 @@
 import api
 
 import click
+import ConfigParser
 import json
+import os
 import requests
+
+APP_NAME = 'sdc-cli'
+DEFAULT_CFG = os.path.join(click.get_app_dir(APP_NAME), 'config.ini')
+SDC_CFG_SECTION = 'sdc'
 
 pass_api = click.make_pass_decorator(api.DataCollector)
 
@@ -10,7 +16,7 @@ pass_api = click.make_pass_decorator(api.DataCollector)
 @click.group()
 @click.option(
     '--sdc-url',
-    default='http://localhost:18630/rest/v1',
+    default=None,
     envvar='SDC_URL',
     help='Base URL of SDC REST endpoint.',
 )
@@ -27,6 +33,12 @@ pass_api = click.make_pass_decorator(api.DataCollector)
     help='Password for logging into SDC',
 )
 @click.option(
+    '--config-file',
+    default=DEFAULT_CFG,
+    envvar='SDC_CLI_CFG',
+    help='Default location: %s' % os.path.join(click.get_app_dir(APP_NAME), 'config.ini'),
+)
+@click.option(
     '--auth-type',
     type=click.Choice(['none', 'basic', 'digest', 'form']),
     default=None,
@@ -34,9 +46,18 @@ pass_api = click.make_pass_decorator(api.DataCollector)
     help='Type of authentication configured in the target SDC.',
 )
 @click.pass_context
-def cli(ctx, sdc_url, sdc_user, sdc_password, auth_type):
+def cli(ctx, sdc_url, sdc_user, sdc_password, config_file, auth_type):
     """sdc-cli is the command line interface for controlling StreamSets Data Collector via its REST API."""
-    ctx.obj = api.DataCollector(sdc_url, sdc_user, sdc_password, auth_type)
+    _create_default_config()
+
+    cfg_values = {
+        'url': sdc_url,
+        'user': sdc_user,
+        'password': sdc_password,
+        'auth_type': auth_type,
+    }
+    cfg_values = _read_config(cfg_values, config_file)
+    ctx.obj = api.DataCollector(cfg_values['url'], cfg_values['user'], cfg_values['password'], cfg_values['auth_type'])
 
 
 @cli.command('ping')
@@ -151,6 +172,37 @@ def rules():
 @pass_api
 def show_rules(sdc_api, pipeline_name, pretty):
     _print_json(sdc_api.get_rules(pipeline_name), pretty)
+
+
+def _read_config(cfg_values=None, cfg=DEFAULT_CFG):
+    parser = ConfigParser.SafeConfigParser()
+    parser.read([cfg])
+    if cfg_values is None:
+        cfg_values = {}
+    for key, value in parser.items(SDC_CFG_SECTION):
+        if cfg_values[key] is None:
+            cfg_values[key] = value
+    return cfg_values
+
+
+def _write_default_config(cfg=DEFAULT_CFG):
+    with open(cfg, 'w') as cfg_file:
+        parser = ConfigParser.SafeConfigParser()
+        parser.add_section(SDC_CFG_SECTION)
+        parser.set(SDC_CFG_SECTION, '# url', 'http://localhost:18630')
+        parser.set(SDC_CFG_SECTION, '# user', 'admin')
+        parser.set(SDC_CFG_SECTION, '# password', 'admin')
+        parser.set(SDC_CFG_SECTION, '# auth_type', 'form')
+        parser.write(cfg_file)
+
+
+def _create_default_config():
+    cfg_dir = os.path.dirname(DEFAULT_CFG)
+    if not os.path.exists(cfg_dir):
+        os.makedirs(cfg_dir)
+
+    if not os.path.exists(DEFAULT_CFG):
+        _write_default_config(DEFAULT_CFG)
 
 
 def _print_json(d, pretty=False):
