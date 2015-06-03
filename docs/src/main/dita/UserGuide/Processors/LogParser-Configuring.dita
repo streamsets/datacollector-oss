@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE task PUBLIC "-//OASIS//DTD DITA General Task//EN" "generalTask.dtd">
+<task id="task_jm1_b4w_fs">
+    <title>Configuring a Log Parser</title>
+    <taskbody>
+        <context>
+            <p><indexterm>Log Parser
+                processor<indexterm>configuring</indexterm></indexterm>Configure a Log Parser to
+                parse log data in a field. </p>
+        </context>
+        <steps id="steps_ysb_1qw_fs">
+            <step
+                conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/1stStep-ReqField-ErrorHandling">
+                <cmd/>
+            </step>
+            <step>
+                <cmd>On the <uicontrol>Parse</uicontrol> tab, configure the following
+                    properties:</cmd>
+                <info>
+                    <table frame="all" rowsep="1" colsep="1" id="table_egn_2qw_fs">
+                        <tgroup cols="2">
+                            <colspec colname="c1" colnum="1" colwidth="1*"/>
+                            <colspec colname="c2" colnum="2" colwidth="1.7*"/>
+                            <thead>
+                                <row>
+                                    <entry>Parse Properties</entry>
+                                    <entry>Description</entry>
+                                </row>
+                            </thead>
+                            <tbody>
+                                <row>
+                                    <entry>Field to Parse</entry>
+                                    <entry>Field path that contains the log data to parse. </entry>
+                                </row>
+                                <row>
+                                    <entry>New Parsed Field</entry>
+                                    <entry>Field to act as the root field for the newly parsed
+                                        fields. </entry>
+                                </row>
+                                <row>
+                                    <entry>Log Format</entry>
+                                    <entry>Format of log data. Use one of the following
+                                            formats:<draft-comment author="Loretta">this is in
+                                            reusable steps, not phrases.</draft-comment><ul
+                                            conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/ul-LogFormatList"
+                                            id="ul_ith_4rw_fs">
+                                            <li/>
+                                        </ul></entry>
+                                </row>
+                            </tbody>
+                        </tgroup>
+                    </table>
+                </info>
+                <info>
+                    <draft-comment author="Loretta">copied from reusable steps</draft-comment>
+                    <ul>
+                        <li>When you select <uicontrol>Apache Access Log Custom Format</uicontrol>,
+                            use Apache log format strings to define the <uicontrol>Custom Log
+                                Format</uicontrol>.</li>
+                        <li>When you select <uicontrol>Regular Expression</uicontrol>, enter the
+                            regular expression that describes the log format, and then map the
+                            fields that you want to include to each regular expression group.</li>
+                        <li>When you select <uicontrol>Grok Pattern</uicontrol>, you can define any
+                            custom grok patterns that you want to use in the <uicontrol>Grok Pattern
+                                Definition</uicontrol> field, and then enter the grok pattern log
+                            file description in the <uicontrol>Grok Pattern</uicontrol> field.<p>For
+                                more information about supported grok patterns, see <xref
+                                    href="../Apx-GrokPatterns/GrokPatterns.dita#concept_vdk_xjb_wr"
+                                />.</p></li>
+                        <li>When you select <uicontrol>Log4j</uicontrol>, you can use log4j
+                            variables to define a custom log format.</li>
+                    </ul>
+                </info>
+            </step>
+        </steps>
+    </taskbody>
+</task>

@@ -364,7 +364,7 @@
             <step>
                 <cmd>
                     <draft-comment author="Loretta">Use the following for origins that use the Log
-                        data format.</draft-comment>
+                        data format. UL in first row is also being conrefed in Log Parser. </draft-comment>
                 </cmd>
             </step>
             <step id="LogData_Log4j">
@@ -385,7 +385,7 @@
                                 <row>
                                     <entry>Log Format</entry>
                                     <entry>Format of the log files. Use one of the following
-                                            options:<ul id="ul_upc_mfs_sr">
+                                            options:<ul id="ul-LogFormatList">
                                             <li>Common Log Format</li>
                                             <li>Combined Log Format</li>
                                             <li>Apache Error Log Format</li>
@@ -411,8 +411,11 @@
                         </tgroup>
                     </table>
                     <ul id="ul_mdk_djs_sr">
-                        <li>When you select <uicontrol>Apache Access Log Custom Format</uicontrol>,
-                            use Apache log format strings to define the <uicontrol>Custom Log
+                        <li><draft-comment author="Loretta">For any changes to these bullets, update
+                                Log Parser as well. Everything except the Log4j table/bullet point
+                                is copied from here. </draft-comment>When you select
+                                <uicontrol>Apache Access Log Custom Format</uicontrol>, use Apache
+                            log format strings to define the <uicontrol>Custom Log
                                 Format</uicontrol>.</li>
                         <li>When you select <uicontrol>Regular Expression</uicontrol>, enter the
                             regular expression that describes the log format, and then map the

@@ -53,8 +53,12 @@
    <topicref href="../Processors/Jython-TypeHandling.dita"/>
    <topicref href="../Processors/Jython-Configuring.dita"/>
   </topicref>
-  <topicref href="../Processors/LogParser.dita">
-   <topicref href="../Origins/LogFormats.dita"/>
+  <topicref href="../Processors/LogParser.dita" chunk="to-content">
+   <topicmeta>
+    <shortdesc/>
+   </topicmeta>
+   <topicref href="../Processors/LogParser-LogFormats.dita"/>
+   <topicref href="../Processors/LogParser-Configuring.dita"/>
   </topicref>
   <topicref href="../Processors/RDeduplicator.dita" chunk="to-content">
    <topicmeta>

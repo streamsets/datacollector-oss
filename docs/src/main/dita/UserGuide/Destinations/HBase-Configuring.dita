@@ -86,6 +86,34 @@
                                     </entry>
                                 </row>
                                 <row>
+                                    <entry>Master Kerberos Principal</entry>
+                                    <entry>Kerberos principal used for the Master process. Use the
+                                        following format: &lt;user>/&lt;hostname>@&lt;domain>.
+                                            <p>You can use _HOST to replace &lt;hostname> with the
+                                            running instance name as follows:
+                                            &lt;user>/_HOST@&lt;domain>.</p></entry>
+                                </row>
+                                <row>
+                                    <entry>RegionServer Kerberos Principal</entry>
+                                    <entry>Kerberos principal used for the RegionServer process. Use
+                                        the following format: &lt;user>/&lt;hostname>@&lt;domain>.
+                                            <p>You can use _HOST to replace &lt;hostname> with the
+                                            running instance name as follows:
+                                            &lt;user>/_HOST@&lt;domain>.</p></entry>
+                                </row>
+                                <row>
+                                    <entry>HBase Configuration Directory <xref
+                                            href="HBase-HBaseProperties.dita">
+                                            <image href="../Graphics/icon_moreInfo.png" scale="10"
+                                                id="image_br4_fgs_5r"/></xref></entry>
+                                    <entry>Directory for a local HBase configuration file. Enter the
+                                        directory to enable the HBase destination to use properties
+                                        defined in the hbase-site.xml configuration file.
+                                            <p><note/>Properties in the configuration file are
+                                            overridden by individual properties defined in the
+                                            stage.</p></entry>
+                                </row>
+                                <row>
                                     <entry>HBase Configuration</entry>
                                     <entry>
                                         <p>Additional HBase configuration properties to use. </p>

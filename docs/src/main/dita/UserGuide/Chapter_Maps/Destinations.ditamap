@@ -42,7 +42,7 @@
    <topicmeta>
     <shortdesc/>
    </topicmeta>
-   <topicref href="../Destinations/HBase-AdditionalProperties.dita"/>
+   <topicref href="../Destinations/HBase-HBaseProperties.dita"/>
    <topicref href="../Destinations/HBase-Configuring.dita"/>
   </topicref>
   <topicref href="../Destinations/KProducer.dita" chunk="to-content">

@@ -19,11 +19,13 @@
   <topicref href="../Origins/FileTail.dita" chunk="to-content">
    <topicmeta><shortdesc></shortdesc></topicmeta>
    <topicref href="../Origins/FileTail-MultipleDirectories.dita"/>
-   <topicref href="../Origins/FileTail-Nodes.dita"/>
    <topicref href="../Origins/FileTail-FileProcessing.dita"/>
+   <topicref href="../Origins/FileTail-PathsandPatterns.dita"/>
+   <topicref href="../Origins/FileTail-TagAttribute.dita"/>
    <topicref href="../Origins/FileTail-DataFormats.dita">
     <topicref href="../Origins/LogFormats.dita"/>
    </topicref>
+   <topicref href="../Origins/FileTail-Nodes.dita"/>
    <topicref href="../Origins/FileTail-Configuring.dita"/>
   </topicref>
   <topicref href="../Origins/HTTPClient.dita" chunk="to-content">

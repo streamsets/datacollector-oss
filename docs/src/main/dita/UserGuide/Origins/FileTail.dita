@@ -8,10 +8,10 @@
  <conbody>
         <p><indexterm>File Tail
                     origin<indexterm>overview</indexterm></indexterm><indexterm>origins<indexterm>File
-                    Tail</indexterm></indexterm>When you configure File Tail, you define the active
-            file name, the naming convention for archived files, and the first archived file to
-            process. These properties determine the files that are read and the order of
-            processing.</p>
+                    Tail</indexterm></indexterm>When you configure File Tail, you define the full
+            path to the active file, the naming convention for archived files, and the first
+            archived file to process. These properties determine the files that are read and the
+            order of processing.</p>
         <p>For example, a File Tail is configured to tail a log called server.log, starting with
             server.log.1, expecting archived files named in reverse counter order. When the pipeline
             runs, it starts reading lines from the beginning of server.log.1, ignoring older files.
@@ -21,9 +21,6 @@
         <p>When you stop a pipeline, File Tail notes the line where it stops reading. When you
             restart the pipeline, File Tail continues processing from the line where it left off,
             even if it has been archived to a different file. </p>
-        <p>In the previous example, say you stopped the pipeline as File Tail was tailing
-            server.log. By the time you restart the pipeline, the unprocessed data has been archived
-            to server.log.4. File Tail cleverly starts reading in server.log.4.</p>
         <p>You can reset the origin for File Tail. When you reset the origin, the File Tail treats
             all properties as if you are starting the pipeline for the first time - processing all
             requested files before continuing to the active file. </p>

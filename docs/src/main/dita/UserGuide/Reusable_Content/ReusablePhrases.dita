@@ -123,6 +123,7 @@
                   use constants or runtime properties throughout the pipeline. You can use
                   expression completion determine where you can use an expression and the expression
                   elements that you can use in that location. </p>
+            <p>Properties that allow the use of expressions are outline in green</p>
             <p id="EXP-p3">You can use the following elements in an expression:<ul
                         id="ul_w34_vxl_2s">
                         <li>Constants</li>
@@ -132,6 +133,5 @@
                         <li>Operators</li>
                         <li>Runtime properties</li>
                   </ul></p>
-            <p/>
       </conbody>
 </concept>

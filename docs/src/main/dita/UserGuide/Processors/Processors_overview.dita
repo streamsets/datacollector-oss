@@ -17,10 +17,10 @@
         <li>JavaScript Evaluator - Processes records based on custom JavaScript code.  </li>
         <li>JSON Parser - Parses a JSON object embedded in a string field.</li>
         <li>Jython Evaluator - Processes records based on custom Jython code.</li>
-        <li>Log Parser - Parses log lines based on the specified log format.</li>
+        <li>Log Parser - Parses log data in a field based on the specified log format.</li>
         <li>Record Deduplicator - Removes duplicate records.</li>
         <li>Stream Selector - Routes data to different streams based on conditions.</li>
-        <li>Value Replacer - Replaces null values or replaces values with Nulls.</li>
+        <li>Value Replacer - Replaces null values or replaces values with nulls.</li>
       </ul></p>
   </conbody>
 </concept>
