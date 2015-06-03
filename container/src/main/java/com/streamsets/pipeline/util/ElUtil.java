@@ -7,18 +7,17 @@ package com.streamsets.pipeline.util;
 
 import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.el.ELEvalException;
-import com.streamsets.pipeline.config.ConfigConfiguration;
 import com.streamsets.pipeline.config.ConfigDefinition;
 import com.streamsets.pipeline.config.PipelineConfiguration;
 import com.streamsets.pipeline.config.StageDefinition;
 import com.streamsets.pipeline.el.ELEvaluator;
 import com.streamsets.pipeline.el.ELVariables;
 import com.streamsets.pipeline.el.RuntimeEL;
+import com.streamsets.pipeline.lib.el.StringEL;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -66,14 +65,15 @@ public class ElUtil {
     if(elDefs != null && elDefs.size() > 0) {
       return getElDefClassArray(cl, elDefs);
     }
-    Class<?>[] elDefClasses = new Class[1];
-    //inject RuntimeEL.class into the evaluator
+    Class<?>[] elDefClasses = new Class[2];
+    //inject RuntimeEL.class & StringEL.class into the evaluator
     elDefClasses[0] = RuntimeEL.class;
+    elDefClasses[1] = StringEL.class;
     return elDefClasses;
   }
 
   public static Class<?>[] getElDefClassArray(ClassLoader classLoader, List<String> elDefs) {
-    Class<?>[] elDefClasses = new Class<?>[elDefs.size() + 1];
+    Class<?>[] elDefClasses = new Class<?>[elDefs.size() + 2];
     int i = 0;
     for(; i < elDefs.size(); i++) {
       try {
@@ -82,8 +82,9 @@ public class ElUtil {
         throw new RuntimeException(e);
       }
     }
-    //inject RuntimeEL.class into the evaluator
-    elDefClasses[i] = RuntimeEL.class;
+    //inject RuntimeEL.class & StringEL.class into the evaluator
+    elDefClasses[i++] = RuntimeEL.class;
+    elDefClasses[i] = StringEL.class;
     return  elDefClasses;
   }
 

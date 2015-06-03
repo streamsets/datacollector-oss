@@ -10,6 +10,7 @@ import com.streamsets.pipeline.config.PipelineDefConfigs;
 import com.streamsets.pipeline.el.ELEvaluator;
 import com.streamsets.pipeline.el.ELVariables;
 import com.streamsets.pipeline.el.RuntimeEL;
+import com.streamsets.pipeline.lib.el.StringEL;
 import com.streamsets.pipeline.validation.Issues;
 import com.streamsets.pipeline.validation.StageIssue;
 
@@ -32,7 +33,8 @@ public class ValidationUtil {
 
   public static long evaluateMemoryLimit(String memoryLimitString, Map<String, Object> constants)
     throws ELEvalException {
-    ELEvaluator memConfigEval = ElUtil.createElEval(PipelineDefConfigs.MEMORY_LIMIT_CONFIG, constants, RuntimeEL.class);
+    ELEvaluator memConfigEval = ElUtil.createElEval(PipelineDefConfigs.MEMORY_LIMIT_CONFIG, constants, RuntimeEL.class,
+      StringEL.class);
     long memoryLimit = memConfigEval.evaluate(new ELVariables(constants), memoryLimitString, Long.class);
     return memoryLimit;
   }
