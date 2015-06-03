@@ -142,6 +142,28 @@
 
       <a class="btn btn-link icon-button"
          tooltip-placement="bottom"
+         tooltip="{{'global.form.undo' | translate}}"
+         tooltip-popup-delay="500"
+         ng-hide="isPipelineRunning || previewMode || snapshotMode"
+         ng-if="isAuthorized([userRoles.admin, userRoles.creator]) && common.sdcExecutionMode != pipelineConstant.SLAVE"
+         ng-disabled="!canUndo()"
+         ng-click="undo()">
+        <span class="fa fa-undo fa-14x"></span>
+      </a>
+
+      <a class="btn btn-link icon-button"
+         tooltip-placement="bottom"
+         tooltip="{{'global.form.redo' | translate}}"
+         tooltip-popup-delay="500"
+         ng-hide="isPipelineRunning || previewMode || snapshotMode"
+         ng-if="isAuthorized([userRoles.admin, userRoles.creator]) && common.sdcExecutionMode != pipelineConstant.SLAVE"
+         ng-disabled="!canRedo()"
+         ng-click="redo()">
+        <span class="fa fa-repeat fa-14x"></span>
+      </a>
+
+      <a class="btn btn-link icon-button"
+         tooltip-placement="bottom"
          tooltip="{{selectedType === pipelineConstant.STAGE_INSTANCE ?
           ('global.form.deleteStage' | translate) + ' ' + selectedObject.uiInfo.label : ('global.form.deleteStream' | translate)}}"
          tooltip-popup-delay="500"
