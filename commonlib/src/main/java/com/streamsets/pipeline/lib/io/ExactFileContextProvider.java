@@ -149,16 +149,12 @@ public class ExactFileContextProvider implements FileContextProvider {
 
   @Override
   public void close() {
-    LOG.debug("Closing files: {}", getFileKeys());
+    LOG.debug("Closing files: {}", fileKeys);
     for (FileContext fileContext : fileContexts) {
-      LiveFile file = null;
       try {
-        if (fileContext.hasReader()) {
-          file = fileContext.getReader().getLiveFile();
-          fileContext.getReader().close();
-        }
+        fileContext.close();
       } catch (IOException ex) {
-        LOG.warn("Could not close '{}': {}", file, ex.getMessage(), ex);
+        LOG.warn("Could not close '{}': {}", fileContext, ex.getMessage(), ex);
       }
     }
   }

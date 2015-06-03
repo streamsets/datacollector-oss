@@ -70,6 +70,7 @@ public enum LogRollModeFactory implements RollModeFactory {
       this.liveFileName = liveFileName;
     }
 
+
     @Override
     public String getLiveFileName() {
       Utils.checkNotNull(liveFileName, "liveFileName");
@@ -112,7 +113,7 @@ public enum LogRollModeFactory implements RollModeFactory {
 
     @Override
     public String toString() {
-      return "LogRollMode[" + name() + "]";
+      return name();
     }
 
   }

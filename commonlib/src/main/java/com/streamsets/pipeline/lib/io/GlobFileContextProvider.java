@@ -11,13 +11,14 @@ import com.streamsets.pipeline.lib.executor.SafeScheduledExecutorService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.Closeable;
 import java.io.IOException;
 import java.nio.charset.Charset;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.LinkedHashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -25,19 +26,39 @@ import java.util.Set;
 public class GlobFileContextProvider implements FileContextProvider {
   private static final Logger LOG = LoggerFactory.getLogger(GlobFileContextProvider.class);
 
-  private static class GlobFileInfo {
+  private static class GlobFileInfo implements Closeable {
     private final MultiFileInfo globFileInfo;
     private final FileFinder fileFinder;
+    private final Path finderPath;
 
+    // if scan interval is zero the GlobFileInfo will work synchronously and it won't require an executor
     public GlobFileInfo(MultiFileInfo globFileInfo, SafeScheduledExecutorService executor, int scanIntervalSecs) {
       this.globFileInfo = globFileInfo;
-      Path path = Paths.get(globFileInfo.getFileFullPath());
-      this.fileFinder = (scanIntervalSecs == 0) ? new SynchronousFileFinder(path)
-                                                : new AsynchronousFileFinder(path, scanIntervalSecs, executor);
+      finderPath = Paths.get(globFileInfo.getFileFullPath());
+      this.fileFinder = (scanIntervalSecs == 0) ? new SynchronousFileFinder(finderPath)
+                                                : new AsynchronousFileFinder(finderPath, scanIntervalSecs, executor);
     }
 
     public MultiFileInfo getFileInfo(Path path) {
       return new MultiFileInfo(globFileInfo, path.toString());
+    }
+
+    public Set<Path> find() throws IOException {
+      return fileFinder.find();
+    }
+
+    public boolean forget(MultiFileInfo multiFileInfo) {
+      return fileFinder.forget(Paths.get(multiFileInfo.getFileFullPath()));
+    }
+
+    @Override
+    public void close() throws IOException {
+      fileFinder.close();
+    }
+
+    @Override
+    public String toString() {
+      return Utils.format("GlobFileInfo [finderPath='{}']", finderPath);
     }
   }
 
@@ -50,14 +71,14 @@ public class GlobFileContextProvider implements FileContextProvider {
   private final FileEventPublisher eventPublisher;
 
   private final List<FileContext> fileContexts;
-  private final Set<String> fileKeys;
   private int startingIdx;
   private int currentIdx;
   private int loopIdx;
 
   public GlobFileContextProvider(List<MultiFileInfo> fileInfos, int scanIntervalSecs, Charset charset, int maxLineLength,
       PostProcessingOptions postProcessing, String archiveDir, FileEventPublisher eventPublisher) throws IOException {
-    executor = new SafeScheduledExecutorService(fileInfos.size() / 3 + 1, "FileFinder");
+    // if scan interval is zero the GlobFileInfo will work synchronously and it won't require an executor
+    executor = (scanIntervalSecs == 0) ? null : new SafeScheduledExecutorService(fileInfos.size() / 3 + 1, "FileFinder");
     globFileInfos = new ArrayList<>(fileInfos.size());
     for (MultiFileInfo fileInfo : fileInfos) {
       globFileInfos.add(new GlobFileInfo(fileInfo, executor, scanIntervalSecs));
@@ -69,19 +90,34 @@ public class GlobFileContextProvider implements FileContextProvider {
     this.eventPublisher = eventPublisher;
 
     this.fileContexts = new ArrayList<>();
-    fileKeys = new LinkedHashSet<>();
     startingIdx = 0;
-    LOG.debug("Opening files: {}", fileKeys);
+    LOG.debug("Created");
   }
 
-  private void updateFileContexts() throws IOException {
+  private Map<FileContext, GlobFileInfo> fileToGlobFile = new HashMap<>();
+
+  private void findNewFileContexts() throws IOException {
     for (GlobFileInfo globfileInfo : globFileInfos) {
-      Set<Path> found = globfileInfo.fileFinder.find();
+      Set<Path> found = globfileInfo.find();
       for (Path path : found) {
         FileContext fileContext = new FileContext(globfileInfo.getFileInfo(path), charset, maxLineLength,
                                                   postProcessing, archiveDir, eventPublisher);
         fileContexts.add(fileContext);
-        fileKeys.add(path.toString());
+        fileToGlobFile.put(fileContext, globfileInfo);
+        LOG.debug("Found '{}'", fileContext);
+      }
+    }
+  }
+
+  private void purgeFileContexts() throws IOException {
+    Iterator<FileContext> iterator = fileContexts.iterator();
+    while (iterator.hasNext()) {
+      FileContext fileContext = iterator.next();
+      if (!fileContext.isActive()) {
+        fileContext.close();
+        iterator.remove();
+        fileToGlobFile.get(fileContext).forget(fileContext.getMultiFileInfo());
+        LOG.debug("Removed '{}'", fileContext);
       }
     }
   }
@@ -99,9 +135,12 @@ public class GlobFileContextProvider implements FileContextProvider {
   @Override
   public void setOffsets(Map<String, String> offsets) throws IOException {
     Utils.checkNotNull(offsets, "offsets");
+    LOG.trace("setOffsets()");
 
     // we look for new files only here
-    updateFileContexts();
+    findNewFileContexts();
+    // we purge file only here
+    purgeFileContexts();
 
     // retrieve file:offset for each directory
     for (FileContext fileContext : fileContexts) {
@@ -132,6 +171,7 @@ public class GlobFileContextProvider implements FileContextProvider {
    */
   @Override
   public Map<String, String> getOffsets() throws IOException {
+    LOG.trace("getOffsets()");
     Map<String, String> map = new HashMap<>();
     // produce file:offset for each directory taking into account a current reader and its file state.
     for (FileContext fileContext : fileContexts) {
@@ -166,16 +206,20 @@ public class GlobFileContextProvider implements FileContextProvider {
   @Override
   public FileContext next() {
     loopIdx++;
-    return fileContexts.get(getAndIncrementIdx());
+    FileContext fileContext = fileContexts.get(getAndIncrementIdx());
+    LOG.trace("next(): {}", fileContext);
+    return fileContext;
   }
 
   @Override
   public boolean didFullLoop() {
+    LOG.trace("didFullLoop()");
     return loopIdx >= fileContexts.size();
   }
 
   @Override
   public void startNewLoop() {
+    LOG.trace("startNewLoop()");
     loopIdx = 0;
   }
 
@@ -192,17 +236,22 @@ public class GlobFileContextProvider implements FileContextProvider {
 
   @Override
   public void close() {
-    LOG.debug("Closing files: {}", fileKeys);
-    executor.shutdownNow();
-    for (FileContext fileContext : fileContexts) {
-      LiveFile file = null;
+    LOG.debug("Closed");
+    if (executor != null) {
+      executor.shutdownNow();
+    }
+    for (GlobFileInfo globFileInfo : globFileInfos) {
       try {
-        if (fileContext.hasReader()) {
-          file = fileContext.getReader().getLiveFile();
-          fileContext.getReader().close();
-        }
+        globFileInfo.close();
       } catch (IOException ex) {
-        LOG.warn("Could not close '{}': {}", file, ex.getMessage(), ex);
+        LOG.warn("Could not close '{}': {}", globFileInfo, ex.getMessage(), ex);
+      }
+    }
+    for (FileContext fileContext : fileContexts) {
+      try {
+        fileContext.close();
+      } catch (IOException ex) {
+        LOG.warn("Could not close '{}': {}", fileContext, ex.getMessage(), ex);
       }
     }
   }

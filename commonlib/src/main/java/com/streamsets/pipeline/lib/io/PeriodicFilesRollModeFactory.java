@@ -98,6 +98,10 @@ public class PeriodicFilesRollModeFactory implements RollModeFactory {
       return regexPattern;
     }
 
+    @Override
+    public String toString() {
+      return "PERIODIC_PATTERN";
+    }
   }
 
 }
