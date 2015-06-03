@@ -32,12 +32,13 @@
           <dd>For example, ${str:endsWith("32403-1001", "1001")} returns: true.</dd>
         </dlentry>
         <dlentry>
-          <dt>str:regexCapture("&lt;string>", &lt;regex pattern>, &lt;group></dt>
+          <dt>str:regexCapture("&lt;string>", &lt;regEx>, &lt;group>)</dt>
           <dd>Parses a complex string into groups based on a Java regex pattern and returns the
             specified group.</dd>
           <dd>Uses the following arguments:<ul id="ul_fy1_qbx_1r">
               <li>string - The string that contains a pattern of characters.</li>
-              <li>regex pattern - The Java regex pattern to parse the string into groups.</li>
+              <li>regEx - Regular expression that describes the pattern of the string, separating it
+                into groups.</li>
               <li>group - The number of the group to return, where 1 represents the first group, 2
                 represents the second group, etc. 0 returns the entire string.</li>
             </ul></dd>
@@ -94,7 +95,7 @@
           <dd>For example, ${str:toLower("FALSE")} returns: false.</dd>
         </dlentry>
         <dlentry>
-          <dt>str:toUpper("string>")</dt>
+          <dt>str:toUpper("&lt;string>")</dt>
           <dd>Converts string data to all capital letters. </dd>
           <dd>Uses the following argument:<ul id="ul_std_jnk_br">
               <li>string - The string to capitalize.</li>

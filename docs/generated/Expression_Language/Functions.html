@@ -2,7 +2,7 @@
 <!DOCTYPE html
   SYSTEM "about:legacy-compat">
 <html xml:lang="en-us" lang="en-us">
-<head><meta name="description" content="The expression language provides the following types of functions: Record functions Error functions String functions Miscellaneous functions Use record functions to determine information about a ..."></meta><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><meta name="copyright" content="(C) Copyright 2005"></meta><meta name="DC.rights.owner" content="(C) Copyright 2005"></meta><meta name="DC.Type" content="concept"></meta><meta name="DC.Title" content="Functions"></meta><meta name="abstract" content="The expression language provides the following types of functions:"></meta><meta name="description" content="The expression language provides the following types of functions:"></meta><meta name="DC.Relation" scheme="URI" content="../Expression_Language/ExpressionLanguage_title.html"></meta><meta name="DC.Format" content="XHTML"></meta><meta name="DC.Identifier" content="concept_lhz_pyp_1r"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/commonltr.css"><!----></link><title>Functions</title><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/webhelp_topic.css"><!----></link><link rel="stylesheet" type="text/css" href="../skin.css"></link><script type="text/javascript"><!--
+<head><meta name="description" content="The following table lists all available functions. For details about each function, see the related function type: Function Type Functions General record functions record:attribute('&lt;attribute name&gt;') ..."></meta><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><meta name="copyright" content="(C) Copyright 2005"></meta><meta name="DC.rights.owner" content="(C) Copyright 2005"></meta><meta name="DC.Type" content="concept"></meta><meta name="DC.Title" content="Functions"></meta><meta name="DC.Relation" scheme="URI" content="../Expression_Language/ExpressionLanguage_title.html"></meta><meta name="DC.Format" content="XHTML"></meta><meta name="DC.Identifier" content="concept_lhz_pyp_1r"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/commonltr.css"><!----></link><title>Functions</title><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/webhelp_topic.css"><!----></link><link rel="stylesheet" type="text/css" href="../skin.css"></link><script type="text/javascript"><!--
           
           var prefix = "../index.html";
           
@@ -13,19 +13,163 @@
 <div class="nested0" id="concept_lhz_pyp_1r">
  <h1 class="title topictitle1">Functions</h1>
 
- 
- <div class="body conbody"><p class="shortdesc">The expression language provides the following types of functions:</p>
+ <div class="body conbody">
+  <div class="p">The following table lists all available functions.
+   For details about each function, see the related function type:
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="concept_lhz_pyp_1r__table_ocf_112_gs" class="table" frame="border" border="1" rules="all">
+     
+     
+     <thead class="thead" align="left">
+      <tr class="row">
+       <th class="entry" valign="top" width="33.557046979865774%" id="d13131e37">Function Type</th>
 
-  <ul class="ul" id="concept_lhz_pyp_1r__ul_dxr_wyp_1r">
-   <li class="li">Record functions</li>
+       <th class="entry" valign="top" width="66.44295302013423%" id="d13131e40">Functions</th>
 
-   <li class="li">Error functions</li>
+      </tr>
 
-   <li class="li">String functions</li>
+     </thead>
 
-   <li class="li">Miscellaneous functions</li>
+     <tbody class="tbody">
+      <tr class="row">
+       <td class="entry" valign="top" width="33.557046979865774%" headers="d13131e37 ">General record functions </td>
 
-  </ul>
+       <td class="entry" valign="top" width="66.44295302013423%" headers="d13131e40 ">
+        <div class="p">
+         <ul class="ul" id="concept_lhz_pyp_1r__ul_gdz_wb2_gs">
+          <li class="li">record:attribute('&lt;attribute name&gt;') </li>
+
+          <li class="li">record:creator()</li>
+
+          <li class="li">record:exists('&lt;field path&gt;')</li>
+
+          <li class="li">record:id()</li>
+
+          <li class="li">record:path()</li>
+
+          <li class="li">record:type('&lt;field path&gt;')</li>
+
+          <li class="li">record:value('&lt;field path&gt;')</li>
+
+         </ul>
+
+        </div>
+
+       </td>
+
+      </tr>
+
+      <tr class="row">
+       <td class="entry" valign="top" width="33.557046979865774%" headers="d13131e37 ">Delimited data record functions</td>
+
+       <td class="entry" valign="top" width="66.44295302013423%" headers="d13131e40 ">
+        <ul class="ul" id="concept_lhz_pyp_1r__ul_z2x_jc2_gs">
+         <li class="li">record:dExists('&lt;header&gt;') </li>
+
+         <li class="li">record:dHasDupHeader() </li>
+
+         <li class="li">record:dIndex('&lt;header&gt;')</li>
+
+         <li class="li">record:dIsDupHeader('&lt;header&gt;')</li>
+
+         <li class="li">record:dToMap()</li>
+
+         <li class="li">record:dValue('&lt;header&gt;')</li>
+
+         <li class="li">record:dValueAt(&lt;header index&gt;)</li>
+
+        </ul>
+
+       </td>
+
+      </tr>
+
+      <tr class="row">
+       <td class="entry" valign="top" width="33.557046979865774%" headers="d13131e37 ">Error record functions</td>
+
+       <td class="entry" valign="top" width="66.44295302013423%" headers="d13131e40 ">
+        <ul class="ul" id="concept_lhz_pyp_1r__ul_n1v_z12_gs">
+         <li class="li">record:errorCode()</li>
+
+         <li class="li">record:errorCollectorId()</li>
+
+         <li class="li">record:errorMessage()</li>
+
+         <li class="li">record:errorPipeline()</li>
+
+         <li class="li">record:errorStage()</li>
+
+         <li class="li">record:errorTime()</li>
+
+        </ul>
+
+       </td>
+
+      </tr>
+
+      <tr class="row">
+       <td class="entry" valign="top" width="33.557046979865774%" headers="d13131e37 ">String functions</td>
+
+       <td class="entry" valign="top" width="66.44295302013423%" headers="d13131e40 ">
+        <div class="p">
+         <ul class="ul" id="concept_lhz_pyp_1r__ul_f15_xf2_gs">
+          <li class="li">str:contains("&lt;string&gt;", "&lt;subset&gt;") </li>
+
+          <li class="li">str:endsWith("&lt;string&gt;", "&lt;subset&gt;")</li>
+
+          <li class="li">str:regexCapture("&lt;string&gt;", &lt;regEx&gt;, &lt;group&gt;)</li>
+
+          <li class="li">str:replace("&lt;string&gt;", "&lt;oldChar&gt;", "&lt;newChar&gt;")</li>
+
+          <li class="li">str:replaceAll("&lt;string&gt;", "&lt;regEx&gt;", "&lt;newString&gt;")</li>
+
+          <li class="li">str:startsWith("&lt;string&gt;", "&lt;subset&gt;")</li>
+
+          <li class="li">str:substring("&lt;string&gt;", &lt;beginIndex&gt;, &lt;endIndex&gt;)</li>
+
+          <li class="li">str:toLower("&lt;string&gt;")</li>
+
+          <li class="li">str:toUpper("&lt;string&gt;")</li>
+
+          <li class="li">str:trim("&lt;string&gt;")</li>
+
+          <li class="li">str:truncate("&lt;string&gt;", &lt;length&gt;)</li>
+
+         </ul>
+
+        </div>
+
+       </td>
+
+      </tr>
+
+      <tr class="row">
+       <td class="entry" valign="top" width="33.557046979865774%" headers="d13131e37 ">Miscellaneous functions</td>
+
+       <td class="entry" valign="top" width="66.44295302013423%" headers="d13131e40 ">
+        <ul class="ul" id="concept_lhz_pyp_1r__ul_xks_xg2_gs">
+         <li class="li">emptyList</li>
+
+         <li class="li">emptyMap</li>
+
+         <li class="li">jvm:maxMemory()</li>
+
+         <li class="li">runtime:conf('&lt;runtime property&gt;')</li>
+
+         <li class="li">runtime:loadResource("&lt;file name&gt;", &lt;restricted: true | false&gt;)</li>
+
+         <li class="li">sdc:id()</li>
+
+        </ul>
+
+       </td>
+
+      </tr>
+
+     </tbody>
+
+    </table>
+</div>
+</div>
 
  </div>
 
@@ -349,7 +493,7 @@
 
         
         
-          <dt class="dt dlterm">str:regexCapture("&lt;string&gt;", &lt;regex pattern&gt;, &lt;group&gt;</dt>
+          <dt class="dt dlterm">str:regexCapture("&lt;string&gt;", &lt;regEx&gt;, &lt;group&gt;)</dt>
 
           <dd class="dd">Parses a complex string into groups based on a Java regex pattern and returns the
             specified group.</dd>
@@ -357,7 +501,8 @@
           <dd class="dd">Uses the following arguments:<ul class="ul" id="concept_ahp_f4v_1r__ul_fy1_qbx_1r">
               <li class="li">string - The string that contains a pattern of characters.</li>
 
-              <li class="li">regex pattern - The Java regex pattern to parse the string into groups.</li>
+              <li class="li">regEx - Regular expression that describes the pattern of the string, separating it
+                into groups.</li>
 
               <li class="li">group - The number of the group to return, where 1 represents the first group, 2
                 represents the second group, etc. 0 returns the entire string.</li>
@@ -455,7 +600,7 @@
 
         
         
-          <dt class="dt dlterm">str:toUpper("string&gt;")</dt>
+          <dt class="dt dlterm">str:toUpper("&lt;string&gt;")</dt>
 
           <dd class="dd">Converts string data to all capital letters. </dd>
 
@@ -542,7 +687,7 @@
 
       
    
-    <dt class="dt dlterm">runtime:conf("&lt;runtime configuration name&gt;")</dt>
+    <dt class="dt dlterm">runtime:conf("&lt;runtime property&gt;")</dt>
 
     <dd class="dd">Returns the value for the specified runtime configuration. Use to call a runtime property. </dd>
 

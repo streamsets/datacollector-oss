@@ -2,15 +2,100 @@
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_lhz_pyp_1r">
  <title>Functions</title>
- <shortdesc>The expression language provides the following types of functions:</shortdesc>
  <conbody>
-  <ul id="ul_dxr_wyp_1r">
-   <li><indexterm>expression
-      language<indexterm>functions</indexterm></indexterm><indexterm>functions<indexterm>in the
-      expression language</indexterm></indexterm>Record functions</li>
-   <li>Error functions</li>
-   <li>String functions</li>
-   <li>Miscellaneous functions</li>
-  </ul>
+  <p><indexterm>expression
+     language<indexterm>functions</indexterm></indexterm><indexterm>functions<indexterm>in the
+     expression language</indexterm></indexterm>The following table lists all available functions.
+   For details about each function, see the related function type:<table frame="all" rowsep="1"
+    colsep="1" id="table_ocf_112_gs">
+    <tgroup cols="2">
+     <colspec colname="c1" colnum="1" colwidth="1*"/>
+     <colspec colname="c2" colnum="2" colwidth="1.98*"/>
+     <thead>
+      <row>
+       <entry>Function Type</entry>
+       <entry>Functions</entry>
+      </row>
+     </thead>
+     <tbody>
+      <row>
+       <entry>General record functions </entry>
+       <entry>
+        <p>
+         <ul id="ul_gdz_wb2_gs">
+          <li>record:attribute('&lt;attribute name>') </li>
+          <li>record:creator()</li>
+          <li>record:exists('&lt;field path>')</li>
+          <li>record:id()</li>
+          <li>record:path()</li>
+          <li>record:type('&lt;field path>')</li>
+          <li>record:value('&lt;field path>')</li>
+         </ul>
+        </p>
+       </entry>
+      </row>
+      <row>
+       <entry>Delimited data record functions</entry>
+       <entry>
+        <ul id="ul_z2x_jc2_gs">
+         <li>record:dExists('&lt;header>') </li>
+         <li>record:dHasDupHeader() </li>
+         <li>record:dIndex('&lt;header>')</li>
+         <li>record:dIsDupHeader('&lt;header>')</li>
+         <li>record:dToMap()</li>
+         <li>record:dValue('&lt;header>')</li>
+         <li>record:dValueAt(&lt;header index>)</li>
+        </ul>
+       </entry>
+      </row>
+      <row>
+       <entry>Error record functions</entry>
+       <entry>
+        <ul id="ul_n1v_z12_gs">
+         <li>record:errorCode()</li>
+         <li>record:errorCollectorId()</li>
+         <li>record:errorMessage()</li>
+         <li>record:errorPipeline()</li>
+         <li>record:errorStage()</li>
+         <li>record:errorTime()</li>
+        </ul>
+       </entry>
+      </row>
+      <row>
+       <entry>String functions</entry>
+       <entry>
+        <p>
+         <ul id="ul_f15_xf2_gs">
+          <li>str:contains("&lt;string>", "&lt;subset>") </li>
+          <li>str:endsWith("&lt;string>", "&lt;subset>")</li>
+          <li>str:regexCapture("&lt;string>", &lt;regEx>, &lt;group>)</li>
+          <li>str:replace("&lt;string>", "&lt;oldChar>", "&lt;newChar>")</li>
+          <li>str:replaceAll("&lt;string>", "&lt;regEx>", "&lt;newString>")</li>
+          <li>str:startsWith("&lt;string>", "&lt;subset>")</li>
+          <li>str:substring("&lt;string>", &lt;beginIndex>, &lt;endIndex>)</li>
+          <li>str:toLower("&lt;string>")</li>
+          <li>str:toUpper("&lt;string>")</li>
+          <li>str:trim("&lt;string>")</li>
+          <li>str:truncate("&lt;string>", &lt;length>)</li>
+         </ul>
+        </p>
+       </entry>
+      </row>
+      <row>
+       <entry>Miscellaneous functions</entry>
+       <entry>
+        <ul id="ul_xks_xg2_gs">
+         <li>emptyList</li>
+         <li>emptyMap</li>
+         <li>jvm:maxMemory()</li>
+         <li>runtime:conf('&lt;runtime property>')</li>
+         <li>runtime:loadResource("&lt;file name>", &lt;restricted: true | false>)</li>
+         <li>sdc:id()</li>
+        </ul>
+       </entry>
+      </row>
+     </tbody>
+    </tgroup>
+   </table></p>
  </conbody>
 </concept>
