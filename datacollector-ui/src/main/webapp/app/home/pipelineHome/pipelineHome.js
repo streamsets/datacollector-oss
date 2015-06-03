@@ -19,8 +19,8 @@ angular
         }
       });
   }])
-  .controller('PipelineHomeController', function ($scope, $rootScope, $routeParams, $timeout, api, configuration, _, $q, $modal,
-                                          $localStorage, pipelineService, pipelineConstant, visibilityBroadcaster,
+  .controller('PipelineHomeController', function ($scope, $rootScope, $routeParams, $timeout, api, configuration, _, $q,
+                                          $modal, $localStorage, pipelineService, pipelineConstant, visibilityBroadcaster,
                                           $translate, contextHelpService, $location, authService, userRoles, Analytics) {
     var routeParamPipelineName = $routeParams.pipelineName,
       configTimeout,
@@ -41,7 +41,10 @@ angular
       webSocketMetricsURL = webSocketBaseURL + '/rest/v1/webSocket?type=metrics',
       metricsWebSocket,
       webSocketAlertsURL = webSocketBaseURL + '/rest/v1/webSocket?type=alerts',
-      alertsWebSocket;
+      alertsWebSocket,
+      archive = [],
+      currArchivePos = null,
+      archiveOp = false;
 
     configuration.init().then(function() {
       if(configuration.isAnalyticsEnabled()) {
@@ -557,7 +560,34 @@ angular
         if(configuration.isAnalyticsEnabled()) {
           Analytics.trackEvent(category, action, label, value);
         }
+      },
+
+      undo: function() {
+        if ($scope.canUndo()){
+          currArchivePos -= 1;
+          revert(currArchivePos);
+          return true;
+        }
+        return false;
+      },
+
+      redo: function() {
+        if ($scope.canRedo()){
+          currArchivePos += 1;
+          revert(currArchivePos);
+          return true;
+        }
+        return false;
+      },
+
+      canUndo: function() {
+        return currArchivePos > 0;
+      },
+
+      canRedo: function() {
+        return currArchivePos < archive.length-1;
       }
+
     });
 
     $rootScope.common.errors = [];
@@ -651,6 +681,10 @@ angular
           var config = results[0].data,
             rules = results[1].data;
           $rootScope.common.errors = [];
+
+          archive = [];
+          currArchivePos = null;
+
           updateGraph(config, rules);
           updateDetailPane({
             selectedObject: undefined,
@@ -661,6 +695,47 @@ angular
           $rootScope.common.errors = [resp.data];
         });
     };
+
+
+    /**
+     * Revert the changes.
+     *
+     * @param revertToPos
+     */
+    var revert = function(revertToPos) {
+      var uuid = $scope.pipelineConfig.uuid;
+      $scope.pipelineConfig = angular.copy(archive[revertToPos]);
+      $scope.pipelineConfig.uuid = uuid;
+      archiveOp = true;
+    };
+
+    /**
+     * Add to archive
+     *
+     */
+    var addToArchive = function() {
+      if(archiveOp) {
+        archiveOp = false;
+        return;
+      }
+
+      //Archiving the current state of the variables
+      if (archive.length - 1 > currArchivePos){
+        //Cutting off the end of the archive if you were in the middle of your archive and made a change
+        var diff = archive.length - currArchivePos - 1;
+        archive.splice(currArchivePos+1, diff);
+      }
+
+      archive.push(angular.copy($scope.pipelineConfig));
+
+      if(archive.length > 10) {
+        //Store only last 10 changes
+        archive.shift();
+      }
+
+      currArchivePos = archive.length -1;
+    };
+
 
     /**
      * Save Updates
@@ -733,6 +808,8 @@ angular
       $scope.pipelineConfig = pipelineConfig || {};
       $scope.activeConfigInfo = $rootScope.$storage.activeConfigInfo = pipelineConfig.info;
       $scope.pipelineRules = pipelineRules;
+
+      addToArchive($scope.pipelineConfig);
 
       //Initialize the pipeline config
       if(!$scope.pipelineConfig.uiInfo) {
