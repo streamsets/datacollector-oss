@@ -66,24 +66,21 @@
                                     <entry>Number of seconds to wait before sending a batch.</entry>
                                 </row>
                                 <row>
-                                    <entry>File Sets to Tail</entry>
+                                    <entry>File to Tail</entry>
                                     <entry>Directories and sets of files to process. Click the
                                             <uicontrol>Add</uicontrol> icon to enter additional sets
-                                        of information.</entry>
+                                        of information. </entry>
                                 </row>
                                 <row>
-                                    <entry>Tag</entry>
-                                    <entry>
-                                        <draft-comment author="Loretta">come back to
-                                            this.</draft-comment>
-                                    </entry>
+                                    <entry>Path</entry>
+                                    <entry>Full path to the active file to tail. <draft-comment
+                                            author="Loretta">Fro Active File doc previously: Static
+                                            file name for the active file that contains the latest
+                                            data from the server.<p>Not used for Periodic
+                                            Files.</p></draft-comment></entry>
                                 </row>
                                 <row>
-                                    <entry>Directory</entry>
-                                    <entry>Directory where the source files reside.</entry>
-                                </row>
-                                <row>
-                                    <entry>File Naming <xref
+                                    <entry>Naming <xref
                                             href="FileTail-FileProcessing.dita#concept_trt_thq_5r">
                                             <image href="../Graphics/icon_moreInfo.png" scale="10"
                                                 id="image_ckc_4ks_2s"/></xref></entry>
@@ -92,13 +89,7 @@
                                         names.</entry>
                                 </row>
                                 <row>
-                                    <entry>Active File</entry>
-                                    <entry>Static file name for the active file that contains the
-                                        latest data from the server.<p>Not used for Periodic
-                                            Files.</p></entry>
-                                </row>
-                                <row>
-                                    <entry>Periodic File Pattern</entry>
+                                    <entry>Pattern</entry>
                                     <entry>Regular expression that defines the file name pattern
                                         used to create files. <p>You can use UNIX-style wildcards,
                                             such as an asterisk or question mark. </p><p>Available
@@ -116,6 +107,14 @@
                                         ignores this property. It starts where it left off
                                         regardless of the file name unless you reset the origin.
                                     </entry>
+                                </row>
+                                <row>
+                                    <entry>Tag <xref
+                                            href="FileTail-TagAttribute.dita">
+                                            <image href="../Graphics/icon_moreInfo.png" scale="10"
+                                                id="image_gs4_vnx_fs"/></xref></entry>
+                                    <entry>An optional attribute defined for the record to help you
+                                        differentiate between different sets of records. </entry>
                                 </row>
                             </tbody>
                         </tgroup>

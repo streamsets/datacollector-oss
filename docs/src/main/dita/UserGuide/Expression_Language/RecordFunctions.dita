@@ -10,9 +10,10 @@
    following general record functions:</p>
   <dl>
    <dlentry>
-    <dt>record:attribute('&lt;attribute name'>)</dt>
-    <dd>Returns the value of the specified record attribute. <draft-comment author="Loretta">what's
-      this? </draft-comment></dd>
+    <dt>record:attribute('&lt;attribute name>')</dt>
+    <dd>Returns the value of the specified record attribute. Use to return data, for example, for
+     the "tag" attribute that you set using the File Tail origin. </dd>
+    <dd>Return type: String.</dd>
    </dlentry>
    <dlentry>
     <dt>record:creator()</dt>

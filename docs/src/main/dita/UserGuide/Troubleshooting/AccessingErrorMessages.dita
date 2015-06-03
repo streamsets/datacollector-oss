@@ -15,8 +15,6 @@
      <dt>Pipeline configuration issues</dt>
      <dd>The <ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
       console provides guidance and error details in the UI as follows:<ul id="ul_ht3_cml_2s">
-       <li>Required properties are outlined in green.</li>
-       <li>Required properties that are not defined ar outlined in red.</li>
        <li>Issues found by implicit validation display in the Issues list in the console.</li>
        <li>In addition, an error icon displays at the stage where the problem occurs or on the
         canvas for pipeline configuration issues. </li>
