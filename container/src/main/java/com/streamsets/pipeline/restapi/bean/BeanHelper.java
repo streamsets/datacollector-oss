@@ -645,12 +645,13 @@ public class BeanHelper {
     if(elFunctionDefinition == null) {
       return null;
     }
-    List<ElFunctionDefinitionJson> elFunctionDefinitionJsons =
-      new ArrayList<>(elFunctionDefinition.size());
+    Map<String, ElFunctionDefinitionJson> elFunctionDefinitionJsons =
+      new HashMap<>(elFunctionDefinition.size());
     for(ElFunctionDefinition e : elFunctionDefinition) {
-      elFunctionDefinitionJsons.add(new ElFunctionDefinitionJson(e));
+      elFunctionDefinitionJsons.put(e.getName(), new ElFunctionDefinitionJson(e));
     }
-    return elFunctionDefinitionJsons;
+
+    return new ArrayList(elFunctionDefinitionJsons.values());
   }
 
   public static List<ElConstantDefinitionJson> wrapElConstantDefinitions(
@@ -658,12 +659,12 @@ public class BeanHelper {
     if(elConstantDefinition == null) {
       return null;
     }
-    List<ElConstantDefinitionJson> elConstantDefinitionJsons =
-      new ArrayList<>(elConstantDefinition.size());
+    Map<String, ElConstantDefinitionJson> elConstantDefinitionJsons =
+      new HashMap<>(elConstantDefinition.size());
     for(ElConstantDefinition e : elConstantDefinition) {
-      elConstantDefinitionJsons.add(new ElConstantDefinitionJson(e));
+      elConstantDefinitionJsons.put(e.getName(), new ElConstantDefinitionJson(e));
     }
-    return elConstantDefinitionJsons;
+    return new ArrayList<>(elConstantDefinitionJsons.values());
   }
 
   public static List<ElFunctionArgumentDefinition> unwrapElFunctionArgumentDefinitions(
