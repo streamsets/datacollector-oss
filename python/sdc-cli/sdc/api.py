@@ -8,11 +8,11 @@ import urlparse
 
 # create logger
 logger = logging.getLogger(__name__)
-logger.setLevel(logging.DEBUG)
+logger.setLevel(logging.INFO)
 
 # create console handler and set level to debug
 ch = logging.StreamHandler()
-ch.setLevel(logging.DEBUG)
+ch.setLevel(logging.INFO)
 
 # create formatter
 formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
@@ -61,7 +61,8 @@ class DataCollector:
 
     def _auth_form(self, sdc_user, sdc_password):
         credentials = {'j_username': sdc_user, 'j_password': sdc_password}
-        logger.info('using login url %s' % self._login_url)
+        logger.debug('using login url %s' % self._login_url)
+        logger.debug('using username / password: %s / %s' % (sdc_user, sdc_password))
         response = self._session.get(self._login_url, params=credentials)
 
         if response.status_code != requests.codes.ok:
