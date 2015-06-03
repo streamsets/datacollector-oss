@@ -534,14 +534,6 @@ public class PipelineConfigurationValidator {
               confDef.getName(), ValidationError.VALIDATION_0009,
               confDef.getType()));
             preview = false;
-          } else {
-            String val = (String) conf.getValue();
-            if(val.isEmpty()) {
-              issues.add(issueCreator.createConfigIssue(stageConf.getInstanceName(), confDef.getGroup(),
-                confDef.getName(), ValidationError.VALIDATION_0007,
-                confDef.getType()));
-              preview = false;
-            }
           }
           break;
         case CHARACTER:
