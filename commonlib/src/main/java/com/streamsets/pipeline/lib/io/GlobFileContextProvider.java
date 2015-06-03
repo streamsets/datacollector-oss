@@ -1,0 +1,210 @@
+/**
+ * (c) 2015 StreamSets, Inc. All rights reserved. May not
+ * be copied, modified, or distributed in whole or part without
+ * written consent of StreamSets, Inc.
+ */
+package com.streamsets.pipeline.lib.io;
+
+import com.streamsets.pipeline.api.impl.Utils;
+import com.streamsets.pipeline.config.PostProcessingOptions;
+import com.streamsets.pipeline.lib.executor.SafeScheduledExecutorService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.io.IOException;
+import java.nio.charset.Charset;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
+public class GlobFileContextProvider implements FileContextProvider {
+  private static final Logger LOG = LoggerFactory.getLogger(GlobFileContextProvider.class);
+
+  private static class GlobFileInfo {
+    private final MultiFileInfo globFileInfo;
+    private final FileFinder fileFinder;
+
+    public GlobFileInfo(MultiFileInfo globFileInfo, SafeScheduledExecutorService executor, int scanIntervalSecs) {
+      this.globFileInfo = globFileInfo;
+      Path path = Paths.get(globFileInfo.getFileFullPath());
+      this.fileFinder = (scanIntervalSecs == 0) ? new SynchronousFileFinder(path)
+                                                : new AsynchronousFileFinder(path, scanIntervalSecs, executor);
+    }
+
+    public MultiFileInfo getFileInfo(Path path) {
+      return new MultiFileInfo(globFileInfo, path.toString());
+    }
+  }
+
+  private final List<GlobFileInfo> globFileInfos;
+  private final SafeScheduledExecutorService executor;
+  private final Charset charset;
+  private final int maxLineLength;
+  private final PostProcessingOptions postProcessing;
+  private final String archiveDir;
+  private final FileEventPublisher eventPublisher;
+
+  private final List<FileContext> fileContexts;
+  private final Set<String> fileKeys;
+  private int startingIdx;
+  private int currentIdx;
+  private int loopIdx;
+
+  public GlobFileContextProvider(List<MultiFileInfo> fileInfos, int scanIntervalSecs, Charset charset, int maxLineLength,
+      PostProcessingOptions postProcessing, String archiveDir, FileEventPublisher eventPublisher) throws IOException {
+    executor = new SafeScheduledExecutorService(fileInfos.size() / 3 + 1, "FileFinder");
+    globFileInfos = new ArrayList<>(fileInfos.size());
+    for (MultiFileInfo fileInfo : fileInfos) {
+      globFileInfos.add(new GlobFileInfo(fileInfo, executor, scanIntervalSecs));
+    }
+    this.charset = charset;
+    this.maxLineLength = maxLineLength;
+    this.postProcessing = postProcessing;
+    this.archiveDir = archiveDir;
+    this.eventPublisher = eventPublisher;
+
+    this.fileContexts = new ArrayList<>();
+    fileKeys = new LinkedHashSet<>();
+    startingIdx = 0;
+    LOG.debug("Opening files: {}", fileKeys);
+  }
+
+  private void updateFileContexts() throws IOException {
+    for (GlobFileInfo globfileInfo : globFileInfos) {
+      Set<Path> found = globfileInfo.fileFinder.find();
+      for (Path path : found) {
+        FileContext fileContext = new FileContext(globfileInfo.getFileInfo(path), charset, maxLineLength,
+                                                  postProcessing, archiveDir, eventPublisher);
+        fileContexts.add(fileContext);
+        fileKeys.add(path.toString());
+      }
+    }
+  }
+
+  /**
+   * Sets the file offsets to use for the next read. To work correctly, the last return offsets should be used or
+   * an empty <code>Map</code> if there is none.
+   * <p/>
+   * If a reader is already live, the corresponding set offset is ignored as we cache all the contextual information
+   * of live readers.
+   *
+   * @param offsets directory offsets.
+   * @throws java.io.IOException thrown if there was an IO error while preparing file offsets.
+   */
+  @Override
+  public void setOffsets(Map<String, String> offsets) throws IOException {
+    Utils.checkNotNull(offsets, "offsets");
+
+    // we look for new files only here
+    updateFileContexts();
+
+    // retrieve file:offset for each directory
+    for (FileContext fileContext : fileContexts) {
+      String offset = offsets.get(fileContext.getMultiFileInfo().getFileKey());
+      LiveFile file = null;
+      long fileOffset = 0;
+      if (offset != null && !offset.isEmpty()) {
+        String[] split = offset.split("::", 2);
+        file = LiveFile.deserialize(split[1]).refresh();
+        fileOffset = Long.parseLong(split[0]);
+      }
+      fileContext.setStartingCurrentFileName(file);
+      fileContext.setStartingOffset(fileOffset);
+      if (LOG.isTraceEnabled()) {
+        LOG.trace("Setting offset: directory '{}', file '{}', offset '{}'",
+                  fileContext.getMultiFileInfo().getFileFullPath(), file, fileOffset);
+      }
+    }
+    currentIdx = startingIdx;
+    startNewLoop();
+  }
+
+  /**
+   * Returns the current file offsets. The returned offsets should be set before the next read.
+   *
+   * @return the current file offsets.
+   * @throws java.io.IOException thrown if there was an IO error while preparing file offsets.
+   */
+  @Override
+  public Map<String, String> getOffsets() throws IOException {
+    Map<String, String> map = new HashMap<>();
+    // produce file:offset for each directory taking into account a current reader and its file state.
+    for (FileContext fileContext : fileContexts) {
+      LiveFile file;
+      long fileOffset;
+      if (!fileContext.hasReader()) {
+        file = fileContext.getStartingCurrentFileName();
+        fileOffset = fileContext.getStartingOffset();
+      } else if (fileContext.getReader().hasNext()) {
+        file = fileContext.getReader().getLiveFile();
+        fileOffset = fileContext.getReader().getOffset();
+      } else {
+        file = fileContext.getReader().getLiveFile();
+        fileOffset = Long.MAX_VALUE;
+      }
+      String offset = (file == null) ? "" : Long.toString(fileOffset) + "::" + file.serialize();
+      map.put(fileContext.getMultiFileInfo().getFileKey(), offset);
+      if (LOG.isTraceEnabled()) {
+        LOG.trace("Reporting offset: directory '{}', pattern: '{}', file '{}', offset '{}'",
+                  fileContext.getMultiFileInfo().getFileFullPath(),
+                  fileContext.getRollMode().getPattern(),
+                  file,
+                  fileOffset
+        );
+      }
+    }
+    startingIdx = getAndIncrementIdx();
+    loopIdx = 0;
+    return map;
+  }
+
+  @Override
+  public FileContext next() {
+    loopIdx++;
+    return fileContexts.get(getAndIncrementIdx());
+  }
+
+  @Override
+  public boolean didFullLoop() {
+    return loopIdx >= fileContexts.size();
+  }
+
+  @Override
+  public void startNewLoop() {
+    loopIdx = 0;
+  }
+
+  private int getAndIncrementIdx() {
+    int idx = currentIdx;
+    incrementIdx();
+    return idx;
+  }
+
+  private int incrementIdx() {
+    currentIdx = (fileContexts.isEmpty()) ? 0 : (currentIdx + 1) % fileContexts.size();
+    return currentIdx;
+  }
+
+  @Override
+  public void close() {
+    LOG.debug("Closing files: {}", fileKeys);
+    executor.shutdownNow();
+    for (FileContext fileContext : fileContexts) {
+      LiveFile file = null;
+      try {
+        if (fileContext.hasReader()) {
+          file = fileContext.getReader().getLiveFile();
+          fileContext.getReader().close();
+        }
+      } catch (IOException ex) {
+        LOG.warn("Could not close '{}': {}", file, ex.getMessage(), ex);
+      }
+    }
+  }
+
+}

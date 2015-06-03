@@ -5,6 +5,7 @@
  */
 package com.streamsets.pipeline.lib.io;
 
+import com.google.common.collect.ImmutableSet;
 import com.streamsets.pipeline.config.FileRollMode;
 import com.streamsets.pipeline.config.PostProcessingOptions;
 import org.junit.Assert;
@@ -12,11 +13,14 @@ import org.junit.Test;
 
 import java.io.File;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.UUID;
 
-public class TestFileContextProvider {
+public class TestGlobFileContextProvider {
 
   @Test
   public void testProvider() throws Exception {
@@ -35,40 +39,63 @@ public class TestFileContextProvider {
       }
     };
 
-    FileContextProvider
-        provider = new ExactFileContextProvider(Arrays.asList(di1, di2, di3), StandardCharsets.UTF_8, 1024,
-                                                           PostProcessingOptions.NONE, null, eventPublisher);
+    GlobFileContextProvider provider =
+        new GlobFileContextProvider(Arrays.asList(di1, di2, di3), 1, StandardCharsets.UTF_8, 1024,
+                                    PostProcessingOptions.NONE, null, eventPublisher);
 
 
-    // do full loop
+    // do full loop with no files
+    Thread.sleep(2000);
+    provider.setOffsets(new HashMap<String, String>());
+    Assert.assertTrue(provider.didFullLoop());
+    provider.getOffsets();
+
+
+    // do full loop with one file
+    Files.createFile(file1.toPath());
+    Thread.sleep(2000);
     provider.setOffsets(new HashMap<String, String>());
     Assert.assertFalse(provider.didFullLoop());
-    Assert.assertEquals(di1, provider.next().getMultiFileInfo());
-    Assert.assertFalse(provider.didFullLoop());
-    Assert.assertEquals(di2, provider.next().getMultiFileInfo());
-    Assert.assertFalse(provider.didFullLoop());
-    Assert.assertEquals(di3, provider.next().getMultiFileInfo());
+    Assert.assertEquals(di1, provider.next().getMultiFileInfo().getSource());
     Assert.assertTrue(provider.didFullLoop());
+    provider.getOffsets();
+
+    // do full loop with 3 files
+    Files.createFile(file2.toPath());
+    Files.createFile(file3.toPath());
+    Thread.sleep(2000);
+    Set<MultiFileInfo> expected = ImmutableSet.of(di1, di2, di3);
+    Set<MultiFileInfo> got = new HashSet<>();
+    provider.setOffsets(new HashMap<String, String>());
+    Assert.assertFalse(provider.didFullLoop());
+    got.add(provider.next().getMultiFileInfo().getSource());
+    Assert.assertFalse(provider.didFullLoop());
+    got.add(provider.next().getMultiFileInfo().getSource());
+    Assert.assertFalse(provider.didFullLoop());
+    got.add(provider.next().getMultiFileInfo().getSource());
+    Assert.assertTrue(provider.didFullLoop());
+    Assert.assertEquals(expected, got);
+
     // test reset loop count
     provider.startNewLoop();
     Assert.assertFalse(provider.didFullLoop());
     provider.getOffsets();
 
-
     // do partial loop
     provider.setOffsets(new HashMap<String, String>());
     Assert.assertFalse(provider.didFullLoop());
-    Assert.assertEquals(di1, provider.next().getMultiFileInfo());
+    provider.next().getMultiFileInfo().getSource();
+    Assert.assertFalse(provider.didFullLoop());
     provider.getOffsets();
 
     // do full loop continuing from partial loop
     provider.setOffsets(new HashMap<String, String>());
     Assert.assertFalse(provider.didFullLoop());
-    Assert.assertEquals(di2, provider.next().getMultiFileInfo());
+    provider.next().getMultiFileInfo().getSource();
     Assert.assertFalse(provider.didFullLoop());
-    Assert.assertEquals(di3, provider.next().getMultiFileInfo());
+    provider.next().getMultiFileInfo().getSource();
     Assert.assertFalse(provider.didFullLoop());
-    Assert.assertEquals(di1, provider.next().getMultiFileInfo());
+    provider.next().getMultiFileInfo().getSource();
     Assert.assertTrue(provider.didFullLoop());
     provider.getOffsets();
 

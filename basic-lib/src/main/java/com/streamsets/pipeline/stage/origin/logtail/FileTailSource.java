@@ -30,6 +30,8 @@ import com.streamsets.pipeline.lib.parser.DataParserException;
 import com.streamsets.pipeline.lib.parser.DataParserFactoryBuilder;
 import com.streamsets.pipeline.lib.parser.log.LogDataFormatValidator;
 import com.streamsets.pipeline.lib.parser.log.RegExConfig;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.IOException;
@@ -47,6 +49,8 @@ import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
 
 public class FileTailSource extends BaseSource {
+  private static final Logger LOG = LoggerFactory.getLogger(FileTailSource.class);
+
   private final DataFormat dataFormat;
   private final String charset;
   private final int maxLineLength;
@@ -171,8 +175,9 @@ public class FileTailSource extends BaseSource {
       }
       if (!dirInfos.isEmpty()) {
         try {
+          int scanIntervalSecs = (getContext().isPreview()) ? 0 : 10;
           multiDirReader = new MultiFileReader(dirInfos, Charset.forName(charset), maxLineLength,
-                                                    postProcessing, archiveDir);
+                                                    postProcessing, archiveDir, true, scanIntervalSecs);
         } catch (IOException ex) {
           issues.add(getContext().createConfigIssue(Groups.FILES.name(), "fileInfos", Errors.TAIL_02, ex.getMessage(), ex));
         }
@@ -225,6 +230,11 @@ public class FileTailSource extends BaseSource {
 
   @Override
   public void destroy() {
+    try {
+      multiDirReader.close();
+    } catch (IOException ex) {
+      LOG.warn("Could not close properly MultiDirectoryReader: {}", ex.getMessage(), ex);
+    }
     super.destroy();
   }
 

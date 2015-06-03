@@ -16,6 +16,7 @@ public class MultiFileInfo {
   private final FileRollMode fileRollMode;
   private final String pattern;
   private final String firstFile;
+  private final MultiFileInfo source;
 
   /**
    * Creates a <code>FileInfo</code>
@@ -31,6 +32,20 @@ public class MultiFileInfo {
     this.fileRollMode = fileRollMode;
     this.pattern = pattern;
     this.firstFile = firstFile;
+    source = null;
+  }
+
+  public MultiFileInfo(MultiFileInfo source, String resolvedPath) {
+    this.tag = source.getTag();
+    this.fileFullPath = resolvedPath;
+    this.fileRollMode = source.getFileRollMode();
+    this.pattern = source.getPattern();
+    this.firstFile = null;
+    this.source = source;
+  }
+
+  public MultiFileInfo getSource() {
+    return source;
   }
 
   public String getFileKey() {
