@@ -104,7 +104,7 @@ public class JdbcSource extends BaseSource {
     Source.Context context = getContext();
 
     if (queryIntervalMillis < 0) {
-      issues.add(getContext().createConfigIssue(Groups.JDBC.name(), QUERY_INTERVAL_EL, Errors.JDBC_09));
+      issues.add(getContext().createConfigIssue(Groups.JDBC.name(), QUERY_INTERVAL_EL, Errors.JDBC_07));
     }
 
     if (!driverClassName.isEmpty()) {
@@ -137,17 +137,20 @@ public class JdbcSource extends BaseSource {
             try {
               resultSet.findColumn(offsetColumn);
             } catch (SQLException e) {
+              logSQLException(e);
               issues.add(
                   context.createConfigIssue(Groups.JDBC.name(), OFFSET_COLUMN, Errors.JDBC_02, offsetColumn, query)
               );
             }
           } catch (SQLException e) {
+            logSQLException(e);
             issues.add(
                 context.createConfigIssue(Groups.JDBC.name(), QUERY, Errors.JDBC_04, preparedQuery, e.getMessage())
             );
           }
         }
       } catch (SQLException e) {
+        logSQLException(e);
         issues.add(context.createConfigIssue(Groups.JDBC.name(), CONNECTION_STRING, Errors.JDBC_00, e.getMessage()));
       }
     }
@@ -209,6 +212,7 @@ public class JdbcSource extends BaseSource {
           LOG.debug("Query completed at: {}", lastQueryCompletedTime);
         }
       } catch (SQLException e) {
+        logSQLException(e);
         closeQuietly(connection);
         lastQueryCompletedTime = System.currentTimeMillis();
         LOG.debug("Query failed at: {}", lastQueryCompletedTime);
@@ -245,7 +249,8 @@ public class JdbcSource extends BaseSource {
     try {
       dataSource = new HikariDataSource(config);
     } catch (RuntimeException e) {
-      throw new StageException(Errors.JDBC_07, e.getMessage());
+      LOG.error(Errors.JDBC_06.getMessage(), e);
+      throw new StageException(Errors.JDBC_06, e.getCause().getMessage());
     }
   }
 
@@ -293,6 +298,14 @@ public class JdbcSource extends BaseSource {
       default:
         throw new IllegalStateException(Utils.format("It should never happen. OnError '{}'",
             context.getOnErrorRecord()));
+    }
+  }
+  
+  static void logSQLException(SQLException e) {
+    LOG.error("SQLException: {}", e.getMessage());
+    SQLException next = e.getNextException();
+    if (null != next) {
+      logSQLException(e.getNextException());
     }
   }
 }
