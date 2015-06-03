@@ -9,7 +9,7 @@
         conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> console
       when you configure a pipeline:</p>
    <p>
-      <image href="../Graphics/CanvasConfig.png" id="image_u5b_1mb_rr"/></p>
+      <image href="../Graphics/CanvasConfig.png" id="image_u5b_1mb_rr" scale="80"/></p>
     <table frame="all" rowsep="1" colsep="1" id="table_qwf_byk_sq">
       <tgroup cols="3">
         <colspec colname="c1" colnum="1" colwidth=".5*"/>
@@ -56,17 +56,26 @@
                 stage by name.</p></entry>
           </row>
           <row>
-            <entry><image href="../Graphics/icon_Issues.png" id="image_lmk_p4z_sq" 
-              /></entry>
+            <entry><image href="../Graphics/icon-ConfigMore.png" id="image_mwf_yzw_rr"/></entry>
+            <entry>More icon</entry>
+            <entry>Provides additional actions for the pipeline. Use to reset the origin for the
+              pipeline. Or to view or delete snapshot data.</entry>
+          </row>
+          <row>
+            <entry><image href="../Graphics/icon_Issues.png" id="image_lmk_p4z_sq"/></entry>
             <entry>Issues icon</entry>
             <entry>Displays the number of implicit validation issues in the pipeline. Click to view
               a detailed list of issues found during implicit validation.</entry>
           </row>
           <row>
-            <entry><image href="../Graphics/icon-ConfigMore.png" id="image_mwf_yzw_rr"/></entry>
-            <entry>More icon</entry>
-            <entry>Provides additional actions for the pipeline. Use to reset the origin for the
-              pipeline. Or to view or delete snapshot data.</entry>
+            <entry><image href="../Graphics/icon-ConfigUndo.png" id="image_ppg_542_gs"/></entry>
+            <entry>Undo icon</entry>
+            <entry/>
+          </row>
+          <row>
+            <entry><image href="../Graphics/icon-ConfigRedo.png" id="image_aym_v42_gs"/></entry>
+            <entry/>
+            <entry/>
           </row>
           <row>
             <entry><image href="../Graphics/icon-ConfigDelete.png" id="image_mhh_31x_rr"/></entry>

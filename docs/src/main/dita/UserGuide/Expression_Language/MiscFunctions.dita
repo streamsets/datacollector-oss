@@ -27,7 +27,7 @@
           <codeblock>${jvm:maxMemory() * 0.65}</codeblock></dd>
       </dlentry>
    <dlentry>
-    <dt>runtime:conf("&lt;runtime configuration name>")</dt>
+    <dt>runtime:conf("&lt;runtime property>")</dt>
     <dd>Returns the value for the specified runtime configuration. Use to call a runtime property. </dd>
     <dd>Uses the following argument:<ul id="ul_vqc_2h1_1s">
       <li>runtime configuration name - Name of the configuration property to use. The property must
