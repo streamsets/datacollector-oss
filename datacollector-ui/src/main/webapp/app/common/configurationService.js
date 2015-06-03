@@ -12,7 +12,8 @@ angular.module('dataCollectorApp.common')
       UI_ENABLE_WEB_SOCKET = 'ui.enable.webSocket',
       HTTP_AUTHENTICATION = 'http.authentication',
       SDC_EXECUTION_MODE = 'sdc.execution.mode',
-      CALLBACK_SERVER_URL = 'callback.server.url';
+      CALLBACK_SERVER_URL = 'callback.server.url',
+      UI_UNDO_LIMIT = 'ui.undo.limit';
 
     this.initializeDefer = undefined;
     this.config = undefined;
@@ -143,6 +144,17 @@ angular.module('dataCollectorApp.common')
         return self.config[UI_ENABLE_WEB_SOCKET] === 'true';
       }
       return true;
+    };
+
+    /*
+     * Returns ui.undo.limit configuration value
+     * @returns {*}
+     */
+    this.getUndoLimit = function() {
+      if(self.config && self.config[UI_UNDO_LIMIT] !== undefined) {
+        return self.config[UI_UNDO_LIMIT];
+      }
+      return 10;
     };
 
   });

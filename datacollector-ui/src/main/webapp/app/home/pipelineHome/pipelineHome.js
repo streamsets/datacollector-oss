@@ -42,6 +42,7 @@ angular
       metricsWebSocket,
       webSocketAlertsURL = webSocketBaseURL + '/rest/v1/webSocket?type=alerts',
       alertsWebSocket,
+      undoLimit = 10,
       archive = [],
       currArchivePos = null,
       archiveOp = false;
@@ -605,6 +606,7 @@ angular
         var pipelineStatus = results[0].data;
 
         isWebSocketSupported = (typeof(WebSocket) === "function") && configuration.isWebSocketUseEnabled();
+        undoLimit = configuration.getUndoLimit();
 
         //Definitions
         $scope.pipelineConfigDefinition = pipelineService.getPipelineConfigDefinition();
@@ -703,17 +705,27 @@ angular
      * @param revertToPos
      */
     var revert = function(revertToPos) {
-      var uuid = $scope.pipelineConfig.uuid;
-      $scope.pipelineConfig = angular.copy(archive[revertToPos]);
-      $scope.pipelineConfig.uuid = uuid;
+      var cuuid = $scope.pipelineConfig.uuid,
+        ruuid = $scope.pipelineRules.uuid,
+        ar = archive[revertToPos];
+
+      $scope.pipelineConfig = angular.copy(ar.c);
+      $scope.pipelineConfig.uuid = cuuid;
+
+      $scope.pipelineRules = angular.copy(ar.r);
+      $scope.pipelineRules.uuid = ruuid;
+
       archiveOp = true;
     };
+
 
     /**
      * Add to archive
      *
+     * @param config
+     * @param rules
      */
-    var addToArchive = function() {
+    var addToArchive = function(config, rules) {
       if(archiveOp) {
         archiveOp = false;
         return;
@@ -726,9 +738,12 @@ angular
         archive.splice(currArchivePos+1, diff);
       }
 
-      archive.push(angular.copy($scope.pipelineConfig));
+      archive.push({
+        c: angular.copy(config),
+        r: angular.copy(rules)
+      });
 
-      if(archive.length > 10) {
+      if(archive.length > undoLimit) {
         //Store only last 10 changes
         archive.shift();
       }
@@ -809,8 +824,6 @@ angular
       $scope.activeConfigInfo = $rootScope.$storage.activeConfigInfo = pipelineConfig.info;
       $scope.pipelineRules = pipelineRules;
 
-      addToArchive($scope.pipelineConfig);
-
       //Initialize the pipeline config
       if(!$scope.pipelineConfig.uiInfo) {
         $scope.pipelineConfig.uiInfo = {
@@ -869,6 +882,7 @@ angular
         //First time
         $scope.detailPaneConfig = $scope.selectedObject = $scope.pipelineConfig;
         $scope.detailPaneConfigDefn = $scope.pipelineConfigDefinition;
+        $scope.selectedType = pipelineConstant.PIPELINE;
       } else {
         //Check
 
@@ -876,6 +890,7 @@ angular
           //In case of detail pane is Pipeline Configuration
           $scope.detailPaneConfig = $scope.selectedObject = $scope.pipelineConfig;
           $scope.detailPaneConfigDefn = $scope.pipelineConfigDefinition;
+          $scope.selectedType = pipelineConstant.PIPELINE;
         } else if($scope.selectedType === pipelineConstant.STAGE_INSTANCE) {
           //In case of detail pane is stage instance
           angular.forEach($scope.pipelineConfig.stages, function (stageInstance) {
@@ -887,9 +902,11 @@ angular
           if (selectedStageInstance) {
             $scope.detailPaneConfig = $scope.selectedObject = selectedStageInstance;
             $scope.stageSelected = true;
+            $scope.selectedType = pipelineConstant.STAGE_INSTANCE;
           } else {
             $scope.detailPaneConfig = $scope.selectedObject = $scope.pipelineConfig;
             $scope.detailPaneConfigDefn = $scope.pipelineConfigDefinition;
+            $scope.selectedType = pipelineConstant.PIPELINE;
           }
         }
       }
@@ -908,6 +925,8 @@ angular
           $scope.errorStageConfigDefn = undefined;
         }
       }
+
+      addToArchive($scope.pipelineConfig, $scope.pipelineRules);
 
       $timeout(function() {
         $scope.$broadcast('updateGraph', {
@@ -1252,6 +1271,7 @@ angular
             saveRulesUpdate(rules);
           }
 
+          addToArchive($scope.pipelineConfig, $scope.pipelineRules);
           $scope.$broadcast('updateEdgePreviewIconColor', $scope.pipelineRules, []);
         }).
         error(function(data, status, headers, config) {
@@ -1432,6 +1452,14 @@ angular
         refreshPipelineMetrics();
         pageHidden = false;
       }
+    });
+
+    $scope.$on('bodyUndoKeyPressed', function() {
+      $scope.undo();
+    });
+
+    $scope.$on('bodyRedoKeyPressed', function() {
+      $scope.redo();
     });
 
   });
