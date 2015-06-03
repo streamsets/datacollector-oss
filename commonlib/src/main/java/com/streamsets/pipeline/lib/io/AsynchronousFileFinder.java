@@ -34,6 +34,7 @@ public class AsynchronousFileFinder implements FileFinder {
   private final BlockingQueue<Path> found;
   private final SafeScheduledExecutorService executor;
   private final boolean ownExecutor;
+  private boolean firstFind;
 
   public AsynchronousFileFinder(final Path globPath, int scanIntervalSec) {
     this(globPath, scanIntervalSec, null);
@@ -45,7 +46,8 @@ public class AsynchronousFileFinder implements FileFinder {
     found = new LinkedBlockingDeque<>();
     this.executor = (executor != null) ? executor : new SafeScheduledExecutorService(1, "FileFinder");
     ownExecutor = (executor == null);
-    this.executor.scheduleAtFixedRate(new Runnable() {
+    firstFind = true;
+    Runnable finder = new Runnable() {
       @Override
       public void run() {
         if (found.size() < MAX_QUEUE_SIZE)    {
@@ -60,14 +62,23 @@ public class AsynchronousFileFinder implements FileFinder {
           LOG.error("Found queue is full ('{}' files), skipping finding files for '{}'", MAX_QUEUE_SIZE, globPath);
         }
       }
-    }, 1, scanIntervalSec, TimeUnit.SECONDS);
+    };
+    //doing a first run synchronous to have everything for the initial find.
+    finder.run();
+    this.executor.scheduleAtFixedRate(finder, scanIntervalSec, scanIntervalSec, TimeUnit.SECONDS);
   }
 
   @Override
-  public Set<Path> find() throws IOException {
+  public synchronized Set<Path> find() throws IOException {
     Set<Path> newFound = new HashSet<>();
     if (!found.isEmpty()) {
-      found.drainTo(newFound, MAX_DRAIN_SIZE);
+      if (firstFind) {
+        //the first time we run find() we don't cap the files to return so we have everything there is at the moment
+        firstFind = true;
+        found.drainTo(newFound);
+      } else {
+        found.drainTo(newFound, MAX_DRAIN_SIZE);
+      }
     }
     LOG.debug("Returning '{}' new files for '{}'", newFound.size(), path);
     return newFound;

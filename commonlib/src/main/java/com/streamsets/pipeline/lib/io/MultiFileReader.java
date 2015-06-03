@@ -59,7 +59,8 @@ public class MultiFileReader implements Closeable {
    * @throws IOException thrown if there was an IO error while creating the reader.
    */
   public MultiFileReader(List<MultiFileInfo> fileInfos, Charset charset, int maxLineLength,
-      PostProcessingOptions postProcessing, String archiveDir) throws IOException {
+      PostProcessingOptions postProcessing, String archiveDir, boolean globbing, int scanIntervalSecs)
+      throws IOException {
     Utils.checkNotNull(fileInfos, "fileInfos");
     Utils.checkArgument(!fileInfos.isEmpty(), "fileInfos cannot be empty");
     Utils.checkNotNull(charset, "charset");
@@ -79,8 +80,11 @@ public class MultiFileReader implements Closeable {
       }
     };
 
-    fileContextProvider = new FileContextProvider(fileInfos, charset, maxLineLength, postProcessing, archiveDir,
-                                                  eventPublisher);
+    fileContextProvider = (globbing)
+                          ? new GlobFileContextProvider(fileInfos, scanIntervalSecs, charset, maxLineLength,
+                                                        postProcessing, archiveDir, eventPublisher)
+                          : new ExactFileContextProvider(fileInfos, charset, maxLineLength, postProcessing,
+                                                         archiveDir, eventPublisher);
     open = true;
   }
 
@@ -146,27 +150,29 @@ public class MultiFileReader implements Closeable {
     LiveFileChunk chunk = null;
     boolean exit = false;
     while (!exit) {
-      FileContext fileContext = fileContextProvider.next();
-      LiveFileReader reader = fileContext.getReader();
-      if (reader != null) {
-        if (reader.hasNext()) {
-          chunk = reader.next(0);
-          if (LOG.isTraceEnabled()) {
-            LOG.trace("next(): directory '{}', file '{}', offset '{}' got data '{}'",
-                      fileContext.getMultiFileInfo().getFileFullPath(),
-                      reader.getLiveFile(), reader.getOffset(), chunk != null);
+      if (!fileContextProvider.didFullLoop()) {
+        FileContext fileContext = fileContextProvider.next();
+        LiveFileReader reader = fileContext.getReader();
+        if (reader != null) {
+          if (reader.hasNext()) {
+            chunk = reader.next(0);
+            if (LOG.isTraceEnabled()) {
+              LOG.trace("next(): directory '{}', file '{}', offset '{}' got data '{}'",
+                        fileContext.getMultiFileInfo().getFileFullPath(),
+                        reader.getLiveFile(), reader.getOffset(), chunk != null);
+            }
+          } else {
+            if (LOG.isTraceEnabled()) {
+              LOG.trace("next(): directory '{}', file '{}', offset '{}' EOF reached",
+                        fileContext.getMultiFileInfo().getFileFullPath(),
+                        reader.getLiveFile(), reader.getOffset());
+            }
           }
+          fileContext.releaseReader();
         } else {
           if (LOG.isTraceEnabled()) {
-            LOG.trace("next(): directory '{}', file '{}', offset '{}' EOF reached",
-                      fileContext.getMultiFileInfo().getFileFullPath(),
-                      reader.getLiveFile(), reader.getOffset());
+            LOG.trace("next(): directory '{}', no reader available", fileContext.getMultiFileInfo().getFileFullPath());
           }
-        }
-        fileContext.releaseReader();
-      } else {
-        if (LOG.isTraceEnabled()) {
-          LOG.trace("next(): directory '{}', no reader available", fileContext.getMultiFileInfo().getFileFullPath());
         }
       }
 
@@ -190,7 +196,7 @@ public class MultiFileReader implements Closeable {
   /**
    * Closes all open readers.
    */
-  public void close() {
+  public void close() throws IOException {
     if (open) {
       open = false;
       fileContextProvider.close();
