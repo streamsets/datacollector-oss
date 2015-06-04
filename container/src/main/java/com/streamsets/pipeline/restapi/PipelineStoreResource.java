@@ -75,7 +75,7 @@ public class PipelineStoreResource {
   private static final String MEMORY_LIMIt_ID = "memoryLimitAlertID";
   private static final String MEMORY_LIMIt_TEXT = "Memory limit for pipeline exceeded";
   private static final String MEMORY_LIMIt_METRIC_ID = "pipeline.memoryConsumed.counter";
-  private static final String MEMORY_LIMIt_CONDITION = "${value() > (jvm:maxMemory() * 0.65)}";
+  private static final String MEMORY_LIMIt_CONDITION = "${value() > (jvm:maxMemoryMB() * 0.65)}";
 
 
   private final RuntimeInfo runtimeInfo;

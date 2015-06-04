@@ -412,8 +412,8 @@ public class TestDeDupProcessor {
   }
 
   private long getDefaultMemoryLimitMiB() {
-    double maxMemoryMiB = Runtime.getRuntime().maxMemory() / 1000.0d / 1000.0d;
-    return (long)(maxMemoryMiB * 0.70d);
+    long maxMemoryMiB = Runtime.getRuntime().maxMemory() / 1000 / 1000;
+    return (long)(maxMemoryMiB * 0.65);
   }
 
 // //TO TEST MEMORY USAGE

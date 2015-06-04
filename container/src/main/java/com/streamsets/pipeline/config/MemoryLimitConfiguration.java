@@ -5,6 +5,8 @@
  */
 package com.streamsets.pipeline.config;
 
+import com.streamsets.pipeline.el.JvmEL;
+
 import java.io.Serializable;
 
 public class MemoryLimitConfiguration implements Serializable {
@@ -12,7 +14,7 @@ public class MemoryLimitConfiguration implements Serializable {
   private long memoryLimit;
 
   public MemoryLimitConfiguration() {
-    this(MemoryLimitExceeded.STOP_PIPELINE, PipelineDefConfigs.MEMORY_LIMIT_DEFAULT);
+    this(MemoryLimitExceeded.STOP_PIPELINE, (long) (JvmEL.jvmMaxMemoryMB() * 0.65));
   }
 
   public MemoryLimitConfiguration(MemoryLimitExceeded memoryLimitExceeded, long memoryLimit) {

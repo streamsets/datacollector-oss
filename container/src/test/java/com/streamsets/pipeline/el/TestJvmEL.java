@@ -14,14 +14,14 @@ public class TestJvmEL {
   public void testMaxMemory() throws Exception {
     ELEvaluator eval = new ELEvaluator("x", JvmEL.class);
     ELVariables variables = new ELVariables();
-    Assert.assertTrue(eval.eval(variables, "${jvm:maxMemory()}", Long.class) > 0);
+    Assert.assertTrue(eval.eval(variables, "${jvm:maxMemoryMB()}", Long.class) > 0);
   }
 
   @Test
   public void testJvmELAvailViaRuleELRegistry() throws Exception {
     ELEvaluator eval = new ELEvaluator("x", RuleELRegistry.getRuleELs());
     ELVariables variables = new ELVariables();
-    Assert.assertTrue(eval.eval(variables, "${jvm:maxMemory()}", Long.class) > 0);
+    Assert.assertTrue(eval.eval(variables, "${jvm:maxMemoryMB()}", Long.class) > 0);
   }
 
 }

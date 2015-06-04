@@ -14,6 +14,7 @@ import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.el.ELEvaluator;
 import com.streamsets.pipeline.el.ElConstantDefinition;
 import com.streamsets.pipeline.el.ElFunctionDefinition;
+import com.streamsets.pipeline.el.JvmEL;
 import com.streamsets.pipeline.el.RuntimeEL;
 import com.streamsets.pipeline.lib.el.StringEL;
 import com.streamsets.pipeline.main.RuntimeInfo;
@@ -57,7 +58,7 @@ public class PipelineDefinition {
 
   private static List<ConfigDefinition> createPipelineConfigs(RuntimeInfo runtimeInfo) {
 
-    Class<?>[] elClasses = {RuntimeEL.class, StringEL.class};
+    Class<?>[] elClasses = {RuntimeEL.class, StringEL.class, JvmEL.class};
     ELEvaluator elEval = new ELEvaluator("pipelineDefinition", elClasses);
     List<ElFunctionDefinition> elFunctionDefinitions = elEval.getElFunctionDefinitions();
     List<ElConstantDefinition> elConstantDefinitions = elEval.getElConstantDefinitions();
@@ -407,8 +408,8 @@ public class PipelineDefinition {
       20,
       elFunctionDefinitions,
       elConstantDefinitions,
-      Long.MIN_VALUE,
-      Long.MAX_VALUE,
+      PipelineDefConfigs.MEMORY_LIMIT_MIN,
+      PipelineDefConfigs.MEMORY_LIMIT_MAX,
       "",
       0,
       Collections.<String> emptyList(),
