@@ -70,12 +70,14 @@
           <row>
             <entry><image href="../Graphics/icon-ConfigUndo.png" id="image_ppg_542_gs"/></entry>
             <entry>Undo icon</entry>
-            <entry/>
+            <entry>Reverts recent changes. On Mac, you can also use Cmd+Z. On Windows, you can use
+              Ctrl+Z. </entry>
           </row>
           <row>
             <entry><image href="../Graphics/icon-ConfigRedo.png" id="image_aym_v42_gs"/></entry>
-            <entry/>
-            <entry/>
+            <entry>Redo icon</entry>
+            <entry>Restores changes that were reverted. On Mac, you can also use Cmd+Shift+Z. On
+              Windows, you can use Ctrl+Y. </entry>
           </row>
           <row>
             <entry><image href="../Graphics/icon-ConfigDelete.png" id="image_mhh_31x_rr"/></entry>

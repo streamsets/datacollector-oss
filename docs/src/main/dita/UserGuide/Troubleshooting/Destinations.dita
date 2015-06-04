@@ -3,9 +3,8 @@
 <concept id="concept_m4g_qyk_2s">
  <title>Destinations </title>
  <conbody>
-  <p><indexterm>Data
-     Collector<indexterm>troubleshooting</indexterm></indexterm><indexterm>troubleshooting<indexterm>destinations</indexterm></indexterm>Use
-   the following tips to help you with destination stages and systems. </p>
+  <p><indexterm>troubleshooting<indexterm>destinations</indexterm></indexterm>Use the following tips
+      to help you with destination stages and systems. </p>
   <section>
    <title>Cassandra</title>
    <dl>

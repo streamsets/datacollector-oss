@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
+<concept id="concept_fwl_5cl_gs">
+ <title>Origins</title>
+ <shortdesc></shortdesc>
+ <conbody>
+  <p><indexterm>troubleshooting<indexterm>origins</indexterm></indexterm>Use the following tips to
+   help you with origin stages and systems. <dl>
+    <dlentry>
+     <dt>My MySQL JDBC Driver 5.0 fails to validate the query in my JBDC origin. </dt>
+     <dd>This can occur when you use a LIMIT clause in your query. Workaround: upgrade to version
+      5.1.</dd>
+    </dlentry>
+    <dlentry>
+     <dt>I'm using the JDBC origin to read MySQL data. Why are datetime value set to zero being
+      treated like error records?</dt>
+     <dd>MySQL treats invalid dates as an exception, so the JDBC origin creates error records for
+      invalid dates. You can override this behavior by setting a JDBC configuration property in the
+      JDBC origin. Add the <uicontrol>zeroDateTimeBehavior</uicontrol> property and set the value to
+      "convertToNull".</dd>
+     <dd>For more information about this and other MySQL-specific JDBC configuration properties, see
+       <xref
+       href="http://dev.mysql.com/doc/connector-j/en/connector-j-reference-configuration-properties.html"
+       format="html" scope="external"
+       >http://dev.mysql.com/doc/connector-j/en/connector-j-reference-configuration-properties.html</xref>.</dd>
+    </dlentry>
+    <dlentry>
+     <dt>Why isn't my pipeline reading data from my Kafka cluster? </dt>
+     <dd>By default, the Kafka Consumer reads data written to the cluster after you start the
+      pipeline. Records already in the cluster are not read. </dd>
+     <dd>To read the oldest unread data in a topic, add the <uicontrol>auto.offset.reset</uicontrol>
+      property to the Kafka Consumer origin and set it to "smallest". </dd>
+    </dlentry>
+   </dl></p>
+  <p>
+   <draft-comment author="Loretta">haven't dealt with this yet: <b>IMPORTANT: Note that if you
+     already started the pipeline or ran a preview without this option, the offset will have been
+     committed. You will have to change the Consumer Group value to something (anything) else as
+     well as the auto.offset.reset option to smallest. -- changing the consumer group is ugly - find
+     out what else to do? </b></draft-comment>
+  </p>
+ </conbody>
+</concept>

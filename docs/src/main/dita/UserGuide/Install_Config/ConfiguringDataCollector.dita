@@ -140,6 +140,18 @@
                                 <entry>Allows anonymous Google Analytics information to be sent
                                     StreamSets. <p>Default is true. </p></entry>
                             </row>
+                            <row>
+                                <entry>ui.enable.webSocket</entry>
+                                <entry>
+                                    <draft-comment author="Loretta">someone tell me what the
+                                        difference is?</draft-comment>
+                                </entry>
+                            </row>
+                            <row>
+                                <entry>ui.undo.limit</entry>
+                                <entry>Number of recent actions stored so you can undo them.
+                                </entry>
+                            </row>
                         </tbody>
                     </tgroup>
                 </table></p><p>The <ph

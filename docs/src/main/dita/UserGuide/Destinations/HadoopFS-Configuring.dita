@@ -51,12 +51,12 @@
                                             href="HadoopFS-HadoopProperties.dita">
                                             <image href="../Graphics/icon_moreInfo.png" scale="10"
                                                 id="image_br4_fgs_5r"/></xref></entry>
-                                    <entry>Directory for a local HDFS configuration files. <p>Use to
-                                            enable the Hadoop FS destination to use the
-                                            core-site.xml and hdfs-site.xml configuration
-                                            files.</p><p><note/>Properties in the configuration
-                                            files are overridden by individual properties defined in
-                                            the stage.</p></entry>
+                                    <entry>Directory for a local HDFS configuration files. To use
+                                        properties defined in the core-site.xml and hdfs-site.xml
+                                        configuration files, enter the directory where the files are
+                                        located. <note>Properties in the configuration files are
+                                            overridden by individual properties defined in the
+                                            stage.</note></entry>
                                 </row>
                                 <row>
                                     <entry>Hadoop FS Configuration</entry>

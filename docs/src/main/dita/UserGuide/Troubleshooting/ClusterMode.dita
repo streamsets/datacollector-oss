@@ -17,5 +17,16 @@
    </dl>
   </p>
   <draft-comment author="Loretta">see brock's email... </draft-comment>
+    <draft-comment author="Loretta">1) Why cannot I start my pipeline in cluster mode: a)
+      "sdc.execution.mode" in sdc.properties is set to standalone: "VALIDATION_0072 - Data collector
+      is in standalone mode, cannot run pipeline cluster mode" b) Most likely the Spark on YARN
+      client configuration is not in place (it's not a gateway node) or not up to date. "Error
+      starting application: java.util.concurrent.ExecutionException:
+      java.lang.IllegalStateException: Process submitting the spark job is dead and couldn't
+      retrieve the YARN application id" Unfortunately for now they will have to go to logs to debug
+      this one. 2) My cluster pipeline was killed unexpectely To debug this one go to the
+      application on the YARN RM gui page and look at the Spark App Master logs. 3) How long does it
+      take to start a cluster pipeline? It depends on how busy your YARN cluster is but typical
+      times are 30-90 seconds. </draft-comment>
  </conbody>
 </concept>

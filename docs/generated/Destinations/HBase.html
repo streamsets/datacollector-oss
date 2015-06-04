@@ -36,13 +36,13 @@
  <div class="body conbody"><p class="shortdesc">You can configure the HBase destination to use HBase properties. </p>
 
   <div class="p">The HBase destination provides
-            the following options for specifying HBase properties:<dl class="dl">
+            the following options for using HBase properties:<dl class="dl">
                 
                     <dt class="dt dlterm">HBase configuration file, hbase-site.xml </dt>
 
                     <dd class="dd">You can store the hbase-site.xml configuration file in a directory local to
                         the <span class="ph">Data
-                  Collector</span> and specify the path in the destination.</dd>
+                  Collector</span> and define the directory in the destination.</dd>
 
                 
                 
@@ -192,7 +192,7 @@
                                     <td class="entry" valign="top" width="34.96503496503497%" headers="d8066e260 ">ZooKeeper Client Port</td>
 
                                     <td class="entry" valign="top" width="65.03496503496503%" headers="d8066e263 ">Port number clients use to connect to the ZooKeeper
-                                        servers.  </td>
+                                        servers. </td>
 
                                 </tr>
 
@@ -207,7 +207,7 @@
                                 <tr class="row">
                                     <td class="entry" valign="top" width="34.96503496503497%" headers="d8066e260 ">Table Name</td>
 
-                                    <td class="entry" valign="top" width="65.03496503496503%" headers="d8066e263 ">Name of the HBase table to use.  Enter a table name or a
+                                    <td class="entry" valign="top" width="65.03496503496503%" headers="d8066e263 ">Name of the HBase table to use. Enter a table name or a
                                         namespace and table name as follows:
                                         &lt;namespace&gt;.&lt;tablename&gt;. <p class="p">If you do not enter a
                                             table name, HBase uses the default namespace.
@@ -300,13 +300,12 @@
                                     <td class="entry" valign="top" width="34.96503496503497%" headers="d8066e260 ">HBase Configuration Directory <a class="xref" href="HBase.html#concept_tjp_v5l_zq" title="You can configure the HBase destination to use HBase properties.">
                                             <img class="image" id="task_pyq_qx5_vr__image_br4_fgs_5r" src="../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
 
-                                    <td class="entry" valign="top" width="65.03496503496503%" headers="d8066e263 ">Directory for a local HBase configuration file. Enter the
-                                        directory to enable the HBase destination to use properties
-                                        defined in the hbase-site.xml configuration file.
-                                            <div class="p"><div class="note note"><span class="notetitle">Note:</span> </div>
-Properties in the configuration file are
-                                            overridden by individual properties defined in the
-                                            stage.</div>
+                                    <td class="entry" valign="top" width="65.03496503496503%" headers="d8066e263 ">Directory for a local HBase configuration file. To use
+                                        properties defined in the hbase-site.xml configuration file,
+                                        enter the directory where the file is located.
+                                            <div class="note note"><span class="notetitle">Note:</span> Properties in the file are overridden by
+                                            individual properties defined in the
+                                        stage.</div>
 </td>
 
                                 </tr>

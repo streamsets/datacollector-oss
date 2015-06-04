@@ -10,7 +10,7 @@
   <p>The following image shows the <ph
         conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> console in
       Monitor mode:</p>
-    <p><image href="../Graphics/CanvasMonitor.png" id="image_zjl_w35_2s"/></p>
+    <p><image href="../Graphics/CanvasMonitor.png" id="image_zjl_w35_2s" scale="90"/></p>
   <simpletable frame="all" relcolwidth="1.0* 1.46* 3.66*" id="simpletable_jb5_1k4_tq">
    <sthead>
     <stentry>Area / Icon</stentry>
@@ -46,6 +46,16 @@
     <stentry>Lists the stages in the pipeline. Use to select the information that you want to
           view.</stentry>
    </strow>
+      <strow>
+        <stentry><image href="../Graphics/icon_MonMore.png" id="image_d43_252_gs"/></stentry>
+        <stentry>More icon</stentry>
+        <stentry>Provides additional actions for the pipeline. Use to pause monitoring. </stentry>
+      </strow>
+      <strow>
+        <stentry><image href="../Graphics/icon_MonArrange.png" id="image_xh2_st2_gs"/></stentry>
+        <stentry>Auto Arrange icon</stentry>
+        <stentry>Arranges the stages in the pipeline.</stentry>
+      </strow>
       <strow>
         <stentry><image href="../Graphics/icon_MonDataAlert.png" id="image_twl_st5_br"
           /></stentry>

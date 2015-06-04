@@ -7,13 +7,13 @@
         <p><indexterm>Hadoop FS destination<indexterm>additional
                 properties</indexterm></indexterm><indexterm>custom properties<indexterm>Hadoop
                     FS</indexterm></indexterm>The Hadoop FS destination provides the following
-            options for specifying HDFS properties:<dl>
+            options for using HDFS properties:<dl>
                 <dlentry>
                     <dt>HDFS configuration files: core-site.xml and hdfs-site.xml</dt>
                     <dd>You can store the core-site.xml and hdfs-site.xml configuration files in a
                         directory local to the <ph
                             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                        /> and specify the path in the destination.</dd>
+                        /> and define the directory in the destination.</dd>
                 </dlentry>
                 <dlentry>
                     <dt>Individual properties</dt>

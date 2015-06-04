@@ -9,6 +9,7 @@
     <shortdesc/>
    </topicmeta>
   </topicref>
+  <topicref href="../Troubleshooting/Origins.dita"/>
   <topicref href="../Troubleshooting/Destinations.dita"/>
   <topicref href="../Troubleshooting/Performance.dita"/>
   <topicref href="../Troubleshooting/ClusterMode.dita"/>
