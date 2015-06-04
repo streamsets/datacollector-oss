@@ -101,6 +101,8 @@ angular
             type: pipelineConstant.STAGE_INSTANCE
           });
 
+          $rootScope.$broadcast('updateErrorCount',
+            previewService.getPreviewStageErrorCounts($scope.previewData.snapshot));
           $scope.showLoading = false;
         }).
         error(function(data) {

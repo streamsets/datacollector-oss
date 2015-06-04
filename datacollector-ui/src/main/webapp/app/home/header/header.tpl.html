@@ -167,7 +167,8 @@
          tooltip="{{selectedType === pipelineConstant.STAGE_INSTANCE ?
           ('global.form.deleteStage' | translate) + ' ' + selectedObject.uiInfo.label : ('global.form.deleteStream' | translate)}}"
          tooltip-popup-delay="500"
-         ng-hide="isPipelineRunning || previewMode || snapshotMode || selectedType === pipelineConstant.PIPELINE"
+         ng-hide="isPipelineRunning || previewMode || snapshotMode"
+         ng-disabled="selectedType === pipelineConstant.PIPELINE"
          ng-if="isAuthorized([userRoles.admin, userRoles.creator]) && common.sdcExecutionMode != pipelineConstant.SLAVE"
          ng-click="deleteSelection()">
         <span class="fa fa-trash fa-14x"></span>
@@ -177,8 +178,8 @@
          tooltip-placement="bottom"
          tooltip="{{('global.form.duplicateStage' | translate) + ' ' + selectedObject.uiInfo.label}}"
          tooltip-popup-delay="500"
-         ng-hide="isPipelineRunning || previewMode || snapshotMode || selectedType !== pipelineConstant.STAGE_INSTANCE ||
-         selectedObject.uiInfo.stageType === pipelineConstant.SOURCE_STAGE_TYPE"
+         ng-hide="isPipelineRunning || previewMode || snapshotMode"
+         ng-disabled="selectedType !== pipelineConstant.STAGE_INSTANCE || selectedObject.uiInfo.stageType === pipelineConstant.SOURCE_STAGE_TYPE"
          ng-if="isAuthorized([userRoles.admin, userRoles.creator]) && common.sdcExecutionMode != pipelineConstant.SLAVE"
          ng-click="duplicateStage()">
         <span class="glyphicon glyphicon-duplicate fa-14x"></span>
