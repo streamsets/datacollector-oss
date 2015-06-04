@@ -239,12 +239,15 @@ public class PipelineConfigurationValidator {
               memoryLimit = Long.parseLong(memoryLimitString);
             }
 
-            if(memoryLimit != Integer.MIN_VALUE) {
-              if (memoryLimit > PipelineDefConfigs.MEMORY_LIMIT_MAX) {
-                issues.addP(new Issue(config.getName(), "", ValidationError.VALIDATION_0063, memoryLimit,
-                  "above the maximum", PipelineDefConfigs.MEMORY_LIMIT_MAX));
-                return false;
-              }
+            if (memoryLimit < PipelineDefConfigs.MEMORY_LIMIT_MIN) {
+              issues.addP(new Issue(config.getName(), "", ValidationError.VALIDATION_0065, memoryLimit,
+                                    PipelineDefConfigs.MEMORY_LIMIT_MIN));
+              return false;
+            }
+            if (memoryLimit > PipelineDefConfigs.MEMORY_LIMIT_MAX) {
+              issues.addP(new Issue(config.getName(), "", ValidationError.VALIDATION_0063, memoryLimit,
+                                    PipelineDefConfigs.MEMORY_LIMIT_MAX));
+              return false;
             }
           } catch (NumberFormatException e) {
             issues.addP(new Issue(config.getName(), "", ValidationError.VALIDATION_0062, config.getValue()));

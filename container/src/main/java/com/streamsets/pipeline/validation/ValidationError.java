@@ -77,8 +77,9 @@ public enum ValidationError implements ErrorCode {
   VALIDATION_0060("Define the error record handling for the pipeline"),
   VALIDATION_0061("Define the directory for error record files"),
   VALIDATION_0062("Configured memory limit '{}' is not an integer"),
-  VALIDATION_0063("Configured memory limit {} is {} allowed {}"),
-  VALIDATION_0064("Error resolving memory limit, {}"),
+  VALIDATION_0063("Configured memory limit '{}' is above the maximum allowed '{}'"),
+  VALIDATION_0064("Error resolving memory limit: {}"),
+  VALIDATION_0065("Configured memory limit '{}' is below the minimum allowed '{}'"),
 
   VALIDATION_0070("Pipeline does not define its execution mode"),
   VALIDATION_0071("The stage does not support '{}' execution mode"),

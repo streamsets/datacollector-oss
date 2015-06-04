@@ -9,11 +9,11 @@ import com.streamsets.pipeline.api.ElFunction;
 
 public class JvmEL {
 
-  @ElFunction(prefix = "jvm", name = "maxMemory",
-      description = "JVM Maximum Heap size, in bytes"
+  @ElFunction(prefix = "jvm", name = "maxMemoryMB",
+      description = "JVM Maximum Heap size, in MB"
   )
-  public static long jvmMaxMemory() {
-    return  Runtime.getRuntime().maxMemory();
+  public static long jvmMaxMemoryMB() {
+    return  Runtime.getRuntime().maxMemory() / 1000 / 1000;
   }
 
 }
