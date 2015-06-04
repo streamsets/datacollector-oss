@@ -35,7 +35,7 @@
                                 <row>
                                     <entry>ZooKeeper Client Port</entry>
                                     <entry>Port number clients use to connect to the ZooKeeper
-                                        servers.  </entry>
+                                        servers. </entry>
                                 </row>
                                 <row>
                                     <entry>ZooKeeper Parent Znode</entry>
@@ -44,7 +44,7 @@
                                 </row>
                                 <row>
                                     <entry>Table Name</entry>
-                                    <entry>Name of the HBase table to use.  Enter a table name or a
+                                    <entry>Name of the HBase table to use. Enter a table name or a
                                         namespace and table name as follows:
                                         &lt;namespace>.&lt;tablename>. <p>If you do not enter a
                                             table name, HBase uses the default namespace.
@@ -106,12 +106,12 @@
                                             href="HBase-HBaseProperties.dita">
                                             <image href="../Graphics/icon_moreInfo.png" scale="10"
                                                 id="image_br4_fgs_5r"/></xref></entry>
-                                    <entry>Directory for a local HBase configuration file. Enter the
-                                        directory to enable the HBase destination to use properties
-                                        defined in the hbase-site.xml configuration file.
-                                            <p><note/>Properties in the configuration file are
-                                            overridden by individual properties defined in the
-                                            stage.</p></entry>
+                                    <entry>Directory for a local HBase configuration file. To use
+                                        properties defined in the hbase-site.xml configuration file,
+                                        enter the directory where the file is located.
+                                            <note>Properties in the file are overridden by
+                                            individual properties defined in the
+                                        stage.</note></entry>
                                 </row>
                                 <row>
                                     <entry>HBase Configuration</entry>

@@ -7,13 +7,13 @@
   <p><indexterm>HBase destination<indexterm>additional
                 properties</indexterm></indexterm><indexterm>custom
                     properties<indexterm>HBase</indexterm></indexterm>The HBase destination provides
-            the following options for specifying HBase properties:<dl>
+            the following options for using HBase properties:<dl>
                 <dlentry>
                     <dt>HBase configuration file, hbase-site.xml </dt>
                     <dd>You can store the hbase-site.xml configuration file in a directory local to
                         the <ph
                             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                        /> and specify the path in the destination.</dd>
+                        /> and define the directory in the destination.</dd>
                 </dlentry>
                 <dlentry>
                     <dt>Individual properties</dt>
