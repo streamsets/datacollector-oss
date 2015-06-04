@@ -77,7 +77,8 @@
 
     <!--Input -->
 
-    <td ng-repeat="fieldPath in outputFieldPaths | limitTo: outputLimit">
+    <td ng-repeat="fieldPath in outputFieldPaths | limitTo: outputLimit"
+        ng-class="{'value-deletion': (flattenOutputRecord[fieldPath].value !== flattenInputRecord[fieldPath].value) }">
 
       <span class="pull-right glyphicon glyphicon-asterisk dirty-icon" ng-if="flattenOutputRecord[fieldPath].dirty"></span>
 
@@ -105,7 +106,6 @@
            contenteditable="{{previewMode}}"
            ng-model="flattenOutputRecord[fieldPath].value"
            ng-change="recordValueUpdated(outputRecord, flattenOutputRecord[fieldPath])"
-           ng-class="{'value-deletion': (flattenOutputRecord[fieldPath].value !== flattenInputRecord[fieldPath].value) }"
            class="field-value {{flattenOutputRecord[fieldPath].type}}">
       </div>
 

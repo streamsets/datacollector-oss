@@ -17,7 +17,7 @@ import java.util.List;
 import java.util.Map;
 
 @GenerateResourceBundle
-@StageDef(version = "1.0.0", label = "HBase", icon = "hbase.png")
+@StageDef(version = "1.0.0", label = "HBase",  description = "Writes data to HBase", icon = "hbase.png")
 @ConfigGroups(Groups.class)
 public class HBaseDTarget extends DTarget {
 

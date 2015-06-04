@@ -97,7 +97,7 @@ angular.module('recordTreeDirectives', ['RecursionHelper'])
             scope.updatedValue = true;
           }
         } else {
-          if(!scope.diffRecordValue) {
+          if(!scope.diffRecordValue || !angular.equals(scope.recordValue.value, scope.diffRecordValue.value) ) {
             scope.updatedField = true;
           }
         }
