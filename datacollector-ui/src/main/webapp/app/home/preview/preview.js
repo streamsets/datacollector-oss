@@ -133,6 +133,8 @@ angular
               });
             }
 
+            $rootScope.$broadcast('updateErrorCount',
+              previewService.getPreviewStageErrorCounts($scope.previewData.batchesOutput[0]));
             $scope.stepExecuted = true;
             $scope.showLoading = false;
             $rootScope.common.errors = [];
@@ -298,6 +300,8 @@ angular
               });
             }
 
+            $rootScope.$broadcast('updateErrorCount',
+              previewService.getPreviewStageErrorCounts($scope.previewData.batchesOutput[0]));
             $rootScope.$broadcast('clearDirtyLaneConnector');
             $scope.showLoading = false;
           }).

@@ -261,6 +261,38 @@ angular.module('dataCollectorApp.common')
       return '';
     };
 
+    /**
+     * Return error counts for preview data.
+     *
+     * @param batchData
+     * @returns {{}}
+     */
+    this.getPreviewStageErrorCounts = function(batchData) {
+      var stageInstanceErrorCounts = {};
+
+      angular.forEach(batchData, function (stageOutput) {
+        var count = 0;
+
+        if(stageOutput.errorRecords && stageOutput.errorRecords.length) {
+          count += stageOutput.errorRecords.length;
+        }
+
+        if(stageOutput.stageErrors && stageOutput.stageErrors.length) {
+          count += stageOutput.stageErrors.length;
+        }
+
+        stageInstanceErrorCounts[stageOutput.instanceName] = count;
+      });
+
+      return stageInstanceErrorCounts;
+    };
+
+    /**
+     * Escape HTML utility function
+     *
+     * @param unsafe
+     * @returns {*}
+     */
     function escapeHtml(unsafe) {
       return unsafe
         .replace(/&/g, "&amp;")

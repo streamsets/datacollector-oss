@@ -1416,7 +1416,11 @@ angular
         config = $scope.pipelineConfig;
       if(pipelineStatus && config && pipelineStatus.name === config.info.name &&
         $scope.isPipelineRunning && $rootScope.common.pipelineMetrics) {
-        $scope.$broadcast('updateErrorCount', getStageErrorCounts());
+
+        if(!$scope.snapshotMode) {
+          $scope.$broadcast('updateErrorCount', getStageErrorCounts());
+        }
+
         $scope.triggeredAlerts = pipelineService.getTriggeredAlerts($scope.pipelineRules,
           $rootScope.common.pipelineMetrics);
         $scope.$broadcast('updateEdgePreviewIconColor', $scope.pipelineRules, $scope.triggeredAlerts);

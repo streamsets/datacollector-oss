@@ -1453,10 +1453,10 @@ angular.module('pipelineGraphDirectives', [])
         if(!flag) {
           graph.clearStartAndEndNode();
           graph.clearDirtyNodeClass();
+          graph.rects.selectAll('span.badge').style('visibility', 'hidden');
         }
       }
     });
-
 
     $scope.$on('updateEdgePreviewIconColor', function(event, pipelineRules, triggeredAlerts) {
       if(graph) {
@@ -1466,8 +1466,6 @@ angular.module('pipelineGraphDirectives', [])
           });
       }
     });
-
-
 
     var getEdgePreviewIcon = function(pipelineRules, triggeredAlerts, d) {
       var atLeastOneRuleDefined = false,
