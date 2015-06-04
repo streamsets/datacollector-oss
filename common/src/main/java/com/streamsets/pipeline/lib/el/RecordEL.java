@@ -210,7 +210,7 @@ public class RecordEL {
   @ElFunction(
       prefix = RECORD_EL_PREFIX,
       name = "dValue",
-      description = "Returns the value of the specified column name")
+      description = "Returns the value of the specified header name")
   public static String getDelimitedValue(
       @ElParam("header") String header) {
     String value = null;
@@ -246,7 +246,7 @@ public class RecordEL {
   @ElFunction(
       prefix = RECORD_EL_PREFIX,
       name = "dExists",
-      description = "Returns the value of the specified column name")
+      description = "Returns the value of the specified header name")
   public static boolean getDelimitedExists(
       @ElParam("header") String header) {
     return getDelimitedValue(header) != null;
@@ -255,7 +255,7 @@ public class RecordEL {
   @ElFunction(
       prefix = RECORD_EL_PREFIX,
       name = "dValueAt",
-      description = "Returns the value of the specified column name")
+      description = "Returns the value of the specified header name")
   public static String getDelimitedValueAt(
       @ElParam("index") int index) {
     String value = null;
@@ -316,7 +316,7 @@ public class RecordEL {
   @ElFunction(
       prefix = RECORD_EL_PREFIX,
       name = "dIndex",
-      description = "Returns the index of the specific column name")
+      description = "Returns the index of the specific header name")
   public static int getDelimitedIndex(
       @ElParam("header") String header
   ) {
@@ -326,7 +326,7 @@ public class RecordEL {
   @ElFunction(
       prefix = RECORD_EL_PREFIX,
       name = "dIsDupHeader",
-      description = "Returns if a column header is more than once")
+      description = "Returns if a header is more than once")
   public static boolean isDelimitedDuplicateHeader(
       @ElParam("header") String header
   ) {
