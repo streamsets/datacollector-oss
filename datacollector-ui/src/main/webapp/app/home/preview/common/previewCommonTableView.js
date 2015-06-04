@@ -4,7 +4,7 @@
 
 angular
   .module('dataCollectorApp.home')
-  .controller('PreviewCommonTableViewController', function ($scope, pipelineService) {
+  .controller('PreviewCommonTableViewController', function ($scope, pipelineService, previewService) {
     var columnLimit = 5;
 
     angular.extend($scope, {
@@ -89,7 +89,15 @@ angular
         input = $scope.stagePreviewData.input,
         fieldPathsList,
         fieldPaths,
-        isCSVRecord;
+        isCSVRecord,
+        selectedObject = $scope.selectedObject;
+
+
+      if(selectedObject.outputLanes.length > 1) {
+        $scope.laneMap = previewService.getStageLaneInfo(selectedObject);
+      } else {
+        $scope.laneMap = null;
+      }
 
       $scope.inputFieldPaths = [];
       if(input && input.length) {

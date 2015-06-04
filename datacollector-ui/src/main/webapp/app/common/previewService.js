@@ -261,6 +261,29 @@ angular.module('dataCollectorApp.common')
       return '';
     };
 
+
+    /**
+     * Return Stage Lane info with index and condition.
+     *
+     * @param stageInstance
+     * @returns {{}}
+     */
+    this.getStageLaneInfo = function(stageInstance) {
+      var laneMap = {},
+        lanePredicatesConfiguration = _.find(stageInstance.configuration, function(configuration) {
+          return configuration.name === 'lanePredicates';
+        });
+
+      _.each(stageInstance.outputLanes, function(lane, index) {
+        laneMap[lane] = {
+          index: index + 1,
+          condition: (lanePredicatesConfiguration ? lanePredicatesConfiguration.value[index].predicate : undefined)
+        };
+      });
+
+      return laneMap;
+    };
+
     /**
      * Return error counts for preview data.
      *
