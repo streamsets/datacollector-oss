@@ -8,7 +8,10 @@ package com.streamsets.pipeline.lib.parser.netflow;
 import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.Stage;
+import com.streamsets.pipeline.api.StageException;
+import com.streamsets.pipeline.api.base.OnRecordErrorException;
 import com.streamsets.pipeline.api.impl.Utils;
+import com.streamsets.pipeline.lib.parser.AbstractParser;
 import io.netty.buffer.ByteBuf;
 
 import java.net.InetSocketAddress;
@@ -27,7 +30,7 @@ import java.util.UUID;
  * <a href="http://www.cisco.com/en/US/technologies/tk648/tk362/technologies_white_paper09186a00800a3db9.html">v9</a>.
  */
 
-public class NetflowParser {
+public class NetflowParser extends AbstractParser {
   private static final int V9_HEADER_SIZE = 20;
   private static final int V5_HEADER_SIZE = 24;
   private static final int V5_FLOW_SIZE = 48;
@@ -69,53 +72,41 @@ public class NetflowParser {
   public static final String SAMPLINGINT = "samplingint";
   public static final String SAMPLINGMODE = "samplingmode";
 
-  private final Stage.Context context;
   private long recordId;
 
   public NetflowParser(Stage.Context context) {
-    this.context = context;
+    super(context);
     this.recordId = 0;
   }
 
+  @Override
   public List<Record> parse(ByteBuf buf, InetSocketAddress recipient, InetSocketAddress sender)
-    throws InvalidFlowVersionException, CorruptFlowPacketException {
+    throws OnRecordErrorException {
     int packetLength = buf.readableBytes();
     if (packetLength < 4) {
-      throw new CorruptFlowPacketException(Utils.format("Packet must be at least 4 bytes, was: {}", packetLength));
+      throw new OnRecordErrorException(Errors.NETFLOW_01,
+        Utils.format("Packet must be at least 4 bytes, was: {}", packetLength));
     }
     String readerId = String.valueOf(recipient);
     int version = buf.getUnsignedShort(0); // 0-1
     switch (version) {
       case 5:
         return parseV5(version, packetLength, buf, readerId, sender);
-      case 9:
-        return parseV9(version, packetLength, buf, readerId, sender);
       default:
-        throw new InvalidFlowVersionException(version);
+        throw new OnRecordErrorException(Errors.NETFLOW_00, version);
     }
-  }
-  private List<Record> parseV9(int version, int packetLength, ByteBuf buf, String readerId,
-                               InetSocketAddress sender)
-    throws InvalidFlowVersionException, CorruptFlowPacketException {
-    if (version != 9) {
-      throw new InvalidFlowVersionException(version);
-    }
-    throw new InvalidFlowVersionException(version);
   }
 
   private List<Record> parseV5(int version, int packetLength, ByteBuf buf, String readerId,
                                InetSocketAddress sender)
-    throws InvalidFlowVersionException, CorruptFlowPacketException {
-    if (version != 5) {
-      throw new InvalidFlowVersionException(version);
-    }
+    throws OnRecordErrorException {
     int count = buf.getUnsignedShort(2); // 2-3
     if (count <= 0) {
-      throw new CorruptFlowPacketException(Utils.format("Count is invalid: {}", count));
+      throw new OnRecordErrorException(Errors.NETFLOW_01,Utils.format("Count is invalid: {}", count));
     } else if (packetLength < V5_HEADER_SIZE + count * V5_FLOW_SIZE) {
       String msg = Utils.format("Readable bytes {} too small for count {} (max {})",
         packetLength, count, (V5_HEADER_SIZE + count * V5_FLOW_SIZE));
-      throw new CorruptFlowPacketException(msg);
+      throw new OnRecordErrorException(Errors.NETFLOW_01, msg);
     }
     List<Record> result = new ArrayList<>(count);
     long uptime = buf.getUnsignedInt(4); // 4-7

@@ -33,6 +33,7 @@ import org.slf4j.LoggerFactory;
 import java.io.File;
 import java.io.IOException;
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.nio.charset.UnsupportedCharsetException;
 import java.nio.file.PathMatcher;
 import java.util.HashMap;
@@ -268,7 +269,7 @@ public class SpoolDirSource extends BaseSource {
       fileCharset = Charset.forName(charset);
     } catch (UnsupportedCharsetException ex) {
       // setting it to a valid one so the parser factory can be configured and tested for more errors
-      fileCharset = Charset.forName("UTF-8");
+      fileCharset = StandardCharsets.UTF_8;
       issues.add(getContext().createConfigIssue(Groups.FILES.name(), "charset", Errors.SPOOLDIR_00, charset));
     }
     builder.setCharset(fileCharset);

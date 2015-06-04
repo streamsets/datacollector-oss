@@ -9,6 +9,7 @@ import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.OnRecordError;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.Stage;
+import com.streamsets.pipeline.api.base.OnRecordErrorException;
 import com.streamsets.pipeline.sdk.ContextInfoCreator;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.UnpooledByteBufAllocator;
@@ -31,7 +32,7 @@ public class TestNetflowParser {
       Collections.<String>emptyList());
   }
 
-  @Test(expected = InvalidFlowVersionException.class)
+  @Test(expected = OnRecordErrorException.class)
   public void testInvalidVersion() throws Exception {
     UnpooledByteBufAllocator allocator = new UnpooledByteBufAllocator(false);
     NetflowParser netflowParser = new NetflowParser(getContext());
@@ -41,7 +42,7 @@ public class TestNetflowParser {
     netflowParser.parse(buf, null, null);
   }
 
-  @Test(expected = CorruptFlowPacketException.class)
+  @Test(expected = OnRecordErrorException.class)
   public void testInvalidCountInvalidLength() throws Exception {
     UnpooledByteBufAllocator allocator = new UnpooledByteBufAllocator(false);
     NetflowParser netflowParser = new NetflowParser(getContext());
@@ -51,7 +52,7 @@ public class TestNetflowParser {
     netflowParser.parse(buf, null, null);
   }
 
-  @Test(expected = CorruptFlowPacketException.class)
+  @Test(expected = OnRecordErrorException.class)
   public void testInvalidCountZero() throws Exception {
     UnpooledByteBufAllocator allocator = new UnpooledByteBufAllocator(false);
     NetflowParser netflowParser = new NetflowParser(getContext());
@@ -61,7 +62,7 @@ public class TestNetflowParser {
     netflowParser.parse(buf, null, null);
   }
 
-  @Test(expected = CorruptFlowPacketException.class)
+  @Test(expected = OnRecordErrorException.class)
   public void testInvalidPacketTooShort1() throws Exception {
     UnpooledByteBufAllocator allocator = new UnpooledByteBufAllocator(false);
     NetflowParser netflowParser = new NetflowParser(getContext());
@@ -69,7 +70,7 @@ public class TestNetflowParser {
     netflowParser.parse(buf, null, null);
   }
 
-  @Test(expected = CorruptFlowPacketException.class)
+  @Test(expected = OnRecordErrorException.class)
   public void testInvalidPacketTooShort2() throws Exception {
     UnpooledByteBufAllocator allocator = new UnpooledByteBufAllocator(false);
     NetflowParser netflowParser = new NetflowParser(getContext());

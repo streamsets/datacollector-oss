@@ -10,14 +10,20 @@ import com.streamsets.pipeline.api.BatchMaker;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.base.BaseSource;
+import com.streamsets.pipeline.api.base.OnRecordErrorException;
 import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.lib.parser.netflow.NetflowParser;
+import com.streamsets.pipeline.lib.parser.AbstractParser;
+import com.streamsets.pipeline.lib.parser.syslog.SyslogParser;
 import io.netty.channel.socket.DatagramPacket;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
+import java.nio.charset.UnsupportedCharsetException;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
@@ -30,18 +36,26 @@ import java.util.concurrent.TimeUnit;
 
 public class UDPSource extends BaseSource {
   private static final Logger LOG = LoggerFactory.getLogger(UDPSource.class);
+  private static final boolean IS_TRACE_ENABLED = LOG.isTraceEnabled();
+  private static final boolean IS_DEBUG_ENABLED = LOG.isDebugEnabled();
   private final Set<String> ports;
   private final int maxBatchSize;
   private final Queue<Record> overrunQueue;
   private final long maxWaitTime;
   private final List<InetSocketAddress> addresses;
+  private final String charsetName;
+  private final UDPDataFormat dataFormat;
+  private Charset charset;
   private long recordCount;
   private UDPConsumingServer udpServer;
-  private NetflowParser netflowParser;
+  private AbstractParser parser;
   private BlockingQueue<DatagramPacket> incomingQueue;
 
-  public UDPSource(List<String> ports, int maxBatchSize, long maxWaitTime) {
+  public UDPSource(List<String> ports, String charsetName, UDPDataFormat dataFormat, int maxBatchSize,
+                   long maxWaitTime) {
     this.ports = ImmutableSet.copyOf(ports);
+    this.charsetName = charsetName;
+    this.dataFormat = dataFormat;
     this.maxBatchSize = maxBatchSize;
     this.maxWaitTime = maxWaitTime;
     this.overrunQueue = new LinkedList<>();
@@ -51,7 +65,6 @@ public class UDPSource extends BaseSource {
   @Override
   protected List<ConfigIssue> validateConfigs()  throws StageException {
     List<ConfigIssue> issues = new ArrayList<>();
-    netflowParser = new NetflowParser(getContext());
     this.recordCount = 0;
     this.incomingQueue = new ArrayBlockingQueue<>(this.maxBatchSize * 10);
     if (ports.isEmpty()) {
@@ -72,6 +85,24 @@ public class UDPSource extends BaseSource {
             Errors.UDP_03, candidatePort));
         }
       }
+    }
+    try {
+      charset = Charset.forName(charsetName);
+    } catch (UnsupportedCharsetException ex) {
+      charset = StandardCharsets.UTF_8;
+      issues.add(getContext().createConfigIssue(Groups.SYSLOG.name(), "charset", Errors.UDP_04, charset));
+    }
+    switch (dataFormat) {
+      case NETFLOW:
+        parser = new NetflowParser(getContext());
+        break;
+      case SYSLOG:
+        parser = new SyslogParser(getContext(), charset);
+        break;
+      default:
+        issues.add(getContext().createConfigIssue(Groups.UDP.name(), "dataFormat",
+          Errors.UDP_01, dataFormat));
+        break;
     }
     return issues;
   }
@@ -110,52 +141,51 @@ public class UDPSource extends BaseSource {
     final long startingRecordCount = recordCount;
     long remainingTime = maxWaitTime;
     for (int i = 0; i < maxBatchSize; i++) {
-      String sourceId = getOffset();
-      try {
-        if (overrunQueue.isEmpty()) {
-          try {
-            long start = System.currentTimeMillis();
-            DatagramPacket packet = incomingQueue.poll(remainingTime, TimeUnit.MILLISECONDS);
-            long elapsedTime = System.currentTimeMillis() - start;
-            if (elapsedTime > 0) {
-              remainingTime -= elapsedTime;
-            }
-            if (packet != null) {
-              List<Record> records = netflowParser.parse(packet.content(), packet.recipient(), packet.sender());
-              if (LOG.isTraceEnabled()) {
+      if (overrunQueue.isEmpty()) {
+        try {
+          long start = System.currentTimeMillis();
+          DatagramPacket packet = incomingQueue.poll(remainingTime, TimeUnit.MILLISECONDS);
+          long elapsedTime = System.currentTimeMillis() - start;
+          if (elapsedTime > 0) {
+            remainingTime -= elapsedTime;
+          }
+          if (packet != null) {
+            try {
+              List<Record> records = parser.parse(packet.content(), packet.recipient(), packet.sender());
+              if (IS_TRACE_ENABLED) {
                 LOG.trace("Found {} records", records.size());
               }
               overrunQueue.addAll(records);
               packet.release();
+            } catch (OnRecordErrorException ex) {
+              switch (getContext().getOnErrorRecord()) {
+                case DISCARD:
+                  break;
+                case TO_ERROR:
+                  getContext().reportError(ex);
+                  break;
+                case STOP_PIPELINE:
+                  throw ex;
+                default:
+                  throw new IllegalStateException(Utils.format("It should never happen. OnError '{}'",
+                    getContext().getOnErrorRecord(), ex));
+              }
             }
-          } catch (InterruptedException e) {
-            Thread.currentThread().interrupt();
           }
-        }
-        Record record = overrunQueue.poll();
-        if (record != null) {
-          recordCount++;
-          batchMaker.addRecord(record);
-        }
-        if (remainingTime <= 0) {
-          break;
-        }
-      } catch (IOException ex) {
-        switch (getContext().getOnErrorRecord()) {
-          case DISCARD:
-            break;
-          case TO_ERROR:
-            getContext().reportError(Errors.UDP_01, sourceId, ex.getMessage(), ex);
-            break;
-          case STOP_PIPELINE:
-            throw new StageException(Errors.UDP_01, sourceId, ex.getMessage(), ex);
-          default:
-            throw new IllegalStateException(Utils.format("It should never happen. OnError '{}'",
-              getContext().getOnErrorRecord(), ex));
+        } catch (InterruptedException e) {
+          Thread.currentThread().interrupt();
         }
       }
+      Record record = overrunQueue.poll();
+      if (record != null) {
+        recordCount++;
+        batchMaker.addRecord(record);
+      }
+      if (remainingTime <= 0) {
+        break;
+      }
     }
-    if (LOG.isDebugEnabled()) {
+    if (IS_DEBUG_ENABLED) {
       LOG.debug("Processed {} records", (recordCount - startingRecordCount));
     }
     return getOffset();

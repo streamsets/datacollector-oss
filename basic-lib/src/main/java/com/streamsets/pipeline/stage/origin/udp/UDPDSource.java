@@ -13,7 +13,10 @@ import com.streamsets.pipeline.api.Source;
 import com.streamsets.pipeline.api.StageDef;
 import com.streamsets.pipeline.api.ValueChooser;
 import com.streamsets.pipeline.api.impl.Utils;
+import com.streamsets.pipeline.config.CharsetChooserValues;
 import com.streamsets.pipeline.configurablestage.DSource;
+import com.streamsets.pipeline.lib.parser.AbstractParser;
+import com.streamsets.pipeline.lib.parser.netflow.NetflowParser;
 
 import java.util.List;
 
@@ -44,12 +47,25 @@ public class UDPDSource extends DSource {
     required = true,
     type = ConfigDef.Type.MODEL,
     label = "Data Format",
-    defaultValue = "NETFLOW",
+    defaultValue = "SYSLOG",
     group = "UDP",
     displayPosition = 20
   )
   @ValueChooser(UDPDataFormatChooserValues.class)
   public UDPDataFormat dataFormat;
+
+  @ConfigDef(
+    required = true,
+    type = ConfigDef.Type.MODEL,
+    defaultValue = "UTF-8",
+    label = "Charset",
+    displayPosition = 5,
+    group = "SYSLOG",
+    dependsOn = "dataFormat",
+    triggeredByValue = {"SYSLOG"}
+  )
+  @ValueChooser(CharsetChooserValues.class)
+  public String charset;
 
   @ConfigDef(
     required = true,
@@ -79,7 +95,7 @@ public class UDPDSource extends DSource {
   @Override
   protected Source createSource() {
     Utils.checkNotNull(dataFormat, "Data format cannot be null");
-    Utils.checkState(dataFormat == UDPDataFormat.NETFLOW, "Unknown data format: " + dataFormat);
-    return new UDPSource(ports, batchSize, maxWaitTime);
+    Utils.checkNotNull(ports, "Ports cannot be null");
+    return new UDPSource(ports, charset, dataFormat, batchSize, maxWaitTime);
   }
 }

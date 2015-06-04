@@ -202,7 +202,12 @@ public class StageContext implements Source.Context, Target.Context, Processor.C
   @SuppressWarnings("ThrowableResultOfMethodCallIgnored")
   public void reportError(Exception exception) {
     Preconditions.checkNotNull(exception, "exception cannot be null");
-    errorSink.addError(instanceName, new ErrorMessage(ContainerError.CONTAINER_0001, exception.getMessage()));
+    if (exception instanceof StageException) {
+      StageException stageException = (StageException)exception;
+      errorSink.addError(instanceName, new ErrorMessage(stageException.getErrorCode(), stageException.getParams()));
+    } else {
+      errorSink.addError(instanceName, new ErrorMessage(ContainerError.CONTAINER_0001, exception.getMessage()));
+    }
   }
 
   @Override
