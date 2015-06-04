@@ -26,7 +26,7 @@ public class TestPeriodicFilesRollMode {
     Files.createFile(f1);
     Files.createFile(f2);
 
-    RollMode rollMode = new PeriodicFilesRollModeFactory().get("x${pattern}x", ".");
+    RollMode rollMode = new PeriodicFilesRollModeFactory().get("x${PATTERN}x", ".");
     Assert.assertNull(rollMode.getLiveFileName());
     Assert.assertFalse(rollMode.isFirstAcceptable("x"));
     Assert.assertFalse(rollMode.isFirstAcceptable("xx"));

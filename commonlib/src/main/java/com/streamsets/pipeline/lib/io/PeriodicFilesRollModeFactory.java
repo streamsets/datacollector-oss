@@ -21,11 +21,12 @@ public class PeriodicFilesRollModeFactory implements RollModeFactory {
 
   @Override
   public String getTokenForPattern() {
-    return "${pattern}";
+    return "${PATTERN}";
   }
 
   @Override
   public RollMode get(String fileName, String periodicPattern) {
+    fileName = Paths.get(fileName).getFileName().toString();
     int tokenStart = fileName.indexOf(getTokenForPattern());
     int tokenEnd = tokenStart + getTokenForPattern().length();
     String preToken = fileName.substring(0, tokenStart);

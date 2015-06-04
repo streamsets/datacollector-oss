@@ -13,6 +13,6 @@ public class PatternEL {
   public static final String TOKEN = "${" + TOKEN_NAME + "}";
 
   @ElConstant(name = TOKEN_NAME, description = "")
-  public static final String PATTERN = "${pattern}";
+  public static final String PATTERN = TOKEN;
 
 }

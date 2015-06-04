@@ -25,7 +25,7 @@ import java.util.concurrent.TimeUnit;
  * <p/>
  * This is an asynchronous implementation.
  */
-public class AsynchronousFileFinder implements FileFinder {
+public class AsynchronousFileFinder extends FileFinder {
   private final static Logger LOG = LoggerFactory.getLogger(AsynchronousFileFinder.class);
 
   private final static int MAX_QUEUE_SIZE = 1000;
