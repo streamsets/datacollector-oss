@@ -6,6 +6,7 @@
 package com.streamsets.pipeline.lib.io;
 
 import com.streamsets.pipeline.api.impl.Utils;
+import com.streamsets.pipeline.config.FileRollMode;
 import com.streamsets.pipeline.config.PostProcessingOptions;
 import com.streamsets.pipeline.lib.executor.SafeScheduledExecutorService;
 import org.slf4j.Logger;
@@ -80,8 +81,14 @@ public class GlobFileContextProvider implements FileContextProvider {
     // if scan interval is zero the GlobFileInfo will work synchronously and it won't require an executor
     executor = (scanIntervalSecs == 0) ? null : new SafeScheduledExecutorService(fileInfos.size() / 3 + 1, "FileFinder");
     globFileInfos = new ArrayList<>(fileInfos.size());
+    fileContexts = new ArrayList<>();
     for (MultiFileInfo fileInfo : fileInfos) {
-      globFileInfos.add(new GlobFileInfo(fileInfo, executor, scanIntervalSecs));
+      if (fileInfo.getFileRollMode() == FileRollMode.PATTERN) {
+        // for periodic pattern roll mode we don't support wildcards
+        fileContexts.add(new FileContext(fileInfo, charset, maxLineLength, postProcessing, archiveDir, eventPublisher));
+      } else {
+        globFileInfos.add(new GlobFileInfo(fileInfo, executor, scanIntervalSecs));
+      }
     }
     this.charset = charset;
     this.maxLineLength = maxLineLength;
@@ -89,7 +96,6 @@ public class GlobFileContextProvider implements FileContextProvider {
     this.archiveDir = archiveDir;
     this.eventPublisher = eventPublisher;
 
-    this.fileContexts = new ArrayList<>();
     startingIdx = 0;
     LOG.debug("Created");
   }

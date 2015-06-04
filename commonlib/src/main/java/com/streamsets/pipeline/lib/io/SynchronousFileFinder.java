@@ -25,7 +25,7 @@ import java.util.regex.Pattern;
  * <p/>
  * This is a synchronous implementation.
  */
-public class SynchronousFileFinder implements FileFinder {
+public class SynchronousFileFinder extends FileFinder {
   private final static Logger LOG = LoggerFactory.getLogger(SynchronousFileFinder.class);
 
   private final static Pattern DOUBLE_WILDCARD = Pattern.compile(".*[^\\\\]\\*\\*.*");
@@ -63,28 +63,6 @@ public class SynchronousFileFinder implements FileFinder {
     LOG.trace("<init>(globPath={})", globPath);
   }
 
-  static boolean hasWildcard(String name) {
-    boolean escaped = false;
-    for (char c: name.toCharArray()) {
-      if (c == '\\') {
-        escaped = true;
-      } else {
-        if (!escaped) {
-          switch (c) {
-            case '*':
-            case '?':
-            case '{':
-            case '[':
-              return true;
-          }
-        } else {
-          escaped = false;
-        }
-      }
-    }
-    return false;
-  }
-
   private Path getSubPath(Path path, int from, int to, boolean isPivot) {
     Path subPath = null;
     if (to - from > 0) {
@@ -104,14 +82,14 @@ public class SynchronousFileFinder implements FileFinder {
   private Path getPivotPath(Path path) {
     int nameCount = path.getNameCount();
     int wildcardIdx = 0;
-    for (; wildcardIdx < nameCount && !hasWildcard(path.getName(wildcardIdx).toString()); wildcardIdx++);
+    for (; wildcardIdx < nameCount && !hasGlobWildcard(path.getName(wildcardIdx).toString()); wildcardIdx++);
     return getSubPath(path, 0, wildcardIdx, true);
   }
 
   private Path getWildcardPath(Path path) {
     int nameCount = path.getNameCount();
     int wildcardIdx = 0;
-    for (; wildcardIdx < nameCount && !hasWildcard(path.getName(wildcardIdx).toString()); wildcardIdx++);
+    for (; wildcardIdx < nameCount && !hasGlobWildcard(path.getName(wildcardIdx).toString()); wildcardIdx++);
     return getSubPath(path, wildcardIdx, nameCount, false);
   }
 

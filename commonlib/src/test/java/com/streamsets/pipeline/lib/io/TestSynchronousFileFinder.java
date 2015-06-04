@@ -26,19 +26,19 @@ public class TestSynchronousFileFinder {
 
     @Test
   public void testHasWildcard() {
-    Assert.assertFalse(SynchronousFileFinder.hasWildcard(""));
-    Assert.assertFalse(SynchronousFileFinder.hasWildcard("a"));
-    Assert.assertFalse(SynchronousFileFinder.hasWildcard("\\*"));
-    Assert.assertFalse(SynchronousFileFinder.hasWildcard("a\\?"));
-    Assert.assertFalse(SynchronousFileFinder.hasWildcard("\\[z"));
-    Assert.assertFalse(SynchronousFileFinder.hasWildcard("a\\{z"));
-    Assert.assertTrue(SynchronousFileFinder.hasWildcard("*"));
-    Assert.assertTrue(SynchronousFileFinder.hasWildcard("?"));
-    Assert.assertTrue(SynchronousFileFinder.hasWildcard("["));
-    Assert.assertTrue(SynchronousFileFinder.hasWildcard("{"));
-    Assert.assertTrue(SynchronousFileFinder.hasWildcard("a*"));
-    Assert.assertTrue(SynchronousFileFinder.hasWildcard("*z"));
-    Assert.assertTrue(SynchronousFileFinder.hasWildcard("a*z"));
+    Assert.assertFalse(SynchronousFileFinder.hasGlobWildcard(""));
+    Assert.assertFalse(SynchronousFileFinder.hasGlobWildcard("a"));
+    Assert.assertFalse(SynchronousFileFinder.hasGlobWildcard("\\*"));
+    Assert.assertFalse(SynchronousFileFinder.hasGlobWildcard("a\\?"));
+    Assert.assertFalse(SynchronousFileFinder.hasGlobWildcard("\\[z"));
+    Assert.assertFalse(SynchronousFileFinder.hasGlobWildcard("a\\{z"));
+    Assert.assertTrue(SynchronousFileFinder.hasGlobWildcard("*"));
+    Assert.assertTrue(SynchronousFileFinder.hasGlobWildcard("?"));
+    Assert.assertTrue(SynchronousFileFinder.hasGlobWildcard("["));
+    Assert.assertTrue(SynchronousFileFinder.hasGlobWildcard("{"));
+    Assert.assertTrue(SynchronousFileFinder.hasGlobWildcard("a*"));
+    Assert.assertTrue(SynchronousFileFinder.hasGlobWildcard("*z"));
+    Assert.assertTrue(SynchronousFileFinder.hasGlobWildcard("a*z"));
   }
 
   @Test

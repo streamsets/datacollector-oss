@@ -20,6 +20,10 @@ public enum Errors implements ErrorCode {
   TAIL_08("The configuration for '{}' requires the '{}' token in the '{}' file name"),
   TAIL_09("The configuration for '{}' has an invalid regular expression in the '{}' pattern: {}"),
   TAIL_15("The file path '{}' must have the '{}' token in it"),
+  TAIL_16("The configuration for '{}' cannot have the '{}' token in a directory element"),
+  TAIL_17("The configuration for '{}' uses 'Files matching a pattern', it cannot have wildcards"),
+  TAIL_18("The configuration for '{}' is an invalid expression: {}"),
+  TAIL_19("The configuration for '{}' has an invalid 'First File'"),
 
   TAIL_10("Could not deserialize offset: {}"),
   TAIL_11("Error reading file '{}': {}"),

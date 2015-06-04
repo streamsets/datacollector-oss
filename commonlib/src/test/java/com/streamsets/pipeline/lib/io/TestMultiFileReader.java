@@ -269,7 +269,7 @@ public class TestMultiFileReader {
     File file2 = new File(testDir1, "f2.txt");
     Files.write(file1.toPath(), Arrays.asList("f1"), UTF8);
     MultiFileInfo di1 =
-        new MultiFileInfo(null, new File(testDir1, "f${pattern}.txt").getPath(),
+        new MultiFileInfo(null, new File(testDir1, "f${PATTERN}.txt").getPath(),
                                                FileRollMode.PATTERN, ".", "");
 
     MultiFileReader mdr = new MultiFileReader(Arrays.asList(di1), UTF8, 1024, PostProcessingOptions.DELETE, null,
@@ -300,7 +300,7 @@ public class TestMultiFileReader {
     File file2 = new File(testDir1, "f2.txt");
     Files.write(file1.toPath(), Arrays.asList("f1"), UTF8);
     MultiFileInfo di1 =
-        new MultiFileInfo(null, new File(testDir1, "f${pattern}.txt").getPath(),
+        new MultiFileInfo(null, new File(testDir1, "f${PATTERN}.txt").getPath(),
                                                FileRollMode.PATTERN, ".", "");
 
     MultiFileReader mdr = new MultiFileReader(Arrays.asList(di1), UTF8, 1024, PostProcessingOptions.ARCHIVE,

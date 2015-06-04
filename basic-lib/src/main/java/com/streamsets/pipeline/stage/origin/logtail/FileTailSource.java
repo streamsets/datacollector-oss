@@ -11,6 +11,9 @@ import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.base.BaseSource;
+import com.streamsets.pipeline.api.el.ELEval;
+import com.streamsets.pipeline.api.el.ELEvalException;
+import com.streamsets.pipeline.api.el.ELVars;
 import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.config.DataFormat;
 import com.streamsets.pipeline.config.FileRollMode;
@@ -19,11 +22,14 @@ import com.streamsets.pipeline.config.LogMode;
 import com.streamsets.pipeline.config.OnParseError;
 import com.streamsets.pipeline.config.PostProcessingOptions;
 import com.streamsets.pipeline.lib.io.FileEvent;
+import com.streamsets.pipeline.lib.io.FileFinder;
 import com.streamsets.pipeline.lib.io.FileLine;
+import com.streamsets.pipeline.lib.io.GlobFileContextProvider;
 import com.streamsets.pipeline.lib.io.LiveFile;
 import com.streamsets.pipeline.lib.io.LiveFileChunk;
 import com.streamsets.pipeline.lib.io.MultiFileInfo;
 import com.streamsets.pipeline.lib.io.MultiFileReader;
+import com.streamsets.pipeline.lib.io.RollMode;
 import com.streamsets.pipeline.lib.parser.DataParserFactory;
 import com.streamsets.pipeline.lib.parser.DataParser;
 import com.streamsets.pipeline.lib.parser.DataParserException;
@@ -123,10 +129,16 @@ public class FileTailSource extends BaseSource {
   private boolean validateFileInfo(FileInfo fileInfo, List<ConfigIssue> issues) {
     boolean ok = true;
     String fileName = Paths.get(fileInfo.fileFullPath).getFileName().toString();
-    if (!fileName.contains(fileInfo.fileRollMode.getTokenForPattern())) {
+    String token = fileInfo.fileRollMode.getTokenForPattern();
+    if (!token.isEmpty() && !fileName.contains(token)) {
       ok = false;
       issues.add(getContext().createConfigIssue(Groups.FILES.name(), "fileInfo", Errors.TAIL_08, fileInfo.fileFullPath,
                                                 fileInfo.fileRollMode.getTokenForPattern(), fileName));
+    }
+    String fileParentDir = Paths.get(fileInfo.fileFullPath).getParent().toString();
+    if (!token.isEmpty() && fileParentDir.contains(token)) {
+      issues.add(getContext().createConfigIssue(Groups.FILES.name(), "fileInfo", Errors.TAIL_16, fileInfo.fileFullPath,
+                                                fileInfo.fileRollMode.getTokenForPattern()));
     }
     if (fileInfo.fileRollMode == FileRollMode.PATTERN) {
       if (fileInfo.patternForToken == null || fileInfo.patternForToken.isEmpty()) {
@@ -140,6 +152,29 @@ public class FileTailSource extends BaseSource {
           issues.add(getContext().createConfigIssue(Groups.FILES.name(), "fileInfo", Errors.TAIL_09,
                                                     fileInfo.fileFullPath, fileInfo.patternForToken,
                                                     ex.getMessage()));
+        }
+        ELVars elVars = getContext().createELVars();
+        elVars.addVariable("pattern", "");
+        ELEval elEval = getContext().createELEval("fileFullPath");
+        try {
+          String pathWithoutPattern = elEval.eval(elVars, fileInfo.fileFullPath, String.class);
+          if (FileFinder.hasGlobWildcard(pathWithoutPattern)) {
+            ok = false;
+            issues.add(getContext().createConfigIssue(Groups.FILES.name(), "fileInfo", Errors.TAIL_17,
+                                                      fileInfo.fileFullPath));
+          }
+        } catch (ELEvalException ex) {
+          ok = false;
+          issues.add(getContext().createConfigIssue(Groups.FILES.name(), "fileInfo", Errors.TAIL_18,
+                                                    fileInfo.fileFullPath, ex.getMessage()));
+        }
+      }
+      if (ok && fileInfo.firstFile != null && !fileInfo.firstFile.isEmpty()) {
+        RollMode rollMode = fileInfo.fileRollMode.createRollMode(fileInfo.fileFullPath, fileInfo.patternForToken);
+        if (!rollMode.isFirstAcceptable(fileInfo.firstFile)) {
+          ok = false;
+          issues.add(getContext().createConfigIssue(Groups.FILES.name(), "fileInfo", Errors.TAIL_19,
+                                                    fileInfo.fileFullPath));
         }
       }
     }

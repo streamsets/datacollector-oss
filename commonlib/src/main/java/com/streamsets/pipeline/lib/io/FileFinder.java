@@ -17,11 +17,34 @@ import java.util.Set;
  * is that first invocation to find() returns all the currently available files (this can be thought as the first
  * invocation being always synchronous).
  */
-public interface FileFinder {
+public abstract class FileFinder {
 
-  Set<Path> find() throws IOException;
+  public abstract Set<Path> find() throws IOException;
 
-  boolean forget(Path path);
+  public abstract boolean forget(Path path);
 
-  void close();
+  public abstract void close();
+
+  public static boolean hasGlobWildcard(String name) {
+    boolean escaped = false;
+    for (char c: name.toCharArray()) {
+      if (c == '\\') {
+        escaped = true;
+      } else {
+        if (!escaped) {
+          switch (c) {
+            case '*':
+            case '?':
+            case '{':
+            case '[':
+              return true;
+          }
+        } else {
+          escaped = false;
+        }
+      }
+    }
+    return false;
+  }
+
 }

@@ -84,8 +84,7 @@ public class LiveDirectoryScanner {
 
     // firstFileName needs to be verified by roll mode
     Utils.checkArgument(this.rollMode.isFirstAcceptable(firstFileName),
-                        Utils.formatL("liveFileName '{}' should be a prefix of firstFileName '{}'",
-                                      this.liveFileName, firstFileName));
+                        Utils.formatL("firstFileName '{}' is not an acceptable file name", firstFileName));
     this.firstFile = (firstFileName == null || firstFileName.isEmpty()) ? null : new File(dir, firstFileName).toPath();
 
     pathComparator = this.rollMode.getComparator();
