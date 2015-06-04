@@ -3,7 +3,7 @@
  * be copied, modified, or distributed in whole or part without
  * written consent of StreamSets, Inc.
  */
-package com.streamsets.pipeline.stage.origin.udp;
+package com.streamsets.pipeline.lib.parser.netflow;
 
 import com.streamsets.pipeline.api.ErrorCode;
 import com.streamsets.pipeline.api.GenerateResourceBundle;
@@ -11,11 +11,8 @@ import com.streamsets.pipeline.api.GenerateResourceBundle;
 
 @GenerateResourceBundle
 public enum Errors implements ErrorCode {
-  UDP_00("Cannot bind to port {}: {}"),
-  UDP_01("Unknown data format: {}"),
-  UDP_02("No ports specified"),
-  UDP_03("Port '{}' is invalid"),
-  UDP_04("Charset '{}' is not supported"),
+  NETFLOW_00("Invalid version: '{}'"),
+  NETFLOW_01("Corrupt packet: {}"),
   ;
 
   private final String msg;
@@ -32,4 +29,5 @@ public enum Errors implements ErrorCode {
   public String getMessage() {
     return msg;
   }
+
 }
