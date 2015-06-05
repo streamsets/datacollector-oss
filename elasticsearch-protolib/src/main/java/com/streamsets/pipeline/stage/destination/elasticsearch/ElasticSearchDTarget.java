@@ -79,8 +79,8 @@ public class ElasticSearchDTarget extends DTarget {
   @ConfigDef(
       required = true,
       type = ConfigDef.Type.STRING,
-      defaultValue = "${record:value('/es-type')}",
-      label = "Type",
+      defaultValue = "${record:value('/es-mapping')}",
+      label = "Mapping",
       description = "",
       displayPosition = 50,
       group = "ELASTIC_SEARCH",
@@ -92,7 +92,6 @@ public class ElasticSearchDTarget extends DTarget {
   @ConfigDef(
       required = false,
       type = ConfigDef.Type.STRING,
-      defaultValue = "${record:value('/es-id')}",
       label = "Document ID",
       description = "Typically left empty",
       displayPosition = 50,
