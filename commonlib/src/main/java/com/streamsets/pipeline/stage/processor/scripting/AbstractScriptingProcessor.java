@@ -10,6 +10,7 @@ import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.base.SingleLaneProcessor;
 import com.streamsets.pipeline.api.impl.Utils;
+import org.slf4j.Logger;
 
 import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
@@ -20,8 +21,7 @@ import java.util.Iterator;
 import java.util.List;
 
 public abstract class AbstractScriptingProcessor extends SingleLaneProcessor {
-
-
+  private final Logger log;
   // to hide all other methods of batchMaker
   public interface Out {
     public void write(ScriptRecord record);
@@ -43,8 +43,19 @@ public abstract class AbstractScriptingProcessor extends SingleLaneProcessor {
   protected ScriptEngine engine;
   private Err err;
 
-  public AbstractScriptingProcessor(String scriptingEngineName, String scriptConfigGroup, String scriptConfigName,
-      ProcessingMode processingMode, String script) {
+  // State obj for use by end-user scripts.
+  private final Object state;
+
+  public AbstractScriptingProcessor(
+      Logger log,
+      String scriptingEngineName,
+      String scriptConfigGroup,
+      String scriptConfigName,
+      ProcessingMode processingMode,
+      String script
+  ) {
+    state = getScriptObjectFactory().createMap();
+    this.log = log;
     this.scriptingEngineName = scriptingEngineName;
     this.scriptConfigGroup = scriptConfigGroup;
     this.scriptConfigName = scriptConfigName;
@@ -108,7 +119,7 @@ public abstract class AbstractScriptingProcessor extends SingleLaneProcessor {
         while (it.hasNext()) {
           Record record = it.next();
           records.set(0, getScriptObjectFactory().createScriptRecord(record));
-          runScript(records, out, err);
+          runScript(records, out, err, state, log);
         }
         break;
       }
@@ -119,17 +130,19 @@ public abstract class AbstractScriptingProcessor extends SingleLaneProcessor {
           Record record = it.next();
           records.add(getScriptObjectFactory().createScriptRecord(record));
         }
-        runScript(records, out, err);
+        runScript(records, out, err, state, log);
         break;
       }
     }
   }
 
-  private void runScript(List<ScriptRecord> records, Out out, Err err) throws StageException {
+  private void runScript(List<ScriptRecord> records, Out out, Err err, Object state, Logger LOG) throws StageException {
     SimpleBindings bindings = new SimpleBindings();
     bindings.put("records", records.toArray(new Object[records.size()]));
     bindings.put("out", out);
     bindings.put("err", err);
+    bindings.put("state", state);
+    bindings.put("log", LOG);
     try {
       runScript(bindings);
     } catch (ScriptException ex) {
@@ -139,8 +152,12 @@ public abstract class AbstractScriptingProcessor extends SingleLaneProcessor {
             case DISCARD:
               break;
             case TO_ERROR:
-              getContext().toError(getScriptObjectFactory().getRecord(records.get(0)), Errors.SCRIPTING_05, ex.getMessage(),
-                                   ex);
+              getContext().toError(
+                  getScriptObjectFactory().getRecord(records.get(0)),
+                  Errors.SCRIPTING_05,
+                  ex.getMessage(),
+                  ex
+              );
               break;
             case STOP_PIPELINE:
               throw new StageException(Errors.SCRIPTING_05, ex.getMessage(), ex);

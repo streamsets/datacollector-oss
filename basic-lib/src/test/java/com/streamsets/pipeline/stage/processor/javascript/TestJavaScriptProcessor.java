@@ -21,6 +21,7 @@ import org.junit.Test;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -386,6 +387,37 @@ public class TestJavaScriptProcessor {
       Assert.assertEquals(field, output.getRecords().get("lane").get(0).get());
 
       Assert.assertEquals(Field.create((String)null), output.getRecords().get("lane").get(1).get());
+    } finally {
+      runner.runDestroy();
+    }
+  }
+
+  @Test
+  public void testStateObject() throws Exception {
+    Processor processor = new JavaScriptProcessor(ProcessingMode.RECORD,
+        "if (!state['total_count']) {\n" +
+        "  state['total_count'] = 0;\n" +
+        "}\n" +
+        "state['total_count'] = state['total_count'] + records.length;\n" +
+        "for (var i = 0; i < records.length; i++) {\n" +
+        "  records[i].value['count'] = state['total_count'];\n" +
+        "  out.write(records[i]);\n" +
+        "}");
+    ProcessorRunner runner = new ProcessorRunner.Builder(JavaScriptDProcessor.class, processor)
+        .addOutputLane("lane")
+        .build();
+    runner.runInit();
+    try {
+
+      Record record = RecordCreator.create();
+      Map<String, Field> map = new HashMap<>();
+      map.put("count", Field.create(0));
+      record.set(Field.create(map));
+      List<Record> input = Arrays.asList(record);
+      runner.runProcess(input);
+      StageRunner.Output output = runner.runProcess(input);
+      Assert.assertEquals(1, output.getRecords().get("lane").size());
+      Assert.assertEquals(2, output.getRecords().get("lane").get(0).get("/count").getValueAsInteger());
     } finally {
       runner.runDestroy();
     }
