@@ -131,7 +131,8 @@ public class TestMetricRuleEvaluator {
     //get alert gauge
     Gauge<Object> gauge = MetricsConfigurator.getGauge(metrics,
       AlertsUtil.getAlertGaugeName(metricsRuleDefinition.getId()));
-    Assert.assertNull(gauge);
+    Assert.assertNotNull(gauge);
+    Assert.assertNotNull(((Map<String, Object>) gauge.getValue()).get("exceptionMessage"));
   }
 
   @Test

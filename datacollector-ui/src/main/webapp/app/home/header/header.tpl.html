@@ -306,7 +306,13 @@
               ng-repeat="alert in triggeredAlerts">
             <a role="menuitem" tabindex="-1" href="#"
                ng-click="onNotificationClick(alert)">
-              <span ng-bind="alert.rule.alertText"></span>
+
+              <span ng-if="alert.gauge.value.exceptionMessage">
+                <strong>{{alert.rule.label}}: </strong> {{alert.gauge.value.exceptionMessage}}
+              </span>
+
+              <span ng-if="!alert.gauge.value.exceptionMessage" ng-bind="alert.rule.alertText"></span>
+
               <button type="button" class="close" aria-label="Close" ng-click="deleteTriggeredAlert(alert, $event)">
                 <span aria-hidden="true">&times;</span>
               </button>
