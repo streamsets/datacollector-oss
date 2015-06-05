@@ -28,7 +28,7 @@ public class JythonDProcessor extends DProcessor {
   @ConfigDef(
       required = true,
       type = ConfigDef.Type.MODEL,
-      defaultValue = "RECORD",
+      defaultValue = "BATCH",
       label = "Record Processing Mode",
       description = "If 'Record by Record' the processor takes care of record error handling, if 'Record batch' " +
                     "the Jython script must take care of record error handling",
@@ -56,29 +56,29 @@ public class JythonDProcessor extends DProcessor {
     "#sys.path.append('/some/other/dir/to/search')\n" +
     "\n" +
     "for record in records:\n" +
-    "  \n" +
-    "  #Change record root field value to a STRING value\n" +
-    "  #record.value = 'Hello '\n" +
+    "  try:\n" +
+    "    # Change record root field value to a STRING value\n" +
+    "    #record.value = 'Hello '\n" +
     "\n" +
     "\n" +
-    "  #Change record root field value to a MAP value and create an entry\n" +
-    "  #record.value = { 'V' : 'Hello'}\n" +
+    "    # Change record root field value to a MAP value and create an entry\n" +
+    "    #record.value = { 'V' : 'Hello'}\n" +
     "\n" +
-    "  #Modify a MAP entry\n" +
-    "  #record.value['V'] = 5\n" +
+    "    # Modify a MAP entry\n" +
+    "    #record.value['V'] = 5\n" +
     "\n" +
-    "  #Create an ARRAY entry\n" +
-    "  #record.value['A'] = [ 'Element 1', 'Element 2' ]\n" +
+    "    # Create an ARRAY entry\n" +
+    "    #record.value['A'] = [ 'Element 1', 'Element 2' ]\n" +
     "\n" +
-    "  #Modify an existing ARRAY entry\n" +
-    "  #record.value['A'][0] = 100\n" +
+    "    # Modify an existing ARRAY entry\n" +
+    "    #record.value['A'][0] = 100\n" +
     "\n" +
-    "  #Write record to procesor output\n" +
-    "  out.write(record)\n" +
+    "    # Write record to procesor output\n" +
+    "    out.write(record)\n" +
     "\n" +
-    "  #Send record to error\n" +
-    "  #err.write(record, 'Error Message')\n" +
-    "  \n";
+    "  except Exception as e:\n" +
+    "    # Send record to error\n" +
+    "    err.write(record, str(e))\n";
 
   @ConfigDef(
       required = true,
