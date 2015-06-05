@@ -28,7 +28,7 @@ public class JavaScriptDProcessor extends DProcessor {
   @ConfigDef(
       required = true,
       type = ConfigDef.Type.MODEL,
-      defaultValue = "RECORD",
+      defaultValue = "BATCH",
       label = "Record Processing Mode",
       description = "If 'Record by Record' the processor takes care of record error handling, if 'Record batch' " +
                     "the JavaScript must take care of record error handling",
@@ -53,34 +53,34 @@ public class JavaScriptDProcessor extends DProcessor {
     " *\n" +
     " */\n" +
     "\n" +
-    "for(var i=0; i < records.length; i++) {\n" +
-    "  \n" +
-    "  //Change record root field value to a STRING value\n" +
-    "  //records[i].value = 'Hello ' + i;\n" +
+    "for(var i = 0; i < records.length; i++) {\n" +
+    "  try {\n" +
+    "    // Change record root field value to a STRING value\n" +
+    "    //records[i].value = 'Hello ' + i;\n" +
     "\n" +
     "\n" +
-    "  //Change record root field value to a MAP value and create an entry\n" +
-    "  //records[i].value = {};\n" +
-    "  //records[i].value.V = 'Hello';\n" +
+    "    // Change record root field value to a MAP value and create an entry\n" +
+    "    //records[i].value = {};\n" +
+    "    //records[i].value.V = 'Hello';\n" +
     "\n" +
-    "  //Modify a MAP entry\n" +
-    "  //records[i].value.V = 5;\n" +
+    "    // Modify a MAP entry\n" +
+    "    //records[i].value.V = 5;\n" +
     "\n" +
-    "  //Create an ARRAY entry\n" +
-    "  //records[i].value.A = [];\n" +
-    "  //records[i].value.A.push('Element 1');\n" +
-    "  //records[i].value.A.push('Element 2');\n" +
+    "    // Create an ARRAY entry\n" +
+    "    //records[i].value.A = [];\n" +
+    "    //records[i].value.A.push('Element 1');\n" +
+    "    //records[i].value.A.push('Element 2');\n" +
     "\n" +
-    "  //Modify an existing ARRAY entry\n" +
-    "  //records[i].value.A[0] = 100;\n" +
+    "    // Modify an existing ARRAY entry\n" +
+    "    //records[i].value.A[0] = 100;\n" +
     "\n" +
-    "  //Write record to procesor output\n" +
-    "  out.write(records[i]);\n" +
-    "\n" +
-    "  //Send record to error\n" +
-    "  //err.write(records[i], 'Error Message');\n" +
-    "\n" +
-    "}  \n";
+    "    // Write record to procesor output\n" +
+    "    out.write(records[i]);\n" +
+    "  } catch (e) {\n" +
+    "    // Send record to error\n" +
+    "    err.write(records[i], e);\n" +
+    "  }\n" +
+    "}\n";
 
   @ConfigDef(
       required = true,
