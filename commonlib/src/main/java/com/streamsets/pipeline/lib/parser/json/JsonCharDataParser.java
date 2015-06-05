@@ -121,8 +121,8 @@ public class JsonCharDataParser implements DataParser {
   }
 
   @Override
-  public long getOffset() {
-    return (eof) ? -1 : parser.getReaderPosition();
+  public String getOffset() {
+    return (eof) ? String.valueOf(-1) : String.valueOf(parser.getReaderPosition());
   }
 
   @Override

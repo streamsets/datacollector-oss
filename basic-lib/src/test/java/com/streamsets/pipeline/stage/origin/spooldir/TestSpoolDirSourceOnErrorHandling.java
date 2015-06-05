@@ -45,7 +45,7 @@ public class TestSpoolDirSourceOnErrorHandling {
     return new SpoolDirSource(DataFormat.DELIMITED, "UTF-8", false, 100, dir, 10, 1, "file-[0-9].csv", 10, null, null,
                               PostProcessingOptions.ARCHIVE, dir, 10, CsvMode.RFC4180, CsvHeader.NO_HEADER,
                               5, null, 0, 10, null, 0, null, 0, false, null, null, null, null, null, false, null,
-      OnParseError.ERROR, -1);
+      OnParseError.ERROR, -1, null);
   }
 
   @Test
@@ -55,15 +55,15 @@ public class TestSpoolDirSourceOnErrorHandling {
                                                           .setOnRecordError(OnRecordError.DISCARD).build();
     runner.runInit();
     try {
-      StageRunner.Output output = runner.runProduce(source.createSourceOffset("file-0.csv", 0), 10);
-      Assert.assertEquals(source.createSourceOffset("file-0.csv", -1), output.getNewOffset());
+      StageRunner.Output output = runner.runProduce(source.createSourceOffset("file-0.csv", "0"), 10);
+      Assert.assertEquals(source.createSourceOffset("file-0.csv", "-1"), output.getNewOffset());
       Assert.assertEquals(2, output.getRecords().get("lane").size());
       Assert.assertEquals("a", output.getRecords().get("lane").get(0).get("[0]/value").getValueAsString());
       Assert.assertEquals("e", output.getRecords().get("lane").get(1).get("[0]/value").getValueAsString());
       Assert.assertEquals(0, runner.getErrorRecords().size());
 
       output = runner.runProduce(output.getNewOffset(), 10);
-      Assert.assertEquals(source.createSourceOffset("file-1.csv", -1), output.getNewOffset());
+      Assert.assertEquals(source.createSourceOffset("file-1.csv", "-1"), output.getNewOffset());
       Assert.assertEquals(1, output.getRecords().get("lane").size());
       Assert.assertEquals("x", output.getRecords().get("lane").get(0).get("[0]/value").getValueAsString());
       Assert.assertEquals(0, runner.getErrorRecords().size());
@@ -80,8 +80,8 @@ public class TestSpoolDirSourceOnErrorHandling {
                                                           .setOnRecordError(OnRecordError.TO_ERROR).build();
     runner.runInit();
     try {
-      StageRunner.Output output = runner.runProduce(source.createSourceOffset("file-0.csv", 0), 10);
-      Assert.assertEquals(source.createSourceOffset("file-0.csv", -1), output.getNewOffset());
+      StageRunner.Output output = runner.runProduce(source.createSourceOffset("file-0.csv", "0"), 10);
+      Assert.assertEquals(source.createSourceOffset("file-0.csv", "-1"), output.getNewOffset());
       Assert.assertEquals(2, output.getRecords().get("lane").size());
       Assert.assertEquals("a", output.getRecords().get("lane").get(0).get("[0]/value").getValueAsString());
       Assert.assertEquals("e", output.getRecords().get("lane").get(1).get("[0]/value").getValueAsString());
@@ -90,7 +90,7 @@ public class TestSpoolDirSourceOnErrorHandling {
 
       runner.clearErrors();
       output = runner.runProduce(output.getNewOffset(), 10);
-      Assert.assertEquals(source.createSourceOffset("file-1.csv", -1), output.getNewOffset());
+      Assert.assertEquals(source.createSourceOffset("file-1.csv", "-1"), output.getNewOffset());
       Assert.assertEquals(1, output.getRecords().get("lane").size());
       Assert.assertEquals("x", output.getRecords().get("lane").get(0).get("[0]/value").getValueAsString());
       Assert.assertEquals(0, runner.getErrorRecords().size());
@@ -108,7 +108,7 @@ public class TestSpoolDirSourceOnErrorHandling {
                                                           .setOnRecordError(OnRecordError.STOP_PIPELINE).build();
     runner.runInit();
     try {
-      runner.runProduce(source.createSourceOffset("file-0.csv", 0), 10);
+      runner.runProduce(source.createSourceOffset("file-0.csv", "0"), 10);
     } finally {
       runner.runDestroy();
     }
@@ -127,7 +127,7 @@ public class TestSpoolDirSourceOnErrorHandling {
     return new SpoolDirSource(DataFormat.JSON, "UTF-8", false, 100, dir, 10, 1, "file-[0-9].json", 10, null, null,
                               PostProcessingOptions.ARCHIVE, dir, 10, null, null,
                               5, JsonMode.ARRAY_OBJECTS, 100, 10, null, 0, null, 0, false, null, null, null, null,
-      null, false, null, OnParseError.ERROR, -1);
+      null, false, null, OnParseError.ERROR, -1, null);
   }
 
   @Test
@@ -137,14 +137,14 @@ public class TestSpoolDirSourceOnErrorHandling {
                                                           .setOnRecordError(OnRecordError.DISCARD).build();
     runner.runInit();
     try {
-      StageRunner.Output output = runner.runProduce(source.createSourceOffset("file-0.json", 0), 10);
-      Assert.assertEquals(source.createSourceOffset("file-0.json", -1), output.getNewOffset());
+      StageRunner.Output output = runner.runProduce(source.createSourceOffset("file-0.json", "0"), 10);
+      Assert.assertEquals(source.createSourceOffset("file-0.json", "-1"), output.getNewOffset());
       Assert.assertEquals(1, output.getRecords().get("lane").size());
       Assert.assertEquals(1, output.getRecords().get("lane").get(0).get("").getValueAsInteger());
       Assert.assertEquals(0, runner.getErrorRecords().size());
 
       output = runner.runProduce(output.getNewOffset(), 10);
-      Assert.assertEquals(source.createSourceOffset("file-1.json", -1), output.getNewOffset());
+      Assert.assertEquals(source.createSourceOffset("file-1.json", "-1"), output.getNewOffset());
       Assert.assertEquals(1, output.getRecords().get("lane").size());
       Assert.assertEquals(2, output.getRecords().get("lane").get(0).get("").getValueAsInteger());
       Assert.assertEquals(0, runner.getErrorRecords().size());
@@ -161,8 +161,8 @@ public class TestSpoolDirSourceOnErrorHandling {
                                                           .setOnRecordError(OnRecordError.TO_ERROR).build();
     runner.runInit();
     try {
-      StageRunner.Output output = runner.runProduce(source.createSourceOffset("file-0.json", 0), 10);
-      Assert.assertEquals(source.createSourceOffset("file-0.json", -1), output.getNewOffset());
+      StageRunner.Output output = runner.runProduce(source.createSourceOffset("file-0.json", "0"), 10);
+      Assert.assertEquals(source.createSourceOffset("file-0.json", "-1"), output.getNewOffset());
       Assert.assertEquals(1, output.getRecords().get("lane").size());
       Assert.assertEquals(1, output.getRecords().get("lane").get(0).get("").getValueAsInteger());
       Assert.assertEquals(0, runner.getErrorRecords().size());
@@ -170,7 +170,7 @@ public class TestSpoolDirSourceOnErrorHandling {
 
       runner.clearErrors();
       output = runner.runProduce(output.getNewOffset(), 10);
-      Assert.assertEquals(source.createSourceOffset("file-1.json", -1), output.getNewOffset());
+      Assert.assertEquals(source.createSourceOffset("file-1.json", "-1"), output.getNewOffset());
       Assert.assertEquals(1, output.getRecords().get("lane").size());
       Assert.assertEquals(2, output.getRecords().get("lane").get(0).get("").getValueAsInteger());
       Assert.assertEquals(0, runner.getErrorRecords().size());
@@ -188,7 +188,7 @@ public class TestSpoolDirSourceOnErrorHandling {
                                                           .setOnRecordError(OnRecordError.STOP_PIPELINE).build();
     runner.runInit();
     try {
-      runner.runProduce(source.createSourceOffset("file-0.json", 0), 10);
+      runner.runProduce(source.createSourceOffset("file-0.json", "0"), 10);
     } finally {
       runner.runDestroy();
     }

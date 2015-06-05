@@ -165,6 +165,7 @@ public abstract class StageRunner<S extends Stage> {
         }
         return false;
       }
+      return false;
     }
     return true;
   }

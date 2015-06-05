@@ -208,8 +208,8 @@ public abstract class LogCharDataParser implements DataParser {
   protected abstract Map<String, Field> parseLogLine(StringBuilder sb) throws DataParserException;
 
   @Override
-  public long getOffset() {
-    return currentOffset;
+  public String getOffset() {
+    return String.valueOf(currentOffset);
   }
 
   @Override

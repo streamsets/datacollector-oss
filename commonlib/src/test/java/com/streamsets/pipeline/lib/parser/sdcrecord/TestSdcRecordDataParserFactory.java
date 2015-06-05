@@ -71,11 +71,11 @@ public class TestSdcRecordDataParserFactory {
     SdcRecordDataParserFactory factory = (SdcRecordDataParserFactory) dataFactory;
 
     DataParser parser = factory.getParser("id", createJsonSdcRecordsString());
-    Assert.assertEquals(0, parser.getOffset());
+    Assert.assertEquals("0", parser.getOffset());
     Record record = parser.parse();
     Assert.assertNotNull(record);
     Assert.assertTrue(record.has(""));
-    Assert.assertTrue(0 < parser.getOffset());
+    Assert.assertTrue(0 < Long.parseLong(parser.getOffset()));
     parser.close();
   }
 
@@ -91,11 +91,11 @@ public class TestSdcRecordDataParserFactory {
 
     InputStream is = new ByteArrayInputStream(createJsonSdcRecordsString());
     DataParser parser = factory.getParser("id", is, 0);
-    Assert.assertEquals(0, parser.getOffset());
+    Assert.assertEquals("0", parser.getOffset());
     Record record = parser.parse();
     Assert.assertNotNull(record);
     Assert.assertTrue(record.has(""));
-    Assert.assertTrue(0 < parser.getOffset());
+    Assert.assertTrue(0 < Long.parseLong(parser.getOffset()));
     parser.close();
   }
 
@@ -113,9 +113,9 @@ public class TestSdcRecordDataParserFactory {
 
     InputStream is = new ByteArrayInputStream(payload);
     DataParser parser = factory.getParser("id", is, 0);
-    Assert.assertEquals(0, parser.getOffset());
+    Assert.assertEquals(0, Long.parseLong(parser.getOffset()));
     parser.parse();
-    long offset = parser.getOffset();
+    long offset = Long.parseLong(parser.getOffset());
     parser.close();
 
     dataFactory = dataParserFactoryBuilder
@@ -126,11 +126,11 @@ public class TestSdcRecordDataParserFactory {
 
     is = new ByteArrayInputStream(payload);
     parser = factory.getParser("id", is, offset);
-    Assert.assertEquals(offset, parser.getOffset());
+    Assert.assertEquals(offset, Long.parseLong(parser.getOffset()));
     Record record = parser.parse();
     Assert.assertNotNull(record);
     Assert.assertTrue(record.has(""));
-    Assert.assertTrue(offset < parser.getOffset());
+    Assert.assertTrue(offset < Long.parseLong(parser.getOffset()));
     parser.close();
   }
 

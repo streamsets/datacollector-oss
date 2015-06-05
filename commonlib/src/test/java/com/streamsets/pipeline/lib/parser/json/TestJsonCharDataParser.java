@@ -31,20 +31,20 @@ public class TestJsonCharDataParser {
     OverrunReader reader = new OverrunReader(new StringReader("[\"Hello\"]\n[\"Bye\"]"), 1000, true, false);
     DataParser parser = new JsonCharDataParser(getContext(), "id", reader, 0,
                                            OverrunStreamingJsonParser.Mode.MULTIPLE_OBJECTS, 100);
-    Assert.assertEquals(0, parser.getOffset());
+    Assert.assertEquals(0, Long.parseLong(parser.getOffset()));
     Record record = parser.parse();
     Assert.assertNotNull(record);
     Assert.assertEquals("id::0", record.getHeader().getSourceId());
     Assert.assertEquals("Hello", record.get().getValueAsList().get(0).getValueAsString());
-    Assert.assertEquals(10, parser.getOffset());
+    Assert.assertEquals(10, Long.parseLong(parser.getOffset()));
     record = parser.parse();
     Assert.assertNotNull(record);
     Assert.assertEquals("id::10", record.getHeader().getSourceId());
     Assert.assertEquals("Bye", record.get().getValueAsList().get(0).getValueAsString());
-    Assert.assertEquals(17, parser.getOffset());
+    Assert.assertEquals(17, Long.parseLong(parser.getOffset()));
     record = parser.parse();
     Assert.assertNull(record);
-    Assert.assertEquals(-1, parser.getOffset());
+    Assert.assertEquals(-1, Long.parseLong(parser.getOffset()));
     parser.close();
   }
 
@@ -53,15 +53,15 @@ public class TestJsonCharDataParser {
     OverrunReader reader = new OverrunReader(new StringReader("[\"Hello\"]\n[\"Bye\"]"), 1000, true, false);
     DataParser parser = new JsonCharDataParser(getContext(), "id", reader, 10,
                                            OverrunStreamingJsonParser.Mode.MULTIPLE_OBJECTS, 100);
-    Assert.assertEquals(10, parser.getOffset());
+    Assert.assertEquals(10, Long.parseLong(parser.getOffset()));
     Record record = parser.parse();
     Assert.assertNotNull(record);
     Assert.assertEquals("id::10", record.getHeader().getSourceId());
     Assert.assertEquals("Bye", record.get().getValueAsList().get(0).getValueAsString());
-    Assert.assertEquals(17, parser.getOffset());
+    Assert.assertEquals(17, Long.parseLong(parser.getOffset()));
     record = parser.parse();
     Assert.assertNull(record);
-    Assert.assertEquals(-1, parser.getOffset());
+    Assert.assertEquals(-1, Long.parseLong(parser.getOffset()));
     parser.close();
   }
 
@@ -71,21 +71,21 @@ public class TestJsonCharDataParser {
   public void testParseMultipleStringObjects() throws Exception {
     OverrunReader reader = new OverrunReader(new StringReader("\"Hello\"\"Bye\""), 1000, true);
     DataParser parser = new JsonDataParser(getContext(), "id", reader, 0, OverrunStreamingJsonParser.Mode.MULTIPLE_OBJECTS, 100);
-    Assert.assertEquals(0, parser.getOffset()); // "HELLO""
+    Assert.assertEquals(0, Long.parseLong(parser.getOffset())); // "HELLO""
     Record record = parser.parse();
     Assert.assertNotNull(record);
     Assert.assertEquals("id::0", record.getHeader().getSourceId());
     Assert.assertEquals("Hello", record.get().getValueAsString());
-    Assert.assertEquals(7, parser.getOffset());
+    Assert.assertEquals(7, Long.parseLong(parser.getOffset()));
     record = parser.parse();
     Assert.assertNotNull(record);
     Assert.assertEquals("id::7", record.getHeader().getSourceId());
     Assert.assertEquals("Bye", record.get().getValueAsString());
-    Assert.assertEquals(12, parser.getOffset());
+    Assert.assertEquals(12, Long.parseLong(parser.getOffset()));
     record = parser.parse();
-    Assert.assertEquals(12, parser.getOffset());
+    Assert.assertEquals(12, Long.parseLong(parser.getOffset()));
     Assert.assertNull(record);
-    Assert.assertEquals(-1, parser.getOffset());
+    Assert.assertEquals(-1, Long.parseLong(parser.getOffset()));
     parser.close();
   }
    */
@@ -105,20 +105,20 @@ public class TestJsonCharDataParser {
     OverrunReader reader = new OverrunReader(new StringReader("[[\"Hello\"],[\"Bye\"]]"), 1000, true, false);
     DataParser parser = new JsonCharDataParser(getContext(), "id", reader, 0,
                                            OverrunStreamingJsonParser.Mode.ARRAY_OBJECTS, 10);
-    Assert.assertEquals(0, parser.getOffset());
+    Assert.assertEquals(0, Long.parseLong(parser.getOffset()));
     Record record = parser.parse();
     Assert.assertNotNull(record);
     Assert.assertEquals("id::0", record.getHeader().getSourceId());
     Assert.assertEquals("Hello", record.get().getValueAsList().get(0).getValueAsString());
-    Assert.assertEquals(9, parser.getOffset());
+    Assert.assertEquals(9, Long.parseLong(parser.getOffset()));
     record = parser.parse();
     Assert.assertNotNull(record);
     Assert.assertEquals("id::9", record.getHeader().getSourceId());
     Assert.assertEquals("Bye", record.get().getValueAsList().get(0).getValueAsString());
-    Assert.assertEquals(17, parser.getOffset());
+    Assert.assertEquals(17, Long.parseLong(parser.getOffset()));
     record = parser.parse();
     Assert.assertNull(record);
-    Assert.assertEquals(-1, parser.getOffset());
+    Assert.assertEquals(-1, Long.parseLong(parser.getOffset()));
     parser.close();
   }
 
@@ -127,15 +127,15 @@ public class TestJsonCharDataParser {
     OverrunReader reader = new OverrunReader(new StringReader("[[\"Hello\"],[\"Bye\"]]"), 1000, true, false);
     DataParser parser = new JsonCharDataParser(getContext(), "id", reader, 9,
                                            OverrunStreamingJsonParser.Mode.ARRAY_OBJECTS, 10);
-    Assert.assertEquals(9, parser.getOffset());
+    Assert.assertEquals(9, Long.parseLong(parser.getOffset()));
     Record record = parser.parse();
     Assert.assertNotNull(record);
     Assert.assertEquals("id::9", record.getHeader().getSourceId());
     Assert.assertEquals("Bye", record.get().getValueAsList().get(0).getValueAsString());
-    Assert.assertEquals(17, parser.getOffset());
+    Assert.assertEquals(17, Long.parseLong(parser.getOffset()));
     record = parser.parse();
     Assert.assertNull(record);
-    Assert.assertEquals(-1, parser.getOffset());
+    Assert.assertEquals(-1, Long.parseLong(parser.getOffset()));
     parser.close();
   }
 

@@ -406,6 +406,21 @@ public class HdfsDTarget extends DTarget {
   )
   public boolean textEmptyLineIfNull;
 
+  /********  For AVRO *******/
+
+  @ConfigDef(
+    required = false,
+    type = ConfigDef.Type.TEXT,
+    defaultValue = "",
+    label = "Avro Schema",
+    description = "",
+    displayPosition = 320,
+    group = "AVRO",
+    dependsOn = "dataFormat",
+    triggeredByValue = {"AVRO"},
+    mode = ConfigDef.Mode.JSON
+  )
+  public String avroSchema;
 
   @Override
   protected Target createTarget() {
@@ -437,7 +452,8 @@ public class HdfsDTarget extends DTarget {
       csvReplaceNewLines,
       jsonMode,
       textFieldPath,
-      textEmptyLineIfNull
+      textEmptyLineIfNull,
+      avroSchema
     );
   }
 

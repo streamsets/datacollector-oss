@@ -5,6 +5,8 @@
  */
 package com.streamsets.pipeline.stage.origin.kafka;
 
+import com.google.common.collect.ImmutableList;
+import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.config.CsvHeader;
@@ -21,19 +23,43 @@ import com.streamsets.pipeline.lib.parser.log.Constants;
 import com.streamsets.pipeline.sdk.SourceRunner;
 import com.streamsets.pipeline.sdk.StageRunner;
 import kafka.javaapi.producer.Producer;
+import kafka.producer.KeyedMessage;
+import kafka.producer.ProducerConfig;
+import org.apache.avro.Schema;
+import org.apache.avro.file.DataFileWriter;
+import org.apache.avro.generic.GenericData;
+import org.apache.avro.generic.GenericDatumWriter;
+import org.apache.avro.generic.GenericRecord;
+import org.apache.avro.io.BinaryEncoder;
+import org.apache.avro.io.DatumWriter;
+import org.apache.avro.io.EncoderFactory;
 import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Properties;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
 public class TestKafkaSource {
+
+  private static final String AVRO_SCHEMA = "{\n"
+    +"\"type\": \"record\",\n"
+    +"\"name\": \"Employee\",\n"
+    +"\"fields\": [\n"
+    +" {\"name\": \"name\", \"type\": \"string\"},\n"
+    +" {\"name\": \"age\", \"type\": \"int\"},\n"
+    +" {\"name\": \"emails\", \"type\": {\"type\": \"array\", \"items\": \"string\"}},\n"
+    +" {\"name\": \"boss\", \"type\": [\"Employee\",\"null\"]}\n"
+    +"]}";
 
   private static final int SINGLE_PARTITION = 1;
   private static final int MULTIPLE_PARTITIONS = 5;
@@ -50,6 +76,8 @@ public class TestKafkaSource {
   private static final String TOPIC9 = "TestKafkaSource9";
   private static final String TOPIC10 = "TestKafkaSource10";
   private static final String TOPIC11 = "TestKafkaSource11";
+  private static final String TOPIC12 = "TestKafkaSource12";
+  private static final String TOPIC13 = "TestKafkaSource13";
   private static final String CONSUMER_GROUP = "SDC";
 
   private static Producer<String, String> producer;
@@ -73,6 +101,8 @@ public class TestKafkaSource {
     KafkaTestUtil.createTopic(TOPIC9, SINGLE_PARTITION, SINGLE_REPLICATION_FACTOR);
     KafkaTestUtil.createTopic(TOPIC10, SINGLE_PARTITION, SINGLE_REPLICATION_FACTOR);
     KafkaTestUtil.createTopic(TOPIC11, SINGLE_PARTITION, SINGLE_REPLICATION_FACTOR);
+    KafkaTestUtil.createTopic(TOPIC12, SINGLE_PARTITION, SINGLE_REPLICATION_FACTOR);
+    KafkaTestUtil.createTopic(TOPIC13, SINGLE_PARTITION, SINGLE_REPLICATION_FACTOR);
 
     producer = KafkaTestUtil.createProducer(KafkaTestUtil.getMetadataBrokerURI(), true);
 
@@ -723,6 +753,357 @@ public class TestKafkaSource {
       Assert.assertEquals(10, records.size());
   }
 
+  @Test
+  public void testProduceAvroRecordsWithSchema() throws Exception {
+
+    //create Producer and send messages
+    Schema schema = new Schema.Parser().parse(AVRO_SCHEMA);
+    GenericRecord boss = new GenericData.Record(schema);
+    boss.put("name", "boss");
+    boss.put("age", 60);
+    boss.put("emails", ImmutableList.of("boss@company.com", "boss2@company.com"));
+    boss.put("boss", null);
+
+    GenericRecord e3 = new GenericData.Record(schema);
+    e3.put("name", "c");
+    e3.put("age", 50);
+    e3.put("emails", ImmutableList.of("c@company.com", "c2@company.com"));
+    e3.put("boss", boss);
+
+    GenericRecord e2 = new GenericData.Record(schema);
+    e2.put("name", "b");
+    e2.put("age", 40);
+    e2.put("emails", ImmutableList.of("b@company.com", "b2@company.com"));
+    e2.put("boss", boss);
+
+    GenericRecord e1 = new GenericData.Record(schema);
+    e1.put("name", "a");
+    e1.put("age", 30);
+    e1.put("emails", ImmutableList.of("a@company.com", "a2@company.com"));
+    e1.put("boss", boss);
+
+
+    Properties props = new Properties();
+    props.put("metadata.broker.list", KafkaTestUtil.getMetadataBrokerURI());
+    props.put("serializer.class", "kafka.serializer.DefaultEncoder");
+    props.put("key.serializer.class", "kafka.serializer.StringEncoder");
+    props.put("request.required.acks", "1");
+    ProducerConfig config = new ProducerConfig(props);
+    Producer<String, byte[]> producer = new Producer<>(config);
+
+    ByteArrayOutputStream baos = new ByteArrayOutputStream();
+    DatumWriter<GenericRecord> datumWriter = new GenericDatumWriter<>(schema);
+    DataFileWriter<GenericRecord> dataFileWriter = new DataFileWriter<>(datumWriter);
+    dataFileWriter.create(schema, baos);
+    dataFileWriter.append(e1);
+    dataFileWriter.flush();
+    dataFileWriter.close();
+    producer.send(new KeyedMessage<>(TOPIC12, "0", baos.toByteArray()));
+
+    baos.reset();
+    dataFileWriter.create(schema, baos);
+    dataFileWriter.append(e2);
+    dataFileWriter.flush();
+    dataFileWriter.close();
+    producer.send(new KeyedMessage<>(TOPIC12, "0", baos.toByteArray()));
+
+    baos.reset();
+    dataFileWriter.create(schema, baos);
+    dataFileWriter.append(e3);
+    dataFileWriter.flush();
+    dataFileWriter.close();
+    producer.send(new KeyedMessage<>(TOPIC12, "0", baos.toByteArray()));
+
+
+    Map<String, String> kafkaConsumerConfigs = new HashMap<>();
+    kafkaConsumerConfigs.put("auto.offset.reset", "smallest");
+
+    SourceRunner sourceRunner = new SourceRunner.Builder(KafkaDSource.class)
+      .addOutputLane("lane")
+      .addConfiguration("topic", TOPIC12)
+      .addConfiguration("metadataBrokerList", KafkaTestUtil.getMetadataBrokerURI())
+      .addConfiguration("consumerGroup", CONSUMER_GROUP)
+      .addConfiguration("zookeeperConnect", zkConnect)
+      .addConfiguration("maxBatchSize", 100)
+      .addConfiguration("maxWaitTime", 10000)
+      .addConfiguration("dataFormat", DataFormat.AVRO)
+      .addConfiguration("charset", "UTF-8")
+      .addConfiguration("jsonContent", null)
+      .addConfiguration("kafkaConsumerConfigs", kafkaConsumerConfigs)
+      .addConfiguration("produceSingleRecordPerMessage", false)
+      .addConfiguration("xmlRecordElement", "")
+      .addConfiguration("xmlMaxObjectLen", null)
+      .addConfiguration("logMode", LogMode.LOG4J)
+      .addConfiguration("logMaxObjectLen", 10000)
+      .addConfiguration("regex", null)
+      .addConfiguration("grokPatternDefinition", null)
+      .addConfiguration("enableLog4jCustomLogFormat", false)
+      .addConfiguration("customLogFormat", null)
+      .addConfiguration("fieldPathsToGroupName", null)
+      .addConfiguration("log4jCustomLogFormat", null)
+      .addConfiguration("grokPattern", null)
+      .addConfiguration("onParseError", OnParseError.INCLUDE_AS_STACK_TRACE)
+      .addConfiguration("maxStackTraceLines", 100)
+      .addConfiguration("retainOriginalLine", true)
+      .addConfiguration("avroSchema", AVRO_SCHEMA)
+      .addConfiguration("schemaInMessage", true)
+      .build();
+
+    sourceRunner.runInit();
+
+    StageRunner.Output output = sourceRunner.runProduce(null, 10);
+
+    String newOffset = output.getNewOffset();
+    Assert.assertNull(newOffset);
+
+    List<Record> records = output.getRecords().get("lane");
+    Assert.assertEquals(3, records.size());
+
+    Record e3Record = records.get(2);
+    Assert.assertTrue(e3Record.has("/name"));
+    Assert.assertEquals("c", e3Record.get("/name").getValueAsString());
+    Assert.assertTrue(e3Record.has("/age"));
+    Assert.assertEquals(50, e3Record.get("/age").getValueAsInteger());
+    Assert.assertTrue(e3Record.has("/emails"));
+    Assert.assertTrue(e3Record.get("/emails").getValueAsList() instanceof List);
+    List<Field> emails = e3Record.get("/emails").getValueAsList();
+    Assert.assertEquals(2, emails.size());
+    Assert.assertEquals("c@company.com", emails.get(0).getValueAsString());
+    Assert.assertEquals("c2@company.com", emails.get(1).getValueAsString());
+    Assert.assertTrue(e3Record.has("/boss"));
+    Assert.assertTrue(e3Record.get("/boss").getValueAsMap() instanceof Map);
+    Assert.assertTrue(e3Record.has("/boss/name"));
+    Assert.assertEquals("boss", e3Record.get("/boss/name").getValueAsString());
+    Assert.assertTrue(e3Record.has("/boss/age"));
+    Assert.assertEquals(60, e3Record.get("/boss/age").getValueAsInteger());
+    Assert.assertTrue(e3Record.has("/boss/emails"));
+    Assert.assertTrue(e3Record.get("/boss/emails").getValueAsList() instanceof List);
+    emails = e3Record.get("/boss/emails").getValueAsList();
+    Assert.assertEquals(2, emails.size());
+    Assert.assertEquals("boss@company.com", emails.get(0).getValueAsString());
+    Assert.assertEquals("boss2@company.com", emails.get(1).getValueAsString());
+
+    Record e2Record = records.get(1);
+    Assert.assertTrue(e2Record.has("/name"));
+    Assert.assertEquals("b", e2Record.get("/name").getValueAsString());
+    Assert.assertTrue(e2Record.has("/age"));
+    Assert.assertEquals(40, e2Record.get("/age").getValueAsInteger());
+    Assert.assertTrue(e2Record.has("/emails"));
+    Assert.assertTrue(e2Record.get("/emails").getValueAsList() instanceof List);
+    emails = e2Record.get("/emails").getValueAsList();
+    Assert.assertEquals(2, emails.size());
+    Assert.assertEquals("b@company.com", emails.get(0).getValueAsString());
+    Assert.assertEquals("b2@company.com", emails.get(1).getValueAsString());
+    Assert.assertTrue(e2Record.has("/boss"));
+    Assert.assertTrue(e2Record.get("/boss").getValueAsMap() instanceof Map);
+    Assert.assertTrue(e2Record.has("/boss/name"));
+    Assert.assertEquals("boss", e2Record.get("/boss/name").getValueAsString());
+    Assert.assertTrue(e2Record.has("/boss/age"));
+    Assert.assertEquals(60, e2Record.get("/boss/age").getValueAsInteger());
+    Assert.assertTrue(e2Record.has("/boss/emails"));
+    Assert.assertTrue(e2Record.get("/boss/emails").getValueAsList() instanceof List);
+    emails = e2Record.get("/boss/emails").getValueAsList();
+    Assert.assertEquals(2, emails.size());
+    Assert.assertEquals("boss@company.com", emails.get(0).getValueAsString());
+    Assert.assertEquals("boss2@company.com", emails.get(1).getValueAsString());
+
+    Record e1Record = records.get(0);
+    Assert.assertTrue(e1Record.has("/name"));
+    Assert.assertEquals("a", e1Record.get("/name").getValueAsString());
+    Assert.assertTrue(e1Record.has("/age"));
+    Assert.assertEquals(30, e1Record.get("/age").getValueAsInteger());
+    Assert.assertTrue(e1Record.has("/emails"));
+    Assert.assertTrue(e1Record.get("/emails").getValueAsList() instanceof List);
+    emails = e1Record.get("/emails").getValueAsList();
+    Assert.assertEquals(2, emails.size());
+    Assert.assertEquals("a@company.com", emails.get(0).getValueAsString());
+    Assert.assertEquals("a2@company.com", emails.get(1).getValueAsString());
+    Assert.assertTrue(e1Record.has("/boss"));
+    Assert.assertTrue(e1Record.get("/boss").getValueAsMap() instanceof Map);
+    Assert.assertTrue(e1Record.has("/boss/name"));
+    Assert.assertEquals("boss", e1Record.get("/boss/name").getValueAsString());
+    Assert.assertTrue(e1Record.has("/boss/age"));
+    Assert.assertEquals(60, e1Record.get("/boss/age").getValueAsInteger());
+    Assert.assertTrue(e1Record.has("/boss/emails"));
+    Assert.assertTrue(e1Record.get("/boss/emails").getValueAsList() instanceof List);
+    emails = e1Record.get("/boss/emails").getValueAsList();
+    Assert.assertEquals(2, emails.size());
+    Assert.assertEquals("boss@company.com", emails.get(0).getValueAsString());
+    Assert.assertEquals("boss2@company.com", emails.get(1).getValueAsString());
+
+  }
+
+  @Test
+  public void testProduceAvroRecordsWithOutSchema() throws Exception {
+
+    //create Producer and send messages
+    Schema schema = new Schema.Parser().parse(AVRO_SCHEMA);
+    GenericRecord boss = new GenericData.Record(schema);
+    boss.put("name", "boss");
+    boss.put("age", 60);
+    boss.put("emails", ImmutableList.of("boss@company.com", "boss2@company.com"));
+    boss.put("boss", null);
+
+    GenericRecord e3 = new GenericData.Record(schema);
+    e3.put("name", "c");
+    e3.put("age", 50);
+    e3.put("emails", ImmutableList.of("c@company.com", "c2@company.com"));
+    e3.put("boss", boss);
+
+    GenericRecord e2 = new GenericData.Record(schema);
+    e2.put("name", "b");
+    e2.put("age", 40);
+    e2.put("emails", ImmutableList.of("b@company.com", "b2@company.com"));
+    e2.put("boss", boss);
+
+    GenericRecord e1 = new GenericData.Record(schema);
+    e1.put("name", "a");
+    e1.put("age", 30);
+    e1.put("emails", ImmutableList.of("a@company.com", "a2@company.com"));
+    e1.put("boss", boss);
+
+
+    Properties props = new Properties();
+    props.put("metadata.broker.list", KafkaTestUtil.getMetadataBrokerURI());
+    props.put("serializer.class", "kafka.serializer.DefaultEncoder");
+    props.put("key.serializer.class", "kafka.serializer.StringEncoder");
+    props.put("request.required.acks", "1");
+    ProducerConfig config = new ProducerConfig(props);
+    Producer<String, byte[]> producer = new Producer<>(config);
+
+    ByteArrayOutputStream baos = new ByteArrayOutputStream();
+    GenericDatumWriter<GenericRecord> genericDatumWriter = new GenericDatumWriter<>(schema);
+    BinaryEncoder binaryEncoder = EncoderFactory.get().binaryEncoder(baos, null);
+    genericDatumWriter.write(e1, binaryEncoder);
+    binaryEncoder.flush();
+    producer.send(new KeyedMessage<>(TOPIC13, "0", baos.toByteArray()));
+
+    baos.reset();
+    genericDatumWriter.write(e2, binaryEncoder);
+    binaryEncoder.flush();
+    producer.send(new KeyedMessage<>(TOPIC13, "0", baos.toByteArray()));
+
+    baos.reset();
+    genericDatumWriter.write(e3, binaryEncoder);
+    binaryEncoder.flush();
+    producer.send(new KeyedMessage<>(TOPIC13, "0", baos.toByteArray()));
+
+    Map<String, String> kafkaConsumerConfigs = new HashMap<>();
+    kafkaConsumerConfigs.put("auto.offset.reset", "smallest");
+
+    SourceRunner sourceRunner = new SourceRunner.Builder(KafkaDSource.class)
+      .addOutputLane("lane")
+      .addConfiguration("topic", TOPIC13)
+      .addConfiguration("metadataBrokerList", KafkaTestUtil.getMetadataBrokerURI())
+      .addConfiguration("consumerGroup", CONSUMER_GROUP)
+      .addConfiguration("zookeeperConnect", zkConnect)
+      .addConfiguration("maxBatchSize", 100)
+      .addConfiguration("maxWaitTime", 10000)
+      .addConfiguration("dataFormat", DataFormat.AVRO)
+      .addConfiguration("charset", "UTF-8")
+      .addConfiguration("jsonContent", null)
+      .addConfiguration("kafkaConsumerConfigs", kafkaConsumerConfigs)
+      .addConfiguration("produceSingleRecordPerMessage", false)
+      .addConfiguration("xmlRecordElement", "")
+      .addConfiguration("xmlMaxObjectLen", null)
+      .addConfiguration("logMode", LogMode.LOG4J)
+      .addConfiguration("logMaxObjectLen", 10000)
+      .addConfiguration("regex", null)
+      .addConfiguration("grokPatternDefinition", null)
+      .addConfiguration("enableLog4jCustomLogFormat", false)
+      .addConfiguration("customLogFormat", null)
+      .addConfiguration("fieldPathsToGroupName", null)
+      .addConfiguration("log4jCustomLogFormat", null)
+      .addConfiguration("grokPattern", null)
+      .addConfiguration("onParseError", OnParseError.INCLUDE_AS_STACK_TRACE)
+      .addConfiguration("maxStackTraceLines", 100)
+      .addConfiguration("retainOriginalLine", true)
+      .addConfiguration("avroSchema", AVRO_SCHEMA)
+      .addConfiguration("schemaInMessage", false)
+      .build();
+
+    sourceRunner.runInit();
+    StageRunner.Output output = sourceRunner.runProduce(null, 10);
+
+    String newOffset = output.getNewOffset();
+    Assert.assertNull(newOffset);
+
+    List<Record> records = output.getRecords().get("lane");
+    Assert.assertEquals(3, records.size());
+
+    Record e3Record = records.get(2);
+    Assert.assertTrue(e3Record.has("/name"));
+    Assert.assertEquals("c", e3Record.get("/name").getValueAsString());
+    Assert.assertTrue(e3Record.has("/age"));
+    Assert.assertEquals(50, e3Record.get("/age").getValueAsInteger());
+    Assert.assertTrue(e3Record.has("/emails"));
+    Assert.assertTrue(e3Record.get("/emails").getValueAsList() instanceof List);
+    List<Field> emails = e3Record.get("/emails").getValueAsList();
+    Assert.assertEquals(2, emails.size());
+    Assert.assertEquals("c@company.com", emails.get(0).getValueAsString());
+    Assert.assertEquals("c2@company.com", emails.get(1).getValueAsString());
+    Assert.assertTrue(e3Record.has("/boss"));
+    Assert.assertTrue(e3Record.get("/boss").getValueAsMap() instanceof Map);
+    Assert.assertTrue(e3Record.has("/boss/name"));
+    Assert.assertEquals("boss", e3Record.get("/boss/name").getValueAsString());
+    Assert.assertTrue(e3Record.has("/boss/age"));
+    Assert.assertEquals(60, e3Record.get("/boss/age").getValueAsInteger());
+    Assert.assertTrue(e3Record.has("/boss/emails"));
+    Assert.assertTrue(e3Record.get("/boss/emails").getValueAsList() instanceof List);
+    emails = e3Record.get("/boss/emails").getValueAsList();
+    Assert.assertEquals(2, emails.size());
+    Assert.assertEquals("boss@company.com", emails.get(0).getValueAsString());
+    Assert.assertEquals("boss2@company.com", emails.get(1).getValueAsString());
+
+    Record e2Record = records.get(1);
+    Assert.assertTrue(e2Record.has("/name"));
+    Assert.assertEquals("b", e2Record.get("/name").getValueAsString());
+    Assert.assertTrue(e2Record.has("/age"));
+    Assert.assertEquals(40, e2Record.get("/age").getValueAsInteger());
+    Assert.assertTrue(e2Record.has("/emails"));
+    Assert.assertTrue(e2Record.get("/emails").getValueAsList() instanceof List);
+    emails = e2Record.get("/emails").getValueAsList();
+    Assert.assertEquals(2, emails.size());
+    Assert.assertEquals("b@company.com", emails.get(0).getValueAsString());
+    Assert.assertEquals("b2@company.com", emails.get(1).getValueAsString());
+    Assert.assertTrue(e2Record.has("/boss"));
+    Assert.assertTrue(e2Record.get("/boss").getValueAsMap() instanceof Map);
+    Assert.assertTrue(e2Record.has("/boss/name"));
+    Assert.assertEquals("boss", e2Record.get("/boss/name").getValueAsString());
+    Assert.assertTrue(e2Record.has("/boss/age"));
+    Assert.assertEquals(60, e2Record.get("/boss/age").getValueAsInteger());
+    Assert.assertTrue(e2Record.has("/boss/emails"));
+    Assert.assertTrue(e2Record.get("/boss/emails").getValueAsList() instanceof List);
+    emails = e2Record.get("/boss/emails").getValueAsList();
+    Assert.assertEquals(2, emails.size());
+    Assert.assertEquals("boss@company.com", emails.get(0).getValueAsString());
+    Assert.assertEquals("boss2@company.com", emails.get(1).getValueAsString());
+
+    Record e1Record = records.get(0);
+    Assert.assertTrue(e1Record.has("/name"));
+    Assert.assertEquals("a", e1Record.get("/name").getValueAsString());
+    Assert.assertTrue(e1Record.has("/age"));
+    Assert.assertEquals(30, e1Record.get("/age").getValueAsInteger());
+    Assert.assertTrue(e1Record.has("/emails"));
+    Assert.assertTrue(e1Record.get("/emails").getValueAsList() instanceof List);
+    emails = e1Record.get("/emails").getValueAsList();
+    Assert.assertEquals(2, emails.size());
+    Assert.assertEquals("a@company.com", emails.get(0).getValueAsString());
+    Assert.assertEquals("a2@company.com", emails.get(1).getValueAsString());
+    Assert.assertTrue(e1Record.has("/boss"));
+    Assert.assertTrue(e1Record.get("/boss").getValueAsMap() instanceof Map);
+    Assert.assertTrue(e1Record.has("/boss/name"));
+    Assert.assertEquals("boss", e1Record.get("/boss/name").getValueAsString());
+    Assert.assertTrue(e1Record.has("/boss/age"));
+    Assert.assertEquals(60, e1Record.get("/boss/age").getValueAsInteger());
+    Assert.assertTrue(e1Record.has("/boss/emails"));
+    Assert.assertTrue(e1Record.get("/boss/emails").getValueAsList() instanceof List);
+    emails = e1Record.get("/boss/emails").getValueAsList();
+    Assert.assertEquals(2, emails.size());
+    Assert.assertEquals("boss@company.com", emails.get(0).getValueAsString());
+    Assert.assertEquals("boss2@company.com", emails.get(1).getValueAsString());
+
+  }
 
   private void shutDownExecutorService(ExecutorService executorService) throws InterruptedException {
     executorService.shutdownNow();

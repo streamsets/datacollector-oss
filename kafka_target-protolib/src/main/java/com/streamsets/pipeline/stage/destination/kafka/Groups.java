@@ -13,7 +13,8 @@ public enum Groups implements Label {
   KAFKA("Kafka"),
   TEXT("Text"),
   JSON("JSON"),
-  DELIMITED("Delimited")
+  DELIMITED("Delimited"),
+  AVRO("Avro"),
   ;
 
   private final String label;

@@ -71,7 +71,6 @@ public class JsonCharDataGenerator implements DataGenerator {
     generator.close();
   }
 
-
   public static Object fieldToJsonObject(Record record, Field field) throws DataGeneratorException {
     Object obj;
     if (field == null || field.getValue() == null) {
@@ -118,9 +117,8 @@ public class JsonCharDataGenerator implements DataGenerator {
       obj = toReturn;
     } else {
       throw new DataGeneratorException(Errors.JSON_GENERATOR_00, field.getType(), field.getValue(),
-                               record.getHeader().getSourceId());
+        record.getHeader().getSourceId());
     }
     return obj;
   }
-
 }

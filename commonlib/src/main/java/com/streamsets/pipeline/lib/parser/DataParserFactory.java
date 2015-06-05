@@ -42,10 +42,10 @@ public abstract class DataParserFactory extends DataFactory {
     return getParser(id, reader, 0);
   }
 
-  public DataParser getParser(File file, long fileOffset)
+  public DataParser getParser(File file, String fileOffset)
     throws DataParserException {
     try {
-      return getParser(file.getName(), new FileInputStream(file), fileOffset);
+      return getParser(file.getName(), new FileInputStream(file), Long.parseLong(fileOffset));
     } catch (FileNotFoundException e) {
       throw new DataParserException(Errors.DATA_PARSER_00, file.getAbsolutePath(), e.getMessage(), e);
     }

@@ -28,20 +28,20 @@ public class TestXmlCharDataParser {
   public void testParse() throws Exception {
     OverrunReader reader = new OverrunReader(new StringReader("<r><e>Hello</e><e>Bye</e></r>"), 1000, true, false);
     DataParser parser = new XmlCharDataParser(getContext(), "id", reader, 0, "e", 100);
-    Assert.assertEquals(0, parser.getOffset());
+    Assert.assertEquals(0, Long.parseLong(parser.getOffset()));
     Record record = parser.parse();
     Assert.assertNotNull(record);
     Assert.assertEquals("id::0", record.getHeader().getSourceId());
     Assert.assertEquals("Hello", record.get().getValueAsMap().get("value").getValueAsString());
-    Assert.assertEquals(18, parser.getOffset());
+    Assert.assertEquals(18, Long.parseLong(parser.getOffset()));
     record = parser.parse();
     Assert.assertNotNull(record);
     Assert.assertEquals("id::18", record.getHeader().getSourceId());
     Assert.assertEquals("Bye", record.get().getValueAsMap().get("value").getValueAsString());
-    Assert.assertEquals(29, parser.getOffset());
+    Assert.assertEquals(29, Long.parseLong(parser.getOffset()));
     record = parser.parse();
     Assert.assertNull(record);
-    Assert.assertEquals(-1, parser.getOffset());
+    Assert.assertEquals(-1, Long.parseLong(parser.getOffset()));
     parser.close();
   }
 
@@ -49,15 +49,15 @@ public class TestXmlCharDataParser {
   public void testParseWithOffset() throws Exception {
     OverrunReader reader = new OverrunReader(new StringReader("<r><e>Hello</e><e>Bye</e></r>"), 1000, true, false);
     DataParser parser = new XmlCharDataParser(getContext(), "id", reader, 18, "e", 100);
-    Assert.assertEquals(18, parser.getOffset());
+    Assert.assertEquals(18, Long.parseLong(parser.getOffset()));
     Record record = parser.parse();
     Assert.assertNotNull(record);
     Assert.assertEquals("id::18", record.getHeader().getSourceId());
     Assert.assertEquals("Bye", record.get().getValueAsMap().get("value").getValueAsString());
-    Assert.assertEquals(29, parser.getOffset());
+    Assert.assertEquals(29, Long.parseLong(parser.getOffset()));
     record = parser.parse();
     Assert.assertNull(record);
-    Assert.assertEquals(-1, parser.getOffset());
+    Assert.assertEquals(-1, Long.parseLong(parser.getOffset()));
     parser.close();
   }
 

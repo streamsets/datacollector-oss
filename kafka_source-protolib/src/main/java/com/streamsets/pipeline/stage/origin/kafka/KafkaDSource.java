@@ -463,6 +463,35 @@ public class KafkaDSource extends DSourceOffsetCommitter {
   )
   public String log4jCustomLogFormat;
 
+  //AVRO
+
+  @ConfigDef(
+    required = true,
+    type = ConfigDef.Type.BOOLEAN,
+    defaultValue = "true",
+    label = "Message With Schema",
+    description = "The Kafka Message has the Avro Schema",
+    displayPosition = 830,
+    group = "AVRO",
+    dependsOn = "dataFormat",
+    triggeredByValue = "AVRO"
+  )
+  public boolean schemaInMessage;
+
+  @ConfigDef(
+    required = false,
+    type = ConfigDef.Type.TEXT,
+    defaultValue = "",
+    label = "Avro Reader Schema",
+    description = "",
+    displayPosition = 840,
+    group = "AVRO",
+    dependsOn = "schemaInMessage",
+    triggeredByValue = {"false"},
+    mode = ConfigDef.Mode.PLAIN_TEXT
+  )
+  public String avroSchema;
+
   @Override
   protected Source createSource() {
     SourceArguments args = new SourceArguments(metadataBrokerList,
@@ -471,7 +500,8 @@ public class KafkaDSource extends DSourceOffsetCommitter {
       textMaxLineLen, jsonContent, jsonMaxObjectLen, csvFileFormat, csvHeader,
       csvMaxObjectLen, xmlRecordElement, xmlMaxObjectLen, logMode, logMaxObjectLen, retainOriginalLine,
       customLogFormat, regex, grokPatternDefinition, grokPattern, fieldPathsToGroupName,
-      enableLog4jCustomLogFormat, log4jCustomLogFormat, maxStackTraceLines, onParseError, kafkaConsumerConfigs);
+      enableLog4jCustomLogFormat, log4jCustomLogFormat, maxStackTraceLines, onParseError, kafkaConsumerConfigs,
+      schemaInMessage, avroSchema);
     delegatingKafkaSource = new DelegatingKafkaSource(new StandaloneKafkaSourceFactory(args),
       new ClusterKafkaSourceFactory(args));
     return delegatingKafkaSource;

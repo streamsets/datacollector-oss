@@ -47,19 +47,19 @@ public class TestSdcRecordDataParser {
     byte[] data = createJsonSdcRecordsBytes();
     InputStream reader = new ByteArrayInputStream(data);
     DataParser parser = new SdcRecordDataParser(getContext(), reader, 0, 100);
-    Assert.assertEquals(0, parser.getOffset());
+    Assert.assertEquals(0, Long.parseLong(parser.getOffset()));
     Record record = parser.parse();
     Assert.assertNotNull(record);
     Assert.assertEquals("Hello", record.get().getValueAsString());
-    long offset = parser.getOffset();
+    long offset = Long.parseLong(parser.getOffset());
     Assert.assertTrue(0 < offset);
     record = parser.parse();
     Assert.assertNotNull(record);
     Assert.assertEquals("Bye", record.get().getValueAsString());
-    Assert.assertTrue(offset < parser.getOffset());
+    Assert.assertTrue(offset < Long.parseLong(parser.getOffset()));
     record = parser.parse();
     Assert.assertNull(record);
-    Assert.assertEquals(-1, parser.getOffset());
+    Assert.assertEquals(-1, Long.parseLong(parser.getOffset()));
     parser.close();
   }
 
@@ -70,23 +70,23 @@ public class TestSdcRecordDataParser {
 
     // find out offset of second record first
     DataParser parser = new SdcRecordDataParser(getContext(), reader, 0, 100);
-    Assert.assertEquals(0, parser.getOffset());
+    Assert.assertEquals(0, Long.parseLong(parser.getOffset()));
     Record record = parser.parse();
     Assert.assertNotNull(record);
     Assert.assertEquals("Hello", record.get().getValueAsString());
-    long offset = parser.getOffset();
+    long offset = Long.parseLong(parser.getOffset());
     parser.close();
 
     reader = new ByteArrayInputStream(data);
     parser = new SdcRecordDataParser(getContext(), reader, offset, 100);
-    Assert.assertEquals(offset, parser.getOffset());
+    Assert.assertEquals(offset, Long.parseLong(parser.getOffset()));
     record = parser.parse();
     Assert.assertNotNull(record);
     Assert.assertEquals("Bye", record.get().getValueAsString());
-    Assert.assertTrue(offset < parser.getOffset());
+    Assert.assertTrue(offset < Long.parseLong(parser.getOffset()));
     record = parser.parse();
     Assert.assertNull(record);
-    Assert.assertEquals(-1, parser.getOffset());
+    Assert.assertEquals(-1, Long.parseLong(parser.getOffset()));
     parser.close();
   }
 

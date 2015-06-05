@@ -47,7 +47,7 @@ public class TestTextSpoolDirSource {
     return new SpoolDirSource(DataFormat.TEXT, charset, false, 100, createTestDir(), 10, 1, "file-[0-9].log", 10, null, null,
                               PostProcessingOptions.ARCHIVE, createTestDir(), 10, null, null, -1, null, 0, 10,
                               null, 0, null, 0, false, null, null, null, null, null, false, null, OnParseError.ERROR,
-      -1);
+      -1, null);
   }
 
   public void testProduceFullFile(String charset) throws Exception {
@@ -56,7 +56,7 @@ public class TestTextSpoolDirSource {
     runner.runInit();
     try {
       BatchMaker batchMaker = SourceRunner.createTestBatchMaker("lane");
-      Assert.assertEquals(-1, source.produce(createLogFile(charset), 0, 10, batchMaker));
+      Assert.assertEquals("-1", source.produce(createLogFile(charset), "0", 10, batchMaker));
       StageRunner.Output output = SourceRunner.getOutput(batchMaker);
       List<Record> records = output.getRecords().get("lane");
       Assert.assertNotNull(records);
@@ -87,8 +87,8 @@ public class TestTextSpoolDirSource {
     runner.runInit();
     try {
       BatchMaker batchMaker = SourceRunner.createTestBatchMaker("lane");
-      long offset = source.produce(createLogFile("UTF-8"), 0, 1, batchMaker);
-      Assert.assertEquals(11, offset);
+      String offset = source.produce(createLogFile("UTF-8"), "0", 1, batchMaker);
+      Assert.assertEquals("11", offset);
       StageRunner.Output output = SourceRunner.getOutput(batchMaker);
       List<Record> records = output.getRecords().get("lane");
       Assert.assertNotNull(records);
@@ -99,7 +99,7 @@ public class TestTextSpoolDirSource {
 
       batchMaker = SourceRunner.createTestBatchMaker("lane");
       offset = source.produce(createLogFile("UTF-8"), offset, 1, batchMaker);
-      Assert.assertEquals(22, offset);
+      Assert.assertEquals("22", offset);
       output = SourceRunner.getOutput(batchMaker);
       records = output.getRecords().get("lane");
       Assert.assertNotNull(records);
@@ -109,7 +109,7 @@ public class TestTextSpoolDirSource {
 
       batchMaker = SourceRunner.createTestBatchMaker("lane");
       offset = source.produce(createLogFile("UTF-8"), offset, 1, batchMaker);
-      Assert.assertEquals(-1, offset);
+      Assert.assertEquals("-1", offset);
       output = SourceRunner.getOutput(batchMaker);
       records = output.getRecords().get("lane");
       Assert.assertNotNull(records);

@@ -53,7 +53,7 @@ public class TestLogSpoolDirSourceApacheCustomLogFormat {
     return new SpoolDirSource(DataFormat.LOG, "UTF-8", false, 100, createTestDir(), 10, 1, "file-[0-9].log", 10, null, null,
       PostProcessingOptions.ARCHIVE, createTestDir(), 10, null, null, -1, null, 0, 0,
       null, 0, LogMode.APACHE_CUSTOM_LOG_FORMAT, 1000, true, CUSTOM_LOG_FORMAT, null,
-      Collections.<RegExConfig>emptyList(), null, null, false, null, OnParseError.ERROR, 0);
+      Collections.<RegExConfig>emptyList(), null, null, false, null, OnParseError.ERROR, 0, null);
   }
 
   @Test
@@ -63,7 +63,7 @@ public class TestLogSpoolDirSourceApacheCustomLogFormat {
     runner.runInit();
     try {
       BatchMaker batchMaker = SourceRunner.createTestBatchMaker("lane");
-      Assert.assertEquals(-1, source.produce(createLogFile(), 0, 10, batchMaker));
+      Assert.assertEquals("-1", source.produce(createLogFile(), "0", 10, batchMaker));
       StageRunner.Output output = SourceRunner.getOutput(batchMaker);
       List<Record> records = output.getRecords().get("lane");
       Assert.assertNotNull(records);
@@ -148,9 +148,9 @@ public class TestLogSpoolDirSourceApacheCustomLogFormat {
     runner.runInit();
     try {
       BatchMaker batchMaker = SourceRunner.createTestBatchMaker("lane");
-      long offset = source.produce(createLogFile(), 0, 1, batchMaker);
+      String offset = source.produce(createLogFile(), "0", 1, batchMaker);
       //FIXME
-      Assert.assertEquals(83, offset);
+      Assert.assertEquals("83", offset);
       StageRunner.Output output = SourceRunner.getOutput(batchMaker);
       List<Record> records = output.getRecords().get("lane");
       Assert.assertNotNull(records);
@@ -189,7 +189,7 @@ public class TestLogSpoolDirSourceApacheCustomLogFormat {
 
       batchMaker = SourceRunner.createTestBatchMaker("lane");
       offset = source.produce(createLogFile(), offset, 1, batchMaker);
-      Assert.assertEquals(165, offset);
+      Assert.assertEquals("165", offset);
       output = SourceRunner.getOutput(batchMaker);
       records = output.getRecords().get("lane");
       Assert.assertNotNull(records);
@@ -229,7 +229,7 @@ public class TestLogSpoolDirSourceApacheCustomLogFormat {
 
       batchMaker = SourceRunner.createTestBatchMaker("lane");
       offset = source.produce(createLogFile(), offset, 1, batchMaker);
-      Assert.assertEquals(-1, offset);
+      Assert.assertEquals("-1", offset);
       output = SourceRunner.getOutput(batchMaker);
       records = output.getRecords().get("lane");
       Assert.assertNotNull(records);
@@ -246,7 +246,7 @@ public class TestLogSpoolDirSourceApacheCustomLogFormat {
       "file-[0-9].log", 10, null, null,
       PostProcessingOptions.ARCHIVE, createTestDir(), 10, null, null, -1, null, 0, 0,
       null, 0, LogMode.APACHE_CUSTOM_LOG_FORMAT, 1000, true, INVALID_CUSTOM_LOG_FORMAT, null,
-      Collections.<RegExConfig>emptyList(), null, null, false, null, OnParseError.ERROR, 0);
+      Collections.<RegExConfig>emptyList(), null, null, false, null, OnParseError.ERROR, 0, null);
     SourceRunner runner = new SourceRunner.Builder(SpoolDirDSource.class, spoolDirSource).addOutputLane("lane").build();
     runner.runInit();
   }

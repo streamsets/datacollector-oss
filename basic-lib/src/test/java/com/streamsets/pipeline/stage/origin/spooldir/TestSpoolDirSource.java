@@ -47,18 +47,19 @@ public class TestSpoolDirSource {
       super(dataFormat, "UTF-8", false, 100, spoolDir, batchSize, poolingTimeoutSecs, filePattern, maxSpoolFiles,
         initialFileToProcess, errorArchiveDir, postProcessing, archiveDir, retentionTimeMins, csvFileFormat,
         csvHeaders, -1, jsonContent, maxJsonObjectLen, maxLogLineLength, xmlRecordElement, maxXmlObjectLen, null, 0,
-        false, null, null, null, null, null, false, null, OnParseError.ERROR, -1);
+        false, null, null, null, null, null, false, null, OnParseError.ERROR, -1, null);
       this.spoolDir = spoolDir;
     }
 
     @Override
-    public long produce(File file, long offset, int maxBatchSize, BatchMaker batchMaker) throws StageException {
+    public String produce(File file, String offset, int maxBatchSize, BatchMaker batchMaker) throws StageException {
+      long longOffset = Long.parseLong(offset);
       produceCalled = true;
       Assert.assertEquals(this.file, file);
-      Assert.assertEquals(this.offset, offset);
+      Assert.assertEquals(this.offset, longOffset);
       Assert.assertEquals(this.maxBatchSize, maxBatchSize);
       Assert.assertNotNull(batchMaker);
-      return offset + offsetIncrement;
+      return String.valueOf(longOffset + offsetIncrement);
     }
   }
 
@@ -86,10 +87,10 @@ public class TestSpoolDirSource {
     TSpoolDirSource source = createSource("file-0.log");
     Assert.assertNull(source.getFileFromSourceOffset(null));
     Assert.assertEquals("x", source.getFileFromSourceOffset("x"));
-    Assert.assertEquals(0, source.getOffsetFromSourceOffset(null));
-    Assert.assertEquals(0, source.getOffsetFromSourceOffset("x"));
-    Assert.assertEquals("x", source.getFileFromSourceOffset(source.createSourceOffset("x", 1)));
-    Assert.assertEquals(1, source.getOffsetFromSourceOffset(source.createSourceOffset("x", 1)));
+    Assert.assertEquals("0", source.getOffsetFromSourceOffset(null));
+    Assert.assertEquals("0", source.getOffsetFromSourceOffset("x"));
+    Assert.assertEquals("x", source.getFileFromSourceOffset(source.createSourceOffset("x", "1")));
+    Assert.assertEquals("1", source.getOffsetFromSourceOffset(source.createSourceOffset("x", "1")));
   }
 
   @Test
@@ -120,7 +121,7 @@ public class TestSpoolDirSource {
     source.maxBatchSize = 10;
     try {
       StageRunner.Output output = runner.runProduce(null, 10);
-      Assert.assertEquals(source.createSourceOffset("file-0.log", 0), output.getNewOffset());
+      Assert.assertEquals(source.createSourceOffset("file-0.log", "0"), output.getNewOffset());
       Assert.assertTrue(source.produceCalled);
     } finally {
       runner.runDestroy();
@@ -135,7 +136,7 @@ public class TestSpoolDirSource {
     runner.runInit();
     try {
       StageRunner.Output output = runner.runProduce("file-0.log", 10);
-      Assert.assertEquals(source.createSourceOffset("file-0.log", 0), output.getNewOffset());
+      Assert.assertEquals(source.createSourceOffset("file-0.log", "0"), output.getNewOffset());
       Assert.assertFalse(source.produceCalled);
     } finally {
       runner.runDestroy();
@@ -155,7 +156,7 @@ public class TestSpoolDirSource {
     source.maxBatchSize = 10;
     try {
       StageRunner.Output output = runner.runProduce("file-0.log", 10);
-      Assert.assertEquals(source.createSourceOffset("file-0.log", 0), output.getNewOffset());
+      Assert.assertEquals(source.createSourceOffset("file-0.log", "0"), output.getNewOffset());
       Assert.assertTrue(source.produceCalled);
     } finally {
       runner.runDestroy();
@@ -173,8 +174,8 @@ public class TestSpoolDirSource {
     source.offset = 1;
     source.maxBatchSize = 10;
     try {
-      StageRunner.Output output = runner.runProduce(source.createSourceOffset("file-0.log", 1), 10);
-      Assert.assertEquals(source.createSourceOffset("file-0.log", 1), output.getNewOffset());
+      StageRunner.Output output = runner.runProduce(source.createSourceOffset("file-0.log", "1"), 10);
+      Assert.assertEquals(source.createSourceOffset("file-0.log", "1"), output.getNewOffset());
       Assert.assertTrue(source.produceCalled);
     } finally {
       runner.runDestroy();
@@ -194,14 +195,14 @@ public class TestSpoolDirSource {
     source.offset = 0;
     source.maxBatchSize = 10;
     try {
-      StageRunner.Output output = runner.runProduce(source.createSourceOffset("file-0.log", 0), 10);
-      Assert.assertEquals(source.createSourceOffset("file-0.log", 0), output.getNewOffset());
+      StageRunner.Output output = runner.runProduce(source.createSourceOffset("file-0.log", "0"), 10);
+      Assert.assertEquals(source.createSourceOffset("file-0.log", "0"), output.getNewOffset());
       Assert.assertTrue(source.produceCalled);
 
       source.produceCalled = false;
       source.offsetIncrement = -1;
       output = runner.runProduce(output.getNewOffset(), 10);
-      Assert.assertEquals(source.createSourceOffset("file-0.log", -1), output.getNewOffset());
+      Assert.assertEquals(source.createSourceOffset("file-0.log", "-1"), output.getNewOffset());
       Assert.assertTrue(source.produceCalled);
 
       source.file = file2;
@@ -210,7 +211,7 @@ public class TestSpoolDirSource {
       source.offset = 0;
       source.offsetIncrement = 0;
       output = runner.runProduce(output.getNewOffset(), 10);
-      Assert.assertEquals(source.createSourceOffset("file-1.log", -1), output.getNewOffset());
+      Assert.assertEquals(source.createSourceOffset("file-1.log", "-1"), output.getNewOffset());
       Assert.assertFalse(source.produceCalled);
     } finally {
       runner.runDestroy();

@@ -46,6 +46,7 @@ public enum Errors implements ErrorCode {
   KAFKA_40("Messages with XML data cannot have multiple XML documents in a single message"),
   KAFKA_41("Could not get partition count for topic '{}' : {}"),
   KAFKA_42("Could not get partition count for topic '{}'"),
+  KAFKA_43("Avro Schema must be specified"),
 
   //Kafka target messages
   KAFKA_50("Error writing data to the Kafka broker: {}"),

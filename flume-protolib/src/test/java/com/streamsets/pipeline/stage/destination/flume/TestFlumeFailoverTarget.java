@@ -14,8 +14,17 @@ import com.streamsets.pipeline.config.CsvHeader;
 import com.streamsets.pipeline.config.CsvMode;
 import com.streamsets.pipeline.config.DataFormat;
 import com.streamsets.pipeline.lib.FlumeTestUtil;
+import com.streamsets.pipeline.lib.util.SdcAvroTestUtil;
 import com.streamsets.pipeline.sdk.ContextInfoCreator;
 import com.streamsets.pipeline.sdk.TargetRunner;
+import org.apache.avro.Schema;
+import org.apache.avro.file.DataFileReader;
+import org.apache.avro.file.SeekableByteArrayInput;
+import org.apache.avro.generic.GenericDatumReader;
+import org.apache.avro.generic.GenericRecord;
+import org.apache.avro.io.BinaryDecoder;
+import org.apache.avro.io.DatumReader;
+import org.apache.avro.io.DecoderFactory;
 import org.apache.flume.Channel;
 import org.apache.flume.ChannelSelector;
 import org.apache.flume.Context;
@@ -32,6 +41,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.io.ByteArrayInputStream;
+import java.io.EOFException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -370,5 +380,216 @@ public class TestFlumeFailoverTarget {
       transaction.commit();
       transaction.close();
     }
+  }
+
+  @Test
+  public void testWriteAvroRecords() throws InterruptedException, StageException, IOException {
+
+    Map<String, String> flumeHostsConfig = new HashMap<>();
+    flumeHostsConfig.put("h1", "localhost:9050");
+
+    TargetRunner targetRunner = new TargetRunner.Builder(FlumeDTarget.class)
+      .addConfiguration("flumeHostsConfig", flumeHostsConfig)
+      .addConfiguration("clientType", ClientType.AVRO_FAILOVER)
+      .addConfiguration("maxRetryAttempts", 1)
+      .addConfiguration("waitBetweenRetries", 0)
+      .addConfiguration("batchSize", 1)
+      .addConfiguration("connectionTimeout", 1000)
+      .addConfiguration("requestTimeout", 1000)
+      .addConfiguration("dataFormat", DataFormat.AVRO)
+      .addConfiguration("csvFileFormat", CsvMode.CSV)
+      .addConfiguration("csvHeader", CsvHeader.NO_HEADER)
+      .addConfiguration("csvReplaceNewLines", false)
+      .addConfiguration("singleEventPerBatch", false)
+      .addConfiguration("charset", "UTF-8")
+      .addConfiguration("avroSchema", SdcAvroTestUtil.AVRO_SCHEMA1)
+      .addConfiguration("includeSchema", true)
+      .build();
+
+    targetRunner.runInit();
+    List<Record> records = SdcAvroTestUtil.getRecords1();
+    targetRunner.runWrite(records);
+    targetRunner.runDestroy();
+
+    List<GenericRecord> genericRecords = new ArrayList<>();
+    DatumReader<GenericRecord> datumReader = new GenericDatumReader<>(); //Reader schema argument is optional
+
+    Transaction transaction = ch.getTransaction();
+    transaction.begin();
+    Event event = ch.take();
+    while(event != null) {
+      DataFileReader<GenericRecord> dataFileReader = new DataFileReader<>(
+        new SeekableByteArrayInput(event.getBody()), datumReader);
+      while(dataFileReader.hasNext()) {
+        genericRecords.add(dataFileReader.next());
+      }
+      event = ch.take();
+    }
+    transaction.commit();
+    transaction.close();
+
+    Assert.assertEquals(3, genericRecords.size());
+    SdcAvroTestUtil.compare1(genericRecords);
+  }
+
+  @Test
+  public void testWriteAvroRecordsSingleEvent() throws InterruptedException, StageException, IOException {
+
+    Map<String, String> flumeHostsConfig = new HashMap<>();
+    flumeHostsConfig.put("h1", "localhost:9050");
+
+    TargetRunner targetRunner = new TargetRunner.Builder(FlumeDTarget.class)
+      .addConfiguration("flumeHostsConfig", flumeHostsConfig)
+      .addConfiguration("clientType", ClientType.AVRO_FAILOVER)
+      .addConfiguration("maxRetryAttempts", 1)
+      .addConfiguration("waitBetweenRetries", 0)
+      .addConfiguration("batchSize", 1)
+      .addConfiguration("connectionTimeout", 1000)
+      .addConfiguration("requestTimeout", 1000)
+      .addConfiguration("dataFormat", DataFormat.AVRO)
+      .addConfiguration("csvFileFormat", CsvMode.CSV)
+      .addConfiguration("csvHeader", CsvHeader.NO_HEADER)
+      .addConfiguration("csvReplaceNewLines", false)
+      .addConfiguration("singleEventPerBatch", true)
+      .addConfiguration("charset", "UTF-8")
+      .addConfiguration("avroSchema", SdcAvroTestUtil.AVRO_SCHEMA1)
+      .addConfiguration("includeSchema", true)
+      .build();
+
+    targetRunner.runInit();
+    List<Record> records = SdcAvroTestUtil.getRecords1();
+    targetRunner.runWrite(records);
+    targetRunner.runDestroy();
+
+    List<GenericRecord> genericRecords = new ArrayList<>();
+    DatumReader<GenericRecord> datumReader = new GenericDatumReader<>(); //Reader schema argument is optional
+
+    int eventCounter = 0;
+    Transaction transaction = ch.getTransaction();
+    transaction.begin();
+    Event event = ch.take();
+    while(event != null) {
+      eventCounter++;
+      DataFileReader<GenericRecord> dataFileReader = new DataFileReader<>(
+        new SeekableByteArrayInput(event.getBody()), datumReader);
+      while(dataFileReader.hasNext()) {
+        genericRecords.add(dataFileReader.next());
+      }
+      event = ch.take();
+    }
+    transaction.commit();
+    transaction.close();
+
+    Assert.assertEquals(1, eventCounter);
+    Assert.assertEquals(3, genericRecords.size());
+    SdcAvroTestUtil.compare1(genericRecords);
+  }
+
+  @Test
+  public void testWriteAvroRecordsDropSchema() throws InterruptedException, StageException, IOException {
+
+    Map<String, String> flumeHostsConfig = new HashMap<>();
+    flumeHostsConfig.put("h1", "localhost:9050");
+
+    TargetRunner targetRunner = new TargetRunner.Builder(FlumeDTarget.class)
+      .addConfiguration("flumeHostsConfig", flumeHostsConfig)
+      .addConfiguration("clientType", ClientType.AVRO_FAILOVER)
+      .addConfiguration("maxRetryAttempts", 1)
+      .addConfiguration("waitBetweenRetries", 0)
+      .addConfiguration("batchSize", 1)
+      .addConfiguration("connectionTimeout", 1000)
+      .addConfiguration("requestTimeout", 1000)
+      .addConfiguration("dataFormat", DataFormat.AVRO)
+      .addConfiguration("csvFileFormat", CsvMode.CSV)
+      .addConfiguration("csvHeader", CsvHeader.NO_HEADER)
+      .addConfiguration("csvReplaceNewLines", false)
+      .addConfiguration("singleEventPerBatch", false)
+      .addConfiguration("charset", "UTF-8")
+      .addConfiguration("avroSchema", SdcAvroTestUtil.AVRO_SCHEMA1)
+      .addConfiguration("includeSchema", false)
+      .build();
+
+    targetRunner.runInit();
+    List<Record> records = SdcAvroTestUtil.getRecords1();
+    targetRunner.runWrite(records);
+    targetRunner.runDestroy();
+
+    List<GenericRecord> genericRecords = new ArrayList<>();
+    DatumReader<GenericRecord> datumReader = new GenericDatumReader<>(); //Reader schema argument is optional
+    datumReader.setSchema(new Schema.Parser().parse(SdcAvroTestUtil.AVRO_SCHEMA1));
+
+    Transaction transaction = ch.getTransaction();
+    transaction.begin();
+    Event event = ch.take();
+    while(event != null) {
+      BinaryDecoder decoder = DecoderFactory.get().binaryDecoder(event.getBody(), null);
+      GenericRecord read = datumReader.read(null, decoder);
+      genericRecords.add(read);
+      event = ch.take();
+    }
+    transaction.commit();
+    transaction.close();
+
+    Assert.assertEquals(3, genericRecords.size());
+    SdcAvroTestUtil.compare1(genericRecords);
+  }
+
+  @Test
+  public void testWriteAvroRecordsDropSchemaSingleEvent() throws InterruptedException, StageException, IOException {
+
+    Map<String, String> flumeHostsConfig = new HashMap<>();
+    flumeHostsConfig.put("h1", "localhost:9050");
+
+    TargetRunner targetRunner = new TargetRunner.Builder(FlumeDTarget.class)
+      .addConfiguration("flumeHostsConfig", flumeHostsConfig)
+      .addConfiguration("clientType", ClientType.AVRO_FAILOVER)
+      .addConfiguration("maxRetryAttempts", 1)
+      .addConfiguration("waitBetweenRetries", 0)
+      .addConfiguration("batchSize", 1)
+      .addConfiguration("connectionTimeout", 1000)
+      .addConfiguration("requestTimeout", 1000)
+      .addConfiguration("dataFormat", DataFormat.AVRO)
+      .addConfiguration("csvFileFormat", CsvMode.CSV)
+      .addConfiguration("csvHeader", CsvHeader.NO_HEADER)
+      .addConfiguration("csvReplaceNewLines", false)
+      .addConfiguration("singleEventPerBatch", true)
+      .addConfiguration("charset", "UTF-8")
+      .addConfiguration("avroSchema", SdcAvroTestUtil.AVRO_SCHEMA1)
+      .addConfiguration("includeSchema", false)
+      .build();
+
+    targetRunner.runInit();
+    List<Record> records = SdcAvroTestUtil.getRecords1();
+    targetRunner.runWrite(records);
+    targetRunner.runDestroy();
+
+    List<GenericRecord> genericRecords = new ArrayList<>();
+    DatumReader<GenericRecord> datumReader = new GenericDatumReader<>(); //Reader schema argument is optional
+    datumReader.setSchema(new Schema.Parser().parse(SdcAvroTestUtil.AVRO_SCHEMA1));
+
+    int eventCounter = 0;
+    Transaction transaction = ch.getTransaction();
+    transaction.begin();
+    Event event = ch.take();
+    while(event != null) {
+      eventCounter++;
+      BinaryDecoder decoder = DecoderFactory.get().binaryDecoder(event.getBody(), null);
+      GenericRecord read = datumReader.read(null, decoder);
+      while(read != null) {
+        genericRecords.add(read);
+        try {
+          read = datumReader.read(null, decoder);
+        } catch (EOFException e) {
+          break;
+        }
+      }
+      event = ch.take();
+    }
+    transaction.commit();
+    transaction.close();
+
+    Assert.assertEquals(1, eventCounter);
+    Assert.assertEquals(3, genericRecords.size());
+    SdcAvroTestUtil.compare1(genericRecords);
   }
 }

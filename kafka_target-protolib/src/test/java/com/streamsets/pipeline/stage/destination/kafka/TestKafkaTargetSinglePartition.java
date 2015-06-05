@@ -16,17 +16,27 @@ import com.streamsets.pipeline.config.CsvHeader;
 import com.streamsets.pipeline.config.CsvMode;
 import com.streamsets.pipeline.config.DataFormat;
 import com.streamsets.pipeline.lib.KafkaTestUtil;
+import com.streamsets.pipeline.lib.util.SdcAvroTestUtil;
 import com.streamsets.pipeline.sdk.ContextInfoCreator;
 import com.streamsets.pipeline.sdk.TargetRunner;
 import kafka.consumer.ConsumerIterator;
 import kafka.consumer.KafkaStream;
 import kafka.zk.EmbeddedZookeeper;
+import org.apache.avro.Schema;
+import org.apache.avro.file.DataFileReader;
+import org.apache.avro.file.SeekableByteArrayInput;
+import org.apache.avro.generic.GenericDatumReader;
+import org.apache.avro.generic.GenericRecord;
+import org.apache.avro.io.BinaryDecoder;
+import org.apache.avro.io.DatumReader;
+import org.apache.avro.io.DecoderFactory;
 import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
 import java.io.ByteArrayInputStream;
+import java.io.EOFException;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -53,8 +63,9 @@ public class TestKafkaTargetSinglePartition {
   private static List<KafkaStream<byte[], byte[]>> kafkaStreams14;
   private static List<KafkaStream<byte[], byte[]>> kafkaStreams15;
   private static List<KafkaStream<byte[], byte[]>> kafkaStreams16;
+  private static List<KafkaStream<byte[], byte[]>> kafkaStreams17;
+  private static List<KafkaStream<byte[], byte[]>> kafkaStreams18;
 
-  private static final String HOST = "localhost";
   private static final int PARTITIONS = 1;
   private static final int REPLICATION_FACTOR = 1;
   private static final String TOPIC1 = "TestKafkaTargetSinglePartition1";
@@ -73,6 +84,8 @@ public class TestKafkaTargetSinglePartition {
   private static final String TOPIC14 = "TestKafkaTargetSinglePartition14";
   private static final String TOPIC15 = "TestKafkaTargetSinglePartition15";
   private static final String TOPIC16 = "TestKafkaTargetSinglePartition16";
+  private static final String TOPIC17 = "TestKafkaTargetSinglePartition17";
+  private static final String TOPIC18 = "TestKafkaTargetSinglePartition18";
 
   @BeforeClass
   public static void setUp() {
@@ -96,6 +109,8 @@ public class TestKafkaTargetSinglePartition {
     KafkaTestUtil.createTopic(TOPIC14, PARTITIONS, REPLICATION_FACTOR);
     KafkaTestUtil.createTopic(TOPIC15, PARTITIONS, REPLICATION_FACTOR);
     KafkaTestUtil.createTopic(TOPIC16, PARTITIONS, REPLICATION_FACTOR);
+    KafkaTestUtil.createTopic(TOPIC17, PARTITIONS, REPLICATION_FACTOR);
+    KafkaTestUtil.createTopic(TOPIC18, PARTITIONS, REPLICATION_FACTOR);
 
     kafkaStreams1 = KafkaTestUtil.createKafkaStream(zkServer.connectString(), TOPIC1, PARTITIONS);
     kafkaStreams2 = KafkaTestUtil.createKafkaStream(zkServer.connectString(), TOPIC2, PARTITIONS);
@@ -113,6 +128,8 @@ public class TestKafkaTargetSinglePartition {
     kafkaStreams14 = KafkaTestUtil.createKafkaStream(zkServer.connectString(), TOPIC14, PARTITIONS);
     kafkaStreams15 = KafkaTestUtil.createKafkaStream(zkServer.connectString(), TOPIC15, PARTITIONS);
     kafkaStreams16 = KafkaTestUtil.createKafkaStream(zkServer.connectString(), TOPIC16, PARTITIONS);
+    kafkaStreams17 = KafkaTestUtil.createKafkaStream(zkServer.connectString(), TOPIC17, PARTITIONS);
+    kafkaStreams18 = KafkaTestUtil.createKafkaStream(zkServer.connectString(), TOPIC18, PARTITIONS);
   }
 
   @AfterClass
@@ -955,4 +972,217 @@ public class TestKafkaTargetSinglePartition {
     }
   }
 
+  @Test
+  public void testWriteAvroRecords() throws Exception {
+
+    TargetRunner targetRunner = new TargetRunner.Builder(KafkaDTarget.class)
+      .addConfiguration("topic", TOPIC17)
+      .addConfiguration("partition", "0")
+      .addConfiguration("metadataBrokerList", KafkaTestUtil.getMetadataBrokerURI())
+      .addConfiguration("kafkaProducerConfigs", null)
+      .addConfiguration("dataFormat", DataFormat.AVRO)
+      .addConfiguration("singleMessagePerBatch", false)
+      .addConfiguration("partitionStrategy", PartitionStrategy.EXPRESSION)
+      .addConfiguration("csvFileFormat", CsvMode.CSV)
+      .addConfiguration("csvHeader", CsvHeader.NO_HEADER)
+      .addConfiguration("csvReplaceNewLines", false)
+      .addConfiguration("charset", "UTF-8")
+      .addConfiguration("runtimeTopicResolution", false)
+      .addConfiguration("topicExpression", null)
+      .addConfiguration("topicWhiteList", null)
+      .addConfiguration("avroSchema", SdcAvroTestUtil.AVRO_SCHEMA1)
+      .addConfiguration("includeSchema", true)
+      .build();
+
+    targetRunner.runInit();
+
+    List<Record> records = SdcAvroTestUtil.getRecords1();
+
+    targetRunner.runWrite(records);
+    targetRunner.runDestroy();
+
+    List<GenericRecord> genericRecords = new ArrayList<>();
+    DatumReader<GenericRecord> datumReader = new GenericDatumReader<>(); //Reader schema argument is optional
+
+    Assert.assertTrue(kafkaStreams17.size() == 1);
+    ConsumerIterator<byte[], byte[]> it = kafkaStreams17.get(0).iterator();
+    try {
+      while (it.hasNext()) {
+        DataFileReader<GenericRecord> dataFileReader = new DataFileReader<>(
+          new SeekableByteArrayInput(it.next().message()), datumReader);
+        while(dataFileReader.hasNext()) {
+          genericRecords.add(dataFileReader.next());
+        }
+      }
+    } catch (kafka.consumer.ConsumerTimeoutException e) {
+      //no-op
+    }
+
+    Assert.assertEquals(3, genericRecords.size());
+    SdcAvroTestUtil.compare1(genericRecords);
+  }
+
+  @Test
+  public void testWriteAvroRecordsSingleMessage() throws Exception {
+
+    TargetRunner targetRunner = new TargetRunner.Builder(KafkaDTarget.class)
+      .addConfiguration("topic", TOPIC17)
+      .addConfiguration("partition", "0")
+      .addConfiguration("metadataBrokerList", KafkaTestUtil.getMetadataBrokerURI())
+      .addConfiguration("kafkaProducerConfigs", null)
+      .addConfiguration("dataFormat", DataFormat.AVRO)
+      .addConfiguration("singleMessagePerBatch", true)
+      .addConfiguration("partitionStrategy", PartitionStrategy.EXPRESSION)
+      .addConfiguration("csvFileFormat", CsvMode.CSV)
+      .addConfiguration("csvHeader", CsvHeader.NO_HEADER)
+      .addConfiguration("csvReplaceNewLines", false)
+      .addConfiguration("charset", "UTF-8")
+      .addConfiguration("runtimeTopicResolution", false)
+      .addConfiguration("topicExpression", null)
+      .addConfiguration("topicWhiteList", null)
+      .addConfiguration("avroSchema", SdcAvroTestUtil.AVRO_SCHEMA1)
+      .addConfiguration("includeSchema", true)
+      .build();
+
+    targetRunner.runInit();
+
+    List<Record> records = SdcAvroTestUtil.getRecords1();
+
+    targetRunner.runWrite(records);
+    targetRunner.runDestroy();
+
+    List<GenericRecord> genericRecords = new ArrayList<>();
+    DatumReader<GenericRecord> datumReader = new GenericDatumReader<>(); //Reader schema argument is optional
+
+    Assert.assertTrue(kafkaStreams17.size() == 1);
+    ConsumerIterator<byte[], byte[]> it = kafkaStreams17.get(0).iterator();
+    int messageCount = 0;
+    try {
+      while (it.hasNext()) {
+        messageCount++;
+        DataFileReader<GenericRecord> dataFileReader = new DataFileReader<>(
+          new SeekableByteArrayInput(it.next().message()), datumReader);
+        while(dataFileReader.hasNext()) {
+          genericRecords.add(dataFileReader.next());
+        }
+      }
+    } catch (kafka.consumer.ConsumerTimeoutException e) {
+      //no-op
+    }
+
+    Assert.assertEquals(1, messageCount);
+    Assert.assertEquals(3, genericRecords.size());
+    SdcAvroTestUtil.compare1(genericRecords);
+  }
+
+  @Test
+  public void testWriteAvroRecordsDropSchema() throws Exception {
+
+    TargetRunner targetRunner = new TargetRunner.Builder(KafkaDTarget.class)
+      .addConfiguration("topic", TOPIC17)
+      .addConfiguration("partition", "0")
+      .addConfiguration("metadataBrokerList", KafkaTestUtil.getMetadataBrokerURI())
+      .addConfiguration("kafkaProducerConfigs", null)
+      .addConfiguration("dataFormat", DataFormat.AVRO)
+      .addConfiguration("singleMessagePerBatch", false)
+      .addConfiguration("partitionStrategy", PartitionStrategy.EXPRESSION)
+      .addConfiguration("csvFileFormat", CsvMode.CSV)
+      .addConfiguration("csvHeader", CsvHeader.NO_HEADER)
+      .addConfiguration("csvReplaceNewLines", false)
+      .addConfiguration("charset", "UTF-8")
+      .addConfiguration("runtimeTopicResolution", false)
+      .addConfiguration("topicExpression", null)
+      .addConfiguration("topicWhiteList", null)
+      .addConfiguration("avroSchema", SdcAvroTestUtil.AVRO_SCHEMA1)
+      .addConfiguration("includeSchema", false)
+      .build();
+
+    targetRunner.runInit();
+
+    List<Record> records = SdcAvroTestUtil.getRecords1();
+
+    targetRunner.runWrite(records);
+    targetRunner.runDestroy();
+
+    List<GenericRecord> genericRecords = new ArrayList<>();
+    DatumReader<GenericRecord> datumReader = new GenericDatumReader<>(); //Reader schema argument is optional
+    datumReader.setSchema(new Schema.Parser().parse(SdcAvroTestUtil.AVRO_SCHEMA1));
+    int messageCounter = 0;
+
+    Assert.assertTrue(kafkaStreams17.size() == 1);
+    ConsumerIterator<byte[], byte[]> it = kafkaStreams17.get(0).iterator();
+    try {
+      while (it.hasNext()) {
+        messageCounter++;
+        BinaryDecoder decoder = DecoderFactory.get().binaryDecoder(it.next().message(), null);
+        GenericRecord read = datumReader.read(null, decoder);
+        genericRecords.add(read);
+      }
+    } catch (kafka.consumer.ConsumerTimeoutException e) {
+      //no-op
+    }
+
+    Assert.assertEquals(3, messageCounter);
+    Assert.assertEquals(3, genericRecords.size());
+    SdcAvroTestUtil.compare1(genericRecords);
+  }
+
+  @Test
+  public void testWriteAvroRecordsDropSchemaSingleMessage() throws Exception {
+
+    TargetRunner targetRunner = new TargetRunner.Builder(KafkaDTarget.class)
+      .addConfiguration("topic", TOPIC17)
+      .addConfiguration("partition", "0")
+      .addConfiguration("metadataBrokerList", KafkaTestUtil.getMetadataBrokerURI())
+      .addConfiguration("kafkaProducerConfigs", null)
+      .addConfiguration("dataFormat", DataFormat.AVRO)
+      .addConfiguration("singleMessagePerBatch", true)
+      .addConfiguration("partitionStrategy", PartitionStrategy.EXPRESSION)
+      .addConfiguration("csvFileFormat", CsvMode.CSV)
+      .addConfiguration("csvHeader", CsvHeader.NO_HEADER)
+      .addConfiguration("csvReplaceNewLines", false)
+      .addConfiguration("charset", "UTF-8")
+      .addConfiguration("runtimeTopicResolution", false)
+      .addConfiguration("topicExpression", null)
+      .addConfiguration("topicWhiteList", null)
+      .addConfiguration("avroSchema", SdcAvroTestUtil.AVRO_SCHEMA1)
+      .addConfiguration("includeSchema", false)
+      .build();
+
+    targetRunner.runInit();
+
+    List<Record> records = SdcAvroTestUtil.getRecords1();
+
+    targetRunner.runWrite(records);
+    targetRunner.runDestroy();
+
+    List<GenericRecord> genericRecords = new ArrayList<>();
+    DatumReader<GenericRecord> datumReader = new GenericDatumReader<>(); //Reader schema argument is optional
+    datumReader.setSchema(new Schema.Parser().parse(SdcAvroTestUtil.AVRO_SCHEMA1));
+    int messageCounter = 0;
+
+    Assert.assertTrue(kafkaStreams17.size() == 1);
+    ConsumerIterator<byte[], byte[]> it = kafkaStreams17.get(0).iterator();
+    try {
+      while (it.hasNext()) {
+        messageCounter++;
+        BinaryDecoder decoder = DecoderFactory.get().binaryDecoder(it.next().message(), null);
+        GenericRecord read = datumReader.read(null, decoder);
+        while(read != null) {
+          genericRecords.add(read);
+          try {
+            read = datumReader.read(null, decoder);
+          } catch (EOFException e) {
+            break;
+          }
+        }
+      }
+    } catch (kafka.consumer.ConsumerTimeoutException e) {
+      //no-op
+    }
+
+    Assert.assertEquals(1, messageCounter);
+    Assert.assertEquals(3, genericRecords.size());
+    SdcAvroTestUtil.compare1(genericRecords);
+  }
 }

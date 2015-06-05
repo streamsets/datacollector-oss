@@ -34,7 +34,7 @@ public class TestCommonLogFormatParser {
     DataParser parser = getDataParser(
       "127.0.0.1 ss h [10/Oct/2000:13:55:36 -0700] \"GET /apache_pb.gif HTTP/1.0\" 200 2326 Hello", 1000, 0);
 
-    Assert.assertEquals(0, parser.getOffset());
+    Assert.assertEquals(0, Long.parseLong(parser.getOffset()));
     Record record = parser.parse();
     Assert.assertNotNull(record);
 
@@ -46,7 +46,7 @@ public class TestCommonLogFormatParser {
     Assert.assertFalse(record.has("/truncated"));
 
     //offset is -1 as the parser attempted a read ahead and met the end
-    Assert.assertEquals(88, parser.getOffset());
+    Assert.assertEquals(88, Long.parseLong(parser.getOffset()));
 
     Assert.assertTrue(record.has("/" + Constants.CLIENTIP));
     Assert.assertEquals("127.0.0.1", record.get("/" + Constants.CLIENTIP).getValueAsString());
@@ -82,7 +82,7 @@ public class TestCommonLogFormatParser {
   public void testParseWithOffset() throws Exception {
     DataParser parser = getDataParser(
       "Hello\n127.0.0.1 ss h [10/Oct/2000:13:55:36 -0700] \"GET /apache_pb.gif HTTP/1.0\" 200 2326", 1000, 6);
-    Assert.assertEquals(6, parser.getOffset());
+    Assert.assertEquals(6, Long.parseLong(parser.getOffset()));
     Record record = parser.parse();
     Assert.assertNotNull(record);
 
@@ -94,7 +94,7 @@ public class TestCommonLogFormatParser {
     Assert.assertFalse(record.has("/truncated"));
 
     //offset is -1 as the parser attempted a read ahead and met the end
-    Assert.assertEquals(88, parser.getOffset());
+    Assert.assertEquals(88, Long.parseLong(parser.getOffset()));
 
     Assert.assertTrue(record.has("/" + Constants.CLIENTIP));
     Assert.assertEquals("127.0.0.1", record.get("/" + Constants.CLIENTIP).getValueAsString());
@@ -127,7 +127,7 @@ public class TestCommonLogFormatParser {
     record = parser.parse();
     Assert.assertNull(record);
 
-    Assert.assertEquals(-1, parser.getOffset());
+    Assert.assertEquals(-1, Long.parseLong(parser.getOffset()));
     parser.close();
   }
 
@@ -142,7 +142,7 @@ public class TestCommonLogFormatParser {
   public void testTruncate() throws Exception {
     DataParser parser = getDataParser(
       "127.0.0.1 ss h [10/Oct/2000:13:55:36 -0700] \"GET /apache_pb.gif HTTP/1.0\" 200 2326", 25, 0);
-    Assert.assertEquals(0, parser.getOffset());
+    Assert.assertEquals(0, Long.parseLong(parser.getOffset()));
     try {
       parser.parse();
     } finally {
@@ -155,7 +155,7 @@ public class TestCommonLogFormatParser {
     DataParser parser = getDataParser(
       "127.0.0.1 ss h [10/Oct/2000:13:55:36 -0700] This is a log line that does not confirm to common log format",
       1000, 0);
-    Assert.assertEquals(0, parser.getOffset());
+    Assert.assertEquals(0, Long.parseLong(parser.getOffset()));
     try {
       parser.parse();
     } finally {

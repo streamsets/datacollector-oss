@@ -30,22 +30,22 @@ public class TestTextCharDataParser {
   public void testParse() throws Exception {
     OverrunReader reader = new OverrunReader(new StringReader("Hello\nBye"), 1000, true, false);
     DataParser parser = new TextCharDataParser(getContext(), "id", reader, 0, 1000, "text", "truncated");
-    Assert.assertEquals(0, parser.getOffset());
+    Assert.assertEquals(0, Long.parseLong(parser.getOffset()));
     Record record = parser.parse();
     Assert.assertNotNull(record);
     Assert.assertEquals("id::0", record.getHeader().getSourceId());
     Assert.assertEquals("Hello", record.get().getValueAsMap().get("text").getValueAsString());
     Assert.assertFalse(record.has("/truncated"));
-    Assert.assertEquals(6, parser.getOffset());
+    Assert.assertEquals(6, Long.parseLong(parser.getOffset()));
     record = parser.parse();
     Assert.assertNotNull(record);
     Assert.assertEquals("id::6", record.getHeader().getSourceId());
     Assert.assertEquals("Bye", record.get().getValueAsMap().get("text").getValueAsString());
     Assert.assertFalse(record.has("/truncated"));
-    Assert.assertEquals(9, parser.getOffset());
+    Assert.assertEquals(9, Long.parseLong(parser.getOffset()));
     record = parser.parse();
     Assert.assertNull(record);
-    Assert.assertEquals(-1, parser.getOffset());
+    Assert.assertEquals(-1, Long.parseLong(parser.getOffset()));
     parser.close();
   }
 
@@ -53,16 +53,16 @@ public class TestTextCharDataParser {
   public void testParseWithOffset() throws Exception {
     OverrunReader reader = new OverrunReader(new StringReader("Hello\nBye"), 1000, true, false);
     DataParser parser = new TextCharDataParser(getContext(), "id", reader, 6, 1000, "text", "truncated");
-    Assert.assertEquals(6, parser.getOffset());
+    Assert.assertEquals(6, Long.parseLong(parser.getOffset()));
     Record record = parser.parse();
     Assert.assertNotNull(record);
     Assert.assertEquals("id::6", record.getHeader().getSourceId());
     Assert.assertEquals("Bye", record.get().getValueAsMap().get("text").getValueAsString());
     Assert.assertFalse(record.has("/truncated"));
-    Assert.assertEquals(9, parser.getOffset());
+    Assert.assertEquals(9, Long.parseLong(parser.getOffset()));
     record = parser.parse();
     Assert.assertNull(record);
-    Assert.assertEquals(-1, parser.getOffset());
+    Assert.assertEquals(-1, Long.parseLong(parser.getOffset()));
     parser.close();
   }
 
@@ -78,22 +78,22 @@ public class TestTextCharDataParser {
   public void testTruncate() throws Exception {
     OverrunReader reader = new OverrunReader(new StringReader("Hello\nBye"), 1000, true, false);
     DataParser parser = new TextCharDataParser(getContext(), "id", reader, 0, 3, "text", "truncated");
-    Assert.assertEquals(0, parser.getOffset());
+    Assert.assertEquals(0, Long.parseLong(parser.getOffset()));
     Record record = parser.parse();
     Assert.assertNotNull(record);
     Assert.assertEquals("id::0", record.getHeader().getSourceId());
     Assert.assertEquals("Hel", record.get().getValueAsMap().get("text").getValueAsString());
     Assert.assertTrue(record.has("/truncated"));
-    Assert.assertEquals(6, parser.getOffset());
+    Assert.assertEquals(6, Long.parseLong(parser.getOffset()));
     record = parser.parse();
     Assert.assertNotNull(record);
     Assert.assertEquals("id::6", record.getHeader().getSourceId());
     Assert.assertEquals("Bye", record.get().getValueAsMap().get("text").getValueAsString());
     Assert.assertFalse(record.has("/truncated"));
-    Assert.assertEquals(9, parser.getOffset());
+    Assert.assertEquals(9, Long.parseLong(parser.getOffset()));
     record = parser.parse();
     Assert.assertNull(record);
-    Assert.assertEquals(-1, parser.getOffset());
+    Assert.assertEquals(-1, Long.parseLong(parser.getOffset()));
     parser.close();
   }
 

@@ -37,11 +37,11 @@ public class TestTextDataParserFactory {
     TextDataParserFactory factory = (TextDataParserFactory) dataFactory;
 
     DataParser parser = factory.getParser("id", "Hello\n".getBytes());
-    Assert.assertEquals(0, parser.getOffset());
+    Assert.assertEquals(0, Long.parseLong(parser.getOffset()));
     Record record = parser.parse();
     Assert.assertTrue(record.has("/text"));
     Assert.assertTrue(record.has("/truncated"));
-    Assert.assertEquals(6, parser.getOffset());
+    Assert.assertEquals(6, Long.parseLong(parser.getOffset()));
     parser.close();
   }
 
@@ -55,11 +55,11 @@ public class TestTextDataParserFactory {
     TextDataParserFactory factory = (TextDataParserFactory) dataFactory;
     InputStream is = new ByteArrayInputStream("Hello\nBye".getBytes());
     DataParser parser = factory.getParser("id", is, 0);
-    Assert.assertEquals(0, parser.getOffset());
+    Assert.assertEquals(0, Long.parseLong(parser.getOffset()));
     Record record = parser.parse();
     Assert.assertTrue(record.has("/text"));
     Assert.assertTrue(record.has("/truncated"));
-    Assert.assertEquals(6, parser.getOffset());
+    Assert.assertEquals(6, Long.parseLong(parser.getOffset()));
     parser.close();
   }
 
@@ -73,10 +73,10 @@ public class TestTextDataParserFactory {
     TextDataParserFactory factory = (TextDataParserFactory) dataFactory;
     InputStream is = new ByteArrayInputStream("Hello\nBye".getBytes());
     DataParser parser = factory.getParser("id", is, 6);
-    Assert.assertEquals(6, parser.getOffset());
+    Assert.assertEquals(6, Long.parseLong(parser.getOffset()));
     Record record = parser.parse();
     Assert.assertTrue(record.has("/text"));
-    Assert.assertEquals(9, parser.getOffset());
+    Assert.assertEquals(9, Long.parseLong(parser.getOffset()));
     parser.close();
   }
 
@@ -89,10 +89,10 @@ public class TestTextDataParserFactory {
     Assert.assertTrue(dataFactory instanceof TextDataParserFactory);
     TextDataParserFactory factory = (TextDataParserFactory) dataFactory;
     DataParser parser = factory.getParser("id", "Hello\nBye");
-    Assert.assertEquals(0, parser.getOffset());
+    Assert.assertEquals(0, Long.parseLong(parser.getOffset()));
     Record record = parser.parse();
     Assert.assertTrue(record.has("/text"));
-    Assert.assertEquals(6, parser.getOffset());
+    Assert.assertEquals(6, Long.parseLong(parser.getOffset()));
     parser.close();
   }
 

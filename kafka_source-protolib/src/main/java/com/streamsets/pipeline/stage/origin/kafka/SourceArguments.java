@@ -54,6 +54,8 @@ public class SourceArguments {
   protected final OnParseError onParseError;
   protected final int maxBatchSize;
   protected final Map<String, String> kafkaConsumerConfigs;
+  protected final boolean schemaInMessage;
+  protected final String avroSchema;
 
   public SourceArguments(String metadataBrokerList, String zookeeperConnect, String consumerGroup, String topic,
                          DataFormat dataFormat, String charset, boolean removeCtrlChars,
@@ -64,7 +66,7 @@ public class SourceArguments {
                          String customLogFormat, String regex, String grokPatternDefinition, String grokPattern,
                          List<RegExConfig> fieldPathsToGroupName, boolean enableLog4jCustomLogFormat,
                          String log4jCustomLogFormat, int maxStackTraceLines, OnParseError onParseError,
-                         Map<String, String> kafkaConsumerConfigs) {
+                         Map<String, String> kafkaConsumerConfigs, boolean schemaInMessage, String avroSchema) {
     this.metadataBrokerList = metadataBrokerList;
     this.zookeeperConnect = zookeeperConnect;
     this.consumerGroup = consumerGroup;
@@ -98,6 +100,8 @@ public class SourceArguments {
     this.maxBatchSize = maxBatchSize;
     this.kafkaConsumerConfigs = Maps.newHashMap(kafkaConsumerConfigs == null ?
       Collections.<String, String>emptyMap() : kafkaConsumerConfigs);
+    this.schemaInMessage = schemaInMessage;
+    this.avroSchema = avroSchema;
   }
 
   public String getMetadataBrokerList() {
@@ -224,4 +228,11 @@ public class SourceArguments {
     return kafkaConsumerConfigs;
   }
 
+  public boolean isSchemaInMessage() {
+    return schemaInMessage;
+  }
+
+  public String getAvroSchema() {
+    return avroSchema;
+  }
 }

@@ -24,6 +24,7 @@ import com.streamsets.pipeline.lib.el.RecordEL;
 import com.streamsets.pipeline.lib.el.TimeEL;
 import com.streamsets.pipeline.lib.generator.DataGeneratorFactory;
 import com.streamsets.pipeline.lib.generator.DataGeneratorFactoryBuilder;
+import com.streamsets.pipeline.lib.generator.avro.AvroDataGeneratorFactory;
 import com.streamsets.pipeline.lib.generator.delimited.DelimitedDataGeneratorFactory;
 import com.streamsets.pipeline.lib.generator.text.TextDataGeneratorFactory;
 import com.streamsets.pipeline.stage.destination.hdfs.writer.ActiveRecordWriters;
@@ -81,17 +82,16 @@ public class HdfsTarget extends RecordTarget {
   private final String textFieldPath;
   private final boolean textEmptyLineIfNull;
   private String charset;
+  private final String avroSchema;
 
   public HdfsTarget(String hdfsUri, boolean hdfsKerberos, String kerberosPrincipal, String kerberosKeytab,
       String hadoopConfDir, Map<String, String> hdfsConfigs, String uniquePrefix, String dirPathTemplate,
-      String timeZoneID,
-      String timeDriver, long maxRecordsPerFile, long maxFileSize, CompressionMode compression, String otherCompression,
-      HdfsFileType fileType, String keyEl,
+      String timeZoneID, String timeDriver, long maxRecordsPerFile, long maxFileSize, CompressionMode compression,
+      String otherCompression, HdfsFileType fileType, String keyEl,
       HdfsSequenceFileCompressionType seqFileCompressionType, String lateRecordsLimit,
-      LateRecordsAction lateRecordsAction, String lateRecordsDirPathTemplate,
-      DataFormat dataFormat, String charset, CsvMode csvFileFormat, CsvHeader csvHeader, boolean csvReplaceNewLines,
-      JsonMode jsonMode,
-      String textFieldPath, boolean textEmptyLineIfNull) {
+      LateRecordsAction lateRecordsAction, String lateRecordsDirPathTemplate, DataFormat dataFormat, String charset,
+      CsvMode csvFileFormat, CsvHeader csvHeader, boolean csvReplaceNewLines, JsonMode jsonMode, String textFieldPath,
+      boolean textEmptyLineIfNull, String avroSchema) {
     this.hdfsUri = hdfsUri;
     this.hdfsKerberos = hdfsKerberos;
     this.kerberosPrincipal = kerberosPrincipal;
@@ -120,6 +120,7 @@ public class HdfsTarget extends RecordTarget {
     this.textFieldPath = textFieldPath;
     this.textEmptyLineIfNull = textEmptyLineIfNull;
     this.charset = charset;
+    this.avroSchema = avroSchema;
   }
 
   private Configuration hdfsConfiguration;
@@ -402,6 +403,7 @@ public class HdfsTarget extends RecordTarget {
       case JSON:
       case DELIMITED:
       case SDC_JSON:
+      case AVRO:
         break;
       default:
         issues.add(getContext().createConfigIssue(Groups.OUTPUT_FILES.name(), "dataFormat", Errors.HADOOPFS_16,
@@ -430,6 +432,9 @@ public class HdfsTarget extends RecordTarget {
         builder.setConfig(TextDataGeneratorFactory.EMPTY_LINE_IF_NULL_KEY, textEmptyLineIfNull);
         break;
       case SDC_JSON:
+        break;
+      case AVRO:
+        builder.setConfig(AvroDataGeneratorFactory.SCHEMA_KEY, avroSchema);
         break;
       case XML:
       default:

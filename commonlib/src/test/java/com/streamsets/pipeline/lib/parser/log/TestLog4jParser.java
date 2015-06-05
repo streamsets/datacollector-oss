@@ -112,7 +112,7 @@ public class TestLog4jParser {
   @Test
   public void testParse() throws Exception {
     DataParser parser = getDataParser(LOG_LINE, 1000, 0);
-    Assert.assertEquals(0, parser.getOffset());
+    Assert.assertEquals(0, Long.parseLong(parser.getOffset()));
     Record record = parser.parse();
     Assert.assertNotNull(record);
 
@@ -122,7 +122,7 @@ public class TestLog4jParser {
 
     Assert.assertFalse(record.has("/truncated"));
 
-    Assert.assertEquals(141, parser.getOffset());
+    Assert.assertEquals(141, Long.parseLong(parser.getOffset()));
 
     Assert.assertTrue(record.has("/" + Constants.TIMESTAMP));
     Assert.assertEquals("2015-03-20 15:53:31,161", record.get("/" + Constants.TIMESTAMP).getValueAsString());
@@ -143,7 +143,7 @@ public class TestLog4jParser {
   @Test
   public void testParseWithOffset() throws Exception {
     DataParser parser = getDataParser("Hello\n" + LOG_LINE, 1000, 6);
-    Assert.assertEquals(6, parser.getOffset());
+    Assert.assertEquals(6, Long.parseLong(parser.getOffset()));
     Record record = parser.parse();
     Assert.assertNotNull(record);
 
@@ -153,7 +153,7 @@ public class TestLog4jParser {
 
     Assert.assertFalse(record.has("/truncated"));
 
-    Assert.assertEquals(147, parser.getOffset());
+    Assert.assertEquals(147, Long.parseLong(parser.getOffset()));
 
     Assert.assertTrue(record.has("/" + Constants.TIMESTAMP));
     Assert.assertEquals("2015-03-20 15:53:31,161", record.get("/" + Constants.TIMESTAMP).getValueAsString());
@@ -171,7 +171,7 @@ public class TestLog4jParser {
     record = parser.parse();
     Assert.assertNull(record);
 
-    Assert.assertEquals(-1, parser.getOffset());
+    Assert.assertEquals(-1, Long.parseLong(parser.getOffset()));
     parser.close();
   }
 
@@ -185,7 +185,7 @@ public class TestLog4jParser {
   @Test(expected = DataParserException.class)
   public void testTruncate() throws Exception {
     DataParser parser = getDataParser(LOG_LINE, 25, 0);
-    Assert.assertEquals(0, parser.getOffset());
+    Assert.assertEquals(0, Long.parseLong(parser.getOffset()));
     try {
       parser.parse();
     } finally {
@@ -198,7 +198,7 @@ public class TestLog4jParser {
     DataParser parser = getDataParser(
       "127.0.0.1 ss h [10/Oct/2000:13:55:36 -0700] This is a log line that does not confirm to default log4j log format",
       1000, 0);
-    Assert.assertEquals(0, parser.getOffset());
+    Assert.assertEquals(0, Long.parseLong(parser.getOffset()));
     try {
       parser.parse();
     } finally {
@@ -224,7 +224,7 @@ public class TestLog4jParser {
     LogDataParserFactory factory = (LogDataParserFactory) dataFactory;
 
     DataParser parser = factory.getParser("id", is, 0);
-    Assert.assertEquals(0, parser.getOffset());
+    Assert.assertEquals(0, Long.parseLong(parser.getOffset()));
     Record record = parser.parse();
     Assert.assertNotNull(record);
 
@@ -233,7 +233,7 @@ public class TestLog4jParser {
     Assert.assertEquals(LOG_LINE_WITH_STACK_TRACE, record.get().getValueAsMap().get("originalLine").getValueAsString());
 
     Assert.assertFalse(record.has("/truncated"));
-    Assert.assertEquals(-1, parser.getOffset());
+    Assert.assertEquals(-1, Long.parseLong(parser.getOffset()));
 
     Assert.assertTrue(record.has("/" + Constants.TIMESTAMP));
     Assert.assertEquals("2015-03-24 17:49:16,808", record.get("/" + Constants.TIMESTAMP).getValueAsString());

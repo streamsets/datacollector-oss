@@ -19,6 +19,7 @@ import com.streamsets.pipeline.lib.FlumeUtil;
 import com.streamsets.pipeline.lib.generator.DataGeneratorFactory;
 import com.streamsets.pipeline.lib.generator.DataGenerator;
 import com.streamsets.pipeline.lib.generator.DataGeneratorFactoryBuilder;
+import com.streamsets.pipeline.lib.generator.avro.AvroDataGeneratorFactory;
 import com.streamsets.pipeline.lib.generator.delimited.DelimitedDataGeneratorFactory;
 import com.streamsets.pipeline.lib.generator.text.TextDataGeneratorFactory;
 import com.streamsets.pipeline.lib.util.ThreadUtil;
@@ -78,6 +79,9 @@ public class FlumeTarget extends BaseTarget {
   private final int requestTimeout;
   private final int maxRetryAttempts;
   private final long waitBetweenRetries;
+  private final String avroSchema;
+  private final boolean includeSchema;
+
   private String charset;
   private ByteArrayOutputStream baos;
 
@@ -86,7 +90,8 @@ public class FlumeTarget extends BaseTarget {
                      CsvMode csvFileFormat, CsvHeader csvHeader, boolean csvReplaceNewLines, JsonMode jsonMode,
                      String textFieldPath, boolean textEmptyLineIfNull, ClientType clientType, boolean backOff,
                      HostSelectionStrategy hostSelectionStrategy, int maxBackOff, int batchSize,
-                     int connectionTimeout, int requestTimeout, int maxRetryAttempts, long waitBetweenRetries) {
+                     int connectionTimeout, int requestTimeout, int maxRetryAttempts, long waitBetweenRetries,
+                     String avroSchema, boolean includeSchema) {
     this.flumeHostsConfig = flumeHostsConfig;
     this.dataFormat = dataFormat;
     this.singleEventPerBatch = singleEventPerBatch;
@@ -106,6 +111,8 @@ public class FlumeTarget extends BaseTarget {
     this.charset = charset;
     this.maxRetryAttempts = maxRetryAttempts;
     this.waitBetweenRetries = waitBetweenRetries;
+    this.avroSchema = avroSchema;
+    this.includeSchema = includeSchema;
     baos = new ByteArrayOutputStream(1024);
   }
 
@@ -220,6 +227,10 @@ public class FlumeTarget extends BaseTarget {
         break;
       case JSON:
         builder.setMode(jsonMode);
+        break;
+      case AVRO:
+        builder.setConfig(AvroDataGeneratorFactory.SCHEMA_KEY, avroSchema);
+        builder.setConfig(AvroDataGeneratorFactory.INCLUDE_SCHEMA_KEY, includeSchema);
         break;
     }
     return builder.build();
