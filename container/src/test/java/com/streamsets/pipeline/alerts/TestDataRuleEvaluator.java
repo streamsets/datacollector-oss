@@ -141,7 +141,8 @@ public class TestDataRuleEvaluator {
     evaluateRule(dataRuleEvaluator, lane);
     Gauge<Object> gauge = MetricsConfigurator.getGauge(metrics,
       AlertsUtil.getAlertGaugeName(dataRuleDefinition.getId()));
-    Assert.assertNull(gauge);
+    Assert.assertNotNull(gauge);
+    Assert.assertNotNull(((Map<String, Object>) gauge.getValue()).get("exceptionMessage"));
   }
 
   @Test

@@ -30,6 +30,7 @@ public class AlertManager {
   private static Logger LOG = LoggerFactory.getLogger(AlertManager.class);
 
   private static final String CURRENT_VALUE = "currentValue";
+  private static final String EXCEPTION_MESSAGE = "exceptionMessage";
   private static final String TIMESTAMP = "timestamp";
   private static final String STREAMSETS_DATA_COLLECTOR_ALERT = "StreamsSets Data Collector Alert - ";
   private static final String ERROR_EMAIL_TEMPLATE = "Error Code \t\t: ERROR_CODE\n" +
@@ -153,6 +154,28 @@ public class AlertManager {
         return alertResponse;
       }
     };
+    MetricsConfigurator.createGauge(metrics, AlertsUtil.getAlertGaugeName(ruleDefinition.getId()),
+      alertResponseGauge);
+  }
+
+  public void alertException(Object value, RuleDefinition ruleDefinition) {
+    final Map<String, Object> alertResponse = new HashMap<>();
+    alertResponse.put(EXCEPTION_MESSAGE, value);
+    Gauge<Object> gauge = MetricsConfigurator.getGauge(metrics,
+      AlertsUtil.getAlertGaugeName(ruleDefinition.getId()));
+
+    if (gauge != null) {
+      //remove existing gauge
+      MetricsConfigurator.removeGauge(metrics, AlertsUtil.getAlertGaugeName(ruleDefinition.getId()));
+    }
+
+    Gauge<Object> alertResponseGauge = new Gauge<Object>() {
+      @Override
+      public Object getValue() {
+        return alertResponse;
+      }
+    };
+
     MetricsConfigurator.createGauge(metrics, AlertsUtil.getAlertGaugeName(ruleDefinition.getId()),
       alertResponseGauge);
   }

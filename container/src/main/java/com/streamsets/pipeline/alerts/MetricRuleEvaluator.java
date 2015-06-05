@@ -252,6 +252,9 @@ public class MetricRuleEvaluator {
       //Log and it and continue for now
       LOG.error("Error processing metric definition alert '{}', reason: {}", metricsRuleDefinition.getId(),
         e.getMessage(), e);
+
+      //Trigger alert with exception message
+      alertManager.alertException(e.getMessage(), metricsRuleDefinition);
     }
   }
 }
