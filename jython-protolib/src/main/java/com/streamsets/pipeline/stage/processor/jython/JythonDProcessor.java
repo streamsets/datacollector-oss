@@ -47,6 +47,12 @@ public class JythonDProcessor extends DProcessor {
     "#  records: an array of records to process, depending on Jython processor\n" +
     "#           processing mode it may have 1 record or all the records in the batch.\n" +
     "#\n" +
+    "#  state: a dict that is preserved between invocations of this script. \n" +
+    "#         Useful for caching bits of data e.g. counters.\n" +
+    "#\n" +
+    "#  log.<loglevel>(msg, obj...): use instead of print to send log messages to the log4j log instead of stdout.\n" +
+    "#                               loglevel is any log4j level: e.g. info, error, warn, trace.\n" +
+    "#\n" +
     "#  out.write(record): writes a record to processor output\n" +
     "#\n" +
     "#  err.write(record, message): sends a record to error\n" +

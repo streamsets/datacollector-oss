@@ -20,7 +20,9 @@ import org.junit.Test;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class TestJythonProcessor {
 
@@ -288,6 +290,37 @@ public class TestJythonProcessor {
       Assert.assertEquals(field, output.getRecords().get("lane").get(0).get());
 
       Assert.assertEquals(Field.create((String)null), output.getRecords().get("lane").get(1).get());
+    } finally {
+      runner.runDestroy();
+    }
+  }
+
+  @Test
+  public void testStateObject() throws Exception {
+    Processor processor = new JythonProcessor(
+        ProcessingMode.RECORD,
+        "if not 'total_count' in state:\n" +
+        "  state['total_count'] = 0\n" +
+        "state['total_count'] = state['total_count'] + len(records)\n" +
+        "for record in records:\n" +
+        "  record.value['count'] = state['total_count']\n" +
+        "  out.write(record)\n"
+    );
+    ProcessorRunner runner = new ProcessorRunner.Builder(JythonDProcessor.class, processor)
+        .addOutputLane("lane")
+        .build();
+    runner.runInit();
+    try {
+
+      Record record = RecordCreator.create();
+      Map<String, Field> map = new HashMap<>();
+      map.put("count", Field.create(0));
+      record.set(Field.create(map));
+      List<Record> input = Arrays.asList(record);
+      runner.runProcess(input);
+      StageRunner.Output output = runner.runProcess(input);
+      Assert.assertEquals(1, output.getRecords().get("lane").size());
+      Assert.assertEquals(2, output.getRecords().get("lane").get(0).get("/count").getValue());
     } finally {
       runner.runDestroy();
     }

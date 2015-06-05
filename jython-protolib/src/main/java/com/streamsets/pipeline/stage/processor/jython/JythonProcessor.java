@@ -11,6 +11,8 @@ import com.streamsets.pipeline.stage.processor.scripting.ProcessingMode;
 import com.streamsets.pipeline.stage.processor.scripting.ScriptObjectFactory;
 import org.python.core.PyDictionary;
 import org.python.core.PyList;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.script.ScriptEngine;
 import java.math.BigDecimal;
@@ -19,11 +21,12 @@ import java.util.Date;
 import java.util.List;
 
 public class JythonProcessor extends AbstractScriptingProcessor {
+  private static final Logger LOG = LoggerFactory.getLogger(JythonProcessor.class);
 
   public static final String JYTHON_ENGINE = "jython";
 
   public JythonProcessor(ProcessingMode processingMode, String script) {
-    super(JYTHON_ENGINE, Groups.JYTHON.name(), "script", processingMode, script);
+    super(LOG, JYTHON_ENGINE, Groups.JYTHON.name(), "script", processingMode, script);
   }
 
   @Override
