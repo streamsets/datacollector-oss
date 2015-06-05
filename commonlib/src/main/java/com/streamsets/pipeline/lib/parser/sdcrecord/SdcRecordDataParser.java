@@ -32,8 +32,8 @@ public class SdcRecordDataParser implements DataParser {
   }
 
   @Override
-  public long getOffset() {
-    return (eof) ? -1 : recordReader.getPosition();
+  public String getOffset() {
+    return (eof) ? String.valueOf(-1) : String.valueOf(recordReader.getPosition());
   }
 
   @Override

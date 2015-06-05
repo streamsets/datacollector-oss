@@ -23,6 +23,7 @@ import com.streamsets.pipeline.lib.io.OverrunException;
 import com.streamsets.pipeline.lib.parser.DataParser;
 import com.streamsets.pipeline.lib.parser.DataParserFactory;
 import com.streamsets.pipeline.lib.parser.DataParserFactoryBuilder;
+import com.streamsets.pipeline.lib.parser.avro.AvroDataParserFactory;
 import com.streamsets.pipeline.lib.parser.log.LogDataFormatValidator;
 import com.streamsets.pipeline.lib.parser.log.RegExConfig;
 import com.streamsets.pipeline.lib.parser.xml.XmlDataParserFactory;
@@ -44,6 +45,8 @@ import java.util.concurrent.TimeUnit;
 public class SpoolDirSource extends BaseSource {
   private final static Logger LOG = LoggerFactory.getLogger(SpoolDirSource.class);
   private static final String OFFSET_SEPARATOR = "::";
+  private static final String MINUS_ONE = "-1";
+  private static final String ZERO = "0";
   private static final int MIN_OVERRUN_LIMIT = 64 * 1000;
   private static final int MAX_OVERRUN_LIMIT = 1000 * 1000;
 
@@ -81,6 +84,7 @@ public class SpoolDirSource extends BaseSource {
   private final String log4jCustomLogFormat;
   private final int maxStackTraceLines;
   private final OnParseError onParseError;
+  private final String avroSchema;
 
   public SpoolDirSource(DataFormat dataFormat, String charset, boolean removeCtrlChars, int overrunLimit,
       String spoolDir, int batchSize,
@@ -91,7 +95,7 @@ public class SpoolDirSource extends BaseSource {
       int textMaxLineLen, String xmlRecordElement, int xmlMaxObjectLen, LogMode logMode, int logMaxObjectLen,
       boolean retainOriginalLine, String customLogFormat, String regex, List<RegExConfig> fieldPathsToGroupName,
       String grokPatternDefinition, String grokPattern, boolean enableLog4jCustomLogFormat,
-      String log4jCustomLogFormat, OnParseError onParseError, int maxStackTraceLines) {
+      String log4jCustomLogFormat, OnParseError onParseError, int maxStackTraceLines, String avroSchema) {
     this.dataFormat = dataFormat;
     this.charset = charset;
     this.removeCtrlChars = removeCtrlChars;
@@ -126,6 +130,7 @@ public class SpoolDirSource extends BaseSource {
     this.log4jCustomLogFormat = log4jCustomLogFormat;
     this.onParseError = onParseError;
     this.maxStackTraceLines = maxStackTraceLines;
+    this.avroSchema = avroSchema;
   }
 
   private Charset fileCharset;
@@ -206,6 +211,8 @@ public class SpoolDirSource extends BaseSource {
         break;
       case SDC_JSON:
         break;
+      case AVRO:
+        break;
       case LOG:
         logDataFormatValidator = new LogDataFormatValidator(logMode, logMaxObjectLen,
           logRetainOriginalLine, customLogFormat, regex, grokPatternDefinition, grokPattern,
@@ -267,7 +274,6 @@ public class SpoolDirSource extends BaseSource {
   private void validateDataParser(List<ConfigIssue> issues) {
     DataParserFactoryBuilder builder = new DataParserFactoryBuilder(getContext(), dataFormat.getParserFormat());
 
-
     try {
       fileCharset = Charset.forName(charset);
     } catch (UnsupportedCharsetException ex) {
@@ -299,6 +305,9 @@ public class SpoolDirSource extends BaseSource {
         break;
       case LOG:
         logDataFormatValidator.populateBuilder(builder);
+        break;
+      case AVRO:
+        builder.setMaxDataLen(-1).setConfig(AvroDataParserFactory.SCHEMA_KEY, avroSchema);
         break;
     }
     try {
@@ -365,22 +374,22 @@ public class SpoolDirSource extends BaseSource {
     return file;
   }
 
-  protected long getOffsetFromSourceOffset(String sourceOffset) throws StageException {
-    long offset = 0;
+  protected String getOffsetFromSourceOffset(String sourceOffset) throws StageException {
+    String offset = ZERO;
     if (sourceOffset != null) {
       int separator = sourceOffset.indexOf(OFFSET_SEPARATOR);
       if (separator > -1) {
-        offset = Long.parseLong(sourceOffset.substring(separator + OFFSET_SEPARATOR.length()));
+        offset = sourceOffset.substring(separator + OFFSET_SEPARATOR.length());
       }
     }
     return offset;
   }
 
-  protected String createSourceOffset(String file, long fileOffset) {
-    return (file != null) ? file + OFFSET_SEPARATOR + Long.toString(fileOffset) : null;
+  protected String createSourceOffset(String file, String fileOffset) {
+    return (file != null) ? file + OFFSET_SEPARATOR + fileOffset : null;
   }
 
-  private boolean hasToFetchNextFileFromSpooler(String file, long offset) {
+  private boolean hasToFetchNextFileFromSpooler(String file, String offset) {
     return
         // we don't have a current file half way processed in the current agent execution
         currentFile == null ||
@@ -390,10 +399,10 @@ public class SpoolDirSource extends BaseSource {
         // this can happen if somebody drop
         currentFile.getName().compareTo(file) < 0 ||
         // the current file has been fully processed
-        offset == -1;
+        MINUS_ONE.equals(offset);
   }
 
-  private boolean isFileFromSpoolerEligible(File spoolerFile, String offsetFile, long offsetInFile) {
+  private boolean isFileFromSpoolerEligible(File spoolerFile, String offsetFile, String offsetInFile) {
     if (spoolerFile == null) {
       // there is no new file from spooler, we return yes to break the loop
       return true;
@@ -402,7 +411,7 @@ public class SpoolDirSource extends BaseSource {
       // file reported by offset tracking is NULL, means we are starting from zero
       return true;
     }
-    if (spoolerFile.getName().compareTo(offsetFile) == 0 && offsetInFile != -1) {
+    if (spoolerFile.getName().compareTo(offsetFile) == 0 && !MINUS_ONE.equals(offsetInFile)) {
       // file reported by spooler is equal than current offset file
       // and we didn't fully process (not -1) the current file
       return true;
@@ -420,7 +429,7 @@ public class SpoolDirSource extends BaseSource {
     // if lastSourceOffset is NULL (beginning of source) it returns NULL
     String file = getFileFromSourceOffset(lastSourceOffset);
     // if lastSourceOffset is NULL (beginning of source) it returns 0
-    long offset = getOffsetFromSourceOffset(lastSourceOffset);
+    String offset = getOffsetFromSourceOffset(lastSourceOffset);
     if (hasToFetchNextFileFromSpooler(file, offset)) {
       currentFile = null;
       try {
@@ -447,7 +456,7 @@ public class SpoolDirSource extends BaseSource {
           // offset we processed (known via offset tracking)
           if (file == null || nextAvailFile.getName().compareTo(file) > 0) {
             file = currentFile.getName();
-            offset = 0;
+            offset = ZERO;
           }
         }
       } catch (InterruptedException ex) {
@@ -472,7 +481,7 @@ public class SpoolDirSource extends BaseSource {
           throw new StageException(Errors.SPOOLDIR_00, currentFile, ex1.getMessage(), ex1);
         }
         // we set the offset to -1 to indicate we are done with the file and we should fetch a new one from the spooler
-        offset = -1;
+        offset = MINUS_ONE;
       }
     }
     // create a new offset using the current file and offset
@@ -483,7 +492,7 @@ public class SpoolDirSource extends BaseSource {
    * Processes a batch from the specified file and offset up to a maximum batch size. If the file is fully process
    * it must return -1, otherwise it must return the offset to continue from next invocation.
    */
-  public long produce(File file, long offset, int maxBatchSize, BatchMaker batchMaker) throws StageException,
+  public String produce(File file, String offset, int maxBatchSize, BatchMaker batchMaker) throws StageException,
       BadSpoolFileException {
     String sourceFile = file.getName();
     try {
@@ -499,12 +508,12 @@ public class SpoolDirSource extends BaseSource {
           } else {
             parser.close();
             parser = null;
-            offset = -1;
+            offset = MINUS_ONE;
             break;
           }
         } catch (ObjectLengthException ex) {
-          long exOffset = offset;
-          offset = -1;
+          String exOffset = offset;
+          offset = MINUS_ONE;
           switch (getContext().getOnErrorRecord()) {
             case DISCARD:
               break;
@@ -520,12 +529,12 @@ public class SpoolDirSource extends BaseSource {
         }
       }
     } catch (IOException ex) {
-      offset = -1;
-      long exOffset;
+      offset = MINUS_ONE;
+      String exOffset;
       if (ex instanceof OverrunException) {
-        exOffset = ((OverrunException)ex).getStreamOffset();
+        exOffset = String.valueOf(((OverrunException) ex).getStreamOffset());
       } else {
-        exOffset = (parser != null) ? parser.getOffset() : -1;
+        exOffset = (parser != null) ? parser.getOffset() : MINUS_ONE;
       }
       switch (getContext().getOnErrorRecord()) {
         case DISCARD:
@@ -540,7 +549,7 @@ public class SpoolDirSource extends BaseSource {
                                                        getContext().getOnErrorRecord(), ex));
       }
     } finally {
-      if (offset == -1) {
+      if (MINUS_ONE.equals(offset)) {
         if (parser != null) {
           try {
             parser.close();

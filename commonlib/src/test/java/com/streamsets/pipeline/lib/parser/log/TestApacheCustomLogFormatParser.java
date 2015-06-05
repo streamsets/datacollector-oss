@@ -36,7 +36,7 @@ public class TestApacheCustomLogFormatParser {
   @Test
   public void testParse() throws Exception {
     DataParser parser = getDataParser(LOG_LINE, 1000, 0);
-    Assert.assertEquals(0, parser.getOffset());
+    Assert.assertEquals(0, Long.parseLong(parser.getOffset()));
     Record record = parser.parse();
     Assert.assertNotNull(record);
 
@@ -46,7 +46,7 @@ public class TestApacheCustomLogFormatParser {
 
     Assert.assertFalse(record.has("/truncated"));
 
-    Assert.assertEquals(88, parser.getOffset());
+    Assert.assertEquals(88, Long.parseLong(parser.getOffset()));
 
     Assert.assertTrue(record.has("/remoteHost"));
     Assert.assertEquals("127.0.0.1", record.get("/remoteHost").getValueAsString());
@@ -75,7 +75,7 @@ public class TestApacheCustomLogFormatParser {
   @Test
   public void testParseWithOffset() throws Exception {
     DataParser parser = getDataParser("Hello\n" + LOG_LINE, 1000, 6);
-    Assert.assertEquals(6, parser.getOffset());
+    Assert.assertEquals(6, Long.parseLong(parser.getOffset()));
     Record record = parser.parse();
     Assert.assertNotNull(record);
 
@@ -85,7 +85,7 @@ public class TestApacheCustomLogFormatParser {
 
     Assert.assertFalse(record.has("/truncated"));
 
-    Assert.assertEquals(94, parser.getOffset());
+    Assert.assertEquals(94, Long.parseLong(parser.getOffset()));
 
     Assert.assertTrue(record.has("/remoteHost"));
     Assert.assertEquals("127.0.0.1", record.get("/remoteHost").getValueAsString());
@@ -111,7 +111,7 @@ public class TestApacheCustomLogFormatParser {
     record = parser.parse();
     Assert.assertNull(record);
 
-    Assert.assertEquals(-1, parser.getOffset());
+    Assert.assertEquals(-1, Long.parseLong(parser.getOffset()));
     parser.close();
   }
 
@@ -125,7 +125,7 @@ public class TestApacheCustomLogFormatParser {
   @Test(expected = DataParserException.class)
   public void testTruncate() throws Exception {
     DataParser parser = getDataParser(LOG_LINE, 25, 0);
-    Assert.assertEquals(0, parser.getOffset());
+    Assert.assertEquals(0, Long.parseLong(parser.getOffset()));
     try {
       parser.parse();
     } finally {
@@ -139,7 +139,7 @@ public class TestApacheCustomLogFormatParser {
     DataParser parser = getDataParser(
       "127.0.0.1 ss h [10/Oct/2000:13:55:36 -0700] This is a log line that does not confirm to common log format",
       1000, 0);
-    Assert.assertEquals(0, parser.getOffset());
+    Assert.assertEquals(0, Long.parseLong(parser.getOffset()));
     try {
       parser.parse();
     } finally {

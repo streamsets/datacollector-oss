@@ -272,10 +272,40 @@ public class KafkaDTarget extends DTarget {
   )
   public boolean textEmptyLineIfNull;
 
+  /********  For AVRO Content  ***********/
+
+  @ConfigDef(
+    required = true,
+    type = ConfigDef.Type.TEXT,
+    defaultValue = "",
+    label = "Avro Writer Schema",
+    description = "",
+    displayPosition = 320,
+    group = "AVRO",
+    dependsOn = "dataFormat",
+    triggeredByValue = {"AVRO"},
+    mode = ConfigDef.Mode.PLAIN_TEXT
+  )
+  public String avroSchema;
+
+  @ConfigDef(
+    required = true,
+    type = ConfigDef.Type.BOOLEAN,
+    defaultValue = "true",
+    label = "Message Without Schema",
+    description = "The Kafka Message produced will not contain the schema",
+    displayPosition = 330,
+    group = "AVRO",
+    dependsOn = "dataFormat",
+    triggeredByValue = "AVRO"
+  )
+  public boolean includeSchema;
+
   @Override
   protected Target createTarget() {
     return new KafkaTarget(metadataBrokerList, runtimeTopicResolution, topic, topicExpression, topicWhiteList,
       partitionStrategy, partition, dataFormat, charset, singleMessagePerBatch, kafkaProducerConfigs, csvFileFormat,
-      csvHeader, csvReplaceNewLines, jsonMode, textFieldPath, textEmptyLineIfNull);
+      csvHeader, csvReplaceNewLines, jsonMode, textFieldPath, textEmptyLineIfNull,
+      avroSchema, includeSchema);
   }
 }

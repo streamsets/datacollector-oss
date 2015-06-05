@@ -18,6 +18,7 @@ public enum CommonError implements ErrorCode {
   CMN_0103("Error converting record '{}' to string: {}"),
   CMN_0104("Error evaluating expression {}: {}"),
   CMN_0105("Error parsing expression {}: {}"),
+  CMN_0106("Error resolving union for value of type {} using schema {}: {}"),
 
   ;
   private final String msg;

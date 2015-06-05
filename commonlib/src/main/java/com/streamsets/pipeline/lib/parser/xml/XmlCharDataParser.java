@@ -41,7 +41,7 @@ public class XmlCharDataParser implements DataParser {
     Record record = null;
     long offset = -1;
     try {
-      offset = getOffset();
+      offset = getOffsetAsLong();
       Field field = parser.read();
       readerOffset = -1;
       if (field != null) {
@@ -60,7 +60,12 @@ public class XmlCharDataParser implements DataParser {
   }
 
   @Override
-  public long getOffset() throws DataParserException{
+  public String getOffset() throws DataParserException {
+    return String.valueOf(getOffsetAsLong());
+
+  }
+
+  private long getOffsetAsLong() throws DataParserException {
     try {
       return (readerOffset > -1) ? readerOffset : parser.getReaderPosition();
     } catch (XMLStreamException ex) {

@@ -17,6 +17,7 @@ public enum Groups implements Label {
   DELIMITED("Delimited"),
   XML("XML"),
   LOG("Log"),
+  AVRO("Avro"),
 
   ;
 

@@ -43,7 +43,7 @@ public class TestGrokParser {
   public void testParse() throws Exception {
     DataParser parser = getDataParser(LOG_LINE, 1000, 0);
 
-    Assert.assertEquals(0, parser.getOffset());
+    Assert.assertEquals(0, Long.parseLong(parser.getOffset()));
     Record record = parser.parse();
     Assert.assertNotNull(record);
 
@@ -53,7 +53,7 @@ public class TestGrokParser {
 
     Assert.assertFalse(record.has("/truncated"));
 
-    Assert.assertEquals(146, parser.getOffset());
+    Assert.assertEquals(146, Long.parseLong(parser.getOffset()));
 
     Assert.assertTrue(record.has("/timestamp"));
     Assert.assertEquals("26 Feb 23:59:01", record.get("/timestamp").getValueAsString());
@@ -67,7 +67,7 @@ public class TestGrokParser {
   @Test
   public void testParseWithOffset() throws Exception {
     DataParser parser = getDataParser("Hello\n" + LOG_LINE, 1000, 6);
-    Assert.assertEquals(6, parser.getOffset());
+    Assert.assertEquals(6, Long.parseLong(parser.getOffset()));
     Record record = parser.parse();
     Assert.assertNotNull(record);
 
@@ -77,7 +77,7 @@ public class TestGrokParser {
 
     Assert.assertFalse(record.has("/truncated"));
 
-    Assert.assertEquals(152, parser.getOffset());
+    Assert.assertEquals(152, Long.parseLong(parser.getOffset()));
 
     Assert.assertTrue(record.has("/timestamp"));
     Assert.assertEquals("26 Feb 23:59:01", record.get("/timestamp").getValueAsString());
@@ -88,7 +88,7 @@ public class TestGrokParser {
     record = parser.parse();
     Assert.assertNull(record);
 
-    Assert.assertEquals(-1, parser.getOffset());
+    Assert.assertEquals(-1, Long.parseLong(parser.getOffset()));
     parser.close();
   }
 
@@ -102,7 +102,7 @@ public class TestGrokParser {
   @Test(expected = DataParserException.class)
   public void testTruncate() throws Exception {
     DataParser parser = getDataParser(LOG_LINE, 7, 0);
-    Assert.assertEquals(0, parser.getOffset());
+    Assert.assertEquals(0, Long.parseLong(parser.getOffset()));
     try {
       parser.parse();
     } finally {
@@ -115,7 +115,7 @@ public class TestGrokParser {
     DataParser parser = getDataParser(
       "127.0.0.1 ss h [10/Oct/2000:13:55:36 -0700] This is a log line that does not confirm to common log format",
       1000, 0);
-    Assert.assertEquals(0, parser.getOffset());
+    Assert.assertEquals(0, Long.parseLong(parser.getOffset()));
     try {
       parser.parse();
     } finally {

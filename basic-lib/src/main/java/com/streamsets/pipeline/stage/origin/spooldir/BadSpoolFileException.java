@@ -7,9 +7,9 @@ package com.streamsets.pipeline.stage.origin.spooldir;
 
 public class BadSpoolFileException extends Exception {
   private final String file;
-  private final long pos;
+  private final String pos;
 
-  public BadSpoolFileException(String file, long pos, Exception ex) {
+  public BadSpoolFileException(String file, String pos, Exception ex) {
     super(ex);
     this.file = file;
     this.pos = pos;
@@ -19,7 +19,7 @@ public class BadSpoolFileException extends Exception {
     return file;
   }
 
-  public long getPos() {
+  public String getPos() {
     return pos;
   }
 }

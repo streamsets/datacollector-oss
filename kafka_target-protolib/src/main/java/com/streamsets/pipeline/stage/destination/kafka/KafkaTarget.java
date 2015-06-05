@@ -27,6 +27,7 @@ import com.streamsets.pipeline.lib.el.RecordEL;
 import com.streamsets.pipeline.lib.generator.DataGeneratorFactory;
 import com.streamsets.pipeline.lib.generator.DataGenerator;
 import com.streamsets.pipeline.lib.generator.DataGeneratorFactoryBuilder;
+import com.streamsets.pipeline.lib.generator.avro.AvroDataGeneratorFactory;
 import com.streamsets.pipeline.lib.generator.delimited.DelimitedDataGeneratorFactory;
 import com.streamsets.pipeline.lib.generator.text.TextDataGeneratorFactory;
 import kafka.common.ErrorMapping;
@@ -71,6 +72,8 @@ public class KafkaTarget extends BaseTarget {
   private final String textFieldPath;
   private final boolean textEmptyLineIfNull;
   private String charset;
+  private final String avroSchema;
+  private final  boolean includeSchema;
 
   private KafkaProducer kafkaProducer;
   private long recordCounter = 0;
@@ -96,7 +99,8 @@ public class KafkaTarget extends BaseTarget {
                      String topicWhiteList, PartitionStrategy partitionStrategy, String partition,
                      DataFormat dataFormat, String charset, boolean singleMessagePerBatch,
                      Map<String, String> kafkaProducerConfigs, CsvMode csvFileFormat, CsvHeader csvHeader,
-                     boolean csvReplaceNewLines, JsonMode jsonMode, String textFieldPath, boolean textEmptyLineIfNull) {
+                     boolean csvReplaceNewLines, JsonMode jsonMode, String textFieldPath, boolean textEmptyLineIfNull,
+                     String avroSchema,  boolean includeSchema) {
     this.metadataBrokerList = metadataBrokerList;
     this.partitionStrategy = partitionStrategy;
     this.partition = partition;
@@ -114,7 +118,8 @@ public class KafkaTarget extends BaseTarget {
     this.topic = topic;
     this.topicExpression = topicExpression;
     this.topicWhiteList = topicWhiteList;
-
+    this.avroSchema = avroSchema;
+    this.includeSchema = includeSchema;
   }
 
   @Override
@@ -206,6 +211,10 @@ public class KafkaTarget extends BaseTarget {
         break;
       case JSON:
         builder.setMode(jsonMode);
+        break;
+      case AVRO:
+        builder.setConfig(AvroDataGeneratorFactory.SCHEMA_KEY, avroSchema);
+        builder.setConfig(AvroDataGeneratorFactory.INCLUDE_SCHEMA_KEY, includeSchema);
         break;
     }
     return builder.build();
@@ -495,6 +504,7 @@ public class KafkaTarget extends BaseTarget {
       case JSON:
       case DELIMITED:
       case SDC_JSON:
+      case AVRO:
         //no-op
         break;
       default:

@@ -16,6 +16,7 @@ public enum Groups implements Label {
   TEXT("Text"),
   JSON("JSON"),
   DELIMITED("Delimited"),
+  AVRO("Avro"),
   ;
 
   private final String label;

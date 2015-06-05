@@ -50,7 +50,7 @@ public class TestRegexParser {
     OverrunReader reader = new OverrunReader(new StringReader(LOG_LINE), 1000, true, false);
     DataParser parser = new RegexParser(getContext(), "id", reader, 0, 1000, true, Pattern.compile(REGEX),
       FIELD_TO_GROUP_MAP);
-    Assert.assertEquals(0, parser.getOffset());
+    Assert.assertEquals(0, Long.parseLong(parser.getOffset()));
     Record record = parser.parse();
     Assert.assertNotNull(record);
 
@@ -60,7 +60,7 @@ public class TestRegexParser {
 
     Assert.assertFalse(record.has("/truncated"));
 
-    Assert.assertEquals(88, parser.getOffset());
+    Assert.assertEquals(88, Long.parseLong(parser.getOffset()));
 
     Assert.assertTrue(record.has("/remoteHost"));
     Assert.assertEquals("127.0.0.1", record.get("/remoteHost").getValueAsString());
@@ -92,7 +92,7 @@ public class TestRegexParser {
       "Hello\n" + LOG_LINE), 1000, true, false);
     DataParser parser = new RegexParser(getContext(), "id", reader, 6, 1000, true, Pattern.compile(REGEX),
       FIELD_TO_GROUP_MAP);
-    Assert.assertEquals(6, parser.getOffset());
+    Assert.assertEquals(6, Long.parseLong(parser.getOffset()));
     Record record = parser.parse();
     Assert.assertNotNull(record);
 
@@ -102,7 +102,7 @@ public class TestRegexParser {
 
     Assert.assertFalse(record.has("/truncated"));
 
-    Assert.assertEquals(94, parser.getOffset());
+    Assert.assertEquals(94, Long.parseLong(parser.getOffset()));
 
     Assert.assertTrue(record.has("/remoteHost"));
     Assert.assertEquals("127.0.0.1", record.get("/remoteHost").getValueAsString());
@@ -128,7 +128,7 @@ public class TestRegexParser {
     record = parser.parse();
     Assert.assertNull(record);
 
-    Assert.assertEquals(-1, parser.getOffset());
+    Assert.assertEquals(-1, Long.parseLong(parser.getOffset()));
     parser.close();
   }
 
@@ -147,7 +147,7 @@ public class TestRegexParser {
       LOG_LINE), 1000, true, false);
     DataParser parser = new RegexParser(getContext(), "id", reader, 0, 25, true, Pattern.compile(REGEX),
       FIELD_TO_GROUP_MAP); //cut short to 25
-    Assert.assertEquals(0, parser.getOffset());
+    Assert.assertEquals(0, Long.parseLong(parser.getOffset()));
     try {
       parser.parse();
     } finally {
@@ -162,7 +162,7 @@ public class TestRegexParser {
       1000, true, false);
     DataParser parser = new RegexParser(getContext(), "id", reader, 0, 1000, true, Pattern.compile(REGEX),
       FIELD_TO_GROUP_MAP);
-    Assert.assertEquals(0, parser.getOffset());
+    Assert.assertEquals(0, Long.parseLong(parser.getOffset()));
     try {
       parser.parse();
     } finally {

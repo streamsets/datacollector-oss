@@ -11,7 +11,7 @@ import com.streamsets.pipeline.config.DataFormat;
 public class FlumeDestinationDataFormatChooserValues extends BaseEnumChooserValues<DataFormat> {
 
   public FlumeDestinationDataFormatChooserValues() {
-    super(DataFormat.SDC_JSON, DataFormat.TEXT, DataFormat.JSON, DataFormat.DELIMITED);
+    super(DataFormat.SDC_JSON, DataFormat.TEXT, DataFormat.JSON, DataFormat.DELIMITED, DataFormat.AVRO);
   }
 
 }

@@ -21,7 +21,6 @@ import com.streamsets.pipeline.config.DataFormat;
 import com.streamsets.pipeline.config.JsonMode;
 import com.streamsets.pipeline.config.JsonModeChooserValues;
 import com.streamsets.pipeline.configurablestage.DTarget;
-import com.streamsets.pipeline.lib.el.StringEL;
 
 import java.util.Map;
 
@@ -274,6 +273,36 @@ public class FlumeDTarget extends DTarget {
   )
   public boolean textEmptyLineIfNull;
 
+  /********  For AVRO Content  ***********/
+
+  @ConfigDef(
+    required = true,
+    type = ConfigDef.Type.TEXT,
+    defaultValue = "",
+    label = "Avro Writer Schema",
+    description = "",
+    displayPosition = 320,
+    group = "AVRO",
+    dependsOn = "dataFormat",
+    triggeredByValue = {"AVRO"},
+    mode = ConfigDef.Mode.PLAIN_TEXT
+  )
+  public String avroSchema;
+
+  @ConfigDef(
+    required = true,
+    type = ConfigDef.Type.BOOLEAN,
+    defaultValue = "true",
+    label = "Include Schema in Event",
+    description = "The Flume Event produced will contain the schema",
+    displayPosition = 330,
+    group = "AVRO",
+    dependsOn = "dataFormat",
+    triggeredByValue = "AVRO"
+  )
+  public boolean includeSchema;
+
+
   @Override
   protected Target createTarget() {
     return new FlumeTarget(
@@ -295,7 +324,9 @@ public class FlumeDTarget extends DTarget {
       connectionTimeout,
       requestTimeout,
       maxRetryAttempts,
-      waitBetweenRetries
+      waitBetweenRetries,
+      avroSchema,
+      includeSchema
     );
   }
 }

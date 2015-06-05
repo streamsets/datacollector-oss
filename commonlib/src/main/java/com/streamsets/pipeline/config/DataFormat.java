@@ -18,7 +18,7 @@ public enum DataFormat implements Label {
   XML("XML", DataParserFormat.XML, null),
   SDC_JSON("SDC Record", DataParserFormat.SDC_RECORD, DataGeneratorFormat.SDC_RECORD),
   LOG("Log", DataParserFormat.LOG, null),
-
+  AVRO("Avro", DataParserFormat.AVRO, DataGeneratorFormat.AVRO),
   ;
 
   private final String label;

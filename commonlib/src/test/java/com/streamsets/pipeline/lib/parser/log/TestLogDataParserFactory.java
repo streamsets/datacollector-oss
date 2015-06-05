@@ -47,7 +47,7 @@ public class TestLogDataParserFactory {
                                           "127.0.0.1 ss h [10/Oct/2000:13:55:36 -0700] \"GET /apache_pb.gif HTTP/1.0\" 200 2326"
                                               .getBytes());
 
-    Assert.assertEquals(0, parser.getOffset());
+    Assert.assertEquals(0, Long.parseLong(parser.getOffset()));
     Record record = parser.parse();
     Assert.assertTrue(record.has("/originalLine"));
 
@@ -78,7 +78,7 @@ public class TestLogDataParserFactory {
     Assert.assertTrue(record.has("/" + Constants.BYTES));
     Assert.assertEquals("2326", record.get("/" + Constants.BYTES).getValueAsString());
 
-    Assert.assertEquals(82, parser.getOffset());
+    Assert.assertEquals(82, Long.parseLong(parser.getOffset()));
     parser.close();
   }
 
@@ -99,7 +99,7 @@ public class TestLogDataParserFactory {
                                           "127.0.0.1 ss h [10/Oct/2000:13:55:36 -0700] \"GET /apache_pb.gif HTTP/1.0\" 200 2326"
                                               .getBytes());
 
-    Assert.assertEquals(0, parser.getOffset());
+    Assert.assertEquals(0, Long.parseLong(parser.getOffset()));
     Record record = parser.parse();
     Assert.assertFalse(record.has("/originalLine"));
 
@@ -130,7 +130,7 @@ public class TestLogDataParserFactory {
     Assert.assertTrue(record.has("/" + Constants.BYTES));
     Assert.assertEquals("2326", record.get("/" + Constants.BYTES).getValueAsString());
 
-    Assert.assertEquals(82, parser.getOffset());
+    Assert.assertEquals(82, Long.parseLong(parser.getOffset()));
 
     parser.close();
   }
@@ -152,7 +152,7 @@ public class TestLogDataParserFactory {
 
     DataParser parser = factory.getParser("id", is, 0);
 
-    Assert.assertEquals(0, parser.getOffset());
+    Assert.assertEquals(0, Long.parseLong(parser.getOffset()));
     Record record = parser.parse();
     Assert.assertTrue(record.has("/originalLine"));
 
@@ -183,7 +183,7 @@ public class TestLogDataParserFactory {
     Assert.assertTrue(record.has("/" + Constants.BYTES));
     Assert.assertEquals("2326", record.get("/" + Constants.BYTES).getValueAsString());
 
-    Assert.assertEquals(82, parser.getOffset());
+    Assert.assertEquals(82, Long.parseLong(parser.getOffset()));
 
     parser.close();
   }
@@ -205,7 +205,7 @@ public class TestLogDataParserFactory {
         "127.0.0.1 ss h [10/Oct/2000:13:55:36 -0700] \"GET /apache_pb.gif HTTP/1.0\" 200 2326".getBytes());
     DataParser parser = factory.getParser("id", is, 0);
 
-    Assert.assertEquals(0, parser.getOffset());
+    Assert.assertEquals(0, Long.parseLong(parser.getOffset()));
     try {
       parser.parse();
     } finally {
@@ -230,7 +230,7 @@ public class TestLogDataParserFactory {
 
     DataParser parser = factory.getParser("id", is, 6);
 
-    Assert.assertEquals(6, parser.getOffset());
+    Assert.assertEquals(6, Long.parseLong(parser.getOffset()));
 
     Record record = parser.parse();
 
@@ -263,7 +263,7 @@ public class TestLogDataParserFactory {
     Assert.assertTrue(record.has("/" + Constants.BYTES));
     Assert.assertEquals("2326", record.get("/" + Constants.BYTES).getValueAsString());
 
-    Assert.assertEquals(88, parser.getOffset());
+    Assert.assertEquals(88, Long.parseLong(parser.getOffset()));
 
     parser.close();
   }
@@ -284,7 +284,7 @@ public class TestLogDataParserFactory {
                                           "127.0.0.1 ss h [10/Oct/2000:13:55:36 -0700] \"GET /apache_pb.gif HTTP/1.0\" 200 2326 \"http:www.example.com/start.html\" \"Mozilla/4.08 [en] (Win98; I ;Nav)\""
                                               .getBytes());
 
-    Assert.assertEquals(0, parser.getOffset());
+    Assert.assertEquals(0, Long.parseLong(parser.getOffset()));
     Record record = parser.parse();
     Assert.assertNotNull(record);
 
@@ -296,7 +296,7 @@ public class TestLogDataParserFactory {
 
     Assert.assertFalse(record.has("/truncated"));
 
-    Assert.assertEquals(152, parser.getOffset());
+    Assert.assertEquals(152, Long.parseLong(parser.getOffset()));
 
     Assert.assertTrue(record.has("/" + Constants.CLIENTIP));
     Assert.assertEquals("127.0.0.1", record.get("/" + Constants.CLIENTIP).getValueAsString());
@@ -351,7 +351,7 @@ public class TestLogDataParserFactory {
                                           "[Wed Oct 11 14:32:52 2000] [error] [client 127.0.0.1] client denied by server configuration: /export/home/live/ap/htdocs/test"
                                               .getBytes());
 
-    Assert.assertEquals(0, parser.getOffset());
+    Assert.assertEquals(0, Long.parseLong(parser.getOffset()));
     Record record = parser.parse();
     Assert.assertNotNull(record);
 
@@ -363,7 +363,7 @@ public class TestLogDataParserFactory {
 
     Assert.assertFalse(record.has("/truncated"));
 
-    Assert.assertEquals(125, parser.getOffset());
+    Assert.assertEquals(125, Long.parseLong(parser.getOffset()));
 
     Assert.assertTrue(record.has("/" + Constants.TIMESTAMP));
     Assert.assertEquals("Wed Oct 11 14:32:52 2000", record.get("/" + Constants.TIMESTAMP).getValueAsString());
@@ -401,7 +401,7 @@ public class TestLogDataParserFactory {
 
     DataParser parser = factory.getParser("id", logLine.getBytes());
 
-    Assert.assertEquals(0, parser.getOffset());
+    Assert.assertEquals(0, Long.parseLong(parser.getOffset()));
     Record record = parser.parse();
     Assert.assertNotNull(record);
 
@@ -411,7 +411,7 @@ public class TestLogDataParserFactory {
 
     Assert.assertFalse(record.has("/truncated"));
 
-    Assert.assertEquals(152, parser.getOffset());
+    Assert.assertEquals(152, Long.parseLong(parser.getOffset()));
 
     Assert.assertTrue(record.has("/remoteHost"));
     Assert.assertEquals("127.0.0.1", record.get("/remoteHost").getValueAsString());
@@ -483,7 +483,7 @@ public class TestLogDataParserFactory {
 
     Assert.assertTrue(parser instanceof RegexParser);
 
-    Assert.assertEquals(0, parser.getOffset());
+    Assert.assertEquals(0, Long.parseLong(parser.getOffset()));
     Record record = parser.parse();
     Assert.assertNotNull(record);
 
@@ -493,7 +493,7 @@ public class TestLogDataParserFactory {
 
     Assert.assertFalse(record.has("/truncated"));
 
-    Assert.assertEquals(88, parser.getOffset());
+    Assert.assertEquals(88, Long.parseLong(parser.getOffset()));
 
     Assert.assertTrue(record.has("/remoteHost"));
     Assert.assertEquals("127.0.0.1", record.get("/remoteHost").getValueAsString());
@@ -534,7 +534,7 @@ public class TestLogDataParserFactory {
     DataParser parser =
         factory.getParser("id", "127.0.0.1 ss h [10/Oct/2000:13:55:36 -0700] \"GET /apache_pb.gif HTTP/1.0\" 200 2326");
 
-    Assert.assertEquals(0, parser.getOffset());
+    Assert.assertEquals(0, Long.parseLong(parser.getOffset()));
     Record record = parser.parse();
     Assert.assertTrue(record.has("/originalLine"));
 
@@ -565,7 +565,7 @@ public class TestLogDataParserFactory {
     Assert.assertTrue(record.has("/" + Constants.BYTES));
     Assert.assertEquals("2326", record.get("/" + Constants.BYTES).getValueAsString());
 
-    Assert.assertEquals(82, parser.getOffset());
+    Assert.assertEquals(82, Long.parseLong(parser.getOffset()));
     parser.close();
   }
 

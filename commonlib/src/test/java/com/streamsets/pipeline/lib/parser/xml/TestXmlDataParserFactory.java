@@ -39,11 +39,11 @@ public class TestXmlDataParserFactory {
     XmlDataParserFactory factory = (XmlDataParserFactory) dataFactory;
 
     DataParser parser = factory.getParser("id", "<r><e>Hello</e><e>Bye</e></r>".getBytes());
-    Assert.assertEquals(0, parser.getOffset());
+    Assert.assertEquals(0, Long.parseLong(parser.getOffset()));
     Record record = parser.parse();
     Assert.assertNotNull(record);
     Assert.assertEquals("Hello", record.get("/value").getValueAsString());
-    Assert.assertEquals(18, parser.getOffset());
+    Assert.assertEquals(18, Long.parseLong(parser.getOffset()));
     parser.close();
   }
 
@@ -59,12 +59,12 @@ public class TestXmlDataParserFactory {
 
 
     DataParser parser = factory.getParser("id", "<r><e>Hello</e><e>Bye</e></r>".getBytes());
-    Assert.assertEquals(0, parser.getOffset());
+    Assert.assertEquals(0, Long.parseLong(parser.getOffset()));
     Record record = parser.parse();
     Assert.assertNotNull(record);
     Assert.assertEquals("Hello", record.get("/e[0]/value").getValueAsString());
     Assert.assertEquals("Bye", record.get("/e[1]/value").getValueAsString());
-    Assert.assertEquals(-1, parser.getOffset());
+    Assert.assertEquals(-1, Long.parseLong(parser.getOffset()));
     parser.close();
   }
 
@@ -81,11 +81,11 @@ public class TestXmlDataParserFactory {
 
     InputStream is = new ByteArrayInputStream("<r><e>Hello</e><e>Bye</e></r>".getBytes());
     DataParser parser = factory.getParser("id", is, 0);
-    Assert.assertEquals(0, parser.getOffset());
+    Assert.assertEquals(0, Long.parseLong(parser.getOffset()));
     Record record = parser.parse();
     Assert.assertNotNull(record);
     Assert.assertTrue(record.has(""));
-    Assert.assertEquals(18, parser.getOffset());
+    Assert.assertEquals(18, Long.parseLong(parser.getOffset()));
     parser.close();
   }
 
@@ -102,11 +102,11 @@ public class TestXmlDataParserFactory {
 
     InputStream is = new ByteArrayInputStream("<r><e>Hello</e><e>Bye</e></r>".getBytes());
     DataParser parser = factory.getParser("id", is, 18);
-    Assert.assertEquals(18, parser.getOffset());
+    Assert.assertEquals(18, Long.parseLong(parser.getOffset()));
     Record record = parser.parse();
     Assert.assertNotNull(record);
     Assert.assertTrue(record.has(""));
-    Assert.assertEquals(29, parser.getOffset());
+    Assert.assertEquals(29, Long.parseLong(parser.getOffset()));
     parser.close();
   }
 
@@ -122,11 +122,11 @@ public class TestXmlDataParserFactory {
     XmlDataParserFactory factory = (XmlDataParserFactory) dataFactory;
 
     DataParser parser = factory.getParser("id", "<r><e>Hello</e><e>Bye</e></r>");
-    Assert.assertEquals(0, parser.getOffset());
+    Assert.assertEquals(0, Long.parseLong(parser.getOffset()));
     Record record = parser.parse();
     Assert.assertNotNull(record);
     Assert.assertTrue(record.has(""));
-    Assert.assertEquals(18, parser.getOffset());
+    Assert.assertEquals(18, Long.parseLong(parser.getOffset()));
     parser.close();
 
   }

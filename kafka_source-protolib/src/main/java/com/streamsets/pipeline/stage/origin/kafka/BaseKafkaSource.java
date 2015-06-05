@@ -25,13 +25,13 @@ import com.streamsets.pipeline.lib.parser.DataParserFactory;
 import com.streamsets.pipeline.lib.parser.DataParser;
 import com.streamsets.pipeline.lib.parser.DataParserException;
 import com.streamsets.pipeline.lib.parser.DataParserFactoryBuilder;
+import com.streamsets.pipeline.lib.parser.avro.AvroDataParserFactory;
 import com.streamsets.pipeline.lib.parser.log.LogDataFormatValidator;
 import com.streamsets.pipeline.lib.parser.log.RegExConfig;
 import com.streamsets.pipeline.lib.parser.xml.XmlDataParserFactory;
 
 import org.apache.xerces.util.XMLChar;
 
-import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
@@ -75,6 +75,8 @@ public abstract class BaseKafkaSource extends BaseSource implements OffsetCommit
   private final int maxStackTraceLines;
   private final OnParseError onParseError;
   protected KafkaConsumer kafkaConsumer;
+  private final boolean messageHasSchema;
+  private final String avroSchema;
 
   protected int maxWaitTime;
   private LogDataFormatValidator logDataFormatValidator;
@@ -114,6 +116,9 @@ public abstract class BaseKafkaSource extends BaseSource implements OffsetCommit
     this.log4jCustomLogFormat = args.getLog4jCustomLogFormat();
     this.maxStackTraceLines = args.getMaxStackTraceLines();
     this.onParseError = args.getOnParseError();
+    this.messageHasSchema = args.isSchemaInMessage();
+    this.avroSchema = args.getAvroSchema();
+
   }
 
   @Override
@@ -166,6 +171,12 @@ public abstract class BaseKafkaSource extends BaseSource implements OffsetCommit
           enableLog4jCustomLogFormat, log4jCustomLogFormat, onParseError, maxStackTraceLines,
           Groups.LOG.name(), getFieldPathToGroupMap(fieldPathsToGroupName));
         logDataFormatValidator.validateLogFormatConfig(issues, getContext());
+        break;
+      case AVRO:
+        if(!messageHasSchema && (avroSchema == null || avroSchema.isEmpty())) {
+          issues.add(getContext().createConfigIssue(Groups.AVRO.name(), "avroSchema", Errors.KAFKA_43,
+            avroSchema));
+        }
         break;
       default:
         issues.add(getContext().createConfigIssue(Groups.KAFKA.name(), "dataFormat", Errors.KAFKA_39, dataFormat));
@@ -224,13 +235,16 @@ public abstract class BaseKafkaSource extends BaseSource implements OffsetCommit
   private void validateParserFactoryConfigs(List<ConfigIssue> issues) {
     DataParserFactoryBuilder builder = new DataParserFactoryBuilder(getContext(), dataFormat.getParserFormat())
       .setCharset(Charset.defaultCharset());
-
-    try {
-      messageCharset = Charset.forName(charset);
-    } catch (UnsupportedCharsetException ex) {
-      // setting it to a valid one so the parser factory can be configured and tested for more errors
+    if (charset == null) {
       messageCharset = StandardCharsets.UTF_8;
-      issues.add(getContext().createConfigIssue(Groups.KAFKA.name(), "charset", Errors.KAFKA_08, charset));
+    } else {
+      try {
+        messageCharset = Charset.forName(charset);
+      } catch (UnsupportedCharsetException ex) {
+        // setting it to a valid one so the parser factory can be configured and tested for more errors
+        messageCharset = StandardCharsets.UTF_8;
+        issues.add(getContext().createConfigIssue(Groups.KAFKA.name(), "charset", Errors.KAFKA_08, charset));
+      }
     }
     builder.setCharset(messageCharset).setRemoveCtrlChars(removeCtrlChars);
 
@@ -257,15 +271,17 @@ public abstract class BaseKafkaSource extends BaseSource implements OffsetCommit
         logDataFormatValidator.populateBuilder(builder);
         parserFactory = builder.build();
         break;
+      case AVRO:
+        builder.setMaxDataLen(Integer.MAX_VALUE).setConfig(AvroDataParserFactory.SCHEMA_KEY, avroSchema)
+        .setConfig(AvroDataParserFactory.SCHEMA_IN_MESSAGE_KEY, messageHasSchema);
+        break;
     }
     parserFactory = builder.build();
   }
 
-
-
   protected List<Record> processKafkaMessage(String messageId, byte[] payload) throws StageException {
     List<Record> records = new ArrayList<>();
-    try (DataParser parser = parserFactory.getParser(messageId, new ByteArrayInputStream(payload), 0)) {
+    try (DataParser parser = parserFactory.getParser(messageId, payload)) {
       Record record = parser.parse();
       while (record != null) {
         records.add(record);

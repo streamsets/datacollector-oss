@@ -18,7 +18,6 @@ import com.streamsets.pipeline.config.CsvMode;
 import com.streamsets.pipeline.config.DataFormat;
 import com.streamsets.pipeline.sdk.ContextInfoCreator;
 import com.streamsets.pipeline.sdk.RecordCreator;
-
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.hdfs.HdfsConfiguration;
 import org.apache.hadoop.hdfs.MiniDFSCluster;
@@ -35,7 +34,6 @@ import org.junit.Test;
 import java.io.File;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
-import java.nio.file.Paths;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -80,7 +78,7 @@ public class TestBaseHdfsTarget {
 
   private void configure(HdfsDTarget target) {
     target.hdfsUri = miniDFS.getURI().toString();
-    target.hdfsConfigs = new HashMap<String, String>();
+    target.hdfsConfigs = new HashMap<>();
     target.hdfsConfigs.put("x", "X");
     target.timeZoneID = "UTC";
     target.dirPathTemplate = "${YYYY()}";
@@ -126,7 +124,8 @@ public class TestBaseHdfsTarget {
           csvReplaceNewLines,
           jsonMode,
           textFieldPath,
-          textEmptyLineIfNull
+          textEmptyLineIfNull,
+          null
       ) {
         @Override
         public void write(Batch batch) throws StageException {

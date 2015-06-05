@@ -516,6 +516,22 @@ public class SpoolDirDSource extends DSource {
   )
   public String log4jCustomLogFormat;
 
+  //AVRO
+
+  @ConfigDef(
+    required = false,
+    type = ConfigDef.Type.TEXT,
+    defaultValue = "",
+    label = "Avro Schema",
+    description = "",
+    displayPosition = 830,
+    group = "AVRO",
+    dependsOn = "dataFormat",
+    triggeredByValue = "AVRO",
+    mode = ConfigDef.Mode.JSON
+  )
+  public String avroSchema;
+
   @Override
   protected Source createSource() {
     return new SpoolDirSource(dataFormat, charset, removeCtrlChars, overrunLimit, spoolDir, batchSize,
@@ -523,7 +539,7 @@ public class SpoolDirDSource extends DSource {
       retentionTimeMins, csvFileFormat, csvHeader, csvMaxObjectLen, jsonContent,
       jsonMaxObjectLen, textMaxObjectLen, xmlRecordElement, xmlMaxObjectLen, logMode,
       logMaxObjectLen, retainOriginalLine, customLogFormat, regex, fieldPathsToGroupName, grokPatternDefinition,
-      grokPattern, enableLog4jCustomLogFormat, log4jCustomLogFormat, onParseError, maxStackTraceLines);
+      grokPattern, enableLog4jCustomLogFormat, log4jCustomLogFormat, onParseError, maxStackTraceLines, avroSchema);
   }
 
 }

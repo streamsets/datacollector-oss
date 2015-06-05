@@ -30,7 +30,7 @@ public class TestDelimitedCharDataParser {
   public void testParseNoHeader() throws Exception {
     OverrunReader reader = new OverrunReader(new StringReader("A,B\na,b"), 1000, true, false);
     DataParser parser = new DelimitedCharDataParser(getContext(), "id", reader, 0, CSVFormat.DEFAULT, CsvHeader.NO_HEADER, -1);
-    Assert.assertEquals(0, parser.getOffset());
+    Assert.assertEquals("0", parser.getOffset());
     Record record = parser.parse();
     Assert.assertNotNull(record);
     Assert.assertEquals("id::0", record.getHeader().getSourceId());
@@ -38,7 +38,7 @@ public class TestDelimitedCharDataParser {
     Assert.assertFalse(record.has("[0]/header"));
     Assert.assertEquals("B", record.get().getValueAsList().get(1).getValueAsMap().get("value").getValueAsString());
     Assert.assertFalse(record.has("[1]/header"));
-    Assert.assertEquals(4, parser.getOffset());
+    Assert.assertEquals("4", parser.getOffset());
     record = parser.parse();
     Assert.assertNotNull(record);
     Assert.assertEquals("id::4", record.getHeader().getSourceId());
@@ -46,10 +46,10 @@ public class TestDelimitedCharDataParser {
     Assert.assertFalse(record.has("[0]/header"));
     Assert.assertEquals("b", record.get().getValueAsList().get(1).getValueAsMap().get("value").getValueAsString());
     Assert.assertFalse(record.has("[1]/header"));
-    Assert.assertEquals(7, parser.getOffset());
+    Assert.assertEquals("7", parser.getOffset());
     record = parser.parse();
     Assert.assertNull(record);
-    Assert.assertEquals(-1, parser.getOffset());
+    Assert.assertEquals("-1", parser.getOffset());
     parser.close();
   }
 
@@ -57,7 +57,7 @@ public class TestDelimitedCharDataParser {
   public void testParseIgnoreHeader() throws Exception {
     OverrunReader reader = new OverrunReader(new StringReader("A,B\na,b"), 1000, true, false);
     DataParser parser = new DelimitedCharDataParser(getContext(), "id", reader, 0, CSVFormat.DEFAULT, CsvHeader.IGNORE_HEADER, -1);
-    Assert.assertEquals(4, parser.getOffset());
+    Assert.assertEquals("4", parser.getOffset());
     Record record = parser.parse();
     Assert.assertNotNull(record);
     Assert.assertEquals("id::4", record.getHeader().getSourceId());
@@ -65,10 +65,10 @@ public class TestDelimitedCharDataParser {
     Assert.assertFalse(record.has("[0]/header"));
     Assert.assertEquals("b", record.get().getValueAsList().get(1).getValueAsMap().get("value").getValueAsString());
     Assert.assertFalse(record.has("[1]/header"));
-    Assert.assertEquals(7, parser.getOffset());
+    Assert.assertEquals("7", parser.getOffset());
     record = parser.parse();
     Assert.assertNull(record);
-    Assert.assertEquals(-1, parser.getOffset());
+    Assert.assertEquals("-1", parser.getOffset());
     parser.close();
   }
 
@@ -76,7 +76,7 @@ public class TestDelimitedCharDataParser {
   public void testParseWithHeader() throws Exception {
     OverrunReader reader = new OverrunReader(new StringReader("A,B\na,b"), 1000, true, false);
     DataParser parser = new DelimitedCharDataParser(getContext(), "id", reader, 0, CSVFormat.DEFAULT, CsvHeader.WITH_HEADER, -1);
-    Assert.assertEquals(4, parser.getOffset());
+    Assert.assertEquals("4", parser.getOffset());
     Record record = parser.parse();
     Assert.assertNotNull(record);
     Assert.assertEquals("id::4", record.getHeader().getSourceId());
@@ -84,10 +84,10 @@ public class TestDelimitedCharDataParser {
     Assert.assertEquals("A", record.get().getValueAsList().get(0).getValueAsMap().get("header").getValueAsString());
     Assert.assertEquals("b", record.get().getValueAsList().get(1).getValueAsMap().get("value").getValueAsString());
     Assert.assertEquals("B", record.get().getValueAsList().get(1).getValueAsMap().get("header").getValueAsString());
-    Assert.assertEquals(7, parser.getOffset());
+    Assert.assertEquals("7", parser.getOffset());
     record = parser.parse();
     Assert.assertNull(record);
-    Assert.assertEquals(-1, parser.getOffset());
+    Assert.assertEquals("-1", parser.getOffset());
     parser.close();
   }
 
@@ -95,7 +95,7 @@ public class TestDelimitedCharDataParser {
   public void testParseNoHeaderWithOffset() throws Exception {
     OverrunReader reader = new OverrunReader(new StringReader("A,B\na,b"), 1000, true, false);
     DataParser parser = new DelimitedCharDataParser(getContext(), "id", reader, 4, CSVFormat.DEFAULT, CsvHeader.NO_HEADER, -1);
-    Assert.assertEquals(4, parser.getOffset());
+    Assert.assertEquals("4", parser.getOffset());
     Record record = parser.parse();
     Assert.assertNotNull(record);
     Assert.assertEquals("id::4", record.getHeader().getSourceId());
@@ -103,10 +103,10 @@ public class TestDelimitedCharDataParser {
     Assert.assertFalse(record.has("[0]/header"));
     Assert.assertEquals("b", record.get().getValueAsList().get(1).getValueAsMap().get("value").getValueAsString());
     Assert.assertFalse(record.has("[1]/header"));
-    Assert.assertEquals(7, parser.getOffset());
+    Assert.assertEquals("7", parser.getOffset());
     record = parser.parse();
     Assert.assertNull(record);
-    Assert.assertEquals(-1, parser.getOffset());
+    Assert.assertEquals("-1", parser.getOffset());
     parser.close();
   }
 
@@ -114,7 +114,7 @@ public class TestDelimitedCharDataParser {
   public void testParseIgnoreHeaderWithOffset() throws Exception {
     OverrunReader reader = new OverrunReader(new StringReader("A,B\na,b"), 1000, true, false);
     DataParser parser = new DelimitedCharDataParser(getContext(), "id", reader, 4, CSVFormat.DEFAULT, CsvHeader.IGNORE_HEADER, -1);
-    Assert.assertEquals(4, parser.getOffset());
+    Assert.assertEquals("4", parser.getOffset());
     Record record = parser.parse();
     Assert.assertNotNull(record);
     Assert.assertEquals("id::4", record.getHeader().getSourceId());
@@ -122,10 +122,10 @@ public class TestDelimitedCharDataParser {
     Assert.assertFalse(record.has("[0]/header"));
     Assert.assertEquals("b", record.get().getValueAsList().get(1).getValueAsMap().get("value").getValueAsString());
     Assert.assertFalse(record.has("[1]/header"));
-    Assert.assertEquals(7, parser.getOffset());
+    Assert.assertEquals("7", parser.getOffset());
     record = parser.parse();
     Assert.assertNull(record);
-    Assert.assertEquals(-1, parser.getOffset());
+    Assert.assertEquals("-1", parser.getOffset());
     parser.close();
   }
 
@@ -133,7 +133,7 @@ public class TestDelimitedCharDataParser {
   public void testParseIgnoreHeaderWithOffset2() throws Exception {
     OverrunReader reader = new OverrunReader(new StringReader("A,B\na,b\ne,f"), 1000, true, false);
     DataParser parser = new DelimitedCharDataParser(getContext(), "id", reader, 8, CSVFormat.DEFAULT, CsvHeader.IGNORE_HEADER, -1);
-    Assert.assertEquals(8, parser.getOffset());
+    Assert.assertEquals("8", parser.getOffset());
     Record record = parser.parse();
     Assert.assertNotNull(record);
     Assert.assertEquals("id::8", record.getHeader().getSourceId());
@@ -141,10 +141,10 @@ public class TestDelimitedCharDataParser {
     Assert.assertFalse(record.has("[0]/header"));
     Assert.assertEquals("f", record.get().getValueAsList().get(1).getValueAsMap().get("value").getValueAsString());
     Assert.assertFalse(record.has("[1]/header"));
-    Assert.assertEquals(11, parser.getOffset());
+    Assert.assertEquals("11", parser.getOffset());
     record = parser.parse();
     Assert.assertNull(record);
-    Assert.assertEquals(-1, parser.getOffset());
+    Assert.assertEquals("-1", parser.getOffset());
     parser.close();
   }
 
@@ -152,7 +152,7 @@ public class TestDelimitedCharDataParser {
   public void testParseWithHeaderWithOffset() throws Exception {
     OverrunReader reader = new OverrunReader(new StringReader("A,B\na,b\ne,f"), 1000, true, false);
     DataParser parser = new DelimitedCharDataParser(getContext(), "id", reader, 8, CSVFormat.DEFAULT, CsvHeader.WITH_HEADER, -1);
-    Assert.assertEquals(8, parser.getOffset());
+    Assert.assertEquals("8", parser.getOffset());
     Record record = parser.parse();
     Assert.assertNotNull(record);
     Assert.assertEquals("id::8", record.getHeader().getSourceId());
@@ -160,10 +160,10 @@ public class TestDelimitedCharDataParser {
     Assert.assertEquals("A", record.get().getValueAsList().get(0).getValueAsMap().get("header").getValueAsString());
     Assert.assertEquals("f", record.get().getValueAsList().get(1).getValueAsMap().get("value").getValueAsString());
     Assert.assertEquals("B", record.get().getValueAsList().get(1).getValueAsMap().get("header").getValueAsString());
-    Assert.assertEquals(11, parser.getOffset());
+    Assert.assertEquals("11", parser.getOffset());
     record = parser.parse();
     Assert.assertNull(record);
-    Assert.assertEquals(-1, parser.getOffset());
+    Assert.assertEquals("-1", parser.getOffset());
     parser.close();
   }
 

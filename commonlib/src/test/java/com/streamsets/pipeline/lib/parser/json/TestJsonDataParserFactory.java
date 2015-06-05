@@ -39,10 +39,10 @@ public class TestJsonDataParserFactory {
     JsonDataParserFactory factory = (JsonDataParserFactory) dataFactory;
 
     DataParser parser = factory.getParser("id", "[\"Hello\"]\n".getBytes());
-    Assert.assertEquals(0, parser.getOffset());
+    Assert.assertEquals(0, Long.parseLong(parser.getOffset()));
     Record record = parser.parse();
     Assert.assertTrue(record.has(""));
-    Assert.assertEquals(9, parser.getOffset());
+    Assert.assertEquals(9, Long.parseLong(parser.getOffset()));
     parser.close();
   }
 
@@ -59,10 +59,10 @@ public class TestJsonDataParserFactory {
 
     InputStream is = new ByteArrayInputStream("[\"Hello\"]\n".getBytes());
     DataParser parser = factory.getParser("id", is, 0);
-    Assert.assertEquals(0, parser.getOffset());
+    Assert.assertEquals(0, Long.parseLong(parser.getOffset()));
     Record record = parser.parse();
     Assert.assertTrue(record.has(""));
-    Assert.assertEquals(9, parser.getOffset());
+    Assert.assertEquals(9, Long.parseLong(parser.getOffset()));
     parser.close();
   }
 
@@ -79,10 +79,10 @@ public class TestJsonDataParserFactory {
 
     InputStream is = new ByteArrayInputStream("[[\"Hello\"],[\"Bye\"]]\n".getBytes());
     DataParser parser = factory.getParser("id", is, 10);
-    Assert.assertEquals(10, parser.getOffset());
+    Assert.assertEquals(10, Long.parseLong(parser.getOffset()));
     Record record = parser.parse();
     Assert.assertTrue(record.has(""));
-    Assert.assertEquals(12, parser.getOffset());
+    Assert.assertEquals(12, Long.parseLong(parser.getOffset()));
     parser.close();
   }
 
@@ -98,10 +98,10 @@ public class TestJsonDataParserFactory {
     JsonDataParserFactory factory = (JsonDataParserFactory) dataFactory;
 
     DataParser parser = factory.getParser("id", "[[\"Hello\"],[\"Bye\"]]\n");
-    Assert.assertEquals(0, parser.getOffset());
+    Assert.assertEquals(0, Long.parseLong(parser.getOffset()));
     Record record = parser.parse();
     Assert.assertTrue(record.has(""));
-    Assert.assertEquals(9, parser.getOffset());
+    Assert.assertEquals(9, Long.parseLong(parser.getOffset()));
     parser.close();
   }
 
