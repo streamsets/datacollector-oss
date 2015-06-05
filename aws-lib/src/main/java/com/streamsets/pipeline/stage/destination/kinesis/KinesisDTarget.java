@@ -48,7 +48,7 @@ public class KinesisDTarget extends DTarget {
       required = true,
       type = ConfigDef.Type.MODEL,
       defaultValue = "SDC_JSON",
-      label = "Output Record Format",
+      label = "Data Format",
       description = "Record format to use when publishing to Kinesis",
       displayPosition = 25,
       group = "KINESIS"
