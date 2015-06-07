@@ -13,6 +13,7 @@ import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.el.ElConstantDefinition;
 import com.streamsets.pipeline.el.ElFunctionDefinition;
 
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -28,6 +29,7 @@ public class ConfigDefinition {
   public static final String PRECONDITIONS = "stageRecordPreconditions";
   public static final Set<String> SYSTEM_CONFIGS = ImmutableSet.of(REQUIRED_FIELDS, PRECONDITIONS, ON_RECORD_ERROR);
 
+  private final Field configField;
   private final String name;
   private final ConfigDef.Type type;
   private final String label;
@@ -50,11 +52,24 @@ public class ConfigDefinition {
   private final ConfigDef.Evaluation evaluation;
   private Map<String, List<Object>> dependsOnMap;
 
-  public ConfigDefinition(String name, ConfigDef.Type type, String label, String description, Object defaultValue,
+  public ConfigDefinition(String name, ConfigDef.Type type, String label, String description,
+      Object defaultValue,
       boolean required, String group, String fieldName, ModelDefinition model, String dependsOn,
       List<Object> triggeredByValues, int displayPosition, List<ElFunctionDefinition> elFunctionDefinitions,
       List<ElConstantDefinition> elConstantDefinitions, long min, long max, String mode, int lines,
       List<String> elDefs, ConfigDef.Evaluation evaluation, Map<String, List<Object>> dependsOnMap) {
+    this(null, name, type, label, description, defaultValue, required, group, fieldName, model,
+         dependsOn, triggeredByValues, displayPosition, elFunctionDefinitions,
+         elConstantDefinitions, min, max, mode, lines, elDefs, evaluation, dependsOnMap);
+  }
+
+  public ConfigDefinition(Field configField, String name, ConfigDef.Type type, String label, String description,
+      Object defaultValue,
+      boolean required, String group, String fieldName, ModelDefinition model, String dependsOn,
+      List<Object> triggeredByValues, int displayPosition, List<ElFunctionDefinition> elFunctionDefinitions,
+      List<ElConstantDefinition> elConstantDefinitions, long min, long max, String mode, int lines,
+      List<String> elDefs, ConfigDef.Evaluation evaluation, Map<String, List<Object>> dependsOnMap) {
+    this.configField = configField;
     this.name = name;
     this.type = type;
     this.label = label;
@@ -76,6 +91,10 @@ public class ConfigDefinition {
     this.elDefs = elDefs;
     this.dependsOnMap = dependsOnMap;
     this.evaluation = evaluation;
+  }
+
+  public Field getConfigField() {
+    return configField;
   }
 
   public String getName() {
@@ -218,7 +237,7 @@ public class ConfigDefinition {
       }
     }
 
-    return new ConfigDefinition(getName(), getType(), label, description, getDefaultValue(),
+    return new ConfigDefinition(getConfigField(), getName(), getType(), label, description, getDefaultValue(),
                                 isRequired(), getGroup(), getFieldName(), model, getDependsOn(), getTriggeredByValues(),
                                 getDisplayPosition(), getElFunctionDefinitions(), getElConstantDefinitions(), getMin(),
                                 getMax(), getMode(), getLines(), getElDefs(), getEvaluation(), getDependsOnMap());

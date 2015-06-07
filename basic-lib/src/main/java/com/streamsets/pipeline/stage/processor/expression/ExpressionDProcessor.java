@@ -34,7 +34,7 @@ public class ExpressionDProcessor extends DProcessor {
       displayPosition = 10,
       group = "EXPRESSIONS"
   )
-  @ComplexField
+  @ComplexField(ExpressionProcessorConfig.class)
   public List<ExpressionProcessorConfig> expressionProcessorConfigs;
 
   @Override

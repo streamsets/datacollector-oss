@@ -279,6 +279,7 @@ public class PipelineAnnotationsProcessor extends AbstractProcessor {
   }
 
   private ConfigGroupDefinition getConfigOptionGroupsForStage(TypeElement typeElement) {
+    Set<String> allGroupNames = new HashSet<>();
     Map<String, List<VariableElement>> allConfigGroups = getAllConfigGroups(typeElement);
 
     Map<String, List<String>> classNameToGroupsMap = new HashMap<>();
@@ -289,6 +290,7 @@ public class PipelineAnnotationsProcessor extends AbstractProcessor {
       classNameToGroupsMap.put(v.getKey(), groupNames);
       for(VariableElement variableElement : v.getValue()) {
         groupNames.add(variableElement.getSimpleName().toString());
+        allGroupNames.add(variableElement.getSimpleName().toString());
         Map<String, String> groupNameToLabelMap = new LinkedHashMap<>();
         groupNameToLabelMap.put("name", variableElement.getSimpleName().toString());
         groupNameToLabelMap.put("label", (String) variableElement.getConstantValue());
@@ -296,7 +298,7 @@ public class PipelineAnnotationsProcessor extends AbstractProcessor {
       }
     }
 
-    return new ConfigGroupDefinition(classNameToGroupsMap, groupNameToLabelMapList);
+    return new ConfigGroupDefinition(allGroupNames, classNameToGroupsMap, groupNameToLabelMapList);
   }
 
   private List<ConfigDefinition> getConfigDefsFromTypeElement(TypeElement typeElement) {

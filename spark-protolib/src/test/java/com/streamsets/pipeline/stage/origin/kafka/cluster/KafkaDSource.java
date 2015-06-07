@@ -371,7 +371,7 @@ public class KafkaDSource extends DSourceOffsetCommitter {
     dependsOn = "logMode",
     triggeredByValue = "REGEX"
   )
-  @ComplexField
+  @ComplexField(RegExConfig.class)
   public List<RegExConfig> fieldPathsToGroupName;
 
   //GROK

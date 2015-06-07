@@ -291,7 +291,8 @@ public class StageDefinition {
                                                           groupToDefaultLabelMap.get(groupName), null).getLocalized());
         localizedGroups.add(localizeGroup);
       }
-      groupDefs = new ConfigGroupDefinition(groupDefs.getClassNameToGroupsMap(), localizedGroups);
+      groupDefs = new ConfigGroupDefinition(groupDefs.getGroupNames(), groupDefs.getClassNameToGroupsMap(),
+                                            localizedGroups);
     }
     return groupDefs;
   }

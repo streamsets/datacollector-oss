@@ -37,7 +37,7 @@ public class FieldHasherDProcessor extends DProcessor {
       displayPosition = 10,
       group = "HASHING"
   )
-  @ComplexField
+  @ComplexField(FieldHasherConfig.class)
   public List<FieldHasherConfig> fieldHasherConfigs;
 
   @ConfigDef(
