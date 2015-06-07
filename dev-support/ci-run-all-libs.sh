@@ -6,10 +6,12 @@ DEV_SUPPORT=$(cd $(dirname ${BASH_SOURCE}) && /bin/pwd)
 PROFILE=$(basename ${BASH_SOURCE})
 PROFILE=${PROFILE#*-}
 PROFILE=${PROFILE%%-*}
+RUN_TESTS=""
 # apply profile here
 case "$PROFILE" in
   run)
     PACKAGE_OPTS=()
+    RUN_TESTS="true"
     ;;
   build)
     PACKAGE_OPTS=(-DskipTests)
@@ -31,8 +33,9 @@ mvn clean install -Pdist,all-libs,ui,rpm -Drelease -Dtest=DoesNotExist -DfailIfN
 set +e
 export JAVA_HOME=${TEST_JVM}
 mvn package -fae -Pdist,all-libs,ui,rpm -Drelease -Dmaven.main.skip=true -DlastModGranularityMs=604800000 ${PACKAGE_OPTS[@]}
+/opt/scripts/build-upload-sdc-tar.sh dist/target/streamsets-datacollector-*/streamsets-datacollector-*
 exitCode=$?
-if git log --format=%B -n 1 HEAD | grep -q "RUN_IT_TESTS"
+if [[ -n $RUN_TESTS ]] && git log --format=%B -n 1 HEAD | grep -q "RUN_IT_TESTS"
 then
   set -e
   bash ../infra/dev-support/ci-build-sdc-docker-image.sh
