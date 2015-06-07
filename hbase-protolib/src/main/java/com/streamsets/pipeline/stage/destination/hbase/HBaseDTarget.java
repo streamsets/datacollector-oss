@@ -91,7 +91,7 @@ public class HBaseDTarget extends DTarget {
       description = "Column names, their values and storage type",
       displayPosition = 70,
       group = "HBASE")
-  @ComplexField
+  @ComplexField(HBaseFieldMappingConfig.class)
   public List<HBaseFieldMappingConfig> hbaseFieldColumnMapping;
 
   @ConfigDef(required = true,

@@ -34,7 +34,7 @@ public class FieldMaskDProcessor extends DProcessor {
       displayPosition = 10,
       group = "MASKING"
   )
-  @ComplexField
+  @ComplexField(FieldMaskConfig.class)
   public List<FieldMaskConfig> fieldMaskConfigs;
 
   @Override

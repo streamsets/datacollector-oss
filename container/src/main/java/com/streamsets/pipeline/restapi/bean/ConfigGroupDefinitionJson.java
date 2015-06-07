@@ -21,7 +21,7 @@ public class ConfigGroupDefinitionJson {
   public ConfigGroupDefinitionJson(
     @JsonProperty("classNameToGroupsMap") Map<String, List<String>> classNameToGroupsMap,
     @JsonProperty("groupNameToLabelMapList") List<Map<String, String>> groupNameToLabelMap) {
-    this.configGroupDefinition = new com.streamsets.pipeline.config.ConfigGroupDefinition(classNameToGroupsMap,
+    this.configGroupDefinition = new com.streamsets.pipeline.config.ConfigGroupDefinition(null, classNameToGroupsMap,
       groupNameToLabelMap);
   }
 

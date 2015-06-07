@@ -16,5 +16,5 @@ import java.lang.annotation.RetentionPolicy;
 public @interface ElFunction {
   String prefix() default "";
   String name();
-  String description();
+  String description() default "";
 }

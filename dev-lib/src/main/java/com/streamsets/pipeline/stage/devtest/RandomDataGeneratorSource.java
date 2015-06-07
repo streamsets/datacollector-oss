@@ -34,7 +34,7 @@ public class RandomDataGeneratorSource extends BaseSource {
 
   @ConfigDef(label = "Fields to generate", required = false, type = ConfigDef.Type.MODEL, defaultValue="",
     description="Fields to generate of the indicated type")
-  @ComplexField
+  @ComplexField(DataGeneratorConfig.class)
   public List<DataGeneratorConfig> dataGenConfigs;
 
   @Override

@@ -7,16 +7,22 @@ package com.streamsets.pipeline.config;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 public class ConfigGroupDefinition {
-
+  private final Set<String> groupNames;
   private final Map<String, List<String>> classNameToGroupsMap;
   private final List<Map<String, String>> groupNameToLabelMapList;
 
-  public ConfigGroupDefinition( Map<String, List<String>> classNameToGroupsMap,
+  public ConfigGroupDefinition(Set<String> groupsNames, Map<String, List<String>> classNameToGroupsMap,
     List<Map<String, String>> groupNameToLabelMap) {
+    this.groupNames = groupsNames;
     this.classNameToGroupsMap = classNameToGroupsMap;
     this.groupNameToLabelMapList = groupNameToLabelMap;
+  }
+
+  public Set<String> getGroupNames() {
+    return groupNames;
   }
 
   public Map<String, List<String>> getClassNameToGroupsMap() {

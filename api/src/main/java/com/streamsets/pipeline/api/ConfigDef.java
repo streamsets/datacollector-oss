@@ -10,12 +10,34 @@ import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
+import java.util.Collections;
 
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.FIELD)
 public @interface ConfigDef {
 
-  public enum Type { BOOLEAN, NUMBER, STRING, LIST, MAP, MODEL, CHARACTER, TEXT }
+  public enum Type {
+    BOOLEAN(false),
+    NUMBER(0),
+    STRING(""),
+    LIST(Collections.emptyList()),
+    MAP(Collections.emptyList()),
+    MODEL(null),
+    CHARACTER(' '),
+    TEXT("")
+
+    ;
+
+    private final Object defaultValue;
+
+    Type(Object defaultValue) {
+      this.defaultValue = defaultValue;
+    }
+
+    public Object getDefault() {
+      return defaultValue;
+    }
+  }
 
   public enum Mode {JAVA, JAVASCRIPT, JSON, PLAIN_TEXT, PYTHON, RUBY, SCALA, SQL}
 

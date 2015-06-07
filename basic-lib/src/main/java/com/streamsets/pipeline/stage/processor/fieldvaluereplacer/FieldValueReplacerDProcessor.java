@@ -50,7 +50,7 @@ public class FieldValueReplacerDProcessor extends DProcessor {
       displayPosition = 20,
       group = "REPLACE"
   )
-  @ComplexField
+  @ComplexField(FieldValueReplacerConfig.class)
   public List<FieldValueReplacerConfig> fieldsToReplaceIfNull;
 
   @ConfigDef(

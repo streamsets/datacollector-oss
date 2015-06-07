@@ -7,6 +7,7 @@ package com.streamsets.pipeline.config;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.ImmutableSet;
 import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.ExecutionMode;
 import com.streamsets.pipeline.api.impl.LocaleInContext;
@@ -42,7 +43,7 @@ public class TestStageDefinitionLocalization {
                                      true, "GROUP", "c2", model, null, null, 0, null, null, 0, 0, "mode", 1,
       Collections.<String> emptyList(), ConfigDef.Evaluation.IMPLICIT, null));
     RawSourceDefinition rawSource = new RawSourceDefinition(TRawSourcePreviewer.class.getName(), "*/*", configs);
-    ConfigGroupDefinition configGroup = new ConfigGroupDefinition(
+    ConfigGroupDefinition configGroup = new ConfigGroupDefinition(ImmutableSet.of("GROUP"),
         (Map)ImmutableMap.of(Groups.class.getName(), ImmutableList.of(Groups.GROUP.name())),
         (List)ImmutableList.of(ImmutableMap.of("label", "Group", "name", "GROUP"))
     );

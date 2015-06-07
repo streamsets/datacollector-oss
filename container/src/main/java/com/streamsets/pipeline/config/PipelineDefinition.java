@@ -23,6 +23,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 
@@ -105,7 +106,7 @@ public class PipelineDefinition {
       groups.add(ImmutableMap.of("name", group.name(), "label", group.getLabel()));
     }
     classNameToGroupsMap.put(PipelineDefConfigs.Groups.class.getName(), groupsInEnum);
-    return new ConfigGroupDefinition(classNameToGroupsMap, groups);
+    return new ConfigGroupDefinition(new HashSet<>(groupsInEnum), classNameToGroupsMap, groups);
   }
 
   private static ConfigDefinition createExecutionModeOption(RuntimeInfo runtimeInfo) {

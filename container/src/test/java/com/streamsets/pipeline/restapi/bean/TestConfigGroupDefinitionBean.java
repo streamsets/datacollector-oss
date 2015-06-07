@@ -5,6 +5,7 @@
  */
 package com.streamsets.pipeline.restapi.bean;
 
+import com.google.common.collect.ImmutableSet;
 import com.streamsets.pipeline.config.ConfigGroupDefinition;
 import org.junit.Assert;
 import org.junit.Test;
@@ -30,8 +31,8 @@ public class TestConfigGroupDefinitionBean {
     group1.add("B");
     classNameToGroupsMap.put("g1", group1);
     List<String> group2 = new ArrayList<>();
-    group1.add("C");
-    group1.add("D");
+    group2.add("C");
+    group2.add("D");
     classNameToGroupsMap.put("g2", group2);
 
     List<Map<String, String>> groupNameToLabelMapList = new ArrayList<>();
@@ -43,7 +44,7 @@ public class TestConfigGroupDefinitionBean {
     groupNameToLabelMapList.add(map2);
 
     com.streamsets.pipeline.config.ConfigGroupDefinition configGroupDefinition =
-      new ConfigGroupDefinition(classNameToGroupsMap, groupNameToLabelMapList);
+      new ConfigGroupDefinition(ImmutableSet.of("A", "B", "C", "C"), classNameToGroupsMap, groupNameToLabelMapList);
 
     ConfigGroupDefinitionJson configGroupDefinitionJsonBean =
       new ConfigGroupDefinitionJson(configGroupDefinition);
@@ -62,8 +63,8 @@ public class TestConfigGroupDefinitionBean {
     group1.add("B");
     classNameToGroupsMap.put("g1", group1);
     List<String> group2 = new ArrayList<>();
-    group1.add("C");
-    group1.add("D");
+    group2.add("C");
+    group2.add("D");
     classNameToGroupsMap.put("g2", group2);
 
     List<Map<String, String>> groupNameToLabelMapList = new ArrayList<>();
@@ -75,7 +76,7 @@ public class TestConfigGroupDefinitionBean {
     groupNameToLabelMapList.add(map2);
 
     com.streamsets.pipeline.config.ConfigGroupDefinition configGroupDefinition =
-      new ConfigGroupDefinition(classNameToGroupsMap, groupNameToLabelMapList);
+      new ConfigGroupDefinition(ImmutableSet.of("A", "B", "C", "C"), classNameToGroupsMap, groupNameToLabelMapList);
 
     ConfigGroupDefinitionJson configGroupDefinitionJsonBean =
       new ConfigGroupDefinitionJson(classNameToGroupsMap, groupNameToLabelMapList);

@@ -166,7 +166,7 @@ public class FaultySource {
     description = "The user name of the twitter user",
     type = ConfigDef.Type.MODEL
   )
-    @ComplexField
+    @ComplexField(PhoneConfig.class)
   public List<PhoneConfig> phoneConfigs;
 
 

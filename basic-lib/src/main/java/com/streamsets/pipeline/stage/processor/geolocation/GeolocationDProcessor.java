@@ -45,7 +45,7 @@ public class GeolocationDProcessor extends DProcessor {
     displayPosition = 10,
     group = "GEOLOCATION"
   )
-  @ComplexField
+  @ComplexField(GeolocationFieldConfig.class)
   public List<GeolocationFieldConfig> fieldTypeConverterConfigs;
 
   @Override
