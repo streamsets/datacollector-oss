@@ -33,8 +33,11 @@ mvn clean install -Pdist,all-libs,ui,rpm -Drelease -Dtest=DoesNotExist -DfailIfN
 set +e
 export JAVA_HOME=${TEST_JVM}
 mvn package -fae -Pdist,all-libs,ui,rpm -Drelease -Dmaven.main.skip=true -DlastModGranularityMs=604800000 ${PACKAGE_OPTS[@]}
-/opt/scripts/build-upload-sdc-tar.sh dist/target/streamsets-datacollector-*/streamsets-datacollector-*
 exitCode=$?
+if [[ -n $PUBLISH_SDC_TAR ]] && [[ $exitCode -eq 0 ]]
+then
+  /opt/scripts/build-upload-sdc-tar.sh dist/target/streamsets-datacollector-*/streamsets-datacollector-*
+fi
 if [[ -n $RUN_TESTS ]] && git log --format=%B -n 1 HEAD | grep -q "RUN_IT_TESTS"
 then
   set -e
