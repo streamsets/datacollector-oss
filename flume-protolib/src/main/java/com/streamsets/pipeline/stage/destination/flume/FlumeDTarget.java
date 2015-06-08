@@ -37,10 +37,7 @@ public class FlumeDTarget extends DTarget {
   @ConfigDef(
     required = false,
     type = ConfigDef.Type.MAP,
-    defaultValue = "[ {\n" +
-      "        \"key\" : \"h1\",\n" +
-      "        \"value\" : \"localhost:41414\"\n" +
-      "      } ]",
+    defaultValue = "{ \"h1\" : \"localhost:41414\" }",
     label = "Hosts Configuration",
     description = "Flume host alias and the address in the form <HOST>:<PORT>",
     displayPosition = 10,

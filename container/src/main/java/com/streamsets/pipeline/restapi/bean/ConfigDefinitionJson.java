@@ -48,7 +48,7 @@ public class ConfigDefinitionJson {
     this.configDefinition = new com.streamsets.pipeline.config.ConfigDefinition(name, type, label, description,
       defaultValue, required, group, fieldName, BeanHelper.unwrapModelDefinition(model), dependsOn, triggeredByValues,
       displayPosition, BeanHelper.unwrapElFunctionDefinitions(elFunctionDefinitions),
-      BeanHelper.unwrapElConstantDefinitions(elConstantDefinitions), min, max, mode, lines, elDefs, evaluation,
+      BeanHelper.unwrapElConstantDefinitions(elConstantDefinitions), min, max, mode, lines, null, evaluation,
       dependsOnMap);
   }
 
@@ -128,7 +128,7 @@ public class ConfigDefinitionJson {
   }
 
   public List<String> getElDefs() {
-    return configDefinition.getElDefs();
+    return null;
   }
 
   public ConfigDef.Evaluation getEvaluation() {

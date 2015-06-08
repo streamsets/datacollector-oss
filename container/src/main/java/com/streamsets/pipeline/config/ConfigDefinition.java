@@ -48,7 +48,7 @@ public class ConfigDefinition {
   private final long max;
   private final String mode;
   private final int lines;
-  private final List<String> elDefs;
+  private final List<Class> elDefs;
   private final ConfigDef.Evaluation evaluation;
   private Map<String, List<Object>> dependsOnMap;
 
@@ -57,7 +57,7 @@ public class ConfigDefinition {
       boolean required, String group, String fieldName, ModelDefinition model, String dependsOn,
       List<Object> triggeredByValues, int displayPosition, List<ElFunctionDefinition> elFunctionDefinitions,
       List<ElConstantDefinition> elConstantDefinitions, long min, long max, String mode, int lines,
-      List<String> elDefs, ConfigDef.Evaluation evaluation, Map<String, List<Object>> dependsOnMap) {
+      List<Class> elDefs, ConfigDef.Evaluation evaluation, Map<String, List<Object>> dependsOnMap) {
     this(null, name, type, label, description, defaultValue, required, group, fieldName, model,
          dependsOn, triggeredByValues, displayPosition, elFunctionDefinitions,
          elConstantDefinitions, min, max, mode, lines, elDefs, evaluation, dependsOnMap);
@@ -68,7 +68,7 @@ public class ConfigDefinition {
       boolean required, String group, String fieldName, ModelDefinition model, String dependsOn,
       List<Object> triggeredByValues, int displayPosition, List<ElFunctionDefinition> elFunctionDefinitions,
       List<ElConstantDefinition> elConstantDefinitions, long min, long max, String mode, int lines,
-      List<String> elDefs, ConfigDef.Evaluation evaluation, Map<String, List<Object>> dependsOnMap) {
+      List<Class> elDefs, ConfigDef.Evaluation evaluation, Map<String, List<Object>> dependsOnMap) {
     this.configField = configField;
     this.name = name;
     this.type = type;
@@ -151,7 +151,7 @@ public class ConfigDefinition {
     return lines;
   }
 
-  public List<String> getElDefs() {
+  public List<Class> getElDefs() {
     return elDefs;
   }
 

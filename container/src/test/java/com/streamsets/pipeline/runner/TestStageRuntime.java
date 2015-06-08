@@ -23,6 +23,7 @@ import com.streamsets.pipeline.config.StageDefinition;
 import com.streamsets.pipeline.config.StageType;
 import com.streamsets.pipeline.el.ElConstantDefinition;
 import com.streamsets.pipeline.el.ElFunctionDefinition;
+import com.streamsets.pipeline.lib.el.StringEL;
 import com.streamsets.pipeline.stagelibrary.StageLibraryTask;
 import com.streamsets.pipeline.store.PipelineStoreTask;
 
@@ -99,43 +100,43 @@ public class TestStageRuntime {
     ConfigDefinition configDef = new ConfigDefinition("string", ConfigDef.Type.STRING, "l1", "d1", "--", true, "g",
                                                       "stringVar", null, "", new ArrayList<>(), 0,
       Collections.<ElFunctionDefinition>emptyList(), Collections.<ElConstantDefinition>emptyList(), Long.MIN_VALUE,
-      Long.MAX_VALUE, "text/plain", 0, ImmutableList.of("com.streamsets.pipeline.lib.el.StringEL"),
+      Long.MAX_VALUE, "text/plain", 0, ImmutableList.<Class>of(StringEL.class),
       ConfigDef.Evaluation.IMPLICIT, null);
     configDefs.add(configDef);
     configDef = new ConfigDefinition("int", ConfigDef.Type.NUMBER, "l2", "d2", "-1", true, "g", "intVar", null, "",
       new ArrayList<>(), 0, Collections.<ElFunctionDefinition>emptyList(),
       Collections.<ElConstantDefinition>emptyList(), Long.MIN_VALUE, Long.MAX_VALUE, "text/plain", 0,
-      ImmutableList.of("com.streamsets.pipeline.lib.el.StringEL"), ConfigDef.Evaluation.IMPLICIT, null);
+      ImmutableList.<Class>of(StringEL.class), ConfigDef.Evaluation.IMPLICIT, null);
     configDefs.add(configDef);
     configDef = new ConfigDefinition("long", ConfigDef.Type.NUMBER, "l3", "d3", "-2", true, "g", "longVar", null, "",
       new ArrayList<>(), 0, Collections.<ElFunctionDefinition>emptyList(),
       Collections.<ElConstantDefinition>emptyList(), Long.MIN_VALUE, Long.MAX_VALUE, "text/plain", 0,
-      ImmutableList.of("com.streamsets.pipeline.lib.el.StringEL"), ConfigDef.Evaluation.IMPLICIT, null);
+      ImmutableList.<Class>of(StringEL.class), ConfigDef.Evaluation.IMPLICIT, null);
     configDefs.add(configDef);
     configDef = new ConfigDefinition("boolean", ConfigDef.Type.BOOLEAN, "l4", "d4", "false", true, "g", "booleanVar",
       null, "", new ArrayList<>(), 0, Collections.<ElFunctionDefinition>emptyList(),
       Collections.<ElConstantDefinition>emptyList(), Long.MIN_VALUE, Long.MAX_VALUE, "text/plain", 0,
-      ImmutableList.of("com.streamsets.pipeline.lib.el.StringEL"), ConfigDef.Evaluation.IMPLICIT, null);
+      ImmutableList.<Class>of(StringEL.class), ConfigDef.Evaluation.IMPLICIT, null);
     configDefs.add(configDef);
     configDef = new ConfigDefinition("char", ConfigDef.Type.CHARACTER, "l5", "d5", "K", true, "g", "charVar", null, "",
       new ArrayList<>(), 0, Collections.<ElFunctionDefinition>emptyList(),
       Collections.<ElConstantDefinition>emptyList(), Long.MIN_VALUE, Long.MAX_VALUE, "text/plain", 0,
-      ImmutableList.of("com.streamsets.pipeline.lib.el.StringEL"), ConfigDef.Evaluation.IMPLICIT, null);
+      ImmutableList.<Class>of(StringEL.class), ConfigDef.Evaluation.IMPLICIT, null);
     configDefs.add(configDef);
     configDef = new ConfigDefinition("stringList", ConfigDef.Type.LIST, "l6", "d6", "", false, "g", "stringListVar", null, "",
       new ArrayList<>(), 0, Collections.<ElFunctionDefinition>emptyList(),
       Collections.<ElConstantDefinition>emptyList(), Long.MIN_VALUE, Long.MAX_VALUE, "text/plain", 0,
-      ImmutableList.of("com.streamsets.pipeline.lib.el.StringEL"), ConfigDef.Evaluation.IMPLICIT, null);
+      ImmutableList.<Class>of(StringEL.class), ConfigDef.Evaluation.IMPLICIT, null);
     configDefs.add(configDef);
     configDef = new ConfigDefinition("stringMap", ConfigDef.Type.MAP, "l7", "d7", "", false, "g", "stringMapVar", null, "",
       new ArrayList<>(), 0, Collections.<ElFunctionDefinition>emptyList(),
       Collections.<ElConstantDefinition>emptyList(), Long.MIN_VALUE, Long.MAX_VALUE, "text/plain", 0,
-      ImmutableList.of("com.streamsets.pipeline.lib.el.StringEL"), ConfigDef.Evaluation.IMPLICIT, null);
+      ImmutableList.<Class>of(StringEL.class), ConfigDef.Evaluation.IMPLICIT, null);
     configDefs.add(configDef);
     configDef = new ConfigDefinition("listOfMap", ConfigDef.Type.MAP, "l8", "d8", "", false, "g", "listOfMapVar", null, "",
       new ArrayList<>(), 0, Collections.<ElFunctionDefinition>emptyList(),
       Collections.<ElConstantDefinition>emptyList(), Long.MIN_VALUE, Long.MAX_VALUE, "text/plain", 0,
-      ImmutableList.of("com.streamsets.pipeline.lib.el.StringEL"), ConfigDef.Evaluation.IMPLICIT, null);
+      ImmutableList.<Class>of(StringEL.class), ConfigDef.Evaluation.IMPLICIT, null);
     configDefs.add(configDef);
     StageDefinition sourceDef = new StageDefinition(
       TSource.class.getName(), "source", "1.0.0", "label", "description", StageType.SOURCE, false, true,

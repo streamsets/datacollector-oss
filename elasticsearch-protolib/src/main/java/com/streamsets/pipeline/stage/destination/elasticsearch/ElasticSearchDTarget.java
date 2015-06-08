@@ -55,7 +55,7 @@ public class ElasticSearchDTarget extends DTarget {
   @ConfigDef(
       required = false,
       type = ConfigDef.Type.MAP,
-      defaultValue = "[{\"key\": \"client.transport.sniff\", \"value\" : \"true\"}]",
+      defaultValue = "{ \"client.transport.sniff\" : \"true\" }",
       label = "Additional Configuration",
       description = "Additional Elasticsearch client configuration properties",
       displayPosition = 30,
