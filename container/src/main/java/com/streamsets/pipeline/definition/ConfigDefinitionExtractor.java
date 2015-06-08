@@ -5,6 +5,7 @@
  */
 package com.streamsets.pipeline.definition;
 
+import com.google.common.collect.ImmutableList;
 import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.config.ConfigDefinition;
@@ -117,6 +118,7 @@ public abstract class ConfigDefinitionExtractor {
           ELDefinitionExtractor.get().extractFunctions(annotation.elDefs(), contextMsg);
       List<ElConstantDefinition> elConstantDefinitions =
           ELDefinitionExtractor.get().extractConstants(annotation.elDefs(), contextMsg);
+      List<Class> elDefs = ImmutableList.copyOf(annotation.elDefs());
       long min = annotation.min();
       long max = annotation.max();
       String mode = (annotation.mode() != null) ? annotation.mode().name() : null;
@@ -125,7 +127,7 @@ public abstract class ConfigDefinitionExtractor {
       Map<String, List<Object>> dependsOnMap = null; // done at resolveDependencies() invocation
       def = new ConfigDefinition(field, name, type, label, description, defaultValue, required, group, fieldName, model,
                                  dependsOn, triggeredByValues, displayPosition, elFunctionDefinitions,
-                                 elConstantDefinitions, min, max, mode, lines, null, evaluation, dependsOnMap);
+                                 elConstantDefinitions, min, max, mode, lines, elDefs, evaluation, dependsOnMap);
     }
     return def;
   }

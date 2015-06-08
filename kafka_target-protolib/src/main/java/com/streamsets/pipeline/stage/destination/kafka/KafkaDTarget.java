@@ -36,13 +36,11 @@ import java.util.Map;
 public class KafkaDTarget extends DTarget {
 
   private static final String KAFKA_PRODUCER_OPTIONS_DEFAULT =
-    "[ " +
-      "{\"key\" : \"queue.buffering.max.ms\", \"value\" : \"5000\"}" +
-      ", " +
-      "{\"key\" : \"message.send.max.retries\", \"value\" : \"10\"}" +
-      ", " +
-      "{\"key\" : \"retry.backoff.ms\", \"value\" : \"1000\"}" +
-    " ]";
+    "{" +
+      " \"queue.buffering.max.ms\" : \"5000\", " +
+      " \"message.send.max.retries\" : \"10\", " +
+      " \"retry.backoff.ms\" : \"1000\" " +
+    "}";
 
   @ConfigDef(
     required = true,

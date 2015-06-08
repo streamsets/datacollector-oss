@@ -61,9 +61,9 @@ public class ElUtil {
 
   public static Class<?>[] getElDefs(StageDefinition stageDef, ConfigDefinition configDefinition) {
     ClassLoader cl = stageDef.getStageClassLoader();
-    List<String> elDefs = configDefinition.getElDefs();
+    List<Class> elDefs = configDefinition.getElDefs();
     if(elDefs != null && elDefs.size() > 0) {
-      return getElDefClassArray(cl, elDefs);
+      return elDefs.toArray(new Class[elDefs.size()]);
     }
     Class<?>[] elDefClasses = new Class[2];
     //inject RuntimeEL.class & StringEL.class into the evaluator
@@ -72,20 +72,8 @@ public class ElUtil {
     return elDefClasses;
   }
 
-  public static Class<?>[] getElDefClassArray(ClassLoader classLoader, List<String> elDefs) {
-    Class<?>[] elDefClasses = new Class<?>[elDefs.size() + 2];
-    int i = 0;
-    for(; i < elDefs.size(); i++) {
-      try {
-        elDefClasses[i] = classLoader.loadClass(elDefs.get(i));
-      } catch (ClassNotFoundException e) {
-        throw new RuntimeException(e);
-      }
-    }
-    //inject RuntimeEL.class & StringEL.class into the evaluator
-    elDefClasses[i++] = RuntimeEL.class;
-    elDefClasses[i] = StringEL.class;
-    return  elDefClasses;
+  public static Class<?>[] getElDefClassArray(ClassLoader classLoader, List<Class> elDefs) {
+    return elDefs.toArray(new Class[elDefs.size()]);
   }
 
   public static ELEvaluator createElEval(String name, Map<String, Object> constants, Class<?>... elDefs) {

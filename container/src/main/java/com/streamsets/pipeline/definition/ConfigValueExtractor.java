@@ -86,9 +86,8 @@ public abstract class ConfigValueExtractor {
               value = list;
               break;
             case MODEL:
-              Utils.checkArgument(valueStr.isEmpty(), Utils.formatL(
-                  "{}, configuration field is a 'Model', cannot have a default value", contextMsg));
-              value = null;
+              value = (field.getType() == String.class) ? valueStr
+                                                        : Enum.valueOf(((Class<Enum>)field.getType()), valueStr);
               break;
             case CHARACTER:
               Utils.checkArgument(field.getType() == Character.TYPE || field.getType() == Character.class,

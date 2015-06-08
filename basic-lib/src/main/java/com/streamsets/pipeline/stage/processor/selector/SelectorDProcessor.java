@@ -36,6 +36,7 @@ public class SelectorDProcessor extends DProcessor {
       description = "Records that match the condition pass to the stream",
       displayPosition = 10,
       group = "CONDITIONS",
+      evaluation = ConfigDef.Evaluation.EXPLICIT,
       elDefs = {RecordEL.class}
   )
   @LanePredicateMapping

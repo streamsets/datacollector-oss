@@ -41,7 +41,7 @@ public abstract class StageDefinitionExtractor {
     Utils.checkArgument(sDef != null, Utils.formatL("{} does not have a StageDef annotation", contextMsg));
 
     String className = klass.getName();
-    String name = className;
+    String name = className.replace(".", "_").replace("$", "_");
     String version = sDef.version();
     Utils.checkArgument(!version.isEmpty(), Utils.formatL("{} version cannot be empty", contextMsg));
     String label = sDef.label();

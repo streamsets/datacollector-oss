@@ -16,6 +16,7 @@ import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.ExecutionMode;
 import com.streamsets.pipeline.api.OnRecordError;
 import com.streamsets.pipeline.api.OnRecordErrorChooserValues;
+import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.impl.LocaleInContext;
 import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.config.ConfigDefinition;
@@ -23,6 +24,7 @@ import com.streamsets.pipeline.config.ErrorHandlingChooserValues;
 import com.streamsets.pipeline.config.ModelDefinition;
 import com.streamsets.pipeline.config.ModelType;
 import com.streamsets.pipeline.config.StageDefinition;
+import com.streamsets.pipeline.definition.StageDefinitionExtractor;
 import com.streamsets.pipeline.el.ELEvaluator;
 import com.streamsets.pipeline.el.ElConstantDefinition;
 import com.streamsets.pipeline.el.ElFunctionDefinition;
@@ -145,10 +147,12 @@ public class ClassLoaderStageLibraryTask extends AbstractTask implements StageLi
             Map<String, String> stagesInLibrary = new HashMap<>();
             URL url = resources.nextElement();
             InputStream is = url.openStream();
-            StageDefinitionJson[] stages =
-              json.readValue(is, StageDefinitionJson[].class);
-            for (StageDefinitionJson stageDef : stages) {
-              StageDefinition stage = BeanHelper.unwrapStageDefinition(stageDef);
+            List<Map<String, ?>> list = json.readValue(is, List.class);
+            for (Map<String, ?> e : list) {
+              String className = (String) e.get("className");
+              Class<? extends Stage> klass = (Class<? extends Stage>) cl.loadClass(className);
+              StageDefinition stage = StageDefinitionExtractor.get().
+                  extract(klass, Utils.formatL("Library='{}'", libraryName));
               List<ExecutionMode> executionModes = null;
               switch (stage.getType()) {
                 case PROCESSOR:
@@ -257,7 +261,7 @@ public class ClassLoaderStageLibraryTask extends AbstractTask implements StageLi
       null, false, "", null, new ModelDefinition(ModelType.FIELD_SELECTOR_MULTI_VALUED, null, null, null, null),
       "", new ArrayList<>(), 10, Collections.<ElFunctionDefinition>emptyList(),
       Collections.<ElConstantDefinition>emptyList(), Long.MIN_VALUE, Long.MAX_VALUE, "text/plain", 0,
-    Collections.<String>emptyList(), ConfigDef.Evaluation.IMPLICIT, null);
+    Collections.<Class>emptyList(), ConfigDef.Evaluation.IMPLICIT, null);
 
   private static final ELEvaluator PRECONDITIONS_EVALUATOR =
       new ELEvaluator(ConfigDefinition.PRECONDITIONS, RecordEL.class, StringEL.class);
@@ -269,7 +273,7 @@ public class ClassLoaderStageLibraryTask extends AbstractTask implements StageLi
       null, false, "", null, null,
       "", new ArrayList<>(), 10, PRECONDITIONS_EVALUATOR.getElFunctionDefinitions(),
       PRECONDITIONS_EVALUATOR.getElConstantDefinitions(), Long.MIN_VALUE, Long.MAX_VALUE, "text/plain", 0,
-      Collections.<String>emptyList(), ConfigDef.Evaluation.EXPLICIT, null);
+      Collections.<Class>emptyList(), ConfigDef.Evaluation.EXPLICIT, null);
 
   //Group name needs to be empty for UI to show the config in General Group.
   private static final ConfigDefinition ON_RECORD_ERROR_CONFIG = new ConfigDefinition(
@@ -281,7 +285,7 @@ public class ClassLoaderStageLibraryTask extends AbstractTask implements StageLi
                                                  new OnRecordErrorChooserValues().getLabels(), null), "",
       new ArrayList<>(), 20, Collections.<ElFunctionDefinition>emptyList(),
       Collections.<ElConstantDefinition>emptyList(), Long.MIN_VALUE, Long.MAX_VALUE, "text/plain", 0,
-    Collections.<String>emptyList(), ConfigDef.Evaluation.IMPLICIT, null);
+    Collections.<Class>emptyList(), ConfigDef.Evaluation.IMPLICIT, null);
 
   private void addSystemConfigurations(StageDefinition stage) {
     if (stage.hasPreconditions()) {
@@ -439,9 +443,8 @@ public class ClassLoaderStageLibraryTask extends AbstractTask implements StageLi
   private void updateElFunctionAndConstantDef(StageDefinition stageDefinition, ConfigDefinition configDefinition)
     throws ClassNotFoundException {
     List<Class<?>> classes = new ArrayList<>();
-    for(String elDef : configDefinition.getElDefs()) {
-      Class<?> elClass = stageDefinition.getStageClassLoader().loadClass(elDef);
-      classes.add(elClass);
+    for(Class klass : configDefinition.getElDefs()) {
+      classes.add(klass);
     }
 
     //Add the RuntimeEL class for every config property that has text box

@@ -135,7 +135,7 @@ public class PipelineDefinition {
         Long.MAX_VALUE,
         "",
         0,
-        Collections.<String> emptyList(),
+        Collections.<Class> emptyList(),
         ConfigDef.Evaluation.IMPLICIT,
         null);
   }
@@ -162,7 +162,7 @@ public class PipelineDefinition {
         1024 * 1024,
         "",
         0,
-        Collections.<String> emptyList(),
+        Collections.<Class> emptyList(),
         ConfigDef.Evaluation.IMPLICIT,
         (Map) ImmutableMap.of(PipelineDefConfigs.EXECUTION_MODE_CONFIG, Arrays.asList(ExecutionMode.CLUSTER.name()))));
     list.add(new ConfigDefinition(
@@ -184,7 +184,7 @@ public class PipelineDefinition {
       Long.MAX_VALUE,
       "",
       0,
-      Collections.<String> emptyList(),
+      Collections.<Class> emptyList(),
       ConfigDef.Evaluation.IMPLICIT,
       (Map) ImmutableMap.of(PipelineDefConfigs.EXECUTION_MODE_CONFIG, Arrays.asList(ExecutionMode.CLUSTER.name()))));
     list.add(new ConfigDefinition(
@@ -206,7 +206,7 @@ public class PipelineDefinition {
       Long.MAX_VALUE,
       "",
       0,
-      Collections.<String> emptyList(),
+      Collections.<Class> emptyList(),
       ConfigDef.Evaluation.IMPLICIT,
       (Map) ImmutableMap.of(PipelineDefConfigs.EXECUTION_MODE_CONFIG, Arrays.asList(ExecutionMode.CLUSTER.name()))));
     // TODO these should be dependent on kerberos == true but that does not work
@@ -229,7 +229,7 @@ public class PipelineDefinition {
       Long.MAX_VALUE,
       "",
       0,
-      Collections.<String> emptyList(),
+      Collections.<Class> emptyList(),
       ConfigDef.Evaluation.IMPLICIT,
       (Map) ImmutableMap.of(PipelineDefConfigs.EXECUTION_MODE_CONFIG, Arrays.asList(ExecutionMode.CLUSTER.name()))));
     list.add(new ConfigDefinition(
@@ -251,7 +251,7 @@ public class PipelineDefinition {
       Long.MAX_VALUE,
       "",
       0,
-      Collections.<String> emptyList(),
+      Collections.<Class> emptyList(),
       ConfigDef.Evaluation.IMPLICIT,
       (Map) ImmutableMap.of(PipelineDefConfigs.EXECUTION_MODE_CONFIG, Arrays.asList(ExecutionMode.CLUSTER.name()))));
     list.add(new ConfigDefinition(
@@ -273,7 +273,7 @@ public class PipelineDefinition {
         Long.MAX_VALUE,
         "",
         0,
-        Collections.<String> emptyList(),
+        Collections.<Class> emptyList(),
         ConfigDef.Evaluation.IMPLICIT,
         (Map) ImmutableMap.of(PipelineDefConfigs.EXECUTION_MODE_CONFIG, Arrays.asList(ExecutionMode.CLUSTER.name()))));
     return list;
@@ -304,7 +304,7 @@ public class PipelineDefinition {
       Long.MAX_VALUE,
       "",
       0,
-      Collections.<String> emptyList(),
+      Collections.<Class> emptyList(),
       ConfigDef.Evaluation.IMPLICIT,
       null);
   }
@@ -332,7 +332,7 @@ public class PipelineDefinition {
         Long.MAX_VALUE,
         "",
         0,
-        Collections.<String> emptyList(),
+        Collections.<Class> emptyList(),
         ConfigDef.Evaluation.IMPLICIT,
         null);
   }
@@ -358,7 +358,7 @@ public class PipelineDefinition {
       Long.MAX_VALUE,
       "",
       0,
-      Collections.<String> emptyList(),
+      Collections.<Class> emptyList(),
       ConfigDef.Evaluation.IMPLICIT,
       null);
   }
@@ -387,7 +387,7 @@ public class PipelineDefinition {
       Long.MAX_VALUE,
       "",
       0,
-      Collections.<String> emptyList(),
+      Collections.<Class> emptyList(),
       ConfigDef.Evaluation.IMPLICIT,
       null);
   }
@@ -413,7 +413,7 @@ public class PipelineDefinition {
       PipelineDefConfigs.MEMORY_LIMIT_MAX,
       "",
       0,
-      Collections.<String> emptyList(),
+      Collections.<Class> emptyList(),
       ConfigDef.Evaluation.IMPLICIT,
       null);
   }
