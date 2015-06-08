@@ -35,13 +35,17 @@ public abstract class StageDefinitionExtractor {
     return EXTRACTOR;
   }
 
+  static String getStageName(Class klass) {
+    return klass.getName().replace(".", "_").replace("$", "_");
+  }
+
   public StageDefinition extract(Class<? extends Stage> klass, Object contextMsg) {
     contextMsg = Utils.formatL("{} Stage='{}'", contextMsg, klass.getSimpleName());
     StageDef sDef = klass.getAnnotation(StageDef.class);
     Utils.checkArgument(sDef != null, Utils.formatL("{} does not have a StageDef annotation", contextMsg));
 
     String className = klass.getName();
-    String name = className.replace(".", "_").replace("$", "_");
+    String name = getStageName(klass);
     String version = sDef.version();
     Utils.checkArgument(!version.isEmpty(), Utils.formatL("{} version cannot be empty", contextMsg));
     String label = sDef.label();
@@ -49,9 +53,12 @@ public abstract class StageDefinitionExtractor {
     String icon = sDef.icon();
     StageType type = extractStageType(klass, contextMsg);
     boolean errorStage = klass.getAnnotation(ErrorStage.class) != null;
+    Utils.checkArgument(!errorStage || type != StageType.SOURCE,
+                        Utils.formatL("{} a SOURCE cannot be an ErrorStage", contextMsg));
     HideConfig hideConfigs = klass.getAnnotation(HideConfig.class);
-    boolean preconditions = (hideConfigs == null) || hideConfigs.preconditions();
-    boolean onRecordError = (hideConfigs == null) || hideConfigs.onErrorRecord();
+    boolean preconditions = !errorStage && type != StageType.SOURCE &&
+                            ((hideConfigs == null) || !hideConfigs.preconditions());
+    boolean onRecordError = !errorStage && ((hideConfigs == null) || !hideConfigs.onErrorRecord());
     List<ConfigDefinition> configDefinitions = extractConfigDefinitions(klass, hideConfigs, contextMsg);
     RawSourceDefinition rawSourceDefinition = RawSourceDefinitionExtractor.get().extract(klass, contextMsg);
     Utils.checkArgument(rawSourceDefinition == null || type == StageType.SOURCE,
