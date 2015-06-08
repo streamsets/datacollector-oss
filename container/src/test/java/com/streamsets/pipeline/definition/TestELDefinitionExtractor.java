@@ -5,6 +5,7 @@
  */
 package com.streamsets.pipeline.definition;
 
+import com.google.common.collect.ImmutableList;
 import com.streamsets.pipeline.api.ElConstant;
 import com.streamsets.pipeline.api.ElFunction;
 import com.streamsets.pipeline.api.ElParam;
@@ -58,8 +59,8 @@ public class TestELDefinitionExtractor {
 
   @Test
   public void testExtractionEmpty() {
-    Assert.assertTrue(ELDefinitionExtractor.get().extractFunctions(new Class[]{Empty.class}, "x").isEmpty());
-    Assert.assertTrue(ELDefinitionExtractor.get().extractConstants(new Class[]{Empty.class}, "x").isEmpty());
+    Assert.assertTrue(ELDefinitionExtractor.get().extractFunctions(ImmutableList.<Class>of(Empty.class), "").isEmpty());
+    Assert.assertTrue(ELDefinitionExtractor.get().extractConstants(ImmutableList.<Class>of(Empty.class), "").isEmpty());
   }
 
   @Test(expected = IllegalArgumentException.class)
@@ -84,7 +85,7 @@ public class TestELDefinitionExtractor {
 
   @Test
   public void testExtractionFunctions() {
-    List<ElFunctionDefinition> functions = ELDefinitionExtractor.get().extractFunctions(new Class[]{Ok.class}, "x");
+    List<ElFunctionDefinition> functions = ELDefinitionExtractor.get().extractFunctions(ImmutableList.<Class>of(Ok.class), "x");
     Assert.assertEquals(1, functions.size());
     Assert.assertEquals("p:f", functions.get(0).getName());
     Assert.assertEquals("p", functions.get(0).getGroup());
@@ -98,7 +99,7 @@ public class TestELDefinitionExtractor {
 
   @Test
   public void testExtractionConstants() {
-    List<ElConstantDefinition> constants = ELDefinitionExtractor.get().extractConstants(new Class[]{Ok.class}, "x");
+    List<ElConstantDefinition> constants = ELDefinitionExtractor.get().extractConstants(ImmutableList.<Class>of(Ok.class), "x");
     Assert.assertEquals(1, constants.size());
     Assert.assertEquals("C", constants.get(0).getName());
     Assert.assertEquals("CC", constants.get(0).getDescription());

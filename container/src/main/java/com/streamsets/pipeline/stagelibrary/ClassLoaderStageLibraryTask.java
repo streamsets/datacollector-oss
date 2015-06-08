@@ -33,8 +33,6 @@ import com.streamsets.pipeline.json.ObjectMapperFactory;
 import com.streamsets.pipeline.lib.el.RecordEL;
 import com.streamsets.pipeline.lib.el.StringEL;
 import com.streamsets.pipeline.main.RuntimeInfo;
-import com.streamsets.pipeline.restapi.bean.BeanHelper;
-import com.streamsets.pipeline.restapi.bean.StageDefinitionJson;
 import com.streamsets.pipeline.task.AbstractTask;
 
 import org.slf4j.Logger;
@@ -181,11 +179,9 @@ public class ClassLoaderStageLibraryTask extends AbstractTask implements StageLi
               convertTriggeredByValuesToType(stage.getStageClassLoader().loadClass(stage.getClassName()),
                 stage.getConfigDefinitions());
               computeDependsOnChain(stage);
-              setElMetadata(stage);
             }
           }
-        } catch (IOException | ClassNotFoundException | NoSuchFieldException | InstantiationException
-          | IllegalAccessException ex) {
+        } catch (IOException | ClassNotFoundException | NoSuchFieldException ex) {
           throw new RuntimeException(
               Utils.format("Could not load stages definition from '{}', {}", cl, ex.getMessage()),
               ex);
@@ -422,43 +418,6 @@ public class ClassLoaderStageLibraryTask extends AbstractTask implements StageLi
         defaultValue = ObjectMapperFactory.get().readValue(defaultValueString, List.class);
       }
       configDef.setDefaultValue(defaultValue);
-    }
-  }
-
-  private void setElMetadata(StageDefinition stageDefinition) throws ClassNotFoundException, IllegalAccessException,
-    InstantiationException {
-    for(ConfigDefinition configDefinition : stageDefinition.getConfigDefinitions()) {
-      updateElFunctionAndConstantDef(stageDefinition, configDefinition);
-      if(configDefinition.getModel() != null) {
-        List<ConfigDefinition> configDefinitions = configDefinition.getModel().getConfigDefinitions();
-        if(configDefinitions != null) {
-          for(ConfigDefinition configDef : configDefinitions) {
-            updateElFunctionAndConstantDef(stageDefinition, configDef);
-          }
-        }
-      }
-    }
-  }
-
-  private void updateElFunctionAndConstantDef(StageDefinition stageDefinition, ConfigDefinition configDefinition)
-    throws ClassNotFoundException {
-    List<Class<?>> classes = new ArrayList<>();
-    for(Class klass : configDefinition.getElDefs()) {
-      classes.add(klass);
-    }
-
-    //Add the RuntimeEL class for every config property that has text box
-    if(configDefinition.getType() != ConfigDef.Type.BOOLEAN && (configDefinition.getType() != ConfigDef.Type.MODEL ||
-      configDefinition.getModel().getModelType() == ModelType.LANE_PREDICATE_MAPPING)) {
-      classes.add(RuntimeEL.class);
-      classes.add(StringEL.class);
-    }
-
-    if(!classes.isEmpty()) {
-      Class<?>[] elClasses = new Class[classes.size()];
-      ELEvaluator elEval = new ELEvaluator(configDefinition.getName(), classes.toArray(elClasses));
-      configDefinition.getElFunctionDefinitions().addAll(elEval.getElFunctionDefinitions());
-      configDefinition.getElConstantDefinitions().addAll(elEval.getElConstantDefinitions());
     }
   }
 

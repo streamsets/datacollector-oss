@@ -21,11 +21,13 @@ import com.streamsets.pipeline.config.ConfigDefinition;
 import com.streamsets.pipeline.config.ModelType;
 import com.streamsets.pipeline.config.PipelineConfiguration;
 import com.streamsets.pipeline.config.PipelineDefConfigs;
+import com.streamsets.pipeline.config.PipelineGroups;
 import com.streamsets.pipeline.config.StageConfiguration;
 import com.streamsets.pipeline.config.StageDefinition;
 import com.streamsets.pipeline.config.StageType;
 import com.streamsets.pipeline.el.ELEvaluator;
 import com.streamsets.pipeline.el.ELVariables;
+import com.streamsets.pipeline.el.JvmEL;
 import com.streamsets.pipeline.el.RuntimeEL;
 import com.streamsets.pipeline.lib.el.RecordEL;
 import com.streamsets.pipeline.lib.el.StringEL;
@@ -239,14 +241,9 @@ public class PipelineConfigurationValidator {
               memoryLimit = Long.parseLong(memoryLimitString);
             }
 
-            if (memoryLimit < PipelineDefConfigs.MEMORY_LIMIT_MIN) {
-              issues.addP(new Issue(config.getName(), "", ValidationError.VALIDATION_0065, memoryLimit,
-                                    PipelineDefConfigs.MEMORY_LIMIT_MIN));
-              return false;
-            }
-            if (memoryLimit > PipelineDefConfigs.MEMORY_LIMIT_MAX) {
+            if (memoryLimit > JvmEL.jvmMaxMemoryMB() * 0.85) {
               issues.addP(new Issue(config.getName(), "", ValidationError.VALIDATION_0063, memoryLimit,
-                                    PipelineDefConfigs.MEMORY_LIMIT_MAX));
+                                    JvmEL.jvmMaxMemoryMB() * 0.85));
               return false;
             }
           } catch (NumberFormatException e) {
@@ -862,7 +859,7 @@ public class PipelineConfigurationValidator {
   boolean validateErrorStage() {
     boolean preview = true;
     if (pipelineConfiguration.getErrorStage() == null) {
-      issues.addP(new Issue(PipelineDefConfigs.ERROR_RECORDS_CONFIG, PipelineDefConfigs.Groups.BAD_RECORDS.name(),
+      issues.addP(new Issue(PipelineDefConfigs.ERROR_RECORDS_CONFIG, PipelineGroups.BAD_RECORDS.name(),
                             ValidationError.VALIDATION_0060));
       preview = false;
     } else {

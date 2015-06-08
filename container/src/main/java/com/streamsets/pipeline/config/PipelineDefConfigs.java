@@ -5,203 +5,139 @@
  */
 package com.streamsets.pipeline.config;
 
-
 import com.streamsets.pipeline.api.ConfigDef;
+import com.streamsets.pipeline.api.ConfigGroups;
 import com.streamsets.pipeline.api.ExecutionMode;
 import com.streamsets.pipeline.api.GenerateResourceBundle;
-import com.streamsets.pipeline.api.Label;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.ValueChooser;
-import com.streamsets.pipeline.el.JvmEL;
 
 import java.util.Map;
 
-//Dummy stage that is used to produce the resource bundle for the pipeline definition configs
+//TODO: use this class as initialization bean for the pipeline configuration
 //
 // we are using the annotation for reference purposes only.
 // the annotation processor does not work on this maven project
 // we have a hardcoded 'datacollector-resource-bundles.json' file in resources
 @GenerateResourceBundle
+@ConfigGroups(PipelineGroups.class)
 public abstract class PipelineDefConfigs implements Stage {
 
-  public enum Groups implements Label {
-    CONSTANTS("Constants"),
-    BAD_RECORDS("Error Records"),
-    CLUSTER("Cluster"),
-    ;
-
-    private final String label;
-
-    Groups(String label) {
-      this.label = label;
-    }
-
-    @Override
-    public String getLabel() {
-      return label;
-    }
-  }
-
-  public static final String DELIVERY_GUARANTEE_CONFIG = "deliveryGuarantee";
-  public static final String DELIVERY_GUARANTEE_LABEL = "Delivery Guarantee";
-  public static final String DELIVERY_GUARANTEE_DESCRIPTION = "";
-
-  @ConfigDef(
-      required = true,
-      type = ConfigDef.Type.MODEL,
-      defaultValue="",
-      label = DELIVERY_GUARANTEE_LABEL,
-      description = DELIVERY_GUARANTEE_DESCRIPTION,
-      displayPosition = 0,
-      group = ""
-  )
-  @ValueChooser(DeliveryGuaranteeChooserValues.class)
-  public DeliveryGuarantee deliveryGuarantee;
-
   public static final String EXECUTION_MODE_CONFIG = "executionMode";
-  public static final String EXECUTION_MODE_LABEL = "Execution Mode";
-  public static final String EXECUTION_MODE_DESCRIPTION = "";
-
   @ConfigDef(
       required = true,
       type = ConfigDef.Type.MODEL,
-      defaultValue="",
-      label = EXECUTION_MODE_LABEL,
-      description = EXECUTION_MODE_DESCRIPTION,
-      displayPosition = 0,
-      group = ""
+      label = "Execution Mode",
+      defaultValue= "STANDALONE",
+      displayPosition = 10
   )
   @ValueChooser(ExecutionModeChooserValues.class)
   public ExecutionMode executionMode;
 
-  public static final String ERROR_RECORDS_CONFIG = "badRecordsHandling";
-  public static final String ERROR_RECORDS_LABEL = "Error Records";
-  public static final String ERROR_RECORDS_DESCRIPTION = "";
 
+  public static final String DELIVERY_GUARANTEE_CONFIG = "deliveryGuarantee";
   @ConfigDef(
       required = true,
       type = ConfigDef.Type.MODEL,
-      defaultValue="",
-      label = ERROR_RECORDS_LABEL,
-      description = ERROR_RECORDS_DESCRIPTION,
-      displayPosition = 0,
-      group = ""
+      defaultValue="AT_LEAST_ONCE",
+      label = "Delivery Guarantee",
+      displayPosition = 20
   )
-  @ValueChooser(ErrorHandlingChooserValues.class)
-  public String badRecordsHandling;
+  @ValueChooser(DeliveryGuaranteeChooserValues.class)
+  public DeliveryGuarantee deliveryGuarantee;
 
-  public static final String CONSTANTS_CONFIG = "constants";
-  public static final String CONSTANTS_LABEL = "Constants";
-  public static final String CONSTANTS_DESCRIPTION = "";
-
-  @ConfigDef(
-    required = true,
-    type = ConfigDef.Type.MAP,
-    defaultValue="",
-    label = CONSTANTS_LABEL,
-    description = CONSTANTS_DESCRIPTION,
-    displayPosition = 0,
-    group = ""
-  )
-  public Map<String, Object> constants;
-
-  public static final String MEMORY_LIMIT_CONFIG = "memoryLimit";
-  public static final String MEMORY_LIMIT_LABEL = "Memory Limit (MB)";
-  public static final String MEMORY_LIMIT_DESCRIPTION_BASE = "Maximum memory in MB a pipeline will be allowed to " +
-    "consume. Maximum and minimum values are based on SDC Java heap size.";
-  public static final String MEMORY_LIMIT_DESCRIPTION;
-  /*
-   * Note that these values are not used by the localizer and thus do not need to be on
-   * the ConfigDef below.
-   */
-  public static final String MEMORY_LIMIT_DEFAULT = "${jvm:maxMemoryMB() * 0.65}";
-  public static final Long MEMORY_LIMIT_MAX;
-  public static final Long MEMORY_LIMIT_MIN;
-
-
-  static {
-    MEMORY_LIMIT_MAX = (long) (JvmEL.jvmMaxMemoryMB() * 0.70);
-    MEMORY_LIMIT_MIN = (long) (JvmEL.jvmMaxMemoryMB() * 0.10);
-    MEMORY_LIMIT_DESCRIPTION = MEMORY_LIMIT_DESCRIPTION_BASE + " Max: " + MEMORY_LIMIT_MAX + ", Min: " +
-      MEMORY_LIMIT_MIN;
-  }
-
-  @ConfigDef(
-    required = true,
-    type = ConfigDef.Type.NUMBER,
-    defaultValue = "",
-    label = MEMORY_LIMIT_LABEL,
-    description = MEMORY_LIMIT_DESCRIPTION_BASE,
-    displayPosition = 20,
-    group = ""
-  )
-  public long memoryLimit;
 
   public static final String MEMORY_LIMIT_EXCEEDED_CONFIG = "memoryLimitExceeded";
-  public static final String MEMORY_LIMIT_EXCEEDED_LABEL = "Memory Limit Exceeded";
-  public static final String MEMORY_LIMIT_EXCEEDED_DESCRIPTION = "Behavior when a pipeline has exceeded the " +
-    "memory limit. Use Metric Alerts to alert before this limit has been exceeded.";
   @ConfigDef(
-    required = true,
-    type = ConfigDef.Type.MODEL,
-    defaultValue="",
-    label = MEMORY_LIMIT_EXCEEDED_LABEL,
-    description = MEMORY_LIMIT_EXCEEDED_DESCRIPTION ,
-    displayPosition = 30,
-    group = ""
+      required = true,
+      type = ConfigDef.Type.MODEL,
+      defaultValue="STOP_PIPELINE",
+      label = "Memory Limit Exceeded",
+      description = "Behavior when a pipeline has exceeded the " +
+                    "memory limit. Use Metric Alerts to alert before this limit has been exceeded." ,
+      displayPosition = 30,
+      group = ""
   )
   @ValueChooser(MemoryLimitExceededChooserValues.class)
   public MemoryLimitExceeded memoryLimitExceeded;
 
 
-  public static final String CLUSTER_SLAVE_MEMORY_CONFIG = "clusterSlaveMemory";
-  public static final String CLUSTER_SLAVE_MEMORY_LABEL = "Worker Memory (MB)";
-  public static final String CLUSTER_SLAVE_MEMORY_DEFAULT = "1024";
-  public static final String CLUSTER_SLAVE_MEMORY_DESCRIPTION = "";
-
+  public static final String MEMORY_LIMIT_CONFIG = "memoryLimit";
+  public static final String MEMORY_LIMIT_DEFAULT = "${jvm:maxMemoryMB() * 0.65}";
   @ConfigDef(
       required = true,
       type = ConfigDef.Type.NUMBER,
-      label = CLUSTER_SLAVE_MEMORY_LABEL,
-      defaultValue = CLUSTER_SLAVE_MEMORY_DEFAULT,
-      description = CLUSTER_SLAVE_MEMORY_DESCRIPTION,
+      label = "Memory Limit (MB)",
+      defaultValue = MEMORY_LIMIT_DEFAULT,
+      description = "Maximum memory in MB a pipeline will be allowed to " +
+                    "consume. Maximum and minimum values are based on SDC Java heap size.",
+      displayPosition = 40,
+      min = 128,
+      group = ""
+  )
+  public long memoryLimit;
+
+
+  public static final String CONSTANTS_CONFIG = "constants";
+  @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.MAP,
+      label = "Constants",
+      displayPosition = 10,
+      group = "CONSTANTS"
+  )
+  public Map<String, Object> constants;
+
+
+  public static final String ERROR_RECORDS_CONFIG = "badRecordsHandling";
+  @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.MODEL,
+      label = "Error Records",
+      displayPosition = 10,
+      group = "BAD_RECORDS"
+  )
+  @ValueChooser(ErrorHandlingChooserValues.class)
+  public String badRecordsHandling;
+
+
+  public static final String CLUSTER_SLAVE_MEMORY_CONFIG = "clusterSlaveMemory";
+  public static final String CLUSTER_SLAVE_MEMORY_DEFAULT = "1024";
+  @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.NUMBER,
+      label = "Worker Memory (MB)",
+      defaultValue = "1024",
       displayPosition = 10,
       group = "CLUSTER",
       dependsOn = EXECUTION_MODE_CONFIG,
       triggeredByValue = "CLUSTER"
   )
-  public String clusterSlaveMemory;
+  public long clusterSlaveMemory;
+
 
   public static final String CLUSTER_SLAVE_JAVA_OPTS_CONFIG = "clusterSlaveJavaOpts";
-  public static final String CLUSTER_SLAVE_JAVA_OPTS_LABEL = "Worker Java Options";
   public static final String CLUSTER_SLAVE_JAVA_OPTS_DEFAULT = "-XX:PermSize=128M -XX:MaxPermSize=256M";
-  public static final String CLUSTER_SLAVE_JAVA_OPTS_DESCRIPTION = "";
-
   @ConfigDef(
     required = true,
     type = ConfigDef.Type.STRING,
-    label = CLUSTER_SLAVE_JAVA_OPTS_LABEL,
+    label = "Worker Java Options",
     defaultValue = CLUSTER_SLAVE_JAVA_OPTS_DEFAULT,
-    description = CLUSTER_SLAVE_JAVA_OPTS_DESCRIPTION,
-    displayPosition = 10,
+    displayPosition = 20,
     group = "CLUSTER",
     dependsOn = EXECUTION_MODE_CONFIG,
     triggeredByValue = "CLUSTER"
   )
   public String clusterSlaveJavaOpts;
 
-  public static final String CLUSTER_KERBEROS_AUTH_CONFIG = "clusterKerberos";
-  public static final String CLUSTER_KERBEROS_AUTH_LABEL = "Kerberos Authentication";
-  public static final String CLUSTER_KERBEROS_AUTH_DEFAULT = "false";
-  public static final String CLUSTER_KERBEROS_AUTH_DESCRIPTION = "";
 
+  public static final String CLUSTER_KERBEROS_AUTH_CONFIG = "clusterKerberos";
   @ConfigDef(
     required = true,
     type = ConfigDef.Type.BOOLEAN,
-    label = CLUSTER_KERBEROS_AUTH_LABEL,
-    defaultValue = CLUSTER_KERBEROS_AUTH_DEFAULT,
-    description = CLUSTER_KERBEROS_AUTH_DESCRIPTION,
-    displayPosition = 20,
+    label = "Kerberos Authentication",
+    defaultValue = "false",
+    displayPosition = 30,
     group = "CLUSTER",
     dependsOn = EXECUTION_MODE_CONFIG,
     triggeredByValue = "CLUSTER"
@@ -209,17 +145,11 @@ public abstract class PipelineDefConfigs implements Stage {
   public boolean clusterKerberos;
 
   public static final String CLUSTER_KERBEROS_PRINCIPAL_CONFIG = "kerberosPrincipal";
-  public static final String CLUSTER_KERBEROS_PRINCIPAL_LABEL = "Kerberos Principal";
-  public static final String CLUSTER_KERBEROS_PRINCIPAL_DEFAULT = "";
-  public static final String CLUSTER_KERBEROS_PRINCIPAL_DESCRIPTION = "";
-
   @ConfigDef(
     required = false,
     type = ConfigDef.Type.STRING,
-    label = CLUSTER_KERBEROS_PRINCIPAL_LABEL,
-    defaultValue = CLUSTER_KERBEROS_PRINCIPAL_DEFAULT,
-    description = CLUSTER_KERBEROS_PRINCIPAL_DESCRIPTION,
-    displayPosition = 30,
+    label = "Kerberos Principal",
+    displayPosition = 40,
     group = "CLUSTER",
     dependsOn = CLUSTER_KERBEROS_AUTH_CONFIG,
     triggeredByValue = "true"
@@ -227,16 +157,10 @@ public abstract class PipelineDefConfigs implements Stage {
   public String kerberosPrincipal;
 
   public static final String CLUSTER_KERBEROS_KEYTAB_CONFIG = "kerberosKeytab";
-  public static final String CLUSTER_KERBEROS_KEYTAB_LABEL = "Kerberos Keytab (file)";
-  public static final String CLUSTER_KERBEROS_KEYTAB_DEFAULT = "";
-  public static final String CLUSTER_KERBEROS_KEYTAB_DESCRIPTION = "";
-
   @ConfigDef(required = false,
     type = ConfigDef.Type.STRING,
-    label = CLUSTER_KERBEROS_KEYTAB_LABEL,
-    defaultValue = CLUSTER_KERBEROS_KEYTAB_DEFAULT,
-    description = CLUSTER_KERBEROS_KEYTAB_DESCRIPTION,
-    displayPosition = 40,
+    label = "Kerberos Keytab (file)",
+    displayPosition = 50,
     group = "CLUSTER",
     dependsOn = CLUSTER_KERBEROS_AUTH_CONFIG,
     triggeredByValue = "true"
@@ -244,16 +168,12 @@ public abstract class PipelineDefConfigs implements Stage {
   public String kerberosKeytab;
 
   public static final String CLUSTER_LAUNCHER_ENV_CONFIG = "clusterLauncherEnv";
-  public static final String CLUSTER_LAUNCHER_ENV_LABEL = "Launcher ENV";
-  public static final String CLUSTER_LAUNCHER_ENV_DESCRIPTION =
-    "Sets additional environment variables for the cluster launcher";
-
   @ConfigDef(
     required = false,
     type = ConfigDef.Type.MAP,
-    label = CLUSTER_LAUNCHER_ENV_LABEL,
-    description = CLUSTER_LAUNCHER_ENV_DESCRIPTION,
-    displayPosition = 20,
+    label = "Launcher ENV",
+    description = "Sets additional environment variables for the cluster launcher",
+    displayPosition = 60,
     group = "CLUSTER",
     dependsOn = EXECUTION_MODE_CONFIG,
     triggeredByValue = "CLUSTER"

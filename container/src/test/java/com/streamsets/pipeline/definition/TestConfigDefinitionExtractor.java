@@ -12,6 +12,8 @@ import com.streamsets.pipeline.api.ElFunction;
 import com.streamsets.pipeline.api.ElParam;
 import com.streamsets.pipeline.api.FieldSelector;
 import com.streamsets.pipeline.config.ConfigDefinition;
+import com.streamsets.pipeline.el.ElConstantDefinition;
+import com.streamsets.pipeline.el.ElFunctionDefinition;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -73,12 +75,31 @@ public class TestConfigDefinitionExtractor {
     Assert.assertEquals(4, config.getMax());
     Assert.assertEquals(ConfigDef.Evaluation.EXPLICIT, config.getEvaluation());
     Assert.assertEquals(ConfigDef.Mode.JAVA.name(), config.getMode());
-    Assert.assertEquals(1, config.getElFunctionDefinitions().size());
-    Assert.assertEquals(1, config.getElConstantDefinitions().size());
+    Assert.assertTrue(containsF(config.getElFunctionDefinitions(), "p:f"));
+    Assert.assertTrue(containsC(config.getElConstantDefinitions(), "C"));
     Assert.assertNull(config.getModel());
     Assert.assertEquals("", config.getDependsOn());
     Assert.assertNull(config.getTriggeredByValues());
   }
+
+  private boolean containsF(List<ElFunctionDefinition> defs, String name) {
+    for (ElFunctionDefinition def : defs) {
+      if (def.getName().equals(name)) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  private boolean containsC(List<ElConstantDefinition> defs, String name) {
+    for (ElConstantDefinition def : defs) {
+      if (def.getName().equals(name)) {
+        return true;
+      }
+    }
+    return false;
+  }
+
 
   public static class Model {
 

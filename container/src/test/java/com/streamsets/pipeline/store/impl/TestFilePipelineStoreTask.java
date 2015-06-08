@@ -405,58 +405,64 @@ public class TestFilePipelineStoreTask {
     Assert.assertEquals(12, expectedPipelineConfig.getConfiguration().size());
 
     Assert.assertEquals(PipelineDefConfigs.EXECUTION_MODE_CONFIG,
-      expectedPipelineConfig.getConfiguration().get(0).getName());
-    Assert.assertEquals(ExecutionMode.STANDALONE.name(),
-      expectedPipelineConfig.getConfiguration().get(0).getValue());
+      expectedPipelineConfig.getConfiguration(PipelineDefConfigs.EXECUTION_MODE_CONFIG).getName());
+    Assert.assertEquals(ExecutionMode.STANDALONE,
+      expectedPipelineConfig.getConfiguration(PipelineDefConfigs.EXECUTION_MODE_CONFIG).getValue());
 
     Assert.assertEquals(PipelineDefConfigs.DELIVERY_GUARANTEE_CONFIG,
-      expectedPipelineConfig.getConfiguration().get(1).getName());
-    Assert.assertEquals(DeliveryGuarantee.AT_LEAST_ONCE.name(),
-      expectedPipelineConfig.getConfiguration().get(1).getValue());
+      expectedPipelineConfig.getConfiguration(PipelineDefConfigs.DELIVERY_GUARANTEE_CONFIG).getName());
+    Assert.assertEquals(DeliveryGuarantee.AT_LEAST_ONCE,
+      expectedPipelineConfig.getConfiguration(PipelineDefConfigs.DELIVERY_GUARANTEE_CONFIG).getValue());
 
     Assert.assertEquals(PipelineDefConfigs.ERROR_RECORDS_CONFIG,
-      expectedPipelineConfig.getConfiguration().get(2).getName());
-    Assert.assertEquals("", expectedPipelineConfig.getConfiguration().get(2).getValue());
+      expectedPipelineConfig.getConfiguration(PipelineDefConfigs.ERROR_RECORDS_CONFIG).getName());
+    Assert.assertEquals(null, expectedPipelineConfig.getConfiguration(PipelineDefConfigs.ERROR_RECORDS_CONFIG).getValue());
 
     Assert.assertEquals(PipelineDefConfigs.CONSTANTS_CONFIG,
-      expectedPipelineConfig.getConfiguration().get(3).getName());
-    Assert.assertEquals(null, expectedPipelineConfig.getConfiguration().get(3).getValue());
+      expectedPipelineConfig.getConfiguration(PipelineDefConfigs.CONSTANTS_CONFIG).getName());
+    Assert.assertEquals(Collections.emptyList(),
+                        expectedPipelineConfig.getConfiguration(PipelineDefConfigs.CONSTANTS_CONFIG).getValue());
 
     Assert.assertEquals(PipelineDefConfigs.MEMORY_LIMIT_CONFIG,
-      expectedPipelineConfig.getConfiguration().get(4).getName());
+      expectedPipelineConfig.getConfiguration(PipelineDefConfigs.MEMORY_LIMIT_CONFIG).getName());
     Assert.assertEquals(PipelineDefConfigs.MEMORY_LIMIT_DEFAULT,
-      expectedPipelineConfig.getConfiguration().get(4).getValue());
+      expectedPipelineConfig.getConfiguration(PipelineDefConfigs.MEMORY_LIMIT_CONFIG).getValue());
 
     Assert.assertEquals(PipelineDefConfigs.MEMORY_LIMIT_EXCEEDED_CONFIG,
-      expectedPipelineConfig.getConfiguration().get(5).getName());
-    Assert.assertEquals(MemoryLimitExceeded.STOP_PIPELINE.name(),
-      expectedPipelineConfig.getConfiguration().get(5).getValue());
+      expectedPipelineConfig.getConfiguration(PipelineDefConfigs.MEMORY_LIMIT_EXCEEDED_CONFIG).getName());
+    Assert.assertEquals(MemoryLimitExceeded.STOP_PIPELINE,
+      expectedPipelineConfig.getConfiguration(PipelineDefConfigs.MEMORY_LIMIT_EXCEEDED_CONFIG).getValue());
 
     Assert.assertEquals(PipelineDefConfigs.CLUSTER_SLAVE_MEMORY_CONFIG,
-      expectedPipelineConfig.getConfiguration().get(6).getName());
-    Assert.assertEquals(1024, expectedPipelineConfig.getConfiguration().get(6).getValue());
+      expectedPipelineConfig.getConfiguration(PipelineDefConfigs.CLUSTER_SLAVE_MEMORY_CONFIG).getName());
+    Assert.assertEquals((long)1024, expectedPipelineConfig.getConfiguration(
+        PipelineDefConfigs.CLUSTER_SLAVE_MEMORY_CONFIG).getValue());
 
 
     Assert.assertEquals(PipelineDefConfigs.CLUSTER_SLAVE_JAVA_OPTS_CONFIG,
-      expectedPipelineConfig.getConfiguration().get(7).getName());
+      expectedPipelineConfig.getConfiguration(PipelineDefConfigs.CLUSTER_SLAVE_JAVA_OPTS_CONFIG).getName());
     Assert.assertEquals(PipelineDefConfigs.CLUSTER_SLAVE_JAVA_OPTS_DEFAULT,
-      expectedPipelineConfig.getConfiguration().get(7).getValue());
+      expectedPipelineConfig.getConfiguration(PipelineDefConfigs.CLUSTER_SLAVE_JAVA_OPTS_CONFIG).getValue());
 
     Assert.assertEquals(PipelineDefConfigs.CLUSTER_KERBEROS_AUTH_CONFIG,
-      expectedPipelineConfig.getConfiguration().get(8).getName());
-    Assert.assertEquals("false", expectedPipelineConfig.getConfiguration().get(8).getValue());
+      expectedPipelineConfig.getConfiguration(PipelineDefConfigs.CLUSTER_KERBEROS_AUTH_CONFIG).getName());
+    Assert.assertEquals(false, expectedPipelineConfig.getConfiguration(
+        PipelineDefConfigs.CLUSTER_KERBEROS_AUTH_CONFIG).getValue());
 
     Assert.assertEquals(PipelineDefConfigs.CLUSTER_KERBEROS_PRINCIPAL_CONFIG,
-      expectedPipelineConfig.getConfiguration().get(9).getName());
-    Assert.assertEquals("", expectedPipelineConfig.getConfiguration().get(9).getValue());
+      expectedPipelineConfig.getConfiguration(PipelineDefConfigs.CLUSTER_KERBEROS_PRINCIPAL_CONFIG).getName());
+    Assert.assertEquals("", expectedPipelineConfig.getConfiguration(
+        PipelineDefConfigs.CLUSTER_KERBEROS_PRINCIPAL_CONFIG).getValue());
 
     Assert.assertEquals(PipelineDefConfigs.CLUSTER_KERBEROS_KEYTAB_CONFIG,
-      expectedPipelineConfig.getConfiguration().get(10).getName());
-    Assert.assertEquals("", expectedPipelineConfig.getConfiguration().get(10).getValue());
+      expectedPipelineConfig.getConfiguration(PipelineDefConfigs.CLUSTER_KERBEROS_KEYTAB_CONFIG).getName());
+    Assert.assertEquals("", expectedPipelineConfig.getConfiguration(PipelineDefConfigs.CLUSTER_KERBEROS_KEYTAB_CONFIG)
+                                                  .getValue());
 
     Assert.assertEquals(PipelineDefConfigs.CLUSTER_LAUNCHER_ENV_CONFIG,
-      expectedPipelineConfig.getConfiguration().get(11).getName());
-    Assert.assertEquals("", expectedPipelineConfig.getConfiguration().get(11).getValue());
+      expectedPipelineConfig.getConfiguration(PipelineDefConfigs.CLUSTER_LAUNCHER_ENV_CONFIG).getName());
+    Assert.assertEquals(Collections.emptyList(), expectedPipelineConfig.getConfiguration(
+        PipelineDefConfigs.CLUSTER_LAUNCHER_ENV_CONFIG).getValue());
   }
 
   @Test

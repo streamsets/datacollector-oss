@@ -19,6 +19,7 @@ import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.attribute.PosixFilePermission;
+import java.util.Collections;
 import java.util.Properties;
 import java.util.Set;
 
@@ -125,7 +126,7 @@ public class RuntimeEL {
   }
 
   public static Set<Object> getRuntimeConfKeys() {
-    return RUNTIME_CONF_PROPS.keySet();
+    return (RUNTIME_CONF_PROPS != null) ? RUNTIME_CONF_PROPS.keySet() : Collections.emptySet();
   }
 
 }
