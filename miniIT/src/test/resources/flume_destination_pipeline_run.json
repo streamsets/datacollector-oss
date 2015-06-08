@@ -46,9 +46,6 @@
       "name" : "delay",
       "value" : 1000
     }, {
-      "name" : "stageOnRecordError",
-      "value" : "TO_ERROR"
-    }, {
       "name" : "maxRecordsToGenerate",
       "value": 100
     } ],
