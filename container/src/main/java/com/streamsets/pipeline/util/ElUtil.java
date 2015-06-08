@@ -72,8 +72,15 @@ public class ElUtil {
     return elDefClasses;
   }
 
-  public static Class<?>[] getElDefClassArray(ClassLoader classLoader, List<Class> elDefs) {
-    return elDefs.toArray(new Class[elDefs.size()]);
+  public static Class<?>[] getElDefClassArray(List<Class> elDefs) {
+    Class[] elDefClasses = new Class[elDefs.size() + 2];
+    int i = 0;
+    for(; i < elDefs.size(); i++) {
+      elDefClasses[i] = elDefs.get(i);
+    }
+    elDefClasses[i++] = RuntimeEL.class;
+    elDefClasses[i] = StringEL.class;
+    return elDefClasses;
   }
 
   public static ELEvaluator createElEval(String name, Map<String, Object> constants, Class<?>... elDefs) {

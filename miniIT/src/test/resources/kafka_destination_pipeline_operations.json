@@ -63,9 +63,6 @@
         "field" : "c",
         "type" : "INTEGER"
       } ]
-    }, {
-      "name" : "stageOnRecordError",
-      "value" : "TO_ERROR"
     } ],
     "uiInfo" : {
       "label" : "Dev Data Generator 1",

@@ -107,11 +107,11 @@ public class StageContext implements Source.Context, Target.Context, Processor.C
     Map<String, Class<?>[]> configToElDefMap = new HashMap<>();
     for(ConfigDefinition configDefinition : stageRuntime.getDefinition().getConfigDefinitions()) {
       configToElDefMap.put(configDefinition.getFieldName(),
-        ElUtil.getElDefClassArray(stageRuntime.getDefinition().getStageClassLoader(), configDefinition.getElDefs()));
+        ElUtil.getElDefClassArray(configDefinition.getElDefs()));
       if(configDefinition.getModel() != null && configDefinition.getModel().getConfigDefinitions() != null) {
         for(ConfigDefinition configDef : configDefinition.getModel().getConfigDefinitions()) {
           configToElDefMap.put(configDef.getFieldName(),
-            ElUtil.getElDefClassArray(stageRuntime.getDefinition().getStageClassLoader(), configDef.getElDefs()));
+            ElUtil.getElDefClassArray(configDef.getElDefs()));
         }
       }
     }

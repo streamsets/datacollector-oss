@@ -147,9 +147,6 @@
     }, {
       "name" : "log4jCustomLogFormat",
       "value" : "%r [%t] %-5p %c %x - %m%n"
-    }, {
-      "name" : "stageOnRecordError",
-      "value" : "TO_ERROR"
     } ],
     "uiInfo" : {
       "label" : "Kafka Consumer 1",
