@@ -15,6 +15,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadFactory;
@@ -613,6 +614,7 @@ public class ClusterPipelineManager extends AbstractTask implements PipelineMana
           PipelineConfiguration pipelineConf = pipelineStore.load(ps.getName(), ps.getRev());
           running = sparkManager.isRunning(appState, pipelineConf).get(60, TimeUnit.SECONDS);
         } catch (Exception ex) {
+          ex = removeExecutionExceptionIfPossible(ex);
           String msg = "Error getting application status: " + ex;
           LOG.warn(msg, ex);
         }
@@ -640,6 +642,13 @@ public class ClusterPipelineManager extends AbstractTask implements PipelineMana
       }
     }
 
+    private static Exception removeExecutionExceptionIfPossible(Exception ex) {
+      if (ex instanceof ExecutionException && ex.getCause() instanceof Exception) {
+        return (Exception)ex.getCause();
+      }
+      return ex;
+    }
+
     @VisibleForTesting
     void start(StateTransitionRequest request) throws PipelineManagerException {
       ApplicationState appState = request.applicationState;
@@ -654,6 +663,7 @@ public class ClusterPipelineManager extends AbstractTask implements PipelineMana
         try {
           running = sparkManager.isRunning(appState, pipelineConf).get(60, TimeUnit.SECONDS);
         } catch (Exception ex) {
+          ex = removeExecutionExceptionIfPossible(ex);
           String msg = "Error getting application status: " + ex;
           clusterPipelineManager.transitionToError(ps, msg);
           LOG.error(msg, ex);
@@ -708,6 +718,7 @@ public class ClusterPipelineManager extends AbstractTask implements PipelineMana
         stateTracker.setState(name, rev, State.RUNNING, "Starting cluster pipeline", null, attributes);
       } catch (Exception ex) {
         // TODO if PipelineRuntimeException fails we should send validation issues back to client
+        ex = removeExecutionExceptionIfPossible(ex);
         String msg = "Error starting application: " + ex;
         clusterPipelineManager.transitionToError(ps, msg);
         LOG.error(msg, ex);
@@ -726,6 +737,7 @@ public class ClusterPipelineManager extends AbstractTask implements PipelineMana
         sparkManager.kill(request.applicationState, request.pipelineConf).get(60, TimeUnit.SECONDS);
         stopped = true;
       } catch (Exception ex) {
+        ex = removeExecutionExceptionIfPossible(ex);
         String msg = "Error stopping cluster: " + ex;
         LOG.error(msg, ex);
         clusterPipelineManager.validateStateTransition(ps.getName(), ps.getRev(), State.ERROR);
