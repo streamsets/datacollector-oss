@@ -5,12 +5,11 @@
  */
 package com.streamsets.pipeline.definition;
 
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableSet;
 import com.streamsets.pipeline.api.Batch;
 import com.streamsets.pipeline.api.BatchMaker;
 import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.ConfigGroups;
+import com.streamsets.pipeline.api.ErrorStage;
 import com.streamsets.pipeline.api.ExecutionMode;
 import com.streamsets.pipeline.api.HideConfig;
 import com.streamsets.pipeline.api.Label;
@@ -20,14 +19,12 @@ import com.streamsets.pipeline.api.StageDef;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.base.BaseSource;
 import com.streamsets.pipeline.api.base.BaseTarget;
-import com.streamsets.pipeline.config.ConfigGroupDefinition;
 import com.streamsets.pipeline.config.StageDefinition;
 import com.streamsets.pipeline.config.StageType;
 import org.junit.Assert;
 import org.junit.Test;
 
 import java.io.InputStream;
-import java.io.OutputStream;
 
 public class TestStageDefinitionExtractor {
 
@@ -132,7 +129,17 @@ public class TestStageDefinitionExtractor {
   }
 
   @StageDef(version = "1", label = "L")
+  @HideConfig(preconditions = true)
   public static class Target1 extends BaseTarget {
+    @Override
+    public void write(Batch batch) throws StageException {
+
+    }
+  }
+
+  @StageDef(version = "1", label = "L")
+  @ErrorStage
+  public static class ToErrorTarget1 extends Target1 {
     @Override
     public void write(Batch batch) throws StageException {
 
@@ -143,7 +150,7 @@ public class TestStageDefinitionExtractor {
   public void testExtractSource1() {
     StageDefinition def = StageDefinitionExtractor.get().extract(Source1.class, "x");
     Assert.assertEquals(Source1.class.getName(), def.getClassName());
-    Assert.assertEquals(Source1.class.getName(), def.getName());
+    Assert.assertEquals(StageDefinitionExtractor.getStageName(Source1.class), def.getName());
     Assert.assertEquals("1", def.getVersion());
     Assert.assertEquals("L", def.getLabel());
     Assert.assertEquals("D", def.getDescription());
@@ -162,7 +169,7 @@ public class TestStageDefinitionExtractor {
   public void testExtractSource2() {
     StageDefinition def = StageDefinitionExtractor.get().extract(Source2.class, "x");
     Assert.assertEquals(Source2.class.getName(), def.getClassName());
-    Assert.assertEquals(Source2.class.getName(), def.getName());
+    Assert.assertEquals(StageDefinitionExtractor.getStageName(Source2.class), def.getName());
     Assert.assertEquals("2", def.getVersion());
     Assert.assertEquals("LL", def.getLabel());
     Assert.assertEquals("DD", def.getDescription());
@@ -176,8 +183,8 @@ public class TestStageDefinitionExtractor {
     Assert.assertEquals(null, def.getOutputStreamLabels());
     Assert.assertEquals(StageType.SOURCE, def.getType());
     Assert.assertFalse(def.isVariableOutputStreams());
-    Assert.assertTrue(def.hasOnRecordError());
-    Assert.assertTrue(def.hasPreconditions());
+    Assert.assertFalse(def.hasOnRecordError());
+    Assert.assertFalse(def.hasPreconditions());
   }
 
   @Test
@@ -194,6 +201,18 @@ public class TestStageDefinitionExtractor {
     Assert.assertEquals(StageType.TARGET, def.getType());
     Assert.assertEquals(0, def.getOutputStreams());
     Assert.assertEquals(null, def.getOutputStreamLabelProviderClass());
+    Assert.assertTrue(def.hasOnRecordError());
+    Assert.assertFalse(def.hasPreconditions());
+  }
+
+  @Test
+  public void testExtractToErrorTarget1() {
+    StageDefinition def = StageDefinitionExtractor.get().extract(ToErrorTarget1.class, "x");
+    Assert.assertEquals(StageType.TARGET, def.getType());
+    Assert.assertEquals(0, def.getOutputStreams());
+    Assert.assertEquals(null, def.getOutputStreamLabelProviderClass());
+    Assert.assertFalse(def.hasOnRecordError());
+    Assert.assertFalse(def.hasPreconditions());
   }
 
 }
