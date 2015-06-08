@@ -20,6 +20,7 @@ public class RecordWriterReaderFactory {
   public static final String DATA_COLLECTOR_RECORD_FORMAT = "DATA_COLLECTOR_RECORD_FORMAT";
 
   private static final Logger LOG = LoggerFactory.getLogger(RecordWriterReaderFactory.class);
+  private static final boolean IS_TRACE_ENABLED = LOG.isTraceEnabled();
 
   public static RecordReader createRecordReader(InputStream is, long initialPosition, int maxObjectLen)
       throws IOException {
@@ -39,7 +40,9 @@ public class RecordWriterReaderFactory {
           default:
             throw new RuntimeException("It cannot happen");
         }
-        LOG.debug("Created reader using '{}' encoding", encoding);
+        if (IS_TRACE_ENABLED) {
+          LOG.trace("Created reader using '{}' encoding", encoding);
+        }
       } else {
         throw new IOException(String.format("Invalid magic number '0x%X'", magicNumber));
       }
