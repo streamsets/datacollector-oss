@@ -82,7 +82,7 @@ public class SDCClassLoader extends BlackListURLClassLoader {
   private static final String APPLICATION_CLASSES_DEFAULT_KEY =
     "application.classes.default";
 
-  private static boolean debug = true;
+  private static boolean debug = false;
 
   public static void setDebug(boolean debug) {
     SDCClassLoader.debug = debug;

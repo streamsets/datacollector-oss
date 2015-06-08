@@ -27,7 +27,7 @@ import java.io.OutputStream;
 
 public class RecordWriter {
   private final static Logger LOG = LoggerFactory.getLogger(RecordWriter.class);
-
+  private final static boolean IS_TRACE_ENABLED = LOG.isTraceEnabled();
   private final long expires;
   private final Path path;
   private final DataGeneratorFactory generatorFactory;
@@ -81,8 +81,8 @@ public class RecordWriter {
   }
 
   public void write(Record record) throws IOException, StageException {
-    if (LOG.isDebugEnabled()) {
-      LOG.debug("Path[{}] - Writing ['{}']", path, record.getHeader().getSourceId());
+    if (IS_TRACE_ENABLED) {
+      LOG.trace("Path[{}] - Writing ['{}']", path, record.getHeader().getSourceId());
     }
     if (generator != null) {
       generator.write(record);

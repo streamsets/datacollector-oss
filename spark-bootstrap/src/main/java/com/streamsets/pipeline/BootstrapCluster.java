@@ -74,6 +74,8 @@ public class BootstrapCluster {
     }
     properties = new Properties();
     properties.load(new FileInputStream(sdcProperties));
+    SDCClassLoader.setDebug(Boolean.getBoolean("pipeline.bootstrap.debug") ||
+      Boolean.parseBoolean(properties.getProperty("pipeline.bootstrap.debug")));
     File pipelineJsonFile = new File(etcRoot, "pipeline.json");
     if (!pipelineJsonFile.isFile()) {
       String msg = "Pipeline JSON file does not exist at expected location: " + pipelineJsonFile;
