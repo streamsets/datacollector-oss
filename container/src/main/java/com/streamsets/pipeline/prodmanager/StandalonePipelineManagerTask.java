@@ -30,6 +30,7 @@ import com.streamsets.pipeline.config.MemoryLimitExceeded;
 import com.streamsets.pipeline.config.PipelineConfiguration;
 import com.streamsets.pipeline.config.PipelineDefConfigs;
 import com.streamsets.pipeline.config.RuleDefinition;
+import com.streamsets.pipeline.el.JvmEL;
 import com.streamsets.pipeline.email.EmailSender;
 import com.streamsets.pipeline.json.ObjectMapperFactory;
 import com.streamsets.pipeline.lib.executor.SafeScheduledExecutorService;
@@ -622,9 +623,9 @@ public class StandalonePipelineManagerTask extends AbstractTask implements Pipel
             }
           }
 
-          if (memoryLimit > PipelineDefConfigs.MEMORY_LIMIT_MAX) {
+          if (memoryLimit > JvmEL.jvmMaxMemoryMB() * 0.85) {
             throw new PipelineRuntimeException(ValidationError.VALIDATION_0063, memoryLimit,
-              "above the maximum", PipelineDefConfigs.MEMORY_LIMIT_MAX);
+              "above the maximum", JvmEL.jvmMaxMemoryMB() * 0.85);
           }
         }
       }

@@ -11,7 +11,6 @@ import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.config.PipelineDefinition;
 import com.streamsets.pipeline.config.StageDefinition;
 import com.streamsets.pipeline.el.RuntimeEL;
-import com.streamsets.pipeline.main.RuntimeInfo;
 import com.streamsets.pipeline.restapi.bean.BeanHelper;
 import com.streamsets.pipeline.stagelibrary.StageLibraryTask;
 
@@ -53,12 +52,10 @@ public class StageLibraryResource {
   static final String RUNTIME_CONFIGS = "runtimeConfigs";
 
   private final StageLibraryTask stageLibrary;
-  private final RuntimeInfo runtimeInfo;
 
   @Inject
-  public StageLibraryResource(StageLibraryTask stageLibrary, RuntimeInfo runtimeInfo) {
+  public StageLibraryResource(StageLibraryTask stageLibrary) {
     this.stageLibrary = stageLibrary;
-    this.runtimeInfo = runtimeInfo;
   }
 
   @GET
@@ -76,7 +73,7 @@ public class StageLibraryResource {
 
     //Populate the definitions with the PipelineDefinition
     List<Object> pipeline = new ArrayList<>(1);
-    pipeline.add(BeanHelper.wrapPipelineDefinition(PipelineDefinition.getPipelineDef(runtimeInfo)));
+    pipeline.add(BeanHelper.wrapPipelineDefinition(PipelineDefinition.getPipelineDef()));
     definitions.put(PIPELINE, pipeline);
 
     Map<String, Object> map = new HashMap<>();

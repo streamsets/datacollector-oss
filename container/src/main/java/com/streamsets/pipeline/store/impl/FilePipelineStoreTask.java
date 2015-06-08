@@ -396,7 +396,7 @@ public class FilePipelineStoreTask extends AbstractTask implements PipelineStore
 
   private List<ConfigConfiguration> syncPipelineConf(PipelineConfiguration pipelineConfig, String name,
                                                      String tagOrRev) {
-    PipelineDefinition pipelineDef = PipelineDefinition.getPipelineDef(runtimeInfo);
+    PipelineDefinition pipelineDef = PipelineDefinition.getPipelineDef();
     Set<String> configsToRemove = getNamesFromConfigConf(pipelineConfig.getConfiguration());
 
     List<ConfigConfiguration> configuration = new ArrayList<>(pipelineConfig.getConfiguration());
