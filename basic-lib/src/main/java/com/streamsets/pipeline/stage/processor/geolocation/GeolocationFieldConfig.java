@@ -33,7 +33,7 @@ public class GeolocationFieldConfig {
   @ConfigDef(
       required = true,
       type = ConfigDef.Type.MODEL,
-      defaultValue="COUNTRY",
+      defaultValue="COUNTRY_NAME",
       label = "Geolocation Field",
       description = "",
       displayPosition = 10
