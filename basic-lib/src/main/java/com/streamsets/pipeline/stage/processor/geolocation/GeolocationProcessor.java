@@ -151,7 +151,7 @@ public class GeolocationProcessor extends SingleLaneRecordProcessor {
         } catch (ExecutionException ex) {
           Throwable cause = ex.getCause();
           if (cause instanceof UnknownHostException || cause instanceof AddressNotFoundException) {
-            throw new OnRecordErrorException(Errors.GEOIP_02, field.getValue(), ex);
+            throw new OnRecordErrorException(Errors.GEOIP_02, field.getValue(), cause);
           }
           Throwables.propagateIfInstanceOf(cause, OnRecordErrorException.class);
           Throwables.propagateIfInstanceOf(cause, GeoIp2Exception.class);
