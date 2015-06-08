@@ -61,6 +61,9 @@ public class GeolocationProcessor extends SingleLaneRecordProcessor {
   protected List<ConfigIssue> validateConfigs()  throws StageException {
     List<ConfigIssue> result = new ArrayList<>();
     File database = new File(geoIP2DBFile);
+    if (!database.isAbsolute()) {
+      database = new File(getContext().getResourcesDirectory(), geoIP2DBFile).getAbsoluteFile();
+    }
     if (database.isFile()) {
       try {
         reader = new DatabaseReader.Builder(database).build();
@@ -98,6 +101,13 @@ public class GeolocationProcessor extends SingleLaneRecordProcessor {
     }
     if (configs.isEmpty()) {
       result.add(getContext().createConfigIssue("GEOLOCATION", "fieldTypeConverterConfigs", Errors.GEOIP_04));
+    }
+    for (GeolocationFieldConfig config : configs) {
+      if (config.inputFieldName == null || config.inputFieldName.isEmpty()) {
+        result.add(getContext().createConfigIssue("GEOLOCATION", "fieldTypeConverterConfigs", Errors.GEOIP_08));
+      } else if (config.outputFieldName == null || config.outputFieldName.isEmpty()) {
+        result.add(getContext().createConfigIssue("GEOLOCATION", "fieldTypeConverterConfigs", Errors.GEOIP_09));
+      }
     }
     countries = CacheBuilder.newBuilder().maximumSize(1000).build(new CacheLoader<Field, CountryResponse>() {
       @Override

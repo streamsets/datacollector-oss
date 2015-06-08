@@ -10,14 +10,16 @@ import com.streamsets.pipeline.api.GenerateResourceBundle;
 
 @GenerateResourceBundle
 public enum Errors implements ErrorCode {
-  GEOIP_00("Database file {} does not exist"),
+  GEOIP_00("Database file '{}' does not exist"),
   GEOIP_01("Error reading database file '{}': '{}'"),
-  GEOIP_02("Address {} not found: '{}'"),
+  GEOIP_02("Address '{}' not found: '{}'"),
   GEOIP_03("Unknown geolocation occurred: '{}'"),
   GEOIP_04("At least one field is required"),
   GEOIP_05("Supplied database does not support: '{}'"),
   GEOIP_06("String IP addresses must be dot delimited [0-9].[0-9].[0-9].[0-9] or an integer: '{}'"),
-  GEOIP_07("Unknown error occurred during initialization: '{}'")
+  GEOIP_07("Unknown error occurred during initialization: '{}'"),
+  GEOIP_08("Input field name is empty"),
+  GEOIP_09("Output field name is empty")
   ;
 
 

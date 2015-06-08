@@ -30,7 +30,7 @@ public class GeolocationDProcessor extends DProcessor {
       type = ConfigDef.Type.STRING,
       defaultValue = "",
       label = "GeoIP2 DB File",
-      description = "File must be in GeoIP2 format",
+      description = "An absolute path or a file under SDC resources directory in GeoIP2 format",
       displayPosition = 10,
       group = "GEOLOCATION"
   )
