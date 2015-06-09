@@ -44,6 +44,8 @@ public class ConfigDefinition {
   private final int displayPosition;
   private final List<ElFunctionDefinition> elFunctionDefinitions;
   private final List<ElConstantDefinition> elConstantDefinitions;
+  private final List<String> elFunctionDefinitionsIdx;
+  private final List<String> elConstantDefinitionsIdx;
   private final long min;
   private final long max;
   private final String mode;
@@ -83,7 +85,15 @@ public class ConfigDefinition {
     this.triggeredByValues = triggeredByValues;
     this.displayPosition = displayPosition;
     this.elFunctionDefinitions = elFunctionDefinitions;
+    elFunctionDefinitionsIdx = new ArrayList<>();
+    for (ElFunctionDefinition f : elFunctionDefinitions) {
+      elFunctionDefinitionsIdx.add(f.getIndex());
+    }
     this.elConstantDefinitions = elConstantDefinitions;
+    elConstantDefinitionsIdx = new ArrayList<>();
+    for (ElConstantDefinition c : elConstantDefinitions) {
+      elConstantDefinitionsIdx.add(c.getIndex());
+    }
     this.min = min;
     this.max = max;
     this.mode = mode;
@@ -169,6 +179,14 @@ public class ConfigDefinition {
 
   public List<ElConstantDefinition> getElConstantDefinitions() {
     return elConstantDefinitions;
+  }
+
+  public List<String> getElFunctionDefinitionsIdx() {
+    return elFunctionDefinitionsIdx;
+  }
+
+  public List<String> getElConstantDefinitionsIdx() {
+    return elConstantDefinitionsIdx;
   }
 
   public int getDisplayPosition() {

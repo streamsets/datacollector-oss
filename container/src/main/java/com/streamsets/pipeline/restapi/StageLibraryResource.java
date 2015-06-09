@@ -10,6 +10,7 @@ import com.streamsets.pipeline.alerts.DataRuleEvaluator;
 import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.config.PipelineDefinition;
 import com.streamsets.pipeline.config.StageDefinition;
+import com.streamsets.pipeline.definition.ELDefinitionExtractor;
 import com.streamsets.pipeline.el.RuntimeEL;
 import com.streamsets.pipeline.restapi.bean.BeanHelper;
 import com.streamsets.pipeline.stagelibrary.StageLibraryTask;
@@ -51,6 +52,9 @@ public class StageLibraryResource {
   @VisibleForTesting
   static final String RUNTIME_CONFIGS = "runtimeConfigs";
 
+  @VisibleForTesting
+  static final String EL_CATALOG = "elCatalog";
+
   private final StageLibraryTask stageLibrary;
 
   @Inject
@@ -77,9 +81,16 @@ public class StageLibraryResource {
     definitions.put(PIPELINE, pipeline);
 
     Map<String, Object> map = new HashMap<>();
-    map.put(EL_FUNCTION_DEFS, BeanHelper.wrapElFunctionDefinitions(DataRuleEvaluator.getElEvaluator().getElFunctionDefinitions()));
-    map.put(EL_CONSTANT_DEFS, BeanHelper.wrapElConstantDefinitions(DataRuleEvaluator.getElEvaluator().getElConstantDefinitions()));
+    map.put(EL_FUNCTION_DEFS,DataRuleEvaluator.getElFunctionIdx());
+    map.put(EL_CONSTANT_DEFS, DataRuleEvaluator.getElConstantIdx());
     definitions.put(RULES_EL_METADATA, map);
+
+    map = new HashMap<>();
+    map.put(EL_FUNCTION_DEFS,
+            BeanHelper.wrapElFunctionDefinitionsIdx(ELDefinitionExtractor.get().getElFunctionsCatalog()));
+    map.put(EL_CONSTANT_DEFS,
+            BeanHelper.wrapElConstantDefinitionsIdx(ELDefinitionExtractor.get().getELConstantsCatalog()));
+    definitions.put(EL_CATALOG, map);
 
     definitions.put(RUNTIME_CONFIGS, RuntimeEL.getRuntimeConfKeys());
 

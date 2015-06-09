@@ -69,12 +69,12 @@ public class ConfigDefinitionJson {
     return configDefinition.getDisplayPosition();
   }
 
-  public List<ElFunctionDefinitionJson> getElFunctionDefinitions() {
-    return BeanHelper.wrapElFunctionDefinitions(configDefinition.getElFunctionDefinitions());
+  public List<String> getElFunctionDefinitionsIdx() {
+    return configDefinition.getElFunctionDefinitionsIdx();
   }
 
-  public List<ElConstantDefinitionJson> getElConstantDefinitions() {
-    return BeanHelper.wrapElConstantDefinitions(configDefinition.getElConstantDefinitions());
+  public List<String> getElConstantDefinitionsIdx() {
+    return configDefinition.getElConstantDefinitionsIdx();
   }
 
   public long getMin() {
