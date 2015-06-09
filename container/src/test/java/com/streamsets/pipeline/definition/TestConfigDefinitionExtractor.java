@@ -11,6 +11,7 @@ import com.streamsets.pipeline.api.ElConstant;
 import com.streamsets.pipeline.api.ElFunction;
 import com.streamsets.pipeline.api.ElParam;
 import com.streamsets.pipeline.api.FieldSelector;
+import com.streamsets.pipeline.api.LanePredicateMapping;
 import com.streamsets.pipeline.config.ConfigDefinition;
 import com.streamsets.pipeline.el.ElConstantDefinition;
 import com.streamsets.pipeline.el.ElFunctionDefinition;
@@ -36,7 +37,7 @@ public class TestConfigDefinitionExtractor {
 
   }
 
-  public static class Ok {
+  public static class Ok1 {
 
     @ConfigDef(
         label = "L",
@@ -56,9 +57,54 @@ public class TestConfigDefinitionExtractor {
     public String config;
   }
 
+  public static class Ok2 {
+
+    @ConfigDef(
+        label = "L",
+        description = "D",
+        type = ConfigDef.Type.BOOLEAN,
+        required = true,
+        group = "G",
+        displayPosition = 1,
+        lines = 2,
+        min = 3,
+        max = 4,
+        evaluation = ConfigDef.Evaluation.EXPLICIT,
+        mode = ConfigDef.Mode.JAVA,
+        elDefs = ELs.class
+    )
+    public String config;
+  }
+
+  public static class Ok3 {
+
+    @ConfigDef(
+        label = "L",
+        description = "D",
+        type = ConfigDef.Type.MODEL,
+        required = true,
+        elDefs = ELs.class
+    )
+    @LanePredicateMapping
+    public List<String> predicates;
+  }
+
+  public static class Ok4 {
+
+    @ConfigDef(
+        label = "L",
+        description = "D",
+        type = ConfigDef.Type.MODEL,
+        required = true,
+        elDefs = ELs.class
+    )
+    @FieldSelector
+    public String selector;
+  }
+
   @Test
   public void testStringConfigOk() {
-    List<ConfigDefinition> configs = ConfigDefinitionExtractor.get().extract(Ok.class, "x");
+    List<ConfigDefinition> configs = ConfigDefinitionExtractor.get().extract(Ok1.class, "x");
     Assert.assertEquals(1, configs.size());
     ConfigDefinition config = configs.get(0);
     Assert.assertEquals("config", config.getName());
@@ -80,6 +126,37 @@ public class TestConfigDefinitionExtractor {
     Assert.assertNull(config.getModel());
     Assert.assertEquals("", config.getDependsOn());
     Assert.assertNull(config.getTriggeredByValues());
+  }
+
+  @Test
+  public void testTypeNoELConfigOk() {
+    List<ConfigDefinition> configs = ConfigDefinitionExtractor.get().extract(Ok2.class, "x");
+    Assert.assertEquals(1, configs.size());
+    ConfigDefinition config = configs.get(0);
+    Assert.assertEquals(ConfigDef.Type.BOOLEAN, config.getType());
+    Assert.assertEquals(false, config.getDefaultValue());
+    Assert.assertTrue(config.getElFunctionDefinitions().isEmpty());
+    Assert.assertTrue(config.getElConstantDefinitions().isEmpty());
+  }
+
+  @Test
+  public void testModelNoELConfigOk() {
+    List<ConfigDefinition> configs = ConfigDefinitionExtractor.get().extract(Ok4.class, "x");
+    Assert.assertEquals(1, configs.size());
+    ConfigDefinition config = configs.get(0);
+    Assert.assertEquals(ConfigDef.Type.MODEL, config.getType());
+    Assert.assertTrue(config.getElFunctionDefinitions().isEmpty());
+    Assert.assertTrue(config.getElConstantDefinitions().isEmpty());
+  }
+
+  @Test
+  public void testModelELConfigOk() {
+    List<ConfigDefinition> configs = ConfigDefinitionExtractor.get().extract(Ok3.class, "x");
+    Assert.assertEquals(1, configs.size());
+    ConfigDefinition config = configs.get(0);
+    Assert.assertEquals(ConfigDef.Type.MODEL, config.getType());
+    Assert.assertFalse(config.getElFunctionDefinitions().isEmpty());
+    Assert.assertFalse(config.getElConstantDefinitions().isEmpty());
   }
 
   private boolean containsF(List<ElFunctionDefinition> defs, String name) {
