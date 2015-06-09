@@ -86,7 +86,7 @@ public class ELEvaluator extends ELEval {
               elFunctionArgumentDefinitions.add(new ElFunctionArgumentDefinition(((ElParam) annotation).value(),
                 parameterTypes[i].getSimpleName()));
             }
-            elFunctionDefinitions.add(new ElFunctionDefinition(elFunctionAnnot.prefix(), functionName,
+            elFunctionDefinitions.add(new ElFunctionDefinition(null, elFunctionAnnot.prefix(), functionName,
               elFunctionAnnot.description(),
               elFunctionArgumentDefinitions,
               m.getReturnType().getSimpleName()));
@@ -111,7 +111,7 @@ public class ELEvaluator extends ELEval {
             }
             try {
               constants.put(constantName, f.get(null));
-              elConstantDefinitions.add(new ElConstantDefinition(constantName, elConstant.description(),
+              elConstantDefinitions.add(new ElConstantDefinition(null, constantName, elConstant.description(),
                 f.getType().getSimpleName()));
             } catch (IllegalAccessException e) {
               throw new RuntimeException(e);

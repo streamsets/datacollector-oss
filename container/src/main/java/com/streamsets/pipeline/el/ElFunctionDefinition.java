@@ -5,23 +5,29 @@
  */
 package com.streamsets.pipeline.el;
 
+import java.lang.reflect.Method;
 import java.util.List;
 
 public class ElFunctionDefinition {
-
+  private final String index;
   private final String name;
   private final String description;
   private final String group;
   private final String returnType;
   private final List<ElFunctionArgumentDefinition> elFunctionArgumentDefinition;
 
-  public ElFunctionDefinition(String group, String name, String description,
+  public ElFunctionDefinition(String index, String group, String name, String description,
       List<ElFunctionArgumentDefinition> elFunctionArgumentDefinition, String returnType) {
+    this.index = index;
     this.name = name;
     this.description = description;
     this.group = group;
     this.returnType = returnType;
     this.elFunctionArgumentDefinition = elFunctionArgumentDefinition;
+  }
+
+  public String getIndex() {
+    return index;
   }
 
   public String getName() {

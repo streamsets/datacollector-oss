@@ -12,8 +12,11 @@ import com.google.common.annotations.VisibleForTesting;
 import com.google.common.collect.EvictingQueue;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.config.DataRuleDefinition;
+import com.streamsets.pipeline.definition.ELDefinitionExtractor;
 import com.streamsets.pipeline.el.ELEvaluator;
 import com.streamsets.pipeline.el.ELVariables;
+import com.streamsets.pipeline.el.ElConstantDefinition;
+import com.streamsets.pipeline.el.ElFunctionDefinition;
 import com.streamsets.pipeline.el.RuleELRegistry;
 import com.streamsets.pipeline.metrics.MetricsConfigurator;
 import com.streamsets.pipeline.prodmanager.Constants;
@@ -23,6 +26,7 @@ import com.streamsets.pipeline.util.ObserverException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -32,6 +36,28 @@ public class DataRuleEvaluator {
   private static final String USER_PREFIX = "user.";
 
   private static final ELEvaluator EL_EVALUATOR = new ELEvaluator("condition", RuleELRegistry.getRuleELs());
+  private static final List<String> EL_FUNCTION_IDX = createElFunctionIdx();
+  private static final List<String> EL_CONSTANT_IDX = createElConstantIdx();
+
+  private static List<String> createElFunctionIdx() {
+    List<ElFunctionDefinition> defs = ELDefinitionExtractor.get().extractFunctions(RuleELRegistry.getRuleELs(),
+                                                                                   "DataRules");
+    List<String> idx = new ArrayList<>();
+    for (ElFunctionDefinition f : defs) {
+      idx.add(f.getIndex());
+    }
+    return idx;
+  }
+
+  private static List<String> createElConstantIdx() {
+    List<ElConstantDefinition> defs = ELDefinitionExtractor.get().extractConstants(RuleELRegistry.getRuleELs(),
+                                                                                   "DataRules");
+    List<String> idx = new ArrayList<>();
+    for (ElConstantDefinition f : defs) {
+      idx.add(f.getIndex());
+    }
+    return idx;
+  }
 
   private final MetricRegistry metrics;
   private final List<String> emailIds;
@@ -40,7 +66,7 @@ public class DataRuleEvaluator {
   private final AlertManager alertManager;
 
   public DataRuleEvaluator(MetricRegistry metrics, AlertManager alertManager, List<String> emailIds,
-                           DataRuleDefinition dataRuleDefinition, Configuration configuration) {
+      DataRuleDefinition dataRuleDefinition, Configuration configuration) {
     this.metrics = metrics;
     this.emailIds = emailIds;
     this.dataRuleDefinition = dataRuleDefinition;
@@ -49,17 +75,17 @@ public class DataRuleEvaluator {
   }
 
   public void evaluateRule(List<Record> sampleRecords, String lane,
-                           Map<String, EvictingQueue<Record>> ruleToSampledRecordsMap) {
+      Map<String, EvictingQueue<Record>> ruleToSampledRecordsMap) {
 
     if (dataRuleDefinition.isEnabled() && sampleRecords != null && sampleRecords.size() > 0) {
       //cache all sampled records for this data rule definition in an evicting queue
       EvictingQueue<Record> sampledRecords = ruleToSampledRecordsMap.get(dataRuleDefinition.getId());
       if (sampledRecords == null) {
         int maxSize = configuration.get(
-          Constants.SAMPLED_RECORDS_MAX_CACHE_SIZE_KEY,
-          Constants.SAMPLED_RECORDS_MAX_CACHE_SIZE_DEFAULT);
+            Constants.SAMPLED_RECORDS_MAX_CACHE_SIZE_KEY,
+            Constants.SAMPLED_RECORDS_MAX_CACHE_SIZE_DEFAULT);
         int size = dataRuleDefinition.getSamplingRecordsToRetain();
-        if(size > maxSize) {
+        if (size > maxSize) {
           size = maxSize;
         }
         sampledRecords = EvictingQueue.create(size);
@@ -82,14 +108,16 @@ public class DataRuleEvaluator {
       if (dataRuleDefinition.isAlertEnabled()) {
         //Keep the counters and meters ready before execution
         //batch record counter - cummulative sum of records per batch
-        Counter evaluatedRecordCounter = MetricsConfigurator.getCounter(metrics, LaneResolver.getPostFixedLaneForObserver(
-            lane));
+        Counter evaluatedRecordCounter =
+            MetricsConfigurator.getCounter(metrics, LaneResolver.getPostFixedLaneForObserver(
+                lane));
         if (evaluatedRecordCounter == null) {
           evaluatedRecordCounter = MetricsConfigurator.createCounter(metrics, LaneResolver.getPostFixedLaneForObserver(
               lane));
         }
         //counter for the matching records - cummulative sum of records that match criteria
-        Counter matchingRecordCounter = MetricsConfigurator.getCounter(metrics, USER_PREFIX + dataRuleDefinition.getId());
+        Counter matchingRecordCounter =
+            MetricsConfigurator.getCounter(metrics, USER_PREFIX + dataRuleDefinition.getId());
         if (matchingRecordCounter == null) {
           matchingRecordCounter = MetricsConfigurator.createCounter(metrics, USER_PREFIX + dataRuleDefinition.getId());
         }
@@ -113,7 +141,7 @@ public class DataRuleEvaluator {
             break;
           case PERCENTAGE:
             if ((matchingRecordCounter.getCount() * 100 / evaluatedRecordCounter.getCount()) > threshold
-              && evaluatedRecordCounter.getCount() >= dataRuleDefinition.getMinVolume()) {
+                && evaluatedRecordCounter.getCount() >= dataRuleDefinition.getMinVolume()) {
               alertManager.alert(matchingRecordCounter.getCount(), emailIds, dataRuleDefinition);
             }
             break;
@@ -152,5 +180,13 @@ public class DataRuleEvaluator {
 
   public static ELEvaluator getElEvaluator() {
     return EL_EVALUATOR;
+  }
+
+  public static List<String> getElFunctionIdx() {
+    return EL_FUNCTION_IDX;
+  }
+
+  public static List<String> getElConstantIdx() {
+    return EL_CONSTANT_IDX;
   }
 }
