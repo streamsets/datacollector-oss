@@ -26,11 +26,9 @@ import com.streamsets.pipeline.config.ConfigGroupDefinition;
 import com.streamsets.pipeline.config.ModelDefinition;
 import com.streamsets.pipeline.config.ModelType;
 import com.streamsets.pipeline.config.RawSourceDefinition;
-import com.streamsets.pipeline.config.StageDefinition;
-import com.streamsets.pipeline.config.StageType;
 import com.streamsets.pipeline.el.ElConstantDefinition;
 import com.streamsets.pipeline.el.ElFunctionDefinition;
-import com.streamsets.pipeline.restapi.bean.BeanHelper;
+import com.streamsets.pipeline.stagelibrary.StageLibraryTask;
 import com.streamsets.pipeline.util.ElUtil;
 
 import javax.annotation.processing.AbstractProcessor;
@@ -54,6 +52,7 @@ import javax.tools.Diagnostic;
 import javax.tools.FileObject;
 import javax.tools.StandardLocation;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.lang.annotation.Annotation;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -84,7 +83,7 @@ public class PipelineAnnotationsProcessor extends AbstractProcessor {
   private static final String SEPARATOR = ".";
   private static final String DOT = ".";
   private static final String DEFAULT_CONSTRUCTOR = "<init>";
-  private static final String PIPELINE_STAGES_JSON = "PipelineStages.json";
+  private static final String STAGES_DEFINITION_RESOURCE = StageLibraryTask.STAGES_DEFINITION_RESOURCE;
   private static final String DC_RESOURCE_BUNDLES_JSON = "datacollector-resource-bundles.json";
   private static final String MAP_TYPE_WITH_KEY = "java.util.Map<java.lang.String,";
   private static final String VARIABLE_OUTPUT_STREAMS_CLASS = StageDef.VariableOutputStreams.class.getName();
@@ -96,7 +95,7 @@ public class PipelineAnnotationsProcessor extends AbstractProcessor {
   private Map<String, String> stageNameToVersionMap = null;
   /*An instance of StageCollection collects all the stage definitions and configurations
   in maps and will later be serialized into json.*/
-  private List<StageDefinition> stageDefinitions = null;
+  private List<StageInfo> stageDefinitions = null;
   /*Indicates if there is an error while processing stages*/
   private boolean stageDefValidationError = false;
   /*Indicates if there is an error while processing stage error definition enum*/
@@ -206,13 +205,37 @@ public class PipelineAnnotationsProcessor extends AbstractProcessor {
    * Generates the "PipelineStages.json" file with the configuration options
    */
   private void generateConfigFile() {
-    try {
-      FileObject resource = processingEnv.getFiler().createResource(StandardLocation.CLASS_OUTPUT, "",
-        PIPELINE_STAGES_JSON);
-      json.writeValue(resource.openOutputStream(), BeanHelper.wrapStageDefinitions(stageDefinitions));
+    try (OutputStream out = processingEnv.getFiler().createResource(StandardLocation.CLASS_OUTPUT, "",
+                                                                    STAGES_DEFINITION_RESOURCE).openOutputStream()) {
+      List<String> stageClasses = new ArrayList<>();
+      for (StageInfo stageInfo : stageDefinitions) {
+        stageClasses.add(stageInfo.getClassName());
+      }
+      Map<String, Object> map = new HashMap<>();
+      map.put("stageClasses", stageClasses);
+      json.writeValue(out, map);
     } catch (IOException e) {
       processingEnv.getMessager().printMessage(Diagnostic.Kind.ERROR, e.getMessage());
     }
+  }
+
+  private static class StageInfo {
+    private final String className;
+    private final String version;
+
+    public StageInfo(String className, String version) {
+      this.className = className;
+      this.version = version;
+    }
+
+    public String getClassName() {
+      return className;
+    }
+
+    public String getVersion() {
+      return version;
+    }
+
   }
 
   /**
@@ -220,7 +243,7 @@ public class PipelineAnnotationsProcessor extends AbstractProcessor {
    * @param typeElement The type element on which the stage annotation is present
    * @return returns a StageDefinition object
    */
-  private StageDefinition createStageConfig(TypeElement typeElement) {
+  private StageInfo createStageConfig(TypeElement typeElement) {
     StageDef stageDefAnnotation = typeElement.getAnnotation(StageDef.class);
 
     ErrorStage errorStage = typeElement.getAnnotation(ErrorStage.class);
@@ -228,50 +251,13 @@ public class PipelineAnnotationsProcessor extends AbstractProcessor {
     //Process all fields with ConfigDef annotation
     List< ConfigDefinition> configDefinitions = getConfigDefsFromTypeElement(typeElement);
 
-    StageDefinition stageDefinition = null;
+    StageInfo stageInfo = null;
     if(validateStageDef(typeElement, stageDefAnnotation)) {
-      RawSource rawSourceAnnot = typeElement.getAnnotation(RawSource.class);
-      RawSourceDefinition rawSourceDefinition = null;
-      if(rawSourceAnnot != null) {
-        rawSourceDefinition = getRawSourceDefinition(rawSourceAnnot);
-      }
-
-      boolean variableOutputStreams = isVariableOutputStreams(stageDefAnnotation);
-      int outputStreams = getOutputStreams(typeElement, stageDefAnnotation);
-      String outputStreamsLabelProviderClass = getOutputStreamLabelsProviderClass(stageDefAnnotation);
-
-      List<ExecutionMode> executionModes = getExecutionModes(stageDefAnnotation);
-
-      StageType stageType = StageType.valueOf(getStageTypeFromElement(typeElement));
-      HideConfig hideConfigAnnotation = typeElement.getAnnotation(HideConfig.class);
-
-      boolean preconditions = stageType != StageType.SOURCE &&
-                               (hideConfigAnnotation == null || !hideConfigAnnotation.preconditions());
-      boolean onRecordError = hideConfigAnnotation == null || !hideConfigAnnotation.onErrorRecord();
-      String stageName = StageHelper.getStageNameFromClassName(typeElement.getQualifiedName().toString());
-      stageDefinition = new StageDefinition(
-          typeElement.getQualifiedName().toString(),
-          stageName,
-          stageDefAnnotation.version(),
-          stageDefAnnotation.label(),
-          stageDefAnnotation.description(),
-          stageType,
-          isErrorStage,
-          preconditions,
-          onRecordError,
-          configDefinitions,
-          rawSourceDefinition,
-          stageDefAnnotation.icon(),
-          getConfigOptionGroupsForStage(typeElement),
-          variableOutputStreams,
-          outputStreams,
-          outputStreamsLabelProviderClass,
-          executionModes
-      );
+      stageInfo = new StageInfo(typeElement.getQualifiedName().toString(), stageDefAnnotation.version());
     } else {
       stageDefValidationError = true;
     }
-    return stageDefinition;
+    return stageInfo;
   }
 
   private List<ExecutionMode> getExecutionModes(StageDef stageDefAnnotation) {

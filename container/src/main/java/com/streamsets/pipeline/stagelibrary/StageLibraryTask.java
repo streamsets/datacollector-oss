@@ -12,6 +12,8 @@ import java.util.List;
 
 public interface StageLibraryTask extends Task {
 
+  public static final String STAGES_DEFINITION_RESOURCE = "PipelineStages.json";
+
   public List<StageDefinition> getStages();
 
   public StageDefinition getStage(String library, String name, String version);

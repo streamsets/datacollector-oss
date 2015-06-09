@@ -1,34 +1,5 @@
-[
-  {
-    "library" : null,
-    "className" : "com.streamsets.pipeline.sdk.annotationsprocessor.testData.SourceWithStageAndConfigDef",
-    "name" : "com_streamsets_pipeline_sdk_annotationsprocessor_testData_SourceWithStageAndConfigDef",
-    "version" : "1.0",
-    "label" : "twitter_source",
-    "description" : "Produces twitter feeds",
-    "type" : "SOURCE",
-    "configDefinitions" : [
-      {
-        "name" : "username",
-        "description" : "The user name of the twitter user",
-        "label" : "username",
-        "defaultValue" : "admin",
-        "type" : "STRING",
-        "fieldName" : "username",
-        "required" : "true",
-        "group" : ""
-      },
-      {
-        "name" : "password",
-        "description" : "The password the twitter user",
-        "label" : "password",
-        "defaultValue" : "admin",
-        "type" : "STRING",
-        "fieldName" : "password",
-        "required" : "true",
-        "group" : ""
-      }
-    ],
-    "executionModes" : [ "STANDALONE", "CLUSTER" ]
-  }
-]
+{
+  "stageClasses" : [
+    "com.streamsets.pipeline.sdk.annotationsprocessor.testData.SourceWithStageAndConfigDef"
+  ]
+}

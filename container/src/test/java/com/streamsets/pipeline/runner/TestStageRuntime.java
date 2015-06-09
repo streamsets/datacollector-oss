@@ -20,6 +20,7 @@ import com.streamsets.pipeline.config.DeliveryGuarantee;
 import com.streamsets.pipeline.config.PipelineConfiguration;
 import com.streamsets.pipeline.config.StageConfiguration;
 import com.streamsets.pipeline.config.StageDefinition;
+import com.streamsets.pipeline.config.StageLibraryDefinition;
 import com.streamsets.pipeline.config.StageType;
 import com.streamsets.pipeline.el.ElConstantDefinition;
 import com.streamsets.pipeline.el.ElFunctionDefinition;
@@ -37,6 +38,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
 import java.util.UUID;
 
 public class TestStageRuntime {
@@ -46,6 +48,9 @@ public class TestStageRuntime {
   private static final String STRING_VALUE = "STRING";
   private static final boolean BOOLEAN_VALUE = true;
   private static final String CHAR_VALUE = "H";
+
+  private static final StageLibraryDefinition MOCK_LIB_DEF =
+      new StageLibraryDefinition(TestStageRuntime.class.getClassLoader(), "mock", "MOCK", new Properties());
 
   public static class TSource extends BaseSource {
     public boolean inited;
@@ -139,15 +144,13 @@ public class TestStageRuntime {
       ImmutableList.<Class>of(StringEL.class), ConfigDef.Evaluation.IMPLICIT, null);
     configDefs.add(configDef);
     StageDefinition sourceDef = new StageDefinition(
-      TSource.class.getName(), "source", "1.0.0", "label", "description", StageType.SOURCE, false, true,
+        MOCK_LIB_DEF, TSource.class, "source", "1.0.0", "label", "description", StageType.SOURCE, false, true,
       true, configDefs, null/*raw source definition*/,"", null, false, 1, null,
       Arrays.asList(ExecutionMode.CLUSTER, ExecutionMode.STANDALONE));
-    sourceDef.setLibrary("library", "", Arrays.asList(ExecutionMode.values()), Thread.currentThread().getContextClassLoader());
     StageDefinition targetDef = new StageDefinition(
-      TTarget.class.getName(), "target", "1.0.0", "label", "description", StageType.TARGET, false, true,
+        MOCK_LIB_DEF, TTarget.class, "target", "1.0.0", "label", "description", StageType.TARGET, false, true,
       true, Collections.<ConfigDefinition>emptyList(), null/*raw source definition*/,"", null, false, 0, null,
       Arrays.asList(ExecutionMode.CLUSTER, ExecutionMode.STANDALONE));
-    targetDef.setLibrary("library", "", Arrays.asList(ExecutionMode.values()), Thread.currentThread().getContextClassLoader());
     Mockito.when(lib.getStage(Mockito.eq("library"), Mockito.eq("source"), Mockito.eq("1.0.0"))).thenReturn(sourceDef);
     Mockito.when(lib.getStage(Mockito.eq("library"), Mockito.eq("target"), Mockito.eq("1.0.0"))).thenReturn(targetDef);
     Mockito.when(lib.getStage(Mockito.eq("library"), Mockito.eq("errorTarget"), Mockito.eq("1.0.0"))).thenReturn(targetDef);

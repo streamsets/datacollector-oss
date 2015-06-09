@@ -14,7 +14,6 @@ import com.streamsets.pipeline.api.Source;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.Target;
-import com.streamsets.pipeline.api.el.ELEval;
 import com.streamsets.pipeline.config.ConfigConfiguration;
 import com.streamsets.pipeline.config.DeliveryGuarantee;
 import com.streamsets.pipeline.config.PipelineConfiguration;
@@ -31,7 +30,6 @@ import org.junit.Test;
 import org.mockito.Mockito;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -84,7 +82,7 @@ public class TestMemoryIsolation {
   @Test
   public void testSourceWithLargeBuffer() throws Exception {
     StageLibraryTask lib = new MockStages.MockStageLibraryTask.Builder()
-      .overrideClass("sourceName", SourceWithLargeBuffer.class.getName()).build();
+      .overrideClass("sourceName", SourceWithLargeBuffer.class).build();
     for (Stage stage : createStages(lib)) {
       if (stage instanceof SourceWithLargeBuffer) {
         long memoryUsed = MemoryUsageCollector.getMemoryUsageOfForTests(stage);
@@ -107,7 +105,7 @@ public class TestMemoryIsolation {
   @Test
   public void testProcessorWithLargeBuffer() throws Exception {
     StageLibraryTask lib = new MockStages.MockStageLibraryTask.Builder()
-      .overrideClass("processorName", ProcessorWithLargeBuffer.class.getName()).build();
+      .overrideClass("processorName", ProcessorWithLargeBuffer.class).build();
     for (Stage stage : createStages(lib)) {
       if (stage instanceof Source) {
         long memoryUsed = MemoryUsageCollector.getMemoryUsageOfForTests(stage);
@@ -130,7 +128,7 @@ public class TestMemoryIsolation {
   @Test
   public void testTargetWithLargeBuffer() throws Exception {
     StageLibraryTask lib = new MockStages.MockStageLibraryTask.Builder()
-      .overrideClass("targetName", TargetWithLargeBuffer.class.getName()).build();
+      .overrideClass("targetName", TargetWithLargeBuffer.class).build();
     for (Stage stage : createStages(lib)) {
       if (stage instanceof Source) {
         long memoryUsed = MemoryUsageCollector.getMemoryUsageOfForTests(stage);

@@ -5,9 +5,6 @@
  */
 package com.streamsets.pipeline.restapi.bean;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import com.streamsets.pipeline.api.impl.Utils;
 
 import java.util.List;
@@ -16,14 +13,6 @@ import java.util.Map;
 public class ConfigGroupDefinitionJson {
 
   private final com.streamsets.pipeline.config.ConfigGroupDefinition configGroupDefinition;
-
-  @JsonCreator
-  public ConfigGroupDefinitionJson(
-    @JsonProperty("classNameToGroupsMap") Map<String, List<String>> classNameToGroupsMap,
-    @JsonProperty("groupNameToLabelMapList") List<Map<String, String>> groupNameToLabelMap) {
-    this.configGroupDefinition = new com.streamsets.pipeline.config.ConfigGroupDefinition(null, classNameToGroupsMap,
-      groupNameToLabelMap);
-  }
 
   public ConfigGroupDefinitionJson(com.streamsets.pipeline.config.ConfigGroupDefinition configGroupDefinition) {
     Utils.checkNotNull(configGroupDefinition, "configGroupDefinition");
@@ -38,8 +27,4 @@ public class ConfigGroupDefinitionJson {
     return configGroupDefinition.getGroupNameToLabelMapList();
   }
 
-  @JsonIgnore
-  public com.streamsets.pipeline.config.ConfigGroupDefinition getConfigGroupDefinition() {
-    return configGroupDefinition;
-  }
 }
