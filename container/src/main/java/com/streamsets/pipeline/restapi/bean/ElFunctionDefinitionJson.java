@@ -5,8 +5,6 @@
  */
 package com.streamsets.pipeline.restapi.bean;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.el.ElFunctionDefinition;
 
@@ -15,18 +13,6 @@ import java.util.List;
 public class ElFunctionDefinitionJson {
 
   private final ElFunctionDefinition elFunctionDefinition;
-
-  public ElFunctionDefinitionJson(
-    @JsonProperty("name") String name,
-    @JsonProperty("description") String description,
-    @JsonProperty("group") String group,
-    @JsonProperty("returnType") String returnType,
-    @JsonProperty("elFunctionArgumentDefinition") List<ElFunctionArgumentDefinitionJson> elFunctionArgumentDefinition) {
-    this.elFunctionDefinition = new ElFunctionDefinition(group, name, description,
-                                                         BeanHelper.unwrapElFunctionArgumentDefinitions(elFunctionArgumentDefinition),
-                                                         returnType
-    );
-  }
 
   public ElFunctionDefinitionJson(ElFunctionDefinition elFunctionDefinition) {
     Utils.checkNotNull(elFunctionDefinition, "elFunctionDefinition");
@@ -53,8 +39,4 @@ public class ElFunctionDefinitionJson {
     return BeanHelper.wrapElFunctionArgumentDefinitions(elFunctionDefinition.getElFunctionArgumentDefinition());
   }
 
-  @JsonIgnore
-  public ElFunctionDefinition getElFunctionDefinition() {
-    return elFunctionDefinition;
-  }
 }

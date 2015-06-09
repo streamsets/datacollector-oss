@@ -20,11 +20,13 @@ import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.base.BaseSource;
 import com.streamsets.pipeline.api.base.BaseTarget;
 import com.streamsets.pipeline.config.StageDefinition;
+import com.streamsets.pipeline.config.StageLibraryDefinition;
 import com.streamsets.pipeline.config.StageType;
 import org.junit.Assert;
 import org.junit.Test;
 
 import java.io.InputStream;
+import java.util.Properties;
 
 public class TestStageDefinitionExtractor {
 
@@ -146,9 +148,12 @@ public class TestStageDefinitionExtractor {
     }
   }
 
+  private static final StageLibraryDefinition MOCK_LIB_DEF =
+      new StageLibraryDefinition(TestStageDefinitionExtractor.class.getClassLoader(), "mock", "MOCK", new Properties());
+
   @Test
   public void testExtractSource1() {
-    StageDefinition def = StageDefinitionExtractor.get().extract(Source1.class, "x");
+    StageDefinition def = StageDefinitionExtractor.get().extract(MOCK_LIB_DEF, Source1.class, "x");
     Assert.assertEquals(Source1.class.getName(), def.getClassName());
     Assert.assertEquals(StageDefinitionExtractor.getStageName(Source1.class), def.getName());
     Assert.assertEquals("1", def.getVersion());
@@ -167,7 +172,7 @@ public class TestStageDefinitionExtractor {
 
   @Test
   public void testExtractSource2() {
-    StageDefinition def = StageDefinitionExtractor.get().extract(Source2.class, "x");
+    StageDefinition def = StageDefinitionExtractor.get().extract(MOCK_LIB_DEF, Source2.class, "x");
     Assert.assertEquals(Source2.class.getName(), def.getClassName());
     Assert.assertEquals(StageDefinitionExtractor.getStageName(Source2.class), def.getName());
     Assert.assertEquals("2", def.getVersion());
@@ -189,7 +194,7 @@ public class TestStageDefinitionExtractor {
 
   @Test
   public void testExtractSource3() {
-    StageDefinition def = StageDefinitionExtractor.get().extract(Source3.class, "x");
+    StageDefinition def = StageDefinitionExtractor.get().extract(MOCK_LIB_DEF, Source3.class, "x");
     Assert.assertEquals(0, def.getOutputStreams());
     Assert.assertEquals(StageDef.VariableOutputStreams.class.getName(), def.getOutputStreamLabelProviderClass());
     Assert.assertTrue(def.isVariableOutputStreams());
@@ -197,7 +202,7 @@ public class TestStageDefinitionExtractor {
 
   @Test
   public void testExtractTarget1() {
-    StageDefinition def = StageDefinitionExtractor.get().extract(Target1.class, "x");
+    StageDefinition def = StageDefinitionExtractor.get().extract(MOCK_LIB_DEF, Target1.class, "x");
     Assert.assertEquals(StageType.TARGET, def.getType());
     Assert.assertEquals(0, def.getOutputStreams());
     Assert.assertEquals(null, def.getOutputStreamLabelProviderClass());
@@ -207,7 +212,7 @@ public class TestStageDefinitionExtractor {
 
   @Test
   public void testExtractToErrorTarget1() {
-    StageDefinition def = StageDefinitionExtractor.get().extract(ToErrorTarget1.class, "x");
+    StageDefinition def = StageDefinitionExtractor.get().extract(MOCK_LIB_DEF, ToErrorTarget1.class, "x");
     Assert.assertEquals(StageType.TARGET, def.getType());
     Assert.assertEquals(0, def.getOutputStreams());
     Assert.assertEquals(null, def.getOutputStreamLabelProviderClass());

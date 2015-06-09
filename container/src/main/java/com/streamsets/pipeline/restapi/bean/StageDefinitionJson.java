@@ -5,8 +5,6 @@
  */
 package com.streamsets.pipeline.restapi.bean;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.streamsets.pipeline.api.ExecutionMode;
@@ -17,33 +15,6 @@ import java.util.List;
 public class StageDefinitionJson {
 
   private final com.streamsets.pipeline.config.StageDefinition stageDefinition;
-
-  @JsonCreator
-  public StageDefinitionJson(
-    @JsonProperty("className") String className,
-    @JsonProperty("name") String name,
-    @JsonProperty("version") String version,
-    @JsonProperty("label") String label,
-    @JsonProperty("description") String description,
-    @JsonProperty("type") StageTypeJson type,
-    @JsonProperty("errorStage") boolean errorStage,
-    @JsonProperty("preconditions") boolean preconditions,
-    @JsonProperty("onRecordError") boolean onRecordError,
-    @JsonProperty("configDefinitions") List<ConfigDefinitionJson> configDefinitionJsons,
-    @JsonProperty("rawSourceDefinition") RawSourceDefinitionJson rawSourceDefinitionJson,
-    @JsonProperty("icon") String icon,
-    @JsonProperty("configGroupDefinition") ConfigGroupDefinitionJson configGroupDefinitionJson,
-    @JsonProperty("variableOutputStreams") boolean variableOutputStreams,
-    @JsonProperty("outputStreams") int outputStreams,
-    @JsonProperty("outputStreamLabelProviderClass") String outputStreamLabelProviderClass,
-    @JsonProperty("executionModes") List<ExecutionMode> executionModes) {
-    this.stageDefinition = new com.streamsets.pipeline.config.StageDefinition(className, name, version, label,
-      description, BeanHelper.unwrapStageType(type), errorStage, preconditions,
-      onRecordError, BeanHelper.unwrapConfigDefinitions(configDefinitionJsons),
-      BeanHelper.unwrapRawSourceDefinition(rawSourceDefinitionJson), icon,
-      BeanHelper.unwrapConfigGroupDefinition(configGroupDefinitionJson), variableOutputStreams, outputStreams,
-      outputStreamLabelProviderClass, executionModes);
-  }
 
   public StageDefinitionJson(com.streamsets.pipeline.config.StageDefinition stageDefinition) {
     this.stageDefinition = stageDefinition;
@@ -131,8 +102,4 @@ public class StageDefinitionJson {
     return stageDefinition.getExecutionModes();
   }
 
-  @JsonIgnore
-  public com.streamsets.pipeline.config.StageDefinition getStageDefinition() {
-    return stageDefinition;
-  }
 }

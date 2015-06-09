@@ -5,9 +5,6 @@
  */
 package com.streamsets.pipeline.restapi.bean;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.impl.Utils;
 
@@ -20,37 +17,6 @@ import java.util.Map;
 public class ConfigDefinitionJson {
 
   private final com.streamsets.pipeline.config.ConfigDefinition configDefinition;
-
-  @JsonCreator
-  public ConfigDefinitionJson(
-    @JsonProperty("name") String name,
-    @JsonProperty("type") ConfigDef.Type type,
-    @JsonProperty("label") String label,
-    @JsonProperty("description") String description,
-    @JsonProperty("defaultValue") Object defaultValue,
-    @JsonProperty("required") boolean required,
-    @JsonProperty("group") String group,
-    @JsonProperty("fieldName") String fieldName,
-    @JsonProperty("model") ModelDefinitionJson model,
-    @JsonProperty("dependsOn") String dependsOn,
-    @JsonProperty("triggeredByValues") List<Object> triggeredByValues,
-    @JsonProperty("displayPosition") int displayPosition,
-    @JsonProperty("elFunctionDefinitions") List<ElFunctionDefinitionJson> elFunctionDefinitions,
-    @JsonProperty("elConstantDefinitions") List<ElConstantDefinitionJson> elConstantDefinitions,
-    @JsonProperty("min")long min,
-    @JsonProperty("max")long max,
-    @JsonProperty("mode")String mode,
-    @JsonProperty("lines")int lines,
-    @JsonProperty("elDefs") List<String> elDefs,
-    @JsonProperty("evaluation") ConfigDef.Evaluation evaluation,
-    @JsonProperty("dependsOnMap") Map<String, List<Object>> dependsOnMap) {
-
-    this.configDefinition = new com.streamsets.pipeline.config.ConfigDefinition(name, type, label, description,
-      defaultValue, required, group, fieldName, BeanHelper.unwrapModelDefinition(model), dependsOn, triggeredByValues,
-      displayPosition, BeanHelper.unwrapElFunctionDefinitions(elFunctionDefinitions),
-      BeanHelper.unwrapElConstantDefinitions(elConstantDefinitions), min, max, mode, lines, null, evaluation,
-      dependsOnMap);
-  }
 
   public ConfigDefinitionJson(com.streamsets.pipeline.config.ConfigDefinition configDefinition) {
     Utils.checkNotNull(configDefinition, "configDefinition");
@@ -139,8 +105,4 @@ public class ConfigDefinitionJson {
     return configDefinition.getDependsOnMap();
   }
 
-  @JsonIgnore
-  public com.streamsets.pipeline.config.ConfigDefinition getConfigDefinition() {
-    return configDefinition;
-  }
 }

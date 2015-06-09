@@ -22,8 +22,7 @@ public class TestConfigDefinitionBean {
 
   @Test(expected = NullPointerException.class)
   public void testConfigDefinitionBeanNull() {
-    ConfigDefinitionJson configDefinitionJsonBean =
-      new ConfigDefinitionJson(null);
+    new ConfigDefinitionJson(null);
   }
 
   @Test
@@ -51,65 +50,10 @@ public class TestConfigDefinitionBean {
     Assert.assertEquals(configDefinition.getFieldName(), configDefinitionJsonBean.getFieldName());
     Assert.assertEquals(configDefinition.getGroup(), configDefinitionJsonBean.getGroup());
     Assert.assertEquals(configDefinition.getLabel(), configDefinitionJsonBean.getLabel());
-    //Shallow compare model definition. Its own unit test will take care of real comparison.
-    Assert.assertEquals(configDefinition.getModel(), configDefinitionJsonBean.getModel().getModelDefinition());
     Assert.assertEquals(configDefinition.getTriggeredByValues(), configDefinitionJsonBean.getTriggeredByValues());
     Assert.assertEquals(configDefinition.getType(), configDefinitionJsonBean.getType());
     Assert.assertEquals(configDefinition.isRequired(), configDefinitionJsonBean.isRequired());
 
   }
 
-  @Test
-  public void testConfigDefinitionBeanConstructorWithArgs() {
-    com.streamsets.pipeline.config.ModelDefinition modelDefinition = new ModelDefinition(ModelType.COMPLEX_FIELD,
-                                                                                         "myClass", null , null, null);
-    List<Object> triggeredBy = new ArrayList<>();
-    triggeredBy.add("X");
-    triggeredBy.add("Y");
-    triggeredBy.add("Z");
-    com.streamsets.pipeline.config.ConfigDefinition configDefinition =
-      new ConfigDefinition("int", ConfigDef.Type.NUMBER, "l2", "d2", "-1", true, "g", "intVar", modelDefinition, "A",
-        triggeredBy, 0, Collections.<ElFunctionDefinition>emptyList(), Collections.<ElConstantDefinition>emptyList(), Long.MIN_VALUE, Long.MAX_VALUE
-        , "text/plain", 0, Collections.<Class> emptyList(), ConfigDef.Evaluation.IMPLICIT, null);
-
-    ModelDefinitionJson modelDefinitionJsonBean =
-      new ModelDefinitionJson(modelDefinition);
-    ConfigDefinitionJson configDefinitionJsonBean =
-      new ConfigDefinitionJson("int", ConfigDef.Type.NUMBER, "l2", "d2", "-1", true,
-        "g", "intVar", modelDefinitionJsonBean, "A", triggeredBy, 0, Collections.<ElFunctionDefinitionJson>emptyList(),
-        Collections.<ElConstantDefinitionJson>emptyList(), Long.MIN_VALUE, Long.MAX_VALUE
-        , "text/plain", 0, Collections.<String> emptyList(), ConfigDef.Evaluation.IMPLICIT, null);
-
-    Assert.assertEquals(configDefinition.getName(), configDefinitionJsonBean.getName());
-    Assert.assertEquals(configDefinition.getDefaultValue(), configDefinitionJsonBean.getDefaultValue());
-    Assert.assertEquals(configDefinition.getDependsOn(), configDefinitionJsonBean.getDependsOn());
-    Assert.assertEquals(configDefinition.getDescription(), configDefinitionJsonBean.getDescription());
-    Assert.assertEquals(configDefinition.getDisplayPosition(), configDefinitionJsonBean.getDisplayPosition());
-    Assert.assertEquals(configDefinition.getFieldName(), configDefinitionJsonBean.getFieldName());
-    Assert.assertEquals(configDefinition.getGroup(), configDefinitionJsonBean.getGroup());
-    Assert.assertEquals(configDefinition.getLabel(), configDefinitionJsonBean.getLabel());
-    //Shallow compare model definition. Its own unit test will take care of real comparison.
-    Assert.assertEquals(configDefinition.getModel(), configDefinitionJsonBean.getModel().getModelDefinition());
-    Assert.assertEquals(configDefinition.getTriggeredByValues(), configDefinitionJsonBean.getTriggeredByValues());
-    Assert.assertEquals(configDefinition.getType(), configDefinitionJsonBean.getType());
-    Assert.assertEquals(configDefinition.isRequired(), configDefinitionJsonBean.isRequired());
-
-    //compare the underlying com.streamsets.pipeline.config.ConfigDefinition object
-    Assert.assertEquals(configDefinition.getName(), configDefinitionJsonBean.getConfigDefinition().getName());
-    Assert.assertEquals(configDefinition.getDefaultValue(),
-      configDefinitionJsonBean.getConfigDefinition().getDefaultValue());
-    Assert.assertEquals(configDefinition.getDependsOn(), configDefinitionJsonBean.getConfigDefinition().getDependsOn());
-    Assert.assertEquals(configDefinition.getDescription(), configDefinitionJsonBean.getConfigDefinition().getDescription());
-    Assert.assertEquals(configDefinition.getDisplayPosition(),
-      configDefinitionJsonBean.getConfigDefinition().getDisplayPosition());
-    Assert.assertEquals(configDefinition.getFieldName(), configDefinitionJsonBean.getConfigDefinition().getFieldName());
-    Assert.assertEquals(configDefinition.getGroup(), configDefinitionJsonBean.getConfigDefinition().getGroup());
-    Assert.assertEquals(configDefinition.getLabel(), configDefinitionJsonBean.getConfigDefinition().getLabel());
-    //Shallow compare model definition. Its own unit test will take care of real comparison.
-    Assert.assertEquals(configDefinition.getModel(), configDefinitionJsonBean.getConfigDefinition().getModel());
-    Assert.assertEquals(configDefinition.getTriggeredByValues(),
-      configDefinitionJsonBean.getConfigDefinition().getTriggeredByValues());
-    Assert.assertEquals(configDefinition.getType(), configDefinitionJsonBean.getConfigDefinition().getType());
-    Assert.assertEquals(configDefinition.isRequired(), configDefinitionJsonBean.getConfigDefinition().isRequired());
-  }
 }

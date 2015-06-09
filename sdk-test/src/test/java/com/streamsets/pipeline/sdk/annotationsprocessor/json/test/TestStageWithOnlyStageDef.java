@@ -10,6 +10,7 @@ import org.junit.Assert;
 
 import javax.tools.Diagnostic;
 import javax.tools.JavaFileObject;
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 

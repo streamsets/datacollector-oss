@@ -20,6 +20,7 @@ import com.streamsets.pipeline.config.ConfigDefinition;
 import com.streamsets.pipeline.config.ConfigGroupDefinition;
 import com.streamsets.pipeline.config.RawSourceDefinition;
 import com.streamsets.pipeline.config.StageDefinition;
+import com.streamsets.pipeline.config.StageLibraryDefinition;
 import com.streamsets.pipeline.config.StageType;
 
 import java.util.Collections;
@@ -39,8 +40,9 @@ public abstract class StageDefinitionExtractor {
     return klass.getName().replace(".", "_").replace("$", "_");
   }
 
-  public StageDefinition extract(Class<? extends Stage> klass, Object contextMsg) {
+  public StageDefinition extract(StageLibraryDefinition libraryDef, Class<? extends Stage> klass, Object contextMsg) {
     contextMsg = Utils.formatL("{} Stage='{}'", contextMsg, klass.getSimpleName());
+
     StageDef sDef = klass.getAnnotation(StageDef.class);
     Utils.checkArgument(sDef != null, Utils.formatL("{} does not have a StageDef annotation", contextMsg));
 
@@ -85,7 +87,7 @@ public abstract class StageDefinitionExtractor {
     validateConfigGroups(configDefinitions, configGroupDefinition, contextMsg);
 
     StageDefinition stageDef =
-        new StageDefinition(className, name, version, label, description, type, errorStage, preconditions,
+        new StageDefinition(libraryDef, klass, name, version, label, description, type, errorStage, preconditions,
                             onRecordError, configDefinitions, rawSourceDefinition, icon, configGroupDefinition,
                             variableOutputStreams, outputStreams, outputStreamLabelProviderClass, executionModes);
 

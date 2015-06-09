@@ -5,8 +5,6 @@
  */
 package com.streamsets.pipeline.restapi.bean;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
 import java.util.List;
 
 public class PipelineDefinitionJson {
@@ -25,8 +23,4 @@ public class PipelineDefinitionJson {
     return BeanHelper.wrapConfigGroupDefinition(pipelineDefinition.getConfigGroupDefinition());
   }
 
-  @JsonIgnore
-  public com.streamsets.pipeline.config.PipelineDefinition getPipelineDefinition() {
-    return pipelineDefinition;
-  }
 }

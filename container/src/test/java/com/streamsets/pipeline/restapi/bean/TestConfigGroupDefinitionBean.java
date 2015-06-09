@@ -19,7 +19,6 @@ public class TestConfigGroupDefinitionBean {
 
   @Test(expected = NullPointerException.class)
   public void testConfigGroupDefinitionBeanNull() {
-    ConfigGroupDefinitionJson configGroupDefinitionJsonBean =
       new ConfigGroupDefinitionJson(null);
   }
 
@@ -55,40 +54,4 @@ public class TestConfigGroupDefinitionBean {
       configGroupDefinitionJsonBean.getGroupNameToLabelMapList());
   }
 
-  @Test
-  public void testConfigGroupDefinitionBeanConstructorWithArgs() {
-    Map<String, List<String>> classNameToGroupsMap = new HashMap<>();
-    List<String> group1 = new ArrayList<>();
-    group1.add("A");
-    group1.add("B");
-    classNameToGroupsMap.put("g1", group1);
-    List<String> group2 = new ArrayList<>();
-    group2.add("C");
-    group2.add("D");
-    classNameToGroupsMap.put("g2", group2);
-
-    List<Map<String, String>> groupNameToLabelMapList = new ArrayList<>();
-    Map<String, String> map1 = new HashMap<>();
-    map1.put("g1", "Group One");
-    Map<String, String> map2 = new HashMap<>();
-    map2.put("g2", "Group Two");
-    groupNameToLabelMapList.add(map1);
-    groupNameToLabelMapList.add(map2);
-
-    com.streamsets.pipeline.config.ConfigGroupDefinition configGroupDefinition =
-      new ConfigGroupDefinition(ImmutableSet.of("A", "B", "C", "C"), classNameToGroupsMap, groupNameToLabelMapList);
-
-    ConfigGroupDefinitionJson configGroupDefinitionJsonBean =
-      new ConfigGroupDefinitionJson(classNameToGroupsMap, groupNameToLabelMapList);
-
-    Assert.assertEquals(configGroupDefinition.getClassNameToGroupsMap(),
-      configGroupDefinitionJsonBean.getClassNameToGroupsMap());
-    Assert.assertEquals(configGroupDefinition.getGroupNameToLabelMapList(),
-      configGroupDefinitionJsonBean.getGroupNameToLabelMapList());
-
-    Assert.assertEquals(configGroupDefinition.getClassNameToGroupsMap(),
-      configGroupDefinitionJsonBean.getConfigGroupDefinition().getClassNameToGroupsMap());
-    Assert.assertEquals(configGroupDefinition.getGroupNameToLabelMapList(),
-      configGroupDefinitionJsonBean.getConfigGroupDefinition().getGroupNameToLabelMapList());
-  }
 }

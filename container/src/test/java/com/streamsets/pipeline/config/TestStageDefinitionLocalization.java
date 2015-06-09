@@ -23,6 +23,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Properties;
 
 public class TestStageDefinitionLocalization {
 
@@ -30,6 +31,9 @@ public class TestStageDefinitionLocalization {
   public void cleanUp() {
     LocaleInContext.set(null);
   }
+
+  private static final StageLibraryDefinition MOCK_LIB_DEF =
+      new StageLibraryDefinition(TestStageDefinitionLocalization.class.getClassLoader(), "mock", "MOCK", new Properties());
 
   @SuppressWarnings("unchecked")
   private StageDefinition createStageDefinition() {
@@ -47,13 +51,12 @@ public class TestStageDefinitionLocalization {
         (Map)ImmutableMap.of(Groups.class.getName(), ImmutableList.of(Groups.GROUP.name())),
         (List)ImmutableList.of(ImmutableMap.of("label", "Group", "name", "GROUP"))
     );
-    StageDefinition def = new StageDefinition(TProcessor.class.getName(), "stage", "1.0.0", "StageLabel",
+    StageDefinition def = new StageDefinition(MOCK_LIB_DEF, TProcessor.class, "stage", "1.0.0", "StageLabel",
                                               "StageDescription", StageType.PROCESSOR, true, true, true, configs,
                                               rawSource, "", configGroup, false, 1,
                                               TOutput.class.getName(),
                                               Arrays.asList(ExecutionMode.CLUSTER,
                                                             ExecutionMode.STANDALONE));
-    def.setLibrary("lib", "LIB", Arrays.asList(ExecutionMode.values()), getClass().getClassLoader());
     return def;
   }
 

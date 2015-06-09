@@ -270,38 +270,11 @@ public class BeanHelper {
     return configDefinitionlist;
   }
 
-  public static List<com.streamsets.pipeline.config.ConfigDefinition> unwrapConfigDefinitions(
-    List<ConfigDefinitionJson> configDefinitionJsons) {
-    if(configDefinitionJsons == null) {
-      return null;
-    }
-    List<com.streamsets.pipeline.config.ConfigDefinition> configDefinitionlist = new ArrayList<>(configDefinitionJsons.size());
-    for(ConfigDefinitionJson c : configDefinitionJsons) {
-      configDefinitionlist.add(c.getConfigDefinition());
-    }
-    return configDefinitionlist;
-  }
-
   public static ModelDefinitionJson wrapModelDefinition(com.streamsets.pipeline.config.ModelDefinition modelDefinition) {
     if(modelDefinition == null) {
       return null;
     }
     return new ModelDefinitionJson(modelDefinition);
-  }
-
-  public static com.streamsets.pipeline.config.ModelDefinition unwrapModelDefinition(ModelDefinitionJson modelDefinitionJson) {
-    if(modelDefinitionJson == null) {
-      return null;
-    }
-    return modelDefinitionJson.getModelDefinition();
-  }
-
-  public static com.streamsets.pipeline.config.RawSourceDefinition unwrapRawSourceDefinition(
-    RawSourceDefinitionJson rawSourceDefinitionJson) {
-    if(rawSourceDefinitionJson == null) {
-      return null;
-    }
-    return rawSourceDefinitionJson.getRawSourceDefinition();
   }
 
   public static RawSourceDefinitionJson wrapRawSourceDefinition(
@@ -320,14 +293,6 @@ public class BeanHelper {
     return new ConfigGroupDefinitionJson(configGroupDefinition);
   }
 
-  public static com.streamsets.pipeline.config.ConfigGroupDefinition unwrapConfigGroupDefinition(
-    ConfigGroupDefinitionJson configGroupDefinitionJson) {
-    if(configGroupDefinitionJson == null) {
-      return null;
-    }
-    return configGroupDefinitionJson.getConfigGroupDefinition();
-  }
-
   public static List<StageDefinitionJson> wrapStageDefinitions(
     List<com.streamsets.pipeline.config.StageDefinition> stageDefinitions) {
     if(stageDefinitions == null) {
@@ -338,25 +303,6 @@ public class BeanHelper {
       stageDefinitionJsonList.add(new StageDefinitionJson(s));
     }
     return stageDefinitionJsonList;
-  }
-
-  public static com.streamsets.pipeline.config.StageDefinition unwrapStageDefinition(StageDefinitionJson stageDefinitionJson) {
-    if(stageDefinitionJson == null) {
-      return null;
-    }
-    return stageDefinitionJson.getStageDefinition();
-  }
-
-  public static List<com.streamsets.pipeline.config.StageDefinition> unwrapStageDefinitions(
-    List<StageDefinitionJson> stageDefinitionJsons) {
-    if(stageDefinitionJsons == null) {
-      return null;
-    }
-    List<com.streamsets.pipeline.config.StageDefinition> stageDefinitionList = new ArrayList<>(stageDefinitionJsons.size());
-    for(StageDefinitionJson s : stageDefinitionJsons) {
-      stageDefinitionList.add(s.getStageDefinition());
-    }
-    return stageDefinitionList;
   }
 
   public static List<RuleIssueJson> wrapRuleIssues(List<com.streamsets.pipeline.validation.RuleIssue> ruleIssues) {
@@ -667,32 +613,6 @@ public class BeanHelper {
     return new ArrayList<>(elConstantDefinitionJsons.values());
   }
 
-  public static List<ElFunctionArgumentDefinition> unwrapElFunctionArgumentDefinitions(
-    List<ElFunctionArgumentDefinitionJson> elFunctionArgumentDefinitionJson) {
-    if(elFunctionArgumentDefinitionJson == null) {
-      return null;
-    }
-    List<ElFunctionArgumentDefinition> elFunctionArgumentDefinitions =
-      new ArrayList<>(elFunctionArgumentDefinitionJson.size());
-    for(ElFunctionArgumentDefinitionJson e : elFunctionArgumentDefinitionJson) {
-      elFunctionArgumentDefinitions.add(e.getElFunctionArgumentDefinition());
-    }
-    return elFunctionArgumentDefinitions;
-  }
-
-  public static List<ElFunctionDefinition> unwrapElFunctionDefinitions(
-    List<ElFunctionDefinitionJson> elFunctionDefinitionJson) {
-    if(elFunctionDefinitionJson == null) {
-      return null;
-    }
-    List<ElFunctionDefinition> elFunctionDefinitions =
-      new ArrayList<>(elFunctionDefinitionJson.size());
-    for(ElFunctionDefinitionJson e : elFunctionDefinitionJson) {
-      elFunctionDefinitions.add(e.getElFunctionDefinition());
-    }
-    return elFunctionDefinitions;
-  }
-
   public static Map<String, ElFunctionDefinitionJson> wrapElFunctionDefinitionsMap(
     Map<String, ElFunctionDefinition> elFunctionDefinitionMap) {
     if(elFunctionDefinitionMap == null) {
@@ -705,31 +625,6 @@ public class BeanHelper {
     return elFunctionDefinitionJsonMap;
   }
 
-  public static Map<String, ElFunctionDefinition> unwrapElFunctionDefinitionsMap(
-    Map<String, ElFunctionDefinitionJson> elFunctionDefinitionJsonMap) {
-    if(elFunctionDefinitionJsonMap == null) {
-      return null;
-    }
-    Map<String, ElFunctionDefinition> elFunctionDefinitionMap = new HashMap<>();
-    for(Map.Entry<String, ElFunctionDefinitionJson> e : elFunctionDefinitionJsonMap.entrySet()) {
-      elFunctionDefinitionMap.put(e.getKey(), e.getValue().getElFunctionDefinition());
-    }
-    return elFunctionDefinitionMap;
-  }
-
-  public static List<ElConstantDefinition> unwrapElConstantDefinitions(
-    List<ElConstantDefinitionJson> elConstantDefinitionJson) {
-    if(elConstantDefinitionJson == null) {
-      return null;
-    }
-    List<ElConstantDefinition> elConstantDefinitions =
-      new ArrayList<>(elConstantDefinitionJson.size());
-    for(ElConstantDefinitionJson e : elConstantDefinitionJson) {
-      elConstantDefinitions.add(e.getElConstantDefinition());
-    }
-    return elConstantDefinitions;
-  }
-
   public static Map<String, ElConstantDefinitionJson> wrapElConstantDefinitionsMap(
     Map<String, ElConstantDefinition> elConstantDefinitionMap) {
     if(elConstantDefinitionMap == null) {
@@ -740,18 +635,6 @@ public class BeanHelper {
       elConstantDefinitionJsonMap.put(e.getKey(), new ElConstantDefinitionJson(e.getValue()));
     }
     return elConstantDefinitionJsonMap;
-  }
-
-  public static Map<String, ElConstantDefinition> unwrapElConstantDefinitionsMap(
-    Map<String, ElConstantDefinitionJson> elConstantDefinitionJsonMap) {
-    if(elConstantDefinitionJsonMap == null) {
-      return null;
-    }
-    Map<String, ElConstantDefinition> elConstantDefinitionMap = new HashMap<>();
-    for(Map.Entry<String, ElConstantDefinitionJson> e : elConstantDefinitionJsonMap.entrySet()) {
-      elConstantDefinitionMap.put(e.getKey(), e.getValue().getElConstantDefinition());
-    }
-    return elConstantDefinitionMap;
   }
 
   /*****************************************************/
