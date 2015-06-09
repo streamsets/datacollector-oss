@@ -15,7 +15,7 @@ import com.streamsets.pipeline.config.MetricElement;
 import com.streamsets.pipeline.config.MetricType;
 import com.streamsets.pipeline.config.MetricsRuleDefinition;
 import com.streamsets.pipeline.config.PipelineConfiguration;
-import com.streamsets.pipeline.config.PipelineDefConfigs;
+import com.streamsets.pipeline.definition.PipelineDefConfigs;
 import com.streamsets.pipeline.config.RuleDefinitions;
 import com.streamsets.pipeline.config.StageConfiguration;
 import com.streamsets.pipeline.config.ThresholdType;

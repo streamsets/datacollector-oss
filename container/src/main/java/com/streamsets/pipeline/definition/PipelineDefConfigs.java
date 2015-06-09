@@ -3,7 +3,7 @@
  * be copied, modified, or distributed in whole or part without
  * written consent of StreamSets, Inc.
  */
-package com.streamsets.pipeline.config;
+package com.streamsets.pipeline.definition;
 
 import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.ConfigGroups;
@@ -11,6 +11,13 @@ import com.streamsets.pipeline.api.ExecutionMode;
 import com.streamsets.pipeline.api.GenerateResourceBundle;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.ValueChooser;
+import com.streamsets.pipeline.config.DeliveryGuarantee;
+import com.streamsets.pipeline.config.DeliveryGuaranteeChooserValues;
+import com.streamsets.pipeline.config.ErrorHandlingChooserValues;
+import com.streamsets.pipeline.config.ExecutionModeChooserValues;
+import com.streamsets.pipeline.config.MemoryLimitExceeded;
+import com.streamsets.pipeline.config.MemoryLimitExceededChooserValues;
+import com.streamsets.pipeline.config.PipelineGroups;
 
 import java.util.Map;
 

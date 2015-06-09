@@ -175,10 +175,6 @@ public class ConfigDefinition {
     return displayPosition;
   }
 
-  public void setDefaultValue(Object defaultValue) {
-    this.defaultValue = defaultValue;
-  }
-
   public Map<String, List<Object>> getDependsOnMap() {
     return dependsOnMap;
   }

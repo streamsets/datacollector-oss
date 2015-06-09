@@ -18,7 +18,7 @@ import com.streamsets.pipeline.cluster.MockSystemProcessFactory;
 import com.streamsets.pipeline.cluster.SparkManager;
 import com.streamsets.pipeline.config.ConfigConfiguration;
 import com.streamsets.pipeline.config.PipelineConfiguration;
-import com.streamsets.pipeline.config.PipelineDefConfigs;
+import com.streamsets.pipeline.definition.PipelineDefConfigs;
 import com.streamsets.pipeline.lib.util.ThreadUtil;
 import com.streamsets.pipeline.main.RuntimeInfo;
 import com.streamsets.pipeline.runner.MockStages;
