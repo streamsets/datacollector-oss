@@ -6,16 +6,19 @@
 package com.streamsets.pipeline.definition;
 
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableSet;
 import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.config.ConfigDefinition;
 import com.streamsets.pipeline.config.ModelDefinition;
+import com.streamsets.pipeline.config.ModelType;
 import com.streamsets.pipeline.el.ElConstantDefinition;
 import com.streamsets.pipeline.el.ElFunctionDefinition;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -114,10 +117,8 @@ public abstract class ConfigDefinitionExtractor {
       List<Object> triggeredByValues = null;  // done at resolveDependencies() invocation
       ModelDefinition model = ModelDefinitionExtractor.get().extract(field, contextMsg);
       int displayPosition = annotation.displayPosition();
-      List<ElFunctionDefinition> elFunctionDefinitions =
-          ELDefinitionExtractor.get().extractFunctions(annotation.elDefs(), contextMsg);
-      List<ElConstantDefinition> elConstantDefinitions =
-          ELDefinitionExtractor.get().extractConstants(annotation.elDefs(), contextMsg);
+      List<ElFunctionDefinition> elFunctionDefinitions = getELFunctions(annotation, model, contextMsg);
+      List<ElConstantDefinition> elConstantDefinitions = getELConstants(annotation, model ,contextMsg);
       List<Class> elDefs = ImmutableList.copyOf(annotation.elDefs());
       long min = annotation.min();
       long max = annotation.max();
@@ -132,5 +133,27 @@ public abstract class ConfigDefinitionExtractor {
     return def;
   }
 
+  private static final Set<ConfigDef.Type> TYPES_SUPPORTING_ELS = ImmutableSet.of(
+      ConfigDef.Type.LIST, ConfigDef.Type.MAP, ConfigDef.Type.NUMBER, ConfigDef.Type.STRING, ConfigDef.Type.TEXT);
+
+  private static final Set<ModelType> MODELS_SUPPORTING_ELS = ImmutableSet.of(ModelType.LANE_PREDICATE_MAPPING);
+
+  private List<ElFunctionDefinition> getELFunctions(ConfigDef annotation,ModelDefinition model,  Object contextMsg) {
+    List<ElFunctionDefinition> functions = Collections.emptyList();
+    if (TYPES_SUPPORTING_ELS.contains(annotation.type()) ||
+        (annotation.type() == ConfigDef.Type.MODEL && MODELS_SUPPORTING_ELS.contains(model.getModelType()))) {
+      functions = ELDefinitionExtractor.get().extractFunctions(annotation.elDefs(), contextMsg);
+    }
+    return functions;
+  }
+
+  private List<ElConstantDefinition> getELConstants(ConfigDef annotation, ModelDefinition model, Object contextMsg) {
+    List<ElConstantDefinition> functions = Collections.emptyList();
+    if (TYPES_SUPPORTING_ELS.contains(annotation.type()) ||
+        (annotation.type() == ConfigDef.Type.MODEL && MODELS_SUPPORTING_ELS.contains(model.getModelType()))) {
+      functions = ELDefinitionExtractor.get().extractConstants(annotation.elDefs(), contextMsg);
+    }
+    return functions;
+  }
 
 }
