@@ -325,10 +325,11 @@ angular.module('dataCollectorApp.common')
           configuration: [],
           uiInfo: {
             label: stageLabel,
-            description: '', //stage.description,
+            description: '',
             xPos: xPos,
             yPos: yPos,
-            stageType: stage.type
+            stageType: stage.type,
+            icon: self.getStageIconURL(stage)
           },
           inputLanes: [],
           outputLanes: []
@@ -388,8 +389,6 @@ angular.module('dataCollectorApp.common')
           stageInstance.uiInfo.rawSource.configuration.push(self.setDefaultValueForConfig(configDefinition, stageInstance));
         });
       }
-
-      stageInstance.uiInfo.icon = self.getStageIconURL(stage);
 
       if(configuration) {
         //Special handling for lanePredicates
