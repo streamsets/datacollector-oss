@@ -33,14 +33,30 @@ angular.module('dataCollectorApp.common')
           ])
           .then(function (results) {
             var definitions = results[0].data,
-              pipelines = results[1].data;
+              pipelines = results[1].data,
+              rulesElMetadata = definitions.rulesElMetadata,
+              elFunctionDefinitions = [],
+              elConstantDefinitions = [];
 
             //Definitions
             self.pipelineConfigDefinition = definitions.pipeline[0];
             self.stageDefintions = definitions.stages;
-            self.rulesElMetadata = definitions.rulesElMetadata;
+            self.elCatalog = definitions.elCatalog;
 
-            self.metricRulesELMetadata = angular.copy(definitions.rulesElMetadata);
+            angular.forEach(rulesElMetadata.elFunctionDefinitions, function(idx) {
+              elFunctionDefinitions.push(self.elCatalog.elFunctionDefinitions[parseInt(idx)]);
+            });
+
+            angular.forEach(rulesElMetadata.elConstantDefinitions, function(idx) {
+              elConstantDefinitions.push(self.elCatalog.elConstantDefinitions[parseInt(idx)]);
+            });
+
+            self.rulesElMetadata = {
+              elFunctionDefinitions: elFunctionDefinitions,
+              elConstantDefinitions: elConstantDefinitions
+            };
+
+            self.metricRulesELMetadata = angular.copy(self.rulesElMetadata);
             self.metricRulesELMetadata.elFunctionDefinitions.push({
               name: "value",
               description: "Returns the value of the metric in context",
@@ -103,6 +119,13 @@ angular.module('dataCollectorApp.common')
      */
     this.getMetricRulesElMetadata = function() {
       return self.metricRulesELMetadata;
+    };
+
+    /**
+     * Returns EL Catalog
+     */
+    this.getELCatalog = function() {
+      return self.elCatalog;
     };
 
     /**

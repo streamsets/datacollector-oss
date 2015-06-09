@@ -66,11 +66,26 @@ angular
         var pipelineConfig = $scope.pipelineConfig,
           pipelineConstants = _.find(pipelineConfig.configuration, function(config) {
             return config.name === 'constants';
+          }),
+          elCatalog = pipelineService.getELCatalog(),
+          elFunctionDefinitions = [],
+          elConstantDefinitions = [];
+
+        if(configDefinition.elFunctionDefinitionsIdx) {
+          angular.forEach(configDefinition.elFunctionDefinitionsIdx, function(idx) {
+            elFunctionDefinitions.push(elCatalog.elFunctionDefinitions[parseInt(idx)]);
           });
+        }
+
+        if(configDefinition.elConstantDefinitionsIdx) {
+          angular.forEach(configDefinition.elConstantDefinitionsIdx, function(idx) {
+            elConstantDefinitions.push(elCatalog.elConstantDefinitions[parseInt(idx)]);
+          });
+        }
 
         return {
-          elFunctionDefinitions: configDefinition.elFunctionDefinitions,
-          elConstantDefinitions: configDefinition.elConstantDefinitions,
+          elFunctionDefinitions: elFunctionDefinitions,
+          elConstantDefinitions: elConstantDefinitions,
           pipelineConstants: pipelineConstants ? pipelineConstants.value : [],
           runtimeConfigs: pipelineService.getRuntimeConfigs(),
           regex: 'wordColonSlash'
