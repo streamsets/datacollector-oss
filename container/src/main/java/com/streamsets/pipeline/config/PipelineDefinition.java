@@ -9,6 +9,7 @@ import com.google.common.annotations.VisibleForTesting;
 import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.definition.ConfigDefinitionExtractor;
 import com.streamsets.pipeline.definition.ConfigGroupExtractor;
+import com.streamsets.pipeline.definition.PipelineDefConfigs;
 
 import java.util.ArrayList;
 import java.util.List;

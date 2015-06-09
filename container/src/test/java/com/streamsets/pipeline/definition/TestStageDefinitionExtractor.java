@@ -140,6 +140,14 @@ public class TestStageDefinitionExtractor {
   }
 
   @StageDef(version = "1", label = "L")
+  public static class Target2 extends BaseTarget {
+    @Override
+    public void write(Batch batch) throws StageException {
+
+    }
+  }
+
+  @StageDef(version = "1", label = "L")
   @ErrorStage
   public static class ToErrorTarget1 extends Target1 {
     @Override
@@ -161,13 +169,16 @@ public class TestStageDefinitionExtractor {
     Assert.assertEquals("D", def.getDescription());
     Assert.assertEquals(null, def.getRawSourceDefinition());
     Assert.assertEquals(0, def.getConfigGroupDefinition().getGroupNames().size());
-    Assert.assertEquals(2, def.getConfigDefinitions().size());
+    Assert.assertEquals(3, def.getConfigDefinitions().size());
     Assert.assertEquals(1, def.getOutputStreams());
     Assert.assertEquals(2, def.getExecutionModes().size());
     Assert.assertEquals("I", def.getIcon());
     Assert.assertEquals(StageDef.DefaultOutputStreams.class.getName(), def.getOutputStreamLabelProviderClass());
     Assert.assertEquals(null, def.getOutputStreamLabels());
     Assert.assertEquals(StageType.SOURCE, def.getType());
+    Assert.assertFalse(def.getConfigDefinitionsMap().containsKey(StageDefinitionExtractor.REQUIRED_FIELDS.getName()));
+    Assert.assertFalse(def.getConfigDefinitionsMap().containsKey(StageDefinitionExtractor.PRECONDITIONS.getName()));
+    Assert.assertTrue(def.getConfigDefinitionsMap().containsKey(StageDefinitionExtractor.ON_ERROR_RECORD.getName()));
   }
 
   @Test
@@ -208,6 +219,19 @@ public class TestStageDefinitionExtractor {
     Assert.assertEquals(null, def.getOutputStreamLabelProviderClass());
     Assert.assertTrue(def.hasOnRecordError());
     Assert.assertFalse(def.hasPreconditions());
+    Assert.assertFalse(def.getConfigDefinitionsMap().containsKey(StageDefinitionExtractor.REQUIRED_FIELDS.getName()));
+    Assert.assertFalse(def.getConfigDefinitionsMap().containsKey(StageDefinitionExtractor.PRECONDITIONS.getName()));
+    Assert.assertTrue(def.getConfigDefinitionsMap().containsKey(StageDefinitionExtractor.ON_ERROR_RECORD.getName()));
+  }
+
+  @Test
+  public void testExtractTarget2() {
+    StageDefinition def = StageDefinitionExtractor.get().extract(MOCK_LIB_DEF, Target2.class, "x");
+    Assert.assertTrue(def.hasOnRecordError());
+    Assert.assertTrue(def.hasPreconditions());
+    Assert.assertTrue(def.getConfigDefinitionsMap().containsKey(StageDefinitionExtractor.REQUIRED_FIELDS.getName()));
+    Assert.assertTrue(def.getConfigDefinitionsMap().containsKey(StageDefinitionExtractor.PRECONDITIONS.getName()));
+    Assert.assertTrue(def.getConfigDefinitionsMap().containsKey(StageDefinitionExtractor.ON_ERROR_RECORD.getName()));
   }
 
   @Test
@@ -218,6 +242,9 @@ public class TestStageDefinitionExtractor {
     Assert.assertEquals(null, def.getOutputStreamLabelProviderClass());
     Assert.assertFalse(def.hasOnRecordError());
     Assert.assertFalse(def.hasPreconditions());
+    Assert.assertFalse(def.getConfigDefinitionsMap().containsKey(StageDefinitionExtractor.REQUIRED_FIELDS.getName()));
+    Assert.assertFalse(def.getConfigDefinitionsMap().containsKey(StageDefinitionExtractor.PRECONDITIONS.getName()));
+    Assert.assertFalse(def.getConfigDefinitionsMap().containsKey(StageDefinitionExtractor.ON_ERROR_RECORD.getName()));
   }
 
 }

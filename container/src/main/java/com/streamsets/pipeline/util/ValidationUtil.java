@@ -6,7 +6,7 @@
 package com.streamsets.pipeline.util;
 
 import com.streamsets.pipeline.api.el.ELEvalException;
-import com.streamsets.pipeline.config.PipelineDefConfigs;
+import com.streamsets.pipeline.definition.PipelineDefConfigs;
 import com.streamsets.pipeline.el.ELEvaluator;
 import com.streamsets.pipeline.el.ELVariables;
 import com.streamsets.pipeline.el.JvmEL;

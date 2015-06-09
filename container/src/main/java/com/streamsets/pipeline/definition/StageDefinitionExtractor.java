@@ -24,8 +24,10 @@ import com.streamsets.pipeline.config.StageLibraryDefinition;
 import com.streamsets.pipeline.config.StageType;
 
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 public abstract class StageDefinitionExtractor {
@@ -34,6 +36,28 @@ public abstract class StageDefinitionExtractor {
 
   public static StageDefinitionExtractor get() {
     return EXTRACTOR;
+  }
+
+  static final ConfigDefinition REQUIRED_FIELDS;
+  static final ConfigDefinition PRECONDITIONS;
+  static final ConfigDefinition ON_ERROR_RECORD;
+
+  static {
+    List<ConfigDefinition> defs = ConfigDefinitionExtractor.get().extract(BuiltInStageDefConfigs.class,
+                                                                          "Built-in stage configurations");
+    Map<String, ConfigDefinition> map = new HashMap<>();
+    for (ConfigDefinition def : defs) {
+      map.put(def.getName(), def);
+    }
+    REQUIRED_FIELDS = map.get(BuiltInStageDefConfigs.STAGE_REQUIRED_FIELDS_CONFIG);
+    PRECONDITIONS = map.get(BuiltInStageDefConfigs.STAGE_PRECONDITIONS_CONFIG);
+    ON_ERROR_RECORD = map.get(BuiltInStageDefConfigs.STAGE_ON_RECORD_ERROR_CONFIG);
+    Utils.checkState(REQUIRED_FIELDS != null, Utils.format("Missing built-in configuration '{}'",
+                                                           BuiltInStageDefConfigs.STAGE_REQUIRED_FIELDS_CONFIG));
+    Utils.checkState(PRECONDITIONS != null, Utils.format("Missing built-in configuration '{}'",
+                                                         BuiltInStageDefConfigs.STAGE_PRECONDITIONS_CONFIG));
+    Utils.checkState(ON_ERROR_RECORD != null, Utils.format("Missing built-in configuration '{}'",
+                                                           BuiltInStageDefConfigs.STAGE_ON_RECORD_ERROR_CONFIG));
   }
 
   static String getStageName(Class klass) {
@@ -46,7 +70,6 @@ public abstract class StageDefinitionExtractor {
     StageDef sDef = klass.getAnnotation(StageDef.class);
     Utils.checkArgument(sDef != null, Utils.formatL("{} does not have a StageDef annotation", contextMsg));
 
-    String className = klass.getName();
     String name = getStageName(klass);
     String version = sDef.version();
     Utils.checkArgument(!version.isEmpty(), Utils.formatL("{} version cannot be empty", contextMsg));
@@ -86,6 +109,13 @@ public abstract class StageDefinitionExtractor {
 
     validateConfigGroups(configDefinitions, configGroupDefinition, contextMsg);
 
+    if (preconditions) {
+      configDefinitions.add(REQUIRED_FIELDS);
+      configDefinitions.add(PRECONDITIONS);
+    }
+    if (onRecordError) {
+      configDefinitions.add(ON_ERROR_RECORD);
+    }
     StageDefinition stageDef =
         new StageDefinition(libraryDef, klass, name, version, label, description, type, errorStage, preconditions,
                             onRecordError, configDefinitions, rawSourceDefinition, icon, configGroupDefinition,
