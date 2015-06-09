@@ -527,6 +527,21 @@ angular
         }
 
         return val;
+      },
+
+      /**
+       * Callback function when Stage Library is changed.
+       * Update the icon URL when stage library is updated.
+       */
+      stageLibraryChange: function() {
+        var selectedObject = $scope.selectedObject,
+          stageLibraryDefn = _.find($scope.stageLibraries, function (stageLibrary) {
+            return (stageLibrary.name === selectedObject.stageName &&
+              stageLibrary.version === selectedObject.stageVersion &&
+              stageLibrary.library === selectedObject.library);
+          });
+
+        selectedObject.uiInfo.icon = pipelineService.getStageIconURL(stageLibraryDefn);
       }
     });
 
