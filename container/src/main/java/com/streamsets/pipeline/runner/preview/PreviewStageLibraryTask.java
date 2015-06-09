@@ -24,7 +24,7 @@ public class PreviewStageLibraryTask extends TaskWrapper implements StageLibrary
   public static final String VERSION = "1.0.0";
 
   private static final StageLibraryDefinition PREVIEW_LIB = new StageLibraryDefinition(
-      PreviewStageLibraryTask.class.getClassLoader(), LIBRARY, NAME, new Properties());
+      PreviewStageLibraryTask.class.getClassLoader(), LIBRARY, "Preview", new Properties());
 
   private final StageLibraryTask library;
 
