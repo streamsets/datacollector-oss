@@ -103,6 +103,21 @@
       <artifactId>streamsets-datacollector-spark-bootstrap</artifactId>
       <scope>provided</scope>
     </dependency>
+    <dependency>
+      <groupId>com.streamsets</groupId>
+      <artifactId>streamsets-datacollector-cassandra_2_1_5-lib</artifactId>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>com.streamsets</groupId>
+      <artifactId>streamsets-datacollector-mongodb_3_0_2-lib</artifactId>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>com.streamsets</groupId>
+      <artifactId>streamsets-datacollector-aws-lib</artifactId>
+      <scope>provided</scope>
+    </dependency>
   </dependencies>
 
   <build>
@@ -198,8 +213,12 @@
         </dependency>
         <dependency>
           <groupId>com.streamsets</groupId>
+          <artifactId>streamsets-datacollector-mongodb_3_0_2-lib</artifactId>
+          <scope>provided</scope>
+        </dependency>
+        <dependency>
+          <groupId>com.streamsets</groupId>
           <artifactId>streamsets-datacollector-aws-lib</artifactId>
-          <version>1.0.0b3-SNAPSHOT</version>
           <scope>provided</scope>
         </dependency>
       </dependencies>

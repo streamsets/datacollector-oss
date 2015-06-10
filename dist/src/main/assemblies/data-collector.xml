@@ -236,6 +236,13 @@
       <outputDirectory>/streamsets-libs/</outputDirectory>
     </fileSet>
 
+    <!-- Mongo libs -->
+    <fileSet>
+      <directory>${basedir}/../${mongodb_3_0_2-lib}/target/streamsets-libs/</directory>
+      <outputDirectory>/streamsets-libs/</outputDirectory>
+    </fileSet>
+
+
   </fileSets>
 
   <dependencySets>
