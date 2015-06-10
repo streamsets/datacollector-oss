@@ -51,6 +51,7 @@
     <elasticsearch_1_4_4-lib>none</elasticsearch_1_4_4-lib>
     <elasticsearch_1_5_0-lib>none</elasticsearch_1_5_0-lib>
     <cassandra_2_1_5-lib>none</cassandra_2_1_5-lib>
+    <mongo_3_0_2-lib>none</mongo_3_0_2-lib>
   </properties>
 
   <modules>
@@ -88,6 +89,8 @@
     <module>solr-protolib</module>
 
     <module>cassandra-protolib</module>
+
+    <module>mongodb-protolib</module>
 
     <module>flume-protolib</module>
 
@@ -246,6 +249,9 @@
         <elasticsearch_1_4_4-lib>elasticsearch_1_4_4-lib</elasticsearch_1_4_4-lib>
         <cdh5_4_0-cluster-cdh_kafka_1_2_0-lib>cdh5_4_0-cluster-cdh_kafka_1_2_0-lib</cdh5_4_0-cluster-cdh_kafka_1_2_0-lib>
         <cdh5_4_1-cluster-cdh_kafka_1_2_0-lib>cdh5_4_1-cluster-cdh_kafka_1_2_0-lib</cdh5_4_1-cluster-cdh_kafka_1_2_0-lib>
+        <cassandra_2_1_5-lib>cassandra_2_1_5-lib</cassandra_2_1_5-lib>
+        <mongodb_3_0_2-lib>mongodb_3_0_2-lib</mongodb_3_0_2-lib>
+        <aws-lib>aws-lib</aws-lib>
       </properties>
       <modules>
         <module>cdh5_2_1-lib</module>
@@ -258,6 +264,9 @@
         <module>apache-kafka_0_8_2_0-lib</module>
         <module>apache-kafka_0_8_2_1-lib</module>
         <module>elasticsearch_1_4_4-lib</module>
+        <module>cassandra_2_1_5-lib</module>
+        <module>mongodb_3_0_2-lib</module>
+        <module>aws-lib</module>
       </modules>
     </profile>
 
@@ -277,6 +286,7 @@
         <elasticsearch_1_5_0-lib>elasticsearch_1_5_0-lib</elasticsearch_1_5_0-lib>
         <cassandra_2_1_5-lib>cassandra_2_1_5-lib</cassandra_2_1_5-lib>
         <cdh5_4_1-cluster-cdh_kafka_1_2_0-lib>cdh5_4_1-cluster-cdh_kafka_1_2_0-lib</cdh5_4_1-cluster-cdh_kafka_1_2_0-lib>
+        <mongodb_3_0_2-lib>mongodb_3_0_2-lib</mongodb_3_0_2-lib>
       </properties>
       <modules>
         <module>cdh5_3_2-lib</module>
@@ -288,6 +298,7 @@
         <module>cdh_kafka_1_2_0-lib</module>
         <module>cdh5_4_0-cluster-cdh_kafka_1_2_0-lib</module>
         <module>cdh5_4_1-cluster-cdh_kafka_1_2_0-lib</module>
+        <module>mongodb_3_0_2-lib</module>
       </modules>
     </profile>
 

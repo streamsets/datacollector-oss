@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ (c) 2014 StreamSets, Inc. All rights reserved. May not
+ be copied, modified, or distributed in whole or part without
+ written consent of StreamSets, Inc.
+-->
+<assembly>
+  <id>cassandra_3.0.2-lib</id>
+  <formats>
+    <format>tar.gz</format>
+  </formats>
+  <includeBaseDirectory>false</includeBaseDirectory>
+
+  <fileSets>
+
+    <!-- LICENSE, NOTICE, README, etc -->
+    <fileSet>
+      <directory>src/main/release-files</directory>
+      <outputDirectory>/</outputDirectory>
+    </fileSet>
+
+    <!-- Library -->
+    <fileSet>
+      <directory>${basedir}/../mongodb_3_0_2-lib/target/streamsets-libs</directory>
+      <outputDirectory>/streamsets-datacollector-${project.version}/streamsets-libs</outputDirectory>
+    </fileSet>
+  </fileSets>
+
+</assembly>
