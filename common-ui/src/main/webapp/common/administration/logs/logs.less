@@ -1,3 +1,8 @@
+@pre-bg:                    #f5f5f5;
+@pre-color:                 #333;
+@pre-border-color:          #ccc;
+@border-radius-base:        4px;
+
 .logs-page {
   .download-btn-group {
     padding-left: @defaultPadding;
@@ -5,9 +10,21 @@
 
   .panel-body {
     overflow: hidden;
-    pre {
+    .log-message {
       word-wrap: normal;
       height: 100%;
+      overflow: auto;
+      color: @pre-color;
+      background-color: @pre-bg;
+      border: 1px solid @pre-border-color;
+      border-radius: @border-radius-base;
+      padding: @defaultPadding;
+
+      span {
+        display: inline-block;
+        white-space: pre;
+      }
+      
     }
   }
 }
