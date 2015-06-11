@@ -8,7 +8,9 @@ package com.streamsets.pipeline.lib.io;
 import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.lib.util.ExceptionUtils;
 
+import java.io.IOException;
 import java.io.Reader;
+import java.nio.CharBuffer;
 
 /**
  * Caps amount of data read to avoid OOM issues, max size should be 64K or more ot avoid issues with implicit
@@ -23,12 +25,14 @@ public class OverrunReader extends CountingReader {
   }
 
   private final int readLimit;
+  private final boolean removeCtrlChars;
   private boolean enabled;
 
-  public OverrunReader(Reader in, int readLimit, boolean enabled) {
+  public OverrunReader(Reader in, int readLimit, boolean overrunCheckEnabled, boolean removeCtrlChars) {
     super(in);
+    this.removeCtrlChars = removeCtrlChars;
     this.readLimit = readLimit;
-    setEnabled(enabled);
+    setEnabled(overrunCheckEnabled);
   }
 
   public void setEnabled(boolean enabled) {
@@ -51,5 +55,88 @@ public class OverrunReader extends CountingReader {
     }
   }
 
+  private char[] oneCharBuf = new char[1];
+
+  @Override
+  public int read() throws IOException {
+    if (removeCtrlChars) {
+      int r = read(oneCharBuf, 0, 1);
+      while (r > -1 && r == 0) {
+        r = read(oneCharBuf, 0, 1);
+      }
+      return (r == -1) ? -1 : oneCharBuf[0];
+    } else {
+      return super.read();
+    }
+  }
+
+  @Override
+  public int read(char[] buffer) throws IOException {
+    if (removeCtrlChars) {
+      return read(buffer, 0, buffer.length);
+    } else {
+      return super.read(buffer);
+    }
+  }
+
+  @Override
+  public int read(char[] buffer, int offset, int len) throws IOException {
+    if (removeCtrlChars) {
+      char[] internalBuffer = new char[len];
+      int r = super.read(internalBuffer, 0, len);
+      return (r == -1) ? -1 : removeControlChars(internalBuffer, r, buffer, offset);
+    } else {
+      return super.read(buffer, offset, len);
+    }
+  }
+
+  @Override
+  public int read(CharBuffer target) throws IOException {
+    if (removeCtrlChars) {
+      char[] buffer = new char[target.limit()];
+      int r = read(buffer);
+      if (r > 0) {
+        target.put(buffer, 0, r);
+      }
+      return r;
+    } else {
+      return super.read(target);
+    }
+  }
+
+  static int removeControlChars(char[] intBuffer, int len, char[] extBuffer, int offset) {
+    int removed = 0;
+    int extPos = 0;
+    int pos = 0;
+
+    int controlPos = findFirstControlIdx(intBuffer, pos, len);
+    while (controlPos > -1) {
+      int lenToCopy = controlPos - pos;
+      if (lenToCopy > 0) {
+        System.arraycopy(intBuffer, pos, extBuffer, offset + extPos, lenToCopy);
+        extPos += lenToCopy;
+      }
+      pos = controlPos + 1;
+      removed++;
+      controlPos = findFirstControlIdx(intBuffer, pos, len);
+    }
+    int lenToCopy = len - pos;
+    if (lenToCopy > 0) {
+      System.arraycopy(intBuffer, pos, extBuffer, offset + extPos, lenToCopy);
+    }
+    return len - removed;
+  }
+
+  static int findFirstControlIdx(char[] buffer, int start, int bufferLen) {
+    int pos = start;
+    while (pos < bufferLen && !isControl(buffer[pos])) {
+      pos++;
+    }
+    return (pos == bufferLen) ? -1 : pos;
+  }
+
+  static boolean isControl(char c) {
+    return c < 32 && c != '\t' && c != 8 && c != 9 && c != 10 && c != 12 && c!= 13;
+   }
 
 }

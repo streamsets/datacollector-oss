@@ -18,17 +18,19 @@ public abstract class DataFactory {
     private final DataFormat format;
     private final Compression compression;
     private final Charset charset;
+    private final boolean removeCtrlChars;
     private final int maxRecordLen;
     private final Map<Class<? extends Enum>, Enum> modes;
     private final Map<String, Object> configs;
     private final int overRunLimit;
 
     Settings(Stage.Context context, DataFormat format, Compression compression, Charset charset, int maxRecordLen,
-        Map<Class<? extends Enum>, Enum> modes, Map<String, Object> configs, int overRunLimit) {
+        Map<Class<? extends Enum>, Enum> modes, Map<String, Object> configs, int overRunLimit, boolean removeCtrlChars) {
       this.context = context;
       this.format = format;
       this.compression = compression;
       this.charset = charset;
+      this.removeCtrlChars = removeCtrlChars;
       this.maxRecordLen = maxRecordLen;
       this.modes = ImmutableMap.copyOf(modes);
       this.configs = ImmutableMap.copyOf(configs);
@@ -53,6 +55,10 @@ public abstract class DataFactory {
 
     public int getMaxRecordLen() {
       return maxRecordLen;
+    }
+
+    public boolean getRemoveCtrlChars() {
+      return removeCtrlChars;
     }
 
     @SuppressWarnings("unchecked")

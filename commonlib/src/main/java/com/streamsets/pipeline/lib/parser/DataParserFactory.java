@@ -57,7 +57,8 @@ public abstract class DataParserFactory extends DataFactory {
 
   protected OverrunReader createReader(InputStream is) {
     Reader bufferedReader = new BufferedReader(new InputStreamReader(is, getSettings().getCharset()));
-    OverrunReader overrunReader = new OverrunReader(bufferedReader, getSettings().getOverRunLimit(), false);
+    OverrunReader overrunReader = new OverrunReader(bufferedReader, getSettings().getOverRunLimit(), false,
+                                                    getSettings().getRemoveCtrlChars());
     return overrunReader;
   }
 
@@ -65,7 +66,8 @@ public abstract class DataParserFactory extends DataFactory {
     if (!(reader instanceof BufferedReader)) {
       reader = new BufferedReader(reader);
     }
-    OverrunReader overrunReader = new OverrunReader(reader, getSettings().getOverRunLimit(), false);
+    OverrunReader overrunReader = new OverrunReader(reader, getSettings().getOverRunLimit(), false,
+                                                    getSettings().getRemoveCtrlChars());
     return overrunReader;
   }
 

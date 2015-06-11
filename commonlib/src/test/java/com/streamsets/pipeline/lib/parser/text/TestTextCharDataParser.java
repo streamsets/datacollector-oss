@@ -28,7 +28,7 @@ public class TestTextCharDataParser {
 
   @Test
   public void testParse() throws Exception {
-    OverrunReader reader = new OverrunReader(new StringReader("Hello\nBye"), 1000, true);
+    OverrunReader reader = new OverrunReader(new StringReader("Hello\nBye"), 1000, true, false);
     DataParser parser = new TextCharDataParser(getContext(), "id", reader, 0, 1000, "text", "truncated");
     Assert.assertEquals(0, parser.getOffset());
     Record record = parser.parse();
@@ -51,7 +51,7 @@ public class TestTextCharDataParser {
 
   @Test
   public void testParseWithOffset() throws Exception {
-    OverrunReader reader = new OverrunReader(new StringReader("Hello\nBye"), 1000, true);
+    OverrunReader reader = new OverrunReader(new StringReader("Hello\nBye"), 1000, true, false);
     DataParser parser = new TextCharDataParser(getContext(), "id", reader, 6, 1000, "text", "truncated");
     Assert.assertEquals(6, parser.getOffset());
     Record record = parser.parse();
@@ -68,7 +68,7 @@ public class TestTextCharDataParser {
 
   @Test(expected = IOException.class)
   public void testClose() throws Exception {
-    OverrunReader reader = new OverrunReader(new StringReader("Hello\nByte"), 1000, true);
+    OverrunReader reader = new OverrunReader(new StringReader("Hello\nByte"), 1000, true, false);
     DataParser parser = new TextCharDataParser(getContext(), "id", reader, 0, 1000, "text", "truncated");
     parser.close();
     parser.parse();
@@ -76,7 +76,7 @@ public class TestTextCharDataParser {
 
   @Test
   public void testTruncate() throws Exception {
-    OverrunReader reader = new OverrunReader(new StringReader("Hello\nBye"), 1000, true);
+    OverrunReader reader = new OverrunReader(new StringReader("Hello\nBye"), 1000, true, false);
     DataParser parser = new TextCharDataParser(getContext(), "id", reader, 0, 3, "text", "truncated");
     Assert.assertEquals(0, parser.getOffset());
     Record record = parser.parse();
@@ -114,7 +114,7 @@ public class TestTextCharDataParser {
 
   @Test(expected = OverrunException.class)
   public void testOverrun() throws Exception {
-    OverrunReader reader = new OverrunReader(new StringReader(createTextLines(1000, 20, 5000)), 2 * 1000, true);
+    OverrunReader reader = new OverrunReader(new StringReader(createTextLines(1000, 20, 5000)), 2 * 1000, true, false);
     int lines = 0;
     try (DataParser parser = new TextCharDataParser(getContext(), "id", reader, 0, 3, "text", "truncated")) {
       // we read 20 lines under the limit then one over the limit

@@ -32,6 +32,7 @@ public class TestDataFactory {
       .setConfig(MockDataFactory.CONFIG1, "myConfig")
       .setConfig(MockDataFactory.CONFIG2, 1000)
       .setMode(MockMode.MODE1)
+      .setRemoveCtrlChars(true)
       .build();
 
     Assert.assertTrue(dataFactory instanceof MockDataFactory);
@@ -42,6 +43,7 @@ public class TestDataFactory {
     Assert.assertEquals(Compression.GZIP, settings.getCompression());
     Assert.assertEquals(MockDataFormat.MOCK_DATA, settings.getFormat());
     Assert.assertEquals(1000, settings.getMaxRecordLen());
+    Assert.assertTrue(settings.getRemoveCtrlChars());
 
   }
 

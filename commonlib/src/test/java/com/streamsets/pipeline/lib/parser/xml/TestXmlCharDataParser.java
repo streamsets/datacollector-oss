@@ -26,7 +26,7 @@ public class TestXmlCharDataParser {
 
   @Test
   public void testParse() throws Exception {
-    OverrunReader reader = new OverrunReader(new StringReader("<r><e>Hello</e><e>Bye</e></r>"), 1000, true);
+    OverrunReader reader = new OverrunReader(new StringReader("<r><e>Hello</e><e>Bye</e></r>"), 1000, true, false);
     DataParser parser = new XmlCharDataParser(getContext(), "id", reader, 0, "e", 100);
     Assert.assertEquals(0, parser.getOffset());
     Record record = parser.parse();
@@ -47,7 +47,7 @@ public class TestXmlCharDataParser {
 
   @Test
   public void testParseWithOffset() throws Exception {
-    OverrunReader reader = new OverrunReader(new StringReader("<r><e>Hello</e><e>Bye</e></r>"), 1000, true);
+    OverrunReader reader = new OverrunReader(new StringReader("<r><e>Hello</e><e>Bye</e></r>"), 1000, true, false);
     DataParser parser = new XmlCharDataParser(getContext(), "id", reader, 18, "e", 100);
     Assert.assertEquals(18, parser.getOffset());
     Record record = parser.parse();
@@ -63,7 +63,7 @@ public class TestXmlCharDataParser {
 
   @Test(expected = IOException.class)
   public void testClose() throws Exception {
-    OverrunReader reader = new OverrunReader(new StringReader("<r><e>Hello</e><e>Bye</e></r>"), 1000, true);
+    OverrunReader reader = new OverrunReader(new StringReader("<r><e>Hello</e><e>Bye</e></r>"), 1000, true, false);
     DataParser parser = new XmlCharDataParser(getContext(), "id", reader, 0, "e", 100);
     parser.close();
     parser.parse();
