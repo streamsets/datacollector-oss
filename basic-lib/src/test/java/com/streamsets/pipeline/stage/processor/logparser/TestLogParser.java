@@ -158,7 +158,7 @@ public class TestLogParser {
 
   @Test
   public void testCommonLogFormat() throws StageException {
-    LogParserProcessor logParserProcessor = new LogParserProcessor("/text", "/log", LogMode.COMMON_LOG_FORMAT,
+    LogParserProcessor logParserProcessor = new LogParserProcessor("/text", false, "/log", LogMode.COMMON_LOG_FORMAT,
       null, null, null, null, null, false, null);
 
     ProcessorRunner runner = new ProcessorRunner.Builder(LogParserDProcessor.class, logParserProcessor)
@@ -211,7 +211,7 @@ public class TestLogParser {
 
   @Test
   public void testErrorLogFormat() throws StageException {
-    LogParserProcessor logParserProcessor = new LogParserProcessor("/text", "/log", LogMode.APACHE_ERROR_LOG_FORMAT,
+    LogParserProcessor logParserProcessor = new LogParserProcessor("/text", false, "/log", LogMode.APACHE_ERROR_LOG_FORMAT,
       null, null, null, null, null, false, null);
 
     ProcessorRunner runner = new ProcessorRunner.Builder(LogParserDProcessor.class, logParserProcessor)
@@ -252,7 +252,7 @@ public class TestLogParser {
 
   @Test
   public void testApacheCustomLogFormat() throws StageException {
-    LogParserProcessor logParserProcessor = new LogParserProcessor("/text", "/log", LogMode.APACHE_CUSTOM_LOG_FORMAT,
+    LogParserProcessor logParserProcessor = new LogParserProcessor("/text", false, "/log", LogMode.APACHE_CUSTOM_LOG_FORMAT,
       CUSTOM_LOG_FORMAT, null, null, null, null, false, null);
 
     ProcessorRunner runner = new ProcessorRunner.Builder(LogParserDProcessor.class, logParserProcessor)
@@ -307,7 +307,7 @@ public class TestLogParser {
 
   @Test(expected = StageException.class)
   public void testInvalidApacheCustomLogFormat() throws StageException {
-    LogParserProcessor logParserProcessor = new LogParserProcessor("/text", "/log", LogMode.APACHE_CUSTOM_LOG_FORMAT,
+    LogParserProcessor logParserProcessor = new LogParserProcessor("/text", false, "/log", LogMode.APACHE_CUSTOM_LOG_FORMAT,
       INVALID_CUSTOM_LOG_FORMAT, null, null, null, null, false, null);
 
     ProcessorRunner runner = new ProcessorRunner.Builder(LogParserDProcessor.class, logParserProcessor)
@@ -317,7 +317,7 @@ public class TestLogParser {
 
   @Test
   public void testCombinedLogFormat() throws StageException {
-    LogParserProcessor logParserProcessor = new LogParserProcessor("/text", "/", LogMode.COMBINED_LOG_FORMAT,
+    LogParserProcessor logParserProcessor = new LogParserProcessor("/text", false, "/", LogMode.COMBINED_LOG_FORMAT,
       null, null, null, null, null, false, null);
 
     ProcessorRunner runner = new ProcessorRunner.Builder(LogParserDProcessor.class, logParserProcessor)
@@ -370,7 +370,7 @@ public class TestLogParser {
 
   @Test
   public void testGrokFormat() throws StageException {
-    LogParserProcessor logParserProcessor = new LogParserProcessor("/text", "/", LogMode.GROK,
+    LogParserProcessor logParserProcessor = new LogParserProcessor("/text", false, "/", LogMode.GROK,
       null, null, null, GROK_PATTERN_DEFINITION, GROK_PATTERN, false, null);
 
     ProcessorRunner runner = new ProcessorRunner.Builder(LogParserDProcessor.class, logParserProcessor)
@@ -409,7 +409,7 @@ public class TestLogParser {
 
   @Test
   public void testLog4jFormat() throws StageException {
-    LogParserProcessor logParserProcessor = new LogParserProcessor("/text", "/", LogMode.LOG4J,
+    LogParserProcessor logParserProcessor = new LogParserProcessor("/text", false, "/", LogMode.LOG4J,
       null, null, null, null, null, false, null);
 
     ProcessorRunner runner = new ProcessorRunner.Builder(LogParserDProcessor.class, logParserProcessor)
@@ -450,7 +450,7 @@ public class TestLogParser {
 
   @Test
   public void testLog4jCustomFormat() throws StageException {
-    LogParserProcessor logParserProcessor = new LogParserProcessor("/text", "/", LogMode.LOG4J,
+    LogParserProcessor logParserProcessor = new LogParserProcessor("/text", false, "/", LogMode.LOG4J,
       null, null, null, null, null, true, "%-6r [%15.15t] %-5p %30.30c - %m");
 
     ProcessorRunner runner = new ProcessorRunner.Builder(LogParserDProcessor.class, logParserProcessor)
@@ -495,7 +495,7 @@ public class TestLogParser {
 
   @Test
   public void testRegexFormat() throws StageException {
-    LogParserProcessor logParserProcessor = new LogParserProcessor("/text", "/", LogMode.REGEX,
+    LogParserProcessor logParserProcessor = new LogParserProcessor("/text", false, "/", LogMode.REGEX,
       null, REGEX, REGEX_CONFIG, null, null, false, null);
 
     ProcessorRunner runner = new ProcessorRunner.Builder(LogParserDProcessor.class, logParserProcessor)
@@ -544,7 +544,7 @@ public class TestLogParser {
 
   @Test(expected = StageException.class)
   public void testInvalidRegEx() throws StageException {
-    LogParserProcessor logParserProcessor = new LogParserProcessor("/text", "/", LogMode.REGEX,
+    LogParserProcessor logParserProcessor = new LogParserProcessor("/text", false, "/", LogMode.REGEX,
       null, INVALID_REGEX, REGEX_CONFIG, null, null, false, null);
 
     ProcessorRunner runner = new ProcessorRunner.Builder(LogParserDProcessor.class, logParserProcessor)
@@ -562,7 +562,7 @@ public class TestLogParser {
     r8.group = 8;
     regExConfig.add(r8);
 
-    LogParserProcessor logParserProcessor = new LogParserProcessor("/text", "/", LogMode.REGEX,
+    LogParserProcessor logParserProcessor = new LogParserProcessor("/text", false, "/", LogMode.REGEX,
       null, REGEX, regExConfig, null, null, false, null);
 
     ProcessorRunner runner = new ProcessorRunner.Builder(LogParserDProcessor.class, logParserProcessor)
@@ -572,7 +572,7 @@ public class TestLogParser {
 
   @Test(expected = OnRecordErrorException.class)
   public void testProduceFullFileWithStackTrace() throws Exception {
-    LogParserProcessor logParserProcessor = new LogParserProcessor("/text", "/", LogMode.LOG4J,
+    LogParserProcessor logParserProcessor = new LogParserProcessor("/text", false, "/", LogMode.LOG4J,
       null, REGEX, REGEX_CONFIG, null, null, false, null);
 
     ProcessorRunner runner = new ProcessorRunner.Builder(LogParserDProcessor.class, logParserProcessor)

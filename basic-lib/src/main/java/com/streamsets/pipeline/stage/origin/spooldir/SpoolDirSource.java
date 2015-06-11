@@ -49,6 +49,7 @@ public class SpoolDirSource extends BaseSource {
 
   private final DataFormat dataFormat;
   private String charset;
+  private boolean removeCtrlChars;
   private final int overrunLimit;
   private final String spoolDir;
   private final int batchSize;
@@ -81,7 +82,8 @@ public class SpoolDirSource extends BaseSource {
   private final int maxStackTraceLines;
   private final OnParseError onParseError;
 
-  public SpoolDirSource(DataFormat dataFormat, String charset, int overrunLimit, String spoolDir, int batchSize,
+  public SpoolDirSource(DataFormat dataFormat, String charset, boolean removeCtrlChars, int overrunLimit,
+      String spoolDir, int batchSize,
       long poolingTimeoutSecs,
       String filePattern, int maxSpoolFiles, String initialFileToProcess, String errorArchiveDir,
       PostProcessingOptions postProcessing, String archiveDir, long retentionTimeMins,
@@ -92,6 +94,7 @@ public class SpoolDirSource extends BaseSource {
       String log4jCustomLogFormat, OnParseError onParseError, int maxStackTraceLines) {
     this.dataFormat = dataFormat;
     this.charset = charset;
+    this.removeCtrlChars = removeCtrlChars;
     this.overrunLimit = overrunLimit * 1000;
     this.spoolDir = spoolDir;
     this.batchSize = batchSize;
@@ -274,6 +277,7 @@ public class SpoolDirSource extends BaseSource {
     }
     builder.setCharset(fileCharset);
     builder.setOverRunLimit(overrunLimit);
+    builder.setRemoveCtrlChars(removeCtrlChars);
 
     switch (dataFormat) {
       case TEXT:

@@ -28,6 +28,7 @@ import java.util.Map;
 public class LogParserProcessor extends SingleLaneRecordProcessor {
 
   private final String fieldPathToParse;
+  private final boolean removeCtrlChars;
   private final String parsedFieldPath;
   private final LogMode logMode;
   private final int logMaxObjectLen;
@@ -41,10 +42,12 @@ public class LogParserProcessor extends SingleLaneRecordProcessor {
   private final OnParseError onParseError;
   private final int maxStackTraceLines;
 
-  public LogParserProcessor(String fieldPathToParse, String parsedFieldPath, LogMode logMode,String customLogFormat,
-                            String regex, List<RegExConfig> fieldPathsToGroupName, String grokPatternDefinition,
-                            String grokPattern, boolean enableLog4jCustomLogFormat, String log4jCustomLogFormat) {
+  public LogParserProcessor(String fieldPathToParse, boolean removeCtrlChars, String parsedFieldPath, LogMode logMode,
+      String customLogFormat,
+      String regex, List<RegExConfig> fieldPathsToGroupName, String grokPatternDefinition,
+      String grokPattern, boolean enableLog4jCustomLogFormat, String log4jCustomLogFormat) {
     this.fieldPathToParse = fieldPathToParse;
+    this.removeCtrlChars = removeCtrlChars;
     this.parsedFieldPath = parsedFieldPath;
     this.logMode = logMode;
     this.logMaxObjectLen = -1;
@@ -80,6 +83,7 @@ public class LogParserProcessor extends SingleLaneRecordProcessor {
 
     DataParserFactoryBuilder builder = new DataParserFactoryBuilder(getContext(), DataParserFormat.LOG);
     builder.setOverRunLimit(1000000);
+    builder.setRemoveCtrlChars(removeCtrlChars);
     logDataFormatValidator.populateBuilder(builder);
 
     try {

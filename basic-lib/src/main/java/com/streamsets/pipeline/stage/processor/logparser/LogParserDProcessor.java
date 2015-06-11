@@ -41,6 +41,17 @@ public class LogParserDProcessor extends DProcessor {
   public String fieldPathToParse;
 
   @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.BOOLEAN,
+      defaultValue = "false",
+      label = "Ignore <CTRL> Characters",
+      description = "Use only if required as it impacts reading performance",
+      displayPosition = 15,
+      group = "LOG"
+  )
+  public boolean removeCtrlChars;
+
+  @ConfigDef(
     required = true,
     type = ConfigDef.Type.STRING,
     defaultValue = "/",
@@ -165,7 +176,7 @@ public class LogParserDProcessor extends DProcessor {
 
   @Override
   protected Processor createProcessor() {
-    return new LogParserProcessor(fieldPathToParse, parsedFieldPath,logMode, customLogFormat,
+    return new LogParserProcessor(fieldPathToParse, removeCtrlChars, parsedFieldPath,logMode, customLogFormat,
       regex, fieldPathsToGroupName, grokPatternDefinition, grokPattern, enableLog4jCustomLogFormat,
       log4jCustomLogFormat);
   }

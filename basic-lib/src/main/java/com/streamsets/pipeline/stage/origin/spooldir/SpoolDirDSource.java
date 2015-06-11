@@ -73,6 +73,17 @@ public class SpoolDirDSource extends DSource {
 
   @ConfigDef(
       required = true,
+      type = ConfigDef.Type.BOOLEAN,
+      defaultValue = "false",
+      label = "Ignore <CTRL> Characters",
+      description = "Use only if required as it impacts reading performance",
+      displayPosition = 7,
+      group = "FILES"
+  )
+  public boolean removeCtrlChars;
+
+  @ConfigDef(
+      required = true,
       type = ConfigDef.Type.STRING,
       label = "Files Directory",
       description = "Use a local directory",
@@ -507,8 +518,8 @@ public class SpoolDirDSource extends DSource {
 
   @Override
   protected Source createSource() {
-    return new SpoolDirSource(dataFormat, charset, overrunLimit, spoolDir, batchSize, poolingTimeoutSecs, filePattern,
-      maxSpoolFiles, initialFileToProcess, errorArchiveDir, postProcessing, archiveDir,
+    return new SpoolDirSource(dataFormat, charset, removeCtrlChars, overrunLimit, spoolDir, batchSize,
+      poolingTimeoutSecs, filePattern, maxSpoolFiles, initialFileToProcess, errorArchiveDir, postProcessing, archiveDir,
       retentionTimeMins, csvFileFormat, csvHeader, csvMaxObjectLen, jsonContent,
       jsonMaxObjectLen, textMaxObjectLen, xmlRecordElement, xmlMaxObjectLen, logMode,
       logMaxObjectLen, retainOriginalLine, customLogFormat, regex, fieldPathsToGroupName, grokPatternDefinition,

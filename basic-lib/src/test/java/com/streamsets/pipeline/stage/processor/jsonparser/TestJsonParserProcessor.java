@@ -34,6 +34,7 @@ public class TestJsonParserProcessor {
   public void testParsingDiscarding() throws Exception {
     ProcessorRunner runner = new ProcessorRunner.Builder(JsonParserDProcessor.class)
         .setOnRecordError(OnRecordError.DISCARD)
+        .addConfiguration("removeCtrlChars", false)
         .addConfiguration("fieldPathToParse", "/json")
         .addConfiguration("parsedFieldPath", "/parsed")
         .addOutputLane("out")
@@ -48,10 +49,14 @@ public class TestJsonParserProcessor {
       Record r4 = RecordCreator.create();
       List<Record> input = ImmutableList.of(r0, r1, r2, r3, r4);
       StageRunner.Output output = runner.runProcess(input);
-      Assert.assertEquals(1, output.getRecords().get("out").size());
+      Assert.assertEquals(2, output.getRecords().get("out").size());
       Assert.assertEquals(r0.get("/json").getValueAsString(),
                           output.getRecords().get("out").get(0).get("/json").getValue());
       Assert.assertEquals("A", output.getRecords().get("out").get(0).get("/parsed/a").getValue());
+      Assert.assertEquals(r3.get("/json").getValueAsString(),
+                          output.getRecords().get("out").get(1).get("/json").getValue());
+      Assert.assertFalse(output.getRecords().get("out").get(1).has("/parsed/a"));
+      Assert.assertTrue(runner.getErrorRecords().isEmpty());
     } finally {
       runner.runDestroy();
     }
@@ -61,6 +66,7 @@ public class TestJsonParserProcessor {
   public void testParsingToError() throws Exception {
     ProcessorRunner runner = new ProcessorRunner.Builder(JsonParserDProcessor.class)
         .setOnRecordError(OnRecordError.TO_ERROR)
+        .addConfiguration("removeCtrlChars", false)
         .addConfiguration("fieldPathToParse", "/json")
         .addConfiguration("parsedFieldPath", "/parsed")
         .addOutputLane("out")
@@ -74,11 +80,14 @@ public class TestJsonParserProcessor {
       Record r4 = RecordCreator.create();
       List<Record> input = ImmutableList.of(r0, r1, r2, r3, r4);
       StageRunner.Output output = runner.runProcess(input);
-      Assert.assertEquals(1, output.getRecords().get("out").size());
+      Assert.assertEquals(2, output.getRecords().get("out").size());
       Assert.assertEquals(r0.get("/json").getValueAsString(),
                           output.getRecords().get("out").get(0).get("/json").getValue());
       Assert.assertEquals("A", output.getRecords().get("out").get(0).get("/parsed/a").getValue());
-      Assert.assertEquals(4, runner.getErrorRecords().size());
+      Assert.assertEquals(r3.get("/json").getValueAsString(),
+                          output.getRecords().get("out").get(1).get("/json").getValue());
+      Assert.assertFalse(output.getRecords().get("out").get(1).has("/parsed/a"));
+      Assert.assertEquals(3, runner.getErrorRecords().size());
     } finally {
       runner.runDestroy();
     }
@@ -88,6 +97,7 @@ public class TestJsonParserProcessor {
   public void testParsingStopPipeline() throws Exception {
     ProcessorRunner runner = new ProcessorRunner.Builder(JsonParserDProcessor.class)
         .setOnRecordError(OnRecordError.STOP_PIPELINE)
+        .addConfiguration("removeCtrlChars", false)
         .addConfiguration("fieldPathToParse", "/json")
         .addConfiguration("parsedFieldPath", "/parsed")
         .addOutputLane("out")

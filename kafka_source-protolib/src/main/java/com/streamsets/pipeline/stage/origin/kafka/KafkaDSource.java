@@ -118,6 +118,17 @@ public class KafkaDSource extends DSourceOffsetCommitter {
       required = true,
       type = ConfigDef.Type.BOOLEAN,
       defaultValue = "false",
+      label = "Ignore <CTRL> Characters",
+      description = "Use only if required as it impacts reading performance",
+      displayPosition = 43,
+      group = "KAFKA"
+  )
+  public boolean removeCtrlChars;
+
+  @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.BOOLEAN,
+      defaultValue = "false",
       label = "Produce Single Record",
       description = "Generates a single record for multiple objects within a message",
       displayPosition = 45,
@@ -455,7 +466,8 @@ public class KafkaDSource extends DSourceOffsetCommitter {
   @Override
   protected Source createSource() {
     SourceArguments args = new SourceArguments(metadataBrokerList,
-      zookeeperConnect, consumerGroup, topic, dataFormat, charset, produceSingleRecordPerMessage, maxBatchSize, maxWaitTime,
+      zookeeperConnect, consumerGroup, topic, dataFormat, charset, removeCtrlChars,
+      produceSingleRecordPerMessage, maxBatchSize, maxWaitTime,
       textMaxLineLen, jsonContent, jsonMaxObjectLen, csvFileFormat, csvHeader,
       csvMaxObjectLen, xmlRecordElement, xmlMaxObjectLen, logMode, logMaxObjectLen, retainOriginalLine,
       customLogFormat, regex, grokPatternDefinition, grokPattern, fieldPathsToGroupName,

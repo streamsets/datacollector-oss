@@ -55,6 +55,16 @@ public class JsonCharDataParser implements DataParser {
     return record;
   }
 
+  public Field parseAsField() throws IOException, DataParserException {
+    long offset = parser.getReaderPosition();
+    try {
+      Object json = parser.read();
+      return (json != null) ? jsonToField(json,  offset) : null;
+    } catch (ObjectLengthException ex) {
+      throw new DataParserException(Errors.JSON_PARSER_02, readerId, offset, maxObjectLen);
+    }
+  }
+
   protected Record createRecord(long offset, Object json) throws DataParserException {
     Record record = context.createRecord(readerId + "::" + offset);
     record.set(jsonToField(json,  offset));

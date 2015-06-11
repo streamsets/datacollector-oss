@@ -26,6 +26,7 @@ public class SourceArguments {
   protected final String topic;
   protected final DataFormat dataFormat;
   protected final String charset;
+  protected final boolean removeCtrlChars;
   protected final boolean produceSingleRecordPerMessage;
 
   protected final int textMaxLineLen;
@@ -55,7 +56,8 @@ public class SourceArguments {
   protected final Map<String, String> kafkaConsumerConfigs;
 
   public SourceArguments(String metadataBrokerList, String zookeeperConnect, String consumerGroup, String topic,
-                         DataFormat dataFormat, String charset, boolean produceSingleRecordPerMessage, int maxBatchSize,
+                         DataFormat dataFormat, String charset, boolean removeCtrlChars,
+                         boolean produceSingleRecordPerMessage, int maxBatchSize,
                          int maxWaitTime, int textMaxLineLen, JsonMode jsonContent, int jsonMaxObjectLen,
                          CsvMode csvFileFormat, CsvHeader csvHeader, int csvMaxObjectLen, String xmlRecordElement,
                          int xmlMaxObjectLen, LogMode logMode, int logMaxObjectLen, boolean retainOriginalLine,
@@ -69,6 +71,7 @@ public class SourceArguments {
     this.topic = topic;
     this.dataFormat = dataFormat;
     this.charset = charset;
+    this.removeCtrlChars = removeCtrlChars;
     this.produceSingleRecordPerMessage = produceSingleRecordPerMessage;
     this.textMaxLineLen = textMaxLineLen;
     this.jsonContent = jsonContent;
@@ -119,6 +122,10 @@ public class SourceArguments {
 
   public String getCharset() {
     return charset;
+  }
+
+  public boolean getRemoveCtrlChars() {
+    return removeCtrlChars;
   }
 
   public boolean isProduceSingleRecordPerMessage() {

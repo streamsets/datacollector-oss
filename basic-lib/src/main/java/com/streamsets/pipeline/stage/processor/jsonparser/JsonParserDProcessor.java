@@ -35,17 +35,28 @@ public class JsonParserDProcessor extends DProcessor {
 
   @ConfigDef(
       required = true,
+      type = ConfigDef.Type.BOOLEAN,
+      defaultValue = "false",
+      label = "Ignore <CTRL> Characters",
+      description = "Use only if required as it impacts reading performance",
+      displayPosition = 20,
+      group = "JSON"
+  )
+  public boolean removeCtrlChars;
+
+  @ConfigDef(
+      required = true,
       type = ConfigDef.Type.STRING,
       defaultValue = "",
       label = "New Parsed Field",
       description="Name of the new field to set the parsed JSON data",
-      displayPosition = 20,
+      displayPosition = 30,
       group = "JSON"
   )
   public String parsedFieldPath;
 
   @Override
   protected Processor createProcessor() {
-    return new JsonParserProcessor(fieldPathToParse, parsedFieldPath);
+    return new JsonParserProcessor(fieldPathToParse, removeCtrlChars, parsedFieldPath);
   }
 }

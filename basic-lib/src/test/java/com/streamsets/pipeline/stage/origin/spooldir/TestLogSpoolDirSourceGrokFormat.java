@@ -55,7 +55,7 @@ public class TestLogSpoolDirSourceGrokFormat {
   }
 
   private SpoolDirSource createSource() {
-    return new SpoolDirSource(DataFormat.LOG, "UTF-8", 100, createTestDir(), 10, 1, "file-[0-9].log", 10, null, null,
+    return new SpoolDirSource(DataFormat.LOG, "UTF-8", false, 100, createTestDir(), 10, 1, "file-[0-9].log", 10, null, null,
       PostProcessingOptions.ARCHIVE, createTestDir(), 10, null, null, -1, null, 0, 0,
       null, 0, LogMode.GROK, 1000, true, null, null, Collections.<RegExConfig>emptyList(), GROK_PATTERN_DEFINITION,
       GROK_PATTERN, false, null, OnParseError.ERROR, 0);
