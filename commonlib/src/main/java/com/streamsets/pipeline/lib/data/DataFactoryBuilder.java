@@ -25,6 +25,7 @@ public class DataFactoryBuilder<B extends DataFactoryBuilder, DF extends DataFac
   private final Map<String, Object> configs;
   private Compression compression = Compression.NONE;
   private Charset charset = UTF8;
+  private boolean removeCtrlChars;
   private int maxDataLen;
   private int overRunLimit = MAX_OVERRUN_LIMIT;
 
@@ -74,6 +75,12 @@ public class DataFactoryBuilder<B extends DataFactoryBuilder, DF extends DataFac
     return (B) this;
   }
 
+  public B setRemoveCtrlChars(boolean removeCtrlChars) {
+    Utils.checkNotNull(removeCtrlChars, "removeCtrlChars");
+    this.removeCtrlChars = removeCtrlChars;
+    return (B) this;
+  }
+
   public B setMaxDataLen(int maxDataLen) {
     Utils.checkArgument(maxDataLen > 0 || maxDataLen == -1, Utils.formatL(
         "maxDataLen '{}' cannot be zero, use -1 to disable it", maxDataLen));
@@ -92,7 +99,7 @@ public class DataFactoryBuilder<B extends DataFactoryBuilder, DF extends DataFac
     Utils.checkState(modes.size() == expectedModes.size(),
                      Utils.formatL("Format '{}', all required modes have not been set", format));
     DataFactory.Settings settings = new DataFactory.Settings(context, format, compression, charset, maxDataLen, modes,
-                                                             configs, overRunLimit);
+                                                             configs, overRunLimit, removeCtrlChars);
     return format.create(settings);
   }
 

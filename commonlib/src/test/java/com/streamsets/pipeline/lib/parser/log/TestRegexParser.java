@@ -47,7 +47,7 @@ public class TestRegexParser {
 
   @Test
   public void testParse() throws Exception {
-    OverrunReader reader = new OverrunReader(new StringReader(LOG_LINE), 1000, true);
+    OverrunReader reader = new OverrunReader(new StringReader(LOG_LINE), 1000, true, false);
     DataParser parser = new RegexParser(getContext(), "id", reader, 0, 1000, true, Pattern.compile(REGEX),
       FIELD_TO_GROUP_MAP);
     Assert.assertEquals(0, parser.getOffset());
@@ -89,7 +89,7 @@ public class TestRegexParser {
   @Test
   public void testParseWithOffset() throws Exception {
     OverrunReader reader = new OverrunReader(new StringReader(
-      "Hello\n" + LOG_LINE), 1000, true);
+      "Hello\n" + LOG_LINE), 1000, true, false);
     DataParser parser = new RegexParser(getContext(), "id", reader, 6, 1000, true, Pattern.compile(REGEX),
       FIELD_TO_GROUP_MAP);
     Assert.assertEquals(6, parser.getOffset());
@@ -134,7 +134,7 @@ public class TestRegexParser {
 
   @Test(expected = IOException.class)
   public void testClose() throws Exception {
-    OverrunReader reader = new OverrunReader(new StringReader("Hello\nByte"), 1000, true);
+    OverrunReader reader = new OverrunReader(new StringReader("Hello\nByte"), 1000, true, false);
     DataParser parser = new RegexParser(getContext(), "id", reader, 0, 1000, false, Pattern.compile(REGEX),
       FIELD_TO_GROUP_MAP);
     parser.close();
@@ -144,7 +144,7 @@ public class TestRegexParser {
   @Test(expected = DataParserException.class)
   public void testTruncate() throws Exception {
     OverrunReader reader = new OverrunReader(new StringReader(
-      LOG_LINE), 1000, true);
+      LOG_LINE), 1000, true, false);
     DataParser parser = new RegexParser(getContext(), "id", reader, 0, 25, true, Pattern.compile(REGEX),
       FIELD_TO_GROUP_MAP); //cut short to 25
     Assert.assertEquals(0, parser.getOffset());
@@ -159,7 +159,7 @@ public class TestRegexParser {
   public void testParseNonLogLine() throws Exception {
     OverrunReader reader = new OverrunReader(new StringReader(
       "127.0.0.1 ss h [10/Oct/2000:13:55:36 -0700] This is a log line that does not confirm to common log format"),
-      1000, true);
+      1000, true, false);
     DataParser parser = new RegexParser(getContext(), "id", reader, 0, 1000, true, Pattern.compile(REGEX),
       FIELD_TO_GROUP_MAP);
     Assert.assertEquals(0, parser.getOffset());

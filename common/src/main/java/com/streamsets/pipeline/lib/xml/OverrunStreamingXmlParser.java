@@ -25,7 +25,7 @@ public class OverrunStreamingXmlParser  extends StreamingXmlParser {
 
   public OverrunStreamingXmlParser(Reader reader, String recordElement, long initialPosition, int maxObjectLen)
       throws IOException, XMLStreamException {
-    this(new OverrunReader(reader, OverrunReader.getDefaultReadLimit(), false), recordElement, initialPosition,
+    this(new OverrunReader(reader, OverrunReader.getDefaultReadLimit(), false, false), recordElement, initialPosition,
          maxObjectLen);
     this.initialPosition = initialPosition;
   }

@@ -22,7 +22,7 @@ public class OverrunCsvParser extends CsvParser {
   }
 
   public OverrunCsvParser(Reader reader, CSVFormat format, long initialPosition, int maxObjectLen) throws IOException {
-    this(new OverrunReader(reader, OverrunReader.getDefaultReadLimit(), false), format, initialPosition, maxObjectLen);
+    this(new OverrunReader(reader, OverrunReader.getDefaultReadLimit(), false, false), format, initialPosition, maxObjectLen);
   }
 
   public OverrunCsvParser(OverrunReader reader, CSVFormat format, long initialPosition, int maxObjectLen)

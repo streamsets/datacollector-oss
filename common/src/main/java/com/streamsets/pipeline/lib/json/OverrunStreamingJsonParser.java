@@ -132,7 +132,7 @@ public class OverrunStreamingJsonParser extends StreamingJsonParser {
 
   public OverrunStreamingJsonParser(CountingReader reader, long initialPosition, Mode mode, int maxObjectLen)
       throws IOException {
-    this(new OverrunReader(reader, OverrunReader.getDefaultReadLimit(), false), initialPosition, mode, maxObjectLen);
+    this(new OverrunReader(reader, OverrunReader.getDefaultReadLimit(), false, false), initialPosition, mode, maxObjectLen);
   }
 
   public OverrunStreamingJsonParser(OverrunReader reader, long initialPosition, Mode mode, int maxObjectLen)

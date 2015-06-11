@@ -19,7 +19,7 @@ public class TestCsvParser {
 
   private OverrunReader getReader(String name) throws Exception {
     InputStream is = Thread.currentThread().getContextClassLoader().getResourceAsStream(name);
-    return (is != null) ? new OverrunReader(new InputStreamReader(is), 0, false) : null;
+    return (is != null) ? new OverrunReader(new InputStreamReader(is), 0, false, false) : null;
   }
 
   @Test
