@@ -63,6 +63,17 @@ public class FileTailDSource extends DSource {
 
   @ConfigDef(
       required = true,
+      type = ConfigDef.Type.BOOLEAN,
+      defaultValue = "false",
+      label = "Ignore <CTRL> Characters",
+      description = "Use only if required as it impacts reading performance",
+      displayPosition = 25,
+      group = "FILES"
+  )
+  public boolean removeCtrlChars;
+
+  @ConfigDef(
+      required = true,
       type = ConfigDef.Type.NUMBER,
       defaultValue = "1024",
       label = "Max Line Length",
@@ -270,7 +281,7 @@ public class FileTailDSource extends DSource {
 
   @Override
   protected Source createSource() {
-    return new FileTailSource(dataFormat, charset, maxLineLength, batchSize, maxWaitTimeSecs, fileInfos,
+    return new FileTailSource(dataFormat, charset, removeCtrlChars, maxLineLength, batchSize, maxWaitTimeSecs, fileInfos,
                               postProcessing, archiveDir, logMode, retainOriginalLine, customLogFormat,
                               regex, fieldPathsToGroupName, grokPatternDefinition, grokPattern,
                               enableLog4jCustomLogFormat, log4jCustomLogFormat);

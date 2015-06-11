@@ -70,6 +70,9 @@
       "name" : "charset",
       "value" : "UTF-8"
     }, {
+      "name" : "removeCtrlChars",
+      "value" : false
+    }, {
       "name" : "produceSingleRecordPerMessage",
       "value" : false
     }, {

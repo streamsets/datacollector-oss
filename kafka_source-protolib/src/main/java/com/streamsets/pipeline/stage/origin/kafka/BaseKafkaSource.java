@@ -51,6 +51,7 @@ public abstract class BaseKafkaSource extends BaseSource implements OffsetCommit
   protected final String topic;
   protected final DataFormat dataFormat;
   protected final String charset;
+  protected final boolean removeCtrlChars;
   protected final boolean produceSingleRecordPerMessage;
   // required only in self
   private final int textMaxLineLen;
@@ -90,6 +91,7 @@ public abstract class BaseKafkaSource extends BaseSource implements OffsetCommit
     this.topic = args.getTopic();
     this.dataFormat = args.getDataFormat();
     this.charset = args.getCharset();
+    this.removeCtrlChars = args.getRemoveCtrlChars();
     this.produceSingleRecordPerMessage = args.isProduceSingleRecordPerMessage();
     this.maxWaitTime = args.getMaxWaitTime();
     this.textMaxLineLen = args.getTextMaxLineLen();
@@ -230,7 +232,7 @@ public abstract class BaseKafkaSource extends BaseSource implements OffsetCommit
       messageCharset = StandardCharsets.UTF_8;
       issues.add(getContext().createConfigIssue(Groups.KAFKA.name(), "charset", Errors.KAFKA_08, charset));
     }
-    builder.setCharset(messageCharset);
+    builder.setCharset(messageCharset).setRemoveCtrlChars(removeCtrlChars);
 
     switch ((dataFormat)) {
       case TEXT:

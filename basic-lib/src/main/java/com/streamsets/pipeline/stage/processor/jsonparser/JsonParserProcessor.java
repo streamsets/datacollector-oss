@@ -10,25 +10,28 @@ import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.base.OnRecordErrorException;
 import com.streamsets.pipeline.api.base.SingleLaneRecordProcessor;
-import com.streamsets.pipeline.lib.util.JsonLineToRecord;
-import com.streamsets.pipeline.lib.util.ToRecordException;
+import com.streamsets.pipeline.lib.io.OverrunReader;
+import com.streamsets.pipeline.lib.json.StreamingJsonParser;
+import com.streamsets.pipeline.lib.parser.json.JsonCharDataParser;
+
+import java.io.IOException;
+import java.io.StringReader;
 
 public class JsonParserProcessor extends SingleLaneRecordProcessor {
 
   private final String fieldPathToParse;
+  private final boolean removeCtrlChars;
   private final String parsedFieldPath;
 
-  public JsonParserProcessor(String fieldPathToParse, String parsedFieldPath) {
+  public JsonParserProcessor(String fieldPathToParse, boolean removeCtrlChars, String parsedFieldPath) {
     this.fieldPathToParse = fieldPathToParse;
+    this.removeCtrlChars = removeCtrlChars;
     this.parsedFieldPath = parsedFieldPath;
   }
-
-  private JsonLineToRecord parser;
 
   @Override
   protected void init() throws StageException {
     super.init();
-    parser = new JsonLineToRecord();
   }
 
   @Override
@@ -41,15 +44,16 @@ public class JsonParserProcessor extends SingleLaneRecordProcessor {
       if (value == null) {
         throw new OnRecordErrorException(Errors.JSONP_01, record.getHeader().getSourceId(), fieldPathToParse);
       }
-      try {
-        Field parsed = parser.parse(value);
-        record.set(parsedFieldPath, parsed);
-      } catch (ToRecordException ex) {
+      try (OverrunReader reader = new OverrunReader(new StringReader(value), -1, false, removeCtrlChars)) {
+        JsonCharDataParser parser = new JsonCharDataParser(getContext(), "", reader, 0,
+                                                           StreamingJsonParser.Mode.MULTIPLE_OBJECTS, -1);
+        Field parsed = parser.parseAsField();
+        if (parsed != null) {
+          record.set(parsedFieldPath, parsed);
+        }
+      } catch (IOException ex) {
         throw new OnRecordErrorException(Errors.JSONP_03, record.getHeader().getSourceId(), fieldPathToParse,
                                          ex.getMessage(), ex);
-      }
-      if (!record.has(parsedFieldPath)) {
-        throw new OnRecordErrorException(Errors.JSONP_02, record.getHeader().getSourceId(), parsedFieldPath);
       }
       batchMaker.addRecord(record);
     }

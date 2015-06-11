@@ -24,7 +24,6 @@ import com.streamsets.pipeline.config.PostProcessingOptions;
 import com.streamsets.pipeline.lib.io.FileEvent;
 import com.streamsets.pipeline.lib.io.FileFinder;
 import com.streamsets.pipeline.lib.io.FileLine;
-import com.streamsets.pipeline.lib.io.GlobFileContextProvider;
 import com.streamsets.pipeline.lib.io.LiveFile;
 import com.streamsets.pipeline.lib.io.LiveFileChunk;
 import com.streamsets.pipeline.lib.io.MultiFileInfo;
@@ -59,6 +58,7 @@ public class FileTailSource extends BaseSource {
 
   private final DataFormat dataFormat;
   private final String charset;
+  private final boolean removeCtrlChars;
   private final int maxLineLength;
   private final int batchSize;
   private final int maxWaitTimeSecs;
@@ -76,20 +76,21 @@ public class FileTailSource extends BaseSource {
   private final String log4jCustomLogFormat;
   private final int scanIntervalSecs;
 
-  public FileTailSource(DataFormat dataFormat, String charset, int maxLineLength, int batchSize,
+  public FileTailSource(DataFormat dataFormat, String charset, boolean removeCtrlChars, int maxLineLength,
+      int batchSize,
       int maxWaitTimeSecs, List<FileInfo> fileInfos, PostProcessingOptions postProcessing, String archiveDir,
       LogMode logMode,
       boolean retainOriginalLine, String customLogFormat, String regex,
       List<RegExConfig> fieldPathsToGroupName,
       String grokPatternDefinition, String grokPattern, boolean enableLog4jCustomLogFormat,
       String log4jCustomLogFormat) {
-    this(dataFormat, charset, maxLineLength, batchSize, maxWaitTimeSecs, fileInfos, postProcessing, archiveDir,
-         logMode, retainOriginalLine, customLogFormat, regex, fieldPathsToGroupName, grokPatternDefinition,
+    this(dataFormat, charset, removeCtrlChars, maxLineLength, batchSize, maxWaitTimeSecs, fileInfos, postProcessing,
+         archiveDir, logMode, retainOriginalLine, customLogFormat, regex, fieldPathsToGroupName, grokPatternDefinition,
          grokPattern, enableLog4jCustomLogFormat, log4jCustomLogFormat, 20);
   }
 
 
-  FileTailSource(DataFormat dataFormat, String charset, int maxLineLength, int batchSize,
+  FileTailSource(DataFormat dataFormat, String charset, boolean removeCtrlChars, int maxLineLength, int batchSize,
       int maxWaitTimeSecs, List<FileInfo> fileInfos, PostProcessingOptions postProcessing, String archiveDir,
       LogMode logMode,
       boolean retainOriginalLine, String customLogFormat, String regex,
@@ -98,6 +99,7 @@ public class FileTailSource extends BaseSource {
       String log4jCustomLogFormat, int scanIntervalSecs) {
     this.dataFormat = dataFormat;
     this.charset = charset;
+    this.removeCtrlChars = removeCtrlChars;
     this.maxLineLength = maxLineLength;
     this.batchSize = batchSize;
     this.maxWaitTimeSecs = maxWaitTimeSecs;
@@ -259,7 +261,7 @@ public class FileTailSource extends BaseSource {
     maxWaitTimeMillis = maxWaitTimeSecs * 1000;
 
     DataParserFactoryBuilder builder = new DataParserFactoryBuilder(getContext(), dataFormat.getParserFormat())
-        .setCharset(Charset.defaultCharset()).setMaxDataLen(-1);
+        .setCharset(Charset.defaultCharset()).setRemoveCtrlChars(removeCtrlChars).setMaxDataLen(-1);
     switch (dataFormat) {
       case TEXT:
         break;

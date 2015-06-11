@@ -14,7 +14,6 @@ import com.streamsets.pipeline.api.GenerateResourceBundle;
 public enum Errors implements ErrorCode {
   JSONP_00("JSON field '{}' does not exist in record '{}'. Cannot parse the field."),
   JSONP_01("JSON field '{}' in record '{}' is set to NULL. Cannot parse the field."),
-  JSONP_02("Cannot pass the parsed JSON to field '{}' for record '{}'. Field does not exist."),
   JSONP_03("Cannot parse the JSON field '{}' for record '{}': {}"),
   ;
 
