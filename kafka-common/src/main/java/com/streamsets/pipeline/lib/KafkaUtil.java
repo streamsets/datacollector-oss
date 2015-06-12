@@ -92,24 +92,31 @@ public class KafkaUtil {
   }
 
   public static List<KafkaBroker> validateConnectionString(List<Stage.ConfigIssue> issues, String connectionString,
-                                                     String confiGroupName, String configName, Stage.Context context) {
+                                                     String configGroupName, String configName, Stage.Context context) {
     if(connectionString == null || connectionString.isEmpty()) {
-      issues.add(context.createConfigIssue(confiGroupName, configName,
+      issues.add(context.createConfigIssue(configGroupName, configName,
         Errors.KAFKA_06, configName));
       return null;
     }
     List<KafkaBroker> kafkaBrokers = new ArrayList<>();
-    String[] brokers = connectionString.split(",");
+
+    // Technically, this is only necessary for testing Zookeeper connection strings, since Kafka's root znode may
+    // be something other than / (as in CDH5.2, where it was /kafka). However, we're terrible people
+    // who are overloading a function intended for Kafka broker lists and using it for ZK connection strings, as well.
+    String[] chroot = connectionString.split("/");
+    String brokerList = chroot[0];
+
+    String[] brokers = brokerList.split(",");
     for(String broker : brokers) {
       String[] brokerHostAndPort = broker.split(":");
       if(brokerHostAndPort.length != 2) {
-        issues.add(context.createConfigIssue(confiGroupName, configName, Errors.KAFKA_07, connectionString));
+        issues.add(context.createConfigIssue(configGroupName, configName, Errors.KAFKA_07, connectionString));
       } else {
         try {
           int port = Integer.parseInt(brokerHostAndPort[1].trim());
           kafkaBrokers.add(new KafkaBroker(brokerHostAndPort[0].trim(), port));
         } catch (NumberFormatException e) {
-          issues.add(context.createConfigIssue(confiGroupName, configName, Errors.KAFKA_07, connectionString));
+          issues.add(context.createConfigIssue(configGroupName, configName, Errors.KAFKA_07, connectionString));
         }
       }
     }
