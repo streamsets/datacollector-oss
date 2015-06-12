@@ -6,10 +6,17 @@
 package com.streamsets.pipeline.lib;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertSame;
+import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
+import java.util.List;
 import java.util.Properties;
 
+import com.google.common.collect.Lists;
+import com.streamsets.pipeline.api.ErrorCode;
+import com.streamsets.pipeline.api.Stage;
+import junit.framework.Assert;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -22,6 +29,7 @@ import kafka.utils.MockTime;
 import kafka.utils.TestUtils;
 import kafka.utils.TestZKUtils;
 import kafka.zk.EmbeddedZookeeper;
+import org.mockito.Mockito;
 
 public class TestKafkaUtil {
   private static EmbeddedZookeeper zkServer;
@@ -67,6 +75,43 @@ public class TestKafkaUtil {
       fail("Expected stage exception with error code " + Errors.KAFKA_03 + " but got " + e);
     }
     kafkaServer.shutdown();
+  }
+
+  @Test
+  public void testValidateBrokerURI() {
+    List<Stage.ConfigIssue> issues = Lists.newArrayList();
+    Stage.Context ctx = Mockito.mock(Stage.Context.class);
+    Stage.ConfigIssue issue = Mockito.mock(Stage.ConfigIssue.class);
+    Mockito.when(ctx.createConfigIssue(Mockito.anyString(), Mockito.anyString(),
+        Mockito.any(ErrorCode.class), Mockito.any())).thenReturn(issue);
+
+    List<KafkaBroker> kafkaBrokers = KafkaUtil.validateConnectionString(issues, "localhost:2181", "KAFKA",
+        "zookeeperConnect", ctx);
+    Mockito.verifyZeroInteractions(ctx);
+    assertTrue(kafkaBrokers.size() == 1);
+    assertEquals(kafkaBrokers.get(0).getHost(), "localhost");
+    assertEquals(kafkaBrokers.get(0).getPort(), 2181);
+
+
+    kafkaBrokers = KafkaUtil.validateConnectionString(issues, "localhost:2181#####", "KAFKA",
+        "zookeeperConnect", ctx);
+    Mockito.verify(ctx, Mockito.times(1)).createConfigIssue(Mockito.anyString(), Mockito.anyString(),
+        Mockito.any(ErrorCode.class), Mockito.any());
+
+    kafkaBrokers = KafkaUtil.validateConnectionString(issues, "localhost1:2181,localhost2:2181", "KAFKA",
+        "zookeeperConnect", ctx);
+    Mockito.verifyZeroInteractions(ctx);
+    assertTrue(kafkaBrokers.size() == 2);
+    assertEquals(kafkaBrokers.get(0).getHost(), "localhost1");
+    assertEquals(kafkaBrokers.get(0).getPort(), 2181);
+    assertEquals(kafkaBrokers.get(1).getHost(), "localhost2");
+    assertEquals(kafkaBrokers.get(1).getPort(), 2181);
+
+    kafkaBrokers = KafkaUtil.validateConnectionString(issues, "localhost:2181/kafka", "KAFKA",
+        "zookeeperConnect", ctx);
+    Mockito.verifyZeroInteractions(ctx);
+    assertEquals(kafkaBrokers.get(0).getHost(), "localhost");
+    assertEquals(kafkaBrokers.get(0).getPort(), 2181);
   }
 
 }
