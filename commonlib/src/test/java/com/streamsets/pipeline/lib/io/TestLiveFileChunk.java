@@ -18,7 +18,7 @@ public class TestLiveFileChunk {
   @Test
   public void testChunkGetters() throws IOException {
     LiveFile file = Mockito.mock(LiveFile.class);
-    LiveFileChunk chunk = new LiveFileChunk("tag", file, "Hola\nHello".getBytes(), Charset.forName("UTF-8"), 1, 9, true);
+    LiveFileChunk chunk = new LiveFileChunk("tag", file, Charset.forName("UTF-8"), "Hola\nHello".getBytes(), 1, 9, true);
     Assert.assertEquals("tag", chunk.getTag());
     Assert.assertEquals(file, chunk.getFile());
     Assert.assertEquals("Hola", IOUtils.readLines(chunk.getReader()).get(0));
@@ -29,12 +29,12 @@ public class TestLiveFileChunk {
     Assert.assertEquals(2, chunk.getLines().size());
     Assert.assertEquals("Hola\n", chunk.getLines().get(0).getText());
     Assert.assertEquals(1, chunk.getLines().get(0).getFileOffset());
-    Assert.assertEquals(chunk.getBuffer(), chunk.getLines().get(0).getChunkBuffer());
+    Assert.assertEquals(chunk.getBuffer(), chunk.getLines().get(0).getBuffer());
     Assert.assertEquals(0, chunk.getLines().get(0).getOffset());
     Assert.assertEquals(5, chunk.getLines().get(0).getLength());
     Assert.assertEquals("Hell", chunk.getLines().get(1).getText());
     Assert.assertEquals(6, chunk.getLines().get(1).getFileOffset());
-    Assert.assertEquals(chunk.getBuffer(), chunk.getLines().get(1).getChunkBuffer());
+    Assert.assertEquals(chunk.getBuffer(), chunk.getLines().get(1).getBuffer());
     Assert.assertEquals(5, chunk.getLines().get(1).getOffset());
     Assert.assertEquals(4, chunk.getLines().get(1).getLength());
   }
@@ -42,7 +42,7 @@ public class TestLiveFileChunk {
   @Test
   public void testChunkLinesLF() throws IOException {
     byte[] data = "Hello\nBye\n".getBytes(Charset.forName("UTF-8"));
-    LiveFileChunk chunk = new LiveFileChunk(null, null, data, Charset.forName("UTF-8"), 1, data.length, true);
+    LiveFileChunk chunk = new LiveFileChunk(null, null, Charset.forName("UTF-8"), data, 1, data.length, true);
     Assert.assertEquals(2, chunk.getLines().size());
     Assert.assertEquals("Hello\n", chunk.getLines().get(0).getText());
     Assert.assertEquals(1, chunk.getLines().get(0).getFileOffset());
@@ -53,7 +53,7 @@ public class TestLiveFileChunk {
   @Test
   public void testChunkLinesCRLF() throws IOException {
     byte[] data = "Hello\r\nBye\r\n".getBytes(Charset.forName("UTF-8"));
-    LiveFileChunk chunk = new LiveFileChunk(null, null, data, Charset.forName("UTF-8"), 1, data.length, true);
+    LiveFileChunk chunk = new LiveFileChunk(null, null, Charset.forName("UTF-8"), data, 1, data.length, true);
     Assert.assertEquals(2, chunk.getLines().size());
     Assert.assertEquals("Hello\r\n", chunk.getLines().get(0).getText());
     Assert.assertEquals(1, chunk.getLines().get(0).getFileOffset());

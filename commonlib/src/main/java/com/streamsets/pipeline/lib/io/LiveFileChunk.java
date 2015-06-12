@@ -21,18 +21,33 @@ public class LiveFileChunk {
   private final LiveFile file;
   private final byte[] data;
   private final Charset charset;
-  private final long initialOffset;
+  private final long dataOffset;
   private final int length;
   private final boolean truncated;
+  private final List<FileLine> lines;
 
-  LiveFileChunk(String tag, LiveFile file, byte[] data, Charset charset, long initialOffset, int length,
+  // creates a chunk using  existing FileLines instead of a raw buffer to create them
+  LiveFileChunk(String tag, LiveFile file, Charset charset, List<FileLine> lines, boolean truncated) {
+    this.tag = tag;
+    this.file = file;
+    this.charset = charset;
+    data = null;
+    dataOffset = -1;
+    length = -1;
+    this.lines = lines;
+    this.truncated = truncated;
+  }
+
+  // creates a chunk using  a raw buffer and creates the FileLines from it
+  LiveFileChunk(String tag, LiveFile file, Charset charset, byte[] data, long dataOffset, int length,
       boolean truncated) {
     this.tag = tag;
     this.file = file;
     this.data = data;
     this.charset = charset;
-    this.initialOffset = initialOffset;
+    this.dataOffset = dataOffset;
     this.length = length;
+    lines = createLines();
     this.truncated = truncated;
   }
 
@@ -75,7 +90,7 @@ public class LiveFileChunk {
   /**
    * Returns a {@link Reader} to the data in the chunk.
    * <p/>
-   * The {@link Reader} is created using the {@link java.nio.charset.Charset} specified in the {@link LiveFileReader}.
+   * The {@link Reader} is created using the {@link java.nio.charset.Charset} specified in the {@link SingleLineLiveFileReader}.
    *
    * @return a {@link Reader} to the data in the chunk.
    */
@@ -89,7 +104,7 @@ public class LiveFileChunk {
    * @return the byte offset of the chunk in the {@link LiveFile}.
    */
   public long getOffset() {
-    return initialOffset;
+    return dataOffset;
   }
 
   /**
@@ -103,7 +118,7 @@ public class LiveFileChunk {
 
   /**
    * Returns if the chunk has been truncated. This happens if the last line of the data chunk exceeds the maximum
-   * length specified in the {@link LiveFileReader}.
+   * length specified in the {@link SingleLineLiveFileReader}.
    *
    * @return <code>true</code> if the chunk has been truncated, <code>false</code> if not.
    */
@@ -118,6 +133,10 @@ public class LiveFileChunk {
    * @return a list with the {@link FileLine} in the chunk.
    */
   public List<FileLine> getLines() {
+    return lines;
+  }
+
+  private List<FileLine> createLines() {
     List<FileLine> lines = new ArrayList<>();
     int start = 0;
     for (int i = 0; i < length; i++) {

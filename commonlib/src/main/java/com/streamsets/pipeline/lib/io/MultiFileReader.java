@@ -22,7 +22,7 @@ import java.util.Map;
  * The <code>MultiFileReader</code> is a Reader that allows to read multiple files in a 'tail -f' mode while
  * keeping track of the current offsets and detecting if the files has been renamed.
  * <p/>
- * It builds on top of the {@link LiveFileReader} adding support for reading data from multiple files in different
+ * It builds on top of the {@link SingleLineLiveFileReader} adding support for reading data from multiple files in different
  * directories.
  * <p/>
  * Directories are read in round-robin fashion to avoid starvation.
