@@ -95,7 +95,7 @@ public class FileContext {
         fileOffset = 0;
       }
       if (currentFile != null) {
-        reader = new LiveFileReader(getRollMode(), getMultiFileInfo().getTag(), currentFile, charset, fileOffset,
+        reader = new SingleLineLiveFileReader(getRollMode(), getMultiFileInfo().getTag(), currentFile, charset, fileOffset,
                                     maxLineLength);
         if (fileOffset == 0) {
           // file start event

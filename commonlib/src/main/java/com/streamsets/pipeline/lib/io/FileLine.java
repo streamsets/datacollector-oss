@@ -5,18 +5,31 @@
  */
 package com.streamsets.pipeline.lib.io;
 
+import java.nio.charset.Charset;
+
 /**
  * A <code>FileLine</code> contains the text of a line and its byte offset in a file.
  */
 public class FileLine {
-  private final LiveFileChunk chunk;
-  private final int chunkOffset;
+  private final byte[] buffer;
+  private final long fileOffset;
+  private final Charset charset;
+  private final int offsetInChunk;
   private final int length;
+  private String line;
 
-  public FileLine(LiveFileChunk chunk, int chunkOffset, int length) {
-    this.chunk = chunk;
-    this.chunkOffset = chunkOffset;
+  // creates a FileLine from a raw byte[] buffer
+  FileLine(Charset charset, long offsetOfBuffer, byte[] buffer, int offsetInBuffer, int length) {
+    this.charset = charset;
+    this.fileOffset = offsetOfBuffer +  offsetInBuffer;
+    this.buffer = buffer;
+    this.offsetInChunk = offsetInBuffer;
     this.length = length;
+  }
+
+  // creates a FileLine from the buffer of a chunk, it references the original buffer, no bytes copying
+  FileLine(LiveFileChunk chunk, int offsetInChunk, int length) {
+    this(chunk.getCharset(), chunk.getOffset(), chunk.getBuffer(), offsetInChunk, length);
   }
 
   /**
@@ -25,7 +38,19 @@ public class FileLine {
    * @return the text of the line.
    */
   public String getText() {
-    return new String(chunk.getBuffer(), chunkOffset, length, chunk.getCharset());
+    if (line == null) {
+      line = new String(buffer, offsetInChunk, length, charset);
+    }
+    return line;
+  }
+
+  /**
+   * Returns the charset of the buffer.
+   *
+   * @return the charset of the buffer.
+   */
+  public Charset getCharset() {
+    return charset;
   }
 
   /**
@@ -34,25 +59,25 @@ public class FileLine {
    * @return the byte offset of the line in the file.
    */
   public long getFileOffset() {
-    return chunk.getOffset() + chunkOffset;
+    return fileOffset;
   }
 
   /**
-   * Returns the chunk buffer. It is reference, do not modify.
+   * Returns the buffer. It is reference, do not modify.
    *
-   * @return the chunk buffer. It is reference, do not modify.
+   * @return the buffer. It is reference, do not modify.
    */
-  public byte[] getChunkBuffer() {
-    return chunk.getBuffer();
+  public byte[] getBuffer() {
+    return buffer;
   }
 
   /**
-   * Returns the offset of the line within the chunk buffer.
+   * Returns the offset of the line within the buffer.
    *
-   * @return the offset of the line within the chunk buffer.
+   * @return the offset of the line within the buffer.
    */
   public int getOffset() {
-    return chunkOffset;
+    return offsetInChunk;
   }
 
   /**

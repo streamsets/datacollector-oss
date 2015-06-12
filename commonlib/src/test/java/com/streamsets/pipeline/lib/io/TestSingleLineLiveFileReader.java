@@ -22,7 +22,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
-public class TestLiveFileReader {
+public class TestSingleLineLiveFileReader {
   private File testDir;
 
   @Before
@@ -49,7 +49,7 @@ public class TestLiveFileReader {
   public void testMethods() throws Exception {
     Path file = createFile(Arrays.asList("Hello1\n", "Hello2\n"));
     LiveFile lf = new LiveFile(file);
-    LiveFileReader lfr = new LiveFileReader(LogRollModeFactory.REVERSE_COUNTER.get(file.getFileName().toString(), ""),
+    LiveFileReader lfr = new SingleLineLiveFileReader(LogRollModeFactory.REVERSE_COUNTER.get(file.getFileName().toString(), ""),
                                            null, lf, Charset.defaultCharset(), 0, 10);
     Assert.assertEquals(Charset.defaultCharset(), lfr.getCharset());
     Assert.assertEquals(lf, lfr.getLiveFile());
@@ -61,49 +61,49 @@ public class TestLiveFileReader {
   public void testValidCharsets() throws Exception {
     Path file = createFile(Arrays.asList("Hello1\n", "Hello2\n"));
     LiveFile lf = new LiveFile(file);
-    new LiveFileReader(LogRollModeFactory.REVERSE_COUNTER.get(file.getFileName().toString(), ""),null, lf, Charset.forName("US-ASCII"), 0, 10);
-    new LiveFileReader(LogRollModeFactory.REVERSE_COUNTER.get(file.getFileName().toString(), ""),null, lf, Charset.forName("UTF-8"), 0, 10);
-    new LiveFileReader(LogRollModeFactory.REVERSE_COUNTER.get(file.getFileName().toString(), ""),null, lf, Charset.forName("GBK"), 0, 10);
-    new LiveFileReader(LogRollModeFactory.REVERSE_COUNTER.get(file.getFileName().toString(), ""),null, lf, Charset.forName("ISO-8859-1"), 0, 10);
-    new LiveFileReader(LogRollModeFactory.REVERSE_COUNTER.get(file.getFileName().toString(), ""),null, lf, Charset.forName("shift_jis"), 0, 10);
-    new LiveFileReader(LogRollModeFactory.REVERSE_COUNTER.get(file.getFileName().toString(), ""),null, lf, Charset.forName("euc-jp"), 0, 10);
-    new LiveFileReader(LogRollModeFactory.REVERSE_COUNTER.get(file.getFileName().toString(), ""),null, lf, Charset.forName("euc-kr"), 0, 10);
-    new LiveFileReader(LogRollModeFactory.REVERSE_COUNTER.get(file.getFileName().toString(), ""),null, lf, Charset.forName("koi8-r"), 0, 10);
+    new SingleLineLiveFileReader(LogRollModeFactory.REVERSE_COUNTER.get(file.getFileName().toString(), ""),null, lf, Charset.forName("US-ASCII"), 0, 10);
+    new SingleLineLiveFileReader(LogRollModeFactory.REVERSE_COUNTER.get(file.getFileName().toString(), ""),null, lf, Charset.forName("UTF-8"), 0, 10);
+    new SingleLineLiveFileReader(LogRollModeFactory.REVERSE_COUNTER.get(file.getFileName().toString(), ""),null, lf, Charset.forName("GBK"), 0, 10);
+    new SingleLineLiveFileReader(LogRollModeFactory.REVERSE_COUNTER.get(file.getFileName().toString(), ""),null, lf, Charset.forName("ISO-8859-1"), 0, 10);
+    new SingleLineLiveFileReader(LogRollModeFactory.REVERSE_COUNTER.get(file.getFileName().toString(), ""),null, lf, Charset.forName("shift_jis"), 0, 10);
+    new SingleLineLiveFileReader(LogRollModeFactory.REVERSE_COUNTER.get(file.getFileName().toString(), ""),null, lf, Charset.forName("euc-jp"), 0, 10);
+    new SingleLineLiveFileReader(LogRollModeFactory.REVERSE_COUNTER.get(file.getFileName().toString(), ""),null, lf, Charset.forName("euc-kr"), 0, 10);
+    new SingleLineLiveFileReader(LogRollModeFactory.REVERSE_COUNTER.get(file.getFileName().toString(), ""),null, lf, Charset.forName("koi8-r"), 0, 10);
   }
 
   @Test(expected = IllegalArgumentException.class)
   public void testInvalidCharset1() throws Exception {
     Path file = createFile(Arrays.asList("Hello1\n", "Hello2\n"));
     LiveFile lf = new LiveFile(file);
-    new LiveFileReader(LogRollModeFactory.REVERSE_COUNTER.get(file.getFileName().toString(), ""),null, lf, Charset.forName("UTF-16"), 0, 10);
+    new SingleLineLiveFileReader(LogRollModeFactory.REVERSE_COUNTER.get(file.getFileName().toString(), ""),null, lf, Charset.forName("UTF-16"), 0, 10);
   }
 
   @Test(expected = IllegalArgumentException.class)
   public void testInvalidCharset2() throws Exception {
     Path file = createFile(Arrays.asList("Hello1\n", "Hello2\n"));
     LiveFile lf = new LiveFile(file);
-    new LiveFileReader(LogRollModeFactory.REVERSE_COUNTER.get(file.getFileName().toString(), ""),null, lf, Charset.forName("UTF-32"), 0, 10);
+    new SingleLineLiveFileReader(LogRollModeFactory.REVERSE_COUNTER.get(file.getFileName().toString(), ""),null, lf, Charset.forName("UTF-32"), 0, 10);
   }
 
   @Test(expected = IllegalArgumentException.class)
   public void testInvalidCharset3() throws Exception {
     Path file = createFile(Arrays.asList("Hello1\n", "Hello2\n"));
     LiveFile lf = new LiveFile(file);
-    new LiveFileReader(LogRollModeFactory.REVERSE_COUNTER.get(file.getFileName().toString(), ""),null, lf, Charset.forName("IBM500"), 0, 10);
+    new SingleLineLiveFileReader(LogRollModeFactory.REVERSE_COUNTER.get(file.getFileName().toString(), ""),null, lf, Charset.forName("IBM500"), 0, 10);
   }
 
   @Test(expected = IOException.class)
   public void testInvalidOffset() throws Exception {
     Path file = createFile(Arrays.asList("Hello"));
     LiveFile lf = new LiveFile(file);
-    new LiveFileReader(LogRollModeFactory.REVERSE_COUNTER.get(file.getFileName().toString(), ""),null, lf, Charset.defaultCharset(), 10, 10);
+    new SingleLineLiveFileReader(LogRollModeFactory.REVERSE_COUNTER.get(file.getFileName().toString(), ""),null, lf, Charset.defaultCharset(), 10, 10);
   }
 
   @Test
   public void testOneLineReadFromBeginningFullLinesNoTruncate() throws Exception {
     Path file = createFile(Arrays.asList("Hello1\n", "Hello2\n"));
     LiveFile lf = new LiveFile(file);
-    LiveFileReader lfr = new LiveFileReader(LogRollModeFactory.REVERSE_COUNTER.get(file.getFileName().toString(), ""),null, lf, Charset.defaultCharset(), 0, 10);
+    LiveFileReader lfr = new SingleLineLiveFileReader(LogRollModeFactory.REVERSE_COUNTER.get(file.getFileName().toString(), ""),null, lf, Charset.defaultCharset(), 0, 10);
 
     Assert.assertTrue(lfr.hasNext());
     LiveFileChunk chunk = lfr.next(0);
@@ -134,7 +134,7 @@ public class TestLiveFileReader {
     Assert.assertEquals(14, lfr.getOffset());
 
     Files.move(file, Paths.get(file.getParent().toString(), UUID.randomUUID().toString()));
-    Thread.sleep(LiveFileReader.REFRESH_INTERVAL + 1);
+    Thread.sleep(SingleLineLiveFileReader.REFRESH_INTERVAL + 1);
 
     Assert.assertFalse(lfr.hasNext());
     Assert.assertEquals(14, lfr.getOffset());
@@ -146,7 +146,7 @@ public class TestLiveFileReader {
   public void testOneLineReadFromBeginningLastLineNoEOLNoTruncate() throws Exception {
     Path file = createFile(Arrays.asList("Hello1\n", "Hello2"));
     LiveFile lf = new LiveFile(file);
-    LiveFileReader lfr = new LiveFileReader(LogRollModeFactory.REVERSE_COUNTER.get(file.getFileName().toString(), ""),null, lf, Charset.defaultCharset(), 0, 10);
+    LiveFileReader lfr = new SingleLineLiveFileReader(LogRollModeFactory.REVERSE_COUNTER.get(file.getFileName().toString(), ""),null, lf, Charset.defaultCharset(), 0, 10);
 
     Assert.assertTrue(lfr.hasNext());
     LiveFileChunk chunk = lfr.next(0);
@@ -163,7 +163,7 @@ public class TestLiveFileReader {
     Assert.assertEquals(7, lfr.getOffset());
 
     Files.move(file, Paths.get(file.getParent().toString(), UUID.randomUUID().toString()));
-    Thread.sleep(LiveFileReader.REFRESH_INTERVAL + 1);
+    Thread.sleep(SingleLineLiveFileReader.REFRESH_INTERVAL + 1);
 
     Assert.assertTrue(lfr.hasNext());
     chunk = lfr.next(0);
@@ -185,7 +185,7 @@ public class TestLiveFileReader {
   public void testOneLineReadFromExactOffsetFullLinesNoTruncate() throws Exception {
     Path file = createFile(Arrays.asList("Hello1\n", "Hello2\n"));
     LiveFile lf = new LiveFile(file);
-    LiveFileReader lfr = new LiveFileReader(LogRollModeFactory.REVERSE_COUNTER.get(file.getFileName().toString(), ""),null, lf, Charset.defaultCharset(), 7, 10);
+    LiveFileReader lfr = new SingleLineLiveFileReader(LogRollModeFactory.REVERSE_COUNTER.get(file.getFileName().toString(), ""),null, lf, Charset.defaultCharset(), 7, 10);
 
     Assert.assertTrue(lfr.hasNext());
     LiveFileChunk chunk = lfr.next(0);
@@ -207,7 +207,7 @@ public class TestLiveFileReader {
     Assert.assertEquals(14, lfr.getOffset());
 
     Files.move(file, Paths.get(file.getParent().toString(), UUID.randomUUID().toString()));
-    Thread.sleep(LiveFileReader.REFRESH_INTERVAL + 1);
+    Thread.sleep(SingleLineLiveFileReader.REFRESH_INTERVAL + 1);
 
     Assert.assertFalse(lfr.hasNext());
 
@@ -218,7 +218,7 @@ public class TestLiveFileReader {
   public void testOneLineReadFromExactOffsetLastLineNoEOLNoTruncate() throws Exception {
     Path file = createFile(Arrays.asList("Hello1\n", "Hello2"));
     LiveFile lf = new LiveFile(file);
-    LiveFileReader lfr = new LiveFileReader(LogRollModeFactory.REVERSE_COUNTER.get(file.getFileName().toString(), ""),null, lf, Charset.defaultCharset(), 7, 10);
+    LiveFileReader lfr = new SingleLineLiveFileReader(LogRollModeFactory.REVERSE_COUNTER.get(file.getFileName().toString(), ""),null, lf, Charset.defaultCharset(), 7, 10);
 
 
     Assert.assertTrue(lfr.hasNext());
@@ -226,7 +226,7 @@ public class TestLiveFileReader {
     Assert.assertNull(chunk);
 
     Files.move(file, Paths.get(file.getParent().toString(), UUID.randomUUID().toString()));
-    Thread.sleep(LiveFileReader.REFRESH_INTERVAL + 1);
+    Thread.sleep(SingleLineLiveFileReader.REFRESH_INTERVAL + 1);
 
     Assert.assertTrue(lfr.hasNext());
 
@@ -251,7 +251,7 @@ public class TestLiveFileReader {
   public void testMultiLineReadFromBeginningFullLinesNoTruncate() throws Exception {
     Path file = createFile(Arrays.asList("Hello1\n", "Hello2\n"));
     LiveFile lf = new LiveFile(file);
-    LiveFileReader lfr = new LiveFileReader(LogRollModeFactory.REVERSE_COUNTER.get(file.getFileName().toString(), ""),null, lf, Charset.defaultCharset(), 0, 20);
+    LiveFileReader lfr = new SingleLineLiveFileReader(LogRollModeFactory.REVERSE_COUNTER.get(file.getFileName().toString(), ""),null, lf, Charset.defaultCharset(), 0, 20);
 
     Assert.assertTrue(lfr.hasNext());
     LiveFileChunk chunk = lfr.next(0);
@@ -267,7 +267,7 @@ public class TestLiveFileReader {
     Assert.assertEquals(14, lfr.getOffset());
 
     Files.move(file, Paths.get(file.getParent().toString(), UUID.randomUUID().toString()));
-    Thread.sleep(LiveFileReader.REFRESH_INTERVAL + 1);
+    Thread.sleep(SingleLineLiveFileReader.REFRESH_INTERVAL + 1);
 
     Assert.assertFalse(lfr.hasNext());
     Assert.assertEquals(14, lfr.getOffset());
@@ -279,7 +279,7 @@ public class TestLiveFileReader {
   public void testMultiLineLineReadFromBeginningLastLineNoEOLNoTruncate() throws Exception {
     Path file = createFile(Arrays.asList("Hello1\n", "Hello2"));
     LiveFile lf = new LiveFile(file);
-    LiveFileReader lfr = new LiveFileReader(LogRollModeFactory.REVERSE_COUNTER.get(file.getFileName().toString(), ""),null, lf, Charset.defaultCharset(), 0, 20);
+    LiveFileReader lfr = new SingleLineLiveFileReader(LogRollModeFactory.REVERSE_COUNTER.get(file.getFileName().toString(), ""),null, lf, Charset.defaultCharset(), 0, 20);
 
     Assert.assertTrue(lfr.hasNext());
     LiveFileChunk chunk = lfr.next(0);
@@ -296,7 +296,7 @@ public class TestLiveFileReader {
     Assert.assertEquals(7, lfr.getOffset());
 
     Files.move(file, Paths.get(file.getParent().toString(), UUID.randomUUID().toString()));
-    Thread.sleep(LiveFileReader.REFRESH_INTERVAL + 1);
+    Thread.sleep(SingleLineLiveFileReader.REFRESH_INTERVAL + 1);
 
     Assert.assertTrue(lfr.hasNext());
     chunk = lfr.next(0);
@@ -318,7 +318,7 @@ public class TestLiveFileReader {
   public void testOneLineReadFromBeginningFullLinesTruncate() throws Exception {
     Path file = createFile(Arrays.asList("Hello123456\n", "Hello2\n"));
     LiveFile lf = new LiveFile(file);
-    LiveFileReader lfr = new LiveFileReader(LogRollModeFactory.REVERSE_COUNTER.get(file.getFileName().toString(), ""),null, lf, Charset.defaultCharset(), 0, 10);
+    LiveFileReader lfr = new SingleLineLiveFileReader(LogRollModeFactory.REVERSE_COUNTER.get(file.getFileName().toString(), ""),null, lf, Charset.defaultCharset(), 0, 10);
 
     Assert.assertTrue(lfr.hasNext());
     LiveFileChunk chunk = lfr.next(0);
@@ -349,7 +349,7 @@ public class TestLiveFileReader {
     Assert.assertEquals(19, lfr.getOffset());
 
     Files.move(file, Paths.get(file.getParent().toString(), UUID.randomUUID().toString()));
-    Thread.sleep(LiveFileReader.REFRESH_INTERVAL + 1);
+    Thread.sleep(SingleLineLiveFileReader.REFRESH_INTERVAL + 1);
 
     Assert.assertFalse(lfr.hasNext());
     Assert.assertEquals(19, lfr.getOffset());
@@ -361,7 +361,7 @@ public class TestLiveFileReader {
   public void testTruncateMultipleReads() throws Exception {
     Path file = createFile(Arrays.asList("Hello1234567890\n", "Hello\n"));
     LiveFile lf = new LiveFile(file);
-    LiveFileReader lfr = new LiveFileReader(LogRollModeFactory.REVERSE_COUNTER.get(file.getFileName().toString(), ""),null, lf, Charset.defaultCharset(), 0, 6);
+    LiveFileReader lfr = new SingleLineLiveFileReader(LogRollModeFactory.REVERSE_COUNTER.get(file.getFileName().toString(), ""),null, lf, Charset.defaultCharset(), 0, 6);
 
     Assert.assertTrue(lfr.hasNext());
     LiveFileChunk chunk = lfr.next(0);
@@ -398,7 +398,7 @@ public class TestLiveFileReader {
     Assert.assertEquals(22, lfr.getOffset());
 
     Files.move(file, Paths.get(file.getParent().toString(), UUID.randomUUID().toString()));
-    Thread.sleep(LiveFileReader.REFRESH_INTERVAL + 1);
+    Thread.sleep(SingleLineLiveFileReader.REFRESH_INTERVAL + 1);
 
     Assert.assertFalse(lfr.hasNext());
     Assert.assertEquals(22, lfr.getOffset());
@@ -410,7 +410,7 @@ public class TestLiveFileReader {
   public void testOneLineReadFromTruncatedOffset() throws Exception {
     Path file = createFile(Arrays.asList("Hello1\n", "Hello\n"));
     LiveFile lf = new LiveFile(file);
-    LiveFileReader lfr = new LiveFileReader(LogRollModeFactory.REVERSE_COUNTER.get(file.getFileName().toString(), ""),null, lf, Charset.defaultCharset(), -3, 10);
+    LiveFileReader lfr = new SingleLineLiveFileReader(LogRollModeFactory.REVERSE_COUNTER.get(file.getFileName().toString(), ""),null, lf, Charset.defaultCharset(), -3, 10);
 
     Assert.assertTrue(lfr.hasNext());
     LiveFileChunk chunk = lfr.next(0);
@@ -432,7 +432,7 @@ public class TestLiveFileReader {
   public void testTruncatedChunkAndNoEOLInLast() throws Exception {
     Path file = createFile(Arrays.asList("Hello1"));
     LiveFile lf = new LiveFile(file);
-    LiveFileReader lfr = new LiveFileReader(LogRollModeFactory.REVERSE_COUNTER.get(file.getFileName().toString(), ""),null, lf, Charset.defaultCharset(), 0, 6);
+    LiveFileReader lfr = new SingleLineLiveFileReader(LogRollModeFactory.REVERSE_COUNTER.get(file.getFileName().toString(), ""),null, lf, Charset.defaultCharset(), 0, 6);
 
     Assert.assertTrue(lfr.hasNext());
     LiveFileChunk chunk = lfr.next(0);
@@ -459,7 +459,7 @@ public class TestLiveFileReader {
   public void testNextTimeout() throws Exception {
     Path file = createFile(Arrays.asList("Hello1"));
     LiveFile lf = new LiveFile(file);
-    LiveFileReader lfr = new LiveFileReader(LogRollModeFactory.REVERSE_COUNTER.get(file.getFileName().toString(), ""),null, lf, Charset.defaultCharset(), 0, 10);
+    LiveFileReader lfr = new SingleLineLiveFileReader(LogRollModeFactory.REVERSE_COUNTER.get(file.getFileName().toString(), ""),null, lf, Charset.defaultCharset(), 0, 10);
 
     Assert.assertTrue(lfr.hasNext());
     long start = System.currentTimeMillis();
@@ -473,7 +473,7 @@ public class TestLiveFileReader {
   public void testReadWithinTimeout() throws Exception {
     Path file = createFile(Arrays.asList("Hello1\n"));
     LiveFile lf = new LiveFile(file);
-    LiveFileReader lfr = new LiveFileReader(LogRollModeFactory.REVERSE_COUNTER.get(file.getFileName().toString(), ""),null, lf, Charset.defaultCharset(), 0, 10);
+    LiveFileReader lfr = new SingleLineLiveFileReader(LogRollModeFactory.REVERSE_COUNTER.get(file.getFileName().toString(), ""),null, lf, Charset.defaultCharset(), 0, 10);
 
     Assert.assertTrue(lfr.hasNext());
     long start = System.currentTimeMillis();
@@ -490,7 +490,7 @@ public class TestLiveFileReader {
     LiveFile lf = new LiveFile(file);
 
     //multiple lines in one chunk
-    LiveFileReader lfr = new LiveFileReader(LogRollModeFactory.REVERSE_COUNTER.get(file.getFileName().toString(), ""),null, lf, Charset.defaultCharset(), 0, 20);
+    LiveFileReader lfr = new SingleLineLiveFileReader(LogRollModeFactory.REVERSE_COUNTER.get(file.getFileName().toString(), ""),null, lf, Charset.defaultCharset(), 0, 20);
     Assert.assertTrue(lfr.hasNext());
     LiveFileChunk chunk = lfr.next(0);
     Assert.assertNotNull(chunk);
@@ -501,7 +501,7 @@ public class TestLiveFileReader {
     Assert.assertEquals(15, lfr.getOffset());
 
     //1.5 lines in one chunk
-    lfr = new LiveFileReader(LogRollModeFactory.REVERSE_COUNTER.get(file.getFileName().toString(), ""),null, lf, Charset.defaultCharset(), 0, 10);
+    lfr = new SingleLineLiveFileReader(LogRollModeFactory.REVERSE_COUNTER.get(file.getFileName().toString(), ""),null, lf, Charset.defaultCharset(), 0, 10);
     Assert.assertTrue(lfr.hasNext());
     chunk = lfr.next(0);
     Assert.assertNotNull(chunk);
@@ -521,7 +521,7 @@ public class TestLiveFileReader {
     Assert.assertEquals(15, lfr.getOffset());
 
     //first line truncated after \r\n
-    lfr = new LiveFileReader(LogRollModeFactory.REVERSE_COUNTER.get(file.getFileName().toString(), ""),null, lf, Charset.defaultCharset(), 0, 8);
+    lfr = new SingleLineLiveFileReader(LogRollModeFactory.REVERSE_COUNTER.get(file.getFileName().toString(), ""),null, lf, Charset.defaultCharset(), 0, 8);
     Assert.assertTrue(lfr.hasNext());
     chunk = lfr.next(0);
     Assert.assertNotNull(chunk);
@@ -541,7 +541,7 @@ public class TestLiveFileReader {
     Assert.assertEquals(15, lfr.getOffset());
 
     //first line truncated after \r
-    lfr = new LiveFileReader(LogRollModeFactory.REVERSE_COUNTER.get(file.getFileName().toString(), ""),null, lf, Charset.defaultCharset(), 0, 7);
+    lfr = new SingleLineLiveFileReader(LogRollModeFactory.REVERSE_COUNTER.get(file.getFileName().toString(), ""),null, lf, Charset.defaultCharset(), 0, 7);
     Assert.assertTrue(lfr.hasNext());
     chunk = lfr.next(0);
     Assert.assertNotNull(chunk);
@@ -570,7 +570,7 @@ public class TestLiveFileReader {
 
     //multiple lines in one chunk
     LiveFileReader lfr =
-        new LiveFileReader(LogRollModeFactory.REVERSE_COUNTER.get(file.getFileName().toString(), ""), "tag", lf,
+        new SingleLineLiveFileReader(LogRollModeFactory.REVERSE_COUNTER.get(file.getFileName().toString(), ""), "tag", lf,
                            Charset.defaultCharset(), 0, 20);
     Assert.assertTrue(lfr.hasNext());
     LiveFileChunk chunk = lfr.next(0);

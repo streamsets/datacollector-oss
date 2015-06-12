@@ -193,7 +193,7 @@ public class TestMultiFileReader {
     Files.move(file2.toPath(), Paths.get(file2 + ".1"));
 
     //lets sleep a bit more than the refresh interval in order to detect the rename
-    Thread.sleep(LiveFileReader.REFRESH_INTERVAL + 1);
+    Thread.sleep(SingleLineLiveFileReader.REFRESH_INTERVAL + 1);
 
     // reads rolled file from second dir
     mdr.setOffsets(mdr.getOffsets());
@@ -285,7 +285,7 @@ public class TestMultiFileReader {
     Files.createFile(file2.toPath());
 
     //sleeps to trigger a livefile refresh
-    Thread.sleep(LiveFileReader.REFRESH_INTERVAL + 1);
+    Thread.sleep(SingleLineLiveFileReader.REFRESH_INTERVAL * 2 + 1);
 
     //reach eof
     Assert.assertNull(mdr.next(0));
@@ -316,7 +316,7 @@ public class TestMultiFileReader {
     Files.createFile(file2.toPath());
 
     //sleeps to trigger a livefile refresh
-    Thread.sleep(LiveFileReader.REFRESH_INTERVAL + 1);
+    Thread.sleep(SingleLineLiveFileReader.REFRESH_INTERVAL + 1);
 
     //reach eof
     Assert.assertNull(mdr.next(0));

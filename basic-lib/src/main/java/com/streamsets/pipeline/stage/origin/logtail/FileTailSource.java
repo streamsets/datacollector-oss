@@ -369,7 +369,7 @@ public class FileTailSource extends BaseSource {
           String liveFileStr = chunk.getFile().serialize();
           for (FileLine line : chunk.getLines()) {
             String sourceId = liveFileStr + "::" + line.getFileOffset();
-            try (DataParser parser = parserFactory.getParser(sourceId, line.getChunkBuffer(), line.getOffset(),
+            try (DataParser parser = parserFactory.getParser(sourceId, line.getBuffer(), line.getOffset(),
                                                              line.getLength())) {
               Record record = parser.parse();
               if (tag != null) {
