@@ -315,7 +315,7 @@ angular
           }
         ]
       },
-      {
+      /*{
         name: 'psPermGenHeapMemoryUsage',
         label: 'Memory Pool "PS Perm Gen"',
         xAxisTickFormat: $scope.dateFormat(),
@@ -340,7 +340,7 @@ angular
             values: []
           }
         ]
-      },
+      },*/
       {
         name: 'psCodeCacheHeapMemoryUsage',
         label: 'Memory Pool "Code Cache"',
