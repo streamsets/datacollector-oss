@@ -120,7 +120,7 @@ public class TestConfigDefinitionExtractor {
     Assert.assertEquals(3, config.getMin());
     Assert.assertEquals(4, config.getMax());
     Assert.assertEquals(ConfigDef.Evaluation.EXPLICIT, config.getEvaluation());
-    Assert.assertEquals(ConfigDef.Mode.JAVA.name(), config.getMode());
+    Assert.assertEquals("text/x-java", config.getMode());
     Assert.assertTrue(containsF(config.getElFunctionDefinitions(), "p:f"));
     Assert.assertTrue(containsC(config.getElConstantDefinitions(), "C"));
     Assert.assertNull(config.getModel());
