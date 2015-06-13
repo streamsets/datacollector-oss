@@ -34,7 +34,9 @@ import com.streamsets.pipeline.lib.parser.DataParser;
 import com.streamsets.pipeline.lib.parser.DataParserException;
 import com.streamsets.pipeline.lib.parser.DataParserFactoryBuilder;
 import com.streamsets.pipeline.lib.parser.log.LogDataFormatValidator;
+import com.streamsets.pipeline.lib.parser.log.LogDataParserFactory;
 import com.streamsets.pipeline.lib.parser.log.RegExConfig;
+import com.streamsets.pipeline.lib.parser.text.TextDataParserFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -57,6 +59,7 @@ public class FileTailSource extends BaseSource {
   private static final Logger LOG = LoggerFactory.getLogger(FileTailSource.class);
 
   private final DataFormat dataFormat;
+  private final String multiLineMainPattern;
   private final String charset;
   private final boolean removeCtrlChars;
   private final int maxLineLength;
@@ -76,28 +79,30 @@ public class FileTailSource extends BaseSource {
   private final String log4jCustomLogFormat;
   private final int scanIntervalSecs;
 
-  public FileTailSource(DataFormat dataFormat, String charset, boolean removeCtrlChars, int maxLineLength,
-      int batchSize,
+  public FileTailSource(DataFormat dataFormat, String multiLineMainPattern, String charset,  boolean removeCtrlChars,
+      int maxLineLength, int batchSize,
       int maxWaitTimeSecs, List<FileInfo> fileInfos, PostProcessingOptions postProcessing, String archiveDir,
       LogMode logMode,
       boolean retainOriginalLine, String customLogFormat, String regex,
       List<RegExConfig> fieldPathsToGroupName,
       String grokPatternDefinition, String grokPattern, boolean enableLog4jCustomLogFormat,
       String log4jCustomLogFormat) {
-    this(dataFormat, charset, removeCtrlChars, maxLineLength, batchSize, maxWaitTimeSecs, fileInfos, postProcessing,
-         archiveDir, logMode, retainOriginalLine, customLogFormat, regex, fieldPathsToGroupName, grokPatternDefinition,
+    this(dataFormat, multiLineMainPattern, charset, removeCtrlChars, maxLineLength, batchSize, maxWaitTimeSecs,
+         fileInfos, postProcessing, archiveDir,
+         logMode, retainOriginalLine, customLogFormat, regex, fieldPathsToGroupName, grokPatternDefinition,
          grokPattern, enableLog4jCustomLogFormat, log4jCustomLogFormat, 20);
   }
 
 
-  FileTailSource(DataFormat dataFormat, String charset, boolean removeCtrlChars, int maxLineLength, int batchSize,
-      int maxWaitTimeSecs, List<FileInfo> fileInfos, PostProcessingOptions postProcessing, String archiveDir,
-      LogMode logMode,
+  FileTailSource(DataFormat dataFormat, String multiLineMainPattern, String charset, boolean removeCtrlChars,
+      int maxLineLength, int batchSize, int maxWaitTimeSecs, List<FileInfo> fileInfos,
+      PostProcessingOptions postProcessing, String archiveDir, LogMode logMode,
       boolean retainOriginalLine, String customLogFormat, String regex,
       List<RegExConfig> fieldPathsToGroupName,
       String grokPatternDefinition, String grokPattern, boolean enableLog4jCustomLogFormat,
       String log4jCustomLogFormat, int scanIntervalSecs) {
     this.dataFormat = dataFormat;
+    this.multiLineMainPattern = multiLineMainPattern;
     this.charset = charset;
     this.removeCtrlChars = removeCtrlChars;
     this.maxLineLength = maxLineLength;
@@ -211,7 +216,8 @@ public class FileTailSource extends BaseSource {
               fileInfo.fileFullPath,
               fileInfo.fileRollMode,
               fileInfo.patternForToken,
-              fileInfo.firstFile
+              fileInfo.firstFile,
+              multiLineMainPattern
           );
           dirInfos.add(directoryInfo);
           if (fileKeys.contains(directoryInfo.getFileKey())) {
@@ -264,11 +270,13 @@ public class FileTailSource extends BaseSource {
         .setCharset(Charset.defaultCharset()).setRemoveCtrlChars(removeCtrlChars).setMaxDataLen(-1);
     switch (dataFormat) {
       case TEXT:
+        builder.setConfig(TextDataParserFactory.MULTI_LINE_KEY, !multiLineMainPattern.isEmpty());
         break;
       case JSON:
         builder.setMode(JsonMode.MULTIPLE_OBJECTS);
         break;
       case LOG:
+        builder.setConfig(LogDataParserFactory.MULTI_LINES_KEY, !multiLineMainPattern.isEmpty());
         logDataFormatValidator.populateBuilder(builder);
         break;
       default:
@@ -369,8 +377,7 @@ public class FileTailSource extends BaseSource {
           String liveFileStr = chunk.getFile().serialize();
           for (FileLine line : chunk.getLines()) {
             String sourceId = liveFileStr + "::" + line.getFileOffset();
-            try (DataParser parser = parserFactory.getParser(sourceId, line.getBuffer(), line.getOffset(),
-                                                             line.getLength())) {
+            try (DataParser parser = parserFactory.getParser(sourceId, line.getText())) {
               Record record = parser.parse();
               if (tag != null) {
                 record.getHeader().setAttribute("tag", tag);

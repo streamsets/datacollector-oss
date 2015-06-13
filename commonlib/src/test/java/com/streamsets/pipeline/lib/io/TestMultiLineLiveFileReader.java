@@ -167,7 +167,7 @@ public class TestMultiLineLiveFileReader {
     List<LiveFileChunk> got = new ArrayList<>();
 
     LiveFileReader reader = new MockLineLiveFileReader(returnNulls, chunk1, chunk2);
-    reader = new MultiLineLiveFileReader(reader, Pattern.compile(".*"));
+    reader = new MultiLineLiveFileReader("t", reader, Pattern.compile(".*"));
     while (reader.hasNext()) {
       LiveFileChunk chunk = reader.next(0);
       got.add(chunk);
@@ -192,7 +192,7 @@ public class TestMultiLineLiveFileReader {
     List<LiveFileChunk> got = new ArrayList<>();
 
     LiveFileReader reader = new MockLineLiveFileReader(returnNulls, chunk1, chunk2);
-    reader = new MultiLineLiveFileReader(reader, Pattern.compile("A.*"));
+    reader = new MultiLineLiveFileReader("t", reader, Pattern.compile("A.*"));
     while (reader.hasNext()) {
       LiveFileChunk chunk = reader.next(0);
       got.add(chunk);
@@ -216,7 +216,7 @@ public class TestMultiLineLiveFileReader {
     List<LiveFileChunk> got = new ArrayList<>();
 
     LiveFileReader reader = new MockLineLiveFileReader(returnNulls, chunk1);
-    reader = new MultiLineLiveFileReader(reader, Pattern.compile("A.*"));
+    reader = new MultiLineLiveFileReader("t", reader, Pattern.compile("A.*"));
     while (reader.hasNext()) {
       LiveFileChunk chunk = reader.next(0);
       got.add(chunk);
@@ -242,7 +242,7 @@ public class TestMultiLineLiveFileReader {
     List<LiveFileChunk> got = new ArrayList<>();
 
     LiveFileReader reader = new MockLineLiveFileReader(returnNulls, chunk1, chunk2, chunk3);
-    reader = new MultiLineLiveFileReader(reader, Pattern.compile("A.*"));
+    reader = new MultiLineLiveFileReader("t", reader, Pattern.compile("A.*"));
     while (reader.hasNext()) {
       LiveFileChunk chunk = reader.next(0);
       got.add(chunk);
@@ -269,7 +269,7 @@ public class TestMultiLineLiveFileReader {
     List<LiveFileChunk> got = new ArrayList<>();
 
     LiveFileReader reader = new MockLineLiveFileReader(false, chunk1, chunk2, chunk3);
-    reader = new MultiLineLiveFileReader(reader, Pattern.compile("A.*"));
+    reader = new MultiLineLiveFileReader("t", reader, Pattern.compile("A.*"));
     Assert.assertEquals(0, reader.getOffset());
 
     Assert.assertTrue(reader.hasNext());

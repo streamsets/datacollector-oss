@@ -5,7 +5,10 @@
  */
 package com.streamsets.pipeline.lib.io;
 
+import com.streamsets.pipeline.api.impl.Utils;
+
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 
 /**
  * A <code>FileLine</code> contains the text of a line and its byte offset in a file.
@@ -18,18 +21,22 @@ public class FileLine {
   private final int length;
   private String line;
 
-  // creates a FileLine from a raw byte[] buffer
-  FileLine(Charset charset, long offsetOfBuffer, byte[] buffer, int offsetInBuffer, int length) {
-    this.charset = charset;
-    this.fileOffset = offsetOfBuffer +  offsetInBuffer;
-    this.buffer = buffer;
-    this.offsetInChunk = offsetInBuffer;
-    this.length = length;
+  FileLine(long offsetOfBuffer, String str) {
+    buffer = null;
+    this.charset = StandardCharsets.UTF_8;
+    this.fileOffset = offsetOfBuffer;
+    offsetInChunk = 0;
+    line = str;
+    length = str.length();
   }
 
   // creates a FileLine from the buffer of a chunk, it references the original buffer, no bytes copying
   FileLine(LiveFileChunk chunk, int offsetInChunk, int length) {
-    this(chunk.getCharset(), chunk.getOffset(), chunk.getBuffer(), offsetInChunk, length);
+    charset = chunk.getCharset();
+    fileOffset = chunk.getOffset() +  offsetInChunk;
+    buffer = chunk.getBuffer();
+    this.offsetInChunk = offsetInChunk;
+    this.length = length;
   }
 
   /**
@@ -89,4 +96,7 @@ public class FileLine {
     return length;
   }
 
+  public String toString() {
+    return Utils.format("FileLine='{}'", getText());
+  }
 }

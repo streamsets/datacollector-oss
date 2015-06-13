@@ -50,6 +50,20 @@ public class FileTailDSource extends DSource {
   public DataFormat dataFormat;
 
   @ConfigDef(
+      required = false,
+      type = ConfigDef.Type.STRING,
+      label = "Pattern for Multiline",
+      defaultValue = "",
+      description = "RegEx pattern to detect main lines for Text and Log files with multi-line elements. " +
+                    "Use only if required as it impacts reading performance",
+      displayPosition = 15,
+      group = "FILES",
+      dependsOn = "dataFormat",
+      triggeredByValue = { "TEXT", "LOG" }
+  )
+  public String multiLineMainPattern;
+
+  @ConfigDef(
       required = true,
       type = ConfigDef.Type.MODEL,
       defaultValue = "UTF-8",
@@ -281,9 +295,9 @@ public class FileTailDSource extends DSource {
 
   @Override
   protected Source createSource() {
-    return new FileTailSource(dataFormat, charset, removeCtrlChars, maxLineLength, batchSize, maxWaitTimeSecs, fileInfos,
-                              postProcessing, archiveDir, logMode, retainOriginalLine, customLogFormat,
-                              regex, fieldPathsToGroupName, grokPatternDefinition, grokPattern,
+    return new FileTailSource(dataFormat, multiLineMainPattern, charset, removeCtrlChars, maxLineLength, batchSize,
+                              maxWaitTimeSecs, fileInfos, postProcessing, archiveDir, logMode, retainOriginalLine,
+                              customLogFormat, regex, fieldPathsToGroupName, grokPatternDefinition, grokPattern,
                               enableLog4jCustomLogFormat, log4jCustomLogFormat);
   }
 

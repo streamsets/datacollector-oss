@@ -5,6 +5,7 @@
  */
 package com.streamsets.pipeline.lib.parser.text;
 
+import com.google.common.collect.ImmutableMap;
 import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.lib.io.OverrunReader;
 import com.streamsets.pipeline.lib.parser.DataParser;
@@ -19,7 +20,10 @@ import java.util.Map;
 import java.util.Set;
 
 public class TextDataParserFactory extends DataParserFactory {
-  public static final Map<String, Object> CONFIGS = Collections.emptyMap();
+  public static final String MULTI_LINE_KEY = "multiLines";
+  public static final boolean MULTI_LINE_DEFAULT = false;
+
+  public static final Map<String, Object> CONFIGS = ImmutableMap.<String, Object>of(MULTI_LINE_KEY, MULTI_LINE_DEFAULT);
   public static final Set<Class<? extends Enum>> MODES = Collections.emptySet();
 
   static final String TEXT_FIELD_NAME = "text";
@@ -44,8 +48,9 @@ public class TextDataParserFactory extends DataParserFactory {
     Utils.checkState(reader.getPos() == 0, Utils.formatL("reader must be in position '0', it is at '{}'",
       reader.getPos()));
     try {
-      return new TextCharDataParser(getSettings().getContext(), id, reader, offset, getSettings().getMaxRecordLen(),
-        TEXT_FIELD_NAME, TRUNCATED_FIELD_NAME);
+      return new TextCharDataParser(getSettings().getContext(), id, (boolean) getSettings().getConfig(MULTI_LINE_KEY),
+                                    reader, offset, getSettings().getMaxRecordLen(), TEXT_FIELD_NAME,
+                                    TRUNCATED_FIELD_NAME);
     } catch (IOException ex) {
       throw new DataParserException(Errors.TEXT_PARSER_00, id, offset, ex.getMessage(), ex);
     }

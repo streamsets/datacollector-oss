@@ -20,6 +20,9 @@ import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 import java.util.UUID;
 
 public class TestMultiFileReader {
@@ -39,7 +42,7 @@ public class TestMultiFileReader {
   public void testEmptyDirectory() throws IOException {
     File file = new File(testDir1, "file.txt");
     MultiFileInfo di =
-        new MultiFileInfo(null, file.getPath(), FileRollMode.REVERSE_COUNTER, "", "");
+        new MultiFileInfo(null, file.getPath(), FileRollMode.REVERSE_COUNTER, "", "", "");
     MultiFileReader mdr =
         new MultiFileReader(Arrays.asList(di), UTF8, 1024, PostProcessingOptions.NONE, null, false, 0);
     mdr.setOffsets(new HashMap<String, String>());
@@ -57,7 +60,7 @@ public class TestMultiFileReader {
     File file = new File(testDir1, "file.txt");
     Files.write(file.toPath(), Arrays.asList("Hello"), UTF8);
     MultiFileInfo di =
-        new MultiFileInfo("tag", file.getPath(), FileRollMode.REVERSE_COUNTER, "", "");
+        new MultiFileInfo("tag", file.getPath(), FileRollMode.REVERSE_COUNTER, "", "", "");
     MultiFileReader mdr =
         new MultiFileReader(Arrays.asList(di), UTF8, 1024, PostProcessingOptions.NONE, null, false, 0);
     mdr.setOffsets(new HashMap<String, String>());
@@ -91,9 +94,9 @@ public class TestMultiFileReader {
     File file1 = new File(testDir1, "f1.txt");
     Files.write(file1.toPath(), Arrays.asList("f1.0"), UTF8);
     MultiFileInfo di1 =
-        new MultiFileInfo(null, file1.getPath(), FileRollMode.REVERSE_COUNTER, "", "");
+        new MultiFileInfo(null, file1.getPath(), FileRollMode.REVERSE_COUNTER, "", "", "");
     MultiFileInfo di2 =
-        new MultiFileInfo(null, file1.getPath(), FileRollMode.REVERSE_COUNTER, "", "");
+        new MultiFileInfo(null, file1.getPath(), FileRollMode.REVERSE_COUNTER, "", "", "");
     new MultiFileReader(Arrays.asList(di1, di2), UTF8, 1024, PostProcessingOptions.NONE, null, false, 0);
   }
 
@@ -104,9 +107,9 @@ public class TestMultiFileReader {
     Files.write(file1.toPath(), Arrays.asList("f1.0"), UTF8);
     Files.write(file2.toPath(), Arrays.asList("f2.00"), UTF8);
     MultiFileInfo di1 =
-        new MultiFileInfo("tag1", file1.getPath(), FileRollMode.REVERSE_COUNTER, "", "");
+        new MultiFileInfo("tag1", file1.getPath(), FileRollMode.REVERSE_COUNTER, "", "", "");
     MultiFileInfo di2 =
-        new MultiFileInfo("tag2", file2.getPath(), FileRollMode.REVERSE_COUNTER, "", "");
+        new MultiFileInfo("tag2", file2.getPath(), FileRollMode.REVERSE_COUNTER, "", "", "");
     MultiFileReader mdr = new MultiFileReader(Arrays.asList(di1, di2), UTF8, 1024, PostProcessingOptions.NONE, null,
                                               false, 0);
 
@@ -246,7 +249,7 @@ public class TestMultiFileReader {
     File file1 = new File(testDir1, "f1.txt.1");
     Files.write(file1.toPath(), Arrays.asList("f1"), UTF8);
     MultiFileInfo di1 =
-        new MultiFileInfo(null, file.getPath(), FileRollMode.REVERSE_COUNTER, "", "");
+        new MultiFileInfo(null, file.getPath(), FileRollMode.REVERSE_COUNTER, "", "", "");
     MultiFileReader mdr = new MultiFileReader(Arrays.asList(di1), UTF8, 1024, PostProcessingOptions.DELETE, null,
                                               false, 0);
 
@@ -270,7 +273,7 @@ public class TestMultiFileReader {
     Files.write(file1.toPath(), Arrays.asList("f1"), UTF8);
     MultiFileInfo di1 =
         new MultiFileInfo(null, new File(testDir1, "f${PATTERN}.txt").getPath(),
-                                               FileRollMode.PATTERN, ".", "");
+                                               FileRollMode.PATTERN, ".", "", "");
 
     MultiFileReader mdr = new MultiFileReader(Arrays.asList(di1), UTF8, 1024, PostProcessingOptions.DELETE, null,
                                               false, 0);
@@ -301,7 +304,7 @@ public class TestMultiFileReader {
     Files.write(file1.toPath(), Arrays.asList("f1"), UTF8);
     MultiFileInfo di1 =
         new MultiFileInfo(null, new File(testDir1, "f${PATTERN}.txt").getPath(),
-                                               FileRollMode.PATTERN, ".", "");
+                                               FileRollMode.PATTERN, ".", "", "");
 
     MultiFileReader mdr = new MultiFileReader(Arrays.asList(di1), UTF8, 1024, PostProcessingOptions.ARCHIVE,
                                                         testDir2.getAbsolutePath(), false, 0);
@@ -325,6 +328,33 @@ public class TestMultiFileReader {
     Path f1Archived = Paths.get(testDir2.getAbsolutePath(), file1.getPath());
     Assert.assertTrue(Files.exists(f1Archived));
     mdr.close();
+  }
+
+  @Test
+  public void testMultiLineFiles() throws Exception {
+    File file1 = new File(testDir1, "f1.txt");
+    File file2 = new File(testDir1, "f2.txt");
+    Files.write(file1.toPath(), Arrays.asList("A1M1", "a1m1", "A1M2"), UTF8);
+    Files.write(file2.toPath(), Arrays.asList("B2M1", "B2M2", "b2m2", "B3M3"), UTF8);
+    MultiFileInfo di1 = new MultiFileInfo("tag1", file1.getPath(), FileRollMode.REVERSE_COUNTER, "", "", "^A.*");
+    MultiFileInfo di2 = new MultiFileInfo("tag2", file2.getPath(), FileRollMode.REVERSE_COUNTER, "", "", "^B.*");
+    MultiFileReader mdr = new MultiFileReader(Arrays.asList(di1, di2), UTF8, 1024, PostProcessingOptions.NONE, null,
+                                              false, 0);
+
+    Set<String> lines = new HashSet<>();
+    Map<String, String> offsets = new HashMap<>();
+    while (lines.size() < 3) {
+      mdr.setOffsets(offsets);
+      LiveFileChunk chunk = mdr.next(0);
+      if (chunk != null) {
+        for (FileLine line : chunk.getLines()) {
+          lines.add(line.getText());
+        }
+      }
+      offsets = mdr.getOffsets();
+    }
+    mdr.close();
+
   }
 
 }
