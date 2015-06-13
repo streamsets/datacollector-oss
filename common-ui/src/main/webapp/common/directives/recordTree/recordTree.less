@@ -19,6 +19,15 @@
 
     &.field-addition {
       background-color: #eaffea;
+
+      &.is-root {
+        background-color: inherit;
+        .root-label {
+          .field-name {
+            background-color: #eaffea;
+          }
+        }
+      }
     }
 
     .value-addition {
@@ -27,6 +36,15 @@
 
     &.field-deletion {
       background-color: #ffecec;
+      &.is-root {
+        background-color: inherit;
+
+        .root-label {
+          .field-name {
+            background-color: #ffecec;
+          }
+        }
+      }
     }
 
     .value-deletion {
