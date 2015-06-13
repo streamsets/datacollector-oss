@@ -9,7 +9,10 @@
     <div>
 
       <label class="pull-left"
-             ng-class="{'label label-danger': record.header.errorMessage && isRoot}">
+             ng-class="{
+              'label label-danger': record.header.errorMessage && isRoot,
+              'root-label': isRoot
+             }">
 
         <span class="pointer toggler {{(isOpen || (isRoot && record.expand)) ? 'open' : ''}}"
             ng-click="onClick($event)"
