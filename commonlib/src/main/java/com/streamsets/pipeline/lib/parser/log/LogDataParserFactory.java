@@ -54,6 +54,9 @@ public class LogDataParserFactory extends DataParserFactory {
   public static final String LOG4J_TRIM_STACK_TRACES_TO_LENGTH_KEY = KEY_PREFIX + "log4j.trim.stack.trace.to.length";
   static final int LOG4J_TRIM_STACK_TRACES_TO_LENGTH_DEFAULT = 50;
 
+  public static final String MULTI_LINES_KEY = "multiLines";
+  public static final Boolean MULTI_LINES_DEFAULT = false;
+
   public static final Map<String, Object> CONFIGS;
 
   static {
@@ -67,6 +70,7 @@ public class LogDataParserFactory extends DataParserFactory {
     configs.put(LOG4J_FORMAT_KEY, LOG4J_FORMAT_DEFAULT);
     configs.put(ON_PARSE_ERROR_KEY, ON_PARSE_ERROR_DEFAULT);
     configs.put(LOG4J_TRIM_STACK_TRACES_TO_LENGTH_KEY, LOG4J_TRIM_STACK_TRACES_TO_LENGTH_DEFAULT);
+    configs.put(MULTI_LINES_KEY, MULTI_LINES_DEFAULT);
     CONFIGS = Collections.unmodifiableMap(configs);
   }
 

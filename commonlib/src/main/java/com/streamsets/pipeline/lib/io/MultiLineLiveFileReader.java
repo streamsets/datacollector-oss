@@ -29,12 +29,12 @@ import java.util.List;
  * accumulated multi line as a complete multi line.
  */
 public class MultiLineLiveFileReader implements LiveFileReader {
+  private final String tag;
   private final LiveFileReader reader;
   private final Pattern pattern;
-  private LiveFileChunk lookAheadChunk;
-  private boolean lookAheadTruncated;
-  private final List<FileLine> incompleteMultiLine;
-  private long incompleteMultiLinesLen;
+  private boolean incompleteMultiLineTruncated;
+  private final StringBuilder incompleteMultiLine;
+  private long incompleteMultiLineOffset;
 
   /**
    * Creates a multi line reader.
@@ -42,10 +42,11 @@ public class MultiLineLiveFileReader implements LiveFileReader {
    * @param reader The single line reader to use.
    * @param mainLinePattern the regex pattern that determines if a line is main line.
    */
-  public MultiLineLiveFileReader(LiveFileReader reader, Pattern mainLinePattern) {
+  public MultiLineLiveFileReader(String tag, LiveFileReader reader, Pattern mainLinePattern) {
+    this.tag = tag;
     this.reader = reader;
     this.pattern = mainLinePattern;
-    incompleteMultiLine = new ArrayList<>();
+    incompleteMultiLine = new StringBuilder(2048);
   }
 
   @Override
@@ -62,43 +63,35 @@ public class MultiLineLiveFileReader implements LiveFileReader {
   public long getOffset() {
     // we have to correct the reader offset with the length of the incomplete multi lines as that is logical position
     // for user of the multi line reader
-    return reader.getOffset() - incompleteMultiLinesLen;
+    return reader.getOffset() - incompleteMultiLine.length();
   }
 
   @Override
   public boolean hasNext() throws IOException {
     // if the underlying reader is EOF we still have to flush the current incomplete multi line as a complete multi line
     // so we return true if we have incomplete multi lines
-    return reader.hasNext() || !incompleteMultiLine.isEmpty();
+    return reader.hasNext() || incompleteMultiLine.length() != 0;
   }
 
   @Override
   public LiveFileChunk next(long waitMillis) throws IOException {
     LiveFileChunk chunk = null;
     if (!reader.hasNext()) {
-      Utils.checkState(lookAheadChunk != null, Utils.formatL("LiveFileReader for '{}' has reached EOL",
-                                                            reader.getLiveFile()));
-      // if the underlying reader is EOF we still have to flush the current incomplete multi line as a complete multi
-      // line if we have incomplete multi lines (lookAheadChunk != null)
-      chunk = flushLookAhead();
+      Utils.checkState(incompleteMultiLine.length() > 0, Utils.formatL("LiveFileReader for '{}' has reached EOL",
+                                                                       reader.getLiveFile()));
+      // the underlying reader is EOF, we still have to return the current incomplete multiline.
+      // now we know is as a complete multiline because we reached EOF
+      chunk = new LiveFileChunk(tag, reader.getLiveFile(), reader.getCharset(),
+          ImmutableList.of(new FileLine(incompleteMultiLineOffset, incompleteMultiLine.toString())),
+          incompleteMultiLineTruncated);
+      incompleteMultiLine.setLength(0);
     } else {
       // get new chunk from underlying reader
       LiveFileChunk newChunk = reader.next(waitMillis);
       if (newChunk != null) {
-        chunk = compactChunk(newChunk);
+        chunk = resolveChunk(newChunk);
       }
     }
-    return chunk;
-  }
-
-  LiveFileChunk flushLookAhead() {
-    LiveFileChunk chunk = new LiveFileChunk(lookAheadChunk.getTag(), lookAheadChunk.getFile(),
-                                            lookAheadChunk.getCharset(),
-                                            ImmutableList.of(compactFileLines(incompleteMultiLine)),
-                                            lookAheadChunk.isTruncated());
-    incompleteMultiLine.clear();
-    incompleteMultiLinesLen = 0;
-    lookAheadChunk = null;
     return chunk;
   }
 
@@ -116,14 +109,14 @@ public class MultiLineLiveFileReader implements LiveFileReader {
 
   // compacts all multi lines of chunk into single lines.
   // it there is an incomplete multiline from a previous chunk it starts from it.
-  LiveFileChunk compactChunk(LiveFileChunk chunk) {
+  LiveFileChunk resolveChunk(LiveFileChunk chunk) {
     List<FileLine> completeLines = new ArrayList<>();
     List<FileLine> chunkLines = chunk.getLines();
-    if (lookAheadChunk == null) {
-      lookAheadChunk = chunk;
-      lookAheadTruncated = chunk.isTruncated();
+    if (incompleteMultiLine.length() == 0) {
+      incompleteMultiLineOffset = chunk.getOffset();
+      incompleteMultiLineTruncated = chunk.isTruncated();
     }
-    lookAheadTruncated |= chunk.isTruncated();
+    incompleteMultiLineTruncated |= chunk.isTruncated();
 
     int pos = 0;
     int idx = findNextMainLine(chunk, pos);
@@ -133,22 +126,20 @@ public class MultiLineLiveFileReader implements LiveFileReader {
 
       //any multi lines up to the next main line belong to the previous main line
       for (int i = pos; i < idx; i++) {
-        incompleteMultiLine.add(chunkLines.get(i));
-        incompleteMultiLinesLen += chunkLines.get(i).getLength();
+        incompleteMultiLine.append(chunkLines.get(i).getText());
       }
 
       // if we have incomplete lines, at this point they are a complete multiline, compact and add to new chunk lines
-      if (!incompleteMultiLine.isEmpty()) {
-        completeLines.add(compactFileLines(incompleteMultiLine));
+      if (incompleteMultiLine.length() != 0) {
+        completeLines.add(new FileLine(incompleteMultiLineOffset, incompleteMultiLine.toString()));
+        incompleteMultiLineOffset += incompleteMultiLine.length();
+        // clear the incomplete multi lines as we just used them to create a full line
+        incompleteMultiLine.setLength(0);
+        incompleteMultiLineTruncated = false;
       }
 
-      // clear the incomplete multi lines as we just used them to create a full line
-      incompleteMultiLine.clear();
-      incompleteMultiLinesLen = 0;
-
       // add the current main line as incomplete as we still don't if it is a complete line
-      incompleteMultiLine.add(chunkLines.get(idx));
-      incompleteMultiLinesLen += chunkLines.get(idx).getLength();
+      incompleteMultiLine.append(chunkLines.get(idx).getText());
 
       // find the next main line
       pos = idx + 1;
@@ -158,45 +149,18 @@ public class MultiLineLiveFileReader implements LiveFileReader {
     // lets process the left over multi lines in the chunk after the last main line.
     // if any they will kept to completed with lines from the next chunk.
     for (int i = pos; i < chunkLines.size(); i++) {
-      incompleteMultiLine.add(chunkLines.get(i));
-      incompleteMultiLinesLen += chunkLines.get(i).getLength();
+      incompleteMultiLine.append(chunkLines.get(i).getText());
     }
 
-    // create a new chunk with all complete multi lines
-    chunk = new LiveFileChunk(chunk.getTag(), chunk.getFile(), chunk.getCharset(), completeLines, lookAheadTruncated);
-
-    return chunk;
-  }
-
-  // compacts a list of lines into a single line. the assumptions is that only the first line of the list is a main line
-  FileLine compactFileLines(List<FileLine> lines) {
-    FileLine fileLine;
-    boolean sameBuffer = true;
-    FileLine firstLine = lines.get(0);
-    int len = firstLine.getLength();
-
-    // compute new line length and finds out if all the lines are in the same buffer
-    for (int i = 1; i < lines.size(); i++) {
-      sameBuffer &= firstLine.getBuffer() == lines.get(i).getBuffer();
-      len += lines.get(i).getLength();
-    }
-
-    if (sameBuffer) {
-      // the lines are in the same buffer they buffer is consecutive and can create a line using the original
-      // buffer without copying any data
-      fileLine = new FileLine(firstLine.getCharset(), firstLine.getFileOffset(), firstLine.getBuffer(),
-                              firstLine.getOffset(), len);
+    if (completeLines.isEmpty()) {
+      // didn't get a complete multi line yet, we keep storing lines but return a null chunk
+      chunk = null;
     } else {
-      // the lines are not i nthe same buffer, we need to copy their contents to a new buffer.
-      byte[] buffer = new byte[len];
-      int pos = 0;
-      for (FileLine line : lines) {
-        System.arraycopy(line.getBuffer(), line.getOffset(), buffer, pos, line.getLength());
-        pos += line.getLength();
-      }
-      fileLine = new FileLine(firstLine.getCharset(), firstLine.getFileOffset(), buffer, 0, pos);
+      // create a new chunk with all complete multi lines
+      chunk = new LiveFileChunk(chunk.getTag(), chunk.getFile(), chunk.getCharset(), completeLines,
+                                incompleteMultiLineTruncated);
     }
-    return fileLine;
+    return chunk;
   }
 
   @Override

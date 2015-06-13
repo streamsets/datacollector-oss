@@ -10,7 +10,6 @@ import com.streamsets.pipeline.config.DataFormat;
 import com.streamsets.pipeline.config.FileRollMode;
 import com.streamsets.pipeline.config.LogMode;
 import com.streamsets.pipeline.config.PostProcessingOptions;
-import com.streamsets.pipeline.lib.parser.DataParserException;
 import com.streamsets.pipeline.lib.parser.log.Constants;
 import com.streamsets.pipeline.sdk.SourceRunner;
 import com.streamsets.pipeline.sdk.StageRunner;
@@ -41,7 +40,7 @@ public class TestFileTailSource {
     fileInfo.fileRollMode = FileRollMode.REVERSE_COUNTER;
     fileInfo.firstFile = "";
     fileInfo.patternForToken = "";
-    FileTailSource source = new FileTailSource(DataFormat.TEXT, "UTF-8", false, 1024, 25, 1, Arrays.asList(fileInfo),
+    FileTailSource source = new FileTailSource(DataFormat.TEXT, "", "UTF-8", false, 1024, 25, 1, Arrays.asList(fileInfo),
                                                PostProcessingOptions.NONE, null, null,
                                                false, null, null, null, null, null, false, null, SCAN_INTERVAL);
     SourceRunner runner = new SourceRunner.Builder(FileTailDSource.class, source)
@@ -66,7 +65,7 @@ public class TestFileTailSource {
     fileInfo.fileRollMode = FileRollMode.REVERSE_COUNTER;
     fileInfo.firstFile = "";
     fileInfo.patternForToken = "";
-    FileTailSource source = new FileTailSource(DataFormat.TEXT, "UTF-8", false, 1024, 25, 1, Arrays.asList(fileInfo),
+    FileTailSource source = new FileTailSource(DataFormat.TEXT, "", "UTF-8", false, 1024, 25, 1, Arrays.asList(fileInfo),
                                                PostProcessingOptions.NONE, null, null,
                                                false, null, null, null, null, null, false, null, SCAN_INTERVAL);
     SourceRunner runner = new SourceRunner.Builder(FileTailDSource.class, source)
@@ -112,8 +111,8 @@ public class TestFileTailSource {
     fileInfo2.fileRollMode = FileRollMode.REVERSE_COUNTER;
     fileInfo2.firstFile = "";
     fileInfo2.patternForToken = "";
-    FileTailSource source = new FileTailSource(DataFormat.TEXT, "UTF-8", false, 1024, 25, 1, Arrays.asList(fileInfo1, fileInfo2),
-                                               PostProcessingOptions.NONE, null,
+    FileTailSource source = new FileTailSource(DataFormat.TEXT, "", "UTF-8", false, 1024, 25, 1,
+                                               Arrays.asList(fileInfo1, fileInfo2), PostProcessingOptions.NONE, null,
                                                null, false, null, null, null, null, null, false, null, SCAN_INTERVAL);
     SourceRunner runner = new SourceRunner.Builder(FileTailDSource.class, source)
         .addOutputLane("lane").addOutputLane("metadata")
@@ -143,8 +142,8 @@ public class TestFileTailSource {
     fileInfo2.fileRollMode = FileRollMode.REVERSE_COUNTER;
     fileInfo2.firstFile = "";
     fileInfo2.patternForToken = "";
-    FileTailSource source = new FileTailSource(DataFormat.TEXT, "UTF-8", false, 1024, 25, 1, Arrays.asList(fileInfo1, fileInfo2),
-                                               PostProcessingOptions.NONE, null,
+    FileTailSource source = new FileTailSource(DataFormat.TEXT, "", "UTF-8", false, 1024, 25, 1,
+                                               Arrays.asList(fileInfo1, fileInfo2), PostProcessingOptions.NONE, null,
                                                null, false, null, null, null, null, null, false, null, SCAN_INTERVAL);
     SourceRunner runner = new SourceRunner.Builder(FileTailDSource.class, source)
         .addOutputLane("lane").addOutputLane("metadata")
@@ -196,7 +195,7 @@ public class TestFileTailSource {
     fileInfo.fileRollMode = FileRollMode.REVERSE_COUNTER;
     fileInfo.firstFile = "";
     fileInfo.patternForToken = "";
-    FileTailSource source = new FileTailSource(DataFormat.TEXT, "UTF-8", false, 7, 1, 1, Arrays.asList(fileInfo),
+    FileTailSource source = new FileTailSource(DataFormat.TEXT, "", "UTF-8", false, 7, 1, 1, Arrays.asList(fileInfo),
                                                PostProcessingOptions.NONE, null, null,
                                                false, null, null, null, null, null, false, null, SCAN_INTERVAL);
     SourceRunner runner = new SourceRunner.Builder(FileTailDSource.class, source)
@@ -233,7 +232,7 @@ public class TestFileTailSource {
     fileInfo.fileRollMode = FileRollMode.REVERSE_COUNTER;
     fileInfo.firstFile = "";
     fileInfo.patternForToken = "";
-    FileTailSource source = new FileTailSource(DataFormat.JSON, "UTF-8", false, 1024, 25, 1, Arrays.asList(fileInfo),
+    FileTailSource source = new FileTailSource(DataFormat.JSON, "", "UTF-8", false, 1024, 25, 1, Arrays.asList(fileInfo),
                                                PostProcessingOptions.NONE, null, null,
                                                false, null, null, null, null, null, false, null, SCAN_INTERVAL);
     SourceRunner runner = new SourceRunner.Builder(FileTailDSource.class, source)
@@ -348,7 +347,7 @@ public class TestFileTailSource {
     fileInfo.fileRollMode = FileRollMode.REVERSE_COUNTER;
     fileInfo.firstFile = "";
     fileInfo.patternForToken = "";
-    FileTailSource source = new FileTailSource(DataFormat.LOG, "UTF-8", false, 1024, 25, 1, Arrays.asList(fileInfo),
+    FileTailSource source = new FileTailSource(DataFormat.LOG, "", "UTF-8", false, 1024, 25, 1, Arrays.asList(fileInfo),
                                                PostProcessingOptions.NONE, null,
                                                LogMode.LOG4J, true, null, null, null, null, null, false, null, SCAN_INTERVAL);
     SourceRunner runner = new SourceRunner.Builder(FileTailDSource.class, source)
@@ -408,7 +407,7 @@ public class TestFileTailSource {
     }
   }
 
-  @Test(expected = DataParserException.class)
+  @Test
   public void testTailLogFormatStackTrace() throws Exception {
     File testDataDir = new File("target", UUID.randomUUID().toString());
     Assert.assertTrue(testDataDir.mkdirs());
@@ -419,16 +418,19 @@ public class TestFileTailSource {
     fileInfo.fileRollMode = FileRollMode.REVERSE_COUNTER;
     fileInfo.firstFile = "";
     fileInfo.patternForToken = "";
-    FileTailSource source = new FileTailSource(DataFormat.LOG, "UTF-8", false, 2048, 100, 1, Arrays.asList(fileInfo),
-                                               PostProcessingOptions.NONE, null,
+    FileTailSource source = new FileTailSource(DataFormat.TEXT, "^[0-9].*", "UTF-8", false, 2048, 2, 1000,
+                                               Arrays.asList(fileInfo), PostProcessingOptions.NONE, null,
                                                LogMode.LOG4J, true, null, null, null, null, null, false, null, SCAN_INTERVAL);
     SourceRunner runner = new SourceRunner.Builder(FileTailDSource.class, source)
       .addOutputLane("lane").addOutputLane("metadata")
       .build();
     runner.runInit();
-    Files.write(logFile.toPath(), Arrays.asList(LOG_LINE_WITH_STACK_TRACE), Charset.forName("UTF-8"));
+    Files.write(logFile.toPath(), Arrays.asList(LINE1, LOG_LINE_WITH_STACK_TRACE, LINE2), Charset.forName("UTF-8"));
     try {
-      runner.runProduce(null, 100);
+      StageRunner.Output out = runner.runProduce(null, 100);
+      Assert.assertEquals(2, out.getRecords().get("lane").size());
+      Assert.assertEquals(LINE1, out.getRecords().get("lane").get(0).get("/text").getValueAsString().trim());
+      Assert.assertEquals(LOG_LINE_WITH_STACK_TRACE, out.getRecords().get("lane").get(1).get("/text").getValueAsString().trim());
     } finally {
       runner.runDestroy();
     }

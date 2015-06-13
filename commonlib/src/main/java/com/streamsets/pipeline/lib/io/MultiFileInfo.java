@@ -17,6 +17,7 @@ public class MultiFileInfo {
   private final String pattern;
   private final String firstFile;
   private final MultiFileInfo source;
+  private final String multiLineMainLinePatter;
 
   /**
    * Creates a <code>FileInfo</code>
@@ -26,12 +27,14 @@ public class MultiFileInfo {
    * @param pattern file pattern, if any.
    * @param firstFile first file to read.
    */
-  public MultiFileInfo(String tag, String fileFullPath, FileRollMode fileRollMode, String pattern, String firstFile) {
+  public MultiFileInfo(String tag, String fileFullPath, FileRollMode fileRollMode, String pattern, String firstFile,
+      String multiLineMainLinePatter) {
     this.tag = tag;
     this.fileFullPath = fileFullPath;
     this.fileRollMode = fileRollMode;
     this.pattern = pattern;
     this.firstFile = firstFile;
+    this.multiLineMainLinePatter = multiLineMainLinePatter;
     source = null;
   }
 
@@ -41,6 +44,7 @@ public class MultiFileInfo {
     this.fileRollMode = source.getFileRollMode();
     this.pattern = source.getPattern();
     this.firstFile = null;
+    this.multiLineMainLinePatter = source.getMultiLineMainLinePatter();
     this.source = source;
   }
 
@@ -71,4 +75,9 @@ public class MultiFileInfo {
   public String getFirstFile() {
     return firstFile;
   }
+
+  public String getMultiLineMainLinePatter() {
+    return multiLineMainLinePatter;
+  }
+
 }

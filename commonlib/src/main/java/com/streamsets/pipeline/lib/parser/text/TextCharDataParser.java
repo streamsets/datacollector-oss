@@ -20,6 +20,7 @@ import java.util.Map;
 public class TextCharDataParser implements DataParser {
   private final Stage.Context context;
   private final String readerId;
+  private final boolean collapseAllLines;
   private final OverrunReader reader;
   private final int maxObjectLen;
   private final String fieldTextName;
@@ -27,10 +28,11 @@ public class TextCharDataParser implements DataParser {
   private final StringBuilder sb;
   private boolean eof;
 
-  public TextCharDataParser(Stage.Context context, String readerId, OverrunReader reader, long readerOffset,
-                            int maxObjectLen, String fieldTextName, String fieldTruncatedName) throws IOException {
+  public TextCharDataParser(Stage.Context context, String readerId, boolean collapseAllLines, OverrunReader reader,
+      long readerOffset, int maxObjectLen, String fieldTextName, String fieldTruncatedName) throws IOException {
     this.context = context;
     this.readerId = readerId;
+    this.collapseAllLines = collapseAllLines;
     this.reader = reader;
     this.maxObjectLen = maxObjectLen;
     this.fieldTextName = fieldTextName;
@@ -47,6 +49,41 @@ public class TextCharDataParser implements DataParser {
 
   @Override
   public Record parse() throws IOException, DataParserException {
+    Record record;
+    if (collapseAllLines) {
+      record = parseAll();
+    } else {
+      record = parseLine();
+    }
+    return record;
+  }
+
+  public Record parseAll() throws IOException, DataParserException {
+    Record record = null;
+    reader.resetCount();
+    long offset = reader.getPos();
+    sb.setLength(0);
+    char[] buffer = new char[4096];
+    int read = reader.read(buffer);
+    while (read > -1) {
+      sb.append(buffer, 0, read);
+      read = reader.read(buffer);
+    }
+    if (sb.length() > 0) {
+      record = context.createRecord(readerId + "::" + offset);
+      Map<String, Field> map = new HashMap<>();
+      map.put(fieldTextName, Field.create(sb.toString()));
+      if (isOverMaxObjectLen(sb.length())) {
+        map.put(fieldTruncatedName, Field.create(true));
+      }
+      record.set(Field.create(map));
+    }
+    eof = true;
+    return record;
+  }
+
+
+  public Record parseLine() throws IOException, DataParserException {
     reader.resetCount();
     long offset = reader.getPos();
     sb.setLength(0);

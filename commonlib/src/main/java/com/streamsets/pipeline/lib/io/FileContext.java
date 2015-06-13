@@ -7,6 +7,7 @@ package com.streamsets.pipeline.lib.io;
 
 import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.config.PostProcessingOptions;
+import com.streamsets.pipeline.lib.parser.shaded.com.google.code.regexp.Pattern;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -95,8 +96,12 @@ public class FileContext {
         fileOffset = 0;
       }
       if (currentFile != null) {
-        reader = new SingleLineLiveFileReader(getRollMode(), getMultiFileInfo().getTag(), currentFile, charset, fileOffset,
-                                    maxLineLength);
+        reader = new SingleLineLiveFileReader(getRollMode(), getMultiFileInfo().getTag(), currentFile, charset,
+                                              fileOffset, maxLineLength);
+        if (!multiFileInfo.getMultiLineMainLinePatter().isEmpty()) {
+          reader = new MultiLineLiveFileReader(getMultiFileInfo().getTag(), reader,
+                                               Pattern.compile(multiFileInfo.getMultiLineMainLinePatter()));
+        }
         if (fileOffset == 0) {
           // file start event
           eventPublisher.publish(new FileEvent(currentFile, true));

@@ -31,9 +31,9 @@ public class TestGlobFileContextProvider {
     File file1 = new File(testDir1, "f1.txt");
     File file2 = new File(testDir2, "f2.txt");
     File file3 = new File(testDir1, "f3.txt");
-    MultiFileInfo di1 = new MultiFileInfo("tag1", file1.getPath(), FileRollMode.REVERSE_COUNTER, "", "");
-    MultiFileInfo di2 = new MultiFileInfo("tag2", file2.getPath(), FileRollMode.REVERSE_COUNTER, "", "");
-    MultiFileInfo di3 = new MultiFileInfo("tag3", file3.getPath(), FileRollMode.REVERSE_COUNTER, "", "");
+    MultiFileInfo di1 = new MultiFileInfo("tag1", file1.getPath(), FileRollMode.REVERSE_COUNTER, "", "", "");
+    MultiFileInfo di2 = new MultiFileInfo("tag2", file2.getPath(), FileRollMode.REVERSE_COUNTER, "", "", "");
+    MultiFileInfo di3 = new MultiFileInfo("tag3", file3.getPath(), FileRollMode.REVERSE_COUNTER, "", "", "");
 
     FileEventPublisher eventPublisher = new FileEventPublisher() {
       @Override
