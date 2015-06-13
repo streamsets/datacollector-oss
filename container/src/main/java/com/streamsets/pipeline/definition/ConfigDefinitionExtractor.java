@@ -122,7 +122,7 @@ public abstract class ConfigDefinitionExtractor {
       List<Class> elDefs = ImmutableList.copyOf(annotation.elDefs());
       long min = annotation.min();
       long max = annotation.max();
-      String mode = (annotation.mode() != null) ? annotation.mode().name() : null;
+      String mode = (annotation.mode() != null) ? getMimeString(annotation.mode()) : null;
       int lines = annotation.lines();
       ConfigDef.Evaluation evaluation = annotation.evaluation();
       Map<String, List<Object>> dependsOnMap = null; // done at resolveDependencies() invocation
@@ -154,6 +154,29 @@ public abstract class ConfigDefinitionExtractor {
       functions = ELDefinitionExtractor.get().extractConstants(annotation.elDefs(), contextMsg);
     }
     return functions;
+  }
+
+  private String getMimeString(ConfigDef.Mode mode) {
+    switch(mode) {
+      case JSON:
+        return "application/json";
+      case PLAIN_TEXT:
+        return "text/plain";
+      case PYTHON:
+        return "text/x-python";
+      case JAVASCRIPT:
+        return "text/javascript";
+      case RUBY:
+        return "text/x-ruby";
+      case JAVA:
+        return "text/x-java";
+      case SCALA:
+        return "text/x-scala";
+      case SQL:
+        return "text/x-sql";
+      default:
+        return null;
+    }
   }
 
 }

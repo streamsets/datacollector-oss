@@ -99,10 +99,12 @@ angular
        * @returns {*}
        */
       getTextCodeMirrorHints: function(configDefinition) {
+        var hints = $scope.getCodeMirrorHints(configDefinition);
+
         return {
-          elFunctionDefinitions: [],
-          elConstantDefinitions: pipelineService.getTextELConstantDefinitions(),
-          pipelineConstants: [],
+          elFunctionDefinitions: hints.elFunctionDefinitions,
+          elConstantDefinitions: hints.elConstantDefinitions,
+          pipelineConstants: hints.pipelineConstants,
           textMode: configDefinition.mode,
           regex: "wordColonSlashBracket"
         };
