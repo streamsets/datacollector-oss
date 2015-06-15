@@ -24,6 +24,7 @@ import com.streamsets.pipeline.configurablestage.DTarget;
 import com.streamsets.pipeline.lib.el.DataUtilEL;
 import com.streamsets.pipeline.lib.el.RecordEL;
 import com.streamsets.pipeline.lib.el.TimeEL;
+import com.streamsets.pipeline.lib.el.TimeNowEL;
 
 import java.util.Map;
 
@@ -139,7 +140,7 @@ public class HdfsDTarget extends DTarget {
                     "processing time, enter ${time:now()}. To use field values, use '${record:value(\"<filepath>\")}'.",
       displayPosition = 130,
       group = "OUTPUT_FILES",
-      elDefs = {RecordEL.class, TimeEL.class},
+      elDefs = {RecordEL.class, TimeEL.class, TimeNowEL.class},
       evaluation = ConfigDef.Evaluation.EXPLICIT
   )
   public String timeDriver;

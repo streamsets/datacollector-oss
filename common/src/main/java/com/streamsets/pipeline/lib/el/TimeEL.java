@@ -12,12 +12,9 @@ import com.streamsets.pipeline.api.el.ELVars;
 import com.streamsets.pipeline.api.impl.Utils;
 
 import java.util.Calendar;
-import java.util.Date;
 
 public class TimeEL {
 
-  public static final String TIME_CONTEXT_VAR = "time";
-  public static final String TIME_NOW_CONTEXT_VAR = "time_now";
   public static final String CALENDER_CONTEXT_VAR = "calender";
 
   @ElConstant(name = "HOURS", description = "")
@@ -28,18 +25,6 @@ public class TimeEL {
 
   @ElConstant(name = "SECONDS", description = "")
   public static final int SECONDS = 1;
-
-  @ElFunction(prefix = TIME_CONTEXT_VAR, name = "now", description = "")
-  public static Date getTimeNowFunc() {
-    Date now = (Date) ELEval.getVariablesInScope().getContextVariable(TIME_NOW_CONTEXT_VAR);
-    Utils.checkArgument(now != null, "time:now() function has not been properly initialized");
-    return now;
-  }
-
-  public static void setTimeNowInContext(ELVars variables, Date now) {
-    Utils.checkNotNull(variables, "variables");
-    variables.addContextVariable(TIME_NOW_CONTEXT_VAR, now);
-  }
 
   public static void setCalendarInContext(ELVars variables, Calendar calendar) {
     Utils.checkNotNull(variables, "variables");

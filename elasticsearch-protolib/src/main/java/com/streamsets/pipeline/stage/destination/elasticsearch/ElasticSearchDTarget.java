@@ -16,6 +16,7 @@ import com.streamsets.pipeline.configurablestage.DTarget;
 import com.streamsets.pipeline.lib.el.DataUtilEL;
 import com.streamsets.pipeline.lib.el.RecordEL;
 import com.streamsets.pipeline.lib.el.TimeEL;
+import com.streamsets.pipeline.lib.el.TimeNowEL;
 
 import java.util.List;
 import java.util.Map;
@@ -71,7 +72,7 @@ public class ElasticSearchDTarget extends DTarget {
       description = "",
       displayPosition = 40,
       group = "ELASTIC_SEARCH",
-      elDefs = {RecordEL.class, TimeEL.class},
+      elDefs = {RecordEL.class, TimeEL.class, TimeNowEL.class},
       evaluation = ConfigDef.Evaluation.EXPLICIT
   )
   public String indexTemplate;
@@ -84,7 +85,7 @@ public class ElasticSearchDTarget extends DTarget {
       description = "",
       displayPosition = 50,
       group = "ELASTIC_SEARCH",
-      elDefs = {RecordEL.class, TimeEL.class},
+      elDefs = {RecordEL.class, TimeEL.class, TimeNowEL.class},
       evaluation = ConfigDef.Evaluation.EXPLICIT
   )
   public String typeTemplate;

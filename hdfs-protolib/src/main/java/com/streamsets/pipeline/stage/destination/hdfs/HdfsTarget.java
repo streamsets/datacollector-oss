@@ -20,7 +20,7 @@ import com.streamsets.pipeline.config.CsvMode;
 import com.streamsets.pipeline.config.DataFormat;
 import com.streamsets.pipeline.config.JsonMode;
 import com.streamsets.pipeline.lib.el.RecordEL;
-import com.streamsets.pipeline.lib.el.TimeEL;
+import com.streamsets.pipeline.lib.el.TimeNowEL;
 import com.streamsets.pipeline.lib.generator.DataGeneratorFactory;
 import com.streamsets.pipeline.lib.generator.DataGeneratorFactoryBuilder;
 import com.streamsets.pipeline.lib.generator.avro.AvroDataGeneratorFactory;
@@ -235,7 +235,7 @@ public class HdfsTarget extends RecordTarget {
     try {
       ELVars variables = getContext().createELVars();
       RecordEL.setRecordInContext(variables, getContext().createRecord("validationConfigs"));
-      TimeEL.setTimeNowInContext(variables, new Date());
+      TimeNowEL.setTimeNowInContext(variables, new Date());
       getContext().parseEL(timeDriver);
       timeDriverElEval.eval(variables, timeDriver, Date.class);
     } catch (ELEvalException ex) {
@@ -509,7 +509,7 @@ public class HdfsTarget extends RecordTarget {
 
   protected Date getRecordTime(Record record) throws ELEvalException {
     ELVars variables = getContext().createELVars();
-    TimeEL.setTimeNowInContext(variables, getBatchTime());
+    TimeNowEL.setTimeNowInContext(variables, getBatchTime());
     RecordEL.setRecordInContext(variables, record);
     return timeDriverElEval.eval(variables, timeDriver, Date.class);
   }
