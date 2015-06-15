@@ -42,8 +42,8 @@ public class TestConfigDefinitionExtractor {
     @ConfigDef(
         label = "L",
         description = "D",
-        type = ConfigDef.Type.STRING,
-        defaultValue = "default",
+        type = ConfigDef.Type.NUMBER,
+        defaultValue = "10",
         required = true,
         group = "G",
         displayPosition = 1,
@@ -54,7 +54,7 @@ public class TestConfigDefinitionExtractor {
         mode = ConfigDef.Mode.JAVA,
         elDefs = ELs.class
     )
-    public String config;
+    public int config;
   }
 
   public static class Ok2 {
@@ -67,8 +67,6 @@ public class TestConfigDefinitionExtractor {
         group = "G",
         displayPosition = 1,
         lines = 2,
-        min = 3,
-        max = 4,
         evaluation = ConfigDef.Evaluation.EXPLICIT,
         mode = ConfigDef.Mode.JAVA,
         elDefs = ELs.class
@@ -109,10 +107,10 @@ public class TestConfigDefinitionExtractor {
     ConfigDefinition config = configs.get(0);
     Assert.assertEquals("config", config.getName());
     Assert.assertEquals("config", config.getFieldName());
-    Assert.assertEquals(ConfigDef.Type.STRING, config.getType());
+    Assert.assertEquals(ConfigDef.Type.NUMBER, config.getType());
     Assert.assertEquals("L", config.getLabel());
     Assert.assertEquals("D", config.getDescription());
-    Assert.assertEquals("default", config.getDefaultValue());
+    Assert.assertEquals(10, config.getDefaultValue());
     Assert.assertEquals(true, config.isRequired());
     Assert.assertEquals("G", config.getGroup());
     Assert.assertEquals(1, config.getDisplayPosition());
@@ -226,6 +224,22 @@ public class TestConfigDefinitionExtractor {
   @Test(expected = IllegalArgumentException.class)
   public void testStringConfigFail2() {
     ConfigDefinitionExtractor.get().extract(Fail2.class, "x");
+  }
+
+  public static class Fail3 {
+
+    @ConfigDef(
+        label = "L",
+        type = ConfigDef.Type.STRING,
+        required = false,
+        min = 0
+    )
+    public static String config;
+  }
+
+  @Test(expected = IllegalArgumentException.class)
+  public void testStringConfigFail3() {
+    ConfigDefinitionExtractor.get().extract(Fail3.class, "x");
   }
 
   public static class DependsOn {
