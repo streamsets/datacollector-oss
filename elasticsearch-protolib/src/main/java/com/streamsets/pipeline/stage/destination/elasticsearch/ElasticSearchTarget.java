@@ -16,9 +16,9 @@ import com.streamsets.pipeline.api.el.ELVars;
 import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.config.JsonMode;
 import com.streamsets.pipeline.lib.el.RecordEL;
-import com.streamsets.pipeline.lib.el.TimeEL;
-import com.streamsets.pipeline.lib.generator.DataGeneratorFactory;
+import com.streamsets.pipeline.lib.el.TimeNowEL;
 import com.streamsets.pipeline.lib.generator.DataGenerator;
+import com.streamsets.pipeline.lib.generator.DataGeneratorFactory;
 import com.streamsets.pipeline.lib.generator.DataGeneratorFactoryBuilder;
 import com.streamsets.pipeline.lib.generator.DataGeneratorFormat;
 import org.elasticsearch.action.admin.cluster.health.ClusterHealthRequest;
@@ -167,7 +167,7 @@ public class ElasticSearchTarget extends BaseTarget {
   public void write(final Batch batch) throws StageException {
     setBatchTime();
     ELVars elVars = getContext().createELVars();
-    TimeEL.setTimeNowInContext(elVars, getBatchTime());
+    TimeNowEL.setTimeNowInContext(elVars, getBatchTime());
     Iterator<Record> it = batch.getRecords();
 
     BulkRequestBuilder bulkRequest = elasticClient.prepareBulk();
