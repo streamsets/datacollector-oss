@@ -13,18 +13,22 @@ import com.streamsets.pipeline.api.FieldSelector;
 import com.streamsets.pipeline.api.FieldValueChooser;
 import com.streamsets.pipeline.api.LanePredicateMapping;
 import com.streamsets.pipeline.api.ValueChooser;
+import com.streamsets.pipeline.api.impl.ErrorMessage;
 import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.config.ModelDefinition;
 import com.streamsets.pipeline.config.ModelType;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
 public abstract class ModelDefinitionExtractor {
+
+  public abstract List<ErrorMessage> validate(Field field, Object contextMsg);
 
   public abstract ModelDefinition extract(Field field, Object contextMsg);
 
@@ -44,89 +48,200 @@ public abstract class ModelDefinitionExtractor {
                     .put(LanePredicateMapping.class, new LanePredicateMappingExtractor())
                     .put(ComplexField.class, new ComplexFieldExtractor())
                     .build();
+
     @Override
-    public ModelDefinition extract(Field field, Object contextMsg) {
-      ModelDefinition def = null;
+    public List<ErrorMessage> validate(Field field, Object contextMsg) {
+      List<ErrorMessage> errors = new ArrayList<>();
       ConfigDef configAnnotation = field.getAnnotation(ConfigDef.class);
       if (configAnnotation != null) {
         if (configAnnotation.type() == ConfigDef.Type.MODEL) {
-          Set<Annotation> modelAnnotations = new HashSet<>();
+          List<Annotation> modelAnnotations = new ArrayList<>();
           for (Class<? extends  Annotation> modelAnnotationClass : MODEL_EXTRACTOR.keySet()) {
             Annotation modelAnnotation = field.getAnnotation(modelAnnotationClass);
             if (modelAnnotation != null) {
               modelAnnotations.add(modelAnnotation);
             }
           }
-          Utils.checkArgument(!modelAnnotations.isEmpty(), Utils.formatL("{}, Model annotation missing'", contextMsg));
-          Utils.checkArgument(modelAnnotations.size() == 1, Utils.formatL("{}, only one Model annotation is allowed, {}",
-                                                                          contextMsg, modelAnnotations));
-          Annotation modelAnnotation = modelAnnotations.iterator().next();
-          ModelDefinitionExtractor extractor = MODEL_EXTRACTOR.get(modelAnnotation.annotationType());
-          Utils.checkState(extractor != null, Utils.formatL("{}, paser for Model '{}' not found", contextMsg,
-                                                         modelAnnotation));
-          def = extractor.extract(field, contextMsg);
+          if (modelAnnotations.isEmpty()) {
+            errors.add(new ErrorMessage(DefinitionError.DEF_200, contextMsg));
+          }
+          if (modelAnnotations.size() > 1)  {
+            errors.add(new ErrorMessage(DefinitionError.DEF_201, contextMsg, modelAnnotations));
+          }
+          if (modelAnnotations.size() > 0) {
+            Annotation modelAnnotation = modelAnnotations.get(0);
+            ModelDefinitionExtractor extractor = MODEL_EXTRACTOR.get(modelAnnotation.annotationType());
+            if (extractor == null) {
+              errors.add(new ErrorMessage(DefinitionError.DEF_202, contextMsg, modelAnnotation));
+            } else {
+              errors.addAll(extractor.validate(field, contextMsg));
+            }
+          }
         }
       }
-      return def;
+      return errors;
+    }
+
+    @Override
+    public ModelDefinition extract(Field field, Object contextMsg) {
+      List<ErrorMessage> errors = validate(field, contextMsg);
+      if (errors.isEmpty()) {
+        ModelDefinition def = null;
+        ConfigDef configAnnotation = field.getAnnotation(ConfigDef.class);
+        if (configAnnotation != null) {
+          if (configAnnotation.type() == ConfigDef.Type.MODEL) {
+            Set<Annotation> modelAnnotations = new HashSet<>();
+            for (Class<? extends  Annotation> modelAnnotationClass : MODEL_EXTRACTOR.keySet()) {
+              Annotation modelAnnotation = field.getAnnotation(modelAnnotationClass);
+              if (modelAnnotation != null) {
+                modelAnnotations.add(modelAnnotation);
+              }
+            }
+            Annotation modelAnnotation = modelAnnotations.iterator().next();
+            ModelDefinitionExtractor extractor = MODEL_EXTRACTOR.get(modelAnnotation.annotationType());
+            def = extractor.extract(field, contextMsg);
+          }
+        }
+        return def;
+      } else {
+        throw new IllegalArgumentException(Utils.format("Invalid ModelDefinition: {}", errors));
+      }
     }
   }
 
   static class FieldSelectorExtractor extends ModelDefinitionExtractor {
+
+    @Override
+    public List<ErrorMessage> validate(Field field, Object contextMsg) {
+      return new ArrayList<>();
+    }
+
     @Override
     public ModelDefinition extract(Field field, Object contextMsg) {
-      FieldSelector fieldSelector = field.getAnnotation(FieldSelector.class);
-      ModelType modelType = (fieldSelector.singleValued()) ? ModelType.FIELD_SELECTOR_SINGLE_VALUED
-                                                           : ModelType.FIELD_SELECTOR_MULTI_VALUED;
-      return new ModelDefinition(modelType, null, null, null, null);
+      List<ErrorMessage> errors = validate(field, contextMsg);
+      if (errors.isEmpty()) {
+        FieldSelector fieldSelector = field.getAnnotation(FieldSelector.class);
+        ModelType modelType = (fieldSelector.singleValued()) ? ModelType.FIELD_SELECTOR_SINGLE_VALUED
+                                                             : ModelType.FIELD_SELECTOR_MULTI_VALUED;
+        return new ModelDefinition(modelType, null, null, null, null);
+      } else {
+        throw new IllegalArgumentException(Utils.format("Invalid ModelDefinition: {}", errors));
+      }
     }
   }
 
   static class FieldValueChooserExtractor extends ModelDefinitionExtractor {
+
+    @Override
+    public List<ErrorMessage> validate(Field field, Object contextMsg) {
+      List<ErrorMessage> errors = new ArrayList<>();
+      try {
+        FieldValueChooser fieldValueChooser = field.getAnnotation(FieldValueChooser.class);
+        ChooserValues values = fieldValueChooser.value().newInstance();
+        values.getValues();
+        values.getLabels();
+      } catch (Exception ex) {
+        errors.add(new ErrorMessage(DefinitionError.DEF_210, contextMsg, ex.getMessage()));
+      }
+      return errors;
+    }
+
     @Override
     public ModelDefinition extract(Field field, Object contextMsg) {
-      FieldValueChooser fieldValueChooser = field.getAnnotation(FieldValueChooser.class);
-      try {
-        ChooserValues values = fieldValueChooser.value().newInstance();
-        return new ModelDefinition(ModelType.FIELD_VALUE_CHOOSER, values.getClass().getName(), values.getValues(),
-                                    values.getLabels(), null);
-      } catch (Exception ex) {
-        throw new IllegalArgumentException(Utils.format("{}, could not evaluate ChooserValue: {}",
-                                                        contextMsg, ex.getMessage()), ex);
+      List<ErrorMessage> errors = validate(field, contextMsg);
+      if (errors.isEmpty()) {
+        FieldValueChooser fieldValueChooser = field.getAnnotation(FieldValueChooser.class);
+        try {
+          ChooserValues values = fieldValueChooser.value().newInstance();
+          return new ModelDefinition(ModelType.FIELD_VALUE_CHOOSER, values.getClass().getName(), values.getValues(),
+                                     values.getLabels(), null);
+        } catch (Exception ex) {
+          throw new RuntimeException(Utils.format("It should not happen: {}", ex.getMessage()), ex);
+        }
+      } else {
+        throw new IllegalArgumentException(Utils.format("Invalid ModelDefinition: {}", errors));
       }
     }
   }
 
   static class ValueChooserExtractor extends ModelDefinitionExtractor {
+
+    @Override
+    public List<ErrorMessage> validate(Field field, Object contextMsg) {
+      List<ErrorMessage> errors = new ArrayList<>();
+      try {
+        ValueChooser valueChooser = field.getAnnotation(ValueChooser.class);
+        ChooserValues values = valueChooser.value().newInstance();
+        values.getValues();
+        values.getLabels();
+      } catch (Exception ex) {
+        errors.add(new ErrorMessage(DefinitionError.DEF_220, contextMsg, ex.getMessage()));
+      }
+      return errors;
+    }
+
     @Override
     public ModelDefinition extract(Field field, Object contextMsg) {
-      ValueChooser valueChooser = field.getAnnotation(ValueChooser.class);
-      try {
-        ChooserValues values = valueChooser.value().newInstance();
-        return new ModelDefinition(ModelType.VALUE_CHOOSER, values.getClass().getName(), values.getValues(),
-                                    values.getLabels(), null);
-      } catch (Exception ex) {
-        throw new IllegalArgumentException(Utils.format("{}, could not evaluate ChooserValue: {}",
-                                                        contextMsg, ex.getMessage()), ex);
+      List<ErrorMessage> errors = validate(field, contextMsg);
+      if (errors.isEmpty()) {
+        ValueChooser valueChooser = field.getAnnotation(ValueChooser.class);
+        try {
+          ChooserValues values = valueChooser.value().newInstance();
+          return new ModelDefinition(ModelType.VALUE_CHOOSER, values.getClass().getName(), values.getValues(),
+                                     values.getLabels(), null);
+        } catch (Exception ex) {
+          throw new RuntimeException(Utils.format("It should not happen: {}", ex.getMessage()), ex);
+        }
+      } else {
+        throw new IllegalArgumentException(Utils.format("Invalid ModelDefinition: {}", errors));
       }
     }
   }
 
   static class LanePredicateMappingExtractor extends ModelDefinitionExtractor {
+
+    @Override
+    public List<ErrorMessage> validate(Field field, Object contextMsg) {
+      return new ArrayList<>();
+    }
+
     @Override
     public ModelDefinition extract(Field field, Object contextMsg) {
-      return new ModelDefinition(ModelType.LANE_PREDICATE_MAPPING, null, null, null, null);
+      List<ErrorMessage> errors = validate(field, contextMsg);
+      if (errors.isEmpty()) {
+        return new ModelDefinition(ModelType.LANE_PREDICATE_MAPPING, null, null, null, null);
+      } else {
+        throw new IllegalArgumentException(Utils.format("Invalid ModelDefinition: {}", errors));
+      }
     }
   }
 
   static class ComplexFieldExtractor extends ModelDefinitionExtractor {
+
+    @Override
+    public List<ErrorMessage> validate(Field field, Object contextMsg) {
+      List<ErrorMessage> errors = new ArrayList<>();
+      if (!List.class.isAssignableFrom(field.getType())) {
+        errors.add(new ErrorMessage(DefinitionError.DEF_230, contextMsg));
+      } else {
+        ComplexField complexField = field.getAnnotation(ComplexField.class);
+        Class complexFieldClass = complexField.value();
+        errors.addAll(ConfigDefinitionExtractor.get().validate(complexFieldClass, contextMsg));
+      }
+      return errors;
+    }
+
     @Override
     public ModelDefinition extract(Field field, Object contextMsg) {
-      Utils.checkArgument(List.class.isAssignableFrom(field.getType()), Utils.formatL(
-          "{}, ComplexField configuration must be a list", contextMsg));
-      ComplexField complexField = field.getAnnotation(ComplexField.class);
-      Class complexFieldClass = complexField.value();
-      return new ModelDefinition(ModelType.COMPLEX_FIELD, null, null, null,
-                                 ConfigDefinitionExtractor.get().extract(complexFieldClass, contextMsg));
+      List<ErrorMessage> errors = validate(field, contextMsg);
+      if (errors.isEmpty()) {
+        ComplexField complexField = field.getAnnotation(ComplexField.class);
+        Class complexFieldClass = complexField.value();
+        return new ModelDefinition(ModelType.COMPLEX_FIELD, null, null, null,
+                                   ConfigDefinitionExtractor.get().extract(complexFieldClass, contextMsg));
+      } else {
+        throw new IllegalArgumentException(Utils.format("Invalid ModelDefinition: {}", errors));
+      }
     }
   }
 

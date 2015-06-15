@@ -39,7 +39,7 @@ public class StageDefinition {
   private final int outputStreams;
   private final String outputStreamLabelProviderClass;
   private List<String> outputStreamLabels;
-  private final List<ExecutionMode> executionModes;
+  private List<ExecutionMode> executionModes;
 
   // localized version
   private StageDefinition(StageLibraryDefinition libraryDefinition, Class klass, String name,
@@ -120,9 +120,12 @@ public class StageDefinition {
     this.executionModes = executionModes;
   }
 
+  public void setLibraryExecutionModes(List<ExecutionMode> executionModes) {
+    this.executionModes = executionModes;
+  }
+
   public List<ExecutionMode> getLibraryExecutionModes() {
-    List<ExecutionMode> override = libraryDefinition.getStageExecutionModesOverride(getClass());
-    return  (override == null) ? executionModes : override;
+    return executionModes;
   }
 
   public ConfigGroupDefinition getConfigGroupDefinition() {

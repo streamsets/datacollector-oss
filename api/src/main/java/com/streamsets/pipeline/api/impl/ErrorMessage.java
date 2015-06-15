@@ -83,4 +83,8 @@ public class ErrorMessage implements LocalizableString {
                                : localizableMessage.getLocalized();
   }
 
+  @Override
+  public String toString() {
+    return getNonLocalized();
+  }
 }

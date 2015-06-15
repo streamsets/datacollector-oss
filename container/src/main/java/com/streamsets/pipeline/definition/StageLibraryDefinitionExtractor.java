@@ -5,6 +5,7 @@
  */
 package com.streamsets.pipeline.definition;
 
+import com.streamsets.pipeline.api.impl.ErrorMessage;
 import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.config.StageLibraryDefinition;
 import com.streamsets.pipeline.stagelibrary.StageLibraryUtils;
@@ -13,6 +14,8 @@ import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Properties;
 
 public abstract class StageLibraryDefinitionExtractor {
@@ -26,26 +29,38 @@ public abstract class StageLibraryDefinitionExtractor {
     return EXTRACTOR;
   }
 
-  public StageLibraryDefinition extract(ClassLoader classLoader) {
+  public List<ErrorMessage> validate(ClassLoader classLoader) {
+    List<ErrorMessage> errors = new ArrayList<>();
     String libraryName = StageLibraryUtils.getLibraryName(classLoader);
-    String libraryLabel = StageLibraryUtils.getLibraryLabel(classLoader);
-    Properties libraryProps = new Properties();
     try (InputStream inputStream = classLoader.getResourceAsStream(DATA_COLLECTOR_LIBRARY_PROPERTIES)) {
       if (inputStream != null) {
-        libraryProps.load(inputStream);
+        new Properties().load(inputStream);
       } else {
-        LOG.warn("Stage library '{}', file '{}' not found", libraryName, DATA_COLLECTOR_LIBRARY_PROPERTIES);
+        LOG.warn(DefinitionError.DEF_400.getMessage(), libraryName, DATA_COLLECTOR_LIBRARY_PROPERTIES);
       }
     } catch (IOException ex) {
-      throw new IllegalArgumentException(Utils.format("Stage library '{}', could not read file '{}': {}",
-                                                      libraryName, DATA_COLLECTOR_LIBRARY_PROPERTIES, ex.getMessage()),
-                                         ex);
+      errors.add(new ErrorMessage(DefinitionError.DEF_401, libraryName, DATA_COLLECTOR_LIBRARY_PROPERTIES,
+                                  ex.getMessage()));
     }
-    try {
+    return errors;
+  }
+
+  public StageLibraryDefinition extract(ClassLoader classLoader) {
+    List<ErrorMessage> errors = validate(classLoader);
+    if (errors.isEmpty()) {
+      String libraryName = StageLibraryUtils.getLibraryName(classLoader);
+      String libraryLabel = StageLibraryUtils.getLibraryLabel(classLoader);
+      Properties libraryProps = new Properties();
+      try (InputStream inputStream = classLoader.getResourceAsStream(DATA_COLLECTOR_LIBRARY_PROPERTIES)) {
+        if (inputStream != null) {
+          libraryProps.load(inputStream);
+        }
+      } catch (IOException ex) {
+        throw new RuntimeException(Utils.format("It should not happen: {}", ex.getMessage()), ex);
+      }
       return new StageLibraryDefinition(classLoader, libraryName, libraryLabel, libraryProps);
-    } catch (IllegalArgumentException ex) {
-      throw new IllegalArgumentException(Utils.format("Stage library '{}', could not initialize library definition: {}",
-                                                      libraryName, ex.getMessage()), ex);
+    } else {
+      throw new IllegalArgumentException(Utils.format("Invalid Stage library: {}", errors));
     }
   }
 

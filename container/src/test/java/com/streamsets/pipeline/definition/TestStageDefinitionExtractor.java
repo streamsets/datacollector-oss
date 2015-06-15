@@ -57,7 +57,7 @@ public class TestStageDefinitionExtractor {
     }
   }
 
-  @StageDef(version = "1", label = "L", description = "D", icon = "I")
+  @StageDef(version = "1", label = "L", description = "D", icon = "TargetIcon.svg")
   public static class Source1 extends BaseSource {
 
     @ConfigDef(
@@ -91,8 +91,8 @@ public class TestStageDefinitionExtractor {
     }
   }
 
-  @StageDef(version = "2", label = "LL", description = "DD", icon = "II", execution = ExecutionMode.STANDALONE,
-  outputStreams = TwoOutputStreams.class)
+  @StageDef(version = "2", label = "LL", description = "DD", icon = "TargetIcon.svg",
+      execution = ExecutionMode.STANDALONE, outputStreams = TwoOutputStreams.class)
   @ConfigGroups(Group1.class)
   @RawSource(rawSourcePreviewer = Previewer.class)
   @HideConfig(value = "config2", preconditions = true, onErrorRecord = true)
@@ -156,6 +156,15 @@ public class TestStageDefinitionExtractor {
     }
   }
 
+  @StageDef(version = "1", label = "", icon="missing.svg")
+  @ErrorStage
+  public static class MissingIcon extends BaseTarget {
+    @Override
+    public void write(Batch batch) throws StageException {
+
+    }
+  }
+
   private static final StageLibraryDefinition MOCK_LIB_DEF =
       new StageLibraryDefinition(TestStageDefinitionExtractor.class.getClassLoader(), "mock", "MOCK", new Properties());
 
@@ -172,7 +181,7 @@ public class TestStageDefinitionExtractor {
     Assert.assertEquals(3, def.getConfigDefinitions().size());
     Assert.assertEquals(1, def.getOutputStreams());
     Assert.assertEquals(2, def.getExecutionModes().size());
-    Assert.assertEquals("I", def.getIcon());
+    Assert.assertEquals("TargetIcon.svg", def.getIcon());
     Assert.assertEquals(StageDef.DefaultOutputStreams.class.getName(), def.getOutputStreamLabelProviderClass());
     Assert.assertEquals(null, def.getOutputStreamLabels());
     Assert.assertEquals(StageType.SOURCE, def.getType());
@@ -194,7 +203,7 @@ public class TestStageDefinitionExtractor {
     Assert.assertEquals(3, def.getConfigDefinitions().size());
     Assert.assertEquals(2, def.getOutputStreams());
     Assert.assertEquals(1, def.getExecutionModes().size());
-    Assert.assertEquals("II", def.getIcon());
+    Assert.assertEquals("TargetIcon.svg", def.getIcon());
     Assert.assertEquals(TwoOutputStreams.class.getName(), def.getOutputStreamLabelProviderClass());
     Assert.assertEquals(null, def.getOutputStreamLabels());
     Assert.assertEquals(StageType.SOURCE, def.getType());
@@ -245,6 +254,11 @@ public class TestStageDefinitionExtractor {
     Assert.assertFalse(def.getConfigDefinitionsMap().containsKey(StageDefinitionExtractor.REQUIRED_FIELDS.getName()));
     Assert.assertFalse(def.getConfigDefinitionsMap().containsKey(StageDefinitionExtractor.PRECONDITIONS.getName()));
     Assert.assertFalse(def.getConfigDefinitionsMap().containsKey(StageDefinitionExtractor.ON_ERROR_RECORD.getName()));
+  }
+
+  @Test(expected = IllegalArgumentException.class)
+  public void testExtractMissingIcon() {
+    StageDefinitionExtractor.get().extract(MOCK_LIB_DEF, MissingIcon.class, "x");
   }
 
 }

@@ -15,6 +15,7 @@ import com.streamsets.pipeline.api.Source;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.StageDef;
 import com.streamsets.pipeline.api.Target;
+import com.streamsets.pipeline.api.impl.ErrorMessage;
 import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.config.ConfigDefinition;
 import com.streamsets.pipeline.config.ConfigGroupDefinition;
@@ -23,6 +24,8 @@ import com.streamsets.pipeline.config.StageDefinition;
 import com.streamsets.pipeline.config.StageLibraryDefinition;
 import com.streamsets.pipeline.config.StageType;
 
+import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -64,67 +67,129 @@ public abstract class StageDefinitionExtractor {
     return klass.getName().replace(".", "_").replace("$", "_");
   }
 
-  public StageDefinition extract(StageLibraryDefinition libraryDef, Class<? extends Stage> klass, Object contextMsg) {
+  public List<ErrorMessage> validate(StageLibraryDefinition libraryDef, Class<? extends Stage> klass, Object contextMsg) {
+    List<ErrorMessage> errors = new ArrayList<>();
     contextMsg = Utils.formatL("{} Stage='{}'", contextMsg, klass.getSimpleName());
 
     StageDef sDef = klass.getAnnotation(StageDef.class);
-    Utils.checkArgument(sDef != null, Utils.formatL("{} does not have a StageDef annotation", contextMsg));
+    if (sDef == null) {
+      errors.add(new ErrorMessage(DefinitionError.DEF_300, contextMsg));
+    } else {
+      String version = sDef.version();
+      if (version.isEmpty()) {
+        errors.add(new ErrorMessage(DefinitionError.DEF_301, contextMsg));
+      }
+      if (!sDef.icon().isEmpty()) {
+        if (klass.getClassLoader().getResource(sDef.icon()) == null) {
+          errors.add(new ErrorMessage(DefinitionError.DEF_311, contextMsg, sDef.icon()));
+        }
+      }
+      StageType type = extractStageType(klass);
+      if (type == null) {
+        errors.add(new ErrorMessage(DefinitionError.DEF_302, contextMsg));
+      }
+      boolean errorStage = klass.getAnnotation(ErrorStage.class) != null;
+      if (type != null && errorStage && type == StageType.SOURCE) {
+        errors.add(new ErrorMessage(DefinitionError.DEF_303, contextMsg));
+      }
+      HideConfig hideConfigs = klass.getAnnotation(HideConfig.class);
 
-    String name = getStageName(klass);
-    String version = sDef.version();
-    Utils.checkArgument(!version.isEmpty(), Utils.formatL("{} version cannot be empty", contextMsg));
-    String label = sDef.label();
-    String description = sDef.description();
-    String icon = sDef.icon();
-    StageType type = extractStageType(klass, contextMsg);
-    boolean errorStage = klass.getAnnotation(ErrorStage.class) != null;
-    Utils.checkArgument(!errorStage || type != StageType.SOURCE,
-                        Utils.formatL("{} a SOURCE cannot be an ErrorStage", contextMsg));
-    HideConfig hideConfigs = klass.getAnnotation(HideConfig.class);
-    boolean preconditions = !errorStage && type != StageType.SOURCE &&
-                            ((hideConfigs == null) || !hideConfigs.preconditions());
-    boolean onRecordError = !errorStage && ((hideConfigs == null) || !hideConfigs.onErrorRecord());
-    List<ConfigDefinition> configDefinitions = extractConfigDefinitions(klass, hideConfigs, contextMsg);
-    RawSourceDefinition rawSourceDefinition = RawSourceDefinitionExtractor.get().extract(klass, contextMsg);
-    Utils.checkArgument(rawSourceDefinition == null || type == StageType.SOURCE,
-                        Utils.formatL("{} only a SOURCE can have a RawSourcePreviewer", contextMsg));
-    ConfigGroupDefinition configGroupDefinition = ConfigGroupExtractor.get().extract(klass, contextMsg);
-    Utils.checkArgument(sDef.outputStreams().isEnum(), Utils.formatL("{} outputStreams '{}' must be an enum",
-                                                                    contextMsg, sDef.outputStreams().getSimpleName()));
-    String outputStreamLabelProviderClass = (type != StageType.TARGET) ? sDef.outputStreams().getName() : null;
-    Utils.checkArgument(sDef.outputStreams() == StageDef.DefaultOutputStreams.class || type != StageType.TARGET,
-                        Utils.formatL("{} a TARGET cannot have an OutputStreams", contextMsg));
-    boolean variableOutputStreams = StageDef.VariableOutputStreams.class.isAssignableFrom(sDef.outputStreams());
-    int outputStreams = (variableOutputStreams || type == StageType.TARGET)
-                        ? 0 : sDef.outputStreams().getEnumConstants().length;
-    List<ExecutionMode> executionModes = ImmutableList.copyOf(sDef.execution());
-    Utils.checkArgument(!executionModes.isEmpty(),
-                        Utils.formatL("{} the Stage must support at least one execution mode", contextMsg));
+      List<ErrorMessage> configErrors = ConfigDefinitionExtractor.get().validate(klass, contextMsg);
+      errors.addAll(configErrors);
 
-    //TODO figure out how this one is used besides the check
-    String outputStreamsDrivenByConfig = sDef.outputStreamsDrivenByConfig();
-    Utils.checkArgument(!variableOutputStreams || !outputStreamsDrivenByConfig.isEmpty(), Utils.formatL(
-        "{} A stage with VariableOutputStreams must have  Stage define a 'outputStreamsDrivenByConfig' config",
-        contextMsg));
+      List<ErrorMessage> rawSourceErrors = RawSourceDefinitionExtractor.get().validate(klass, contextMsg);
+      errors.addAll(rawSourceErrors);
+      if (type != null && rawSourceErrors.isEmpty() && type != StageType.SOURCE) {
+        if (RawSourceDefinitionExtractor.get().extract(klass, contextMsg) != null) {
+          errors.add(new ErrorMessage(DefinitionError.DEF_304, contextMsg));
+        }
 
-    validateConfigGroups(configDefinitions, configGroupDefinition, contextMsg);
+      }
+      List<ErrorMessage> configGroupErrors = ConfigGroupExtractor.get().validate(klass, contextMsg);
+      errors.addAll(configGroupErrors);
+      errors.addAll(ConfigGroupExtractor.get().validate(klass, contextMsg));
 
-    if (preconditions) {
-      configDefinitions.add(REQUIRED_FIELDS);
-      configDefinitions.add(PRECONDITIONS);
+      if (!sDef.outputStreams().isEnum()) {
+        errors.add(new ErrorMessage(DefinitionError.DEF_305, contextMsg, sDef.outputStreams().getSimpleName()));
+      }
+
+      if (type != null && sDef.outputStreams() != StageDef.DefaultOutputStreams.class && type == StageType.TARGET) {
+        errors.add(new ErrorMessage(DefinitionError.DEF_306, contextMsg));
+      }
+
+      boolean variableOutputStreams = StageDef.VariableOutputStreams.class.isAssignableFrom(sDef.outputStreams());
+
+      List<ExecutionMode> executionModes = ImmutableList.copyOf(sDef.execution());
+      if (executionModes.isEmpty()) {
+        errors.add(new ErrorMessage(DefinitionError.DEF_307, contextMsg));
+      }
+
+      String outputStreamsDrivenByConfig = sDef.outputStreamsDrivenByConfig();
+
+      if (variableOutputStreams && outputStreamsDrivenByConfig.isEmpty()) {
+        errors.add(new ErrorMessage(DefinitionError.DEF_308, contextMsg));
+      }
+
+      if (configErrors.isEmpty() && configGroupErrors.isEmpty()) {
+        List<ConfigDefinition> configDefs = extractConfigDefinitions(klass, hideConfigs, contextMsg);
+        ConfigGroupDefinition configGroupDef = ConfigGroupExtractor.get().extract(klass, contextMsg);
+        errors.addAll(validateConfigGroups(configDefs, configGroupDef, contextMsg));
+        if (variableOutputStreams) {
+          boolean found = false;
+          for (ConfigDefinition configDef : configDefs) {
+            if (configDef.getName().equals(outputStreamsDrivenByConfig)) {
+              found = true;
+              break;
+            }
+          }
+          if (!found) {
+            errors.add(new ErrorMessage(DefinitionError.DEF_309, contextMsg, outputStreamsDrivenByConfig));
+          }
+        }
+      }
     }
-    if (onRecordError) {
-      configDefinitions.add(ON_ERROR_RECORD);
-    }
-    StageDefinition stageDef =
-        new StageDefinition(libraryDef, klass, name, version, label, description, type, errorStage, preconditions,
-                            onRecordError, configDefinitions, rawSourceDefinition, icon, configGroupDefinition,
-                            variableOutputStreams, outputStreams, outputStreamLabelProviderClass, executionModes);
+    return errors;
+  }
 
-    Utils.checkArgument(!variableOutputStreams || stageDef.getConfigDefinition(outputStreamsDrivenByConfig) != null,
-                        Utils.formatL("{} outputStreamsDrivenByConfig='{}' not defined as configuration",
-                                      contextMsg, outputStreamsDrivenByConfig));
-    return stageDef;
+  public StageDefinition extract(StageLibraryDefinition libraryDef, Class<? extends Stage> klass, Object contextMsg) {
+    List<ErrorMessage> errors = validate(libraryDef, klass, contextMsg);
+    if (errors.isEmpty()) {
+      contextMsg = Utils.formatL("{} Stage='{}'", contextMsg, klass.getSimpleName());
+
+      StageDef sDef = klass.getAnnotation(StageDef.class);
+      String name = getStageName(klass);
+      String version = sDef.version();
+      String label = sDef.label();
+      String description = sDef.description();
+      String icon = sDef.icon();
+      StageType type = extractStageType(klass);
+      boolean errorStage = klass.getAnnotation(ErrorStage.class) != null;
+      HideConfig hideConfigs = klass.getAnnotation(HideConfig.class);
+      boolean preconditions = !errorStage && type != StageType.SOURCE &&
+                              ((hideConfigs == null) || !hideConfigs.preconditions());
+      boolean onRecordError = !errorStage && ((hideConfigs == null) || !hideConfigs.onErrorRecord());
+      List<ConfigDefinition> configDefinitions = extractConfigDefinitions(klass, hideConfigs, contextMsg);
+      RawSourceDefinition rawSourceDefinition = RawSourceDefinitionExtractor.get().extract(klass, contextMsg);
+      ConfigGroupDefinition configGroupDefinition = ConfigGroupExtractor.get().extract(klass, contextMsg);
+      String outputStreamLabelProviderClass = (type != StageType.TARGET) ? sDef.outputStreams().getName() : null;
+      boolean variableOutputStreams = StageDef.VariableOutputStreams.class.isAssignableFrom(sDef.outputStreams());
+      int outputStreams = (variableOutputStreams || type == StageType.TARGET)
+                          ? 0 : sDef.outputStreams().getEnumConstants().length;
+      List<ExecutionMode> executionModes = ImmutableList.copyOf(sDef.execution());
+
+      if (preconditions) {
+        configDefinitions.add(REQUIRED_FIELDS);
+        configDefinitions.add(PRECONDITIONS);
+      }
+      if (onRecordError) {
+        configDefinitions.add(ON_ERROR_RECORD);
+      }
+      return new StageDefinition(libraryDef, klass, name, version, label, description, type, errorStage, preconditions,
+                                 onRecordError, configDefinitions, rawSourceDefinition, icon, configGroupDefinition,
+                                 variableOutputStreams, outputStreams, outputStreamLabelProviderClass, executionModes);
+    } else {
+      throw new IllegalArgumentException(Utils.format("Invalid StageDefinition: {}", errors));
+    }
   }
 
   private List<ConfigDefinition> extractConfigDefinitions(Class<? extends Stage> klass, HideConfig hideConfigs,
@@ -145,7 +210,7 @@ public abstract class StageDefinitionExtractor {
     return cDefs;
   }
 
-  private StageType extractStageType(Class<? extends Stage> klass, Object contextMsg) {
+  private StageType extractStageType(Class<? extends Stage> klass) {
     StageType type;
     if (Source.class.isAssignableFrom(klass)) {
       type = StageType.SOURCE;
@@ -154,19 +219,22 @@ public abstract class StageDefinitionExtractor {
     } else if (Target.class.isAssignableFrom(klass)) {
       type = StageType.TARGET;
     } else {
-      throw new IllegalArgumentException(Utils.format("{} does not implement Source, Processor nor Target", contextMsg));
+      type = null;
     }
     return type;
   }
 
-  private void validateConfigGroups(List<ConfigDefinition> configs, ConfigGroupDefinition groups, Object contextMsg) {
+  private List<ErrorMessage> validateConfigGroups(List<ConfigDefinition> configs, ConfigGroupDefinition
+      groups, Object contextMsg) {
+    List<ErrorMessage> errors = new ArrayList<>();
     for (ConfigDefinition config : configs) {
       if (!config.getGroup().isEmpty()) {
-        Utils.checkArgument(groups.getGroupNames().contains(config.getGroup()),
-                            Utils.formatL("{} configuration '{}' has an undefined group '{}'",
-                                          contextMsg, config.getName(), config.getGroup()));
+        if (!groups.getGroupNames().contains(config.getGroup())) {
+          errors.add(new ErrorMessage(DefinitionError.DEF_310, contextMsg, config.getName(), config.getGroup()));
+        }
       }
     }
+    return errors;
   }
 
 }
