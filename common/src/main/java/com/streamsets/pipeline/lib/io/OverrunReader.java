@@ -136,7 +136,7 @@ public class OverrunReader extends CountingReader {
   }
 
   static boolean isControl(char c) {
-    return c < 32 && c != '\t' && c != 8 && c != 9 && c != 10 && c != 12 && c!= 13;
+    return c == 127 || (c < 32 && c != '\t' && c !='\n' && c != '\r');
    }
 
 }
