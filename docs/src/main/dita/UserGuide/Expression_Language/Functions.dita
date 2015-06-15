@@ -19,7 +19,7 @@
      </thead>
      <tbody>
       <row>
-       <entry>General record functions </entry>
+       <entry><xref href="RecordFunctions.dita#concept_p1z_ggv_1r">Record functions</xref></entry>
        <entry>
         <p>
          <ul id="ul_gdz_wb2_gs">
@@ -35,7 +35,8 @@
        </entry>
       </row>
       <row>
-       <entry>Delimited data record functions</entry>
+       <entry><xref href="RecordFunc-Delimited.dita#concept_s2c_q14_fs">Delimited data record
+         functions</xref></entry>
        <entry>
         <ul id="ul_z2x_jc2_gs">
          <li>record:dExists('&lt;header>') </li>
@@ -49,7 +50,8 @@
        </entry>
       </row>
       <row>
-       <entry>Error record functions</entry>
+       <entry><xref href="ErrorFunctions.dita#concept_ndj_43v_1r">Error record
+        functions</xref></entry>
        <entry>
         <ul id="ul_n1v_z12_gs">
          <li>record:errorCode()</li>
@@ -62,7 +64,7 @@
        </entry>
       </row>
       <row>
-       <entry>String functions</entry>
+       <entry><xref href="StringFunctions.dita#concept_ahp_f4v_1r">String functions</xref></entry>
        <entry>
         <p>
          <ul id="ul_f15_xf2_gs">
@@ -82,7 +84,8 @@
        </entry>
       </row>
       <row>
-       <entry>Miscellaneous functions</entry>
+       <entry><xref href="MiscFunctions.dita#concept_ddw_ld1_1s">Miscellaneous
+        functions</xref></entry>
        <entry>
         <ul id="ul_xks_xg2_gs">
          <li>emptyList</li>

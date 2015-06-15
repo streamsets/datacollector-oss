@@ -36,7 +36,23 @@
     </tgroup>
    </table>
   </p>
-  <p/>
+  <p>The following IgnoreControlChar-row is used in Configuring a - Directory, File Tail, Kafka
+   Consumer, JSON Parser, Log Parser:<table frame="all" rowsep="1" colsep="1" id="table_mxl_xrm_js">
+    <tgroup cols="2">
+     <colspec colname="c1" colnum="1" colwidth="1*"/>
+     <colspec colname="c2" colnum="2" colwidth="2.17*"/>
+     <tbody>
+      <row id="IgnoreControlChars-row">
+       <entry>Ignore Ctrl Characters <xref href="../Pipeline_Configuration/ControlCharacters.dita">
+         <image href="../Graphics/icon_moreInfo.png" scale="10" placement="inline"
+          id="image_xwx_xrm_js"/></xref></entry>
+       <entry>Removes all ASCII control characters except for the tab, line feed, and carriage
+        return characters.<draft-comment author="Loretta">from
+        ReusableTables.dita.</draft-comment></entry>
+      </row>
+     </tbody>
+    </tgroup>
+   </table></p>
   <p/>
  </conbody>
 </concept>

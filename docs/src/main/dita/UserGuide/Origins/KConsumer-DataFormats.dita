@@ -2,7 +2,6 @@
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_xgs_nlc_wr">
  <title>Data Formats</title>
- <shortdesc></shortdesc>
  <conbody>
   <p><indexterm>data formats<indexterm>for Kafka Consumer</indexterm></indexterm><indexterm>Kafka
         Consumer origin<indexterm>data formats</indexterm></indexterm>The Kafka Consumer origin

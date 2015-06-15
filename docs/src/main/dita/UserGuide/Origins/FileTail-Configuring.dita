@@ -42,6 +42,10 @@
                                     <entry>Data Charset</entry>
                                     <entry>Character encoding of the data to be processed.</entry>
                                 </row>
+                                <row
+                                    conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/IgnoreControlChars-row">
+                                    <entry/>
+                                </row>
                                 <row>
                                     <entry>Max Line Length</entry>
                                     <entry>Maximum number of characters in a record, including

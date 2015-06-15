@@ -244,7 +244,7 @@
                                 </xref></entry>
                             <entry>Location of runtime properties. Use to declare where runtime
                                 properties are defined:<ul id="ul_mh4_rrn_1s">
-                                    <li>Embedded - The runtime properties are defined in the file.
+                                    <li>embedded - The runtime properties are defined in the file.
                                             <p>Use the following naming convention to define runtime
                                             properties in the <ph
                                                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
@@ -264,11 +264,11 @@
                             <entry>Execution mode for the <ph
                                     conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
                                     />:<ul id="ul_icj_t5n_1s">
-                                    <li>Standalone - Runs the <ph
+                                    <li>standalone - Runs the <ph
                                             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
                                         /> in the default mode, allowing it to read and write from
                                         all endpoints.</li>
-                                    <li>Cluster - Runs the <ph
+                                    <li>cluster - Runs the <ph
                                             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
                                         /> in cluster mode, reading only from Kafka clusters. <xref
                                             href="../Advanced_Config/ExecutionMode.dita"><image
@@ -276,6 +276,20 @@
                                                 id="image_o5j_f5g_cs"/>
                                         </xref></li>
                                 </ul></entry>
+                        </row>
+                        <row>
+                            <entry>observer.queue.size</entry>
+                            <entry>
+                                <draft-comment author="Loretta">come back to these.</draft-comment>
+                            </entry>
+                        </row>
+                        <row>
+                            <entry>observer.sampled.records.cache.size</entry>
+                            <entry/>
+                        </row>
+                        <row>
+                            <entry>observer.queue.offer.max.wait.time.ms</entry>
+                            <entry/>
                         </row>
                     </tbody>
                 </tgroup>

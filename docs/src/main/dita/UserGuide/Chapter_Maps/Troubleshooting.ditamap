@@ -8,9 +8,13 @@
    <topicmeta>
     <shortdesc/>
    </topicmeta>
+   <topicref href="../Troubleshooting/DataPreview.dita"/>
   </topicref>
   <topicref href="../Troubleshooting/Origins.dita"/>
-  <topicref href="../Troubleshooting/Destinations.dita"/>
+  <topicref href="../Troubleshooting/Destinations.dita">
+   <topicref href="../Troubleshooting/Destinations-Cassandra.dita"/>
+   <topicref href="../Troubleshooting/Destinations-Kafka.dita"/>
+  </topicref>
   <topicref href="../Troubleshooting/Performance.dita"/>
   <topicref href="../Troubleshooting/ClusterMode.dita"/>
  </topicref>

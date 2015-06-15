@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
+<concept id="concept_zlc_ppn_js">
+ <title>Initial and Subsequent Offsets</title>
+ <shortdesc>When you start a pipeline for the first time, the Kafka Consumer becomes a new consumer
+  group for the topic. It reads only incoming data - processing data from all partitions - and
+  ignores any existing data in the topic by default. </shortdesc>
+ <conbody>
+  <p>After the origin passes data to destinations, it saves the offset with the ZooKeeper. When you
+   stop and restart the pipeline, processing continues based on the offset provided by the
+   ZooKeeper.</p>
+  <p>To configure the origin to read all unread data in the topic, you can add a Kafka configuration
+   property, <uicontrol>auto.offset.reset</uicontrol>, and set it to
+   <uicontrol>smallest</uicontrol>. For more information about this property, see the Apache Kafka
+   documentation. </p>
+ </conbody>
+</concept>

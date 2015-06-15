@@ -113,6 +113,10 @@
                                     <entry>Character encoding of the messages to be
                                         processed.</entry>
                                 </row>
+                                <row
+                                    conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/IgnoreControlChars-row">
+                                    <entry/>
+                                </row>
                                 <row>
                                     <entry>Produce Single Record</entry>
                                     <entry>For each partition, generates a single record for records
