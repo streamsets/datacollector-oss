@@ -23,6 +23,7 @@
    <topicref href="../Pipeline_Configuration/DelimitedDataRecordStructure.dita">
     <topicref href="../Pipeline_Configuration/DelimitedData-Processing.dita"/>
    </topicref>
+   <topicref href="../Pipeline_Configuration/ControlCharacters.dita"/>
   </topicref>
   <topicref href="../Pipeline_Configuration/PipelineProperties.dita" chunk="to-content">
    <topicmeta>

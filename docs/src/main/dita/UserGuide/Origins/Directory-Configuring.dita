@@ -52,6 +52,10 @@
                                     <entry>Files Charset</entry>
                                     <entry>Character encoding of the data to be processed.</entry>
                                 </row>
+                                <row
+                                    conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/IgnoreControlChars-row">
+                                    <entry/>
+                                </row>
                                 <row>
                                     <entry>Files Directory</entry>
                                     <entry>A directory local to the <ph

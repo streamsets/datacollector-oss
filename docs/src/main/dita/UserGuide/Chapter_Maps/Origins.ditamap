@@ -45,6 +45,7 @@
   </topicref>
   <topicref href="../Origins/KConsumer.dita" chunk="to-content">
    <topicmeta><shortdesc></shortdesc></topicmeta>
+   <topicref href="../Origins/KConsumer-Offsets.dita"/>
    <topicref href="../Origins/KConsumer-DataFormats.dita">
     <topicref href="../Origins/LogFormats.dita"/>
    </topicref>

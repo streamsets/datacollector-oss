@@ -32,6 +32,10 @@
                                     <entry>Field to Parse</entry>
                                     <entry>Field path that contains the log data to parse. </entry>
                                 </row>
+                                <row
+                                    conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/IgnoreControlChars-row">
+                                    <entry/>
+                                </row>
                                 <row>
                                     <entry>New Parsed Field</entry>
                                     <entry>Field to act as the root field for the newly parsed

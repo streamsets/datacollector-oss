@@ -14,9 +14,5 @@
      Consumer</indexterm></indexterm>When you configure a Kafka Consumer, you configure the consumer
    group name, topic, and ZooKeeper connection information. You can add additional Kafka
    configuration properties as needed.</p>
-  <p>When you start a pipeline, the Kafka Consumer becomes a new consumer group for the topic and
-   starts reading data from the topic based on the offset provided by the ZooKeeper.</p>
-  <p>The Kafka Consumer processes data from all partitions in the topic. It saves the offset with
-   the ZooKeeper after passing data to destinations. </p>
  </conbody>
 </concept>

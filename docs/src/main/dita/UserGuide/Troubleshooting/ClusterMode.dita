@@ -2,31 +2,53 @@
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_zjl_nnl_2s">
  <title>Cluster Mode </title>
- <shortdesc></shortdesc>
  <conbody>
-  <p>
-   <dl>
-    <dlentry>
-     <dt>Why isn't the <ph
-       conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> reading
-      data from my new partition?</dt>
-     <dd>If you create a new partition in the Kafka topic, to launch a new <ph
-       conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> worker to
-      read from the partition, you need to restart the pipeline.</dd>
-    </dlentry>
-   </dl>
-  </p>
-  <draft-comment author="Loretta">see brock's email... </draft-comment>
-    <draft-comment author="Loretta">1) Why cannot I start my pipeline in cluster mode: a)
-      "sdc.execution.mode" in sdc.properties is set to standalone: "VALIDATION_0072 - Data collector
-      is in standalone mode, cannot run pipeline cluster mode" b) Most likely the Spark on YARN
-      client configuration is not in place (it's not a gateway node) or not up to date. "Error
-      starting application: java.util.concurrent.ExecutionException:
-      java.lang.IllegalStateException: Process submitting the spark job is dead and couldn't
-      retrieve the YARN application id" Unfortunately for now they will have to go to logs to debug
-      this one. 2) My cluster pipeline was killed unexpectely To debug this one go to the
-      application on the YARN RM gui page and look at the Spark App Master logs. 3) How long does it
-      take to start a cluster pipeline? It depends on how busy your YARN cluster is but typical
-      times are 30-90 seconds. </draft-comment>
+  <p><indexterm>troubleshooting<indexterm>cluster mode</indexterm></indexterm>Use the following tips
+      for help with cluster mode:<dl>
+        <dlentry>
+          <dt>Why isn't the <ph
+              conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
+            reading data from my new partition?</dt>
+          <dd>If you create a new partition in the Kafka topic, to launch a new <ph
+              conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
+            worker to read from the partition, you need to restart the pipeline.</dd>
+        </dlentry>
+        <dlentry>
+          <dt>My pipeline fails to start with the following error: <codeph>VALIDATION_0072 - Data
+              collector is in standalone mode, cannot run pipeline cluster mode.</codeph></dt>
+          <dd>Though the pipeline is configured for cluster mode, the <ph
+              conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> is
+            not. To configure the <ph
+              conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> to
+            run in cluster mode, in the <ph
+              conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
+            configuration file, set the <uicontrol>sdc.execution.mode</uicontrol> property to
+            "cluster".</dd>
+        </dlentry>
+        <dlentry>
+          <dt>My pipeline fails to start with the following error: <codeph>Error starting
+              application: java.util.concurrent.ExecutionException: java.lang.IllegalStateException:
+              Process submitting the spark job is dead and couldn't retrieve the YARN application
+              id.</codeph></dt>
+          <dd>Check the Spark on YARN logs for more information. It's possible that the Spark on
+            YARN client configuration is not in place, the node is not a gateway node, or the
+            installation is not up to date.<draft-comment author="Loretta">are these correct?
+              reworded from original email.</draft-comment></dd>
+        </dlentry>
+        <dlentry>
+          <dt>My pipeline was killed unexpectedly.</dt>
+          <dd>
+            <draft-comment author="Loretta">can I say "My pipeline stopped unexpectedly" or is that
+              different?</draft-comment>
+          </dd>
+          <dd>For more information, check the Spark Application Master logs in the YARN
+            ResourceManager UI.</dd>
+        </dlentry>
+        <dlentry>
+          <dt>Why does my pipeline take so long to start?</dt>
+          <dd>The start time for a pipeline can vary based on how busy the YARN cluster is.
+            Typically, a cluster pipeline should start in 30-90 seconds. </dd>
+        </dlentry>
+      </dl></p>
  </conbody>
 </concept>

@@ -32,6 +32,10 @@
                                     <entry>Field to Parse</entry>
                                     <entry>Field that contains the JSON object.</entry>
                                 </row>
+                                <row
+                                    conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/IgnoreControlChars-row">
+                                    <entry/>
+                                </row>
                                 <row>
                                     <entry>New Parsed Field</entry>
                                     <entry>Output field for the parsed JSON object.</entry>

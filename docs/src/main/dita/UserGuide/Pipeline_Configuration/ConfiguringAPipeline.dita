@@ -78,15 +78,14 @@
                                         href="../Graphics/icon_moreInfo.png" scale="10"
                                         id="image_ldk_s5g_cs"/>
                                 </xref></stentry>
-                            <stentry>Maximum amount of memory for the pipeline to use. <p>Best
-                                    practice is to use up to 65% of the Java heap size defined for
-                                    the <ph
-                                        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                                    />. </p><p>You can use the following expression to set the
-                                    memory limit based on the specified percentage of the <ph
+                            <stentry>Maximum amount of memory for the pipeline to use. You can enter
+                                a numeric value or edit the default expression to use a percentage
+                                of the Java heap size defined for the <ph
+                                    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                                />. <p>Default is 65% of the <ph
                                         conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
                                     /> Java heap
-                                    size:<codeblock> ${jvm:maxMemory() * &lt;percentage>}</codeblock></p></stentry>
+                                    size:<codeblock> ${jvm:maxMemory() * 0.65}</codeblock></p></stentry>
                         </strow>
                         <strow>
                             <stentry>Memory Exceeded</stentry>
@@ -172,7 +171,7 @@
                                             evaluates to sdc-&lt;<ph
                                                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
                                             /> ID>. This provides default differentiation in case
-                                            multiple <ph
+                                            several <ph
                                                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
                                             />s write to the same directory. </p><p>The <ph
                                                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"

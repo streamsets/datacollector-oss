@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
+<concept id="concept_hfs_dkm_js">
+ <title>Control Character Removal</title>
+ <shortdesc>You can remove control characters, such as the escape or end-of-transmission characters
+    from data. Remove control characters to avoid creating invalid records. </shortdesc>
+ <conbody>
+  <p><indexterm>pipeline design<indexterm>control character
+        removal</indexterm></indexterm><indexterm>control characters<indexterm>removing from
+          data</indexterm></indexterm>When the <ph
+        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> removes
+      control characters, it removes ASCII character codes 0-31 and 127 with the following
+        exceptions:<ul id="ul_i3y_2lm_js">
+        <li>9 - Tab</li>
+        <li>10 - Line feed</li>
+        <li>13 - Carriage return</li>
+      </ul></p>
+    <p>You can use the following stages to remove control characters from the data flow: <ul
+        id="ul_hm5_nlm_js">
+        <li>Directory origin</li>
+        <li>File Tail origin</li>
+        <li>Kafka Consumer origin</li>
+        <li>JSON Parser processor</li>
+        <li>Log Parser processor</li>
+      </ul></p>
+ </conbody>
+</concept>

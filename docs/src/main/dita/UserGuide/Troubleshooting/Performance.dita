@@ -1,11 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_ay2_w1l_2s">
- <title>Performance Issues</title>
+ <title>Performance</title>
  <conbody>
-  <p><indexterm>Data
-     Collector<indexterm>troubleshooting</indexterm></indexterm><indexterm>troubleshooting<indexterm>destinations</indexterm></indexterm>Use
-   the following tips to help you with performance issues. <dl>
+  <p><indexterm>troubleshooting<indexterm>performance</indexterm></indexterm>Use the following tips
+   for help with performance:<dl>
     <dlentry>
      <dt>Why is my batch size only 1000 records when I configured my origin for larger batches?</dt>
      <dd>The <ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>

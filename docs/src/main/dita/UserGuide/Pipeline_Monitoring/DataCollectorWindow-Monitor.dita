@@ -57,14 +57,13 @@
         <stentry>Arranges the stages in the pipeline.</stentry>
       </strow>
       <strow>
-        <stentry><image href="../Graphics/icon_MonDataAlert.png" id="image_twl_st5_br"
+        <stentry><image href="../Graphics/icon_MonDataAlert.png" id="image_twl_st5_br" scale="90"
           /></stentry>
-        <stentry>Monitoring Stream</stentry>
+        <stentry>Stream Monitoring icon</stentry>
         <stentry>Select to view or configure a data rule or alert.</stentry>
       </strow>
    <strow>
-    <stentry><image href="../Graphics/icon_MonInspect.png" id="image_gz1_rk4_tq"
-          /></stentry>
+    <stentry><image href="../Graphics/icon_MonInspect.png" id="image_gz1_rk4_tq"/></stentry>
     <stentry>Inspect Data icon</stentry>
     <stentry>Indicates when alerts are configured on the stream:<ul id="ul_is1_tq5_br">
             <li>Gray indicates no data alerts are activated.</li>

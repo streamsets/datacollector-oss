@@ -2,13 +2,12 @@
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_fwl_5cl_gs">
  <title>Origins</title>
- <shortdesc></shortdesc>
  <conbody>
-  <p><indexterm>troubleshooting<indexterm>origins</indexterm></indexterm>Use the following tips to
-   help you with origin stages and systems. <dl>
+  <p><indexterm>troubleshooting<indexterm>origins</indexterm></indexterm>Use the following tips for
+   help with origin stages and systems:<dl>
     <dlentry>
      <dt>My MySQL JDBC Driver 5.0 fails to validate the query in my JBDC origin. </dt>
-     <dd>This can occur when you use a LIMIT clause in your query. Workaround: upgrade to version
+     <dd>This can occur when you use a LIMIT clause in your query. Workaround: Upgrade to version
       5.1.</dd>
     </dlentry>
     <dlentry>
@@ -25,11 +24,16 @@
        >http://dev.mysql.com/doc/connector-j/en/connector-j-reference-configuration-properties.html</xref>.</dd>
     </dlentry>
     <dlentry>
-     <dt>Why isn't my pipeline reading data from my Kafka cluster? </dt>
-     <dd>By default, the Kafka Consumer reads data written to the cluster after you start the
-      pipeline. Records already in the cluster are not read. </dd>
+     <dt>Why isn't my pipeline reading existing data from my Kafka topic? </dt>
+     <dd>By default, the Kafka Consumer reads data written to the topic after you start the
+      pipeline. Records already in the topic are ignored. </dd>
      <dd>To read the oldest unread data in a topic, add the <uicontrol>auto.offset.reset</uicontrol>
-      property to the Kafka Consumer origin and set it to "smallest". </dd>
+      Kafka Configuration property to the origin and set it to <uicontrol>smallest</uicontrol>.
+       <note>If you already started the pipeline or ran a preview without this option, the offset
+       has already been committed. To read the oldest unread data in a topic, set
+        <uicontrol>auto.offset.reset</uicontrol> to <uicontrol>smallest</uicontrol> and then
+       temporarily change the Consumer Group name to a different value. Run data preview. Then,
+       change the Consumer Group back to the correct value and start the pipeline.</note></dd>
     </dlentry>
    </dl></p>
   <p>
