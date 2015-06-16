@@ -70,7 +70,7 @@ public class ExpressionProcessor extends SingleLaneRecordProcessor {
       Field newField = Field.create(getTypeFromObject(result), result);
 
       if(FieldRegexUtil.hasWildCards(fieldToSet)) {
-        for(String field : FieldRegexUtil.getMatchingFieldPaths(fieldToSet, record)) {
+        for(String field : FieldRegexUtil.getMatchingFieldPaths(fieldToSet, record.getFieldPaths())) {
           record.set(field, newField);
         }
       } else {

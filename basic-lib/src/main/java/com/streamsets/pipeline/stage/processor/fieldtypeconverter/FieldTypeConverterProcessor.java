@@ -21,6 +21,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.Locale;
+import java.util.Set;
 
 public class FieldTypeConverterProcessor extends SingleLaneRecordProcessor {
   private static final Logger LOG = LoggerFactory.getLogger(FieldTypeConverterProcessor.class);
@@ -34,9 +35,10 @@ public class FieldTypeConverterProcessor extends SingleLaneRecordProcessor {
 
   @Override
   protected void process(Record record, SingleLaneBatchMaker batchMaker) throws StageException {
+    Set<String> fieldPaths = record.getFieldPaths();
     for(FieldTypeConverterConfig fieldTypeConverterConfig : fieldTypeConverterConfigs) {
       for(String fieldToConvert : fieldTypeConverterConfig.fields) {
-        for(String matchingField : FieldRegexUtil.getMatchingFieldPaths(fieldToConvert, record)) {
+        for(String matchingField : FieldRegexUtil.getMatchingFieldPaths(fieldToConvert, fieldPaths)) {
           Field field = record.get(matchingField);
           if (field == null) {
             LOG.warn("Record {} does not have field {}. Ignoring conversion.", record.getHeader().getSourceId(),

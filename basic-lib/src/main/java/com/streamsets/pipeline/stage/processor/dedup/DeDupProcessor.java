@@ -25,6 +25,7 @@ import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
 public class DeDupProcessor extends RecordProcessor {
@@ -54,10 +55,11 @@ public class DeDupProcessor extends RecordProcessor {
     }
 
     protected List<String> getFieldsToHash(Record record) {
+      Set<String> fieldPaths = record.getFieldPaths();
       List<String> fields = new ArrayList<>();
       if (fieldsToHash != null) {
         for(String field : fieldsToHash) {
-          List<String> matchingFieldPaths = FieldRegexUtil.getMatchingFieldPaths(field, record);
+          List<String> matchingFieldPaths = FieldRegexUtil.getMatchingFieldPaths(field, fieldPaths);
           Collections.sort(matchingFieldPaths);
           fields.addAll(matchingFieldPaths);
         }

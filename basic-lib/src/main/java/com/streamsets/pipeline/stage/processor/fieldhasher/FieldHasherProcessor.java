@@ -33,13 +33,14 @@ public class FieldHasherProcessor extends SingleLaneRecordProcessor {
 
   @Override
   protected void process(Record record, SingleLaneBatchMaker batchMaker) throws StageException {
+    Set<String> fieldPaths = record.getFieldPaths();
     Set<String> fieldsDontExist = new HashSet<>();
     Set<String> fieldsWithListOrMapType = new HashSet<>();
     Set<String> fieldsWithNull = new HashSet<>();
 
     for(FieldHasherConfig fieldHasherConfig : fieldHasherConfigs) {
       for(String fieldToHash : fieldHasherConfig.fieldsToHash) {
-        for(String matchingFieldPath : FieldRegexUtil.getMatchingFieldPaths(fieldToHash, record)) {
+        for(String matchingFieldPath : FieldRegexUtil.getMatchingFieldPaths(fieldToHash, fieldPaths)) {
           if (record.has(matchingFieldPath)) {
             Field field = record.get(matchingFieldPath);
             if (field.getType() == Field.Type.MAP || field.getType() == Field.Type.LIST) {

@@ -6,10 +6,10 @@
 package com.streamsets.pipeline.lib.util;
 
 import com.google.common.collect.ImmutableList;
-import com.streamsets.pipeline.api.Record;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -22,14 +22,22 @@ public class FieldRegexUtil {
     return false;
   }
 
-  public static List<String> getMatchingFieldPaths(String fieldPath, Record record) {
+  public static List<String> getMatchingFieldPaths(String fieldPath, Set<String> fieldPaths) {
     if(!hasWildCards(fieldPath)) {
       return ImmutableList.of(fieldPath);
     }
-    fieldPath = fieldPath.replaceAll("\\/\\*", "/(.*)").replace("[*]", "\\[\\d+\\]");
+    //Any reference to array index brackets [ ] must be escaped in the regex
+    //Reference to * in map must be replaced by regex that matches a field name
+    //Reference to * in array index must be replaced by \d+
+    fieldPath = fieldPath
+      .replace("[*]", "[\\d+]")
+      .replace("[", "\\[")
+      .replace("]", "\\]")
+      .replaceAll("\\/\\*", "/([^\\\\/\\\\[]+)");
+
     Pattern pattern = Pattern.compile(fieldPath);
     List<String> matchingFieldPaths = new ArrayList<>();
-    for(String existingFieldPath : record.getFieldPaths()) {
+    for(String existingFieldPath : fieldPaths) {
       Matcher matcher = pattern.matcher(existingFieldPath);
       if(matcher.matches()) {
         matchingFieldPaths.add(existingFieldPath);
