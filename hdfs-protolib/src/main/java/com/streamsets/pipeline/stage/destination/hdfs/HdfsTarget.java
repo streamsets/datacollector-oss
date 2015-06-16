@@ -15,7 +15,6 @@ import com.streamsets.pipeline.api.base.RecordTarget;
 import com.streamsets.pipeline.api.el.ELEval;
 import com.streamsets.pipeline.api.el.ELEvalException;
 import com.streamsets.pipeline.api.el.ELVars;
-import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.config.CsvHeader;
 import com.streamsets.pipeline.config.CsvMode;
 import com.streamsets.pipeline.config.DataFormat;
@@ -34,30 +33,34 @@ import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.CommonConfigurationKeys;
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
+import org.apache.hadoop.hdfs.DFSConfigKeys;
 import org.apache.hadoop.io.SequenceFile;
 import org.apache.hadoop.io.compress.CompressionCodec;
 import org.apache.hadoop.security.UserGroupInformation;
+import org.apache.hadoop.security.authentication.util.KerberosUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.security.auth.Subject;
 import java.io.File;
 import java.io.IOException;
 import java.net.URI;
 import java.nio.charset.Charset;
+import java.security.AccessController;
 import java.security.PrivilegedExceptionAction;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.TimeZone;
 
+
 public class HdfsTarget extends RecordTarget {
   private final static Logger LOG = LoggerFactory.getLogger(HdfsTarget.class);
   private final static int MEGA_BYTE = 1024 * 1024;
 
   private final String hdfsUri;
+  private final String hdfsUser;
   private final boolean hdfsKerberos;
-  private final String kerberosPrincipal;
-  private final String kerberosKeytab;
   private final String hadoopConfDir;
   private final Map<String, String> hdfsConfigs;
   private String uniquePrefix;
@@ -84,7 +87,7 @@ public class HdfsTarget extends RecordTarget {
   private String charset;
   private final String avroSchema;
 
-  public HdfsTarget(String hdfsUri, boolean hdfsKerberos, String kerberosPrincipal, String kerberosKeytab,
+  public HdfsTarget(String hdfsUri, String hdfsUser, boolean hdfsKerberos,
       String hadoopConfDir, Map<String, String> hdfsConfigs, String uniquePrefix, String dirPathTemplate,
       String timeZoneID, String timeDriver, long maxRecordsPerFile, long maxFileSize, CompressionMode compression,
       String otherCompression, HdfsFileType fileType, String keyEl,
@@ -93,9 +96,8 @@ public class HdfsTarget extends RecordTarget {
       CsvMode csvFileFormat, CsvHeader csvHeader, boolean csvReplaceNewLines, JsonMode jsonMode, String textFieldPath,
       boolean textEmptyLineIfNull, String avroSchema) {
     this.hdfsUri = hdfsUri;
+    this.hdfsUser = hdfsUser;
     this.hdfsKerberos = hdfsKerberos;
-    this.kerberosPrincipal = kerberosPrincipal;
-    this.kerberosKeytab = kerberosKeytab;
     this.hadoopConfDir = hadoopConfDir;
     this.hdfsConfigs = hdfsConfigs;
     this.uniquePrefix = uniquePrefix;
@@ -124,7 +126,7 @@ public class HdfsTarget extends RecordTarget {
   }
 
   private Configuration hdfsConfiguration;
-  private UserGroupInformation ugi;
+  private UserGroupInformation loginUgi;
   private long lateRecordsLimitSecs;
   private ActiveRecordWriters currentWriters;
   private ActiveRecordWriters lateWriters;
@@ -246,7 +248,18 @@ public class HdfsTarget extends RecordTarget {
 
   Configuration getHadoopConfiguration(List<ConfigIssue> issues) {
     Configuration conf = new Configuration();
-
+    if (hdfsKerberos) {
+      conf.set(CommonConfigurationKeys.HADOOP_SECURITY_AUTHENTICATION,
+               UserGroupInformation.AuthenticationMethod.KERBEROS.name());
+      try {
+        conf.set(DFSConfigKeys.DFS_NAMENODE_USER_NAME_KEY, "hdfs/_HOST@" + KerberosUtil.getDefaultRealm());
+      } catch (Exception ex) {
+        if (!hdfsConfigs.containsKey(DFSConfigKeys.DFS_NAMENODE_USER_NAME_KEY)) {
+          issues.add(getContext().createConfigIssue(Groups.HADOOP_FS.name(), null, Errors.HADOOPFS_28,
+                                                    ex.getMessage()));
+        }
+      }
+    }
     if (hadoopConfDir != null && !hadoopConfDir.isEmpty()) {
       File hadoopConfigDir = new File(hadoopConfDir);
       if (!hadoopConfigDir.isAbsolute()) {
@@ -303,35 +316,30 @@ public class HdfsTarget extends RecordTarget {
       hdfsConfiguration = getHadoopConfiguration(issues);
 
       hdfsConfiguration.set(CommonConfigurationKeys.FS_DEFAULT_NAME_KEY, hdfsUri);
+
+      // forcing UGI to initialize with the security settings from the stage
+      UserGroupInformation.setConfiguration(hdfsConfiguration);
+
+      // If Kerberos is enabled the SDC is already logged to the KDC, we need to UGI login using the SDC login context
+      UserGroupInformation.loginUserFromSubject(Subject.getSubject(AccessController.getContext()));
+      // we now extract the UGI we just logged in as.
+      loginUgi = UserGroupInformation.getLoginUser();
+
       if (hdfsKerberos) {
         logMessage.append("Using Kerberos: ");
-        if (Boolean.getBoolean("sdc.transient-env")) {
-          Utils.checkState(getContext().isClusterMode(), "Transient environment implies cluster mode");
-          Utils.checkState(!getContext().isPreview(), "Transient environment implies pipeline is not in preview");
-          logMessage.append("via delegation token: " + System.getenv("HADOOP_TOKEN_FILE_LOCATION"));
-          // use delegation token
-          UserGroupInformation.setConfiguration(hdfsConfiguration);
-          ugi = UserGroupInformation.getCurrentUser();
-        } else {
-          logMessage.append("via keytab");
-          hdfsConfiguration.set(CommonConfigurationKeys.HADOOP_SECURITY_AUTHENTICATION,
-            UserGroupInformation.AuthenticationMethod.KERBEROS.name());
-          UserGroupInformation.setConfiguration(hdfsConfiguration);
-          ugi = UserGroupInformation.loginUserFromKeytabAndReturnUGI(kerberosPrincipal, kerberosKeytab);
-          if (ugi.getAuthenticationMethod() != UserGroupInformation.AuthenticationMethod.KERBEROS) {
-            issues.add(getContext().createConfigIssue(Groups.HADOOP_FS.name(), "hdfsKerberos", Errors.HADOOPFS_00,
-              ugi.getAuthenticationMethod(), UserGroupInformation.AuthenticationMethod.KERBEROS));
-          }
+        if (loginUgi.getAuthenticationMethod() != UserGroupInformation.AuthenticationMethod.KERBEROS) {
+          issues.add(getContext().createConfigIssue(Groups.HADOOP_FS.name(), "hdfsKerberos", Errors.HADOOPFS_00,
+                                                    loginUgi.getAuthenticationMethod(),
+                                                    UserGroupInformation.AuthenticationMethod.KERBEROS));
         }
       } else {
         logMessage.append("Using Simple");
         hdfsConfiguration.set(CommonConfigurationKeys.HADOOP_SECURITY_AUTHENTICATION,
                               UserGroupInformation.AuthenticationMethod.SIMPLE.name());
-        ugi = UserGroupInformation.getLoginUser();
       }
+      UserGroupInformation doAsUgi = UserGroupInformation.createProxyUser(hdfsUser, loginUgi);
       if (validHapoopFsUri) {
-        // we just login, the TGT won't expire yet, no need to relogin
-        ugi.doAs(new PrivilegedExceptionAction<Void>() {
+        doAsUgi.doAs(new PrivilegedExceptionAction<Void>() {
           @Override
           public Void run() throws Exception {
             try (FileSystem fs = getFileSystemForInitDestroy()) { //to trigger the close
@@ -369,9 +377,8 @@ public class HdfsTarget extends RecordTarget {
 
   private FileSystem getFileSystemForInitDestroy() throws IOException {
     try {
-      // we need to relogin if the TGT is expiring
-      ugi.checkTGTAndReloginFromKeytab();
-      return ugi.doAs(new PrivilegedExceptionAction<FileSystem>() {
+      UserGroupInformation doAsUgi = UserGroupInformation.createProxyUser(hdfsUser, loginUgi);
+      return doAsUgi.doAs(new PrivilegedExceptionAction<FileSystem>() {
         @Override
         public FileSystem run() throws Exception {
           return FileSystem.get(new URI(hdfsUri), hdfsConfiguration);
@@ -452,7 +459,7 @@ public class HdfsTarget extends RecordTarget {
       if (lateWriters != null) {
         lateWriters.closeAll();
       }
-      if (ugi != null) {
+      if (loginUgi != null) {
         getFileSystemForInitDestroy().close();
       }
     } catch (IOException ex) {
@@ -465,9 +472,8 @@ public class HdfsTarget extends RecordTarget {
   public void write(final Batch batch) throws StageException {
     setBatchTime();
     try {
-      // we need to relogin if the TGT is expiring
-      ugi.checkTGTAndReloginFromKeytab();
-      ugi.doAs(new PrivilegedExceptionAction<Void>() {
+      UserGroupInformation doAsUgi = UserGroupInformation.createProxyUser(hdfsUser, loginUgi);
+      doAsUgi.doAs(new PrivilegedExceptionAction<Void>() {
         @Override
         public Void run() throws Exception {
           getCurrentWriters().purge();

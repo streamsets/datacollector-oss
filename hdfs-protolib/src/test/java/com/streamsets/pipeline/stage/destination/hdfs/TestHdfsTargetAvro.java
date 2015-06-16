@@ -48,6 +48,7 @@ public class TestHdfsTargetAvro {
     TargetRunner runner = new TargetRunner.Builder(HdfsDTarget.class)
       .setOnRecordError(OnRecordError.STOP_PIPELINE)
       .addConfiguration("hdfsUri", "file:///")
+      .addConfiguration("hdfsUser", "foo")
       .addConfiguration("hdfsKerberos", false)
       .addConfiguration("hdfsConfDir", null)
       .addConfiguration("hdfsConfigs", new HashMap<>())

@@ -26,6 +26,11 @@ import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+/**
+ * The <code>SecurityContext</code> allows to run a JVM within a client Kerberos session that is propagated to
+ * all threads created within a <code>Subject.doAs()</code> invocation using the Subject from the
+ * <code></code>
+ */
 public class SecurityContext {
   private static final Logger LOG = LoggerFactory.getLogger(SecurityContext.class);
 
@@ -47,9 +52,27 @@ public class SecurityContext {
     this.runtimeInfo = runtimeInfo;
     kerberosEnabled = serviceConf.get(KERBEROS_ENABLED_KEY, KERBEROS_ENABLED_DEFAULT);
     kerberosPrincipal = (kerberosEnabled) ? resolveKerberosPrincipal(serviceConf) : null;
-    kerberosKeytab = (kerberosEnabled) ? serviceConf.get(KERBEROS_KEYTAB_KEY, KERBEROS_KEYTAB_DEFAULT) : null;
+    if (kerberosEnabled) {
+      String keytab = serviceConf.get(KERBEROS_KEYTAB_KEY, KERBEROS_KEYTAB_DEFAULT);
+      if (!(keytab.charAt(0) == '/')) {
+        String confDir = runtimeInfo.getConfigDir();
+        keytab = new File(confDir, keytab).getAbsolutePath();
+      }
+      File keytabFile = new File(keytab);
+      if (!keytabFile.exists()) {
+        throw new RuntimeException(Utils.format("Keytab file '{}' does not exist", keytabFile));
+      }
+      kerberosKeytab = keytab;
+    } else {
+      kerberosKeytab = null;
+    }
   }
 
+  /**
+   * Returns if Kerberos authentication is enabled.
+   *
+   * @return <code>true</code> if Kerberos authentication is enabled, <code>false</code> otherwise.
+   */
   public boolean isKerberosEnabled() {
     return kerberosEnabled;
   }
@@ -75,6 +98,11 @@ public class SecurityContext {
     return principal;
   }
 
+  /**
+   * Returns the Kerberos principal being used.
+   *
+   * @return the Kerberos principal being used, or <code>null</code> if Kerberos authentication is not enabled.
+   */
   public String getKerberosPrincipal() {
     return kerberosPrincipal;
   }
@@ -87,10 +115,18 @@ public class SecurityContext {
     }
   }
 
+  /**
+   * Returns the Kerberos keytab absolute path.
+   *
+   * @return the Kerberos keytab absolute path, or <code>null</code> if Kerberos authentication is not enabled.
+   */
   public String getKerberosKeytab() {
     return kerberosKeytab;
   }
 
+  /**
+   * Logs in. If Kerberos is enabled it logs in against the KDC, otherwise is a NOP.
+   */
   public void login() {
     if (subject != null) {
       throw new IllegalStateException(Utils.format("Service already logged-in, Principal '{}'",
@@ -109,6 +145,9 @@ public class SecurityContext {
     LOG.debug("Logged-in. Kerberos enabled '{}', Principal '{}'", kerberosEnabled, subject.getPrincipals());
   }
 
+  /**
+   * Logs out. If Keberos is enabled it logs out from the KDC, otherwise is a NOP.
+   */
   public void logout() {
     if (subject != null) {
       LOG.debug("Logout. Kerberos enabled '{}', Principal '{}'", kerberosEnabled, subject.getPrincipals());
@@ -125,8 +164,16 @@ public class SecurityContext {
     }
   }
 
+  /**
+   * Returns the current <code>Subject</code> after a login.
+   * <p/>
+   * If Kerberos is enabled it returns a <code>Subject</code> with Kerberos credentials.
+   * <p/>
+   * If Kerberos is not enabled it returns a default <code>Subject</code>.
+   *
+   * @return the login <code>Subject</code>, or <code>null</code> if not logged in.
+   */
   public Subject getSubject() {
-    Utils.checkState(subject != null, "Service is not logged-in");
     return subject;
   }
 
@@ -134,20 +181,11 @@ public class SecurityContext {
   private LoginContext kerberosLogin(boolean isClient) throws Exception {
     Subject subject;
     String principalName = getKerberosPrincipal();
-    String keytab = getKerberosKeytab();
-    if (!(keytab.charAt(0) == '/')) {
-      String confDir = runtimeInfo.getConfigDir();
-      keytab = new File(confDir, keytab).getAbsolutePath();
-    }
-    File keytabFile = new File(keytab);
-    if (!keytabFile.exists()) {
-      throw new RuntimeException(Utils.format("Keytab file '{}' does not exist", keytabFile));
-    }
     Set<Principal> principals = new HashSet<>();
     principals.add(new KerberosPrincipal(principalName));
     subject = new Subject(false, principals, new HashSet<>(), new HashSet<>());
-    LoginContext context = new LoginContext("", subject, null,
-                                            new KeytabKerberosConfiguration(principalName, keytabFile, isClient));
+    LoginContext context = new LoginContext("", subject, null, new KeytabKerberosConfiguration(runtimeInfo,
+        principalName, new File(getKerberosKeytab()), isClient));
     context.login();
     return context;
   }
@@ -158,11 +196,13 @@ public class SecurityContext {
   }
 
   private static class KeytabKerberosConfiguration extends javax.security.auth.login.Configuration {
+    private RuntimeInfo runtimeInfo;
     private String principal;
     private String keytab;
     private boolean isInitiator;
 
-    public KeytabKerberosConfiguration(String principal, File keytab, boolean client) {
+    public KeytabKerberosConfiguration(RuntimeInfo runtimeInfo, String principal, File keytab, boolean client) {
+      this.runtimeInfo = runtimeInfo;
       this.principal = principal;
       this.keytab = keytab.getAbsolutePath();
       this.isInitiator = client;
@@ -183,6 +223,8 @@ public class SecurityContext {
       String ticketCache = System.getenv("KRB5CCNAME");
       if (ticketCache != null) {
         options.put("ticketCache", ticketCache);
+      } else {
+        options.put("ticketCache", new File(runtimeInfo.getDataDir(), "krb5.ticketCache").getAbsolutePath());
       }
       options.put("debug", System.getProperty("sun.security.krb5.debug=true", "false"));
 
