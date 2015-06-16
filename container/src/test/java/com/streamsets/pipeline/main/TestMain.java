@@ -7,6 +7,7 @@ package com.streamsets.pipeline.main;
 
 import com.streamsets.pipeline.task.Task;
 import com.streamsets.pipeline.task.TaskWrapper;
+import com.streamsets.pipeline.util.Configuration;
 import dagger.Module;
 import dagger.Provides;
 import org.junit.After;
@@ -17,6 +18,7 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.Mockito;
 import org.slf4j.Logger;
 
+import javax.inject.Singleton;
 import java.io.File;
 import java.util.UUID;
 
@@ -27,7 +29,7 @@ public class TestMain {
   private static RuntimeInfo runtimeInfo = Mockito.mock(RuntimeInfo.class);
   private static Task task = Mockito.mock(Task.class);
 
-  @Module(injects = {TaskWrapper.class, LogConfigurator.class, BuildInfo.class, RuntimeInfo.class})
+  @Module(injects = {TaskWrapper.class, LogConfigurator.class, BuildInfo.class, RuntimeInfo.class, Configuration.class})
   public static class TPipelineAgentModule {
 
     @Provides
@@ -48,6 +50,12 @@ public class TestMain {
     @Provides
     public Task provideAgent() {
       return task;
+    }
+
+    @Provides
+    @Singleton
+    public Configuration provideConfiguration() {
+      return new Configuration();
     }
   }
 
