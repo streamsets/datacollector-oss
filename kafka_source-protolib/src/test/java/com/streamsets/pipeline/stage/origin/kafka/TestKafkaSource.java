@@ -847,6 +847,7 @@ public class TestKafkaSource {
       .addConfiguration("retainOriginalLine", true)
       .addConfiguration("avroSchema", AVRO_SCHEMA)
       .addConfiguration("schemaInMessage", true)
+      .addConfiguration("removeCtrlChars", false)
       .build();
 
     sourceRunner.runInit();
@@ -1002,6 +1003,7 @@ public class TestKafkaSource {
       .addConfiguration("dataFormat", DataFormat.AVRO)
       .addConfiguration("charset", "UTF-8")
       .addConfiguration("jsonContent", null)
+      .addConfiguration("removeCtrlChars", false)
       .addConfiguration("kafkaConsumerConfigs", kafkaConsumerConfigs)
       .addConfiguration("produceSingleRecordPerMessage", false)
       .addConfiguration("xmlRecordElement", "")
