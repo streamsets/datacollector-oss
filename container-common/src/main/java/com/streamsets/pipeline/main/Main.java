@@ -7,14 +7,16 @@ package com.streamsets.pipeline.main;
 
 import com.google.common.annotations.VisibleForTesting;
 import com.streamsets.pipeline.api.impl.Utils;
+import com.streamsets.pipeline.security.SecurityContext;
 import com.streamsets.pipeline.task.Task;
 import com.streamsets.pipeline.task.TaskWrapper;
+import com.streamsets.pipeline.util.Configuration;
 import dagger.ObjectGraph;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.lang.instrument.Instrumentation;
-import java.util.List;
+import javax.security.auth.Subject;
+import java.security.PrivilegedExceptionAction;
 
 public class Main {
   private final ObjectGraph dagger;
@@ -39,6 +41,7 @@ public class Main {
   }
 
   public int doMain() {
+    SecurityContext securityContext = null;
     Logger log = null;
     try {
       final Task task = this.task;
@@ -58,28 +61,46 @@ public class Main {
       log.info("-----------------------------------------------------------------");
       log.info("Starting ...");
 
-      task.init();
+      securityContext = new SecurityContext(dagger.get(RuntimeInfo.class), dagger.get(Configuration.class));
+      securityContext.login();
+
+      log.info("-----------------------------------------------------------------");
+      log.info("  Kerberos enabled: {}", securityContext.isKerberosEnabled());
+      if (securityContext.isKerberosEnabled()) {
+        log.info("  Kerberos principal: {}", securityContext.getKerberosPrincipal());
+        log.info("  Kerberos keytab: {}", securityContext.getKerberosKeytab());
+      }
+      log.info("-----------------------------------------------------------------");
+      log.info("Starting ...");
+
       final Logger finalLog = log;
-      Thread shutdownHookThread = new Thread("Main.shutdownHook") {
+      Subject.doAs(securityContext.getSubject(), new PrivilegedExceptionAction<Void>() {
         @Override
-        public void run() {
-          finalLog.debug("Stopping, reason: SIGTERM (kill)");
-          task.stop();
-        }
-      };
-      getRuntime().addShutdownHook(shutdownHookThread);
-      dagger.get(RuntimeInfo.class).setShutdownHandler(new Runnable() {
-        @Override
-        public void run() {
-          finalLog.debug("Stopping, reason: requested");
-          task.stop();
+        public Void run() throws Exception {
+          task.init();
+          Thread shutdownHookThread = new Thread("Main.shutdownHook") {
+            @Override
+            public void run() {
+              finalLog.debug("Stopping, reason: SIGTERM (kill)");
+              task.stop();
+            }
+          };
+          getRuntime().addShutdownHook(shutdownHookThread);
+          dagger.get(RuntimeInfo.class).setShutdownHandler(new Runnable() {
+            @Override
+            public void run() {
+              finalLog.debug("Stopping, reason: requested");
+              task.stop();
+            }
+          });
+          task.run();
+          task.waitWhileRunning();
+          getRuntime().removeShutdownHook(shutdownHookThread);
+          finalLog.debug("Stopping, reason: programmatic stop()");
+          return null;
         }
       });
-      task.run();
-      task.waitWhileRunning();
-      getRuntime().removeShutdownHook(shutdownHookThread);
-      log.debug("Stopping, reason: programmatic stop()");
-      return 0;
+       return 0;
     } catch (Throwable ex) {
       if (log != null) {
         log.error("Abnormal exit: {}", ex.getMessage(), ex);

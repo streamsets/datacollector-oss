@@ -65,6 +65,8 @@
     <icegreen.version>1.4.0</icegreen.version>
     <kryo.version>3.0.1</kryo.version>
     <jtar.version>2.2</jtar.version>
+    <minikdc-hadoop.version>2.6.0</minikdc-hadoop.version>
+    <minikdc-jdbm1.version>2.0.0-M3</minikdc-jdbm1.version>
   </properties>
 
   <dependencyManagement>
@@ -475,6 +477,25 @@
         <artifactId>kryo</artifactId>
         <version>${kryo.version}</version>
       </dependency>
+
+      <dependency>
+        <groupId>org.apache.hadoop</groupId>
+        <artifactId>hadoop-minikdc</artifactId>
+        <version>${minikdc-hadoop.version}</version>
+        <exclusions>
+          <exclusion>
+            <groupId>org.apache.directory.jdbm</groupId>
+            <artifactId>apacheds-jdbm1</artifactId>
+          </exclusion>
+        </exclusions>
+      </dependency>
+
+      <dependency>
+        <groupId>org.apache.directory.jdbm</groupId>
+        <artifactId>apacheds-jdbm1</artifactId>
+        <version>${minikdc-jdbm1.version}</version>
+      </dependency>
+
     </dependencies>
   </dependencyManagement>
 
