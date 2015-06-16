@@ -49,37 +49,24 @@ public class HdfsDTarget extends DTarget {
 
   @ConfigDef(
       required = true,
+      type = ConfigDef.Type.STRING,
+      label = "HDFS User",
+      description = "The user to write in HDFS. The data collector must be configured as a proxy user in HDFS.",
+      displayPosition = 20,
+      group = "HADOOP_FS"
+  )
+  public String hdfsUser;
+
+  @ConfigDef(
+      required = true,
       type = ConfigDef.Type.BOOLEAN,
       label = "Kerberos Authentication",
       defaultValue = "false",
       description = "",
-      displayPosition = 20,
+      displayPosition = 30,
       group = "HADOOP_FS"
   )
   public boolean hdfsKerberos;
-
-  @ConfigDef(
-      required = false,
-      type = ConfigDef.Type.STRING,
-      label = "Kerberos Principal",
-      description = "",
-      displayPosition = 30,
-      group = "HADOOP_FS",
-      dependsOn = "hdfsKerberos",
-      triggeredByValue = "true"
-  )
-  public String kerberosPrincipal;
-
-  @ConfigDef(required = false,
-      type = ConfigDef.Type.STRING,
-      label = "Kerberos Keytab (file)",
-      description = "",
-      displayPosition = 40,
-      group = "HADOOP_FS",
-      dependsOn = "hdfsKerberos",
-      triggeredByValue = "true"
-  )
-  public String kerberosKeytab;
 
   @ConfigDef(
       required = false,
@@ -426,9 +413,8 @@ public class HdfsDTarget extends DTarget {
   protected Target createTarget() {
     return new HdfsTarget(
       hdfsUri,
+      hdfsUser,
       hdfsKerberos,
-      kerberosPrincipal,
-      kerberosKeytab,
       hdfsConfDir,
       hdfsConfigs,
       uniquePrefix,

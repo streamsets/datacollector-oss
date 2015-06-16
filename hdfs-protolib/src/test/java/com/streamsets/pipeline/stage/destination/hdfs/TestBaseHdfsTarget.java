@@ -43,8 +43,8 @@ public class TestBaseHdfsTarget {
   private static MiniDFSCluster miniDFS;
 
   @BeforeClass
-  public static void setUpClass() throws IOException {
-    // setting some dummy kerberos settings to be able to test a mis-setting
+  public static void setUpClass() throws Exception {
+    //setting some dummy kerberos settings to be able to test a mis-setting
     System.setProperty("java.security.krb5.realm", "foo");
     System.setProperty("java.security.krb5.kdc", "localhost:0");
 
@@ -54,6 +54,9 @@ public class TestBaseHdfsTarget {
     }
     System.setProperty(MiniDFSCluster.PROP_TEST_BUILD_DATA, minidfsDir.getPath());
     Configuration conf = new HdfsConfiguration();
+    conf.set("hadoop.proxyuser." + System.getProperty("user.name") + ".hosts", "*");
+    conf.set("hadoop.proxyuser." + System.getProperty("user.name") + ".groups", "*");
+    UserGroupInformation.createUserForTesting("foo", new String[]{ "all"});
     EditLogFileOutputStream.setShouldSkipFsyncForTesting(true);
     miniDFS = new MiniDFSCluster.Builder(conf).build();
   }
@@ -91,6 +94,7 @@ public class TestBaseHdfsTarget {
     target.csvFileFormat = CsvMode.CSV;
     target.csvHeader = CsvHeader.IGNORE_HEADER;
     target.charset = "UTF-8";
+    target.hdfsUser = "foo";
   }
 
   static class ForTestHdfsTarget extends HdfsDTarget {
@@ -98,9 +102,8 @@ public class TestBaseHdfsTarget {
     protected Target createTarget() {
       return new HdfsTarget(
           hdfsUri,
+          hdfsUser,
           hdfsKerberos,
-          kerberosPrincipal,
-          kerberosKeytab,
           hdfsConfDir,
           hdfsConfigs,
           uniquePrefix,
@@ -208,22 +211,6 @@ public class TestBaseHdfsTarget {
     } finally {
       target.destroy();
     }
-  }
-
-  @Test
-  public void testKerberosConfig() throws Exception {
-    HdfsDTarget dTarget = new ForTestHdfsTarget();
-    dTarget.hdfsKerberos = true;
-    dTarget.kerberosKeytab = "/tmp/keytab";
-    dTarget.kerberosPrincipal = "sdc/localhost";
-    dTarget.compression = CompressionMode.NONE;
-    configure(dTarget);
-    HdfsTarget target = (HdfsTarget) dTarget.createTarget();
-    List<Stage.ConfigIssue> issues =
-        target.validateConfigs(null, ContextInfoCreator.createTargetContext(HdfsDTarget.class, "n", false,
-          OnRecordError.TO_ERROR, null));
-    Assert.assertEquals(1, issues.size());
-    Assert.assertTrue(issues.get(0).toString().contains("HADOOPFS_01"));
   }
 
   @Test

@@ -48,6 +48,7 @@ public class TestSecurityContext {
   private RuntimeInfo getMockRuntimeInfo() {
     RuntimeInfo runtimeInfo = Mockito.mock(RuntimeInfo.class);
     Mockito.when(runtimeInfo.getConfigDir()).thenReturn(testDir.getAbsolutePath());
+    Mockito.when(runtimeInfo.getDataDir()).thenReturn(testDir.getAbsolutePath());
     return runtimeInfo;
   }
 
@@ -55,6 +56,7 @@ public class TestSecurityContext {
   public void testPrincipalResolution() {
     Configuration conf = new Configuration();
     conf.set(SecurityContext.KERBEROS_ENABLED_KEY, true);
+    conf.set(SecurityContext.KERBEROS_KEYTAB_KEY, "test.keytab");
 
     String hostname = SecurityContext.getLocalHostName();
 
@@ -83,6 +85,16 @@ public class TestSecurityContext {
     SecurityContext context = new SecurityContext(getMockRuntimeInfo(), conf);
     Assert.assertTrue(context.isKerberosEnabled());
     context.login();
+  }
+
+  @Test
+  public void notLoggedIn() throws Exception {
+    Configuration conf = new Configuration();
+    conf.set(SecurityContext.KERBEROS_ENABLED_KEY, true);
+    conf.set(SecurityContext.KERBEROS_PRINCIPAL_KEY, "foo");
+    conf.set(SecurityContext.KERBEROS_KEYTAB_KEY, "test.keytab");
+    SecurityContext context = new SecurityContext(getMockRuntimeInfo(), conf);
+    Assert.assertNull(context.getSubject());
   }
 
   @Test
