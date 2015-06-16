@@ -38,10 +38,11 @@ public class FieldValueReplacerProcessor extends SingleLaneRecordProcessor {
 
   @Override
   protected void process(Record record, SingleLaneBatchMaker batchMaker) throws StageException {
+    Set<String> fieldPaths = record.getFieldPaths();
     Set<String> fieldsThatDoNotExist = new HashSet<>();
     if(fieldsToNull != null && !fieldsToNull.isEmpty()) {
       for (String fieldToNull : fieldsToNull) {
-        for(String matchingField : FieldRegexUtil.getMatchingFieldPaths(fieldToNull, record)) {
+        for(String matchingField : FieldRegexUtil.getMatchingFieldPaths(fieldToNull, fieldPaths)) {
           if (record.has(matchingField)) {
             Field field = record.get(matchingField);
             record.set(matchingField, Field.create(field, null));
@@ -55,7 +56,7 @@ public class FieldValueReplacerProcessor extends SingleLaneRecordProcessor {
     if(fieldsToReplaceIfNull !=null && !fieldsToReplaceIfNull.isEmpty()) {
       for (FieldValueReplacerConfig fieldValueReplacerConfig : fieldsToReplaceIfNull) {
         for (String fieldToReplace : fieldValueReplacerConfig.fields) {
-          for(String matchingField : FieldRegexUtil.getMatchingFieldPaths(fieldToReplace, record)) {
+          for(String matchingField : FieldRegexUtil.getMatchingFieldPaths(fieldToReplace, fieldPaths)) {
             if (record.has(matchingField)) {
               Field field = record.get(matchingField);
               if (field.getValue() == null) {

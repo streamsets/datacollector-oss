@@ -32,7 +32,7 @@ public class FieldFilterDProcessor extends DProcessor {
   @ConfigDef(
       required = true,
       type = Type.MODEL,
-      defaultValue="KEEP",
+      defaultValue="REMOVE",
       label = "Action",
       description = "",
       displayPosition = 10,
