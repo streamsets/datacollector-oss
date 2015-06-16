@@ -144,15 +144,15 @@ public class TestJsonCharDataParser {
     OverrunReader reader = new OverrunReader(new StringReader("[[\"He\0llo\"],[\"Bye\"]]"), 1000, true, true);
     DataParser parser = new JsonCharDataParser(getContext(), "id", reader, 9,
                                                OverrunStreamingJsonParser.Mode.ARRAY_OBJECTS, 10);
-    Assert.assertEquals(9, parser.getOffset());
+    Assert.assertEquals("9", parser.getOffset());
     Record record = parser.parse();
     Assert.assertNotNull(record);
     Assert.assertEquals("id::9", record.getHeader().getSourceId());
     Assert.assertEquals("Bye", record.get().getValueAsList().get(0).getValueAsString());
-    Assert.assertEquals(17, parser.getOffset());
+    Assert.assertEquals("17", parser.getOffset());
     record = parser.parse();
     Assert.assertNull(record);
-    Assert.assertEquals(-1, parser.getOffset());
+    Assert.assertEquals("-1", parser.getOffset());
     parser.close();
   }
 
