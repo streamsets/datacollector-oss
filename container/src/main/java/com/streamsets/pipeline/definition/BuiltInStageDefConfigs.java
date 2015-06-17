@@ -21,13 +21,25 @@ import java.util.List;
 @ConfigGroups(PipelineGroups.class)
 public abstract class BuiltInStageDefConfigs implements Stage {
 
+  public static final String STAGE_ON_RECORD_ERROR_CONFIG = "stageOnRecordError";
+  @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.MODEL,
+      defaultValue = "TO_ERROR",
+      label = "On Record Error",
+      description = "Action to take with records sent to error",
+      displayPosition = 10
+  )
+  @ValueChooser(OnRecordErrorChooserValues.class)
+  public OnRecordError stageOnRecordError;
+
   public static final String STAGE_REQUIRED_FIELDS_CONFIG = "stageRequiredFields";
   @ConfigDef(
       required = false,
       type = ConfigDef.Type.MODEL,
       label = "Required Fields",
       description = "Records without any of these fields are sent to error",
-      displayPosition = 10
+      displayPosition = 20
   )
   @FieldSelector(singleValued = false)
   public List<String> stageRequiredFields;
@@ -38,20 +50,9 @@ public abstract class BuiltInStageDefConfigs implements Stage {
       type = ConfigDef.Type.LIST,
       label = "Preconditions",
       description = "Records that don't satisfy all the preconditions are sent to error",
-      displayPosition = 20,
+      displayPosition = 30,
       evaluation = ConfigDef.Evaluation.EXPLICIT
   )
   public List<String> stageRecordPreconditions;
-
-  public static final String STAGE_ON_RECORD_ERROR_CONFIG = "stageOnRecordError";
-  @ConfigDef(
-      required = true,
-      type = ConfigDef.Type.MODEL,
-      label = "On Record Error",
-      description = "Action to take with records sent to error",
-      displayPosition = 30
-  )
-  @ValueChooser(OnRecordErrorChooserValues.class)
-  public OnRecordError stageOnRecordError;
 
 }
