@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE map PUBLIC "-//OASIS//DTD DITA Map//EN" "map.dtd">
+<map>
+ <title>Regular Expressions</title>
+ <topicref href="../Apx-RegEx/RegEx-Title.dita">
+  <topicref href="../Apx-RegEx/RegEx-Overview.dita">
+   <topicmeta>
+    <shortdesc/>
+   </topicmeta>
+   <topicref href="../Apx-RegEx/QuickReference.dita">
+    <topicmeta>
+     <shortdesc/>
+    </topicmeta>
+   </topicref>
+  </topicref>
+ </topicref>
+</map>

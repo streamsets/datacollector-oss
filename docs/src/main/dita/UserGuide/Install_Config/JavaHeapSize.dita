@@ -31,7 +31,7 @@
       <codeblock>SDC_JAVA_OPTS="-Xmx2048m -Xms2048m -server ${SDC_JAVA_OPTS}"</codeblock>
     </p>
     <p>With a heap size of 2048 MB, you can configure a pipeline to use up to 65% - that's 1331 MB
-      of memory.<note>In the pipeline properties, you can use the jvm:maxMemory() function to help
+      of memory.<note>In the pipeline properties, you can use the jvm:maxMemoryMB() function to help
         define the percentage of the heap size the pipeline uses.</note></p>
  </conbody>
 </concept>

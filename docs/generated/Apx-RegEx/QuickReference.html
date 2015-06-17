@@ -1,0 +1,256 @@
+
+<!DOCTYPE html
+  SYSTEM "about:legacy-compat">
+<html xml:lang="en-us" lang="en-us">
+<head><meta name="description" content="The regular expression language is complex and allows you to define string patterns in a multitude of ways. For a thorough description of how to define regular expressions, use a manual or online ..."></meta><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><meta name="copyright" content="(C) Copyright 2005"></meta><meta name="DC.rights.owner" content="(C) Copyright 2005"></meta><meta name="DC.Type" content="concept"></meta><meta name="DC.Title" content="Quick Reference"></meta><meta name="abstract" content="The regular expression language is complex and allows you to define string patterns in a multitude of ways."></meta><meta name="description" content="The regular expression language is complex and allows you to define string patterns in a multitude of ways."></meta><meta name="DC.Relation" scheme="URI" content="../Apx-RegEx/RegEx-Overview.html"></meta><meta name="DC.Format" content="XHTML"></meta><meta name="DC.Identifier" content="concept_jyt_lb5_js"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/commonltr.css"><!----></link><title>Quick Reference</title><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/webhelp_topic.css"><!----></link><link rel="stylesheet" type="text/css" href="../skin.css"></link><script type="text/javascript"><!--
+          
+          var prefix = "../index.html";
+          
+          --></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery-1.8.2.min.js"><!----></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery.cookie.js"><!----></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery-ui.custom.min.js"><!----></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery.highlight-3.js"><!----></script><script type="text/javascript" charset="utf-8" src="../oxygen-webhelp/resources/js/webhelp_topic.js"><!----></script></head>
+<body onload="highlightSearchTerm()" class="frmBody" id="concept_jyt_lb5_js">
+<table class="nav"><tbody><tr><td colspan="2"><div id="printlink"><a href="javascript:window.print();" title="Print this page"></a></div><div id="permalink"><a href="#" title="Link to this page"></a></div></td></tr><tr><td width="75%"><a class="navheader_parent_path" href="../Apx-RegEx/../Apx-RegEx/RegEx-Title.html" title="Regular Expressions">Regular Expressions</a> / <a class="navheader_parent_path" href="../Apx-RegEx/RegEx-Overview.html" title="Regular Expressions in the Pipeline">Regular Expressions in the Pipeline</a></td><td><div class="navheader">
+<span class="navparent"><a class="link" href="../Apx-RegEx/RegEx-Overview.html" title="Regular Expressions in the Pipeline"><span class="navheader_label">Parent topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">Regular Expressions in the Pipeline</span></a></span>  </div></td></tr></tbody></table>
+
+ <h1 class="title topictitle1">Quick Reference</h1>
+
+ 
+ <div class="body conbody"><p class="shortdesc">The regular expression language is complex and allows you to define string patterns in a
+  multitude of ways. </p>
+
+  <p class="p">For a thorough
+   description of how to define regular expressions, use a manual or online reference such as: <a class="xref" href="http://docs.oracle.com/javase/7/docs/api/java/util/regex/Pattern.html" target="_blank">http://docs.oracle.com/javase/7/docs/api/java/util/regex/Pattern.html</a>.</p>
+
+  <p class="p">For testing regular expressions, you might find the following website helpful: <a class="xref" href="https://regex101.com/" target="_blank">https://regex101.com/</a>.</p>
+
+  <div class="p">The following table includes some details you might find helpful when creating a regular
+    expression:
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="concept_jyt_lb5_js__table_d3t_sh5_js" class="table" frame="border" border="1" rules="all">
+     
+     
+     
+     <thead class="thead" align="left">
+      <tr class="row">
+       <th class="entry" valign="top" width="16.666666666666664%" id="d4308e49">Character</th>
+
+       <th class="entry" valign="top" width="50%" id="d4308e52">Description</th>
+
+       <th class="entry" valign="top" width="33.33333333333333%" id="d4308e55">Examples</th>
+
+      </tr>
+
+     </thead>
+
+     <tbody class="tbody">
+      <tr class="row">
+       <td class="entry" valign="top" width="16.666666666666664%" headers="d4308e49 ">(  ) </td>
+
+       <td class="entry" valign="top" width="50%" headers="d4308e52 ">Use parentheses to create groups, atomic groups, or lookarounds.</td>
+
+       <td class="entry" valign="top" width="33.33333333333333%" headers="d4308e55 "> </td>
+
+      </tr>
+
+      <tr class="row">
+       <td class="entry" valign="top" width="16.666666666666664%" headers="d4308e49 ">[ ]</td>
+
+       <td class="entry" valign="top" width="50%" headers="d4308e52 ">Use brackets to define character classes. </td>
+
+       <td class="entry" valign="top" width="33.33333333333333%" headers="d4308e55 ">[0-9][0-9][0-9] represents 3 digits ranging from 0 through 9, inclusive. </td>
+
+      </tr>
+
+      <tr class="row">
+       <td class="entry" valign="top" width="16.666666666666664%" headers="d4308e49 ">-</td>
+
+       <td class="entry" valign="top" width="50%" headers="d4308e52 ">Use the hyphen to define ranges.</td>
+
+       <td class="entry" valign="top" width="33.33333333333333%" headers="d4308e55 ">
+        <p class="p">[a-z] defines one lowercase letter from a to z.</p>
+
+        <p class="p">[A-Z] defines one uppercase letter from A to Z.</p>
+
+       </td>
+
+      </tr>
+
+      <tr class="row">
+       <td class="entry" valign="top" width="16.666666666666664%" headers="d4308e49 ">&lt; &gt; </td>
+
+       <td class="entry" valign="top" width="50%" headers="d4308e52 ">Use angle brackets to define named capture groups. Use the following syntax:
+        <pre class="pre codeblock">(?&lt;groupName&gt; ...) </pre>
+to set up a named field extraction.</td>
+
+       <td class="entry" valign="top" width="33.33333333333333%" headers="d4308e55 "> </td>
+
+      </tr>
+
+      <tr class="row">
+       <td class="entry" valign="top" width="16.666666666666664%" headers="d4308e49 ">^</td>
+
+       <td class="entry" valign="top" width="50%" headers="d4308e52 ">Use a carat to negate a character class. </td>
+
+       <td class="entry" valign="top" width="33.33333333333333%" headers="d4308e55 ">[^A-G] defines a character that is not an uppercase letter from A to G.</td>
+
+      </tr>
+
+      <tr class="row">
+       <td class="entry" valign="top" width="16.666666666666664%" headers="d4308e49 ">.</td>
+
+       <td class="entry" valign="top" width="50%" headers="d4308e52 ">A wildcard that represents any character except newline or other special
+        characters.</td>
+
+       <td class="entry" valign="top" width="33.33333333333333%" headers="d4308e55 "> </td>
+
+      </tr>
+
+      <tr class="row">
+       <td class="entry" valign="top" width="16.666666666666664%" headers="d4308e49 ">|</td>
+
+       <td class="entry" valign="top" width="50%" headers="d4308e52 ">Indicates an alternate option to the character or group being defined.</td>
+
+       <td class="entry" valign="top" width="33.33333333333333%" headers="d4308e55 ">[a-z | A-Z] represents a single upper or lowercase letter. </td>
+
+      </tr>
+
+      <tr class="row">
+       <td class="entry" valign="top" width="16.666666666666664%" headers="d4308e49 ">&amp;&amp;</td>
+
+       <td class="entry" valign="top" width="50%" headers="d4308e52 ">Use two ampersands to indicate the union of two ranges. </td>
+
+       <td class="entry" valign="top" width="33.33333333333333%" headers="d4308e55 "> </td>
+
+      </tr>
+
+      <tr class="row">
+       <td class="entry" valign="top" width="16.666666666666664%" headers="d4308e49 ">? </td>
+
+       <td class="entry" valign="top" width="50%" headers="d4308e52 ">A quantifier that represents zero or one instance of the preceding character or group.
+         </td>
+
+       <td class="entry" valign="top" width="33.33333333333333%" headers="d4308e55 ">B-?7 represents B7 or B-7.</td>
+
+      </tr>
+
+      <tr class="row">
+       <td class="entry" valign="top" width="16.666666666666664%" headers="d4308e49 ">+</td>
+
+       <td class="entry" valign="top" width="50%" headers="d4308e52 ">A quantifier that represents one or more instances of the preceding character or
+        group.</td>
+
+       <td class="entry" valign="top" width="33.33333333333333%" headers="d4308e55 "> </td>
+
+      </tr>
+
+      <tr class="row">
+       <td class="entry" valign="top" width="16.666666666666664%" headers="d4308e49 ">* </td>
+
+       <td class="entry" valign="top" width="50%" headers="d4308e52 ">A quantifier that represents zero or more instances of the preceding character or
+        group. </td>
+
+       <td class="entry" valign="top" width="33.33333333333333%" headers="d4308e55 "> </td>
+
+      </tr>
+
+      <tr class="row">
+       <td class="entry" valign="top" width="16.666666666666664%" headers="d4308e49 ">\</td>
+
+       <td class="entry" valign="top" width="50%" headers="d4308e52 ">Use the backslash as an escape character.</td>
+
+       <td class="entry" valign="top" width="33.33333333333333%" headers="d4308e55 "> </td>
+
+      </tr>
+
+      <tr class="row">
+       <td class="entry" valign="top" width="16.666666666666664%" headers="d4308e49 ">\\</td>
+
+       <td class="entry" valign="top" width="50%" headers="d4308e52 ">Represents a single backslash</td>
+
+       <td class="entry" valign="top" width="33.33333333333333%" headers="d4308e55 "> </td>
+
+      </tr>
+
+      <tr class="row">
+       <td class="entry" valign="top" width="16.666666666666664%" headers="d4308e49 ">\w </td>
+
+       <td class="entry" valign="top" width="50%" headers="d4308e52 ">Represents a word character, such as a letter or underscore. </td>
+
+       <td class="entry" valign="top" width="33.33333333333333%" headers="d4308e55 "> </td>
+
+      </tr>
+
+      <tr class="row">
+       <td class="entry" valign="top" width="16.666666666666664%" headers="d4308e49 ">\W</td>
+
+       <td class="entry" valign="top" width="50%" headers="d4308e52 ">Represents a non-word character.</td>
+
+       <td class="entry" valign="top" width="33.33333333333333%" headers="d4308e55 "> </td>
+
+      </tr>
+
+      <tr class="row">
+       <td class="entry" valign="top" width="16.666666666666664%" headers="d4308e49 ">\d</td>
+
+       <td class="entry" valign="top" width="50%" headers="d4308e52 ">Represents a digit.</td>
+
+       <td class="entry" valign="top" width="33.33333333333333%" headers="d4308e55 "> </td>
+
+      </tr>
+
+      <tr class="row">
+       <td class="entry" valign="top" width="16.666666666666664%" headers="d4308e49 ">\D</td>
+
+       <td class="entry" valign="top" width="50%" headers="d4308e52 ">Represents a non-digit character.</td>
+
+       <td class="entry" valign="top" width="33.33333333333333%" headers="d4308e55 "> </td>
+
+      </tr>
+
+      <tr class="row">
+       <td class="entry" valign="top" width="16.666666666666664%" headers="d4308e49 ">\s</td>
+
+       <td class="entry" valign="top" width="50%" headers="d4308e52 ">Represents a whitespace character.</td>
+
+       <td class="entry" valign="top" width="33.33333333333333%" headers="d4308e55 "> </td>
+
+      </tr>
+
+      <tr class="row">
+       <td class="entry" valign="top" width="16.666666666666664%" headers="d4308e49 ">\S</td>
+
+       <td class="entry" valign="top" width="50%" headers="d4308e52 ">Represents a non-space character.</td>
+
+       <td class="entry" valign="top" width="33.33333333333333%" headers="d4308e55 "> </td>
+
+      </tr>
+
+      <tr class="row">
+       <td class="entry" valign="top" width="16.666666666666664%" headers="d4308e49 ">\r</td>
+
+       <td class="entry" valign="top" width="50%" headers="d4308e52 ">Return character.</td>
+
+       <td class="entry" valign="top" width="33.33333333333333%" headers="d4308e55 "> </td>
+
+      </tr>
+
+      <tr class="row">
+       <td class="entry" valign="top" width="16.666666666666664%" headers="d4308e49 ">\n</td>
+
+       <td class="entry" valign="top" width="50%" headers="d4308e52 ">Newline character.</td>
+
+       <td class="entry" valign="top" width="33.33333333333333%" headers="d4308e55 "> </td>
+
+      </tr>
+
+     </tbody>
+
+    </table>
+</div>
+</div>
+
+ </div>
+
+<div class="related-links"></div>
+<div class="navfooter"><!---->
+<span class="navparent"><a class="link" href="../Apx-RegEx/RegEx-Overview.html" title="Regular Expressions in the Pipeline"><span class="navheader_label">Parent topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">Regular Expressions in the Pipeline</span></a></span>  </div><div class="footer"><div> </div><!-- © <a href="http://creativecommons.org/licenses/by-nc/4.0/legalcode">CC BY-NC 4.0.</a> StreamSets, 2015. --></div>
+</body>
+</html>

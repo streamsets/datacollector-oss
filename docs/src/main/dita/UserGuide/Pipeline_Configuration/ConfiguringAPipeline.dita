@@ -85,7 +85,7 @@
                                 />. <p>Default is 65% of the <ph
                                         conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
                                     /> Java heap
-                                    size:<codeblock> ${jvm:maxMemory() * 0.65}</codeblock></p></stentry>
+                                    size:<codeblock> ${jvm:maxMemoryMB() * 0.65}</codeblock></p></stentry>
                         </strow>
                         <strow>
                             <stentry>Memory Exceeded</stentry>

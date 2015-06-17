@@ -1,17 +1,56 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_vd4_nsc_gs">
- <title>Regular Expressions</title>
- <shortdesc></shortdesc>
+ <title>Regular Expressions in the Pipeline</title>
+ <shortdesc>A regular expression describes a pattern for a string. Though generally not required,
+    you can use Java-based regular expressions at various locations within a pipeline to define,
+    search, or manipulate strings. </shortdesc>
  <conbody>
-  <p>You can use regular expressions in the following locations:<ul id="ul_vfy_4sc_gs">
-    <li>Directory - File Name Pattern property</li>
-    <li>All origins that process log data (Directory, Kafka Consumer, File Tail) and the Log Parser
-     - Regular expression log format</li>
-    <li>File Tail origin - Files Matching Pattern archive method - regular expression to define the
-     ${PATTERN}</li>
-    <li>Field Masker - Regular expression field mask type</li>
-    <li>String functions - replaceAll uses regex for the string to replace, regexCapture </li>
-   </ul></p>
+  <p><indexterm>regular expressions<indexterm>in the pipeline</indexterm></indexterm>For example, in
+      the Field Masker processor, you can use a fixed length, variable length, or custom static mask
+      to mask data in a field. Or, you can use a regular expression to define a specific custom
+      mask. Similarly, you can use a regular expression to define the pattern of a log line if the
+      pattern is not a common structure available for selection. </p>
+    <p>The following table describes the ways you can use a regular expression in the
+        pipeline:<table frame="all" rowsep="1" colsep="1" id="table_nvq_ywt_js">
+        <tgroup cols="2">
+          <colspec colname="c1" colnum="1" colwidth="1*"/>
+          <colspec colname="c2" colnum="2" colwidth="3.08*"/>
+          <thead>
+            <row>
+              <entry>Location</entry>
+              <entry>Description</entry>
+            </row>
+          </thead>
+          <tbody>
+            <row>
+              <entry>Directory origin</entry>
+              <entry>Optionally use to define the pattern of the file name.</entry>
+            </row>
+            <row>
+              <entry>File Tail origin</entry>
+              <entry>Use to define the ${PATTERN} constant when you use the Files Matching a Pattern
+                naming option. </entry>
+            </row>
+            <row>
+              <entry>Origins that process log data<p>Log Parser processor</p></entry>
+              <entry>Optionally use to define the pattern of the log line.</entry>
+            </row>
+            <row>
+              <entry>Field Masker processor</entry>
+              <entry>Optionally use to define the field mask.</entry>
+            </row>
+            <row>
+              <entry>regexCapture function</entry>
+              <entry>Use to define the groups and pattern of the string so you can specify the group
+                to return.</entry>
+            </row>
+            <row>
+              <entry>replaceAll function</entry>
+              <entry>Use to define the string to replace.</entry>
+            </row>
+          </tbody>
+        </tgroup>
+      </table></p>
  </conbody>
 </concept>

@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
+<concept id="concept_jyt_lb5_js">
+ <title>Quick Reference</title>
+ <shortdesc>The regular expression language is complex and allows you to define string patterns in a
+  multitude of ways. </shortdesc>
+ <conbody>
+  <p><indexterm>regular expressions<indexterm>quick reference</indexterm></indexterm>For a thorough
+   description of how to define regular expressions, use a manual or online reference such as: <xref
+    href="http://docs.oracle.com/javase/7/docs/api/java/util/regex/Pattern.html" format="html"
+    scope="external"/>.</p>
+  <p>For testing regular expressions, you might find the following website helpful: <xref
+    href="https://regex101.com/" format="html" scope="external"/>.</p>
+  <p>The following table includes some details you might find helpful when creating a regular
+    expression:<table frame="all" rowsep="1" colsep="1" id="table_d3t_sh5_js">
+    <tgroup cols="3">
+     <colspec colname="c1" colnum="1" colwidth="1*"/>
+     <colspec colname="c2" colnum="2" colwidth="3*"/>
+     <colspec colname="c3" colnum="3" colwidth="2*"/>
+     <thead>
+      <row>
+       <entry>Character</entry>
+       <entry>Description</entry>
+       <entry>Examples</entry>
+      </row>
+     </thead>
+     <tbody>
+      <row>
+       <entry>(  ) </entry>
+       <entry>Use parentheses to create groups, atomic groups, or lookarounds.</entry>
+       <entry/>
+      </row>
+      <row>
+       <entry>[ ]</entry>
+       <entry>Use brackets to define character classes. </entry>
+       <entry>[0-9][0-9][0-9] represents 3 digits ranging from 0 through 9, inclusive. </entry>
+      </row>
+      <row>
+       <entry>-</entry>
+       <entry>Use the hyphen to define ranges.</entry>
+       <entry>
+        <p>[a-z] defines one lowercase letter from a to z.</p>
+        <p>[A-Z] defines one uppercase letter from A to Z.</p>
+       </entry>
+      </row>
+      <row>
+       <entry>&lt; > </entry>
+       <entry>Use angle brackets to define named capture groups. Use the following syntax:
+        <codeblock>(?&lt;groupName> ...) </codeblock>to set up a named field extraction.</entry>
+       <entry/>
+      </row>
+      <row>
+       <entry>^</entry>
+       <entry>Use a carat to negate a character class. </entry>
+       <entry>[^A-G] defines a character that is not an uppercase letter from A to G.</entry>
+      </row>
+      <row>
+       <entry>.</entry>
+       <entry>A wildcard that represents any character except newline or other special
+        characters.</entry>
+       <entry/>
+      </row>
+      <row>
+       <entry>|</entry>
+       <entry>Indicates an alternate option to the character or group being defined.</entry>
+       <entry>[a-z | A-Z] represents a single upper or lowercase letter. </entry>
+      </row>
+      <row>
+       <entry>&amp;&amp;</entry>
+       <entry>Use two ampersands to indicate the union of two ranges. </entry>
+       <entry/>
+      </row>
+      <row>
+       <entry>? </entry>
+       <entry>A quantifier that represents zero or one instance of the preceding character or group.
+         <draft-comment author="Loretta">group? or no group?</draft-comment></entry>
+       <entry>B-?7 represents B7 or B-7.</entry>
+      </row>
+      <row>
+       <entry>+</entry>
+       <entry>A quantifier that represents one or more instances of the preceding character or
+        group.</entry>
+       <entry/>
+      </row>
+      <row>
+       <entry>* </entry>
+       <entry>A quantifier that represents zero or more instances of the preceding character or
+        group. </entry>
+       <entry/>
+      </row>
+      <row>
+       <entry>\</entry>
+       <entry>Use the backslash as an escape character.</entry>
+       <entry/>
+      </row>
+      <row>
+       <entry>\\</entry>
+       <entry>Represents a single backslash</entry>
+       <entry/>
+      </row>
+      <row>
+       <entry>\w </entry>
+       <entry>Represents a word character, such as a letter or underscore. <draft-comment
+         author="Loretta">does this include numbers?</draft-comment></entry>
+       <entry/>
+      </row>
+      <row>
+       <entry>\W</entry>
+       <entry>Represents a non-word character.<draft-comment author="Loretta">such
+         as?</draft-comment></entry>
+       <entry/>
+      </row>
+      <row>
+       <entry>\d</entry>
+       <entry>Represents a digit.</entry>
+       <entry/>
+      </row>
+      <row>
+       <entry>\D</entry>
+       <entry>Represents a non-digit character.</entry>
+       <entry/>
+      </row>
+      <row>
+       <entry>\s</entry>
+       <entry>Represents a whitespace character.</entry>
+       <entry/>
+      </row>
+      <row>
+       <entry>\S</entry>
+       <entry>Represents a non-space character.</entry>
+       <entry/>
+      </row>
+      <row>
+       <entry>\r</entry>
+       <entry>Return character.</entry>
+       <entry/>
+      </row>
+      <row>
+       <entry>\n</entry>
+       <entry>Newline character.</entry>
+       <entry/>
+      </row>
+     </tbody>
+    </tgroup>
+   </table></p>
+ </conbody>
+</concept>
