@@ -90,7 +90,7 @@
         <ul id="ul_xks_xg2_gs">
          <li>emptyList</li>
          <li>emptyMap</li>
-         <li>jvm:maxMemory()</li>
+         <li>jvm:maxMemoryMB()</li>
          <li>runtime:conf('&lt;runtime property>')</li>
          <li>runtime:loadResource("&lt;file name>", &lt;restricted: true | false>)</li>
          <li>sdc:id()</li>

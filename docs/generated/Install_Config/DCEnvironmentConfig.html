@@ -108,7 +108,7 @@
     </div>
 
     <div class="p">With a heap size of 2048 MB, you can configure a pipeline to use up to 65% - that's 1331 MB
-      of memory.<div class="note note"><span class="notetitle">Note:</span> In the pipeline properties, you can use the jvm:maxMemory() function to help
+      of memory.<div class="note note"><span class="notetitle">Note:</span> In the pipeline properties, you can use the jvm:maxMemoryMB() function to help
         define the percentage of the heap size the pipeline uses.</div>
 </div>
 
@@ -173,9 +173,9 @@ The <span class="ph">Data
                         
                         <thead class="thead" align="left">
                             <tr class="row">
-                                <th class="entry" valign="top" width="37.87878787878788%" id="d17988e275">Environment Configuration Property</th>
+                                <th class="entry" valign="top" width="37.87878787878788%" id="d18929e275">Environment Configuration Property</th>
 
-                                <th class="entry" valign="top" width="62.121212121212125%" id="d17988e278">Description</th>
+                                <th class="entry" valign="top" width="62.121212121212125%" id="d18929e278">Description</th>
 
                             </tr>
 
@@ -183,27 +183,27 @@ The <span class="ph">Data
 
                         <tbody class="tbody">
                             <tr class="row">
-                                <td class="entry" valign="top" width="37.87878787878788%" headers="d17988e275 ">SDC_PRE_CLASSPATH</td>
+                                <td class="entry" valign="top" width="37.87878787878788%" headers="d18929e275 ">SDC_PRE_CLASSPATH</td>
 
-                                <td class="entry" valign="top" width="62.121212121212125%" headers="d17988e278 ">Path to a directory of Java classes that can be called by
+                                <td class="entry" valign="top" width="62.121212121212125%" headers="d18929e278 ">Path to a directory of Java classes that can be called by
                                     custom stages. Classes in this list load before the
                                     post-classpath list.</td>
 
                             </tr>
 
                             <tr class="row">
-                                <td class="entry" valign="top" width="37.87878787878788%" headers="d17988e275 ">SDC_POST_CLASSPATH</td>
+                                <td class="entry" valign="top" width="37.87878787878788%" headers="d18929e275 ">SDC_POST_CLASSPATH</td>
 
-                                <td class="entry" valign="top" width="62.121212121212125%" headers="d17988e278 ">Path to a directory of Java classes that can be called by
+                                <td class="entry" valign="top" width="62.121212121212125%" headers="d18929e278 ">Path to a directory of Java classes that can be called by
                                     custom stages. Classes in this list load after the pre-classpath
                                     list.</td>
 
                             </tr>
 
                             <tr class="row">
-                                <td class="entry" valign="top" width="37.87878787878788%" headers="d17988e275 ">SDC_JAVA_OPTS</td>
+                                <td class="entry" valign="top" width="37.87878787878788%" headers="d18929e275 ">SDC_JAVA_OPTS</td>
 
-                                <td class="entry" valign="top" width="62.121212121212125%" headers="d17988e278 ">Additional Java options for the <span class="ph">Data
+                                <td class="entry" valign="top" width="62.121212121212125%" headers="d18929e278 ">Additional Java options for the <span class="ph">Data
                   Collector</span>. <p class="p">By default, the Xmx and Xms properties set the <span class="ph">Data
                   Collector</span> Java heap size to 1024 MB. </p>
 <p class="p">By default, XX:PermSize
@@ -215,9 +215,9 @@ The <span class="ph">Data
                             </tr>
 
                             <tr class="row">
-                                <td class="entry" valign="top" width="37.87878787878788%" headers="d17988e275 ">SDC_SECURITY_MANAGER_ENABLED</td>
+                                <td class="entry" valign="top" width="37.87878787878788%" headers="d18929e275 ">SDC_SECURITY_MANAGER_ENABLED</td>
 
-                                <td class="entry" valign="top" width="62.121212121212125%" headers="d17988e278 ">Default is True. Do not change this property. </td>
+                                <td class="entry" valign="top" width="62.121212121212125%" headers="d18929e278 ">Default is True. Do not change this property. </td>
 
                             </tr>
 

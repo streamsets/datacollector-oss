@@ -17,14 +17,14 @@
     <dd>Creates an empty map. </dd>
    </dlentry>
       <dlentry>
-        <dt>jvm:maxMemory()</dt>
+        <dt>jvm:maxMemoryMB()</dt>
         <dd>Returns the Java heap size allocated to the <ph
-            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>. You
-          can use this function in an expression to specify the maximum amount of memory a pipeline
-          can use. </dd>
-        <dd>For example, since 65% of the Java heap size is the recommended maximum, you might use
-          the following expression in the pipeline memory limit property:
-          <codeblock>${jvm:maxMemory() * 0.65}</codeblock></dd>
+            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> in MB.
+          You can use this function in an expression to specify the maximum amount of memory a
+          pipeline can use. </dd>
+        <dd>For example, since 65% of the Java heap size is the recommended maximum, the following
+          expression is the default memory limit for a pipeline:
+          <codeblock>${jvm:maxMemoryMB() * 0.65}</codeblock></dd>
       </dlentry>
    <dlentry>
     <dt>runtime:conf("&lt;runtime property>")</dt>

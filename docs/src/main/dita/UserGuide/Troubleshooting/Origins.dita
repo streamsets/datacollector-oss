@@ -36,12 +36,5 @@
        change the Consumer Group back to the correct value and start the pipeline.</note></dd>
     </dlentry>
    </dl></p>
-  <p>
-   <draft-comment author="Loretta">haven't dealt with this yet: <b>IMPORTANT: Note that if you
-     already started the pipeline or ran a preview without this option, the offset will have been
-     committed. You will have to change the Consumer Group value to something (anything) else as
-     well as the auto.offset.reset option to smallest. -- changing the consumer group is ugly - find
-     out what else to do? </b></draft-comment>
-  </p>
  </conbody>
 </concept>
