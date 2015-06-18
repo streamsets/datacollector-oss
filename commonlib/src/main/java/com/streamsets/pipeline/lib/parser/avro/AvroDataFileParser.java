@@ -47,7 +47,7 @@ public class AvroDataFileParser implements DataParser {
     datumReader = new GenericDatumReader<>(avroSchema, avroSchema, GenericData.get()); //Reader schema argument is optional
     dataFileReader = new DataFileReader<>(new SeekableOverrunFileInputStream(
       new FileInputStream(file), maxObjectLength, true), datumReader);
-    if(readerOffset != null && !readerOffset.isEmpty()) {
+    if(readerOffset != null && !readerOffset.isEmpty() && !readerOffset.equals("0")) {
       String[] split = readerOffset.split(OFFSET_SEPARATOR);
       if(split.length == 3) {
         //split[0] is the file name

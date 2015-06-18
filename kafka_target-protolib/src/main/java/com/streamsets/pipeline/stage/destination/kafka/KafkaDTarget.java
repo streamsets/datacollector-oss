@@ -278,13 +278,13 @@ public class KafkaDTarget extends DTarget {
     required = true,
     type = ConfigDef.Type.TEXT,
     defaultValue = "",
-    label = "Avro Writer Schema",
-    description = "",
+    label = "Avro Schema",
+    description = "Optionally use the runtime:loadResource function to use a schema stored in a file",
     displayPosition = 320,
     group = "AVRO",
     dependsOn = "dataFormat",
     triggeredByValue = {"AVRO"},
-    mode = ConfigDef.Mode.PLAIN_TEXT
+    mode = ConfigDef.Mode.JSON
   )
   public String avroSchema;
 
@@ -292,8 +292,8 @@ public class KafkaDTarget extends DTarget {
     required = true,
     type = ConfigDef.Type.BOOLEAN,
     defaultValue = "true",
-    label = "Message Without Schema",
-    description = "The Kafka Message produced will not contain the schema",
+    label = "Include Schema",
+    description = "Includes Avro schema in the kafka message",
     displayPosition = 330,
     group = "AVRO",
     dependsOn = "dataFormat",

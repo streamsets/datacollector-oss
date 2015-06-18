@@ -398,11 +398,11 @@ public class HdfsDTarget extends DTarget {
   /********  For AVRO *******/
 
   @ConfigDef(
-    required = false,
+    required = true,
     type = ConfigDef.Type.TEXT,
     defaultValue = "",
     label = "Avro Schema",
-    description = "",
+    description = "Optionally use the runtime:loadResource function to use a schema stored in a file",
     displayPosition = 320,
     group = "AVRO",
     dependsOn = "dataFormat",

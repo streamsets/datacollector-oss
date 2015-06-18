@@ -142,7 +142,8 @@ public abstract class StageRunner<S extends Stage> {
       String name = it.next();
       try {
         Field field = stage.getClass().getField(name);
-        if (!isConfigurationActive(field.getAnnotation(ConfigDef.class), configuration)) {
+        ConfigDef annotation = field.getAnnotation(ConfigDef.class);
+        if (!annotation.required() || !isConfigurationActive(annotation, configuration)) {
           it.remove();
         }
       } catch (Exception ex) {
