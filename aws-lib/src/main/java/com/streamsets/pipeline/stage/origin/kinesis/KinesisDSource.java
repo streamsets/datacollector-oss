@@ -1,3 +1,4 @@
+e
 /**
  * (c) 2015 StreamSets, Inc. All rights reserved. May not
  * be copied, modified, or distributed in whole or part without
@@ -51,8 +52,8 @@ public class KinesisDSource extends DSourceOffsetCommitter {
       required = true,
       type = ConfigDef.Type.MODEL,
       defaultValue = "SDC_JSON",
-      label = "Input Record Format",
-      description = "Record format to use when receiving records from Kinesis",
+      label = "Data Format",
+      description = "Data format to use when receiving records from Kinesis",
       displayPosition = 30,
       group = "KINESIS"
   )
