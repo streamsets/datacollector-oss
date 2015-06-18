@@ -35,7 +35,7 @@ public class ClusterUtil {
   private static MiniSDC miniSDC;
   private static MiniYARNCluster miniYarnCluster;
 
-  public static void setupCluster(String testName, String pipelineJson) throws Exception {
+  public static void setupCluster(String testName, String pipelineJson, YarnConfiguration yarnConfiguration) throws Exception {
     System.setProperty("sdc.testing-mode", "true");
     System.setProperty(MiniSDCTestingUtility.PRESERVE_TEST_DIR, "true");
     miniSDCTestingUtility = new MiniSDCTestingUtility();
@@ -45,7 +45,7 @@ public class ClusterUtil {
     File sparkHome = ClusterUtil.createSparkHome(dataTestDir);
 
     //start mini yarn cluster
-    miniYarnCluster = miniSDCTestingUtility.startMiniYarnCluster(testName, 1, 1, 1);
+    miniYarnCluster = miniSDCTestingUtility.startMiniYarnCluster(testName, 1, 1, 1, yarnConfiguration);
     Configuration config = miniYarnCluster.getConfig();
 
     long deadline = System.currentTimeMillis() + TimeUnit.SECONDS.toMillis(10);

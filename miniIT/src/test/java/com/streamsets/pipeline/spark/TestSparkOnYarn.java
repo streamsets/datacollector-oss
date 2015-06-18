@@ -55,7 +55,8 @@ public class TestSparkOnYarn {
 
     File sparkHome = ClusterUtil.createSparkHome(dataTestDir);
 
-    miniYarnCluster = miniSDCTestingUtility.startMiniYarnCluster(TEST_NAME, 1, 1, 1);
+    YarnConfiguration entries = new YarnConfiguration();
+    miniYarnCluster = miniSDCTestingUtility.startMiniYarnCluster(TEST_NAME, 1, 1, 1, entries);
 
     Configuration config = miniYarnCluster.getConfig();
     long deadline = System.currentTimeMillis() + TimeUnit.SECONDS.toMillis(10);

@@ -32,7 +32,7 @@ mvn clean install -Pdist,all-libs,ui,rpm -Drelease -Dtest=DoesNotExist -DfailIfN
 # package and run tests (if appropiate)
 set +e
 export JAVA_HOME=${TEST_JVM}
-mvn package -fae -Pdist,all-libs,ui,rpm -Drelease -Dmaven.main.skip=true -DlastModGranularityMs=604800000 ${PACKAGE_OPTS[@]}
+mvn package -fae -Pdist,all-libs,ui,rpm,miniIT -Drelease -Dmaven.main.skip=true -DlastModGranularityMs=604800000 ${PACKAGE_OPTS[@]}
 exitCode=$?
 if [[ -n $PUBLISH_SDC_TAR ]] && [[ $exitCode -eq 0 ]]
 then

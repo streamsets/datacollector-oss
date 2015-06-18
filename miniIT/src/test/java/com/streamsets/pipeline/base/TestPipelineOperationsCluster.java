@@ -7,6 +7,7 @@ package com.streamsets.pipeline.base;
 
 import com.streamsets.pipeline.MiniSDC;
 import com.streamsets.pipeline.util.ClusterUtil;
+import org.apache.hadoop.yarn.conf.YarnConfiguration;
 
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -29,7 +30,7 @@ public abstract class TestPipelineOperationsCluster extends TestPipelineOperatio
   private static final String TEST_NAME = "PipelineOperationsOnCluster";
 
   public static void beforeClass(String pipelineJson) throws Exception {
-    ClusterUtil.setupCluster(TEST_NAME, pipelineJson);
+    ClusterUtil.setupCluster(TEST_NAME, pipelineJson, new YarnConfiguration());
     serverURI = ClusterUtil.getServerURI();
     miniSDC = ClusterUtil.getMiniSDC();
   }

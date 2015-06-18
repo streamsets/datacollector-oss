@@ -14,6 +14,7 @@ import org.apache.hadoop.hdfs.DistributedFileSystem;
 import org.apache.hadoop.hdfs.HdfsConfiguration;
 import org.apache.hadoop.hdfs.MiniDFSCluster;
 import org.apache.hadoop.hdfs.server.namenode.EditLogFileOutputStream;
+import org.apache.hadoop.security.UserGroupInformation;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
@@ -45,6 +46,9 @@ public class TestHdfsDestinationPipelineRun extends TestPipelineRunStandalone {
     }
     System.setProperty(MiniDFSCluster.PROP_TEST_BUILD_DATA, minidfsDir.getPath());
     Configuration conf = new HdfsConfiguration();
+    conf.set("hadoop.proxyuser." + System.getProperty("user.name") + ".hosts", "*");
+    conf.set("hadoop.proxyuser." + System.getProperty("user.name") + ".groups", "*");
+    UserGroupInformation.createUserForTesting("foo", new String[]{"all", "supergroup"});
     EditLogFileOutputStream.setShouldSkipFsyncForTesting(true);
     miniDFS = new MiniDFSCluster.Builder(conf).build();
   }

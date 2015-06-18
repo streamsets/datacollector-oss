@@ -14,6 +14,8 @@ import org.apache.hadoop.hdfs.DistributedFileSystem;
 import org.apache.hadoop.hdfs.HdfsConfiguration;
 import org.apache.hadoop.hdfs.MiniDFSCluster;
 import org.apache.hadoop.hdfs.server.namenode.EditLogFileOutputStream;
+import org.apache.hadoop.security.UserGroupInformation;
+import org.apache.hadoop.yarn.conf.YarnConfiguration;
 import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.BeforeClass;
@@ -74,11 +76,18 @@ public class TestKafkaToHDFS {
     }
     System.setProperty(MiniDFSCluster.PROP_TEST_BUILD_DATA, minidfsDir.getPath());
     Configuration conf = new HdfsConfiguration();
+    conf.set("hadoop.proxyuser." + System.getProperty("user.name") + ".hosts", "*");
+    conf.set("hadoop.proxyuser." + System.getProperty("user.name") + ".groups", "*");
+    UserGroupInformation.createUserForTesting("foo", new String[]{"all", "supergroup"});
     EditLogFileOutputStream.setShouldSkipFsyncForTesting(true);
     miniDFS = new MiniDFSCluster.Builder(conf).build();
 
     //setup Cluster and start pipeline
-    ClusterUtil.setupCluster(TEST_NAME, getPipelineJson());
+    YarnConfiguration entries = new YarnConfiguration();
+    //TODO: Investigate why this is required for test to pass. Is yarn messing with the miniDFS cluster configuration?
+    entries.set("hadoop.proxyuser." + System.getProperty("user.name") + ".hosts", "*");
+    entries.set("hadoop.proxyuser." + System.getProperty("user.name") + ".groups", "*");
+    ClusterUtil.setupCluster(TEST_NAME, getPipelineJson(), entries);
     serverURI = ClusterUtil.getServerURI();
     miniSDC = ClusterUtil.getMiniSDC();
   }

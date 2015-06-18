@@ -71,14 +71,11 @@
       "name" : "hdfsUri",
       "value" : "/uri"
     }, {
+      "name" : "hdfsUser",
+      "value" : "foo"
+    }, {
       "name" : "hdfsKerberos",
       "value" : false
-    }, {
-      "name" : "kerberosPrincipal",
-      "value" : null
-    }, {
-      "name" : "kerberosKeytab",
-      "value" : null
     }, {
       "name" : "hdfsConfDir",
       "value" : null
