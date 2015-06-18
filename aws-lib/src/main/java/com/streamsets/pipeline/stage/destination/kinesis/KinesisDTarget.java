@@ -49,8 +49,8 @@ public class KinesisDTarget extends DTarget {
       type = ConfigDef.Type.MODEL,
       defaultValue = "SDC_JSON",
       label = "Data Format",
-      description = "Record format to use when publishing to Kinesis",
-      displayPosition = 25,
+      description = "Data format to use when publishing to Kinesis",
+      displayPosition = 30,
       group = "KINESIS"
   )
   @ValueChooser(OutputRecordFormatChooserValues.class)
@@ -62,7 +62,7 @@ public class KinesisDTarget extends DTarget {
       defaultValue = "ROUND_ROBIN",
       label = "Partitioning Strategy",
       description = "Partitioning strategy for partition key generation",
-      displayPosition = 26,
+      displayPosition = 40,
       group = "KINESIS"
   )
   @ValueChooser(PartitionStrategyChooserValues.class)
@@ -74,7 +74,7 @@ public class KinesisDTarget extends DTarget {
       required = true,
       type = ConfigDef.Type.STRING,
       label = "AWS Access Key ID",
-      displayPosition = 30,
+      displayPosition = 50,
       group = "KINESIS"
   )
   public String awsAccessKeyId;
@@ -83,7 +83,7 @@ public class KinesisDTarget extends DTarget {
       required = true,
       type = ConfigDef.Type.STRING,
       label = "AWS Secret Access Key",
-      displayPosition = 40,
+      displayPosition = 60,
       group = "KINESIS"
   )
   public String awsSecretAccessKey;
