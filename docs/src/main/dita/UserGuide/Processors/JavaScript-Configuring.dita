@@ -34,9 +34,9 @@
                                             data:<ul id="ul_tzg_vzx_nr">
                                             <li>Record by Record - Processes records individually.
                                                 Performs error handling.</li>
-                                            <li>Record Batch - Processes records in batches.
+                                            <li>Batch by Batch - Processes records in batches.
                                                 Requires error handling code in the script.</li>
-                                        </ul></entry>
+                                        </ul><p>Default is Batch by Batch.</p></entry>
                                 </row>
                                 <row>
                                     <entry>Script</entry>

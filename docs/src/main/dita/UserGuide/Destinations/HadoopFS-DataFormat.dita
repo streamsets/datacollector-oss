@@ -12,5 +12,12 @@
           <dd/>
         </dlentry>
       </dl></p>
+    <dl>
+      <dlentry>
+        <dt>Avro</dt>
+        <dd>The destination writes records based on the Avro schema that you provide. The schema
+          definition is included in each file written to Hadoop FS.</dd>
+      </dlentry>
+    </dl>
  </conbody>
 </concept>

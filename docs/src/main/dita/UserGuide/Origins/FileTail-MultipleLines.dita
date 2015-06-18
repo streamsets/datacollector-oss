@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
+<concept id="concept_mzk_w4v_js">
+ <title>Multiple Line Processing</title>
+ <shortdesc>File Tail can process log and text data that includes multiple lines. You might use
+  multiple line processing to include stack traces with log data, or to process MySQL multiline
+  logs. </shortdesc>
+ <conbody>
+  <p><indexterm>File Tail origin<indexterm>processing multiple
+    lines</indexterm></indexterm><indexterm>multiple line processing<indexterm>with File
+     Tail</indexterm></indexterm>To process multiline data, you use a regular expression to define
+   the pattern of the standard line. When File Tail encounters data that does not match the pattern,
+   it appends the non-matching data to the previous line. </p>
+  <p>Evaluating data for the pattern can impact performance, so use multiple line processing only
+   when required.</p>
+ </conbody>
+</concept>

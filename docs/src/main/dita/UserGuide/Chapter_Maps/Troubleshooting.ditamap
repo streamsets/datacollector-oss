@@ -10,7 +10,10 @@
    </topicmeta>
    <topicref href="../Troubleshooting/DataPreview.dita"/>
   </topicref>
-  <topicref href="../Troubleshooting/Origins.dita"/>
+  <topicref href="../Troubleshooting/Origins.dita">
+   <topicref href="../Troubleshooting/Origins-JDBC.dita"/>
+   <topicref href="../Troubleshooting/Origins-KafkaConsumer.dita"/>
+  </topicref>
   <topicref href="../Troubleshooting/Destinations.dita">
    <topicref href="../Troubleshooting/Destinations-Cassandra.dita"/>
    <topicref href="../Troubleshooting/Destinations-Kafka.dita"/>

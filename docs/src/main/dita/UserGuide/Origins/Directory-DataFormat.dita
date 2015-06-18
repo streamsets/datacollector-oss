@@ -8,7 +8,8 @@
       differently based on the type of data in the file. Directory can process the following types
       of data:</p>
     <draft-comment author="Loretta">Doc reminder: Updates to this section should be ported over to
-      KConsumer-Data Formats - the origins handle data formats the same way. 4/28/15</draft-comment>
+      KConsumer-Data Formats - the origins handle data formats the same way. 4/28/15 -- except for
+      Avro - that's different on purpose. 6/18-15.</draft-comment>
   <dl>
    <dlentry>
     <dt>Text</dt>
@@ -25,8 +26,8 @@
    </dlentry>
    <dlentry>
     <dt>Delimited</dt>
-    <dd>Generates a record for each delimited line. You can use the following types of delimited
-            files:<ul id="ul_a51_wzk_5q">
+    <dd>Generates a record for each delimited line. You can use the following delimited format
+            types:<ul id="ul_a51_wzk_5q">
             <li>Default CSV (ignores empty lines)</li>
             <li>RFC4180 CSV</li>
             <li>Microsoft Excel CSV</li>
@@ -70,6 +71,12 @@
           truncated, and you request the log line in the record, Directory includes the truncated
           line.</dd>
         <dd>You can define the log format or type to be read.</dd>
+      </dlentry>
+      <dlentry>
+        <dt>Avro</dt>
+        <dd>Generates a record for every record. </dd>
+        <dd>Directory assumes each file includes an Avro schema definition. But you can optionally
+          provide an alternate schema to use. </dd>
       </dlentry>
   </dl>
  </conbody>

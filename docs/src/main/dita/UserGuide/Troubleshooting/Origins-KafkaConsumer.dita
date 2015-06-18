@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
+<concept id="concept_err_w23_ks">
+ <title>Kafka Consumer</title>
+ <conbody>
+  <dl>
+   <dlentry>
+    <dt>Why isn't my pipeline reading existing data from my Kafka topic? </dt>
+    <dd>By default, the Kafka Consumer reads data written to the topic after you start the pipeline.
+     Records already in the topic are ignored. </dd>
+    <dd>To read the oldest unread data in a topic, add the <uicontrol>auto.offset.reset</uicontrol>
+     Kafka Configuration property to the origin and set it to <uicontrol>smallest</uicontrol>.
+      <note>If you already started the pipeline or ran a preview without this option, the offset has
+      already been committed. To read the oldest unread data in a topic, set
+       <uicontrol>auto.offset.reset</uicontrol> to <uicontrol>smallest</uicontrol> and then
+      temporarily change the Consumer Group name to a different value. Run data preview. Then,
+      change the Consumer Group back to the correct value and start the pipeline.</note></dd>
+   </dlentry>
+  </dl>
+ </conbody>
+</concept>

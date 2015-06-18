@@ -39,6 +39,14 @@
                                         </ul></entry>
                                 </row>
                                 <row>
+                                    <entry>Pattern for Multiline <xref
+                                            href="FileTail-MultipleLines.dita">
+                                            <image href="../Graphics/icon_moreInfo.png" scale="10"
+                                                id="image_hxf_lnb_ks"/></xref></entry>
+                                    <entry>Regular expression that defines the pattern for the
+                                        standard line of text or log line.</entry>
+                                </row>
+                                <row>
                                     <entry>Data Charset</entry>
                                     <entry>Character encoding of the data to be processed.</entry>
                                 </row>

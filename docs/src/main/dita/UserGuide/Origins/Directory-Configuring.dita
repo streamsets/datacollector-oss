@@ -46,11 +46,14 @@
                                                   scale="10" id="image_wjh_ycl_br"
                                                   placement="inline" /></xref></li>
                                             <li>Log</li>
+                                            <li>Avro</li>
                                         </ul></entry>
                                 </row>
                                 <row>
                                     <entry>Files Charset</entry>
-                                    <entry>Character encoding of the data to be processed.</entry>
+                                    <entry>Character encoding of the data to be processed. <p>Not
+                                            used for the SDC Record or Avro data
+                                        formats.</p></entry>
                                 </row>
                                 <row
                                     conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/IgnoreControlChars-row">
@@ -287,6 +290,13 @@
             </step>
             <step conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/LogData_Log4j">
                 <cmd/>
+            </step>
+            <step>
+                <cmd>For Avro data, click the <wintitle>Avro</wintitle> tab and optionally enter a
+                    Avro schema definition to use. </cmd>
+                <info>Entering a schema definition overrides any existing schema definitions
+                    associated with the data.<p>You can use the runtime:loadResource function to use
+                        a schema definition stored in a file.</p></info>
             </step>
         </steps>
     </taskbody>
