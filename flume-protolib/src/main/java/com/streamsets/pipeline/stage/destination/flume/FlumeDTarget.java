@@ -78,7 +78,9 @@ public class FlumeDTarget extends DTarget {
     displayPosition = 50,
     group = "FLUME",
     dependsOn = "clientType",
-    triggeredByValue = "AVRO_LOAD_BALANCING"
+    triggeredByValue = "AVRO_LOAD_BALANCING",
+    min = 0,
+    max = Integer.MAX_VALUE
   )
   public int maxBackOff;
 
@@ -102,7 +104,9 @@ public class FlumeDTarget extends DTarget {
     defaultValue = "100",
     label = "Flume Batch Size (events)",
     displayPosition = 70,
-    group = "FLUME"
+    group = "FLUME",
+    min = 1,
+    max = Integer.MAX_VALUE
   )
   public int batchSize;
 
@@ -112,7 +116,9 @@ public class FlumeDTarget extends DTarget {
     defaultValue = "20000",
     label = "Flume Client Connection Timeout (ms)",
     displayPosition = 80,
-    group = "FLUME"
+    group = "FLUME",
+    min = 1,
+    max = Integer.MAX_VALUE
   )
   public int connectionTimeout;
 
@@ -123,7 +129,9 @@ public class FlumeDTarget extends DTarget {
     label = "Flume Client Request Timeout (ms)",
     description = "",
     displayPosition = 90,
-    group = "FLUME"
+    group = "FLUME",
+    min = 1,
+    max = Integer.MAX_VALUE
   )
   public int requestTimeout;
 
@@ -134,7 +142,9 @@ public class FlumeDTarget extends DTarget {
     label = "Max Retry Attempts",
     description = "Number of times to resend data to the Flume agent in case of failures",
     displayPosition = 100,
-    group = "FLUME"
+    group = "FLUME",
+    min = 0,
+    max = Integer.MAX_VALUE
   )
   public int maxRetryAttempts;
 
@@ -145,7 +155,9 @@ public class FlumeDTarget extends DTarget {
     label = "Retry Wait Time (ms)",
     description = "Time to wait before resending data to Flume",
     displayPosition = 110,
-    group = "FLUME"
+    group = "FLUME",
+    min = 1,
+    max = Integer.MAX_VALUE
   )
   public long waitBetweenRetries;
 
@@ -279,13 +291,13 @@ public class FlumeDTarget extends DTarget {
     required = true,
     type = ConfigDef.Type.TEXT,
     defaultValue = "",
-    label = "Avro Writer Schema",
-    description = "",
+    label = "Avro Schema",
+    description = "Optionally use the runtime:loadResource function to use a schema stored in a file",
     displayPosition = 320,
     group = "AVRO",
     dependsOn = "dataFormat",
     triggeredByValue = {"AVRO"},
-    mode = ConfigDef.Mode.PLAIN_TEXT
+    mode = ConfigDef.Mode.JSON
   )
   public String avroSchema;
 
@@ -293,8 +305,8 @@ public class FlumeDTarget extends DTarget {
     required = true,
     type = ConfigDef.Type.BOOLEAN,
     defaultValue = "true",
-    label = "Include Schema in Event",
-    description = "The Flume Event produced will contain the schema",
+    label = "Include Schema",
+    description = "Includes the Avro schema in the Flume event",
     displayPosition = 330,
     group = "AVRO",
     dependsOn = "dataFormat",

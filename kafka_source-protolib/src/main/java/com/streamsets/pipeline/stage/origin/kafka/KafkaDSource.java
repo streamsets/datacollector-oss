@@ -469,8 +469,8 @@ public class KafkaDSource extends DSourceOffsetCommitter {
     required = true,
     type = ConfigDef.Type.BOOLEAN,
     defaultValue = "true",
-    label = "Message With Schema",
-    description = "The Kafka Message has the Avro Schema",
+    label = "Message includes Schema",
+    description = "The Kafka message includes the Avro schema",
     displayPosition = 830,
     group = "AVRO",
     dependsOn = "dataFormat",
@@ -482,13 +482,11 @@ public class KafkaDSource extends DSourceOffsetCommitter {
     required = false,
     type = ConfigDef.Type.TEXT,
     defaultValue = "",
-    label = "Avro Reader Schema",
-    description = "",
+    label = "Avro Schema",
+    description = "Overrides the schema associated with the message. Optionally use the runtime:loadResource function to use a schema stored in a file",
     displayPosition = 840,
     group = "AVRO",
-    dependsOn = "schemaInMessage",
-    triggeredByValue = {"false"},
-    mode = ConfigDef.Mode.PLAIN_TEXT
+    mode = ConfigDef.Mode.JSON
   )
   public String avroSchema;
 
