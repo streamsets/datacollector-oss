@@ -1,4 +1,3 @@
-e
 /**
  * (c) 2015 StreamSets, Inc. All rights reserved. May not
  * be copied, modified, or distributed in whole or part without
