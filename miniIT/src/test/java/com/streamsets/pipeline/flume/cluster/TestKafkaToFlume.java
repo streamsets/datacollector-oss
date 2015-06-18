@@ -17,6 +17,7 @@ import org.apache.flume.channel.MemoryChannel;
 import org.apache.flume.channel.ReplicatingChannelSelector;
 import org.apache.flume.conf.Configurables;
 import org.apache.flume.source.AvroSource;
+import org.apache.hadoop.yarn.conf.YarnConfiguration;
 import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.BeforeClass;
@@ -85,7 +86,7 @@ public class TestKafkaToFlume {
     source.start();
 
     //setup Cluster and start pipeline
-    ClusterUtil.setupCluster(TEST_NAME, getPipelineJson());
+    ClusterUtil.setupCluster(TEST_NAME, getPipelineJson(), new YarnConfiguration());
     serverURI = ClusterUtil.getServerURI();
     miniSDC = ClusterUtil.getMiniSDC();
   }

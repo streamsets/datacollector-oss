@@ -399,10 +399,7 @@ public class PipelineConfigurationValidator {
       }
       for (ConfigDefinition confDef : stageDef.getConfigDefinitions()) {
         if (stageConf.getConfig(confDef.getName()) == null && confDef.isRequired()) {
-          // stage configuration does not have a configuration that is required
-          issues.add(issueCreator.createConfigIssue(stageConf.getInstanceName(), confDef.getGroup(), confDef.getName(),
-                                                  ValidationError.VALIDATION_0007));
-          preview = false;
+          preview &= validateRequiredField(confDef, stageConf, issueCreator);
         }
       }
       for (ConfigConfiguration conf : stageConf.getConfiguration()) {
@@ -412,6 +409,21 @@ public class PipelineConfigurationValidator {
           preview &= validatePreconditions(stageConf.getInstanceName(), confDef, conf, issues, issueCreator);
         }
       }
+    }
+    return preview;
+  }
+
+  private boolean validateRequiredField(ConfigDefinition confDef, StageConfiguration stageConf,
+                                        StageIssueCreator issueCreator) {
+    boolean preview = true;
+    String dependsOn = confDef.getDependsOn();
+    List<Object> triggeredBy = confDef.getTriggeredByValues();
+    // If the config doesn't depend on anything or the config should be triggered, config is invalid
+    if (dependsOn == null || dependsOn.isEmpty() ||
+      (triggeredBy.contains(stageConf.getConfig(dependsOn).getValue()))) {
+      issues.add(issueCreator.createConfigIssue(stageConf.getInstanceName(), confDef.getGroup(), confDef.getName(),
+        ValidationError.VALIDATION_0007, confDef.getName(), confDef.getGroup()));
+      preview = false;
     }
     return preview;
   }
@@ -459,16 +471,7 @@ public class PipelineConfigurationValidator {
         ValidationError.VALIDATION_0008));
       return false;
     } else if (conf.getValue() == null && confDef.isRequired()) {
-      // stage configuration has a NULL value for a configuration that requires a value
-      String dependsOn = confDef.getDependsOn();
-      List<Object> triggeredBy = confDef.getTriggeredByValues();
-      // If the config doesn't depend on anything or the config should be triggered, config is invalid
-      if (dependsOn == null || dependsOn.isEmpty() ||
-        (triggeredBy.contains(stageConf.getConfig(dependsOn).getValue()))) {
-        issues.add(issueCreator.createConfigIssue(stageConf.getInstanceName(), confDef.getGroup(), confDef.getName(),
-          ValidationError.VALIDATION_0007));
-        preview = false;
-      }
+      preview &= validateRequiredField(confDef, stageConf, issueCreator);
     }
     boolean validateConfig = true;
     if (confDef.getDependsOn() != null &&

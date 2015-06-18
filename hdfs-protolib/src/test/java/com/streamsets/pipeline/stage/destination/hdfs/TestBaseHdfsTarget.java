@@ -10,7 +10,6 @@ import com.streamsets.pipeline.api.Batch;
 import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.OnRecordError;
 import com.streamsets.pipeline.api.Record;
-import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.Target;
 import com.streamsets.pipeline.config.CsvHeader;
@@ -34,9 +33,11 @@ import org.junit.Test;
 import java.io.File;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.attribute.PosixFilePermission;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.UUID;
 
 public class TestBaseHdfsTarget {
@@ -52,6 +53,12 @@ public class TestBaseHdfsTarget {
     if (!minidfsDir.exists()) {
       Assert.assertTrue(minidfsDir.mkdirs());
     }
+    Set<PosixFilePermission> set = new HashSet<PosixFilePermission>();
+    set.add(PosixFilePermission.OWNER_EXECUTE);
+    set.add(PosixFilePermission.OWNER_READ);
+    set.add(PosixFilePermission.OWNER_WRITE);
+    set.add(PosixFilePermission.OTHERS_READ);
+    java.nio.file.Files.setPosixFilePermissions(minidfsDir.toPath(), set);
     System.setProperty(MiniDFSCluster.PROP_TEST_BUILD_DATA, minidfsDir.getPath());
     Configuration conf = new HdfsConfiguration();
     conf.set("hadoop.proxyuser." + System.getProperty("user.name") + ".hosts", "*");

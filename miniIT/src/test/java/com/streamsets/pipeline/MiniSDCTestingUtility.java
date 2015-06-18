@@ -230,9 +230,9 @@ public class MiniSDCTestingUtility {
     }
   }
 
-  public MiniYARNCluster startMiniYarnCluster(String testName, int numNodeManager, int numLocalDir, int numLogDir) {
+  public MiniYARNCluster startMiniYarnCluster(String testName, int numNodeManager, int numLocalDir, int numLogDir, YarnConfiguration yarnConfiguration) {
     miniYarnCluster = new MiniYARNCluster(testName, numNodeManager, numLocalDir, numLogDir);
-    miniYarnCluster.init(new YarnConfiguration());
+    miniYarnCluster.init(yarnConfiguration);
     miniYarnCluster.start();
     return miniYarnCluster;
   }

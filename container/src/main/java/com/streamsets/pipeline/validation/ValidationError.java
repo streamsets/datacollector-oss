@@ -21,7 +21,7 @@ public enum ValidationError implements ErrorCode {
   VALIDATION_0004("This stage cannot be an origin"),
   VALIDATION_0005("Stage name already defined"),
   VALIDATION_0006("Stage definition does not exist, library '{}', name '{}', version '{}'"),
-  VALIDATION_0007("Configuration value is required"),
+  VALIDATION_0007("Configuration value is required for option '{}' in group '{}'"),
   VALIDATION_0008("Invalid configuration"),
   VALIDATION_0009("Configuration should be a '{}'"),
   VALIDATION_0010("Output streams '{}' are already defined by stage '{}'"),
