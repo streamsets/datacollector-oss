@@ -71,7 +71,8 @@
             </p>
             <p>
                   <draft-comment author="Loretta">The following list is destination data formats.
-                        Used by Kafka, Hadoop FS, and Flume.</draft-comment>
+                        Used by Kafka, Hadoop FS, and Flume. All 3 also have an individual Avro
+                        description added to their list in the local file. </draft-comment>
                   <dl id="DataFormats-dest">
                         <dlentry>
                               <dt>Text</dt>

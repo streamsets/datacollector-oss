@@ -7,7 +7,7 @@
  <conbody>
   <p><indexterm>regular expressions<indexterm>quick reference</indexterm></indexterm>For a thorough
    description of how to define regular expressions, use a manual or online reference such as: <xref
-    href="http://docs.oracle.com/javase/7/docs/api/java/util/regex/Pattern.html" format="html"
+    href="https://docs.oracle.com/javase/tutorial/essential/regex/index.html" format="html"
     scope="external"/>.</p>
   <p>For testing regular expressions, you might find the following website helpful: <xref
     href="https://regex101.com/" format="html" scope="external"/>.</p>

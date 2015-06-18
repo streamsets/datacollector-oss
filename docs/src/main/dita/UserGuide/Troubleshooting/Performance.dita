@@ -19,9 +19,17 @@
     </dlentry>
     <dlentry>
      <dt>How can I tell what's slowing down my pipeline?</dt>
-     <dd>
-      <draft-comment author="Loretta">check this out.</draft-comment>
-     </dd>
+     <dd>Review the information available in the <ph
+       conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> console in
+      Monitor mode. Charts provide information about the record count,  record throughput, and batch
+      throughput for the pipeline. To determine where processing slows, you can click each stage to
+      view the count and throughput details for the stage.</dd>
+     <dd>If the origin is the issue, you might tune the batch size or batch wait time properties or
+      adjust related properties in the origin system. If the destinations cause the problem, try
+      adjusting  any performance-related properties in the destination or related properties in the
+      destination system.</dd>
+     <dd>If a processor causes the problem, you might take a snapshot of the pipeline to review how
+      data passes through the pipeline and consider options for streamlining processing. </dd>
     </dlentry>
     <dlentry>
      <dt>How can I improve the general pipeline performance? </dt>
@@ -37,10 +45,6 @@
        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
       configuration file. </dd>
     </dlentry>
-   </dl><draft-comment author="Loretta">From Hari: "Why is there no data in my pipeline" or "why is
-    the throughput very low". User could trouble shoot by looking at the metric charts and figure
-    out whether source is producing records or if a stage is taking more time.User could follow up
-    by tuning the throughput/latency parameters for origin stages [batch size vs batch time] or even
-    tune the external source.</draft-comment></p>
+   </dl></p>
  </conbody>
 </concept>

@@ -33,8 +33,10 @@
                                 </row>
                                 <row>
                                     <entry>Data Format</entry>
-                                    <entry>Data format passed by UDP. UDP Source reads only NetFlow
-                                        Version 5 messages at this time. </entry>
+                                    <entry>Data format passed by UDP:<ul id="ul_dfw_dqj_ks">
+                                            <li>NetFlow</li>
+                                            <li>Syslog </li>
+                                        </ul></entry>
                                 </row>
                                 <row>
                                     <entry>Max Batch Size (messages)</entry>
@@ -58,6 +60,9 @@
                             </tbody>
                         </tgroup>
                     </table>
+                    <draft-comment author="Loretta">Add Charset - currently on Syslog tab. Sent
+                        Brock a note 6/18 about whether it should be moved to main
+                        tab.</draft-comment>
                 </info>
             </step>
         </steps>

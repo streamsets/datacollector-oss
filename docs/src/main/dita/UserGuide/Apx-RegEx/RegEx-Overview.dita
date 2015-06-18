@@ -2,9 +2,9 @@
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_vd4_nsc_gs">
  <title>Regular Expressions in the Pipeline</title>
- <shortdesc>A regular expression describes a pattern for a string. Though generally not required,
-    you can use Java-based regular expressions at various locations within a pipeline to define,
-    search, or manipulate strings. </shortdesc>
+ <shortdesc>A regular expression, also known as <term>regex</term>, describes a pattern for a
+    string. Though generally not required, you can use Java-based regular expressions at various
+    locations within a pipeline to define, search, or manipulate strings. </shortdesc>
  <conbody>
   <p><indexterm>regular expressions<indexterm>in the pipeline</indexterm></indexterm>For example, in
       the Field Masker processor, you can use a fixed length, variable length, or custom static mask
@@ -30,7 +30,7 @@
             <row>
               <entry>File Tail origin</entry>
               <entry>Use to define the ${PATTERN} constant when you use the Files Matching a Pattern
-                naming option. </entry>
+                naming option. <p>Use to define the structure of a log line or text.</p></entry>
             </row>
             <row>
               <entry>Origins that process log data<p>Log Parser processor</p></entry>

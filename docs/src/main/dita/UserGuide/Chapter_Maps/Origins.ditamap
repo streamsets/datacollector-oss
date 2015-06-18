@@ -26,6 +26,7 @@
    <topicref href="../Origins/FileTail-DataFormats.dita">
     <topicref href="../Origins/LogFormats.dita"/>
    </topicref>
+   <topicref href="../Origins/FileTail-MultipleLines.dita"/>
    <topicref href="../Origins/FileTail-Nodes.dita"/>
    <topicref href="../Origins/FileTail-Configuring.dita"/>
   </topicref>

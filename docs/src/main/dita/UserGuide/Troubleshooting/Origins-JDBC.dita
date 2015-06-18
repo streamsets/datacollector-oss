@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
+<concept id="concept_ggx_s23_ks">
+ <title>JDBC</title>
+ <conbody>
+  <p>
+   <dl>
+    <dlentry>
+     <dt>My MySQL JDBC Driver 5.0 fails to validate the query in my JBDC origin. </dt>
+     <dd>This can occur when you use a LIMIT clause in your query. Workaround: Upgrade to version
+      5.1.</dd>
+    </dlentry>
+    <dlentry>
+     <dt>I'm using the JDBC origin to read MySQL data. Why are datetime value set to zero being
+      treated like error records?</dt>
+     <dd>MySQL treats invalid dates as an exception, so the JDBC origin creates error records for
+      invalid dates. You can override this behavior by setting a JDBC configuration property in the
+      JDBC origin. Add the <uicontrol>zeroDateTimeBehavior</uicontrol> property and set the value to
+      "convertToNull".</dd>
+     <dd>For more information about this and other MySQL-specific JDBC configuration properties, see
+       <xref
+       href="http://dev.mysql.com/doc/connector-j/en/connector-j-reference-configuration-properties.html"
+       format="html" scope="external"
+       >http://dev.mysql.com/doc/connector-j/en/connector-j-reference-configuration-properties.html</xref>.</dd>
+    </dlentry>
+   </dl>
+  </p>
+ </conbody>
+</concept>

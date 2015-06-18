@@ -474,42 +474,37 @@
             </step>
             <step>
                 <cmd>
-                    <draft-comment author="Loretta">Use the following for the appropriate delimited
-                        destinations - currently Hadoop FS and Kafka Producer:</draft-comment>
+                    <draft-comment author="Loretta">Using the following for Hadoop FS and Kafka
+                        Producer, like Delimited, above. This is for text
+                        properties:</draft-comment>
                 </cmd>
             </step>
-            <step id="DelimProps">
-                <cmd>For delimited data, click the <wintitle>Delimited</wintitle> tab and configure
-                    the following properties:</cmd>
+            <step id="TextProps">
+                <cmd>For text data, click the <uicontrol>Text</uicontrol> tab and configure the
+                    following properties:</cmd>
                 <info>
-                    <table frame="all" rowsep="1" colsep="1" id="table_wb3_2kg_br">
+                    <table frame="all" rowsep="1" colsep="1" id="table_egv_3df_jr">
                         <tgroup cols="2">
                             <colspec colname="c1" colnum="1" colwidth="1*"/>
-                            <colspec colname="c2" colnum="2" colwidth="2.53*"/>
+                            <colspec colname="c2" colnum="2" colwidth="3.17*"/>
                             <thead>
                                 <row>
-                                    <entry>Delimited Property</entry>
+                                    <entry>Text Property</entry>
                                     <entry>Description</entry>
                                 </row>
                             </thead>
                             <tbody>
                                 <row>
-                                    <entry>CSV Format</entry>
-                                    <entry>Format for delimited data:<ul
-                                            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/ul_delFileTypes"
-                                            id="ul_k3j_vvf_jr">
-                                            <li/>
-                                        </ul></entry>
+                                    <entry>Text Field Path</entry>
+                                    <entry>Field that contains the text data to be written. All data
+                                        must be incorporated into the specified field. </entry>
                                 </row>
                                 <row>
-                                    <entry>Header Line</entry>
-                                    <entry>Indicates whether to create a header line.</entry>
-                                </row>
-                                <row>
-                                    <entry>Remove New Line Characters</entry>
-                                    <entry>Removes new line characters from within a record.
-                                            <p>Recommended when writing data as a single line of
-                                            text.</p></entry>
+                                    <entry>Empty Line if No Text</entry>
+                                    <entry>Creates an empty line when a record does not include the
+                                        text field specified above. <p>When not selected, records
+                                            without the specified text field are
+                                        discarded.</p></entry>
                                 </row>
                             </tbody>
                         </tgroup>
@@ -557,37 +552,81 @@
             </step>
             <step>
                 <cmd>
-                    <draft-comment author="Loretta">Using the following for Hadoop FS and Kafka
-                        Producer, like Delimited, above. This is for text
-                        properties:</draft-comment>
+                    <draft-comment author="Loretta">Use the following for the appropriate delimited
+                        destinations - currently Hadoop FS and Kafka Producer:</draft-comment>
                 </cmd>
             </step>
-            <step id="TextProps">
-                <cmd>For text data, click the <uicontrol>Text</uicontrol> tab and configure the
-                    following properties:</cmd>
+            <step id="DelimProps">
+                <cmd>For delimited data, click the <wintitle>Delimited</wintitle> tab and configure
+                    the following properties:</cmd>
                 <info>
-                    <table frame="all" rowsep="1" colsep="1" id="table_egv_3df_jr">
+                    <table frame="all" rowsep="1" colsep="1" id="table_wb3_2kg_br">
                         <tgroup cols="2">
                             <colspec colname="c1" colnum="1" colwidth="1*"/>
-                            <colspec colname="c2" colnum="2" colwidth="3.17*"/>
+                            <colspec colname="c2" colnum="2" colwidth="2.53*"/>
                             <thead>
                                 <row>
-                                    <entry>Text Property</entry>
+                                    <entry>Delimited Property</entry>
                                     <entry>Description</entry>
                                 </row>
                             </thead>
                             <tbody>
                                 <row>
-                                    <entry>Text Field Path</entry>
-                                    <entry>Field that contains the text data to be written. All data
-                                        must be incorporated into the specified field. </entry>
+                                    <entry>CSV Format</entry>
+                                    <entry>Format for delimited data:<ul
+                                            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/ul_delFileTypes"
+                                            id="ul_k3j_vvf_jr">
+                                            <li/>
+                                        </ul></entry>
                                 </row>
                                 <row>
-                                    <entry>Empty Line if No Text</entry>
-                                    <entry>Creates an empty line when a record does not include the
-                                        text field specified above. <p>When not selected, records
-                                            without the specified text field are
-                                        discarded.</p></entry>
+                                    <entry>Header Line</entry>
+                                    <entry>Indicates whether to create a header line.</entry>
+                                </row>
+                                <row>
+                                    <entry>Remove New Line Characters</entry>
+                                    <entry>Removes new line characters from within a record.
+                                            <p>Recommended when writing data as a single line of
+                                            text.</p></entry>
+                                </row>
+                            </tbody>
+                        </tgroup>
+                    </table>
+                </info>
+            </step>
+            <step>
+                <cmd>
+                    <draft-comment author="Loretta">The following step is used by Flume and Kafka
+                        Consumer. Hadoop FS has its own thing.</draft-comment>
+                </cmd>
+            </step>
+            <step id="AvroProps">
+                <cmd>For Avro data, click the <wintitle>Avro</wintitle> tab and configure the
+                    following properties:</cmd>
+                <info>
+                    <table frame="all" rowsep="1" colsep="1" id="table_fpg_rx3_ks">
+                        <tgroup cols="2">
+                            <colspec colname="c1" colnum="1" colwidth="1*"/>
+                            <colspec colname="c2" colnum="2" colwidth="2.7*"/>
+                            <thead>
+                                <row>
+                                    <entry>Avro Property</entry>
+                                    <entry>Description</entry>
+                                </row>
+                            </thead>
+                            <tbody>
+                                <row>
+                                    <entry>Avro Schema<draft-comment author="Loretta">check back for
+                                            final labels</draft-comment></entry>
+                                    <entry>Schema definition to use when writing data. </entry>
+                                </row>
+                                <row>
+                                    <entry>Include Schema in Event</entry>
+                                    <entry>Includes the schema in each Flume event. <note>Omitting
+                                            the schema definition can improve performance, but
+                                            requires the appropriate schema management to avoid
+                                            losing track of the schema associated with the
+                                            data.</note></entry>
                                 </row>
                             </tbody>
                         </tgroup>

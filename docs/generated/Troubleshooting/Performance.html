@@ -36,9 +36,19 @@
     
      <dt class="dt dlterm">How can I tell what's slowing down my pipeline?</dt>
 
-     <dd class="dd">
-      
-     </dd>
+     <dd class="dd">Review the information available in the <span class="ph">Data
+                  Collector</span> console in
+      Monitor mode. Charts provide information about the record count,  record throughput, and batch
+      throughput for the pipeline. To determine where processing slows, you can click each stage to
+      view the count and throughput details for the stage.</dd>
+
+     <dd class="dd">If the origin is the issue, you might tune the batch size or batch wait time properties or
+      adjust related properties in the origin system. If the destinations cause the problem, try
+      adjusting  any performance-related properties in the destination or related properties in the
+      destination system.</dd>
+
+     <dd class="dd">If a processor causes the problem, you might take a snapshot of the pipeline to review how
+      data passes through the pipeline and consider options for streamlining processing. </dd>
 
     
     
