@@ -22,11 +22,12 @@
   <packaging>jar</packaging>
 
   <properties>
-    <hadoop.version>2.7.1.2.3.0.0-2557</hadoop.version>
     <flume.version>1.5.2.2.3.0.0-2557</flume.version>
+    <hadoop.version>2.7.1.2.3.0.0-2557</hadoop.version>
+    <hbase.version>1.1.1.2.3.0.0-2557</hbase.version>
+    <hive.version>1.2.1.2.3.0.0-2557</hive.version>
     <kafka.version>0.8.2.2.3.0.0-2557</kafka.version>
     <thrift.version>0.9.0</thrift.version>
-    <hbase.version>1.1.1.2.3.0.0-2557</hbase.version>
     <zk-client.version>0.5-1</zk-client.version>
   </properties>
 
@@ -197,8 +198,43 @@
       <scope>test</scope>
     </dependency>
 
-    <!-- HBase related -->
+    <!-- Hive related -->
+    <dependency>
+      <groupId>com.streamsets</groupId>
+      <artifactId>streamsets-datacollector-hive-protolib</artifactId>
+      <version>${project.version}</version>
+      <scope>compile</scope>
+      <exclusions>
+        <exclusion>
+          <groupId>org.apache.hadoop</groupId>
+          <artifactId>hadoop-client</artifactId>
+        </exclusion>
+        <exclusion>
+          <groupId>org.apache.hive.hcatalog</groupId>
+          <artifactId>hive-hcatalog-streaming</artifactId>
+        </exclusion>
+        <exclusion>
+          <groupId>org.apache.hive.hcatalog</groupId>
+          <artifactId>hive-hcatalog-core</artifactId>
+        </exclusion>
+      </exclusions>
+    </dependency>
 
+    <dependency>
+      <groupId>org.apache.hive.hcatalog</groupId>
+      <artifactId>hive-hcatalog-streaming</artifactId>
+      <version>${hive.version}</version>
+      <scope>compile</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>org.apache.hive.hcatalog</groupId>
+      <artifactId>hive-hcatalog-core</artifactId>
+      <version>${hive.version}</version>
+      <scope>compile</scope>
+    </dependency>
+
+    <!-- HBase related -->
     <dependency>
       <groupId>com.streamsets</groupId>
       <artifactId>streamsets-datacollector-hbase-protolib</artifactId>
