@@ -400,6 +400,7 @@
       "confirmationMessage": "Are you sure you want to shutdown Data Collector?",
       "headerLabel": "Shutdown Collector",
       "secretPlaceholder": "Enter Secret...",
+      "shuttingDown": "Shutting Down the Data Collector...",
       "successMessage": "Collector is stopped."
     },
     "snapshotsPane": {
