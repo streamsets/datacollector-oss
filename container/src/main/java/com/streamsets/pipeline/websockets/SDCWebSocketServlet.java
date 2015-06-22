@@ -13,6 +13,7 @@ import com.streamsets.pipeline.prodmanager.PipelineManager;
 import com.streamsets.pipeline.prodmanager.StateEventListener;
 import com.streamsets.pipeline.util.AuthzRole;
 import com.streamsets.pipeline.util.Configuration;
+import org.eclipse.jetty.websocket.api.WebSocketException;
 import org.eclipse.jetty.websocket.servlet.ServletUpgradeRequest;
 import org.eclipse.jetty.websocket.servlet.ServletUpgradeResponse;
 import org.eclipse.jetty.websocket.servlet.WebSocketCreator;
@@ -65,8 +66,8 @@ public class SDCWebSocketServlet extends WebSocketServlet implements WebSocketCr
             }
           } catch (InterruptedException ex) {
             //NOP
-          } catch (IOException ex) {
-            LOG.warn("Faile to send WebSocket messsage: {}", ex.getMessage(), ex);
+          } catch (IOException | WebSocketException ex) {
+            LOG.warn("Failed to send WebSocket message: {}", ex.getMessage(), ex);
           }
         }
       }
