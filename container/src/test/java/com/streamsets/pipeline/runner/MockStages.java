@@ -14,6 +14,8 @@ import com.streamsets.pipeline.api.ErrorListener;
 import com.streamsets.pipeline.api.ExecutionMode;
 import com.streamsets.pipeline.api.OffsetCommitter;
 import com.streamsets.pipeline.api.Processor;
+import com.streamsets.pipeline.api.RawSource;
+import com.streamsets.pipeline.api.RawSourcePreviewer;
 import com.streamsets.pipeline.api.Source;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.Target;
@@ -22,16 +24,19 @@ import com.streamsets.pipeline.config.ConfigDefinition;
 import com.streamsets.pipeline.config.ModelDefinition;
 import com.streamsets.pipeline.config.ModelType;
 import com.streamsets.pipeline.config.PipelineConfiguration;
-import com.streamsets.pipeline.definition.PipelineDefConfigs;
+import com.streamsets.pipeline.config.RawSourceDefinition;
 import com.streamsets.pipeline.config.StageConfiguration;
 import com.streamsets.pipeline.config.StageDefinition;
 import com.streamsets.pipeline.config.StageLibraryDefinition;
 import com.streamsets.pipeline.config.StageType;
+import com.streamsets.pipeline.definition.PipelineDefConfigs;
 import com.streamsets.pipeline.el.ElConstantDefinition;
 import com.streamsets.pipeline.el.ElFunctionDefinition;
 import com.streamsets.pipeline.stagelibrary.StageLibraryTask;
 import com.streamsets.pipeline.store.PipelineStoreTask;
 
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -91,6 +96,49 @@ public class MockStages {
     errorCapture = t;
   }
 
+  public static class MockRawSourcePreviewer implements RawSourcePreviewer {
+
+    @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.STRING,
+      defaultValue = "localhost",
+      label = "Broker Host",
+      description = "",
+      displayPosition = 10
+    )
+    public String brokerHost;
+
+    @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.NUMBER,
+      defaultValue = "9092",
+      label = "Broker Port",
+      description = "",
+      displayPosition = 20,
+      min = 1,
+      max = Integer.MAX_VALUE
+    )
+    public int brokerPort;
+
+    @Override
+    public InputStream preview(int maxLength) {
+      StringBuilder sb = new StringBuilder();
+      sb.append(brokerHost).append(":").append(brokerPort);
+      return new ByteArrayInputStream(sb.toString().getBytes());
+    }
+
+    @Override
+    public String getMimeType() {
+      return "*/*";
+    }
+
+    @Override
+    public void setMimeType(String mimeType) {
+
+    }
+  }
+
+  @RawSource(rawSourcePreviewer = MockRawSourcePreviewer.class, mimeType = "*/*")
   public static class MSource implements Source, ErrorListener {
 
     @Override
@@ -402,12 +450,24 @@ public class MockStages {
       }
 
       public Builder(ClassLoader cl) {
+
+        ConfigDefinition brokerHostConfig = new ConfigDefinition("brokerHost", ConfigDef.Type.STRING, "brokerHost", "",
+          "", true, "", "brokerHost", null, "", null, 10, Collections.<ElFunctionDefinition>emptyList(),
+          Collections.<ElConstantDefinition>emptyList(), 0, 0,
+          "", 0, Collections.<Class>emptyList(), ConfigDef.Evaluation.IMPLICIT, Collections.<String, List<Object>>emptyMap());
+        ConfigDefinition brokerPortConfig = new ConfigDefinition("brokerPort", ConfigDef.Type.NUMBER, "brokerPort", "",
+          "", true, "", "brokerPort", null, "", null, 10, Collections.<ElFunctionDefinition>emptyList(),
+          Collections.<ElConstantDefinition>emptyList(), 0, 0,
+          "", 0, Collections.<Class>emptyList(), ConfigDef.Evaluation.IMPLICIT, Collections.<String, List<Object>>emptyMap());
+
+        RawSourceDefinition rawSourceDefinition = new RawSourceDefinition(MockRawSourcePreviewer.class.getName(), "*/*",
+          Arrays.asList(brokerHostConfig, brokerPortConfig));
+
         StageDefinition sDef = new StageDefinition(createLibraryDef(cl),
           MSource.class, "sourceName", "1.0.0", "sourceLabel",
           "sourceDesc", StageType.SOURCE, false,  true, true, Collections.<ConfigDefinition>emptyList(),
-          null/*raw source definition*/, "", null, false, 1, null,
-          Arrays.asList(ExecutionMode.CLUSTER, ExecutionMode.STANDALONE), false
-        );
+          rawSourceDefinition, "", null, false, 1, null,
+          Arrays.asList(ExecutionMode.CLUSTER, ExecutionMode.STANDALONE), false);
 
         StageDefinition socDef = new StageDefinition(createLibraryDef(cl),
           MSourceOffsetCommitter.class, "sourceOffsetCommitterName", "1.0.0", "sourceOffsetCommitterLabel",

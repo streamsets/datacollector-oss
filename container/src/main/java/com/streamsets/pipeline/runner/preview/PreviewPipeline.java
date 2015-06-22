@@ -46,4 +46,8 @@ public class PreviewPipeline {
     return pipeline.validateConfigs();
   }
 
+  public void destroy() {
+    pipeline.destroy();
+  }
+
 }

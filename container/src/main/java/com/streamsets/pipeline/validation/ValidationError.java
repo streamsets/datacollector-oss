@@ -89,6 +89,8 @@ public enum ValidationError implements ErrorCode {
   VALIDATION_0080("Precondition '{}' must begin with '${' and end with '}'"),
   VALIDATION_0081("Invalid precondition '{}': {}"),
 
+  VALIDATION_0090("Encountered exception while validating configuration : {}"),
+
   ;
 
   private final String msg;
