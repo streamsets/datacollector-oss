@@ -7,14 +7,16 @@
 </div>
 <div class="modal-body">
   <ng-include src="'app/home/alerts/error/errorAlert.tpl.html'"></ng-include>
-  <p translate="home.header.stopConfirmationMessage" translate-values="{name: pipelineInfo.name}">
-  </p>
+  <p translate="home.header.stopConfirmationMessage"
+     ng-if="!stopping"
+     translate-values="{name: pipelineInfo.name}"></p>
+  <p translate="home.header.stoppingPipeline" ng-if="stopping"></p>
 </div>
 <div class="modal-footer">
-  <button type="button" class="btn btn-default" ng-click="no()" translate="global.form.no">
+  <button type="button" class="btn btn-default" ng-click="no()" translate="global.form.no" ng-disabled="stopping">
     No
   </button>
-  <button type="button" class="btn btn-primary" ng-click="yes()" translate="global.form.yes">
+  <button type="button" class="btn btn-primary" ng-click="yes()" translate="global.form.yes" ng-disabled="stopping">
     Yes
   </button>
 </div>
