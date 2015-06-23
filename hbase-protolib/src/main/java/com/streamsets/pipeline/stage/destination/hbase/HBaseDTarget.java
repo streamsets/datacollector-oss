@@ -102,49 +102,16 @@ public class HBaseDTarget extends DTarget {
       group = "HBASE")
   public boolean kerberosAuth;
 
-  @ConfigDef(required = false,
-      type = ConfigDef.Type.STRING,
-      label = "Kerberos Principal",
-      displayPosition = 90,
-      group = "HBASE",
-      dependsOn = "kerberosAuth",
-      triggeredByValue = "true")
-  public String kerberosPrincipal;
-
-  @ConfigDef(required = false,
-      type = ConfigDef.Type.STRING,
-      label = "Kerberos Keytab (file)",
-      description = "",
-      displayPosition = 100, group = "HBASE",
-      dependsOn = "kerberosAuth",
-      triggeredByValue = "true")
-  public String kerberosKeytab;
-
-  @ConfigDef(required = false,
+  @ConfigDef(
+    required = false,
     type = ConfigDef.Type.STRING,
-    label = "Master Kerberos Principal",
-    description = "The Kerberos principal name that should be used to run the HBase Master process. "
-        + "The principal name should be in the form: user/hostname@DOMAIN. "
-        + "If \"_HOST\" is used as the hostname portion, it will be replaced with the actual hostname of the running instance "
-        + "Eg. hbase/_HOST@EXAMPLE.COM ",
-    displayPosition = 110,
-    group = "HBASE",
-    dependsOn = "kerberosAuth",
-    triggeredByValue = "true")
-  public String masterPrincipal;
-
-  @ConfigDef(required = false,
-    type = ConfigDef.Type.STRING,
-    label = "RegionServer Kerberos Principal",
-    description = "The Kerberos principal name that should be used to run the HBase RegionServer process. "
-      + "The principal name should be in the form: user/hostname@DOMAIN. "
-      + "If \"_HOST\" is used as the hostname portion, it will be replaced with the actual hostname of the running instance. "
-      + "Eg. hbase/_HOST@EXAMPLE.COM ",
-    displayPosition = 120,
-    group = "HBASE",
-    dependsOn = "kerberosAuth",
-    triggeredByValue = "true")
-  public String regionServerPrincipal;
+    label = "HBase User",
+    description = "If set, the data collector will write to HBase as this user. " +
+                  "The data collector user must be configured as a proxy user in HDFS.",
+    displayPosition = 90,
+    group = "HBASE"
+  )
+  public String hbaseUser;
 
   @ConfigDef(
     required = false,
@@ -152,7 +119,7 @@ public class HBaseDTarget extends DTarget {
     defaultValue = "",
     label = "HBase Configuration Directory",
     description = "An absolute path or a directory under SDC resources directory to load hbase-site.xml configuration file",
-    displayPosition = 130,
+    displayPosition = 100,
     group = "HBASE")
   public String hbaseConfDir;
 
@@ -160,15 +127,15 @@ public class HBaseDTarget extends DTarget {
       type = ConfigDef.Type.MAP,
       label = "HBase Configuration",
       description = "Additional HBase client properties",
-      displayPosition = 140,
+      displayPosition = 110,
       group = "HBASE")
   public Map<String, String> hbaseConfigs;
 
   @Override
   protected Target createTarget() {
     return new HBaseTarget(zookeeperQuorum, clientPort, zookeeperParentZnode, tableName, hbaseRowKey,
-        rowKeyStorageType, hbaseFieldColumnMapping, kerberosAuth, kerberosPrincipal, kerberosKeytab, masterPrincipal, regionServerPrincipal,
-        hbaseConfDir, hbaseConfigs);
+        rowKeyStorageType, hbaseFieldColumnMapping, kerberosAuth, hbaseConfDir, hbaseConfigs, hbaseUser);
+
   }
 
 }
