@@ -8,7 +8,6 @@ package com.streamsets.pipeline.stage.processor.expression;
 import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.FieldSelector;
 import com.streamsets.pipeline.lib.el.RecordEL;
-import com.streamsets.pipeline.lib.el.StringEL;
 
 public class ExpressionProcessorConfig {
 
@@ -19,7 +18,9 @@ public class ExpressionProcessorConfig {
       label = "Output Field",
       description = "Use an existing field or enter a new field. Using an existing field overwrites the " +
                     "original value.",
-      displayPosition = 10
+      displayPosition = 10,
+      group = "EXPRESSIONS"
+
   )
   @FieldSelector(singleValued = true)
   public String fieldToSet;
@@ -32,7 +33,8 @@ public class ExpressionProcessorConfig {
       description = "Use the expression language to modify values in a field.",
       displayPosition = 20,
       elDefs = {RecordEL.class, ELSupport.class},
-      evaluation = ConfigDef.Evaluation.EXPLICIT
+      evaluation = ConfigDef.Evaluation.EXPLICIT,
+      group = "EXPRESSIONS"
   )
   public String expression;
 
