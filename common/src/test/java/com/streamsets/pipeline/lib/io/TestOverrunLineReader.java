@@ -5,6 +5,7 @@
  */
 package com.streamsets.pipeline.lib.io;
 
+import org.apache.commons.io.IOUtils;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -77,5 +78,45 @@ public class TestOverrunLineReader {
     Assert.assertEquals("123456781231", sb.toString());
   }
 
+  @Test
+  public void testPosNotAvail() throws Exception {
+    OverrunLineReader lr = new OverrunLineReader(getReaderStream(), 8);
+    Assert.assertEquals(-1, lr.getPos());
+    Assert.assertEquals(10, lr.readLine(new StringBuilder()));
+    Assert.assertEquals(-1, lr.getPos());
+  }
+
+  @Test
+  public void testPos() throws Exception {
+    OverrunLineReader lr = new OverrunLineReader(new OverrunReader(getReaderStream(), 100, false, false), 8);
+    Assert.assertEquals(0, lr.getPos());
+    Assert.assertEquals(10, lr.readLine(new StringBuilder()));
+    Assert.assertEquals(11, lr.getPos());
+    Assert.assertEquals(0, lr.readLine(new StringBuilder()));
+    Assert.assertEquals(12, lr.getPos());
+    Assert.assertEquals(0, lr.readLine(new StringBuilder()));
+    Assert.assertEquals(13, lr.getPos());
+    Assert.assertEquals(3, lr.readLine(new StringBuilder()));
+    Assert.assertEquals(18, lr.getPos());
+    Assert.assertEquals(0, lr.readLine(new StringBuilder()));
+    Assert.assertEquals(19, lr.getPos());
+    Assert.assertEquals(1, lr.readLine(new StringBuilder()));
+    Assert.assertEquals(20, lr.getPos());
+    Assert.assertEquals(-1, lr.readLine(new StringBuilder()));
+    Assert.assertEquals(20, lr.getPos());
+  }
+
+  @Test
+  public void testPosStartingAtOffset() throws Exception {
+    OverrunLineReader lr = new OverrunLineReader(new OverrunReader(getReaderStream(), 100, false, false), 8);
+    IOUtils.skipFully(lr, 18);
+    Assert.assertEquals(18, lr.getPos());
+    Assert.assertEquals(0, lr.readLine(new StringBuilder()));
+    Assert.assertEquals(19, lr.getPos());
+    Assert.assertEquals(1, lr.readLine(new StringBuilder()));
+    Assert.assertEquals(20, lr.getPos());
+    Assert.assertEquals(-1, lr.readLine(new StringBuilder()));
+    Assert.assertEquals(20, lr.getPos());
+  }
 
 }
