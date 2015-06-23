@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE task PUBLIC "-//OASIS//DTD DITA General Task//EN" "generalTask.dtd">
+<task id="task_ftt_2vq_ks">
+    <title>Configure the Origin</title>
+    <shortdesc>The origin represents the source data for the pipeline. When you configure the
+        origin, you define how to connect to the data, and the type of data you're using. </shortdesc>
+    <taskbody>
+        <context>
+            <p>In this case, use the Directory origin to process static file data.</p>
+        </context>
+        <steps id="steps_ckz_gvq_ks">
+            <step>
+                <cmd>In the Stage list, click the <uicontrol>Directory</uicontrol> origin. After the
+                    origin appears in the canvas, select the origin.</cmd>
+                <info>The Properties panel displays the configuration options for the selected
+                    stage. Or, if you click an unused section of the pipeline, it displays pipeline
+                    properties. </info>
+            </step>
+            <step>
+                <cmd>In the Properties panel, click the <wintitle>Files</wintitle> tab and configure
+                    the following properties - use defaults for all other properties:</cmd>
+                <info>
+                    <table frame="all" rowsep="1" colsep="1" id="table_w5c_jyq_ks">
+                        <tgroup cols="2">
+                            <colspec colname="c1" colnum="1" colwidth="1.0*"/>
+                            <colspec colname="c2" colnum="2" colwidth="1.0*"/>
+                            <thead>
+                                <row>
+                                    <entry>Directory Property</entry>
+                                    <entry>Value</entry>
+                                </row>
+                            </thead>
+                            <tbody>
+                                <row>
+                                    <entry>Data Format</entry>
+                                    <entry>Delimited</entry>
+                                </row>
+                                <row>
+                                    <entry>Files Directory</entry>
+                                    <entry>Enter the local directory where you saved the source
+                                        file. </entry>
+                                </row>
+                                <row>
+                                    <entry>File Name Pattern</entry>
+                                    <entry>Since the file is the only file in the directory, you can
+                                        use the asterisk wild card: *.</entry>
+                                </row>
+                            </tbody>
+                        </tgroup>
+                    </table>
+                </info>
+            </step>
+        </steps>
+    </taskbody>
+</task>

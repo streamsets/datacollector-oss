@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
+<concept id="concept_ez2_3jl_ls">
+ <title>Regex Examples</title>
+ <conbody>
+  <p>
+   <dl>
+    <dlentry>
+     <dt>Masking credit card numbers, except for one group</dt>
+     <dd>You can use the following regular expression in the Field Masker to mask all numbers in a
+      credit or debit card except for the last 4 digits: <codeblock>(.*)([0-9]{4})</codeblock></dd>
+     <dd>This regex defines two groups. The first uses /d* to represent any number, with any number
+      of numbers. And the second group represents the last four digits. In the Field Masker, for the
+      Groups to Show property, you can then enter 2 to display the last 4 digits of a credit card
+      number.</dd>
+     <dd>The following regular expressions perform the same
+      task:<codeblock>(/d*)(/d{4})
+(/d*)(/d/d/d/d)</codeblock></dd>
+    </dlentry>
+   </dl>
+  </p>
+ </conbody>
+</concept>

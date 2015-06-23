@@ -9,6 +9,20 @@
         <steps id="steps_pf2_wvz_sq">
             <step>
                 <cmd>
+                    <draft-comment author="Loretta">The following step is used in Configuring a
+                        Pipeline and the tutorial pipeline config topic.</draft-comment>
+                </cmd>
+            </step>
+            <step id="CreatePipeline">
+                <cmd>If this is the first pipeline for the <ph
+                        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                    />, click <uicontrol>Create Pipeline</uicontrol>. </cmd>
+                <info>If you have created other pipelines, if necessary, use the <uicontrol>Toggle
+                        Library</uicontrol> icon to display the pipeline library, and click the
+                        <uicontrol>Create New Pipeline</uicontrol> icon.</info>
+            </step>
+            <step>
+                <cmd>
                     <draft-comment author="Loretta">The steps below are for data preview. They are
                         used in "Previewing a Single Stage" and "Previewing Multiple
                         Stages."</draft-comment>

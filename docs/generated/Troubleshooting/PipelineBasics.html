@@ -2,15 +2,15 @@
 <!DOCTYPE html
   SYSTEM "about:legacy-compat">
 <html xml:lang="en-us" lang="en-us">
-<head><meta name="description" content="Use the following tips for help with pipeline basics: When I go to the Data Collector console, I get a &#34;Webpage not available&#34; error message. The Data Collector is not running. Start the Data ..."></meta><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><meta name="copyright" content="(C) Copyright 2005"></meta><meta name="DC.rights.owner" content="(C) Copyright 2005"></meta><meta name="DC.Type" content="concept"></meta><meta name="DC.Title" content="Pipeline Basics"></meta><meta name="DC.Relation" scheme="URI" content="../Troubleshooting/Troubleshooting_title.html"></meta><meta name="DC.Relation" scheme="URI" content="../Troubleshooting/DataPreview.html"></meta><meta name="DC.Format" content="XHTML"></meta><meta name="DC.Identifier" content="concept_vxd_tsm_tq"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/commonltr.css"><!----></link><title>Pipeline Basics</title><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/webhelp_topic.css"><!----></link><link rel="stylesheet" type="text/css" href="../skin.css"></link><script type="text/javascript"><!--
+<head><meta name="description" content="Use the following tips for help with pipeline basics: When I go to the Data Collector console, I get a &#34;Webpage not available&#34; error message. The Data Collector is not running. Start the Data ..."></meta><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><meta name="copyright" content="(C) Copyright 2005"></meta><meta name="DC.rights.owner" content="(C) Copyright 2005"></meta><meta name="DC.Type" content="concept"></meta><meta name="DC.Title" content="Pipeline Basics"></meta><meta name="DC.Relation" scheme="URI" content="../Troubleshooting/Troubleshooting_title.html"></meta><meta name="DC.Format" content="XHTML"></meta><meta name="DC.Identifier" content="concept_vxd_tsm_tq"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/commonltr.css"><!----></link><title>Pipeline Basics</title><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/webhelp_topic.css"><!----></link><link rel="stylesheet" type="text/css" href="../skin.css"></link><script type="text/javascript"><!--
           
           var prefix = "../index.html";
           
           --></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery-1.8.2.min.js"><!----></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery.cookie.js"><!----></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery-ui.custom.min.js"><!----></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery.highlight-3.js"><!----></script><script type="text/javascript" charset="utf-8" src="../oxygen-webhelp/resources/js/webhelp_topic.js"><!----></script></head>
-<body onload="highlightSearchTerm()" class="frmBody" id="concept_vxd_tsm_tq">
+<body onload="highlightSearchTerm()" class="frmBody">
 <table class="nav"><tbody><tr><td colspan="2"><div id="printlink"><a href="javascript:window.print();" title="Print this page"></a></div><div id="permalink"><a href="#" title="Link to this page"></a></div></td></tr><tr><td width="75%"><a class="navheader_parent_path" href="../Troubleshooting/Troubleshooting_title.html" title="Troubleshooting">Troubleshooting</a></td><td><div class="navheader">
 <span class="navparent"><a class="link" href="../Troubleshooting/Troubleshooting_title.html" title="Troubleshooting"><span class="navheader_label">Parent topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">Troubleshooting</span></a></span>  </div></td></tr></tbody></table>
-
+<div class="nested0" id="concept_vxd_tsm_tq">
   <h1 class="title topictitle1">Pipeline Basics</h1>
 
   <div class="body conbody">
@@ -75,11 +75,55 @@
 
   </div>
 
-<div class="related-links">
-<ul class="ullinks">
-<li class="link ulchildlink"><strong><a href="../Troubleshooting/DataPreview.html">Data Preview</a></strong><br></br>
-</li>
-</ul>
+<div class="related-links"></div>
+<div class="topic concept nested1" id="concept_tz4_fhm_js">
+ <h2 class="title topictitle2">Data Preview </h2>
+
+ <div class="body conbody">
+  <div class="p">Use the following tips
+   for help with data preview:<dl class="dl">
+    
+     <dt class="dt dlterm">Why isn't the Data Preview icon enabled?</dt>
+
+     <dd class="dd">You can preview data after you connect all stages in the pipeline and configure required
+      properties. You can use any valid value as a placeholder. </dd>
+
+    
+    
+     <dt class="dt dlterm">Why doesn't the data preview show any data?</dt>
+
+     <dd class="dd">If data preview doesn't show any data, one of the following issues might have occurred:<ul class="ul" id="concept_tz4_fhm_js__ul_r5n_jgm_2s">
+       <li class="li">The origin might not be configured correctly. In the Preview panel, check the Issues tab
+        of the origin stage for related issues.</li>
+
+       <li class="li">The origin might not have any data at the moment. </li>
+
+      </ul>
+</dd>
+
+    
+    
+     <dt class="dt dlterm">Why am I only getting 10 records to preview when I'm asking for more?</dt>
+
+     <dd class="dd">The <span class="ph">Data
+                  Collector</span>
+      maximum preview batch size overrides the data preview batch size. The <span class="ph">Data
+                  Collector</span> default is
+      10 records. </dd>
+
+     <dd class="dd">When you request data preview, you can request up to the <span class="ph">Data
+                  Collector</span> preview
+      batch size, or you can increase the <samp class="ph codeph">preview.maxBatchSize</samp> property in the <span class="ph">Data
+                  Collector</span>
+      configuration file. </dd>
+
+    
+   </dl>
+</div>
+
+ </div>
+
+</div>
 </div>
 <div class="navfooter"><!---->
 <span class="navparent"><a class="link" href="../Troubleshooting/Troubleshooting_title.html" title="Troubleshooting"><span class="navheader_label">Parent topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">Troubleshooting</span></a></span>  </div><div class="footer"><div> </div><!-- © <a href="http://creativecommons.org/licenses/by-nc/4.0/legalcode">CC BY-NC 4.0.</a> StreamSets, 2015. --></div>

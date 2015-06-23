@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
+<concept id="concept_is5_lrq_ks">
+ <title>Tutorial Overview</title>
+ <shortdesc>This tutorial shows you how to create a pipeline. You can optionally download sample
+  data and set up local systems to host source and target data so you can run the
+  pipeline.</shortdesc>
+ <conbody>
+  <p>In this tutorial, we evaluate fare payment data from a taxi company. We want a break down of
+   the credit cards used for payment to determine if we can safely drop any card vendors to reduce
+   overhead. </p>
+  <p>We'll create the following pipeline structured as follows:<ul id="ul_gbm_4pl_ls">
+    <li>Directory origin - Represents source data.</li>
+    <li>Stream Selector - Routes credit card transactions through a separate branch for
+     processing.</li>
+    <li>CC Type Evaluator - Evaluates credit card numbers to determine the credit card vendor used
+     for each transaction. Creates a new field in the data for the credit card vendor name. </li>
+    <li>Credit Card Masker - Secures data by masking most of the credit card numbers.</li>
+    <li>Add Corresponding Fields - Adds fields to non-credit card records so they use the same
+     format as the credit card records.</li>
+    <li>HadoopFS - Destination for processed data. </li>
+   </ul></p>
+  <p><image href="../Graphics/Tutorial-Pipeline.png" id="image_ewm_cpl_ls" scale="80"/></p>
+ </conbody>
+</concept>

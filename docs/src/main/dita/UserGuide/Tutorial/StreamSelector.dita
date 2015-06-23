@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE task PUBLIC "-//OASIS//DTD DITA General Task//EN" "generalTask.dtd">
+<task id="task_br5_rzq_ks">
+    <title>Route Data with the Stream Selector</title>
+    <shortdesc>To separate records that use credit card for payment, we use the Stream Selector
+        processor. </shortdesc>
+    <taskbody>
+        <context>
+            <p>The Stream Selector uses user-defined conditions to route data. Any data not captured
+                by a user-defined condition routes to the default stream. </p>
+            <p>In this case, because the data is delimited, we use a delimited data function. The
+                    <codeph>record:dValue</codeph> function returns the value of the specified
+                field, so to capture records with credit card payments you use the following
+                condition: <codeblock>${record:dValue('payment_type') == 'CRD'}</codeblock></p>
+        </context>
+        <steps id="steps_xhx_3rk_ls">
+            <step>
+                <cmd>In the stage library, select the <uicontrol>Stream Selector</uicontrol>
+                    processor and connect it to the pipeline. </cmd>
+            </step>
+            <step>
+                <cmd>With the Stream Selector selected, in the Properties panel, click the
+                        <uicontrol>Conditions</uicontrol> tab.</cmd>
+                <info>A default condition for the default stream displays. The default stream
+                    represents any records not captured by other conditions.</info>
+            </step>
+            <step>
+                <cmd>Click the <uicontrol>Add</uicontrol> icon.</cmd>
+                <info>A condition text box displays, as well as the corresponding output
+                    location.</info>
+            </step>
+            <step>
+                <cmd>Enter the following condition to capture records where a credit card is used
+                    for payment:</cmd>
+                <info>
+                    <codeblock>${record:dValue('payment_type') == 'CRD'}</codeblock>
+                </info>
+                <info>All other records are captured by the default condition and stream.</info>
+            </step>
+        </steps>
+    </taskbody>
+</task>

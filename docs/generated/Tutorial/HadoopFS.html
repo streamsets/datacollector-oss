@@ -1,0 +1,116 @@
+
+<!DOCTYPE html
+  SYSTEM "about:legacy-compat">
+<html xml:lang="en-us" lang="en-us">
+<head><meta name="description" content="You can use the Hadoop FS destination to write tutorial data to a Hadoop file system or a local directory. When you configure the output file properties, you define the directory template, which ..."></meta><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><meta name="copyright" content="(C) Copyright 2005"></meta><meta name="DC.rights.owner" content="(C) Copyright 2005"></meta><meta name="DC.Type" content="task"></meta><meta name="DC.Title" content="Writing to the Destination"></meta><meta name="abstract" content="You can use the Hadoop FS destination to write tutorial data to a Hadoop file system or a local directory."></meta><meta name="description" content="You can use the Hadoop FS destination to write tutorial data to a Hadoop file system or a local directory."></meta><meta name="DC.Relation" scheme="URI" content="../Tutorial/Tutorial-title.html"></meta><meta name="DC.Format" content="XHTML"></meta><meta name="DC.Identifier" content="task_wsj_5tm_ls"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/commonltr.css"><!----></link><title>Writing to the Destination</title><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/webhelp_topic.css"><!----></link><link rel="stylesheet" type="text/css" href="../skin.css"></link><script type="text/javascript"><!--
+          
+          var prefix = "../index.html";
+          
+          --></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery-1.8.2.min.js"><!----></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery.cookie.js"><!----></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery-ui.custom.min.js"><!----></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery.highlight-3.js"><!----></script><script type="text/javascript" charset="utf-8" src="../oxygen-webhelp/resources/js/webhelp_topic.js"><!----></script></head>
+<body onload="highlightSearchTerm()" class="frmBody" id="task_wsj_5tm_ls">
+<table class="nav"><tbody><tr><td colspan="2"><div id="printlink"><a href="javascript:window.print();" title="Print this page"></a></div><div id="permalink"><a href="#" title="Link to this page"></a></div></td></tr><tr><td width="75%"><a class="navheader_parent_path" href="../Tutorial/Tutorial-title.html" title="Data Collector Tutorial">Data Collector Tutorial</a></td><td><div class="navheader">
+<span class="navparent"><a class="link" href="../Tutorial/Tutorial-title.html" title="Data Collector Tutorial"><span class="navheader_label">Parent topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">Data Collector Tutorial</span></a></span>  </div></td></tr></tbody></table>
+
+    <h1 class="title topictitle1">Writing to the Destination</h1>
+
+    
+    <div class="body taskbody"><p class="shortdesc">You can use the Hadoop FS destination to write tutorial data to a Hadoop file system
+        or a local directory. </p>
+
+        <div class="section context">
+            <p class="p">When you configure the output file properties, you define the directory template,
+                which determines the naming convention for the output directories that are created.
+                Use the directory where you want the output files to be written. </p>
+
+        </div>
+
+        <ol class="ol steps" id="task_wsj_5tm_ls__steps_xdd_wwm_ls"><li class="li step stepexpand">
+                <span class="ph cmd">From the stage library, select the <span class="ph uicontrol">Hadoop FS</span> processor
+                    and connect it to the previous stage. </span>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">With the destination selected, in the Properties panel, click the
+                        <span class="keyword wintitle">Hadoop FS</span> tab. If you have a real Hadoop FS
+                    installation, configure the stage to write to it.</span>
+                <div class="itemgroup info">To use Hadoop FS to write to a local filesystem, enter the following
+                    configuration for the <span class="ph uicontrol">Hadoop FS URI</span> property:
+                        <samp class="ph codeph">file:///</samp>.</div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">Click the <span class="keyword wintitle">Output Files</span> tab and configure the following
+                    properties. Use the defaults for the rest:</span>
+                <div class="itemgroup info">
+                    
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_wsj_5tm_ls__table_kcy_5bn_ls" class="table" frame="border" border="1" rules="all">
+                            
+                            
+                            <thead class="thead" align="left">
+                                <tr class="row">
+                                    <th class="entry" valign="top" width="29.49852507374631%" id="d45557e72">Hadoop FS Property</th>
+
+                                    <th class="entry" valign="top" width="70.50147492625369%" id="d45557e75">Configuration</th>
+
+                                </tr>
+
+                            </thead>
+
+                            <tbody class="tbody">
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="29.49852507374631%" headers="d45557e72 ">Data Format</td>
+
+                                    <td class="entry" valign="top" width="70.50147492625369%" headers="d45557e75 ">Delimited</td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="29.49852507374631%" headers="d45557e72 ">Files Prefix</td>
+
+                                    <td class="entry" valign="top" width="70.50147492625369%" headers="d45557e75 ">Taxi_</td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="29.49852507374631%" headers="d45557e72 ">Directory Template</td>
+
+                                    <td class="entry" valign="top" width="70.50147492625369%" headers="d45557e75 ">Use the output directory where you want the files to be
+                                        written and optionally include constants to indicate the
+                                        frequency at which the files should be rolled over. <p class="p">For
+                                            example the following directory rolls the output file
+                                            once a year, but works for this tutorial:
+                                                <samp class="ph codeph">&lt;output
+                                            directory&gt;/${YYYY()}</samp>.</p>
+</td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="29.49852507374631%" headers="d45557e72 ">Max Records in File</td>
+
+                                    <td class="entry" valign="top" width="70.50147492625369%" headers="d45557e75 ">250000</td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="29.49852507374631%" headers="d45557e72 ">Max File Size</td>
+
+                                    <td class="entry" valign="top" width="70.50147492625369%" headers="d45557e75 ">If writing to a local file system, you might prefer to
+                                        lower the file size to something manageable, like 5.</td>
+
+                                </tr>
+
+                            </tbody>
+
+                        </table>
+</div>
+
+                </div>
+            </li>
+</ol>
+
+    </div>
+
+<div class="related-links"></div>
+<div class="navfooter"><!---->
+<span class="navparent"><a class="link" href="../Tutorial/Tutorial-title.html" title="Data Collector Tutorial"><span class="navheader_label">Parent topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">Data Collector Tutorial</span></a></span>  </div><div class="footer"><div> </div><!-- © <a href="http://creativecommons.org/licenses/by-nc/4.0/legalcode">CC BY-NC 4.0.</a> StreamSets, 2015. --></div>
+</body>
+</html>

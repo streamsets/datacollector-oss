@@ -1,56 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_vd4_nsc_gs">
- <title>Regular Expressions in the Pipeline</title>
- <shortdesc>A regular expression, also known as <term>regex</term>, describes a pattern for a
-    string. Though generally not required, you can use Java-based regular expressions at various
-    locations within a pipeline to define, search, or manipulate strings. </shortdesc>
- <conbody>
-  <p><indexterm>regular expressions<indexterm>in the pipeline</indexterm></indexterm>For example, in
-      the Field Masker processor, you can use a fixed length, variable length, or custom static mask
-      to mask data in a field. Or, you can use a regular expression to define a specific custom
-      mask. Similarly, you can use a regular expression to define the pattern of a log line if the
-      pattern is not a common structure available for selection. </p>
-    <p>The following table describes the ways you can use a regular expression in the
-        pipeline:<table frame="all" rowsep="1" colsep="1" id="table_nvq_ywt_js">
-        <tgroup cols="2">
-          <colspec colname="c1" colnum="1" colwidth="1*"/>
-          <colspec colname="c2" colnum="2" colwidth="3.08*"/>
-          <thead>
-            <row>
-              <entry>Location</entry>
-              <entry>Description</entry>
-            </row>
-          </thead>
-          <tbody>
-            <row>
-              <entry>Directory origin</entry>
-              <entry>Optionally use to define the pattern of the file name.</entry>
-            </row>
-            <row>
-              <entry>File Tail origin</entry>
-              <entry>Use to define the ${PATTERN} constant when you use the Files Matching a Pattern
-                naming option. <p>Use to define the structure of a log line or text.</p></entry>
-            </row>
-            <row>
-              <entry>Origins that process log data<p>Log Parser processor</p></entry>
-              <entry>Optionally use to define the pattern of the log line.</entry>
-            </row>
-            <row>
-              <entry>Field Masker processor</entry>
-              <entry>Optionally use to define the field mask.</entry>
-            </row>
-            <row>
-              <entry>regexCapture function</entry>
-              <entry>Use to define the groups and pattern of the string so you can specify the group
-                to return.</entry>
-            </row>
-            <row>
-              <entry>replaceAll function</entry>
-              <entry>Use to define the string to replace.</entry>
-            </row>
-          </tbody>
-        </tgroup>
-      </table></p>
- </conbody>
+  <title>Regular Expressions</title>
+  <shortdesc>A regular expression, also known as <term>regex</term>, describes a pattern for a
+    string. </shortdesc>
+  <conbody>
+    <p><indexterm>regular expressions<indexterm>overview</indexterm></indexterm>This appendix
+      provides some details and tips specific to using regular expressions with the <ph
+        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>. For a
+      thorough description of how to define regular expressions, use a manual or online reference
+      such as: <xref href="https://docs.oracle.com/javase/tutorial/essential/regex/index.html"
+        format="html" scope="external"/>.</p>
+    <p>For testing regular expressions, you might find the following website helpful: <xref
+        href="https://regex101.com/" format="html" scope="external"/>.</p>
+  </conbody>
 </concept>

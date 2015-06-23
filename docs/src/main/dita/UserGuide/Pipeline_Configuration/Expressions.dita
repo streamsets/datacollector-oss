@@ -7,8 +7,9 @@
       conrefend="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/EXP-p3"/>
  </conbody>
   <related-links>
-    <link href="../Advanced_Config/RuntimeProperties.dita#concept_fjx_g31_1s"/>
-    <link href="PipelineConstants.dita#concept_rjh_ntz_qr"/>
     <link href="../Expression_Language/ExpressionLanguage_overview.dita#concept_p54_4kl_vq"/>
+    <link href="PipelineConstants.dita#concept_rjh_ntz_qr"/>
+    <link href="../Advanced_Config/RuntimeProperties.dita#concept_fjx_g31_1s"/>
+    <link href="../Advanced_Config/RuntimeResources.dita#concept_bs4_5nm_2s"/>
   </related-links>
 </concept>

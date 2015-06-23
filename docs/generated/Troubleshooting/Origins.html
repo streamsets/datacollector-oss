@@ -2,15 +2,15 @@
 <!DOCTYPE html
   SYSTEM "about:legacy-compat">
 <html xml:lang="en-us" lang="en-us">
-<head><meta name="description" content="Use the following tips for help with origin stages and systems."></meta><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><meta name="copyright" content="(C) Copyright 2005"></meta><meta name="DC.rights.owner" content="(C) Copyright 2005"></meta><meta name="DC.Type" content="concept"></meta><meta name="DC.Title" content="Origins"></meta><meta name="DC.Relation" scheme="URI" content="../Troubleshooting/Troubleshooting_title.html"></meta><meta name="DC.Relation" scheme="URI" content="../Troubleshooting/Origins-JDBC.html"></meta><meta name="DC.Relation" scheme="URI" content="../Troubleshooting/Origins-KafkaConsumer.html"></meta><meta name="DC.Format" content="XHTML"></meta><meta name="DC.Identifier" content="concept_fwl_5cl_gs"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/commonltr.css"><!----></link><title>Origins</title><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/webhelp_topic.css"><!----></link><link rel="stylesheet" type="text/css" href="../skin.css"></link><script type="text/javascript"><!--
+<head><meta name="description" content="Use the following tips for help with origin stages and systems. My MySQL JDBC Driver 5.0 fails to validate the query in my JBDC origin. This can occur when you use a LIMIT clause in your query. ..."></meta><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><meta name="copyright" content="(C) Copyright 2005"></meta><meta name="DC.rights.owner" content="(C) Copyright 2005"></meta><meta name="DC.Type" content="concept"></meta><meta name="DC.Title" content="Origins"></meta><meta name="DC.Relation" scheme="URI" content="../Troubleshooting/Troubleshooting_title.html"></meta><meta name="DC.Format" content="XHTML"></meta><meta name="DC.Identifier" content="concept_fwl_5cl_gs"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/commonltr.css"><!----></link><title>Origins</title><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/webhelp_topic.css"><!----></link><link rel="stylesheet" type="text/css" href="../skin.css"></link><script type="text/javascript"><!--
           
           var prefix = "../index.html";
           
           --></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery-1.8.2.min.js"><!----></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery.cookie.js"><!----></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery-ui.custom.min.js"><!----></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery.highlight-3.js"><!----></script><script type="text/javascript" charset="utf-8" src="../oxygen-webhelp/resources/js/webhelp_topic.js"><!----></script></head>
-<body onload="highlightSearchTerm()" class="frmBody" id="concept_fwl_5cl_gs">
+<body onload="highlightSearchTerm()" class="frmBody">
 <table class="nav"><tbody><tr><td colspan="2"><div id="printlink"><a href="javascript:window.print();" title="Print this page"></a></div><div id="permalink"><a href="#" title="Link to this page"></a></div></td></tr><tr><td width="75%"><a class="navheader_parent_path" href="../Troubleshooting/Troubleshooting_title.html" title="Troubleshooting">Troubleshooting</a></td><td><div class="navheader">
 <span class="navparent"><a class="link" href="../Troubleshooting/Troubleshooting_title.html" title="Troubleshooting"><span class="navheader_label">Parent topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">Troubleshooting</span></a></span>  </div></td></tr></tbody></table>
-
+<div class="nested0" id="concept_fwl_5cl_gs">
  <h1 class="title topictitle1">Origins</h1>
 
  <div class="body conbody">
@@ -19,13 +19,66 @@
 
  </div>
 
-<div class="related-links">
-<ul class="ullinks">
-<li class="link ulchildlink"><strong><a href="../Troubleshooting/Origins-JDBC.html">JDBC</a></strong><br></br>
-</li>
-<li class="link ulchildlink"><strong><a href="../Troubleshooting/Origins-KafkaConsumer.html">Kafka Consumer</a></strong><br></br>
-</li>
-</ul>
+<div class="related-links"></div>
+<div class="topic concept nested1" id="concept_ggx_s23_ks">
+ <h2 class="title topictitle2">JDBC</h2>
+
+ <div class="body conbody">
+  <div class="p">
+   <dl class="dl">
+    
+     <dt class="dt dlterm">My MySQL JDBC Driver 5.0 fails to validate the query in my JBDC origin. </dt>
+
+     <dd class="dd">This can occur when you use a LIMIT clause in your query. Workaround: Upgrade to version
+      5.1.</dd>
+
+    
+    
+     <dt class="dt dlterm">I'm using the JDBC origin to read MySQL data. Why are datetime value set to zero being
+      treated like error records?</dt>
+
+     <dd class="dd">MySQL treats invalid dates as an exception, so the JDBC origin creates error records for
+      invalid dates. You can override this behavior by setting a JDBC configuration property in the
+      JDBC origin. Add the <span class="ph uicontrol">zeroDateTimeBehavior</span> property and set the value to
+      "convertToNull".</dd>
+
+     <dd class="dd">For more information about this and other MySQL-specific JDBC configuration properties, see
+       <a class="xref" href="http://dev.mysql.com/doc/connector-j/en/connector-j-reference-configuration-properties.html" target="_blank">http://dev.mysql.com/doc/connector-j/en/connector-j-reference-configuration-properties.html</a>.</dd>
+
+    
+   </dl>
+
+  </div>
+
+ </div>
+
+</div>
+<div class="topic concept nested1" id="concept_err_w23_ks">
+ <h2 class="title topictitle2">Kafka Consumer</h2>
+
+ <div class="body conbody">
+  <dl class="dl">
+   
+    <dt class="dt dlterm">Why isn't my pipeline reading existing data from my Kafka topic? </dt>
+
+    <dd class="dd">By default, the Kafka Consumer reads data written to the topic after you start the pipeline.
+     Records already in the topic are ignored. </dd>
+
+    <dd class="dd">To read the oldest unread data in a topic, add the <span class="ph uicontrol">auto.offset.reset</span>
+     Kafka Configuration property to the origin and set it to <span class="ph uicontrol">smallest</span>.
+      <div class="note note"><span class="notetitle">Note:</span> If you already started the pipeline or ran a preview without this option, the offset has
+      already been committed. To read the oldest unread data in a topic, set
+       <span class="ph uicontrol">auto.offset.reset</span> to <span class="ph uicontrol">smallest</span> and then
+      temporarily change the Consumer Group name to a different value. Run data preview. Then,
+      change the Consumer Group back to the correct value and start the pipeline.</div>
+</dd>
+
+   
+  </dl>
+
+ </div>
+
+</div>
 </div>
 <div class="navfooter"><!---->
 <span class="navparent"><a class="link" href="../Troubleshooting/Troubleshooting_title.html" title="Troubleshooting"><span class="navheader_label">Parent topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">Troubleshooting</span></a></span>  </div><div class="footer"><div> </div><!-- © <a href="http://creativecommons.org/licenses/by-nc/4.0/legalcode">CC BY-NC 4.0.</a> StreamSets, 2015. --></div>

@@ -12,6 +12,11 @@
           cluster.</dd>
       </dlentry>
       <dlentry>
+        <dt>control character</dt>
+        <dd>A non-printing character in a character set, such as the acknowledgement or escape
+          characters.</dd>
+      </dlentry>
+      <dlentry>
         <dt>data alerts</dt>
         <dd>Alerts based on rules that gather information about the data that passes between two
           stages.</dd>
@@ -22,6 +27,17 @@
       conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> writes
      processed data.</dd>
    </dlentry>
+      <dlentry>
+        <dt>explicit validation</dt>
+        <dd>A semantic validation that checks all configured values for validity and verifies
+          whether the pipeline can run as configured. Occurs when you click the Validate icon,
+          request data preview, or start the pipeline.</dd>
+      </dlentry>
+      <dlentry>
+        <dt>implicit validation</dt>
+        <dd>Lists missing or incomplete configuration. Occurs by default as the Data Collector
+          console saves your changes.</dd>
+      </dlentry>
       <dlentry>
         <dt>metric alerts</dt>
         <dd>Monitoring or email alerts based stage or pipeline metrics. </dd>
@@ -36,8 +52,36 @@
       conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>.</dd>
    </dlentry>
       <dlentry>
+        <dt>pipeline constant</dt>
+        <dd>A constant that you define for the pipeline and that you can use in any stage in the
+          pipeline. </dd>
+      </dlentry>
+      <dlentry>
+        <dt>preconditions</dt>
+        <dd>Conditions that a record must satisfy to enter the stage for processing. </dd>
+      </dlentry>
+      <dlentry>
         <dt>processors</dt>
         <dd>A stage type that performs specific processing on pipeline data.</dd>
+      </dlentry>
+      <dlentry>
+        <dt>required fields</dt>
+        <dd>A required field is a field that must exist in a record to allow it into the stage for
+          processing. </dd>
+      </dlentry>
+      <dlentry>
+        <dt>runtime properties</dt>
+        <dd>Properties that you define in a file local to the <ph
+            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> and
+          call from within a pipeline. Use to define different sets of values for different <ph
+            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
+          instances.</dd>
+      </dlentry>
+      <dlentry>
+        <dt>runtime resources</dt>
+        <dd>Runtime resources are values that you can define in a restricted file local to the <ph
+            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>and
+          call from within a pipeline. Use to load sensitive information from files at runtime.</dd>
       </dlentry>
       <dlentry>
         <dt>SDC Record data format</dt>
@@ -47,8 +91,8 @@
       </dlentry>
       <dlentry>
         <dt>snapshot</dt>
-        <dd>A snapshot of data that has been processed by the pipeline. You can step through the
-          snapshot like data preview. You can also use it as a source for data preview.</dd>
+        <dd>A set of data captured as a pipeline runs. You can step through the snapshot like data
+          preview. You can also use it as a source for data preview.</dd>
       </dlentry>
   </dl>
  </conbody>
