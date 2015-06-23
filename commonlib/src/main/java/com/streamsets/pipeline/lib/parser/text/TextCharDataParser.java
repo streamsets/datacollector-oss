@@ -8,6 +8,7 @@ package com.streamsets.pipeline.lib.parser.text;
 import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.Stage;
+import com.streamsets.pipeline.lib.io.OverrunLineReader;
 import com.streamsets.pipeline.lib.io.OverrunReader;
 import com.streamsets.pipeline.lib.parser.DataParser;
 import com.streamsets.pipeline.lib.parser.DataParserException;
@@ -21,10 +22,12 @@ public class TextCharDataParser implements DataParser {
   private final Stage.Context context;
   private final String readerId;
   private final boolean collapseAllLines;
-  private final OverrunReader reader;
+  private final OverrunLineReader reader;
   private final int maxObjectLen;
   private final String fieldTextName;
   private final String fieldTruncatedName;
+  private final StringBuilder recordIdSb;
+  private final int recordIdOffset;
   private final StringBuilder sb;
   private boolean eof;
 
@@ -33,7 +36,7 @@ public class TextCharDataParser implements DataParser {
     this.context = context;
     this.readerId = readerId;
     this.collapseAllLines = collapseAllLines;
-    this.reader = reader;
+    this.reader = new OverrunLineReader(reader, maxObjectLen);
     this.maxObjectLen = maxObjectLen;
     this.fieldTextName = fieldTextName;
     this.fieldTruncatedName = fieldTruncatedName;
@@ -41,6 +44,9 @@ public class TextCharDataParser implements DataParser {
     IOUtils.skipFully(reader, readerOffset);
     reader.setEnabled(true);
     sb = new StringBuilder(maxObjectLen > 0 ? maxObjectLen : 1024);
+    recordIdSb = new StringBuilder(readerId.length() + 15);
+    recordIdSb.append(readerId).append("::");
+    recordIdOffset = recordIdSb.length();
   }
 
   private boolean isOverMaxObjectLen(int len) {
@@ -63,11 +69,8 @@ public class TextCharDataParser implements DataParser {
     reader.resetCount();
     long offset = reader.getPos();
     sb.setLength(0);
-    char[] buffer = new char[4096];
-    int read = reader.read(buffer);
-    while (read > -1) {
-      sb.append(buffer, 0, read);
-      read = reader.read(buffer);
+    while (reader.readLine(sb) > -1) {
+      sb.append('\n');
     }
     if (sb.length() > 0) {
       record = context.createRecord(readerId + "::" + offset);
@@ -82,15 +85,16 @@ public class TextCharDataParser implements DataParser {
     return record;
   }
 
-
   public Record parseLine() throws IOException, DataParserException {
     reader.resetCount();
     long offset = reader.getPos();
     sb.setLength(0);
-    int read = readLine(sb);
+    int read = reader.readLine(sb);
     Record record = null;
     if (read > -1) {
-      record = context.createRecord(readerId + "::" + offset);
+      recordIdSb.setLength(recordIdOffset);
+      recordIdSb.append(offset);
+      record = context.createRecord(recordIdSb.toString());
       Map<String, Field> map = new HashMap<>();
       map.put(fieldTextName, Field.create(sb.toString()));
       if (isOverMaxObjectLen(read)) {
@@ -111,41 +115,6 @@ public class TextCharDataParser implements DataParser {
   @Override
   public void close() throws IOException {
     reader.close();
-  }
-
-  // returns the reader line length, the StringBuilder has up to maxObjectLen chars
-  int readLine(StringBuilder sb) throws IOException {
-    int c = reader.read();
-    int count = (c == -1) ? -1 : 0;
-    while (c > -1 && !isOverMaxObjectLen(count) && !checkEolAndAdjust(c)) {
-      count++;
-      sb.append((char) c);
-      c = reader.read();
-    }
-    if (isOverMaxObjectLen(count)) {
-      sb.setLength(sb.length() - 1);
-      while (c > -1 && c != '\n' && c != '\r') {
-        count++;
-        c = reader.read();
-      }
-      checkEolAndAdjust(c);
-    }
-    return count;
-  }
-
-  boolean checkEolAndAdjust(int c) throws IOException {
-    boolean eol = false;
-    if (c == '\n') {
-      eol = true;
-    } else if (c == '\r') {
-      eol = true;
-      reader.mark(1);
-      c = reader.read();
-      if (c != '\n') {
-        reader.reset();
-      }
-    }
-    return eol;
   }
 
 }

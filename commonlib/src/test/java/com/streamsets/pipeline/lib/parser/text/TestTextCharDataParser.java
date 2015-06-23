@@ -132,7 +132,7 @@ public class TestTextCharDataParser {
     DataParser parser = new TextCharDataParser(getContext(), "id", true, reader, 0, 100, "text", "truncated");
     Record record = parser.parse();
     Assert.assertNotNull(record);
-    Assert.assertEquals("Hello\nBye", record.get().getValueAsMap().get("text").getValueAsString());
+    Assert.assertEquals("Hello\nBye\n", record.get().getValueAsMap().get("text").getValueAsString());
     record = parser.parse();
     Assert.assertNull(record);
     parser.close();
