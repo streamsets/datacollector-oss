@@ -30,7 +30,7 @@ public class JavaScriptDProcessor extends DProcessor {
       type = ConfigDef.Type.MODEL,
       defaultValue = "BATCH",
       label = "Record Processing Mode",
-      description = "If 'Record by Record' the processor takes care of record error handling, if 'Record batch' " +
+      description = "If 'Record by Record' the processor takes care of record error handling, if 'Batch by Batch' " +
                     "the JavaScript must take care of record error handling",
       displayPosition = 10,
       group = "JAVASCRIPT"
