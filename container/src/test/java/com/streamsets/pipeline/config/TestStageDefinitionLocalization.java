@@ -64,7 +64,7 @@ public class TestStageDefinitionLocalization {
                                               rawSource, "", configGroup, false, 1,
                                               TOutput.class.getName(),
                                               Arrays.asList(ExecutionMode.CLUSTER,
-                                                            ExecutionMode.STANDALONE));
+                                                            ExecutionMode.STANDALONE), false);
     return def;
   }
 

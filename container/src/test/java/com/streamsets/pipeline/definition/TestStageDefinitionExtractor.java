@@ -92,7 +92,7 @@ public class TestStageDefinitionExtractor {
   }
 
   @StageDef(version = "2", label = "LL", description = "DD", icon = "TargetIcon.svg",
-      execution = ExecutionMode.STANDALONE, outputStreams = TwoOutputStreams.class)
+      execution = ExecutionMode.STANDALONE, outputStreams = TwoOutputStreams.class, recordsByRef = true)
   @ConfigGroups(Group1.class)
   @RawSource(rawSourcePreviewer = Previewer.class)
   @HideConfig(value = "config2", preconditions = true, onErrorRecord = true)
@@ -188,6 +188,7 @@ public class TestStageDefinitionExtractor {
     Assert.assertFalse(def.getConfigDefinitionsMap().containsKey(StageDefinitionExtractor.REQUIRED_FIELDS.getName()));
     Assert.assertFalse(def.getConfigDefinitionsMap().containsKey(StageDefinitionExtractor.PRECONDITIONS.getName()));
     Assert.assertTrue(def.getConfigDefinitionsMap().containsKey(StageDefinitionExtractor.ON_ERROR_RECORD.getName()));
+    Assert.assertFalse(def.getRecordsByRef());
   }
 
   @Test

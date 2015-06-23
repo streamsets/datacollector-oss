@@ -24,7 +24,6 @@ import com.streamsets.pipeline.config.StageDefinition;
 import com.streamsets.pipeline.config.StageLibraryDefinition;
 import com.streamsets.pipeline.config.StageType;
 
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -177,6 +176,8 @@ public abstract class StageDefinitionExtractor {
                           ? 0 : sDef.outputStreams().getEnumConstants().length;
       List<ExecutionMode> executionModes = ImmutableList.copyOf(sDef.execution());
 
+      boolean recordsByRef = sDef.recordsByRef();
+
       if (preconditions) {
         configDefinitions.add(REQUIRED_FIELDS);
         configDefinitions.add(PRECONDITIONS);
@@ -186,7 +187,8 @@ public abstract class StageDefinitionExtractor {
       }
       return new StageDefinition(libraryDef, klass, name, version, label, description, type, errorStage, preconditions,
                                  onRecordError, configDefinitions, rawSourceDefinition, icon, configGroupDefinition,
-                                 variableOutputStreams, outputStreams, outputStreamLabelProviderClass, executionModes);
+                                 variableOutputStreams, outputStreams, outputStreamLabelProviderClass, executionModes,
+                                 recordsByRef);
     } else {
       throw new IllegalArgumentException(Utils.format("Invalid StageDefinition: {}", errors));
     }
