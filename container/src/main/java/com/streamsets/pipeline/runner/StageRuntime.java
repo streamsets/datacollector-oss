@@ -16,6 +16,7 @@ import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.Target;
 import com.streamsets.pipeline.api.el.ELEvalException;
+import com.streamsets.pipeline.api.impl.CreateByRef;
 import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.config.ConfigConfiguration;
 import com.streamsets.pipeline.config.ConfigDefinition;
@@ -38,6 +39,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.Callable;
 
 public class StageRuntime {
   private final StageDefinition def;
@@ -147,34 +149,55 @@ public class StageRuntime {
     }
   }
 
-  public String execute(String previousOffset, int batchSize, Batch batch, BatchMaker batchMaker,
-      ErrorSink errorSink)
-      throws StageException {
-    String newOffset = null;
+  public String execute(final String previousOffset, final int batchSize, final Batch batch,
+      final BatchMaker batchMaker, ErrorSink errorSink) throws StageException {
     ClassLoader cl = Thread.currentThread().getContextClassLoader();
     try {
       setErrorSink(errorSink);
       Thread.currentThread().setContextClassLoader(getDefinition().getStageClassLoader());
-      switch (getDefinition().getType()) {
-        case SOURCE: {
-          newOffset = ((Source) getStage()).produce(previousOffset, batchSize, batchMaker);
-          break;
-        }
-        case PROCESSOR: {
-          ((Processor) getStage()).process(batch, batchMaker);
-          break;
 
+      Callable<String> callable = new Callable<String>() {
+        @Override
+        public String call() throws Exception {
+          String newOffset = null;
+          switch (getDefinition().getType()) {
+            case SOURCE: {
+              newOffset = ((Source) getStage()).produce(previousOffset, batchSize, batchMaker);
+              break;
+            }
+            case PROCESSOR: {
+              ((Processor) getStage()).process(batch, batchMaker);
+              break;
+
+            }
+            case TARGET: {
+              ((Target) getStage()).write(batch);
+              break;
+            }
+          }
+          return newOffset;
         }
-        case TARGET: {
-          ((Target) getStage()).write(batch);
-          break;
+      };
+
+      try {
+        // if the stage is annotated as recordsByRef it means it does not reuse the records/fields it creates, thus
+        // we have to call it within a create-by-ref context so Field.create does not clone Fields and BatchMakerImpl
+        // does not clone output records.
+        return (def.getRecordsByRef()) ? CreateByRef.call(callable) : callable.call();
+      } catch (Exception ex) {
+        if (ex instanceof StageException) {
+          throw (StageException) ex;
+        } else if (ex instanceof RuntimeException) {
+          throw (RuntimeException) ex;
+        } else {
+          throw new RuntimeException(ex);
         }
       }
+
     } finally {
       setErrorSink(null);
       Thread.currentThread().setContextClassLoader(cl);
     }
-    return newOffset;
   }
 
   public void destroy() {

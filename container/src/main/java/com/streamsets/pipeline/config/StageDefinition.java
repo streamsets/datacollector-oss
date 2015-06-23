@@ -40,13 +40,14 @@ public class StageDefinition {
   private final String outputStreamLabelProviderClass;
   private List<String> outputStreamLabels;
   private List<ExecutionMode> executionModes;
+  private final boolean recordsByRef;
 
   // localized version
   private StageDefinition(StageLibraryDefinition libraryDefinition, Class klass, String name,
       String version, String label, String description, StageType type, boolean errorStage, boolean preconditions,
       boolean onRecordError, List<ConfigDefinition> configDefinitions, RawSourceDefinition rawSourceDefinition,
       String icon, ConfigGroupDefinition configGroupDefinition, boolean variableOutputStreams, int outputStreams,
-      List<String> outputStreamLabels, List<ExecutionMode> executionModes) {
+      List<String> outputStreamLabels, List<ExecutionMode> executionModes, boolean recordsByRef) {
     this.libraryDefinition = libraryDefinition;
     this.klass = klass;
     this.name = name;
@@ -79,6 +80,7 @@ public class StageDefinition {
     this.outputStreamLabels = outputStreamLabels;
     outputStreamLabelProviderClass = null;
     this.executionModes = executionModes;
+    this.recordsByRef = recordsByRef;
   }
 
   public StageDefinition(StageLibraryDefinition libraryDefinition, Class klass, String name, String version,
@@ -86,7 +88,7 @@ public class StageDefinition {
       StageType type, boolean errorStage, boolean preconditions, boolean onRecordError,
       List<ConfigDefinition> configDefinitions, RawSourceDefinition rawSourceDefinition, String icon,
       ConfigGroupDefinition configGroupDefinition, boolean variableOutputStreams, int outputStreams,
-      String outputStreamLabelProviderClass, List<ExecutionMode> executionModes) {
+      String outputStreamLabelProviderClass, List<ExecutionMode> executionModes, boolean recordsByRef) {
     this.libraryDefinition = libraryDefinition;
     this.klass = klass;
     this.name = name;
@@ -118,6 +120,7 @@ public class StageDefinition {
     this.outputStreams = outputStreams;
     this.outputStreamLabelProviderClass = outputStreamLabelProviderClass;
     this.executionModes = executionModes;
+    this.recordsByRef = recordsByRef;
   }
 
   public void setLibraryExecutionModes(List<ExecutionMode> executionModes) {
@@ -239,6 +242,10 @@ public class StageDefinition {
     return executionModes;
   }
 
+  public boolean getRecordsByRef() {
+    return recordsByRef;
+  }
+
   private final static String STAGE_LABEL = "stageLabel";
   private final static String STAGE_DESCRIPTION = "stageDescription";
 
@@ -332,7 +339,7 @@ public class StageDefinition {
     return new StageDefinition(libraryDefinition, getStageClass(), getName(), getVersion(), label,
                                description, getType(), isErrorStage(),
                                hasPreconditions(), hasOnRecordError(), configDefs, rawSourceDef, getIcon(), groupDefs,
-                               isVariableOutputStreams(), getOutputStreams(), streamLabels, executionModes);
+                               isVariableOutputStreams(), getOutputStreams(), streamLabels, executionModes, recordsByRef);
   }
 
   private List<String> _getOutputStreamLabels(ClassLoader classLoader, boolean localized) {

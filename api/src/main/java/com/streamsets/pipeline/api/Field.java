@@ -5,6 +5,7 @@
  */
 package com.streamsets.pipeline.api;
 
+import com.streamsets.pipeline.api.impl.CreateByRef;
 import com.streamsets.pipeline.api.impl.ListTypeSupport;
 import com.streamsets.pipeline.api.impl.MapTypeSupport;
 import com.streamsets.pipeline.api.impl.Utils;
@@ -181,7 +182,7 @@ public class Field implements Cloneable {
 
   private Field(Type type, Object value) {
     this.type = type;
-    this.value = type.constructorCopy(value);
+    this.value = (CreateByRef.isByRef()) ? value : type.constructorCopy(value);
   }
 
   public Type getType() {

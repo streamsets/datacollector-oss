@@ -132,12 +132,12 @@ public class TestUtil {
     StageDefinition sourceDef = new StageDefinition(
         MOCK_LIB_DEF, TSource.class, "source", "1.0.0", "label", "description",
         StageType.SOURCE, false, true, true, configDefs, null/*raw source definition*/, "", null, false ,1,
-        null, Arrays.asList(ExecutionMode.CLUSTER, ExecutionMode.STANDALONE));
+        null, Arrays.asList(ExecutionMode.CLUSTER, ExecutionMode.STANDALONE), false);
     StageDefinition targetDef = new StageDefinition(
         MOCK_LIB_DEF, TTarget.class, "target", "1.0.0", "label", "description",
         StageType.TARGET, false, true, true, Collections.<ConfigDefinition>emptyList(), null/*raw source definition*/,
         "TargetIcon.svg", null, false, 0, null, Arrays.asList(ExecutionMode.CLUSTER,
-                                                              ExecutionMode.STANDALONE));
+                                                              ExecutionMode.STANDALONE), false);
     Mockito.when(lib.getStage(Mockito.eq("library"), Mockito.eq("source"), Mockito.eq("1.0.0"))).thenReturn(sourceDef);
     Mockito.when(lib.getStage(Mockito.eq("library"), Mockito.eq("target"), Mockito.eq("1.0.0"))).thenReturn(targetDef);
 

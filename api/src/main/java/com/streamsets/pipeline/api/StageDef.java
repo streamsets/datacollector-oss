@@ -66,4 +66,6 @@ public @interface StageDef {
 
   ExecutionMode[] execution() default { ExecutionMode.STANDALONE, ExecutionMode.CLUSTER };
 
+  boolean recordsByRef() default false;
+
 }

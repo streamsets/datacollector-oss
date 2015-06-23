@@ -10,6 +10,7 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import com.streamsets.pipeline.api.BatchMaker;
 import com.streamsets.pipeline.api.Record;
+import com.streamsets.pipeline.api.impl.CreateByRef;
 import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.config.StageType;
 import com.streamsets.pipeline.record.RecordImpl;
@@ -73,7 +74,10 @@ public class BatchMakerImpl implements BatchMaker {
       LOG.warn("The maximum number of records per batch in the origin has been exceeded.");
     }
     Preconditions.checkNotNull(record, "record cannot be null");
-    RecordImpl recordCopy = ((RecordImpl)record).clone();
+
+    // if the stage is annotated as recordsByRef it means it does not reuse the records it creates, thus
+    // we can skip one copy here (just here though)
+    RecordImpl recordCopy = (CreateByRef.isByRef()) ? (RecordImpl) record: ((RecordImpl) record).clone();
     recordCopy.addStageToStagePath(instanceName);
     recordCopy.createTrackingId();
 
