@@ -47,11 +47,11 @@ public interface Runner {
 
   // called for all existing pipelines when the data collector starts
   // it should reconnect/reset-status of all pipelines
-  public void dataCollectorStart();
+  public void onDataCollectorStart();
 
   // called for all existing pipelines when the data collector is shutting down
   // it should disconnect/reset-status of all pipelines
-  public void dataCollectorStop();
+  public void onDataCollectorStop();
 
   // stops the pipeline
   public void stop();

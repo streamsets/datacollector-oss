@@ -207,7 +207,7 @@ public class PipelineStoreResource {
   @RolesAllowed({ AuthzRole.CREATOR, AuthzRole.ADMIN })
   public Response save(
       @PathParam("name") String name,
-      @QueryParam("tag") String tag,
+      @QueryParam("tag") @DefaultValue("0") String tag,
       @QueryParam("tagDescription") String tagDescription,
       PipelineConfigurationJson pipeline)
       throws PipelineStoreException, URISyntaxException {

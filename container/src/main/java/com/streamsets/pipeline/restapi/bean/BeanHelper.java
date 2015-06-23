@@ -5,6 +5,9 @@
  */
 package com.streamsets.pipeline.restapi.bean;
 
+import com.streamsets.dataCollector.execution.PipelineState;
+import com.streamsets.dataCollector.execution.PipelineStatus;
+import com.streamsets.dataCollector.restapi.bean.StatusJson;
 import com.streamsets.pipeline.callback.CallbackInfo;
 import com.streamsets.pipeline.el.ElConstantDefinition;
 import com.streamsets.pipeline.el.ElFunctionArgumentDefinition;
@@ -26,6 +29,13 @@ public class BeanHelper {
       return null;
     }
     return new PipelineStateJson(pipelineState);
+  }
+
+  public static com.streamsets.dataCollector.restapi.bean.PipelineStateJson wrapPipelineState(com.streamsets.dataCollector.execution.PipelineState pipelineState) {
+    if(pipelineState == null) {
+      return null;
+    }
+    return new com.streamsets.dataCollector.restapi.bean.PipelineStateJson(pipelineState);
   }
 
   public static SnapshotStatusJson wrapSnapshotStatus(com.streamsets.pipeline.snapshotstore.SnapshotStatus snapshotStatus) {
@@ -54,6 +64,18 @@ public class BeanHelper {
     }
     List<com.streamsets.pipeline.prodmanager.PipelineState> states = new ArrayList<>(pipelineStateJsons.size());
     for(PipelineStateJson p : pipelineStateJsons) {
+      states.add(p.getPipelineState());
+    }
+    return states;
+  }
+
+  public static List<com.streamsets.dataCollector.execution.PipelineState> unwrapPipelineStatesNewAPI(
+    List<com.streamsets.dataCollector.restapi.bean.PipelineStateJson> pipelineStateJsons) {
+    if(pipelineStateJsons == null) {
+      return null;
+    }
+    List<com.streamsets.dataCollector.execution.PipelineState> states = new ArrayList<>(pipelineStateJsons.size());
+    for(com.streamsets.dataCollector.restapi.bean.PipelineStateJson p : pipelineStateJsons) {
       states.add(p.getPipelineState());
     }
     return states;
@@ -677,7 +699,48 @@ public class BeanHelper {
       case NODE_PROCESS_SHUTDOWN:
         return StateJson.NODE_PROCESS_SHUTDOWN;
       default:
-        throw new IllegalArgumentException("Unrecognized state");
+        throw new IllegalArgumentException("Unrecognized state" + state);
+    }
+  }
+
+  public static StatusJson wrapState(com.streamsets.dataCollector.execution.PipelineStatus status) {
+    if(status == null) {
+      return null;
+    }
+    switch(status) {
+      case STOPPED:
+        return StatusJson.STOPPED;
+      case STOPPING:
+        return StatusJson.STOPPING;
+      case RUNNING:
+        return StatusJson.RUNNING;
+      case RUN_ERROR:
+        return StatusJson.RUN_ERROR;
+      case FINISHED:
+        return StatusJson.FINISHED;
+      case CONNECTING:
+        return StatusJson.CONNECTING;
+      case CONNECT_ERROR:
+        return StatusJson.CONNECT_ERROR;
+      case DISCONNECTED:
+        return StatusJson.DISCONNECTED;
+      case DISCONNECTING:
+        return StatusJson.DISCONNECTING;
+      case EDITED:
+        return StatusJson.EDITED;
+      case FINISHING:
+        return StatusJson.FINISHING;
+      case KILLED:
+        return StatusJson.KILLED;
+      case RUNNING_ERROR:
+        return StatusJson.RUNNING_ERROR;
+      case STARTING:
+        return StatusJson.STARTING;
+      case START_ERROR:
+        return StatusJson.START_ERROR;
+      default:
+        throw new IllegalArgumentException("Unrecognized state" + status);
+
     }
   }
 
@@ -698,6 +761,46 @@ public class BeanHelper {
         return com.streamsets.pipeline.prodmanager.State.FINISHED;
       case NODE_PROCESS_SHUTDOWN:
         return com.streamsets.pipeline.prodmanager.State.NODE_PROCESS_SHUTDOWN;
+      default:
+        throw new IllegalArgumentException("Unrecognized state");
+    }
+  }
+
+  public static  PipelineStatus unwrapState(StatusJson pipelineStatus) {
+    if(pipelineStatus == null) {
+      return null;
+    }
+    switch(pipelineStatus) {
+      case STOPPED:
+        return com.streamsets.dataCollector.execution.PipelineStatus.STOPPED;
+      case STOPPING:
+        return com.streamsets.dataCollector.execution.PipelineStatus.STOPPING;
+      case RUNNING:
+        return com.streamsets.dataCollector.execution.PipelineStatus.RUNNING;
+      case RUN_ERROR:
+        return com.streamsets.dataCollector.execution.PipelineStatus.RUN_ERROR;
+      case FINISHED:
+        return com.streamsets.dataCollector.execution.PipelineStatus.FINISHED;
+      case CONNECTING:
+        return com.streamsets.dataCollector.execution.PipelineStatus.CONNECTING;
+      case CONNECT_ERROR:
+        return com.streamsets.dataCollector.execution.PipelineStatus.CONNECT_ERROR;
+      case DISCONNECTED:
+        return com.streamsets.dataCollector.execution.PipelineStatus.DISCONNECTED;
+      case DISCONNECTING:
+        return com.streamsets.dataCollector.execution.PipelineStatus.DISCONNECTING;
+      case EDITED:
+        return com.streamsets.dataCollector.execution.PipelineStatus.EDITED;
+      case FINISHING:
+        return com.streamsets.dataCollector.execution.PipelineStatus.FINISHING;
+      case KILLED:
+        return com.streamsets.dataCollector.execution.PipelineStatus.KILLED;
+      case RUNNING_ERROR:
+        return com.streamsets.dataCollector.execution.PipelineStatus.RUNNING_ERROR;
+      case STARTING:
+        return com.streamsets.dataCollector.execution.PipelineStatus.STARTING;
+      case START_ERROR:
+        return com.streamsets.dataCollector.execution.PipelineStatus.START_ERROR;
       default:
         throw new IllegalArgumentException("Unrecognized state");
     }

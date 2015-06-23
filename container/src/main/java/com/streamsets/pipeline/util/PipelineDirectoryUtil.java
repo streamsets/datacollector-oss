@@ -12,7 +12,7 @@ import java.io.File;
 
 public class PipelineDirectoryUtil {
 
-  private static final String PIPELINE_BASE_DIR = "runInfo";
+  public static final String PIPELINE_BASE_DIR = "runInfo";
   private static final String SNAPSHOTS_BASE_DIR = "snapshots";
 
   public static File getPipelineDir(RuntimeInfo runtimeInfo, String pipelineName, String rev) {

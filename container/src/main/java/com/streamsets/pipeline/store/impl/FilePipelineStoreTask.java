@@ -8,6 +8,9 @@ package com.streamsets.pipeline.store.impl;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.collect.ImmutableList;
+import com.streamsets.dataCollector.execution.PipelineStateStore;
+import com.streamsets.dataCollector.execution.PipelineStatus;
+import com.streamsets.dataCollector.execution.util.PipelineStatusUtil;
 import com.streamsets.pipeline.api.ExecutionMode;
 import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.config.ConfigConfiguration;
@@ -56,6 +59,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 
 public class FilePipelineStoreTask extends AbstractTask implements PipelineStoreTask {
 
@@ -72,6 +77,9 @@ public class FilePipelineStoreTask extends AbstractTask implements PipelineStore
   private final RuntimeInfo runtimeInfo;
   private File storeDir;
   private ObjectMapper json;
+  private PipelineStateStore pipelineStateStore;
+  private ConcurrentMap<String, PipelineInfo> pipelineInfoMap = new ConcurrentHashMap<String, PipelineInfo>();
+
 
   //rules can be modified while the pipeline is running
   //runner will look up the rule definition before running each batch, we need synchronization
@@ -94,17 +102,30 @@ public class FilePipelineStoreTask extends AbstractTask implements PipelineStore
   }
 
   @Override
-  protected void initTask()  {
+  public void registerListener(PipelineStateStore pipelineStateStore) {
+    this.pipelineStateStore = pipelineStateStore;
+  }
+
+
+  @Override
+  protected void initTask() {
     storeDir = new File(runtimeInfo.getDataDir(), "pipelines");
     if (!storeDir.exists()) {
       if (!storeDir.mkdirs()) {
         throw new RuntimeException(Utils.format("Could not create directory '{}'", storeDir.getAbsolutePath()));
+      }
+    } else {
+      try {
+        populateMap();
+      } catch (PipelineStoreException e) {
+        throw new RuntimeException("Cannot obtain list of existing pipelines", e);
       }
     }
   }
 
   @Override
   protected void stopTask() {
+    pipelineInfoMap.clear();
   }
 
   public File getPipelineDir(String name) {
@@ -126,7 +147,7 @@ public class FilePipelineStoreTask extends AbstractTask implements PipelineStore
 
   @Override
   public boolean hasPipeline(String name) {
-    return getPipelineDir(name).exists();
+    return pipelineInfoMap.containsKey(name);
   }
 
   @Override
@@ -175,6 +196,10 @@ public class FilePipelineStoreTask extends AbstractTask implements PipelineStore
                                        ex);
     }
     pipeline.setPipelineInfo(info);
+    if (pipelineStateStore != null) {
+      pipelineStateStore.saveState(user, name, REV, PipelineStatus.EDITED, "Pipeline edited", null);
+    }
+    pipelineInfoMap.put(name, info);
     return pipeline;
   }
 
@@ -187,47 +212,55 @@ public class FilePipelineStoreTask extends AbstractTask implements PipelineStore
     if (!hasPipeline(name)) {
       throw new PipelineStoreException(ContainerError.CONTAINER_0200, name);
     }
+    PipelineInfo info = getInfo(name);
     if (!cleanUp(name)) {
       throw new PipelineStoreException(ContainerError.CONTAINER_0203, name);
     }
+    if (pipelineStateStore != null) {
+     // For now, passing rev 0 - make delete take tag/rev as a parameter
+      PipelineStatus pipelineStatus = pipelineStateStore.getState(name, REV).getStatus();
+      if (PipelineStatusUtil.isActive(pipelineStatus)) {
+        throw new PipelineStoreException(ContainerError.CONTAINER_0208, pipelineStatus);
+      }
+      pipelineStateStore.delete(name, REV);
+    }
     cleanUp(name);
+    pipelineInfoMap.remove(name, info);
   }
 
-  private PipelineInfo getInfo(String name, boolean checkExistence) throws PipelineStoreException {
-    if (checkExistence && !hasPipeline(name)) {
-      throw new PipelineStoreException(ContainerError.CONTAINER_0200, name);
-    }
-    try {
-      PipelineInfoJson pipelineInfoJsonBean =
-        json.readValue(getInfoFile(name), PipelineInfoJson.class);
-      return pipelineInfoJsonBean.getPipelineInfo();
-    } catch (Exception ex) {
-      throw new PipelineStoreException(ContainerError.CONTAINER_0206, name);
+  private void populateMap() throws PipelineStoreException {
+    for (String name : storeDir.list(new FilenameFilter() {
+      @Override
+      public boolean accept(File dir, String name) {
+        // If one browses to the pipelines directory, mac creates a ".DS_store directory and this causes us problems
+        // So filter it out
+        if (name.startsWith(".")) {
+          return false;
+        }
+        return true;
+      }
+    })) {
+      try {
+        PipelineInfoJson pipelineInfoJsonBean = json.readValue(getInfoFile(name), PipelineInfoJson.class);
+        pipelineInfoMap.put(name, pipelineInfoJsonBean.getPipelineInfo());
+      } catch (Exception ex) {
+        throw new PipelineStoreException(ContainerError.CONTAINER_0206, name);
+      }
     }
   }
 
   @Override
   public List<PipelineInfo> getPipelines() throws PipelineStoreException {
-    List<PipelineInfo> list = new ArrayList<>();
-    for (String name : storeDir.list(new FilenameFilter() {
-          @Override
-          public boolean accept(File dir, String name) {
-            //If one browses to the pipelines directory, mac creates a ".DS_store directory and this causes us problems
-            //So filter it out
-            if(name.startsWith(".")) {
-              return false;
-            }
-            return true;
-          }
-        })) {
-      list.add(getInfo(name, false));
-    }
-    return Collections.unmodifiableList(list);
+   return Collections.unmodifiableList(new ArrayList(pipelineInfoMap.values()));
   }
 
   @Override
   public PipelineInfo getInfo(String name) throws PipelineStoreException {
-    return getInfo(name, true);
+    if (!pipelineInfoMap.containsKey(name)) {
+      throw new PipelineStoreException(ContainerError.CONTAINER_0200, name);
+    } else {
+      return pipelineInfoMap.get(name);
+    }
   }
 
   @Override
@@ -236,12 +269,19 @@ public class FilePipelineStoreTask extends AbstractTask implements PipelineStore
     if (!hasPipeline(name)) {
       throw new PipelineStoreException(ContainerError.CONTAINER_0200, name);
     }
-    PipelineInfo savedInfo = getInfo(name, false);
+    PipelineInfo savedInfo = getInfo(name);
     if (!savedInfo.getUuid().equals(pipeline.getUuid())) {
       throw new PipelineStoreException(ContainerError.CONTAINER_0205, name);
     }
+    if (pipelineStateStore != null) {
+      PipelineStatus pipelineStatus = pipelineStateStore.getState(name, tag).getStatus();
+      if (PipelineStatusUtil.isActive(pipelineStatus)) {
+        throw new PipelineStoreException(ContainerError.CONTAINER_0208, pipelineStatus);
+      }
+    }
+
     UUID uuid = UUID.randomUUID();
-    PipelineInfo info = new PipelineInfo(getInfo(name, false), pipeline.getDescription(), new Date(), user, REV, uuid,
+    PipelineInfo info = new PipelineInfo(getInfo(name), pipeline.getDescription(), new Date(), user, REV, uuid,
                                          pipeline.isValid());
 
     //synchronize pipeline configuration with whats present in the stage library
@@ -251,17 +291,21 @@ public class FilePipelineStoreTask extends AbstractTask implements PipelineStore
       pipeline.setUuid(uuid);
       json.writeValue(getInfoFile(name), BeanHelper.wrapPipelineInfo(info));
       json.writeValue(getPipelineFile(name), BeanHelper.wrapPipelineConfiguration(pipeline));
+      if (pipelineStateStore != null) {
+        pipelineStateStore.edited(user, name, tag);
+      }
     } catch (Exception ex) {
       throw new PipelineStoreException(ContainerError.CONTAINER_0204, name, ex.getMessage(), ex);
     }
     pipeline.setPipelineInfo(info);
+    pipelineInfoMap.replace(name, info);
     return pipeline;
   }
 
   @Override
   @SuppressWarnings("unchecked")
   public List<PipelineRevInfo> getHistory(String name) throws PipelineStoreException {
-    return ImmutableList.of(new PipelineRevInfo(getInfo(name, true)));
+    return ImmutableList.of(new PipelineRevInfo(getInfo(name)));
   }
 
   @Override
@@ -348,7 +392,9 @@ public class FilePipelineStoreTask extends AbstractTask implements PipelineStore
 
   @Override
   public boolean deleteRules(String name) throws PipelineStoreException {
-    pipelineToRuleDefinitionMap.remove(getPipelineKey(name, REV));
+    synchronized (rulesMutex) {
+      pipelineToRuleDefinitionMap.remove(getPipelineKey(name, REV));
+    }
     if(hasPipeline(name) && getRulesFile(name) != null && getRulesFile(name).exists()) {
       return getRulesFile(name).delete();
     }

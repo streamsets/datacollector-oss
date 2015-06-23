@@ -5,6 +5,7 @@
  */
 package com.streamsets.dataCollector.execution;
 
+import com.streamsets.pipeline.store.PipelineStoreException;
 import com.streamsets.pipeline.task.Task;
 
 import java.util.List;
@@ -29,21 +30,11 @@ public interface Manager extends Task {
   public Previewer getPreview(String previewerId);
 
   // creates a runner for a given pipeline, the runner will have the current state of the pipeline.
-  public Runner getRunner(String name, String rev);
+  public Runner getRunner(String name, String rev) throws PipelineStoreException;
 
-  public List<PipelineState> getPipelines();
+  public List<PipelineState> getPipelines() throws PipelineStoreException;
 
   // returns if the pipeline is in a 'running' state (starting, stopping, running)
-  public boolean isPipelineActive(String name, String rev);
-
-  // FROM Task
-  // called when the data collector starts
-  // it should reconnect/reset-status of all pipelines
-  public void start();
-
-  // FROM Task
-  // called when the data collector is shutting down
-  // it should disconnect/reset-status of all pipelines
-  public void stop();
+  public boolean isPipelineActive(String name, String rev) throws PipelineStoreException;
 
 }
