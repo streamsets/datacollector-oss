@@ -40,7 +40,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.concurrent.Callable;
+import java.util.concurrent.CompletionService;
 import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorCompletionService;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 
 public class ClassLoaderStageLibraryTask extends AbstractTask implements StageLibraryTask {
   private static final Logger LOG = LoggerFactory.getLogger(ClassLoaderStageLibraryTask.class);
@@ -102,42 +108,86 @@ public class ClassLoaderStageLibraryTask extends AbstractTask implements StageLi
 
     try {
       LocaleInContext.set(Locale.getDefault());
-      for (ClassLoader cl : stageClassLoaders) {
-        StageLibraryDefinition libDef = StageLibraryDefinitionExtractor.get().extract(cl);
-        LOG.debug("Loading stages from library '{}'", libDef.getName());
-        try {
-          Enumeration<URL> resources = cl.getResources(STAGES_DEFINITION_RESOURCE);
-          while (resources.hasMoreElements()) {
-            Map<String, String> stagesInLibrary = new HashMap<>();
-            URL url = resources.nextElement();
-            try (InputStream is = url.openStream()) {
-              Map<String, List<String>> libraryInfo = json.readValue(is, Map.class);
-              for (String className : libraryInfo.get("stageClasses")) {
-                Class<? extends Stage> klass = (Class<? extends Stage>) cl.loadClass(className);
-                StageDefinition stage = StageDefinitionExtractor.get().
-                    extract(libDef, klass, Utils.formatL("Library='{}'", libDef.getName()));
-                String key = createKey(libDef.getName(), stage.getName(), stage.getVersion());
-                LOG.debug("Loaded stage '{}' (library:name:version)", key);
-                if (stagesInLibrary.containsKey(key)) {
-                  throw new IllegalStateException(Utils.format(
-                      "Library '{}' contains more than one definition for stage '{}', class '{}' and class '{}'",
-                      libDef.getName(), key, stagesInLibrary.get(key), stage.getStageClass()));
-                }
-                stagesInLibrary.put(key, stage.getClassName());
-                stageList.add(stage);
-                stageMap.put(key, stage);
-                computeDependsOnChain(stage);
-              }
-            }
+      long start = System.currentTimeMillis();
+      int libraries = stageClassLoaders.size();
+
+      LOG.debug("Loading '{}' libraries in parallel", libraries);
+
+      // we use a threadpool/completionservice to dispatch and wait for completion of the library loading in different
+      // threads
+      ExecutorService executor = Executors.newFixedThreadPool(libraries);
+      CompletionService<Map<String, StageDefinition>> completion = new ExecutorCompletionService<>(executor);
+
+      // we are loading the stage libraries in parallel as it is a classloader/reflection heavy lifting task
+      for (final ClassLoader cl : stageClassLoaders) {
+        completion.submit(new Callable<Map<String, StageDefinition>>() {
+          @Override
+          public Map<String, StageDefinition> call() throws Exception {
+
+            // yielding CPU for a bit so all threads get to this point before they start running.
+            Thread.sleep(5);
+            return loadLibrary(cl);
           }
-        } catch (IOException | ClassNotFoundException ex) {
-          throw new RuntimeException(
-              Utils.format("Could not load stages definition from '{}', {}", cl, ex.getMessage()), ex);
+        });
+      }
+
+      // merge the output of all libraries
+      while (libraries > 0) {
+        LOG.debug("Libraries to merge '{}'", libraries);
+        try {
+
+          // consuming the output of each library its corresponding thread is done.
+          Future<Map<String, StageDefinition>> future = completion.take();
+          stageList.addAll(future.get().values());
+          stageMap.putAll(future.get());
+          libraries--;
+        } catch (Exception ex) {
+          throw new RuntimeException(ex);
         }
       }
+      LOG.debug("Libraries merging complete, '{}'ms", System.currentTimeMillis() - start);
+
+      // shutdown the threadpool used for loading the libraries.
+      executor.shutdown();
     } finally {
       LocaleInContext.set(null);
     }
+  }
+
+  @SuppressWarnings("unchecked")
+  private Map<String, StageDefinition> loadLibrary(ClassLoader cl) {
+    Map<String, StageDefinition> stages = new HashMap<>();
+    StageLibraryDefinition libDef = StageLibraryDefinitionExtractor.get().extract(cl);
+    LOG.debug("Loading stages from library '{}'", libDef.getName());
+    try {
+      Enumeration<URL> resources = cl.getResources(STAGES_DEFINITION_RESOURCE);
+      while (resources.hasMoreElements()) {
+        Map<String, String> stagesInLibrary = new HashMap<>();
+        URL url = resources.nextElement();
+        try (InputStream is = url.openStream()) {
+          Map<String, List<String>> libraryInfo = json.readValue(is, Map.class);
+          for (String className : libraryInfo.get("stageClasses")) {
+            Class<? extends Stage> klass = (Class<? extends Stage>) cl.loadClass(className);
+            StageDefinition stage = StageDefinitionExtractor.get().
+                extract(libDef, klass, Utils.formatL("Library='{}'", libDef.getName()));
+            String key = createKey(libDef.getName(), stage.getName(), stage.getVersion());
+            LOG.debug("Loaded stage '{}' (library:name:version)", key);
+            if (stagesInLibrary.containsKey(key)) {
+              throw new IllegalStateException(Utils.format(
+                  "Library '{}' contains more than one definition for stage '{}', class '{}' and class '{}'",
+                  libDef.getName(), key, stagesInLibrary.get(key), stage.getStageClass()));
+            }
+            stagesInLibrary.put(key, stage.getClassName());
+            stages.put(key, stage);
+            computeDependsOnChain(stage);
+          }
+        }
+      }
+    } catch (IOException | ClassNotFoundException ex) {
+      throw new RuntimeException(
+          Utils.format("Could not load stages definition from '{}', {}", cl, ex.getMessage()), ex);
+    }
+    return stages;
   }
 
   private void computeDependsOnChain(StageDefinition stageDefinition) {
