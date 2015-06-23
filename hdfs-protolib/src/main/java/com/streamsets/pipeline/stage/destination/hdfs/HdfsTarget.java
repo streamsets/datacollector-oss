@@ -337,9 +337,8 @@ public class HdfsTarget extends RecordTarget {
         hdfsConfiguration.set(CommonConfigurationKeys.HADOOP_SECURITY_AUTHENTICATION,
                               UserGroupInformation.AuthenticationMethod.SIMPLE.name());
       }
-      UserGroupInformation doAsUgi = UserGroupInformation.createProxyUser(hdfsUser, loginUgi);
       if (validHapoopFsUri) {
-        doAsUgi.doAs(new PrivilegedExceptionAction<Void>() {
+        getUGI().doAs(new PrivilegedExceptionAction<Void>() {
           @Override
           public Void run() throws Exception {
             try (FileSystem fs = getFileSystemForInitDestroy()) { //to trigger the close
@@ -356,6 +355,9 @@ public class HdfsTarget extends RecordTarget {
     return validHapoopFsUri;
   }
 
+  private UserGroupInformation getUGI() {
+    return (hdfsUser.isEmpty()) ? loginUgi : UserGroupInformation.createProxyUser(hdfsUser, loginUgi);
+  }
 
   @Override
   protected void init() throws StageException {
@@ -377,8 +379,7 @@ public class HdfsTarget extends RecordTarget {
 
   private FileSystem getFileSystemForInitDestroy() throws IOException {
     try {
-      UserGroupInformation doAsUgi = UserGroupInformation.createProxyUser(hdfsUser, loginUgi);
-      return doAsUgi.doAs(new PrivilegedExceptionAction<FileSystem>() {
+      return getUGI().doAs(new PrivilegedExceptionAction<FileSystem>() {
         @Override
         public FileSystem run() throws Exception {
           return FileSystem.get(new URI(hdfsUri), hdfsConfiguration);
@@ -472,8 +473,7 @@ public class HdfsTarget extends RecordTarget {
   public void write(final Batch batch) throws StageException {
     setBatchTime();
     try {
-      UserGroupInformation doAsUgi = UserGroupInformation.createProxyUser(hdfsUser, loginUgi);
-      doAsUgi.doAs(new PrivilegedExceptionAction<Void>() {
+      getUGI().doAs(new PrivilegedExceptionAction<Void>() {
         @Override
         public Void run() throws Exception {
           getCurrentWriters().purge();

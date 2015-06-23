@@ -17,7 +17,11 @@ import com.streamsets.pipeline.config.CsvMode;
 import com.streamsets.pipeline.config.DataFormat;
 import com.streamsets.pipeline.sdk.ContextInfoCreator;
 import com.streamsets.pipeline.sdk.RecordCreator;
+import com.streamsets.pipeline.sdk.TargetRunner;
 import org.apache.hadoop.conf.Configuration;
+import org.apache.hadoop.fs.FileStatus;
+import org.apache.hadoop.fs.Path;
+import org.apache.hadoop.fs.permission.FsPermission;
 import org.apache.hadoop.hdfs.HdfsConfiguration;
 import org.apache.hadoop.hdfs.MiniDFSCluster;
 import org.apache.hadoop.hdfs.server.namenode.EditLogFileOutputStream;
@@ -34,6 +38,8 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.attribute.PosixFilePermission;
+import java.security.PrivilegedExceptionAction;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -42,6 +48,7 @@ import java.util.UUID;
 
 public class TestBaseHdfsTarget {
   private static MiniDFSCluster miniDFS;
+  private static UserGroupInformation fooUgi;
 
   @BeforeClass
   public static void setUpClass() throws Exception {
@@ -63,9 +70,10 @@ public class TestBaseHdfsTarget {
     Configuration conf = new HdfsConfiguration();
     conf.set("hadoop.proxyuser." + System.getProperty("user.name") + ".hosts", "*");
     conf.set("hadoop.proxyuser." + System.getProperty("user.name") + ".groups", "*");
-    UserGroupInformation.createUserForTesting("foo", new String[]{ "all"});
+    fooUgi = UserGroupInformation.createUserForTesting("foo", new String[]{ "all"});
     EditLogFileOutputStream.setShouldSkipFsyncForTesting(true);
     miniDFS = new MiniDFSCluster.Builder(conf).build();
+    miniDFS.getFileSystem().setPermission(new Path("/"), FsPermission.createImmutable((short)0777));
   }
 
   @AfterClass
@@ -96,12 +104,12 @@ public class TestBaseHdfsTarget {
     target.compression = CompressionMode.NONE;
     target.otherCompression = null;
     target.timeDriver = "${time:now()}";
-    target.lateRecordsLimit = "${1 * HOURS}";
+    target.lateRecordsLimit = "3600";
     target.dataFormat = DataFormat.DELIMITED;
     target.csvFileFormat = CsvMode.CSV;
     target.csvHeader = CsvHeader.IGNORE_HEADER;
     target.charset = "UTF-8";
-    target.hdfsUser = "foo";
+    target.hdfsUser = "";
   }
 
   static class ForTestHdfsTarget extends HdfsDTarget {
@@ -358,6 +366,69 @@ public class TestBaseHdfsTarget {
     } finally {
       target.destroy();
     }
+  }
+
+  private void testUser(String user, String expectedOwner) throws Exception {
+    final Path dir = new Path("/" + UUID.randomUUID().toString());
+    if (user.isEmpty()) {
+      miniDFS.getFileSystem().mkdirs(dir);
+    } else {
+      fooUgi.doAs(new PrivilegedExceptionAction<Object>() {
+        @Override
+        public Object run() throws Exception {
+          miniDFS.getFileSystem().mkdirs(dir);
+          return null;
+        }
+      });
+    }
+    TargetRunner runner = new TargetRunner.Builder(HdfsDTarget.class)
+        .setOnRecordError(OnRecordError.STOP_PIPELINE)
+        .addConfiguration("hdfsUri", miniDFS.getFileSystem().getUri().toString())
+        .addConfiguration("hdfsUser", user)
+        .addConfiguration("hdfsKerberos", false)
+        .addConfiguration("hdfsConfDir", "")
+        .addConfiguration("hdfsConfigs", new HashMap<>())
+        .addConfiguration("uniquePrefix", "foo")
+        .addConfiguration("dirPathTemplate", dir.toString())
+        .addConfiguration("timeZoneID", "UTC")
+        .addConfiguration("fileType", HdfsFileType.TEXT)
+        .addConfiguration("keyEl", "${uuid()}")
+        .addConfiguration("compression", CompressionMode.NONE)
+        .addConfiguration("seqFileCompressionType", HdfsSequenceFileCompressionType.BLOCK)
+        .addConfiguration("maxRecordsPerFile", 1)
+        .addConfiguration("maxFileSize", 1)
+        .addConfiguration("timeDriver", "${record:value('/')}")
+        .addConfiguration("lateRecordsLimit", "${30 * MINUTES}")
+        .addConfiguration("lateRecordsAction", LateRecordsAction.SEND_TO_LATE_RECORDS_FILE)
+        .addConfiguration("lateRecordsDirPathTemplate", dir.toString())
+        .addConfiguration("dataFormat", DataFormat.SDC_JSON)
+        .addConfiguration("csvFileFormat", null)
+        .addConfiguration("csvReplaceNewLines", false)
+        .addConfiguration("charset", "UTF-8")
+        .build();
+    runner.runInit();
+    try {
+      Date date = new Date();
+      Record record = RecordCreator.create();
+      record.set(Field.createDatetime(date));
+      runner.runWrite(Arrays.asList(record));
+    } finally {
+      runner.runDestroy();
+    }
+    FileStatus[] status = miniDFS.getFileSystem().listStatus(dir);
+    Assert.assertEquals(1, status.length);
+    Assert.assertEquals(expectedOwner, status[0].getOwner());
+  }
+
+
+  @Test
+  public void testRegularUser() throws Exception {
+    testUser("", System.getProperty("user.name"));
+  }
+
+  @Test
+  public void testProxyUser() throws Exception {
+    testUser("foo", "foo");
   }
 
 }
