@@ -49,10 +49,11 @@ public class HdfsDTarget extends DTarget {
   public String hdfsUri;
 
   @ConfigDef(
-      required = true,
+      required = false,
       type = ConfigDef.Type.STRING,
       label = "HDFS User",
-      description = "The user to write in HDFS. The data collector must be configured as a proxy user in HDFS.",
+      description = "If set, the data collector will write to HDFS as this user. " +
+                    "The data collector user must be configured as a proxy user in HDFS.",
       displayPosition = 20,
       group = "HADOOP_FS"
   )
