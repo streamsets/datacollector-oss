@@ -9,6 +9,9 @@
   <p>In this tutorial, we evaluate fare payment data from a taxi company. We want a break down of
    the credit cards used for payment to determine if we can safely drop any card vendors to reduce
    overhead. </p>
+  <p>You can do a shorter or longer version of the tutorial. The shorter version allows you to read
+   and write to a local file system so you can use tutorial data. The longer version incorporates
+   altering the data formats to write to Elasticsearch.</p>
   <p>We'll create the following pipeline structured as follows:<ul id="ul_gbm_4pl_ls">
     <li>Directory origin - Represents source data.</li>
     <li>Stream Selector - Routes credit card transactions through a separate branch for
