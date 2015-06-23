@@ -40,11 +40,9 @@
     <chapter href="Chapter_Maps/PipelineMonitoring.ditamap" format="ditamap"/>
     <chapter href="Chapter_Maps/PipelineMaintenance.ditamap" format="ditamap"/>
     <chapter href="Chapter_Maps/Administration.ditamap" format="ditamap"/>
-    <chapter href="Chapter_Maps/Tutorial.ditamap" format="ditamap"/>
     <appendix href="Chapter_Maps/Troubleshooting.ditamap" format="ditamap"/>
     <appendix href="Chapter_Maps/Glossary.ditamap" format="ditamap"/>
     <appendix href="Chapter_Maps/ExpressionLanguage.ditamap" format="ditamap"/>
-    <appendix href="Chapter_Maps/RegEx.ditamap" format="ditamap"/>
     <appendix href="Chapter_Maps/GrokPatterns.ditamap" format="ditamap"/>
     <appendix href="Chapter_Maps/ReusableContent.ditamap" format="ditamap"
         processing-role="resource-only"/>

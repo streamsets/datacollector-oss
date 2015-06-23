@@ -269,10 +269,14 @@
                 <cmd>Add additional stages as necessary.</cmd>
             </step>
             <step>
-                <cmd>When the pipeline is valid, you can use the <uicontrol>Preview</uicontrol> icon
-                    to preview data to fine-tune pipeline configuration. </cmd>
-                <info>For more information, see <xref
-                        href="../Data_Preview/DataPreview.dita#concept_jtn_s3m_lq"/>. </info>
+                <cmd>At any point, you can use the <uicontrol>Preview</uicontrol> icon to preview
+                    data to help .configure the pipeline. For more information, see <xref
+                        href="../Data_Preview/DataPreview.dita#concept_jtn_s3m_lq"/>. </cmd>
+            </step>
+            <step>
+                <cmd>Optionally, you can create metric or data alerts to track details about a
+                    pipeline run and create threshhold alerts. For more information, see <xref
+                        href="../Alerts/Alerts_title.dita#concept_pgk_brx_rr"/>.</cmd>
             </step>
             <step>
                 <cmd>When the pipeline is complete, use the <uicontrol>Start</uicontrol> icon to run
@@ -281,6 +285,8 @@
         </steps>
         <result>When the <ph
                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
-            starts the pipeline, the Monitor panel displays real-time statistics for the pipeline. </result>
+            starts the pipeline, the Monitor console displays real-time statistics for the pipeline.
+            For more information about monitoring, see <xref
+                href="../Pipeline_Monitoring/PipelineMonitoring.dita#concept_hsp_tnt_lq"/>.</result>
     </taskbody>
 </task>
