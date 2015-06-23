@@ -5,9 +5,9 @@
  <conbody>
   <p><indexterm>runtime resources<indexterm>defining</indexterm></indexterm>Use the following steps
    to define a runtime resources:<ol id="ol_j2q_ftm_2s">
-    <li>For each resource, create a text file for and save it in the following
-      directory:<codeblock>&lt;SDCinstalldir>/resources</codeblock><p>A file must contain one piece
-      of information to be used when the resource is called.</p></li>
+    <li>For each resource, create a text file and save it in the following
+            directory:<codeblock>&lt;SDCinstalldir>/resources</codeblock><p>A file must contain one
+            piece of information to be used when the resource is called.</p></li>
     <li>Optionally, restrict the permissions for the file. <p>Generally, anyone can read a file. To
             restrict permissions, configure the file so only the owner has read or write permissions
             for the file - in octals, that's 600 or 400. And the owner must be the system user that

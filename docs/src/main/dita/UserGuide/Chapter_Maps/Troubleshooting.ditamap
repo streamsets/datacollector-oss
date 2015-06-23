@@ -3,22 +3,40 @@
 <map>
  <title>Troubleshooting</title>
  <topicref href="../Troubleshooting/Troubleshooting_title.dita">
-  <topicref href="../Troubleshooting/AccessingErrorMessages.dita"/>
-  <topicref href="../Troubleshooting/PipelineBasics.dita">
+  <topicref href="../Troubleshooting/AccessingErrorMessages.dita">
+   <topicmeta>
+   <shortdesc/>
+  </topicmeta>
+  </topicref>
+  <topicref href="../Troubleshooting/PipelineBasics.dita" chunk="to-content">
    <topicmeta>
     <shortdesc/>
    </topicmeta>
    <topicref href="../Troubleshooting/DataPreview.dita"/>
   </topicref>
-  <topicref href="../Troubleshooting/Origins.dita">
+  <topicref href="../Troubleshooting/Origins.dita" chunk="to-content">
+   <topicmeta>
+    <shortdesc/>
+   </topicmeta>
    <topicref href="../Troubleshooting/Origins-JDBC.dita"/>
    <topicref href="../Troubleshooting/Origins-KafkaConsumer.dita"/>
   </topicref>
-  <topicref href="../Troubleshooting/Destinations.dita">
+  <topicref href="../Troubleshooting/Destinations.dita" chunk="to-content">
+   <topicmeta>
+    <shortdesc/>
+   </topicmeta>
    <topicref href="../Troubleshooting/Destinations-Cassandra.dita"/>
    <topicref href="../Troubleshooting/Destinations-Kafka.dita"/>
   </topicref>
-  <topicref href="../Troubleshooting/Performance.dita"/>
-  <topicref href="../Troubleshooting/ClusterMode.dita"/>
+  <topicref href="../Troubleshooting/Performance.dita">
+   <topicmeta>
+    <shortdesc/>
+   </topicmeta>
+  </topicref>
+  <topicref href="../Troubleshooting/ClusterMode.dita">
+   <topicmeta>
+    <shortdesc/>
+   </topicmeta>
+  </topicref>
  </topicref>
 </map>

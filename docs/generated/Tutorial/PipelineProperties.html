@@ -1,0 +1,99 @@
+
+<!DOCTYPE html
+  SYSTEM "about:legacy-compat">
+<html xml:lang="en-us" lang="en-us">
+<head><meta name="description" content="Generally, you can use defaults for pipeline properties, but you should always define how you want to handle error records. If you have a Kafka cluster you can use for error records, feel free. ..."></meta><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><meta name="copyright" content="(C) Copyright 2005"></meta><meta name="DC.rights.owner" content="(C) Copyright 2005"></meta><meta name="DC.Type" content="task"></meta><meta name="DC.Title" content="Creating a Pipeline and Defining Pipeline Properties"></meta><meta name="abstract" content="Generally, you can use defaults for pipeline properties, but you should always define how you want to handle error records."></meta><meta name="description" content="Generally, you can use defaults for pipeline properties, but you should always define how you want to handle error records."></meta><meta name="DC.Relation" scheme="URI" content="../Tutorial/Tutorial-title.html"></meta><meta name="DC.Format" content="XHTML"></meta><meta name="DC.Identifier" content="task_jmz_3dn_ls"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/commonltr.css"><!----></link><title>Creating a Pipeline and Defining Pipeline Properties</title><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/webhelp_topic.css"><!----></link><link rel="stylesheet" type="text/css" href="../skin.css"></link><script type="text/javascript"><!--
+          
+          var prefix = "../index.html";
+          
+          --></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery-1.8.2.min.js"><!----></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery.cookie.js"><!----></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery-ui.custom.min.js"><!----></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery.highlight-3.js"><!----></script><script type="text/javascript" charset="utf-8" src="../oxygen-webhelp/resources/js/webhelp_topic.js"><!----></script></head>
+<body onload="highlightSearchTerm()" class="frmBody" id="task_jmz_3dn_ls">
+<table class="nav"><tbody><tr><td colspan="2"><div id="printlink"><a href="javascript:window.print();" title="Print this page"></a></div><div id="permalink"><a href="#" title="Link to this page"></a></div></td></tr><tr><td width="75%"><a class="navheader_parent_path" href="../Tutorial/Tutorial-title.html" title="Data Collector Tutorial">Data Collector Tutorial</a></td><td><div class="navheader">
+<span class="navparent"><a class="link" href="../Tutorial/Tutorial-title.html" title="Data Collector Tutorial"><span class="navheader_label">Parent topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">Data Collector Tutorial</span></a></span>  </div></td></tr></tbody></table>
+
+    <h1 class="title topictitle1">Creating a Pipeline and Defining Pipeline Properties</h1>
+
+    
+    <div class="body taskbody"><p class="shortdesc">Generally, you can use defaults for pipeline properties, but you should always define
+        how you want to handle error records. </p>
+
+        <div class="section context">
+            <p class="p">If you have a Kafka cluster you can use for error records, feel free. Otherwise,
+                let's write the records to a local file.</p>
+
+        </div>
+
+        <ol class="ol steps" id="task_jmz_3dn_ls__steps_hsz_b2n_ls"><li class="li step stepexpand">
+                <span class="ph cmd">If this is the first pipeline for the <span class="ph">Data
+                  Collector</span>, click <span class="ph uicontrol">Create Pipeline</span>. </span>
+                <div class="itemgroup info">If you have created other pipelines, if necessary, use the <span class="ph uicontrol">Toggle
+                        Library</span> icon to display the pipeline library, and click the
+                        <span class="ph uicontrol">Create New Pipeline</span> icon.</div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">Click the <span class="keyword wintitle">Error Records</span> tab, for the <span class="ph uicontrol">Error
+                        Records</span> property, select <span class="ph uicontrol">Write to
+                    File</span>.</span>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">Click the <span class="keyword wintitle">Error Records - Write to File</span> tab and configure
+                    the following properties: </span>
+                <div class="itemgroup info">
+                    
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_jmz_3dn_ls__table_zvy_kfn_ls" class="table" frame="border" border="1" rules="all">
+                            
+                            
+                            <thead class="thead" align="left">
+                                <tr class="row">
+                                    <th class="entry" valign="top" width="27.47252747252747%" id="d46071e81"> </th>
+
+                                    <th class="entry" valign="top" width="72.52747252747253%" id="d46071e83"> </th>
+
+                                </tr>
+
+                            </thead>
+
+                            <tbody class="tbody">
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="27.47252747252747%" headers="d46071e81 ">Directory</td>
+
+                                    <td class="entry" valign="top" width="72.52747252747253%" headers="d46071e83 ">Enter a directory local to the <span class="ph">Data
+                  Collector</span>. <div class="note note"><span class="notetitle">Note:</span> The directory must exist to prevent validation
+                                            errors. </div>
+</td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="27.47252747252747%" headers="d46071e81 ">Files Prefix</td>
+
+                                    <td class="entry" valign="top" width="72.52747252747253%" headers="d46071e83 ">This defines a prefix for error record files. Delete the
+                                        default and use "Taxi-Errors_".</td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="27.47252747252747%" headers="d46071e81 ">Max File Size</td>
+
+                                    <td class="entry" valign="top" width="72.52747252747253%" headers="d46071e83 ">When writing to a local directory, you might want to
+                                        reduce the files size to something more managable, such as 5
+                                        MB.</td>
+
+                                </tr>
+
+                            </tbody>
+
+                        </table>
+</div>
+
+                </div>
+            </li>
+</ol>
+
+    </div>
+
+<div class="related-links"></div>
+<div class="navfooter"><!---->
+<span class="navparent"><a class="link" href="../Tutorial/Tutorial-title.html" title="Data Collector Tutorial"><span class="navheader_label">Parent topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">Data Collector Tutorial</span></a></span>  </div><div class="footer"><div> </div><!-- © <a href="http://creativecommons.org/licenses/by-nc/4.0/legalcode">CC BY-NC 4.0.</a> StreamSets, 2015. --></div>
+</body>
+</html>

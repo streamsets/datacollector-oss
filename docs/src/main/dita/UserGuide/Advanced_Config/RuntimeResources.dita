@@ -2,10 +2,11 @@
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_bs4_5nm_2s">
  <title>Runtime Resources</title>
- <shortdesc>Similar to runtime properties, runtime resources are values that load from a file at
-  runtime. Unlike runtime properties, you can restrict the permissions for the files to secure
-  sensitive information. Use runtime properties to load sensitive information from files at
-  runtime.</shortdesc>
+ <shortdesc>Similar to runtime properties, runtime resources are values that you define in a file
+    local to the <ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+    /> and call from within a pipeline. But with runtime resources, you can restrict the permissions
+    for the files to secure sensitive information. Use runtime properties to load sensitive
+    information from files at runtime.</shortdesc>
  <conbody>
   <p><indexterm>runtime resources<indexterm>overview</indexterm></indexterm>You can use runtime
    resources for any pipeline property that allows the use of the expression language. You can, for

@@ -2,7 +2,7 @@
 <!DOCTYPE html
   SYSTEM "about:legacy-compat">
 <html xml:lang="en-us" lang="en-us">
-<head><meta name="description" content="Similar to runtime properties, runtime resources are values that load from a file at runtime. Unlike runtime properties, you can restrict the permissions for the files to secure sensitive information. ..."></meta><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><meta name="copyright" content="(C) Copyright 2005"></meta><meta name="DC.rights.owner" content="(C) Copyright 2005"></meta><meta name="DC.Type" content="concept"></meta><meta name="DC.Title" content="Runtime Resources"></meta><meta name="abstract" content="Similar to runtime properties, runtime resources are values that load from a file at runtime. Unlike runtime properties, you can restrict the permissions for the files to secure sensitive information. Use runtime properties to load sensitive information from files at runtime."></meta><meta name="description" content="Similar to runtime properties, runtime resources are values that load from a file at runtime. Unlike runtime properties, you can restrict the permissions for the files to secure sensitive information. Use runtime properties to load sensitive information from files at runtime."></meta><meta name="DC.Relation" scheme="URI" content="../Advanced_Config/AdvancedPipelineConfig-title.html"></meta><meta name="DC.Format" content="XHTML"></meta><meta name="DC.Identifier" content="concept_bs4_5nm_2s"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/commonltr.css"><!----></link><title>Runtime Resources</title><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/webhelp_topic.css"><!----></link><link rel="stylesheet" type="text/css" href="../skin.css"></link><script type="text/javascript"><!--
+<head><meta name="description" content="Similar to runtime properties, runtime resources are values that you define in a file local to the Data Collector and call from within a pipeline. But with runtime resources, you can restrict the ..."></meta><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><meta name="copyright" content="(C) Copyright 2005"></meta><meta name="DC.rights.owner" content="(C) Copyright 2005"></meta><meta name="DC.Type" content="concept"></meta><meta name="DC.Title" content="Runtime Resources"></meta><meta name="abstract" content="Similar to runtime properties, runtime resources are values that you define in a file local to the Data Collector and call from within a pipeline. But with runtime resources, you can restrict the permissions for the files to secure sensitive information. Use runtime properties to load sensitive information from files at runtime."></meta><meta name="description" content="Similar to runtime properties, runtime resources are values that you define in a file local to the Data Collector and call from within a pipeline. But with runtime resources, you can restrict the permissions for the files to secure sensitive information. Use runtime properties to load sensitive information from files at runtime."></meta><meta name="DC.Relation" scheme="URI" content="../Advanced_Config/AdvancedPipelineConfig-title.html"></meta><meta name="DC.Format" content="XHTML"></meta><meta name="DC.Identifier" content="concept_bs4_5nm_2s"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/commonltr.css"><!----></link><title>Runtime Resources</title><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/webhelp_topic.css"><!----></link><link rel="stylesheet" type="text/css" href="../skin.css"></link><script type="text/javascript"><!--
           
           var prefix = "../index.html";
           
@@ -14,10 +14,11 @@
  <h1 class="title topictitle1">Runtime Resources</h1>
 
  
- <div class="body conbody"><p class="shortdesc">Similar to runtime properties, runtime resources are values that load from a file at
-  runtime. Unlike runtime properties, you can restrict the permissions for the files to secure
-  sensitive information. Use runtime properties to load sensitive information from files at
-  runtime.</p>
+ <div class="body conbody"><p class="shortdesc">Similar to runtime properties, runtime resources are values that you define in a file
+    local to the <span class="ph">Data
+                  Collector</span> and call from within a pipeline. But with runtime resources, you can restrict the permissions
+    for the files to secure sensitive information. Use runtime properties to load sensitive
+    information from files at runtime.</p>
 
   <p class="p">You can use runtime
    resources for any pipeline property that allows the use of the expression language. You can, for
@@ -41,10 +42,10 @@
  <div class="body conbody">
   <div class="p">Use the following steps
    to define a runtime resources:<ol class="ol" id="concept_jh2_ysm_2s__ol_j2q_ftm_2s">
-    <li class="li">For each resource, create a text file for and save it in the following
-      directory:<pre class="pre codeblock">&lt;SDCinstalldir&gt;/resources</pre>
-<p class="p">A file must contain one piece
-      of information to be used when the resource is called.</p>
+    <li class="li">For each resource, create a text file and save it in the following
+            directory:<pre class="pre codeblock">&lt;SDCinstalldir&gt;/resources</pre>
+<p class="p">A file must contain one
+            piece of information to be used when the resource is called.</p>
 </li>
 
     <li class="li">Optionally, restrict the permissions for the file. <p class="p">Generally, anyone can read a file. To

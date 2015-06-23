@@ -133,6 +133,7 @@
                         <li>Literals</li>
                         <li>Operators</li>
                         <li>Runtime properties</li>
+                        <li>Runtime resources</li>
                   </ul></p>
       </conbody>
 </concept>

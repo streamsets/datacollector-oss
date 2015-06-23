@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE task PUBLIC "-//OASIS//DTD DITA General Task//EN" "generalTask.dtd">
+<task id="task_jmz_3dn_ls">
+    <title>Creating a Pipeline and Defining Pipeline Properties</title>
+    <shortdesc>Generally, you can use defaults for pipeline properties, but you should always define
+        how you want to handle error records. </shortdesc>
+    <taskbody>
+        <context>
+            <p>If you have a Kafka cluster you can use for error records, feel free. Otherwise,
+                let's write the records to a local file.</p>
+        </context>
+        <steps id="steps_hsz_b2n_ls">
+            <step conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/CreatePipeline">
+                <cmd/>
+            </step>
+            <step>
+                <cmd>Click the <wintitle>Error Records</wintitle> tab, for the <uicontrol>Error
+                        Records</uicontrol> property, select <uicontrol>Write to
+                    File</uicontrol>.</cmd>
+            </step>
+            <step>
+                <cmd>Click the <wintitle>Error Records - Write to File</wintitle> tab and configure
+                    the following properties: </cmd>
+                <info>
+                    <table frame="all" rowsep="1" colsep="1" id="table_zvy_kfn_ls">
+                        <tgroup cols="2">
+                            <colspec colname="c1" colnum="1" colwidth="1*"/>
+                            <colspec colname="c2" colnum="2" colwidth="2.64*"/>
+                            <thead>
+                                <row>
+                                    <entry/>
+                                    <entry/>
+                                </row>
+                            </thead>
+                            <tbody>
+                                <row>
+                                    <entry>Directory</entry>
+                                    <entry>Enter a directory local to the <ph
+                                            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                                        />. <note>The directory must exist to prevent validation
+                                            errors. </note></entry>
+                                </row>
+                                <row>
+                                    <entry>Files Prefix</entry>
+                                    <entry>This defines a prefix for error record files. Delete the
+                                        default and use "Taxi-Errors_".</entry>
+                                </row>
+                                <row>
+                                    <entry>Max File Size</entry>
+                                    <entry>When writing to a local directory, you might want to
+                                        reduce the files size to something more managable, such as 5
+                                        MB.</entry>
+                                </row>
+                            </tbody>
+                        </tgroup>
+                    </table>
+                </info>
+            </step>
+        </steps>
+    </taskbody>
+</task>

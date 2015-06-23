@@ -19,7 +19,7 @@
                         conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
                     />, click <uicontrol>Create Pipeline</uicontrol>. </cmd>
                 <info>If you have created other pipelines, if necessary, use the <uicontrol>Toggle
-                        Library</uicontrol> icon to display the Library, and click the
+                        Library</uicontrol> icon to display the pipeline library, and click the
                         <uicontrol>Create New Pipeline</uicontrol> icon.</info>
             </step>
             <step>

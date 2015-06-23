@@ -7,11 +7,17 @@
    <topicmeta>
     <shortdesc/>
    </topicmeta>
-   <topicref href="../Apx-RegEx/QuickReference.dita">
-    <topicmeta>
-     <shortdesc/>
-    </topicmeta>
-   </topicref>
   </topicref>
+  <topicref href="../Apx-RegEx/Regex-inthePipeline.dita">  
+   <topicmeta>
+   <shortdesc/>
+  </topicmeta>
+  </topicref>
+  <topicref href="../Apx-RegEx/QuickReference.dita">
+   <topicmeta>
+    <shortdesc/>
+   </topicmeta>
+  </topicref>
+  <topicref href="../Apx-RegEx/Examples.dita"/>
  </topicref>
 </map>

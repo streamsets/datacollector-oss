@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE task PUBLIC "-//OASIS//DTD DITA General Task//EN" "generalTask.dtd">
+<task id="task_cdx_kfm_ls">
+    <title>Jython for Card Typing</title>
+    <shortdesc>The pipeline uses a Jython Evaluator to evaluate credit card numbers and determine
+        the credit card type associated with each number.</shortdesc>
+    <taskbody>
+        <context><p>The <ph
+                    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                /> provides a JavaScript Evaluator and Jython Evaluator so you can use custom script
+                to perform processing that is not easily performed using other <ph
+                    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                /> processors. </p>In this pipeline, the Jython Evaluator creates an additional
+            field, credit_card_type, and generates the credit card type based on the first few
+            digits of the credit card number. The Jython script passes an error message if the
+            record has a credit card payment type, but no credit card number. </context>
+        <steps id="steps_lnv_lfm_ls">
+            <step>
+                <cmd>From the stage library, select the <uicontrol>Jython Evaluator</uicontrol>
+                    processor and connect it to the first output location of the Stream
+                    Selector.</cmd>
+                <info>This routes records paid by credit card to the Jython Evaluator. </info>
+            </step>
+            <step>
+                <cmd>With the Jython Evaluator selected, in the Properties panel, click the
+                        <wintitle>Jython</wintitle> tab. </cmd>
+            </step>
+            <step>
+                <cmd>Use the default record processing mode to process data in batches instead of
+                    record by record. </cmd>
+            </step>
+            <step>
+                <cmd>In the Script text box, paste the following script below the comments:</cmd>
+                <info>
+                    <codeblock>try: 
+  for record in records:
+    cc = record.value[20]['value']
+    if cc == '':
+      err.write(record, "Payment type was CRD, but credit card was null")
+      continue
+
+    cc_type = ''
+    if cc.startswith('4'):
+      cc_type = 'Visa'
+    elif cc.startswith(('51','52','53','54','55')):
+      cc_type = 'MasterCard'
+    elif cc.startswith(('34','37')):
+      cc_type = 'AMEX'
+    elif cc.startswith(('300','301','302','303','304','305','36','38')):
+      cc_type = 'Diners Club'
+    elif cc.startswith(('6011','65')):
+      cc_type = 'Discover'
+    elif cc.startswith(('2131','1800','35')):
+      cc_type = 'JCB'
+    else:
+      cc_type = 'Other'
+
+    record.value.append({'header':'credit_card_type','value':cc_type})
+    out.write(record)
+except Exception as e:
+  err.write(record, e.message)</codeblock>
+                </info>
+            </step>
+        </steps>
+    </taskbody>
+</task>
