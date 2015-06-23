@@ -7,6 +7,7 @@ package com.streamsets.pipeline.stage.processor.dedup;
 
 import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.ConfigGroups;
+import com.streamsets.pipeline.api.ExecutionMode;
 import com.streamsets.pipeline.api.FieldSelector;
 import com.streamsets.pipeline.api.GenerateResourceBundle;
 import com.streamsets.pipeline.api.HideConfig;
@@ -22,7 +23,8 @@ import java.util.List;
     label = "Record Deduplicator",
     description = "Separates unique and duplicate records based on field comparison",
     icon="dedup.png",
-    outputStreams = OutputStreams.class
+    outputStreams = OutputStreams.class,
+    execution = ExecutionMode.STANDALONE
 )
 @ConfigGroups(Groups.class)
 @HideConfig(onErrorRecord = true)
