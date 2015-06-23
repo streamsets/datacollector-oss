@@ -30,6 +30,7 @@ import org.apache.hadoop.hbase.client.HTable;
 import org.apache.hadoop.hbase.client.Result;
 import org.apache.hadoop.hbase.util.Bytes;
 import org.apache.hadoop.hbase.zookeeper.MiniZooKeeperCluster;
+import org.apache.hadoop.security.UserGroupInformation;
 import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.BeforeClass;
@@ -53,6 +54,7 @@ import com.streamsets.pipeline.sdk.TargetRunner;
 import com.streamsets.pipeline.stage.destination.hbase.HBaseFieldMappingConfig;
 
 
+
 public class TestHBaseTarget {
 
   private static HBaseTestingUtility utility;
@@ -64,6 +66,9 @@ public class TestHBaseTarget {
   @BeforeClass
   public static void setUpBeforeClass() throws Exception {
     conf.set(HConstants.ZOOKEEPER_ZNODE_PARENT, "/hbase");
+    conf.set("hadoop.proxyuser." + System.getProperty("user.name") + ".hosts", "*");
+    conf.set("hadoop.proxyuser." + System.getProperty("user.name") + ".groups", "*");
+    UserGroupInformation.createUserForTesting("foo", new String[]{ "all"});
     utility = new HBaseTestingUtility(conf);
     utility.startMiniCluster();
     miniZK = utility.getZkCluster();
@@ -94,10 +99,9 @@ public class TestHBaseTarget {
             .addConfiguration("hbaseFieldColumnMapping",
               ImmutableList.of(new HBaseFieldMappingConfig("cf:a", "[1]", StorageType.TEXT)))
             .addConfiguration("kerberosAuth", false)
-            .addConfiguration("kerberosPrincipal", "")
             .addConfiguration("hbaseConfigs", new HashMap<String, String>())
+            .addConfiguration("hbaseUser", "")
             .addConfiguration("hbaseConfDir", "")
-            .addConfiguration("kerberosKeytab", "")
             .addConfiguration("rowKeyStorageType", StorageType.BINARY)
             .setOnRecordError(OnRecordError.DISCARD).build();
     assertTrue(targetRunner.runValidateConfigs().isEmpty());
@@ -175,7 +179,7 @@ public class TestHBaseTarget {
           new HBaseFieldMappingConfig("cf:c", "[3]", StorageType.TEXT),
           new HBaseFieldMappingConfig("cf:d", "[4]", StorageType.TEXT));
 
-    TargetRunner targetRunner = buildRunner(fieldMappings, StorageType.TEXT, OnRecordError.DISCARD);
+    TargetRunner targetRunner = buildRunner(fieldMappings, StorageType.TEXT, OnRecordError.DISCARD, "");
 
     Record record = RecordCreator.create();
     List<Field> fields = new ArrayList<>();
@@ -213,7 +217,7 @@ public class TestHBaseTarget {
           new HBaseFieldMappingConfig("cf:d", "[4]", StorageType.TEXT));
 
     TargetRunner targetRunner =
-        buildRunner(fieldMappings, StorageType.BINARY, OnRecordError.DISCARD);
+        buildRunner(fieldMappings, StorageType.BINARY, OnRecordError.DISCARD, "");
 
     Record record = RecordCreator.create();
     List<Field> fields = new ArrayList<>();
@@ -255,7 +259,7 @@ public class TestHBaseTarget {
           new HBaseFieldMappingConfig("cf:d", "[4]", StorageType.TEXT));
 
     TargetRunner targetRunner =
-        buildRunner(fieldMappings, StorageType.BINARY, OnRecordError.DISCARD);
+        buildRunner(fieldMappings, StorageType.BINARY, OnRecordError.DISCARD, "");
 
     // Add two records
     Record record = RecordCreator.create();
@@ -315,7 +319,7 @@ public class TestHBaseTarget {
           new HBaseFieldMappingConfig("cf:d", "[4]", StorageType.JSON_STRING));
 
     TargetRunner targetRunner =
-        buildRunner(fieldMappings, StorageType.BINARY, OnRecordError.DISCARD);
+        buildRunner(fieldMappings, StorageType.BINARY, OnRecordError.DISCARD, "");
 
     Record record = RecordCreator.create();
     List<Field> fields = new ArrayList<>();
@@ -366,7 +370,7 @@ public class TestHBaseTarget {
           new HBaseFieldMappingConfig("cf:d", "[4]", StorageType.TEXT));
 
     TargetRunner targetRunner =
-        buildRunner(fieldMappings, StorageType.BINARY, OnRecordError.DISCARD);
+        buildRunner(fieldMappings, StorageType.BINARY, OnRecordError.DISCARD, "");
 
     Record record = RecordCreator.create();
     List<Field> fields = new ArrayList<>();
@@ -405,7 +409,7 @@ public class TestHBaseTarget {
           new HBaseFieldMappingConfig("cf:d", "[4]", StorageType.TEXT));
 
     TargetRunner targetRunner =
-        buildRunner(fieldMappings, StorageType.BINARY, OnRecordError.TO_ERROR);
+        buildRunner(fieldMappings, StorageType.BINARY, OnRecordError.TO_ERROR, "");
 
     Record record = RecordCreator.create();
     List<Field> fields = new ArrayList<>();
@@ -444,7 +448,7 @@ public class TestHBaseTarget {
           new HBaseFieldMappingConfig("cf:d", "[4]", StorageType.TEXT));
 
     TargetRunner targetRunner =
-        buildRunner(fieldMappings, StorageType.BINARY, OnRecordError.STOP_PIPELINE);
+        buildRunner(fieldMappings, StorageType.BINARY, OnRecordError.STOP_PIPELINE, "");
 
     Record record = RecordCreator.create();
     List<Field> fields = new ArrayList<>();
@@ -475,7 +479,7 @@ public class TestHBaseTarget {
           new HBaseFieldMappingConfig("cf:d", "[4]", StorageType.TEXT));
 
     TargetRunner targetRunner =
-        buildRunner(fieldMappings, StorageType.BINARY, OnRecordError.TO_ERROR);
+        buildRunner(fieldMappings, StorageType.BINARY, OnRecordError.TO_ERROR, "");
 
     Record record = RecordCreator.create();
     List<Field> fields = new ArrayList<>();
@@ -533,7 +537,7 @@ public class TestHBaseTarget {
           new HBaseFieldMappingConfig("cf:d", "[4]", StorageType.TEXT));
 
     TargetRunner targetRunner =
-        buildRunner(fieldMappings, StorageType.TEXT, OnRecordError.TO_ERROR);
+        buildRunner(fieldMappings, StorageType.TEXT, OnRecordError.TO_ERROR, "");
 
     Record record = RecordCreator.create();
     List<Field> fields = new ArrayList<>();
@@ -565,8 +569,7 @@ public class TestHBaseTarget {
     @Override
     protected Target createTarget() {
       return new HBaseTarget(zookeeperQuorum, clientPort, zookeeperParentZnode, tableName, hbaseRowKey,
-        rowKeyStorageType, hbaseFieldColumnMapping, kerberosAuth, kerberosPrincipal, masterPrincipal,
-        regionServerPrincipal, kerberosKeytab, hbaseConfDir, hbaseConfigs) {
+        rowKeyStorageType, hbaseFieldColumnMapping, kerberosAuth, hbaseConfDir, hbaseConfigs, hbaseUser) {
         @Override
         public void write(Batch batch) throws StageException {
         }
@@ -625,10 +628,11 @@ public class TestHBaseTarget {
     target.hbaseFieldColumnMapping = new ArrayList<HBaseFieldMappingConfig>();
     target.hbaseFieldColumnMapping
         .add(new HBaseFieldMappingConfig("cf:a", "[1]", StorageType.TEXT));
+    target.hbaseUser = "";
   }
 
   private TargetRunner buildRunner(List<HBaseFieldMappingConfig> fieldMappings,
-      StorageType storageType, OnRecordError onRecordError) {
+      StorageType storageType, OnRecordError onRecordError, String hbaseUser) {
     TargetRunner targetRunner =
         new TargetRunner.Builder(HBaseDTarget.class)
             .addConfiguration("zookeeperQuorum", "127.0.0.1")
@@ -636,13 +640,55 @@ public class TestHBaseTarget {
             .addConfiguration("zookeeperParentZnode", "/hbase")
             .addConfiguration("tableName", tableName).addConfiguration("hbaseRowKey", "[0]")
             .addConfiguration("hbaseFieldColumnMapping", fieldMappings)
-            .addConfiguration("kerberosAuth", false).addConfiguration("kerberosPrincipal", "")
+            .addConfiguration("kerberosAuth", false)
             .addConfiguration("hbaseConfDir", "")
             .addConfiguration("hbaseConfigs", new HashMap<String, String>())
-            .addConfiguration("kerberosKeytab", "")
             .addConfiguration("rowKeyStorageType", storageType).setOnRecordError(onRecordError)
+            .addConfiguration("hbaseUser", hbaseUser)
             .build();
     return targetRunner;
+  }
+
+  private void testUser(String user) throws Exception {
+    List<HBaseFieldMappingConfig> fieldMappings =
+      ImmutableList.of(new HBaseFieldMappingConfig("cf:a", "[1]", StorageType.TEXT),
+        new HBaseFieldMappingConfig("cf:b", "[2]", StorageType.TEXT),
+        new HBaseFieldMappingConfig("cf:c", "[3]", StorageType.TEXT),
+        new HBaseFieldMappingConfig("cf:d", "[4]", StorageType.TEXT));
+
+    TargetRunner targetRunner = buildRunner(fieldMappings, StorageType.TEXT, OnRecordError.DISCARD, user);
+
+    Record record = RecordCreator.create();
+    List<Field> fields = new ArrayList<>();
+    String rowKey = "row_key";
+    fields.add(Field.create(rowKey));
+    fields.add(Field.create(20));
+    fields.add(Field.create(30));
+    fields.add(Field.create(40));
+    fields.add(Field.create(50));
+    record.set(Field.create(fields));
+    assertTrue(targetRunner.runValidateConfigs().isEmpty());
+    List<Record> singleRecord = ImmutableList.of(record);
+    targetRunner.runInit();
+    targetRunner.runWrite(singleRecord);
+    targetRunner.runDestroy();
+    HTable htable = new HTable(conf, tableName);
+    Get g = new Get(Bytes.toBytes(rowKey));
+    Result r = htable.get(g);
+    assertEquals("20", Bytes.toString(r.getValue(Bytes.toBytes(familyName), Bytes.toBytes("a"))));
+    assertEquals("30", Bytes.toString(r.getValue(Bytes.toBytes(familyName), Bytes.toBytes("b"))));
+    assertEquals("40", Bytes.toString(r.getValue(Bytes.toBytes(familyName), Bytes.toBytes("c"))));
+    assertEquals("50", Bytes.toString(r.getValue(Bytes.toBytes(familyName), Bytes.toBytes("d"))));
+  }
+
+  @Test
+  public void testRegularUser() throws Exception {
+    testUser("");
+  }
+
+  @Test
+  public void testProxyUser() throws Exception {
+    testUser("foo");
   }
 
 }

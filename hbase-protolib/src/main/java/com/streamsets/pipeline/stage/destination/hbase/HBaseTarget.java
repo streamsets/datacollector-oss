@@ -9,6 +9,7 @@ import java.io.IOException;
 import java.io.InterruptedIOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.security.AccessController;
 import java.security.PrivilegedExceptionAction;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -16,6 +17,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.SortedMap;
 import java.util.TreeMap;
+
+import javax.security.auth.Subject;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.hadoop.conf.Configuration;
@@ -32,6 +35,7 @@ import org.apache.hadoop.hbase.client.Row;
 import org.apache.hadoop.hbase.security.User;
 import org.apache.hadoop.hbase.util.Bytes;
 import org.apache.hadoop.security.UserGroupInformation;
+import org.apache.hadoop.security.authentication.util.KerberosUtil;
 import org.slf4j.LoggerFactory;
 import org.slf4j.Logger;
 
@@ -56,7 +60,6 @@ public class HBaseTarget extends BaseTarget {
   final private String hbaseRowKey;
   final private List<HBaseFieldMappingConfig> hbaseFieldColumnMapping;
   final private boolean kerberosAuth;
-  final private String kerberosPrincipal;
   //master and regionserver principals are not defined in HBase constants, so do it here
   final private String MASTER_KERBEROS_PRINCIPAL = "hbase.master.kerberos.principal";
   final private String REGIONSERVER_KERBEROS_PRINCIPAL = "hbase.regionserver.kerberos.principal";
@@ -64,16 +67,13 @@ public class HBaseTarget extends BaseTarget {
   private Configuration hbaseConf;
   final private Map<String, String> hbaseConfigs;
   final private StorageType rowKeyStorageType;
-  final private String kerberosKeytab;
-  private UserGroupInformation ugi;
-  final private String masterPrincipal;
-  final private String regionServerPrincipal;
+  private UserGroupInformation loginUgi;
   final private String hbaseConfDir;
+  private final String hbaseUser;
 
-  public HBaseTarget(String zookeeperQuorum, int clientPort, String zookeeperParentZnode,
-      String tableName, String hbaseRowKey, StorageType rowKeyStorageType,
-      List<HBaseFieldMappingConfig> hbaseFieldColumnMapping, boolean kerberosAuth,
-      String kerberosPrincipal, String kerberosKeytab, String masterPrincipal, String regionServerPrincipal, String hbaseConfDir, Map<String, String> hbaseConfigs) {
+  public HBaseTarget(String zookeeperQuorum, int clientPort, String zookeeperParentZnode, String tableName,
+    String hbaseRowKey, StorageType rowKeyStorageType, List<HBaseFieldMappingConfig> hbaseFieldColumnMapping,
+    boolean kerberosAuth, String hbaseConfDir, Map<String, String> hbaseConfigs, String hbaseUser) {
     this.zookeeperQuorum = zookeeperQuorum;
     this.clientPort = clientPort;
     this.zookeeperParentZnode = zookeeperParentZnode;
@@ -81,13 +81,10 @@ public class HBaseTarget extends BaseTarget {
     this.hbaseRowKey = hbaseRowKey;
     this.hbaseFieldColumnMapping = hbaseFieldColumnMapping;
     this.kerberosAuth = kerberosAuth;
-    this.kerberosPrincipal = kerberosPrincipal;
     this.hbaseConfigs = hbaseConfigs;
     this.rowKeyStorageType = rowKeyStorageType;
-    this.kerberosKeytab = kerberosKeytab;
-    this.regionServerPrincipal = regionServerPrincipal;
-    this.masterPrincipal = masterPrincipal;
     this.hbaseConfDir = hbaseConfDir;
+    this.hbaseUser = hbaseUser;
   }
 
   @Override
@@ -173,43 +170,56 @@ public class HBaseTarget extends BaseTarget {
   private void validateSecurityConfigs(List<ConfigIssue> issues) {
     try {
       if (kerberosAuth) {
-        hbaseConf.set(User.HBASE_SECURITY_CONF_KEY,
-          UserGroupInformation.AuthenticationMethod.KERBEROS.name());
+        hbaseConf.set(User.HBASE_SECURITY_CONF_KEY, UserGroupInformation.AuthenticationMethod.KERBEROS.name());
         hbaseConf.set(CommonConfigurationKeys.HADOOP_SECURITY_AUTHENTICATION, UserGroupInformation.AuthenticationMethod.KERBEROS.name());
-        if (masterPrincipal != null && !masterPrincipal.isEmpty()) {
-          hbaseConf.set(MASTER_KERBEROS_PRINCIPAL, masterPrincipal);
-        }
-        if (regionServerPrincipal != null && !regionServerPrincipal.isEmpty()) {
-          hbaseConf.set(REGIONSERVER_KERBEROS_PRINCIPAL, regionServerPrincipal);
-        }
         if (hbaseConf.get(MASTER_KERBEROS_PRINCIPAL) == null) {
-          issues.add(getContext().createConfigIssue(Groups.HBASE.name(), "masterPrincipal", Errors.HBASE_22));
+          try {
+            hbaseConf.set(MASTER_KERBEROS_PRINCIPAL, "hbase/_HOST@" + KerberosUtil.getDefaultRealm());
+          } catch (Exception e) {
+            issues.add(getContext().createConfigIssue(Groups.HBASE.name(), "masterPrincipal", Errors.HBASE_22));
+          }
         }
         if (hbaseConf.get(REGIONSERVER_KERBEROS_PRINCIPAL) == null) {
-          issues.add(getContext().createConfigIssue(Groups.HBASE.name(), "regionServerPrincipal", Errors.HBASE_23));
+          try {
+            hbaseConf.set(REGIONSERVER_KERBEROS_PRINCIPAL, "hbase/_HOST@" + KerberosUtil.getDefaultRealm());
+          } catch (Exception e) {
+            issues.add(getContext().createConfigIssue(Groups.HBASE.name(), "regionServerPrincipal", Errors.HBASE_23));
+          }
         }
+      }
 
-        UserGroupInformation.setConfiguration(hbaseConf);
-        ugi = UserGroupInformation.loginUserFromKeytabAndReturnUGI(kerberosPrincipal, kerberosKeytab);
-        if (ugi.getAuthenticationMethod() != UserGroupInformation.AuthenticationMethod.KERBEROS) {
-          issues.add(getContext().createConfigIssue(Groups.HBASE.name(), "kerberosAuth",
-            Errors.HBASE_16, ugi.getAuthenticationMethod()));
+      UserGroupInformation.setConfiguration(hbaseConf);
+      // If Kerberos is enabled the SDC is already logged to the KDC, we need to UGI login using the SDC login context
+      UserGroupInformation.loginUserFromSubject(Subject.getSubject(AccessController.getContext()));
+      // we now extract the UGI we just logged in as.
+      loginUgi = UserGroupInformation.getLoginUser();
+      StringBuilder logMessage = new StringBuilder();
+      if (kerberosAuth) {
+        logMessage.append("Using Kerberos: ");
+        if (loginUgi.getAuthenticationMethod() != UserGroupInformation.AuthenticationMethod.KERBEROS) {
+          issues.add(getContext().createConfigIssue(Groups.HBASE.name(), "kerberosAuth", Errors.HBASE_16,
+            loginUgi.getAuthenticationMethod()));
         }
       } else {
+        logMessage.append("Using Simple");
         hbaseConf.set(CommonConfigurationKeys.HADOOP_SECURITY_AUTHENTICATION,
           UserGroupInformation.AuthenticationMethod.SIMPLE.name());
-        ugi = UserGroupInformation.getLoginUser();
       }
+      LOG.info("Authentication Config: " + logMessage);
     } catch (Exception ex) {
-      issues.add(getContext().createConfigIssue(Groups.HBASE.name(), null, Errors.HBASE_17,
-        ex.getMessage(), ex));
+      issues.add(getContext().createConfigIssue(Groups.HBASE.name(), null, Errors.HBASE_17, ex.getMessage(), ex));
     }
   }
+
+  private UserGroupInformation getUGI() {
+    return (hbaseUser.isEmpty()) ? loginUgi : UserGroupInformation.createProxyUser(hbaseUser, loginUgi);
+  }
+
 
   private void checkConnectionAndTableExistence(final List<ConfigIssue> issues,
       final String tableName) {
     try {
-      ugi.doAs(new PrivilegedExceptionAction<Void>() {
+      getUGI().doAs(new PrivilegedExceptionAction<Void>() {
         @Override
         public Void run() throws Exception {
           LOG.debug("Validating connection to hbase cluster and whether table " + tableName + " exists and is enabled");
@@ -304,8 +314,7 @@ public class HBaseTarget extends BaseTarget {
   @Override
   public void write(final Batch batch) throws StageException {
     try {
-      ugi.checkTGTAndReloginFromKeytab();
-      ugi.doAs(new PrivilegedExceptionAction<Void>() {
+      getUGI().doAs(new PrivilegedExceptionAction<Void>() {
         @Override
         public Void run() throws Exception {
           writeBatch(batch);
