@@ -43,7 +43,7 @@ public class OmnitureDSource extends DSource {
       type = ConfigDef.Type.TEXT,
       label = "Omniture Report Description",
       description = "Report description to queue",
-      displayPosition = 10,
+      displayPosition = 15,
       mode = ConfigDef.Mode.JSON,
       dependsOn = "httpMode",
       lines = 5,
@@ -63,7 +63,6 @@ public class OmnitureDSource extends DSource {
   )
   public long requestTimeoutMillis;
 
-
   @ConfigDef(
       required = true,
       type = ConfigDef.Type.MODEL,
@@ -78,9 +77,9 @@ public class OmnitureDSource extends DSource {
   @ConfigDef(
       required = true,
       type = ConfigDef.Type.NUMBER,
-      label = "Delay between report requests (ms)",
+      label = "Report Request Interval (ms)",
       defaultValue = "5000",
-      displayPosition = 26,
+      displayPosition = 30,
       group = "OMNITURE",
       dependsOn = "httpMode",
       triggeredByValue = "POLLING"
@@ -90,10 +89,10 @@ public class OmnitureDSource extends DSource {
   @ConfigDef(
       required = true,
       type = ConfigDef.Type.NUMBER,
-      label = "Batch Size",
+      label = "Max Batch Size (reports)",
       defaultValue = "1",
       description = "Maximum number of response entities to queue (e.g. JSON objects).",
-      displayPosition = 40,
+      displayPosition = 35,
       group = "OMNITURE"
   )
   public int batchSize;
@@ -114,7 +113,7 @@ public class OmnitureDSource extends DSource {
       type = ConfigDef.Type.STRING,
       label = "Username",
       description = "Omniture Username",
-      displayPosition = 10,
+      displayPosition = 45,
       group = "OMNITURE"
   )
   public String username;
@@ -124,7 +123,7 @@ public class OmnitureDSource extends DSource {
       type = ConfigDef.Type.STRING,
       label = "Shared Secret",
       description = "Omniture Shared Secret",
-      displayPosition = 20,
+      displayPosition = 50,
       group = "OMNITURE"
   )
   public String sharedSecret;
