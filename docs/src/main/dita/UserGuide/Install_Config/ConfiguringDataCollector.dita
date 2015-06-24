@@ -161,8 +161,8 @@
                                 <entry>ui.enable.usage.data.collection</entry>
                                 <entry>Allows anonymous Google Analytics information to be sent
                                     StreamSets. <p>Default is true. <draft-comment author="Loretta"
-                                            >Tucu says ok to skip doc'ing
-                                            ui.enable.webSocket</draft-comment></p></entry>
+                                            >Tucu says ok to skip doc'ing ui.enable.webSocket.
+                                            6/23/15.</draft-comment></p></entry>
                             </row>
                             <row>
                                 <entry>ui.undo.limit</entry>
@@ -292,7 +292,7 @@
                                                 href="../Graphics/icon_moreInfo.png" scale="10"
                                                 id="image_o5j_f5g_cs"/>
                                         </xref><draft-comment author="Loretta">Tucu says not to doc
-                                            the observer properties. Skipping</draft-comment></li>
+                                            the observer properties. 6/23/15.</draft-comment></li>
                                 </ul></entry>
                         </row>
                     </tbody>

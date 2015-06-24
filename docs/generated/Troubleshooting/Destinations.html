@@ -41,7 +41,7 @@
 
      <dd class="dd">To determine the issue, check the error messages associated with the error records. If you
       see a message like the following, you have a data type mismatch. The following error message
-      indicates that data type mismatch is for Integer data being unsucessfully written to a Varchar
+      indicates that data type mismatch is for Integer data being unsuccessfully written to a Varchar
       column:
       <pre class="pre codeblock">CASSANDRA_06 - Could not prepare record 'sdk:': 
 Invalid type for value 0 of CQL type varchar, expecting class java.lang.String but class java.lang. 
@@ -84,7 +84,7 @@ Integer provided`</pre>
     
      <dt class="dt dlterm">How can I reset the offset for a Kafka Consumer?</dt>
 
-     <dd class="dd">Since the offset for a Kakfa Consumer is stored with the ZooKeeper for the Kafka cluster,
+     <dd class="dd">Since the offset for a Kafka Consumer is stored with the ZooKeeper for the Kafka cluster,
       you cannot reset the offset through the <span class="ph">Data
                   Collector</span>. For
       information about resetting an offset through Kafka, see the Apache Kafka documentation. </dd>

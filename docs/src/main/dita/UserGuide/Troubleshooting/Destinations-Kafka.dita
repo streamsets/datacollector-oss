@@ -18,7 +18,7 @@
     </dlentry>
     <dlentry>
      <dt>How can I reset the offset for a Kafka Consumer?</dt>
-     <dd>Since the offset for a Kakfa Consumer is stored with the ZooKeeper for the Kafka cluster,
+     <dd>Since the offset for a Kafka Consumer is stored with the ZooKeeper for the Kafka cluster,
       you cannot reset the offset through the <ph
        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>. For
       information about resetting an offset through Kafka, see the Apache Kafka documentation. </dd>

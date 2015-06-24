@@ -296,8 +296,7 @@
                             </thead>
                             <tbody>
                                 <row>
-                                    <entry>Message with Schema<draft-comment author="Loretta">check
-                                            for update</draft-comment></entry>
+                                    <entry>Message includes Schema</entry>
                                     <entry>Indicates that the message includes an Avro schema.
                                     </entry>
                                 </row>
@@ -305,9 +304,9 @@
                                     <entry>Avro Schema</entry>
                                     <entry>Avro schema definition to use when processing data. When
                                         used, overrides any existing schema definitions associated
-                                        with the data.<p>You can use the runtime:loadResource
-                                            function to use a schema definition stored in a
-                                            file.</p></entry>
+                                        with the data.<p>You can optionally use the
+                                            runtime:loadResource function to use a schema definition
+                                            stored in a file.</p></entry>
                                 </row>
                             </tbody>
                         </tgroup>

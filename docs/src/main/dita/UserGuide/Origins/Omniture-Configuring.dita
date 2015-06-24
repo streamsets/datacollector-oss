@@ -33,17 +33,8 @@
                                     <entry>REST URL for the Omniture reporting API to use. </entry>
                                 </row>
                                 <row>
-                                    <entry>Username</entry>
-                                    <entry>Omniture user name.</entry>
-                                </row>
-                                <row>
                                     <entry>Request Timeout (ms)</entry>
                                     <entry>Milliseconds before the connection times out.</entry>
-                                </row>
-                                <row>
-                                    <entry>Shared Secret <draft-comment author="Loretta">can we move
-                                            this below user name?</draft-comment></entry>
-                                    <entry>Omniture shared secret.</entry>
                                 </row>
                                 <row>
                                     <entry>Mode</entry>
@@ -51,17 +42,14 @@
                                         Polling.</p></entry>
                                 </row>
                                 <row>
-                                    <entry>Delay Between Report Requests (ms)<draft-comment
-                                            author="Loretta">Can we use Report Request Interval (ms)
-                                        </draft-comment></entry>
+                                    <entry>Report Request Interval (ms)</entry>
                                     <entry>Milliseconds to wait between requests. <p>When necessary,
                                             the origin delays a request until the API responds to
                                             the previous request.</p><p>Default is
                                         5,000.</p></entry>
                                 </row>
                                 <row>
-                                    <entry>Batch Size (reports)<draft-comment author="Loretta">Can
-                                            we use Max Batch Size (reports)</draft-comment></entry>
+                                    <entry>Max Batch Size (reports)</entry>
                                     <entry>Maximum number of reports to include in a batch.
                                             <p>Default is 1.</p></entry>
                                 </row>
@@ -69,6 +57,14 @@
                                     <entry>Batch Wait Time (ms)</entry>
                                     <entry>Milliseconds to wait before sending an empty or partial
                                             batch.<p>Default is 5,000.</p></entry>
+                                </row>
+                                <row>
+                                    <entry>Username</entry>
+                                    <entry>Omniture user name.</entry>
+                                </row>
+                                <row>
+                                    <entry>Shared Secret </entry>
+                                    <entry>Omniture shared secret.</entry>
                                 </row>
                             </tbody>
                         </tgroup>
