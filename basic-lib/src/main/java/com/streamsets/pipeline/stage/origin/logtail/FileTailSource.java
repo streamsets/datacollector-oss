@@ -360,12 +360,16 @@ public class FileTailSource extends BaseSource {
     // deserializing offsets of all directories
     Map<String, String> offsetMap = deserializeOffsetMap(lastSourceOffset);
 
-    try {
-      multiDirReader.setOffsets(offsetMap);
-    } catch (IOException ex) {
-      throw new StageException(Errors.TAIL_10, ex.getMessage(), ex);
+    boolean offsetSet = false;
+    while (!offsetSet) {
+      try {
+        multiDirReader.setOffsets(offsetMap);
+        offsetSet = true;
+      } catch (IOException ex) {
+        LOG.warn("Error while creating reading previous offset: {}", ex.getMessage(), ex);
+        multiDirReader.purge();
+      }
     }
-
 
     while (recordCounter < maxBatchSize && !isTimeout(startTime)) {
       try {
@@ -392,13 +396,15 @@ public class FileTailSource extends BaseSource {
           }
         }
       } catch (IOException ex) {
-        throw new StageException(Errors.TAIL_11, ex.getMessage(), ex);
+        LOG.warn("Error while reading file: {}", ex.getMessage(), ex);
+        multiDirReader.purge();
       }
     }
 
-    try {
-      Date now = new Date(startTime);
-      for (FileEvent event : multiDirReader.getEvents()) {
+    boolean metadataGenerationFailure = false;
+    Date now = new Date(startTime);
+    for (FileEvent event : multiDirReader.getEvents()) {
+      try {
         LiveFile file = event.getFile().refresh();
         Record metadataRecord = getContext().createRecord("");
         Map<String, Field> map = new HashMap<>();
@@ -408,15 +414,24 @@ public class FileTailSource extends BaseSource {
         map.put("event", Field.create((event.isStart() ? "START" : "END")));
         metadataRecord.set(Field.create(map));
         batchMaker.addRecord(metadataRecord, metadataLane);
+      } catch (IOException ex) {
+        LOG.warn("Error while creating metadata records: {}", ex.getMessage(), ex);
+        metadataGenerationFailure = true;
       }
-    } catch (IOException ex) {
-      throw new StageException(Errors.TAIL_14, ex.getMessage(), ex);
+    }
+    if (metadataGenerationFailure) {
+      multiDirReader.purge();
     }
 
-    try {
-      offsetMap = multiDirReader.getOffsets();
-    } catch (IOException ex) {
-      throw new StageException(Errors.TAIL_13, ex.getMessage(), ex);
+    boolean offsetExtracted = false;
+    while (!offsetExtracted) {
+      try {
+        offsetMap = multiDirReader.getOffsets();
+        offsetExtracted = true;
+      } catch (IOException ex) {
+        LOG.warn("Error while creating creating new offset: {}", ex.getMessage(), ex);
+        multiDirReader.purge();
+      }
     }
 
     // serializing offsets of all directories

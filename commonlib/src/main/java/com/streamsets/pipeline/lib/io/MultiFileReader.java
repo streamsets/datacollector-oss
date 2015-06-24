@@ -106,6 +106,13 @@ public class MultiFileReader implements Closeable {
   }
 
   /**
+   * Purge invalid file entries.
+   */
+  public void purge() {
+    fileContextProvider.purge();
+  }
+
+  /**
    * Returns the current file offsets. The returned offsets should be set before the next read.
    *
    * @return the current file offsets.

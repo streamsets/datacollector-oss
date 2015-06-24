@@ -23,6 +23,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
@@ -431,6 +432,47 @@ public class TestFileTailSource {
       Assert.assertEquals(2, out.getRecords().get("lane").size());
       Assert.assertEquals(LINE1, out.getRecords().get("lane").get(0).get("/text").getValueAsString().trim());
       Assert.assertEquals(LOG_LINE_WITH_STACK_TRACE, out.getRecords().get("lane").get(1).get("/text").getValueAsString().trim());
+    } finally {
+      runner.runDestroy();
+    }
+  }
+
+
+  @Test
+  public void testTailFilesDeletion() throws Exception {
+    File testDataDir = new File("target", UUID.randomUUID().toString());
+    File testDataDir1 = new File(testDataDir, UUID.randomUUID().toString());
+    File testDataDir2 = new File(testDataDir, UUID.randomUUID().toString());
+    Assert.assertTrue(testDataDir1.mkdirs());
+    Assert.assertTrue(testDataDir2.mkdirs());
+    Path file1 = new File(testDataDir1, "log1.txt").toPath();
+    Path file2 = new File(testDataDir2, "log2.txt").toPath();
+    Files.write(file1, Arrays.asList("Hello"), UTF8);
+    Files.write(file2, Arrays.asList("Hola"), UTF8);
+
+    FileInfo fileInfo1 = new FileInfo();
+    fileInfo1.fileFullPath = testDataDir.getAbsolutePath() + "/*/log*.txt";
+    fileInfo1.fileRollMode = FileRollMode.REVERSE_COUNTER;
+    fileInfo1.firstFile = "";
+    fileInfo1.patternForToken = "";
+    FileTailSource source = new FileTailSource(DataFormat.TEXT, "", "UTF-8", false, 1024, 25, 1,
+                                               Arrays.asList(fileInfo1), PostProcessingOptions.NONE, null,
+                                               null, false, null, null, null, null, null, false, null, SCAN_INTERVAL);
+    SourceRunner runner = new SourceRunner.Builder(FileTailDSource.class, source)
+        .addOutputLane("lane").addOutputLane("metadata")
+        .build();
+    try {
+      runner.runInit();
+      StageRunner.Output output = runner.runProduce(null, 10);
+      output = runner.runProduce(output.getNewOffset(), 10);
+      Assert.assertTrue(output.getNewOffset().contains("log1.txt"));
+      Assert.assertTrue(output.getNewOffset().contains("log2.txt"));
+      Files.delete(file1);
+      Files.delete(testDataDir1.toPath());
+      output = runner.runProduce(output.getNewOffset(), 10);
+      output = runner.runProduce(output.getNewOffset(), 10);
+      Assert.assertFalse(output.getNewOffset().contains("log1.txt"));
+      Assert.assertTrue(output.getNewOffset().contains("log2.txt"));
     } finally {
       runner.runDestroy();
     }

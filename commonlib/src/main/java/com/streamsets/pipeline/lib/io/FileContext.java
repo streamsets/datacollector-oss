@@ -64,15 +64,16 @@ public class FileContext {
 
   // a file context is active while its parent directory exists.
   public boolean isActive() {
-    Utils.checkState(open, "FileContext is closed");
     return Files.exists(dir);
   }
 
-  public void close() throws IOException {
+  public void close() {
     if (open && reader != null) {
       open = false;
       try {
         reader.close();
+      } catch (IOException ex) {
+        LOG.warn("Could not close '{}' file property: {}", reader.getLiveFile(), ex.getMessage(), ex);
       } finally {
         reader = null;
       }
@@ -152,7 +153,6 @@ public class FileContext {
   }
 
   public MultiFileInfo getMultiFileInfo() {
-    Utils.checkState(open, "FileContext is closed");
     return multiFileInfo;
   }
 
