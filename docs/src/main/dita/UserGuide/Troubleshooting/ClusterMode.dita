@@ -14,9 +14,9 @@
             worker to read from the partition, you need to restart the pipeline.</dd>
         </dlentry>
         <dlentry>
-          <dt>My pipeline fails to start with the following error: <codeph>VALIDATION_0072 - Data
-              collector is in standalone mode, cannot run pipeline cluster mode.</codeph></dt>
-          <dd>Though the pipeline is configured for cluster mode, the <ph
+          <dt>My pipeline fails to start with the following error: </dt>
+          <dd><codeblock>VALIDATION_0072 - Data collector is in standalone mode, cannot run pipeline cluster mode.</codeblock>Though
+            the pipeline is configured for cluster mode, the <ph
               conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> is
             not. To configure the <ph
               conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> to
@@ -26,23 +26,18 @@
             "cluster".</dd>
         </dlentry>
         <dlentry>
-          <dt>My pipeline fails to start with the following error: <codeph>Error starting
-              application: java.util.concurrent.ExecutionException: java.lang.IllegalStateException:
-              Process submitting the spark job is dead and couldn't retrieve the YARN application
-              id.</codeph></dt>
-          <dd>Check the Spark on YARN logs for more information. It's possible that the Spark on
-            YARN client configuration is not in place, the node is not a gateway node, or the
-            installation is not up to date.<draft-comment author="Loretta">are these correct?
-              reworded from original email.</draft-comment></dd>
+          <dt>My pipeline fails to start with the following error: </dt>
+          <dd><codeblock>Error starting application: java.util.concurrent.ExecutionException: java.lang.IllegalStateException: 
+Process submitting the spark job is dead and couldn't retrieve the YARN application id.</codeblock>Check
+            the Spark on YARN logs for more information. It's possible that the Spark on YARN client
+            configuration is not in place, the node is not a gateway node, or the installation is
+            out of date.<draft-comment author="Loretta">are these correct? reworded from original
+              email.</draft-comment></dd>
         </dlentry>
         <dlentry>
-          <dt>My pipeline was killed unexpectedly.</dt>
-          <dd>
-            <draft-comment author="Loretta">can I say "My pipeline stopped unexpectedly" or is that
-              different?</draft-comment>
-          </dd>
-          <dd>For more information, check the Spark Application Master logs in the YARN
-            ResourceManager UI.</dd>
+          <dt>My pipeline stopped unexpectedly.</dt>
+          <dd>Check the Spark Application Master logs in the YARN ResourceManager UI for more
+            information about the problem.</dd>
         </dlentry>
         <dlentry>
           <dt>Why does my pipeline take so long to start?</dt>

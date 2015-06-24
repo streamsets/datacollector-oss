@@ -5,7 +5,7 @@
     <taskbody>
         <context>
             <p><indexterm>UDP Source origin<indexterm>configuring</indexterm></indexterm>Configure a
-                UDP Source origin to process NetFlow messages from a UPD source.</p>
+                UDP Source origin to process messages from a UPD source.</p>
         </context>
         <steps id="steps_ejy_1dv_1s">
             <step
@@ -49,7 +49,7 @@
                                             /> default is 1000.</p></entry>
                                 </row>
                                 <row>
-                                    <entry>Batch Wait Time (ms)  <xref
+                                    <entry>Batch Wait Time (ms) <xref
                                             href="BatchSizeWaitTime.dita#concept_ypd_vgr_5q">
                                             <image href="../Graphics/icon_moreInfo.png" scale="10"
                                                 id="image_mgp_2q3_br" placement="inline"
@@ -60,10 +60,12 @@
                             </tbody>
                         </tgroup>
                     </table>
-                    <draft-comment author="Loretta">Add Charset - currently on Syslog tab. Sent
-                        Brock a note 6/18 about whether it should be moved to main
-                        tab.</draft-comment>
                 </info>
+            </step>
+            <step>
+                <cmd>On the <wintitle>Syslog</wintitle> tab, define the character set for the data.
+                        <draft-comment author="Loretta">Sent Brock a note 6/18 about whether it
+                        should be moved to main tab.</draft-comment></cmd>
             </step>
         </steps>
     </taskbody>

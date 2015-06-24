@@ -61,6 +61,10 @@
                     /> as a service, use the following command: </cmd>
                 <info>
                     <codeblock>service sdc start  </codeblock>
+                    <p>For CentOS, use the following
+                        command:<codeblock>chkconfig --add sdc</codeblock></p>
+                    <p>For Ubuntu, use the following
+                        command:<codeblock>update-rc.d sdc defaults 97 03</codeblock></p>
                 </info>
             </step>
         </steps>

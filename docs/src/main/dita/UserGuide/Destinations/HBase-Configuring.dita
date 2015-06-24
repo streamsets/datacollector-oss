@@ -70,36 +70,9 @@
                                 <row>
                                     <entry>Kerberos Authentication</entry>
                                     <entry>Indicates that HBase cluster uses Kerberos
-                                        authentication.</entry>
-                                </row>
-                                <row>
-                                    <entry>Kerberos Principal</entry>
-                                    <entry>
-                                        <p>Kerberos principal used to connect to HBase. </p>
-                                    </entry>
-                                </row>
-                                <row>
-                                    <entry>Kerberos Keytab</entry>
-                                    <entry>
-                                        <p>Location for the keytab file that contains the
-                                            credentials for the Kerberos principal. </p>
-                                    </entry>
-                                </row>
-                                <row>
-                                    <entry>Master Kerberos Principal</entry>
-                                    <entry>Kerberos principal used for the Master process. Use the
-                                        following format: &lt;user>/&lt;hostname>@&lt;domain>.
-                                            <p>You can use _HOST to replace &lt;hostname> with the
-                                            running instance name as follows:
-                                            &lt;user>/_HOST@&lt;domain>.</p></entry>
-                                </row>
-                                <row>
-                                    <entry>RegionServer Kerberos Principal</entry>
-                                    <entry>Kerberos principal used for the RegionServer process. Use
-                                        the following format: &lt;user>/&lt;hostname>@&lt;domain>.
-                                            <p>You can use _HOST to replace &lt;hostname> with the
-                                            running instance name as follows:
-                                            &lt;user>/_HOST@&lt;domain>.</p></entry>
+                                        authentication. To use Kerberos authentication, the <ph
+                                            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                                        /> must be configured to use Kerberos.</entry>
                                 </row>
                                 <row>
                                     <entry>HBase Configuration Directory <xref

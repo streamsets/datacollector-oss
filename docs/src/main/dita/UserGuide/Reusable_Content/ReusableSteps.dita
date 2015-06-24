@@ -727,8 +727,8 @@
                                                   scale="10"/></xref></entry>
                                         <entry>Expression to use to write to partitions. <p>Define
                                                 the expression to evaluate to the partition where
-                                                you want each record written. Partitions are
-                                                numbered 0 - n.</p><p
+                                                you want each record written. Partition numbers
+                                                start with 0.</p><p
                                                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/EEditor"
                                                 /><p>For the expression partition strategy only.
                                             </p></entry>

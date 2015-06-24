@@ -8,15 +8,18 @@
     <dlentry>
      <dt>Why isn't the Data Preview icon enabled?</dt>
      <dd>You can preview data after you connect all stages in the pipeline and configure required
-      properties. You can use any valid value as a placeholder. </dd>
+            properties. You can use any valid value as a placeholder for required properties.</dd>
     </dlentry>
     <dlentry>
      <dt>Why doesn't the data preview show any data?</dt>
      <dd>If data preview doesn't show any data, one of the following issues might have occurred:<ul
        id="ul_r5n_jgm_2s">
-       <li>The origin might not be configured correctly. In the Preview panel, check the Issues tab
-        of the origin stage for related issues.</li>
-       <li>The origin might not have any data at the moment. </li>
+       <li>The origin might not be configured correctly. <p>In the Preview panel, check the
+                  Configuration tab for the origin for related issues. For some origins, you can use
+                  Raw Preview to see if the configuration information is correct.</p></li>
+       <li>The origin might not have any data at the moment. <p>Some origins, such as Directory,
+                  File Tail, and Kafka Consumer, can display processed data for data preview.
+                  However, most origins require incoming data to enable data preview. </p></li>
       </ul></dd>
     </dlentry>
     <dlentry>

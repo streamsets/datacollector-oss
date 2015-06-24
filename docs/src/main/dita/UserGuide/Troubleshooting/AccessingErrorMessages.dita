@@ -12,11 +12,11 @@
     <dlentry>
      <dt>Pipeline configuration issues</dt>
      <dd>The <ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
-      console provides guidance and error details in the UI as follows:<ul id="ul_ht3_cml_2s">
-       <li>Issues found by implicit validation display in the Issues list in the console.</li>
-       <li>In addition, an error icon displays at the stage where the problem occurs or on the
-        canvas for pipeline configuration issues. </li>
-       <li>Issues discovered by explicit validation displays in a warning message on on the
+      console provides guidance and error details in the console as follows:<ul id="ul_ht3_cml_2s">
+       <li>Issues found by implicit validation display in the Issues list.</li>
+       <li>An error icon displays at the stage where the problem occurs or on the canvas for
+        pipeline configuration issues. </li>
+       <li>Issues discovered by explicit validation displays in a warning message on the
         canvas.</li>
       </ul></dd>
     </dlentry>
@@ -33,9 +33,9 @@
     </dlentry>
     <dlentry>
      <dt>Error record information</dt>
-     <dd>You can use the Error Records pipeline properties to save error records and related details
-      to file or Kafka. The information in the following fields can help you determine the problem
-      that occurred:<ul id="ul_gqp_1dm_2s">
+     <dd>You can use the Error Records pipeline properties to write error records and related
+      details to a file or Kafka. The information in the following fields can help you determine the
+      problem that occurred:<ul id="ul_gqp_1dm_2s">
        <li>errorStage - The stage in the pipeline that generated the error.</li>
        <li>errorCode - The error code associated with the error message.</li>
        <li>errorMessage - The text of the error message. <draft-comment author="Loretta">Dev: I am

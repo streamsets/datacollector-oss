@@ -35,16 +35,10 @@
                                 </row>
                                 <row>
                                     <entry>Kerberos Authentication</entry>
-                                    <entry>Indicates that HDFS uses Kerberos authentication.</entry>
-                                </row>
-                                <row>
-                                    <entry>Kerberos Principal</entry>
-                                    <entry>Kerberos principal used to connect to HDFS.</entry>
-                                </row>
-                                <row>
-                                    <entry>Kerberos Keytab</entry>
-                                    <entry>Location for the keytab file that contains the
-                                        credentials for the Kerberos principal.</entry>
+                                    <entry>Enables that HDFS uses Kerberos authentication. To use
+                                        Kerberos authentication, the <ph
+                                            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                                        /> must be configured to use Kerberos.</entry>
                                 </row>
                                 <row>
                                     <entry>Hadoop FS Configuration Directory <xref
