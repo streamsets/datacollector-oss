@@ -11,12 +11,12 @@
   <parent>
     <groupId>com.streamsets</groupId>
     <artifactId>streamsets-datacollector-root-lib</artifactId>
-    <version>1.0.0b2-SNAPSHOT</version>
+    <version>1.0.0b2</version>
     <relativePath>../root-lib</relativePath>
   </parent>
   <groupId>com.streamsets</groupId>
   <artifactId>streamsets-datacollector-spark-protolib</artifactId>
-  <version>1.0.0b2-SNAPSHOT</version>
+  <version>1.0.0b2</version>
   <description>StreamSets Data Collector Spark ProtoLib</description>
   <name>StreamSets Data Collector Spark ProtoLib</name>
   <packaging>jar</packaging>
@@ -96,7 +96,7 @@
       <groupId>com.streamsets</groupId>
       <artifactId>streamsets-datacollector-spark-bootstrap</artifactId>
       <scope>provided</scope>
-      <version>1.0.0b2-SNAPSHOT</version> <!-- required because we don't inherit from root and root-lib
+      <version>1.0.0b2</version> <!-- required because we don't inherit from root and root-lib
                                                does not define dep spark-bootstrap -->
     </dependency>
 
