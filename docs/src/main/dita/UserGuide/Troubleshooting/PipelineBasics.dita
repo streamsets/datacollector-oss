@@ -41,7 +41,9 @@
         <dlentry>
           <dt>The data reaching the destination is not what I expect - what do I do?</dt>
           <dd>If the pipeline is still running, take a couple snapshots of the data being processed,
-            then stop the pipeline and enter data preview and use the snapshot as the source data. </dd>
+            then stop the pipeline and enter data preview and use the snapshot as the source data.
+            In data preview, you can step through the pipeline and see how each stage alters the
+            data.</dd>
           <dd>If you already stopped the pipeline, perform data preview using the origin data. You
             can step through the pipeline to review how each stage processes the data and update the
             pipeline configuration as necessary. </dd>

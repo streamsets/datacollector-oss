@@ -2,7 +2,7 @@
 <!DOCTYPE html
   SYSTEM "about:legacy-compat">
 <html xml:lang="en-us" lang="en-us">
-<head><meta name="description" content="The UDP Source origin reads NetFlow messages from one or more UDP ports. UDP Source generates a record for every NetFlow message. UDP Source can read syslog data and data from NetFlow Version 5. When ..."></meta><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><meta name="copyright" content="(C) Copyright 2005"></meta><meta name="DC.rights.owner" content="(C) Copyright 2005"></meta><meta name="DC.Type" content="concept"></meta><meta name="DC.Title" content="UDP Source"></meta><meta name="abstract" content="The UDP Source origin reads NetFlow messages from one or more UDP ports. UDP Source generates a record for every NetFlow message. UDP Source can read syslog data and data from NetFlow Version 5."></meta><meta name="description" content="The UDP Source origin reads NetFlow messages from one or more UDP ports. UDP Source generates a record for every NetFlow message. UDP Source can read syslog data and data from NetFlow Version 5."></meta><meta name="DC.Relation" scheme="URI" content="../Origins/Origins_title.html"></meta><meta name="DC.Format" content="XHTML"></meta><meta name="DC.Identifier" content="concept_rst_2y5_1s"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/commonltr.css"><!----></link><title>UDP Source</title><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/webhelp_topic.css"><!----></link><link rel="stylesheet" type="text/css" href="../skin.css"></link><script type="text/javascript"><!--
+<head><meta name="description" content="The UDP Source origin reads messages from one or more UDP ports. UDP Source generates a record for every message. UDP Source can read syslog messages and Netflow messages from NetFlow Version 5. When ..."></meta><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><meta name="copyright" content="(C) Copyright 2005"></meta><meta name="DC.rights.owner" content="(C) Copyright 2005"></meta><meta name="DC.Type" content="concept"></meta><meta name="DC.Title" content="UDP Source"></meta><meta name="abstract" content="The UDP Source origin reads messages from one or more UDP ports. UDP Source generates a record for every message. UDP Source can read syslog messages and Netflow messages from NetFlow Version 5."></meta><meta name="description" content="The UDP Source origin reads messages from one or more UDP ports. UDP Source generates a record for every message. UDP Source can read syslog messages and Netflow messages from NetFlow Version 5."></meta><meta name="DC.Relation" scheme="URI" content="../Origins/Origins_title.html"></meta><meta name="DC.Format" content="XHTML"></meta><meta name="DC.Identifier" content="concept_rst_2y5_1s"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/commonltr.css"><!----></link><title>UDP Source</title><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/webhelp_topic.css"><!----></link><link rel="stylesheet" type="text/css" href="../skin.css"></link><script type="text/javascript"><!--
           
           var prefix = "../index.html";
           
@@ -14,9 +14,9 @@
  <h1 class="title topictitle1">UDP Source</h1>
 
  
- <div class="body conbody"><p class="shortdesc">The UDP Source origin reads NetFlow messages from one or more UDP ports. UDP Source
-    generates a record for every NetFlow message. UDP Source can read syslog data and data from
-    NetFlow Version 5.</p>
+ <div class="body conbody"><p class="shortdesc">The UDP Source origin reads messages from one or more UDP ports. UDP Source generates a
+    record for every message. UDP Source can read syslog messages and Netflow messages from NetFlow
+    Version 5.</p>
 
   <p class="p">When you configure UDP Source, you specify the
    ports to use and the batch size and wait time. </p>
@@ -30,7 +30,7 @@
     <div class="body taskbody">
         <div class="section context">
             <p class="p">Configure a
-                UDP Source origin to process NetFlow messages from a UPD source.</p>
+                UDP Source origin to process messages from a UPD source.</p>
 
         </div>
 
@@ -39,14 +39,14 @@
                     following properties:</span>
                 <div class="itemgroup info">
                     
-<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_kgn_rcv_1s__d2649e286" class="table" frame="border" border="1" rules="all">
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_kgn_rcv_1s__d2812e286" class="table" frame="border" border="1" rules="all">
                             
                             
                             <thead class="thead" align="left">
                                 <tr class="row">
-                                    <th class="entry" valign="top" width="24.509803921568626%" id="d29247e83">General Property</th>
+                                    <th class="entry" valign="top" width="24.509803921568626%" id="d30426e83">General Property</th>
 
-                                    <th class="entry" valign="top" width="75.49019607843137%" id="d29247e86">Description</th>
+                                    <th class="entry" valign="top" width="75.49019607843137%" id="d30426e86">Description</th>
 
                                 </tr>
 
@@ -54,23 +54,23 @@
 
                             <tbody class="tbody">
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="24.509803921568626%" headers="d29247e83 ">Name</td>
+                                    <td class="entry" valign="top" width="24.509803921568626%" headers="d30426e83 ">Name</td>
 
-                                    <td class="entry" valign="top" width="75.49019607843137%" headers="d29247e86 ">Stage name.</td>
-
-                                </tr>
-
-                                <tr class="row">
-                                    <td class="entry" valign="top" width="24.509803921568626%" headers="d29247e83 ">Description</td>
-
-                                    <td class="entry" valign="top" width="75.49019607843137%" headers="d29247e86 ">Optional description.</td>
+                                    <td class="entry" valign="top" width="75.49019607843137%" headers="d30426e86 ">Stage name.</td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="24.509803921568626%" headers="d29247e83 ">On Record Error</td>
+                                    <td class="entry" valign="top" width="24.509803921568626%" headers="d30426e83 ">Description</td>
 
-                                    <td class="entry" valign="top" width="75.49019607843137%" headers="d29247e86 ">Error record handling for the stage: <ul class="ul" id="task_kgn_rcv_1s__d2649e333">
+                                    <td class="entry" valign="top" width="75.49019607843137%" headers="d30426e86 ">Optional description.</td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="24.509803921568626%" headers="d30426e83 ">On Record Error</td>
+
+                                    <td class="entry" valign="top" width="75.49019607843137%" headers="d30426e86 ">Error record handling for the stage: <ul class="ul" id="task_kgn_rcv_1s__d2812e333">
                                             <li class="li">Discard - Discards the record.</li>
 
                                             <li class="li">Send to Error - Sends the record to the pipeline for
@@ -99,9 +99,9 @@
                             
                             <thead class="thead" align="left">
                                 <tr class="row">
-                                    <th class="entry" valign="top" width="25.510204081632654%" id="d29247e158">UDP Property</th>
+                                    <th class="entry" valign="top" width="25.510204081632654%" id="d30426e158">UDP Property</th>
 
-                                    <th class="entry" valign="top" width="74.48979591836735%" id="d29247e161">Description</th>
+                                    <th class="entry" valign="top" width="74.48979591836735%" id="d30426e161">Description</th>
 
                                 </tr>
 
@@ -109,17 +109,17 @@
 
                             <tbody class="tbody">
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="25.510204081632654%" headers="d29247e158 ">Port</td>
+                                    <td class="entry" valign="top" width="25.510204081632654%" headers="d30426e158 ">Port</td>
 
-                                    <td class="entry" valign="top" width="74.48979591836735%" headers="d29247e161 ">Port to listen to for data. To list additional ports,
+                                    <td class="entry" valign="top" width="74.48979591836735%" headers="d30426e161 ">Port to listen to for data. To list additional ports,
                                         click the<span class="ph uicontrol"> Add</span> icon.</td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="25.510204081632654%" headers="d29247e158 ">Data Format</td>
+                                    <td class="entry" valign="top" width="25.510204081632654%" headers="d30426e158 ">Data Format</td>
 
-                                    <td class="entry" valign="top" width="74.48979591836735%" headers="d29247e161 ">Data format passed by UDP:<ul class="ul" id="task_kgn_rcv_1s__ul_dfw_dqj_ks">
+                                    <td class="entry" valign="top" width="74.48979591836735%" headers="d30426e161 ">Data format passed by UDP:<ul class="ul" id="task_kgn_rcv_1s__ul_dfw_dqj_ks">
                                             <li class="li">NetFlow</li>
 
                                             <li class="li">Syslog </li>
@@ -130,9 +130,9 @@
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="25.510204081632654%" headers="d29247e158 ">Max Batch Size (messages)</td>
+                                    <td class="entry" valign="top" width="25.510204081632654%" headers="d30426e158 ">Max Batch Size (messages)</td>
 
-                                    <td class="entry" valign="top" width="74.48979591836735%" headers="d29247e161 ">Maximum number of messages include in a batch and pass
+                                    <td class="entry" valign="top" width="74.48979591836735%" headers="d30426e161 ">Maximum number of messages include in a batch and pass
                                         through the pipeline at one time. Honors values up to the
                                             <span class="ph">Data
                   Collector</span> maximum batch size. <p class="p">Default is 1000. The <span class="ph">Data
@@ -142,10 +142,10 @@
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="25.510204081632654%" headers="d29247e158 ">Batch Wait Time (ms)  <a class="xref" href="Origins_overview.html#concept_ypd_vgr_5q" title="For origin stages, the batch size determines the maximum number of records sent through the pipeline at one time. The batch wait time determines the time that the origin waits for data before sending a batch. At the end of the wait time, it sends the batch regardless of how many records the batch contains.">
+                                    <td class="entry" valign="top" width="25.510204081632654%" headers="d30426e158 ">Batch Wait Time (ms) <a class="xref" href="Origins_overview.html#concept_ypd_vgr_5q" title="For origin stages, the batch size determines the maximum number of records sent through the pipeline at one time. The batch wait time determines the time that the origin waits for data before sending a batch. At the end of the wait time, it sends the batch regardless of how many records the batch contains.">
                                             <img class="image" id="task_kgn_rcv_1s__image_mgp_2q3_br" src="../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
 
-                                    <td class="entry" valign="top" width="74.48979591836735%" headers="d29247e161 ">Milliseconds to wait before sending a partial or empty
+                                    <td class="entry" valign="top" width="74.48979591836735%" headers="d30426e161 ">Milliseconds to wait before sending a partial or empty
                                         batch.</td>
 
                                 </tr>
@@ -155,8 +155,11 @@
                         </table>
 </div>
 
-                    
                 </div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">On the <span class="keyword wintitle">Syslog</span> tab, define the character set for the data.
+                        </span>
             </li>
 </ol>
 

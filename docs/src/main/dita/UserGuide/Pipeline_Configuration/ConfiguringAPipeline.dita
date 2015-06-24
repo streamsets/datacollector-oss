@@ -98,7 +98,10 @@
                                 </ul><ul id="ul_mtf_3k4_1s">
                                     <li>Log, Alert and Stop Pipeline - Logs a message, triggers an
                                         alert that displays in monitor mode and sends an alert email
-                                        to any provided email addresses. Stops the pipeline.</li>
+                                        to any provided email addresses. Stops the pipeline. This
+                                        option is not supported for cluster mode at this time.
+                                            <draft-comment author="Loretta">remove after
+                                            fixed.</draft-comment></li>
                                 </ul></stentry>
                         </strow>
                     </simpletable>
@@ -134,10 +137,13 @@
                                             id="ul_ayr_y22_br">
                                             <li>Discard - Discards error records.</li>
                                             <li>Write to File - Writes error records to a file in
-                                                the specified directory</li>
+                                                the specified directory. </li>
                                             <li>Write to Kafka - Writes error records to the
                                                 specified Kafka cluster.</li>
-                                        </ul></entry>
+                                        </ul><p>For cluster mode, use Discard. The other options are
+                                            not supported at this time. <draft-comment
+                                                author="Loretta">remove this after it's
+                                                fixed.</draft-comment></p></entry>
                                 </row>
                             </tbody>
                         </tgroup>

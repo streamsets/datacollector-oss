@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
+<concept id="concept_gbt_fpt_ls">
+ <title>Using an HBase User</title>
+ <shortdesc>You can configure the destination to use an HBase user to write data to HBase. By
+    default the HBase destination uses the <ph
+      conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> user. </shortdesc>
+ <conbody>
+  <p><indexterm>HBase destination<indexterm>using an HBase user to write to
+    HBase</indexterm></indexterm>The <ph
+    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> user is the
+   user who started the <ph
+    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>. Or, when
+   using Kerberos, the <ph
+    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> user is the
+   Kerberos principal. </p>
+  <p>To use an HBase user, perform the following tasks:<ol id="ul_mb1_xpt_ls">
+    <li>On HBase, configure the <ph
+      conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> user as a
+     proxy user and authorize the <ph
+      conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> user to
+     impersonate the HBase user.<p>For more information, see the HBase documentation.</p></li>
+    <li>In the HBase destination, enter the HBase user name.</li>
+   </ol></p>
+ </conbody>
+</concept>

@@ -27,10 +27,11 @@
 
         
         
-          <dt class="dt dlterm">My pipeline fails to start with the following error: <samp class="ph codeph">VALIDATION_0072 - Data
-              collector is in standalone mode, cannot run pipeline cluster mode.</samp></dt>
+          <dt class="dt dlterm">My pipeline fails to start with the following error: </dt>
 
-          <dd class="dd">Though the pipeline is configured for cluster mode, the <span class="ph">Data
+          <dd class="dd"><pre class="pre codeblock">VALIDATION_0072 - Data collector is in standalone mode, cannot run pipeline cluster mode.</pre>
+Though
+            the pipeline is configured for cluster mode, the <span class="ph">Data
                   Collector</span> is
             not. To configure the <span class="ph">Data
                   Collector</span> to
@@ -41,25 +42,21 @@
 
         
         
-          <dt class="dt dlterm">My pipeline fails to start with the following error: <samp class="ph codeph">Error starting
-              application: java.util.concurrent.ExecutionException: java.lang.IllegalStateException:
-              Process submitting the spark job is dead and couldn't retrieve the YARN application
-              id.</samp></dt>
+          <dt class="dt dlterm">My pipeline fails to start with the following error: </dt>
 
-          <dd class="dd">Check the Spark on YARN logs for more information. It's possible that the Spark on
-            YARN client configuration is not in place, the node is not a gateway node, or the
-            installation is not up to date.</dd>
+          <dd class="dd"><pre class="pre codeblock">Error starting application: java.util.concurrent.ExecutionException: java.lang.IllegalStateException: 
+Process submitting the spark job is dead and couldn't retrieve the YARN application id.</pre>
+Check
+            the Spark on YARN logs for more information. It's possible that the Spark on YARN client
+            configuration is not in place, the node is not a gateway node, or the installation is
+            out of date.</dd>
 
         
         
-          <dt class="dt dlterm">My pipeline was killed unexpectedly.</dt>
+          <dt class="dt dlterm">My pipeline stopped unexpectedly.</dt>
 
-          <dd class="dd">
-            
-          </dd>
-
-          <dd class="dd">For more information, check the Spark Application Master logs in the YARN
-            ResourceManager UI.</dd>
+          <dd class="dd">Check the Spark Application Master logs in the YARN ResourceManager UI for more
+            information about the problem.</dd>
 
         
         

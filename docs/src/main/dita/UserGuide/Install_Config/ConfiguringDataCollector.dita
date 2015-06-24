@@ -74,6 +74,28 @@
                                         form.<p>Default is form.</p></entry>
                             </row>
                             <row>
+                                <entry>kerberos.client.enabled</entry>
+                                <entry>Enables the <ph
+                                        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                                    /> to use Kerberos authentication. Must be enabled to allow a
+                                    stage to use Kerberos authentication to access external systems.
+                                </entry>
+                            </row>
+                            <row>
+                                <entry>kerberos.client.principal</entry>
+                                <entry>Kerberos principal for the <ph
+                                        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                                    /> to use. Enter a service principal.</entry>
+                            </row>
+                            <row>
+                                <entry>kerberos.client.keytab</entry>
+                                <entry>Location of the Kerberos keytab file that contains the
+                                    credentials for the Kerberos principal. <p>Use a fully-qualified
+                                        directory or a directory relative to the <ph
+                                            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                                        /> configuration directory.</p></entry>
+                            </row>
+                            <row>
                                 <entry>preview.maxBatchSize</entry>
                                 <entry>Maximum number of records used to preview data. <p>Default is
                                         10.</p></entry>
@@ -138,14 +160,9 @@
                             <row>
                                 <entry>ui.enable.usage.data.collection</entry>
                                 <entry>Allows anonymous Google Analytics information to be sent
-                                    StreamSets. <p>Default is true. </p></entry>
-                            </row>
-                            <row>
-                                <entry>ui.enable.webSocket</entry>
-                                <entry>
-                                    <draft-comment author="Loretta">someone tell me what the
-                                        difference is?</draft-comment>
-                                </entry>
+                                    StreamSets. <p>Default is true. <draft-comment author="Loretta"
+                                            >Tucu says ok to skip doc'ing
+                                            ui.enable.webSocket</draft-comment></p></entry>
                             </row>
                             <row>
                                 <entry>ui.undo.limit</entry>
@@ -274,22 +291,9 @@
                                             href="../Advanced_Config/ExecutionMode.dita"><image
                                                 href="../Graphics/icon_moreInfo.png" scale="10"
                                                 id="image_o5j_f5g_cs"/>
-                                        </xref></li>
+                                        </xref><draft-comment author="Loretta">Tucu says not to doc
+                                            the observer properties. Skipping</draft-comment></li>
                                 </ul></entry>
-                        </row>
-                        <row>
-                            <entry>observer.queue.size</entry>
-                            <entry>
-                                <draft-comment author="Loretta">come back to these.</draft-comment>
-                            </entry>
-                        </row>
-                        <row>
-                            <entry>observer.sampled.records.cache.size</entry>
-                            <entry/>
-                        </row>
-                        <row>
-                            <entry>observer.queue.offer.max.wait.time.ms</entry>
-                            <entry/>
                         </row>
                     </tbody>
                 </tgroup>
