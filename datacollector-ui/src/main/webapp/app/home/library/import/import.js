@@ -13,7 +13,7 @@ angular
       },
       showLoading: true,
       uploadFile: {},
-      createNewPipeline: false,
+      createNewPipeline: (pipelineInfo ? false : true),
       pipelineInfo: pipelineInfo,
       newConfig : {
         name: '',
