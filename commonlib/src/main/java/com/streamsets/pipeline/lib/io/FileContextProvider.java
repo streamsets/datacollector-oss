@@ -35,5 +35,6 @@ public interface FileContextProvider extends Closeable {
 
   Map<String, String> getOffsets() throws IOException;
 
+  void purge();
 
 }

@@ -121,6 +121,11 @@ public class ExactFileContextProvider implements FileContextProvider {
   }
 
   @Override
+  public void purge() {
+    //NOP
+  }
+
+  @Override
   public FileContext next() {
     loopIdx++;
     return fileContexts.get(getAndIncrementIdx());
@@ -151,11 +156,7 @@ public class ExactFileContextProvider implements FileContextProvider {
   public void close() {
     LOG.debug("Closing files: {}", fileKeys);
     for (FileContext fileContext : fileContexts) {
-      try {
-        fileContext.close();
-      } catch (IOException ex) {
-        LOG.warn("Could not close '{}': {}", fileContext, ex.getMessage(), ex);
-      }
+      fileContext.close();
     }
   }
 

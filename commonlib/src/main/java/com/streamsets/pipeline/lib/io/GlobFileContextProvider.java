@@ -115,8 +115,9 @@ public class GlobFileContextProvider implements FileContextProvider {
     }
   }
 
-  private void purgeFileContexts() throws IOException {
+  public void purge() {
     Iterator<FileContext> iterator = fileContexts.iterator();
+    boolean purgedAtLeastOne = false;
     while (iterator.hasNext()) {
       FileContext fileContext = iterator.next();
       if (!fileContext.isActive()) {
@@ -124,7 +125,14 @@ public class GlobFileContextProvider implements FileContextProvider {
         iterator.remove();
         fileToGlobFile.get(fileContext).forget(fileContext.getMultiFileInfo());
         LOG.debug("Removed '{}'", fileContext);
+        purgedAtLeastOne = true;
       }
+    }
+    if (purgedAtLeastOne) {
+      //reset loop counter to be within boundaries.
+      currentIdx = 0;
+      startingIdx = 0;
+      startNewLoop();
     }
   }
 
@@ -146,7 +154,7 @@ public class GlobFileContextProvider implements FileContextProvider {
     // we look for new files only here
     findNewFileContexts();
     // we purge file only here
-    purgeFileContexts();
+    purge();
 
     // retrieve file:offset for each directory
     for (FileContext fileContext : fileContexts) {
@@ -254,11 +262,7 @@ public class GlobFileContextProvider implements FileContextProvider {
       }
     }
     for (FileContext fileContext : fileContexts) {
-      try {
-        fileContext.close();
-      } catch (IOException ex) {
-        LOG.warn("Could not close '{}': {}", fileContext, ex.getMessage(), ex);
-      }
+      fileContext.close();
     }
   }
 
