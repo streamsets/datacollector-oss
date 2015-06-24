@@ -16,7 +16,7 @@
       <dlentry>
         <dt>Avro</dt>
         <dd>The destination writes records based on the Avro schema that you provide. The schema
-          definition is included in each file written to HDFS.</dd>
+          definition is included in each file.</dd>
       </dlentry>
     </dl>
  </conbody>

@@ -292,8 +292,8 @@
                 <cmd/>
             </step>
             <step>
-                <cmd>For Avro data, click the <wintitle>Avro</wintitle> tab and optionally enter a
-                    Avro schema definition to use. </cmd>
+                <cmd>For Avro data, click the <wintitle>Avro</wintitle> tab and optionally enter an
+                    Avro schema definition. </cmd>
                 <info>Entering a schema definition overrides any existing schema definitions
                     associated with the data.<p>You can optionally use the runtime:loadResource
                         function to use a schema definition stored in a file.</p></info>

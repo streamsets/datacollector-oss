@@ -2,8 +2,9 @@
 <!DOCTYPE task PUBLIC "-//OASIS//DTD DITA General Task//EN" "generalTask.dtd">
 <task id="task_jp5_ql1_tq">
     <title>Previewing Raw Source Data</title>
-    <shortdesc>You can preview raw source data when you configure an origin. Preview raw source data
-        when reviewing the data might help with origin configuration.</shortdesc>
+    <shortdesc>You can preview raw source data for Directory, File Tail, and Kafka Consumer origins.
+        Preview raw source data when reviewing the data might help with origin
+        configuration.</shortdesc>
     <taskbody>
         <context>
             <p><indexterm>Directory origin<indexterm>raw source

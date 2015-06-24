@@ -4,8 +4,9 @@
     <title>Configuring a JDBC Consumer</title>
     <taskbody>
         <context>
-            <p><indexterm>JDBC Consumer<indexterm>configuring</indexterm></indexterm>Configure a
-                JDBC Consumer origin to use a JDBC connection to read database data. </p>
+            <p><indexterm>JDBC Consumer
+                origin<indexterm>configuring</indexterm></indexterm>Configure a JDBC Consumer origin
+                to use a JDBC connection to read database data. </p>
         </context>
         <steps id="steps_hhn_vkr_bs">
             <step

@@ -2,7 +2,6 @@
 <!DOCTYPE task PUBLIC "-//OASIS//DTD DITA General Task//EN" "generalTask.dtd">
 <task id="task_dpl_m1z_wr">
     <title>Creating Multiple Instances</title>
-    <shortdesc/>
     <taskbody>
         <context>When you create an instance, you specify a directory and http or https port number.
             The <ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"

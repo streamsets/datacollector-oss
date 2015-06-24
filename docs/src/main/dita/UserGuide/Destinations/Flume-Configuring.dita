@@ -4,8 +4,8 @@
     <title>Configuring a Flume Destination</title>
     <taskbody>
         <context>
-            <p><indexterm>Flume destinations<indexterm>configuring</indexterm></indexterm>Configure
-                a Flume destination to write data to a Flume source. </p>
+            <p><indexterm>Flume destination<indexterm>configuring</indexterm></indexterm>Configure a
+                Flume destination to write data to a Flume source. </p>
         </context>
         <steps id="steps_dmg_jyp_yr">
             <step
