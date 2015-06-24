@@ -36,7 +36,8 @@ import java.util.Map;
     version = "1.0.0",
     label = "Kafka Consumer",
     description = "Reads data from Kafka",
-    icon = "kafka.png"
+    icon = "kafka.png",
+    recordsByRef = true
 )
 @RawSource(rawSourcePreviewer = KafkaRawSourcePreviewer.class, mimeType = "*/*")
 @ConfigGroups(value = Groups.class)

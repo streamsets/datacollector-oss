@@ -25,7 +25,8 @@ import java.util.List;
   label = "UDP Source",
   description = "Listens for UDP messages on a single port",
   icon="udp.png",
-  execution = ExecutionMode.STANDALONE
+  execution = ExecutionMode.STANDALONE,
+  recordsByRef = true
 )
 
 @ConfigGroups(Groups.class)

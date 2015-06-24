@@ -22,7 +22,8 @@ import com.streamsets.pipeline.stage.lib.kinesis.AWSRegionChooserValues;
     label = "Kinesis Consumer",
     description = "Reads data from Kinesis",
     icon = "kinesis.png",
-    execution = ExecutionMode.STANDALONE
+    execution = ExecutionMode.STANDALONE,
+    recordsByRef = true
 )
 @ConfigGroups(value = Groups.class)
 @GenerateResourceBundle

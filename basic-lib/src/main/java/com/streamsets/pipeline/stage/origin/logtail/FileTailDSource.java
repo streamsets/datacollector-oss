@@ -31,7 +31,8 @@ import java.util.List;
     description = "Tails a file. It handles rolling files within the same directory",
     icon="fileTail.png",
     execution = ExecutionMode.STANDALONE,
-    outputStreams = FileTailOutputStreams.class
+    outputStreams = FileTailOutputStreams.class,
+    recordsByRef = true
 )
 @RawSource(rawSourcePreviewer = FileRawSourcePreviewer.class)
 @ConfigGroups(Groups.class)

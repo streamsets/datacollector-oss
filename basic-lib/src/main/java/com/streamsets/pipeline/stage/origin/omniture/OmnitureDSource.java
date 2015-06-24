@@ -20,7 +20,8 @@ import com.streamsets.pipeline.configurablestage.DSource;
     label = "Omniture",
     description = "Retrieves Omniture reports via the REST API.",
     icon="omniture_icon.png",
-    execution = ExecutionMode.STANDALONE
+    execution = ExecutionMode.STANDALONE,
+    recordsByRef = true
 )
 
 @ConfigGroups(Groups.class)

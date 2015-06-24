@@ -40,7 +40,8 @@ import java.util.List;
     label = "Directory",
     description = "Reads files from a directory",
     icon="directory.png",
-    execution = ExecutionMode.STANDALONE
+    execution = ExecutionMode.STANDALONE,
+    recordsByRef = true
 )
 @RawSource(rawSourcePreviewer = FileRawSourcePreviewer.class)
 @ConfigGroups(Groups.class)
