@@ -79,7 +79,7 @@ public class FileTailDSource extends DSource {
       required = true,
       type = ConfigDef.Type.BOOLEAN,
       defaultValue = "false",
-      label = "Ignore <CTRL> Characters",
+      label = "Ignore Control Characters",
       description = "Use only if required as it impacts reading performance",
       displayPosition = 25,
       group = "FILES"
