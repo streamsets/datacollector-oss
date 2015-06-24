@@ -18,7 +18,8 @@ import com.streamsets.pipeline.lib.el.TimeEL;
     version = "1.0.0",
     label = "MongoDB Origin",
     description = "Reads records from a MongoDB Collection",
-    icon="mongodb.png"
+    icon="mongodb.png",
+    recordsByRef = true
 )
 @ConfigGroups(Groups.class)
 @GenerateResourceBundle

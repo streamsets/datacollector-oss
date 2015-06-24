@@ -24,7 +24,8 @@ import org.apache.commons.lang3.StringEscapeUtils;
   label = "HTTP Client",
   description = "Uses an HTTP client to read records from an URL.",
   icon="httpclient.png",
-  execution = ExecutionMode.STANDALONE
+  execution = ExecutionMode.STANDALONE,
+  recordsByRef = true
 )
 
 @ConfigGroups(Groups.class)

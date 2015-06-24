@@ -21,7 +21,8 @@ import java.util.Map;
     label = "JDBC Consumer",
     description = "Reads data from a JDBC source.",
     icon = "rdbms.png",
-    execution = ExecutionMode.STANDALONE
+    execution = ExecutionMode.STANDALONE,
+    recordsByRef = true
 )
 @ConfigGroups(value = Groups.class)
 @GenerateResourceBundle
