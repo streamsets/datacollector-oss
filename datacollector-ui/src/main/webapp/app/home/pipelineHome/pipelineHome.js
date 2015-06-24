@@ -716,6 +716,8 @@ angular
       $scope.pipelineRules.uuid = ruuid;
 
       archiveOp = true;
+
+      updateGraph($scope.pipelineConfig, $scope.pipelineRules, true, true);
     };
 
 
@@ -806,8 +808,9 @@ angular
      * @param pipelineConfig
      * @param pipelineRules
      * @param manualUpdate
+     * @param ignoreArchive
      */
-    var updateGraph = function (pipelineConfig, pipelineRules, manualUpdate) {
+    var updateGraph = function (pipelineConfig, pipelineRules, manualUpdate, ignoreArchive) {
       var selectedStageInstance,
         stageErrorCounts = {},
         pipelineMetrics = $rootScope.common.pipelineMetrics,
@@ -926,7 +929,10 @@ angular
         }
       }
 
-      addToArchive($scope.pipelineConfig, $scope.pipelineRules);
+      if(!ignoreArchive) {
+        addToArchive($scope.pipelineConfig, $scope.pipelineRules);
+      }
+
 
       $timeout(function() {
         $scope.$broadcast('updateGraph', {
