@@ -11,12 +11,12 @@
   <parent>
     <groupId>com.streamsets</groupId>
     <artifactId>streamsets-datacollector-root-lib</artifactId>
-    <version>1.0.0b2</version>
+    <version>1.0.0b2-SNAPSHOT</version>
     <relativePath>../root-lib</relativePath>
   </parent>
   <groupId>com.streamsets</groupId>
   <artifactId>streamsets-datacollector-cassandra-protolib</artifactId>
-  <version>1.0.0b2</version>
+  <version>1.0.0b2-SNAPSHOT</version>
   <description>StreamSets Data Collector Cassandra ProtoLib</description>
   <name>StreamSets Data Collector Cassandra ProtoLib</name>
   <packaging>jar</packaging>

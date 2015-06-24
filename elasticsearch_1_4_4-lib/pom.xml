@@ -11,12 +11,12 @@
   <parent>
     <groupId>com.streamsets</groupId>
     <artifactId>streamsets-datacollector-root-lib</artifactId>
-    <version>1.0.0b2</version>
+    <version>1.0.0b2-SNAPSHOT</version>
     <relativePath>../root-lib</relativePath>
   </parent>
   <groupId>com.streamsets</groupId>
   <artifactId>streamsets-datacollector-elasticsearch_1_4_4-lib</artifactId>
-  <version>1.0.0b2</version>
+  <version>1.0.0b2-SNAPSHOT</version>
   <description>StreamSets Data Collector Elastic Search 1.4.4 Lib</description>
   <name>StreamSets Data Collector Elastic Search 1.4.4 Lib</name>
   <packaging>jar</packaging>

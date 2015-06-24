@@ -11,12 +11,12 @@
   <parent>
     <groupId>com.streamsets</groupId>
     <artifactId>streamsets-datacollector-root-lib</artifactId>
-    <version>1.0.0b2</version>
+    <version>1.0.0b2-SNAPSHOT</version>
     <relativePath>../root-lib</relativePath>
   </parent>
   <groupId>com.streamsets</groupId>
   <artifactId>streamsets-datacollector-cdh5_4_1-cluster-cdh_kafka_1_2_0-lib</artifactId>
-  <version>1.0.0b2</version>
+  <version>1.0.0b2-SNAPSHOT</version>
   <description>StreamSets Data Collector CDH 5.4.1 Cluster Cloudera Kafka 1.2.0 Lib</description>
   <name>StreamSets Data Collector 5.4.1 Cluster Kafka 1.2.0 Lib</name>
   <packaging>jar</packaging>
