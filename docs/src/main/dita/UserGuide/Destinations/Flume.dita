@@ -6,9 +6,10 @@
     pass data to a Flume client. The Flume client passes data to hosts based on client configuration
     properties. </shortdesc>
  <conbody>
-  <p>When you configure a Flume destination, you can configure one or more hosts to use, connection
-      information, the client type, and the data format to use. You can also configure some client
-      properties, such as the Flume batch size or connection timeout.</p>
+  <p><indexterm>Flume destination<indexterm>overview</indexterm></indexterm>When you configure a
+            Flume destination, you can configure one or more hosts to use, connection information,
+            the client type, and the data format to use. You can also configure some client
+            properties, such as the Flume batch size or connection timeout.</p>
   <p>The Flume destination can write data to the following client types:<ul id="ul_evb_hbq_yr">
         <li>Apache Avro Failover RPC Client</li>
         <li>Apache Avro LoadBalancing RPC Client</li>

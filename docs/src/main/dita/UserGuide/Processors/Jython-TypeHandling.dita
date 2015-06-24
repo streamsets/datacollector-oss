@@ -3,7 +3,7 @@
 <concept id="concept_szj_slw_tr">
  <title>Type Handling</title>
  <conbody>
-  <p><indexterm>Jython Evaluator destination<indexterm>type
+  <p><indexterm>Jython Evaluator processor<indexterm>type
         handling</indexterm></indexterm><indexterm>type handling<indexterm>Jython Evaluator
           processor</indexterm></indexterm>Though Jython does not use type information when
       processing data, passing data to the rest of the pipeline requires data types. </p>

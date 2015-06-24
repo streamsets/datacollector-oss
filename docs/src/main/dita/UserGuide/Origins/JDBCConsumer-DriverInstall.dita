@@ -4,9 +4,9 @@
  <title>Installing the Driver</title>
  <shortdesc>To use JDBC Consumer, install the JDBC driver for the database that you are accessing. </shortdesc>
  <conbody>
-  <p><indexterm>JDBC Consumer<indexterm>driver installation</indexterm></indexterm>You cannot access
-   the database until you install the required driver. Install the driver in the following location,
-   and then restart the <ph
+  <p><indexterm>JDBC Consumer origin<indexterm>driver installation</indexterm></indexterm>You cannot
+   access the database until you install the required driver. Install the driver in the following
+   location, and then restart the <ph
     conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
    />:<codeblock>&lt;SDCinstalldir>/streamsets-libs/streamsets-datacollector-basic-lib/lib</codeblock></p>
  </conbody>

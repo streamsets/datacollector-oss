@@ -5,8 +5,8 @@
     <taskbody>
         <context>
             <p><indexterm>Kinesis Consumer
-                destination<indexterm>configuring</indexterm></indexterm>Configure a Kinesis
-                Consumer origin to read JSON or SDC Record data from an Amazon Kinesis cluster.</p>
+                origin<indexterm>configuring</indexterm></indexterm>Configure a Kinesis Consumer
+                origin to read JSON or SDC Record data from an Amazon Kinesis cluster.</p>
         </context>
         <steps id="steps_hqj_pw4_yr">
             <step

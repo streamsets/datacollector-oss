@@ -4,11 +4,11 @@
     <title>Capturing and Viewing a Snapshot</title>
     <taskbody>
         <context>
-            <p><indexterm>snapshot<indexterm>overview</indexterm></indexterm>You can capture a
-                snapshot of data when you monitor a pipeline. After you capture a snapshot, you can
-                view the snapshot data stage by stage or through a group of stages, like data
-                preview. You can also delete snapshot data or use it as source data for data
-                preview.</p>
+            <p><indexterm>snapshots<indexterm>capturing and viewing</indexterm></indexterm>You can
+                capture a snapshot of data when you monitor a pipeline. After you capture a
+                snapshot, you can view the snapshot data stage by stage or through a group of
+                stages, like data preview. You can also delete snapshot data or use it as source
+                data for data preview.</p>
         </context>
         <steps id="steps_esy_44p_tq">
             <step>
