@@ -156,6 +156,7 @@ public class MultiFileReader implements Closeable {
     long startTime = System.currentTimeMillis();
     LiveFileChunk chunk = null;
     boolean exit = false;
+    fileContextProvider.startNewLoop();
     while (!exit) {
       if (!fileContextProvider.didFullLoop()) {
         FileContext fileContext = fileContextProvider.next();
