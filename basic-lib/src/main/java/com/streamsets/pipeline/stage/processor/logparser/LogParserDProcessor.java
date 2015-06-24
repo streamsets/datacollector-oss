@@ -44,7 +44,7 @@ public class LogParserDProcessor extends DProcessor {
       required = true,
       type = ConfigDef.Type.BOOLEAN,
       defaultValue = "false",
-      label = "Ignore <CTRL> Characters",
+      label = "Ignore Control Characters",
       description = "Use only if required as it impacts reading performance",
       displayPosition = 15,
       group = "LOG"

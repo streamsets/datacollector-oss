@@ -118,7 +118,7 @@ public class KafkaDSource extends DSourceOffsetCommitter {
       required = true,
       type = ConfigDef.Type.BOOLEAN,
       defaultValue = "false",
-      label = "Ignore <CTRL> Characters",
+      label = "Ignore Control Characters",
       description = "Use only if required as it impacts reading performance",
       displayPosition = 43,
       group = "KAFKA"
