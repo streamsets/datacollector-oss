@@ -303,7 +303,7 @@ public class PipelineConfigurationValidator {
       StageIssueCreator issueCreator) {
     boolean preview = true;
     StageDefinition stageDef = stageLibrary.getStage(stageConf.getLibrary(), stageConf.getStageName(),
-                                                     stageConf.getStageVersion());
+      stageConf.getStageVersion());
     if (stageDef == null) {
       // stage configuration refers to an undefined stage definition
       issues.add(issueCreator.createStageIssue(stageConf.getInstanceName(), ValidationError.VALIDATION_0006,
@@ -420,12 +420,26 @@ public class PipelineConfigurationValidator {
     List<Object> triggeredBy = confDef.getTriggeredByValues();
     // If the config doesn't depend on anything or the config should be triggered, config is invalid
     if (dependsOn == null || dependsOn.isEmpty() ||
-      (triggeredBy.contains(stageConf.getConfig(dependsOn).getValue()))) {
+      /*At times the dependsOn config may be hidden [for ex. ToErrorKafkaTarget hides the dataFormat property].
+      * In such a scenario stageConf.getConfig(dependsOn) can be null. We need to guard against this.*/
+      (stageConf.getConfig(dependsOn) != null &&
+        triggeredByContains(triggeredBy, stageConf.getConfig(dependsOn).getValue()))) {
       issues.add(issueCreator.createConfigIssue(stageConf.getInstanceName(), confDef.getGroup(), confDef.getName(),
         ValidationError.VALIDATION_0007, confDef.getName(), confDef.getGroup()));
       preview = false;
     }
     return preview;
+  }
+
+  private boolean triggeredByContains(List<Object> triggeredBy, Object value) {
+    boolean contains = false;
+    for(Object object : triggeredBy) {
+      if(String.valueOf(object).equals(String.valueOf(value))) {
+        contains = true;
+        break;
+      }
+    }
+    return contains;
   }
 
   private static final Record PRECONDITION_RECORD = new RecordImpl("dummy", "dummy", null, null);
@@ -490,7 +504,7 @@ public class PipelineConfigurationValidator {
         validateConfig = false;
         Object value = dependsOnConfig.getValue();
         for (Object trigger : triggeredBy) {
-          validateConfig |= value.equals(trigger);
+          validateConfig |= String.valueOf(value).equals(String.valueOf(trigger));
         }
       }
     }
@@ -531,6 +545,7 @@ public class PipelineConfigurationValidator {
             preview = false;
           }
           break;
+        case TEXT:
         case STRING:
           if (!(conf.getValue() instanceof String)) {
             issues.add(issueCreator.createConfigIssue(stageConf.getInstanceName(), confDef.getGroup(),
