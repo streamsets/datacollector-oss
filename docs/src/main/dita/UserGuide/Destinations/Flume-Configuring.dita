@@ -153,12 +153,11 @@
                             </thead>
                             <tbody>
                                 <row>
-                                    <entry>Avro Schema<draft-comment author="Loretta">check back for
-                                            final labels</draft-comment></entry>
+                                    <entry>Avro Schema</entry>
                                     <entry>Schema definition to use when writing data. </entry>
                                 </row>
                                 <row>
-                                    <entry>Include Schema in Event</entry>
+                                    <entry>Include Schema</entry>
                                     <entry>Includes the schema in each Flume event. <note>Omitting
                                             the schema definition can improve performance, but
                                             requires the appropriate schema management to avoid

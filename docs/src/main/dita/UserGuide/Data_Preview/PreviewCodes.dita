@@ -4,7 +4,7 @@
  <title>Preview Codes</title>
  <shortdesc>In preview mode, the <ph
    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> console uses
-  different colors to represent different types of data. The console uses other codes and formating
+  different colors to represent different types of data. The console uses other codes and formatting
   to highlight changed fields.</shortdesc>
  <conbody>
   <p><indexterm>data preview<indexterm>color codes</indexterm></indexterm>The following table

@@ -71,7 +71,7 @@
                     <table frame="all" rowsep="1" colsep="1" id="table_byd_xpd_br">
                         <tgroup cols="2">
                             <colspec colname="c1" colnum="1" colwidth="1*"/>
-                            <colspec colname="c2" colnum="2" colwidth="2.89*"/>
+                            <colspec colname="c2" colnum="2" colwidth="2.85*"/>
                             <thead>
                                 <row>
                                     <entry>Output Files Property</entry>
@@ -90,6 +90,7 @@
                                                   href="../Pipeline_Configuration/SDCRecordFormat.dita#concept_qkk_mwk_br">
                                                   <image href="../Graphics/icon_moreInfo.png"
                                                   scale="10" id="image_wjh_ycl_br"/></xref></li>
+                                            <li>Avro</li>
                                         </ul></entry>
                                 </row>
                                 <row>
@@ -106,7 +107,8 @@
                                             prefix sdc-${sdc:id()} by default. The prefix evaluates
                                             to sdc-&lt;Data Collector ID>. </p><p>The Data Collector
                                             ID is stored in the following file:
-                                            &lt;SDCinstalldir>/data/sdc.id. </p></entry>
+                                                <filepath>&lt;SDCinstalldir>/data/sdc.id</filepath>.
+                                        </p></entry>
                                 </row>
                                 <row>
                                     <entry>Data Charset</entry>
@@ -138,7 +140,7 @@
                                             expressions:<ul id="ul_ggs_43g_br">
                                             <li>${time:now()} - Uses the processing time as the time
                                                 basis. </li>
-                                            <li>${record:value("/&lt;date field>") - Uses the time
+                                            <li>${record:value("/&lt;date field>")} - Uses the time
                                                 associated with the record as the time basis.</li>
                                         </ul></entry>
                                 </row>
@@ -264,8 +266,7 @@
                             </thead>
                             <tbody>
                                 <row>
-                                    <entry>Avro Schema<draft-comment author="Loretta">check back for
-                                            final labels</draft-comment></entry>
+                                    <entry>Avro Schema</entry>
                                     <entry>Schema definition to use when writing data. Hadoop FS
                                         includes the schema definition in each generated file.
                                     </entry>

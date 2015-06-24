@@ -42,7 +42,7 @@
       creates a new active file, it archives the previous active file without renaming it. The
       active file changes, but file names do not change. </dd>
      <dd>The server generates files using a pattern that you can define with a regular expression. </dd>
-     <dd>Use <uicontrol>Files Matching a Pattern</uicontrol> as the the archive file naming
+     <dd>Use <uicontrol>Files Matching a Pattern</uicontrol> as the archive file naming
       convention.</dd>
      <dd>File Tail processes the files in alphabetical order before progressing to the most recent
       file - the active file. </dd>

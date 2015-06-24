@@ -16,7 +16,7 @@
       type of the data to exactly match the data type of the Cassandra column. </dd>
      <dd>To determine the issue, check the error messages associated with the error records. If you
       see a message like the following, you have a data type mismatch. The following error message
-      indicates that data type mismatch is for Integer data being unsucessfully written to a Varchar
+      indicates that data type mismatch is for Integer data being unsuccessfully written to a Varchar
       column:
       <codeblock>CASSANDRA_06 - Could not prepare record 'sdk:': 
 Invalid type for value 0 of CQL type varchar, expecting class java.lang.String but class java.lang. 

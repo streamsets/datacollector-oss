@@ -20,7 +20,10 @@
                     <li>In the pipeline properties, on the <wintitle>General</wintitle> tab, set the
                             <uicontrol>Execution Mode</uicontrol> property to
                             <uicontrol>Cluster</uicontrol>.</li>
-                    <li>Use a Kafka Consumer origin in the pipeline. </li>
+                    <li>In the pipeline, use a Kafka Consumer origin for cluster mode. <p>If you
+                            have more than one Kafka stage library installed, make sure you have the
+                            cluster mode stage library selected on the General tab of the
+                            origin.</p></li>
                 </ol><note>When you add a partition to the Kafka topic, restart the pipeline to
                     enable the <ph
                         conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"

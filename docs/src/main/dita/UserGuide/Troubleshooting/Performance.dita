@@ -34,7 +34,7 @@
     <dlentry>
      <dt>How can I improve the general pipeline performance? </dt>
      <dd>You might improve performance by adjusting the batch size used by the pipeline. The batch
-      size determines how much data passes throught the pipeline at one time. By default, the batch
+      size determines how much data passes through the pipeline at one time. By default, the batch
       size is 1000 records. </dd>
      <dd>You might adjust the batch size based on the size of the records or the speed of their
       arrival. For example, if your records are extremely big, you might reduce the batch size to

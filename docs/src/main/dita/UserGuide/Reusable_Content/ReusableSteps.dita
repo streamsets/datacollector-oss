@@ -610,8 +610,8 @@
             </step>
             <step>
                 <cmd>
-                    <draft-comment author="Loretta">The following step is used by Flume and Kafka
-                        Consumer. Hadoop FS has its own thing.</draft-comment>
+                    <draft-comment author="Loretta">The following step is used by Kafka Consumer.
+                        Hadoop FS and Flume have their own thing.</draft-comment>
                 </cmd>
             </step>
             <step id="AvroProps">
@@ -630,17 +630,15 @@
                             </thead>
                             <tbody>
                                 <row>
-                                    <entry>Avro Schema<draft-comment author="Loretta">check back for
-                                            final labels</draft-comment></entry>
+                                    <entry>Avro Schema</entry>
                                     <entry>Schema definition to use when writing data. </entry>
                                 </row>
                                 <row>
-                                    <entry>Include Schema in Event</entry>
-                                    <entry>Includes the schema in each Flume event. <note>Omitting
-                                            the schema definition can improve performance, but
-                                            requires the appropriate schema management to avoid
-                                            losing track of the schema associated with the
-                                            data.</note></entry>
+                                    <entry>Include Schema</entry>
+                                    <entry>Includes the schema in each message. <note>Omitting the
+                                            schema definition can improve performance, but requires
+                                            the appropriate schema management to avoid losing track
+                                            of the schema associated with the data.</note></entry>
                                 </row>
                             </tbody>
                         </tgroup>
@@ -744,6 +742,7 @@
                                                   href="../Pipeline_Configuration/SDCRecordFormat.dita#concept_qkk_mwk_br">
                                                   <image href="../Graphics/icon_moreInfo.png"
                                                   scale="10" id="image_ucp_chr_br"/></xref></li>
+                                                <li>Avro</li>
                                             </ul></entry>
                                     </row>
                                     <row>

@@ -76,7 +76,7 @@
         <dt>Avro</dt>
         <dd>Generates a record for every record. </dd>
         <dd>Directory assumes each file includes an Avro schema definition. But you can optionally
-          provide an alternate schema to use. </dd>
+          provide an alternate schema. </dd>
       </dlentry>
   </dl>
  </conbody>

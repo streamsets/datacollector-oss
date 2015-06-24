@@ -4,7 +4,7 @@
   <title>SQL Query</title>
   <conbody>
     <p><indexterm>JDBC Consumer origin<indexterm>SQL query</indexterm></indexterm><indexterm>SQL
-          query<indexterm>JDBC Cponsumer</indexterm></indexterm>The SQL query defines the data
+          query<indexterm>JDBC Consumer</indexterm></indexterm>The SQL query defines the data
       returned from the database. When you define the SQL query, use the following guidelines:<dl>
         <dlentry>
           <dt>In the WHERE clause, include the offset column and the offset value</dt>
