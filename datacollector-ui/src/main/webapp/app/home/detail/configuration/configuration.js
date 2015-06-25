@@ -518,7 +518,7 @@ angular
         if(issuesMap) {
           if(stageInstance.instanceName && issuesMap.stageIssues && issuesMap.stageIssues[stageInstance.instanceName]) {
             issues = issuesMap.stageIssues[stageInstance.instanceName];
-          } else if(issuesMap.pipelineIssues) {
+          } else if(issuesMap.pipelineIssues && !stageInstance.instanceName) {
             issues = issuesMap.pipelineIssues;
           }
         }
