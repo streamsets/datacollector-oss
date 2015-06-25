@@ -40,10 +40,12 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.attribute.PosixFilePermission;
 import java.security.PrivilegedExceptionAction;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.TimeZone;
 import java.util.UUID;
 
 public class TestBaseHdfsTarget {
@@ -430,5 +432,58 @@ public class TestBaseHdfsTarget {
   public void testProxyUser() throws Exception {
     testUser("foo", "foo");
   }
+
+  @Test
+  public void testCustomFrequency() throws Exception {
+    final Path dir = new Path("/" + UUID.randomUUID().toString());
+      miniDFS.getFileSystem().mkdirs(dir);
+    TargetRunner runner = new TargetRunner.Builder(HdfsDTarget.class)
+        .setOnRecordError(OnRecordError.STOP_PIPELINE)
+        .addConfiguration("hdfsUri", miniDFS.getFileSystem().getUri().toString())
+        .addConfiguration("hdfsUser", "")
+        .addConfiguration("hdfsKerberos", false)
+        .addConfiguration("hdfsConfDir", "")
+        .addConfiguration("hdfsConfigs", new HashMap<>())
+        .addConfiguration("uniquePrefix", "foo")
+        .addConfiguration("dirPathTemplate", dir.toString() + "/${YY()}${MM()}${DD()}${hh()}${every(10, mm())}")
+        .addConfiguration("timeZoneID", "UTC")
+        .addConfiguration("fileType", HdfsFileType.TEXT)
+        .addConfiguration("keyEl", "${uuid()}")
+        .addConfiguration("compression", CompressionMode.NONE)
+        .addConfiguration("seqFileCompressionType", HdfsSequenceFileCompressionType.BLOCK)
+        .addConfiguration("maxRecordsPerFile", 1)
+        .addConfiguration("maxFileSize", 1)
+        .addConfiguration("timeDriver", "${record:value('/')}")
+        .addConfiguration("lateRecordsLimit", "${30 * MINUTES}")
+        .addConfiguration("lateRecordsAction", LateRecordsAction.SEND_TO_LATE_RECORDS_FILE)
+        .addConfiguration("lateRecordsDirPathTemplate", dir.toString())
+        .addConfiguration("dataFormat", DataFormat.SDC_JSON)
+        .addConfiguration("csvFileFormat", null)
+        .addConfiguration("csvReplaceNewLines", false)
+        .addConfiguration("charset", "UTF-8")
+        .build();
+    runner.runInit();
+    try {
+      Calendar calendar = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
+      calendar.setTime(new Date());
+
+      // 3 records which are exactly 10 mins apart, they always fall in 2 frequency ranges
+      Record record1 = RecordCreator.create();
+      record1.set(Field.createDatetime(calendar.getTime()));
+      calendar.add(Calendar.MINUTE, - 5);
+      Record record2 = RecordCreator.create();
+      record2.set(Field.createDatetime(calendar.getTime()));
+      calendar.add(Calendar.MINUTE, - 5);
+      Record record3 = RecordCreator.create();
+      record3.set(Field.createDatetime(calendar.getTime()));
+
+      runner.runWrite(Arrays.asList(record1, record2, record3));
+    } finally {
+      runner.runDestroy();
+    }
+    FileStatus[] status = miniDFS.getFileSystem().listStatus(dir);
+    Assert.assertEquals(2, status.length);
+  }
+
 
 }

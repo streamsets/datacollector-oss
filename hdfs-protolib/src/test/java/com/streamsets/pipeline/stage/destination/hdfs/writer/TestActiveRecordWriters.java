@@ -8,6 +8,7 @@ package com.streamsets.pipeline.stage.destination.hdfs.writer;
 import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.OnRecordError;
 import com.streamsets.pipeline.api.Record;
+import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.lib.generator.DataGeneratorFactory;
 import com.streamsets.pipeline.lib.generator.DataGenerator;
 import com.streamsets.pipeline.lib.generator.DataGeneratorException;
@@ -28,6 +29,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.net.URI;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.TimeZone;
 import java.util.UUID;
@@ -90,7 +92,8 @@ public class TestActiveRecordWriters {
     RecordWriterManager mgr = new RecordWriterManager(uri, conf, prefix, template, timeZone, cutOffSecs, cutOffSize,
       cutOffRecords, fileType, compressionCodec , compressionType, keyEL, generatorFactory,
       ContextInfoCreator.createTargetContext(HdfsDTarget.class, "testWritersLifecycle", false, OnRecordError.TO_ERROR,
-                                             null));
+                                             null), "dirPathTemplate");
+    Assert.assertTrue(mgr.validateDirTemplate("g", "dirPathTemplate", new ArrayList<Stage.ConfigIssue>()));
     ActiveRecordWriters writers = new ActiveRecordWriters(mgr);
 
     Date now = new Date();

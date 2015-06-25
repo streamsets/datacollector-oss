@@ -171,64 +171,56 @@ public class HdfsTarget extends RecordTarget {
                                                    ? seqFileCompressionType.getType() : null;
 
     try {
-      RecordWriterManager.validateDirPathTemplate1(getContext(), dirPathTemplate);
-      RecordWriterManager.validateDirPathTemplate2(getContext(), dirPathTemplate);
-      try {
-        switch (compression) {
-          case OTHER:
-            try {
-              Class klass = Thread.currentThread().getContextClassLoader().loadClass(otherCompression);
-              if (CompressionCodec.class.isAssignableFrom(klass)) {
-                compressionCodec = ((Class<? extends CompressionCodec> ) klass).newInstance();
-              } else {
-                throw new StageException(Errors.HADOOPFS_04, otherCompression);
-              }
-            } catch (Exception ex1) {
-              throw new StageException(Errors.HADOOPFS_05, otherCompression, ex1.getMessage(), ex1);
+      switch (compression) {
+        case OTHER:
+          try {
+            Class klass = Thread.currentThread().getContextClassLoader().loadClass(otherCompression);
+            if (CompressionCodec.class.isAssignableFrom(klass)) {
+              compressionCodec = ((Class<? extends CompressionCodec> ) klass).newInstance();
+            } else {
+              throw new StageException(Errors.HADOOPFS_04, otherCompression);
             }
-            break;
-          case NONE:
-            break;
-          default:
-            compressionCodec = compression.getCodec().newInstance();
-            break;
-        }
-        if(validHadoopFsUri) {
-          RecordWriterManager mgr = new RecordWriterManager(new URI(hdfsUri), hdfsConfiguration, uniquePrefix,
-            dirPathTemplate, TimeZone.getTimeZone(timeZoneID), lateRecordsLimitSecs, maxFileSizeMBs * MEGA_BYTE,
-            maxRecordsPerFile, fileType, compressionCodec, compressionType, keyEl, generatorFactory, getContext());
+          } catch (Exception ex1) {
+            throw new StageException(Errors.HADOOPFS_05, otherCompression, ex1.getMessage(), ex1);
+          }
+          break;
+        case NONE:
+          break;
+        default:
+          compressionCodec = compression.getCodec().newInstance();
+          break;
+      }
+      if(validHadoopFsUri) {
+        RecordWriterManager mgr = new RecordWriterManager(new URI(hdfsUri), hdfsConfiguration, uniquePrefix,
+          dirPathTemplate, TimeZone.getTimeZone(timeZoneID), lateRecordsLimitSecs, maxFileSizeMBs * MEGA_BYTE,
+          maxRecordsPerFile, fileType, compressionCodec, compressionType, keyEl, generatorFactory, getContext(),
+          "dirPathTemplate");
 
+        if (mgr.validateDirTemplate(Groups.OUTPUT_FILES.name(), "dirPathTemplate", issues)) {
           currentWriters = new ActiveRecordWriters(mgr);
         }
-      } catch (Exception ex) {
-        issues.add(getContext().createConfigIssue(Groups.OUTPUT_FILES.name(), null, Errors.HADOOPFS_11, ex.getMessage(),
-                                                  ex));
       }
     } catch (Exception ex) {
-      issues.add(getContext().createConfigIssue(Groups.OUTPUT_FILES.name(), "dirPathTemplate", Errors.HADOOPFS_20,
-                                                ex.getMessage(), ex));
+      issues.add(getContext().createConfigIssue(Groups.OUTPUT_FILES.name(), null, Errors.HADOOPFS_11, ex.getMessage(),
+                                                ex));
     }
 
-    try {
-      if (lateRecordsDirPathTemplate != null && !lateRecordsDirPathTemplate.isEmpty()) {
-        RecordWriterManager.validateDirPathTemplate1(getContext(), lateRecordsDirPathTemplate);
-        RecordWriterManager.validateDirPathTemplate2(getContext(), lateRecordsDirPathTemplate);
-        if(validHadoopFsUri) {
-          try {
-            RecordWriterManager mgr = new RecordWriterManager(new URI(hdfsUri), hdfsConfiguration, uniquePrefix,
-              lateRecordsDirPathTemplate, TimeZone.getTimeZone(timeZoneID), lateRecordsLimitSecs,
-              maxFileSizeMBs * MEGA_BYTE, maxRecordsPerFile, fileType, compressionCodec, compressionType, keyEl,
-              generatorFactory, getContext());
+    if (lateRecordsDirPathTemplate != null && !lateRecordsDirPathTemplate.isEmpty()) {
+      if(validHadoopFsUri) {
+        try {
+          RecordWriterManager mgr = new RecordWriterManager(new URI(hdfsUri), hdfsConfiguration, uniquePrefix,
+            lateRecordsDirPathTemplate, TimeZone.getTimeZone(timeZoneID), lateRecordsLimitSecs,
+            maxFileSizeMBs * MEGA_BYTE, maxRecordsPerFile, fileType, compressionCodec, compressionType, keyEl,
+            generatorFactory, getContext(), "lateRecordsDirPathTemplate");
 
+          if (mgr.validateDirTemplate(Groups.OUTPUT_FILES.name(), "lateRecordsDirPathTemplate", issues)) {
             lateWriters = new ActiveRecordWriters(mgr);
-          } catch (Exception ex) {
-            issues.add(getContext().createConfigIssue(Groups.LATE_RECORDS.name(), null, Errors.HADOOPFS_17, ex.getMessage(), ex));
           }
+        } catch (Exception ex) {
+          issues.add(getContext().createConfigIssue(Groups.LATE_RECORDS.name(), null, Errors.HADOOPFS_17,
+                                                    ex.getMessage(), ex));
         }
       }
-    } catch (Exception ex) {
-      issues.add(getContext().createConfigIssue(Groups.OUTPUT_FILES.name(), "lateRecordsDirPathTemplate",
-                                                Errors.HADOOPFS_21, ex.getMessage(), ex));
     }
 
     timeDriverElEval = getContext().createELEval("timeDriver");

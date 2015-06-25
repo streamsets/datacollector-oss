@@ -39,13 +39,23 @@ public enum Errors implements ErrorCode {
   HADOOPFS_22("Invalid URI '{}': {}"),
   HADOOPFS_23("Could not commit old files: {}"),
 
-  HADOOPFS_24("Could nto evaluate EL for directory path: {}"),
+  HADOOPFS_24("Could not evaluate EL for directory path: {}"),
 
   HADOOPFS_25("Hadoop configuration directory '{}' under SDC resources does not exist"),
   HADOOPFS_26("Hadoop configuration directory '{}' path under  SDC resources is not a directory"),
   HADOOPFS_27("Hadoop configuration file '{}/{}' under SDC resources is not a file"),
   HADOOPFS_28("Could not resolve the default Kerberos realm, you must set the 'dfs.namenode.kerberos.principal' " +
               "property to the HDFS principal name: {}"),
+
+  HADOOPFS_29("Path template uses the '{}' function, it must use the '{}' function"),
+  HADOOPFS_30("The 'every(<UNIT>, <VALUE>)' function can be used only once in the path"),
+  HADOOPFS_31("The 'every(<UNIT>, <VALUE>)' function must use YYYY(), YY(), MM(), DD(), hh(), mm() or ss() as <UNIT>"),
+  HADOOPFS_32("The 'every(<UNIT>, <VALUE>)' function has the <VALUE> argument out of range, it must be between '1' and '{}'"),
+  HADOOPFS_33("The 'every(<UNIT>, <VALUE>)' function must use the smallest unit in the path template"),
+  HADOOPFS_34("The 'every(<UNIT>, <VALUE>)' function value must be a sub-multiple of the maximum value of the <UNIT>"),
+  HADOOPFS_35("Failed to retrieve increment time unit and value from the path template: {}"),
+  HADOOPFS_36("The 'ss()' function cannot be used within and outside of the 'every()' function at the same time"),
+  HADOOPFS_37("The 'mm()' function cannot be used within and outside of the 'every()' function at the same time"),
 
   ;
   private final String msg;

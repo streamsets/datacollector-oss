@@ -115,7 +115,7 @@ public class HdfsDTarget extends DTarget {
                     "created based on the smallest time unit variable used.",
       displayPosition = 110,
       group = "OUTPUT_FILES",
-      elDefs = {RecordEL.class, TimeEL.class},
+      elDefs = {RecordEL.class, TimeEL.class, ExtraTimeEL.class},
       evaluation = ConfigDef.Evaluation.EXPLICIT
   )
   public String dirPathTemplate;
