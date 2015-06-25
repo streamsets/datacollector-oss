@@ -5,9 +5,8 @@
  */
 package com.streamsets.pipeline.lib.util;
 
-import com.google.common.collect.ImmutableList;
-
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 import java.util.regex.Matcher;
@@ -24,7 +23,7 @@ public class FieldRegexUtil {
 
   public static List<String> getMatchingFieldPaths(String fieldPath, Set<String> fieldPaths) {
     if(!hasWildCards(fieldPath)) {
-      return ImmutableList.of(fieldPath);
+      return Arrays.asList(fieldPath);
     }
     //Any reference to array index brackets [ ] must be escaped in the regex
     //Reference to * in map must be replaced by regex that matches a field name

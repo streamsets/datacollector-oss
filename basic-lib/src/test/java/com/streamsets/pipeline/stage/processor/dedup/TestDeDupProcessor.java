@@ -98,7 +98,7 @@ public class TestDeDupProcessor {
   }
 
   @Test
-  public void testUniqueSingleBatch() throws Exception {
+  public void testUniqueSingleBatchAllFields() throws Exception {
     Processor processor = new DeDupProcessor(4, 1, SelectFields.ALL_FIELDS, Collections.EMPTY_LIST);
     ProcessorRunner runner = new ProcessorRunner.Builder(DeDupDProcessor.class, processor)
         .addOutputLane("unique")
@@ -115,6 +115,49 @@ public class TestDeDupProcessor {
       StageRunner.Output output = runner.runProcess(input);
       Assert.assertEquals(4, output.getRecords().get("unique").size());
       Assert.assertEquals(0, output.getRecords().get("duplicate").size());
+    } finally {
+      runner.runDestroy();
+    }
+  }
+
+  @Test
+  public void testUniqueSingleBatchSpecifiedFields() throws Exception {
+    Processor processor = new DeDupProcessor(4, 1, SelectFields.SPECIFIED_FIELDS, Arrays.asList("/value"));
+    ProcessorRunner runner = new ProcessorRunner.Builder(DeDupDProcessor.class, processor)
+      .addOutputLane("unique")
+      .addOutputLane("duplicate")
+      .build();
+    runner.runInit();
+    try {
+
+      Record r0 = createRecordWithValue("a");
+      Record r1 = createRecordWithValue("b");
+      Record r2 = createRecordWithValue("c");
+      Record r3 = createRecordWithValue("d");
+      List<Record> input = ImmutableList.of(r0, r1, r2, r3);
+      StageRunner.Output output = runner.runProcess(input);
+      Assert.assertEquals(4, output.getRecords().get("unique").size());
+      Assert.assertEquals(0, output.getRecords().get("duplicate").size());
+    } finally {
+      runner.runDestroy();
+    }
+
+    processor = new DeDupProcessor(4, 1, SelectFields.SPECIFIED_FIELDS, Arrays.asList("/value"));
+    runner = new ProcessorRunner.Builder(DeDupDProcessor.class, processor)
+      .addOutputLane("unique")
+      .addOutputLane("duplicate")
+      .build();
+    runner.runInit();
+    try {
+
+      Record r0 = createRecordWithValue("a");
+      Record r1 = createRecordWithValue("b");
+      Record r2 = createRecordWithValue("c");
+      Record r3 = createRecordWithValue("a");
+      List<Record> input = ImmutableList.of(r0, r1, r2, r3);
+      StageRunner.Output output = runner.runProcess(input);
+      Assert.assertEquals(3, output.getRecords().get("unique").size());
+      Assert.assertEquals(1, output.getRecords().get("duplicate").size());
     } finally {
       runner.runDestroy();
     }
