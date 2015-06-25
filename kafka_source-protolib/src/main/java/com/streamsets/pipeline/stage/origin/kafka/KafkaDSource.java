@@ -487,6 +487,8 @@ public class KafkaDSource extends DSourceOffsetCommitter {
     description = "Overrides the schema associated with the message. Optionally use the runtime:loadResource function to use a schema stored in a file",
     displayPosition = 840,
     group = "AVRO",
+    dependsOn = "dataFormat",
+    triggeredByValue = "AVRO",
     mode = ConfigDef.Mode.JSON
   )
   public String avroSchema;
