@@ -99,12 +99,12 @@ public class SolrTarget extends BaseTarget {
   public void write(Batch batch) throws StageException {
     Iterator<Record> it = batch.getRecords();
     List<SolrInputDocument> solrDocuments = new ArrayList<>();
+    List<Record> recordsBackup = new ArrayList<>();
     boolean atLeastOne = false;
 
     while (it.hasNext()) {
       atLeastOne = true;
       Record record = it.next();
-
       try {
         SolrInputDocument document = new SolrInputDocument();
         for(SolrFieldMappingConfig fieldMapping: fieldNamesMap) {
@@ -114,6 +114,7 @@ public class SolrTarget extends BaseTarget {
 
         if(ProcessingMode.BATCH.equals(indexingMode)) {
           solrDocuments.add(document);
+          recordsBackup.add(record);
         } else {
           solrClient.add(document);
         }
@@ -143,24 +144,22 @@ public class SolrTarget extends BaseTarget {
       } catch (Exception ex) {
         try {
           solrClient.rollback();
-          handleException(ex, batch);
+          handleException(ex, recordsBackup);
         } catch (Exception ex2) {
-          handleException(ex2, batch);
+          handleException(ex2, recordsBackup);
         }
       }
     }
   }
 
-  private void handleException(Exception ex, Batch batch) throws StageException{
+  private void handleException(Exception ex, List<Record> records) throws StageException{
     switch (getContext().getOnErrorRecord()) {
       case DISCARD:
         break;
       case TO_ERROR:
         // Add all the records in batch to error since there is no way to figure out which record in batch
         // caused exception.
-        Iterator<Record> it = batch.getRecords();
-        while (it.hasNext()) {
-          Record record = it.next();
+        for(Record record: records) {
           getContext().toError(record, ex);
         }
         break;

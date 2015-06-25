@@ -231,6 +231,52 @@ public class TestSolrTarget  extends SolrJettyTestBase {
     }
   }
 
+  @Test
+  public void testWriteRecordsOnErrorToErrorDuringIndexing() throws Exception {
+
+    //Create target without solr field id
+    String solrURI = jetty.getBaseUrl().toString() + "/" + "collection1";
+    List<SolrFieldMappingConfig> fieldNamesMap = new ArrayList<>();
+    fieldNamesMap.add(new SolrFieldMappingConfig("/a", "name"));
+    Target target = new SolrTarget(InstanceTypeOptions.SINGLE_NODE, solrURI, null, ProcessingMode.BATCH, fieldNamesMap);
+
+    TargetRunner runner = new TargetRunner.Builder(SolrDTarget.class, target).setOnRecordError(OnRecordError.TO_ERROR)
+      .build();
+    try {
+      SolrServer solrClient = getSolrServer();
+
+      //delete all index
+      solrClient.deleteByQuery("*:*");
+
+      runner.runInit();
+      List<Record> records = new ArrayList<>();
+
+      Record record1 = RecordCreator.create();
+      record1.set(Field.create(ImmutableMap.of("nota", Field.create("Hello"),
+        "b", Field.create("i1"), "c", Field.create("t1"))));
+
+      Record record2 = RecordCreator.create();
+      record2.set(Field.create(ImmutableMap.of("a", Field.create("Bye"),
+        "b", Field.create("i2"), "c", Field.create("t2"))));
+
+      records.add(record1);
+      records.add(record2);
+
+      runner.runWrite(records);
+      Assert.assertEquals(2, runner.getErrorRecords().size());
+      Assert.assertEquals("Hello", runner.getErrorRecords().get(0).get("/nota").getValueAsString());
+      Assert.assertTrue(runner.getErrors().isEmpty());
+
+      SolrQuery parameters = new SolrQuery();
+      parameters.set("q", "sku:i1");
+      QueryResponse queryResponse = solrClient.query(parameters);
+
+      SolrDocumentList solrDocuments = queryResponse.getResults();
+      Assert.assertEquals(0, solrDocuments.size());
+    } finally {
+      runner.runDestroy();
+    }
+  }
 
   @Test(expected = StageException.class)
   public void testWriteRecordsOnErrorStopPipeline() throws Exception {
