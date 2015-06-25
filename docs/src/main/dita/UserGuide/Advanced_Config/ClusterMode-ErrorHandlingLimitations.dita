@@ -8,8 +8,8 @@
         id="ul_vf1_zft_ls">
         <li>Memory Limit Exceeded - Use the log or log and alert options. Stopping the pipeline is
           not supported at this time. </li>
-        <li>Error Records - Use the discard error records option. Stopping the pipeline or writing
-          records to file or Kafka are not supported at this time. </li>
+        <li>Error Records - Write error records to Kafka or discard the records. Stopping the
+          pipeline or writing records to file is not supported at this time. </li>
       </ul></p>
  </conbody>
 </concept>
