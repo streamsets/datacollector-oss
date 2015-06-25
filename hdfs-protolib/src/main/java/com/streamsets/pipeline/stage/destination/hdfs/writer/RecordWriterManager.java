@@ -9,6 +9,7 @@ import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
 import com.streamsets.pipeline.api.Record;
+import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.Target;
 import com.streamsets.pipeline.api.el.ELEval;
@@ -16,7 +17,6 @@ import com.streamsets.pipeline.api.el.ELEvalException;
 import com.streamsets.pipeline.api.el.ELVars;
 import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.lib.el.FakeRecordEL;
-import com.streamsets.pipeline.lib.el.RecordEL;
 import com.streamsets.pipeline.lib.el.TimeEL;
 import com.streamsets.pipeline.lib.generator.DataGeneratorFactory;
 import com.streamsets.pipeline.stage.destination.hdfs.Errors;
@@ -46,25 +46,11 @@ import java.util.concurrent.TimeUnit;
 public class RecordWriterManager {
   private final static Logger LOG = LoggerFactory.getLogger(RecordWriterManager.class);
 
-  public static void validateDirPathTemplate1(Target.Context context, String pathTemplate) {
-    getCeilingDateBasedOnTemplate(pathTemplate, TimeZone.getDefault(), new Date());
-  }
-
-  public static void validateDirPathTemplate2(Target.Context context, String pathTemplate) throws ELEvalException {
-    ELEval dirPathTemplateEval = context.createELEval("dirPathTemplate");
-    ELVars vars = context.createELVars();
-    RecordEL.setRecordInContext(vars, context.createRecord("validateDirPathTemplate"));
-    Calendar calendar = Calendar.getInstance(TimeZone.getDefault());
-    calendar.setTime(new Date());
-    TimeEL.setCalendarInContext(vars, calendar);
-    dirPathTemplateEval.eval(vars, pathTemplate, String.class);
-  }
-
   private URI hdfsUri;;
   private Configuration hdfsConf;
   private String uniquePrefix;
   private String dirPathTemplate;
-  private ELEval dirPathTemplateElEval;
+  private PathResolver pathResolver;
   private TimeZone timeZone;
   private long cutOffMillis;
   private long cutOffSize;
@@ -81,7 +67,7 @@ public class RecordWriterManager {
   public RecordWriterManager(URI hdfsUri, Configuration hdfsConf, String uniquePrefix, String dirPathTemplate,
       TimeZone timeZone, long cutOffSecs, long cutOffSizeBytes, long cutOffRecords, HdfsFileType fileType,
       CompressionCodec compressionCodec, SequenceFile.CompressionType compressionType, String keyEL,
-      DataGeneratorFactory generatorFactory, Target.Context context) {
+      DataGeneratorFactory generatorFactory, Target.Context context, String config) {
     this.hdfsUri = hdfsUri;
     this.hdfsConf = hdfsConf;
     this.uniquePrefix = uniquePrefix;
@@ -96,8 +82,7 @@ public class RecordWriterManager {
     this.keyEL = keyEL;
     this.generatorFactory = generatorFactory;
     this.context = context;
-    dirPathTemplateElEval = context.createELEval("dirPathTemplate");
-    getCeilingDateBasedOnTemplate(dirPathTemplate, timeZone, new Date());
+    pathResolver = new PathResolver(context, config, dirPathTemplate, timeZone);
 
     // we use/reuse Path as they are expensive to create (it increases the performance by at least 3%)
     tempFilePath = new Path(getTempFileName());
@@ -108,6 +93,10 @@ public class RecordWriterManager {
             return new Path(key, tempFilePath);
           }
         });
+  }
+
+  public boolean validateDirTemplate(String group, String config, List<Stage.ConfigIssue> issues) {
+    return pathResolver.validate(group, config, issues);
   }
 
   public long getCutOffMillis() {
@@ -122,25 +111,8 @@ public class RecordWriterManager {
     return cutOffRecords;
   }
 
-  private static final String CONST_YYYY = "YYYY";
-  private static final String CONST_YY = "YY";
-  private static final String CONST_MM = "MM";
-  private static final String CONST_DD = "DD";
-  private static final String CONST_hh = "hh";
-  private static final String CONST_mm = "mm";
-  private static final String CONST_ss = "ss";
-
   String getDirPath(Date date, Record record) throws StageException {
-    try {
-      ELVars vars = context.createELVars();
-      RecordEL.setRecordInContext(vars, record);
-      Calendar calendar = Calendar.getInstance(timeZone);
-      calendar.setTime(date);
-      TimeEL.setCalendarInContext(vars, calendar);
-      return dirPathTemplateElEval.eval(vars, dirPathTemplate, String.class);
-    } catch (ELEvalException ex) {
-      throw new StageException(Errors.HADOOPFS_02, dirPathTemplate, ex.getMessage(), ex);
-    }
+    return pathResolver.resolvePath(date, record);
   }
 
   String getExtension() {
@@ -174,96 +146,9 @@ public class RecordWriterManager {
     return finalPath;
   }
 
-  static Date getCeilingDateBasedOnTemplate(String dirPathTemplate, TimeZone timeZone, Date date) {
-    Calendar calendar = null;
-    boolean done = false;
-    if (!dirPathTemplate.contains("${" + CONST_YY + "()}") && !dirPathTemplate.contains(CONST_YYYY)) {
-      done = true;
-    } else {
-      calendar = Calendar.getInstance(timeZone);
-      calendar.setTime(date);
-    }
-    if (!dirPathTemplate.contains("${" + CONST_MM + "()}")) {
-      if (!done) {
-        calendar.set(Calendar.MONTH, calendar.getActualMaximum(Calendar.MONTH));
-        calendar.set(Calendar.DAY_OF_MONTH, calendar.getActualMaximum(Calendar.DAY_OF_MONTH));
-        calendar.set(Calendar.HOUR_OF_DAY, calendar.getActualMaximum(Calendar.HOUR_OF_DAY));
-        calendar.set(Calendar.MINUTE, calendar.getActualMaximum(Calendar.MINUTE));
-        calendar.set(Calendar.SECOND, calendar.getActualMaximum(Calendar.SECOND));
-        calendar.set(Calendar.MILLISECOND, calendar.getActualMaximum(Calendar.MILLISECOND));
-        done = true;
-      }
-    }
-    else {
-      if (done) {
-        throw new IllegalArgumentException(
-            "dir path template has the '${MM()}' token but does not have the '${YY()}' or '${YYYY()}' tokens");
-      }
-    }
-    if (!dirPathTemplate.contains("${" + CONST_DD + "()}")) {
-      if (!done) {
-        calendar.set(Calendar.DAY_OF_MONTH, calendar.getActualMaximum(Calendar.DAY_OF_MONTH));
-        calendar.set(Calendar.HOUR_OF_DAY, calendar.getActualMaximum(Calendar.HOUR_OF_DAY));
-        calendar.set(Calendar.MINUTE, calendar.getActualMaximum(Calendar.MINUTE));
-        calendar.set(Calendar.SECOND, calendar.getActualMaximum(Calendar.SECOND));
-        calendar.set(Calendar.MILLISECOND, calendar.getActualMaximum(Calendar.MILLISECOND));
-        done = true;
-      }
-    } else {
-      if (done) {
-        throw new IllegalArgumentException(
-            "dir path template has the '${DD()}' token but does not have the '${MM()}' token");
-      }
-    }
-    if (!dirPathTemplate.contains("${" + CONST_hh + "()}")) {
-      if (!done) {
-        calendar.set(Calendar.HOUR_OF_DAY, calendar.getActualMaximum(Calendar.HOUR_OF_DAY));
-        calendar.set(Calendar.MINUTE, calendar.getActualMaximum(Calendar.MINUTE));
-        calendar.set(Calendar.SECOND, calendar.getActualMaximum(Calendar.SECOND));
-        calendar.set(Calendar.MILLISECOND, calendar.getActualMaximum(Calendar.MILLISECOND));
-        done = true;
-      }
-    } else {
-      if (done) {
-        throw new IllegalArgumentException(
-            "dir path template has the '${hh()}' token but does not have the '${DD()}' token");
-      }
-    }
-    if (!dirPathTemplate.contains("${" + CONST_mm + "()}")) {
-      if (!done) {
-        calendar.set(Calendar.MINUTE, calendar.getActualMaximum(Calendar.MINUTE));
-        calendar.set(Calendar.SECOND, calendar.getActualMaximum(Calendar.SECOND));
-        calendar.set(Calendar.MILLISECOND, calendar.getActualMaximum(Calendar.MILLISECOND));
-        done = true;
-      }
-    } else {
-      if (done) {
-        throw new IllegalArgumentException(
-            "dir path template has the '${mm()}' token but does not have the '${hh()}' token");
-      }
-    }
-    if (!dirPathTemplate.contains("${" + CONST_ss + "()}")) {
-      if (!done) {
-        calendar.set(Calendar.SECOND, calendar.getActualMaximum(Calendar.SECOND));
-      }
-    } else {
-      if (done) {
-        throw  new IllegalArgumentException(
-            "dir path template has the '${ss()}' token but does not have the '${mm()}' token");
-      }
-    }
-    if (calendar != null) {
-      calendar.set(Calendar.MILLISECOND, calendar.getActualMaximum(Calendar.MILLISECOND));
-      date = calendar.getTime();
-    } else {
-      return null;
-    }
-    return date;
-  }
-
   long getTimeToLiveMillis(Date now, Date recordDate) {
     // we up the record date to the greatest one based on the template
-    recordDate = getCeilingDateBasedOnTemplate(dirPathTemplate, timeZone, recordDate);
+    recordDate = pathResolver.getCeilingDate(recordDate);
     return (recordDate != null) ? recordDate.getTime() + cutOffMillis - now.getTime() : Long.MAX_VALUE;
   }
 
@@ -292,7 +177,7 @@ public class RecordWriterManager {
     RecordWriter writer = null;
     long writerTimeToLive = getTimeToLiveMillis(now, recordDate);
     Path tempPath = getPath(recordDate, record);
-    if (writerTimeToLive > 0) {
+    if (writerTimeToLive >= 0) {
       FileSystem fs = FileSystem.get(hdfsUri, hdfsConf);
       if (fs.exists(tempPath)) {
         Path path = renameToFinalName(fs, tempPath);
@@ -327,32 +212,6 @@ public class RecordWriterManager {
     return over;
   }
 
-  // returns the time procession of the directory template
-  int getTimeIncrement(String template) {
-    if (template.contains("${" + CONST_ss + "()}")) {
-      return Calendar.SECOND;
-    }
-    if (template.contains("${" + CONST_mm + "()}")) {
-      return Calendar.MINUTE;
-    }
-    if (template.contains("${" + CONST_hh + "()}")) {
-      return Calendar.HOUR;
-    }
-    if (template.contains("${" + CONST_DD + "()}")) {
-      return Calendar.DATE;
-    }
-    if (template.contains("${" + CONST_MM + "()}")) {
-      return Calendar.MONTH;
-    }
-    if (template.contains("${" + CONST_YY + "()}")) {
-      return Calendar.YEAR;
-    }
-    if (template.contains("${" + CONST_YYYY + "()}")) {
-      return Calendar.YEAR;
-    }
-    return -1;
-  }
-
   Date incrementDate(Date date, int timeIncrement) {
     Calendar calendar = Calendar.getInstance(timeZone);
     calendar.setTime(date);
@@ -370,9 +229,8 @@ public class RecordWriterManager {
 
   List<String> getGlobs() throws ELEvalException {
     List<String> globs = new ArrayList<>();
-    int timeIncrement = getTimeIncrement(dirPathTemplate);
     Calendar endCalendar = Calendar.getInstance(timeZone);
-    if (timeIncrement > -1) {
+    if (pathResolver.getTimeIncrementUnit() > -1) {
 
       // we need to scan dirs from last batch minus the cutOff time
       Calendar calendar = Calendar.getInstance(timeZone);
@@ -381,11 +239,15 @@ public class RecordWriterManager {
       // adding an extra hour to scan
       calendar.add(Calendar.HOUR, -1);
 
+      // set the calendar to the floor date of the computed start time
+      calendar.setTime(pathResolver.getFloorDate(calendar.getTime()));
+
       LOG.info("Looking for uncommitted files from '{}' onwards", calendar.getTime());
 
       // iterate from last batch time until now at the dir template minimum time precision increments
       // we create a glob for each template time tick
-      for (; calendar.compareTo(endCalendar) < 0; calendar.add(timeIncrement, 1)) {
+      for (; calendar.compareTo(endCalendar) < 0;
+           calendar.add(pathResolver.getTimeIncrementUnit(), pathResolver.getTimeIncrementValue())) {
         globs.add(createGlob(calendar));
       }
     } else {
