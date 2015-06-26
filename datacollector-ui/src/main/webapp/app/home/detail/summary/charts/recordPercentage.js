@@ -8,52 +8,66 @@ angular
     var colorArray = ['#5cb85c', '#FF3333'];
 
     angular.extend($scope, {
-      pieChartData: [],
-
-      getLabel: function(){
-        return function(d) {
-          switch(d.key) {
-            case 'goodRecords':
-              return 'Good Records';
-            case 'errorRecords':
-              return 'Error Records';
+      chartOptions: {
+        chart: {
+          type: 'pieChart',
+          height: 250,
+          x: function(d) {
+            switch(d.key) {
+              case 'goodRecords':
+                return 'Good Records';
+              case 'errorRecords':
+                return 'Error Records';
+            }
+          },
+          y: function(d){
+            return d.value;
+          },
+          showLabels: true,
+          color: function(d, i) {
+            return colorArray[i];
+          },
+          legendColor: function(d, i) {
+            return colorArray[i];
+          },
+          showLegend: true,
+          labelType: "percent",
+          donut: true,
+          labelsOutside: true,
+          transitionDuration: 500,
+          labelThreshold: 0.01,
+          legend: {
+            margin: {
+              left:10,
+              top:10,
+              bottom:10,
+              right:10
+            }
           }
-        };
+        }
       },
-
-      getValue: function() {
-        return function(d){
-          return d.value;
-        };
-      },
-
-      getColor: function() {
-        return function(d, i) {
-          return colorArray[i];
-        };
-      },
-
-      getTooltipContent: function() {
-        return function(key, x, y, e, graph) {
-          return '<p>' + key + '</p><p>' + y.value +  '</p>';
-        };
-      }
+      pieChartData: [
+        {
+          key: "goodRecords",
+          value: 0
+        },
+        {
+          key: "errorRecords",
+          value: 0
+        }
+      ]
     });
 
     $scope.$on('summaryDataUpdated', function() {
       if($scope.summaryMeters.outputRecords && $scope.summaryMeters.errorRecords) {
-        $scope.pieChartData = [
-          {
-            key: "goodRecords",
-            value: $scope.summaryMeters.outputRecords.count
-          },
-          {
-            key: "errorRecords",
-            value: $scope.summaryMeters.errorRecords.count
+        angular.forEach($scope.pieChartData, function(chartData) {
+          if(chartData.key === 'goodRecords') {
+            chartData.value = $scope.summaryMeters.outputRecords.count;
+          } else if(chartData.key === 'errorRecords') {
+            chartData.value = $scope.summaryMeters.errorRecords.count;
           }
-        ];
+        });
       }
-
     });
 
   });

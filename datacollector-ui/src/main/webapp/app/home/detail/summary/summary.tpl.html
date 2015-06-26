@@ -32,7 +32,7 @@
 
 <script type="text/ng-template" id="summaryRecordPercentagePieChartTemplate">
   <div class="col-sm-4"
-       ng-if="selectedType === pipelineConstant.STAGE_INSTANCE"
+       ng-if="selectedType === pipelineConstant.STAGE_INSTANCE && timeRange === 'latest'"
        ng-controller="RecordPercentagePieChartController">
     <div class="panel panel-default">
       <div class="panel-heading">
@@ -43,7 +43,12 @@
         </button>
       </div>
       <div class="panel-body">
-        <nvd3-pie-chart
+
+        <nvd3 ng-if="timeRange === 'latest'"
+              options="chartOptions" data="pieChartData" config="{ refreshDataOnly: true }"></nvd3>
+
+        <!--nvd3-pie-chart
+          ng-if="timeRange === 'latest'"
           data="pieChartData"
           id="RecordProcessedPieChartID"
           height="250"
@@ -61,7 +66,10 @@
           donutLabelsOutside="true"
           margin="{left:20,top:20,bottom:20,right:20}">
           <svg></svg>
-        </nvd3-pie-chart>
+        </nvd3-pie-chart -->
+
+
+
       </div>
     </div>
   </div>
@@ -80,9 +88,18 @@
         </button>
       </div>
       <div class="panel-body">
-        <nvd3-discrete-bar-chart
+
+        <nvd3 ng-if="timeRange === 'latest'"
+              options="chartOptions" data="barChartData" config="{ refreshDataOnly: true }"></nvd3>
+
+
+        <nvd3 ng-if="timeRange !== 'latest'"
+              options="timeSeriesChartOptions" data="timeSeriesChartData" config="{ refreshDataOnly: true }"></nvd3>
+
+        <!--nvd3-discrete-bar-chart
+          ng-if="timeRange === 'latest'"
           data="barChartData"
-          id="RecordProcessedBarChartID"
+          id="RecordCountBarChartID"
           height="250"
           color="getColor()"
           showXAxis="true"
@@ -93,7 +110,30 @@
           yAxisTickFormat="getYAxisLabel()"
           valueformat="valueFormatFunction()"
           margin="{left:20,top:20,bottom:40,right:20}">
-        </nvd3-discrete-bar-chart>
+        </nvd3-discrete-bar-chart-->
+
+
+        <!--nvd3-line-chart
+          ng-if="timeRange !== 'latest'"
+          objectequality="true"
+          data="timeSeriesChartData"
+          id="RecordCountTimeSeriesID"
+          xAxisTickFormat="dateFormat()"
+          yAxisTickFormat="formatValue()"
+          x="xValue()"
+          y="yValue()"
+          height="250"
+          showXAxis="true"
+          showYAxis="true"
+          showLegend="true"
+          tooltips="true"
+          color="getColor()"
+          legendColor="getColor()"
+          margin="{left:50,top:20,bottom:40,right:40}">
+          <svg></svg>
+        </nvd3-line-chart-->
+
+
       </div>
     </div>
   </div>
@@ -111,7 +151,17 @@
         </button>
       </div>
       <div class="panel-body">
-        <nvd3-multi-bar-chart
+
+        <nvd3 ng-if="timeRange === 'latest'"
+              options="chartOptions" data="chartData" config="{ refreshDataOnly: true }"></nvd3>
+
+
+        <nvd3 ng-if="timeRange !== 'latest'"
+              options="timeSeriesChartOptions" data="timeSeriesChartData" config="{ refreshDataOnly: true }"></nvd3>
+
+
+        <!--nvd3-multi-bar-chart
+          ng-if="timeRange === 'latest'"
           data="chartData"
           id="MeterBarChartId"
           height="250"
@@ -129,7 +179,30 @@
           tooltips="true"
           tooltipcontent="getTooltipContent()">
           <svg></svg>
-        </nvd3-multi-bar-chart>
+        </nvd3-multi-bar-chart-->
+
+        <!--nvd3-line-chart
+          ng-if="timeRange !== 'latest'"
+          objectequality="true"
+          data="timeSeriesChartData"
+          id="MeterBarChartTimeSeriesID"
+          xAxisTickFormat="dateFormat()"
+          yAxisTickFormat="formatValue()"
+          yaxislabel="{{'home.detailPane.recordsPerSecond' | translate}}"
+          yaxislabeldistance="40"
+          x="xValue()"
+          y="yValue()"
+          height="250"
+          showXAxis="true"
+          showYAxis="true"
+          showLegend="true"
+          tooltips="true"
+          color="getColor()"
+          legendColor="getColor()"
+          margin="{left:50,top:20,bottom:40,right:40}">
+          <svg></svg>
+        </nvd3-line-chart-->
+
       </div>
     </div>
   </div>
@@ -150,7 +223,17 @@
         </button>
       </div>
       <div class="panel-body">
-        <nvd3-discrete-bar-chart
+
+        <nvd3 ng-if="timeRange === 'latest'"
+              options="chartOptions" data="chartData" config="{ refreshDataOnly: true }"></nvd3>
+
+
+        <nvd3 ng-if="timeRange !== 'latest'"
+              options="timeSeriesChartOptions" data="timeSeriesChartData" config="{ refreshDataOnly: true }"></nvd3>
+
+
+        <!--nvd3-discrete-bar-chart
+          ng-if="timeRange === 'latest'"
           data="chartData"
           id="BatchCountBarChartID"
           height="250"
@@ -164,7 +247,30 @@
           tooltips="true"
           tooltipcontent="getTooltipContent()"
           margin="{left:50,top:20,bottom:40,right:20}">
-        </nvd3-discrete-bar-chart>
+        </nvd3-discrete-bar-chart-->
+
+        <!--nvd3-line-chart
+          ng-if="timeRange !== 'latest'"
+          objectequality="true"
+          data="timeSeriesChartData"
+          id="BatchCountBarChartTimeSeriesID"
+          xAxisTickFormat="dateFormat()"
+          yAxisTickFormat="formatValue()"
+          yaxislabel="{{'home.detailPane.batchesPerSecond' | translate}}"
+          yaxislabeldistance="40"
+          x="xValue()"
+          y="yValue()"
+          height="250"
+          showXAxis="true"
+          showYAxis="true"
+          showLegend="true"
+          tooltips="true"
+          color="getColor()"
+          legendColor="getColor()"
+          margin="{left:50,top:20,bottom:40,right:40}">
+          <svg></svg>
+        </nvd3-line-chart-->
+
       </div>
     </div>
   </div>
@@ -173,7 +279,7 @@
 
 <script type="text/ng-template" id="summaryRecordHistogramTemplate">
   <div class="col-sm-4"
-       ng-if="common.sdcExecutionMode !== pipelineConstant.CLUSTER"
+       ng-if="common.sdcExecutionMode !== pipelineConstant.CLUSTER && timeRange === 'latest'"
        ng-controller="HistogramChartController">
     <div class="panel panel-default">
       <div class="panel-heading">
@@ -184,7 +290,13 @@
         </button>
       </div>
       <div class="panel-body">
-        <nvd3-multi-bar-horizontal-chart
+
+
+        <nvd3 ng-if="timeRange === 'latest'"
+              options="chartOptions" data="timerData" config="{ refreshDataOnly: true }"></nvd3>
+
+        <!--nvd3-multi-bar-horizontal-chart
+          ng-if="timeRange === 'latest'"
           data="timerData"
           id="histogramMixChartID"
           height="250"
@@ -198,7 +310,8 @@
           tooltipcontent="getTooltipContent()"
           margin="{left:65,top:70,bottom:20,right:20}">
           <svg></svg>
-        </nvd3-multi-bar-horizontal-chart>
+        </nvd3-multi-bar-horizontal-chart-->
+
       </div>
     </div>
   </div>
@@ -207,7 +320,7 @@
 
 <script type="text/ng-template" id="summaryRecordsProcessedTemplate">
   <div class="col-sm-4"
-       ng-if="common.sdcExecutionMode !== pipelineConstant.CLUSTER"
+       ng-if="common.sdcExecutionMode !== pipelineConstant.CLUSTER && timeRange === 'latest'"
        ng-controller="BatchTimerChartController">
     <div class="panel panel-default">
       <div class="panel-heading">
@@ -218,7 +331,13 @@
         </button>
       </div>
       <div class="panel-body">
-        <nvd3-multi-bar-horizontal-chart
+
+        <nvd3 ng-if="timeRange === 'latest'"
+              options="chartOptions" data="timerData" config="{ refreshDataOnly: true }"></nvd3>
+
+
+        <!--nvd3-multi-bar-horizontal-chart
+          ng-if="timeRange === 'latest'"
           data="timerData"
           id="timerDataBatchTimerChartID"
           height="250"
@@ -229,7 +348,8 @@
           showValues="true"
           margin="{left:50,top:70,bottom:20,right:20}">
           <svg></svg>
-        </nvd3-multi-bar-horizontal-chart>
+        </nvd3-multi-bar-horizontal-chart-->
+
       </div>
 
     </div>
@@ -249,12 +369,21 @@
         </button>
       </div>
       <div class="panel-body">
-        <nvd3-line-chart
+
+        <nvd3 ng-if="timeRange === 'latest'"
+              options="chartOptions" data="lineChartData" config="{ refreshDataOnly: true }"></nvd3>
+
+
+        <nvd3 ng-if="timeRange !== 'latest'"
+              options="timeSeriesChartOptions" data="timeSeriesChartData" config="{ refreshDataOnly: true }"></nvd3>
+
+        <!--nvd3-line-chart
+          ng-if="timeRange === 'latest'"
           objectequality="true"
           data="lineChartData"
           id="MemoryConsumedLineChartID"
           height="250"
-          isArea="false"
+          isArea="true"
           xAxisTickFormat="xAxisTickFormat"
           yAxisTickFormat="yAxisTickFormat"
           showXAxis="true"
@@ -267,7 +396,30 @@
           tooltipcontent="getTooltipContent()"
           margin="{left:50,top:70,bottom:20,right:20}">
           <svg></svg>
-        </nvd3-line-chart>
+        </nvd3-line-chart-->
+
+
+        <!--nvd3-line-chart
+          ng-if="timeRange !== 'latest'"
+          objectequality="true"
+          data="timeSeriesChartData"
+          id="MemoryConsumedLineChartTimeSeriesID"
+          xAxisTickFormat="dateFormat()"
+          yAxisTickFormat="sizeFormat()"
+          x="xValue()"
+          y="yValue()"
+          height="{{(selectedType === pipelineConstant.STAGE_INSTANCE) ? '250' : '500'}}"
+          showXAxis="true"
+          showYAxis="true"
+          showLegend="true"
+          tooltips="true"
+          color="getColor()"
+          legendColor="getColor()"
+          margin="{left:50,top:20,bottom:40,right:40}">
+          <svg></svg>
+        </nvd3-line-chart-->
+
+
       </div>
     </div>
   </div>
@@ -411,7 +563,16 @@
       </div>
       <div class="panel-body">
 
-        <nvd3-pie-chart
+        <nvd3 ng-if="timeRange === 'latest'"
+              options="chartOptions" data="chartData" config="{ refreshDataOnly: true }"></nvd3>
+
+
+        <nvd3 ng-if="timeRange !== 'latest'"
+              options="timeSeriesChartOptions" data="timeSeriesChartData" config="{ refreshDataOnly: true }"></nvd3>
+
+
+        <!--nvd3-pie-chart
+          ng-if="timeRange === 'latest'"
           data="chartData"
           id="SummaryAllStageBatchTimerBarChartTemplateID"
           height="500"
@@ -427,14 +588,34 @@
           donutLabelsOutside="true"
           margin="{left:20,top:0,bottom:20,right:20}">
           <svg></svg>
-        </nvd3-pie-chart>
+        </nvd3-pie-chart-->
 
-        <ul class="properties">
+        <ul class="properties" ng-if="timeRange === 'latest'">
           <li>
             <span class="properties-label"> Total:</span>
             <span class="properties-value">{{totalValue}} seconds</span>
           </li>
         </ul>
+
+
+        <!--nvd3-line-chart
+          ng-if="timeRange !== 'latest'"
+          objectequality="true"
+          data="timeSeriesChartData"
+          id="SummaryAllStageBatchTimerBarChartTemplateTimeSeriesID"
+          xAxisTickFormat="dateFormat()"
+          yAxisTickFormat="formatValue()"
+          x="xValue()"
+          y="yValue()"
+          height="500"
+          isArea="false"
+          showXAxis="true"
+          showYAxis="true"
+          showLegend="true"
+          tooltips="true"
+          margin="{left:50,top:20,bottom:40,right:40}">
+          <svg></svg>
+        </nvd3-line-chart-->
 
       </div>
     </div>
@@ -454,7 +635,17 @@
         </button>
       </div>
       <div class="panel-body">
-        <nvd3-pie-chart
+
+        <nvd3 ng-if="timeRange === 'latest'"
+              options="chartOptions" data="chartData" config="{ refreshDataOnly: true }"></nvd3>
+
+
+        <nvd3 ng-if="timeRange !== 'latest'"
+              options="timeSeriesChartOptions" data="timeSeriesChartData" config="{ refreshDataOnly: true }"></nvd3>
+
+
+        <!--nvd3-pie-chart
+          ng-if="timeRange === 'latest'"
           data="chartData"
           id="SummaryAllStageMemoryConsumedBarChartTemplateID"
           height="500"
@@ -471,14 +662,33 @@
           donutLabelsOutside="true"
           margin="{left:20,top:0,bottom:20,right:20}">
           <svg></svg>
-        </nvd3-pie-chart>
+        </nvd3-pie-chart-->
 
-        <ul class="properties">
+        <ul class="properties" ng-if="timeRange === 'latest'">
           <li>
             <span class="properties-label"> Total:</span>
             <span class="properties-value">{{totalValue}} MB</span>
           </li>
         </ul>
+
+        <!--nvd3-line-chart
+          ng-if="timeRange !== 'latest'"
+          objectequality="true"
+          data="timeSeriesChartData"
+          id="SummaryAllStageMemoryConsumedBarChartTemplateTimeSeriesID"
+          xAxisTickFormat="dateFormat()"
+          yAxisTickFormat="sizeFormat()"
+          x="xValue()"
+          y="yValue()"
+          height="500"
+          isArea="false"
+          showXAxis="true"
+          showYAxis="true"
+          showLegend="true"
+          tooltips="true"
+          margin="{left:50,top:20,bottom:40,right:40}">
+          <svg></svg>
+        </nvd3-line-chart-->
 
       </div>
     </div>

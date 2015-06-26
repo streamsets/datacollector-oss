@@ -109,6 +109,28 @@
             ng-click="onMaximizeDetailPane()"></span>
     </div>
 
+
+
+    <div class="btn-group pull-right detail-time-range-dropdown"
+         ng-if="common.isMetricsTimeSeriesEnabled && isPipelineRunning && activeDetailTab.name == 'summary'">
+
+      <button class="btn btn-link dropdown-toggle" type="button" data-toggle="dropdown">
+        <i class="fa fa-clock-o"></i>
+        <span>{{getTimeRangeLabel()}}</span>
+        <span class="caret"></span>
+      </button>
+
+      <ul class="dropdown-menu pull-left" role="menu" aria-labelledby="dropdownMenu1">
+
+        <li role="presentation" ng-repeat="timeOption in timeOptions">
+          <a role="menuitem" tabindex="-1" href="#"
+             ng-click="changeTimeRange(timeOption)">{{'home.detailPane.' + timeOption | translate}}</a>
+        </li>
+
+      </ul>
+    </div>
+
+
   </div>
 
   <div class="panel-body">

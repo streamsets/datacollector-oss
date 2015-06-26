@@ -12,7 +12,7 @@ angular
     'dataCollectorApp.commonDirectives',
     'ui.bootstrap',
     'angularMoment',
-    'nvd3ChartDirectives',
+    'nvd3',
     'dataCollectorApp.filters',
     'ngSanitize',
     'ui.select',

@@ -69,7 +69,10 @@
                 </li>
               </ul>
 
-              <nvd3-multi-bar-horizontal-chart
+              <nvd3 options="percentilesChartOptions" data="errorRecordsPercentilesData"
+                    config="{ refreshDataOnly: true }"></nvd3>
+
+              <!--nvd3-multi-bar-horizontal-chart
                 data="errorRecordsPercentilesData"
                 id="stageErrorRecordsPercentilesDataID"
                 height="250"
@@ -80,7 +83,7 @@
                 showValues="true"
                 margin="{left:50,top:70,bottom:20,right:20}">
                 <svg></svg>
-              </nvd3-multi-bar-horizontal-chart>
+              </nvd3-multi-bar-horizontal-chart-->
             </div>
           </div>
         </div>
@@ -146,7 +149,11 @@
                 </li>
               </ul>
 
-              <nvd3-multi-bar-horizontal-chart
+              <nvd3 options="percentilesChartOptions" data="errorsPercentilesData"
+                    config="{ refreshDataOnly: true }"></nvd3>
+
+
+              <!--nvd3-multi-bar-horizontal-chart
                 data="errorsPercentilesData"
                 id="stageErrorsPercentilesDataID"
                 height="250"
@@ -157,7 +164,7 @@
                 showValues="true"
                 margin="{left:50,top:70,bottom:20,right:20}">
                 <svg></svg>
-              </nvd3-multi-bar-horizontal-chart>
+              </nvd3-multi-bar-horizontal-chart-->
             </div>
           </div>
         </div>

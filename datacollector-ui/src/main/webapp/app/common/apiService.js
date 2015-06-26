@@ -649,5 +649,21 @@ angular.module('dataCollectorApp.common')
       }
     };
 
+
+    api.timeSeries = {
+      /**
+       * Fetch Time Series Data
+       *
+       * @param query
+       */
+      getTimeSeriesData: function(query) {
+        var url = apiBase + '/pipeline/metrics/timeSeries?q=' +  query;
+        return $http({
+          method: 'GET',
+          url: url
+        });
+      }
+    };
+
     return api;
   });

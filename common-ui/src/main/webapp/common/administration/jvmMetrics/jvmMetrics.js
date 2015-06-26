@@ -23,7 +23,53 @@ angular
   .controller('JVMMetricsController', function ($scope, $rootScope, $timeout, api, configuration,
                                                 Analytics, visibilityBroadcaster, $modal) {
     var jvmMetricsTimer,
-      destroyed = false;
+      destroyed = false,
+      dateFormat = function(d) {
+        return d3.time.format('%H:%M:%S')(new Date(d));
+      },
+      sizeFormat = function(d) {
+        var mbValue = d / 1000000;
+        return mbValue.toFixed(0) + ' MB';
+      },
+      cpuPercentageFormat = function(d){
+        var mbValue = d * 1000/ 10.0;
+        return mbValue.toFixed(1) + ' %';
+      },
+      formatValue = function(d, chart) {
+        if(chart.yAxisTickFormat) {
+          return chart.yAxisTickFormat(d);
+        } else {
+          return d;
+        }
+      },
+      defaultChartOptions = {
+        chart: {
+          type: 'lineChart',
+          height: 250,
+          showLabels: true,
+          duration: 0,
+          x:function(d){
+            return (new Date(d[0])).getTime();
+          },
+          y: function(d) {
+            return d[1];
+          },
+          showLegend: true,
+          xAxis: {
+            tickFormat: dateFormat
+          },
+          yAxis: {
+            //tickFormat: sizeFormat
+          },
+          margin: {
+            left: 60,
+            top: 20,
+            bottom: 30,
+            right: 30
+          },
+          useInteractiveGuideline: true
+        }
+      };
 
     configuration.init().then(function() {
       if(configuration.isAnalyticsEnabled()) {
@@ -34,6 +80,14 @@ angular
     angular.extend($scope, {
       metrics: {},
       jmxList: [],
+
+      getChartOptions: function(metricChartObject) {
+        var chartOptions = angular.copy(defaultChartOptions);
+        if(metricChartObject.yAxisTickFormat) {
+          chartOptions.chart.yAxis.tickFormat = metricChartObject.yAxisTickFormat;
+        }
+        return chartOptions;
+      },
 
       dateFormat: function() {
         return function(d){
@@ -123,7 +177,7 @@ angular
         name: 'cpuUsage',
         label: 'CPU Usage',
         xAxisTickFormat: $scope.dateFormat(),
-        yAxisTickFormat: $scope.cpuPercentageFormat(),
+        yAxisTickFormat: cpuPercentageFormat,
         values: [
           {
             name: 'java.lang:type=OperatingSystem',
@@ -189,7 +243,7 @@ angular
         name: 'heapMemoryUsage',
         label: 'Heap Memory Usage',
         xAxisTickFormat: $scope.dateFormat(),
-        yAxisTickFormat: $scope.sizeFormat(),
+        yAxisTickFormat: sizeFormat,
         values: [
           {
             name: 'metrics:name=jvm.memory.heap.max',
@@ -215,7 +269,7 @@ angular
         name: 'nonHeapMemoryUsage',
         label: 'Non-Heap Memory Usage',
         xAxisTickFormat: $scope.dateFormat(),
-        yAxisTickFormat: $scope.sizeFormat(),
+        yAxisTickFormat: sizeFormat,
         values: [
           {
             name: 'metrics:name=jvm.memory.non-heap.max',
@@ -241,7 +295,7 @@ angular
         name: 'psEdenSpaceHeapMemoryUsage',
         label: 'Memory Pool "PS Eden Space"',
         xAxisTickFormat: $scope.dateFormat(),
-        yAxisTickFormat: $scope.sizeFormat(),
+        yAxisTickFormat: sizeFormat,
         values: [
           {
             name: 'java.lang:type=MemoryPool,name=[a-zA-Z ]*Eden Space',
@@ -267,7 +321,7 @@ angular
         name: 'psSurvivorSpaceHeapMemoryUsage',
         label: 'Memory Pool "PS Survivor Space"',
         xAxisTickFormat: $scope.dateFormat(),
-        yAxisTickFormat: $scope.sizeFormat(),
+        yAxisTickFormat: sizeFormat,
         values: [
           {
             name: 'java.lang:type=MemoryPool,name=[a-zA-Z ]*Survivor Space',
@@ -293,7 +347,7 @@ angular
         name: 'psOldGenHeapMemoryUsage',
         label: 'Memory Pool "PS Old Gen"',
         xAxisTickFormat: $scope.dateFormat(),
-        yAxisTickFormat: $scope.sizeFormat(),
+        yAxisTickFormat: sizeFormat,
         values: [
           {
             name: 'java.lang:type=MemoryPool,name=PS Old Gen|java.lang:type=MemoryPool,name=Tenured Gen',
@@ -319,7 +373,7 @@ angular
         name: 'psPermGenHeapMemoryUsage',
         label: 'Memory Pool "PS Perm Gen"',
         xAxisTickFormat: $scope.dateFormat(),
-        yAxisTickFormat: $scope.sizeFormat(),
+        yAxisTickFormat: sizeFormat,
         values: [
           {
             name: 'java.lang:type=MemoryPool,name=[a-zA-Z ]*Perm Gen',
@@ -345,7 +399,7 @@ angular
         name: 'psCodeCacheHeapMemoryUsage',
         label: 'Memory Pool "Code Cache"',
         xAxisTickFormat: $scope.dateFormat(),
-        yAxisTickFormat: $scope.sizeFormat(),
+        yAxisTickFormat: sizeFormat,
         values: [
           {
             name: 'java.lang:type=MemoryPool,name=Code Cache',

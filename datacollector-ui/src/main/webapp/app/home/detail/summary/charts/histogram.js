@@ -21,6 +21,10 @@ angular
       };
 
 
+    var getColor = function(d) {
+      return d.color;
+    };
+
     angular.forEach(label, function(value, key) {
       $translate('home.detailPane.summaryTab.histogram.' + key).then(function(translation) {
         label[key] = [translation];
@@ -28,17 +32,41 @@ angular
     });
 
     angular.extend($scope, {
-      histogramData: [],
+      chartOptions: {
+        chart: {
+          type: 'multiBarHorizontalChart',
+          stacked: true,
+          height: 250,
+          showLabels: true,
+          duration: 0,
+          x: function(d) {
+            return d[0];
+          },
+          y: function(d) {
+            return d[1];
+          },
+          color: getColor,
+          showLegend: true,
+          staggerLabels: true,
+          showValues: false,
+          yAxis: {
+            tickValues: 0
+          },
+          valueFormat: $scope.formatValue(),
+          margin: {
+            left: 55,
+            top: 20,
+            bottom: 20,
+            right: 20
+          },
+          reduceXTicks: false,
+          showControls: false
+        }
+      },
       timerData:[],
 
       init: function(type) {
         recordType = type;
-      },
-
-      getColor: function() {
-        return function(d) {
-          return d.color;
-        };
       },
 
       getTooltipContent: function() {
@@ -50,9 +78,10 @@ angular
 
 
     $scope.$on('summaryDataUpdated', function() {
-      var list = [];
-
-      angular.forEach($scope.histogramList, function(recordType) {
+      var list = $scope.timerData,
+        listBackup = angular.copy($scope.timerData);
+      list.splice(0, list.length);
+      angular.forEach($scope.histogramList, function(recordType, index) {
         var data = $scope.summaryHistograms[recordType];
         if(data) {
           list.push({
@@ -67,13 +96,11 @@ angular
               ["75%" , data.p75 ],
               ["50%" , data.p50 ]
             ],
-            color: color[recordType]
+            color: color[recordType],
+            disabled: (listBackup && listBackup.length > index) ? listBackup[index].disabled : false
           });
         }
       });
-
-      $scope.timerData = list;
-
     });
 
   });

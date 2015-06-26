@@ -5,18 +5,103 @@
 angular
   .module('dataCollectorApp.home')
 
-  .controller('BadRecordsController', function ($scope, $rootScope, _, api, pipelineConstant) {
+  .controller('BadRecordsController', function ($scope, $rootScope, _, api, pipelineConstant, $filter) {
+
+    var formatValue = function(d){
+      return $filter('abbreviateNumber')(d);
+    };
 
     angular.extend($scope, {
+      percentilesChartOptions: {
+        chart: {
+          type: 'multiBarHorizontalChart',
+          stacked: true,
+          height: 250,
+          showLabels: true,
+          duration: 0,
+          x: function(d) {
+            return d[0];
+          },
+          y: function(d) {
+            return d[1];
+          },
+          showLegend: true,
+          staggerLabels: true,
+          showValues: false,
+          yAxis: {
+            tickValues: 0
+          },
+          margin: {
+            left: 55,
+            top: 20,
+            bottom: 20,
+            right: 20
+          },
+          reduceXTicks: false,
+          showControls: false
+        }
+      },
+
+      barChartOptions: {
+        chart: {
+          type: 'discreteBarChart',
+          showControls: false,
+          height: 250,
+          showLabels: true,
+          duration: 0,
+          x: function(d) {
+            return d[0];
+          },
+          y: function(d) {
+            return d[1];
+          },
+          staggerLabels: true,
+          showValues: true,
+          yAxis: {
+            tickValues: 0
+          },
+          margin: {
+            left: 40,
+            top: 20,
+            bottom: 40,
+            right: 20
+          },
+          reduceXTicks: false
+        }
+      },
+
+
       showBadRecordsLoading: false,
       showErrorMessagesLoading: false,
-      badRecordsChartData: [],
-      errorMessagesChartData: [],
+      badRecordsChartData: [{
+        key: "Bad Records",
+        values: []
+      }],
+      errorMessagesChartData: [{
+        key: "Error Messages",
+        values: []
+      }],
       errorMessagesCount: 0,
       errorMessages: [],
       errorRecordsCount: 0,
       expandAllErrorData: false,
       stageBadRecords:[],
+
+      errorRecordsPercentilesData: [
+        {
+          key: 'Error Records',
+          values: [],
+          color: '#FF3333'
+        }
+      ],
+
+      errorsPercentilesData: [
+        {
+          key: 'Stage Errors',
+          values: [],
+          color: '#d62728'
+        }
+      ],
 
       onExpandAllErrorData: function() {
         $scope.expandAllErrorData = true;
@@ -161,25 +246,15 @@ angular
             }
           });
 
-          $scope.badRecordsChartData = [{
-            key: "Bad Records",
-            values: badRecordsArr
-          }];
-
-          $scope.errorMessagesChartData = [{
-            key: "Error Messages",
-            values: errorMessagesArr
-          }];
+          $scope.badRecordsChartData[0].values = badRecordsArr;
+          $scope.errorMessagesChartData[0].values = errorMessagesArr;
 
           errorRecordsHistogram = pipelineMetrics.histograms['pipeline.errorRecordsPerBatch.histogramM5'];
           errorsHistogram = pipelineMetrics.histograms['pipeline.errorsPerBatch.histogramM5'];
         }
 
         if(errorRecordsHistogram) {
-          $scope.errorRecordsPercentilesData = [
-            {
-              key: 'Error Records',
-              values: [
+          $scope.errorRecordsPercentilesData[0].values = [
                 ["Mean" , errorRecordsHistogram.mean ],
                 ["Std Dev" , errorRecordsHistogram.stddev ],
                 ["99.9%" , errorRecordsHistogram.p999 ],
@@ -188,18 +263,12 @@ angular
                 ["95%" , errorRecordsHistogram.p95 ],
                 ["75%" , errorRecordsHistogram.p75 ],
                 ["50%" , errorRecordsHistogram.p50 ]
-              ],
-              color: '#FF3333'
-            }
-          ];
+              ];
         }
 
 
         if(errorsHistogram) {
-          $scope.errorsPercentilesData = [
-            {
-              key: 'Stage Errors',
-              values: [
+          $scope.errorsPercentilesData[0].values = [
                 ["Mean" , errorsHistogram.mean ],
                 ["Std Dev" , errorsHistogram.stddev ],
                 ["99.9%" , errorsHistogram.p999 ],
@@ -208,10 +277,7 @@ angular
                 ["95%" , errorsHistogram.p95 ],
                 ["75%" , errorsHistogram.p75 ],
                 ["50%" , errorsHistogram.p50 ]
-              ],
-              color: '#d62728'
-            }
-          ];
+              ];
         }
 
       }

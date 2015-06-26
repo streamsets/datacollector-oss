@@ -57,11 +57,6 @@ angular
         template:'app/home/detail/rules/rules.tpl.html',
         iconClass: 'fa fa-list',
         helpId: 'metric-rules-tab'
-      },
-      emailIdsTab = {
-        name:'emailIDs',
-        template:'app/home/detail/rules/emailIDs/emailIDs.tpl.html',
-        iconClass: 'fa fa-envelope-o'
       };
 
     /**
@@ -119,6 +114,85 @@ angular
 
     angular.extend($scope, {
       detailPaneTabs: getDetailTabsList(pipelineConstant.PIPELINE, false),
+      timeOptions: [
+        'latest',
+        'last5m',
+        'last15m',
+        'last1h',
+        'last6h',
+        'last12h',
+        'last24h',
+        'last2d',
+        'last7d',
+        'last30d',
+        'custom'
+      ],
+      timeRange: 'latest',
+      customFromTime: null,
+      customToTime: null,
+
+
+      /**
+       * Returns label for Time Range
+       */
+      getTimeRangeLabel: function() {
+        var timeRange = $scope.timeRange;
+        switch(timeRange) {
+          case 'latest':
+            return 'Latest';
+          case 'last5m':
+            return '5 minutes ago to a few seconds ago';
+          case 'last15m':
+            return '15 minutes ago to a few seconds ago';
+          case 'last1h':
+            return 'an hour ago to a few seconds ago';
+          case 'last6h':
+            return '6 hours ago to a few seconds ago';
+          case 'last12h':
+            return '12 hours ago to a few seconds ago';
+          case 'last24h':
+            return 'a day ago to a few seconds ago';
+          case 'last2d':
+            return '2 days ago to a few seconds ago';
+          case 'last7d':
+            return '7 days ago to a few seconds ago';
+          case 'last30d':
+            return 'a month ago to a few seconds ago';
+          case 'custom':
+            return '2 days ago to a few seconds ago';
+        }
+      },
+
+      /**
+       * Returns label for Time Range
+       */
+      getTimeRangeWhereCondition: function() {
+        var timeRange = $scope.timeRange;
+        switch(timeRange) {
+          case 'last5m':
+            return '(time > now() - 5m)';
+          case 'last15m':
+            return '(time > now() - 15m)';
+          case 'last1h':
+            return '(time > now() - 1h)';
+          case 'last6h':
+            return '(time > now() - 6h)';
+          case 'last12h':
+            return '(time > now() - 12h)';
+          case 'last24h':
+            return '(time > now() - 24h)';
+          case 'last2d':
+            return '(time > now() - 1d)';
+          case 'last7d':
+            return '(time > now() - 7d)';
+          case 'last30d':
+            return '(time > now() - 30d)';
+        }
+      },
+
+      changeTimeRange: function(timeRange) {
+        $scope.timeRange = timeRange;
+      },
 
       /**
        * Returns label for Detail Pane
@@ -251,6 +325,7 @@ angular
        */
       onTabSelect: function(tab) {
         $scope.trackEvent(pipelineConstant.TAB_CATEGORY, pipelineConstant.SELECT_ACTION, tab.name, 1);
+        $scope.activeDetailTab = tab;
       }
     });
 
@@ -270,10 +345,10 @@ angular
       }
 
       //To fix NVD3 JS errors - https://github.com/novus/nvd3/pull/396
-      window.nv.charts = {};
+      /*window.nv.charts = {};
       window.nv.graphs = [];
       window.nv.logs = {};
-      window.onresize = null;
+      window.onresize = null;*/
     });
 
     $scope.$watch('isPipelineRunning', function(newValue) {

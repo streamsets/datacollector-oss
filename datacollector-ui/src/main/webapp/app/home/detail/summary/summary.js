@@ -5,7 +5,7 @@
 angular
   .module('dataCollectorApp.home')
 
-  .controller('SummaryController', function ($scope, $rootScope, $modal, $http, pipelineConstant, authService) {
+  .controller('SummaryController', function ($scope, $rootScope, $modal, $http, pipelineConstant, $filter, authService) {
     var chartList = [
       {
         label: 'home.detailPane.summaryTab.slaveSDCInstances',
@@ -69,7 +69,9 @@ angular
         'Output 4': '#85BB65',
         'Output 5': '#03C03C',
         'Output 6': '#138808',
-        'Output 7': '#556B2F'
+        'Output 7': '#556B2F',
+        'Batch Throughput': '#5cb85c',
+        'Total': '#5cb85c'
       },
       stageNameToLabelMap: _.reduce($scope.pipelineConfig.stages, function(nameToLabelMap, stageInstance){
         nameToLabelMap[stageInstance.instanceName] = stageInstance.uiInfo.label;
@@ -100,6 +102,34 @@ angular
 
       removeChart: function(chart, index) {
         $rootScope.$storage.summaryPanelList.splice(index, 1);
+      },
+
+      dateFormat: function() {
+        return function(d){
+          var timeRange = $scope.timeRange;
+          switch(timeRange) {
+            case 'last5m':
+            case 'last15m':
+            case 'last1h':
+            case 'last6h':
+            case 'last12h':
+              return d3.time.format('%H:%M')(new Date(d));
+            case 'last24h':
+            case 'last2d':
+              return d3.time.format('%m/%d %H:%M')(new Date(d));
+            case 'last7d':
+            case 'last30d':
+              return d3.time.format('%m/%d')(new Date(d));
+            default:
+              return d3.time.format('%H:%M:%S')(new Date(d));
+          }
+        };
+      },
+
+      formatValue: function() {
+        return function(d){
+          return $filter('abbreviateNumber')(d);
+        };
       }
     });
 

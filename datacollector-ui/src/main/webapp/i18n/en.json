@@ -227,6 +227,7 @@
         "stageType": "Stage Type",
         "stageVersion": "Stage Version"
       },
+      "custom": "Custom",
       "dataRules": "Data Rules",
       "dataSummaryTab": {
         "noRulesMessage": "No active Data Rules for this stream. Add Rules in Data Rules Tab for Inspecting Data.",
@@ -244,6 +245,16 @@
       },
       "info": "Info",
       "inspectingData": "Inspecting Data",
+      "last5m": "Last 5m",
+      "last15m": "Last 15m",
+      "last1h": "Last 1h",
+      "last6h": "Last 6h",
+      "last12h": "Last 12h",
+      "last24h": "Last 24h",
+      "last2d": "Last 2d",
+      "last7d": "Last 7d",
+      "last30d": "Last 30d",
+      "latest": "Latest",
       "metricAlertRules": "Metric Rules",
       "monitoring": "Monitoring",
       "monitoringJSONData": "Pipeline Monitoring",
@@ -343,6 +354,12 @@
         "stageBatchProcessingTimer": "Stage Batch Processing Timer (in seconds)",
         "stageBatchProcessingTimerYAxis": "( Mean Timer Percentiles )",
         "stageMemoryConsumed": "Stage Heap Memory Usage (in MB)"
+      },
+      "timeSeries": "Time Series",
+      "timeSeriesTab": {
+        "memoryConsumed": "Heap Memory Usage",
+        "recordCount": "Record Count (since last startup)",
+        "recordThroughput": "Record Throughput"
       }
     },
     "previewPane": {

@@ -13,7 +13,8 @@ angular.module('dataCollectorApp.common')
       HTTP_AUTHENTICATION = 'http.authentication',
       SDC_EXECUTION_MODE = 'sdc.execution.mode',
       CALLBACK_SERVER_URL = 'callback.server.url',
-      UI_UNDO_LIMIT = 'ui.undo.limit';
+      UI_UNDO_LIMIT = 'ui.undo.limit',
+      METRICS_TIME_SERIES_ENABLE = 'metrics.timeSeries.enable';
 
     this.initializeDefer = undefined;
     this.config = undefined;
@@ -155,6 +156,17 @@ angular.module('dataCollectorApp.common')
         return self.config[UI_UNDO_LIMIT];
       }
       return 10;
+    };
+
+    /*
+     * Returns metrics.timeSeries.enable flag value
+     * @returns {*}
+     */
+    this.isMetricsTimeSeriesEnabled = function() {
+      if(self.config) {
+        return self.config[METRICS_TIME_SERIES_ENABLE] === 'true';
+      }
+      return true;
     };
 
   });

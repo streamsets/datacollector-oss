@@ -3,7 +3,11 @@
     <div class="panel panel-default">
       <div class="panel-heading" translate="home.detailPane.badRecordsTab.badRecordsHistogram">Records in Error Histogram</div>
       <div class="panel-body">
-        <nvd3-multi-bar-horizontal-chart
+
+        <nvd3 options="percentilesChartOptions" data="errorRecordsPercentilesData"
+              config="{ refreshDataOnly: true }"></nvd3>
+
+        <!--nvd3-multi-bar-horizontal-chart
           data="errorRecordsPercentilesData"
           id="errorRecordsPercentilesDataID"
           height="250"
@@ -14,7 +18,7 @@
           showValues="true"
           margin="{left:50,top:70,bottom:20,right:20}">
           <svg></svg>
-        </nvd3-multi-bar-horizontal-chart>
+        </nvd3-multi-bar-horizontal-chart -->
       </div>
     </div>
   </div>
@@ -24,8 +28,11 @@
       <div class="panel-heading" translate="home.detailPane.badRecordsTab.badRecordsCounts">Bad Records Count</div>
       <div class="panel-body">
 
+        <nvd3 options="barChartOptions" data="badRecordsChartData"
+              config="{ refreshDataOnly: true }"></nvd3>
+
         <!--  margin="{left:100,top:20,bottom:20,right:20}"-->
-        <nvd3-discrete-bar-chart
+        <!--nvd3-discrete-bar-chart
           data="badRecordsChartData"
           id="BadRecordsBarChartID"
           height="250"
@@ -38,7 +45,7 @@
           yAxisTickFormat="getYAxisLabel()"
           valueformat="valueFormatFunction()"
           margin="{left:30,top:20,bottom:50,right:20}">
-        </nvd3-discrete-bar-chart>
+        </nvd3-discrete-bar-chart-->
 
       </div>
     </div>
@@ -52,7 +59,11 @@
     <div class="panel panel-default">
       <div class="panel-heading" translate="home.detailPane.badRecordsTab.errorsHistogram">Errors Histogram</div>
       <div class="panel-body">
-        <nvd3-multi-bar-horizontal-chart
+
+        <nvd3 options="percentilesChartOptions" data="errorsPercentilesData"
+              config="{ refreshDataOnly: true }"></nvd3>
+
+        <!--nvd3-multi-bar-horizontal-chart
           data="errorsPercentilesData"
           id="errorsPercentilesDataID"
           height="250"
@@ -63,7 +74,7 @@
           showValues="true"
           margin="{left:50,top:70,bottom:20,right:20}">
           <svg></svg>
-        </nvd3-multi-bar-horizontal-chart>
+        </nvd3-multi-bar-horizontal-chart-->
       </div>
     </div>
   </div>
@@ -72,7 +83,9 @@
     <div class="panel panel-default">
       <div class="panel-heading" translate="home.detailPane.badRecordsTab.errorsCount">Errors</div>
       <div class="panel-body">
-        <nvd3-discrete-bar-chart
+        <nvd3 options="barChartOptions" data="errorMessagesChartData"
+              config="{ refreshDataOnly: true }"></nvd3>
+        <!--nvd3-discrete-bar-chart
           data="errorMessagesChartData"
           id="ErrorMessagesBarChartID"
           height="250"
@@ -85,7 +98,7 @@
           yAxisTickFormat="getYAxisLabel()"
           valueformat="valueFormatFunction()"
           margin="{left:30,top:20,bottom:50,right:20}">
-        </nvd3-discrete-bar-chart>
+        </nvd3-discrete-bar-chart-->
       </div>
     </div>
   </div>

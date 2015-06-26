@@ -281,6 +281,7 @@ angular.module('dataCollectorApp')
       $rootScope.common.authenticationType = configuration.getAuthenticationType();
       $rootScope.common.sdcExecutionMode = configuration.getSDCExecutionMode();
       $rootScope.common.sdcClusterManagerURL = configuration.getSDCClusterManagerURL();
+      $rootScope.common.isMetricsTimeSeriesEnabled = configuration.isMetricsTimeSeriesEnabled();
       if(configuration.isAnalyticsEnabled()) {
         Analytics.createAnalyticsScriptTag();
       }
@@ -298,10 +299,10 @@ angular.module('dataCollectorApp')
       }
 
       //To fix NVD3 JS errors - https://github.com/novus/nvd3/pull/396
-      window.nv.charts = {};
-      window.nv.graphs = [];
-      window.nv.logs = {};
-      window.onresize = null;
+      //window.nv.charts = {};
+      //window.nv.graphs = [];
+      //window.nv.logs = {};
+      //window.onresize = null;
     });
 
     $rootScope.go = function ( path ) {
