@@ -14,6 +14,8 @@ import com.streamsets.pipeline.api.el.ELVars;
 import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.lib.util.CommonError;
 import org.apache.commons.el.ExpressionEvaluatorImpl;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.servlet.jsp.el.ELException;
 import javax.servlet.jsp.el.FunctionMapper;
@@ -24,10 +26,13 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 public class ELEvaluator extends ELEval {
+  private final static Logger LOG = LoggerFactory.getLogger(ELEvaluator.class);
 
   private final String configName;
   private final Map<String, Object> constants;
@@ -55,6 +60,8 @@ public class ELEvaluator extends ELEval {
 
   private void populateConstantsAndFunctions(Class<?>... elFuncConstDefClasses) {
     if(elFuncConstDefClasses != null) {
+      Set<ElFunctionDefinition> elFunctions = new HashSet<>();
+      Set<ElConstantDefinition> elConstants = new HashSet<>();
       for (Class<?> klass : elFuncConstDefClasses) {
         for (Method m : klass.getMethods()) {
           ElFunction elFunctionAnnot = m.getAnnotation(ElFunction.class);
@@ -76,6 +83,10 @@ public class ELEvaluator extends ELEval {
             if (!elFunctionAnnot.prefix().isEmpty()) {
               functionName = elFunctionAnnot.prefix() + ":" + functionName;
             }
+            if (functions.containsKey(functionName)) {
+              LOG.warn("The function '{}' is already defined for '{}', overriding to '{}'", functionName,
+                       functions.get(functionName).getName(), m.getName());
+            }
             functions.put(functionName, m);
             Annotation[][] parameterAnnotations = m.getParameterAnnotations();
             Class<?>[] parameterTypes = m.getParameterTypes();
@@ -86,7 +97,7 @@ public class ELEvaluator extends ELEval {
               elFunctionArgumentDefinitions.add(new ElFunctionArgumentDefinition(((ElParam) annotation).value(),
                 parameterTypes[i].getSimpleName()));
             }
-            elFunctionDefinitions.add(new ElFunctionDefinition(null, elFunctionAnnot.prefix(), functionName,
+            elFunctions.add(new ElFunctionDefinition(null, elFunctionAnnot.prefix(), functionName,
               elFunctionAnnot.description(),
               elFunctionArgumentDefinitions,
               m.getReturnType().getSimpleName()));
@@ -110,8 +121,12 @@ public class ELEvaluator extends ELEval {
                 klass.getName(), f));
             }
             try {
+              if (constants.containsKey(constantName)) {
+                LOG.warn("The constant '{}' is already defined for '{}', overriding to '{}'", constantName,
+                         constants.get(constantName), f.get(null));
+              }
               constants.put(constantName, f.get(null));
-              elConstantDefinitions.add(new ElConstantDefinition(null, constantName, elConstant.description(),
+              elConstants.add(new ElConstantDefinition(null, constantName, elConstant.description(),
                 f.getType().getSimpleName()));
             } catch (IllegalAccessException e) {
               throw new RuntimeException(e);
@@ -119,6 +134,9 @@ public class ELEvaluator extends ELEval {
           }
         }
       }
+      //we are using sets to remove duplicate functions and constants
+      elFunctionDefinitions.addAll(elFunctions);
+      elConstantDefinitions.addAll(elConstants);
     }
   }
 

@@ -35,4 +35,25 @@ public class ElConstantDefinition {
   public String getReturnType() {
     return returnType;
   }
+
+  @Override
+  public int hashCode() {
+    return toString().hashCode();
+  }
+
+  @Override
+  public boolean equals(Object obj) {
+    if (obj == null) {
+      return false;
+    }
+    if (! (obj instanceof ElConstantDefinition)) {
+      return false;
+    }
+    return toString().equals(obj.toString());
+  }
+
+  public String toString() {
+    return name;
+  }
+
 }
