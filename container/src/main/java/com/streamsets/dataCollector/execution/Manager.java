@@ -23,13 +23,13 @@ public interface Manager extends Task {
   // (using a last-access cache). the previewer is given a PreviewerListener at <init> time which will be used
   // by the previewer to signal the PreviewOutput has been given back to the client and the Previewer could be
   // eagerly removed from the cache.
-  public Previewer createPreviewer(String name, String rev);
+  public Previewer createPreviewer(String user, String name, String rev);
 
   // returns the previewer from the cache with the specified ID
   public Previewer getPreview(String previewerId);
 
   // creates a runner for a given pipeline, the runner will have the current state of the pipeline.
-  public Runner getRunner(String name, String rev, String user) throws PipelineStoreException;
+  public Runner getRunner(String user, String name, String rev) throws PipelineStoreException;
 
   public List<PipelineState> getPipelines() throws PipelineStoreException;
 

@@ -5,9 +5,9 @@
  */
 package com.streamsets.dataCollector.execution;
 
-import java.util.Map;
-
 import com.streamsets.pipeline.api.ExecutionMode;
+
+import java.util.Map;
 
 public interface PipelineState {
 
@@ -19,7 +19,7 @@ public interface PipelineState {
 
   public long getTimeStamp();
 
-  public PipelineStatus getStatus();
+  public PipelineStatus getState();
 
   public String getMessage();
 

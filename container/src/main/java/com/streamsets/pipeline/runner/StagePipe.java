@@ -21,6 +21,8 @@ import com.streamsets.pipeline.memory.MemoryUsageCollector;
 import com.streamsets.pipeline.memory.MemoryUsageCollectorResourceBundle;
 import com.streamsets.pipeline.metrics.MetricsConfigurator;
 import com.streamsets.pipeline.validation.StageIssue;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.HashMap;
 import java.util.List;
@@ -29,10 +31,9 @@ import java.util.concurrent.TimeUnit;
 
 public class StagePipe extends Pipe<StagePipe.Context> {
 
+  private static final Logger LOG = LoggerFactory.getLogger(StagePipe.class);
   //Runtime stat gauge name
   public static final String RUNTIME_STATS_GAUGE = "RuntimeStatsGauge";
-  // Remove after SDC-983
-  public static final String SKIP_RUNTIME_STATS_METRIC = "SKIP_RUNTIME_STATS_METRIC";
   private Timer processingTimer;
   private Counter inputRecordsCounter;
   private Counter outputRecordsCounter;
@@ -111,10 +112,7 @@ public class StagePipe extends Pipe<StagePipe.Context> {
             .setStageRuntime(getStage()).build();
         }
       }));
-    // Remove after SDC-983
-    if (!Boolean.getBoolean(SKIP_RUNTIME_STATS_METRIC)) {
-      createRuntimeStatsGauge(metrics);
-    }
+    createRuntimeStatsGauge(metrics);
   }
 
   @Override
@@ -206,7 +204,16 @@ public class StagePipe extends Pipe<StagePipe.Context> {
           return context.getRuntimeStats();
         }
       };
-      MetricsConfigurator.createGauge(metricRegistry, RUNTIME_STATS_GAUGE, runtimeStatsGauge);
+      LOG.error("/************** Creating runtime stats gauge in Metric Registry " + metricRegistry.toString() + " by thread " + Thread.currentThread().toString());
+      try {
+        MetricsConfigurator.createGauge(metricRegistry, RUNTIME_STATS_GAUGE, runtimeStatsGauge);
+      } catch (Exception e) {
+        LOG.error("/************** Exception while Creating runtime stats gauge in Metric Registry " + metricRegistry.toString() + " by thread " + Thread.currentThread().toString());
+        for(StackTraceElement se : e.getStackTrace()) {
+          LOG.error(se.toString());
+        }
+        throw e;
+      }
     }
     return runtimeStatsGauge;
   }

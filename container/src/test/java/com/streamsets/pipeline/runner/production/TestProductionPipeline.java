@@ -29,6 +29,7 @@ import com.streamsets.pipeline.runner.MockStages;
 import com.streamsets.pipeline.runner.PipelineRuntimeException;
 import com.streamsets.pipeline.runner.SourceOffsetTracker;
 import com.streamsets.pipeline.snapshotstore.SnapshotStatus;
+import com.streamsets.pipeline.snapshotstore.SnapshotStore;
 import com.streamsets.pipeline.snapshotstore.impl.FileSnapshotStore;
 import com.streamsets.pipeline.util.Configuration;
 import com.streamsets.pipeline.util.ContainerError;
@@ -288,7 +289,7 @@ public class TestProductionPipeline {
                                                       boolean captureNextBatch, boolean sourceOffsetCommitter)
       throws PipelineRuntimeException, StageException {
     SourceOffsetTracker tracker = new TestUtil.SourceOffsetTrackerImpl("1");
-    FileSnapshotStore snapshotStore = Mockito.mock(FileSnapshotStore.class);
+    SnapshotStore snapshotStore = Mockito.mock(FileSnapshotStore.class);
 
     Mockito.when(snapshotStore.getSnapshotStatus(PIPELINE_NAME, REVISION, SNAPSHOT_NAME)).thenReturn(new SnapshotStatus(false, false));
     BlockingQueue<Object> productionObserveRequests = new ArrayBlockingQueue<>(100, true /*FIFO*/);

@@ -25,6 +25,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.PriorityBlockingQueue;
+import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
 public class DirectorySpooler {
@@ -143,7 +144,7 @@ public class DirectorySpooler {
   private PathMatcher fileMatcher;
   private PriorityBlockingQueue<Path> filesQueue;
   private Path previousFile;
-  private SafeScheduledExecutorService scheduledExecutor;
+  private ScheduledExecutorService scheduledExecutor;
 
   private Meter spoolQueueMeter;
 

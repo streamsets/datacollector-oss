@@ -98,9 +98,9 @@ public class TestClusterPipelineManager {
     stateTracker = new StateTracker(runtimeInfo, conf);
     attributes = new HashMap<>();
     stageLibraryTask = MockStages.createStageLibrary(emptyCL);
-    pipelineStoreTask = new FilePipelineStoreTask(runtimeInfo, stageLibraryTask);
+    pipelineStoreTask = new FilePipelineStoreTask(runtimeInfo, stageLibraryTask, null);
     pipelineStoreTask.init();
-    pipelineStoreTask.create(NAME, "some desc", "admin");
+    pipelineStoreTask.create("admin", NAME, "some desc");
     clusterManager = new ClusterManager(new MockSystemProcessFactory(), sparkProvider, tempDir, sparkManagerShell,
       emptyCL, emptyCL);
     setExecMode(ExecutionMode.CLUSTER);
@@ -120,7 +120,7 @@ public class TestClusterPipelineManager {
     PipelineConfiguration pipelineConf = pipelineStoreTask.load(NAME, REV);
     PipelineConfiguration conf = MockStages.createPipelineConfigurationWithClusterOnlyStage(mode);
     conf.setUuid(pipelineConf.getUuid());
-    pipelineStoreTask.save(NAME, "admin", REV, "", conf);
+    pipelineStoreTask.save("admin", NAME, REV, "", conf);
 
   }
 
@@ -326,7 +326,7 @@ public class TestClusterPipelineManager {
     PipelineConfiguration pipelineConf = pipelineStoreTask.load(NAME, REV).createWithNewConfig(
       PipelineDefConfigs.EXECUTION_MODE_CONFIG, new ConfigConfiguration(PipelineDefConfigs.EXECUTION_MODE_CONFIG,
         ExecutionMode.CLUSTER));
-    pipelineConf = pipelineStoreTask.save(NAME, "admin", REV, "", pipelineConf);
+    pipelineConf = pipelineStoreTask.save("admin", NAME, REV, "", pipelineConf);
     clusterPipelineManager.startPipeline(NAME, REV);
     Assert.assertEquals(State.ERROR, getState());
     ApplicationState appState = new ApplicationState((Map)stateTracker.getState().getAttributes().

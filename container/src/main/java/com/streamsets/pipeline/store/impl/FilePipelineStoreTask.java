@@ -84,17 +84,7 @@ public class FilePipelineStoreTask extends AbstractTask implements PipelineStore
   private final Object rulesMutex;
   private final HashMap<String, RuleDefinitions> pipelineToRuleDefinitionMap;
 
-  // TODO - remove after multi pipeline support
   @Inject
-  public FilePipelineStoreTask(RuntimeInfo runtimeInfo, StageLibraryTask stageLibrary) {
-    super("filePipelineStore");
-    this.stageLibrary = stageLibrary;
-    this.runtimeInfo = runtimeInfo;
-    json = ObjectMapperFactory.get();
-    rulesMutex = new Object();
-    pipelineToRuleDefinitionMap = new HashMap<>();
-  }
-
   public FilePipelineStoreTask(RuntimeInfo runtimeInfo, StageLibraryTask stageLibrary, PipelineStateStore pipelineStateStore) {
     super("filePipelineStore");
     this.stageLibrary = stageLibrary;
@@ -159,7 +149,7 @@ public class FilePipelineStoreTask extends AbstractTask implements PipelineStore
   }
 
   @Override
-  public synchronized PipelineConfiguration create(String name, String description, String user) throws PipelineStoreException {
+  public PipelineConfiguration create(String user, String name, String description) throws PipelineStoreException {
     if (hasPipeline(name)) {
       throw new PipelineStoreException(ContainerError.CONTAINER_0201, name);
     }
@@ -224,7 +214,7 @@ public class FilePipelineStoreTask extends AbstractTask implements PipelineStore
     }
     if (pipelineStateStore != null) {
      // For now, passing rev 0 - make delete take tag/rev as a parameter
-      PipelineStatus pipelineStatus = pipelineStateStore.getState(name, REV).getStatus();
+      PipelineStatus pipelineStatus = pipelineStateStore.getState(name, REV).getState();
       if (pipelineStatus.isActive()) {
         throw new PipelineStoreException(ContainerError.CONTAINER_0208, pipelineStatus);
       }
@@ -277,7 +267,7 @@ public class FilePipelineStoreTask extends AbstractTask implements PipelineStore
   }
 
   @Override
-  public synchronized PipelineConfiguration save(String name, String user, String tag, String tagDescription,
+  public PipelineConfiguration save(String user, String name, String tag, String tagDescription,
       PipelineConfiguration pipeline) throws PipelineStoreException {
     if (!hasPipeline(name)) {
       throw new PipelineStoreException(ContainerError.CONTAINER_0200, name);
@@ -287,7 +277,7 @@ public class FilePipelineStoreTask extends AbstractTask implements PipelineStore
       throw new PipelineStoreException(ContainerError.CONTAINER_0205, name);
     }
     if (pipelineStateStore != null) {
-      PipelineStatus pipelineStatus = pipelineStateStore.getState(name, tag).getStatus();
+      PipelineStatus pipelineStatus = pipelineStateStore.getState(name, tag).getState();
       if (pipelineStatus.isActive()) {
         throw new PipelineStoreException(ContainerError.CONTAINER_0208, pipelineStatus);
       }

@@ -5,29 +5,6 @@
  */
 package com.streamsets.pipeline.prodmanager;
 
-import java.io.File;
-import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.concurrent.ArrayBlockingQueue;
-import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ThreadFactory;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.locks.ReentrantLock;
-
-import javax.validation.constraints.NotNull;
-
-import org.apache.commons.io.FileUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Optional;
 import com.google.common.base.Strings;
@@ -76,6 +53,27 @@ import com.streamsets.pipeline.util.ContainerError;
 import com.streamsets.pipeline.util.PipelineConfigurationUtil;
 import com.streamsets.pipeline.util.PipelineDirectoryUtil;
 import com.streamsets.pipeline.validation.ValidationError;
+import org.apache.commons.io.FileUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import javax.validation.constraints.NotNull;
+import java.io.File;
+import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.concurrent.ArrayBlockingQueue;
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ThreadFactory;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.locks.ReentrantLock;
 
 public class ClusterPipelineManager extends AbstractTask implements PipelineManager {
   private static final String CLUSTER_PIPELINE_MANAGER = "ClusterPipelineManager";
@@ -106,7 +104,6 @@ public class ClusterPipelineManager extends AbstractTask implements PipelineMana
   private MetricsEventRunnable metricsEventRunnable;
   private final ReentrantLock callbackCacheLock;
   private UpdateChecker updateChecker;
-  private ProductionPipeline prodPipeline;
 
   public ClusterPipelineManager(RuntimeInfo runtimeInfo, Configuration configuration, PipelineStoreTask pipelineStore,
                                 StageLibraryTask stageLibrary) {
@@ -172,13 +169,13 @@ public class ClusterPipelineManager extends AbstractTask implements PipelineMana
     int refreshInterval = configuration.get(REFRESH_INTERVAL_PROPERTY, REFRESH_INTERVAL_PROPERTY_DEFAULT);
     if (refreshInterval > 0) {
       metricsEventRunnable = new MetricsEventRunnable(this, runtimeInfo, refreshInterval, null);
-      scheduledExecutor.scheduleAtFixedRate(metricsEventRunnable, 0, refreshInterval, TimeUnit.MILLISECONDS);
+      scheduledExecutor.scheduleAtFixedRateAndForget(metricsEventRunnable, 0, refreshInterval, TimeUnit.MILLISECONDS);
     }
 
     // update checker
     updateChecker = new UpdateChecker(runtimeInfo, configuration, this);
     scheduledExecutor
-        .scheduleAtFixedRate(new UpdateChecker(runtimeInfo, configuration, this), 1, 24 * 60, TimeUnit.MINUTES);
+        .scheduleAtFixedRateAndForget(new UpdateChecker(runtimeInfo, configuration, this), 1, 24 * 60, TimeUnit.MINUTES);
   }
 
   @Override

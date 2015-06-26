@@ -5,10 +5,10 @@
  */
 package com.streamsets.dataCollector.execution;
 
-import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.runner.PipelineRuntimeException;
 import com.streamsets.pipeline.runner.StageOutput;
 import com.streamsets.pipeline.store.PipelineStoreException;
+import com.streamsets.pipeline.util.PipelineException;
 
 import javax.ws.rs.core.MultivaluedMap;
 import java.util.List;
@@ -30,19 +30,19 @@ public interface Previewer {
 
   public String getRev();
 
-  public void validateConfigs() throws StageException, PipelineRuntimeException, PipelineStoreException;
+  public void validateConfigs() throws PipelineException;
 
   public RawPreview getRawSource(int maxLength, MultivaluedMap<String, String> previewParams)
     throws PipelineRuntimeException, PipelineStoreException;
 
   public void start(int batches, int batchSize, boolean skipTargets, String stopStage, List<StageOutput> stagesOverride)
-    throws PipelineStoreException, PipelineRuntimeException, StageException;
+    throws PipelineException;
 
   public void stop();
 
   // in the case of the synchronous one the only acceptable value is -1 (wait until it finishes)
   // in the case of the asynchronous one acceptable values are 0 (dispatch and wait) and greater (dispatch and block for millis)
-  public PreviewStatus waitForCompletion(int millis) throws Throwable;
+  public boolean waitForCompletion(int millis) throws PipelineException;
 
   public PreviewStatus getStatus();
 

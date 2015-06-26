@@ -107,16 +107,21 @@ public class DataStore {
   public InputStream getInputStream() throws IOException {
     acquireLock();
     try {
+      isClosed = false;
       forWrite = false;
       LOG.trace("Starts read '{}'", file);
       verifyAndRecover();
       InputStream is = new ProxyInputStream(new FileInputStream(file.toFile())) {
         @Override
         public void close() throws IOException {
+          if (isClosed) {
+            return;
+          }
           try {
             super.close();
           } finally {
             releaseLock();
+            isClosed = true;
             stream = null;
           }
           LOG.trace("Finishes read '{}'", file);

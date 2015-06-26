@@ -9,15 +9,19 @@ import com.google.common.annotations.VisibleForTesting;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.Collection;
+import java.util.List;
 import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 
-public class SafeScheduledExecutorService {
+public class SafeScheduledExecutorService implements ScheduledExecutorService {
   private static final Logger LOG = LoggerFactory.getLogger(SafeScheduledExecutorService.class);
   private final ScheduledExecutorService scheduledExecutorService;
   private ExecutorSupport executorSupport = new ExecutorSupport(LOG);
@@ -39,11 +43,6 @@ public class SafeScheduledExecutorService {
     scheduledExecutorService = Executors.newScheduledThreadPool(corePoolSize, threadFactory);
   }
 
-  @VisibleForTesting
-  void setExecutorSupport(ExecutorSupport executorSupport) {
-    this.executorSupport = executorSupport;
-  }
-
   public void shutdown() {
     scheduledExecutorService.shutdown();
   }
@@ -52,60 +51,73 @@ public class SafeScheduledExecutorService {
     return scheduledExecutorService.isShutdown();
   }
 
-  public void shutdownNow() {
-    scheduledExecutorService.shutdownNow();
+  @Override
+  public boolean isTerminated() {
+    return false;
+  }
+
+  public List<Runnable> shutdownNow() {
+    return scheduledExecutorService.shutdownNow();
   }
 
   public boolean awaitTermination(long timeout, TimeUnit unit) throws InterruptedException {
     return scheduledExecutorService.awaitTermination(timeout, unit);
   }
 
-  public Future<?> submitReturnFuture(final Runnable runnable) {
-
+  public Future<?> submit(final Runnable runnable) {
     return scheduledExecutorService.submit(new SafeRunnable(runnable, true));
   }
 
-  public void submit(final Runnable runnable) {
-    scheduledExecutorService.submit(new SafeRunnable(runnable, false));
+  @Override
+  public <T> List<Future<T>> invokeAll(Collection<? extends Callable<T>> tasks) throws InterruptedException {
+    return scheduledExecutorService.invokeAll(tasks);
+  }
+
+  @Override
+  public <T> List<Future<T>> invokeAll(Collection<? extends Callable<T>> tasks, long timeout, TimeUnit unit)
+    throws InterruptedException {
+    return scheduledExecutorService.invokeAll(tasks, timeout, unit);
+  }
+
+  @Override
+  public <T> T invokeAny(Collection<? extends Callable<T>> tasks) throws InterruptedException, ExecutionException {
+    return scheduledExecutorService.invokeAny(tasks);
+  }
+
+  @Override
+  public <T> T invokeAny(Collection<? extends Callable<T>> tasks, long timeout, TimeUnit unit)
+    throws InterruptedException, ExecutionException, TimeoutException {
+    return scheduledExecutorService.invokeAny(tasks, timeout, unit);
   }
 
   public <T> Future<T> submit(Callable<T> task) {
-    return scheduledExecutorService.submit(new SafeCallable<T>(task, true));
+    return scheduledExecutorService.submit(new SafeCallable<>(task, true));
   }
 
-  public void scheduleAtFixedRate(Runnable command,
-                                                            long initialDelay,
-                                                            long period,
-                                                            TimeUnit unit) {
-    scheduledExecutorService.scheduleAtFixedRate(new SafeRunnable(command, false), initialDelay, period, unit);
+  @Override
+  public <T> Future<T> submit(Runnable task, T result) {
+    return scheduledExecutorService.submit(new SafeRunnable(task, true), result);
   }
 
-  public ScheduledFuture<?> scheduleAtFixedRateReturnFuture(Runnable command,
-                                                            long initialDelay,
-                                                            long period,
-                                                            TimeUnit unit) {
+  public ScheduledFuture<?> scheduleAtFixedRate(Runnable command, long initialDelay, long period, TimeUnit unit) {
     return scheduledExecutorService.scheduleAtFixedRate(new SafeRunnable(command, true), initialDelay, period, unit);
   }
-  public void scheduleWithFixedDelay(Runnable command,
-                                                   long initialDelay,
-                                                   long period,
-                                                   TimeUnit unit) {
-    scheduledExecutorService.scheduleWithFixedDelay(new SafeRunnable(command, false), initialDelay, period, unit);
-  }
-  public ScheduledFuture<?> scheduleWithFixedDelayReturnFuture(Runnable command,
-                                                long initialDelay,
-                                                long period,
-                                                TimeUnit unit) {
+
+  public ScheduledFuture<?> scheduleWithFixedDelay(Runnable command, long initialDelay, long period, TimeUnit unit) {
     return scheduledExecutorService.scheduleWithFixedDelay(new SafeRunnable(command, true), initialDelay, period, unit);
   }
-  public ScheduledFuture<?> scheduleReturnFuture(Runnable command, long delay, TimeUnit unit) {
+
+  public ScheduledFuture<?> schedule(Runnable command, long delay, TimeUnit unit) {
     return scheduledExecutorService.schedule(new SafeRunnable(command, true), delay, unit);
   }
-  public void schedule(Runnable command, long delay, TimeUnit unit) {
-    scheduledExecutorService.schedule(new SafeRunnable(command, false), delay, unit);
-  }
+
   public <V> ScheduledFuture<V> schedule(Callable<V> callable, long delay, TimeUnit unit) {
     return scheduledExecutorService.schedule(callable, delay, unit);
+  }
+
+  @Override
+  public void execute(Runnable command) {
+    scheduledExecutorService.execute(new SafeRunnable(command, false));
   }
 
   private class SafeRunnable implements Runnable {
@@ -155,10 +167,33 @@ public class SafeScheduledExecutorService {
       } catch (Throwable throwable) {
         executorSupport.uncaughtThrowableInCallable(throwable, delegate, delegateName);
         if (propagateErrors) {
+          //Not wrapping in Runtime Exception as it could be StageException when preview validation fails or
+          //PipelineRuntimeException when running preview fails.
           throw throwable;
         }
         return null;
       }
     }
+  }
+
+  @VisibleForTesting
+  void setExecutorSupport(ExecutorSupport executorSupport) {
+    this.executorSupport = executorSupport;
+  }
+
+  public void scheduleAtFixedRateAndForget(Runnable command, long initialDelay, long period, TimeUnit unit) {
+    scheduledExecutorService.scheduleAtFixedRate(new SafeRunnable(command, false), initialDelay, period, unit);
+  }
+
+  public void submitAndForget(final Runnable runnable) {
+    scheduledExecutorService.submit(new SafeRunnable(runnable, false));
+  }
+
+  public void scheduleWithFixedDelayAndForget(Runnable command, long initialDelay, long period, TimeUnit unit) {
+    scheduledExecutorService.scheduleWithFixedDelay(new SafeRunnable(command, false), initialDelay, period, unit);
+  }
+
+  public void scheduleAndForget(Runnable command, long delay, TimeUnit unit) {
+    scheduledExecutorService.schedule(new SafeRunnable(command, false), delay, unit);
   }
 }

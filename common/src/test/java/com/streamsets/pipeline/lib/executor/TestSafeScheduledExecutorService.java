@@ -7,13 +7,14 @@ package com.streamsets.pipeline.lib.executor;
 
 import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.lib.util.ThreadUtil;
-import org.junit.Test;
 import org.junit.Assert;
+import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
+import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -22,15 +23,15 @@ public class TestSafeScheduledExecutorService {
   @Test
   public void testCorePoolSize() throws Exception {
     long start = System.currentTimeMillis();
-    SafeScheduledExecutorService executorService = new SafeScheduledExecutorService(1, "test");
+    ScheduledExecutorService executorService = new SafeScheduledExecutorService(1, "test");
     Runnable sleepy = new Runnable() {
       @Override
       public void run() {
         Utils.checkState(ThreadUtil.sleep(110), "Interrupted while sleeping");
       }
     };
-    Future<?> future1 = executorService.submitReturnFuture(sleepy);
-    Future<?> future2 = executorService.submitReturnFuture(sleepy);
+    Future<?> future1 = executorService.submit(sleepy);
+    Future<?> future2 = executorService.submit(sleepy);
     future1.get();
     future2.get();
     long elapsed = System.currentTimeMillis() - start;
@@ -61,8 +62,8 @@ public class TestSafeScheduledExecutorService {
   }
   @Test(expected = SafeScheduledExecutorServiceRethrowsException.class)
   public void testSubmitReturnFutureThrowsException() throws Throwable {
-    SafeScheduledExecutorService executorService = new SafeScheduledExecutorService(1, "test");
-    Future<?> future = executorService.submitReturnFuture(new RunnableWhichThrows());
+    ScheduledExecutorService executorService = new SafeScheduledExecutorService(1, "test");
+    Future<?> future = executorService.submit(new RunnableWhichThrows());
     try {
       future.get();
     } catch (ExecutionException e) {
@@ -71,8 +72,8 @@ public class TestSafeScheduledExecutorService {
   }
   @Test(expected = SafeScheduledExecutorServiceRethrowsException.class)
   public void testScheduleAtFixedRateReturnFutureThrowsException() throws Throwable {
-    SafeScheduledExecutorService executorService = new SafeScheduledExecutorService(1, "test");
-    Future<?> future = executorService.scheduleAtFixedRateReturnFuture(new RunnableWhichThrows(), 0, 10,
+    ScheduledExecutorService executorService = new SafeScheduledExecutorService(1, "test");
+    Future<?> future = executorService.scheduleAtFixedRate(new RunnableWhichThrows(), 0, 10,
       TimeUnit.DAYS);
     try {
       future.get();
@@ -83,8 +84,8 @@ public class TestSafeScheduledExecutorService {
   }
   @Test(expected = SafeScheduledExecutorServiceRethrowsException.class)
   public void testScheduleWithFixedDelayReturnFutureThrowsException() throws Throwable {
-    SafeScheduledExecutorService executorService = new SafeScheduledExecutorService(1, "test");
-    Future<?> future = executorService.scheduleWithFixedDelayReturnFuture(new RunnableWhichThrows(), 0, 10,
+    ScheduledExecutorService executorService = new SafeScheduledExecutorService(1, "test");
+    Future<?> future = executorService.scheduleWithFixedDelay(new RunnableWhichThrows(), 0, 10,
       TimeUnit.DAYS);
     try {
       future.get();
@@ -95,8 +96,8 @@ public class TestSafeScheduledExecutorService {
   }
   @Test(expected = SafeScheduledExecutorServiceRethrowsException.class)
   public void testScheduleReturnFutureThrowsException() throws Throwable {
-    SafeScheduledExecutorService executorService = new SafeScheduledExecutorService(1, "test");
-    Future<?> future = executorService.scheduleReturnFuture(new RunnableWhichThrows(), 0, TimeUnit.DAYS);
+    ScheduledExecutorService executorService = new SafeScheduledExecutorService(1, "test");
+    Future<?> future = executorService.schedule(new RunnableWhichThrows(), 0, TimeUnit.DAYS);
     try {
       future.get();
     } catch (ExecutionException e) {
@@ -105,14 +106,14 @@ public class TestSafeScheduledExecutorService {
     executorService.shutdown();
   }
   @Test
-  public void testScheduleAtFixedRateReturnFutureDoesNotRethrow() throws Throwable {
+  public void testScheduleAtFixedRateDoesNotRethrow() throws Throwable {
     SafeScheduledExecutorService executorService = new SafeScheduledExecutorService(1, "test");
     ExecutorSupportForTests executorSupport = new ExecutorSupportForTests(LOG);
     executorService.setExecutorSupport(executorSupport);
-    executorService.scheduleAtFixedRate(new RunnableWhichThrows(), 0, 10, TimeUnit.MILLISECONDS);
+    executorService.scheduleAtFixedRateAndForget(new RunnableWhichThrows(), 0, 10, TimeUnit.MILLISECONDS);
     TimeUnit.MILLISECONDS.sleep(25);
     int executionCount = executorSupport.uncaughtThrowableInRunnableCount.get();
-    Assert.assertTrue("executionCount is " + executionCount + " which should be >= 2 and <= 4",
+    Assert.assertTrue("executionCount is " + executionCount + " which should be >= 2 and <= 5",
       executionCount >= 2 && executionCount <= 5);
   }
 }

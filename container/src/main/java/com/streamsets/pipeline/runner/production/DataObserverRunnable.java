@@ -12,6 +12,7 @@ import com.streamsets.pipeline.util.Configuration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.inject.Inject;
 import java.util.List;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.TimeUnit;
@@ -26,6 +27,7 @@ public class DataObserverRunnable implements Runnable {
   private final DataObserverRunner dataObserverRunner;
   private final ThreadHealthReporter threadHealthReporter;
 
+  @Inject
   public DataObserverRunnable(ThreadHealthReporter threadHealthReporter, MetricRegistry metrics,
                               BlockingQueue<Object> requestQueue, AlertManager alertManager,
                               Configuration configuration) {

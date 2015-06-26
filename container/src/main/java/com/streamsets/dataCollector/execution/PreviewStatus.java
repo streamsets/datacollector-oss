@@ -6,20 +6,29 @@
 package com.streamsets.dataCollector.execution;
 
 public enum PreviewStatus {
-  VALIDATING,     // validating the configuration, during preview
-  VALID,          // configuration is valid, during preview
-  INVALID,        // configuration is invalid, during preview
+  VALIDATING(true),     // validating the configuration, during preview
+  VALID(false),          // configuration is valid, during preview
+  INVALID(false),        // configuration is invalid, during preview
 
-  STARTING,       // preview starting (initialization)
-  START_ERROR,    // preview failed while start (during initialization)
-  RUNNING,        // preview running
-  RUN_ERROR,      // preview failed while running
+  STARTING(true),       // preview starting (initialization)
+  START_ERROR(false),    // preview failed while start (during initialization)
+  RUNNING(true),        // preview running
+  RUN_ERROR(false),      // preview failed while running
 
-  FINISHING,      // preview finishing (calling destroy on pipeline)
-  FINISHED,       // preview finished  (done)
+  FINISHING(true),      // preview finishing (calling destroy on pipeline)
+  FINISHED(false),       // preview finished  (done)
 
-  CANCELLING,     // preview has been manually stopped
-  CANCELLED,      // preview has been manually stopped
+  CANCELLING(true),     // preview has been manually stopped
+  CANCELLED(false),      // preview has been manually stopped
   ;
-  
+
+  private final boolean isActive;
+
+  PreviewStatus(boolean isActive) {
+    this.isActive = isActive;
+  }
+
+  public boolean isActive() {
+    return isActive;
+  }
 }

@@ -7,7 +7,20 @@ package com.streamsets.pipeline.util;
 
 import com.codahale.metrics.MetricRegistry;
 import com.streamsets.dataCollector.execution.PipelineStateStore;
+import com.streamsets.dataCollector.execution.Previewer;
+import com.streamsets.dataCollector.execution.PreviewerListener;
+import com.streamsets.dataCollector.execution.Runner;
+import com.streamsets.dataCollector.execution.alerts.AlertManager;
 import com.streamsets.dataCollector.execution.manager.PipelineManager;
+import com.streamsets.dataCollector.execution.manager.PreviewerProvider;
+import com.streamsets.dataCollector.execution.manager.RunnerProvider;
+import com.streamsets.dataCollector.execution.runner.AsyncRunner;
+import com.streamsets.dataCollector.execution.runner.DataObserverRunnable;
+import com.streamsets.dataCollector.execution.runner.MetricObserverRunnable;
+import com.streamsets.dataCollector.execution.runner.MetricsObserverRunner;
+import com.streamsets.dataCollector.execution.runner.ProductionObserver;
+import com.streamsets.dataCollector.execution.runner.StandaloneRunner;
+import com.streamsets.dataCollector.execution.store.CachePipelineStateStore;
 import com.streamsets.dataCollector.execution.store.FilePipelineStateStore;
 import com.streamsets.pipeline.api.Batch;
 import com.streamsets.pipeline.api.BatchMaker;
@@ -23,6 +36,7 @@ import com.streamsets.pipeline.config.MetricsRuleDefinition;
 import com.streamsets.pipeline.config.PipelineConfiguration;
 import com.streamsets.pipeline.config.RuleDefinitions;
 import com.streamsets.pipeline.config.ThresholdType;
+import com.streamsets.pipeline.email.EmailSender;
 import com.streamsets.pipeline.lib.executor.SafeScheduledExecutorService;
 import com.streamsets.pipeline.main.RuntimeInfo;
 import com.streamsets.pipeline.main.RuntimeModule;
@@ -30,15 +44,27 @@ import com.streamsets.pipeline.prodmanager.PipelineManagerException;
 import com.streamsets.pipeline.prodmanager.StandalonePipelineManagerTask;
 import com.streamsets.pipeline.prodmanager.State;
 import com.streamsets.pipeline.runner.MockStages;
+import com.streamsets.pipeline.runner.Observer;
 import com.streamsets.pipeline.runner.SourceOffsetTracker;
+import com.streamsets.pipeline.runner.production.ProductionPipelineBuilder;
+import com.streamsets.pipeline.runner.production.ProductionPipelineRunner;
+import com.streamsets.pipeline.runner.production.ProductionSourceOffsetTracker;
+import com.streamsets.pipeline.runner.production.RulesConfigLoader;
+import com.streamsets.pipeline.runner.production.RulesConfigLoaderRunnable;
+import com.streamsets.pipeline.runner.production.ThreadHealthReporter;
+import com.streamsets.pipeline.snapshotstore.SnapshotStore;
+import com.streamsets.pipeline.snapshotstore.impl.FileSnapshotStore;
 import com.streamsets.pipeline.stagelibrary.StageLibraryTask;
 import com.streamsets.pipeline.store.PipelineStoreException;
 import com.streamsets.pipeline.store.PipelineStoreTask;
 import com.streamsets.pipeline.store.impl.FilePipelineStoreTask;
-
 import dagger.Module;
+import dagger.ObjectGraph;
 import dagger.Provides;
+import org.mockito.Mockito;
 
+import javax.inject.Named;
+import javax.inject.Singleton;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -50,11 +76,7 @@ import java.util.Random;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 public class TestUtil {
-  private static final Logger LOG = LoggerFactory.getLogger(TestUtil.class);
   public static final String MY_PIPELINE = "my pipeline";
   public static final String MY_SECOND_PIPELINE = "my second pipeline";
   public static final String PIPELINE_REV = "2.0";
@@ -189,20 +211,25 @@ public class TestUtil {
   /*************** Providers for Dagger *******/
   /********************************************/
 
+
+  /*************** StageLibrary ***************/
+
   @Module(library = true)
   public static class TestStageLibraryModule {
 
     public TestStageLibraryModule() {
     }
 
-    @Provides
+    @Provides @Singleton
     public StageLibraryTask provideStageLibrary() {
       return MockStages.createStageLibrary();
     }
   }
 
+  /*************** PipelineStore ***************/
+
   @Module(injects = PipelineStoreTask.class, library = true, includes = {TestRuntimeModule.class,
-    TestStageLibraryModule.class, TestConfigurationModule.class})
+    TestStageLibraryModule.class, TestConfigurationModule.class, TestPipelineStateStoreModule.class})
   public static class TestPipelineStoreModule {
 
     public TestPipelineStoreModule() {
@@ -210,22 +237,22 @@ public class TestUtil {
 
     @Provides
     public PipelineStoreTask providePipelineStore(RuntimeInfo info, StageLibraryTask stageLibraryTask) {
-      FilePipelineStoreTask pipelineStoreTask = new FilePipelineStoreTask(info, stageLibraryTask);
+      FilePipelineStoreTask pipelineStoreTask = new FilePipelineStoreTask(info, stageLibraryTask, null);
       pipelineStoreTask.init();
       try {
         //create an invalid pipeline
-        pipelineStoreTask.create("invalid", "invalid cox its empty", "tag");
+        pipelineStoreTask.create("user", "invalid", "invalid cox its empty");
         PipelineConfiguration pipelineConf = pipelineStoreTask.load("invalid", PIPELINE_REV);
         PipelineConfiguration mockPipelineConf = MockStages.createPipelineConfigurationSourceProcessorTarget();
         pipelineConf.setErrorStage(mockPipelineConf.getErrorStage());
 
         //create a valid pipeline
-        pipelineStoreTask.create(MY_PIPELINE, "description", "tag");
+        pipelineStoreTask.create("user", MY_PIPELINE, "description");
         pipelineConf = pipelineStoreTask.load(MY_PIPELINE, PIPELINE_REV);
         mockPipelineConf = MockStages.createPipelineConfigurationSourceProcessorTarget();
         pipelineConf.setStages(mockPipelineConf.getStages());
         pipelineConf.setErrorStage(mockPipelineConf.getErrorStage());
-        pipelineStoreTask.save(MY_PIPELINE, "admin", PIPELINE_REV, "description"
+        pipelineStoreTask.save("admin", MY_PIPELINE, PIPELINE_REV, "description"
           , pipelineConf);
 
         //create a DataRuleDefinition for one of the stages
@@ -246,54 +273,60 @@ public class TestUtil {
     }
   }
 
+  /*************** PipelineStore ***************/
   // TODO - Rename TestPipelineStoreModule after multi pipeline support
   @Module(injects = PipelineStoreTask.class, library = true, includes = {TestRuntimeModule.class,
     TestStageLibraryModule.class, TestConfigurationModule.class, TestPipelineStateStoreModule.class })
   public static class TestPipelineStoreModuleNew {
 
     public TestPipelineStoreModuleNew() {
+
     }
 
-    @Provides
+    @Provides @Singleton
     public PipelineStoreTask providePipelineStore(RuntimeInfo info, StageLibraryTask stageLibraryTask, PipelineStateStore pipelineStateStore) {
       FilePipelineStoreTask pipelineStoreTask = new FilePipelineStoreTask(info, stageLibraryTask, pipelineStateStore);
       pipelineStoreTask.init();
       try {
         //create an invalid pipeline
-        pipelineStoreTask.create("invalid", "invalid cox its empty", "tag");
-        PipelineConfiguration pipelineConf = pipelineStoreTask.load("invalid", PIPELINE_REV);
-        PipelineConfiguration mockPipelineConf = MockStages.createPipelineConfigurationSourceTarget();
-        pipelineConf.setErrorStage(mockPipelineConf.getErrorStage());
+        //The if check is needed because the tests restart the pipeline manager. In that case the check prevents
+        //us from trying to create the same pipeline again
+        if(!pipelineStoreTask.hasPipeline("invalid")) {
+          pipelineStoreTask.create("user", "invalid", "invalid cox its empty");
+          PipelineConfiguration pipelineConf = pipelineStoreTask.load("invalid", PIPELINE_REV);
+          PipelineConfiguration mockPipelineConf = MockStages.createPipelineConfigurationSourceTarget();
+          pipelineConf.setErrorStage(mockPipelineConf.getErrorStage());
+        }
 
-        //create a valid pipeline
-        pipelineStoreTask.create(MY_PIPELINE, "description", "user");
-        pipelineConf = pipelineStoreTask.load(MY_PIPELINE, "0");
-        mockPipelineConf = MockStages.createPipelineConfigurationSourceTarget();
-        pipelineConf.setStages(mockPipelineConf.getStages());
-        pipelineConf.setErrorStage(mockPipelineConf.getErrorStage());
-        pipelineStoreTask.save(MY_PIPELINE, "admin", "0", "description"
-          , pipelineConf);
+        if(!pipelineStoreTask.hasPipeline(MY_PIPELINE)) {
+          pipelineStoreTask.create("user", MY_PIPELINE, "description");
+          PipelineConfiguration pipelineConf = pipelineStoreTask.load(MY_PIPELINE, "0");
+          PipelineConfiguration mockPipelineConf = MockStages.createPipelineConfigurationSourceTarget();
+          pipelineConf.setStages(mockPipelineConf.getStages());
+          pipelineConf.setErrorStage(mockPipelineConf.getErrorStage());
+          pipelineStoreTask.save("admin", MY_PIPELINE, "0", "description"
+            , pipelineConf);
 
+          //create a DataRuleDefinition for one of the stages
+          DataRuleDefinition dataRuleDefinition = new DataRuleDefinition("myID", "myLabel", "s", 100, 10,
+            "${record:value(\"/name\") != null}", true, "alertText", ThresholdType.COUNT, "100", 100, true, false, true);
+          List<DataRuleDefinition> dataRuleDefinitions = new ArrayList<>();
+          dataRuleDefinitions.add(dataRuleDefinition);
 
+          RuleDefinitions ruleDefinitions = new RuleDefinitions(Collections.<MetricsRuleDefinition>emptyList(),
+            dataRuleDefinitions, Collections.<String>emptyList(), UUID.randomUUID());
+          pipelineStoreTask.storeRules(MY_PIPELINE, "0", ruleDefinitions);
+        }
 
-        //create a DataRuleDefinition for one of the stages
-        DataRuleDefinition dataRuleDefinition = new DataRuleDefinition("myID", "myLabel", "s", 100, 10,
-          "${record:value(\"/name\") != null}", true, "alertText", ThresholdType.COUNT, "100", 100, true, false, true);
-        List<DataRuleDefinition> dataRuleDefinitions = new ArrayList<>();
-        dataRuleDefinitions.add(dataRuleDefinition);
-
-        RuleDefinitions ruleDefinitions = new RuleDefinitions(Collections.<MetricsRuleDefinition>emptyList(),
-          dataRuleDefinitions, Collections.<String>emptyList(), UUID.randomUUID());
-        pipelineStoreTask.storeRules(MY_PIPELINE, "0", ruleDefinitions);
-
-        pipelineStoreTask.create(MY_SECOND_PIPELINE, "description2", "user2");
-        pipelineConf = pipelineStoreTask.load(MY_SECOND_PIPELINE, "0");
-        mockPipelineConf = MockStages.createPipelineConfigurationSourceTargetDifferentInstance();
-        pipelineConf.setStages(mockPipelineConf.getStages());
-        pipelineConf.setErrorStage(mockPipelineConf.getErrorStage());
-        pipelineStoreTask.save(MY_SECOND_PIPELINE, "admin2", "0", "description"
-          , pipelineConf);
-
+        if(!pipelineStoreTask.hasPipeline(MY_SECOND_PIPELINE)) {
+          pipelineStoreTask.create("user2", MY_SECOND_PIPELINE, "description2");
+          PipelineConfiguration pipelineConf = pipelineStoreTask.load(MY_SECOND_PIPELINE, "0");
+          PipelineConfiguration mockPipelineConf = MockStages.createPipelineConfigurationSourceProcessorTarget();
+          pipelineConf.setStages(mockPipelineConf.getStages());
+          pipelineConf.setErrorStage(mockPipelineConf.getErrorStage());
+          pipelineStoreTask.save("admin2", MY_SECOND_PIPELINE, "0", "description"
+            , pipelineConf);
+        }
       } catch (PipelineStoreException e) {
         throw new RuntimeException(e);
       }
@@ -302,6 +335,7 @@ public class TestUtil {
     }
   }
 
+  /*************** PipelineStateStore ***************/
 
   @Module(injects = PipelineStateStore.class, library = true, includes = {TestRuntimeModule.class,
     TestConfigurationModule.class})
@@ -309,13 +343,16 @@ public class TestUtil {
     public TestPipelineStateStoreModule() {
     }
 
-    @Provides
+    @Provides @Singleton
     public PipelineStateStore providePipelineStore(RuntimeInfo info, Configuration conf) {
       PipelineStateStore pipelineStateStore = new FilePipelineStateStore(info, conf);
-      pipelineStateStore.init();
-      return pipelineStateStore;
+      CachePipelineStateStore cachePipelineStateStore = new CachePipelineStateStore(pipelineStateStore);
+      cachePipelineStateStore.init();
+      return cachePipelineStateStore;
     }
   }
+
+  /*************** Configuration ***************/
 
   @Module(library = true)
   public static class TestConfigurationModule {
@@ -323,12 +360,14 @@ public class TestUtil {
     public TestConfigurationModule() {
     }
 
-    @Provides
-    public Configuration provideRuntimeInfo() {
+    @Provides  @Singleton
+    public Configuration provideConfiguration() {
       Configuration conf = new Configuration();
       return conf;
     }
   }
+
+  /*************** RuntimeInfo ***************/
 
   @Module(library = true)
   public static class TestRuntimeModule {
@@ -336,53 +375,216 @@ public class TestUtil {
     public TestRuntimeModule() {
     }
 
-    @Provides
+    @Provides @Singleton
     public RuntimeInfo provideRuntimeInfo() {
       RuntimeInfo info = new RuntimeInfo(RuntimeModule.SDC_PROPERTY_PREFIX, new MetricRegistry(),
         Arrays.asList(getClass().getClassLoader()));
       return info;
     }
+
   }
 
+  /*************** SafeScheduledExecutorService ***************/
 
-  @Module(injects = PipelineManager.class, library = true, includes = { TestRuntimeModule.class,
-      TestPipelineStoreModuleNew.class, TestPipelineStateStoreModule.class, TestStageLibraryModule.class,
-      TestConfigurationModule.class, TestPreviewExecutorModule.class, TestPreviewExecutorModule.class})
+  @Module(library = true)
+  public static class TestExecutorModule {
+
+    @Provides @Named("previewExecutor")
+    public SafeScheduledExecutorService providePreviewExecutor() {
+      return new SafeScheduledExecutorService(1, "preview");
+    }
+
+    @Provides @Named("runnerExecutor") @Singleton
+    public SafeScheduledExecutorService provideRunnerExecutor() {
+      return new SafeScheduledExecutorService(10, "runner");
+
+    }
+
+    @Provides @Named("managerExecutor") @Singleton
+    public SafeScheduledExecutorService provideManagerExecutor() {
+      return new SafeScheduledExecutorService(10, "manager");
+
+    }
+  }
+
+  /*************** PipelineProvider ***************/
+
+  @Module(injects = {EmailSender.class, AlertManager.class, ProductionObserver.class, RulesConfigLoader.class,
+    ThreadHealthReporter.class, DataObserverRunnable.class, RulesConfigLoaderRunnable.class, MetricObserverRunnable.class,
+    SourceOffsetTracker.class, ProductionPipelineRunner.class, ProductionPipelineBuilder.class},
+    library = true, includes = {TestRuntimeModule.class, TestPipelineStoreModuleNew.class})
+  public static class TestPipelineProviderModule {
+
+    private String name;
+    private String rev;
+
+
+    public TestPipelineProviderModule() {
+    }
+
+    public TestPipelineProviderModule(String name, String rev) {
+      this.name = name;
+      this.rev = rev;
+    }
+
+    @Provides
+    @Named("name")
+    public String provideName() {
+      return name;
+    }
+
+    @Provides
+    @Named("rev")
+    public String provideRev() {
+      return rev;
+    }
+
+    @Provides @Singleton
+    public MetricRegistry provideMetricRegistry() {
+      return new MetricRegistry();
+    }
+
+    @Provides @Singleton
+    public EmailSender provideEmailSender() {
+      return Mockito.mock(EmailSender.class);
+    }
+
+    @Provides @Singleton
+    public AlertManager provideAlertManager() {
+      return Mockito.mock(AlertManager.class);
+    }
+
+    @Provides @Singleton
+    public MetricsObserverRunner provideMetricsObserverRunner() {
+      return Mockito.mock(MetricsObserverRunner.class);
+    }
+
+    @Provides @Singleton
+    public Observer provProductionObserver() {
+      return Mockito.mock(ProductionObserver.class);
+    }
+
+    @Provides @Singleton
+    public RulesConfigLoader provideRulesConfigLoader() {
+      return Mockito.mock(RulesConfigLoader.class);
+    }
+
+    @Provides @Singleton
+    public ThreadHealthReporter provideThreadHealthReporter() {
+      return Mockito.mock(ThreadHealthReporter.class);
+    }
+
+    @Provides @Singleton
+    public RulesConfigLoaderRunnable provideRulesConfigLoaderRunnable() {
+      return Mockito.mock(RulesConfigLoaderRunnable.class);
+    }
+
+    @Provides @Singleton
+    public MetricObserverRunnable provideMetricObserverRunnable() {
+      return Mockito.mock(MetricObserverRunnable.class);
+    }
+
+    @Provides @Singleton
+    public DataObserverRunnable provideDataObserverRunnable() {
+      return Mockito.mock(DataObserverRunnable.class);
+    }
+
+    @Provides @Singleton
+    public SourceOffsetTracker provideProductionSourceOffsetTracker(@Named("name") String name,
+                                                                              @Named("rev") String rev,
+                                                                              RuntimeInfo runtimeInfo) {
+      return new ProductionSourceOffsetTracker(name, rev, runtimeInfo);
+    }
+
+    @Provides @Singleton
+    public ProductionPipelineRunner provideProductionPipelineRunner(@Named("name") String name,
+                                                                    @Named("rev") String rev, Configuration configuration, RuntimeInfo runtimeInfo,
+                                                                    MetricRegistry metrics, SnapshotStore snapshotStore,
+                                                                    ThreadHealthReporter threadHealthReporter,
+                                                                    SourceOffsetTracker sourceOffsetTracker) {
+      return new ProductionPipelineRunner(name, rev, configuration, runtimeInfo, metrics, snapshotStore,
+        threadHealthReporter, sourceOffsetTracker);
+    }
+
+    @Provides @Singleton
+    public ProductionPipelineBuilder provideProductionPipelineBuilder(@Named("name") String name,
+                                                                      @Named("rev") String rev,
+                                                                      RuntimeInfo runtimeInfo, StageLibraryTask stageLib,
+                                                                      ProductionPipelineRunner runner, Observer observer) {
+      return new ProductionPipelineBuilder(name, rev, runtimeInfo, stageLib, runner, observer);
+    }
+
+    @Provides @Singleton
+    public SnapshotStore provideSnapshotStore(RuntimeInfo runtimeInfo) {
+      return new FileSnapshotStore(runtimeInfo);
+    }
+  }
+
+  /*************** Runner ***************/
+
+  @Module(injects = Runner.class, library = true, includes = {TestExecutorModule.class, TestPipelineStoreModuleNew.class,
+    TestPipelineStateStoreModule.class, TestPipelineProviderModule.class})
+  public static class TestRunnerModule {
+
+    private final String name;
+    private final String rev;
+    private final String user;
+    private final ObjectGraph objectGraph;
+
+    public TestRunnerModule(String user, String name, String rev, ObjectGraph objectGraph) {
+      this.name = name;
+      this.rev = rev;
+      this.user = user;
+      this.objectGraph = objectGraph;
+    }
+
+    @Provides
+    public Runner provideRunner(@Named("runnerExecutor") SafeScheduledExecutorService runnerExecutor) {
+      return new AsyncRunner(new StandaloneRunner(user, name, rev, objectGraph), runnerExecutor);
+    }
+  }
+
+  /*************** PipelineManager ***************/
+
+  @Module(injects = {PipelineManager.class, StandaloneRunner.class}, library = true,
+    includes = { TestRuntimeModule.class, TestPipelineStoreModuleNew.class, TestPipelineStateStoreModule.class,
+      TestStageLibraryModule.class, TestConfigurationModule.class, TestExecutorModule.class, TestPipelineProviderModule.class})
   public static class TestPipelineManagerModule {
 
     public TestPipelineManagerModule() {
     }
 
-    @Provides
-    public PipelineManager provideStateManager(RuntimeInfo runtimeInfo, Configuration configuration,
-      PipelineStoreTask pipelineStore, PipelineStateStore pipelineStateStore, StageLibraryTask stageLibrary, SafeScheduledExecutorService
-      previewExecutor, SafeScheduledExecutorService runnerExecutor, SafeScheduledExecutorService managerExecutor) {
-      return new PipelineManager(runtimeInfo, configuration, pipelineStore, pipelineStateStore, stageLibrary,
-        previewExecutor, runnerExecutor, managerExecutor);
-    }
-  }
-
-  @Module(library = true)
-  public class TestPreviewExecutorModule {
-
-    @Provides
-    public SafeScheduledExecutorService provideExecutorService() {
-      return new SafeScheduledExecutorService(10, "PreviewExecutor");
+    @Provides @Singleton
+    public PreviewerProvider providePreviewerProvider() {
+      return new PreviewerProvider() {
+        @Override
+        public Previewer createPreviewer(String user, String name, String rev, PreviewerListener listener,
+                                         ObjectGraph objectGraph) {
+          Previewer mock = Mockito.mock(Previewer.class);
+          Mockito.when(mock.getId()).thenReturn(UUID.randomUUID().toString());
+          Mockito.when(mock.getName()).thenReturn(name);
+          Mockito.when(mock.getRev()).thenReturn(rev);
+          return mock;
+        }
+      };
     }
 
-  }
-
-  @Module(library = true)
-  public class TestRunnerExecutorModule {
-
-    @Provides
-    public SafeScheduledExecutorService provideExecutorService() {
-      return new SafeScheduledExecutorService(10, "RunnerExecutor");
+    @Provides @Singleton
+    public RunnerProvider provideRunnerProvider() {
+      return new RunnerProvider() {
+        @Override
+        public Runner createRunner(String user, String name, String rev, PipelineConfiguration pipelineConf,
+                                   ObjectGraph objectGraph) {
+          ObjectGraph plus = objectGraph.plus(new TestPipelineProviderModule(name, rev));
+          TestRunnerModule testRunnerModule = new TestRunnerModule(user, name, rev, plus);
+          return testRunnerModule.provideRunner(new SafeScheduledExecutorService(1, "asyncExecutor"));
+        }
+      };
     }
 
   }
 
-
+  /*************** StandalonePipelineManagerTask ***************/
 
   @Module(injects = StandalonePipelineManagerTask.class
     , library = true, includes = {TestRuntimeModule.class, TestPipelineStoreModule.class
@@ -398,6 +600,7 @@ public class TestUtil {
       return new StandalonePipelineManagerTask(RuntimeInfo, configuration, pipelineStore, stageLibrary);
     }
   }
+
 
   /********************************************/
   /*************** Utility methods ************/

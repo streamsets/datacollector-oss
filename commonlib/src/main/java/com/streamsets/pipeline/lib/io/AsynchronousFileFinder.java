@@ -17,6 +17,7 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingDeque;
+import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -34,7 +35,7 @@ public class AsynchronousFileFinder extends FileFinder {
   private final Path globPath;
   private final FileFinder fileFinder;
   private final BlockingQueue<Path> found;
-  private final SafeScheduledExecutorService executor;
+  private final ScheduledExecutorService executor;
   private final boolean ownExecutor;
   private boolean firstFind;
 
@@ -43,7 +44,7 @@ public class AsynchronousFileFinder extends FileFinder {
   }
 
   // if a null executor is given the finder will create its own instance and destroy it on close()
-  public AsynchronousFileFinder(final Path globPath, int scanIntervalSec, SafeScheduledExecutorService executor) {
+  public AsynchronousFileFinder(final Path globPath, int scanIntervalSec, ScheduledExecutorService executor) {
     Utils.checkArgument(scanIntervalSec > 0, Utils.formatL("scanInterval must be greater than zero", scanIntervalSec));
     this.globPath = globPath;
     fileFinder = new SynchronousFileFinder(globPath);
@@ -108,7 +109,7 @@ public class AsynchronousFileFinder extends FileFinder {
   }
 
   @VisibleForTesting
-  SafeScheduledExecutorService getExecutor() {
+  ScheduledExecutorService getExecutor() {
     return executor;
   }
 

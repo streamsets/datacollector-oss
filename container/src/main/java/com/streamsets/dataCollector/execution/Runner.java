@@ -114,9 +114,9 @@ public interface Runner {
 
   void removeAlertEventListener(AlertEventListener alertEventListener);
 
-  void broadcastAlerts(RuleDefinition ruleDefinition);
-
   void addMetricsEventListener(MetricsEventListener metricsEventListener);
+
+  void broadcastAlerts(RuleDefinition ruleDefinition);
 
   void close();
 

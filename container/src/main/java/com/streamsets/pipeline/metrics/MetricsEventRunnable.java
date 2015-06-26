@@ -7,7 +7,6 @@
 package com.streamsets.pipeline.metrics;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.streamsets.dataCollector.execution.PipelineStatus;
 import com.streamsets.dataCollector.execution.Runner;
 import com.streamsets.pipeline.callback.CallbackInfo;
 import com.streamsets.pipeline.json.ObjectMapperFactory;
@@ -19,10 +18,10 @@ import com.streamsets.pipeline.restapi.bean.MeterJson;
 import com.streamsets.pipeline.restapi.bean.MetricRegistryJson;
 import com.streamsets.pipeline.runner.production.ThreadHealthReporter;
 import com.streamsets.pipeline.store.PipelineStoreException;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.inject.Inject;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -50,6 +49,17 @@ public class MetricsEventRunnable implements Runnable {
     this.scheduledDelay = scheduledDelay/1000;
     slaveMetrics = new HashMap<>();
     this.runner = runner;
+  }
+
+  @Inject
+  public MetricsEventRunnable(PipelineManager pipelineManager, RuntimeInfo runtimeInfo, int scheduledDelay, Runner runner,
+                              ThreadHealthReporter threadHealthReporter) {
+    this.pipelineManager = pipelineManager;
+    this.runtimeInfo = runtimeInfo;
+    this.scheduledDelay = scheduledDelay/1000;
+    slaveMetrics = new HashMap<>();
+    this.runner = runner;
+    this.threadHealthReporter = threadHealthReporter;
   }
 
   public void addMetricsEventListener(MetricsEventListener metricsEventListener) {
@@ -171,5 +181,9 @@ public class MetricsEventRunnable implements Runnable {
     aggregatedMetrics.setSlaves(slaves);
 
     return aggregatedMetrics;
+  }
+
+  public int getScheduledDelay() {
+    return scheduledDelay;
   }
 }

@@ -60,7 +60,7 @@ public class MiniITDataCollector implements DataCollector {
     StageLibraryTask stageLibrary = pipelineTask.getStageLibraryTask();
     PipelineStoreTask store = pipelineTask.getPipelineStoreTask();
     PipelineConfiguration tmpPipelineConfig =
-      store.create(pipelineName, desc, user);
+      store.create(user, pipelineName, desc);
     // we might want to add an import API as now to import have to create one then update it
     realPipelineConfig.setUuid(tmpPipelineConfig.getUuid());
     PipelineConfigurationValidator validator =
@@ -68,7 +68,7 @@ public class MiniITDataCollector implements DataCollector {
     validator.validate();
     realPipelineConfig.setValidation(validator);
     realPipelineConfig =
-      store.save(pipelineName, user, tag, desc, realPipelineConfig);
+      store.save(user, pipelineName, tag, desc, realPipelineConfig);
   }
 
   @Override

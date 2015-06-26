@@ -3,7 +3,8 @@ package com.streamsets.pipeline.lib.executor;
 import java.util.concurrent.Callable;
 
 import org.slf4j.Logger;
-import org.slf4j.Marker;
+
+import java.util.concurrent.Callable;
 
 public class ExecutorSupport {
   private final Logger logger;

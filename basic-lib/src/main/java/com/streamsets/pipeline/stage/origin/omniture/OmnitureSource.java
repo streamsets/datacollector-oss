@@ -7,7 +7,6 @@
 package com.streamsets.pipeline.stage.origin.omniture;
 
 import com.streamsets.pipeline.api.BatchMaker;
-import com.streamsets.pipeline.api.OffsetCommitter;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.base.BaseSource;
@@ -27,6 +26,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
 public class OmnitureSource extends BaseSource {
@@ -47,7 +47,7 @@ public class OmnitureSource extends BaseSource {
   private final HttpClientMode httpMode;
   private final long pollingInterval;
 
-  private SafeScheduledExecutorService safeExecutor;
+  private ScheduledExecutorService executorService;
 
   private long recordCount;
   private DataParserFactory parserFactory;
@@ -94,9 +94,9 @@ public class OmnitureSource extends BaseSource {
   }
 
   private void createPollingConsumer() {
-    safeExecutor = new SafeScheduledExecutorService(1, getClass().getName());
+    executorService = new SafeScheduledExecutorService(1, getClass().getName());
     LOG.info("Scheduling consumer at polling period {}.", pollingInterval);
-    safeExecutor.scheduleAtFixedRate(httpConsumer, 0L, pollingInterval, TimeUnit.MILLISECONDS);
+    executorService.scheduleAtFixedRate(httpConsumer, 0L, pollingInterval, TimeUnit.MILLISECONDS);
   }
 
   @Override
@@ -105,7 +105,7 @@ public class OmnitureSource extends BaseSource {
     switch (httpMode) {
       case POLLING:
         httpConsumer.stop();
-        safeExecutor.shutdown();
+        executorService.shutdown();
         break;
       default:
         throw new IllegalStateException("Unrecognized httpMode " + httpMode);

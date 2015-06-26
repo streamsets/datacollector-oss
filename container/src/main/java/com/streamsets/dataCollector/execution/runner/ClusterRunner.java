@@ -5,11 +5,6 @@
  */
 package com.streamsets.dataCollector.execution.runner;
 
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
 import com.codahale.metrics.MetricRegistry;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
@@ -25,6 +20,11 @@ import com.streamsets.pipeline.callback.CallbackInfo;
 import com.streamsets.pipeline.config.RuleDefinition;
 import com.streamsets.pipeline.metrics.MetricsEventListener;
 import com.streamsets.pipeline.store.PipelineStoreException;
+
+import java.util.Collection;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * (c) 2015 StreamSets, Inc. All rights reserved. May not
@@ -175,12 +175,6 @@ public class ClusterRunner implements Runner {
   }
 
   @Override
-  public void broadcastAlerts(RuleDefinition ruleDefinition) {
-    // TODO Auto-generated method stub
-
-  }
-
-  @Override
   public boolean deleteAlert(String alertId) throws PipelineRunnerException, PipelineStoreException {
     // TODO Auto-generated method stub
     return false;
@@ -189,6 +183,11 @@ public class ClusterRunner implements Runner {
   @Override
   public void addMetricsEventListener(MetricsEventListener metricsEventListener) {
     // TODO Auto-generated method stub
+
+  }
+
+  @Override
+  public void broadcastAlerts(RuleDefinition ruleDefinition) {
 
   }
 

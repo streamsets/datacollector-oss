@@ -18,7 +18,7 @@ public interface PipelineStoreTask extends Task {
   // for now, pipelinestatestore should be injected in pipelinestoretask
   public void registerListener(PipelineStateStore pipelineStateStore);
 
-  public PipelineConfiguration create(String name, String description, String user) throws PipelineStoreException;
+  public PipelineConfiguration create(String user, String name, String description) throws PipelineStoreException;
 
   public void delete(String name) throws PipelineStoreException;
 
@@ -28,7 +28,7 @@ public interface PipelineStoreTask extends Task {
 
   public List<PipelineRevInfo> getHistory(String name) throws PipelineStoreException;
 
-  public PipelineConfiguration save(String name, String user, String tag, String tagDescription,
+  public PipelineConfiguration save(String user, String name, String tag, String tagDescription,
       PipelineConfiguration pipeline) throws PipelineStoreException;
 
   public PipelineConfiguration load(String name, String tagOrRev) throws PipelineStoreException;

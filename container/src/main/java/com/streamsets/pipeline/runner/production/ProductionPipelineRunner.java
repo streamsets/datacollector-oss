@@ -44,10 +44,11 @@ import com.streamsets.pipeline.snapshotstore.SnapshotStatus;
 import com.streamsets.pipeline.snapshotstore.SnapshotStore;
 import com.streamsets.pipeline.snapshotstore.impl.FileSnapshotStore;
 import com.streamsets.pipeline.util.ContainerError;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.inject.Inject;
+import javax.inject.Named;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -101,10 +102,11 @@ public class ProductionPipelineRunner implements PipelineRunner {
   private Observer observer;
   private List<BatchListener> batchListenerList = new CopyOnWriteArrayList<BatchListener>();
   private Object errorRecordsMutex;
-  private final MemoryLimitConfiguration memoryLimitConfiguration;
+  private MemoryLimitConfiguration memoryLimitConfiguration;
   private long lastMemoryLimitNotification;
   private ThreadHealthReporter threadHealthReporter;
 
+  //TODO<Hari>  remove this
   public ProductionPipelineRunner(RuntimeInfo runtimeInfo, SnapshotStore snapshotStore,
                                   DeliveryGuarantee deliveryGuarantee, String pipelineName, String revision,
                                   BlockingQueue<Object> observeRequests,
@@ -143,6 +145,65 @@ public class ProductionPipelineRunner implements PipelineRunner {
     errorRecordsMutex = new Object();
   }
 
+  @Inject
+  public ProductionPipelineRunner(@Named("name") String pipelineName, @Named ("rev") String revision,
+                                  com.streamsets.pipeline.util.Configuration configuration,
+                                  RuntimeInfo runtimeInfo, MetricRegistry metrics, SnapshotStore snapshotStore,
+                                  ThreadHealthReporter threadHealthReporter, SourceOffsetTracker offsetTracker) {
+    this.runtimeInfo = runtimeInfo;
+    this.configuration = configuration;
+    this.metrics = metrics;
+    this.threadHealthReporter = threadHealthReporter;
+    this.snapshotStore = snapshotStore;
+    this.pipelineName = pipelineName;
+    this.revision = revision;
+    this.offsetTracker = offsetTracker;
+
+    stageToErrorRecordsMap = new HashMap<>();
+    stageToErrorMessagesMap = new HashMap<>();
+    errorRecordsMutex = new Object();
+
+    batchProcessingTimer = MetricsConfigurator.createTimer(metrics, "pipeline.batchProcessing");
+    batchCountMeter = MetricsConfigurator.createMeter(metrics, "pipeline.batchCount");
+    batchInputRecordsHistogram = MetricsConfigurator.createHistogram5Min(metrics, "pipeline.inputRecordsPerBatch");
+    batchOutputRecordsHistogram = MetricsConfigurator.createHistogram5Min(metrics, "pipeline.outputRecordsPerBatch");
+    batchErrorRecordsHistogram = MetricsConfigurator.createHistogram5Min(metrics, "pipeline.errorRecordsPerBatch");
+    batchErrorsHistogram = MetricsConfigurator.createHistogram5Min(metrics, "pipeline.errorsPerBatch");
+    batchInputRecordsMeter = MetricsConfigurator.createMeter(metrics, "pipeline.batchInputRecords");
+    batchOutputRecordsMeter = MetricsConfigurator.createMeter(metrics, "pipeline.batchOutputRecords");
+    batchErrorRecordsMeter = MetricsConfigurator.createMeter(metrics, "pipeline.batchErrorRecords");
+    batchErrorMessagesMeter = MetricsConfigurator.createMeter(metrics, "pipeline.batchErrorMessages");
+    memoryConsumedCounter = MetricsConfigurator.createCounter(metrics, "pipeline.memoryConsumed");
+  }
+
+  public void setObserveRequests(BlockingQueue<Object> observeRequests) {
+    this.observeRequests = observeRequests;
+  }
+
+  public void setDeliveryGuarantee(DeliveryGuarantee deliveryGuarantee) {
+    this.deliveryGuarantee = deliveryGuarantee;
+  }
+
+  public void setMemoryLimitConfiguration(MemoryLimitConfiguration memoryLimitConfiguration) {
+    this.memoryLimitConfiguration = memoryLimitConfiguration;
+  }
+
+  public void setOffsetTracker(SourceOffsetTracker offsetTracker) {
+    //This setter is need to override offsetTracker in case of some sources which don't want sdc to keep track of offsets
+    this.offsetTracker = offsetTracker;
+  }
+
+  //TODO<Hari>  remove this when we remove the other constructor
+  public void setThreadHealthReporter(ThreadHealthReporter threadHealthReporter) {
+    this.threadHealthReporter = threadHealthReporter;
+  }
+
+  //TODO<Hari>  remove this when we remove the other constructor
+  @Override
+  public void setObserver(Observer observer) {
+    this.observer = observer;
+  }
+
   @Override
   public RuntimeInfo getRuntimeInfo() {
     return runtimeInfo;
@@ -156,14 +217,6 @@ public class ProductionPipelineRunner implements PipelineRunner {
   @Override
   public MetricRegistry getMetrics() {
     return metrics;
-  }
-
-  public void setOffsetTracker(SourceOffsetTracker offsetTracker) {
-    this.offsetTracker = offsetTracker;
-  }
-
-  public void setThreadHealthReporter(ThreadHealthReporter threadHealthReporter) {
-    this.threadHealthReporter = threadHealthReporter;
   }
 
   @Override
@@ -228,11 +281,6 @@ public class ProductionPipelineRunner implements PipelineRunner {
   @Override
   public String getNewSourceOffset() {
     return newSourceOffset;
-  }
-
-  @Override
-  public void setObserver(Observer observer) {
-    this.observer = observer;
   }
 
   public String getCommittedOffset() {

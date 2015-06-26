@@ -188,7 +188,7 @@ public class TestTokenAuthentication {
       .queryParam(ProxyAuthenticator.AUTH_TOKEN, authenticationTokens.get("admin"))
       .request()
       .get();
-    Assert.assertEquals(200, response.getStatus());
+    Assert.assertEquals(200, response.getState());
 
     Map userInfo = response.readEntity(Map.class);
     Assert.assertTrue(userInfo.containsKey("user"));

@@ -20,6 +20,7 @@ public class MetricsObserverRunner {
   /*ProductionObserver from the ProductionPipelineRunnable will set the new change request if the metric alert
   definition changes*/
   private volatile RulesConfigurationChangeRequest newChangeRequest;
+
   private final MetricRegistry metrics;
   private final AlertManager alertManager;
 

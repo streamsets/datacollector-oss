@@ -5,9 +5,8 @@
  */
 package com.streamsets.pipeline.store.impl;
 
-import static org.junit.Assert.assertEquals;
-
 import com.google.common.collect.ImmutableList;
+import com.streamsets.dataCollector.execution.PipelineStateStore;
 import com.streamsets.pipeline.api.ExecutionMode;
 import com.streamsets.pipeline.config.ConfigConfiguration;
 import com.streamsets.pipeline.config.DataRuleDefinition;
@@ -17,10 +16,10 @@ import com.streamsets.pipeline.config.MetricElement;
 import com.streamsets.pipeline.config.MetricType;
 import com.streamsets.pipeline.config.MetricsRuleDefinition;
 import com.streamsets.pipeline.config.PipelineConfiguration;
-import com.streamsets.pipeline.definition.PipelineDefConfigs;
 import com.streamsets.pipeline.config.RuleDefinitions;
 import com.streamsets.pipeline.config.StageConfiguration;
 import com.streamsets.pipeline.config.ThresholdType;
+import com.streamsets.pipeline.definition.PipelineDefConfigs;
 import com.streamsets.pipeline.main.RuntimeInfo;
 import com.streamsets.pipeline.runner.MockStages;
 import com.streamsets.pipeline.stagelibrary.StageLibraryTask;
@@ -28,10 +27,8 @@ import com.streamsets.pipeline.store.PipelineInfo;
 import com.streamsets.pipeline.store.PipelineStoreException;
 import com.streamsets.pipeline.store.PipelineStoreTask;
 import com.streamsets.pipeline.util.ContainerError;
-
 import dagger.ObjectGraph;
 import dagger.Provides;
-
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
@@ -39,7 +36,6 @@ import org.junit.Test;
 import org.mockito.Mockito;
 
 import javax.inject.Singleton;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -47,6 +43,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+
+import static org.junit.Assert.assertEquals;
 
 public class TestFilePipelineStoreTask {
 
@@ -68,17 +66,25 @@ public class TestFilePipelineStoreTask {
       Mockito.when(mock.getExecutionMode()).thenReturn(RuntimeInfo.ExecutionMode.STANDALONE);
       return mock;
     }
+
     @Provides
     @Singleton
     public StageLibraryTask provideStageLibrary() {
       return MockStages.createStageLibrary();
+    }
+
+    @Provides
+    @Singleton
+    public PipelineStateStore providePipelineStateStore() {
+      return null;
     }
   }
 
   @Before
   public void setUp() {
     ObjectGraph dagger = ObjectGraph.create(new Module());
-    store = dagger.get(FilePipelineStoreTask.class);
+    FilePipelineStoreTask filePipelineStoreTask = dagger.get(FilePipelineStoreTask.class);
+    store = new CachePipelineStoreTask(filePipelineStoreTask);
   }
 
   @After
@@ -109,9 +115,9 @@ public class TestFilePipelineStoreTask {
     try {
       store.init();
       Assert.assertEquals(0, store.getPipelines().size());
-      store.create("a", "A", "foo");
+      store.create("foo", "a", "A");
       Assert.assertEquals(1, store.getPipelines().size());
-      store.save("a", "foo2", "A", "", store.load("a", "0"));
+      store.save("foo2", "a", "A", "", store.load("a", "0"));
       assertEquals("foo2", store.getPipelines().get(0).getLastModifier());
       Assert.assertEquals("a", store.getInfo("a").getName());
       store.delete("a");
@@ -125,8 +131,8 @@ public class TestFilePipelineStoreTask {
   public void testCreateExistingPipeline() throws Exception {
     try {
       store.init();
-      store.create("a", "A", "foo");
-      store.create("a", "A", "foo");
+      store.create("foo", "a", "A");
+      store.create("foo", "a", "A");
     } finally {
       store.stop();
     }
@@ -148,7 +154,7 @@ public class TestFilePipelineStoreTask {
       store.init();
       createDefaultPipeline(store);
       PipelineConfiguration pc = store.load(DEFAULT_PIPELINE_NAME, FilePipelineStoreTask.REV);
-      store.save("a", "foo", null, null, pc);
+      store.save("foo", "a", null, null, pc);
     } finally {
       store.stop();
     }
@@ -161,7 +167,7 @@ public class TestFilePipelineStoreTask {
       createDefaultPipeline(store);
       PipelineConfiguration pc = store.load(DEFAULT_PIPELINE_NAME, FilePipelineStoreTask.REV);
       pc.setUuid(UUID.randomUUID());
-      store.save(DEFAULT_PIPELINE_NAME, "foo", null, null, pc);
+      store.save("foo", DEFAULT_PIPELINE_NAME, null, null, pc);
     } finally {
       store.stop();
     }
@@ -202,7 +208,7 @@ public class TestFilePipelineStoreTask {
       PipelineConfiguration pc0 = store.load(DEFAULT_PIPELINE_NAME, FilePipelineStoreTask.REV);
       pc0 = createPipeline(pc0.getUuid());
       Thread.sleep(5);
-      store.save(DEFAULT_PIPELINE_NAME, "foo", null, null, pc0);
+      store.save("foo", DEFAULT_PIPELINE_NAME, null, null, pc0);
       PipelineInfo info2 = store.getInfo(DEFAULT_PIPELINE_NAME);
       Assert.assertEquals(info1.getCreated(), info2.getCreated());
       Assert.assertEquals(info1.getCreator(), info2.getCreator());
@@ -224,7 +230,7 @@ public class TestFilePipelineStoreTask {
       Assert.assertTrue(pc.getStages().isEmpty());
       UUID uuid = pc.getUuid();
       pc = createPipeline(pc.getUuid());
-      pc = store.save(DEFAULT_PIPELINE_NAME, "foo", null, null, pc);
+      pc = store.save("foo", DEFAULT_PIPELINE_NAME, null, null, pc);
       UUID newUuid = pc.getUuid();
       Assert.assertNotEquals(uuid, newUuid);
       PipelineConfiguration pc2 = store.load(DEFAULT_PIPELINE_NAME, FilePipelineStoreTask.REV);
@@ -334,14 +340,14 @@ public class TestFilePipelineStoreTask {
   }
 
   private void createDefaultPipeline(PipelineStoreTask store) throws PipelineStoreException {
-    store.create(DEFAULT_PIPELINE_NAME,DEFAULT_PIPELINE_DESCRIPTION, SYSTEM_USER);
+    store.create(SYSTEM_USER, DEFAULT_PIPELINE_NAME, DEFAULT_PIPELINE_DESCRIPTION);
   }
 
   @Test
   public void testPipelineDefaults() throws Exception {
     try {
       store.init();
-      PipelineConfiguration pc = store.create(UUID.randomUUID().toString(),"", "foo");
+      PipelineConfiguration pc = store.create("foo", UUID.randomUUID().toString(),"");
       Map<String, Object> confs = new HashMap<>();
       for (ConfigConfiguration cc : pc.getConfiguration()) {
         confs.put(cc.getName(), cc.getValue());

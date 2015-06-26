@@ -6,14 +6,13 @@
 package com.streamsets.dataCollector.execution.preview;
 
 import com.streamsets.dataCollector.execution.Previewer;
-
-import java.util.concurrent.Executors;
+import com.streamsets.pipeline.lib.executor.SafeScheduledExecutorService;
 
 public class TestAsyncPreviewer extends TestPreviewer {
 
   protected Previewer createPreviewer() {
     SyncPreviewer syncPreviewer = new SyncPreviewer(ID, NAME, REV, previewerListener, configuration, stageLibrary,
       pipelineStore, runtimeInfo);
-    return new AsyncPreviewer(syncPreviewer, Executors.newSingleThreadExecutor());
+    return new AsyncPreviewer(syncPreviewer, new SafeScheduledExecutorService(1, "preview"));
   }
 }

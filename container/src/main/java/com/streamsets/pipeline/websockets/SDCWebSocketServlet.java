@@ -28,6 +28,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
 public class SDCWebSocketServlet extends WebSocketServlet implements WebSocketCreator {
@@ -37,7 +38,7 @@ public class SDCWebSocketServlet extends WebSocketServlet implements WebSocketCr
   private final RuntimeInfo runtimeInfo;
   private final PipelineManager pipelineManager;
   private BlockingQueue<WebSocketMessage> queue;
-  private SafeScheduledExecutorService executorService;
+  private ScheduledExecutorService executorService;
 
   private static final String MAX_WEB_SOCKETS_CONCURRENT_REQUESTS_KEY = "max.webSockets.concurrent.requests";
   private static final int MAX_WEB_SOCKETS_CONCURRENT_REQUESTS_DEFAULT = 50;

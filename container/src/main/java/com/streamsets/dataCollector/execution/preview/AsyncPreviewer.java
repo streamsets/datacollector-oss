@@ -9,26 +9,27 @@ import com.streamsets.dataCollector.execution.PreviewOutput;
 import com.streamsets.dataCollector.execution.PreviewStatus;
 import com.streamsets.dataCollector.execution.Previewer;
 import com.streamsets.dataCollector.execution.RawPreview;
-import com.streamsets.pipeline.api.StageException;
+import com.streamsets.pipeline.lib.executor.SafeScheduledExecutorService;
 import com.streamsets.pipeline.runner.PipelineRuntimeException;
 import com.streamsets.pipeline.runner.StageOutput;
 import com.streamsets.pipeline.store.PipelineStoreException;
+import com.streamsets.pipeline.util.PipelineException;
 
 import javax.ws.rs.core.MultivaluedMap;
 import java.util.List;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
-import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 
 public class AsyncPreviewer implements Previewer {
 
   private final SyncPreviewer syncPreviewer;
-  private final ExecutorService executorService;
+  private final SafeScheduledExecutorService executorService;
   private Future<?> future;
 
-  public AsyncPreviewer(SyncPreviewer syncPreviewer, ExecutorService executorService) {
+  public AsyncPreviewer(SyncPreviewer syncPreviewer, SafeScheduledExecutorService executorService) {
     this.syncPreviewer = syncPreviewer;
     this.executorService = executorService;
   }
@@ -49,7 +50,7 @@ public class AsyncPreviewer implements Previewer {
   }
 
   @Override
-  public void validateConfigs() throws StageException, PipelineRuntimeException, PipelineStoreException {
+  public void validateConfigs() throws PipelineException {
     Callable<Object> callable = new Callable<Object>() {
       @Override
       public Object call() throws Exception {
@@ -71,7 +72,7 @@ public class AsyncPreviewer implements Previewer {
                     final List<StageOutput> stagesOverride) {
     Callable<Object> callable = new Callable<Object>() {
       @Override
-      public Object call() throws StageException, PipelineRuntimeException, PipelineStoreException {
+      public Object call() throws PipelineException {
         syncPreviewer.start(batches, batchSize, skipTargets, stopStage, stagesOverride);
         return null;
       }
@@ -81,27 +82,31 @@ public class AsyncPreviewer implements Previewer {
 
   @Override
   public void stop() {
-    if(future != null) {
+    if(future != null && !future.isDone()) {
       future.cancel(true);
+      syncPreviewer.stop();
     }
-    syncPreviewer.stop();
   }
 
   @Override
-  public PreviewStatus waitForCompletion(int millis) throws Throwable {
+  public boolean waitForCompletion(int millis) throws PipelineException {
     if(future == null) {
       throw new PipelineRuntimeException(PreviewError.PREVIEW_0001);
     }
     try {
       future.get(millis, TimeUnit.MILLISECONDS);
+      return true;
     } catch (ExecutionException e) {
-      //Callable has thrown Exception
-      throw e.getCause();
-    } catch (Exception e) {
-      //Some other exception
-      throw e;
+      if (e.getCause() instanceof PipelineException) {
+        //preview error from pipeline
+        throw (PipelineException)e.getCause();
+      } else {
+        //some exception while previewing
+        throw new PipelineException(PreviewError.PREVIEW_0003, e.getMessage(), e);
+      }
+    } catch (InterruptedException | TimeoutException e) {
+      return false;
     }
-    return syncPreviewer.getStatus();
   }
 
   @Override
@@ -111,7 +116,7 @@ public class AsyncPreviewer implements Previewer {
 
   @Override
   public PreviewOutput getOutput() {
-    return syncPreviewer.getOutput();
+    return (future.isDone()) ? syncPreviewer.getOutput() : null;
   }
 
 }

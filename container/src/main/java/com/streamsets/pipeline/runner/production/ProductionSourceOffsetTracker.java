@@ -15,6 +15,8 @@ import com.streamsets.pipeline.runner.SourceOffsetTracker;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.inject.Inject;
+import javax.inject.Named;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -33,7 +35,8 @@ public class ProductionSourceOffsetTracker implements SourceOffsetTracker {
   private final String rev;
   private final RuntimeInfo runtimeInfo;
 
-  public ProductionSourceOffsetTracker(String pipelineName, String rev, RuntimeInfo runtimeInfo) {
+  @Inject
+  public ProductionSourceOffsetTracker( @Named("name") String pipelineName,  @Named("rev") String rev, RuntimeInfo runtimeInfo) {
     this.pipelineName = pipelineName;
     this.rev = rev;
     this.runtimeInfo = runtimeInfo;

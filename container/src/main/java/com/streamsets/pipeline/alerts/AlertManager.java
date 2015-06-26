@@ -147,10 +147,6 @@ public class AlertManager {
         pipelineManager.broadcastAlerts(ruleDefinition);
       }
 
-      if (standaloneRunner != null) {
-        standaloneRunner.broadcastAlerts(ruleDefinition);
-      }
-
     } else {
       //remove existing gauge
       MetricsConfigurator.removeGauge(metrics, AlertsUtil.getAlertGaugeName(ruleDefinition.getId()));

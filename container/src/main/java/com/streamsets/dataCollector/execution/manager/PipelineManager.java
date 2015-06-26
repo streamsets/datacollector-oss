@@ -5,19 +5,6 @@
  */
 package com.streamsets.dataCollector.execution.manager;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
-import java.util.concurrent.Callable;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.ScheduledFuture;
-import java.util.concurrent.TimeUnit;
-
-import javax.inject.Inject;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
@@ -31,11 +18,6 @@ import com.streamsets.dataCollector.execution.PreviewStatus;
 import com.streamsets.dataCollector.execution.Previewer;
 import com.streamsets.dataCollector.execution.PreviewerListener;
 import com.streamsets.dataCollector.execution.Runner;
-import com.streamsets.dataCollector.execution.preview.SyncPreviewer;
-import com.streamsets.dataCollector.execution.runner.AsyncRunner;
-import com.streamsets.dataCollector.execution.runner.ClusterRunner;
-import com.streamsets.dataCollector.execution.runner.StandaloneRunner;
-import com.streamsets.pipeline.api.ExecutionMode;
 import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.lib.executor.SafeScheduledExecutorService;
 import com.streamsets.pipeline.main.RuntimeInfo;
@@ -46,52 +28,56 @@ import com.streamsets.pipeline.store.PipelineStoreTask;
 import com.streamsets.pipeline.task.AbstractTask;
 import com.streamsets.pipeline.util.Configuration;
 import com.streamsets.pipeline.util.ContainerError;
+import dagger.ObjectGraph;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import javax.inject.Inject;
+import javax.inject.Named;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ScheduledFuture;
+import java.util.concurrent.TimeUnit;
 
 public class PipelineManager extends AbstractTask implements Manager, PreviewerListener  {
 
   private static final Logger LOG = LoggerFactory.getLogger(PipelineManager.class);
   private static final String PIPELINE_MANAGER = "PipelineManager";
-  private final RuntimeInfo runtimeInfo;
-  private final Configuration configuration;
-  private final PipelineStoreTask pipelineStore;
-  private final PipelineStateStore pipelineStateStore;
-  //TODO- Change to cache with runner evicted when its in terminal status
+
+  private final ObjectGraph objectGraph;
+
+  @Inject RuntimeInfo runtimeInfo;
+  @Inject Configuration configuration;
+  @Inject PipelineStoreTask pipelineStore;
+  @Inject PipelineStateStore pipelineStateStore;
+  @Inject StageLibraryTask stageLibrary;
+  @Inject @Named("previewExecutor") SafeScheduledExecutorService previewExecutor;
+  @Inject @Named("runnerExecutor") SafeScheduledExecutorService runnerExecutor;
+  @Inject @Named("managerExecutor") SafeScheduledExecutorService managerExecutor;
+  @Inject RunnerProvider runnerProvider;
+  @Inject PreviewerProvider previewerProvider;
+
   private Cache<String, Runner> runnerCache;
   private Cache<String, Previewer> previewerCache;
-  private final StageLibraryTask stageLibrary;
-  private final SafeScheduledExecutorService previewExecutor;
-  private final SafeScheduledExecutorService runnerExecutor;
   static final long DEFAULT_RUNNER_EXPIRY_INTERVAL = 60*60*1000;
   static final String RUNNER_EXPIRY_INTERVAL = "runner.expiry.interval";
   private final long runnerExpiryInterval;
-  private final SafeScheduledExecutorService managerExecutor;
   private ScheduledFuture<?> runnerExpiryFuture;
   private static final String NAME_AND_REV_SEPARATOR = "::";
 
-  @Inject
-  public PipelineManager(RuntimeInfo runtimeInfo,
-      Configuration configuration, PipelineStoreTask pipelineStore, PipelineStateStore pipelineStateStore,
-      StageLibraryTask stageLibrary, SafeScheduledExecutorService previewExecutor, SafeScheduledExecutorService runnerExecutor,
-      SafeScheduledExecutorService managerExecutor) {
+  public PipelineManager(ObjectGraph objectGraph) {
     super(PIPELINE_MANAGER);
-    this.runtimeInfo = runtimeInfo;
-    this.configuration = configuration;
-    runnerExpiryInterval = this.configuration.get(RUNNER_EXPIRY_INTERVAL, DEFAULT_RUNNER_EXPIRY_INTERVAL);
-    this.pipelineStore = pipelineStore;
-    this.pipelineStateStore = pipelineStateStore;
-    this.stageLibrary = stageLibrary;
-    this.previewExecutor = previewExecutor;
-    this.runnerExecutor = runnerExecutor;
-    this.managerExecutor = managerExecutor;
+    this.objectGraph = objectGraph;
+    this.objectGraph.inject(this);
+      runnerExpiryInterval = this.configuration.get(RUNNER_EXPIRY_INTERVAL, DEFAULT_RUNNER_EXPIRY_INTERVAL);
   }
 
   @Override
-  public Previewer createPreviewer(String name, String rev) {
-    UUID uuid = UUID.randomUUID();
-    // pass the previewExecutor
-    Previewer previewer =
-      new SyncPreviewer(uuid.toString(), name, rev, this, configuration, stageLibrary, pipelineStore, runtimeInfo);
-    previewerCache.put(uuid.toString(), previewer);
+  public Previewer createPreviewer(String user, String name, String rev) {
+    Previewer previewer = previewerProvider.createPreviewer(user, name, rev, this, objectGraph);
+    previewerCache.put(previewer.getId(), previewer);
     return previewer;
   }
 
@@ -106,7 +92,7 @@ public class PipelineManager extends AbstractTask implements Manager, PreviewerL
   }
 
   @Override
-  public Runner getRunner(final String name, final String rev, String user) throws PipelineStoreException {
+  public Runner getRunner(final String user, final String name, final String rev) throws PipelineStoreException {
     final String nameAndRevString = getNameAndRevString(name, rev);
     Runner runner;
     try {
@@ -131,7 +117,7 @@ public class PipelineManager extends AbstractTask implements Manager, PreviewerL
   @Override
   public List<PipelineState> getPipelines() throws PipelineStoreException {
     List<PipelineInfo> pipelineInfoList = pipelineStore.getPipelines();
-    List<PipelineState> pipelineStateList = new ArrayList<PipelineState>();
+    List<PipelineState> pipelineStateList = new ArrayList<>();
     for (PipelineInfo pipelineInfo : pipelineInfoList) {
       String name = pipelineInfo.getName();
       String rev = pipelineInfo.getLastRev();
@@ -174,7 +160,7 @@ public class PipelineManager extends AbstractTask implements Manager, PreviewerL
       try {
         PipelineState pipelineState = pipelineStateStore.getState(name, rev);
         // Create runner if active
-        if (pipelineState.getStatus().isActive()) {
+        if (pipelineState.getState().isActive()) {
           Runner runner = getRunner(pipelineState, name, rev);
           runner.prepareForDataCollectorStart();
           if (runner.getStatus() == PipelineStatus.DISCONNECTED) {
@@ -187,7 +173,7 @@ public class PipelineManager extends AbstractTask implements Manager, PreviewerL
       }
     }
 
-    runnerExpiryFuture = managerExecutor.scheduleReturnFuture(new Runnable() {
+    runnerExpiryFuture = managerExecutor.schedule(new Runnable() {
       @Override
       public void run() {
         for (Runner runner : runnerCache.asMap().values()) {
@@ -250,23 +236,10 @@ public class PipelineManager extends AbstractTask implements Manager, PreviewerL
     previewerCache.invalidate(id);
   }
 
-  private Runner getRunner(PipelineState pipelineState, String name, String rev) {
-    LOG.debug("Pipeline status of pipeline: '{}::{}' is: '{}'", name, rev, pipelineState.getStatus());
-    ExecutionMode executionMode = pipelineState.getExecutionMode();
-    Runner runner;
-    switch (executionMode) {
-      case CLUSTER:
-        runner = new ClusterRunner();
-        break;
-      case STANDALONE:
-        StandaloneRunner standloneRunner =
-          new StandaloneRunner(name, rev, pipelineState.getUser(), runtimeInfo, configuration, pipelineStore,
-            pipelineStateStore, stageLibrary, runnerExecutor);
-        runner = new AsyncRunner(standloneRunner, runnerExecutor);
-        break;
-      default:
-        throw new IllegalArgumentException(Utils.format("Invalid execution mode '{}'", executionMode));
-    }
+  private Runner getRunner(PipelineState pipelineState, String name, String rev) throws PipelineStoreException {
+    LOG.debug("Pipeline status of pipeline: '{}::{}' is: '{}'", name, rev, pipelineState.getState());
+    Runner runner = runnerProvider.createRunner(pipelineState.getUser(), name, rev,
+      pipelineStore.load(name, rev), objectGraph);
     return runner;
   }
 

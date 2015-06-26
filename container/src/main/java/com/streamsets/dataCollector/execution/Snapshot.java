@@ -5,14 +5,13 @@
  */
 package com.streamsets.dataCollector.execution;
 
-import com.streamsets.pipeline.runner.StageOutput;
+import java.io.Closeable;
+import java.io.InputStream;
 
-import java.util.List;
-
-public interface Snapshot {
+public interface Snapshot extends Closeable {
 
   SnapshotInfo getInfo();
 
-  public List<List<StageOutput>> getOutput();
+  public InputStream getOutput();
 
 }

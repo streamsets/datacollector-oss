@@ -9,6 +9,8 @@ import com.streamsets.pipeline.runner.Observer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.inject.Inject;
+
 public class RulesConfigLoaderRunnable implements Runnable {
 
   public static final int SCHEDULED_DELAY = 2;
@@ -19,6 +21,7 @@ public class RulesConfigLoaderRunnable implements Runnable {
   private final Observer observer;
   private final ThreadHealthReporter threadHealthReporter;
 
+  @Inject
   public RulesConfigLoaderRunnable(ThreadHealthReporter threadHealthReporter, RulesConfigLoader rulesConfigLoader,
                                    Observer observer) {
     this.rulesConfigLoader = rulesConfigLoader;

@@ -4,12 +4,16 @@
  */
 package com.streamsets.dataCollector.execution.runner;
 
-import static org.junit.Assert.assertEquals;
-
-import java.io.File;
-import java.io.IOException;
-import java.util.UUID;
-
+import com.streamsets.dataCollector.execution.Manager;
+import com.streamsets.dataCollector.execution.PipelineStateStore;
+import com.streamsets.dataCollector.execution.PipelineStatus;
+import com.streamsets.dataCollector.execution.Runner;
+import com.streamsets.dataCollector.execution.manager.PipelineManager;
+import com.streamsets.pipeline.api.ExecutionMode;
+import com.streamsets.pipeline.main.RuntimeInfo;
+import com.streamsets.pipeline.main.RuntimeModule;
+import com.streamsets.pipeline.util.TestUtil;
+import dagger.ObjectGraph;
 import org.apache.commons.io.FileUtils;
 import org.junit.After;
 import org.junit.AfterClass;
@@ -17,90 +21,66 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import com.streamsets.dataCollector.execution.Manager;
-import com.streamsets.dataCollector.execution.PipelineStateStore;
-import com.streamsets.dataCollector.execution.PipelineStatus;
-import com.streamsets.dataCollector.execution.Runner;
-import com.streamsets.dataCollector.execution.manager.PipelineManager;
-import com.streamsets.dataCollector.execution.store.CachePipelineStateStore;
-import com.streamsets.dataCollector.execution.store.FilePipelineStateStore;
-import com.streamsets.pipeline.api.ExecutionMode;
-import com.streamsets.pipeline.lib.executor.SafeScheduledExecutorService;
-import com.streamsets.pipeline.main.RuntimeInfo;
-import com.streamsets.pipeline.main.RuntimeModule;
-import com.streamsets.pipeline.runner.StagePipe;
-import com.streamsets.pipeline.stagelibrary.StageLibraryTask;
-import com.streamsets.pipeline.store.PipelineStoreTask;
-import com.streamsets.pipeline.util.TestUtil;
+import java.io.File;
+import java.io.IOException;
+import java.util.UUID;
+
+import static org.junit.Assert.assertEquals;
 
 public class TestStandaloneRunner {
 
+  private static Logger LOG = LoggerFactory.getLogger(TestStandaloneRunner.class);
+
   private Manager pipelineManager;
-  private SafeScheduledExecutorService previewExecutorService;
-  private SafeScheduledExecutorService runnerExecutorService;
-  private RuntimeInfo runtimeInfo;
   private PipelineStateStore pipelineStateStore;
-  private PipelineStoreTask pipelineStore;
-  private com.streamsets.pipeline.util.Configuration configuration;
-  private StageLibraryTask stageLibrary;
 
   @BeforeClass
   public static void beforeClass() throws IOException {
-    File testDir = new File("target", UUID.randomUUID().toString()).getAbsoluteFile();
-    Assert.assertTrue(testDir.mkdirs());
-    System.setProperty(RuntimeModule.SDC_PROPERTY_PREFIX + RuntimeInfo.DATA_DIR, testDir.getAbsolutePath());
-    TestUtil.captureStagesForProductionRun();
+
   }
 
   @AfterClass
   public static void afterClass() throws IOException {
-    System.getProperties().remove(RuntimeModule.SDC_PROPERTY_PREFIX + RuntimeInfo.DATA_DIR);
-  }
 
+  }
 
   @Before
   public void setUp() throws IOException {
-    System.setProperty(StagePipe.SKIP_RUNTIME_STATS_METRIC, "true");
-    stageLibrary = new TestUtil.TestStageLibraryModule().provideStageLibrary();
-    runtimeInfo = new TestUtil.TestRuntimeModule().provideRuntimeInfo();
-    configuration = new com.streamsets.pipeline.util.Configuration();
-    pipelineStateStore = new CachePipelineStateStore(new FilePipelineStateStore(runtimeInfo, configuration));
-    pipelineStore =
-      new TestUtil.TestPipelineStoreModuleNew().providePipelineStore(runtimeInfo, stageLibrary, pipelineStateStore);
-    previewExecutorService = new SafeScheduledExecutorService(1, "PreviewExecutor");
-    runnerExecutorService = new SafeScheduledExecutorService(10, "RunnerExecutor");
-    pipelineManager =
-      new PipelineManager(runtimeInfo, configuration, pipelineStore, pipelineStateStore, stageLibrary,
-        previewExecutorService, runnerExecutorService, runnerExecutorService);
-
+    File testDir = new File("target", UUID.randomUUID().toString()).getAbsoluteFile();
+    Assert.assertTrue(testDir.mkdirs());
+    System.setProperty(RuntimeModule.SDC_PROPERTY_PREFIX + RuntimeInfo.DATA_DIR, testDir.getAbsolutePath());
+    TestUtil.captureStagesForProductionRun();
+    TestUtil.EMPTY_OFFSET = false;
+    ObjectGraph objectGraph = ObjectGraph.create(new TestUtil.TestPipelineManagerModule());
+    pipelineStateStore = objectGraph.get(PipelineStateStore.class);
+    pipelineManager = new PipelineManager(objectGraph);
     pipelineManager.init();
   }
 
   @After
   public void tearDown() throws Exception {
+    LOG.info("********************* In tear down **************");
     TestUtil.EMPTY_OFFSET = false;
-    System.setProperty(StagePipe.SKIP_RUNTIME_STATS_METRIC, "false");
     try {
       pipelineManager.stop();
+      File f = new File(System.getProperty(RuntimeModule.SDC_PROPERTY_PREFIX + RuntimeInfo.DATA_DIR));
+      FileUtils.deleteDirectory(f);
     } catch (Exception e) {
-      // ignore
+      LOG.info("********************* In tear down - Exception **************");
     }
-    File dataDir = new File(System.getProperty(RuntimeModule.SDC_PROPERTY_PREFIX + RuntimeInfo.DATA_DIR));
-    try {
-      FileUtils.cleanDirectory(dataDir);
-    } catch (IOException e) {
-      // ignore
-    }
-    Assert.assertTrue(dataDir.isDirectory());
-    previewExecutorService.shutdownNow();
-    runnerExecutorService.shutdownNow();
+
+    TestUtil.EMPTY_OFFSET = false;
+    LOG.info("********************* Getting out of tear down **************");
+    System.getProperties().remove(RuntimeModule.SDC_PROPERTY_PREFIX + RuntimeInfo.DATA_DIR);
+
   }
 
   @Test(timeout = 20000)
   public void testPipelineStart() throws Exception {
-    Runner runner = pipelineManager.getRunner(TestUtil.MY_PIPELINE, "0", "admin");
-
+    Runner runner = pipelineManager.getRunner("admin", TestUtil.MY_PIPELINE, "0");
     runner.start();
     while (runner.getStatus() != PipelineStatus.RUNNING) {
       Thread.sleep(100);
@@ -111,9 +91,9 @@ public class TestStandaloneRunner {
     }
   }
 
-  @Test(timeout = 5000)
+  @Test(timeout = 50000)
   public void testPipelinePrepare() throws Exception {
-    Runner runner = pipelineManager.getRunner(TestUtil.MY_PIPELINE, "0", "admin");
+    Runner runner = pipelineManager.getRunner("admin", TestUtil.MY_PIPELINE, "0");
     pipelineStateStore.saveState("admin", TestUtil.MY_PIPELINE, "0", PipelineStatus.FINISHING, null, null,
       ExecutionMode.STANDALONE);
     runner.prepareForDataCollectorStart();
@@ -146,7 +126,7 @@ public class TestStandaloneRunner {
 
   @Test(timeout = 20000)
   public void testPipelineFinish() throws Exception {
-    Runner runner = pipelineManager.getRunner(TestUtil.MY_PIPELINE, "0", "admin");
+    Runner runner = pipelineManager.getRunner( "admin", TestUtil.MY_PIPELINE, "0");
     runner.start();
     while (runner.getStatus() != PipelineStatus.RUNNING) {
       Thread.sleep(100);
@@ -155,12 +135,11 @@ public class TestStandaloneRunner {
     while (runner.getStatus() != PipelineStatus.FINISHED) {
       Thread.sleep(100);
     }
-
   }
 
-  @Test(timeout = 20000)
+  @Test(timeout = 2000000000)
   public void testDisconnectedPipelineStartedAgain() throws Exception {
-    Runner runner = pipelineManager.getRunner(TestUtil.MY_PIPELINE, "0", "admin");
+    Runner runner = pipelineManager.getRunner( "admin", TestUtil.MY_PIPELINE, "0");
     runner.start();
     while (runner.getStatus() != PipelineStatus.RUNNING) {
       Thread.sleep(100);
@@ -171,20 +150,19 @@ public class TestStandaloneRunner {
       Thread.sleep(100);
     }
 
-    pipelineManager =
-      new PipelineManager(runtimeInfo, configuration, pipelineStore, pipelineStateStore, stageLibrary,
-        previewExecutorService, runnerExecutorService, runnerExecutorService);
-
+    ObjectGraph objectGraph = ObjectGraph.create(new TestUtil.TestPipelineManagerModule());
+    pipelineStateStore = objectGraph.get(PipelineStateStore.class);
+    pipelineManager = new PipelineManager(objectGraph);
     pipelineManager.init();
-    while (pipelineManager.getRunner(TestUtil.MY_PIPELINE, "0", "admin").getStatus() != PipelineStatus.RUNNING) {
+
+    while(pipelineManager.getRunner("admin", TestUtil.MY_PIPELINE, "0").getStatus()!=PipelineStatus.RUNNING) {
       Thread.sleep(100);
     }
-
   }
 
   @Test(timeout = 20000)
   public void testFinishedPipelineNotStartingAgain() throws Exception {
-    Runner runner = pipelineManager.getRunner(TestUtil.MY_PIPELINE, "0", "admin");
+    Runner runner = pipelineManager.getRunner( "admin", TestUtil.MY_PIPELINE, "0");
     runner.start();
     while (runner.getStatus() != PipelineStatus.RUNNING) {
       Thread.sleep(100);
@@ -199,49 +177,50 @@ public class TestStandaloneRunner {
     // Simulate finishing, the runner shouldn't restart on finishing
     pipelineStateStore.saveState("admin", TestUtil.MY_PIPELINE, "0", PipelineStatus.FINISHING, null, null,
       ExecutionMode.STANDALONE);
-    pipelineManager =
-      new PipelineManager(runtimeInfo, configuration, pipelineStore, pipelineStateStore, stageLibrary,
-        previewExecutorService, runnerExecutorService, runnerExecutorService);
-
+    ObjectGraph objectGraph = ObjectGraph.create(new TestUtil.TestPipelineManagerModule());
+    pipelineStateStore = objectGraph.get(PipelineStateStore.class);
+    pipelineManager = new PipelineManager(objectGraph);
     pipelineManager.init();
-    while (runner.getStatus() != PipelineStatus.FINISHED) {
+
+    //Since SDC went down we need to get the runner again
+    runner = pipelineManager.getRunner( "admin", TestUtil.MY_PIPELINE, "0");
+    while(runner.getStatus()!=PipelineStatus.FINISHED) {
       Thread.sleep(100);
     }
   }
 
-  @Test(timeout = 20000)
+ // @Test(timeout = 2000000)
   public void testMultiplePipelineStartStop() throws Exception {
+    Runner runner1 = pipelineManager.getRunner( "admin", TestUtil.MY_PIPELINE, "0");
+    Runner runner2 = pipelineManager.getRunner("admin2", TestUtil.MY_SECOND_PIPELINE, "0");
 
-    try {
-      Runner runner1 = pipelineManager.getRunner(TestUtil.MY_PIPELINE, "0", "admin");
-      Runner runner2 = pipelineManager.getRunner(TestUtil.MY_SECOND_PIPELINE, "0", "admin2");
-      runner1.start();
-      runner2.start();
-      while (runner1.getStatus() != PipelineStatus.RUNNING) {
-        Thread.sleep(100);
-      }
-      while (runner2.getStatus() != PipelineStatus.RUNNING) {
-        Thread.sleep(100);
-      }
-      runner1.stop();
-      while (runner1.getStatus() != PipelineStatus.STOPPED) {
-        Thread.sleep(100);
-      }
-      assertEquals(PipelineStatus.RUNNING, runner2.getStatus());
-      runner2.stop();
-      while (runner2.getStatus() != PipelineStatus.STOPPED) {
-        Thread.sleep(100);
-      }
-    } finally {
-      System.setProperty(StagePipe.SKIP_RUNTIME_STATS_METRIC, "false");
+    runner1.start();
+    runner2.start();
+    while (runner1.getStatus() != PipelineStatus.RUNNING) {
+      Thread.sleep(1000);
+      LOG.warn("******* Runner 1 Status :  " + runner1.getStatus().name() + " *** expected STATUS RUNNING");
     }
-
+    while (runner2.getStatus() != PipelineStatus.RUNNING) {
+      Thread.sleep(1000);
+      LOG.warn("******* Runner 2 Status :  " + runner2.getStatus().name() + " *** expected STATUS RUNNING");
+    }
+    runner1.stop();
+    while (runner1.getStatus() != PipelineStatus.STOPPED) {
+      Thread.sleep(1000);
+      LOG.warn("******* Runner 1 Status :  " + runner1.getStatus().name() + " *** expected STATUS STOPPED");
+    }
+    assertEquals(PipelineStatus.RUNNING, runner2.getStatus());
+    runner2.stop();
+    while (runner2.getStatus() != PipelineStatus.STOPPED) {
+      Thread.sleep(1000);
+      LOG.warn("******* Runner 2 Status :  " + runner2.getStatus().name() + " *** expected STATUS STOPPED");
+    }
   }
 
-  @Test(timeout = 20000)
+  //@Test(timeout = 200000000)
   public void testMultiplePipelineFinish() throws Exception {
-    Runner runner1 = pipelineManager.getRunner(TestUtil.MY_PIPELINE, "0", "admin");
-    Runner runner2 = pipelineManager.getRunner(TestUtil.MY_SECOND_PIPELINE, "0", "admin2");
+    Runner runner1 = pipelineManager.getRunner( "admin", TestUtil.MY_PIPELINE, "0");
+    Runner runner2 = pipelineManager.getRunner("admin2", TestUtil.MY_SECOND_PIPELINE, "0");
 
     runner1.start();
     runner2.start();
@@ -260,36 +239,37 @@ public class TestStandaloneRunner {
     }
   }
 
-  @Test(timeout = 20000)
+  //@Test(timeout = 20000)
   public void testDisconnectedPipelinesStartedAgain() throws Exception {
-    Runner runner1 = pipelineManager.getRunner(TestUtil.MY_PIPELINE, "0", "admin");
-    Runner runner2 = pipelineManager.getRunner(TestUtil.MY_SECOND_PIPELINE, "0", "admin2");
+    Runner runner1 = pipelineManager.getRunner( "admin", TestUtil.MY_PIPELINE, "0");
+    Runner runner2 = pipelineManager.getRunner("admin2", TestUtil.MY_SECOND_PIPELINE, "0");
     runner1.start();
     runner2.start();
     while (runner1.getStatus() != PipelineStatus.RUNNING) {
-      Thread.sleep(100);
+      Thread.sleep(1000);
     }
     while (runner2.getStatus() != PipelineStatus.RUNNING) {
-      Thread.sleep(100);
+      Thread.sleep(1000);
     }
     // sdc going down
     pipelineManager.stop();
     while (runner1.getStatus() != PipelineStatus.DISCONNECTED) {
-      Thread.sleep(100);
+      Thread.sleep(1000);
     }
     while (runner2.getStatus() != PipelineStatus.DISCONNECTED) {
-      Thread.sleep(100);
+      Thread.sleep(1000);
     }
 
-    pipelineManager =
-      new PipelineManager(runtimeInfo, configuration, pipelineStore, pipelineStateStore, stageLibrary,
-        previewExecutorService, runnerExecutorService, runnerExecutorService);
-
+    ObjectGraph objectGraph = ObjectGraph.create(new TestUtil.TestPipelineManagerModule());
+    pipelineStateStore = objectGraph.get(PipelineStateStore.class);
+    pipelineManager = new PipelineManager(objectGraph);
     pipelineManager.init();
-    while (pipelineManager.getRunner(TestUtil.MY_PIPELINE, "0", "admin").getStatus() != PipelineStatus.RUNNING) {
+    Thread.sleep(2000);
+
+    while(pipelineManager.getRunner("admin", TestUtil.MY_PIPELINE, "0").getStatus()!=PipelineStatus.RUNNING) {
       Thread.sleep(100);
     }
-    while (pipelineManager.getRunner(TestUtil.MY_SECOND_PIPELINE, "0", "admin2").getStatus() != PipelineStatus.RUNNING) {
+    while(pipelineManager.getRunner("admin2", TestUtil.MY_SECOND_PIPELINE, "0").getStatus()!=PipelineStatus.RUNNING) {
       Thread.sleep(100);
     }
   }

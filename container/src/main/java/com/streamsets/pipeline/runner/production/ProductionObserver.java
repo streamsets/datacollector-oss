@@ -12,9 +12,11 @@ import com.streamsets.pipeline.prodmanager.Constants;
 import com.streamsets.pipeline.record.RecordImpl;
 import com.streamsets.pipeline.runner.Observer;
 import com.streamsets.pipeline.runner.Pipe;
+import com.streamsets.pipeline.util.Configuration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.inject.Inject;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -53,8 +55,7 @@ public class ProductionObserver implements Observer {
   n*/
   private List<Integer> randomNumberSampleSpace;
 
-  public ProductionObserver(BlockingQueue<Object> observeRequests,
-                            com.streamsets.pipeline.util.Configuration configuration) {
+  public ProductionObserver(BlockingQueue<Object> observeRequests, Configuration configuration) {
     this.observeRequests = observeRequests;
     this.configuration = configuration;
     this.laneToMaxRecordIndexMap = new HashMap<>();
@@ -64,6 +65,21 @@ public class ProductionObserver implements Observer {
     for(int i = 0; i < 100; i++) {
       randomNumberSampleSpace.add(i);
     }
+  }
+
+  @Inject
+  public ProductionObserver(BlockingQueue<Object> observeRequests, Configuration configuration,
+                            MetricsObserverRunner metricsObserverRunner) {
+    this.observeRequests = observeRequests;
+    this.configuration = configuration;
+    this.laneToMaxRecordIndexMap = new HashMap<>();
+    this.ruleIdToRecordIndexMap = new HashMap<>();
+    this.laneToRecordCounterMap = new HashMap<>();
+    randomNumberSampleSpace = new ArrayList<>(100);
+    for(int i = 0; i < 100; i++) {
+      randomNumberSampleSpace.add(i);
+    }
+    this.metricsObserverRunner = metricsObserverRunner;
   }
 
   @Override

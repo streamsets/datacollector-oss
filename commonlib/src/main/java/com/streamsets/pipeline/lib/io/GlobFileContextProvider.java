@@ -23,6 +23,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.ScheduledExecutorService;
 
 public class GlobFileContextProvider implements FileContextProvider {
   private static final Logger LOG = LoggerFactory.getLogger(GlobFileContextProvider.class);
@@ -33,7 +34,7 @@ public class GlobFileContextProvider implements FileContextProvider {
     private final Path finderPath;
 
     // if scan interval is zero the GlobFileInfo will work synchronously and it won't require an executor
-    public GlobFileInfo(MultiFileInfo globFileInfo, SafeScheduledExecutorService executor, int scanIntervalSecs) {
+    public GlobFileInfo(MultiFileInfo globFileInfo, ScheduledExecutorService executor, int scanIntervalSecs) {
       this.globFileInfo = globFileInfo;
       finderPath = Paths.get(globFileInfo.getFileFullPath());
       this.fileFinder = (scanIntervalSecs == 0) ? new SynchronousFileFinder(finderPath)
@@ -64,7 +65,7 @@ public class GlobFileContextProvider implements FileContextProvider {
   }
 
   private final List<GlobFileInfo> globFileInfos;
-  private final SafeScheduledExecutorService executor;
+  private final ScheduledExecutorService executor;
   private final Charset charset;
   private final int maxLineLength;
   private final PostProcessingOptions postProcessing;

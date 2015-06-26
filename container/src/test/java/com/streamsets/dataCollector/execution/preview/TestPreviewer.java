@@ -31,6 +31,7 @@ import com.streamsets.pipeline.store.PipelineStoreException;
 import com.streamsets.pipeline.store.PipelineStoreTask;
 import com.streamsets.pipeline.util.Configuration;
 import com.streamsets.pipeline.util.ContainerError;
+import com.streamsets.pipeline.util.PipelineException;
 import org.apache.commons.io.IOUtils;
 import org.junit.Assert;
 import org.junit.Before;
@@ -231,9 +232,10 @@ public abstract class TestPreviewer {
     try {
       previewer.validateConfigs();
       previewer.waitForCompletion(5000);
-
       Assert.fail("Stage Exception expected");
-    } catch (StageException e) {
+    } catch (PipelineException pe) {
+      Assert.assertTrue(pe.getCause() instanceof StageException);
+      StageException e = (StageException) pe.getCause();
       Assert.assertEquals(MockErrorCode.MOCK_0000.getCode(), e.getErrorCode().getCode());
       Assert.assertEquals(MockErrorCode.MOCK_0000.getMessage(), e.getErrorCode().getMessage());
       //If there is an exception while validating then the state remains same
@@ -476,9 +478,10 @@ public abstract class TestPreviewer {
     try {
       previewer.start(1, 10, true, null, new ArrayList<StageOutput>());
       previewer.waitForCompletion(5000);
-
       Assert.fail("Stage Exception expected");
-    } catch (StageException e) {
+    } catch (PipelineException pe) {
+      Assert.assertTrue(pe.getCause() instanceof StageException);
+      StageException e = (StageException) pe.getCause();
       Assert.assertEquals(MockErrorCode.MOCK_0000.getCode(), e.getErrorCode().getCode());
       Assert.assertEquals(MockErrorCode.MOCK_0000.getMessage(), e.getErrorCode().getMessage());
       Assert.assertEquals(PreviewStatus.RUN_ERROR.name(), previewer.getStatus().name());

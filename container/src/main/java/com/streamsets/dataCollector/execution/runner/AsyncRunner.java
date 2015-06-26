@@ -5,9 +5,6 @@
  */
 package com.streamsets.dataCollector.execution.runner;
 
-import java.util.List;
-import java.util.concurrent.Callable;
-
 import com.codahale.metrics.MetricRegistry;
 import com.streamsets.dataCollector.execution.PipelineState;
 import com.streamsets.dataCollector.execution.PipelineStatus;
@@ -24,14 +21,20 @@ import com.streamsets.pipeline.metrics.MetricsEventListener;
 import com.streamsets.pipeline.runner.PipelineRuntimeException;
 import com.streamsets.pipeline.store.PipelineStoreException;
 
+import javax.inject.Inject;
+import javax.inject.Named;
+import java.util.List;
+import java.util.concurrent.Callable;
+
 public class AsyncRunner implements Runner {
 
   private final Runner runner;
-  private final SafeScheduledExecutorService executorService;
+  private final SafeScheduledExecutorService asyncExecutor;
 
-  public AsyncRunner (Runner runner, SafeScheduledExecutorService executorService) {
+  @Inject
+  public AsyncRunner (Runner runner, @Named("asyncExecutor") SafeScheduledExecutorService asyncExecutor) {
     this.runner = runner;
-    this.executorService = executorService;
+    this.asyncExecutor = asyncExecutor;
   }
 
   @Override
@@ -74,7 +77,7 @@ public class AsyncRunner implements Runner {
          return null;
       }
     };
-    executorService.submit(callable);
+    asyncExecutor.submit(callable);
   }
 
   @Override
@@ -96,7 +99,7 @@ public class AsyncRunner implements Runner {
          return null;
       }
     };
-    executorService.submit(callable);
+    asyncExecutor.submit(callable);
   }
 
   @Override

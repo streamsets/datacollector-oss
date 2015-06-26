@@ -33,13 +33,13 @@ import com.streamsets.pipeline.store.PipelineStoreException;
 import com.streamsets.pipeline.store.PipelineStoreTask;
 import com.streamsets.pipeline.util.Configuration;
 import com.streamsets.pipeline.util.ContainerError;
+import com.streamsets.pipeline.util.PipelineException;
 import com.streamsets.pipeline.validation.Issues;
 import com.streamsets.pipeline.validation.StageIssue;
 import org.apache.commons.io.input.BoundedInputStream;
 
 import javax.ws.rs.core.MultivaluedMap;
 import java.lang.reflect.Field;
-import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -93,7 +93,7 @@ public class SyncPreviewer implements Previewer {
   }
 
   @Override
-  public void validateConfigs() throws StageException, PipelineRuntimeException, PipelineStoreException {
+  public void validateConfigs() throws PipelineException {
     changeState(PreviewStatus.VALIDATING, null);
     try {
       previewPipeline = buildPreviewPipeline(0, 0, null, false);
@@ -109,10 +109,13 @@ public class SyncPreviewer implements Previewer {
         //Leave the state as is.
         throw e;
       }
-    } catch (PipelineStoreException | StageException e) {
+    } catch (PipelineStoreException e) {
       //Leave the state as is.
       throw e;
-    } finally {
+    } catch (StageException e) {
+      //Wrap stage exception in PipelineException
+      throw new PipelineException(PreviewError.PREVIEW_0003, e.getMessage(), e) ;
+    }  finally {
       if(previewPipeline != null) {
         previewPipeline.destroy();
         previewPipeline = null;
@@ -134,7 +137,7 @@ public class SyncPreviewer implements Previewer {
 
   @Override
   public void start(int batches, int batchSize, boolean skipTargets, String stopStage, List<StageOutput> stagesOverride)
-    throws StageException, PipelineRuntimeException, PipelineStoreException {
+    throws PipelineException {
     changeState(PreviewStatus.RUNNING, null);
     try {
       previewPipeline = buildPreviewPipeline(batches, batchSize, stopStage, skipTargets);
@@ -150,9 +153,12 @@ public class SyncPreviewer implements Previewer {
         changeState(PreviewStatus.RUN_ERROR, null);
         throw e;
       }
-    } catch (PipelineStoreException | StageException e) {
+    } catch (PipelineStoreException e) {
       changeState(PreviewStatus.RUN_ERROR, null);
       throw e;
+    } catch (StageException e) {
+      changeState(PreviewStatus.RUN_ERROR, null);
+      throw new PipelineException(PreviewError.PREVIEW_0003, e.getMessage(), e);
     } finally {
       if(previewPipeline != null) {
         previewPipeline.destroy();
@@ -163,14 +169,22 @@ public class SyncPreviewer implements Previewer {
 
   @Override
   public void stop() {
+    //state is active then call cancelling otherwise just destroy
+    if(previewStatus.isActive()) {
+      changeState(PreviewStatus.CANCELLING, null);
+    }
     if(previewPipeline != null) {
       previewPipeline.destroy();
+      previewPipeline = null;
+    }
+    if(previewStatus == PreviewStatus.CANCELLING) {
+      changeState(PreviewStatus.CANCELLED, null);
     }
   }
 
   @Override
-  public PreviewStatus waitForCompletion(int millis) {
-    return previewStatus;
+  public boolean waitForCompletion(int millis) {
+    return true;
   }
 
   @Override
@@ -180,8 +194,12 @@ public class SyncPreviewer implements Previewer {
 
   @Override
   public PreviewOutput getOutput() {
-    previewerListener.outputRetrieved(id);
-    return previewOutput;
+    //return output only if the preview has finished or terminated
+    if(!previewStatus.isActive()) {
+      previewerListener.outputRetrieved(id);
+      return previewOutput;
+    }
+    return null;
   }
 
   private PreviewPipeline buildPreviewPipeline(int batches, int batchSize, String endStageInstanceName,

@@ -29,6 +29,7 @@ import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
 public class HttpClientSource extends BaseSource implements OffsetCommitter {
@@ -55,7 +56,7 @@ public class HttpClientSource extends BaseSource implements OffsetCommitter {
   private String entityDelimiter;
 
   private ExecutorService executorService;
-  private SafeScheduledExecutorService safeExecutor;
+  private ScheduledExecutorService safeExecutor;
 
   private long recordCount;
   private DataParserFactory parserFactory;

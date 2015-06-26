@@ -5,22 +5,6 @@
  */
 package com.streamsets.dataCollector.execution.store;
 
-import java.io.File;
-import java.io.FileReader;
-import java.io.FilenameFilter;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.io.Reader;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-
-import javax.inject.Inject;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.MappingIterator;
@@ -41,6 +25,20 @@ import com.streamsets.pipeline.util.Configuration;
 import com.streamsets.pipeline.util.ContainerError;
 import com.streamsets.pipeline.util.LogUtil;
 import com.streamsets.pipeline.util.PipelineDirectoryUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import javax.inject.Inject;
+import java.io.File;
+import java.io.FileReader;
+import java.io.FilenameFilter;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.io.Reader;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
 
 public class FilePipelineStateStore implements PipelineStateStore {
   private final RuntimeInfo runtimeInfo;
@@ -49,7 +47,6 @@ public class FilePipelineStateStore implements PipelineStateStore {
   public static final String STATE_FILE_HISTORY = "pipelineStateHistory.json";
   public static final String STATE = "state";
   private static final Logger LOG = LoggerFactory.getLogger(FilePipelineStateStore.class);
-
 
   @Inject
   public FilePipelineStateStore(RuntimeInfo runtimeInfo, Configuration conf) {
@@ -74,9 +71,9 @@ public class FilePipelineStateStore implements PipelineStateStore {
   @Override
   public PipelineState edited(String user, String name, String rev, ExecutionMode executionMode) throws PipelineStoreException {
     PipelineState pipelineState = getState(name, rev);
-    Utils.checkState(!pipelineState.getStatus().isActive(),
-      Utils.format("Cannot edit pipeline in state: '{}'", pipelineState.getStatus()));
-    if (pipelineState.getStatus() != PipelineStatus.EDITED || executionMode != pipelineState.getExecutionMode()) {
+    Utils.checkState(!pipelineState.getState().isActive(),
+      Utils.format("Cannot edit pipeline in state: '{}'", pipelineState.getState()));
+    if (pipelineState.getState() != PipelineStatus.EDITED || executionMode != pipelineState.getExecutionMode()) {
       return saveState(user, name, rev, PipelineStatus.EDITED, "Pipeline edited", null, executionMode);
     } else {
       return null;
@@ -99,7 +96,7 @@ public class FilePipelineStateStore implements PipelineStateStore {
     LOG.debug("Changing state of pipeline '{}','{}','{}' to '{}' in execution mode: '{}'", name, rev, user, status,
       executionMode);
     PipelineState pipelineState =
-      new PipelineStateImpl(name, rev, user, status, message, System.currentTimeMillis(), attributes, executionMode);
+      new PipelineStateImpl(user, name, rev, status, message, System.currentTimeMillis(), attributes, executionMode);
     persistPipelineState(pipelineState);
     return pipelineState;
   }
@@ -173,8 +170,7 @@ public class FilePipelineStateStore implements PipelineStateStore {
     } catch (JsonProcessingException e) {
       throw new PipelineStoreException(ContainerError.CONTAINER_0210, e.getMessage(), e);
     }
-    try (OutputStream os =
-      new DataStore(getPipelineStateFile(pipelineState.getName(), pipelineState.getRev())).getOutputStream()) {
+    try (OutputStream os = new DataStore(getPipelineStateFile(pipelineState.getName(), pipelineState.getRev())).getOutputStream()) {
       os.write(pipelineString.getBytes());
     } catch (IOException e) {
       throw new PipelineStoreException(ContainerError.CONTAINER_0100, e.getMessage(), e);

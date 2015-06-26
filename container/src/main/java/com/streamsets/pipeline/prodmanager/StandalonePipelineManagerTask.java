@@ -28,8 +28,8 @@ import com.streamsets.pipeline.config.DeliveryGuarantee;
 import com.streamsets.pipeline.config.MemoryLimitConfiguration;
 import com.streamsets.pipeline.config.MemoryLimitExceeded;
 import com.streamsets.pipeline.config.PipelineConfiguration;
-import com.streamsets.pipeline.definition.PipelineDefConfigs;
 import com.streamsets.pipeline.config.RuleDefinition;
+import com.streamsets.pipeline.definition.PipelineDefConfigs;
 import com.streamsets.pipeline.el.JvmEL;
 import com.streamsets.pipeline.email.EmailSender;
 import com.streamsets.pipeline.json.ObjectMapperFactory;
@@ -521,16 +521,16 @@ public class StandalonePipelineManagerTask extends AbstractTask implements Pipel
 
     configLoaderRunnable = new RulesConfigLoaderRunnable(threadHealthReporter, rulesConfigLoader, observer);
     ScheduledFuture<?> configLoaderFuture =
-      executor.scheduleWithFixedDelayReturnFuture(configLoaderRunnable, 1,
+      executor.scheduleWithFixedDelay(configLoaderRunnable, 1,
         RulesConfigLoaderRunnable.SCHEDULED_DELAY, TimeUnit.SECONDS);
 
     metricObserverRunnable = new MetricObserverRunnable(threadHealthReporter, metricsObserverRunner);
-    ScheduledFuture<?> metricObserverFuture = executor.scheduleWithFixedDelayReturnFuture(
+    ScheduledFuture<?> metricObserverFuture = executor.scheduleWithFixedDelay(
       metricObserverRunnable, 1, 2, TimeUnit.SECONDS);
 
     observerRunnable = new DataObserverRunnable(threadHealthReporter, this.getMetrics(), productionObserveRequests,
       alertManager, configuration);
-    Future<?> observerFuture = executor.submitReturnFuture(observerRunnable);
+    Future<?> observerFuture = executor.submit(observerRunnable);
 
     pipelineRunnable = new ProductionPipelineRunnable(threadHealthReporter, this, prodPipeline, name, rev,
       ImmutableList.of(configLoaderFuture, observerFuture, metricObserverFuture));

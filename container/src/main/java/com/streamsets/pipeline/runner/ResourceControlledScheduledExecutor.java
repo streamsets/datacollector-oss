@@ -28,7 +28,7 @@ public class ResourceControlledScheduledExecutor {
   public ResourceControlledScheduledExecutor(final float maxCpuConsumption, final long minimumDelay) {
     Utils.checkArgument(maxCpuConsumption > 0, "Max CPU Consumption cannot be less than zero");
     scheduledExecutorService = new SafeScheduledExecutorService(2, "ResourceControlledScheduledExecutor");
-    scheduledExecutorService.schedule(new Runnable() {
+    scheduledExecutorService.scheduleAndForget(new Runnable() {
       private final ExponentiallyDecayingReservoir decayingReservoir =
         new ExponentiallyDecayingReservoir();
       @Override
@@ -59,8 +59,8 @@ public class ResourceControlledScheduledExecutor {
           delay = minimumDelay;
         }
         try {
-          scheduledExecutorService.schedule(this, delay, TimeUnit.MILLISECONDS);
-        } catch(RejectedExecutionException e) {
+          scheduledExecutorService.scheduleAndForget(this, delay, TimeUnit.MILLISECONDS);
+        } catch (RejectedExecutionException e) {
           if (!scheduledExecutorService.isShutdown()) {
             throw e;
           }

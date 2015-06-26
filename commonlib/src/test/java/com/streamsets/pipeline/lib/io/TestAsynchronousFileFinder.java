@@ -16,6 +16,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Set;
 import java.util.UUID;
+import java.util.concurrent.ScheduledExecutorService;
 
 public class TestAsynchronousFileFinder {
 
@@ -84,7 +85,7 @@ public class TestAsynchronousFileFinder {
 
   @Test
   public void testFindAndForgetExternalExecutor() throws Exception {
-    SafeScheduledExecutorService executor = new SafeScheduledExecutorService(1, "FileFinder");
+    ScheduledExecutorService executor = new SafeScheduledExecutorService(1, "FileFinder");
     try {
       testFindAndForget(null);
     } finally {

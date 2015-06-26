@@ -164,7 +164,7 @@ public class PipelineStoreResource {
       throws PipelineStoreException, URISyntaxException {
     Utils.checkState(runtimeInfo.getExecutionMode() != RuntimeInfo.ExecutionMode.SLAVE,
       "This operation is not supported in SLAVE mode");
-    PipelineConfiguration pipeline = store.create(name, description, user);
+    PipelineConfiguration pipeline = store.create(user, name, description);
 
     //Add predefined Metric Rules to the pipeline
     List<MetricsRuleDefinition> metricsRuleDefinitions = new ArrayList<>();
@@ -234,7 +234,7 @@ public class PipelineStoreResource {
     PipelineConfigurationValidator validator = new PipelineConfigurationValidator(stageLibrary, name, pipelineConfig);
     validator.validate();
     pipelineConfig.setValidation(validator);
-    pipelineConfig = store.save(name, user, rev, description, pipelineConfig);
+    pipelineConfig = store.save(user, name, rev, description, pipelineConfig);
     return Response.ok().entity(BeanHelper.wrapPipelineConfiguration(pipelineConfig)).build();
   }
 

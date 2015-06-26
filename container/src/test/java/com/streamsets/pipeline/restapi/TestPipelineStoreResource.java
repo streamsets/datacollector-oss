@@ -210,8 +210,8 @@ public class TestPipelineStoreResource extends JerseyTest {
                 "xyz lastModifier", "1", UUID.randomUUID(), true))));
         Mockito.when(pipelineStore.load("xyz", "1.0.0")).thenReturn(
             MockStages.createPipelineConfigurationSourceProcessorTarget());
-        Mockito.when(pipelineStore.create("myPipeline", "my description", "nobody")).thenReturn(
-            MockStages.createPipelineConfigurationSourceProcessorTarget());
+        Mockito.when(pipelineStore.create("nobody", "myPipeline", "my description")).thenReturn(
+          MockStages.createPipelineConfigurationSourceProcessorTarget());
         Mockito.doNothing().when(pipelineStore).delete("myPipeline");
         Mockito.doThrow(new PipelineStoreException(ContainerError.CONTAINER_0200, "xyz"))
             .when(pipelineStore).delete("xyz");

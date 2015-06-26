@@ -22,6 +22,8 @@ import com.streamsets.pipeline.validation.StageIssue;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.inject.Inject;
+import javax.inject.Named;
 import java.util.List;
 
 public class ProductionPipelineBuilder {
@@ -31,9 +33,14 @@ public class ProductionPipelineBuilder {
   private final StageLibraryTask stageLib;
   private final String name;
   private final String rev;
-  private final PipelineConfiguration pipelineConf;
+  //TODO<Hari>: Remove after migration
+  private PipelineConfiguration pipelineConf;
   private final RuntimeInfo runtimeInfo;
 
+  private ProductionPipelineRunner runner;
+  private Observer observer;
+
+  //TODO<Hari>: Remove after migration
   public ProductionPipelineBuilder(StageLibraryTask stageLib, String name, String rev, RuntimeInfo runtimeInfo,
                                    PipelineConfiguration pipelineConf) {
     this.stageLib = stageLib;
@@ -43,6 +50,18 @@ public class ProductionPipelineBuilder {
     this.pipelineConf = pipelineConf;
   }
 
+  @Inject
+  public ProductionPipelineBuilder(@Named("name") String name, @Named("rev") String rev, RuntimeInfo runtimeInfo,
+                                   StageLibraryTask stageLib, ProductionPipelineRunner runner, Observer observer) {
+    this.name = name;
+    this.rev = rev;
+    this.runtimeInfo = runtimeInfo;
+    this.stageLib = stageLib;
+    this.runner = runner;
+    this.observer = observer;
+  }
+
+  //TODO<Hari>: Remove after migration
   public ProductionPipeline build(ProductionPipelineRunner runner, SourceOffsetTracker offsetTracker, Observer observer)
       throws PipelineRuntimeException, StageException {
     PipelineConfigurationValidator validator = new PipelineConfigurationValidator(stageLib, name, pipelineConf, true);
@@ -66,6 +85,31 @@ public class ProductionPipelineBuilder {
         (OffsetCommitter) pipeline.getSource()));
     } else {
       runner.setOffsetTracker(offsetTracker);
+    }
+    return new ProductionPipeline(runtimeInfo, pipelineConf, pipeline);
+  }
+
+  public ProductionPipeline build(PipelineConfiguration pipelineConf)
+    throws PipelineRuntimeException, StageException {
+    PipelineConfigurationValidator validator = new PipelineConfigurationValidator(stageLib, name, pipelineConf, true);
+    if (!validator.validate()) {
+      throw new PipelineRuntimeException(ContainerError.CONTAINER_0158, ValidationUtil.getFirstIssueAsString(name,
+        validator.getIssues()));
+    }
+    Pipeline pipeline = new Pipeline.Builder(stageLib, name + PRODUCTION_PIPELINE_SUFFIX, pipelineConf)
+      .setObserver(observer).build(runner);
+
+    List<StageIssue> configIssues = pipeline.validateConfigs();
+    if (!configIssues.isEmpty()) {
+      Issues issues = new Issues(configIssues);
+      for (StageIssue stageIssue : configIssues) {
+        LOG.warn(String.valueOf(stageIssue));
+      }
+      throw new PipelineRuntimeException(issues);
+    }
+    if (pipeline.getSource() instanceof OffsetCommitter) {
+      runner.setOffsetTracker(new ProductionSourceOffsetCommitterOffsetTracker(name, rev, runtimeInfo,
+        (OffsetCommitter) pipeline.getSource()));
     }
     return new ProductionPipeline(runtimeInfo, pipelineConf, pipeline);
   }

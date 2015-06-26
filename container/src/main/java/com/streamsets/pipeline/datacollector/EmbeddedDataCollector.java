@@ -5,15 +5,6 @@
  */
 
 package com.streamsets.pipeline.datacollector;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.util.ArrayList;
-import java.util.List;
-
-import com.streamsets.pipeline.prodmanager.StandalonePipelineManagerTask;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.streamsets.pipeline.DataCollector;
 import com.streamsets.pipeline.api.impl.Utils;
@@ -27,6 +18,7 @@ import com.streamsets.pipeline.main.PipelineTask;
 import com.streamsets.pipeline.main.PipelineTaskModule;
 import com.streamsets.pipeline.main.RuntimeInfo;
 import com.streamsets.pipeline.prodmanager.PipelineManager;
+import com.streamsets.pipeline.prodmanager.StandalonePipelineManagerTask;
 import com.streamsets.pipeline.restapi.bean.BeanHelper;
 import com.streamsets.pipeline.restapi.bean.PipelineConfigurationJson;
 import com.streamsets.pipeline.runner.Pipeline;
@@ -37,6 +29,13 @@ import com.streamsets.pipeline.task.Task;
 import com.streamsets.pipeline.task.TaskWrapper;
 import com.streamsets.pipeline.validation.PipelineConfigurationValidator;
 import dagger.ObjectGraph;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class EmbeddedDataCollector implements DataCollector {
   private static final Logger LOG = LoggerFactory.getLogger(EmbeddedDataCollector.class);
@@ -55,7 +54,7 @@ public class EmbeddedDataCollector implements DataCollector {
     StageLibraryTask stageLibrary = pipelineTask.getStageLibraryTask();
     PipelineStoreTask store = pipelineTask.getPipelineStoreTask();
     PipelineConfiguration tmpPipelineConfig =
-      store.create(pipelineName, desc, user);
+      store.create(user, pipelineName, desc);
     // we might want to add an import API as now to import have to create one then update it
     realPipelineConfig.setUuid(tmpPipelineConfig.getUuid());
     PipelineConfigurationValidator validator =
@@ -63,7 +62,7 @@ public class EmbeddedDataCollector implements DataCollector {
     validator.validate();
     realPipelineConfig.setValidation(validator);
     realPipelineConfig =
-      store.save(pipelineName, user, tag, desc, realPipelineConfig);
+      store.save(user, pipelineName, tag, desc, realPipelineConfig);
   }
 
   @Override

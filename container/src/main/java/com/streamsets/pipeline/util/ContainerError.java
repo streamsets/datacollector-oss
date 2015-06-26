@@ -93,8 +93,15 @@ public enum ContainerError implements ErrorCode {
   CONTAINER_0403("Cannot load rule definitions for pipeline '{}': {}"),
   CONTAINER_0404("Cannot store rule definitions for pipeline '{}': {}"),
 
-
+  //Email Sender
   CONTAINER_0500("EmailSender error: {}"),
+
+  //Snapshot
+  CONTAINER_0600("Error retrieving snapshot '{}' for pipeline with name '{}' and revision '{}' : '{}'"),
+  CONTAINER_0601("Error deleting snapshot '{}' for pipeline with name '{}' and revision '{}'"),
+  CONTAINER_0602("Error persisting snapshot info '{}' for pipeline with name '{}' and revision '{}' : '{}'"),
+  CONTAINER_0603("Error persisting snapshot '{}' for pipeline with name '{}' and revision '{}' : '{}'"),
+  CONTAINER_0604("Error retrieving snapshot info '{}' for pipeline with name '{}' and revision '{}' : '{}'"),
   ;
 
   private final String msg;

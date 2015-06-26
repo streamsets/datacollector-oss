@@ -10,6 +10,7 @@ import com.codahale.metrics.MetricRegistry;
 import com.google.common.annotations.VisibleForTesting;
 import com.streamsets.pipeline.metrics.MetricsConfigurator;
 
+import javax.inject.Inject;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -20,6 +21,7 @@ public class ThreadHealthReporter {
   private Map<String, ThreadHealthReportGauge> threadToGaugeMap;
   private MetricRegistry metrics;
 
+  @Inject
   public ThreadHealthReporter(MetricRegistry metrics) {
     this.threadToGaugeMap = new HashMap<>();
     this.metrics = metrics;

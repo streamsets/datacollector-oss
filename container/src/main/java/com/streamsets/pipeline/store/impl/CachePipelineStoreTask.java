@@ -5,14 +5,6 @@
  */
 package com.streamsets.pipeline.store.impl;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import javax.inject.Inject;
-
 import com.google.common.annotations.VisibleForTesting;
 import com.streamsets.dataCollector.execution.PipelineStateStore;
 import com.streamsets.pipeline.api.impl.Utils;
@@ -25,6 +17,13 @@ import com.streamsets.pipeline.store.PipelineStoreTask;
 import com.streamsets.pipeline.task.AbstractTask;
 import com.streamsets.pipeline.util.ContainerError;
 import com.streamsets.pipeline.util.PipelineDirectoryUtil;
+
+import javax.inject.Inject;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class CachePipelineStoreTask extends AbstractTask implements PipelineStoreTask {
 
@@ -62,8 +61,8 @@ public class CachePipelineStoreTask extends AbstractTask implements PipelineStor
   }
 
   @Override
-  public synchronized PipelineConfiguration create(String name, String description, String user) throws PipelineStoreException {
-    PipelineConfiguration pipelineConf =  pipelineStore.create(name, description, user);
+  public synchronized PipelineConfiguration create(String user, String name, String description) throws PipelineStoreException {
+    PipelineConfiguration pipelineConf =  pipelineStore.create(user, name, description);
     pipelineInfoMap.put(name, pipelineConf.getInfo());
     return pipelineConf;
   }
@@ -94,9 +93,9 @@ public class CachePipelineStoreTask extends AbstractTask implements PipelineStor
   }
 
   @Override
-  public synchronized PipelineConfiguration save(String name, String user, String tag, String tagDescription,
+  public synchronized PipelineConfiguration save(String user, String name, String tag, String tagDescription,
     PipelineConfiguration pipeline) throws PipelineStoreException {
-    PipelineConfiguration pipelineConf =  pipelineStore.save(name, user, tag, tagDescription, pipeline);
+    PipelineConfiguration pipelineConf =  pipelineStore.save(user, name, tag, tagDescription, pipeline);
     pipelineInfoMap.put(PipelineDirectoryUtil.getEscapedPipelineName(name), pipelineConf.getInfo());
     return pipelineConf;
   }
