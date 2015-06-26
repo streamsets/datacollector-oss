@@ -58,7 +58,7 @@ angular
       ]
     });
 
-    $scope.$on('summaryDataUpdated', function() {
+    var refreshChartData = function() {
       if($scope.summaryMeters.outputRecords && $scope.summaryMeters.errorRecords) {
         angular.forEach($scope.pieChartData, function(chartData) {
           if(chartData.key === 'goodRecords') {
@@ -68,6 +68,13 @@ angular
           }
         });
       }
+    };
+
+
+    $scope.$on('summaryDataUpdated', function() {
+      refreshChartData();
     });
+
+    refreshChartData();
 
   });

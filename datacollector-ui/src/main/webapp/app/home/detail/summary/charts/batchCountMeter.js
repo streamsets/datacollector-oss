@@ -120,7 +120,7 @@ angular
       }
     });
 
-    $scope.$on('summaryDataUpdated', function() {
+    var refreshChartData = function() {
       if($scope.summaryMeters && $scope.summaryMeters.batchCount) {
         $scope.chartData[0].values = [
           ["1m" , $scope.summaryMeters.batchCount.m1_rate ],
@@ -134,7 +134,7 @@ angular
           ["Mean" , $scope.summaryMeters.batchCount.mean_rate ]
         ];
       }
-    });
+    };
 
 
     var refreshTimeSeriesData = function() {
@@ -167,6 +167,10 @@ angular
       );
     };
 
+    $scope.$on('summaryDataUpdated', function() {
+      refreshChartData();
+    });
+
     $scope.$watch('timeRange', function() {
       if($scope.timeRange !== 'latest') {
         refreshTimeSeriesData();
@@ -174,14 +178,19 @@ angular
     });
 
     $scope.$on('onSelectionChange', function(event, options) {
-      if($scope.isPipelineRunning && $scope.timeRange !== 'latest' &&
-        options.type !== pipelineConstant.LINK) {
-        refreshTimeSeriesData();
+      if($scope.isPipelineRunning && options.type !== pipelineConstant.LINK) {
+        if($scope.timeRange !== 'latest') {
+          refreshTimeSeriesData();
+        } else {
+          refreshChartData();
+        }
       }
     });
 
     if($scope.timeRange !== 'latest') {
       refreshTimeSeriesData();
+    } else {
+      refreshChartData();
     }
 
   });

@@ -59,7 +59,7 @@ angular
       ]
     });
 
-    $scope.$on('summaryDataUpdated', function() {
+    var refreshChartData = function() {
       if(!$scope.summaryTimer) {
         return;
       }
@@ -74,7 +74,11 @@ angular
         ["75%" , $scope.summaryTimer.p75 ],
         ["50%" , $scope.summaryTimer.p50 ]
       ];
+    };
 
+    $scope.$on('summaryDataUpdated', function() {
+      refreshChartData();
     });
 
+    refreshChartData();
   });
