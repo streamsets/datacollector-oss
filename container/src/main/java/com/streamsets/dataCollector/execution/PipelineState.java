@@ -7,6 +7,8 @@ package com.streamsets.dataCollector.execution;
 
 import java.util.Map;
 
+import com.streamsets.pipeline.api.ExecutionMode;
+
 public interface PipelineState {
 
   public String getUser();
@@ -22,5 +24,7 @@ public interface PipelineState {
   public String getMessage();
 
   public Map<String, Object> getAttributes();
+
+  public ExecutionMode getExecutionMode();
 
 }

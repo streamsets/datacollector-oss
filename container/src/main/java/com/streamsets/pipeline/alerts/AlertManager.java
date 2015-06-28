@@ -7,12 +7,14 @@ package com.streamsets.pipeline.alerts;
 
 import com.codahale.metrics.Gauge;
 import com.codahale.metrics.MetricRegistry;
+import com.streamsets.dataCollector.execution.runner.StandaloneRunner;
 import com.streamsets.pipeline.config.RuleDefinition;
 import com.streamsets.pipeline.email.EmailSender;
 import com.streamsets.pipeline.main.RuntimeInfo;
 import com.streamsets.pipeline.metrics.MetricsConfigurator;
 import com.streamsets.pipeline.prodmanager.StandalonePipelineManagerTask;
 import com.streamsets.pipeline.util.PipelineException;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -59,15 +61,17 @@ public class AlertManager {
   private final MetricRegistry metrics;
   private final RuntimeInfo runtimeInfo;
   private final StandalonePipelineManagerTask pipelineManager;
+  private final StandaloneRunner standaloneRunner;
 
   public AlertManager(String pipelineName, String revision, EmailSender emailSender, MetricRegistry metrics,
-                      RuntimeInfo runtimeInfo, StandalonePipelineManagerTask pipelineManager) {
+                      RuntimeInfo runtimeInfo, StandalonePipelineManagerTask pipelineManager, StandaloneRunner standaloneRunner) {
     this.pipelineName = pipelineName;
     this.revision = revision;
     this.emailSender = emailSender;
     this.metrics = metrics;
     this.runtimeInfo = runtimeInfo;
     this.pipelineManager = pipelineManager;
+    this.standaloneRunner = standaloneRunner;
   }
 
   public void alert(List<String> emailIds, Throwable throwable) {
@@ -141,6 +145,10 @@ public class AlertManager {
 
       if(pipelineManager != null) {
         pipelineManager.broadcastAlerts(ruleDefinition);
+      }
+
+      if (standaloneRunner != null) {
+        standaloneRunner.broadcastAlerts(ruleDefinition);
       }
 
     } else {

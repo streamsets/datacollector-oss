@@ -62,7 +62,7 @@ public class TestMetricRuleEvaluator {
       "testTimerMatch", MetricType.TIMER,
       MetricElement.TIMER_COUNT, "${value()>2}", false, true);
     MetricRuleEvaluator metricRuleEvaluator = new MetricRuleEvaluator(metricsRuleDefinition, metrics,
-      new AlertManager(PIPELINE_NAME, REVISION, null, metrics, runtimeInfo, null), Collections.<String>emptyList());
+      new AlertManager(PIPELINE_NAME, REVISION, null, metrics, runtimeInfo, null, null), Collections.<String>emptyList());
     metricRuleEvaluator.checkForAlerts();
 
     //get alert gauge
@@ -84,7 +84,7 @@ public class TestMetricRuleEvaluator {
       "testTimerMatchDisabled", "testTimerMatchDisabled", MetricType.TIMER, MetricElement.TIMER_COUNT,
       "${value()>2}", false, false);
     MetricRuleEvaluator metricRuleEvaluator = new MetricRuleEvaluator(metricsRuleDefinition, metrics,
-      new AlertManager(PIPELINE_NAME, REVISION, null, metrics, runtimeInfo, null), Collections.<String>emptyList());
+      new AlertManager(PIPELINE_NAME, REVISION, null, metrics, runtimeInfo, null, null), Collections.<String>emptyList());
     metricRuleEvaluator.checkForAlerts();
 
     //get alert gauge
@@ -105,7 +105,7 @@ public class TestMetricRuleEvaluator {
       "testTimerNoMatch", MetricType.TIMER,
       MetricElement.TIMER_COUNT, "${value()>4}", false, true);
     MetricRuleEvaluator metricRuleEvaluator = new MetricRuleEvaluator(metricsRuleDefinition, metrics,
-      new AlertManager(PIPELINE_NAME, REVISION, null, metrics, runtimeInfo, null), Collections.<String>emptyList());
+      new AlertManager(PIPELINE_NAME, REVISION, null, metrics, runtimeInfo, null, null), Collections.<String>emptyList());
     metricRuleEvaluator.checkForAlerts();
 
     //get alert gauge
@@ -125,7 +125,7 @@ public class TestMetricRuleEvaluator {
       //invalid condition
       MetricElement.TIMER_COUNT, "${valu()>2", false, true);
     MetricRuleEvaluator metricRuleEvaluator = new MetricRuleEvaluator(metricsRuleDefinition, metrics,
-      new AlertManager(PIPELINE_NAME, REVISION, null, metrics, runtimeInfo, null), Collections.<String>emptyList());
+      new AlertManager(PIPELINE_NAME, REVISION, null, metrics, runtimeInfo, null, null), Collections.<String>emptyList());
     metricRuleEvaluator.checkForAlerts();
 
     //get alert gauge
@@ -145,7 +145,7 @@ public class TestMetricRuleEvaluator {
       "testCounterMatch", MetricType.COUNTER,
       MetricElement.COUNTER_COUNT, "${value()>98}", false, true);
     MetricRuleEvaluator metricRuleEvaluator = new MetricRuleEvaluator(metricsRuleDefinition, metrics,
-      new AlertManager(PIPELINE_NAME, REVISION, null, metrics, runtimeInfo, null), Collections.<String>emptyList());
+      new AlertManager(PIPELINE_NAME, REVISION, null, metrics, runtimeInfo, null, null), Collections.<String>emptyList());
     metricRuleEvaluator.checkForAlerts();
 
     //get alert gauge
@@ -165,7 +165,7 @@ public class TestMetricRuleEvaluator {
       "testCounterDisabled", "testCounterDisabled", MetricType.COUNTER,
       MetricElement.COUNTER_COUNT, "${value()>98}", false, false);
     MetricRuleEvaluator metricRuleEvaluator = new MetricRuleEvaluator(metricsRuleDefinition, metrics,
-      new AlertManager(PIPELINE_NAME, REVISION, null, metrics, runtimeInfo, null), Collections.<String>emptyList());
+      new AlertManager(PIPELINE_NAME, REVISION, null, metrics, runtimeInfo, null, null), Collections.<String>emptyList());
     metricRuleEvaluator.checkForAlerts();
 
     //get alert gauge
@@ -184,7 +184,7 @@ public class TestMetricRuleEvaluator {
       "testCounterNoMatch", "testCounterNoMatch", MetricType.COUNTER,
       MetricElement.COUNTER_COUNT, "${value()>100}", false, true);
     MetricRuleEvaluator metricRuleEvaluator = new MetricRuleEvaluator(metricsRuleDefinition, metrics,
-      new AlertManager(PIPELINE_NAME, REVISION, null, metrics, runtimeInfo, null), Collections.<String>emptyList());
+      new AlertManager(PIPELINE_NAME, REVISION, null, metrics, runtimeInfo, null, null), Collections.<String>emptyList());
     metricRuleEvaluator.checkForAlerts();
 
     //get alert gauge
@@ -203,7 +203,7 @@ public class TestMetricRuleEvaluator {
       "testMeterMatch", MetricType.METER,
       MetricElement.METER_COUNT, "${value()>98}", false, true);
     MetricRuleEvaluator metricRuleEvaluator = new MetricRuleEvaluator(metricsRuleDefinition, metrics,
-      new AlertManager(PIPELINE_NAME, REVISION, null, metrics, runtimeInfo, null), Collections.<String>emptyList());
+      new AlertManager(PIPELINE_NAME, REVISION, null, metrics, runtimeInfo, null, null), Collections.<String>emptyList());
     metricRuleEvaluator.checkForAlerts();
 
     //get alert gauge
@@ -223,7 +223,7 @@ public class TestMetricRuleEvaluator {
       "testMeterNoMatch", MetricType.METER,
       MetricElement.METER_COUNT, "${value()>1001}", false, true);
     MetricRuleEvaluator metricRuleEvaluator = new MetricRuleEvaluator(metricsRuleDefinition, metrics,
-      new AlertManager(PIPELINE_NAME, REVISION, null, metrics, runtimeInfo, null), Collections.<String>emptyList());
+      new AlertManager(PIPELINE_NAME, REVISION, null, metrics, runtimeInfo, null, null), Collections.<String>emptyList());
     metricRuleEvaluator.checkForAlerts();
 
     //get alert gauge
@@ -242,7 +242,7 @@ public class TestMetricRuleEvaluator {
       "testMeterDisabled", MetricType.METER,
       MetricElement.METER_COUNT, "${value()>100}", false, false);
     MetricRuleEvaluator metricRuleEvaluator = new MetricRuleEvaluator(metricsRuleDefinition, metrics,
-      new AlertManager(PIPELINE_NAME, REVISION, null, metrics, runtimeInfo, null), Collections.<String>emptyList());
+      new AlertManager(PIPELINE_NAME, REVISION, null, metrics, runtimeInfo, null, null), Collections.<String>emptyList());
     metricRuleEvaluator.checkForAlerts();
 
     //get alert gauge
@@ -261,7 +261,7 @@ public class TestMetricRuleEvaluator {
       "testHistogramMatch", MetricType.HISTOGRAM,
       MetricElement.HISTOGRAM_COUNT, "${value()==1}", false, true);
     MetricRuleEvaluator metricRuleEvaluator = new MetricRuleEvaluator(metricsRuleDefinition, metrics,
-      new AlertManager(PIPELINE_NAME, REVISION, null, metrics, runtimeInfo, null), Collections.<String>emptyList());
+      new AlertManager(PIPELINE_NAME, REVISION, null, metrics, runtimeInfo, null, null), Collections.<String>emptyList());
     metricRuleEvaluator.checkForAlerts();
 
     //get alert gauge
@@ -281,7 +281,7 @@ public class TestMetricRuleEvaluator {
       "testHistogramNoMatch", "testHistogramNoMatch", MetricType.HISTOGRAM,
       MetricElement.HISTOGRAM_COUNT, "${value()>1}", false, true);
     MetricRuleEvaluator metricRuleEvaluator = new MetricRuleEvaluator(metricsRuleDefinition, metrics,
-      new AlertManager(PIPELINE_NAME, REVISION, null, metrics, runtimeInfo, null), Collections.<String>emptyList());
+      new AlertManager(PIPELINE_NAME, REVISION, null, metrics, runtimeInfo, null, null), Collections.<String>emptyList());
     metricRuleEvaluator.checkForAlerts();
 
     //get alert gauge
@@ -300,7 +300,7 @@ public class TestMetricRuleEvaluator {
       "testHistogramDisabled", "testHistogramDisabled", MetricType.HISTOGRAM,
       MetricElement.HISTOGRAM_COUNT, "${value()==1}", false, false);
     MetricRuleEvaluator metricRuleEvaluator = new MetricRuleEvaluator(metricsRuleDefinition, metrics,
-      new AlertManager(PIPELINE_NAME, REVISION, null, metrics, runtimeInfo, null), Collections.<String>emptyList());
+      new AlertManager(PIPELINE_NAME, REVISION, null, metrics, runtimeInfo, null, null), Collections.<String>emptyList());
     metricRuleEvaluator.checkForAlerts();
 
     //get alert gauge

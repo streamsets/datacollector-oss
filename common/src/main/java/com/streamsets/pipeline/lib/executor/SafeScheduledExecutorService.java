@@ -56,8 +56,8 @@ public class SafeScheduledExecutorService {
     scheduledExecutorService.shutdownNow();
   }
 
-  public void awaitTermination(long timeout, TimeUnit unit) throws InterruptedException {
-    scheduledExecutorService.awaitTermination(timeout, unit);
+  public boolean awaitTermination(long timeout, TimeUnit unit) throws InterruptedException {
+    return scheduledExecutorService.awaitTermination(timeout, unit);
   }
 
   public Future<?> submitReturnFuture(final Runnable runnable) {
@@ -113,6 +113,7 @@ public class SafeScheduledExecutorService {
       this.delegateName = delegate.toString(); // call toString() in caller thread in case of error
       this.propagateErrors = propagateErrors;
     }
+    @Override
     public void run() {
       try {
         delegate.run();

@@ -73,7 +73,7 @@ public class TestMetricsAggregation {
 
   @Test
   public void testAggregatedMetrics() {
-    MetricsEventRunnable metricsEventRunnable = new MetricsEventRunnable(pipelineManager, runtimeInfo, 2000);
+    MetricsEventRunnable metricsEventRunnable = new MetricsEventRunnable(pipelineManager, runtimeInfo, 2000, null);
     MetricRegistryJson aggregatedMetrics = metricsEventRunnable.getAggregatedMetrics();
 
     Map<String, CounterJson> counters = aggregatedMetrics.getCounters();

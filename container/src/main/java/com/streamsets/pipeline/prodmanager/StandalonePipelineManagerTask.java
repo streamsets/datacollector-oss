@@ -92,6 +92,7 @@ public class StandalonePipelineManagerTask extends AbstractTask implements Pipel
   private static final String PRODUCTION_PIPELINE_RUNNER = "ProductionPipelineRunner";
   static final String RUN_INFO_DIR = "runInfo";
 
+
   private static final Map<State, Set<State>> VALID_TRANSITIONS = new ImmutableMap.Builder<State, Set<State>>()
     .put(State.STOPPED, ImmutableSet.of(State.RUNNING))
     .put(State.FINISHED, ImmutableSet.of(State.RUNNING))
@@ -250,7 +251,7 @@ public class StandalonePipelineManagerTask extends AbstractTask implements Pipel
             ProductionObserver observer = new ProductionObserver(productionObserveRequests, configuration);
             createPipeline(ps.getName(), ps.getRev(), observer, productionObserveRequests);
             AlertManager alertManager = new AlertManager(ps.getName(), ps.getRev(), new EmailSender(configuration),
-              getMetrics(), runtimeInfo, this);
+              getMetrics(), runtimeInfo, this, null);
             MetricsObserverRunner metricsObserverRunner = new MetricsObserverRunner(this.getMetrics(), alertManager);
             observer.setMetricsObserverRunner(metricsObserverRunner);
           } catch (Exception e) {
@@ -263,7 +264,7 @@ public class StandalonePipelineManagerTask extends AbstractTask implements Pipel
     int refreshInterval = configuration.get(REFRESH_INTERVAL_PROPERTY, REFRESH_INTERVAL_PROPERTY_DEFAULT);
 
     if(refreshInterval > 0) {
-      metricsEventRunnable = new MetricsEventRunnable(this, runtimeInfo, refreshInterval);
+      metricsEventRunnable = new MetricsEventRunnable(this, runtimeInfo, refreshInterval, null);
       executor.scheduleAtFixedRate(metricsEventRunnable, 0, refreshInterval, TimeUnit.MILLISECONDS);
     }
 
@@ -287,6 +288,7 @@ public class StandalonePipelineManagerTask extends AbstractTask implements Pipel
     LOG.debug("Initialized Production Pipeline Manager");
   }
 
+  @Override
   public Map getUpdateInfo() {
     return updateChecker.getUpdateInfo();
   }
@@ -493,7 +495,7 @@ public class StandalonePipelineManagerTask extends AbstractTask implements Pipel
     ProductionObserver observer = new ProductionObserver(productionObserveRequests, configuration);
     createPipeline(name, rev, observer, productionObserveRequests);
 
-    AlertManager alertManager = new AlertManager(name, rev, new EmailSender(configuration), getMetrics(), runtimeInfo, this);
+    AlertManager alertManager = new AlertManager(name, rev, new EmailSender(configuration), getMetrics(), runtimeInfo, this, null);
     MetricsObserverRunner metricsObserverRunner = new MetricsObserverRunner(this.getMetrics(), alertManager);
 
     observer.setMetricsObserverRunner(metricsObserverRunner);
@@ -544,11 +546,9 @@ public class StandalonePipelineManagerTask extends AbstractTask implements Pipel
       pipelineRunnable.stop(nodeProcessShutdown);
       pipelineRunnable = null;
     }
-
     if(metricsEventRunnable != null) {
       metricsEventRunnable.setThreadHealthReporter(null);
     }
-
     threadHealthReporter.destroy();
     threadHealthReporter = null;
     LOG.debug("Stopped pipeline");

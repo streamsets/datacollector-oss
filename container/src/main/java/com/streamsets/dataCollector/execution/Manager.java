@@ -12,7 +12,6 @@ import java.util.List;
 
 // one per SDC
 public interface Manager extends Task {
-
   //the Manager receives a PipelineStore and a PipelineState instance at <init> time
   //the Manager has a threadpool used exclusively for previews and runners
   //it should have configurations for maximum concurrent previews and maximum running pipelines and based on that
@@ -30,7 +29,7 @@ public interface Manager extends Task {
   public Previewer getPreview(String previewerId);
 
   // creates a runner for a given pipeline, the runner will have the current state of the pipeline.
-  public Runner getRunner(String name, String rev) throws PipelineStoreException;
+  public Runner getRunner(String name, String rev, String user) throws PipelineStoreException;
 
   public List<PipelineState> getPipelines() throws PipelineStoreException;
 

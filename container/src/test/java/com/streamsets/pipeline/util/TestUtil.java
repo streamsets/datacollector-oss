@@ -6,6 +6,9 @@
 package com.streamsets.pipeline.util;
 
 import com.codahale.metrics.MetricRegistry;
+import com.streamsets.dataCollector.execution.PipelineStateStore;
+import com.streamsets.dataCollector.execution.manager.PipelineManager;
+import com.streamsets.dataCollector.execution.store.FilePipelineStateStore;
 import com.streamsets.pipeline.api.Batch;
 import com.streamsets.pipeline.api.BatchMaker;
 import com.streamsets.pipeline.api.Field;
@@ -20,6 +23,7 @@ import com.streamsets.pipeline.config.MetricsRuleDefinition;
 import com.streamsets.pipeline.config.PipelineConfiguration;
 import com.streamsets.pipeline.config.RuleDefinitions;
 import com.streamsets.pipeline.config.ThresholdType;
+import com.streamsets.pipeline.lib.executor.SafeScheduledExecutorService;
 import com.streamsets.pipeline.main.RuntimeInfo;
 import com.streamsets.pipeline.main.RuntimeModule;
 import com.streamsets.pipeline.prodmanager.PipelineManagerException;
@@ -31,6 +35,7 @@ import com.streamsets.pipeline.stagelibrary.StageLibraryTask;
 import com.streamsets.pipeline.store.PipelineStoreException;
 import com.streamsets.pipeline.store.PipelineStoreTask;
 import com.streamsets.pipeline.store.impl.FilePipelineStoreTask;
+
 import dagger.Module;
 import dagger.Provides;
 
@@ -45,10 +50,15 @@ import java.util.Random;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
-public class TestUtil {
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+public class TestUtil {
+  private static final Logger LOG = LoggerFactory.getLogger(TestUtil.class);
   public static final String MY_PIPELINE = "my pipeline";
+  public static final String MY_SECOND_PIPELINE = "my second pipeline";
   public static final String PIPELINE_REV = "2.0";
+  public static boolean EMPTY_OFFSET = false;
 
   public static class SourceOffsetTrackerImpl implements SourceOffsetTracker {
     private String currentOffset;
@@ -135,7 +145,7 @@ public class TestUtil {
         for (int i = 0; i < maxBatchSize; i++ ) {
           batchMaker.addRecord(createRecord(lastSourceOffset, i));
         }
-        return "random";
+        return EMPTY_OFFSET  == true ? null: "random";
       }
 
       private Record createRecord(String lastSourceOffset, int batchOffset) {
@@ -215,7 +225,7 @@ public class TestUtil {
         mockPipelineConf = MockStages.createPipelineConfigurationSourceProcessorTarget();
         pipelineConf.setStages(mockPipelineConf.getStages());
         pipelineConf.setErrorStage(mockPipelineConf.getErrorStage());
-        pipelineStoreTask.save(MY_PIPELINE, "admin", "tag", "description"
+        pipelineStoreTask.save(MY_PIPELINE, "admin", PIPELINE_REV, "description"
           , pipelineConf);
 
         //create a DataRuleDefinition for one of the stages
@@ -233,6 +243,77 @@ public class TestUtil {
       }
 
       return pipelineStoreTask;
+    }
+  }
+
+  // TODO - Rename TestPipelineStoreModule after multi pipeline support
+  @Module(injects = PipelineStoreTask.class, library = true, includes = {TestRuntimeModule.class,
+    TestStageLibraryModule.class, TestConfigurationModule.class, TestPipelineStateStoreModule.class })
+  public static class TestPipelineStoreModuleNew {
+
+    public TestPipelineStoreModuleNew() {
+    }
+
+    @Provides
+    public PipelineStoreTask providePipelineStore(RuntimeInfo info, StageLibraryTask stageLibraryTask, PipelineStateStore pipelineStateStore) {
+      FilePipelineStoreTask pipelineStoreTask = new FilePipelineStoreTask(info, stageLibraryTask, pipelineStateStore);
+      pipelineStoreTask.init();
+      try {
+        //create an invalid pipeline
+        pipelineStoreTask.create("invalid", "invalid cox its empty", "tag");
+        PipelineConfiguration pipelineConf = pipelineStoreTask.load("invalid", PIPELINE_REV);
+        PipelineConfiguration mockPipelineConf = MockStages.createPipelineConfigurationSourceTarget();
+        pipelineConf.setErrorStage(mockPipelineConf.getErrorStage());
+
+        //create a valid pipeline
+        pipelineStoreTask.create(MY_PIPELINE, "description", "user");
+        pipelineConf = pipelineStoreTask.load(MY_PIPELINE, "0");
+        mockPipelineConf = MockStages.createPipelineConfigurationSourceTarget();
+        pipelineConf.setStages(mockPipelineConf.getStages());
+        pipelineConf.setErrorStage(mockPipelineConf.getErrorStage());
+        pipelineStoreTask.save(MY_PIPELINE, "admin", "0", "description"
+          , pipelineConf);
+
+
+
+        //create a DataRuleDefinition for one of the stages
+        DataRuleDefinition dataRuleDefinition = new DataRuleDefinition("myID", "myLabel", "s", 100, 10,
+          "${record:value(\"/name\") != null}", true, "alertText", ThresholdType.COUNT, "100", 100, true, false, true);
+        List<DataRuleDefinition> dataRuleDefinitions = new ArrayList<>();
+        dataRuleDefinitions.add(dataRuleDefinition);
+
+        RuleDefinitions ruleDefinitions = new RuleDefinitions(Collections.<MetricsRuleDefinition>emptyList(),
+          dataRuleDefinitions, Collections.<String>emptyList(), UUID.randomUUID());
+        pipelineStoreTask.storeRules(MY_PIPELINE, "0", ruleDefinitions);
+
+        pipelineStoreTask.create(MY_SECOND_PIPELINE, "description2", "user2");
+        pipelineConf = pipelineStoreTask.load(MY_SECOND_PIPELINE, "0");
+        mockPipelineConf = MockStages.createPipelineConfigurationSourceProcessorTarget();
+        pipelineConf.setStages(mockPipelineConf.getStages());
+        pipelineConf.setErrorStage(mockPipelineConf.getErrorStage());
+        pipelineStoreTask.save(MY_SECOND_PIPELINE, "admin2", "0", "description"
+          , pipelineConf);
+
+      } catch (PipelineStoreException e) {
+        throw new RuntimeException(e);
+      }
+
+      return pipelineStoreTask;
+    }
+  }
+
+
+  @Module(injects = PipelineStateStore.class, library = true, includes = {TestRuntimeModule.class,
+    TestConfigurationModule.class})
+  public static class TestPipelineStateStoreModule {
+    public TestPipelineStateStoreModule() {
+    }
+
+    @Provides
+    public PipelineStateStore providePipelineStore(RuntimeInfo info, Configuration conf) {
+      PipelineStateStore pipelineStateStore = new FilePipelineStateStore(info, conf);
+      pipelineStateStore.init();
+      return pipelineStateStore;
     }
   }
 
@@ -262,6 +343,46 @@ public class TestUtil {
       return info;
     }
   }
+
+
+  @Module(injects = PipelineManager.class, library = true, includes = { TestRuntimeModule.class,
+      TestPipelineStoreModuleNew.class, TestPipelineStateStoreModule.class, TestStageLibraryModule.class,
+      TestConfigurationModule.class, TestPreviewExecutorModule.class, TestPreviewExecutorModule.class})
+  public static class TestPipelineManagerModule {
+
+    public TestPipelineManagerModule() {
+    }
+
+    @Provides
+    public PipelineManager provideStateManager(RuntimeInfo runtimeInfo, Configuration configuration,
+      PipelineStoreTask pipelineStore, PipelineStateStore pipelineStateStore, StageLibraryTask stageLibrary, SafeScheduledExecutorService
+      previewExecutor, SafeScheduledExecutorService runnerExecutor) {
+      return new PipelineManager(runtimeInfo, configuration, pipelineStore, pipelineStateStore, stageLibrary,
+        previewExecutor, runnerExecutor);
+    }
+  }
+
+  @Module(library = true)
+  public class TestPreviewExecutorModule {
+
+    @Provides
+    public SafeScheduledExecutorService provideExecutorService() {
+      return new SafeScheduledExecutorService(10, "PreviewExecutor");
+    }
+
+  }
+
+  @Module(library = true)
+  public class TestRunnerExecutorModule {
+
+    @Provides
+    public SafeScheduledExecutorService provideExecutorService() {
+      return new SafeScheduledExecutorService(10, "RunnerExecutor");
+    }
+
+  }
+
+
 
   @Module(injects = StandalonePipelineManagerTask.class
     , library = true, includes = {TestRuntimeModule.class, TestPipelineStoreModule.class

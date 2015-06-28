@@ -26,7 +26,6 @@ import com.google.common.cache.CacheBuilder;
 import com.streamsets.dataCollector.execution.Manager;
 import com.streamsets.dataCollector.execution.PipelineState;
 import com.streamsets.dataCollector.execution.PipelineStateStore;
-import com.streamsets.dataCollector.execution.PipelineStatus;
 import com.streamsets.dataCollector.execution.PreviewStatus;
 import com.streamsets.dataCollector.execution.Previewer;
 import com.streamsets.dataCollector.execution.PreviewerListener;
@@ -34,7 +33,7 @@ import com.streamsets.dataCollector.execution.Runner;
 import com.streamsets.dataCollector.execution.preview.SyncPreviewer;
 import com.streamsets.dataCollector.execution.runner.ClusterRunner;
 import com.streamsets.dataCollector.execution.runner.StandaloneRunner;
-import com.streamsets.dataCollector.execution.store.FilePipelineStateStore;
+
 import com.streamsets.dataCollector.execution.util.PipelineStatusUtil;
 import com.streamsets.pipeline.api.ExecutionMode;
 import com.streamsets.pipeline.api.impl.Utils;
@@ -60,25 +59,22 @@ public class PipelineManager extends AbstractTask implements Manager, PreviewerL
   private final PipelineStateStore pipelineStateStore;
   private ConcurrentMap<String, Runner> runnerMap = new ConcurrentHashMap<String, Runner>();
   private Cache<String, Previewer> previewerCache;
-   private StageLibraryTask stageLibrary;
-  private ExecutorService previewExecutor;
-  private ExecutorService runnerExecutor;
-  private final SafeScheduledExecutorService scheduledExecutor;
+  private final StageLibraryTask stageLibrary;
+  private final SafeScheduledExecutorService previewExecutor;
+  private final SafeScheduledExecutorService runnerExecutor;
 
   @Inject
   public PipelineManager(RuntimeInfo runtimeInfo,
       Configuration configuration, PipelineStoreTask pipelineStore, PipelineStateStore pipelineStateStore,
-      StageLibraryTask stageLibrary) {
+      StageLibraryTask stageLibrary, SafeScheduledExecutorService previewExecutor, SafeScheduledExecutorService runnerExecutor) {
     super(PIPELINE_MANAGER);
     this.runtimeInfo = runtimeInfo;
     this.configuration = configuration;
     this.pipelineStore = pipelineStore;
     this.pipelineStateStore = pipelineStateStore;
     this.stageLibrary = stageLibrary;
-    // TODO - Get thread pool size from conf;
-    this.previewExecutor = Executors.newFixedThreadPool(10);
-    this.runnerExecutor = Executors.newFixedThreadPool(10);
-    this.scheduledExecutor = new SafeScheduledExecutorService(4, "PipelineRunner");
+    this.previewExecutor = previewExecutor;
+    this.runnerExecutor = runnerExecutor;
   }
 
   @Override
@@ -106,7 +102,7 @@ public class PipelineManager extends AbstractTask implements Manager, PreviewerL
   }
 
   @Override
-  public Runner getRunner(String name, String rev) throws PipelineStoreException {
+  public Runner getRunner(String name, String rev, String user) throws PipelineStoreException {
     Runner runner;
     String nameAndRevString = getNameAndRevString(name, rev);
     if (runnerMap.containsKey(nameAndRevString)) {
@@ -122,7 +118,7 @@ public class PipelineManager extends AbstractTask implements Manager, PreviewerL
           runner = new ClusterRunner();
           break;
         case STANDALONE:
-          runner = new StandaloneRunner();
+          runner = new StandaloneRunner(name, rev, user, runtimeInfo, configuration, pipelineStore, pipelineStateStore, stageLibrary, runnerExecutor);
           break;
         default:
           throw new IllegalArgumentException(Utils.format("Invalid execution mode '{}'", executionMode));
@@ -159,8 +155,6 @@ public class PipelineManager extends AbstractTask implements Manager, PreviewerL
   public void initTask() {
     previewerCache = CacheBuilder.newBuilder()
       .expireAfterAccess(30, TimeUnit.MINUTES).build();
-    // Temporary - pipelineStateStore should be available to PipelineStore through dagger
-    pipelineStore.registerListener(pipelineStateStore);
     List<PipelineInfo> pipelineInfoList;
     try {
       pipelineInfoList = pipelineStore.getPipelines();
@@ -171,17 +165,14 @@ public class PipelineManager extends AbstractTask implements Manager, PreviewerL
         // Create runner if active
         if (PipelineStatusUtil.isActive(pipelineState.getStatus())) {
           LOG.debug("Pipeline status of pipeline: " + name + " and rev " + rev + " is:" + pipelineState.getStatus());
-          PipelineConfiguration pipelineConf = pipelineStore.load(name, rev);
-          ExecutionMode executionMode =
-            ExecutionMode.valueOf((String) pipelineConf.getConfiguration(PipelineDefConfigs.EXECUTION_MODE_CONFIG)
-              .getValue());
+          ExecutionMode executionMode = pipelineState.getExecutionMode();
           Runner runner;
           switch (executionMode) {
             case CLUSTER:
               runner = new ClusterRunner();
               break;
             case STANDALONE:
-              runner = new StandaloneRunner();
+              runner = new StandaloneRunner(name, rev, pipelineState.getUser(), runtimeInfo, configuration, pipelineStore, pipelineStateStore, stageLibrary, runnerExecutor);
               break;
             default:
               throw new IllegalArgumentException(Utils.format("Invalid execution mode '{}'", executionMode));
@@ -193,7 +184,7 @@ public class PipelineManager extends AbstractTask implements Manager, PreviewerL
           runner.onDataCollectorStart();
         }
       }
-    } catch (PipelineStoreException e) {
+    } catch (Exception e) {
        throw new RuntimeException("Exception while initializing manager: " + e.getMessage(), e);
     }
   }
@@ -207,9 +198,42 @@ public class PipelineManager extends AbstractTask implements Manager, PreviewerL
   protected void stopTask() {
     previewerCache.invalidateAll();
     for (Runner runner : runnerMap.values()) {
-      runner.onDataCollectorStop();
+      try {
+        runner.onDataCollectorStop();
+      } catch (Exception e) {
+        LOG.warn("Failed to stop the runner for pipeline: {} and rev: {} due to: {}", runner.getName(),
+          runner.getRev(), e.getMessage(), e);
+      }
     }
     runnerMap.clear();
+    if (runnerExecutor != null) {
+      runnerExecutor.shutdown();
+      try {
+        if (!runnerExecutor.awaitTermination(30, TimeUnit.SECONDS)) {
+          runnerExecutor.shutdownNow();
+          if (!runnerExecutor.awaitTermination(30, TimeUnit.SECONDS)) {
+            LOG.error("Runner Executor did not terminate");
+          }
+        }
+      } catch (InterruptedException e) {
+        LOG.warn(Utils.format("Forced termination. Reason {}", e.getMessage()));
+      }
+    }
+    if (previewExecutor != null) {
+      previewExecutor.shutdown();
+      try {
+        if (!previewExecutor.awaitTermination(30, TimeUnit.SECONDS)) {
+          previewExecutor.shutdownNow();
+          if (!previewExecutor.awaitTermination(30, TimeUnit.SECONDS)) {
+            LOG.error("Preview Executor did not terminate");
+          }
+        }
+      } catch (InterruptedException e) {
+        previewExecutor.shutdownNow();
+        LOG.warn(Utils.format("Forced termination. Reason {}", e.getMessage()));
+      }
+    }
+    LOG.debug("Stopped Production Pipeline Manager");
   }
 
   @Override

@@ -86,6 +86,7 @@ public class FilePipelineStoreTask extends AbstractTask implements PipelineStore
   private final Object rulesMutex;
   private HashMap<String, RuleDefinitions> pipelineToRuleDefinitionMap;
 
+  // TODO - remove after multi pipeline support
   @Inject
   public FilePipelineStoreTask(RuntimeInfo runtimeInfo, StageLibraryTask stageLibrary) {
     super("filePipelineStore");
@@ -94,6 +95,16 @@ public class FilePipelineStoreTask extends AbstractTask implements PipelineStore
     json = ObjectMapperFactory.get();
     rulesMutex = new Object();
     pipelineToRuleDefinitionMap = new HashMap<>();
+  }
+
+  public FilePipelineStoreTask(RuntimeInfo runtimeInfo, StageLibraryTask stageLibrary, PipelineStateStore pipelineStateStore) {
+    super("filePipelineStore");
+    this.stageLibrary = stageLibrary;
+    this.runtimeInfo = runtimeInfo;
+    json = ObjectMapperFactory.get();
+    rulesMutex = new Object();
+    pipelineToRuleDefinitionMap = new HashMap<>();
+    this.pipelineStateStore = pipelineStateStore;
   }
 
   @VisibleForTesting
@@ -121,11 +132,17 @@ public class FilePipelineStoreTask extends AbstractTask implements PipelineStore
         throw new RuntimeException("Cannot obtain list of existing pipelines", e);
       }
     }
+    if (pipelineStateStore != null) {
+      pipelineStateStore.init();
+    }
   }
 
   @Override
   protected void stopTask() {
     pipelineInfoMap.clear();
+    if (pipelineStateStore != null) {
+      pipelineStateStore.destroy();
+    }
   }
 
   public File getPipelineDir(String name) {
@@ -164,10 +181,10 @@ public class FilePipelineStoreTask extends AbstractTask implements PipelineStore
     PipelineInfo info = new PipelineInfo(name, description, date, date, user, user, REV, uuid, false);
 
     List<ConfigConfiguration> configuration = new ArrayList<>(4);
-    String executionMode = runtimeInfo.getExecutionMode() == RuntimeInfo.ExecutionMode.STANDALONE ?
-      ExecutionMode.STANDALONE.name() : ExecutionMode.CLUSTER.name();
+    ExecutionMode executionMode = runtimeInfo.getExecutionMode() == RuntimeInfo.ExecutionMode.STANDALONE ?
+      ExecutionMode.STANDALONE : ExecutionMode.CLUSTER;
     configuration.add(new ConfigConfiguration(PipelineDefConfigs.EXECUTION_MODE_CONFIG,
-      executionMode));
+      executionMode.name()));
     configuration.add(new ConfigConfiguration(PipelineDefConfigs.CLUSTER_SLAVE_MEMORY_CONFIG,
                                               Integer.parseInt(PipelineDefConfigs.CLUSTER_SLAVE_MEMORY_DEFAULT)));
     configuration.add(new ConfigConfiguration(PipelineDefConfigs.CLUSTER_SLAVE_JAVA_OPTS_CONFIG,
@@ -197,7 +214,7 @@ public class FilePipelineStoreTask extends AbstractTask implements PipelineStore
     }
     pipeline.setPipelineInfo(info);
     if (pipelineStateStore != null) {
-      pipelineStateStore.saveState(user, name, REV, PipelineStatus.EDITED, "Pipeline edited", null);
+      pipelineStateStore.saveState(user, name, REV, PipelineStatus.EDITED, "Pipeline edited", null, executionMode);
     }
     pipelineInfoMap.put(name, info);
     return pipeline;
@@ -292,7 +309,10 @@ public class FilePipelineStoreTask extends AbstractTask implements PipelineStore
       json.writeValue(getInfoFile(name), BeanHelper.wrapPipelineInfo(info));
       json.writeValue(getPipelineFile(name), BeanHelper.wrapPipelineConfiguration(pipeline));
       if (pipelineStateStore != null) {
-        pipelineStateStore.edited(user, name, tag);
+        ExecutionMode executionMode =
+          ExecutionMode.valueOf((String) pipeline.getConfiguration(PipelineDefConfigs.EXECUTION_MODE_CONFIG)
+            .getValue());
+        pipelineStateStore.edited(user, name, tag, executionMode);
       }
     } catch (Exception ex) {
       throw new PipelineStoreException(ContainerError.CONTAINER_0204, name, ex.getMessage(), ex);

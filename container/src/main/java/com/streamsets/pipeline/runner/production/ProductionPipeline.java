@@ -5,6 +5,9 @@
  */
 package com.streamsets.pipeline.runner.production;
 
+import com.streamsets.dataCollector.execution.PipelineStatus;
+import com.streamsets.dataCollector.execution.StateListener;
+import com.streamsets.dataCollector.execution.runnable.ProductionPipelineRunnable;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.impl.ErrorMessage;
@@ -15,12 +18,18 @@ import com.streamsets.pipeline.runner.Pipeline;
 import com.streamsets.pipeline.runner.PipelineRuntimeException;
 
 import java.util.List;
+import java.util.Map;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class ProductionPipeline {
   private final RuntimeInfo runtimeInfo;
   private final PipelineConfiguration pipelineConf;
   private final Pipeline pipeline;
   private final ProductionPipelineRunner pipelineRunner;
+  private StateListener stateListener;
+  private static final Logger LOG = LoggerFactory.getLogger(ProductionPipeline.class);
 
   public ProductionPipeline(RuntimeInfo runtimeInfo, PipelineConfiguration pipelineConf, Pipeline pipeline) {
     this.runtimeInfo = runtimeInfo;
@@ -29,14 +38,56 @@ public class ProductionPipeline {
     this.pipelineRunner =  (ProductionPipelineRunner)pipeline.getRunner();
   }
 
-  public void run() throws StageException, PipelineRuntimeException{
+  public StateListener getStatusListener() {
+    return this.stateListener;
+  }
+
+  public void registerStatusListener(StateListener stateListener) {
+    this.stateListener = stateListener;
+  }
+
+  private void stateChanged(PipelineStatus pipelineStatus, String message, Map<String, Object> attributes) throws PipelineRuntimeException {
+    if (stateListener!=null) {
+      stateListener.stateChanged(pipelineStatus, message, attributes);
+    }
+
+  }
+
+  public void run() throws StageException, PipelineRuntimeException {
     MetricsConfigurator.registerJmxMetrics(runtimeInfo.getMetrics());
     try {
-      pipeline.init();
       try {
+        pipeline.init();
+      } catch (Exception e) {
+        if (!wasStopped()) {
+          LOG.error("Pipeline failed to start: {} ", e.getMessage(), e);
+          stateChanged(PipelineStatus.START_ERROR, null, null);
+        }
+        throw e;
+      }
+      boolean finishing = false;
+      boolean running_error = true;
+      try {
+        stateChanged(PipelineStatus.RUNNING, null, null);
         pipeline.run();
+        if (!wasStopped()) {
+          stateChanged(PipelineStatus.FINISHING, null, null);
+          finishing = true;
+        }
+      } catch (Exception e) {
+        if (!wasStopped()) {
+          LOG.error("Pipeline failed while running: {} ", e.getMessage(), e);
+          stateChanged(PipelineStatus.RUNNING_ERROR, null, null);
+          running_error = true;
+        }
+        throw e;
       } finally {
         pipeline.destroy();
+        if (finishing) {
+          stateChanged(PipelineStatus.FINISHED, null, null);
+        } else if (running_error) {
+          stateChanged(PipelineStatus.RUN_ERROR, null, null);
+        } //neither of above condition happens if pipeline was stopped
       }
     } finally {
       MetricsConfigurator.cleanUpJmxMetrics();

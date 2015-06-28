@@ -33,12 +33,12 @@ import com.streamsets.dataCollector.execution.PipelineStatus;
 import com.streamsets.dataCollector.execution.manager.PipelineStateImpl;
 import com.streamsets.dataCollector.execution.util.PipelineStatusUtil;
 import com.streamsets.dataCollector.restapi.bean.PipelineStateJson;
+import com.streamsets.pipeline.api.ExecutionMode;
 import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.io.DataStore;
 import com.streamsets.pipeline.json.ObjectMapperFactory;
 import com.streamsets.pipeline.main.RuntimeInfo;
 import com.streamsets.pipeline.restapi.bean.BeanHelper;
-import com.streamsets.pipeline.stagelibrary.StageLibraryTask;
 import com.streamsets.pipeline.store.PipelineStoreException;
 import com.streamsets.pipeline.util.Configuration;
 import com.streamsets.pipeline.util.ContainerError;
@@ -77,7 +77,6 @@ public class FilePipelineStateStore implements PipelineStateStore {
         return loadState(nameAndRev);
       }
     });
-    // TODO - do register(name, rev) here
   }
 
   @Override
@@ -86,11 +85,11 @@ public class FilePipelineStateStore implements PipelineStateStore {
   }
 
   @Override
-  public void edited(String user, String name, String rev) throws PipelineStoreException {
+  public void edited(String user, String name, String rev, ExecutionMode executionMode) throws PipelineStoreException {
     PipelineState pipelineState = getState(name, rev);
     Utils.checkState(!PipelineStatusUtil.isActive(pipelineState.getStatus()), "Cannot edit pipeline in state: " + pipelineState.getStatus());
-    if (pipelineState.getStatus() != PipelineStatus.EDITED) {
-      saveState(user, name, rev, PipelineStatus.EDITED, "Pipeline edited", null);
+    if (pipelineState.getStatus() != PipelineStatus.EDITED || executionMode != pipelineState.getExecutionMode()) {
+      saveState(user, name, rev, PipelineStatus.EDITED, "Pipeline edited", null, executionMode);
     }
   }
 
@@ -106,9 +105,12 @@ public class FilePipelineStateStore implements PipelineStateStore {
 
   @Override
   public void saveState(String user, String name, String rev, PipelineStatus status, String message,
-    Map<String, Object> attributes) throws PipelineStoreException {
+    Map<String, Object> attributes, ExecutionMode executionMode) throws PipelineStoreException {
+    register(name, rev);
+    LOG.debug("Changing state of pipeline '{}','{}','{}' to '{}' in execution mode: '{}'", name, rev, user, status,
+      executionMode);
     PipelineState pipelineState =
-      new PipelineStateImpl(name, rev, user, status, message, System.currentTimeMillis(), attributes);
+      new PipelineStateImpl(name, rev, user, status, message, System.currentTimeMillis(), attributes, executionMode);
     persistPipelineState(pipelineState);
     pipelineStateCache.put(getNameAndRevString(name, rev), pipelineState);
   }
@@ -178,8 +180,7 @@ public class FilePipelineStateStore implements PipelineStateStore {
       .getAbsolutePath(), configuration);
   }
 
-  @Override
-  public void register(String pipelineName, String rev) {
+  private void register(String pipelineName, String rev) {
     LogUtil.registerLogger(pipelineName, rev, STATE, getPipelineStateHistoryFile(pipelineName, rev).getAbsolutePath(),
       configuration);
   }

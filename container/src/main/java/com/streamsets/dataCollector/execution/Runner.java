@@ -6,8 +6,15 @@
 package com.streamsets.dataCollector.execution;
 
 import com.codahale.metrics.MetricRegistry;
+import com.streamsets.dataCollector.execution.runner.PipelineRunnerException;
+import com.streamsets.pipeline.alerts.AlertEventListener;
 import com.streamsets.pipeline.api.Record;
+import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.impl.ErrorMessage;
+import com.streamsets.pipeline.config.RuleDefinition;
+import com.streamsets.pipeline.metrics.MetricsEventListener;
+import com.streamsets.pipeline.runner.PipelineRuntimeException;
+import com.streamsets.pipeline.store.PipelineStoreException;
 
 import java.util.List;
 
@@ -17,6 +24,12 @@ import java.util.List;
 //  SLAVE: cluster streaming
 //  BATCH  : cluster batch
 public interface Runner {
+  public static final String REFRESH_INTERVAL_PROPERTY = "ui.refresh.interval.ms";
+  public static final int REFRESH_INTERVAL_PROPERTY_DEFAULT = 2000;
+  public static final String CALLBACK_SERVER_URL_KEY = "callback.server.url";
+  public static final String CALLBACK_SERVER_URL_DEFAULT = null;
+  public static final String SDC_CLUSTER_TOKEN_KEY = "sdc.cluster.token";
+
 
   //Runners are lightweight control classes, they are created on every Manager.getRunner() call
 
@@ -40,28 +53,28 @@ public interface Runner {
 
   // resets the pipeline offset, only if the pipeline is not running
   // it must assert the current status
-  public void resetOffset();
+  public void resetOffset() throws PipelineStoreException, PipelineRunnerException;
 
   // pipeline status
-  public PipelineStatus getStatus();
+  public PipelineStatus getStatus() throws PipelineStoreException;
 
   // called for all existing pipelines when the data collector starts
   // it should reconnect/reset-status of all pipelines
-  public void onDataCollectorStart();
+  public void onDataCollectorStart() throws PipelineRunnerException, PipelineStoreException, PipelineRuntimeException, StageException;
 
   // called for all existing pipelines when the data collector is shutting down
   // it should disconnect/reset-status of all pipelines
-  public void onDataCollectorStop();
+  public void onDataCollectorStop() throws PipelineStoreException, PipelineRunnerException;
 
   // stops the pipeline
-  public void stop();
+  public void stop() throws PipelineStoreException, PipelineRunnerException;
 
   // starts the pipeline
-  public void start();
+  public void start() throws PipelineRunnerException, PipelineStoreException, PipelineRuntimeException, StageException;
 
   // triggers a snapshot request
   // delegates to SnapshotStore
-  public String captureSnapshot(String name, int batches);
+  public String captureSnapshot(String name, int batches) throws PipelineRunnerException, PipelineStoreException;
 
   // retrieves a snapshot base on its ID
   // delegates to SnapshotStore
@@ -80,18 +93,26 @@ public interface Runner {
   public List<PipelineState> getHistory();
 
   // gets the current pipeline metrics
-  public MetricRegistry getMetric();
+  public MetricRegistry getMetrics();
 
   // returns error records for a give stage
   // delegates to the ErrorStore
-  public List<Record> getErrorRecords(String stage, int max);
+  public List<Record> getErrorRecords(String stage, int max) throws PipelineRunnerException, PipelineStoreException;
 
   // returns pipeline error for a give stage
   // delegates to the ErrorStore
-  public List<ErrorMessage> getErrorMessages(String stage, int max);
+  public List<ErrorMessage> getErrorMessages(String stage, int max) throws PipelineRunnerException, PipelineStoreException;
 
-  public List<Record> getSampledRecords(String sampleId, int max);
+  public List<Record> getSampledRecords(String sampleId, int max) throws PipelineRunnerException, PipelineStoreException;
 
-  public void deleteAlert(String alertId);
+  public boolean deleteAlert(String alertId) throws PipelineRunnerException, PipelineStoreException;
+
+  void addAlertEventListener(AlertEventListener alertEventListener);
+
+  void removeAlertEventListener(AlertEventListener alertEventListener);
+
+  void broadcastAlerts(RuleDefinition ruleDefinition);
+
+  void addMetricsEventListener(MetricsEventListener metricsEventListener);
 
 }

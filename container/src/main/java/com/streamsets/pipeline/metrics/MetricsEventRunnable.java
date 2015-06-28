@@ -7,6 +7,9 @@
 package com.streamsets.pipeline.metrics;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.streamsets.dataCollector.execution.PipelineStatus;
+import com.streamsets.dataCollector.execution.Runner;
+import com.streamsets.dataCollector.execution.util.PipelineStatusUtil;
 import com.streamsets.pipeline.callback.CallbackInfo;
 import com.streamsets.pipeline.json.ObjectMapperFactory;
 import com.streamsets.pipeline.main.RuntimeInfo;
@@ -16,6 +19,8 @@ import com.streamsets.pipeline.restapi.bean.CounterJson;
 import com.streamsets.pipeline.restapi.bean.MeterJson;
 import com.streamsets.pipeline.restapi.bean.MetricRegistryJson;
 import com.streamsets.pipeline.runner.production.ThreadHealthReporter;
+import com.streamsets.pipeline.store.PipelineStoreException;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -37,12 +42,15 @@ public class MetricsEventRunnable implements Runnable {
   private final RuntimeInfo runtimeInfo;
   private ThreadHealthReporter threadHealthReporter;
   private final int scheduledDelay;
+  private Runner runner;
 
-  public MetricsEventRunnable(PipelineManager pipelineManager, RuntimeInfo runtimeInfo, int scheduledDelay) {
+  // TODO - Remove pipelineManager after multi pipeline support
+  public MetricsEventRunnable(PipelineManager pipelineManager, RuntimeInfo runtimeInfo, int scheduledDelay, Runner runner) {
     this.pipelineManager = pipelineManager;
     this.runtimeInfo = runtimeInfo;
-    this.scheduledDelay = (int)scheduledDelay/1000;
+    this.scheduledDelay = scheduledDelay/1000;
     slaveMetrics = new HashMap<>();
+    this.runner = runner;
   }
 
   public void addMetricsEventListener(MetricsEventListener metricsEventListener) {
@@ -61,6 +69,7 @@ public class MetricsEventRunnable implements Runnable {
     this.threadHealthReporter = threadHealthReporter;
   }
 
+  @Override
   public void run() {
     //Added log trace to debug SDC-725
     SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
@@ -70,9 +79,15 @@ public class MetricsEventRunnable implements Runnable {
       if(threadHealthReporter != null) {
         threadHealthReporter.reportHealth(RUNNABLE_NAME, scheduledDelay, System.currentTimeMillis());
       }
+      boolean isRunning = false;
+      if (pipelineManager == null) {
+        isRunning = PipelineStatusUtil.isActive(runner.getStatus());
+      } else {
+        isRunning =
+          pipelineManager.getPipelineState() != null && pipelineManager.getPipelineState().getState() == State.RUNNING;
+      }
 
-      if (metricsEventListenerList.size() > 0 && pipelineManager.getPipelineState() != null &&
-        pipelineManager.getPipelineState().getState() == State.RUNNING) {
+      if (metricsEventListenerList.size() > 0 && isRunning) {
         ObjectMapper objectMapper = ObjectMapperFactory.get();
 
         String metricsJSONStr;
@@ -81,7 +96,9 @@ public class MetricsEventRunnable implements Runnable {
           MetricRegistryJson metricRegistryJson = getAggregatedMetrics();
           metricsJSONStr = objectMapper.writer().writeValueAsString(metricRegistryJson);
         } else {
-          metricsJSONStr = objectMapper.writer().writeValueAsString(pipelineManager.getMetrics());
+          metricsJSONStr =
+            objectMapper.writer().writeValueAsString(
+              pipelineManager != null ? pipelineManager.getMetrics() : runner.getMetrics());
         }
 
         for(MetricsEventListener alertEventListener : metricsEventListenerList) {
@@ -94,6 +111,8 @@ public class MetricsEventRunnable implements Runnable {
       }
     } catch (IOException ex) {
       LOG.warn("Error while serializing metrics, {}", ex.getMessage(), ex);
+    } catch (PipelineStoreException ex) {
+      LOG.warn("Error while fetching status of pipeline,  {}", ex.getMessage(), ex);
     }
   }
 

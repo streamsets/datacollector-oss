@@ -7,6 +7,7 @@ package com.streamsets.dataCollector.execution.manager;
 
 import com.streamsets.dataCollector.execution.PipelineState;
 import com.streamsets.dataCollector.execution.PipelineStatus;
+import com.streamsets.pipeline.api.ExecutionMode;
 import com.streamsets.pipeline.api.impl.Utils;
 
 import java.util.HashMap;
@@ -20,17 +21,19 @@ public class PipelineStateImpl implements PipelineState {
   private final long timeStamp;
   private final Map<String, Object> attributes;
   private final String user;
+  private ExecutionMode executionMode;
 
   @SuppressWarnings("unchecked")
   public PipelineStateImpl(String name, String rev, String user, PipelineStatus status, String message, long timeStamp,
-                        Map<String, Object> attributes) {
+                        Map<String, Object> attributes, ExecutionMode executionMode) {
     this.name = name;
     this.rev = rev;
     this.user = user;
     this.status = status;
     this.message = message;
     this.timeStamp = timeStamp;
-      this.attributes = (Map) ((attributes != null) ? new HashMap<>(attributes) : new HashMap<>());
+    this.attributes = (Map) ((attributes != null) ? new HashMap<>(attributes) : new HashMap<>());
+    this.executionMode = executionMode;
   }
 
   @Override
@@ -72,5 +75,10 @@ public class PipelineStateImpl implements PipelineState {
   @Override
   public String getUser() {
     return user;
+  }
+
+  @Override
+  public ExecutionMode getExecutionMode() {
+    return executionMode;
   }
 }

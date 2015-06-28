@@ -31,6 +31,8 @@ import com.streamsets.dataCollector.execution.PipelineStatus;
 import com.streamsets.dataCollector.execution.Previewer;
 import com.streamsets.dataCollector.execution.store.FilePipelineStateStore;
 import com.streamsets.dataCollector.execution.store.TestFilePipelineStateStore;
+import com.streamsets.pipeline.api.ExecutionMode;
+import com.streamsets.pipeline.lib.executor.SafeScheduledExecutorService;
 import com.streamsets.pipeline.main.RuntimeInfo;
 import com.streamsets.pipeline.main.RuntimeModule;
 import com.streamsets.pipeline.runner.MockStages;
@@ -48,17 +50,18 @@ public class TestPipelineManager {
   private PipelineStateStore pipelineStateStore;
   private com.streamsets.pipeline.util.Configuration configuration = new com.streamsets.pipeline.util.Configuration();
 
-
   private void setUpManager() {
     emptyCL = new URLClassLoader(new URL[0]);
     runtimeInfo = new RuntimeInfo(RuntimeModule.SDC_PROPERTY_PREFIX, new MetricRegistry(),
       Arrays.asList(TestFilePipelineStateStore.class.getClassLoader()));
     stageLibraryTask = MockStages.createStageLibrary(emptyCL);
-    pipelineStoreTask = new FilePipelineStoreTask(runtimeInfo, stageLibraryTask);
-    pipelineStoreTask.init();
     pipelineStateStore = new FilePipelineStateStore(runtimeInfo, configuration);
     pipelineStateStore.init();
-    pipelineManager = new PipelineManager(runtimeInfo, configuration, pipelineStoreTask, pipelineStateStore, stageLibraryTask);
+    pipelineStoreTask = new FilePipelineStoreTask(runtimeInfo, stageLibraryTask, pipelineStateStore);
+    pipelineStoreTask.init();
+    SafeScheduledExecutorService scheduledExecutor = new SafeScheduledExecutorService(1, "PipelineManager");
+    pipelineManager = new PipelineManager(runtimeInfo, configuration, pipelineStoreTask, pipelineStateStore, stageLibraryTask,
+      scheduledExecutor, scheduledExecutor);
     pipelineManager.init();
   }
 
@@ -87,7 +90,7 @@ public class TestPipelineManager {
   @Test
   public void testRunner() throws Exception {
     pipelineStoreTask.create("aaaa", "blah", "user");
-    assertNotNull(pipelineManager.getRunner("aaaa", "0"));
+    assertNotNull(pipelineManager.getRunner("aaaa", "0", "user1"));
   }
 
   @Test
@@ -113,22 +116,21 @@ public class TestPipelineManager {
   @Test
   public void testInitTask() throws Exception {
     pipelineStoreTask.create("aaaa", "blah", "user");
-    pipelineStateStore.saveState("user", "aaaa", "0", PipelineStatus.RUNNING, "blah", null);
+    pipelineStateStore.saveState("user", "aaaa", "0", PipelineStatus.FINISHING, "blah", null, ExecutionMode.STANDALONE);
     pipelineStoreTask = null;
     pipelineStateStore = null;
     pipelineManager = null;
     setUpManager();
     List<PipelineState> pipelineStates = pipelineManager.getPipelines();
     assertEquals(1, pipelineStates.size());
-    assertEquals(PipelineStatus.RUNNING, pipelineStates.get(0).getStatus());
-    assertTrue(((PipelineManager)pipelineManager).isRunnerCreated("aaaa", "0"));
-    pipelineStateStore.saveState("user", "aaaa", "0", PipelineStatus.FINISHED, "blah", null);
+    assertEquals(PipelineStatus.FINISHED, pipelineStates.get(0).getStatus());
+    assertTrue(((PipelineManager) pipelineManager).isRunnerCreated("aaaa", "0"));
     setUpManager();
     pipelineStates = pipelineManager.getPipelines();
     assertEquals(1, pipelineStates.size());
     assertEquals(PipelineStatus.FINISHED, pipelineStates.get(0).getStatus());
-    assertFalse(((PipelineManager)pipelineManager).isRunnerCreated("aaaa", "0"));
-
+    // no runner is created
+    assertFalse(((PipelineManager) pipelineManager).isRunnerCreated("aaaa", "0"));
   }
 
 }

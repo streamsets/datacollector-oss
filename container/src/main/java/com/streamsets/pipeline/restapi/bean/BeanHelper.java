@@ -7,7 +7,9 @@ package com.streamsets.pipeline.restapi.bean;
 
 import com.streamsets.dataCollector.execution.PipelineState;
 import com.streamsets.dataCollector.execution.PipelineStatus;
+import com.streamsets.dataCollector.restapi.bean.ExecutionModeJson;
 import com.streamsets.dataCollector.restapi.bean.StatusJson;
+import com.streamsets.pipeline.api.ExecutionMode;
 import com.streamsets.pipeline.callback.CallbackInfo;
 import com.streamsets.pipeline.el.ElConstantDefinition;
 import com.streamsets.pipeline.el.ElFunctionArgumentDefinition;
@@ -1156,5 +1158,33 @@ public class BeanHelper {
       return null;
     }
     return new CallbackInfoJson(callbackInfo);
+  }
+
+  public static ExecutionModeJson wrapExecutionMode(ExecutionMode executionMode) {
+    if (executionMode == null) {
+      return null;
+    }
+    switch (executionMode) {
+      case CLUSTER:
+        return ExecutionModeJson.CLUSTER;
+      case STANDALONE:
+        return ExecutionModeJson.STANDALONE;
+      default:
+        throw new IllegalArgumentException("Unrecognized execution mode");
+    }
+  }
+
+  public static ExecutionMode unwrapExecutionMode(ExecutionModeJson executionModeJson) {
+    if (executionModeJson == null) {
+      return null;
+    }
+    switch (executionModeJson) {
+      case CLUSTER:
+        return ExecutionMode.CLUSTER;
+      case STANDALONE:
+        return ExecutionMode.STANDALONE;
+      default:
+        throw new IllegalArgumentException("Unrecognized execution mode");
+    }
   }
 }

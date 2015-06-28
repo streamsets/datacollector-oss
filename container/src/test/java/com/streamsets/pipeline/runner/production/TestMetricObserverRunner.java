@@ -47,7 +47,7 @@ public class TestMetricObserverRunner {
     runtimeInfo = new RuntimeInfo(RuntimeModule.SDC_PROPERTY_PREFIX, new MetricRegistry(),
       Arrays.asList(TestDataRuleEvaluator.class.getClassLoader()));
     metricObserverRunner = new MetricsObserverRunner(metrics, new AlertManager(PIPELINE_NAME, REVISION, null, metrics,
-      runtimeInfo, null));
+      runtimeInfo, null, null));
   }
 
   @Test
