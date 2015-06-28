@@ -121,9 +121,10 @@
       ng-init="flattenRecord = getFlattenRecord(outputRecord)">
     <td colspan="{{inputLimit}}"></td>
 
-    <td ng-repeat="fieldPath in outputFieldPaths | limitTo: outputLimit"
-        class="field-value {{flattenRecord[fieldPath].type}}"
-      >{{(flattenRecord[fieldPath].type === 'DATETIME' || flattenRecord[fieldPath].type === 'DATE') ? (flattenRecord[fieldPath].value + '' | date:'medium') : (flattenRecord[fieldPath].value + '')}}</td>
+    <td ng-repeat="fieldPath in outputFieldPaths | limitTo: outputLimit">
+      <span
+        class="field-value {{flattenRecord[fieldPath].type}}">{{(flattenRecord[fieldPath].type === 'DATETIME' || flattenRecord[fieldPath].type === 'DATE') ? (flattenRecord[fieldPath].value + '' | date:'medium') : (flattenRecord[fieldPath].value + '')}}</span>
+    </td>
   </tr>
 
   <tr ng-if="detailPaneConfig.uiInfo.stageType === pipelineConstant.SOURCE_STAGE_TYPE"

@@ -44,9 +44,10 @@ angular
       },
       defaultChartOptions = {
         chart: {
-          type: 'lineChart',
+          type: 'lineChart', //'multiBarChart', //'lineChart'
           height: 250,
           showLabels: true,
+          showControls: false,
           duration: 0,
           x:function(d){
             return (new Date(d[0])).getTime();
@@ -183,7 +184,8 @@ angular
             name: 'java.lang:type=OperatingSystem',
             property: 'ProcessCpuLoad',
             key: 'CPU Usage',
-            values: []
+            values: [],
+            area: true
           }
         ]
       },
@@ -196,7 +198,8 @@ angular
             name: 'java.lang:type=Threading',
             property: 'ThreadCount',
             key: 'Live Threads',
-            values: []
+            values: [],
+            area: true
           }
         ],
         displayProperties: [
@@ -223,7 +226,8 @@ angular
             name: 'java.lang:type=ClassLoading',
             property: 'LoadedClassCount',
             key: 'Loaded',
-            values: []
+            values: [],
+            area: true
           },
           {
             name: 'java.lang:type=ClassLoading',
@@ -261,7 +265,8 @@ angular
             name: 'metrics:name=jvm.memory.heap.used',
             property: 'Value',
             key: 'Used',
-            values: []
+            values: [],
+            area: true
           }
         ]
       },
@@ -287,7 +292,8 @@ angular
             name: 'metrics:name=jvm.memory.non-heap.used',
             property: 'Value',
             key: 'Used',
-            values: []
+            values: [],
+            area: true
           }
         ]
       },
@@ -313,7 +319,8 @@ angular
             name: 'java.lang:type=MemoryPool,name=[a-zA-Z ]*Eden Space',
             property: 'Usage/used',
             key: 'Used',
-            values: []
+            values: [],
+            area: true
           }
         ]
       },
@@ -339,7 +346,8 @@ angular
             name: 'java.lang:type=MemoryPool,name=[a-zA-Z ]*Survivor Space',
             property: 'Usage/used',
             key: 'Used',
-            values: []
+            values: [],
+            area: true
           }
         ]
       },
@@ -365,7 +373,8 @@ angular
             name: 'java.lang:type=MemoryPool,name=PS Old Gen|java.lang:type=MemoryPool,name=Tenured Gen',
             property: 'Usage/used',
             key: 'Used',
-            values: []
+            values: [],
+            area: true
           }
         ]
       },
@@ -417,7 +426,8 @@ angular
             name: 'java.lang:type=MemoryPool,name=Code Cache',
             property: 'Usage/used',
             key: 'Used',
-            values: []
+            values: [],
+            area: true
           }
         ]
       }
@@ -465,6 +475,7 @@ angular
         angular.forEach(chartList, function(chartObj) {
 
           angular.forEach(chartObj.values, function(chartBean) {
+            //chartBean.area = true;
             var regExp = new RegExp(chartBean.name);
             if(regExp.test(bean.name)) {
               var propertyList = chartBean.property.split('/'),
