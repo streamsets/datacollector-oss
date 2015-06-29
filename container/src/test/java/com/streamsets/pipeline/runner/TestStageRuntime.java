@@ -14,6 +14,7 @@ import com.streamsets.pipeline.api.ExecutionMode;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.base.BaseSource;
 import com.streamsets.pipeline.api.base.BaseTarget;
+import com.streamsets.pipeline.api.impl.CreateByRef;
 import com.streamsets.pipeline.config.ConfigConfiguration;
 import com.streamsets.pipeline.config.ConfigDefinition;
 import com.streamsets.pipeline.config.DeliveryGuarantee;
@@ -40,6 +41,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.UUID;
+import java.util.concurrent.Callable;
 
 public class TestStageRuntime {
 
@@ -349,6 +351,59 @@ public class TestStageRuntime {
     StageRuntime[] runtimes = builder.build();
     Assert.assertFalse(((TSource) runtimes[0].getStage()).inited);
     runtimes[0].init();
+  }
+
+  @Test
+  public void testCreateByRef() throws Exception {
+    StageDefinition def = Mockito.mock(StageDefinition.class);
+    StageContext context = Mockito.mock(StageContext.class);
+    StageRuntime runtime = new StageRuntime(def, null, null, null, null, null, null);
+    runtime.setContext(context);
+
+    // by value, no preview
+    Mockito.when(def.getRecordsByRef()).thenReturn(false);
+    Mockito.when(context.isPreview()).thenReturn(false);
+    runtime.execute(new Callable<String>() {
+      @Override
+      public String call() throws Exception {
+        Assert.assertFalse(CreateByRef.isByRef());
+        return null;
+      }
+    });
+
+    // by value, preview
+    Mockito.when(def.getRecordsByRef()).thenReturn(false);
+    Mockito.when(context.isPreview()).thenReturn(true);
+    runtime.execute(new Callable<String>() {
+      @Override
+      public String call() throws Exception {
+        Assert.assertFalse(CreateByRef.isByRef());
+        return null;
+      }
+    });
+
+    // by ref, no preview
+    Mockito.when(def.getRecordsByRef()).thenReturn(true);
+    Mockito.when(context.isPreview()).thenReturn(false);
+    runtime.execute(new Callable<String>() {
+      @Override
+      public String call() throws Exception {
+        Assert.assertTrue(CreateByRef.isByRef());
+        return null;
+      }
+    });
+
+    // by ref, preview
+    Mockito.when(def.getRecordsByRef()).thenReturn(true);
+    Mockito.when(context.isPreview()).thenReturn(true);
+    runtime.execute(new Callable<String>() {
+      @Override
+      public String call() throws Exception {
+        Assert.assertFalse(CreateByRef.isByRef());
+        return null;
+      }
+    });
+
   }
 
 }
