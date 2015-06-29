@@ -162,10 +162,10 @@ public class CassandraTarget extends BaseTarget {
       issues.add(context.createConfigIssue(Groups.CASSANDRA.name(), "qualifiedTableName", Errors.CASSANDRA_02));
     }
 
-    checkCassandraReachable(issues);
-
-    if (!isColumnMappingValid()) {
-      issues.add(context.createConfigIssue(Groups.CASSANDRA.name(), "columnNames", Errors.CASSANDRA_08));
+    if (checkCassandraReachable(issues)) {
+      if (!isColumnMappingValid()) {
+        issues.add(context.createConfigIssue(Groups.CASSANDRA.name(), "columnNames", Errors.CASSANDRA_08));
+      }
     }
 
     return issues;
@@ -198,11 +198,13 @@ public class CassandraTarget extends BaseTarget {
     return true;
   }
 
-  private void checkCassandraReachable(List<ConfigIssue> issues) {
+  private boolean checkCassandraReachable(List<ConfigIssue> issues) {
+    boolean isReachable = true;
     try (Cluster cluster = getCluster()) {
       Session session = cluster.connect();
       session.close();
     } catch (NoHostAvailableException | AuthenticationException | IllegalStateException e) {
+      isReachable = false;
       Target.Context context = getContext();
       issues.add(
               context.createConfigIssue(
@@ -212,6 +214,7 @@ public class CassandraTarget extends BaseTarget {
           )
       );
     }
+    return isReachable;
   }
 
   @Override
