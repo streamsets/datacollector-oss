@@ -383,10 +383,10 @@ public class FileTailSource extends BaseSource {
             String sourceId = liveFileStr + "::" + line.getFileOffset();
             try (DataParser parser = parserFactory.getParser(sourceId, line.getText())) {
               Record record = parser.parse();
-              if (tag != null) {
-                record.getHeader().setAttribute("tag", tag);
-              }
               if (record != null) {
+                if (tag != null) {
+                  record.getHeader().setAttribute("tag", tag);
+                }
                 batchMaker.addRecord(record, outputLane);
                 recordCounter++;
               }
