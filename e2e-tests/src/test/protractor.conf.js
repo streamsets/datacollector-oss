@@ -29,7 +29,7 @@ exports.config = {
 
   onPrepare: function() {
     browser.sleep(3000);
-
+    browser.driver.manage().window().setSize(1400, 750);
     browser.driver.get(browser.baseUrl + 'login.html');
 
     browser.driver.findElement(by.id('usernameId')).sendKeys('admin');

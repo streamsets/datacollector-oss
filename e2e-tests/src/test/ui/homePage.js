@@ -53,6 +53,8 @@ describe('StreamSets Data Collector App', function() {
         var importBtnElement = elements[elements.length - 1];
         importBtnElement.click();
         $('input[type="file"]').sendKeys(__dirname + '/testData/testPipeline.json');
+
+        element(by.model('newConfig.name')).sendKeys('UI End to End Test Pipeline');
         element(by.css('button[type="submit"]')).click();
 
         browser.sleep(1500);

@@ -29,7 +29,7 @@ angular
       },
       sizeFormat = function(d) {
         var mbValue = d / 1000000;
-        return mbValue.toFixed(0) + ' MB';
+        return mbValue.toFixed(1) + ' MB';
       },
       cpuPercentageFormat = function(d){
         var mbValue = d * 1000/ 10.0;
