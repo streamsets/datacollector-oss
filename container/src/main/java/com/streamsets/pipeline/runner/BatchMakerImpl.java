@@ -5,12 +5,12 @@
  */
 package com.streamsets.pipeline.runner;
 
+import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import com.streamsets.pipeline.api.BatchMaker;
 import com.streamsets.pipeline.api.Record;
-import com.streamsets.pipeline.api.impl.CreateByRef;
 import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.config.StageType;
 import com.streamsets.pipeline.record.RecordImpl;
@@ -35,6 +35,7 @@ public class BatchMakerImpl implements BatchMaker {
   private final Map<String, List<Record>> stageOutputSnapshot;
   private int recordAllowance;
   private int size;
+  private boolean recordByRef;
 
   public BatchMakerImpl(StagePipe stagePipe, boolean keepSnapshot) {
     this(stagePipe, keepSnapshot, Integer.MAX_VALUE);
@@ -54,6 +55,14 @@ public class BatchMakerImpl implements BatchMaker {
       }
     }
     this.recordAllowance = recordAllowance;
+    // if the stage is annotated as recordsByRef it means it does not reuse the records it creates, thus
+    // we can skip one copy here (just here though), except if we are in preview
+    recordByRef = !stagePipe.getStage().getContext().isPreview() &&
+                  stagePipe.getStage().getDefinition().getRecordsByRef();
+  }
+
+  boolean isRecordByRef() {
+    return recordByRef;
   }
 
   public StagePipe getStagePipe() {
@@ -63,6 +72,12 @@ public class BatchMakerImpl implements BatchMaker {
   @Override
   public List<String> getLanes() {
     return outputLanes;
+  }
+
+  @VisibleForTesting
+  RecordImpl getRecordForBatchMaker(Record record) {
+    // in the constructor we figured out if we can do recordByRef or not
+    return (recordByRef) ? (RecordImpl) record: ((RecordImpl) record).clone();
   }
 
   @Override
@@ -75,9 +90,7 @@ public class BatchMakerImpl implements BatchMaker {
     }
     Preconditions.checkNotNull(record, "record cannot be null");
 
-    // if the stage is annotated as recordsByRef it means it does not reuse the records it creates, thus
-    // we can skip one copy here (just here though)
-    RecordImpl recordCopy = (CreateByRef.isByRef()) ? (RecordImpl) record: ((RecordImpl) record).clone();
+    RecordImpl recordCopy = getRecordForBatchMaker(record);
     recordCopy.addStageToStagePath(instanceName);
     recordCopy.createTrackingId();
 

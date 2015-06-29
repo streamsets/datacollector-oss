@@ -8,12 +8,15 @@ package com.streamsets.pipeline.runner;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
+import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.Record;
+import com.streamsets.pipeline.api.Source;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.StageDef;
 import com.streamsets.pipeline.config.StageConfiguration;
 import com.streamsets.pipeline.config.StageDefinition;
 import com.streamsets.pipeline.config.StageType;
+import com.streamsets.pipeline.record.HeaderImpl;
 import com.streamsets.pipeline.record.RecordImpl;
 import org.junit.Assert;
 import org.junit.Test;
@@ -48,6 +51,10 @@ public class TestBatchMakerImpl {
       pipeOutputs.add(LaneResolver.createLane(output, "x"));
     }
     List<String> pipeOutput = LaneResolver.getPostFixed(pipeOutputs, LaneResolver.STAGE_OUT);
+
+    StageContext context = Mockito.mock(StageContext.class);
+    Mockito.when(context.isPreview()).thenReturn(false);
+    Mockito.when(stageRuntime.getContext()).thenReturn(context);
     return new StagePipe(stageRuntime, pipeInput, pipeOutput);
   }
 
@@ -196,6 +203,62 @@ public class TestBatchMakerImpl {
     batchMaker.addRecord(record);
     //This is changed to log warning and not throw IllegalArgumentException.
     //Some sources could translate one event to multiple records and my go over the batch size.
+  }
+
+  @Test
+  public void testRecordByRef() {
+    StageConfiguration stageConfiguration = new StageConfiguration("i", "l", "n", "1",
+                                                                   Collections.EMPTY_LIST,
+                                                                   Collections.EMPTY_MAP,
+                                                                   Collections.EMPTY_LIST,
+                                                                   ImmutableList.of("o"));
+    StageDefinition stageDef = Mockito.mock(StageDefinition.class);
+    Mockito.when(stageDef.getType()).thenReturn(StageType.SOURCE);
+    Source.Context context = Mockito.mock(Source.Context.class);
+
+    Mockito.when(stageDef.getType()).thenReturn(StageType.SOURCE);
+
+    Stage.Info stageInfo = Mockito.mock(Stage.Info.class);
+    Mockito.when(stageInfo.getInstanceName()).thenReturn("i");
+
+    StageRuntime stageRuntime = Mockito.mock(StageRuntime.class);
+    Mockito.when(stageRuntime.getInfo()).thenReturn(stageInfo);
+    Mockito.when(stageRuntime.getConfiguration()).thenReturn(stageConfiguration);
+    Mockito.when(stageRuntime.getDefinition()).thenReturn(stageDef);
+    Mockito.when(stageRuntime.getContext()).thenReturn(context);
+
+    StagePipe pipe = new StagePipe(stageRuntime, Collections.EMPTY_LIST, Collections.EMPTY_LIST);
+
+    Record record = new RecordImpl("s", "s", null, null);
+
+    // preview by value
+    Mockito.when(context.isPreview()).thenReturn(true);
+    Mockito.when(stageDef.getRecordsByRef()).thenReturn(false);
+    BatchMakerImpl batchMaker = new BatchMakerImpl(pipe, false);
+    Assert.assertFalse(batchMaker.isRecordByRef());
+    Assert.assertNotSame(record, batchMaker.getRecordForBatchMaker(record));
+
+    // preview by ref
+    Mockito.when(context.isPreview()).thenReturn(true);
+    Mockito.when(stageDef.getRecordsByRef()).thenReturn(true);
+    batchMaker = new BatchMakerImpl(pipe, false);
+    Assert.assertFalse(batchMaker.isRecordByRef());
+    Assert.assertNotSame(record, batchMaker.getRecordForBatchMaker(record));
+
+    // prod by value
+    Mockito.when(stageDef.getRecordsByRef()).thenReturn(false);
+    Mockito.when(context.isPreview()).thenReturn(false);
+    batchMaker = new BatchMakerImpl(pipe, false);
+    Assert.assertFalse(batchMaker.isRecordByRef());
+    Assert.assertNotSame(record, batchMaker.getRecordForBatchMaker(record));
+
+    // prod by ref
+    Mockito.when(stageDef.getRecordsByRef()).thenReturn(true);
+    Mockito.when(context.isPreview()).thenReturn(false);
+    batchMaker = new BatchMakerImpl(pipe, false);
+    Assert.assertTrue(batchMaker.isRecordByRef());
+    Assert.assertSame(record, batchMaker.getRecordForBatchMaker(record));
+
   }
 
 }

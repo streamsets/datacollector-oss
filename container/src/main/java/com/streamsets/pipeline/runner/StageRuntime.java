@@ -5,6 +5,7 @@
  */
 package com.streamsets.pipeline.runner;
 
+import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Preconditions;
 import com.streamsets.pipeline.api.Batch;
 import com.streamsets.pipeline.api.BatchMaker;
@@ -52,7 +53,8 @@ public class StageRuntime {
   private StageContext context;
   private final Map<String, Object> constants;
 
-  private StageRuntime(final StageDefinition def, final StageConfiguration conf, List<String> requiredFields,
+  @VisibleForTesting
+  StageRuntime(final StageDefinition def, final StageConfiguration conf, List<String> requiredFields,
       List<String> preconditions, OnRecordError onRecordError, Stage stage, Map<String, Object> constants) {
     this.def = def;
     this.conf = conf;
@@ -149,6 +151,13 @@ public class StageRuntime {
     }
   }
 
+  String execute(Callable<String> callable) throws Exception {
+    // if the stage is annotated as recordsByRef it means it does not reuse the records/fields it creates, thus
+    // we have to call it within a create-by-ref context so Field.create does not clone Fields and BatchMakerImpl
+    // does not clone output records.
+    return (def.getRecordsByRef() && !context.isPreview()) ? CreateByRef.call(callable) : callable.call();
+  }
+
   public String execute(final String previousOffset, final int batchSize, final Batch batch,
       final BatchMaker batchMaker, ErrorSink errorSink) throws StageException {
     ClassLoader cl = Thread.currentThread().getContextClassLoader();
@@ -180,10 +189,7 @@ public class StageRuntime {
       };
 
       try {
-        // if the stage is annotated as recordsByRef it means it does not reuse the records/fields it creates, thus
-        // we have to call it within a create-by-ref context so Field.create does not clone Fields and BatchMakerImpl
-        // does not clone output records.
-        return (def.getRecordsByRef()) ? CreateByRef.call(callable) : callable.call();
+        return execute(callable);
       } catch (Exception ex) {
         if (ex instanceof StageException) {
           throw (StageException) ex;
