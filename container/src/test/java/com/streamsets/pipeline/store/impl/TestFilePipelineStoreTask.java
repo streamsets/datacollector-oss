@@ -66,7 +66,6 @@ public class TestFilePipelineStoreTask {
   @dagger.Module(injects = FilePipelineStoreTask.class)
   public static class Module {
     public Module() {
-
     }
     @Provides
     @Singleton

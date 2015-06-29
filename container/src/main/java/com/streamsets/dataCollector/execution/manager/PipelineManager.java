@@ -18,6 +18,9 @@ import com.streamsets.dataCollector.execution.PreviewStatus;
 import com.streamsets.dataCollector.execution.Previewer;
 import com.streamsets.dataCollector.execution.PreviewerListener;
 import com.streamsets.dataCollector.execution.Runner;
+import com.streamsets.dataCollector.execution.runner.AsyncRunner;
+import com.streamsets.dataCollector.execution.runner.ClusterRunner;
+import com.streamsets.pipeline.api.ExecutionMode;
 import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.lib.executor.SafeScheduledExecutorService;
 import com.streamsets.pipeline.main.RuntimeInfo;
@@ -28,12 +31,15 @@ import com.streamsets.pipeline.store.PipelineStoreTask;
 import com.streamsets.pipeline.task.AbstractTask;
 import com.streamsets.pipeline.util.Configuration;
 import com.streamsets.pipeline.util.ContainerError;
+
 import dagger.ObjectGraph;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
 import javax.inject.Named;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Callable;
@@ -238,8 +244,18 @@ public class PipelineManager extends AbstractTask implements Manager, PreviewerL
 
   private Runner getRunner(PipelineState pipelineState, String name, String rev) throws PipelineStoreException {
     LOG.debug("Status of pipeline: '{}::{}' is: '{}'", name, rev, pipelineState.getStatus());
-    Runner runner = runnerProvider.createRunner(pipelineState.getUser(), name, rev,
-      pipelineStore.load(name, rev), objectGraph);
+    ExecutionMode executionMode = pipelineState.getExecutionMode();
+    Runner runner;
+    // TODO - Use cluster Module
+    if (executionMode == ExecutionMode.CLUSTER) {
+      ClusterRunner clusterRunner =
+        new ClusterRunner(name, rev, pipelineState.getUser(), runtimeInfo, configuration, pipelineStore,
+          pipelineStateStore, stageLibrary, runnerExecutor);
+      runner = new AsyncRunner(clusterRunner, runnerExecutor);
+    } else {
+      runner =
+        runnerProvider.createRunner(pipelineState.getUser(), name, rev, pipelineStore.load(name, rev), objectGraph);
+    }
     return runner;
   }
 

@@ -33,6 +33,6 @@ public interface SystemProcess {
 
   public int exitValue();
 
-  public boolean waitFor(long timeout, TimeUnit unit)
-    throws InterruptedException;
+  public boolean waitFor(long timeout, TimeUnit unit);
+
 }

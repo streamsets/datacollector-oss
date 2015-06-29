@@ -77,7 +77,7 @@ public class ClusterProviderImpl implements ClusterProvider {
 
   @Override
   public void killPipeline(SystemProcessFactory systemProcessFactory, File sparkManager, File tempDir,
-                    String appId, PipelineConfiguration pipelineConfiguration) throws TimeoutException {
+                    String appId, PipelineConfiguration pipelineConfiguration) throws TimeoutException, IOException {
     Map<String, String> environment = new HashMap<>();
     environment.put(CLUSTER_TYPE, CLUSTER_TYPE_SPARK);
     addKerberosConfiguration(environment, pipelineConfiguration);
@@ -92,12 +92,6 @@ public class ClusterProviderImpl implements ClusterProvider {
         logOutput(appId, process);
         throw new TimeoutException(errorString("YARN kill command for {} timed out.", appId));
       }
-    } catch (IOException e) {
-      String msg = errorString("Could not kill job: {}", e);
-      throw new RuntimeException(msg, e);
-    } catch (InterruptedException e) {
-      String msg = errorString("Could not kill job: {}", e);
-      throw new RuntimeException(msg, e);
     } finally {
       process.cleanup();
     }
@@ -122,7 +116,8 @@ public class ClusterProviderImpl implements ClusterProvider {
 
   @Override
   public ClusterPipelineStatus getStatus(SystemProcessFactory systemProcessFactory, File sparkManager, File tempDir,
-                    String appId, PipelineConfiguration pipelineConfiguration) throws TimeoutException {
+                    String appId, PipelineConfiguration pipelineConfiguration) throws TimeoutException, IOException {
+
     Map<String, String> environment = new HashMap<>();
     environment.put(CLUSTER_TYPE, CLUSTER_TYPE_SPARK);
     addKerberosConfiguration(environment, pipelineConfiguration);
@@ -155,16 +150,11 @@ public class ClusterProviderImpl implements ClusterProvider {
       }
       // TODO - differentiate between Yarn killed and Yarn failed
       return ClusterPipelineStatus.FAILED;
-    } catch (IOException e) {
-      String msg = errorString("Could not get job status: {}", e);
-      throw new RuntimeException(msg, e);
-    } catch (InterruptedException e) {
-      String msg = errorString("Could not get job status: {}", e);
-      throw new RuntimeException(msg, e);
     } finally {
       process.cleanup();
     }
   }
+
 
   private void rewriteProperties(File sdcPropertiesFile, Map<String, String> sourceConfigs, Map<String, String> sourceInfo) throws IOException{
     InputStream sdcInStream = null;
@@ -246,7 +236,7 @@ public class ClusterProviderImpl implements ClusterProvider {
                        Map<String, String> environment, Map<String, String> sourceInfo,
                        PipelineConfiguration pipelineConfiguration, StageLibraryTask stageLibrary,
                        File etcDir, File resourcesDir, File staticWebDir, File bootstrapDir, URLClassLoader apiCL,
-                       URLClassLoader containerCL, long timeToWaitForFailure) throws TimeoutException {
+                       URLClassLoader containerCL, long timeToWaitForFailure) throws IOException, TimeoutException {
     environment = Maps.newHashMap(environment);
     environment.put(CLUSTER_TYPE, CLUSTER_TYPE_SPARK);
     // create libs.tar.gz file for pipeline
@@ -395,12 +385,7 @@ public class ClusterProviderImpl implements ClusterProvider {
     SystemProcess process = systemProcessFactory.create(ClusterManager.class.getSimpleName(), tempDir, args);
     LOG.info("Starting: " + process);
     try {
-      try {
-        process.start(environment);
-      } catch (IOException e) {
-        String msg = errorString("Could not submit job: {}", e);
-        throw new RuntimeException(msg, e);
-      }
+      process.start(environment);
       long start = System.currentTimeMillis();
       Set<String> applicationIds = new HashSet<>();
       while (true) {

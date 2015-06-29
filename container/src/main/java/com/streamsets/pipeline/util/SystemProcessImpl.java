@@ -188,8 +188,7 @@ public class SystemProcessImpl implements SystemProcess {
   }
 
   @Override
-  public boolean waitFor(long timeout, TimeUnit unit)
-    throws InterruptedException {
+  public boolean waitFor(long timeout, TimeUnit unit) {
     return waitFor(delegate, timeout, unit);
   }
 
@@ -208,12 +207,9 @@ public class SystemProcessImpl implements SystemProcess {
   /**
    * Java 1.7 does not have Process.waitFor(timeout)
    */
-  private static boolean waitFor(Process process, long timeout, TimeUnit unit)
-    throws InterruptedException
-  {
+  private static boolean waitFor(Process process, long timeout, TimeUnit unit) {
     long startTime = System.nanoTime();
     long rem = unit.toNanos(timeout);
-
     do {
       try {
         process.exitValue();

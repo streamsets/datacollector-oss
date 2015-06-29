@@ -10,7 +10,7 @@ import com.streamsets.pipeline.stagelibrary.StageLibraryTask;
 import com.streamsets.pipeline.util.SystemProcessFactory;
 
 import java.io.File;
-
+import java.io.IOException;
 import java.net.URLClassLoader;
 import java.util.Map;
 import java.util.concurrent.TimeoutException;
@@ -18,10 +18,11 @@ import java.util.concurrent.TimeoutException;
 public interface ClusterProvider {
 
   void killPipeline(SystemProcessFactory systemProcessFactory, File sparkManager, File tempDir,
-                                   String appId, PipelineConfiguration pipelineConfiguration) throws TimeoutException;
+                                   String appId, PipelineConfiguration pipelineConfiguration) throws TimeoutException,
+                                   IOException;
 
   ClusterPipelineStatus getStatus(SystemProcessFactory systemProcessFactory, File sparkManager, File tempDir,
-                                   String appId, PipelineConfiguration pipelineConfiguration) throws TimeoutException;
+                                   String appId, PipelineConfiguration pipelineConfiguration) throws TimeoutException, IOException;
 
 
   ApplicationState startPipeline(SystemProcessFactory systemProcessFactory, File sparkManager, File tempDir,
@@ -29,5 +30,5 @@ public interface ClusterProvider {
                                       PipelineConfiguration pipelineConfiguration, StageLibraryTask stageLibrary,
                                       File etcDir, File resourcesDir, File staticWebDir, File bootstrapDir,
                                       URLClassLoader apiCL, URLClassLoader containerCL, long timeToWaitForFailure)
-    throws TimeoutException;
+    throws TimeoutException, IOException;
 }

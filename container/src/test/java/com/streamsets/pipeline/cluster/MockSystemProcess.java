@@ -93,8 +93,7 @@ public class MockSystemProcess implements SystemProcess {
   }
 
   @Override
-  public boolean waitFor(long timeout, TimeUnit unit)
-    throws InterruptedException {
+  public boolean waitFor(long timeout, TimeUnit unit) {
     return true;
   }
 }

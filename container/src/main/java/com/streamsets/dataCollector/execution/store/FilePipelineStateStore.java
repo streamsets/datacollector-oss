@@ -93,8 +93,9 @@ public class FilePipelineStateStore implements PipelineStateStore {
   public PipelineState saveState(String user, String name, String rev, PipelineStatus status, String message,
     Map<String, Object> attributes, ExecutionMode executionMode) throws PipelineStoreException {
     register(name, rev);
-    LOG.debug("Changing state of pipeline '{}','{}','{}' to '{}' in execution mode: '{}'", name, rev, user, status,
-      executionMode);
+    LOG.debug("Changing state of pipeline '{}','{}','{}' to '{}' in execution mode: '{}';"
+      + "status msg is '{}'", name, rev, user, status,
+      executionMode, message);
     PipelineState pipelineState =
       new PipelineStateImpl(user, name, rev, status, message, System.currentTimeMillis(), attributes, executionMode);
     persistPipelineState(pipelineState);

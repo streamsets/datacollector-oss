@@ -18,6 +18,7 @@ public class ClusterRunnerModule {
 
   @Provides
   public Runner provideRunner() {
-    return new ClusterRunner();
+  //  return new ClusterRunner(user, name, rev, objectGraph);
+    return null;
   }
 }

@@ -457,8 +457,8 @@ public class StandaloneRunner implements Runner, StateListener {
     LOG.debug("Started pipeline {} {}", name, rev);
   }
 
-  private void stopPipeline(boolean sdcShutting) {
-    if (pipelineRunnable != null && !pipelineRunnable.isStopped()) {
+  private synchronized void stopPipeline(boolean sdcShutting) {
+   if (pipelineRunnable != null && !pipelineRunnable.isStopped()) {
       LOG.info("Stopping pipeline {} {}", pipelineRunnable.getName(), pipelineRunnable.getRev());
       pipelineRunnable.stop(sdcShutting);
     }

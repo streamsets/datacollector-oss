@@ -268,7 +268,6 @@ public class TestClusterPipelineManager {
     Assert.assertTrue(ThreadUtil.sleep(1000));
     ApplicationState appState = new ApplicationState((Map)stateTracker.getState().getAttributes().
       get(ClusterPipelineManager.APPLICATION_STATE));
-    appState.setId(APPID);
     Assert.assertEquals(APPID, appState.getId());
     clusterPipelineManager.stopPipeline(false);
     Assert.assertEquals(State.STOPPED, getState());
