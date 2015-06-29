@@ -158,9 +158,11 @@ public class TestFileTailSource {
       Record record = output.getRecords().get("lane").get(0);
       Assert.assertEquals("Hello", record.get("/text").getValueAsString());
       Assert.assertEquals("tag1", record.getHeader().getAttribute("tag"));
+      Assert.assertEquals(fileInfo1.fileFullPath, record.getHeader().getAttribute("file"));
       record = output.getRecords().get("lane").get(1);
       Assert.assertEquals("Hola", record.get("/text").getValueAsString());
       Assert.assertNull(record.getHeader().getAttribute("tag"));
+      Assert.assertEquals(fileInfo2.fileFullPath, record.getHeader().getAttribute("file"));
 
       Assert.assertEquals(2, output.getRecords().get("metadata").size());
       Record metadata = output.getRecords().get("metadata").get(0);
