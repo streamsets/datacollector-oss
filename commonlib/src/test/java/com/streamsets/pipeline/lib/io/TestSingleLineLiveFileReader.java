@@ -139,6 +139,9 @@ public class TestSingleLineLiveFileReader {
     Assert.assertFalse(lfr.hasNext());
     Assert.assertEquals(14, lfr.getOffset());
 
+    // next() after EOF returns null
+    Assert.assertNull(lfr.next(0));
+
     lfr.close();
   }
 

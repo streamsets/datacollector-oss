@@ -77,14 +77,14 @@ public class MultiLineLiveFileReader implements LiveFileReader {
   public LiveFileChunk next(long waitMillis) throws IOException {
     LiveFileChunk chunk = null;
     if (!reader.hasNext()) {
-      Utils.checkState(incompleteMultiLine.length() > 0, Utils.formatL("LiveFileReader for '{}' has reached EOL",
-                                                                       reader.getLiveFile()));
-      // the underlying reader is EOF, we still have to return the current incomplete multiline.
-      // now we know is as a complete multiline because we reached EOF
-      chunk = new LiveFileChunk(tag, reader.getLiveFile(), reader.getCharset(),
-          ImmutableList.of(new FileLine(incompleteMultiLineOffset, incompleteMultiLine.toString())),
-          incompleteMultiLineTruncated);
-      incompleteMultiLine.setLength(0);
+      if (incompleteMultiLine.length() > 0) {
+        // the underlying reader is EOF, we still have to return the current incomplete multiline.
+        // now we know is as a complete multiline because we reached EOF
+        chunk = new LiveFileChunk(tag, reader.getLiveFile(), reader.getCharset(),
+                                  ImmutableList.of(new FileLine(incompleteMultiLineOffset, incompleteMultiLine.toString())),
+                                  incompleteMultiLineTruncated);
+        incompleteMultiLine.setLength(0);
+      }
     } else {
       // get new chunk from underlying reader
       LiveFileChunk newChunk = reader.next(waitMillis);
