@@ -9,6 +9,7 @@
     "grunt": "~0.4.1",
     "grunt-protractor-runner": "1.2.1",
     "grunt-shell": "1.1.2",
+    "phantomjs": "^1.9.17",
     "protractor": "^1.1.1"
   },
   "scripts": {

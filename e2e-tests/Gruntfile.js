@@ -46,18 +46,40 @@ module.exports = function(grunt) {
             browser: 'firefox'
           }
         }
+      },
+      phantomjs: {
+        options: {
+          args: {
+            baseUrl: 'http://localhost:18630/',
+            browser: 'phantomjs'
+          }
+        }
+      },
+      clean: {
+        configFile: "src/test/protractorClean.conf.js",
+        options: {
+          args: {
+            baseUrl: 'http://localhost:18630/',
+            browser: 'chrome'
+          }
+        }
       }
-
     }
   });
 
-  grunt.registerTask( 'test', ['shell:dockerBuild', 'shell:dockerComposeUp', 'protractor:docker',
-    'shell:dockerComposeStop']);
+  /*grunt.registerTask( 'test', ['shell:dockerBuild', 'shell:dockerComposeUp', 'protractor:docker',
+    'shell:dockerComposeStop']);*/
 
   grunt.registerTask( 'chrome', ['protractor:chrome']);
 
   grunt.registerTask( 'firefox', ['protractor:firefox']);
 
+  grunt.registerTask( 'phantomjs', ['protractor:phantomjs']);
+
+  grunt.registerTask( 'clean', ['protractor:clean']);
+
+
+  grunt.registerTask( 'test', ['protractor:clean', 'protractor:chrome', 'protractor:clean', 'protractor:firefox']);
 
 };
 

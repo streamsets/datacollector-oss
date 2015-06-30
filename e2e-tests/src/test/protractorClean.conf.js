@@ -2,23 +2,7 @@ exports.config = {
   allScriptsTimeout: 11000,
 
   suites: {
-    //sample: ['restAPI/logoutResource.js']
-    restAPI: [
-      'restAPI/adminResource.js',
-      'restAPI/infoResource.js',
-      'restAPI/logoutResource.js',
-      'restAPI/configurationResource.js',
-      'restAPI/helpResource.js',
-      'restAPI/jmx.js',
-      'restAPI/stageLibraryResource.js',
-      'restAPI/pipelineStoreResource.js'
-    ],
-    ui: [
-      'ui/homePage.js',
-      'ui/configurationPage.js',
-      'ui/jvmMetricsPage.js',
-      'ui/logPage.js'
-    ]
+    clean: ['clean/clean.js']
   },
 
   framework: 'jasmine',
