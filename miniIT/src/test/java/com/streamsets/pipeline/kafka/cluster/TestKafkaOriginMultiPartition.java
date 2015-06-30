@@ -39,7 +39,7 @@ public class TestKafkaOriginMultiPartition extends TestPipelineOperationsCluster
     executorService = Executors.newSingleThreadExecutor();
     executorService.submit(new ProducerRunnable(TOPIC, 3, producer, startLatch, DataType.TEXT, null, -1,
       null));
-    TestPipelineOperationsCluster.beforeClass(getPipelineJson());
+    TestPipelineOperationsCluster.beforeClass(getPipelineJson(), "TestKafkaOriginMultiPartitionCluster");
     startLatch.countDown();
   }
 
@@ -47,7 +47,7 @@ public class TestKafkaOriginMultiPartition extends TestPipelineOperationsCluster
   public static void afterClass() throws Exception {
     executorService.shutdownNow();
     KafkaTestUtil.shutdown();
-    TestPipelineOperationsCluster.afterClass();
+    TestPipelineOperationsCluster.afterClass("TestKafkaOriginMultiPartitionCluster");
   }
 
   private static String getPipelineJson() throws Exception {

@@ -27,16 +27,14 @@ public abstract class TestPipelineOperationsCluster extends TestPipelineOperatio
   protected static URI serverURI;
   protected static MiniSDC miniSDC;
 
-  private static final String TEST_NAME = "PipelineOperationsOnCluster";
-
-  public static void beforeClass(String pipelineJson) throws Exception {
-    ClusterUtil.setupCluster(TEST_NAME, pipelineJson, new YarnConfiguration());
+  public static void beforeClass(String pipelineJson, String testName) throws Exception {
+    ClusterUtil.setupCluster(testName, pipelineJson, new YarnConfiguration());
     serverURI = ClusterUtil.getServerURI();
     miniSDC = ClusterUtil.getMiniSDC();
   }
 
-  public static void afterClass() throws Exception {
-    ClusterUtil.tearDownCluster(TEST_NAME);
+  public static void afterClass(String testName) throws Exception {
+    ClusterUtil.tearDownCluster(testName);
   }
 
   protected URI getServerURI() {

@@ -41,7 +41,7 @@ public class TestKafkaOriginSinglePartition extends TestPipelineOperationsCluste
     executorService.submit(new ProducerRunnable(TOPIC, 1, producer, startLatch, DataType.TEXT, null, -1,
       null));
 
-    TestPipelineOperationsCluster.beforeClass(getPipelineJson());
+    TestPipelineOperationsCluster.beforeClass(getPipelineJson(), "TestKafkaOriginSinglePartitionCluster");
     startLatch.countDown();
   }
 
@@ -49,7 +49,7 @@ public class TestKafkaOriginSinglePartition extends TestPipelineOperationsCluste
   public static void afterClass() throws Exception {
     executorService.shutdownNow();
     KafkaTestUtil.shutdown();
-    TestPipelineOperationsCluster.afterClass();
+    TestPipelineOperationsCluster.afterClass("TestKafkaOriginSinglePartitionCluster");
   }
 
   private static String getPipelineJson() throws Exception {
