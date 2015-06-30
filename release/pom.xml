@@ -81,9 +81,9 @@
             <configuration>
               <appendAssemblyId>false</appendAssemblyId>
               <attach>false</attach>
-              <finalName>streamsets-datacollector-cdh_5_2_4-lib-${project.version}</finalName>
+              <finalName>streamsets-datacollector-cdh_5_2-lib-${project.version}</finalName>
               <descriptors>
-                <descriptor>src/main/assemblies/data-collector-cdh_5_2_4-lib.xml</descriptor>
+                <descriptor>src/main/assemblies/data-collector-cdh_5_2-lib.xml</descriptor>
               </descriptors>
             </configuration>
           </execution>
@@ -96,9 +96,9 @@
             <configuration>
               <appendAssemblyId>false</appendAssemblyId>
               <attach>false</attach>
-              <finalName>streamsets-datacollector-cdh_5_3_2-lib-${project.version}</finalName>
+              <finalName>streamsets-datacollector-cdh_5_3-lib-${project.version}</finalName>
               <descriptors>
-                <descriptor>src/main/assemblies/data-collector-cdh_5_3_2-lib.xml</descriptor>
+                <descriptor>src/main/assemblies/data-collector-cdh_5_3-lib.xml</descriptor>
               </descriptors>
             </configuration>
           </execution>
@@ -111,9 +111,9 @@
             <configuration>
               <appendAssemblyId>false</appendAssemblyId>
               <attach>false</attach>
-              <finalName>streamsets-datacollector-cdh_5_4_1-lib-${project.version}</finalName>
+              <finalName>streamsets-datacollector-cdh_5_4-lib-${project.version}</finalName>
               <descriptors>
-                <descriptor>src/main/assemblies/data-collector-cdh_5_4_1-lib.xml</descriptor>
+                <descriptor>src/main/assemblies/data-collector-cdh_5_4-lib.xml</descriptor>
               </descriptors>
             </configuration>
           </execution>
@@ -126,9 +126,9 @@
             <configuration>
               <appendAssemblyId>false</appendAssemblyId>
               <attach>false</attach>
-              <finalName>streamsets-datacollector-hdp_2_2_0-lib-${project.version}</finalName>
+              <finalName>streamsets-datacollector-hdp_2_2-lib-${project.version}</finalName>
               <descriptors>
-                <descriptor>src/main/assemblies/data-collector-hdp_2_2_0-lib.xml</descriptor>
+                <descriptor>src/main/assemblies/data-collector-hdp_2_2-lib.xml</descriptor>
               </descriptors>
             </configuration>
           </execution>
@@ -141,9 +141,9 @@
             <configuration>
               <appendAssemblyId>false</appendAssemblyId>
               <attach>false</attach>
-              <finalName>streamsets-datacollector-apache-kafka_0_8_1_1-lib-${project.version}</finalName>
+              <finalName>streamsets-datacollector-apache-kafka_0_8_1-lib-${project.version}</finalName>
               <descriptors>
-                <descriptor>src/main/assemblies/data-collector-apache-kafka_0_8_1_1-lib.xml</descriptor>
+                <descriptor>src/main/assemblies/data-collector-apache-kafka_0_8_1-lib.xml</descriptor>
               </descriptors>
             </configuration>
           </execution>
@@ -156,14 +156,14 @@
             <configuration>
               <appendAssemblyId>false</appendAssemblyId>
               <attach>false</attach>
-              <finalName>streamsets-datacollector-apache-kafka_0_8_2_1-lib-${project.version}</finalName>
+              <finalName>streamsets-datacollector-apache-kafka_0_8_2-lib-${project.version}</finalName>
               <descriptors>
-                <descriptor>src/main/assemblies/data-collector-apache-kafka_0_8_2_1-lib.xml</descriptor>
+                <descriptor>src/main/assemblies/data-collector-apache-kafka_0_8_2-lib.xml</descriptor>
               </descriptors>
             </configuration>
           </execution>
           <execution>
-            <id>cdh5-0.8.2.0-kafka-1.2.0</id>
+            <id>cdh_5-0.8.2.0-kafka-1.2.0</id>
             <phase>package</phase>
             <goals>
               <goal>single</goal>
@@ -178,7 +178,7 @@
             </configuration>
           </execution>
           <execution>
-            <id>cdh5_4_1-cluster-cdh_kafka_1_2_0-lib</id>
+            <id>cdh_5_4_1-cluster-cdh_kafka_1_2_0-lib</id>
             <phase>package</phase>
             <goals>
               <goal>single</goal>
@@ -186,9 +186,9 @@
             <configuration>
               <appendAssemblyId>false</appendAssemblyId>
               <attach>false</attach>
-              <finalName>streamsets-datacollector-cdh5_4_1-cluster-cdh_kafka_1_2_0-lib-${project.version}</finalName>
+              <finalName>streamsets-datacollector-cdh_5_4-cluster-cdh_kafka_1_2_0-lib-${project.version}</finalName>
               <descriptors>
-                <descriptor>src/main/assemblies/data-collector-cdh5_4_1-cluster-cdh_kafka_1_2_0-lib.xml</descriptor>
+                <descriptor>src/main/assemblies/data-collector-cdh_5_4-cluster-cdh_kafka_1_2_0-lib.xml</descriptor>
               </descriptors>
             </configuration>
           </execution>
@@ -201,9 +201,9 @@
             <configuration>
               <appendAssemblyId>false</appendAssemblyId>
               <attach>false</attach>
-              <finalName>streamsets-datacollector-jython_2_7_0-lib-${project.version}</finalName>
+              <finalName>streamsets-datacollector-jython_2_7-lib-${project.version}</finalName>
               <descriptors>
-                <descriptor>src/main/assemblies/data-collector-jython_2_7_0-lib.xml</descriptor>
+                <descriptor>src/main/assemblies/data-collector-jython_2_7-lib.xml</descriptor>
               </descriptors>
             </configuration>
           </execution>
@@ -216,9 +216,9 @@
             <configuration>
               <appendAssemblyId>false</appendAssemblyId>
               <attach>false</attach>
-              <finalName>streamsets-datacollector-elasticsearch_1_4_4-lib-${project.version}</finalName>
+              <finalName>streamsets-datacollector-elasticsearch_1_4-lib-${project.version}</finalName>
               <descriptors>
-                <descriptor>src/main/assemblies/data-collector-elasticsearch_1_4_4-lib.xml</descriptor>
+                <descriptor>src/main/assemblies/data-collector-elasticsearch_1_4-lib.xml</descriptor>
               </descriptors>
             </configuration>
           </execution>
@@ -231,9 +231,9 @@
             <configuration>
               <appendAssemblyId>false</appendAssemblyId>
               <attach>false</attach>
-              <finalName>streamsets-datacollector-elasticsearch_1_5_0-lib-${project.version}</finalName>
+              <finalName>streamsets-datacollector-elasticsearch_1_5-lib-${project.version}</finalName>
               <descriptors>
-                <descriptor>src/main/assemblies/data-collector-elasticsearch_1_5_0-lib.xml</descriptor>
+                <descriptor>src/main/assemblies/data-collector-elasticsearch_1_5-lib.xml</descriptor>
               </descriptors>
             </configuration>
           </execution>
@@ -261,9 +261,9 @@
             <configuration>
               <appendAssemblyId>false</appendAssemblyId>
               <attach>false</attach>
-              <finalName>streamsets-datacollector-cassandra_2_1_5-lib-${project.version}</finalName>
+              <finalName>streamsets-datacollector-cassandra_2-lib-${project.version}</finalName>
               <descriptors>
-                <descriptor>src/main/assemblies/data-collector-cassandra_2_1_5-lib.xml</descriptor>
+                <descriptor>src/main/assemblies/data-collector-cassandra_2-lib.xml</descriptor>
               </descriptors>
             </configuration>
           </execution>
@@ -276,9 +276,9 @@
             <configuration>
               <appendAssemblyId>false</appendAssemblyId>
               <attach>false</attach>
-              <finalName>streamsets-datacollector-mongodb_3_0_2-lib-${project.version}</finalName>
+              <finalName>streamsets-datacollector-mongodb_3-lib-${project.version}</finalName>
               <descriptors>
-                <descriptor>src/main/assemblies/data-collector-mongodb_3_0_2-lib.xml</descriptor>
+                <descriptor>src/main/assemblies/data-collector-mongodb_3-lib.xml</descriptor>
               </descriptors>
             </configuration>
           </execution>

@@ -201,13 +201,13 @@
           </execution>
           <!-- Executions for additional SDC libs -->
           <execution>
-            <id>generate-kafka-0.8.1.1-rpm</id>
+            <id>generate-kafka-0.8.1-rpm</id>
             <goals>
               <goal>attached-rpm</goal>
             </goals>
             <configuration>
-              <name>streamsets-datacollector-apache-kafka_0.8.1.1-lib</name>
-              <classifier>kafka_0.8.1.1-lib</classifier>
+              <name>streamsets-datacollector-apache-kafka_0.8.1-lib</name>
+              <classifier>kafka_0.8.1-lib</classifier>
               <license>Proprietary</license>
               <distribution>el6</distribution>
               <group>Applications/System</group>
@@ -215,7 +215,7 @@
               <targetOS>linux</targetOS>
               <prefix>/opt</prefix>
               <provides>
-                <provide>streamsets-datacollector-kafka-0.8.1.1</provide>
+                <provide>streamsets-datacollector-kafka-0.8.1</provide>
               </provides>
               <requires>
                 <require>java</require>
@@ -230,26 +230,26 @@
               <mappings>
                 <!-- Separate mappings for dirs exist b/c of the Won't Fix for this JIRA https://jira.codehaus.org/browse/MRPM-8 -->
                 <mapping>
-                  <directory>${sdc.dir}/streamsets-datacollector-${project.version}/streamsets-libs/streamsets-datacollector-apache-kafka_0_8_1_1-lib</directory>
+                  <directory>${sdc.dir}/streamsets-datacollector-${project.version}/streamsets-libs/streamsets-datacollector-apache-kafka_0_8_1-lib</directory>
                   <filemode>755</filemode>
                   <username>root</username>
                   <groupname>root</groupname>
                 </mapping>
                 <mapping>
-                  <directory>${sdc.dir}/streamsets-datacollector-${project.version}/streamsets-libs/streamsets-datacollector-apache-kafka_0_8_1_1-lib/lib</directory>
+                  <directory>${sdc.dir}/streamsets-datacollector-${project.version}/streamsets-libs/streamsets-datacollector-apache-kafka_0_8_1-lib/lib</directory>
                   <filemode>755</filemode>
                   <username>root</username>
                   <groupname>root</groupname>
                 </mapping>
                 <mapping>
-                  <directory>${sdc.dir}/streamsets-datacollector-${project.version}/streamsets-libs/streamsets-datacollector-apache-kafka_0_8_1_1-lib</directory>
+                  <directory>${sdc.dir}/streamsets-datacollector-${project.version}/streamsets-libs/streamsets-datacollector-apache-kafka_0_8_1-lib</directory>
                   <directoryIncluded>false</directoryIncluded>
                   <filemode>644</filemode>
                   <username>root</username>
                   <groupname>root</groupname>
                   <sources>
                     <source>
-                      <location>${sdc.distroot}/streamsets-datacollector-${project.version}/streamsets-libs/streamsets-datacollector-apache-kafka_0_8_1_1-lib</location>
+                      <location>${sdc.distroot}/streamsets-datacollector-${project.version}/streamsets-libs/streamsets-datacollector-apache-kafka_0_8_1-lib</location>
                     </source>
                   </sources>
                 </mapping>
@@ -257,13 +257,13 @@
             </configuration>
           </execution>
           <execution>
-            <id>generate-kafka-0.8.2.0-rpm</id>
+            <id>generate-kafka-0.8.2-rpm</id>
             <goals>
               <goal>attached-rpm</goal>
             </goals>
             <configuration>
-              <name>streamsets-datacollector-apache-kafka_0.8.2.0-lib</name>
-              <classifier>kafka_0.8.2.0-lib</classifier>
+              <name>streamsets-datacollector-apache-kafka_0.8.2-lib</name>
+              <classifier>kafka_0.8.2-lib</classifier>
               <license>Proprietary</license>
               <distribution>el6</distribution>
               <group>Applications/System</group>
@@ -271,7 +271,7 @@
               <targetOS>linux</targetOS>
               <prefix>/opt</prefix>
               <provides>
-                <provide>streamsets-datacollector-kafka-0.8.2.0</provide>
+                <provide>streamsets-datacollector-kafka-0.8.2</provide>
               </provides>
               <requires>
                 <require>java</require>
@@ -286,82 +286,26 @@
               <mappings>
                 <!-- Separate mappings for dirs exist b/c of the Won't Fix for this JIRA https://jira.codehaus.org/browse/MRPM-8 -->
                 <mapping>
-                  <directory>${sdc.dir}/streamsets-datacollector-${project.version}/streamsets-libs/streamsets-datacollector-apache-kafka_0_8_2_0-lib</directory>
+                  <directory>${sdc.dir}/streamsets-datacollector-${project.version}/streamsets-libs/streamsets-datacollector-apache-kafka_0_8_2-lib</directory>
                   <filemode>755</filemode>
                   <username>root</username>
                   <groupname>root</groupname>
                 </mapping>
                 <mapping>
-                  <directory>${sdc.dir}/streamsets-datacollector-${project.version}/streamsets-libs/streamsets-datacollector-apache-kafka_0_8_2_0-lib/lib</directory>
+                  <directory>${sdc.dir}/streamsets-datacollector-${project.version}/streamsets-libs/streamsets-datacollector-apache-kafka_0_8_2-lib/lib</directory>
                   <filemode>755</filemode>
                   <username>root</username>
                   <groupname>root</groupname>
                 </mapping>
                 <mapping>
-                  <directory>${sdc.dir}/streamsets-datacollector-${project.version}/streamsets-libs/streamsets-datacollector-apache-kafka_0_8_2_0-lib</directory>
+                  <directory>${sdc.dir}/streamsets-datacollector-${project.version}/streamsets-libs/streamsets-datacollector-apache-kafka_0_8_2-lib</directory>
                   <directoryIncluded>false</directoryIncluded>
                   <filemode>644</filemode>
                   <username>root</username>
                   <groupname>root</groupname>
                   <sources>
                     <source>
-                      <location>${sdc.distroot}/streamsets-datacollector-${project.version}/streamsets-libs/streamsets-datacollector-apache-kafka_0_8_2_0-lib</location>
-                    </source>
-                  </sources>
-                </mapping>
-              </mappings>
-            </configuration>
-          </execution>
-          <execution>
-            <id>generate-kafka-0.8.2.1-rpm</id>
-            <goals>
-              <goal>attached-rpm</goal>
-            </goals>
-            <configuration>
-              <name>streamsets-datacollector-apache-kafka_0.8.2.1-lib</name>
-              <classifier>kafka_0.8.2.1-lib</classifier>
-              <license>Proprietary</license>
-              <distribution>el6</distribution>
-              <group>Applications/System</group>
-              <packager>StreamSets</packager>
-              <targetOS>linux</targetOS>
-              <prefix>/opt</prefix>
-              <provides>
-                <provide>streamsets-datacollector-kafka-0.8.2.1</provide>
-              </provides>
-              <requires>
-                <require>java</require>
-                <require>streamsets-datacollector</require>
-              </requires>
-              <defineStatements>
-                <defineStatement>_unpackaged_files_terminate_build 0</defineStatement>
-                <defineStatement>service_user ${sdc.user}</defineStatement>
-                <defineStatement>service_group ${sdc.group}</defineStatement>
-                <defineStatement>install_dir ${sdc.dir}</defineStatement>
-              </defineStatements>
-              <mappings>
-                <!-- Separate mappings for dirs exist b/c of the Won't Fix for this JIRA https://jira.codehaus.org/browse/MRPM-8 -->
-                <mapping>
-                  <directory>${sdc.dir}/streamsets-datacollector-${project.version}/streamsets-libs/streamsets-datacollector-apache-kafka_0_8_2_1-lib</directory>
-                  <filemode>755</filemode>
-                  <username>root</username>
-                  <groupname>root</groupname>
-                </mapping>
-                <mapping>
-                  <directory>${sdc.dir}/streamsets-datacollector-${project.version}/streamsets-libs/streamsets-datacollector-apache-kafka_0_8_2_1-lib/lib</directory>
-                  <filemode>755</filemode>
-                  <username>root</username>
-                  <groupname>root</groupname>
-                </mapping>
-                <mapping>
-                  <directory>${sdc.dir}/streamsets-datacollector-${project.version}/streamsets-libs/streamsets-datacollector-apache-kafka_0_8_2_1-lib</directory>
-                  <directoryIncluded>false</directoryIncluded>
-                  <filemode>644</filemode>
-                  <username>root</username>
-                  <groupname>root</groupname>
-                  <sources>
-                    <source>
-                      <location>${sdc.distroot}/streamsets-datacollector-${project.version}/streamsets-libs/streamsets-datacollector-apache-kafka_0_8_2_1-lib</location>
+                      <location>${sdc.distroot}/streamsets-datacollector-${project.version}/streamsets-libs/streamsets-datacollector-apache-kafka_0_8_2-lib</location>
                     </source>
                   </sources>
                 </mapping>
@@ -425,13 +369,13 @@
             </configuration>
           </execution>
           <execution>
-            <id>generate-cassandra-2.1.5-rpm</id>
+            <id>generate-cassandra-2.1-rpm</id>
             <goals>
               <goal>attached-rpm</goal>
             </goals>
             <configuration>
-              <name>streamsets-datacollector-cassandra-2.1.5-lib</name>
-              <classifier>cassandra-2.1.5-lib</classifier>
+              <name>streamsets-datacollector-cassandra-2.1-lib</name>
+              <classifier>cassandra-2.1-lib</classifier>
               <license>Proprietary</license>
               <distribution>el6</distribution>
               <group>Applications/System</group>
@@ -439,7 +383,7 @@
               <targetOS>linux</targetOS>
               <prefix>/opt</prefix>
               <provides>
-                <provide>streamsets-datacollector-cassandra-2.1.5</provide>
+                <provide>streamsets-datacollector-cassandra-2.1</provide>
               </provides>
               <requires>
                 <require>java</require>
@@ -454,26 +398,26 @@
               <mappings>
                 <!-- Separate mappings for dirs exist b/c of the Won't Fix for this JIRA https://jira.codehaus.org/browse/MRPM-8 -->
                 <mapping>
-                  <directory>${sdc.dir}/streamsets-datacollector-${project.version}/streamsets-libs/streamsets-datacollector-cassandra_2_1_5-lib</directory>
+                  <directory>${sdc.dir}/streamsets-datacollector-${project.version}/streamsets-libs/streamsets-datacollector-cassandra_2-lib</directory>
                   <filemode>755</filemode>
                   <username>root</username>
                   <groupname>root</groupname>
                 </mapping>
                 <mapping>
-                  <directory>${sdc.dir}/streamsets-datacollector-${project.version}/streamsets-libs/streamsets-datacollector-cassandra_2_1_5-lib/lib</directory>
+                  <directory>${sdc.dir}/streamsets-datacollector-${project.version}/streamsets-libs/streamsets-datacollector-cassandra_2-lib/lib</directory>
                   <filemode>755</filemode>
                   <username>root</username>
                   <groupname>root</groupname>
                 </mapping>
                 <mapping>
-                  <directory>${sdc.dir}/streamsets-datacollector-${project.version}/streamsets-libs/streamsets-datacollector-cassandra_2_1_5-lib</directory>
+                  <directory>${sdc.dir}/streamsets-datacollector-${project.version}/streamsets-libs/streamsets-datacollector-cassandra_2-lib</directory>
                   <directoryIncluded>false</directoryIncluded>
                   <filemode>644</filemode>
                   <username>root</username>
                   <groupname>root</groupname>
                   <sources>
                     <source>
-                      <location>${sdc.distroot}/streamsets-datacollector-${project.version}/streamsets-libs/streamsets-datacollector-cassandra_2_1_5-lib</location>
+                      <location>${sdc.distroot}/streamsets-datacollector-${project.version}/streamsets-libs/streamsets-datacollector-cassandra_2-lib</location>
                     </source>
                   </sources>
                 </mapping>
@@ -537,13 +481,13 @@
             </configuration>
           </execution>
           <execution>
-            <id>generate-cdh5-5.2.1-rpm</id>
+            <id>generate-cdh-5.2-rpm</id>
             <goals>
               <goal>attached-rpm</goal>
             </goals>
             <configuration>
-              <name>streamsets-datacollector-cdh5-5.2.1-lib</name>
-              <classifier>cdh5-5.2.1-lib</classifier>
+              <name>streamsets-datacollector-cdh-5.2-lib</name>
+              <classifier>cdh-5.2-lib</classifier>
               <license>Proprietary</license>
               <distribution>el6</distribution>
               <group>Applications/System</group>
@@ -551,7 +495,7 @@
               <targetOS>linux</targetOS>
               <prefix>/opt</prefix>
               <provides>
-                <provide>streamsets-datacollector-cdh5-5.2.1</provide>
+                <provide>streamsets-datacollector-cdh-5.2</provide>
               </provides>
               <requires>
                 <require>java</require>
@@ -566,26 +510,26 @@
               <mappings>
                 <!-- Separate mappings for dirs exist b/c of the Won't Fix for this JIRA https://jira.codehaus.org/browse/MRPM-8 -->
                 <mapping>
-                  <directory>${sdc.dir}/streamsets-datacollector-${project.version}/streamsets-libs/streamsets-datacollector-cdh5_2_1-lib</directory>
+                  <directory>${sdc.dir}/streamsets-datacollector-${project.version}/streamsets-libs/streamsets-datacollector-cdh_5_2-lib</directory>
                   <filemode>755</filemode>
                   <username>root</username>
                   <groupname>root</groupname>
                 </mapping>
                 <mapping>
-                  <directory>${sdc.dir}/streamsets-datacollector-${project.version}/streamsets-libs/streamsets-datacollector-cdh5_2_1-lib/lib</directory>
+                  <directory>${sdc.dir}/streamsets-datacollector-${project.version}/streamsets-libs/streamsets-datacollector-cdh_5_2-lib/lib</directory>
                   <filemode>755</filemode>
                   <username>root</username>
                   <groupname>root</groupname>
                 </mapping>
                 <mapping>
-                  <directory>${sdc.dir}/streamsets-datacollector-${project.version}/streamsets-libs/streamsets-datacollector-cdh5_2_1-lib</directory>
+                  <directory>${sdc.dir}/streamsets-datacollector-${project.version}/streamsets-libs/streamsets-datacollector-cdh_5_2-lib</directory>
                   <directoryIncluded>false</directoryIncluded>
                   <filemode>644</filemode>
                   <username>root</username>
                   <groupname>root</groupname>
                   <sources>
                     <source>
-                      <location>${sdc.distroot}/streamsets-datacollector-${project.version}/streamsets-libs/streamsets-datacollector-cdh5_2_1-lib</location>
+                      <location>${sdc.distroot}/streamsets-datacollector-${project.version}/streamsets-libs/streamsets-datacollector-cdh_5_2-lib</location>
                     </source>
                   </sources>
                 </mapping>
@@ -593,13 +537,13 @@
             </configuration>
           </execution>
           <execution>
-            <id>generate-cdh5-5.2.3-rpm</id>
+            <id>generate-cdh-5.3-rpm</id>
             <goals>
               <goal>attached-rpm</goal>
             </goals>
             <configuration>
-              <name>streamsets-datacollector-cdh5-5.2.3-lib</name>
-              <classifier>cdh5-5.2.3-lib</classifier>
+              <name>streamsets-datacollector-cdh-5.3-lib</name>
+              <classifier>cdh-5.3-lib</classifier>
               <license>Proprietary</license>
               <distribution>el6</distribution>
               <group>Applications/System</group>
@@ -607,7 +551,7 @@
               <targetOS>linux</targetOS>
               <prefix>/opt</prefix>
               <provides>
-                <provide>streamsets-datacollector-cdh5-5.2.3</provide>
+                <provide>streamsets-datacollector-cdh-5.3</provide>
               </provides>
               <requires>
                 <require>java</require>
@@ -622,26 +566,26 @@
               <mappings>
                 <!-- Separate mappings for dirs exist b/c of the Won't Fix for this JIRA https://jira.codehaus.org/browse/MRPM-8 -->
                 <mapping>
-                  <directory>${sdc.dir}/streamsets-datacollector-${project.version}/streamsets-libs/streamsets-datacollector-cdh5_2_3-lib</directory>
+                  <directory>${sdc.dir}/streamsets-datacollector-${project.version}/streamsets-libs/streamsets-datacollector-cdh_5_3-lib</directory>
                   <filemode>755</filemode>
                   <username>root</username>
                   <groupname>root</groupname>
                 </mapping>
                 <mapping>
-                  <directory>${sdc.dir}/streamsets-datacollector-${project.version}/streamsets-libs/streamsets-datacollector-cdh5_2_3-lib/lib</directory>
+                  <directory>${sdc.dir}/streamsets-datacollector-${project.version}/streamsets-libs/streamsets-datacollector-cdh_5_3-lib/lib</directory>
                   <filemode>755</filemode>
                   <username>root</username>
                   <groupname>root</groupname>
                 </mapping>
                 <mapping>
-                  <directory>${sdc.dir}/streamsets-datacollector-${project.version}/streamsets-libs/streamsets-datacollector-cdh5_2_3-lib</directory>
+                  <directory>${sdc.dir}/streamsets-datacollector-${project.version}/streamsets-libs/streamsets-datacollector-cdh_5_3-lib</directory>
                   <directoryIncluded>false</directoryIncluded>
                   <filemode>644</filemode>
                   <username>root</username>
                   <groupname>root</groupname>
                   <sources>
                     <source>
-                      <location>${sdc.distroot}/streamsets-datacollector-${project.version}/streamsets-libs/streamsets-datacollector-cdh5_2_3-lib</location>
+                      <location>${sdc.distroot}/streamsets-datacollector-${project.version}/streamsets-libs/streamsets-datacollector-cdh_5_3-lib</location>
                     </source>
                   </sources>
                 </mapping>
@@ -649,13 +593,13 @@
             </configuration>
           </execution>
           <execution>
-            <id>generate-cdh5-5.2.4-rpm</id>
+            <id>generate-cdh-5.4-rpm</id>
             <goals>
               <goal>attached-rpm</goal>
             </goals>
             <configuration>
-              <name>streamsets-datacollector-cdh5-5.2.4-lib</name>
-              <classifier>cdh5-5.2.4-lib</classifier>
+              <name>streamsets-datacollector-cdh-5.4-lib</name>
+              <classifier>cdh-5.4-lib</classifier>
               <license>Proprietary</license>
               <distribution>el6</distribution>
               <group>Applications/System</group>
@@ -663,7 +607,7 @@
               <targetOS>linux</targetOS>
               <prefix>/opt</prefix>
               <provides>
-                <provide>streamsets-datacollector-cdh5-5.2.4</provide>
+                <provide>streamsets-datacollector-cdh-5.4</provide>
               </provides>
               <requires>
                 <require>java</require>
@@ -678,26 +622,26 @@
               <mappings>
                 <!-- Separate mappings for dirs exist b/c of the Won't Fix for this JIRA https://jira.codehaus.org/browse/MRPM-8 -->
                 <mapping>
-                  <directory>${sdc.dir}/streamsets-datacollector-${project.version}/streamsets-libs/streamsets-datacollector-cdh5_2_4-lib</directory>
+                  <directory>${sdc.dir}/streamsets-datacollector-${project.version}/streamsets-libs/streamsets-datacollector-cdh_5_4-lib</directory>
                   <filemode>755</filemode>
                   <username>root</username>
                   <groupname>root</groupname>
                 </mapping>
                 <mapping>
-                  <directory>${sdc.dir}/streamsets-datacollector-${project.version}/streamsets-libs/streamsets-datacollector-cdh5_2_4-lib/lib</directory>
+                  <directory>${sdc.dir}/streamsets-datacollector-${project.version}/streamsets-libs/streamsets-datacollector-cdh_5_4-lib/lib</directory>
                   <filemode>755</filemode>
                   <username>root</username>
                   <groupname>root</groupname>
                 </mapping>
                 <mapping>
-                  <directory>${sdc.dir}/streamsets-datacollector-${project.version}/streamsets-libs/streamsets-datacollector-cdh5_2_4-lib</directory>
+                  <directory>${sdc.dir}/streamsets-datacollector-${project.version}/streamsets-libs/streamsets-datacollector-cdh_5_4-lib</directory>
                   <directoryIncluded>false</directoryIncluded>
                   <filemode>644</filemode>
                   <username>root</username>
                   <groupname>root</groupname>
                   <sources>
                     <source>
-                      <location>${sdc.distroot}/streamsets-datacollector-${project.version}/streamsets-libs/streamsets-datacollector-cdh5_2_4-lib</location>
+                      <location>${sdc.distroot}/streamsets-datacollector-${project.version}/streamsets-libs/streamsets-datacollector-cdh_5_4-lib</location>
                     </source>
                   </sources>
                 </mapping>
@@ -705,13 +649,13 @@
             </configuration>
           </execution>
           <execution>
-            <id>generate-cdh5-5.3.0-rpm</id>
+            <id>generate-cdh-5_4-cluster-cdh_kafka_1_2_0-rpm</id>
             <goals>
               <goal>attached-rpm</goal>
             </goals>
             <configuration>
-              <name>streamsets-datacollector-cdh5-5.3.0-lib</name>
-              <classifier>cdh5-5.3.0-lib</classifier>
+              <name>streamsets-datacollector-cdh-5_4-cluster-cdh_kafka_1_2_0</name>
+              <classifier>cdh-5_4-cluster-cdh_kafka_1_2_0</classifier>
               <license>Proprietary</license>
               <distribution>el6</distribution>
               <group>Applications/System</group>
@@ -719,7 +663,7 @@
               <targetOS>linux</targetOS>
               <prefix>/opt</prefix>
               <provides>
-                <provide>streamsets-datacollector-cdh-5.3.0</provide>
+                <provide>streamsets-datacollector-cdh-cluster-5.4-kafka-1.2.0</provide>
               </provides>
               <requires>
                 <require>java</require>
@@ -734,26 +678,26 @@
               <mappings>
                 <!-- Separate mappings for dirs exist b/c of the Won't Fix for this JIRA https://jira.codehaus.org/browse/MRPM-8 -->
                 <mapping>
-                  <directory>${sdc.dir}/streamsets-datacollector-${project.version}/streamsets-libs/streamsets-datacollector-cdh5_3_0-lib</directory>
+                  <directory>${sdc.dir}/streamsets-datacollector-${project.version}/streamsets-libs/streamsets-datacollector-cdh_5_4-cluster-cdh_kafka_1_2_0-lib</directory>
                   <filemode>755</filemode>
                   <username>root</username>
                   <groupname>root</groupname>
                 </mapping>
                 <mapping>
-                  <directory>${sdc.dir}/streamsets-datacollector-${project.version}/streamsets-libs/streamsets-datacollector-cdh5_3_0-lib/lib</directory>
+                  <directory>${sdc.dir}/streamsets-datacollector-${project.version}/streamsets-libs/streamsets-datacollector-cdh_5_4-cluster-cdh_kafka_1_2_0-lib/lib</directory>
                   <filemode>755</filemode>
                   <username>root</username>
                   <groupname>root</groupname>
                 </mapping>
                 <mapping>
-                  <directory>${sdc.dir}/streamsets-datacollector-${project.version}/streamsets-libs/streamsets-datacollector-cdh5_3_0-lib</directory>
+                  <directory>${sdc.dir}/streamsets-datacollector-${project.version}/streamsets-libs/streamsets-datacollector-cdh_5_4-cluster-cdh_kafka_1_2_0-lib</directory>
                   <directoryIncluded>false</directoryIncluded>
                   <filemode>644</filemode>
                   <username>root</username>
                   <groupname>root</groupname>
                   <sources>
                     <source>
-                      <location>${sdc.distroot}/streamsets-datacollector-${project.version}/streamsets-libs/streamsets-datacollector-cdh5_3_0-lib</location>
+                      <location>${sdc.distroot}/streamsets-datacollector-${project.version}/streamsets-libs/streamsets-datacollector-cdh_5_4-cluster-cdh_kafka_1_2_0-lib</location>
                     </source>
                   </sources>
                 </mapping>
@@ -761,13 +705,13 @@
             </configuration>
           </execution>
           <execution>
-            <id>generate-cdh5-5.3.1-rpm</id>
+            <id>generate-elasticsearch-1.4-rpm</id>
             <goals>
               <goal>attached-rpm</goal>
             </goals>
             <configuration>
-              <name>streamsets-datacollector-cdh5-5.3.1-lib</name>
-              <classifier>cdh5-5.3.1-lib</classifier>
+              <name>streamsets-datacollector-elasticsearch-1.4-lib</name>
+              <classifier>elasticsearch-1.4-lib</classifier>
               <license>Proprietary</license>
               <distribution>el6</distribution>
               <group>Applications/System</group>
@@ -775,7 +719,7 @@
               <targetOS>linux</targetOS>
               <prefix>/opt</prefix>
               <provides>
-                <provide>streamsets-datacollector-cdh-5.3.1</provide>
+                <provide>streamsets-datacollector-elasticsearch-1.4</provide>
               </provides>
               <requires>
                 <require>java</require>
@@ -790,26 +734,26 @@
               <mappings>
                 <!-- Separate mappings for dirs exist b/c of the Won't Fix for this JIRA https://jira.codehaus.org/browse/MRPM-8 -->
                 <mapping>
-                  <directory>${sdc.dir}/streamsets-datacollector-${project.version}/streamsets-libs/streamsets-datacollector-cdh5_3_1-lib</directory>
+                  <directory>${sdc.dir}/streamsets-datacollector-${project.version}/streamsets-libs/streamsets-datacollector-elasticsearch_1_4-lib</directory>
                   <filemode>755</filemode>
                   <username>root</username>
                   <groupname>root</groupname>
                 </mapping>
                 <mapping>
-                  <directory>${sdc.dir}/streamsets-datacollector-${project.version}/streamsets-libs/streamsets-datacollector-cdh5_3_1-lib/lib</directory>
+                  <directory>${sdc.dir}/streamsets-datacollector-${project.version}/streamsets-libs/streamsets-datacollector-elasticsearch_1_4-lib/lib</directory>
                   <filemode>755</filemode>
                   <username>root</username>
                   <groupname>root</groupname>
                 </mapping>
                 <mapping>
-                  <directory>${sdc.dir}/streamsets-datacollector-${project.version}/streamsets-libs/streamsets-datacollector-cdh5_3_1-lib</directory>
+                  <directory>${sdc.dir}/streamsets-datacollector-${project.version}/streamsets-libs/streamsets-datacollector-elasticsearch_1_4-lib</directory>
                   <directoryIncluded>false</directoryIncluded>
                   <filemode>644</filemode>
                   <username>root</username>
                   <groupname>root</groupname>
                   <sources>
                     <source>
-                      <location>${sdc.distroot}/streamsets-datacollector-${project.version}/streamsets-libs/streamsets-datacollector-cdh5_3_1-lib</location>
+                      <location>${sdc.distroot}/streamsets-datacollector-${project.version}/streamsets-libs/streamsets-datacollector-elasticsearch_1_4-lib</location>
                     </source>
                   </sources>
                 </mapping>
@@ -817,13 +761,13 @@
             </configuration>
           </execution>
           <execution>
-            <id>generate-cdh5-5.3.2-rpm</id>
+            <id>generate-elasticsearch-1.5-rpm</id>
             <goals>
               <goal>attached-rpm</goal>
             </goals>
             <configuration>
-              <name>streamsets-datacollector-cdh5-5.3.2-lib</name>
-              <classifier>cdh5-5.3.2-lib</classifier>
+              <name>streamsets-datacollector-elasticsearch-1.5-lib</name>
+              <classifier>elasticsearch-1.5-lib</classifier>
               <license>Proprietary</license>
               <distribution>el6</distribution>
               <group>Applications/System</group>
@@ -831,7 +775,7 @@
               <targetOS>linux</targetOS>
               <prefix>/opt</prefix>
               <provides>
-                <provide>streamsets-datacollector-cdh-5.3.2</provide>
+                <provide>streamsets-datacollector-elasticsearch-1.5</provide>
               </provides>
               <requires>
                 <require>java</require>
@@ -846,26 +790,26 @@
               <mappings>
                 <!-- Separate mappings for dirs exist b/c of the Won't Fix for this JIRA https://jira.codehaus.org/browse/MRPM-8 -->
                 <mapping>
-                  <directory>${sdc.dir}/streamsets-datacollector-${project.version}/streamsets-libs/streamsets-datacollector-cdh5_3_2-lib</directory>
+                  <directory>${sdc.dir}/streamsets-datacollector-${project.version}/streamsets-libs/streamsets-datacollector-elasticsearch_1_5-lib</directory>
                   <filemode>755</filemode>
                   <username>root</username>
                   <groupname>root</groupname>
                 </mapping>
                 <mapping>
-                  <directory>${sdc.dir}/streamsets-datacollector-${project.version}/streamsets-libs/streamsets-datacollector-cdh5_3_2-lib/lib</directory>
+                  <directory>${sdc.dir}/streamsets-datacollector-${project.version}/streamsets-libs/streamsets-datacollector-elasticsearch_1_5-lib/lib</directory>
                   <filemode>755</filemode>
                   <username>root</username>
                   <groupname>root</groupname>
                 </mapping>
                 <mapping>
-                  <directory>${sdc.dir}/streamsets-datacollector-${project.version}/streamsets-libs/streamsets-datacollector-cdh5_3_2-lib</directory>
+                  <directory>${sdc.dir}/streamsets-datacollector-${project.version}/streamsets-libs/streamsets-datacollector-elasticsearch_1_5-lib</directory>
                   <directoryIncluded>false</directoryIncluded>
                   <filemode>644</filemode>
                   <username>root</username>
                   <groupname>root</groupname>
                   <sources>
                     <source>
-                      <location>${sdc.distroot}/streamsets-datacollector-${project.version}/streamsets-libs/streamsets-datacollector-cdh5_3_2-lib</location>
+                      <location>${sdc.distroot}/streamsets-datacollector-${project.version}/streamsets-libs/streamsets-datacollector-elasticsearch_1_5-lib</location>
                     </source>
                   </sources>
                 </mapping>
@@ -873,13 +817,13 @@
             </configuration>
           </execution>
           <execution>
-            <id>generate-cdh5-5.4.0-rpm</id>
+            <id>generate-hdp-2.2-rpm</id>
             <goals>
               <goal>attached-rpm</goal>
             </goals>
             <configuration>
-              <name>streamsets-datacollector-cdh5-5.4.0-lib</name>
-              <classifier>cdh5-5.4.0-lib</classifier>
+              <name>streamsets-datacollector-hdp-2.2-lib</name>
+              <classifier>hdp-2.2-lib</classifier>
               <license>Proprietary</license>
               <distribution>el6</distribution>
               <group>Applications/System</group>
@@ -887,7 +831,7 @@
               <targetOS>linux</targetOS>
               <prefix>/opt</prefix>
               <provides>
-                <provide>streamsets-datacollector-cdh-5.4.0</provide>
+                <provide>streamsets-datacollector-hdp-2.2</provide>
               </provides>
               <requires>
                 <require>java</require>
@@ -902,26 +846,26 @@
               <mappings>
                 <!-- Separate mappings for dirs exist b/c of the Won't Fix for this JIRA https://jira.codehaus.org/browse/MRPM-8 -->
                 <mapping>
-                  <directory>${sdc.dir}/streamsets-datacollector-${project.version}/streamsets-libs/streamsets-datacollector-cdh5_4_0-lib</directory>
+                  <directory>${sdc.dir}/streamsets-datacollector-${project.version}/streamsets-libs/streamsets-datacollector-hdp_2_2-lib</directory>
                   <filemode>755</filemode>
                   <username>root</username>
                   <groupname>root</groupname>
                 </mapping>
                 <mapping>
-                  <directory>${sdc.dir}/streamsets-datacollector-${project.version}/streamsets-libs/streamsets-datacollector-cdh5_4_0-lib/lib</directory>
+                  <directory>${sdc.dir}/streamsets-datacollector-${project.version}/streamsets-libs/streamsets-datacollector-hdp_2_2-lib/lib</directory>
                   <filemode>755</filemode>
                   <username>root</username>
                   <groupname>root</groupname>
                 </mapping>
                 <mapping>
-                  <directory>${sdc.dir}/streamsets-datacollector-${project.version}/streamsets-libs/streamsets-datacollector-cdh5_4_0-lib</directory>
+                  <directory>${sdc.dir}/streamsets-datacollector-${project.version}/streamsets-libs/streamsets-datacollector-hdp_2_2-lib</directory>
                   <directoryIncluded>false</directoryIncluded>
                   <filemode>644</filemode>
                   <username>root</username>
                   <groupname>root</groupname>
                   <sources>
                     <source>
-                      <location>${sdc.distroot}/streamsets-datacollector-${project.version}/streamsets-libs/streamsets-datacollector-cdh5_4_0-lib</location>
+                      <location>${sdc.distroot}/streamsets-datacollector-${project.version}/streamsets-libs/streamsets-datacollector-hdp_2_2-lib</location>
                     </source>
                   </sources>
                 </mapping>
@@ -929,13 +873,13 @@
             </configuration>
           </execution>
           <execution>
-            <id>generate-cdh5-5.4.1-rpm</id>
+            <id>generate-mongodb-3.0-rpm</id>
             <goals>
               <goal>attached-rpm</goal>
             </goals>
             <configuration>
-              <name>streamsets-datacollector-cdh5-5.4.1-lib</name>
-              <classifier>cdh5-5.4.1-lib</classifier>
+              <name>streamsets-datacollector-mongodb-3.0-lib</name>
+              <classifier>mongodb-3.0-lib</classifier>
               <license>Proprietary</license>
               <distribution>el6</distribution>
               <group>Applications/System</group>
@@ -943,7 +887,7 @@
               <targetOS>linux</targetOS>
               <prefix>/opt</prefix>
               <provides>
-                <provide>streamsets-datacollector-cdh-5.4.1</provide>
+                <provide>streamsets-datacollector-mongodb-3.0</provide>
               </provides>
               <requires>
                 <require>java</require>
@@ -958,26 +902,26 @@
               <mappings>
                 <!-- Separate mappings for dirs exist b/c of the Won't Fix for this JIRA https://jira.codehaus.org/browse/MRPM-8 -->
                 <mapping>
-                  <directory>${sdc.dir}/streamsets-datacollector-${project.version}/streamsets-libs/streamsets-datacollector-cdh5_4_1-lib</directory>
+                  <directory>${sdc.dir}/streamsets-datacollector-${project.version}/streamsets-libs/streamsets-datacollector-mongodb_3-lib</directory>
                   <filemode>755</filemode>
                   <username>root</username>
                   <groupname>root</groupname>
                 </mapping>
                 <mapping>
-                  <directory>${sdc.dir}/streamsets-datacollector-${project.version}/streamsets-libs/streamsets-datacollector-cdh5_4_1-lib/lib</directory>
+                  <directory>${sdc.dir}/streamsets-datacollector-${project.version}/streamsets-libs/streamsets-datacollector-mongodb_3-lib/lib</directory>
                   <filemode>755</filemode>
                   <username>root</username>
                   <groupname>root</groupname>
                 </mapping>
                 <mapping>
-                  <directory>${sdc.dir}/streamsets-datacollector-${project.version}/streamsets-libs/streamsets-datacollector-cdh5_4_1-lib</directory>
+                  <directory>${sdc.dir}/streamsets-datacollector-${project.version}/streamsets-libs/streamsets-datacollector-mongodb_3-lib</directory>
                   <directoryIncluded>false</directoryIncluded>
                   <filemode>644</filemode>
                   <username>root</username>
                   <groupname>root</groupname>
                   <sources>
                     <source>
-                      <location>${sdc.distroot}/streamsets-datacollector-${project.version}/streamsets-libs/streamsets-datacollector-cdh5_4_1-lib</location>
+                      <location>${sdc.distroot}/streamsets-datacollector-${project.version}/streamsets-libs/streamsets-datacollector-mongodb_3-lib</location>
                     </source>
                   </sources>
                 </mapping>
@@ -985,14 +929,13 @@
             </configuration>
           </execution>
           <execution>
-            <id>generate-cdh5_4_0-cluster-cdh_kafka_1_2_0-rpm</id>
+            <id>generate-jython-2.7-rpm</id>
             <goals>
               <goal>attached-rpm</goal>
             </goals>
             <configuration>
-              <name>streamsets-datacollector-cdh5_4_0-cluster-cdh_kafka_1_2_0</name>
-              <classifier>cdh5_4_0-cluster-cdh_kafka_1_2_0</classifier>
-              <classifier>cdh5-cluster-5.4.0-kafka-1.2.0-lib</classifier>
+              <name>streamsets-datacollector-jython-2.7-lib</name>
+              <classifier>jython-2.7-lib</classifier>
               <license>Proprietary</license>
               <distribution>el6</distribution>
               <group>Applications/System</group>
@@ -1000,7 +943,7 @@
               <targetOS>linux</targetOS>
               <prefix>/opt</prefix>
               <provides>
-                <provide>streamsets-datacollector-cdh-cluster-5.4.0-kafka-1.2.0</provide>
+                <provide>streamsets-datacollector-jython-2.7</provide>
               </provides>
               <requires>
                 <require>java</require>
@@ -1015,363 +958,26 @@
               <mappings>
                 <!-- Separate mappings for dirs exist b/c of the Won't Fix for this JIRA https://jira.codehaus.org/browse/MRPM-8 -->
                 <mapping>
-                  <directory>${sdc.dir}/streamsets-datacollector-${project.version}/streamsets-libs/streamsets-datacollector-cdh5_4_0-cluster-cdh_kafka_1_2_0-lib</directory>
+                  <directory>${sdc.dir}/streamsets-datacollector-${project.version}/streamsets-libs/streamsets-datacollector-jython_2_7-lib</directory>
                   <filemode>755</filemode>
                   <username>root</username>
                   <groupname>root</groupname>
                 </mapping>
                 <mapping>
-                  <directory>${sdc.dir}/streamsets-datacollector-${project.version}/streamsets-libs/streamsets-datacollector-cdh5_4_0-cluster-cdh_kafka_1_2_0-lib/lib</directory>
+                  <directory>${sdc.dir}/streamsets-datacollector-${project.version}/streamsets-libs/streamsets-datacollector-jython_2_7-lib/lib</directory>
                   <filemode>755</filemode>
                   <username>root</username>
                   <groupname>root</groupname>
                 </mapping>
                 <mapping>
-                  <directory>${sdc.dir}/streamsets-datacollector-${project.version}/streamsets-libs/streamsets-datacollector-cdh5_4_0-cluster-cdh_kafka_1_2_0-lib</directory>
+                  <directory>${sdc.dir}/streamsets-datacollector-${project.version}/streamsets-libs/streamsets-datacollector-jython_2_7-lib</directory>
                   <directoryIncluded>false</directoryIncluded>
                   <filemode>644</filemode>
                   <username>root</username>
                   <groupname>root</groupname>
                   <sources>
                     <source>
-                      <location>${sdc.distroot}/streamsets-datacollector-${project.version}/streamsets-libs/streamsets-datacollector-cdh5_4_0-cluster-cdh_kafka_1_2_0-lib</location>
-                    </source>
-                  </sources>
-                </mapping>
-              </mappings>
-            </configuration>
-          </execution>
-          <execution>
-            <id>generate-cdh5_4_1-cluster-cdh_kafka_1_2_0-rpm</id>
-            <goals>
-              <goal>attached-rpm</goal>
-            </goals>
-            <configuration>
-              <name>streamsets-datacollector-cdh5_4_1-cluster-cdh_kafka_1_2_0</name>
-              <classifier>cdh5_4_1-cluster-cdh_kafka_1_2_0</classifier>
-              <classifier>cdh5-cluster-5.4.1-kafka-1.2.0-lib</classifier>
-              <license>Proprietary</license>
-              <distribution>el6</distribution>
-              <group>Applications/System</group>
-              <packager>StreamSets</packager>
-              <targetOS>linux</targetOS>
-              <prefix>/opt</prefix>
-              <provides>
-                <provide>streamsets-datacollector-cdh-cluster-5.4.1-kafka-1.2.0</provide>
-              </provides>
-              <requires>
-                <require>java</require>
-                <require>streamsets-datacollector</require>
-              </requires>
-              <defineStatements>
-                <defineStatement>_unpackaged_files_terminate_build 0</defineStatement>
-                <defineStatement>service_user ${sdc.user}</defineStatement>
-                <defineStatement>service_group ${sdc.group}</defineStatement>
-                <defineStatement>install_dir ${sdc.dir}</defineStatement>
-              </defineStatements>
-              <mappings>
-                <!-- Separate mappings for dirs exist b/c of the Won't Fix for this JIRA https://jira.codehaus.org/browse/MRPM-8 -->
-                <mapping>
-                  <directory>${sdc.dir}/streamsets-datacollector-${project.version}/streamsets-libs/streamsets-datacollector-cdh5_4_1-cluster-cdh_kafka_1_2_0-lib</directory>
-                  <filemode>755</filemode>
-                  <username>root</username>
-                  <groupname>root</groupname>
-                </mapping>
-                <mapping>
-                  <directory>${sdc.dir}/streamsets-datacollector-${project.version}/streamsets-libs/streamsets-datacollector-cdh5_4_1-cluster-cdh_kafka_1_2_0-lib/lib</directory>
-                  <filemode>755</filemode>
-                  <username>root</username>
-                  <groupname>root</groupname>
-                </mapping>
-                <mapping>
-                  <directory>${sdc.dir}/streamsets-datacollector-${project.version}/streamsets-libs/streamsets-datacollector-cdh5_4_1-cluster-cdh_kafka_1_2_0-lib</directory>
-                  <directoryIncluded>false</directoryIncluded>
-                  <filemode>644</filemode>
-                  <username>root</username>
-                  <groupname>root</groupname>
-                  <sources>
-                    <source>
-                      <location>${sdc.distroot}/streamsets-datacollector-${project.version}/streamsets-libs/streamsets-datacollector-cdh5_4_1-cluster-cdh_kafka_1_2_0-lib</location>
-                    </source>
-                  </sources>
-                </mapping>
-              </mappings>
-            </configuration>
-          </execution>
-          <execution>
-            <id>generate-elasticsearch-1.4.4-rpm</id>
-            <goals>
-              <goal>attached-rpm</goal>
-            </goals>
-            <configuration>
-              <name>streamsets-datacollector-elasticsearch-1.4.4-lib</name>
-              <classifier>elasticsearch-1.4.4-lib</classifier>
-              <license>Proprietary</license>
-              <distribution>el6</distribution>
-              <group>Applications/System</group>
-              <packager>StreamSets</packager>
-              <targetOS>linux</targetOS>
-              <prefix>/opt</prefix>
-              <provides>
-                <provide>streamsets-datacollector-elasticsearch-1.4.4</provide>
-              </provides>
-              <requires>
-                <require>java</require>
-                <require>streamsets-datacollector</require>
-              </requires>
-              <defineStatements>
-                <defineStatement>_unpackaged_files_terminate_build 0</defineStatement>
-                <defineStatement>service_user ${sdc.user}</defineStatement>
-                <defineStatement>service_group ${sdc.group}</defineStatement>
-                <defineStatement>install_dir ${sdc.dir}</defineStatement>
-              </defineStatements>
-              <mappings>
-                <!-- Separate mappings for dirs exist b/c of the Won't Fix for this JIRA https://jira.codehaus.org/browse/MRPM-8 -->
-                <mapping>
-                  <directory>${sdc.dir}/streamsets-datacollector-${project.version}/streamsets-libs/streamsets-datacollector-elasticsearch_1_4_4-lib</directory>
-                  <filemode>755</filemode>
-                  <username>root</username>
-                  <groupname>root</groupname>
-                </mapping>
-                <mapping>
-                  <directory>${sdc.dir}/streamsets-datacollector-${project.version}/streamsets-libs/streamsets-datacollector-elasticsearch_1_4_4-lib/lib</directory>
-                  <filemode>755</filemode>
-                  <username>root</username>
-                  <groupname>root</groupname>
-                </mapping>
-                <mapping>
-                  <directory>${sdc.dir}/streamsets-datacollector-${project.version}/streamsets-libs/streamsets-datacollector-elasticsearch_1_4_4-lib</directory>
-                  <directoryIncluded>false</directoryIncluded>
-                  <filemode>644</filemode>
-                  <username>root</username>
-                  <groupname>root</groupname>
-                  <sources>
-                    <source>
-                      <location>${sdc.distroot}/streamsets-datacollector-${project.version}/streamsets-libs/streamsets-datacollector-elasticsearch_1_4_4-lib</location>
-                    </source>
-                  </sources>
-                </mapping>
-              </mappings>
-            </configuration>
-          </execution>
-          <execution>
-            <id>generate-elasticsearch-1.5.0-rpm</id>
-            <goals>
-              <goal>attached-rpm</goal>
-            </goals>
-            <configuration>
-              <name>streamsets-datacollector-elasticsearch-1.5.0-lib</name>
-              <classifier>elasticsearch-1.5.0-lib</classifier>
-              <license>Proprietary</license>
-              <distribution>el6</distribution>
-              <group>Applications/System</group>
-              <packager>StreamSets</packager>
-              <targetOS>linux</targetOS>
-              <prefix>/opt</prefix>
-              <provides>
-                <provide>streamsets-datacollector-elasticsearch-1.5.0</provide>
-              </provides>
-              <requires>
-                <require>java</require>
-                <require>streamsets-datacollector</require>
-              </requires>
-              <defineStatements>
-                <defineStatement>_unpackaged_files_terminate_build 0</defineStatement>
-                <defineStatement>service_user ${sdc.user}</defineStatement>
-                <defineStatement>service_group ${sdc.group}</defineStatement>
-                <defineStatement>install_dir ${sdc.dir}</defineStatement>
-              </defineStatements>
-              <mappings>
-                <!-- Separate mappings for dirs exist b/c of the Won't Fix for this JIRA https://jira.codehaus.org/browse/MRPM-8 -->
-                <mapping>
-                  <directory>${sdc.dir}/streamsets-datacollector-${project.version}/streamsets-libs/streamsets-datacollector-elasticsearch_1_5_0-lib</directory>
-                  <filemode>755</filemode>
-                  <username>root</username>
-                  <groupname>root</groupname>
-                </mapping>
-                <mapping>
-                  <directory>${sdc.dir}/streamsets-datacollector-${project.version}/streamsets-libs/streamsets-datacollector-elasticsearch_1_5_0-lib/lib</directory>
-                  <filemode>755</filemode>
-                  <username>root</username>
-                  <groupname>root</groupname>
-                </mapping>
-                <mapping>
-                  <directory>${sdc.dir}/streamsets-datacollector-${project.version}/streamsets-libs/streamsets-datacollector-elasticsearch_1_5_0-lib</directory>
-                  <directoryIncluded>false</directoryIncluded>
-                  <filemode>644</filemode>
-                  <username>root</username>
-                  <groupname>root</groupname>
-                  <sources>
-                    <source>
-                      <location>${sdc.distroot}/streamsets-datacollector-${project.version}/streamsets-libs/streamsets-datacollector-elasticsearch_1_5_0-lib</location>
-                    </source>
-                  </sources>
-                </mapping>
-              </mappings>
-            </configuration>
-          </execution>
-          <execution>
-            <id>generate-hdp-2.2.0-rpm</id>
-            <goals>
-              <goal>attached-rpm</goal>
-            </goals>
-            <configuration>
-              <name>streamsets-datacollector-hdp-2.2.0-lib</name>
-              <classifier>hdp-2.2.0-lib</classifier>
-              <license>Proprietary</license>
-              <distribution>el6</distribution>
-              <group>Applications/System</group>
-              <packager>StreamSets</packager>
-              <targetOS>linux</targetOS>
-              <prefix>/opt</prefix>
-              <provides>
-                <provide>streamsets-datacollector-hdp-2.2.0</provide>
-              </provides>
-              <requires>
-                <require>java</require>
-                <require>streamsets-datacollector</require>
-              </requires>
-              <defineStatements>
-                <defineStatement>_unpackaged_files_terminate_build 0</defineStatement>
-                <defineStatement>service_user ${sdc.user}</defineStatement>
-                <defineStatement>service_group ${sdc.group}</defineStatement>
-                <defineStatement>install_dir ${sdc.dir}</defineStatement>
-              </defineStatements>
-              <mappings>
-                <!-- Separate mappings for dirs exist b/c of the Won't Fix for this JIRA https://jira.codehaus.org/browse/MRPM-8 -->
-                <mapping>
-                  <directory>${sdc.dir}/streamsets-datacollector-${project.version}/streamsets-libs/streamsets-datacollector-hdp_2_2_0-lib</directory>
-                  <filemode>755</filemode>
-                  <username>root</username>
-                  <groupname>root</groupname>
-                </mapping>
-                <mapping>
-                  <directory>${sdc.dir}/streamsets-datacollector-${project.version}/streamsets-libs/streamsets-datacollector-hdp_2_2_0-lib/lib</directory>
-                  <filemode>755</filemode>
-                  <username>root</username>
-                  <groupname>root</groupname>
-                </mapping>
-                <mapping>
-                  <directory>${sdc.dir}/streamsets-datacollector-${project.version}/streamsets-libs/streamsets-datacollector-hdp_2_2_0-lib</directory>
-                  <directoryIncluded>false</directoryIncluded>
-                  <filemode>644</filemode>
-                  <username>root</username>
-                  <groupname>root</groupname>
-                  <sources>
-                    <source>
-                      <location>${sdc.distroot}/streamsets-datacollector-${project.version}/streamsets-libs/streamsets-datacollector-hdp_2_2_0-lib</location>
-                    </source>
-                  </sources>
-                </mapping>
-              </mappings>
-            </configuration>
-          </execution>
-          <execution>
-            <id>generate-mongodb-3.0.2-rpm</id>
-            <goals>
-              <goal>attached-rpm</goal>
-            </goals>
-            <configuration>
-              <name>streamsets-datacollector-mongodb-3.0.2-lib</name>
-              <classifier>mongodb-3.0.2-lib</classifier>
-              <license>Proprietary</license>
-              <distribution>el6</distribution>
-              <group>Applications/System</group>
-              <packager>StreamSets</packager>
-              <targetOS>linux</targetOS>
-              <prefix>/opt</prefix>
-              <provides>
-                <provide>streamsets-datacollector-mongodb-3.0.2</provide>
-              </provides>
-              <requires>
-                <require>java</require>
-                <require>streamsets-datacollector</require>
-              </requires>
-              <defineStatements>
-                <defineStatement>_unpackaged_files_terminate_build 0</defineStatement>
-                <defineStatement>service_user ${sdc.user}</defineStatement>
-                <defineStatement>service_group ${sdc.group}</defineStatement>
-                <defineStatement>install_dir ${sdc.dir}</defineStatement>
-              </defineStatements>
-              <mappings>
-                <!-- Separate mappings for dirs exist b/c of the Won't Fix for this JIRA https://jira.codehaus.org/browse/MRPM-8 -->
-                <mapping>
-                  <directory>${sdc.dir}/streamsets-datacollector-${project.version}/streamsets-libs/streamsets-datacollector-mongodb_3_0_2-lib</directory>
-                  <filemode>755</filemode>
-                  <username>root</username>
-                  <groupname>root</groupname>
-                </mapping>
-                <mapping>
-                  <directory>${sdc.dir}/streamsets-datacollector-${project.version}/streamsets-libs/streamsets-datacollector-mongodb_3_0_2-lib/lib</directory>
-                  <filemode>755</filemode>
-                  <username>root</username>
-                  <groupname>root</groupname>
-                </mapping>
-                <mapping>
-                  <directory>${sdc.dir}/streamsets-datacollector-${project.version}/streamsets-libs/streamsets-datacollector-mongodb_3_0_2-lib</directory>
-                  <directoryIncluded>false</directoryIncluded>
-                  <filemode>644</filemode>
-                  <username>root</username>
-                  <groupname>root</groupname>
-                  <sources>
-                    <source>
-                      <location>${sdc.distroot}/streamsets-datacollector-${project.version}/streamsets-libs/streamsets-datacollector-mongodb_3_0_2-lib</location>
-                    </source>
-                  </sources>
-                </mapping>
-              </mappings>
-            </configuration>
-          </execution>
-          <execution>
-            <id>generate-jython-2.7.0-rpm</id>
-            <goals>
-              <goal>attached-rpm</goal>
-            </goals>
-            <configuration>
-              <name>streamsets-datacollector-jython-2.7.0-lib</name>
-              <classifier>jython-2.7.0-lib</classifier>
-              <license>Proprietary</license>
-              <distribution>el6</distribution>
-              <group>Applications/System</group>
-              <packager>StreamSets</packager>
-              <targetOS>linux</targetOS>
-              <prefix>/opt</prefix>
-              <provides>
-                <provide>streamsets-datacollector-jython-2.7.0</provide>
-              </provides>
-              <requires>
-                <require>java</require>
-                <require>streamsets-datacollector</require>
-              </requires>
-              <defineStatements>
-                <defineStatement>_unpackaged_files_terminate_build 0</defineStatement>
-                <defineStatement>service_user ${sdc.user}</defineStatement>
-                <defineStatement>service_group ${sdc.group}</defineStatement>
-                <defineStatement>install_dir ${sdc.dir}</defineStatement>
-              </defineStatements>
-              <mappings>
-                <!-- Separate mappings for dirs exist b/c of the Won't Fix for this JIRA https://jira.codehaus.org/browse/MRPM-8 -->
-                <mapping>
-                  <directory>${sdc.dir}/streamsets-datacollector-${project.version}/streamsets-libs/streamsets-datacollector-jython_2_7_0-lib</directory>
-                  <filemode>755</filemode>
-                  <username>root</username>
-                  <groupname>root</groupname>
-                </mapping>
-                <mapping>
-                  <directory>${sdc.dir}/streamsets-datacollector-${project.version}/streamsets-libs/streamsets-datacollector-jython_2_7_0-lib/lib</directory>
-                  <filemode>755</filemode>
-                  <username>root</username>
-                  <groupname>root</groupname>
-                </mapping>
-                <mapping>
-                  <directory>${sdc.dir}/streamsets-datacollector-${project.version}/streamsets-libs/streamsets-datacollector-jython_2_7_0-lib</directory>
-                  <directoryIncluded>false</directoryIncluded>
-                  <filemode>644</filemode>
-                  <username>root</username>
-                  <groupname>root</groupname>
-                  <sources>
-                    <source>
-                      <location>${sdc.distroot}/streamsets-datacollector-${project.version}/streamsets-libs/streamsets-datacollector-jython_2_7_0-lib</location>
+                      <location>${sdc.distroot}/streamsets-datacollector-${project.version}/streamsets-libs/streamsets-datacollector-jython_2_7-lib</location>
                     </source>
                   </sources>
                 </mapping>

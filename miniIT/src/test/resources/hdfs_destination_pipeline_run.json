@@ -64,7 +64,7 @@
     "outputLanes" : [ "com_streamsets_pipeline_stage_devtest_RandomSource1432158818343OutputLane14321588183430" ]
   }, {
     "instanceName" : "com_streamsets_pipeline_stage_destination_hdfs_HdfsDTarget1433023466492",
-    "library" : "streamsets-datacollector-cdh5_4_1-lib",
+    "library" : "streamsets-datacollector-cdh_5_4-lib",
     "stageName" : "com_streamsets_pipeline_stage_destination_hdfs_HdfsDTarget",
     "stageVersion" : "1.0.0",
     "configuration" : [ {

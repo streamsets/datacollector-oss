@@ -140,43 +140,43 @@
 
     <!-- CDH libs -->
     <fileSet>
-      <directory>${basedir}/../${cdh_5_2_4-lib}/target/streamsets-libs/</directory>
+      <directory>${basedir}/../${cdh_5_2-lib}/target/streamsets-libs/</directory>
       <outputDirectory>/streamsets-libs/</outputDirectory>
     </fileSet>
     <fileSet>
-      <directory>${basedir}/../${cdh_5_3_2-lib}/target/streamsets-libs/</directory>
+      <directory>${basedir}/../${cdh_5_3-lib}/target/streamsets-libs/</directory>
       <outputDirectory>/streamsets-libs/</outputDirectory>
     </fileSet>
 
     <fileSet>
-      <directory>${basedir}/../${cdh_5_4_1-lib}/target/streamsets-libs/</directory>
+      <directory>${basedir}/../${cdh_5_4-lib}/target/streamsets-libs/</directory>
       <outputDirectory>/streamsets-libs/</outputDirectory>
     </fileSet>
     <!-- CDH Spark Kafka lib -->
     <fileSet>
-      <directory>${basedir}/../${cdh5_4_1-cluster-cdh_kafka_1_2_0-lib}/target/streamsets-libs/</directory>
+      <directory>${basedir}/../${cdh_5_4-cluster-cdh_kafka_1_2_0-lib}/target/streamsets-libs/</directory>
       <outputDirectory>/streamsets-libs/</outputDirectory>
     </fileSet>
 
     <!-- HDP Libs -->
     <fileSet>
-      <directory>${basedir}/../${hdp_2_2_0-lib}/target/streamsets-libs/</directory>
+      <directory>${basedir}/../${hdp_2_2-lib}/target/streamsets-libs/</directory>
       <outputDirectory>/streamsets-libs/</outputDirectory>
     </fileSet>
 
     <!-- Apache Kafka libs -->
     <fileSet>
-      <directory>${basedir}/../${apache-kafka_0_8_1_1-lib}/target/streamsets-libs/</directory>
+      <directory>${basedir}/../${apache-kafka_0_8_1-lib}/target/streamsets-libs/</directory>
       <outputDirectory>/streamsets-libs/</outputDirectory>
     </fileSet>
     <fileSet>
-      <directory>${basedir}/../${apache-kafka_0_8_2_1-lib}/target/streamsets-libs/</directory>
+      <directory>${basedir}/../${apache-kafka_0_8_2-lib}/target/streamsets-libs/</directory>
       <outputDirectory>/streamsets-libs/</outputDirectory>
     </fileSet>
 
     <!-- Cassandra libs -->
     <fileSet>
-      <directory>${basedir}/../${cassandra_2_1_5-lib}/target/streamsets-libs/</directory>
+      <directory>${basedir}/../${cassandra_2-lib}/target/streamsets-libs/</directory>
       <outputDirectory>/streamsets-libs/</outputDirectory>
     </fileSet>
 
@@ -194,23 +194,23 @@
 
     <!-- Jython libs -->
     <fileSet>
-      <directory>${basedir}/../${jython_2_7_0-lib}/target/streamsets-libs/</directory>
+      <directory>${basedir}/../${jython_2_7-lib}/target/streamsets-libs/</directory>
       <outputDirectory>/streamsets-libs/</outputDirectory>
     </fileSet>
 
     <!-- Elasticsearch libs -->
     <fileSet>
-      <directory>${basedir}/../${elasticsearch_1_4_4-lib}/target/streamsets-libs/</directory>
+      <directory>${basedir}/../${elasticsearch_1_4-lib}/target/streamsets-libs/</directory>
       <outputDirectory>/streamsets-libs/</outputDirectory>
     </fileSet>
     <fileSet>
-      <directory>${basedir}/../${elasticsearch_1_5_0-lib}/target/streamsets-libs/</directory>
+      <directory>${basedir}/../${elasticsearch_1_5-lib}/target/streamsets-libs/</directory>
       <outputDirectory>/streamsets-libs/</outputDirectory>
     </fileSet>
 
     <!-- Mongo libs -->
     <fileSet>
-      <directory>${basedir}/../${mongodb_3_0_2-lib}/target/streamsets-libs/</directory>
+      <directory>${basedir}/../${mongodb_3-lib}/target/streamsets-libs/</directory>
       <outputDirectory>/streamsets-libs/</outputDirectory>
     </fileSet>
 

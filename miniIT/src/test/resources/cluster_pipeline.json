@@ -48,7 +48,7 @@
   },
   "stages" : [ {
     "instanceName" : "com_streamsets_pipeline_stage_origin_kafka_KafkaDSource1431673008509",
-    "library" : "streamsets-datacollector-cdh5_4_1-cluster-cdh_kafka_1_2_0-lib",
+    "library" : "streamsets-datacollector-cdh_5_4-cluster-cdh_kafka_1_2_0-lib",
     "stageName" : "com_streamsets_pipeline_stage_origin_kafka_KafkaDSource",
     "stageVersion" : "1.0.0",
     "configuration" : [ {
