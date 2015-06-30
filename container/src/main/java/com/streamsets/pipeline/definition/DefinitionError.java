@@ -30,6 +30,7 @@ public enum DefinitionError implements ErrorCode {
   DEF_052("{} Class='{}' Function='{}', method must be static"),
   DEF_053("{} Class='{}' Method='{}', invalid name '{}'"),
   DEF_054("{} Class='{}' Method='{}', invalid prefix '{}'"),
+  DEF_055("{} Class='{}' Method='{}', parameter at position '{}' has '@ElParam' annotation missing"),
 
   DEF_060("{} Class='{}' Field='{}', field must public to be an EL constant"),
   DEF_061("{} Class='{}' Field='{}', EL constant name cannot be empty"),

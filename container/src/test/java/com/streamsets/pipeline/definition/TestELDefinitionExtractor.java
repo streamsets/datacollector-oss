@@ -58,6 +58,15 @@ public class TestELDefinitionExtractor {
 
   }
 
+  public static class Fail3 {
+
+    @ElFunction(prefix = "p", name = "f")
+    public static String f(String param) {
+      return null;
+    }
+
+  }
+
   @Test
   public void testExtractionEmpty() {
     Assert.assertTrue(ELDefinitionExtractor.get().extractFunctions(ImmutableSet.<Class>of(Empty.class), "").isEmpty());
@@ -82,6 +91,11 @@ public class TestELDefinitionExtractor {
   @Test(expected = IllegalArgumentException.class)
   public void testExtractionFail2Constant() {
     ELDefinitionExtractor.get().extractConstants(new Class[]{Fail2.class}, "x");
+  }
+
+  @Test(expected = IllegalArgumentException.class)
+  public void testExtractionFail3MissingElParam() {
+    ELDefinitionExtractor.get().extractFunctions(new Class[]{Fail3.class}, "x");
   }
 
   @Test

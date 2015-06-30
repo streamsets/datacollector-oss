@@ -30,7 +30,8 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.regex.Pattern;
 
-public abstract class ELDefinitionExtractor {
+public abstract class
+    ELDefinitionExtractor {
   public static final Class[] DEFAULT_EL_DEFS = {RuntimeEL.class, StringEL.class, JvmEL.class};
 
   private static final ELDefinitionExtractor EXTRACTOR = new ELDefinitionExtractor() {};
@@ -113,11 +114,27 @@ public abstract class ELDefinitionExtractor {
             if (!Modifier.isStatic(method.getModifiers())) {
               errors.add(new ErrorMessage(DefinitionError.DEF_052, contextMsg, klass.getSimpleName(), fName));
             }
+            Annotation[][] pAnnotations = method.getParameterAnnotations();
+            Class<?>[] pTypes = method.getParameterTypes();
+            for (int i = 0; i < pTypes.length; i++) {
+              if (getParamAnnotation(pAnnotations[i]) == null) {
+                errors.add(new ErrorMessage(DefinitionError.DEF_052, contextMsg, klass.getSimpleName(), fName, i));
+              }
+            }
           }
         }
       }
     }
     return errors;
+  }
+
+  private ElParam getParamAnnotation(Annotation[] paramAnnotations) {
+    for (Annotation annotation : paramAnnotations) {
+      if (annotation instanceof ElParam) {
+        return (ElParam) annotation;
+      }
+    }
+    return null;
   }
 
   List<ElFunctionDefinition> extractFunctions(Set<Class> augmentedClasses, Object contextMsg) {
@@ -138,8 +155,7 @@ public abstract class ELDefinitionExtractor {
               Class<?>[] pTypes = method.getParameterTypes();
               List<ElFunctionArgumentDefinition> fArgDefs = new ArrayList<>(pTypes.length);
               for (int i = 0; i < pTypes.length; i++) {
-                Annotation pAnnotation = pAnnotations[i][0];
-                fArgDefs.add(new ElFunctionArgumentDefinition(((ElParam) pAnnotation).value(),
+                fArgDefs.add(new ElFunctionArgumentDefinition(getParamAnnotation(pAnnotations[i]).value(),
                                                               pTypes[i].getSimpleName()));
               }
               fDef = new ElFunctionDefinition(Integer.toString(indexCounter.incrementAndGet()), fAnnotation.prefix(),
