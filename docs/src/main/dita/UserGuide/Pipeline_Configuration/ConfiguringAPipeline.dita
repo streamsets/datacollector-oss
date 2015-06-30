@@ -208,92 +208,54 @@
                 <cmd>When writing error records to Kafka, click the <wintitle>Error Records - Write
                         to Kafka</wintitle> tab and configure the following properties:</cmd>
                 <info>
-                    <table frame="all" rowsep="1" colsep="1" id="KafkaTableProperties">
+                    <draft-comment author="Loretta">Table rows from Kakfa Producer Kafka tab of
+                        reusablesteps.dita - no data format &amp; charset.</draft-comment>
+                    <table frame="all" rowsep="1" colsep="1" id="table_lb5_svh_ms">
                         <tgroup cols="2">
                             <colspec colname="c1" colnum="1" colwidth="1*"/>
-                            <colspec colname="c2" colnum="2" colwidth="3.17*"/>
+                            <colspec colname="c2" colnum="2" colwidth="2.13*"/>
                             <thead>
                                 <row>
-                                    <entry>Kafka Properties</entry>
+                                    <entry>Write to Kafka Property</entry>
                                     <entry>Description</entry>
                                 </row>
                             </thead>
                             <tbody>
-                                <row>
-                                    <entry>Broker URI</entry>
-                                    <entry>A comma-separated list of URIs for Kafka brokers that
-                                        write to the topic. Use the following format:
-                                            <codeph>&lt;host>:&lt;port></codeph>.<p>To ensure a
-                                            connection, enter a comma-separated list of additional
-                                            broker URI.</p></entry>
+                                <row
+                                    conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/KPBrokerURI">
+                                    <entry/>
                                 </row>
-                                <row>
-                                    <entry>Runtime Topic Resolution <xref
-                                            href="../Destinations/KProducer-RuntimeResolution.dita"
-                                                ><image href="../Graphics/icon_moreInfo.png"
-                                                scale="10" id="image_ekt_x5g_cs"/>
-                                        </xref></entry>
-                                    <entry>Evaluates an expression at runtime to determine the topic
-                                        to use for each record.</entry>
+                                <row
+                                    conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/KPRuntimeTopic">
+                                    <entry/>
                                 </row>
-                                <row>
-                                    <entry>Topic Expression</entry>
-                                    <entry>Expression used to determine where each record is
-                                        written. Use an expression that evaluates to a topic name.
-                                            <p>For runtime topic resolution only. </p></entry>
+                                <row
+                                    conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/KPTopicEx">
+                                    <entry/>
                                 </row>
-                                <row>
-                                    <entry>Topic White List</entry>
-                                    <entry>List of valid topic names to write to. Use to avoid
-                                        writing to invalid topics. Records that resolve to invalid
-                                        topic names are passed the stage for error handling. <p>Use
-                                            an asterisk (*) to allow writing to any topic name. By
-                                            default, all topic names are valid.</p><p>For runtime
-                                            topic resolution only. </p></entry>
+                                <row
+                                    conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/KPTopicWList">
+                                    <entry/>
                                 </row>
-                                <row>
-                                    <entry>Topic</entry>
-                                    <entry>Kafka topic to use. <p>Not available when using runtime
-                                            topic resolution.</p></entry>
+                                <row
+                                    conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/KPTopic">
+                                    <entry/>
                                 </row>
-                                <row>
-                                    <entry>Partition Strategy </entry>
-                                    <entry>Strategy to use to write to partitions:<ul
-                                            id="ul_tq2_yr3_br">
-                                            <li>Round Robin - Takes turns writing to different
-                                                partitions.</li>
-                                            <li>Random - Writes to partitions randomly.</li>
-                                            <li>Expression - Uses an expression to write data to
-                                                different partitions. </li>
-                                        </ul></entry>
+                                <row
+                                    conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/KPPartStrategy">
+                                    <entry/>
                                 </row>
-                                <row>
-                                    <entry>Partition Expression <xref
-                                            href="../Destinations/KProducer-PartitionStrategy.dita#concept_qpm_xp4_4r">
-                                            <image href="../Graphics/icon_moreInfo.png" scale="10"
-                                                id="image_nyc_r55_ls"/></xref></entry>
-                                    <entry>Expression to use to write to partitions. <p>Define the
-                                            expression to evaluate to the partition where you want
-                                            each record written. Partition numbers start with
-                                            0.</p><p
-                                            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/EEditor"
-                                            /><p>For the expression partition strategy only.
-                                        </p></entry>
+                                <row
+                                    conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/KPPartExpr">
+                                    <entry/>
                                 </row>
-                                <row>
-                                    <entry>One Message per Batch</entry>
-                                    <entry>For each batch, writes the records to each partition as a
-                                        single message. </entry>
+                                <row
+                                    conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/KPOneMessPBatch">
+                                    <entry/>
                                 </row>
-                                <row>
-                                    <entry>Kafka Configuration</entry>
-                                    <entry>Additional Kafka properties to use. Click the
-                                            <uicontrol>Add</uicontrol> icon and define the Kafka
-                                        property name and value. <p>Use the property names and
-                                            values as expected by Kafka. Do not use the broker.list
-                                            property.</p><p>Several properties are defined by
-                                            default. You can edit or delete the properties.
-                                        </p></entry>
+                                <row
+                                    conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/KPKConfigs">
+                                    <entry/>
                                 </row>
                             </tbody>
                         </tgroup>

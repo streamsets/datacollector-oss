@@ -14,6 +14,7 @@
         <li>Field Masker - Masks sensitive string data.</li>
         <li>Field Remover - Removes fields from a record.</li>
         <li>Field Splitter - Splits the string values in a field into different fields.</li>
+        <li>Geo IP- Provides geographic location information based on an IP address. </li>
         <li>JavaScript Evaluator - Processes records based on custom JavaScript code.  </li>
         <li>JSON Parser - Parses a JSON object embedded in a string field.</li>
         <li>Jython Evaluator - Processes records based on custom Jython code.</li>

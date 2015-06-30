@@ -1,0 +1,545 @@
+
+<!DOCTYPE html
+  SYSTEM "about:legacy-compat">
+<html xml:lang="en-us" lang="en-us">
+<head><meta name="description" content="The basic tutorial steps through creating a pipeline that splits data to two branches and merges it before writing to the destination. You'll use data prevew to check how the pipeline processes the ..."></meta><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><meta name="copyright" content="(C) Copyright 2005"></meta><meta name="DC.rights.owner" content="(C) Copyright 2005"></meta><meta name="DC.Type" content="concept"></meta><meta name="DC.Title" content="Basic Tutorial"></meta><meta name="abstract" content="The basic tutorial steps through creating a pipeline that splits data to two branches and merges it before writing to the destination. You'll use data prevew to check how the pipeline processes the data, and create a data alert before starting the pipeline."></meta><meta name="description" content="The basic tutorial steps through creating a pipeline that splits data to two branches and merges it before writing to the destination. You'll use data prevew to check how the pipeline processes the data, and create a data alert before starting the pipeline."></meta><meta name="DC.Relation" scheme="URI" content="../Tutorial/Tutorial-title.html"></meta><meta name="DC.Format" content="XHTML"></meta><meta name="DC.Identifier" content="concept_phf_cjt_ls"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/commonltr.css"><!----></link><title>Basic Tutorial</title><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/webhelp_topic.css"><!----></link><link rel="stylesheet" type="text/css" href="../skin.css"></link><script type="text/javascript"><!--
+          
+          var prefix = "../index.html";
+          
+          --></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery-1.8.2.min.js"><!----></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery.cookie.js"><!----></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery-ui.custom.min.js"><!----></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery.highlight-3.js"><!----></script><script type="text/javascript" charset="utf-8" src="../oxygen-webhelp/resources/js/webhelp_topic.js"><!----></script></head>
+<body onload="highlightSearchTerm()" class="frmBody">
+<table class="nav"><tbody><tr><td colspan="2"><div id="printlink"><a href="javascript:window.print();" title="Print this page"></a></div><div id="permalink"><a href="#" title="Link to this page"></a></div></td></tr><tr><td width="75%"><a class="navheader_parent_path" href="../Tutorial/Tutorial-title.html" title="Data Collector Tutorial">Data Collector Tutorial</a></td><td><div class="navheader">
+<span class="navparent"><a class="link" href="../Tutorial/Tutorial-title.html" title="Data Collector Tutorial"><span class="navheader_label">Parent topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">Data Collector Tutorial</span></a></span>  </div></td></tr></tbody></table>
+<div class="nested0" id="concept_phf_cjt_ls">
+ <h1 class="title topictitle1">Basic Tutorial</h1>
+
+ 
+ <div class="body conbody"><p class="shortdesc">The basic tutorial steps through creating a pipeline that splits data to two branches
+  and merges it before writing to the destination. You'll use data prevew to check how the pipeline
+  processes the data, and create a data alert before starting the pipeline. </p>
+
+  <div class="p">Here are high level steps we'll take
+   to build the basic pipeline:<ol class="ol" id="concept_phf_cjt_ls__ol_emy_rhp_ms">
+    <li class="li">Configure pipeline properties, primarily error handling.</li>
+
+    <li class="li">Add a Directory origin to represent the data to be processed. </li>
+
+    <li class="li">Use a Stream Selector processor to route records paid by credit card to the primary branch
+     and those paid by cash to an different branch. We'll set up a Required Field and use preview
+     data to </li>
+
+    <li class="li">Configure a Jython Evaluator to perform custom processing that determines the credit card
+     type based on the credit card number. </li>
+
+    <li class="li">Add a Field Masker to mask credit card information. </li>
+
+    <li class="li">Use an Expression Evaluator to add corresponding fields to the cash records so all records
+     have the same data format in the destination. Use data preview to verify the fields to add. </li>
+
+    <li class="li">Merge both branches to an HDFS destination.</li>
+
+    <li class="li">Add a data alert to </li>
+
+    <li class="li">Start the pipeline.</li>
+
+   </ol>
+</div>
+
+  
+ </div>
+
+<div class="related-links"></div>
+<div class="topic task nested1" id="task_jmz_3dn_ls">
+    <h2 class="title topictitle2">Creating a Pipeline and Defining Pipeline Properties</h2>
+
+    
+    <div class="body taskbody"><p class="shortdesc">Generally, you can use defaults for pipeline properties, but you should always define
+        how you want to handle error records. </p>
+
+        <div class="section context">
+            <p class="p">If you have a Kafka cluster you can use for error records, feel free. The rest of us
+                will write the records to a local file.</p>
+
+        </div>
+
+        <ol class="ol steps" id="task_jmz_3dn_ls__steps_hsz_b2n_ls"><li class="li step stepexpand">
+                <span class="ph cmd">If this is the first pipeline for the <span class="ph">Data
+                  Collector</span>, click <span class="ph uicontrol">Create Pipeline</span>. </span>
+                <div class="itemgroup info">If you have created other pipelines, if necessary, use the <span class="ph uicontrol">Toggle
+                        Library</span> icon to display the pipeline library, and click the
+                        <span class="ph uicontrol">Create New Pipeline</span> icon.</div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">Click the <span class="keyword wintitle">Error Records</span> tab, for the <span class="ph uicontrol">Error
+                        Records</span> property, select <span class="ph uicontrol">Write to
+                    File</span>.</span>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">Click the <span class="keyword wintitle">Error Records - Write to File</span> tab and configure
+                    the following properties: </span>
+                <div class="itemgroup info">
+                    
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_jmz_3dn_ls__table_zvy_kfn_ls" class="table" frame="border" border="1" rules="all">
+                            
+                            
+                            <thead class="thead" align="left">
+                                <tr class="row">
+                                    <th class="entry" valign="top" width="27.47252747252747%" id="d45383e146">Write to File Property</th>
+
+                                    <th class="entry" valign="top" width="72.52747252747253%" id="d45383e149">Description</th>
+
+                                </tr>
+
+                            </thead>
+
+                            <tbody class="tbody">
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="27.47252747252747%" headers="d45383e146 ">Directory</td>
+
+                                    <td class="entry" valign="top" width="72.52747252747253%" headers="d45383e149 ">Enter the directory local to the <span class="ph">Data
+                  Collector</span> where the sample data is saved.<div class="note note"><span class="notetitle">Note:</span> The directory must
+                                            exist to prevent validation errors. </div>
+</td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="27.47252747252747%" headers="d45383e146 ">Files Prefix</td>
+
+                                    <td class="entry" valign="top" width="72.52747252747253%" headers="d45383e149 ">This defines a prefix for error record files. Delete the
+                                        default and use "Taxi-Errors_".</td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="27.47252747252747%" headers="d45383e146 ">Max File Size</td>
+
+                                    <td class="entry" valign="top" width="72.52747252747253%" headers="d45383e149 ">When writing to a local directory, you might want to
+                                        reduce the files size to something more managable, such as 5
+                                        MB.</td>
+
+                                </tr>
+
+                            </tbody>
+
+                        </table>
+</div>
+
+                </div>
+            </li>
+</ol>
+
+    </div>
+
+</div>
+<div class="topic task nested1" id="task_ftt_2vq_ks">
+    <h2 class="title topictitle2">Configure the Origin</h2>
+
+    
+    <div class="body taskbody"><p class="shortdesc">The origin represents the source data for the pipeline. When you configure the
+        origin, you define how to connect to the data, and the type of data you're using. </p>
+
+        <div class="section context">
+            <p class="p">In this case, use the Directory origin to process static file data.</p>
+
+        </div>
+
+        <ol class="ol steps" id="task_ftt_2vq_ks__steps_ckz_gvq_ks"><li class="li step stepexpand">
+                <span class="ph cmd">In the Stage list, click the <span class="ph uicontrol">Directory</span> origin. After the
+                    origin appears in the canvas, select the origin.</span>
+                <div class="itemgroup info">The Properties panel displays the configuration options for the selected
+                    stage. Or, if you click an unused section of the pipeline, it displays pipeline
+                    properties. </div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">In the Properties panel, click the <span class="keyword wintitle">Files</span> tab and configure
+                    the following properties - use defaults for all other properties:</span>
+                <div class="itemgroup info">
+                    
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_ftt_2vq_ks__table_w5c_jyq_ks" class="table" frame="border" border="1" rules="all">
+                            
+                            
+                            <thead class="thead" align="left">
+                                <tr class="row">
+                                    <th class="entry" valign="top" width="35.97122302158273%" id="d45383e250">Directory Property</th>
+
+                                    <th class="entry" valign="top" width="64.02877697841726%" id="d45383e253">Value</th>
+
+                                </tr>
+
+                            </thead>
+
+                            <tbody class="tbody">
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="35.97122302158273%" headers="d45383e250 ">Data Format</td>
+
+                                    <td class="entry" valign="top" width="64.02877697841726%" headers="d45383e253 ">Delimited</td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="35.97122302158273%" headers="d45383e250 ">Files Directory</td>
+
+                                    <td class="entry" valign="top" width="64.02877697841726%" headers="d45383e253 ">Enter the local directory where you saved the source
+                                        file. </td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="35.97122302158273%" headers="d45383e250 ">File Name Pattern</td>
+
+                                    <td class="entry" valign="top" width="64.02877697841726%" headers="d45383e253 ">Since the file is the only file in the directory, you can
+                                        use the asterisk wild card: *.</td>
+
+                                </tr>
+
+                            </tbody>
+
+                        </table>
+</div>
+
+                </div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">For delimited data, additional properties are available, so click the
+                        <span class="keyword wintitle">Delimited</span> tab. </span>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">The sample data includes a header row, so set the <span class="ph uicontrol">Header
+                        Line</span> property to <span class="ph uicontrol">With Header Line</span>.</span>
+            </li>
+</ol>
+
+    </div>
+
+</div>
+<div class="topic task nested1" id="task_br5_rzq_ks">
+    <h2 class="title topictitle2">Route Data with the Stream Selector</h2>
+
+    
+    <div class="body taskbody"><p class="shortdesc">To route records that use credit card for payment to a separate branch for
+        processing, we use the Stream Selector processor. </p>
+
+        <div class="section context">
+            <p class="p">The Stream Selector uses user-defined conditions to route data. Any data not captured
+                by a user-defined condition routes to the default stream. </p>
+
+            <div class="p">In this case, because the data is delimited, we use a delimited data function. The
+                    <samp class="ph codeph">record:dValue</samp> function returns the value of the specified
+                field, so to capture records with credit card payments you use the following
+                condition: <pre class="pre codeblock">${record:dValue('payment_type') == 'CRD'}</pre>
+</div>
+
+        </div>
+
+        <ol class="ol steps" id="task_br5_rzq_ks__steps_xhx_3rk_ls"><li class="li step stepexpand">
+                <span class="ph cmd">In the stage library, select the <span class="ph uicontrol">Stream Selector</span>
+                    processor and connect it to the pipeline. </span>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">With the Stream Selector selected, in the Properties panel, click the
+                        <span class="ph uicontrol">Conditions</span> tab.</span>
+                <div class="itemgroup info">A default condition for the default stream displays. The default stream
+                    represents any records not captured by other conditions.</div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">Click the <span class="ph uicontrol">Add</span> icon.</span>
+                <div class="itemgroup info">A condition text box displays, as well as the corresponding output
+                    location.</div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">Enter the following condition to capture records where a credit card is used
+                    for payment:</span>
+                <div class="itemgroup info">
+                    <pre class="pre codeblock">${record:dValue('payment_type') == 'CRD'}</pre>
+
+                </div>
+                <div class="itemgroup info">All other records are captured by the default condition and stream.</div>
+            </li>
+</ol>
+
+    </div>
+
+</div>
+<div class="topic task nested1" id="task_cdx_kfm_ls">
+    <h2 class="title topictitle2">Use Jython for Card Typing</h2>
+
+    
+    <div class="body taskbody"><p class="shortdesc">The pipeline uses a Jython Evaluator to evaluate credit card numbers and determine
+        the credit card type associated with each number.</p>
+
+        <div class="section context"><p class="p">The <span class="ph">Data
+                  Collector</span> provides a JavaScript Evaluator and Jython Evaluator so you can use custom script
+                to perform processing that is not easily performed using other <span class="ph">Data
+                  Collector</span> processors. </p>
+In this pipeline, the Jython Evaluator creates an additional
+            field, credit_card_type, and generates the credit card type based on the first few
+            digits of the credit card number. The Jython script passes an error message if the
+            record has a credit card payment type, but no credit card number. </div>
+
+        <ol class="ol steps" id="task_cdx_kfm_ls__steps_lnv_lfm_ls"><li class="li step stepexpand">
+                <span class="ph cmd">From the stage library, select the <span class="ph uicontrol">Jython Evaluator</span>
+                    processor and connect it to the first output location of the Stream
+                    Selector.</span>
+                <div class="itemgroup info">This routes records paid by credit card to the Jython Evaluator. </div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">With the Jython Evaluator selected, in the Properties panel, click the
+                        <span class="keyword wintitle">Jython</span> tab. </span>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">Use the default record processing mode to process data in batches instead of
+                    record by record. </span>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">In the Script text box, paste the following script below the comments:</span>
+                <div class="itemgroup info">
+                    <pre class="pre codeblock">try: 
+  for record in records:
+    cc = record.value[20]['value']
+    if cc == '':
+      err.write(record, "Payment type was CRD, but credit card was null")
+      continue
+
+    cc_type = ''
+    if cc.startswith('4'):
+      cc_type = 'Visa'
+    elif cc.startswith(('51','52','53','54','55')):
+      cc_type = 'MasterCard'
+    elif cc.startswith(('34','37')):
+      cc_type = 'AMEX'
+    elif cc.startswith(('300','301','302','303','304','305','36','38')):
+      cc_type = 'Diners Club'
+    elif cc.startswith(('6011','65')):
+      cc_type = 'Discover'
+    elif cc.startswith(('2131','1800','35')):
+      cc_type = 'JCB'
+    else:
+      cc_type = 'Other'
+
+    record.value.append({'header':'credit_card_type','value':cc_type})
+    out.write(record)
+except Exception as e:
+  err.write(record, e.message)</pre>
+
+                </div>
+            </li>
+</ol>
+
+    </div>
+
+</div>
+<div class="topic task nested1" id="task_qbw_d3m_ls">
+    <h2 class="title topictitle2">Mask Credit Card Numbers</h2>
+
+    
+    <div class="body taskbody"><p class="shortdesc">Use the Field Masker to mask sensitive data, in this case, credit card numbers. </p>
+
+        <div class="section context">
+            <p class="p">The Field Masker provides fixed and variable-length masks that mask all data. You can
+                create a custom mask that contains masked positions and revealed positions. And you
+                can use a regular expression mask that defines the string and optionally allows you
+                to reveal one or more groups in the string. </p>
+
+            <div class="p">For our pipeline, let's mask all but the last four digits of the credit card number
+                with the following regular expression:<pre class="pre codeblock">(.*)([0-9]{4})</pre>
+</div>
+
+            <p class="p">Notice the expression defines two groups so we can reveal the second group.</p>
+
+        </div>
+
+        <ol class="ol steps" id="task_qbw_d3m_ls__steps_wwy_fjm_ls"><li class="li step stepexpand">
+                <span class="ph cmd">From the stage library, select the <span class="ph uicontrol">Field Masker</span>
+                    processor and connect it to the previous stage.</span>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">With the processor selected, in the Properties panel, click the
+                        <span class="keyword wintitle">Mask</span> tab.</span>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">
+                    
+                </span>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">To use a regular expression as a mask and display the last 4 digits of the
+                    credit card number, configure the rest of the properties as follows:</span>
+                <div class="itemgroup info">
+                    
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_qbw_d3m_ls__table_ejl_msm_ls" class="table" frame="border" border="1" rules="all">
+                            
+                            
+                            <thead class="thead" align="left">
+                                <tr class="row">
+                                    <th class="entry" valign="top" width="28.49002849002849%" id="d45383e537">Field Masker Property</th>
+
+                                    <th class="entry" valign="top" width="71.5099715099715%" id="d45383e540">Configuration</th>
+
+                                </tr>
+
+                            </thead>
+
+                            <tbody class="tbody">
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="28.49002849002849%" headers="d45383e537 ">Mask Type</td>
+
+                                    <td class="entry" valign="top" width="71.5099715099715%" headers="d45383e540 ">Regular Expression</td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="28.49002849002849%" headers="d45383e537 ">Regular Expression</td>
+
+                                    <td class="entry" valign="top" width="71.5099715099715%" headers="d45383e540 "> (.*)([0-9]{4})</td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="28.49002849002849%" headers="d45383e537 ">Groups to Reveal</td>
+
+                                    <td class="entry" valign="top" width="71.5099715099715%" headers="d45383e540 ">2</td>
+
+                                </tr>
+
+                            </tbody>
+
+                        </table>
+</div>
+
+                </div>
+            </li>
+</ol>
+
+    </div>
+
+</div>
+<div class="topic task nested1" id="task_wsj_5tm_ls">
+    <h2 class="title topictitle2">Write to the Destination</h2>
+
+    
+    <div class="body taskbody"><p class="shortdesc">You can use the Hadoop FS destination to write tutorial data to a Hadoop file system
+        or a local directory. </p>
+
+        <div class="section context">
+            <p class="p">When you configure the output file properties, you define the directory template,
+                which determines the naming convention for the output directories that are created.
+                Use the directory where you want the output files to be written. </p>
+
+        </div>
+
+        <ol class="ol steps" id="task_wsj_5tm_ls__steps_xdd_wwm_ls"><li class="li step stepexpand">
+                <span class="ph cmd">From the stage library, select the <span class="ph uicontrol">Hadoop FS</span> processor
+                    and connect it to the previous stage. </span>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">With the destination selected, in the Properties panel, click the
+                        <span class="keyword wintitle">Hadoop FS</span> tab. If you have a real Hadoop FS
+                    installation, configure the stage to write to it.</span>
+                <div class="itemgroup info">To use Hadoop FS to write to a local filesystem, enter the following
+                    configuration for the <span class="ph uicontrol">Hadoop FS URI</span> property:
+                        <samp class="ph codeph">file:///</samp>.</div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">Click the <span class="keyword wintitle">Output Files</span> tab and configure the following
+                    properties. Use the defaults for the rest:</span>
+                <div class="itemgroup info">
+                    
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_wsj_5tm_ls__table_kcy_5bn_ls" class="table" frame="border" border="1" rules="all">
+                            
+                            
+                            <thead class="thead" align="left">
+                                <tr class="row">
+                                    <th class="entry" valign="top" width="29.49852507374631%" id="d45383e651">Hadoop FS Property</th>
+
+                                    <th class="entry" valign="top" width="70.50147492625369%" id="d45383e654">Configuration</th>
+
+                                </tr>
+
+                            </thead>
+
+                            <tbody class="tbody">
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="29.49852507374631%" headers="d45383e651 ">Data Format</td>
+
+                                    <td class="entry" valign="top" width="70.50147492625369%" headers="d45383e654 ">Delimited</td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="29.49852507374631%" headers="d45383e651 ">Files Prefix</td>
+
+                                    <td class="entry" valign="top" width="70.50147492625369%" headers="d45383e654 ">Taxi_</td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="29.49852507374631%" headers="d45383e651 ">Directory Template</td>
+
+                                    <td class="entry" valign="top" width="70.50147492625369%" headers="d45383e654 ">Use the output directory where you want the files to be
+                                        written and optionally include constants to indicate the
+                                        frequency at which the files should be rolled over. <p class="p">For
+                                            example the following directory rolls the output file
+                                            once a year, but works for this tutorial:
+                                                <samp class="ph codeph">&lt;output
+                                            directory&gt;/${YYYY()}</samp>.</p>
+</td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="29.49852507374631%" headers="d45383e651 ">Max Records in File</td>
+
+                                    <td class="entry" valign="top" width="70.50147492625369%" headers="d45383e654 ">250000</td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="29.49852507374631%" headers="d45383e651 ">Max File Size</td>
+
+                                    <td class="entry" valign="top" width="70.50147492625369%" headers="d45383e654 ">If writing to a local file system, you might prefer to
+                                        lower the file size to something manageable, like 5.</td>
+
+                                </tr>
+
+                            </tbody>
+
+                        </table>
+</div>
+
+                </div>
+            </li>
+</ol>
+
+    </div>
+
+</div>
+<div class="topic task nested1" id="task_wgb_t4p_ms">
+    <h2 class="title topictitle2">Add Corresponding Fields with the Expression Evaluator</h2>
+
+    
+    <div class="body taskbody"><p class="shortdesc">Records with credit card payments now have additional fields, so let's use an
+        Expression Editor to add those fields to the other records so our data isn't malformed. </p>
+
+        <div class="section context">
+            <p class="p"></p>
+
+        </div>
+
+        <ol class="ol steps" id="task_wgb_t4p_ms__steps_mr4_2pp_ms"><li class="li step">
+                <span class="ph cmd">In the stage library, select the <span class="ph uicontrol">Expression Evaluator</span>
+                    processor and connect it to default output of the Stream Selector. </span>
+            </li>
+<li class="li step">
+                <span class="ph cmd">Click the Expressions tab</span>
+            </li>
+</ol>
+
+    </div>
+
+</div>
+</div>
+<div class="navfooter"><!---->
+<span class="navparent"><a class="link" href="../Tutorial/Tutorial-title.html" title="Data Collector Tutorial"><span class="navheader_label">Parent topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">Data Collector Tutorial</span></a></span>  </div><div class="footer"><div> </div><!-- © <a href="http://creativecommons.org/licenses/by-nc/4.0/legalcode">CC BY-NC 4.0.</a> StreamSets, 2015. --></div>
+</body>
+</html>

@@ -2,8 +2,8 @@
 <!DOCTYPE task PUBLIC "-//OASIS//DTD DITA General Task//EN" "generalTask.dtd">
 <task id="task_br5_rzq_ks">
     <title>Route Data with the Stream Selector</title>
-    <shortdesc>To separate records that use credit card for payment, we use the Stream Selector
-        processor. </shortdesc>
+    <shortdesc>To route records that use credit card for payment to a separate branch for
+        processing, we use the Stream Selector processor. </shortdesc>
     <taskbody>
         <context>
             <p>The Stream Selector uses user-defined conditions to route data. Any data not captured

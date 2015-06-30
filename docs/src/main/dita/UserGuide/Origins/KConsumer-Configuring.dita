@@ -66,10 +66,10 @@
                             </thead>
                             <tbody>
                                 <row>
-                                    <entry>Kafka Broker URI</entry>
-                                    <entry>Connection string for Kafka brokers. Use the following
-                                        format: <codeph>&lt;host>:&lt;port></codeph>.  <p>To ensure
-                                            a connection, enter a comma-separated list of additional
+                                    <entry>Broker URI</entry>
+                                    <entry>Connection string for the Kafka broker. Use the following
+                                        format: <codeph>&lt;host>:&lt;port></codeph>. <p>To ensure a
+                                            connection, enter a comma-separated list of additional
                                             broker URI.</p></entry>
                                 </row>
                                 <row>

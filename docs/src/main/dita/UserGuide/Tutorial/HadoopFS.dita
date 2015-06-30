@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE task PUBLIC "-//OASIS//DTD DITA General Task//EN" "generalTask.dtd">
 <task id="task_wsj_5tm_ls">
-    <title>Writing to the Destination</title>
+    <title>Write to the Destination</title>
     <shortdesc>You can use the Hadoop FS destination to write tutorial data to a Hadoop file system
         or a local directory. </shortdesc>
     <taskbody>

@@ -22,8 +22,8 @@
                 <info>
                     <table frame="all" rowsep="1" colsep="1" id="table_w5c_jyq_ks">
                         <tgroup cols="2">
-                            <colspec colname="c1" colnum="1" colwidth="1.0*"/>
-                            <colspec colname="c2" colnum="2" colwidth="1.0*"/>
+                            <colspec colname="c1" colnum="1" colwidth="1*"/>
+                            <colspec colname="c2" colnum="2" colwidth="1.78*"/>
                             <thead>
                                 <row>
                                     <entry>Directory Property</entry>
@@ -49,6 +49,14 @@
                         </tgroup>
                     </table>
                 </info>
+            </step>
+            <step>
+                <cmd>For delimited data, additional properties are available, so click the
+                        <wintitle>Delimited</wintitle> tab. </cmd>
+            </step>
+            <step>
+                <cmd>The sample data includes a header row, so set the <uicontrol>Header
+                        Line</uicontrol> property to <uicontrol>With Header Line</uicontrol>.</cmd>
             </step>
         </steps>
     </taskbody>

@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE task PUBLIC "-//OASIS//DTD DITA General Task//EN" "generalTask.dtd">
+<task id="task_wgb_t4p_ms">
+    <title>Add Corresponding Fields with the Expression Evaluator</title>
+    <shortdesc>Records with credit card payments now have additional fields, so let's use an
+        Expression Editor to add those fields to the other records so our data isn't malformed. </shortdesc>
+    <taskbody>
+        <context>
+            <p></p>
+        </context>
+        <steps id="steps_mr4_2pp_ms">
+            <step>
+                <cmd>In the stage library, select the <uicontrol>Expression Evaluator</uicontrol>
+                    processor and connect it to default output of the Stream Selector. </cmd>
+            </step>
+            <step>
+                <cmd>Click the Expressions tab</cmd>
+            </step>
+        </steps>
+    </taskbody>
+</task>

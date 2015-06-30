@@ -3,26 +3,19 @@
 <concept id="concept_is5_lrq_ks">
  <title>Tutorial Overview</title>
  <shortdesc>This tutorial shows you how to create a pipeline. You can optionally download sample
-  data and set up local systems to host source and target data so you can run the
-  pipeline.</shortdesc>
+  data so you can preview data as you configure the pipeline and then run the completed pipeline and
+  monitor the results. </shortdesc>
  <conbody>
-  <p>In this tutorial, we evaluate fare payment data from a taxi company. We want a break down of
-   the credit cards used for payment to determine if we can safely drop any card vendors to reduce
+  <p>You can use the basic or extended version of the tutorial. The basic version allows you to read
+   and write to a local file system so you can use tutorial data to run the pipeline. The extended
+   version requires an Elasticsearch destination system to run the pipeline. If you don't use
+   Elasticsearch, you can still follow along to the end without running the pipeline.</p>
+  <p>The basic tutorial evaluates fare payment data from a taxi company. It evaluates the credit
+   cards used for payment to find the less-used vendors, so they might be dropped to reduce
    overhead. </p>
-  <p>You can do a shorter or longer version of the tutorial. The shorter version allows you to read
-   and write to a local file system so you can use tutorial data. The longer version incorporates
-   altering the data formats to write to Elasticsearch.</p>
-  <p>We'll create the following pipeline structured as follows:<ul id="ul_gbm_4pl_ls">
-    <li>Directory origin - Represents source data.</li>
-    <li>Stream Selector - Routes credit card transactions through a separate branch for
-     processing.</li>
-    <li>CC Type Evaluator - Evaluates credit card numbers to determine the credit card vendor used
-     for each transaction. Creates a new field in the data for the credit card vendor name. </li>
-    <li>Credit Card Masker - Secures data by masking most of the credit card numbers.</li>
-    <li>Add Corresponding Fields - Adds fields to non-credit card records so they use the same
-     format as the credit card records.</li>
-    <li>HadoopFS - Destination for processed data. </li>
-   </ul></p>
-  <p><image href="../Graphics/Tutorial-Pipeline.png" id="image_ewm_cpl_ls" scale="80"/></p>
+  <p>Here's what the basic tutorial pipeline looks like in the end:</p>
+  <p><image href="../Graphics/Tutorial-BasicPipe.png" scale="80" id="image_c1c_wj4_ms"/></p>
+  <p>The extended version incorporates altering the record formats to write to Elasticsearch:</p>
+  <p><image href="../Graphics/Tutorial-ExtendedPipe.png" id="image_k3b_dr4_ms" scale="85"/></p>
  </conbody>
 </concept>

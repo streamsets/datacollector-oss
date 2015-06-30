@@ -1,10 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE task PUBLIC "-//OASIS//DTD DITA General Task//EN" "generalTask.dtd">
 <task id="task_qbw_d3m_ls">
-    <title>Masking Credit Card Numbers</title>
-    <shortdesc>Use the Field Masker to mask sensitive data, in this case, credit card numbers.
-            <draft-comment author="Loretta">add a section before this for data preview? need to get
-            the source data from Natty/Adam.</draft-comment></shortdesc>
+    <title>Mask Credit Card Numbers</title>
+    <shortdesc>Use the Field Masker to mask sensitive data, in this case, credit card numbers. </shortdesc>
     <taskbody>
         <context>
             <p>The Field Masker provides fixed and variable-length masks that mask all data. You can

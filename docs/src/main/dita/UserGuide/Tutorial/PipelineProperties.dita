@@ -6,8 +6,8 @@
         how you want to handle error records. </shortdesc>
     <taskbody>
         <context>
-            <p>If you have a Kafka cluster you can use for error records, feel free. Otherwise,
-                let's write the records to a local file.</p>
+            <p>If you have a Kafka cluster you can use for error records, feel free. The rest of us
+                will write the records to a local file.</p>
         </context>
         <steps id="steps_hsz_b2n_ls">
             <step conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/CreatePipeline">
@@ -28,17 +28,17 @@
                             <colspec colname="c2" colnum="2" colwidth="2.64*"/>
                             <thead>
                                 <row>
-                                    <entry/>
-                                    <entry/>
+                                    <entry>Write to File Property</entry>
+                                    <entry>Description</entry>
                                 </row>
                             </thead>
                             <tbody>
                                 <row>
                                     <entry>Directory</entry>
-                                    <entry>Enter a directory local to the <ph
+                                    <entry>Enter the directory local to the <ph
                                             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                                        />. <note>The directory must exist to prevent validation
-                                            errors. </note></entry>
+                                        /> where the sample data is saved.<note>The directory must
+                                            exist to prevent validation errors. </note></entry>
                                 </row>
                                 <row>
                                     <entry>Files Prefix</entry>

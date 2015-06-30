@@ -647,10 +647,9 @@
             </step>
             <step>
                 <cmd>
-                    <draft-comment author="Loretta">The following Kafka Producer - Kafka tab
-                        properties are also used for pipeline error handling - writing to Kafka.
-                        Whole step used in Kafka Producer, just the table by the pipeline error
-                        handling.</draft-comment>
+                    <draft-comment author="Loretta">The following step is used for the Kafka
+                        Producer - Kafka tab properties. Rows in the table are used for Configuring
+                        a Pipeline, error handling > Write to Kafka.</draft-comment>
                 </cmd>
             </step>
             <step id="KafkaConfig">
@@ -669,16 +668,16 @@
                                     </row>
                                 </thead>
                                 <tbody>
-                                    <row>
+                                    <row id="KPBrokerURI">
                                         <entry>Broker URI</entry>
-                                        <entry>A comma-separated list of URIs for Kafka brokers that
-                                            write to the topic. Use the following format:
+                                        <entry>Connection string for the Kafka broker. Use the
+                                            following format:
                                                 <codeph>&lt;host>:&lt;port></codeph>.<p>To ensure a
                                                 connection, enter a comma-separated list of
                                                 additional broker URI.</p></entry>
                                     </row>
-                                    <row>
-                                        <entry>Runtime Topic Resolution  <xref
+                                    <row id="KPRuntimeTopic">
+                                        <entry>Runtime Topic Resolution <xref
                                                 href="../Destinations/KProducer-RuntimeResolution.dita"
                                                   ><image href="../Graphics/icon_moreInfo.png"
                                                   scale="10" id="image_ekt_x5g_cs"/>
@@ -686,13 +685,13 @@
                                         <entry>Evaluates an expression at runtime to determine the
                                             topic to use for each record.</entry>
                                     </row>
-                                    <row>
+                                    <row id="KPTopicEx">
                                         <entry>Topic Expression</entry>
                                         <entry>Expression used to determine where each record is
                                             written. Use an expression that evaluates to a topic
                                             name. <p>For runtime topic resolution only. </p></entry>
                                     </row>
-                                    <row>
+                                    <row id="KPTopicWList">
                                         <entry>Topic White List</entry>
                                         <entry>List of valid topic names to write to. Use to avoid
                                             writing to invalid topics. Records that resolve to
@@ -702,12 +701,12 @@
                                                 valid.</p><p>For runtime topic resolution only.
                                             </p></entry>
                                     </row>
-                                    <row>
+                                    <row id="KPTopic">
                                         <entry>Topic</entry>
                                         <entry>Kafka topic to use. <p>Not available when using
                                                 runtime topic resolution.</p></entry>
                                     </row>
-                                    <row>
+                                    <row id="KPPartStrategy">
                                         <entry>Partition Strategy </entry>
                                         <entry>Strategy to use to write to partitions:<ul
                                                 id="ul_tq2_yr3_br">
@@ -718,7 +717,7 @@
                                                   different partitions. </li>
                                             </ul></entry>
                                     </row>
-                                    <row>
+                                    <row id="KPPartExpr">
                                         <entry>Partition Expression <xref
                                                 href="../Destinations/KProducer-PartitionStrategy.dita#concept_qpm_xp4_4r">
                                                 <image href="../Graphics/icon_moreInfo.png"
@@ -750,12 +749,12 @@
                                         <entry>Character encoding to use when writing data. <p>Not
                                                 used for the SDC Record data format.</p></entry>
                                     </row>
-                                    <row>
+                                    <row id="KPOneMessPBatch">
                                         <entry>One Message per Batch</entry>
                                         <entry>For each batch, writes the records to each partition
                                             as a single message. </entry>
                                     </row>
-                                    <row>
+                                    <row id="KPKConfigs">
                                         <entry>Kafka Configuration</entry>
                                         <entry>Additional Kafka properties to use. Click the
                                                 <uicontrol>Add</uicontrol> icon and define the Kafka

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE task PUBLIC "-//OASIS//DTD DITA General Task//EN" "generalTask.dtd">
 <task id="task_cdx_kfm_ls">
-    <title>Jython for Card Typing</title>
+    <title>Use Jython for Card Typing</title>
     <shortdesc>The pipeline uses a Jython Evaluator to evaluate credit card numbers and determine
         the credit card type associated with each number.</shortdesc>
     <taskbody>
