@@ -166,10 +166,12 @@ public class SingleLineLiveFileReader implements LiveFileReader {
   public LiveFileChunk next(long waitMillis) throws IOException {
     Utils.checkArgument(waitMillis >= 0, "waitMillis must equal or greater than zero");
     Utils.checkState(open, Utils.formatL("LiveFileReader for '{}' is not open", currentFile));
-    Utils.checkState(hasNext(), Utils.formatL("LiveFileReader for '{}' has reached EOL", currentFile));
     LiveFileChunk liveFileChunk = null;
     long start = System.currentTimeMillis() + waitMillis;
     while (true) {
+      if (!hasNext()) {
+        break;
+      }
       if (truncateMode) {
         if (LOG.isTraceEnabled()) {
           LOG.trace("File '{}' at offset '{} in fast forward mode", currentFile, channel.position());

@@ -52,7 +52,8 @@ public interface LiveFileReader extends Closeable {
    * Returns the next chunk of data from the reader if available, or <code>null</code> if there is no data available
    * yet.
    * <p/>
-   * This method can be called only if {@link #hasNext()} returned <code>true</code>.
+   * This method should be called if {@link #hasNext()} returned <code>true</code>, otherwise it will return
+   * <code>null</code>.
    *
    * @param waitMillis milliseconds to block while waiting for more data, use zero for no wait.
    * @return a {@link LiveFileChunk} with a chunk of data, or <code>null</code> if no data is yet available.

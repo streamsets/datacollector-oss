@@ -157,6 +157,10 @@ public class TestMultiLineLiveFileReader {
     Assert.assertEquals(chunk1.getLength() + chunk2.getLength(), reader.getOffset());
     Assert.assertFalse(reader.hasNext());
     Assert.assertEquals(chunk1.getLength() + chunk2.getLength(), reader.getOffset());
+
+    // next() after EOF returns null
+    Assert.assertNull(reader.next(0));
+
     reader.close();
   }
 
