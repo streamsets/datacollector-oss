@@ -140,23 +140,7 @@
 
     <!-- CDH libs -->
     <fileSet>
-      <directory>${basedir}/../${cdh_5_2_1-lib}/target/streamsets-libs/</directory>
-      <outputDirectory>/streamsets-libs/</outputDirectory>
-    </fileSet>
-    <fileSet>
-      <directory>${basedir}/../${cdh_5_2_3-lib}/target/streamsets-libs/</directory>
-      <outputDirectory>/streamsets-libs/</outputDirectory>
-    </fileSet>
-    <fileSet>
       <directory>${basedir}/../${cdh_5_2_4-lib}/target/streamsets-libs/</directory>
-      <outputDirectory>/streamsets-libs/</outputDirectory>
-    </fileSet>
-    <fileSet>
-      <directory>${basedir}/../${cdh_5_3_0-lib}/target/streamsets-libs/</directory>
-      <outputDirectory>/streamsets-libs/</outputDirectory>
-    </fileSet>
-    <fileSet>
-      <directory>${basedir}/../${cdh_5_3_1-lib}/target/streamsets-libs/</directory>
       <outputDirectory>/streamsets-libs/</outputDirectory>
     </fileSet>
     <fileSet>
@@ -164,19 +148,11 @@
       <outputDirectory>/streamsets-libs/</outputDirectory>
     </fileSet>
 
-	<fileSet>
-      <directory>${basedir}/../${cdh_5_4_0-lib}/target/streamsets-libs/</directory>
-      <outputDirectory>/streamsets-libs/</outputDirectory>
-    </fileSet>
     <fileSet>
       <directory>${basedir}/../${cdh_5_4_1-lib}/target/streamsets-libs/</directory>
       <outputDirectory>/streamsets-libs/</outputDirectory>
     </fileSet>
     <!-- CDH Spark Kafka lib -->
-    <fileSet>
-      <directory>${basedir}/../${cdh5_4_0-cluster-cdh_kafka_1_2_0-lib}/target/streamsets-libs/</directory>
-      <outputDirectory>/streamsets-libs/</outputDirectory>
-    </fileSet>
     <fileSet>
       <directory>${basedir}/../${cdh5_4_1-cluster-cdh_kafka_1_2_0-lib}/target/streamsets-libs/</directory>
       <outputDirectory>/streamsets-libs/</outputDirectory>
@@ -191,10 +167,6 @@
     <!-- Apache Kafka libs -->
     <fileSet>
       <directory>${basedir}/../${apache-kafka_0_8_1_1-lib}/target/streamsets-libs/</directory>
-      <outputDirectory>/streamsets-libs/</outputDirectory>
-    </fileSet>
-    <fileSet>
-      <directory>${basedir}/../${apache-kafka_0_8_2_0-lib}/target/streamsets-libs/</directory>
       <outputDirectory>/streamsets-libs/</outputDirectory>
     </fileSet>
     <fileSet>

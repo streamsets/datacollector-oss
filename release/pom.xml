@@ -73,36 +73,6 @@
             </configuration>
           </execution>
           <execution>
-            <id>cdh-5.2.1</id>
-            <phase>package</phase>
-            <goals>
-              <goal>single</goal>
-            </goals>
-            <configuration>
-              <appendAssemblyId>false</appendAssemblyId>
-              <attach>false</attach>
-              <finalName>streamsets-datacollector-cdh_5_2_1-lib-${project.version}</finalName>
-              <descriptors>
-                <descriptor>src/main/assemblies/data-collector-cdh_5_2_1-lib.xml</descriptor>
-              </descriptors>
-            </configuration>
-          </execution>
-          <execution>
-            <id>cdh-5.2.3</id>
-            <phase>package</phase>
-            <goals>
-              <goal>single</goal>
-            </goals>
-            <configuration>
-              <appendAssemblyId>false</appendAssemblyId>
-              <attach>false</attach>
-              <finalName>streamsets-datacollector-cdh_5_2_3-lib-${project.version}</finalName>
-              <descriptors>
-                <descriptor>src/main/assemblies/data-collector-cdh_5_2_3-lib.xml</descriptor>
-              </descriptors>
-            </configuration>
-          </execution>
-          <execution>
             <id>cdh-5.2.4</id>
             <phase>package</phase>
             <goals>
@@ -118,36 +88,6 @@
             </configuration>
           </execution>
           <execution>
-            <id>cdh-5.3.0</id>
-            <phase>package</phase>
-            <goals>
-              <goal>single</goal>
-            </goals>
-            <configuration>
-              <appendAssemblyId>false</appendAssemblyId>
-              <attach>false</attach>
-              <finalName>streamsets-datacollector-cdh_5_3_0-lib-${project.version}</finalName>
-              <descriptors>
-                <descriptor>src/main/assemblies/data-collector-cdh_5_3_0-lib.xml</descriptor>
-              </descriptors>
-            </configuration>
-          </execution>
-          <execution>
-            <id>cdh-5.3.1</id>
-            <phase>package</phase>
-            <goals>
-              <goal>single</goal>
-            </goals>
-            <configuration>
-              <appendAssemblyId>false</appendAssemblyId>
-              <attach>false</attach>
-              <finalName>streamsets-datacollector-cdh_5_3_1-lib-${project.version}</finalName>
-              <descriptors>
-                <descriptor>src/main/assemblies/data-collector-cdh_5_3_1-lib.xml</descriptor>
-              </descriptors>
-            </configuration>
-          </execution>
-          <execution>
             <id>cdh-5.3.2</id>
             <phase>package</phase>
             <goals>
@@ -159,21 +99,6 @@
               <finalName>streamsets-datacollector-cdh_5_3_2-lib-${project.version}</finalName>
               <descriptors>
                 <descriptor>src/main/assemblies/data-collector-cdh_5_3_2-lib.xml</descriptor>
-              </descriptors>
-            </configuration>
-          </execution>
-          <execution>
-            <id>cdh-5.4.0</id>
-            <phase>package</phase>
-            <goals>
-              <goal>single</goal>
-            </goals>
-            <configuration>
-              <appendAssemblyId>false</appendAssemblyId>
-              <attach>false</attach>
-              <finalName>streamsets-datacollector-cdh_5_4_0-lib-${project.version}</finalName>
-              <descriptors>
-                <descriptor>src/main/assemblies/data-collector-cdh_5_4_0-lib.xml</descriptor>
               </descriptors>
             </configuration>
           </execution>
@@ -223,21 +148,6 @@
             </configuration>
           </execution>
           <execution>
-            <id>apache-kafka-0.8.2.0</id>
-            <phase>package</phase>
-            <goals>
-              <goal>single</goal>
-            </goals>
-            <configuration>
-              <appendAssemblyId>false</appendAssemblyId>
-              <attach>false</attach>
-              <finalName>streamsets-datacollector-apache-kafka_0_8_2_0-lib-${project.version}</finalName>
-              <descriptors>
-                <descriptor>src/main/assemblies/data-collector-apache-kafka_0_8_2_0-lib.xml</descriptor>
-              </descriptors>
-            </configuration>
-          </execution>
-          <execution>
             <id>apache-kafka-0.8.2.1</id>
             <phase>package</phase>
             <goals>
@@ -264,21 +174,6 @@
               <finalName>streamsets-datacollector-cdh_kafka_1_2_0-lib-${project.version}</finalName>
               <descriptors>
                 <descriptor>src/main/assemblies/data-collector-cdh_kafka_1_2_0-lib.xml</descriptor>
-              </descriptors>
-            </configuration>
-          </execution>
-          <execution>
-            <id>cdh5_4_0-cluster-cdh_kafka_1_2_0-lib</id>
-            <phase>package</phase>
-            <goals>
-              <goal>single</goal>
-            </goals>
-            <configuration>
-              <appendAssemblyId>false</appendAssemblyId>
-              <attach>false</attach>
-              <finalName>streamsets-datacollector-cdh5_4_0-cluster-cdh_kafka_1_2_0-lib-${project.version}</finalName>
-              <descriptors>
-                <descriptor>src/main/assemblies/data-collector-cdh5_4_0-cluster-cdh_kafka_1_2_0-lib.xml</descriptor>
               </descriptors>
             </configuration>
           </execution>

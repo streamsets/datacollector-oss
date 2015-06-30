@@ -112,27 +112,7 @@
       </dependency>
       <dependency>
         <groupId>com.streamsets</groupId>
-        <artifactId>streamsets-datacollector-cdh5_2_1-lib</artifactId>
-        <version>${project.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>com.streamsets</groupId>
-        <artifactId>streamsets-datacollector-cdh5_2_3-lib</artifactId>
-        <version>${project.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>com.streamsets</groupId>
         <artifactId>streamsets-datacollector-cdh5_2_4-lib</artifactId>
-        <version>${project.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>com.streamsets</groupId>
-        <artifactId>streamsets-datacollector-cdh5_3_0-lib</artifactId>
-        <version>${project.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>com.streamsets</groupId>
-        <artifactId>streamsets-datacollector-cdh5_3_1-lib</artifactId>
         <version>${project.version}</version>
       </dependency>
       <dependency>
@@ -148,11 +128,6 @@
       <dependency>
         <groupId>com.streamsets</groupId>
         <artifactId>streamsets-datacollector-apache-kafka_0_8_1_1-lib</artifactId>
-        <version>${project.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>com.streamsets</groupId>
-        <artifactId>streamsets-datacollector-apache-kafka_0_8_2_0-lib</artifactId>
         <version>${project.version}</version>
       </dependency>
       <dependency>
@@ -213,11 +188,6 @@
       <dependency>
         <groupId>com.streamsets</groupId>
         <artifactId>streamsets-datacollector-cdh5_4_1-lib</artifactId>
-        <version>${project.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>com.streamsets</groupId>
-        <artifactId>streamsets-datacollector-cdh5_4_0-cluster-cdh_kafka_1_2_0-lib</artifactId>
         <version>${project.version}</version>
       </dependency>
       <dependency>

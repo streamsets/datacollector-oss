@@ -60,11 +60,6 @@
     </dependency>
     <dependency>
       <groupId>com.streamsets</groupId>
-      <artifactId>streamsets-datacollector-cdh5_3_2-lib</artifactId>
-      <scope>provided</scope>
-    </dependency>
-    <dependency>
-      <groupId>com.streamsets</groupId>
       <artifactId>streamsets-datacollector-hdp_2_2_0-lib</artifactId>
       <scope>provided</scope>
     </dependency>
@@ -86,11 +81,6 @@
     <dependency>
       <groupId>com.streamsets</groupId>
       <artifactId>streamsets-datacollector-cdh5_4_1-lib</artifactId>
-      <scope>provided</scope>
-    </dependency>
-    <dependency>
-      <groupId>com.streamsets</groupId>
-      <artifactId>streamsets-datacollector-cdh5_4_0-cluster-cdh_kafka_1_2_0-lib</artifactId>
       <scope>provided</scope>
     </dependency>
     <dependency>
@@ -158,32 +148,12 @@
       <dependencies>
         <dependency>
           <groupId>com.streamsets</groupId>
-          <artifactId>streamsets-datacollector-cdh5_2_1-lib</artifactId>
-          <scope>provided</scope>
-        </dependency>
-        <dependency>
-          <groupId>com.streamsets</groupId>
-          <artifactId>streamsets-datacollector-cdh5_2_3-lib</artifactId>
+          <artifactId>streamsets-datacollector-cdh5_3_2-lib</artifactId>
           <scope>provided</scope>
         </dependency>
         <dependency>
           <groupId>com.streamsets</groupId>
           <artifactId>streamsets-datacollector-cdh5_2_4-lib</artifactId>
-          <scope>provided</scope>
-        </dependency>
-        <dependency>
-          <groupId>com.streamsets</groupId>
-          <artifactId>streamsets-datacollector-cdh5_3_0-lib</artifactId>
-          <scope>provided</scope>
-        </dependency>
-        <dependency>
-          <groupId>com.streamsets</groupId>
-          <artifactId>streamsets-datacollector-cdh5_3_1-lib</artifactId>
-          <scope>provided</scope>
-        </dependency>
-        <dependency>
-          <groupId>com.streamsets</groupId>
-          <artifactId>streamsets-datacollector-cdh5_4_0-lib</artifactId>
           <scope>provided</scope>
         </dependency>
         <dependency>
@@ -198,22 +168,7 @@
         </dependency>
         <dependency>
           <groupId>com.streamsets</groupId>
-          <artifactId>streamsets-datacollector-apache-kafka_0_8_2_0-lib</artifactId>
-          <scope>provided</scope>
-        </dependency>
-        <dependency>
-          <groupId>com.streamsets</groupId>
           <artifactId>streamsets-datacollector-elasticsearch_1_4_4-lib</artifactId>
-          <scope>provided</scope>
-        </dependency>
-        <dependency>
-          <groupId>com.streamsets</groupId>
-          <artifactId>streamsets-datacollector-cassandra_2_1_5-lib</artifactId>
-          <scope>provided</scope>
-        </dependency>
-        <dependency>
-          <groupId>com.streamsets</groupId>
-          <artifactId>streamsets-datacollector-mongodb_3_0_2-lib</artifactId>
           <scope>provided</scope>
         </dependency>
         <dependency>
