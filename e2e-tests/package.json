@@ -10,7 +10,7 @@
     "grunt-protractor-runner": "1.2.1",
     "grunt-shell": "1.1.2",
     "phantomjs": "^1.9.17",
-    "protractor": "^1.1.1"
+    "protractor": "2.1.0"
   },
   "scripts": {
     "update-webdriver": "webdriver-manager update",

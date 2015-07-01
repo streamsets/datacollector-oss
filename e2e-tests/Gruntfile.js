@@ -35,7 +35,17 @@ module.exports = function(grunt) {
         options: {
           args: {
             baseUrl: 'http://localhost:18630/',
-            browser: 'chrome'
+            browser: 'chrome',
+            suite: 'restAPI,ui'
+          }
+        }
+      },
+      safari: {
+        options: {
+          args: {
+            baseUrl: 'http://localhost:18630/',
+            browser: 'safari',
+            suite: 'restAPI,ui'
           }
         }
       },
@@ -43,7 +53,8 @@ module.exports = function(grunt) {
         options: {
           args: {
             baseUrl: 'http://localhost:18630/',
-            browser: 'firefox'
+            browser: 'firefox',
+            suite: 'restAPI,ui'
           }
         }
       },
@@ -51,16 +62,17 @@ module.exports = function(grunt) {
         options: {
           args: {
             baseUrl: 'http://localhost:18630/',
-            browser: 'phantomjs'
+            browser: 'phantomjs',
+            suite: 'restAPI'
           }
         }
       },
       clean: {
-        configFile: "src/test/protractorClean.conf.js",
         options: {
           args: {
             baseUrl: 'http://localhost:18630/',
-            browser: 'chrome'
+            browser: 'chrome',
+            suite: 'clean'
           }
         }
       }
@@ -74,10 +86,11 @@ module.exports = function(grunt) {
 
   grunt.registerTask( 'firefox', ['protractor:firefox']);
 
+  grunt.registerTask( 'safari', ['protractor:safari']);
+
   grunt.registerTask( 'phantomjs', ['protractor:phantomjs']);
 
   grunt.registerTask( 'clean', ['protractor:clean']);
-
 
   grunt.registerTask( 'test', ['protractor:clean', 'protractor:chrome', 'protractor:clean', 'protractor:firefox']);
 

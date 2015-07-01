@@ -168,15 +168,21 @@ describe('StreamSets Data Collector App', function() {
     });
 
     it('should be able to toggle stage library and click on stage to add', function() {
-      browser.sleep(500);
+      browser.sleep(1000);
       //Select Sample Pipeline
 
       //Toggle Library Pane
       element(by.css('[ng-click="toggleLibraryPanel()"]')).click();
 
       element.all(by.repeater('pipeline in pipelines')).then(function(pipelines) {
+
+        //browser.wait(pipelines[0].isPresent);
+
         //Select 1 pipeline
-        pipelines[0].click();
+        //pipelines[0].click();
+
+
+
         element(by.css('[ng-click="toggleLibraryPanel()"]')).click();
       });
 
