@@ -1,3 +1,0 @@
-{
-  "stageClasses" : [ "com.streamsets.pipeline.stagelibrary.TestClassLoaderStageLibraryTask$DummyStage" ]
-}
