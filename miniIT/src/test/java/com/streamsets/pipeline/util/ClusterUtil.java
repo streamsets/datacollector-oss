@@ -83,7 +83,16 @@ public class ClusterUtil {
     serverURI = miniSDC.getServerURI();
     miniSDC.createPipeline(pipelineJson);
     miniSDC.startPipeline();
-    Thread.sleep(60000);
+
+    int attempt = 0;
+    //Hard wait for 2 minutes
+    while(miniSDC.getListOfSlaveSDCURI().size() == 0 && attempt < 6) {
+      Thread.sleep(20000);
+      attempt++;
+    }
+    if(miniSDC.getListOfSlaveSDCURI().size() == 0) {
+      throw new IllegalStateException("Timed out waiting for slaves to come up.");
+    }
   }
 
   public static void tearDownCluster(String testName) throws Exception {
