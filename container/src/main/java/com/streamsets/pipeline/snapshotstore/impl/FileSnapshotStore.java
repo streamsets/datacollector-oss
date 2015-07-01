@@ -39,7 +39,7 @@ public class FileSnapshotStore implements SnapshotStore {
   private boolean inProgress = false;
   private String inProgressPipelineName = "";
   private String inProgressSnapshotName = "";
-  private ObjectMapper json;
+  private final ObjectMapper json;
 
   public void setInProgress(String pipelineName, String rev, String snapshotName, boolean inProgress) {
     PipelineDirectoryUtil.createPipelineSnapshotDir(runtimeInfo, pipelineName, rev, snapshotName);
@@ -53,31 +53,31 @@ public class FileSnapshotStore implements SnapshotStore {
     json = ObjectMapperFactory.get();
   }
 
+  @Override
   public void storeSnapshot(String pipelineName, String rev, String snapshotName, List<StageOutput> snapshot) {
-    try {
-      SnapshotInfo info = new SnapshotInfo(pipelineName, snapshotName, new Date());
-
-      json.writeValue(new DataStore(getPipelineSnapshotFile(pipelineName, rev,
-        snapshotName)).getOutputStream(), new SnapshotJson(new Snapshot(snapshot)));
-
-      json.writeValue(new DataStore(getPipelineSnapshotInfoFile(pipelineName, rev,
-        snapshotName)).getOutputStream(), new SnapshotInfoJson(info));
-
-      inProgress = false;
+    SnapshotInfo info = new SnapshotInfo(pipelineName, snapshotName, new Date());
+    try (OutputStream os = new DataStore(getPipelineSnapshotFile(pipelineName, rev, snapshotName)).getOutputStream()) {
+      json.writeValue(os, new SnapshotJson(new Snapshot(snapshot)));
     } catch (IOException e) {
       throw new RuntimeException(e);
     }
-
+    try (OutputStream os =
+      new DataStore(getPipelineSnapshotInfoFile(pipelineName, rev, snapshotName)).getOutputStream();) {
+      json.writeValue(os, new SnapshotInfoJson(info));
+    } catch (IOException e) {
+      throw new RuntimeException(e);
+    }
+    inProgress = false;
   }
 
+  @Override
   public List<StageOutput> retrieveSnapshot(String pipelineName, String rev, String snapshotName) {
     if(!PipelineDirectoryUtil.getPipelineDir(runtimeInfo, pipelineName, rev).exists() ||
       !getPipelineSnapshotFile(pipelineName, rev, snapshotName).exists()) {
       return Collections.emptyList();
     }
-    try {
-      List<StageOutputJson> snapshotJson = ObjectMapperFactory.get().readValue(
-        new DataStore(getPipelineSnapshotFile(pipelineName, rev, snapshotName)).getInputStream(), SnapshotJson.class).getSnapshot();
+    try (InputStream is = new DataStore(getPipelineSnapshotFile(pipelineName, rev, snapshotName)).getInputStream()) {
+      List<StageOutputJson> snapshotJson = ObjectMapperFactory.get().readValue(is, SnapshotJson.class).getSnapshot();
       return BeanHelper.unwrapStageOutput(snapshotJson);
     } catch (IOException e) {
       throw new RuntimeException(e);

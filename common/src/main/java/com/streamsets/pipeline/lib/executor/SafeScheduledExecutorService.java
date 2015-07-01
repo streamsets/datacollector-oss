@@ -69,6 +69,10 @@ public class SafeScheduledExecutorService {
     scheduledExecutorService.submit(new SafeRunnable(runnable, false));
   }
 
+  public <T> Future<T> submit(Callable<T> task) {
+    return scheduledExecutorService.submit(new SafeCallable<T>(task, true));
+  }
+
   public void scheduleAtFixedRate(Runnable command,
                                                             long initialDelay,
                                                             long period,
@@ -128,6 +132,32 @@ public class SafeScheduledExecutorService {
             throw new RuntimeException(throwable);
           }
         }
+      }
+    }
+  }
+
+  private class SafeCallable<T> implements Callable<T> {
+
+    private final Callable<T> delegate;
+    private final String delegateName;
+    private final boolean propagateErrors;
+
+    public SafeCallable(Callable<T> delegate, boolean propagateErrors) {
+      this.delegate = delegate;
+      this.delegateName = delegate.toString(); // call toString() in caller thread in case of error
+      this.propagateErrors = propagateErrors;
+    }
+
+    @Override
+    public T call() throws Exception {
+      try {
+        return delegate.call();
+      } catch (Throwable throwable) {
+        executorSupport.uncaughtThrowableInCallable(throwable, delegate, delegateName);
+        if (propagateErrors) {
+          throw throwable;
+        }
+        return null;
       }
     }
   }

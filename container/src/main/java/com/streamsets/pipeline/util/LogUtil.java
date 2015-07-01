@@ -5,42 +5,48 @@
  */
 package com.streamsets.pipeline.util;
 
+import com.streamsets.dataCollector.execution.store.FilePipelineStateStore;
 import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.prodmanager.Constants;
+
 import org.apache.log4j.Appender;
+import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import org.apache.log4j.PatternLayout;
 import org.apache.log4j.RollingFileAppender;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
 
 public class LogUtil {
 
   private static final String PIPELINE = "pipeline";
   private static final String DOT = ".";
   private static final String LAYOUT_PATTERN = "%m%n";
+  private static final org.slf4j.Logger LOG = LoggerFactory.getLogger(LogUtil.class);
 
-  /*cache all registered loggers, otherwise each time a new pipeline is created, a new rolling appender is added
-  * to the logger*/
-  private static final Map<String, String> registeredLoggers = new HashMap<>();
-
-  public static void registerLogger(String pipelineName, String rev, String suffix, String filename,
-                             Configuration configuration) {
+  public static boolean registerLogger(String pipelineName, String rev, String suffix, String filename,
+    Configuration configuration) {
     String loggerName = getLoggerName(pipelineName, rev, suffix);
-    if(registeredLoggers.containsKey(loggerName)) {
-      if(!registeredLoggers.get(loggerName).equals(filename)) {
-        throw new RuntimeException(Utils.format("The pipeline '{}' revision '{}' suffix '{}' is already registered.",
-          pipelineName, rev, suffix));
-      }
-      //no op
-      return;
-    }
+    boolean registered;
     Logger logger = Logger.getLogger(loggerName);
-    logger.setAdditivity(false);
-    logger.addAppender(createRollingFileAppender(loggerName, filename, configuration));
-    registeredLoggers.put(loggerName, filename);
+    if (logger.getAppender(loggerName) != null) {
+      LOG.debug("Logger '{}' already exists", loggerName);
+      registered = false;
+    }
+    else {
+      synchronized (logger) {
+        if (logger.getAppender(loggerName) == null) {
+          logger.setAdditivity(false);
+          logger.addAppender(createRollingFileAppender(loggerName, filename, configuration));
+          registered = true;
+        } else {
+          LOG.debug("Logger '{}' already exists", loggerName);
+          registered = false;
+        }
+      }
+    }
+    return registered;
   }
 
   public static void log(String pipelineName, String rev, String suffix, String message) {
@@ -48,15 +54,13 @@ public class LogUtil {
     Logger.getLogger(loggerName).error(message);
   }
 
-  public static void resetRollingFileAppender(String pipeline, String rev, String suffix, String filename,
-                                              Configuration configuration) {
+  public static void resetRollingFileAppender(String pipeline, String rev, String suffix) {
     String loggerName = getLoggerName(pipeline, rev, suffix);
     Logger logger =Logger.getLogger(loggerName);
     logger.removeAppender(loggerName);
-    logger.addAppender(createRollingFileAppender(loggerName, filename, configuration));
   }
 
-  private static String getLoggerName(String pipelineName, String rev, String suffix) {
+  static String getLoggerName(String pipelineName, String rev, String suffix) {
     return PIPELINE + DOT + pipelineName + DOT + rev + DOT + suffix;
   }
 
@@ -78,13 +82,5 @@ public class LogUtil {
     appender.setName(loggerName);
 
     return appender;
-  }
-
-  public static void unregisterAllLoggers() {
-    for(Map.Entry<String, String> entry : registeredLoggers.entrySet()) {
-      Logger logger = Logger.getLogger(entry.getKey());
-      logger.removeAppender(entry.getKey());
-    }
-    registeredLoggers.clear();
   }
 }

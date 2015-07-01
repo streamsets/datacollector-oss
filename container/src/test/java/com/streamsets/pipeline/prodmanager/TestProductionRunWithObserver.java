@@ -62,7 +62,6 @@ public class TestProductionRunWithObserver {
   @After
   public void tearDown() throws InterruptedException, PipelineManagerException {
     TestUtil.stopPipelineIfNeeded(manager);
-    LogUtil.unregisterAllLoggers();
     manager.stop();
   }
 

@@ -11,11 +11,14 @@ import com.streamsets.pipeline.main.RuntimeInfo;
 import com.streamsets.pipeline.restapi.bean.BeanHelper;
 import com.streamsets.pipeline.restapi.bean.SourceOffsetJson;
 import com.streamsets.pipeline.runner.SourceOffsetTracker;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 
 public class ProductionSourceOffsetTracker implements SourceOffsetTracker {
 
@@ -69,10 +72,8 @@ public class ProductionSourceOffsetTracker implements SourceOffsetTracker {
     SourceOffset sourceOffset;
     if(pipelineOffsetFile.exists()) {
       //offset file exists, read from it
-      try {
-        SourceOffsetJson sourceOffsetJson =
-          ObjectMapperFactory.get().readValue(new DataStore(pipelineOffsetFile).getInputStream(),
-            SourceOffsetJson.class);
+      try (InputStream is = new DataStore(pipelineOffsetFile).getInputStream()) {
+        SourceOffsetJson sourceOffsetJson = ObjectMapperFactory.get().readValue(is, SourceOffsetJson.class);
         sourceOffset = BeanHelper.unwrapSourceOffset(sourceOffsetJson);
       } catch (IOException e) {
         throw new RuntimeException(e);
@@ -90,10 +91,9 @@ public class ProductionSourceOffsetTracker implements SourceOffsetTracker {
 
   private void saveOffset(String pipelineName, String rev, SourceOffset s) {
     LOG.debug("Saving offset {} for pipeline {}", s.getOffset(), pipelineName);
-    try {
-      ObjectMapperFactory.get().writeValue((new DataStore(OffsetFileUtil.getPipelineOffsetFile(runtimeInfo,
-          pipelineName, rev)).getOutputStream()),
-        BeanHelper.wrapSourceOffset(s));
+    try (OutputStream os = new DataStore(OffsetFileUtil.getPipelineOffsetFile(runtimeInfo,
+          pipelineName, rev)).getOutputStream()) {
+      ObjectMapperFactory.get().writeValue((os), BeanHelper.wrapSourceOffset(s));
     } catch (IOException e) {
       LOG.error("Failed to save offset value {}. Reason {}", s.getOffset(), e.getMessage(), e);
       throw new RuntimeException(e);

@@ -21,6 +21,7 @@ import com.streamsets.pipeline.restapi.bean.PipelineStateJson;
 import com.streamsets.pipeline.util.ContainerError;
 import com.streamsets.pipeline.util.LogUtil;
 import com.streamsets.pipeline.util.PipelineDirectoryUtil;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -28,6 +29,8 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.FilenameFilter;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.io.Reader;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -48,7 +51,7 @@ public class StateTracker {
   private volatile PipelineState pipelineState;
   private final com.streamsets.pipeline.util.Configuration configuration;
 
-  private List<StateEventListener> stateEventListenerList = new ArrayList<>();
+  private final List<StateEventListener> stateEventListenerList = new ArrayList<>();
 
   public void addStateEventListener(StateEventListener stateListener) {
     stateEventListenerList.add(stateListener);
@@ -150,9 +153,8 @@ public class StateTracker {
   }
 
   private PipelineState getPersistedState() throws PipelineManagerException {
-    try {
-      PipelineStateJson pipelineStateJsonBean = ObjectMapperFactory.get().readValue(
-        new DataStore(getStateFile()).getInputStream(), PipelineStateJson.class);
+    try (InputStream is = new DataStore(getStateFile()).getInputStream()){
+      PipelineStateJson pipelineStateJsonBean = ObjectMapperFactory.get().readValue(is, PipelineStateJson.class);
       return pipelineStateJsonBean.getPipelineState();
     } catch (IOException e) {
       LOG.error(ContainerError.CONTAINER_0101.getMessage(), e.getMessage(), e);
@@ -162,15 +164,12 @@ public class StateTracker {
 
   private void persistPipelineState(PipelineState pipelineState) throws PipelineManagerException {
     //write to runInfo/pipelineState.json as well as /runInfo/<pipelineName>/pipelineState.json
-    try {
-      ObjectMapperFactory.get().writeValue((new DataStore(getStateFile()).getOutputStream()),
-        BeanHelper.wrapPipelineState(pipelineState));
-
+    try (OutputStream os = new DataStore(getStateFile()).getOutputStream()){
+      ObjectMapperFactory.get().writeValue(os, BeanHelper.wrapPipelineState(pipelineState));
       //In addition, append the state of the pipeline to the pipelineState.json present in the directory of that
       //pipeline
       LogUtil.log(pipelineState.getName(), pipelineState.getRev(), STATE,
         ObjectMapperFactory.get().writeValueAsString(BeanHelper.wrapPipelineState(pipelineState)));
-
     } catch (IOException e) {
       LOG.error(ContainerError.CONTAINER_0100.getMessage(), e.getMessage(), e);
       throw new PipelineManagerException(ContainerError.CONTAINER_0100, e.getMessage(), e);
@@ -217,8 +216,7 @@ public class StateTracker {
     for(File f : getStateFiles(pipelineName, rev)) {
       f.delete();
     }
-    LogUtil.resetRollingFileAppender(pipelineName, rev, STATE, getPipelineStateFile(pipelineName, rev)
-      .getAbsolutePath(), configuration);
+    LogUtil.resetRollingFileAppender(pipelineName, rev, STATE);
   }
 
   private File[] getStateFiles(String pipelineName, String rev) {

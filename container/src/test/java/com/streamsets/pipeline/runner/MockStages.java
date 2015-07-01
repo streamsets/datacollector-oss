@@ -686,7 +686,6 @@ public class MockStages {
         null, stages, getErrorStageConfig());
   }
 
-
   @SuppressWarnings("unchecked")
   /**
    *     p1 -  p4
@@ -774,6 +773,21 @@ public class MockStages {
       lanes);
     stages.add(source);
     StageConfiguration target = new StageConfiguration("t", "default", "targetName", "1.0.0",
+      new ArrayList<ConfigConfiguration>(), null, lanes, new ArrayList<String>());
+    stages.add(target);
+    return new PipelineConfiguration(PipelineStoreTask.SCHEMA_VERSION, UUID.randomUUID(), null, createPipelineConfigs(),
+                                     null, stages, getErrorStageConfig());
+  }
+
+  @SuppressWarnings("unchecked")
+  public static PipelineConfiguration createPipelineConfigurationSourceTargetDifferentInstance() {
+    List<String> lanes = ImmutableList.of("a");
+    List<StageConfiguration> stages = new ArrayList<>();
+    StageConfiguration source = new StageConfiguration("s1", "default", "sourceName", "1.0.0",
+      new ArrayList<ConfigConfiguration>(), null, new ArrayList<String>(),
+      lanes);
+    stages.add(source);
+    StageConfiguration target = new StageConfiguration("t1", "default", "targetName", "1.0.0",
       new ArrayList<ConfigConfiguration>(), null, lanes, new ArrayList<String>());
     stages.add(target);
     return new PipelineConfiguration(PipelineStoreTask.SCHEMA_VERSION, UUID.randomUUID(), null, createPipelineConfigs(),

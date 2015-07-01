@@ -31,7 +31,8 @@ public class StagePipe extends Pipe<StagePipe.Context> {
 
   //Runtime stat gauge name
   public static final String RUNTIME_STATS_GAUGE = "RuntimeStatsGauge";
-
+  // Remove after SDC-983
+  public static final String SKIP_RUNTIME_STATS_METRIC = "SKIP_RUNTIME_STATS_METRIC";
   private Timer processingTimer;
   private Counter inputRecordsCounter;
   private Counter outputRecordsCounter;
@@ -110,7 +111,10 @@ public class StagePipe extends Pipe<StagePipe.Context> {
             .setStageRuntime(getStage()).build();
         }
       }));
-    createRuntimeStatsGauge(metrics);
+    // Remove after SDC-983
+    if (!Boolean.getBoolean(SKIP_RUNTIME_STATS_METRIC)) {
+      createRuntimeStatsGauge(metrics);
+    }
   }
 
   @Override

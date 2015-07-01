@@ -7,12 +7,10 @@ package com.streamsets.dataCollector.execution.manager;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.UUID;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ConcurrentMap;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 
 import javax.inject.Inject;
@@ -23,58 +21,68 @@ import org.slf4j.LoggerFactory;
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
+import com.google.common.cache.RemovalListener;
+import com.google.common.cache.RemovalNotification;
 import com.streamsets.dataCollector.execution.Manager;
 import com.streamsets.dataCollector.execution.PipelineState;
 import com.streamsets.dataCollector.execution.PipelineStateStore;
+import com.streamsets.dataCollector.execution.PipelineStatus;
 import com.streamsets.dataCollector.execution.PreviewStatus;
 import com.streamsets.dataCollector.execution.Previewer;
 import com.streamsets.dataCollector.execution.PreviewerListener;
 import com.streamsets.dataCollector.execution.Runner;
 import com.streamsets.dataCollector.execution.preview.SyncPreviewer;
+import com.streamsets.dataCollector.execution.runner.AsyncRunner;
 import com.streamsets.dataCollector.execution.runner.ClusterRunner;
 import com.streamsets.dataCollector.execution.runner.StandaloneRunner;
-
-import com.streamsets.dataCollector.execution.util.PipelineStatusUtil;
 import com.streamsets.pipeline.api.ExecutionMode;
 import com.streamsets.pipeline.api.impl.Utils;
-import com.streamsets.pipeline.config.PipelineConfiguration;
-import com.streamsets.pipeline.definition.PipelineDefConfigs;
 import com.streamsets.pipeline.lib.executor.SafeScheduledExecutorService;
 import com.streamsets.pipeline.main.RuntimeInfo;
-import com.streamsets.pipeline.prodmanager.StandalonePipelineManagerTask;
 import com.streamsets.pipeline.stagelibrary.StageLibraryTask;
 import com.streamsets.pipeline.store.PipelineInfo;
 import com.streamsets.pipeline.store.PipelineStoreException;
 import com.streamsets.pipeline.store.PipelineStoreTask;
 import com.streamsets.pipeline.task.AbstractTask;
 import com.streamsets.pipeline.util.Configuration;
+import com.streamsets.pipeline.util.ContainerError;
 
 public class PipelineManager extends AbstractTask implements Manager, PreviewerListener  {
 
-  private static final Logger LOG = LoggerFactory.getLogger(StandalonePipelineManagerTask.class);
+  private static final Logger LOG = LoggerFactory.getLogger(PipelineManager.class);
   private static final String PIPELINE_MANAGER = "PipelineManager";
   private final RuntimeInfo runtimeInfo;
   private final Configuration configuration;
   private final PipelineStoreTask pipelineStore;
   private final PipelineStateStore pipelineStateStore;
-  private ConcurrentMap<String, Runner> runnerMap = new ConcurrentHashMap<String, Runner>();
+  //TODO- Change to cache with runner evicted when its in terminal status
+  private Cache<String, Runner> runnerCache;
   private Cache<String, Previewer> previewerCache;
   private final StageLibraryTask stageLibrary;
   private final SafeScheduledExecutorService previewExecutor;
   private final SafeScheduledExecutorService runnerExecutor;
+  static final long DEFAULT_RUNNER_EXPIRY_INTERVAL = 60*60*1000;
+  static final String RUNNER_EXPIRY_INTERVAL = "runner.expiry.interval";
+  private final long runnerExpiryInterval;
+  private final SafeScheduledExecutorService managerExecutor;
+  private ScheduledFuture<?> runnerExpiryFuture;
+  private static final String NAME_AND_REV_SEPARATOR = "::";
 
   @Inject
   public PipelineManager(RuntimeInfo runtimeInfo,
       Configuration configuration, PipelineStoreTask pipelineStore, PipelineStateStore pipelineStateStore,
-      StageLibraryTask stageLibrary, SafeScheduledExecutorService previewExecutor, SafeScheduledExecutorService runnerExecutor) {
+      StageLibraryTask stageLibrary, SafeScheduledExecutorService previewExecutor, SafeScheduledExecutorService runnerExecutor,
+      SafeScheduledExecutorService managerExecutor) {
     super(PIPELINE_MANAGER);
     this.runtimeInfo = runtimeInfo;
     this.configuration = configuration;
+    runnerExpiryInterval = this.configuration.get(RUNNER_EXPIRY_INTERVAL, DEFAULT_RUNNER_EXPIRY_INTERVAL);
     this.pipelineStore = pipelineStore;
     this.pipelineStateStore = pipelineStateStore;
     this.stageLibrary = stageLibrary;
     this.previewExecutor = previewExecutor;
     this.runnerExecutor = runnerExecutor;
+    this.managerExecutor = managerExecutor;
   }
 
   @Override
@@ -92,40 +100,29 @@ public class PipelineManager extends AbstractTask implements Manager, PreviewerL
     Utils.checkNotNull(previewerId, "previewerId");
     Previewer previewer = previewerCache.getIfPresent(previewerId);
     if (previewer == null) {
-      LOG.warn("Cannot find the previewer in cached for id: " + previewerId);
+      LOG.warn("Cannot find the previewer in cache for id: '{}'", previewerId);
     }
     return previewer;
   }
 
-  private String getNameAndRevString(String name, String rev) {
-     return name + "::" + rev;
-  }
-
   @Override
-  public Runner getRunner(String name, String rev, String user) throws PipelineStoreException {
+  public Runner getRunner(final String name, final String rev, String user) throws PipelineStoreException {
+    final String nameAndRevString = getNameAndRevString(name, rev);
     Runner runner;
-    String nameAndRevString = getNameAndRevString(name, rev);
-    if (runnerMap.containsKey(nameAndRevString)) {
-      runner = runnerMap.get(nameAndRevString);
-    } else {
-      PipelineConfiguration pipelineConf = pipelineStore.load(name, rev);
-      ExecutionMode executionMode =
-        ExecutionMode.valueOf((String) pipelineConf.getConfiguration(PipelineDefConfigs.EXECUTION_MODE_CONFIG)
-          .getValue());
-      switch (executionMode) {
-        case CLUSTER:
-          // pass the scheduled executor and runner executor
-          runner = new ClusterRunner();
-          break;
-        case STANDALONE:
-          runner = new StandaloneRunner(name, rev, user, runtimeInfo, configuration, pipelineStore, pipelineStateStore, stageLibrary, runnerExecutor);
-          break;
-        default:
-          throw new IllegalArgumentException(Utils.format("Invalid execution mode '{}'", executionMode));
-      }
-      Runner alreadyPresentRunner = runnerMap.putIfAbsent(nameAndRevString, runner);
-      if (alreadyPresentRunner != null) {
-        runner = alreadyPresentRunner;
+    try {
+      runner = runnerCache.get(nameAndRevString, new Callable<Runner>() {
+        @Override
+        public Runner call() throws PipelineStoreException {
+          return getRunner(pipelineStateStore.getState(name, rev), name, rev);
+        }
+      });
+    } catch (ExecutionException ex) {
+      if (ex.getCause() instanceof RuntimeException) {
+        throw (RuntimeException) ex.getCause();
+      } else if (ex.getCause() instanceof PipelineStoreException) {
+        throw (PipelineStoreException) ex.getCause();
+      } else {
+        throw new PipelineStoreException(ContainerError.CONTAINER_0114, ex.getMessage(), ex);
       }
     }
     return runner;
@@ -139,7 +136,7 @@ public class PipelineManager extends AbstractTask implements Manager, PreviewerL
       String name = pipelineInfo.getName();
       String rev = pipelineInfo.getLastRev();
       PipelineState pipelineState = pipelineStateStore.getState(name, rev);
-      Utils.checkState(pipelineState != null, "State for pipeline: " + name + " of revision " + rev + " doesn't exist");
+      Utils.checkState(pipelineState != null, Utils.format("State for pipeline: '{}::{}' doesn't exist", name, rev));
       pipelineStateList.add(pipelineState);
     }
     return pipelineStateList;
@@ -147,103 +144,134 @@ public class PipelineManager extends AbstractTask implements Manager, PreviewerL
 
   @Override
   public boolean isPipelineActive(String name, String rev) throws PipelineStoreException {
-    PipelineState pipelineState = pipelineStateStore.getState(name, rev);
-    return PipelineStatusUtil.isActive(pipelineState.getStatus());
+    Runner runner = runnerCache.getIfPresent(getNameAndRevString(name, rev));
+    return (runner == null) ? false : runner.getStatus().isActive();
   }
 
   @Override
   public void initTask() {
     previewerCache = CacheBuilder.newBuilder()
-      .expireAfterAccess(30, TimeUnit.MINUTES).build();
+      .expireAfterAccess(30, TimeUnit.MINUTES).removalListener(new RemovalListener<String, Previewer>() {
+        @Override
+        public void onRemoval(RemovalNotification<String, Previewer> removal) {
+          Previewer previewer = removal.getValue();
+          LOG.warn("Evicting idle previewer '{}::{}'::'{}' in status '{}'",
+            previewer.getName(), previewer.getRev(), previewer.getId(), previewer.getStatus());
+        }
+      }).build();
+
+    runnerCache = CacheBuilder.newBuilder().build();
+
     List<PipelineInfo> pipelineInfoList;
     try {
       pipelineInfoList = pipelineStore.getPipelines();
-      for (PipelineInfo pipelineInfo : pipelineInfoList) {
-        String name = pipelineInfo.getName();
-        String rev = pipelineInfo.getLastRev();
+    } catch (PipelineStoreException ex) {
+      throw new RuntimeException("Cannot load the list of pipelines from StateStore", ex);
+    }
+    for (PipelineInfo pipelineInfo : pipelineInfoList) {
+      String name = pipelineInfo.getName();
+      String rev = pipelineInfo.getLastRev();
+      try {
         PipelineState pipelineState = pipelineStateStore.getState(name, rev);
         // Create runner if active
-        if (PipelineStatusUtil.isActive(pipelineState.getStatus())) {
-          LOG.debug("Pipeline status of pipeline: " + name + " and rev " + rev + " is:" + pipelineState.getStatus());
-          ExecutionMode executionMode = pipelineState.getExecutionMode();
-          Runner runner;
-          switch (executionMode) {
-            case CLUSTER:
-              runner = new ClusterRunner();
-              break;
-            case STANDALONE:
-              runner = new StandaloneRunner(name, rev, pipelineState.getUser(), runtimeInfo, configuration, pipelineStore, pipelineStateStore, stageLibrary, runnerExecutor);
-              break;
-            default:
-              throw new IllegalArgumentException(Utils.format("Invalid execution mode '{}'", executionMode));
+        if (pipelineState.getStatus().isActive()) {
+          Runner runner = getRunner(pipelineState, name, rev);
+          runner.prepareForDataCollectorStart();
+          if (runner.getStatus() == PipelineStatus.DISCONNECTED) {
+            runnerCache.put(getNameAndRevString(name, rev), runner);
+            runner.onDataCollectorStart();
           }
-          Runner alreadyPresentRunner = runnerMap.putIfAbsent(getNameAndRevString(name, rev), runner);
-          if (alreadyPresentRunner != null) {
-            runner = alreadyPresentRunner;
+        }
+      } catch (Exception ex) {
+        LOG.error(Utils.format("Error while processing pipeline '{}::{}'", name, rev), ex);
+      }
+    }
+
+    runnerExpiryFuture = managerExecutor.scheduleReturnFuture(new Runnable() {
+      @Override
+      public void run() {
+        for (Runner runner : runnerCache.asMap().values()) {
+          try {
+            LOG.debug("Runner for pipeline '{}::{}' is in status: '{}'", runner.getName(), runner.getRev(),
+              runner.getStatus());
+            if (!runner.getStatus().isActive()) {
+              runner.close();
+              runnerCache.invalidate(getNameAndRevString(runner.getName(), runner.getRev()));
+              LOG.info("Removing runner for pipeline '{}::'{}'", runner.getName(), runner.getRev());
+            }
+          } catch (PipelineStoreException ex) {
+            LOG.warn("Cannot remove runner for pipeline: '{}::{}' due to '{}'", runner.getName(), runner.getRev(),
+              ex.getMessage(), ex);
           }
-          runner.onDataCollectorStart();
         }
       }
-    } catch (Exception e) {
-       throw new RuntimeException("Exception while initializing manager: " + e.getMessage(), e);
-    }
+    }, runnerExpiryInterval, TimeUnit.MILLISECONDS);
   }
 
   @VisibleForTesting
-  boolean isRunnerCreated(String name, String rev) {
-     return runnerMap.containsKey(getNameAndRevString(name, rev));
+  boolean isRunnerPresent(String name, String rev) {
+     return runnerCache.getIfPresent(getNameAndRevString(name, rev)) == null? false: true;
+
   }
 
   @Override
   protected void stopTask() {
-    previewerCache.invalidateAll();
-    for (Runner runner : runnerMap.values()) {
+    for (Runner runner : runnerCache.asMap().values()) {
       try {
+        runner.close();
         runner.onDataCollectorStop();
       } catch (Exception e) {
         LOG.warn("Failed to stop the runner for pipeline: {} and rev: {} due to: {}", runner.getName(),
           runner.getRev(), e.getMessage(), e);
       }
     }
-    runnerMap.clear();
-    if (runnerExecutor != null) {
-      runnerExecutor.shutdown();
+    runnerCache.invalidateAll();
+    for (Previewer previewer : previewerCache.asMap().values()) {
       try {
-        if (!runnerExecutor.awaitTermination(30, TimeUnit.SECONDS)) {
-          runnerExecutor.shutdownNow();
-          if (!runnerExecutor.awaitTermination(30, TimeUnit.SECONDS)) {
-            LOG.error("Runner Executor did not terminate");
-          }
-        }
-      } catch (InterruptedException e) {
-        LOG.warn(Utils.format("Forced termination. Reason {}", e.getMessage()));
+        previewer.stop();
+      } catch (Exception e) {
+        LOG.warn("Failed to stop the previewer: {}::{}::{} due to: {}", previewer.getName(),
+          previewer.getRev(), previewer.getId(), e.getMessage(), e);
       }
     }
-    if (previewExecutor != null) {
-      previewExecutor.shutdown();
-      try {
-        if (!previewExecutor.awaitTermination(30, TimeUnit.SECONDS)) {
-          previewExecutor.shutdownNow();
-          if (!previewExecutor.awaitTermination(30, TimeUnit.SECONDS)) {
-            LOG.error("Preview Executor did not terminate");
-          }
-        }
-      } catch (InterruptedException e) {
-        previewExecutor.shutdownNow();
-        LOG.warn(Utils.format("Forced termination. Reason {}", e.getMessage()));
-      }
-    }
-    LOG.debug("Stopped Production Pipeline Manager");
+    previewerCache.invalidateAll();
+    runnerExpiryFuture.cancel(true);
+    LOG.info("Stopped Production Pipeline Manager");
   }
 
   @Override
   public void statusChange(String id, PreviewStatus status) {
-    LOG.info("Status of previewer with id: " + id + " changed to " + status);
+    LOG.debug("Status of previewer with id: '{}' changed to status: '{}'", id, status);
   }
 
   @Override
   public void outputRetrieved(String id) {
-    LOG.info("Removing previewer with id: " + id + " from cache as output is retrieved");
+    LOG.debug("Removing previewer with id:  '{}' from cache as output is retrieved", id);
     previewerCache.invalidate(id);
   }
+
+  private Runner getRunner(PipelineState pipelineState, String name, String rev) {
+    LOG.debug("Pipeline status of pipeline: '{}::{}' is: '{}'", name, rev, pipelineState.getStatus());
+    ExecutionMode executionMode = pipelineState.getExecutionMode();
+    Runner runner;
+    switch (executionMode) {
+      case CLUSTER:
+        runner = new ClusterRunner();
+        break;
+      case STANDALONE:
+        StandaloneRunner standloneRunner =
+          new StandaloneRunner(name, rev, pipelineState.getUser(), runtimeInfo, configuration, pipelineStore,
+            pipelineStateStore, stageLibrary, runnerExecutor);
+        runner = new AsyncRunner(standloneRunner, runnerExecutor);
+        break;
+      default:
+        throw new IllegalArgumentException(Utils.format("Invalid execution mode '{}'", executionMode));
+    }
+    return runner;
+  }
+
+  private String getNameAndRevString(String name, String rev) {
+    return name + NAME_AND_REV_SEPARATOR + rev;
+  }
+
 }

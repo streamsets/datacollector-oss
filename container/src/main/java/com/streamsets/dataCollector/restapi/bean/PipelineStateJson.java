@@ -22,12 +22,12 @@ public class PipelineStateJson {
     @JsonProperty("name") String name,
     @JsonProperty("rev") String rev,
     @JsonProperty("user") String user,
-    @JsonProperty("state") StatusJson stateJson,
+    @JsonProperty("status") StatusJson statusJson,
     @JsonProperty("message") String message,
     @JsonProperty("timeStamp") long timeStamp,
     @JsonProperty("attributes") Map<String, Object> attributes,
     @JsonProperty("executionMode") ExecutionModeJson executionModeJson) {
-    pipelineState = new com.streamsets.dataCollector.execution.manager.PipelineStateImpl(name, rev, user, BeanHelper.unwrapState(stateJson),
+    pipelineState = new com.streamsets.dataCollector.execution.manager.PipelineStateImpl(name, rev, user, BeanHelper.unwrapState(statusJson),
       message, timeStamp, attributes, BeanHelper.unwrapExecutionMode(executionModeJson));
   }
 
@@ -43,7 +43,7 @@ public class PipelineStateJson {
     return pipelineState.getUser();
   }
 
-  public StatusJson getState() {
+  public StatusJson getStatus() {
     return BeanHelper.wrapState(pipelineState.getStatus());
   }
 

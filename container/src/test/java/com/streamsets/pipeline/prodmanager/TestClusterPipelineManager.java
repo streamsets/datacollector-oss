@@ -78,7 +78,6 @@ public class TestClusterPipelineManager {
 
   @Before
   public void setup() throws Exception {
-    LogUtil.unregisterAllLoggers();
     executorService = Executors.newCachedThreadPool();
     emptyCL = new URLClassLoader(new URL[0]);
     tempDir = Files.createTempDir();

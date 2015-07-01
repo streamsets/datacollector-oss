@@ -47,6 +47,7 @@ public enum ContainerError implements ErrorCode {
   CONTAINER_0112("Origin Parallelism cannot be less than 1"),
   CONTAINER_0113("Cannot delete history for pipeline '{}' when the pipeline is running"),
   CONTAINER_0114("Error while retrieving state from cache: '{}'"),
+  CONTAINER_0115("Failed to fetch history for pipeline: '{}', '{}' due to: '{}'"),
 
   // PipelineRunners
   CONTAINER_0150("Pipeline configuration error: {}"),
@@ -77,6 +78,7 @@ public enum ContainerError implements ErrorCode {
   CONTAINER_0207("Definition for Stage '{}' from library '{}' with version '{}' is not available"),
   CONTAINER_0208("Pipeline in state '{}' cannot be saved"),
   CONTAINER_0209("Pipeline state file '{}' doesn't exist"),
+  CONTAINER_0210("Cannot fetch JSON string: {}"),
 
   //Previewr
   CONTAINER_0250("Cannot create previewer: '{}'"),

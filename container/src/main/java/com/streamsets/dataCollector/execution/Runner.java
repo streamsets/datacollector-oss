@@ -30,7 +30,6 @@ public interface Runner {
   public static final String CALLBACK_SERVER_URL_DEFAULT = null;
   public static final String SDC_CLUSTER_TOKEN_KEY = "sdc.cluster.token";
 
-
   //Runners are lightweight control classes, they are created on every Manager.getRunner() call
 
   //ALl impls receive a PipelineStore instance at <init> time, to load the PipelineConfiguration if necessary
@@ -58,8 +57,12 @@ public interface Runner {
   // pipeline status
   public PipelineStatus getStatus() throws PipelineStoreException;
 
+  // called on startup, moves runner to disconnected state if necessary
+  void prepareForDataCollectorStart() throws PipelineStoreException, PipelineRunnerException;
+
   // called for all existing pipelines when the data collector starts
   // it should reconnect/reset-status of all pipelines
+  // returns whether to start the pipeline on sdc start
   public void onDataCollectorStart() throws PipelineRunnerException, PipelineStoreException, PipelineRuntimeException, StageException;
 
   // called for all existing pipelines when the data collector is shutting down
@@ -90,7 +93,7 @@ public interface Runner {
 
   // the pipeline history
   // delegates to the the PipelineStateStore
-  public List<PipelineState> getHistory();
+  public List<PipelineState> getHistory() throws PipelineStoreException;
 
   // gets the current pipeline metrics
   public MetricRegistry getMetrics();
@@ -114,5 +117,7 @@ public interface Runner {
   void broadcastAlerts(RuleDefinition ruleDefinition);
 
   void addMetricsEventListener(MetricsEventListener metricsEventListener);
+
+  void close();
 
 }

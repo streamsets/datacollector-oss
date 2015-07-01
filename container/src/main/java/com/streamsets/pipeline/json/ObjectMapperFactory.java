@@ -10,6 +10,7 @@ import com.codahale.metrics.json.MetricsModule;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.databind.module.SimpleModule;
+import com.fasterxml.jackson.core.JsonGenerator;
 import com.streamsets.pipeline.api.impl.ErrorMessage;
 import com.streamsets.pipeline.metrics.ExtendedMeter;
 import com.streamsets.pipeline.record.FieldDeserializer;
@@ -24,6 +25,8 @@ public class ObjectMapperFactory {
 
   private static ObjectMapper create(boolean indent) {
     ObjectMapper objectMapper = new ObjectMapper();
+    // This will cause the objectmapper to not close the underlying output stream
+    objectMapper.configure(JsonGenerator.Feature.AUTO_CLOSE_TARGET, false);
     objectMapper.registerModule(new MetricsModule(TimeUnit.SECONDS, TimeUnit.SECONDS, false, MetricFilter.ALL));
     SimpleModule module = new SimpleModule();
     module.addDeserializer(FieldJson.class, new FieldDeserializer());

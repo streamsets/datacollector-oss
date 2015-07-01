@@ -35,6 +35,7 @@ public class DataStore {
   private final Path fileOld;
   private Closeable stream;
   private boolean forWrite;
+  private boolean isClosed;
 
   public DataStore(File file) {
     Utils.checkNotNull(file, "file");
@@ -94,11 +95,12 @@ public class DataStore {
     ReentrantLock lock;
     synchronized (DataStore.class) {
       lock = FILE_LOCKS.remove(file);
-      Utils.checkState(lock != null, Utils.format("Missing lock for file '{}'", file));
     }
-    LOG.trace("Releasing the lock for '{}'", file);
-    lock.unlock();
-    LOG.trace("Released the lock for '{}'", file);
+    if (lock != null) {
+      LOG.trace("Releasing the lock for '{}'", file);
+      lock.unlock();
+      LOG.trace("Released the lock for '{}'", file);
+    }
   }
 
 
@@ -131,6 +133,7 @@ public class DataStore {
   public OutputStream getOutputStream() throws IOException {
     acquireLock();
     try {
+      isClosed = false;
       forWrite = true;
       LOG.trace("Starts write '{}'", file);
       verifyAndRecover();
@@ -141,6 +144,9 @@ public class DataStore {
       OutputStream os = new ProxyOutputStream(new FileOutputStream(fileTmp.toFile())) {
         @Override
         public void close() throws IOException {
+          if (isClosed) {
+            return;
+          }
           try {
             super.close();
             Files.move(fileTmp, fileNew);
@@ -153,6 +159,7 @@ public class DataStore {
             }
           } finally {
             releaseLock();
+            isClosed = true;
             stream = null;
           }
           LOG.trace("Finishes write '{}'", file);

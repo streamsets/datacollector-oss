@@ -5,15 +5,13 @@
  */
 package com.streamsets.dataCollector.execution.runner;
 
-import java.sql.Savepoint;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.ExecutorService;
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.Future;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
@@ -45,6 +43,7 @@ import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.el.ELEvalException;
 import com.streamsets.pipeline.api.impl.ErrorMessage;
+import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.callback.CallbackServerMetricsEventListener;
 import com.streamsets.pipeline.config.ConfigConfiguration;
 import com.streamsets.pipeline.config.DeliveryGuarantee;
@@ -70,7 +69,6 @@ import com.streamsets.pipeline.runner.production.ProductionObserver;
 import com.streamsets.pipeline.runner.production.ProductionPipeline;
 import com.streamsets.pipeline.runner.production.ProductionPipelineBuilder;
 import com.streamsets.dataCollector.execution.runnable.ProductionPipelineRunnable;
-import com.streamsets.dataCollector.execution.util.PipelineStatusUtil;
 import com.streamsets.pipeline.runner.production.ProductionPipelineRunner;
 import com.streamsets.pipeline.runner.production.ProductionSourceOffsetTracker;
 import com.streamsets.pipeline.runner.production.RulesConfigLoader;
@@ -96,15 +94,13 @@ public class StandaloneRunner implements Runner, StateListener {
   private final SnapshotStore snapshotStore;
   private final PipelineStoreTask pipelineStore;
   /*The executor service that is currently executing the ProdPipelineRunnerThread*/
-  private SafeScheduledExecutorService executor;
+  private final SafeScheduledExecutorService executor;
   private final String name;
   private final String rev;
   private final String user;
   /*The pipeline being executed or the pipeline in the context*/
   private ProductionPipeline prodPipeline;
-  /*Mutex objects to synchronize start and stop pipeline methods*/
-  private final Object pipelineMutex = new Object();
-  private List<AlertEventListener> alertEventListenerList = new ArrayList<>();
+  private final List<AlertEventListener> alertEventListenerList;
   private ThreadHealthReporter threadHealthReporter;
   private MetricsEventRunnable metricsEventRunnable;
   private RulesConfigLoaderRunnable configLoaderRunnable;
@@ -112,6 +108,7 @@ public class StandaloneRunner implements Runner, StateListener {
   private DataObserverRunnable observerRunnable;
   private CallbackServerMetricsEventListener callbackServerMetricsEventListener;
   private ProductionPipelineRunnable pipelineRunnable;
+  private volatile boolean isClosed;
 
   private static final Map<PipelineStatus, Set<PipelineStatus>> VALID_TRANSITIONS = new ImmutableMap.Builder<PipelineStatus, Set<PipelineStatus>>()
     .put(PipelineStatus.EDITED, ImmutableSet.of(PipelineStatus.STARTING))
@@ -126,7 +123,7 @@ public class StandaloneRunner implements Runner, StateListener {
     .put(PipelineStatus.STOPPED, ImmutableSet.of(PipelineStatus.STARTING))
     .put(PipelineStatus.DISCONNECTING, ImmutableSet.of(PipelineStatus.DISCONNECTED))
     .put(PipelineStatus.DISCONNECTED, ImmutableSet.of(PipelineStatus.CONNECTING))
-    .put(PipelineStatus.CONNECTING, ImmutableSet.of(PipelineStatus.STARTING))
+    .put(PipelineStatus.CONNECTING, ImmutableSet.of(PipelineStatus.STARTING, PipelineStatus.DISCONNECTING))
     .build();
 
   @Inject
@@ -143,31 +140,43 @@ public class StandaloneRunner implements Runner, StateListener {
     this.name = name;
     this.rev = rev;
     this.user = user;
+    this.alertEventListenerList = new CopyOnWriteArrayList<AlertEventListener>();
   }
 
   @Override
-  public void onDataCollectorStart() throws PipelineStoreException, PipelineRunnerException, PipelineRuntimeException, StageException {
-    PipelineStatus status = getStatus();
-    LOG.info("Pipeline " + name + " with rev " + rev + " is in state: " + status);
+  public void prepareForDataCollectorStart() throws PipelineStoreException, PipelineRunnerException {
+      PipelineStatus status = getStatus();
+      LOG.info("Pipeline '{}::{}' has status: '{}'", name, rev, status);
+      String msg = null;
     switch (status) {
-      case RUNNING:
-        validateAndSetStateTransition(PipelineStatus.DISCONNECTING, null, null);
-      case DISCONNECTING:
-        validateAndSetStateTransition(PipelineStatus.DISCONNECTED, null, null);
-      case DISCONNECTED:
-        validateAndSetStateTransition(PipelineStatus.CONNECTING, null, null);
-      case CONNECTING:
       case STARTING:
-        start();
+        msg = "Pipeline was in STARTING state, forcing it to DISCONNECTING";
+      case CONNECTING:
+        msg = msg == null ? "Pipeline was in CONNECTING state, forcing it to DISCONNECTING" : msg;
+      case RUNNING:
+        msg = msg == null ? "Pipeline was in RUNNING state, forcing it to DISCONNECTING" : msg;
+        LOG.debug(msg);
+        validateAndSetStateTransition(PipelineStatus.DISCONNECTING, msg, null);
+      case DISCONNECTING:
+        msg = "Pipeline was in DISCONNECTING state, forcing it to DISCONNECTED";
+        LOG.debug(msg);
+        validateAndSetStateTransition(PipelineStatus.DISCONNECTED, msg, null);
+      case DISCONNECTED:
         break;
       case RUNNING_ERROR:
-        validateAndSetStateTransition(PipelineStatus.RUN_ERROR, null, null);
+        msg = "Pipeline was in RUNNING_ERROR state, forcing it to terminal state of RUN_ERROR";
+        LOG.debug(msg);
+        validateAndSetStateTransition(PipelineStatus.RUN_ERROR, msg, null);
         break;
       case STOPPING:
-        validateAndSetStateTransition(PipelineStatus.STOPPED, null, null);
+        msg = "Pipeline was in STOPPING state, forcing it to terminal state of STOPPED";
+        LOG.debug(msg);
+        validateAndSetStateTransition(PipelineStatus.STOPPED, msg, null);
         break;
       case FINISHING:
-        validateAndSetStateTransition(PipelineStatus.FINISHED, null,null);
+        msg = "Pipeline was in FINISHING state, forcing it to terminal state of FINISHED";
+        LOG.debug(msg);
+        validateAndSetStateTransition(PipelineStatus.FINISHED, null, null);
         break;
       case RUN_ERROR: // do nothing
       case EDITED:
@@ -177,9 +186,23 @@ public class StandaloneRunner implements Runner, StateListener {
       case STOPPED:
         break;
       default:
-        throw new IllegalStateException("Pipeline in undefined state " + status);
+        throw new IllegalStateException(Utils.format("Pipeline in undefined state: '{}'", status));
     }
+  }
 
+  @Override
+  public void onDataCollectorStart() throws PipelineStoreException, PipelineRunnerException, PipelineRuntimeException, StageException {
+    PipelineStatus status = getStatus();
+    LOG.info("Pipeline '{}::{}' has status: '{}'", name, rev, status);
+    switch (status) {
+      case DISCONNECTED:
+        String msg = "Pipeline was in DISCONNECTED state, changing it to CONNECTING";
+        LOG.debug(msg);
+        validateAndSetStateTransition(PipelineStatus.CONNECTING, msg, null);
+        start();
+      default:
+        LOG.error(Utils.format("Pipeline cannot start with status: '{}'", status));
+    }
     // TODO - this should be in slave runner
     if(runtimeInfo.getExecutionMode() == RuntimeInfo.ExecutionMode.SLAVE) {
       //For Slave Callback to Cluster SDC Server
@@ -225,25 +248,27 @@ public class StandaloneRunner implements Runner, StateListener {
           }
         }
       } catch (JsonProcessingException ex) {
-        LOG.warn("Error while broadcasting alerts, {}", ex.getMessage(), ex);
+        LOG.warn("Error while writing rule definition, {}", ex.getMessage(), ex);
       }
     }
   }
 
   @Override
-  public void onDataCollectorStop() {
+  public void onDataCollectorStop() throws PipelineStoreException {
+    if (!getStatus().isActive() || getStatus() == PipelineStatus.DISCONNECTED) {
+      LOG.info("Pipeline '{}'::'{}' is no longer active", name, rev);
+      return;
+    }
+    LOG.info("Stopping pipeline {}::{}", name, rev);
     try {
       try {
         validateAndSetStateTransition(PipelineStatus.DISCONNECTING, "Stopping the pipeline as SDC is shutting down",
           null);
       } catch (PipelineRunnerException ex) {
         // its ok if state validation fails - we will still try to stop pipeline if active
-        LOG.info("Cannot transition to PipelineStatus.DISCONNECTING: {}", ex.getMessage(), ex);
+        LOG.warn("Cannot transition to PipelineStatus.DISCONNECTING: {}", ex.getMessage(), ex);
       }
-      if (PipelineStatusUtil.isActive(getStatus())) {
-        LOG.debug("Stopping pipeline {},{}", name, rev);
-        stopPipeline(true /* shutting down node process */);
-      }
+      stopPipeline(true /* shutting down node process */);
     } catch (Exception e) {
       LOG.warn("Error while stopping the pipeline: {} ", e.getMessage(), e);
     }
@@ -265,9 +290,8 @@ public class StandaloneRunner implements Runner, StateListener {
   }
 
   @Override
-  public void resetOffset() throws PipelineStoreException, PipelineRunnerException {
+  public synchronized void resetOffset() throws PipelineStoreException, PipelineRunnerException {
     PipelineStatus status = getStatus();
-
     LOG.debug("Resetting offset for pipeline {}, {}", name, rev);
     if(status == PipelineStatus.RUNNING) {
       throw new PipelineRunnerException(ContainerError.CONTAINER_0104, name);
@@ -282,20 +306,111 @@ public class StandaloneRunner implements Runner, StateListener {
   }
 
   @Override
-  public void stop() throws PipelineStoreException, PipelineRunnerException {
-    synchronized (pipelineMutex) {
-      validateAndSetStateTransition(PipelineStatus.STOPPING, "Stopping the pipeline", null);
-      handleStopRequest(false);
-    }
-
+  public synchronized void stop() throws PipelineStoreException, PipelineRunnerException {
+    validateAndSetStateTransition(PipelineStatus.STOPPING, "Stopping the pipeline", null);
+    stopPipeline(false);
   }
 
   @Override
-  public void start() throws PipelineStoreException, PipelineRunnerException, PipelineRuntimeException, StageException {
-    synchronized (pipelineMutex) {
+  public void start() throws PipelineStoreException, PipelineRunnerException, PipelineRuntimeException,
+    StageException {
+    Utils.checkState(!isClosed,
+      Utils.formatL("Cannot start the pipeline '{}::{}' as the runner is already closed", name, rev));
+    synchronized (this) {
       LOG.info("Starting pipeline {} {}", name, rev);
       validateAndSetStateTransition(PipelineStatus.STARTING, null, null);
-      handleStartRequest(name, rev);
+      /*
+      Implementation Notes:
+      ---------------------
+
+      What are the different threads and runnables created?
+      - - - - - - - - - - - - - - - - - - - - - - - - - - -
+       RulesConfigLoader
+       ProductionObserver
+       MetricObserver
+       ProductionPipelineRunner
+
+      How do threads communicate?
+      - - - - - - - - - - - - - -
+
+       RulesConfigLoader, ProductionObserver and ProductionPipelineRunner share a blocking queue which will hold
+       record samples to be evaluated by the Observer [Data Rule evaluation] and rules configuration change requests
+       computed by the RulesConfigLoader.
+
+       MetricsObserverRunner handles evaluating metric rules and a reference is passed to Production Observer which
+       updates the MetricsObserverRunner when configuration changes.
+
+      Other classes:
+      - - - - - - - -
+
+      Alert Manager - responsible for creating alerts and sending email.
+
+
+    */
+      BlockingQueue<Object> productionObserveRequests =
+        new ArrayBlockingQueue<>(configuration.get(Constants.OBSERVER_QUEUE_SIZE_KEY,
+          Constants.OBSERVER_QUEUE_SIZE_DEFAULT), true /* FIFO */);
+
+      ProductionObserver observer = new ProductionObserver(productionObserveRequests, configuration);
+      createPipeline(observer, productionObserveRequests);
+
+      AlertManager alertManager =
+        new AlertManager(name, rev, new EmailSender(configuration), getMetrics(), runtimeInfo, null, this);
+      MetricsObserverRunner metricsObserverRunner = new MetricsObserverRunner(this.getMetrics(), alertManager);
+
+      observer.setMetricsObserverRunner(metricsObserverRunner);
+
+      // bootstrap the pipeline runner thread with rule configuration
+      RulesConfigLoader rulesConfigLoader = new RulesConfigLoader(name, rev, pipelineStore);
+      try {
+        rulesConfigLoader.load(observer);
+      } catch (InterruptedException e) {
+        throw new PipelineRuntimeException(ContainerError.CONTAINER_0403, name, e.getMessage(), e);
+      }
+
+      threadHealthReporter = new ThreadHealthReporter(this.getMetrics());
+      threadHealthReporter.register(RulesConfigLoaderRunnable.RUNNABLE_NAME);
+      threadHealthReporter.register(MetricObserverRunnable.RUNNABLE_NAME);
+      threadHealthReporter.register(DataObserverRunnable.RUNNABLE_NAME);
+      threadHealthReporter.register(ProductionPipelineRunnable.RUNNABLE_NAME);
+      threadHealthReporter.register(MetricsEventRunnable.RUNNABLE_NAME);
+
+      int refreshInterval = configuration.get(REFRESH_INTERVAL_PROPERTY, REFRESH_INTERVAL_PROPERTY_DEFAULT);
+      ScheduledFuture<?> metricsFuture = null;
+      if (refreshInterval > 0) {
+        metricsEventRunnable = new MetricsEventRunnable(null, runtimeInfo, refreshInterval, this);
+        metricsFuture =
+          executor.scheduleAtFixedRateReturnFuture(metricsEventRunnable, 0, refreshInterval, TimeUnit.MILLISECONDS);
+      }
+
+      if (metricsEventRunnable != null) {
+        metricsEventRunnable.setThreadHealthReporter(threadHealthReporter);
+      }
+
+      configLoaderRunnable = new RulesConfigLoaderRunnable(threadHealthReporter, rulesConfigLoader, observer);
+      ScheduledFuture<?> configLoaderFuture =
+        executor.scheduleWithFixedDelayReturnFuture(configLoaderRunnable, 1, RulesConfigLoaderRunnable.SCHEDULED_DELAY,
+          TimeUnit.SECONDS);
+
+      metricObserverRunnable = new MetricObserverRunnable(threadHealthReporter, metricsObserverRunner);
+      ScheduledFuture<?> metricObserverFuture =
+        executor.scheduleWithFixedDelayReturnFuture(metricObserverRunnable, 1, 2, TimeUnit.SECONDS);
+
+      observerRunnable =
+        new DataObserverRunnable(threadHealthReporter, this.getMetrics(), productionObserveRequests, alertManager,
+          configuration);
+      Future<?> observerFuture = executor.submitReturnFuture(observerRunnable);
+
+      List<Future<?>> list;
+      if (metricsFuture != null) {
+        list = ImmutableList.of(configLoaderFuture, observerFuture, metricObserverFuture, metricsFuture);
+      } else {
+        list = ImmutableList.of(configLoaderFuture, observerFuture, metricObserverFuture);
+      }
+      pipelineRunnable = new ProductionPipelineRunnable(threadHealthReporter, this, prodPipeline, name, rev, list);
+    }
+    if (!pipelineRunnable.isStopped()) {
+      pipelineRunnable.run();
     }
   }
 
@@ -338,25 +453,25 @@ public class StandaloneRunner implements Runner, StateListener {
   }
 
   @Override
-  public List<PipelineState> getHistory() {
+  public List<PipelineState> getHistory() throws PipelineStoreException {
     return pipelineStateStore.getHistory(name, rev, false);
   }
 
   @Override
   public List<Record> getErrorRecords(String stage, int max) throws PipelineRunnerException, PipelineStoreException {
-    checkState(PipelineStatusUtil.isActive(getStatus()), ContainerError.CONTAINER_0106);
+    checkState(getStatus().isActive(), ContainerError.CONTAINER_0106);
     return prodPipeline.getErrorRecords(stage, max);
   }
 
   @Override
   public List<ErrorMessage> getErrorMessages(String stage, int max) throws PipelineRunnerException, PipelineStoreException {
-    checkState(PipelineStatusUtil.isActive(getStatus()), ContainerError.CONTAINER_0106);
+    checkState(getStatus().isActive(), ContainerError.CONTAINER_0106);
     return prodPipeline.getErrorMessages(stage, max);
   }
 
   @Override
   public List<Record> getSampledRecords(String sampleId, int max) throws PipelineRunnerException, PipelineStoreException {
-    checkState(PipelineStatusUtil.isActive(getStatus()), ContainerError.CONTAINER_0106);
+    checkState(getStatus().isActive(), ContainerError.CONTAINER_0106);
     return observerRunnable.getSampledRecords(sampleId, max);
   }
 
@@ -378,7 +493,7 @@ public class StandaloneRunner implements Runner, StateListener {
     }
   }
 
-  private void validateAndSetStateTransition(PipelineStatus toStatus, String message, Map<String, Object> attributes)
+  private synchronized void validateAndSetStateTransition(PipelineStatus toStatus, String message, Map<String, Object> attributes)
     throws PipelineStoreException, PipelineRunnerException {
     PipelineStatus status = getStatus();
     checkState(VALID_TRANSITIONS.get(status).contains(toStatus), ContainerError.CONTAINER_0102, status, toStatus);
@@ -392,107 +507,17 @@ public class StandaloneRunner implements Runner, StateListener {
   }
 
   private void stopPipeline(boolean sdcShutting) {
-    synchronized (pipelineMutex) {
-      if(pipelineRunnable != null ) {
-        handleStopRequest(sdcShutting);
-      }
-    }
-  }
-
-  private void handleStartRequest(String name, String rev) throws StageException,
-  PipelineRuntimeException, PipelineStoreException {
-
-  /*
-   * Implementation Notes: --------------------- What are the different threads and runnables created? - - - - - - - -
-   * - - - - - - - - - - - - - - - - - - - RulesConfigLoader ProductionObserver MetricObserver
-   * ProductionPipelineRunner How do threads communicate? - - - - - - - - - - - - - - RulesConfigLoader,
-   * ProductionObserver and ProductionPipelineRunner share a blocking queue which will hold record samples to be
-   * evaluated by the Observer [Data Rule evaluation] and rules configuration change requests computed by the
-   * RulesConfigLoader. MetricsObserverRunner handles evaluating metric rules and a reference is passed to Production
-   * Observer which updates the MetricsObserverRunner when configuration changes. Other classes: - - - - - - - - Alert
-   * Manager - responsible for creating alerts and sending email.
-   */
-
-  BlockingQueue<Object> productionObserveRequests =
-    new ArrayBlockingQueue<>(configuration.get(Constants.OBSERVER_QUEUE_SIZE_KEY,
-      Constants.OBSERVER_QUEUE_SIZE_DEFAULT), true /* FIFO */);
-
-  ProductionObserver observer = new ProductionObserver(productionObserveRequests, configuration);
-  createPipeline(observer, productionObserveRequests);
-
-  AlertManager alertManager =
-    new AlertManager(name, rev, new EmailSender(configuration), getMetrics(), runtimeInfo, null, this);
-  MetricsObserverRunner metricsObserverRunner = new MetricsObserverRunner(this.getMetrics(), alertManager);
-
-  observer.setMetricsObserverRunner(metricsObserverRunner);
-
-  // bootstrap the pipeline runner thread with rule configuration
-  RulesConfigLoader rulesConfigLoader = new RulesConfigLoader(name, rev, pipelineStore);
-  try {
-    rulesConfigLoader.load(observer);
-  } catch (InterruptedException e) {
-    throw new PipelineRuntimeException(ContainerError.CONTAINER_0403, name, e.getMessage(), e);
-  }
-
-  threadHealthReporter = new ThreadHealthReporter(this.getMetrics());
-  threadHealthReporter.register(RulesConfigLoaderRunnable.RUNNABLE_NAME);
-  threadHealthReporter.register(MetricObserverRunnable.RUNNABLE_NAME);
-  threadHealthReporter.register(DataObserverRunnable.RUNNABLE_NAME);
-  threadHealthReporter.register(ProductionPipelineRunnable.RUNNABLE_NAME);
-  threadHealthReporter.register(MetricsEventRunnable.RUNNABLE_NAME);
-
-
-  int refreshInterval = configuration.get(REFRESH_INTERVAL_PROPERTY, REFRESH_INTERVAL_PROPERTY_DEFAULT);
-  ScheduledFuture<?> metricsFuture = null;
-  if(refreshInterval > 0) {
-    metricsEventRunnable = new MetricsEventRunnable(null, runtimeInfo, refreshInterval, this);
-    metricsFuture =  executor.scheduleAtFixedRateReturnFuture(metricsEventRunnable, 0, refreshInterval, TimeUnit.MILLISECONDS);
-  }
-
-  if (metricsEventRunnable != null) {
-    metricsEventRunnable.setThreadHealthReporter(threadHealthReporter);
-  }
-
-  configLoaderRunnable = new RulesConfigLoaderRunnable(threadHealthReporter, rulesConfigLoader, observer);
-  ScheduledFuture<?> configLoaderFuture =
-    executor.scheduleWithFixedDelayReturnFuture(configLoaderRunnable, 1, RulesConfigLoaderRunnable.SCHEDULED_DELAY,
-      TimeUnit.SECONDS);
-
-  metricObserverRunnable = new MetricObserverRunnable(threadHealthReporter, metricsObserverRunner);
-  ScheduledFuture<?> metricObserverFuture =
-    executor.scheduleWithFixedDelayReturnFuture(metricObserverRunnable, 1, 2, TimeUnit.SECONDS);
-
-  observerRunnable =
-    new DataObserverRunnable(threadHealthReporter, this.getMetrics(), productionObserveRequests, alertManager,
-      configuration);
-  Future<?> observerFuture = executor.submitReturnFuture(observerRunnable);
-
-  List<Future<?>> list;
-  if (metricsFuture!=null) {
-    list = ImmutableList.of(configLoaderFuture, observerFuture, metricObserverFuture, metricsFuture);
-  } else {
-    list = ImmutableList.of(configLoaderFuture, observerFuture, metricObserverFuture);
-  }
-
-  pipelineRunnable =
-    new ProductionPipelineRunnable(threadHealthReporter, this, prodPipeline, name, rev, list);
-
-  executor.submit(pipelineRunnable);
-
-  LOG.debug("Started pipeline {} {}", name, rev);
-}
-
-  private void handleStopRequest(boolean sdcShutting) {
-    LOG.info("Stopping pipeline {} {}", pipelineRunnable.getName(), pipelineRunnable.getRev());
-    if(pipelineRunnable != null) {
+    if (pipelineRunnable != null && !pipelineRunnable.isStopped()) {
+      LOG.info("Stopping pipeline {} {}", pipelineRunnable.getName(), pipelineRunnable.getRev());
       pipelineRunnable.stop(sdcShutting);
-      pipelineRunnable = null;
     }
     if(metricsEventRunnable != null) {
       metricsEventRunnable.setThreadHealthReporter(null);
     }
-    threadHealthReporter.destroy();
-    threadHealthReporter = null;
+    if (threadHealthReporter != null) {
+      threadHealthReporter.destroy();
+      threadHealthReporter = null;
+    }
     LOG.debug("Stopped pipeline");
   }
 
@@ -582,5 +607,9 @@ public class StandaloneRunner implements Runner, StateListener {
     return builder.build(runner, offsetTracker, observer);
   }
 
+  @Override
+  public void close() {
+    isClosed = true;
+  }
 
 }

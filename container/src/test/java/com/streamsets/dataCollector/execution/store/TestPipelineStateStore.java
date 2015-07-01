@@ -34,11 +34,12 @@ import com.streamsets.pipeline.runner.MockStages;
 import com.streamsets.pipeline.stagelibrary.StageLibraryTask;
 import com.streamsets.pipeline.store.PipelineStoreException;
 import com.streamsets.pipeline.store.PipelineStoreTask;
+import com.streamsets.pipeline.store.impl.CachePipelineStoreTask;
 import com.streamsets.pipeline.store.impl.FilePipelineStoreTask;
 import com.streamsets.pipeline.util.Configuration;
 import com.streamsets.pipeline.util.TestUtil;
 
-public class TestFilePipelineStateStore {
+public class TestPipelineStateStore {
 
   private static PipelineStateStore pipelineStateStore;
   private static PipelineStoreTask pipelineStoreTask;
@@ -63,12 +64,14 @@ public class TestFilePipelineStateStore {
   }
 
   private static void createStateStore() {
-    RuntimeInfo info = new RuntimeInfo(RuntimeModule.SDC_PROPERTY_PREFIX, new MetricRegistry(),
-      Arrays.asList(TestFilePipelineStateStore.class.getClassLoader()));
+    RuntimeInfo info =
+      new RuntimeInfo(RuntimeModule.SDC_PROPERTY_PREFIX, new MetricRegistry(),
+        Arrays.asList(TestPipelineStateStore.class.getClassLoader()));
     com.streamsets.pipeline.util.Configuration configuration = new com.streamsets.pipeline.util.Configuration();
-    pipelineStateStore =  new MockFilePipelineStateStore(info, configuration);
+    pipelineStateStore =
+      new MockFilePipelineStateStore(new CachePipelineStateStore(new FilePipelineStateStore(info, configuration)));
     StageLibraryTask stageLibrary = new TestUtil.TestStageLibraryModule().provideStageLibrary();
-    pipelineStoreTask = new FilePipelineStoreTask(info, stageLibrary, pipelineStateStore);
+    pipelineStoreTask = new CachePipelineStoreTask(new FilePipelineStoreTask(info, stageLibrary, pipelineStateStore));
   }
 
   private PipelineConfiguration createPipeline(UUID uuid) {
@@ -207,29 +210,31 @@ public class TestFilePipelineStateStore {
      assertEquals(ExecutionMode.STANDALONE, pipelineState.getExecutionMode());
    }
 
-  static class MockFilePipelineStateStore extends FilePipelineStateStore {
+  static class MockFilePipelineStateStore extends CachePipelineStateStore {
 
-    static boolean INVALIDATE_CACHE = false;
-    public MockFilePipelineStateStore(RuntimeInfo runtimeInfo, Configuration conf) {
-      super(runtimeInfo, conf);
+    public MockFilePipelineStateStore(PipelineStateStore pipelineStateStore) {
+      super(pipelineStateStore);
     }
 
+    static boolean INVALIDATE_CACHE = false;
+
     @Override
-    public void edited(String user, String name, String rev, ExecutionMode executionMode) throws PipelineStoreException {
-      super.edited(user, name, rev, executionMode);
+    public PipelineState edited(String user, String name, String rev, ExecutionMode executionMode) throws PipelineStoreException {
+      PipelineState state = super.edited(user, name, rev, executionMode);
       if (INVALIDATE_CACHE) {
         // invalidate cache
         super.destroy();
       }
+      return state;
     }
 
     @Override
-    public void saveState(String user, String name, String rev, PipelineStatus status, String message,
+    public PipelineState saveState(String user, String name, String rev, PipelineStatus status, String message,
       Map<String, Object> attributes, ExecutionMode executionMode) throws PipelineStoreException {
-      super.saveState(user, name, rev, status, message, attributes, executionMode);
       if (INVALIDATE_CACHE) {
         super.destroy();
       }
+      return super.saveState(user, name, rev, status, message, attributes, executionMode);
     }
 
   }

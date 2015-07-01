@@ -9,7 +9,6 @@ package com.streamsets.pipeline.metrics;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.streamsets.dataCollector.execution.PipelineStatus;
 import com.streamsets.dataCollector.execution.Runner;
-import com.streamsets.dataCollector.execution.util.PipelineStatusUtil;
 import com.streamsets.pipeline.callback.CallbackInfo;
 import com.streamsets.pipeline.json.ObjectMapperFactory;
 import com.streamsets.pipeline.main.RuntimeInfo;
@@ -35,14 +34,14 @@ import java.util.Map;
 public class MetricsEventRunnable implements Runnable {
   public static final String RUNNABLE_NAME = "MetricsEventRunnable";
   private final static Logger LOG = LoggerFactory.getLogger(MetricsEventRunnable.class);
-  private List<MetricsEventListener> metricsEventListenerList = new ArrayList<>();
-  private Map<String, MetricRegistryJson> slaveMetrics;
+  private final List<MetricsEventListener> metricsEventListenerList = new ArrayList<>();
+  private final Map<String, MetricRegistryJson> slaveMetrics;
 
   private final PipelineManager pipelineManager;
   private final RuntimeInfo runtimeInfo;
   private ThreadHealthReporter threadHealthReporter;
   private final int scheduledDelay;
-  private Runner runner;
+  private final Runner runner;
 
   // TODO - Remove pipelineManager after multi pipeline support
   public MetricsEventRunnable(PipelineManager pipelineManager, RuntimeInfo runtimeInfo, int scheduledDelay, Runner runner) {
@@ -81,7 +80,7 @@ public class MetricsEventRunnable implements Runnable {
       }
       boolean isRunning = false;
       if (pipelineManager == null) {
-        isRunning = PipelineStatusUtil.isActive(runner.getStatus());
+        isRunning = runner.getStatus().isActive();
       } else {
         isRunning =
           pipelineManager.getPipelineState() != null && pipelineManager.getPipelineState().getState() == State.RUNNING;

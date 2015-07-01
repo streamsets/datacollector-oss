@@ -288,7 +288,7 @@ public class TestUtil {
 
         pipelineStoreTask.create(MY_SECOND_PIPELINE, "description2", "user2");
         pipelineConf = pipelineStoreTask.load(MY_SECOND_PIPELINE, "0");
-        mockPipelineConf = MockStages.createPipelineConfigurationSourceProcessorTarget();
+        mockPipelineConf = MockStages.createPipelineConfigurationSourceTargetDifferentInstance();
         pipelineConf.setStages(mockPipelineConf.getStages());
         pipelineConf.setErrorStage(mockPipelineConf.getErrorStage());
         pipelineStoreTask.save(MY_SECOND_PIPELINE, "admin2", "0", "description"
@@ -356,9 +356,9 @@ public class TestUtil {
     @Provides
     public PipelineManager provideStateManager(RuntimeInfo runtimeInfo, Configuration configuration,
       PipelineStoreTask pipelineStore, PipelineStateStore pipelineStateStore, StageLibraryTask stageLibrary, SafeScheduledExecutorService
-      previewExecutor, SafeScheduledExecutorService runnerExecutor) {
+      previewExecutor, SafeScheduledExecutorService runnerExecutor, SafeScheduledExecutorService managerExecutor) {
       return new PipelineManager(runtimeInfo, configuration, pipelineStore, pipelineStateStore, stageLibrary,
-        previewExecutor, runnerExecutor);
+        previewExecutor, runnerExecutor, managerExecutor);
     }
   }
 

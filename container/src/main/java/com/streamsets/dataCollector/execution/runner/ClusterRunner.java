@@ -83,8 +83,7 @@ public class ClusterRunner implements Runner {
   @Override
   public void onDataCollectorStart() {
     // TODO Auto-generated method stub
-
-  }
+ }
 
   @Override
   public void onDataCollectorStop() {
@@ -189,6 +188,18 @@ public class ClusterRunner implements Runner {
 
   @Override
   public void addMetricsEventListener(MetricsEventListener metricsEventListener) {
+    // TODO Auto-generated method stub
+
+  }
+
+  @Override
+  public void prepareForDataCollectorStart() throws PipelineStoreException, PipelineRunnerException {
+    // TODO Auto-generated method stub
+
+  }
+
+  @Override
+  public void close() {
     // TODO Auto-generated method stub
 
   }

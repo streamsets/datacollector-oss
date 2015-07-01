@@ -5,6 +5,8 @@
  */
 package com.streamsets.pipeline.store.impl;
 
+import static org.junit.Assert.assertEquals;
+
 import com.google.common.collect.ImmutableList;
 import com.streamsets.pipeline.api.ExecutionMode;
 import com.streamsets.pipeline.config.ConfigConfiguration;
@@ -26,13 +28,18 @@ import com.streamsets.pipeline.store.PipelineInfo;
 import com.streamsets.pipeline.store.PipelineStoreException;
 import com.streamsets.pipeline.store.PipelineStoreTask;
 import com.streamsets.pipeline.util.ContainerError;
+
 import dagger.ObjectGraph;
 import dagger.Provides;
+
+import org.junit.After;
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
 
 import javax.inject.Singleton;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -46,14 +53,13 @@ public class TestFilePipelineStoreTask {
   private static final String DEFAULT_PIPELINE_NAME = "xyz";
   private static final String DEFAULT_PIPELINE_DESCRIPTION = "Default Pipeline";
   private static final String SYSTEM_USER = "system";
+  protected PipelineStoreTask store;
 
   @dagger.Module(injects = FilePipelineStoreTask.class)
   public static class Module {
-
     public Module() {
 
     }
-
     @Provides
     @Singleton
     public RuntimeInfo provideRuntimeInfo() {
@@ -62,19 +68,26 @@ public class TestFilePipelineStoreTask {
       Mockito.when(mock.getExecutionMode()).thenReturn(RuntimeInfo.ExecutionMode.STANDALONE);
       return mock;
     }
-
     @Provides
     @Singleton
     public StageLibraryTask provideStageLibrary() {
       return MockStages.createStageLibrary();
     }
+  }
 
+  @Before
+  public void setUp() {
+    ObjectGraph dagger = ObjectGraph.create(new Module());
+    store = dagger.get(FilePipelineStoreTask.class);
+  }
+
+  @After
+  public void tearDown() {
+    store = null;
   }
 
   @Test
   public void testStoreNoDefaultPipeline() throws Exception {
-    ObjectGraph dagger = ObjectGraph.create(new Module());
-    PipelineStoreTask store = dagger.get(FilePipelineStoreTask.class);
     try {
       //creating store dir
       store.init();
@@ -82,7 +95,6 @@ public class TestFilePipelineStoreTask {
     } finally {
       store.stop();
     }
-    store = dagger.get(FilePipelineStoreTask.class);
     try {
       //store dir already exists
       store.init();
@@ -94,13 +106,13 @@ public class TestFilePipelineStoreTask {
 
   @Test
   public void testCreateDelete() throws Exception {
-    ObjectGraph dagger = ObjectGraph.create(new Module());
-    PipelineStoreTask store = dagger.get(FilePipelineStoreTask.class);
     try {
       store.init();
       Assert.assertEquals(0, store.getPipelines().size());
       store.create("a", "A", "foo");
       Assert.assertEquals(1, store.getPipelines().size());
+      store.save("a", "foo2", "A", "", store.load("a", "0"));
+      assertEquals("foo2", store.getPipelines().get(0).getLastModifier());
       Assert.assertEquals("a", store.getInfo("a").getName());
       store.delete("a");
       Assert.assertEquals(0, store.getPipelines().size());
@@ -111,8 +123,6 @@ public class TestFilePipelineStoreTask {
 
   @Test(expected = PipelineStoreException.class)
   public void testCreateExistingPipeline() throws Exception {
-    ObjectGraph dagger = ObjectGraph.create(new Module());
-    PipelineStoreTask store = dagger.get(FilePipelineStoreTask.class);
     try {
       store.init();
       store.create("a", "A", "foo");
@@ -124,8 +134,6 @@ public class TestFilePipelineStoreTask {
 
   @Test(expected = PipelineStoreException.class)
   public void testDeleteNotExisting() throws Exception {
-    ObjectGraph dagger = ObjectGraph.create(new Module());
-    FilePipelineStoreTask store = dagger.get(FilePipelineStoreTask.class);
     try {
       store.init();
       store.delete("a");
@@ -136,8 +144,6 @@ public class TestFilePipelineStoreTask {
 
   @Test(expected = PipelineStoreException.class)
   public void testSaveNotExisting() throws Exception {
-    ObjectGraph dagger = ObjectGraph.create(new Module());
-    FilePipelineStoreTask store = dagger.get(FilePipelineStoreTask.class);
     try {
       store.init();
       createDefaultPipeline(store);
@@ -150,8 +156,6 @@ public class TestFilePipelineStoreTask {
 
   @Test(expected = PipelineStoreException.class)
   public void testSaveWrongUuid() throws Exception {
-    ObjectGraph dagger = ObjectGraph.create(new Module());
-    FilePipelineStoreTask store = dagger.get(FilePipelineStoreTask.class);
     try {
       store.init();
       createDefaultPipeline(store);
@@ -165,8 +169,6 @@ public class TestFilePipelineStoreTask {
 
   @Test(expected = PipelineStoreException.class)
   public void testLoadNotExisting() throws Exception {
-    ObjectGraph dagger = ObjectGraph.create(new Module());
-    FilePipelineStoreTask store = dagger.get(FilePipelineStoreTask.class);
     try {
       store.init();
       store.load("a", null);
@@ -177,8 +179,6 @@ public class TestFilePipelineStoreTask {
 
   @Test(expected = PipelineStoreException.class)
   public void testHistoryNotExisting() throws Exception {
-    ObjectGraph dagger = ObjectGraph.create(new Module());
-    FilePipelineStoreTask store = dagger.get(FilePipelineStoreTask.class);
     try {
       store.init();
       store.getHistory("a");
@@ -195,8 +195,6 @@ public class TestFilePipelineStoreTask {
 
   @Test
   public void testSave() throws Exception {
-    ObjectGraph dagger = ObjectGraph.create(new Module());
-    PipelineStoreTask store = dagger.get(FilePipelineStoreTask.class);
     try {
       store.init();
       createDefaultPipeline(store);
@@ -219,8 +217,6 @@ public class TestFilePipelineStoreTask {
 
   @Test
   public void testSaveAndLoad() throws Exception {
-    ObjectGraph dagger = ObjectGraph.create(new Module());
-    PipelineStoreTask store = dagger.get(FilePipelineStoreTask.class);
     try {
       store.init();
       createDefaultPipeline(store);
@@ -243,8 +239,6 @@ public class TestFilePipelineStoreTask {
 
   @Test
   public void testStoreAndRetrieveRules() throws PipelineStoreException {
-    ObjectGraph dagger = ObjectGraph.create(new Module());
-    PipelineStoreTask store = dagger.get(FilePipelineStoreTask.class);
     store.init();
     createDefaultPipeline(store);
     RuleDefinitions ruleDefinitions = store.retrieveRules(DEFAULT_PIPELINE_NAME,
@@ -282,8 +276,6 @@ public class TestFilePipelineStoreTask {
     /*This test case mimicks a use case where 2 users connect to the same data collector instance
     * using different browsers and modify the same rule definition. The user who saves last runs into an exception.
     * The user is forced to reload, reapply changes and save*/
-    ObjectGraph dagger = ObjectGraph.create(new Module());
-    PipelineStoreTask store = dagger.get(FilePipelineStoreTask.class);
     store.init();
     createDefaultPipeline(store);
     RuleDefinitions ruleDefinitions1 = store.retrieveRules(DEFAULT_PIPELINE_NAME,
@@ -347,8 +339,6 @@ public class TestFilePipelineStoreTask {
 
   @Test
   public void testPipelineDefaults() throws Exception {
-    ObjectGraph dagger = ObjectGraph.create(new Module());
-    PipelineStoreTask store = dagger.get(FilePipelineStoreTask.class);
     try {
       store.init();
       PipelineConfiguration pc = store.create(UUID.randomUUID().toString(),"", "foo");
@@ -374,8 +364,6 @@ public class TestFilePipelineStoreTask {
 
   @Test
   public void testSyncPipelineConfigOptions() throws PipelineStoreException {
-    ObjectGraph dagger = ObjectGraph.create(new Module());
-    PipelineStoreTask store = dagger.get(FilePipelineStoreTask.class);
     store.init();
 
     List<ConfigConfiguration> pipelineConfig = new ArrayList<>();
@@ -394,7 +382,7 @@ public class TestFilePipelineStoreTask {
     /*
      * SYNC
      */
-    expectedPipelineConfig = ((FilePipelineStoreTask)store).syncPipelineConfiguration(expectedPipelineConfig,
+    expectedPipelineConfig = getFilePipelineStoreTask().syncPipelineConfiguration(expectedPipelineConfig,
       "myPipeline", "1.0", MockStages.createStageLibrary());
 
     /*
@@ -467,8 +455,6 @@ public class TestFilePipelineStoreTask {
 
   @Test
   public void testSyncPipelineConfiguration() throws PipelineStoreException {
-    ObjectGraph dagger = ObjectGraph.create(new Module());
-    PipelineStoreTask store = dagger.get(FilePipelineStoreTask.class);
     store.init();
 
     /*
@@ -495,7 +481,7 @@ public class TestFilePipelineStoreTask {
     /*
      * SYNC
      */
-    expectedPipelineConfig = ((FilePipelineStoreTask)store).syncPipelineConfiguration(expectedPipelineConfig, "myPipeline", "1.0",
+    expectedPipelineConfig = getFilePipelineStoreTask().syncPipelineConfiguration(expectedPipelineConfig, "myPipeline", "1.0",
       MockStages.createStageLibrary());
 
     /*
@@ -530,8 +516,6 @@ public class TestFilePipelineStoreTask {
 
   @Test
   public void testSyncPipelineComplexConfiguration1() throws PipelineStoreException {
-    ObjectGraph dagger = ObjectGraph.create(new Module());
-    PipelineStoreTask store = dagger.get(FilePipelineStoreTask.class);
     store.init();
 
     //Scenario 1 - expected complex config but has none
@@ -546,7 +530,7 @@ public class TestFilePipelineStoreTask {
     /*
      * SYNC
      */
-    expectedPipelineConfig = ((FilePipelineStoreTask)store).syncPipelineConfiguration(expectedPipelineConfig, "myPipeline", "1.0",
+    expectedPipelineConfig = getFilePipelineStoreTask().syncPipelineConfiguration(expectedPipelineConfig, "myPipeline", "1.0",
       MockStages.createStageLibrary());
 
     /*
@@ -573,9 +557,6 @@ public class TestFilePipelineStoreTask {
 
   @Test
   public void testSyncPipelineComplexConfiguration2() throws PipelineStoreException {
-
-    ObjectGraph dagger = ObjectGraph.create(new Module());
-    PipelineStoreTask store = dagger.get(FilePipelineStoreTask.class);
     store.init();
 
     PipelineConfiguration expectedPipelineConfig = MockStages.createPipelineConfigurationComplexSourceTarget();
@@ -601,7 +582,7 @@ public class TestFilePipelineStoreTask {
     /*
      * SYNC
      */
-    expectedPipelineConfig = ((FilePipelineStoreTask)store).syncPipelineConfiguration(expectedPipelineConfig,
+    expectedPipelineConfig = getFilePipelineStoreTask().syncPipelineConfiguration(expectedPipelineConfig,
       "myPipeline", "1.0",
       MockStages.createStageLibrary());
 
@@ -635,8 +616,6 @@ public class TestFilePipelineStoreTask {
 
   @Test
   public void testSyncPipelineConfigurationInvalidStage() throws PipelineStoreException {
-    ObjectGraph dagger = ObjectGraph.create(new Module());
-    PipelineStoreTask store = dagger.get(FilePipelineStoreTask.class);
     store.init();
 
     PipelineConfiguration expectedPipelineConfig = MockStages.createPipelineWithRequiredDependentConfig();
@@ -646,12 +625,21 @@ public class TestFilePipelineStoreTask {
     expectedPipelineConfig.getStages().add(nonExistingStage);
 
     try {
-      ((FilePipelineStoreTask)store).syncPipelineConfiguration(expectedPipelineConfig, "p", "1",
+      getFilePipelineStoreTask().syncPipelineConfiguration(expectedPipelineConfig, "p", "1",
         MockStages.createStageLibrary());
     } catch (PipelineStoreException e) {
       Assert.assertEquals(ContainerError.CONTAINER_0207, e.getErrorCode());
     }
+  }
 
+  private FilePipelineStoreTask getFilePipelineStoreTask() {
+    FilePipelineStoreTask filePipelineStoreTask;
+    if (store instanceof FilePipelineStoreTask) {
+      filePipelineStoreTask = ((FilePipelineStoreTask) store);
+    } else {
+      filePipelineStoreTask = (FilePipelineStoreTask) ((CachePipelineStoreTask) store).getActualStore();
+    }
+    return filePipelineStoreTask;
   }
 
 }

@@ -29,7 +29,7 @@ public class ProductionPipelineRunnable implements Runnable {
   private volatile Thread runningThread;
   private volatile boolean nodeProcessShutdown;
   private final List<Future<?>> relatedTasks;
-
+  private volatile boolean isStopped;
 
   public ProductionPipelineRunnable(ThreadHealthReporter threadHealthReporter,
                                     StandaloneRunner runner, ProductionPipeline pipeline,
@@ -44,6 +44,9 @@ public class ProductionPipelineRunnable implements Runnable {
 
   @Override
   public void run() {
+    if (isStopped) {
+      throw new IllegalStateException(Utils.format("Pipeline is stopped, cannot start the pipeline '{}::{}'", name, rev));
+    }
     String originalThreadName = Thread.currentThread().getName();
     try {
       Thread.currentThread().setName(originalThreadName + "-" + RUNNABLE_NAME);
@@ -77,7 +80,6 @@ public class ProductionPipelineRunnable implements Runnable {
                 + "because the node process was shutdown. " +
                 "The last committed source offset is {}.", pipeline.getCommittedOffset(), runner.getMetrics()), null);
           } else {
-            Thread.dumpStack();
             LOG.info("Changing state of pipeline '{}', '{}' to '{}'", name, rev, PipelineStatus.STOPPED);
             pipeline.getStatusListener().stateChanged(PipelineStatus.STOPPED,
               Utils.format("The pipeline was stopped. The last committed source offset is {}."
@@ -93,6 +95,7 @@ public class ProductionPipelineRunnable implements Runnable {
   }
 
   public void stop(boolean nodeProcessShutdown) {
+    this.isStopped = true;
     this.nodeProcessShutdown = nodeProcessShutdown;
     pipeline.stop();
     Thread thread = runningThread;
@@ -109,4 +112,9 @@ public class ProductionPipelineRunnable implements Runnable {
   public String getName() {
     return name;
   }
+
+  public boolean isStopped() {
+    return isStopped;
+  }
+
 }

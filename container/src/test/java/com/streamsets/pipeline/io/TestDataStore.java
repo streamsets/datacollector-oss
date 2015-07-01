@@ -36,11 +36,23 @@ public class TestDataStore {
     }
   }
 
-  @Test(expected = IllegalStateException.class)
+  @Test
   public void testReleaseNoNotLockedLock() throws IOException {
     DataStore ds = new DataStore(new File(createTestDir(), "x"));
     try {
       ds.releaseLock();
+    } finally {
+      ds.close();
+    }
+  }
+
+  @Test
+  public void testCloseMultipeTimes() throws IOException {
+    DataStore ds = new DataStore(new File(createTestDir(), "x"));
+    try {
+      OutputStream os = ds.getOutputStream();
+      os.close();
+      os.close();
     } finally {
       ds.close();
     }

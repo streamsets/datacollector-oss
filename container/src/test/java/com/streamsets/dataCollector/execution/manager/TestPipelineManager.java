@@ -29,8 +29,10 @@ import com.streamsets.dataCollector.execution.PipelineState;
 import com.streamsets.dataCollector.execution.PipelineStateStore;
 import com.streamsets.dataCollector.execution.PipelineStatus;
 import com.streamsets.dataCollector.execution.Previewer;
+import com.streamsets.dataCollector.execution.Runner;
+import com.streamsets.dataCollector.execution.store.CachePipelineStateStore;
 import com.streamsets.dataCollector.execution.store.FilePipelineStateStore;
-import com.streamsets.dataCollector.execution.store.TestFilePipelineStateStore;
+import com.streamsets.dataCollector.execution.store.TestPipelineStateStore;
 import com.streamsets.pipeline.api.ExecutionMode;
 import com.streamsets.pipeline.lib.executor.SafeScheduledExecutorService;
 import com.streamsets.pipeline.main.RuntimeInfo;
@@ -38,7 +40,9 @@ import com.streamsets.pipeline.main.RuntimeModule;
 import com.streamsets.pipeline.runner.MockStages;
 import com.streamsets.pipeline.stagelibrary.StageLibraryTask;
 import com.streamsets.pipeline.store.PipelineStoreTask;
+import com.streamsets.pipeline.store.impl.CachePipelineStoreTask;
 import com.streamsets.pipeline.store.impl.FilePipelineStoreTask;
+import com.streamsets.pipeline.util.Configuration;
 
 public class TestPipelineManager {
 
@@ -48,20 +52,25 @@ public class TestPipelineManager {
   private StageLibraryTask stageLibraryTask;
   private Manager pipelineManager;
   private PipelineStateStore pipelineStateStore;
-  private com.streamsets.pipeline.util.Configuration configuration = new com.streamsets.pipeline.util.Configuration();
+  private final Configuration configuration = new Configuration();
+  private SafeScheduledExecutorService scheduledExecutor;
 
-  private void setUpManager() {
+  private void setUpManager(long expiryTime) {
     emptyCL = new URLClassLoader(new URL[0]);
-    runtimeInfo = new RuntimeInfo(RuntimeModule.SDC_PROPERTY_PREFIX, new MetricRegistry(),
-      Arrays.asList(TestFilePipelineStateStore.class.getClassLoader()));
+    runtimeInfo =
+      new RuntimeInfo(RuntimeModule.SDC_PROPERTY_PREFIX, new MetricRegistry(),
+        Arrays.asList(TestPipelineStateStore.class.getClassLoader()));
     stageLibraryTask = MockStages.createStageLibrary(emptyCL);
-    pipelineStateStore = new FilePipelineStateStore(runtimeInfo, configuration);
+    configuration.set(PipelineManager.RUNNER_EXPIRY_INTERVAL, expiryTime);
+    pipelineStateStore = new CachePipelineStateStore(new FilePipelineStateStore(runtimeInfo, configuration));
     pipelineStateStore.init();
-    pipelineStoreTask = new FilePipelineStoreTask(runtimeInfo, stageLibraryTask, pipelineStateStore);
+    pipelineStoreTask =
+      new CachePipelineStoreTask(new FilePipelineStoreTask(runtimeInfo, stageLibraryTask, pipelineStateStore));
     pipelineStoreTask.init();
-    SafeScheduledExecutorService scheduledExecutor = new SafeScheduledExecutorService(1, "PipelineManager");
-    pipelineManager = new PipelineManager(runtimeInfo, configuration, pipelineStoreTask, pipelineStateStore, stageLibraryTask,
-      scheduledExecutor, scheduledExecutor);
+    scheduledExecutor = new SafeScheduledExecutorService(6, "PipelineManager");
+    pipelineManager =
+      new PipelineManager(runtimeInfo, configuration, pipelineStoreTask, pipelineStateStore, stageLibraryTask,
+        scheduledExecutor, scheduledExecutor, scheduledExecutor);
     pipelineManager.init();
   }
 
@@ -70,13 +79,14 @@ public class TestPipelineManager {
     System.setProperty(RuntimeModule.SDC_PROPERTY_PREFIX + RuntimeInfo.DATA_DIR, "./target/var");
     File f = new File(System.getProperty(RuntimeModule.SDC_PROPERTY_PREFIX + RuntimeInfo.DATA_DIR));
     FileUtils.deleteDirectory(f);
-    setUpManager();
+    setUpManager(PipelineManager.DEFAULT_RUNNER_EXPIRY_INTERVAL);
   }
 
   @After
   public void tearDown() {
     pipelineStoreTask.stop();
     pipelineManager.stop();
+    scheduledExecutor.shutdownNow();
   }
 
   @Test
@@ -116,21 +126,37 @@ public class TestPipelineManager {
   @Test
   public void testInitTask() throws Exception {
     pipelineStoreTask.create("aaaa", "blah", "user");
-    pipelineStateStore.saveState("user", "aaaa", "0", PipelineStatus.FINISHING, "blah", null, ExecutionMode.STANDALONE);
-    pipelineStoreTask = null;
-    pipelineStateStore = null;
-    pipelineManager = null;
-    setUpManager();
+    pipelineStateStore.saveState("user", "aaaa", "0", PipelineStatus.CONNECTING, "blah", null, ExecutionMode.STANDALONE);
+    pipelineStoreTask.stop();
+    pipelineManager.stop();
+    setUpManager(PipelineManager.DEFAULT_RUNNER_EXPIRY_INTERVAL);
+    Thread.sleep(2000);
     List<PipelineState> pipelineStates = pipelineManager.getPipelines();
     assertEquals(1, pipelineStates.size());
-    assertEquals(PipelineStatus.FINISHED, pipelineStates.get(0).getStatus());
-    assertTrue(((PipelineManager) pipelineManager).isRunnerCreated("aaaa", "0"));
-    setUpManager();
+    assertTrue(((PipelineManager) pipelineManager).isRunnerPresent("aaaa", "0"));
+    pipelineStateStore.saveState("user", "aaaa", "0", PipelineStatus.FINISHING, "blah", null, ExecutionMode.STANDALONE);
+    pipelineStoreTask.stop();
+    pipelineManager.stop();
+    setUpManager(PipelineManager.DEFAULT_RUNNER_EXPIRY_INTERVAL);
     pipelineStates = pipelineManager.getPipelines();
     assertEquals(1, pipelineStates.size());
     assertEquals(PipelineStatus.FINISHED, pipelineStates.get(0).getStatus());
     // no runner is created
-    assertFalse(((PipelineManager) pipelineManager).isRunnerCreated("aaaa", "0"));
+    assertFalse(((PipelineManager) pipelineManager).isRunnerPresent("aaaa", "0"));
+  }
+
+  @Test
+  public void testExpiry() throws Exception {
+    pipelineStoreTask.create("aaaa", "blah", "user");
+    Runner runner = pipelineManager.getRunner("aaaa", "0", "user1");
+    pipelineStateStore.saveState("user", "aaaa", "0", PipelineStatus.RUNNING_ERROR, "blah", null, ExecutionMode.STANDALONE);
+    assertEquals(PipelineStatus.RUNNING_ERROR, runner.getStatus());
+    pipelineStoreTask.stop();
+    pipelineManager.stop();
+    pipelineManager = null;
+    setUpManager(100);
+    Thread.sleep(2000);
+    assertFalse(((PipelineManager) pipelineManager).isRunnerPresent("aaaa", "0"));
   }
 
 }
