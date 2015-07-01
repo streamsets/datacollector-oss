@@ -55,10 +55,9 @@ public abstract class ConfigDefinitionExtractor {
         }
         names.add(field.getName());
       }
-      if (errors.isEmpty()) {
-        List<ConfigDefinition> defs = getConfigDefinitions(klass, contextMsg);
-        errors.addAll(validateDependencies(defs, contextMsg));
-      }
+    }
+    if (errors.isEmpty()) {
+      errors.addAll(validateDependencies(getConfigDefinitions(klass, contextMsg), contextMsg));
     }
     return errors;
   }

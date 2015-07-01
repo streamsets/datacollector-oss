@@ -101,8 +101,12 @@ public class ClassLoaderStageLibraryTask extends AbstractTask implements StageLi
     }
 
     try {
+      int libs = 0;
+      int stages = 0;
+      long start = System.currentTimeMillis();
       LocaleInContext.set(Locale.getDefault());
       for (ClassLoader cl : stageClassLoaders) {
+        libs++;
         StageLibraryDefinition libDef = StageLibraryDefinitionExtractor.get().extract(cl);
         LOG.debug("Loading stages from library '{}'", libDef.getName());
         try {
@@ -113,6 +117,7 @@ public class ClassLoaderStageLibraryTask extends AbstractTask implements StageLi
             try (InputStream is = url.openStream()) {
               Map<String, List<String>> libraryInfo = json.readValue(is, Map.class);
               for (String className : libraryInfo.get("stageClasses")) {
+                stages++;
                 Class<? extends Stage> klass = (Class<? extends Stage>) cl.loadClass(className);
                 StageDefinition stage = StageDefinitionExtractor.get().
                     extract(libDef, klass, Utils.formatL("Library='{}'", libDef.getName()));
@@ -135,6 +140,8 @@ public class ClassLoaderStageLibraryTask extends AbstractTask implements StageLi
               Utils.format("Could not load stages definition from '{}', {}", cl, ex.getMessage()), ex);
         }
       }
+      LOG.debug("Loaded '{}' libraries with a total of '{}' stages in '{}ms'", libs, stages,
+                System.currentTimeMillis() - start);
     } finally {
       LocaleInContext.set(null);
     }
