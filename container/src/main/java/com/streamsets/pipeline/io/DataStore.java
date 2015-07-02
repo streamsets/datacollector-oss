@@ -73,8 +73,10 @@ public class DataStore {
 
   @VisibleForTesting
   void acquireLock() {
+    LOG.trace("Acquiring lock for '{}'", file);
+    ReentrantLock lock  = null;
     synchronized (DataStore.class) {
-      ReentrantLock lock = FILE_LOCKS.get(file);
+      lock = FILE_LOCKS.get(file);
       if (lock == null) {
         lock = new ReentrantLock();
         FILE_LOCKS.put(file, lock);
@@ -82,17 +84,21 @@ public class DataStore {
         Utils.checkState(!lock.isHeldByCurrentThread(), Utils.format("The current thread already has a lock on '{}'",
                                                                      file));
       }
-      lock.lock();
     }
+    lock.lock();
+    LOG.trace("Acquired lock for '{}'", file);
   }
 
   @VisibleForTesting
   void releaseLock() {
+    ReentrantLock lock;
     synchronized (DataStore.class) {
-      ReentrantLock lock = FILE_LOCKS.remove(file);
+      lock = FILE_LOCKS.remove(file);
       Utils.checkState(lock != null, Utils.format("Missing lock for file '{}'", file));
-      lock.unlock();
     }
+    LOG.trace("Releasing the lock for '{}'", file);
+    lock.unlock();
+    LOG.trace("Released the lock for '{}'", file);
   }
 
 

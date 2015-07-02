@@ -46,6 +46,32 @@ public class TestDataStore {
     }
   }
 
+  @Test(timeout = 5000)
+  public void testMultipleThreadAcquireReleaselock() throws Exception {
+    final DataStore ds = new DataStore(new File(createTestDir(), "x"));
+    Thread th1 = createThreadAcquireReleaseLock(ds);
+    Thread th2 = createThreadAcquireReleaseLock(ds);
+    th1.start();
+    th2.start();
+    th1.join();
+    th2.join();
+  }
+
+  private Thread createThreadAcquireReleaseLock(final DataStore ds) {
+    Thread thread = new Thread() {
+      @Override
+      public void run() {
+        ds.acquireLock();
+        try {
+          Thread.sleep(500);
+        } catch (InterruptedException e) {
+        }
+        ds.releaseLock();
+      }
+    };
+    return thread;
+  }
+
   @Test
   public void testLock() throws IOException {
     DataStore ds = new DataStore(new File(createTestDir(), "x"));
