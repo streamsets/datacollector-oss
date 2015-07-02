@@ -92,7 +92,9 @@
               </li>
             </ul>
 
-            <nvd3-discrete-bar-chart
+            <nvd3 options="chartOptions" data="chartData" config="{ refreshDataOnly: true }"></nvd3>
+
+            <!--nvd3-discrete-bar-chart
               data="chartData"
               id="{{dataRuleDefn.id}}"
               height="250"
@@ -106,7 +108,7 @@
               tooltips="true"
               tooltipcontent="getTooltipContent()"
               margin="{left:65,top:10,bottom:40,right:20}">
-            </nvd3-discrete-bar-chart>
+            </nvd3-discrete-bar-chart-->
 
           </div>
 

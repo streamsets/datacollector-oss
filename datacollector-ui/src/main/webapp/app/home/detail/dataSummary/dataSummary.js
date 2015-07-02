@@ -15,9 +15,46 @@ angular
     });
   })
 
-  .controller('DataSummaryMeterController', function ($scope, $rootScope, pipelineConstant) {
+  .controller('DataSummaryMeterController', function ($scope, $rootScope, $translate, pipelineConstant) {
+    var yAxisLabel = '( records / sec )';
+
+    $translate('home.detailPane.recordsPerSecond').then(function(translation) {
+      yAxisLabel = translation;
+    });
+
     angular.extend($scope, {
-      chartData: [],
+      chartOptions: {
+        chart: {
+          type: 'discreteBarChart',
+          height: 250,
+          showLabels: true,
+          duration: 0,
+          x: function(d) {
+            return d[0];
+          },
+          y: function(d) {
+            return d[1];
+          },
+          showLegend: true,
+          staggerLabels: false,
+          showValues: true,
+          yAxis: {
+            tickValues: 0,
+            axisLabel: yAxisLabel,
+            axisLabelDistance: -10
+          },
+          valueFormat: function(d) {
+            return d3.format(',d')(d);
+          },
+          margin: {
+            left:65,top:10,bottom:40,right:20
+          }
+        }
+      },
+      chartData: [{
+        key: undefined,
+        values: []
+      }],
       count: 0
     });
 
@@ -30,20 +67,19 @@ angular
 
         if(meterData) {
           $scope.count = meterData.count;
-          $scope.chartData = [{
-            key: dataRuleDefn.label,
-            values: [
-              ["1m" , meterData.m1_rate ],
-              ["5m" , meterData.m5_rate ],
-              ["15m" , meterData.m15_rate ],
-              ["30m" , meterData.m30_rate ],
-              ["1h" , meterData.h1_rate ],
-              ["6h" , meterData.h6_rate ],
-              ["12h" , meterData.h12_rate ],
-              ["1d" , meterData.h24_rate ],
-              ["Mean" , meterData.mean_rate ]
-            ]
-          }];
+
+          $scope.chartData[0].key = dataRuleDefn.label;
+          $scope.chartData[0].values = [
+            ["1m" , meterData.m1_rate ],
+            ["5m" , meterData.m5_rate ],
+            ["15m" , meterData.m15_rate ],
+            ["30m" , meterData.m30_rate ],
+            ["1h" , meterData.h1_rate ],
+            ["6h" , meterData.h6_rate ],
+            ["12h" , meterData.h12_rate ],
+            ["1d" , meterData.h24_rate ],
+            ["Mean" , meterData.mean_rate ]
+          ];
         }
 
       }
