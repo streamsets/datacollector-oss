@@ -44,10 +44,15 @@ public enum DefinitionError implements ErrorCode {
   //ConfigDefinitionExtractor
   DEF_150("{} Class='{}' Field='{}', field must public to be a configuration"),
   DEF_151("{} Class='{}' Field='{}', field cannot be static to be a configuration"),
-  DEF_152("{}, there cannot be 2 configurations with the same name '{}'"),
+  DEF_152("{} Class='{}' Field='{}', field cannot have both '@ConfigDef' and '@ConfigDefBean' annotations"),
   DEF_153("{}, configuration '{}' depends on an non-existing configuration '{}'"),
   DEF_154("{} Class='{}' Field='{}', field cannot be final to be a configuration"),
   DEF_155("{} Class='{}' Field='{}', field type is not NUMBER, cannot define min or max"),
+  DEF_156("{} class '{}' does not have a public default constructor"),
+  DEF_157("{} dependsOn name starting with '^' can have only one '^'"),
+  DEF_158("{} dependsOn name ending with multiple '^' cannot have other characters in betweeen"),
+  DEF_159("{} field has {} '^' but its bean depth is only '{}' ('{}')"),
+  DEF_160("{} bean does not have any configuration properties"),
 
   //ModelDefinitionExtractor
   DEF_200("{}, Model annotation missing'"),

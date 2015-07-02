@@ -8,6 +8,7 @@ package com.streamsets.pipeline.definition;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import com.streamsets.pipeline.api.ConfigDef;
+import com.streamsets.pipeline.api.ConfigDefBean;
 import com.streamsets.pipeline.api.impl.ErrorMessage;
 import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.config.ConfigDefinition;
@@ -21,7 +22,6 @@ import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -35,49 +35,73 @@ public abstract class ConfigDefinitionExtractor {
   }
 
   public List<ErrorMessage> validate(Class klass, Object contextMsg) {
+    return validate("", klass, true, false, contextMsg);
+  }
+
+  private List<ErrorMessage> validate(String configPrefix, Class klass, boolean validateDependencies, boolean isBean,
+      Object contextMsg) {
     List<ErrorMessage> errors = new ArrayList<>();
-    Set<String> names = new HashSet<>();
+    boolean noConfigs = true;
     for (Field field : klass.getDeclaredFields()) {
-      if (field.getAnnotation(ConfigDef.class) != null) {
-        if (!Modifier.isPublic(field.getModifiers())) {
-          errors.add(new ErrorMessage(DefinitionError.DEF_150, contextMsg, klass.getSimpleName(), field.getName()));
+      if (field.getAnnotation(ConfigDef.class) != null && field.getAnnotation(ConfigDefBean.class) != null) {
+        errors.add(new ErrorMessage(DefinitionError.DEF_152, contextMsg, field.getName()));
+      } else {
+        if (field.getAnnotation(ConfigDef.class) != null || field.getAnnotation(ConfigDefBean.class) != null) {
+          if (!Modifier.isPublic(field.getModifiers())) {
+            errors.add(new ErrorMessage(DefinitionError.DEF_150, contextMsg, klass.getSimpleName(), field.getName()));
+          }
+          if (Modifier.isStatic(field.getModifiers())) {
+            errors.add(new ErrorMessage(DefinitionError.DEF_151, contextMsg, klass.getSimpleName(), field.getName()));
+          }
+          if (Modifier.isFinal(field.getModifiers())) {
+            errors.add(new ErrorMessage(DefinitionError.DEF_154, contextMsg, klass.getSimpleName(), field.getName()));
+          }
         }
-        if (Modifier.isStatic(field.getModifiers())) {
-          errors.add(new ErrorMessage(DefinitionError.DEF_151, contextMsg, klass.getSimpleName(), field.getName()));
+        if (field.getAnnotation(ConfigDef.class) != null) {
+          noConfigs = false;
+          List<ErrorMessage> subErrors = validateConfigDef(configPrefix, field,
+                                                           Utils.formatL("{} Field='{}'", contextMsg, field.getName()));
+          errors.addAll(subErrors);
+        } else if (field.getAnnotation(ConfigDefBean.class) != null) {
+          noConfigs = false;
+          List<ErrorMessage> subErrors = validateConfigDefBean(configPrefix + field.getName() + ".", field.getType(),
+              Utils.formatL("{} BeanField='{}'", contextMsg, field.getName()));
+          errors.addAll(subErrors);
         }
-        if (Modifier.isFinal(field.getModifiers())) {
-          errors.add(new ErrorMessage(DefinitionError.DEF_154, contextMsg, klass.getSimpleName(), field.getName()));
-        }
-        List<ErrorMessage> subErrors = validate(field, Utils.formatL("{} Field='{}'", contextMsg, field.getName()));
-        errors.addAll(subErrors);
-        if (names.contains(field.getName())) {
-          errors.add(new ErrorMessage(DefinitionError.DEF_152, contextMsg, field.getName()));
-        }
-        names.add(field.getName());
       }
     }
-    if (errors.isEmpty()) {
-      errors.addAll(validateDependencies(getConfigDefinitions(klass, contextMsg), contextMsg));
+    if (isBean && noConfigs) {
+      errors.add(new ErrorMessage(DefinitionError.DEF_160, contextMsg));
+    }
+    if (errors.isEmpty() & validateDependencies) {
+      errors.addAll(validateDependencies(getConfigDefinitions("", klass, contextMsg), contextMsg));
     }
     return errors;
   }
 
-  private List<ConfigDefinition> getConfigDefinitions(Class klass, Object contextMsg) {
+  private List<ConfigDefinition> getConfigDefinitions(String configPrefix, Class klass, Object contextMsg) {
     List<ConfigDefinition> defs = new ArrayList<>();
     for (Field field : klass.getFields()) {
       if (field.getAnnotation(ConfigDef.class) != null) {
-        defs.add(extract(field, Utils.formatL("{} Field='{}'", contextMsg, field.getName())));
+        defs.add(extractConfigDef(configPrefix, field, Utils.formatL("{} Field='{}'", contextMsg, field.getName())));
+      } else if (field.getAnnotation(ConfigDefBean.class) != null) {
+        defs.addAll(extract(configPrefix + field.getName() + ".", field.getType(), true,
+                            Utils.formatL("{} BeanField='{}'", contextMsg, field.getName())));
       }
     }
     return defs;
   }
 
   public List<ConfigDefinition> extract(Class klass, Object contextMsg) {
-    List<ErrorMessage> errors = validate(klass, contextMsg);
+    List<ConfigDefinition> defs = extract("", klass, false, contextMsg);
+    resolveDependencies("", defs, contextMsg);
+    return defs;
+  }
+
+  private List<ConfigDefinition> extract(String configPrefix, Class klass, boolean isBean, Object contextMsg) {
+    List<ErrorMessage> errors = validate(configPrefix, klass, false, isBean, contextMsg);
     if (errors.isEmpty()) {
-      List<ConfigDefinition> defs = getConfigDefinitions(klass, contextMsg);
-      resolveDependencies(defs, contextMsg);
-      return defs;
+      return getConfigDefinitions(configPrefix, klass, contextMsg);
     } else {
       throw new IllegalArgumentException(Utils.format("Invalid ConfigDefinition: {}", errors));
     }
@@ -109,7 +133,7 @@ public abstract class ConfigDefinitionExtractor {
     return errors;
   }
 
-  void resolveDependencies(List<ConfigDefinition>  defs, Object contextMsg) {
+  void resolveDependencies(String configPrefix, List<ConfigDefinition>  defs, Object contextMsg) {
     Map<String, ConfigDefinition> definitionsMap = new HashMap<>();
     for (ConfigDefinition def : defs) {
       definitionsMap.put(def.getName(), def);
@@ -143,7 +167,7 @@ public abstract class ConfigDefinitionExtractor {
     }
   }
 
-  List<ErrorMessage> validate(Field field, Object contextMsg) {
+  List<ErrorMessage> validateConfigDef(String configPrefix, Field field, Object contextMsg) {
     List<ErrorMessage> errors = new ArrayList<>();
     ConfigDef annotation = field.getAnnotation(ConfigDef.class);
     errors.addAll(ConfigValueExtractor.get().validate(field, annotation, contextMsg));
@@ -159,11 +183,25 @@ public abstract class ConfigDefinitionExtractor {
         (annotation.min() != Long.MIN_VALUE || annotation.max() != Long.MAX_VALUE)) {
       errors.add(new ErrorMessage(DefinitionError.DEF_155, contextMsg, field.getName()));
     }
+    errors.addAll(validateDependsOnName(configPrefix, annotation.dependsOn(),
+                                        Utils.formatL("{} Field='{}'", contextMsg, field.getName())));
     return errors;
   }
 
-  ConfigDefinition extract(Field field, Object contextMsg) {
-    List<ErrorMessage> errors = validate(field, contextMsg);
+  @SuppressWarnings("unchecked")
+  List<ErrorMessage> validateConfigDefBean(String configPrefix, Class klass, Object contextMsg) {
+    List<ErrorMessage> errors = new ArrayList<>();
+    try {
+      klass.getConstructor();
+      errors.addAll(validate(configPrefix, klass, false, true, contextMsg));
+    } catch (NoSuchMethodException ex) {
+      errors.add(new ErrorMessage(DefinitionError.DEF_156, contextMsg, klass.getSimpleName()));
+    }
+    return errors;
+  }
+
+  ConfigDefinition extractConfigDef(String configPrefix, Field field, Object contextMsg) {
+    List<ErrorMessage> errors = validateConfigDef(configPrefix, field, contextMsg);
     if (errors.isEmpty()) {
       ConfigDefinition def = null;
       ConfigDef annotation = field.getAnnotation(ConfigDef.class);
@@ -176,7 +214,7 @@ public abstract class ConfigDefinitionExtractor {
         boolean required = annotation.required();
         String group = annotation.group();
         String fieldName = field.getName();
-        String dependsOn = annotation.dependsOn();
+        String dependsOn = resolveDependsOn(configPrefix, annotation.dependsOn());
         List<Object> triggeredByValues = null;  // done at resolveDependencies() invocation
         ModelDefinition model = ModelDefinitionExtractor.get().extract(field, contextMsg);
         int displayPosition = annotation.displayPosition();
@@ -189,9 +227,10 @@ public abstract class ConfigDefinitionExtractor {
         int lines = annotation.lines();
         ConfigDef.Evaluation evaluation = annotation.evaluation();
         Map<String, List<Object>> dependsOnMap = null; // done at resolveDependencies() invocation
-        def = new ConfigDefinition(field, name, type, label, description, defaultValue, required, group, fieldName, model,
-                                   dependsOn, triggeredByValues, displayPosition, elFunctionDefinitions,
-                                   elConstantDefinitions, min, max, mode, lines, elDefs, evaluation, dependsOnMap);
+        def = new ConfigDefinition(field, configPrefix + name, type, label, description, defaultValue, required, group,
+                                   fieldName, model, dependsOn, triggeredByValues, displayPosition,
+                                   elFunctionDefinitions, elConstantDefinitions, min, max, mode, lines, elDefs,
+                                   evaluation, dependsOnMap);
       }
       return def;
     } else {
@@ -199,6 +238,56 @@ public abstract class ConfigDefinitionExtractor {
     }
   }
 
+  private List<ErrorMessage> validateDependsOnName(String configPrefix, String dependsOn, Object contextMsg) {
+    List<ErrorMessage> errors = new ArrayList<>();
+    if (!dependsOn.isEmpty()) {
+      if (dependsOn.startsWith("^")) {
+        if (dependsOn.substring(1).contains("^")) {
+          errors.add(new ErrorMessage(DefinitionError.DEF_157, contextMsg));
+        }
+      } else if (dependsOn.endsWith("^")) {
+        boolean gaps = false;
+        for (int i = dependsOn.indexOf("^"); !gaps && i < dependsOn.length(); i++) {
+          gaps = dependsOn.charAt(i) != '^';
+        }
+        if (gaps) {
+          errors.add(new ErrorMessage(DefinitionError.DEF_158, contextMsg));
+        } else {
+          int relativeCount = dependsOn.length() - dependsOn.indexOf("^");
+          int dotCount = configPrefix.split("\\.").length;
+          if (relativeCount > dotCount) {
+            errors.add(new ErrorMessage(DefinitionError.DEF_159, contextMsg, relativeCount, dotCount, configPrefix));
+          }
+        }
+      }
+    }
+    return  errors;
+  }
+
+  private String resolveDependsOn(String configPrefix, String dependsOn) {
+    if (!dependsOn.isEmpty()) {
+      if (dependsOn.startsWith("^")) {
+        //is absolute from the top
+        dependsOn = dependsOn.substring(1);
+      } else if (dependsOn.endsWith("^")) {
+        configPrefix = configPrefix.substring(0, configPrefix.length() - 1);
+        //is relative backwards based on the ^ count
+        int relativeCount = dependsOn.length() - dependsOn.indexOf("^");
+        while (relativeCount > 0) {
+          int pos = configPrefix.lastIndexOf(".");
+          configPrefix = (pos == -1) ? "" : configPrefix.substring(0, pos);
+          relativeCount--;
+        }
+        if (!configPrefix.isEmpty()) {
+          configPrefix += ".";
+        }
+        dependsOn = configPrefix + dependsOn.substring(0, dependsOn.indexOf("^"));
+      } else {
+        dependsOn = configPrefix + dependsOn;
+      }
+    }
+    return  dependsOn;
+  }
 
   private String getMimeString(ConfigDef.Mode mode) {
     switch(mode) {

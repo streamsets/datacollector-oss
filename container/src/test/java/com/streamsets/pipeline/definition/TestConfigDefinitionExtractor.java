@@ -6,7 +6,9 @@
 package com.streamsets.pipeline.definition;
 
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableSet;
 import com.streamsets.pipeline.api.ConfigDef;
+import com.streamsets.pipeline.api.ConfigDefBean;
 import com.streamsets.pipeline.api.ElConstant;
 import com.streamsets.pipeline.api.ElFunction;
 import com.streamsets.pipeline.api.ElParam;
@@ -18,7 +20,9 @@ import com.streamsets.pipeline.el.ElFunctionDefinition;
 import org.junit.Assert;
 import org.junit.Test;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 public class TestConfigDefinitionExtractor {
 
@@ -328,6 +332,188 @@ public class TestConfigDefinitionExtractor {
     Assert.assertEquals(2, a.getDependsOnMap().size());
     Assert.assertEquals(ImmutableList.of("B"), a.getDependsOnMap().get("b"));
     Assert.assertEquals(ImmutableList.of("C"), a.getDependsOnMap().get("c"));
+  }
+
+  public static class SubSubBean {
+
+    @ConfigDef(
+        label = "L",
+        required = true,
+        type = ConfigDef.Type.NUMBER    )
+    public long prop5;
+
+    @ConfigDef(
+        label = "L",
+        required = true,
+        type = ConfigDef.Type.NUMBER,
+        dependsOn = "prop5",
+        triggeredByValue = "1"
+    )
+    public long prop6;
+
+    @ConfigDef(
+        label = "L",
+        required = true,
+        type = ConfigDef.Type.NUMBER,
+        dependsOn = "^prop2.prop3",
+        triggeredByValue = "2"
+    )
+    public long prop7;
+
+    @ConfigDef(
+        label = "L",
+        required = true,
+        type = ConfigDef.Type.NUMBER,
+        dependsOn = "prop1^^",
+        triggeredByValue = "3"
+    )
+    public long prop8;
+
+  }
+
+  public static class SubBean {
+
+    @ConfigDef(
+        label = "L",
+        required = true,
+        type = ConfigDef.Type.NUMBER
+    )
+    public long prop3;
+
+    @ConfigDefBean
+    public SubSubBean prop4;
+
+  }
+
+  public static class Bean {
+
+    @ConfigDef(
+        label = "L",
+        required = true,
+        type = ConfigDef.Type.STRING
+    )
+    public String prop1;
+
+    @ConfigDefBean
+    public SubBean prop2;
+  }
+
+  @Test
+  public void testConfigDefBean() {
+    Assert.assertTrue(ConfigDefinitionExtractor.get().validate(Bean.class, "x").isEmpty());
+    List<ConfigDefinition> configs = ConfigDefinitionExtractor.get().extract(Bean.class, "x");
+    Assert.assertEquals(6, configs.size());
+    Set<String> expectedNames = ImmutableSet.of("prop1", "prop2.prop3", "prop2.prop4.prop5", "prop2.prop4.prop6",
+                                                "prop2.prop4.prop7", "prop2.prop4.prop8");
+    Set<String> expectedFieldNames = ImmutableSet.of("prop1", "prop3", "prop5", "prop6", "prop7", "prop8");
+    Set<String> gotNames = new HashSet<>();
+    Set<String> gotFieldNames = new HashSet<>();
+    for (ConfigDefinition cd : configs) {
+      gotNames.add(cd.getName());
+      gotFieldNames.add(cd.getFieldName());
+    }
+    Assert.assertEquals(expectedNames, gotNames);
+    Assert.assertEquals(expectedFieldNames, gotFieldNames);
+  }
+
+  public static class SubBean1 {
+
+    public String prop4;
+
+  }
+
+  public static class Bean1 {
+
+    @ConfigDef(
+        label = "L",
+        required = true,
+        type = ConfigDef.Type.STRING
+    )
+    public String prop1;
+
+    @ConfigDefBean
+    public SubBean1 prop2;
+  }
+
+  @Test
+  public void testConfigDefBeanInvalidBeanWithoutConfig() {
+    Assert.assertEquals(1, ConfigDefinitionExtractor.get().validate(Bean1.class, "x").size());
+  }
+
+  public static class SubBean2 {
+
+    @ConfigDef(
+        label = "L",
+        required = true,
+        type = ConfigDef.Type.STRING,
+        dependsOn = "props^^"
+    )
+    public String prop3;
+
+    @ConfigDef(
+        label = "L",
+        required = true,
+        type = ConfigDef.Type.STRING,
+        dependsOn = "^props^^"
+    )
+    public String prop4;
+
+    @ConfigDef(
+        label = "L",
+        required = true,
+        type = ConfigDef.Type.STRING,
+        dependsOn = "props^3^"
+    )
+    public String prop5;
+
+  }
+
+  public static class Bean2 {
+
+    @ConfigDef(
+        label = "L",
+        required = true,
+        type = ConfigDef.Type.STRING
+    )
+    public String prop1;
+
+    @ConfigDefBean
+    public SubBean2 prop2;
+  }
+
+  @Test
+  public void testConfigDefBeanInvalidDependsOn() {
+    Assert.assertEquals(3, ConfigDefinitionExtractor.get().validate(Bean2.class, "x").size());
+  }
+
+  public static class SubBean3 {
+
+    @ConfigDef(
+        label = "L",
+        required = true,
+        type = ConfigDef.Type.STRING,
+        dependsOn = "props^"
+    )
+    public String prop3;
+
+  }
+
+  public static class Bean3 {
+
+    @ConfigDef(
+        label = "L",
+        required = true,
+        type = ConfigDef.Type.STRING
+    )
+    public String prop1;
+
+    @ConfigDefBean
+    public SubBean3 prop2;
+  }
+
+  @Test
+  public void testConfigDefBeanNonExistentDependsOn() {
+    Assert.assertEquals(1, ConfigDefinitionExtractor.get().validate(Bean3.class, "x").size());
   }
 
 }
