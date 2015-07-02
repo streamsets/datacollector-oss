@@ -107,6 +107,8 @@ public class TestClusterPipelineManager {
 
   @After
   public void tearDown() {
+    System.clearProperty(RuntimeInfo.TRANSIENT_ENVIRONMENT);
+    System.clearProperty("sdc.testing-mode");
     FileUtils.deleteQuietly(tempDir);
     if (executorService != null) {
       executorService.shutdownNow();

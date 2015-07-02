@@ -65,7 +65,6 @@ public class TestStandaloneRunner {
 
   @Before
   public void setUp() throws IOException {
-    TestUtil.EMPTY_OFFSET = false;
     stageLibrary = new TestUtil.TestStageLibraryModule().provideStageLibrary();
     runtimeInfo  = new TestUtil.TestRuntimeModule().provideRuntimeInfo();
     configuration = new com.streamsets.pipeline.util.Configuration();
@@ -80,6 +79,7 @@ public class TestStandaloneRunner {
 
   @After
   public void tearDown() throws Exception {
+    TestUtil.EMPTY_OFFSET = false;
     LogUtil.unregisterAllLoggers();
     try {
     pipelineManager.stop();
