@@ -2,7 +2,7 @@ describe('StreamSets Data Collector App', function() {
 
   beforeEach(function() {
     browser.ignoreSynchronization = true;
-    browser.manage().timeouts().pageLoadTimeout(10000);
+    //browser.manage().timeouts().pageLoadTimeout(10000);
   });
 
   afterEach(function() {
@@ -52,7 +52,12 @@ describe('StreamSets Data Collector App', function() {
       element.all(by.css('.import-pipeline-btn')).then(function(elements) {
         var importBtnElement = elements[elements.length - 1];
         importBtnElement.click();
-        $('input[type="file"]').sendKeys(__dirname + '/testData/testPipeline.json');
+
+        browser.sleep(1500);
+
+        element(by.css('input[type="file"]')).sendKeys(__dirname + '/testData/testPipeline.json');
+
+        browser.sleep(1500);
 
         element(by.model('newConfig.name')).sendKeys('UI End to End Test Pipeline');
         element(by.css('button[type="submit"]')).click();

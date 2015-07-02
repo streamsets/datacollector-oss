@@ -1,4 +1,4 @@
-<div ng-switch="configDefinition.type">
+<div ng-switch="configDefinition.type" class="config_{{configDefinition.name}}">
   <div ng-switch-when="BOOLEAN">
     <ng-include src="'labelConfigurationTemplate'"></ng-include>
     <ng-include src="'booleanConfigurationTemplate'"></ng-include>

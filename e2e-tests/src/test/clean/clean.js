@@ -25,10 +25,6 @@ frisby.create('Login to StreamSets Data Collector')
       .afterJSON(function(pipelineListJSON) {
         expect(pipelineListJSON).toBeDefined();
 
-        //expect(pipelineListJSON.length).toEqual(0);
-        initialPipelineCount = pipelineListJSON.length;
-
-
         pipelineListJSON.forEach(function(pipelineInfo) {
           frisby.create('Should be able to delete pipeline configuration.')
             .delete(browser.baseUrl + 'rest/v1/pipeline-library/' + pipelineInfo.name, {}, {

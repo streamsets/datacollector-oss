@@ -252,9 +252,7 @@
             ng-model="detailPaneConfig.configuration[configIndex].value">
       <option ng-repeat="listValue in configDefinition.model.values"
               value="{{listValue}}"
-              ng-selected="listValue === detailPaneConfig.configuration[configIndex].value">
-        {{configDefinition.model.labels[$index]}}
-      </option>
+              ng-selected="listValue === detailPaneConfig.configuration[configIndex].value">{{configDefinition.model.labels[$index]}}</option>
     </select>
     <p class="help-block">{{getConfigurationIssueMessage(detailPaneConfig, configDefinition)}}</p>
   </div>

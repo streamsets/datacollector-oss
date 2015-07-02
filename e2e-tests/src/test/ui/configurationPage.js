@@ -2,7 +2,7 @@ describe('StreamSets Data Collector App', function() {
 
   beforeEach(function() {
     browser.ignoreSynchronization = true;
-    browser.manage().timeouts().pageLoadTimeout(10000);
+    //browser.manage().timeouts().pageLoadTimeout(10000);
   });
 
   afterEach(function() {
