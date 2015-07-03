@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE task PUBLIC "-//OASIS//DTD DITA General Task//EN" "generalTask.dtd">
+<task id="task_wpz_nhs_ns">
+    <title>Configuring a Geo IP Processor</title>
+    <taskbody>
+        <context><indexterm>Geo IP processor<indexterm>configuring</indexterm></indexterm>Configure
+            a Geo IP processor to return geolocation information based on IP addresses.</context>
+        <steps id="steps_et4_33s_ns">
+            <step
+                conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/1stStep-ReqField-noEHandling">
+                <cmd/>
+            </step>
+            <step>
+                <cmd>On the <wintitle>Geo IP </wintitle> tab, configure the following
+                    properties:</cmd>
+                <info>
+                    <table frame="all" rowsep="1" colsep="1" id="table_f3t_m3s_ns">
+                        <tgroup cols="2">
+                            <colspec colname="c1" colnum="1"/>
+                            <colspec colname="c2" colnum="2"/>
+                            <thead>
+                                <row>
+                                    <entry>Geo IP Property</entry>
+                                    <entry>Description</entry>
+                                </row>
+                            </thead>
+                            <tbody>
+                                <row>
+                                    <entry>GeoIP2 DB File <draft-comment author="Loretta">SDC-977
+                                            asks for name change</draft-comment></entry>
+                                    <entry>Directory where the GeoIP2 database file is located.
+                                        Enter a fully-qualified location or the <ph
+                                            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                                        /> resources directory. <draft-comment author="Loretta">come
+                                            back to this.</draft-comment></entry>
+                                </row>
+                                <row>
+                                    <entry>Input Field Name</entry>
+                                    <entry>Incoming field with the IP address to use. The field can
+                                        be an Integer or String data type. The </entry>
+                                </row>
+                                <row>
+                                    <entry>Output Field Name</entry>
+                                    <entry>Name of the field to pass the selected geolocation
+                                        data.</entry>
+                                </row>
+                                <row>
+                                    <entry>Geolocation Field<draft-comment author="Loretta">SDC-977
+                                            asks for name change</draft-comment></entry>
+                                    <entry>Geolocation data to be passed by the output
+                                        field.</entry>
+                                </row>
+                            </tbody>
+                        </tgroup>
+                    </table>
+                </info>
+            </step>
+        </steps>
+    </taskbody>
+</task>

@@ -2,19 +2,49 @@
 <!DOCTYPE task PUBLIC "-//OASIS//DTD DITA General Task//EN" "generalTask.dtd">
 <task id="task_wgb_t4p_ms">
     <title>Add Corresponding Fields with the Expression Evaluator</title>
-    <shortdesc>Records with credit card payments now have additional fields, so let's use an
-        Expression Editor to add those fields to the other records so our data isn't malformed. </shortdesc>
+    <shortdesc>Use an Expression Editor to add fields to the non-credit card data flow so all
+        records have the same format.  </shortdesc>
     <taskbody>
         <context>
-            <p></p>
+            <p>To do this, let's use data preview to verify the structure of records in the credit
+                card branch.</p>
         </context>
         <steps id="steps_mr4_2pp_ms">
             <step>
-                <cmd>In the stage library, select the <uicontrol>Expression Evaluator</uicontrol>
-                    processor and connect it to default output of the Stream Selector. </cmd>
+                <cmd>Click the <uicontrol>Preview</uicontrol> icon. </cmd>
             </step>
             <step>
-                <cmd>Click the Expressions tab</cmd>
+                <cmd>In the pipeline, click the <uicontrol>Jython Evaluator</uicontrol> to view the
+                    output of that processor.</cmd>
+            </step>
+            <step>
+                <cmd>Expand the first output record, scroll down, and expand index 21. Note the
+                    header and value information, and then click <uicontrol>Close
+                        Preview</uicontrol>.</cmd>
+                <info><image href="../Graphics/Tutorial-Exp-JythonPreview.png" id="image_h4c_d4h_4s"
+                        scale="80"/></info>
+            </step>
+            <step>
+                <cmd>In the stage library, select the <uicontrol>Expression Evaluator</uicontrol>
+                    processor and connect it to default output of the Stream Selector. Or from the
+                    Pipeline Creation Help Bar, click <menucascade>
+                        <uicontrol>Select Processor to Connect</uicontrol>
+                        <uicontrol>Expression Evaluator</uicontrol>
+                    </menucascade>.</cmd>
+            </step>
+            <step>
+                <cmd>Click the <wintitle>Expressions</wintitle> tab.</cmd>
+            </step>
+            <step>
+                <cmd>Click the <uicontrol>Add</uicontrol> icon twice and configure the properties as
+                    follows:</cmd>
+                <info><image href="../Graphics/Tutorial-ExpressionEvaluator.png"
+                        id="image_wqq_nrh_4s" scale="80"/></info>
+            </step>
+            <step>
+                <cmd>To write the data from this branch to the destination and merge the non-credit
+                    card data with the credit card data, link the Expression Evaluator to the Hadoop
+                    FS destination.</cmd>
             </step>
         </steps>
     </taskbody>

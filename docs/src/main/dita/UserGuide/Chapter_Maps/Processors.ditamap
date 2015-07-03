@@ -38,7 +38,9 @@
   <topicref href="../Processors/GeoIP.dita" chunk="to-content"> 
    <topicmeta>
    <shortdesc/>
-  </topicmeta></topicref>
+  </topicmeta>
+   <topicref href="../Processors/GeoIP-DatabaseFileLocation.dita"/>
+   <topicref href="../Processors/GeoIP-Configuring.dita"/></topicref>
   <topicref href="../Processors/JavaScript.dita" chunk="to-content"> 
    <topicmeta><shortdesc></shortdesc></topicmeta>
    <topicref href="../Processors/JavaScript_ProcessingMode.dita"/>

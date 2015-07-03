@@ -2,7 +2,8 @@
 <!DOCTYPE task PUBLIC "-//OASIS//DTD DITA General Task//EN" "generalTask.dtd">
 <task id="task_qbw_d3m_ls">
     <title>Mask Credit Card Numbers</title>
-    <shortdesc>Use the Field Masker to mask sensitive data, in this case, credit card numbers. </shortdesc>
+    <shortdesc>Now that the credit card type has been evaluated, we'll use a Field Masker to mask
+        the credit card numbers. </shortdesc>
     <taskbody>
         <context>
             <p>The Field Masker provides fixed and variable-length masks that mask all data. You can
@@ -16,17 +17,23 @@
         <steps id="steps_wwy_fjm_ls">
             <step>
                 <cmd>From the stage library, select the <uicontrol>Field Masker</uicontrol>
-                    processor and connect it to the previous stage.</cmd>
+                    processor and connect it to the Jython Evaluator. Or, from the Pipeline Creation
+                    Help Bar, click <menucascade>
+                        <uicontrol>Select Processor to Connect</uicontrol>
+                        <uicontrol>Field Masker</uicontrol>
+                    </menucascade>.</cmd>
             </step>
             <step>
                 <cmd>With the processor selected, in the Properties panel, click the
                         <wintitle>Mask</wintitle> tab.</cmd>
             </step>
             <step>
-                <cmd>
-                    <draft-comment author="Loretta">enter the field name - or select it after data
-                        preview: [20]/value -- or add to table below.</draft-comment>
-                </cmd>
+                <cmd>Click in the <uicontrol>Fields to Mask</uicontrol> field. Scroll down the list
+                    of fields to select the field we verified represented credit card data:
+                        <uicontrol>[20]/value</uicontrol>. </cmd>
+                <info>A list of fields displays when the pipeline is valid for data preview. If the
+                    list does not display, you can type in the field path:
+                        <uicontrol>[20]/value</uicontrol>.</info>
             </step>
             <step>
                 <cmd>To use a regular expression as a mask and display the last 4 digits of the

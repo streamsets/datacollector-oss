@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
+<concept id="concept_oy2_1dt_ns">
+ <title>Read Preference</title>
+ <shortdesc>You can configure the read preference that the MongoDB origin uses. The read preference
+  determines how the origin reads data from different members of the MongoDB replica set. </shortdesc>
+ <conbody>
+  <p><indexterm>MongoDB origin<indexterm>read preference</indexterm></indexterm>You can use the
+   following MongoDB read preferences:<ul id="ul_uh2_13t_ns">
+    <li>Primary - Requires reading from the primary member.</li>
+    <li>Primary Preferred - Prefers reading from the primary, but allows reads from a secondary
+     member.</li>
+    <li>Secondary - Requires reading from a secondary member.</li>
+    <li>Secondary Preferred - Prefers reading from a secondary, but allows reads from a primary when
+     necessary.</li>
+    <li>Nearest - Reads from the member with the least network latency. </li>
+   </ul>By default, the origin uses Secondary Preferred to avoid making unnecessary requests to the
+   primary member.</p>
+ </conbody>
+</concept>

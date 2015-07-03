@@ -57,6 +57,12 @@
    <topicmeta><shortdesc></shortdesc></topicmeta>
    <topicref href="../Origins/KinConsumer-ReadInterval.dita"/>
    <topicref href="../Origins/KinConsumer-Configuring.dita"/></topicref>
+  <topicref href="../Origins/MongoDB.dita" chunk="to-content">
+   <topicmeta><shortdesc></shortdesc></topicmeta>
+   <topicref href="../Origins/MongoDB-OffsetField.dita"/>
+   <topicref href="../Origins/MongoDB-ReadPreference.dita"/>
+   <topicref href="../Origins/MongoDB-Configuring.dita"/>
+  </topicref>
   <topicref href="../Origins/Omniture.dita" chunk="to-content">
    <topicmeta><shortdesc></shortdesc></topicmeta>
    <topicref href="../Origins/Omniture-Configuring.dita"/>

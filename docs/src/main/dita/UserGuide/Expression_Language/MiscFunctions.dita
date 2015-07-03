@@ -17,6 +17,26 @@
     <dd>Creates an empty map. </dd>
    </dlentry>
       <dlentry>
+        <dt>every( &lt;interval>, &lt; mm() | ss() > )</dt>
+        <dd>Represents the interval of minutes or seconds for generating Hadoop FS output
+          directories. You can use the function once in the Hadoop FS Directory Template property in
+          place of the minutes or seconds datetime variables. Use the function to replace the
+          smallest time interval in the directory template.</dd>
+        <dd>For example, the following usage in the Directory Template property generates a new
+          directory every
+          minute:<codeblock>/outputfiles/${YY()}-${MM()}-${DD()}-${hh()}-${every(1,mm())}</codeblock></dd>
+        <dd>To include seconds in the directories and generate a new directory every 60 seconds,
+          replace the seconds datetime variable as
+          follows:<codeblock>/outputfiles/${YY()}-${MM()}-${DD()}-${hh()}-${mm()}-${every(60,ss())}</codeblock></dd>
+        <dd>Uses the following arguments:<ul id="ul_p1j_vdr_ns">
+            <li>interval - An integer factor or submultiple of 60 that represents the interval of
+              minutes or seconds to wait between directory generation. Use one of the following
+              values: 1, 2, 3, 4, 5, 6, 10, 12, 15, 20, or 30.</li>
+            <li>&lt; mm() | ss() > - Use <codeph>mm()</codeph> to represent minutes, and
+                <codeph>ss()</codeph> to represent seconds. </li>
+          </ul></dd>
+      </dlentry>
+      <dlentry>
         <dt>jvm:maxMemoryMB()</dt>
         <dd>Returns the Java heap size allocated to the <ph
             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> in MB.

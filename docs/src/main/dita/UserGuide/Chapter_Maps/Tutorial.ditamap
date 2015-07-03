@@ -16,6 +16,7 @@
   </topicmeta>
    <topicref href="../Tutorial/PipelineProperties.dita"/>
    <topicref href="../Tutorial/Directory.dita"/>
+   <topicref href="../Tutorial/DataPreviewforSS.dita"/>
    <topicref href="../Tutorial/StreamSelector.dita"/>
    <topicref href="../Tutorial/Jython.dita"/>
    <topicref href="../Tutorial/FieldMasker.dita"/>

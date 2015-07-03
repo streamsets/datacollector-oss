@@ -30,7 +30,8 @@
                     record by record. </cmd>
             </step>
             <step>
-                <cmd>In the Script text box, paste the following script below the comments:</cmd>
+                <cmd>In the Script text box, delete everything below the first set of comments, and
+                    then paste the following script: </cmd>
                 <info>
                     <codeblock>try: 
   for record in records:
@@ -59,8 +60,14 @@
     out.write(record)
 except Exception as e:
   err.write(record, e.message)</codeblock>
+                    <note outputclass="" type="note">Incorrect indentation can cause Jython
+                        validation errors. Copying the script from the User Guide PDF can cause
+                        incorrect indentation. If this occurs, copy the script from the online help.
+                    </note>
                 </info>
             </step>
         </steps>
+        <result>The script should look like this:<p><image href="../Graphics/Tutorial-Jython.png"
+                    id="image_jt1_4ch_4s" scale="90"/></p></result>
     </taskbody>
 </task>

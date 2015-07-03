@@ -3,7 +3,9 @@
 <task id="task_br5_rzq_ks">
     <title>Route Data with the Stream Selector</title>
     <shortdesc>To route records that use credit card for payment to a separate branch for
-        processing, we use the Stream Selector processor. </shortdesc>
+        processing, we use the Stream Selector processor. We'll also define payment_type as a
+        required field to drop records with no payment type. Required fields must include data to
+        enter a stage.</shortdesc>
     <taskbody>
         <context>
             <p>The Stream Selector uses user-defined conditions to route data. Any data not captured
@@ -16,7 +18,21 @@
         <steps id="steps_xhx_3rk_ls">
             <step>
                 <cmd>In the stage library, select the <uicontrol>Stream Selector</uicontrol>
-                    processor and connect it to the pipeline. </cmd>
+                    processor and connect it to the pipeline. Or, from the Pipeline Creation Help
+                    Bar, click <menucascade>
+                        <uicontrol>Select Processor to Connect</uicontrol>
+                        <uicontrol>Stream Selector</uicontrol>
+                    </menucascade>.</cmd>
+            </step>
+            <step>
+                <cmd>On the General tab, click in the <uicontrol>Required Fields</uicontrol>
+                    property. </cmd>
+            </step>
+            <step>
+                <cmd>To discard records with no payment type information, select the following
+                    field: <codeph>[3]/value</codeph>.</cmd>
+                <info>Because the pipeline is configured to write error records to file, any records
+                    that don't have a value in this field are written to file. </info>
             </step>
             <step>
                 <cmd>With the Stream Selector selected, in the Properties panel, click the
@@ -35,8 +51,13 @@
                 <info>
                     <codeblock>${record:dValue('payment_type') == 'CRD'}</codeblock>
                 </info>
+                <info>You can use single quotation marks or regular quotation marks around the
+                    string values. </info>
                 <info>All other records are captured by the default condition and stream.</info>
             </step>
         </steps>
+        <result>The Stream Selector should look like this:<p><image
+                    href="../Graphics/Tutorial-StreamSelector.png" id="image_t1s_png_4s" scale="80"
+                /></p></result>
     </taskbody>
 </task>

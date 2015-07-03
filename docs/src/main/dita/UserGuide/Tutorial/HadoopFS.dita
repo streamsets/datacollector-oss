@@ -13,7 +13,11 @@
         <steps id="steps_xdd_wwm_ls">
             <step>
                 <cmd>From the stage library, select the <uicontrol>Hadoop FS</uicontrol> processor
-                    and connect it to the previous stage. </cmd>
+                    and connect it to the Field Masker. Or, from the Pipeline Creation Help Bar,
+                    click <menucascade>
+                        <uicontrol>Select Processor to Connect</uicontrol>
+                        <uicontrol>Hadoop FS</uicontrol>
+                    </menucascade>.</cmd>
             </step>
             <step>
                 <cmd>With the destination selected, in the Properties panel, click the

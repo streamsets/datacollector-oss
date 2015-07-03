@@ -12,14 +12,14 @@
     <li>Add a Directory origin to represent the data to be processed. </li>
     <li>Use a Stream Selector processor to route records paid by credit card to the primary branch
      and those paid by cash to an different branch. We'll set up a Required Field and use preview
-     data to </li>
+     data to discard records without a payment type.</li>
     <li>Configure a Jython Evaluator to perform custom processing that determines the credit card
      type based on the credit card number. </li>
     <li>Add a Field Masker to mask credit card information. </li>
     <li>Use an Expression Evaluator to add corresponding fields to the cash records so all records
      have the same data format in the destination. Use data preview to verify the fields to add. </li>
-    <li>Merge both branches to an HDFS destination.</li>
-    <li>Add a data alert to <draft-comment author="Loretta">what?</draft-comment></li>
+    <li>Merge both branches to a Hadoop FS destination.</li>
+    <li>Add a data rule to alert you to invalid data.</li>
     <li>Start the pipeline.</li>
    </ol></p>
   

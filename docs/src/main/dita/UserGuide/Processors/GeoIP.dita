@@ -2,19 +2,26 @@
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_fch_fc3_ms">
  <title>Geo IP</title>
- <shortdesc>The Geo IP processor provides  geographic location information for IP addresses. Geo IP
-  uses the Maxmind GeoIP2 database to provide geolocation information.</shortdesc>
+ <shortdesc>The Geo IP processor provides geographic location information for IP addresses. The Geo
+    IP processor uses the MaxMind GeoIP2 database file to provide geolocation information. You must
+    provide your own copy of the database file. </shortdesc>
  <conbody>
   <draft-comment author="Loretta">Do they have to have their own geoIP2 database file? </draft-comment>
-  <p>To use the Geo IP processor, you specify one or more IP address input fields, name the
-   corresponding output field, and specify the geolocation information that you want. </p>
-  <p>Geo IP can provide the following geolocation information for each IP address.<ul
-    id="ul_ptx_mg3_ms">
-    <li>Country name</li>
-    <li>Country ISO code</li>
-    <li>City name</li>
-    <li>Latitude</li>
-    <li>Longitude</li>
-   </ul></p>
+  <p><indexterm>Geo IP
+          processor<indexterm>overview</indexterm></indexterm><indexterm>processors<indexterm>Geo
+          IP</indexterm></indexterm>To use the Geo IP processor, you define the location of the
+      database file, specify one or more IP address input fields, name the corresponding output
+      field, and specify the geolocation information that you want. </p>
+    <p>The input field must be an Integer or String datatype with IP addresses formatted as follows:
+        n.n.n.n.<draft-comment author="Loretta">check how this should be
+      expressed.</draft-comment></p>
+  <p>Geo IP can provide the following geolocation information for each IP address:<ul
+        id="ul_ptx_mg3_ms">
+        <li>Country name</li>
+        <li>Country ISO code</li>
+        <li>City name</li>
+        <li>Latitude</li>
+        <li>Longitude</li>
+      </ul></p>
  </conbody>
 </concept>

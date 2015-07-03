@@ -43,7 +43,8 @@
                                 <row>
                                     <entry>File Name Pattern</entry>
                                     <entry>Since the file is the only file in the directory, you can
-                                        use the asterisk wild card: *.</entry>
+                                        use the asterisk wild card (*) or some version of that,
+                                        like: *.csv.</entry>
                                 </row>
                             </tbody>
                         </tgroup>
@@ -59,5 +60,10 @@
                         Line</uicontrol> property to <uicontrol>With Header Line</uicontrol>.</cmd>
             </step>
         </steps>
+        <result>This is how the stage and pipeline should look at this point:<p><image
+                    href="../Graphics/Tutorial-Directory.png" id="image_kj1_c5f_4s" scale="80"
+                /></p><p>Notice, the error icon on the Directory stage. If you hover over the icon
+                or click the Issues icon, you see from the error message that it's just because you
+                haven't connected it to anything yet. All in good time. </p></result>
     </taskbody>
 </task>

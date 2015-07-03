@@ -21,9 +21,9 @@
      
      <thead class="thead" align="left">
       <tr class="row">
-       <th class="entry" valign="top" width="33.557046979865774%" id="d15151e37">Function Type</th>
+       <th class="entry" valign="top" width="31.25%" id="d15198e37">Function Type</th>
 
-       <th class="entry" valign="top" width="66.44295302013423%" id="d15151e40">Functions</th>
+       <th class="entry" valign="top" width="68.75%" id="d15198e40">Functions</th>
 
       </tr>
 
@@ -31,9 +31,9 @@
 
      <tbody class="tbody">
       <tr class="row">
-       <td class="entry" valign="top" width="33.557046979865774%" headers="d15151e37 "><a class="xref" href="Functions.html#concept_p1z_ggv_1r" title="Use record functions to determine information about a record, such as the stage that created it or whether a field exists in the record.">Record functions</a></td>
+       <td class="entry" valign="top" width="31.25%" headers="d15198e37 "><a class="xref" href="Functions.html#concept_p1z_ggv_1r" title="Use record functions to determine information about a record, such as the stage that created it or whether a field exists in the record.">Record functions</a></td>
 
-       <td class="entry" valign="top" width="66.44295302013423%" headers="d15151e40 ">
+       <td class="entry" valign="top" width="68.75%" headers="d15198e40 ">
         <div class="p">
          <ul class="ul" id="concept_lhz_pyp_1r__ul_gdz_wb2_gs">
           <li class="li">record:attribute('&lt;attribute name&gt;') </li>
@@ -59,10 +59,10 @@
       </tr>
 
       <tr class="row">
-       <td class="entry" valign="top" width="33.557046979865774%" headers="d15151e37 "><a class="xref" href="Functions.html#concept_s2c_q14_fs" title="When reading delimited data, the Data Collector generates records of the List data format with a map of the header and value. Use delimited data record functions to process delimited data, such as returning the value associated with a header or checking for duplicate headers.">Delimited data record
+       <td class="entry" valign="top" width="31.25%" headers="d15198e37 "><a class="xref" href="Functions.html#concept_s2c_q14_fs" title="When reading delimited data, the Data Collector generates records of the List data format with a map of the header and value. Use delimited data record functions to process delimited data, such as returning the value associated with a header or checking for duplicate headers.">Delimited data record
          functions</a></td>
 
-       <td class="entry" valign="top" width="66.44295302013423%" headers="d15151e40 ">
+       <td class="entry" valign="top" width="68.75%" headers="d15198e40 ">
         <ul class="ul" id="concept_lhz_pyp_1r__ul_z2x_jc2_gs">
          <li class="li">record:dExists('&lt;header&gt;') </li>
 
@@ -85,10 +85,10 @@
       </tr>
 
       <tr class="row">
-       <td class="entry" valign="top" width="33.557046979865774%" headers="d15151e37 "><a class="xref" href="Functions.html#concept_ndj_43v_1r" title="Error record functions provide information about error records. Use error functions to process error records.">Error record
+       <td class="entry" valign="top" width="31.25%" headers="d15198e37 "><a class="xref" href="Functions.html#concept_ndj_43v_1r" title="Error record functions provide information about error records. Use error functions to process error records.">Error record
         functions</a></td>
 
-       <td class="entry" valign="top" width="66.44295302013423%" headers="d15151e40 ">
+       <td class="entry" valign="top" width="68.75%" headers="d15198e40 ">
         <ul class="ul" id="concept_lhz_pyp_1r__ul_n1v_z12_gs">
          <li class="li">record:errorCode()</li>
 
@@ -109,9 +109,9 @@
       </tr>
 
       <tr class="row">
-       <td class="entry" valign="top" width="33.557046979865774%" headers="d15151e37 "><a class="xref" href="Functions.html#concept_ahp_f4v_1r" title="Use string functions to transform string data.">String functions</a></td>
+       <td class="entry" valign="top" width="31.25%" headers="d15198e37 "><a class="xref" href="Functions.html#concept_ahp_f4v_1r" title="Use string functions to transform string data.">String functions</a></td>
 
-       <td class="entry" valign="top" width="66.44295302013423%" headers="d15151e40 ">
+       <td class="entry" valign="top" width="68.75%" headers="d15198e40 ">
         <div class="p">
          <ul class="ul" id="concept_lhz_pyp_1r__ul_f15_xf2_gs">
           <li class="li">str:contains("&lt;string&gt;", "&lt;subset&gt;") </li>
@@ -145,14 +145,16 @@
       </tr>
 
       <tr class="row">
-       <td class="entry" valign="top" width="33.557046979865774%" headers="d15151e37 "><a class="xref" href="Functions.html#concept_ddw_ld1_1s">Miscellaneous
+       <td class="entry" valign="top" width="31.25%" headers="d15198e37 "><a class="xref" href="Functions.html#concept_ddw_ld1_1s">Miscellaneous
         functions</a></td>
 
-       <td class="entry" valign="top" width="66.44295302013423%" headers="d15151e40 ">
+       <td class="entry" valign="top" width="68.75%" headers="d15198e40 ">
         <ul class="ul" id="concept_lhz_pyp_1r__ul_xks_xg2_gs">
          <li class="li">emptyList</li>
 
          <li class="li">emptyMap</li>
+
+         <li class="li">every(&lt;interval&gt;, &lt;mm() | ss()&gt;)</li>
 
          <li class="li">jvm:maxMemoryMB()</li>
 
@@ -675,6 +677,36 @@
     <dd class="dd">Creates an empty map. </dd>
 
    
+      
+        <dt class="dt dlterm">every( &lt;interval&gt;, &lt; mm() | ss() &gt; )</dt>
+
+        <dd class="dd">Represents the interval of minutes or seconds for generating Hadoop FS output
+          directories. You can use the function once in the Hadoop FS Directory Template property in
+          place of the minutes or seconds datetime variables. Use the function to replace the
+          smallest time interval in the directory template.</dd>
+
+        <dd class="dd">For example, the following usage in the Directory Template property generates a new
+          directory every
+          minute:<pre class="pre codeblock">/outputfiles/${YY()}-${MM()}-${DD()}-${hh()}-${every(1,mm())}</pre>
+</dd>
+
+        <dd class="dd">To include seconds in the directories and generate a new directory every 60 seconds,
+          replace the seconds datetime variable as
+          follows:<pre class="pre codeblock">/outputfiles/${YY()}-${MM()}-${DD()}-${hh()}-${mm()}-${every(60,ss())}</pre>
+</dd>
+
+        <dd class="dd">Uses the following arguments:<ul class="ul" id="concept_ddw_ld1_1s__ul_p1j_vdr_ns">
+            <li class="li">interval - An integer factor or submultiple of 60 that represents the interval of
+              minutes or seconds to wait between directory generation. Use one of the following
+              values: 1, 2, 3, 4, 5, 6, 10, 12, 15, 20, or 30.</li>
+
+            <li class="li">&lt; mm() | ss() &gt; - Use <samp class="ph codeph">mm()</samp> to represent minutes, and
+                <samp class="ph codeph">ss()</samp> to represent seconds. </li>
+
+          </ul>
+</dd>
+
+      
       
         <dt class="dt dlterm">jvm:maxMemoryMB()</dt>
 
