@@ -21,7 +21,8 @@
         "helpContents": "Help Contents",
         "useHelp": "Help:",
         "localHelp": "Local Help",
-        "hostedHelp": "Hosted Help"
+        "hostedHelp": "Hosted Help",
+        "restFulAPI": "RESTful API"
       },
       "home": "Home",
       "toggleNavigation": "Toggle navigation"
@@ -528,6 +529,9 @@
     "TIMER_M15_RATE" : "15 Minute Rate",
     "TIMER_MEAN_RATE" : "Mean Rate"
   },
+  "restapi": {
+    "title": "Data Collector RESTful API"
+  },
   "sdcConfiguration": {
     "title": "Data Collector Configuration"
   },
@@ -544,6 +548,5 @@
     "resourcesDir": "Resources Directory",
     "runtimeDir": "Runtime Directory",
     "staticWebDir": "Static Web Directory"
-
   }
 }

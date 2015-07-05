@@ -110,7 +110,7 @@ angular.module('dataCollectorApp.common')
        * logout
        */
       logout: function() {
-        var url = apiBase + '/logout';
+        var url = apiBase + '/authentication/logout';
         return $http({
           method: 'POST',
           url: url
