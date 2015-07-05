@@ -11,6 +11,8 @@ import com.streamsets.pipeline.config.PipelineConfiguration;
 import com.streamsets.pipeline.main.RuntimeInfo;
 import com.streamsets.pipeline.prodmanager.RawSourcePreviewHelper;
 import com.streamsets.pipeline.restapi.bean.BeanHelper;
+import com.streamsets.pipeline.restapi.bean.IssueJson;
+import com.streamsets.pipeline.restapi.bean.PreviewPipelineOutputJson;
 import com.streamsets.pipeline.restapi.bean.StageOutputJson;
 import com.streamsets.pipeline.stagelibrary.StageLibraryTask;
 import com.streamsets.pipeline.util.AuthzRole;
@@ -25,6 +27,9 @@ import com.streamsets.pipeline.runner.preview.PreviewSourceOffsetTracker;
 import com.streamsets.pipeline.store.PipelineStoreTask;
 import com.streamsets.pipeline.store.PipelineStoreException;
 import com.streamsets.pipeline.util.ContainerError;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 
 import javax.annotation.security.DenyAll;
 import javax.annotation.security.RolesAllowed;
@@ -49,6 +54,7 @@ import java.util.List;
 import java.util.Map;
 
 @Path("/v1/pipeline-library")
+@Api(value = "pipeline")
 @DenyAll
 public class PreviewResource {
   private static final String MAX_BATCH_SIZE_KEY = "preview.maxBatchSize";
@@ -73,6 +79,7 @@ public class PreviewResource {
 
   @Path("/{name}/preview")
   @GET
+  @ApiOperation(value = "Run Pipeline preview and get preview data", response = PreviewPipelineOutputJson.class)
   @Produces(MediaType.APPLICATION_JSON)
   @RolesAllowed({ AuthzRole.CREATOR, AuthzRole.ADMIN })
   public Response preview(
@@ -87,6 +94,8 @@ public class PreviewResource {
 
   @Path("/{name}/preview")
   @POST
+  @ApiOperation(value = "Run Pipeline preview by overriding passed stage instance data and get preview data",
+    response = PreviewPipelineOutputJson.class)
   @Produces(MediaType.APPLICATION_JSON)
   @RolesAllowed({ AuthzRole.CREATOR, AuthzRole.ADMIN })
   public Response previewWithOverride(
@@ -96,7 +105,7 @@ public class PreviewResource {
       @QueryParam("batches") @DefaultValue("1") int batches,
       @QueryParam("skipTargets") @DefaultValue("true") boolean skipTargets,
       @QueryParam("endStage") String endStageInstanceName,
-      List<StageOutputJson> stageOutputsToOverrideJson)
+      @ApiParam(name="stageOutputsToOverrideJson", required = true)  List<StageOutputJson> stageOutputsToOverrideJson)
       throws PipelineStoreException, PipelineRuntimeException, StageException {
 
     Utils.checkState(runtimeInfo.getExecutionMode() != RuntimeInfo.ExecutionMode.SLAVE,
@@ -127,6 +136,7 @@ public class PreviewResource {
 
   @Path("/{name}/rawSourcePreview")
   @GET
+  @ApiOperation(value = "Get raw source preview data for pipeline name and revision")
   @Produces(MediaType.APPLICATION_JSON)
   @RolesAllowed({ AuthzRole.CREATOR, AuthzRole.ADMIN })
   public Response rawSourcePreview(
@@ -142,6 +152,8 @@ public class PreviewResource {
 
   @Path("/{name}/validateConfigs")
   @GET
+  @ApiOperation(value = "Validate pipeline configuration and return validation status and issues",
+    response = IssueJson.class)
   @Produces(MediaType.APPLICATION_JSON)
   @RolesAllowed({ AuthzRole.CREATOR, AuthzRole.MANAGER, AuthzRole.ADMIN })
   public Response validateConfigs(

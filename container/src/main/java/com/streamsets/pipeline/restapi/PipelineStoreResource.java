@@ -15,6 +15,7 @@ import com.streamsets.pipeline.config.RuleDefinitions;
 import com.streamsets.pipeline.main.RuntimeInfo;
 import com.streamsets.pipeline.restapi.bean.BeanHelper;
 import com.streamsets.pipeline.restapi.bean.PipelineConfigurationJson;
+import com.streamsets.pipeline.restapi.bean.PipelineInfoJson;
 import com.streamsets.pipeline.restapi.bean.RuleDefinitionsJson;
 import com.streamsets.pipeline.stagelibrary.StageLibraryTask;
 import com.streamsets.pipeline.store.PipelineStoreException;
@@ -22,6 +23,9 @@ import com.streamsets.pipeline.store.PipelineStoreTask;
 import com.streamsets.pipeline.util.AuthzRole;
 import com.streamsets.pipeline.validation.PipelineConfigurationValidator;
 import com.streamsets.pipeline.validation.RuleDefinitionValidator;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 
 import javax.annotation.security.DenyAll;
 import javax.annotation.security.PermitAll;
@@ -50,6 +54,7 @@ import java.util.List;
 import java.util.Map;
 
 @Path("/v1/pipeline-library")
+@Api(value = "pipeline-library")
 @DenyAll
 public class PipelineStoreResource {
   private static final String HIGH_BAD_RECORDS_ID = "badRecordsAlertID";
@@ -95,6 +100,7 @@ public class PipelineStoreResource {
   }
 
   @GET
+  @ApiOperation(value = "Returns all Pipeline Configuration Info", response = PipelineInfoJson.class, responseContainer = "List")
   @Produces(MediaType.APPLICATION_JSON)
   @PermitAll
   public Response getPipelines() throws PipelineStoreException {
@@ -102,12 +108,13 @@ public class PipelineStoreResource {
       .build();
   }
 
-  @Path("/{name}")
+  @Path("/{pipelineName}")
   @GET
+  @ApiOperation(value = "Find Pipeline Configuration by name and revision", response = PipelineConfigurationJson.class)
   @Produces(MediaType.APPLICATION_JSON)
   @PermitAll
   public Response getInfo(
-      @PathParam("name") String name,
+      @PathParam("pipelineName") String name,
       @QueryParam("rev") @DefaultValue("0") String rev,
       @QueryParam("get") @DefaultValue("pipeline") String get,
       @QueryParam("attachment") @DefaultValue("false") Boolean attachment)
@@ -142,12 +149,13 @@ public class PipelineStoreResource {
 
   }
 
-  @Path("/{name}")
+  @Path("/{pipelineName}")
   @PUT
+  @ApiOperation(value = "Add a new Pipeline Configuration to the store", response = PipelineConfigurationJson.class)
   @Produces(MediaType.APPLICATION_JSON)
   @RolesAllowed({ AuthzRole.CREATOR, AuthzRole.ADMIN })
   public Response create(
-      @PathParam("name") String name,
+      @PathParam("pipelineName") String name,
       @QueryParam("description") @DefaultValue("") String description)
       throws PipelineStoreException, URISyntaxException {
     Utils.checkState(runtimeInfo.getExecutionMode() != RuntimeInfo.ExecutionMode.SLAVE,
@@ -186,12 +194,13 @@ public class PipelineStoreResource {
       BeanHelper.wrapPipelineConfiguration(pipeline)).build();
   }
 
-  @Path("/{name}")
+  @Path("/{pipelineName}")
   @DELETE
+  @ApiOperation(value = "Delete Pipeline Configuration by name")
   @Produces(MediaType.APPLICATION_JSON)
   @RolesAllowed({ AuthzRole.CREATOR, AuthzRole.ADMIN })
   public Response delete(
-      @PathParam("name") String name)
+      @PathParam("pipelineName") String name)
       throws PipelineStoreException, URISyntaxException {
     Utils.checkState(runtimeInfo.getExecutionMode() != RuntimeInfo.ExecutionMode.SLAVE,
       "This operation is not supported in SLAVE mode");
@@ -200,16 +209,17 @@ public class PipelineStoreResource {
     return Response.ok().build();
   }
 
-  @Path("/{name}")
+  @Path("/{pipelineName}")
   @POST
+  @ApiOperation(value = "Update an existing Pipeline Configuration by name", response = PipelineConfigurationJson.class)
   @Consumes(MediaType.APPLICATION_JSON)
   @Produces(MediaType.APPLICATION_JSON)
   @RolesAllowed({ AuthzRole.CREATOR, AuthzRole.ADMIN })
   public Response save(
-      @PathParam("name") String name,
+      @PathParam("pipelineName") String name,
       @QueryParam("tag") @DefaultValue("0") String tag,
       @QueryParam("tagDescription") String tagDescription,
-      PipelineConfigurationJson pipeline)
+      @ApiParam(name="pipeline", required = true) PipelineConfigurationJson pipeline)
       throws PipelineStoreException, URISyntaxException {
     Utils.checkState(runtimeInfo.getExecutionMode() != RuntimeInfo.ExecutionMode.SLAVE,
       "This operation is not supported in SLAVE mode");
@@ -223,12 +233,13 @@ public class PipelineStoreResource {
     return Response.ok().entity(BeanHelper.wrapPipelineConfiguration(pipelineConfig)).build();
   }
 
-  @Path("/{name}/rules")
+  @Path("/{pipelineName}/rules")
   @GET
+  @ApiOperation(value = "Find Pipeline Rules by name and revision", response = RuleDefinitionsJson.class)
   @Produces(MediaType.APPLICATION_JSON)
   @PermitAll
   public Response getRules(
-    @PathParam("name") String name,
+    @PathParam("pipelineName") String name,
     @QueryParam("rev") @DefaultValue("0") String rev) throws PipelineStoreException {
     com.streamsets.pipeline.config.RuleDefinitions ruleDefinitions = store.retrieveRules(name, rev);
     if(ruleDefinitions != null) {
@@ -239,14 +250,15 @@ public class PipelineStoreResource {
       BeanHelper.wrapRuleDefinitions(ruleDefinitions)).build();
   }
 
-  @Path("/{name}/rules")
+  @Path("/{pipelineName}/rules")
   @POST
+  @ApiOperation(value = "Update an existing Pipeline Rules by name", response = RuleDefinitionsJson.class)
   @Produces(MediaType.APPLICATION_JSON)
   @RolesAllowed({ AuthzRole.CREATOR, AuthzRole.MANAGER, AuthzRole.ADMIN })
   public Response saveRules(
-    @PathParam("name") String name,
+    @PathParam("pipelineName") String name,
     @QueryParam("rev") @DefaultValue("0") String rev,
-    RuleDefinitionsJson ruleDefinitionsJson) throws PipelineStoreException {
+    @ApiParam(name="pipeline", required = true) RuleDefinitionsJson ruleDefinitionsJson) throws PipelineStoreException {
     com.streamsets.pipeline.config.RuleDefinitions ruleDefs = BeanHelper.unwrapRuleDefinitions(ruleDefinitionsJson);
     RuleDefinitionValidator ruleDefinitionValidator = new RuleDefinitionValidator();
     ruleDefinitionValidator.validateRuleDefinition(ruleDefs);

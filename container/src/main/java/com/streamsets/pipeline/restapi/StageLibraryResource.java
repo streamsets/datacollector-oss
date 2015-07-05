@@ -14,6 +14,8 @@ import com.streamsets.pipeline.definition.ELDefinitionExtractor;
 import com.streamsets.pipeline.el.RuntimeEL;
 import com.streamsets.pipeline.restapi.bean.BeanHelper;
 import com.streamsets.pipeline.stagelibrary.StageLibraryTask;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 
 import javax.annotation.security.DenyAll;
 import javax.annotation.security.PermitAll;
@@ -33,6 +35,7 @@ import java.util.Map;
 
 
 @Path("/v1/definitions")
+@Api(value = "definitions")
 @DenyAll
 public class StageLibraryResource {
   private static final String DEFAULT_ICON_FILE = "PipelineDefinition-bundle.properties";
@@ -63,6 +66,7 @@ public class StageLibraryResource {
   }
 
   @GET
+  @ApiOperation(value = "Returns pipeline & stage configuration definitions")
   @Produces(MediaType.APPLICATION_JSON)
   @PermitAll
   public Response getDefinitions() {
@@ -99,6 +103,7 @@ public class StageLibraryResource {
 
   @GET
   @Path("/stages/icon")
+  @ApiOperation(value = "Find stage icon url for pipeline name, stage library and version")
   @Produces({SVG_MEDIA_TYPE, PNG_MEDIA_TYPE})
   @PermitAll
   public Response getIcon(@QueryParam("name") String name,

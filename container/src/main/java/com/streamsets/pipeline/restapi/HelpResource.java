@@ -6,6 +6,8 @@
 package com.streamsets.pipeline.restapi;
 
 import com.streamsets.pipeline.main.RuntimeInfo;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 
 import javax.annotation.security.DenyAll;
 import javax.annotation.security.PermitAll;
@@ -22,6 +24,7 @@ import java.io.Reader;
 import java.util.Properties;
 
 @Path("/v1/helpref")
+@Api(value = "helpref")
 @DenyAll
 public class HelpResource {
   private final RuntimeInfo runtimeInfo;
@@ -32,6 +35,7 @@ public class HelpResource {
   }
 
   @GET
+  @ApiOperation(value = "Returns HELP Reference")
   @Produces(MediaType.APPLICATION_JSON)
   @PermitAll
   public Response getHelpRefs() throws IOException {

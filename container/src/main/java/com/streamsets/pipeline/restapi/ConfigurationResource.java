@@ -7,6 +7,8 @@ package com.streamsets.pipeline.restapi;
 
 import com.streamsets.pipeline.store.PipelineStoreException;
 import com.streamsets.pipeline.util.Configuration;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 
 import javax.annotation.security.DenyAll;
 import javax.annotation.security.PermitAll;
@@ -18,6 +20,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 @Path("/v1/configuration")
+@Api(value = "configuration")
 @DenyAll
 public class ConfigurationResource {
   private static final String UI_PREFIX = "ui.";
@@ -31,6 +34,7 @@ public class ConfigurationResource {
 
   @GET
   @Path("/ui")
+  @ApiOperation(value = "Returns UI SDC Configuration")
   @Produces(MediaType.APPLICATION_JSON)
   @PermitAll
   public Response getUIConfiguration() throws PipelineStoreException {
@@ -41,6 +45,7 @@ public class ConfigurationResource {
 
   @GET
   @Path("/all")
+  @ApiOperation(value = "Returns ALL SDC Configuration")
   @Produces(MediaType.APPLICATION_JSON)
   @PermitAll
   public Response getConfiguration() throws PipelineStoreException {

@@ -9,6 +9,8 @@ import com.streamsets.pipeline.log.LogStreamer;
 import com.streamsets.pipeline.log.LogUtils;
 import com.streamsets.pipeline.main.RuntimeInfo;
 import com.streamsets.pipeline.util.AuthzRole;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 
 import javax.annotation.security.DenyAll;
 import javax.annotation.security.RolesAllowed;
@@ -34,6 +36,7 @@ import java.util.List;
 import java.util.Map;
 
 @Path("/v1/log")
+@Api(value = "log")
 @DenyAll
 public class LogResource {
   public static final String X_SDC_LOG_PREVIOUS_OFFSET_HEADER = "X-SDC-LOG-PREVIOUS-OFFSET";
@@ -49,6 +52,7 @@ public class LogResource {
   }
 
   @GET
+  @ApiOperation(value = "Returns Current SDC Log Contents")
   @Produces(MediaType.TEXT_PLAIN)
   @RolesAllowed({AuthzRole.ADMIN, AuthzRole.CREATOR, AuthzRole.MANAGER})
   public Response currentLog(@QueryParam("endingOffset") @DefaultValue("-1") long offset) throws IOException {
@@ -80,6 +84,7 @@ public class LogResource {
 
   @GET
   @Path("/files")
+  @ApiOperation(value = "Returns all available SDC Log files")
   @Produces(MediaType.APPLICATION_JSON)
   @RolesAllowed({AuthzRole.ADMIN, AuthzRole.CREATOR, AuthzRole.MANAGER})
   @SuppressWarnings("unchecked")
@@ -97,6 +102,7 @@ public class LogResource {
 
   @GET
   @Path("/files/{logName}")
+  @ApiOperation(value = "Returns SDC Log File Content")
   @Produces(MediaType.TEXT_PLAIN)
   @RolesAllowed({AuthzRole.ADMIN, AuthzRole.CREATOR, AuthzRole.MANAGER})
   public Response getLogFile(@PathParam("logName") String logName,

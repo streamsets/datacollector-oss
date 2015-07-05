@@ -8,6 +8,8 @@ package com.streamsets.pipeline.restapi;
 import com.streamsets.pipeline.main.BuildInfo;
 import com.streamsets.pipeline.util.AuthzRole;
 import com.streamsets.pipeline.util.PipelineException;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 
 import javax.annotation.security.DenyAll;
 import javax.annotation.security.PermitAll;
@@ -27,6 +29,7 @@ import java.util.List;
 import java.util.Map;
 
 @Path("/v1/info")
+@Api(value = "info")
 @DenyAll
 public class InfoResource {
 
@@ -39,6 +42,7 @@ public class InfoResource {
 
   @GET
   @Path("/sdc")
+  @ApiOperation(value = "Returns SDC Info")
   @Produces(MediaType.APPLICATION_JSON)
   @PermitAll
   public Response getBuild() throws PipelineException, IOException {
@@ -47,6 +51,7 @@ public class InfoResource {
 
   @GET
   @Path("/user")
+  @ApiOperation(value = "Returns User Info")
   @Produces(MediaType.APPLICATION_JSON)
   @PermitAll
   public Response getUser(@Context SecurityContext context) throws PipelineException, IOException {

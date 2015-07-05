@@ -6,18 +6,46 @@
 package com.streamsets.pipeline.restapi;
 
 import com.streamsets.pipeline.store.PipelineStoreException;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import org.eclipse.jetty.security.authentication.FormAuthenticator;
 
 import javax.annotation.security.PermitAll;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import javax.ws.rs.FormParam;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.core.Context;
+import java.io.IOException;
 
-@Path("/v1/logout")
+@Path("/v1/authentication")
+@Api(value = "authentication")
 public class LogoutResource {
 
+
   @POST
+  @Path("/login")
+  @ApiOperation(value = "Login to SDC")
+  @PermitAll
+  public void login(@FormParam("username") String username,
+                    @FormParam("password") String password,
+                    @Context HttpServletRequest request,
+                    @Context HttpServletResponse response) throws PipelineStoreException, IOException {
+
+    HttpSession session = request.getSession();
+    String redirectURL = (String)session.getAttribute(FormAuthenticator.__J_URI);
+    if(redirectURL != null && redirectURL.contains("rest/v1/")) {
+      session.setAttribute(FormAuthenticator.__J_URI, "/");
+    }
+
+    response.sendRedirect("j_security_check?j_username=" + username + "&j_password=" + password);
+  }
+
+  @POST
+  @Path("/logout")
+  @ApiOperation(value = "Logs out from SDC")
   @PermitAll
   public void logout(@Context HttpServletRequest request) throws PipelineStoreException {
     HttpSession session = request.getSession();

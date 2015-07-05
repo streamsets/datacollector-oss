@@ -5,6 +5,7 @@
  */
 package com.streamsets.pipeline.restapi;
 
+import com.codahale.metrics.MetricRegistry;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.prodmanager.PipelineManager;
 import com.streamsets.pipeline.api.impl.Utils;
@@ -13,10 +14,17 @@ import com.streamsets.pipeline.prodmanager.PipelineManagerException;
 import com.streamsets.pipeline.prodmanager.PipelineState;
 import com.streamsets.pipeline.prodmanager.State;
 import com.streamsets.pipeline.restapi.bean.BeanHelper;
+import com.streamsets.pipeline.restapi.bean.ErrorMessageJson;
+import com.streamsets.pipeline.restapi.bean.PipelineStateJson;
+import com.streamsets.pipeline.restapi.bean.RecordJson;
+import com.streamsets.pipeline.restapi.bean.SnapshotInfoJson;
+import com.streamsets.pipeline.restapi.bean.SnapshotStatusJson;
 import com.streamsets.pipeline.runner.PipelineRuntimeException;
 import com.streamsets.pipeline.store.PipelineStoreException;
 import com.streamsets.pipeline.util.AuthzRole;
 import com.streamsets.pipeline.util.ContainerError;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 
 import javax.annotation.security.DenyAll;
 import javax.annotation.security.PermitAll;
@@ -36,6 +44,7 @@ import javax.ws.rs.core.Response;
 import java.util.Collections;
 
 @Path("/v1/pipeline")
+@Api(value = "pipeline")
 @DenyAll
 public class PipelineManagerResource {
 
@@ -50,6 +59,7 @@ public class PipelineManagerResource {
 
   @Path("/status")
   @GET
+  @ApiOperation(value = "Returns Pipeline Status", response = PipelineStateJson.class)
   @Produces(MediaType.APPLICATION_JSON)
   @PermitAll
   public Response getStatus() throws PipelineManagerException {
@@ -62,6 +72,7 @@ public class PipelineManagerResource {
 
   @Path("/start")
   @POST
+  @ApiOperation(value = "Start Pipeline", response = PipelineStateJson.class)
   @Produces(MediaType.APPLICATION_JSON)
   @RolesAllowed({ AuthzRole.MANAGER, AuthzRole.ADMIN })
   public Response startPipeline(
@@ -85,6 +96,7 @@ public class PipelineManagerResource {
 
   @Path("/stop")
   @POST
+  @ApiOperation(value = "Stop Pipeline", response = PipelineStateJson.class)
   @Produces(MediaType.APPLICATION_JSON)
   @RolesAllowed({ AuthzRole.MANAGER, AuthzRole.ADMIN })
   public Response stopPipeline() throws PipelineManagerException {
@@ -94,12 +106,13 @@ public class PipelineManagerResource {
     return Response.ok().type(MediaType.APPLICATION_JSON).entity(BeanHelper.wrapPipelineState(ps)).build();
   }
 
-  @Path("/resetOffset/{name}")
+  @Path("/resetOffset/{pipelineName}")
   @POST
+  @ApiOperation(value = "Reset Origin Offset")
   @Produces(MediaType.APPLICATION_JSON)
   @RolesAllowed({ AuthzRole.MANAGER, AuthzRole.ADMIN })
   public Response resetOffset(
-      @PathParam("name") String name,
+      @PathParam("pipelineName") String name,
       @QueryParam("rev") @DefaultValue("0") String rev) throws PipelineManagerException {
     Utils.checkState(runtimeInfo.getExecutionMode() != RuntimeInfo.ExecutionMode.SLAVE,
       "This operation is not supported in SLAVE mode");
@@ -109,6 +122,7 @@ public class PipelineManagerResource {
 
   @Path("/snapshots/{snapshotName}")
   @PUT
+  @ApiOperation(value = "Capture Snapshot")
   @RolesAllowed({ AuthzRole.MANAGER, AuthzRole.ADMIN })
   public Response captureSnapshot(
       @PathParam("snapshotName") String snapshotName,
@@ -120,6 +134,7 @@ public class PipelineManagerResource {
 
   @Path("/snapshots")
   @GET
+  @ApiOperation(value = "Returns all Snapshot Info", response = SnapshotInfoJson.class, responseContainer = "List")
   @RolesAllowed({ AuthzRole.MANAGER, AuthzRole.CREATOR, AuthzRole.ADMIN })
   public Response getSnapshotsInfo() throws PipelineManagerException, PipelineStoreException {
     return Response.ok().type(MediaType.APPLICATION_JSON).entity(BeanHelper.wrapSnapshotInfo(
@@ -128,6 +143,7 @@ public class PipelineManagerResource {
 
   @Path("/snapshots/{snapshotName}")
   @GET
+  @ApiOperation(value = "Return Snapshot status", response = SnapshotStatusJson.class)
   @Produces(MediaType.APPLICATION_JSON)
   @RolesAllowed({ AuthzRole.MANAGER, AuthzRole.ADMIN })
   public Response getSnapshotStatus(
@@ -139,6 +155,7 @@ public class PipelineManagerResource {
 
   @Path("/snapshots/{pipelineName}/{snapshotName}")
   @GET
+  @ApiOperation(value = "Return Snapshot data")
   @Produces(MediaType.APPLICATION_JSON)
   @RolesAllowed({ AuthzRole.MANAGER, AuthzRole.CREATOR, AuthzRole.ADMIN })
   public Response getSnapshot(
@@ -151,6 +168,7 @@ public class PipelineManagerResource {
 
   @Path("/snapshots/{pipelineName}/{snapshotName}")
   @DELETE
+  @ApiOperation(value = "Delete Snapshot data")
   @Produces(MediaType.APPLICATION_JSON)
   @RolesAllowed({ AuthzRole.MANAGER, AuthzRole.ADMIN })
   public Response deleteSnapshot(
@@ -163,6 +181,7 @@ public class PipelineManagerResource {
 
   @Path("/metrics")
   @GET
+  @ApiOperation(value = "Return Pipeline Metrics", response = MetricRegistry.class)
   @Produces(MediaType.APPLICATION_JSON)
   @PermitAll
   public Response getMetrics() {
@@ -175,12 +194,13 @@ public class PipelineManagerResource {
     return response;
   }
 
-  @Path("/history/{name}")
+  @Path("/history/{pipelineName}")
   @GET
+  @ApiOperation(value = "Find history by pipeline name", response = PipelineStateJson.class, responseContainer = "List")
   @Produces(MediaType.APPLICATION_JSON)
   @PermitAll
   public Response getHistory(
-      @PathParam("name") String name,
+      @PathParam("pipelineName") String name,
       @QueryParam("rev") @DefaultValue("0") String rev,
       @QueryParam("fromBeginning") @DefaultValue("false") boolean fromBeginning) throws PipelineManagerException {
     return Response.ok().type(MediaType.APPLICATION_JSON).entity(
@@ -189,6 +209,7 @@ public class PipelineManagerResource {
 
   @Path("/history/{pipelineName}")
   @DELETE
+  @ApiOperation(value = "Delete history by pipeline name")
   @Produces(MediaType.APPLICATION_JSON)
   @RolesAllowed({ AuthzRole.MANAGER, AuthzRole.ADMIN })
   public Response deleteHistory(
@@ -200,6 +221,8 @@ public class PipelineManagerResource {
 
   @Path("/errorRecords")
   @GET
+  @ApiOperation(value = "Returns error records by stage instance name and size", response = RecordJson.class,
+    responseContainer = "List")
   @Produces(MediaType.APPLICATION_JSON)
   @PermitAll
   @RolesAllowed({ AuthzRole.MANAGER, AuthzRole.ADMIN })
@@ -213,6 +236,8 @@ public class PipelineManagerResource {
 
   @Path("/errorMessages")
   @GET
+  @ApiOperation(value = "Returns error messages by stage instance name and size", response = ErrorMessageJson.class,
+   responseContainer = "List")
   @Produces(MediaType.APPLICATION_JSON)
   @RolesAllowed({ AuthzRole.MANAGER, AuthzRole.ADMIN })
   public Response getErrorMessages(
@@ -226,6 +251,8 @@ public class PipelineManagerResource {
 
   @Path("/sampledRecords")
   @GET
+  @ApiOperation(value = "Returns Sampled records by sample ID and size", response = RecordJson.class,
+    responseContainer = "List")
   @Produces(MediaType.APPLICATION_JSON)
   @RolesAllowed({ AuthzRole.MANAGER, AuthzRole.ADMIN })
   public Response getSampledRecords(
@@ -238,6 +265,7 @@ public class PipelineManagerResource {
 
   @Path("/alerts/{pipelineName}")
   @DELETE
+  @ApiOperation(value = "Delete alert by Pipeline name, revision and Alert ID")
   @Produces(MediaType.APPLICATION_JSON)
   @RolesAllowed({ AuthzRole.MANAGER, AuthzRole.ADMIN })
   public Response deleteAlert(

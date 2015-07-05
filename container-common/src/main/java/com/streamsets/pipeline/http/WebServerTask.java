@@ -240,6 +240,11 @@ public class WebServerTask extends AbstractTask {
     securityHandler.addConstraintMapping(resourceMapping);
 
     resourceMapping = new ConstraintMapping();
+    resourceMapping.setPathSpec("/rest/v1/authentication/login");
+    resourceMapping.setConstraint(noAuthConstraint);
+    securityHandler.addConstraintMapping(resourceMapping);
+
+    resourceMapping = new ConstraintMapping();
     resourceMapping.setPathSpec("/rest/v1/cluster/callback");
     resourceMapping.setConstraint(noAuthConstraint);
     securityHandler.addConstraintMapping(resourceMapping);

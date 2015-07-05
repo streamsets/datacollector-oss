@@ -46,6 +46,8 @@ import java.util.EnumSet;
     PipelineStoreModule.class, StageLibraryModule.class, PipelineManagerModule.class})
 public class WebServerModule {
 
+  private final String SWAGGER_PACKAGE = "io.swagger.jaxrs.listing";
+
   @Provides(type = Type.SET)
   ContextConfigurator provideStaticWeb(final RuntimeInfo runtimeInfo) {
     return new ContextConfigurator() {
@@ -151,7 +153,8 @@ public class WebServerModule {
       @Override
       public void init(ServletContextHandler context) {
         ServletHolder servlet = new ServletHolder(new ServletContainer());
-        servlet.setInitParameter(ServerProperties.PROVIDER_PACKAGES, RestAPI.class.getPackage().getName());
+        servlet.setInitParameter(ServerProperties.PROVIDER_PACKAGES,
+          SWAGGER_PACKAGE + "," + RestAPI.class.getPackage().getName());
         servlet.setInitParameter(ServletProperties.JAXRS_APPLICATION_CLASS, RestAPIResourceConfig.class.getName());
         context.addServlet(servlet, "/rest/*");
       }

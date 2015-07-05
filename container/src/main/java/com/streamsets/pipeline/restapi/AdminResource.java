@@ -10,6 +10,10 @@ import com.streamsets.pipeline.lib.util.ThreadUtil;
 import com.streamsets.pipeline.main.RuntimeInfo;
 import com.streamsets.pipeline.store.PipelineStoreException;
 import com.streamsets.pipeline.util.AuthzRole;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiImplicitParams;
+import io.swagger.annotations.ApiModelProperty;
+import io.swagger.annotations.ApiOperation;
 
 import javax.annotation.security.DenyAll;
 import javax.annotation.security.RolesAllowed;
@@ -30,6 +34,7 @@ import java.util.List;
 import java.util.Map;
 
 @Path("/v1/admin")
+@Api(value = "admin")
 @DenyAll
 public class AdminResource {
 
@@ -42,6 +47,7 @@ public class AdminResource {
 
   @POST
   @Path("/shutdown")
+  @ApiOperation(value = "Shutdown SDC")
   @Produces(MediaType.APPLICATION_JSON)
   @RolesAllowed(AuthzRole.ADMIN)
   public Response shutdown() throws PipelineStoreException {
@@ -63,6 +69,7 @@ public class AdminResource {
 
   @GET
   @Path("/threadsDump")
+  @ApiOperation(value = "Returns Thread Dump along with stack trace")
   @Produces(MediaType.APPLICATION_JSON)
   @RolesAllowed(AuthzRole.ADMIN)
   public Response getThreadsDump() throws IOException {
@@ -82,6 +89,7 @@ public class AdminResource {
 
   @GET
   @Path("/sdcDirectories")
+  @ApiOperation(value = "Returns SDC Directories")
   @Produces(MediaType.APPLICATION_JSON)
   @RolesAllowed(AuthzRole.ADMIN)
   public Response getSDCDirectories() throws IOException {
