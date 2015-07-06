@@ -23,6 +23,8 @@ import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import java.io.IOException;
+import java.net.ServerSocket;
 import java.net.URI;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
@@ -54,7 +56,7 @@ public class TestKafkaToFlume {
   private static AvroSource source;
   private static Channel ch;
   private static Producer<String, String> producer;
-
+  private static int flumePort;
 
   private static final String TEST_NAME = "KafkaToFlumeOnCluster";
 
@@ -74,7 +76,8 @@ public class TestKafkaToFlume {
 
     Context context = new Context();
     //This should match whats present in the pipeline.json file
-    context.put("port", String.valueOf(9050));
+    flumePort = getFreePort();
+    context.put("port", String.valueOf(flumePort));
     context.put("bind", "localhost");
     Configurables.configure(source, context);
 
@@ -105,6 +108,7 @@ public class TestKafkaToFlume {
     pipelineJson = pipelineJson.replace("topicName", TOPIC);
     pipelineJson = pipelineJson.replaceAll("localhost:9092", KafkaTestUtil.getMetadataBrokerURI());
     pipelineJson = pipelineJson.replaceAll("localhost:2181", KafkaTestUtil.getZkConnect());
+    pipelineJson = pipelineJson.replaceAll("localhost:9050", "localhost:" + flumePort);
     pipelineJson = pipelineJson.replaceAll("STANDALONE", "CLUSTER");
     return pipelineJson;
   }
@@ -144,6 +148,13 @@ public class TestKafkaToFlume {
       transaction.commit();
       transaction.close();
     }
+  }
+
+  public static int getFreePort() throws IOException {
+    ServerSocket serverSocket = new ServerSocket(0);
+    int port = serverSocket.getLocalPort();
+    serverSocket.close();
+    return port;
   }
 
 }
