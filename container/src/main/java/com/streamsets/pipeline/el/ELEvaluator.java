@@ -148,10 +148,11 @@ public class ELEvaluator extends ELEval {
       @Override
       public Object resolveVariable(String name) throws ELException {
         Object value = constants.get(name);
-        if (value == null) {
-          if (!vars.hasVariable(name)) {
+        if (!vars.hasVariable(name)) {
+          if (value == null) {
             throw new ELException(Utils.format("Variable '{}' cannot be resolved", name));
           }
+        } else {
           value = vars.getVariable(name);
         }
         return value;

@@ -480,4 +480,45 @@ public class TestFileTailSource {
     }
   }
 
+
+  @Test
+  public void testPeriodicFiles() throws Exception {
+    File testDataDir = new File("target", UUID.randomUUID().toString());
+    Assert.assertTrue(testDataDir.mkdirs());
+    String logFile = new File(testDataDir, "logFile.txt-1").getAbsolutePath();
+    InputStream is = Thread.currentThread().getContextClassLoader().getResourceAsStream("testLogFile.txt");
+    OutputStream os = new FileOutputStream(logFile);
+    IOUtils.copy(is, os);
+    is.close();
+    os.close();
+
+    FileInfo fileInfo = new FileInfo();
+    fileInfo.fileFullPath = testDataDir.getAbsolutePath() + "/logFile.txt-${PATTERN}";
+    fileInfo.fileRollMode = FileRollMode.PATTERN;
+    fileInfo.firstFile = "";
+    fileInfo.patternForToken = "[0-9]";
+    FileTailSource source = new FileTailSource(DataFormat.TEXT, "", "UTF-8", false, 1024, 25, 1, Arrays.asList(fileInfo),
+                                               PostProcessingOptions.NONE, null, null,
+                                               false, null, null, null, null, null, false, null, SCAN_INTERVAL);
+    SourceRunner runner = new SourceRunner.Builder(FileTailDSource.class, source)
+        .addOutputLane("lane").addOutputLane("metadata")
+        .build();
+    runner.runInit();
+    try {
+      long start = System.currentTimeMillis();
+      StageRunner.Output output = runner.runProduce(null, 1000);
+      long end = System.currentTimeMillis();
+      Assert.assertTrue(end - start >= 1000);
+      Assert.assertNotNull(output.getNewOffset());
+      Assert.assertEquals(2, output.getRecords().get("lane").size());
+      Record record = output.getRecords().get("lane").get(0);
+      Assert.assertEquals("FIRST", record.get("/text").getValueAsString());
+      record = output.getRecords().get("lane").get(1);
+      Assert.assertEquals("LAST", record.get("/text").getValueAsString());
+    } finally {
+      runner.runDestroy();
+    }
+  }
+
+
 }

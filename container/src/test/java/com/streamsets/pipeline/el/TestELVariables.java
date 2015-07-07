@@ -74,24 +74,14 @@ public class TestELVariables {
   }
 
   @Test
-  public void testInvalidVariableName2() {
+  public void testReplaceConstant() {
     Map<String, Object> constants = new HashMap<>();
     constants.put("ZERO", 0);
 
     ELVars elVars = new ELVariables(constants);
-
-    try {
-      elVars.addContextVariable("ZERO", VAR_VALUE);
-      Assert.fail("IllegalArgumentException expected as a constant with the same name already exists.");
-    } catch (IllegalArgumentException e) {
-
-    }
-
-    try {
-      elVars.addVariable("ZERO", VAR_VALUE);
-      Assert.fail("IllegalArgumentException expected as a constant with the same name already exists.");
-    } catch (IllegalArgumentException e) {
-
-    }
+    elVars.addVariable("ZERO", 1);
+    Assert.assertEquals(0, elVars.getConstant("ZERO"));
+    Assert.assertEquals(1, elVars.getVariable("ZERO"));
   }
+
 }
