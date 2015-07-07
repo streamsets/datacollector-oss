@@ -264,6 +264,42 @@ public class SpoolDirDSource extends DSource {
   )
   public int csvMaxObjectLen;
 
+  @ConfigDef(
+      required = false,
+      type = ConfigDef.Type.CHARACTER,
+      defaultValue = "|",
+      label = "Delimiter Character",
+      displayPosition = 330,
+      group = "DELIMITED",
+      dependsOn = "csvFileFormat",
+      triggeredByValue = "CUSTOM"
+  )
+  public char csvCustomDelimiter;
+
+  @ConfigDef(
+      required = false,
+      type = ConfigDef.Type.CHARACTER,
+      defaultValue = "\\",
+      label = "Escape Character",
+      displayPosition = 340,
+      group = "DELIMITED",
+      dependsOn = "csvFileFormat",
+      triggeredByValue = "CUSTOM"
+  )
+  public char csvCustomEscape;
+
+  @ConfigDef(
+      required = false,
+      type = ConfigDef.Type.CHARACTER,
+      defaultValue = "\"",
+      label = "Quote Character",
+      displayPosition = 350,
+      group = "DELIMITED",
+      dependsOn = "csvFileFormat",
+      triggeredByValue = "CUSTOM"
+  )
+  public char csvCustomQuote;
+
   // JSON Configuration
 
   @ConfigDef(
@@ -537,8 +573,8 @@ public class SpoolDirDSource extends DSource {
   protected Source createSource() {
     return new SpoolDirSource(dataFormat, charset, removeCtrlChars, overrunLimit, spoolDir, batchSize,
       poolingTimeoutSecs, filePattern, maxSpoolFiles, initialFileToProcess, errorArchiveDir, postProcessing, archiveDir,
-      retentionTimeMins, csvFileFormat, csvHeader, csvMaxObjectLen, jsonContent,
-      jsonMaxObjectLen, textMaxObjectLen, xmlRecordElement, xmlMaxObjectLen, logMode,
+      retentionTimeMins, csvFileFormat, csvHeader, csvMaxObjectLen, csvCustomDelimiter, csvCustomEscape, csvCustomQuote,
+      jsonContent, jsonMaxObjectLen, textMaxObjectLen, xmlRecordElement, xmlMaxObjectLen, logMode,
       logMaxObjectLen, retainOriginalLine, customLogFormat, regex, fieldPathsToGroupName, grokPatternDefinition,
       grokPattern, enableLog4jCustomLogFormat, log4jCustomLogFormat, onParseError, maxStackTraceLines, avroSchema);
   }

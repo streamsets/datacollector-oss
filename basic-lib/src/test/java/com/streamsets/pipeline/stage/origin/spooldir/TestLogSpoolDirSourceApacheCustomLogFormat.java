@@ -51,7 +51,7 @@ public class TestLogSpoolDirSourceApacheCustomLogFormat {
 
   private SpoolDirSource createSource() {
     return new SpoolDirSource(DataFormat.LOG, "UTF-8", false, 100, createTestDir(), 10, 1, "file-[0-9].log", 10, null, null,
-      PostProcessingOptions.ARCHIVE, createTestDir(), 10, null, null, -1, null, 0, 0,
+      PostProcessingOptions.ARCHIVE, createTestDir(), 10, null, null, -1, '^', '^', '^', null, 0, 0,
       null, 0, LogMode.APACHE_CUSTOM_LOG_FORMAT, 1000, true, CUSTOM_LOG_FORMAT, null,
       Collections.<RegExConfig>emptyList(), null, null, false, null, OnParseError.ERROR, 0, null);
   }
@@ -244,7 +244,7 @@ public class TestLogSpoolDirSourceApacheCustomLogFormat {
   public void testInvalidFormat() throws StageException {
     SpoolDirSource spoolDirSource = new SpoolDirSource(DataFormat.LOG, "UTF-8", false, 100, createTestDir(), 10, 1,
       "file-[0-9].log", 10, null, null,
-      PostProcessingOptions.ARCHIVE, createTestDir(), 10, null, null, -1, null, 0, 0,
+      PostProcessingOptions.ARCHIVE, createTestDir(), 10, null, null, -1, '^', '^', '^', null, 0, 0,
       null, 0, LogMode.APACHE_CUSTOM_LOG_FORMAT, 1000, true, INVALID_CUSTOM_LOG_FORMAT, null,
       Collections.<RegExConfig>emptyList(), null, null, false, null, OnParseError.ERROR, 0, null);
     SourceRunner runner = new SourceRunner.Builder(SpoolDirDSource.class, spoolDirSource).addOutputLane("lane").build();
