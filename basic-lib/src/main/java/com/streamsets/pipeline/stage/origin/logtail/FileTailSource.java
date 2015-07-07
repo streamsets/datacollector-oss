@@ -161,7 +161,7 @@ public class FileTailSource extends BaseSource {
                                                     ex.getMessage()));
         }
         ELVars elVars = getContext().createELVars();
-        elVars.addVariable("pattern", "");
+        elVars.addVariable("PATTERN", "");
         ELEval elEval = getContext().createELEval("fileFullPath");
         try {
           String pathWithoutPattern = elEval.eval(elVars, fileInfo.fileFullPath, String.class);
