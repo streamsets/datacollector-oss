@@ -69,8 +69,12 @@ public enum DataParserFormat implements DataFormat<DataParserFactory> {
     try {
       return constructor.newInstance(settings);
     } catch (Exception ex) {
+      Throwable cause = ex;
+      if (ex.getCause() != null) {
+        cause = ex.getCause();
+      }
       throw new RuntimeException(Utils.format("Could not create DataFactory instance for '{}': {}",
-                                              klass.getName(), ex.getMessage(), ex));
+                                              klass.getName(), cause.getMessage(), cause));
     }
   }
 
