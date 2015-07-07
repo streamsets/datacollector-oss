@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE task PUBLIC "-//OASIS//DTD DITA General Task//EN" "generalTask.dtd">
+<task id="task_kxl_tvk_ps">
+    <title>Convert Types with a Field Converter</title>
+    <shortdesc>Now that data is flattened, you can use a Field Converter to convert the data types
+        of the flattened fields. Let's convert the appropriate fields to Datetime and Double. Any
+        field that you don't convert remains a String field. </shortdesc>
+    <taskbody>
+        <context/>
+        <steps id="steps_wx1_xvk_ps">
+            <step>
+                <cmd>From the stage library, select the <uicontrol>Field Converter</uicontrol>
+                    processor and connect it to the Jython Evaluator. Or, from the Pipeline Creation
+                    Help Bar, click <menucascade>
+                        <uicontrol>Select Processor to Connect</uicontrol>
+                        <uicontrol>Field Converter</uicontrol>
+                    </menucascade>.</cmd>
+            </step>
+            <step>
+                <cmd>Click the <uicontrol>Conversions</uicontrol> tab.</cmd>
+            </step>
+            <step>
+                <cmd>Convert fields with datetime data to Datetime as follows:</cmd>
+                <info>
+                    <simpletable frame="all" id="simpletable_sp4_wxk_ps">
+                        <sthead>
+                            <stentry>Field Converter Property</stentry>
+                            <stentry>Datetime Conversion</stentry>
+                        </sthead>
+                        <strow>
+                            <stentry>Fields to Convert</stentry>
+                            <stentry>Click in the field and select the following fields:<ul
+                                    id="ul_wnn_zxk_ps">
+                                    <li>/dropoff_datetime</li>
+                                    <li>/pickup_datetime</li>
+                                </ul></stentry>
+                        </strow>
+                        <strow>
+                            <stentry>Convert to Type</stentry>
+                            <stentry>Datetime</stentry>
+                        </strow>
+                        <strow>
+                            <stentry>Date Format</stentry>
+                            <stentry>YYYY-MM-DD hh:mm:ss<draft-comment author="Loretta">there are
+                                    two, one causes lots of errors, the other doesn't. check with
+                                    Hari.</draft-comment></stentry>
+                        </strow>
+                    </simpletable>
+                </info>
+            </step>
+            <step>
+                <cmd>To convert fields to Double, click the <uicontrol>Add</uicontrol> icon and
+                    configure the properties as follows:</cmd>
+                <info>
+                    <simpletable frame="all" id="simpletable_tcl_dyk_ps">
+                        <sthead>
+                            <stentry>Field Converter Property</stentry>
+                            <stentry>Double Conversion</stentry>
+                        </sthead>
+                        <strow>
+                            <stentry>Fields to Convert</stentry>
+                            <stentry>Click in the field and select the following fields:<ul
+                                    id="ul_mly_gyk_ps">
+                                    <li>/fare_amount</li>
+                                    <li>/mta_tax</li>
+                                    <li>/pickup_latitude</li>
+                                    <li>/pickup_longitude</li>
+                                    <li>/surcharge</li>
+                                    <li>/tip_amount</li>
+                                    <li>/tolls_amount</li>
+                                    <li>/total_amount</li>
+                                </ul></stentry>
+                        </strow>
+                        <strow>
+                            <stentry>Convert to Type</stentry>
+                            <stentry>Double</stentry>
+                        </strow>
+                    </simpletable>
+                </info>
+            </step>
+        </steps>
+        <result>The pipeline and Field Converter should look like this:<image
+                href="../Graphics/Tutorial-FieldConverter.png" id="image_lhs_bjq_ps" scale="75"
+            /></result>
+    </taskbody>
+</task>

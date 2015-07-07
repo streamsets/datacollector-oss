@@ -2,28 +2,27 @@
 <!DOCTYPE task PUBLIC "-//OASIS//DTD DITA General Task//EN" "generalTask.dtd">
 <task id="task_wsj_5tm_ls">
     <title>Write to the Destination</title>
-    <shortdesc>You can use the Hadoop FS destination to write tutorial data to a Hadoop file system
-        or a local directory. </shortdesc>
+    <shortdesc>You can use the Hadoop FS destination to write tutorial data to HDFS or to a local
+        directory. We'll write to the local directory that you set up. </shortdesc>
     <taskbody>
         <context>
-            <p>When you configure the output file properties, you define the directory template,
-                which determines the naming convention for the output directories that are created.
+            <p>When you configure the output file properties, you define the directory template.
+                This determines the naming convention for the output directories that are created.
                 Use the directory where you want the output files to be written. </p>
         </context>
         <steps id="steps_xdd_wwm_ls">
             <step>
-                <cmd>From the stage library, select the <uicontrol>Hadoop FS</uicontrol> processor
+                <cmd>From the stage library, select the <uicontrol>Hadoop FS</uicontrol> destination
                     and connect it to the Field Masker. Or, from the Pipeline Creation Help Bar,
                     click <menucascade>
-                        <uicontrol>Select Processor to Connect</uicontrol>
+                        <uicontrol>Select Destination to Connect</uicontrol>
                         <uicontrol>Hadoop FS</uicontrol>
                     </menucascade>.</cmd>
             </step>
             <step>
-                <cmd>With the destination selected, in the Properties panel, click the
-                        <wintitle>Hadoop FS</wintitle> tab. If you have a real Hadoop FS
-                    installation, configure the stage to write to it.</cmd>
-                <info>To use Hadoop FS to write to a local filesystem, enter the following
+                <cmd>In the Properties panel, click the <wintitle>Hadoop FS</wintitle> tab. If you
+                    have a real Hadoop FS installation, configure the stage to write to it.</cmd>
+                <info>To use Hadoop FS to write to a local file system, enter the following
                     configuration for the <uicontrol>Hadoop FS URI</uicontrol> property:
                         <codeph>file:///</codeph>.</info>
             </step>
@@ -48,7 +47,10 @@
                                 </row>
                                 <row>
                                     <entry>Files Prefix</entry>
-                                    <entry>Taxi_</entry>
+                                    <entry>By default, Hadoop FS uses the <ph
+                                            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                                        /> ID. That can be useful, but let's simplify and use
+                                        "Tutorial_" instead.</entry>
                                 </row>
                                 <row>
                                     <entry>Directory Template</entry>
@@ -65,9 +67,10 @@
                                     <entry>250000</entry>
                                 </row>
                                 <row>
-                                    <entry>Max File Size</entry>
+                                    <entry>Max File Size (MB)</entry>
                                     <entry>If writing to a local file system, you might prefer to
-                                        lower the file size to something manageable, like 5.</entry>
+                                        lower the file size to something manageable, like 5 or
+                                        1.</entry>
                                 </row>
                             </tbody>
                         </tgroup>
@@ -75,5 +78,7 @@
                 </info>
             </step>
         </steps>
+        <result>That completes the primary branch. Now, let's go back to the Stream Selector and
+            complete the secondary branch.</result>
     </taskbody>
 </task>

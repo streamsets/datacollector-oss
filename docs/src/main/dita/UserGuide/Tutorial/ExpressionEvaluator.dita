@@ -2,12 +2,12 @@
 <!DOCTYPE task PUBLIC "-//OASIS//DTD DITA General Task//EN" "generalTask.dtd">
 <task id="task_wgb_t4p_ms">
     <title>Add Corresponding Fields with the Expression Evaluator</title>
-    <shortdesc>Use an Expression Editor to add fields to the non-credit card data flow so all
-        records have the same format.  </shortdesc>
+    <shortdesc>Use an Expression Editor to add the credit card type fields to the non-credit card
+        stream so all records have the same format when written to the destination.</shortdesc>
     <taskbody>
         <context>
-            <p>To do this, let's use data preview to verify the structure of records in the credit
-                card branch.</p>
+            <p>To do this, let's use data preview to verify how we added the credit card type to the
+                records..</p>
         </context>
         <steps id="steps_mr4_2pp_ms">
             <step>
@@ -22,7 +22,8 @@
                     header and value information, and then click <uicontrol>Close
                         Preview</uicontrol>.</cmd>
                 <info><image href="../Graphics/Tutorial-Exp-JythonPreview.png" id="image_h4c_d4h_4s"
-                        scale="80"/></info>
+                        scale="80"/><p>From this, we can see that we need to add a map with an index
+                        of 21, as well as the header and value fields.</p></info>
             </step>
             <step>
                 <cmd>In the stage library, select the <uicontrol>Expression Evaluator</uicontrol>
@@ -40,6 +41,11 @@
                     follows:</cmd>
                 <info><image href="../Graphics/Tutorial-ExpressionEvaluator.png"
                         id="image_wqq_nrh_4s" scale="80"/></info>
+                <info>These fields creates a map for index 21, and then creates a header field with
+                    the name credit_card_type. The third expression creates the value field and
+                    defines it as NA, for "not applicable."<draft-comment author="Loretta">check
+                        with Adam/Natty about why it was \N. Retake screenshot if necessary.
+                    </draft-comment></info>
             </step>
             <step>
                 <cmd>To write the data from this branch to the destination and merge the non-credit

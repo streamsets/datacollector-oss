@@ -10,8 +10,8 @@
      You can download sample data for this tutorial from the StreamSets website:<draft-comment
       author="Loretta">URL</draft-comment><p>To run the pipeline, you'll need the larger file to
       provide enough data to see how things work. If you don't plan to run the pipeline, download
-      the data preview file so you can at least preview data and examine how the pipeline processes
-      a sample set.</p></li>
+      the smaller file so you can at least preview data and examine how the pipeline processes a
+      sample set.</p></li>
     <li>Set up origin and destination and error directories: <ul id="ul_qwn_mz4_ms">
       <li>Origin directory - Save the sample data in a directory local to the <ph
         conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>. Ensure
@@ -19,13 +19,10 @@
         conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> has
        permission to read from the directory.</li>
       <li>Destination directory - The pipeline writes output records to file. Consider where you
-       want to write the output files and make sure the <ph
-        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> has write
-       permission on the directory. </li>
+       want to write the output files and make sure the  user has write permission for the
+       directory. </li>
       <li>Error directory - The pipeline writes error records to file. Consider where you want to
-       write the error files and make sure the <ph
-        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> has write
-       permission on the directory. </li>
+       write the error files and make sure the user has write permission for the directory. </li>
      </ul></li>
     <li>The <ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
      should be installed and running, but not running other pipelines. At this time, a <ph

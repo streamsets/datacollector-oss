@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE task PUBLIC "-//OASIS//DTD DITA General Task//EN" "generalTask.dtd">
+<task id="task_m21_dyj_ps">
+    <title>Run the Basic Pipeline</title>
+    <shortdesc>Now that the basic pipeline is complete, you can start it by clicking the
+            <uicontrol>Start</uicontrol> icon.</shortdesc>
+    <taskbody>
+        <context>
+            <p>The console enters Monitor mode, showing <draft-comment author="Loretta">come back to
+                    this. Should show the alert. Not working right now. </draft-comment></p>
+        </context>
+    </taskbody>
+</task>

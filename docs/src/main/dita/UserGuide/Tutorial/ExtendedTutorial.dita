@@ -2,8 +2,14 @@
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_w4n_gjt_ls">
  <title>Extended Tutorial</title>
- <shortdesc></shortdesc>
+ <shortdesc>The extended tutorial builds on the basic tutorial, using another set of stages to
+  convert the data format from delimited to one that you can write to Elasticsearch.</shortdesc>
  <conbody>
-  <p></p>
+  <p>The extended tutorial continues with the following steps:<ol id="ol_m23_hhk_ps">
+    <li>Use a Jython Evaluator to flatten data.</li>
+    <li>Convert fields to the appropriate data type.</li>
+    <li>Use the Expression Evaluator to merge field data.</li>
+    <li>Write the results to Elasticsearch.</li>
+   </ol></p>
  </conbody>
 </concept>

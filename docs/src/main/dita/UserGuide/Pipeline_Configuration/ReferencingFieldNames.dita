@@ -43,6 +43,10 @@
                                         <dd>To reference a field in an array or list, include the
                                                 index and path to the field, as
                                                 follows:<codeblock>[&lt;index value>]/&lt;path to field>/&lt;field name></codeblock></dd>
+                                        <dd>Delimited records are structured as lists. For more
+                                                information, see <xref
+                                                  href="DelimitedDataRecordStructure.dita#concept_zcg_bm4_fs"
+                                                /></dd>
                                 </dlentry>
                                 <dlentry>
                                         <dt>Text</dt>
@@ -53,7 +57,4 @@
                         </dl>
                 </p>
  </conbody>
-        <related-links>
-                <link href="DelimitedDataRecordStructure.dita#concept_zcg_bm4_fs"/>
-        </related-links>
 </concept>

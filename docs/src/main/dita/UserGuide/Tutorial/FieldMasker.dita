@@ -12,7 +12,7 @@
                 to reveal one or more groups in the string. </p>
             <p>For our pipeline, let's mask all but the last four digits of the credit card number
                 with the following regular expression:<codeblock>(.*)([0-9]{4})</codeblock></p>
-            <p>Notice the expression defines two groups so we can reveal the second group.</p>
+            <p>The expression deliberately defines two groups so we can reveal the second group.</p>
         </context>
         <steps id="steps_wwy_fjm_ls">
             <step>
@@ -29,11 +29,10 @@
             </step>
             <step>
                 <cmd>Click in the <uicontrol>Fields to Mask</uicontrol> field. Scroll down the list
-                    of fields to select the field we verified represented credit card data:
+                    of fields to select the field that represents credit card data:
                         <uicontrol>[20]/value</uicontrol>. </cmd>
                 <info>A list of fields displays when the pipeline is valid for data preview. If the
-                    list does not display, you can type in the field path:
-                        <uicontrol>[20]/value</uicontrol>.</info>
+                    list does not display, you can type in the field path: [20]/value.</info>
             </step>
             <step>
                 <cmd>To use a regular expression as a mask and display the last 4 digits of the
@@ -56,7 +55,8 @@
                                 </row>
                                 <row>
                                     <entry>Regular Expression</entry>
-                                    <entry> (.*)([0-9]{4})</entry>
+                                    <entry>
+                                        <codeph>(.*)([0-9]{4})</codeph></entry>
                                 </row>
                                 <row>
                                     <entry>Groups to Reveal</entry>

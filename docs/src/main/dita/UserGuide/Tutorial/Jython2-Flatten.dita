@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE task PUBLIC "-//OASIS//DTD DITA General Task//EN" "generalTask.dtd">
+<task id="task_cn5_w3k_ps">
+    <title>Flatten Data with a Jython Evaluator</title>
+    <shortdesc>To flatten data from the delimited data record format, let's use a Jython script with
+        the Jython Evaluator.</shortdesc>
+    <taskbody>
+        <context/>
+        <steps id="steps_s4j_x3k_ps">
+            <step>
+                <cmd>In the stage library, select the <uicontrol>Jython Evaluator</uicontrol> and
+                    connect the Field Masker and the Expression Evaluator to the stage, as
+                    shown:</cmd>
+                <info><image href="../Graphics/Tutorial-Jython2pipeline.png" id="image_fsy_3nk_ps"
+                        scale="70"/></info>
+            </step>
+            <step>
+                <cmd>On the <uicontrol>Jython</uicontrol> tab, delete everything in the Script field
+                    and enter the following script:</cmd>
+                <info>
+                    <codeblock>try:
+  for record in records:
+    flattened = dict((field['header'].strip(), field['value'] if field['value'] != '' else None) for field in record.value)
+    record.value = flattened
+    out.write(record)
+except Exception as e:
+  err.write(record, e.message)  </codeblock>
+                    <note
+                        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/Note-JythonScript"
+                    />
+                </info>
+            </step>
+        </steps>
+    </taskbody>
+</task>

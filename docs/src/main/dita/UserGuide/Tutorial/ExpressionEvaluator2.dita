@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE task PUBLIC "-//OASIS//DTD DITA General Task//EN" "generalTask.dtd">
+<task id="task_rlk_tdq_ps">
+    <title>Merge Field Data with the Expression Evaluator</title>
+    <shortdesc>Before writing data to Elasticsearch, let's merge the longitude and latitude
+        information into a single pickup location field. </shortdesc>
+    <taskbody>
+        <context>
+            <p/>
+        </context>
+        <steps id="steps_dzt_j3q_ps">
+            <step>
+                <cmd>Add an <uicontrol>Expression Evaluator </uicontrol>to the canvas and connect it
+                    to the <uicontrol>Field Converter</uicontrol>.</cmd>
+            </step>
+        </steps>
+    </taskbody>
+</task>

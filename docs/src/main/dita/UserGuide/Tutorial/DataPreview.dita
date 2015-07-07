@@ -2,26 +2,29 @@
 <!DOCTYPE task PUBLIC "-//OASIS//DTD DITA General Task//EN" "generalTask.dtd">
 <task id="task_xb5_2sf_4s">
     <title>Preview Data </title>
-    <shortdesc>To route records that use credit card for payment to a separate branch for
-        processing, we will use the Stream Selector processor. But before we do that, let's preview
-        the source data to become more familiar with the data set. </shortdesc>
     <taskbody>
         <context>
-            <p>We'll also gather some information we'll use later in the pipeline:<ul
-                    id="ul_a41_hvh_4s">
+            <p>Let's preview the source data to become more familiar with the data set and gather
+                some details that we'll use later in the pipeline: <ul id="ul_a41_hvh_4s">
                     <li>The name and field path of the field that contains payment information -
                         We'll use this to route data in the Stream Selector. </li>
                     <li>The field path for credit card numbers - We'll use this to mask the data in
                         the Field Masker.</li>
                 </ul></p>
+            <p>
+                <note>The format for field paths differs based on the type of data you're working
+                    with. For more information, see <xref
+                        href="../Pipeline_Configuration/ReferencingFieldNames.dita#concept_hjk_b4l_vq"
+                    />.</note>
+            </p>
             <p>To start data preview, all stages must be connected and all required fields filled,
-                though not necessarily correctly. In this case, the pipeline should be ready to
-                preview as is. </p>
+                though not necessarily correctly. In this case, since the origin is configured and
+                the only stage, the pipeline should be ready to preview as is. </p>
         </context>
         <steps id="steps_jxv_fpf_4s">
             <step>
                 <cmd>Above the pipeline canvas, click the <uicontrol>Preview</uicontrol> icon:
-                        <image href="../Graphics/icon-Preview.png" id="image_tj5_qqf_4s" scale="80"
+                        <image href="../Graphics/icon-Preview.png" id="image_tj5_qqf_4s" scale="75"
                     />.</cmd>
                 <info>If the icon is not enabled, make sure you completed all the previous steps for
                     the tutorial. If more than one issue displays in the list, correct any issue
@@ -30,7 +33,7 @@
             <step>
                 <cmd>In the <wintitle>Preview Configuration</wintitle> dialog box, select
                         <uicontrol> Remember the Configuration</uicontrol> and make sure
-                        <uicontrol>Write to Destinations</uicontrol> is clear.</cmd>
+                        <uicontrol>Write to Destinations</uicontrol> is not selected.</cmd>
                 <info>This current configuration ensures that data preview uses data from the source
                     file, displays 10 records, and avoids writing preview data to the destination. </info>
                 <info>Selecting Remember the Configuration means that the next time you click the
@@ -40,7 +43,7 @@
             <step>
                 <cmd>Click <uicontrol>Run Preview</uicontrol>.</cmd>
                 <stepresult>The Preview Panel displays a list of 10 output records for Directory in
-                    List view. If you drill down a bit, you see that the delimited record data
+                    list view. If you drill down a bit, you see that the delimited record data
                     structure is a list with a maps for each set of header and value. But we aren't
                     worried about the details right now. <p>(For more information about the record
                         structure for delimited data, see <xref
@@ -53,10 +56,10 @@
             <step>
                 <cmd>For a full view of the data, click the <uicontrol>Table View</uicontrol> icon:
                         <image href="../Graphics/icon_PrevTableView.png" id="image_zxq_1zf_4s"
-                        scale="90"/></cmd>
+                        scale="85"/></cmd>
                 <info>The Preview panel displays the first several columns of data. <p><image
                             href="../Graphics/Tutorial-PreviewDirectory.png" id="image_d1m_yzf_4s"
-                            scale="80"/></p></info>
+                            scale="70"/></p></info>
             </step>
             <step>
                 <cmd>To view all columns, click <uicontrol>Show All</uicontrol>.</cmd>
@@ -69,7 +72,7 @@
             </step>
             <step>
                 <cmd>To check the what the field path is for this field, click the List icon: <image
-                        href="../Graphics/icon_PrevListView.png" id="image_hq1_hrg_4s" scale="90"
+                        href="../Graphics/icon_PrevListView.png" id="image_hq1_hrg_4s" scale="85"
                     /></cmd>
             </step>
             <step>
@@ -87,7 +90,7 @@
                     arrow by the last map, number 20. </cmd>
                 <info>Notice, the index number is 20, and the field name for the value is "value".
                     So to access this data, we'll use the following field path:
-                        <codeph>[0]/value</codeph>.</info>
+                        <codeph>[20]/value</codeph>.</info>
                 <info>By the way, working with delimited data presents specific challenges like
                     these. If this were a field in a database table, the field path could have been
                     "/credit_card". </info>
@@ -95,8 +98,15 @@
             <step>
                 <cmd>Now that we have the information that we need, exit data preview by clicking
                     the Close Preview icon: <image href="../Graphics/icon_PrevClose.png"
-                        id="image_zs2_2bg_4s" scale="80"/></cmd>
+                        id="image_zs2_2bg_4s" scale="75"/></cmd>
             </step>
         </steps>
+        <result>To summarize, here are the details that we figured out by previewing data:<ul
+                id="ul_rhp_gx3_ps">
+                <li>payment_type is the header for the field that contains payment type
+                    information.</li>
+                <li><codeph>[3]/value</codeph> is the field path for the payment_type data.</li>
+                <li><codeph>[20]/value</codeph> is the field path for credit card numbers.</li>
+            </ul></result>
     </taskbody>
 </task>

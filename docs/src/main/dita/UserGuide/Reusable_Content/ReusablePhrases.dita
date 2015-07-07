@@ -135,5 +135,10 @@
                         <li>Runtime properties</li>
                         <li>Runtime resources</li>
                   </ul></p>
+            <draft-comment author="Loretta">The following note is used on both Jython topics in the
+                  Tutorial:</draft-comment>
+            <note outputclass="" type="note" id="Note-JythonScript">Incorrect indentation can cause
+                  Jython validation errors. For best results, copy the script from the online help.
+                  Copying the script from the User Guide PDF can cause incorrect indentation. </note>
       </conbody>
 </concept>

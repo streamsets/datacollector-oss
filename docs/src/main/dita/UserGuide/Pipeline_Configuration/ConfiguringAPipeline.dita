@@ -14,6 +14,10 @@
                 </ul></p>
         </context>
         <steps id="steps_tsx_d2w_kq">
+            <step conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/CreatePipeline1"
+                conrefend="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/CreatePipeline2">
+                <cmd/>
+            </step>
             <step>
                 <cmd>If this is the first pipeline for the <ph
                         conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"

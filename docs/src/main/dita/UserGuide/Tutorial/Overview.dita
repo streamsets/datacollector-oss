@@ -7,9 +7,9 @@
   monitor the results. </shortdesc>
  <conbody>
   <p>You can use the basic or extended version of the tutorial. The basic version allows you to read
-   and write to a local file system so you can use tutorial data to run the pipeline. The extended
-   version requires an Elasticsearch destination system to run the pipeline. If you don't use
-   Elasticsearch, you can still follow along to the end without running the pipeline.</p>
+   and write to a local file system so you can use tutorial data to preview and run the pipeline.
+   The extended version requires an Elasticsearch destination system to run the pipeline. If you
+   don't use Elasticsearch, you can still follow along to the end without running the pipeline.</p>
   <p>The basic tutorial evaluates fare payment data from a taxi company. It evaluates the credit
    cards used for payment to find the less-used vendors, so they might be dropped to reduce
    overhead. </p>

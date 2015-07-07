@@ -4,16 +4,20 @@
     <title>Route Data with the Stream Selector</title>
     <shortdesc>To route records that use credit card for payment to a separate branch for
         processing, we use the Stream Selector processor. We'll also define payment_type as a
-        required field to drop records with no payment type. Required fields must include data to
-        enter a stage.</shortdesc>
+        required field to drop records with no payment type.  </shortdesc>
     <taskbody>
         <context>
+            <p>Required fields must include data for the record to enter the stage. Records that
+                don't meet the requirement are sent to the pipeline for error handling. For this
+                tutorial pipeline, this means the records will be written to file. </p>
             <p>The Stream Selector uses user-defined conditions to route data. Any data not captured
                 by a user-defined condition routes to the default stream. </p>
-            <p>In this case, because the data is delimited, we use a delimited data function. The
-                    <codeph>record:dValue</codeph> function returns the value of the specified
-                field, so to capture records with credit card payments you use the following
-                condition: <codeblock>${record:dValue('payment_type') == 'CRD'}</codeblock></p>
+            <p>In this case, because the data is delimited, we use a delimited data record function.
+                The <codeph>record:dValue</codeph> function returns the value associated with the
+                specified header so you don't need to know the exact location of the header in the
+                record. </p>
+            <p>To capture records with credit card payments, use the following condition:
+                <codeblock>${record:dValue('payment_type') == 'CRD'}</codeblock></p>
         </context>
         <steps id="steps_xhx_3rk_ls">
             <step>
@@ -30,9 +34,10 @@
             </step>
             <step>
                 <cmd>To discard records with no payment type information, select the following
-                    field: <codeph>[3]/value</codeph>.</cmd>
-                <info>Because the pipeline is configured to write error records to file, any records
-                    that don't have a value in this field are written to file. </info>
+                    field: <uicontrol>[3]/value</uicontrol>.</cmd>
+                <info>The list of fields displays because you've already performed data preview or
+                    because the pipeline is valid for data preview. If a list does not appear, you
+                    can also enter the field path: [3]/value.</info>
             </step>
             <step>
                 <cmd>With the Stream Selector selected, in the Properties panel, click the

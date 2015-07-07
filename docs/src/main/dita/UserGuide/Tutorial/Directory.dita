@@ -3,17 +3,19 @@
 <task id="task_ftt_2vq_ks">
     <title>Configure the Origin</title>
     <shortdesc>The origin represents the source data for the pipeline. When you configure the
-        origin, you define how to connect to the data, and the type of data you're using. </shortdesc>
+        origin, you define how to connect to the data, and the type of data to be processed. </shortdesc>
     <taskbody>
         <context>
             <p>In this case, use the Directory origin to process static file data.</p>
         </context>
         <steps id="steps_ckz_gvq_ks">
             <step>
-                <cmd>In the Stage list, click the <uicontrol>Directory</uicontrol> origin. After the
-                    origin appears in the canvas, select the origin.</cmd>
-                <info>The Properties panel displays the configuration options for the selected
-                    stage. Or, if you click an unused section of the pipeline, it displays pipeline
+                <cmd>In the Stage list, click the <uicontrol>Directory</uicontrol> origin. Or, from
+                    the Pipeline Creation Help Bar, click <menucascade>
+                        <uicontrol>Select Origin</uicontrol>
+                        <uicontrol>Directory</uicontrol>
+                    </menucascade>.</cmd>
+                <info>The origin displays in the canvas and the Properties panel displays the stage
                     properties. </info>
             </step>
             <step>
@@ -42,9 +44,9 @@
                                 </row>
                                 <row>
                                     <entry>File Name Pattern</entry>
-                                    <entry>Since the file is the only file in the directory, you can
-                                        use the asterisk wild card (*) or some version of that,
-                                        like: *.csv.</entry>
+                                    <entry>If the file is the only file in the directory, you can
+                                        use the asterisk wild card (*) or something similarly
+                                        generic, like *.csv.</entry>
                                 </row>
                             </tbody>
                         </tgroup>
@@ -63,7 +65,7 @@
         <result>This is how the stage and pipeline should look at this point:<p><image
                     href="../Graphics/Tutorial-Directory.png" id="image_kj1_c5f_4s" scale="80"
                 /></p><p>Notice, the error icon on the Directory stage. If you hover over the icon
-                or click the Issues icon, you see from the error message that it's just because you
-                haven't connected it to anything yet. All in good time. </p></result>
+                or click the Issues icon, you see from the error message that's because it's not
+                connected to anything yet. All in good time. </p></result>
     </taskbody>
 </task>
