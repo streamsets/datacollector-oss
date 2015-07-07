@@ -12,10 +12,10 @@ import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.callback.CallbackInfo;
 import com.streamsets.pipeline.cluster.ApplicationState;
-import com.streamsets.pipeline.cluster.MockSparkProvider;
+import com.streamsets.pipeline.cluster.MockClusterProvider;
 import com.streamsets.pipeline.cluster.MockSystemProcess;
 import com.streamsets.pipeline.cluster.MockSystemProcessFactory;
-import com.streamsets.pipeline.cluster.SparkManager;
+import com.streamsets.pipeline.cluster.ClusterManager;
 import com.streamsets.pipeline.config.ConfigConfiguration;
 import com.streamsets.pipeline.config.PipelineConfiguration;
 import com.streamsets.pipeline.definition.PipelineDefConfigs;
@@ -70,8 +70,8 @@ public class TestClusterPipelineManager {
   private Configuration conf;
   private PipelineStoreTask pipelineStoreTask;
   private StageLibraryTask stageLibraryTask;
-  private SparkManager sparkManager;
-  private MockSparkProvider sparkProvider;
+  private ClusterManager clusterManager;
+  private MockClusterProvider sparkProvider;
   private ClusterPipelineManager clusterPipelineManager;
   private Map<String, Object> attributes;
   private ExecutorService executorService;
@@ -83,7 +83,7 @@ public class TestClusterPipelineManager {
     tempDir = Files.createTempDir();
     System.setProperty(RuntimeInfo.TRANSIENT_ENVIRONMENT, "true");
     System.setProperty("sdc.testing-mode", "true");
-    sparkManagerShell = new File(tempDir, "spark-manager");
+    sparkManagerShell = new File(tempDir, "_cluster-manager");
     Assert.assertTrue(tempDir.delete());
     Assert.assertTrue(tempDir.mkdir());
     Assert.assertTrue(sparkManagerShell.createNewFile());
@@ -93,7 +93,7 @@ public class TestClusterPipelineManager {
     MockSystemProcess.error.clear();
     runtimeInfo = new RuntimeInfo("dummy", null, Arrays.asList(emptyCL), tempDir);
     runtimeInfo.setSDCToken("myToken");
-    sparkProvider = new MockSparkProvider();
+    sparkProvider = new MockClusterProvider();
     conf = new Configuration();
     stateTracker = new StateTracker(runtimeInfo, conf);
     attributes = new HashMap<>();
@@ -101,7 +101,7 @@ public class TestClusterPipelineManager {
     pipelineStoreTask = new FilePipelineStoreTask(runtimeInfo, stageLibraryTask);
     pipelineStoreTask.init();
     pipelineStoreTask.create(NAME, "some desc", "admin");
-    sparkManager = new SparkManager(new MockSystemProcessFactory(), sparkProvider, tempDir, sparkManagerShell,
+    clusterManager = new ClusterManager(new MockSystemProcessFactory(), sparkProvider, tempDir, sparkManagerShell,
       emptyCL, emptyCL);
     setExecMode(ExecutionMode.CLUSTER);
   }
@@ -134,7 +134,7 @@ public class TestClusterPipelineManager {
 
   private ClusterPipelineManager createClusterPipelineManager() {
     return new ClusterPipelineManager(runtimeInfo, conf, pipelineStoreTask, stageLibraryTask,
-      sparkManager, stateTracker);
+      clusterManager, stateTracker);
   }
 
   @Test

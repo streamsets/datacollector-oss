@@ -193,11 +193,11 @@ public class MiniSDCTestingUtility {
     set.add(PosixFilePermission.OWNER_READ);
     set.add(PosixFilePermission.OWNER_WRITE);
     set.add(PosixFilePermission.OTHERS_READ);
-    Files.setPosixFilePermissions(new File(target, "libexec" + "/spark-manager").toPath(), set);
+    Files.setPosixFilePermissions(new File(target, "libexec" + "/_cluster-manager").toPath(), set);
     File staticWebDir = new File(target, "static-web");
     staticWebDir.mkdir();
 
-    setExecutePermission(new File(target, "libexec" + "/spark-manager").toPath());
+    setExecutePermission(new File(target, "libexec" + "/_cluster-manager").toPath());
     File log4jProperties = new File(etcTarget, "sdc-log4j.properties");
     if (log4jProperties.exists()) {
       log4jProperties.delete();

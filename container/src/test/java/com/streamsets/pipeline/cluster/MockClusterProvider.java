@@ -16,8 +16,8 @@ import java.net.URLClassLoader;
 import java.util.Map;
 import java.util.concurrent.TimeoutException;
 
-public class MockSparkProvider implements SparkProvider {
-  private static final Logger LOG = LoggerFactory.getLogger(MockSparkProvider.class);
+public class MockClusterProvider implements ClusterProvider {
+  private static final Logger LOG = LoggerFactory.getLogger(MockClusterProvider.class);
   public boolean killTimesOut = false;
   public boolean submitTimesOut = false;
   public boolean isRunningTimesOut = false;

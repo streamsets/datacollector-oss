@@ -6,7 +6,7 @@
 #
 exec 2<&-
 exec 2>&1
-if [[ -z "$RUN_FROM_SDC" ]]
+if [[ -z "$CLUSTER_TYPE" ]]
 then
   echo "ERROR: can only be invoked by an SDC" 1>&2
   exit 1
@@ -19,7 +19,8 @@ MKTEMP_COMMAND=${MKTEMP_COMMAND:-mktemp}
 KINIT_COMMAND=${KINIT_COMMAND:-kinit}
 YARN_COMMAND=${YARN_COMMAND:-/usr/bin/yarn}
 SPARK_SUBMIT=${SPARK_SUBMIT:-/usr/bin/spark-submit}
-SPARK_HOME=${SPARK_HOME:-$(cd -P $(dirname $(readlink -f $SPARK_SUBMIT))/../lib/spark/ && pwd)}
+HADOOP_COMMAND=${HADOOP_COMMAND:-/usr/bin/hadoop}
+#SPARK_HOME=${SPARK_HOME:-$(cd -P $(dirname $(readlink -f $SPARK_SUBMIT))/../lib/spark/ && pwd)}
 
 if [[ "$KERBEROS_AUTH" == "true" ]]
 then
@@ -30,7 +31,17 @@ fi
 
 if [[ $command == "start" ]]
 then
-  exec $SPARK_SUBMIT "$@"
+  if [[ "$CLUSTER_TYPE" == "spark" ]]
+  then
+    exec $SPARK_SUBMIT "$@"
+  elif [[ "$CLUSTER_TYPE" == "mr" ]]
+  then
+      echo "ERROR: TODO" 1>&2
+      exit 1
+  else
+    echo "ERROR: '$CLUSTER_TYPE' is not a supported cluster type" 1>&2
+    exit 1
+  fi
 elif [[ $command == "kill" ]]
 then
   exec $YARN_COMMAND application -kill "$@"

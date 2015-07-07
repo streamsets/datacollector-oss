@@ -15,7 +15,7 @@ import java.net.URLClassLoader;
 import java.util.Map;
 import java.util.concurrent.TimeoutException;
 
-public interface SparkProvider {
+public interface ClusterProvider {
 
   void killPipeline(SystemProcessFactory systemProcessFactory, File sparkManager, File tempDir,
                                    String appId, PipelineConfiguration pipelineConfiguration) throws TimeoutException;

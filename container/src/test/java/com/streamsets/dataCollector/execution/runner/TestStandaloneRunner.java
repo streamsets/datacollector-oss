@@ -84,14 +84,15 @@ public class TestStandaloneRunner {
     try {
       pipelineManager.stop();
     } catch (Exception e) {
-      //
+      // ignore
     }
-    File f = new File(System.getProperty(RuntimeModule.SDC_PROPERTY_PREFIX + RuntimeInfo.DATA_DIR));
+    File dataDir = new File(System.getProperty(RuntimeModule.SDC_PROPERTY_PREFIX + RuntimeInfo.DATA_DIR));
     try {
-      FileUtils.deleteDirectory(f);
-    } catch (Exception e) {
-
+      FileUtils.cleanDirectory(dataDir);
+    } catch (IOException e) {
+      // ignore
     }
+    Assert.assertTrue(dataDir.isDirectory());
     previewExecutorService.shutdownNow();
     runnerExecutorService.shutdownNow();
   }

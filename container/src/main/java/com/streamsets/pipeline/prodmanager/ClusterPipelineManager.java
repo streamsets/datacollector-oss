@@ -49,7 +49,7 @@ import com.streamsets.pipeline.callback.CallbackInfo;
 import com.streamsets.pipeline.cluster.ApplicationState;
 import com.streamsets.pipeline.cluster.ClusterModeConstants;
 import com.streamsets.pipeline.cluster.ClusterPipelineStatus;
-import com.streamsets.pipeline.cluster.SparkManager;
+import com.streamsets.pipeline.cluster.ClusterManager;
 import com.streamsets.pipeline.config.DeliveryGuarantee;
 import com.streamsets.pipeline.config.MemoryLimitConfiguration;
 import com.streamsets.pipeline.config.PipelineConfiguration;
@@ -101,7 +101,7 @@ public class ClusterPipelineManager extends AbstractTask implements PipelineMana
   private final SafeScheduledExecutorService scheduledExecutor;
   private final ExecutorService executor;
   private final File tempDir;
-  private SparkManager sparkManager;
+  private ClusterManager clusterManager;
   private Cache<String, CallbackInfo> slaveCallbackList;
   private MetricsEventRunnable metricsEventRunnable;
   private final ReentrantLock callbackCacheLock;
@@ -116,7 +116,7 @@ public class ClusterPipelineManager extends AbstractTask implements PipelineMana
 
   @VisibleForTesting
   ClusterPipelineManager(RuntimeInfo runtimeInfo, Configuration configuration, PipelineStoreTask pipelineStore,
-      StageLibraryTask stageLibrary, SparkManager sparkManager, StateTracker stateTracker) {
+      StageLibraryTask stageLibrary, ClusterManager clusterManager, StateTracker stateTracker) {
     super(ClusterPipelineManager.class.getSimpleName());
     this.runtimeInfo = runtimeInfo;
     this.configuration = configuration;
@@ -124,7 +124,7 @@ public class ClusterPipelineManager extends AbstractTask implements PipelineMana
     this.stageLibrary = stageLibrary;
     this.stateTracker = stateTracker;
     this.tempDir = Files.createTempDir();
-    this.sparkManager = sparkManager;
+    this.clusterManager = clusterManager;
     this.scheduledExecutor = new SafeScheduledExecutorService(4, CLUSTER_PIPELINE_MANAGER);
     this.executor = Executors.newSingleThreadExecutor(new ThreadFactory() {
       @Override
@@ -134,10 +134,10 @@ public class ClusterPipelineManager extends AbstractTask implements PipelineMana
         return thread;
       }
     });
-    if (this.sparkManager == null) {
-      this.sparkManager = new SparkManager(runtimeInfo, tempDir);
+    if (this.clusterManager == null) {
+      this.clusterManager = new ClusterManager(runtimeInfo, tempDir);
     }
-    this.managerRunnable = new ManagerRunnable(this, stateTracker, this.sparkManager);
+    this.managerRunnable = new ManagerRunnable(this, stateTracker, this.clusterManager);
     this.executor.submit(managerRunnable);
     slaveCallbackList = CacheBuilder.newBuilder()
         .expireAfterWrite(1, TimeUnit.MINUTES)
@@ -620,14 +620,14 @@ public class ClusterPipelineManager extends AbstractTask implements PipelineMana
     final BlockingQueue<Optional<StateTransitionRequest>> queue = new ArrayBlockingQueue<>(10);
     final ClusterPipelineManager clusterPipelineManager;
     final StateTracker stateTracker;
-    final SparkManager sparkManager;
+    final ClusterManager clusterManager;
     final PipelineStoreTask pipelineStore;
 
     public ManagerRunnable(ClusterPipelineManager clusterPipelineManager, StateTracker stateTracker,
-                           SparkManager sparkManager) {
+                           ClusterManager clusterManager) {
       this.clusterPipelineManager = clusterPipelineManager;
       this.stateTracker = stateTracker;
-      this.sparkManager = sparkManager;
+      this.clusterManager = clusterManager;
       this.pipelineStore = clusterPipelineManager.pipelineStore;
     }
 
@@ -671,7 +671,7 @@ public class ClusterPipelineManager extends AbstractTask implements PipelineMana
         ApplicationState appState = new ApplicationState((Map)ps.getAttributes().get(APPLICATION_STATE));
         try {
           PipelineConfiguration pipelineConf = pipelineStore.load(ps.getName(), ps.getRev());
-          clusterPipelineState = sparkManager.getStatus(appState, pipelineConf).get(60, TimeUnit.SECONDS);
+          clusterPipelineState = clusterManager.getStatus(appState, pipelineConf).get(60, TimeUnit.SECONDS);
         } catch (Exception ex) {
           ex = removeExecutionExceptionIfPossible(ex);
           String msg = "Error getting application status: " + ex;
@@ -722,7 +722,7 @@ public class ClusterPipelineManager extends AbstractTask implements PipelineMana
       } else {
         ClusterPipelineStatus pipelineStatus = null;
         try {
-          pipelineStatus = sparkManager.getStatus(appState, pipelineConf).get(60, TimeUnit.SECONDS);
+          pipelineStatus = clusterManager.getStatus(appState, pipelineConf).get(60, TimeUnit.SECONDS);
         } catch (Exception ex) {
           ex = removeExecutionExceptionIfPossible(ex);
           String msg = "Error getting application status: " + ex;
@@ -778,14 +778,14 @@ public class ClusterPipelineManager extends AbstractTask implements PipelineMana
         RuntimeInfo runtimeInfo = clusterPipelineManager.runtimeInfo;
         runtimeInfo.setAttribute(ClusterModeConstants.NUM_EXECUTORS_KEY, clusterSourceInfo.getParallelism());
         clusterPipelineManager.clearSlaveList();
-        ListenableFuture<ApplicationState> submitFuture = sparkManager.submit(pipelineConf,
+        ListenableFuture<ApplicationState> submitFuture = clusterManager.submit(pipelineConf,
           clusterPipelineManager.stageLibrary,  new File(runtimeInfo.getConfigDir()),
           new File(runtimeInfo.getResourcesDir()), new File(runtimeInfo.getStaticWebDir()), bootstrapDir, environment,
           sourceInfo, SUBMIT_TIMEOUT_SECS);
         // set state of running before adding callback which modified attributes
         Map<String, Object> attributes = new HashMap<>();
         attributes.putAll(ps.getAttributes());
-        // add an extra 10 sec wait to the actual timeout value passed to SparkManager#submit
+        // add an extra 10 sec wait to the actual timeout value passed to ClusterManager#submit
         ApplicationState applicationState = submitFuture.get(SUBMIT_TIMEOUT_SECS + 10, TimeUnit.SECONDS);
         attributes.put(APPLICATION_STATE, applicationState.getMap());
         stateTracker.setState(name, rev, State.RUNNING, "Starting cluster pipeline", null, attributes);
@@ -807,7 +807,7 @@ public class ClusterPipelineManager extends AbstractTask implements PipelineMana
       attributes.putAll(ps.getAttributes());
       attributes.remove(APPLICATION_STATE);
       try {
-        sparkManager.kill(request.applicationState, request.pipelineConf).get(60, TimeUnit.SECONDS);
+        clusterManager.kill(request.applicationState, request.pipelineConf).get(60, TimeUnit.SECONDS);
         stopped = true;
       } catch (Exception ex) {
         ex = removeExecutionExceptionIfPossible(ex);

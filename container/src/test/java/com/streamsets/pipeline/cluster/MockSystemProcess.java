@@ -19,10 +19,22 @@ public class MockSystemProcess implements SystemProcess {
   public static boolean isAlive = false;
   public static final List<String> output = new ArrayList<>();
   public static final List<String> error = new ArrayList<>();
+  public static final List<String> args = new ArrayList<>();
+
+  public static void reset() {
+    isAlive = false;
+    output.clear();
+    error.clear();
+    args.clear();
+  }
 
 
-  public MockSystemProcess(File tempDir) {
-
+  public MockSystemProcess(File tempDir, List<String> args) {
+    String tempPrefix = tempDir.getParent();
+    for (String arg : args) {
+      arg = arg.replace(tempPrefix, "<masked>");
+      MockSystemProcess.args.add(arg);
+    }
   }
 
   @Override

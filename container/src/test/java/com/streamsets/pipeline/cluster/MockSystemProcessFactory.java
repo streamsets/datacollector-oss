@@ -13,6 +13,6 @@ import java.util.List;
 
 public class MockSystemProcessFactory extends SystemProcessFactory {
   public SystemProcess create(String name, File tempDir, List<String> args) {
-    return new MockSystemProcess(tempDir);
+    return new MockSystemProcess(tempDir, args);
   }
 }

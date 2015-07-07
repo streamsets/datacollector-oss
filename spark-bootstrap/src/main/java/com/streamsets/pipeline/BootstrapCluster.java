@@ -145,8 +145,8 @@ public class BootstrapCluster {
     try {
       Instrumentation instrumentation = BootstrapMain.getInstrumentation();
       if (instrumentation != null) {
-        Method memoryUsageCollectorInitialize = Class.forName("com.streamsets.pipeline.memory.MemoryUsageCollector", true, containerCL).
-          getMethod("initialize", Instrumentation.class);
+        Method memoryUsageCollectorInitialize = Class.forName("com.streamsets.pipeline.memory.MemoryUsageCollector",
+          true, containerCL).getMethod("initialize", Instrumentation.class);
         memoryUsageCollectorInitialize.invoke(null, instrumentation);
       }
     } catch (Exception ex) {

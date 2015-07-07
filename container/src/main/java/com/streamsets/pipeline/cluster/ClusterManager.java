@@ -23,30 +23,30 @@ import java.util.Map;
 import java.util.concurrent.Callable;
 import java.util.concurrent.Executors;
 
-public class SparkManager {
-  private static final Logger LOG = LoggerFactory.getLogger(SparkManager.class);
+public class ClusterManager {
+  private static final Logger LOG = LoggerFactory.getLogger(ClusterManager.class);
   private final ListeningExecutorService executorService = MoreExecutors.
     listeningDecorator(Executors.newFixedThreadPool(3));
   private final SystemProcessFactory systemProcessFactory;
-  private final SparkProvider sparkProvider;
+  private final ClusterProvider clusterProvider;
   private final File tempDir;
-  private final File sparkManager;
+  private final File clusterManagerFile;
   private URLClassLoader apiCL;
   private URLClassLoader containerCL;
 
-  public SparkManager(RuntimeInfo runtimeInfo, File tempDir) {
-    this(new SystemProcessFactory(), new SparkProviderImpl(runtimeInfo), tempDir,
-      new File(runtimeInfo.getLibexecDir(), "spark-manager"), null, null);
+  public ClusterManager(RuntimeInfo runtimeInfo, File tempDir) {
+    this(new SystemProcessFactory(), new ClusterProviderImpl(runtimeInfo), tempDir,
+      new File(runtimeInfo.getLibexecDir(), "_cluster-manager"), null, null);
   }
 
   @VisibleForTesting
-  public SparkManager(SystemProcessFactory systemProcessFactory, SparkProvider sparkProvider,
-                      File tempDir, File sparkManager, URLClassLoader apiCL,
-                      URLClassLoader containerCL) {
+  public ClusterManager(SystemProcessFactory systemProcessFactory, ClusterProvider clusterProvider,
+                        File tempDir, File clusterManagerFile, URLClassLoader apiCL,
+                        URLClassLoader containerCL) {
     this.systemProcessFactory = systemProcessFactory;
-    this.sparkProvider = sparkProvider;
+    this.clusterProvider = clusterProvider;
     this.tempDir = tempDir;
-    this.sparkManager = sparkManager;
+    this.clusterManagerFile = clusterManagerFile;
     if (containerCL == null) {
       this.containerCL = (URLClassLoader)getClass().getClassLoader();
     } else {
@@ -58,8 +58,8 @@ public class SparkManager {
       this.apiCL = apiCL;
     }
     Utils.checkState(tempDir.isDirectory(), errorString("Temp directory does not exist: {}", tempDir));
-    Utils.checkState(sparkManager.isFile(), errorString("spark-manager does not exist: {}", sparkManager));
-    Utils.checkState(sparkManager.canExecute(), errorString("spark-manager is not executable: {}", sparkManager));
+    Utils.checkState(clusterManagerFile.isFile(), errorString("_cluster-manager does not exist: {}", clusterManagerFile));
+    Utils.checkState(clusterManagerFile.canExecute(), errorString("_cluster-manager is not executable: {}", clusterManagerFile));
   }
 
   public ListenableFuture<ApplicationState> submit(final PipelineConfiguration pipelineConfiguration,
@@ -70,7 +70,7 @@ public class SparkManager {
     return executorService.submit(new Callable<ApplicationState>() {
       @Override
       public ApplicationState call() throws Exception {
-        return sparkProvider.startPipeline(systemProcessFactory, sparkManager, tempDir, environment, sourceInfo,
+        return clusterProvider.startPipeline(systemProcessFactory, clusterManagerFile, tempDir, environment, sourceInfo,
           pipelineConfiguration, stageLibrary, etcDir, resourcesDir, staticWebDir, bootstrapDir, apiCL, containerCL,
           timeout);
       }
@@ -82,7 +82,7 @@ public class SparkManager {
     return executorService.submit(new Callable<Void>() {
       @Override
       public Void call() throws Exception {
-        sparkProvider.killPipeline(systemProcessFactory, sparkManager, tempDir, applicationState.getId(),
+        clusterProvider.killPipeline(systemProcessFactory, clusterManagerFile, tempDir, applicationState.getId(),
           pipelineConfiguration);
         return null;
       }
@@ -94,7 +94,7 @@ public class SparkManager {
     return executorService.submit(new Callable<ClusterPipelineStatus>() {
       @Override
       public ClusterPipelineStatus call() throws Exception {
-        return sparkProvider.getStatus(systemProcessFactory, sparkManager, tempDir, applicationState.getId(),
+        return clusterProvider.getStatus(systemProcessFactory, clusterManagerFile, tempDir, applicationState.getId(),
           pipelineConfiguration);
       }
     });

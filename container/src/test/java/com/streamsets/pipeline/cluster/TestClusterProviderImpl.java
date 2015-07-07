@@ -22,12 +22,13 @@ import java.io.File;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
-public class TestSparkProviderImpl {
+public class TestClusterProviderImpl {
 
   private File tempDir;
   private File providerTemp;
@@ -41,22 +42,20 @@ public class TestSparkProviderImpl {
   private StageLibraryTask stageLibrary;
   private Map<String, String> env;
   private Map<String, String> sourceInfo;
-  private SparkProviderImpl sparkProvider;
+  private ClusterProviderImpl sparkProvider;
 
 
   @Before
   public void setup() throws Exception {
     tempDir = File.createTempFile(getClass().getSimpleName(), "");
-    sparkManagerShell = new File(tempDir, "spark-manager");
+    sparkManagerShell = new File(tempDir, "_cluster-manager");
     Assert.assertTrue(tempDir.delete());
     Assert.assertTrue(tempDir.mkdir());
     providerTemp = new File(tempDir, "provider-temp");
     Assert.assertTrue(providerTemp.mkdir());
     Assert.assertTrue(sparkManagerShell.createNewFile());
     sparkManagerShell.setExecutable(true);
-    MockSystemProcess.isAlive = false;
-    MockSystemProcess.output.clear();
-    MockSystemProcess.error.clear();
+    MockSystemProcess.reset();
     etcDir = new File(tempDir, "etc-src");
     Assert.assertTrue(etcDir.mkdir());
     File sdcProperties = new File(etcDir, "sdc.properties");
@@ -98,7 +97,7 @@ public class TestSparkProviderImpl {
     sourceInfo = new HashMap<>();
     sourceInfo.put(ClusterModeConstants.NUM_EXECUTORS_KEY, "64");
     sourceInfo.put(ClusterModeConstants.CLUSTER_SOURCE_NAME, "kafka");
-    sparkProvider = new SparkProviderImpl();
+    sparkProvider = new ClusterProviderImpl();
   }
 
   @After
@@ -123,5 +122,13 @@ public class TestSparkProviderImpl {
     Assert.assertEquals(id, sparkProvider.startPipeline(new MockSystemProcessFactory(), sparkManagerShell,
       providerTemp, env, sourceInfo, pipelineConf, stageLibrary, etcDir, resourcesDir, webDir,
       bootstrapLibDir, classLoader, classLoader, 60).getId());
+    Assert.assertEquals(Arrays.asList("<masked>/_cluster-manager", "start", "--master", "yarn-cluster",
+      "--executor-memory", "512m", "--executor-cores", "1", "--num-executors", "64", "--archives",
+      "<masked>/provider-temp/libs.tar.gz,<masked>/provider-temp/etc.tar.gz,<masked>/provider-temp/resources.tar.gz",
+      "--files", "<masked>/provider-temp/log4j.properties", "--jars",
+      "<masked>/bootstrap-lib/main/streamsets-datacollector-bootstrap.jar,<masked>/spark-streaming-kafka.jar",
+      "--conf", "spark.executor.extraJavaOptions=-javaagent:./streamsets-datacollector-bootstrap.jar " , "--class",
+      "com.streamsets.pipeline.BootstrapCluster",
+      "<masked>/bootstrap-lib/spark/streamsets-datacollector-spark-bootstrap.jar"), MockSystemProcess.args);
   }
 }

@@ -55,8 +55,9 @@ import java.util.concurrent.TimeoutException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class SparkProviderImpl implements SparkProvider {
-  private static final String RUN_FROM_SDC = "RUN_FROM_SDC";
+public class ClusterProviderImpl implements ClusterProvider {
+  private static final String CLUSTER_TYPE = "CLUSTER_TYPE";
+  private static final String CLUSTER_TYPE_SPARK = "spark";
   private static final String KERBEROS_AUTH = "KERBEROS_AUTH";
   private static final String KERBEROS_KEYTAB = "KERBEROS_KEYTAB";
   private static final String KERBEROS_PRINCIPAL = "KERBEROS_PRINCIPAL";
@@ -64,13 +65,13 @@ public class SparkProviderImpl implements SparkProvider {
   private final RuntimeInfo runtimeInfo;
   private String clusterOrigin;
 
-  private static final Logger LOG = LoggerFactory.getLogger(SparkProviderImpl.class);
+  private static final Logger LOG = LoggerFactory.getLogger(ClusterProviderImpl.class);
 
   @VisibleForTesting
-  SparkProviderImpl() {
+  ClusterProviderImpl() {
     this(null);
   }
-  public SparkProviderImpl(RuntimeInfo runtimeInfo) {
+  public ClusterProviderImpl(RuntimeInfo runtimeInfo) {
     this.runtimeInfo = runtimeInfo;
   }
 
@@ -78,13 +79,13 @@ public class SparkProviderImpl implements SparkProvider {
   public void killPipeline(SystemProcessFactory systemProcessFactory, File sparkManager, File tempDir,
                     String appId, PipelineConfiguration pipelineConfiguration) throws TimeoutException {
     Map<String, String> environment = new HashMap<>();
-    environment.put(RUN_FROM_SDC, Boolean.TRUE.toString());
+    environment.put(CLUSTER_TYPE, CLUSTER_TYPE_SPARK);
     addKerberosConfiguration(environment, pipelineConfiguration);
     ImmutableList.Builder<String> args = ImmutableList.builder();
     args.add(sparkManager.getAbsolutePath());
     args.add("kill");
     args.add(appId);
-    SystemProcess process = systemProcessFactory.create(SparkManager.class.getSimpleName(), tempDir, args.build());
+    SystemProcess process = systemProcessFactory.create(ClusterManager.class.getSimpleName(), tempDir, args.build());
     try {
       process.start(environment);
       if (!process.waitFor(30, TimeUnit.SECONDS)) {
@@ -123,13 +124,13 @@ public class SparkProviderImpl implements SparkProvider {
   public ClusterPipelineStatus getStatus(SystemProcessFactory systemProcessFactory, File sparkManager, File tempDir,
                     String appId, PipelineConfiguration pipelineConfiguration) throws TimeoutException {
     Map<String, String> environment = new HashMap<>();
-    environment.put(RUN_FROM_SDC, Boolean.TRUE.toString());
+    environment.put(CLUSTER_TYPE, CLUSTER_TYPE_SPARK);
     addKerberosConfiguration(environment, pipelineConfiguration);
     ImmutableList.Builder<String> args = ImmutableList.builder();
     args.add(sparkManager.getAbsolutePath());
     args.add("status");
     args.add(appId);
-    SystemProcess process = systemProcessFactory.create(SparkManager.class.getSimpleName(), tempDir, args.build());
+    SystemProcess process = systemProcessFactory.create(ClusterManager.class.getSimpleName(), tempDir, args.build());
     try {
       process.start(environment);
       if (!process.waitFor(30, TimeUnit.SECONDS)) {
@@ -247,7 +248,7 @@ public class SparkProviderImpl implements SparkProvider {
                        File etcDir, File resourcesDir, File staticWebDir, File bootstrapDir, URLClassLoader apiCL,
                        URLClassLoader containerCL, long timeToWaitForFailure) throws TimeoutException {
     environment = Maps.newHashMap(environment);
-    environment.put(RUN_FROM_SDC, Boolean.TRUE.toString());
+    environment.put(CLUSTER_TYPE, CLUSTER_TYPE_SPARK);
     // create libs.tar.gz file for pipeline
     Map<String, URLClassLoader > streamsetsLibsCl = new HashMap<>();
     Map<String, URLClassLoader > userLibsCL = new HashMap<>();
@@ -391,7 +392,7 @@ public class SparkProviderImpl implements SparkProvider {
     args.add("--class");
     args.add("com.streamsets.pipeline.BootstrapCluster");
     args.add(sparkBootstrapJar.getAbsolutePath());
-    SystemProcess process = systemProcessFactory.create(SparkManager.class.getSimpleName(), tempDir, args);
+    SystemProcess process = systemProcessFactory.create(ClusterManager.class.getSimpleName(), tempDir, args);
     LOG.info("Starting: " + process);
     try {
       try {
