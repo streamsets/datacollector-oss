@@ -15,7 +15,8 @@ public enum CsvMode implements Label {
   RFC4180("RFC4180 CSV", CSVFormat.RFC4180),
   EXCEL("MS Excel CSV", CSVFormat.EXCEL),
   MYSQL("MySQL CSV", CSVFormat.MYSQL),
-  TDF("Tab Separated Values", CSVFormat.TDF)
+  TDF("Tab Separated Values", CSVFormat.TDF),
+  CUSTOM("Custom", null)
   ;
 
   private final String label;
