@@ -24,6 +24,7 @@ import com.streamsets.pipeline.lib.parser.DataParser;
 import com.streamsets.pipeline.lib.parser.DataParserFactory;
 import com.streamsets.pipeline.lib.parser.DataParserFactoryBuilder;
 import com.streamsets.pipeline.lib.parser.avro.AvroDataParserFactory;
+import com.streamsets.pipeline.lib.parser.delimited.DelimitedDataParserFactory;
 import com.streamsets.pipeline.lib.parser.log.LogDataFormatValidator;
 import com.streamsets.pipeline.lib.parser.log.RegExConfig;
 import com.streamsets.pipeline.lib.parser.xml.XmlDataParserFactory;
@@ -67,6 +68,9 @@ public class SpoolDirSource extends BaseSource {
   private final CsvMode csvFileFormat;
   private final CsvHeader csvHeader;
   private final int csvMaxObjectLen;
+  private final char csvCustomDelimiter;
+  private final char csvCustomEscape;
+  private final char csvCustomQuote;
   private final JsonMode jsonContent;
   private final int jsonMaxObjectLen;
   private final int textMaxLineLen;
@@ -91,7 +95,8 @@ public class SpoolDirSource extends BaseSource {
       long poolingTimeoutSecs,
       String filePattern, int maxSpoolFiles, String initialFileToProcess, String errorArchiveDir,
       PostProcessingOptions postProcessing, String archiveDir, long retentionTimeMins,
-      CsvMode csvFileFormat, CsvHeader csvHeader, int csvMaxObjectLen, JsonMode jsonContent, int jsonMaxObjectLen,
+      CsvMode csvFileFormat, CsvHeader csvHeader, int csvMaxObjectLen, char csvCustomDelimiter, char csvCustomEscape,
+      char csvCustomQuote, JsonMode jsonContent, int jsonMaxObjectLen,
       int textMaxLineLen, String xmlRecordElement, int xmlMaxObjectLen, LogMode logMode, int logMaxObjectLen,
       boolean retainOriginalLine, String customLogFormat, String regex, List<RegExConfig> fieldPathsToGroupName,
       String grokPatternDefinition, String grokPattern, boolean enableLog4jCustomLogFormat,
@@ -113,6 +118,9 @@ public class SpoolDirSource extends BaseSource {
     this.csvFileFormat = csvFileFormat;
     this.csvHeader = csvHeader;
     this.csvMaxObjectLen = csvMaxObjectLen;
+    this.csvCustomDelimiter = csvCustomDelimiter;
+    this.csvCustomEscape = csvCustomEscape;
+    this.csvCustomQuote = csvCustomQuote;
     this.jsonContent = jsonContent;
     this.jsonMaxObjectLen = jsonMaxObjectLen;
     this.textMaxLineLen = textMaxLineLen;
@@ -293,7 +301,10 @@ public class SpoolDirSource extends BaseSource {
         builder.setMaxDataLen(jsonMaxObjectLen).setMode(jsonContent);
         break;
       case DELIMITED:
-        builder.setMaxDataLen(csvMaxObjectLen).setMode(csvFileFormat).setMode(csvHeader);
+        builder.setMaxDataLen(csvMaxObjectLen).setMode(csvFileFormat).setMode(csvHeader)
+               .setConfig(DelimitedDataParserFactory.DELIMITER_CONFIG, csvCustomDelimiter)
+               .setConfig(DelimitedDataParserFactory.ESCAPE_CONFIG, csvCustomEscape)
+               .setConfig(DelimitedDataParserFactory.QUOTE_CONFIG, csvCustomQuote);
         break;
       case XML:
         builder.setMaxDataLen(xmlMaxObjectLen).setConfig(XmlDataParserFactory.RECORD_ELEMENT_KEY, xmlRecordElement);

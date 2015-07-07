@@ -46,8 +46,8 @@ public class TestSpoolDirSource {
         int maxXmlObjectLen) {
       super(dataFormat, "UTF-8", false, 100, spoolDir, batchSize, poolingTimeoutSecs, filePattern, maxSpoolFiles,
         initialFileToProcess, errorArchiveDir, postProcessing, archiveDir, retentionTimeMins, csvFileFormat,
-        csvHeaders, -1, jsonContent, maxJsonObjectLen, maxLogLineLength, xmlRecordElement, maxXmlObjectLen, null, 0,
-        false, null, null, null, null, null, false, null, OnParseError.ERROR, -1, null);
+        csvHeaders, -1, 'A', 'A', 'A', jsonContent, maxJsonObjectLen, maxLogLineLength, xmlRecordElement,
+        maxXmlObjectLen, null, 0, false, null, null, null, null, null, false, null, OnParseError.ERROR, -1, null);
       this.spoolDir = spoolDir;
     }
 

@@ -35,7 +35,7 @@ public class TestCsvSpoolDirSource {
   private final static String LINE2 = "a,b";
   private final static String LINE3 = "e,f";
 
-  private File createLogFile() throws Exception {
+  private File createDelimitedFile() throws Exception {
     File f = new File(createTestDir(), "test.log");
     Writer writer = new FileWriter(f);
     writer.write(LINE1 + "\n");
@@ -45,21 +45,30 @@ public class TestCsvSpoolDirSource {
     return f;
   }
 
-  private SpoolDirSource createSource(CsvHeader header) {
-    return new SpoolDirSource(DataFormat.DELIMITED, "UTF-8", false, 100, createTestDir(), 10, 1, "file-[0-9].log", 10, null, null,
-                              PostProcessingOptions.ARCHIVE, createTestDir(), 10, CsvMode.RFC4180, header, 5, null, 0,
-                              10, null, 0, null, 0, false, null, null, null, null, null, false, null,
-                              OnParseError.ERROR, -1, null);
+  private File createCustomDelimitedFile() throws Exception {
+    File f = new File(createTestDir(), "test.log");
+    Writer writer = new FileWriter(f);
+    writer.write("A^!B !^$^A\n");
+    writer.close();
+    return f;
+  }
+
+  private SpoolDirSource createSource(CsvMode mode, CsvHeader header, char delimiter, char escape, char quote,
+      int maxLen) {
+    return new SpoolDirSource(DataFormat.DELIMITED, "UTF-8", false, 100, createTestDir(), 10, 1, "file-[0-9].log", 10,
+                              null, null, PostProcessingOptions.ARCHIVE, createTestDir(), 10, mode, header, maxLen,
+                              delimiter, escape, quote, null, 0, 10, null, 0, null, 0, false, null, null, null, null,
+                              null, false, null, OnParseError.ERROR, -1, null);
   }
 
   @Test
   public void testProduceFullFile() throws Exception {
-    SpoolDirSource source = createSource(CsvHeader.NO_HEADER);
+    SpoolDirSource source = createSource(CsvMode.RFC4180, CsvHeader.NO_HEADER, '|', '\\', '"', 5);
     SourceRunner runner = new SourceRunner.Builder(SpoolDirDSource.class, source).addOutputLane("lane").build();
     runner.runInit();
     try {
       BatchMaker batchMaker = SourceRunner.createTestBatchMaker("lane");
-      Assert.assertEquals("-1", source.produce(createLogFile(), "0", 10, batchMaker));
+      Assert.assertEquals("-1", source.produce(createDelimitedFile(), "0", 10, batchMaker));
       StageRunner.Output output = SourceRunner.getOutput(batchMaker);
       List<Record> records = output.getRecords().get("lane");
       Assert.assertNotNull(records);
@@ -85,12 +94,14 @@ public class TestCsvSpoolDirSource {
   }
 
   private void testProduceLessThanFile(boolean ignoreHeader) throws Exception {
-    SpoolDirSource source = createSource((ignoreHeader) ? CsvHeader.IGNORE_HEADER : CsvHeader.WITH_HEADER);
+    SpoolDirSource source = createSource(CsvMode.RFC4180,
+                                         (ignoreHeader) ? CsvHeader.IGNORE_HEADER : CsvHeader.WITH_HEADER, '|', '\\',
+                                         '"', 5);
     SourceRunner runner = new SourceRunner.Builder(SpoolDirDSource.class, source).addOutputLane("lane").build();
     runner.runInit();
     try {
       BatchMaker batchMaker = SourceRunner.createTestBatchMaker("lane");
-      String offset = source.produce(createLogFile(), "0", 1, batchMaker);
+      String offset = source.produce(createDelimitedFile(), "0", 1, batchMaker);
       Assert.assertEquals("8", offset);
       StageRunner.Output output = SourceRunner.getOutput(batchMaker);
       List<Record> records = output.getRecords().get("lane");
@@ -107,7 +118,7 @@ public class TestCsvSpoolDirSource {
       }
 
       batchMaker = SourceRunner.createTestBatchMaker("lane");
-      offset = source.produce(createLogFile(), offset, 1, batchMaker);
+      offset = source.produce(createDelimitedFile(), offset, 1, batchMaker);
       Assert.assertEquals("12", offset);
       output = SourceRunner.getOutput(batchMaker);
       records = output.getRecords().get("lane");
@@ -124,12 +135,32 @@ public class TestCsvSpoolDirSource {
       }
 
       batchMaker = SourceRunner.createTestBatchMaker("lane");
-      offset = source.produce(createLogFile(), offset, 1, batchMaker);
+      offset = source.produce(createDelimitedFile(), offset, 1, batchMaker);
       Assert.assertEquals("-1", offset);
       output = SourceRunner.getOutput(batchMaker);
       records = output.getRecords().get("lane");
       Assert.assertNotNull(records);
       Assert.assertEquals(0, records.size());
+    } finally {
+      runner.runDestroy();
+    }
+  }
+
+  @Test
+  public void testDelimitedCustom() throws Exception {
+    SpoolDirSource source = createSource(CsvMode.CUSTOM, CsvHeader.NO_HEADER, '^', '$', '!', 20);
+    SourceRunner runner = new SourceRunner.Builder(SpoolDirDSource.class, source).addOutputLane("lane").build();
+    runner.runInit();
+    try {
+      BatchMaker batchMaker = SourceRunner.createTestBatchMaker("lane");
+      Assert.assertEquals("-1", source.produce(createCustomDelimitedFile(), "0", 10, batchMaker));
+      StageRunner.Output output = SourceRunner.getOutput(batchMaker);
+      List<Record> records = output.getRecords().get("lane");
+      Assert.assertNotNull(records);
+      Assert.assertEquals(1, records.size());
+      Assert.assertEquals("A", records.get(0).get("[0]/value").getValueAsString());
+      Assert.assertEquals("B ", records.get(0).get("[1]/value").getValueAsString());
+      Assert.assertEquals("^A", records.get(0).get("[2]/value").getValueAsString());
     } finally {
       runner.runDestroy();
     }

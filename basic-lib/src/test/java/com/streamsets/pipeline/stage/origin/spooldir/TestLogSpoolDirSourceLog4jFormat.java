@@ -147,7 +147,7 @@ public class TestLogSpoolDirSourceLog4jFormat {
 
   private SpoolDirSource createSource(OnParseError onParseError, int maxStackTraceLines) {
     return new SpoolDirSource(DataFormat.LOG, "UTF-8", false, 100, createTestDir(), 10, 1, "file-[0-9].log", 10, null, null,
-      PostProcessingOptions.ARCHIVE, createTestDir(), 10, null, null, -1, null, 0, 0,
+      PostProcessingOptions.ARCHIVE, createTestDir(), 10, null, null, -1, '^', '^', '^', null, 0, 0,
       null, 0, LogMode.LOG4J, 10000, true, null, null, Collections.<RegExConfig>emptyList(), null,
       null, false, null, onParseError, maxStackTraceLines, null);
   }
@@ -286,7 +286,7 @@ public class TestLogSpoolDirSourceLog4jFormat {
   @Test
   public void testProduceFullFileCustomLogFormat() throws Exception {
     SpoolDirSource source = new SpoolDirSource(DataFormat.LOG, "UTF-8", false, 100, createTestDir(), 10, 1, "file-[0-9].log",
-      10, null, null, PostProcessingOptions.ARCHIVE, createTestDir(), 10, null, null, -1, null, 0, 0,
+      10, null, null, PostProcessingOptions.ARCHIVE, createTestDir(), 10, null, null, -1, '^', '^', '^', null, 0, 0,
       null, 0, LogMode.LOG4J, 1000, true, null, null, Collections.<RegExConfig>emptyList(), null,
       null, true, "%-6r [%15.15t] %-5p %30.30c - %m", OnParseError.ERROR, 0, null);
     SourceRunner runner = new SourceRunner.Builder(SpoolDirDSource.class, source).addOutputLane("lane").build();
