@@ -1,0 +1,19 @@
+[ec2-user@node00 ~]$ yarn application -status application_1436303455376_0006
+15/07/08 18:23:35 INFO client.RMProxy: Connecting to ResourceManager at node00.local/172.17.0.1:8032
+Application Report :
+	Application-Id : application_1436303455376_0006
+	Application-Name : grep-search
+	Application-Type : MAPREDUCE
+	User : ec2-user
+	Queue : root.ec2-user
+	Start-Time : 1436379777694
+	Finish-Time : 1436379798838
+	Progress : 100%
+	State : FINISHED
+	Final-State : FAILED
+	Tracking-URL : http://node00.local:19888/jobhistory/job/job_1436303455376_0006
+	RPC Port : 50866
+	AM Host : node01.local
+	Aggregate Resource Allocation : 45714 MB-seconds, 43 vcore-seconds
+	Diagnostics : Task failed task_1436303455376_0006_m_000000
+Job failed as tasks failed. failedMaps:1 failedReduces:0

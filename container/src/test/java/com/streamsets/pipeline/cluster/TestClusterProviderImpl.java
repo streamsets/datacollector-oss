@@ -101,6 +101,7 @@ public class TestClusterProviderImpl {
     sourceInfo = new HashMap<>();
     sourceInfo.put(ClusterModeConstants.NUM_EXECUTORS_KEY, "64");
     sourceInfo.put(ClusterModeConstants.CLUSTER_SOURCE_NAME, "kafka");
+    sourceInfo.put(ClusterModeConstants.CLUSTER_SOURCE_BATCHMODE, "false");
     sparkProvider = new ClusterProviderImpl();
   }
 
@@ -126,13 +127,13 @@ public class TestClusterProviderImpl {
     Assert.assertEquals(id, sparkProvider.startPipeline(new MockSystemProcessFactory(), sparkManagerShell,
       providerTemp, env, sourceInfo, pipelineConf, stageLibrary, etcDir, resourcesDir, webDir,
       bootstrapLibDir, classLoader, classLoader, 60).getId());
-    Assert.assertEquals(Arrays.asList("<masked>/_cluster-manager", "start", "--master", "yarn-cluster",
+    Assert.assertArrayEquals(new String[]{"<masked>/_cluster-manager", "start", "--master", "yarn-cluster",
       "--executor-memory", "512m", "--executor-cores", "1", "--num-executors", "64", "--archives",
       "<masked>/provider-temp/libs.tar.gz,<masked>/provider-temp/etc.tar.gz,<masked>/provider-temp/resources.tar.gz",
       "--files", "<masked>/provider-temp/log4j.properties", "--jars",
       "<masked>/bootstrap-lib/main/streamsets-datacollector-bootstrap.jar,<masked>/spark-streaming-kafka.jar",
-      "--conf", "spark.executor.extraJavaOptions=-javaagent:./streamsets-datacollector-bootstrap.jar " , "--class",
-      "com.streamsets.pipeline.BootstrapCluster",
-      "<masked>/bootstrap-lib/spark/streamsets-datacollector-spark-bootstrap.jar"), MockSystemProcess.args);
+      "--conf", "spark.executor.extraJavaOptions=-javaagent:./streamsets-datacollector-bootstrap.jar ",
+      "--class", "com.streamsets.pipeline.BootstrapClusterStreaming",
+      "<masked>/bootstrap-lib/spark/streamsets-datacollector-spark-bootstrap.jar"}, MockSystemProcess.args.toArray());
   }
 }

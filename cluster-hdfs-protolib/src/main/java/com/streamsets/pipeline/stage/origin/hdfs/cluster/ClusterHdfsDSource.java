@@ -8,21 +8,19 @@ package com.streamsets.pipeline.stage.origin.hdfs.cluster;
 import java.util.List;
 import java.util.Map;
 
-import com.streamsets.pipeline.api.ClusterSource;
 import com.streamsets.pipeline.api.ComplexField;
 import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.ConfigGroups;
+import com.streamsets.pipeline.api.ErrorListener;
 import com.streamsets.pipeline.api.ExecutionMode;
 import com.streamsets.pipeline.api.GenerateResourceBundle;
 import com.streamsets.pipeline.api.Source;
 import com.streamsets.pipeline.api.StageDef;
 import com.streamsets.pipeline.api.ValueChooser;
-import com.streamsets.pipeline.config.CharsetChooserValues;
 import com.streamsets.pipeline.config.DataFormat;
 import com.streamsets.pipeline.config.LogMode;
 import com.streamsets.pipeline.config.LogModeChooserValues;
 import com.streamsets.pipeline.configurablestage.DClusterSourceOffsetCommitter;
-import com.streamsets.pipeline.configurablestage.DSource;
 import com.streamsets.pipeline.lib.parser.log.RegExConfig;
 
 
@@ -36,8 +34,7 @@ import com.streamsets.pipeline.lib.parser.log.RegExConfig;
 )
 @ConfigGroups(value = Groups.class)
 @GenerateResourceBundle
-public class ClusterHdfsDSource extends DClusterSourceOffsetCommitter {
-
+public class ClusterHdfsDSource extends DClusterSourceOffsetCommitter implements ErrorListener {
   private ClusterHdfsSource clusterHDFSSource;
 
   @ConfigDef(
@@ -312,4 +309,19 @@ public class ClusterHdfsDSource extends DClusterSourceOffsetCommitter {
     return clusterHDFSSource;
   }
 
+  @Override
+  public void errorNotification(Throwable throwable) {
+    ClusterHdfsSource source = this.clusterHDFSSource;
+    if (source != null) {
+      source.errorNotification(throwable);
+    }
+  }
+
+  @Override
+  public void shutdown() {
+    ClusterHdfsSource source = this.clusterHDFSSource;
+    if (source != null) {
+      source.shutdown();
+    }
+  }
 }

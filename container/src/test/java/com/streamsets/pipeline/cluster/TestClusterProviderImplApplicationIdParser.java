@@ -52,5 +52,9 @@ public class TestClusterProviderImplApplicationIdParser {
       matcher(" application_11111111111111111_9999924 ");
     Assert.assertTrue(matcher.find());
     Assert.assertEquals("application_11111111111111111_9999924", matcher.group(1));
+    matcher = ClusterProviderImpl.YARN_APPLICATION_ID_REGEX.
+      matcher("\tapplication_1429587312661_0024");
+    Assert.assertTrue(matcher.find());
+    Assert.assertEquals("application_1429587312661_0024", matcher.group(1));
   }
 }

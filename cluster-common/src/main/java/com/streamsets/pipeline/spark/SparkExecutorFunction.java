@@ -22,6 +22,7 @@ import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Properties;
 import java.util.concurrent.Callable;
 
@@ -37,11 +38,9 @@ public class SparkExecutorFunction<T1, T2> implements VoidFunction<Iterator<Tupl
   private static final Object staticLock = new Object();
   private static volatile boolean initialized = false;
   private Properties properties;
-  private String pipelineJson;
 
-  public SparkExecutorFunction(Properties properties, String pipelineJson) {
+  public SparkExecutorFunction(Properties properties) {
     this.properties = Utils.checkNotNull(properties, "Properties");
-    this.pipelineJson = Utils.checkNotNull(pipelineJson,  "Pipeline JSON");
   }
 
   private void initialize() throws Exception {
@@ -59,7 +58,7 @@ public class SparkExecutorFunction<T1, T2> implements VoidFunction<Iterator<Tupl
             return sdcId;
           }
         });
-        sdcPool = new EmbeddedSDCPool(properties, pipelineJson);
+        sdcPool = new EmbeddedSDCPool(properties);
         initialized = true;
       }
     }
@@ -69,22 +68,14 @@ public class SparkExecutorFunction<T1, T2> implements VoidFunction<Iterator<Tupl
   public void call(Iterator<Tuple2<T1, T2>> tupleIterator) throws Exception {
     LOG.debug("In executor function " + " " + Thread.currentThread().getName());
     initialize();
-    EmbeddedSDC embeddedSDC = sdcPool.getEmbeddedSDC();
-    List<Pair> batch = new ArrayList<>();
-    boolean hdfs = embeddedSDC.getSource().getName().equals("hdfs");
-
+    EmbeddedSDC embeddedSDC = sdcPool.checkout();
+    List<Map.Entry> batch = new ArrayList<>();
     while (tupleIterator.hasNext()) {
       Tuple2<T1, T2> tuple = tupleIterator.next();
-      if (hdfs) {
-        // For now assuming this is text
-        batch.add(new Pair(Long.valueOf(tuple._1().toString()), tuple._2().toString()));
-        LOG.info("Got message: 1: {}, 2: {}", tuple._1(), tuple._2());
-      } else {
-        if (IS_TRACE_ENABLED) {
-          LOG.trace("Got message: 1: {}, 2: {}", toString((byte[])tuple._1), toString((byte[])tuple._2));
-        }
-        batch.add(new Pair(tuple._1(), tuple._2()));
+      if (IS_TRACE_ENABLED) {
+        LOG.trace("Got message: 1: {}, 2: {}", toString((byte[])tuple._1), toString((byte[])tuple._2));
       }
+      batch.add(new Pair(tuple._1(), tuple._2()));
     }
     embeddedSDC.getSource().put(batch);
   }
@@ -102,9 +93,9 @@ public class SparkExecutorFunction<T1, T2> implements VoidFunction<Iterator<Tupl
   }
 
   public static <T1, T2> void
-    execute(Properties properties, String pipelineJson, Iterator<Tuple2<T1, T2>> tupleIterator)
+    execute(Properties properties, Iterator<Tuple2<T1, T2>> tupleIterator)
       throws Exception {
-    SparkExecutorFunction<T1, T2> function = new SparkExecutorFunction<T1, T2>(properties, pipelineJson);
+    SparkExecutorFunction<T1, T2> function = new SparkExecutorFunction<T1, T2>(properties);
     function.call(tupleIterator);
   }
 
@@ -113,7 +104,7 @@ public class SparkExecutorFunction<T1, T2> implements VoidFunction<Iterator<Tupl
     if (sdcPool == null) {
       throw new RuntimeException("Embedded SDC pool is not initialized");
     }
-    for (EmbeddedSDC sdc : sdcPool.getTotalInstances()) {
+    for (EmbeddedSDC sdc : sdcPool.getInstances()) {
       result += sdc.getSource().getRecordsProduced();
     }
     return result;

@@ -35,11 +35,15 @@ public class BootstrapCluster {
    */
   private static volatile boolean initialized = false;
   private static Properties properties;
-  private static String pipelineJson;
   private static ClassLoader apiCL;
   private static ClassLoader containerCL;
   private static ClassLoader sparkCL;
   private static List<ClassLoader> stageLibrariesCLs;
+
+  public static synchronized Properties getProperties() throws Exception {
+    initialize();
+    return properties;
+  }
 
   private static synchronized void initialize() throws Exception {
     if (initialized) {
@@ -87,6 +91,7 @@ public class BootstrapCluster {
       String msg = "Pipeline JSON file does not exist at expected location: " + pipelineJsonFile;
       throw new IllegalStateException(msg);
     }
+    String pipelineJson;
     try {
       pipelineJson = new String(Files.readAllBytes(Paths.get(pipelineJsonFile.toURI())), StandardCharsets.UTF_8);
     } catch (Exception ex) {
@@ -173,40 +178,21 @@ public class BootstrapCluster {
   }
 
   /**
-   * Bootstrapping the Driver which starts a spark job on cluster
-   */
-  public static void main(String[] args) throws Exception {
-    BootstrapCluster.initialize();
-    DelegatingClusterBinding binding = new DelegatingClusterBinding(properties, pipelineJson);
-    try {
-      binding.init();
-      binding.awaitTermination();
-    } catch (Exception ex) {
-      String msg = "Error trying to invoke SparkStreamingBinding.main: " + ex;
-      throw new IllegalStateException(msg, ex);
-    } finally {
-      binding.close();
-    }
-  }
-
-  /**
    * Obtaining a reference on the dummy source which is used to feed a pipeline<br/>
    * Direction: Stage -> Container
    * @param postBatchRunnable
    * @return a source object associated with the newly created pipeline
    * @throws Exception
    */
-  public static /*Source*/ Object createPipeline(Properties properties, String pipelineJson,
-                                                 Runnable postBatchRunnable) throws Exception {
+  public static Object createPipeline(Runnable postBatchRunnable) throws Exception {
     BootstrapCluster.initialize();
     ClassLoader originalClassLoader = Thread.currentThread().getContextClassLoader();
     try {
       Thread.currentThread().setContextClassLoader(containerCL);
-      Class embeddedPipelineFactoryClz = Class.forName("com.streamsets.pipeline.datacollector.EmbeddedDataCollectorFactory", true,
-        containerCL);
-      Method createPipelineMethod = embeddedPipelineFactoryClz.getMethod("createPipeline", Properties.class,
-        String.class, Runnable.class);
-      return createPipelineMethod.invoke(null, properties, pipelineJson, postBatchRunnable);
+      Class embeddedPipelineFactoryClz = Class.forName("com.streamsets.pipeline.datacollector.EmbeddedDataCollectorFactory",
+        true, containerCL);
+      Method createPipelineMethod = embeddedPipelineFactoryClz.getMethod("createPipeline", Runnable.class);
+      return createPipelineMethod.invoke(null, postBatchRunnable);
     } catch (Exception ex) {
       String msg = "Error trying to create pipeline: " + ex;
       throw new IllegalStateException(msg, ex);
@@ -256,6 +242,35 @@ public class BootstrapCluster {
     }
   }
 
+  public static Method getHadoopDestroyFunction() throws Exception {
+    BootstrapCluster.initialize();
+    ClassLoader originalClassLoader = Thread.currentThread().getContextClassLoader();
+    try {
+      Thread.currentThread().setContextClassLoader(sparkCL);
+      return Class.forName("com.streamsets.pipeline.hadoop.HadoopMapFunction", true,
+        sparkCL).getMethod("shutdown");
+    } catch (Exception ex) {
+      String msg = "Error trying to obtain HadoopMapFunction Class: " + ex;
+      throw new IllegalStateException(msg, ex);
+    } finally {
+      Thread.currentThread().setContextClassLoader(originalClassLoader);
+    }
+  }
+
+  public static Method getHadoopMapFunction() throws Exception {
+    BootstrapCluster.initialize();
+    ClassLoader originalClassLoader = Thread.currentThread().getContextClassLoader();
+    try {
+      Thread.currentThread().setContextClassLoader(sparkCL);
+      return Class.forName("com.streamsets.pipeline.hadoop.HadoopMapFunction", true,
+        sparkCL).getMethod("execute", Properties.class, Integer.class, List.class);
+    } catch (Exception ex) {
+      String msg = "Error trying to obtain HadoopMapFunction Class: " + ex;
+      throw new IllegalStateException(msg, ex);
+    } finally {
+      Thread.currentThread().setContextClassLoader(originalClassLoader);
+    }
+  }
 
   /**
    * Bootstrapping an Executor which is started as part of a spark kafka/hdfs job<br/>
@@ -269,7 +284,7 @@ public class BootstrapCluster {
     try {
       Thread.currentThread().setContextClassLoader(sparkCL);
       return Class.forName("com.streamsets.pipeline.spark.SparkExecutorFunction", true,
-        sparkCL).getMethod("execute", Properties.class, String.class, Iterator.class);
+        sparkCL).getMethod("execute", Properties.class, Iterator.class);
     } catch (Exception ex) {
       String msg = "Error trying to obtain SparkExecutorFunction Class: " + ex;
       throw new IllegalStateException(msg, ex);

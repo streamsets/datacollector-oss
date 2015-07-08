@@ -7,6 +7,7 @@
 package com.streamsets.pipeline.util;
 
 import java.io.IOException;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
@@ -21,13 +22,13 @@ public interface SystemProcess {
 
   public void cleanup();
 
-  public List<String> getAllOutput();
+  public Collection<String> getAllOutput();
 
-  public List<String> getAllError();
+  public Collection<String> getAllError();
 
   public List<String> getOutput();
 
-  public List<String> getError();
+  public Collection<String> getError();
 
   public void kill(long timeoutBeforeForceKill) ;
 

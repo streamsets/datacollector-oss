@@ -13,6 +13,8 @@ import com.streamsets.pipeline.lib.ProducerRunnable;
 import kafka.javaapi.producer.Producer;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.net.URI;
 import java.nio.charset.StandardCharsets;
@@ -23,7 +25,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 public class TestKafkaOriginMultiPartition extends TestPipelineOperationsCluster {
-
+  private static final Logger LOG = LoggerFactory.getLogger(TestKafkaOriginMultiPartition.class);
   private static final String TOPIC = "TestKafkaOriginMultiPartitionCluster";
   private static CountDownLatch startLatch;
   private static ExecutorService executorService;
@@ -34,6 +36,7 @@ public class TestKafkaOriginMultiPartition extends TestPipelineOperationsCluster
     KafkaTestUtil.startZookeeper();
     KafkaTestUtil.startKafkaBrokers(5);
     KafkaTestUtil.createTopic(TOPIC, 3, 2);
+    LOG.info("Kafka Broker URIs: " + KafkaTestUtil.getMetadataBrokerURI());
     startLatch = new CountDownLatch(1);
     Producer<String, String> producer = KafkaTestUtil.createProducer(KafkaTestUtil.getMetadataBrokerURI(), true);
     executorService = Executors.newSingleThreadExecutor();

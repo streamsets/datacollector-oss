@@ -34,6 +34,7 @@ public class ProductionPipeline {
   private final Pipeline pipeline;
   private final ProductionPipelineRunner pipelineRunner;
   private StateListener stateListener;
+  private volatile PipelineStatus pipelineStatus;
 
   public ProductionPipeline(RuntimeInfo runtimeInfo, PipelineConfiguration pipelineConf, Pipeline pipeline) {
     this.runtimeInfo = runtimeInfo;
@@ -52,6 +53,8 @@ public class ProductionPipeline {
 
   private void stateChanged(PipelineStatus pipelineStatus, String message, Map<String, Object> attributes)
     throws PipelineRuntimeException {
+    this.pipelineStatus = pipelineStatus;
+    LOG.info("Changing pipeline status from '{}' to '{}'", this.pipelineStatus, pipelineStatus);
     if (stateListener != null) {
       stateListener.stateChanged(pipelineStatus, message, attributes);
     }

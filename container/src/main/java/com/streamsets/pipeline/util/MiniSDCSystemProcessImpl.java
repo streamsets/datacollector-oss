@@ -20,7 +20,9 @@ import java.util.Map;
 // TODO - move this and subclass to bootstrap
 public class MiniSDCSystemProcessImpl extends SystemProcessImpl {
   private static final Logger LOG = LoggerFactory.getLogger(SystemProcessImpl.class);
-  private static final String YARN_COMMAND_TEXT = Joiner.on("\n").join("#!/bin/bash", "echo \"$@\"", "echo RUNNING", "");
+  public static final String YARN_STATUS_SUCCESS = " State : RUNNING ";
+  private static final String YARN_COMMAND_TEXT = Joiner.on("\n").join("#!/bin/bash", "echo \"$@\"", "echo '",
+    YARN_STATUS_SUCCESS, "'", "");
   private final File testDir;
   private final String yarnCommand;
 
@@ -54,8 +56,7 @@ public class MiniSDCSystemProcessImpl extends SystemProcessImpl {
   public void start(Map<String, String> env) throws IOException {
     String sparkHomeDir = System.getProperty("SPARK_TEST_HOME");
     LOG.debug("Spark home in test case is at " + sparkHomeDir);
-    env.put("SPARK_HOME", sparkHomeDir);
-    env.put("SPARK_SUBMIT", new File(sparkHomeDir, "bin/spark-submit").getAbsolutePath());
+    env.put("SPARK_SUBMIT_COMMAND", new File(sparkHomeDir, "bin/spark-submit").getAbsolutePath());
     // need to set some this prop, actual value doesn't matter
     env.put("YARN_CONF_DIR", testDir.getAbsolutePath());
     env.put("YARN_COMMAND",  yarnCommand);

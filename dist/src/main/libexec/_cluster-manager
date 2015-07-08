@@ -15,12 +15,10 @@ set -x
 env
 command=$1
 shift
-MKTEMP_COMMAND=${MKTEMP_COMMAND:-mktemp}
 KINIT_COMMAND=${KINIT_COMMAND:-kinit}
 YARN_COMMAND=${YARN_COMMAND:-/usr/bin/yarn}
-SPARK_SUBMIT=${SPARK_SUBMIT:-/usr/bin/spark-submit}
+SPARK_SUBMIT_COMMAND=${SPARK_SUBMIT_COMMAND:-/usr/bin/spark-submit}
 HADOOP_COMMAND=${HADOOP_COMMAND:-/usr/bin/hadoop}
-#SPARK_HOME=${SPARK_HOME:-$(cd -P $(dirname $(readlink -f $SPARK_SUBMIT))/../lib/spark/ && pwd)}
 
 if [[ "$KERBEROS_AUTH" == "true" ]]
 then
@@ -33,11 +31,10 @@ if [[ $command == "start" ]]
 then
   if [[ "$CLUSTER_TYPE" == "spark" ]]
   then
-    exec $SPARK_SUBMIT "$@"
+    exec $SPARK_SUBMIT_COMMAND "$@"
   elif [[ "$CLUSTER_TYPE" == "mr" ]]
   then
-      echo "ERROR: TODO" 1>&2
-      exit 1
+    exec $HADOOP_COMMAND "$@"
   else
     echo "ERROR: '$CLUSTER_TYPE' is not a supported cluster type" 1>&2
     exit 1
@@ -47,20 +44,8 @@ then
   exec $YARN_COMMAND application -kill "$@"
 elif [[ $command == "status" ]]
 then
-  tmp=$($MKTEMP_COMMAND /tmp/sdc-cluster.XXXXXXX)
-  trap "rm -f $tmp" EXIT
-  status=""
-  $YARN_COMMAND application -status "$@" &>$tmp
-  exitCode=$?
-  cat $tmp 1>&2
-  if [[ $exitCode -ne 0 ]]
-  then
-    exit $exitCode
-  elif grep -Eq "State\s*:\s+ACCEPTED" $tmp || grep -Eq "State\s*:\s+RUNNING" $tmp
-  then
-    echo "RUNNING"
-  elif grep -Eq "State\s*:\s+SUCCEEDED" $tmp
-  then
-    echo "SUCCEEDED"
-  fi
+  exec $YARN_COMMAND application -status "$@"
+else
+  echo "ERROR: Unknown command '$command'" 1>&2
+  exit 1
 fi

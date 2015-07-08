@@ -22,4 +22,12 @@ public class OffsetAndResult<T> {
   public List<T> getResult() {
     return result;
   }
+
+  @Override
+  public String toString() {
+    return "OffsetAndResult{" +
+      "offset='" + offset + '\'' +
+      ", result=" + (result == null ? "null" : result.size()) +
+      '}';
+  }
 }

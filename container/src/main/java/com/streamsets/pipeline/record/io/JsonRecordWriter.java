@@ -10,6 +10,8 @@ import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.ext.RecordWriter;
 import com.streamsets.pipeline.json.ObjectMapperFactory;
 import com.streamsets.pipeline.restapi.bean.BeanHelper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -17,6 +19,7 @@ import java.io.OutputStreamWriter;
 import java.io.Writer;
 
 public class JsonRecordWriter implements RecordWriter {
+  private final static Logger LOG = LoggerFactory.getLogger(JsonRecordWriter.class);
   private final Writer writer;
   private final JsonGenerator generator;
   private boolean closed;
@@ -53,7 +56,7 @@ public class JsonRecordWriter implements RecordWriter {
     try {
       writer.close();
     } catch (IOException ex) {
-      //NOP
+      LOG.warn("Error on close: {}", ex, ex);
     }
   }
 }

@@ -8,11 +8,9 @@ package com.streamsets.pipeline.configurablestage;
 import java.util.List;
 import java.util.Map;
 
-import com.streamsets.pipeline.api.ClusterSource;
-import com.streamsets.pipeline.api.OffsetCommitter;
+import com.streamsets.pipeline.api.impl.ClusterSource;
 import com.streamsets.pipeline.api.Source;
 import com.streamsets.pipeline.api.Stage;
-import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.impl.Utils;
 
 public abstract class DClusterSourceOffsetCommitter extends DSourceOffsetCommitter implements ClusterSource {
@@ -63,7 +61,7 @@ public abstract class DClusterSourceOffsetCommitter extends DSourceOffsetCommitt
    * @throws InterruptedException
    */
   @Override
-  public <T> void put(List<T> batch) throws InterruptedException {
+  public void put(List<Map.Entry> batch) throws InterruptedException {
     if (clusterSource == null) {
       // Get actual source in case of source being a delegating source (DelegatingKafkaSource)
       if (getSource() instanceof ClusterSource) {

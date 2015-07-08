@@ -3,7 +3,9 @@
  * be copied, modified, or distributed in whole or part without
  * written consent of StreamSets, Inc.
  */
-package com.streamsets.pipeline.api;
+package com.streamsets.pipeline.api.impl;
+
+import com.streamsets.pipeline.api.Source;
 
 import java.util.List;
 import java.util.Map;
@@ -18,7 +20,7 @@ public interface ClusterSource extends Source {
    * @param batch
    * @throws InterruptedException
    */
-  <T> void put(List<T> batch) throws InterruptedException;
+  void put(List<Map.Entry> batch) throws InterruptedException;
 
   /**
    * Return the no of records produced by this source
@@ -49,4 +51,7 @@ public interface ClusterSource extends Source {
    * @return
    */
   Map<String, String> getConfigsToShip();
+
+
+  void shutdown();
 }

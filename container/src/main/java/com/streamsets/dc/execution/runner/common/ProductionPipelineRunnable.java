@@ -98,8 +98,10 @@ public class ProductionPipelineRunnable implements Runnable {
     pipeline.stop();
     Thread thread = runningThread;
     if (thread != null) {
+      // cannot interrupt the thread as it does not play well with writing to HDFS
+      // this causes issues in batch mode when we are trying to rename files on stop
       thread.interrupt();
-      LOG.debug("Pipeline stopped, interrupting the thread running the pipeline");
+      LOG.info("Pipeline stopped, thread '{}' running the pipeline", thread.getName());
     }
   }
 

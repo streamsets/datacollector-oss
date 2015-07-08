@@ -6,6 +6,8 @@
 package com.streamsets.pipeline;
 
 
+import com.streamsets.pipeline.impl.DataCollector;
+
 import java.lang.reflect.Method;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -76,7 +78,9 @@ public class MiniSDC {
     if(dataCollector == null) {
       throw new IllegalStateException("DataCollector is not initialized.");
     }
-    dataCollector.startPipeline(pipelineJson);
+    // TODO - can we hook the pipeline json to the proper location so we don't have to pass this?
+    Method startPipelineMethod = dataCollector.getClass().getMethod("startPipeline", String.class);
+    startPipelineMethod.invoke(dataCollector, pipelineJson);
   }
 
   public void createPipeline(String pipelineJson) throws Exception {

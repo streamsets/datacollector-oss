@@ -7,11 +7,11 @@ package com.streamsets.pipeline;
 
 public interface ClusterBinding {
 
-  public void init() throws Exception;
+  void init() throws Exception;
 
-  public void awaitTermination();
+  void awaitTermination() throws Exception;
 
-  public void close();
+  void close() throws Exception;
 
 
 }

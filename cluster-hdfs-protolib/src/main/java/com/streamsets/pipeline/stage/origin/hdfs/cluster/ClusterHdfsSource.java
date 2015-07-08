@@ -11,10 +11,15 @@ import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.security.PrivilegedExceptionAction;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.streamsets.pipeline.cluster.Consumer;
+import com.streamsets.pipeline.cluster.ControlChannel;
+import com.streamsets.pipeline.cluster.DataChannel;
+import com.streamsets.pipeline.cluster.Producer;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.CommonConfigurationKeys;
@@ -31,12 +36,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.google.common.annotations.VisibleForTesting;
-import com.streamsets.pipeline.ClusterQueue;
-import com.streamsets.pipeline.ClusterQueueConsumer;
-import com.streamsets.pipeline.Pair;
 import com.streamsets.pipeline.OffsetAndResult;
 import com.streamsets.pipeline.api.BatchMaker;
-import com.streamsets.pipeline.api.ClusterSource;
+import com.streamsets.pipeline.api.impl.ClusterSource;
 import com.streamsets.pipeline.api.ErrorListener;
 import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.OffsetCommitter;
@@ -59,8 +61,10 @@ public class ClusterHdfsSource extends BaseSource implements OffsetCommitter, Er
   private static final Logger LOG = LoggerFactory.getLogger(ClusterHdfsSource.class);
   private String hdfsDirLocation;
   private Configuration hadoopConf;
-  private final ClusterQueue clusterQueue;
-  private final ClusterQueueConsumer clusterQueueConsumer;
+  private ControlChannel controlChannel;
+  private DataChannel dataChannel;
+  private Producer producer;
+  private Consumer consumer;
   private final DataFormat dataFormat;
   private final int textMaxLineLen;
   private final int jsonMaxObjectLen;
@@ -84,6 +88,7 @@ public class ClusterHdfsSource extends BaseSource implements OffsetCommitter, Er
   private UserGroupInformation ugi;
   private final boolean recursive;
   private int parallelism;
+  private long recordsProduced;
 
 
   public ClusterHdfsSource(String hdfsDirLocation, boolean recursive, Map<String, String> hdfsConfigs, DataFormat dataFormat, int textMaxLineLen,
@@ -91,8 +96,10 @@ public class ClusterHdfsSource extends BaseSource implements OffsetCommitter, Er
     List<RegExConfig> fieldPathsToGroupName, String grokPatternDefinition, String grokPattern,
     boolean enableLog4jCustomLogFormat, String log4jCustomLogFormat, int logMaxObjectLen, boolean produceSingleRecordPerMessage,
     boolean kerberosAuth, String kerberosPrincipal, String kerberosKeytab) {
-    clusterQueue = new ClusterQueue();
-    clusterQueueConsumer = new ClusterQueueConsumer(clusterQueue);
+    controlChannel = new ControlChannel();
+    dataChannel = new DataChannel();
+    producer = new Producer(controlChannel, dataChannel);
+    consumer = new Consumer(controlChannel, dataChannel);
     this.recursive = recursive;
     this.hdfsConfigs = hdfsConfigs;
     this.hdfsDirLocation = hdfsDirLocation;
@@ -113,6 +120,7 @@ public class ClusterHdfsSource extends BaseSource implements OffsetCommitter, Er
     this.kerberosAuth = kerberosAuth;
     this.kerberosPrincipal = kerberosPrincipal;
     this.kerberosKeytab = kerberosKeytab;
+    this.recordsProduced = 0;
   }
 
   @Override
@@ -171,8 +179,8 @@ public class ClusterHdfsSource extends BaseSource implements OffsetCommitter, Er
             hdfsDirLocation));
         } else {
           try {
-            int splits = getParallelism();
-            if (splits == 0) {
+            Object[] files = fs.listStatus(ph);
+            if (files == null || files.length == 0) {
               issues.add(getContext().createConfigIssue(Groups.HADOOP_FS.name(), "hdfsDirLocation", Errors.HADOOPFS_16,
                                                         hdfsDirLocation));
             }
@@ -262,7 +270,7 @@ public class ClusterHdfsSource extends BaseSource implements OffsetCommitter, Er
     // TextInputFormat supports Hadoop Text class which is Standard UTF-8
     builder.setCharset(StandardCharsets.UTF_8);
 
-    switch ((dataFormat)) {
+    switch (dataFormat) {
       case TEXT:
         builder.setMaxDataLen(textMaxLineLen);
         break;
@@ -279,14 +287,24 @@ public class ClusterHdfsSource extends BaseSource implements OffsetCommitter, Er
 
   @Override
   public String produce(String lastSourceOffset, int maxBatchSize, BatchMaker batchMaker) throws StageException {
-    // Ignore the batch size
-    OffsetAndResult<Pair> offsetAndResult = clusterQueueConsumer.produce(1000);
-    for (Pair message : offsetAndResult.getResult()) {
+    // Ignore the batch size -- TODO why?
+    OffsetAndResult<Map.Entry> offsetAndResult = consumer.take();
+    if (offsetAndResult == null) {
+      LOG.info("Received null batch, returning null");
+      return null;
+    }
+    int count = 0;
+    for (Map.Entry message : offsetAndResult.getResult()) {
+      count++;
       String messageId = getRecordId();
-      List<Record> listRecords = processMessage(messageId, message.getSecond().toString());
+      List<Record> listRecords = processMessage(messageId, String.valueOf(message.getValue()));
       for (Record record : listRecords) {
         batchMaker.addRecord(record);
       }
+    }
+    if (count == 0) {
+      LOG.info("Received no records, returning null");
+      return null;
     }
     return offsetAndResult.getOffset();
   }
@@ -316,34 +334,46 @@ public class ClusterHdfsSource extends BaseSource implements OffsetCommitter, Er
   }
 
   private String getRecordId() {
-    return "spark-streaming"+ ":" + "hdfs";
+    return "mr:hdfs";
   }
 
   @Override
-  public <T> void put(List<T> batch) throws InterruptedException {
-    clusterQueue.putData(batch);
-
+  public void put(List<Map.Entry> batch) throws InterruptedException {
+    recordsProduced += batch.size();
+    producer.put(new OffsetAndResult<>(String.valueOf(recordsProduced), batch));
   }
+
   @Override
   public long getRecordsProduced() {
-    return clusterQueueConsumer.getRecordsProduced();
+    return recordsProduced;
   }
 
   @Override
   public boolean inErrorState() {
-    return clusterQueue.inErrorState();
+    return producer.inErrorState() || consumer.inErrorState();
   }
 
   @Override
   public void errorNotification(Throwable throwable) {
-    clusterQueueConsumer.errorNotification(throwable);
-
+    consumer.error(throwable);
   }
+
   @Override
   public void commit(String offset) throws StageException {
-    clusterQueueConsumer.commit(offset);
-
+    consumer.commit(offset);
   }
+
+  @Override
+  public void destroy() {
+    shutdown();
+    super.destroy();
+  }
+
+  @Override
+  public void shutdown() {
+    producer.complete();
+  }
+
 
   private Map<String, Integer> getFieldPathToGroupMap(List<RegExConfig> fieldPathsToGroupName) {
     if(fieldPathsToGroupName == null) {
@@ -375,29 +405,9 @@ public class ClusterHdfsSource extends BaseSource implements OffsetCommitter, Er
     }
   }
 
-  private int getSplits() throws IOException {
-    if (parallelism != 0) {
-      return parallelism;
-    }
-    CombineFileInputFormat<Text, Text> combineFileInputFormat = new CombineFileInputFormat<Text, Text>() {
-      @Override
-      public RecordReader<Text, Text> createRecordReader(InputSplit inputSplit,
-                                                         TaskAttemptContext taskAttemptContext)
-        throws IOException {
-        throw new IOException("Please report, should never occur");
-      }
-    };
-    LOG.info("Finding parallelism for files in input dir: " + hadoopConf.get(FileInputFormat.INPUT_DIR));
-    Job job = Job.getInstance(hadoopConf);
-    List<InputSplit> splits = combineFileInputFormat.getSplits(job);
-    LOG.info("No of splits are " + splits.size());
-    parallelism = splits.size();
-    return parallelism;
-  }
-
   @Override
   public int getParallelism() throws IOException {
-    return getSplits();
+    return 0; // not used as MR calculates splits
   }
 
   @Override

@@ -22,11 +22,9 @@ public class BootstrapSparkFunction<T> implements VoidFunction<Iterator<Tuple2<T
   private static volatile boolean initialized = false;
   private static Method sparkExecutorFunctionMethod;
   private Properties properties;
-  private String pipelineJson;
 
-  public BootstrapSparkFunction(Properties properties, String pipelineJson) {
+  public BootstrapSparkFunction(Properties properties) {
     this.properties = Utils.checkNotNull(properties, "Properties");
-    this.pipelineJson = Utils.checkNotNull(pipelineJson, "Pipeline JSON");
   }
 
   private static synchronized void initialize() throws Exception {
@@ -40,7 +38,7 @@ public class BootstrapSparkFunction<T> implements VoidFunction<Iterator<Tuple2<T
   @Override
   public void call(Iterator<Tuple2<T, T>> tupleIterator) throws Exception {
     BootstrapSparkFunction.initialize();
-    sparkExecutorFunctionMethod.invoke(null, properties, pipelineJson, tupleIterator);
+    sparkExecutorFunctionMethod.invoke(null, properties, tupleIterator);
   }
 
 }

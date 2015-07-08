@@ -14,14 +14,17 @@ import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.lang.reflect.Method;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -74,8 +77,8 @@ public class SystemProcessImpl implements SystemProcess {
     Utils.checkState(output.createNewFile(), Utils.formatL("Could not create output file: {}", output));
     Utils.checkState(error.createNewFile(), Utils.formatL("Could not create error file: {}", error));
     Utils.checkState(delegate == null, "start can only be called once");
-    LOG.info("Standard output for process written to file  " + output);
-    LOG.info("Standard error for process written to file " + error);
+    LOG.info("Standard output for process written to file: " + output);
+    LOG.info("Standard error for process written to file: " + error);
     ProcessBuilder processBuilder = new ProcessBuilder()
       .redirectInput(input)
       .redirectOutput(output)
@@ -114,39 +117,35 @@ public class SystemProcessImpl implements SystemProcess {
     kill(5000);
   }
   @Override
-  public List<String> getAllOutput() {
-    List<String> result = new ArrayList<>();
+  public Collection<String> getAllOutput() {
     if (outputTailer != null) {
       return outputTailer.getAllData();
     }
-    return result;
+    return new ArrayList<>();
   }
 
   @Override
-  public List<String> getAllError() {
-    List<String> result = new ArrayList<>();
+  public Collection<String> getAllError() {
     if (errorTailer != null) {
       return errorTailer.getAllData();
     }
-    return result;
+    return new ArrayList<>();
   }
 
   @Override
   public List<String> getOutput() {
-    List<String> result = new ArrayList<>();
     if (outputTailer != null) {
       return outputTailer.getData();
     }
-    return result;
+    return new ArrayList<>();
   }
 
   @Override
-  public List<String> getError() {
-    List<String> result = new ArrayList<>();
+  public Collection<String> getError() {
     if (errorTailer != null) {
       return errorTailer.getData();
     }
-    return result;
+    return new ArrayList<>();
   }
 
   @Override
@@ -229,17 +228,15 @@ public class SystemProcessImpl implements SystemProcess {
     private final EvictingQueue<String> history;
     private final RandomAccessFile randomAccessFile;
     private final byte[] inbuf;
-    private long position;
 
     public SimpleFileTailer(File file) {
       this.file = file;
       this.history = EvictingQueue.create(2500);
-      this.position = 0;
       this.inbuf = new byte[8192 * 8];
       try {
         this.randomAccessFile = new RandomAccessFile(file, "r");
       } catch (FileNotFoundException e) {
-        throw new RuntimeException(Utils.format("Unexpected error reading output file {}: ", file, e), e);
+        throw new RuntimeException(Utils.format("Unexpected error reading output file '{}': {}", file, e), e);
       }
     }
 
@@ -250,17 +247,35 @@ public class SystemProcessImpl implements SystemProcess {
     public List<String> getData() {
       List<String> result = new ArrayList<>();
       try {
-        this.position = readLines(randomAccessFile, result);
+        readLines(randomAccessFile, result);
       } catch (IOException e) {
-        throw new RuntimeException(Utils.format("Error reading from {}: {}", file, e, e));
+        throw new RuntimeException(Utils.format("Error reading from '{}': {}", file, e, e));
       }
       history.addAll(result);
       return result;
     }
 
-    public List<String> getAllData() {
-      List<String> result = new ArrayList<>();
-      result.addAll(history);
+    public Collection<String> getAllData() {
+      EvictingQueue<String> result = EvictingQueue.create(2500);
+      BufferedReader reader = null;
+      try {
+        reader = new BufferedReader(new FileReader(file));
+        String line;
+        while ((line = reader.readLine()) != null) {
+          result.add(line);
+        }
+      } catch (IOException e) {
+        String msg = Utils.format("Error reading from command output file '{}': {}", file, e);
+        throw new RuntimeException(msg, e);
+      } finally {
+        if (reader != null) {
+          try {
+            reader.close();
+          } catch (IOException ex) {
+            // ignored
+          }
+        }
+      }
       return result;
     }
 

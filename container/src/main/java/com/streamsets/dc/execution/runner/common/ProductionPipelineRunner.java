@@ -194,12 +194,12 @@ public class ProductionPipelineRunner implements PipelineRunner {
 
   @Override
   public void run(Pipe[] pipes, BadRecordsHandler badRecordsHandler) throws StageException, PipelineRuntimeException {
-    while(!offsetTracker.isFinished() && !stop) {
-      if(threadHealthReporter != null) {
+    while (!offsetTracker.isFinished() && !stop) {
+      if (threadHealthReporter != null) {
         threadHealthReporter.reportHealth(ProductionPipelineRunnable.RUNNABLE_NAME, -1, System.currentTimeMillis());
       }
       try {
-        for (BatchListener batchListener: batchListenerList) {
+        for (BatchListener batchListener : batchListenerList) {
           batchListener.preBatch();
         }
         runBatch(pipes, badRecordsHandler);

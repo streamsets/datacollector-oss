@@ -1,0 +1,18 @@
+[ec2-user@node00 ~]$ yarn application -status application_1436303455376_0002
+15/07/08 18:18:50 INFO client.RMProxy: Connecting to ResourceManager at node00.local/172.17.0.1:8032
+Application Report :
+	Application-Id : application_1436303455376_0002
+	Application-Name : QuasiMonteCarlo
+	Application-Type : MAPREDUCE
+	User : ec2-user
+	Queue : root.ec2-user
+	Start-Time : 1436379518751
+	Finish-Time : 0
+	Progress : 5%
+	State : RUNNING
+	Final-State : UNDEFINED
+	Tracking-URL : http://node01.local:34660
+	RPC Port : 34021
+	AM Host : node01.local
+	Aggregate Resource Allocation : 132126 MB-seconds, 116 vcore-seconds
+	Diagnostics :

@@ -8,11 +8,10 @@ package com.streamsets.pipeline;
 
 import java.util.concurrent.atomic.AtomicInteger;
 
-import com.streamsets.pipeline.api.ClusterSource;
+import com.streamsets.pipeline.api.impl.ClusterSource;
 
 /**
  * Embedded SDC providing access to the source
- *
  */
 public class EmbeddedSDC {
   private static final AtomicInteger instanceIdCounter = new AtomicInteger(0);

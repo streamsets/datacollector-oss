@@ -9,12 +9,14 @@ import com.streamsets.pipeline.api.OffsetCommitter;
 import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.main.RuntimeInfo;
 import com.streamsets.pipeline.runner.SourceOffsetTracker;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.IOException;
 
 public class ProductionSourceOffsetCommitterOffsetTracker implements SourceOffsetTracker {
-
+  private static final Logger LOG = LoggerFactory.getLogger(ProductionSourceOffsetCommitterOffsetTracker.class);
   private final OffsetCommitter offsetCommitter;
   private final File offsetFile;
   private String newOffset = ""; // not null to ensure at least one pass
@@ -54,6 +56,9 @@ public class ProductionSourceOffsetCommitterOffsetTracker implements SourceOffse
   @Override
   public void commitOffset() {
     try {
+      if (LOG.isTraceEnabled()) {
+        LOG.trace("Commit offset '{}'", newOffset);
+      }
       offsetCommitter.commit(newOffset);
       offsetFile.setLastModified(System.currentTimeMillis());
     } catch (Exception ex) {

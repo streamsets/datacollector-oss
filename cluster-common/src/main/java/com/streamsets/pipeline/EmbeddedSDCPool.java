@@ -1,5 +1,6 @@
 /**
- * (c) 2015 StreamSets, Inc. All rights reserved. May not be copied, modified, or distributed in whole or part without
+ * (c) 2015 StreamSets, Inc. All rights reserved. May not
+ * be copied, modified, or distributed in whole or part without
  * written consent of StreamSets, Inc.
  */
 package com.streamsets.pipeline;
@@ -9,8 +10,8 @@ import java.util.concurrent.ConcurrentLinkedDeque;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 import com.google.common.annotations.VisibleForTesting;
-import com.streamsets.pipeline.api.ClusterSource;
 import com.streamsets.pipeline.api.Source;
+import com.streamsets.pipeline.api.impl.ClusterSource;
 import com.streamsets.pipeline.api.impl.Utils;
 
 import org.slf4j.Logger;
@@ -26,22 +27,23 @@ import com.streamsets.pipeline.configurablestage.DSource;
  */
 public class EmbeddedSDCPool {
   private static final Logger LOG = LoggerFactory.getLogger(EmbeddedSDCPool.class);
-  private final ConcurrentLinkedDeque<EmbeddedSDC> concurrentQueue = new ConcurrentLinkedDeque<EmbeddedSDC>();
-  private final List<EmbeddedSDC> totalInstances = new CopyOnWriteArrayList<>();
+  private static final boolean IS_TRACE_ENABLED = LOG.isTraceEnabled();
+  private final ConcurrentLinkedDeque<EmbeddedSDC> instanceQueue = new ConcurrentLinkedDeque<>();
+  private final List<EmbeddedSDC> instances = new CopyOnWriteArrayList<>();
   private final Properties properties;
-  private final String pipelineJson;
-  private final boolean infiniteSDCPool;
+  private boolean infinitePoolSize;
+  private volatile boolean open;
+
   /**
    * Create a pool. For now, there is only instance being created
    * @param properties the properties file
-   * @param pipelineJson the pipeline configuration
    * @throws Exception
    */
-  public EmbeddedSDCPool(Properties properties, String pipelineJson) throws Exception {
-    this.properties = Utils.checkNotNull(properties, "Properties");
-    this.pipelineJson = Utils.checkNotNull(pipelineJson,  "Pipeline JSON");
-    infiniteSDCPool = Boolean.valueOf(properties.getProperty("sdc.pool.size.infinite", "false"));
-    addToQueues(createEmbeddedSDC());
+  public EmbeddedSDCPool(Properties properties) throws Exception {
+    this.open = true;
+    this.properties = properties;
+    infinitePoolSize = Boolean.valueOf(properties.getProperty("sdc.pool.size.infinite", "false"));
+    addToQueues(create());
   }
 
   /**
@@ -49,7 +51,8 @@ public class EmbeddedSDCPool {
    * @return EmbeddedSDC
    * @throws Exception
    */
-  protected EmbeddedSDC createEmbeddedSDC() throws Exception {
+  protected EmbeddedSDC create() throws Exception {
+    Utils.checkState(open, "Not open");
     final EmbeddedSDC embeddedSDC = new EmbeddedSDC();
     Object source;
     source = BootstrapCluster.startPipeline(new Runnable() { // post-batch runnable
@@ -57,7 +60,7 @@ public class EmbeddedSDCPool {
         public void run() {
           if (!embeddedSDC.inErrorState()) {
             LOG.debug("Returning SDC instance {} back to queue", embeddedSDC.getInstanceId());
-            returnEmbeddedSDC(embeddedSDC);
+            checkin(embeddedSDC);
           } else {
             LOG.info("SDC is in error state, not returning to pool");
           }
@@ -80,18 +83,20 @@ public class EmbeddedSDCPool {
       }
       source = actualSource;
     }
-
     if (!(source instanceof ClusterSource)) {
-      throw new IllegalArgumentException("Source is not of type SparkStreamingSource: " + source.getClass().getName());
+        throw new IllegalArgumentException("Source is not of type ClusterSource: " + source.getClass().getName());
     }
     embeddedSDC.setSource((ClusterSource) source);
     return embeddedSDC;
   }
 
   private void addToQueues(EmbeddedSDC embeddedSDC) throws Exception {
-    totalInstances.add(embeddedSDC);
-    concurrentQueue.add(embeddedSDC);
-    LOG.debug("After adding, size of queue is " + concurrentQueue.size());
+    Utils.checkState(open, "Not open");
+    instances.add(embeddedSDC);
+    instanceQueue.add(embeddedSDC);
+    if (IS_TRACE_ENABLED) {
+      LOG.trace("After adding, size of queue is " + instanceQueue.size());
+    }
   }
 
   /**
@@ -99,21 +104,24 @@ public class EmbeddedSDCPool {
    * @return
    * @throws Exception
    */
-  public EmbeddedSDC getEmbeddedSDC() throws Exception {
-    LOG.debug("Before polling, size of queue is " + concurrentQueue.size());
+  public EmbeddedSDC checkout() throws Exception {
+    Utils.checkState(open, "Not open");
+    if (IS_TRACE_ENABLED) {
+      LOG.trace("Before polling, size of queue is " + instanceQueue.size());
+    }
     EmbeddedSDC embeddedSDC;
-    if (concurrentQueue.size() == 0) {
-      if (infiniteSDCPool) {
+    if (instanceQueue.size() == 0) {
+      if (infinitePoolSize) {
         LOG.warn("Creating new SDC as no SDC found in queue, This should be called only during testing");
-        embeddedSDC = createEmbeddedSDC();
+        embeddedSDC = create();
         addToQueues(embeddedSDC);
-        embeddedSDC = concurrentQueue.poll();
+        embeddedSDC = instanceQueue.poll();
       } else {
         // wait for a minute for sdc to be returned back
         embeddedSDC = waitForSDC(60000);
       }
     } else {
-      embeddedSDC = concurrentQueue.poll();
+      embeddedSDC = instanceQueue.poll();
     }
     if (embeddedSDC == null) {
       throw new IllegalStateException("Cannot find SDC, this should never happen");
@@ -125,32 +133,33 @@ public class EmbeddedSDCPool {
    * Return size of pool
    * @return
    */
-  public int size() {
-    return concurrentQueue.size();
+  public synchronized int size() {
+    Utils.checkState(open, "Not open");
+    return instanceQueue.size();
   }
 
   /**
    * Return the embedded SDC back. This function is called once the batch of
    * RDD's is processed
-   * @param embeddedSDC
    */
-  public void returnEmbeddedSDC(EmbeddedSDC embeddedSDC) {
-    if (!concurrentQueue.contains(embeddedSDC)) {
-      concurrentQueue.offer(embeddedSDC);
+  public void checkin(EmbeddedSDC embeddedSDC) {
+    // don't check open since we want the instance returned per the
+    // condition in destroy blocking for all instances to be returned
+    if (!instanceQueue.contains(embeddedSDC)) {
+      instanceQueue.offer(embeddedSDC);
     }
-    LOG.debug("After returning an SDC, size of queue is " + concurrentQueue.size());
-  }
-
-  public void destoryEmbeddedSDC() {
-    //
+    if (IS_TRACE_ENABLED) {
+      LOG.trace("After returning an SDC, size of queue is " + instanceQueue.size());
+    }
   }
 
   /**
    * Get total instances of SDC (used and unused)
    * @return the list of SDC
    */
-  public List<EmbeddedSDC> getTotalInstances() {
-    return totalInstances;
+  public List<EmbeddedSDC> getInstances() {
+    Utils.checkState(open, "Not open");
+    return instances;
   }
 
   @VisibleForTesting
@@ -162,7 +171,8 @@ public class EmbeddedSDCPool {
     long diff = endTime - startTime;
     int counter = 1000;
     while (diff < timeout) {
-      embeddedSDC = concurrentQueue.poll();
+      Utils.checkState(open, "Not open");
+      embeddedSDC = instanceQueue.poll();
       if (embeddedSDC != null) {
         break;
       }

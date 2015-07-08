@@ -153,6 +153,9 @@ public class StageRuntime {
               ((Target) getStage()).write(batch);
               break;
             }
+            default: {
+              throw new IllegalStateException(Utils.format("Unknown stage type: '{}'", getDefinition().getType()));
+            }
           }
           return newOffset;
         }

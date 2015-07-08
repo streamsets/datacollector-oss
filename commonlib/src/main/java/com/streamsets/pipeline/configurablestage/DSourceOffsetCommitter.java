@@ -5,15 +5,11 @@
  */
 package com.streamsets.pipeline.configurablestage;
 
-import com.streamsets.pipeline.api.ClusterSource;
 import com.streamsets.pipeline.api.OffsetCommitter;
 import com.streamsets.pipeline.api.Source;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.impl.Utils;
-
-import java.util.List;
-import java.util.Map;
 
 public abstract class DSourceOffsetCommitter extends DSource implements OffsetCommitter {
   protected OffsetCommitter offsetCommitter;

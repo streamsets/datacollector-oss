@@ -8,6 +8,7 @@ package com.streamsets.pipeline.cluster;
 public enum ClusterPipelineStatus {
   RUNNING("RUNNING"),
   SUCCEEDED("SUCCEEDED"),
+  // TODO - differentiate between Yarn killed and Yarn failed
   FAILED("FAILED");
 
   private final String state;

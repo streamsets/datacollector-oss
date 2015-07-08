@@ -9,7 +9,7 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 import com.streamsets.pipeline.api.Batch;
 import com.streamsets.pipeline.api.BatchMaker;
-import com.streamsets.pipeline.api.ClusterSource;
+import com.streamsets.pipeline.api.impl.ClusterSource;
 import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.ErrorListener;
 import com.streamsets.pipeline.api.ExecutionMode;
@@ -245,20 +245,17 @@ public class MockStages {
     }
 
     @Override
-    public <T> void put(List<T> batch) throws InterruptedException {
-      // TODO Auto-generated method stub
+    public void put(List<Map.Entry> batch) throws InterruptedException {
 
     }
 
     @Override
     public long getRecordsProduced() {
-      // TODO Auto-generated method stub
       return 0;
     }
 
     @Override
     public boolean inErrorState() {
-      // TODO Auto-generated method stub
       return false;
     }
 
@@ -275,6 +272,11 @@ public class MockStages {
     @Override
     public Map<String, String> getConfigsToShip() {
       return new HashMap<String, String>();
+    }
+
+    @Override
+    public void shutdown() {
+
     }
 
   }

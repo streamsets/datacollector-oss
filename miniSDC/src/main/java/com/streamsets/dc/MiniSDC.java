@@ -7,8 +7,8 @@ package com.streamsets.dc;
 
 
 import com.streamsets.pipeline.BootstrapMain;
-import com.streamsets.pipeline.DataCollector;
 import com.streamsets.pipeline.SDCClassLoader;
+import com.streamsets.pipeline.impl.DataCollector;
 
 import java.lang.reflect.Method;
 import java.net.URI;

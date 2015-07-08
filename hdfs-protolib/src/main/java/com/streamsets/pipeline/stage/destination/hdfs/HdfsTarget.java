@@ -458,6 +458,7 @@ public class HdfsTarget extends RecordTarget {
 
   @Override
   public void destroy() {
+    LOG.info("Destroy");
     try {
       if (currentWriters != null) {
         currentWriters.closeAll();

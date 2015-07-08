@@ -25,7 +25,7 @@ public class MemoryMonitor implements Runnable {
   public void run() {
     MemoryUsageSnapshot snapshot = memoryUsageCollector.get().collect();
     String name = snapshot.getStageName();
-    LOG.info(Utils.format("Stage {} consumed {} ({}ms), ClassLoader loaded {} classes",
+    LOG.debug(Utils.format("Stage {} consumed {} ({}ms), ClassLoader loaded {} classes",
       name, Utils.humanReadableInt(snapshot.getMemoryConsumed()), snapshot.getElapsedTime(),
       snapshot.getNumClassesLoaded()));
     long currentValue = memoryConsumed.getCount();

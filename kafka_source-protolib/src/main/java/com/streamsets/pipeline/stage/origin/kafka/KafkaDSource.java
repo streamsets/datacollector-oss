@@ -8,11 +8,13 @@ package com.streamsets.pipeline.stage.origin.kafka;
 import com.streamsets.pipeline.api.ComplexField;
 import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.ConfigGroups;
+import com.streamsets.pipeline.api.ErrorListener;
 import com.streamsets.pipeline.api.GenerateResourceBundle;
 import com.streamsets.pipeline.api.RawSource;
 import com.streamsets.pipeline.api.Source;
 import com.streamsets.pipeline.api.StageDef;
 import com.streamsets.pipeline.api.ValueChooser;
+import com.streamsets.pipeline.api.impl.ClusterSource;
 import com.streamsets.pipeline.config.CharsetChooserValues;
 import com.streamsets.pipeline.config.CsvHeader;
 import com.streamsets.pipeline.config.CsvHeaderChooserValues;
@@ -42,7 +44,7 @@ import java.util.Map;
 @RawSource(rawSourcePreviewer = KafkaRawSourcePreviewer.class, mimeType = "*/*")
 @ConfigGroups(value = Groups.class)
 @GenerateResourceBundle
-public class KafkaDSource extends DClusterSourceOffsetCommitter {
+public class KafkaDSource extends DClusterSourceOffsetCommitter implements ErrorListener {
 
   //2 info required for spark streaming to create direct stream
   public static final String METADATA_BROKER_LIST= "metadataBrokerList";
@@ -511,5 +513,27 @@ public class KafkaDSource extends DClusterSourceOffsetCommitter {
   @Override
   public Source getSource() {
     return source != null?  delegatingKafkaSource.getSource(): null;
+  }
+
+  @Override
+  public void errorNotification(Throwable throwable) {
+    DelegatingKafkaSource delegatingSource = delegatingKafkaSource;
+    if (delegatingSource != null) {
+      Source source = delegatingSource.getSource();
+      if (source instanceof ErrorListener) {
+        ((ErrorListener)source).errorNotification(throwable);
+      }
+    }
+  }
+
+  @Override
+  public void shutdown() {
+    DelegatingKafkaSource delegatingSource = delegatingKafkaSource;
+    if (delegatingSource != null) {
+      Source source = delegatingSource.getSource();
+      if (source instanceof ClusterSource) {
+        ((ClusterSource)source).shutdown();
+      }
+    }
   }
 }

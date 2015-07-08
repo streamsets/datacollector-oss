@@ -31,7 +31,6 @@ import java.util.Set;
 
 public class Pipeline {
   private static final Logger LOG = LoggerFactory.getLogger(Pipeline.class);
-
   private final PipelineBean pipelineBean;
   private final String name;
   private final String rev;
@@ -40,7 +39,7 @@ public class Pipeline {
   private final Observer observer;
   private final BadRecordsHandler badRecordsHandler;
   private final ResourceControlledScheduledExecutor scheduledExecutorService;
-
+  private volatile boolean running;
 
   private Pipeline(String name, String rev, PipelineBean pipelineBean, Pipe[] pipes, Observer observer, BadRecordsHandler badRecordsHandler,
                    PipelineRunner runner, ResourceControlledScheduledExecutor scheduledExecutorService) {
@@ -52,6 +51,7 @@ public class Pipeline {
     this.badRecordsHandler = badRecordsHandler;
     this.runner = runner;
     this.scheduledExecutorService = scheduledExecutorService;
+    this.running = false;
   }
 
   PipelineConfigBean getPipelineConfig() {
@@ -64,7 +64,17 @@ public class Pipeline {
   }
 
   public Source getSource() {
-    return (Source) pipes[0].getStage().getStage();
+    Source source = null;
+    for (Pipe pipe : pipes) {
+      if (pipe.getStage().getStage() instanceof Source) {
+        source = (Source)pipe.getStage().getStage();
+        break;
+      }
+    }
+    if (source == null) {
+      throw new NullPointerException("Cannot find pipeline source");
+    }
+    return source;
   }
 
   public PipelineRunner getRunner() {
@@ -80,7 +90,7 @@ public class Pipeline {
   }
 
   @SuppressWarnings("unchecked")
-  public List<Issue>  init() {
+  public List<Issue> init() {
     PipeContext pipeContext = new PipeContext();
     List<Issue> issues = new ArrayList<>();
     try {
@@ -88,7 +98,7 @@ public class Pipeline {
     } catch (Exception ex) {
       LOG.warn(ContainerError.CONTAINER_0700.getMessage(), ex.getMessage(), ex);
       issues.add(IssueCreator.getStage(badRecordsHandler.getInstanceName()).create(ContainerError.CONTAINER_0700,
-                                                                                   ex.getMessage()));
+        ex.getMessage()));
     }
     for (Pipe pipe : pipes) {
       try {
@@ -97,7 +107,7 @@ public class Pipeline {
         String instanceName = pipe.getStage().getConfiguration().getInstanceName();
         LOG.warn(ContainerError.CONTAINER_0701.getMessage(), instanceName, ex.getMessage(), ex);
         issues.add(IssueCreator.getStage(instanceName).create(ContainerError.CONTAINER_0701, instanceName,
-                                                              ex.getMessage()));
+          ex.getMessage()));
       }
     }
     return issues;
@@ -107,13 +117,15 @@ public class Pipeline {
     try {
       badRecordsHandler.destroy();
     } catch (Exception ex) {
-      //TODO LOG
+      String msg = Utils.format("Exception thrown during bad record handler destroy: {}", ex);
+      LOG.warn(msg, ex);
     }
     for (Pipe pipe : pipes) {
       try {
         pipe.destroy();
-      } catch (Exception ex) {
-        //TODO LOG
+      } catch (RuntimeException ex) {
+        String msg = Utils.format("Exception thrown during pipe '{}' destroy: {}", pipe, ex);
+        LOG.warn(msg, ex);
       }
     }
     if (scheduledExecutorService != null) {
@@ -122,13 +134,27 @@ public class Pipeline {
   }
 
   public void run() throws StageException, PipelineRuntimeException {
-    runner.setObserver(observer);
-    runner.run(pipes, badRecordsHandler);
+    this.running = true;
+    try {
+      runner.setObserver(observer);
+      runner.run(pipes, badRecordsHandler);
+    } finally {
+      this.running = false;
+    }
   }
 
   public void run(List<StageOutput> stageOutputsToOverride) throws StageException, PipelineRuntimeException {
+    this.running = true;
+    try {
     runner.setObserver(observer);
     runner.run(pipes, badRecordsHandler, stageOutputsToOverride);
+    } finally {
+      this.running = false;
+    }
+  }
+
+  public boolean isRunning() {
+    return running;
   }
 
   public static class Builder {

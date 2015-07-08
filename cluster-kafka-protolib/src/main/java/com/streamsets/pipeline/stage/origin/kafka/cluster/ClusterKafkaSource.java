@@ -4,17 +4,18 @@
  */
 package com.streamsets.pipeline.stage.origin.kafka.cluster;
 
-import com.streamsets.pipeline.ClusterQueue;
-import com.streamsets.pipeline.ClusterQueueConsumer;
-import com.streamsets.pipeline.Pair;
 import com.streamsets.pipeline.OffsetAndResult;
 import com.streamsets.pipeline.api.BatchMaker;
-import com.streamsets.pipeline.api.ClusterSource;
+import com.streamsets.pipeline.api.impl.ClusterSource;
 import com.streamsets.pipeline.api.ErrorListener;
 import com.streamsets.pipeline.api.OffsetCommitter;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.StageException;
+import com.streamsets.pipeline.cluster.Consumer;
+import com.streamsets.pipeline.cluster.ControlChannel;
+import com.streamsets.pipeline.cluster.DataChannel;
+import com.streamsets.pipeline.cluster.Producer;
 import com.streamsets.pipeline.stage.origin.kafka.BaseKafkaSource;
 import com.streamsets.pipeline.stage.origin.kafka.SourceArguments;
 
@@ -30,14 +31,19 @@ import java.util.Map;
  */
 public class ClusterKafkaSource extends BaseKafkaSource implements OffsetCommitter, ClusterSource, ErrorListener {
   private static final Logger LOG = LoggerFactory.getLogger(ClusterKafkaSource.class);
-
-  private final ClusterQueue clusterQueue;
-  private final ClusterQueueConsumer clusterQueueConsumer;
+  private ControlChannel controlChannel;
+  private DataChannel dataChannel;
+  private Producer producer;
+  private Consumer consumer;
+  private long recordsProduced;
 
   public ClusterKafkaSource(SourceArguments args) {
     super(args);
-    this.clusterQueue = new ClusterQueue();
-    this.clusterQueueConsumer = new ClusterQueueConsumer(clusterQueue);
+    controlChannel = new ControlChannel();
+    dataChannel = new DataChannel();
+    producer = new Producer(controlChannel, dataChannel);
+    consumer = new Consumer(controlChannel, dataChannel);
+    this.recordsProduced = 0;
   }
 
   private String getRecordId(String topic) {
@@ -47,10 +53,10 @@ public class ClusterKafkaSource extends BaseKafkaSource implements OffsetCommitt
   @Override
   public String produce(String lastSourceOffset, int maxBatchSize, BatchMaker batchMaker) throws StageException {
     // Ignore the batch size
-    OffsetAndResult<Pair> offsetAndResult = clusterQueueConsumer.produce(maxWaitTime);
-    for (Pair messageAndPartition : offsetAndResult.getResult()) {
+    OffsetAndResult<Map.Entry> offsetAndResult = consumer.take();
+    for (Map.Entry  messageAndPartition : offsetAndResult.getResult()) {
       String messageId = getRecordId(topic);
-      List<Record> records = processKafkaMessage(messageId, (byte[]) messageAndPartition.getSecond());
+      List<Record> records = processKafkaMessage(messageId, (byte[]) messageAndPartition.getValue());
       for (Record record : records) {
         batchMaker.addRecord(record);
       }
@@ -60,7 +66,7 @@ public class ClusterKafkaSource extends BaseKafkaSource implements OffsetCommitt
 
   @Override
   public long getRecordsProduced() {
-    return clusterQueueConsumer.getRecordsProduced();
+    return recordsProduced;
   }
 
   @Override
@@ -74,27 +80,29 @@ public class ClusterKafkaSource extends BaseKafkaSource implements OffsetCommitt
 
   @Override
   public void destroy() {
-    //
+    shutdown();
+    super.destroy();
   }
 
   @Override
   public void commit(String offset) throws StageException {
-    clusterQueueConsumer.commit(offset);
+    consumer.commit(offset);
   }
 
   @Override
-  public <T> void put(List<T> batch) throws InterruptedException {
-    clusterQueue.putData(batch);
+  public void put(List<Map.Entry> batch) throws InterruptedException {
+    recordsProduced += batch.size();
+    producer.put(new OffsetAndResult<>(String.valueOf(recordsProduced), batch));
   }
 
   @Override
   public void errorNotification(Throwable throwable) {
-    clusterQueueConsumer.errorNotification(throwable);
+    consumer.error(throwable);
   }
 
   @Override
   public boolean inErrorState() {
-    return clusterQueue.inErrorState();
+    return producer.inErrorState() || consumer.inErrorState();
   }
 
   @Override
@@ -111,4 +119,10 @@ public class ClusterKafkaSource extends BaseKafkaSource implements OffsetCommitt
   public Map<String, String> getConfigsToShip() {
     return new HashMap<String, String>();
   }
+
+  @Override
+  public void shutdown() {
+    producer.complete();
+  }
+
 }

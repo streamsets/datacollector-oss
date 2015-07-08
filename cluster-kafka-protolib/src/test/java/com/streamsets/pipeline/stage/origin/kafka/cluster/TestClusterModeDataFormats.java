@@ -42,6 +42,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 import java.util.Properties;
 import java.util.UUID;
 
@@ -133,7 +134,7 @@ public class TestClusterModeDataFormats {
     Thread th = null;
     try {
       sourceRunner.runInit();
-      List<Pair> list = new ArrayList<Pair>();
+      List<Map.Entry> list = new ArrayList<Map.Entry>();
       list.add(new Pair("1".getBytes(), "aaa".getBytes()));
       list.add(new Pair("2".getBytes(), "bbb".getBytes()));
       list.add(new Pair("1".getBytes(), "ccc".getBytes()));
@@ -150,7 +151,7 @@ public class TestClusterModeDataFormats {
         Assert.assertNotNull(records.get(i).get("/text"));
         LOG.info("Header " + records.get(i).getHeader().getSourceId());
         Assert.assertTrue(!records.get(i).get("/text").getValueAsString().isEmpty());
-        Assert.assertEquals(new String((byte[])list.get(i).getSecond()), records.get(i).get("/text").getValueAsString());
+        Assert.assertEquals(new String((byte[])list.get(i).getValue()), records.get(i).get("/text").getValueAsString());
       }
 
     if (sourceRunner != null) {
@@ -198,7 +199,7 @@ public class TestClusterModeDataFormats {
       String jsonData = KafkaTestUtil.generateTestData(DataType.JSON, StreamingJsonParser.Mode.MULTIPLE_OBJECTS);
       th =
         createThreadForAddingBatch(sourceRunner,
-          new ArrayList<>(Arrays.asList(new Pair("1".getBytes(), jsonData.getBytes()))));
+          new ArrayList<Map.Entry>(Arrays.asList(new Pair("1".getBytes(), jsonData.getBytes()))));
       StageRunner.Output output = sourceRunner.runProduce(null, 10);
 
       String newOffset = output.getNewOffset();
@@ -252,7 +253,7 @@ public class TestClusterModeDataFormats {
       String jsonData = KafkaTestUtil.generateTestData(DataType.JSON, StreamingJsonParser.Mode.ARRAY_OBJECTS);
       th =
         createThreadForAddingBatch(sourceRunner,
-          new ArrayList<>(Arrays.asList(new Pair("1".getBytes(), jsonData.getBytes()))));
+          new ArrayList<Map.Entry>(Arrays.asList(new Pair("1".getBytes(), jsonData.getBytes()))));
       StageRunner.Output output = sourceRunner.runProduce(null, 10);
 
       String newOffset = output.getNewOffset();
@@ -313,7 +314,7 @@ public class TestClusterModeDataFormats {
       String jsonData = KafkaTestUtil.generateTestData(DataType.JSON, StreamingJsonParser.Mode.ARRAY_OBJECTS);
       th = createThreadForAddingBatch(
         sourceRunner,
-        new ArrayList<Pair>(Arrays.asList(new Pair("1"
+        new ArrayList<Map.Entry>(Arrays.asList(new Pair("1"
           .getBytes(), jsonData.getBytes()))));
       StageRunner.Output output = sourceRunner.runProduce(null, 10);
 
@@ -374,7 +375,7 @@ public class TestClusterModeDataFormats {
       String xmlData = KafkaTestUtil.generateTestData(DataType.XML, null);
       th =
         createThreadForAddingBatch(sourceRunner,
-          new ArrayList<Pair>(Arrays.asList(new Pair("1".getBytes(), xmlData.getBytes()))));
+          new ArrayList<Map.Entry>(Arrays.asList(new Pair("1".getBytes(), xmlData.getBytes()))));
       StageRunner.Output output = sourceRunner.runProduce(null, 10);
 
       String newOffset = output.getNewOffset();
@@ -435,7 +436,7 @@ public class TestClusterModeDataFormats {
       String xmlData = KafkaTestUtil.generateTestData(DataType.XML, null);
       th =
         createThreadForAddingBatch(sourceRunner,
-          new ArrayList<Pair>(Arrays.asList(new Pair("1".getBytes(), xmlData.getBytes()))));
+          new ArrayList<Map.Entry>(Arrays.asList(new Pair("1".getBytes(), xmlData.getBytes()))));
       StageRunner.Output output = sourceRunner.runProduce(null, 10);
 
       String newOffset = output.getNewOffset();
@@ -496,7 +497,7 @@ public class TestClusterModeDataFormats {
       String csvData = KafkaTestUtil.generateTestData(DataType.CSV, null);
       th =
         createThreadForAddingBatch(sourceRunner,
-          new ArrayList<Pair>(Arrays.asList(new Pair("1".getBytes(), csvData.getBytes()))));
+          new ArrayList<Map.Entry>(Arrays.asList(new Pair("1".getBytes(), csvData.getBytes()))));
       StageRunner.Output output = sourceRunner.runProduce(null, 10);
 
       String newOffset = output.getNewOffset();
@@ -519,7 +520,7 @@ public class TestClusterModeDataFormats {
     }
   }
 
-  private Thread createThreadForAddingBatch(final SourceRunner sourceRunner, final List<Pair> list) {
+  private Thread createThreadForAddingBatch(final SourceRunner sourceRunner, final List<Map.Entry> list) {
     Thread sourceThread = new Thread() {
       @Override
       public void run() {

@@ -13,6 +13,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.FSDataOutputStream;
@@ -80,55 +81,6 @@ public class TestClusterHDFSSource {
     hdfsClusterSource.hdfsConfigs.put("x", "X");
     hdfsClusterSource.dataFormat = DataFormat.TEXT;
     hdfsClusterSource.textMaxLineLen = 1024;
-  }
-
-  @Test
-  public void testHdfsSplitSizeConfig() throws Exception {
-    ClusterHdfsDSource dSource = new ForTestClusterHdfsDSource();
-    Path rootPath = new Path(dir+"/testHdfsSplitSizeConfig" );
-    configure(dSource, rootPath.toString());
-    FileSystem fs = miniDFS.getFileSystem();
-    writeFile(fs, new Path(rootPath+"/path1"), 5000);
-    ClusterHdfsSource clusterHdfsSource = (ClusterHdfsSource) dSource.createSource();
-    try {
-      clusterHdfsSource.init(null, ContextInfoCreator.createSourceContext("myInstance", false, OnRecordError.TO_ERROR,
-                                                                          ImmutableList.of("lane")));
-      // should be 1 as default split max size is 750000000
-      assertEquals(1, clusterHdfsSource.getParallelism());
-
-      dSource.hdfsConfigs.put("mapreduce.input.fileinputformat.split.maxsize", "700");
-      clusterHdfsSource = (ClusterHdfsSource) dSource.createSource();
-      clusterHdfsSource.init(null, ContextInfoCreator.createSourceContext("myInstance", false, OnRecordError.TO_ERROR,
-                                                                          ImmutableList.of("lane")));
-      // should be 2 as split max size is 700
-      assertEquals(5, clusterHdfsSource.getParallelism());
-      // 2 files in directory
-      writeFile(fs, new Path(rootPath+"/path2"), 1500);
-      clusterHdfsSource = (ClusterHdfsSource) dSource.createSource();
-      clusterHdfsSource.init(null, ContextInfoCreator.createSourceContext("myInstance", false, OnRecordError.TO_ERROR,
-                                                                          ImmutableList.of("lane")));
-      assertEquals(7, clusterHdfsSource.getParallelism());
-      Path subDir = new Path(rootPath+"/subDir");
-      fs.mkdirs(subDir);
-      writeFile(fs, new Path(subDir+"/path3"), 1500);
-      writeFile(fs, new Path(subDir+"/path4"), 1500);
-      dSource.recursive = false;
-
-      clusterHdfsSource = (ClusterHdfsSource) dSource.createSource();
-      clusterHdfsSource.init(null, ContextInfoCreator.createSourceContext("myInstance", false, OnRecordError.TO_ERROR,
-                                                                          ImmutableList.of("lane")));
-      // With non-recursive, splits for 2 files: path1, path2
-      assertEquals(7, clusterHdfsSource.getParallelism());
-
-      dSource.recursive=true;
-      // With recursive, splits for 4 files: path1, path2, subDir/path3, subDir/path4
-      clusterHdfsSource = (ClusterHdfsSource) dSource.createSource();
-      clusterHdfsSource.init(null, ContextInfoCreator.createSourceContext("myInstance", false, OnRecordError.TO_ERROR,
-                                                                          ImmutableList.of("lane")));
-      assertEquals(10, clusterHdfsSource.getParallelism());
-    } finally {
-      clusterHdfsSource.destroy();
-    }
   }
 
   @Test
@@ -266,7 +218,7 @@ public class TestClusterHDFSSource {
       .build();
       sourceRunner.runInit();
 
-    List<Pair> list = new ArrayList<Pair>();
+    List<Map.Entry> list = new ArrayList<>();
     list.add(new Pair(new LongWritable(1), new Text("aaa")));
     list.add(new Pair(new LongWritable(2), new Text("bbb")));
     list.add(new Pair(new LongWritable(3), new Text("ccc")));
@@ -284,7 +236,7 @@ public class TestClusterHDFSSource {
       Assert.assertNotNull(records.get(i).get("/text"));
       LOG.info("Header " + records.get(i).getHeader().getSourceId());
       Assert.assertTrue(!records.get(i).get("/text").getValueAsString().isEmpty());
-      Assert.assertEquals(list.get(i).getSecond().toString(), records.get(i).get("/text").getValueAsString());
+      Assert.assertEquals(list.get(i).getValue().toString(), records.get(i).get("/text").getValueAsString());
     }
 
     if (sourceRunner != null) {
@@ -296,7 +248,7 @@ public class TestClusterHDFSSource {
   }
 
 
-  private Thread createThreadForAddingBatch(final SourceRunner sourceRunner, final List<Pair> list) {
+  private Thread createThreadForAddingBatch(final SourceRunner sourceRunner, final List<Map.Entry> list) {
     Thread sourceThread = new Thread() {
       @Override
       public void run() {

@@ -21,15 +21,14 @@ import java.util.Properties;
 public class SparkDriverFunction<T1, T2>  implements Function<JavaPairRDD<T1, T2>, Void>, Serializable {
   private static final Logger LOG = LoggerFactory.getLogger(SparkDriverFunction.class);
   private Properties properties;
-  private String pipelineJson;
-  public SparkDriverFunction(Properties properties, String pipelineJson) {
+
+  public SparkDriverFunction(Properties properties) {
     this.properties = Utils.checkNotNull(properties, "Properties");
-    this.pipelineJson = Utils.checkNotNull(pipelineJson, "Pipeline JSON");
   }
 
   @Override
   public Void call(JavaPairRDD<T1, T2> byteArrayJavaRDD) throws Exception {
-    byteArrayJavaRDD.foreachPartition(new BootstrapSparkFunction(properties, pipelineJson));
+    byteArrayJavaRDD.foreachPartition(new BootstrapSparkFunction(properties));
     return null;
   }
 }

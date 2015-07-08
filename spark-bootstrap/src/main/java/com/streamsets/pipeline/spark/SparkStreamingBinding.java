@@ -30,11 +30,9 @@ public class SparkStreamingBinding implements ClusterBinding {
 
   private JavaStreamingContext ssc;
   private Properties properties;
-  private String pipelineJson;
 
-  public SparkStreamingBinding(Properties properties, String pipelineJson) {
+  public SparkStreamingBinding(Properties properties) {
     this.properties = Utils.checkNotNull(properties, "Properties");
-    this.pipelineJson = Utils.checkNotNull(pipelineJson, "Pipeline JSON");
   }
 
   @Override
@@ -62,7 +60,7 @@ public class SparkStreamingBinding implements ClusterBinding {
     LOG.info("Making calls through spark context ");
     if (getProperty("cluster.source.name").equals("kafka")) {
       JavaPairInputDStream<byte[], byte[]> dStream = createDirectStreamForKafka();
-      dStream.foreachRDD(new SparkDriverFunction(properties, pipelineJson));
+      dStream.foreachRDD(new SparkDriverFunction(properties));
     } else {
       throw new IllegalStateException("Property value " + getProperty("cluster.source.name") + " is invalid");
     }

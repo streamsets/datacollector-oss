@@ -12,9 +12,9 @@ import com.streamsets.dc.execution.PipelineInfo;
 import com.streamsets.dc.execution.Runner;
 import com.streamsets.dc.main.MainSlavePipelineManagerModule;
 import com.streamsets.dc.main.PipelineTask;
-import com.streamsets.pipeline.DataCollector;
 import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.http.ServerNotYetRunningException;
+import com.streamsets.pipeline.impl.DataCollector;
 import com.streamsets.pipeline.main.BuildInfo;
 import com.streamsets.pipeline.main.LogConfigurator;
 import com.streamsets.pipeline.main.RuntimeInfo;
@@ -43,6 +43,7 @@ public class EmbeddedDataCollector implements DataCollector {
   private RuntimeInfo runtimeInfo;
   private Runner runner;
   private PipelineTask pipelineTask;
+
 
   @Override
   public void startPipeline() throws Exception {

@@ -124,7 +124,7 @@ public class ActiveRecordWriters {
   }
 
   public void closeAll() {
-    LOG.debug("Close all");
+    LOG.info("Close all '{}'", toString());
     for (RecordWriter writer : writers.values()) {
       if (!writer.isClosed()) {
         try {

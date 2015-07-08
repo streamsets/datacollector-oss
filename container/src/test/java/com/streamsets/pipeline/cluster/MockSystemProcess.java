@@ -6,11 +6,11 @@
 package com.streamsets.pipeline.cluster;
 
 import com.streamsets.pipeline.util.SystemProcess;
-import com.streamsets.pipeline.util.SystemProcessImpl;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
@@ -53,12 +53,12 @@ public class MockSystemProcess implements SystemProcess {
   }
 
   @Override
-  public List<String> getAllOutput() {
+  public Collection<String> getAllOutput() {
     return output;
   }
 
   @Override
-  public List<String> getAllError() {
+  public Collection<String> getAllError() {
     return error;
   }
 
@@ -68,7 +68,7 @@ public class MockSystemProcess implements SystemProcess {
   }
 
   @Override
-  public List<String> getError() {
+  public Collection<String> getError() {
     return error;
   }
 

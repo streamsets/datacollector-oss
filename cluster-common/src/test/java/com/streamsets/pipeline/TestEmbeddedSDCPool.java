@@ -11,7 +11,6 @@ import static org.junit.Assert.assertTrue;
 
 import java.util.Properties;
 import java.util.concurrent.Executors;
-import java.util.concurrent.TimeUnit;
 
 import org.junit.Assert;
 import org.junit.Test;
@@ -19,18 +18,16 @@ import org.junit.Test;
 import com.google.common.util.concurrent.ListenableFuture;
 import com.google.common.util.concurrent.ListeningExecutorService;
 import com.google.common.util.concurrent.MoreExecutors;
-import com.streamsets.pipeline.EmbeddedSDC;
-import com.streamsets.pipeline.EmbeddedSDCPool;
 
 public class TestEmbeddedSDCPool {
 
   static class DummyEmbeddedSDCPool extends EmbeddedSDCPool {
-    public DummyEmbeddedSDCPool(Properties properties, String pipelineJson) throws Exception {
-      super(properties, pipelineJson);
+    public DummyEmbeddedSDCPool(Properties properties) throws Exception {
+      super(properties);
     }
 
     @Override
-    protected EmbeddedSDC createEmbeddedSDC() throws Exception {
+    protected EmbeddedSDC create() throws Exception {
       return new EmbeddedSDC();
     }
   }
@@ -39,39 +36,39 @@ public class TestEmbeddedSDCPool {
   public void testEmbeddedSDC() throws Exception {
     Properties props = new Properties();
     props.setProperty("sdc.pool.size.infinite", "true");
-    DummyEmbeddedSDCPool dummyEmbeddedSDCPool = new DummyEmbeddedSDCPool(props, "");
-    Assert.assertEquals(1, dummyEmbeddedSDCPool.getTotalInstances().size());
+    DummyEmbeddedSDCPool dummyEmbeddedSDCPool = new DummyEmbeddedSDCPool(props);
+    Assert.assertEquals(1, dummyEmbeddedSDCPool.getInstances().size());
     Assert.assertEquals(1, dummyEmbeddedSDCPool.size());
     // Now retrieve the created one
-    EmbeddedSDC embeddedSDC1 = dummyEmbeddedSDCPool.getEmbeddedSDC();
+    EmbeddedSDC embeddedSDC1 = dummyEmbeddedSDCPool.checkout();
     Assert.assertEquals(0, dummyEmbeddedSDCPool.size());
-    Assert.assertEquals(1, dummyEmbeddedSDCPool.getTotalInstances().size());
+    Assert.assertEquals(1, dummyEmbeddedSDCPool.getInstances().size());
 
     // This should create new SDC
-    EmbeddedSDC embeddedSDC2 = dummyEmbeddedSDCPool.getEmbeddedSDC();
+    EmbeddedSDC embeddedSDC2 = dummyEmbeddedSDCPool.checkout();
     Assert.assertEquals(0, dummyEmbeddedSDCPool.size());
-    Assert.assertEquals(2, dummyEmbeddedSDCPool.getTotalInstances().size());
+    Assert.assertEquals(2, dummyEmbeddedSDCPool.getInstances().size());
 
     // Return one back
-    dummyEmbeddedSDCPool.returnEmbeddedSDC(embeddedSDC1);
+    dummyEmbeddedSDCPool.checkin(embeddedSDC1);
     Assert.assertEquals(1, dummyEmbeddedSDCPool.size());
 
-    dummyEmbeddedSDCPool.returnEmbeddedSDC(embeddedSDC2);
+    dummyEmbeddedSDCPool.checkin(embeddedSDC2);
     Assert.assertEquals(2, dummyEmbeddedSDCPool.size());
-    Assert.assertEquals(2, dummyEmbeddedSDCPool.getTotalInstances().size());
+    Assert.assertEquals(2, dummyEmbeddedSDCPool.getInstances().size());
 
     // Return the same instance back again
-    dummyEmbeddedSDCPool.returnEmbeddedSDC(embeddedSDC1);
+    dummyEmbeddedSDCPool.checkin(embeddedSDC1);
     Assert.assertEquals(2, dummyEmbeddedSDCPool.size());
   }
 
   @Test(timeout = 90000)
   public void testEmbeddedSDCTimeout() throws Exception {
     Properties props = new Properties();
-    DummyEmbeddedSDCPool dummyEmbeddedSDCPool = new DummyEmbeddedSDCPool(props, "");
-    Assert.assertEquals(1, dummyEmbeddedSDCPool.getTotalInstances().size());
+    DummyEmbeddedSDCPool dummyEmbeddedSDCPool = new DummyEmbeddedSDCPool(props);
+    Assert.assertEquals(1, dummyEmbeddedSDCPool.getInstances().size());
     Assert.assertEquals(1, dummyEmbeddedSDCPool.size());
-    EmbeddedSDC embeddedSDC1 = dummyEmbeddedSDCPool.getEmbeddedSDC();
+    EmbeddedSDC embeddedSDC1 = dummyEmbeddedSDCPool.checkout();
     Assert.assertEquals(0, dummyEmbeddedSDCPool.size());
 
     // Nothing in pool, so wait() should return null
@@ -85,7 +82,7 @@ public class TestEmbeddedSDCPool {
     assertTrue(!future.isDone());
     assertNull(th.embeddedSDC);
     // return back sdc to pool
-    dummyEmbeddedSDCPool.returnEmbeddedSDC(embeddedSDC1);
+    dummyEmbeddedSDCPool.checkin(embeddedSDC1);
     assertNull(future.get());
     assertEquals(embeddedSDC1, th.embeddedSDC);
   }
@@ -108,7 +105,7 @@ public class TestEmbeddedSDCPool {
     }
 
     void doWaiting() throws Exception {
-      embeddedSDC = embeddedPool.getEmbeddedSDC();
+      embeddedSDC = embeddedPool.checkout();
     }
   }
 }

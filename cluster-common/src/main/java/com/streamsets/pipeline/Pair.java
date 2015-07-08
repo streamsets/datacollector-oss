@@ -4,10 +4,12 @@
  */
 package com.streamsets.pipeline;
 
+import java.util.Map;
+
 /**
  * Wrapper around the message received from spark
  */
-public class Pair {
+public class Pair implements Map.Entry {
 
   private Object first;
   private Object second;
@@ -26,4 +28,18 @@ public class Pair {
   }
 
 
+  @Override
+  public Object getKey() {
+    return first;
+  }
+
+  @Override
+  public Object getValue() {
+    return second;
+  }
+
+  @Override
+  public Object setValue(Object value) {
+    throw new UnsupportedOperationException();
+  }
 }
