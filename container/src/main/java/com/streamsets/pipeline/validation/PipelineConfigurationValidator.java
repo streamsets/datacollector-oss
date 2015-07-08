@@ -191,7 +191,7 @@ public class PipelineConfigurationValidator {
       if (stageDef != null) {
         if (!stageDef.getExecutionModes().contains(executionMode)) {
           issues.add(issueCreator.createStageIssue(stageConf.getInstanceName(), ValidationError.VALIDATION_0071,
-            executionMode));
+            stageConf.getStageName(), executionMode));
           canPreview = false;
         } else if (!stageDef.getLibraryExecutionModes().contains(executionMode)) {
           String type;
