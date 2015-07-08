@@ -17,27 +17,34 @@ public abstract class RecordTarget extends BaseTarget {
   @Override
   public void write(Batch batch) throws StageException {
     Iterator<Record> it = batch.getRecords();
-    while (it.hasNext()) {
-      Record record = it.next();
-      try {
-        write(record);
-      } catch (OnRecordErrorException ex) {
-        switch (getContext().getOnErrorRecord()) {
-          case DISCARD:
-            break;
-          case TO_ERROR:
-            getContext().toError(record, ex);
-            break;
-          case STOP_PIPELINE:
-            throw ex;
-          default:
-            throw new IllegalStateException(Utils.format("It should never happen. OnError '{}'",
-                                                         getContext().getOnErrorRecord(), ex));
+    if (it.hasNext()) {
+      while (it.hasNext()) {
+        Record record = it.next();
+        try {
+          write(record);
+        } catch (OnRecordErrorException ex) {
+          switch (getContext().getOnErrorRecord()) {
+            case DISCARD:
+              break;
+            case TO_ERROR:
+              getContext().toError(record, ex);
+              break;
+            case STOP_PIPELINE:
+              throw ex;
+            default:
+              throw new IllegalStateException(Utils.format("It should never happen. OnError '{}'",
+                                                           getContext().getOnErrorRecord(), ex));
+          }
         }
       }
+    } else {
+      emptyBatch();
     }
   }
 
   protected abstract void write(Record record) throws StageException, OnRecordErrorException;
+
+  protected void emptyBatch() throws StageException {
+  }
 
 }

@@ -20,6 +20,7 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.Mockito;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class TestRecordTarget {
@@ -32,11 +33,17 @@ public class TestRecordTarget {
     Mockito.when(batch.getRecords()).thenReturn(ImmutableSet.of(record1, record2).iterator());
 
     final List<Record> got = new ArrayList<Record>();
+    final boolean[] emptyBatch = new boolean[1];
 
     Target target = new RecordTarget() {
       @Override
       protected void write(Record record) throws StageException {
         got.add(record);
+      }
+
+      @Override
+      protected void emptyBatch() throws StageException {
+        emptyBatch[0] = true;
       }
     };
     target.write(batch);
@@ -44,6 +51,15 @@ public class TestRecordTarget {
     Assert.assertEquals(2, got.size());
     Assert.assertEquals(record1, got.get(0));
     Assert.assertEquals(record2, got.get(1));
+    Assert.assertFalse(emptyBatch[0]);
+
+    //emptyBatch
+    got.clear();
+    Mockito.when(batch.getRecords()).thenReturn(Collections.<Record>emptySet().iterator());
+    target.write(batch);
+    Assert.assertTrue(got.isEmpty());
+    Assert.assertTrue(emptyBatch[0]);
+
   }
 
   public enum ERROR implements ErrorCode {

@@ -18,27 +18,34 @@ public abstract class RecordProcessor extends BaseProcessor {
   @Override
   public void process(Batch batch, BatchMaker batchMaker) throws StageException {
     Iterator<Record> it = batch.getRecords();
-    while (it.hasNext()) {
-      Record record = it.next();
-      try {
-        process(record, batchMaker);
-      } catch (OnRecordErrorException ex) {
-        switch (getContext().getOnErrorRecord()) {
-          case DISCARD:
-            break;
-          case TO_ERROR:
-            getContext().toError(record, ex);
-            break;
-          case STOP_PIPELINE:
-            throw ex;
-          default:
-            throw new IllegalStateException(Utils.format("It should never happen. OnError '{}'",
-                                                         getContext().getOnErrorRecord(), ex));
+    if (it.hasNext()) {
+      while (it.hasNext()) {
+        Record record = it.next();
+        try {
+          process(record, batchMaker);
+        } catch (OnRecordErrorException ex) {
+          switch (getContext().getOnErrorRecord()) {
+            case DISCARD:
+              break;
+            case TO_ERROR:
+              getContext().toError(record, ex);
+              break;
+            case STOP_PIPELINE:
+              throw ex;
+            default:
+              throw new IllegalStateException(Utils.format("It should never happen. OnError '{}'",
+                                                           getContext().getOnErrorRecord(), ex));
+          }
         }
       }
+    } else {
+      emptyBatch(batchMaker);
     }
   }
 
   protected abstract void process(Record record, BatchMaker batchMaker) throws StageException, OnRecordErrorException;
+
+  protected void emptyBatch(BatchMaker batchMaker) throws StageException {
+  }
 
 }
