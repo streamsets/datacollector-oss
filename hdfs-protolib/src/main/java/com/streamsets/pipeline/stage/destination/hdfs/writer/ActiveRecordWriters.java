@@ -107,6 +107,11 @@ public class ActiveRecordWriters {
     return manager;
   }
 
+  @VisibleForTesting
+  public int getActiveWritersCount() {
+    return cutOffQueue.size();
+  }
+
   public void release(RecordWriter writer) throws IOException {
     if (manager.isOverThresholds(writer)) {
       if (IS_TRACE_ENABLED) {
