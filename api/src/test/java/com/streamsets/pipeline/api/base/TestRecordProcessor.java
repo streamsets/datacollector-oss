@@ -21,6 +21,7 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.Mockito;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class TestRecordProcessor {
@@ -34,6 +35,7 @@ public class TestRecordProcessor {
     final BatchMaker batchMaker = Mockito.mock(BatchMaker.class);
 
     final List<Record> got = new ArrayList<Record>();
+    final boolean[] emptyBatch = new boolean[1];
 
     Processor processor = new RecordProcessor() {
       @Override
@@ -41,12 +43,26 @@ public class TestRecordProcessor {
         Assert.assertEquals(batchMaker, bm);
         got.add(record);
       }
+
+      @Override
+      protected void emptyBatch(BatchMaker batchMaker) throws StageException {
+        emptyBatch[0] = true;
+      }
+
     };
     processor.process(batch, batchMaker);
 
     Assert.assertEquals(2, got.size());
     Assert.assertEquals(record1, got.get(0));
     Assert.assertEquals(record2, got.get(1));
+    Assert.assertFalse(emptyBatch[0]);
+
+    //empty batch
+    got.clear();
+    Mockito.when(batch.getRecords()).thenReturn(Collections.<Record>emptySet().iterator());
+    processor.process(batch, batchMaker);
+    Assert.assertTrue(got.isEmpty());
+    Assert.assertTrue(emptyBatch[0]);
   }
 
   public enum ERROR implements ErrorCode {
