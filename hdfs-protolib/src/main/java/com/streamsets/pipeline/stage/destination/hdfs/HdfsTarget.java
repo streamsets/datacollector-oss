@@ -33,6 +33,7 @@ import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.CommonConfigurationKeys;
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
+import org.apache.hadoop.fs.RawLocalFileSystem;
 import org.apache.hadoop.hdfs.DFSConfigKeys;
 import org.apache.hadoop.io.SequenceFile;
 import org.apache.hadoop.io.compress.CompressionCodec;
@@ -240,6 +241,7 @@ public class HdfsTarget extends RecordTarget {
 
   Configuration getHadoopConfiguration(List<ConfigIssue> issues) {
     Configuration conf = new Configuration();
+    conf.setClass("fs.file.impl", RawLocalFileSystem.class, FileSystem.class);
     if (hdfsKerberos) {
       conf.set(CommonConfigurationKeys.HADOOP_SECURITY_AUTHENTICATION,
                UserGroupInformation.AuthenticationMethod.KERBEROS.name());
