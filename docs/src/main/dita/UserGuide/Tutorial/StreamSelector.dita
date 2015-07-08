@@ -29,8 +29,8 @@
                     </menucascade>.</cmd>
             </step>
             <step>
-                <cmd>On the General tab, click in the <uicontrol>Required Fields</uicontrol>
-                    property. </cmd>
+                <cmd>On the <wintitle>General</wintitle> tab, click in the <uicontrol>Required
+                        Fields</uicontrol> property. </cmd>
             </step>
             <step>
                 <cmd>To discard records with no payment type information, select the following

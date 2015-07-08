@@ -34,13 +34,14 @@
                                     <entry>Directory</entry>
                                     <entry>Enter the directory local to the <ph
                                             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                                        /> where the sample data is saved.<note>The directory must
-                                            exist to prevent validation errors. </note></entry>
+                                        /> where you want to write error record files. <note>The
+                                            directory must exist to prevent validation errors.
+                                        </note></entry>
                                 </row>
                                 <row>
                                     <entry>Files Prefix</entry>
                                     <entry>This defines a prefix for error record files. Delete the
-                                        default and use "Tutorial-Err_".</entry>
+                                        default and use "Err_".</entry>
                                 </row>
                                 <row>
                                     <entry>Max File Size</entry>

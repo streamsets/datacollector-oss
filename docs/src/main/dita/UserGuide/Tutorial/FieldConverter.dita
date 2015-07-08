@@ -41,9 +41,7 @@
                         </strow>
                         <strow>
                             <stentry>Date Format</stentry>
-                            <stentry>YYYY-MM-DD hh:mm:ss<draft-comment author="Loretta">there are
-                                    two, one causes lots of errors, the other doesn't. check with
-                                    Hari.</draft-comment></stentry>
+                            <stentry>Select a format that you like.l </stentry>
                         </strow>
                     </simpletable>
                 </info>
@@ -79,8 +77,8 @@
                 </info>
             </step>
         </steps>
-        <result>The pipeline and Field Converter should look like this:<image
-                href="../Graphics/Tutorial-FieldConverter.png" id="image_lhs_bjq_ps" scale="75"
-            /></result>
+        <result>The pipeline and Field Converter should look like this:<p><image
+                    href="../Graphics/Tutorial-FieldConverter.png" id="image_lhs_bjq_ps" scale="75"
+                /></p></result>
     </taskbody>
 </task>

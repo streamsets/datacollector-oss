@@ -4,8 +4,8 @@
   <title>Error Record Handling</title>
   <shortdesc>You can configure error record handling at a stage level and at a pipeline level. </shortdesc>
   <conbody>
-    <p><indexterm>error record handling<indexterm>overview</indexterm></indexterm>When an error
-      occurs as a stage processes a record, the <ph
+    <p><indexterm>error records<indexterm>handling</indexterm></indexterm>When an error occurs as a
+      stage processes a record, the <ph
         conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> handles
       the record based on the stage configuration. One of the stage options is to pass the record to
       the pipeline for error handling. For this option, the <ph

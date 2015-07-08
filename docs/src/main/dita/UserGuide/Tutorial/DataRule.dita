@@ -14,8 +14,9 @@
         </context>
         <steps id="steps_cw5_qqj_ps">
             <step>
-                <cmd>Select the link between the Stream Selector and the Jython Evaluator.</cmd>
-                <info>The Data Rules tab displays in the Preview Panel. </info>
+                <cmd>Select the link between the <uicontrol>Stream Selector</uicontrol> and the
+                        <uicontrol>Jython Evaluator</uicontrol>.</cmd>
+                <info>The <wintitle>Data Rules</wintitle> tab displays in the Preview panel. </info>
             </step>
             <step>
                 <cmd>Click <uicontrol>Add</uicontrol>.</cmd>
@@ -35,7 +36,11 @@
                         </strow>
                         <strow>
                             <stentry>Condition</stentry>
-                            <stentry>${[20]/value == null}</stentry>
+                            <stentry>${record:value("[20]/value") == ""}</stentry>
+                        </strow>
+                        <strow>
+                            <stentry>Sampling Percentage</stentry>
+                            <stentry>20</stentry>
                         </strow>
                         <strow>
                             <stentry>Alert Text</stentry>
@@ -47,6 +52,8 @@
                         </strow>
                     </simpletable>
                 </info>
+                <info>With a larger data set, a smaller sampling percentage might be appropriate,
+                    but for the purposes of this tutorial, we'll use 20. </info>
             </step>
             <step>
                 <cmd>Click <uicontrol>Save</uicontrol>.</cmd>

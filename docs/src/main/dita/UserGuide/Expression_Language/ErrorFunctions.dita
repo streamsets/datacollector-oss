@@ -6,9 +6,9 @@
   process error records.</shortdesc>
  <conbody>
   <p><indexterm>functions<indexterm>error record functions</indexterm></indexterm><indexterm>error
-    record functions<indexterm>description</indexterm></indexterm>For example, you might use error
-   functions in a Stream Selector to pass data to different error handling pipelines based on the
-   type of error that occurred. </p>
+     records<indexterm>functions</indexterm></indexterm>For example, you might use error functions
+   in a Stream Selector to pass data to different error handling pipelines based on the type of
+   error that occurred. </p>
   <p>The expression language provides the following error functions:</p>
   <p>
    <dl>

@@ -26,6 +26,7 @@
     <shortdesc/>
    </topicmeta>
    <topicref href="../Troubleshooting/Destinations-Cassandra.dita"/>
+   <topicref href="../Troubleshooting/Destinations-HadoopFS.dita"/>
    <topicref href="../Troubleshooting/Destinations-Kafka.dita"/>
   </topicref>
   <topicref href="../Troubleshooting/Performance.dita">

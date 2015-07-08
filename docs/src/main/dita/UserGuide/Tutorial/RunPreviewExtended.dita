@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE task PUBLIC "-//OASIS//DTD DITA General Task//EN" "generalTask.dtd">
+<task id="task_fsb_1my_ps">
+    <title>Run or Preview the Pipeline</title>
+    <shortdesc>You can run the pipeline if you configured the Elasticsearch destination to write to
+        your Elasticsearch cluster. Or, if you don't use Elasticsearch, or if you want a close look
+        at how the pipeline works, use data preview.</shortdesc>
+    <taskbody>
+        <context/>
+    </taskbody>
+</task>

@@ -16,16 +16,11 @@
         </context>
         <steps id="steps_wwy_fjm_ls">
             <step>
-                <cmd>From the stage library, select the <uicontrol>Field Masker</uicontrol>
-                    processor and connect it to the Jython Evaluator. Or, from the Pipeline Creation
-                    Help Bar, click <menucascade>
-                        <uicontrol>Select Processor to Connect</uicontrol>
-                        <uicontrol>Field Masker</uicontrol>
-                    </menucascade>.</cmd>
+                <cmd>Add a <uicontrol>Field Masker</uicontrol> processor to the canvas and connect
+                    it to the Jython Evaluator. </cmd>
             </step>
             <step>
-                <cmd>With the processor selected, in the Properties panel, click the
-                        <wintitle>Mask</wintitle> tab.</cmd>
+                <cmd>In the Properties panel, click the <wintitle>Mask</wintitle> tab.</cmd>
             </step>
             <step>
                 <cmd>Click in the <uicontrol>Fields to Mask</uicontrol> field. Scroll down the list
@@ -68,5 +63,7 @@
                 </info>
             </step>
         </steps>
+        <result><image href="../Graphics/Tutorial-FieldMasker.png" id="image_v1y_35q_ps" scale="80"
+            /></result>
     </taskbody>
 </task>

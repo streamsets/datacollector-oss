@@ -2,17 +2,31 @@
 <!DOCTYPE task PUBLIC "-//OASIS//DTD DITA General Task//EN" "generalTask.dtd">
 <task id="task_rlk_tdq_ps">
     <title>Merge Field Data with the Expression Evaluator</title>
-    <shortdesc>Before writing data to Elasticsearch, let's merge the longitude and latitude
-        information into a single pickup location field. </shortdesc>
+    <shortdesc>Before writing data to Elasticsearch, let's use an Expression Evaluator to merge the
+        longitude and latitude information into a single pickup location field. </shortdesc>
     <taskbody>
-        <context>
-            <p/>
-        </context>
+        <context/>
         <steps id="steps_dzt_j3q_ps">
             <step>
-                <cmd>Add an <uicontrol>Expression Evaluator </uicontrol>to the canvas and connect it
+                <cmd>Add an <uicontrol>Expression Evaluator</uicontrol> to the canvas and connect it
                     to the <uicontrol>Field Converter</uicontrol>.</cmd>
             </step>
+            <step>
+                <cmd>On the Expressions tab, enter the following information:</cmd>
+                <info>
+                    <ul id="ul_bfl_y2y_ps">
+                        <li>For <uicontrol>Output Field</uicontrol>, enter "/pickup_location".</li>
+                        <li>For <uicontrol>Expression</uicontrol>, enter the following expression:<codeblock>${record:value('/pickup_latitude')}, ${record:value('/pickup_longitude')}</codeblock>
+                            <p>This returns the data from the two flattened fields in the following
+                                format: &lt;pickup latitude>, &lt;pickup longitude>.</p></li>
+                    </ul>
+                </info>
+            </step>
         </steps>
+        <result>
+            <p>Here's the Expression Evaluator in the extended pipeline:  <image
+                    href="../Graphics/Tutorial-Expression2.png" id="image_w4n_hpy_ps" scale="80"
+                /></p>
+        </result>
     </taskbody>
 </task>

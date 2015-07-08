@@ -2,7 +2,7 @@
 <!DOCTYPE html
   SYSTEM "about:legacy-compat">
 <html xml:lang="en-us" lang="en-us">
-<head><meta name="description" content="The extended tutorial builds on the basic tutorial, using another set of stages to convert the data format from delimited to one that you can write to Elasticsearch. The extended tutorial continues ..."></meta><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><meta name="copyright" content="(C) Copyright 2005"></meta><meta name="DC.rights.owner" content="(C) Copyright 2005"></meta><meta name="DC.Type" content="concept"></meta><meta name="DC.Title" content="Extended Tutorial"></meta><meta name="abstract" content="The extended tutorial builds on the basic tutorial, using another set of stages to convert the data format from delimited to one that you can write to Elasticsearch."></meta><meta name="description" content="The extended tutorial builds on the basic tutorial, using another set of stages to convert the data format from delimited to one that you can write to Elasticsearch."></meta><meta name="DC.Relation" scheme="URI" content="../Tutorial/Tutorial-title.html"></meta><meta name="DC.Format" content="XHTML"></meta><meta name="DC.Identifier" content="concept_w4n_gjt_ls"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/commonltr.css"><!----></link><title>Extended Tutorial</title><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/webhelp_topic.css"><!----></link><link rel="stylesheet" type="text/css" href="../skin.css"></link><script type="text/javascript"><!--
+<head><meta name="description" content="The extended tutorial builds on the basic tutorial, using an additional set of stages to flatten delimited data, perform some minor data transformations, and write to Elasticsearch. If you don't use ..."></meta><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><meta name="copyright" content="(C) Copyright 2005"></meta><meta name="DC.rights.owner" content="(C) Copyright 2005"></meta><meta name="DC.Type" content="concept"></meta><meta name="DC.Title" content="Extended Tutorial"></meta><meta name="abstract" content="The extended tutorial builds on the basic tutorial, using an additional set of stages to flatten delimited data, perform some minor data transformations, and write to Elasticsearch."></meta><meta name="description" content="The extended tutorial builds on the basic tutorial, using an additional set of stages to flatten delimited data, perform some minor data transformations, and write to Elasticsearch."></meta><meta name="DC.Relation" scheme="URI" content="../Tutorial/Tutorial-title.html"></meta><meta name="DC.Format" content="XHTML"></meta><meta name="DC.Identifier" content="concept_w4n_gjt_ls"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/commonltr.css"><!----></link><title>Extended Tutorial</title><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/webhelp_topic.css"><!----></link><link rel="stylesheet" type="text/css" href="../skin.css"></link><script type="text/javascript"><!--
           
           var prefix = "../index.html";
           
@@ -14,19 +14,25 @@
  <h1 class="title topictitle1">Extended Tutorial</h1>
 
  
- <div class="body conbody"><p class="shortdesc">The extended tutorial builds on the basic tutorial, using another set of stages to
-  convert the data format from delimited to one that you can write to Elasticsearch.</p>
+ <div class="body conbody"><p class="shortdesc">The extended tutorial builds on the basic tutorial, using an additional set of stages to
+    flatten delimited data, perform some minor data transformations, and write to
+    Elasticsearch.</p>
 
-  <div class="p">The extended tutorial continues with the following steps:<ol class="ol" id="concept_w4n_gjt_ls__ol_m23_hhk_ps">
-    <li class="li">Use a Jython Evaluator to flatten data.</li>
+  <p class="p">If you don't use Elasticsearch, you can still complete the extended tutorial. But instead of
+      running the pipeline, you can use data preview to examine how the pipeline converts data. </p>
 
-    <li class="li">Convert fields to the appropriate data type.</li>
+    <div class="p">The extended tutorial continues with the following steps:<ol class="ol" id="concept_w4n_gjt_ls__ol_m23_hhk_ps">
+        <li class="li">Use a Jython Evaluator to flatten data.</li>
 
-    <li class="li">Use the Expression Evaluator to merge field data.</li>
+        <li class="li">Configure a Field Converter to convert field types.</li>
 
-    <li class="li">Write the results to Elasticsearch.</li>
+        <li class="li">Use the Expression Evaluator to merge field data.</li>
 
-   </ol>
+        <li class="li">Connect the pipeline to an Elasticsearch destination. </li>
+
+        <li class="li">Run or preview the extended pipeline.</li>
+
+      </ol>
 </div>
 
  </div>
@@ -39,7 +45,16 @@
     <div class="body taskbody"><p class="shortdesc">To flatten data from the delimited data record format, let's use a Jython script with
         the Jython Evaluator.</p>
 
-        <div class="section context"></div>
+        <div class="section context">
+            <p class="p">Flattening the delimited data converts the data from list format to a single level.
+                After flattening the records, you no longer need to use delimited functions to
+                return field data, or use an index in the field path. </p>
+
+            <p class="p">For example, before flattening, we used the following field path to reference the
+                field with credit card numbers: <samp class="ph codeph">[20]/value</samp>. After flattening, you
+                use the following field path: <samp class="ph codeph">/credit_card.</samp></p>
+
+        </div>
 
         <ol class="ol steps" id="task_cn5_w3k_ps__steps_s4j_x3k_ps"><li class="li step stepexpand">
                 <span class="ph cmd">In the stage library, select the <span class="ph uicontrol">Jython Evaluator</span> and
@@ -92,15 +107,15 @@ except Exception as e:
                 <span class="ph cmd">Convert fields with datetime data to Datetime as follows:</span>
                 <div class="itemgroup info">
                     <table cellpadding="4" cellspacing="0" summary="" id="task_kxl_tvk_ps__simpletable_sp4_wxk_ps" border="1" class="simpletable"><tr class="sthead">
-                            <th valign="bottom" align="left" id="d48549e149" class="stentry">Field Converter Property</th>
+                            <th valign="bottom" align="left" id="d48763e167" class="stentry">Field Converter Property</th>
 
-                            <th valign="bottom" align="left" id="d48549e152" class="stentry">Datetime Conversion</th>
+                            <th valign="bottom" align="left" id="d48763e170" class="stentry">Datetime Conversion</th>
 
                         </tr>
 <tr class="strow">
-                            <td valign="top" headers="d48549e149" class="stentry">Fields to Convert</td>
+                            <td valign="top" headers="d48763e167" class="stentry">Fields to Convert</td>
 
-                            <td valign="top" headers="d48549e152" class="stentry">Click in the field and select the following fields:<ul class="ul" id="task_kxl_tvk_ps__ul_wnn_zxk_ps">
+                            <td valign="top" headers="d48763e170" class="stentry">Click in the field and select the following fields:<ul class="ul" id="task_kxl_tvk_ps__ul_wnn_zxk_ps">
                                     <li class="li">/dropoff_datetime</li>
 
                                     <li class="li">/pickup_datetime</li>
@@ -110,15 +125,15 @@ except Exception as e:
 
                         </tr>
 <tr class="strow">
-                            <td valign="top" headers="d48549e149" class="stentry">Convert to Type</td>
+                            <td valign="top" headers="d48763e167" class="stentry">Convert to Type</td>
 
-                            <td valign="top" headers="d48549e152" class="stentry">Datetime</td>
+                            <td valign="top" headers="d48763e170" class="stentry">Datetime</td>
 
                         </tr>
 <tr class="strow">
-                            <td valign="top" headers="d48549e149" class="stentry">Date Format</td>
+                            <td valign="top" headers="d48763e167" class="stentry">Date Format</td>
 
-                            <td valign="top" headers="d48549e152" class="stentry">YYYY-MM-DD hh:mm:ss</td>
+                            <td valign="top" headers="d48763e170" class="stentry">Select a format that you like.l </td>
 
                         </tr>
 </table>
@@ -130,15 +145,15 @@ except Exception as e:
                     configure the properties as follows:</span>
                 <div class="itemgroup info">
                     <table cellpadding="4" cellspacing="0" summary="" id="task_kxl_tvk_ps__simpletable_tcl_dyk_ps" border="1" class="simpletable"><tr class="sthead">
-                            <th valign="bottom" align="left" id="d48549e210" class="stentry">Field Converter Property</th>
+                            <th valign="bottom" align="left" id="d48763e226" class="stentry">Field Converter Property</th>
 
-                            <th valign="bottom" align="left" id="d48549e213" class="stentry">Double Conversion</th>
+                            <th valign="bottom" align="left" id="d48763e229" class="stentry">Double Conversion</th>
 
                         </tr>
 <tr class="strow">
-                            <td valign="top" headers="d48549e210" class="stentry">Fields to Convert</td>
+                            <td valign="top" headers="d48763e226" class="stentry">Fields to Convert</td>
 
-                            <td valign="top" headers="d48549e213" class="stentry">Click in the field and select the following fields:<ul class="ul" id="task_kxl_tvk_ps__ul_mly_gyk_ps">
+                            <td valign="top" headers="d48763e229" class="stentry">Click in the field and select the following fields:<ul class="ul" id="task_kxl_tvk_ps__ul_mly_gyk_ps">
                                     <li class="li">/fare_amount</li>
 
                                     <li class="li">/mta_tax</li>
@@ -160,9 +175,9 @@ except Exception as e:
 
                         </tr>
 <tr class="strow">
-                            <td valign="top" headers="d48549e210" class="stentry">Convert to Type</td>
+                            <td valign="top" headers="d48763e226" class="stentry">Convert to Type</td>
 
-                            <td valign="top" headers="d48549e213" class="stentry">Double</td>
+                            <td valign="top" headers="d48763e229" class="stentry">Double</td>
 
                         </tr>
 </table>
@@ -171,7 +186,8 @@ except Exception as e:
             </li>
 </ol>
 
-        <div class="section result">The pipeline and Field Converter should look like this:<img class="image" id="task_kxl_tvk_ps__image_lhs_bjq_ps" src="../Graphics/Tutorial-FieldConverter.png" height="360" width="762"></img></div>
+        <div class="section result">The pipeline and Field Converter should look like this:<p class="p"><img class="image" id="task_kxl_tvk_ps__image_lhs_bjq_ps" src="../Graphics/Tutorial-FieldConverter.png" height="360" width="762"></img></p>
+</div>
 
     </div>
 
@@ -180,18 +196,103 @@ except Exception as e:
     <h2 class="title topictitle2">Merge Field Data with the Expression Evaluator</h2>
 
     
-    <div class="body taskbody"><p class="shortdesc">Before writing data to Elasticsearch, let's merge the longitude and latitude
-        information into a single pickup location field. </p>
+    <div class="body taskbody"><p class="shortdesc">Before writing data to Elasticsearch, let's use an Expression Evaluator to merge the
+        longitude and latitude information into a single pickup location field. </p>
 
-        <div class="section context">
-            <p class="p"></p>
+        <div class="section context"></div>
+
+        <ol class="ol steps" id="task_rlk_tdq_ps__steps_dzt_j3q_ps"><li class="li step stepexpand">
+                <span class="ph cmd">Add an <span class="ph uicontrol">Expression Evaluator</span> to the canvas and connect it
+                    to the <span class="ph uicontrol">Field Converter</span>.</span>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">On the Expressions tab, enter the following information:</span>
+                <div class="itemgroup info">
+                    <ul class="ul" id="task_rlk_tdq_ps__ul_bfl_y2y_ps">
+                        <li class="li">For <span class="ph uicontrol">Output Field</span>, enter "/pickup_location".</li>
+
+                        <li class="li">For <span class="ph uicontrol">Expression</span>, enter the following expression:<pre class="pre codeblock">${record:value('/pickup_latitude')}, ${record:value('/pickup_longitude')}</pre>
+
+                            <p class="p">This returns the data from the two flattened fields in the following
+                                format: &lt;pickup latitude&gt;, &lt;pickup longitude&gt;.</p>
+</li>
+
+                    </ul>
+
+                </div>
+            </li>
+</ol>
+
+        <div class="section result">
+            <p class="p">Here's the Expression Evaluator in the extended pipeline:  <img class="image" id="task_rlk_tdq_ps__image_w4n_hpy_ps" src="../Graphics/Tutorial-Expression2.png" height="288" width="808"></img></p>
 
         </div>
 
-        <div class="li step p">
-                <span class="ph cmd">Add an <span class="ph uicontrol">Expression Evaluator </span>to the canvas and connect it
-                    to the <span class="ph uicontrol">Field Converter</span>.</span>
-            </div>
+    </div>
+
+</div>
+<div class="topic task nested1" id="task_lh2_yhy_ps">
+    <h2 class="title topictitle2">Write to Elasticsearch</h2>
+
+    
+    <div class="body taskbody"><p class="shortdesc">We'll use the Elasticsearch destination to write to an Elasticsearch cluster. You
+        write data to Elasticsearch as individual documents with an index and mapping fields defined
+        to help return the documents on a search.</p>
+
+        <div class="section context">
+            <p class="p">If you have an Elasticsearch cluster, you can configure the destination to write to
+                your instance. For the tutorial, we'll use the default placeholder properties for
+                required fields so we can run data preview instead of running the pipeline. </p>
+
+        </div>
+
+        <ol class="ol steps" id="task_lh2_yhy_ps__steps_nqd_p3y_ps"><li class="li step stepexpand">
+                <span class="ph cmd">Add an <span class="ph uicontrol">Elasticsearch</span> destination to the canvas and
+                    connect it to the <span class="ph uicontrol">Expression Evaluator</span>.</span>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">On the <span class="keyword wintitle">Elasticsearch</span> tab, enter the following properties
+                    and use defaults for the rest:</span>
+                <div class="itemgroup info">
+                    <table cellpadding="4" cellspacing="0" summary="" id="task_lh2_yhy_ps__simpletable_xgz_yky_ps" border="1" class="simpletable"><tr class="sthead">
+                            <th valign="bottom" align="left" id="d48763e403" class="stentry">Elasticsearch Property</th>
+
+                            <th valign="bottom" align="left" id="d48763e406" class="stentry">Value</th>
+
+                        </tr>
+<tr class="strow">
+                            <td valign="top" headers="d48763e403" class="stentry">Index</td>
+
+                            <td valign="top" headers="d48763e406" class="stentry">taxi_rides</td>
+
+                        </tr>
+<tr class="strow">
+                            <td valign="top" headers="d48763e403" class="stentry">Type</td>
+
+                            <td valign="top" headers="d48763e406" class="stentry">taxi_ride</td>
+
+                        </tr>
+</table>
+
+                </div>
+            </li>
+</ol>
+
+        <div class="section result">Here's the full pipeline:<p class="p"><img class="image" id="task_lh2_yhy_ps__image_xds_wry_ps" src="../Graphics/Tutorial-Elasticsearch.png" height="364" width="807"></img></p>
+</div>
+
+    </div>
+
+</div>
+<div class="topic task nested1" id="task_fsb_1my_ps">
+    <h2 class="title topictitle2">Run or Preview the Pipeline</h2>
+
+    
+    <div class="body taskbody"><p class="shortdesc">You can run the pipeline if you configured the Elasticsearch destination to write to
+        your Elasticsearch cluster. Or, if you don't use Elasticsearch, or if you want a close look
+        at how the pipeline works, use data preview.</p>
+
+        <div class="section context"></div>
 
     </div>
 

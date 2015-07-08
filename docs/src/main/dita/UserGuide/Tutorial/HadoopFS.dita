@@ -12,17 +12,13 @@
         </context>
         <steps id="steps_xdd_wwm_ls">
             <step>
-                <cmd>From the stage library, select the <uicontrol>Hadoop FS</uicontrol> destination
-                    and connect it to the Field Masker. Or, from the Pipeline Creation Help Bar,
-                    click <menucascade>
-                        <uicontrol>Select Destination to Connect</uicontrol>
-                        <uicontrol>Hadoop FS</uicontrol>
-                    </menucascade>.</cmd>
+                <cmd>Add a <uicontrol>Hadoop FS</uicontrol> destination to the canvas and and
+                    connect it to the Field Masker.</cmd>
             </step>
             <step>
                 <cmd>In the Properties panel, click the <wintitle>Hadoop FS</wintitle> tab. If you
-                    have a real Hadoop FS installation, configure the stage to write to it.</cmd>
-                <info>To use Hadoop FS to write to a local file system, enter the following
+                    have a real Hadoop FS installation, you can configure the stage to write to it. </cmd>
+                <info>Or, to use Hadoop FS to write to a local file system, enter the following
                     configuration for the <uicontrol>Hadoop FS URI</uicontrol> property:
                         <codeph>file:///</codeph>.</info>
             </step>
@@ -77,8 +73,25 @@
                     </table>
                 </info>
             </step>
+            <step>
+                <cmd>Click the <wintitle>Delimited</wintitle> tab and configure the following
+                    property. Use the defaults for the rest:</cmd>
+                <info>
+                    <simpletable frame="all" id="simpletable_jyj_2vq_ps">
+                        <sthead>
+                            <stentry>Delimited Property</stentry>
+                            <stentry>Value</stentry>
+                        </sthead>
+                        <strow>
+                            <stentry>Header Line</stentry>
+                            <stentry>With Header Line</stentry>
+                        </strow>
+                    </simpletable>
+                </info>
+            </step>
         </steps>
         <result>That completes the primary branch. Now, let's go back to the Stream Selector and
-            complete the secondary branch.</result>
+            complete the secondary branch.<p><image href="../Graphics/Tutorial-HDFS.png"
+                    id="image_svj_rvq_ps" scale="80"/></p></result>
     </taskbody>
 </task>

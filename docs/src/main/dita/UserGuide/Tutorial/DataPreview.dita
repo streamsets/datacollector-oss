@@ -2,10 +2,11 @@
 <!DOCTYPE task PUBLIC "-//OASIS//DTD DITA General Task//EN" "generalTask.dtd">
 <task id="task_xb5_2sf_4s">
     <title>Preview Data </title>
+    <shortdesc>Let's preview the source data to become more familiar with the data set and gather
+        some details for pipeline configuration. </shortdesc>
     <taskbody>
         <context>
-            <p>Let's preview the source data to become more familiar with the data set and gather
-                some details that we'll use later in the pipeline: <ul id="ul_a41_hvh_4s">
+            <p> Here's the information we're looking for: <ul id="ul_a41_hvh_4s">
                     <li>The name and field path of the field that contains payment information -
                         We'll use this to route data in the Stream Selector. </li>
                     <li>The field path for credit card numbers - We'll use this to mask the data in

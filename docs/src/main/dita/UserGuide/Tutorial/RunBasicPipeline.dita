@@ -6,8 +6,24 @@
             <uicontrol>Start</uicontrol> icon.</shortdesc>
     <taskbody>
         <context>
-            <p>The console enters Monitor mode, showing <draft-comment author="Loretta">come back to
-                    this. Should show the alert. Not working right now. </draft-comment></p>
+            <p>The console enters Monitor mode, showing summary statistics in the Monitor panel.
+                Odds are good the data alert has triggered, displaying a pop up message and a
+                notification:</p>
+            <p><image href="../Graphics/Tutorial-RunPipeline.png" id="image_gc3_vyr_ps" scale="80"
+                /></p>
+            <p>You can close the pop up message and explore the information available in the Monitor
+                panel.</p>
+            <p>Note that when you select an unused part of the canvas, the Monitor panel displays
+                monitoring information for the pipeline. When you select a stage, it displays
+                information for the stage.</p>
+            <p>When you select the Jython Evaluator, statistics for the stage displays. You can
+                click the Error tab to view the error records. </p>
+            <p>You can also select the red Alert icon to view information about the data alert and
+                view the sampled error records. </p>
+            <p>To continue on to the extended tutorial, stop the pipeline. </p>
+            <p>If you like, you can use data preview to step through the pipeline to review how each
+                stage processes the data. <draft-comment author="Loretta">just add this here or add
+                    a new heading about data preview?</draft-comment></p>
         </context>
     </taskbody>
 </task>

@@ -2,7 +2,7 @@
 <!DOCTYPE html
   SYSTEM "about:legacy-compat">
 <html xml:lang="en-us" lang="en-us">
-<head><meta name="description" content="This tutorial shows you how to create a pipeline. You can optionally download sample data so you can preview data as you configure the pipeline and then run the completed pipeline and monitor the ..."></meta><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><meta name="copyright" content="(C) Copyright 2005"></meta><meta name="DC.rights.owner" content="(C) Copyright 2005"></meta><meta name="DC.Type" content="concept"></meta><meta name="DC.Title" content="Tutorial Overview"></meta><meta name="abstract" content="This tutorial shows you how to create a pipeline. You can optionally download sample data so you can preview data as you configure the pipeline and then run the completed pipeline and monitor the results."></meta><meta name="description" content="This tutorial shows you how to create a pipeline. You can optionally download sample data so you can preview data as you configure the pipeline and then run the completed pipeline and monitor the results."></meta><meta name="DC.Relation" scheme="URI" content="../Tutorial/Tutorial-title.html"></meta><meta name="DC.Format" content="XHTML"></meta><meta name="DC.Identifier" content="concept_is5_lrq_ks"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/commonltr.css"><!----></link><title>Tutorial Overview</title><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/webhelp_topic.css"><!----></link><link rel="stylesheet" type="text/css" href="../skin.css"></link><script type="text/javascript"><!--
+<head><meta name="description" content="This tutorial shows you how to create a pipeline. You can download sample data so you can preview data as you configure the pipeline and then run the completed pipeline and monitor the results. The ..."></meta><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><meta name="copyright" content="(C) Copyright 2005"></meta><meta name="DC.rights.owner" content="(C) Copyright 2005"></meta><meta name="DC.Type" content="concept"></meta><meta name="DC.Title" content="Tutorial Overview"></meta><meta name="abstract" content="This tutorial shows you how to create a pipeline. You can download sample data so you can preview data as you configure the pipeline and then run the completed pipeline and monitor the results."></meta><meta name="description" content="This tutorial shows you how to create a pipeline. You can download sample data so you can preview data as you configure the pipeline and then run the completed pipeline and monitor the results."></meta><meta name="DC.Relation" scheme="URI" content="../Tutorial/Tutorial-title.html"></meta><meta name="DC.Format" content="XHTML"></meta><meta name="DC.Identifier" content="concept_is5_lrq_ks"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/commonltr.css"><!----></link><title>Tutorial Overview</title><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/webhelp_topic.css"><!----></link><link rel="stylesheet" type="text/css" href="../skin.css"></link><script type="text/javascript"><!--
           
           var prefix = "../index.html";
           
@@ -14,18 +14,23 @@
  <h1 class="title topictitle1">Tutorial Overview</h1>
 
  
- <div class="body conbody"><p class="shortdesc">This tutorial shows you how to create a pipeline. You can optionally download sample
-  data so you can preview data as you configure the pipeline and then run the completed pipeline and
-  monitor the results. </p>
+ <div class="body conbody"><p class="shortdesc">This tutorial shows you how to create a pipeline. You can download sample data so you
+  can preview data as you configure the pipeline and then run the completed pipeline and monitor the
+  results. </p>
+
+  <p class="p">The tutorial evaluates fare payment data from a taxi company. It evaluates the credit cards
+   used for payment to find the less-used vendors, so they might be dropped to reduce overhead. </p>
+
+  <p class="p">The source data is delimited data in a file. The <span class="ph">Data
+                  Collector</span> uses a special
+   record format for delimited data. So in addition to introducing you to some basic <span class="ph">Data
+                  Collector</span> concepts and
+   pipeline configuration, you'll see how to manipulate delimited data.</p>
 
   <p class="p">You can use the basic or extended version of the tutorial. The basic version allows you to read
    and write to a local file system so you can use tutorial data to preview and run the pipeline.
-   The extended version requires an Elasticsearch destination system to run the pipeline. If you
+   The extended version flattens and reformats the data before writing to Elasticsearch. If you
    don't use Elasticsearch, you can still follow along to the end without running the pipeline.</p>
-
-  <p class="p">The basic tutorial evaluates fare payment data from a taxi company. It evaluates the credit
-   cards used for payment to find the less-used vendors, so they might be dropped to reduce
-   overhead. </p>
 
   <p class="p">Here's what the basic tutorial pipeline looks like in the end:</p>
 

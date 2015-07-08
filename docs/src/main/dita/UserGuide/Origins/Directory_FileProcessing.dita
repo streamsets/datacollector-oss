@@ -5,7 +5,7 @@
  <shortdesc>The Directory origin processes files in a directory that match the configured file name
                 pattern. </shortdesc>
  <conbody>
-  <p><indexterm>First processing<indexterm>for Directory</indexterm></indexterm><indexterm>Directory
+  <p><indexterm>file processing<indexterm>Directory</indexterm></indexterm><indexterm>Directory
                                         origin<indexterm>file
                                 processing</indexterm></indexterm><indexterm>first file to
                                         process<indexterm>Directory

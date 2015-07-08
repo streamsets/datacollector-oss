@@ -196,7 +196,7 @@
                     <table frame="all" rowsep="1" colsep="1" id="table_wv3_xzd_br">
                         <tgroup cols="2">
                             <colspec colname="c1" colnum="1" colwidth="1*"/>
-                            <colspec colname="c2" colnum="2" colwidth="2.49*"/>
+                            <colspec colname="c2" colnum="2" colwidth="2.71*"/>
                             <thead>
                                 <row>
                                     <entry>Late Records Property <xref

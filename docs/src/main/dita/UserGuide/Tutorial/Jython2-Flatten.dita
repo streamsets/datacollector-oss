@@ -5,7 +5,14 @@
     <shortdesc>To flatten data from the delimited data record format, let's use a Jython script with
         the Jython Evaluator.</shortdesc>
     <taskbody>
-        <context/>
+        <context>
+            <p>Flattening the delimited data converts the data from list format to a single level.
+                After flattening the records, you no longer need to use delimited functions to
+                return field data, or use an index in the field path. </p>
+            <p>For example, before flattening, we used the following field path to reference the
+                field with credit card numbers: <codeph>[20]/value</codeph>. After flattening, you
+                use the following field path: <codeph>/credit_card.</codeph></p>
+        </context>
         <steps id="steps_s4j_x3k_ps">
             <step>
                 <cmd>In the stage library, select the <uicontrol>Jython Evaluator</uicontrol> and

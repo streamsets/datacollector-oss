@@ -26,12 +26,8 @@
                         of 21, as well as the header and value fields.</p></info>
             </step>
             <step>
-                <cmd>In the stage library, select the <uicontrol>Expression Evaluator</uicontrol>
-                    processor and connect it to default output of the Stream Selector. Or from the
-                    Pipeline Creation Help Bar, click <menucascade>
-                        <uicontrol>Select Processor to Connect</uicontrol>
-                        <uicontrol>Expression Evaluator</uicontrol>
-                    </menucascade>.</cmd>
+                <cmd>Add an <uicontrol>Expression Evaluator</uicontrol> processor to the canvas and
+                    connect it to default output of the <uicontrol>Stream Selector</uicontrol>. </cmd>
             </step>
             <step>
                 <cmd>Click the <wintitle>Expressions</wintitle> tab.</cmd>
@@ -39,13 +35,29 @@
             <step>
                 <cmd>Click the <uicontrol>Add</uicontrol> icon twice and configure the properties as
                     follows:</cmd>
-                <info><image href="../Graphics/Tutorial-ExpressionEvaluator.png"
-                        id="image_wqq_nrh_4s" scale="80"/></info>
-                <info>These fields creates a map for index 21, and then creates a header field with
-                    the name credit_card_type. The third expression creates the value field and
-                    defines it as NA, for "not applicable."<draft-comment author="Loretta">check
-                        with Adam/Natty about why it was \N. Retake screenshot if necessary.
-                    </draft-comment></info>
+                <info>
+                    <simpletable frame="all" id="simpletable_xdm_rcr_ps">
+                        <sthead>
+                            <stentry>Output Field</stentry>
+                            <stentry>Expression</stentry>
+                        </sthead>
+                        <strow>
+                            <stentry>[21]</stentry>
+                            <stentry>${emptyMap()}</stentry>
+                        </strow>
+                        <strow>
+                            <stentry>[21]/header</stentry>
+                            <stentry>credit_card_type</stentry>
+                        </strow>
+                        <strow>
+                            <stentry>[21]/value</stentry>
+                            <stentry>N/A</stentry>
+                        </strow>
+                    </simpletable>
+                </info>
+                <info>These fields create a map for index 21, a header field with the name
+                    credit_card_type, and a value field that indicates the information is not
+                    applicable.</info>
             </step>
             <step>
                 <cmd>To write the data from this branch to the destination and merge the non-credit
@@ -53,5 +65,7 @@
                     FS destination.</cmd>
             </step>
         </steps>
+        <result><image href="../Graphics/Tutorial-Expression.png" id="image_adv_r2r_ps" scale="80"
+            /></result>
     </taskbody>
 </task>

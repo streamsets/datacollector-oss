@@ -59,6 +59,30 @@ Integer provided`</pre>
  </div>
 
 </div>
+<div class="topic concept nested1" id="unique_1130889804">
+ <h2 class="title topictitle2">Hadoop FS</h2>
+
+ <div class="body conbody">
+  <div class="p">
+   <dl class="dl">
+    
+     <dt class="dt dlterm">I'm writing text data to HDFS. Why are my files all empty? </dt>
+
+     <dd class="dd">You might not have the pipeline or Hadoop FS destination configured correctly. </dd>
+
+     <dd class="dd">The Hadoop FS destination uses a single field to write text data to HDFS. </dd>
+
+     <dd class="dd">The pipeline should collapse all data to a single field. And the Hadoop FS destination must
+      be configured to use that field. By default, Hadoop FS uses a field named /text. </dd>
+
+    
+   </dl>
+
+  </div>
+
+ </div>
+
+</div>
 <div class="topic concept nested1" id="concept_mth_cjm_js">
  <h2 class="title topictitle2">Kafka Producer</h2>
 

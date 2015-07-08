@@ -6,7 +6,7 @@
         origin, you define how to connect to the data, and the type of data to be processed. </shortdesc>
     <taskbody>
         <context>
-            <p>In this case, use the Directory origin to process static file data.</p>
+            <p>To process data in a static file, we'll use the Directory origin.</p>
         </context>
         <steps id="steps_ckz_gvq_ks">
             <step>
@@ -35,7 +35,7 @@
                             <tbody>
                                 <row>
                                     <entry>Data Format</entry>
-                                    <entry>Delimited</entry>
+                                    <entry>Delimited.</entry>
                                 </row>
                                 <row>
                                     <entry>Files Directory</entry>
@@ -64,8 +64,8 @@
         </steps>
         <result>This is how the stage and pipeline should look at this point:<p><image
                     href="../Graphics/Tutorial-Directory.png" id="image_kj1_c5f_4s" scale="80"
-                /></p><p>Notice, the error icon on the Directory stage. If you hover over the icon
-                or click the Issues icon, you see from the error message that's because it's not
-                connected to anything yet. All in good time. </p></result>
+                /></p><p>Notice, the error icons on the page. If you click the Issues icon or hover
+                over the Directory error icon, you see a warning that the origin isn't connected to
+                anything yet. All in good time. </p></result>
     </taskbody>
 </task>
