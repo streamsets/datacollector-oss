@@ -5,16 +5,20 @@ DEV_SUPPORT=$(cd $(dirname ${BASH_SOURCE}) && /bin/pwd)
 . ${DEV_SUPPORT}/ci-default-profile.sh
 PROFILE=$(basename ${BASH_SOURCE})
 PROFILE=${PROFILE#*-}
-PROFILE=${PROFILE%%-*}
+PROFILE=${PROFILE%-*}
 RUN_TESTS=""
 # apply profile here
 case "$PROFILE" in
-  run)
-    PACKAGE_OPTS=()
+  run-all)
+    TEST_OPTS=(-Pall-libs)
+    RUN_TESTS="true"
+    ;;
+  run-min)
+    TEST_OPTS=()
     RUN_TESTS="true"
     ;;
   build)
-    PACKAGE_OPTS=(-DskipTests)
+    TEST_OPTS=(-DskipTests)
     ;;
   *)
     echo "Unknown profile $PROFILE" 1>&2
@@ -32,7 +36,7 @@ mvn clean install -Pdist,all-libs,ui,rpm,miniIT -Drelease -Dtest=DoesNotExist -D
 # package and run tests (if appropiate)
 set +e
 export JAVA_HOME=${TEST_JVM}
-mvn package -fae -Pdist,all-libs,ui,rpm,miniIT -Drelease -Dmaven.main.skip=true -DlastModGranularityMs=604800000 ${PACKAGE_OPTS[@]}
+mvn package -fae -Pdist,ui,rpm,miniIT -Drelease -Dmaven.main.skip=true -DlastModGranularityMs=604800000 ${TEST_OPTS[@]}
 exitCode=$?
 if [[ -n $PUBLISH_SDC_TAR ]] && [[ $exitCode -eq 0 ]]
 then
