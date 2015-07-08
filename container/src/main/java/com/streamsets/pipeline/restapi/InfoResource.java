@@ -10,6 +10,7 @@ import com.streamsets.pipeline.util.AuthzRole;
 import com.streamsets.pipeline.util.PipelineException;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.Authorization;
 
 import javax.annotation.security.DenyAll;
 import javax.annotation.security.PermitAll;
@@ -42,19 +43,19 @@ public class InfoResource {
 
   @GET
   @Path("/sdc")
-  @ApiOperation(value = "Returns SDC Info")
+  @ApiOperation(value = "Returns SDC Info", response = Map.class, authorizations = @Authorization(value = "basic"))
   @Produces(MediaType.APPLICATION_JSON)
   @PermitAll
-  public Response getBuild() throws PipelineException, IOException {
+  public Response getBuildInfo() throws PipelineException, IOException {
     return Response.status(Response.Status.OK).entity(buildInfo).build();
   }
 
   @GET
   @Path("/user")
-  @ApiOperation(value = "Returns User Info")
+  @ApiOperation(value = "Returns User Info", response = Map.class, authorizations = @Authorization(value = "basic"))
   @Produces(MediaType.APPLICATION_JSON)
   @PermitAll
-  public Response getUser(@Context SecurityContext context) throws PipelineException, IOException {
+  public Response getUserInfo(@Context SecurityContext context) throws PipelineException, IOException {
     Map<String, Object> map = new HashMap<>();
     String user;
     List<String> roles = new ArrayList<>();

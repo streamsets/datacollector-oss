@@ -1,8 +1,25 @@
-<div class="panel panel-default page-panel sdc-configuration-page">
+<div class="panel panel-default page-panel sdc-restapi-page">
 
   <div class="panel-heading clearfix">
-    <div class="panel-title">
-      <h3 translate="restapi.title">Data Collector RESTful API</h3>
+    <div class="panel-title size-toolbar">
+      <h3 class="pull-left" translate="restapi.title">Data Collector RESTful API</h3>
+
+      <div class="btn-group pull-right settings-dropdown">
+        <a class="btn btn-link dropdown-toggle" data-toggle="dropdown"
+           tooltip-placement="top"
+           tooltip="{{'home.header.more' | translate}}"
+           tooltip-popup-delay="500">
+          <span class="fa fa-gear fa-14x pointer"></span>
+        </a>
+        <ul class="dropdown-menu pull-right" role="menu">
+
+          <li role="presentation">
+            <a role="menuitem" tabindex="-1" href="/rest/swagger.json"
+               target="_blank">swagger.json</a>
+          </li>
+
+        </ul>
+      </div>
     </div>
   </div>
 

@@ -16,6 +16,7 @@ import com.streamsets.pipeline.restapi.bean.BeanHelper;
 import com.streamsets.pipeline.stagelibrary.StageLibraryTask;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.Authorization;
 
 import javax.annotation.security.DenyAll;
 import javax.annotation.security.PermitAll;
@@ -66,7 +67,8 @@ public class StageLibraryResource {
   }
 
   @GET
-  @ApiOperation(value = "Returns pipeline & stage configuration definitions")
+  @ApiOperation(value = "Returns pipeline & stage configuration definitions", response = Map.class,
+    authorizations = @Authorization(value = "basic"))
   @Produces(MediaType.APPLICATION_JSON)
   @PermitAll
   public Response getDefinitions() {
@@ -103,7 +105,8 @@ public class StageLibraryResource {
 
   @GET
   @Path("/stages/icon")
-  @ApiOperation(value = "Find stage icon url for pipeline name, stage library and version")
+  @ApiOperation(value = "Return stage icon url for pipeline name, stage library and version", response = Object.class,
+    authorizations = @Authorization(value = "basic"))
   @Produces({SVG_MEDIA_TYPE, PNG_MEDIA_TYPE})
   @PermitAll
   public Response getIcon(@QueryParam("name") String name,

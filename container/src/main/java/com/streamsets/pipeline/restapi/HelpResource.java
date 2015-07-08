@@ -8,6 +8,7 @@ package com.streamsets.pipeline.restapi;
 import com.streamsets.pipeline.main.RuntimeInfo;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.Authorization;
 
 import javax.annotation.security.DenyAll;
 import javax.annotation.security.PermitAll;
@@ -21,6 +22,7 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.Reader;
+import java.util.Map;
 import java.util.Properties;
 
 @Path("/v1/helpref")
@@ -35,7 +37,7 @@ public class HelpResource {
   }
 
   @GET
-  @ApiOperation(value = "Returns HELP Reference")
+  @ApiOperation(value = "Returns HELP Reference", response = Map.class, authorizations = @Authorization(value = "basic"))
   @Produces(MediaType.APPLICATION_JSON)
   @PermitAll
   public Response getHelpRefs() throws IOException {

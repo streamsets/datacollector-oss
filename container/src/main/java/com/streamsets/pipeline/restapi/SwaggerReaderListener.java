@@ -12,6 +12,7 @@ import io.swagger.models.Model;
 import io.swagger.models.Operation;
 import io.swagger.models.Path;
 import io.swagger.models.Swagger;
+import io.swagger.models.auth.BasicAuthDefinition;
 import io.swagger.models.parameters.BodyParameter;
 import io.swagger.models.parameters.Parameter;
 
@@ -65,6 +66,8 @@ public class SwaggerReaderListener implements ReaderListener {
         definitons.remove(reference);
       }
     }
+
+    swagger.securityDefinition("basic", new BasicAuthDefinition());
 
   }
 }

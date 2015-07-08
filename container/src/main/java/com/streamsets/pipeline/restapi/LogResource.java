@@ -11,6 +11,7 @@ import com.streamsets.pipeline.main.RuntimeInfo;
 import com.streamsets.pipeline.util.AuthzRole;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.Authorization;
 
 import javax.annotation.security.DenyAll;
 import javax.annotation.security.RolesAllowed;
@@ -52,7 +53,7 @@ public class LogResource {
   }
 
   @GET
-  @ApiOperation(value = "Returns Current SDC Log Contents")
+  @ApiOperation(value= "Return Log file contents", hidden = true)
   @Produces(MediaType.TEXT_PLAIN)
   @RolesAllowed({AuthzRole.ADMIN, AuthzRole.CREATOR, AuthzRole.MANAGER})
   public Response currentLog(@QueryParam("endingOffset") @DefaultValue("-1") long offset) throws IOException {
@@ -84,7 +85,8 @@ public class LogResource {
 
   @GET
   @Path("/files")
-  @ApiOperation(value = "Returns all available SDC Log files")
+  @ApiOperation(value = "Returns all available SDC Log files", response = Map.class, responseContainer = "List",
+    authorizations = @Authorization(value = "basic"))
   @Produces(MediaType.APPLICATION_JSON)
   @RolesAllowed({AuthzRole.ADMIN, AuthzRole.CREATOR, AuthzRole.MANAGER})
   @SuppressWarnings("unchecked")
@@ -102,7 +104,8 @@ public class LogResource {
 
   @GET
   @Path("/files/{logName}")
-  @ApiOperation(value = "Returns SDC Log File Content")
+  @ApiOperation(value = "Returns SDC Log File Content", response = String.class,
+    authorizations = @Authorization(value = "basic"))
   @Produces(MediaType.TEXT_PLAIN)
   @RolesAllowed({AuthzRole.ADMIN, AuthzRole.CREATOR, AuthzRole.MANAGER})
   public Response getLogFile(@PathParam("logName") String logName,

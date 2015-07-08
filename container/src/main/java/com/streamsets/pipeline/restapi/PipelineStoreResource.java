@@ -26,6 +26,7 @@ import com.streamsets.pipeline.validation.RuleDefinitionValidator;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
+import io.swagger.annotations.Authorization;
 
 import javax.annotation.security.DenyAll;
 import javax.annotation.security.PermitAll;
@@ -100,7 +101,8 @@ public class PipelineStoreResource {
   }
 
   @GET
-  @ApiOperation(value = "Returns all Pipeline Configuration Info", response = PipelineInfoJson.class, responseContainer = "List")
+  @ApiOperation(value = "Returns all Pipeline Configuration Info", response = PipelineInfoJson.class,
+    responseContainer = "List", authorizations = @Authorization(value = "basic"))
   @Produces(MediaType.APPLICATION_JSON)
   @PermitAll
   public Response getPipelines() throws PipelineStoreException {
@@ -110,10 +112,11 @@ public class PipelineStoreResource {
 
   @Path("/{pipelineName}")
   @GET
-  @ApiOperation(value = "Find Pipeline Configuration by name and revision", response = PipelineConfigurationJson.class)
+  @ApiOperation(value = "Find Pipeline Configuration by name and revision", response = PipelineConfigurationJson.class,
+    authorizations = @Authorization(value = "basic"))
   @Produces(MediaType.APPLICATION_JSON)
   @PermitAll
-  public Response getInfo(
+  public Response getPipelineInfo(
       @PathParam("pipelineName") String name,
       @QueryParam("rev") @DefaultValue("0") String rev,
       @QueryParam("get") @DefaultValue("pipeline") String get,
@@ -151,10 +154,11 @@ public class PipelineStoreResource {
 
   @Path("/{pipelineName}")
   @PUT
-  @ApiOperation(value = "Add a new Pipeline Configuration to the store", response = PipelineConfigurationJson.class)
+  @ApiOperation(value = "Add a new Pipeline Configuration to the store", response = PipelineConfigurationJson.class,
+    authorizations = @Authorization(value = "basic"))
   @Produces(MediaType.APPLICATION_JSON)
   @RolesAllowed({ AuthzRole.CREATOR, AuthzRole.ADMIN })
-  public Response create(
+  public Response createPipeline(
       @PathParam("pipelineName") String name,
       @QueryParam("description") @DefaultValue("") String description)
       throws PipelineStoreException, URISyntaxException {
@@ -196,10 +200,10 @@ public class PipelineStoreResource {
 
   @Path("/{pipelineName}")
   @DELETE
-  @ApiOperation(value = "Delete Pipeline Configuration by name")
+  @ApiOperation(value = "Delete Pipeline Configuration by name", authorizations = @Authorization(value = "basic"))
   @Produces(MediaType.APPLICATION_JSON)
   @RolesAllowed({ AuthzRole.CREATOR, AuthzRole.ADMIN })
-  public Response delete(
+  public Response deletePipeline(
       @PathParam("pipelineName") String name)
       throws PipelineStoreException, URISyntaxException {
     Utils.checkState(runtimeInfo.getExecutionMode() != RuntimeInfo.ExecutionMode.SLAVE,
@@ -211,14 +215,15 @@ public class PipelineStoreResource {
 
   @Path("/{pipelineName}")
   @POST
-  @ApiOperation(value = "Update an existing Pipeline Configuration by name", response = PipelineConfigurationJson.class)
+  @ApiOperation(value = "Update an existing Pipeline Configuration by name", response = PipelineConfigurationJson.class,
+    authorizations = @Authorization(value = "basic"))
   @Consumes(MediaType.APPLICATION_JSON)
   @Produces(MediaType.APPLICATION_JSON)
   @RolesAllowed({ AuthzRole.CREATOR, AuthzRole.ADMIN })
-  public Response save(
+  public Response savePipeline(
       @PathParam("pipelineName") String name,
-      @QueryParam("tag") @DefaultValue("0") String tag,
-      @QueryParam("tagDescription") String tagDescription,
+      @QueryParam("rev") @DefaultValue("0") String rev,
+      @QueryParam("description") String description,
       @ApiParam(name="pipeline", required = true) PipelineConfigurationJson pipeline)
       throws PipelineStoreException, URISyntaxException {
     Utils.checkState(runtimeInfo.getExecutionMode() != RuntimeInfo.ExecutionMode.SLAVE,
@@ -229,16 +234,17 @@ public class PipelineStoreResource {
     PipelineConfigurationValidator validator = new PipelineConfigurationValidator(stageLibrary, name, pipelineConfig);
     validator.validate();
     pipelineConfig.setValidation(validator);
-    pipelineConfig = store.save(name, user, tag, tagDescription, pipelineConfig);
+    pipelineConfig = store.save(name, user, rev, description, pipelineConfig);
     return Response.ok().entity(BeanHelper.wrapPipelineConfiguration(pipelineConfig)).build();
   }
 
   @Path("/{pipelineName}/rules")
   @GET
-  @ApiOperation(value = "Find Pipeline Rules by name and revision", response = RuleDefinitionsJson.class)
+  @ApiOperation(value = "Find Pipeline Rules by name and revision", response = RuleDefinitionsJson.class,
+    authorizations = @Authorization(value = "basic"))
   @Produces(MediaType.APPLICATION_JSON)
   @PermitAll
-  public Response getRules(
+  public Response getPipelineRules(
     @PathParam("pipelineName") String name,
     @QueryParam("rev") @DefaultValue("0") String rev) throws PipelineStoreException {
     com.streamsets.pipeline.config.RuleDefinitions ruleDefinitions = store.retrieveRules(name, rev);
@@ -252,10 +258,11 @@ public class PipelineStoreResource {
 
   @Path("/{pipelineName}/rules")
   @POST
-  @ApiOperation(value = "Update an existing Pipeline Rules by name", response = RuleDefinitionsJson.class)
+  @ApiOperation(value = "Update an existing Pipeline Rules by name", response = RuleDefinitionsJson.class,
+    authorizations = @Authorization(value = "basic"))
   @Produces(MediaType.APPLICATION_JSON)
   @RolesAllowed({ AuthzRole.CREATOR, AuthzRole.MANAGER, AuthzRole.ADMIN })
-  public Response saveRules(
+  public Response savePipelineRules(
     @PathParam("pipelineName") String name,
     @QueryParam("rev") @DefaultValue("0") String rev,
     @ApiParam(name="pipeline", required = true) RuleDefinitionsJson ruleDefinitionsJson) throws PipelineStoreException {

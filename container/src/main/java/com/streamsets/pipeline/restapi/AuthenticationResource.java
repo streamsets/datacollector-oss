@@ -21,13 +21,11 @@ import javax.ws.rs.core.Context;
 import java.io.IOException;
 
 @Path("/v1/authentication")
-@Api(value = "authentication")
-public class LogoutResource {
+public class AuthenticationResource {
 
 
   @POST
   @Path("/login")
-  @ApiOperation(value = "Login to SDC")
   @PermitAll
   public void login(@FormParam("username") String username,
                     @FormParam("password") String password,
@@ -45,7 +43,6 @@ public class LogoutResource {
 
   @POST
   @Path("/logout")
-  @ApiOperation(value = "Logs out from SDC")
   @PermitAll
   public void logout(@Context HttpServletRequest request) throws PipelineStoreException {
     HttpSession session = request.getSession();
