@@ -16,7 +16,7 @@ import com.streamsets.pipeline.lib.el.TimeEL;
 
 @StageDef(
     version = "1.0.0",
-    label = "MongoDB Origin",
+    label = "MongoDB",
     description = "Reads records from a MongoDB Collection",
     icon="mongodb.png",
     recordsByRef = true

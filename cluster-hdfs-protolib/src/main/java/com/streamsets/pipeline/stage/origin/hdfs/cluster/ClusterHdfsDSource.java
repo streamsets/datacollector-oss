@@ -28,10 +28,10 @@ import com.streamsets.pipeline.lib.parser.log.RegExConfig;
 
 @StageDef(
     version = "1.0.0",
-    label = "HDFS Cluster Origin",
-    description = "Reads data from HDFS",
+    label = "Hadoop FS",
+    description = "Reads data from Hadoop file system",
     execution = ExecutionMode.CLUSTER,
-    icon = "cluster-hdfs.png"
+    icon = "hdfs.png"
 )
 @ConfigGroups(value = Groups.class)
 @GenerateResourceBundle
