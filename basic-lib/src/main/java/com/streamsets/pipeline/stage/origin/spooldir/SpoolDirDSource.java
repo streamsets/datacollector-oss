@@ -22,6 +22,8 @@ import com.streamsets.pipeline.config.CsvMode;
 import com.streamsets.pipeline.config.CsvModeChooserValues;
 import com.streamsets.pipeline.config.DataFormat;
 import com.streamsets.pipeline.config.DataFormatChooserValues;
+import com.streamsets.pipeline.config.FileCompression;
+import com.streamsets.pipeline.config.FileCompressionChooserValues;
 import com.streamsets.pipeline.config.JsonMode;
 import com.streamsets.pipeline.config.JsonModeChooserValues;
 import com.streamsets.pipeline.config.LogMode;
@@ -170,6 +172,20 @@ public class SpoolDirDSource extends DSource {
       triggeredByValue = { "TEXT", "JSON", "XML", "DELIMITED", "LOG"}
   )
   public String initialFileToProcess;
+
+  @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.MODEL,
+      defaultValue = "AUTOMATIC",
+      label = "Files Compression",
+      displayPosition = 70,
+      group = "FILES",
+      dependsOn = "dataFormat",
+      triggeredByValue = { "TEXT", "JSON", "DELIMITED", "XML", "SDC_JSON", "LOG" }
+  )
+  @ValueChooser(FileCompressionChooserValues.class)
+  public FileCompression fileCompression;
+
 
   @ConfigDef(
       required = false,
@@ -572,7 +588,8 @@ public class SpoolDirDSource extends DSource {
   @Override
   protected Source createSource() {
     return new SpoolDirSource(dataFormat, charset, removeCtrlChars, overrunLimit, spoolDir, batchSize,
-      poolingTimeoutSecs, filePattern, maxSpoolFiles, initialFileToProcess, errorArchiveDir, postProcessing, archiveDir,
+      poolingTimeoutSecs, filePattern, maxSpoolFiles, initialFileToProcess, fileCompression, errorArchiveDir,
+      postProcessing, archiveDir,
       retentionTimeMins, csvFileFormat, csvHeader, csvMaxObjectLen, csvCustomDelimiter, csvCustomEscape, csvCustomQuote,
       jsonContent, jsonMaxObjectLen, textMaxObjectLen, xmlRecordElement, xmlMaxObjectLen, logMode,
       logMaxObjectLen, retainOriginalLine, customLogFormat, regex, fieldPathsToGroupName, grokPatternDefinition,

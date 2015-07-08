@@ -9,6 +9,7 @@ import com.streamsets.pipeline.api.BatchMaker;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.config.DataFormat;
+import com.streamsets.pipeline.config.FileCompression;
 import com.streamsets.pipeline.config.LogMode;
 import com.streamsets.pipeline.config.OnParseError;
 import com.streamsets.pipeline.config.PostProcessingOptions;
@@ -85,7 +86,8 @@ public class TestLogSpoolDirSourceRegex {
   }
 
   private SpoolDirSource createSource() {
-    return new SpoolDirSource(DataFormat.LOG, "UTF-8", false, 100, createTestDir(), 10, 1, "file-[0-9].log", 10, null, null,
+    return new SpoolDirSource(DataFormat.LOG, "UTF-8", false, 100, createTestDir(), 10, 1, "file-[0-9].log", 10, null,
+                              FileCompression.NONE, null,
       PostProcessingOptions.ARCHIVE, createTestDir(), 10, null, null, -1, '^', '^', '^', null, 0, 0,
       null, 0, LogMode.REGEX, 1000, true, CUSTOM_LOG_FORMAT, REGEX, REGEX_CONFIG, null, null, false, null,
       OnParseError.ERROR, 0, null);
@@ -254,7 +256,7 @@ public class TestLogSpoolDirSourceRegex {
   @Test(expected = StageException.class)
   public void testInvalidRegEx() throws StageException {
     SpoolDirSource spoolDirSource = new SpoolDirSource(DataFormat.LOG, "UTF-8", false, 100, createTestDir(), 10, 1,
-      "file-[0-9].log", 10, null, null,
+      "file-[0-9].log", 10, null, FileCompression.NONE, null,
       PostProcessingOptions.ARCHIVE, createTestDir(), 10, null, null, -1, '^', '^', '^', null, 0, 0,
       null, 0, LogMode.REGEX, 1000, true, CUSTOM_LOG_FORMAT, INVALID_REGEX, REGEX_CONFIG, null, null, false, null,
       OnParseError.ERROR, 0, null);
@@ -273,7 +275,7 @@ public class TestLogSpoolDirSourceRegex {
     regExConfig.add(r8);
 
     SpoolDirSource spoolDirSource = new SpoolDirSource(DataFormat.LOG, "UTF-8", false, 100, createTestDir(), 10, 1,
-      "file-[0-9].log", 10, null, null,
+      "file-[0-9].log", 10, null, FileCompression.NONE, null,
       PostProcessingOptions.ARCHIVE, createTestDir(), 10, null, null, -1, '^', '^', '^',null, 0, 0,
       null, 0, LogMode.REGEX, 1000, true, CUSTOM_LOG_FORMAT, REGEX, regExConfig, null, null, false, null,
       OnParseError.ERROR, 0, null);

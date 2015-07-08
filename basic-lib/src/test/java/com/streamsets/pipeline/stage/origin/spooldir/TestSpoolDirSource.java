@@ -10,6 +10,7 @@ import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.config.CsvHeader;
 import com.streamsets.pipeline.config.CsvMode;
 import com.streamsets.pipeline.config.DataFormat;
+import com.streamsets.pipeline.config.FileCompression;
 import com.streamsets.pipeline.config.JsonMode;
 import com.streamsets.pipeline.config.OnParseError;
 import com.streamsets.pipeline.config.PostProcessingOptions;
@@ -45,7 +46,8 @@ public class TestSpoolDirSource {
         JsonMode jsonContent, int maxJsonObjectLen, int maxLogLineLength, String xmlRecordElement,
         int maxXmlObjectLen) {
       super(dataFormat, "UTF-8", false, 100, spoolDir, batchSize, poolingTimeoutSecs, filePattern, maxSpoolFiles,
-        initialFileToProcess, errorArchiveDir, postProcessing, archiveDir, retentionTimeMins, csvFileFormat,
+        initialFileToProcess, FileCompression.NONE, errorArchiveDir, postProcessing, archiveDir, retentionTimeMins,
+        csvFileFormat,
         csvHeaders, -1, 'A', 'A', 'A', jsonContent, maxJsonObjectLen, maxLogLineLength, xmlRecordElement,
         maxXmlObjectLen, null, 0, false, null, null, null, null, null, false, null, OnParseError.ERROR, -1, null);
       this.spoolDir = spoolDir;
