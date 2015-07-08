@@ -14,8 +14,10 @@ import com.streamsets.pipeline.lib.generator.DataGeneratorException;
 import com.streamsets.pipeline.sdk.ContextInfoCreator;
 import com.streamsets.pipeline.sdk.RecordCreator;
 import com.streamsets.pipeline.stage.destination.hdfs.HdfsDTarget;
+import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
+import org.apache.hadoop.fs.RawLocalFileSystem;
 import org.apache.hadoop.hdfs.HdfsConfiguration;
 import org.apache.hadoop.io.SequenceFile;
 import org.apache.hadoop.io.Text;
@@ -31,6 +33,7 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
+import java.net.URI;
 import java.util.UUID;
 
 public class TestRecordWriter {
@@ -82,9 +85,15 @@ public class TestRecordWriter {
     return testDir;
   }
 
+  private FileSystem getRawLocalFileSystem() throws Exception {
+    Configuration conf = new Configuration();
+    conf.setClass("fs.file.impl", RawLocalFileSystem.class, FileSystem.class);
+    return FileSystem.get(new URI("file:///"), conf);
+  }
+
   @Test
   public void testTextFile() throws Exception {
-    FileSystem fs = FileSystem.getLocal(new HdfsConfiguration());
+    FileSystem fs = getRawLocalFileSystem();
     try {
       Path file = new Path(getTestDir(), "file.txt");
       OutputStream os = fs.create(file, false);
@@ -125,7 +134,7 @@ public class TestRecordWriter {
 
   private void testSequenceFile(boolean useUUIDAsKey) throws Exception {
     String keyEL = (useUUIDAsKey) ? "${uuid()}" : "${record:value('/')}";
-    FileSystem fs = FileSystem.getLocal(new HdfsConfiguration());
+    FileSystem fs = getRawLocalFileSystem();
     try {
       Path file = new Path(getTestDir(), "file.txt");
 
