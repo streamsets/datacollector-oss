@@ -13,6 +13,7 @@ import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.config.CsvHeader;
 import com.streamsets.pipeline.config.CsvMode;
 import com.streamsets.pipeline.config.DataFormat;
+import com.streamsets.pipeline.config.FileCompression;
 import com.streamsets.pipeline.config.JsonMode;
 import com.streamsets.pipeline.config.LogMode;
 import com.streamsets.pipeline.config.OnParseError;
@@ -61,6 +62,7 @@ public class SpoolDirSource extends BaseSource {
   private String filePattern;
   private int maxSpoolFiles;
   private String initialFileToProcess;
+  private final FileCompression fileCompression;
   private final String errorArchiveDir;
   private final PostProcessingOptions postProcessing;
   private final String archiveDir;
@@ -91,10 +93,9 @@ public class SpoolDirSource extends BaseSource {
   private final String avroSchema;
 
   public SpoolDirSource(DataFormat dataFormat, String charset, boolean removeCtrlChars, int overrunLimit,
-      String spoolDir, int batchSize,
-      long poolingTimeoutSecs,
-      String filePattern, int maxSpoolFiles, String initialFileToProcess, String errorArchiveDir,
-      PostProcessingOptions postProcessing, String archiveDir, long retentionTimeMins,
+      String spoolDir, int batchSize, long poolingTimeoutSecs,
+      String filePattern, int maxSpoolFiles, String initialFileToProcess, FileCompression fileCompression,
+      String errorArchiveDir, PostProcessingOptions postProcessing, String archiveDir, long retentionTimeMins,
       CsvMode csvFileFormat, CsvHeader csvHeader, int csvMaxObjectLen, char csvCustomDelimiter, char csvCustomEscape,
       char csvCustomQuote, JsonMode jsonContent, int jsonMaxObjectLen,
       int textMaxLineLen, String xmlRecordElement, int xmlMaxObjectLen, LogMode logMode, int logMaxObjectLen,
@@ -111,6 +112,7 @@ public class SpoolDirSource extends BaseSource {
     this.filePattern = filePattern;
     this.maxSpoolFiles = maxSpoolFiles;
     this.initialFileToProcess = initialFileToProcess;
+    this.fileCompression = fileCompression;
     this.errorArchiveDir = errorArchiveDir;
     this.postProcessing = postProcessing;
     this.archiveDir = archiveDir;
@@ -508,7 +510,11 @@ public class SpoolDirSource extends BaseSource {
     String sourceFile = file.getName();
     try {
       if (parser == null) {
-        parser = parserFactory.getParser(file, offset);
+        if (dataFormat == DataFormat.AVRO) {
+          parser = parserFactory.getParser(file, offset);
+        } else {
+          parser = parserFactory.getParser(file.getName(), fileCompression.open(file), Long.parseLong(offset));
+        }
       }
       for (int i = 0; i < maxBatchSize; i++) {
         try {
