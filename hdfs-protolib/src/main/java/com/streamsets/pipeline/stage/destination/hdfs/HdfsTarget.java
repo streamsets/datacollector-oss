@@ -481,6 +481,27 @@ public class HdfsTarget extends RecordTarget {
     }
   }
 
+  // we use the emptyBatch() method call to close open files when the late window closes even if there is no more
+  // new data.
+  @Override
+  protected void emptyBatch() throws StageException {
+    setBatchTime();
+    try {
+      getUGI().doAs(new PrivilegedExceptionAction<Void>() {
+        @Override
+        public Void run() throws Exception {
+          getCurrentWriters().purge();
+          if (getLateWriters() != null) {
+            getLateWriters().purge();
+          }
+          return null;
+        }
+      });
+    } catch (Exception ex) {
+      throw new RuntimeException(ex);
+    }
+  }
+
   //visible for testing.
   Date setBatchTime() {
     batchTime = new Date();
