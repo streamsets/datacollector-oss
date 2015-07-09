@@ -10,10 +10,12 @@ import java.util.List;
 public class PipelineBean {
   private final PipelineConfigBean config;
   private final List<StageBean> stages;
+  private final StageBean errorStage;
 
-  public PipelineBean(PipelineConfigBean config, List<StageBean> stages) {
+  public PipelineBean(PipelineConfigBean config, List<StageBean> stages, StageBean errorStage) {
     this.config = config;
     this.stages = stages;
+    this.errorStage = errorStage;
   }
 
   public PipelineConfigBean getConfig() {
@@ -22,6 +24,10 @@ public class PipelineBean {
 
   public List<StageBean> getStages() {
     return stages;
+  }
+
+  public StageBean getErrorStage() {
+    return errorStage;
   }
 
 }

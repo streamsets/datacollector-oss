@@ -9,4 +9,5 @@ public enum StageType {
   SOURCE,
   PROCESSOR,
   TARGET,
+  PIPELINE
 }

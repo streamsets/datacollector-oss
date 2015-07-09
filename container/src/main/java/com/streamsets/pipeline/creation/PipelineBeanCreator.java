@@ -18,8 +18,10 @@ import com.streamsets.pipeline.config.ModelType;
 import com.streamsets.pipeline.config.PipelineConfiguration;
 import com.streamsets.pipeline.config.StageConfiguration;
 import com.streamsets.pipeline.config.StageDefinition;
+import com.streamsets.pipeline.config.StageLibraryDefinition;
 import com.streamsets.pipeline.definition.ConfigDefinitionExtractor;
 import com.streamsets.pipeline.definition.ConfigValueExtractor;
+import com.streamsets.pipeline.definition.StageDefinitionExtractor;
 import com.streamsets.pipeline.stagelibrary.StageLibraryTask;
 import com.streamsets.pipeline.util.ElUtil;
 import com.streamsets.pipeline.validation.Issue;
@@ -32,6 +34,7 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
 
 public abstract class PipelineBeanCreator {
 
@@ -42,19 +45,79 @@ public abstract class PipelineBeanCreator {
     return CREATOR;
   }
 
+  private static final StageDefinition PIPELINE_DEFINITION = getPipelineDefinition();
+
   private static final Map<String, ConfigDefinition> SYSTEM_STAGE_CONFIG_DEFS = getSystemStageConfigDefMap();
+
+  static private StageDefinition getPipelineDefinition() {
+    StageLibraryDefinition libraryDef = new StageLibraryDefinition(Thread.currentThread().getContextClassLoader(),
+                                                                   "system", "System", new Properties());
+    return StageDefinitionExtractor.get().extract(libraryDef, PipelineConfigBean.class, "Pipeline Config Definitions");
+  }
 
   static private Map<String, ConfigDefinition> getSystemStageConfigDefMap() {
     Map<String, ConfigDefinition> map = new HashMap<>();
     for (ConfigDefinition def
-        : ConfigDefinitionExtractor.get().extract(StageConfigBean.class, "System Stage Configs")) {
+        : ConfigDefinitionExtractor.get().extract(StageConfigBean.class, "System Stage Config Definitions")) {
       map.put(def.getName(), def);
     }
     return ImmutableMap.copyOf(map);
   }
 
-  public PipelineBean create(PipelineConfiguration pipelineConf, StageLibraryTask library, List<Issue> errors) {
-    return null;
+  public PipelineBean create(StageLibraryTask library, PipelineConfiguration pipelineConf, List<Issue> errors) {
+    PipelineConfigBean pipelineConfigBean = createPipeline(pipelineConf, errors);
+    StageBean errorStageBean = null;
+    List<StageBean> stages = new ArrayList<>();
+    if (pipelineConfigBean != null && pipelineConfigBean.constants != null) {
+      for (StageConfiguration stageConf : pipelineConf.getStages()) {
+        StageBean stageBean = createStageBean(library, stageConf, false, pipelineConfigBean.constants, errors);
+        if (stageBean != null) {
+          stages.add(stageBean);
+        }
+      }
+      StageConfiguration errorStageConf = pipelineConf.getErrorStage();
+      errorStageBean = createStageBean(library, errorStageConf, true, pipelineConfigBean.constants, errors);
+    }
+    return (errors.isEmpty()) ? new PipelineBean(pipelineConfigBean, stages, errorStageBean) : null;
+  }
+
+  StageBean createStageBean(StageLibraryTask library, StageConfiguration stageConf, boolean errorStage,
+      Map<String, Object> constants, List<Issue> errors) {
+    StageBean bean = null;
+    StageDefinition stageDef = library.getStage(stageConf.getLibrary(), stageConf.getStageName(),
+                                                stageConf.getStageVersion());
+    if (stageDef != null) {
+      if (stageDef.isErrorStage() != errorStage) {
+        if (stageDef.isErrorStage()) {
+          errors.add(new Issue(stageConf.getInstanceName(), null, CreationError.CREATION_007, stageConf.getLibrary(),
+                               stageConf.getInstanceName(), stageConf.getStageVersion()));
+        } else {
+          errors.add(new Issue(stageConf.getInstanceName(), null, CreationError.CREATION_008, stageConf.getLibrary(),
+                               stageConf.getInstanceName(), stageConf.getStageVersion()));
+        }
+      }
+      bean = createStage(stageDef, stageConf, constants, errors);
+    } else {
+      errors.add(new Issue(stageConf.getInstanceName(), null, CreationError.CREATION_006, stageConf.getLibrary(),
+                           stageConf.getInstanceName(), stageConf.getStageVersion()));
+    }
+    return bean;
+  }
+
+  @SuppressWarnings("unchecked")
+  StageConfiguration getPipelineConfAsStageConf(PipelineConfiguration pipelineConf) {
+    return new StageConfiguration("pipeline", "none", "pipeline", "1.0.0", pipelineConf.getConfiguration(),
+                                  Collections.EMPTY_MAP, Collections.EMPTY_LIST, Collections.EMPTY_LIST);
+  }
+
+  @SuppressWarnings("unchecked")
+  PipelineConfigBean createPipeline(PipelineConfiguration pipelineConf, List<Issue> errors) {
+    PipelineConfigBean pipelineConfigBean = new PipelineConfigBean();
+    if (createConfigBeans(pipelineConfigBean, "", "pipeline", errors)) {
+      injectConfigs(pipelineConfigBean, "", PIPELINE_DEFINITION.getConfigDefinitionsMap(), PIPELINE_DEFINITION,
+                    getPipelineConfAsStageConf(pipelineConf), Collections.EMPTY_MAP, errors);
+    }
+    return pipelineConfigBean;
   }
 
   // if not null it is OK. if null there was at least one error, check errors for the details
@@ -132,7 +195,7 @@ public abstract class PipelineBeanCreator {
       if (field.getAnnotation(ConfigDef.class) != null) {
         ConfigDefinition configDef = configDefMap.get(configName);
         if (configDef == null) {
-          errors.add(new Issue(stageName, configName, CreationError.CREATION_002));
+          errors.add(new Issue(stageName, configName, CreationError.CREATION_002, configName));
         } else {
           Object value = valueMap.get(configName);
           if (value == null) {
@@ -163,7 +226,7 @@ public abstract class PipelineBeanCreator {
       if (field.getAnnotation(ConfigDef.class) != null) {
         ConfigDefinition configDef = configDefMap.get(configName);
         if (configDef == null) {
-          errors.add(new Issue(stageName, configName, CreationError.CREATION_002));
+          errors.add(new Issue(stageName, configName, CreationError.CREATION_002, configName));
         } else {
           ConfigConfiguration configConf = stageConf.getConfig(configName);
           if (configConf == null) {

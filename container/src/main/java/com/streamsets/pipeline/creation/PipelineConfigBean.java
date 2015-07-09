@@ -10,6 +10,8 @@ import com.streamsets.pipeline.api.ConfigGroups;
 import com.streamsets.pipeline.api.ExecutionMode;
 import com.streamsets.pipeline.api.GenerateResourceBundle;
 import com.streamsets.pipeline.api.Stage;
+import com.streamsets.pipeline.api.StageDef;
+import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.ValueChooser;
 import com.streamsets.pipeline.config.DeliveryGuarantee;
 import com.streamsets.pipeline.config.DeliveryGuaranteeChooserValues;
@@ -19,16 +21,17 @@ import com.streamsets.pipeline.config.MemoryLimitExceeded;
 import com.streamsets.pipeline.config.MemoryLimitExceededChooserValues;
 import com.streamsets.pipeline.config.PipelineGroups;
 
+import java.util.Collections;
+import java.util.List;
 import java.util.Map;
 
-//TODO: use this class as initialization bean for the pipeline configuration
-//
 // we are using the annotation for reference purposes only.
 // the annotation processor does not work on this maven project
 // we have a hardcoded 'datacollector-resource-bundles.json' file in resources
 @GenerateResourceBundle
+@StageDef(version = "1.0.0", label = "Pipeline")
 @ConfigGroups(PipelineGroups.class)
-public abstract class PipelineConfigBean implements Stage {
+public class PipelineConfigBean implements Stage {
 
   public static final String EXECUTION_MODE_CONFIG = "executionMode";
   @ConfigDef(
@@ -186,4 +189,18 @@ public abstract class PipelineConfigBean implements Stage {
     triggeredByValue = "CLUSTER"
   )
   public Map clusterLauncherEnv;
+
+  @Override
+  public List<ConfigIssue> validateConfigs(Info info, Context context) throws StageException {
+    return Collections.emptyList();
+  }
+
+  @Override
+  public void init(Info info, Context context) throws StageException {
+  }
+
+  @Override
+  public void destroy() {
+  }
+
 }

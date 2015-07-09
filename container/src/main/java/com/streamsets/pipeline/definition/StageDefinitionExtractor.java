@@ -23,6 +23,7 @@ import com.streamsets.pipeline.config.RawSourceDefinition;
 import com.streamsets.pipeline.config.StageDefinition;
 import com.streamsets.pipeline.config.StageLibraryDefinition;
 import com.streamsets.pipeline.config.StageType;
+import com.streamsets.pipeline.creation.PipelineConfigBean;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -220,6 +221,8 @@ public abstract class StageDefinitionExtractor {
       type = StageType.PROCESSOR;
     } else if (Target.class.isAssignableFrom(klass)) {
       type = StageType.TARGET;
+    } else if (PipelineConfigBean.class.isAssignableFrom(klass)) {
+      type = StageType.PIPELINE;
     } else {
       type = null;
     }

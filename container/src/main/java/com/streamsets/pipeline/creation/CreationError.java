@@ -14,12 +14,17 @@ public enum CreationError implements ErrorCode {
 
   CREATION_000("Failed to instantiate stage '{}' [ERROR]: {}"),
   CREATION_001("Failed to instantiate config bean '{}' [ERROR]: {}"),
-  CREATION_002("Configuration definition missing, there is a library/stage mismatch [ERROR]"),
+  CREATION_002("Configuration definition missing '{}', there is a library/stage mismatch [ERROR]"),
   CREATION_003("Failed to access config bean [ERROR]: {}"),
 
   CREATION_004("Could not set default value to configuration [ERROR]: {}"),
 
   CREATION_005("Could not resolve implicit EL expression '{}': {}"),
+
+  CREATION_006("Stage definition not found Library '{}' Stage '{}' Version '{}'"),
+
+  CREATION_007("Stage definition Library '{}' Stage '{}' Version '{}' is for error stages only"),
+  CREATION_008("Stage definition Library '{}' Stage '{}' Version '{}' is not for error stages"),
 
   CREATION_010("Configuration value '{}' is not a valid '{}' enum value: {}"),
   CREATION_011("Configuration value '{}' is not string, it is a '{}'"),
