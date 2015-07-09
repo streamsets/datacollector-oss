@@ -5,7 +5,6 @@
  */
 package com.streamsets.pipeline.store;
 
-import com.streamsets.dataCollector.execution.PipelineStateStore;
 import com.streamsets.pipeline.config.PipelineConfiguration;
 import com.streamsets.pipeline.config.RuleDefinitions;
 import com.streamsets.pipeline.task.Task;
@@ -14,9 +13,6 @@ import java.util.List;
 
 public interface PipelineStoreTask extends Task {
   public static final int SCHEMA_VERSION = 1;
-
-  // for now, pipelinestatestore should be injected in pipelinestoretask
-  public void registerListener(PipelineStateStore pipelineStateStore);
 
   public PipelineConfiguration create(String user, String name, String description) throws PipelineStoreException;
 

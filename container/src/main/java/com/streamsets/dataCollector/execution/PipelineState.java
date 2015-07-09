@@ -19,7 +19,7 @@ public interface PipelineState {
 
   public long getTimeStamp();
 
-  public PipelineStatus getState();
+  public PipelineStatus getStatus();
 
   public String getMessage();
 

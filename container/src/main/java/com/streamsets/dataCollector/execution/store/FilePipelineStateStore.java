@@ -71,9 +71,9 @@ public class FilePipelineStateStore implements PipelineStateStore {
   @Override
   public PipelineState edited(String user, String name, String rev, ExecutionMode executionMode) throws PipelineStoreException {
     PipelineState pipelineState = getState(name, rev);
-    Utils.checkState(!pipelineState.getState().isActive(),
-      Utils.format("Cannot edit pipeline in state: '{}'", pipelineState.getState()));
-    if (pipelineState.getState() != PipelineStatus.EDITED || executionMode != pipelineState.getExecutionMode()) {
+    Utils.checkState(!pipelineState.getStatus().isActive(),
+      Utils.format("Cannot edit pipeline in state: '{}'", pipelineState.getStatus()));
+    if (pipelineState.getStatus() != PipelineStatus.EDITED || executionMode != pipelineState.getExecutionMode()) {
       return saveState(user, name, rev, PipelineStatus.EDITED, "Pipeline edited", null, executionMode);
     } else {
       return null;

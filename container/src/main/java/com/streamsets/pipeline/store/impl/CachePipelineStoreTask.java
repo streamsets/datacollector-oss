@@ -56,11 +56,6 @@ public class CachePipelineStoreTask extends AbstractTask implements PipelineStor
   }
 
   @Override
-  public void registerListener(PipelineStateStore pipelineStateStore) {
-    pipelineStore.registerListener(pipelineStateStore);
-  }
-
-  @Override
   public synchronized PipelineConfiguration create(String user, String name, String description) throws PipelineStoreException {
     PipelineConfiguration pipelineConf =  pipelineStore.create(user, name, description);
     pipelineInfoMap.put(name, pipelineConf.getInfo());

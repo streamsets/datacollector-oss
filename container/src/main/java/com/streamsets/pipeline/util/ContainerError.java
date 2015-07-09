@@ -79,6 +79,9 @@ public enum ContainerError implements ErrorCode {
   CONTAINER_0208("Pipeline in state '{}' cannot be saved"),
   CONTAINER_0209("Pipeline state file '{}' doesn't exist"),
   CONTAINER_0210("Cannot fetch JSON string: {}"),
+  CONTAINER_0211("Pipeline state doesn't exist for pipeline '{}::{}' in execution mode: '{}'"),
+  CONTAINER_0212("Cannot save state of pipeline '{}::{}' in execution mode: '{}' as there is already an existing"
+    + "pipeline '{}::{}'"),
 
   //Previewr
   CONTAINER_0250("Cannot create previewer: '{}'"),

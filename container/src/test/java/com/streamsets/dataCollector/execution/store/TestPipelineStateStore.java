@@ -203,8 +203,8 @@ public class TestPipelineStateStore {
     pipelineStateStore.saveState("user1", "aaa", "0", PipelineStatus.RUNNING, "Pipeline stopped", null, ExecutionMode.STANDALONE);
     List<PipelineState> history = pipelineStateStore.getHistory("aaa", "0", true);
     for (PipelineState pipelineState: history) {
-      assertEquals(PipelineStatus.RUNNING, pipelineState.getState());
-      assertEquals(PipelineStatus.STOPPED, pipelineState.getState());
+      assertEquals(PipelineStatus.RUNNING, pipelineState.getStatus());
+      assertEquals(PipelineStatus.STOPPED, pipelineState.getStatus());
     }
   }
 
@@ -224,7 +224,7 @@ public class TestPipelineStateStore {
     assertEquals("user1", pipelineState.getUser());
     assertEquals("aaa", pipelineState.getName());
     assertEquals("0", pipelineState.getRev());
-    assertEquals(PipelineStatus.EDITED, pipelineState.getState());
+    assertEquals(PipelineStatus.EDITED, pipelineState.getStatus());
     assertEquals("Pipeline edited", pipelineState.getMessage());
     assertEquals(ExecutionMode.STANDALONE, pipelineState.getExecutionMode());
   }
@@ -247,7 +247,7 @@ public class TestPipelineStateStore {
     assertEquals("user2", pipelineState.getUser());
     assertEquals("aaa", pipelineState.getName());
     assertEquals("0", pipelineState.getRev());
-    assertEquals(PipelineStatus.EDITED, pipelineState.getState());
+    assertEquals(PipelineStatus.EDITED, pipelineState.getStatus());
 
     pipelineStateStore.saveState("user1", "aaa", "0", PipelineStatus.RUNNING, "Pipeline running", null, ExecutionMode.STANDALONE);
     try {

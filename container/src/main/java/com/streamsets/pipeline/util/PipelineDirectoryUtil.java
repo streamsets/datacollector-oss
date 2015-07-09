@@ -14,6 +14,7 @@ public class PipelineDirectoryUtil {
 
   public static final String PIPELINE_BASE_DIR = "runInfo";
   private static final String SNAPSHOTS_BASE_DIR = "snapshots";
+  public static final String PIPELINE_INFO_BASE_DIR = "pipelines";
 
   public static File getPipelineDir(RuntimeInfo runtimeInfo, String pipelineName, String rev) {
     File pipelineDir = new File(new File(new File(runtimeInfo.getDataDir(), PIPELINE_BASE_DIR),

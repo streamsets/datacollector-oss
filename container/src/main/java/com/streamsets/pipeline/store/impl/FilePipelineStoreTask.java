@@ -77,7 +77,7 @@ public class FilePipelineStoreTask extends AbstractTask implements PipelineStore
   private final RuntimeInfo runtimeInfo;
   private File storeDir;
   private final ObjectMapper json;
-  private PipelineStateStore pipelineStateStore;
+  private final PipelineStateStore pipelineStateStore;
 
   //rules can be modified while the pipeline is running
   //runner will look up the rule definition before running each batch, we need synchronization
@@ -101,14 +101,12 @@ public class FilePipelineStoreTask extends AbstractTask implements PipelineStore
   }
 
   @Override
-  public void registerListener(PipelineStateStore pipelineStateStore) {
-    this.pipelineStateStore = pipelineStateStore;
-  }
-
-
-  @Override
   protected void initTask() {
-    storeDir = new File(runtimeInfo.getDataDir(), "pipelines");
+    if (runtimeInfo.getExecutionMode() == RuntimeInfo.ExecutionMode.SLAVE) {
+      storeDir = new File(runtimeInfo.getDataDir());
+    } else {
+      storeDir = new File(runtimeInfo.getDataDir(), "pipelines");
+    }
     if (!storeDir.exists()) {
       if (!storeDir.mkdirs()) {
         throw new RuntimeException(Utils.format("Could not create directory '{}'", storeDir.getAbsolutePath()));
@@ -214,7 +212,7 @@ public class FilePipelineStoreTask extends AbstractTask implements PipelineStore
     }
     if (pipelineStateStore != null) {
      // For now, passing rev 0 - make delete take tag/rev as a parameter
-      PipelineStatus pipelineStatus = pipelineStateStore.getState(name, REV).getState();
+      PipelineStatus pipelineStatus = pipelineStateStore.getState(name, REV).getStatus();
       if (pipelineStatus.isActive()) {
         throw new PipelineStoreException(ContainerError.CONTAINER_0208, pipelineStatus);
       }
@@ -277,7 +275,7 @@ public class FilePipelineStoreTask extends AbstractTask implements PipelineStore
       throw new PipelineStoreException(ContainerError.CONTAINER_0205, name);
     }
     if (pipelineStateStore != null) {
-      PipelineStatus pipelineStatus = pipelineStateStore.getState(name, tag).getState();
+      PipelineStatus pipelineStatus = pipelineStateStore.getState(name, tag).getStatus();
       if (pipelineStatus.isActive()) {
         throw new PipelineStoreException(ContainerError.CONTAINER_0208, pipelineStatus);
       }

@@ -267,7 +267,7 @@ public class StandaloneRunner implements Runner, StateListener {
 
   @Override
   public PipelineStatus getStatus() throws PipelineStoreException {
-    return pipelineStateStore.getState(name, rev).getState();
+    return pipelineStateStore.getState(name, rev).getStatus();
   }
 
   @Override

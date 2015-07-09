@@ -160,7 +160,7 @@ public class PipelineManager extends AbstractTask implements Manager, PreviewerL
       try {
         PipelineState pipelineState = pipelineStateStore.getState(name, rev);
         // Create runner if active
-        if (pipelineState.getState().isActive()) {
+        if (pipelineState.getStatus().isActive()) {
           Runner runner = getRunner(pipelineState, name, rev);
           runner.prepareForDataCollectorStart();
           if (runner.getStatus() == PipelineStatus.DISCONNECTED) {
@@ -237,7 +237,7 @@ public class PipelineManager extends AbstractTask implements Manager, PreviewerL
   }
 
   private Runner getRunner(PipelineState pipelineState, String name, String rev) throws PipelineStoreException {
-    LOG.debug("Pipeline status of pipeline: '{}::{}' is: '{}'", name, rev, pipelineState.getState());
+    LOG.debug("Status of pipeline: '{}::{}' is: '{}'", name, rev, pipelineState.getStatus());
     Runner runner = runnerProvider.createRunner(pipelineState.getUser(), name, rev,
       pipelineStore.load(name, rev), objectGraph);
     return runner;

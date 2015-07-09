@@ -21,7 +21,7 @@ public class PipelineStateImpl implements PipelineState {
   private final long timeStamp;
   private final Map<String, Object> attributes;
   private final String user;
-  private ExecutionMode executionMode;
+  private final ExecutionMode executionMode;
 
   @SuppressWarnings("unchecked")
   public PipelineStateImpl(String user, String name, String rev, PipelineStatus status, String message, long timeStamp,
@@ -42,7 +42,7 @@ public class PipelineStateImpl implements PipelineState {
   }
 
   @Override
-  public PipelineStatus getState() {
+  public PipelineStatus getStatus() {
     return this.status;
   }
 
@@ -69,7 +69,7 @@ public class PipelineStateImpl implements PipelineState {
   @Override
   public String toString() {
     return Utils.format("PipelineState[name='{}' rev='{}' state='{}' message='{}' timeStamp='{}' attributes='{}']",
-      getName(), getRev(), getState().name(), getMessage(), getTimeStamp(), getAttributes());
+      getName(), getRev(), getStatus().name(), getMessage(), getTimeStamp(), getAttributes());
   }
 
   @Override

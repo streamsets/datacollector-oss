@@ -220,7 +220,7 @@ public class TestPipelineManager {
 
     pipelineStates = pipelineManager.getPipelines();
     assertEquals(1, pipelineStates.size());
-    assertEquals(PipelineStatus.FINISHED, pipelineStates.get(0).getState());
+    assertEquals(PipelineStatus.FINISHED, pipelineStates.get(0).getStatus());
     // no runner is created
     assertFalse(((PipelineManager) pipelineManager).isRunnerPresent("aaaa", "0"));
   }

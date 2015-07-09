@@ -6,7 +6,12 @@
 package com.streamsets.pipeline.store.impl;
 
 import com.google.common.collect.ImmutableList;
+
+import static org.junit.Assert.assertEquals;
+
+import com.codahale.metrics.MetricRegistry;
 import com.streamsets.dataCollector.execution.PipelineStateStore;
+import com.streamsets.dataCollector.execution.store.TestPipelineStateStore;
 import com.streamsets.pipeline.api.ExecutionMode;
 import com.streamsets.pipeline.config.ConfigConfiguration;
 import com.streamsets.pipeline.config.DataRuleDefinition;
@@ -21,14 +26,18 @@ import com.streamsets.pipeline.config.StageConfiguration;
 import com.streamsets.pipeline.config.ThresholdType;
 import com.streamsets.pipeline.definition.PipelineDefConfigs;
 import com.streamsets.pipeline.main.RuntimeInfo;
+import com.streamsets.pipeline.main.RuntimeModule;
 import com.streamsets.pipeline.runner.MockStages;
 import com.streamsets.pipeline.stagelibrary.StageLibraryTask;
 import com.streamsets.pipeline.store.PipelineInfo;
 import com.streamsets.pipeline.store.PipelineStoreException;
 import com.streamsets.pipeline.store.PipelineStoreTask;
 import com.streamsets.pipeline.util.ContainerError;
+import com.streamsets.pipeline.util.PipelineDirectoryUtil;
+
 import dagger.ObjectGraph;
 import dagger.Provides;
+
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
@@ -36,6 +45,7 @@ import org.junit.Test;
 import org.mockito.Mockito;
 
 import javax.inject.Singleton;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
