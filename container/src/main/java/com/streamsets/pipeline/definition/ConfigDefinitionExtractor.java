@@ -7,6 +7,7 @@ package com.streamsets.pipeline.definition;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
+import com.streamsets.pipeline.api.ComplexField;
 import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.ConfigDefBean;
 import com.streamsets.pipeline.api.impl.ErrorMessage;
@@ -35,11 +36,15 @@ public abstract class ConfigDefinitionExtractor {
   }
 
   public List<ErrorMessage> validate(Class klass, Object contextMsg) {
-    return validate("", klass, true, false, contextMsg);
+    return validate("", klass, true, false, false, contextMsg);
+  }
+
+  public List<ErrorMessage> validateComplexField(String configPrefix, Class klass, Object contextMsg) {
+    return validate(configPrefix, klass, true, false, true, contextMsg);
   }
 
   private List<ErrorMessage> validate(String configPrefix, Class klass, boolean validateDependencies, boolean isBean,
-      Object contextMsg) {
+      boolean isComplexField, Object contextMsg) {
     List<ErrorMessage> errors = new ArrayList<>();
     boolean noConfigs = true;
     for (Field field : klass.getDeclaredFields()) {
@@ -59,13 +64,14 @@ public abstract class ConfigDefinitionExtractor {
         }
         if (field.getAnnotation(ConfigDef.class) != null) {
           noConfigs = false;
-          List<ErrorMessage> subErrors = validateConfigDef(configPrefix, field,
-                                                           Utils.formatL("{} Field='{}'", contextMsg, field.getName()));
+          List<ErrorMessage> subErrors = validateConfigDef(configPrefix, field, isComplexField,
+                                                           Utils.formatL("{} Field='{}'", contextMsg,
+                                                                         field.getName()));
           errors.addAll(subErrors);
         } else if (field.getAnnotation(ConfigDefBean.class) != null) {
           noConfigs = false;
           List<ErrorMessage> subErrors = validateConfigDefBean(configPrefix + field.getName() + ".", field.getType(),
-              Utils.formatL("{} BeanField='{}'", contextMsg, field.getName()));
+              isComplexField, Utils.formatL("{} BeanField='{}'", contextMsg, field.getName()));
           errors.addAll(subErrors);
         }
       }
@@ -74,7 +80,7 @@ public abstract class ConfigDefinitionExtractor {
       errors.add(new ErrorMessage(DefinitionError.DEF_160, contextMsg));
     }
     if (errors.isEmpty() & validateDependencies) {
-      errors.addAll(validateDependencies(getConfigDefinitions("", klass, contextMsg), contextMsg));
+      errors.addAll(validateDependencies(getConfigDefinitions(configPrefix, klass, contextMsg), contextMsg));
     }
     return errors;
   }
@@ -86,20 +92,24 @@ public abstract class ConfigDefinitionExtractor {
         defs.add(extractConfigDef(configPrefix, field, Utils.formatL("{} Field='{}'", contextMsg, field.getName())));
       } else if (field.getAnnotation(ConfigDefBean.class) != null) {
         defs.addAll(extract(configPrefix + field.getName() + ".", field.getType(), true,
-                            Utils.formatL("{} BeanField='{}'", contextMsg, field.getName())));
+            Utils.formatL("{} BeanField='{}'", contextMsg, field.getName())));
       }
     }
     return defs;
   }
 
   public List<ConfigDefinition> extract(Class klass, Object contextMsg) {
-    List<ConfigDefinition> defs = extract("", klass, false, contextMsg);
+    return extract("", klass, contextMsg);
+  }
+
+  public List<ConfigDefinition> extract(String configPrefix, Class klass, Object contextMsg) {
+    List<ConfigDefinition> defs = extract(configPrefix, klass, false, contextMsg);
     resolveDependencies("", defs, contextMsg);
     return defs;
   }
 
   private List<ConfigDefinition> extract(String configPrefix, Class klass, boolean isBean, Object contextMsg) {
-    List<ErrorMessage> errors = validate(configPrefix, klass, false, isBean, contextMsg);
+    List<ErrorMessage> errors = validate(configPrefix, klass, false, isBean, false, contextMsg);
     if (errors.isEmpty()) {
       return getConfigDefinitions(configPrefix, klass, contextMsg);
     } else {
@@ -167,33 +177,39 @@ public abstract class ConfigDefinitionExtractor {
     }
   }
 
-  List<ErrorMessage> validateConfigDef(String configPrefix, Field field, Object contextMsg) {
+  List<ErrorMessage> validateConfigDef(String configPrefix, Field field, boolean isComplexField, Object contextMsg) {
     List<ErrorMessage> errors = new ArrayList<>();
     ConfigDef annotation = field.getAnnotation(ConfigDef.class);
     errors.addAll(ConfigValueExtractor.get().validate(field, annotation, contextMsg));
-    List<ErrorMessage> modelErrors = ModelDefinitionExtractor.get().validate(field, contextMsg);
-    if (modelErrors.isEmpty()) {
-      ModelDefinition model = ModelDefinitionExtractor.get().extract(field, contextMsg);
-      errors.addAll(validateELFunctions(annotation, model, contextMsg));
-      errors.addAll(validateELConstants(annotation, model, contextMsg));
+    if (annotation.type() == ConfigDef.Type.MODEL && field.getAnnotation(ComplexField.class) != null && isComplexField) {
+      errors.add(new ErrorMessage(DefinitionError.DEF_161, contextMsg,  field.getName()));
     } else {
-      errors.addAll(modelErrors);
+      List<ErrorMessage> modelErrors = ModelDefinitionExtractor.get().validate(configPrefix + field.getName() + ".", field, contextMsg);
+      if (modelErrors.isEmpty()) {
+        ModelDefinition model = ModelDefinitionExtractor.get().extract(configPrefix + field.getName() + ".", field, contextMsg);
+        errors.addAll(validateELFunctions(annotation, model, contextMsg));
+        errors.addAll(validateELConstants(annotation, model, contextMsg));
+      } else {
+        errors.addAll(modelErrors);
+      }
+      if (annotation.type() != ConfigDef.Type.NUMBER &&
+          (annotation.min() != Long.MIN_VALUE || annotation.max() != Long.MAX_VALUE)) {
+        errors.add(new ErrorMessage(DefinitionError.DEF_155, contextMsg, field.getName()));
+      }
+      errors.addAll(validateDependsOnName(configPrefix, annotation.dependsOn(),
+                                          Utils.formatL("{} Field='{}'", contextMsg, field.getName())));
     }
-    if (annotation.type() != ConfigDef.Type.NUMBER &&
-        (annotation.min() != Long.MIN_VALUE || annotation.max() != Long.MAX_VALUE)) {
-      errors.add(new ErrorMessage(DefinitionError.DEF_155, contextMsg, field.getName()));
-    }
-    errors.addAll(validateDependsOnName(configPrefix, annotation.dependsOn(),
-                                        Utils.formatL("{} Field='{}'", contextMsg, field.getName())));
     return errors;
   }
 
   @SuppressWarnings("unchecked")
-  List<ErrorMessage> validateConfigDefBean(String configPrefix, Class klass, Object contextMsg) {
+  List<ErrorMessage> validateConfigDefBean(String configPrefix, Class klass, boolean isComplexField, Object contextMsg) {
     List<ErrorMessage> errors = new ArrayList<>();
     try {
-      klass.getConstructor();
-      errors.addAll(validate(configPrefix, klass, false, true, contextMsg));
+      if (!klass.isPrimitive()) {
+        klass.getConstructor();
+      }
+      errors.addAll(validate(configPrefix, klass, false, true, isComplexField, contextMsg));
     } catch (NoSuchMethodException ex) {
       errors.add(new ErrorMessage(DefinitionError.DEF_156, contextMsg, klass.getSimpleName()));
     }
@@ -201,7 +217,7 @@ public abstract class ConfigDefinitionExtractor {
   }
 
   ConfigDefinition extractConfigDef(String configPrefix, Field field, Object contextMsg) {
-    List<ErrorMessage> errors = validateConfigDef(configPrefix, field, contextMsg);
+    List<ErrorMessage> errors = validateConfigDef(configPrefix, field, false, contextMsg);
     if (errors.isEmpty()) {
       ConfigDefinition def = null;
       ConfigDef annotation = field.getAnnotation(ConfigDef.class);
@@ -216,7 +232,8 @@ public abstract class ConfigDefinitionExtractor {
         String fieldName = field.getName();
         String dependsOn = resolveDependsOn(configPrefix, annotation.dependsOn());
         List<Object> triggeredByValues = null;  // done at resolveDependencies() invocation
-        ModelDefinition model = ModelDefinitionExtractor.get().extract(field, contextMsg);
+        ModelDefinition model = ModelDefinitionExtractor.get().extract(configPrefix + field.getName() + ".", field,
+                                                                       contextMsg);
         int displayPosition = annotation.displayPosition();
         List<ElFunctionDefinition> elFunctionDefinitions = getELFunctions(annotation, model, contextMsg);
         List<ElConstantDefinition> elConstantDefinitions = getELConstants(annotation, model ,contextMsg);

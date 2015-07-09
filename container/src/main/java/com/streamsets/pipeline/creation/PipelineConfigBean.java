@@ -3,7 +3,7 @@
  * be copied, modified, or distributed in whole or part without
  * written consent of StreamSets, Inc.
  */
-package com.streamsets.pipeline.definition;
+package com.streamsets.pipeline.creation;
 
 import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.ConfigGroups;
@@ -28,7 +28,7 @@ import java.util.Map;
 // we have a hardcoded 'datacollector-resource-bundles.json' file in resources
 @GenerateResourceBundle
 @ConfigGroups(PipelineGroups.class)
-public abstract class PipelineDefConfigs implements Stage {
+public abstract class PipelineConfigBean implements Stage {
 
   public static final String EXECUTION_MODE_CONFIG = "executionMode";
   @ConfigDef(

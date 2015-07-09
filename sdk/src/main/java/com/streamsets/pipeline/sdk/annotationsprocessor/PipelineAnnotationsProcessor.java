@@ -317,29 +317,29 @@ public class PipelineAnnotationsProcessor extends AbstractProcessor {
             if(fieldSelector.singleValued()) {
               modelType = ModelType.FIELD_SELECTOR_SINGLE_VALUED;
             }
-            model = new ModelDefinition(modelType, null, null, null, null);
+            model = new ModelDefinition(modelType, null, null, null, null, null);
           }
           FieldValueChooser fieldValueChooser = variableElement.getAnnotation(FieldValueChooser.class);
           //processingEnv.
           if (fieldValueChooser != null) {
             model = new ModelDefinition(ModelType.FIELD_VALUE_CHOOSER,
                                         getValuesProvider(fieldValueChooser)
-                , null, null, null);
+                , null, null, null, null);
           }
           ValueChooser valueChooser = variableElement.getAnnotation(ValueChooser.class);
           if(valueChooser != null) {
             model = new ModelDefinition(ModelType.VALUE_CHOOSER,
                                         getValuesProvider(valueChooser)
-                , null, null, null);
+                , null, null, null, null);
           }
           LanePredicateMapping lanePredicateMapping = variableElement.getAnnotation(LanePredicateMapping.class);
           if (lanePredicateMapping != null) {
-            model = new ModelDefinition(ModelType.LANE_PREDICATE_MAPPING, null, null, null, null);
+            model = new ModelDefinition(ModelType.LANE_PREDICATE_MAPPING, null, null, null, null, null);
           }
           ComplexField complexField = variableElement.getAnnotation(ComplexField.class);
           if(complexField != null) {
             String typeName = getTypeNameFromComplexField(variableElement);
-            model = new ModelDefinition(ModelType.COMPLEX_FIELD, null, null, null,
+            model = new ModelDefinition(ModelType.COMPLEX_FIELD, null, null, null, null,
               getConfigDefsFromTypeElement(getTypeElementFromName(typeName)));
           }
         }

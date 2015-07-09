@@ -20,7 +20,7 @@ import com.streamsets.pipeline.config.ConfigConfiguration;
 import com.streamsets.pipeline.config.ConfigDefinition;
 import com.streamsets.pipeline.config.ModelType;
 import com.streamsets.pipeline.config.PipelineConfiguration;
-import com.streamsets.pipeline.definition.PipelineDefConfigs;
+import com.streamsets.pipeline.creation.PipelineConfigBean;
 import com.streamsets.pipeline.config.PipelineGroups;
 import com.streamsets.pipeline.config.StageConfiguration;
 import com.streamsets.pipeline.config.StageDefinition;
@@ -151,17 +151,17 @@ public class PipelineConfigurationValidator {
     return !issues.hasIssues();
   }
   private boolean validateClusterModeConfig() {
-    ConfigConfiguration executionConfigMode = pipelineConfiguration.getConfiguration(PipelineDefConfigs.
+    ConfigConfiguration executionConfigMode = pipelineConfiguration.getConfiguration(PipelineConfigBean.
       EXECUTION_MODE_CONFIG);
     ExecutionMode executionMode = (executionConfigMode == null) ? ExecutionMode.STANDALONE
       : ExecutionMode.valueOf((String) executionConfigMode.getValue());
-    ConfigConfiguration kerberosAuth = pipelineConfiguration.getConfiguration(PipelineDefConfigs.
+    ConfigConfiguration kerberosAuth = pipelineConfiguration.getConfiguration(PipelineConfigBean.
       CLUSTER_KERBEROS_AUTH_CONFIG);
     if (executionMode == ExecutionMode.CLUSTER && kerberosAuth != null && (Boolean)kerberosAuth.getValue()
       && !Boolean.getBoolean(RuntimeInfo.TRANSIENT_ENVIRONMENT)) {
-      ConfigConfiguration kerberosPrinc = pipelineConfiguration.getConfiguration(PipelineDefConfigs.
+      ConfigConfiguration kerberosPrinc = pipelineConfiguration.getConfiguration(PipelineConfigBean.
         CLUSTER_KERBEROS_PRINCIPAL_CONFIG);
-      ConfigConfiguration kerberosKeytab = pipelineConfiguration.getConfiguration(PipelineDefConfigs.
+      ConfigConfiguration kerberosKeytab = pipelineConfiguration.getConfiguration(PipelineConfigBean.
         CLUSTER_KERBEROS_KEYTAB_CONFIG);
       if (Strings.nullToEmpty((String)kerberosPrinc.getValue()).trim().isEmpty()) {
         issues.addP(new Issue(kerberosPrinc.getName(), "CLUSTER", ValidationError.VALIDATION_0033,
@@ -182,7 +182,7 @@ public class PipelineConfigurationValidator {
   }
   private boolean validateStagesExecutionMode(StageIssueCreator issueCreator, List<StageConfiguration> stageConfigs) {
     boolean canPreview = true;
-    ConfigConfiguration conf = pipelineConfiguration.getConfiguration(PipelineDefConfigs.EXECUTION_MODE_CONFIG);
+    ConfigConfiguration conf = pipelineConfiguration.getConfiguration(PipelineConfigBean.EXECUTION_MODE_CONFIG);
     ExecutionMode executionMode = (conf == null) ? ExecutionMode.STANDALONE
                                                  : ExecutionMode.valueOf((String) conf.getValue());
     for (StageConfiguration stageConf : stageConfigs) {
@@ -218,7 +218,7 @@ public class PipelineConfigurationValidator {
     List<ConfigConfiguration> configs = pipelineConfiguration.getConfiguration();
     if (configs != null) {
       for (ConfigConfiguration config : configs) {
-        if (PipelineDefConfigs.MEMORY_LIMIT_CONFIG.equals(config.getName())) {
+        if (PipelineConfigBean.MEMORY_LIMIT_CONFIG.equals(config.getName())) {
           try {
             //Memory limit configuration expects a long value.
             //However the user could provide an El expression or refer to this value using an EL constant or
@@ -884,7 +884,7 @@ public class PipelineConfigurationValidator {
   boolean validateErrorStage() {
     boolean preview = true;
     if (pipelineConfiguration.getErrorStage() == null) {
-      issues.addP(new Issue(PipelineDefConfigs.ERROR_RECORDS_CONFIG, PipelineGroups.BAD_RECORDS.name(),
+      issues.addP(new Issue(PipelineConfigBean.ERROR_RECORDS_CONFIG, PipelineGroups.BAD_RECORDS.name(),
                             ValidationError.VALIDATION_0060));
       preview = false;
     } else {
@@ -902,14 +902,14 @@ public class PipelineConfigurationValidator {
     if (configValue instanceof Map) {
       Map<Object, Object> evaluatedMap = new HashMap<>();
       for(Map.Entry<Object, Object> e : ((Map<Object, Object>)configValue).entrySet()) {
-        evaluatedMap.put(e.getKey(), ElUtil.evaluate(e.getValue(), var, stageDef, confDef, constants));
+        evaluatedMap.put(e.getKey(), ElUtil.evaluate(e.getValue(), stageDef, confDef, constants));
       }
       value = evaluatedMap;
     } else if (configValue instanceof List) {
       if (confDef.getType() == ConfigDef.Type.LIST) {
         List<Object> evaluatedValue = new ArrayList<>();
         for (Object e : (List) configValue) {
-          evaluatedValue.add(ElUtil.evaluate(e, var, stageDef, confDef, constants));
+          evaluatedValue.add(ElUtil.evaluate(e, stageDef, confDef, constants));
         }
         value = evaluatedValue;
       } else if (confDef.getType() == ConfigDef.Type.MAP) {
@@ -922,13 +922,13 @@ public class PipelineConfigurationValidator {
           Object key = map.get("key");
           Object val = map.get("value");
           evaluatedMap.put("key", key);
-          evaluatedMap.put("value", ElUtil.evaluate(val, var, stageDef, confDef, constants));
+          evaluatedMap.put("value", ElUtil.evaluate(val, stageDef, confDef, constants));
           evaluatedList.add(evaluatedMap);
         }
         value = evaluatedList;
       }
     } else {
-      value = ElUtil.evaluate(configValue, var, stageDef, confDef, constants);
+      value = ElUtil.evaluate(configValue, stageDef, confDef, constants);
     }
     return value;
   }

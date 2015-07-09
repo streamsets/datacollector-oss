@@ -19,11 +19,11 @@ import com.streamsets.pipeline.config.DeliveryGuarantee;
 import com.streamsets.pipeline.config.MemoryLimitExceeded;
 import com.streamsets.pipeline.config.MetricsRuleDefinition;
 import com.streamsets.pipeline.config.PipelineConfiguration;
-import com.streamsets.pipeline.definition.PipelineDefConfigs;
 import com.streamsets.pipeline.config.PipelineDefinition;
 import com.streamsets.pipeline.config.RuleDefinitions;
 import com.streamsets.pipeline.config.StageConfiguration;
 import com.streamsets.pipeline.config.StageDefinition;
+import com.streamsets.pipeline.creation.PipelineConfigBean;
 import com.streamsets.pipeline.io.DataStore;
 import com.streamsets.pipeline.json.ObjectMapperFactory;
 import com.streamsets.pipeline.main.RuntimeInfo;
@@ -162,25 +162,25 @@ public class FilePipelineStoreTask extends AbstractTask implements PipelineStore
     List<ConfigConfiguration> configuration = new ArrayList<>(4);
     ExecutionMode executionMode = runtimeInfo.getExecutionMode() == RuntimeInfo.ExecutionMode.STANDALONE ?
       ExecutionMode.STANDALONE : ExecutionMode.CLUSTER;
-    configuration.add(new ConfigConfiguration(PipelineDefConfigs.EXECUTION_MODE_CONFIG,
+    configuration.add(new ConfigConfiguration(PipelineConfigBean.EXECUTION_MODE_CONFIG,
       executionMode.name()));
-    configuration.add(new ConfigConfiguration(PipelineDefConfigs.CLUSTER_SLAVE_MEMORY_CONFIG,
-                                              Integer.parseInt(PipelineDefConfigs.CLUSTER_SLAVE_MEMORY_DEFAULT)));
-    configuration.add(new ConfigConfiguration(PipelineDefConfigs.CLUSTER_SLAVE_JAVA_OPTS_CONFIG,
-      PipelineDefConfigs.CLUSTER_SLAVE_JAVA_OPTS_DEFAULT));
-    configuration.add(new ConfigConfiguration(PipelineDefConfigs.CLUSTER_KERBEROS_AUTH_CONFIG,
+    configuration.add(new ConfigConfiguration(PipelineConfigBean.CLUSTER_SLAVE_MEMORY_CONFIG,
+                                              Integer.parseInt(PipelineConfigBean.CLUSTER_SLAVE_MEMORY_DEFAULT)));
+    configuration.add(new ConfigConfiguration(PipelineConfigBean.CLUSTER_SLAVE_JAVA_OPTS_CONFIG,
+      PipelineConfigBean.CLUSTER_SLAVE_JAVA_OPTS_DEFAULT));
+    configuration.add(new ConfigConfiguration(PipelineConfigBean.CLUSTER_KERBEROS_AUTH_CONFIG,
       false));
-    configuration.add(new ConfigConfiguration(PipelineDefConfigs.CLUSTER_KERBEROS_PRINCIPAL_CONFIG, ""));
-    configuration.add(new ConfigConfiguration(PipelineDefConfigs.CLUSTER_KERBEROS_KEYTAB_CONFIG, ""));
-    configuration.add(new ConfigConfiguration(PipelineDefConfigs.CLUSTER_LAUNCHER_ENV_CONFIG, new ArrayList<>()));
-    configuration.add(new ConfigConfiguration(PipelineDefConfigs.DELIVERY_GUARANTEE_CONFIG,
+    configuration.add(new ConfigConfiguration(PipelineConfigBean.CLUSTER_KERBEROS_PRINCIPAL_CONFIG, ""));
+    configuration.add(new ConfigConfiguration(PipelineConfigBean.CLUSTER_KERBEROS_KEYTAB_CONFIG, ""));
+    configuration.add(new ConfigConfiguration(PipelineConfigBean.CLUSTER_LAUNCHER_ENV_CONFIG, new ArrayList<>()));
+    configuration.add(new ConfigConfiguration(PipelineConfigBean.DELIVERY_GUARANTEE_CONFIG,
       DeliveryGuarantee.AT_LEAST_ONCE.name()));
-    configuration.add(new ConfigConfiguration(PipelineDefConfigs.ERROR_RECORDS_CONFIG, ""));
-    configuration.add(new ConfigConfiguration(PipelineDefConfigs.CONSTANTS_CONFIG, new ArrayList<>()));
-    configuration.add(new ConfigConfiguration(PipelineDefConfigs.MEMORY_LIMIT_EXCEEDED_CONFIG,
+    configuration.add(new ConfigConfiguration(PipelineConfigBean.ERROR_RECORDS_CONFIG, ""));
+    configuration.add(new ConfigConfiguration(PipelineConfigBean.CONSTANTS_CONFIG, new ArrayList<>()));
+    configuration.add(new ConfigConfiguration(PipelineConfigBean.MEMORY_LIMIT_EXCEEDED_CONFIG,
       MemoryLimitExceeded.STOP_PIPELINE.name()));
-    configuration.add(new ConfigConfiguration(PipelineDefConfigs.MEMORY_LIMIT_CONFIG,
-      PipelineDefConfigs.MEMORY_LIMIT_DEFAULT));
+    configuration.add(new ConfigConfiguration(PipelineConfigBean.MEMORY_LIMIT_CONFIG,
+      PipelineConfigBean.MEMORY_LIMIT_DEFAULT));
 
     PipelineConfiguration pipeline = new PipelineConfiguration(SCHEMA_VERSION, uuid, description, configuration, null,
       null, null);
@@ -294,7 +294,7 @@ public class FilePipelineStoreTask extends AbstractTask implements PipelineStore
       json.writeValue(getPipelineFile(name), BeanHelper.wrapPipelineConfiguration(pipeline));
       if (pipelineStateStore != null) {
         ExecutionMode executionMode =
-          ExecutionMode.valueOf((String) pipeline.getConfiguration(PipelineDefConfigs.EXECUTION_MODE_CONFIG)
+          ExecutionMode.valueOf((String) pipeline.getConfiguration(PipelineConfigBean.EXECUTION_MODE_CONFIG)
             .getValue());
         pipelineStateStore.edited(user, name, tag, executionMode);
       }

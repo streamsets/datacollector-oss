@@ -126,28 +126,38 @@ public class TestModelDefinitionExtractor {
     public List<Bean> complexField;
   }
 
+  public static class InvalidConfigs {
+    @ConfigDef(
+        label = "L",
+        type = ConfigDef.Type.MODEL,
+        required = true
+    )
+    @ComplexField(Configs.class)
+    public List<Configs> complexField;
+  }
+
   @Test(expected = IllegalArgumentException.class)
   public void testInvalid1() throws Exception {
     Field f = Configs.class.getField("invalid1");
-    ModelDefinitionExtractor.get().extract(f, "x");
+    ModelDefinitionExtractor.get().extract("", f, "x");
   }
 
   @Test(expected = IllegalArgumentException.class)
   public void testInvalid2() throws Exception {
     Field f = Configs.class.getField("invalid2");
-    ModelDefinitionExtractor.get().extract(f, "x");
+    ModelDefinitionExtractor.get().extract("", f, "x");
   }
 
   @Test(expected = IllegalArgumentException.class)
   public void testInvalid3() throws Exception {
     Field f = Configs.class.getField("invalid3");
-    ModelDefinitionExtractor.get().extract(f, "x");
+    ModelDefinitionExtractor.get().extract("", f, "x");
   }
 
   @Test
   public void testFieldSelectorM() throws Exception {
     Field f = Configs.class.getField("fieldSelectorM");
-    ModelDefinition def = ModelDefinitionExtractor.get().extract(f, "x");
+    ModelDefinition def = ModelDefinitionExtractor.get().extract("", f, "x");
     Assert.assertEquals(null, def.getValues());
     Assert.assertEquals(null, def.getLabels());
     Assert.assertEquals(ModelType.FIELD_SELECTOR_MULTI_VALUED, def.getModelType());
@@ -158,7 +168,7 @@ public class TestModelDefinitionExtractor {
   @Test
   public void testFieldSelectorS() throws Exception {
     Field f = Configs.class.getField("fieldSelectorS");
-    ModelDefinition def = ModelDefinitionExtractor.get().extract(f, "x");
+    ModelDefinition def = ModelDefinitionExtractor.get().extract("", f, "x");
     Assert.assertEquals(null, def.getValues());
     Assert.assertEquals(null, def.getLabels());
     Assert.assertEquals(ModelType.FIELD_SELECTOR_SINGLE_VALUED, def.getModelType());
@@ -169,7 +179,7 @@ public class TestModelDefinitionExtractor {
   @Test
   public void testFieldChooserValue() throws Exception {
     Field f = Configs.class.getField("fieldChooserValue");
-    ModelDefinition def = ModelDefinitionExtractor.get().extract(f, "x");
+    ModelDefinition def = ModelDefinitionExtractor.get().extract("", f, "x");
     Assert.assertEquals(ImmutableList.of("a"), def.getValues());
     Assert.assertEquals(ImmutableList.of("A"), def.getLabels());
     Assert.assertEquals(ModelType.FIELD_VALUE_CHOOSER, def.getModelType());
@@ -180,7 +190,7 @@ public class TestModelDefinitionExtractor {
   @Test
   public void testValueChooserConfig() throws Exception {
     Field f = Configs.class.getField("valueChooser");
-    ModelDefinition def = ModelDefinitionExtractor.get().extract(f, "x");
+    ModelDefinition def = ModelDefinitionExtractor.get().extract("", f, "x");
     Assert.assertEquals(ImmutableList.of("a"), def.getValues());
     Assert.assertEquals(ImmutableList.of("A"), def.getLabels());
     Assert.assertEquals(ModelType.VALUE_CHOOSER, def.getModelType());
@@ -191,7 +201,7 @@ public class TestModelDefinitionExtractor {
   @Test
   public void testLanePredicateMapping() throws Exception {
     Field f = Configs.class.getField("lanePredicateMapping");
-    ModelDefinition def = ModelDefinitionExtractor.get().extract(f, "x");
+    ModelDefinition def = ModelDefinitionExtractor.get().extract("", f, "x");
     Assert.assertEquals(null, def.getValues());
     Assert.assertEquals(null, def.getLabels());
     Assert.assertEquals(ModelType.LANE_PREDICATE_MAPPING, def.getModelType());
@@ -202,14 +212,20 @@ public class TestModelDefinitionExtractor {
   @Test
   public void testComplexField() throws Exception {
     Field f = Configs.class.getField("complexField");
-    ModelDefinition def = ModelDefinitionExtractor.get().extract(f, "x");
+    ModelDefinition def = ModelDefinitionExtractor.get().extract("x.", f, "x");
     Assert.assertEquals(null, def.getValues());
     Assert.assertEquals(null, def.getLabels());
     Assert.assertEquals(ModelType.COMPLEX_FIELD, def.getModelType());
     Assert.assertEquals(null, def.getValuesProviderClass());
     Assert.assertEquals(1, def.getConfigDefinitions().size());
-    Assert.assertEquals("name", def.getConfigDefinitions().get(0).getName());
+    Assert.assertEquals("x.name", def.getConfigDefinitions().get(0).getName());
     Assert.assertEquals(ConfigDef.Type.STRING, def.getConfigDefinitions().get(0).getType());
+  }
+
+  @Test
+  public void testComplexFieldInvalid() throws Exception {
+    Field f = InvalidConfigs.class.getField("complexField");
+    Assert.assertFalse(ModelDefinitionExtractor.get().validate("x.", f, "x").isEmpty());
   }
 
 }

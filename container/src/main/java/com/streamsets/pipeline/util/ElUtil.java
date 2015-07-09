@@ -26,15 +26,15 @@ public class ElUtil {
   private static final String EL_PREFIX = "${";
   private static final String CONSTANTS = "constants";
 
-  public static Object evaluate(Object value, Field field, StageDefinition stageDefinition,
-                                 ConfigDefinition configDefinition,
-                                 Map<String, Object> constants) throws ELEvalException {
+  public static Object evaluate(Object value, StageDefinition stageDefinition,
+      ConfigDefinition configDefinition,
+      Map<String, Object> constants) throws ELEvalException {
     if(configDefinition.getEvaluation() == ConfigDef.Evaluation.IMPLICIT) {
       if(isElString(value)) {
         //its an EL expression, try to evaluate it.
-        ELEvaluator elEvaluator = createElEval(field.getName(), constants, getElDefs(stageDefinition,
+        ELEvaluator elEvaluator = createElEval(configDefinition.getName(), constants, getElDefs(stageDefinition,
           configDefinition));
-        Type genericType = field.getGenericType();
+        Type genericType = configDefinition.getConfigField().getGenericType();
         Class<?> klass;
         if(genericType instanceof ParameterizedType) {
           //As of today the only supported parameterized types are
@@ -42,6 +42,8 @@ public class ElUtil {
           //2. Map<String, String>
           //3. List<Map<String, String>>
           //In all cases we want to return String.class
+          klass = String.class;
+        } else if (genericType instanceof Enum) {
           klass = String.class;
         } else {
           klass = (Class<?>) genericType;

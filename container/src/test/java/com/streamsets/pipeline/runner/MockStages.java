@@ -30,7 +30,7 @@ import com.streamsets.pipeline.config.StageConfiguration;
 import com.streamsets.pipeline.config.StageDefinition;
 import com.streamsets.pipeline.config.StageLibraryDefinition;
 import com.streamsets.pipeline.config.StageType;
-import com.streamsets.pipeline.definition.PipelineDefConfigs;
+import com.streamsets.pipeline.creation.PipelineConfigBean;
 import com.streamsets.pipeline.el.ElConstantDefinition;
 import com.streamsets.pipeline.el.ElFunctionDefinition;
 import com.streamsets.pipeline.stagelibrary.StageLibraryTask;
@@ -583,7 +583,7 @@ public class MockStages {
         List<ConfigDefinition> list = new ArrayList<>();
         list.add(regularConf);
         ModelDefinition modelDefinition = new ModelDefinition(ModelType.COMPLEX_FIELD, null, Collections.<String>emptyList(),
-          Collections.<String>emptyList(), list);
+          Collections.<String>emptyList(), null, list);
 
         ConfigDefinition complexConf = new ConfigDefinition(
           "complexConfName", ConfigDef.Type.MODEL, "complexConfLabel", "complexConfDesc", null, true,
@@ -664,7 +664,7 @@ public class MockStages {
 
   private static List<ConfigConfiguration> createPipelineConfigs() {
     List<ConfigConfiguration> pipelineConfig = new ArrayList<>();
-    pipelineConfig.add(new ConfigConfiguration(PipelineDefConfigs.EXECUTION_MODE_CONFIG,
+    pipelineConfig.add(new ConfigConfiguration(PipelineConfigBean.EXECUTION_MODE_CONFIG,
                                                  ExecutionMode.STANDALONE.name()));
     return pipelineConfig;
   }
@@ -837,7 +837,7 @@ public class MockStages {
                                                        Collections.<ConfigConfiguration>emptyList(), null, lanes, Collections.<String>emptyList());
     stages.add(target);
     return new PipelineConfiguration(PipelineStoreTask.SCHEMA_VERSION, UUID.randomUUID(), null,
-                                     Arrays.asList(new ConfigConfiguration(PipelineDefConfigs.EXECUTION_MODE_CONFIG,
+                                     Arrays.asList(new ConfigConfiguration(PipelineConfigBean.EXECUTION_MODE_CONFIG,
                                                                            executionMode.name())), null, stages,
                                      getErrorStageConfig());
   }
@@ -857,7 +857,7 @@ public class MockStages {
         null, lanes, Collections.<String> emptyList());
     stages.add(target);
     return new PipelineConfiguration(PipelineStoreTask.SCHEMA_VERSION, UUID.randomUUID(), null,
-      Arrays.asList(new ConfigConfiguration(PipelineDefConfigs.EXECUTION_MODE_CONFIG, executionMode.name())), null,
+      Arrays.asList(new ConfigConfiguration(PipelineConfigBean.EXECUTION_MODE_CONFIG, executionMode.name())), null,
       stages, getErrorStageConfig());
   }
 
@@ -877,7 +877,7 @@ public class MockStages {
         Collections.<ConfigConfiguration> emptyList(), null, lanes, Collections.<String> emptyList());
     stages.add(target);
     return new PipelineConfiguration(PipelineStoreTask.SCHEMA_VERSION, UUID.randomUUID(), null,
-      Arrays.asList(new ConfigConfiguration(PipelineDefConfigs.EXECUTION_MODE_CONFIG, executionMode.name())), null,
+      Arrays.asList(new ConfigConfiguration(PipelineConfigBean.EXECUTION_MODE_CONFIG, executionMode.name())), null,
       stages, getErrorStageConfig());
   }
 

@@ -7,8 +7,8 @@ package com.streamsets.pipeline.cluster;
 
 import com.streamsets.pipeline.config.ConfigConfiguration;
 import com.streamsets.pipeline.config.PipelineConfiguration;
-import com.streamsets.pipeline.definition.PipelineDefConfigs;
 import com.streamsets.pipeline.config.StageConfiguration;
+import com.streamsets.pipeline.creation.PipelineConfigBean;
 import com.streamsets.pipeline.runner.MockStages;
 import com.streamsets.pipeline.stagelibrary.StageLibraryTask;
 import com.streamsets.pipeline.store.PipelineStoreTask;
@@ -77,11 +77,11 @@ public class TestClusterProviderImpl {
     Assert.assertTrue(new File(bootstrapMainLibDir, "streamsets-datacollector-bootstrap.jar").createNewFile());
     Assert.assertTrue(new File(bootstrapSparkLibDir, "streamsets-datacollector-spark-bootstrap.jar").createNewFile());
     List<ConfigConfiguration> configs = new ArrayList<ConfigConfiguration>();
-    configs.add(new ConfigConfiguration(PipelineDefConfigs.CLUSTER_SLAVE_MEMORY_CONFIG, "512"));
-    configs.add(new ConfigConfiguration(PipelineDefConfigs.CLUSTER_SLAVE_JAVA_OPTS_CONFIG, ""));
-    configs.add(new ConfigConfiguration(PipelineDefConfigs.CLUSTER_KERBEROS_AUTH_CONFIG, false));
-    configs.add(new ConfigConfiguration(PipelineDefConfigs.CLUSTER_KERBEROS_PRINCIPAL_CONFIG, ""));
-    configs.add(new ConfigConfiguration(PipelineDefConfigs.CLUSTER_KERBEROS_KEYTAB_CONFIG, ""));
+    configs.add(new ConfigConfiguration(PipelineConfigBean.CLUSTER_SLAVE_MEMORY_CONFIG, "512"));
+    configs.add(new ConfigConfiguration(PipelineConfigBean.CLUSTER_SLAVE_JAVA_OPTS_CONFIG, ""));
+    configs.add(new ConfigConfiguration(PipelineConfigBean.CLUSTER_KERBEROS_AUTH_CONFIG, false));
+    configs.add(new ConfigConfiguration(PipelineConfigBean.CLUSTER_KERBEROS_PRINCIPAL_CONFIG, ""));
+    configs.add(new ConfigConfiguration(PipelineConfigBean.CLUSTER_KERBEROS_KEYTAB_CONFIG, ""));
     pipelineConf = new PipelineConfiguration(PipelineStoreTask.SCHEMA_VERSION, UUID.randomUUID(),
       null, configs, null, new ArrayList<StageConfiguration>(),
       MockStages.getErrorStageConfig());

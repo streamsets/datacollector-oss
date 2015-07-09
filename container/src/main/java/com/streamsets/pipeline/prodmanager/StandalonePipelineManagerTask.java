@@ -28,8 +28,8 @@ import com.streamsets.pipeline.config.DeliveryGuarantee;
 import com.streamsets.pipeline.config.MemoryLimitConfiguration;
 import com.streamsets.pipeline.config.MemoryLimitExceeded;
 import com.streamsets.pipeline.config.PipelineConfiguration;
+import com.streamsets.pipeline.creation.PipelineConfigBean;
 import com.streamsets.pipeline.config.RuleDefinition;
-import com.streamsets.pipeline.definition.PipelineDefConfigs;
 import com.streamsets.pipeline.el.JvmEL;
 import com.streamsets.pipeline.email.EmailSender;
 import com.streamsets.pipeline.json.ObjectMapperFactory;
@@ -418,7 +418,7 @@ public class StandalonePipelineManagerTask extends AbstractTask implements Pipel
       validateStateTransition(name, rev, State.RUNNING);
       PipelineConfiguration pipelineConf = pipelineStore.load(name, rev);
       ExecutionMode pipelineExecutionMode = ExecutionMode.valueOf((String) pipelineConf.getConfiguration(
-          PipelineDefConfigs.EXECUTION_MODE_CONFIG).getValue());
+          PipelineConfigBean.EXECUTION_MODE_CONFIG).getValue());
       if (pipelineExecutionMode == ExecutionMode.STANDALONE ||
         (pipelineExecutionMode == ExecutionMode.CLUSTER) &&
           runtimeInfo.getExecutionMode() == RuntimeInfo.ExecutionMode.SLAVE) {
@@ -594,17 +594,17 @@ public class StandalonePipelineManagerTask extends AbstractTask implements Pipel
 
     if (configuration != null) {
       for (ConfigConfiguration config : configuration) {
-        if (PipelineDefConfigs.MEMORY_LIMIT_EXCEEDED_CONFIG.equals(config.getName())) {
+        if (PipelineConfigBean.MEMORY_LIMIT_EXCEEDED_CONFIG.equals(config.getName())) {
           try {
             memoryLimitExceeded = MemoryLimitExceeded.valueOf(String.valueOf(config.getValue()).
               toUpperCase(Locale.ENGLISH));
           } catch (IllegalArgumentException e) {
             //This should never happen.
-            String msg = "Invalid pipeline configuration: " + PipelineDefConfigs.MEMORY_LIMIT_EXCEEDED_CONFIG +
+            String msg = "Invalid pipeline configuration: " + PipelineConfigBean.MEMORY_LIMIT_EXCEEDED_CONFIG +
               " value: '" + config.getValue() + "'. Should never happen, please report. : " + e;
             throw new IllegalStateException(msg, e);
           }
-        } else if (PipelineDefConfigs.MEMORY_LIMIT_CONFIG.equals(config.getName())) {
+        } else if (PipelineConfigBean.MEMORY_LIMIT_CONFIG.equals(config.getName())) {
           String memoryLimitString = String.valueOf(config.getValue());
 
           if(ElUtil.isElString(memoryLimitString)) {

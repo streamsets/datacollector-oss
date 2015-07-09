@@ -10,7 +10,7 @@ import com.streamsets.dataCollector.execution.manager.RunnerProvider;
 import com.streamsets.pipeline.api.ExecutionMode;
 import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.config.PipelineConfiguration;
-import com.streamsets.pipeline.definition.PipelineDefConfigs;
+import com.streamsets.pipeline.creation.PipelineConfigBean;
 import dagger.ObjectGraph;
 
 import javax.inject.Inject;
@@ -27,7 +27,7 @@ public class RunnerProviderImpl implements RunnerProvider {
   public Runner createRunner(String user, String name, String rev, PipelineConfiguration pipelineConf,
                              ObjectGraph objectGraph) {
     ExecutionMode executionMode = ExecutionMode.valueOf(
-      (String) pipelineConf.getConfiguration(PipelineDefConfigs.EXECUTION_MODE_CONFIG).getValue());
+      (String) pipelineConf.getConfiguration(PipelineConfigBean.EXECUTION_MODE_CONFIG).getValue());
     List<Object> modules = new ArrayList<>();
     switch (executionMode) {
       case CLUSTER:

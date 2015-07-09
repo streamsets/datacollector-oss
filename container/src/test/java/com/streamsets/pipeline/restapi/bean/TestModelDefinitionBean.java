@@ -46,7 +46,8 @@ public class TestModelDefinitionBean {
 
     com.streamsets.pipeline.config.ModelDefinition modelDefinition =
       new com.streamsets.pipeline.config.ModelDefinition(ModelType.COMPLEX_FIELD,
-                                                         "valuesProviderClass", values,labels, configDefinitions);
+                                                         "valuesProviderClass", values,labels, String.class,
+                                                         configDefinitions);
 
     ModelDefinitionJson modelDefinitionJsonBean = new ModelDefinitionJson(modelDefinition);
 

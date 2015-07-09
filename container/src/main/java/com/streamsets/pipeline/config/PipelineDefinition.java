@@ -9,7 +9,7 @@ import com.google.common.annotations.VisibleForTesting;
 import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.definition.ConfigDefinitionExtractor;
 import com.streamsets.pipeline.definition.ConfigGroupExtractor;
-import com.streamsets.pipeline.definition.PipelineDefConfigs;
+import com.streamsets.pipeline.creation.PipelineConfigBean;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,7 +29,7 @@ public class PipelineDefinition {
     // stage configs
     List<ConfigDefinition> configDefs = new ArrayList<>();
     for (ConfigDefinition configDef : getConfigDefinitions()) {
-      configDefs.add(configDef.localize(classLoader, PipelineDefConfigs.class.getName() + "-bundle"));
+      configDefs.add(configDef.localize(classLoader, PipelineConfigBean.class.getName() + "-bundle"));
     }
 
     // stage groups
@@ -44,12 +44,12 @@ public class PipelineDefinition {
   }
 
   private static List<ConfigDefinition> createPipelineConfigs() {
-    return ConfigDefinitionExtractor.get().extract(PipelineDefConfigs.class, "Pipeline Definition");
+    return ConfigDefinitionExtractor.get().extract(PipelineConfigBean.class, "Pipeline Definition");
   }
 
   @VisibleForTesting
   PipelineDefinition() {
-    this(createPipelineConfigs(), ConfigGroupExtractor.get().extract(PipelineDefConfigs.class, "Pipeline Definition"));
+    this(createPipelineConfigs(), ConfigGroupExtractor.get().extract(PipelineConfigBean.class, "Pipeline Definition"));
   }
 
   /*Need this API for Jackson to serialize*/

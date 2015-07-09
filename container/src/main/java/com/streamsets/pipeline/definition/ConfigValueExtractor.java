@@ -27,14 +27,14 @@ public abstract class ConfigValueExtractor {
     return EXTRACTOR;
   }
 
-  private final static Set<Class> BOOLEAN_TYPES = ImmutableSet.<Class>of(Boolean.class, Boolean.TYPE);
-  private final static Set<Class> NUMBER_TYPES = ImmutableSet.<Class>of(Byte.class, Byte.TYPE,
-                                                                        Short.class, Short.TYPE,
-                                                                        Integer.class, Integer.TYPE,
-                                                                        Long.class, Long.TYPE,
-                                                                        Float.class, Float.TYPE,
-                                                                        Double.class, Double.TYPE);
-  private final static Set<Class> CHARACTER_TYPES = ImmutableSet.<Class>of(Character.class, Character.TYPE);
+  public final static Set<Class> BOOLEAN_TYPES = ImmutableSet.<Class>of(Boolean.class, Boolean.TYPE);
+  public final static Set<Class> NUMBER_TYPES = ImmutableSet.<Class>of(Byte.class, Byte.TYPE,
+                                                                   Short.class, Short.TYPE,
+                                                                   Integer.class, Integer.TYPE,
+                                                                   Long.class, Long.TYPE,
+                                                                   Float.class, Float.TYPE,
+                                                                   Double.class, Double.TYPE);
+  public final static Set<Class> CHARACTER_TYPES = ImmutableSet.<Class>of(Character.class, Character.TYPE);
 
   @SuppressWarnings("unchecked")
   public List<ErrorMessage> validate(Field field, ConfigDef.Type type, String valueStr, Object contextMsg,

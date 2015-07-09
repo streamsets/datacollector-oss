@@ -12,9 +12,9 @@ import com.google.common.collect.Maps;
 import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.config.ConfigConfiguration;
 import com.streamsets.pipeline.config.PipelineConfiguration;
-import com.streamsets.pipeline.definition.PipelineDefConfigs;
 import com.streamsets.pipeline.config.StageConfiguration;
 import com.streamsets.pipeline.config.StageDefinition;
+import com.streamsets.pipeline.creation.PipelineConfigBean;
 import com.streamsets.pipeline.http.WebServerTask;
 import com.streamsets.pipeline.json.ObjectMapperFactory;
 import com.streamsets.pipeline.lib.util.ThreadUtil;
@@ -210,11 +210,11 @@ public class ClusterProviderImpl implements ClusterProvider {
   }
 
   private void addKerberosConfiguration(Map<String, String> environment, PipelineConfiguration pipelineConfiguration) {
-    ConfigConfiguration clusterKerberos = Utils.checkNotNull(pipelineConfiguration.getConfiguration(PipelineDefConfigs.
+    ConfigConfiguration clusterKerberos = Utils.checkNotNull(pipelineConfiguration.getConfiguration(PipelineConfigBean.
       CLUSTER_KERBEROS_AUTH_CONFIG), "Could not obtain cluster kerberos auth");
-    ConfigConfiguration kerberosPrincipal = Utils.checkNotNull(pipelineConfiguration.getConfiguration(PipelineDefConfigs.
+    ConfigConfiguration kerberosPrincipal = Utils.checkNotNull(pipelineConfiguration.getConfiguration(PipelineConfigBean.
       CLUSTER_KERBEROS_PRINCIPAL_CONFIG), "Could not obtain cluster kerberos principal");
-    ConfigConfiguration kerberosKeytab = Utils.checkNotNull(pipelineConfiguration.getConfiguration(PipelineDefConfigs.
+    ConfigConfiguration kerberosKeytab = Utils.checkNotNull(pipelineConfiguration.getConfiguration(PipelineConfigBean.
       CLUSTER_KERBEROS_KEYTAB_CONFIG), "Could not obtain cluster kerberos keytab");
     environment.put(KERBEROS_AUTH, String.valueOf(clusterKerberos.getValue()));
     if ((Boolean)clusterKerberos.getValue()) {
@@ -349,7 +349,7 @@ public class ClusterProviderImpl implements ClusterProvider {
     // we only support yarn-cluster mode
     args.add("--master");
     args.add("yarn-cluster");
-    ConfigConfiguration slaveMemory = Utils.checkNotNull(pipelineConfiguration.getConfiguration(PipelineDefConfigs.
+    ConfigConfiguration slaveMemory = Utils.checkNotNull(pipelineConfiguration.getConfiguration(PipelineConfigBean.
       CLUSTER_SLAVE_MEMORY_CONFIG), "Could not obtain cluster slave memory");
     args.add("--executor-memory");
     args.add(slaveMemory.getValue() + "m");
@@ -372,7 +372,7 @@ public class ClusterProviderImpl implements ClusterProvider {
     args.add(log4jProperties.getAbsolutePath());
     args.add("--jars");
     args.add(Joiner.on(",").skipNulls().join(bootstrapJar.getAbsoluteFile(), pathToSparkKafkaJar));
-    ConfigConfiguration javaOpts = Utils.checkNotNull(pipelineConfiguration.getConfiguration(PipelineDefConfigs.
+    ConfigConfiguration javaOpts = Utils.checkNotNull(pipelineConfiguration.getConfiguration(PipelineConfigBean.
       CLUSTER_SLAVE_JAVA_OPTS_CONFIG), "Could not obtain cluster worker java options");
     // use our javaagent and java opt configs
     args.add("--conf");

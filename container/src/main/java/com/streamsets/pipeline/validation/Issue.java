@@ -10,17 +10,16 @@ import com.streamsets.pipeline.api.impl.ErrorMessage;
 import com.streamsets.pipeline.api.impl.LocalizableString;
 import com.streamsets.pipeline.api.impl.Utils;
 
-import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 
-public class Issue implements Serializable {
+public class Issue {
   protected final String configGroup;
   protected final String configName;
   private final LocalizableString message;
   private Map<String, Object> additionalInfo;
 
-  protected Issue(String configName, String configGroup, ErrorCode error, Object... args) {
+  public Issue(String configName, String configGroup, ErrorCode error, Object... args) {
     message = new ErrorMessage(error, args);
     this.configName = configName;
     this.configGroup = configGroup;

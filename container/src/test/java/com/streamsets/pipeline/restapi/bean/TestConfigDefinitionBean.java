@@ -28,7 +28,8 @@ public class TestConfigDefinitionBean {
   @Test
   public void testConfigDefinitionBean() {
     com.streamsets.pipeline.config.ModelDefinition modelDefinition = new ModelDefinition(ModelType.COMPLEX_FIELD,
-                                                                                         "myClass", null , null, null);
+                                                                                         "myClass", null , null, null,
+                                                                                         null);
 
     List<Object> triggeredBy = new ArrayList<>();
     triggeredBy.add("X");

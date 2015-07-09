@@ -9,6 +9,7 @@ import com.streamsets.pipeline.api.ExecutionMode;
 import com.streamsets.pipeline.api.Label;
 import com.streamsets.pipeline.api.impl.LocalizableMessage;
 import com.streamsets.pipeline.api.impl.Utils;
+import com.streamsets.pipeline.creation.StageConfigBean;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -294,7 +295,7 @@ public class StageDefinition {
     return groupDefs;
   }
 
-  private static final String SYSTEM_CONFIGS_RB = SystemStageConfigs.class.getName() + "-bundle";
+  private static final String SYSTEM_CONFIGS_RB = StageConfigBean.class.getName() + "-bundle";
 
   public StageDefinition localize() {
     ClassLoader classLoader = libraryDefinition.getClassLoader();

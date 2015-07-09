@@ -53,6 +53,7 @@ public enum DefinitionError implements ErrorCode {
   DEF_158("{} dependsOn name ending with multiple '^' cannot have other characters in betweeen"),
   DEF_159("{} field has {} '^' but its bean depth is only '{}' ('{}')"),
   DEF_160("{} bean does not have any configuration properties"),
+  DEF_161("{} Field='{}' there cannot be nested @ComplexField configs"),
 
   //ModelDefinitionExtractor
   DEF_200("{}, Model annotation missing'"),

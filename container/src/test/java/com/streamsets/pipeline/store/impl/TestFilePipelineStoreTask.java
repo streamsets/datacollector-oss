@@ -9,9 +9,7 @@ import com.google.common.collect.ImmutableList;
 
 import static org.junit.Assert.assertEquals;
 
-import com.codahale.metrics.MetricRegistry;
 import com.streamsets.dataCollector.execution.PipelineStateStore;
-import com.streamsets.dataCollector.execution.store.TestPipelineStateStore;
 import com.streamsets.pipeline.api.ExecutionMode;
 import com.streamsets.pipeline.config.ConfigConfiguration;
 import com.streamsets.pipeline.config.DataRuleDefinition;
@@ -21,19 +19,17 @@ import com.streamsets.pipeline.config.MetricElement;
 import com.streamsets.pipeline.config.MetricType;
 import com.streamsets.pipeline.config.MetricsRuleDefinition;
 import com.streamsets.pipeline.config.PipelineConfiguration;
+import com.streamsets.pipeline.creation.PipelineConfigBean;
 import com.streamsets.pipeline.config.RuleDefinitions;
 import com.streamsets.pipeline.config.StageConfiguration;
 import com.streamsets.pipeline.config.ThresholdType;
-import com.streamsets.pipeline.definition.PipelineDefConfigs;
 import com.streamsets.pipeline.main.RuntimeInfo;
-import com.streamsets.pipeline.main.RuntimeModule;
 import com.streamsets.pipeline.runner.MockStages;
 import com.streamsets.pipeline.stagelibrary.StageLibraryTask;
 import com.streamsets.pipeline.store.PipelineInfo;
 import com.streamsets.pipeline.store.PipelineStoreException;
 import com.streamsets.pipeline.store.PipelineStoreTask;
 import com.streamsets.pipeline.util.ContainerError;
-import com.streamsets.pipeline.util.PipelineDirectoryUtil;
 
 import dagger.ObjectGraph;
 import dagger.Provides;
@@ -361,17 +357,17 @@ public class TestFilePipelineStoreTask {
       for (ConfigConfiguration cc : pc.getConfiguration()) {
         confs.put(cc.getName(), cc.getValue());
       }
-      Assert.assertEquals(DeliveryGuarantee.AT_LEAST_ONCE.name(), confs.get(PipelineDefConfigs.DELIVERY_GUARANTEE_CONFIG));
-      Assert.assertEquals(ExecutionMode.STANDALONE.name(), confs.get(PipelineDefConfigs.EXECUTION_MODE_CONFIG));
-      Assert.assertEquals("", confs.get(PipelineDefConfigs.ERROR_RECORDS_CONFIG));
-      Assert.assertEquals(PipelineDefConfigs.MEMORY_LIMIT_DEFAULT, confs.get(PipelineDefConfigs.MEMORY_LIMIT_CONFIG));
-      Assert.assertEquals(MemoryLimitExceeded.STOP_PIPELINE.name(), confs.get(PipelineDefConfigs.MEMORY_LIMIT_EXCEEDED_CONFIG));
-      Assert.assertEquals(Integer.parseInt(PipelineDefConfigs.CLUSTER_SLAVE_MEMORY_DEFAULT),
-                          confs.get(PipelineDefConfigs.CLUSTER_SLAVE_MEMORY_CONFIG));
-      Assert.assertEquals(false, confs.get(PipelineDefConfigs.CLUSTER_KERBEROS_AUTH_CONFIG));
-      Assert.assertEquals("", confs.get(PipelineDefConfigs.CLUSTER_KERBEROS_PRINCIPAL_CONFIG));
-      Assert.assertEquals("", confs.get(PipelineDefConfigs.CLUSTER_KERBEROS_KEYTAB_CONFIG));
-      Assert.assertEquals(Collections.emptyList(), confs.get(PipelineDefConfigs.CLUSTER_LAUNCHER_ENV_CONFIG));
+      Assert.assertEquals(DeliveryGuarantee.AT_LEAST_ONCE.name(), confs.get(PipelineConfigBean.DELIVERY_GUARANTEE_CONFIG));
+      Assert.assertEquals(ExecutionMode.STANDALONE.name(), confs.get(PipelineConfigBean.EXECUTION_MODE_CONFIG));
+      Assert.assertEquals("", confs.get(PipelineConfigBean.ERROR_RECORDS_CONFIG));
+      Assert.assertEquals(PipelineConfigBean.MEMORY_LIMIT_DEFAULT, confs.get(PipelineConfigBean.MEMORY_LIMIT_CONFIG));
+      Assert.assertEquals(MemoryLimitExceeded.STOP_PIPELINE.name(), confs.get(PipelineConfigBean.MEMORY_LIMIT_EXCEEDED_CONFIG));
+      Assert.assertEquals(Integer.parseInt(PipelineConfigBean.CLUSTER_SLAVE_MEMORY_DEFAULT),
+                          confs.get(PipelineConfigBean.CLUSTER_SLAVE_MEMORY_CONFIG));
+      Assert.assertEquals(false, confs.get(PipelineConfigBean.CLUSTER_KERBEROS_AUTH_CONFIG));
+      Assert.assertEquals("", confs.get(PipelineConfigBean.CLUSTER_KERBEROS_PRINCIPAL_CONFIG));
+      Assert.assertEquals("", confs.get(PipelineConfigBean.CLUSTER_KERBEROS_KEYTAB_CONFIG));
+      Assert.assertEquals(Collections.emptyList(), confs.get(PipelineConfigBean.CLUSTER_LAUNCHER_ENV_CONFIG));
     } finally {
       store.stop();
     }
@@ -407,65 +403,65 @@ public class TestFilePipelineStoreTask {
 
     Assert.assertEquals(12, expectedPipelineConfig.getConfiguration().size());
 
-    Assert.assertEquals(PipelineDefConfigs.EXECUTION_MODE_CONFIG,
-      expectedPipelineConfig.getConfiguration(PipelineDefConfigs.EXECUTION_MODE_CONFIG).getName());
+    Assert.assertEquals(PipelineConfigBean.EXECUTION_MODE_CONFIG,
+      expectedPipelineConfig.getConfiguration(PipelineConfigBean.EXECUTION_MODE_CONFIG).getName());
     Assert.assertEquals(ExecutionMode.STANDALONE,
-      expectedPipelineConfig.getConfiguration(PipelineDefConfigs.EXECUTION_MODE_CONFIG).getValue());
+      expectedPipelineConfig.getConfiguration(PipelineConfigBean.EXECUTION_MODE_CONFIG).getValue());
 
-    Assert.assertEquals(PipelineDefConfigs.DELIVERY_GUARANTEE_CONFIG,
-      expectedPipelineConfig.getConfiguration(PipelineDefConfigs.DELIVERY_GUARANTEE_CONFIG).getName());
+    Assert.assertEquals(PipelineConfigBean.DELIVERY_GUARANTEE_CONFIG,
+      expectedPipelineConfig.getConfiguration(PipelineConfigBean.DELIVERY_GUARANTEE_CONFIG).getName());
     Assert.assertEquals(DeliveryGuarantee.AT_LEAST_ONCE,
-      expectedPipelineConfig.getConfiguration(PipelineDefConfigs.DELIVERY_GUARANTEE_CONFIG).getValue());
+      expectedPipelineConfig.getConfiguration(PipelineConfigBean.DELIVERY_GUARANTEE_CONFIG).getValue());
 
-    Assert.assertEquals(PipelineDefConfigs.ERROR_RECORDS_CONFIG,
-      expectedPipelineConfig.getConfiguration(PipelineDefConfigs.ERROR_RECORDS_CONFIG).getName());
-    Assert.assertEquals(null, expectedPipelineConfig.getConfiguration(PipelineDefConfigs.ERROR_RECORDS_CONFIG).getValue());
+    Assert.assertEquals(PipelineConfigBean.ERROR_RECORDS_CONFIG,
+      expectedPipelineConfig.getConfiguration(PipelineConfigBean.ERROR_RECORDS_CONFIG).getName());
+    Assert.assertEquals(null, expectedPipelineConfig.getConfiguration(PipelineConfigBean.ERROR_RECORDS_CONFIG).getValue());
 
-    Assert.assertEquals(PipelineDefConfigs.CONSTANTS_CONFIG,
-      expectedPipelineConfig.getConfiguration(PipelineDefConfigs.CONSTANTS_CONFIG).getName());
+    Assert.assertEquals(PipelineConfigBean.CONSTANTS_CONFIG,
+      expectedPipelineConfig.getConfiguration(PipelineConfigBean.CONSTANTS_CONFIG).getName());
     Assert.assertEquals(Collections.emptyList(),
-                        expectedPipelineConfig.getConfiguration(PipelineDefConfigs.CONSTANTS_CONFIG).getValue());
+                        expectedPipelineConfig.getConfiguration(PipelineConfigBean.CONSTANTS_CONFIG).getValue());
 
-    Assert.assertEquals(PipelineDefConfigs.MEMORY_LIMIT_CONFIG,
-      expectedPipelineConfig.getConfiguration(PipelineDefConfigs.MEMORY_LIMIT_CONFIG).getName());
-    Assert.assertEquals(PipelineDefConfigs.MEMORY_LIMIT_DEFAULT,
-      expectedPipelineConfig.getConfiguration(PipelineDefConfigs.MEMORY_LIMIT_CONFIG).getValue());
+    Assert.assertEquals(PipelineConfigBean.MEMORY_LIMIT_CONFIG,
+      expectedPipelineConfig.getConfiguration(PipelineConfigBean.MEMORY_LIMIT_CONFIG).getName());
+    Assert.assertEquals(PipelineConfigBean.MEMORY_LIMIT_DEFAULT,
+      expectedPipelineConfig.getConfiguration(PipelineConfigBean.MEMORY_LIMIT_CONFIG).getValue());
 
-    Assert.assertEquals(PipelineDefConfigs.MEMORY_LIMIT_EXCEEDED_CONFIG,
-      expectedPipelineConfig.getConfiguration(PipelineDefConfigs.MEMORY_LIMIT_EXCEEDED_CONFIG).getName());
+    Assert.assertEquals(PipelineConfigBean.MEMORY_LIMIT_EXCEEDED_CONFIG,
+      expectedPipelineConfig.getConfiguration(PipelineConfigBean.MEMORY_LIMIT_EXCEEDED_CONFIG).getName());
     Assert.assertEquals(MemoryLimitExceeded.STOP_PIPELINE,
-      expectedPipelineConfig.getConfiguration(PipelineDefConfigs.MEMORY_LIMIT_EXCEEDED_CONFIG).getValue());
+      expectedPipelineConfig.getConfiguration(PipelineConfigBean.MEMORY_LIMIT_EXCEEDED_CONFIG).getValue());
 
-    Assert.assertEquals(PipelineDefConfigs.CLUSTER_SLAVE_MEMORY_CONFIG,
-      expectedPipelineConfig.getConfiguration(PipelineDefConfigs.CLUSTER_SLAVE_MEMORY_CONFIG).getName());
+    Assert.assertEquals(PipelineConfigBean.CLUSTER_SLAVE_MEMORY_CONFIG,
+      expectedPipelineConfig.getConfiguration(PipelineConfigBean.CLUSTER_SLAVE_MEMORY_CONFIG).getName());
     Assert.assertEquals((long)1024, expectedPipelineConfig.getConfiguration(
-        PipelineDefConfigs.CLUSTER_SLAVE_MEMORY_CONFIG).getValue());
+        PipelineConfigBean.CLUSTER_SLAVE_MEMORY_CONFIG).getValue());
 
 
-    Assert.assertEquals(PipelineDefConfigs.CLUSTER_SLAVE_JAVA_OPTS_CONFIG,
-      expectedPipelineConfig.getConfiguration(PipelineDefConfigs.CLUSTER_SLAVE_JAVA_OPTS_CONFIG).getName());
-    Assert.assertEquals(PipelineDefConfigs.CLUSTER_SLAVE_JAVA_OPTS_DEFAULT,
-      expectedPipelineConfig.getConfiguration(PipelineDefConfigs.CLUSTER_SLAVE_JAVA_OPTS_CONFIG).getValue());
+    Assert.assertEquals(PipelineConfigBean.CLUSTER_SLAVE_JAVA_OPTS_CONFIG,
+      expectedPipelineConfig.getConfiguration(PipelineConfigBean.CLUSTER_SLAVE_JAVA_OPTS_CONFIG).getName());
+    Assert.assertEquals(PipelineConfigBean.CLUSTER_SLAVE_JAVA_OPTS_DEFAULT,
+      expectedPipelineConfig.getConfiguration(PipelineConfigBean.CLUSTER_SLAVE_JAVA_OPTS_CONFIG).getValue());
 
-    Assert.assertEquals(PipelineDefConfigs.CLUSTER_KERBEROS_AUTH_CONFIG,
-      expectedPipelineConfig.getConfiguration(PipelineDefConfigs.CLUSTER_KERBEROS_AUTH_CONFIG).getName());
+    Assert.assertEquals(PipelineConfigBean.CLUSTER_KERBEROS_AUTH_CONFIG,
+      expectedPipelineConfig.getConfiguration(PipelineConfigBean.CLUSTER_KERBEROS_AUTH_CONFIG).getName());
     Assert.assertEquals(false, expectedPipelineConfig.getConfiguration(
-        PipelineDefConfigs.CLUSTER_KERBEROS_AUTH_CONFIG).getValue());
+        PipelineConfigBean.CLUSTER_KERBEROS_AUTH_CONFIG).getValue());
 
-    Assert.assertEquals(PipelineDefConfigs.CLUSTER_KERBEROS_PRINCIPAL_CONFIG,
-      expectedPipelineConfig.getConfiguration(PipelineDefConfigs.CLUSTER_KERBEROS_PRINCIPAL_CONFIG).getName());
+    Assert.assertEquals(PipelineConfigBean.CLUSTER_KERBEROS_PRINCIPAL_CONFIG,
+      expectedPipelineConfig.getConfiguration(PipelineConfigBean.CLUSTER_KERBEROS_PRINCIPAL_CONFIG).getName());
     Assert.assertEquals("", expectedPipelineConfig.getConfiguration(
-        PipelineDefConfigs.CLUSTER_KERBEROS_PRINCIPAL_CONFIG).getValue());
+        PipelineConfigBean.CLUSTER_KERBEROS_PRINCIPAL_CONFIG).getValue());
 
-    Assert.assertEquals(PipelineDefConfigs.CLUSTER_KERBEROS_KEYTAB_CONFIG,
-      expectedPipelineConfig.getConfiguration(PipelineDefConfigs.CLUSTER_KERBEROS_KEYTAB_CONFIG).getName());
-    Assert.assertEquals("", expectedPipelineConfig.getConfiguration(PipelineDefConfigs.CLUSTER_KERBEROS_KEYTAB_CONFIG)
+    Assert.assertEquals(PipelineConfigBean.CLUSTER_KERBEROS_KEYTAB_CONFIG,
+      expectedPipelineConfig.getConfiguration(PipelineConfigBean.CLUSTER_KERBEROS_KEYTAB_CONFIG).getName());
+    Assert.assertEquals("", expectedPipelineConfig.getConfiguration(PipelineConfigBean.CLUSTER_KERBEROS_KEYTAB_CONFIG)
                                                   .getValue());
 
-    Assert.assertEquals(PipelineDefConfigs.CLUSTER_LAUNCHER_ENV_CONFIG,
-      expectedPipelineConfig.getConfiguration(PipelineDefConfigs.CLUSTER_LAUNCHER_ENV_CONFIG).getName());
+    Assert.assertEquals(PipelineConfigBean.CLUSTER_LAUNCHER_ENV_CONFIG,
+      expectedPipelineConfig.getConfiguration(PipelineConfigBean.CLUSTER_LAUNCHER_ENV_CONFIG).getName());
     Assert.assertEquals(Collections.emptyList(), expectedPipelineConfig.getConfiguration(
-        PipelineDefConfigs.CLUSTER_LAUNCHER_ENV_CONFIG).getValue());
+        PipelineConfigBean.CLUSTER_LAUNCHER_ENV_CONFIG).getValue());
   }
 
   @Test

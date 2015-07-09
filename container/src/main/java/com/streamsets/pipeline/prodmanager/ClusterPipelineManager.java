@@ -31,7 +31,7 @@ import com.streamsets.pipeline.config.DeliveryGuarantee;
 import com.streamsets.pipeline.config.MemoryLimitConfiguration;
 import com.streamsets.pipeline.config.PipelineConfiguration;
 import com.streamsets.pipeline.config.RuleDefinition;
-import com.streamsets.pipeline.definition.PipelineDefConfigs;
+import com.streamsets.pipeline.creation.PipelineConfigBean;
 import com.streamsets.pipeline.lib.executor.SafeScheduledExecutorService;
 import com.streamsets.pipeline.lib.util.ThreadUtil;
 import com.streamsets.pipeline.main.RuntimeInfo;
@@ -75,7 +75,8 @@ import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.ReentrantLock;
 
-public class ClusterPipelineManager extends AbstractTask implements PipelineManager {
+public class
+    ClusterPipelineManager extends AbstractTask implements PipelineManager {
   private static final String CLUSTER_PIPELINE_MANAGER = "ClusterPipelineManager";
   private static final Logger LOG = LoggerFactory.getLogger(ClusterPipelineManager.class);
   static final String APPLICATION_STATE = "cluster.application.state";
@@ -320,7 +321,7 @@ public class ClusterPipelineManager extends AbstractTask implements PipelineMana
     LOG.debug("State of pipeline is " + ps);
     PipelineConfiguration pipelineConf = pipelineStore.load(name, rev);
     ExecutionMode executionMode = ExecutionMode.valueOf((String) pipelineConf.getConfiguration(
-      PipelineDefConfigs.EXECUTION_MODE_CONFIG).getValue());
+      PipelineConfigBean.EXECUTION_MODE_CONFIG).getValue());
     if (executionMode != ExecutionMode.CLUSTER) {
       throw new PipelineManagerException(ValidationError.VALIDATION_0073);
     }
@@ -755,7 +756,7 @@ public class ClusterPipelineManager extends AbstractTask implements PipelineMana
       Utils.checkNotNull(clusterSourceInfo, "clusterSourceInfo");
       stateTracker.register(name, rev);
       Map<String, String> environment = new HashMap<>();
-      Map<String, String> envConfigMap = PipelineConfigurationUtil.getFlattenedStringMap(PipelineDefConfigs.
+      Map<String, String> envConfigMap = PipelineConfigurationUtil.getFlattenedStringMap(PipelineConfigBean.
         CLUSTER_LAUNCHER_ENV_CONFIG, pipelineConf);
       environment.putAll(envConfigMap);
       Map<String, String> sourceInfo = new HashMap<>();

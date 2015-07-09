@@ -20,6 +20,7 @@ import java.util.concurrent.locks.ReentrantLock;
 
 import javax.inject.Inject;
 
+import com.streamsets.pipeline.creation.PipelineConfigBean;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -54,7 +55,6 @@ import com.streamsets.pipeline.config.DeliveryGuarantee;
 import com.streamsets.pipeline.config.MemoryLimitConfiguration;
 import com.streamsets.pipeline.config.PipelineConfiguration;
 import com.streamsets.pipeline.config.RuleDefinition;
-import com.streamsets.pipeline.definition.PipelineDefConfigs;
 import com.streamsets.pipeline.lib.executor.SafeScheduledExecutorService;
 import com.streamsets.pipeline.main.RuntimeInfo;
 import com.streamsets.pipeline.metrics.MetricsEventListener;
@@ -568,7 +568,7 @@ public class ClusterRunner implements Runner {
     Utils.checkState(clusterSourceInfo.getParallelism() != 0, "Parallelism cannot be zero");
     Map<String, String> environment = new HashMap<>();
     Map<String, String> envConfigMap =
-      PipelineConfigurationUtil.getFlattenedStringMap(PipelineDefConfigs.CLUSTER_LAUNCHER_ENV_CONFIG, pipelineConf);
+      PipelineConfigurationUtil.getFlattenedStringMap(PipelineConfigBean.CLUSTER_LAUNCHER_ENV_CONFIG, pipelineConf);
     environment.putAll(envConfigMap);
     Map<String, String> sourceInfo = new HashMap<>();
     File bootstrapDir = new File(this.runtimeInfo.getLibexecDir(), "bootstrap-libs");

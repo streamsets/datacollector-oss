@@ -3,7 +3,7 @@
  * be copied, modified, or distributed in whole or part without
  * written consent of StreamSets, Inc.
  */
-package com.streamsets.pipeline.config;
+package com.streamsets.pipeline.creation;
 
 
 import com.streamsets.pipeline.api.ConfigDef;
@@ -19,13 +19,11 @@ import com.streamsets.pipeline.lib.el.StringEL;
 
 import java.util.List;
 
-//Dummy stage that is used to produce the resource bundle for system driven configs
-//
 // we are using the annotation for reference purposes only.
 // the annotation processor does not work on this maven project
 // we have a hardcoded 'datacollector-resource-bundles.json' file in resources
 @GenerateResourceBundle
-public abstract class SystemStageConfigs implements Stage {
+public class StageConfigBean {
 
   @ConfigDef(
       required = true,

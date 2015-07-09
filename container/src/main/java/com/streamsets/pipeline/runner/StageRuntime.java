@@ -374,7 +374,7 @@ public class StageRuntime {
             //could be an el expression which evaluates to character
             String stringVal = (String) value;
             if(stringVal.startsWith("${")) {
-              Object evaluatedValue = ElUtil.evaluate(value, var, stageDef, confDef, constants);
+              Object evaluatedValue = ElUtil.evaluate(value, stageDef, confDef, constants);
               if(evaluatedValue instanceof Character) {
                 value = evaluatedValue;
               } else if (evaluatedValue instanceof String) {
@@ -388,7 +388,7 @@ public class StageRuntime {
               value = stringVal.charAt(0);
             }
           } else if (ElUtil.isElString(value)) {
-            value = ElUtil.evaluate(value, var, stageDef, confDef, constants);
+            value = ElUtil.evaluate(value, stageDef, confDef, constants);
           }
         }
         if (value != null) {
@@ -398,7 +398,7 @@ public class StageRuntime {
           //default value could be el String
           Object defaultValue = confDef.getDefaultValue();
           if(ElUtil.isElString(defaultValue)) {
-            var.set(stage, ElUtil.evaluate(defaultValue, var, stageDef, confDef, constants));
+            var.set(stage, ElUtil.evaluate(defaultValue, stageDef, confDef, constants));
           } else {
             var.set(stage, defaultValue);
           }
@@ -429,7 +429,7 @@ public class StageRuntime {
       if (!element.isEmpty()) {
         String key = (String) element.get("key");
         String value = (String) element.get("value");
-        Object evaluatedValue = ElUtil.evaluate(value, var, stageDef, confDef, constants);
+        Object evaluatedValue = ElUtil.evaluate(value, stageDef, confDef, constants);
         checkForString(evaluatedValue, stageDef.getName(), instanceName, confDef.getName());
         map.put(key, (String) evaluatedValue);
       }
@@ -444,7 +444,7 @@ public class StageRuntime {
     for (Object e : list) {
       checkForString(e, stageDef.getName(), instanceName, confDef.getName());
       String value = (String)e;
-      Object evaluatedValue = ElUtil.evaluate(value, var, stageDef, confDef, constants);
+      Object evaluatedValue = ElUtil.evaluate(value, stageDef, confDef, constants);
       checkForString(evaluatedValue, stageDef.getName(), instanceName, confDef.getName());
       evaluatedValues.add((String) evaluatedValue);
     }
@@ -462,7 +462,7 @@ public class StageRuntime {
       }
       checkForString(e.getValue(), stageDef.getName(), instanceName, confDef.getName());
       String value = (String)e.getValue();
-      Object evaluatedValue = ElUtil.evaluate(value, var, stageDef, confDef, constants);
+      Object evaluatedValue = ElUtil.evaluate(value, stageDef, confDef, constants);
       checkForString(evaluatedValue, stageDef.getName(), instanceName, confDef.getName());
       evaluatedMap.put((String) e.getKey(), (String) evaluatedValue);
     }
