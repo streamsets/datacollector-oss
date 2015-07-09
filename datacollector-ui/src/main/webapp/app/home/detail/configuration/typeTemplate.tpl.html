@@ -43,6 +43,7 @@
          ui-refresh="refreshCodemirror"
          ui-codemirror-opts="getCodeMirrorOptions({
                 readOnly: isPipelineReadOnly || isPipelineRunning,
+                autofocus: autoFocusConfigName === configDefinition.name,
                 extraKeys: {
                   'Tab': false,
                   'Ctrl-Space': 'autocomplete'
