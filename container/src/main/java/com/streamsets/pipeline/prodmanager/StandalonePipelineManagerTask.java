@@ -255,7 +255,8 @@ public class StandalonePipelineManagerTask extends AbstractTask implements Pipel
             createPipeline(ps.getName(), ps.getRev(), observer, productionObserveRequests);
             AlertManager alertManager = new AlertManager(ps.getName(), ps.getRev(), new EmailSender(configuration),
               getMetrics(), runtimeInfo, this, null);
-            MetricsObserverRunner metricsObserverRunner = new MetricsObserverRunner(this.getMetrics(), alertManager);
+            MetricsObserverRunner metricsObserverRunner = new MetricsObserverRunner(ps.getName(), ps.getRev(),
+              this.getMetrics(), alertManager);
             observer.setMetricsObserverRunner(metricsObserverRunner);
           } catch (Exception e) {
             //log error and shutdown again
@@ -501,8 +502,9 @@ public class StandalonePipelineManagerTask extends AbstractTask implements Pipel
     ProductionObserver observer = new ProductionObserver(productionObserveRequests, configuration);
     createPipeline(name, rev, observer, productionObserveRequests);
 
-    AlertManager alertManager = new AlertManager(name, rev, new EmailSender(configuration), getMetrics(), runtimeInfo, this, null);
-    MetricsObserverRunner metricsObserverRunner = new MetricsObserverRunner(this.getMetrics(), alertManager);
+    AlertManager alertManager = new AlertManager(name, rev, new EmailSender(configuration), getMetrics(), runtimeInfo,
+      this, null);
+    MetricsObserverRunner metricsObserverRunner = new MetricsObserverRunner(name, rev, this.getMetrics(), alertManager);
 
     observer.setMetricsObserverRunner(metricsObserverRunner);
 
@@ -514,7 +516,7 @@ public class StandalonePipelineManagerTask extends AbstractTask implements Pipel
       throw new PipelineRuntimeException(ContainerError.CONTAINER_0403, name, e.getMessage(), e);
     }
 
-    threadHealthReporter = new ThreadHealthReporter(this.getMetrics());
+    threadHealthReporter = new ThreadHealthReporter(name, rev, this.getMetrics());
     threadHealthReporter.register(RulesConfigLoaderRunnable.RUNNABLE_NAME);
     threadHealthReporter.register(MetricObserverRunnable.RUNNABLE_NAME);
     threadHealthReporter.register(DataObserverRunnable.RUNNABLE_NAME);
@@ -534,8 +536,8 @@ public class StandalonePipelineManagerTask extends AbstractTask implements Pipel
     ScheduledFuture<?> metricObserverFuture = executor.scheduleWithFixedDelay(
         metricObserverRunnable, 1, 2, TimeUnit.SECONDS);
 
-    observerRunnable = new DataObserverRunnable(threadHealthReporter, this.getMetrics(), productionObserveRequests,
-      alertManager, configuration);
+    observerRunnable = new DataObserverRunnable(name, rev, threadHealthReporter, this.getMetrics(),
+      productionObserveRequests, alertManager, configuration);
     Future<?> observerFuture = executor.submit(observerRunnable);
 
     pipelineRunnable = new ProductionPipelineRunnable(threadHealthReporter, this, prodPipeline, name, rev,
@@ -672,10 +674,10 @@ public class StandalonePipelineManagerTask extends AbstractTask implements Pipel
   }
 
   @Override
-  public boolean deleteAlert(String ruleId) throws PipelineManagerException {
+  public boolean deleteAlert(String pipelineName, String rev, String ruleId) throws PipelineManagerException {
     checkState(getPipelineState().getState().equals(State.RUNNING), ContainerError.CONTAINER_0402);
     MetricsConfigurator.resetCounter(getMetrics(), AlertsUtil.getUserMetricName(ruleId));
-    return MetricsConfigurator.removeGauge(getMetrics(), AlertsUtil.getAlertGaugeName(ruleId));
+    return MetricsConfigurator.removeGauge(getMetrics(), AlertsUtil.getAlertGaugeName(ruleId), pipelineName, rev);
   }
 
   @VisibleForTesting

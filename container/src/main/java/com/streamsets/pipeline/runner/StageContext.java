@@ -67,11 +67,15 @@ public class StageContext implements Source.Context, Target.Context, Processor.C
   private final long pipelineMaxMemory;
   private final boolean isClusterMode;
   private final String resourcesDir;
+  private final String pipelineName;
+  private final String rev;
 
   //for SDK
-  public StageContext(String instanceName, StageType stageType, boolean isPreview, OnRecordError onRecordError,
-      List<String> outputLanes, Map<String, Class<?>[]> configToElDefMap, Map<String, Object> constants,
-      boolean isClusterMode, String resourcesDir) {
+  public StageContext(String instanceName, StageType stageType, boolean isPreview,
+                      OnRecordError onRecordError, List<String> outputLanes, Map<String, Class<?>[]> configToElDefMap,
+                      Map<String, Object> constants, boolean isClusterMode, String resourcesDir) {
+    this.pipelineName = "myPipeline";
+    this.rev = "0";
     pipelineInfo = ImmutableList.of();
     this.stageType = stageType;
     this.isPreview = isPreview;
@@ -87,8 +91,11 @@ public class StageContext implements Source.Context, Target.Context, Processor.C
     this.resourcesDir = resourcesDir;
   }
 
-  public StageContext(List<Stage.Info> pipelineInfo, StageType stageType, boolean isPreview, MetricRegistry metrics,
-      StageRuntime stageRuntime, long pipelineMaxMemory, boolean isClusterMode, String resourcesDir) {
+  public StageContext(String pipelineName, String rev, List<Stage.Info> pipelineInfo, StageType stageType, boolean isPreview,
+                      MetricRegistry metrics, StageRuntime stageRuntime, long pipelineMaxMemory, boolean isClusterMode,
+                      String resourcesDir) {
+    this.pipelineName = pipelineName;
+    this.rev = rev;
     this.pipelineInfo = pipelineInfo;
     this.stageType = stageType;
     this.isPreview = isPreview;
@@ -176,17 +183,20 @@ public class StageContext implements Source.Context, Target.Context, Processor.C
 
   @Override
   public Timer createTimer(String name) {
-    return MetricsConfigurator.createTimer(getMetrics(), CUSTOM_METRICS_PREFIX + instanceName + "." + name);
+    return MetricsConfigurator.createTimer(getMetrics(), CUSTOM_METRICS_PREFIX + instanceName + "." + name, pipelineName,
+      rev);
   }
 
   @Override
   public Meter createMeter(String name) {
-    return MetricsConfigurator.createMeter(getMetrics(), CUSTOM_METRICS_PREFIX + instanceName + "." + name);
+    return MetricsConfigurator.createMeter(getMetrics(), CUSTOM_METRICS_PREFIX + instanceName + "." + name, pipelineName,
+      rev);
   }
 
   @Override
   public Counter createCounter(String name) {
-    return MetricsConfigurator.createCounter(getMetrics(), CUSTOM_METRICS_PREFIX +instanceName + "." + name);
+    return MetricsConfigurator.createCounter(getMetrics(), CUSTOM_METRICS_PREFIX +instanceName + "." + name, pipelineName,
+      rev);
   }
 
   // for SDK

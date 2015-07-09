@@ -25,11 +25,15 @@ public class MetricsObserverRunner {
 
   private final MetricRegistry metrics;
   private final AlertManager alertManager;
+  private final String name;
+  private final String rev;
 
   @Inject
-  public MetricsObserverRunner(MetricRegistry metrics, AlertManager alertManager) {
+  public MetricsObserverRunner(String name, String rev, MetricRegistry metrics, AlertManager alertManager) {
     this.metrics = metrics;
     this.alertManager = alertManager;
+    this.name = name;
+    this.rev = rev;
   }
 
   public void evaluate() {
@@ -39,7 +43,7 @@ public class MetricsObserverRunner {
     if(tempNewChangeRequest != null && tempNewChangeRequest != currentChangeRequest) {
       this.currentChangeRequest = tempNewChangeRequest;
       for(String alertId : currentChangeRequest.getMetricAlertsToRemove()) {
-        MetricsConfigurator.removeGauge(metrics, AlertsUtil.getAlertGaugeName(alertId));
+        MetricsConfigurator.removeGauge(metrics, AlertsUtil.getAlertGaugeName(alertId), name ,rev);
       }
     }
 

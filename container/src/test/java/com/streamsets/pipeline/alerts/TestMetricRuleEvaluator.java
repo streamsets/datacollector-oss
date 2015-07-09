@@ -53,7 +53,7 @@ public class TestMetricRuleEvaluator {
   @Test
   public void testTimerMatch() {
     //create timer with id "testMetricAlerts" and register with metric registry, bump up value to 4.
-    Timer t = MetricsConfigurator.createTimer(metrics, "testTimerMatch");
+    Timer t = MetricsConfigurator.createTimer(metrics, "testTimerMatch", PIPELINE_NAME, REVISION);
     t.update(1000, TimeUnit.MILLISECONDS);
     t.update(2000, TimeUnit.MILLISECONDS);
     t.update(3000, TimeUnit.MILLISECONDS);
@@ -75,7 +75,7 @@ public class TestMetricRuleEvaluator {
   @Test
   public void testTimerMatchDisabled() {
     //create timer with id "testMetricAlerts" and register with metric registry, bump up value to 4.
-    Timer t = MetricsConfigurator.createTimer(metrics, "testTimerMatchDisabled");
+    Timer t = MetricsConfigurator.createTimer(metrics, "testTimerMatchDisabled", PIPELINE_NAME, REVISION);
     t.update(1000, TimeUnit.MILLISECONDS);
     t.update(2000, TimeUnit.MILLISECONDS);
     t.update(3000, TimeUnit.MILLISECONDS);
@@ -96,7 +96,7 @@ public class TestMetricRuleEvaluator {
   @Test
   public void testTimerNoMatch() {
     //create timer with id "testMetricAlerts" and register with metric registry, bump up value to 4.
-    Timer t = MetricsConfigurator.createTimer(metrics, "testTimerNoMatch");
+    Timer t = MetricsConfigurator.createTimer(metrics, "testTimerNoMatch", PIPELINE_NAME, REVISION);
     t.update(1000, TimeUnit.MILLISECONDS);
     t.update(2000, TimeUnit.MILLISECONDS);
     t.update(3000, TimeUnit.MILLISECONDS);
@@ -117,7 +117,7 @@ public class TestMetricRuleEvaluator {
   @Test
   public void testSoftErrorOnWrongCondition() {
     //create timer with id "testMetricAlerts" and register with metric registry, bump up value to 4.
-    Timer t = MetricsConfigurator.createTimer(metrics, "testSoftErrorOnWrongCondition");
+    Timer t = MetricsConfigurator.createTimer(metrics, "testSoftErrorOnWrongCondition", PIPELINE_NAME, REVISION);
     t.update(1000, TimeUnit.MILLISECONDS);
 
     MetricsRuleDefinition metricsRuleDefinition = new MetricsRuleDefinition("testSoftErrorOnWrongCondition",
@@ -138,7 +138,7 @@ public class TestMetricRuleEvaluator {
   @Test
   public void testCounterMatch() {
     //create timer with id "testMetricAlerts" and register with metric registry, bump up value to 4.
-    Counter c = MetricsConfigurator.createCounter(metrics, "testCounterMatch");
+    Counter c = MetricsConfigurator.createCounter(metrics, "testCounterMatch", PIPELINE_NAME, REVISION);
     c.inc(100);
 
     MetricsRuleDefinition metricsRuleDefinition = new MetricsRuleDefinition("testCounterMatch", "testCounterMatch",
@@ -158,7 +158,7 @@ public class TestMetricRuleEvaluator {
   @Test
   public void testCounterDisabled() {
     //create timer with id "testMetricAlerts" and register with metric registry, bump up value to 4.
-    Counter c = MetricsConfigurator.createCounter(metrics, "testCounterDisabled");
+    Counter c = MetricsConfigurator.createCounter(metrics, "testCounterDisabled", PIPELINE_NAME, REVISION);
     c.inc(100);
 
     MetricsRuleDefinition metricsRuleDefinition = new MetricsRuleDefinition("testCounterDisabled",
@@ -177,7 +177,7 @@ public class TestMetricRuleEvaluator {
   @Test
   public void testCounterNoMatch() {
     //create timer with id "testMetricAlerts" and register with metric registry, bump up value to 4.
-    Counter c = MetricsConfigurator.createCounter(metrics, "testCounterNoMatch");
+    Counter c = MetricsConfigurator.createCounter(metrics, "testCounterNoMatch", PIPELINE_NAME, REVISION);
     c.inc(100);
 
     MetricsRuleDefinition metricsRuleDefinition = new MetricsRuleDefinition("testCounterNoMatch",
@@ -196,7 +196,7 @@ public class TestMetricRuleEvaluator {
   @Test
   public void testMeterMatch() {
     //create timer with id "testMetricAlerts" and register with metric registry, bump up value to 4.
-    Meter m = MetricsConfigurator.createMeter(metrics, "testMeterMatch");
+    Meter m = MetricsConfigurator.createMeter(metrics, "testMeterMatch", PIPELINE_NAME, REVISION);
     m.mark(1000);
 
     MetricsRuleDefinition metricsRuleDefinition = new MetricsRuleDefinition("testMeterMatch", "testMeterMatch",
@@ -216,7 +216,7 @@ public class TestMetricRuleEvaluator {
   @Test
   public void testMeterNoMatch() {
     //create timer with id "testMetricAlerts" and register with metric registry, bump up value to 4.
-    Meter m = MetricsConfigurator.createMeter(metrics, "testMeterNoMatch");
+    Meter m = MetricsConfigurator.createMeter(metrics, "testMeterNoMatch", PIPELINE_NAME, REVISION);
     m.mark(1000);
 
     MetricsRuleDefinition metricsRuleDefinition = new MetricsRuleDefinition("testMeterNoMatch", "testMeterNoMatch",
@@ -235,7 +235,7 @@ public class TestMetricRuleEvaluator {
   @Test
   public void testMeterDisabled() {
     //create timer with id "testMetricAlerts" and register with metric registry, bump up value to 4.
-    Meter m = MetricsConfigurator.createMeter(metrics, "testMeterDisabled");
+    Meter m = MetricsConfigurator.createMeter(metrics, "testMeterDisabled", PIPELINE_NAME, REVISION);
     m.mark(1000);
 
     MetricsRuleDefinition metricsRuleDefinition = new MetricsRuleDefinition("testMeterDisabled", "testMeterDisabled",
@@ -254,7 +254,7 @@ public class TestMetricRuleEvaluator {
   @Test
   public void testHistogramMatch() {
     //create timer with id "testMetricAlerts" and register with metric registry, bump up value to 4.
-    Histogram h = MetricsConfigurator.createHistogram5Min(metrics, "testHistogramMatch");
+    Histogram h = MetricsConfigurator.createHistogram5Min(metrics, "testHistogramMatch", PIPELINE_NAME, REVISION);
     h.update(1000);
 
     MetricsRuleDefinition metricsRuleDefinition = new MetricsRuleDefinition("testHistogramMatch", "testHistogramMatch",
@@ -274,7 +274,7 @@ public class TestMetricRuleEvaluator {
   @Test
   public void testHistogramNoMatch() {
     //create timer with id "testMetricAlerts" and register with metric registry, bump up value to 4.
-    Histogram h = MetricsConfigurator.createHistogram5Min(metrics, "testHistogramNoMatch");
+    Histogram h = MetricsConfigurator.createHistogram5Min(metrics, "testHistogramNoMatch", PIPELINE_NAME, REVISION);
     h.update(1000);
 
     MetricsRuleDefinition metricsRuleDefinition = new MetricsRuleDefinition("testHistogramNoMatch",
@@ -293,7 +293,7 @@ public class TestMetricRuleEvaluator {
   @Test
   public void testHistogramDisabled() {
     //create timer with id "testMetricAlerts" and register with metric registry, bump up value to 4.
-    Histogram h = MetricsConfigurator.createHistogram5Min(metrics, "testHistogramDisabled");
+    Histogram h = MetricsConfigurator.createHistogram5Min(metrics, "testHistogramDisabled", PIPELINE_NAME, REVISION);
     h.update(1000);
 
     MetricsRuleDefinition metricsRuleDefinition = new MetricsRuleDefinition("testHistogramDisabled",

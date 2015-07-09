@@ -43,9 +43,10 @@ public class TestDataObserverRunner {
 
   @Before
   public void setUp() {
-    runtimeInfo = new RuntimeInfo(RuntimeModule.SDC_PROPERTY_PREFIX, new MetricRegistry(), Arrays.asList(TestDataRuleEvaluator.class.getClassLoader()));
-    dataObserverRunner = new DataObserverRunner(metrics, new AlertManager(PIPELINE_NAME, REVISION, null, metrics,
-      runtimeInfo, null, null), new Configuration());
+    runtimeInfo = new RuntimeInfo(RuntimeModule.SDC_PROPERTY_PREFIX, new MetricRegistry(),
+      Arrays.asList(TestDataRuleEvaluator.class.getClassLoader()));
+    dataObserverRunner = new DataObserverRunner(PIPELINE_NAME, REVISION, metrics,
+      new AlertManager(PIPELINE_NAME, REVISION, null, metrics, runtimeInfo, null, null), new Configuration());
   }
 
   @Test

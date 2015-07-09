@@ -28,15 +28,20 @@ import java.util.Set;
 
 public class Pipeline {
   private final PipelineBean pipelineBean;
+  private final String name;
+  private final String rev;
   private final Pipe[] pipes;
   private final PipelineRunner runner;
   private final Observer observer;
   private final BadRecordsHandler badRecordsHandler;
   private final ResourceControlledScheduledExecutor scheduledExecutorService;
 
-  private Pipeline(PipelineBean pipelineBean, Pipe[] pipes, Observer observer, BadRecordsHandler badRecordsHandler,
-      PipelineRunner runner, ResourceControlledScheduledExecutor scheduledExecutorService) {
+
+  private Pipeline(String name, String rev, PipelineBean pipelineBean, Pipe[] pipes, Observer observer, BadRecordsHandler badRecordsHandler,
+                   PipelineRunner runner, ResourceControlledScheduledExecutor scheduledExecutorService) {
     this.pipelineBean = pipelineBean;
+    this.name = name;
+    this.rev = rev;
     this.pipes = pipes;
     this.observer = observer;
     this.badRecordsHandler = badRecordsHandler;
@@ -120,6 +125,9 @@ public class Pipeline {
     private static final String EXECUTION_MODE_CLUSTER = "CLUSTER";
 
     private final StageLibraryTask stageLib;
+    private final String name;
+    private final String pipelineName;
+    private final String rev;
     private final PipelineConfiguration pipelineConf;
     private Observer observer;
     private final ResourceControlledScheduledExecutor scheduledExecutor =
@@ -129,8 +137,11 @@ public class Pipeline {
     private List<Issue> errors;
 
 
-    public Builder(StageLibraryTask stageLib, String name, PipelineConfiguration pipelineConf) {
+    public Builder(StageLibraryTask stageLib, String name, String pipelineName, String rev, PipelineConfiguration pipelineConf) {
       this.stageLib = stageLib;
+      this.name = name;
+      this.pipelineName = pipelineName;
+      this.rev = rev;
       this.pipelineConf = pipelineConf;
       errors = Collections.emptyList();
     }
@@ -155,7 +166,7 @@ public class Pipeline {
         Pipe[] pipes = createPipes(stages);
         BadRecordsHandler badRecordsHandler = new BadRecordsHandler(errorStage);
         try {
-          pipeline = new Pipeline(pipelineBean, pipes, observer, badRecordsHandler, runner, scheduledExecutor);
+          pipeline = new Pipeline(name, rev, pipelineBean, pipes, observer, badRecordsHandler, runner, scheduledExecutor);
         } catch (Exception e) {
           String msg = "Could not create memory usage collector: " + e;
           throw new PipelineRuntimeException(ContainerError.CONTAINER_0151, msg, e);
@@ -174,11 +185,11 @@ public class Pipeline {
       boolean clusterMode = isClusterMode(pipelineConf);
       for (StageRuntime stage : stages) {
         infos.add(stage.getInfo());
-        stage.setContext(new StageContext(infosUnmodifiable, stage.getDefinition().getType(), runner.isPreview(),
+        stage.setContext(new StageContext(pipelineName, rev, infosUnmodifiable, stage.getDefinition().getType(), runner.isPreview(),
           runner.getMetrics(), stage, pipelineConf.getMemoryLimitConfiguration().getMemoryLimit(), clusterMode,
           runner.getRuntimeInfo().getResourcesDir()));
       }
-      errorStage.setContext(new StageContext(infosUnmodifiable, errorStage.getDefinition().getType(), runner.isPreview(),
+      errorStage.setContext(new StageContext(pipelineName, rev, infosUnmodifiable, errorStage.getDefinition().getType(), runner.isPreview(),
           runner.getMetrics(), errorStage, pipelineConf.getMemoryLimitConfiguration().getMemoryLimit(), clusterMode,
           runner.getRuntimeInfo().getResourcesDir()));
     }
@@ -202,8 +213,8 @@ public class Pipeline {
         StageRuntime stage = stages[idx];
         switch (stage.getDefinition().getType()) {
           case SOURCE:
-            pipe = new StagePipe(stage, laneResolver.getStageInputLanes(idx), laneResolver.getStageOutputLanes(idx),
-              scheduledExecutor, memoryUsageCollectorResourceBundle);
+            pipe = new StagePipe(pipelineName, rev, stage, laneResolver.getStageInputLanes(idx),
+              laneResolver.getStageOutputLanes(idx), scheduledExecutor, memoryUsageCollectorResourceBundle);
             pipes.add(pipe);
             pipe = new ObserverPipe(stage, laneResolver.getObserverInputLanes(idx),
                                     laneResolver.getObserverOutputLanes(idx), observer);
@@ -216,7 +227,7 @@ public class Pipeline {
             pipe = new CombinerPipe(stage, laneResolver.getCombinerInputLanes(idx),
                                     laneResolver.getCombinerOutputLanes(idx));
             pipes.add(pipe);
-            pipe = new StagePipe(stage, laneResolver.getStageInputLanes(idx),
+            pipe = new StagePipe(pipelineName, rev, stage, laneResolver.getStageInputLanes(idx),
                                  laneResolver.getStageOutputLanes(idx), scheduledExecutor,
               memoryUsageCollectorResourceBundle);
             pipes.add(pipe);
@@ -231,8 +242,8 @@ public class Pipeline {
             pipe = new CombinerPipe(stage, laneResolver.getCombinerInputLanes(idx),
                                     laneResolver.getCombinerOutputLanes(idx));
             pipes.add(pipe);
-            pipe = new StagePipe(stage, laneResolver.getStageInputLanes(idx), laneResolver.getStageOutputLanes(idx),
-              scheduledExecutor, memoryUsageCollectorResourceBundle);
+            pipe = new StagePipe(pipelineName, rev, stage, laneResolver.getStageInputLanes(idx),
+              laneResolver.getStageOutputLanes(idx), scheduledExecutor, memoryUsageCollectorResourceBundle);
             pipes.add(pipe);
             break;
         }

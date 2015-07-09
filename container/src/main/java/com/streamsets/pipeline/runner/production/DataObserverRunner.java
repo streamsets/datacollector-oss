@@ -34,13 +34,18 @@ public class DataObserverRunner {
   private final MetricRegistry metrics;
   private final AlertManager alertManager;
   private final Configuration configuration;
+  private final String name;
+  private final String rev;
 
-  public DataObserverRunner(MetricRegistry metrics, AlertManager alertManager,
+
+  public DataObserverRunner(String name, String rev, MetricRegistry metrics, AlertManager alertManager,
                             Configuration configuration) {
     this.metrics = metrics;
     this.ruleToSampledRecordsMap = new HashMap<>();
     this.configuration = configuration;
     this.alertManager = alertManager;
+    this.name = name;
+    this.rev = rev;
   }
 
   public void handleDataRulesEvaluationRequest(DataRulesEvaluationRequest dataRulesEvaluationRequest) {
@@ -53,7 +58,7 @@ public class DataObserverRunner {
       List<DataRuleDefinition> dataRuleDefinitions = rulesConfigurationChangeRequest.getLaneToDataRuleMap().get(lane);
       if (dataRuleDefinitions != null) {
         for (DataRuleDefinition dataRuleDefinition : dataRuleDefinitions) {
-          DataRuleEvaluator dataRuleEvaluator = new DataRuleEvaluator(metrics, alertManager,
+          DataRuleEvaluator dataRuleEvaluator = new DataRuleEvaluator(name ,rev, metrics, alertManager,
             rulesConfigurationChangeRequest.getRuleDefinitions().getEmailIds(), dataRuleDefinition, configuration);
           dataRuleEvaluator.evaluateRule(ruleIdToSampledRecords.get(dataRuleDefinition.getId()), lane,
             ruleToSampledRecordsMap);
@@ -68,8 +73,8 @@ public class DataObserverRunner {
 
     //remove metrics for changed / deleted rules
     for(String ruleId : rulesConfigurationChangeRequest.getRulesToRemove()) {
-      MetricsConfigurator.removeMeter(metrics, USER_PREFIX + ruleId);
-      MetricsConfigurator.removeCounter(metrics, USER_PREFIX + ruleId);
+      MetricsConfigurator.removeMeter(metrics, USER_PREFIX + ruleId, name, rev);
+      MetricsConfigurator.removeCounter(metrics, USER_PREFIX + ruleId, name ,rev);
     }
 
     //resize evicting queue which retains sampled records

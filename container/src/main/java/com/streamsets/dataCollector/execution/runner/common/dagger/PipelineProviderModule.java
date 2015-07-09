@@ -75,7 +75,7 @@ public class PipelineProviderModule {
 
   @Provides  @Singleton
   public MetricsObserverRunner provideMetricsObserverRunner(MetricRegistry metricRegistry, AlertManager alertManager) {
-    return new MetricsObserverRunner(metricRegistry, alertManager);
+    return new MetricsObserverRunner(name, rev, metricRegistry, alertManager);
   }
 
   @Provides  @Singleton
@@ -91,8 +91,7 @@ public class PipelineProviderModule {
 
   @Provides @Singleton
   public ThreadHealthReporter provideThreadHealthReporter(MetricRegistry metricRegistry) {
-    ThreadHealthReporter threadHealthReporter = new ThreadHealthReporter(metricRegistry
-    );
+    ThreadHealthReporter threadHealthReporter = new ThreadHealthReporter(name, rev, metricRegistry);
     threadHealthReporter.register(RulesConfigLoaderRunnable.RUNNABLE_NAME);
     threadHealthReporter.register(MetricObserverRunnable.RUNNABLE_NAME);
     threadHealthReporter.register(DataObserverRunnable.RUNNABLE_NAME);
@@ -118,7 +117,7 @@ public class PipelineProviderModule {
   public DataObserverRunnable provideDataObserverRunnable(ThreadHealthReporter threadHealthReporter,
                                                           MetricRegistry metricRegistry, AlertManager alertManager,
                                                           Configuration configuration) {
-    return new DataObserverRunnable(threadHealthReporter, metricRegistry, alertManager, configuration);
+    return new DataObserverRunnable(name, rev, threadHealthReporter, metricRegistry, alertManager, configuration);
   }
 
   @Provides @Singleton

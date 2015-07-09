@@ -69,7 +69,7 @@ public class ProductionPipelineBuilder {
       throw new PipelineRuntimeException(ContainerError.CONTAINER_0158, ValidationUtil.getFirstIssueAsString(name,
         validator.getIssues()));
     }
-    Pipeline pipeline = new Pipeline.Builder(stageLib, name + PRODUCTION_PIPELINE_SUFFIX, pipelineConf)
+    Pipeline pipeline = new Pipeline.Builder(stageLib, name + PRODUCTION_PIPELINE_SUFFIX, name, rev, pipelineConf)
       .setObserver(observer).build(runner);
 
     List<Issue> configIssues = pipeline.validateConfigs();
@@ -96,7 +96,7 @@ public class ProductionPipelineBuilder {
       throw new PipelineRuntimeException(ContainerError.CONTAINER_0158, ValidationUtil.getFirstIssueAsString(name,
         validator.getIssues()));
     }
-    Pipeline pipeline = new Pipeline.Builder(stageLib, name + PRODUCTION_PIPELINE_SUFFIX, pipelineConf)
+    Pipeline pipeline = new Pipeline.Builder(stageLib, name + PRODUCTION_PIPELINE_SUFFIX, name, rev, pipelineConf)
       .setObserver(observer).build(runner);
 
     List<Issue> configIssues = pipeline.validateConfigs();

@@ -62,20 +62,16 @@ public class TestStandaloneRunner {
 
   @After
   public void tearDown() throws Exception {
-    LOG.info("********************* In tear down **************");
     TestUtil.EMPTY_OFFSET = false;
+    pipelineManager.stop();
     try {
-      pipelineManager.stop();
       File f = new File(System.getProperty(RuntimeModule.SDC_PROPERTY_PREFIX + RuntimeInfo.DATA_DIR));
       FileUtils.deleteDirectory(f);
     } catch (Exception e) {
-      LOG.info("********************* In tear down - Exception **************");
+
     }
-
     TestUtil.EMPTY_OFFSET = false;
-    LOG.info("********************* Getting out of tear down **************");
     System.getProperties().remove(RuntimeModule.SDC_PROPERTY_PREFIX + RuntimeInfo.DATA_DIR);
-
   }
 
   @Test(timeout = 20000)
@@ -189,7 +185,7 @@ public class TestStandaloneRunner {
     }
   }
 
- // @Test(timeout = 2000000)
+  @Test(timeout = 20000)
   public void testMultiplePipelineStartStop() throws Exception {
     Runner runner1 = pipelineManager.getRunner( "admin", TestUtil.MY_PIPELINE, "0");
     Runner runner2 = pipelineManager.getRunner("admin2", TestUtil.MY_SECOND_PIPELINE, "0");
@@ -198,26 +194,22 @@ public class TestStandaloneRunner {
     runner2.start();
     while (runner1.getStatus() != PipelineStatus.RUNNING) {
       Thread.sleep(1000);
-      LOG.warn("******* Runner 1 Status :  " + runner1.getStatus().name() + " *** expected STATUS RUNNING");
     }
     while (runner2.getStatus() != PipelineStatus.RUNNING) {
       Thread.sleep(1000);
-      LOG.warn("******* Runner 2 Status :  " + runner2.getStatus().name() + " *** expected STATUS RUNNING");
     }
     runner1.stop();
     while (runner1.getStatus() != PipelineStatus.STOPPED) {
       Thread.sleep(1000);
-      LOG.warn("******* Runner 1 Status :  " + runner1.getStatus().name() + " *** expected STATUS STOPPED");
     }
     assertEquals(PipelineStatus.RUNNING, runner2.getStatus());
     runner2.stop();
     while (runner2.getStatus() != PipelineStatus.STOPPED) {
       Thread.sleep(1000);
-      LOG.warn("******* Runner 2 Status :  " + runner2.getStatus().name() + " *** expected STATUS STOPPED");
     }
   }
 
-  //@Test(timeout = 200000000)
+  @Test(timeout = 20000)
   public void testMultiplePipelineFinish() throws Exception {
     Runner runner1 = pipelineManager.getRunner( "admin", TestUtil.MY_PIPELINE, "0");
     Runner runner2 = pipelineManager.getRunner("admin2", TestUtil.MY_SECOND_PIPELINE, "0");
@@ -239,7 +231,7 @@ public class TestStandaloneRunner {
     }
   }
 
-  //@Test(timeout = 20000)
+  @Test(timeout = 20000)
   public void testDisconnectedPipelinesStartedAgain() throws Exception {
     Runner runner1 = pipelineManager.getRunner( "admin", TestUtil.MY_PIPELINE, "0");
     Runner runner2 = pipelineManager.getRunner("admin2", TestUtil.MY_SECOND_PIPELINE, "0");

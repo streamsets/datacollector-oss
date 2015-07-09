@@ -149,7 +149,7 @@ public class AlertManager {
 
     } else {
       //remove existing gauge
-      MetricsConfigurator.removeGauge(metrics, AlertsUtil.getAlertGaugeName(ruleDefinition.getId()));
+      MetricsConfigurator.removeGauge(metrics, AlertsUtil.getAlertGaugeName(ruleDefinition.getId()), pipelineName, revision);
       alertResponse.put(TIMESTAMP, ((Map<String, Object>)gauge.getValue()).get(TIMESTAMP));
     }
     Gauge<Object> alertResponseGauge = new Gauge<Object>() {
@@ -159,7 +159,7 @@ public class AlertManager {
       }
     };
     MetricsConfigurator.createGauge(metrics, AlertsUtil.getAlertGaugeName(ruleDefinition.getId()),
-      alertResponseGauge);
+      alertResponseGauge, pipelineName, revision);
   }
 
   public void alertException(Object value, RuleDefinition ruleDefinition) {
@@ -170,7 +170,7 @@ public class AlertManager {
 
     if (gauge != null) {
       //remove existing gauge
-      MetricsConfigurator.removeGauge(metrics, AlertsUtil.getAlertGaugeName(ruleDefinition.getId()));
+      MetricsConfigurator.removeGauge(metrics, AlertsUtil.getAlertGaugeName(ruleDefinition.getId()), pipelineName, revision);
     }
 
     Gauge<Object> alertResponseGauge = new Gauge<Object>() {
@@ -181,6 +181,6 @@ public class AlertManager {
     };
 
     MetricsConfigurator.createGauge(metrics, AlertsUtil.getAlertGaugeName(ruleDefinition.getId()),
-      alertResponseGauge);
+      alertResponseGauge, pipelineName, revision);
   }
 }

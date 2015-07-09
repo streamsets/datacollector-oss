@@ -40,20 +40,24 @@ public class PreviewPipelineRunner implements PipelineRunner {
   private final boolean skipTargets;
   private final MetricRegistry metrics;
   private final List<List<StageOutput>> batchesOutput;
+  private final String name;
+  private final String rev;
   private String sourceOffset;
   private String newSourceOffset;
   private Timer processingTimer;
   private List<BatchListener> batchListenerList = new ArrayList<BatchListener>();
 
-  public PreviewPipelineRunner(RuntimeInfo runtimeInfo, SourceOffsetTracker offsetTracker, int batchSize, int batches,
+  public PreviewPipelineRunner(String name, String rev, RuntimeInfo runtimeInfo, SourceOffsetTracker offsetTracker, int batchSize, int batches,
       boolean skipTargets) {
+    this.name = name;
+    this.rev = rev;
     this.runtimeInfo = runtimeInfo;
     this.offsetTracker = offsetTracker;
     this.batchSize = batchSize;
     this.batches = batches;
     this.skipTargets = skipTargets;
     this.metrics = new MetricRegistry();
-    processingTimer = MetricsConfigurator.createTimer(metrics, "pipeline.batchProcessing");
+    processingTimer = MetricsConfigurator.createTimer(metrics, "pipeline.batchProcessing", name, rev);
     batchesOutput = new ArrayList<>();
   }
 

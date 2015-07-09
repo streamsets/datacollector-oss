@@ -55,7 +55,7 @@ public class TestDataRuleEvaluator {
     DataRuleDefinition dataRuleDefinition = new DataRuleDefinition("testAlertEnabledMeterEnabled",
       "testAlertEnabledMeterEnabled", lane, 100, 10, "${record:value(\"/name\")==null}", true,
       "testAlertEnabledMeterEnabled", ThresholdType.COUNT, "2", 5, true, false, true);
-    DataRuleEvaluator dataRuleEvaluator = new DataRuleEvaluator(metrics,
+    DataRuleEvaluator dataRuleEvaluator = new DataRuleEvaluator("name", "0", metrics,
       new AlertManager(PIPELINE_NAME, REVISION, null, metrics, runtimeInfo, null, null), null,
       dataRuleDefinition, new Configuration());
     evaluateRule(dataRuleEvaluator, lane);
@@ -77,7 +77,7 @@ public class TestDataRuleEvaluator {
       "testAlertDisabledMeterEnabled", lane,
       100, 10, "${record:value(\"/name\")==null}", false, null, ThresholdType.COUNT, "2", 5, true,
       false, true);
-    DataRuleEvaluator dataRuleEvaluator = new DataRuleEvaluator(metrics,
+    DataRuleEvaluator dataRuleEvaluator = new DataRuleEvaluator( "name", "0", metrics,
       new AlertManager(PIPELINE_NAME, REVISION, null, metrics, runtimeInfo, null, null), null,
       dataRuleDefinition, new Configuration());
     evaluateRule(dataRuleEvaluator, lane);
@@ -97,7 +97,7 @@ public class TestDataRuleEvaluator {
       "testAlertEnabledMeterDisabled", lane,
       100, 10, "${record:value(\"/name\")==null}", true, "testAlertEnabledMeterDisabled", ThresholdType.COUNT, "2",
       5, false, false, true);
-    DataRuleEvaluator dataRuleEvaluator = new DataRuleEvaluator(metrics,
+    DataRuleEvaluator dataRuleEvaluator = new DataRuleEvaluator( "name", "0", metrics,
       new AlertManager(PIPELINE_NAME, REVISION, null, metrics, runtimeInfo, null, null), null,
       dataRuleDefinition, new Configuration());
     evaluateRule(dataRuleEvaluator, lane);
@@ -118,7 +118,7 @@ public class TestDataRuleEvaluator {
       "testAlertRaisedCountRuleDisabled", lane,
       100, 10, "${record:value(\"/name\")==null}", true, "testAlertRaisedCountRuleDisabled", ThresholdType.COUNT, "2",
       5, true, false, false);
-    DataRuleEvaluator dataRuleEvaluator = new DataRuleEvaluator(metrics,
+    DataRuleEvaluator dataRuleEvaluator = new DataRuleEvaluator( "name", "0", metrics,
       new AlertManager(PIPELINE_NAME, REVISION, null, metrics, runtimeInfo, null, null), null,
       dataRuleDefinition, new Configuration());
     evaluateRule(dataRuleEvaluator, lane);
@@ -135,7 +135,7 @@ public class TestDataRuleEvaluator {
       "testNoExceptionInvalidExpression", lane,
       100, 10, "${record:value(\"/name\")==null", true, "testNoExceptionInvalidExpression", ThresholdType.COUNT, "2",
       5, true, false, true);
-    DataRuleEvaluator dataRuleEvaluator = new DataRuleEvaluator(metrics,
+    DataRuleEvaluator dataRuleEvaluator = new DataRuleEvaluator( "name", "0", metrics,
       new AlertManager(PIPELINE_NAME, REVISION, null, metrics, runtimeInfo, null, null), null,
       dataRuleDefinition, new Configuration());
     evaluateRule(dataRuleEvaluator, lane);
@@ -152,7 +152,7 @@ public class TestDataRuleEvaluator {
     DataRuleDefinition dataRuleDefinition = new DataRuleDefinition("testNoAlertRaisedCount", "testNoAlertRaisedCount",
       lane, 100, 10, "${record:value(\"/name\")==null}", true, "testNoAlertRaisedCount", ThresholdType.COUNT, "3",
       5, true, false, true);
-    DataRuleEvaluator dataRuleEvaluator = new DataRuleEvaluator(metrics,
+    DataRuleEvaluator dataRuleEvaluator = new DataRuleEvaluator( "name", "0", metrics,
       new AlertManager(PIPELINE_NAME, REVISION, null, metrics, runtimeInfo, null, null), null,
       dataRuleDefinition, new Configuration());
     evaluateRule(dataRuleEvaluator, lane);
@@ -168,7 +168,7 @@ public class TestDataRuleEvaluator {
       "testAlertRaisedPercentage", lane,
       100, 10, "${record:value(\"/name\")==null}", true, "testAlertRaisedPercentage", ThresholdType.PERCENTAGE, "40",
       5, true, false, true);
-    DataRuleEvaluator dataRuleEvaluator = new DataRuleEvaluator(metrics,
+    DataRuleEvaluator dataRuleEvaluator = new DataRuleEvaluator( "name", "0", metrics,
       new AlertManager(PIPELINE_NAME, REVISION, null, metrics, runtimeInfo, null, null), null,
       dataRuleDefinition, new Configuration());
     evaluateRule(dataRuleEvaluator, lane);
@@ -185,7 +185,7 @@ public class TestDataRuleEvaluator {
     DataRuleDefinition dataRuleDefinition = new DataRuleDefinition("testNoAlertRaisedPercentage",
       "testNoAlertRaisedPercentage", lane, 100, 10, "${record:value(\"/name\")==null}", true,
       "testNoAlertRaisedPercentage", ThresholdType.PERCENTAGE, "60", 5, true, false, true);
-    DataRuleEvaluator dataRuleEvaluator = new DataRuleEvaluator(metrics,  null, null,
+    DataRuleEvaluator dataRuleEvaluator = new DataRuleEvaluator( "name", "0", metrics,  null, null,
       dataRuleDefinition, new Configuration());
     evaluateRule(dataRuleEvaluator, lane);
     Gauge<Object> gauge = MetricsConfigurator.getGauge(metrics,
@@ -199,7 +199,7 @@ public class TestDataRuleEvaluator {
     DataRuleDefinition dataRuleDefinition = new DataRuleDefinition("testGaugeChange", "testGaugeChange", lane,
       100, 10, "${record:value(\"/name\")==null}", true, "testGaugeChange", ThresholdType.COUNT, "2", 5, true,
       false, true);
-    DataRuleEvaluator dataRuleEvaluator = new DataRuleEvaluator(metrics,
+    DataRuleEvaluator dataRuleEvaluator = new DataRuleEvaluator( "name", "0", metrics,
       new AlertManager(PIPELINE_NAME, REVISION, null, metrics, runtimeInfo, null, null), null,
       dataRuleDefinition, new Configuration());
 
@@ -225,7 +225,7 @@ public class TestDataRuleEvaluator {
     DataRuleDefinition nameNotNull = new DataRuleDefinition("nameNotNull",
       "nameNotNull", lane, 100, 10, "${record:value(\"/name\")==null}", true,
       "nameNotNull", ThresholdType.COUNT, "2", 5, true, false, true);
-    DataRuleEvaluator dataRuleEvaluator = new DataRuleEvaluator(metrics,
+    DataRuleEvaluator dataRuleEvaluator = new DataRuleEvaluator( "name", "0", metrics,
       new AlertManager(PIPELINE_NAME, REVISION, null, metrics, runtimeInfo, null, null), null,
       nameNotNull, new Configuration());
 
@@ -240,7 +240,7 @@ public class TestDataRuleEvaluator {
     DataRuleDefinition nameEqualsStreamSets = new DataRuleDefinition("nameEqualsStreamSets",
       "nameEqualsStreamSets", lane, 100, 10, "${record:value(\"/zip\")==94101}", true,
       "nameEqualsStreamSets", ThresholdType.COUNT, "1", 5, true, false, true);
-    DataRuleEvaluator dataRuleEvaluator2 = new DataRuleEvaluator(metrics,
+    DataRuleEvaluator dataRuleEvaluator2 = new DataRuleEvaluator( "name", "0", metrics,
       new AlertManager(PIPELINE_NAME, REVISION, null, metrics, runtimeInfo, null, null), null,
       nameEqualsStreamSets, new Configuration());
 

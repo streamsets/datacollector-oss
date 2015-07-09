@@ -19,7 +19,7 @@ public class TestMetricsConfigurator {
   @Test
   public void testCreateTimer() {
     MetricRegistry metrics = new MetricRegistry();
-    Timer timer = MetricsConfigurator.createTimer(metrics, "a");
+    Timer timer = MetricsConfigurator.createTimer(metrics, "a", "name", "0");
     Assert.assertNotNull(timer);
     Assert.assertEquals(1, metrics.getTimers().size());
     Map.Entry<String, Timer> entry = metrics.getTimers().entrySet().iterator().next();
@@ -31,7 +31,7 @@ public class TestMetricsConfigurator {
   @Test
   public void testCreateMeter() {
     MetricRegistry metrics = new MetricRegistry();
-    Meter meter = MetricsConfigurator.createMeter(metrics, "a");
+    Meter meter = MetricsConfigurator.createMeter(metrics, "a", "name", "0");
     Assert.assertNotNull(meter);
     Assert.assertEquals(1, metrics.getMeters().size());
     Map.Entry<String, Meter> entry = metrics.getMeters().entrySet().iterator().next();
@@ -43,7 +43,7 @@ public class TestMetricsConfigurator {
   @Test
   public void testCreateCounter() {
     MetricRegistry metrics = new MetricRegistry();
-    Counter counter = MetricsConfigurator.createCounter(metrics, "a");
+    Counter counter = MetricsConfigurator.createCounter(metrics, "a", "name", "0");
     Assert.assertNotNull(counter);
     Assert.assertEquals(1, metrics.getCounters().size());
     Map.Entry<String, Counter> entry = metrics.getCounters().entrySet().iterator().next();

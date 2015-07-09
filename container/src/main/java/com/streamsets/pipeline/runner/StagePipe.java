@@ -53,17 +53,21 @@ public class StagePipe extends Pipe<StagePipe.Context> {
   private StagePipe.Context context;
   private final ResourceControlledScheduledExecutor scheduledExecutorService;
   private final MemoryUsageCollectorResourceBundle memoryUsageCollectorResourceBundle;
+  private final String name;
+  private final String rev;
 
   @VisibleForTesting
   StagePipe(StageRuntime stage, List<String> inputLanes, List<String> outputLanes) {
-    this(stage, inputLanes, outputLanes, new ResourceControlledScheduledExecutor(0.02f),
+    this("myPipeline", "0", stage, inputLanes, outputLanes, new ResourceControlledScheduledExecutor(0.02f),
       new MemoryUsageCollectorResourceBundle());
   }
 
-  public StagePipe(StageRuntime stage, List<String> inputLanes, List<String> outputLanes,
+  public StagePipe(String name, String rev, StageRuntime stage, List<String> inputLanes, List<String> outputLanes,
                    ResourceControlledScheduledExecutor scheduledExecutorService,
                    MemoryUsageCollectorResourceBundle memoryUsageCollectorResourceBundle) {
     super(stage, inputLanes, outputLanes);
+    this.name = name;
+    this.rev = rev;
     this.scheduledExecutorService = scheduledExecutorService;
     this.memoryUsageCollectorResourceBundle = memoryUsageCollectorResourceBundle;
   }
@@ -78,28 +82,28 @@ public class StagePipe extends Pipe<StagePipe.Context> {
     getStage().init();
     MetricRegistry metrics = getStage().getContext().getMetrics();
     String metricsKey = "stage." + getStage().getConfiguration().getInstanceName();
-    processingTimer = MetricsConfigurator.createTimer(metrics, metricsKey + ".batchProcessing");
-    inputRecordsCounter = MetricsConfigurator.createCounter(metrics, metricsKey + ".inputRecords");
-    outputRecordsCounter = MetricsConfigurator.createCounter(metrics, metricsKey + ".outputRecords");
-    errorRecordsCounter = MetricsConfigurator.createCounter(metrics, metricsKey + ".errorRecords");
-    stageErrorCounter = MetricsConfigurator.createCounter(metrics, metricsKey + ".stageErrors");
-    memoryConsumedCounter = MetricsConfigurator.createCounter(metrics, metricsKey + ".memoryConsumed");
-    inputRecordsMeter = MetricsConfigurator.createMeter(metrics, metricsKey + ".inputRecords");
-    outputRecordsMeter = MetricsConfigurator.createMeter(metrics, metricsKey + ".outputRecords");
-    errorRecordsMeter = MetricsConfigurator.createMeter(metrics, metricsKey + ".errorRecords");
-    stageErrorMeter = MetricsConfigurator.createMeter(metrics, metricsKey + ".stageErrors");
-    inputRecordsHistogram = MetricsConfigurator.createHistogram5Min(metrics, metricsKey + ".inputRecords");
-    outputRecordsHistogram = MetricsConfigurator.createHistogram5Min(metrics, metricsKey + ".outputRecords");
-    errorRecordsHistogram = MetricsConfigurator.createHistogram5Min(metrics, metricsKey + ".errorRecords");
-    stageErrorsHistogram = MetricsConfigurator.createHistogram5Min(metrics, metricsKey + ".stageErrors");
+    processingTimer = MetricsConfigurator.createTimer(metrics, metricsKey + ".batchProcessing", name, rev);
+    inputRecordsCounter = MetricsConfigurator.createCounter(metrics, metricsKey + ".inputRecords", name, rev);
+    outputRecordsCounter = MetricsConfigurator.createCounter(metrics, metricsKey + ".outputRecords", name, rev);
+    errorRecordsCounter = MetricsConfigurator.createCounter(metrics, metricsKey + ".errorRecords", name, rev);
+    stageErrorCounter = MetricsConfigurator.createCounter(metrics, metricsKey + ".stageErrors", name, rev);
+    memoryConsumedCounter = MetricsConfigurator.createCounter(metrics, metricsKey + ".memoryConsumed", name, rev);
+    inputRecordsMeter = MetricsConfigurator.createMeter(metrics, metricsKey + ".inputRecords", name, rev);
+    outputRecordsMeter = MetricsConfigurator.createMeter(metrics, metricsKey + ".outputRecords", name, rev);
+    errorRecordsMeter = MetricsConfigurator.createMeter(metrics, metricsKey + ".errorRecords", name, rev);
+    stageErrorMeter = MetricsConfigurator.createMeter(metrics, metricsKey + ".stageErrors", name, rev);
+    inputRecordsHistogram = MetricsConfigurator.createHistogram5Min(metrics, metricsKey + ".inputRecords", name, rev);
+    outputRecordsHistogram = MetricsConfigurator.createHistogram5Min(metrics, metricsKey + ".outputRecords", name, rev);
+    errorRecordsHistogram = MetricsConfigurator.createHistogram5Min(metrics, metricsKey + ".errorRecords", name, rev);
+    stageErrorsHistogram = MetricsConfigurator.createHistogram5Min(metrics, metricsKey + ".stageErrors", name, rev);
     if (getStage().getConfiguration().getOutputLanes().size() > 1) {
       outputRecordsPerLaneCounter = new HashMap<>();
       outputRecordsPerLaneMeter = new HashMap<>();
       for (String lane : getStage().getConfiguration().getOutputLanes()) {
         outputRecordsPerLaneCounter.put(lane, MetricsConfigurator.createCounter(
-          metrics, metricsKey + ":" + lane + ".outputRecords"));
+          metrics, metricsKey + ":" + lane + ".outputRecords", name, rev));
         outputRecordsPerLaneMeter.put(lane, MetricsConfigurator.createMeter(
-          metrics, metricsKey + ":" + lane + ".outputRecords"));
+          metrics, metricsKey + ":" + lane + ".outputRecords", name, rev));
       }
     }
     this.context = context;
@@ -205,7 +209,7 @@ public class StagePipe extends Pipe<StagePipe.Context> {
         }
       };
       try {
-        MetricsConfigurator.createGauge(metricRegistry, RUNTIME_STATS_GAUGE, runtimeStatsGauge);
+        MetricsConfigurator.createGauge(metricRegistry, RUNTIME_STATS_GAUGE, runtimeStatsGauge, name ,rev);
       } catch (Exception e) {
         for(StackTraceElement se : e.getStackTrace()) {
           LOG.error(se.toString());

@@ -81,7 +81,7 @@ public interface PipelineManager extends Task {
 
   void deleteHistory(String pipelineName, String rev) throws PipelineManagerException;
 
-  boolean deleteAlert(String alertId) throws PipelineManagerException;
+  boolean deleteAlert(String pipelineName, String rev, String alertId) throws PipelineManagerException;
 
   public void updateSlaveCallbackInfo(CallbackInfo callbackInfo);
 

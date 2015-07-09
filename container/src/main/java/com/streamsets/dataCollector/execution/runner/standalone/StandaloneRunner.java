@@ -350,7 +350,7 @@ public class StandaloneRunner implements Runner, StateListener {
   public boolean deleteAlert(String alertId) throws PipelineRunnerException, PipelineStoreException {
     checkState(getStatus().equals(PipelineStatus.RUNNING), ContainerError.CONTAINER_0402);
     MetricsConfigurator.resetCounter(getMetrics(), AlertsUtil.getUserMetricName(alertId));
-    return MetricsConfigurator.removeGauge(getMetrics(), AlertsUtil.getAlertGaugeName(alertId));
+    return MetricsConfigurator.removeGauge(getMetrics(), AlertsUtil.getAlertGaugeName(alertId), name ,rev);
   }
 
   @Override

@@ -46,13 +46,13 @@ public class TestMetricObserverRunner {
   public void setUp() {
     runtimeInfo = new RuntimeInfo(RuntimeModule.SDC_PROPERTY_PREFIX, new MetricRegistry(),
       Arrays.asList(TestDataRuleEvaluator.class.getClassLoader()));
-    metricObserverRunner = new MetricsObserverRunner(metrics, new AlertManager(PIPELINE_NAME, REVISION, null, metrics,
-      runtimeInfo, null, null));
+    metricObserverRunner = new MetricsObserverRunner(PIPELINE_NAME, REVISION, metrics,
+      new AlertManager(PIPELINE_NAME, REVISION, null, metrics, runtimeInfo, null, null));
   }
 
   @Test
   public void testMetricObserverRunner() {
-    Timer t = MetricsConfigurator.createTimer(metrics, "testTimerMatch");
+    Timer t = MetricsConfigurator.createTimer(metrics, "testTimerMatch", PIPELINE_NAME, REVISION);
     t.update(1000, TimeUnit.MILLISECONDS);
     t.update(2000, TimeUnit.MILLISECONDS);
     t.update(3000, TimeUnit.MILLISECONDS);

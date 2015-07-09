@@ -38,8 +38,8 @@ public class ContextInfoCreator {
     };
   }
 
-  private static StageContext createContext(Class<?> stageClass, String instanceName, boolean isPreview, OnRecordError onRecordError,
-      List<String> outputLanes, String resourcesDir) {
+  private static StageContext createContext(Class<?> stageClass, String instanceName, boolean isPreview,
+                                            OnRecordError onRecordError, List<String> outputLanes, String resourcesDir) {
     Map<String, Class<?>[]> configToElDefMap;
     if(stageClass == null) {
       configToElDefMap = Collections.emptyMap();

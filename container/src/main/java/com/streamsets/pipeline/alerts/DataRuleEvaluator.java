@@ -64,9 +64,13 @@ public class DataRuleEvaluator {
   private final Configuration configuration;
   private final DataRuleDefinition dataRuleDefinition;
   private final AlertManager alertManager;
+  private final String name;
+  private final String rev;
 
-  public DataRuleEvaluator(MetricRegistry metrics, AlertManager alertManager, List<String> emailIds,
+  public DataRuleEvaluator(String name, String rev, MetricRegistry metrics, AlertManager alertManager, List<String> emailIds,
       DataRuleDefinition dataRuleDefinition, Configuration configuration) {
+    this.name = name;
+    this.rev = rev;
     this.metrics = metrics;
     this.emailIds = emailIds;
     this.dataRuleDefinition = dataRuleDefinition;
@@ -113,13 +117,14 @@ public class DataRuleEvaluator {
                 lane));
         if (evaluatedRecordCounter == null) {
           evaluatedRecordCounter = MetricsConfigurator.createCounter(metrics, LaneResolver.getPostFixedLaneForObserver(
-              lane));
+              lane), name ,rev);
         }
         //counter for the matching records - cummulative sum of records that match criteria
         Counter matchingRecordCounter =
             MetricsConfigurator.getCounter(metrics, USER_PREFIX + dataRuleDefinition.getId());
         if (matchingRecordCounter == null) {
-          matchingRecordCounter = MetricsConfigurator.createCounter(metrics, USER_PREFIX + dataRuleDefinition.getId());
+          matchingRecordCounter = MetricsConfigurator.createCounter(metrics, USER_PREFIX + dataRuleDefinition.getId()
+            , name, rev);
         }
 
         evaluatedRecordCounter.inc(evaluatedRecordCount);
@@ -151,7 +156,7 @@ public class DataRuleEvaluator {
       if (dataRuleDefinition.isMeterEnabled() && matchingRecordCount > 0) {
         Meter meter = MetricsConfigurator.getMeter(metrics, USER_PREFIX + dataRuleDefinition.getId());
         if (meter == null) {
-          meter = MetricsConfigurator.createMeter(metrics, USER_PREFIX + dataRuleDefinition.getId());
+          meter = MetricsConfigurator.createMeter(metrics, USER_PREFIX + dataRuleDefinition.getId(), name ,rev);
         }
         meter.mark(matchingRecordCount);
       }

@@ -13,6 +13,9 @@ import org.junit.Before;
 import org.junit.Test;
 
 public class TestThreadHealthReporter {
+
+  private static final String PIPELINE_NAME = "myPipeline";
+  private static final String PIPELINE_REV = "0";
   private static final String MY_THREAD = "MyThread";
   private static final String NOT_MY_THREAD = "NotMyThread";
 
@@ -21,7 +24,7 @@ public class TestThreadHealthReporter {
 
   @Before
   public void setUp() {
-    threadHealthReporter = new ThreadHealthReporter(metricRegistry);
+    threadHealthReporter = new ThreadHealthReporter(PIPELINE_NAME, PIPELINE_REV, metricRegistry);
   }
 
   @Test

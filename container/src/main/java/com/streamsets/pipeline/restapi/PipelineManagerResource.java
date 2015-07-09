@@ -284,7 +284,7 @@ public class PipelineManagerResource {
     @QueryParam("rev") @DefaultValue("0") String rev,
     @QueryParam("alertId") String alertId) throws PipelineManagerException {
     return Response.ok().type(MediaType.APPLICATION_JSON).entity(
-      pipelineManager.deleteAlert(alertId)).build();
+      pipelineManager.deleteAlert(pipelineName, rev, alertId)).build();
   }
 
 }

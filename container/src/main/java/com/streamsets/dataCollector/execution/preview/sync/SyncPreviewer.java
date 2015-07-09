@@ -216,8 +216,9 @@ public class SyncPreviewer implements Previewer {
     PipelineConfiguration pipelineConf = pipelineStore.load(name, rev);
     batches = Math.min(maxBatches, batches);
     SourceOffsetTracker tracker = new PreviewSourceOffsetTracker(null);
-    PreviewPipelineRunner runner = new PreviewPipelineRunner(runtimeInfo, tracker, batchSize, batches, skipTargets);
-    return new PreviewPipelineBuilder(stageLibrary, name, pipelineConf, endStageInstanceName)
+    PreviewPipelineRunner runner = new PreviewPipelineRunner(name, rev, runtimeInfo, tracker, batchSize, batches,
+      skipTargets);
+    return new PreviewPipelineBuilder(stageLibrary, name, rev, pipelineConf, endStageInstanceName)
       .build(runner);
   }
 

@@ -40,6 +40,7 @@ public class PreviewPipelineBuilder {
 
   private final StageLibraryTask stageLib;
   private final String name;
+  private final String rev;
   private final PipelineConfiguration pipelineConf;
   private final String endStageInstanceName;
 
@@ -52,10 +53,11 @@ public class PreviewPipelineBuilder {
    * @param endStageInstanceName Optional parameter, if passed builder will generate a partial pipeline and
    *                             endStage is exclusive
    */
-  public PreviewPipelineBuilder(StageLibraryTask stageLib, String name, PipelineConfiguration pipelineConf,
+  public PreviewPipelineBuilder(StageLibraryTask stageLib, String name, String rev, PipelineConfiguration pipelineConf,
                                 String endStageInstanceName) {
     this.stageLib = new PreviewStageLibraryTask(stageLib);
     this.name = name;
+    this.rev = rev;
     this.pipelineConf = pipelineConf;
     this.endStageInstanceName = endStageInstanceName;
   }
@@ -105,7 +107,7 @@ public class PreviewPipelineBuilder {
       throw new PipelineRuntimeException(ContainerError.CONTAINER_0154, ValidationUtil.getFirstIssueAsString(name,
         validator.getIssues()));
     }
-     Pipeline.Builder builder = new Pipeline.Builder(stageLib, name + ":preview", pipelineConf);
+     Pipeline.Builder builder = new Pipeline.Builder(stageLib, name + ":preview", name, rev, pipelineConf);
      Pipeline pipeline = builder.build(runner);
      if (pipeline != null) {
        List<Issue> configIssues = pipeline.validateConfigs();

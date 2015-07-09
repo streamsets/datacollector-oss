@@ -119,9 +119,10 @@ public class PreviewResource {
     batches = Math.min(maxBatches, batches);
     PipelineConfiguration pipelineConf = store.load(pipelineName, rev);
     SourceOffsetTracker tracker = new PreviewSourceOffsetTracker(null);
-    PreviewPipelineRunner runner = new PreviewPipelineRunner(runtimeInfo, tracker, batchSize, batches, skipTargets);
+    PreviewPipelineRunner runner = new PreviewPipelineRunner(pipelineName, rev, runtimeInfo, tracker, batchSize,
+      batches, skipTargets);
     try {
-      PreviewPipeline pipeline = new PreviewPipelineBuilder(stageLibrary, pipelineName, pipelineConf,
+      PreviewPipeline pipeline = new PreviewPipelineBuilder(stageLibrary, pipelineName, rev, pipelineConf,
         endStageInstanceName).build(runner);
       PreviewPipelineOutput previewOutput = pipeline.run(BeanHelper.unwrapStageOutput(stageOutputsToOverrideJson));
       return Response.ok().type(MediaType.APPLICATION_JSON).entity(BeanHelper.wrapPreviewPipelineOutput(previewOutput))
@@ -165,9 +166,9 @@ public class PreviewResource {
       throws PipelineStoreException, PipelineRuntimeException, StageException {
     PipelineConfiguration pipelineConf = store.load(pipelineName, rev);
     SourceOffsetTracker tracker = new PreviewSourceOffsetTracker("");
-    PreviewPipelineRunner runner = new PreviewPipelineRunner(runtimeInfo, tracker, 10, 1, true);
+    PreviewPipelineRunner runner = new PreviewPipelineRunner(pipelineName, rev, runtimeInfo, tracker, 10, 1, true);
     try {
-      PreviewPipeline pipeline = new PreviewPipelineBuilder(stageLibrary, pipelineName, pipelineConf, null).build(runner);
+      PreviewPipeline pipeline = new PreviewPipelineBuilder(stageLibrary, pipelineName, rev, pipelineConf, null).build(runner);
       return Response.ok().type(MediaType.APPLICATION_JSON)
                      .entity(BeanHelper.wrapIssues(pipeline.validateConfigs())).build();
     } catch (PipelineRuntimeException ex) {

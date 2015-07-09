@@ -124,17 +124,17 @@ public class ProductionPipelineRunner implements PipelineRunner {
     this.observeRequests = observeRequests;
     this.memoryLimitConfiguration = memoryLimitConfiguration;
 
-    batchProcessingTimer = MetricsConfigurator.createTimer(metrics, "pipeline.batchProcessing");
-    batchCountMeter = MetricsConfigurator.createMeter(metrics, "pipeline.batchCount");
-    batchInputRecordsHistogram = MetricsConfigurator.createHistogram5Min(metrics, "pipeline.inputRecordsPerBatch");
-    batchOutputRecordsHistogram = MetricsConfigurator.createHistogram5Min(metrics, "pipeline.outputRecordsPerBatch");
-    batchErrorRecordsHistogram = MetricsConfigurator.createHistogram5Min(metrics, "pipeline.errorRecordsPerBatch");
-    batchErrorsHistogram = MetricsConfigurator.createHistogram5Min(metrics, "pipeline.errorsPerBatch");
-    batchInputRecordsMeter = MetricsConfigurator.createMeter(metrics, "pipeline.batchInputRecords");
-    batchOutputRecordsMeter = MetricsConfigurator.createMeter(metrics, "pipeline.batchOutputRecords");
-    batchErrorRecordsMeter = MetricsConfigurator.createMeter(metrics, "pipeline.batchErrorRecords");
-    batchErrorMessagesMeter = MetricsConfigurator.createMeter(metrics, "pipeline.batchErrorMessages");
-    memoryConsumedCounter = MetricsConfigurator.createCounter(metrics, "pipeline.memoryConsumed");
+    batchProcessingTimer = MetricsConfigurator.createTimer(metrics, "pipeline.batchProcessing", pipelineName, revision);
+    batchCountMeter = MetricsConfigurator.createMeter(metrics, "pipeline.batchCount", pipelineName, revision);
+    batchInputRecordsHistogram = MetricsConfigurator.createHistogram5Min(metrics, "pipeline.inputRecordsPerBatch", pipelineName, revision);
+    batchOutputRecordsHistogram = MetricsConfigurator.createHistogram5Min(metrics, "pipeline.outputRecordsPerBatch", pipelineName, revision);
+    batchErrorRecordsHistogram = MetricsConfigurator.createHistogram5Min(metrics, "pipeline.errorRecordsPerBatch", pipelineName, revision);
+    batchErrorsHistogram = MetricsConfigurator.createHistogram5Min(metrics, "pipeline.errorsPerBatch", pipelineName, revision);
+    batchInputRecordsMeter = MetricsConfigurator.createMeter(metrics, "pipeline.batchInputRecords", pipelineName, revision);
+    batchOutputRecordsMeter = MetricsConfigurator.createMeter(metrics, "pipeline.batchOutputRecords", pipelineName, revision);
+    batchErrorRecordsMeter = MetricsConfigurator.createMeter(metrics, "pipeline.batchErrorRecords", pipelineName, revision);
+    batchErrorMessagesMeter = MetricsConfigurator.createMeter(metrics, "pipeline.batchErrorMessages", pipelineName, revision);
+    memoryConsumedCounter = MetricsConfigurator.createCounter(metrics, "pipeline.memoryConsumed", pipelineName, revision);
 
     this.deliveryGuarantee = deliveryGuarantee;
     this.snapshotStore = snapshotStore;
@@ -163,17 +163,26 @@ public class ProductionPipelineRunner implements PipelineRunner {
     stageToErrorMessagesMap = new HashMap<>();
     errorRecordsMutex = new Object();
 
-    batchProcessingTimer = MetricsConfigurator.createTimer(metrics, "pipeline.batchProcessing");
-    batchCountMeter = MetricsConfigurator.createMeter(metrics, "pipeline.batchCount");
-    batchInputRecordsHistogram = MetricsConfigurator.createHistogram5Min(metrics, "pipeline.inputRecordsPerBatch");
-    batchOutputRecordsHistogram = MetricsConfigurator.createHistogram5Min(metrics, "pipeline.outputRecordsPerBatch");
-    batchErrorRecordsHistogram = MetricsConfigurator.createHistogram5Min(metrics, "pipeline.errorRecordsPerBatch");
-    batchErrorsHistogram = MetricsConfigurator.createHistogram5Min(metrics, "pipeline.errorsPerBatch");
-    batchInputRecordsMeter = MetricsConfigurator.createMeter(metrics, "pipeline.batchInputRecords");
-    batchOutputRecordsMeter = MetricsConfigurator.createMeter(metrics, "pipeline.batchOutputRecords");
-    batchErrorRecordsMeter = MetricsConfigurator.createMeter(metrics, "pipeline.batchErrorRecords");
-    batchErrorMessagesMeter = MetricsConfigurator.createMeter(metrics, "pipeline.batchErrorMessages");
-    memoryConsumedCounter = MetricsConfigurator.createCounter(metrics, "pipeline.memoryConsumed");
+    batchProcessingTimer = MetricsConfigurator.createTimer(metrics, "pipeline.batchProcessing", pipelineName, revision);
+    batchCountMeter = MetricsConfigurator.createMeter(metrics, "pipeline.batchCount", pipelineName, revision);
+    batchInputRecordsHistogram = MetricsConfigurator.createHistogram5Min(metrics, "pipeline.inputRecordsPerBatch",
+      pipelineName, revision);
+    batchOutputRecordsHistogram = MetricsConfigurator.createHistogram5Min(metrics, "pipeline.outputRecordsPerBatch",
+      pipelineName, revision);
+    batchErrorRecordsHistogram = MetricsConfigurator.createHistogram5Min(metrics, "pipeline.errorRecordsPerBatch",
+      pipelineName, revision);
+    batchErrorsHistogram = MetricsConfigurator.createHistogram5Min(metrics, "pipeline.errorsPerBatch",
+      pipelineName, revision);
+    batchInputRecordsMeter = MetricsConfigurator.createMeter(metrics, "pipeline.batchInputRecords", pipelineName,
+      revision);
+    batchOutputRecordsMeter = MetricsConfigurator.createMeter(metrics, "pipeline.batchOutputRecords", pipelineName,
+      revision);
+    batchErrorRecordsMeter = MetricsConfigurator.createMeter(metrics, "pipeline.batchErrorRecords", pipelineName,
+      revision);
+    batchErrorMessagesMeter = MetricsConfigurator.createMeter(metrics, "pipeline.batchErrorMessages", pipelineName,
+      revision);
+    memoryConsumedCounter = MetricsConfigurator.createCounter(metrics, "pipeline.memoryConsumed", pipelineName,
+      revision);
   }
 
   public void setObserveRequests(BlockingQueue<Object> observeRequests) {

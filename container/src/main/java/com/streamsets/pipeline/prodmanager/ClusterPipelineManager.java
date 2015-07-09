@@ -428,7 +428,7 @@ public class
   }
 
   @Override
-  public boolean deleteAlert(String alertId) throws PipelineManagerException {
+  public boolean deleteAlert(String name, String rev, String alertId) throws PipelineManagerException {
     throw new UnsupportedOperationException();
   }
 

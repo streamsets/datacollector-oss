@@ -102,7 +102,7 @@ public class TestProductionRunWithObserver {
     Assert.assertTrue(counter.getCount() >= 100);
 
     //delete alert
-    manager.deleteAlert("myID");
+    manager.deleteAlert(MY_PIPELINE, PIPELINE_REV, "myID");
     alertGauge = MetricsConfigurator.getGauge(manager.getMetrics(), AlertsUtil.getAlertGaugeName("myID"));
     counter = MetricsConfigurator.getCounter(manager.getMetrics(), AlertsUtil.getUserMetricName("myID"));
 

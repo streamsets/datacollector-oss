@@ -11,6 +11,7 @@ import com.google.common.annotations.VisibleForTesting;
 import com.streamsets.pipeline.metrics.MetricsConfigurator;
 
 import javax.inject.Inject;
+import javax.inject.Named;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -20,9 +21,13 @@ public class ThreadHealthReporter {
 
   private Map<String, ThreadHealthReportGauge> threadToGaugeMap;
   private MetricRegistry metrics;
+  private final String name;
+  private final String rev;
 
   @Inject
-  public ThreadHealthReporter(MetricRegistry metrics) {
+  public ThreadHealthReporter(@Named("name") String name, @Named("rev") String rev, MetricRegistry metrics) {
+    this.name = name;
+    this.rev = rev;
     this.threadToGaugeMap = new HashMap<>();
     this.metrics = metrics;
   }
@@ -55,7 +60,7 @@ public class ThreadHealthReporter {
       return false;
     }
     ThreadHealthReportGauge threadHealthReportGauge = new ThreadHealthReportGauge();
-    MetricsConfigurator.createGauge(metrics, getHealthGaugeName(threadName), threadHealthReportGauge);
+    MetricsConfigurator.createGauge(metrics, getHealthGaugeName(threadName), threadHealthReportGauge, name, rev);
     threadToGaugeMap.put(threadName, threadHealthReportGauge);
     return true;
   }
@@ -63,7 +68,7 @@ public class ThreadHealthReporter {
   public boolean unregister(String threadName) {
     if(threadToGaugeMap.containsKey(threadName)) {
       threadToGaugeMap.remove(threadName);
-      return MetricsConfigurator.removeGauge(metrics, getHealthGaugeName(threadName));
+      return MetricsConfigurator.removeGauge(metrics, getHealthGaugeName(threadName), name, rev);
     }
     return true;
   }
@@ -74,7 +79,7 @@ public class ThreadHealthReporter {
 
   public void destroy() {
     for(String threadName : threadToGaugeMap.keySet()) {
-      MetricsConfigurator.removeGauge(metrics, getHealthGaugeName(threadName));
+      MetricsConfigurator.removeGauge(metrics, getHealthGaugeName(threadName), name ,rev);
     }
     threadToGaugeMap.clear();
   }
