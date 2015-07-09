@@ -935,10 +935,21 @@ angular
 
 
       $timeout(function() {
+        var config = $scope.pipelineConfig,
+          commonErrors = $rootScope.common.errors,
+          issuesMap;
+
+
+        if(commonErrors && commonErrors.length && commonErrors[0].pipelineIssues) {
+          issuesMap = commonErrors[0];
+        } else if(config && config.issues){
+          issuesMap = config.issues;
+        }
+
         $scope.$broadcast('updateGraph', {
           nodes: $scope.pipelineConfig.stages,
           edges: edges,
-          issues: $scope.pipelineConfig.issues,
+          issues: issuesMap,
           selectNode: ($scope.selectedType && $scope.selectedType === pipelineConstant.STAGE_INSTANCE) ? $scope.selectedObject : undefined,
           selectEdge: ($scope.selectedType && $scope.selectedType === pipelineConstant.LINK) ? $scope.selectedObject : undefined,
           stageErrorCounts: stageErrorCounts,
@@ -1432,6 +1443,13 @@ angular
         $scope.$broadcast('updateEdgePreviewIconColor', $scope.pipelineRules, $scope.triggeredAlerts);
       } else {
         $scope.triggeredAlerts = [];
+      }
+    });
+
+    $rootScope.$watch('common.errors', function() {
+      var commonErrors = $rootScope.common.errors;
+      if(commonErrors && commonErrors.length && commonErrors[0].pipelineIssues) {
+        $scope.refreshGraph();
       }
     });
 
