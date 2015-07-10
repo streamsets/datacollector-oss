@@ -27,12 +27,10 @@
    <dlentry>
     <dt>Delimited</dt>
     <dd>Generates a record for each delimited line. You can use the following delimited format
-            types:<ul id="ul_a51_wzk_5q">
-            <li>Default CSV (ignores empty lines)</li>
-            <li>RFC4180 CSV</li>
-            <li>Microsoft Excel CSV</li>
-            <li>MySQL CSV</li>
-            <li>Tab-separated values</li>
+            types:<ul
+            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/ul_delFileTypes"
+            id="ul_usk_hlf_qs">
+            <li/>
           </ul></dd>
         <dd>When a record exceeds the maximum record length defined for the origin, Directory
           processes the object based on the error handling configured for the origin. </dd>

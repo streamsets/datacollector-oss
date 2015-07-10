@@ -22,58 +22,74 @@
             <step>
                 <cmd>Convert fields with datetime data to Datetime as follows:</cmd>
                 <info>
-                    <simpletable frame="all" id="simpletable_sp4_wxk_ps">
-                        <sthead>
-                            <stentry>Field Converter Property</stentry>
-                            <stentry>Datetime Conversion</stentry>
-                        </sthead>
-                        <strow>
-                            <stentry>Fields to Convert</stentry>
-                            <stentry>Click in the field and select the following fields:<ul
-                                    id="ul_wnn_zxk_ps">
-                                    <li>/dropoff_datetime</li>
-                                    <li>/pickup_datetime</li>
-                                </ul></stentry>
-                        </strow>
-                        <strow>
-                            <stentry>Convert to Type</stentry>
-                            <stentry>Datetime</stentry>
-                        </strow>
-                        <strow>
-                            <stentry>Date Format</stentry>
-                            <stentry>Select a format that you like.l </stentry>
-                        </strow>
-                    </simpletable>
+                    <table frame="all" rowsep="1" colsep="1" id="table_h3v_yhz_ps">
+                        <tgroup cols="2">
+                            <colspec colname="c1" colnum="1"/>
+                            <colspec colname="c2" colnum="2"/>
+                            <thead>
+                                <row>
+                                    <entry>Field Converter Property</entry>
+                                    <entry>Datetime Conversion</entry>
+                                </row>
+                            </thead>
+                            <tbody>
+                                <row>
+                                    <entry>Fields to Convert</entry>
+                                    <entry>Click in the field and select the following fields:<ul
+                                            id="ul_v3g_23z_ps">
+                                            <li>/dropoff_datetime</li>
+                                            <li>/pickup_datetime</li>
+                                        </ul></entry>
+                                </row>
+                                <row>
+                                    <entry>Convert to Type</entry>
+                                    <entry>Datetime</entry>
+                                </row>
+                                <row>
+                                    <entry>Date Format</entry>
+                                    <entry>Select a format that you like.</entry>
+                                </row>
+                            </tbody>
+                        </tgroup>
+                    </table>
                 </info>
             </step>
             <step>
                 <cmd>To convert fields to Double, click the <uicontrol>Add</uicontrol> icon and
                     configure the properties as follows:</cmd>
                 <info>
-                    <simpletable frame="all" id="simpletable_tcl_dyk_ps">
-                        <sthead>
-                            <stentry>Field Converter Property</stentry>
-                            <stentry>Double Conversion</stentry>
-                        </sthead>
-                        <strow>
-                            <stentry>Fields to Convert</stentry>
-                            <stentry>Click in the field and select the following fields:<ul
-                                    id="ul_mly_gyk_ps">
-                                    <li>/fare_amount</li>
-                                    <li>/mta_tax</li>
-                                    <li>/pickup_latitude</li>
-                                    <li>/pickup_longitude</li>
-                                    <li>/surcharge</li>
-                                    <li>/tip_amount</li>
-                                    <li>/tolls_amount</li>
-                                    <li>/total_amount</li>
-                                </ul></stentry>
-                        </strow>
-                        <strow>
-                            <stentry>Convert to Type</stentry>
-                            <stentry>Double</stentry>
-                        </strow>
-                    </simpletable>
+                    <table frame="all" rowsep="1" colsep="1" id="table_xkg_g3z_ps">
+                        <tgroup cols="2">
+                            <colspec colname="c1" colnum="1"/>
+                            <colspec colname="c2" colnum="2"/>
+                            <thead>
+                                <row>
+                                    <entry>Field Converter Property</entry>
+                                    <entry>Double Conversion</entry>
+                                </row>
+                            </thead>
+                            <tbody>
+                                <row>
+                                    <entry>Fields to Convert</entry>
+                                    <entry>Click in the field and select the following fields:<ul
+                                            id="ul_tlc_33z_ps">
+                                            <li>/fare_amount</li>
+                                            <li>/mta_tax</li>
+                                            <li>/pickup_latitude</li>
+                                            <li>/pickup_longitude</li>
+                                            <li>/surcharge</li>
+                                            <li>/tip_amount</li>
+                                            <li>/tolls_amount</li>
+                                            <li>/total_amount</li>
+                                        </ul></entry>
+                                </row>
+                                <row>
+                                    <entry>Convert to Type</entry>
+                                    <entry>Double</entry>
+                                </row>
+                            </tbody>
+                        </tgroup>
+                    </table>
                 </info>
             </step>
         </steps>

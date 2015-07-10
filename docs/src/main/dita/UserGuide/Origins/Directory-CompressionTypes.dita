@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
+<concept id="concept_uxr_g52_qs">
+ <title>File Compression Types</title>
+ <shortdesc>The Directory origin can read uncompressed files, files compressed by ZIP and gzip, or a
+  combination of all. </shortdesc>
+ <conbody>
+  <p><indexterm>Directory origin<indexterm>file compression
+    types</indexterm></indexterm><indexterm>compression types<indexterm>for
+    Directory</indexterm></indexterm>Configure Directory to indicate the type of files to read and
+   define the file name pattern appropriately. For example, when reading compression files, make
+   sure to specify the appropriate file extension or use a wildcard for the extension.<note
+    type="tip">When reading a combination of types, use an asterisk to represent the file exension
+    to avoid excluding an extension type. </note></p>
+ </conbody>
+</concept>

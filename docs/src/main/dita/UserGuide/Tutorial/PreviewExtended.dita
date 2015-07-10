@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
+<concept id="concept_u4h_mwf_qs">
+ <title>Preview and Edit the Pipeline</title>
+ <shortdesc>Except for the Elasticsearch destination, the extended tutorial is complete. Let's use
+  data preview to see how stages transform data. We'll also make some configuration changes and edit
+  preview data for testing. </shortdesc>
+ <conbody>
+  <p>To preview the pipeline, click the preview icon: <image
+    href="../Graphics/icon-ConfigDataPreview.png" id="image_iqz_1hg_qs" scale="80"/>.</p>
+  <p>You can explore how each stage transforms data by selecting the stage and reviewing the input
+   and output records in the Preview panel. Listed here are some details to note:<dl>
+    <dlentry>
+     <dt>Field Masker</dt>
+     <dd>To see how the Field Masker masks credit card numbers: <ol id="ol_ht2_5lg_qs">
+       <li>Select the Field Masker in the canvas, and then expand the first input and output
+        record.</li>
+       <li>Scroll down and note that index 20 is highlighted, indicating a change.</li>
+       <li> Expand index 20 for the input and output data. Notice how all digits except the last 4
+        are masked. </li>
+      </ol></dd>
+     <dd>Say we want to change the mask type to mask the whole credit card number. To review the
+      stage property that made this happen and try a different option, complete the following
+       steps:<ol id="ol_vvw_wlg_qs">
+       <li>Scroll up and select the <uicontrol>Stage Configuration</uicontrol> icon: <image
+         href="../Graphics/icon_PrevStageConfig.png" id="image_xnl_lmg_qs" scale="80"/></li>
+       <li>Click the <uicontrol>Mask</uicontrol> tab.</li>
+       <li>Change the <uicontrol>Mask Type</uicontrol> to <uicontrol>Variable Length</uicontrol> to
+        mask all numbers while showing how many numbers there are in the data. </li>
+       <li>To view the data with this change, click the <uicontrol>Refresh Preview</uicontrol> icon.
+         <draft-comment author="Loretta">Hopefully this icon name will change?</draft-comment></li>
+       <li>In the canvas, select the Field Masker processor and if the Preview panel displays the
+        stage configuration, select the <uicontrol>Records</uicontrol> tab to view the preview
+        records. </li>
+       <li> Expand an output record, expand index 20, and notice how the entire number is now
+        masked. </li>
+      </ol></dd>
+    </dlentry>
+    <dlentry>
+     <dt>Jython Evaluator Flattening Records</dt>
+     <dd>Next, let's look at the second Jython Evaluator in the pipeline. This stage flattens the
+      delimited data, but let's see what that looks like:<ul id="ul_qvt_lmm_qs">
+       <li>Select the second Jython Evaluator and expand the first input and output record.
+         <p>Notice how the input record is a list of maps and the output record has been flattened
+         to the following structure: &lt;field name>: &lt;value>. Isn't that great? </p></li>
+      </ul></dd>
+    </dlentry>
+    <dlentry>
+     <dt>Field Converter</dt>
+     <dd>Now let's look at the Field Converter. <ol id="ol_ajx_pmm_qs">
+       <li>To move the focus to the Field Converter, instead of selecting the stage in the pipeline,
+        you can click the <uicontrol>Next Stage</uicontrol> icon.<p>You might notice a red message
+         that indicates the first record has an unparsable date - it shows that the date data
+         includes invalid characters at the end. </p><p>So what happens to this bad record? It
+         depends on how the stage is configured. We used the default configuration, but let's see
+         what that is:</p></li>
+       <li>Click the Stage Configuration icon. Notice the <uicontrol>On Record Error
+        </uicontrol>property is set to <uicontrol>Send to Error</uicontrol>. <p>This means error
+         records are sent to the pipeline for error handling. And you might recall we configured the
+         pipeline to write all error records to file. So with this configuration, the error record
+         will be dropped from the pipeline and written to file. </p><p>You can configure this
+         property to stop the pipeline on encountering an error record or to discard error
+         records.</p></li>
+       <li>To see how it looks when you discard errors, set <uicontrol>On Record Error</uicontrol>
+        to <uicontrol>Discard</uicontrol>. And then, click the <uicontrol>Refresh
+         Preview</uicontrol> icon.<draft-comment author="Loretta">Hopefully this name will
+         change.</draft-comment></li>
+       <li>On the canvas, select the <uicontrol>Field Converter </uicontrol>stage, and then click
+        the <uicontrol>Records</uicontrol> icon in the Preview panel. Notice the first record is
+        discarded without notice of the error that occurred. </li>
+       <li>We prefer to keep error records, so go back to the Stage Configuration tab and change
+         <uicontrol>On Record Error</uicontrol> back to <uicontrol>Send to Error</uicontrol>.</li>
+      </ol></dd>
+    </dlentry>
+    <dlentry>
+     <dt>Expression Evaluator </dt>
+     <dd/>
+    </dlentry>
+   </dl></p>
+ </conbody>
+</concept>

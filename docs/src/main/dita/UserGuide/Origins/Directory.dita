@@ -9,9 +9,9 @@
   <p><indexterm>Directory
                     origin<indexterm>overview</indexterm></indexterm><indexterm>origins<indexterm>Directory</indexterm></indexterm>When
             you configure the Directory origin, you define the directory to use, the file name
-            pattern, and the first file to process. These properties determine the files that the
-            origin processes. After processing a file, Directory can keep, archive, or delete the
-            file. </p>
+            pattern, the first file to process, and the compression type. These properties determine
+            the files that the origin processes. After processing a file, Directory can keep,
+            archive, or delete the file. </p>
         <p>When the pipeline stops, Directory notes where it stops reading. When the pipeline starts
             again, Directory continues processing from where it stopped by default. You can reset
             the origin to process all requested files. </p>

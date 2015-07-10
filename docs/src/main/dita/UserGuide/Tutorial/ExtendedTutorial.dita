@@ -6,14 +6,14 @@
     flatten delimited data, perform some minor data transformations, and write to
     Elasticsearch.</shortdesc>
  <conbody>
-  <p>If you don't use Elasticsearch, you can still complete the extended tutorial. But instead of
-      running the pipeline, you can use data preview to examine how the pipeline converts data. </p>
+  <p>If you don't use Elasticsearch, you can use data preview to see how the pipeline transforms
+      data before we add the destination.</p>
     <p>The extended tutorial continues with the following steps:<ol id="ol_m23_hhk_ps">
         <li>Use a Jython Evaluator to flatten data.</li>
         <li>Configure a Field Converter to convert field types.</li>
         <li>Use the Expression Evaluator to merge field data.</li>
-        <li>Connect the pipeline to an Elasticsearch destination. </li>
-        <li>Run or preview the extended pipeline.</li>
+        <li>Use data preview to review and edit the pipeline.</li>
+        <li>Optionally connect an Elasticsearch destination and start the pipeline.</li>
       </ol></p>
  </conbody>
 </concept>

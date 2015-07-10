@@ -18,8 +18,8 @@
     flatten delimited data, perform some minor data transformations, and write to
     Elasticsearch.</p>
 
-  <p class="p">If you don't use Elasticsearch, you can still complete the extended tutorial. But instead of
-      running the pipeline, you can use data preview to examine how the pipeline converts data. </p>
+  <p class="p">If you don't use Elasticsearch, you can use data preview to see how the pipeline transforms
+      data before we add the destination.</p>
 
     <div class="p">The extended tutorial continues with the following steps:<ol class="ol" id="concept_w4n_gjt_ls__ol_m23_hhk_ps">
         <li class="li">Use a Jython Evaluator to flatten data.</li>
@@ -28,9 +28,9 @@
 
         <li class="li">Use the Expression Evaluator to merge field data.</li>
 
-        <li class="li">Connect the pipeline to an Elasticsearch destination. </li>
+        <li class="li">Use data preview to see how the pipeline works.</li>
 
-        <li class="li">Run or preview the extended pipeline.</li>
+        <li class="li">Optionally connect an Elasticsearch destination and start the pipeline.</li>
 
       </ol>
 </div>
@@ -63,8 +63,8 @@
                 <div class="itemgroup info"><img class="image" id="task_cn5_w3k_ps__image_fsy_3nk_ps" src="../Graphics/Tutorial-Jython2pipeline.png" height="145" width="593"></img></div>
             </li>
 <li class="li step stepexpand">
-                <span class="ph cmd">On the <span class="ph uicontrol">Jython</span> tab, delete everything in the Script field
-                    and enter the following script:</span>
+                <span class="ph cmd">On the <span class="ph uicontrol">Jython</span> tab, delete everything in the
+                        <span class="ph uicontrol">Script</span> field and enter the following script:</span>
                 <div class="itemgroup info">
                     <pre class="pre codeblock">try:
   for record in records:
@@ -106,37 +106,52 @@ except Exception as e:
 <li class="li step stepexpand">
                 <span class="ph cmd">Convert fields with datetime data to Datetime as follows:</span>
                 <div class="itemgroup info">
-                    <table cellpadding="4" cellspacing="0" summary="" id="task_kxl_tvk_ps__simpletable_sp4_wxk_ps" border="1" class="simpletable"><tr class="sthead">
-                            <th valign="bottom" align="left" id="d48763e167" class="stentry">Field Converter Property</th>
+                    
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_kxl_tvk_ps__table_h3v_yhz_ps" class="table" frame="border" border="1" rules="all">
+                            
+                            
+                            <thead class="thead" align="left">
+                                <tr class="row">
+                                    <th class="entry" valign="top" id="d48979e178">Field Converter Property</th>
 
-                            <th valign="bottom" align="left" id="d48763e170" class="stentry">Datetime Conversion</th>
+                                    <th class="entry" valign="top" id="d48979e181">Datetime Conversion</th>
 
-                        </tr>
-<tr class="strow">
-                            <td valign="top" headers="d48763e167" class="stentry">Fields to Convert</td>
+                                </tr>
 
-                            <td valign="top" headers="d48763e170" class="stentry">Click in the field and select the following fields:<ul class="ul" id="task_kxl_tvk_ps__ul_wnn_zxk_ps">
-                                    <li class="li">/dropoff_datetime</li>
+                            </thead>
 
-                                    <li class="li">/pickup_datetime</li>
+                            <tbody class="tbody">
+                                <tr class="row">
+                                    <td class="entry" valign="top" headers="d48979e178 ">Fields to Convert</td>
 
-                                </ul>
+                                    <td class="entry" valign="top" headers="d48979e181 ">Click in the field and select the following fields:<ul class="ul" id="task_kxl_tvk_ps__ul_v3g_23z_ps">
+                                            <li class="li">/dropoff_datetime</li>
+
+                                            <li class="li">/pickup_datetime</li>
+
+                                        </ul>
 </td>
 
-                        </tr>
-<tr class="strow">
-                            <td valign="top" headers="d48763e167" class="stentry">Convert to Type</td>
+                                </tr>
 
-                            <td valign="top" headers="d48763e170" class="stentry">Datetime</td>
+                                <tr class="row">
+                                    <td class="entry" valign="top" headers="d48979e178 ">Convert to Type</td>
 
-                        </tr>
-<tr class="strow">
-                            <td valign="top" headers="d48763e167" class="stentry">Date Format</td>
+                                    <td class="entry" valign="top" headers="d48979e181 ">Datetime</td>
 
-                            <td valign="top" headers="d48763e170" class="stentry">Select a format that you like.l </td>
+                                </tr>
 
-                        </tr>
-</table>
+                                <tr class="row">
+                                    <td class="entry" valign="top" headers="d48979e178 ">Date Format</td>
+
+                                    <td class="entry" valign="top" headers="d48979e181 ">Select a format that you like.</td>
+
+                                </tr>
+
+                            </tbody>
+
+                        </table>
+</div>
 
                 </div>
             </li>
@@ -144,43 +159,57 @@ except Exception as e:
                 <span class="ph cmd">To convert fields to Double, click the <span class="ph uicontrol">Add</span> icon and
                     configure the properties as follows:</span>
                 <div class="itemgroup info">
-                    <table cellpadding="4" cellspacing="0" summary="" id="task_kxl_tvk_ps__simpletable_tcl_dyk_ps" border="1" class="simpletable"><tr class="sthead">
-                            <th valign="bottom" align="left" id="d48763e226" class="stentry">Field Converter Property</th>
+                    
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_kxl_tvk_ps__table_xkg_g3z_ps" class="table" frame="border" border="1" rules="all">
+                            
+                            
+                            <thead class="thead" align="left">
+                                <tr class="row">
+                                    <th class="entry" valign="top" id="d48979e250">Field Converter Property</th>
 
-                            <th valign="bottom" align="left" id="d48763e229" class="stentry">Double Conversion</th>
+                                    <th class="entry" valign="top" id="d48979e253">Double Conversion</th>
 
-                        </tr>
-<tr class="strow">
-                            <td valign="top" headers="d48763e226" class="stentry">Fields to Convert</td>
+                                </tr>
 
-                            <td valign="top" headers="d48763e229" class="stentry">Click in the field and select the following fields:<ul class="ul" id="task_kxl_tvk_ps__ul_mly_gyk_ps">
-                                    <li class="li">/fare_amount</li>
+                            </thead>
 
-                                    <li class="li">/mta_tax</li>
+                            <tbody class="tbody">
+                                <tr class="row">
+                                    <td class="entry" valign="top" headers="d48979e250 ">Fields to Convert</td>
 
-                                    <li class="li">/pickup_latitude</li>
+                                    <td class="entry" valign="top" headers="d48979e253 ">Click in the field and select the following fields:<ul class="ul" id="task_kxl_tvk_ps__ul_tlc_33z_ps">
+                                            <li class="li">/fare_amount</li>
 
-                                    <li class="li">/pickup_longitude</li>
+                                            <li class="li">/mta_tax</li>
 
-                                    <li class="li">/surcharge</li>
+                                            <li class="li">/pickup_latitude</li>
 
-                                    <li class="li">/tip_amount</li>
+                                            <li class="li">/pickup_longitude</li>
 
-                                    <li class="li">/tolls_amount</li>
+                                            <li class="li">/surcharge</li>
 
-                                    <li class="li">/total_amount</li>
+                                            <li class="li">/tip_amount</li>
 
-                                </ul>
+                                            <li class="li">/tolls_amount</li>
+
+                                            <li class="li">/total_amount</li>
+
+                                        </ul>
 </td>
 
-                        </tr>
-<tr class="strow">
-                            <td valign="top" headers="d48763e226" class="stentry">Convert to Type</td>
+                                </tr>
 
-                            <td valign="top" headers="d48763e229" class="stentry">Double</td>
+                                <tr class="row">
+                                    <td class="entry" valign="top" headers="d48979e250 ">Convert to Type</td>
 
-                        </tr>
-</table>
+                                    <td class="entry" valign="top" headers="d48979e253 ">Double</td>
+
+                                </tr>
+
+                            </tbody>
+
+                        </table>
+</div>
 
                 </div>
             </li>
@@ -231,6 +260,64 @@ except Exception as e:
     </div>
 
 </div>
+<div class="topic concept nested1" id="concept_u4h_mwf_qs">
+ <h2 class="title topictitle2">Preview and Adjust the Pipeline</h2>
+
+ 
+ <div class="body conbody"><p class="shortdesc">Except for the Elasticsearch destination, the extended tutorial is complete. To see how
+  each stage transforms data, use data preview. In preview mode, you can edit configuration
+  properties or preview data and run the preview with the changes.</p>
+
+  <p class="p">To preview the pipeline, click the preview icon: <img class="image" id="concept_u4h_mwf_qs__image_iqz_1hg_qs" src="../Graphics/icon-ConfigDataPreview.png" height="15" width="20"></img>.</p>
+
+  <div class="p">You can explore how each stage transforms data by selecting the stage and reviewing the input
+   and output records in the Preview panel. Listed here are some details to note:<dl class="dl">
+    
+     <dt class="dt dlterm">Field Masker</dt>
+
+     <dd class="dd">To see how the Field Masker masks credit card numbers: <ol class="ol" id="concept_u4h_mwf_qs__ol_ht2_5lg_qs">
+       <li class="li">Select the Field Masker in the canvas, and then expand the first record.</li>
+
+       <li class="li">Scroll down and note that index 20 is highlighted, indicating a change.</li>
+
+       <li class="li"> Expand index 20 for the input and output data. Note how all digits except the last 4 are
+        masked. </li>
+
+      </ol>
+</dd>
+
+     <dd class="dd">Say we want to change the mask type to mask the whole credit card number. </dd>
+
+     <dd class="dd">To review the stage property that made this happen and try a different option:<ol class="ol" id="concept_u4h_mwf_qs__ol_vvw_wlg_qs">
+       <li class="li">Scroll up and select the <span class="ph uicontrol">Stage Configuration</span> icon: <img class="image" id="concept_u4h_mwf_qs__image_xnl_lmg_qs" src="../Graphics/icon_PrevStageConfig.png" height="18" width="20"></img></li>
+
+       <li class="li">Click the <span class="ph uicontrol">Mask</span> tab.</li>
+
+       <li class="li">Change the <span class="ph uicontrol">Mask Type</span> to <span class="ph uicontrol">Variable Length</span> to
+        mask all numbers while showing how many numbers there are in the data. </li>
+
+       <li class="li">To view the data with this change, click the <span class="ph uicontrol">Refresh Preview</span> icon. </li>
+
+       <li class="li">In the canvas, select the Field Masker processor and if the Preview panel displays the
+        stage configuration, select the <span class="ph uicontrol">Records</span> tab to view the preview
+        records. </li>
+
+       <li class="li"> Expand an output record, expand index 20, and see how the entire number is now masked. </li>
+
+       <li class="li">
+        
+       </li>
+
+      </ol>
+</dd>
+
+    
+   </dl>
+</div>
+
+ </div>
+
+</div>
 <div class="topic task nested1" id="task_lh2_yhy_ps">
     <h2 class="title topictitle2">Write to Elasticsearch</h2>
 
@@ -254,25 +341,39 @@ except Exception as e:
                 <span class="ph cmd">On the <span class="keyword wintitle">Elasticsearch</span> tab, enter the following properties
                     and use defaults for the rest:</span>
                 <div class="itemgroup info">
-                    <table cellpadding="4" cellspacing="0" summary="" id="task_lh2_yhy_ps__simpletable_xgz_yky_ps" border="1" class="simpletable"><tr class="sthead">
-                            <th valign="bottom" align="left" id="d48763e403" class="stentry">Elasticsearch Property</th>
+                    
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_lh2_yhy_ps__table_mdq_p3z_ps" class="table" frame="border" border="1" rules="all">
+                            
+                            
+                            <thead class="thead" align="left">
+                                <tr class="row">
+                                    <th class="entry" valign="top" id="d48979e536">Elasticsearch Property</th>
 
-                            <th valign="bottom" align="left" id="d48763e406" class="stentry">Value</th>
+                                    <th class="entry" valign="top" id="d48979e539">Value</th>
 
-                        </tr>
-<tr class="strow">
-                            <td valign="top" headers="d48763e403" class="stentry">Index</td>
+                                </tr>
 
-                            <td valign="top" headers="d48763e406" class="stentry">taxi_rides</td>
+                            </thead>
 
-                        </tr>
-<tr class="strow">
-                            <td valign="top" headers="d48763e403" class="stentry">Type</td>
+                            <tbody class="tbody">
+                                <tr class="row">
+                                    <td class="entry" valign="top" headers="d48979e536 ">Index</td>
 
-                            <td valign="top" headers="d48763e406" class="stentry">taxi_ride</td>
+                                    <td class="entry" valign="top" headers="d48979e539 ">taxi_rides</td>
 
-                        </tr>
-</table>
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" headers="d48979e536 ">Type</td>
+
+                                    <td class="entry" valign="top" headers="d48979e539 ">taxi_ride</td>
+
+                                </tr>
+
+                            </tbody>
+
+                        </table>
+</div>
 
                 </div>
             </li>

@@ -38,8 +38,8 @@
             </p>
             <p>
                   <draft-comment author="Loretta">The following bullets are CSV file types. Used in
-                        "Configuring a Directory Origin" and "Configuring the Kafka
-                        Consumer"</draft-comment>
+                        "Configuring a Directory Origin", Directory-Data Formats and "Configuring
+                        the Kafka Consumer"</draft-comment>
             </p>
             <p>
                   <ul id="ul_delFileTypes">
@@ -52,6 +52,8 @@
                         <li><uicontrol>MySQL CSV</uicontrol> - MySQL comma separated file.</li>
                         <li><uicontrol>Tab-Separated Values</uicontrol> - File that includes
                               tab-separated values.</li>
+                        <li><uicontrol>Custom</uicontrol> - File that uses user-defined delimiter,
+                              escape, and quote characters.</li>
                   </ul>
             </p>
             <draft-comment author="Loretta">Use the following for invoking the expression editor. So

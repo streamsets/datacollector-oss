@@ -22,8 +22,8 @@
                         scale="70"/></info>
             </step>
             <step>
-                <cmd>On the <uicontrol>Jython</uicontrol> tab, delete everything in the Script field
-                    and enter the following script:</cmd>
+                <cmd>On the <uicontrol>Jython</uicontrol> tab, delete everything in the
+                        <uicontrol>Script</uicontrol> field and enter the following script:</cmd>
                 <info>
                     <codeblock>try:
   for record in records:

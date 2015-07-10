@@ -17,7 +17,7 @@
    and write to a local file system so you can use tutorial data to preview and run the pipeline.
    The extended version flattens and reformats the data before writing to Elasticsearch. If you
    don't use Elasticsearch, you can still follow along to the end without running the pipeline.</p>
-  <p>Here's what the basic tutorial pipeline looks like in the end:</p>
+  <p>Here's what we'll create with the basic tutorial:</p>
   <p><image href="../Graphics/Tutorial-BasicPipe.png" scale="80" id="image_c1c_wj4_ms"/></p>
   <p>The extended version incorporates altering the record formats to write to Elasticsearch:</p>
   <p><image href="../Graphics/Tutorial-ExtendedPipe.png" id="image_k3b_dr4_ms" scale="85"/></p>

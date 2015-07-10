@@ -8,10 +8,10 @@
    <ol id="ol_xyv_3x4_ms">
     <li><indexterm>tutorial<indexterm>prerequisites</indexterm></indexterm>Download sample data -
      You can download sample data for this tutorial from the StreamSets website:<draft-comment
-      author="Loretta">URL</draft-comment><p>To run the pipeline, you'll need the larger file to
-      provide enough data to see how things work. If you don't plan to run the pipeline, download
-      the smaller file so you can at least preview data and examine how the pipeline processes a
-      sample set.</p></li>
+      author="Loretta">URL - decide if we just want the smaller file - works for running the basic
+      tutorial.</draft-comment><p>To run the pipeline, you'll need the larger file to provide enough
+      data to see how things work. If you don't plan to run the pipeline, download the smaller file
+      so you can at least preview data and examine how the pipeline processes a sample set.</p></li>
     <li>Set up origin and destination and error directories: <ul id="ul_qwn_mz4_ms">
       <li>Origin directory - Save the sample data in a directory local to the <ph
         conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>. Ensure

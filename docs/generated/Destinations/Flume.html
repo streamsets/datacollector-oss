@@ -56,7 +56,7 @@
                               <dt class="dt dlterm">JSON</dt>
 
                               <dd class="dd">The destination writes records as JSON data. You can use one of
-                                    the following formats:<ul class="ul" id="concept_dbh_2xp_yr__d858e156">
+                                    the following formats:<ul class="ul" id="concept_dbh_2xp_yr__d858e162">
                                           <li class="li">Array - Each file includes a single array. In the
                                                 array, each element is a JSON representation of each
                                                 record.</li>
@@ -74,7 +74,7 @@
 
                               <dd class="dd">The destination writes records as delimited data. When you use
                                     this data format, you must ensure that the data uses the
-                                    following data structure:<ul class="ul" id="concept_dbh_2xp_yr__d858e173">
+                                    following data structure:<ul class="ul" id="concept_dbh_2xp_yr__d858e179">
                                           <li class="li">A root field that contains an array of maps.</li>
 
                                           <li class="li">Each map includes a <dfn class="term">value</dfn> element and an
@@ -503,6 +503,9 @@ Use 0 to use
                         <li class="li"><span class="ph uicontrol">Tab-Separated Values</span> - File that includes
                               tab-separated values.</li>
 
+                        <li class="li"><span class="ph uicontrol">Custom</span> - File that uses user-defined delimiter,
+                              escape, and quote characters.</li>
+
                   </ul>
 </td>
 
@@ -542,9 +545,9 @@ Use 0 to use
                             
                             <thead class="thead" align="left">
                                 <tr class="row">
-                                    <th class="entry" valign="top" width="27.027027027027025%" id="d8582e742">Avro Property</th>
+                                    <th class="entry" valign="top" width="27.027027027027025%" id="d8582e748">Avro Property</th>
 
-                                    <th class="entry" valign="top" width="72.97297297297297%" id="d8582e745">Description</th>
+                                    <th class="entry" valign="top" width="72.97297297297297%" id="d8582e751">Description</th>
 
                                 </tr>
 
@@ -552,16 +555,16 @@ Use 0 to use
 
                             <tbody class="tbody">
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="27.027027027027025%" headers="d8582e742 ">Avro Schema</td>
+                                    <td class="entry" valign="top" width="27.027027027027025%" headers="d8582e748 ">Avro Schema</td>
 
-                                    <td class="entry" valign="top" width="72.97297297297297%" headers="d8582e745 ">Schema definition to use when writing data. </td>
+                                    <td class="entry" valign="top" width="72.97297297297297%" headers="d8582e751 ">Schema definition to use when writing data. </td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="27.027027027027025%" headers="d8582e742 ">Include Schema</td>
+                                    <td class="entry" valign="top" width="27.027027027027025%" headers="d8582e748 ">Include Schema</td>
 
-                                    <td class="entry" valign="top" width="72.97297297297297%" headers="d8582e745 ">Includes the schema in each message. <div class="note note"><span class="notetitle">Note:</span> Omitting the
+                                    <td class="entry" valign="top" width="72.97297297297297%" headers="d8582e751 ">Includes the schema in each message. <div class="note note"><span class="notetitle">Note:</span> Omitting the
                                             schema definition can improve performance, but requires
                                             the appropriate schema management to avoid losing track
                                             of the schema associated with the data.</div>
@@ -586,9 +589,9 @@ Use 0 to use
                             
                             <thead class="thead" align="left">
                                 <tr class="row">
-                                    <th class="entry" valign="top" width="27.027027027027025%" id="d8582e799">Avro Property</th>
+                                    <th class="entry" valign="top" width="27.027027027027025%" id="d8582e805">Avro Property</th>
 
-                                    <th class="entry" valign="top" width="72.97297297297297%" id="d8582e802">Description</th>
+                                    <th class="entry" valign="top" width="72.97297297297297%" id="d8582e808">Description</th>
 
                                 </tr>
 
@@ -596,16 +599,16 @@ Use 0 to use
 
                             <tbody class="tbody">
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="27.027027027027025%" headers="d8582e799 ">Avro Schema</td>
+                                    <td class="entry" valign="top" width="27.027027027027025%" headers="d8582e805 ">Avro Schema</td>
 
-                                    <td class="entry" valign="top" width="72.97297297297297%" headers="d8582e802 ">Schema definition to use when writing data. </td>
+                                    <td class="entry" valign="top" width="72.97297297297297%" headers="d8582e808 ">Schema definition to use when writing data. </td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="27.027027027027025%" headers="d8582e799 ">Include Schema</td>
+                                    <td class="entry" valign="top" width="27.027027027027025%" headers="d8582e805 ">Include Schema</td>
 
-                                    <td class="entry" valign="top" width="72.97297297297297%" headers="d8582e802 ">Includes the schema in each Flume event. <div class="note note"><span class="notetitle">Note:</span> Omitting
+                                    <td class="entry" valign="top" width="72.97297297297297%" headers="d8582e808 ">Includes the schema in each Flume event. <div class="note note"><span class="notetitle">Note:</span> Omitting
                                             the schema definition can improve performance, but
                                             requires the appropriate schema management to avoid
                                             losing track of the schema associated with the

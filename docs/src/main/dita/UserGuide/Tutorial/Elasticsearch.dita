@@ -20,20 +20,28 @@
                 <cmd>On the <wintitle>Elasticsearch</wintitle> tab, enter the following properties
                     and use defaults for the rest:</cmd>
                 <info>
-                    <simpletable frame="all" id="simpletable_xgz_yky_ps">
-                        <sthead>
-                            <stentry>Elasticsearch Property</stentry>
-                            <stentry>Value</stentry>
-                        </sthead>
-                        <strow>
-                            <stentry>Index</stentry>
-                            <stentry>taxi_rides</stentry>
-                        </strow>
-                        <strow>
-                            <stentry>Type</stentry>
-                            <stentry>taxi_ride</stentry>
-                        </strow>
-                    </simpletable>
+                    <table frame="all" rowsep="1" colsep="1" id="table_mdq_p3z_ps">
+                        <tgroup cols="2">
+                            <colspec colname="c1" colnum="1"/>
+                            <colspec colname="c2" colnum="2"/>
+                            <thead>
+                                <row>
+                                    <entry>Elasticsearch Property</entry>
+                                    <entry>Value</entry>
+                                </row>
+                            </thead>
+                            <tbody>
+                                <row>
+                                    <entry>Index</entry>
+                                    <entry>taxi_rides</entry>
+                                </row>
+                                <row>
+                                    <entry>Type</entry>
+                                    <entry>taxi_ride</entry>
+                                </row>
+                            </tbody>
+                        </tgroup>
+                    </table>
                 </info>
             </step>
         </steps>
