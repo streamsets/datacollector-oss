@@ -234,10 +234,13 @@ public abstract class ConfigDefinitionExtractor {
         List<Object> triggeredByValues = null;  // done at resolveDependencies() invocation
         ModelDefinition model = ModelDefinitionExtractor.get().extract(configPrefix + field.getName() + ".", field,
                                                                        contextMsg);
+        if (model != null) {
+          defaultValue = model.getModelType().prepareDefault(defaultValue);
+        }
         int displayPosition = annotation.displayPosition();
         List<ElFunctionDefinition> elFunctionDefinitions = getELFunctions(annotation, model, contextMsg);
         List<ElConstantDefinition> elConstantDefinitions = getELConstants(annotation, model ,contextMsg);
-        List<Class> elDefs = ImmutableList.copyOf(annotation.elDefs());
+        List<Class> elDefs = new ImmutableList.Builder().add(annotation.elDefs()).add(ELDefinitionExtractor.DEFAULT_EL_DEFS).build();
         long min = annotation.min();
         long max = annotation.max();
         String mode = (annotation.mode() != null) ? getMimeString(annotation.mode()) : null;
