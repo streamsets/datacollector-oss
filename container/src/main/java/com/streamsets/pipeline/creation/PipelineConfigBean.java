@@ -90,7 +90,7 @@ public class PipelineConfigBean implements Stage {
 
   public static final String CONSTANTS_CONFIG = "constants";
   @ConfigDef(
-      required = true,
+      required = false,
       type = ConfigDef.Type.MAP,
       label = "Constants",
       displayPosition = 10,

@@ -8,7 +8,13 @@ package com.streamsets.pipeline.runner;
 import com.google.common.collect.ImmutableList;
 import com.streamsets.pipeline.api.Batch;
 import com.streamsets.pipeline.api.Record;
+import com.streamsets.pipeline.config.PipelineConfiguration;
+import com.streamsets.pipeline.creation.PipelineBean;
+import com.streamsets.pipeline.creation.PipelineBeanCreator;
+import com.streamsets.pipeline.creation.StageBean;
 import com.streamsets.pipeline.record.RecordImpl;
+import com.streamsets.pipeline.stagelibrary.StageLibraryTask;
+import com.streamsets.pipeline.validation.Issue;
 import org.junit.Assert;
 import org.junit.Test;
 import org.mockito.Mockito;
@@ -20,6 +26,17 @@ import java.util.List;
 import java.util.Map;
 
 public class TestPipeBatch {
+
+  private PipelineBean getPipelineBean() {
+    List<Issue> errors = new ArrayList<>();
+    StageLibraryTask library = MockStages.createStageLibrary();
+    PipelineConfiguration pipelineConf = MockStages.createPipelineConfigurationSourceTarget();
+    PipelineBean pipelineBean = PipelineBeanCreator.get().create(library, pipelineConf, errors);
+    if (pipelineBean == null) {
+      Assert.fail(errors.toString());
+    }
+    return pipelineBean;
+  }
 
   @Test
   @SuppressWarnings("unchecked")
@@ -38,12 +55,14 @@ public class TestPipeBatch {
     Mockito.verify(tracker, Mockito.times(1)).commitOffset();
     Mockito.verifyNoMoreInteractions(tracker);
 
-    StageRuntime[] stages = new StageRuntime.Builder(MockStages.createStageLibrary(), "name",
-                                                    MockStages.createPipelineConfigurationSourceTarget()).build();
+    PipelineBean pipelineBean = getPipelineBean();
+    StageBean stageBean = pipelineBean.getStages().get(0);
 
-    StagePipe pipe = new StagePipe(stages[0], Collections.EMPTY_LIST,
-      LaneResolver.getPostFixed(stages[0].getConfiguration().getOutputLanes(),
-        LaneResolver.STAGE_OUT));
+    StageRuntime stage = new StageRuntime(pipelineBean, stageBean);
+
+    StagePipe pipe = new StagePipe(stage, Collections.EMPTY_LIST,
+      LaneResolver.getPostFixed(stage.getConfiguration().getOutputLanes(),
+                                LaneResolver.STAGE_OUT));
 
     Batch batch = pipeBatch.getBatch(pipe);
     Assert.assertEquals("foo", batch.getSourceOffset());
@@ -55,8 +74,11 @@ public class TestPipeBatch {
     SourceOffsetTracker tracker = Mockito.mock(SourceOffsetTracker.class);
     PipeBatch pipeBatch = new FullPipeBatch(tracker, -1, false);
 
-    StageRuntime[] stages = new StageRuntime.Builder(MockStages.createStageLibrary(), "name",
-                                                     MockStages.createPipelineConfigurationSourceTarget()).build();
+    PipelineBean pipelineBean = getPipelineBean();
+    StageRuntime[] stages = {
+        new StageRuntime(pipelineBean, pipelineBean.getStages().get(0)),
+        new StageRuntime(pipelineBean, pipelineBean.getStages().get(1))};
+
     StageContext context = Mockito.mock(StageContext.class);
     Mockito.when(context.isPreview()).thenReturn(false);
     stages[0].setContext(context);
@@ -116,8 +138,11 @@ public class TestPipeBatch {
     SourceOffsetTracker tracker = Mockito.mock(SourceOffsetTracker.class);
     PipeBatch pipeBatch = new FullPipeBatch(tracker, -1, true);
 
-    StageRuntime[] stages = new StageRuntime.Builder(MockStages.createStageLibrary(), "name",
-                                                     MockStages.createPipelineConfigurationSourceTarget()).build();
+    PipelineBean pipelineBean = getPipelineBean();
+    StageRuntime[] stages = {
+        new StageRuntime(pipelineBean, pipelineBean.getStages().get(0)),
+        new StageRuntime(pipelineBean, pipelineBean.getStages().get(1))};
+
     StageContext context = Mockito.mock(StageContext.class);
     Mockito.when(context.isPreview()).thenReturn(false);
     stages[0].setContext(context);
@@ -207,8 +232,11 @@ public class TestPipeBatch {
     SourceOffsetTracker tracker = Mockito.mock(SourceOffsetTracker.class);
     FullPipeBatch pipeBatch = new FullPipeBatch(tracker, -1, true);
 
-    StageRuntime[] stages = new StageRuntime.Builder(MockStages.createStageLibrary(), "name",
-                                                     MockStages.createPipelineConfigurationSourceTarget()).build();
+    PipelineBean pipelineBean = getPipelineBean();
+    StageRuntime[] stages = {
+        new StageRuntime(pipelineBean, pipelineBean.getStages().get(0)),
+        new StageRuntime(pipelineBean, pipelineBean.getStages().get(1))};
+
     StageContext context = Mockito.mock(StageContext.class);
     Mockito.when(context.isPreview()).thenReturn(false);
     stages[0].setContext(context);
@@ -245,8 +273,11 @@ public class TestPipeBatch {
     SourceOffsetTracker tracker = Mockito.mock(SourceOffsetTracker.class);
     FullPipeBatch pipeBatch = new FullPipeBatch(tracker, -1, true);
 
-    StageRuntime[] stages = new StageRuntime.Builder(MockStages.createStageLibrary(), "name",
-                                                     MockStages.createPipelineConfigurationSourceTarget()).build();
+    PipelineBean pipelineBean = getPipelineBean();
+    StageRuntime[] stages = {
+        new StageRuntime(pipelineBean, pipelineBean.getStages().get(0)),
+        new StageRuntime(pipelineBean, pipelineBean.getStages().get(1))};
+
     StageContext context = Mockito.mock(StageContext.class);
     Mockito.when(context.isPreview()).thenReturn(false);
     stages[0].setContext(context);
@@ -295,8 +326,11 @@ public class TestPipeBatch {
     SourceOffsetTracker tracker = Mockito.mock(SourceOffsetTracker.class);
     FullPipeBatch pipeBatch = new FullPipeBatch(tracker, -1, true);
 
-    StageRuntime[] stages = new StageRuntime.Builder(MockStages.createStageLibrary(), "name",
-                                                     MockStages.createPipelineConfigurationSourceTarget()).build();
+    PipelineBean pipelineBean = getPipelineBean();
+    StageRuntime[] stages = {
+        new StageRuntime(pipelineBean, pipelineBean.getStages().get(0)),
+        new StageRuntime(pipelineBean, pipelineBean.getStages().get(1))};
+
     StageContext context = Mockito.mock(StageContext.class);
     Mockito.when(context.isPreview()).thenReturn(false);
     stages[0].setContext(context);
@@ -339,8 +373,11 @@ public class TestPipeBatch {
     SourceOffsetTracker tracker = Mockito.mock(SourceOffsetTracker.class);
     PipeBatch pipeBatch = new FullPipeBatch(tracker, -1, true);
 
-    StageRuntime[] stages = new StageRuntime.Builder(MockStages.createStageLibrary(), "name",
-                                                     MockStages.createPipelineConfigurationSourceTarget()).build();
+    PipelineBean pipelineBean = getPipelineBean();
+    StageRuntime[] stages = {
+        new StageRuntime(pipelineBean, pipelineBean.getStages().get(0)),
+        new StageRuntime(pipelineBean, pipelineBean.getStages().get(1))};
+
     StageContext context = Mockito.mock(StageContext.class);
     Mockito.when(context.isPreview()).thenReturn(false);
     stages[0].setContext(context);

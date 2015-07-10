@@ -109,7 +109,7 @@ public abstract class PipelineBeanCreator {
 
   @SuppressWarnings("unchecked")
   StageConfiguration getPipelineConfAsStageConf(PipelineConfiguration pipelineConf) {
-    return new StageConfiguration("pipeline", "none", "pipeline", "1.0.0", pipelineConf.getConfiguration(),
+    return new StageConfiguration(null, "none", "pipeline", "1.0.0", pipelineConf.getConfiguration(),
                                   Collections.EMPTY_MAP, Collections.EMPTY_LIST, Collections.EMPTY_LIST);
   }
 
@@ -138,7 +138,7 @@ public abstract class PipelineBeanCreator {
       Thread.currentThread().setContextClassLoader(classLoader);
     }
     StageConfigBean stageConfigBean = createAndInjectStageBeanConfigs(stageDef, stageConf, pipelineConstants, errors);
-    return (errors.isEmpty()) ? new StageBean(stageConfigBean, stage) : null;
+    return (errors.isEmpty()) ? new StageBean(stageDef, stageConf, stageConfigBean, stage) : null;
   }
 
   Stage createStageInstance(StageDefinition stageDef, String stageName, List<Issue> errors) {
@@ -209,7 +209,7 @@ public abstract class PipelineBeanCreator {
           Object value = valueMap.get(configName);
           if (value == null) {
             //TODO LOG WARNING missing config in state config
-            injectDefaultValue(obj, field, stageDef, configDef, pipelineConstants, stageName, errors);
+            injectDefaultValue(obj, field, stageDef, stageConf, configDef, pipelineConstants, stageName, errors);
           } else {
             injectConfigValue(obj, field, value, stageDef, stageConf, configDef, null, pipelineConstants, errors);
           }
@@ -242,7 +242,7 @@ public abstract class PipelineBeanCreator {
           ConfigConfiguration configConf = stageConf.getConfig(configName);
           if (configConf == null) {
             //TODO LOG WARNING missing config in state config
-            injectDefaultValue(obj, field, stageDef, configDef, pipelineConstants, stageName, errors);
+            injectDefaultValue(obj, field, stageDef, stageConf, configDef, pipelineConstants, stageName, errors);
           } else {
             injectConfigValue(obj, field, stageDef, stageConf, configDef, configConf, pipelineConstants, errors);
           }
@@ -257,28 +257,21 @@ public abstract class PipelineBeanCreator {
     }
   }
 
-  void injectDefaultValue(Object obj, Field field, StageDefinition stageDef, ConfigDefinition configDef,
-      Map<String, Object> pipelineConstants, String stageName, List<Issue> errors) {
+  void injectDefaultValue(Object obj, Field field, StageDefinition stageDef, StageConfiguration stageConf,
+      ConfigDefinition configDef, Map<String, Object> pipelineConstants, String stageName, List<Issue> errors) {
     Object value = configDef.getDefaultValue();
-    if (configDef.getType() == ConfigDef.Type.LIST) {
-      value = toList(value, stageDef, configDef, pipelineConstants, stageName, configDef.getGroup(),
-                     configDef.getName(), errors);
-    } else if (configDef.getType() == ConfigDef.Type.MAP) {
-      value = toMap(value, stageDef, configDef, pipelineConstants, stageName, configDef.getGroup(),configDef.getName(),
-                    errors);
-    } else if (configDef.getType() == ConfigDef.Type.MODEL &&
-               configDef.getModel().getModelType() == ModelType.COMPLEX_FIELD) {
-      value = Collections.emptyList();
-    }
+//    if (configDef.getType() == ConfigDef.Type.LIST) {
+//      value = toList(value, stageDef, configDef, pipelineConstants, stageName, configDef.getGroup(),
+//                     configDef.getName(), errors);
+//    } else if (configDef.getType() == ConfigDef.Type.MAP) {
+//      value = toMap(value, stageDef, configDef, pipelineConstants, stageName, configDef.getGroup(),configDef.getName(),
+//                    errors);
+//    } else if (configDef.getType() == ConfigDef.Type.MODEL &&
+//               configDef.getModel().getModelType() == ModelType.COMPLEX_FIELD) {
+//      value = Collections.emptyList();
+//    }
     if (value != null) {
-      try {
-        field.set(obj, value);
-      } catch (IllegalAccessException ex) {
-        IssueCreator issueCreator = (stageDef.isErrorStage()) ? IssueCreator.getErrorStage()
-                                                              : IssueCreator.getStage(stageName);
-        errors.add(issueCreator.create(configDef.getGroup(), configDef.getName(), CreationError.CREATION_004,
-                                       ex.getMessage()));
-      }
+      injectConfigValue(obj, field, value, stageDef, stageConf, configDef, null, pipelineConstants, errors);
     }
   }
 

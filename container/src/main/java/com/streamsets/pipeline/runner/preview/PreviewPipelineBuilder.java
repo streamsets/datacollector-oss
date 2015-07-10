@@ -105,13 +105,19 @@ public class PreviewPipelineBuilder {
       throw new PipelineRuntimeException(ContainerError.CONTAINER_0154, ValidationUtil.getFirstIssueAsString(name,
         validator.getIssues()));
     }
-    Pipeline pipeline = new Pipeline.Builder(stageLib, name + ":preview", pipelineConf).build(runner);
-    List<Issue> configIssues = pipeline.validateConfigs();
-    if (!configIssues.isEmpty()) {
-      Issues issues = new Issues(configIssues);
-      throw new PipelineRuntimeException(issues);
+     Pipeline.Builder builder = new Pipeline.Builder(stageLib, name + ":preview", pipelineConf);
+     Pipeline pipeline = builder.build(runner);
+     if (pipeline != null) {
+       List<Issue> configIssues = pipeline.validateConfigs();
+       if (!configIssues.isEmpty()) {
+         Issues issues = new Issues(configIssues);
+         throw new PipelineRuntimeException(issues);
+       }
+       return new PreviewPipeline(pipeline, validator.getIssues());
+     } else {
+       Issues issues = new Issues(builder.getIssues());
+       throw new PipelineRuntimeException(issues);
     }
-    return new PreviewPipeline(pipeline, validator.getIssues());
   }
 
 }

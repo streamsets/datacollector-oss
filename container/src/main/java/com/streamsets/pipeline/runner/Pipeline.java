@@ -11,6 +11,9 @@ import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.config.PipelineConfiguration;
+import com.streamsets.pipeline.creation.PipelineBean;
+import com.streamsets.pipeline.creation.PipelineBeanCreator;
+import com.streamsets.pipeline.creation.PipelineConfigBean;
 import com.streamsets.pipeline.memory.MemoryUsageCollectorResourceBundle;
 import com.streamsets.pipeline.runner.production.BadRecordsHandler;
 import com.streamsets.pipeline.stagelibrary.StageLibraryTask;
@@ -24,19 +27,25 @@ import java.util.List;
 import java.util.Set;
 
 public class Pipeline {
+  private final PipelineBean pipelineBean;
   private final Pipe[] pipes;
   private final PipelineRunner runner;
   private final Observer observer;
   private final BadRecordsHandler badRecordsHandler;
   private final ResourceControlledScheduledExecutor scheduledExecutorService;
 
-  private Pipeline(Pipe[] pipes, Observer observer, BadRecordsHandler badRecordsHandler, PipelineRunner runner,
-                   ResourceControlledScheduledExecutor scheduledExecutorService) {
+  private Pipeline(PipelineBean pipelineBean, Pipe[] pipes, Observer observer, BadRecordsHandler badRecordsHandler,
+      PipelineRunner runner, ResourceControlledScheduledExecutor scheduledExecutorService) {
+    this.pipelineBean = pipelineBean;
     this.pipes = pipes;
     this.observer = observer;
     this.badRecordsHandler = badRecordsHandler;
     this.runner = runner;
     this.scheduledExecutorService = scheduledExecutorService;
+  }
+
+  PipelineConfigBean getPipelineConfig() {
+    return  pipelineBean.getConfig();
   }
 
   @VisibleForTesting
@@ -111,19 +120,19 @@ public class Pipeline {
     private static final String EXECUTION_MODE_CLUSTER = "CLUSTER";
 
     private final StageLibraryTask stageLib;
-    private final String name;
     private final PipelineConfiguration pipelineConf;
     private Observer observer;
     private final ResourceControlledScheduledExecutor scheduledExecutor =
       new ResourceControlledScheduledExecutor(0.01f); // consume 1% of a cpu calculating stage memory consumption
     private final MemoryUsageCollectorResourceBundle memoryUsageCollectorResourceBundle =
       new MemoryUsageCollectorResourceBundle();
+    private List<Issue> errors;
 
 
     public Builder(StageLibraryTask stageLib, String name, PipelineConfiguration pipelineConf) {
       this.stageLib = stageLib;
-      this.name = name;
       this.pipelineConf = pipelineConf;
+      errors = Collections.emptyList();
     }
     public Builder setObserver(Observer observer) {
       this.observer = observer;
@@ -131,18 +140,32 @@ public class Pipeline {
     }
 
     public Pipeline build(PipelineRunner runner) throws PipelineRuntimeException {
-      StageRuntime.Builder builder = new StageRuntime.Builder(stageLib, name, pipelineConf);
-      StageRuntime[] stages = builder.build();
-      StageRuntime errorStage = builder.buildErrorStage(pipelineConf);
-      setStagesContext(stages, errorStage, runner);
-      Pipe[] pipes = createPipes(stages);
-      BadRecordsHandler badRecordsHandler = new BadRecordsHandler(errorStage);
-      try {
-        return new Pipeline(pipes, observer, badRecordsHandler, runner, scheduledExecutor);
-      } catch (Exception e) {
-        String msg = "Could not create memory usage collector: " + e;
-        throw new PipelineRuntimeException(ContainerError.CONTAINER_0151, msg, e);
+      Pipeline pipeline = null;
+      errors = new ArrayList<>();
+      PipelineBean pipelineBean = PipelineBeanCreator.get().create(stageLib, pipelineConf, errors);
+      StageRuntime[] stages = null;
+      StageRuntime errorStage = null;
+      if (pipelineBean != null) {
+        stages = new StageRuntime[pipelineBean.getStages().size()];
+        for (int i = 0; i < pipelineBean.getStages().size(); i++) {
+          stages[i] = new StageRuntime(pipelineBean, pipelineBean.getStages().get(i));
+        }
+        errorStage = new StageRuntime(pipelineBean, pipelineBean.getErrorStage());
+        setStagesContext(stages, errorStage, runner);
+        Pipe[] pipes = createPipes(stages);
+        BadRecordsHandler badRecordsHandler = new BadRecordsHandler(errorStage);
+        try {
+          pipeline = new Pipeline(pipelineBean, pipes, observer, badRecordsHandler, runner, scheduledExecutor);
+        } catch (Exception e) {
+          String msg = "Could not create memory usage collector: " + e;
+          throw new PipelineRuntimeException(ContainerError.CONTAINER_0151, msg, e);
+        }
       }
+      return pipeline;
+    }
+
+    public List<Issue> getIssues() {
+      return errors;
     }
 
     private void setStagesContext(StageRuntime[] stages, StageRuntime errorStage, PipelineRunner runner) {
