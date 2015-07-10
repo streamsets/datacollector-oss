@@ -39,16 +39,22 @@ import java.util.UUID;
 
 public class TestPipelineBeanCreator {
 
+  private StageDefinition getStageDef() {
+    StageDefinition def = Mockito.mock(StageDefinition.class);
+    Mockito.when(def.isErrorStage()).thenReturn(false);
+    return def;
+  }
+
   public enum E { A, B }
 
   @Test
   public void testToEnum() {
     List<Issue> issues = new ArrayList<>();
-    Object v = PipelineBeanCreator.get().toEnum(E.class, "A", "s", "c", issues);
+    Object v = PipelineBeanCreator.get().toEnum(E.class, "A", getStageDef(), "g", "s", "c", issues);
     Assert.assertEquals(E.A, v);
     Assert.assertTrue(issues.isEmpty());
 
-    v = PipelineBeanCreator.get().toEnum(E.class, "x", "s", "c", issues);
+    v = PipelineBeanCreator.get().toEnum(E.class, "x", getStageDef(), "g", "s", "c", issues);
     Assert.assertNull(v);
     Assert.assertFalse(issues.isEmpty());
   }
@@ -56,11 +62,11 @@ public class TestPipelineBeanCreator {
   @Test
   public void testToString() {
     List<Issue> issues = new ArrayList<>();
-    Object v = PipelineBeanCreator.get().toString("A", "s", "c", issues);
+    Object v = PipelineBeanCreator.get().toString("A", getStageDef(), "g", "s", "c", issues);
     Assert.assertEquals("A", v);
     Assert.assertTrue(issues.isEmpty());
 
-    v = PipelineBeanCreator.get().toString(1, "s", "c", issues);
+    v = PipelineBeanCreator.get().toString(1, getStageDef(), "g", "s", "c", issues);
     Assert.assertNull(v);
     Assert.assertFalse(issues.isEmpty());
   }
@@ -68,21 +74,21 @@ public class TestPipelineBeanCreator {
   @Test
   public void testChar() {
     List<Issue> issues = new ArrayList<>();
-    Object v = PipelineBeanCreator.get().toChar("A", "s", "c", issues);
+    Object v = PipelineBeanCreator.get().toChar("A", getStageDef(), "g", "s", "c", issues);
     Assert.assertEquals('A', v);
     Assert.assertTrue(issues.isEmpty());
 
-    v = PipelineBeanCreator.get().toChar(1, "s", "c", issues);
+    v = PipelineBeanCreator.get().toChar(1, getStageDef(), "g", "s", "c", issues);
     Assert.assertNull(v);
     Assert.assertFalse(issues.isEmpty());
 
     issues.clear();
-    v = PipelineBeanCreator.get().toChar("", "s", "c", issues);
+    v = PipelineBeanCreator.get().toChar("", getStageDef(), "g", "s", "c", issues);
     Assert.assertNull(v);
     Assert.assertFalse(issues.isEmpty());
 
     issues.clear();
-    v = PipelineBeanCreator.get().toChar("abc", "s", "c", issues);
+    v = PipelineBeanCreator.get().toChar("abc", getStageDef(), "g", "s", "c", issues);
     Assert.assertNull(v);
     Assert.assertFalse(issues.isEmpty());
   }
@@ -90,11 +96,11 @@ public class TestPipelineBeanCreator {
   @Test
   public void testToBoolean() {
     List<Issue> issues = new ArrayList<>();
-    Object v = PipelineBeanCreator.get().toBoolean(true, "s", "c", issues);
+    Object v = PipelineBeanCreator.get().toBoolean(true, getStageDef(), "g", "s", "c", issues);
     Assert.assertEquals(true, v);
     Assert.assertTrue(issues.isEmpty());
 
-    v = PipelineBeanCreator.get().toBoolean(1, "s", "c", issues);
+    v = PipelineBeanCreator.get().toBoolean(1, getStageDef(), "g", "s", "c", issues);
     Assert.assertNull(v);
     Assert.assertFalse(issues.isEmpty());
   }
@@ -102,21 +108,33 @@ public class TestPipelineBeanCreator {
   @Test
   public void testToNumber() {
     List<Issue> issues = new ArrayList<>();
-    Assert.assertEquals((byte) 1, PipelineBeanCreator.get().toNumber(Byte.TYPE, (byte) 1, "s", "c", issues));
-    Assert.assertEquals((short) 1, PipelineBeanCreator.get().toNumber(Short.TYPE, (short) 1, "s", "c", issues));
-    Assert.assertEquals((int) 1, PipelineBeanCreator.get().toNumber(Integer.TYPE, (int) 1, "s", "c", issues));
-    Assert.assertEquals((long) 1, PipelineBeanCreator.get().toNumber(Long.TYPE, (long) 1, "s", "c", issues));
-    Assert.assertEquals((float) 1, PipelineBeanCreator.get().toNumber(Float.TYPE, (float) 1, "s", "c", issues));
-    Assert.assertEquals((double) 1, PipelineBeanCreator.get().toNumber(Double.TYPE, (double) 1, "s", "c", issues));
-    Assert.assertEquals((byte) 1, PipelineBeanCreator.get().toNumber(Byte.class, new Byte((byte)1), "s", "c", issues));
-    Assert.assertEquals((short) 1, PipelineBeanCreator.get().toNumber(Short.class, new Short((short)1), "s", "c", issues));
-    Assert.assertEquals((int) 1, PipelineBeanCreator.get().toNumber(Integer.class, new Integer(1), "s", "c", issues));
-    Assert.assertEquals((long) 1, PipelineBeanCreator.get().toNumber(Long.class, new Long(1), "s", "c", issues));
-    Assert.assertEquals((float) 1, PipelineBeanCreator.get().toNumber(Float.class, new Float(1), "s", "c", issues));
-    Assert.assertEquals((double) 1, PipelineBeanCreator.get().toNumber(Double.class, new Double(1), "s", "c", issues));
+    Assert.assertEquals((byte) 1, PipelineBeanCreator.get().toNumber(Byte.TYPE, (byte) 1, getStageDef(),
+                                                                     "g", "s", "c", issues));
+    Assert.assertEquals((short) 1, PipelineBeanCreator.get().toNumber(Short.TYPE, (short) 1, getStageDef(),
+                                                                      "g", "s", "c", issues));
+    Assert.assertEquals((int) 1, PipelineBeanCreator.get().toNumber(Integer.TYPE, (int) 1, getStageDef(),
+                                                                    "g", "s", "c", issues));
+    Assert.assertEquals((long) 1, PipelineBeanCreator.get().toNumber(Long.TYPE, (long) 1, getStageDef(),
+                                                                     "g", "s", "c", issues));
+    Assert.assertEquals((float) 1, PipelineBeanCreator.get().toNumber(Float.TYPE, (float) 1, getStageDef(),
+                                                                      "g", "s", "c", issues));
+    Assert.assertEquals((double) 1, PipelineBeanCreator.get().toNumber(Double.TYPE, (double) 1, getStageDef(),
+                                                                       "g", "s", "c", issues));
+    Assert.assertEquals((byte) 1, PipelineBeanCreator.get().toNumber(Byte.class, new Byte((byte)1), getStageDef(),
+                                                                     "g", "s", "c", issues));
+    Assert.assertEquals((short) 1, PipelineBeanCreator.get().toNumber(Short.class, new Short((short)1), getStageDef(),
+                                                                      "g", "s", "c", issues));
+    Assert.assertEquals((int) 1, PipelineBeanCreator.get().toNumber(Integer.class, new Integer(1), getStageDef(),
+                                                                    "g", "s", "c", issues));
+    Assert.assertEquals((long) 1, PipelineBeanCreator.get().toNumber(Long.class, new Long(1), getStageDef(),
+                                                                     "g", "s", "c", issues));
+    Assert.assertEquals((float) 1, PipelineBeanCreator.get().toNumber(Float.class, new Float(1), getStageDef(),
+                                                                      "g", "s", "c", issues));
+    Assert.assertEquals((double) 1, PipelineBeanCreator.get().toNumber(Double.class, new Double(1), getStageDef(),
+                                                                       "g", "s", "c", issues));
     Assert.assertTrue(issues.isEmpty());
 
-    Object v = PipelineBeanCreator.get().toNumber(Byte.class, 'a', "s", "c", issues);
+    Object v = PipelineBeanCreator.get().toNumber(Byte.class, 'a', getStageDef(), "g", "s", "c", issues);
     Assert.assertNull(v);
     Assert.assertFalse(issues.isEmpty());
   }
@@ -233,29 +251,29 @@ public class TestPipelineBeanCreator {
     Map<String, Object> constants = ImmutableMap.<String, Object>of("a", "A");
     List<Issue> issues = new ArrayList<>();
     Object value = ImmutableList.of("${a}");
-    Object v = PipelineBeanCreator.get().toList(value, stageDef, configDef, constants, "s", "c", issues);
+    Object v = PipelineBeanCreator.get().toList(value, stageDef, configDef, constants, "g", "s", "c", issues);
     Assert.assertEquals(ImmutableList.of("A"), v);
     Assert.assertTrue(issues.isEmpty());
 
     value = ImmutableList.of("A");
-    v = PipelineBeanCreator.get().toList(value, stageDef, configDef, constants, "s", "c", issues);
+    v = PipelineBeanCreator.get().toList(value, stageDef, configDef, constants, "g", "s", "c", issues);
     Assert.assertEquals(ImmutableList.of("A"), v);
     Assert.assertTrue(issues.isEmpty());
 
     value = Arrays.asList(null, "A");
-    v = PipelineBeanCreator.get().toList(value, stageDef, configDef, constants, "s", "c", issues);
+    v = PipelineBeanCreator.get().toList(value, stageDef, configDef, constants, "g", "s", "c", issues);
     Assert.assertNull(v);
     Assert.assertFalse(issues.isEmpty());
 
     issues.clear();
     value = ImmutableList.of("${a");
-    v = PipelineBeanCreator.get().toList(value, stageDef, configDef, constants, "s", "c", issues);
+    v = PipelineBeanCreator.get().toList(value, stageDef, configDef, constants, "g", "s", "c", issues);
     Assert.assertNull(v);
     Assert.assertFalse(issues.isEmpty());
 
     issues.clear();
     value = "x";
-    v = PipelineBeanCreator.get().toList(value, stageDef, configDef, constants, "s", "c", issues);
+    v = PipelineBeanCreator.get().toList(value, stageDef, configDef, constants, "g", "s", "c", issues);
     Assert.assertNull(v);
     Assert.assertFalse(issues.isEmpty());
 
@@ -263,7 +281,7 @@ public class TestPipelineBeanCreator {
     issues.clear();
     configDef = stageDef.getConfigDefinition("listExplicit");
     value = ImmutableList.of("${a}");
-    v = PipelineBeanCreator.get().toList(value, stageDef, configDef, constants, "s", "c", issues);
+    v = PipelineBeanCreator.get().toList(value, stageDef, configDef, constants, "g", "s", "c", issues);
     Assert.assertEquals(ImmutableList.of("${a}"), v);
     Assert.assertTrue(issues.isEmpty());
   }
@@ -277,13 +295,13 @@ public class TestPipelineBeanCreator {
     Map<String, Object> constants = ImmutableMap.<String, Object>of("a", 1);
     List<Issue> issues = new ArrayList<>();
     Object value = ImmutableList.of(ImmutableMap.of("key", "a", "value", 2));
-    Object v = PipelineBeanCreator.get().toMap(value, stageDef, configDef, constants, "s", "c", issues);
+    Object v = PipelineBeanCreator.get().toMap(value, stageDef, configDef, constants, "g", "s", "c", issues);
     Assert.assertEquals(ImmutableMap.of("a", 2), v);
     Assert.assertTrue(issues.isEmpty());
 
 
     value = ImmutableList.of(ImmutableMap.of("key", "a", "value", "${a}"));
-    v = PipelineBeanCreator.get().toMap(value, stageDef, configDef, constants, "s", "c", issues);
+    v = PipelineBeanCreator.get().toMap(value, stageDef, configDef, constants, "g", "s", "c", issues);
     Assert.assertEquals(ImmutableMap.of("a", "1"), v);
     Assert.assertTrue(issues.isEmpty());
 
@@ -291,7 +309,7 @@ public class TestPipelineBeanCreator {
     map.put("key", null);
     map.put("value", "A");
     value = ImmutableList.of(map);
-    v = PipelineBeanCreator.get().toMap(value, stageDef, configDef, constants, "s", "c", issues);
+    v = PipelineBeanCreator.get().toMap(value, stageDef, configDef, constants, "g", "s", "c", issues);
     Assert.assertNull(v);
     Assert.assertFalse(issues.isEmpty());
 
@@ -299,19 +317,19 @@ public class TestPipelineBeanCreator {
     map.put("key", "a");
     map.put("value", null);
     value = ImmutableList.of(map);
-    v = PipelineBeanCreator.get().toMap(value, stageDef, configDef, constants, "s", "c", issues);
+    v = PipelineBeanCreator.get().toMap(value, stageDef, configDef, constants, "g", "s", "c", issues);
     Assert.assertNull(v);
     Assert.assertFalse(issues.isEmpty());
 
     issues.clear();
     value = "x";
-    v = PipelineBeanCreator.get().toMap(value, stageDef, configDef, constants, "s", "c", issues);
+    v = PipelineBeanCreator.get().toMap(value, stageDef, configDef, constants, "g", "s", "c", issues);
     Assert.assertNull(v);
     Assert.assertFalse(issues.isEmpty());
 
     issues.clear();
     value = ImmutableList.of(1);
-    v = PipelineBeanCreator.get().toMap(value, stageDef, configDef, constants, "s", "c", issues);
+    v = PipelineBeanCreator.get().toMap(value, stageDef, configDef, constants, "g", "s", "c", issues);
     Assert.assertNull(v);
     Assert.assertFalse(issues.isEmpty());
 
@@ -319,7 +337,7 @@ public class TestPipelineBeanCreator {
     issues.clear();
     configDef = stageDef.getConfigDefinition("mapExplicit");
     value = ImmutableList.of(ImmutableMap.of("key", "a", "value", "${a}"));
-    v = PipelineBeanCreator.get().toMap(value, stageDef, configDef, constants, "s", "c", issues);
+    v = PipelineBeanCreator.get().toMap(value, stageDef, configDef, constants, "g", "s", "c", issues);
     Assert.assertNotNull(v);
     Assert.assertEquals(ImmutableMap.of("a", "${a}"), v);
     Assert.assertTrue(issues.isEmpty());

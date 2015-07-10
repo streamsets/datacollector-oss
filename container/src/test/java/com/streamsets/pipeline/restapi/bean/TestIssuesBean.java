@@ -19,7 +19,7 @@ public class TestIssuesBean {
 
     Assert.assertEquals(issues.getIssueCount(), issuesJsonBean.getIssueCount());
     Assert.assertEquals(issues.getPipelineIssues(), BeanHelper.unwrapIssues(issuesJsonBean.getPipelineIssues()));
-    Assert.assertEquals(issues.getStageIssues(), BeanHelper.unwrapStageIssuesMap(issuesJsonBean.getStageIssues()));
+    Assert.assertEquals(issues.getStageIssues(), BeanHelper.unwrapIssuesMap(issuesJsonBean.getStageIssues()));
 
     //test underlying
     Assert.assertEquals(issues.getIssueCount(), issuesJsonBean.getIssues().getIssueCount());

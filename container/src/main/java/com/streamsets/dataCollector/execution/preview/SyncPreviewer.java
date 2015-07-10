@@ -34,8 +34,8 @@ import com.streamsets.pipeline.store.PipelineStoreTask;
 import com.streamsets.pipeline.util.Configuration;
 import com.streamsets.pipeline.util.ContainerError;
 import com.streamsets.pipeline.util.PipelineException;
+import com.streamsets.pipeline.validation.Issue;
 import com.streamsets.pipeline.validation.Issues;
-import com.streamsets.pipeline.validation.StageIssue;
 import org.apache.commons.io.input.BoundedInputStream;
 
 import javax.ws.rs.core.MultivaluedMap;
@@ -97,7 +97,7 @@ public class SyncPreviewer implements Previewer {
     changeState(PreviewStatus.VALIDATING, null);
     try {
       previewPipeline = buildPreviewPipeline(0, 0, null, false);
-      List<StageIssue> stageIssues = previewPipeline.validateConfigs();
+      List<Issue> stageIssues = previewPipeline.validateConfigs();
       PreviewStatus status = stageIssues.size() == 0 ? PreviewStatus.VALID : PreviewStatus.INVALID;
       changeState(status, new PreviewOutputImpl(status, new Issues(stageIssues), null));
     } catch (PipelineRuntimeException e) {

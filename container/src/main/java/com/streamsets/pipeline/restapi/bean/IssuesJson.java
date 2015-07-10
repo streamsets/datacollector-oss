@@ -22,8 +22,8 @@ public class IssuesJson {
     return BeanHelper.wrapIssues(issues.getPipelineIssues());
   }
 
-  public Map<String, List<StageIssueJson>> getStageIssues() {
-    return BeanHelper.wrapStageIssuesMap(issues.getStageIssues());
+  public Map<String, List<IssueJson>> getStageIssues() {
+    return BeanHelper.wrapIssuesMap(issues.getStageIssues());
   }
 
   public int getIssueCount() {

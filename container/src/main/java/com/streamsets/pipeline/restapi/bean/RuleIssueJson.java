@@ -24,15 +24,8 @@ public class RuleIssueJson {
     return ruleIssue.getAdditionalInfo();
   }
 
-  public String getMessage() { return ruleIssue.getMessage();
-  }
-
-  public String getConfigGroup() {
-    return ruleIssue.getConfigGroup();
-  }
-
-  public String getConfigName() {
-    return ruleIssue.getConfigName();
+  public String getMessage() {
+    return ruleIssue.getMessage();
   }
 
   public String getRuleId() {

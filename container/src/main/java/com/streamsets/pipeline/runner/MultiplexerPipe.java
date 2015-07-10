@@ -7,7 +7,7 @@ package com.streamsets.pipeline.runner;
 
 
 import com.streamsets.pipeline.api.StageException;
-import com.streamsets.pipeline.validation.StageIssue;
+import com.streamsets.pipeline.validation.Issue;
 
 import java.util.Collections;
 import java.util.List;
@@ -19,7 +19,7 @@ public class MultiplexerPipe extends Pipe<Pipe.Context> {
   }
 
   @Override
-  public List<StageIssue> validateConfigs() {
+  public List<Issue> validateConfigs() {
     return Collections.emptyList();
   }
 

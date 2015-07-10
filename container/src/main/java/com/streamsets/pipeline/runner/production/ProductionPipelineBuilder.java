@@ -16,9 +16,9 @@ import com.streamsets.pipeline.runner.SourceOffsetTracker;
 import com.streamsets.pipeline.stagelibrary.StageLibraryTask;
 import com.streamsets.pipeline.util.ContainerError;
 import com.streamsets.pipeline.util.ValidationUtil;
+import com.streamsets.pipeline.validation.Issue;
 import com.streamsets.pipeline.validation.Issues;
 import com.streamsets.pipeline.validation.PipelineConfigurationValidator;
-import com.streamsets.pipeline.validation.StageIssue;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -72,10 +72,10 @@ public class ProductionPipelineBuilder {
     Pipeline pipeline = new Pipeline.Builder(stageLib, name + PRODUCTION_PIPELINE_SUFFIX, pipelineConf)
       .setObserver(observer).build(runner);
 
-    List<StageIssue> configIssues = pipeline.validateConfigs();
+    List<Issue> configIssues = pipeline.validateConfigs();
     if (!configIssues.isEmpty()) {
       Issues issues = new Issues(configIssues);
-      for (StageIssue stageIssue : configIssues) {
+      for (Issue stageIssue : configIssues) {
         LOG.warn("Stage Issue: + " + String.valueOf(stageIssue));
       }
       throw new PipelineRuntimeException(issues);
@@ -99,10 +99,10 @@ public class ProductionPipelineBuilder {
     Pipeline pipeline = new Pipeline.Builder(stageLib, name + PRODUCTION_PIPELINE_SUFFIX, pipelineConf)
       .setObserver(observer).build(runner);
 
-    List<StageIssue> configIssues = pipeline.validateConfigs();
+    List<Issue> configIssues = pipeline.validateConfigs();
     if (!configIssues.isEmpty()) {
       Issues issues = new Issues(configIssues);
-      for (StageIssue stageIssue : configIssues) {
+      for (Issue stageIssue : configIssues) {
         LOG.warn(String.valueOf(stageIssue));
       }
       throw new PipelineRuntimeException(issues);

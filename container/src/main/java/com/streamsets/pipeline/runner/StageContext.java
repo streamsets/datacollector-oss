@@ -38,7 +38,7 @@ import com.streamsets.pipeline.record.RecordImpl;
 import com.streamsets.pipeline.record.io.RecordWriterReaderFactory;
 import com.streamsets.pipeline.util.ContainerError;
 import com.streamsets.pipeline.util.ElUtil;
-import com.streamsets.pipeline.validation.StageIssue;
+import com.streamsets.pipeline.validation.Issue;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -119,11 +119,11 @@ public class StageContext implements Source.Context, Target.Context, Processor.C
 
   }
 
-  private static class ConfigIssueImpl extends StageIssue implements Stage.ConfigIssue {
+  private static class ConfigIssueImpl extends Issue implements Stage.ConfigIssue {
 
     public ConfigIssueImpl(String instanceName, String configGroup, String configName, ErrorCode errorCode,
         Object... args) {
-      super(false, instanceName, configGroup, configName, errorCode, args); //TODO we should use errorStage bit here
+      super(instanceName, false, configGroup, configName, errorCode, args); //TODO we should use errorStage bit here
     }
 
   }

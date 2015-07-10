@@ -17,67 +17,56 @@ import java.util.Map;
 
 @JsonDeserialize(using = NullDeserializer.Object.class)
 public class Issues implements Serializable {
+  private final List<Issue> all;
   private final List<Issue> pipeline;
-  private final Map<String, List<StageIssue>> stages;
+  private final Map<String, List<Issue>> stages;
 
   public Issues() {
-    this(new ArrayList<StageIssue>());
-  }
-
-  public Issues(List<StageIssue> issues) {
+    all = new ArrayList<>();
     pipeline = new ArrayList<>();
     stages = new HashMap<>();
-    for (StageIssue issue : issues) {
+  }
+
+  public Issues(List<Issue> issues) {
+    this();
+    for (Issue issue : issues) {
       add(issue);
     }
   }
 
-  public void addP(Issue issue) {
-    pipeline.add(issue);
-  }
-
-  public void add(StageIssue issue) {
-    List<StageIssue> stageIssues = stages.get(issue.getInstanceName());
-    if (stageIssues == null) {
-      stageIssues = new ArrayList<>();
-      stages.put(issue.getInstanceName(), stageIssues);
-    }
-    stageIssues.add(issue);
-  }
-
-  private void addAll(List<StageIssue> issues) {
-    for (StageIssue issue : issues) {
-      add(issue);
+  public void add(Issue issue) {
+    all.add(issue);
+    String instance = issue.getInstanceName();
+    if (instance == null) {
+      pipeline.add(issue);
+    } else {
+      List<Issue> stage = stages.get(instance);
+      if (stage == null) {
+        stage = new ArrayList<>();
+        stages.put(instance, stage);
+      }
+      stage.add(issue);
     }
   }
 
   public List<Issue> getIssues() {
-    List<Issue> result = new ArrayList<>();
-    result.addAll(pipeline);
-    for (List<StageIssue> stageIssues : stages.values()) {
-      result.addAll(stageIssues);
-    }
-    return pipeline;
+    return all;
   }
 
   public List<Issue> getPipelineIssues() {
     return pipeline;
   }
 
-  public Map<String, List<StageIssue>> getStageIssues() {
+  public Map<String, List<Issue>> getStageIssues() {
     return stages;
   }
 
   public boolean hasIssues() {
-    return !pipeline.isEmpty() || !stages.isEmpty();
+    return !all.isEmpty();
   }
 
   public int getIssueCount() {
-    int issueCount = pipeline.size();
-    for(String key: stages.keySet()) {
-      issueCount += stages.get(key).size();
-    }
-    return issueCount;
+    return all.size();
   }
 
   public String toString() {

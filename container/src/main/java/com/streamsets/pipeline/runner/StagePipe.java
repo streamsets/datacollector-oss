@@ -20,9 +20,9 @@ import com.streamsets.pipeline.memory.MemoryMonitor;
 import com.streamsets.pipeline.memory.MemoryUsageCollector;
 import com.streamsets.pipeline.memory.MemoryUsageCollectorResourceBundle;
 import com.streamsets.pipeline.metrics.MetricsConfigurator;
-import com.streamsets.pipeline.validation.StageIssue;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import com.streamsets.pipeline.validation.Issue;
 
 import java.util.HashMap;
 import java.util.List;
@@ -69,7 +69,7 @@ public class StagePipe extends Pipe<StagePipe.Context> {
   }
 
   @Override
-  public List<StageIssue> validateConfigs() throws StageException {
+  public List<Issue> validateConfigs() throws StageException {
     return getStage().validateConfigs();
   }
 

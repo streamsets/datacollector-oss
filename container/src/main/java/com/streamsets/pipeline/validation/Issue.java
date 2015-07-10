@@ -14,23 +14,20 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class Issue {
-  protected final String configGroup;
-  protected final String configName;
+  private final String instanceName;
+  private final boolean errorStage;
+  private final String configGroup;
+  private final String configName;
   private final LocalizableString message;
   private Map<String, Object> additionalInfo;
 
-  public Issue(String configName, String configGroup, ErrorCode error, Object... args) {
-    message = new ErrorMessage(error, args);
-    this.configName = configName;
+  protected Issue(String instanceName, boolean errorStage, String configGroup, String configName, ErrorCode error,
+      Object... args) {
+    this.instanceName = instanceName;
+    this.errorStage = errorStage;
     this.configGroup = configGroup;
-  }
-
-  protected Issue(ErrorCode error, Object... args) {
-    this(null, null, error, args);
-  }
-
-  protected Issue(ValidationError error, Object... args) {
-    this((ErrorCode) error, args);
+    this.configName = configName;
+    message = new ErrorMessage(error, args);
   }
 
   public void setAdditionalInfo(String key, Object value) {
@@ -52,6 +49,24 @@ public class Issue {
     return ((ErrorMessage)message).getErrorCode();
   }
 
+  public String getInstanceName() {
+    return instanceName;
+  }
+
+  public boolean isErrorStage() {
+    return errorStage;
+  }
+
+  public String getLevel() {
+    String level;
+    if (instanceName == null) {
+      level = (getConfigName() == null) ? "PIPELINE" : "PIPELINE_CONFIG";
+    } else {
+      level = (getConfigName() == null) ? "STAGE" : "STAGE_CONFIG";
+    }
+    return level;
+  }
+
   public String getConfigGroup() {
     return configGroup;
   }
@@ -62,7 +77,8 @@ public class Issue {
 
   @Override
   public String toString() {
-    return Utils.format("Issue[message='{}']", message.getNonLocalized());
+    return Utils.format("Issue[instance='{}' group='{}' config='{}' errorStage='{}' message='{}']", instanceName,
+                        configGroup, configName, errorStage, message.getNonLocalized());
   }
 
 }

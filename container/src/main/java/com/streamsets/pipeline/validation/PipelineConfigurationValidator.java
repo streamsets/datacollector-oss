@@ -109,7 +109,7 @@ public class PipelineConfigurationValidator {
         for (StageConfiguration stage : original) {
           names.add(stage.getInstanceName());
         }
-        issues.addP(new Issue(ValidationError.VALIDATION_0002, names));
+        issues.add(IssueCreator.getPipeline().create(ValidationError.VALIDATION_0002, names));
         ok = false;
       }
     }
@@ -126,20 +126,18 @@ public class PipelineConfigurationValidator {
       canPreview = sortStages();
       canPreview &= checkIfPipelineIsEmpty();
       canPreview &= validatePipelineMemoryConfiguration();
-      canPreview &= validatePipelineConfiguration(StageIssueCreator.getStageCreator());
-      canPreview &= validatePipelineLanes(StageIssueCreator.getStageCreator());
+      canPreview &= validatePipelineConfiguration();
+      canPreview &= validatePipelineLanes();
       canPreview &= validateErrorStage();
-      canPreview &= validateStagesExecutionMode(StageIssueCreator.getStageCreator(), pipelineConfiguration.getStages());
+      canPreview &= validateStagesExecutionMode(pipelineConfiguration.getStages(), false);
       canPreview &= validateClusterModeConfig();
 
       if (LOG.isTraceEnabled() && issues.hasIssues()) {
         for (Issue issue : issues.getPipelineIssues()) {
           LOG.trace("Pipeline '{}', {}", name, issue);
         }
-        for (List<StageIssue> stageIssues : issues.getStageIssues().values()) {
-          for (StageIssue stageIssue : stageIssues) {
-            LOG.trace("Pipeline '{}', {}", name, stageIssue);
-          }
+        for (Issue issue : issues.getIssues()) {
+          LOG.trace("Pipeline '{}', {}", name, issue);
         }
       }
       LOG.debug("Pipeline '{}' validation. valid={}, canPreview={}, issuesCount={}", name, !issues.hasIssues(),
@@ -164,34 +162,35 @@ public class PipelineConfigurationValidator {
       ConfigConfiguration kerberosKeytab = pipelineConfiguration.getConfiguration(PipelineConfigBean.
         CLUSTER_KERBEROS_KEYTAB_CONFIG);
       if (Strings.nullToEmpty((String)kerberosPrinc.getValue()).trim().isEmpty()) {
-        issues.addP(new Issue(kerberosPrinc.getName(), "CLUSTER", ValidationError.VALIDATION_0033,
-          "Kerberos Principal is empty"));
+        issues.add(IssueCreator.getPipeline().create(kerberosPrinc.getName(), "CLUSTER", ValidationError.VALIDATION_0033,
+                             "Kerberos Principal is empty"));
       }
       if (Strings.nullToEmpty((String)kerberosKeytab.getValue()).trim().isEmpty()) {
-        issues.addP(new Issue(kerberosKeytab.getName(), "CLUSTER", ValidationError.VALIDATION_0033,
-          "Kerberos Keytab is empty"));
+        issues.add(IssueCreator.getPipeline().create(kerberosKeytab.getName(), "CLUSTER", ValidationError.VALIDATION_0033,
+                             "Kerberos Keytab is empty"));
       } else {
         File keyTab = new File((String)kerberosKeytab.getValue());
         if (!keyTab.isFile() || !keyTab.canRead()) {
-          issues.addP(new Issue(kerberosKeytab.getName(), "CLUSTER", ValidationError.VALIDATION_0033,
-            "Kerberos Keytab file does not exist or cannot be read"));
+          issues.add(IssueCreator.getPipeline().create(kerberosKeytab.getName(), "CLUSTER", ValidationError.VALIDATION_0033,
+                               "Kerberos Keytab file does not exist or cannot be read"));
         }
       }
     }
     return true;
   }
-  private boolean validateStagesExecutionMode(StageIssueCreator issueCreator, List<StageConfiguration> stageConfigs) {
+  private boolean validateStagesExecutionMode(List<StageConfiguration> stageConfigs, boolean errorStage) {
     boolean canPreview = true;
     ConfigConfiguration conf = pipelineConfiguration.getConfiguration(PipelineConfigBean.EXECUTION_MODE_CONFIG);
     ExecutionMode executionMode = (conf == null) ? ExecutionMode.STANDALONE
                                                  : ExecutionMode.valueOf((String) conf.getValue());
     for (StageConfiguration stageConf : stageConfigs) {
+      IssueCreator issueCreator = (errorStage) ? IssueCreator.getErrorStage()
+                                               : IssueCreator.getStage(stageConf.getInstanceName());
       StageDefinition stageDef = stageLibrary.getStage(stageConf.getLibrary(), stageConf.getStageName(),
                                                        stageConf.getStageVersion());
       if (stageDef != null) {
         if (!stageDef.getExecutionModes().contains(executionMode)) {
-          issues.add(issueCreator.createStageIssue(stageConf.getInstanceName(), ValidationError.VALIDATION_0071,
-            stageConf.getStageName(), executionMode));
+          issues.add(issueCreator.create(ValidationError.VALIDATION_0071, stageConf.getStageName(), executionMode));
           canPreview = false;
         } else if (!stageDef.getLibraryExecutionModes().contains(executionMode)) {
           String type;
@@ -202,13 +201,13 @@ public class PipelineConfigurationValidator {
           } else {
             type = "Processor";
           }
-          issues.add(issueCreator.createStageIssue(stageConf.getInstanceName(), ValidationError.VALIDATION_0074,
-            stageDef.getLibraryLabel(), executionMode.getLabel(), type));
+          issues.add(issueCreator.create(ValidationError.VALIDATION_0074, stageDef.getLibraryLabel(),
+                                         executionMode.getLabel(), type));
           canPreview = false;
         }
       } else {
-        issues.add(issueCreator.createStageIssue(stageConf.getInstanceName(), ValidationError.VALIDATION_0006,
-          stageConf.getLibrary(), stageConf.getStageName(), stageConf.getStageVersion()));
+        issues.add(issueCreator.create(ValidationError.VALIDATION_0006, stageConf.getLibrary(),
+                                       stageConf.getStageName(), stageConf.getStageVersion()));
       }
     }
     return canPreview;
@@ -233,7 +232,7 @@ public class PipelineConfigurationValidator {
                 try {
                   memoryLimit = ValidationUtil.evaluateMemoryLimit(memoryLimitString, constants);
                 } catch (ELEvalException e) {
-                  issues.addP(new Issue(config.getName(), "", ValidationError.VALIDATION_0064, e.getMessage(), e));
+                  issues.add(IssueCreator.getPipeline().create(config.getName(), "", ValidationError.VALIDATION_0064, e.getMessage(), e));
                   return false;
                 }
               }
@@ -242,12 +241,12 @@ public class PipelineConfigurationValidator {
             }
 
             if (memoryLimit > JvmEL.jvmMaxMemoryMB() * 0.85) {
-              issues.addP(new Issue(config.getName(), "", ValidationError.VALIDATION_0063, memoryLimit,
-                                    JvmEL.jvmMaxMemoryMB() * 0.85));
+              issues.add(IssueCreator.getPipeline().create(config.getName(), "", ValidationError.VALIDATION_0063, memoryLimit,
+                                   JvmEL.jvmMaxMemoryMB() * 0.85));
               return false;
             }
           } catch (NumberFormatException e) {
-            issues.addP(new Issue(config.getName(), "", ValidationError.VALIDATION_0062, config.getValue()));
+            issues.add(IssueCreator.getPipeline().create(config.getName(), "", ValidationError.VALIDATION_0062, config.getValue()));
             return false;
           }
         }
@@ -259,7 +258,7 @@ public class PipelineConfigurationValidator {
   //TODO eventually, this should trigger a schema upgrade
   public boolean validSchemaVersion() {
     if (pipelineConfiguration.getSchemaVersion() != PipelineStoreTask.SCHEMA_VERSION) {
-      issues.addP(new Issue(ValidationError.VALIDATION_0000, pipelineConfiguration.getSchemaVersion()));
+      issues.add(IssueCreator.getPipeline().create(ValidationError.VALIDATION_0000, pipelineConfiguration.getSchemaVersion()));
       return false;
     } else {
       return true;
@@ -284,7 +283,7 @@ public class PipelineConfigurationValidator {
     boolean preview = true;
     if (pipelineConfiguration.getStages().isEmpty()) {
       // pipeline has not stages at all
-      issues.addP(new Issue(ValidationError.VALIDATION_0001));
+      issues.add(IssueCreator.getPipeline().create(ValidationError.VALIDATION_0001));
       preview = false;
     }
     return preview;
@@ -300,48 +299,48 @@ public class PipelineConfigurationValidator {
   }
 
   private boolean validateStageConfiguration(boolean shouldBeSource, StageConfiguration stageConf, boolean errorStage,
-      StageIssueCreator issueCreator) {
+      IssueCreator issueCreator) {
     boolean preview = true;
     StageDefinition stageDef = stageLibrary.getStage(stageConf.getLibrary(), stageConf.getStageName(),
       stageConf.getStageVersion());
     if (stageDef == null) {
       // stage configuration refers to an undefined stage definition
-      issues.add(issueCreator.createStageIssue(stageConf.getInstanceName(), ValidationError.VALIDATION_0006,
-                                             stageConf.getLibrary(), stageConf.getStageName(), stageConf.getStageVersion()));
+      issues.add(issueCreator.create(stageConf.getInstanceName(), ValidationError.VALIDATION_0006,
+                                     stageConf.getLibrary(), stageConf.getStageName(), stageConf.getStageVersion()));
       preview = false;
     } else {
       if (shouldBeSource) {
         if (stageDef.getType() != StageType.SOURCE) {
           // first stage must be a Source
-          issues.add(issueCreator.createStageIssue(stageConf.getInstanceName(), ValidationError.VALIDATION_0003));
+          issues.add(issueCreator.create(stageConf.getInstanceName(), ValidationError.VALIDATION_0003));
           preview = false;
         }
       } else {
         if (stageDef.getType() == StageType.SOURCE) {
           // no stage other than first stage can be a Source
-          issues.add(issueCreator.createStageIssue(stageConf.getInstanceName(), ValidationError.VALIDATION_0004));
+          issues.add(issueCreator.create(stageConf.getInstanceName(), ValidationError.VALIDATION_0004));
           preview = false;
         }
       }
       if (!stageConf.isSystemGenerated() && !TextUtils.isValidName(stageConf.getInstanceName())) {
         // stage instance name has an invalid name (it must match '[0-9A-Za-z_]+')
-        issues.add(issueCreator.createStageIssue(stageConf.getInstanceName(), ValidationError.VALIDATION_0016,
-                                               TextUtils.VALID_NAME));
+        issues.add(issueCreator.create(stageConf.getInstanceName(), ValidationError.VALIDATION_0016,
+                                       TextUtils.VALID_NAME));
         preview = false;
       }
       for (String lane : stageConf.getInputLanes()) {
         if (!TextUtils.isValidName(lane)) {
           // stage instance input lane has an invalid name (it must match '[0-9A-Za-z_]+')
-          issues.add(issueCreator.createStageIssue(stageConf.getInstanceName(), ValidationError.VALIDATION_0017, lane,
-                                                 TextUtils.VALID_NAME));
+          issues.add(issueCreator.create(stageConf.getInstanceName(), ValidationError.VALIDATION_0017, lane,
+                                         TextUtils.VALID_NAME));
           preview = false;
         }
       }
       for (String lane : stageConf.getOutputLanes()) {
         if (!TextUtils.isValidName(lane)) {
           // stage instance output lane has an invalid name (it must match '[0-9A-Za-z_]+')
-          issues.add(issueCreator.createStageIssue(stageConf.getInstanceName(), ValidationError.VALIDATION_0018, lane,
-                                                 TextUtils.VALID_NAME));
+          issues.add(issueCreator.create(stageConf.getInstanceName(), ValidationError.VALIDATION_0018, lane,
+                                         TextUtils.VALID_NAME));
           preview = false;
         }
       }
@@ -349,50 +348,50 @@ public class PipelineConfigurationValidator {
         case SOURCE:
           if (!stageConf.getInputLanes().isEmpty()) {
             // source stage cannot have input lanes
-            issues.add(issueCreator.createStageIssue(stageConf.getInstanceName(), ValidationError.VALIDATION_0012,
-                                                   stageDef.getType(), stageConf.getInputLanes()));
+            issues.add(issueCreator.create(stageConf.getInstanceName(), ValidationError.VALIDATION_0012,
+                                           stageDef.getType(), stageConf.getInputLanes()));
             preview = false;
           }
           if (!stageDef.isVariableOutputStreams()) {
             // source stage must match the output stream defined in StageDef
             if (stageDef.getOutputStreams() != stageConf.getOutputLanes().size()) {
-              issues.add(issueCreator.createStageIssue(stageConf.getInstanceName(), ValidationError.VALIDATION_0015,
-                                                     stageDef.getOutputStreams(), stageConf.getOutputLanes().size()));
+              issues.add(issueCreator.create(stageConf.getInstanceName(), ValidationError.VALIDATION_0015,
+                                             stageDef.getOutputStreams(), stageConf.getOutputLanes().size()));
             }
           } else if (stageConf.getOutputLanes().isEmpty()) {
             // source stage must have at least one output lane
-            issues.add(issueCreator.createStageIssue(stageConf.getInstanceName(), ValidationError.VALIDATION_0032));
+            issues.add(issueCreator.create(stageConf.getInstanceName(), ValidationError.VALIDATION_0032));
           }
           break;
         case PROCESSOR:
           if (stageConf.getInputLanes().isEmpty()) {
             // processor stage must have at least one input lane
-            issues.add(issueCreator.createStageIssue(stageConf.getInstanceName(), ValidationError.VALIDATION_0014,
-                                                   stageDef.getType()));
+            issues.add(issueCreator.create(stageConf.getInstanceName(), ValidationError.VALIDATION_0014,
+                                           stageDef.getType()));
             preview = false;
           }
           if (!stageDef.isVariableOutputStreams()) {
             // processor stage must match the output stream defined in StageDef
             if (stageDef.getOutputStreams() != stageConf.getOutputLanes().size()) {
-              issues.add(issueCreator.createStageIssue(stageConf.getInstanceName(), ValidationError.VALIDATION_0015,
-                                                     stageDef.getOutputStreams(), stageConf.getOutputLanes().size()));
+              issues.add(issueCreator.create(stageConf.getInstanceName(), ValidationError.VALIDATION_0015,
+                                             stageDef.getOutputStreams(), stageConf.getOutputLanes().size()));
             }
           } else if (stageConf.getOutputLanes().isEmpty()) {
             // processor stage must have at least one output lane
-            issues.add(issueCreator.createStageIssue(stageConf.getInstanceName(), ValidationError.VALIDATION_0032));
+            issues.add(issueCreator.create(stageConf.getInstanceName(), ValidationError.VALIDATION_0032));
           }
           break;
         case TARGET:
           if (!errorStage && stageConf.getInputLanes().isEmpty()) {
             // target stage must have at least one input lane
-            issues.add(issueCreator.createStageIssue(stageConf.getInstanceName(), ValidationError.VALIDATION_0014,
-                                                   stageDef.getType()));
+            issues.add(issueCreator.create(stageConf.getInstanceName(), ValidationError.VALIDATION_0014,
+                                           stageDef.getType()));
             preview = false;
           }
           if (!stageConf.getOutputLanes().isEmpty()) {
             // target stage cannot have output lanes
-            issues.add(issueCreator.createStageIssue(stageConf.getInstanceName(), ValidationError.VALIDATION_0013,
-                                                   stageDef.getType(), stageConf.getOutputLanes()));
+            issues.add(issueCreator.create(stageConf.getInstanceName(), ValidationError.VALIDATION_0013,
+                                           stageDef.getType(), stageConf.getOutputLanes()));
             preview = false;
           }
           break;
@@ -414,7 +413,7 @@ public class PipelineConfigurationValidator {
   }
 
   private boolean validateRequiredField(ConfigDefinition confDef, StageConfiguration stageConf,
-                                        StageIssueCreator issueCreator) {
+                                        IssueCreator issueCreator) {
     boolean preview = true;
     String dependsOn = confDef.getDependsOn();
     List<Object> triggeredBy = confDef.getTriggeredByValues();
@@ -424,8 +423,8 @@ public class PipelineConfigurationValidator {
       * In such a scenario stageConf.getConfig(dependsOn) can be null. We need to guard against this.*/
       (stageConf.getConfig(dependsOn) != null &&
         triggeredByContains(triggeredBy, stageConf.getConfig(dependsOn).getValue()))) {
-      issues.add(issueCreator.createConfigIssue(stageConf.getInstanceName(), confDef.getGroup(), confDef.getName(),
-        ValidationError.VALIDATION_0007, confDef.getName(), confDef.getGroup()));
+      issues.add(issueCreator.create(confDef.getGroup(), confDef.getName(),
+                                     ValidationError.VALIDATION_0007, confDef.getName(), confDef.getGroup()));
       preview = false;
     }
     return preview;
@@ -445,15 +444,15 @@ public class PipelineConfigurationValidator {
   private static final Record PRECONDITION_RECORD = new RecordImpl("dummy", "dummy", null, null);
 
   boolean validatePreconditions(String instanceName, ConfigDefinition confDef, ConfigConfiguration conf, Issues issues,
-      StageIssueCreator issueCreator) {
+      IssueCreator issueCreator) {
     boolean valid = true;
     if (conf.getValue() != null && conf.getValue() instanceof List) {
       List<String> list = (List<String>) conf.getValue();
       for (String precondition : list) {
         precondition = precondition.trim();
         if (!precondition.startsWith("${") || !precondition.endsWith("}")) {
-          issues.add(issueCreator.createConfigIssue(instanceName, confDef.getGroup(), confDef.getName(),
-                                                    ValidationError.VALIDATION_0080, precondition));
+          issues.add(issueCreator.create(confDef.getGroup(), confDef.getName(),
+                                         ValidationError.VALIDATION_0080, precondition));
           valid = false;
         } else {
           ELVariables elVars = new ELVariables();
@@ -463,8 +462,8 @@ public class PipelineConfigurationValidator {
                                             RecordEL.class, StringEL.class, RuntimeEL.class);
             elEval.eval(elVars, precondition, Boolean.class);
           } catch (ELEvalException ex) {
-            issues.add(issueCreator.createConfigIssue(instanceName, confDef.getGroup(), confDef.getName(),
-                                                      ValidationError.VALIDATION_0081, precondition, ex.getMessage()));
+            issues.add(issueCreator.create(confDef.getGroup(), confDef.getName(),
+                                           ValidationError.VALIDATION_0081, precondition, ex.getMessage()));
             valid = false;
           }
         }
@@ -475,14 +474,14 @@ public class PipelineConfigurationValidator {
 
   private boolean validateConfigDefinition(ConfigDefinition confDef, ConfigConfiguration conf,
                                            StageConfiguration stageConf, StageDefinition stageDef,
-                                           Map<String, Object> parentConf, StageIssueCreator issueCreator,
+                                           Map<String, Object> parentConf, IssueCreator issueCreator,
                                            boolean inject) {
     //parentConf is applicable when validating complex fields.
     boolean preview = true;
     if (confDef == null) {
       // stage configuration defines an invalid configuration
-      issues.add(issueCreator.createConfigIssue(stageConf.getInstanceName(), null, conf.getName(),
-        ValidationError.VALIDATION_0008));
+      issues.add(issueCreator.create(stageConf.getInstanceName(), null, conf.getName(),
+                                     ValidationError.VALIDATION_0008));
       return false;
     } else if (conf.getValue() == null && confDef.isRequired()) {
       preview &= validateRequiredField(confDef, stageConf, issueCreator);
@@ -519,44 +518,41 @@ public class PipelineConfigurationValidator {
       switch (confDef.getType()) {
         case BOOLEAN:
           if (!(conf.getValue() instanceof Boolean)) {
-            issues.add(issueCreator.createConfigIssue(stageConf.getInstanceName(), confDef.getGroup(),
-              confDef.getName(), ValidationError.VALIDATION_0009,
-              confDef.getType()));
+            issues.add(issueCreator.create(confDef.getGroup(), confDef.getName(), ValidationError.VALIDATION_0009,
+                                           confDef.getType()));
             preview = false;
           }
           break;
         case NUMBER:
           if (!(conf.getValue() instanceof Long || conf.getValue() instanceof Integer)) {
-            issues.add(issueCreator.createConfigIssue(stageConf.getInstanceName(), confDef.getGroup(),
-              confDef.getName(), ValidationError.VALIDATION_0009,
-              confDef.getType()));
+            issues.add(issueCreator.create(confDef.getGroup(), confDef.getName(), ValidationError.VALIDATION_0009,
+                                           confDef.getType()));
             preview = false;
             break;
           }
           Long value = ((Number) conf.getValue()).longValue();
           if(value > confDef.getMax()) {
-            issues.add(issueCreator.createConfigIssue(stageConf.getInstanceName(), confDef.getGroup(),
-              confDef.getName(), ValidationError.VALIDATION_0034, confDef.getName(), confDef.getMax()));
+            issues.add(issueCreator.create(confDef.getGroup(), confDef.getName(), ValidationError.VALIDATION_0034,
+                                           confDef.getName(), confDef.getMax()));
             preview = false;
           }
           if(value < confDef.getMin()) {
-            issues.add(issueCreator.createConfigIssue(stageConf.getInstanceName(), confDef.getGroup(),
-              confDef.getName(), ValidationError.VALIDATION_0035, confDef.getName(), confDef.getMin()));
+            issues.add(issueCreator.create(confDef.getGroup(), confDef.getName(), ValidationError.VALIDATION_0035,
+                                           confDef.getName(), confDef.getMin()));
             preview = false;
           }
           break;
         case TEXT:
         case STRING:
           if (!(conf.getValue() instanceof String)) {
-            issues.add(issueCreator.createConfigIssue(stageConf.getInstanceName(), confDef.getGroup(),
-              confDef.getName(), ValidationError.VALIDATION_0009,
-              confDef.getType()));
+            issues.add(issueCreator.create(confDef.getGroup(), confDef.getName(), ValidationError.VALIDATION_0009,
+                                           confDef.getType()));
             preview = false;
           } else {
             String strValue = (String)conf.getValue();
             if((strValue == null || strValue.isEmpty()) && confDef.isRequired()) {
-              issues.add(issueCreator.createConfigIssue(stageConf.getInstanceName(), confDef.getGroup(),
-                confDef.getName(), ValidationError.VALIDATION_0007, confDef.getName(), confDef.getGroup()));
+              issues.add(issueCreator.create(confDef.getGroup(), confDef.getName(), ValidationError.VALIDATION_0007,
+                                             confDef.getName(), confDef.getGroup()));
               preview = false;
             }
           }
@@ -566,15 +562,14 @@ public class PipelineConfigurationValidator {
 
           } else if (conf.getValue() instanceof String) {
             if (((String)conf.getValue()).length() > 1) {
-              issues.add(issueCreator.createConfigIssue(stageConf.getInstanceName(), confDef.getGroup(),
-                confDef.getName(), ValidationError.VALIDATION_0031,
-                conf.getValue()));
+              issues.add(issueCreator.create(confDef.getGroup(), confDef.getName(), ValidationError.VALIDATION_0031,
+                                             conf.getValue()));
               preview = false;
             }
           } else {
-            issues.add(issueCreator.createConfigIssue(stageConf.getInstanceName(), confDef.getGroup(),
-              confDef.getName(), ValidationError.VALIDATION_0009,
-              confDef.getType()));
+            issues.add(issueCreator.create(confDef.getGroup(),
+                                           confDef.getName(), ValidationError.VALIDATION_0009,
+                                           confDef.getType()));
             preview = false;
           }
           break;
@@ -583,38 +578,38 @@ public class PipelineConfigurationValidator {
             int count = 0;
             for (Object element : (List) conf.getValue()) {
               if (element == null) {
-                issues.add(issueCreator.createConfigIssue(stageConf.getInstanceName(), confDef.getGroup(),
-                  confDef.getName(), ValidationError.VALIDATION_0024,
-                  count));
+                issues.add(issueCreator.create(confDef.getGroup(),
+                                               confDef.getName(), ValidationError.VALIDATION_0024,
+                                               count));
                 preview = false;
               } else if (element instanceof Map) {
                 Map map = (Map) element;
                 if (!map.containsKey("key") || !map.containsKey("value")) {
-                  issues.add(issueCreator.createConfigIssue(stageConf.getInstanceName(), confDef.getGroup(),
-                    confDef.getName(), ValidationError.VALIDATION_0025,
-                    count));
+                  issues.add(issueCreator.create(confDef.getGroup(),
+                                                 confDef.getName(), ValidationError.VALIDATION_0025,
+                                                 count));
                   preview = false;
                 }
               } else {
-                issues.add(issueCreator.createConfigIssue(stageConf.getInstanceName(), confDef.getGroup(),
-                  confDef.getName(), ValidationError.VALIDATION_0026, count,
-                  element.getClass().getSimpleName()));
+                issues.add(issueCreator.create(confDef.getGroup(),
+                                               confDef.getName(), ValidationError.VALIDATION_0026, count,
+                                               element.getClass().getSimpleName()));
                 preview = false;
               }
               count++;
             }
           } else if (!(conf.getValue() instanceof Map)) {
-            issues.add(issueCreator.createConfigIssue(stageConf.getInstanceName(), confDef.getGroup(),
-              confDef.getName(), ValidationError.VALIDATION_0009,
-              confDef.getType()));
+            issues.add(issueCreator.create(confDef.getGroup(),
+                                           confDef.getName(), ValidationError.VALIDATION_0009,
+                                           confDef.getType()));
             preview = false;
           }
           break;
         case LIST:
           if (!(conf.getValue() instanceof List)) {
-            issues.add(issueCreator.createConfigIssue(stageConf.getInstanceName(), confDef.getGroup(),
-              confDef.getName(), ValidationError.VALIDATION_0009,
-              confDef.getType()));
+            issues.add(issueCreator.create(confDef.getGroup(),
+                                           confDef.getName(), ValidationError.VALIDATION_0009,
+                                           confDef.getType()));
             preview = false;
           }
           break;
@@ -628,7 +623,7 @@ public class PipelineConfigurationValidator {
 
   private ConfigConfiguration injectConfiguration(ConfigConfiguration conf, ConfigDefinition confDef,
                                                         StageDefinition stageDef, StageConfiguration stageConf,
-                                                        PipelineConfiguration pipelineConf, StageIssueCreator issueCreator) {
+                                                        PipelineConfiguration pipelineConf, IssueCreator issueCreator) {
     switch (confDef.getName()) {
       case ConfigDefinition.REQUIRED_FIELDS:
       case ConfigDefinition.ON_RECORD_ERROR:
@@ -649,8 +644,8 @@ public class PipelineConfigurationValidator {
             stageDef.getClassName(), stageConf.getInstanceName(), confDef.getFieldName(),
             conf.getValue(), e.getMessage(), e));
         } catch (ELEvalException e) {
-          issues.add(issueCreator.createConfigIssue(stageConf.getInstanceName(), confDef.getGroup(), confDef.getName(),
-            ValidationError.VALIDATION_0033, e.getMessage(), e));
+          issues.add(issueCreator.create(confDef.getGroup(), confDef.getName(),
+                                         ValidationError.VALIDATION_0033, e.getMessage(), e));
           return null;
         }
     }
@@ -701,17 +696,19 @@ public class PipelineConfigurationValidator {
   }
 
   @VisibleForTesting
-  boolean validatePipelineConfiguration(StageIssueCreator issueCreator) {
+  boolean validatePipelineConfiguration() {
     boolean preview = true;
     Set<String> stageNames = new HashSet<>();
     boolean shouldBeSource = true;
     for (StageConfiguration stageConf : pipelineConfiguration.getStages()) {
       if (stageNames.contains(stageConf.getInstanceName())) {
         // duplicate stage instance name in the pipeline
-        issues.add(issueCreator.createStageIssue(stageConf.getInstanceName(), ValidationError.VALIDATION_0005));
+        issues.add(IssueCreator.getStage(stageConf.getInstanceName()).create(stageConf.getInstanceName(),
+                                                                             ValidationError.VALIDATION_0005));
         preview = false;
       }
-      preview &= validateStageConfiguration(shouldBeSource, stageConf, false, StageIssueCreator.getStageCreator());
+      preview &= validateStageConfiguration(shouldBeSource, stageConf, false,
+                                            IssueCreator.getStage(stageConf.getInstanceName()));
       stageNames.add(stageConf.getInstanceName());
       shouldBeSource = false;
     }
@@ -719,23 +716,23 @@ public class PipelineConfigurationValidator {
   }
 
   private boolean validateModel(StageConfiguration stageConf, StageDefinition stageDef, ConfigDefinition confDef, ConfigConfiguration conf,
-      StageIssueCreator issueCreator) {
+      IssueCreator issueCreator) {
     String instanceName = stageConf.getInstanceName();
     boolean preview = true;
     switch (confDef.getModel().getModelType()) {
       case VALUE_CHOOSER:
         if(!(conf.getValue() instanceof String || conf.getValue().getClass().isEnum()) ) {
           // stage configuration must be a model
-          issues.add(issueCreator.createConfigIssue(instanceName, confDef.getGroup(), confDef.getName(),
-                                                  ValidationError.VALIDATION_0009, "String"));
+          issues.add(issueCreator.create(confDef.getGroup(), confDef.getName(),
+                                         ValidationError.VALIDATION_0009, "String"));
           preview = false;
         }
         break;
       case FIELD_SELECTOR_MULTI_VALUED:
         if(!(conf.getValue() instanceof List)) {
           // stage configuration must be a model
-          issues.add(issueCreator.createConfigIssue(instanceName, confDef.getGroup(), confDef.getName(),
-                                                  ValidationError.VALIDATION_0009, "List"));
+          issues.add(issueCreator.create(confDef.getGroup(), confDef.getName(),
+                                         ValidationError.VALIDATION_0009, "List"));
           preview = false;
         }
         break;
@@ -761,16 +758,16 @@ public class PipelineConfigurationValidator {
       case FIELD_VALUE_CHOOSER:
         if(!(conf.getValue() instanceof Map)) {
           // stage configuration must be a model
-          issues.add(issueCreator.createConfigIssue(instanceName, confDef.getGroup(), confDef.getName(),
-                                                  ValidationError.VALIDATION_0009, "Map"));
+          issues.add(issueCreator.create(confDef.getGroup(), confDef.getName(),
+                                         ValidationError.VALIDATION_0009, "Map"));
           preview = false;
         }
         break;
       case LANE_PREDICATE_MAPPING:
         if(!(conf.getValue() instanceof List)) {
           // stage configuration must be a model
-          issues.add(issueCreator.createConfigIssue(instanceName, confDef.getGroup(), confDef.getName(),
-                                                    ValidationError.VALIDATION_0009, "List<Map>"));
+          issues.add(issueCreator.create(confDef.getGroup(), confDef.getName(),
+                                         ValidationError.VALIDATION_0009, "List<Map>"));
           preview = false;
         } else {
           int count = 1;
@@ -778,50 +775,50 @@ public class PipelineConfigurationValidator {
             if (element instanceof Map) {
               Map map = (Map)element;
               if (!map.containsKey("outputLane")) {
-                issues.add(issueCreator.createConfigIssue(instanceName, confDef.getGroup(), confDef.getName(),
-                                                        ValidationError.VALIDATION_0020, count, "outputLane"));
+                issues.add(issueCreator.create(confDef.getGroup(), confDef.getName(),
+                                               ValidationError.VALIDATION_0020, count, "outputLane"));
                 preview = false;
               } else {
                 if (map.get("outputLane") == null) {
-                  issues.add(issueCreator.createConfigIssue(instanceName, confDef.getGroup(), confDef.getName(),
-                                                          ValidationError.VALIDATION_0021, count, "outputLane"));
+                  issues.add(issueCreator.create(confDef.getGroup(), confDef.getName(),
+                                                 ValidationError.VALIDATION_0021, count, "outputLane"));
                   preview = false;
                 } else {
                   if (!(map.get("outputLane") instanceof String)) {
-                    issues.add(issueCreator.createConfigIssue(instanceName, confDef.getGroup(), confDef.getName(),
-                                                            ValidationError.VALIDATION_0022, count, "outputLane"));
+                    issues.add(issueCreator.create(confDef.getGroup(), confDef.getName(),
+                                                   ValidationError.VALIDATION_0022, count, "outputLane"));
                     preview = false;
                   } else if (((String)map.get("outputLane")).isEmpty()) {
-                    issues.add(issueCreator.createConfigIssue(instanceName, confDef.getGroup(), confDef.getName(),
-                                                            ValidationError.VALIDATION_0023, count, "outputLane"));
+                    issues.add(issueCreator.create(confDef.getGroup(), confDef.getName(),
+                                                   ValidationError.VALIDATION_0023, count, "outputLane"));
                     preview = false;
                   }
                 }
               }
               if (!map.containsKey("predicate")) {
-                issues.add(issueCreator.createConfigIssue(instanceName, confDef.getGroup(), confDef.getName(),
-                                                        ValidationError.VALIDATION_0020, count, "condition"));
+                issues.add(issueCreator.create(confDef.getGroup(), confDef.getName(),
+                                               ValidationError.VALIDATION_0020, count, "condition"));
                 preview = false;
               } else {
                 if (map.get("predicate") == null) {
-                  issues.add(issueCreator.createConfigIssue(instanceName, confDef.getGroup(), confDef.getName(),
-                                                          ValidationError.VALIDATION_0021, count, "condition"));
+                  issues.add(issueCreator.create(confDef.getGroup(), confDef.getName(),
+                                                 ValidationError.VALIDATION_0021, count, "condition"));
                   preview = false;
                 } else {
                   if (!(map.get("predicate") instanceof String)) {
-                    issues.add(issueCreator.createConfigIssue(instanceName, confDef.getGroup(), confDef.getName(),
-                                                            ValidationError.VALIDATION_0022, count, "condition"));
+                    issues.add(issueCreator.create(confDef.getGroup(), confDef.getName(),
+                                                   ValidationError.VALIDATION_0022, count, "condition"));
                     preview = false;
                   } else if (((String)map.get("predicate")).isEmpty()) {
-                    issues.add(issueCreator.createConfigIssue(instanceName, confDef.getGroup(), confDef.getName(),
-                                                            ValidationError.VALIDATION_0023, count, "condition"));
+                    issues.add(issueCreator.create(confDef.getGroup(), confDef.getName(),
+                                                   ValidationError.VALIDATION_0023, count, "condition"));
                     preview = false;
                   }
                 }
               }
             } else {
-              issues.add(issueCreator.createConfigIssue(instanceName, confDef.getGroup(), confDef.getName(),
-                                                        ValidationError.VALIDATION_0019, count));
+              issues.add(issueCreator.create(confDef.getGroup(), confDef.getName(),
+                                             ValidationError.VALIDATION_0019, count));
               preview = false;
             }
             count++;
@@ -834,7 +831,7 @@ public class PipelineConfigurationValidator {
 
   private boolean validateComplexConfig(Map<String, ConfigDefinition> configDefinitionsMap,
                                         Map<String, Object> confvalue , StageConfiguration stageConf,
-                                        StageDefinition stageDef, StageIssueCreator issueCreator) {
+                                        StageDefinition stageDef, IssueCreator issueCreator) {
     boolean preview = true;
     for(Map.Entry<String, Object> entry : confvalue.entrySet()) {
       String configName = entry.getKey();
@@ -849,7 +846,7 @@ public class PipelineConfigurationValidator {
 
 
   @VisibleForTesting
-  boolean validatePipelineLanes(StageIssueCreator issueCreator) {
+  boolean validatePipelineLanes() {
     boolean preview = true;
     List<StageConfiguration> stagesConf = pipelineConfiguration.getStages();
     for (int i = 0; i < stagesConf.size(); i++) {
@@ -861,9 +858,9 @@ public class PipelineConfigurationValidator {
                                                          new HashSet<>(downStreamStageConf.getOutputLanes()));
         if (!duplicateOutputs.isEmpty()) {
           // there is more than one stage defining the same output lane
-          issues.add(issueCreator.createStageIssue(downStreamStageConf.getInstanceName(),
-                                                 ValidationError.VALIDATION_0010,
-                                                 duplicateOutputs, stageConf.getInstanceName()));
+          issues.add(IssueCreator.getPipeline().create(downStreamStageConf.getInstanceName(),
+                                                       ValidationError.VALIDATION_0010,
+                                                       duplicateOutputs, stageConf.getInstanceName()));
           preview = false;
         }
 
@@ -872,7 +869,7 @@ public class PipelineConfigurationValidator {
       if (!openOutputs.isEmpty()) {
         openLanes.addAll(openOutputs);
         // the stage has open output lanes
-        StageIssue issue = issueCreator.createStageIssue(stageConf.getInstanceName(), ValidationError.VALIDATION_0011);
+        Issue issue = IssueCreator.getStage(stageConf.getInstanceName()).create(ValidationError.VALIDATION_0011);
         issue.setAdditionalInfo("openStreams", openOutputs);
         issues.add(issue);
       }
@@ -884,14 +881,14 @@ public class PipelineConfigurationValidator {
   boolean validateErrorStage() {
     boolean preview = true;
     if (pipelineConfiguration.getErrorStage() == null) {
-      issues.addP(new Issue(PipelineConfigBean.ERROR_RECORDS_CONFIG, PipelineGroups.BAD_RECORDS.name(),
-                            ValidationError.VALIDATION_0060));
+      issues.add(IssueCreator.getErrorStage().create(PipelineConfigBean.ERROR_RECORDS_CONFIG,
+                                                     PipelineGroups.BAD_RECORDS.name(), ValidationError.VALIDATION_0060));
       preview = false;
     } else {
       StageConfiguration errorStage = pipelineConfiguration.getErrorStage();
-      StageIssueCreator errorStageCreator = StageIssueCreator.getErrorStageCreator();
+      IssueCreator errorStageCreator = IssueCreator.getErrorStage();
       preview &= validateStageConfiguration(false, errorStage, true, errorStageCreator);
-      preview &= validateStagesExecutionMode(errorStageCreator, Arrays.asList(errorStage));
+      preview &= validateStagesExecutionMode(Arrays.asList(errorStage), true);
     }
     return preview;
   }

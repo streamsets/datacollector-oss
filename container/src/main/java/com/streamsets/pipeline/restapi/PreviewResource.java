@@ -169,7 +169,7 @@ public class PreviewResource {
     try {
       PreviewPipeline pipeline = new PreviewPipelineBuilder(stageLibrary, pipelineName, pipelineConf, null).build(runner);
       return Response.ok().type(MediaType.APPLICATION_JSON)
-                     .entity(BeanHelper.wrapStageIssues(pipeline.validateConfigs())).build();
+                     .entity(BeanHelper.wrapIssues(pipeline.validateConfigs())).build();
     } catch (PipelineRuntimeException ex) {
       if (ex.getErrorCode() == ContainerError.CONTAINER_0165) {
         return Response.status(Response.Status.BAD_REQUEST).type(MediaType.APPLICATION_JSON).entity(

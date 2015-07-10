@@ -8,7 +8,7 @@ package com.streamsets.pipeline.runner;
 
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.impl.Utils;
-import com.streamsets.pipeline.validation.StageIssue;
+import com.streamsets.pipeline.validation.Issue;
 
 import java.util.List;
 
@@ -35,7 +35,7 @@ public abstract class Pipe<C extends Pipe.Context> {
     return outputLanes;
   }
 
-  public abstract List<StageIssue> validateConfigs() throws StageException;
+  public abstract List<Issue> validateConfigs() throws StageException;
 
   public abstract void init(C context) throws StageException;
 

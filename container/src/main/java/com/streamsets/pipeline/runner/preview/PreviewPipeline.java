@@ -10,8 +10,8 @@ import com.streamsets.pipeline.metrics.MetricsConfigurator;
 import com.streamsets.pipeline.runner.Pipeline;
 import com.streamsets.pipeline.runner.PipelineRuntimeException;
 import com.streamsets.pipeline.runner.StageOutput;
+import com.streamsets.pipeline.validation.Issue;
 import com.streamsets.pipeline.validation.Issues;
-import com.streamsets.pipeline.validation.StageIssue;
 
 import java.util.Collections;
 import java.util.List;
@@ -42,7 +42,7 @@ public class PreviewPipeline {
     return new PreviewPipelineOutput(issues, pipeline.getRunner());
   }
 
-  public List<StageIssue> validateConfigs() throws StageException {
+  public List<Issue> validateConfigs() throws StageException {
     return pipeline.validateConfigs();
   }
 

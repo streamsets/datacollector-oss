@@ -10,7 +10,7 @@ import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.Target;
 import com.streamsets.pipeline.runner.BatchImpl;
 import com.streamsets.pipeline.runner.StageRuntime;
-import com.streamsets.pipeline.validation.StageIssue;
+import com.streamsets.pipeline.validation.Issue;
 
 import java.util.List;
 
@@ -21,12 +21,8 @@ public class BadRecordsHandler {
     this.errorStage = errorStage;
   }
 
-  public List<StageIssue> validate() throws StageException {
-    List<StageIssue> issues = errorStage.validateConfigs();
-    for (StageIssue issue: issues) {
-      issue.setErrorStage();
-    }
-    return issues;
+  public List<Issue> validate() throws StageException {
+    return  errorStage.validateConfigs();
   }
 
   public void init() throws StageException {

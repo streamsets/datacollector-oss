@@ -12,8 +12,8 @@ import com.streamsets.pipeline.el.ELVariables;
 import com.streamsets.pipeline.el.JvmEL;
 import com.streamsets.pipeline.el.RuntimeEL;
 import com.streamsets.pipeline.lib.el.StringEL;
+import com.streamsets.pipeline.validation.Issue;
 import com.streamsets.pipeline.validation.Issues;
-import com.streamsets.pipeline.validation.StageIssue;
 
 import java.util.List;
 import java.util.Map;
@@ -25,7 +25,7 @@ public class ValidationUtil {
     if(issues.getPipelineIssues().size() > 0) {
       sb.append("[").append(name).append("] ").append(issues.getPipelineIssues().get(0).getMessage());
     } else if (issues.getStageIssues().entrySet().size() > 0) {
-      Map.Entry<String, List<StageIssue>> e = issues.getStageIssues().entrySet().iterator().next();
+      Map.Entry<String, List<Issue>> e = issues.getStageIssues().entrySet().iterator().next();
       sb.append("[").append(e.getKey()).append("] ").append(e.getValue().get(0).getMessage());
     }
     sb.append("...");

@@ -5,7 +5,6 @@
  */
 package com.streamsets.pipeline.restapi.bean;
 
-import com.streamsets.dataCollector.execution.PipelineState;
 import com.streamsets.dataCollector.execution.PipelineStatus;
 import com.streamsets.dataCollector.restapi.bean.ExecutionModeJson;
 import com.streamsets.dataCollector.restapi.bean.StatusJson;
@@ -340,6 +339,31 @@ public class BeanHelper {
     return ruleIssueJsonList;
   }
 
+  public static Map<String, List<IssueJson>> wrapIssuesMap(
+      Map<String, List<com.streamsets.pipeline.validation.Issue>> stageIssuesMapList) {
+    if(stageIssuesMapList == null) {
+      return null;
+    }
+    Map<String, List<IssueJson>> stageIssuesMap = new HashMap<>();
+    for(Map.Entry<String, List<com.streamsets.pipeline.validation.Issue>> e : stageIssuesMapList.entrySet()) {
+      stageIssuesMap.put(e.getKey(), wrapIssues(e.getValue()));
+    }
+    return stageIssuesMap;
+  }
+
+
+  public static Map<String, List<com.streamsets.pipeline.validation.Issue>> unwrapIssuesMap(
+      Map<String, List<IssueJson>> Issues) {
+    if(Issues == null) {
+      return null;
+    }
+    Map<String, List<com.streamsets.pipeline.validation.Issue>> IssuesMap = new HashMap<>();
+    for(Map.Entry<String, List<IssueJson>> e : Issues.entrySet()) {
+      IssuesMap.put(e.getKey(), unwrapIssues(e.getValue()));
+    }
+    return IssuesMap;
+  }
+
   public static List<IssueJson> wrapIssues(List<com.streamsets.pipeline.validation.Issue> issues) {
     if(issues == null) {
       return null;
@@ -358,52 +382,6 @@ public class BeanHelper {
     List<com.streamsets.pipeline.validation.Issue> issueList = new ArrayList<>(issueJsons.size());
     for(IssueJson r : issueJsons) {
       issueList.add(r.getIssue());
-    }
-    return issueList;
-  }
-
-  public static Map<String, List<StageIssueJson>> wrapStageIssuesMap(
-    Map<String, List<com.streamsets.pipeline.validation.StageIssue>> stageIssuesMapList) {
-    if(stageIssuesMapList == null) {
-      return null;
-    }
-    Map<String, List<StageIssueJson>> stageIssuesMap = new HashMap<>();
-    for(Map.Entry<String, List<com.streamsets.pipeline.validation.StageIssue>> e : stageIssuesMapList.entrySet()) {
-      stageIssuesMap.put(e.getKey(), wrapStageIssues(e.getValue()));
-    }
-    return stageIssuesMap;
-  }
-
-  public static Map<String, List<com.streamsets.pipeline.validation.StageIssue>> unwrapStageIssuesMap(
-    Map<String, List<StageIssueJson>> stageIssues) {
-    if(stageIssues == null) {
-      return null;
-    }
-    Map<String, List<com.streamsets.pipeline.validation.StageIssue>> stageIssuesMap = new HashMap<>();
-    for(Map.Entry<String, List<StageIssueJson>> e : stageIssues.entrySet()) {
-      stageIssuesMap.put(e.getKey(), unwrapStageIssues(e.getValue()));
-    }
-    return stageIssuesMap;
-  }
-
-  public static List<StageIssueJson> wrapStageIssues(List<com.streamsets.pipeline.validation.StageIssue> issues) {
-    if(issues == null) {
-      return null;
-    }
-    List<StageIssueJson> issueList = new ArrayList<>(issues.size());
-    for(com.streamsets.pipeline.validation.StageIssue r : issues) {
-      issueList.add(new StageIssueJson(r));
-    }
-    return issueList;
-  }
-
-  public static List<com.streamsets.pipeline.validation.StageIssue> unwrapStageIssues(List<StageIssueJson> issues) {
-    if(issues == null) {
-      return null;
-    }
-    List<com.streamsets.pipeline.validation.StageIssue> issueList = new ArrayList<>(issues.size());
-    for(StageIssueJson r : issues) {
-      issueList.add(r.getStageIssue());
     }
     return issueList;
   }

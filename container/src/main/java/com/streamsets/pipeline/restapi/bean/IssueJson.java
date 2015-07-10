@@ -6,22 +6,28 @@
 package com.streamsets.pipeline.restapi.bean;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.streamsets.pipeline.validation.Issue;
 
 import java.util.Map;
 
 public class IssueJson {
 
-  private final com.streamsets.pipeline.validation.Issue issue;
+  private final Issue issue;
 
   public IssueJson(com.streamsets.pipeline.validation.Issue issue) {
     this.issue = issue;
   }
 
-  public Map getAdditionalInfo() {
-    return issue.getAdditionalInfo();
+  public String getInstanceName() {
+    return issue.getInstanceName();
   }
 
-  public String getMessage() { return issue.getMessage();
+  public boolean isErrorStage() {
+    return issue.isErrorStage();
+  }
+
+  public String getLevel() {
+    return issue.getLevel();
   }
 
   public String getConfigGroup() {
@@ -32,8 +38,15 @@ public class IssueJson {
     return issue.getConfigName();
   }
 
+  public String getMessage() { return issue.getMessage();
+  }
+
+  public Map getAdditionalInfo() {
+    return issue.getAdditionalInfo();
+  }
+
   @JsonIgnore
-  public com.streamsets.pipeline.validation.Issue getIssue() {
+  public Issue getIssue() {
     return issue;
   }
 }

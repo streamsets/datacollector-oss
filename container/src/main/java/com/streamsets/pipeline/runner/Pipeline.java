@@ -15,7 +15,7 @@ import com.streamsets.pipeline.memory.MemoryUsageCollectorResourceBundle;
 import com.streamsets.pipeline.runner.production.BadRecordsHandler;
 import com.streamsets.pipeline.stagelibrary.StageLibraryTask;
 import com.streamsets.pipeline.util.ContainerError;
-import com.streamsets.pipeline.validation.StageIssue;
+import com.streamsets.pipeline.validation.Issue;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -52,8 +52,8 @@ public class Pipeline {
     return runner;
   }
 
-  public List<StageIssue> validateConfigs() throws StageException {
-    List<StageIssue> configIssues = new ArrayList<>();
+  public List<Issue> validateConfigs() throws StageException {
+    List<Issue> configIssues = new ArrayList<>();
     configIssues.addAll(badRecordsHandler.validate());
     for (Pipe pipe : pipes) {
       configIssues.addAll(pipe.validateConfigs());

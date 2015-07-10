@@ -29,8 +29,8 @@ import com.streamsets.pipeline.stagelibrary.StageLibraryTask;
 import com.streamsets.pipeline.util.ContainerError;
 import com.streamsets.pipeline.util.ElUtil;
 import com.streamsets.pipeline.util.ValidationUtil;
+import com.streamsets.pipeline.validation.Issue;
 import com.streamsets.pipeline.validation.PipelineConfigurationValidator;
-import com.streamsets.pipeline.validation.StageIssue;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.ParameterizedType;
@@ -124,12 +124,13 @@ public class StageRuntime {
   }
 
   @SuppressWarnings("unchecked")
-  public List<StageIssue> validateConfigs() throws StageException {
+  public List<Issue> validateConfigs() throws StageException {
+    //TODO: for errorstage we must set the errorstage flag in issues, use IssueCreator.getErrorStage()
     Preconditions.checkState(context != null, "context has not been set");
     ClassLoader cl = Thread.currentThread().getContextClassLoader();
     try {
       Thread.currentThread().setContextClassLoader(getDefinition().getStageClassLoader());
-      List<StageIssue> issues = stage.validateConfigs(info, context);
+      List<Issue> issues = stage.validateConfigs(info, context);
       if (issues == null) {
         issues = Collections.emptyList();
       }
