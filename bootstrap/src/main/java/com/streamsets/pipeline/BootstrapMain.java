@@ -10,6 +10,7 @@ import java.io.FileFilter;
 import java.lang.instrument.Instrumentation;
 import java.lang.reflect.Method;
 import java.net.URL;
+import java.security.AccessControlException;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -61,6 +62,12 @@ public class BootstrapMain {
 
   @SuppressWarnings("unchecked")
   public static void main(String[] args) throws Exception {
+    try {
+      System.getProperty("test.to.ensure.security.is.configured.correctly");
+    } catch (AccessControlException e) {
+      String msg = "Error: Security is enabled but sdc policy file is misconfigured";
+      throw new IllegalArgumentException(msg, e);
+    }
     boolean debug = Boolean.getBoolean("pipeline.bootstrap.debug");
     SDCClassLoader.setDebug(debug);
     String mainClass = null;

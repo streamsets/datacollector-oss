@@ -85,6 +85,16 @@ SDC_POLICY_FILE=""
 if [ "${SDC_SECURITY_MANAGER_ENABLED}" = "true" ]
 then
   SDC_POLICY_FILE=${SDC_POLICY_FILE:="file://${SDC_CONF}/sdc-security.policy"}
+  if [[ "$SDC_POLICY_FILE" =~ (file:)(.*) ]]
+  then
+      SDC_POLICY_FILE_FOR_VALIDATION="${BASH_REMATCH[2]}"
+  else
+      SDC_POLICY_FILE_FOR_VALIDATION="$SDC_POLICY_FILE"
+  fi
+  if [[ ! -f "$SDC_POLICY_FILE_FOR_VALIDATION" ]]
+  then
+    echo "WARN: Security is enabled and was unable to verify policy file '$SDC_POLICY_FILE'" 1>&2
+  fi
   SDC_SECURITY_MANAGER="-Djava.security.manager -Djava.security.policy=${SDC_POLICY_FILE}"
   SDC_JAVA_OPTS="${SDC_SECURITY_MANAGER} ${SDC_JAVA_OPTS}"
 fi
