@@ -65,8 +65,15 @@ public abstract class PipelineBeanCreator {
     return ImmutableMap.copyOf(map);
   }
 
+  public PipelineConfigBean create(PipelineConfiguration pipelineConf, List<Issue> errors) {
+    int priorErrors = errors.size();
+    PipelineConfigBean pipelineConfigBean = createPipelineConfigs(pipelineConf, errors);
+    return (errors.size() > priorErrors) ? pipelineConfigBean : null;
+  }
+
   public PipelineBean create(StageLibraryTask library, PipelineConfiguration pipelineConf, List<Issue> errors) {
-    PipelineConfigBean pipelineConfigBean = createPipeline(pipelineConf, errors);
+    int priorErrors = errors.size();
+    PipelineConfigBean pipelineConfigBean = create(pipelineConf, errors);
     StageBean errorStageBean = null;
     List<StageBean> stages = new ArrayList<>();
     if (pipelineConfigBean != null && pipelineConfigBean.constants != null) {
@@ -79,7 +86,7 @@ public abstract class PipelineBeanCreator {
       StageConfiguration errorStageConf = pipelineConf.getErrorStage();
       errorStageBean = createStageBean(library, errorStageConf, true, pipelineConfigBean.constants, errors);
     }
-    return (errors.isEmpty()) ? new PipelineBean(pipelineConfigBean, stages, errorStageBean) : null;
+    return (errors.size() > priorErrors) ? new PipelineBean(pipelineConfigBean, stages, errorStageBean) : null;
   }
 
   StageBean createStageBean(StageLibraryTask library, StageConfiguration stageConf, boolean errorStage,
@@ -114,7 +121,7 @@ public abstract class PipelineBeanCreator {
   }
 
   @SuppressWarnings("unchecked")
-  PipelineConfigBean createPipeline(PipelineConfiguration pipelineConf, List<Issue> errors) {
+  PipelineConfigBean createPipelineConfigs(PipelineConfiguration pipelineConf, List<Issue> errors) {
     PipelineConfigBean pipelineConfigBean = new PipelineConfigBean();
     if (createConfigBeans(pipelineConfigBean, "", PIPELINE_DEFINITION, "pipeline", errors)) {
       injectConfigs(pipelineConfigBean, "", PIPELINE_DEFINITION.getConfigDefinitionsMap(), PIPELINE_DEFINITION,
@@ -260,16 +267,6 @@ public abstract class PipelineBeanCreator {
   void injectDefaultValue(Object obj, Field field, StageDefinition stageDef, StageConfiguration stageConf,
       ConfigDefinition configDef, Map<String, Object> pipelineConstants, String stageName, List<Issue> errors) {
     Object value = configDef.getDefaultValue();
-//    if (configDef.getType() == ConfigDef.Type.LIST) {
-//      value = toList(value, stageDef, configDef, pipelineConstants, stageName, configDef.getGroup(),
-//                     configDef.getName(), errors);
-//    } else if (configDef.getType() == ConfigDef.Type.MAP) {
-//      value = toMap(value, stageDef, configDef, pipelineConstants, stageName, configDef.getGroup(),configDef.getName(),
-//                    errors);
-//    } else if (configDef.getType() == ConfigDef.Type.MODEL &&
-//               configDef.getModel().getModelType() == ModelType.COMPLEX_FIELD) {
-//      value = Collections.emptyList();
-//    }
     if (value != null) {
       injectConfigValue(obj, field, value, stageDef, stageConf, configDef, null, pipelineConstants, errors);
     }
