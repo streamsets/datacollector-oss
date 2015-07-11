@@ -171,38 +171,53 @@ public class HttpClientSource extends BaseSource implements OffsetCommitter {
 
     List<String> chunks = new ArrayList<>(chunksToFetch);
     entityQueue.drainTo(chunks, chunksToFetch);
-    for (String chunk : chunks) {
-      String sourceId = getOffset();
-      try (DataParser parser = parserFactory.getParser(sourceId, chunk.getBytes())) {
-        Record record = parser.parse();
-        // A chunk only contains a single Record, so we only parse it once.
-        if (record != null) {
-          batchMaker.addRecord(record);
-          recordCount++;
-        }
-        if (null != parser.parse()) {
-          throw new DataParserException(Errors.HTTP_02);
-        }
-      } catch (IOException | DataParserException ex) {
-        switch (getContext().getOnErrorRecord()) {
-          case DISCARD:
-            break;
-          case TO_ERROR:
-            getContext().reportError(Errors.HTTP_00, sourceId, ex.getMessage(), ex);
-            break;
-          case STOP_PIPELINE:
-            if (ex instanceof StageException) {
-              throw (StageException) ex;
-            } else {
-              throw new StageException(Errors.HTTP_00, sourceId, ex.getMessage(), ex);
-            }
-          default:
-            throw new IllegalStateException(Utils.format("It should never happen. OnError '{}'",
-                getContext().getOnErrorRecord(), ex));
-        }
 
+    if(httpConsumer.getLastResponseStatus() == 200) {
+      for (String chunk : chunks) {
+        String sourceId = getOffset();
+        try (DataParser parser = parserFactory.getParser(sourceId, chunk.getBytes())) {
+          Record record = parser.parse();
+          // A chunk only contains a single Record, so we only parse it once.
+          if (record != null) {
+            batchMaker.addRecord(record);
+            recordCount++;
+          }
+          if (null != parser.parse()) {
+            throw new DataParserException(Errors.HTTP_02);
+          }
+        } catch (IOException | DataParserException ex) {
+          switch (getContext().getOnErrorRecord()) {
+            case DISCARD:
+              break;
+            case TO_ERROR:
+              getContext().reportError(Errors.HTTP_00, sourceId, ex.getMessage(), ex);
+              break;
+            case STOP_PIPELINE:
+              if (ex instanceof StageException) {
+                throw (StageException) ex;
+              } else {
+                throw new StageException(Errors.HTTP_00, sourceId, ex.getMessage(), ex);
+              }
+            default:
+              throw new IllegalStateException(Utils.format("It should never happen. OnError '{}'",
+                getContext().getOnErrorRecord(), ex));
+          }
+
+        }
+      }
+    } else {
+      //If http response status != 200
+      switch (getContext().getOnErrorRecord()) {
+        case DISCARD:
+          break;
+        case TO_ERROR:
+          getContext().reportError(Errors.HTTP_01, chunks);
+          break;
+        case STOP_PIPELINE:
+          throw new StageException(Errors.HTTP_01, chunks);
       }
     }
+
     return getOffset();
   }
 

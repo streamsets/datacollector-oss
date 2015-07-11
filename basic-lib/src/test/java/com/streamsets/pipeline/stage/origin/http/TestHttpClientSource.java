@@ -2,7 +2,9 @@ package com.streamsets.pipeline.stage.origin.http;
 
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Sets;
+import com.streamsets.pipeline.api.OnRecordError;
 import com.streamsets.pipeline.api.Record;
+import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.sdk.SourceRunner;
 import com.streamsets.pipeline.sdk.StageRunner;
 import org.glassfish.jersey.server.ResourceConfig;
@@ -201,8 +203,85 @@ public class TestHttpClientSource extends JerseyTest {
 
   }
 
+  @Test
+  public void testNoAuthorizeHttpOnSendToError() throws Exception {
+    HttpClientSource origin = getTwitterHttpClientSource();
+    SourceRunner runner = new SourceRunner.Builder(HttpClientSource.class, origin)
+      .addOutputLane("lane")
+      .setOnRecordError(OnRecordError.TO_ERROR)
+      .build();
+    runner.runInit();
+
+    try {
+      runner.runProduce(null, 1000);
+      List<String> errors = runner.getErrors();
+      Assert.assertEquals(1, errors.size());
+    } finally {
+      runner.runDestroy();
+    }
+  }
+
+  @Test
+  public void testNoAuthorizeHttpOnStopPipeline() throws Exception {
+    HttpClientSource origin = getTwitterHttpClientSource();
+    SourceRunner runner = new SourceRunner.Builder(HttpClientSource.class, origin)
+      .addOutputLane("lane")
+      .setOnRecordError(OnRecordError.STOP_PIPELINE)
+      .build();
+    runner.runInit();
+
+    boolean exceptionThrown = false;
+
+    try {
+      runner.runProduce(null, 1000);
+      List<String> errors = runner.getErrors();
+      Assert.assertEquals(1, errors.size());
+    } catch (StageException ex){
+      exceptionThrown = true;
+      Assert.assertEquals(ex.getErrorCode(), Errors.HTTP_01);
+    }
+    finally {
+      runner.runDestroy();
+    }
+
+    Assert.assertTrue(exceptionThrown);
+  }
+
+  @Test
+  public void testNoAuthorizeHttpOnDiscard() throws Exception {
+    HttpClientSource origin = getTwitterHttpClientSource();
+
+    SourceRunner runner = new SourceRunner.Builder(HttpClientSource.class, origin)
+      .addOutputLane("lane")
+      .setOnRecordError(OnRecordError.DISCARD)
+      .build();
+    runner.runInit();
+
+    try {
+      runner.runProduce(null, 1000);
+      List<String> errors = runner.getErrors();
+      Assert.assertEquals(0, errors.size());
+    } finally {
+      runner.runDestroy();
+    }
+  }
+
   private boolean checkPersonRecord(Record record, String name) {
     return record.has("/name") &&
         record.get("/name").getValueAsString().equals(name);
+  }
+
+  private HttpClientSource getTwitterHttpClientSource() {
+    HttpClientConfig config = new HttpClientConfig();
+    config.setHttpMode(HttpClientMode.STREAMING);
+    config.setResourceUrl("https://stream.twitter.com/1.1/statuses/sample.json");
+    config.setRequestTimeoutMillis(1000);
+    config.setEntityDelimiter("\r\n");
+    config.setBatchSize(100);
+    config.setMaxBatchWaitTime(1000);
+    config.setPollingInterval(1000);
+    config.setHttpMethod(HttpMethod.GET);
+
+    return new HttpClientSource(config);
   }
 }

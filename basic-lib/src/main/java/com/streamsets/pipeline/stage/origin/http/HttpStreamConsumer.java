@@ -35,6 +35,7 @@ class HttpStreamConsumer implements Runnable {
   private final long responseTimeoutMillis;
   private final String entityDelimiter;
   private final BlockingQueue<String> entityQueue;
+  private int lastResponseStatus;
 
   private volatile boolean stop = false;
 
@@ -127,16 +128,18 @@ class HttpStreamConsumer implements Runnable {
     Response response;
     try {
       response = responseFuture.get(responseTimeoutMillis, TimeUnit.MILLISECONDS);
-        final ChunkedInput<String> chunkedInput = response.readEntity(new GenericType<ChunkedInput<String>>() {});
-        chunkedInput.setParser(ChunkedInput.createParser(entityDelimiter));
-        String chunk;
-        while ((chunk = chunkedInput.read()) != null && !stop) {
-          boolean accepted = entityQueue.offer(chunk, responseTimeoutMillis, TimeUnit.MILLISECONDS);
-          if (!accepted) {
-            LOG.warn("Response buffer full, dropped record.");
-          }
+      lastResponseStatus = response.getStatus();
+
+      final ChunkedInput<String> chunkedInput = response.readEntity(new GenericType<ChunkedInput<String>>() {});
+      chunkedInput.setParser(ChunkedInput.createParser(entityDelimiter));
+      String chunk;
+      while ((chunk = chunkedInput.read()) != null && !stop) {
+        boolean accepted = entityQueue.offer(chunk, responseTimeoutMillis, TimeUnit.MILLISECONDS);
+        if (!accepted) {
+          LOG.warn("Response buffer full, dropped record.");
         }
-        chunkedInput.close();
+      }
+      chunkedInput.close();
       response.close();
       LOG.debug("HTTP stream consumer closed.");
     } catch (InterruptedException | ExecutionException e) {
@@ -148,5 +151,9 @@ class HttpStreamConsumer implements Runnable {
 
   public void stop() {
     stop = true;
+  }
+
+  public int getLastResponseStatus() {
+    return lastResponseStatus;
   }
 }
