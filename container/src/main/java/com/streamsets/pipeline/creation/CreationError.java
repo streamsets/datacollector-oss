@@ -26,6 +26,8 @@ public enum CreationError implements ErrorCode {
   CREATION_007("Stage definition Library '{}' Stage '{}' Version '{}' is for error stages only"),
   CREATION_008("Stage definition Library '{}' Stage '{}' Version '{}' is not for error stages"),
 
+  CREATION_009("Missing error stage configuration"),
+
   CREATION_010("Configuration value '{}' is not a valid '{}' enum value: {}"),
   CREATION_011("Configuration value '{}' is not string, it is a '{}'"),
   CREATION_012("Configuration value '{}' is not character, it is a '{}'"),

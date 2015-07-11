@@ -22,6 +22,8 @@ import com.streamsets.dataCollector.execution.runner.AsyncRunner;
 import com.streamsets.dataCollector.execution.runner.ClusterRunner;
 import com.streamsets.pipeline.api.ExecutionMode;
 import com.streamsets.pipeline.api.impl.Utils;
+import com.streamsets.pipeline.creation.PipelineBeanCreator;
+import com.streamsets.pipeline.creation.PipelineConfigBean;
 import com.streamsets.pipeline.lib.executor.SafeScheduledExecutorService;
 import com.streamsets.pipeline.main.RuntimeInfo;
 import com.streamsets.pipeline.stagelibrary.StageLibraryTask;
@@ -32,6 +34,7 @@ import com.streamsets.pipeline.task.AbstractTask;
 import com.streamsets.pipeline.util.Configuration;
 import com.streamsets.pipeline.util.ContainerError;
 
+import com.streamsets.pipeline.validation.Issue;
 import dagger.ObjectGraph;
 
 import org.slf4j.Logger;
@@ -253,8 +256,13 @@ public class PipelineManager extends AbstractTask implements Manager, PreviewerL
           pipelineStateStore, stageLibrary, runnerExecutor);
       runner = new AsyncRunner(clusterRunner, runnerExecutor);
     } else {
-      runner =
-        runnerProvider.createRunner(pipelineState.getUser(), name, rev, pipelineStore.load(name, rev), objectGraph);
+      List<Issue> errors = new ArrayList<>();
+      PipelineConfigBean pipelineConfigBean = PipelineBeanCreator.get().create(pipelineStore.load(name, rev), errors);
+      if (pipelineConfigBean != null) {
+        runner = runnerProvider.createRunner(pipelineState.getUser(), name, rev, pipelineConfigBean, objectGraph);
+      } else {
+        throw new PipelineStoreException(ContainerError.CONTAINER_0116, name, rev, errors);
+      }
     }
     return runner;
   }

@@ -77,11 +77,11 @@ public class TestClusterProviderImpl {
     Assert.assertTrue(new File(bootstrapMainLibDir, "streamsets-datacollector-bootstrap.jar").createNewFile());
     Assert.assertTrue(new File(bootstrapSparkLibDir, "streamsets-datacollector-spark-bootstrap.jar").createNewFile());
     List<ConfigConfiguration> configs = new ArrayList<ConfigConfiguration>();
-    configs.add(new ConfigConfiguration(PipelineConfigBean.CLUSTER_SLAVE_MEMORY_CONFIG, "512"));
-    configs.add(new ConfigConfiguration(PipelineConfigBean.CLUSTER_SLAVE_JAVA_OPTS_CONFIG, ""));
-    configs.add(new ConfigConfiguration(PipelineConfigBean.CLUSTER_KERBEROS_AUTH_CONFIG, false));
-    configs.add(new ConfigConfiguration(PipelineConfigBean.CLUSTER_KERBEROS_PRINCIPAL_CONFIG, ""));
-    configs.add(new ConfigConfiguration(PipelineConfigBean.CLUSTER_KERBEROS_KEYTAB_CONFIG, ""));
+    configs.add(new ConfigConfiguration("clusterSlaveMemory", 512));
+    configs.add(new ConfigConfiguration("clusterSlaveJavaOpts", ""));
+    configs.add(new ConfigConfiguration("clusterKerberos", false));
+    configs.add(new ConfigConfiguration("kerberosPrincipal", ""));
+    configs.add(new ConfigConfiguration("kerberosKeytab", ""));
     pipelineConf = new PipelineConfiguration(PipelineStoreTask.SCHEMA_VERSION, UUID.randomUUID(),
       null, configs, null, new ArrayList<StageConfiguration>(),
       MockStages.getErrorStageConfig());

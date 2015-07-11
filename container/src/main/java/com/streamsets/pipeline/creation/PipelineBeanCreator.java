@@ -68,7 +68,7 @@ public abstract class PipelineBeanCreator {
   public PipelineConfigBean create(PipelineConfiguration pipelineConf, List<Issue> errors) {
     int priorErrors = errors.size();
     PipelineConfigBean pipelineConfigBean = createPipelineConfigs(pipelineConf, errors);
-    return (errors.size() > priorErrors) ? pipelineConfigBean : null;
+    return (errors.size() == priorErrors) ? pipelineConfigBean : null;
   }
 
   public PipelineBean create(StageLibraryTask library, PipelineConfiguration pipelineConf, List<Issue> errors) {
@@ -84,9 +84,13 @@ public abstract class PipelineBeanCreator {
         }
       }
       StageConfiguration errorStageConf = pipelineConf.getErrorStage();
-      errorStageBean = createStageBean(library, errorStageConf, true, pipelineConfigBean.constants, errors);
+      if (errorStageConf != null) {
+        errorStageBean = createStageBean(library, errorStageConf, true, pipelineConfigBean.constants, errors);
+      } else {
+        errors.add(IssueCreator.getPipeline().create(CreationError.CREATION_007));
+      }
     }
-    return (errors.size() > priorErrors) ? new PipelineBean(pipelineConfigBean, stages, errorStageBean) : null;
+    return (errors.size() == priorErrors) ? new PipelineBean(pipelineConfigBean, stages, errorStageBean) : null;
   }
 
   StageBean createStageBean(StageLibraryTask library, StageConfiguration stageConf, boolean errorStage,

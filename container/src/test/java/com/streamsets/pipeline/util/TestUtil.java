@@ -36,6 +36,7 @@ import com.streamsets.pipeline.config.MetricsRuleDefinition;
 import com.streamsets.pipeline.config.PipelineConfiguration;
 import com.streamsets.pipeline.config.RuleDefinitions;
 import com.streamsets.pipeline.config.ThresholdType;
+import com.streamsets.pipeline.creation.PipelineConfigBean;
 import com.streamsets.pipeline.email.EmailSender;
 import com.streamsets.pipeline.lib.executor.SafeScheduledExecutorService;
 import com.streamsets.pipeline.main.RuntimeInfo;
@@ -573,7 +574,7 @@ public class TestUtil {
     public RunnerProvider provideRunnerProvider() {
       return new RunnerProvider() {
         @Override
-        public Runner createRunner(String user, String name, String rev, PipelineConfiguration pipelineConf,
+        public Runner createRunner(String user, String name, String rev, PipelineConfigBean pipelineConfigBean,
                                    ObjectGraph objectGraph) {
           ObjectGraph plus = objectGraph.plus(new TestPipelineProviderModule(name, rev));
           TestRunnerModule testRunnerModule = new TestRunnerModule(user, name, rev, plus);

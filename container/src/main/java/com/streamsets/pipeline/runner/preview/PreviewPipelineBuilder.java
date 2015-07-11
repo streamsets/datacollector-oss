@@ -95,7 +95,7 @@ public class PreviewPipelineBuilder {
       pipelineConf.setStages(stages);
     }
 
-    PipelineConfigurationValidator validator = new PipelineConfigurationValidator(stageLib, name, pipelineConf, true);
+    PipelineConfigurationValidator validator = new PipelineConfigurationValidator(stageLib, name, pipelineConf);
     if (validator.validate() || validator.canPreview()) {
       List<String> openLanes = validator.getOpenLanes();
       if (!openLanes.isEmpty()) {

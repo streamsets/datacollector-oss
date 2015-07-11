@@ -664,8 +664,7 @@ public class MockStages {
 
   private static List<ConfigConfiguration> createPipelineConfigs() {
     List<ConfigConfiguration> pipelineConfig = new ArrayList<>();
-    pipelineConfig.add(new ConfigConfiguration(PipelineConfigBean.EXECUTION_MODE_CONFIG,
-                                                 ExecutionMode.STANDALONE.name()));
+    pipelineConfig.add(new ConfigConfiguration("executionMode", ExecutionMode.STANDALONE.name()));
     return pipelineConfig;
   }
 
@@ -837,7 +836,7 @@ public class MockStages {
                                                        Collections.<ConfigConfiguration>emptyList(), null, lanes, Collections.<String>emptyList());
     stages.add(target);
     return new PipelineConfiguration(PipelineStoreTask.SCHEMA_VERSION, UUID.randomUUID(), null,
-                                     Arrays.asList(new ConfigConfiguration(PipelineConfigBean.EXECUTION_MODE_CONFIG,
+                                     Arrays.asList(new ConfigConfiguration("executionMode",
                                                                            executionMode.name())), null, stages,
                                      getErrorStageConfig());
   }
@@ -857,7 +856,7 @@ public class MockStages {
         null, lanes, Collections.<String> emptyList());
     stages.add(target);
     return new PipelineConfiguration(PipelineStoreTask.SCHEMA_VERSION, UUID.randomUUID(), null,
-      Arrays.asList(new ConfigConfiguration(PipelineConfigBean.EXECUTION_MODE_CONFIG, executionMode.name())), null,
+      Arrays.asList(new ConfigConfiguration("executionMode", executionMode.name())), null,
       stages, getErrorStageConfig());
   }
 
@@ -877,7 +876,7 @@ public class MockStages {
         Collections.<ConfigConfiguration> emptyList(), null, lanes, Collections.<String> emptyList());
     stages.add(target);
     return new PipelineConfiguration(PipelineStoreTask.SCHEMA_VERSION, UUID.randomUUID(), null,
-      Arrays.asList(new ConfigConfiguration(PipelineConfigBean.EXECUTION_MODE_CONFIG, executionMode.name())), null,
+      Arrays.asList(new ConfigConfiguration("executionMode", executionMode.name())), null,
       stages, getErrorStageConfig());
   }
 

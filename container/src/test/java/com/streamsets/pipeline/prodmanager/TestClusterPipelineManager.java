@@ -29,7 +29,6 @@ import com.streamsets.pipeline.store.PipelineStoreException;
 import com.streamsets.pipeline.store.PipelineStoreTask;
 import com.streamsets.pipeline.store.impl.FilePipelineStoreTask;
 import com.streamsets.pipeline.util.Configuration;
-import com.streamsets.pipeline.util.LogUtil;
 
 import org.apache.commons.io.FileUtils;
 import org.junit.After;
@@ -323,8 +322,7 @@ public class TestClusterPipelineManager {
     clusterPipelineManager = createClusterPipelineManager();
     clusterPipelineManager.initTask();
     PipelineConfiguration pipelineConf = pipelineStoreTask.load(NAME, REV).createWithNewConfig(
-      PipelineConfigBean.EXECUTION_MODE_CONFIG, new ConfigConfiguration(PipelineConfigBean.EXECUTION_MODE_CONFIG,
-        ExecutionMode.CLUSTER));
+        new ConfigConfiguration("executionMode", ExecutionMode.CLUSTER));
     pipelineConf = pipelineStoreTask.save("admin", NAME, REV, "", pipelineConf);
     clusterPipelineManager.startPipeline(NAME, REV);
     Assert.assertEquals(State.ERROR, getState());

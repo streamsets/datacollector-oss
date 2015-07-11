@@ -161,10 +161,10 @@ public class PipelineConfiguration implements Serializable{
 
   @VisibleForTesting
   @JsonIgnore
-  public PipelineConfiguration createWithNewConfig(String name, ConfigConfiguration replacement) {
+  public PipelineConfiguration createWithNewConfig(ConfigConfiguration replacement) {
     List<ConfigConfiguration> newConfigurations = new ArrayList<>();
     for (ConfigConfiguration candidate : this.configuration) {
-      if (name.equals(candidate.getName())) {
+      if (replacement.getName().equals(candidate.getName())) {
         newConfigurations.add(replacement);
       } else {
         newConfigurations.add(candidate);

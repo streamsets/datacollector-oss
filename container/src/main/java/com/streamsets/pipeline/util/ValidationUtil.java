@@ -32,11 +32,4 @@ public class ValidationUtil {
     return sb.toString();
   }
 
-  public static long evaluateMemoryLimit(String memoryLimitString, Map<String, Object> constants)
-    throws ELEvalException {
-    ELEvaluator memConfigEval = ElUtil.createElEval(PipelineConfigBean.MEMORY_LIMIT_CONFIG, constants, RuntimeEL.class,
-      StringEL.class, JvmEL.class);
-    long memoryLimit = memConfigEval.evaluate(new ELVariables(constants), memoryLimitString, Long.class);
-    return memoryLimit;
-  }
 }

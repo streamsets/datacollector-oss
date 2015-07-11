@@ -12,6 +12,8 @@ import com.google.common.annotations.VisibleForTesting;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
+import com.streamsets.dataCollector.execution.runner.PipelineRunnerException;
+import com.streamsets.dataCollector.execution.runner.StandaloneRunner;
 import com.streamsets.pipeline.alerts.AlertEventListener;
 import com.streamsets.pipeline.alerts.AlertManager;
 import com.streamsets.pipeline.alerts.AlertsUtil;
@@ -28,6 +30,7 @@ import com.streamsets.pipeline.config.DeliveryGuarantee;
 import com.streamsets.pipeline.config.MemoryLimitConfiguration;
 import com.streamsets.pipeline.config.MemoryLimitExceeded;
 import com.streamsets.pipeline.config.PipelineConfiguration;
+import com.streamsets.pipeline.creation.PipelineBeanCreator;
 import com.streamsets.pipeline.creation.PipelineConfigBean;
 import com.streamsets.pipeline.config.RuleDefinition;
 import com.streamsets.pipeline.el.JvmEL;
@@ -66,6 +69,7 @@ import com.streamsets.pipeline.util.ContainerError;
 import com.streamsets.pipeline.util.ElUtil;
 import com.streamsets.pipeline.util.PipelineDirectoryUtil;
 import com.streamsets.pipeline.util.ValidationUtil;
+import com.streamsets.pipeline.validation.Issue;
 import com.streamsets.pipeline.validation.ValidationError;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -417,10 +421,13 @@ public class StandalonePipelineManagerTask extends AbstractTask implements Pipel
       LOG.info("Starting pipeline {} {}", name, rev);
       validateStateTransition(name, rev, State.RUNNING);
       PipelineConfiguration pipelineConf = pipelineStore.load(name, rev);
-      ExecutionMode pipelineExecutionMode = ExecutionMode.valueOf((String) pipelineConf.getConfiguration(
-          PipelineConfigBean.EXECUTION_MODE_CONFIG).getValue());
-      if (pipelineExecutionMode == ExecutionMode.STANDALONE ||
-        (pipelineExecutionMode == ExecutionMode.CLUSTER) &&
+      List<Issue> errors = new ArrayList<>();
+      PipelineConfigBean pipelineConfigBean = PipelineBeanCreator.get().create(pipelineConf, errors);
+      if (pipelineConfigBean == null) {
+        throw new PipelineManagerException(ContainerError.CONTAINER_0116, errors);
+      }
+      if (pipelineConfigBean.executionMode == ExecutionMode.STANDALONE ||
+        (pipelineConfigBean.executionMode == ExecutionMode.CLUSTER) &&
           runtimeInfo.getExecutionMode() == RuntimeInfo.ExecutionMode.SLAVE) {
         handleStartRequest(name, rev);
         setState(name, rev, State.RUNNING, null, null);
@@ -522,11 +529,11 @@ public class StandalonePipelineManagerTask extends AbstractTask implements Pipel
     configLoaderRunnable = new RulesConfigLoaderRunnable(threadHealthReporter, rulesConfigLoader, observer);
     ScheduledFuture<?> configLoaderFuture =
       executor.scheduleWithFixedDelay(configLoaderRunnable, 1,
-        RulesConfigLoaderRunnable.SCHEDULED_DELAY, TimeUnit.SECONDS);
+                                      RulesConfigLoaderRunnable.SCHEDULED_DELAY, TimeUnit.SECONDS);
 
     metricObserverRunnable = new MetricObserverRunnable(threadHealthReporter, metricsObserverRunner);
     ScheduledFuture<?> metricObserverFuture = executor.scheduleWithFixedDelay(
-      metricObserverRunnable, 1, 2, TimeUnit.SECONDS);
+        metricObserverRunnable, 1, 2, TimeUnit.SECONDS);
 
     observerRunnable = new DataObserverRunnable(threadHealthReporter, this.getMetrics(), productionObserveRequests,
       alertManager, configuration);
@@ -585,54 +592,12 @@ public class StandalonePipelineManagerTask extends AbstractTask implements Pipel
 
   static MemoryLimitConfiguration getMemoryLimitConfiguration(PipelineConfiguration pipelineConfiguration)
     throws PipelineRuntimeException {
-    //Default memory limit configuration
-    MemoryLimitConfiguration memoryLimitConfiguration = new MemoryLimitConfiguration();
-
-    List<ConfigConfiguration> configuration = pipelineConfiguration.getConfiguration();
-    MemoryLimitExceeded memoryLimitExceeded = null;
-    long memoryLimit = 0;
-
-    if (configuration != null) {
-      for (ConfigConfiguration config : configuration) {
-        if (PipelineConfigBean.MEMORY_LIMIT_EXCEEDED_CONFIG.equals(config.getName())) {
-          try {
-            memoryLimitExceeded = MemoryLimitExceeded.valueOf(String.valueOf(config.getValue()).
-              toUpperCase(Locale.ENGLISH));
-          } catch (IllegalArgumentException e) {
-            //This should never happen.
-            String msg = "Invalid pipeline configuration: " + PipelineConfigBean.MEMORY_LIMIT_EXCEEDED_CONFIG +
-              " value: '" + config.getValue() + "'. Should never happen, please report. : " + e;
-            throw new IllegalStateException(msg, e);
-          }
-        } else if (PipelineConfigBean.MEMORY_LIMIT_CONFIG.equals(config.getName())) {
-          String memoryLimitString = String.valueOf(config.getValue());
-
-          if(ElUtil.isElString(memoryLimitString)) {
-            //Memory limit is an EL expression. Evaluate to get the value
-            try {
-              memoryLimit = ValidationUtil.evaluateMemoryLimit(memoryLimitString, ElUtil.getConstants(pipelineConfiguration));
-            } catch (ELEvalException e) {
-              throw new PipelineRuntimeException(ValidationError.VALIDATION_0064, e.getMessage(), e);
-            }
-          } else {
-            //Memory limit is not an EL expression. Parse it as long.
-            try {
-              memoryLimit = Long.parseLong(memoryLimitString);
-            } catch (NumberFormatException e) {
-              throw new PipelineRuntimeException(ValidationError.VALIDATION_0062, memoryLimitString);
-            }
-          }
-
-          if (memoryLimit > JvmEL.jvmMaxMemoryMB() * 0.85) {
-            throw new PipelineRuntimeException(ValidationError.VALIDATION_0063, memoryLimit,
-              "above the maximum", JvmEL.jvmMaxMemoryMB() * 0.85);
-          }
-        }
-      }
+    List<Issue> errors = new ArrayList<>();
+    PipelineConfigBean pipelineConfigBean = PipelineBeanCreator.get().create(pipelineConfiguration, errors);
+    if (pipelineConfigBean == null) {
+      throw new PipelineRuntimeException(ContainerError.CONTAINER_0116, errors);
     }
-    if (memoryLimitExceeded != null && memoryLimit > 0) {
-      memoryLimitConfiguration = new MemoryLimitConfiguration(memoryLimitExceeded, memoryLimit);
-    }
+    MemoryLimitConfiguration memoryLimitConfiguration = StandaloneRunner.getMemoryLimitConfiguration(pipelineConfigBean);
     //update the pipeline memory configuration based on the calculated value
     pipelineConfiguration.setMemoryLimitConfiguration(memoryLimitConfiguration);
     return memoryLimitConfiguration;

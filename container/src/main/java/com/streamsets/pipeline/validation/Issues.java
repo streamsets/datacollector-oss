@@ -29,6 +29,10 @@ public class Issues implements Serializable {
 
   public Issues(List<Issue> issues) {
     this();
+    addAll(issues);
+  }
+
+  public void addAll(List<Issue> issues) {
     for (Issue issue : issues) {
       add(issue);
     }

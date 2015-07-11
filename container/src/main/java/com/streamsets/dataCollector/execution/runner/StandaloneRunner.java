@@ -19,7 +19,6 @@ import com.streamsets.dataCollector.execution.StateListener;
 import com.streamsets.dataCollector.execution.alerts.AlertManager;
 import com.streamsets.dataCollector.execution.metrics.MetricsEventRunnable;
 import com.streamsets.dataCollector.execution.runnable.ProductionPipelineRunnable;
-import com.streamsets.dataCollector.execution.util.PipelineConfUtil;
 import com.streamsets.pipeline.alerts.AlertEventListener;
 import com.streamsets.pipeline.alerts.AlertsUtil;
 import com.streamsets.pipeline.api.ExecutionMode;
@@ -30,8 +29,12 @@ import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.callback.CallbackServerMetricsEventListener;
 import com.streamsets.pipeline.config.DeliveryGuarantee;
 import com.streamsets.pipeline.config.MemoryLimitConfiguration;
+import com.streamsets.pipeline.config.MemoryLimitExceeded;
 import com.streamsets.pipeline.config.PipelineConfiguration;
 import com.streamsets.pipeline.config.RuleDefinition;
+import com.streamsets.pipeline.creation.PipelineBeanCreator;
+import com.streamsets.pipeline.creation.PipelineConfigBean;
+import com.streamsets.pipeline.el.JvmEL;
 import com.streamsets.pipeline.lib.executor.SafeScheduledExecutorService;
 import com.streamsets.pipeline.main.RuntimeInfo;
 import com.streamsets.pipeline.metrics.MetricsConfigurator;
@@ -50,12 +53,15 @@ import com.streamsets.pipeline.store.PipelineStoreException;
 import com.streamsets.pipeline.store.PipelineStoreTask;
 import com.streamsets.pipeline.util.Configuration;
 import com.streamsets.pipeline.util.ContainerError;
+import com.streamsets.pipeline.validation.Issue;
+import com.streamsets.pipeline.validation.ValidationError;
 import dagger.ObjectGraph;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
 import javax.inject.Named;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -369,6 +375,22 @@ public class StandaloneRunner implements Runner, StateListener {
     }
   }
 
+  public static MemoryLimitConfiguration getMemoryLimitConfiguration(PipelineConfigBean pipelineConfiguration)
+      throws PipelineRuntimeException {
+    //Default memory limit configuration
+    MemoryLimitConfiguration memoryLimitConfiguration = new MemoryLimitConfiguration();
+    MemoryLimitExceeded memoryLimitExceeded = pipelineConfiguration.memoryLimitExceeded;
+    long memoryLimit = pipelineConfiguration.memoryLimit;
+    if (memoryLimit > JvmEL.jvmMaxMemoryMB() * 0.85) {
+      throw new PipelineRuntimeException(ValidationError.VALIDATION_0063, memoryLimit,
+                                         "above the maximum", JvmEL.jvmMaxMemoryMB() * 0.85);
+    }
+    if (memoryLimitExceeded != null && memoryLimit > 0) {
+      memoryLimitConfiguration = new MemoryLimitConfiguration(memoryLimitExceeded, memoryLimit);
+    }
+    return memoryLimitConfiguration;
+  }
+
   @Override
   public void start() throws PipelineStoreException, PipelineRunnerException, PipelineRuntimeException, StageException {
     Utils.checkState(!isClosed,
@@ -389,8 +411,14 @@ public class StandaloneRunner implements Runner, StateListener {
        */
 
       PipelineConfiguration pipelineConfiguration = pipelineStore.load(name, rev);
-      MemoryLimitConfiguration memoryLimitConfiguration = PipelineConfUtil.getMemoryLimitConfiguration(pipelineConfiguration);
-      DeliveryGuarantee deliveryGuarantee = PipelineConfUtil.getDeliveryGuarantee(pipelineConfiguration);
+      List<Issue> errors = new ArrayList<>();
+      PipelineConfigBean pipelineConfigBean = PipelineBeanCreator.get().create(pipelineConfiguration, errors);
+      if (pipelineConfigBean == null) {
+        throw new PipelineRuntimeException(ContainerError.CONTAINER_0116, errors);
+      }
+
+      MemoryLimitConfiguration memoryLimitConfiguration = getMemoryLimitConfiguration(pipelineConfigBean);
+
       BlockingQueue<Object> productionObserveRequests =
         new ArrayBlockingQueue<>(configuration.get(Constants.OBSERVER_QUEUE_SIZE_KEY,
           Constants.OBSERVER_QUEUE_SIZE_DEFAULT), true /* FIFO */);
@@ -412,7 +440,7 @@ public class StandaloneRunner implements Runner, StateListener {
       //This which are not injected as of now.
       productionObserver.setObserveRequests(productionObserveRequests);
       runner.setObserveRequests(productionObserveRequests);
-      runner.setDeliveryGuarantee(deliveryGuarantee);
+      runner.setDeliveryGuarantee(pipelineConfigBean.deliveryGuarantee);
       runner.setMemoryLimitConfiguration(memoryLimitConfiguration);
 
       prodPipeline = builder.build(pipelineConfiguration);

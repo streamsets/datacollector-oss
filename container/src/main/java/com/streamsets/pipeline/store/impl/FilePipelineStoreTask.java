@@ -15,14 +15,13 @@ import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.config.ConfigConfiguration;
 import com.streamsets.pipeline.config.ConfigDefinition;
 import com.streamsets.pipeline.config.DataRuleDefinition;
-import com.streamsets.pipeline.config.DeliveryGuarantee;
-import com.streamsets.pipeline.config.MemoryLimitExceeded;
 import com.streamsets.pipeline.config.MetricsRuleDefinition;
 import com.streamsets.pipeline.config.PipelineConfiguration;
 import com.streamsets.pipeline.config.PipelineDefinition;
 import com.streamsets.pipeline.config.RuleDefinitions;
 import com.streamsets.pipeline.config.StageConfiguration;
 import com.streamsets.pipeline.config.StageDefinition;
+import com.streamsets.pipeline.creation.PipelineBeanCreator;
 import com.streamsets.pipeline.creation.PipelineConfigBean;
 import com.streamsets.pipeline.io.DataStore;
 import com.streamsets.pipeline.json.ObjectMapperFactory;
@@ -40,6 +39,7 @@ import com.streamsets.pipeline.task.AbstractTask;
 import com.streamsets.pipeline.util.ContainerError;
 import com.streamsets.pipeline.util.PipelineDirectoryUtil;
 
+import com.streamsets.pipeline.validation.Issue;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -158,32 +158,8 @@ public class FilePipelineStoreTask extends AbstractTask implements PipelineStore
     Date date = new Date();
     UUID uuid = UUID.randomUUID();
     PipelineInfo info = new PipelineInfo(name, description, date, date, user, user, REV, uuid, false);
-
-    List<ConfigConfiguration> configuration = new ArrayList<>(4);
-    ExecutionMode executionMode = runtimeInfo.getExecutionMode() == RuntimeInfo.ExecutionMode.STANDALONE ?
-      ExecutionMode.STANDALONE : ExecutionMode.CLUSTER;
-    configuration.add(new ConfigConfiguration(PipelineConfigBean.EXECUTION_MODE_CONFIG,
-      executionMode.name()));
-    configuration.add(new ConfigConfiguration(PipelineConfigBean.CLUSTER_SLAVE_MEMORY_CONFIG,
-                                              Integer.parseInt(PipelineConfigBean.CLUSTER_SLAVE_MEMORY_DEFAULT)));
-    configuration.add(new ConfigConfiguration(PipelineConfigBean.CLUSTER_SLAVE_JAVA_OPTS_CONFIG,
-      PipelineConfigBean.CLUSTER_SLAVE_JAVA_OPTS_DEFAULT));
-    configuration.add(new ConfigConfiguration(PipelineConfigBean.CLUSTER_KERBEROS_AUTH_CONFIG,
-      false));
-    configuration.add(new ConfigConfiguration(PipelineConfigBean.CLUSTER_KERBEROS_PRINCIPAL_CONFIG, ""));
-    configuration.add(new ConfigConfiguration(PipelineConfigBean.CLUSTER_KERBEROS_KEYTAB_CONFIG, ""));
-    configuration.add(new ConfigConfiguration(PipelineConfigBean.CLUSTER_LAUNCHER_ENV_CONFIG, new ArrayList<>()));
-    configuration.add(new ConfigConfiguration(PipelineConfigBean.DELIVERY_GUARANTEE_CONFIG,
-      DeliveryGuarantee.AT_LEAST_ONCE.name()));
-    configuration.add(new ConfigConfiguration(PipelineConfigBean.ERROR_RECORDS_CONFIG, ""));
-    configuration.add(new ConfigConfiguration(PipelineConfigBean.CONSTANTS_CONFIG, new ArrayList<>()));
-    configuration.add(new ConfigConfiguration(PipelineConfigBean.MEMORY_LIMIT_EXCEEDED_CONFIG,
-      MemoryLimitExceeded.STOP_PIPELINE.name()));
-    configuration.add(new ConfigConfiguration(PipelineConfigBean.MEMORY_LIMIT_CONFIG,
-      PipelineConfigBean.MEMORY_LIMIT_DEFAULT));
-
-    PipelineConfiguration pipeline = new PipelineConfiguration(SCHEMA_VERSION, uuid, description, configuration, null,
-      null, null);
+    PipelineConfiguration pipeline = new PipelineConfiguration(SCHEMA_VERSION, uuid, description,
+                                                               Collections.EMPTY_LIST, null, null, null);
     try {
       json.writeValue(getInfoFile(name), BeanHelper.wrapPipelineInfo(info));
       json.writeValue(getPipelineFile(name), BeanHelper.wrapPipelineConfiguration(pipeline));
@@ -193,7 +169,8 @@ public class FilePipelineStoreTask extends AbstractTask implements PipelineStore
     }
     pipeline.setPipelineInfo(info);
     if (pipelineStateStore != null) {
-      pipelineStateStore.saveState(user, name, REV, PipelineStatus.EDITED, "Pipeline edited", null, executionMode);
+      pipelineStateStore.saveState(user, name, REV, PipelineStatus.EDITED, "Pipeline edited", null,
+                                   ExecutionMode.STANDALONE);
     }
     return pipeline;
   }
@@ -293,10 +270,12 @@ public class FilePipelineStoreTask extends AbstractTask implements PipelineStore
       json.writeValue(getInfoFile(name), BeanHelper.wrapPipelineInfo(info));
       json.writeValue(getPipelineFile(name), BeanHelper.wrapPipelineConfiguration(pipeline));
       if (pipelineStateStore != null) {
-        ExecutionMode executionMode =
-          ExecutionMode.valueOf((String) pipeline.getConfiguration(PipelineConfigBean.EXECUTION_MODE_CONFIG)
-            .getValue());
-        pipelineStateStore.edited(user, name, tag, executionMode);
+        List<Issue> errors = new ArrayList<>();
+        PipelineConfigBean pipelineConfigBean = PipelineBeanCreator.get().create(pipeline, errors);
+        if (pipelineConfigBean == null) {
+          throw new PipelineStoreException(ContainerError.CONTAINER_0116, errors);
+        }
+        pipelineStateStore.edited(user, name, tag, pipelineConfigBean.executionMode);
       }
     } catch (Exception ex) {
       throw new PipelineStoreException(ContainerError.CONTAINER_0204, name, ex.getMessage(), ex);

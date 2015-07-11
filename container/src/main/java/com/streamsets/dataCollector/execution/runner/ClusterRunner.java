@@ -20,7 +20,9 @@ import java.util.concurrent.locks.ReentrantLock;
 
 import javax.inject.Inject;
 
+import com.streamsets.pipeline.creation.PipelineBeanCreator;
 import com.streamsets.pipeline.creation.PipelineConfigBean;
+import com.streamsets.pipeline.validation.Issue;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -68,7 +70,6 @@ import com.streamsets.pipeline.store.PipelineStoreException;
 import com.streamsets.pipeline.store.PipelineStoreTask;
 import com.streamsets.pipeline.util.Configuration;
 import com.streamsets.pipeline.util.ContainerError;
-import com.streamsets.pipeline.util.PipelineConfigurationUtil;
 import com.streamsets.pipeline.validation.ValidationError;
 
 
@@ -566,10 +567,12 @@ public class ClusterRunner implements Runner {
     PipelineRunnerException {
     Utils.checkNotNull(pipelineConf, "PipelineConfiguration cannot be null");
     Utils.checkState(clusterSourceInfo.getParallelism() != 0, "Parallelism cannot be zero");
-    Map<String, String> environment = new HashMap<>();
-    Map<String, String> envConfigMap =
-      PipelineConfigurationUtil.getFlattenedStringMap(PipelineConfigBean.CLUSTER_LAUNCHER_ENV_CONFIG, pipelineConf);
-    environment.putAll(envConfigMap);
+    List<Issue> errors = new ArrayList<>();
+    PipelineConfigBean pipelineConfigBean = PipelineBeanCreator.get().create(pipelineConf, errors);
+    if (pipelineConfigBean == null) {
+      throw new PipelineRunnerException(ContainerError.CONTAINER_0116, errors);
+    }
+    Map<String, String> environment = new HashMap<>(pipelineConfigBean.clusterLauncherEnv);
     Map<String, String> sourceInfo = new HashMap<>();
     File bootstrapDir = new File(this.runtimeInfo.getLibexecDir(), "bootstrap-libs");
     String msg = null;

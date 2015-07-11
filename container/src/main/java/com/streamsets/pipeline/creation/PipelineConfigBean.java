@@ -33,7 +33,6 @@ import java.util.Map;
 @ConfigGroups(PipelineGroups.class)
 public class PipelineConfigBean implements Stage {
 
-  public static final String EXECUTION_MODE_CONFIG = "executionMode";
   @ConfigDef(
       required = true,
       type = ConfigDef.Type.MODEL,
@@ -44,8 +43,6 @@ public class PipelineConfigBean implements Stage {
   @ValueChooser(ExecutionModeChooserValues.class)
   public ExecutionMode executionMode;
 
-
-  public static final String DELIVERY_GUARANTEE_CONFIG = "deliveryGuarantee";
   @ConfigDef(
       required = true,
       type = ConfigDef.Type.MODEL,
@@ -56,8 +53,6 @@ public class PipelineConfigBean implements Stage {
   @ValueChooser(DeliveryGuaranteeChooserValues.class)
   public DeliveryGuarantee deliveryGuarantee;
 
-
-  public static final String MEMORY_LIMIT_EXCEEDED_CONFIG = "memoryLimitExceeded";
   @ConfigDef(
       required = true,
       type = ConfigDef.Type.MODEL,
@@ -72,7 +67,6 @@ public class PipelineConfigBean implements Stage {
   public MemoryLimitExceeded memoryLimitExceeded;
 
 
-  public static final String MEMORY_LIMIT_CONFIG = "memoryLimit";
   public static final String MEMORY_LIMIT_DEFAULT = "${jvm:maxMemoryMB() * 0.65}";
   @ConfigDef(
       required = true,
@@ -88,7 +82,6 @@ public class PipelineConfigBean implements Stage {
   public long memoryLimit;
 
 
-  public static final String CONSTANTS_CONFIG = "constants";
   @ConfigDef(
       required = false,
       type = ConfigDef.Type.MAP,
@@ -99,7 +92,6 @@ public class PipelineConfigBean implements Stage {
   public Map<String, Object> constants;
 
 
-  public static final String ERROR_RECORDS_CONFIG = "badRecordsHandling";
   @ConfigDef(
       required = true,
       type = ConfigDef.Type.MODEL,
@@ -111,7 +103,6 @@ public class PipelineConfigBean implements Stage {
   public String badRecordsHandling;
 
 
-  public static final String CLUSTER_SLAVE_MEMORY_CONFIG = "clusterSlaveMemory";
   public static final String CLUSTER_SLAVE_MEMORY_DEFAULT = "1024";
   @ConfigDef(
       required = true,
@@ -120,13 +111,12 @@ public class PipelineConfigBean implements Stage {
       defaultValue = "1024",
       displayPosition = 10,
       group = "CLUSTER",
-      dependsOn = EXECUTION_MODE_CONFIG,
+      dependsOn = "executionMode",
       triggeredByValue = "CLUSTER"
   )
   public long clusterSlaveMemory;
 
 
-  public static final String CLUSTER_SLAVE_JAVA_OPTS_CONFIG = "clusterSlaveJavaOpts";
   public static final String CLUSTER_SLAVE_JAVA_OPTS_DEFAULT = "-XX:PermSize=128M -XX:MaxPermSize=256M";
   @ConfigDef(
     required = true,
@@ -135,13 +125,12 @@ public class PipelineConfigBean implements Stage {
     defaultValue = CLUSTER_SLAVE_JAVA_OPTS_DEFAULT,
     displayPosition = 20,
     group = "CLUSTER",
-    dependsOn = EXECUTION_MODE_CONFIG,
+    dependsOn = "executionMode",
     triggeredByValue = "CLUSTER"
   )
   public String clusterSlaveJavaOpts;
 
 
-  public static final String CLUSTER_KERBEROS_AUTH_CONFIG = "clusterKerberos";
   @ConfigDef(
     required = true,
     type = ConfigDef.Type.BOOLEAN,
@@ -149,35 +138,33 @@ public class PipelineConfigBean implements Stage {
     defaultValue = "false",
     displayPosition = 30,
     group = "CLUSTER",
-    dependsOn = EXECUTION_MODE_CONFIG,
+    dependsOn = "executionMode",
     triggeredByValue = "CLUSTER"
   )
   public boolean clusterKerberos;
 
-  public static final String CLUSTER_KERBEROS_PRINCIPAL_CONFIG = "kerberosPrincipal";
   @ConfigDef(
-    required = false,
+    required = true,
     type = ConfigDef.Type.STRING,
     label = "Kerberos Principal",
     displayPosition = 40,
     group = "CLUSTER",
-    dependsOn = CLUSTER_KERBEROS_AUTH_CONFIG,
+    dependsOn = "clusterKerberos",
     triggeredByValue = "true"
   )
   public String kerberosPrincipal;
 
-  public static final String CLUSTER_KERBEROS_KEYTAB_CONFIG = "kerberosKeytab";
-  @ConfigDef(required = false,
+  @ConfigDef(
+    required = true,
     type = ConfigDef.Type.STRING,
     label = "Kerberos Keytab (file)",
     displayPosition = 50,
     group = "CLUSTER",
-    dependsOn = CLUSTER_KERBEROS_AUTH_CONFIG,
+    dependsOn = "clusterKerberos",
     triggeredByValue = "true"
   )
   public String kerberosKeytab;
 
-  public static final String CLUSTER_LAUNCHER_ENV_CONFIG = "clusterLauncherEnv";
   @ConfigDef(
     required = false,
     type = ConfigDef.Type.MAP,
@@ -185,7 +172,7 @@ public class PipelineConfigBean implements Stage {
     description = "Sets additional environment variables for the cluster launcher",
     displayPosition = 60,
     group = "CLUSTER",
-    dependsOn = EXECUTION_MODE_CONFIG,
+    dependsOn = "executionMode",
     triggeredByValue = "CLUSTER"
   )
   public Map clusterLauncherEnv;

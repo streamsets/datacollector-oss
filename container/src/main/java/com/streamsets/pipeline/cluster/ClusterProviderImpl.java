@@ -14,6 +14,7 @@ import com.streamsets.pipeline.config.ConfigConfiguration;
 import com.streamsets.pipeline.config.PipelineConfiguration;
 import com.streamsets.pipeline.config.StageConfiguration;
 import com.streamsets.pipeline.config.StageDefinition;
+import com.streamsets.pipeline.creation.PipelineBeanCreator;
 import com.streamsets.pipeline.creation.PipelineConfigBean;
 import com.streamsets.pipeline.http.WebServerTask;
 import com.streamsets.pipeline.json.ObjectMapperFactory;
@@ -27,6 +28,7 @@ import com.streamsets.pipeline.stagelibrary.StageLibraryUtils;
 import com.streamsets.pipeline.util.SystemProcess;
 import com.streamsets.pipeline.util.SystemProcessFactory;
 
+import com.streamsets.pipeline.validation.Issue;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
@@ -210,16 +212,14 @@ public class ClusterProviderImpl implements ClusterProvider {
   }
 
   private void addKerberosConfiguration(Map<String, String> environment, PipelineConfiguration pipelineConfiguration) {
-    ConfigConfiguration clusterKerberos = Utils.checkNotNull(pipelineConfiguration.getConfiguration(PipelineConfigBean.
-      CLUSTER_KERBEROS_AUTH_CONFIG), "Could not obtain cluster kerberos auth");
-    ConfigConfiguration kerberosPrincipal = Utils.checkNotNull(pipelineConfiguration.getConfiguration(PipelineConfigBean.
-      CLUSTER_KERBEROS_PRINCIPAL_CONFIG), "Could not obtain cluster kerberos principal");
-    ConfigConfiguration kerberosKeytab = Utils.checkNotNull(pipelineConfiguration.getConfiguration(PipelineConfigBean.
-      CLUSTER_KERBEROS_KEYTAB_CONFIG), "Could not obtain cluster kerberos keytab");
-    environment.put(KERBEROS_AUTH, String.valueOf(clusterKerberos.getValue()));
-    if ((Boolean)clusterKerberos.getValue()) {
-      environment.put(KERBEROS_PRINCIPAL, String.valueOf(kerberosPrincipal.getValue()));
-      environment.put(KERBEROS_KEYTAB, String.valueOf(kerberosKeytab.getValue()));
+    List<Issue> errors = new ArrayList<>();
+    PipelineConfigBean config = PipelineBeanCreator.get().create(pipelineConfiguration, errors);
+    Utils.checkArgument(config != null, Utils.formatL("Invalid pipeline configuration: {}", errors));
+
+    environment.put(KERBEROS_AUTH, String.valueOf(config.clusterKerberos));
+    if (config.clusterKerberos) {
+      environment.put(KERBEROS_PRINCIPAL, config.kerberosPrincipal);
+      environment.put(KERBEROS_KEYTAB, config.kerberosKeytab);
     }
   }
 
@@ -343,16 +343,19 @@ public class ClusterProviderImpl implements ClusterProvider {
       }
     }
     addKerberosConfiguration(environment, pipelineConfiguration);
+
+    List<Issue> errors = new ArrayList<>();
+    PipelineConfigBean config = PipelineBeanCreator.get().create(pipelineConfiguration, errors);
+    Utils.checkArgument(config != null, Utils.formatL("Invalid pipeline configuration: {}", errors));
+
     List<String> args = new ArrayList<>();
     args.add(sparkManager.getAbsolutePath());
     args.add("start");
     // we only support yarn-cluster mode
     args.add("--master");
     args.add("yarn-cluster");
-    ConfigConfiguration slaveMemory = Utils.checkNotNull(pipelineConfiguration.getConfiguration(PipelineConfigBean.
-      CLUSTER_SLAVE_MEMORY_CONFIG), "Could not obtain cluster slave memory");
     args.add("--executor-memory");
-    args.add(slaveMemory.getValue() + "m");
+    args.add(config.clusterSlaveMemory + "m");
     // one single sdc per executor
     args.add("--executor-cores");
     args.add("1");
@@ -372,12 +375,10 @@ public class ClusterProviderImpl implements ClusterProvider {
     args.add(log4jProperties.getAbsolutePath());
     args.add("--jars");
     args.add(Joiner.on(",").skipNulls().join(bootstrapJar.getAbsoluteFile(), pathToSparkKafkaJar));
-    ConfigConfiguration javaOpts = Utils.checkNotNull(pipelineConfiguration.getConfiguration(PipelineConfigBean.
-      CLUSTER_SLAVE_JAVA_OPTS_CONFIG), "Could not obtain cluster worker java options");
     // use our javaagent and java opt configs
     args.add("--conf");
     args.add("spark.executor.extraJavaOptions=" + Joiner.on(" ").join("-javaagent:./" + bootstrapJar.getName(),
-      javaOpts.getValue()));
+      config.clusterSlaveJavaOpts));
     // main class
     args.add("--class");
     args.add("com.streamsets.pipeline.BootstrapCluster");

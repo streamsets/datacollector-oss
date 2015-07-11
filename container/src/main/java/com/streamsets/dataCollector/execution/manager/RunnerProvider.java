@@ -7,6 +7,7 @@ package com.streamsets.dataCollector.execution.manager;
 
 import com.streamsets.dataCollector.execution.Runner;
 import com.streamsets.pipeline.config.PipelineConfiguration;
+import com.streamsets.pipeline.creation.PipelineConfigBean;
 import dagger.ObjectGraph;
 
 /**
@@ -14,6 +15,6 @@ import dagger.ObjectGraph;
  */
 public interface RunnerProvider {
 
-  public Runner createRunner( String user, String name, String rev, PipelineConfiguration pipelineConf,
+  public Runner createRunner( String user, String name, String rev, PipelineConfigBean pipelineConfigBean,
                               ObjectGraph objectGraph);
 }

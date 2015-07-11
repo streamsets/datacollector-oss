@@ -31,6 +31,7 @@ import com.streamsets.pipeline.config.DeliveryGuarantee;
 import com.streamsets.pipeline.config.MemoryLimitConfiguration;
 import com.streamsets.pipeline.config.PipelineConfiguration;
 import com.streamsets.pipeline.config.RuleDefinition;
+import com.streamsets.pipeline.creation.PipelineBeanCreator;
 import com.streamsets.pipeline.creation.PipelineConfigBean;
 import com.streamsets.pipeline.lib.executor.SafeScheduledExecutorService;
 import com.streamsets.pipeline.lib.util.ThreadUtil;
@@ -52,6 +53,7 @@ import com.streamsets.pipeline.util.Configuration;
 import com.streamsets.pipeline.util.ContainerError;
 import com.streamsets.pipeline.util.PipelineConfigurationUtil;
 import com.streamsets.pipeline.util.PipelineDirectoryUtil;
+import com.streamsets.pipeline.validation.Issue;
 import com.streamsets.pipeline.validation.ValidationError;
 import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
@@ -320,9 +322,12 @@ public class
     PipelineState ps = stateTracker.getState();
     LOG.debug("State of pipeline is " + ps);
     PipelineConfiguration pipelineConf = pipelineStore.load(name, rev);
-    ExecutionMode executionMode = ExecutionMode.valueOf((String) pipelineConf.getConfiguration(
-      PipelineConfigBean.EXECUTION_MODE_CONFIG).getValue());
-    if (executionMode != ExecutionMode.CLUSTER) {
+    List<Issue> errors = new ArrayList<>();
+    PipelineConfigBean pipelineConfigBean = PipelineBeanCreator.get().create(pipelineConf, errors);
+    if (pipelineConfigBean == null) {
+      throw new PipelineManagerException(ContainerError.CONTAINER_0116, errors);
+    }
+    if (pipelineConfigBean.executionMode != ExecutionMode.CLUSTER) {
       throw new PipelineManagerException(ValidationError.VALIDATION_0073);
     }
     if (ps == null) {
@@ -755,10 +760,13 @@ public class
       throws PipelineManagerException {
       Utils.checkNotNull(clusterSourceInfo, "clusterSourceInfo");
       stateTracker.register(name, rev);
-      Map<String, String> environment = new HashMap<>();
-      Map<String, String> envConfigMap = PipelineConfigurationUtil.getFlattenedStringMap(PipelineConfigBean.
-        CLUSTER_LAUNCHER_ENV_CONFIG, pipelineConf);
-      environment.putAll(envConfigMap);
+      List<Issue> errors = new ArrayList<>();
+      PipelineConfigBean pipelineConfigBean = PipelineBeanCreator.get().create(pipelineConf, errors);
+      if (pipelineConfigBean == null) {
+        throw new PipelineManagerException(ContainerError.CONTAINER_0116, errors);
+      }
+
+      Map<String, String> environment = new HashMap<>(pipelineConfigBean.clusterLauncherEnv);
       Map<String, String> sourceInfo = new HashMap<>();
       File bootstrapDir = new File(this.clusterPipelineManager.runtimeInfo.getLibexecDir(),
         "bootstrap-libs");

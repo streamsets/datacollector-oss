@@ -7,9 +7,7 @@ package com.streamsets.dataCollector.execution.runner;
 
 import com.streamsets.dataCollector.execution.Runner;
 import com.streamsets.dataCollector.execution.manager.RunnerProvider;
-import com.streamsets.pipeline.api.ExecutionMode;
 import com.streamsets.pipeline.api.impl.Utils;
-import com.streamsets.pipeline.config.PipelineConfiguration;
 import com.streamsets.pipeline.creation.PipelineConfigBean;
 import dagger.ObjectGraph;
 
@@ -24,12 +22,10 @@ public class RunnerProviderImpl implements RunnerProvider {
   }
 
   @Override
-  public Runner createRunner(String user, String name, String rev, PipelineConfiguration pipelineConf,
+  public Runner createRunner(String user, String name, String rev, PipelineConfigBean pipelineConfigBean,
                              ObjectGraph objectGraph) {
-    ExecutionMode executionMode = ExecutionMode.valueOf(
-      (String) pipelineConf.getConfiguration(PipelineConfigBean.EXECUTION_MODE_CONFIG).getValue());
     List<Object> modules = new ArrayList<>();
-    switch (executionMode) {
+    switch (pipelineConfigBean.executionMode) {
       case CLUSTER:
         modules.add(new ClusterRunnerModule());
         break;
@@ -39,7 +35,7 @@ public class RunnerProviderImpl implements RunnerProvider {
         modules.add(new PipelineProviderModule(name, rev));
         break;
       default:
-        throw new IllegalArgumentException(Utils.format("Invalid execution mode '{}'", executionMode));
+        throw new IllegalArgumentException(Utils.format("Invalid execution mode '{}'", pipelineConfigBean.executionMode));
     }
     ObjectGraph plus =  objectGraph.plus(modules.toArray());
     return plus.get(Runner.class);
