@@ -343,7 +343,7 @@ public class HdfsTarget extends RecordTarget {
       }
     } catch (Exception ex) {
       issues.add(getContext().createConfigIssue(Groups.HADOOP_FS.name(), null, Errors.HADOOPFS_01, hdfsUri,
-                                                ex.getMessage(), ex));
+                                                String.valueOf(ex), ex));
     }
     LOG.info("Authentication Config: " + logMessage);
     return validHapoopFsUri;
@@ -362,8 +362,8 @@ public class HdfsTarget extends RecordTarget {
       if (getLateWriters() != null) {
         getLateWriters().commitOldFiles(fs);
       }
-    } catch (IOException ex) {
-      throw new StageException(Errors.HADOOPFS_23, ex.getMessage(), ex);
+    } catch (Exception ex) {
+      throw new StageException(Errors.HADOOPFS_23, String.valueOf(ex), ex);
     }
     toHdfsRecordsCounter = getContext().createCounter("toHdfsRecords");
     toHdfsRecordsMeter = getContext().createMeter("toHdfsRecords");
@@ -371,7 +371,7 @@ public class HdfsTarget extends RecordTarget {
     lateRecordsMeter = getContext().createMeter("lateRecords");
   }
 
-  private FileSystem getFileSystemForInitDestroy() throws IOException {
+  private FileSystem getFileSystemForInitDestroy() throws Exception {
     try {
       return getUGI().doAs(new PrivilegedExceptionAction<FileSystem>() {
         @Override
@@ -381,9 +381,23 @@ public class HdfsTarget extends RecordTarget {
       });
     } catch (IOException ex) {
       throw ex;
-    } catch (Exception ex) {
-      throw new RuntimeException(ex);
+    } catch (RuntimeException ex) {
+      Throwable cause = ex.getCause();
+      if (cause instanceof Exception) {
+        throw (Exception)cause;
+      }
+      throw ex;
     }
+  }
+
+  private static StageException throwStageException(Exception e) {
+    if (e instanceof RuntimeException) {
+      Throwable cause = e.getCause();
+      if (cause != null) {
+        return new StageException(Errors.HADOOPFS_13, String.valueOf(cause), cause);
+      }
+    }
+    return new StageException(Errors.HADOOPFS_13, String.valueOf(e), e);
   }
 
   Configuration getHdfsConfiguration() {
@@ -457,7 +471,7 @@ public class HdfsTarget extends RecordTarget {
       if (loginUgi != null) {
         getFileSystemForInitDestroy().close();
       }
-    } catch (IOException ex) {
+    } catch (Exception ex) {
       LOG.warn("Error while closing HDFS FileSystem URI='{}': {}", hdfsUri, ex.getMessage(), ex);
     }
     super.destroy();
@@ -479,7 +493,7 @@ public class HdfsTarget extends RecordTarget {
         }
       });
     } catch (Exception ex) {
-      throw new RuntimeException(ex);
+      throw throwStageException(ex);
     }
   }
 
@@ -500,7 +514,7 @@ public class HdfsTarget extends RecordTarget {
         }
       });
     } catch (Exception ex) {
-      throw new RuntimeException(ex);
+      throw throwStageException(ex);
     }
   }
 
