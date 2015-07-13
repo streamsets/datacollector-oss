@@ -30,7 +30,7 @@ angular
        * Delete Pipeline Configuration
        */
       deletePipelineConfig: function(pipelineInfo, $event) {
-        pipelineService.deletePipelineConfigCommand(pipelineInfo, $event);
+        pipelineService.deletePipelineConfigCommand(pipelineInfo, $event, true);
       },
 
       /**

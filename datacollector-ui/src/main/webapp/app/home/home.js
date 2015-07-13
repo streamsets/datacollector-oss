@@ -25,6 +25,9 @@ angular
 
     angular.extend($scope, {
       loaded: false,
+      pipelines: [],
+      sortColumn: 'lastModified',
+      sortReverse: true,
 
       /**
        * Add New Pipeline Configuration
@@ -38,6 +41,38 @@ angular
        */
       importPipelineConfig: function() {
         pipelineService.importPipelineConfigCommand();
+      },
+
+      /**
+       * Delete Pipeline Configuration
+       */
+      deletePipelineConfig: function(pipelineInfo, $event) {
+        pipelineService.deletePipelineConfigCommand(pipelineInfo, $event).then(function(res) {
+          $scope.pipelines = res;
+        });
+      },
+
+      /**
+       * Duplicate Pipeline Configuration
+       */
+      duplicatePipelineConfig: function(pipelineInfo, $event) {
+        pipelineService.duplicatePipelineConfigCommand(pipelineInfo, $event);
+      },
+
+      /**
+       * Export link command handler
+       */
+      exportPipelineConfig: function(pipelineInfo, $event) {
+        $event.stopPropagation();
+        api.pipelineAgent.exportPipelineConfig(pipelineInfo.name);
+      },
+
+      /**
+       * Open pipeline
+       * @param pipeline
+       */
+      openPipeline: function(pipeline) {
+        $location.path('/collector/pipeline/' + pipeline.name);
       }
     });
 
@@ -51,7 +86,7 @@ angular
           pipelines = pipelineService.getPipelines(),
           activeConfigInfo;
 
-        if($rootScope.$storage.activeConfigInfo && $rootScope.$storage.activeConfigInfo.name) {
+        /*if($rootScope.$storage.activeConfigInfo && $rootScope.$storage.activeConfigInfo.name) {
           var localStorageConfigInfoName = $rootScope.$storage.activeConfigInfo.name;
           activeConfigInfo = _.find(pipelines, function(pipelineConfigInfo) {
             return pipelineConfigInfo.name === localStorageConfigInfoName;
@@ -67,11 +102,15 @@ angular
         }
 
         if(activeConfigInfo) {
-          $location.path('/collector/pipeline/' + activeConfigInfo.name);
-          $location.replace();
+          //$location.path('/collector/pipeline/' + activeConfigInfo.name);
+          //$location.replace();
         } else {
           $scope.loaded = true;
-        }
+        }*/
+
+        $scope.loaded = true;
+        $rootScope.common.pipelineStatus = pipelineStatus;
+        $scope.pipelines = pipelineService.getPipelines();
       },
       function (results) {
         $scope.loaded = true;

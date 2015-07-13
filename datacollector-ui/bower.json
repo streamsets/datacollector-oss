@@ -18,7 +18,7 @@
     "angular-bootstrap": "0.12.0",
     "angular-bootstrap-datetimepicker": "latest",
     "underscore": "1.8.1",
-    "fontawesome": "~4.2.0",
+    "fontawesome": "~4.3.0",
     "angular-moment": "~0.8.2",
     "moment": "2.9.0",
     "nvd3": "~1.8.1",

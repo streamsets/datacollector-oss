@@ -24,7 +24,7 @@
 
       <div class="panel-title pull-left"
            ng-switch-when="RUNNING">
-        <h3 class="pull-left">{{pipelineConfig.info.name}}: </h3>
+        <h3 class="pull-left">{{pipelineConfig.info.name | limitTo: 40}}: </h3>
         <h3 class="pull-left" translate="home.header.uptime">Uptime</h3>
         <h3 class="pull-left" am-time-ago="common.pipelineStatus.lastStatusChange"></h3>
 
@@ -41,7 +41,7 @@
       <div class="panel-title pull-left"
            ng-switch-default>
         <h3 class="pull-left" translate="home.header.definePipeline">Define Pipeline:</h3>
-        <h3 class="pull-left">{{activeConfigInfo.name}}</h3>
+        <h3 class="pull-left">{{pipelineConfig.info.name | limitTo: 40}}</h3>
       </div>
 
     </div>

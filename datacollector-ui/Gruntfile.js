@@ -127,7 +127,8 @@ module.exports = function(grunt) {
         'bower_components/fontawesome/fonts/fontawesome-webfont.eot',
         'bower_components/fontawesome/fonts/fontawesome-webfont.svg',
         'bower_components/fontawesome/fonts/fontawesome-webfont.ttf',
-        'bower_components/fontawesome/fonts/fontawesome-webfont.woff'
+        'bower_components/fontawesome/fonts/fontawesome-webfont.woff',
+        'bower_components/fontawesome/fonts/fontawesome-webfont.woff2'
       ],
       i18n: [
         'bower_components/angular-i18n/angular-locale_en-us.js',

@@ -230,18 +230,19 @@ angular.module('dataCollectorApp.common')
     /**
      * Delete Pipeline Configuration Command Handler
      */
-    this.deletePipelineConfigCommand = function(pipelineInfo, $event) {
-      var modalInstance = $modal.open({
-        templateUrl: 'app/home/library/delete/delete.tpl.html',
-        controller: 'DeleteModalInstanceController',
-        size: '',
-        backdrop: 'static',
-        resolve: {
-          pipelineInfo: function () {
-            return pipelineInfo;
+    this.deletePipelineConfigCommand = function(pipelineInfo, $event, afterDeleteOpenFirst) {
+      var defer = $q.defer(),
+        modalInstance = $modal.open({
+          templateUrl: 'app/home/library/delete/delete.tpl.html',
+          controller: 'DeleteModalInstanceController',
+          size: '',
+          backdrop: 'static',
+          resolve: {
+            pipelineInfo: function () {
+              return pipelineInfo;
+            }
           }
-        }
-      });
+        });
 
       if($event) {
         $event.stopPropagation();
@@ -249,14 +250,19 @@ angular.module('dataCollectorApp.common')
 
       modalInstance.result.then(function (configInfo) {
         self.removePipeline(configInfo);
-        if(self.pipelines.length) {
-          $location.path('/collector/pipeline/' + self.pipelines[0].name);
-        } else {
-          $location.path('/');
+        if(afterDeleteOpenFirst) {
+          if(self.pipelines.length) {
+            $location.path('/collector/pipeline/' + self.pipelines[0].name);
+          } else {
+            $location.path('/');
+          }
         }
+        defer.resolve(self.pipelines);
       }, function () {
 
       });
+
+      return defer.promise;
     };
 
 

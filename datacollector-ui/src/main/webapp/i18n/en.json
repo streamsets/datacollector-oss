@@ -134,8 +134,8 @@
     }
   },
   "home": {
-    "createPipeline": "Create Pipeline",
-    "importPipeline": "Import Pipeline",
+    "createPipeline": "Create new pipeline",
+    "importPipeline": "Import pipeline",
     "getStarted": "Get Started",
     "header" : {
       "addStage": "Add Stage",
@@ -426,7 +426,13 @@
       "captureSnapshotInProgress": "Capturing...",
       "modalTitle": "Snapshots",
       "noSnapshots": "No Snapshots"
-    }
+    },
+    "sortColumn": {
+      "name": "Name",
+      "created": "Date created",
+      "lastModified": "Date updated"
+    },
+    "title": "Pipelines"
   },
   "jvmMetrics": {
     "gc": {

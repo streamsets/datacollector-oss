@@ -1,4 +1,7 @@
-<div class="pipeline-empty-container" ng-class="{'show': loaded}"  ng-cloak>
+
+
+<div class="pipeline-empty-container" ng-class="{'show': loaded}"
+     ng-show="pipelines.length == 0">
   <div class="create-pipeline-btn-group">
     <h2 translate="home.getStarted">Get Started</h2>
     <button class="btn btn-primary pull-left create-pipeline-btn"
@@ -19,3 +22,171 @@
 
 <ng-include src="'app/home/alerts/error/errorModal.tpl.html'"></ng-include>
 <ng-include src="'app/home/alerts/error/errorAlert.tpl.html'"></ng-include>
+
+
+
+<div class="panel panel-default page-panel home-page" ng-show="pipelines.length > 0">
+
+  <div class="panel-heading clearfix">
+    <div class="panel-title size-toolbar">
+      <h3 class="pull-left" translate="home.title">Pipelines</h3>
+
+      <div class="pull-right" ng-show="pipelines.length > 1">
+
+        <span class="sort-by-label">Sort by:</span>
+        <div class="btn-group pull-right sort-by-dropdown">
+
+          <button class="btn btn-link dropdown-toggle icon-button" type="button" data-toggle="dropdown">
+            <span>{{'home.sortColumn.' + sortColumn | translate}}</span>
+            <i ng-show="!sortReverse" class="fa fa-arrow-down"></i>
+            <i ng-show="sortReverse" class="fa fa-arrow-up"></i>
+          </button>
+
+          <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
+
+            <li role="presentation">
+              <a role="menuitem" tabindex="-1" href="#"
+                 ng-click="sortColumn = 'name'; sortReverse = false">
+                <span translate="home.sortColumn.name">Name</span>
+                <i class="fa fa-arrow-down"></i>
+              </a>
+            </li>
+
+            <li role="presentation">
+              <a role="menuitem" tabindex="-1" href="#"
+                 ng-click="sortColumn = 'name'; sortReverse = true">
+                <span translate="home.sortColumn.name">Name</span>
+                <i class="fa fa-arrow-up"></i>
+              </a>
+            </li>
+
+
+
+            <li role="presentation">
+              <a role="menuitem" tabindex="-1" href="#"
+                 ng-click="sortColumn = 'created'; sortReverse = false">
+                <span translate="home.sortColumn.created">Date created</span>
+                <i class="fa fa-arrow-down"></i>
+              </a>
+            </li>
+
+            <li role="presentation">
+              <a role="menuitem" tabindex="-1" href="#"
+                 ng-click="sortColumn = 'created'; sortReverse = true">
+                <span translate="home.sortColumn.created">Date created</span>
+                <i class="fa fa-arrow-up"></i>
+              </a>
+            </li>
+
+            <li role="presentation">
+              <a role="menuitem" tabindex="-1" href="#"
+                 ng-click="sortColumn = 'lastModified'; sortReverse = false">
+                <span translate="home.sortColumn.lastModified">Date updated</span>
+                <i class="fa fa-arrow-down"></i>
+              </a>
+            </li>
+
+            <li role="presentation">
+              <a role="menuitem" tabindex="-1" href="#"
+                 ng-click="sortColumn = 'lastModified'; sortReverse = true">
+                <span translate="home.sortColumn.lastModified">Date updated</span>
+                <i class="fa fa-arrow-up"></i>
+              </a>
+            </li>
+
+
+          </ul>
+        </div>
+      </div>
+
+
+    </div>
+  </div>
+
+  <div class="panel-body"  ng-style="{'height': (windowHeight - 60) + 'px', 'width': (windowWidth) + 'px'}" resize>
+
+    <section class="tile-list ">
+
+      <section class="pipeline-container new-pipeline" >
+        <div class="centering-container">
+          <a href="" class="btn btn-primary" ng-click="addPipelineConfig()">
+            <span class="fa fa-plus"></span>
+            <span translate="home.createPipeline">Create new pipeline</span></a>
+          <br>
+          <a href="" class="btn btn-link" ng-click="importPipelineConfig()">
+            <span class="fa fa-arrow-circle-down"></span>
+            <span translate="home.importPipeline">Import pipeline</span>
+          </a>
+        </div>
+      </section>
+
+      <section class="pipeline-container single-pipeline"
+               ng-repeat="pipeline in pipelines | orderBy:sortColumn:sortReverse">
+        <header ng-click="openPipeline(pipeline)">
+          <h2>{{pipeline.name | limitTo: 50}}</h2>
+        </header>
+
+        <section class="project-additional-info" >
+          <span class="time-update">Updated</span>
+          <span class="time-update" am-time-ago="pipeline.lastModified"></span>
+          <span class="time-update">ago</span>
+        </section>
+
+        <footer >
+          <section class="running-status"
+                   ng-show="pipeline.name === common.pipelineStatus.name  && common.pipelineStatus.state === 'RUNNING'">
+            <i class="fa fa-spinner fa-spin fa-14x"></i>
+          </section>
+
+
+          <section class="pipeline-menu">
+            <span class="split-bar"></span>
+            <div class="action-menu" dropdown
+                 ng-if="isAuthorized([userRoles.admin, userRoles.creator])">
+              <span class="dropdown-toggle" dropdown-toggle
+                    ng-click="$event.stopPropagation();">
+                <i class="fa fa-ellipsis-h"></i>
+              </span>
+              <ul class="dropdown-menu" role="menu">
+                <li role="presentation"
+                    ng-hide="pipeline.name === common.pipelineStatus.name  && common.pipelineStatus.state === 'RUNNING'">
+                  <a href="#" dropdown-toggle ng-click="deletePipelineConfig(pipeline, $event)">
+                    <i class="fa fa-trash-o"></i>
+                    <span>{{'global.form.delete' | translate}}</span>
+                  </a>
+                </li>
+
+                <li role="presentation">
+                  <a href="#" dropdown-toggle ng-click="duplicatePipelineConfig(pipeline, $event)">
+                    <i class="fa fa-files-o"></i>
+                    <span>{{'global.form.duplicate' | translate}}</span>
+                  </a>
+                </li>
+
+                <li role="presentation">
+                  <a href="#" dropdown-toggle ng-click="importPipelineConfig(pipeline, $event)">
+                    <i class="glyphicon glyphicon-import"></i>
+                    <span>{{'global.form.import' | translate}}</span>
+                  </a>
+                </li>
+
+                <li role="presentation">
+                  <a href="#" dropdown-toggle ng-click="exportPipelineConfig(pipeline, $event)">
+                    <i class="glyphicon glyphicon-export"></i>
+                    <span>{{'global.form.export' | translate}}</span>
+                  </a>
+                </li>
+              </ul>
+            </div>
+
+          </section>
+
+        </footer>
+      </section>
+
+    </section>
+
+
+  </div>
+
+</div>
