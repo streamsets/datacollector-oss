@@ -11,7 +11,7 @@
     <p>The extended tutorial continues with the following steps:<ol id="ol_m23_hhk_ps">
         <li>Use a Jython Evaluator to flatten data.</li>
         <li>Configure a Field Converter to convert field types.</li>
-        <li>Use the Expression Evaluator to merge field data.</li>
+        <li>Manipulate data with the Expression Evaluator.</li>
         <li>Use data preview to review and edit the pipeline.</li>
         <li>Optionally connect an Elasticsearch destination and start the pipeline.</li>
       </ol></p>

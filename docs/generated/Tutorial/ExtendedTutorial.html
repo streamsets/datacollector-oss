@@ -26,9 +26,9 @@
 
         <li class="li">Configure a Field Converter to convert field types.</li>
 
-        <li class="li">Use the Expression Evaluator to merge field data.</li>
+        <li class="li">Manipulate data with the Expression Evaluator.</li>
 
-        <li class="li">Use data preview to see how the pipeline works.</li>
+        <li class="li">Use data preview to review and edit the pipeline.</li>
 
         <li class="li">Optionally connect an Elasticsearch destination and start the pipeline.</li>
 
@@ -222,25 +222,27 @@ except Exception as e:
 
 </div>
 <div class="topic task nested1" id="task_rlk_tdq_ps">
-    <h2 class="title topictitle2">Merge Field Data with the Expression Evaluator</h2>
+    <h2 class="title topictitle2">Manipulate Data with the Expression Evaluator</h2>
 
     
     <div class="body taskbody"><p class="shortdesc">Before writing data to Elasticsearch, let's use an Expression Evaluator to merge the
         longitude and latitude information into a single pickup location field. </p>
 
-        <div class="section context"></div>
+        <div class="section context">We'll also calculate a total fare without the tip to get the basic trip revenue. </div>
 
         <ol class="ol steps" id="task_rlk_tdq_ps__steps_dzt_j3q_ps"><li class="li step stepexpand">
                 <span class="ph cmd">Add an <span class="ph uicontrol">Expression Evaluator</span> to the canvas and connect it
                     to the <span class="ph uicontrol">Field Converter</span>.</span>
             </li>
 <li class="li step stepexpand">
-                <span class="ph cmd">On the Expressions tab, enter the following information:</span>
+                <span class="ph cmd">On the <span class="ph uicontrol">Expressions</span> tab, enter the following information
+                    to generate pickup location data:</span>
                 <div class="itemgroup info">
                     <ul class="ul" id="task_rlk_tdq_ps__ul_bfl_y2y_ps">
-                        <li class="li">For <span class="ph uicontrol">Output Field</span>, enter "/pickup_location".</li>
+                        <li class="li">For the <span class="ph uicontrol">Output Field</span> property, enter
+                            "/pickup_location".</li>
 
-                        <li class="li">For <span class="ph uicontrol">Expression</span>, enter the following expression:<pre class="pre codeblock">${record:value('/pickup_latitude')}, ${record:value('/pickup_longitude')}</pre>
+                        <li class="li">For <span class="ph uicontrol">Expression</span> property, enter the following expression:<pre class="pre codeblock">${record:value('/pickup_latitude')}, ${record:value('/pickup_longitude')}</pre>
 
                             <p class="p">This returns the data from the two flattened fields in the following
                                 format: &lt;pickup latitude&gt;, &lt;pickup longitude&gt;.</p>
@@ -250,10 +252,30 @@ except Exception as e:
 
                 </div>
             </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">To add another expression, click the <span class="ph uicontrol">Add</span> icon and enter
+                    the following information to generate a trip revenue with no taxes or
+                    tolls:</span>
+                <div class="itemgroup info">
+                    <ul class="ul" id="task_rlk_tdq_ps__ul_xzs_lcn_qs">
+                        <li class="li">For the <span class="ph uicontrol">Output Field</span> property, enter
+                            "/trip_revenue".</li>
+
+                        <li class="li">For the <span class="ph uicontrol">Expression</span> property, enter the following
+                            expression:
+                            <pre class="pre codeblock">${record:value('/total_amount') - record:value('/tip_amount')}</pre>
+</li>
+
+                    </ul>
+
+                </div>
+            </li>
 </ol>
 
         <div class="section result">
-            <p class="p">Here's the Expression Evaluator in the extended pipeline:  <img class="image" id="task_rlk_tdq_ps__image_w4n_hpy_ps" src="../Graphics/Tutorial-Expression2.png" height="288" width="808"></img></p>
+            <p class="p">Here's the Expression Evaluator in the extended pipeline:</p>
+ <p class="p">
+                <img class="image" id="task_rlk_tdq_ps__image_w4n_hpy_ps" src="../Graphics/Tutorial-Expression2.png" height="303" width="813"></img></p>
 
         </div>
 
@@ -261,14 +283,14 @@ except Exception as e:
 
 </div>
 <div class="topic concept nested1" id="concept_u4h_mwf_qs">
- <h2 class="title topictitle2">Preview and Adjust the Pipeline</h2>
+ <h2 class="title topictitle2">Preview and Edit the Pipeline</h2>
 
  
- <div class="body conbody"><p class="shortdesc">Except for the Elasticsearch destination, the extended tutorial is complete. To see how
-  each stage transforms data, use data preview. In preview mode, you can edit configuration
-  properties or preview data and run the preview with the changes.</p>
+ <div class="body conbody"><p class="shortdesc">Except for the Elasticsearch destination, the extended tutorial is complete. Let's use
+  data preview to see how stages transform data. We'll also make some configuration changes and edit
+  preview data for testing. </p>
 
-  <p class="p">To preview the pipeline, click the preview icon: <img class="image" id="concept_u4h_mwf_qs__image_iqz_1hg_qs" src="../Graphics/icon-ConfigDataPreview.png" height="15" width="20"></img>.</p>
+  <p class="p">To preview the pipeline, click the preview icon: <img class="image" id="concept_u4h_mwf_qs__image_iqz_1hg_qs" src="../Graphics/icon-ConfigDataPreview.png" height="15" width="20"></img></p>
 
   <div class="p">You can explore how each stage transforms data by selecting the stage and reviewing the input
    and output records in the Preview panel. Listed here are some details to note:<dl class="dl">
@@ -276,39 +298,127 @@ except Exception as e:
      <dt class="dt dlterm">Field Masker</dt>
 
      <dd class="dd">To see how the Field Masker masks credit card numbers: <ol class="ol" id="concept_u4h_mwf_qs__ol_ht2_5lg_qs">
-       <li class="li">Select the Field Masker in the canvas, and then expand the first record.</li>
+       <li class="li">Select the Field Masker in the canvas, and then expand the first input and output
+        record.</li>
 
        <li class="li">Scroll down and note that index 20 is highlighted, indicating a change.</li>
 
-       <li class="li"> Expand index 20 for the input and output data. Note how all digits except the last 4 are
-        masked. </li>
+       <li class="li"> Expand index 20 for the input and output data. Notice how all digits except the last 4
+        are masked. </li>
 
       </ol>
 </dd>
 
-     <dd class="dd">Say we want to change the mask type to mask the whole credit card number. </dd>
-
-     <dd class="dd">To review the stage property that made this happen and try a different option:<ol class="ol" id="concept_u4h_mwf_qs__ol_vvw_wlg_qs">
-       <li class="li">Scroll up and select the <span class="ph uicontrol">Stage Configuration</span> icon: <img class="image" id="concept_u4h_mwf_qs__image_xnl_lmg_qs" src="../Graphics/icon_PrevStageConfig.png" height="18" width="20"></img></li>
+     <dd class="dd">Say we want to change the mask type to mask the whole credit card number. To review the
+      stage property that made this happen and try a different option, complete the following
+       steps:<ol class="ol" id="concept_u4h_mwf_qs__ol_vvw_wlg_qs">
+       <li class="li">Scroll up and select the <span class="ph uicontrol">Stage Configuration</span> icon: <img class="image" id="concept_u4h_mwf_qs__image_xnl_lmg_qs" src="../Graphics/icon_PrevStageConfig.png" height="16" width="18"></img></li>
 
        <li class="li">Click the <span class="ph uicontrol">Mask</span> tab.</li>
 
        <li class="li">Change the <span class="ph uicontrol">Mask Type</span> to <span class="ph uicontrol">Variable Length</span> to
         mask all numbers while showing how many numbers there are in the data. </li>
 
-       <li class="li">To view the data with this change, click the <span class="ph uicontrol">Refresh Preview</span> icon. </li>
+       <li class="li">To view the data with this change, click the <span class="ph uicontrol">Refresh Preview</span> icon.
+         </li>
 
        <li class="li">In the canvas, select the Field Masker processor and if the Preview panel displays the
         stage configuration, select the <span class="ph uicontrol">Records</span> tab to view the preview
         records. </li>
 
-       <li class="li"> Expand an output record, expand index 20, and see how the entire number is now masked. </li>
-
-       <li class="li">
-        
-       </li>
+       <li class="li"> Expand an output record, expand index 20, and notice how the entire number is now
+        masked. </li>
 
       </ol>
+</dd>
+
+    
+    
+     <dt class="dt dlterm">Second Jython Evaluator</dt>
+
+     <dd class="dd">Next, let's look at the second Jython Evaluator in the pipeline. This stage flattens the
+      delimited data, but let's see what that looks like:<ul class="ul" id="concept_u4h_mwf_qs__ul_qvt_lmm_qs">
+       <li class="li">Select the second Jython Evaluator and expand the first input and output record.
+         <p class="p">Notice how the input record is a list of maps and the output record has been flattened
+         to the following structure: &lt;field name&gt;: &lt;value&gt;. Isn't that great? </p>
+</li>
+
+      </ul>
+</dd>
+
+    
+    
+     <dt class="dt dlterm">Field Converter</dt>
+
+     <dd class="dd">Now let's look at the Field Converter. <ol class="ol" id="concept_u4h_mwf_qs__ol_ajx_pmm_qs">
+       <li class="li">To move the focus to the Field Converter, instead of selecting the stage in the pipeline,
+        you can click the <span class="ph uicontrol">Next Stage</span> icon.<p class="p">You might notice a red message
+         that indicates the first record has an unparsable date - it shows that the date data
+         includes invalid characters at the end. </p>
+<p class="p">So what happens to this bad record? It
+         depends on how the stage is configured. We used the default configuration, but let's see
+         what that is:</p>
+</li>
+
+       <li class="li">Click the Stage Configuration icon. Notice the <span class="ph uicontrol">On Record Error</span>
+                property is set to <span class="ph uicontrol">Send to Error</span>. <p class="p">This means error records
+                  are sent to the pipeline for error handling. And you might recall we configured
+                  the pipeline to write all error records to file. So with this configuration, the
+                  error record will be dropped from the pipeline and written to file. </p>
+<p class="p">You can
+                  configure this property to stop the pipeline on encountering an error record or to
+                  discard error records.</p>
+</li>
+
+       <li class="li">To see how it looks when you discard errors, set <span class="ph uicontrol">On Record Error</span>
+        to <span class="ph uicontrol">Discard</span>. And then, click the <span class="ph uicontrol">Refresh
+         Preview</span> icon.</li>
+
+       <li class="li">On the canvas, select the <span class="ph uicontrol">Field Converter </span>stage, and then click
+        the <span class="ph uicontrol">Records</span> icon in the Preview panel. Notice the first record is
+        discarded without notice of the error that occurred. </li>
+
+       <li class="li">We prefer to keep error records, so go back to the Stage Configuration tab and change
+         <span class="ph uicontrol">On Record Error</span> back to <span class="ph uicontrol">Send to Error</span>.</li>
+
+      </ol>
+</dd>
+
+    
+    
+     <dt class="dt dlterm">Second Expression Evaluator</dt>
+
+     <dd class="dd">The second Expression Evaluator manipulates data. Let's take a look and try editing some
+              data.<ol class="ol" id="concept_u4h_mwf_qs__ol_u54_mx3_rs">
+              <li class="li">Click the <span class="ph uicontrol">Next Stage</span> icon or select the Expression
+                Evaluator.</li>
+
+              <li class="li">If necessary, expand a couple input and output records. <p class="p">Notice the fields
+                  created by the stage, pickup_location and trip_location, are highlighted in
+                  green.</p>
+<p class="p">Though it isn't necessary for these calculations, let's see how you
+                  can edit preview data to test stage configuration.</p>
+</li>
+
+              <li class="li">In the first input record - in the Input Data column, click on the Pickup Latitude
+                  data,<span class="ph uicontrol"> 40.730068</span>, add a negative sign before the data, and
+                hit <span class="ph uicontrol">Enter</span> or click outside the data.<p class="p">The edited input data
+                  becomes red to indicate a change. </p>
+</li>
+
+              <li class="li">To test the change, click the <span class="ph uicontrol">Run Preview with Changes</span>
+                icon: <img class="image" id="concept_u4h_mwf_qs__image_awt_jbj_rs" src="../Graphics/icon_PreviewRerun.png" height="13" width="17"></img><p class="p">The <span class="ph">Data
+                  Collector</span> runs the preview with the change. Notice the corresponding output record now
+                  has -40.730068 for both pickup_latitude and pickup_location. </p>
+<p class="p"><img class="image" id="concept_u4h_mwf_qs__image_bgm_cfj_rs" src="../Graphics/Tutorial-PreviewEditData.png" height="388" width="692"></img></p>
+<p class="p">You can see how this functionality might come in handy when you want to
+                  test some cases that didn't come up in the preview data. </p>
+</li>
+
+              <li class="li">To revert that change, click the <span class="ph uicontrol">Revert Data Changes</span> icon.
+                This icon does not revert configuration changes. </li>
+
+            </ol>
 </dd>
 
     
@@ -347,9 +457,9 @@ except Exception as e:
                             
                             <thead class="thead" align="left">
                                 <tr class="row">
-                                    <th class="entry" valign="top" id="d48979e536">Elasticsearch Property</th>
+                                    <th class="entry" valign="top" id="d48979e703">Elasticsearch Property</th>
 
-                                    <th class="entry" valign="top" id="d48979e539">Value</th>
+                                    <th class="entry" valign="top" id="d48979e706">Value</th>
 
                                 </tr>
 
@@ -357,16 +467,16 @@ except Exception as e:
 
                             <tbody class="tbody">
                                 <tr class="row">
-                                    <td class="entry" valign="top" headers="d48979e536 ">Index</td>
+                                    <td class="entry" valign="top" headers="d48979e703 ">Index</td>
 
-                                    <td class="entry" valign="top" headers="d48979e539 ">taxi_rides</td>
+                                    <td class="entry" valign="top" headers="d48979e706 ">taxi_rides</td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" headers="d48979e536 ">Type</td>
+                                    <td class="entry" valign="top" headers="d48979e703 ">Type</td>
 
-                                    <td class="entry" valign="top" headers="d48979e539 ">taxi_ride</td>
+                                    <td class="entry" valign="top" headers="d48979e706 ">taxi_ride</td>
 
                                 </tr>
 

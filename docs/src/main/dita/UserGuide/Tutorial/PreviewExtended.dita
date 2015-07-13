@@ -2,16 +2,18 @@
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_u4h_mwf_qs">
  <title>Preview and Edit the Pipeline</title>
- <shortdesc>Except for the Elasticsearch destination, the extended tutorial is complete. Let's use
-  data preview to see how stages transform data. We'll also make some configuration changes and edit
-  preview data for testing. </shortdesc>
+ <shortdesc>The extended tutorial is almost done, so let's use data preview to see how stages
+    transform data. While in data preview, we'll make some configuration changes and edit preview
+    data for testing. </shortdesc>
  <conbody>
   <p>To preview the pipeline, click the preview icon: <image
-    href="../Graphics/icon-ConfigDataPreview.png" id="image_iqz_1hg_qs" scale="80"/>.</p>
+        href="../Graphics/icon-ConfigDataPreview.png" id="image_iqz_1hg_qs" scale="80"/></p>
   <p>You can explore how each stage transforms data by selecting the stage and reviewing the input
    and output records in the Preview panel. Listed here are some details to note:<dl>
     <dlentry>
      <dt>Field Masker</dt>
+          <dd>Let's see how the Field Masker masks credit card numbers and change the mask type that
+            we're using. </dd>
      <dd>To see how the Field Masker masks credit card numbers: <ol id="ol_ht2_5lg_qs">
        <li>Select the Field Masker in the canvas, and then expand the first input and output
         record.</li>
@@ -20,30 +22,34 @@
         are masked. </li>
       </ol></dd>
      <dd>Say we want to change the mask type to mask the whole credit card number. To review the
-      stage property that made this happen and try a different option, complete the following
-       steps:<ol id="ol_vvw_wlg_qs">
-       <li>Scroll up and select the <uicontrol>Stage Configuration</uicontrol> icon: <image
-         href="../Graphics/icon_PrevStageConfig.png" id="image_xnl_lmg_qs" scale="80"/></li>
-       <li>Click the <uicontrol>Mask</uicontrol> tab.</li>
-       <li>Change the <uicontrol>Mask Type</uicontrol> to <uicontrol>Variable Length</uicontrol> to
-        mask all numbers while showing how many numbers there are in the data. </li>
-       <li>To view the data with this change, click the <uicontrol>Refresh Preview</uicontrol> icon.
-         <draft-comment author="Loretta">Hopefully this icon name will change?</draft-comment></li>
-       <li>In the canvas, select the Field Masker processor and if the Preview panel displays the
-        stage configuration, select the <uicontrol>Records</uicontrol> tab to view the preview
-        records. </li>
-       <li> Expand an output record, expand index 20, and notice how the entire number is now
-        masked. </li>
-      </ol></dd>
+            stage configuration and try a different option:<ol id="ol_vvw_wlg_qs">
+              <li>On the left side of the Preview panel, select the <uicontrol>Stage
+                  Configuration</uicontrol> icon: <image href="../Graphics/icon_PrevStageConfig.png"
+                  id="image_xnl_lmg_qs" scale="70"/><p>You might need to scroll up to the top of the
+                  panel.</p></li>
+              <li>Click the <uicontrol>Mask</uicontrol> tab.</li>
+              <li>Change the <uicontrol>Mask Type</uicontrol> to <uicontrol>Variable
+                  Length</uicontrol> to mask all numbers while showing how many numbers there are in
+                the data. </li>
+              <li>To view the data with this change, click the <uicontrol>Refresh
+                  Preview</uicontrol> icon. <draft-comment author="Loretta">Rewrite after Madhu's
+                  change.</draft-comment></li>
+              <li>In the canvas, select the Field Masker processor and if the Preview panel displays
+                the stage configuration, select the <uicontrol>Records</uicontrol> tab to view the
+                preview records. </li>
+              <li> Expand an output record, expand index 20, and notice how the entire number is now
+                masked. </li>
+            </ol></dd>
     </dlentry>
     <dlentry>
-     <dt>Jython Evaluator Flattening Records</dt>
+     <dt>Second Jython Evaluator</dt>
      <dd>Next, let's look at the second Jython Evaluator in the pipeline. This stage flattens the
-      delimited data, but let's see what that looks like:<ul id="ul_qvt_lmm_qs">
-       <li>Select the second Jython Evaluator and expand the first input and output record.
-         <p>Notice how the input record is a list of maps and the output record has been flattened
-         to the following structure: &lt;field name>: &lt;value>. Isn't that great? </p></li>
-      </ul></dd>
+            delimited data. Let's take a look:<ul id="ul_qvt_lmm_qs">
+              <li>Select the second Jython Evaluator and expand the first input and output record.
+                  <p>Notice how the input record is a list of maps and the output record has been
+                  flattened to the following structure: &lt;field name>: &lt;value>. Isn't that
+                  great? </p></li>
+            </ul></dd>
     </dlentry>
     <dlentry>
      <dt>Field Converter</dt>
@@ -54,13 +60,13 @@
          includes invalid characters at the end. </p><p>So what happens to this bad record? It
          depends on how the stage is configured. We used the default configuration, but let's see
          what that is:</p></li>
-       <li>Click the Stage Configuration icon. Notice the <uicontrol>On Record Error
-        </uicontrol>property is set to <uicontrol>Send to Error</uicontrol>. <p>This means error
-         records are sent to the pipeline for error handling. And you might recall we configured the
-         pipeline to write all error records to file. So with this configuration, the error record
-         will be dropped from the pipeline and written to file. </p><p>You can configure this
-         property to stop the pipeline on encountering an error record or to discard error
-         records.</p></li>
+       <li>Click the Stage Configuration icon. Notice the <uicontrol>On Record Error</uicontrol>
+                property is set to <uicontrol>Send to Error</uicontrol>. <p>This means error records
+                  are sent to the pipeline for error handling. And you might recall we configured
+                  the pipeline to write all error records to file. So with this configuration, the
+                  error record will be dropped from the pipeline and written to file. </p><p>You can
+                  configure this property to stop the pipeline on encountering an error record or to
+                  discard error records.</p></li>
        <li>To see how it looks when you discard errors, set <uicontrol>On Record Error</uicontrol>
         to <uicontrol>Discard</uicontrol>. And then, click the <uicontrol>Refresh
          Preview</uicontrol> icon.<draft-comment author="Loretta">Hopefully this name will
@@ -73,8 +79,31 @@
       </ol></dd>
     </dlentry>
     <dlentry>
-     <dt>Expression Evaluator </dt>
-     <dd/>
+     <dt>Second Expression Evaluator</dt>
+     <dd>The second Expression Evaluator manipulates data. Let's take a look and try editing some
+              data.<ol id="ol_u54_mx3_rs">
+              <li>Click the <uicontrol>Next Stage</uicontrol> icon or select the Expression
+                Evaluator.</li>
+              <li>If necessary, expand a couple input and output records. <p>Notice the fields
+                  created by the stage, pickup_location and trip_location, are highlighted in
+                  green.</p><p>Though it isn't necessary for these calculations, let's see how you
+                  can edit preview data to test stage configuration.</p></li>
+              <li>In the first input record - in the Input Data column, click on the Pickup Latitude
+                  data,<uicontrol> 40.730068</uicontrol>, add a negative sign before the data, and
+                hit <uicontrol>Enter</uicontrol> or click outside the data.<p>The edited input data
+                  becomes red to indicate a change. </p></li>
+              <li>To test the change, click the <uicontrol>Run Preview with Changes</uicontrol>
+                icon: <image href="../Graphics/icon_PreviewRerun.png" id="image_awt_jbj_rs"
+                  scale="80"/><p>The <ph
+                    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                  /> runs the preview with the change. Notice the corresponding output record now
+                  has -40.730068 for both pickup_latitude and pickup_location. </p><p><image
+                    href="../Graphics/Tutorial-PreviewEditData.png" id="image_bgm_cfj_rs" scale="80"
+                  /></p><p>You can see how this functionality might come in handy when you want to
+                  test some cases that didn't come up in the preview data. </p></li>
+              <li>To revert that change, click the <uicontrol>Revert Data Changes</uicontrol> icon.
+                This icon does not revert configuration changes. </li>
+            </ol></dd>
     </dlentry>
    </dl></p>
  </conbody>

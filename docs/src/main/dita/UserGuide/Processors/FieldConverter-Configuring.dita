@@ -53,9 +53,10 @@
                                 </row>
                                 <row>
                                     <entry>Date Format </entry>
-                                    <entry>Format for a Date or Datetime field. Select or enter any
-                                        valid format. <p>For more information about creating a
-                                            custom date format, see <xref
+                                    <entry>Format of the date or datetime data to be converted. For
+                                        conversions to Date or Datetime only. <p>Select the format
+                                            to use or create a custom format. For more information
+                                            about creating a custom date format, see <xref
                                                 href="http://docs.oracle.com/javase/tutorial/i18n/format/simpleDateFormat.html"
                                                 format="html" scope="external"
                                                 >http://docs.oracle.com/javase/tutorial/i18n/format/simpleDateFormat.html</xref>.</p></entry>
