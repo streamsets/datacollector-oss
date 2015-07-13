@@ -87,7 +87,7 @@ public abstract class PipelineBeanCreator {
       if (errorStageConf != null) {
         errorStageBean = createStageBean(library, errorStageConf, true, pipelineConfigBean.constants, errors);
       } else {
-        errors.add(IssueCreator.getPipeline().create(CreationError.CREATION_007));
+        errors.add(IssueCreator.getPipeline().create(CreationError.CREATION_009));
       }
     }
     return (errors.size() == priorErrors) ? new PipelineBean(pipelineConfigBean, stages, errorStageBean) : null;
