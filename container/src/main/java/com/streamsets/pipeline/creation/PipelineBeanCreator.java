@@ -16,6 +16,7 @@ import com.streamsets.pipeline.config.ConfigConfiguration;
 import com.streamsets.pipeline.config.ConfigDefinition;
 import com.streamsets.pipeline.config.ModelType;
 import com.streamsets.pipeline.config.PipelineConfiguration;
+import com.streamsets.pipeline.config.PipelineGroups;
 import com.streamsets.pipeline.config.StageConfiguration;
 import com.streamsets.pipeline.config.StageDefinition;
 import com.streamsets.pipeline.config.StageLibraryDefinition;
@@ -87,7 +88,8 @@ public abstract class PipelineBeanCreator {
       if (errorStageConf != null) {
         errorStageBean = createStageBean(library, errorStageConf, true, pipelineConfigBean.constants, errors);
       } else {
-        errors.add(IssueCreator.getPipeline().create(CreationError.CREATION_009));
+        errors.add(IssueCreator.getPipeline().create(PipelineGroups.BAD_RECORDS.name(), "badRecordsHandling",
+                                                     CreationError.CREATION_009));
       }
     }
     return (errors.size() == priorErrors) ? new PipelineBean(pipelineConfigBean, stages, errorStageBean) : null;
@@ -176,7 +178,9 @@ public abstract class PipelineBeanCreator {
       Map<String, Object> pipelineConstants, List<Issue> errors) {
     StageConfigBean stageConfigBean = new StageConfigBean();
     if (createConfigBeans(stageConfigBean, "", stageDef, stageConf.getInstanceName(), errors)) {
-      injectConfigs(stageConfigBean, "", SYSTEM_STAGE_CONFIG_DEFS, stageDef, stageConf, pipelineConstants, errors);
+      //we use the stageDef configdefs because they may hide system configs
+      injectConfigs(stageConfigBean, "", stageDef.getConfigDefinitionsMap(), stageDef, stageConf, pipelineConstants,
+                    errors);
     }
     return stageConfigBean;
   }
@@ -247,9 +251,8 @@ public abstract class PipelineBeanCreator {
       String configName = configPrefix + field.getName();
       if (field.getAnnotation(ConfigDef.class) != null) {
         ConfigDefinition configDef = configDefMap.get(configName);
-        if (configDef == null) {
-          errors.add(issueCreator.create(configDef.getGroup(), configName, CreationError.CREATION_002, configName));
-        } else {
+        // if there is no config def, we ignore it, it can be the case when the config is a @HideConfig
+        if (configDef != null) {
           ConfigConfiguration configConf = stageConf.getConfig(configName);
           if (configConf == null) {
             //TODO LOG WARNING missing config in state config
@@ -405,7 +408,7 @@ public abstract class PipelineBeanCreator {
           }
         }
       }
-      value = (error) ? null : ImmutableList.copyOf(list);
+      value = (error) ? null : list;
     }
     return value;
   }
@@ -448,7 +451,7 @@ public abstract class PipelineBeanCreator {
           }
         }
       }
-      value = (error) ? null : ImmutableMap.copyOf(map);
+      value = (error) ? null : map;
     }
     return value;
   }
@@ -518,6 +521,9 @@ public abstract class PipelineBeanCreator {
       ConfigDefinition configDef, ConfigConfiguration configConf, Map<String, Object> pipelineConstants,
       List<Issue> errors) {
     Object value = configConf.getValue();
+    if (value == null) {
+      value = configDef.getDefaultValue();
+    }
     injectConfigValue(obj, field, value, stageDef, stageConf, configDef, configConf, pipelineConstants, errors);
   }
 

@@ -7,6 +7,7 @@ package com.streamsets.pipeline.runner.preview;
 
 import com.streamsets.pipeline.api.ExecutionMode;
 import com.streamsets.pipeline.config.ConfigDefinition;
+import com.streamsets.pipeline.config.PipelineDefinition;
 import com.streamsets.pipeline.config.StageDefinition;
 import com.streamsets.pipeline.config.StageLibraryDefinition;
 import com.streamsets.pipeline.config.StageType;
@@ -31,6 +32,11 @@ public class PreviewStageLibraryTask extends TaskWrapper implements StageLibrary
   public PreviewStageLibraryTask(StageLibraryTask library) {
     super(library);
     this.library = library;
+  }
+
+  @Override
+  public PipelineDefinition getPipeline() {
+    return library.getPipeline();
   }
 
   @Override

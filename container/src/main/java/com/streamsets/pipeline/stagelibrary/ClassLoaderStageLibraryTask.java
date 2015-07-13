@@ -17,6 +17,7 @@ import com.streamsets.pipeline.api.impl.LocaleInContext;
 import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.config.ConfigDefinition;
 import com.streamsets.pipeline.config.ErrorHandlingChooserValues;
+import com.streamsets.pipeline.config.PipelineDefinition;
 import com.streamsets.pipeline.config.StageDefinition;
 import com.streamsets.pipeline.config.StageLibraryDefinition;
 import com.streamsets.pipeline.definition.StageDefinitionExtractor;
@@ -171,6 +172,11 @@ public class ClassLoaderStageLibraryTask extends AbstractTask implements StageLi
 
   private String createKey(String library, String name, String version) {
     return library + ":" + name + ":" + version;
+  }
+
+  @Override
+  public PipelineDefinition getPipeline() {
+    return PipelineDefinition.getPipelineDef();
   }
 
   @Override

@@ -8,7 +8,6 @@ package com.streamsets.pipeline.restapi;
 import com.google.common.annotations.VisibleForTesting;
 import com.streamsets.pipeline.alerts.DataRuleEvaluator;
 import com.streamsets.pipeline.api.impl.Utils;
-import com.streamsets.pipeline.config.PipelineDefinition;
 import com.streamsets.pipeline.config.StageDefinition;
 import com.streamsets.pipeline.definition.ELDefinitionExtractor;
 import com.streamsets.pipeline.el.RuntimeEL;
@@ -83,7 +82,7 @@ public class StageLibraryResource {
 
     //Populate the definitions with the PipelineDefinition
     List<Object> pipeline = new ArrayList<>(1);
-    pipeline.add(BeanHelper.wrapPipelineDefinition(PipelineDefinition.getPipelineDef()));
+    pipeline.add(BeanHelper.wrapPipelineDefinition(stageLibrary.getPipeline()));
     definitions.put(PIPELINE, pipeline);
 
     Map<String, Object> map = new HashMap<>();

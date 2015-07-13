@@ -6,6 +6,7 @@
 package com.streamsets.pipeline.config;
 
 import com.google.common.annotations.VisibleForTesting;
+import com.google.common.collect.ImmutableList;
 import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.definition.ConfigDefinitionExtractor;
 import com.streamsets.pipeline.definition.ConfigGroupExtractor;
@@ -16,8 +17,9 @@ import java.util.List;
 
 public class PipelineDefinition {
   /*The config definitions of the pipeline*/
-  private List<ConfigDefinition> configDefinitions;
-  private ConfigGroupDefinition groupDefinition;
+  private final List<ConfigDefinition> configDefinitions;
+  private final ConfigGroupDefinition groupDefinition;
+  private final List<ConfigConfiguration> defaultConfigs;
 
   public static PipelineDefinition getPipelineDef() {
     return new PipelineDefinition().localize();
@@ -41,6 +43,11 @@ public class PipelineDefinition {
   private PipelineDefinition(List<ConfigDefinition> configDefs, ConfigGroupDefinition groupDef) {
     configDefinitions = configDefs;
     groupDefinition = groupDef;
+    List<ConfigConfiguration> configs = new ArrayList<>();
+    for (ConfigDefinition configDef : configDefs) {
+      configs.add(new ConfigConfiguration(configDef.getName(), configDef.getDefaultValue()));
+    }
+    defaultConfigs = ImmutableList.copyOf(configs);
   }
 
   private static List<ConfigDefinition> createPipelineConfigs() {
@@ -59,6 +66,10 @@ public class PipelineDefinition {
 
   public ConfigGroupDefinition getConfigGroupDefinition() {
     return groupDefinition;
+  }
+
+  public List<ConfigConfiguration> getPipelineDefaultConfigs() {
+    return defaultConfigs;
   }
 
   @Override

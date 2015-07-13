@@ -5,6 +5,7 @@
  */
 package com.streamsets.pipeline.stagelibrary;
 
+import com.streamsets.pipeline.config.PipelineDefinition;
 import com.streamsets.pipeline.config.StageDefinition;
 import com.streamsets.pipeline.task.Task;
 
@@ -13,6 +14,8 @@ import java.util.List;
 public interface StageLibraryTask extends Task {
 
   public static final String STAGES_DEFINITION_RESOURCE = "PipelineStages.json";
+
+  public PipelineDefinition getPipeline();
 
   public List<StageDefinition> getStages();
 

@@ -22,7 +22,7 @@ public @interface ConfigDef {
     STRING(""),
     LIST(Collections.emptyList()),
     MAP(Collections.emptyList()),
-    MODEL(null),
+    MODEL(""),
     CHARACTER(' '),
     TEXT("")
 

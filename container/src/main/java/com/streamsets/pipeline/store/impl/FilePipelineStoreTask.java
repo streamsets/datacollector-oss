@@ -159,7 +159,8 @@ public class FilePipelineStoreTask extends AbstractTask implements PipelineStore
     UUID uuid = UUID.randomUUID();
     PipelineInfo info = new PipelineInfo(name, description, date, date, user, user, REV, uuid, false);
     PipelineConfiguration pipeline = new PipelineConfiguration(SCHEMA_VERSION, uuid, description,
-                                                               Collections.EMPTY_LIST, null, null, null);
+                                                               stageLibrary.getPipeline().getPipelineDefaultConfigs(),
+                                                               Collections.EMPTY_MAP, Collections.EMPTY_LIST, null);
     try {
       json.writeValue(getInfoFile(name), BeanHelper.wrapPipelineInfo(info));
       json.writeValue(getPipelineFile(name), BeanHelper.wrapPipelineConfiguration(pipeline));

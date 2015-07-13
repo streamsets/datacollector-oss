@@ -191,7 +191,7 @@ public class TestConfigValueExtractor {
 
     field = Configs.class.getField("modelM");
     configDef = field.getAnnotation(ConfigDef.class);
-    Assert.assertEquals(null, ConfigValueExtractor.get().extract(field, configDef, "x"));
+    Assert.assertEquals("", ConfigValueExtractor.get().extract(field, configDef, "x"));
 
     field = Configs.class.getField("elEL");
     configDef = field.getAnnotation(ConfigDef.class);

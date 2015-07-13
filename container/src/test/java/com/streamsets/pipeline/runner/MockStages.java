@@ -25,6 +25,7 @@ import com.streamsets.pipeline.config.ConfigDefinition;
 import com.streamsets.pipeline.config.ModelDefinition;
 import com.streamsets.pipeline.config.ModelType;
 import com.streamsets.pipeline.config.PipelineConfiguration;
+import com.streamsets.pipeline.config.PipelineDefinition;
 import com.streamsets.pipeline.config.RawSourceDefinition;
 import com.streamsets.pipeline.config.StageConfiguration;
 import com.streamsets.pipeline.config.StageDefinition;
@@ -460,6 +461,11 @@ public class MockStages {
     @Override
     public Status getStatus() {
       return null;
+    }
+
+    @Override
+    public PipelineDefinition getPipeline() {
+      return PipelineDefinition.getPipelineDef();
     }
 
     @Override
