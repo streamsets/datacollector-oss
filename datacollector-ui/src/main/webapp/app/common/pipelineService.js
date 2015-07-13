@@ -230,7 +230,7 @@ angular.module('dataCollectorApp.common')
     /**
      * Delete Pipeline Configuration Command Handler
      */
-    this.deletePipelineConfigCommand = function(pipelineInfo, $event, afterDeleteOpenFirst) {
+    this.deletePipelineConfigCommand = function(pipelineInfo, $event) {
       var defer = $q.defer(),
         modalInstance = $modal.open({
           templateUrl: 'app/home/library/delete/delete.tpl.html',
@@ -250,13 +250,6 @@ angular.module('dataCollectorApp.common')
 
       modalInstance.result.then(function (configInfo) {
         self.removePipeline(configInfo);
-        if(afterDeleteOpenFirst) {
-          if(self.pipelines.length) {
-            $location.path('/collector/pipeline/' + self.pipelines[0].name);
-          } else {
-            $location.path('/');
-          }
-        }
         defer.resolve(self.pipelines);
       }, function () {
 
@@ -270,28 +263,31 @@ angular.module('dataCollectorApp.common')
      * Duplicate Pipeline Configuration Command Handler
      */
     this.duplicatePipelineConfigCommand = function(pipelineInfo, $event) {
-      var modalInstance = $modal.open({
-        templateUrl: 'app/home/library/duplicate/duplicate.tpl.html',
-        controller: 'DuplicateModalInstanceController',
-        size: '',
-        backdrop: 'static',
-        resolve: {
-          pipelineInfo: function () {
-            return pipelineInfo;
+      var defer = $q.defer(),
+        modalInstance = $modal.open({
+          templateUrl: 'app/home/library/duplicate/duplicate.tpl.html',
+          controller: 'DuplicateModalInstanceController',
+          size: '',
+          backdrop: 'static',
+          resolve: {
+            pipelineInfo: function () {
+              return pipelineInfo;
+            }
           }
-        }
-      });
+        });
 
       if($event) {
         $event.stopPropagation();
       }
 
-      modalInstance.result.then(function (configObject) {
-        self.addPipeline(configObject);
-        $location.path('/collector/pipeline/' + configObject.info.name);
+      modalInstance.result.then(function (newPipelineConfig) {
+        self.addPipeline(newPipelineConfig);
+        defer.resolve(newPipelineConfig);
       }, function () {
 
       });
+
+      return defer.promise;
     };
 
     var getXPos = function(pipelineConfig, firstOpenLane) {

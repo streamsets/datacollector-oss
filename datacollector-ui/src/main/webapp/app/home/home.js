@@ -47,16 +47,20 @@ angular
        * Delete Pipeline Configuration
        */
       deletePipelineConfig: function(pipelineInfo, $event) {
-        pipelineService.deletePipelineConfigCommand(pipelineInfo, $event).then(function(res) {
-          $scope.pipelines = res;
-        });
+        pipelineService.deletePipelineConfigCommand(pipelineInfo, $event)
+          .then(function(pipelines) {
+            $scope.pipelines = pipelines;
+          });
       },
 
       /**
        * Duplicate Pipeline Configuration
        */
       duplicatePipelineConfig: function(pipelineInfo, $event) {
-        pipelineService.duplicatePipelineConfigCommand(pipelineInfo, $event);
+        pipelineService.duplicatePipelineConfigCommand(pipelineInfo, $event)
+          .then(function(pipelines) {
+            $scope.pipelines = pipelineService.getPipelines();
+          });
       },
 
       /**
@@ -82,34 +86,8 @@ angular
     ])
     .then(
       function (results) {
-        var pipelineStatus = results[0].data,
-          pipelines = pipelineService.getPipelines(),
-          activeConfigInfo;
-
-        /*if($rootScope.$storage.activeConfigInfo && $rootScope.$storage.activeConfigInfo.name) {
-          var localStorageConfigInfoName = $rootScope.$storage.activeConfigInfo.name;
-          activeConfigInfo = _.find(pipelines, function(pipelineConfigInfo) {
-            return pipelineConfigInfo.name === localStorageConfigInfoName;
-          });
-        } else if(pipelineStatus && pipelineStatus.name) {
-          activeConfigInfo = _.find(pipelines, function(pipelineConfigInfo) {
-            return pipelineConfigInfo.name === pipelineStatus.name;
-          });
-        }
-
-        if(!activeConfigInfo && pipelines && pipelines.length) {
-          activeConfigInfo =   pipelines[0];
-        }
-
-        if(activeConfigInfo) {
-          //$location.path('/collector/pipeline/' + activeConfigInfo.name);
-          //$location.replace();
-        } else {
-          $scope.loaded = true;
-        }*/
-
         $scope.loaded = true;
-        $rootScope.common.pipelineStatus = pipelineStatus;
+        $rootScope.common.pipelineStatus = results[0].data;
         $scope.pipelines = pipelineService.getPipelines();
       },
       function (results) {

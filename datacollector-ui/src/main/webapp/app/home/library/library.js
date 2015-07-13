@@ -30,14 +30,24 @@ angular
        * Delete Pipeline Configuration
        */
       deletePipelineConfig: function(pipelineInfo, $event) {
-        pipelineService.deletePipelineConfigCommand(pipelineInfo, $event, true);
+        pipelineService.deletePipelineConfigCommand(pipelineInfo, $event)
+          .then(function(pipelines) {
+            if(pipelines.length) {
+              $location.path('/collector/pipeline/' + pipelines[0].name);
+            } else {
+              $location.path('/');
+            }
+          });
       },
 
       /**
        * Duplicate Pipeline Configuration
        */
       duplicatePipelineConfig: function(pipelineInfo, $event) {
-        pipelineService.duplicatePipelineConfigCommand(pipelineInfo, $event);
+        pipelineService.duplicatePipelineConfigCommand(pipelineInfo, $event)
+          .then(function(newPipelineConfig) {
+            $location.path('/collector/pipeline/' + newPipelineConfig.info.name);
+          });
       },
 
       /**

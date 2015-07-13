@@ -20,6 +20,7 @@ angular
         output: []
       },
       previewDataUpdated: false,
+      pipelineConfigUpdated: false,
       stepExecuted: false,
       dirtyLanes: [],
 
@@ -352,6 +353,16 @@ angular
           });
         }
       }
+    });
+
+    var firstTime = true;
+    $scope.$watch('pipelineConfig.stages', function(newValue) {
+      if(!firstTime) {
+        $scope.pipelineConfigUpdated = true;
+      } else {
+        firstTime = false;
+      }
+
     });
 
     $scope.$on('recordUpdated', function(event, recordUpdated, recordValue) {
