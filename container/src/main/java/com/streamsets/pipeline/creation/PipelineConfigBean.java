@@ -67,12 +67,11 @@ public class PipelineConfigBean implements Stage {
   public MemoryLimitExceeded memoryLimitExceeded;
 
 
-  public static final String MEMORY_LIMIT_DEFAULT = "${jvm:maxMemoryMB() * 0.65}";
   @ConfigDef(
       required = true,
       type = ConfigDef.Type.NUMBER,
       label = "Memory Limit (MB)",
-      defaultValue = MEMORY_LIMIT_DEFAULT,
+      defaultValue = "${jvm:maxMemoryMB() * 0.65}",
       description = "Maximum memory in MB a pipeline will be allowed to " +
                     "consume. Maximum and minimum values are based on SDC Java heap size.",
       displayPosition = 40,
@@ -103,7 +102,6 @@ public class PipelineConfigBean implements Stage {
   public String badRecordsHandling;
 
 
-  public static final String CLUSTER_SLAVE_MEMORY_DEFAULT = "1024";
   @ConfigDef(
       required = true,
       type = ConfigDef.Type.NUMBER,
@@ -117,12 +115,11 @@ public class PipelineConfigBean implements Stage {
   public long clusterSlaveMemory;
 
 
-  public static final String CLUSTER_SLAVE_JAVA_OPTS_DEFAULT = "-XX:PermSize=128M -XX:MaxPermSize=256M";
   @ConfigDef(
     required = true,
     type = ConfigDef.Type.STRING,
     label = "Worker Java Options",
-    defaultValue = CLUSTER_SLAVE_JAVA_OPTS_DEFAULT,
+    defaultValue = "-XX:PermSize=128M -XX:MaxPermSize=256M",
     displayPosition = 20,
     group = "CLUSTER",
     dependsOn = "executionMode",
