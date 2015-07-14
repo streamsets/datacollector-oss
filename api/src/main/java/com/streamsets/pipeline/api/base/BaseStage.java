@@ -19,24 +19,29 @@ public abstract class BaseStage<C extends Context> implements Stage<C> {
   private boolean superInitCalled;
 
   @Override
-  public List<ConfigIssue> validateConfigs(Info info, C context)  throws StageException {
+  public List<ConfigIssue> validateConfigs(Info info, C context) {
+    List<ConfigIssue> issues = new ArrayList<>();
     this.info = info;
     this.context = context;
-    return validateConfigs();
-  }
-
-  protected List<ConfigIssue> validateConfigs()  throws StageException {
-    return new ArrayList<>();
-  }
-
-  @Override
-  public final void init(Info info, C context) throws StageException {
-    this.info = info;
-    this.context = context;
-    init();
-    if (requiresSuperInit && !superInitCalled) {
-      throw new IllegalStateException("The stage implementation overridden the init() but didn't call super.init()");
+    try {
+      issues.addAll(validateConfigs());
+      if (issues.isEmpty()) {
+        try {
+          init();
+        } catch (Exception ex) {
+          issues.add(context.createConfigIssue(null, null, Errors.API_19, ex.getMessage()));
+        }
+      }
+      return issues;
+    } finally {
+      if (requiresSuperInit && !superInitCalled) {
+        issues.add(context.createConfigIssue(null, null, Errors.API_20));
+      }
     }
+  }
+
+  protected List<ConfigIssue> validateConfigs() {
+    return new ArrayList<>();
   }
 
   void setRequiresSuperInit() {

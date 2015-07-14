@@ -51,8 +51,6 @@ import com.streamsets.pipeline.lib.util.JsonUtil;
 import com.streamsets.pipeline.sdk.ContextInfoCreator;
 import com.streamsets.pipeline.sdk.RecordCreator;
 import com.streamsets.pipeline.sdk.TargetRunner;
-import com.streamsets.pipeline.stage.destination.hbase.HBaseFieldMappingConfig;
-
 
 
 public class TestHBaseTarget {

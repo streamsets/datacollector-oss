@@ -239,7 +239,6 @@ public abstract class StageRunner<S extends Stage> {
       }
       throw new StageException(ContainerError.CONTAINER_0010, list);
     }
-    stage.init(getInfo(), getContext());
     status = Status.INITIALIZED;
   }
 

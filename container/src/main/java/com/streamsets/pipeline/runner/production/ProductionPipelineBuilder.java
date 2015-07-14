@@ -72,14 +72,6 @@ public class ProductionPipelineBuilder {
     Pipeline pipeline = new Pipeline.Builder(stageLib, name + PRODUCTION_PIPELINE_SUFFIX, name, rev, pipelineConf)
       .setObserver(observer).build(runner);
 
-    List<Issue> configIssues = pipeline.validateConfigs();
-    if (!configIssues.isEmpty()) {
-      Issues issues = new Issues(configIssues);
-      for (Issue stageIssue : configIssues) {
-        LOG.warn("Stage Issue: + " + String.valueOf(stageIssue));
-      }
-      throw new PipelineRuntimeException(issues);
-    }
     if (pipeline.getSource() instanceof OffsetCommitter) {
       runner.setOffsetTracker(new ProductionSourceOffsetCommitterOffsetTracker(name, rev, runtimeInfo,
         (OffsetCommitter) pipeline.getSource()));
@@ -99,14 +91,6 @@ public class ProductionPipelineBuilder {
     Pipeline pipeline = new Pipeline.Builder(stageLib, name + PRODUCTION_PIPELINE_SUFFIX, name, rev, pipelineConf)
       .setObserver(observer).build(runner);
 
-    List<Issue> configIssues = pipeline.validateConfigs();
-    if (!configIssues.isEmpty()) {
-      Issues issues = new Issues(configIssues);
-      for (Issue stageIssue : configIssues) {
-        LOG.warn(String.valueOf(stageIssue));
-      }
-      throw new PipelineRuntimeException(issues);
-    }
     if (pipeline.getSource() instanceof OffsetCommitter) {
       runner.setOffsetTracker(new ProductionSourceOffsetCommitterOffsetTracker(name, rev, runtimeInfo,
         (OffsetCommitter) pipeline.getSource()));

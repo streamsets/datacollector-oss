@@ -104,7 +104,7 @@ public class TestRecordProcessor {
     Stage.Info info = Mockito.mock(Stage.Info.class);
     Processor.Context context = Mockito.mock(Processor.Context.class);
     Mockito.when(context.getOnErrorRecord()).thenReturn(OnRecordError.DISCARD);
-    processor.init(info, context);
+    processor.validateConfigs(info, context);
     processor.process(batch, batchMaker);
     processor.destroy();
     Assert.assertEquals(1, got.size());
@@ -136,7 +136,7 @@ public class TestRecordProcessor {
     Stage.Info info = Mockito.mock(Stage.Info.class);
     Processor.Context context = Mockito.mock(Processor.Context.class);
     Mockito.when(context.getOnErrorRecord()).thenReturn(OnRecordError.TO_ERROR);
-    processor.init(info, context);
+    processor.validateConfigs(info, context);
     processor.process(batch, batchMaker);
     processor.destroy();
     Assert.assertEquals(1, got.size());
@@ -170,7 +170,7 @@ public class TestRecordProcessor {
     Stage.Info info = Mockito.mock(Stage.Info.class);
     Processor.Context context = Mockito.mock(Processor.Context.class);
     Mockito.when(context.getOnErrorRecord()).thenReturn(OnRecordError.STOP_PIPELINE);
-    processor.init(info, context);
+    processor.validateConfigs(info, context);
     processor.process(batch, batchMaker);
   }
 
@@ -193,7 +193,7 @@ public class TestRecordProcessor {
     Stage.Info info = Mockito.mock(Stage.Info.class);
     Processor.Context context = Mockito.mock(Processor.Context.class);
     Mockito.when(context.getOnErrorRecord()).thenReturn(onRecordError);
-    processor.init(info, context);
+    processor.validateConfigs(info, context);
     processor.process(batch, batchMaker);
   }
 

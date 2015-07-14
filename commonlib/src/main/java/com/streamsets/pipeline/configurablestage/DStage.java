@@ -20,7 +20,7 @@ public abstract class DStage<C extends Stage.Context> implements Stage<C> {
   abstract Stage<C> createStage();
 
   @Override
-  public final List<ConfigIssue> validateConfigs(Info info, C context) throws StageException {
+  public final List<ConfigIssue> validateConfigs(Info info, C context) {
     if(stage == null) {
       stage = createStage();
     }

@@ -209,7 +209,7 @@ public class TestPreviewRun {
     Mockito.verify(tracker).setOffset(Mockito.eq("X"));
   }
 
-  @Test(expected = PipelineRuntimeException.class)
+  @Test
   public void testPreviewRunFailValidationConfigs() throws Exception {
 
     MockStages.setSourceCapture(new BaseSource() {
@@ -237,8 +237,9 @@ public class TestPreviewRun {
     });
     SourceOffsetTracker tracker = Mockito.mock(SourceOffsetTracker.class);
     PipelineRunner runner = new PreviewPipelineRunner("name", "0", runtimeInfo, tracker, -1, 1, true);
-    new PreviewPipelineBuilder(MockStages.createStageLibrary(), "name", "0",
-                         MockStages.createPipelineConfigurationSourceProcessorTarget(), null).build(runner);
+    PreviewPipeline pp = new PreviewPipelineBuilder(MockStages.createStageLibrary(), "name", "0",
+                                                    MockStages.createPipelineConfigurationSourceProcessorTarget(), null).build(runner);
+    Assert.assertFalse(pp.validateConfigs().isEmpty());
   }
 
 

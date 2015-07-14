@@ -33,6 +33,8 @@ public enum Errors implements ErrorCode {
   API_17("Cannot convert {} field '{}' to Short"),
   API_18("Cannot convert Map, List, or Byte[] to String"),
 
+  API_19("Error while initializing stage: {}"),
+  API_20("The stage implementation overridden the init() but didn't call super.init()")
 
 ;
 

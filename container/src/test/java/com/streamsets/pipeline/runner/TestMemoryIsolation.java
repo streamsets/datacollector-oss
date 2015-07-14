@@ -159,13 +159,8 @@ public class TestMemoryIsolation {
     }
 
     @Override
-    public List<ConfigIssue> validateConfigs(Info info, Context context) throws StageException {
+    public List<ConfigIssue> validateConfigs(Info info, Context context) {
       return null;
-    }
-
-    @Override
-    public void init(Info info, Context context) throws StageException {
-
     }
 
     @Override
@@ -185,13 +180,8 @@ public class TestMemoryIsolation {
     }
 
     @Override
-    public List<ConfigIssue> validateConfigs(Info info, Context context) throws StageException {
+    public List<ConfigIssue> validateConfigs(Info info, Context context) {
       return null;
-    }
-
-    @Override
-    public void init(Info info, Context context) throws StageException {
-
     }
 
     @Override
@@ -210,13 +200,8 @@ public class TestMemoryIsolation {
     }
 
     @Override
-    public List<ConfigIssue> validateConfigs(Info info, Context context) throws StageException {
+    public List<ConfigIssue> validateConfigs(Info info, Context context) {
       return null;
-    }
-
-    @Override
-    public void init(Info info, Context context) throws StageException {
-
     }
 
     @Override

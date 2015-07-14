@@ -35,9 +35,7 @@ public abstract class Pipe<C extends Pipe.Context> {
     return outputLanes;
   }
 
-  public abstract List<Issue> validateConfigs() throws StageException;
-
-  public abstract void init(C context) throws StageException;
+  public abstract List<Issue> init(C pipeContext) throws StageException;
 
   public abstract void process(PipeBatch pipeBatch) throws StageException, PipelineRuntimeException;
 

@@ -23,7 +23,7 @@ import java.util.Iterator;
 
 public class TestSingleLaneProcessor {
 
-  @Test(expected = StageException.class)
+  @Test
   @SuppressWarnings("unchecked")
   public void testInvalidConfig1() throws Exception {
 
@@ -36,15 +36,10 @@ public class TestSingleLaneProcessor {
     Stage.Info info = Mockito.mock(Stage.Info.class);
     Processor.Context context = Mockito.mock(Processor.Context.class);
     Mockito.when(context.getOutputLanes()).thenReturn(Collections.EMPTY_LIST);
-    try {
-      processor.init(info, context);
-    } catch (Exception ex) {
-      ex.getLocalizedMessage();
-      throw ex;
-    }
+    Assert.assertFalse(processor.validateConfigs(info, context).isEmpty());
   }
 
-  @Test(expected = StageException.class)
+  @Test
   public void testInvalidConfig2() throws Exception {
 
     Processor processor = new SingleLaneProcessor() {
@@ -56,10 +51,10 @@ public class TestSingleLaneProcessor {
     Stage.Info info = Mockito.mock(Stage.Info.class);
     Processor.Context context = Mockito.mock(Processor.Context.class);
     Mockito.when(context.getOutputLanes()).thenReturn(ImmutableList.of("l2", "l3"));
-    processor.init(info, context);
+    Assert.assertFalse(processor.validateConfigs(info, context).isEmpty());
   }
 
-  @Test(expected = IllegalStateException.class)
+  @Test
   @SuppressWarnings("unchecked")
   public void testInvalidConfigMissingSuperInit() throws Exception {
 
@@ -77,7 +72,7 @@ public class TestSingleLaneProcessor {
     Stage.Info info = Mockito.mock(Stage.Info.class);
     Processor.Context context = Mockito.mock(Processor.Context.class);
     Mockito.when(context.getOutputLanes()).thenReturn(Collections.EMPTY_LIST);
-    processor.init(info, context);
+    Assert.assertFalse(processor.validateConfigs(info, context).isEmpty());
   }
 
   @Test
@@ -107,7 +102,7 @@ public class TestSingleLaneProcessor {
     Stage.Info info = Mockito.mock(Stage.Info.class);
     Processor.Context context = Mockito.mock(Processor.Context.class);
     Mockito.when(context.getOutputLanes()).thenReturn(ImmutableList.of("l2"));
-    processor.init(info, context);
+    processor.validateConfigs(info, context);
 
     processor.process(batch, batchMaker);
     ArgumentCaptor<Record> recordCaptor = ArgumentCaptor.forClass(Record.class);

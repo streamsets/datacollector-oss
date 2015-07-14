@@ -18,12 +18,8 @@ public class CombinerPipe extends Pipe<Pipe.Context> {
   }
 
   @Override
-  public List<Issue> validateConfigs() {
+  public List<Issue> init(Pipe.Context pipeContext) {
     return Collections.emptyList();
-  }
-
-  @Override
-  public void init(Context context) throws StageException {
   }
 
   @Override

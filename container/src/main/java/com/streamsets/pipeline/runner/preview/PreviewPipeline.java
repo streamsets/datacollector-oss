@@ -33,9 +33,14 @@ public class PreviewPipeline {
   public PreviewPipelineOutput run(List<StageOutput> stageOutputsToOverride)
       throws StageException, PipelineRuntimeException{
     MetricsConfigurator.registerJmxMetrics(null);
-    pipeline.init();
     try {
-      pipeline.run(stageOutputsToOverride);
+      List<Issue> initIssues = pipeline.init();
+      if (initIssues.isEmpty()) {
+        pipeline.run(stageOutputsToOverride);
+      } else {
+        issues.addAll(initIssues);
+        throw new PipelineRuntimeException(issues);
+      }
     } finally {
       pipeline.destroy();
     }

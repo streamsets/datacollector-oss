@@ -175,12 +175,8 @@ public class PipelineConfigBean implements Stage {
   public Map clusterLauncherEnv;
 
   @Override
-  public List<ConfigIssue> validateConfigs(Info info, Context context) throws StageException {
+  public List<ConfigIssue> validateConfigs(Info info, Context context) {
     return Collections.emptyList();
-  }
-
-  @Override
-  public void init(Info info, Context context) throws StageException {
   }
 
   @Override

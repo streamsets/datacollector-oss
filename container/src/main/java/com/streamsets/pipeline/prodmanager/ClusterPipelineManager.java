@@ -61,6 +61,7 @@ import org.slf4j.LoggerFactory;
 
 import javax.validation.constraints.NotNull;
 import java.io.File;
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -514,12 +515,17 @@ public class
         ClusterSource.class.getName()));
     }
 
-    int parallelism = clusterSource.getParallelism();
-    String clusterSourceName  = clusterSource.getName();
-    if(parallelism < 1) {
-      throw new PipelineRuntimeException(ContainerError.CONTAINER_0112);
+    try {
+      int parallelism = clusterSource.getParallelism();
+      String clusterSourceName  = clusterSource.getName();
+      if(parallelism < 1) {
+        throw new PipelineRuntimeException(ContainerError.CONTAINER_0112);
+      }
+      return new ClusterSourceInfo(clusterSourceName, parallelism, clusterSource.isInBatchMode(),
+                                   clusterSource.getConfigsToShip());
+    } catch (IOException ex) {
+      throw new PipelineRuntimeException(ContainerError.CONTAINER_0117, ex.getMessage(), ex);
     }
-    return new ClusterSourceInfo(clusterSourceName, parallelism, clusterSource.isInBatchMode(), clusterSource.getConfigsToShip());
   }
 
   static class ClusterSourceInfo {

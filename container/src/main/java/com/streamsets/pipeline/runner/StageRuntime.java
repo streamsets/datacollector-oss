@@ -112,7 +112,7 @@ public class StageRuntime {
   }
 
   @SuppressWarnings("unchecked")
-  public List<Issue> validateConfigs() throws StageException {
+  public List<Issue> validateConfigs() {
     //TODO: for errorstage we must set the errorstage flag in issues, use IssueCreator.getErrorStage()
     Preconditions.checkState(context != null, "context has not been set");
     ClassLoader cl = Thread.currentThread().getContextClassLoader();
@@ -123,18 +123,6 @@ public class StageRuntime {
         issues = Collections.emptyList();
       }
       return issues;
-    } finally {
-      Thread.currentThread().setContextClassLoader(cl);
-    }
-  }
-
-  @SuppressWarnings("unchecked")
-  public void init() throws StageException {
-    Preconditions.checkState(context != null, "context has not been set");
-    ClassLoader cl = Thread.currentThread().getContextClassLoader();
-    try {
-      Thread.currentThread().setContextClassLoader(getDefinition().getStageClassLoader());
-      stage.init(info, context);
     } finally {
       Thread.currentThread().setContextClassLoader(cl);
     }

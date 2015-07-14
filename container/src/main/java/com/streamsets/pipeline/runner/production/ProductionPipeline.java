@@ -15,9 +15,12 @@ import com.streamsets.pipeline.main.RuntimeInfo;
 import com.streamsets.pipeline.metrics.MetricsConfigurator;
 import com.streamsets.pipeline.runner.Pipeline;
 import com.streamsets.pipeline.runner.PipelineRuntimeException;
+import com.streamsets.pipeline.util.ContainerError;
+import com.streamsets.pipeline.validation.Issue;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -55,13 +58,17 @@ public class ProductionPipeline {
     MetricsConfigurator.registerJmxMetrics(runtimeInfo.getMetrics());
     try {
       try {
-        pipeline.init();
+        List<Issue> issues = pipeline.init();
+        if (!issues.isEmpty()) {
+          throw new Exception(issues.toString());
+        }
       } catch (Exception e) {
+        pipeline.destroy();
         if (!wasStopped()) {
           LOG.error("Pipeline failed to start: {} ", e.getMessage(), e);
-          stateChanged(PipelineStatus.START_ERROR, null, null);
+          stateChanged(PipelineStatus.START_ERROR, e.getMessage(), null);
         }
-        throw e;
+        throw new PipelineRuntimeException(ContainerError.CONTAINER_0702, e.getMessage());
       }
       boolean finishing = false;
       boolean running_error = true;

@@ -325,11 +325,6 @@ public class TestProductionPipeline {
     }
 
     @Override
-    public void init(Info info, Context context) throws StageException {
-
-    }
-
-    @Override
     public void destroy() {
 
     }

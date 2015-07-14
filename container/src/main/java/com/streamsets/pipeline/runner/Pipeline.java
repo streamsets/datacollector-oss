@@ -19,6 +19,9 @@ import com.streamsets.pipeline.runner.production.BadRecordsHandler;
 import com.streamsets.pipeline.stagelibrary.StageLibraryTask;
 import com.streamsets.pipeline.util.ContainerError;
 import com.streamsets.pipeline.validation.Issue;
+import com.streamsets.pipeline.validation.IssueCreator;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -27,6 +30,8 @@ import java.util.List;
 import java.util.Set;
 
 public class Pipeline {
+  private static final Logger LOG = LoggerFactory.getLogger(Pipeline.class);
+
   private final PipelineBean pipelineBean;
   private final String name;
   private final String rev;
@@ -67,44 +72,50 @@ public class Pipeline {
   }
 
   public List<Issue> validateConfigs() throws StageException {
-    List<Issue> configIssues = new ArrayList<>();
-    configIssues.addAll(badRecordsHandler.validate());
-    for (Pipe pipe : pipes) {
-      configIssues.addAll(pipe.validateConfigs());
+    try {
+      return init();
+    } finally {
+      destroy();
     }
-    return configIssues;
   }
 
   @SuppressWarnings("unchecked")
-  public void init() throws StageException {
+  public List<Issue>  init() throws StageException {
     PipeContext pipeContext = new PipeContext();
-    int idx = 0;
+    List<Issue> issues = new ArrayList<>();
     try {
-      for (; idx < pipes.length; idx++) {
-        pipes[idx].init(pipeContext);
-      }
-      badRecordsHandler.init();
-    } catch (StageException|RuntimeException ex) {
-      destroy(idx);
-      throw ex;
+      issues.addAll(badRecordsHandler.init(pipeContext));
+    } catch (Exception ex) {
+      LOG.warn(ContainerError.CONTAINER_0700.getMessage(), ex.getMessage(), ex);
+      issues.add(IssueCreator.getStage(badRecordsHandler.getInstanceName()).create(ContainerError.CONTAINER_0700,
+                                                                                   ex.getMessage()));
     }
-  }
-
-  private void destroy(int idx) {
-    if (idx == pipes.length) {
-      badRecordsHandler.destroy();
-    }
-    for (idx--; idx >=0; idx--) {
+    for (Pipe pipe : pipes) {
       try {
-        pipes[idx].destroy();
-      } catch (RuntimeException ex) {
-        //LOG WARN
+        issues.addAll(pipe.init(pipeContext));
+      } catch (Exception ex) {
+        String instanceName = pipe.getStage().getConfiguration().getInstanceName();
+        LOG.warn(ContainerError.CONTAINER_0701.getMessage(), instanceName, ex.getMessage(), ex);
+        issues.add(IssueCreator.getStage(instanceName).create(ContainerError.CONTAINER_0701, instanceName,
+                                                              ex.getMessage()));
       }
     }
+    return issues;
   }
 
   public void destroy() {
-    destroy(pipes.length);
+    try {
+      badRecordsHandler.destroy();
+    } catch (Exception ex) {
+      //TODO LOG
+    }
+    for (Pipe pipe : pipes) {
+      try {
+        pipe.destroy();
+      } catch (Exception ex) {
+        //TODO LOG
+      }
+    }
     if (scheduledExecutorService != null) {
       scheduledExecutorService.shutdown();
     }

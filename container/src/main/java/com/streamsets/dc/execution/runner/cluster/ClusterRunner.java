@@ -456,12 +456,17 @@ public class ClusterRunner implements Runner {
         ClusterSource.class.getName()));
     }
 
-    int parallelism = clusterSource.getParallelism();
-    String clusterSourceName  = clusterSource.getName();
-    if(parallelism < 1) {
-      throw new PipelineRuntimeException(ContainerError.CONTAINER_0112);
+    try {
+      int parallelism = clusterSource.getParallelism();
+      String clusterSourceName  = clusterSource.getName();
+      if(parallelism < 1) {
+        throw new PipelineRuntimeException(ContainerError.CONTAINER_0112);
+      }
+      return new ClusterSourceInfo(clusterSourceName, parallelism, clusterSource.isInBatchMode(),
+                                   clusterSource.getConfigsToShip());
+    } catch (IOException ex) {
+      throw new PipelineRuntimeException(ContainerError.CONTAINER_0117, ex.getMessage(), ex);
     }
-    return new ClusterSourceInfo(clusterSourceName, parallelism, clusterSource.isInBatchMode(), clusterSource.getConfigsToShip());
   }
 
   static class ClusterSourceInfo {

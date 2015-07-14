@@ -11,7 +11,6 @@ import com.streamsets.pipeline.runner.PipelineRunner;
 import com.streamsets.pipeline.stagelibrary.StageLibraryTask;
 import com.streamsets.pipeline.util.ContainerError;
 import com.streamsets.pipeline.util.ValidationUtil;
-import com.streamsets.pipeline.validation.Issue;
 import com.streamsets.pipeline.validation.Issues;
 import com.streamsets.pipeline.validation.PipelineConfigurationValidator;
 import com.streamsets.pipeline.config.StageConfiguration;
@@ -110,11 +109,6 @@ public class PreviewPipelineBuilder {
      Pipeline.Builder builder = new Pipeline.Builder(stageLib, name + ":preview", name, rev, pipelineConf);
      Pipeline pipeline = builder.build(runner);
      if (pipeline != null) {
-       List<Issue> configIssues = pipeline.validateConfigs();
-       if (!configIssues.isEmpty()) {
-         Issues issues = new Issues(configIssues);
-         throw new PipelineRuntimeException(issues);
-       }
        return new PreviewPipeline(pipeline, validator.getIssues());
      } else {
        Issues issues = new Issues(builder.getIssues());

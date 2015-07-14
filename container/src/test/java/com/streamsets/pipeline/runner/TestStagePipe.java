@@ -51,10 +51,6 @@ public class TestStagePipe {
       }
 
       @Override
-      public void init(Info info, Source.Context context) throws StageException {
-      }
-
-      @Override
       public void destroy() {
 
       }
@@ -83,7 +79,7 @@ public class TestStagePipe {
     Mockito.when(pipeBatch.getErrorSink()).thenReturn(new ErrorSink());
 
     Mockito.when(pipeBatch.startStage(Mockito.eq(pipe))).thenReturn(batchMaker);
-    pipe.init(new PipeContext());
+    Assert.assertTrue(pipe.init(new PipeContext()).isEmpty());
     pipe.process(pipeBatch);
     pipe.destroy();
     Mockito.verify(pipeBatch, Mockito.times(1)).startStage(Mockito.eq(pipe));
@@ -104,7 +100,7 @@ public class TestStagePipe {
     MockStages.setProcessorCapture(new Processor() {
 
       @Override
-      public List<ConfigIssue> validateConfigs(Info info, Processor.Context context) {
+      public List<ConfigIssue> validateConfigs(Info info, Context context) {
         return Collections.emptyList();
       }
 
@@ -113,10 +109,6 @@ public class TestStagePipe {
         process = true;
         Assert.assertEquals("offset2", batch.getSourceOffset());
         Assert.assertEquals(ImmutableList.of("p"), batchMaker.getLanes());
-      }
-
-      @Override
-      public void init(Info info, Context context) throws StageException {
       }
 
       @Override
@@ -142,7 +134,7 @@ public class TestStagePipe {
     Mockito.when(pipeBatch.getBatch(Mockito.eq(pipe))).thenReturn(batch);
     Mockito.when(pipeBatch.getErrorSink()).thenReturn(new ErrorSink());
 
-    pipe.init(new PipeContext());
+    Assert.assertTrue(pipe.init(new PipeContext()).isEmpty());
     pipe.process(pipeBatch);
     pipe.destroy();
 
@@ -163,7 +155,7 @@ public class TestStagePipe {
     MockStages.setTargetCapture(new Target() {
 
       @Override
-      public List<ConfigIssue> validateConfigs(Info info, Target.Context context) {
+      public List<ConfigIssue> validateConfigs(Info info, Context context) {
         return Collections.emptyList();
       }
 
@@ -171,10 +163,6 @@ public class TestStagePipe {
       public void write(Batch batch) throws StageException {
         write = true;
         Assert.assertEquals("offset2", batch.getSourceOffset());
-      }
-
-      @Override
-      public void init(Info info, Context context) throws StageException {
       }
 
       @Override
@@ -201,7 +189,7 @@ public class TestStagePipe {
     Mockito.when(pipeBatch.getBatch(Mockito.eq(pipe))).thenReturn(batch);
     Mockito.when(pipeBatch.getErrorSink()).thenReturn(new ErrorSink());
 
-    pipe.init(new PipeContext());
+    Assert.assertTrue(pipe.init(new PipeContext()).isEmpty());
     pipe.process(pipeBatch);
     pipe.destroy();
 

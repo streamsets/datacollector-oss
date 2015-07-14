@@ -38,7 +38,7 @@ public class TestBaseStage {
   @SuppressWarnings("unchecked")
   public void testBaseStage() throws Exception {
     Stage stage = new TBaseStage();
-    stage.init(info, context);
+    stage.validateConfigs(info, context);
     Assert.assertTrue(inited);
     stage.destroy();
   }

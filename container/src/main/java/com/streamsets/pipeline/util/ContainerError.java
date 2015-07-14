@@ -46,9 +46,10 @@ public enum ContainerError implements ErrorCode {
   CONTAINER_0111("Cannot delete errors for pipeline '{}' when the pipeline is running"),
   CONTAINER_0112("Origin Parallelism cannot be less than 1"),
   CONTAINER_0113("Cannot delete history for pipeline '{}' when the pipeline is running"),
-  CONTAINER_0114("Error while retrieving state from cache: '{}'"),
-  CONTAINER_0115("Failed to fetch history for pipeline: '{}', '{}' due to: '{}'"),
+  CONTAINER_0114("Error while retrieving state from cache: {}"),
+  CONTAINER_0115("Failed to fetch history for pipeline: '{}', '{}' due to: {}"),
   CONTAINER_0116("Cannot load pipeline '{}:{}' configuration: {}"),
+  CONTAINER_0117("Could not determine parallelism: {}"),
 
   // PipelineRunners
   CONTAINER_0150("Pipeline configuration error: {}"),
@@ -106,6 +107,10 @@ public enum ContainerError implements ErrorCode {
   CONTAINER_0603("Error persisting snapshot '{}' for pipeline with name '{}' and revision '{}' : '{}'"),
   CONTAINER_0604("Error retrieving snapshot info '{}' for pipeline with name '{}' and revision '{}' : '{}'"),
   CONTAINER_0605("Snapshot must be created before saving"),
+
+  CONTAINER_0700("Error stage initialization error: {}"),
+  CONTAINER_0701("Stage '{}' initialization error: {}"),
+  CONTAINER_0702("Pipeline initialization error: {}"),
   ;
 
   private final String msg;

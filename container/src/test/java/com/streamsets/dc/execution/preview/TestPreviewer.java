@@ -204,8 +204,8 @@ public abstract class TestPreviewer {
     //Source validateConfigs method is overridden to create a config issue with error code CONTAINER_0000
     MockStages.setSourceCapture(new BaseSource() {
       @Override
-      public List<ConfigIssue> validateConfigs(Info info, Source.Context context) throws StageException {
-        throw new StageException(MockErrorCode.MOCK_0000);
+      public List<ConfigIssue> validateConfigs(Info info, Source.Context context) {
+        return ImmutableList.of(context.createConfigIssue(null, null, MockErrorCode.MOCK_0000));
       }
 
       @Override
@@ -229,19 +229,10 @@ public abstract class TestPreviewer {
     Mockito.when(pipelineStore.load(Mockito.anyString(),
       Mockito.anyString())).thenReturn(MockStages.createPipelineConfigurationSourceProcessorTarget());
     Previewer previewer  = createPreviewer();
-    try {
-      previewer.validateConfigs();
-      previewer.waitForCompletion(5000);
-      Assert.fail("Stage Exception expected");
-    } catch (PipelineException pe) {
-      Assert.assertTrue(pe.getCause() instanceof StageException);
-      StageException e = (StageException) pe.getCause();
-      Assert.assertEquals(MockErrorCode.MOCK_0000.getCode(), e.getErrorCode().getCode());
-      Assert.assertEquals(MockErrorCode.MOCK_0000.getMessage(), e.getErrorCode().getMessage());
-      //If there is an exception while validating then the state remains same
-      Assert.assertEquals(PreviewStatus.VALIDATING.name(), previewer.getStatus().name());
-      Assert.assertNull(previewer.getOutput());
-    }
+    previewer.validateConfigs();
+    previewer.waitForCompletion(5000);
+    Assert.assertEquals(PreviewStatus.INVALID, previewer.getStatus());
+    Assert.assertTrue(previewer.getOutput().getIssues().getIssueCount() > 0);
   }
 
   @Test
@@ -450,8 +441,8 @@ public abstract class TestPreviewer {
     //Source validateConfigs method is overridden to create a config issue with error code CONTAINER_0000
     MockStages.setSourceCapture(new BaseSource() {
       @Override
-      public List<ConfigIssue> validateConfigs(Info info, Source.Context context) throws StageException {
-        throw new StageException(MockErrorCode.MOCK_0000);
+      public List<ConfigIssue> validateConfigs(Info info, Source.Context context) {
+        throw new RuntimeException();
       }
 
       @Override
@@ -475,18 +466,10 @@ public abstract class TestPreviewer {
     Mockito.when(pipelineStore.load(Mockito.anyString(),
       Mockito.anyString())).thenReturn(MockStages.createPipelineConfigurationSourceProcessorTarget());
     Previewer previewer  = createPreviewer();
-    try {
-      previewer.start(1, 10, true, null, new ArrayList<StageOutput>());
-      previewer.waitForCompletion(5000);
-      Assert.fail("Stage Exception expected");
-    } catch (PipelineException pe) {
-      Assert.assertTrue(pe.getCause() instanceof StageException);
-      StageException e = (StageException) pe.getCause();
-      Assert.assertEquals(MockErrorCode.MOCK_0000.getCode(), e.getErrorCode().getCode());
-      Assert.assertEquals(MockErrorCode.MOCK_0000.getMessage(), e.getErrorCode().getMessage());
-      Assert.assertEquals(PreviewStatus.RUN_ERROR.name(), previewer.getStatus().name());
-      Assert.assertNull(previewer.getOutput());
-    }
+    previewer.start(1, 10, true, null, new ArrayList<StageOutput>());
+    previewer.waitForCompletion(5000);
+    Assert.assertEquals(PreviewStatus.INVALID, previewer.getStatus());
+    Assert.assertTrue(previewer.getOutput().getIssues().getIssueCount() > 0);
   }
 
   @Test
@@ -495,7 +478,7 @@ public abstract class TestPreviewer {
     //Source validateConfigs method is overridden to create a config issue with error code CONTAINER_0000
     MockStages.setSourceCapture(new BaseSource() {
       @Override
-      public List<ConfigIssue> validateConfigs(Info info, Source.Context context) throws StageException {
+      public List<ConfigIssue> validateConfigs(Info info, Source.Context context) {
         return Arrays.asList(context.createConfigIssue(null, null, ContainerError.CONTAINER_0000));
       }
 

@@ -8,7 +8,6 @@ package com.streamsets.pipeline.sdk;
 import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.OnRecordError;
 import com.streamsets.pipeline.api.Stage;
-import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.config.StageType;
 import org.junit.Assert;
 import org.junit.Test;
@@ -64,13 +63,8 @@ public class TestStageRunner {
     public boolean destroyed;
 
     @Override
-    public List<ConfigIssue> validateConfigs(Info info, Stage.Context context) {
+    public List<ConfigIssue> validateConfigs(Info info, Context context) {
       return Collections.emptyList();
-    }
-
-    @Override
-    public void init(Info info, Context context) throws StageException {
-      initialized = true;
     }
 
     @Override

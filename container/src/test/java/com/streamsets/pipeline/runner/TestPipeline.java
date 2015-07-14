@@ -28,7 +28,6 @@ import org.junit.Test;
 import org.mockito.Mockito;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 
@@ -215,10 +214,12 @@ public class TestPipeline {
     Mockito.verifyZeroInteractions(processor);
     Mockito.verifyZeroInteractions(target);
     pipeline.init();
-    Mockito.verify(source, Mockito.times(1)).init(Mockito.any(Stage.Info.class), Mockito.any(Source.Context.class));
-    Mockito.verify(processor, Mockito.times(1)).init(Mockito.any(Stage.Info.class),
-                                                     Mockito.any(Processor.Context.class));
-    Mockito.verify(target, Mockito.times(1)).init(Mockito.any(Stage.Info.class), Mockito.any(Target.Context.class));
+    Mockito.verify(source, Mockito.times(1)).validateConfigs(Mockito.any(Stage.Info.class),
+                                                             Mockito.any(Source.Context.class));
+    Mockito.verify(processor, Mockito.times(1)).validateConfigs(Mockito.any(Stage.Info.class),
+                                                                Mockito.any(Processor.Context.class));
+    Mockito.verify(target, Mockito.times(1)).validateConfigs(Mockito.any(Stage.Info.class),
+                                                             Mockito.any(Target.Context.class));
     Mockito.verifyNoMoreInteractions(source);
     Mockito.verifyNoMoreInteractions(processor);
     Mockito.verifyNoMoreInteractions(target);
@@ -275,8 +276,8 @@ public class TestPipeline {
 
     // test checked exception on init
 
-    Mockito.doThrow(new StageException(id)).when(processor).init(Mockito.any(Stage.Info.class),
-                                                                 Mockito.any(Processor.Context.class));
+    Mockito.doThrow(new RuntimeException()).when(processor).validateConfigs(Mockito.any(Stage.Info.class),
+                                                                            Mockito.any(Processor.Context.class));
     Target target = Mockito.mock(Target.class);
     MockStages.setSourceCapture(source);
     MockStages.setProcessorCapture(processor);
@@ -284,41 +285,40 @@ public class TestPipeline {
 
     Pipeline pipeline = builder.build(runner);
 
-    try {
-      pipeline.init();
-      Assert.fail();
-    } catch (StageException ex) {
-      Mockito.verify(source, Mockito.times(1)).init(Mockito.any(Stage.Info.class), Mockito.any(Source.Context.class));
-      Mockito.verify(processor, Mockito.times(1)).init(Mockito.any(Stage.Info.class),
-                                                       Mockito.any(Processor.Context.class));
-      Mockito.verify(target, Mockito.times(0)).init(Mockito.any(Stage.Info.class), Mockito.any(Target.Context.class));
-      Mockito.verify(source, Mockito.times(1)).destroy();
-      Mockito.verifyNoMoreInteractions(processor);
-      Mockito.verifyNoMoreInteractions(target);
-    }
+    Assert.assertFalse(pipeline.init().isEmpty());
+    Mockito.verify(source, Mockito.times(1)).validateConfigs(Mockito.any(Stage.Info.class),
+                                                             Mockito.any(Source.Context.class));
+    Mockito.verify(processor, Mockito.times(1)).validateConfigs(Mockito.any(Stage.Info.class),
+                                                                Mockito.any(Processor.Context.class));
+    Mockito.verify(target, Mockito.times(1)).validateConfigs(Mockito.any(Stage.Info.class),
+                                                             Mockito.any(Target.Context.class));
+    pipeline.destroy();
+    Mockito.verify(source, Mockito.times(1)).destroy();
+    Mockito.verify(processor, Mockito.times(1)).destroy();
+    Mockito.verify(target, Mockito.times(1)).destroy();
 
     // test runtime exception on init
 
     Mockito.reset(source);
     Mockito.reset(processor);
     Mockito.reset(target);
-    Mockito.doThrow(new RuntimeException()).when(processor).init(Mockito.any(Stage.Info.class),
-                                                                 Mockito.any(Processor.Context.class));
+    Mockito.doThrow(new RuntimeException()).when(processor).validateConfigs(Mockito.any(Stage.Info.class),
+                                                                            Mockito.any(Processor.Context.class));
 
     pipeline = builder.build(runner);
 
-    try {
-      pipeline.init();
-      Assert.fail();
-    } catch (RuntimeException ex) {
-      Mockito.verify(source, Mockito.times(1)).init(Mockito.any(Stage.Info.class), Mockito.any(Source.Context.class));
-      Mockito.verify(processor, Mockito.times(1)).init(Mockito.any(Stage.Info.class),
-                                                       Mockito.any(Processor.Context.class));
-      Mockito.verify(target, Mockito.times(0)).init(Mockito.any(Stage.Info.class), Mockito.any(Target.Context.class));
-      Mockito.verify(source, Mockito.times(1)).destroy();
-      Mockito.verifyNoMoreInteractions(processor);
-      Mockito.verifyNoMoreInteractions(target);
-    }
+    Assert.assertFalse(pipeline.init().isEmpty());
+    Mockito.verify(source, Mockito.times(1)).validateConfigs(Mockito.any(Stage.Info.class),
+                                                             Mockito.any(Source.Context.class));
+    Mockito.verify(processor, Mockito.times(1)).validateConfigs(Mockito.any(Stage.Info.class),
+                                                                Mockito.any(Processor.Context.class));
+    Mockito.verify(target, Mockito.times(1)).validateConfigs(Mockito.any(Stage.Info.class),
+                                                             Mockito.any(Target.Context.class));
+
+    pipeline.destroy();
+    Mockito.verify(source, Mockito.times(1)).destroy();
+    Mockito.verify(processor, Mockito.times(1)).destroy();
+    Mockito.verify(target, Mockito.times(1)).destroy();
 
     // test exception on destroy
 
