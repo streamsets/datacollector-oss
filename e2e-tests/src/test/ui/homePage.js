@@ -20,14 +20,17 @@ describe('StreamSets Data Collector App', function() {
   describe('home page', function() {
 
     beforeEach(function() {
-      browser.get('/');
+      //browser.get('/');
     });
 
     it('should render home view when user navigates to /', function() {
+      browser.get('/');
       expect(browser.getTitle()).toEqual('StreamSets Data Collector');
     });
 
     it('should show create pipeline button when pipeline list is empty', function() {
+      browser.get('/');
+
       element.all(by.repeater('pipeline in pipelines')).then(function(pipelines) {
         expect(pipelines.length).toEqual(0);
       });
@@ -48,6 +51,7 @@ describe('StreamSets Data Collector App', function() {
     });
 
     it('should be able to import pipeline', function() {
+      browser.get('/');
       browser.sleep(1000);
       element.all(by.css('.import-pipeline-btn')).then(function(elements) {
         var importBtnElement = elements[elements.length - 1];
@@ -78,6 +82,7 @@ describe('StreamSets Data Collector App', function() {
 
 
     it('should be able to create new pipeline', function() {
+      browser.get('/collector/pipeline/UI%20End%20to%20End%20Test%20Pipeline');
       browser.sleep(1000);
       element(by.css('[ng-click="toggleLibraryPanel()"]')).click();
 
@@ -105,6 +110,7 @@ describe('StreamSets Data Collector App', function() {
 
 
     it('should be able to duplicate pipeline', function() {
+      browser.get('/collector/pipeline/Sample Pipeline');
       browser.sleep(500);
       //Toggle Library Pane
       element(by.css('[ng-click="toggleLibraryPanel()"]')).click();
@@ -134,6 +140,7 @@ describe('StreamSets Data Collector App', function() {
 
 
     it('should be able to delete pipeline', function() {
+      browser.get('/collector/pipeline/Sample Pipeline');
       browser.sleep(1000);
       //Toggle Library Pane
       element(by.css('[ng-click="toggleLibraryPanel()"]')).click();
@@ -173,6 +180,7 @@ describe('StreamSets Data Collector App', function() {
     });
 
     it('should be able to toggle stage library and click on stage to add', function() {
+      browser.get('/collector/pipeline/Sample Pipeline');
       browser.sleep(1000);
       //Select Sample Pipeline
 
