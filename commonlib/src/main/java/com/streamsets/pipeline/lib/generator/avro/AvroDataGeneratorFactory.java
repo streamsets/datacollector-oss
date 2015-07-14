@@ -50,7 +50,7 @@ public class AvroDataGeneratorFactory extends DataGeneratorFactory {
   }
 
   @Override
-  public DataGenerator getGenerator(OutputStream os) throws IOException, DataGeneratorException {
+  public DataGenerator getGenerator(OutputStream os) throws IOException {
     DataGenerator dataGenerator;
     if(includeSchema) {
       dataGenerator = new AvroDataOutputStreamGenerator(os, schema);

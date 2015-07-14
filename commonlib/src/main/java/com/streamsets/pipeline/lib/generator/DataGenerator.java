@@ -7,9 +7,10 @@ package com.streamsets.pipeline.lib.generator;
 
 import com.streamsets.pipeline.api.Record;
 
+import java.io.Closeable;
 import java.io.IOException;
 
-public interface DataGenerator {
+public interface DataGenerator extends Closeable {
 
   public void write(Record record)  throws IOException, DataGeneratorException;
 

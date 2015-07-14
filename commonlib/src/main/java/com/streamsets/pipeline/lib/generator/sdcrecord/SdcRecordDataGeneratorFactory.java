@@ -32,7 +32,7 @@ public class SdcRecordDataGeneratorFactory extends DataGeneratorFactory {
   }
 
   @Override
-  public DataGenerator getGenerator(OutputStream os) throws IOException, DataGeneratorException {
+  public DataGenerator getGenerator(OutputStream os) throws IOException {
     return new SdcRecordDataGenerator(context.createRecordWriter(os));
   }
 

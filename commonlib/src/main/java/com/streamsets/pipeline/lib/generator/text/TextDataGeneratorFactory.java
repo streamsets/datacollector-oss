@@ -47,7 +47,7 @@ public class TextDataGeneratorFactory extends DataGeneratorFactory {
   }
 
   @Override
-  public DataGenerator getGenerator(OutputStream os) throws IOException, DataGeneratorException {
+  public DataGenerator getGenerator(OutputStream os) throws IOException {
     return new TextCharDataGenerator(createWriter(os), fieldPath, emptyLineIfNullDefault);
   }
 

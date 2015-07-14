@@ -43,7 +43,7 @@ public class TestActiveRecordWriters {
     }
 
     @Override
-    public DataGenerator getGenerator(OutputStream os) throws IOException, DataGeneratorException {
+    public DataGenerator getGenerator(OutputStream os) throws IOException {
       return new DataGenerator() {
         @Override
         public void write(Record record) throws IOException, DataGeneratorException {

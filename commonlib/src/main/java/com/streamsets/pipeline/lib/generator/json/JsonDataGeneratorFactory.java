@@ -32,7 +32,7 @@ public class JsonDataGeneratorFactory extends DataGeneratorFactory {
   }
 
   @Override
-  public DataGenerator getGenerator(OutputStream os) throws IOException, DataGeneratorException {
+  public DataGenerator getGenerator(OutputStream os) throws IOException {
     return new JsonCharDataGenerator(createWriter(os), jsonMode);
   }
 
