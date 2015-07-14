@@ -828,7 +828,7 @@ angular
       $scope.pipelineRules = pipelineRules;
 
       //Initialize the pipeline config
-      if(!$scope.pipelineConfig.uiInfo) {
+      if(!$scope.pipelineConfig.uiInfo || _.isEmpty($scope.pipelineConfig.uiInfo)) {
         $scope.pipelineConfig.uiInfo = {
           previewConfig : {
             previewSource: pipelineConstant.CONFIGURED_SOURCE,
