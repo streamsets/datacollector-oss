@@ -39,7 +39,7 @@ public class SplitterProcessor extends SingleLaneRecordProcessor {
   private String[] fieldPaths;
 
   @Override
-  protected List<ConfigIssue> validateConfigs() throws StageException {
+  protected List<ConfigIssue> validateConfigs() {
     List<ConfigIssue> issues = super.validateConfigs();
     if (fieldPathsForSplits.size() < 2) {
       issues.add(getContext().createConfigIssue(Groups.FIELD_SPLITTER.name(), "fieldPathsForSplits",

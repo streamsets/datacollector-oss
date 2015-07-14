@@ -71,7 +71,7 @@ public class LogParserProcessor extends SingleLaneRecordProcessor {
   }
 
   @Override
-  protected List<ConfigIssue> validateConfigs() throws StageException {
+  protected List<ConfigIssue> validateConfigs() {
     List<ConfigIssue> issues = super.validateConfigs();
 
     logDataFormatValidator = new LogDataFormatValidator(logMode, logMaxObjectLen,

@@ -75,7 +75,7 @@ public abstract class AbstractScriptingProcessor extends SingleLaneProcessor {
   }
 
   @Override
-  protected List<ConfigIssue> validateConfigs() throws StageException {
+  protected List<ConfigIssue> validateConfigs() {
     List<ConfigIssue> issues = super.validateConfigs();
     try {
       engine = new ScriptEngineManager(getClass().getClassLoader()).getEngineByName(scriptingEngineName);

@@ -86,7 +86,7 @@ public class KinesisSource extends BaseSource implements OffsetCommitter {
   }
 
   @Override
-  protected List<ConfigIssue> validateConfigs() throws StageException {
+  protected List<ConfigIssue> validateConfigs() {
     List<ConfigIssue> issues = super.validateConfigs();
 
     checkStreamExists(issues);

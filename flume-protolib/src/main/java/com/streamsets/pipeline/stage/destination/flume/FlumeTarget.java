@@ -122,7 +122,7 @@ public class FlumeTarget extends BaseTarget {
   private Map<String, String> headers;
 
   @Override
-  protected List<ConfigIssue> validateConfigs() throws StageException {
+  protected List<ConfigIssue> validateConfigs() {
     List<ConfigIssue> issues = super.validateConfigs();
     FlumeUtil.validateHostConfig(issues, flumeHostsConfig, Groups.FLUME.name(), "flumeHostsConfig", getContext());
     if(batchSize < 1) {

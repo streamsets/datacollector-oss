@@ -6,7 +6,6 @@
 package com.streamsets.pipeline.configurablestage;
 
 import com.streamsets.pipeline.api.Stage;
-import com.streamsets.pipeline.api.StageException;
 
 import java.util.List;
 
@@ -25,11 +24,6 @@ public abstract class DStage<C extends Stage.Context> implements Stage<C> {
       stage = createStage();
     }
     return stage.validateConfigs(info, context);
-  }
-
-  @Override
-  public final void init(Info info, C context) throws StageException {
-    stage.init(info, context);
   }
 
   @Override

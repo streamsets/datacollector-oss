@@ -63,7 +63,7 @@ public class UDPSource extends BaseSource {
   }
 
   @Override
-  protected List<ConfigIssue> validateConfigs()  throws StageException {
+  protected List<ConfigIssue> validateConfigs() {
     List<ConfigIssue> issues = new ArrayList<>();
     this.recordCount = 0;
     this.incomingQueue = new ArrayBlockingQueue<>(this.maxBatchSize * 10);

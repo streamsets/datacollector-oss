@@ -99,7 +99,7 @@ public class JdbcSource extends BaseSource {
   }
 
   @Override
-  protected List<ConfigIssue> validateConfigs() throws StageException {
+  protected List<ConfigIssue> validateConfigs() {
     List<ConfigIssue> issues = new ArrayList<>();
     Source.Context context = getContext();
 

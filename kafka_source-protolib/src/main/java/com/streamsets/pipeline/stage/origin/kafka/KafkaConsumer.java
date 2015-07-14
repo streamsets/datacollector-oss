@@ -71,12 +71,16 @@ public class KafkaConsumer {
     this.context = context;
   }
 
-  public void validate(List<Stage.ConfigIssue> issues, Stage.Context context) throws StageException {
+  public void validate(List<Stage.ConfigIssue> issues, Stage.Context context) {
     Properties props = new Properties();
     configureKafkaProperties(props);
     LOG.debug("Creating Kafka Consumer with properties {}" , props.toString());
     consumerConfig = new ConsumerConfig(props);
-    createConsumer(issues, context);
+    try {
+      createConsumer(issues, context);
+    } catch (StageException ex) {
+      issues.add(context.createConfigIssue(null, null, Errors.KAFKA_10, ex.getMessage()));
+    }
   }
 
   public void init() throws StageException {

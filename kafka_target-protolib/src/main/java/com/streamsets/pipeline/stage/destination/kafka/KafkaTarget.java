@@ -36,6 +36,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -123,7 +124,7 @@ public class KafkaTarget extends BaseTarget {
   }
 
   @Override
-  protected List<ConfigIssue> validateConfigs() throws StageException {
+  protected List<ConfigIssue> validateConfigs() {
     List<ConfigIssue> issues = super.validateConfigs();
 
     this.topicPartitionMap = new HashMap<>();
@@ -425,27 +426,28 @@ public class KafkaTarget extends BaseTarget {
         if (result == null || result.isEmpty()) {
           throw new StageException(Errors.KAFKA_62, topicExpression, record.getHeader().getSourceId());
         }
-        if(!allowedTopics.contains(result) && !allowAllTopics) {
+        if (!allowedTopics.contains(result) && !allowAllTopics) {
           throw new StageException(Errors.KAFKA_65, result, record.getHeader().getSourceId());
         }
-        if(!topicPartitionMap.containsKey(result)) {
+        if (!topicPartitionMap.containsKey(result)) {
           //allowAllTopics must be true to get here
           //Encountered topic name for the very first time.
           //get topic metadata and cache it
-          if(invalidTopicMap.containsKey(result)) {
+          if (invalidTopicMap.containsKey(result)) {
             //Invalid topic previously seen
             throw invalidTopicMap.get(result);
           }
           //Never seen this topic name before
-          TopicMetadata topicMetadata = KafkaUtil.getTopicMetadata(kafkaBrokers, result, messageSendMaxRetries, retryBackoffMs);
-          if(topicMetadata == null) {
+          TopicMetadata topicMetadata =
+              KafkaUtil.getTopicMetadata(kafkaBrokers, result, messageSendMaxRetries, retryBackoffMs);
+          if (topicMetadata == null) {
             //Could not get topic metadata from any of the supplied brokers
             StageException s = new StageException(Errors.KAFKA_03, result, metadataBrokerList);
             //cache bad topic name and the exception
             invalidTopicMap.put(result, s);
             throw s;
           }
-          if(topicMetadata.errorCode()== ErrorMapping.UnknownTopicOrPartitionCode()) {
+          if (topicMetadata.errorCode() == ErrorMapping.UnknownTopicOrPartitionCode()) {
             //Topic does not exist
             StageException s = new StageException(Errors.KAFKA_04, result);
             invalidTopicMap.put(result, s);
@@ -453,9 +455,11 @@ public class KafkaTarget extends BaseTarget {
           }
           topicPartitionMap.put(result, topicMetadata.partitionsMetadata().size());
         }
-        if(topicPartitionMap.keySet().size() % TOPIC_WARN_SIZE == 0) {
+        if (topicPartitionMap.keySet().size() % TOPIC_WARN_SIZE == 0) {
           LOG.warn("Encountered {} different topics while running the pipeline", topicPartitionMap.keySet().size());
         }
+      } catch (IOException e) {
+        throw new StageException(Errors.KAFKA_52, result, kafkaBrokers, e.getMessage());
       } catch (ELEvalException e) {
         throw new StageException(Errors.KAFKA_63, topicExpression, record.getHeader().getSourceId(), e.getMessage());
       }
@@ -520,7 +524,7 @@ public class KafkaTarget extends BaseTarget {
       TopicMetadata topicMetadata;
       try {
         topicMetadata = KafkaUtil.getTopicMetadata(kafkaBrokers, topic, 1, 0);
-      } catch (KafkaConnectionException e) {
+      } catch (IOException e) {
         //Could not connect to kafka with the given metadata broker list
         issues.add(getContext().createConfigIssue(Groups.KAFKA.name(), "metadataBrokerList", Errors.KAFKA_67,
           metadataBrokerList));
@@ -542,7 +546,7 @@ public class KafkaTarget extends BaseTarget {
     }
   }
 
-  private void validateTopicWhiteList(List<ConfigIssue> issues, List<KafkaBroker> kafkaBrokers) throws StageException {
+  private void validateTopicWhiteList(List<ConfigIssue> issues, List<KafkaBroker> kafkaBrokers) {
     //if runtimeTopicResolution then topic white list cannot be empty
     if(topicWhiteList == null || topicWhiteList.isEmpty()) {
       issues.add(getContext().createConfigIssue(Groups.KAFKA.name(), "topicWhiteList", Errors.KAFKA_64));

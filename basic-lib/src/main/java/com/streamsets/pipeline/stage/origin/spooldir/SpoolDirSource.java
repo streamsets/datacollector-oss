@@ -151,7 +151,7 @@ public class SpoolDirSource extends BaseSource {
   private LogDataFormatValidator logDataFormatValidator;
 
   @Override
-  protected List<ConfigIssue> validateConfigs() throws StageException {
+  protected List<ConfigIssue> validateConfigs() {
     List<ConfigIssue> issues = super.validateConfigs();
 
     validateDir(spoolDir, Groups.FILES.name(), "spoolDir", issues);

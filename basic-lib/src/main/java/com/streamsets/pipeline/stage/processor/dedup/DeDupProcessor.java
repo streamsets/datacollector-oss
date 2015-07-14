@@ -139,7 +139,7 @@ public class DeDupProcessor extends RecordProcessor {
   private String hashAttrName;
 
   @Override
-  protected List<ConfigIssue> validateConfigs() throws StageException {
+  protected List<ConfigIssue> validateConfigs() {
     List<ConfigIssue> issues = super.validateConfigs();
     if (recordCountWindow <= 0) {
       issues.add(getContext().createConfigIssue(Groups.DE_DUP.name(), "recordCountWindow", Errors.DEDUP_00,

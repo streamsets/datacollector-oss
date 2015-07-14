@@ -7,6 +7,7 @@ package com.streamsets.pipeline.lib;
 
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.StageException;
+import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.lib.util.ThreadUtil;
 import kafka.javaapi.TopicMetadata;
 import kafka.javaapi.TopicMetadataRequest;
@@ -14,6 +15,7 @@ import kafka.javaapi.consumer.SimpleConsumer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -26,7 +28,7 @@ public class KafkaUtil {
   private static final int BUFFER_SIZE = 64 * 1024;
 
   public static TopicMetadata getTopicMetadata(List<KafkaBroker> kafkaBrokers, String topic, int maxRetries,
-                                               long backOffms) throws KafkaConnectionException {
+                                               long backOffms) throws IOException {
     TopicMetadata topicMetadata = null;
     boolean connectionError = true;
     boolean retry = true;
@@ -73,20 +75,20 @@ public class KafkaUtil {
     }
     if(connectionError) {
       //could not connect any broker even after retries. Fail with exception
-      throw new KafkaConnectionException(Errors.KAFKA_67, getKafkaBrokers(kafkaBrokers));
+      throw new IOException(Utils.format(Errors.KAFKA_67.getMessage(), getKafkaBrokers(kafkaBrokers)));
     }
     return topicMetadata;
   }
 
   public static int getPartitionCount(String metadataBrokerList, String topic, int maxRetries,
-                                               long backOffms) throws StageException {
+                                               long backOffms) throws IOException {
     List<KafkaBroker> kafkaBrokers = getKafkaBrokers(metadataBrokerList);
     if(kafkaBrokers.isEmpty()) {
-      throw new KafkaConnectionException(Errors.KAFKA_07, metadataBrokerList);
+      throw new IOException(Utils.format(Errors.KAFKA_07.getMessage(), metadataBrokerList));
     }
     TopicMetadata topicMetadata = getTopicMetadata(kafkaBrokers, topic, maxRetries, backOffms);
     if(topicMetadata == null || topicMetadata.errorCode() != 0) {
-      throw new StageException(Errors.KAFKA_03, topic, metadataBrokerList);
+      throw new IOException(Utils.format(Errors.KAFKA_03.getMessage(), topic, metadataBrokerList));
     }
     return topicMetadata.partitionsMetadata().size();
   }

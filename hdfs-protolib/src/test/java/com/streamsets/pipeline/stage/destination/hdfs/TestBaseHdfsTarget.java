@@ -239,7 +239,6 @@ public class TestBaseHdfsTarget {
       Target.Context context = ContextInfoCreator.createTargetContext(HdfsDTarget.class, "n", false,
         OnRecordError.TO_ERROR, null);
       target.validateConfigs(null, context);
-      target.init(null, context);
       Assert.assertNull(target.getCompressionCodec());
     } finally {
       target.destroy();
@@ -256,7 +255,6 @@ public class TestBaseHdfsTarget {
       Target.Context context = ContextInfoCreator.createTargetContext(HdfsDTarget.class, "n", false,
         OnRecordError.TO_ERROR, null);
       target.validateConfigs(null, context);
-      target.init(null, context);
       Assert.assertEquals(CompressionMode.GZIP.getCodec(), target.getCompressionCodec().getClass());
     } finally {
       target.destroy();
@@ -274,7 +272,6 @@ public class TestBaseHdfsTarget {
       Target.Context context = ContextInfoCreator.createTargetContext(HdfsDTarget.class, "n", false,
         OnRecordError.TO_ERROR, null);
       target.validateConfigs(null, context);
-      target.init(null, context);
       Assert.assertEquals(DeflateCodec.class, target.getCompressionCodec().getClass());
     } finally {
       target.destroy();

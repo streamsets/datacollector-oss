@@ -61,7 +61,7 @@ public class RecordsToLocalFileSystemTarget extends BaseTarget {
   }
 
   @Override
-  protected List<ConfigIssue> validateConfigs() throws StageException {
+  protected List<ConfigIssue> validateConfigs() {
     List<ConfigIssue> issues =  super.validateConfigs();
 
     dir = new File(directory);

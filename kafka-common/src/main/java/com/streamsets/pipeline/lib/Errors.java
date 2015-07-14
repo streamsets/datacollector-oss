@@ -21,6 +21,8 @@ public enum Errors implements ErrorCode {
   KAFKA_07("Invalid broker URI '{}'"),
   KAFKA_08("Unsupported charset '{}'"),
 
+  KAFKA_10("Cannot validate configuration: {}"),
+
   //Kafka source messages
     /* LC Hari says the first one is not being used right now  */
   KAFKA_20("A message with offset '{}' which is greater than the latest offset '{}' is requested from Kafka topic '{}' partition '{}'"),

@@ -138,7 +138,7 @@ public class HdfsTarget extends RecordTarget {
   private CompressionCodec compressionCodec;
 
   @Override
-  protected List<ConfigIssue> validateConfigs() throws StageException {
+  protected List<ConfigIssue> validateConfigs() {
     List<ConfigIssue> issues = super.validateConfigs();
     boolean validHadoopFsUri = validateHadoopFS(issues);
     try {

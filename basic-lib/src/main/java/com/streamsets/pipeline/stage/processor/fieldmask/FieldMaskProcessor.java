@@ -40,7 +40,7 @@ public class FieldMaskProcessor extends SingleLaneRecordProcessor {
   }
 
   @Override
-  protected List<ConfigIssue> validateConfigs() throws StageException {
+  protected List<ConfigIssue> validateConfigs() {
     List<ConfigIssue> issues =  super.validateConfigs();
     for(FieldMaskConfig fieldMaskConfig : fieldMaskConfigs) {
       if(fieldMaskConfig.maskType == MaskType.REGEX) {

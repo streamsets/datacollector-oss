@@ -189,7 +189,7 @@ public class FileTailSource extends BaseSource {
   }
 
   @Override
-  protected List<ConfigIssue> validateConfigs() throws StageException {
+  protected List<ConfigIssue> validateConfigs() {
     List<ConfigIssue> issues = super.validateConfigs();
     if (postProcessing == PostProcessingOptions.ARCHIVE) {
       if (archiveDir == null || archiveDir.isEmpty()) {

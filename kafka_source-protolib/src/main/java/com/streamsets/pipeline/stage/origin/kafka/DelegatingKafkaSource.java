@@ -24,18 +24,13 @@ public class DelegatingKafkaSource extends BaseSource implements OffsetCommitter
   }
 
   @Override
-  protected List<ConfigIssue> validateConfigs() throws StageException {
+  protected List<ConfigIssue> validateConfigs() {
     if (getContext().isPreview() || !getContext().isClusterMode()) {
       delegate = standaloneKafkaSourceFactory.create();
     } else {
       delegate = clusterKafkaSourceFactory.create();
     }
     return delegate.validateConfigs(getInfo(), getContext());
-  }
-
-  @Override
-  public void init() throws StageException {
-    delegate.init(getInfo(), getContext());
   }
 
   @Override

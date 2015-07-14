@@ -5,7 +5,6 @@
  */
 package com.streamsets.pipeline.stage.processor.selector;
 
-import com.google.common.collect.ImmutableList;
 import com.streamsets.pipeline.api.BatchMaker;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
@@ -15,7 +14,6 @@ import com.streamsets.pipeline.api.el.ELEval;
 import com.streamsets.pipeline.api.el.ELEvalException;
 import com.streamsets.pipeline.api.el.ELVars;
 import com.streamsets.pipeline.lib.el.RecordEL;
-import com.streamsets.pipeline.lib.el.StringEL;
 import com.streamsets.pipeline.lib.el.ELUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -42,7 +40,7 @@ public class SelectorProcessor extends RecordProcessor {
   }
 
   @Override
-  protected List<ConfigIssue> validateConfigs()  throws StageException {
+  protected List<ConfigIssue> validateConfigs() {
     List<ConfigIssue> issues = super.validateConfigs();
     if (lanePredicates == null || lanePredicates.size() == 0) {
       issues.add(getContext().createConfigIssue(Groups.CONDITIONS.name(), "lanePredicates", Errors.SELECTOR_00));
@@ -77,8 +75,7 @@ public class SelectorProcessor extends RecordProcessor {
     return issues;
   }
 
-  private String[][] parsePredicateLanes(List<Map<String, String>> predicateLanesList, List<ConfigIssue> issues)
-      throws StageException {
+  private String[][] parsePredicateLanes(List<Map<String, String>> predicateLanesList, List<ConfigIssue> issues) {
     String[][] predicateLanes = new String[predicateLanesList.size()][];
     int count = 0;
     for (int i = 0; i < predicateLanesList.size(); i++) {

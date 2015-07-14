@@ -122,7 +122,7 @@ public abstract class BaseKafkaSource extends BaseSource implements OffsetCommit
   }
 
   @Override
-  protected List<ConfigIssue> validateConfigs() throws StageException {
+  protected List<ConfigIssue> validateConfigs() {
     List<ConfigIssue> issues = new ArrayList<ConfigIssue>();
     if(topic == null || topic.isEmpty()) {
       issues.add(getContext().createConfigIssue(Groups.KAFKA.name(), "topic",
@@ -194,10 +194,7 @@ public abstract class BaseKafkaSource extends BaseSource implements OffsetCommit
         //cache the partition count as parallelism for future use
         originParallelism = partitionCount;
       }
-    } catch (KafkaConnectionException e) {
-      issues.add(getContext().createConfigIssue(Groups.KAFKA.name(), "metadataBrokerList",
-        e.getErrorCode(), metadataBrokerList, e));
-    } catch (StageException e) {
+    } catch (IOException e) {
       issues.add(getContext().createConfigIssue(Groups.KAFKA.name(), "topic",
         Errors.KAFKA_41, topic, e.getMessage(), e));
     }
@@ -223,7 +220,7 @@ public abstract class BaseKafkaSource extends BaseSource implements OffsetCommit
   }
 
   @Override
-  public int getParallelism() throws StageException {
+  public int getParallelism() throws IOException {
     if(originParallelism == 0) {
       //origin parallelism is not yet calculated
       originParallelism = KafkaUtil.getPartitionCount(metadataBrokerList, topic, 3, 1000);

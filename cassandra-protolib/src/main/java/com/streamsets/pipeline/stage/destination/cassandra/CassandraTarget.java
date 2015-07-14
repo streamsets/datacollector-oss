@@ -125,7 +125,7 @@ public class CassandraTarget extends BaseTarget {
   }
 
   @Override
-  protected List<ConfigIssue> validateConfigs() throws StageException {
+  protected List<ConfigIssue> validateConfigs() {
     List<ConfigIssue> issues = super.validateConfigs();
 
     Target.Context context = getContext();

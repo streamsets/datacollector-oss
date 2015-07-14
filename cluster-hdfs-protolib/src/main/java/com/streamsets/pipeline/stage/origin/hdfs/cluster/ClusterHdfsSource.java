@@ -121,7 +121,7 @@ public class ClusterHdfsSource extends BaseSource implements OffsetCommitter, Er
   }
 
   @Override
-  public List<ConfigIssue> validateConfigs() throws StageException {
+  public List<ConfigIssue> validateConfigs() {
     hadoopConf = new Configuration();
     // This is for getting no of splits - no of executors
     hadoopConf.set(FileInputFormat.LIST_STATUS_NUM_THREADS, "5"); // Per Hive-on-Spark
@@ -175,10 +175,15 @@ public class ClusterHdfsSource extends BaseSource implements OffsetCommitter, Er
           issues.add(getContext().createConfigIssue(Groups.HADOOP_FS.name(), "hdfsDirLocation", Errors.HADOOPFS_15,
             hdfsDirLocation));
         } else {
-          int splits = getParallelism();
-          if (splits == 0) {
-            issues.add(getContext().createConfigIssue(Groups.HADOOP_FS.name(), "hdfsDirLocation", Errors.HADOOPFS_16,
-              hdfsDirLocation));
+          try {
+            int splits = getParallelism();
+            if (splits == 0) {
+              issues.add(getContext().createConfigIssue(Groups.HADOOP_FS.name(), "hdfsDirLocation", Errors.HADOOPFS_16,
+                                                        hdfsDirLocation));
+            }
+          } catch (IOException ex) {
+            issues.add(getContext().createConfigIssue(Groups.HADOOP_FS.name(), "hdfsDirLocation", Errors.HADOOPFS_09,
+                                                      hdfsDirLocation, ex.getMessage()));
           }
         }
       }
@@ -255,7 +260,7 @@ public class ClusterHdfsSource extends BaseSource implements OffsetCommitter, Er
     }
   }
 
-  private void validateParserFactoryConfigs(List<ConfigIssue> issues) throws StageException {
+  private void validateParserFactoryConfigs(List<ConfigIssue> issues) {
     DataParserFactoryBuilder builder = new DataParserFactoryBuilder(getContext(), dataFormat.getParserFormat())
       .setCharset(Charset.defaultCharset());
 
@@ -396,13 +401,8 @@ public class ClusterHdfsSource extends BaseSource implements OffsetCommitter, Er
   }
 
   @Override
-  public int getParallelism() throws StageException {
-    try {
-      return getSplits();
-    } catch (IOException e) {
-      LOG.warn("Error occured getting splits: " + e, e);
-      throw new StageException(Errors.HADOOPFS_09, hdfsDirLocation, e);
-    }
+  public int getParallelism() throws IOException {
+    return getSplits();
   }
 
   @Override
