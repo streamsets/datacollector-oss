@@ -188,8 +188,8 @@ public class TestUtil {
       private Random random;
 
       @Override
-      protected void init() throws StageException {
-        super.init();
+      protected void initX() throws StageException {
+        super.initX();
         random = new Random();
       }
 

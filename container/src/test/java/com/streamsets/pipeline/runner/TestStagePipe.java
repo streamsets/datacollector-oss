@@ -46,7 +46,7 @@ public class TestStagePipe {
       }
 
       @Override
-      public List<ConfigIssue> validateConfigs(Info info, Context context) {
+      public List<ConfigIssue> init(Info info, Context context) {
         return Collections.emptyList();
       }
 
@@ -100,7 +100,7 @@ public class TestStagePipe {
     MockStages.setProcessorCapture(new Processor() {
 
       @Override
-      public List<ConfigIssue> validateConfigs(Info info, Context context) {
+      public List<ConfigIssue> init(Info info, Context context) {
         return Collections.emptyList();
       }
 
@@ -155,7 +155,7 @@ public class TestStagePipe {
     MockStages.setTargetCapture(new Target() {
 
       @Override
-      public List<ConfigIssue> validateConfigs(Info info, Context context) {
+      public List<ConfigIssue> init(Info info, Context context) {
         return Collections.emptyList();
       }
 

@@ -122,8 +122,8 @@ public class FlumeTarget extends BaseTarget {
   private Map<String, String> headers;
 
   @Override
-  protected List<ConfigIssue> validateConfigs() {
-    List<ConfigIssue> issues = super.validateConfigs();
+  protected List<ConfigIssue> init() {
+    List<ConfigIssue> issues = super.init();
     FlumeUtil.validateHostConfig(issues, flumeHostsConfig, Groups.FLUME.name(), "flumeHostsConfig", getContext());
     if(batchSize < 1) {
       issues.add(getContext().createConfigIssue(Groups.FLUME.name(), "batchSize",
@@ -153,7 +153,7 @@ public class FlumeTarget extends BaseTarget {
   }
 
   @Override
-  public void init() throws StageException {
+  public void initX() throws StageException {
     connect();
     generatorFactory = createDataGeneratorFactory();
     headers = new HashMap<>();

@@ -62,7 +62,7 @@ public class TwitterTarget implements Target {
   }
 
   @Override
-  public List<ConfigIssue> validateConfigs(Info info, Context context) {
+  public List<ConfigIssue> init(Info info, Context context) {
     return Collections.emptyList();
   }
 

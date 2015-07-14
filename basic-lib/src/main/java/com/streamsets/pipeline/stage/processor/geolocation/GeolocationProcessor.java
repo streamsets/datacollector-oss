@@ -58,7 +58,7 @@ public class GeolocationProcessor extends SingleLaneRecordProcessor {
   }
 
   @Override
-  protected List<ConfigIssue> validateConfigs() {
+  protected List<ConfigIssue> init() {
     List<ConfigIssue> result = new ArrayList<>();
     File database = new File(geoIP2DBFile);
     if (!database.isAbsolute()) {

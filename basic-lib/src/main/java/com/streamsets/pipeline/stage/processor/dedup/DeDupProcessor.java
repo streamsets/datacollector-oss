@@ -139,8 +139,8 @@ public class DeDupProcessor extends RecordProcessor {
   private String hashAttrName;
 
   @Override
-  protected List<ConfigIssue> validateConfigs() {
-    List<ConfigIssue> issues = super.validateConfigs();
+  protected List<ConfigIssue> init() {
+    List<ConfigIssue> issues = super.init();
     if (recordCountWindow <= 0) {
       issues.add(getContext().createConfigIssue(Groups.DE_DUP.name(), "recordCountWindow", Errors.DEDUP_00,
                                                 recordCountWindow));
@@ -165,8 +165,8 @@ public class DeDupProcessor extends RecordProcessor {
 
   @Override
   @SuppressWarnings("unchecked")
-  protected void init() throws StageException {
-    super.init();
+  protected void initX() throws StageException {
+    super.initX();
     hasher = Hashing.murmur3_128();
     funnel = (compareFields == SelectFields.ALL_FIELDS) ? new RecordFunnel() : new RecordFunnel(fieldsToCompare);
     CacheBuilder cacheBuilder = CacheBuilder.newBuilder();

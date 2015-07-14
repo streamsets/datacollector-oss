@@ -151,8 +151,8 @@ public class SpoolDirSource extends BaseSource {
   private LogDataFormatValidator logDataFormatValidator;
 
   @Override
-  protected List<ConfigIssue> validateConfigs() {
-    List<ConfigIssue> issues = super.validateConfigs();
+  protected List<ConfigIssue> init() {
+    List<ConfigIssue> issues = super.init();
 
     validateDir(spoolDir, Groups.FILES.name(), "spoolDir", issues);
 
@@ -342,8 +342,8 @@ public class SpoolDirSource extends BaseSource {
   }
 
   @Override
-  protected void init() throws StageException {
-    super.init();
+  protected void initX() throws StageException {
+    super.initX();
 
     if (getContext().isPreview()) {
       poolingTimeoutSecs = 1;

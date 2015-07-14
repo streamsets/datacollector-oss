@@ -30,8 +30,8 @@ public class JsonParserProcessor extends SingleLaneRecordProcessor {
   }
 
   @Override
-  protected void init() throws StageException {
-    super.init();
+  protected void initX() throws StageException {
+    super.initX();
   }
 
   @Override

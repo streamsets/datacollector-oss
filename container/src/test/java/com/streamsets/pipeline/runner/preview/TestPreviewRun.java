@@ -20,7 +20,6 @@ import com.streamsets.pipeline.record.RecordImpl;
 import com.streamsets.pipeline.runner.MockStages;
 import com.streamsets.pipeline.runner.Pipeline;
 import com.streamsets.pipeline.runner.PipelineRunner;
-import com.streamsets.pipeline.runner.PipelineRuntimeException;
 import com.streamsets.pipeline.runner.SourceOffsetTracker;
 import com.streamsets.pipeline.runner.StageOutput;
 import com.streamsets.pipeline.util.ContainerError;
@@ -187,8 +186,8 @@ public class TestPreviewRun {
     MockStages.setSourceCapture(new BaseSource() {
 
       @Override
-      protected void init() throws StageException {
-        super.init();
+      protected void initX() throws StageException {
+        super.initX();
         Assert.assertTrue(getContext().isPreview());
       }
 
@@ -214,7 +213,7 @@ public class TestPreviewRun {
 
     MockStages.setSourceCapture(new BaseSource() {
       @Override
-      public List<ConfigIssue> validateConfigs(Info info, Source.Context context) {
+      public List<ConfigIssue> init(Info info, Source.Context context) {
         return Arrays.asList(context.createConfigIssue(null, null, ContainerError.CONTAINER_0000));
       }
 

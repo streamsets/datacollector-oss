@@ -58,7 +58,7 @@ public class RandomSource extends BaseSource {
   private long recordsProduced;
 
   @Override
-  protected void init() throws StageException {
+  protected void initX() throws StageException {
     fieldArr = fields.split(",");
     random = new Random();
     randomNulls = new Random();

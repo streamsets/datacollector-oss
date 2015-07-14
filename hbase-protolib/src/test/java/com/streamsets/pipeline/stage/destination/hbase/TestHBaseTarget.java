@@ -114,8 +114,8 @@ public class TestHBaseTarget {
     dTarget.zookeeperParentZnode = "";
     HBaseTarget target = (HBaseTarget) dTarget.createTarget();
     List<Stage.ConfigIssue> issues =
-        target.validateConfigs(null,
-          ContextInfoCreator.createTargetContext("n", false, OnRecordError.TO_ERROR));
+        target.init(null,
+                    ContextInfoCreator.createTargetContext("n", false, OnRecordError.TO_ERROR));
     Assert.assertEquals(3, issues.size());
     assertTrue(issues.get(0).toString().contains("HBASE_04"));
     assertTrue(issues.get(1).toString().contains("HBASE_09"));
@@ -125,8 +125,8 @@ public class TestHBaseTarget {
     dTarget.tableName = "NonExistingTable";
     target = (HBaseTarget) dTarget.createTarget();
     issues =
-        target.validateConfigs(null,
-          ContextInfoCreator.createTargetContext("n", false, OnRecordError.TO_ERROR));
+        target.init(null,
+                    ContextInfoCreator.createTargetContext("n", false, OnRecordError.TO_ERROR));
     Assert.assertEquals(1, issues.size());
     assertTrue(issues.get(0).toString().contains("HBASE_07"));
 
@@ -134,8 +134,8 @@ public class TestHBaseTarget {
     dTarget.zookeeperQuorum = "dummyhost";
     target = (HBaseTarget) dTarget.createTarget();
     issues =
-        target.validateConfigs(null,
-          ContextInfoCreator.createTargetContext("n", false, OnRecordError.TO_ERROR));
+        target.init(null,
+                    ContextInfoCreator.createTargetContext("n", false, OnRecordError.TO_ERROR));
     Assert.assertEquals(1, issues.size());
     assertTrue(issues.get(0).toString().contains("HBASE_06"));
   }
@@ -146,8 +146,8 @@ public class TestHBaseTarget {
     configure(dTarget);
     HBaseTarget target = (HBaseTarget) dTarget.createTarget();
     try {
-      target.validateConfigs(null,
-        ContextInfoCreator.createTargetContext("n", false, OnRecordError.TO_ERROR));
+      target.init(null,
+                  ContextInfoCreator.createTargetContext("n", false, OnRecordError.TO_ERROR));
       assertNotNull(target.getHBaseConfiguration());
     } finally {
       target.destroy();
@@ -160,8 +160,8 @@ public class TestHBaseTarget {
     configure(dTarget);
     HBaseTarget target = (HBaseTarget) dTarget.createTarget();
     try {
-      target.validateConfigs(null,
-        ContextInfoCreator.createTargetContext("n", false, OnRecordError.TO_ERROR));
+      target.init(null,
+                  ContextInfoCreator.createTargetContext("n", false, OnRecordError.TO_ERROR));
       assertEquals("X", target.getHBaseConfiguration().get("x"));
     } finally {
       target.destroy();
@@ -587,9 +587,9 @@ public class TestHBaseTarget {
     dTarget.hbaseConfDir = fooDir.getName();
     HBaseTarget target = (HBaseTarget) dTarget.createTarget();
     try {
-      target.validateConfigs(null, ContextInfoCreator.createTargetContext(HBaseDTarget.class, "n", false,
-                                                                          OnRecordError.TO_ERROR,
-                                                                          resourcesDir.getAbsolutePath()));
+      target.init(null, ContextInfoCreator.createTargetContext(HBaseDTarget.class, "n", false,
+                                                               OnRecordError.TO_ERROR,
+                                                               resourcesDir.getAbsolutePath()));
       Configuration conf = target.getHBaseConfiguration();
       Assert.assertEquals("XX", conf.get("xx"));
     } finally {
@@ -604,9 +604,9 @@ public class TestHBaseTarget {
     dTarget.hbaseConfDir = absoluteFilePath.getAbsolutePath();
     target = (HBaseTarget) dTarget.createTarget();
     try {
-      target.validateConfigs(null, ContextInfoCreator.createTargetContext(HBaseDTarget.class, "n", false,
-                                                                          OnRecordError.TO_ERROR,
-                                                                          resourcesDir.getAbsolutePath()));
+      target.init(null, ContextInfoCreator.createTargetContext(HBaseDTarget.class, "n", false,
+                                                               OnRecordError.TO_ERROR,
+                                                               resourcesDir.getAbsolutePath()));
       Configuration conf = target.getHBaseConfiguration();
       Assert.assertEquals("ZZ", conf.get("zz"));
     } finally {

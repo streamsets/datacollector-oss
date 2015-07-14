@@ -72,8 +72,8 @@ public class OmnitureSource extends BaseSource {
   }
 
   @Override
-  protected void init() throws StageException {
-    super.init();
+  protected void initX() throws StageException {
+    super.initX();
 
     // TODO: SDC-552 - Omniture origin should be recoverable
     entityQueue = new ArrayBlockingQueue<>(2 * batchSize);

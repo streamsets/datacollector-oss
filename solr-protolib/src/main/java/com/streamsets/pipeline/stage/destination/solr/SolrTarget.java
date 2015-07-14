@@ -47,8 +47,8 @@ public class SolrTarget extends BaseTarget {
   }
 
   @Override
-  protected List<ConfigIssue> validateConfigs() {
-    List<ConfigIssue> issues = super.validateConfigs();
+  protected List<ConfigIssue> init() {
+    List<ConfigIssue> issues = super.init();
 
     boolean solrInstanceInfo = true;
 
@@ -86,8 +86,8 @@ public class SolrTarget extends BaseTarget {
   }
 
   @Override
-  protected void init() throws StageException {
-    super.init();
+  protected void initX() throws StageException {
+    super.initX();
     try {
       solrClient = getSolrClient();
     } catch (MalformedURLException ex) {

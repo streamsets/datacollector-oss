@@ -23,7 +23,7 @@ public class StandaloneKafkaSource extends BaseKafkaSource {
   }
 
   @Override
-  public void init() throws StageException {
+  public void initX() throws StageException {
     if(getContext().isPreview()) {
       //set fixed batch duration time of 1 second for preview.
       maxWaitTime = 1000;

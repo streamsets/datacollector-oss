@@ -61,8 +61,8 @@ public class RecordsToLocalFileSystemTarget extends BaseTarget {
   }
 
   @Override
-  protected List<ConfigIssue> validateConfigs() {
-    List<ConfigIssue> issues =  super.validateConfigs();
+  protected List<ConfigIssue> init() {
+    List<ConfigIssue> issues =  super.init();
 
     dir = new File(directory);
     if (!dir.exists()) {
@@ -93,8 +93,8 @@ public class RecordsToLocalFileSystemTarget extends BaseTarget {
   }
 
   @Override
-  protected void init() throws StageException {
-    super.init();
+  protected void initX() throws StageException {
+    super.initX();
     activeFile = new File(dir, "_tmp_" + uniquePrefix + ".sdc").getAbsoluteFile();
     // if we had non graceful shutdown we may have a _tmp file around. new file is not created.
     rotate(false);

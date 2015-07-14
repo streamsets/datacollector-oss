@@ -12,7 +12,6 @@ import com.streamsets.pipeline.api.Processor;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.Source;
 import com.streamsets.pipeline.api.Stage;
-import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.Target;
 import com.streamsets.pipeline.config.ConfigConfiguration;
 import com.streamsets.pipeline.config.DeliveryGuarantee;
@@ -214,12 +213,12 @@ public class TestPipeline {
     Mockito.verifyZeroInteractions(processor);
     Mockito.verifyZeroInteractions(target);
     pipeline.init();
-    Mockito.verify(source, Mockito.times(1)).validateConfigs(Mockito.any(Stage.Info.class),
-                                                             Mockito.any(Source.Context.class));
-    Mockito.verify(processor, Mockito.times(1)).validateConfigs(Mockito.any(Stage.Info.class),
-                                                                Mockito.any(Processor.Context.class));
-    Mockito.verify(target, Mockito.times(1)).validateConfigs(Mockito.any(Stage.Info.class),
-                                                             Mockito.any(Target.Context.class));
+    Mockito.verify(source, Mockito.times(1)).init(Mockito.any(Stage.Info.class),
+                                                  Mockito.any(Source.Context.class));
+    Mockito.verify(processor, Mockito.times(1)).init(Mockito.any(Stage.Info.class),
+                                                     Mockito.any(Processor.Context.class));
+    Mockito.verify(target, Mockito.times(1)).init(Mockito.any(Stage.Info.class),
+                                                  Mockito.any(Target.Context.class));
     Mockito.verifyNoMoreInteractions(source);
     Mockito.verifyNoMoreInteractions(processor);
     Mockito.verifyNoMoreInteractions(target);
@@ -276,8 +275,8 @@ public class TestPipeline {
 
     // test checked exception on init
 
-    Mockito.doThrow(new RuntimeException()).when(processor).validateConfigs(Mockito.any(Stage.Info.class),
-                                                                            Mockito.any(Processor.Context.class));
+    Mockito.doThrow(new RuntimeException()).when(processor).init(Mockito.any(Stage.Info.class),
+                                                                 Mockito.any(Processor.Context.class));
     Target target = Mockito.mock(Target.class);
     MockStages.setSourceCapture(source);
     MockStages.setProcessorCapture(processor);
@@ -286,12 +285,12 @@ public class TestPipeline {
     Pipeline pipeline = builder.build(runner);
 
     Assert.assertFalse(pipeline.init().isEmpty());
-    Mockito.verify(source, Mockito.times(1)).validateConfigs(Mockito.any(Stage.Info.class),
-                                                             Mockito.any(Source.Context.class));
-    Mockito.verify(processor, Mockito.times(1)).validateConfigs(Mockito.any(Stage.Info.class),
-                                                                Mockito.any(Processor.Context.class));
-    Mockito.verify(target, Mockito.times(1)).validateConfigs(Mockito.any(Stage.Info.class),
-                                                             Mockito.any(Target.Context.class));
+    Mockito.verify(source, Mockito.times(1)).init(Mockito.any(Stage.Info.class),
+                                                  Mockito.any(Source.Context.class));
+    Mockito.verify(processor, Mockito.times(1)).init(Mockito.any(Stage.Info.class),
+                                                     Mockito.any(Processor.Context.class));
+    Mockito.verify(target, Mockito.times(1)).init(Mockito.any(Stage.Info.class),
+                                                  Mockito.any(Target.Context.class));
     pipeline.destroy();
     Mockito.verify(source, Mockito.times(1)).destroy();
     Mockito.verify(processor, Mockito.times(1)).destroy();
@@ -302,18 +301,18 @@ public class TestPipeline {
     Mockito.reset(source);
     Mockito.reset(processor);
     Mockito.reset(target);
-    Mockito.doThrow(new RuntimeException()).when(processor).validateConfigs(Mockito.any(Stage.Info.class),
-                                                                            Mockito.any(Processor.Context.class));
+    Mockito.doThrow(new RuntimeException()).when(processor).init(Mockito.any(Stage.Info.class),
+                                                                 Mockito.any(Processor.Context.class));
 
     pipeline = builder.build(runner);
 
     Assert.assertFalse(pipeline.init().isEmpty());
-    Mockito.verify(source, Mockito.times(1)).validateConfigs(Mockito.any(Stage.Info.class),
-                                                             Mockito.any(Source.Context.class));
-    Mockito.verify(processor, Mockito.times(1)).validateConfigs(Mockito.any(Stage.Info.class),
-                                                                Mockito.any(Processor.Context.class));
-    Mockito.verify(target, Mockito.times(1)).validateConfigs(Mockito.any(Stage.Info.class),
-                                                             Mockito.any(Target.Context.class));
+    Mockito.verify(source, Mockito.times(1)).init(Mockito.any(Stage.Info.class),
+                                                  Mockito.any(Source.Context.class));
+    Mockito.verify(processor, Mockito.times(1)).init(Mockito.any(Stage.Info.class),
+                                                     Mockito.any(Processor.Context.class));
+    Mockito.verify(target, Mockito.times(1)).init(Mockito.any(Stage.Info.class),
+                                                  Mockito.any(Target.Context.class));
 
     pipeline.destroy();
     Mockito.verify(source, Mockito.times(1)).destroy();

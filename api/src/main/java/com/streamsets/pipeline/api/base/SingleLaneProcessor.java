@@ -23,7 +23,7 @@ public abstract class SingleLaneProcessor extends BaseProcessor {
   }
 
   @Override
-  protected void init() throws StageException {
+  protected void initX() throws StageException {
     if (getContext().getOutputLanes().size() != 1) {
       throw new StageException(Errors.API_00, getInfo().getInstanceName(), getContext().getOutputLanes().size());
     }

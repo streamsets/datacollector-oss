@@ -6,7 +6,6 @@
 package com.streamsets.pipeline.stage.origin.hdfs.cluster;
 
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.net.URI;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
@@ -16,15 +15,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.hadoop.io.LongWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.CommonConfigurationKeys;
-import org.apache.hadoop.fs.FileStatus;
 import org.apache.hadoop.fs.FileSystem;
-import org.apache.hadoop.fs.LocatedFileStatus;
 import org.apache.hadoop.fs.Path;
-import org.apache.hadoop.fs.RemoteIterator;
 import org.apache.hadoop.mapreduce.InputSplit;
 import org.apache.hadoop.mapreduce.Job;
 import org.apache.hadoop.mapreduce.RecordReader;
@@ -121,7 +116,7 @@ public class ClusterHdfsSource extends BaseSource implements OffsetCommitter, Er
   }
 
   @Override
-  public List<ConfigIssue> validateConfigs() {
+  public List<ConfigIssue> init() {
     hadoopConf = new Configuration();
     // This is for getting no of splits - no of executors
     hadoopConf.set(FileInputFormat.LIST_STATUS_NUM_THREADS, "5"); // Per Hive-on-Spark
@@ -129,7 +124,7 @@ public class ClusterHdfsSource extends BaseSource implements OffsetCommitter, Er
     for (Map.Entry<String, String> config : hdfsConfigs.entrySet()) {
       hadoopConf.set(config.getKey(), config.getValue());
     }
-    List<ConfigIssue> issues = super.validateConfigs();
+    List<ConfigIssue> issues = super.init();
     if (hdfsDirLocation == null || hdfsDirLocation.isEmpty()) {
       issues.add(getContext().createConfigIssue(Groups.HADOOP_FS.name(), "hdfsDirLocation", Errors.HADOOPFS_00));
     }

@@ -62,7 +62,7 @@ public class TestUtil {
     public boolean destroyed;
 
     @Override
-    protected void init() throws StageException {
+    protected void initX() throws StageException {
       inited = true;
     }
 
@@ -85,7 +85,7 @@ public class TestUtil {
     public boolean destroyed;
 
     @Override
-    protected void init() throws StageException {
+    protected void initX() throws StageException {
       inited = true;
     }
 

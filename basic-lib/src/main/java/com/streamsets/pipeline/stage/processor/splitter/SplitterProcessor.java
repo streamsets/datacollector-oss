@@ -8,7 +8,6 @@ package com.streamsets.pipeline.stage.processor.splitter;
 import com.streamsets.pipeline.api.ErrorCode;
 import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.Record;
-import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.base.OnRecordErrorException;
 import com.streamsets.pipeline.api.base.SingleLaneRecordProcessor;
@@ -39,8 +38,8 @@ public class SplitterProcessor extends SingleLaneRecordProcessor {
   private String[] fieldPaths;
 
   @Override
-  protected List<ConfigIssue> validateConfigs() {
-    List<ConfigIssue> issues = super.validateConfigs();
+  protected List<ConfigIssue> init() {
+    List<ConfigIssue> issues = super.init();
     if (fieldPathsForSplits.size() < 2) {
       issues.add(getContext().createConfigIssue(Groups.FIELD_SPLITTER.name(), "fieldPathsForSplits",
                                                 Errors.SPLITTER_00));
@@ -59,8 +58,8 @@ public class SplitterProcessor extends SingleLaneRecordProcessor {
   }
 
   @Override
-  protected void init() throws StageException {
-    super.init();
+  protected void initX() throws StageException {
+    super.initX();
 
     separatorStr = (separator == '^') ? " " : "" + separator;
 

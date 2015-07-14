@@ -103,8 +103,8 @@ public class MongoDBSource extends BaseSource {
   }
 
   @Override
-  protected List<ConfigIssue> validateConfigs() {
-    List<ConfigIssue> issues = super.validateConfigs();
+  protected List<ConfigIssue> init() {
+    List<ConfigIssue> issues = super.init();
 
     try {
       initialObjectId = new ObjectId(dateFormat.parse(initialOffset));

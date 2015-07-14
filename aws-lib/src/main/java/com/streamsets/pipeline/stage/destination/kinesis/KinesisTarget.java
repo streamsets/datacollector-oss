@@ -76,8 +76,8 @@ public class KinesisTarget extends BaseTarget {
   }
 
   @Override
-  protected List<ConfigIssue> validateConfigs() {
-    List<ConfigIssue> issues = super.validateConfigs();
+  protected List<ConfigIssue> init() {
+    List<ConfigIssue> issues = super.init();
 
     checkStreamExists(issues);
 
@@ -103,8 +103,8 @@ public class KinesisTarget extends BaseTarget {
   }
 
   @Override
-  protected void init() throws StageException {
-    super.init();
+  protected void initX() throws StageException {
+    super.initX();
 
     kinesisConfiguration = new ClientConfiguration();
     //TODO Set additional configuration options here.

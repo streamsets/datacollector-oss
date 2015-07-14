@@ -86,8 +86,8 @@ public class KinesisSource extends BaseSource implements OffsetCommitter {
   }
 
   @Override
-  protected List<ConfigIssue> validateConfigs() {
-    List<ConfigIssue> issues = super.validateConfigs();
+  protected List<ConfigIssue> init() {
+    List<ConfigIssue> issues = super.init();
 
     checkStreamExists(issues);
 
@@ -113,8 +113,8 @@ public class KinesisSource extends BaseSource implements OffsetCommitter {
   }
 
   @Override
-  protected void init() throws StageException {
-    super.init();
+  protected void initX() throws StageException {
+    super.initX();
 
     batchQueue = new LinkedTransferQueue<>();
 

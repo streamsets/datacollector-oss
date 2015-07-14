@@ -66,13 +66,13 @@ public class LogParserProcessor extends SingleLaneRecordProcessor {
   private DataParserFactory parserFactory;
 
   @Override
-  protected void init() throws StageException {
-    super.init();
+  protected void initX() throws StageException {
+    super.initX();
   }
 
   @Override
-  protected List<ConfigIssue> validateConfigs() {
-    List<ConfigIssue> issues = super.validateConfigs();
+  protected List<ConfigIssue> init() {
+    List<ConfigIssue> issues = super.init();
 
     logDataFormatValidator = new LogDataFormatValidator(logMode, logMaxObjectLen,
       false, customLogFormat, regex, grokPatternDefinition, grokPattern,

@@ -35,8 +35,8 @@ public class ExpressionProcessor extends SingleLaneRecordProcessor {
   private ELVars variables;
 
   @Override
-  protected List<ConfigIssue> validateConfigs() {
-    List<ConfigIssue> issues =  super.validateConfigs();
+  protected List<ConfigIssue> init() {
+    List<ConfigIssue> issues =  super.init();
     variables = ELUtils.parseConstants(null, getContext(), Groups.EXPRESSIONS.name(), "constants",
       Errors.EXPR_01, issues);
     expressionEval = createExpressionEval(getContext());

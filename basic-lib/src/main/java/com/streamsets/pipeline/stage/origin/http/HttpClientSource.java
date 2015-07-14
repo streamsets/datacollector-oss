@@ -85,8 +85,8 @@ public class HttpClientSource extends BaseSource implements OffsetCommitter {
   }
 
   @Override
-  protected void init() throws StageException {
-    super.init();
+  protected void initX() throws StageException {
+    super.initX();
 
     // Queue may not be empty at shutdown, but because we can't rewind,
     // the dropped entities are not recoverable anyway. In the case

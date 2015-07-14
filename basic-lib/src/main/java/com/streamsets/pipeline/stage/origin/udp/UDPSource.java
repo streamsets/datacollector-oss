@@ -19,7 +19,6 @@ import io.netty.channel.socket.DatagramPacket;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
@@ -63,7 +62,7 @@ public class UDPSource extends BaseSource {
   }
 
   @Override
-  protected List<ConfigIssue> validateConfigs() {
+  protected List<ConfigIssue> init() {
     List<ConfigIssue> issues = new ArrayList<>();
     this.recordCount = 0;
     this.incomingQueue = new ArrayBlockingQueue<>(this.maxBatchSize * 10);
@@ -108,8 +107,8 @@ public class UDPSource extends BaseSource {
   }
 
   @Override
-  protected void init() throws StageException {
-    super.init();
+  protected void initX() throws StageException {
+    super.initX();
     if (!addresses.isEmpty()) {
       QueuingUDPConsumer udpConsumer = new QueuingUDPConsumer(incomingQueue);
       udpServer = new UDPConsumingServer(addresses, udpConsumer);

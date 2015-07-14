@@ -90,8 +90,8 @@ public class ElasticSearchTarget extends BaseTarget {
     }
   }
   @Override
-  protected List<ConfigIssue> validateConfigs() {
-    List<ConfigIssue> issues = super.validateConfigs();
+  protected List<ConfigIssue> init() {
+    List<ConfigIssue> issues = super.init();
 
     indexEval = getContext().createELEval("indexTemplate");
     typeEval = getContext().createELEval("typeTemplate");
@@ -134,8 +134,8 @@ public class ElasticSearchTarget extends BaseTarget {
   }
 
   @Override
-  protected void init() throws StageException {
-    super.init();
+  protected void initX() throws StageException {
+    super.initX();
     generatorFactory = new DataGeneratorFactoryBuilder(getContext(), DataGeneratorFormat.JSON)
         .setMode(JsonMode.MULTIPLE_OBJECTS).setCharset(Charset.forName(charset)).build();
   }

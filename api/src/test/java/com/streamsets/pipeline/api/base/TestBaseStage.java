@@ -20,8 +20,8 @@ public class TestBaseStage {
   public class TBaseStage extends BaseStage<Stage.Context> {
 
     @Override
-    protected void init() throws StageException {
-      super.init();
+    protected void initX() throws StageException {
+      super.initX();
       Assert.assertEquals(info, getInfo());
       Assert.assertEquals(context, getContext());
       inited = true;
@@ -38,7 +38,7 @@ public class TestBaseStage {
   @SuppressWarnings("unchecked")
   public void testBaseStage() throws Exception {
     Stage stage = new TBaseStage();
-    stage.validateConfigs(info, context);
+    stage.init(info, context);
     Assert.assertTrue(inited);
     stage.destroy();
   }

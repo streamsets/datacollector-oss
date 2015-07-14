@@ -159,7 +159,7 @@ public class TestMemoryIsolation {
     }
 
     @Override
-    public List<ConfigIssue> validateConfigs(Info info, Context context) {
+    public List<ConfigIssue> init(Info info, Context context) {
       return null;
     }
 
@@ -180,7 +180,7 @@ public class TestMemoryIsolation {
     }
 
     @Override
-    public List<ConfigIssue> validateConfigs(Info info, Context context) {
+    public List<ConfigIssue> init(Info info, Context context) {
       return null;
     }
 
@@ -200,7 +200,7 @@ public class TestMemoryIsolation {
     }
 
     @Override
-    public List<ConfigIssue> validateConfigs(Info info, Context context) {
+    public List<ConfigIssue> init(Info info, Context context) {
       return null;
     }
 

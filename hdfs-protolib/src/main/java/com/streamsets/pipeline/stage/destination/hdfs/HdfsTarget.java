@@ -138,8 +138,8 @@ public class HdfsTarget extends RecordTarget {
   private CompressionCodec compressionCodec;
 
   @Override
-  protected List<ConfigIssue> validateConfigs() {
-    List<ConfigIssue> issues = super.validateConfigs();
+  protected List<ConfigIssue> init() {
+    List<ConfigIssue> issues = super.init();
     boolean validHadoopFsUri = validateHadoopFS(issues);
     try {
       lateRecordsLimitEvaluator = getContext().createELEval("lateRecordsLimit");
@@ -354,8 +354,8 @@ public class HdfsTarget extends RecordTarget {
   }
 
   @Override
-  protected void init() throws StageException {
-    super.init();
+  protected void initX() throws StageException {
+    super.initX();
     try {
       FileSystem fs = getFileSystemForInitDestroy();
       getCurrentWriters().commitOldFiles(fs);

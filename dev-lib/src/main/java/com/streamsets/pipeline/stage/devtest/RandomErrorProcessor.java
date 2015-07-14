@@ -27,8 +27,8 @@ public class RandomErrorProcessor extends SingleLaneProcessor {
   private double batchThreshold2;
 
   @Override
-  protected void init() throws StageException {
-    super.init();
+  protected void initX() throws StageException {
+    super.initX();
     random = new Random();
   }
 

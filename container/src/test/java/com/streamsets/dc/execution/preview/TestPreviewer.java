@@ -116,7 +116,7 @@ public abstract class TestPreviewer {
     //Source validateConfigs method is overridden to create a config issue with error code CONTAINER_0000
     MockStages.setSourceCapture(new BaseSource() {
       @Override
-      public List<ConfigIssue> validateConfigs(Info info, Source.Context context) {
+      public List<ConfigIssue> init(Info info, Source.Context context) {
         return Collections.emptyList();
       }
 
@@ -163,7 +163,7 @@ public abstract class TestPreviewer {
     //Source validateConfigs method is overridden to create a config issue with error code CONTAINER_0000
     MockStages.setSourceCapture(new BaseSource() {
       @Override
-      public List<ConfigIssue> validateConfigs(Info info, Source.Context context) {
+      public List<ConfigIssue> init(Info info, Source.Context context) {
         return Arrays.asList(context.createConfigIssue(null, null, ContainerError.CONTAINER_0000));
       }
 
@@ -204,7 +204,7 @@ public abstract class TestPreviewer {
     //Source validateConfigs method is overridden to create a config issue with error code CONTAINER_0000
     MockStages.setSourceCapture(new BaseSource() {
       @Override
-      public List<ConfigIssue> validateConfigs(Info info, Source.Context context) {
+      public List<ConfigIssue> init(Info info, Source.Context context) {
         return ImmutableList.of(context.createConfigIssue(null, null, MockErrorCode.MOCK_0000));
       }
 
@@ -441,7 +441,7 @@ public abstract class TestPreviewer {
     //Source validateConfigs method is overridden to create a config issue with error code CONTAINER_0000
     MockStages.setSourceCapture(new BaseSource() {
       @Override
-      public List<ConfigIssue> validateConfigs(Info info, Source.Context context) {
+      public List<ConfigIssue> init(Info info, Source.Context context) {
         throw new RuntimeException();
       }
 
@@ -478,7 +478,7 @@ public abstract class TestPreviewer {
     //Source validateConfigs method is overridden to create a config issue with error code CONTAINER_0000
     MockStages.setSourceCapture(new BaseSource() {
       @Override
-      public List<ConfigIssue> validateConfigs(Info info, Source.Context context) {
+      public List<ConfigIssue> init(Info info, Source.Context context) {
         return Arrays.asList(context.createConfigIssue(null, null, ContainerError.CONTAINER_0000));
       }
 

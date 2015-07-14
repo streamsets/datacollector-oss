@@ -99,7 +99,7 @@ public class JdbcSource extends BaseSource {
   }
 
   @Override
-  protected List<ConfigIssue> validateConfigs() {
+  protected List<ConfigIssue> init() {
     List<ConfigIssue> issues = new ArrayList<>();
     Source.Context context = getContext();
 

@@ -118,7 +118,7 @@ public class StageRuntime {
     ClassLoader cl = Thread.currentThread().getContextClassLoader();
     try {
       Thread.currentThread().setContextClassLoader(getDefinition().getStageClassLoader());
-      List<Issue> issues = stage.validateConfigs(info, context);
+      List<Issue> issues = stage.init(info, context);
       if (issues == null) {
         issues = Collections.emptyList();
       }

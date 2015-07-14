@@ -160,8 +160,8 @@ public class TestBaseHdfsTarget {
     configure(dTarget);
     HdfsTarget target = (HdfsTarget) dTarget.createTarget();
     try {
-      target.validateConfigs(null, ContextInfoCreator.createTargetContext(HdfsDTarget.class, "n", false,
-        OnRecordError.TO_ERROR, null));
+      target.init(null, ContextInfoCreator.createTargetContext(HdfsDTarget.class, "n", false,
+                                                               OnRecordError.TO_ERROR, null));
       Assert.assertNotNull(target.getHdfsConfiguration());
     } finally {
       target.destroy();
@@ -182,9 +182,9 @@ public class TestBaseHdfsTarget {
     dTarget.hdfsConfDir = fooDir.getName();
     HdfsTarget target = (HdfsTarget) dTarget.createTarget();
     try {
-      target.validateConfigs(null, ContextInfoCreator.createTargetContext(HdfsDTarget.class, "n", false,
-                                                                          OnRecordError.TO_ERROR,
-                                                                          resourcesDir.getAbsolutePath()));
+      target.init(null, ContextInfoCreator.createTargetContext(HdfsDTarget.class, "n", false,
+                                                               OnRecordError.TO_ERROR,
+                                                               resourcesDir.getAbsolutePath()));
       Configuration conf = target.getHdfsConfiguration();
       Assert.assertEquals("XX", conf.get("xx"));
       Assert.assertEquals("YY", conf.get("yy"));
@@ -205,9 +205,9 @@ public class TestBaseHdfsTarget {
     dTarget.hdfsConfDir = absoluteFilePath.getAbsolutePath();
     target = (HdfsTarget) dTarget.createTarget();
     try {
-      target.validateConfigs(null, ContextInfoCreator.createTargetContext(HdfsDTarget.class, "n", false,
-                                                                          OnRecordError.TO_ERROR,
-                                                                          resourcesDir.getAbsolutePath()));
+      target.init(null, ContextInfoCreator.createTargetContext(HdfsDTarget.class, "n", false,
+                                                               OnRecordError.TO_ERROR,
+                                                               resourcesDir.getAbsolutePath()));
       Configuration conf = target.getHdfsConfiguration();
       Assert.assertEquals("ZZ", conf.get("zz"));
       Assert.assertEquals("AA", conf.get("aa"));
@@ -222,8 +222,8 @@ public class TestBaseHdfsTarget {
     configure(dTarget);
     HdfsTarget target = (HdfsTarget) dTarget.createTarget();
     try {
-      target.validateConfigs(null, ContextInfoCreator.createTargetContext(HdfsDTarget.class, "n", false,
-        OnRecordError.TO_ERROR, null));
+      target.init(null, ContextInfoCreator.createTargetContext(HdfsDTarget.class, "n", false,
+                                                               OnRecordError.TO_ERROR, null));
       Assert.assertEquals("X", target.getHdfsConfiguration().get("x"));
     } finally {
       target.destroy();
@@ -238,7 +238,7 @@ public class TestBaseHdfsTarget {
     try {
       Target.Context context = ContextInfoCreator.createTargetContext(HdfsDTarget.class, "n", false,
         OnRecordError.TO_ERROR, null);
-      target.validateConfigs(null, context);
+      target.init(null, context);
       Assert.assertNull(target.getCompressionCodec());
     } finally {
       target.destroy();
@@ -254,7 +254,7 @@ public class TestBaseHdfsTarget {
     try {
       Target.Context context = ContextInfoCreator.createTargetContext(HdfsDTarget.class, "n", false,
         OnRecordError.TO_ERROR, null);
-      target.validateConfigs(null, context);
+      target.init(null, context);
       Assert.assertEquals(CompressionMode.GZIP.getCodec(), target.getCompressionCodec().getClass());
     } finally {
       target.destroy();
@@ -271,7 +271,7 @@ public class TestBaseHdfsTarget {
     try {
       Target.Context context = ContextInfoCreator.createTargetContext(HdfsDTarget.class, "n", false,
         OnRecordError.TO_ERROR, null);
-      target.validateConfigs(null, context);
+      target.init(null, context);
       Assert.assertEquals(DeflateCodec.class, target.getCompressionCodec().getClass());
     } finally {
       target.destroy();
@@ -287,7 +287,7 @@ public class TestBaseHdfsTarget {
     HdfsTarget target = (HdfsTarget) dTarget.createTarget();
     Target.Context context = ContextInfoCreator.createTargetContext(HdfsDTarget.class, "n", false,
       OnRecordError.TO_ERROR, null);
-    Assert.assertEquals(1, target.validateConfigs(null, context).size());
+    Assert.assertEquals(1, target.init(null, context).size());
   }
 
   @Test
@@ -299,7 +299,7 @@ public class TestBaseHdfsTarget {
     HdfsTarget target = (HdfsTarget) dTarget.createTarget();
     Target.Context context = ContextInfoCreator.createTargetContext(HdfsDTarget.class, "n", false,
       OnRecordError.TO_ERROR, null);
-    Assert.assertEquals(1, target.validateConfigs(null, context).size());
+    Assert.assertEquals(1, target.init(null, context).size());
   }
 
   @Test
@@ -308,8 +308,8 @@ public class TestBaseHdfsTarget {
     configure(dTarget);
     HdfsTarget target = (HdfsTarget) dTarget.createTarget();
     try {
-      target.validateConfigs(null, ContextInfoCreator.createTargetContext(HdfsDTarget.class, "n", false,
-        OnRecordError.TO_ERROR, null));
+      target.init(null, ContextInfoCreator.createTargetContext(HdfsDTarget.class, "n", false,
+                                                               OnRecordError.TO_ERROR, null));
       target.getBatchTime();
       Assert.assertEquals(3600, target.getLateRecordLimitSecs());
     } finally {
@@ -321,8 +321,8 @@ public class TestBaseHdfsTarget {
     dTarget.lateRecordsLimit = "${1 * MINUTES}";
     target = (HdfsTarget) dTarget.createTarget();
     try {
-      target.validateConfigs(null, ContextInfoCreator.createTargetContext(HdfsDTarget.class, "n", false,
-        OnRecordError.TO_ERROR, null));
+      target.init(null, ContextInfoCreator.createTargetContext(HdfsDTarget.class, "n", false,
+                                                               OnRecordError.TO_ERROR, null));
       Assert.assertEquals(60, target.getLateRecordLimitSecs());
     } finally {
       target.destroy();
@@ -335,8 +335,8 @@ public class TestBaseHdfsTarget {
     configure(dTarget);
     HdfsTarget target = (HdfsTarget) dTarget.createTarget();
     try {
-      target.validateConfigs(null, ContextInfoCreator.createTargetContext(HdfsDTarget.class, "n", false,
-        OnRecordError.TO_ERROR, null));
+      target.init(null, ContextInfoCreator.createTargetContext(HdfsDTarget.class, "n", false,
+                                                               OnRecordError.TO_ERROR, null));
       target.getBatchTime();
       Record record = RecordCreator.create();
       target.write((Batch)null); //forcing a setBatchTime()
@@ -354,8 +354,8 @@ public class TestBaseHdfsTarget {
     dTarget.timeDriver = "${record:value('/')}";
     HdfsTarget target = (HdfsTarget) dTarget.createTarget();
     try {
-      target.validateConfigs(null, ContextInfoCreator.createTargetContext(HdfsDTarget.class, "n", false,
-        OnRecordError.TO_ERROR, null));
+      target.init(null, ContextInfoCreator.createTargetContext(HdfsDTarget.class, "n", false,
+                                                               OnRecordError.TO_ERROR, null));
       Date date = new Date();
       Record record = RecordCreator.create();
       record.set(Field.createDatetime(date));

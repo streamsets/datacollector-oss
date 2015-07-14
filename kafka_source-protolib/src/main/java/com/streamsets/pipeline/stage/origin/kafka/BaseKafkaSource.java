@@ -122,7 +122,7 @@ public abstract class BaseKafkaSource extends BaseSource implements OffsetCommit
   }
 
   @Override
-  protected List<ConfigIssue> validateConfigs() {
+  protected List<ConfigIssue> init() {
     List<ConfigIssue> issues = new ArrayList<ConfigIssue>();
     if(topic == null || topic.isEmpty()) {
       issues.add(getContext().createConfigIssue(Groups.KAFKA.name(), "topic",

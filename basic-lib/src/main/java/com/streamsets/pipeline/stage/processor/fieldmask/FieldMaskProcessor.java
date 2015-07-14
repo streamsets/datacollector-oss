@@ -40,8 +40,8 @@ public class FieldMaskProcessor extends SingleLaneRecordProcessor {
   }
 
   @Override
-  protected List<ConfigIssue> validateConfigs() {
-    List<ConfigIssue> issues =  super.validateConfigs();
+  protected List<ConfigIssue> init() {
+    List<ConfigIssue> issues =  super.init();
     for(FieldMaskConfig fieldMaskConfig : fieldMaskConfigs) {
       if(fieldMaskConfig.maskType == MaskType.REGEX) {
         Pattern p = Pattern.compile(fieldMaskConfig.regex);

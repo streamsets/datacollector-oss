@@ -189,8 +189,8 @@ public class FileTailSource extends BaseSource {
   }
 
   @Override
-  protected List<ConfigIssue> validateConfigs() {
-    List<ConfigIssue> issues = super.validateConfigs();
+  protected List<ConfigIssue> init() {
+    List<ConfigIssue> issues = super.init();
     if (postProcessing == PostProcessingOptions.ARCHIVE) {
       if (archiveDir == null || archiveDir.isEmpty()) {
         issues.add(getContext().createConfigIssue(Groups.POST_PROCESSING.name(), "archiveDir", Errors.TAIL_05));
@@ -261,8 +261,8 @@ public class FileTailSource extends BaseSource {
   }
 
   @Override
-  protected void init() throws StageException {
-    super.init();
+  protected void initX() throws StageException {
+    super.initX();
 
     maxWaitTimeMillis = maxWaitTimeSecs * 1000;
 

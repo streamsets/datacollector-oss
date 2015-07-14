@@ -225,13 +225,13 @@ public abstract class StageRunner<S extends Stage> {
   @SuppressWarnings("unchecked")
   public List<Stage.ConfigIssue> runValidateConfigs() throws StageException {
     ensureStatus(Status.CREATED);
-    return stage.validateConfigs(getInfo(), getContext());
+    return stage.init(getInfo(), getContext());
   }
 
   @SuppressWarnings("unchecked")
   public void runInit() throws StageException {
     ensureStatus(Status.CREATED);
-    List<Stage.ConfigIssue> issues = stage.validateConfigs(getInfo(), getContext());
+    List<Stage.ConfigIssue> issues = stage.init(getInfo(), getContext());
     if (!issues.isEmpty()) {
       List<String> list = new ArrayList<>(issues.size());
       for (Stage.ConfigIssue issue : issues) {

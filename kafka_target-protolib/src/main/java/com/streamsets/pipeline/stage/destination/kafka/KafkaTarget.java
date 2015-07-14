@@ -124,8 +124,8 @@ public class KafkaTarget extends BaseTarget {
   }
 
   @Override
-  protected List<ConfigIssue> validateConfigs() {
-    List<ConfigIssue> issues = super.validateConfigs();
+  protected List<ConfigIssue> init() {
+    List<ConfigIssue> issues = super.init();
 
     this.topicPartitionMap = new HashMap<>();
     this.allowedTopics = new HashSet<>();
@@ -185,7 +185,7 @@ public class KafkaTarget extends BaseTarget {
   }
 
   @Override
-  public void init() throws StageException {
+  public void initX() throws StageException {
     kafkaProducer = new KafkaProducer(metadataBrokerList, dataFormat, partitionStrategy, kafkaProducerConfigs);
     kafkaProducer.init();
     generatorFactory = createDataGeneratorFactory();

@@ -63,7 +63,7 @@ public class ClusterKafkaSource extends BaseKafkaSource implements OffsetCommitt
   }
 
   @Override
-  public void init() {
+  public void initX() {
     LOG.info("Successfully initialized Spark Kafka Consumer");
   }
 

@@ -100,7 +100,7 @@ public class TestRecordTarget {
     Stage.Info info = Mockito.mock(Stage.Info.class);
     Target.Context context = Mockito.mock(Target.Context.class);
     Mockito.when(context.getOnErrorRecord()).thenReturn(OnRecordError.DISCARD);
-    target.validateConfigs(info, context);
+    target.init(info, context);
     target.write(batch);
     target.destroy();
     Assert.assertEquals(1, got.size());
@@ -132,7 +132,7 @@ public class TestRecordTarget {
     Stage.Info info = Mockito.mock(Stage.Info.class);
     Target.Context context = Mockito.mock(Target.Context.class);
     Mockito.when(context.getOnErrorRecord()).thenReturn(OnRecordError.TO_ERROR);
-    target.validateConfigs(info, context);
+    target.init(info, context);
     target.write(batch);
     target.destroy();
     Assert.assertEquals(1, got.size());
@@ -166,7 +166,7 @@ public class TestRecordTarget {
     Stage.Info info = Mockito.mock(Stage.Info.class);
     Target.Context context = Mockito.mock(Target.Context.class);
     Mockito.when(context.getOnErrorRecord()).thenReturn(OnRecordError.STOP_PIPELINE);
-    target.validateConfigs(info, context);
+    target.init(info, context);
     target.write(batch);
   }
 
@@ -189,7 +189,7 @@ public class TestRecordTarget {
     Stage.Info info = Mockito.mock(Stage.Info.class);
     Target.Context context = Mockito.mock(Target.Context.class);
     Mockito.when(context.getOnErrorRecord()).thenReturn(onRecordError);
-    target.validateConfigs(info, context);
+    target.init(info, context);
     target.write(batch);
   }
 

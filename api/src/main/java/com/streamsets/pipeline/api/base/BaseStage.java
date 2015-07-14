@@ -19,15 +19,15 @@ public abstract class BaseStage<C extends Context> implements Stage<C> {
   private boolean superInitCalled;
 
   @Override
-  public List<ConfigIssue> validateConfigs(Info info, C context) {
+  public List<ConfigIssue> init(Info info, C context) {
     List<ConfigIssue> issues = new ArrayList<>();
     this.info = info;
     this.context = context;
     try {
-      issues.addAll(validateConfigs());
+      issues.addAll(init());
       if (issues.isEmpty()) {
         try {
-          init();
+          initX();
         } catch (Exception ex) {
           issues.add(context.createConfigIssue(null, null, Errors.API_19, ex.getMessage()));
         }
@@ -40,7 +40,7 @@ public abstract class BaseStage<C extends Context> implements Stage<C> {
     }
   }
 
-  protected List<ConfigIssue> validateConfigs() {
+  protected List<ConfigIssue> init() {
     return new ArrayList<>();
   }
 
@@ -60,7 +60,7 @@ public abstract class BaseStage<C extends Context> implements Stage<C> {
     return context;
   }
 
-  protected void init() throws StageException {
+  protected void initX() throws StageException {
   }
 
   @Override

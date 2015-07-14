@@ -5,7 +5,6 @@
  */
 package com.streamsets.pipeline.api.base;
 
-import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import com.streamsets.pipeline.api.Batch;
 import com.streamsets.pipeline.api.BatchMaker;
@@ -104,7 +103,7 @@ public class TestRecordProcessor {
     Stage.Info info = Mockito.mock(Stage.Info.class);
     Processor.Context context = Mockito.mock(Processor.Context.class);
     Mockito.when(context.getOnErrorRecord()).thenReturn(OnRecordError.DISCARD);
-    processor.validateConfigs(info, context);
+    processor.init(info, context);
     processor.process(batch, batchMaker);
     processor.destroy();
     Assert.assertEquals(1, got.size());
@@ -136,7 +135,7 @@ public class TestRecordProcessor {
     Stage.Info info = Mockito.mock(Stage.Info.class);
     Processor.Context context = Mockito.mock(Processor.Context.class);
     Mockito.when(context.getOnErrorRecord()).thenReturn(OnRecordError.TO_ERROR);
-    processor.validateConfigs(info, context);
+    processor.init(info, context);
     processor.process(batch, batchMaker);
     processor.destroy();
     Assert.assertEquals(1, got.size());
@@ -170,7 +169,7 @@ public class TestRecordProcessor {
     Stage.Info info = Mockito.mock(Stage.Info.class);
     Processor.Context context = Mockito.mock(Processor.Context.class);
     Mockito.when(context.getOnErrorRecord()).thenReturn(OnRecordError.STOP_PIPELINE);
-    processor.validateConfigs(info, context);
+    processor.init(info, context);
     processor.process(batch, batchMaker);
   }
 
@@ -193,7 +192,7 @@ public class TestRecordProcessor {
     Stage.Info info = Mockito.mock(Stage.Info.class);
     Processor.Context context = Mockito.mock(Processor.Context.class);
     Mockito.when(context.getOnErrorRecord()).thenReturn(onRecordError);
-    processor.validateConfigs(info, context);
+    processor.init(info, context);
     processor.process(batch, batchMaker);
   }
 

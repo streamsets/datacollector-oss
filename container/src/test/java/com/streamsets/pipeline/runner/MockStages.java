@@ -143,9 +143,9 @@ public class MockStages {
   public static class MSource implements Source, ErrorListener {
 
     @Override
-    public List<ConfigIssue> validateConfigs(Info info, Context context) {
+    public List<ConfigIssue> init(Info info, Context context) {
       if (sourceCapture != null) {
-        return sourceCapture.validateConfigs(info, context);
+        return sourceCapture.init(info, context);
       } else {
         return Collections.emptyList();
       }
@@ -182,9 +182,9 @@ public class MockStages {
   public static class ComplexSource implements Source {
 
     @Override
-    public List<ConfigIssue> validateConfigs(Info info, Context context) {
+    public List<ConfigIssue> init(Info info, Context context) {
       if (sourceCapture != null) {
-        return sourceCapture.validateConfigs(info, context);
+        return sourceCapture.init(info, context);
       } else {
         return Collections.emptyList();
       }
@@ -214,9 +214,9 @@ public class MockStages {
   public static class ClusterMSource implements ClusterSource {
 
     @Override
-    public List<ConfigIssue> validateConfigs(Info info, Context context) {
+    public List<ConfigIssue> init(Info info, Context context) {
       if (sourceCapture != null) {
-        return sourceCapture.validateConfigs(info, context);
+        return sourceCapture.init(info, context);
       } else {
         return Collections.emptyList();
       }
@@ -290,9 +290,9 @@ public class MockStages {
   public static class MProcessor implements Processor {
 
     @Override
-    public List<ConfigIssue> validateConfigs(Info info, Context context) {
+    public List<ConfigIssue> init(Info info, Context context) {
       if (processorCapture != null) {
-        return processorCapture.validateConfigs(info, context);
+        return processorCapture.init(info, context);
       } else {
         return Collections.emptyList();
       }
@@ -316,9 +316,9 @@ public class MockStages {
   public static class MTarget implements Target {
 
     @Override
-    public List<ConfigIssue> validateConfigs(Info info, Context context) {
+    public List<ConfigIssue> init(Info info, Context context) {
       if (targetCapture != null) {
-        return targetCapture.validateConfigs(info, context);
+        return targetCapture.init(info, context);
       } else {
         return Collections.emptyList();
       }
@@ -346,9 +346,9 @@ public class MockStages {
     public String errorTargetConfFieldName;
 
     @Override
-    public List<ConfigIssue> validateConfigs(Info info, Context context) {
+    public List<ConfigIssue> init(Info info, Context context) {
       if (errorCapture != null) {
-        return errorCapture.validateConfigs(info, context);
+        return errorCapture.init(info, context);
       } else {
         return Collections.emptyList();
       }

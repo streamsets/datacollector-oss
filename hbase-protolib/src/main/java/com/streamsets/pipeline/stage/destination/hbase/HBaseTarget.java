@@ -88,8 +88,8 @@ public class HBaseTarget extends BaseTarget {
   }
 
   @Override
-  protected void init() throws StageException {
-    super.init();
+  protected void initX() throws StageException {
+    super.initX();
     for (HBaseFieldMappingConfig column : hbaseFieldColumnMapping) {
       columnMappings.put(column.columnName, new ColumnInfo(column.columnValue,
           column.columnStorageType));
@@ -97,8 +97,8 @@ public class HBaseTarget extends BaseTarget {
   }
 
   @Override
-  protected List<ConfigIssue> validateConfigs() {
-    List<ConfigIssue> issues = super.validateConfigs();
+  protected List<ConfigIssue> init() {
+    List<ConfigIssue> issues = super.init();
     hbaseConf = getHBaseConfiguration(issues);
 
     if (getContext().isPreview()) {

@@ -320,7 +320,7 @@ public class TestProductionPipeline {
     }
 
     @Override
-    public List<ConfigIssue> validateConfigs(Info info, Context context) {
+    public List<ConfigIssue> init(Info info, Context context) {
       return Arrays.asList(context.createConfigIssue(null, null, ContainerError.CONTAINER_0000));
     }
 

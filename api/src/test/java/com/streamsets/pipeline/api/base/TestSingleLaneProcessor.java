@@ -36,7 +36,7 @@ public class TestSingleLaneProcessor {
     Stage.Info info = Mockito.mock(Stage.Info.class);
     Processor.Context context = Mockito.mock(Processor.Context.class);
     Mockito.when(context.getOutputLanes()).thenReturn(Collections.EMPTY_LIST);
-    Assert.assertFalse(processor.validateConfigs(info, context).isEmpty());
+    Assert.assertFalse(processor.init(info, context).isEmpty());
   }
 
   @Test
@@ -51,7 +51,7 @@ public class TestSingleLaneProcessor {
     Stage.Info info = Mockito.mock(Stage.Info.class);
     Processor.Context context = Mockito.mock(Processor.Context.class);
     Mockito.when(context.getOutputLanes()).thenReturn(ImmutableList.of("l2", "l3"));
-    Assert.assertFalse(processor.validateConfigs(info, context).isEmpty());
+    Assert.assertFalse(processor.init(info, context).isEmpty());
   }
 
   @Test
@@ -61,7 +61,7 @@ public class TestSingleLaneProcessor {
     Processor processor = new SingleLaneProcessor() {
 
       @Override
-      protected void init() throws StageException {
+      protected void initX() throws StageException {
       }
 
       @Override
@@ -72,7 +72,7 @@ public class TestSingleLaneProcessor {
     Stage.Info info = Mockito.mock(Stage.Info.class);
     Processor.Context context = Mockito.mock(Processor.Context.class);
     Mockito.when(context.getOutputLanes()).thenReturn(Collections.EMPTY_LIST);
-    Assert.assertFalse(processor.validateConfigs(info, context).isEmpty());
+    Assert.assertFalse(processor.init(info, context).isEmpty());
   }
 
   @Test
@@ -86,8 +86,8 @@ public class TestSingleLaneProcessor {
     Processor processor = new SingleLaneProcessor() {
 
       @Override
-      protected void init() throws StageException {
-        super.init();
+      protected void initX() throws StageException {
+        super.initX();
       }
 
       @Override
@@ -102,7 +102,7 @@ public class TestSingleLaneProcessor {
     Stage.Info info = Mockito.mock(Stage.Info.class);
     Processor.Context context = Mockito.mock(Processor.Context.class);
     Mockito.when(context.getOutputLanes()).thenReturn(ImmutableList.of("l2"));
-    processor.validateConfigs(info, context);
+    processor.init(info, context);
 
     processor.process(batch, batchMaker);
     ArgumentCaptor<Record> recordCaptor = ArgumentCaptor.forClass(Record.class);

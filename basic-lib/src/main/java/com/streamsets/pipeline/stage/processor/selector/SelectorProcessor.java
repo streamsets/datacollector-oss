@@ -40,8 +40,8 @@ public class SelectorProcessor extends RecordProcessor {
   }
 
   @Override
-  protected List<ConfigIssue> validateConfigs() {
-    List<ConfigIssue> issues = super.validateConfigs();
+  protected List<ConfigIssue> init() {
+    List<ConfigIssue> issues = super.init();
     if (lanePredicates == null || lanePredicates.size() == 0) {
       issues.add(getContext().createConfigIssue(Groups.CONDITIONS.name(), "lanePredicates", Errors.SELECTOR_00));
     } else {
@@ -96,8 +96,8 @@ public class SelectorProcessor extends RecordProcessor {
   }
 
   @Override
-  protected void init() throws StageException {
-    super.init();
+  protected void initX() throws StageException {
+    super.initX();
     defaultLane = predicateLanes[predicateLanes.length - 1][1];
   }
 
