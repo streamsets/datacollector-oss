@@ -304,7 +304,7 @@ public class TestProductionPipeline {
       REVISION, runtimeInfo, pConf).build(runner, tracker, null);
 
     if(captureNextBatch) {
-      runner.captureNextBatch("snapshot", 1);
+      runner.capture("snapshot", 1, 1);
     }
 
     return pipeline;

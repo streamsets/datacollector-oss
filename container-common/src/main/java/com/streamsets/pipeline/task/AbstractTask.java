@@ -43,7 +43,7 @@ public abstract class AbstractTask implements Task {
   }
 
   @Override
-  public synchronized void init() {
+  public final synchronized void init() {
     Preconditions.checkState(VALID_TRANSITIONS.get(getStatus()).contains(Status.INITIALIZED),
                              Utils.formatL(STATE_ERROR_MSG, getStatus()));
     try {
@@ -60,7 +60,7 @@ public abstract class AbstractTask implements Task {
   }
 
   @Override
-  public synchronized void run() {
+  public final synchronized void run() {
     Preconditions.checkState(VALID_TRANSITIONS.get(getStatus()).contains(Status.RUNNING),
                              Utils.formatL(STATE_ERROR_MSG, getStatus()));
     setStatus(Status.RUNNING);
@@ -77,7 +77,7 @@ public abstract class AbstractTask implements Task {
   }
 
   @Override
-  public synchronized void stop() {
+  public final synchronized void stop() {
     Preconditions.checkState(VALID_TRANSITIONS.get(getStatus()).contains(Status.STOPPED),
                              Utils.formatL(STATE_ERROR_MSG, getStatus()));
     if (getStatus() != Status.STOPPED) {

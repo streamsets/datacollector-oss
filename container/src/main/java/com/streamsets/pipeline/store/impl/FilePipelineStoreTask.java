@@ -101,7 +101,7 @@ public class FilePipelineStoreTask extends AbstractTask implements PipelineStore
   }
 
   @Override
-  protected void initTask() {
+  public void initTask() {
     if (runtimeInfo.getExecutionMode() == RuntimeInfo.ExecutionMode.SLAVE) {
       storeDir = new File(runtimeInfo.getDataDir());
     } else {
@@ -118,7 +118,7 @@ public class FilePipelineStoreTask extends AbstractTask implements PipelineStore
   }
 
   @Override
-  protected void stopTask() {
+  public void stopTask() {
     if (pipelineStateStore != null) {
       pipelineStateStore.destroy();
     }

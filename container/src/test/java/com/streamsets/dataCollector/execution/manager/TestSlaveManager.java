@@ -5,53 +5,51 @@
  */
 package com.streamsets.dataCollector.execution.manager;
 
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
-
-import java.io.File;
-import java.io.IOException;
-import java.net.URL;
-import java.net.URLClassLoader;
-import java.util.Arrays;
-
-import javax.inject.Named;
-import javax.inject.Singleton;
-
-import org.apache.commons.io.FileUtils;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
-
 import com.codahale.metrics.MetricRegistry;
 import com.streamsets.dataCollector.execution.Manager;
 import com.streamsets.dataCollector.execution.PipelineStateStore;
 import com.streamsets.dataCollector.execution.Runner;
-import com.streamsets.dataCollector.execution.runner.RunnerProviderImpl;
-import com.streamsets.dataCollector.execution.runner.StandaloneRunner;
+import com.streamsets.dataCollector.execution.SnapshotStore;
+import com.streamsets.dataCollector.execution.manager.slave.SlavePipelineManager;
+import com.streamsets.dataCollector.execution.runner.provider.SlaveRunnerProviderImpl;
+import com.streamsets.dataCollector.execution.runner.standalone.StandaloneRunner;
 import com.streamsets.dataCollector.execution.store.FilePipelineStateStore;
 import com.streamsets.dataCollector.execution.store.SlavePipelineStateStore;
 import com.streamsets.pipeline.lib.executor.SafeScheduledExecutorService;
 import com.streamsets.pipeline.main.RuntimeInfo;
 import com.streamsets.pipeline.main.RuntimeModule;
 import com.streamsets.pipeline.runner.MockStages;
-import com.streamsets.pipeline.snapshotstore.SnapshotStore;
-import com.streamsets.pipeline.snapshotstore.impl.FileSnapshotStore;
 import com.streamsets.pipeline.stagelibrary.StageLibraryTask;
 import com.streamsets.pipeline.store.PipelineStoreTask;
 import com.streamsets.pipeline.store.impl.SlavePipelineStoreTask;
 import com.streamsets.pipeline.util.Configuration;
 import com.streamsets.pipeline.util.TestUtil;
-
 import dagger.Module;
 import dagger.ObjectGraph;
 import dagger.Provides;
+import org.apache.commons.io.FileUtils;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
+import org.mockito.Mockito;
+
+import javax.inject.Named;
+import javax.inject.Singleton;
+import java.io.File;
+import java.io.IOException;
+import java.net.URL;
+import java.net.URLClassLoader;
+import java.util.Arrays;
+
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 public class TestSlaveManager {
 
   private Manager manager;
 
   @Module(
-    injects = { SlaveManager.class, PipelineStoreTask.class, PipelineStateStore.class, StandaloneRunner.class },
+    injects = { SlavePipelineManager.class, PipelineStoreTask.class, PipelineStateStore.class, StandaloneRunner.class },
     library = true)
   public static class TestSlaveManagerModule {
 
@@ -105,20 +103,26 @@ public class TestSlaveManager {
 
     @Provides
     @Singleton
-    public SnapshotStore provideSnapshotStore(RuntimeInfo runtimeInfo) {
-      return new FileSnapshotStore(runtimeInfo);
+    @Named("asyncExecutor")
+    public SafeScheduledExecutorService provideAsyncExecutor() {
+      return new SafeScheduledExecutorService(1, "asyncExecutor");
     }
 
     @Provides
     @Singleton
     public RunnerProvider provideRunnerProvider() {
-      return new RunnerProviderImpl();
+      return new SlaveRunnerProviderImpl();
+    }
+
+    @Provides @Singleton
+    public SnapshotStore provideSnapshotStore(RuntimeInfo runtimeInfo) {
+      return Mockito.mock(SnapshotStore.class);
     }
   }
 
   private void setUpManager() {
     ObjectGraph objectGraph = ObjectGraph.create(new TestSlaveManagerModule());
-    manager = new SlaveManager(objectGraph);
+    manager = new SlavePipelineManager(objectGraph);
     manager.init();
   }
 
@@ -141,19 +145,19 @@ public class TestSlaveManager {
 
   @Test
   public void testGetRunner() throws Exception {
-    Runner runner = manager.getRunner("user1", "pipe1", "0");
+    Runner runner = manager.getRunner(TestUtil.USER, TestUtil.MY_PIPELINE, TestUtil.ZERO_REV);
     try {
       runner.resetOffset();
       fail("Expected exception but didn't get any");
     } catch (UnsupportedOperationException e) {
       //expected
     }
-    assertTrue(!manager.isPipelineActive("pipe1", "0"));
-    Runner runner2 = manager.getRunner("user1", "pipe1", "0");
+    assertTrue(!manager.isPipelineActive(TestUtil.MY_PIPELINE, TestUtil.ZERO_REV));
+    Runner runner2 = manager.getRunner(TestUtil.USER, TestUtil.MY_PIPELINE, TestUtil.ZERO_REV);
     assertTrue (runner == runner2);
 
     try {
-      manager.getRunner("user1", "pipe2", "0");
+      manager.getRunner(TestUtil.USER, "pipe2", TestUtil.ZERO_REV);
       fail("Expected exception but didn't get any");
     } catch (IllegalStateException e) {
       //expected

@@ -6,8 +6,8 @@
 package com.streamsets.dataCollector.execution.manager;
 
 import com.streamsets.dataCollector.execution.Runner;
-import com.streamsets.pipeline.config.PipelineConfiguration;
 import com.streamsets.pipeline.creation.PipelineConfigBean;
+import com.streamsets.pipeline.api.ExecutionMode;
 import dagger.ObjectGraph;
 
 /**

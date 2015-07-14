@@ -6,7 +6,7 @@
 package com.streamsets.dataCollector.restapi.bean;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.streamsets.dataCollector.execution.snapshot.SnapshotData;
+import com.streamsets.dataCollector.execution.snapshot.common.SnapshotData;
 import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.restapi.bean.BeanHelper;
 import com.streamsets.pipeline.restapi.bean.StageOutputJson;

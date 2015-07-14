@@ -11,7 +11,7 @@ import dagger.Provides;
 
 import javax.inject.Singleton;
 
-@Module(library = true, includes = {RuntimeModule.class})
+@Module(injects = StageLibraryTask.class, library = true, includes = {RuntimeModule.class})
 public class StageLibraryModule {
 
   @Provides

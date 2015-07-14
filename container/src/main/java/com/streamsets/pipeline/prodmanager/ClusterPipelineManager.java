@@ -146,7 +146,7 @@ public class
   }
 
   @Override
-  protected void initTask() {
+  public void initTask() {
     stateTracker.init();
     final PipelineState ps = getPipelineState();
     LOG.info("State on initTask: " + ps);
@@ -211,7 +211,7 @@ public class
   }
 
   @Override
-  protected void stopTask() {
+  public void stopTask() {
     executor.shutdownNow();
     scheduledExecutor.shutdownNow();
     // DO nothing, SDC goes down but pipeline should continue running

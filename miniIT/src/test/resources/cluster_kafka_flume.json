@@ -314,7 +314,7 @@
     "outputLanes" : [ ]
   }, {
     "instanceName" : "com_streamsets_pipeline_stage_destination_flume_FlumeDTarget1432855334685",
-    "library" : "streamsets-datacollector-cdh_5_3-lib",
+    "library" : "streamsets-datacollector-cdh_5_4-lib",
     "stageName" : "com_streamsets_pipeline_stage_destination_flume_FlumeDTarget",
     "stageVersion" : "1.0.0",
     "configuration" : [ {

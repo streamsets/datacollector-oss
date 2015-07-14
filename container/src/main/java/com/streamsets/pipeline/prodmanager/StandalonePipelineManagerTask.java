@@ -12,8 +12,7 @@ import com.google.common.annotations.VisibleForTesting;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
-import com.streamsets.dataCollector.execution.runner.PipelineRunnerException;
-import com.streamsets.dataCollector.execution.runner.StandaloneRunner;
+import com.streamsets.dataCollector.execution.runner.standalone.StandaloneRunner;
 import com.streamsets.pipeline.alerts.AlertEventListener;
 import com.streamsets.pipeline.alerts.AlertManager;
 import com.streamsets.pipeline.alerts.AlertsUtil;
@@ -365,7 +364,7 @@ public class StandalonePipelineManagerTask extends AbstractTask implements Pipel
     if(batchSize <= 0) {
       throw new PipelineManagerException(ContainerError.CONTAINER_0107, batchSize);
     }
-    prodPipeline.captureSnapshot(snapshotName, batchSize);
+    prodPipeline.captureSnapshot(snapshotName, batchSize, 1);
     LOG.debug("Captured snapshot with batch size {}", batchSize);
   }
 

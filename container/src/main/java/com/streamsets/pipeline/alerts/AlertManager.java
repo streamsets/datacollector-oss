@@ -7,7 +7,7 @@ package com.streamsets.pipeline.alerts;
 
 import com.codahale.metrics.Gauge;
 import com.codahale.metrics.MetricRegistry;
-import com.streamsets.dataCollector.execution.runner.StandaloneRunner;
+import com.streamsets.dataCollector.execution.runner.standalone.StandaloneRunner;
 import com.streamsets.pipeline.config.RuleDefinition;
 import com.streamsets.pipeline.email.EmailSender;
 import com.streamsets.pipeline.main.RuntimeInfo;

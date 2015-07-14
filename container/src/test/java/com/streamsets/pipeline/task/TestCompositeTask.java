@@ -24,17 +24,17 @@ public class TestCompositeTask {
     }
 
     @Override
-    protected void initTask() {
+    public void initTask() {
       initOrder.add(getName());
     }
 
     @Override
-    protected void runTask() {
+    public void runTask() {
       runOrder.add(getName());
     }
 
     @Override
-    protected void stopTask() {
+    public void stopTask() {
       stopOrder.add(getName());
     }
 

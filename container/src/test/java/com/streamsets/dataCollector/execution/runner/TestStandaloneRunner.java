@@ -8,7 +8,7 @@ import com.streamsets.dataCollector.execution.Manager;
 import com.streamsets.dataCollector.execution.PipelineStateStore;
 import com.streamsets.dataCollector.execution.PipelineStatus;
 import com.streamsets.dataCollector.execution.Runner;
-import com.streamsets.dataCollector.execution.manager.PipelineManager;
+import com.streamsets.dataCollector.execution.manager.standalone.StandaloneAndClusterPipelineManager;
 import com.streamsets.pipeline.api.ExecutionMode;
 import com.streamsets.pipeline.main.RuntimeInfo;
 import com.streamsets.pipeline.main.RuntimeModule;
@@ -56,7 +56,7 @@ public class TestStandaloneRunner {
     TestUtil.EMPTY_OFFSET = false;
     ObjectGraph objectGraph = ObjectGraph.create(new TestUtil.TestPipelineManagerModule());
     pipelineStateStore = objectGraph.get(PipelineStateStore.class);
-    pipelineManager = new PipelineManager(objectGraph);
+    pipelineManager = new StandaloneAndClusterPipelineManager(objectGraph);
     pipelineManager.init();
   }
 
@@ -152,7 +152,7 @@ public class TestStandaloneRunner {
 
     ObjectGraph objectGraph = ObjectGraph.create(new TestUtil.TestPipelineManagerModule());
     pipelineStateStore = objectGraph.get(PipelineStateStore.class);
-    pipelineManager = new PipelineManager(objectGraph);
+    pipelineManager = new StandaloneAndClusterPipelineManager(objectGraph);
     pipelineManager.init();
 
     while(pipelineManager.getRunner("admin", TestUtil.MY_PIPELINE, "0").getStatus()!=PipelineStatus.RUNNING) {
@@ -179,7 +179,7 @@ public class TestStandaloneRunner {
       ExecutionMode.STANDALONE);
     ObjectGraph objectGraph = ObjectGraph.create(new TestUtil.TestPipelineManagerModule());
     pipelineStateStore = objectGraph.get(PipelineStateStore.class);
-    pipelineManager = new PipelineManager(objectGraph);
+    pipelineManager = new StandaloneAndClusterPipelineManager(objectGraph);
     pipelineManager.init();
 
     //Since SDC went down we need to get the runner again
@@ -262,7 +262,7 @@ public class TestStandaloneRunner {
 
     ObjectGraph objectGraph = ObjectGraph.create(new TestUtil.TestPipelineManagerModule());
     pipelineStateStore = objectGraph.get(PipelineStateStore.class);
-    pipelineManager = new PipelineManager(objectGraph);
+    pipelineManager = new StandaloneAndClusterPipelineManager(objectGraph);
     pipelineManager.init();
     Thread.sleep(2000);
 

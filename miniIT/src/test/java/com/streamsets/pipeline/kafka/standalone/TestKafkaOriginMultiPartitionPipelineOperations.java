@@ -64,7 +64,7 @@ public class TestKafkaOriginMultiPartitionPipelineOperations extends TestPipelin
 
   @Override
   protected String getPipelineRev() {
-    return "1";
+    return "0";
   }
 
   @Override

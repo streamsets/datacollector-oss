@@ -10,20 +10,23 @@ import com.streamsets.dataCollector.execution.PipelineStateStore;
 import com.streamsets.dataCollector.execution.Previewer;
 import com.streamsets.dataCollector.execution.PreviewerListener;
 import com.streamsets.dataCollector.execution.Runner;
+import com.streamsets.dataCollector.execution.SnapshotStore;
 import com.streamsets.dataCollector.execution.alerts.AlertManager;
-import com.streamsets.dataCollector.execution.manager.PipelineManager;
 import com.streamsets.dataCollector.execution.manager.PreviewerProvider;
 import com.streamsets.dataCollector.execution.manager.RunnerProvider;
-import com.streamsets.dataCollector.execution.runner.AsyncRunner;
-import com.streamsets.dataCollector.execution.runner.DataObserverRunnable;
-import com.streamsets.dataCollector.execution.runner.MetricObserverRunnable;
-import com.streamsets.dataCollector.execution.runner.MetricsObserverRunner;
-import com.streamsets.dataCollector.execution.runner.ProductionObserver;
-import com.streamsets.dataCollector.execution.runner.StandaloneRunner;
+import com.streamsets.dataCollector.execution.manager.standalone.StandaloneAndClusterPipelineManager;
+import com.streamsets.dataCollector.execution.runner.common.AsyncRunner;
+import com.streamsets.dataCollector.execution.runner.common.DataObserverRunnable;
+import com.streamsets.dataCollector.execution.runner.common.MetricObserverRunnable;
+import com.streamsets.dataCollector.execution.runner.common.MetricsObserverRunner;
+import com.streamsets.dataCollector.execution.runner.common.ProductionObserver;
+import com.streamsets.dataCollector.execution.runner.standalone.StandaloneRunner;
+import com.streamsets.dataCollector.execution.snapshot.file.FileSnapshotStore;
 import com.streamsets.dataCollector.execution.store.CachePipelineStateStore;
 import com.streamsets.dataCollector.execution.store.FilePipelineStateStore;
 import com.streamsets.pipeline.api.Batch;
 import com.streamsets.pipeline.api.BatchMaker;
+import com.streamsets.pipeline.api.ExecutionMode;
 import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
@@ -31,6 +34,7 @@ import com.streamsets.pipeline.api.base.BaseSource;
 import com.streamsets.pipeline.api.base.BaseTarget;
 import com.streamsets.pipeline.api.base.SingleLaneProcessor;
 import com.streamsets.pipeline.api.base.SingleLaneRecordProcessor;
+import com.streamsets.pipeline.config.ConfigConfiguration;
 import com.streamsets.pipeline.config.DataRuleDefinition;
 import com.streamsets.pipeline.config.MetricsRuleDefinition;
 import com.streamsets.pipeline.config.PipelineConfiguration;
@@ -47,14 +51,10 @@ import com.streamsets.pipeline.prodmanager.State;
 import com.streamsets.pipeline.runner.MockStages;
 import com.streamsets.pipeline.runner.Observer;
 import com.streamsets.pipeline.runner.SourceOffsetTracker;
-import com.streamsets.pipeline.runner.production.ProductionPipelineBuilder;
-import com.streamsets.pipeline.runner.production.ProductionPipelineRunner;
 import com.streamsets.pipeline.runner.production.ProductionSourceOffsetTracker;
 import com.streamsets.pipeline.runner.production.RulesConfigLoader;
 import com.streamsets.pipeline.runner.production.RulesConfigLoaderRunnable;
 import com.streamsets.pipeline.runner.production.ThreadHealthReporter;
-import com.streamsets.pipeline.snapshotstore.SnapshotStore;
-import com.streamsets.pipeline.snapshotstore.impl.FileSnapshotStore;
 import com.streamsets.pipeline.stagelibrary.StageLibraryTask;
 import com.streamsets.pipeline.store.PipelineStoreException;
 import com.streamsets.pipeline.store.PipelineStoreTask;
@@ -78,9 +78,11 @@ import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
 public class TestUtil {
+  public static final String USER = "user";
   public static final String MY_PIPELINE = "my pipeline";
   public static final String MY_SECOND_PIPELINE = "my second pipeline";
   public static final String PIPELINE_REV = "2.0";
+  public static final String ZERO_REV = "0";
   public static boolean EMPTY_OFFSET = false;
 
   public static class SourceOffsetTrackerImpl implements SourceOffsetTracker {
@@ -293,19 +295,23 @@ public class TestUtil {
         //The if check is needed because the tests restart the pipeline manager. In that case the check prevents
         //us from trying to create the same pipeline again
         if(!pipelineStoreTask.hasPipeline("invalid")) {
-          pipelineStoreTask.create("user", "invalid", "invalid cox its empty");
+          pipelineStoreTask.create(USER, "invalid", "invalid cox its empty");
           PipelineConfiguration pipelineConf = pipelineStoreTask.load("invalid", PIPELINE_REV);
           PipelineConfiguration mockPipelineConf = MockStages.createPipelineConfigurationSourceTarget();
           pipelineConf.setErrorStage(mockPipelineConf.getErrorStage());
+          pipelineConf.getConfiguration().add(new ConfigConfiguration("executionMode",
+            ExecutionMode.STANDALONE.name()));
         }
 
         if(!pipelineStoreTask.hasPipeline(MY_PIPELINE)) {
-          pipelineStoreTask.create("user", MY_PIPELINE, "description");
-          PipelineConfiguration pipelineConf = pipelineStoreTask.load(MY_PIPELINE, "0");
+          pipelineStoreTask.create(USER, MY_PIPELINE, "description");
+          PipelineConfiguration pipelineConf = pipelineStoreTask.load(MY_PIPELINE, ZERO_REV);
           PipelineConfiguration mockPipelineConf = MockStages.createPipelineConfigurationSourceTarget();
           pipelineConf.setStages(mockPipelineConf.getStages());
           pipelineConf.setErrorStage(mockPipelineConf.getErrorStage());
-          pipelineStoreTask.save("admin", MY_PIPELINE, "0", "description"
+          pipelineConf.getConfiguration().add(new ConfigConfiguration("executionMode",
+            ExecutionMode.STANDALONE.name()));
+          pipelineStoreTask.save("admin", MY_PIPELINE, ZERO_REV, "description"
             , pipelineConf);
 
           //create a DataRuleDefinition for one of the stages
@@ -316,16 +322,18 @@ public class TestUtil {
 
           RuleDefinitions ruleDefinitions = new RuleDefinitions(Collections.<MetricsRuleDefinition>emptyList(),
             dataRuleDefinitions, Collections.<String>emptyList(), UUID.randomUUID());
-          pipelineStoreTask.storeRules(MY_PIPELINE, "0", ruleDefinitions);
+          pipelineStoreTask.storeRules(MY_PIPELINE, ZERO_REV, ruleDefinitions);
         }
 
         if(!pipelineStoreTask.hasPipeline(MY_SECOND_PIPELINE)) {
           pipelineStoreTask.create("user2", MY_SECOND_PIPELINE, "description2");
-          PipelineConfiguration pipelineConf = pipelineStoreTask.load(MY_SECOND_PIPELINE, "0");
+          PipelineConfiguration pipelineConf = pipelineStoreTask.load(MY_SECOND_PIPELINE, ZERO_REV);
           PipelineConfiguration mockPipelineConf = MockStages.createPipelineConfigurationSourceProcessorTarget();
           pipelineConf.setStages(mockPipelineConf.getStages());
           pipelineConf.setErrorStage(mockPipelineConf.getErrorStage());
-          pipelineStoreTask.save("admin2", MY_SECOND_PIPELINE, "0", "description"
+          pipelineConf.getConfiguration().add(new ConfigConfiguration("executionMode",
+            ExecutionMode.STANDALONE.name()));
+          pipelineStoreTask.save("admin2", MY_SECOND_PIPELINE, ZERO_REV, "description"
             , pipelineConf);
         }
       } catch (PipelineStoreException e) {
@@ -411,9 +419,12 @@ public class TestUtil {
   /*************** PipelineProvider ***************/
 
   @Module(injects = {EmailSender.class, AlertManager.class, ProductionObserver.class, RulesConfigLoader.class,
-    ThreadHealthReporter.class, DataObserverRunnable.class, RulesConfigLoaderRunnable.class, MetricObserverRunnable.class,
-    SourceOffsetTracker.class, ProductionPipelineRunner.class, ProductionPipelineBuilder.class},
-    library = true, includes = {TestRuntimeModule.class, TestPipelineStoreModuleNew.class})
+    ThreadHealthReporter.class, DataObserverRunnable.class, RulesConfigLoaderRunnable.class,
+    MetricObserverRunnable.class, SourceOffsetTracker.class,
+    com.streamsets.dataCollector.execution.runner.common.ProductionPipelineRunner.class,
+    com.streamsets.dataCollector.execution.runner.common.ProductionPipelineBuilder.class},
+    library = true, includes = {TestRuntimeModule.class, TestPipelineStoreModuleNew.class,
+    TestSnapshotStoreModule.class})
   public static class TestPipelineProviderModule {
 
     private String name;
@@ -498,27 +509,24 @@ public class TestUtil {
     }
 
     @Provides @Singleton
-    public ProductionPipelineRunner provideProductionPipelineRunner(@Named("name") String name,
+    public com.streamsets.dataCollector.execution.runner.common.ProductionPipelineRunner
+    provideProductionPipelineRunner(@Named("name") String name,
                                                                     @Named("rev") String rev, Configuration configuration, RuntimeInfo runtimeInfo,
                                                                     MetricRegistry metrics, SnapshotStore snapshotStore,
                                                                     ThreadHealthReporter threadHealthReporter,
                                                                     SourceOffsetTracker sourceOffsetTracker) {
-      return new ProductionPipelineRunner(name, rev, configuration, runtimeInfo, metrics, snapshotStore,
+      return new com.streamsets.dataCollector.execution.runner.common.ProductionPipelineRunner(name, rev, configuration, runtimeInfo, metrics, snapshotStore,
         threadHealthReporter, sourceOffsetTracker);
     }
 
     @Provides @Singleton
-    public ProductionPipelineBuilder provideProductionPipelineBuilder(@Named("name") String name,
+    public com.streamsets.dataCollector.execution.runner.common.ProductionPipelineBuilder provideProductionPipelineBuilder(@Named("name") String name,
                                                                       @Named("rev") String rev,
                                                                       RuntimeInfo runtimeInfo, StageLibraryTask stageLib,
-                                                                      ProductionPipelineRunner runner, Observer observer) {
-      return new ProductionPipelineBuilder(name, rev, runtimeInfo, stageLib, runner, observer);
+                                                                      com.streamsets.dataCollector.execution.runner.common.ProductionPipelineRunner runner, Observer observer) {
+      return new com.streamsets.dataCollector.execution.runner.common.ProductionPipelineBuilder(name, rev, runtimeInfo, stageLib, runner, observer);
     }
 
-    @Provides @Singleton
-    public SnapshotStore provideSnapshotStore(RuntimeInfo runtimeInfo) {
-      return new FileSnapshotStore(runtimeInfo);
-    }
   }
 
   /*************** Runner ***************/
@@ -545,11 +553,23 @@ public class TestUtil {
     }
   }
 
+  /*************** SnapshotStore ***************/
+
+  @Module(injects = SnapshotStore.class, library = true, includes = {TestRuntimeModule.class})
+  public static class TestSnapshotStoreModule {
+    @Provides
+    @Singleton
+    public SnapshotStore provideSnapshotStore(RuntimeInfo runtimeInfo) {
+      return new FileSnapshotStore(runtimeInfo);
+    }
+  }
+
   /*************** PipelineManager ***************/
 
-  @Module(injects = {PipelineManager.class, StandaloneRunner.class}, library = true,
+  @Module(injects = {StandaloneAndClusterPipelineManager.class, StandaloneRunner.class}, library = true,
     includes = { TestRuntimeModule.class, TestPipelineStoreModuleNew.class, TestPipelineStateStoreModule.class,
-      TestStageLibraryModule.class, TestConfigurationModule.class, TestExecutorModule.class, TestPipelineProviderModule.class})
+      TestStageLibraryModule.class, TestConfigurationModule.class, TestExecutorModule.class,
+      TestPipelineProviderModule.class})
   public static class TestPipelineManagerModule {
 
     public TestPipelineManagerModule() {

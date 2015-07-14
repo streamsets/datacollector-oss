@@ -76,7 +76,7 @@ public class TestAbstractTask {
   public void testInitError() {
     Task task = new AbstractTask("name"){
       @Override
-      protected void initTask() {
+      public void initTask() {
         throw new RuntimeException();
       }
     };
@@ -91,7 +91,7 @@ public class TestAbstractTask {
   public void testRunError() {
     Task task = new AbstractTask("name"){
       @Override
-      protected void runTask() {
+      public void runTask() {
         throw new RuntimeException();
       }
     };
@@ -107,7 +107,7 @@ public class TestAbstractTask {
   public void testStopError() {
     Task task = new AbstractTask("name"){
       @Override
-      protected void stopTask() {
+      public void stopTask() {
         throw new RuntimeException();
       }
     };

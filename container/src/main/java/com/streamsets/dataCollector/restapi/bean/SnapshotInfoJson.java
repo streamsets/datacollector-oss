@@ -9,7 +9,7 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.streamsets.dataCollector.execution.SnapshotInfo;
-import com.streamsets.dataCollector.execution.snapshot.SnapshotInfoImpl;
+import com.streamsets.dataCollector.execution.snapshot.common.SnapshotInfoImpl;
 
 public class SnapshotInfoJson {
 

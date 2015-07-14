@@ -69,7 +69,7 @@ public class TestKafkaOriginSinglePartition extends TestPipelineOperationsCluste
 
   @Override
   protected String getPipelineRev() {
-    return "1";
+    return "0";
   }
 
 }

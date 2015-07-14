@@ -93,7 +93,7 @@ public class TestFlumeDestinationPipelineOperations extends TestPipelineOperatio
 
   @Override
   protected String getPipelineRev() {
-    return "1";
+    return "0";
   }
 
   @Override

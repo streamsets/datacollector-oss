@@ -204,11 +204,9 @@ public class StagePipe extends Pipe<StagePipe.Context> {
           return context.getRuntimeStats();
         }
       };
-      LOG.error("/************** Creating runtime stats gauge in Metric Registry " + metricRegistry.toString() + " by thread " + Thread.currentThread().toString());
       try {
         MetricsConfigurator.createGauge(metricRegistry, RUNTIME_STATS_GAUGE, runtimeStatsGauge);
       } catch (Exception e) {
-        LOG.error("/************** Exception while Creating runtime stats gauge in Metric Registry " + metricRegistry.toString() + " by thread " + Thread.currentThread().toString());
         for(StackTraceElement se : e.getStackTrace()) {
           LOG.error(se.toString());
         }

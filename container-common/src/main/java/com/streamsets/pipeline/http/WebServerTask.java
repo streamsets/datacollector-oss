@@ -27,7 +27,6 @@ import org.eclipse.jetty.server.HttpConnectionFactory;
 import org.eclipse.jetty.server.SecureRequestCustomizer;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.ServerConnector;
-import org.eclipse.jetty.server.SessionManager;
 import org.eclipse.jetty.server.SslConnectionFactory;
 import org.eclipse.jetty.server.handler.HandlerCollection;
 import org.eclipse.jetty.server.session.HashSessionManager;
@@ -95,7 +94,7 @@ public class WebServerTask extends AbstractTask {
   }
 
   @Override
-  protected void initTask() {
+  public void initTask() {
     checkValidPorts();
     server = createServer();
     int port = -1;

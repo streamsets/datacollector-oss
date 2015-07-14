@@ -5,9 +5,6 @@
  */
 package com.streamsets.dataCollector.execution.store;
 
-import java.util.List;
-import java.util.Map;
-
 import com.streamsets.dataCollector.execution.PipelineState;
 import com.streamsets.dataCollector.execution.PipelineStateStore;
 import com.streamsets.dataCollector.execution.PipelineStatus;
@@ -16,6 +13,9 @@ import com.streamsets.pipeline.api.ExecutionMode;
 import com.streamsets.pipeline.main.RuntimeInfo;
 import com.streamsets.pipeline.store.PipelineStoreException;
 import com.streamsets.pipeline.util.ContainerError;
+
+import java.util.List;
+import java.util.Map;
 
 public class SlavePipelineStateStore implements PipelineStateStore {
 

@@ -78,34 +78,40 @@ public class TestLogServlet {
   }
 
   private String startServer() throws  Exception {
-    logFile = new File(baseDir, "test.log");
-    Writer writer = new FileWriter(logFile);
-    writer.write("hello\n");
-    writer.close();
-    Thread.sleep(1000); // for log files to have different lastModified timestamp
-    oldLogFile = new File(baseDir, "test.log.1");
-    writer = new FileWriter(oldLogFile);
-    writer.write("bye\n");
-    writer.close();
-    File log4fConfig = new File(baseDir, "log4j.properties");
-    writer = new FileWriter(log4fConfig);
-    writer.write(LogUtils.LOG4J_APPENDER_STREAMSETS_FILE_PROPERTY + "=" + logFile.getAbsolutePath());
-    writer.close();
+    try {
+      logFile = new File(baseDir, "test.log");
+      Writer writer = new FileWriter(logFile);
+      writer.write("hello\n");
+      writer.close();
+      Thread.sleep(1000); // for log files to have different lastModified timestamp
+      oldLogFile = new File(baseDir, "test.log.1");
+      writer = new FileWriter(oldLogFile);
+      writer.write("bye\n");
+      writer.close();
+      File log4fConfig = new File(baseDir, "log4j.properties");
+      writer = new FileWriter(log4fConfig);
+      writer.write(LogUtils.LOG4J_APPENDER_STREAMSETS_FILE_PROPERTY + "=" + logFile.getAbsolutePath());
+      writer.close();
 
-    int port = getRandomPort();
-    Configuration conf = new Configuration();
-    conf.set(WebServerTask.HTTP_PORT_KEY, port);
-    conf.set(WebServerTask.AUTHENTICATION_KEY, "none");
-    writer = new FileWriter(new File(System.getProperty(RuntimeModule.SDC_PROPERTY_PREFIX + RuntimeInfo.CONFIG_DIR), "sdc.properties"));
-    conf.save(writer);
-    writer.close();
-    ObjectGraph dagger = ObjectGraph.create(PipelineTaskModule.class);
-    RuntimeInfo runtimeInfo = dagger.get(RuntimeInfo.class);
-    runtimeInfo.setAttribute(RuntimeInfo.LOG4J_CONFIGURATION_URL_ATTR, new URL("file://" + baseDir + "/log4j.properties"));
-    server = dagger.get(TaskWrapper.class);
-    server.init();
-    server.run();
-    return "http://127.0.0.1:" + port;
+      int port = getRandomPort();
+      Configuration conf = new Configuration();
+      conf.set(WebServerTask.HTTP_PORT_KEY, port);
+      conf.set(WebServerTask.AUTHENTICATION_KEY, "none");
+      writer = new FileWriter(new File(System.getProperty(RuntimeModule.SDC_PROPERTY_PREFIX + RuntimeInfo.CONFIG_DIR), "sdc.properties"));
+      conf.save(writer);
+      writer.close();
+      ObjectGraph dagger = ObjectGraph.create(PipelineTaskModule.class);
+      RuntimeInfo runtimeInfo = dagger.get(RuntimeInfo.class);
+      runtimeInfo.setAttribute(RuntimeInfo.LOG4J_CONFIGURATION_URL_ATTR, new URL("file://" + baseDir + "/log4j.properties"));
+      server = dagger.get(TaskWrapper.class);
+
+      server.init();
+      server.run();
+      return "http://127.0.0.1:" + port;
+    } catch (Exception e) {
+      System.out.println();
+      return null;
+    }
   }
 
   private void stopServer() {

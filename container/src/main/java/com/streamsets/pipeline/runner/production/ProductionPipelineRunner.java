@@ -88,7 +88,7 @@ public class ProductionPipelineRunner implements PipelineRunner {
   /*indicates if the execution must be stopped after the current batch*/
   private volatile boolean stop = false;
   /*indicates if the next batch of data should be captured, only the next batch*/
-  private volatile boolean captureNextBatch = false;
+  private volatile int batchesToCapture = 0;
   /*indicates the snapshot name to be captured*/
   private volatile String snapshotName;
   /*indicates the batch size to be captured*/
@@ -298,12 +298,12 @@ public class ProductionPipelineRunner implements PipelineRunner {
     return stop;
   }
 
-  public void captureNextBatch(String snapshotName, int batchSize) {
+  public void capture(String snapshotName, int batchSize, int batches) {
     Preconditions.checkArgument(batchSize > 0);
     this.snapshotName = snapshotName;
     this.snapshotBatchSize = batchSize;
     ((FileSnapshotStore)snapshotStore).setInProgress(pipelineName, revision, snapshotName, true);
-    this.captureNextBatch = true;
+    this.batchesToCapture = batches;
   }
 
   private void runBatch(Pipe[] pipes, BadRecordsHandler badRecordsHandler) throws PipelineRuntimeException, StageException {
@@ -316,7 +316,7 @@ public class ProductionPipelineRunner implements PipelineRunner {
       observer.reconfigure();
     }
 
-    if(captureNextBatch) {
+    if(batchesToCapture > 0) {
       batchCaptured = true;
       pipeBatch = new FullPipeBatch(offsetTracker, snapshotBatchSize, true /*snapshot stage output*/);
     } else {
@@ -369,8 +369,10 @@ public class ProductionPipelineRunner implements PipelineRunner {
        * Reset the capture snapshot variable only after capturing the snapshot
        * This guarantees that once captureSnapshot is called, the output is captured exactly once
        * */
-      captureNextBatch = false;
-      snapshotBatchSize = 0;
+      batchesToCapture--;
+      if(batchesToCapture == 0) {
+        snapshotBatchSize = 0;
+      }
     }
 
     //Retain X number of error records per stage

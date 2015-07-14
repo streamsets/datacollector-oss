@@ -8,6 +8,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.UUID;
 
+import com.streamsets.dataCollector.execution.manager.slave.SlavePipelineManager;
 import org.apache.commons.io.FileUtils;
 import org.junit.After;
 import org.junit.AfterClass;
@@ -18,7 +19,6 @@ import org.junit.Test;
 import com.streamsets.dataCollector.execution.Manager;
 import com.streamsets.dataCollector.execution.PipelineStatus;
 import com.streamsets.dataCollector.execution.Runner;
-import com.streamsets.dataCollector.execution.manager.SlaveManager;
 import com.streamsets.dataCollector.execution.manager.TestSlaveManager;
 import com.streamsets.pipeline.main.RuntimeInfo;
 import com.streamsets.pipeline.main.RuntimeModule;
@@ -58,7 +58,7 @@ public class TestSlaveStandaloneRunner {
   public void testSlaveRunnerStartStop() throws Exception {
     ObjectGraph objectGraph = ObjectGraph.create(new TestSlaveManager.TestSlaveManagerModule());
     ObjectGraph plus = objectGraph.plus(new TestPipelineProviderModule(TestUtil.MY_PIPELINE, "0"));
-    Manager manager = new SlaveManager(plus);
+    Manager manager = new SlavePipelineManager(plus);
     manager.init();
     Runner runner = manager.getRunner("admin", TestUtil.MY_PIPELINE, "0");
     runner.start();
@@ -75,7 +75,7 @@ public class TestSlaveStandaloneRunner {
   public void testDisconnectingSlaveRunner() throws Exception {
     ObjectGraph objectGraph = ObjectGraph.create(new TestSlaveManager.TestSlaveManagerModule());
     ObjectGraph plus = objectGraph.plus(new TestPipelineProviderModule(TestUtil.MY_PIPELINE, "0"));
-    Manager manager = new SlaveManager(plus);
+    Manager manager = new SlavePipelineManager(plus);
     manager.init();
     Runner runner = manager.getRunner("admin", TestUtil.MY_PIPELINE, "0");
     runner.start();
@@ -92,7 +92,7 @@ public class TestSlaveStandaloneRunner {
   public void testFinishedSlaveRunner() throws Exception {
     ObjectGraph objectGraph = ObjectGraph.create(new TestSlaveManager.TestSlaveManagerModule());
     ObjectGraph plus = objectGraph.plus(new TestPipelineProviderModule(TestUtil.MY_PIPELINE, "0"));
-    Manager manager = new SlaveManager(plus);
+    Manager manager = new SlavePipelineManager(plus);
     manager.init();
     Runner runner = manager.getRunner("admin", TestUtil.MY_PIPELINE, "0");
     runner.start();

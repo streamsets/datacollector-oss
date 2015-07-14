@@ -10,7 +10,7 @@ import com.streamsets.pipeline.main.RuntimeInfo;
 import com.streamsets.pipeline.main.RuntimeModule;
 import com.streamsets.pipeline.stagelibrary.StageLibraryModule;
 import com.streamsets.pipeline.stagelibrary.StageLibraryTask;
-import com.streamsets.pipeline.store.PipelineStoreModule;
+import com.streamsets.pipeline.store.CachePipelineStoreModule;
 import com.streamsets.pipeline.store.PipelineStoreTask;
 import com.streamsets.pipeline.util.Configuration;
 import dagger.Module;
@@ -18,7 +18,7 @@ import dagger.Provides;
 
 import javax.inject.Singleton;
 
-@Module(library = true, includes = {RuntimeModule.class, PipelineStoreModule.class, StageLibraryModule.class})
+@Module(library = true, includes = {RuntimeModule.class, CachePipelineStoreModule.class, StageLibraryModule.class})
 public class PipelineManagerModule {
 
   @Provides

@@ -60,7 +60,7 @@ public class ClassLoaderStageLibraryTask extends AbstractTask implements StageLi
   }
 
   @Override
-  protected void initTask() {
+  public void initTask() {
     stageClassLoaders = runtimeInfo.getStageLibraryClassLoaders();
     json = ObjectMapperFactory.get();
     stageList = new ArrayList<>();

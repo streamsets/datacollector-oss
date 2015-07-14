@@ -6,6 +6,7 @@
 package com.streamsets.dataCollector.execution.preview;
 
 import com.streamsets.dataCollector.execution.Previewer;
+import com.streamsets.dataCollector.execution.preview.sync.SyncPreviewer;
 
 public class TestSyncPreviewer extends TestPreviewer {
 

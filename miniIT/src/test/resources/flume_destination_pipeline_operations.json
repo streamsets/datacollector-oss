@@ -79,7 +79,7 @@
     "outputLanes" : [ "com_streamsets_pipeline_stage_devtest_RandomDataGeneratorSource1432763273869OutputLane14327632738690" ]
   }, {
     "instanceName" : "com_streamsets_pipeline_stage_destination_flume_FlumeDTarget1432855334685",
-    "library" : "streamsets-datacollector-cdh_5_3-lib",
+    "library" : "streamsets-datacollector-cdh_5_4-lib",
     "stageName" : "com_streamsets_pipeline_stage_destination_flume_FlumeDTarget",
     "stageVersion" : "1.0.0",
     "configuration" : [ {
@@ -184,7 +184,7 @@
     "lastModified" : 1432763341911,
     "creator" : "admin",
     "lastModifier" : "admin",
-    "lastRev" : "1",
+    "lastRev" : "0",
     "uuid" : "c3187554-589f-44b0-a7e2-98ac7d769622",
     "valid" : true
   },

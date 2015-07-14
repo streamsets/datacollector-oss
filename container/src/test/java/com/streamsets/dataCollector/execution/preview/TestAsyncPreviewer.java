@@ -6,6 +6,8 @@
 package com.streamsets.dataCollector.execution.preview;
 
 import com.streamsets.dataCollector.execution.Previewer;
+import com.streamsets.dataCollector.execution.preview.async.AsyncPreviewer;
+import com.streamsets.dataCollector.execution.preview.sync.SyncPreviewer;
 import com.streamsets.pipeline.lib.executor.SafeScheduledExecutorService;
 
 public class TestAsyncPreviewer extends TestPreviewer {

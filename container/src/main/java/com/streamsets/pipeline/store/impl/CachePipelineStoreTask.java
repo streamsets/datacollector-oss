@@ -6,7 +6,6 @@
 package com.streamsets.pipeline.store.impl;
 
 import com.google.common.annotations.VisibleForTesting;
-import com.streamsets.dataCollector.execution.PipelineStateStore;
 import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.config.PipelineConfiguration;
 import com.streamsets.pipeline.config.RuleDefinitions;
@@ -14,7 +13,6 @@ import com.streamsets.pipeline.store.PipelineInfo;
 import com.streamsets.pipeline.store.PipelineRevInfo;
 import com.streamsets.pipeline.store.PipelineStoreException;
 import com.streamsets.pipeline.store.PipelineStoreTask;
-import com.streamsets.pipeline.task.AbstractTask;
 import com.streamsets.pipeline.util.ContainerError;
 import com.streamsets.pipeline.util.PipelineDirectoryUtil;
 
@@ -25,16 +23,20 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class CachePipelineStoreTask extends AbstractTask implements PipelineStoreTask {
+public class CachePipelineStoreTask implements PipelineStoreTask {
 
   private final PipelineStoreTask pipelineStore;
   private final Map<String, PipelineInfo> pipelineInfoMap;
 
   @Inject
   public CachePipelineStoreTask(PipelineStoreTask pipelineStore) {
-    super("cachePipelineStore");
     this.pipelineStore = pipelineStore;
     pipelineInfoMap = new HashMap<>();
+  }
+
+  @Override
+  public String getName() {
+    return "CachePipelineStoreTask";
   }
 
   @Override
@@ -50,9 +52,24 @@ public class CachePipelineStoreTask extends AbstractTask implements PipelineStor
   }
 
   @Override
+  public void run() {
+    pipelineStore.run();
+  }
+
+  @Override
+  public void waitWhileRunning() throws InterruptedException {
+    pipelineStore.waitWhileRunning();
+  }
+
+  @Override
   public void stop() {
     pipelineStore.stop();
     pipelineInfoMap.clear();
+  }
+
+  @Override
+  public Status getStatus() {
+    return pipelineStore.getStatus();
   }
 
   @Override

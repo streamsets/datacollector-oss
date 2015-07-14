@@ -5,6 +5,8 @@
  */
 package com.streamsets.dataCollector.execution;
 
+import com.streamsets.pipeline.util.PipelineException;
+
 import java.io.Closeable;
 import java.io.InputStream;
 
@@ -12,6 +14,6 @@ public interface Snapshot extends Closeable {
 
   SnapshotInfo getInfo();
 
-  public InputStream getOutput();
+  public InputStream getOutput() throws PipelineException;
 
 }

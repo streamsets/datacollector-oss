@@ -7,7 +7,6 @@ package com.streamsets.pipeline.runner.production;
 
 import com.streamsets.dataCollector.execution.PipelineStatus;
 import com.streamsets.dataCollector.execution.StateListener;
-import com.streamsets.dataCollector.execution.runnable.ProductionPipelineRunnable;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.impl.ErrorMessage;
@@ -16,12 +15,11 @@ import com.streamsets.pipeline.main.RuntimeInfo;
 import com.streamsets.pipeline.metrics.MetricsConfigurator;
 import com.streamsets.pipeline.runner.Pipeline;
 import com.streamsets.pipeline.runner.PipelineRuntimeException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.List;
 import java.util.Map;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public class ProductionPipeline {
   private final RuntimeInfo runtimeInfo;
@@ -114,8 +112,8 @@ public class ProductionPipeline {
     return pipelineRunner.getCommittedOffset();
   }
 
-  public void captureSnapshot(String snapshotName, int batchSize) {
-    pipelineRunner.captureNextBatch(snapshotName, batchSize);
+  public void captureSnapshot(String snapshotName, int batchSize, int batches) {
+    pipelineRunner.capture(snapshotName, batchSize, batches);
   }
 
   public void setOffset(String offset) {

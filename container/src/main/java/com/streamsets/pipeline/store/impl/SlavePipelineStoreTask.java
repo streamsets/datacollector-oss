@@ -5,36 +5,23 @@
  */
 package com.streamsets.pipeline.store.impl;
 
-import java.io.File;
-import java.util.List;
-
-import com.google.common.annotations.VisibleForTesting;
 import com.streamsets.pipeline.config.PipelineConfiguration;
 import com.streamsets.pipeline.config.RuleDefinitions;
 import com.streamsets.pipeline.store.PipelineInfo;
 import com.streamsets.pipeline.store.PipelineRevInfo;
 import com.streamsets.pipeline.store.PipelineStoreException;
 import com.streamsets.pipeline.store.PipelineStoreTask;
-import com.streamsets.pipeline.task.AbstractTask;
 
-public class SlavePipelineStoreTask  extends AbstractTask implements PipelineStoreTask {
+import java.util.List;
+
+public class SlavePipelineStoreTask  implements PipelineStoreTask {
 
   private final PipelineStoreTask pipelineStore;
 
   public SlavePipelineStoreTask(PipelineStoreTask pipelineStore) {
-    super("SlavePipelineStore");
     this.pipelineStore = pipelineStore;
   }
 
-  @Override
-  public void init() {
-    pipelineStore.init();
-  }
-
-  @Override
-  public void stop() {
-    pipelineStore.stop();
-  }
 
   @Override
   public PipelineConfiguration create(String name, String description, String user) throws PipelineStoreException {
@@ -93,4 +80,33 @@ public class SlavePipelineStoreTask  extends AbstractTask implements PipelineSto
     throw new UnsupportedOperationException();
   }
 
+  @Override
+  public String getName() {
+    return "SlavePipelineStoreTask";
+  }
+
+  @Override
+  public void init() {
+    pipelineStore.init();
+  }
+
+  @Override
+  public void run() {
+    pipelineStore.run();
+  }
+
+  @Override
+  public void waitWhileRunning() throws InterruptedException {
+    pipelineStore.waitWhileRunning();
+  }
+
+  @Override
+  public void stop() {
+    pipelineStore.stop();
+  }
+
+  @Override
+  public Status getStatus() {
+    return pipelineStore.getStatus();
+  }
 }

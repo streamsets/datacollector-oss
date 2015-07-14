@@ -197,7 +197,7 @@ public class TestProdPipelineRunnable {
     manager.getStateTracker().setState(PIPELINE_NAME, REVISION, State.STOPPED, null, null, null);
 
     if(captureNextBatch) {
-      runner.captureNextBatch(SNAPSHOT_NAME, 1);
+      runner.capture(SNAPSHOT_NAME, 1, 1);
     }
 
     return pipeline;

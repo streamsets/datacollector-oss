@@ -6,7 +6,7 @@
 package com.streamsets.dataCollector.execution;
 
 import com.codahale.metrics.MetricRegistry;
-import com.streamsets.dataCollector.execution.runner.PipelineRunnerException;
+import com.streamsets.dataCollector.execution.runner.common.PipelineRunnerException;
 import com.streamsets.pipeline.alerts.AlertEventListener;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
@@ -15,6 +15,7 @@ import com.streamsets.pipeline.config.RuleDefinition;
 import com.streamsets.pipeline.metrics.MetricsEventListener;
 import com.streamsets.pipeline.runner.PipelineRuntimeException;
 import com.streamsets.pipeline.store.PipelineStoreException;
+import com.streamsets.pipeline.util.PipelineException;
 
 import java.util.List;
 
@@ -77,7 +78,7 @@ public interface Runner {
 
   // triggers a snapshot request
   // delegates to SnapshotStore
-  public String captureSnapshot(String name, int batches) throws PipelineRunnerException, PipelineStoreException;
+  public String captureSnapshot(String name, int batches) throws PipelineException, PipelineStoreException;
 
   // retrieves a snapshot base on its ID
   // delegates to SnapshotStore

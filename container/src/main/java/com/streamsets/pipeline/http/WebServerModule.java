@@ -8,24 +8,24 @@ package com.streamsets.pipeline.http;
 import com.codahale.metrics.JmxReporter;
 import com.codahale.metrics.MetricRegistry;
 import com.streamsets.pipeline.main.BuildInfo;
-import com.streamsets.pipeline.main.RuntimeModule;
 import com.streamsets.pipeline.main.RuntimeInfo;
+import com.streamsets.pipeline.main.RuntimeModule;
+import com.streamsets.pipeline.metrics.MetricsModule;
 import com.streamsets.pipeline.prodmanager.PipelineManager;
 import com.streamsets.pipeline.prodmanager.PipelineManagerModule;
-import com.streamsets.pipeline.restapi.configuration.ConfigurationInjector;
+import com.streamsets.pipeline.restapi.RestAPI;
 import com.streamsets.pipeline.restapi.configuration.BuildInfoInjector;
+import com.streamsets.pipeline.restapi.configuration.ConfigurationInjector;
 import com.streamsets.pipeline.restapi.configuration.PipelineStoreInjector;
 import com.streamsets.pipeline.restapi.configuration.ProductionPipelineManagerInjector;
 import com.streamsets.pipeline.restapi.configuration.RestAPIResourceConfig;
 import com.streamsets.pipeline.restapi.configuration.RuntimeInfoInjector;
 import com.streamsets.pipeline.restapi.configuration.StageLibraryInjector;
-import com.streamsets.pipeline.stagelibrary.StageLibraryTask;
-import com.streamsets.pipeline.util.Configuration;
-import com.streamsets.pipeline.metrics.MetricsModule;
-import com.streamsets.pipeline.restapi.RestAPI;
 import com.streamsets.pipeline.stagelibrary.StageLibraryModule;
+import com.streamsets.pipeline.stagelibrary.StageLibraryTask;
+import com.streamsets.pipeline.store.CachePipelineStoreModule;
 import com.streamsets.pipeline.store.PipelineStoreTask;
-import com.streamsets.pipeline.store.PipelineStoreModule;
+import com.streamsets.pipeline.util.Configuration;
 import com.streamsets.pipeline.websockets.SDCWebSocketServlet;
 import dagger.Module;
 import dagger.Provides;
@@ -43,7 +43,7 @@ import javax.servlet.DispatcherType;
 import java.util.EnumSet;
 
 @Module(library = true, includes = {RuntimeModule.class, MetricsModule.class,
-    PipelineStoreModule.class, StageLibraryModule.class, PipelineManagerModule.class})
+    CachePipelineStoreModule.class, StageLibraryModule.class, PipelineManagerModule.class})
 public class WebServerModule {
 
   private final String SWAGGER_PACKAGE = "io.swagger.jaxrs.listing";
