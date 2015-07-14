@@ -479,9 +479,8 @@ public abstract class PipelineBeanCreator {
           try {
             Object element = klass.newInstance();
             if (createConfigBeans(element, configDef.getName() + ".", stageDef, stageConf.getInstanceName(), errors)) {
-              injectConfigs(element, configElement, configDef.getName() + ".",
-                            configDef.getModel().getConfigDefinitionsAsMap(), stageDef, stageConf, pipelineConstants,
-                            errors);
+              injectConfigs(element, configElement, "", configDef.getModel().getConfigDefinitionsAsMap(), stageDef,
+                            stageConf, pipelineConstants, errors);
               list.add(element);
             }
           } catch (InstantiationException | IllegalAccessException ex) {

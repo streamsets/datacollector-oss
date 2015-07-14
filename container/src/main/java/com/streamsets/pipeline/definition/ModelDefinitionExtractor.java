@@ -227,7 +227,7 @@ public abstract class ModelDefinitionExtractor {
       } else {
         configPrefix += field.getName() + ".";
         Class complexFieldClass = (Class)((ParameterizedType)field.getGenericType()).getActualTypeArguments()[0];
-        errors.addAll(ConfigDefinitionExtractor.get().validateComplexField(configPrefix, complexFieldClass, contextMsg));
+        errors.addAll(ConfigDefinitionExtractor.get().validateComplexField("", complexFieldClass, contextMsg));
       }
       return errors;
     }
@@ -238,7 +238,7 @@ public abstract class ModelDefinitionExtractor {
       if (errors.isEmpty()) {
         Class complexFieldClass = (Class)((ParameterizedType)field.getGenericType()).getActualTypeArguments()[0];
         return new ModelDefinition(ModelType.COMPLEX_FIELD, null, null, null, complexFieldClass,
-                                   ConfigDefinitionExtractor.get().extract(configPrefix, complexFieldClass, contextMsg));
+                                   ConfigDefinitionExtractor.get().extract("", complexFieldClass, contextMsg));
       } else {
         throw new IllegalArgumentException(Utils.format("Invalid ModelDefinition: {}", errors));
       }

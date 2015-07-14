@@ -385,10 +385,10 @@ public class TestPipelineBeanCreator {
         new ConfigConfiguration("bean.beanSubBean.subBeanEnum", "A"),
         new ConfigConfiguration("bean.beanSubBean.subBeanString", "AA"),
         new ConfigConfiguration("complexField", ImmutableList.of(ImmutableMap.of(
-            "complexField.beanInt", 4,
-            "complexField.beanSubBean.subBeanEnum", "A",
-            "complexField.beanSubBean.subBeanList", ImmutableList.of("a", "b"),
-            "complexField.beanSubBean.subBeanString", "X")))
+            "beanInt", 4,
+            "beanSubBean.subBeanEnum", "A",
+            "beanSubBean.subBeanList", ImmutableList.of("a", "b"),
+            "beanSubBean.subBeanString", "X")))
     );
     StageConfiguration stageConf = new StageConfiguration("i", "l", "n", "v", configConfs,
                                                           Collections.<String, Object>emptyMap(),

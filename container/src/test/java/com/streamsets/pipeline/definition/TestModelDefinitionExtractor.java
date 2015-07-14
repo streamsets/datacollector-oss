@@ -218,7 +218,7 @@ public class TestModelDefinitionExtractor {
     Assert.assertEquals(ModelType.COMPLEX_FIELD, def.getModelType());
     Assert.assertEquals(null, def.getValuesProviderClass());
     Assert.assertEquals(1, def.getConfigDefinitions().size());
-    Assert.assertEquals("x.name", def.getConfigDefinitions().get(0).getName());
+    Assert.assertEquals("name", def.getConfigDefinitions().get(0).getName());
     Assert.assertEquals(ConfigDef.Type.STRING, def.getConfigDefinitions().get(0).getType());
   }
 
