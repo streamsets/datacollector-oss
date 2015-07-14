@@ -39,8 +39,8 @@ angular
       /**
        * Import Pipeline Configuration
        */
-      importPipelineConfig: function() {
-        pipelineService.importPipelineConfigCommand();
+      importPipelineConfig: function(pipelineInfo, $event) {
+        pipelineService.importPipelineConfigCommand(pipelineInfo, $event);
       },
 
       /**

@@ -27,11 +27,12 @@ describe('StreamSets Data Collector App', function() {
       browser.sleep(1000);
 
       element.all(by.repeater('pipeline in pipelines')).then(function(pipelines) {
+
+
         if(pipelines.length === 0) {
-          //If no pipeline
           element.all(by.css('.create-pipeline-btn')).then(function(elements) {
-            var importBtnElement = elements[elements.length - 1];
-            importBtnElement.click();
+            var createBtnElement = elements[elements.length - 1];
+            createBtnElement.click();
 
             element(by.model('newConfig.name')).sendKeys(pipelineName);
             element(by.model('newConfig.description')).sendKeys('pipeline description');
@@ -40,19 +41,16 @@ describe('StreamSets Data Collector App', function() {
             browser.sleep(1500);
           });
         } else {
-          //pipeline exists
-          element(by.css('[ng-click="toggleLibraryPanel()"]')).click();
-
-          element.all(by.css('.create-pipeline-btn')).then(function(elements) {
-            var createBtnElement = elements[0];
+          element.all(by.css('.create-pipeline-btn-link')).then(function(elements) {
+            var createBtnElement = elements[elements.length - 1];
             createBtnElement.click();
 
-            //Fill Create Pipeline Modal Dialog values
             element(by.model('newConfig.name')).sendKeys(pipelineName);
             element(by.model('newConfig.description')).sendKeys('pipeline description');
             element(by.css('button[type="submit"]')).click();
-          });
 
+            browser.sleep(1500);
+          });
         }
       });
 

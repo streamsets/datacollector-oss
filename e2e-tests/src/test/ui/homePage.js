@@ -1,8 +1,10 @@
+var EC = protractor.ExpectedConditions,
+  currentNumberOfPipelines = 0;
+
 describe('StreamSets Data Collector App', function() {
 
   beforeEach(function() {
     browser.ignoreSynchronization = true;
-    //browser.manage().timeouts().pageLoadTimeout(10000);
   });
 
   afterEach(function() {
@@ -19,216 +21,262 @@ describe('StreamSets Data Collector App', function() {
 
   describe('home page', function() {
 
-    beforeEach(function() {
-      //browser.get('/');
-    });
-
     it('should render home view when user navigates to /', function() {
       browser.get('/');
       expect(browser.getTitle()).toEqual('StreamSets Data Collector');
     });
 
-    it('should show create pipeline button when pipeline list is empty', function() {
-      browser.get('/');
-
-      element.all(by.repeater('pipeline in pipelines')).then(function(pipelines) {
-        expect(pipelines.length).toEqual(0);
-      });
-
-      element.all(by.css('.create-pipeline-btn')).then(function(elements) {
-        var createBtnElement = elements[elements.length - 1];
-        createBtnElement.isDisplayed().then(function (isVisible) {
-          expect(isVisible).toBeTruthy();
-        });
-      });
-
-      element.all(by.css('.import-pipeline-btn')).then(function(elements) {
-        var importBtnElement = elements[elements.length - 1];
-        importBtnElement.isDisplayed().then(function (isVisible) {
-          expect(isVisible).toBeTruthy();
-        });
-      });
-    });
-
-    it('should be able to import pipeline', function() {
+    it('should show create pipeline and import button', function() {
       browser.get('/');
       browser.sleep(1000);
-      element.all(by.css('.import-pipeline-btn')).then(function(elements) {
-        var importBtnElement = elements[elements.length - 1];
-        importBtnElement.click();
+      element.all(by.repeater('pipeline in pipelines')).then(function(pipelines) {
+        currentNumberOfPipelines = pipelines.length;
+        if(pipelines.length === 0) {
+          element.all(by.css('.create-pipeline-btn-group')).then(function(elements) {
+            var createBtnElement = elements[elements.length - 1];
+            createBtnElement.isDisplayed().then(function (isVisible) {
+              expect(isVisible).toBeTruthy();
+            });
+          });
 
-        browser.sleep(1500);
+          element.all(by.css('.create-pipeline-btn')).then(function(elements) {
+            var createBtnElement = elements[elements.length - 1];
+            createBtnElement.isDisplayed().then(function (isVisible) {
+              expect(isVisible).toBeTruthy();
+            });
+          });
 
-        element(by.css('input[type="file"]')).sendKeys(__dirname + '/testData/testPipeline.json');
+          element.all(by.css('.import-pipeline-btn')).then(function(elements) {
+            var importBtnElement = elements[elements.length - 1];
+            importBtnElement.isDisplayed().then(function (isVisible) {
+              expect(isVisible).toBeTruthy();
+            });
+          });
+        } else {
+          element.all(by.css('.create-pipeline-btn-link')).then(function(elements) {
+            var createBtnElement = elements[elements.length - 1];
+            createBtnElement.isDisplayed().then(function (isVisible) {
+              expect(isVisible).toBeTruthy();
+            });
+          });
 
-        browser.sleep(1500);
+          element.all(by.css('.import-pipeline-btn-link')).then(function(elements) {
+            var importBtnElement = elements[elements.length - 1];
+            importBtnElement.isDisplayed().then(function (isVisible) {
+              expect(isVisible).toBeTruthy();
+            });
+          });
+        }
 
-        element(by.model('newConfig.name')).sendKeys('UI End to End Test Pipeline');
-        element(by.css('button[type="submit"]')).click();
-
-        browser.sleep(1500);
-
-        //Toggle Library Pane
-        element(by.css('[ng-click="toggleLibraryPanel()"]')).click();
-
-        //Test pipeline creation by checking list of pipelines
-        element.all(by.repeater('pipeline in pipelines')).then(function(pipelines) {
-          expect(pipelines.length).toEqual(1);
-          expect(pipelines[0].element(by.binding('pipeline.name')).getText()).toEqual('UI End to End Test Pipeline');
-        });
 
       });
+
     });
 
+    var pipeline1 = 'home page test'  + (new Date()).getTime();
 
     it('should be able to create new pipeline', function() {
-      browser.get('/collector/pipeline/UI%20End%20to%20End%20Test%20Pipeline');
+      browser.get('/');
       browser.sleep(1000);
-      element(by.css('[ng-click="toggleLibraryPanel()"]')).click();
-
-      element.all(by.css('.create-pipeline-btn')).then(function(elements) {
-        var createBtnElement = elements[0];
-        createBtnElement.click();
-
-        //Fill Create Pipeline Modal Dialog values
-        element(by.model('newConfig.name')).sendKeys('Sample Pipeline');
-        element(by.model('newConfig.description')).sendKeys('pipeline description');
-        element(by.css('button[type="submit"]')).click();
-
-        browser.sleep(1000);
-
-        element(by.css('[ng-click="toggleLibraryPanel()"]')).click();
-
-        //Test pipeline creation by checking list of pipelines
-        element.all(by.repeater('pipeline in pipelines')).then(function(pipelines) {
-          expect(pipelines.length).toEqual(2);
-          expect(pipelines[0].element(by.binding('pipeline.name')).getText()).toEqual('Sample Pipeline');
-        });
-
-      });
-    });
-
-
-    it('should be able to duplicate pipeline', function() {
-      browser.get('/collector/pipeline/Sample Pipeline');
-      browser.sleep(500);
-      //Toggle Library Pane
-      element(by.css('[ng-click="toggleLibraryPanel()"]')).click();
 
       element.all(by.repeater('pipeline in pipelines')).then(function(pipelines) {
 
-        pipelines[0].element(by.css('.dropdown-toggle')).click();
+        if(pipelines.length === 0) {
+          element.all(by.css('.create-pipeline-btn')).then(function(elements) {
+            var createBtnElement = elements[elements.length - 1];
+            createBtnElement.click();
 
-        pipelines[0].element(by.css('[ng-click="duplicatePipelineConfig(pipeline, $event)"]')).click();
+            element(by.model('newConfig.name')).sendKeys(pipeline1);
+            element(by.model('newConfig.description')).sendKeys('pipeline description');
+            element(by.css('button[type="submit"]')).click();
 
-        browser.sleep(500);
+            browser.sleep(1500);
+          });
+        } else {
+          element.all(by.css('.create-pipeline-btn-link')).then(function(elements) {
+            var createBtnElement = elements[elements.length - 1];
+            createBtnElement.click();
 
-        element(by.css('.duplicate-modal-form')).element(by.css('button[type="submit"]')).click();
+            element(by.model('newConfig.name')).sendKeys(pipeline1);
+            element(by.model('newConfig.description')).sendKeys('pipeline description');
+            element(by.css('button[type="submit"]')).click();
 
-        browser.sleep(2000);
-
-        element(by.css('[ng-click="toggleLibraryPanel()"]')).click();
-
-        //Test pipeline creation by checking list of pipelines
-        element.all(by.repeater('pipeline in pipelines')).then(function(pipelines) {
-          expect(pipelines.length).toEqual(3);
-          expect(pipelines[1].element(by.binding('pipeline.name')).getText()).toEqual('Sample Pipelinecopy');
-        });
-
+            browser.sleep(1500);
+          });
+        }
       });
+
+      browser.get('/');
+      browser.sleep(1000);
+      element.all(by.repeater('pipeline in pipelines')).then(function(pipelines) {
+        expect(pipelines.length).toEqual(currentNumberOfPipelines + 1);
+        currentNumberOfPipelines++;
+      });
+
     });
 
+    it('should be able to duplicate the pipeline created above', function() {
+      var pipelineElement;
 
-    it('should be able to delete pipeline', function() {
-      browser.get('/collector/pipeline/Sample Pipeline');
+      browser.get('/');
       browser.sleep(1000);
-      //Toggle Library Pane
-      element(by.css('[ng-click="toggleLibraryPanel()"]')).click();
+      element.all(by.repeater('pipeline in pipelines'))
+        .then(function(pipelines) {
+          var deferred = protractor.promise.defer();
+          pipelines.forEach(function(pipeline) {
+            var tagElement = pipeline.element(by.tagName('h2'));
+            tagElement.getText().then(function(text) {
+              if(text == pipeline1) {
+                pipelineElement = pipeline;
+              }
+            });
+          });
 
-      element.all(by.repeater('pipeline in pipelines')).then(function(pipelines) {
+          return browser.sleep(1000);
+        })
+        .then(function() {
+          expect(pipelineElement).toBeDefined();
 
-        //Select 2 pipeline
-        pipelines[1].click();
-
-        browser.sleep(1000);
-
-        element(by.css('[ng-click="toggleLibraryPanel()"]')).click();
-
-        element.all(by.repeater('pipeline in pipelines')).then(function(pipelines) {
           //Click dropdown toggle icon
-          pipelines[1].element(by.css('.dropdown-toggle')).click();
+          pipelineElement.element(by.css('.dropdown-toggle')).click();
 
-          //Click Delete button in dropdown
-          pipelines[1].element(by.css('[ng-click="deletePipelineConfig(pipeline, $event)"]')).click();
+          //Click Duplicate button in dropdown
+          pipelineElement.element(by.css('[ng-click="duplicatePipelineConfig(pipeline, $event)"]')).click();
 
+          browser.sleep(500);
+
+          element(by.css('.duplicate-modal-form')).element(by.css('button[type="submit"]')).click();
+
+          return browser.sleep(2000);
+        })
+        .then(function() {
+          browser.get('/');
+          browser.sleep(1000);
+          element.all(by.repeater('pipeline in pipelines')).then(function(pipelines) {
+            expect(pipelines.length).toEqual(currentNumberOfPipelines + 1);
+            currentNumberOfPipelines++;
+          });
+        });
+    });
+
+    it('should be able to export the pipeline created above', function() {
+      var pipeline2 = pipeline1 + 'copy',
+        pipelineElement;
+
+      browser.get('/');
+      browser.sleep(1000);
+      element.all(by.repeater('pipeline in pipelines'))
+        .then(function(pipelines) {
+          var deferred = protractor.promise.defer();
+          pipelines.forEach(function(pipeline) {
+            var tagElement = pipeline.element(by.tagName('h2'));
+            tagElement.getText().then(function(text) {
+              if(text == pipeline2) {
+                pipelineElement = pipeline;
+              }
+            });
+          });
+
+          return browser.sleep(1000);
+        })
+        .then(function() {
+          expect(pipelineElement).toBeDefined();
+
+          //Click dropdown toggle icon
+          pipelineElement.element(by.css('.dropdown-toggle')).click();
+
+          //Click Export button in dropdown
+          pipelineElement.element(by.css('[ng-click="exportPipelineConfig(pipeline, $event)"]')).click();
+
+        });
+    });
+
+
+    it('should be able to import the pipeline', function() {
+      var pipeline2 = pipeline1 + 'copy',
+        pipelineElement;
+
+      browser.get('/');
+      browser.sleep(1000);
+      element.all(by.repeater('pipeline in pipelines'))
+        .then(function(pipelines) {
+          var deferred = protractor.promise.defer();
+          pipelines.forEach(function(pipeline) {
+            var tagElement = pipeline.element(by.tagName('h2'));
+            tagElement.getText().then(function(text) {
+              if(text == pipeline2) {
+                pipelineElement = pipeline;
+              }
+            });
+          });
+
+          return browser.sleep(1000);
+        })
+        .then(function() {
+          expect(pipelineElement).toBeDefined();
+
+          //Click dropdown toggle icon
+          pipelineElement.element(by.css('.dropdown-toggle')).click();
+
+          //Click Export button in dropdown
+          pipelineElement.element(by.css('[ng-click="importPipelineConfig(pipeline, $event)"]')).click();
+
+          element(by.css('input[type="file"]')).sendKeys(__dirname + '/testData/testPipeline.json');
+
+          browser.sleep(1500);
+
+          element(by.css('button[type="submit"]')).click();
+
+          browser.sleep(1500);
+
+        });
+    });
+
+
+    it('should be able to delete the pipeline', function() {
+      var pipeline2 = pipeline1 + 'copy',
+        pipelineElement;
+
+      browser.get('/');
+      browser.sleep(1000);
+      element.all(by.repeater('pipeline in pipelines'))
+        .then(function(pipelines) {
+          var deferred = protractor.promise.defer();
+          pipelines.forEach(function(pipeline) {
+            var tagElement = pipeline.element(by.tagName('h2'));
+            tagElement.getText().then(function(text) {
+              if(text == pipeline2) {
+                pipelineElement = pipeline;
+              }
+            });
+          });
+
+          return browser.sleep(1000);
+        })
+        .then(function() {
+          expect(pipelineElement).toBeDefined();
+
+          //Click dropdown toggle icon
+          pipelineElement.element(by.css('.dropdown-toggle')).click();
+
+          //Click Export button in dropdown
+          pipelineElement.element(by.css('[ng-click="deletePipelineConfig(pipeline, $event)"]')).click();
 
           //Click yes button
           element(by.css('[ng-click="yes()"]')).click();
 
-
-          browser.sleep(1500);
-
-          element(by.css('[ng-click="toggleLibraryPanel()"]')).click();
-
-          //Test pipeline deletion by checking list of pipelines
+          return browser.sleep(1000);
+        })
+        .then(function() {
+          browser.get('/');
+          browser.sleep(1000);
           element.all(by.repeater('pipeline in pipelines')).then(function(pipelines) {
-            expect(pipelines.length).toEqual(2);
+            expect(pipelines.length).toEqual(currentNumberOfPipelines - 1);
+            currentNumberOfPipelines--;
           });
         });
-
-      });
     });
 
-    it('should be able to toggle stage library and click on stage to add', function() {
-      browser.get('/collector/pipeline/Sample Pipeline');
-      browser.sleep(1000);
-      //Select Sample Pipeline
-
-      //Toggle Library Pane
-      element(by.css('[ng-click="toggleLibraryPanel()"]')).click();
-
-      element.all(by.repeater('pipeline in pipelines')).then(function(pipelines) {
-
-        //browser.wait(pipelines[0].isPresent);
-
-        //Select 1 pipeline
-        //pipelines[0].click();
-
-
-
-        element(by.css('[ng-click="toggleLibraryPanel()"]')).click();
-      });
-
-      element(by.css('[ng-click="$storage.hideStageLibraryPanel = !$storage.hideStageLibraryPanel"]')).click();
-      expect(element(by.model('$storage.stageFilterGroup')).getAttribute('value')).toEqual('SOURCE');
-
-      //Add Source
-      element.all(by.repeater('stageLibrary in filteredStageLibraries')).then(function(stageLibraries) {
-        //Select 1 Stage
-        stageLibraries[0].click();
-
-        browser.sleep(2000);
-      });
-
-
-      //Add Processor
-      element(by.model('$storage.stageFilterGroup')).element(by.cssContainingText('option', 'Processor')).click();
-      element.all(by.repeater('stageLibrary in filteredStageLibraries')).then(function(stageLibraries) {
-        //Select 1 Stage
-        stageLibraries[0].click();
-        browser.sleep(2000);
-      });
-
-
-      //Add Target
-      element(by.model('$storage.stageFilterGroup')).element(by.cssContainingText('option', 'Destinations')).click();
-      element.all(by.repeater('stageLibrary in filteredStageLibraries')).then(function(stageLibraries) {
-        //Select 1 Stage
-        stageLibraries[0].click();
-        browser.sleep(2000);
-      });
-
-    });
 
   });
 });

@@ -14,13 +14,16 @@ exports.config = {
       'restAPI/pipelineStoreResource.js'
     ],
     ui: [
+      'ui/pipelineHomePage.js',
       'ui/homePage.js',
+      'ui/createPipeline.js',
       'ui/configurationPage.js',
       'ui/jvmMetricsPage.js',
       'ui/logPage.js'
     ],
     single: [
       'ui/createPipeline.js'
+      //'ui/homePage.js'
     ]
   },
 
