@@ -15,6 +15,7 @@ import com.streamsets.pipeline.main.RuntimeInfo;
 import com.streamsets.pipeline.store.PipelineStoreTask;
 import com.streamsets.pipeline.task.Task;
 import com.streamsets.pipeline.task.TaskWrapper;
+import com.streamsets.pipeline.util.Configuration;
 import dagger.Module;
 import dagger.ObjectGraph;
 import dagger.Provides;
@@ -25,7 +26,7 @@ import javax.inject.Singleton;
  * Provides singleton instances of RuntimeInfo, PipelineStoreTask and PipelineTask
  */
 @Module(
-  injects = {TaskWrapper.class, RuntimeInfo.class, PipelineStoreTask.class, LogConfigurator.class, BuildInfo.class},
+  injects = {TaskWrapper.class, RuntimeInfo.class, Configuration.class, PipelineStoreTask.class, LogConfigurator.class, BuildInfo.class},
   library = true,
   complete = false /* Note that all the bindings are not supplied so this must be false */
 )
@@ -81,5 +82,10 @@ public class MainStandalonePipelineManagerModule { //Need better name
   @Provides @Singleton
   public BuildInfo provideBuildInfo() {
     return objectGraph.get(BuildInfo.class);
+  }
+
+  @Provides @Singleton
+  public Configuration provideConfiguration() {
+    return objectGraph.get(Configuration.class);
   }
 }
