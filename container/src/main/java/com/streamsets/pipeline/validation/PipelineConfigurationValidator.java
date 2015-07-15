@@ -112,16 +112,13 @@ public class PipelineConfigurationValidator {
     if (validSchemaVersion()) {
       canPreview = sortStages();
       canPreview &= checkIfPipelineIsEmpty();
-      if (loadPipelineConfig()) {
-        canPreview &= validatePipelineMemoryConfiguration();
-        canPreview &= validatePipelineConfiguration();
-        canPreview &= validatePipelineLanes();
-        canPreview &= validateErrorStage();
-        canPreview &= validateStagesExecutionMode(pipelineConfiguration.getStages(), false);
-        canPreview &= validateClusterModeConfig();
-      } else {
-        canPreview = false;
-      }
+      canPreview &= loadPipelineConfig();
+      canPreview &= validatePipelineMemoryConfiguration();
+      canPreview &= validatePipelineConfiguration();
+      canPreview &= validatePipelineLanes();
+      canPreview &= validateErrorStage();
+      canPreview &= validateStagesExecutionMode(pipelineConfiguration.getStages(), false);
+      canPreview &= validateClusterModeConfig();
 
       if (LOG.isTraceEnabled() && issues.hasIssues()) {
         for (Issue issue : issues.getPipelineIssues()) {
@@ -141,49 +138,53 @@ public class PipelineConfigurationValidator {
   }
   private boolean validateClusterModeConfig() {
     boolean canPreview = true;
-    PipelineConfigBean configs = pipelineBean.getConfig();
-    if (configs.executionMode == ExecutionMode.CLUSTER && configs.clusterKerberos &&
-        !Boolean.getBoolean(RuntimeInfo.TRANSIENT_ENVIRONMENT)) {
-      File keyTab = new File(configs.kerberosKeytab);
-      if (!keyTab.isFile() || !keyTab.canRead()) {
-        canPreview = false;
-        issues.add(IssueCreator.getPipeline().create(PipelineGroups.CLUSTER.name(), "kerberosKeytab",
-                                                     ValidationError.VALIDATION_0033,
-                                                     "Kerberos Keytab file does not exist or cannot be read"));
+    if (pipelineBean != null) {
+      PipelineConfigBean configs = pipelineBean.getConfig();
+      if (configs.executionMode == ExecutionMode.CLUSTER && configs.clusterKerberos &&
+          !Boolean.getBoolean(RuntimeInfo.TRANSIENT_ENVIRONMENT)) {
+        File keyTab = new File(configs.kerberosKeytab);
+        if (!keyTab.isFile() || !keyTab.canRead()) {
+          canPreview = false;
+          issues.add(IssueCreator.getPipeline().create(PipelineGroups.CLUSTER.name(), "kerberosKeytab",
+                                                       ValidationError.VALIDATION_0033,
+                                                       "Kerberos Keytab file does not exist or cannot be read"));
+        }
       }
     }
     return canPreview;
   }
 
   private boolean validateStagesExecutionMode(List<StageConfiguration> stageConfigs, boolean errorStage) {
-    PipelineConfigBean configs = pipelineBean.getConfig();
     boolean canPreview = true;
-    for (StageConfiguration stageConf : stageConfigs) {
-      IssueCreator issueCreator = (errorStage) ? IssueCreator.getStage(stageConf.getInstanceName())
-                                               : IssueCreator.getStage(stageConf.getInstanceName());
-      StageDefinition stageDef = stageLibrary.getStage(stageConf.getLibrary(), stageConf.getStageName(),
-                                                       stageConf.getStageVersion());
-      if (stageDef != null) {
-        if (!stageDef.getExecutionModes().contains(configs.executionMode)) {
-          issues.add(issueCreator.create(ValidationError.VALIDATION_0071, stageConf.getStageName(),
-                                         configs.executionMode.getLabel()));
-          canPreview = false;
-        } else if (!stageDef.getLibraryExecutionModes().contains(configs.executionMode)) {
-          String type;
-          if (stageDef.getType() == StageType.SOURCE) {
-            type = "Origin";
-          } else if (stageDef.getType() == StageType.TARGET) {
-            type = "Destination";
-          } else {
-            type = "Processor";
+    if (pipelineBean != null) {
+      PipelineConfigBean configs = pipelineBean.getConfig();
+      for (StageConfiguration stageConf : stageConfigs) {
+        IssueCreator issueCreator = (errorStage) ? IssueCreator.getStage(stageConf.getInstanceName())
+                                                 : IssueCreator.getStage(stageConf.getInstanceName());
+        StageDefinition stageDef = stageLibrary.getStage(stageConf.getLibrary(), stageConf.getStageName(),
+                                                         stageConf.getStageVersion());
+        if (stageDef != null) {
+          if (!stageDef.getExecutionModes().contains(configs.executionMode)) {
+            issues.add(issueCreator.create(ValidationError.VALIDATION_0071, stageConf.getStageName(),
+                                           configs.executionMode.getLabel()));
+            canPreview = false;
+          } else if (!stageDef.getLibraryExecutionModes().contains(configs.executionMode)) {
+            String type;
+            if (stageDef.getType() == StageType.SOURCE) {
+              type = "Origin";
+            } else if (stageDef.getType() == StageType.TARGET) {
+              type = "Destination";
+            } else {
+              type = "Processor";
+            }
+            issues.add(issueCreator.create(ValidationError.VALIDATION_0074, stageDef.getLibraryLabel(),
+                                           configs.executionMode.getLabel(), type));
+            canPreview = false;
           }
-          issues.add(issueCreator.create(ValidationError.VALIDATION_0074, stageDef.getLibraryLabel(),
-                                         configs.executionMode.getLabel(), type));
-          canPreview = false;
+        } else {
+          issues.add(issueCreator.create(ValidationError.VALIDATION_0006, stageConf.getLibrary(),
+                                         stageConf.getStageName(), stageConf.getStageVersion()));
         }
-      } else {
-        issues.add(issueCreator.create(ValidationError.VALIDATION_0006, stageConf.getLibrary(),
-                                       stageConf.getStageName(), stageConf.getStageVersion()));
       }
     }
     return canPreview;
@@ -198,11 +199,14 @@ public class PipelineConfigurationValidator {
 
   private boolean validatePipelineMemoryConfiguration() {
     boolean canPreview = true;
-    PipelineConfigBean config = pipelineBean.getConfig();
-    if (config.memoryLimit > JvmEL.jvmMaxMemoryMB() * 0.85) {
-      issues.add(IssueCreator.getPipeline().create("","memoryLimit",ValidationError.VALIDATION_0063, config.memoryLimit,
-                                                   JvmEL.jvmMaxMemoryMB() * 0.85));
-      canPreview = false;
+    if (pipelineBean != null) {
+      PipelineConfigBean config = pipelineBean.getConfig();
+      if (config.memoryLimit > JvmEL.jvmMaxMemoryMB() * 0.85) {
+        issues.add(
+            IssueCreator.getPipeline().create("", "memoryLimit", ValidationError.VALIDATION_0063, config.memoryLimit,
+                                              JvmEL.jvmMaxMemoryMB() * 0.85));
+        canPreview = false;
+      }
     }
     return canPreview;
   }
@@ -646,10 +650,13 @@ public class PipelineConfigurationValidator {
 
   @VisibleForTesting
   boolean validateErrorStage() {
+    boolean preview = false;
     StageConfiguration errorStage = pipelineConfiguration.getErrorStage();
-    IssueCreator errorStageCreator = IssueCreator.getStage(errorStage.getInstanceName());
-    boolean preview = validateStageConfiguration(false, errorStage, true, errorStageCreator);
-    preview &= validateStagesExecutionMode(Arrays.asList(errorStage), true);
+    if (errorStage != null) {
+      IssueCreator errorStageCreator = IssueCreator.getStage(errorStage.getInstanceName());
+      preview = validateStageConfiguration(false, errorStage, true, errorStageCreator);
+      preview &= validateStagesExecutionMode(Arrays.asList(errorStage), true);
+    }
     return preview;
   }
 
