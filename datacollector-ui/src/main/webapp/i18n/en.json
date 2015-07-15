@@ -539,7 +539,10 @@
     "title": "Data Collector RESTful API"
   },
   "sdcConfiguration": {
-    "title": "Data Collector Configuration"
+    "configuration": "Configuration",
+    "infoMessage": "These configurations are defined in etc/sdc.properties. To change these you currently need to restart Data Collector.",
+    "title": "Data Collector Configuration",
+    "value": "Value"
   },
   "sdcSettings": {
     "title": "Settings",

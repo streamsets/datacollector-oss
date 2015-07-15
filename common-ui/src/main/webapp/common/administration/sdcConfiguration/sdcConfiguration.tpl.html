@@ -7,18 +7,28 @@
   </div>
 
   <div class="panel-body"  ng-style="{'height': (windowHeight - 60 - 51) + 'px', 'width': (windowWidth) + 'px'}" resize>
-    <form class="form-horizontal" role="form"
-          ng-class="{'form-group-sm': ($storage.displayDensity === pipelineConstant.DENSITY_COZY || $storage.displayDensity === pipelineConstant.DENSITY_COMPACT)}"
-          name="sdcConfiguration">
 
-      <div class="form-group" ng-repeat="configKey in configKeys">
-        <label class="col-lg-3 col-md-4 control-label">{{configKey}}</label>
-        <div class="controls col-lg-5 col-md-6">
-          <input readonly type="text" class="form-control" name="{{configKey}}"
-                 ng-model="sdcConfiguration[configKey]">
-        </div>
-      </div>
-    </form>
+    <div class="alert alert-info" role="alert">
+      <i class="fa fa-info-circle"></i>
+      <span translate="sdcConfiguration.infoMessage"></span>
+    </div>
+
+    <table class="table table-striped table-hover">
+      <thead>
+        <tr>
+          <th translate="sdcConfiguration.configuration">Configuration</th>
+          <th translate="sdcConfiguration.value">Value</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr ng-repeat="configKey in configKeys">
+          <td>{{configKey}}</td>
+          <td>{{sdcConfiguration[configKey]}}</td>
+        </tr>
+      </tbody>
+    </table>
+
+
   </div>
 
 </div>
