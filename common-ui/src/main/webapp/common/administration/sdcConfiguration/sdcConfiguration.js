@@ -23,17 +23,22 @@ angular
   .controller('SDCConfigurationController', function ($scope, $rootScope, $q, Analytics, configuration, _) {
 
     angular.extend($scope, {
+      initDefer: undefined,
       configKeys: [],
       sdcConfiguration: {}
     });
 
-    $q.all([configuration.init()]).then(function() {
+    console.log('inside method SDCConfigurationController');
+
+    $scope.initDefer = $q.all([configuration.init()]).then(function() {
+      console.log('inside method SDCConfigurationController after init');
       if(configuration.isAnalyticsEnabled()) {
-        Analytics.trackPage('/collector/logs');
+        Analytics.trackPage('/collector/configuration');
       }
 
       $scope.sdcConfiguration = configuration.getConfiguration();
       $scope.configKeys = _.keys($scope.sdcConfiguration);
       $scope.configKeys.sort();
     });
+
   });
