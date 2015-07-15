@@ -13,6 +13,7 @@ import com.streamsets.pipeline.api.ClusterSource;
 import com.streamsets.pipeline.api.ErrorListener;
 import com.streamsets.pipeline.api.OffsetCommitter;
 import com.streamsets.pipeline.api.Record;
+import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.stage.origin.kafka.BaseKafkaSource;
 import com.streamsets.pipeline.stage.origin.kafka.SourceArguments;
@@ -63,8 +64,12 @@ public class ClusterKafkaSource extends BaseKafkaSource implements OffsetCommitt
   }
 
   @Override
-  public void initX() {
-    LOG.info("Successfully initialized Spark Kafka Consumer");
+  protected List<ConfigIssue> init() {
+    List<ConfigIssue> errors = super.init();
+    if (errors.isEmpty()) {
+      LOG.info("Successfully initialized Spark Kafka Consumer");
+    }
+    return errors;
   }
 
   @Override

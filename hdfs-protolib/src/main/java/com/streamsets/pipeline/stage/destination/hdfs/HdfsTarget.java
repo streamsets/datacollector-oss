@@ -236,6 +236,21 @@ public class HdfsTarget extends RecordTarget {
                                                 ex.getMessage(), ex));
     }
 
+    if (issues.isEmpty()) {
+      try {
+        FileSystem fs = getFileSystemForInitDestroy();
+        getCurrentWriters().commitOldFiles(fs);
+        if (getLateWriters() != null) {
+          getLateWriters().commitOldFiles(fs);
+        }
+      } catch (Exception ex) {
+        issues.add(getContext().createConfigIssue(null, null, Errors.HADOOPFS_23, ex.getMessage(), ex));
+      }
+      toHdfsRecordsCounter = getContext().createCounter("toHdfsRecords");
+      toHdfsRecordsMeter = getContext().createMeter("toHdfsRecords");
+      lateRecordsCounter = getContext().createCounter("lateRecords");
+      lateRecordsMeter = getContext().createMeter("lateRecords");
+    }
     return issues;
   }
 
@@ -351,24 +366,6 @@ public class HdfsTarget extends RecordTarget {
 
   private UserGroupInformation getUGI() {
     return (hdfsUser.isEmpty()) ? loginUgi : UserGroupInformation.createProxyUser(hdfsUser, loginUgi);
-  }
-
-  @Override
-  protected void initX() throws StageException {
-    super.initX();
-    try {
-      FileSystem fs = getFileSystemForInitDestroy();
-      getCurrentWriters().commitOldFiles(fs);
-      if (getLateWriters() != null) {
-        getLateWriters().commitOldFiles(fs);
-      }
-    } catch (Exception ex) {
-      throw new StageException(Errors.HADOOPFS_23, String.valueOf(ex), ex);
-    }
-    toHdfsRecordsCounter = getContext().createCounter("toHdfsRecords");
-    toHdfsRecordsMeter = getContext().createMeter("toHdfsRecords");
-    lateRecordsCounter = getContext().createCounter("lateRecords");
-    lateRecordsMeter = getContext().createMeter("lateRecords");
   }
 
   private FileSystem getFileSystemForInitDestroy() throws Exception {

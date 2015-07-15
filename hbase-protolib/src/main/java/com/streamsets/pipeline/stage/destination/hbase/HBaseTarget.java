@@ -88,15 +88,6 @@ public class HBaseTarget extends BaseTarget {
   }
 
   @Override
-  protected void initX() throws StageException {
-    super.initX();
-    for (HBaseFieldMappingConfig column : hbaseFieldColumnMapping) {
-      columnMappings.put(column.columnName, new ColumnInfo(column.columnValue,
-          column.columnStorageType));
-    }
-  }
-
-  @Override
   protected List<ConfigIssue> init() {
     List<ConfigIssue> issues = super.init();
     hbaseConf = getHBaseConfiguration(issues);
@@ -115,6 +106,12 @@ public class HBaseTarget extends BaseTarget {
       checkConnectionAndTableExistence(issues, this.tableName);
     }
     validateStorageTypes(issues);
+    if (issues.isEmpty()) {
+      for (HBaseFieldMappingConfig column : hbaseFieldColumnMapping) {
+        columnMappings.put(column.columnName, new ColumnInfo(column.columnValue,
+                                                             column.columnStorageType));
+      }
+    }
     return issues;
   }
 

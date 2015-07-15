@@ -130,14 +130,11 @@ public class ElasticSearchTarget extends BaseTarget {
       }
     }
 
+    if (issues.isEmpty()) {
+      generatorFactory = new DataGeneratorFactoryBuilder(getContext(), DataGeneratorFormat.JSON)
+          .setMode(JsonMode.MULTIPLE_OBJECTS).setCharset(Charset.forName(charset)).build();
+    }
     return issues;
-  }
-
-  @Override
-  protected void initX() throws StageException {
-    super.initX();
-    generatorFactory = new DataGeneratorFactoryBuilder(getContext(), DataGeneratorFormat.JSON)
-        .setMode(JsonMode.MULTIPLE_OBJECTS).setCharset(Charset.forName(charset)).build();
   }
 
   private Client getElasticClient() {

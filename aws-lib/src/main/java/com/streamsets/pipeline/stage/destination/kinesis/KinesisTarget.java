@@ -81,6 +81,13 @@ public class KinesisTarget extends BaseTarget {
 
     checkStreamExists(issues);
 
+    if (issues.isEmpty()) {
+      kinesisConfiguration = new ClientConfiguration();
+      //TODO Set additional configuration options here.
+      createKinesisClient();
+
+      generatorFactory = createDataGeneratorFactory();
+    }
     return issues;
   }
 
@@ -103,20 +110,11 @@ public class KinesisTarget extends BaseTarget {
   }
 
   @Override
-  protected void initX() throws StageException {
-    super.initX();
-
-    kinesisConfiguration = new ClientConfiguration();
-    //TODO Set additional configuration options here.
-    createKinesisClient();
-
-    generatorFactory = createDataGeneratorFactory();
-  }
-
-  @Override
   public void destroy() {
+    if (kinesisClient != null) {
+      kinesisClient.shutdown(); // This call is optional per Amazon docs.
+    }
     super.destroy();
-    kinesisClient.shutdown(); // This call is optional per Amazon docs.
   }
 
   private void createKinesisClient() {

@@ -17,6 +17,7 @@ import com.streamsets.pipeline.api.base.BaseSource;
 import com.streamsets.pipeline.lib.util.ThreadUtil;
 
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
@@ -58,12 +59,14 @@ public class RandomSource extends BaseSource {
   private long recordsProduced;
 
   @Override
-  protected void initX() throws StageException {
+  protected List<ConfigIssue> init() {
+    List<ConfigIssue> issues = super.init();
     fieldArr = fields.split(",");
     random = new Random();
     randomNulls = new Random();
     lanes = getContext().getOutputLanes().toArray(new String[getContext().getOutputLanes().size()]);
     randomMeter = getContext().createMeter("randomizer");
+    return issues;
   }
 
   @Override

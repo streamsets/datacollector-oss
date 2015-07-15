@@ -23,6 +23,7 @@ import com.streamsets.pipeline.lib.generator.avro.AvroDataGeneratorFactory;
 import com.streamsets.pipeline.lib.generator.delimited.DelimitedDataGeneratorFactory;
 import com.streamsets.pipeline.lib.generator.text.TextDataGeneratorFactory;
 import com.streamsets.pipeline.lib.util.ThreadUtil;
+import org.apache.commons.io.IOUtils;
 import org.apache.flume.Event;
 import org.apache.flume.EventDeliveryException;
 import org.apache.flume.api.RpcClient;
@@ -149,15 +150,13 @@ public class FlumeTarget extends BaseTarget {
       issues.add(getContext().createConfigIssue(Groups.FLUME.name(), "waitBetweenRetries",
         Errors.FLUME_104, "waitBetweenRetries", 0));
     }
+    if (issues.isEmpty()) {
+      connect();
+      generatorFactory = createDataGeneratorFactory();
+      headers = new HashMap<>();
+      headers.put(HEADER_CHARSET_KEY, charset);
+    }
     return issues;
-  }
-
-  @Override
-  public void initX() throws StageException {
-    connect();
-    generatorFactory = createDataGeneratorFactory();
-    headers = new HashMap<>();
-    headers.put(HEADER_CHARSET_KEY, charset);
   }
 
   private void connect() {
@@ -247,10 +246,11 @@ public class FlumeTarget extends BaseTarget {
 
   @Override
   public void destroy() {
-    LOG.info("Wrote {} number of records to Flume Agent", recordCounter);
+    LOG.debug("Wrote {} number of records to Flume Agent", recordCounter);
     if(client != null) {
       client.close();
     }
+    super.destroy();
   }
 
   private void writeOneEventPerRecord(Batch batch) throws StageException {

@@ -67,8 +67,8 @@ public class SolrTarget extends BaseTarget {
 
     if(solrInstanceInfo) {
       try {
-        SolrServer sClient = getSolrClient();
-        sClient.ping();
+        solrClient = getSolrClient();
+        solrClient.ping();
       } catch (Exception ex) {
         issues.add(getContext().createConfigIssue(Groups.SOLR.name(), null, Errors.SOLR_03, ex.getMessage(), ex));
       }
@@ -82,16 +82,6 @@ public class SolrTarget extends BaseTarget {
       return new HttpSolrServer(this.solrURI);
     } else {
       return new CloudSolrServer(this.zookeeperConnect);
-    }
-  }
-
-  @Override
-  protected void initX() throws StageException {
-    super.initX();
-    try {
-      solrClient = getSolrClient();
-    } catch (MalformedURLException ex) {
-      throw new RuntimeException(ex);
     }
   }
 

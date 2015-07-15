@@ -91,6 +91,46 @@ public class KinesisSource extends BaseSource implements OffsetCommitter {
 
     checkStreamExists(issues);
 
+    if (issues.isEmpty()) {
+      batchQueue = new LinkedTransferQueue<>();
+
+      DataParserFactoryBuilder builder = new DataParserFactoryBuilder(getContext(), dataFormat.getParserFormat())
+          .setMaxDataLen(50 * 1024); // Max Message for Kinesis is 50KiB
+
+      switch (dataFormat) {
+        case SDC_JSON:
+          break;
+        case JSON:
+          builder.setMode(JsonMode.MULTIPLE_OBJECTS);
+          break;
+      }
+
+      parserFactory = builder.build();
+
+      executorService = Executors.newFixedThreadPool(1);
+
+      IRecordProcessorFactory recordProcessorFactory = new StreamSetsRecordProcessorFactory(batchQueue);
+
+      // Create the KCL worker with the StreamSets record processor factory
+      KinesisClientLibConfiguration kclConfig =
+          new KinesisClientLibConfiguration(
+              "sdc",
+              streamName,
+              new DefaultAWSCredentialsProviderChain(),
+              UUID.randomUUID().toString()
+          );
+      kclConfig
+          .withRegionName(region.getName())
+          .withMaxRecords(maxBatchSize)
+          .withIdleTimeBetweenReadsInMillis(idleTimeBetweenReads)
+          .withInitialPositionInStream(InitialPositionInStream.TRIM_HORIZON); // Configurable?
+
+      worker = new Worker(recordProcessorFactory, kclConfig);
+
+      // Launch our worker thread
+      executorService.execute(worker);
+      LOG.info("Launched KCL Worker");
+    }
     return issues;
   }
 
@@ -113,61 +153,22 @@ public class KinesisSource extends BaseSource implements OffsetCommitter {
   }
 
   @Override
-  protected void initX() throws StageException {
-    super.initX();
-
-    batchQueue = new LinkedTransferQueue<>();
-
-    DataParserFactoryBuilder builder = new DataParserFactoryBuilder(getContext(), dataFormat.getParserFormat())
-        .setMaxDataLen(50 * 1024); // Max Message for Kinesis is 50KiB
-
-    switch (dataFormat) {
-      case SDC_JSON:
-        break;
-      case JSON:
-        builder.setMode(JsonMode.MULTIPLE_OBJECTS);
-        break;
-    }
-
-    parserFactory = builder.build();
-
-    executorService = Executors.newFixedThreadPool(1);
-
-    IRecordProcessorFactory recordProcessorFactory = new StreamSetsRecordProcessorFactory(batchQueue);
-
-    // Create the KCL worker with the StreamSets record processor factory
-    KinesisClientLibConfiguration kclConfig =
-        new KinesisClientLibConfiguration(
-            "sdc",
-            streamName,
-            new DefaultAWSCredentialsProviderChain(),
-            UUID.randomUUID().toString()
-        );
-    kclConfig
-        .withRegionName(region.getName())
-        .withMaxRecords(maxBatchSize)
-        .withIdleTimeBetweenReadsInMillis(idleTimeBetweenReads)
-        .withInitialPositionInStream(InitialPositionInStream.TRIM_HORIZON); // Configurable?
-
-    worker = new Worker(recordProcessorFactory, kclConfig);
-
-    // Launch our worker thread
-    executorService.execute(worker);
-    LOG.info("Launched KCL Worker");
-  }
-
-  @Override
   public void destroy() {
-    super.destroy();
-    worker.shutdown();
-    try {
-      executorService.awaitTermination(maxWaitTime, TimeUnit.MILLISECONDS);
-    } catch (InterruptedException ignored) {}
-    if (!batchQueue.isEmpty()) {
-      LOG.error("Queue still had {} batches at shutdown.", batchQueue.size());
-    } else {
-      LOG.info("Queue was empty at shutdown. No data lost.");
+    if (worker != null) {
+      worker.shutdown();
     }
+    if (executorService != null) {
+      try {
+        executorService.awaitTermination(maxWaitTime, TimeUnit.MILLISECONDS);
+      } catch (InterruptedException ignored) {
+      }
+      if (!batchQueue.isEmpty()) {
+        LOG.error("Queue still had {} batches at shutdown.", batchQueue.size());
+      } else {
+        LOG.info("Queue was empty at shutdown. No data lost.");
+      }
+    }
+    super.destroy();
   }
 
   @Override

@@ -181,14 +181,16 @@ public class KafkaTarget extends BaseTarget {
     //kafka producer configs
     validateKafkaProducerConfigs(issues);
 
+    if (issues.isEmpty()) {
+      kafkaProducer = new KafkaProducer(metadataBrokerList, dataFormat, partitionStrategy, kafkaProducerConfigs);
+      try {
+        kafkaProducer.init();
+      } catch (StageException ex) {
+        issues.add(getContext().createConfigIssue(null, null, ex.getErrorCode(), ex.getParams()));
+      }
+      generatorFactory = createDataGeneratorFactory();
+    }
     return issues;
-  }
-
-  @Override
-  public void initX() throws StageException {
-    kafkaProducer = new KafkaProducer(metadataBrokerList, dataFormat, partitionStrategy, kafkaProducerConfigs);
-    kafkaProducer.init();
-    generatorFactory = createDataGeneratorFactory();
   }
 
   private DataGeneratorFactory createDataGeneratorFactory() {

@@ -30,6 +30,7 @@ import com.streamsets.pipeline.api.base.BaseSource;
 import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.lib.util.JsonUtil;
 import com.streamsets.pipeline.lib.util.ThreadUtil;
+import org.apache.commons.io.IOUtils;
 import org.bson.Document;
 import org.bson.types.ObjectId;
 import org.slf4j.Logger;
@@ -134,12 +135,8 @@ public class MongoDBSource extends BaseSource {
 
   @Override
   public void destroy() {
-    if (null != cursor) {
-      cursor.close();
-    }
-    mongoClient.close();
-    mongoClient = null;
-
+    IOUtils.closeQuietly(cursor);
+    IOUtils.closeQuietly(mongoClient);
     super.destroy();
   }
 

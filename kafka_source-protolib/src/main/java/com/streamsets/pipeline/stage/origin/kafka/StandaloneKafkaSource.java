@@ -7,6 +7,7 @@ package com.streamsets.pipeline.stage.origin.kafka;
 
 import java.util.List;
 
+import com.streamsets.pipeline.api.Stage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -23,15 +24,22 @@ public class StandaloneKafkaSource extends BaseKafkaSource {
   }
 
   @Override
-  public void initX() throws StageException {
-    if(getContext().isPreview()) {
-      //set fixed batch duration time of 1 second for preview.
-      maxWaitTime = 1000;
+  protected List<ConfigIssue> init() {
+    List<ConfigIssue> issues = super.init();
+    if (issues.isEmpty()) {
+      if(getContext().isPreview()) {
+        //set fixed batch duration time of 1 second for preview.
+        maxWaitTime = 1000;
+      }
+      try {
+        kafkaConsumer.init();
+        LOG.info("Successfully initialized Kafka Consumer");
+      } catch (StageException ex) {
+        issues.add(getContext().createConfigIssue(null, null, ex.getErrorCode(), ex.getParams()));
+      }
     }
-    kafkaConsumer.init();
-    LOG.info("Successfully initialized Kafka Consumer");
+    return issues;
   }
-
 
   private String getMessageID(MessageAndOffset message) {
     return topic + "::" + message.getPartition() + "::" + message.getOffset();
@@ -58,7 +66,10 @@ public class StandaloneKafkaSource extends BaseKafkaSource {
 
   @Override
   public void destroy() {
-    kafkaConsumer.destroy();
+    if (kafkaConsumer != null) {
+      kafkaConsumer.destroy();
+    }
+    super.destroy();
   }
 
   @Override

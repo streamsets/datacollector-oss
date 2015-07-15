@@ -23,6 +23,7 @@ import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.Target;
 import com.streamsets.pipeline.api.base.BaseTarget;
 import com.streamsets.pipeline.api.impl.Utils;
+import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -84,47 +85,6 @@ public class CassandraTarget extends BaseTarget {
   }
 
   @Override
-  protected void initX() throws StageException {
-    super.initX();
-
-    cluster = Cluster.builder()
-        .addContactPoints(contactPoints)
-        .withPort(port)
-        // If authentication is disabled on the C* cluster, this method has no effect.
-        .withCredentials(username, password)
-        .build();
-
-    try {
-      session = cluster.connect();
-    } catch (NoHostAvailableException | AuthenticationException | IllegalStateException e) {
-      throw new StageException(Errors.CASSANDRA_03, e);
-    }
-
-    setColumnMappings();
-
-    // The INSERT query we're going to perform (parameterized).
-    final String query = String.format(
-        "INSERT INTO %s (%s) VALUES (%s);",
-        qualifiedTableName,
-        Joiner.on(", ").join(columnMappings.keySet()).replaceAll("/", ""),
-        Joiner.on(", ").join(Collections.nCopies(columnNames.size(), "?"))
-    );
-    LOG.info("Prepared Query: {}", query);
-    insertStatement = session.prepare(query);
-  }
-
-  @Override
-  public void destroy() {
-    super.destroy();
-    try {
-      session.close();
-      cluster.close();
-    } catch (NullPointerException e) {
-      LOG.warn("Tried to close cluster, but it was null.");
-    }
-  }
-
-  @Override
   protected List<ConfigIssue> init() {
     List<ConfigIssue> issues = super.init();
 
@@ -168,7 +128,41 @@ public class CassandraTarget extends BaseTarget {
       }
     }
 
+    if (issues.isEmpty()) {
+      cluster = Cluster.builder()
+                       .addContactPoints(contactPoints)
+          .withPort(port)
+              // If authentication is disabled on the C* cluster, this method has no effect.
+          .withCredentials(username, password)
+          .build();
+
+      try {
+        session = cluster.connect();
+      } catch (NoHostAvailableException | AuthenticationException | IllegalStateException e) {
+        issues.add(context.createConfigIssue(null, null, Errors.CASSANDRA_03, e.getMessage()));
+      }
+
+      setColumnMappings();
+
+      // The INSERT query we're going to perform (parameterized).
+      final String query = String.format(
+          "INSERT INTO %s (%s) VALUES (%s);",
+          qualifiedTableName,
+          Joiner.on(", ").join(columnMappings.keySet()).replaceAll("/", ""),
+          Joiner.on(", ").join(Collections.nCopies(columnNames.size(), "?"))
+      );
+      LOG.info("Prepared Query: {}", query);
+      insertStatement = session.prepare(query);
+
+    }
     return issues;
+  }
+
+  @Override
+  public void destroy() {
+    IOUtils.closeQuietly(session);
+    IOUtils.closeQuietly(cluster);
+    super.destroy();
   }
 
   private boolean isColumnMappingValid() {

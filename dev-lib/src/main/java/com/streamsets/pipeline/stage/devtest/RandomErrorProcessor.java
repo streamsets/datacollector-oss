@@ -13,6 +13,7 @@ import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.base.SingleLaneProcessor;
 
 import java.util.Iterator;
+import java.util.List;
 import java.util.Random;
 
 @GenerateResourceBundle
@@ -27,9 +28,10 @@ public class RandomErrorProcessor extends SingleLaneProcessor {
   private double batchThreshold2;
 
   @Override
-  protected void initX() throws StageException {
-    super.initX();
+  protected List<ConfigIssue> init() {
+    List<ConfigIssue> issues = super.init();
     random = new Random();
+    return issues;
   }
 
   @Override
