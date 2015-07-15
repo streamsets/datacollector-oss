@@ -8,6 +8,7 @@ package com.streamsets.pipeline.stage.origin.omniture;
 
 import com.streamsets.pipeline.api.BatchMaker;
 import com.streamsets.pipeline.api.Record;
+import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.base.BaseSource;
 import com.streamsets.pipeline.api.impl.Utils;
@@ -72,8 +73,8 @@ public class OmnitureSource extends BaseSource {
   }
 
   @Override
-  protected void initX() throws StageException {
-    super.initX();
+  protected List<ConfigIssue> init() {
+    List<ConfigIssue> errors = super.init();
 
     // TODO: SDC-552 - Omniture origin should be recoverable
     entityQueue = new ArrayBlockingQueue<>(2 * batchSize);
@@ -81,16 +82,22 @@ public class OmnitureSource extends BaseSource {
     parserFactory = new DataParserFactoryBuilder(getContext(), DataParserFormat.JSON)
         .setMode(JsonMode.MULTIPLE_OBJECTS).setMaxDataLen(-1).build();
 
-    httpConsumer = new OmniturePollingConsumer(
-        resourceUrl,
-        reportDescription,
-        requestTimeoutMillis,
-        username,
-        sharedSecret,
-        entityQueue
-    );
-
-    createPollingConsumer();
+    switch (httpMode) {
+      case POLLING:
+        httpConsumer = new OmniturePollingConsumer(
+            resourceUrl,
+            reportDescription,
+            requestTimeoutMillis,
+            username,
+            sharedSecret,
+            entityQueue
+        );
+        createPollingConsumer();
+        break;
+      default:
+        throw new IllegalStateException("Unrecognized httpMode " + httpMode);
+    }
+    return errors;
   }
 
   private void createPollingConsumer() {
@@ -104,8 +111,12 @@ public class OmnitureSource extends BaseSource {
     super.destroy();
     switch (httpMode) {
       case POLLING:
-        httpConsumer.stop();
-        executorService.shutdown();
+        if (httpConsumer != null) {
+          httpConsumer.stop();
+        }
+        if (executorService != null) {
+          executorService.shutdownNow();
+        }
         break;
       default:
         throw new IllegalStateException("Unrecognized httpMode " + httpMode);

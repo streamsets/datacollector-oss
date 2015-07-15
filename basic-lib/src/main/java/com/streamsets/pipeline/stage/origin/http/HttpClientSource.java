@@ -85,8 +85,8 @@ public class HttpClientSource extends BaseSource implements OffsetCommitter {
   }
 
   @Override
-  protected void initX() throws StageException {
-    super.initX();
+  protected List<ConfigIssue> init() {
+    List<ConfigIssue> errors = super.init();
 
     // Queue may not be empty at shutdown, but because we can't rewind,
     // the dropped entities are not recoverable anyway. In the case
@@ -127,7 +127,10 @@ public class HttpClientSource extends BaseSource implements OffsetCommitter {
       case POLLING:
         createPollingConsumer();
         break;
+      default:
+        throw new IllegalStateException("Unrecognized httpMode " + httpMode);
     }
+    return errors;
   }
 
   private void createPollingConsumer() {
@@ -143,18 +146,19 @@ public class HttpClientSource extends BaseSource implements OffsetCommitter {
 
   @Override
   public void destroy() {
-    super.destroy();
-    httpConsumer.stop();
-    switch (httpMode) {
-      case STREAMING:
-        executorService.shutdown();
-        break;
-      case POLLING:
-        safeExecutor.shutdown();
-        break;
-      default:
-        throw new IllegalStateException("Unrecognized httpMode " + httpMode);
+    if (httpConsumer != null) {
+      httpConsumer.stop();
+      httpConsumer = null;
+      switch (httpMode) {
+        case STREAMING:
+          executorService.shutdownNow();
+          break;
+        case POLLING:
+          safeExecutor.shutdownNow();
+          break;
+      }
     }
+    super.destroy();
   }
 
   @Override
@@ -227,6 +231,6 @@ public class HttpClientSource extends BaseSource implements OffsetCommitter {
 
   @Override
   public void commit(String offset) throws StageException {
-    // NOOP
+    // NOP
   }
 }

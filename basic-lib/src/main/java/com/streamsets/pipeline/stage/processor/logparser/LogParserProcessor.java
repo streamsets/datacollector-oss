@@ -66,11 +66,6 @@ public class LogParserProcessor extends SingleLaneRecordProcessor {
   private DataParserFactory parserFactory;
 
   @Override
-  protected void initX() throws StageException {
-    super.initX();
-  }
-
-  @Override
   protected List<ConfigIssue> init() {
     List<ConfigIssue> issues = super.init();
 

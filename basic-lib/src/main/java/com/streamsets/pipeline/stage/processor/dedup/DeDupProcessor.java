@@ -139,6 +139,7 @@ public class DeDupProcessor extends RecordProcessor {
   private String hashAttrName;
 
   @Override
+  @SuppressWarnings("unchecked")
   protected List<ConfigIssue> init() {
     List<ConfigIssue> issues = super.init();
     if (recordCountWindow <= 0) {
@@ -160,29 +161,25 @@ public class DeDupProcessor extends RecordProcessor {
         recordCountWindow, estimatedMemory / (1000 * 1000), getContext().getPipelineMaxMemory()));
         //MiB to bytes conversion, use  1000 * 1000 instead of 1024 * 1024
     }
-    return issues;
-  }
-
-  @Override
-  @SuppressWarnings("unchecked")
-  protected void initX() throws StageException {
-    super.initX();
-    hasher = Hashing.murmur3_128();
-    funnel = (compareFields == SelectFields.ALL_FIELDS) ? new RecordFunnel() : new RecordFunnel(fieldsToCompare);
-    CacheBuilder cacheBuilder = CacheBuilder.newBuilder();
-    if (timeWindowSecs > 0) {
-      cacheBuilder.expireAfterWrite(timeWindowSecs, TimeUnit.SECONDS);
-    }
-    hashCache = cacheBuilder.build(new CacheLoader<HashCode, Object>() {
-      @Override
-      public Object load(HashCode key) throws Exception {
-        return VOID;
+    if (issues.isEmpty()) {
+      hasher = Hashing.murmur3_128();
+      funnel = (compareFields == SelectFields.ALL_FIELDS) ? new RecordFunnel() : new RecordFunnel(fieldsToCompare);
+      CacheBuilder cacheBuilder = CacheBuilder.newBuilder();
+      if (timeWindowSecs > 0) {
+        cacheBuilder.expireAfterWrite(timeWindowSecs, TimeUnit.SECONDS);
       }
-    });
-    hashBuffer = XEvictingQueue.create(recordCountWindow);
-    hashAttrName = getInfo() + ".hash";
-    uniqueLane = getContext().getOutputLanes().get(OutputStreams.UNIQUE.ordinal());
-    duplicateLane = getContext().getOutputLanes().get(OutputStreams.DUPLICATE.ordinal());
+      hashCache = cacheBuilder.build(new CacheLoader<HashCode, Object>() {
+        @Override
+        public Object load(HashCode key) throws Exception {
+          return VOID;
+        }
+      });
+      hashBuffer = XEvictingQueue.create(recordCountWindow);
+      hashAttrName = getInfo() + ".hash";
+      uniqueLane = getContext().getOutputLanes().get(OutputStreams.UNIQUE.ordinal());
+      duplicateLane = getContext().getOutputLanes().get(OutputStreams.DUPLICATE.ordinal());
+    }
+    return issues;
   }
 
   boolean duplicateCheck(Record record) {

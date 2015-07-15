@@ -11,13 +11,16 @@ import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.lib.util.ThreadUtil;
 import com.streamsets.pipeline.sdk.SourceRunner;
 import com.streamsets.pipeline.sdk.StageRunner;
+import org.apache.commons.io.IOUtils;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.InputStream;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
@@ -28,8 +31,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class TestUDPSource {
-  private static final File TEN_PACKETS = new File(System.getProperty("user.dir") +
-    "/src/test/resources/netflow-v5-file-1");
+  private static final String TEN_PACKETS_RESOURCE = "netflow-v5-file-1";
   private static final Logger LOG = LoggerFactory.getLogger(TestUDPSource.class);
 
   @Before
@@ -98,7 +100,12 @@ public class TestUDPSource {
       byte[] bytes = null;
       switch (dataFormat) {
         case NETFLOW:
-          bytes = Files.readAllBytes(TEN_PACKETS.toPath());
+          InputStream is = Thread.currentThread().getContextClassLoader().getResourceAsStream(TEN_PACKETS_RESOURCE);
+          ByteArrayOutputStream baos = new ByteArrayOutputStream();
+          IOUtils.copy(is, baos);
+          is.close();
+          baos.close();
+          bytes = baos.toByteArray();
           break;
         case SYSLOG:
           bytes = "<34>1 2003-10-11T22:14:15.003Z mymachine.example.com some syslog data".

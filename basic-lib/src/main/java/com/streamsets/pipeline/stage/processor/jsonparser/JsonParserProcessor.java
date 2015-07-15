@@ -30,11 +30,6 @@ public class JsonParserProcessor extends SingleLaneRecordProcessor {
   }
 
   @Override
-  protected void initX() throws StageException {
-    super.initX();
-  }
-
-  @Override
   protected void process(Record record, SingleLaneBatchMaker batchMaker) throws StageException {
     Field field = record.get(fieldPathToParse);
     if (field == null) {

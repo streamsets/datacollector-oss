@@ -37,6 +37,7 @@ import com.streamsets.pipeline.lib.parser.log.LogDataFormatValidator;
 import com.streamsets.pipeline.lib.parser.log.LogDataParserFactory;
 import com.streamsets.pipeline.lib.parser.log.RegExConfig;
 import com.streamsets.pipeline.lib.parser.text.TextDataParserFactory;
+import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -257,12 +258,6 @@ public class FileTailSource extends BaseSource {
         issues.add(getContext().createConfigIssue(Groups.FILES.name(), "dataFormat", Errors.TAIL_03, dataFormat,
                                                   Arrays.asList(DataFormat.TEXT, DataFormat.JSON)));
     }
-    return issues;
-  }
-
-  @Override
-  protected void initX() throws StageException {
-    super.initX();
 
     maxWaitTimeMillis = maxWaitTimeSecs * 1000;
 
@@ -280,21 +275,20 @@ public class FileTailSource extends BaseSource {
         logDataFormatValidator.populateBuilder(builder);
         break;
       default:
-        throw new StageException(Errors.TAIL_03, "dataFormat", dataFormat);
+        issues.add(getContext().createConfigIssue(Groups.FILES.name(), "dataFormat", Errors.TAIL_03, dataFormat,
+                                                  dataFormat));
     }
     parserFactory = builder.build();
 
     outputLane = getContext().getOutputLanes().get(0);
     metadataLane = getContext().getOutputLanes().get(1);
+
+    return issues;
   }
 
   @Override
   public void destroy() {
-    try {
-      multiDirReader.close();
-    } catch (IOException ex) {
-      LOG.warn("Could not close properly MultiDirectoryReader: {}", ex.getMessage(), ex);
-    }
+    IOUtils.closeQuietly(multiDirReader);
     super.destroy();
   }
 

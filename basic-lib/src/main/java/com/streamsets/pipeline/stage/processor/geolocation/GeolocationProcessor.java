@@ -31,6 +31,7 @@ import java.util.concurrent.ExecutionException;
 
 import com.maxmind.geoip2.DatabaseReader;
 import com.streamsets.pipeline.api.impl.Utils;
+import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -59,7 +60,7 @@ public class GeolocationProcessor extends SingleLaneRecordProcessor {
 
   @Override
   protected List<ConfigIssue> init() {
-    List<ConfigIssue> result = new ArrayList<>();
+    List<ConfigIssue> result = super.init();
     File database = new File(geoIP2DBFile);
     if (!database.isAbsolute()) {
       database = new File(getContext().getResourcesDirectory(), geoIP2DBFile).getAbsoluteFile();
@@ -122,6 +123,12 @@ public class GeolocationProcessor extends SingleLaneRecordProcessor {
       }
     });
     return result;
+  }
+
+  @Override
+  public void destroy() {
+    IOUtils.closeQuietly(reader);
+    super.destroy();
   }
 
   @Override

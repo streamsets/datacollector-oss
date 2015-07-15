@@ -16,6 +16,7 @@ import com.streamsets.pipeline.lib.generator.DataGeneratorFactory;
 import com.streamsets.pipeline.lib.generator.DataGenerator;
 import com.streamsets.pipeline.lib.generator.DataGeneratorFactoryBuilder;
 import com.streamsets.pipeline.lib.generator.DataGeneratorFormat;
+import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -54,7 +55,6 @@ public class RecordsToLocalFileSystemTarget extends BaseTarget {
   private CountingOutputStream countingOutputStream;
   private DataGeneratorFactory generatorFactory;
   private DataGenerator generator;
-  private ELEval rotationMillisEvaluator;
 
   private ELEval createRotationMillisEval(ELContext elContext) {
     return elContext.createELEval("rotationIntervalSecs");
@@ -73,7 +73,7 @@ public class RecordsToLocalFileSystemTarget extends BaseTarget {
       }
     }
     try {
-      rotationMillisEvaluator = createRotationMillisEval(getContext());
+      ELEval rotationMillisEvaluator = createRotationMillisEval(getContext());
       getContext().parseEL(rotationIntervalSecs);
       rotationMillis = rotationMillisEvaluator.eval(getContext().createELVars(), rotationIntervalSecs, Long.class);
       if (rotationMillis <= 0) {
@@ -89,18 +89,24 @@ public class RecordsToLocalFileSystemTarget extends BaseTarget {
                                                 maxFileSizeMbs));
     }
     maxFileSizeBytes = maxFileSizeMbs * 1024 * 1024;
+
+    activeFile = new File(dir, "_tmp_" + uniquePrefix + ".sdc").getAbsoluteFile();
+
+    generatorFactory = new DataGeneratorFactoryBuilder(getContext(), DataGeneratorFormat.SDC_RECORD)
+        .setCharset(Charset.forName(CHARSET_UTF8)).build();
+
+    if (issues.isEmpty()) {
+      try {
+        // if we had non graceful shutdown we may have a _tmp file around. new file is not created.
+        rotate(false);
+      } catch (IOException ex) {
+        LOG.warn("Could not do rotation on init(): {}", ex.getMessage(), ex);
+        issues.add(getContext().createConfigIssue(null, null, Errors.RECORDFS_06, activeFile, ex.getMessage()));
+      }
+    }
     return issues;
   }
 
-  @Override
-  protected void initX() throws StageException {
-    super.initX();
-    activeFile = new File(dir, "_tmp_" + uniquePrefix + ".sdc").getAbsoluteFile();
-    // if we had non graceful shutdown we may have a _tmp file around. new file is not created.
-    rotate(false);
-    generatorFactory = new DataGeneratorFactoryBuilder(getContext(), DataGeneratorFormat.SDC_RECORD)
-      .setCharset(Charset.forName(CHARSET_UTF8)).build();
-  }
 
   @Override
   public void write(Batch batch) throws StageException {
@@ -131,17 +137,15 @@ public class RecordsToLocalFileSystemTarget extends BaseTarget {
            (countingOutputStream != null && countingOutputStream.getCount() > maxFileSizeBytes);
   }
 
-  private File findFinalName() throws StageException, IOException {
+  private File findFinalName() throws IOException {
     return new File(dir, uniquePrefix + "_" + UUID.randomUUID().toString() + ".sdc").getAbsoluteFile();
   }
 
-  private void rotate(boolean createNewFile) throws StageException {
+  private void rotate(boolean createNewFile) throws IOException {
     OutputStream outputStream = null;
     try {
-      if (generator != null) {
-        generator.close();
-        generator = null;
-      }
+      IOUtils.closeQuietly(generator);
+      generator = null;
       if (activeFile.exists()) {
         File finalName = findFinalName();
         LOG.debug("Rotating '{}' to '{}'", activeFile, finalName);
@@ -158,23 +162,12 @@ public class RecordsToLocalFileSystemTarget extends BaseTarget {
       }
       lastRotation = System.currentTimeMillis();
     } catch (IOException ex) {
-      if (generator != null) {
-        try {
-          generator.close();
-        } catch (IOException ex1) {
-          //NOP
-        }
-        generator = null;
-      } else {
-        if (outputStream != null) {
-          try {
-            outputStream.close();
-          } catch (IOException ex1) {
-            //NOP
-          }
-        }
-      }
-      throw new StageException(Errors.RECORDFS_06, activeFile, ex.getMessage(), ex);
+      IOUtils.closeQuietly(generator);
+      generator = null;
+      IOUtils.closeQuietly(countingOutputStream);
+      countingOutputStream = null;
+      IOUtils.closeQuietly(outputStream);
+      throw ex;
     }
   }
 
@@ -183,9 +176,11 @@ public class RecordsToLocalFileSystemTarget extends BaseTarget {
     try {
       //closing file and rotating.
       rotate(false);
-    } catch (StageException ex) {
-      LOG.warn("Could not do rotation on destroy: {}", ex.getMessage(), ex);
+    } catch (IOException ex) {
+      LOG.warn("Could not do rotation on destroy(): {}", ex.getMessage(), ex);
     }
+    IOUtils.closeQuietly(generator);
+    IOUtils.closeQuietly(countingOutputStream);
     super.destroy();
   }
 

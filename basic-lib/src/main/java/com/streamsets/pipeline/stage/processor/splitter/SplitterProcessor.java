@@ -54,23 +54,16 @@ public class SplitterProcessor extends SingleLaneRecordProcessor {
       count++;
     }
 
-    return issues;
-  }
-
-  @Override
-  protected void initX() throws StageException {
-    super.initX();
-
-    separatorStr = (separator == '^') ? " " : "" + separator;
-
-    //forcing a fastpath for String.split()
-    if (".$|()[{^?*+\\".contains(separatorStr)) {
-      separatorStr = "\\" + separatorStr;
+    if (issues.isEmpty()) {
+      separatorStr = (separator == '^') ? " " : "" + separator;
+      //forcing a fastpath for String.split()
+      if (".$|()[{^?*+\\".contains(separatorStr)) {
+        separatorStr = "\\" + separatorStr;
+      }
+      fieldPaths = fieldPathsForSplits.toArray(new String[fieldPathsForSplits.size()]);
+      removeUnsplitValue = originalFieldAction == OriginalFieldAction.REMOVE;
     }
-
-    fieldPaths = fieldPathsForSplits.toArray(new String[fieldPathsForSplits.size()]);
-
-    removeUnsplitValue = originalFieldAction == OriginalFieldAction.REMOVE;
+    return issues;
   }
 
   @Override

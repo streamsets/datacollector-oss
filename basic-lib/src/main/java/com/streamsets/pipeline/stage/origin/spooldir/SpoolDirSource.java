@@ -29,6 +29,7 @@ import com.streamsets.pipeline.lib.parser.delimited.DelimitedDataParserFactory;
 import com.streamsets.pipeline.lib.parser.log.LogDataFormatValidator;
 import com.streamsets.pipeline.lib.parser.log.RegExConfig;
 import com.streamsets.pipeline.lib.parser.xml.XmlDataParserFactory;
+import org.apache.commons.io.IOUtils;
 import org.apache.xerces.util.XMLChar;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -238,6 +239,27 @@ public class SpoolDirSource extends BaseSource {
 
     validateDataParser(issues);
 
+    if (getContext().isPreview()) {
+      poolingTimeoutSecs = 1;
+    }
+
+    if (issues.isEmpty()) {
+      DirectorySpooler.Builder builder =
+          DirectorySpooler.builder().setDir(spoolDir).setFilePattern(filePattern)
+                          .setMaxSpoolFiles(maxSpoolFiles)
+                          .setPostProcessing(DirectorySpooler.FilePostProcessing.valueOf(postProcessing.name()));
+      if (postProcessing == PostProcessingOptions.ARCHIVE) {
+        builder.setArchiveDir(archiveDir);
+        builder.setArchiveRetention(retentionTimeMins);
+      }
+      if (errorArchiveDir != null && !errorArchiveDir.isEmpty()) {
+        builder.setErrorArchiveDir(errorArchiveDir);
+      }
+      builder.setContext(getContext());
+      spooler = builder.build();
+      spooler.init(initialFileToProcess);
+    }
+
     return issues;
   }
 
@@ -342,32 +364,11 @@ public class SpoolDirSource extends BaseSource {
   }
 
   @Override
-  protected void initX() throws StageException {
-    super.initX();
-
-    if (getContext().isPreview()) {
-      poolingTimeoutSecs = 1;
-    }
-
-    DirectorySpooler.Builder builder = DirectorySpooler.builder().setDir(spoolDir).setFilePattern(filePattern).
-        setMaxSpoolFiles(maxSpoolFiles).
-        setPostProcessing(DirectorySpooler.FilePostProcessing.valueOf(postProcessing.name()));
-    if (postProcessing == PostProcessingOptions.ARCHIVE) {
-      builder.setArchiveDir(archiveDir);
-      builder.setArchiveRetention(retentionTimeMins);
-    }
-    if (errorArchiveDir != null && !errorArchiveDir.isEmpty()) {
-      builder.setErrorArchiveDir(errorArchiveDir);
-    }
-    builder.setContext(getContext());
-    spooler = builder.build();
-    spooler.init(initialFileToProcess);
-  }
-
-
-  @Override
   public void destroy() {
-    spooler.destroy();
+    IOUtils.closeQuietly(parser);
+    if (spooler != null) {
+      spooler.destroy();
+    }
     super.destroy();
   }
 

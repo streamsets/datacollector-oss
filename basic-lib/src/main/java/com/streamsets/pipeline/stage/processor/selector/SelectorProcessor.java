@@ -70,6 +70,7 @@ public class SelectorProcessor extends RecordProcessor {
             }
           }
         }
+        defaultLane = predicateLanes[predicateLanes.length - 1][1];
       }
     }
     return issues;
@@ -93,12 +94,6 @@ public class SelectorProcessor extends RecordProcessor {
       count++;
     }
     return predicateLanes;
-  }
-
-  @Override
-  protected void initX() throws StageException {
-    super.initX();
-    defaultLane = predicateLanes[predicateLanes.length - 1][1];
   }
 
   @Override

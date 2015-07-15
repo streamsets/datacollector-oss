@@ -17,6 +17,7 @@ import com.streamsets.pipeline.lib.util.JsonUtil;
 import com.streamsets.pipeline.lib.util.ThreadUtil;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
+import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -89,16 +90,6 @@ public class JdbcSource extends BaseSource {
   }
 
   @Override
-  public void destroy() {
-    closeQuietly(connection);
-
-    if (null != dataSource) {
-      dataSource.close();
-    }
-    super.destroy();
-  }
-
-  @Override
   protected List<ConfigIssue> init() {
     List<ConfigIssue> issues = new ArrayList<>();
     Source.Context context = getContext();
@@ -158,6 +149,13 @@ public class JdbcSource extends BaseSource {
       issues.add(context.createConfigIssue(Groups.JDBC.name(), CONNECTION_STRING, Errors.JDBC_00, e.getMessage()));
     }
     return issues;
+  }
+
+  @Override
+  public void destroy() {
+    closeQuietly(connection);
+    closeQuietly(dataSource);
+    super.destroy();
   }
 
   @Override
@@ -223,9 +221,13 @@ public class JdbcSource extends BaseSource {
   }
 
   private void closeQuietly(AutoCloseable c) {
-    try {
-      c.close();
-    } catch (Exception ignored) {}
+    if (c != null) {
+      try {
+        c.close();
+      } catch (Exception ex) {
+        LOG.debug("Error while closing: {}", ex.getMessage(), ex);
+      }
+    }
   }
 
   private void createDataSource() throws StageException {

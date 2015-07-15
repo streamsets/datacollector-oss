@@ -16,6 +16,7 @@ import com.streamsets.pipeline.lib.parser.netflow.NetflowParser;
 import com.streamsets.pipeline.lib.parser.AbstractParser;
 import com.streamsets.pipeline.lib.parser.syslog.SyslogParser;
 import io.netty.channel.socket.DatagramPacket;
+import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -103,25 +104,23 @@ public class UDPSource extends BaseSource {
           Errors.UDP_01, dataFormat));
         break;
     }
+    if (issues.isEmpty()) {
+      if (!addresses.isEmpty()) {
+        QueuingUDPConsumer udpConsumer = new QueuingUDPConsumer(incomingQueue);
+        udpServer = new UDPConsumingServer(addresses, udpConsumer);
+        try {
+          udpServer.listen();
+          udpServer.start();
+        } catch (Exception ex) {
+          udpServer.destroy();
+          udpServer = null;
+          issues.add(getContext().createConfigIssue(null, null, Errors.UDP_00, addresses.toString(), ex.toString(), ex));
+        }
+      }
+    }
     return issues;
   }
 
-  @Override
-  protected void initX() throws StageException {
-    super.initX();
-    if (!addresses.isEmpty()) {
-      QueuingUDPConsumer udpConsumer = new QueuingUDPConsumer(incomingQueue);
-      udpServer = new UDPConsumingServer(addresses, udpConsumer);
-      try {
-        udpServer.listen();
-        udpServer.start();
-      } catch (Exception ex) {
-        udpServer.destroy();
-        udpServer = null;
-        throw new StageException(Errors.UDP_00, addresses.toString(), ex.toString(), ex);
-      }
-    }
-  }
 
   @Override
   public void destroy() {

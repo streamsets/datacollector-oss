@@ -94,13 +94,9 @@ public abstract class AbstractScriptingProcessor extends SingleLaneProcessor {
     // we cannot verify the script is syntactically correct as there is no way to differentiate
     // that from an exception due to a script execution :(
 
-    return issues;
-  }
-
-  @Override
-  protected void initX() throws StageException {
-    super.initX();
     err = new Err();
+
+    return issues;
   }
 
   @Override

@@ -1,5 +1,6 @@
 package com.streamsets.pipeline.stage.origin.http;
 
+import org.apache.commons.io.IOUtils;
 import org.glassfish.jersey.client.ChunkedInput;
 import org.glassfish.jersey.client.oauth1.AccessToken;
 import org.glassfish.jersey.client.oauth1.ConsumerCredentials;
@@ -133,14 +134,17 @@ class HttpStreamConsumer implements Runnable {
       final ChunkedInput<String> chunkedInput = response.readEntity(new GenericType<ChunkedInput<String>>() {});
       chunkedInput.setParser(ChunkedInput.createParser(entityDelimiter));
       String chunk;
-      while ((chunk = chunkedInput.read()) != null && !stop) {
-        boolean accepted = entityQueue.offer(chunk, responseTimeoutMillis, TimeUnit.MILLISECONDS);
-        if (!accepted) {
-          LOG.warn("Response buffer full, dropped record.");
+      try {
+        while (!stop && (chunk = chunkedInput.read()) != null) {
+          boolean accepted = entityQueue.offer(chunk, responseTimeoutMillis, TimeUnit.MILLISECONDS);
+          if (!accepted) {
+            LOG.warn("Response buffer full, dropped record.");
+          }
         }
+      } finally {
+        chunkedInput.close();
+        response.close();
       }
-      chunkedInput.close();
-      response.close();
       LOG.debug("HTTP stream consumer closed.");
     } catch (InterruptedException | ExecutionException e) {
       LOG.warn(Errors.HTTP_01.getMessage(), e.toString(), e);
