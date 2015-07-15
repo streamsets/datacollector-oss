@@ -102,11 +102,7 @@ public class FilePipelineStoreTask extends AbstractTask implements PipelineStore
 
   @Override
   public void initTask() {
-    if (runtimeInfo.getExecutionMode() == RuntimeInfo.ExecutionMode.SLAVE) {
-      storeDir = new File(runtimeInfo.getDataDir());
-    } else {
-      storeDir = new File(runtimeInfo.getDataDir(), "pipelines");
-    }
+    storeDir = new File(runtimeInfo.getDataDir(), PipelineDirectoryUtil.PIPELINE_INFO_BASE_DIR);
     if (!storeDir.exists()) {
       if (!storeDir.mkdirs()) {
         throw new RuntimeException(Utils.format("Could not create directory '{}'", storeDir.getAbsolutePath()));

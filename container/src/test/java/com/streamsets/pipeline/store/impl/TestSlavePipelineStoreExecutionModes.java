@@ -38,7 +38,7 @@ public class TestSlavePipelineStoreExecutionModes {
       new SlavePipelineStateStore());
     SlavePipelineStoreTask slavePipelineStoreTask = new SlavePipelineStoreTask(pipelineStoreTask);
     slavePipelineStoreTask.init();
-    assertEquals(runtimeInfo.getDataDir(), pipelineStoreTask.getStoreDir().getAbsolutePath());
+    assertEquals(new File(runtimeInfo.getDataDir(), PipelineDirectoryUtil.PIPELINE_INFO_BASE_DIR).getAbsolutePath(), pipelineStoreTask.getStoreDir().getAbsolutePath());
     pipelineStoreTask.getStoreDir().delete();
   }
 
