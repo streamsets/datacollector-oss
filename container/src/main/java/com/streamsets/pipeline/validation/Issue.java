@@ -15,16 +15,13 @@ import java.util.Map;
 
 public class Issue {
   private final String instanceName;
-  private final boolean errorStage;
   private final String configGroup;
   private final String configName;
   private final LocalizableString message;
   private Map<String, Object> additionalInfo;
 
-  protected Issue(String instanceName, boolean errorStage, String configGroup, String configName, ErrorCode error,
-      Object... args) {
+  protected Issue(String instanceName, String configGroup, String configName, ErrorCode error, Object... args) {
     this.instanceName = instanceName;
-    this.errorStage = errorStage;
     this.configGroup = configGroup;
     this.configName = configName;
     message = new ErrorMessage(error, args);
@@ -53,10 +50,6 @@ public class Issue {
     return instanceName;
   }
 
-  public boolean isErrorStage() {
-    return errorStage;
-  }
-
   public String getLevel() {
     String level;
     if (instanceName == null) {
@@ -77,8 +70,8 @@ public class Issue {
 
   @Override
   public String toString() {
-    return Utils.format("Issue[instance='{}' group='{}' config='{}' errorStage='{}' message='{}']", instanceName,
-                        configGroup, configName, errorStage, message.getNonLocalized());
+    return Utils.format("Issue[instance='{}' group='{}' config='{}' message='{}']", instanceName, configGroup,
+                        configName, message.getNonLocalized());
   }
 
 }

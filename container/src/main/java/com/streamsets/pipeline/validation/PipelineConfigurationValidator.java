@@ -159,7 +159,7 @@ public class PipelineConfigurationValidator {
     PipelineConfigBean configs = pipelineBean.getConfig();
     boolean canPreview = true;
     for (StageConfiguration stageConf : stageConfigs) {
-      IssueCreator issueCreator = (errorStage) ? IssueCreator.getErrorStage(stageConf.getInstanceName())
+      IssueCreator issueCreator = (errorStage) ? IssueCreator.getStage(stageConf.getInstanceName())
                                                : IssueCreator.getStage(stageConf.getInstanceName());
       StageDefinition stageDef = stageLibrary.getStage(stageConf.getLibrary(), stageConf.getStageName(),
                                                        stageConf.getStageVersion());
@@ -647,7 +647,7 @@ public class PipelineConfigurationValidator {
   @VisibleForTesting
   boolean validateErrorStage() {
     StageConfiguration errorStage = pipelineConfiguration.getErrorStage();
-    IssueCreator errorStageCreator = IssueCreator.getErrorStage(errorStage.getInstanceName());
+    IssueCreator errorStageCreator = IssueCreator.getStage(errorStage.getInstanceName());
     boolean preview = validateStageConfiguration(false, errorStage, true, errorStageCreator);
     preview &= validateStagesExecutionMode(Arrays.asList(errorStage), true);
     return preview;

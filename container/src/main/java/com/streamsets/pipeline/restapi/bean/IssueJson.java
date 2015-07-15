@@ -14,16 +14,12 @@ public class IssueJson {
 
   private final Issue issue;
 
-  public IssueJson(com.streamsets.pipeline.validation.Issue issue) {
+  public IssueJson(Issue issue) {
     this.issue = issue;
   }
 
   public String getInstanceName() {
     return issue.getInstanceName();
-  }
-
-  public boolean isErrorStage() {
-    return issue.isErrorStage();
   }
 
   public String getLevel() {

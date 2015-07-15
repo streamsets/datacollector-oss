@@ -22,45 +22,37 @@ public abstract class IssueCreator {
     return new IssueCreator() {
       @Override
       public Issue create(ErrorCode error, Object... args) {
-        return new Issue(null, false, null, null, error, args);
+        return new Issue(null, null, null, error, args);
       }
 
       @Override
       public Issue create(String configGroup, String configName, ErrorCode error, Object... args) {
-        return new Issue(null, false, configGroup, configName, error, args);
+        return new Issue(null, configGroup, configName, error, args);
       }
 
       @Override
       public Issue create(String configGroup, ErrorCode error, Object... args) {
-        return new Issue(null, false, configGroup, null, error, args);
+        return new Issue(null, configGroup, null, error, args);
       }
 
     };
   }
 
   public static IssueCreator getStage(final String instanceName) {
-    return getStage(instanceName, false);
-  }
-
-  public static IssueCreator getErrorStage(final String instanceName) {
-    return getStage(instanceName, true);
-  }
-
-  private static IssueCreator getStage(final String instanceName, final boolean errorStage) {
     return new IssueCreator() {
       @Override
       public Issue create(ErrorCode error, Object... args) {
-        return new Issue(instanceName, errorStage, null, null, error, args);
+        return new Issue(instanceName, null, null, error, args);
       }
 
       @Override
       public Issue create(String configGroup, String configName, ErrorCode error, Object... args) {
-        return new Issue(instanceName, errorStage, configGroup, configName, error, args);
+        return new Issue(instanceName, configGroup, configName, error, args);
       }
 
       @Override
       public Issue create(String configGroup, ErrorCode error, Object... args) {
-        return new Issue(instanceName, errorStage, configGroup, null, error, args);
+        return new Issue(instanceName, configGroup, null, error, args);
       }
 
     };

@@ -66,8 +66,8 @@ public class PipelineConfigurationJson implements Serializable{
     return pipelineConfiguration.getUuid();
   }
 
-  public Issues getIssues() {
-    return pipelineConfiguration.getIssues();
+  public IssuesJson getIssues() {
+    return BeanHelper.wrapIssues(pipelineConfiguration.getIssues());
   }
 
   public boolean isValid() {

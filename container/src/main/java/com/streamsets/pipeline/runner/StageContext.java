@@ -130,7 +130,7 @@ public class StageContext implements Source.Context, Target.Context, Processor.C
 
     public ConfigIssueImpl(String instanceName, String configGroup, String configName, ErrorCode errorCode,
         Object... args) {
-      super(instanceName, false, configGroup, configName, errorCode, args); //TODO we should use errorStage bit here
+      super(instanceName, configGroup, configName, errorCode, args); //TODO we should use errorStage bit here
     }
 
   }
