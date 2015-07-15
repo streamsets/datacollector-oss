@@ -73,7 +73,7 @@ public class ManagerResource {
     @QueryParam("rev") @DefaultValue("0") String rev) throws PipelineManagerException, PipelineStoreException {
     Runner runner = manager.getRunner(user, name, rev);
     if(runner != null) {
-      return Response.ok().type(MediaType.APPLICATION_JSON).entity(new PipelineStateJson(runner.getStatus())).build();
+      return Response.ok().type(MediaType.APPLICATION_JSON).entity(new PipelineStateJson(runner.getState())).build();
     }
     return Response.noContent().build();
   }
@@ -93,7 +93,7 @@ public class ManagerResource {
     try {
       Runner runner = manager.getRunner(user, name, rev);
       runner.start();
-      return Response.ok().type(MediaType.APPLICATION_JSON).entity(new PipelineStateJson(runner.getStatus())).build();
+      return Response.ok().type(MediaType.APPLICATION_JSON).entity(new PipelineStateJson(runner.getState())).build();
     } catch (PipelineRuntimeException ex) {
       if (ex.getErrorCode() == ContainerError.CONTAINER_0165) {
         return Response.status(Response.Status.BAD_REQUEST).type(MediaType.APPLICATION_JSON).entity(
@@ -118,7 +118,7 @@ public class ManagerResource {
       "This operation is not supported in SLAVE mode");
     Runner runner = manager.getRunner(user, name, rev);
     runner.stop();
-    return Response.ok().type(MediaType.APPLICATION_JSON).entity(new PipelineStateJson(runner.getStatus())).build();
+    return Response.ok().type(MediaType.APPLICATION_JSON).entity(new PipelineStateJson(runner.getState())).build();
   }
 
   @Path("/resetOffset/{pipelineName}")
@@ -146,7 +146,7 @@ public class ManagerResource {
   public Response getMetrics(@QueryParam("name") String name,
                              @QueryParam("rev") @DefaultValue("0") String rev) throws PipelineStoreException {
     Runner runner = manager.getRunner(user, name, rev);
-    if (runner != null && runner.getStatus().getStatus() == PipelineStatus.RUNNING) {
+    if (runner != null && runner.getState().getStatus() == PipelineStatus.RUNNING) {
       return Response.ok().type(MediaType.APPLICATION_JSON).entity(runner.getMetrics()).build();
     }
     return Response.noContent().build();
@@ -162,7 +162,7 @@ public class ManagerResource {
       @QueryParam("rev") @DefaultValue("0") String rev,
       @QueryParam("batchSize") int batchSize) throws PipelineException {
     Runner runner = manager.getRunner(user, name, rev);
-    if (runner != null && runner.getStatus().getStatus() == PipelineStatus.RUNNING) {
+    if (runner != null && runner.getState().getStatus() == PipelineStatus.RUNNING) {
       return Response.ok().type(MediaType.APPLICATION_JSON).entity(
         runner.captureSnapshot(snapshotName, batchSize)).build();
     }

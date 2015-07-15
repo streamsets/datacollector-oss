@@ -78,11 +78,11 @@ public class TestStandaloneRunner {
   public void testPipelineStart() throws Exception {
     Runner runner = pipelineManager.getRunner("admin", TestUtil.MY_PIPELINE, "0");
     runner.start();
-    while (runner.getStatus().getStatus() != PipelineStatus.RUNNING) {
+    while (runner.getState().getStatus() != PipelineStatus.RUNNING) {
       Thread.sleep(100);
     }
     runner.stop();
-    while (runner.getStatus().getStatus() != PipelineStatus.STOPPED) {
+    while (runner.getState().getStatus() != PipelineStatus.STOPPED) {
       Thread.sleep(100);
     }
   }
@@ -93,42 +93,42 @@ public class TestStandaloneRunner {
     pipelineStateStore.saveState("admin", TestUtil.MY_PIPELINE, "0", PipelineStatus.FINISHING, null, null,
       ExecutionMode.STANDALONE);
     runner.prepareForDataCollectorStart();
-    assertEquals(PipelineStatus.FINISHED, runner.getStatus().getStatus());
+    assertEquals(PipelineStatus.FINISHED, runner.getState().getStatus());
     pipelineStateStore.saveState("admin", TestUtil.MY_PIPELINE, "0", PipelineStatus.STOPPING, null, null,
       ExecutionMode.STANDALONE);
     runner.prepareForDataCollectorStart();
-    assertEquals(PipelineStatus.STOPPED, runner.getStatus().getStatus());
+    assertEquals(PipelineStatus.STOPPED, runner.getState().getStatus());
     pipelineStateStore.saveState("admin", TestUtil.MY_PIPELINE, "0", PipelineStatus.DISCONNECTING, null, null,
       ExecutionMode.STANDALONE);
     runner.prepareForDataCollectorStart();
-    assertEquals(PipelineStatus.DISCONNECTED, runner.getStatus().getStatus());
+    assertEquals(PipelineStatus.DISCONNECTED, runner.getState().getStatus());
     pipelineStateStore.saveState("admin", TestUtil.MY_PIPELINE, "0", PipelineStatus.CONNECTING, null, null,
       ExecutionMode.STANDALONE);
     runner.prepareForDataCollectorStart();
-    assertEquals(PipelineStatus.DISCONNECTED, runner.getStatus().getStatus());
+    assertEquals(PipelineStatus.DISCONNECTED, runner.getState().getStatus());
     pipelineStateStore.saveState("admin", TestUtil.MY_PIPELINE, "0", PipelineStatus.STARTING, null, null,
       ExecutionMode.STANDALONE);
     runner.prepareForDataCollectorStart();
-    assertEquals(PipelineStatus.DISCONNECTED, runner.getStatus().getStatus());
+    assertEquals(PipelineStatus.DISCONNECTED, runner.getState().getStatus());
     pipelineStateStore.saveState("admin", TestUtil.MY_PIPELINE, "0", PipelineStatus.RUNNING, null, null,
       ExecutionMode.STANDALONE);
     runner.prepareForDataCollectorStart();
-    assertEquals(PipelineStatus.DISCONNECTED, runner.getStatus().getStatus());
+    assertEquals(PipelineStatus.DISCONNECTED, runner.getState().getStatus());
     pipelineStateStore.saveState("admin", TestUtil.MY_PIPELINE, "0", PipelineStatus.DISCONNECTED, null, null,
       ExecutionMode.STANDALONE);
     runner.prepareForDataCollectorStart();
-    assertEquals(PipelineStatus.DISCONNECTED, runner.getStatus().getStatus());
+    assertEquals(PipelineStatus.DISCONNECTED, runner.getState().getStatus());
   }
 
   @Test(timeout = 20000)
   public void testPipelineFinish() throws Exception {
     Runner runner = pipelineManager.getRunner( "admin", TestUtil.MY_PIPELINE, "0");
     runner.start();
-    while (runner.getStatus().getStatus() != PipelineStatus.RUNNING) {
+    while (runner.getState().getStatus() != PipelineStatus.RUNNING) {
       Thread.sleep(100);
     }
     TestUtil.EMPTY_OFFSET = true;
-    while (runner.getStatus().getStatus() != PipelineStatus.FINISHED) {
+    while (runner.getState().getStatus() != PipelineStatus.FINISHED) {
       Thread.sleep(100);
     }
   }
@@ -137,12 +137,12 @@ public class TestStandaloneRunner {
   public void testDisconnectedPipelineStartedAgain() throws Exception {
     Runner runner = pipelineManager.getRunner( "admin", TestUtil.MY_PIPELINE, "0");
     runner.start();
-    while (runner.getStatus().getStatus() != PipelineStatus.RUNNING) {
+    while (runner.getState().getStatus() != PipelineStatus.RUNNING) {
       Thread.sleep(100);
     }
     // sdc going down
     pipelineManager.stop();
-    while (runner.getStatus().getStatus() != PipelineStatus.DISCONNECTED) {
+    while (runner.getState().getStatus() != PipelineStatus.DISCONNECTED) {
       Thread.sleep(100);
     }
 
@@ -151,7 +151,7 @@ public class TestStandaloneRunner {
     pipelineManager = new StandaloneAndClusterPipelineManager(objectGraph);
     pipelineManager.init();
 
-    while(pipelineManager.getRunner("admin", TestUtil.MY_PIPELINE, "0").getStatus().getStatus()!=PipelineStatus.RUNNING) {
+    while(pipelineManager.getRunner("admin", TestUtil.MY_PIPELINE, "0").getState().getStatus()!=PipelineStatus.RUNNING) {
       Thread.sleep(100);
     }
   }
@@ -160,11 +160,11 @@ public class TestStandaloneRunner {
   public void testFinishedPipelineNotStartingAgain() throws Exception {
     Runner runner = pipelineManager.getRunner( "admin", TestUtil.MY_PIPELINE, "0");
     runner.start();
-    while (runner.getStatus().getStatus() != PipelineStatus.RUNNING) {
+    while (runner.getState().getStatus() != PipelineStatus.RUNNING) {
       Thread.sleep(100);
     }
     TestUtil.EMPTY_OFFSET = true;
-    while (runner.getStatus().getStatus() != PipelineStatus.FINISHED) {
+    while (runner.getState().getStatus() != PipelineStatus.FINISHED) {
       Thread.sleep(100);
     }
 
@@ -180,7 +180,7 @@ public class TestStandaloneRunner {
 
     //Since SDC went down we need to get the runner again
     runner = pipelineManager.getRunner( "admin", TestUtil.MY_PIPELINE, "0");
-    while(runner.getStatus().getStatus()!=PipelineStatus.FINISHED) {
+    while(runner.getState().getStatus()!=PipelineStatus.FINISHED) {
       Thread.sleep(100);
     }
   }
@@ -192,19 +192,19 @@ public class TestStandaloneRunner {
 
     runner1.start();
     runner2.start();
-    while (runner1.getStatus().getStatus() != PipelineStatus.RUNNING) {
+    while (runner1.getState().getStatus() != PipelineStatus.RUNNING) {
       Thread.sleep(1000);
     }
-    while (runner2.getStatus().getStatus() != PipelineStatus.RUNNING) {
+    while (runner2.getState().getStatus() != PipelineStatus.RUNNING) {
       Thread.sleep(1000);
     }
     runner1.stop();
-    while (runner1.getStatus().getStatus() != PipelineStatus.STOPPED) {
+    while (runner1.getState().getStatus() != PipelineStatus.STOPPED) {
       Thread.sleep(1000);
     }
-    assertEquals(PipelineStatus.RUNNING, runner2.getStatus().getStatus());
+    assertEquals(PipelineStatus.RUNNING, runner2.getState().getStatus());
     runner2.stop();
-    while (runner2.getStatus().getStatus() != PipelineStatus.STOPPED) {
+    while (runner2.getState().getStatus() != PipelineStatus.STOPPED) {
       Thread.sleep(1000);
     }
   }
@@ -216,17 +216,17 @@ public class TestStandaloneRunner {
 
     runner1.start();
     runner2.start();
-    while (runner1.getStatus().getStatus() != PipelineStatus.RUNNING) {
+    while (runner1.getState().getStatus() != PipelineStatus.RUNNING) {
       Thread.sleep(100);
     }
-    while (runner2.getStatus().getStatus() != PipelineStatus.RUNNING) {
+    while (runner2.getState().getStatus() != PipelineStatus.RUNNING) {
       Thread.sleep(100);
     }
     TestUtil.EMPTY_OFFSET = true;
-    while (runner1.getStatus().getStatus() != PipelineStatus.FINISHED) {
+    while (runner1.getState().getStatus() != PipelineStatus.FINISHED) {
       Thread.sleep(100);
     }
-    while (runner2.getStatus().getStatus() != PipelineStatus.FINISHED) {
+    while (runner2.getState().getStatus() != PipelineStatus.FINISHED) {
       Thread.sleep(100);
     }
   }
@@ -237,18 +237,18 @@ public class TestStandaloneRunner {
     Runner runner2 = pipelineManager.getRunner("admin2", TestUtil.MY_SECOND_PIPELINE, "0");
     runner1.start();
     runner2.start();
-    while (runner1.getStatus().getStatus() != PipelineStatus.RUNNING) {
+    while (runner1.getState().getStatus() != PipelineStatus.RUNNING) {
       Thread.sleep(1000);
     }
-    while (runner2.getStatus().getStatus() != PipelineStatus.RUNNING) {
+    while (runner2.getState().getStatus() != PipelineStatus.RUNNING) {
       Thread.sleep(1000);
     }
     // sdc going down
     pipelineManager.stop();
-    while (runner1.getStatus().getStatus() != PipelineStatus.DISCONNECTED) {
+    while (runner1.getState().getStatus() != PipelineStatus.DISCONNECTED) {
       Thread.sleep(1000);
     }
-    while (runner2.getStatus().getStatus() != PipelineStatus.DISCONNECTED) {
+    while (runner2.getState().getStatus() != PipelineStatus.DISCONNECTED) {
       Thread.sleep(1000);
     }
 
@@ -258,10 +258,10 @@ public class TestStandaloneRunner {
     pipelineManager.init();
     Thread.sleep(2000);
 
-    while(pipelineManager.getRunner("admin", TestUtil.MY_PIPELINE, "0").getStatus().getStatus()!=PipelineStatus.RUNNING) {
+    while(pipelineManager.getRunner("admin", TestUtil.MY_PIPELINE, "0").getState().getStatus()!=PipelineStatus.RUNNING) {
       Thread.sleep(100);
     }
-    while(pipelineManager.getRunner("admin2", TestUtil.MY_SECOND_PIPELINE, "0").getStatus().getStatus()!=PipelineStatus.RUNNING) {
+    while(pipelineManager.getRunner("admin2", TestUtil.MY_SECOND_PIPELINE, "0").getState().getStatus()!=PipelineStatus.RUNNING) {
       Thread.sleep(100);
     }
   }

@@ -134,7 +134,7 @@ public class StandaloneRunner implements Runner, StateListener {
 
   @Override
   public void prepareForDataCollectorStart() throws PipelineStoreException, PipelineRunnerException {
-    PipelineStatus status = getStatus().getStatus();
+    PipelineStatus status = getState().getStatus();
     LOG.info("Pipeline " + name + " with rev " + rev + " is in state: " + status);
     String msg = null;
     switch (status) {
@@ -181,7 +181,7 @@ public class StandaloneRunner implements Runner, StateListener {
 
   @Override
   public void onDataCollectorStart() throws PipelineStoreException, PipelineRunnerException, PipelineRuntimeException, StageException {
-    PipelineStatus status = getStatus().getStatus();
+    PipelineStatus status = getState().getStatus();
     LOG.info("Pipeline '{}::{}' has status: '{}'", name, rev, status);
     switch (status) {
       case DISCONNECTED:
@@ -230,7 +230,7 @@ public class StandaloneRunner implements Runner, StateListener {
 
   @Override
   public void onDataCollectorStop() throws PipelineStoreException {
-    if (!getStatus().getStatus().isActive() || getStatus().getStatus() == PipelineStatus.DISCONNECTED) {
+    if (!getState().getStatus().isActive() || getState().getStatus() == PipelineStatus.DISCONNECTED) {
       LOG.info("Pipeline '{}'::'{}' is no longer active", name, rev);
       return;
     }
@@ -266,7 +266,7 @@ public class StandaloneRunner implements Runner, StateListener {
 
   @Override
   public synchronized void resetOffset() throws PipelineStoreException, PipelineRunnerException {
-    PipelineStatus status = getStatus().getStatus();
+    PipelineStatus status = getState().getStatus();
     LOG.debug("Resetting offset for pipeline {}, {}", name, rev);
     if(status == PipelineStatus.RUNNING) {
       throw new PipelineRunnerException(ContainerError.CONTAINER_0104, name);
@@ -276,7 +276,7 @@ public class StandaloneRunner implements Runner, StateListener {
   }
 
   @Override
-  public PipelineState getStatus() throws PipelineStoreException {
+  public PipelineState getState() throws PipelineStoreException {
     return pipelineStateStore.getState(name, rev);
   }
 
@@ -299,7 +299,7 @@ public class StandaloneRunner implements Runner, StateListener {
     throws PipelineException {
     int batchSize = configuration.get(Constants.SNAPSHOT_MAX_BATCH_SIZE_KEY, Constants.SNAPSHOT_MAX_BATCH_SIZE_DEFAULT);
     LOG.debug("Capturing snapshot with batch size {}", batchSize);
-    checkState(getStatus().getStatus().equals(PipelineStatus.RUNNING), ContainerError.CONTAINER_0105);
+    checkState(getState().getStatus().equals(PipelineStatus.RUNNING), ContainerError.CONTAINER_0105);
     if(batchSize <= 0) {
       throw new PipelineRunnerException(ContainerError.CONTAINER_0107, batchSize);
     }
@@ -335,25 +335,25 @@ public class StandaloneRunner implements Runner, StateListener {
 
   @Override
   public List<Record> getErrorRecords(String stage, int max) throws PipelineRunnerException, PipelineStoreException {
-    checkState(getStatus().getStatus().isActive(), ContainerError.CONTAINER_0106);
+    checkState(getState().getStatus().isActive(), ContainerError.CONTAINER_0106);
     return prodPipeline.getErrorRecords(stage, max);
   }
 
   @Override
   public List<ErrorMessage> getErrorMessages(String stage, int max) throws PipelineRunnerException, PipelineStoreException {
-    checkState(getStatus().getStatus().isActive(), ContainerError.CONTAINER_0106);
+    checkState(getState().getStatus().isActive(), ContainerError.CONTAINER_0106);
     return prodPipeline.getErrorMessages(stage, max);
   }
 
   @Override
   public List<Record> getSampledRecords(String sampleId, int max) throws PipelineRunnerException, PipelineStoreException {
-    checkState(getStatus().getStatus().isActive(), ContainerError.CONTAINER_0106);
+    checkState(getState().getStatus().isActive(), ContainerError.CONTAINER_0106);
     return observerRunnable.getSampledRecords(sampleId, max);
   }
 
   @Override
   public boolean deleteAlert(String alertId) throws PipelineRunnerException, PipelineStoreException {
-    checkState(getStatus().equals(PipelineStatus.RUNNING), ContainerError.CONTAINER_0402);
+    checkState(getState().equals(PipelineStatus.RUNNING), ContainerError.CONTAINER_0402);
     MetricsConfigurator.resetCounter(getMetrics(), AlertsUtil.getUserMetricName(alertId));
     return MetricsConfigurator.removeGauge(getMetrics(), AlertsUtil.getAlertGaugeName(alertId), name ,rev);
   }
@@ -370,7 +370,7 @@ public class StandaloneRunner implements Runner, StateListener {
 
   private synchronized void validateAndSetStateTransition(PipelineStatus toStatus, String message, Map<String, Object> attributes)
     throws PipelineStoreException, PipelineRunnerException {
-    PipelineStatus status = getStatus().getStatus();
+    PipelineStatus status = getState().getStatus();
     checkState(VALID_TRANSITIONS.get(status).contains(toStatus), ContainerError.CONTAINER_0102, status, toStatus);
     pipelineStateStore.saveState(user, name, rev, toStatus, message, attributes, ExecutionMode.STANDALONE);
   }

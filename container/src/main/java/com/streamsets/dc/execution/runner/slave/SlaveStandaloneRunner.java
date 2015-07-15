@@ -63,8 +63,8 @@ public class SlaveStandaloneRunner implements Runner {
   }
 
   @Override
-  public PipelineState getStatus() throws PipelineStoreException {
-    return standaloneRunner.getStatus();
+  public PipelineState getState() throws PipelineStoreException {
+    return standaloneRunner.getState();
   }
 
   @Override
@@ -93,7 +93,7 @@ public class SlaveStandaloneRunner implements Runner {
   @Override
   public void start() throws PipelineRunnerException, PipelineStoreException, PipelineRuntimeException, StageException {
     standaloneRunner.start();
-    if (standaloneRunner.getStatus().getStatus().isActive()) {
+    if (standaloneRunner.getState().getStatus().isActive()) {
       String callbackServerURL = configuration.get(CALLBACK_SERVER_URL_KEY, CALLBACK_SERVER_URL_DEFAULT);
       String sdcClusterToken = configuration.get(SDC_CLUSTER_TOKEN_KEY, null);
       if(callbackServerURL != null) {

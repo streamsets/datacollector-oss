@@ -140,7 +140,7 @@ public class StandaloneAndClusterPipelineManager extends AbstractTask implements
   @Override
   public boolean isPipelineActive(String name, String rev) throws PipelineStoreException {
     Runner runner = runnerCache.getIfPresent(getNameAndRevString(name, rev));
-    return (runner == null) ? false : runner.getStatus().getStatus().isActive();
+    return (runner == null) ? false : runner.getState().getStatus().isActive();
   }
 
   @Override
@@ -172,7 +172,7 @@ public class StandaloneAndClusterPipelineManager extends AbstractTask implements
         if (pipelineState.getStatus().isActive()) {
           Runner runner = getRunner(pipelineState, name, rev);
           runner.prepareForDataCollectorStart();
-          if (runner.getStatus().getStatus() == PipelineStatus.DISCONNECTED) {
+          if (runner.getState().getStatus() == PipelineStatus.DISCONNECTED) {
             runnerCache.put(getNameAndRevString(name, rev), runner);
             runner.onDataCollectorStart();
           }
@@ -188,8 +188,8 @@ public class StandaloneAndClusterPipelineManager extends AbstractTask implements
         for (Runner runner : runnerCache.asMap().values()) {
           try {
             LOG.debug("Runner for pipeline '{}::{}' is in status: '{}'", runner.getName(), runner.getRev(),
-              runner.getStatus());
-            if (!runner.getStatus().getStatus().isActive()) {
+              runner.getState());
+            if (!runner.getState().getStatus().isActive()) {
               runner.close();
               runnerCache.invalidate(getNameAndRevString(runner.getName(), runner.getRev()));
               LOG.info("Removing runner for pipeline '{}::'{}'", runner.getName(), runner.getRev());

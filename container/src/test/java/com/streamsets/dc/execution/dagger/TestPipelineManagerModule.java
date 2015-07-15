@@ -88,7 +88,7 @@ public class TestPipelineManagerModule {
     runner = ((AsyncRunner)runner).getRunner();
     Assert.assertTrue(runner instanceof StandaloneRunner);
 
-    Assert.assertEquals(PipelineStatus.EDITED, runner.getStatus().getStatus());
+    Assert.assertEquals(PipelineStatus.EDITED, runner.getState().getStatus());
     Assert.assertEquals("p1", runner.getName());
     Assert.assertEquals("0", runner.getRev());
   }
@@ -132,7 +132,7 @@ public class TestPipelineManagerModule {
 
     AsyncRunner asyncRunner = (AsyncRunner)runner;
 
-    Assert.assertEquals(PipelineStatus.EDITED, asyncRunner.getStatus().getStatus());
+    Assert.assertEquals(PipelineStatus.EDITED, asyncRunner.getState().getStatus());
     Assert.assertEquals("p1", asyncRunner.getName());
     Assert.assertEquals("0", asyncRunner.getRev());
   }

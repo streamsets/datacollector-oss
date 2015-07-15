@@ -238,7 +238,7 @@ public class TestStandalonePipelineManager {
     pipelineStoreTask.create("user", "aaaa", "blah");
     Runner runner = pipelineManager.getRunner("user1", "aaaa", "0");
     pipelineStateStore.saveState("user", "aaaa", "0", PipelineStatus.RUNNING_ERROR, "blah", null, ExecutionMode.STANDALONE);
-    assertEquals(PipelineStatus.RUNNING_ERROR, runner.getStatus().getStatus());
+    assertEquals(PipelineStatus.RUNNING_ERROR, runner.getState().getStatus());
 
     pipelineManager.stop();
     pipelineStoreTask.stop();

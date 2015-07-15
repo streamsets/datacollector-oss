@@ -77,7 +77,7 @@ public class MetricsEventRunnable implements Runnable {
       if(threadHealthReporter != null) {
         threadHealthReporter.reportHealth(RUNNABLE_NAME, scheduledDelay, System.currentTimeMillis());
       }
-      if (metricsEventListenerList.size() > 0 && runner.getStatus().getStatus().isActive()) {
+      if (metricsEventListenerList.size() > 0 && runner.getState().getStatus().isActive()) {
         ObjectMapper objectMapper = ObjectMapperFactory.get();
 
         String metricsJSONStr;

@@ -56,7 +56,7 @@ public interface Runner {
   public void resetOffset() throws PipelineStoreException, PipelineRunnerException;
 
   // pipeline status
-  public PipelineState getStatus() throws PipelineStoreException;
+  public PipelineState getState() throws PipelineStoreException;
 
   // called on startup, moves runner to disconnected state if necessary
   void prepareForDataCollectorStart() throws PipelineStoreException, PipelineRunnerException;

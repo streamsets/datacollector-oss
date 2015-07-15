@@ -60,11 +60,11 @@ public class TestSlaveStandaloneRunner {
     manager.init();
     Runner runner = manager.getRunner("admin", TestUtil.MY_PIPELINE, "0");
     runner.start();
-    while (runner.getStatus().getStatus() != PipelineStatus.RUNNING) {
+    while (runner.getState().getStatus() != PipelineStatus.RUNNING) {
       Thread.sleep(100);
     }
     runner.stop();
-    while (runner.getStatus().getStatus() != PipelineStatus.STOPPED) {
+    while (runner.getState().getStatus() != PipelineStatus.STOPPED) {
       Thread.sleep(100);
     }
   }
@@ -77,11 +77,11 @@ public class TestSlaveStandaloneRunner {
     manager.init();
     Runner runner = manager.getRunner("admin", TestUtil.MY_PIPELINE, "0");
     runner.start();
-    while (runner.getStatus().getStatus() != PipelineStatus.RUNNING) {
+    while (runner.getState().getStatus() != PipelineStatus.RUNNING) {
       Thread.sleep(100);
     }
     runner.onDataCollectorStop();
-    while (runner.getStatus().getStatus() != PipelineStatus.DISCONNECTED) {
+    while (runner.getState().getStatus() != PipelineStatus.DISCONNECTED) {
       Thread.sleep(100);
     }
   }
@@ -94,11 +94,11 @@ public class TestSlaveStandaloneRunner {
     manager.init();
     Runner runner = manager.getRunner("admin", TestUtil.MY_PIPELINE, "0");
     runner.start();
-    while (runner.getStatus().getStatus() != PipelineStatus.RUNNING) {
+    while (runner.getState().getStatus() != PipelineStatus.RUNNING) {
       Thread.sleep(100);
     }
     TestUtil.EMPTY_OFFSET = true;
-    while (runner.getStatus().getStatus() != PipelineStatus.FINISHED) {
+    while (runner.getState().getStatus() != PipelineStatus.FINISHED) {
       Thread.sleep(100);
     }
   }

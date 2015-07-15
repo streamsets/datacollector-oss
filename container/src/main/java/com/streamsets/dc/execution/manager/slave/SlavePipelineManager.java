@@ -77,7 +77,7 @@ public class SlavePipelineManager extends AbstractTask implements Manager {
 
   @Override
   public boolean isPipelineActive(String name, String rev) throws PipelineStoreException {
-    return (runner == null) ? false : runner.getStatus().getStatus().isActive();
+    return (runner == null) ? false : runner.getState().getStatus().isActive();
   }
 
   @Override

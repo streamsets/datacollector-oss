@@ -58,8 +58,8 @@ public class AsyncRunner implements Runner {
   }
 
   @Override
-  public PipelineState getStatus() throws PipelineStoreException {
-    return runner.getStatus();
+  public PipelineState getState() throws PipelineStoreException {
+    return runner.getState();
   }
 
   @Override

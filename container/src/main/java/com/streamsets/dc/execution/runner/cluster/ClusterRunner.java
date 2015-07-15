@@ -164,7 +164,7 @@ public class ClusterRunner implements Runner {
 
   @Override
   public void prepareForDataCollectorStart() throws PipelineStoreException, PipelineRunnerException {
-    PipelineStatus status = getStatus().getStatus();
+    PipelineStatus status = getState().getStatus();
     LOG.info("Pipeline '{}::{}' has status: '{}'", name, rev, status);
     String msg = null;
     switch (status) {
@@ -197,7 +197,7 @@ public class ClusterRunner implements Runner {
 
   @Override
   public void onDataCollectorStart() throws PipelineStoreException, PipelineRunnerException, PipelineRuntimeException, StageException {
-    PipelineStatus status = getStatus().getStatus();
+    PipelineStatus status = getState().getStatus();
     LOG.info("Pipeline '{}::{}' has status: '{}'", name, rev, status);
     switch (status) {
       case DISCONNECTED:
@@ -273,7 +273,7 @@ public class ClusterRunner implements Runner {
     } else {
       runtimeInfo.setSDCToken(appState.getSdcToken());
       connect(appState, getPipelineConf());
-      if (getStatus().getStatus().isActive()) {
+      if (getState().getStatus().isActive()) {
         scheduleRunnable();
       }
     }
@@ -289,13 +289,13 @@ public class ClusterRunner implements Runner {
       throw new PipelineRunnerException(ValidationError.VALIDATION_0073);
     }
     validateAndSetStateTransition(PipelineStatus.STARTING, "Starting pipeline in cluster mode");
-    LOG.debug("State of pipeline for '{}::{}' is '{}' ", name, rev, getStatus());
+    LOG.debug("State of pipeline for '{}::{}' is '{}' ", name, rev, getState());
     PipelineConfiguration pipelineConf = getPipelineConf();
     doStart(pipelineConf, getClusterSourceInfo(name, rev, pipelineConf));
   }
 
   @Override
-  public PipelineState getStatus() throws PipelineStoreException {
+  public PipelineState getState() throws PipelineStoreException {
     return pipelineStateStore.getState(name, rev);
   }
 
@@ -402,7 +402,7 @@ public class ClusterRunner implements Runner {
   private synchronized void validateAndSetStateTransition(PipelineStatus toStatus, String message, Map<String, Object> attributes)
     throws PipelineStoreException, PipelineRunnerException {
     Utils.checkState(attributes!=null, "Attributes cannot be set to null");
-    final PipelineStatus status = getStatus().getStatus();
+    final PipelineStatus status = getState().getStatus();
     if (status == toStatus) {
       LOG.debug(Utils.format("Ignoring status '{}' as this is same as current status", status));
     } else {
@@ -526,14 +526,14 @@ public class ClusterRunner implements Runner {
     }
 
     private void checkStatus() throws PipelineStoreException, PipelineRunnerException {
-      if (clusterRunner.getStatus().getStatus().isActive()) {
+      if (clusterRunner.getState().getStatus().isActive()) {
         PipelineState ps = clusterRunner.getState();
         ApplicationState appState = new ApplicationState((Map) ps.getAttributes().get(APPLICATION_STATE));
         clusterRunner.connect(appState, pipelineConf);
       }
-      if (!clusterRunner.getStatus().getStatus().isActive()) {
+      if (!clusterRunner.getState().getStatus().isActive()) {
         LOG.debug(Utils.format("Cancelling the task as the runner is in a non-active state '{}'",
-          clusterRunner.getStatus()));
+          clusterRunner.getState()));
         clusterRunner.cancelRunnable();
       }
     }
@@ -672,10 +672,6 @@ public class ClusterRunner implements Runner {
       attributes.remove(APPLICATION_STATE);
       validateAndSetStateTransition(PipelineStatus.STOPPED, "Stopped cluster pipeline", attributes);
     }
-  }
-
-  private PipelineState getState() throws PipelineStoreException {
-    return pipelineStateStore.getState(name, rev);
   }
 
   private PipelineConfiguration getPipelineConf() throws PipelineStoreException {

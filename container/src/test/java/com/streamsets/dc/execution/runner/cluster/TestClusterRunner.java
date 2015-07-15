@@ -121,23 +121,23 @@ public class TestClusterRunner {
   public void testPipelinePrepareDataCollectorStart() throws Exception {
     Runner clusterRunner = createClusterRunner();
     clusterRunner.prepareForDataCollectorStart();
-    assertEquals(PipelineStatus.EDITED, clusterRunner.getStatus().getStatus());
+    assertEquals(PipelineStatus.EDITED, clusterRunner.getState().getStatus());
     pipelineStateStore.saveState("admin", NAME, "0", PipelineStatus.RUNNING, null, attributes, ExecutionMode.CLUSTER);
     clusterRunner.prepareForDataCollectorStart();
-    assertEquals(PipelineStatus.DISCONNECTED, clusterRunner.getStatus().getStatus());
+    assertEquals(PipelineStatus.DISCONNECTED, clusterRunner.getState().getStatus());
     pipelineStateStore.saveState("admin", NAME, "0", PipelineStatus.STARTING, null, attributes, ExecutionMode.CLUSTER);
     clusterRunner.prepareForDataCollectorStart();
-    assertEquals(PipelineStatus.DISCONNECTED, clusterRunner.getStatus().getStatus());
+    assertEquals(PipelineStatus.DISCONNECTED, clusterRunner.getState().getStatus());
     pipelineStateStore
       .saveState("admin", NAME, "0", PipelineStatus.CONNECTING, null, attributes, ExecutionMode.CLUSTER);
     clusterRunner.prepareForDataCollectorStart();
-    assertEquals(PipelineStatus.DISCONNECTED, clusterRunner.getStatus().getStatus());
+    assertEquals(PipelineStatus.DISCONNECTED, clusterRunner.getState().getStatus());
     pipelineStateStore.saveState("admin", NAME, "0", PipelineStatus.STOPPING, null, attributes, ExecutionMode.CLUSTER);
     clusterRunner.prepareForDataCollectorStart();
-    assertEquals(PipelineStatus.DISCONNECTED, clusterRunner.getStatus().getStatus());
+    assertEquals(PipelineStatus.DISCONNECTED, clusterRunner.getState().getStatus());
     pipelineStateStore.saveState("admin", NAME, "0", PipelineStatus.STOPPED, null, attributes, ExecutionMode.CLUSTER);
     clusterRunner.prepareForDataCollectorStart();
-    assertEquals(PipelineStatus.STOPPED, clusterRunner.getStatus().getStatus());
+    assertEquals(PipelineStatus.STOPPED, clusterRunner.getState().getStatus());
     pipelineStateStore.saveState("admin", NAME, "0", PipelineStatus.RUNNING_ERROR, null, attributes,
       ExecutionMode.CLUSTER);
     try {
@@ -159,9 +159,9 @@ public class TestClusterRunner {
     setState(PipelineStatus.RUNNING);
     Runner clusterRunner = createClusterRunner();
     clusterRunner.prepareForDataCollectorStart();
-    Assert.assertEquals(PipelineStatus.DISCONNECTED, clusterRunner.getStatus().getStatus());
+    Assert.assertEquals(PipelineStatus.DISCONNECTED, clusterRunner.getState().getStatus());
     clusterRunner.onDataCollectorStart();
-    Assert.assertEquals(PipelineStatus.RUN_ERROR, clusterRunner.getStatus().getStatus());
+    Assert.assertEquals(PipelineStatus.RUN_ERROR, clusterRunner.getState().getStatus());
   }
 
   @Test
@@ -172,7 +172,7 @@ public class TestClusterRunner {
     setState(PipelineStatus.DISCONNECTED);
     Runner clusterRunner = createClusterRunner();
     clusterRunner.onDataCollectorStart();
-    Assert.assertEquals(PipelineStatus.RUNNING, clusterRunner.getStatus().getStatus());
+    Assert.assertEquals(PipelineStatus.RUNNING, clusterRunner.getState().getStatus());
   }
 
   @Test
@@ -183,7 +183,7 @@ public class TestClusterRunner {
     setState(PipelineStatus.DISCONNECTED);
     Runner clusterRunner = createClusterRunner();
     clusterRunner.onDataCollectorStart();
-    Assert.assertEquals(PipelineStatus.CONNECT_ERROR, clusterRunner.getStatus().getStatus());
+    Assert.assertEquals(PipelineStatus.CONNECT_ERROR, clusterRunner.getState().getStatus());
   }
 
   @Test
@@ -194,7 +194,7 @@ public class TestClusterRunner {
     Runner clusterRunner = createClusterRunner();
     clusterRunner.prepareForDataCollectorStart();
     clusterRunner.onDataCollectorStart();
-    Assert.assertEquals(PipelineStatus.FINISHED, clusterRunner.getStatus().getStatus());
+    Assert.assertEquals(PipelineStatus.FINISHED, clusterRunner.getState().getStatus());
   }
 
   @Test
@@ -204,7 +204,7 @@ public class TestClusterRunner {
     Runner clusterRunner = createClusterRunner();
     clusterRunner.prepareForDataCollectorStart();
     clusterRunner.onDataCollectorStop();
-    Assert.assertEquals(PipelineStatus.DISCONNECTED, clusterRunner.getStatus().getStatus());
+    Assert.assertEquals(PipelineStatus.DISCONNECTED, clusterRunner.getState().getStatus());
   }
 
   @Test
@@ -213,7 +213,7 @@ public class TestClusterRunner {
     setState(PipelineStatus.RUNNING);
     Runner clusterRunner = createClusterRunner();
     clusterRunner.stop();
-    Assert.assertEquals(PipelineStatus.STOPPED, clusterRunner.getStatus().getStatus());
+    Assert.assertEquals(PipelineStatus.STOPPED, clusterRunner.getState().getStatus());
   }
 
   @Test
@@ -223,10 +223,10 @@ public class TestClusterRunner {
     Runner clusterRunner = createClusterRunner();
     clusterProvider.killTimesOut = true;
     clusterRunner.stop();
-    Assert.assertEquals(PipelineStatus.CONNECT_ERROR, clusterRunner.getStatus().getStatus());
+    Assert.assertEquals(PipelineStatus.CONNECT_ERROR, clusterRunner.getState().getStatus());
     clusterProvider.killTimesOut = false;
     clusterRunner.stop();
-    Assert.assertEquals(PipelineStatus.STOPPED, clusterRunner.getStatus().getStatus());
+    Assert.assertEquals(PipelineStatus.STOPPED, clusterRunner.getState().getStatus());
   }
 
   @Test
@@ -234,7 +234,7 @@ public class TestClusterRunner {
     setState(PipelineStatus.EDITED);
     Runner clusterRunner = createClusterRunner();
     clusterRunner.start();
-    Assert.assertEquals(PipelineStatus.RUNNING, clusterRunner.getStatus().getStatus());
+    Assert.assertEquals(PipelineStatus.RUNNING, clusterRunner.getState().getStatus());
   }
 
   @Test
@@ -243,16 +243,16 @@ public class TestClusterRunner {
     Runner clusterRunner = createClusterRunner();
     clusterProvider.submitTimesOut = true;
     clusterRunner.start();
-    Assert.assertEquals(PipelineStatus.START_ERROR, clusterRunner.getStatus().getStatus());
+    Assert.assertEquals(PipelineStatus.START_ERROR, clusterRunner.getState().getStatus());
     clusterProvider.submitTimesOut = false;
     clusterProvider.appId = APPID;
     clusterRunner.start();
-    Assert.assertEquals(PipelineStatus.RUNNING, clusterRunner.getStatus().getStatus());
+    Assert.assertEquals(PipelineStatus.RUNNING, clusterRunner.getState().getStatus());
     ApplicationState appState = new ApplicationState((Map)pipelineStateStore.getState(NAME, REV).getAttributes().
       get(ClusterRunner.APPLICATION_STATE));
     assertEquals(APPID, appState.getId());
     clusterRunner.stop();
-    assertEquals(PipelineStatus.STOPPED, clusterRunner.getStatus().getStatus());
+    assertEquals(PipelineStatus.STOPPED, clusterRunner.getState().getStatus());
     appState = new ApplicationState((Map)pipelineStateStore.getState(NAME, REV).getAttributes().
       get(ClusterRunner.APPLICATION_STATE));
     assertNull(appState.getId());
@@ -265,7 +265,7 @@ public class TestClusterRunner {
     clusterRunner.prepareForDataCollectorStart();
     clusterProvider.submitTimesOut = true;
     clusterRunner.onDataCollectorStart();
-    Assert.assertEquals(PipelineStatus.START_ERROR, clusterRunner.getStatus().getStatus());
+    Assert.assertEquals(PipelineStatus.START_ERROR, clusterRunner.getState().getStatus());
   }
 
 

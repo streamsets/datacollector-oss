@@ -90,7 +90,7 @@ public class MetricsEventRunnable implements Runnable {
       }
       boolean isRunning = false;
       if (pipelineManager == null) {
-        isRunning = runner.getStatus().getStatus().isActive();
+        isRunning = runner.getState().getStatus().isActive();
       } else {
         isRunning =
           pipelineManager.getPipelineState() != null && pipelineManager.getPipelineState().getState() == State.RUNNING;
