@@ -192,6 +192,18 @@
       </modules>
     </profile>
     <profile>
+      <id>miniITnew</id>
+      <activation>
+        <activeByDefault>false</activeByDefault>
+        <property>
+          <name>miniITnew</name>
+        </property>
+      </activation>
+      <modules>
+        <module>miniITnew</module>
+      </modules>
+    </profile>
+    <profile>
       <id>release</id>
       <activation>
         <activeByDefault>false</activeByDefault>

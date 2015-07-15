@@ -14,6 +14,7 @@ import com.streamsets.pipeline.runner.Observer;
 import com.streamsets.pipeline.store.PipelineStoreException;
 import com.streamsets.pipeline.store.PipelineStoreTask;
 
+import javax.inject.Named;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -28,11 +29,10 @@ public class RulesConfigLoader {
   private final String revision;
   private RuleDefinitions previousRuleDefinitions;
 
-
-  public RulesConfigLoader(String pipelineName, String revision, PipelineStoreTask pipelineStoreTask) {
+  public RulesConfigLoader(@Named("name") String name, @Named("rev") String rev, PipelineStoreTask pipelineStoreTask) {
     this.pipelineStoreTask = pipelineStoreTask;
-    this.pipelineName = pipelineName;
-    this.revision = revision;
+    this.pipelineName = name;
+    this.revision = rev;
   }
 
   public RuleDefinitions load(Observer observer) throws InterruptedException, PipelineStoreException {

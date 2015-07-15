@@ -31,8 +31,8 @@ public class BootstrapMain {
   private static final String STAGE_LIB_CONF_DIR = "etc";
 
   private static final String JARS_WILDCARD = "*.jar";
-  static final String FILE_SEPARATOR = System.getProperty("file.separator");
-  static final String CLASSPATH_SEPARATOR = System.getProperty("path.separator");
+  public static final String FILE_SEPARATOR = System.getProperty("file.separator");
+  public static final String CLASSPATH_SEPARATOR = System.getProperty("path.separator");
 
   private static final String MISSING_ARG_MSG = "Missing argument for '%s'";
   private static final String INVALID_OPTION_ARG_MSG = "Invalid option or argument '%s'";

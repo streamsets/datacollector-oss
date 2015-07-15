@@ -5,12 +5,9 @@
  */
 package com.streamsets.pipeline.util;
 
-import com.streamsets.dataCollector.execution.store.FilePipelineStateStore;
-import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.prodmanager.Constants;
 
 import org.apache.log4j.Appender;
-import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import org.apache.log4j.PatternLayout;
 import org.apache.log4j.RollingFileAppender;

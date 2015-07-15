@@ -6,7 +6,7 @@
 package com.streamsets.pipeline.main;
 
 
-import com.streamsets.dataCollector.execution.Manager;
+import com.streamsets.dc.execution.Manager;
 import com.streamsets.pipeline.http.WebServerTask;
 import com.streamsets.pipeline.stagelibrary.StageLibraryTask;
 import com.streamsets.pipeline.store.PipelineStoreTask;

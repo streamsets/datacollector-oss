@@ -5,9 +5,9 @@
  */
 package com.streamsets.pipeline.restapi.bean;
 
-import com.streamsets.dataCollector.execution.PipelineStatus;
-import com.streamsets.dataCollector.restapi.bean.ExecutionModeJson;
-import com.streamsets.dataCollector.restapi.bean.StatusJson;
+import com.streamsets.dc.execution.PipelineStatus;
+import com.streamsets.dc.restapi.bean.ExecutionModeJson;
+import com.streamsets.dc.restapi.bean.StatusJson;
 import com.streamsets.pipeline.api.ExecutionMode;
 import com.streamsets.pipeline.callback.CallbackInfo;
 import com.streamsets.pipeline.el.ElConstantDefinition;
@@ -16,6 +16,7 @@ import com.streamsets.pipeline.el.ElFunctionDefinition;
 import com.streamsets.pipeline.record.HeaderImpl;
 import com.streamsets.pipeline.record.RecordImpl;
 import com.streamsets.pipeline.runner.production.SourceOffset;
+import com.streamsets.pipeline.snapshotstore.SnapshotInfo;
 import com.streamsets.pipeline.store.PipelineInfo;
 
 import java.util.ArrayList;
@@ -32,11 +33,11 @@ public class BeanHelper {
     return new PipelineStateJson(pipelineState);
   }
 
-  public static com.streamsets.dataCollector.restapi.bean.PipelineStateJson wrapPipelineState(com.streamsets.dataCollector.execution.PipelineState pipelineState) {
+  public static com.streamsets.dc.restapi.bean.PipelineStateJson wrapPipelineState(com.streamsets.dc.execution.PipelineState pipelineState) {
     if(pipelineState == null) {
       return null;
     }
-    return new com.streamsets.dataCollector.restapi.bean.PipelineStateJson(pipelineState);
+    return new com.streamsets.dc.restapi.bean.PipelineStateJson(pipelineState);
   }
 
   public static SnapshotStatusJson wrapSnapshotStatus(com.streamsets.pipeline.snapshotstore.SnapshotStatus snapshotStatus) {
@@ -70,13 +71,26 @@ public class BeanHelper {
     return states;
   }
 
-  public static List<com.streamsets.dataCollector.execution.PipelineState> unwrapPipelineStatesNewAPI(
-    List<com.streamsets.dataCollector.restapi.bean.PipelineStateJson> pipelineStateJsons) {
+
+  public static List<com.streamsets.dc.restapi.bean.PipelineStateJson> wrapPipelineStatesNewAPI(
+    List<com.streamsets.dc.execution.PipelineState> pipelineStates) {
+    if(pipelineStates == null) {
+      return null;
+    }
+    List<com.streamsets.dc.restapi.bean.PipelineStateJson> states = new ArrayList<>(pipelineStates.size());
+    for(com.streamsets.dc.execution.PipelineState p : pipelineStates) {
+      states.add(BeanHelper.wrapPipelineState(p));
+    }
+    return states;
+  }
+
+  public static List<com.streamsets.dc.execution.PipelineState> unwrapPipelineStatesNewAPI(
+    List<com.streamsets.dc.restapi.bean.PipelineStateJson> pipelineStateJsons) {
     if(pipelineStateJsons == null) {
       return null;
     }
-    List<com.streamsets.dataCollector.execution.PipelineState> states = new ArrayList<>(pipelineStateJsons.size());
-    for(com.streamsets.dataCollector.restapi.bean.PipelineStateJson p : pipelineStateJsons) {
+    List<com.streamsets.dc.execution.PipelineState> states = new ArrayList<>(pipelineStateJsons.size());
+    for(com.streamsets.dc.restapi.bean.PipelineStateJson p : pipelineStateJsons) {
       states.add(p.getPipelineState());
     }
     return states;
@@ -93,7 +107,20 @@ public class BeanHelper {
     return pipelineInfoJson;
   }
 
-  public static List<SnapshotInfoJson> wrapSnapshotInfo(List<com.streamsets.pipeline.snapshotstore.SnapshotInfo>
+  public static List<com.streamsets.dc.restapi.bean.SnapshotInfoJson> wrapSnapshotInfoNewAPI(
+    List<com.streamsets.dc.execution.SnapshotInfo> snapshotInfoList) {
+    if(snapshotInfoList == null) {
+      return null;
+    }
+    List<com.streamsets.dc.restapi.bean.SnapshotInfoJson> snapshotInfoJsonList =
+      new ArrayList<>(snapshotInfoList.size());
+    for(com.streamsets.dc.execution.SnapshotInfo p : snapshotInfoList) {
+      snapshotInfoJsonList.add(new com.streamsets.dc.restapi.bean.SnapshotInfoJson(p));
+    }
+    return snapshotInfoJsonList;
+  }
+
+  public static List<SnapshotInfoJson> wrapSnapshotInfo(List<SnapshotInfo>
                                                           snapshotInfoList) {
     if(snapshotInfoList == null) {
       return null;
@@ -683,7 +710,7 @@ public class BeanHelper {
     }
   }
 
-  public static StatusJson wrapState(com.streamsets.dataCollector.execution.PipelineStatus status) {
+  public static StatusJson wrapState(com.streamsets.dc.execution.PipelineStatus status) {
     if(status == null) {
       return null;
     }
@@ -752,35 +779,35 @@ public class BeanHelper {
     }
     switch(pipelineStatus) {
       case STOPPED:
-        return com.streamsets.dataCollector.execution.PipelineStatus.STOPPED;
+        return com.streamsets.dc.execution.PipelineStatus.STOPPED;
       case STOPPING:
-        return com.streamsets.dataCollector.execution.PipelineStatus.STOPPING;
+        return com.streamsets.dc.execution.PipelineStatus.STOPPING;
       case RUNNING:
-        return com.streamsets.dataCollector.execution.PipelineStatus.RUNNING;
+        return com.streamsets.dc.execution.PipelineStatus.RUNNING;
       case RUN_ERROR:
-        return com.streamsets.dataCollector.execution.PipelineStatus.RUN_ERROR;
+        return com.streamsets.dc.execution.PipelineStatus.RUN_ERROR;
       case FINISHED:
-        return com.streamsets.dataCollector.execution.PipelineStatus.FINISHED;
+        return com.streamsets.dc.execution.PipelineStatus.FINISHED;
       case CONNECTING:
-        return com.streamsets.dataCollector.execution.PipelineStatus.CONNECTING;
+        return com.streamsets.dc.execution.PipelineStatus.CONNECTING;
       case CONNECT_ERROR:
-        return com.streamsets.dataCollector.execution.PipelineStatus.CONNECT_ERROR;
+        return com.streamsets.dc.execution.PipelineStatus.CONNECT_ERROR;
       case DISCONNECTED:
-        return com.streamsets.dataCollector.execution.PipelineStatus.DISCONNECTED;
+        return com.streamsets.dc.execution.PipelineStatus.DISCONNECTED;
       case DISCONNECTING:
-        return com.streamsets.dataCollector.execution.PipelineStatus.DISCONNECTING;
+        return com.streamsets.dc.execution.PipelineStatus.DISCONNECTING;
       case EDITED:
-        return com.streamsets.dataCollector.execution.PipelineStatus.EDITED;
+        return com.streamsets.dc.execution.PipelineStatus.EDITED;
       case FINISHING:
-        return com.streamsets.dataCollector.execution.PipelineStatus.FINISHING;
+        return com.streamsets.dc.execution.PipelineStatus.FINISHING;
       case KILLED:
-        return com.streamsets.dataCollector.execution.PipelineStatus.KILLED;
+        return com.streamsets.dc.execution.PipelineStatus.KILLED;
       case RUNNING_ERROR:
-        return com.streamsets.dataCollector.execution.PipelineStatus.RUNNING_ERROR;
+        return com.streamsets.dc.execution.PipelineStatus.RUNNING_ERROR;
       case STARTING:
-        return com.streamsets.dataCollector.execution.PipelineStatus.STARTING;
+        return com.streamsets.dc.execution.PipelineStatus.STARTING;
       case START_ERROR:
-        return com.streamsets.dataCollector.execution.PipelineStatus.START_ERROR;
+        return com.streamsets.dc.execution.PipelineStatus.START_ERROR;
       default:
         throw new IllegalArgumentException("Unrecognized state");
     }

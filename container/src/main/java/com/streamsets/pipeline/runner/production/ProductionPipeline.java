@@ -5,8 +5,8 @@
  */
 package com.streamsets.pipeline.runner.production;
 
-import com.streamsets.dataCollector.execution.PipelineStatus;
-import com.streamsets.dataCollector.execution.StateListener;
+import com.streamsets.dc.execution.PipelineStatus;
+import com.streamsets.dc.execution.StateListener;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.impl.ErrorMessage;

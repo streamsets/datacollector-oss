@@ -5,7 +5,7 @@
  */
 package com.streamsets.pipeline.store;
 
-import com.streamsets.dataCollector.execution.store.SlavePipelineStateStoreModule;
+import com.streamsets.dc.execution.store.SlavePipelineStateStoreModule;
 import com.streamsets.pipeline.main.RuntimeModule;
 import com.streamsets.pipeline.stagelibrary.StageLibraryModule;
 import com.streamsets.pipeline.store.impl.FilePipelineStoreTask;

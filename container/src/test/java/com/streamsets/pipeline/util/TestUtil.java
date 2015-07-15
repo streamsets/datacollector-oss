@@ -6,24 +6,25 @@
 package com.streamsets.pipeline.util;
 
 import com.codahale.metrics.MetricRegistry;
-import com.streamsets.dataCollector.execution.PipelineStateStore;
-import com.streamsets.dataCollector.execution.Previewer;
-import com.streamsets.dataCollector.execution.PreviewerListener;
-import com.streamsets.dataCollector.execution.Runner;
-import com.streamsets.dataCollector.execution.SnapshotStore;
-import com.streamsets.dataCollector.execution.alerts.AlertManager;
-import com.streamsets.dataCollector.execution.manager.PreviewerProvider;
-import com.streamsets.dataCollector.execution.manager.RunnerProvider;
-import com.streamsets.dataCollector.execution.manager.standalone.StandaloneAndClusterPipelineManager;
-import com.streamsets.dataCollector.execution.runner.common.AsyncRunner;
-import com.streamsets.dataCollector.execution.runner.common.DataObserverRunnable;
-import com.streamsets.dataCollector.execution.runner.common.MetricObserverRunnable;
-import com.streamsets.dataCollector.execution.runner.common.MetricsObserverRunner;
-import com.streamsets.dataCollector.execution.runner.common.ProductionObserver;
-import com.streamsets.dataCollector.execution.runner.standalone.StandaloneRunner;
-import com.streamsets.dataCollector.execution.snapshot.file.FileSnapshotStore;
-import com.streamsets.dataCollector.execution.store.CachePipelineStateStore;
-import com.streamsets.dataCollector.execution.store.FilePipelineStateStore;
+import com.streamsets.dc.execution.PipelineStateStore;
+import com.streamsets.dc.execution.Previewer;
+import com.streamsets.dc.execution.PreviewerListener;
+import com.streamsets.dc.execution.Runner;
+import com.streamsets.dc.execution.SnapshotStore;
+import com.streamsets.dc.execution.alerts.AlertManager;
+import com.streamsets.dc.execution.manager.PreviewerProvider;
+import com.streamsets.dc.execution.manager.RunnerProvider;
+import com.streamsets.dc.execution.manager.standalone.StandaloneAndClusterPipelineManager;
+import com.streamsets.dc.execution.runner.common.AsyncRunner;
+import com.streamsets.dc.execution.runner.common.DataObserverRunnable;
+import com.streamsets.dc.execution.runner.common.MetricObserverRunnable;
+import com.streamsets.dc.execution.runner.common.MetricsObserverRunner;
+import com.streamsets.dc.execution.runner.common.ProductionObserver;
+import com.streamsets.dc.execution.runner.common.ProductionPipelineRunner;
+import com.streamsets.dc.execution.runner.standalone.StandaloneRunner;
+import com.streamsets.dc.execution.snapshot.file.FileSnapshotStore;
+import com.streamsets.dc.execution.store.CachePipelineStateStore;
+import com.streamsets.dc.execution.store.FilePipelineStateStore;
 import com.streamsets.pipeline.api.Batch;
 import com.streamsets.pipeline.api.BatchMaker;
 import com.streamsets.pipeline.api.ExecutionMode;
@@ -50,6 +51,7 @@ import com.streamsets.pipeline.prodmanager.StandalonePipelineManagerTask;
 import com.streamsets.pipeline.prodmanager.State;
 import com.streamsets.pipeline.runner.MockStages;
 import com.streamsets.pipeline.runner.Observer;
+import com.streamsets.pipeline.runner.PipelineRunner;
 import com.streamsets.pipeline.runner.SourceOffsetTracker;
 import com.streamsets.pipeline.runner.production.ProductionSourceOffsetTracker;
 import com.streamsets.pipeline.runner.production.RulesConfigLoader;
@@ -418,11 +420,10 @@ public class TestUtil {
 
   /*************** PipelineProvider ***************/
 
-  @Module(injects = {EmailSender.class, AlertManager.class, ProductionObserver.class, RulesConfigLoader.class,
+  @Module(injects = {EmailSender.class, AlertManager.class, Observer.class, RulesConfigLoader.class,
     ThreadHealthReporter.class, DataObserverRunnable.class, RulesConfigLoaderRunnable.class,
-    MetricObserverRunnable.class, SourceOffsetTracker.class,
-    com.streamsets.dataCollector.execution.runner.common.ProductionPipelineRunner.class,
-    com.streamsets.dataCollector.execution.runner.common.ProductionPipelineBuilder.class},
+    MetricObserverRunnable.class, SourceOffsetTracker.class, PipelineRunner.class,
+    com.streamsets.dc.execution.runner.common.ProductionPipelineBuilder.class},
     library = true, includes = {TestRuntimeModule.class, TestPipelineStoreModuleNew.class,
     TestSnapshotStoreModule.class})
   public static class TestPipelineProviderModule {
@@ -509,22 +510,22 @@ public class TestUtil {
     }
 
     @Provides @Singleton
-    public com.streamsets.dataCollector.execution.runner.common.ProductionPipelineRunner
-    provideProductionPipelineRunner(@Named("name") String name,
+    public PipelineRunner provideProductionPipelineRunner(@Named("name") String name,
                                                                     @Named("rev") String rev, Configuration configuration, RuntimeInfo runtimeInfo,
                                                                     MetricRegistry metrics, SnapshotStore snapshotStore,
                                                                     ThreadHealthReporter threadHealthReporter,
                                                                     SourceOffsetTracker sourceOffsetTracker) {
-      return new com.streamsets.dataCollector.execution.runner.common.ProductionPipelineRunner(name, rev, configuration, runtimeInfo, metrics, snapshotStore,
+      return new com.streamsets.dc.execution.runner.common.ProductionPipelineRunner(name, rev, configuration, runtimeInfo, metrics, snapshotStore,
         threadHealthReporter, sourceOffsetTracker);
     }
 
     @Provides @Singleton
-    public com.streamsets.dataCollector.execution.runner.common.ProductionPipelineBuilder provideProductionPipelineBuilder(@Named("name") String name,
+    public com.streamsets.dc.execution.runner.common.ProductionPipelineBuilder provideProductionPipelineBuilder(@Named("name") String name,
                                                                       @Named("rev") String rev,
                                                                       RuntimeInfo runtimeInfo, StageLibraryTask stageLib,
-                                                                      com.streamsets.dataCollector.execution.runner.common.ProductionPipelineRunner runner, Observer observer) {
-      return new com.streamsets.dataCollector.execution.runner.common.ProductionPipelineBuilder(name, rev, runtimeInfo, stageLib, runner, observer);
+                                                                      PipelineRunner runner, Observer observer) {
+      return new com.streamsets.dc.execution.runner.common.ProductionPipelineBuilder(name, rev, runtimeInfo, stageLib,
+        (ProductionPipelineRunner)runner, observer);
     }
 
   }

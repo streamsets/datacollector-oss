@@ -10,6 +10,7 @@ import com.streamsets.pipeline.util.Configuration;
 import com.streamsets.pipeline.util.ContainerError;
 import com.streamsets.pipeline.util.PipelineException;
 
+import javax.inject.Inject;
 import javax.mail.Authenticator;
 import javax.mail.Message;
 import javax.mail.PasswordAuthentication;
@@ -37,6 +38,7 @@ public class EmailSender {
   private final boolean auth;
   private Session session;
 
+  @Inject
   public EmailSender(Configuration conf) {
     javaMailProps = createJavaMailSessionProperties(conf.getSubSetConfiguration(MAIL_CONFIGS_PREFIX));
     String protocol = javaMailProps.getProperty("mail.transport.protocol", "smtp");

@@ -6,7 +6,7 @@
 package com.streamsets.pipeline.prodmanager;
 
 import com.codahale.metrics.MetricRegistry;
-import com.streamsets.dataCollector.execution.store.FilePipelineStateStore;
+import com.streamsets.dc.execution.store.FilePipelineStateStore;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.impl.ErrorMessage;

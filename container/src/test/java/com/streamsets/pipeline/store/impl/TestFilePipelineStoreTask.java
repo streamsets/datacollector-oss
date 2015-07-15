@@ -9,17 +9,13 @@ import com.google.common.collect.ImmutableList;
 
 import static org.junit.Assert.assertEquals;
 
-import com.streamsets.dataCollector.execution.PipelineStateStore;
-import com.streamsets.pipeline.api.ExecutionMode;
+import com.streamsets.dc.execution.PipelineStateStore;
 import com.streamsets.pipeline.config.ConfigConfiguration;
 import com.streamsets.pipeline.config.DataRuleDefinition;
-import com.streamsets.pipeline.config.DeliveryGuarantee;
-import com.streamsets.pipeline.config.MemoryLimitExceeded;
 import com.streamsets.pipeline.config.MetricElement;
 import com.streamsets.pipeline.config.MetricType;
 import com.streamsets.pipeline.config.MetricsRuleDefinition;
 import com.streamsets.pipeline.config.PipelineConfiguration;
-import com.streamsets.pipeline.creation.PipelineConfigBean;
 import com.streamsets.pipeline.config.RuleDefinitions;
 import com.streamsets.pipeline.config.StageConfiguration;
 import com.streamsets.pipeline.config.ThresholdType;
@@ -49,8 +45,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
-
-import static org.junit.Assert.assertEquals;
 
 public class TestFilePipelineStoreTask {
 

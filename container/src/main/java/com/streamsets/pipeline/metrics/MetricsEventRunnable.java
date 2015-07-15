@@ -7,7 +7,7 @@
 package com.streamsets.pipeline.metrics;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.streamsets.dataCollector.execution.Runner;
+import com.streamsets.dc.execution.Runner;
 import com.streamsets.pipeline.callback.CallbackInfo;
 import com.streamsets.pipeline.json.ObjectMapperFactory;
 import com.streamsets.pipeline.main.RuntimeInfo;
@@ -90,7 +90,7 @@ public class MetricsEventRunnable implements Runnable {
       }
       boolean isRunning = false;
       if (pipelineManager == null) {
-        isRunning = runner.getStatus().isActive();
+        isRunning = runner.getStatus().getStatus().isActive();
       } else {
         isRunning =
           pipelineManager.getPipelineState() != null && pipelineManager.getPipelineState().getState() == State.RUNNING;

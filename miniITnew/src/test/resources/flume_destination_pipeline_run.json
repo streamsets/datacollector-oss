@@ -1,0 +1,183 @@
+{
+  "schemaVersion" : 1,
+  "uuid" : "3010cc2e-2ebe-4a2c-a234-712838784e6f",
+  "description" : "",
+  "configuration" : [ {
+    "name" : "executionMode",
+    "value" : "STANDALONE"
+  }, {
+    "name" : "clusterSlaveMemory",
+    "value" : 1024
+  }, {
+    "name" : "clusterLauncherEnv",
+    "value" : [ ]
+  }, {
+    "name" : "deliveryGuarantee",
+    "value" : "AT_LEAST_ONCE"
+  }, {
+    "name" : "badRecordsHandling",
+    "value" : "streamsets-datacollector-basic-lib::com_streamsets_pipeline_stage_destination_devnull_ToErrorNullDTarget::1.0.0"
+  }, {
+    "name" : "constants",
+    "value" : [ ]
+  }, {
+    "name" : "memoryLimitExceeded",
+    "value" : "STOP_PIPELINE"
+  }, {
+    "name" : "memoryLimit",
+    "value" : 668
+  } ],
+  "uiInfo" : {
+    "previewConfig" : {
+      "previewSource" : "CONFIGURED_SOURCE",
+      "batchSize" : 10,
+      "writeToDestinations" : false
+    }
+  },
+  "stages" : [ {
+    "instanceName" : "com_streamsets_pipeline_stage_devtest_RandomSource1432158818343",
+    "library" : "streamsets-datacollector-dev-lib",
+    "stageName" : "com_streamsets_pipeline_stage_devtest_RandomSource",
+    "stageVersion" : "1.0.0",
+    "configuration" : [ {
+      "name" : "fields",
+      "value" : "a,b,c"
+    }, {
+      "name" : "delay",
+      "value" : 1000
+    }, {
+      "name" : "stageOnRecordError",
+      "value" : "TO_ERROR"
+    }, {
+      "name" : "maxRecordsToGenerate",
+      "value": 100
+    } ],
+    "uiInfo" : {
+      "label" : "Dev Random Record Source 1",
+      "description" : "",
+      "xPos" : 217,
+      "yPos" : 174,
+      "stageType" : "SOURCE",
+      "icon" : "/rest/v1/definitions/stages/icon?name=com_streamsets_pipeline_stage_devtest_RandomSource&library=streamsets-datacollector-dev-lib&version=1.0.0"
+    },
+    "inputLanes" : [ ],
+    "outputLanes" : [ "com_streamsets_pipeline_stage_devtest_RandomSource1432158818343OutputLane14321588183430" ]
+  }, {
+    "instanceName" : "com_streamsets_pipeline_stage_destination_flume_FlumeDTarget1432855334685",
+    "library" : "streamsets-datacollector-cdh_5_4-lib",
+    "stageName" : "com_streamsets_pipeline_stage_destination_flume_FlumeDTarget",
+    "stageVersion" : "1.0.0",
+    "configuration" : [ {
+      "name" : "flumeHostsConfig",
+      "value" : [ {
+        "key" : "h1",
+        "value" : "localhost:9050"
+      } ]
+    }, {
+      "name" : "clientType",
+      "value" : "AVRO_FAILOVER"
+    }, {
+      "name" : "backOff",
+      "value" : false
+    }, {
+      "name" : "maxBackOff",
+      "value" : null
+    }, {
+      "name" : "hostSelectionStrategy",
+      "value" : "ROUND_ROBIN"
+    }, {
+      "name" : "batchSize",
+      "value" : 100
+    }, {
+      "name" : "connectionTimeout",
+      "value" : 20000
+    }, {
+      "name" : "requestTimeout",
+      "value" : 20000
+    }, {
+      "name" : "maxRetryAttempts",
+      "value" : 5
+    }, {
+      "name" : "waitBetweenRetries",
+      "value" : 120000
+    }, {
+      "name" : "dataFormat",
+      "value" : "JSON"
+    }, {
+      "name" : "charset",
+      "value" : "UTF-8"
+    }, {
+      "name" : "singleEventPerBatch",
+      "value" : false
+    }, {
+      "name" : "csvFileFormat",
+      "value" : "CSV"
+    }, {
+      "name" : "csvHeader",
+      "value" : "NO_HEADER"
+    }, {
+      "name" : "csvReplaceNewLines",
+      "value" : true
+    }, {
+      "name" : "jsonMode",
+      "value" : "MULTIPLE_OBJECTS"
+    }, {
+      "name" : "textFieldPath",
+      "value" : "/text"
+    }, {
+      "name" : "textEmptyLineIfNull",
+      "value" : false
+    }, {
+      "name" : "stageRequiredFields",
+      "value" : [ ]
+    }, {
+      "name" : "stageOnRecordError",
+      "value" : "TO_ERROR"
+    } ],
+    "uiInfo" : {
+      "label" : "Flume 1",
+      "description" : "",
+      "xPos" : 1816,
+      "yPos" : 140,
+      "stageType" : "TARGET",
+      "icon" : "/rest/v1/definitions/stages/icon?name=com_streamsets_pipeline_stage_destination_flume_FlumeDTarget&library=streamsets-datacollector-cdh5_3_2-lib&version=1.0.0"
+    },
+    "inputLanes" : [ "com_streamsets_pipeline_stage_devtest_RandomSource1432158818343OutputLane14321588183430" ],
+    "outputLanes" : [ ]
+  } ],
+  "errorStage" : {
+    "instanceName" : "com_streamsets_pipeline_stage_destination_devnull_ToErrorNullDTarget1432158402652",
+    "library" : "streamsets-datacollector-basic-lib",
+    "stageName" : "com_streamsets_pipeline_stage_destination_devnull_ToErrorNullDTarget",
+    "stageVersion" : "1.0.0",
+    "configuration" : [ ],
+    "uiInfo" : {
+      "label" : "Bad Records - Discard",
+      "description" : "",
+      "xPos" : 60,
+      "yPos" : 50,
+      "stageType" : "TARGET",
+      "icon" : "/assets/stage/defaultTarget.svg"
+    },
+    "inputLanes" : [ ],
+    "outputLanes" : [ ]
+  },
+  "info" : {
+    "name" : "flume_destination_pipeline",
+    "description" : "",
+    "created" : 1432158165570,
+    "lastModified" : 1432158860872,
+    "creator" : "admin",
+    "lastModifier" : "admin",
+    "lastRev" : "0",
+    "uuid" : "3010cc2e-2ebe-4a2c-a234-712838784e6f",
+    "valid" : true
+  },
+  "issues" : {
+    "stageIssues" : { },
+    "pipelineIssues" : [ ],
+    "issueCount" : 0
+  },
+  "previewable" : true,
+  "valid" : true
+}

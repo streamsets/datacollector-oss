@@ -15,8 +15,8 @@ import java.util.Arrays;
 import org.junit.Test;
 
 import com.codahale.metrics.MetricRegistry;
-import com.streamsets.dataCollector.execution.store.SlavePipelineStateStore;
-import com.streamsets.dataCollector.execution.store.TestPipelineStateStore;
+import com.streamsets.dc.execution.store.SlavePipelineStateStore;
+import com.streamsets.dc.execution.store.TestPipelineStateStore;
 import com.streamsets.pipeline.main.RuntimeInfo;
 import com.streamsets.pipeline.main.RuntimeModule;
 import com.streamsets.pipeline.runner.MockStages;
