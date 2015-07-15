@@ -159,7 +159,7 @@ public class PipelineConfigurationValidator {
     PipelineConfigBean configs = pipelineBean.getConfig();
     boolean canPreview = true;
     for (StageConfiguration stageConf : stageConfigs) {
-      IssueCreator issueCreator = (errorStage) ? IssueCreator.getErrorStage()
+      IssueCreator issueCreator = (errorStage) ? IssueCreator.getErrorStage(stageConf.getInstanceName())
                                                : IssueCreator.getStage(stageConf.getInstanceName());
       StageDefinition stageDef = stageLibrary.getStage(stageConf.getLibrary(), stageConf.getStageName(),
                                                        stageConf.getStageVersion());
@@ -376,8 +376,7 @@ public class PipelineConfigurationValidator {
       * In such a scenario stageConf.getConfig(dependsOn) can be null. We need to guard against this.*/
       (stageConf.getConfig(dependsOn) != null &&
         triggeredByContains(triggeredBy, stageConf.getConfig(dependsOn).getValue()))) {
-      issues.add(issueCreator.create(confDef.getGroup(), confDef.getName(),
-                                     ValidationError.VALIDATION_0007, confDef.getName(), confDef.getGroup()));
+      issues.add(issueCreator.create(confDef.getGroup(), confDef.getName(), ValidationError.VALIDATION_0007));
       preview = false;
     }
     return preview;
@@ -648,7 +647,7 @@ public class PipelineConfigurationValidator {
   @VisibleForTesting
   boolean validateErrorStage() {
     StageConfiguration errorStage = pipelineConfiguration.getErrorStage();
-    IssueCreator errorStageCreator = IssueCreator.getErrorStage();
+    IssueCreator errorStageCreator = IssueCreator.getErrorStage(errorStage.getInstanceName());
     boolean preview = validateStageConfiguration(false, errorStage, true, errorStageCreator);
     preview &= validateStagesExecutionMode(Arrays.asList(errorStage), true);
     return preview;

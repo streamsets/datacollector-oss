@@ -42,8 +42,8 @@ public abstract class IssueCreator {
     return getStage(instanceName, false);
   }
 
-  public static IssueCreator getErrorStage() {
-    return getStage("::errorStage::", true);
+  public static IssueCreator getErrorStage(final String instanceName) {
+    return getStage(instanceName, true);
   }
 
   private static IssueCreator getStage(final String instanceName, final boolean errorStage) {
