@@ -529,10 +529,10 @@ public class
   }
 
   static class ClusterSourceInfo {
-    private int parallelism;
-    private String clusterSourceName;
-    private boolean isInBatchMode;
-    private Map<String, String> configsToShip;
+    private final int parallelism;
+    private final String clusterSourceName;
+    private final boolean isInBatchMode;
+    private final Map<String, String> configsToShip;
 
     ClusterSourceInfo(String clusterSourceName, int parallelism, boolean isInBatchMode, Map<String, String> configsToShip) {
       this.parallelism = parallelism;

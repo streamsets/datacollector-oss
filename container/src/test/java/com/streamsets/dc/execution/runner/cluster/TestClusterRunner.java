@@ -14,7 +14,7 @@ import com.streamsets.dc.execution.store.CachePipelineStateStore;
 import com.streamsets.dc.execution.store.FilePipelineStateStore;
 import com.streamsets.pipeline.api.ExecutionMode;
 import com.streamsets.pipeline.api.StageException;
-import com.streamsets.pipeline.callback.CallbackInfo;
+import com.streamsets.dc.callback.CallbackInfo;
 import com.streamsets.pipeline.cluster.ApplicationState;
 import com.streamsets.pipeline.cluster.MockClusterProvider;
 import com.streamsets.pipeline.cluster.MockSystemProcess;
@@ -272,7 +272,7 @@ public class TestClusterRunner {
   @Test
   public void testSlaveList() throws Exception {
     ClusterRunner clusterRunner = (ClusterRunner) createClusterRunner();
-    CallbackInfo callbackInfo = new CallbackInfo(runtimeInfo.getSDCToken(), "slaveToken", "", "", "", "", "", "");
+    CallbackInfo callbackInfo = new CallbackInfo("user", "name", "rev", runtimeInfo.getSDCToken(), "slaveToken", "", "", "", "", "", "");
     clusterRunner.updateSlaveCallbackInfo(callbackInfo);
     List<CallbackInfo> slaves = new ArrayList<CallbackInfo>(clusterRunner.getSlaveCallbackList());
     assertFalse(slaves.isEmpty());

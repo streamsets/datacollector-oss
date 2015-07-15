@@ -49,7 +49,8 @@ public class TestSlaveManager {
   private Manager manager;
 
   @Module(
-    injects = { SlavePipelineManager.class, PipelineStoreTask.class, PipelineStateStore.class, StandaloneRunner.class },
+    injects = { SlavePipelineManager.class, PipelineStoreTask.class, PipelineStateStore.class,
+      StandaloneRunner.class},
     library = true)
   public static class TestSlaveManagerModule {
 
@@ -77,7 +78,7 @@ public class TestSlaveManager {
       PipelineStateStore pipelineStateStore) {
       PipelineStoreTask pipelineStoreTask =
         new SlavePipelineStoreTask(new TestUtil.TestPipelineStoreModuleNew().providePipelineStore(runtimeInfo,
-          stageLibraryTask, new FilePipelineStateStore(runtimeInfo, new Configuration())));
+          stageLibraryTask, new FilePipelineStateStore(runtimeInfo, provideConfiguration())));
       return pipelineStoreTask;
     }
 

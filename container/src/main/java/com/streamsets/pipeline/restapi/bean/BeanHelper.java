@@ -1165,6 +1165,13 @@ public class BeanHelper {
     return new CallbackInfoJson(callbackInfo);
   }
 
+  public static com.streamsets.dc.restapi.bean.CallbackInfoJson wrapCallbackInfo(com.streamsets.dc.callback.CallbackInfo callbackInfo) {
+    if(callbackInfo == null) {
+      return null;
+    }
+    return new com.streamsets.dc.restapi.bean.CallbackInfoJson(callbackInfo);
+  }
+
   public static ExecutionModeJson wrapExecutionMode(ExecutionMode executionMode) {
     if (executionMode == null) {
       return null;

@@ -5,16 +5,18 @@
  */
 package com.streamsets.dc.execution.runner.cluster.dagger;
 
+import com.streamsets.dc.execution.Runner;
 import com.streamsets.dc.execution.runner.cluster.ClusterRunner;
 import com.streamsets.dc.execution.runner.common.AsyncRunner;
 import com.streamsets.pipeline.lib.executor.SafeScheduledExecutorService;
+
 import dagger.Module;
 import dagger.ObjectGraph;
 import dagger.Provides;
 
 import javax.inject.Named;
 
-@Module(injects = AsyncRunner.class, library = true, complete = false)
+@Module(injects = Runner.class, library = true, complete = false)
 public class ClusterRunnerModule {
 
   private final String name;
@@ -36,7 +38,7 @@ public class ClusterRunnerModule {
   }
 
   @Provides
-  public AsyncRunner provideAsyncRunner(ClusterRunner runner,
+  public Runner provideAsyncRunner(ClusterRunner runner,
                                         @Named("asyncExecutor") SafeScheduledExecutorService asyncExecutor) {
     return new AsyncRunner(runner, asyncExecutor);
   }

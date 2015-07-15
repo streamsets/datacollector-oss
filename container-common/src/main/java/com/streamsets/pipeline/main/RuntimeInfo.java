@@ -40,7 +40,9 @@ public class RuntimeInfo {
   public static final String STATIC_WEB_DIR = ".static-web.dir";
   public static final String TRANSIENT_ENVIRONMENT = "sdc.transient-env";
   public static final String UNDEF = "UNDEF";
+  // TODO -remove after refactoring
   public static final String CALLBACK_URL = "/rest/v1/cluster/callback";
+  public static final String CALLBACK_URL_2 = "/rest/v2/cluster/callback";
   private final static String USER_ROLE = "user";
 
   public static final String LOG4J_CONFIGURATION_URL_ATTR = "log4j.configuration.url";
@@ -52,10 +54,10 @@ public class RuntimeInfo {
   private String httpUrl;
   private final Map<String, Object> attributes;
   private Runnable shutdownRunnable;
-  private Map<String, String> authenticationTokens;
+  private final Map<String, String> authenticationTokens;
   private final String propertyPrefix;
   private final File baseDir;
-  private UUID randomUUID;
+  private final UUID randomUUID;
   private ExecutionMode executionMode = ExecutionMode.STANDALONE;
   private String sdcToken;
 
@@ -292,5 +294,9 @@ public class RuntimeInfo {
 
   public String getClusterCallbackURL() {
     return getBaseHttpUrl() + CALLBACK_URL;
+  }
+
+  public String getClusterCallbackURL2() {
+    return getBaseHttpUrl() + CALLBACK_URL_2;
   }
 }

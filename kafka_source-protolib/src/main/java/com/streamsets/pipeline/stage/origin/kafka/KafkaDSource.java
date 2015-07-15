@@ -510,6 +510,6 @@ public class KafkaDSource extends DClusterSourceOffsetCommitter {
 
   @Override
   public Source getSource() {
-    return delegatingKafkaSource.getSource();
+    return source != null?  delegatingKafkaSource.getSource(): null;
   }
 }

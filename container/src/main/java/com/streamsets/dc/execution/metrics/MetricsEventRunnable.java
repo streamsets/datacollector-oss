@@ -8,11 +8,10 @@ package com.streamsets.dc.execution.metrics;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.streamsets.dc.execution.Runner;
-import com.streamsets.pipeline.callback.CallbackInfo;
+import com.streamsets.dc.callback.CallbackInfo;
 import com.streamsets.pipeline.json.ObjectMapperFactory;
 import com.streamsets.pipeline.main.RuntimeInfo;
 import com.streamsets.pipeline.metrics.MetricsEventListener;
-import com.streamsets.pipeline.prodmanager.PipelineManager;
 import com.streamsets.pipeline.restapi.bean.CounterJson;
 import com.streamsets.pipeline.restapi.bean.MeterJson;
 import com.streamsets.pipeline.restapi.bean.MetricRegistryJson;
@@ -33,13 +32,12 @@ import java.util.Map;
 public class MetricsEventRunnable implements Runnable {
   public static final String RUNNABLE_NAME = "MetricsEventRunnable";
   private final static Logger LOG = LoggerFactory.getLogger(MetricsEventRunnable.class);
-  private List<MetricsEventListener> metricsEventListenerList = new ArrayList<>();
-  private Map<String, MetricRegistryJson> slaveMetrics;
-  private PipelineManager pipelineManager = null;
+  private final List<MetricsEventListener> metricsEventListenerList = new ArrayList<>();
+  private final Map<String, MetricRegistryJson> slaveMetrics;
   private final RuntimeInfo runtimeInfo;
   private ThreadHealthReporter threadHealthReporter;
   private final int scheduledDelay;
-  private Runner runner;
+  private final Runner runner;
 
   @Inject
   public MetricsEventRunnable(RuntimeInfo runtimeInfo, int scheduledDelay, Runner runner,
@@ -112,7 +110,7 @@ public class MetricsEventRunnable implements Runnable {
     List<String> slaves = new ArrayList<>();
 
     //FIXME<Hari>: Eventually there wont be PipelineManager. Sort this out.
-    for(CallbackInfo callbackInfo : pipelineManager.getSlaveCallbackList()) {
+    for(CallbackInfo callbackInfo : runner.getSlaveCallbackList()) {
       slaves.add(callbackInfo.getSdcURL());
       MetricRegistryJson metricRegistryJson = callbackInfo.getMetricRegistryJson();
       if(metricRegistryJson != null) {

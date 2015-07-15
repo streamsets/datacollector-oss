@@ -6,36 +6,34 @@
 
 package com.streamsets.dc.datacollector;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.streamsets.dc.execution.Manager;
-import com.streamsets.dc.main.MainStandalonePipelineManagerModule;
+import com.streamsets.dc.execution.Runner;
+import com.streamsets.dc.execution.runner.common.PipelineInfo;
+import com.streamsets.dc.main.MainSlavePipelineManagerModule;
 import com.streamsets.dc.main.PipelineTask;
 import com.streamsets.pipeline.DataCollector;
 import com.streamsets.pipeline.api.impl.Utils;
-import com.streamsets.pipeline.config.PipelineConfiguration;
+import com.streamsets.dc.callback.CallbackInfo;
 import com.streamsets.pipeline.http.ServerNotYetRunningException;
-import com.streamsets.pipeline.json.ObjectMapperFactory;
 import com.streamsets.pipeline.main.BuildInfo;
 import com.streamsets.pipeline.main.LogConfigurator;
 import com.streamsets.pipeline.main.RuntimeInfo;
-import com.streamsets.pipeline.prodmanager.StandalonePipelineManagerTask;
-import com.streamsets.pipeline.restapi.bean.BeanHelper;
-import com.streamsets.pipeline.restapi.bean.PipelineConfigurationJson;
 import com.streamsets.pipeline.runner.Pipeline;
-import com.streamsets.pipeline.stagelibrary.StageLibraryTask;
-import com.streamsets.pipeline.store.PipelineStoreException;
-import com.streamsets.pipeline.store.PipelineStoreTask;
 import com.streamsets.pipeline.task.Task;
 import com.streamsets.pipeline.task.TaskWrapper;
-import com.streamsets.pipeline.validation.PipelineConfigurationValidator;
+
 import dagger.ObjectGraph;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.File;
+import java.io.FileInputStream;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Properties;
 
 public class EmbeddedDataCollector implements DataCollector {
   private static final Logger LOG = LoggerFactory.getLogger(EmbeddedDataCollector.class);
@@ -43,52 +41,29 @@ public class EmbeddedDataCollector implements DataCollector {
   private Manager pipelineManager;
   private ObjectGraph dagger;
   private Thread waitingThread;
-  private PipelineConfiguration realPipelineConfig;
-  private PipelineTask pipelineTask;
   private Task task;
-
-  private void createAndSave(String pipelineName) throws PipelineStoreException {
-    String user = realPipelineConfig.getInfo().getCreator();
-    String tag = realPipelineConfig.getInfo().getLastRev();
-    String desc = realPipelineConfig.getDescription();
-    StageLibraryTask stageLibrary = pipelineTask.getStageLibraryTask();
-    PipelineStoreTask store = pipelineTask.getPipelineStoreTask();
-    PipelineConfiguration tmpPipelineConfig =
-      store.create(user, pipelineName, desc);
-    // we might want to add an import API as now to import have to create one then update it
-    realPipelineConfig.setUuid(tmpPipelineConfig.getUuid());
-    PipelineConfigurationValidator validator =
-      new PipelineConfigurationValidator(stageLibrary, pipelineName, realPipelineConfig);
-    validator.validate();
-    realPipelineConfig.setValidation(validator);
-    realPipelineConfig =
-      store.save(user, pipelineName, tag, desc, realPipelineConfig);
-  }
+  private RuntimeInfo runtimeInfo;
+  private Runner runner;
+  private PipelineTask pipelineTask;
 
   @Override
-  public void startPipeline(String pipelineJson) throws Exception {
-    Utils.checkNotNull(pipelineJson, "Pipeline Json string");
-    ObjectMapper json = ObjectMapperFactory.getOneLine();
-    PipelineConfigurationJson pipelineConfigBean = json.readValue(pipelineJson, PipelineConfigurationJson.class);
-    realPipelineConfig = BeanHelper.unwrapPipelineConfiguration(pipelineConfigBean);
-    if (task == null) {
-      throw new IllegalStateException("Data collector has not been started");
-    }
-    pipelineTask = (PipelineTask) ((TaskWrapper)task).getTask();
-    this.pipelineName = Utils.checkNotNull(realPipelineConfig.getInfo(), "Pipeline Info").getName();
-    createAndSave(pipelineName);
-    pipelineManager.getRunner(realPipelineConfig.getInfo().getCreator(), pipelineName, "1").start();
+  public void startPipeline() throws Exception {
+    File sdcProperties = new File(runtimeInfo.getDataDir(), "sdc.properties");
+    Utils.checkState(sdcProperties.exists(), Utils.format("sdc property file doesn't exist at '{}'",
+      sdcProperties.getAbsolutePath()));
+    Properties properties = new Properties();
+    properties.load(new FileInputStream(sdcProperties));
+    String pipelineName = Utils.checkNotNull(properties.getProperty("cluster.pipeline.name"), "Pipeline name");
+    String pipelineUser = Utils.checkNotNull(properties.getProperty("cluster.pipeline.user"), "Pipeline user");
+    String pipelineRev = Utils.checkNotNull(properties.getProperty("cluster.pipeline.rev"), "Pipeline revision");
+    runner = pipelineManager.getRunner(pipelineUser, pipelineName, pipelineRev);
+    runner.start();
   }
 
   @Override
   public void createPipeline(String pipelineJson) throws Exception {
     throw new UnsupportedOperationException("This method is not supported. Use \"startPipeline\" method");
 
-  }
-
-  @Override
-  public void startPipeline() throws Exception {
-    throw new UnsupportedOperationException("This method is not supported. Use \"startPipeline\" method");
   }
 
   @Override
@@ -101,15 +76,14 @@ public class EmbeddedDataCollector implements DataCollector {
     final ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
     LOG.info("Entering Embedded SDC with ClassLoader: " + classLoader);
     LOG.info("Java classpath is " + System.getProperty("java.class.path"));
-    dagger = ObjectGraph.create(MainStandalonePipelineManagerModule.class);
+    dagger = ObjectGraph.create(MainSlavePipelineManagerModule.class);
     task = dagger.get(TaskWrapper.class);
     pipelineTask = (PipelineTask) ((TaskWrapper)task).getTask();
     pipelineManager = pipelineTask.getManager();
+    runtimeInfo = dagger.get(RuntimeInfo.class);
     dagger.get(LogConfigurator.class).configure();
     LOG.info("-----------------------------------------------------------------");
     dagger.get(BuildInfo.class).log(LOG);
-    LOG.info("-----------------------------------------------------------------");
-    dagger.get(RuntimeInfo.class).log(LOG);
     LOG.info("-----------------------------------------------------------------");
     if (System.getSecurityManager() != null) {
       LOG.info("  Security Manager : ENABLED, policy file: {}", System.getProperty("java.security.policy"));
@@ -178,18 +152,21 @@ public class EmbeddedDataCollector implements DataCollector {
   }
 
   public Pipeline getPipeline() {
-    return ((StandalonePipelineManagerTask)pipelineManager).getProductionPipeline().getPipeline();
+    return ((PipelineInfo)runner).getPipeline();
   }
 
   @Override
   public List<URI> getWorkerList() throws URISyntaxException {
     List<URI> sdcURLList = new ArrayList<>();
-/*
-    for (CallbackInfo callBackInfo : pipelineManager.getSlaveCallbackList()) {
+    for (CallbackInfo callBackInfo : runner.getSlaveCallbackList()) {
       sdcURLList.add(new URI(callBackInfo.getSdcURL()));
     }
-*/
     return sdcURLList;
+  }
+
+  @Override
+  public void startPipeline(String pipelineJson) throws Exception {
+    throw new UnsupportedOperationException("This method is not supported. Use \"startPipeline()\" method");
   }
 
 }

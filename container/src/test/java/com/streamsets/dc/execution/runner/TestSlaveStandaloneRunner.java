@@ -54,8 +54,9 @@ public class TestSlaveStandaloneRunner {
 
   @Test (timeout = 10000)
   public void testSlaveRunnerStartStop() throws Exception {
-    ObjectGraph objectGraph = ObjectGraph.create(new TestSlaveManager.TestSlaveManagerModule());
-    ObjectGraph plus = objectGraph.plus(new TestPipelineProviderModule(TestUtil.MY_PIPELINE, "0"));
+    ObjectGraph objectGraph = ObjectGraph.create(new TestPipelineProviderModule(TestUtil.MY_PIPELINE, "0"));
+    ObjectGraph plus = objectGraph.plus(new TestSlaveManager.TestSlaveManagerModule());
+
     Manager manager = new SlavePipelineManager(plus);
     manager.init();
     Runner runner = manager.getRunner("admin", TestUtil.MY_PIPELINE, "0");
@@ -71,8 +72,8 @@ public class TestSlaveStandaloneRunner {
 
   @Test (timeout = 10000)
   public void testDisconnectingSlaveRunner() throws Exception {
-    ObjectGraph objectGraph = ObjectGraph.create(new TestSlaveManager.TestSlaveManagerModule());
-    ObjectGraph plus = objectGraph.plus(new TestPipelineProviderModule(TestUtil.MY_PIPELINE, "0"));
+    ObjectGraph objectGraph = ObjectGraph.create(new TestPipelineProviderModule(TestUtil.MY_PIPELINE, "0"));
+    ObjectGraph plus = objectGraph.plus(new TestSlaveManager.TestSlaveManagerModule());
     Manager manager = new SlavePipelineManager(plus);
     manager.init();
     Runner runner = manager.getRunner("admin", TestUtil.MY_PIPELINE, "0");
@@ -88,8 +89,8 @@ public class TestSlaveStandaloneRunner {
 
   @Test(timeout = 10000)
   public void testFinishedSlaveRunner() throws Exception {
-    ObjectGraph objectGraph = ObjectGraph.create(new TestSlaveManager.TestSlaveManagerModule());
-    ObjectGraph plus = objectGraph.plus(new TestPipelineProviderModule(TestUtil.MY_PIPELINE, "0"));
+    ObjectGraph objectGraph = ObjectGraph.create(new TestPipelineProviderModule(TestUtil.MY_PIPELINE, "0"));
+    ObjectGraph plus = objectGraph.plus(new TestSlaveManager.TestSlaveManagerModule());
     Manager manager = new SlavePipelineManager(plus);
     manager.init();
     Runner runner = manager.getRunner("admin", TestUtil.MY_PIPELINE, "0");

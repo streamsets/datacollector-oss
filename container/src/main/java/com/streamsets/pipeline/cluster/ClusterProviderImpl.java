@@ -25,6 +25,9 @@ import com.streamsets.pipeline.prodmanager.PipelineManager;
 import com.streamsets.pipeline.restapi.bean.BeanHelper;
 import com.streamsets.pipeline.stagelibrary.StageLibraryTask;
 import com.streamsets.pipeline.stagelibrary.StageLibraryUtils;
+import com.streamsets.pipeline.store.PipelineInfo;
+import com.streamsets.pipeline.store.impl.FilePipelineStoreTask;
+import com.streamsets.pipeline.util.PipelineDirectoryUtil;
 import com.streamsets.pipeline.util.SystemProcess;
 import com.streamsets.pipeline.util.SystemProcessFactory;
 
@@ -171,7 +174,13 @@ public class ClusterProviderImpl implements ClusterProvider {
 
       if(runtimeInfo != null) {
         sdcProperties.setProperty(PipelineManager.SDC_CLUSTER_TOKEN_KEY, runtimeInfo.getSDCToken());
-        sdcProperties.setProperty(PipelineManager.CALLBACK_SERVER_URL_KEY, runtimeInfo.getClusterCallbackURL());
+        if (!sourceInfo.containsKey(ClusterModeConstants.CLUSTER_PIPELINE_USER)) {
+          LOG.info("This is the old way"); // TODO - remove after refactoring
+          sdcProperties.setProperty(PipelineManager.CALLBACK_SERVER_URL_KEY, runtimeInfo.getClusterCallbackURL());
+        } else {
+          LOG.info("This is the new way");
+          sdcProperties.setProperty(PipelineManager.CALLBACK_SERVER_URL_KEY, runtimeInfo.getClusterCallbackURL2());
+        }
       }
 
       for (Map.Entry<String, String> entry : sourceConfigs.entrySet()) {
@@ -315,9 +324,28 @@ public class ClusterProviderImpl implements ClusterProvider {
     File etcTarGz = new File(tempDir, "etc.tar.gz");
     try {
       etcDir = createDirectoryClone(etcDir, tempDir);
-      File pipelineFile = new File(etcDir, "pipeline.json");
-      ObjectMapperFactory.getOneLine().writeValue(pipelineFile, BeanHelper.
-        wrapPipelineConfiguration(pipelineConfiguration));
+      File pipelineFile;
+      if (sourceInfo.containsKey(ClusterModeConstants.CLUSTER_PIPELINE_USER)) {
+        PipelineInfo pipelineInfo = Utils.checkNotNull(pipelineConfiguration.getInfo(),
+          "Pipeline Info");
+        LOG.info("This is the new runner");
+        String pipelineName = pipelineInfo.getName();
+        File pipelineBaseDir = new File(etcDir, PipelineDirectoryUtil.PIPELINE_INFO_BASE_DIR);
+        File pipelineDir = new File(pipelineBaseDir, PipelineDirectoryUtil.getEscapedPipelineName(pipelineName));
+        if (!pipelineDir.exists()) {
+          pipelineDir.mkdirs();
+        }
+        pipelineFile = new File(pipelineDir, FilePipelineStoreTask.PIPELINE_FILE);
+        ObjectMapperFactory.getOneLine().writeValue(pipelineFile,
+          BeanHelper.wrapPipelineConfiguration(pipelineConfiguration));
+        File infoFile = new File(pipelineDir, FilePipelineStoreTask.INFO_FILE);
+        ObjectMapperFactory.getOneLine().writeValue(infoFile, BeanHelper.wrapPipelineInfo(pipelineInfo));
+      } else { // TODO - remove after refactoring
+        LOG.info("This is the old runner");
+        pipelineFile = new File(etcDir, "pipeline.json");
+        ObjectMapperFactory.getOneLine().writeValue(pipelineFile,
+          BeanHelper.wrapPipelineConfiguration(pipelineConfiguration));
+      }
       File sdcPropertiesFile = new File(etcDir, "sdc.properties");
       rewriteProperties(sdcPropertiesFile, sourceConfigs, sourceInfo);
       TarFileCreator.createTarGz(etcDir, etcTarGz);

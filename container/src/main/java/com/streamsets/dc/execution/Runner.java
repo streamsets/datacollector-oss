@@ -11,12 +11,14 @@ import com.streamsets.pipeline.alerts.AlertEventListener;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.impl.ErrorMessage;
+import com.streamsets.dc.callback.CallbackInfo;
 import com.streamsets.pipeline.config.RuleDefinition;
 import com.streamsets.pipeline.metrics.MetricsEventListener;
 import com.streamsets.pipeline.runner.PipelineRuntimeException;
 import com.streamsets.pipeline.store.PipelineStoreException;
 import com.streamsets.pipeline.util.PipelineException;
 
+import java.util.Collection;
 import java.util.List;
 
 // 3 Runner implementations:
@@ -99,7 +101,7 @@ public interface Runner {
   public void deleteHistory();
 
   // gets the current pipeline metrics
-  public MetricRegistry getMetrics();
+  public Object getMetrics();
 
   // returns error records for a give stage
   // delegates to the ErrorStore
@@ -121,6 +123,10 @@ public interface Runner {
 
   void broadcastAlerts(RuleDefinition ruleDefinition);
 
+  Collection<CallbackInfo> getSlaveCallbackList();
+
   void close();
+
+  void updateSlaveCallbackInfo(CallbackInfo callbackInfo);
 
 }

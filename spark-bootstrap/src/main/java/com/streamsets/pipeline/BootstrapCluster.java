@@ -71,9 +71,25 @@ public class BootstrapCluster {
     }
     properties = new Properties();
     properties.load(new FileInputStream(sdcProperties));
+
+    File pipelineJsonFile;
+    if (properties.getProperty("cluster.pipeline.user") != null) {
+      System.out.println("This is being used by the refactored code");
+      System.setProperty("sdc.data.dir", etcRoot);
+      File basePipelineDir = new File(etcRoot, "pipelines");
+      String pipelineName = properties.getProperty("cluster.pipeline.name");
+      if (pipelineName == null) {
+        throw new IllegalStateException("Pipeline to be run cannot be null");
+      }
+      File pipelineDir = new File(basePipelineDir, pipelineName);
+      pipelineJsonFile = new File(pipelineDir, "pipeline.json");
+    } else { // TODO - remove after refactoring
+      System.out.println("This is being used by the old code");
+      pipelineJsonFile = new File(etcRoot, "pipeline.json");
+    }
     SDCClassLoader.setDebug(Boolean.getBoolean("pipeline.bootstrap.debug") ||
       Boolean.parseBoolean(properties.getProperty("pipeline.bootstrap.debug")));
-    File pipelineJsonFile = new File(etcRoot, "pipeline.json");
+
     if (!pipelineJsonFile.isFile()) {
       String msg = "Pipeline JSON file does not exist at expected location: " + pipelineJsonFile;
       throw new IllegalStateException(msg);
@@ -198,6 +214,31 @@ public class BootstrapCluster {
       Method createPipelineMethod = embeddedPipelineFactoryClz.getMethod("createPipeline", Properties.class,
         String.class, Runnable.class);
       return createPipelineMethod.invoke(null, properties, pipelineJson, postBatchRunnable);
+    } catch (Exception ex) {
+      String msg = "Error trying to create pipeline: " + ex;
+      throw new IllegalStateException(msg, ex);
+    } finally {
+      Thread.currentThread().setContextClassLoader(originalClassLoader);
+    }
+  }
+
+  /**
+   * Obtaining a reference on the dummy source which is used to feed a pipeline<br/>
+   * Direction: Stage -> Container
+   * @param postBatchRunnable
+   * @return a source object associated with the newly created pipeline
+   * @throws Exception
+   */
+  public static /*Source*/ Object startPipeline(
+                                                 Runnable postBatchRunnable) throws Exception {
+    BootstrapCluster.initialize();
+    ClassLoader originalClassLoader = Thread.currentThread().getContextClassLoader();
+    try {
+      Thread.currentThread().setContextClassLoader(containerCL);
+      Class embeddedPipelineFactoryClz = Class.forName("com.streamsets.dc.datacollector.EmbeddedDataCollectorFactory", true,
+        containerCL);
+      Method createPipelineMethod = embeddedPipelineFactoryClz.getMethod("startPipeline", Runnable.class);
+      return createPipelineMethod.invoke(null, postBatchRunnable);
     } catch (Exception ex) {
       String msg = "Error trying to create pipeline: " + ex;
       throw new IllegalStateException(msg, ex);

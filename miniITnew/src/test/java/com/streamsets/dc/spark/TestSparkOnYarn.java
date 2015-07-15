@@ -12,8 +12,10 @@ import com.streamsets.dc.MiniSDC.ExecutionMode;
 import com.streamsets.dc.MiniSDCTestingUtility;
 import com.streamsets.pipeline.lib.KafkaTestUtil;
 import com.streamsets.dc.util.ClusterUtil;
+
 import kafka.javaapi.producer.Producer;
 import kafka.producer.KeyedMessage;
+
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.yarn.conf.YarnConfiguration;
 import org.apache.hadoop.yarn.server.MiniYARNCluster;
@@ -52,7 +54,6 @@ public class TestSparkOnYarn {
     System.setProperty(MiniSDCTestingUtility.PRESERVE_TEST_DIR, "true");
     miniSDCTestingUtility = new MiniSDCTestingUtility();
     File dataTestDir = miniSDCTestingUtility.getDataTestDir();
-
     File sparkHome = ClusterUtil.createSparkHome(dataTestDir);
 
     YarnConfiguration entries = new YarnConfiguration();
@@ -106,7 +107,6 @@ public class TestSparkOnYarn {
   @AfterClass
   public static void tearDown() throws Exception {
     if (miniSDCTestingUtility != null) {
-      miniSDCTestingUtility.stopMiniSDC();
       ClusterUtil.killYarnApp(TEST_NAME);
       miniSDCTestingUtility.stopMiniYarnCluster();
       miniSDCTestingUtility.cleanupTestDir();
@@ -122,11 +122,12 @@ public class TestSparkOnYarn {
     // Produce records in kafka
     int expectedRecords = 30;
     produceRecords(expectedRecords);
-
+    boolean started = false;
     MiniSDC miniSDC = null;
     try {
       miniSDC = miniSDCTestingUtility.createMiniSDC(ExecutionMode.CLUSTER);
       miniSDC.startSDC();
+      started = true;
       miniSDC.createAndStartPipeline(pipelineJson);
       URI serverURI = miniSDC.getServerURI();
       LOG.info("Starting on URI " + serverURI);
@@ -141,7 +142,7 @@ public class TestSparkOnYarn {
       assertEquals("Output records counters for target should be equal to " + expectedRecords, expectedRecords,
         VerifyUtils.getTargetOutputRecords(countersMap));
     } finally {
-      if (miniSDC != null) {
+      if (miniSDC != null && started) {
         miniSDC.stop();
       }
     }

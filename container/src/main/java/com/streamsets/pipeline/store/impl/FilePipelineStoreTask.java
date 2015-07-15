@@ -69,8 +69,8 @@ public class FilePipelineStoreTask extends AbstractTask implements PipelineStore
   @VisibleForTesting
   static final String REV = "0";
 
-  private static final String INFO_FILE = "info.json";
-  private static final String PIPELINE_FILE = "pipeline.json";
+  public static final String INFO_FILE = "info.json";
+  public static final String PIPELINE_FILE = "pipeline.json";
   private static final String RULES_FILE = "rules.json";
 
   private final StageLibraryTask stageLibrary;

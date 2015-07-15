@@ -10,25 +10,31 @@ import com.streamsets.dc.execution.PipelineState;
 import com.streamsets.dc.execution.Runner;
 import com.streamsets.dc.execution.Snapshot;
 import com.streamsets.dc.execution.SnapshotInfo;
+import com.streamsets.dc.execution.runner.common.PipelineInfo;
 import com.streamsets.dc.execution.runner.common.PipelineRunnerException;
 import com.streamsets.dc.execution.runner.standalone.StandaloneRunner;
 import com.streamsets.pipeline.alerts.AlertEventListener;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.impl.ErrorMessage;
-import com.streamsets.pipeline.callback.CallbackServerMetricsEventListener;
+import com.streamsets.dc.callback.CallbackInfo;
+import com.streamsets.dc.callback.CallbackServerMetricsEventListener;
 import com.streamsets.pipeline.config.RuleDefinition;
 import com.streamsets.pipeline.main.RuntimeInfo;
 import com.streamsets.pipeline.metrics.MetricsEventListener;
+import com.streamsets.pipeline.runner.Pipeline;
 import com.streamsets.pipeline.runner.PipelineRuntimeException;
 import com.streamsets.pipeline.store.PipelineStoreException;
 import com.streamsets.pipeline.util.Configuration;
+import com.streamsets.pipeline.util.PipelineException;
 
 import javax.inject.Inject;
+
+import java.util.Collection;
 import java.util.List;
 
 
-public class SlaveStandaloneRunner implements Runner {
+public class SlaveStandaloneRunner implements Runner, PipelineInfo  {
 
   private final StandaloneRunner standaloneRunner;
   private final Configuration configuration;
@@ -92,38 +98,35 @@ public class SlaveStandaloneRunner implements Runner {
 
   @Override
   public void start() throws PipelineRunnerException, PipelineStoreException, PipelineRuntimeException, StageException {
-    standaloneRunner.start();
-    if (standaloneRunner.getState().getStatus().isActive()) {
-      String callbackServerURL = configuration.get(CALLBACK_SERVER_URL_KEY, CALLBACK_SERVER_URL_DEFAULT);
-      String sdcClusterToken = configuration.get(SDC_CLUSTER_TOKEN_KEY, null);
-      if(callbackServerURL != null) {
-        addMetricsEventListener(new CallbackServerMetricsEventListener(runtimeInfo, callbackServerURL,
-          sdcClusterToken));
-      } else {
-        throw new RuntimeException("No callback server URL is passed. SDC in Slave mode requires callback server URL (callback.server.url).");
-      }
+    String callbackServerURL = configuration.get(CALLBACK_SERVER_URL_KEY, CALLBACK_SERVER_URL_DEFAULT);
+    String sdcClusterToken = configuration.get(SDC_CLUSTER_TOKEN_KEY, null);
+    if (callbackServerURL != null) {
+      addMetricsEventListener(new CallbackServerMetricsEventListener(getUser(), getName(), getRev(), runtimeInfo,
+        callbackServerURL, sdcClusterToken));
+    } else {
+      throw new RuntimeException(
+        "No callback server URL is passed. SDC in Slave mode requires callback server URL (callback.server.url).");
     }
-
+    standaloneRunner.start();
   }
 
   @Override
-  public String captureSnapshot(String name, int batches) throws PipelineRunnerException, PipelineStoreException {
-    throw new UnsupportedOperationException();
+  public String captureSnapshot(String snapshotName, int batches) throws PipelineException {
+    return standaloneRunner.captureSnapshot(snapshotName, batches);
   }
 
   @Override
-  public Snapshot getSnapshot(String id) {
-    throw new UnsupportedOperationException();
+  public Snapshot getSnapshot(String id) throws PipelineException {
+    return standaloneRunner.getSnapshot(id);
+  }
+  @Override
+  public List<SnapshotInfo> getSnapshotsInfo() throws PipelineException {
+    return standaloneRunner.getSnapshotsInfo();
   }
 
   @Override
-  public List<SnapshotInfo> getSnapshotsInfo() {
-    throw new UnsupportedOperationException();
-  }
-
-  @Override
-  public void deleteSnapshot(String id) {
-    throw new UnsupportedOperationException();
+  public void deleteSnapshot(String id) throws PipelineException {
+    standaloneRunner.deleteSnapshot(id);
   }
 
   @Override
@@ -137,7 +140,7 @@ public class SlaveStandaloneRunner implements Runner {
   }
 
   @Override
-  public MetricRegistry getMetrics() {
+  public Object getMetrics() {
     return standaloneRunner.getMetrics();
   }
 
@@ -187,5 +190,21 @@ public class SlaveStandaloneRunner implements Runner {
   public void close() {
     standaloneRunner.close();
   }
+
+  @Override
+  public Collection<CallbackInfo> getSlaveCallbackList() {
+    return standaloneRunner.getSlaveCallbackList();
+  }
+
+  @Override
+  public Pipeline getPipeline() {
+    return standaloneRunner.getPipeline();
+  }
+
+  @Override
+  public void updateSlaveCallbackInfo(com.streamsets.dc.callback.CallbackInfo callbackInfo) {
+    standaloneRunner.updateSlaveCallbackInfo(callbackInfo);
+  }
+
 
 }

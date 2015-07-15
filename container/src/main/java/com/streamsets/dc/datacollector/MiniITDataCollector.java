@@ -7,7 +7,9 @@
 package com.streamsets.dc.datacollector;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.streamsets.dc.callback.CallbackInfo;
 import com.streamsets.dc.execution.Manager;
+import com.streamsets.dc.execution.Runner;
 import com.streamsets.dc.main.MainStandalonePipelineManagerModule;
 import com.streamsets.dc.main.PipelineTask;
 import com.streamsets.pipeline.DataCollector;
@@ -26,7 +28,9 @@ import com.streamsets.pipeline.store.PipelineStoreTask;
 import com.streamsets.pipeline.task.Task;
 import com.streamsets.pipeline.task.TaskWrapper;
 import com.streamsets.pipeline.validation.PipelineConfigurationValidator;
+
 import dagger.ObjectGraph;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -51,6 +55,7 @@ public class MiniITDataCollector implements DataCollector {
   private PipelineConfiguration realPipelineConfig;
   private PipelineTask pipelineTask;
   private Task task;
+  private Runner runner;
 
   private void createAndSave(String pipelineName) throws PipelineStoreException {
     String user = realPipelineConfig.getInfo().getCreator();
@@ -83,7 +88,8 @@ public class MiniITDataCollector implements DataCollector {
     this.pipelineName = Utils.checkNotNull(realPipelineConfig.getInfo(), "Pipeline Info").getName();
     this.pipelineRev = Utils.checkNotNull(realPipelineConfig.getInfo(), "Pipeline Info").getLastRev();
     createAndSave(pipelineName);
-    pipelineManager.getRunner(realPipelineConfig.getInfo().getCreator(), pipelineName, pipelineRev).start();
+    runner = pipelineManager.getRunner(realPipelineConfig.getInfo().getCreator(), pipelineName, pipelineRev);
+    runner.start();
   }
 
   @Override
@@ -104,13 +110,14 @@ public class MiniITDataCollector implements DataCollector {
   @Override
   public void startPipeline() throws Exception {
     Utils.checkNotNull(pipelineName, "No pipeline to run");
-    pipelineManager.getRunner(realPipelineConfig.getInfo().getCreator(), pipelineName, pipelineRev).start();
+    runner = pipelineManager.getRunner(realPipelineConfig.getInfo().getCreator(), pipelineName, pipelineRev);
+    runner.start();
   }
 
   @Override
   public void stopPipeline() throws Exception {
     Utils.checkNotNull(pipelineName, "No pipeline to stop");
-    pipelineManager.getRunner(realPipelineConfig.getInfo().getCreator(), pipelineName, pipelineRev).stop();
+    runner.stop();
   }
 
   @Override
@@ -197,9 +204,9 @@ public class MiniITDataCollector implements DataCollector {
   @Override
   public List<URI> getWorkerList() throws URISyntaxException {
     List<URI> sdcURLList = new ArrayList<>();
-    /*for (CallbackInfo callBackInfo : pipelineManager.getSlaveCallbackList() ) {
+    for (CallbackInfo callBackInfo : runner.getSlaveCallbackList() ) {
       sdcURLList.add(new URI(callBackInfo.getSdcURL()));
-    }*/
+    }
     return sdcURLList;
   }
 

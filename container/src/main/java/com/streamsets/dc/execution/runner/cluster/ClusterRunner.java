@@ -5,7 +5,6 @@
  */
 package com.streamsets.dc.execution.runner.cluster;
 
-import com.codahale.metrics.MetricRegistry;
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Strings;
 import com.google.common.cache.Cache;
@@ -29,7 +28,7 @@ import com.streamsets.pipeline.api.Source;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.impl.ErrorMessage;
 import com.streamsets.pipeline.api.impl.Utils;
-import com.streamsets.pipeline.callback.CallbackInfo;
+import com.streamsets.dc.callback.CallbackInfo;
 import com.streamsets.pipeline.cluster.ApplicationState;
 import com.streamsets.pipeline.cluster.ClusterModeConstants;
 import com.streamsets.pipeline.cluster.ClusterPipelineStatus;
@@ -42,7 +41,8 @@ import com.streamsets.pipeline.creation.PipelineConfigBean;
 import com.streamsets.pipeline.lib.executor.SafeScheduledExecutorService;
 import com.streamsets.pipeline.main.RuntimeInfo;
 import com.streamsets.pipeline.metrics.MetricsEventListener;
-import com.streamsets.pipeline.metrics.MetricsEventRunnable;
+import com.streamsets.dc.execution.metrics.MetricsEventRunnable;
+import com.streamsets.pipeline.runner.Pipeline;
 import com.streamsets.pipeline.runner.PipelineRuntimeException;
 import com.streamsets.pipeline.runner.production.ProductionPipeline;
 import com.streamsets.pipeline.runner.production.ProductionPipelineBuilder;
@@ -54,12 +54,15 @@ import com.streamsets.pipeline.util.Configuration;
 import com.streamsets.pipeline.util.ContainerError;
 import com.streamsets.pipeline.validation.Issue;
 import com.streamsets.pipeline.validation.ValidationError;
+
 import dagger.ObjectGraph;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
 import javax.inject.Named;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -299,6 +302,7 @@ public class ClusterRunner implements Runner {
     return pipelineStateStore.getState(name, rev);
   }
 
+  @Override
   public String captureSnapshot(String name, int batches) {
     throw new UnsupportedOperationException();
   }
@@ -329,9 +333,10 @@ public class ClusterRunner implements Runner {
   }
 
   @Override
-  public MetricRegistry getMetrics() {
-    //return metricsEventRunnable.getAggregatedMetrics();
-    //TODO - fix this
+  public Object getMetrics() {
+    if (metricsEventRunnable != null) {
+      return metricsEventRunnable.getAggregatedMetrics();
+    }
     return null;
   }
 
@@ -350,6 +355,7 @@ public class ClusterRunner implements Runner {
     throw new UnsupportedOperationException();
   }
 
+  @Override
   public Collection<CallbackInfo> getSlaveCallbackList() {
     List<CallbackInfo> callbackInfoSet;
     callbackCacheLock.lock();
@@ -417,6 +423,7 @@ public class ClusterRunner implements Runner {
     }
   }
 
+  @Override
   public void updateSlaveCallbackInfo(CallbackInfo callbackInfo) {
     String sdcToken = Strings.nullToEmpty(runtimeInfo.getSDCToken());
     if (sdcToken.equals(callbackInfo.getSdcClusterToken()) &&
@@ -446,7 +453,12 @@ public class ClusterRunner implements Runner {
     throws PipelineRuntimeException, StageException, PipelineStoreException {
 
     ProductionPipeline p = createProductionPipeline(name, rev, pipelineConf);
-    p.getPipeline().init();
+    Pipeline pipeline = p.getPipeline();
+    try {
+      pipeline.init();
+    } finally {
+      pipeline.destroy();
+    }
     Source source = p.getPipeline().getSource();
     ClusterSource clusterSource;
     if (source instanceof ClusterSource) {
@@ -599,6 +611,9 @@ public class ClusterRunner implements Runner {
       sourceInfo.put(ClusterModeConstants.NUM_EXECUTORS_KEY, String.valueOf(clusterSourceInfo.getParallelism()));
       sourceInfo.put(ClusterModeConstants.CLUSTER_SOURCE_NAME, clusterSourceInfo.getClusterSourceName());
       sourceInfo.put(ClusterModeConstants.CLUSTER_SOURCE_BATCHMODE, String.valueOf(clusterSourceInfo.isInBatchMode()));
+      sourceInfo.put(ClusterModeConstants.CLUSTER_PIPELINE_NAME, name);
+      sourceInfo.put(ClusterModeConstants.CLUSTER_PIPELINE_REV, rev);
+      sourceInfo.put(ClusterModeConstants.CLUSTER_PIPELINE_USER, user);
       for (Map.Entry<String, String> configsToShip : clusterSourceInfo.getConfigsToShip().entrySet()) {
         LOG.info("Config to ship " + configsToShip.getKey() + ":" + configsToShip.getValue());
         sourceInfo.put(configsToShip.getKey(), configsToShip.getValue());
@@ -633,7 +648,7 @@ public class ClusterRunner implements Runner {
   private void scheduleRunnable() throws PipelineStoreException {
     int refreshInterval = configuration.get(REFRESH_INTERVAL_PROPERTY, REFRESH_INTERVAL_PROPERTY_DEFAULT);
     if (refreshInterval > 0) {
-      metricsEventRunnable = new MetricsEventRunnable(null, runtimeInfo, refreshInterval, this);
+      metricsEventRunnable = new MetricsEventRunnable(runtimeInfo, refreshInterval, this, null);
       metricRunnableFuture =
         runnerExecutor.scheduleAtFixedRate(metricsEventRunnable, 0, refreshInterval, TimeUnit.MILLISECONDS);
     }

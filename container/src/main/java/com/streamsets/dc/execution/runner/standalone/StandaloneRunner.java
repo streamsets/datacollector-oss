@@ -36,6 +36,7 @@ import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.impl.ErrorMessage;
 import com.streamsets.pipeline.api.impl.Utils;
+import com.streamsets.dc.callback.CallbackInfo;
 import com.streamsets.pipeline.callback.CallbackServerMetricsEventListener;
 import com.streamsets.pipeline.config.MemoryLimitConfiguration;
 import com.streamsets.pipeline.config.MemoryLimitExceeded;
@@ -49,6 +50,7 @@ import com.streamsets.pipeline.main.RuntimeInfo;
 import com.streamsets.pipeline.metrics.MetricsConfigurator;
 import com.streamsets.pipeline.metrics.MetricsEventListener;
 import com.streamsets.pipeline.runner.Observer;
+import com.streamsets.pipeline.runner.Pipeline;
 import com.streamsets.pipeline.runner.PipelineRunner;
 import com.streamsets.pipeline.runner.PipelineRuntimeException;
 import com.streamsets.pipeline.runner.production.ProductionSourceOffsetTracker;
@@ -63,13 +65,17 @@ import com.streamsets.pipeline.util.ContainerError;
 import com.streamsets.pipeline.validation.Issue;
 import com.streamsets.pipeline.validation.ValidationError;
 import com.streamsets.pipeline.util.PipelineException;
+
 import dagger.ObjectGraph;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
 import javax.inject.Named;
+
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -100,8 +106,7 @@ public class StandaloneRunner implements Runner, StateListener {
   private ThreadHealthReporter threadHealthReporter;
   private DataObserverRunnable observerRunnable;
   private ProductionPipeline prodPipeline;
-  private MetricsEventRunnable metricsEventRunnable;
-  private CallbackServerMetricsEventListener callbackServerMetricsEventListener;
+  private final MetricsEventRunnable metricsEventRunnable;
   private ProductionPipelineRunnable pipelineRunnable;
   private volatile boolean isClosed;
 
@@ -130,6 +135,13 @@ public class StandaloneRunner implements Runner, StateListener {
     this.user = user;
     this.objectGraph = objectGraph;
     objectGraph.inject(this);
+    int refreshInterval = configuration.get(REFRESH_INTERVAL_PROPERTY, REFRESH_INTERVAL_PROPERTY_DEFAULT);
+    if (refreshInterval > 0) {
+      metricsEventRunnable = new MetricsEventRunnable(runtimeInfo, refreshInterval, this, threadHealthReporter);
+    } else {
+      metricsEventRunnable = null;
+    }
+
   }
 
   @Override
@@ -191,20 +203,6 @@ public class StandaloneRunner implements Runner, StateListener {
         start();
       default:
         LOG.error(Utils.format("Pipeline cannot start with status: '{}'", status));
-    }
-    // TODO - this should be in slave runner
-    if(runtimeInfo.getExecutionMode() == RuntimeInfo.ExecutionMode.SLAVE) {
-      //For Slave Callback to Cluster SDC Server
-      String callbackServerURL = configuration.get(CALLBACK_SERVER_URL_KEY, CALLBACK_SERVER_URL_DEFAULT);
-      String sdcClusterToken = configuration.get(SDC_CLUSTER_TOKEN_KEY, null);
-      if(callbackServerURL != null) {
-        callbackServerMetricsEventListener = new CallbackServerMetricsEventListener(runtimeInfo, callbackServerURL,
-          sdcClusterToken);
-        addMetricsEventListener(callbackServerMetricsEventListener);
-      } else {
-        throw new RuntimeException(
-          "No callback server URL is passed. SDC in Slave mode requires callback server URL (callback.server.url).");
-      }
     }
   }
 
@@ -287,7 +285,7 @@ public class StandaloneRunner implements Runner, StateListener {
   }
 
   @Override
-  public MetricRegistry getMetrics() {
+  public Object getMetrics() {
     if (prodPipeline != null) {
       return prodPipeline.getPipeline().getRunner().getMetrics();
     }
@@ -354,8 +352,8 @@ public class StandaloneRunner implements Runner, StateListener {
   @Override
   public boolean deleteAlert(String alertId) throws PipelineRunnerException, PipelineStoreException {
     checkState(getState().equals(PipelineStatus.RUNNING), ContainerError.CONTAINER_0402);
-    MetricsConfigurator.resetCounter(getMetrics(), AlertsUtil.getUserMetricName(alertId));
-    return MetricsConfigurator.removeGauge(getMetrics(), AlertsUtil.getAlertGaugeName(alertId), name ,rev);
+    MetricsConfigurator.resetCounter((MetricRegistry)getMetrics(), AlertsUtil.getUserMetricName(alertId));
+    return MetricsConfigurator.removeGauge((MetricRegistry)getMetrics(), AlertsUtil.getAlertGaugeName(alertId), name ,rev);
   }
 
   @Override
@@ -401,6 +399,7 @@ public class StandaloneRunner implements Runner, StateListener {
   public void start() throws PipelineStoreException, PipelineRunnerException, PipelineRuntimeException, StageException {
     Utils.checkState(!isClosed,
       Utils.formatL("Cannot start the pipeline '{}::{}' as the runner is already closed", name, rev));
+
     synchronized (this) {
       LOG.info("Starting pipeline {} {}", name, rev);
       validateAndSetStateTransition(PipelineStatus.STARTING, null, null);
@@ -456,14 +455,12 @@ public class StandaloneRunner implements Runner, StateListener {
       prodPipeline = builder.build(pipelineConfiguration);
       prodPipeline.registerStatusListener(this);
 
-      int refreshInterval = configuration.get(REFRESH_INTERVAL_PROPERTY, REFRESH_INTERVAL_PROPERTY_DEFAULT);
       ScheduledFuture<?> metricsFuture = null;
-      if (refreshInterval > 0) {
-        metricsEventRunnable = new MetricsEventRunnable(runtimeInfo, refreshInterval, this, threadHealthReporter);
-        metricsFuture = runnerExecutor.scheduleAtFixedRate(metricsEventRunnable, 0, refreshInterval,
-          TimeUnit.MILLISECONDS);
+      if (metricsEventRunnable != null) {
+        metricsFuture =
+          runnerExecutor.scheduleAtFixedRate(metricsEventRunnable, 0, metricsEventRunnable.getScheduledDelay(),
+            TimeUnit.MILLISECONDS);
       }
-
       //Schedule Rules Config Loader
       try {
         rulesConfigLoader.load(productionObserver);
@@ -513,5 +510,19 @@ public class StandaloneRunner implements Runner, StateListener {
   @Override
   public void close() {
     isClosed = true;
+  }
+
+  public Pipeline getPipeline() {
+    return prodPipeline != null ? prodPipeline.getPipeline() : null;
+  }
+
+  @Override
+  public Collection<CallbackInfo> getSlaveCallbackList() {
+    throw new UnsupportedOperationException("This method is only supported in Cluster Runner");
+  }
+
+  @Override
+  public void updateSlaveCallbackInfo(CallbackInfo callbackInfo) {
+    throw new UnsupportedOperationException("This method is only supported in Cluster Runner");
   }
 }

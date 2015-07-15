@@ -7,10 +7,10 @@ package com.streamsets.pipeline;
 import java.util.List;
 import java.util.concurrent.ConcurrentLinkedDeque;
 import java.util.concurrent.CopyOnWriteArrayList;
-import java.util.concurrent.TimeUnit;
 
 import com.google.common.annotations.VisibleForTesting;
 import com.streamsets.pipeline.api.ClusterSource;
+import com.streamsets.pipeline.api.Source;
 import com.streamsets.pipeline.api.impl.Utils;
 
 import org.slf4j.Logger;
@@ -26,11 +26,11 @@ import com.streamsets.pipeline.configurablestage.DSource;
  */
 public class EmbeddedSDCPool {
   private static final Logger LOG = LoggerFactory.getLogger(EmbeddedSDCPool.class);
-  private ConcurrentLinkedDeque<EmbeddedSDC> concurrentQueue = new ConcurrentLinkedDeque<EmbeddedSDC>();
+  private final ConcurrentLinkedDeque<EmbeddedSDC> concurrentQueue = new ConcurrentLinkedDeque<EmbeddedSDC>();
   private final List<EmbeddedSDC> totalInstances = new CopyOnWriteArrayList<>();
-  private Properties properties;
-  private String pipelineJson;
-  private boolean infiniteSDCPool;
+  private final Properties properties;
+  private final String pipelineJson;
+  private final boolean infiniteSDCPool;
   /**
    * Create a pool. For now, there is only instance being created
    * @param properties the properties file
@@ -51,20 +51,50 @@ public class EmbeddedSDCPool {
    */
   protected EmbeddedSDC createEmbeddedSDC() throws Exception {
     final EmbeddedSDC embeddedSDC = new EmbeddedSDC();
-    Object source = BootstrapCluster.createPipeline(properties, pipelineJson, new Runnable() { // post-batch runnable
-      @Override
-      public void run() {
-        if (!embeddedSDC.inErrorState()) {
-          LOG.debug("Returning SDC instance {} back to queue", embeddedSDC.getInstanceId());
-          returnEmbeddedSDC(embeddedSDC);
-        } else {
-          LOG.info("SDC is in error state, not returning to pool");
+    Object source;
+    if (properties.getProperty("cluster.pipeline.user") == null) { // TODO - remove after refactoring
+      LOG.info("Running the old way");
+      source = BootstrapCluster.createPipeline(properties, pipelineJson, new Runnable() { // post-batch runnable
+          @Override
+          public void run() {
+            if (!embeddedSDC.inErrorState()) {
+              LOG.debug("Returning SDC instance {} back to queue", embeddedSDC.getInstanceId());
+              returnEmbeddedSDC(embeddedSDC);
+            } else {
+              LOG.info("SDC is in error state, not returning to pool");
+            }
+          }
+        });
+    } else {
+      LOG.info("Running the new way");
+      source = BootstrapCluster.startPipeline(new Runnable() { // post-batch runnable
+        @Override
+        public void run() {
+          if (!embeddedSDC.inErrorState()) {
+            LOG.debug("Returning SDC instance {} back to queue", embeddedSDC.getInstanceId());
+            returnEmbeddedSDC(embeddedSDC);
+          } else {
+            LOG.info("SDC is in error state, not returning to pool");
+          }
         }
-      }
-    });
+      });
+    }
 
     if (source instanceof DSource) {
-      source = ((DSource) source).getSource();
+      long startTime = System.currentTimeMillis();
+      long endTime = startTime;
+      long diff = endTime - startTime;
+      Source actualSource = ((DSource) source).getSource();
+      while (actualSource == null && diff < 60000) {
+        Thread.sleep(100);
+        actualSource = ((DSource) source).getSource();
+        endTime = System.currentTimeMillis();
+        diff = endTime - startTime;
+      }
+      if (actualSource == null) {
+        throw new IllegalStateException("Actual source is null, pipeline may not have been initialized");
+      }
+      source = actualSource;
     }
 
     if (!(source instanceof ClusterSource)) {

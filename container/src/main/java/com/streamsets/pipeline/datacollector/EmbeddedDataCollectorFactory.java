@@ -6,29 +6,10 @@
 
 package com.streamsets.pipeline.datacollector;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.streamsets.pipeline.api.Source;
-import com.streamsets.pipeline.api.impl.Utils;
-import com.streamsets.pipeline.config.PipelineConfiguration;
-import com.streamsets.pipeline.json.ObjectMapperFactory;
-import com.streamsets.pipeline.prodmanager.PipelineManager;
-import com.streamsets.pipeline.restapi.bean.BeanHelper;
-import com.streamsets.pipeline.restapi.bean.PipelineConfigurationJson;
 import com.streamsets.pipeline.runner.BatchListener;
 import com.streamsets.pipeline.runner.Pipeline;
-import com.streamsets.pipeline.stagelibrary.StageLibraryTask;
-import com.streamsets.pipeline.store.PipelineStoreException;
-import com.streamsets.pipeline.store.PipelineStoreTask;
-import com.streamsets.pipeline.task.Task;
-import com.streamsets.pipeline.task.TaskWrapper;
-import com.streamsets.pipeline.validation.PipelineConfigurationValidator;
-import dagger.ObjectGraph;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import java.util.Map;
 import java.util.Properties;
-import java.util.Random;
 
 public class EmbeddedDataCollectorFactory {
 

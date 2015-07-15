@@ -124,7 +124,6 @@ public class TestKafkaToHDFS {
 
   @Test
   public void testKafkaToHDFSOnCluster() throws Exception {
-    Assert.assertEquals("RUNNING", VerifyUtils.getPipelineState(serverURI, "kafka_origin_pipeline_cluster", "0"));
     List<URI> list = miniSDC.getListOfSlaveSDCURI();
     Assert.assertTrue(list != null && !list.isEmpty());
 

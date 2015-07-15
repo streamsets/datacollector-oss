@@ -6,6 +6,7 @@
 package com.streamsets.dc.execution.runner.common;
 
 import com.codahale.metrics.MetricRegistry;
+import com.google.common.annotations.VisibleForTesting;
 import com.streamsets.dc.execution.PipelineState;
 import com.streamsets.dc.execution.Runner;
 import com.streamsets.dc.execution.Snapshot;
@@ -14,19 +15,24 @@ import com.streamsets.pipeline.alerts.AlertEventListener;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.impl.ErrorMessage;
+import com.streamsets.pipeline.api.impl.Utils;
+import com.streamsets.dc.callback.CallbackInfo;
 import com.streamsets.pipeline.config.RuleDefinition;
 import com.streamsets.pipeline.lib.executor.SafeScheduledExecutorService;
 import com.streamsets.pipeline.metrics.MetricsEventListener;
+import com.streamsets.pipeline.runner.Pipeline;
 import com.streamsets.pipeline.runner.PipelineRuntimeException;
 import com.streamsets.pipeline.store.PipelineStoreException;
 import com.streamsets.pipeline.util.PipelineException;
 
 import javax.inject.Inject;
 import javax.inject.Named;
+
+import java.util.Collection;
 import java.util.List;
 import java.util.concurrent.Callable;
 
-public class AsyncRunner implements Runner {
+public class AsyncRunner implements Runner, PipelineInfo {
 
   private final Runner runner;
   private final SafeScheduledExecutorService asyncExecutor;
@@ -133,7 +139,7 @@ public class AsyncRunner implements Runner {
   }
 
   @Override
-  public MetricRegistry getMetrics() {
+  public Object getMetrics() {
     return runner.getMetrics();
   }
 
@@ -184,7 +190,28 @@ public class AsyncRunner implements Runner {
     runner.close();
   }
 
+  @Override
+  public Collection<CallbackInfo> getSlaveCallbackList() {
+    return runner.getSlaveCallbackList();
+  }
+
+  @Override
+  public Pipeline getPipeline() {
+    if (runner instanceof PipelineInfo) {
+      return ((PipelineInfo) runner).getPipeline();
+    } else {
+      throw new UnsupportedOperationException(Utils.format("Runner '{}' doesnt support retrieval of "
+        + "pipeline", runner.getClass().getName()));
+    }
+  }
+
+  @VisibleForTesting
   public Runner getRunner() {
     return runner;
+  }
+
+  @Override
+  public void updateSlaveCallbackInfo(com.streamsets.dc.callback.CallbackInfo callbackInfo) {
+    runner.updateSlaveCallbackInfo(callbackInfo);
   }
 }
