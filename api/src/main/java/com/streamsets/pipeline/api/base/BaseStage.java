@@ -7,7 +7,6 @@ package com.streamsets.pipeline.api.base;
 
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.Stage.Context;
-import com.streamsets.pipeline.api.StageException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,21 +22,11 @@ public abstract class BaseStage<C extends Context> implements Stage<C> {
     List<ConfigIssue> issues = new ArrayList<>();
     this.info = info;
     this.context = context;
-    try {
-      issues.addAll(init());
-      if (issues.isEmpty()) {
-        try {
-          initX();
-        } catch (Exception ex) {
-          issues.add(context.createConfigIssue(null, null, Errors.API_19, ex.getMessage()));
-        }
-      }
-      return issues;
-    } finally {
-      if (requiresSuperInit && !superInitCalled) {
-        issues.add(context.createConfigIssue(null, null, Errors.API_20));
-      }
+    issues.addAll(init());
+    if (requiresSuperInit && !superInitCalled) {
+      issues.add(context.createConfigIssue(null, null, Errors.API_20));
     }
+    return issues;
   }
 
   protected List<ConfigIssue> init() {
@@ -58,9 +47,6 @@ public abstract class BaseStage<C extends Context> implements Stage<C> {
 
   protected C getContext() {
     return context;
-  }
-
-  protected void initX() throws StageException {
   }
 
   @Override

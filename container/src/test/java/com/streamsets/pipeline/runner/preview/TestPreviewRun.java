@@ -186,9 +186,10 @@ public class TestPreviewRun {
     MockStages.setSourceCapture(new BaseSource() {
 
       @Override
-      protected void initX() throws StageException {
-        super.initX();
+      protected List<ConfigIssue> init() {
+        List<ConfigIssue> issues = super.init();
         Assert.assertTrue(getContext().isPreview());
+        return issues;
       }
 
       @Override

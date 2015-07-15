@@ -188,9 +188,10 @@ public class TestUtil {
       private Random random;
 
       @Override
-      protected void initX() throws StageException {
-        super.initX();
+      protected List<ConfigIssue> init() {
+        List<ConfigIssue> issues = super.init();
         random = new Random();
+        return issues;
       }
 
       @Override

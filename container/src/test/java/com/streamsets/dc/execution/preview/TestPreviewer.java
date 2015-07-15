@@ -5,6 +5,7 @@
  */
 package com.streamsets.dc.execution.preview;
 
+import com.google.common.collect.ImmutableList;
 import com.streamsets.dc.execution.PreviewOutput;
 import com.streamsets.dc.execution.PreviewStatus;
 import com.streamsets.dc.execution.Previewer;

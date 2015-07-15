@@ -5,12 +5,13 @@
  */
 package com.streamsets.pipeline.api.base;
 
-import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.Stage;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
+
+import java.util.List;
 
 public class TestBaseStage {
   private Stage.Info info = Mockito.mock(Stage.Info.class);
@@ -20,11 +21,12 @@ public class TestBaseStage {
   public class TBaseStage extends BaseStage<Stage.Context> {
 
     @Override
-    protected void initX() throws StageException {
-      super.initX();
+    protected List<ConfigIssue> init() {
+      List<ConfigIssue> issues = super.init();
       Assert.assertEquals(info, getInfo());
       Assert.assertEquals(context, getContext());
       inited = true;
+      return issues;
     }
 
   }

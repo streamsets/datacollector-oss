@@ -62,8 +62,10 @@ public class TestUtil {
     public boolean destroyed;
 
     @Override
-    protected void initX() throws StageException {
+    protected List<ConfigIssue> init() {
+      List<ConfigIssue> issues = super.init();
       inited = true;
+      return issues;
     }
 
     @Override
@@ -85,8 +87,10 @@ public class TestUtil {
     public boolean destroyed;
 
     @Override
-    protected void initX() throws StageException {
+    protected List<ConfigIssue> init() {
+      List<ConfigIssue> issues = super.init();
       inited = true;
+      return issues;
     }
 
     @Override
