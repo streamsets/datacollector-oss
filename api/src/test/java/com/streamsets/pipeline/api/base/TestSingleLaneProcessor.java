@@ -20,6 +20,7 @@ import org.mockito.Mockito;
 
 import java.util.Collections;
 import java.util.Iterator;
+import java.util.List;
 
 public class TestSingleLaneProcessor {
 
@@ -61,7 +62,8 @@ public class TestSingleLaneProcessor {
     Processor processor = new SingleLaneProcessor() {
 
       @Override
-      protected void initX() throws StageException {
+      protected List<ConfigIssue> init() {
+        return Collections.emptyList();
       }
 
       @Override
@@ -86,8 +88,8 @@ public class TestSingleLaneProcessor {
     Processor processor = new SingleLaneProcessor() {
 
       @Override
-      protected void initX() throws StageException {
-        super.initX();
+      protected List<ConfigIssue> init() {
+        return super.init();
       }
 
       @Override

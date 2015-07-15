@@ -225,7 +225,11 @@ public abstract class StageRunner<S extends Stage> {
   @SuppressWarnings("unchecked")
   public List<Stage.ConfigIssue> runValidateConfigs() throws StageException {
     ensureStatus(Status.CREATED);
-    return stage.init(getInfo(), getContext());
+    try {
+      return stage.init(getInfo(), getContext());
+    } finally {
+      stage.destroy();
+    }
   }
 
   @SuppressWarnings("unchecked")

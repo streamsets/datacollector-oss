@@ -7,8 +7,11 @@ package com.streamsets.pipeline.api.base;
 
 import com.streamsets.pipeline.api.Batch;
 import com.streamsets.pipeline.api.BatchMaker;
+import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.Record;
+
+import java.util.List;
 
 public abstract class SingleLaneProcessor extends BaseProcessor {
 
@@ -23,12 +26,16 @@ public abstract class SingleLaneProcessor extends BaseProcessor {
   }
 
   @Override
-  protected void initX() throws StageException {
+  protected List<ConfigIssue> init() {
+    List<ConfigIssue> issues = super.init();
     if (getContext().getOutputLanes().size() != 1) {
-      throw new StageException(Errors.API_00, getInfo().getInstanceName(), getContext().getOutputLanes().size());
+      issues.add(getContext().createConfigIssue(null, null, Errors.API_00, getInfo().getInstanceName(),
+                                                getContext().getOutputLanes().size()));
+    } else {
+      outputLane = getContext().getOutputLanes().iterator().next();
     }
-    outputLane = getContext().getOutputLanes().iterator().next();
     setSuperInitCalled();
+    return issues;
   }
 
   @Override
