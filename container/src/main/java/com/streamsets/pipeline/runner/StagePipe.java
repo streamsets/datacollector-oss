@@ -74,7 +74,7 @@ public class StagePipe extends Pipe<StagePipe.Context> {
 
   @Override
   public List<Issue> init(StagePipe.Context pipeContext) throws StageException {
-    List<Issue> issues = getStage().validateConfigs();
+    List<Issue> issues = getStage().init();
     if(issues.isEmpty()) {
       MetricRegistry metrics = getStage().getContext().getMetrics();
       String metricsKey = "stage." + getStage().getConfiguration().getInstanceName();

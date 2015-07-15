@@ -80,7 +80,7 @@ public class Pipeline {
   }
 
   @SuppressWarnings("unchecked")
-  public List<Issue>  init() throws StageException {
+  public List<Issue>  init() {
     PipeContext pipeContext = new PipeContext();
     List<Issue> issues = new ArrayList<>();
     try {

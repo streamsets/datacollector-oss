@@ -112,7 +112,7 @@ public class StageRuntime {
   }
 
   @SuppressWarnings("unchecked")
-  public List<Issue> validateConfigs() {
+  public List<Issue> init() {
     //TODO: for errorstage we must set the errorstage flag in issues, use IssueCreator.getErrorStage()
     Preconditions.checkState(context != null, "context has not been set");
     ClassLoader cl = Thread.currentThread().getContextClassLoader();
