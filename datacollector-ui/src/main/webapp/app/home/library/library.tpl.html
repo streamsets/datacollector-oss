@@ -26,7 +26,7 @@
         </div>
 
         <div class="action-menu pull-right" dropdown
-             ng-if="pipeline.name === activeConfigInfo.name && isAuthorized([userRoles.admin, userRoles.creator])">
+             ng-show="pipeline.name === activeConfigInfo.name && isAuthorized([userRoles.admin, userRoles.creator])">
           <span class="dropdown-toggle" dropdown-toggle aria-expanded="true"
                 tooltip-placement="bottom"
                 tooltip="{{'global.form.actions' | translate}}"
@@ -37,7 +37,7 @@
           </span>
           <ul class="dropdown-menu" role="menu">
             <li role="presentation"
-                ng-hide="pipeline.name === common.pipelineStatus.name  && common.pipelineStatus.state === 'RUNNING'">
+                ng-hide="common.pipelineStatusMap[pipeline.name].status === 'RUNNING'">
               <a href="#" dropdown-toggle ng-click="deletePipelineConfig(pipeline, $event)">
                 <i class="fa fa-trash-o"></i>
                 <span>{{'global.form.delete' | translate}}</span>
@@ -68,7 +68,7 @@
         </div>
 
         <div class="pull-right running"
-             ng-if="pipeline.name === common.pipelineStatus.name  && common.pipelineStatus.state === 'RUNNING'">
+             ng-if="common.pipelineStatusMap[pipeline.name].status === 'RUNNING'">
           <i class="fa fa-spinner fa-spin fa-14x"></i>
         </div>
 

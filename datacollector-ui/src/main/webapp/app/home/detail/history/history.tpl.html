@@ -17,8 +17,8 @@
             </thead>
             <tbody ng-hide="showLoading">
               <tr ng-repeat="history in runHistory track by $index">
-                <td>{{history.lastStatusChange | date:'medium'}}</td>
-                <td ng-bind="history.state"></td>
+                <td>{{history.timeStamp | date:'medium'}}</td>
+                <td ng-bind="history.status"></td>
                 <td ng-bind="history.message"></td>
                 <td>
                   <a href="javascript:;"

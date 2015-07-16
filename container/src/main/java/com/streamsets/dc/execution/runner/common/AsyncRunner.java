@@ -115,8 +115,8 @@ public class AsyncRunner implements Runner, PipelineInfo {
   }
 
   @Override
-  public String captureSnapshot(String name, int batches) throws PipelineException, PipelineStoreException {
-    return runner.captureSnapshot(name, batches);
+  public String captureSnapshot(String name, int batches, int batchSize) throws PipelineException, PipelineStoreException {
+    return runner.captureSnapshot(name, batches, batchSize);
   }
 
   @Override

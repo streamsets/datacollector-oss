@@ -121,20 +121,28 @@
       </section>
 
       <section class="pipeline-container single-pipeline"
-               ng-repeat="pipeline in pipelines | orderBy:sortColumn:sortReverse">
-        <header ng-click="openPipeline(pipeline)">
+               ng-repeat="pipeline in pipelines | orderBy:sortColumn:sortReverse"
+               ng-click="openPipeline(pipeline)">
+        <header>
           <h2>{{pipeline.name | limitTo: 50}}</h2>
         </header>
 
-        <section class="project-additional-info" >
+        <section class="project-additional-info"
+                 ng-hide="common.pipelineStatusMap[pipeline.name].status === 'RUNNING'">
           <span class="time-update">Updated</span>
           <span class="time-update" am-time-ago="pipeline.lastModified"></span>
           <span class="time-update">ago</span>
         </section>
 
+        <section class="project-additional-info"
+                 ng-show="common.pipelineStatusMap[pipeline.name].status === 'RUNNING'">
+          <span class="time-update">Uptime</span>
+          <span class="time-update" am-time-ago="common.pipelineStatusMap[pipeline.name].timeStamp"></span>
+        </section>
+
         <footer >
           <section class="running-status"
-                   ng-show="pipeline.name === common.pipelineStatus.name  && common.pipelineStatus.state === 'RUNNING'">
+                   ng-show="common.pipelineStatusMap[pipeline.name].status === 'RUNNING'">
             <i class="fa fa-spinner fa-spin fa-14x"></i>
           </section>
 
@@ -149,7 +157,7 @@
               </span>
               <ul class="dropdown-menu" role="menu">
                 <li role="presentation"
-                    ng-hide="pipeline.name === common.pipelineStatus.name  && common.pipelineStatus.state === 'RUNNING'">
+                    ng-hide="common.pipelineStatusMap[pipeline.name].status === 'RUNNING'">
                   <a href="#" dropdown-toggle ng-click="deletePipelineConfig(pipeline, $event)">
                     <i class="fa fa-trash-o"></i>
                     <span>{{'global.form.delete' | translate}}</span>

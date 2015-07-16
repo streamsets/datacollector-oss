@@ -506,7 +506,7 @@ angular.module('dataCollectorApp.common')
      */
     this.getStageIconURL = function(stage) {
       if(stage.icon) {
-        return '/rest/v1/definitions/stages/icon?name=' + stage.name +
+        return '/rest/' + api.apiVersion + '/definitions/stages/icon?name=' + stage.name +
         '&library=' + stage.library + '&version=' + stage.version;
       } else {
         switch(stage.type) {

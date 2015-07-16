@@ -3,7 +3,7 @@
  * be copied, modified, or distributed in whole or part without
  * written consent of StreamSets, Inc.
  */
-package com.streamsets.pipeline.restapi;
+package com.streamsets.dc.restapi;
 
 import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.config.DataRuleDefinition;

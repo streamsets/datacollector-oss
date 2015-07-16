@@ -3,10 +3,11 @@
  * be copied, modified, or distributed in whole or part without
  * written consent of StreamSets, Inc.
  */
-package com.streamsets.pipeline.restapi;
+package com.streamsets.dc.restapi;
 
 import com.streamsets.pipeline.main.RuntimeInfo;
 import com.streamsets.pipeline.prodmanager.PipelineManager;
+import com.streamsets.pipeline.restapi.PipelineManagerResource;
 import org.glassfish.hk2.utilities.binding.AbstractBinder;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.test.JerseyTest;

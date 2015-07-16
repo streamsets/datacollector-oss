@@ -5,10 +5,12 @@
 angular
   .module('dataCollectorApp.home')
 
-  .controller('PreviewController', function ($scope, $rootScope, $q, _, api, previewService, pipelineConstant) {
-    var previewDataBackup;
+  .controller('PreviewController', function ($scope, $rootScope, $q, _, api, previewService, pipelineConstant,
+                                             $timeout) {
+    var previewDataBackup, previewStatusTimer;
 
     angular.extend($scope, {
+      previewInProgress: false,
       previewMultipleStages: false,
       listView: true,
       showLoading: false,
@@ -108,37 +110,44 @@ angular
 
         $scope.showLoading = true;
 
-        api.pipelineAgent.previewPipeline($scope.activeConfigInfo.name, $scope.previewSourceOffset,
+        api.pipelineAgent.startPreview($scope.activeConfigInfo.name, $scope.previewSourceOffset,
           previewConfig.batchSize, 0, !previewConfig.writeToDestinations, stageOutputs).
-          success(function (previewData) {
-            var updatedPreviewBatchOutput = previewData.batchesOutput[0];
+          success(function (res) {
+            var defer = $q.defer();
 
-            angular.forEach(updatedPreviewBatchOutput, function(stageOutput, index) {
-              var lanesList = _.keys(stageOutput.output),
-                intersection = _.intersection(dirtyLanes, lanesList),
-                changedStageOutput = previewBatchOutput[index];
+            checkForPreviewStatus(res.previewerId, defer);
 
-              if(intersection && intersection.length) {
-                angular.forEach(intersection, function(laneName) {
-                  stageOutput.output[laneName] = angular.copy(changedStageOutput.output[laneName]);
+            defer.promise.then(function(previewData) {
+              var updatedPreviewBatchOutput = previewData.batchesOutput[0];
+
+              angular.forEach(updatedPreviewBatchOutput, function(stageOutput, index) {
+                var lanesList = _.keys(stageOutput.output),
+                  intersection = _.intersection(dirtyLanes, lanesList),
+                  changedStageOutput = previewBatchOutput[index];
+
+                if(intersection && intersection.length) {
+                  angular.forEach(intersection, function(laneName) {
+                    stageOutput.output[laneName] = angular.copy(changedStageOutput.output[laneName]);
+                  });
+                }
+              });
+
+              $scope.previewData = previewData;
+
+              if(!$scope.previewMultipleStages) {
+                $scope.changeStageSelection({
+                  selectedObject: stageInstance,
+                  type: pipelineConstant.STAGE_INSTANCE
                 });
               }
+
+              $rootScope.$broadcast('updateErrorCount',
+                previewService.getPreviewStageErrorCounts($scope.previewData.batchesOutput[0]));
+              $scope.stepExecuted = true;
+              $scope.showLoading = false;
+              $rootScope.common.errors = [];
             });
 
-            $scope.previewData = previewData;
-
-            if(!$scope.previewMultipleStages) {
-              $scope.changeStageSelection({
-                selectedObject: stageInstance,
-                type: pipelineConstant.STAGE_INSTANCE
-              });
-            }
-
-            $rootScope.$broadcast('updateErrorCount',
-              previewService.getPreviewStageErrorCounts($scope.previewData.batchesOutput[0]));
-            $scope.stepExecuted = true;
-            $scope.showLoading = false;
-            $rootScope.common.errors = [];
           }).
           error(function(data) {
             $rootScope.common.errors = [data];
@@ -242,11 +251,10 @@ angular
           var getSnapshotDefer = $q.defer();
 
           if(previewConfig.snapshotInfo) {
-            api.pipelineAgent.getSnapshot(previewConfig.snapshotInfo.pipelineName,
-              previewConfig.snapshotInfo.snapshotName).
+            api.pipelineAgent.getSnapshot(previewConfig.snapshotInfo.name, 0, previewConfig.snapshotInfo.id).
               success(function(res) {
-                if(res && res.snapshot && res.snapshot.length) {
-                  var snapshotSourceOutputs = res.snapshot[0].output;
+                if(res && res.snapshotBatches && res.snapshotBatches[0] && res.snapshotBatches[0].length) {
+                  var snapshotSourceOutputs = res.snapshotBatches[0][0].output;
 
                   stageOutputs = [{
                     instanceName: $scope.pipelineConfig.stages[0].instanceName,
@@ -279,32 +287,39 @@ angular
       }
 
       $q.all(deferList).then(function() {
-        api.pipelineAgent.previewPipeline($scope.activeConfigInfo.name, $scope.previewSourceOffset,
+        api.pipelineAgent.startPreview($scope.activeConfigInfo.name, $scope.previewSourceOffset,
           previewConfig.batchSize, 0, !previewConfig.writeToDestinations, stageOutputs).
-          success(function (previewData) {
-            var firstStageInstance;
+          success(function (res) {
+            var defer = $q.defer();
 
-            //Clear Previous errors
-            $rootScope.common.errors = [];
+            checkForPreviewStatus(res.previewerId, defer);
 
-            previewDataBackup = angular.copy(previewData);
+            defer.promise.then(function(previewData) {
+              var firstStageInstance;
 
-            $scope.previewData = previewData;
-            $scope.previewDataUpdated = false;
-            $scope.dirtyLanes = [];
+              //Clear Previous errors
+              $rootScope.common.errors = [];
 
-            if(!$scope.previewMultipleStages) {
-              firstStageInstance = $scope.pipelineConfig.stages[0];
-              $scope.changeStageSelection({
-                selectedObject: firstStageInstance,
-                type: pipelineConstant.STAGE_INSTANCE
-              });
-            }
+              previewDataBackup = angular.copy(previewData);
 
-            $rootScope.$broadcast('updateErrorCount',
-              previewService.getPreviewStageErrorCounts($scope.previewData.batchesOutput[0]));
-            $rootScope.$broadcast('clearDirtyLaneConnector');
-            $scope.showLoading = false;
+              $scope.previewData = previewData;
+              $scope.previewDataUpdated = false;
+              $scope.dirtyLanes = [];
+
+              if(!$scope.previewMultipleStages) {
+                firstStageInstance = $scope.pipelineConfig.stages[0];
+                $scope.changeStageSelection({
+                  selectedObject: firstStageInstance,
+                  type: pipelineConstant.STAGE_INSTANCE
+                });
+              }
+
+              $rootScope.$broadcast('updateErrorCount',
+                previewService.getPreviewStageErrorCounts($scope.previewData.batchesOutput[0]));
+              $rootScope.$broadcast('clearDirtyLaneConnector');
+              $scope.showLoading = false;
+            });
+
           }).
           error(function(data) {
             $rootScope.common.errors = [data];
@@ -368,5 +383,61 @@ angular
     $scope.$on('recordUpdated', function(event, recordUpdated, recordValue) {
       $scope.recordValueUpdated(recordUpdated, recordValue);
     });
+
+    /**
+     * Check for Preview Status for every 1 seconds, once done open the snapshot view.
+     *
+     */
+    var checkForPreviewStatus = function(previewerId, defer) {
+      previewStatusTimer = $timeout(
+        function() {
+        },
+        1000
+      );
+
+      previewStatusTimer.then(
+        function() {
+          api.pipelineAgent.getPreviewStatus($scope.pipelineConfig.info.name, previewerId)
+            .success(function(data) {
+              if(data && _.contains(['INVALID', 'START_ERROR', 'RUN_ERROR', 'FINISHED'], data.status)) {
+                fetchPreviewData(previewerId, defer);
+              } else {
+                checkForPreviewStatus(previewerId, defer);
+              }
+            })
+            .error(function(data, status, headers, config) {
+              $scope.common.errors = [data];
+            });
+        },
+        function() {
+          console.log( "Timer rejected!" );
+        }
+      );
+    };
+
+    var fetchPreviewData = function(previewerId, defer) {
+      api.pipelineAgent.getPreviewData($scope.pipelineConfig.info.name, previewerId)
+        .success(function(previewData) {
+          if(previewData.status !== 'FINISHED') {
+            $rootScope.common.errors = [previewData.issues];
+            $scope.closePreview();
+            $scope.showLoading = false;
+            defer.reject();
+          } else {
+            defer.resolve(previewData);
+          }
+        })
+        .error(function(data, status, headers, config) {
+          $scope.common.errors = [data];
+        });
+    };
+
+
+    $scope.$on('$destroy', function() {
+      if(previewStatusTimer) {
+        $timeout.cancel(previewStatusTimer);
+      }
+    });
+
 
   });

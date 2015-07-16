@@ -134,8 +134,12 @@ angular
       });
 
       $scope.chartData = values;
-      $scope.totalValue = (pipelineMetrics.timers['pipeline.batchProcessing.timer'].mean).toFixed(2);
 
+      $scope.totalValue = pipelineMetrics.timers['pipeline.batchProcessing.timer'].mean;
+
+      if($scope.totalValue > 0) {
+        $scope.totalValue = $scope.totalValue.toFixed(2);
+      }
     });
 
     var refreshTimeSeriesData = function() {

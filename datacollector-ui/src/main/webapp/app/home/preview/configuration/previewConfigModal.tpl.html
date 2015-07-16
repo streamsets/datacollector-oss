@@ -47,7 +47,7 @@
       <select class="form-control"
               name="snapshotInfo"
               ng-model="previewConfig.snapshotInfo"
-              ng-options="snapshotInfo.snapshotName group by snapshotInfo.pipelineName for snapshotInfo in snapshotsInfo track by snapshotInfo.captured">
+              ng-options="snapshotInfo.id group by snapshotInfo.name for snapshotInfo in snapshotsInfo track by snapshotInfo.timeStamp">
 
       </select>
     </div>

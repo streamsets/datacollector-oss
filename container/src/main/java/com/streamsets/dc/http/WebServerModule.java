@@ -8,6 +8,7 @@ package com.streamsets.dc.http;
 import com.codahale.metrics.JmxReporter;
 import com.codahale.metrics.MetricRegistry;
 import com.streamsets.dc.execution.Manager;
+import com.streamsets.dc.restapi.RestAPI;
 import com.streamsets.dc.restapi.configuration.RestAPIResourceConfig;
 import com.streamsets.dc.restapi.configuration.StandAndClusterManagerInjector;
 import com.streamsets.dc.websockets.SDCWebSocketServlet;
@@ -18,7 +19,6 @@ import com.streamsets.pipeline.http.LoginServlet;
 import com.streamsets.pipeline.http.WebServerTask;
 import com.streamsets.pipeline.main.BuildInfo;
 import com.streamsets.pipeline.main.RuntimeInfo;
-import com.streamsets.pipeline.restapi.RestAPI;
 import com.streamsets.pipeline.restapi.configuration.BuildInfoInjector;
 import com.streamsets.pipeline.restapi.configuration.ConfigurationInjector;
 import com.streamsets.pipeline.restapi.configuration.PipelineStoreInjector;
@@ -165,7 +165,7 @@ public class WebServerModule {
       public void init(ServletContextHandler context) {
         ServletHolder servlet = new ServletHolder(new ServletContainer());
         servlet.setInitParameter(ServerProperties.PROVIDER_PACKAGES,
-          SWAGGER_PACKAGE + "," + "com.streamsets.dc.restapi" + "," + RestAPI.class.getPackage().getName());
+          SWAGGER_PACKAGE + "," + RestAPI.class.getPackage().getName());
         servlet.setInitParameter(ServletProperties.JAXRS_APPLICATION_CLASS, RestAPIResourceConfig.class.getName());
         context.addServlet(servlet, "/rest/*");
       }

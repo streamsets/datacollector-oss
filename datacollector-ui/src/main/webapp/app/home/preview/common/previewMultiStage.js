@@ -82,7 +82,7 @@ angular
       if($scope.previewMode) {
         batchData = $scope.previewData.batchesOutput[0];
       } else if($scope.snapshotMode) {
-        batchData = $scope.previewData.snapshot;
+        batchData = $scope.previewData.snapshotBatches[0];
       }
 
       $scope.multiStagePreviewData = previewService.getPreviewDataForMultiStage(batchData, fromStage, toStage);

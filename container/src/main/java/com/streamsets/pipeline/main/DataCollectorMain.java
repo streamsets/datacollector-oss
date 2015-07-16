@@ -5,6 +5,7 @@
  */
 package com.streamsets.pipeline.main;
 
+import com.streamsets.dc.main.MainStandalonePipelineManagerModule;
 import com.streamsets.pipeline.memory.MemoryUsageCollector;
 
 import java.lang.instrument.Instrumentation;
@@ -14,7 +15,7 @@ import java.util.List;
 public class DataCollectorMain extends Main {
 
   public DataCollectorMain() {
-    super(PipelineTaskModule.class);
+    super(MainStandalonePipelineManagerModule.class);
   }
 
   public DataCollectorMain(Class moduleClass) {

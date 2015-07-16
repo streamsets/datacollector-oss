@@ -12,7 +12,7 @@
 
     <div class="pull-right size-toolbar">
 
-      <div class="btn-group pull-left detail-settings-dropdown" ng-if="!$storage.dontShowRESTResponseMenu">
+      <!--div class="btn-group pull-left detail-settings-dropdown" ng-if="!$storage.dontShowRESTResponseMenu">
         <a class="btn btn-link dropdown-toggle" data-toggle="dropdown"
            tooltip-placement="top"
            tooltip="{{'home.header.more' | translate}}"
@@ -25,11 +25,11 @@
               translate="home.detailPane.restURL">REST URL</li>
 
           <li role="presentation">
-            <a role="menuitem" tabindex="-1" href="/rest/v1/pipeline-library/{{pipelineConfig.info.name}}/preview" target="_blank">{{'home.detailPane.pipelinePreviewJSONData' | translate}}</a>
+            <a role="menuitem" tabindex="-1" href="/rest/{{common.apiVersion}}/pipeline-library/{{pipelineConfig.info.name}}/preview" target="_blank">{{'home.detailPane.pipelinePreviewJSONData' | translate}}</a>
           </li>
 
         </ul>
-      </div>
+      </div-->
 
       <span class="fa fa-question-circle fa-14x pointer"
             tooltip-placement="top"

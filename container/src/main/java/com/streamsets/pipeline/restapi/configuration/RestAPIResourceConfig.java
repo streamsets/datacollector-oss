@@ -8,7 +8,7 @@ package com.streamsets.pipeline.restapi.configuration;
 import com.streamsets.pipeline.main.BuildInfo;
 import com.streamsets.pipeline.main.RuntimeInfo;
 import com.streamsets.pipeline.prodmanager.PipelineManager;
-import com.streamsets.pipeline.restapi.RestAPI;
+import com.streamsets.dc.restapi.RestAPI;
 import com.streamsets.pipeline.stagelibrary.StageLibraryTask;
 import com.streamsets.pipeline.store.PipelineStoreTask;
 import com.streamsets.pipeline.util.Configuration;

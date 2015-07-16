@@ -30,6 +30,7 @@ angular
       rulesDirty = false,
       rulesSaveInProgress = false,
       ignoreUpdate = false,
+      pipelineStatusTimer,
       pipelineMetricsTimer,
       edges = [],
       destroyed = false,
@@ -38,6 +39,8 @@ angular
       isWebSocketSupported,
       webSocketBaseURL = ((loc.protocol === "https:") ?
           "wss://" : "ws://") + loc.hostname + (((loc.port != 80) && (loc.port != 443)) ? ":" + loc.port : ""),
+      webSocketStatusURL = webSocketBaseURL + '/rest/v1/webSocket?type=status',
+      statusWebSocket,
       webSocketMetricsURL = webSocketBaseURL + '/rest/v1/webSocket?type=metrics',
       metricsWebSocket,
       webSocketAlertsURL = webSocketBaseURL + '/rest/v1/webSocket?type=alerts',
@@ -45,7 +48,8 @@ angular
       undoLimit = 10,
       archive = [],
       currArchivePos = null,
-      archiveOp = false;
+      archiveOp = false,
+      reloadingNew = false;
 
     configuration.init().then(function() {
       if(configuration.isAnalyticsEnabled()) {
@@ -69,7 +73,7 @@ angular
       hideLibraryPanel: true,
       activeConfigInfo: undefined,
       activeConfigStatus:{
-        state: 'STOPPED'
+        status: 'STOPPED'
       },
       minimizeDetailPane: false,
       maximizeDetailPane: false,
@@ -587,7 +591,12 @@ angular
 
       canRedo: function() {
         return currArchivePos < archive.length-1;
+      },
+
+      reloadingNewPipeline: function() {
+        reloadingNew = true;
       }
+
 
     });
 
@@ -597,13 +606,14 @@ angular
      * Fetch definitions for Pipeline and Stages, fetch all pipeline configuration info, status and metric.
      */
     $q.all([
-      api.pipelineAgent.getPipelineStatus(),
-      //api.pipelineAgent.getPipelineMetrics(),
+      api.pipelineAgent.getAllPipelineStatus(),
+      api.pipelineAgent.getPipelineMetrics(routeParamPipelineName, 0),
       pipelineService.init(),
       configuration.init()
     ])
       .then(function (results) {
-        var pipelineStatus = results[0].data;
+        var pipelineStatusMap = results[0].data,
+          pipelineMetrics = results[1].data;
 
         isWebSocketSupported = (typeof(WebSocket) === "function") && configuration.isWebSocketUseEnabled();
         undoLimit = configuration.getUndoLimit();
@@ -627,13 +637,15 @@ angular
         //Pipelines
         $scope.pipelines = pipelineService.getPipelines();
 
-        $rootScope.common.pipelineStatus = pipelineStatus;
-        //$rootScope.common.pipelineMetrics = pipelineMetrics;
+        $rootScope.common.pipelineStatusMap = pipelineStatusMap;
+        $rootScope.common.pipelineStatus = pipelineStatusMap[routeParamPipelineName];
+        $rootScope.common.pipelineMetrics = pipelineMetrics;
 
         $scope.activeConfigInfo = _.find($scope.pipelines, function(pipelineDefn) {
           return pipelineDefn.name === routeParamPipelineName;
         });
 
+        refreshPipelineStatus();
         refreshPipelineMetrics();
 
         if($rootScope.common.sdcExecutionMode !== pipelineConstant.CLUSTER) {
@@ -875,7 +887,7 @@ angular
       $scope.firstOpenLane = $rootScope.$storage.dontShowHelpAlert ? {} : getFirstOpenLane();
 
       if(pipelineStatus && pipelineStatus.name === pipelineConfig.info.name &&
-        pipelineStatus.state === 'RUNNING' && pipelineMetrics && pipelineMetrics.meters) {
+        pipelineStatus.status === 'RUNNING' && pipelineMetrics && pipelineMetrics.meters) {
         stageErrorCounts = getStageErrorCounts();
       }
 
@@ -1065,6 +1077,74 @@ angular
       }, 1000);
     };
 
+
+    /**
+     * Fetch the Pipeline Status every configured refresh interval.
+     *
+     */
+    var refreshPipelineStatus = function() {
+
+      if(isWebSocketSupported) {
+        //WebSocket to get Pipeline Status
+
+        statusWebSocket = new WebSocket(webSocketStatusURL);
+
+        statusWebSocket.onmessage = function (evt) {
+          var received_msg = evt.data;
+
+          $rootScope.$apply(function() {
+            $rootScope.common.pipelineStatus = JSON.parse(received_msg);
+          });
+        };
+
+        statusWebSocket.onerror = function (evt) {
+          isWebSocketSupported = false;
+          refreshPipelineStatus();
+        };
+
+        statusWebSocket.onclose = function(evt) {
+          //On Close try calling REST API so that if server is down it will reload the page.
+          api.pipelineAgent.getAllPipelineStatus();
+        };
+
+      } else {
+        //WebSocket is not support use polling to get Pipeline Status
+
+        pipelineStatusTimer = $timeout(
+          function() {
+            //console.log( "Pipeline Status Timeout executed", Date.now() );
+          },
+          configuration.getRefreshInterval()
+        );
+
+        pipelineStatusTimer.then(
+          function() {
+            api.pipelineAgent.getAllPipelineStatus()
+              .success(function(data) {
+                if(!_.isObject(data) && _.isString(data) && data.indexOf('<!doctype html>') !== -1) {
+                  //Session invalidated
+                  window.location.reload();
+                  return;
+                }
+
+                $rootScope.common.pipelineStatusMap = data;
+                $rootScope.common.pipelineStatus = data[$scope.activeConfigInfo.name];
+
+                refreshPipelineStatus();
+              })
+              .error(function(data, status, headers, config) {
+                $rootScope.common.errors = [data];
+              });
+          },
+          function() {
+            //console.log( "Timer rejected!" );
+          }
+        );
+      }
+
+    };
+
+
     /**
      * Fetch the Pipeline Status for every configured refresh interval.
      *
@@ -1107,7 +1187,7 @@ angular
 
         pipelineMetricsTimer.then(
           function() {
-            api.pipelineAgent.getPipelineMetrics()
+            api.pipelineAgent.getPipelineMetrics($scope.activeConfigInfo.name, 0)
               .success(function(data) {
                 if(!_.isObject(data) && _.isString(data) && data.indexOf('<!doctype html>') !== -1) {
                   //Session invalidated
@@ -1221,7 +1301,7 @@ angular
       var pipelineStatus = $rootScope.common.pipelineStatus,
         config = $scope.pipelineConfig;
       return (pipelineStatus && config && pipelineStatus.name === config.info.name &&
-      pipelineStatus.state === 'RUNNING');
+      (pipelineStatus.status === 'RUNNING' || pipelineStatus.status === 'STARTING'));
     };
 
     var derivePipelineStatus = function() {
@@ -1232,7 +1312,7 @@ angular
         return pipelineStatus;
       } else {
         return {
-          state: 'STOPPED'
+          status: 'STOPPED'
         };
       }
     };
@@ -1423,7 +1503,7 @@ angular
       $scope.activeConfigStatus = derivePipelineStatus();
 
       if(oldActiveConfigStatus.lastStatusChange !== $scope.activeConfigStatus.lastStatusChange &&
-        $scope.activeConfigStatus.state === 'ERROR') {
+        $scope.activeConfigStatus.status === 'ERROR') {
         $rootScope.common.errors = [$scope.activeConfigStatus.message];
       }
     });
@@ -1454,6 +1534,25 @@ angular
     });
 
     $scope.$on('$destroy', function() {
+
+      if(isWebSocketSupported) {
+        statusWebSocket.close();
+      } else {
+        $timeout.cancel(pipelineStatusTimer);
+      }
+
+      if(!reloadingNew) {
+        //In case of closing page
+        setTimeout(function() {
+          setTimeout(function() {
+            //If user clicked cancel for reload the page
+            //refreshPipelineStatus();
+          }, 1000);
+        },1);
+      }
+
+      reloadingNew = false;
+
       if(isWebSocketSupported) {
         if(metricsWebSocket) {
           metricsWebSocket.close();

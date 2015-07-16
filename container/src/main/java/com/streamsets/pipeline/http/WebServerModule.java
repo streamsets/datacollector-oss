@@ -13,7 +13,7 @@ import com.streamsets.pipeline.main.RuntimeModule;
 import com.streamsets.pipeline.metrics.MetricsModule;
 import com.streamsets.pipeline.prodmanager.PipelineManager;
 import com.streamsets.pipeline.prodmanager.PipelineManagerModule;
-import com.streamsets.pipeline.restapi.RestAPI;
+import com.streamsets.dc.restapi.RestAPI;
 import com.streamsets.pipeline.restapi.configuration.BuildInfoInjector;
 import com.streamsets.pipeline.restapi.configuration.ConfigurationInjector;
 import com.streamsets.pipeline.restapi.configuration.PipelineStoreInjector;

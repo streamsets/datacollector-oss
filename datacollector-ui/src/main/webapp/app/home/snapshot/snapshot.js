@@ -68,7 +68,7 @@ angular
     var updateSnapshotDataForStage = function(stageInstance) {
       if($scope.snapshotMode) {
         var stageInstances = $scope.pipelineConfig.stages,
-          batchData = $scope.previewData.snapshot;
+          batchData = $scope.previewData.snapshotBatches[0];
 
         $scope.stagePreviewData = previewService.getPreviewDataForStage(batchData, stageInstance);
 
@@ -91,7 +91,7 @@ angular
     };
 
     var viewSnapshot = function(snapshotName) {
-      api.pipelineAgent.getSnapshot($scope.activeConfigInfo.name, snapshotName).
+      api.pipelineAgent.getSnapshot($scope.activeConfigInfo.name, 0, snapshotName).
         success(function(res) {
           $scope.previewData = res;
 
@@ -102,7 +102,7 @@ angular
           });
 
           $rootScope.$broadcast('updateErrorCount',
-            previewService.getPreviewStageErrorCounts($scope.previewData.snapshot));
+            previewService.getPreviewStageErrorCounts($scope.previewData.snapshotBatches[0]));
           $scope.showLoading = false;
         }).
         error(function(data) {
@@ -121,7 +121,7 @@ angular
 
       api.pipelineAgent.getSnapshotsInfo().then(function(res) {
         if(res && res.data && res.data.length) {
-          $scope.snapshotsInfo = _.sortBy(res.data, 'snapshotName');
+          $scope.snapshotsInfo = _.sortBy(res.data, 'id');
         }
       }, function(res) {
         $scope.common.errors = [res.data];
@@ -142,7 +142,7 @@ angular
     });
 
     $scope.$watch('previewMultipleStages', function(newValue) {
-      if($scope.previewData.snapshot) {
+      if($scope.previewData.snapshotBatches && $scope.previewData.snapshotBatches[0]) {
         if(newValue === true) {
           $scope.moveGraphToCenter();
         } else {

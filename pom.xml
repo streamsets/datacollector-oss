@@ -188,7 +188,7 @@
         </property>
       </activation>
       <modules>
-        <module>miniIT</module>
+        <!--module>miniIT</module-->
       </modules>
     </profile>
     <profile>
@@ -200,7 +200,7 @@
         </property>
       </activation>
       <modules>
-        <module>miniITnew</module>
+        <!--module>miniITnew</module-->
       </modules>
     </profile>
     <profile>

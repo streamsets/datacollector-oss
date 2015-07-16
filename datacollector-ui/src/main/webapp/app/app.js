@@ -60,8 +60,6 @@ angular.module('dataCollectorApp')
       loc = window.location,
       webSocketBaseURL = ((loc.protocol === "https:") ?
           "wss://" : "ws://") + loc.hostname + (((loc.port != 80) && (loc.port != 443)) ? ":" + loc.port : ""),
-      webSocketStatusURL = webSocketBaseURL + '/rest/v1/webSocket?type=status',
-      statusWebSocket,
       BACKSPACE_KEY = 8,
       DELETE_KEY = 46,
       Z_KEY = 90,
@@ -75,198 +73,134 @@ angular.module('dataCollectorApp')
     });
 
     $rootScope.common = $rootScope.common || {
-      title : defaultTitle,
-      userName: 'Account',
-      authenticationType: 'none',
-      sdcExecutionMode: pipelineConstant.STANDALONE,
-      active: {
-        home: 'active'
-      },
-      namePattern: '^[a-zA-Z0-9 _]+$',
-      saveOperationInProgress: 0,
-      pipelineStatus: {},
-      errors: [],
-      infoList: [],
-      successList: [],
-      activeDetailTab: undefined,
-      dontShowHelpAlert: false,
-      logEndingOffset: -1,
-      fetchingLog: false,
-      counters: {},
+        title : defaultTitle,
+        userName: 'Account',
+        authenticationType: 'none',
+        apiVersion: api.apiVersion,
+        sdcExecutionMode: pipelineConstant.STANDALONE,
+        active: {
+          home: 'active'
+        },
+        namePattern: '^[a-zA-Z0-9 _]+$',
+        saveOperationInProgress: 0,
+        pipelineStatus: {},
+        pipelineStatusMap: {},
+        errors: [],
+        infoList: [],
+        successList: [],
+        activeDetailTab: undefined,
+        dontShowHelpAlert: false,
+        logEndingOffset: -1,
+        fetchingLog: false,
+        counters: {},
 
-      /**
-       * Open the Shutdown Modal Dialog
-       */
-      shutdownCollector: function() {
-        $modal.open({
-          templateUrl: 'common/administration/shutdown/shutdownModal.tpl.html',
-          controller: 'ShutdownModalInstanceController',
-          size: '',
-          backdrop: true
-        });
-      },
-
-      /**
-       * Logout header link command handler
-       */
-      logout: function() {
-        api.admin.logout()
-          .success(function() {
-            location.reload();
-          })
-          .error(function() {
-
+        /**
+         * Open the Shutdown Modal Dialog
+         */
+        shutdownCollector: function() {
+          $modal.open({
+            templateUrl: 'common/administration/shutdown/shutdownModal.tpl.html',
+            controller: 'ShutdownModalInstanceController',
+            size: '',
+            backdrop: true
           });
-      },
+        },
 
-      /**
-       * Launch Local or Online Help based on settings.
-       *
-       */
-      launchHelpContents: function() {
-        contextHelpService.launchHelpContents();
-      },
+        /**
+         * Logout header link command handler
+         */
+        logout: function() {
+          api.admin.logout()
+            .success(function() {
+              location.reload();
+            })
+            .error(function() {
 
-      /**
-       * Open the About Modal Dialog
-       */
-      showAbout: function() {
-        $modal.open({
-          templateUrl: 'aboutModalContent.html',
-          controller: 'AboutModalInstanceController',
-          size: '',
-          backdrop: true
-        });
-      },
+            });
+        },
 
-      /**
-       * Open the Settings Modal Dialog
-       */
-      showSettings: function() {
-        $modal.open({
-          templateUrl: 'app/help/settings/settingsModal.tpl.html',
-          controller: 'SettingsModalInstanceController',
-          size: '',
-          backdrop: true
-        });
-      },
+        /**
+         * Launch Local or Online Help based on settings.
+         *
+         */
+        launchHelpContents: function() {
+          contextHelpService.launchHelpContents();
+        },
 
-      showSDCDirectories: function() {
-        $modal.open({
-          templateUrl: 'common/administration/sdcDirectories/sdcDirectoriesModal.tpl.html',
-          controller: 'SDCDirectoriesModalInstanceController',
-          size: '',
-          backdrop: true
-        });
-      },
-
-      /**
-       * Return logs collected from Log WebSocket
-       * @returns {string}
-       */
-      getLogMessages: function() {
-        return logMessages.join('\n');
-      },
-
-      /**
-       * Clear Local Storage Contents
-       */
-      clearLocalStorage: function() {
-        $localStorage.$reset();
-      },
-
-      /**
-       * Key Event on body DOM element.
-       *
-       * @param $event
-       */
-      bodyKeyEvent: function($event) {
-        if($event.target === $event.currentTarget && $event.shiftKey !== true &&
-          ($event.keyCode === BACKSPACE_KEY || $event.keyCode === DELETE_KEY)) {
-
-          //Delete Operation
-
-          $event.preventDefault();
-          $event.stopPropagation();
-
-          $rootScope.$broadcast('bodyDeleteKeyPressed');
-        } else if(($event.metaKey && $event.shiftKey && ($event.keyCode === Z_KEY)) ||
-          ($event.ctrlKey && $event.keyCode === Y_KEY))  {
-
-          //REDO Operation
-          $rootScope.$broadcast('bodyRedoKeyPressed');
-        } else if(($event.metaKey || $event.ctrlKey) && $event.keyCode === Z_KEY) {
-          //UNDO Operation
-          $rootScope.$broadcast('bodyUndoKeyPressed');
-        }
-      }
-
-    };
-
-    /**
-     * Fetch the Pipeline Status every configured refresh interval.
-     *
-     */
-    var refreshPipelineStatus = function() {
-
-      if(isWebSocketSupported) {
-        //WebSocket to get Pipeline Status
-
-        statusWebSocket = new WebSocket(webSocketStatusURL);
-
-        statusWebSocket.onmessage = function (evt) {
-          var received_msg = evt.data;
-
-          $rootScope.$apply(function() {
-            $rootScope.common.pipelineStatus = JSON.parse(received_msg);
+        /**
+         * Open the About Modal Dialog
+         */
+        showAbout: function() {
+          $modal.open({
+            templateUrl: 'aboutModalContent.html',
+            controller: 'AboutModalInstanceController',
+            size: '',
+            backdrop: true
           });
-        };
+        },
 
-        statusWebSocket.onerror = function (evt) {
-          isWebSocketSupported = false;
-          refreshPipelineStatus();
-        };
+        /**
+         * Open the Settings Modal Dialog
+         */
+        showSettings: function() {
+          $modal.open({
+            templateUrl: 'app/help/settings/settingsModal.tpl.html',
+            controller: 'SettingsModalInstanceController',
+            size: '',
+            backdrop: true
+          });
+        },
 
-        statusWebSocket.onclose = function(evt) {
-          //On Close try calling REST API so that if server is down it will reload the page.
-          api.pipelineAgent.getPipelineStatus();
-        };
+        showSDCDirectories: function() {
+          $modal.open({
+            templateUrl: 'common/administration/sdcDirectories/sdcDirectoriesModal.tpl.html',
+            controller: 'SDCDirectoriesModalInstanceController',
+            size: '',
+            backdrop: true
+          });
+        },
 
-      } else {
-        //WebSocket is not support use polling to get Pipeline Status
+        /**
+         * Return logs collected from Log WebSocket
+         * @returns {string}
+         */
+        getLogMessages: function() {
+          return logMessages.join('\n');
+        },
 
-        pipelineStatusTimer = $timeout(
-          function() {
-            //console.log( "Pipeline Status Timeout executed", Date.now() );
-          },
-          configuration.getRefreshInterval()
-        );
+        /**
+         * Clear Local Storage Contents
+         */
+        clearLocalStorage: function() {
+          $localStorage.$reset();
+        },
 
-        pipelineStatusTimer.then(
-          function() {
-            api.pipelineAgent.getPipelineStatus()
-              .success(function(data) {
-                if(!_.isObject(data) && _.isString(data) && data.indexOf('<!doctype html>') !== -1) {
-                  //Session invalidated
-                  window.location.reload();
-                  return;
-                }
+        /**
+         * Key Event on body DOM element.
+         *
+         * @param $event
+         */
+        bodyKeyEvent: function($event) {
+          if($event.target === $event.currentTarget && $event.shiftKey !== true &&
+            ($event.keyCode === BACKSPACE_KEY || $event.keyCode === DELETE_KEY)) {
 
-                $rootScope.common.pipelineStatus = data;
+            //Delete Operation
 
-                refreshPipelineStatus();
-              })
-              .error(function(data, status, headers, config) {
-                $rootScope.common.errors = [data];
-              });
-          },
-          function() {
-            //console.log( "Timer rejected!" );
+            $event.preventDefault();
+            $event.stopPropagation();
+
+            $rootScope.$broadcast('bodyDeleteKeyPressed');
+          } else if(($event.metaKey && $event.shiftKey && ($event.keyCode === Z_KEY)) ||
+            ($event.ctrlKey && $event.keyCode === Y_KEY))  {
+
+            //REDO Operation
+            $rootScope.$broadcast('bodyRedoKeyPressed');
+          } else if(($event.metaKey || $event.ctrlKey) && $event.keyCode === Z_KEY) {
+            //UNDO Operation
+            $rootScope.$broadcast('bodyUndoKeyPressed');
           }
-        );
-      }
-
-    };
+        }
+      };
 
     var logMessages = [];
 
@@ -285,9 +219,6 @@ angular.module('dataCollectorApp')
       if(configuration.isAnalyticsEnabled()) {
         Analytics.createAnalyticsScriptTag();
       }
-
-      isWebSocketSupported = (typeof(WebSocket) === "function") && configuration.isWebSocketUseEnabled();
-      refreshPipelineStatus();
     });
 
     // set actions to be taken each time the user navigates
@@ -317,19 +248,6 @@ angular.module('dataCollectorApp')
 
     window.onbeforeunload = function (event) {
       //Check if there was any change, if no changes, then simply let the user leave
-
-      if(isWebSocketSupported) {
-        statusWebSocket.close();
-      } else {
-        $timeout.cancel(pipelineStatusTimer);
-      }
-
-      setTimeout(function() {
-        setTimeout(function() {
-          //If user clicked cancel for reload the page
-          refreshPipelineStatus();
-        }, 1000);
-      },1);
 
       if($rootScope.common.saveOperationInProgress <= 0){
         return;

@@ -242,16 +242,18 @@ angular
           }
 
           angular.forEach(pipelineConfig.stages, function(stageInst) {
-            counterValue = pipelineMetrics.counters['stage.' + stageInst.instanceName + '.memoryConsumed.counter'].count;
+            if(pipelineMetrics.counters['stage.' + stageInst.instanceName + '.memoryConsumed.counter']) {
+              counterValue = pipelineMetrics.counters['stage.' + stageInst.instanceName + '.memoryConsumed.counter'].count;
 
-            if(!counters[ stageInst.instanceName ]) {
-              counters[ stageInst.instanceName ]=  [[currentTime, counterValue]];
-            } else {
-              counters[ stageInst.instanceName ].push([currentTime, counterValue]);
-              if (counters[ stageInst.instanceName ].length > 500) {
-                counters[ stageInst.instanceName ].splice(0, 1);
+              if(!counters[ stageInst.instanceName ]) {
+                counters[ stageInst.instanceName ]=  [[currentTime, counterValue]];
+              } else {
+                counters[ stageInst.instanceName ].push([currentTime, counterValue]);
+                if (counters[ stageInst.instanceName ].length > 500) {
+                  counters[ stageInst.instanceName ].splice(0, 1);
+                }
+
               }
-
             }
           });
 

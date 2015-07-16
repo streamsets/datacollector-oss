@@ -27,18 +27,18 @@
 
       <tbody ng-hide="showLoading">
         <tr ng-repeat="snapshotInfo in snapshotsInfo">
-          <td>{{snapshotInfo.snapshotName}}</td>
+          <td>{{snapshotInfo.id}}</td>
           <td>
-            {{snapshotInfo.captured ? (snapshotInfo.captured  | date:'medium') : ('home.snapshotsPane.captureSnapshotInProgress' | translate)}}
+            {{!snapshotInfo.inProgress ? (snapshotInfo.timeStamp  | date:'medium') : ('home.snapshotsPane.captureSnapshotInProgress' | translate)}}
           </td>
           <td>
             <a href="javascript:;" translate="global.form.view"
-               ng-if="snapshotInfo.captured"
-               ng-click="viewSnapshot(snapshotInfo.snapshotName)"></a>
-            <span class="separator" ng-if="snapshotInfo.captured">|</span>
+               ng-if="!snapshotInfo.inProgress"
+               ng-click="viewSnapshot(snapshotInfo.id)"></a>
+            <span class="separator" ng-if="!snapshotInfo.inProgress">|</span>
             <a href="javascript:;" translate="global.form.delete"
-               ng-if="snapshotInfo.captured"
-               ng-click="deleteSnapshot(snapshotInfo.snapshotName, $index)"> Delete </a>
+               ng-if="!snapshotInfo.inProgress"
+               ng-click="deleteSnapshot(snapshotInfo.id, $index)"> Delete </a>
           </td>
         </tr>
 

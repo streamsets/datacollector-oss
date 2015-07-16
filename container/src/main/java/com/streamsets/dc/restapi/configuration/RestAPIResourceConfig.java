@@ -8,7 +8,7 @@ package com.streamsets.dc.restapi.configuration;
 import com.streamsets.dc.execution.Manager;
 import com.streamsets.pipeline.main.BuildInfo;
 import com.streamsets.pipeline.main.RuntimeInfo;
-import com.streamsets.pipeline.restapi.RestAPI;
+import com.streamsets.dc.restapi.RestAPI;
 import com.streamsets.pipeline.restapi.configuration.BuildInfoInjector;
 import com.streamsets.pipeline.restapi.configuration.ConfigurationInjector;
 import com.streamsets.pipeline.restapi.configuration.PipelineStoreInjector;

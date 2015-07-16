@@ -131,7 +131,7 @@ angular
 
     var updateBadRecordsData = function(currentSelection) {
       $scope.showBadRecordsLoading = true;
-      api.pipelineAgent.getErrorRecords(currentSelection.instanceName)
+      api.pipelineAgent.getErrorRecords($scope.pipelineConfig.info.name, 0, currentSelection.instanceName)
         .success(function(res) {
           $scope.showBadRecordsLoading = false;
           if(res && res.length) {
@@ -148,7 +148,7 @@ angular
 
     var updateErrorMessagesData = function(currentSelection) {
       $scope.showErrorMessagesLoading = true;
-      api.pipelineAgent.getErrorMessages(currentSelection.instanceName)
+      api.pipelineAgent.getErrorMessages($scope.pipelineConfig.info.name, 0, currentSelection.instanceName)
         .success(function(res) {
           $scope.showErrorMessagesLoading = false;
           if(res && res.length) {

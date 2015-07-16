@@ -313,7 +313,7 @@ public class ClusterRunner implements Runner {
   }
 
   @Override
-  public String captureSnapshot(String name, int batches) {
+  public String captureSnapshot(String name, int batches, int batchSize) {
     throw new UnsupportedOperationException();
   }
 

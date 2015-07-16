@@ -3,13 +3,13 @@
  * be copied, modified, or distributed in whole or part without
  * written consent of StreamSets, Inc.
  */
-package com.streamsets.pipeline.restapi;
+package com.streamsets.dc.restapi;
 
 import com.google.common.collect.ImmutableSet;
+import com.streamsets.dc.main.MainStandalonePipelineManagerModule;
 import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.http.WebServerTask;
 import com.streamsets.pipeline.log.LogUtils;
-import com.streamsets.pipeline.main.PipelineTaskModule;
 import com.streamsets.pipeline.main.RuntimeInfo;
 import com.streamsets.pipeline.main.RuntimeModule;
 import com.streamsets.pipeline.task.Task;
@@ -99,7 +99,7 @@ public class TestRestApiAuthorization {
                  writer);
     writer.close();
     Files.setPosixFilePermissions(realmFile.toPath(), WebServerTask.OWNER_PERMISSIONS);
-    ObjectGraph dagger = ObjectGraph.create(PipelineTaskModule.class);
+    ObjectGraph dagger = ObjectGraph.create(MainStandalonePipelineManagerModule.class);
     RuntimeInfo runtimeInfo = dagger.get(RuntimeInfo.class);
     runtimeInfo.setAttribute(RuntimeInfo.LOG4J_CONFIGURATION_URL_ATTR, new URL("file://" + baseDir + "/log4j.properties"));
     server = dagger.get(TaskWrapper.class);
@@ -193,22 +193,24 @@ public class TestRestApiAuthorization {
 
     list.add(new RestApi("/rest/v1/logout", Method.POST, AuthzRole.ALL_ROLES));
 
-    list.add(new RestApi("/rest/v1/pipeline/status", Method.GET, AuthzRole.ALL_ROLES));
-    list.add(new RestApi("/rest/v1/pipeline/start", Method.POST, AuthzRole.MANAGER, AuthzRole.ADMIN));
-    list.add(new RestApi("/rest/v1/pipeline/stop", Method.POST, AuthzRole.MANAGER, AuthzRole.ADMIN));
-    list.add(new RestApi("/rest/v1/pipeline/resetOffset/foo", Method.POST, AuthzRole.MANAGER, AuthzRole.ADMIN));
-    list.add(new RestApi("/rest/v1/pipeline/snapshots", Method.GET, AuthzRole.MANAGER, AuthzRole.ADMIN));
-    list.add(new RestApi("/rest/v1/pipeline/snapshots/foo", Method.PUT, AuthzRole.MANAGER, AuthzRole.ADMIN));
-    list.add(new RestApi("/rest/v1/pipeline/snapshots/foo", Method.GET, AuthzRole.MANAGER, AuthzRole.ADMIN));
-    list.add(new RestApi("/rest/v1/pipeline/snapshots/foo/foo", Method.GET, AuthzRole.MANAGER, AuthzRole.ADMIN));
-    list.add(new RestApi("/rest/v1/pipeline/snapshots/foo/foo", Method.DELETE, AuthzRole.MANAGER, AuthzRole.ADMIN));
-    list.add(new RestApi("/rest/v1/pipeline/metrics", Method.GET, AuthzRole.ALL_ROLES));
-    list.add(new RestApi("/rest/v1/pipeline/history/foo", Method.GET, AuthzRole.ALL_ROLES));
-    list.add(new RestApi("/rest/v1/pipeline/history/foo", Method.DELETE, AuthzRole.MANAGER, AuthzRole.ADMIN));
-    list.add(new RestApi("/rest/v1/pipeline/errorRecords", Method.GET, AuthzRole.MANAGER, AuthzRole.ADMIN));
-    list.add(new RestApi("/rest/v1/pipeline/errorMessages", Method.GET, AuthzRole.MANAGER, AuthzRole.ADMIN));
-    list.add(new RestApi("/rest/v1/pipeline/sampledRecords", Method.GET, AuthzRole.MANAGER, AuthzRole.ADMIN));
-    list.add(new RestApi("/rest/v1/pipeline/alerts/foo", Method.DELETE, AuthzRole.MANAGER, AuthzRole.ADMIN));
+    list.add(new RestApi("/rest/v1/pipelines/status", Method.GET, AuthzRole.ALL_ROLES));
+    list.add(new RestApi("/rest/v1/pipeline/foo/status", Method.GET, AuthzRole.ALL_ROLES));
+    list.add(new RestApi("/rest/v1/pipeline/foo/start", Method.POST, AuthzRole.MANAGER, AuthzRole.ADMIN));
+    list.add(new RestApi("/rest/v1/pipeline/foo/stop", Method.POST, AuthzRole.MANAGER, AuthzRole.ADMIN));
+    list.add(new RestApi("/rest/v1/pipeline/foo/resetOffset", Method.POST, AuthzRole.MANAGER, AuthzRole.ADMIN));
+    list.add(new RestApi("/rest/v1/pipeline/foo/snapshot/foo", Method.PUT, AuthzRole.MANAGER, AuthzRole.ADMIN));
+    list.add(new RestApi("/rest/v1/pipelines/snapshots", Method.GET, AuthzRole.MANAGER, AuthzRole.ADMIN));
+    list.add(new RestApi("/rest/v1/pipeline/foo/snapshots", Method.GET, AuthzRole.MANAGER, AuthzRole.ADMIN));
+    list.add(new RestApi("/rest/v1/pipeline/foo/snapshot/foo/status", Method.GET, AuthzRole.MANAGER, AuthzRole.ADMIN));
+    list.add(new RestApi("/rest/v1/pipeline/foo/snapshot/foo", Method.GET, AuthzRole.MANAGER, AuthzRole.ADMIN));
+    list.add(new RestApi("/rest/v1/pipeline/foo/snapshot/foo", Method.DELETE, AuthzRole.MANAGER, AuthzRole.ADMIN));
+    list.add(new RestApi("/rest/v1/pipeline/foo/metrics", Method.GET, AuthzRole.ALL_ROLES));
+    list.add(new RestApi("/rest/v1/pipeline/foo/history", Method.GET, AuthzRole.ALL_ROLES));
+    list.add(new RestApi("/rest/v1/pipeline/foo/history", Method.DELETE, AuthzRole.MANAGER, AuthzRole.ADMIN));
+    list.add(new RestApi("/rest/v1/pipeline/foo/errorRecords", Method.GET, AuthzRole.MANAGER, AuthzRole.ADMIN));
+    list.add(new RestApi("/rest/v1/pipeline/foo/errorMessages", Method.GET, AuthzRole.MANAGER, AuthzRole.ADMIN));
+    list.add(new RestApi("/rest/v1/pipeline/foo/sampledRecords", Method.GET, AuthzRole.MANAGER, AuthzRole.ADMIN));
+    list.add(new RestApi("/rest/v1/pipeline/foo/alerts", Method.DELETE, AuthzRole.MANAGER, AuthzRole.ADMIN));
 
     list.add(new RestApi("/rest/v1/pipeline-library", Method.GET, AuthzRole.ALL_ROLES));
     list.add(new RestApi("/rest/v1/pipeline-library/foo", Method.GET, AuthzRole.ALL_ROLES));
@@ -219,11 +221,14 @@ public class TestRestApiAuthorization {
     list.add(new RestApi("/rest/v1/pipeline-library/foo/rules", Method.POST,AuthzRole.CREATOR, AuthzRole.ADMIN,
                          AuthzRole.MANAGER));
 
-    list.add(new RestApi("/rest/v1/pipeline-library/foo/preview", Method.GET, AuthzRole.CREATOR, AuthzRole.ADMIN));
-    list.add(new RestApi("/rest/v1/pipeline-library/foo/preview", Method.POST, AuthzRole.CREATOR, AuthzRole.ADMIN));
-    list.add(new RestApi("/rest/v1/pipeline-library/foo/rawSourcePreview", Method.GET, AuthzRole.CREATOR,
+    list.add(new RestApi("/rest/v1/preview/foo/create", Method.POST, AuthzRole.CREATOR, AuthzRole.ADMIN));
+    list.add(new RestApi("/rest/v1/preview-id/uuid/status", Method.GET, AuthzRole.CREATOR, AuthzRole.ADMIN));
+    list.add(new RestApi("/rest/v1/preview-id/uuid", Method.GET, AuthzRole.CREATOR, AuthzRole.ADMIN));
+    list.add(new RestApi("/rest/v1/preview-id/uuid/cancel", Method.POST, AuthzRole.CREATOR, AuthzRole.ADMIN));
+
+    list.add(new RestApi("/rest/v1/preview/foo/rawSourcePreview", Method.GET, AuthzRole.CREATOR,
                          AuthzRole.ADMIN));
-    list.add(new RestApi("/rest/v1/pipeline-library/foo/validateConfigs", Method.GET, AuthzRole.CREATOR,
+    list.add(new RestApi("/rest/v1/pipeline/foo/validate", Method.GET, AuthzRole.CREATOR,
                          AuthzRole.ADMIN, AuthzRole.MANAGER));
 
     list.add(new RestApi("/rest/v1/definitions", Method.GET, AuthzRole.ALL_ROLES));

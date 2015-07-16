@@ -48,9 +48,9 @@ angular
           $scope.snapshotsInfo = res.data;
           $scope.snapshotsInfo = _.chain(res.data)
             .filter(function(snapshotInfo) {
-              return snapshotInfo.captured != null;
+              return !snapshotInfo.inProgress;
             })
-            .sortBy('snapshotName')
+            .sortBy('id')
             .value();
         }
       }, function(res) {

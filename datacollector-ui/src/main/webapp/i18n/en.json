@@ -169,6 +169,7 @@
       "sources": "Origins",
       "stageLibrary": "Stage Library",
       "start": "Start",
+      "startingPipeline": "Starting Pipeline...",
       "stop": "Stop",
       "stopConfirmationTitle": "Stop Pipeline Confirmation",
       "stopConfirmationMessage": "Are you sure you want to stop Pipeline '{{name}}'?",

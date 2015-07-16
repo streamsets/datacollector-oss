@@ -6,7 +6,9 @@
 package com.streamsets.pipeline.restapi.bean;
 
 import com.streamsets.dc.execution.PipelineStatus;
+import com.streamsets.dc.execution.PreviewOutput;
 import com.streamsets.dc.restapi.bean.ExecutionModeJson;
+import com.streamsets.dc.restapi.bean.PreviewOutputJson;
 import com.streamsets.dc.restapi.bean.StatusJson;
 import com.streamsets.pipeline.api.ExecutionMode;
 import com.streamsets.pipeline.callback.CallbackInfo;
@@ -118,6 +120,14 @@ public class BeanHelper {
       snapshotInfoJsonList.add(new com.streamsets.dc.restapi.bean.SnapshotInfoJson(p));
     }
     return snapshotInfoJsonList;
+  }
+
+  public static com.streamsets.dc.restapi.bean.SnapshotInfoJson wrapSnapshotInfoNewAPI(
+    com.streamsets.dc.execution.SnapshotInfo snapshotInfo) {
+    if(snapshotInfo == null) {
+      return null;
+    }
+    return new com.streamsets.dc.restapi.bean.SnapshotInfoJson(snapshotInfo);
   }
 
   public static List<SnapshotInfoJson> wrapSnapshotInfo(List<SnapshotInfo>
@@ -570,14 +580,20 @@ public class BeanHelper {
     return result;
   }
 
-
-
   public static PreviewPipelineOutputJson wrapPreviewPipelineOutput(
     com.streamsets.pipeline.runner.preview.PreviewPipelineOutput previewPipelineOutput) {
     if(previewPipelineOutput == null) {
       return null;
     }
     return new PreviewPipelineOutputJson(previewPipelineOutput);
+  }
+
+
+  public static PreviewOutputJson wrapPreviewOutput(PreviewOutput previewOutput) {
+    if(previewOutput == null) {
+      return null;
+    }
+    return new PreviewOutputJson(previewOutput);
   }
 
   public static PipelineDefinitionJson wrapPipelineDefinition(

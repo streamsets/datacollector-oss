@@ -65,11 +65,11 @@ public class ClusterResource {
   @Path("/redirectToSlave")
   @PermitAll
   public Response redirectToSlaveInstance(
-      @QueryParam("name") String name,
-      @QueryParam("rev") @DefaultValue("0") String rev,
-      @QueryParam("sdcURL") String sdcURL,
-      @Context final HttpServletResponse response,
-      @Context SecurityContext context) throws IOException, PipelineStoreException {
+    @QueryParam("name") String name,
+    @QueryParam("rev") @DefaultValue("0") String rev,
+    @QueryParam("sdcURL") String sdcURL,
+    @Context final HttpServletResponse response,
+    @Context SecurityContext context) throws IOException, PipelineStoreException {
     Runner runner = manager.getRunner(user, name, rev);
     Collection<CallbackInfo> callbackInfoCollection = runner.getSlaveCallbackList();
     CallbackInfo slaveCallbackInfo = null;

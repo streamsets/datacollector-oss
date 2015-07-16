@@ -81,13 +81,13 @@ angular
     });
 
     $q.all([
-      api.pipelineAgent.getPipelineStatus(),
+      api.pipelineAgent.getAllPipelineStatus(),
       pipelineService.init()
     ])
     .then(
       function (results) {
         $scope.loaded = true;
-        $rootScope.common.pipelineStatus = results[0].data;
+        $rootScope.common.pipelineStatusMap = results[0].data;
         $scope.pipelines = pipelineService.getPipelines();
       },
       function (results) {

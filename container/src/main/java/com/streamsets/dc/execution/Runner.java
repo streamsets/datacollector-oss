@@ -83,7 +83,7 @@ public interface Runner {
 
   // triggers a snapshot request
   // delegates to SnapshotStore
-  public String captureSnapshot(String name, int batches) throws PipelineException, PipelineStoreException;
+  public String captureSnapshot(String name, int batches, int batchSize) throws PipelineException, PipelineStoreException;
 
   // retrieves a snapshot base on its ID
   // delegates to SnapshotStore

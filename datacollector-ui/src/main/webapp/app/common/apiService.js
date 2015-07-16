@@ -4,8 +4,12 @@
 
 angular.module('dataCollectorApp.common')
   .factory('api', function($rootScope, $http, $q) {
-    var apiBase = '/rest/v1',
-      api = {events: {}};
+    var apiVersion = 'v1',
+      apiBase = '/rest/' + apiVersion,
+      api = {
+        apiVersion: apiVersion,
+        events: {}
+      };
 
     api.log = {
       /**
@@ -331,7 +335,7 @@ angular.module('dataCollectorApp.common')
       },
 
       /**
-       * Fetches Preview Data for Pipeline
+       * Start Preview for given Pipeline name
        *
        * @param name
        * @param sourceOffset
@@ -342,14 +346,14 @@ angular.module('dataCollectorApp.common')
        * @param endStage
        * @returns {*}
        */
-      previewPipeline: function(name, sourceOffset, batchSize, rev, skipTargets, stageOutputList, endStage) {
+      startPreview: function(name, sourceOffset, batchSize, rev, skipTargets, stageOutputList, endStage) {
         var url;
 
         if(!batchSize) {
           batchSize = 10;
         }
 
-        url = apiBase + '/pipeline-library/' + name + '/preview?batchSize=' + batchSize + '&rev=' + rev +
+        url = apiBase + '/preview/' + name + '/create?batchSize=' + batchSize + '&rev=' + rev +
             '&skipTargets=' + skipTargets;
 
         if(endStage) {
@@ -363,13 +367,70 @@ angular.module('dataCollectorApp.common')
         });
       },
 
+
+      /**
+       * Fetches Preview Status
+       *
+       * @param pipelineName
+       * @param previewerId
+       */
+      getPreviewStatus: function(pipelineName, previewerId) {
+        var url = apiBase + '/preview-id/' + previewerId + '/status' ;
+        return $http({
+          method: 'GET',
+          url: url
+        });
+      },
+
+
+      /**
+       * Fetches Preview Data
+       *
+       * @param pipelineName
+       * @param previewerId
+       */
+      getPreviewData: function(pipelineName, previewerId) {
+        var url = apiBase + '/preview-id/' + previewerId;
+        return $http({
+          method: 'GET',
+          url: url
+        });
+      },
+
+      /**
+       * Stop Preview
+       *
+       * @param pipelineName
+       * @param previewerId
+       */
+      stopPreview: function(pipelineName, previewerId) {
+        var url = apiBase + '/preview-id/' + previewerId + '/cancel' ;
+        return $http({
+          method: 'POST',
+          url: url
+        });
+      },
+
+      /**
+       * Fetch all Pipeline Status
+       *
+       * @returns {*}
+       */
+      getAllPipelineStatus: function() {
+        var url = apiBase + '/pipelines/status';
+        return $http({
+          method: 'GET',
+          url: url
+        });
+      },
+
       /**
        * Fetch the Pipeline Status
        *
        * @returns {*}
        */
-      getPipelineStatus: function() {
-        var url = apiBase + '/pipeline/status';
+      getPipelineStatus: function(pipelineName, rev) {
+        var url = apiBase + '/pipeline/' + pipelineName + '/status?rev=' + rev;
         return $http({
           method: 'GET',
           url: url
@@ -383,7 +444,7 @@ angular.module('dataCollectorApp.common')
        * @returns {*}
        */
       validatePipeline: function(name) {
-        var url = apiBase + '/pipeline-library/' + name + '/validateConfigs';
+        var url = apiBase + '/pipeline/' + name + '/validate';
         return $http({
           method: 'GET',
           url: url
@@ -393,12 +454,12 @@ angular.module('dataCollectorApp.common')
       /**
        * Start the Pipeline
        *
-       * @param name
+       * @param pipelineName
        * @param rev
        * @returns {*}
        */
-      startPipeline: function(name, rev) {
-        var url = apiBase + '/pipeline/start?name=' + name + '&rev=' + rev ;
+      startPipeline: function(pipelineName, rev) {
+        var url = apiBase + '/pipeline/' + pipelineName + '/start?rev=' + rev ;
         return $http({
           method: 'POST',
           url: url
@@ -410,8 +471,8 @@ angular.module('dataCollectorApp.common')
        *
        * @returns {*}
        */
-      stopPipeline: function() {
-        var url = apiBase + '/pipeline/stop';
+      stopPipeline: function(pipelineName, rev) {
+        var url = apiBase + '/pipeline/' + pipelineName + '/stop?rev=' + rev ;
         return $http({
           method: 'POST',
           url: url
@@ -423,8 +484,8 @@ angular.module('dataCollectorApp.common')
        *
        * @returns {*}
        */
-      getPipelineMetrics: function() {
-        var url = apiBase + '/pipeline/metrics';
+      getPipelineMetrics: function(pipelineName, rev) {
+        var url = apiBase + '/pipeline/' + pipelineName + '/metrics?rev=' + rev ;
         return $http({
           method: 'GET',
           url: url
@@ -437,7 +498,7 @@ angular.module('dataCollectorApp.common')
        * @returns {*}
        */
       getSnapshotsInfo: function() {
-        var url = apiBase + '/pipeline/snapshots' ;
+        var url = apiBase + '/pipelines/snapshots' ;
         return $http({
           method: 'GET',
           url: url
@@ -447,12 +508,15 @@ angular.module('dataCollectorApp.common')
       /**
        * Capture Snapshot of running pipeline.
        *
+       * @param pipelineName
+       * @param rev
        * @param snapshotName
        * @param batchSize
        * @returns {*}
        */
-      captureSnapshot: function(snapshotName, batchSize) {
-        var url = apiBase + '/pipeline/snapshots/' + snapshotName + '?batchSize=' + batchSize ;
+      captureSnapshot: function(pipelineName, rev, snapshotName, batchSize) {
+        var url = apiBase + '/pipeline/' + pipelineName + '/snapshot/' + snapshotName +
+          '?batchSize=' + batchSize + '&rev=' + rev;
         return $http({
           method: 'PUT',
           url: url
@@ -462,11 +526,13 @@ angular.module('dataCollectorApp.common')
       /**
        * Get Status of Snapshot.
        *
+       * @param pipelineName
+       * @param rev
        * @param snapshotName
        * @returns {*}
        */
-      getSnapshotStatus: function(snapshotName) {
-        var url = apiBase + '/pipeline/snapshots/' + snapshotName;
+      getSnapshotStatus: function(pipelineName, rev, snapshotName) {
+        var url = apiBase + '/pipeline/' + pipelineName + '/snapshot/' + snapshotName + '/status?rev=' + rev;
         return $http({
           method: 'GET',
           url: url
@@ -477,11 +543,12 @@ angular.module('dataCollectorApp.common')
        * Get captured snapshot for given pipeline name.
        *
        * @param pipelineName
+       * @param rev
        * @param snapshotName
        * @returns {*}
        */
-      getSnapshot: function(pipelineName, snapshotName) {
-        var url = apiBase + '/pipeline/snapshots/' + pipelineName + '/' + snapshotName ;
+      getSnapshot: function(pipelineName, rev, snapshotName) {
+        var url = apiBase + '/pipeline/' + pipelineName + '/snapshot/' + snapshotName + '?rev=' + rev;
         return $http({
           method: 'GET',
           url: url
@@ -492,27 +559,30 @@ angular.module('dataCollectorApp.common')
        * Delete captured snapshot for given pipeline name.
        *
        * @param pipelineName
+       * @param rev
        * @param snapshotName
        * @returns {*}
        */
-      deleteSnapshot: function(pipelineName, snapshotName) {
-        var url = apiBase + '/pipeline/snapshots/' + pipelineName + '/' + snapshotName ;
+      deleteSnapshot: function(pipelineName, rev, snapshotName) {
+        var url = apiBase + '/pipeline/' + pipelineName + '/snapshot/' + snapshotName + '?rev=' + rev;
         return $http({
           method: 'DELETE',
           url: url
         });
       },
 
-
       /**
        * Get error records for the given stage instance name of running pipeline if it is provided otherwise
        * return error records for the pipeline.
        *
+       * @param pipelineName
+       * @param rev
        * @param stageInstanceName
        * @returns {*}
        */
-      getErrorRecords: function(stageInstanceName) {
-        var url = apiBase + '/pipeline/errorRecords?stageInstanceName=' + stageInstanceName;
+      getErrorRecords: function(pipelineName, rev, stageInstanceName) {
+        var url = apiBase + '/pipeline/' + pipelineName + '/errorRecords?rev=' + rev +
+          '&stageInstanceName=' + stageInstanceName;
         return $http({
           method: 'GET',
           url: url
@@ -523,11 +593,14 @@ angular.module('dataCollectorApp.common')
        * Get error messages for the given stage instance name of running pipeline if is provided otherwise
        * return error messages for the pipeline.
        *
+       * @param pipelineName
+       * @param rev
        * @param stageInstanceName
        * @returns {*}
        */
-      getErrorMessages: function(stageInstanceName) {
-        var url = apiBase + '/pipeline/errorMessages?stageInstanceName=' + stageInstanceName;
+      getErrorMessages: function(pipelineName, rev, stageInstanceName) {
+        var url = apiBase + '/pipeline/' + pipelineName + '/errorMessages?rev=' + rev +
+          '&stageInstanceName=' + stageInstanceName;
         return $http({
           method: 'GET',
           url: url
@@ -543,7 +616,7 @@ angular.module('dataCollectorApp.common')
        * @returns {*}
        */
       rawSourcePreview: function(name, rev, configurations) {
-        var url = apiBase + '/pipeline-library/' + name + '/rawSourcePreview?rev=' + rev;
+        var url = apiBase + '/preview/' + name + '/rawSourcePreview?rev=' + rev;
 
         angular.forEach(configurations, function(config) {
           if(config.name && config.value !== undefined) {
@@ -565,7 +638,7 @@ angular.module('dataCollectorApp.common')
        * @returns {*}
        */
       getHistory: function(name, rev) {
-        var url = apiBase + '/pipeline/history/' + name;
+        var url = apiBase + '/pipeline/' + name + '/history';
         return $http({
           method: 'GET',
           url: url
@@ -578,7 +651,7 @@ angular.module('dataCollectorApp.common')
        * @param name
        */
       resetOffset: function(name) {
-        var url = apiBase + '/pipeline/resetOffset/' + name;
+        var url = apiBase + '/pipeline/' + name + '/resetOffset';
         return $http({
           method: 'POST',
           url: url
@@ -621,11 +694,12 @@ angular.module('dataCollectorApp.common')
       /**
        * Get Sampled data for given sampling rule id.
        *
+       * @param pipelineName
        * @param samplingRuleId
        * @returns {*}
        */
-      getSampledRecords: function(samplingRuleId) {
-        var url = apiBase + '/pipeline/sampledRecords/?sampleId=' + samplingRuleId ;
+      getSampledRecords: function(pipelineName, samplingRuleId) {
+        var url = apiBase + '/pipeline/' + pipelineName + '/sampledRecords?sampleId=' + samplingRuleId ;
         return $http({
           method: 'GET',
           url: url
@@ -640,7 +714,7 @@ angular.module('dataCollectorApp.common')
        * @returns {*}
        */
       deleteAlert: function(name, ruleId) {
-        var url = apiBase + '/pipeline/alerts/' + name + '?alertId=' + ruleId;
+        var url = apiBase + '/pipeline/' + name + '/alerts?alertId=' + ruleId;
 
         return $http({
           method: 'DELETE',

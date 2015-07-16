@@ -16,6 +16,7 @@ angular
        */
       onSelect : function(pipeline) {
         //$rootScope.$broadcast('onPipelineConfigSelect', pipeline);
+        $scope.reloadingNewPipeline();
         $location.path('/collector/pipeline/' + pipeline.name);
       },
 

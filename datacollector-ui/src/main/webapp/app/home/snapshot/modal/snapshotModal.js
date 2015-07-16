@@ -24,12 +24,12 @@ angular
        */
       captureSnapshot: function() {
         var snapshotName = getNewSnapshotName();
-        api.pipelineAgent.captureSnapshot(snapshotName, snapshotBatchSize).
+        api.pipelineAgent.captureSnapshot(pipelineConfig.info.name, 0, snapshotName, snapshotBatchSize).
           then(function() {
             $scope.snapshotsInfo.push({
-              pipelineName: pipelineConfig.info.name,
-              snapshotName: snapshotName,
-              captured: null
+              name: pipelineConfig.info.name,
+              id: snapshotName,
+              inProgress: true
             });
             $scope.snapshotInProgress = true;
             checkForCaptureSnapshotStatus(snapshotName);
@@ -55,7 +55,7 @@ angular
        */
       deleteSnapshot: function(snapshotName, index) {
         $scope.snapshotsInfo.splice(index, 1);
-        api.pipelineAgent.deleteSnapshot(pipelineConfig.info.name, snapshotName).
+        api.pipelineAgent.deleteSnapshot(pipelineConfig.info.name, 0, snapshotName).
           then(function() {
 
           }, function(res) {
@@ -78,18 +78,18 @@ angular
 
           $scope.snapshotsInfo = _.chain(res.data)
             .filter(function(snapshotInfo) {
-              return snapshotInfo.pipelineName === pipelineConfig.info.name;
+              return snapshotInfo.name === pipelineConfig.info.name;
             })
-            .sortBy('snapshotName')
+            .sortBy('id')
             .value();
 
           var snapshotInfoInProgress = _.find($scope.snapshotsInfo, function(snapshotInfo) {
-            return snapshotInfo.captured === null;
+            return snapshotInfo.inProgress;
           });
 
           if(snapshotInfoInProgress)  {
             $scope.snapshotInProgress = true;
-            checkForCaptureSnapshotStatus(snapshotInfoInProgress.snapshotName);
+            checkForCaptureSnapshotStatus(snapshotInfoInProgress.id);
           }
         }
         $scope.showLoading = false;
@@ -103,7 +103,7 @@ angular
     var getNewSnapshotName = function() {
       if($scope.snapshotsInfo.length) {
         var lastSnapshot = $scope.snapshotsInfo[$scope.snapshotsInfo.length - 1],
-          lastName = lastSnapshot ? lastSnapshot.snapshotName : '0',
+          lastName = lastSnapshot ? lastSnapshot.id : '0',
           indexStrArr = lastName.match(/\d+/),
           index = indexStrArr.length ? parseInt(indexStrArr[0]) : 0;
 
@@ -127,9 +127,9 @@ angular
 
       captureSnapshotStatusTimer.then(
         function() {
-          api.pipelineAgent.getSnapshotStatus(snapshotName)
+          api.pipelineAgent.getSnapshotStatus(pipelineConfig.info.name, 0, snapshotName)
             .success(function(data) {
-              if(data && data.snapshotInProgress === false) {
+              if(data && data.inProgress === false) {
                 $scope.snapshotInProgress = false;
                 refreshSnapshotsInfo();
               } else {

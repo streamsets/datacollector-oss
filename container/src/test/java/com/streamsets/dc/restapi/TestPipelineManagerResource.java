@@ -3,11 +3,12 @@
  * be copied, modified, or distributed in whole or part without
  * written consent of StreamSets, Inc.
  */
-package com.streamsets.pipeline.restapi;
+package com.streamsets.dc.restapi;
 
 import com.codahale.metrics.MetricRegistry;
 import com.streamsets.pipeline.main.RuntimeInfo;
 import com.streamsets.pipeline.prodmanager.PipelineManager;
+import com.streamsets.pipeline.restapi.PipelineManagerResource;
 import com.streamsets.pipeline.restapi.bean.PipelineStateJson;
 import com.streamsets.pipeline.restapi.bean.SnapshotStatusJson;
 import com.streamsets.pipeline.restapi.bean.StateJson;
@@ -29,7 +30,7 @@ import java.io.StringWriter;
 import java.util.List;
 
 public class TestPipelineManagerResource extends JerseyTest {
-  
+
   private static final String PIPELINE_NAME = "myPipeline";
   private static final String PIPELINE_REV = "2.0";
 

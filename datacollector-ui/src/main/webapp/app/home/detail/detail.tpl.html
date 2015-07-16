@@ -55,23 +55,23 @@
               translate="home.detailPane.restURL">REST URL</li>
 
           <li role="presentation" ng-if="isPipelineRunning && !$storage.dontShowRESTResponseMenu">
-            <a role="menuitem" tabindex="-1" href="/rest/v1/pipeline/metrics" target="_blank">{{'home.detailPane.monitoringJSONData' | translate}}</a>
+            <a role="menuitem" tabindex="-1" href="/rest/{{common.apiVersion}}/pipeline/metrics?name={{pipelineConfig.info.name}}&rev=0" target="_blank">{{'home.detailPane.monitoringJSONData' | translate}}</a>
           </li>
 
           <li role="presentation" ng-if="isPipelineRunning && !$storage.dontShowRESTResponseMenu">
-            <a role="menuitem" tabindex="-1" href="/rest/v1/pipeline/status" target="_blank">{{'home.detailPane.pipelineStatusJSONData' | translate}}</a>
+            <a role="menuitem" tabindex="-1" href="/rest/{{common.apiVersion}}/pipeline/status?name={{pipelineConfig.info.name}}&rev=0" target="_blank">{{'home.detailPane.pipelineStatusJSONData' | translate}}</a>
           </li>
 
           <li role="presentation" ng-if="!$storage.dontShowRESTResponseMenu">
-            <a role="menuitem" tabindex="-1" href="/rest/v1/pipeline-library/{{pipelineConfig.info.name}}" target="_blank">{{'home.detailPane.pipelineConfigJSONData' | translate}}</a>
+            <a role="menuitem" tabindex="-1" href="/rest/{{common.apiVersion}}/pipeline-library/{{pipelineConfig.info.name}}" target="_blank">{{'home.detailPane.pipelineConfigJSONData' | translate}}</a>
           </li>
 
           <li role="presentation" ng-if="!$storage.dontShowRESTResponseMenu">
-            <a role="menuitem" tabindex="-1" href="/rest/v1/pipeline-library/{{pipelineConfig.info.name}}/rules" target="_blank">{{'home.detailPane.pipelineRulesJSONData' | translate}}</a>
+            <a role="menuitem" tabindex="-1" href="/rest/{{common.apiVersion}}/pipeline-library/{{pipelineConfig.info.name}}/rules" target="_blank">{{'home.detailPane.pipelineRulesJSONData' | translate}}</a>
           </li>
 
           <li role="presentation" ng-if="!$storage.dontShowRESTResponseMenu">
-            <a role="menuitem" tabindex="-1" href="/rest/v1/definitions" target="_blank">{{'home.detailPane.definitionsJSONData' | translate}}</a>
+            <a role="menuitem" tabindex="-1" href="/rest/{{common.apiVersion}}/definitions" target="_blank">{{'home.detailPane.definitionsJSONData' | translate}}</a>
           </li>
 
           <li role="presentation" ng-if="isPipelineRunning"

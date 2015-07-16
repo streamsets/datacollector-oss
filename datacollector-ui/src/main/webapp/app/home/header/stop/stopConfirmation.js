@@ -14,7 +14,7 @@ angular
 
       yes: function() {
         $scope.stopping = true;
-        api.pipelineAgent.stopPipeline().
+        api.pipelineAgent.stopPipeline(pipelineInfo.name, 0).
           success(function(res) {
             $scope.stopping = false;
             $modalInstance.close(res);

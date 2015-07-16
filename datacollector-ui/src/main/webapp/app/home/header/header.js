@@ -6,11 +6,12 @@ angular
   .module('dataCollectorApp.home')
 
   .controller('HeaderController', function ($scope, $rootScope, $timeout, _, api, $translate,
-                                           pipelineService, pipelineConstant, $modal) {
+                                           pipelineService, pipelineConstant, $modal, $q) {
 
 
     var pipelineValidationInProgress = 'Validating Pipeline...',
-      pipelineValidationSuccess = 'Validation Successful.';
+      pipelineValidationSuccess = 'Validation Successful.',
+      validateConfigStatusTimer;
 
     $translate('global.messages.validate.pipelineValidationInProgress').then(function(translation) {
       pipelineValidationInProgress = translation;
@@ -66,10 +67,20 @@ angular
         api.pipelineAgent.validatePipeline($scope.activeConfigInfo.name).
           then(
           function (res) {
-            $rootScope.common.infoList = [];
-            $rootScope.common.successList.push({
-              message: pipelineValidationSuccess
+            var defer = $q.defer();
+            checkForValidateConfigStatus(res.data.previewerId, defer);
+
+            defer.promise.then(function(previewData) {
+              $rootScope.common.infoList = [];
+              if(previewData.status === 'VALID') {
+                $rootScope.common.successList.push({
+                  message: pipelineValidationSuccess
+                });
+              } else {
+                $rootScope.common.errors = [previewData.issues];
+              }
             });
+
           },
           function (res) {
             $rootScope.common.infoList = [];
@@ -288,6 +299,59 @@ angular
 
     $scope.$on('bodyDeleteKeyPressed', function() {
       $scope.deleteSelection();
+    });
+
+
+
+    /**
+     * Check for Validate Config Status for every 1 seconds, once done open the snapshot view.
+     *
+     */
+    var checkForValidateConfigStatus = function(previewerId, defer) {
+      validateConfigStatusTimer = $timeout(
+        function() {
+        },
+        1000
+      );
+
+      validateConfigStatusTimer.then(
+        function() {
+          api.pipelineAgent.getPreviewStatus($scope.pipelineConfig.info.name, previewerId)
+            .success(function(data) {
+              if(data && _.contains(['INVALID', 'START_ERROR', 'RUN_ERROR', 'VALID'], data.status)) {
+                fetchValidateConfigData(previewerId, defer);
+              } else {
+                checkForValidateConfigStatus(previewerId, defer);
+              }
+            })
+            .error(function(data, status, headers, config) {
+              $rootScope.common.infoList = [];
+              $scope.common.errors = [data];
+            });
+        },
+        function() {
+          console.log( "Timer rejected!" );
+        }
+      );
+    };
+
+    var fetchValidateConfigData = function(previewerId, defer) {
+      api.pipelineAgent.getPreviewData($scope.pipelineConfig.info.name, previewerId)
+        .success(function(validateConfigData) {
+          defer.resolve(validateConfigData);
+        })
+        .error(function(data, status, headers, config) {
+          $rootScope.common.infoList = [];
+          $scope.common.errors = [data];
+        });
+    };
+
+
+
+    $scope.$on('$destroy', function() {
+      if(validateConfigStatusTimer) {
+        $timeout.cancel(validateConfigStatusTimer);
+      }
     });
 
   });

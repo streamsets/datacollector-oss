@@ -3,7 +3,7 @@
 
   <div class="panel-heading clearfix">
 
-    <div class="pull-left" ng-switch="activeConfigStatus.state">
+    <div class="pull-left" ng-switch="activeConfigStatus.status">
       <button type="button" class="navbar-toggle collapsed"
               ng-if="common.sdcExecutionMode != pipelineConstant.SLAVE"
               ng-class="{'selected' : !hideLibraryPanel}"
@@ -23,14 +23,19 @@
       </div>
 
       <div class="panel-title pull-left"
-           ng-switch-when="RUNNING">
-        <h3 class="pull-left">{{pipelineConfig.info.name | limitTo: 40}}: </h3>
-        <h3 class="pull-left" translate="home.header.uptime">Uptime</h3>
-        <h3 class="pull-left" am-time-ago="common.pipelineStatus.lastStatusChange"></h3>
-
+           ng-switch-when="STARTING">
+        <h3 class="pull-left" translate="home.header.startingPipeline">Starting Pipeline</h3>
         <i class="fa fa-spinner fa-spin fa-2x green-color"></i>
       </div>
 
+      <div class="panel-title pull-left"
+           ng-switch-when="RUNNING">
+        <h3 class="pull-left">{{pipelineConfig.info.name | limitTo: 40}}: </h3>
+        <h3 class="pull-left" translate="home.header.uptime">Uptime</h3>
+        <h3 class="pull-left" am-time-ago="common.pipelineStatus.timeStamp"></h3>
+
+        <i class="fa fa-spinner fa-spin fa-2x green-color"></i>
+      </div>
 
       <div class="panel-title pull-left"
            ng-switch-when="STOPPING">
@@ -47,11 +52,11 @@
     </div>
 
 
-    <div class="pull-right" ng-if="pipelineConfig && activeConfigStatus.state !== 'STOPPING'">
+    <div class="pull-right" ng-if="pipelineConfig && activeConfigStatus.status !== 'STOPPING'">
 
       <div class="pull-left" ng-cloak
            ng-if="!isPipelineReadOnly && common.sdcExecutionMode != pipelineConstant.SLAVE"
-           ng-hide="previewMode || snapshotMode || activeConfigStatus.state === 'STOPPING'">
+           ng-hide="previewMode || snapshotMode || activeConfigStatus.status === 'STOPPING'">
         <div class="pipelineAgent-status pull-right" ng-hide="common.saveOperationInProgress > 0">
           <span class="glyphicon glyphicon-ok-circle"></span>
           <span translate="global.messages.info.saveOperationInProgress"></span>

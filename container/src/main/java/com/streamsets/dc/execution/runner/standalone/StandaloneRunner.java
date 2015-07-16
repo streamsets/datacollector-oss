@@ -294,9 +294,14 @@ public class StandaloneRunner implements Runner, StateListener {
   }
 
   @Override
-  public String captureSnapshot(String snapshotName, int batches)
+  public String captureSnapshot(String snapshotName, int batches, int batchSize)
     throws PipelineException {
-    int batchSize = configuration.get(Constants.SNAPSHOT_MAX_BATCH_SIZE_KEY, Constants.SNAPSHOT_MAX_BATCH_SIZE_DEFAULT);
+    int maxBatchSize = configuration.get(Constants.SNAPSHOT_MAX_BATCH_SIZE_KEY, Constants.SNAPSHOT_MAX_BATCH_SIZE_DEFAULT);
+
+    if(batchSize > maxBatchSize) {
+      batchSize = maxBatchSize;
+    }
+
     LOG.debug("Capturing snapshot with batch size {}", batchSize);
     checkState(getState().getStatus().equals(PipelineStatus.RUNNING), ContainerError.CONTAINER_0105);
     if(batchSize <= 0) {

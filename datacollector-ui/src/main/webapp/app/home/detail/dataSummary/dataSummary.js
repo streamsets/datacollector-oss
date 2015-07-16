@@ -153,7 +153,7 @@ angular
 
     function updateSamplingRecords() {
       $scope.showRecordsLoading = true;
-      api.pipelineAgent.getSampledRecords($scope.dataRuleDefn.id)
+      api.pipelineAgent.getSampledRecords($scope.pipelineConfig.info.name, $scope.dataRuleDefn.id)
         .success(function(res) {
           $scope.showRecordsLoading = false;
           if(res && res.length) {
