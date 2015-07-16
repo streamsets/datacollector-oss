@@ -283,6 +283,16 @@ public class ClusterRunner implements Runner {
   }
 
   @Override
+  public void prepareForStart() throws PipelineStoreException, PipelineRunnerException {
+    if (getState().getStatus() == PipelineStatus.STARTING) {
+      LOG.debug("Pipeline '{}::{}' is already in STARTING state", name, rev);
+    } else {
+      LOG.info("Preparing to start pipeline '{}::{}'", name, rev);
+      validateAndSetStateTransition(PipelineStatus.STARTING, "Starting pipeline in cluster mode");
+    }
+  }
+
+  @Override
   public synchronized void start() throws PipelineStoreException, PipelineRunnerException, PipelineRuntimeException,
     StageException {
     Utils.checkState(!isClosed,
@@ -291,7 +301,7 @@ public class ClusterRunner implements Runner {
     if (executionMode != ExecutionMode.CLUSTER) {
       throw new PipelineRunnerException(ValidationError.VALIDATION_0073);
     }
-    validateAndSetStateTransition(PipelineStatus.STARTING, "Starting pipeline in cluster mode");
+    prepareForStart();
     LOG.debug("State of pipeline for '{}::{}' is '{}' ", name, rev, getState());
     PipelineConfiguration pipelineConf = getPipelineConf();
     doStart(pipelineConf, getClusterSourceInfo(name, rev, pipelineConf));
@@ -697,5 +707,4 @@ public class ClusterRunner implements Runner {
   private PipelineConfiguration getPipelineConf() throws PipelineStoreException {
     return pipelineStore.load(name, rev);
   }
-
 }

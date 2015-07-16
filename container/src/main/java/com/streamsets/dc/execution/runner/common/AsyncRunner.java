@@ -97,7 +97,13 @@ public class AsyncRunner implements Runner, PipelineInfo {
   }
 
   @Override
+  public void prepareForStart() throws PipelineStoreException, PipelineRunnerException {
+    runner.prepareForStart();
+  }
+
+  @Override
   public synchronized void start() throws PipelineRunnerException, PipelineStoreException, PipelineRuntimeException, StageException {
+    runner.prepareForStart();
     Callable<Object> callable = new Callable<Object>() {
       @Override
       public Object call() throws PipelineStoreException, PipelineRunnerException, PipelineRuntimeException, StageException {

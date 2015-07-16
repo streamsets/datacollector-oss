@@ -9,6 +9,7 @@ import com.codahale.metrics.MetricRegistry;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
+import com.google.common.util.concurrent.Service.State;
 import com.streamsets.dc.execution.PipelineState;
 import com.streamsets.dc.execution.PipelineStateStore;
 import com.streamsets.dc.execution.PipelineStatus;
@@ -396,14 +397,23 @@ public class StandaloneRunner implements Runner, StateListener {
   }
 
   @Override
+  public void prepareForStart() throws PipelineStoreException, PipelineRunnerException {
+    if (getState().getStatus() == PipelineStatus.STARTING) {
+      LOG.debug("Pipeline '{}::{}' is already in STARTING state", name, rev);
+    } else {
+      LOG.info("Preparing to start pipeline '{}::{}'", name, rev);
+      validateAndSetStateTransition(PipelineStatus.STARTING, null, null);
+    }
+  }
+
+  @Override
   public void start() throws PipelineStoreException, PipelineRunnerException, PipelineRuntimeException, StageException {
     Utils.checkState(!isClosed,
       Utils.formatL("Cannot start the pipeline '{}::{}' as the runner is already closed", name, rev));
 
     synchronized (this) {
+      prepareForStart();
       LOG.info("Starting pipeline {} {}", name, rev);
-      validateAndSetStateTransition(PipelineStatus.STARTING, null, null);
-
       /*
        * Implementation Notes: --------------------- What are the different threads and runnables created? - - - - - - - -
        * - - - - - - - - - - - - - - - - - - - RulesConfigLoader ProductionObserver MetricObserver

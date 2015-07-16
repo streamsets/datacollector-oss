@@ -118,6 +118,11 @@ public class TestStandaloneRunner {
       ExecutionMode.STANDALONE);
     runner.prepareForDataCollectorStart();
     assertEquals(PipelineStatus.DISCONNECTED, runner.getState().getStatus());
+    pipelineStateStore.saveState("admin", TestUtil.MY_PIPELINE, "0", PipelineStatus.STOPPED, null, null,
+      ExecutionMode.STANDALONE);
+    runner.prepareForStart();
+    assertEquals(PipelineStatus.STARTING, runner.getState().getStatus());
+
   }
 
   @Test(timeout = 20000)

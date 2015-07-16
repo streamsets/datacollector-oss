@@ -97,6 +97,11 @@ public class SlaveStandaloneRunner implements Runner, PipelineInfo  {
   }
 
   @Override
+  public void prepareForStart() throws PipelineStoreException, PipelineRunnerException {
+    standaloneRunner.prepareForStart();
+  }
+
+  @Override
   public void start() throws PipelineRunnerException, PipelineStoreException, PipelineRuntimeException, StageException {
     String callbackServerURL = configuration.get(CALLBACK_SERVER_URL_KEY, CALLBACK_SERVER_URL_DEFAULT);
     String sdcClusterToken = configuration.get(SDC_CLUSTER_TOKEN_KEY, null);
