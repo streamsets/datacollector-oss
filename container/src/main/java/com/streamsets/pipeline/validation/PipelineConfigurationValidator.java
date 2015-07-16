@@ -192,7 +192,7 @@ public class PipelineConfigurationValidator {
 
   private boolean loadPipelineConfig() {
     List<Issue> errors = new ArrayList<>();
-    pipelineBean = PipelineBeanCreator.get().create(stageLibrary, pipelineConfiguration, errors);
+    pipelineBean = PipelineBeanCreator.get().create(false, stageLibrary, pipelineConfiguration, errors);
     issues.addAll(errors);
     return errors.isEmpty();
   }

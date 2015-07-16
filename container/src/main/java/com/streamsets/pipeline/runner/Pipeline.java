@@ -164,7 +164,7 @@ public class Pipeline {
     public Pipeline build(PipelineRunner runner) throws PipelineRuntimeException {
       Pipeline pipeline = null;
       errors = new ArrayList<>();
-      PipelineBean pipelineBean = PipelineBeanCreator.get().create(stageLib, pipelineConf, errors);
+      PipelineBean pipelineBean = PipelineBeanCreator.get().create(true, stageLib, pipelineConf, errors);
       StageRuntime[] stages = null;
       StageRuntime errorStage = null;
       if (pipelineBean != null) {

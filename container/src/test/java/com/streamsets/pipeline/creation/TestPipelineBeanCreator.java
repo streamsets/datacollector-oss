@@ -23,6 +23,7 @@ import com.streamsets.pipeline.config.StageConfiguration;
 import com.streamsets.pipeline.config.StageDefinition;
 import com.streamsets.pipeline.config.StageLibraryDefinition;
 import com.streamsets.pipeline.definition.StageDefinitionExtractor;
+import com.streamsets.pipeline.stagelibrary.ClassLoaderReleaser;
 import com.streamsets.pipeline.stagelibrary.StageLibraryTask;
 import com.streamsets.pipeline.validation.Issue;
 import org.junit.Assert;
@@ -357,7 +358,8 @@ public class TestPipelineBeanCreator {
     Map<String, Object> constants = ImmutableMap.<String, Object>of("a", 1);
     List<Issue> issues = new ArrayList<>();
 
-    StageBean bean = PipelineBeanCreator.get().createStage(stageDef, stageConf, constants, issues);
+    StageBean bean = PipelineBeanCreator.get().createStage(stageDef, Mockito.mock(ClassLoaderReleaser.class), stageConf,
+                                                           constants, issues);
 
     Assert.assertNotNull(bean);
     MyTarget stage = (MyTarget) bean.getStage();
@@ -398,7 +400,8 @@ public class TestPipelineBeanCreator {
     Map<String, Object> constants = ImmutableMap.<String, Object>of("a", 1);
     List<Issue> issues = new ArrayList<>();
 
-    StageBean bean = PipelineBeanCreator.get().createStage(stageDef, stageConf, constants, issues);
+    StageBean bean = PipelineBeanCreator.get().createStage(stageDef, Mockito.mock(ClassLoaderReleaser.class), stageConf,
+                                                           constants, issues);
 
     Assert.assertNotNull(bean);
     MyTarget stage = (MyTarget) bean.getStage();
@@ -443,7 +446,7 @@ public class TestPipelineBeanCreator {
         Collections.EMPTY_MAP, ImmutableList.of(stageConf), errorStageConf);
 
     List<Issue> issues = new ArrayList<>();
-    PipelineBean bean = PipelineBeanCreator.get().create(library, pipelineConf, issues);
+    PipelineBean bean = PipelineBeanCreator.get().create(false, library, pipelineConf, issues);
 
     Assert.assertNotNull(bean);
 
@@ -458,6 +461,31 @@ public class TestPipelineBeanCreator {
     // error stage
     ErrorMyTarget errorStage = (ErrorMyTarget) bean.getErrorStage().getStage();
     Assert.assertEquals(ImmutableList.of("E"), errorStage.list);
+
+  }
+
+  @Test
+  public void testStageBeanReleaseClassLoader() {
+    StageLibraryDefinition libraryDef = Mockito.mock(StageLibraryDefinition.class);
+    ClassLoader cl = Thread.currentThread().getContextClassLoader();
+    Mockito.when(libraryDef.getClassLoader()).thenReturn(cl);
+    StageDefinition stageDef = StageDefinitionExtractor.get().extract(libraryDef, MyTarget.class, "");
+
+    StageConfiguration stageConf =
+        new StageConfiguration("i", "l", "n", "v", Collections.<ConfigConfiguration>emptyList(),
+                               Collections.<String, Object>emptyMap(),
+                               Collections.<String>emptyList(),
+                               Collections.<String>emptyList());
+
+    Map<String, Object> constants = ImmutableMap.<String, Object>of("a", 1);
+    List<Issue> issues = new ArrayList<>();
+
+    ClassLoaderReleaser releaser = Mockito.mock(ClassLoaderReleaser.class);
+    StageBean bean = PipelineBeanCreator.get().createStage(stageDef, releaser, stageConf, constants, issues);
+
+    Mockito.verify(releaser, Mockito.never()).releaseStageClassLoader(Mockito.<ClassLoader>any());
+    bean.releaseClassLoader();
+    Mockito.verify(releaser, Mockito.times(1)).releaseStageClassLoader(cl);
 
   }
 

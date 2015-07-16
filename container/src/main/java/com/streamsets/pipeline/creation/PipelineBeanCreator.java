@@ -22,6 +22,7 @@ import com.streamsets.pipeline.config.StageLibraryDefinition;
 import com.streamsets.pipeline.definition.ConfigDefinitionExtractor;
 import com.streamsets.pipeline.definition.ConfigValueExtractor;
 import com.streamsets.pipeline.definition.StageDefinitionExtractor;
+import com.streamsets.pipeline.stagelibrary.ClassLoaderReleaser;
 import com.streamsets.pipeline.stagelibrary.StageLibraryTask;
 import com.streamsets.pipeline.util.ElUtil;
 import com.streamsets.pipeline.validation.Issue;
@@ -69,7 +70,8 @@ public abstract class PipelineBeanCreator {
     return (errors.size() == priorErrors) ? pipelineConfigBean : null;
   }
 
-  public PipelineBean create(StageLibraryTask library, PipelineConfiguration pipelineConf, List<Issue> errors) {
+  public PipelineBean create(boolean forExecution, StageLibraryTask library, PipelineConfiguration pipelineConf,
+      List<Issue> errors) {
     int priorErrors = errors.size();
     PipelineConfigBean pipelineConfigBean = create(pipelineConf, errors);
     StageBean errorStageBean = null;
@@ -109,7 +111,7 @@ public abstract class PipelineBeanCreator {
                                          stageConf.getStageVersion()));
         }
       }
-      bean = createStage(stageDef, stageConf, constants, errors);
+      bean = createStage(stageDef, library, stageConf, constants, errors);
     } else {
       errors.add(issueCreator.create(CreationError.CREATION_006, stageConf.getLibrary(), stageConf.getStageName(),
                                      stageConf.getStageVersion()));
@@ -134,8 +136,8 @@ public abstract class PipelineBeanCreator {
   }
 
   // if not null it is OK. if null there was at least one error, check errors for the details
-  StageBean createStage(StageDefinition stageDef, StageConfiguration stageConf, Map<String, Object> pipelineConstants,
-      List<Issue> errors) {
+  StageBean createStage(StageDefinition stageDef, ClassLoaderReleaser classLoaderReleaser, StageConfiguration stageConf,
+      Map<String, Object> pipelineConstants, List<Issue> errors) {
     Stage stage;
     ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
     try {
@@ -148,7 +150,7 @@ public abstract class PipelineBeanCreator {
       Thread.currentThread().setContextClassLoader(classLoader);
     }
     StageConfigBean stageConfigBean = createAndInjectStageBeanConfigs(stageDef, stageConf, pipelineConstants, errors);
-    return (errors.isEmpty()) ? new StageBean(stageDef, stageConf, stageConfigBean, stage) : null;
+    return (errors.isEmpty()) ? new StageBean(stageDef, stageConf, stageConfigBean, stage, classLoaderReleaser) : null;
   }
 
   Stage createStageInstance(StageDefinition stageDef, String stageName, List<Issue> errors) {

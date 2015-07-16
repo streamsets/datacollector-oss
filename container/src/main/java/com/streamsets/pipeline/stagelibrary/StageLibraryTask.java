@@ -11,7 +11,7 @@ import com.streamsets.pipeline.task.Task;
 
 import java.util.List;
 
-public interface StageLibraryTask extends Task {
+public interface StageLibraryTask extends Task, ClassLoaderReleaser {
 
   public static final String STAGES_DEFINITION_RESOURCE = "PipelineStages.json";
 
@@ -20,5 +20,7 @@ public interface StageLibraryTask extends Task {
   public List<StageDefinition> getStages();
 
   public StageDefinition getStage(String library, String name, String version);
+
+  public ClassLoader getStageClassLoader(StageDefinition stageDefinition);
 
 }

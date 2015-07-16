@@ -8,18 +8,22 @@ package com.streamsets.pipeline.creation;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.config.StageConfiguration;
 import com.streamsets.pipeline.config.StageDefinition;
+import com.streamsets.pipeline.stagelibrary.ClassLoaderReleaser;
 
 public class StageBean {
   private final StageDefinition definition;
   private final StageConfiguration conf;
   private final StageConfigBean systemConfigs;
   private final Stage stage;
+  private final ClassLoaderReleaser classLoaderReleaser;
 
-  public StageBean(StageDefinition definition, StageConfiguration conf, StageConfigBean systemConfigs, Stage stage) {
+  public StageBean(StageDefinition definition, StageConfiguration conf, StageConfigBean systemConfigs, Stage stage,
+      ClassLoaderReleaser classLoaderReleaser) {
     this.definition = definition;
     this.conf = conf;
     this.systemConfigs = systemConfigs;
     this.stage = stage;
+    this.classLoaderReleaser = classLoaderReleaser;
   }
 
   public StageDefinition getDefinition() {
@@ -36,5 +40,9 @@ public class StageBean {
 
   public Stage getStage() {
     return stage;
+  }
+
+  public void releaseClassLoader() {
+    classLoaderReleaser.releaseStageClassLoader(stage.getClass().getClassLoader());
   }
 }

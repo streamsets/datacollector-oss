@@ -195,4 +195,14 @@ public class ClassLoaderStageLibraryTask extends AbstractTask implements StageLi
     return stageMap.get(createKey(library, name, version));
   }
 
+  @Override
+  public ClassLoader getStageClassLoader(StageDefinition stageDefinition) {
+    return stageDefinition.getStageClassLoader(); //TODO get private classloader if necessary
+  }
+
+  @Override
+  public void releaseStageClassLoader(ClassLoader classLoader) {
+    //TODO release if private classloader
+  }
+
 }

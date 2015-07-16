@@ -439,6 +439,16 @@ public class MockStages {
       }
       return null;
     }
+
+    @Override
+    public ClassLoader getStageClassLoader(StageDefinition stageDefinition) {
+      return stageDefinition.getStageClassLoader();
+    }
+
+    @Override
+    public void releaseStageClassLoader(ClassLoader classLoader) {
+    }
+
     public static class Builder {
       private final Map<String, StageDefinition> stages;
 

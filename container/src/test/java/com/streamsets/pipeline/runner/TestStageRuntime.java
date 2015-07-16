@@ -5,6 +5,7 @@
  */
 package com.streamsets.pipeline.runner;
 
+import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.impl.CreateByRef;
 import com.streamsets.pipeline.config.StageDefinition;
 
@@ -76,4 +77,20 @@ public class TestStageRuntime {
 
   }
 
-}
+
+  @Test
+  public void testReleaseClassLoader() throws Exception {
+    PipelineBean pipelineBean = Mockito.mock(PipelineBean.class);
+    StageBean stageBean = Mockito.mock(StageBean.class);
+    Mockito.when(stageBean.getStage()).thenReturn(Mockito.mock(Stage.class));
+    StageDefinition def = Mockito.mock(StageDefinition.class);
+    Mockito.when(stageBean.getDefinition()).thenReturn(def);
+
+    StageRuntime runtime = new StageRuntime(pipelineBean, stageBean);
+
+    Mockito.verify(stageBean, Mockito.never()).releaseClassLoader();
+    runtime.destroy();
+    Mockito.verify(stageBean, Mockito.times(1)).releaseClassLoader();
+  }
+
+  }

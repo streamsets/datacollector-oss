@@ -31,20 +31,14 @@ public class StageRuntime {
   private final PipelineBean pipelineBean;
   private final StageDefinition def;
   private final StageConfiguration conf;
-  private final Stage stage;
+  private final StageBean stageBean;
   private final Stage.Info info;
-  private final List<String> requiredFields;
-  private final List<String> preconditions;
-  private final OnRecordError onRecordError;
   private StageContext context;
 
   public StageRuntime(PipelineBean pipelineBean, final StageBean stageBean) {
     this.pipelineBean = pipelineBean;
     this.def = stageBean.getDefinition();
-    this.stage = stageBean.getStage();
-    this.requiredFields = stageBean.getSystemConfigs().stageRequiredFields;
-    this.preconditions = stageBean.getSystemConfigs().stageRecordPreconditions;
-    this.onRecordError = stageBean.getSystemConfigs().stageOnRecordError;
+    this.stageBean = stageBean;
     this.conf = stageBean.getConfiguration();
     info = new Stage.Info() {
       @Override
@@ -83,19 +77,19 @@ public class StageRuntime {
   }
 
   public List<String> getRequiredFields() {
-    return requiredFields;
+    return stageBean.getSystemConfigs().stageRequiredFields;
   }
 
   public List<String> getPreconditions() {
-    return preconditions;
+    return stageBean.getSystemConfigs().stageRecordPreconditions;
   }
 
   public OnRecordError getOnRecordError() {
-    return onRecordError;
+    return stageBean.getSystemConfigs().stageOnRecordError;
   }
 
   public Stage getStage() {
-    return stage;
+    return stageBean.getStage();
   }
 
   public void setContext(StageContext context) {
@@ -113,12 +107,11 @@ public class StageRuntime {
 
   @SuppressWarnings("unchecked")
   public List<Issue> init() {
-    //TODO: for errorstage we must set the errorstage flag in issues, use IssueCreator.getErrorStage()
     Preconditions.checkState(context != null, "context has not been set");
     ClassLoader cl = Thread.currentThread().getContextClassLoader();
     try {
       Thread.currentThread().setContextClassLoader(getDefinition().getStageClassLoader());
-      List<Issue> issues = stage.init(info, context);
+      List<Issue> issues = getStage().init(info, context);
       if (issues == null) {
         issues = Collections.emptyList();
       }
@@ -187,8 +180,10 @@ public class StageRuntime {
     ClassLoader cl = Thread.currentThread().getContextClassLoader();
     try {
       Thread.currentThread().setContextClassLoader(getDefinition().getStageClassLoader());
-      stage.destroy();
+      getStage().destroy();
     } finally {
+      //we release the stage classloader back to the library  ro reuse (as some stages my have private classloaders)
+      stageBean.releaseClassLoader();
       Thread.currentThread().setContextClassLoader(cl);
     }
   }

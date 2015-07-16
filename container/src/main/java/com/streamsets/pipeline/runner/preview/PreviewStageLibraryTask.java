@@ -27,6 +27,10 @@ public class PreviewStageLibraryTask extends TaskWrapper implements StageLibrary
   private static final StageLibraryDefinition PREVIEW_LIB = new StageLibraryDefinition(
       PreviewStageLibraryTask.class.getClassLoader(), LIBRARY, "Preview", new Properties());
 
+  private static final StageDefinition PLUG_STAGE =  new StageDefinition(PREVIEW_LIB, false, PreviewPlugTarget.class,
+      NAME, VERSION, "previewPlug", "Preview Plug", StageType.TARGET, false, false, false, Collections.<ConfigDefinition>emptyList(),
+      null/*raw source definition*/, "", null, false, 0, null, Arrays.asList(ExecutionMode.STANDALONE), false);
+
   private final StageLibraryTask library;
 
   public PreviewStageLibraryTask(StageLibraryTask library) {
@@ -48,13 +52,24 @@ public class PreviewStageLibraryTask extends TaskWrapper implements StageLibrary
   public StageDefinition getStage(String library, String name, String version) {
     StageDefinition def;
     if (LIBRARY.equals(library) && NAME.equals(name) && VERSION.equals(VERSION)) {
-      def = new StageDefinition(PREVIEW_LIB, false, PreviewPlugTarget.class, NAME, VERSION, "previewPlug", "Preview Plug",
-          StageType.TARGET, false, false, false, Collections.<ConfigDefinition>emptyList(),
-        null/*raw source definition*/, "", null, false, 0, null, Arrays.asList(ExecutionMode.STANDALONE), false);
+      def = PLUG_STAGE;
     } else {
       def = this.library.getStage(library, name, version);
     }
     return def;
+  }
+
+  @Override
+  public ClassLoader getStageClassLoader(StageDefinition stageDefinition) {
+    return (stageDefinition == PLUG_STAGE) ? PLUG_STAGE.getClass().getClassLoader()
+                                           : library.getStageClassLoader(stageDefinition);
+  }
+
+  @Override
+  public void releaseStageClassLoader(ClassLoader classLoader) {
+    if (classLoader != PLUG_STAGE.getClass().getClassLoader()) {
+      library.releaseStageClassLoader(classLoader);
+    }
   }
 
 }
