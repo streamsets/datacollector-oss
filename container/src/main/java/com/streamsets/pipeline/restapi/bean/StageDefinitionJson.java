@@ -24,6 +24,10 @@ public class StageDefinitionJson {
     return BeanHelper.wrapConfigGroupDefinition(stageDefinition.getConfigGroupDefinition());
   }
 
+  public boolean isPrivateClassLoader() {
+    return stageDefinition.isPrivateClassLoader();
+  }
+
   public String getClassName() {
     return stageDefinition.getClassName();
   }

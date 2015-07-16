@@ -92,7 +92,8 @@ public class TestStageDefinitionExtractor {
   }
 
   @StageDef(version = "2", label = "LL", description = "DD", icon = "TargetIcon.svg",
-      execution = ExecutionMode.STANDALONE, outputStreams = TwoOutputStreams.class, recordsByRef = true)
+      execution = ExecutionMode.STANDALONE, outputStreams = TwoOutputStreams.class, recordsByRef = true,
+      privateClassLoader = true)
   @ConfigGroups(Group1.class)
   @RawSource(rawSourcePreviewer = Previewer.class)
   @HideConfig(value = "config2", preconditions = true, onErrorRecord = true)
@@ -171,6 +172,7 @@ public class TestStageDefinitionExtractor {
   @Test
   public void testExtractSource1() {
     StageDefinition def = StageDefinitionExtractor.get().extract(MOCK_LIB_DEF, Source1.class, "x");
+    Assert.assertFalse(def.isPrivateClassLoader());
     Assert.assertEquals(Source1.class.getName(), def.getClassName());
     Assert.assertEquals(StageDefinitionExtractor.getStageName(Source1.class), def.getName());
     Assert.assertEquals("1", def.getVersion());
@@ -194,6 +196,7 @@ public class TestStageDefinitionExtractor {
   @Test
   public void testExtractSource2() {
     StageDefinition def = StageDefinitionExtractor.get().extract(MOCK_LIB_DEF, Source2.class, "x");
+    Assert.assertTrue(def.isPrivateClassLoader());
     Assert.assertEquals(Source2.class.getName(), def.getClassName());
     Assert.assertEquals(StageDefinitionExtractor.getStageName(Source2.class), def.getName());
     Assert.assertEquals("2", def.getVersion());

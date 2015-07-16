@@ -68,4 +68,6 @@ public @interface StageDef {
 
   boolean recordsByRef() default false;
 
+  boolean privateClassLoader() default false;
+
 }

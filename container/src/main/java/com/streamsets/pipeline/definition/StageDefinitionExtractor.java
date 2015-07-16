@@ -186,10 +186,13 @@ public abstract class StageDefinitionExtractor {
       if (onRecordError) {
         configDefinitions.add(ON_ERROR_RECORD);
       }
-      return new StageDefinition(libraryDef, klass, name, version, label, description, type, errorStage, preconditions,
-                                 onRecordError, configDefinitions, rawSourceDefinition, icon, configGroupDefinition,
-                                 variableOutputStreams, outputStreams, outputStreamLabelProviderClass, executionModes,
-                                 recordsByRef);
+
+      boolean privateClassLoader = sDef.privateClassLoader();
+
+      return new StageDefinition(libraryDef, privateClassLoader, klass, name, version, label, description, type,
+                                 errorStage, preconditions, onRecordError, configDefinitions, rawSourceDefinition, icon,
+                                 configGroupDefinition, variableOutputStreams, outputStreams,
+                                 outputStreamLabelProviderClass, executionModes, recordsByRef);
     } else {
       throw new IllegalArgumentException(Utils.format("Invalid StageDefinition: {}", errors));
     }

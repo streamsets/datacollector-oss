@@ -134,11 +134,11 @@ public class TestUtil {
       ConfigDef.Evaluation.IMPLICIT, null);
     configDefs.add(configDef);
     StageDefinition sourceDef = new StageDefinition(
-        MOCK_LIB_DEF, TSource.class, "source", "1.0.0", "label", "description",
+        MOCK_LIB_DEF, false, TSource.class, "source", "1.0.0", "label", "description",
         StageType.SOURCE, false, true, true, configDefs, null/*raw source definition*/, "", null, false ,1,
         null, Arrays.asList(ExecutionMode.CLUSTER, ExecutionMode.STANDALONE), false);
     StageDefinition targetDef = new StageDefinition(
-        MOCK_LIB_DEF, TTarget.class, "target", "1.0.0", "label", "description",
+        MOCK_LIB_DEF, false, TTarget.class, "target", "1.0.0", "label", "description",
         StageType.TARGET, false, true, true, Collections.<ConfigDefinition>emptyList(), null/*raw source definition*/,
         "TargetIcon.svg", null, false, 0, null, Arrays.asList(ExecutionMode.CLUSTER,
                                                               ExecutionMode.STANDALONE), false);
