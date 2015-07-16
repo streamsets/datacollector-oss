@@ -90,8 +90,8 @@ public class TestBlackListURLClassLoader {
     cl.validateResource("c/d/X.properties");
   }
 
-  private File getBaseDir() {
-    URL dummyResource = getClass().getClassLoader().getResource("dummy-resource.properties");
+  public static File getBaseDir() {
+    URL dummyResource = TestBlackListURLClassLoader.class.getClassLoader().getResource("dummy-resource.properties");
     Assert.assertNotNull(dummyResource);
     String path = dummyResource.toExternalForm();
     Assert.assertTrue(path.startsWith("file:"));

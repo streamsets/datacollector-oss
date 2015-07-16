@@ -125,13 +125,17 @@ public class SDCClassLoader extends BlackListURLClassLoader {
     APPLICATION_STAGE_CLASSES_DEFAULT = checkNotNull(applicationClassesDefaultsMap.get(STAGE), STAGE) + "," + APPLICATION_BASE_CLASSES_DEFAULT;
   }
 
+  private final List<URL> urls;
   private final ClassLoader parent;
   private final List<String> systemClasses;
   private final List<String> applicationClasses;
+  private final boolean isPrivate;
 
   private SDCClassLoader(String type, String name, List<URL> urls, ClassLoader parent,
-                         List<String> systemClasses, List<String> applicationClasses, String[] blacklistedPackages) {
+                         List<String> systemClasses, List<String> applicationClasses, String[] blacklistedPackages,
+      boolean isPrivate) {
     super(type, name, urls, parent, blacklistedPackages);
+    this.urls = urls;
     if (debug) {
       System.err.println(getClass().getSimpleName() + " " + getName() + ": urls: " + Arrays.toString(urls.toArray()));
       System.err.println(getClass().getSimpleName() + " " + getName() + ": system classes: " + systemClasses);
@@ -152,15 +156,16 @@ public class SDCClassLoader extends BlackListURLClassLoader {
       System.err.println(getClass().getSimpleName() + " " + getName() + ": system classes: " + this.systemClasses);
     }
     this.applicationClasses = applicationClasses;
+    this.isPrivate = isPrivate;
     if(debug) {
       System.err.println(getClass().getSimpleName() + " " + getName() + ": application classes: " + this.applicationClasses);
     }
   }
 
   public SDCClassLoader(String type, String name, List<URL> urls, ClassLoader parent,
-                        String[] blacklistedPackages, String systemClasses, String applicationClasses) {
+                        String[] blacklistedPackages, String systemClasses, String applicationClasses, boolean isPrivate) {
     this(type, name, urls, parent, Arrays.asList(getTrimmedStrings(systemClasses)),
-      Arrays.asList(getTrimmedStrings(applicationClasses)), blacklistedPackages);
+      Arrays.asList(getTrimmedStrings(applicationClasses)), blacklistedPackages, isPrivate);
   }
 
   @Override
@@ -390,18 +395,32 @@ public class SDCClassLoader extends BlackListURLClassLoader {
 
   public static SDCClassLoader getAPIClassLoader(List<URL> apiURLs, ClassLoader parent) {
     return new SDCClassLoader("api-lib", "API", apiURLs, parent, null,
-      SDCClassLoader.SYSTEM_API_CLASSES_DEFAULT, SDCClassLoader.APPLICATION_API_CLASSES_DEFAULT);
+      SDCClassLoader.SYSTEM_API_CLASSES_DEFAULT, SDCClassLoader.APPLICATION_API_CLASSES_DEFAULT, false);
   }
 
   public static SDCClassLoader getContainerCLassLoader(List<URL> containerURLs, ClassLoader apiCL) {
     return new SDCClassLoader("container-lib", "Container", containerURLs, apiCL, null,
-      SDCClassLoader.SYSTEM_CONTAINER_CLASSES_DEFAULT, SDCClassLoader.APPLICATION_CONTAINER_CLASSES_DEFAULT);
+      SDCClassLoader.SYSTEM_CONTAINER_CLASSES_DEFAULT, SDCClassLoader.APPLICATION_CONTAINER_CLASSES_DEFAULT, false);
 
   }
 
   public static SDCClassLoader getStageClassLoader(String type, String name, List<URL> libURLs, ClassLoader apiCL) {
+    return getStageClassLoader(type, name, libURLs, apiCL, false);
+  }
+
+  public static SDCClassLoader getStageClassLoader(String type, String name, List<URL> libURLs, ClassLoader apiCL,
+      boolean isPrivate) {
     return new SDCClassLoader(type, name, libURLs, apiCL, PACKAGES_BLACKLIST_FOR_STAGE_LIBRARIES,
-      SDCClassLoader.SYSTEM_STAGE_CLASSES_DEFAULT, SDCClassLoader.APPLICATION_STAGE_CLASSES_DEFAULT);
+      SDCClassLoader.SYSTEM_STAGE_CLASSES_DEFAULT, SDCClassLoader.APPLICATION_STAGE_CLASSES_DEFAULT, isPrivate);
 
   }
+
+  public SDCClassLoader duplicateStageClassLoader() {
+    return getStageClassLoader(getType(), getName(), urls, parent, true);
+  }
+
+  public boolean isPrivate() {
+    return isPrivate;
+  }
+
 }

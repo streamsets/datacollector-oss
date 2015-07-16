@@ -8,6 +8,7 @@ package com.streamsets.pipeline;
 import org.junit.Assert;
 import org.junit.Test;
 
+import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.net.URLClassLoader;
@@ -30,7 +31,7 @@ public class TestSDCClassloader {
 
     public CallStoringURLClassLoader(ClassLoader parent, String systemClasses, String appClasses) {
       super("test", "somecl", Arrays.<URL>asList(), parent,
-        new String[0], systemClasses, appClasses);
+        new String[0], systemClasses, appClasses, false);
     }
 
     @Override
@@ -136,4 +137,17 @@ public class TestSDCClassloader {
     Assert.assertEquals(expectedCallsToParent, actualCallsToParent);
     actualCallsToParent.clear();
   }
+
+  // we are expecting a ClassFormatError because the class file is invalid
+  @Test(expected = ClassFormatError.class)
+  public void testDuplicateStageClassLoader() throws Exception {
+    File dir = TestBlackListURLClassLoader.getBaseDir();
+    SDCClassLoader cl = SDCClassLoader.getStageClassLoader("foo", "bar", Arrays.asList(dir.toURI().toURL()),
+                                                           getClass().getClassLoader());
+    Assert.assertFalse(cl.isPrivate());
+    cl = cl.duplicateStageClassLoader();
+    Assert.assertTrue(cl.isPrivate());
+    cl.loadClass("x.y.Dummy");
+  }
+
 }
