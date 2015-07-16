@@ -32,7 +32,8 @@ import java.util.Map;
     version = "1.0.0",
     label = "Hadoop FS",
     description = "Writes to a Hadoop file system",
-    icon = "hdfs.png"
+    icon = "hdfs.png",
+    privateClassLoader = true
 )
 @ConfigGroups(Groups.class)
 @GenerateResourceBundle

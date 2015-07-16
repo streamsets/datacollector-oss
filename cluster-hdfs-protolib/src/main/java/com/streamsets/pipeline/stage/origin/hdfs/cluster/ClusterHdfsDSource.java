@@ -31,7 +31,8 @@ import com.streamsets.pipeline.lib.parser.log.RegExConfig;
     label = "Hadoop FS",
     description = "Reads data from Hadoop file system",
     execution = ExecutionMode.CLUSTER,
-    icon = "hdfs.png"
+    icon = "hdfs.png",
+    privateClassLoader = true
 )
 @ConfigGroups(value = Groups.class)
 @GenerateResourceBundle
