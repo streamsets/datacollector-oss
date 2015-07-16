@@ -1,10 +1,11 @@
 package com.streamsets.dc.flume.cluster;
 
 import com.google.common.io.Resources;
-import com.streamsets.dc.util.VerifyUtils;
 import com.streamsets.dc.MiniSDC;
-import com.streamsets.pipeline.lib.KafkaTestUtil;
 import com.streamsets.dc.util.ClusterUtil;
+import com.streamsets.dc.util.TestUtil;
+import com.streamsets.dc.util.VerifyUtils;
+import com.streamsets.pipeline.lib.KafkaTestUtil;
 import kafka.javaapi.producer.Producer;
 import kafka.producer.KeyedMessage;
 import org.apache.flume.Channel;
@@ -23,8 +24,6 @@ import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import java.io.IOException;
-import java.net.ServerSocket;
 import java.net.URI;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
@@ -76,7 +75,7 @@ public class TestKafkaToFlume {
 
     Context context = new Context();
     //This should match whats present in the pipeline.json file
-    flumePort = getFreePort();
+    flumePort = TestUtil.getFreePort();
     context.put("port", String.valueOf(flumePort));
     context.put("bind", "localhost");
     Configurables.configure(source, context);
@@ -148,13 +147,6 @@ public class TestKafkaToFlume {
       transaction.commit();
       transaction.close();
     }
-  }
-
-  public static int getFreePort() throws IOException {
-    ServerSocket serverSocket = new ServerSocket(0);
-    int port = serverSocket.getLocalPort();
-    serverSocket.close();
-    return port;
   }
 
 }
