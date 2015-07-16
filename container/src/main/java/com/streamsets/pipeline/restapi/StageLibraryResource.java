@@ -111,7 +111,7 @@ public class StageLibraryResource {
   public Response getIcon(@QueryParam("name") String name,
                           @QueryParam("library") String library,
                           @QueryParam("version") String version) {
-    StageDefinition stage = Utils.checkNotNull(stageLibrary.getStage(library, name, version),
+    StageDefinition stage = Utils.checkNotNull(stageLibrary.getStage(library, name, version, false),
       Utils.formatL("Could not find stage library: {}, name: {}, version: {}", library, name, version));
     String iconFile = DEFAULT_ICON_FILE;
     String responseType = SVG_MEDIA_TYPE;

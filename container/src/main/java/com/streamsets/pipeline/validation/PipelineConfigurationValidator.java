@@ -162,7 +162,7 @@ public class PipelineConfigurationValidator {
         IssueCreator issueCreator = (errorStage) ? IssueCreator.getStage(stageConf.getInstanceName())
                                                  : IssueCreator.getStage(stageConf.getInstanceName());
         StageDefinition stageDef = stageLibrary.getStage(stageConf.getLibrary(), stageConf.getStageName(),
-                                                         stageConf.getStageVersion());
+                                                         stageConf.getStageVersion(), false);
         if (stageDef != null) {
           if (!stageDef.getExecutionModes().contains(configs.executionMode)) {
             issues.add(issueCreator.create(ValidationError.VALIDATION_0071, stageConf.getStageName(),
@@ -259,7 +259,7 @@ public class PipelineConfigurationValidator {
       IssueCreator issueCreator) {
     boolean preview = true;
     StageDefinition stageDef = stageLibrary.getStage(stageConf.getLibrary(), stageConf.getStageName(),
-      stageConf.getStageVersion());
+      stageConf.getStageVersion(), false);
     if (stageDef == null) {
       // stage configuration refers to an undefined stage definition
       issues.add(issueCreator.create(stageConf.getInstanceName(), ValidationError.VALIDATION_0006,

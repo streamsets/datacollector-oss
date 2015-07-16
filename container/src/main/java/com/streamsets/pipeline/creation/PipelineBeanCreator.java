@@ -78,14 +78,16 @@ public abstract class PipelineBeanCreator {
     List<StageBean> stages = new ArrayList<>();
     if (pipelineConfigBean != null && pipelineConfigBean.constants != null) {
       for (StageConfiguration stageConf : pipelineConf.getStages()) {
-        StageBean stageBean = createStageBean(library, stageConf, false, pipelineConfigBean.constants, errors);
+        StageBean stageBean = createStageBean(forExecution, library, stageConf, false, pipelineConfigBean.constants,
+                                              errors);
         if (stageBean != null) {
           stages.add(stageBean);
         }
       }
       StageConfiguration errorStageConf = pipelineConf.getErrorStage();
       if (errorStageConf != null) {
-        errorStageBean = createStageBean(library, errorStageConf, true, pipelineConfigBean.constants, errors);
+        errorStageBean = createStageBean(forExecution, library, errorStageConf, true, pipelineConfigBean.constants,
+                                         errors);
       } else {
         errors.add(IssueCreator.getPipeline().create(PipelineGroups.BAD_RECORDS.name(), "badRecordsHandling",
                                                      CreationError.CREATION_009));
@@ -94,13 +96,13 @@ public abstract class PipelineBeanCreator {
     return (errors.size() == priorErrors) ? new PipelineBean(pipelineConfigBean, stages, errorStageBean) : null;
   }
 
-  StageBean createStageBean(StageLibraryTask library, StageConfiguration stageConf, boolean errorStage,
-      Map<String, Object> constants, List<Issue> errors) {
+  StageBean createStageBean(boolean forExecution, StageLibraryTask library, StageConfiguration stageConf,
+      boolean errorStage, Map<String, Object> constants, List<Issue> errors) {
     IssueCreator issueCreator = (errorStage) ? IssueCreator.getStage(stageConf.getInstanceName())
                                              : IssueCreator.getStage(stageConf.getInstanceName());
     StageBean bean = null;
     StageDefinition stageDef = library.getStage(stageConf.getLibrary(), stageConf.getStageName(),
-                                                stageConf.getStageVersion());
+                                                stageConf.getStageVersion(), forExecution);
     if (stageDef != null) {
       if (stageDef.isErrorStage() != errorStage) {
         if (stageDef.isErrorStage()) {

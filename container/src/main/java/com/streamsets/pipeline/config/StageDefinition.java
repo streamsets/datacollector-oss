@@ -23,6 +23,7 @@ import java.util.Map;
 public class StageDefinition {
   private final StageLibraryDefinition libraryDefinition;
   private final boolean privateClassLoader;
+  private final ClassLoader classLoader;
   private final Class klass;
   private final String name;
   private final String version;
@@ -45,13 +46,15 @@ public class StageDefinition {
   private final boolean recordsByRef;
 
   // localized version
-  private StageDefinition(StageLibraryDefinition libraryDefinition, boolean privateClassLoader, Class klass, String name,
+  private StageDefinition(StageLibraryDefinition libraryDefinition, boolean privateClassLoader, ClassLoader classLoader,
+      Class klass, String name,
       String version, String label, String description, StageType type, boolean errorStage, boolean preconditions,
       boolean onRecordError, List<ConfigDefinition> configDefinitions, RawSourceDefinition rawSourceDefinition,
       String icon, ConfigGroupDefinition configGroupDefinition, boolean variableOutputStreams, int outputStreams,
       List<String> outputStreamLabels, List<ExecutionMode> executionModes, boolean recordsByRef) {
     this.libraryDefinition = libraryDefinition;
     this.privateClassLoader = privateClassLoader;
+    this.classLoader = classLoader;
     this.klass = klass;
     this.name = name;
     this.version = version;
@@ -86,7 +89,36 @@ public class StageDefinition {
     this.recordsByRef = recordsByRef;
   }
 
-  public StageDefinition(StageLibraryDefinition libraryDefinition, boolean privateClassLoader, Class klass, String name,
+  public StageDefinition(StageDefinition def, ClassLoader classLoader) {
+    libraryDefinition = def.libraryDefinition;
+    privateClassLoader = def.privateClassLoader;
+    this.classLoader = classLoader;
+    try {
+      klass = classLoader.loadClass(def.getClassName());
+    } catch (Exception ex) {
+      throw new Error(ex);
+    }
+    name = def.name;
+    version = def.version;
+    label = def.label;
+    description = def.description;
+    type = def.type;
+    errorStage = def.errorStage;
+    preconditions = def.preconditions;
+    onRecordError = def.onRecordError;
+    configDefinitions = def.configDefinitions;
+    rawSourceDefinition = def.rawSourceDefinition;
+    configDefinitionsMap = def.configDefinitionsMap;
+    icon = def.icon;
+    configGroupDefinition = def.configGroupDefinition;
+    variableOutputStreams = def.variableOutputStreams;
+    outputStreams = def.outputStreams;
+    outputStreamLabelProviderClass = def.outputStreamLabelProviderClass;
+    executionModes = def.executionModes;
+    recordsByRef = def.recordsByRef;
+  }
+
+    public StageDefinition(StageLibraryDefinition libraryDefinition, boolean privateClassLoader, Class klass, String name,
       String version,
       String label, String description,
       StageType type, boolean errorStage, boolean preconditions, boolean onRecordError,
@@ -95,6 +127,7 @@ public class StageDefinition {
       String outputStreamLabelProviderClass, List<ExecutionMode> executionModes, boolean recordsByRef) {
     this.libraryDefinition = libraryDefinition;
     this.privateClassLoader = privateClassLoader;
+    this.classLoader = libraryDefinition.getClassLoader();
     this.klass = klass;
     this.name = name;
     this.version = version;
@@ -149,7 +182,7 @@ public class StageDefinition {
   }
 
   public ClassLoader getStageClassLoader() {
-    return libraryDefinition.getClassLoader();
+    return classLoader;
   }
 
   public boolean isPrivateClassLoader() {
@@ -345,8 +378,8 @@ public class StageDefinition {
       streamLabels = getLocalizedOutputStreamLabels(classLoader);
     }
 
-    return new StageDefinition(libraryDefinition, privateClassLoader, getStageClass(), getName(), getVersion(), label,
-                               description, getType(), isErrorStage(),
+    return new StageDefinition(libraryDefinition, privateClassLoader, getStageClassLoader(), getStageClass(), getName(),
+                               getVersion(), label, description, getType(), isErrorStage(),
                                hasPreconditions(), hasOnRecordError(), configDefs, rawSourceDef, getIcon(), groupDefs,
                                isVariableOutputStreams(), getOutputStreams(), streamLabels, executionModes, recordsByRef);
   }

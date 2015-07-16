@@ -27,6 +27,13 @@ import com.streamsets.pipeline.json.ObjectMapperFactory;
 import com.streamsets.pipeline.main.RuntimeInfo;
 import com.streamsets.pipeline.task.AbstractTask;
 
+import com.streamsets.pipeline.util.Configuration;
+import org.apache.commons.pool2.BaseKeyedPooledObjectFactory;
+import org.apache.commons.pool2.KeyedObjectPool;
+import org.apache.commons.pool2.PooledObject;
+import org.apache.commons.pool2.impl.DefaultPooledObject;
+import org.apache.commons.pool2.impl.GenericKeyedObjectPool;
+import org.apache.commons.pool2.impl.GenericKeyedObjectPoolConfig;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -34,6 +41,7 @@ import javax.inject.Inject;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.lang.reflect.Method;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Enumeration;
@@ -44,24 +52,98 @@ import java.util.Map;
 import java.util.concurrent.ExecutionException;
 
 public class ClassLoaderStageLibraryTask extends AbstractTask implements StageLibraryTask {
+  public static final String MAX_PRIVATE_STAGE_CLASS_LOADERS_KEY = "max.stage.private.classloaders";
+  public static final int MAX_PRIVATE_STAGE_CLASS_LOADERS_DEFAULT = 50;
+
   private static final Logger LOG = LoggerFactory.getLogger(ClassLoaderStageLibraryTask.class);
 
   private final RuntimeInfo runtimeInfo;
+  private final Configuration configuration;
   private List<? extends ClassLoader> stageClassLoaders;
   private Map<String, StageDefinition> stageMap;
   private List<StageDefinition> stageList;
   private LoadingCache<Locale, List<StageDefinition>> localizedStageList;
   private ObjectMapper json;
+  private KeyedObjectPool<String, ClassLoader> privateClassLoaderPool;
 
   @Inject
-  public ClassLoaderStageLibraryTask(RuntimeInfo runtimeInfo) {
+  public ClassLoaderStageLibraryTask(RuntimeInfo runtimeInfo, Configuration configuration) {
     super("stageLibrary");
     this.runtimeInfo = runtimeInfo;
+    this.configuration = configuration;
+  }
+
+  private Method duplicateClassLoaderMethod;
+  private Method getClassLoaderKeyMethod;
+  private Method isPrivateClassLoaderMethod;
+
+  private void resolveClassLoaderMethods(ClassLoader cl) {
+    if (cl.getClass().getSimpleName().equals("SDCClassLoader")) {
+      try {
+        duplicateClassLoaderMethod = cl.getClass().getMethod("duplicateStageClassLoader");
+        getClassLoaderKeyMethod = cl.getClass().getMethod("getName");
+        isPrivateClassLoaderMethod = cl.getClass().getMethod("isPrivate");
+      } catch (Exception ex) {
+        throw new Error(ex);
+      }
+    } else {
+      LOG.warn("No SDCClassLoaders available, there is no class isolation");
+    }
+  }
+
+  @SuppressWarnings("unchecked")
+  private <T> T invoke(Method method, ClassLoader cl, Class<T> returnType) {
+    try {
+      return (T) method.invoke(cl);
+    } catch (Exception ex) {
+      throw new Error(ex);
+    }
+  }
+
+  private ClassLoader duplicateClassLoader(ClassLoader cl) {
+    return (duplicateClassLoaderMethod == null) ? cl : invoke(duplicateClassLoaderMethod, cl, ClassLoader.class);
+  }
+
+  private String getClassLoaderKey(ClassLoader cl) {
+    return (getClassLoaderKeyMethod == null) ? "key" : invoke(getClassLoaderKeyMethod, cl, String.class);
+  }
+
+  private boolean isPrivateClassLoader(ClassLoader cl) {
+    if (cl != getClass().getClassLoader()) { // if we are the container CL we are not private for sure
+      return (isPrivateClassLoaderMethod == null) ? false : invoke(isPrivateClassLoaderMethod, cl, Boolean.class);
+    } else {
+      return  false;
+    }
+  }
+
+  private class ClassLoaderFactory extends BaseKeyedPooledObjectFactory<String, ClassLoader> {
+    private final Map<String, ClassLoader> classLoaderMap;
+
+    public ClassLoaderFactory(List<? extends ClassLoader> classLoaders) {
+      classLoaderMap = new HashMap<>();
+      for (ClassLoader cl : classLoaders) {
+        classLoaderMap.put(getClassLoaderKey(cl), cl);
+      }
+    }
+
+    @Override
+    public ClassLoader create(String key) throws Exception {
+      return duplicateClassLoader(classLoaderMap.get(key));
+    }
+
+    @Override
+    public PooledObject<ClassLoader> wrap(ClassLoader value) {
+      return new DefaultPooledObject<>(value);
+    }
   }
 
   @Override
   public void initTask() {
+    super.initTask();
     stageClassLoaders = runtimeInfo.getStageLibraryClassLoaders();
+    if (!stageClassLoaders.isEmpty()) {
+      resolveClassLoaderMethods(stageClassLoaders.get(0));
+    }
     json = ObjectMapperFactory.get();
     stageList = new ArrayList<>();
     stageMap = new HashMap<>();
@@ -84,6 +166,25 @@ public class ClassLoaderStageLibraryTask extends AbstractTask implements StageLi
     // initializing the list of targets that can be used for error handling
     ErrorHandlingChooserValues.setErrorHandlingOptions(this);
 
+    // initializing the pool of private stage classloaders
+    GenericKeyedObjectPoolConfig poolConfig = new GenericKeyedObjectPoolConfig();
+    poolConfig.setJmxEnabled(false);
+    poolConfig.setMaxTotal(configuration.get(MAX_PRIVATE_STAGE_CLASS_LOADERS_KEY,
+                                             MAX_PRIVATE_STAGE_CLASS_LOADERS_DEFAULT));
+    poolConfig.setMinEvictableIdleTimeMillis(-1);
+    poolConfig.setNumTestsPerEvictionRun(0);
+    poolConfig.setMaxIdlePerKey(-1);
+    poolConfig.setMinIdlePerKey(0);
+    poolConfig.setMaxTotalPerKey(-1);
+    poolConfig.setBlockWhenExhausted(false);
+    poolConfig.setMaxWaitMillis(0);
+    privateClassLoaderPool = new GenericKeyedObjectPool<>(new ClassLoaderFactory(stageClassLoaders), poolConfig);
+  }
+
+  @Override
+  protected void stopTask() {
+    privateClassLoaderPool.close();
+    super.stopTask();
   }
 
   @VisibleForTesting
@@ -191,18 +292,46 @@ public class ClassLoaderStageLibraryTask extends AbstractTask implements StageLi
 
   @Override
   @SuppressWarnings("unchecked")
-  public StageDefinition getStage(String library, String name, String version) {
-    return stageMap.get(createKey(library, name, version));
+  public StageDefinition getStage(String library, String name, String version, boolean forExecution) {
+    StageDefinition def = stageMap.get(createKey(library, name, version));
+    if (forExecution &&  def.isPrivateClassLoader()) {
+      def = new StageDefinition(def, getStageClassLoader(def));
+    }
+    return def;
   }
 
-  @Override
-  public ClassLoader getStageClassLoader(StageDefinition stageDefinition) {
-    return stageDefinition.getStageClassLoader(); //TODO get private classloader if necessary
+  ClassLoader getStageClassLoader(StageDefinition stageDefinition) {
+    ClassLoader cl = stageDefinition.getStageClassLoader();
+    if (stageDefinition.isPrivateClassLoader()) {
+      String key = getClassLoaderKey(cl);
+      try {
+        cl = privateClassLoaderPool.borrowObject(key);
+        LOG.debug("Got a private ClassLoader for '{}', for stage '{}', active private ClassLoaders='{}'",
+                  key, stageDefinition.getName(), privateClassLoaderPool.getNumActive());
+      } catch (Exception ex) {
+        LOG.warn("Could not get a private ClassLoader for '{}', for stage '{}', active private ClassLoaders='{}'",
+                 key, stageDefinition.getName(), privateClassLoaderPool.getNumActive());
+        throw new RuntimeException(ex);
+      }
+    }
+    return cl;
   }
 
   @Override
   public void releaseStageClassLoader(ClassLoader classLoader) {
-    //TODO release if private classloader
+    if (isPrivateClassLoader(classLoader)) {
+      String key = getClassLoaderKey(classLoader);
+      try {
+        LOG.debug("Returning private ClassLoader for '{}'", key);
+        privateClassLoaderPool.returnObject(key, classLoader);
+        LOG.debug("Returned a private ClassLoader for '{}', active private ClassLoaders='{}'",
+                  key, privateClassLoaderPool.getNumActive());
+      } catch (Exception ex) {
+        LOG.warn("Could not return a private ClassLoader for '{}', active private ClassLoaders='{}'",
+                 key, privateClassLoaderPool.getNumActive());
+        throw new RuntimeException(ex);
+      }
+    }
   }
 
 }

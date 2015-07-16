@@ -457,7 +457,7 @@ public class FilePipelineStoreTask extends AbstractTask implements PipelineStore
     //get the definition of this stage from the stage library. This is the source of truth.
     //The configuration object must adhere to this definition.
     StageDefinition stageDef = stageLibrary.getStage(argStageConf.getLibrary(), argStageConf.getStageName(),
-      argStageConf.getStageVersion());
+      argStageConf.getStageVersion(), false);
 
     if(stageDef == null) {
       //Encountered a stage whose definition is not available - can happen if the pipeline was designed in an

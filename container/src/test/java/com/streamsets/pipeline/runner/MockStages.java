@@ -431,18 +431,13 @@ public class MockStages {
     }
 
     @Override
-    public StageDefinition getStage(String library, String name, String version) {
+    public StageDefinition getStage(String library, String name, String version, boolean forExecution) {
       for (StageDefinition def : stages) {
         if (def.getLibrary().equals(library) && def.getName().equals(name) && def.getVersion().equals(version)) {
           return def;
         }
       }
       return null;
-    }
-
-    @Override
-    public ClassLoader getStageClassLoader(StageDefinition stageDefinition) {
-      return stageDefinition.getStageClassLoader();
     }
 
     @Override

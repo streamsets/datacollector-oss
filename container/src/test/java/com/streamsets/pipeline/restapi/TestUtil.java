@@ -142,8 +142,10 @@ public class TestUtil {
         StageType.TARGET, false, true, true, Collections.<ConfigDefinition>emptyList(), null/*raw source definition*/,
         "TargetIcon.svg", null, false, 0, null, Arrays.asList(ExecutionMode.CLUSTER,
                                                               ExecutionMode.STANDALONE), false);
-    Mockito.when(lib.getStage(Mockito.eq("library"), Mockito.eq("source"), Mockito.eq("1.0.0"))).thenReturn(sourceDef);
-    Mockito.when(lib.getStage(Mockito.eq("library"), Mockito.eq("target"), Mockito.eq("1.0.0"))).thenReturn(targetDef);
+    Mockito.when(lib.getStage(Mockito.eq("library"), Mockito.eq("source"), Mockito.eq("1.0.0"), Mockito.eq(false)))
+           .thenReturn(sourceDef);
+    Mockito.when(lib.getStage(Mockito.eq("library"), Mockito.eq("target"), Mockito.eq("1.0.0"), Mockito.eq(false)))
+           .thenReturn(targetDef);
 
     List<StageDefinition> stages = new ArrayList<>(2);
     stages.add(sourceDef);

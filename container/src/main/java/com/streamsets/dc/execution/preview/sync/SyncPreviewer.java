@@ -232,7 +232,7 @@ public class SyncPreviewer implements Previewer {
     StageDefinition sourceStageDef = null;
     for(StageConfiguration stageConf : pipelineConf.getStages()) {
       StageDefinition stageDefinition = stageLibrary.getStage(stageConf.getLibrary(), stageConf.getStageName(),
-        stageConf.getStageVersion());
+        stageConf.getStageVersion(), false);
       if(stageDefinition.getType() == StageType.SOURCE) {
         sourceStageDef = stageDefinition;
       }

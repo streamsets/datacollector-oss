@@ -427,8 +427,10 @@ public class TestPipelineBeanCreator {
     StageDefinition stageDef = StageDefinitionExtractor.get().extract(libraryDef, MyTarget.class, "");
     StageDefinition errorStageDef = StageDefinitionExtractor.get().extract(libraryDef, ErrorMyTarget.class, "");
     StageLibraryTask library = Mockito.mock(StageLibraryTask.class);
-    Mockito.when(library.getStage(Mockito.eq("l"), Mockito.eq("s"), Mockito.eq("v"))).thenReturn(stageDef);
-    Mockito.when(library.getStage(Mockito.eq("l"), Mockito.eq("e"), Mockito.eq("v"))).thenReturn(errorStageDef);
+    Mockito.when(library.getStage(Mockito.eq("l"), Mockito.eq("s"), Mockito.eq("v"), Mockito.eq(false)))
+           .thenReturn(stageDef);
+    Mockito.when(library.getStage(Mockito.eq("l"), Mockito.eq("e"), Mockito.eq("v"), Mockito.eq(false)))
+           .thenReturn(errorStageDef);
     Mockito.when(libraryDef.getClassLoader()).thenReturn(Thread.currentThread().getContextClassLoader());
 
     List<ConfigConfiguration> pipelineConfigs = ImmutableList.of(

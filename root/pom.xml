@@ -68,6 +68,7 @@
     <minikdc-hadoop.version>2.6.0</minikdc-hadoop.version>
     <minikdc-jdbm1.version>2.0.0-M3</minikdc-jdbm1.version>
     <swagger.version>1.5.0</swagger.version>
+    <commons-pool.version>2.4.1</commons-pool.version>
   </properties>
 
   <dependencyManagement>
@@ -471,6 +472,12 @@
         <groupId>io.swagger</groupId>
         <artifactId>swagger-jersey2-jaxrs</artifactId>
         <version>${swagger.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>org.apache.commons</groupId>
+        <artifactId>commons-pool2</artifactId>
+        <version>${commons-pool.version}</version>
       </dependency>
 
     </dependencies>
