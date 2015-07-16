@@ -54,8 +54,10 @@ public class SyslogParser extends AbstractParser {
   static final String HOST = "host";
   static final String REMAINING = "remaining";
   static final String RAW = "raw";
-  static final String READER_PORT = "readerPort";
-  static final String READERID = "readerId";
+  static final String RECEIVER_PORT = "receiverPort";
+  static final String RECEIVER_ADDR = "receiverAddr";
+  static final String SENDER_PORT = "senderPort";
+  static final String SENDER_ADDR = "senderAddr";
   private static final Field EMPTY_STRING = Field.create("");
   private static final Field SYSLOG_VERSION1 = Field.create(1);
   private static final Pattern TWO_SPACES = Pattern.compile("  ");
@@ -173,14 +175,21 @@ public class SyslogParser extends AbstractParser {
     } else {
       fields.put(REMAINING, EMPTY_STRING);
     }
-    String readerHost = recipient.getHostString();
-    if (readerHost == null) {
-      readerHost = recipient.toString();
+    String receiverHost = recipient.getHostString();
+    if (receiverHost == null) {
+      receiverHost = recipient.toString();
     }
-    Field readerId = Field.create(readerHost + ":" + recipient.getPort());
-    fields.put(READERID, readerId);
-    fields.put(READER_PORT, Field.create(recipient.getPort()));
-    Record record = context.createRecord(readerId.getValueAsString() + "::" + recordId++);
+    Field receiverAddr = Field.create(receiverHost + ":" + recipient.getPort());
+    fields.put(RECEIVER_ADDR, receiverAddr);
+    fields.put(RECEIVER_PORT, Field.create(recipient.getPort()));
+    String senderHost = sender.getHostString();
+    if (senderHost == null) {
+      senderHost = sender.toString();
+    }
+    Field senderAddr = Field.create(senderHost + ":" + sender.getPort());
+    fields.put(SENDER_ADDR, senderAddr);
+    fields.put(SENDER_PORT, Field.create(sender.getPort()));
+    Record record = context.createRecord(senderAddr.getValueAsString() + "::" + recordId++);
     record.set(Field.create(fields));
     return Arrays.asList(record);
   }

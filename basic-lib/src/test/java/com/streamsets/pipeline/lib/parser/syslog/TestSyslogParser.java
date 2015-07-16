@@ -102,7 +102,9 @@ public class TestSyslogParser {
       Assert.assertEquals("Failure to parse known-good syslog message",
         msg, records.get(0).get("/raw").getValueAsString());
       Assert.assertEquals("Failure to parse known-good syslog message",
-        "localhost:5000", records.get(0).get("/readerId").getValueAsString());
+        "localhost:5000", records.get(0).get("/receiverAddr").getValueAsString());
+      Assert.assertEquals("Failure to parse known-good syslog message",
+        "localhost:50000", records.get(0).get("/senderAddr").getValueAsString());
       Assert.assertNotNull("Failure to parse known-good syslog message",
         records.get(0).get("/host").getValueAsString());
     }
