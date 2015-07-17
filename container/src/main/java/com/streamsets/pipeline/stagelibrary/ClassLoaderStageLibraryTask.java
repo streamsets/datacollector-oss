@@ -223,8 +223,8 @@ public class ClassLoaderStageLibraryTask extends AbstractTask implements StageLi
                 Class<? extends Stage> klass = (Class<? extends Stage>) cl.loadClass(className);
                 StageDefinition stage = StageDefinitionExtractor.get().
                     extract(libDef, klass, Utils.formatL("Library='{}'", libDef.getName()));
-                String key = createKey(libDef.getName(), stage.getName(), stage.getVersion());
-                LOG.debug("Loaded stage '{}' (library:name:version)", key);
+                String key = createKey(libDef.getName(), stage.getName());
+                LOG.debug("Loaded stage '{}' (library:name)", key);
                 if (stagesInLibrary.containsKey(key)) {
                   throw new IllegalStateException(Utils.format(
                       "Library '{}' contains more than one definition for stage '{}', class '{}' and class '{}'",
@@ -271,8 +271,8 @@ public class ClassLoaderStageLibraryTask extends AbstractTask implements StageLi
     }
   }
 
-  private String createKey(String library, String name, int version) {
-    return library + ":" + name + ":" + version;
+  private String createKey(String library, String name) {
+    return library + ":" + name;
   }
 
   @Override
@@ -292,8 +292,8 @@ public class ClassLoaderStageLibraryTask extends AbstractTask implements StageLi
 
   @Override
   @SuppressWarnings("unchecked")
-  public StageDefinition getStage(String library, String name, int version, boolean forExecution) {
-    StageDefinition def = stageMap.get(createKey(library, name, version));
+  public StageDefinition getStage(String library, String name, boolean forExecution) {
+    StageDefinition def = stageMap.get(createKey(library, name));
     if (forExecution &&  def.isPrivateClassLoader()) {
       def = new StageDefinition(def, getStageClassLoader(def));
     }

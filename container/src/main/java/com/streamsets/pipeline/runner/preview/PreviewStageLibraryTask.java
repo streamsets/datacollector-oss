@@ -49,12 +49,12 @@ public class PreviewStageLibraryTask extends TaskWrapper implements StageLibrary
   }
 
   @Override
-  public StageDefinition getStage(String library, String name, int version, boolean forExecution) {
+  public StageDefinition getStage(String library, String name, boolean forExecution) {
     StageDefinition def;
-    if (LIBRARY.equals(library) && NAME.equals(name) && VERSION == version) {
+    if (LIBRARY.equals(library) && NAME.equals(name)) {
       def = PLUG_STAGE;
     } else {
-      def = this.library.getStage(library, name, version, forExecution);
+      def = this.library.getStage(library, name, forExecution);
     }
     return def;
   }

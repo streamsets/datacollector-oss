@@ -19,6 +19,6 @@ public interface StageLibraryTask extends Task, ClassLoaderReleaser {
 
   public List<StageDefinition> getStages();
 
-  public StageDefinition getStage(String library, String name, int version, boolean forExecution);
+  public StageDefinition getStage(String library, String name, boolean forExecution);
 
 }

@@ -102,7 +102,7 @@ public abstract class PipelineBeanCreator {
                                              : IssueCreator.getStage(stageConf.getInstanceName());
     StageBean bean = null;
     StageDefinition stageDef = library.getStage(stageConf.getLibrary(), stageConf.getStageName(),
-                                                stageConf.getStageVersion(), forExecution);
+                                                forExecution);
     if (stageDef != null) {
       if (stageDef.isErrorStage() != errorStage) {
         if (stageDef.isErrorStage()) {

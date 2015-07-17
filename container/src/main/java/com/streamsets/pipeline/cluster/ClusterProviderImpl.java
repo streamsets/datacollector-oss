@@ -256,7 +256,7 @@ public class ClusterProviderImpl implements ClusterProvider {
     String pathToSparkKafkaJar = null;
     for (StageConfiguration stageConf : stageConfigurations.build()) {
       StageDefinition stageDef = stageLibrary.getStage(stageConf.getLibrary(), stageConf.getStageName(),
-        stageConf.getStageVersion(), false);
+                                                       false);
       if (stageConf.getInputLanes().isEmpty()) {
         for (ConfigConfiguration conf : stageConf.getConfiguration()) {
           if (conf.getValue() != null) {
