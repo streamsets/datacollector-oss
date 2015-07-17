@@ -134,7 +134,6 @@ public abstract class TestPipelineOperationsStandalone extends TestPipelineOpera
     Assert.assertEquals(8, history.size());
   }
 
-  @Ignore
   @Test
   public void testPreview() throws IOException, InterruptedException {
     URI serverURI = getServerURI();
@@ -143,8 +142,10 @@ public abstract class TestPipelineOperationsStandalone extends TestPipelineOpera
     VerifyUtils.waitForPipelineToStop(serverURI, getPipelineName(), getPipelineRev());
     Assert.assertEquals("STOPPED", VerifyUtils.getPipelineState(serverURI, getPipelineName(), getPipelineRev()));
 
-    Map<String, Object> preview = VerifyUtils.preview(serverURI, getPipelineName(), getPipelineRev());
-    Object batchesOutput = preview.get("batchesOutput");
+    String previewerId = VerifyUtils.preview(serverURI, getPipelineName(), getPipelineRev());
+    VerifyUtils.waitForPreview(serverURI, previewerId);
+    Map<String, Object> previewData = VerifyUtils.getPreviewOutput(serverURI, previewerId);
+    Object batchesOutput = previewData.get("batchesOutput");
     Assert.assertTrue(batchesOutput instanceof List);
     //This is list list of StageOuts
     List<?> batchesOutputList = (List<?>) batchesOutput;

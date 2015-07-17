@@ -88,6 +88,9 @@ public class PreviewResource {
       @ApiParam(name="stageOutputsToOverrideJson", required = true)  List<StageOutputJson> stageOutputsToOverrideJson)
       throws PipelineException, StageException {
 
+    if (stageOutputsToOverrideJson == null) {
+      stageOutputsToOverrideJson = Collections.EMPTY_LIST;
+    }
     Utils.checkState(runtimeInfo.getExecutionMode() != RuntimeInfo.ExecutionMode.SLAVE,
       "This operation is not supported in SLAVE mode");
 

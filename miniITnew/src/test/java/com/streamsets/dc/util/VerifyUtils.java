@@ -15,9 +15,11 @@ import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.GenericType;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URI;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -163,11 +165,33 @@ public class VerifyUtils {
     return response.readEntity(new GenericType<Map<String, List<List<Map<String, Object>>>>>() {});
   }
 
-  public static Map<String, Object> preview(URI serverURI, String pipelineName, String rev)
+  public static String preview(URI serverURI, String pipelineName, String rev)
     throws MalformedURLException {
     Client client = ClientBuilder.newClient();
-    WebTarget target = client.target(serverURI.toURL().toString()).path("/rest/v1/pipeline-library/" + pipelineName
-      + "/" + "preview").queryParam("rev", rev).queryParam("batchSize", 10);
+    WebTarget target = client.target(serverURI.toURL().toString()).path("/rest/v1/preview/" + pipelineName
+      + "/" + "create").queryParam("rev", rev);
+    Response response = target.request(MediaType.APPLICATION_JSON_TYPE).post(Entity.entity("", MediaType.APPLICATION_JSON));
+    checkResponse(response, Response.Status.OK);
+    Map<String, Object> map = response.readEntity(Map.class);
+    System.out.println("Previewer id " + map.get("previewerId"));
+    return (String)map.get("previewerId");
+  }
+
+  public static boolean isPreviewDone(URI serverURI, String previewerId) throws MalformedURLException {
+    Client client = ClientBuilder.newClient();
+    WebTarget target =
+      client.target(serverURI.toURL().toString()).path("/rest/v1/preview-id/" + previewerId + "/" + "status");
+    Response response = target.request(MediaType.APPLICATION_JSON_TYPE).get();
+    checkResponse(response, Response.Status.OK);
+    Map<String, Object> map = response.readEntity(Map.class);
+    System.out.println("Status is " + map.get("status"));
+    String status = (String)map.get("status");
+    return status.equals("FINISHED");
+  }
+
+  public static Map<String, Object> getPreviewOutput(URI serverURI, String previewerId) throws MalformedURLException {
+    Client client = ClientBuilder.newClient();
+    WebTarget target = client.target(serverURI.toURL().toString()).path("/rest/v1/preview-id/" + previewerId);
     Response response = target.request(MediaType.APPLICATION_JSON_TYPE).get();
     checkResponse(response, Response.Status.OK);
     System.out.println();
@@ -188,6 +212,13 @@ public class VerifyUtils {
 
   public static void waitForSnapshot(URI serverURI, String name, String rev, String snapshotName) throws InterruptedException, IOException {
     while(!snapShotExists(serverURI, name, rev, snapshotName)) {
+      Thread.sleep(500);
+    }
+  }
+
+  public static void waitForPreview(URI serverURI, String previewerId) throws MalformedURLException,
+    InterruptedException {
+    while (!isPreviewDone(serverURI, previewerId)) {
       Thread.sleep(500);
     }
   }
