@@ -444,8 +444,8 @@ public class TestPipelineBeanCreator {
     StageConfiguration errorStageConf = new StageConfiguration("ei", "l", "e", 1,
         ImmutableList.of(new Config("list", ImmutableList.of("E"))),
         Collections.<String, Object>emptyMap(), Collections.<String>emptyList(), Collections.<String>emptyList());
-    PipelineConfiguration pipelineConf = new PipelineConfiguration(1, UUID.randomUUID(), "D", pipelineConfigs,
-        Collections.EMPTY_MAP, ImmutableList.of(stageConf), errorStageConf);
+    PipelineConfiguration pipelineConf = new PipelineConfiguration(1, PipelineConfigBean.VERSION, UUID.randomUUID(),
+        "D", pipelineConfigs, Collections.EMPTY_MAP, ImmutableList.of(stageConf), errorStageConf);
 
     List<Issue> issues = new ArrayList<>();
     PipelineBean bean = PipelineBeanCreator.get().create(false, library, pipelineConf, issues);

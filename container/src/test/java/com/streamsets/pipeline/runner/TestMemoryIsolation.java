@@ -18,6 +18,7 @@ import com.streamsets.pipeline.api.Config;
 import com.streamsets.pipeline.config.DeliveryGuarantee;
 import com.streamsets.pipeline.config.PipelineConfiguration;
 import com.streamsets.pipeline.config.StageConfiguration;
+import com.streamsets.pipeline.creation.PipelineConfigBean;
 import com.streamsets.pipeline.main.RuntimeInfo;
 import com.streamsets.pipeline.memory.MemoryUsageCollector;
 import com.streamsets.pipeline.memory.TestMemoryUsageCollector;
@@ -61,7 +62,8 @@ public class TestMemoryIsolation {
     pipelineConfigs.add(new Config("deliveryGuarantee", DeliveryGuarantee.AT_LEAST_ONCE));
     pipelineConfigs.add(new Config("stopPipelineOnError", false));
 
-    PipelineConfiguration pipelineConf = new PipelineConfiguration(PipelineStoreTask.SCHEMA_VERSION, UUID.randomUUID(),
+    PipelineConfiguration pipelineConf = new PipelineConfiguration(PipelineStoreTask.SCHEMA_VERSION,
+      PipelineConfigBean.VERSION, UUID.randomUUID(),
       null, pipelineConfigs, null, stageDefs, MockStages.getErrorStageConfig());
     Pipeline.Builder builder = new Pipeline.Builder(lib, "name",  "name", "0", pipelineConf);
 

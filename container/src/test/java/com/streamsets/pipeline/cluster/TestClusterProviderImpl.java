@@ -8,6 +8,7 @@ package com.streamsets.pipeline.cluster;
 import com.streamsets.pipeline.api.Config;
 import com.streamsets.pipeline.config.PipelineConfiguration;
 import com.streamsets.pipeline.config.StageConfiguration;
+import com.streamsets.pipeline.creation.PipelineConfigBean;
 import com.streamsets.pipeline.runner.MockStages;
 import com.streamsets.pipeline.stagelibrary.StageLibraryTask;
 import com.streamsets.pipeline.store.PipelineStoreTask;
@@ -81,8 +82,8 @@ public class TestClusterProviderImpl {
     configs.add(new Config("clusterKerberos", false));
     configs.add(new Config("kerberosPrincipal", ""));
     configs.add(new Config("kerberosKeytab", ""));
-    pipelineConf = new PipelineConfiguration(PipelineStoreTask.SCHEMA_VERSION, UUID.randomUUID(),
-      null, configs, null, new ArrayList<StageConfiguration>(),
+    pipelineConf = new PipelineConfiguration(PipelineStoreTask.SCHEMA_VERSION, PipelineConfigBean.VERSION,
+      UUID.randomUUID(), null, configs, null, new ArrayList<StageConfiguration>(),
       MockStages.getErrorStageConfig());
     File sparkKafkaJar = new File(tempDir, ClusterModeConstants.SPARK_KAFKA_JAR_PREFIX + ".jar");
     Assert.assertTrue(sparkKafkaJar.createNewFile());

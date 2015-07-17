@@ -9,7 +9,6 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.streamsets.pipeline.api.impl.Utils;
-import com.streamsets.pipeline.validation.Issues;
 
 import java.io.Serializable;
 import java.util.List;
@@ -24,6 +23,7 @@ public class PipelineConfigurationJson implements Serializable{
   @SuppressWarnings("unchecked")
   public PipelineConfigurationJson(
     @JsonProperty("schemaVersion") int schemaVersion,
+    @JsonProperty("version") int version,
     @JsonProperty("uuid") UUID uuid,
     @JsonProperty("description") String description,
     @JsonProperty("configuration") List<ConfigConfigurationJson> configuration,
@@ -31,7 +31,9 @@ public class PipelineConfigurationJson implements Serializable{
     @JsonProperty("stages") List<StageConfigurationJson> stages,
     @JsonProperty("errorStage") StageConfigurationJson errorStage,
     @JsonProperty("info") PipelineInfoJson pipelineInfo) {
-    this.pipelineConfiguration = new com.streamsets.pipeline.config.PipelineConfiguration(schemaVersion, uuid, description,
+    version = (version == 0) ? 1 : version;
+    this.pipelineConfiguration = new com.streamsets.pipeline.config.PipelineConfiguration(schemaVersion, version,
+      uuid, description,
       BeanHelper.unwrapConfigConfiguration(configuration), uiInfo, BeanHelper.unwrapStageConfigurations(stages),
       BeanHelper.unwrapStageConfiguration(errorStage));
     this.pipelineConfiguration.setPipelineInfo(BeanHelper.unwrapPipelineInfo(pipelineInfo));
@@ -44,6 +46,10 @@ public class PipelineConfigurationJson implements Serializable{
 
   public int getSchemaVersion() {
     return pipelineConfiguration.getSchemaVersion();
+  }
+
+  public int getVersion() {
+    return pipelineConfiguration.getVersion();
   }
 
   public String getDescription() {

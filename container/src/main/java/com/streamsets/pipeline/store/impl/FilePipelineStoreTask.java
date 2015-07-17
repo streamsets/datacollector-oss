@@ -154,9 +154,9 @@ public class FilePipelineStoreTask extends AbstractTask implements PipelineStore
     Date date = new Date();
     UUID uuid = UUID.randomUUID();
     PipelineInfo info = new PipelineInfo(name, description, date, date, user, user, REV, uuid, false);
-    PipelineConfiguration pipeline = new PipelineConfiguration(SCHEMA_VERSION, uuid, description,
-                                                               stageLibrary.getPipeline().getPipelineDefaultConfigs(),
-                                                               Collections.EMPTY_MAP, Collections.EMPTY_LIST, null);
+    PipelineConfiguration pipeline = new PipelineConfiguration(SCHEMA_VERSION, PipelineConfigBean.VERSION, uuid,
+        description, stageLibrary.getPipeline().getPipelineDefaultConfigs(), Collections.EMPTY_MAP,
+        Collections.EMPTY_LIST, null);
     try {
       json.writeValue(getInfoFile(name), BeanHelper.wrapPipelineInfo(info));
       json.writeValue(getPipelineFile(name), BeanHelper.wrapPipelineConfiguration(pipeline));
@@ -413,8 +413,9 @@ public class FilePipelineStoreTask extends AbstractTask implements PipelineStore
       stageConfigs.add(syncStageConfiguration(argStageConf, stageLibrary));
     }
 
-    return new PipelineConfiguration(pipelineConfig.getSchemaVersion(), pipelineConfig.getUuid(),
-      pipelineConfig.getDescription(), pipelineConfigs, pipelineConfig.getUiInfo(), stageConfigs, errorStageConf);
+    return new PipelineConfiguration(pipelineConfig.getSchemaVersion(), pipelineConfig.getVersion(),
+        pipelineConfig.getUuid(), pipelineConfig.getDescription(), pipelineConfigs, pipelineConfig.getUiInfo(),
+        stageConfigs, errorStageConf);
   }
 
   private List<Config> syncPipelineConf(PipelineConfiguration pipelineConfig, String name,

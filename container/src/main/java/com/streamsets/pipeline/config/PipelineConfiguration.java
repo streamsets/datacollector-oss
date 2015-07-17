@@ -24,6 +24,7 @@ import java.util.UUID;
 
 public class PipelineConfiguration implements Serializable{
   private int schemaVersion;
+  private int version;
   private UUID uuid = null;
   private PipelineInfo info;
   private String description;
@@ -37,9 +38,10 @@ public class PipelineConfiguration implements Serializable{
   private MemoryLimitConfiguration memoryLimitConfiguration;
 
   @SuppressWarnings("unchecked")
-  public PipelineConfiguration(int schemaVersion, UUID uuid, String description, List<Config> configuration,
+  public PipelineConfiguration(int schemaVersion, int version, UUID uuid, String description, List<Config> configuration,
       Map<String, Object> uiInfo, List<StageConfiguration> stages, StageConfiguration errorStage) {
     this.schemaVersion = schemaVersion;
+    this.version = version;
     this.uuid = Preconditions.checkNotNull(uuid, "uuid cannot be null");
     this.description = description;
     this.configuration = configuration;
@@ -66,6 +68,10 @@ public class PipelineConfiguration implements Serializable{
 
   public int getSchemaVersion() {
     return schemaVersion;
+  }
+
+  public int getVersion() {
+    return version;
   }
 
   public void setDescription(String description) {
@@ -155,8 +161,8 @@ public class PipelineConfiguration implements Serializable{
 
   @Override
   public String toString() {
-    return Utils.format("PipelineConfiguration[uuid='{}' valid='{}' previewable='{}' configuration='{}']", getUuid(),
-                        isValid(), isPreviewable(), getConfiguration());
+    return Utils.format("PipelineConfiguration[version='{}' uuid='{}' valid='{}' previewable='{}' configuration='{}']",
+                        getVersion(), getUuid(), isValid(), isPreviewable(), getConfiguration());
   }
 
 
@@ -171,7 +177,7 @@ public class PipelineConfiguration implements Serializable{
         newConfigurations.add(candidate);
       }
     }
-    return new PipelineConfiguration(schemaVersion, uuid, description, newConfigurations, uiInfo, stages,
+    return new PipelineConfiguration(schemaVersion, version, uuid, description, newConfigurations, uiInfo, stages,
       errorStage);
   }
 }

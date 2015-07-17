@@ -33,6 +33,8 @@ import java.util.Map;
 @ConfigGroups(PipelineGroups.class)
 public class PipelineConfigBean implements Stage {
 
+  public static final int VERSION = 1;
+
   @ConfigDef(
       required = true,
       type = ConfigDef.Type.MODEL,
