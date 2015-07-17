@@ -321,6 +321,7 @@
         "batchThroughput": "Batch Throughput",
         "chartsLabel": "Charts",
         "chartsPlaceholder": "Select Chart",
+        "currentValue": "Current Value",
         "dataObserverRunnable": "Data Observer",
         "metricObserverRunnable": "Metric Observer",
         "metricsEventRunnable": "Metrics Event",
@@ -355,7 +356,8 @@
         "batchStartTime": "Batch Start Time",
         "stageBatchProcessingTimer": "Stage Batch Processing Timer (in seconds)",
         "stageBatchProcessingTimerYAxis": "( Mean Timer Percentiles )",
-        "stageMemoryConsumed": "Stage Heap Memory Usage (in MB)"
+        "stageMemoryConsumed": "Stage Heap Memory Usage (in MB)",
+        "triggered": "Triggered"
       },
       "timeSeries": "Time Series",
       "timeSeriesTab": {

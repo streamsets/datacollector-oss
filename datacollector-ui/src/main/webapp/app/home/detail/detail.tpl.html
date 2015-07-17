@@ -55,11 +55,11 @@
               translate="home.detailPane.restURL">REST URL</li>
 
           <li role="presentation" ng-if="isPipelineRunning && !$storage.dontShowRESTResponseMenu">
-            <a role="menuitem" tabindex="-1" href="/rest/{{common.apiVersion}}/pipeline/metrics?name={{pipelineConfig.info.name}}&rev=0" target="_blank">{{'home.detailPane.monitoringJSONData' | translate}}</a>
+            <a role="menuitem" tabindex="-1" href="/rest/{{common.apiVersion}}/pipeline/{{pipelineConfig.info.name}}/metrics?rev=0" target="_blank">{{'home.detailPane.monitoringJSONData' | translate}}</a>
           </li>
 
           <li role="presentation" ng-if="isPipelineRunning && !$storage.dontShowRESTResponseMenu">
-            <a role="menuitem" tabindex="-1" href="/rest/{{common.apiVersion}}/pipeline/status?name={{pipelineConfig.info.name}}&rev=0" target="_blank">{{'home.detailPane.pipelineStatusJSONData' | translate}}</a>
+            <a role="menuitem" tabindex="-1" href="/rest/{{common.apiVersion}}/pipeline/{{pipelineConfig.info.name}}/status?rev=0" target="_blank">{{'home.detailPane.pipelineStatusJSONData' | translate}}</a>
           </li>
 
           <li role="presentation" ng-if="!$storage.dontShowRESTResponseMenu">

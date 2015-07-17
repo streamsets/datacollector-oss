@@ -25,6 +25,11 @@
               <span ng-if="!triggeredAlert.gauge.value.exceptionMessage"
                     ng-bind="triggeredAlert.rule.alertText"></span>
 
+
+              <span ng-if="!triggeredAlert.gauge.value.exceptionMessage"
+                class="alert-details"> ( {{'home.detailPane.summaryTab.currentValue' | translate}}: {{triggeredAlert.gauge.value.currentValue}}, {{'home.detailPane.summaryTab.triggered' | translate}}: {{triggeredAlert.gauge.value.timestamp | amTimeAgo}} )</span>
+
+
               <div class="pull-right">
                 <a href="#"
                    ng-click="deleteTriggeredAlert(triggeredAlert)">

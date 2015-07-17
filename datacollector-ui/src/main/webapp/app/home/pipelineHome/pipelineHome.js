@@ -1083,6 +1083,9 @@ angular
      *
      */
     var refreshPipelineStatus = function() {
+      if(destroyed) {
+        return;
+      }
 
       if(isWebSocketSupported) {
         //WebSocket to get Pipeline Status
