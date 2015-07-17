@@ -110,7 +110,7 @@ angular
 
         $scope.showLoading = true;
 
-        api.pipelineAgent.startPreview($scope.activeConfigInfo.name, $scope.previewSourceOffset,
+        api.pipelineAgent.createPreview($scope.activeConfigInfo.name, $scope.previewSourceOffset,
           previewConfig.batchSize, 0, !previewConfig.writeToDestinations, stageOutputs).
           success(function (res) {
             var defer = $q.defer();
@@ -287,7 +287,7 @@ angular
       }
 
       $q.all(deferList).then(function() {
-        api.pipelineAgent.startPreview($scope.activeConfigInfo.name, $scope.previewSourceOffset,
+        api.pipelineAgent.createPreview($scope.activeConfigInfo.name, $scope.previewSourceOffset,
           previewConfig.batchSize, 0, !previewConfig.writeToDestinations, stageOutputs).
           success(function (res) {
             var defer = $q.defer();
@@ -397,7 +397,7 @@ angular
 
       previewStatusTimer.then(
         function() {
-          api.pipelineAgent.getPreviewStatus($scope.pipelineConfig.info.name, previewerId)
+          api.pipelineAgent.getPreviewStatus(previewerId)
             .success(function(data) {
               if(data && _.contains(['INVALID', 'START_ERROR', 'RUN_ERROR', 'FINISHED'], data.status)) {
                 fetchPreviewData(previewerId, defer);
@@ -416,7 +416,7 @@ angular
     };
 
     var fetchPreviewData = function(previewerId, defer) {
-      api.pipelineAgent.getPreviewData($scope.pipelineConfig.info.name, previewerId)
+      api.pipelineAgent.getPreviewData(previewerId)
         .success(function(previewData) {
           if(previewData.status !== 'FINISHED') {
             $rootScope.common.errors = [previewData.issues];

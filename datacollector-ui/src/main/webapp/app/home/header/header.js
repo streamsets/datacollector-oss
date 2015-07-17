@@ -316,7 +316,7 @@ angular
 
       validateConfigStatusTimer.then(
         function() {
-          api.pipelineAgent.getPreviewStatus($scope.pipelineConfig.info.name, previewerId)
+          api.pipelineAgent.getPreviewStatus(previewerId)
             .success(function(data) {
               if(data && _.contains(['INVALID', 'START_ERROR', 'RUN_ERROR', 'VALID'], data.status)) {
                 fetchValidateConfigData(previewerId, defer);
@@ -336,7 +336,7 @@ angular
     };
 
     var fetchValidateConfigData = function(previewerId, defer) {
-      api.pipelineAgent.getPreviewData($scope.pipelineConfig.info.name, previewerId)
+      api.pipelineAgent.getPreviewData(previewerId)
         .success(function(validateConfigData) {
           defer.resolve(validateConfigData);
         })

@@ -346,7 +346,7 @@ angular.module('dataCollectorApp.common')
        * @param endStage
        * @returns {*}
        */
-      startPreview: function(name, sourceOffset, batchSize, rev, skipTargets, stageOutputList, endStage) {
+      createPreview: function(name, sourceOffset, batchSize, rev, skipTargets, stageOutputList, endStage) {
         var url;
 
         if(!batchSize) {
@@ -371,10 +371,9 @@ angular.module('dataCollectorApp.common')
       /**
        * Fetches Preview Status
        *
-       * @param pipelineName
        * @param previewerId
        */
-      getPreviewStatus: function(pipelineName, previewerId) {
+      getPreviewStatus: function(previewerId) {
         var url = apiBase + '/preview-id/' + previewerId + '/status' ;
         return $http({
           method: 'GET',
@@ -386,10 +385,9 @@ angular.module('dataCollectorApp.common')
       /**
        * Fetches Preview Data
        *
-       * @param pipelineName
        * @param previewerId
        */
-      getPreviewData: function(pipelineName, previewerId) {
+      getPreviewData: function(previewerId) {
         var url = apiBase + '/preview-id/' + previewerId;
         return $http({
           method: 'GET',
@@ -400,10 +398,9 @@ angular.module('dataCollectorApp.common')
       /**
        * Stop Preview
        *
-       * @param pipelineName
        * @param previewerId
        */
-      stopPreview: function(pipelineName, previewerId) {
+      cancelPreview: function(previewerId) {
         var url = apiBase + '/preview-id/' + previewerId + '/cancel' ;
         return $http({
           method: 'POST',

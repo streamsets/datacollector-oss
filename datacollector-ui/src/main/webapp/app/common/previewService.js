@@ -2,7 +2,7 @@
  * Service for providing access to the Preview/Snapshot utility functions.
  */
 angular.module('dataCollectorApp.common')
-  .service('previewService', function(api, $q, $translate) {
+  .service('previewService', function(api, $q, $translate, $timeout) {
 
     var self = this,
       translations;
@@ -118,17 +118,21 @@ angular.module('dataCollectorApp.common')
      */
     this.getInputRecordsFromPreview = function(pipelineName, stageInstance, batchSize) {
       var deferred = $q.defer();
-      api.pipelineAgent.previewPipeline(pipelineName, 0, batchSize, 0, true, [], stageInstance.instanceName).
-        then(
+      api.pipelineAgent.createPreview(pipelineName, 0, batchSize, 0, true, [], stageInstance.instanceName)
+        .then(
           function (res) {
-            var previewData = res.data,
-              stagePreviewData = self.getPreviewDataForStage(previewData.batchesOutput[0], stageInstance);
-            deferred.resolve(stagePreviewData.input);
+            var checkStatusDefer = $q.defer();
+            checkForPreviewStatus(res.data.previewerId, checkStatusDefer);
+            return checkStatusDefer.promise;
           },
           function(res) {
             deferred.reject(res);
           }
-        );
+        )
+        .then(function(previewData) {
+          var stagePreviewData = self.getPreviewDataForStage(previewData.batchesOutput[0], stageInstance);
+          deferred.resolve(stagePreviewData.input);
+        });
 
       return deferred.promise;
     };
@@ -144,17 +148,24 @@ angular.module('dataCollectorApp.common')
      */
     this.getEdgeInputRecordsFromPreview = function(pipelineName, edge, batchSize) {
       var deferred = $q.defer();
-      api.pipelineAgent.previewPipeline(pipelineName, 0, batchSize, 0, true, [], edge.target.instanceName).
-        then(
+      api.pipelineAgent.createPreview(pipelineName, 0, batchSize, 0, true, [], edge.target.instanceName)
+        .then(
         function (res) {
-          var previewData = res.data,
-            stagePreviewData = self.getPreviewDataForEdge(previewData.batchesOutput[0], edge);
+          var checkStatusDefer = $q.defer();
+          checkForPreviewStatus(res.data.previewerId, checkStatusDefer);
+          return checkStatusDefer.promise;
+        },
+        function(res) {
+          deferred.reject(res);
+        })
+        .then(
+        function(previewData) {
+          var stagePreviewData = self.getPreviewDataForEdge(previewData.batchesOutput[0], edge);
           deferred.resolve(stagePreviewData.input);
         },
         function(res) {
           deferred.reject(res);
-        }
-      );
+        });
 
       return deferred.promise;
     };
@@ -324,5 +335,55 @@ angular.module('dataCollectorApp.common')
         .replace(/"/g, "&quot;")
         .replace(/'/g, "&#039;");
     }
+
+
+
+
+
+    /**
+     * Check for Preview Status for every 1 seconds, once done open the snapshot view.
+     *
+     */
+    var checkForPreviewStatus = function(previewerId, defer) {
+      var previewStatusTimer = $timeout(
+        function() {
+        },
+        500
+      );
+
+      previewStatusTimer.then(
+        function() {
+          api.pipelineAgent.getPreviewStatus(previewerId)
+            .success(function(data) {
+              if(data && _.contains(['INVALID', 'START_ERROR', 'RUN_ERROR', 'FINISHED'], data.status)) {
+                fetchPreviewData(previewerId, defer);
+              } else {
+                checkForPreviewStatus(previewerId, defer);
+              }
+            })
+            .error(function(data, status, headers, config) {
+              $scope.common.errors = [data];
+            });
+        },
+        function() {
+          console.log( "Timer rejected!" );
+        }
+      );
+    };
+
+    var fetchPreviewData = function(previewerId, defer) {
+      api.pipelineAgent.getPreviewData(previewerId)
+        .success(function(previewData) {
+          if(previewData.status !== 'FINISHED') {
+            //Ignore
+            defer.reject();
+          } else {
+            defer.resolve(previewData);
+          }
+        })
+        .error(function(data, status, headers, config) {
+          $scope.common.errors = [data];
+        });
+    };
 
   });
