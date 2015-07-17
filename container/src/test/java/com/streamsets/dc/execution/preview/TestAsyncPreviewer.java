@@ -13,8 +13,7 @@ import com.streamsets.pipeline.lib.executor.SafeScheduledExecutorService;
 public class TestAsyncPreviewer extends TestPreviewer {
 
   protected Previewer createPreviewer() {
-    SyncPreviewer syncPreviewer = new SyncPreviewer(ID, NAME, REV, previewerListener, configuration, stageLibrary,
-      pipelineStore, runtimeInfo);
-    return new AsyncPreviewer(syncPreviewer, new SafeScheduledExecutorService(1, "preview"));
+    return new AsyncPreviewer(new SyncPreviewer(ID, NAME, REV, previewerListener, objectGraph),
+      new SafeScheduledExecutorService(1, "preview"));
   }
 }

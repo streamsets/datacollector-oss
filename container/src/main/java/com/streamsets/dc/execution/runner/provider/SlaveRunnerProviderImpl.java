@@ -13,8 +13,6 @@ import com.streamsets.pipeline.creation.PipelineConfigBean;
 import dagger.ObjectGraph;
 
 import javax.inject.Inject;
-import java.util.ArrayList;
-import java.util.List;
 
 public class SlaveRunnerProviderImpl implements RunnerProvider {
 
@@ -25,10 +23,8 @@ public class SlaveRunnerProviderImpl implements RunnerProvider {
   @Override
   public Runner createRunner( String user, String name, String rev, PipelineConfigBean pipelineConfigBean,
       ObjectGraph objectGraph) {
-    List<Object> modules = new ArrayList<>();
     objectGraph = objectGraph.plus(StandaloneRunnerInjectorModule.class);
-    modules.add(new SlaveRunnerModule(user, name, rev, objectGraph));
-    ObjectGraph plus =  objectGraph.plus(modules.toArray());
+    ObjectGraph plus =  objectGraph.plus(new SlaveRunnerModule(user, name, rev, objectGraph));
     return plus.get(Runner.class);
   }
 }

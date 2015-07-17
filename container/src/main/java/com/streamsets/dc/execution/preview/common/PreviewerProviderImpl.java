@@ -9,7 +9,7 @@ import com.streamsets.dc.execution.Previewer;
 import com.streamsets.dc.execution.PreviewerListener;
 import com.streamsets.dc.execution.manager.PreviewerProvider;
 import com.streamsets.dc.execution.preview.async.dagger.AsyncPreviewerModule;
-import com.streamsets.dc.execution.preview.sync.dagger.SyncPreviewerModule;
+import com.streamsets.dc.execution.preview.sync.dagger.SyncPreviewerInjectorModule;
 import dagger.ObjectGraph;
 
 import javax.inject.Inject;
@@ -23,8 +23,10 @@ public class PreviewerProviderImpl implements PreviewerProvider {
 
   @Override
   public Previewer createPreviewer(String user, String name, String rev, PreviewerListener listener, ObjectGraph objectGraph) {
-    ObjectGraph plus = objectGraph.plus(new SyncPreviewerModule(UUID.randomUUID().toString(), name, rev, listener),
-      new AsyncPreviewerModule());
-    return plus.get(Previewer.class);
+
+    objectGraph = objectGraph.plus(SyncPreviewerInjectorModule.class);
+    objectGraph = objectGraph.plus(
+      new AsyncPreviewerModule(UUID.randomUUID().toString(), name, rev, listener, objectGraph));
+    return objectGraph.get(Previewer.class);
   }
 }

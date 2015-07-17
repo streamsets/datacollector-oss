@@ -11,7 +11,6 @@ import com.streamsets.dc.execution.preview.sync.SyncPreviewer;
 public class TestSyncPreviewer extends TestPreviewer {
 
   protected Previewer createPreviewer() {
-    return new SyncPreviewer(ID, NAME, REV, previewerListener, configuration, stageLibrary,
-      pipelineStore, runtimeInfo);
+    return new SyncPreviewer(ID, NAME, REV, previewerListener, objectGraph);
   }
 }

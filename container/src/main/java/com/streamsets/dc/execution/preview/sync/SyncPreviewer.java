@@ -39,8 +39,10 @@ import com.streamsets.pipeline.util.ContainerError;
 import com.streamsets.pipeline.util.PipelineException;
 import com.streamsets.pipeline.validation.Issue;
 import com.streamsets.pipeline.validation.Issues;
+import dagger.ObjectGraph;
 import org.apache.commons.io.input.BoundedInputStream;
 
+import javax.inject.Inject;
 import javax.ws.rs.core.MultivaluedMap;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
@@ -59,25 +61,21 @@ public class SyncPreviewer implements Previewer {
   private final String name;
   private final String rev;
   private final PreviewerListener previewerListener;
-  private final Configuration configuration;
-  private final StageLibraryTask stageLibrary;
-  private final PipelineStoreTask pipelineStore;
-  private final RuntimeInfo runtimeInfo;
+  @Inject Configuration configuration;
+  @Inject StageLibraryTask stageLibrary;
+  @Inject PipelineStoreTask pipelineStore;
+  @Inject RuntimeInfo runtimeInfo;
   private volatile PreviewStatus previewStatus;
   private volatile PreviewOutput previewOutput;
   private volatile PreviewPipeline previewPipeline;
 
   public SyncPreviewer(String id, String name, String rev, PreviewerListener previewerListener,
-                       Configuration configuration, StageLibraryTask stageLibrary,
-                       PipelineStoreTask pipelineStore, RuntimeInfo runtimeInfo) {
+                       ObjectGraph objectGraph) {
     this.id = id;
     this.name = name;
     this.rev = rev;
     this.previewerListener = previewerListener;
-    this.configuration = configuration;
-    this.stageLibrary = stageLibrary;
-    this.pipelineStore = pipelineStore;
-    this.runtimeInfo = runtimeInfo;
+    objectGraph.inject(this);
   }
 
   @Override

@@ -5,12 +5,14 @@
  */
 package com.streamsets.dc.execution.preview;
 
+import com.codahale.metrics.MetricRegistry;
 import com.google.common.collect.ImmutableList;
 import com.streamsets.dc.execution.PreviewOutput;
 import com.streamsets.dc.execution.PreviewStatus;
 import com.streamsets.dc.execution.Previewer;
 import com.streamsets.dc.execution.PreviewerListener;
 import com.streamsets.dc.execution.RawPreview;
+import com.streamsets.dc.execution.preview.sync.SyncPreviewer;
 import com.streamsets.pipeline.api.Batch;
 import com.streamsets.pipeline.api.BatchMaker;
 import com.streamsets.pipeline.api.ErrorCode;
@@ -23,6 +25,7 @@ import com.streamsets.pipeline.api.base.BaseTarget;
 import com.streamsets.pipeline.api.base.SingleLaneRecordProcessor;
 import com.streamsets.pipeline.config.PipelineConfiguration;
 import com.streamsets.pipeline.main.RuntimeInfo;
+import com.streamsets.pipeline.main.RuntimeModule;
 import com.streamsets.pipeline.record.RecordImpl;
 import com.streamsets.pipeline.runner.MockStages;
 import com.streamsets.pipeline.runner.PipelineRuntimeException;
@@ -32,16 +35,21 @@ import com.streamsets.pipeline.store.PipelineStoreException;
 import com.streamsets.pipeline.store.PipelineStoreTask;
 import com.streamsets.pipeline.util.Configuration;
 import com.streamsets.pipeline.util.ContainerError;
-import com.streamsets.pipeline.util.PipelineException;
+import dagger.Module;
+import dagger.ObjectGraph;
+import dagger.Provides;
 import org.apache.commons.io.IOUtils;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
 
+import javax.inject.Singleton;
 import javax.ws.rs.core.MultivaluedHashMap;
 import javax.ws.rs.core.MultivaluedMap;
 import java.io.IOException;
+import java.net.URL;
+import java.net.URLClassLoader;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -58,6 +66,35 @@ public abstract class TestPreviewer {
   protected Configuration configuration;
   protected StageLibraryTask stageLibrary;
   protected PipelineStoreTask pipelineStore;
+  protected ObjectGraph objectGraph;
+
+  @Module(injects = {RuntimeInfo.class, Configuration.class, StageLibraryTask.class, PipelineStoreTask.class, SyncPreviewer.class},
+    library = true)
+  static class TestPreviewModule {
+    @Provides
+    @Singleton
+    public RuntimeInfo providesRuntimeInfo() {
+      return new RuntimeInfo(RuntimeModule.SDC_PROPERTY_PREFIX, new MetricRegistry(),
+        Arrays.asList(TestPreviewer.class.getClassLoader()));
+    }
+
+    @Provides @Singleton
+    public Configuration provideConfiguration() {
+      Configuration configuration = new Configuration();
+      return configuration;
+    }
+
+    @Provides @Singleton
+    public PipelineStoreTask providePipelineStoreTask() {
+      return Mockito.mock(PipelineStoreTask.class);
+    }
+
+    @Provides @Singleton
+    public StageLibraryTask provideStageLibraryTask() {
+      return MockStages.createStageLibrary(new URLClassLoader(new URL[0]));
+    }
+
+  }
 
   //Mock Error Code implementation
   enum MockErrorCode implements ErrorCode {
@@ -101,11 +138,13 @@ public abstract class TestPreviewer {
   @Before
   public void setUp() throws PipelineStoreException {
     MockStages.resetStageCaptures();
-    runtimeInfo = Mockito.mock(RuntimeInfo.class);
     previewerListener = new RecordingPreviewListener();
-    configuration = new Configuration();
-    stageLibrary = MockStages.createStageLibrary();
-    pipelineStore = Mockito.mock(PipelineStoreTask.class);
+
+    objectGraph = ObjectGraph.create(TestPreviewModule.class);
+    runtimeInfo = objectGraph.get(RuntimeInfo.class);
+    configuration = objectGraph.get(Configuration.class);
+    stageLibrary = objectGraph.get(StageLibraryTask.class);
+    pipelineStore = objectGraph.get(PipelineStoreTask.class);
 
   }
 

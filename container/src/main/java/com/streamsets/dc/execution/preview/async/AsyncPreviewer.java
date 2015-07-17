@@ -17,6 +17,7 @@ import com.streamsets.pipeline.runner.StageOutput;
 import com.streamsets.pipeline.store.PipelineStoreException;
 import com.streamsets.pipeline.util.PipelineException;
 
+import javax.inject.Inject;
 import javax.ws.rs.core.MultivaluedMap;
 import java.util.List;
 import java.util.concurrent.Callable;
@@ -31,6 +32,7 @@ public class AsyncPreviewer implements Previewer {
   private final SafeScheduledExecutorService executorService;
   private Future<?> future;
 
+  @Inject
   public AsyncPreviewer(SyncPreviewer syncPreviewer, SafeScheduledExecutorService executorService) {
     this.syncPreviewer = syncPreviewer;
     this.executorService = executorService;
