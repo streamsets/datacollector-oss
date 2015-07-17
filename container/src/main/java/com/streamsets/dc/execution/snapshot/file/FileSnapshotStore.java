@@ -23,7 +23,6 @@ import com.streamsets.pipeline.store.PipelineStoreException;
 import com.streamsets.pipeline.util.ContainerError;
 import com.streamsets.pipeline.util.PipelineDirectoryUtil;
 import com.streamsets.pipeline.util.PipelineException;
-
 import javax.inject.Inject;
 import java.io.File;
 import java.io.FileInputStream;
@@ -36,7 +35,6 @@ import java.util.Collections;
 import java.util.List;
 
 public class FileSnapshotStore implements SnapshotStore {
-
   private static final String SNAPSHOT_FILE_NAME = "snapshot.json";
   private static final String INFO_FILE_NAME = "info.json";
 
@@ -49,6 +47,7 @@ public class FileSnapshotStore implements SnapshotStore {
     json = ObjectMapperFactory.get();
   }
 
+  @Override
   public SnapshotInfo create(String user, String name, String rev, String id) throws PipelineException {
     PipelineDirectoryUtil.createPipelineSnapshotDir(runtimeInfo, name, rev, id);
     SnapshotInfo snapshotInfo = new SnapshotInfoImpl(user, id, name, rev, System.currentTimeMillis(), true);
@@ -63,10 +62,10 @@ public class FileSnapshotStore implements SnapshotStore {
     if(existingInfo == null) {
       throw new PipelineException(ContainerError.CONTAINER_0605);
     }
+    persistSnapshot(name, rev, id, snapshotBatches);
     SnapshotInfo updatedSnapshotInfo = new SnapshotInfoImpl(existingInfo.getUser(), id, name, rev,
       System.currentTimeMillis(), false);
     persistSnapshotInfo(updatedSnapshotInfo);
-    persistSnapshot(name, rev, id, snapshotBatches);
     return updatedSnapshotInfo;
   }
 
