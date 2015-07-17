@@ -70,4 +70,6 @@ public @interface StageDef {
 
   boolean privateClassLoader() default false;
 
+  Class<? extends StageUpgrader> upgrader() default StageUpgrader.Default.class;
+
 }

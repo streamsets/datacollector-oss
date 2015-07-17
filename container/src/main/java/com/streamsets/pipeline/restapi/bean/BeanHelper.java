@@ -10,6 +10,7 @@ import com.streamsets.dc.execution.PreviewOutput;
 import com.streamsets.dc.restapi.bean.ExecutionModeJson;
 import com.streamsets.dc.restapi.bean.PreviewOutputJson;
 import com.streamsets.dc.restapi.bean.StatusJson;
+import com.streamsets.pipeline.api.Config;
 import com.streamsets.pipeline.api.ExecutionMode;
 import com.streamsets.pipeline.callback.CallbackInfo;
 import com.streamsets.pipeline.el.ElConstantDefinition;
@@ -143,31 +144,31 @@ public class BeanHelper {
   }
 
   public static ConfigConfigurationJson wrapConfigConfiguration(
-    com.streamsets.pipeline.config.ConfigConfiguration configConfiguration) {
-    if(configConfiguration == null) {
+    Config config) {
+    if(config == null) {
       return null;
     }
-    return new ConfigConfigurationJson(configConfiguration);
+    return new ConfigConfigurationJson(config);
   }
 
   public static List<ConfigConfigurationJson> wrapConfigConfiguration(
-    List<com.streamsets.pipeline.config.ConfigConfiguration> configConfiguration) {
-    if(configConfiguration == null) {
+    List<Config> config) {
+    if(config == null) {
       return null;
     }
-    List<ConfigConfigurationJson> unwrappedConfig = new ArrayList<>(configConfiguration.size());
-    for(com.streamsets.pipeline.config.ConfigConfiguration c : configConfiguration) {
+    List<ConfigConfigurationJson> unwrappedConfig = new ArrayList<>(config.size());
+    for(Config c : config) {
       unwrappedConfig.add(new ConfigConfigurationJson(c));
     }
     return unwrappedConfig;
   }
 
-  public static List<com.streamsets.pipeline.config.ConfigConfiguration> unwrapConfigConfiguration(
+  public static List<Config> unwrapConfigConfiguration(
     List<ConfigConfigurationJson> configConfigurationJson) {
     if(configConfigurationJson == null) {
       return null;
     }
-    List<com.streamsets.pipeline.config.ConfigConfiguration> unwrappedConfig = new ArrayList<>(configConfigurationJson.size());
+    List<Config> unwrappedConfig = new ArrayList<>(configConfigurationJson.size());
     for(ConfigConfigurationJson c : configConfigurationJson) {
       unwrappedConfig.add(c.getConfigConfiguration());
     }

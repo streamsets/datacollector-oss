@@ -11,7 +11,7 @@ import com.streamsets.pipeline.api.ConfigDefBean;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.el.ELEvalException;
 import com.streamsets.pipeline.api.impl.Utils;
-import com.streamsets.pipeline.config.ConfigConfiguration;
+import com.streamsets.pipeline.api.Config;
 import com.streamsets.pipeline.config.ConfigDefinition;
 import com.streamsets.pipeline.config.ModelType;
 import com.streamsets.pipeline.config.PipelineConfiguration;
@@ -254,7 +254,7 @@ public abstract class PipelineBeanCreator {
         ConfigDefinition configDef = configDefMap.get(configName);
         // if there is no config def, we ignore it, it can be the case when the config is a @HideConfig
         if (configDef != null) {
-          ConfigConfiguration configConf = stageConf.getConfig(configName);
+          Config configConf = stageConf.getConfig(configName);
           if (configConf == null) {
             //TODO LOG WARNING missing config in state config
             injectDefaultValue(obj, field, stageDef, stageConf, configDef, pipelineConstants, stageName, errors);
@@ -459,7 +459,7 @@ public abstract class PipelineBeanCreator {
 
   @SuppressWarnings("unchecked")
   Object toComplexField(Object value, StageDefinition stageDef, StageConfiguration stageConf,
-      ConfigDefinition configDef, ConfigConfiguration configConf, Map<String, Object> pipelineConstants,
+      ConfigDefinition configDef, Config configConf, Map<String, Object> pipelineConstants,
       List<Issue> errors) {
     String stageName = stageConf.getInstanceName();
     IssueCreator issueCreator = (stageDef.isErrorStage()) ? IssueCreator.getStage(stageName)
@@ -518,7 +518,7 @@ public abstract class PipelineBeanCreator {
   }
 
   void injectConfigValue(Object obj, Field field, StageDefinition stageDef, StageConfiguration stageConf,
-      ConfigDefinition configDef, ConfigConfiguration configConf, Map<String, Object> pipelineConstants,
+      ConfigDefinition configDef, Config configConf, Map<String, Object> pipelineConstants,
       List<Issue> errors) {
     Object value = configConf.getValue();
     if (value == null) {
@@ -529,7 +529,7 @@ public abstract class PipelineBeanCreator {
 
 
   void injectConfigValue(Object obj, Field field, Object value, StageDefinition stageDef, StageConfiguration stageConf,
-      ConfigDefinition configDef, ConfigConfiguration configConf, Map<String, Object> pipelineConstants,
+      ConfigDefinition configDef, Config configConf, Map<String, Object> pipelineConstants,
       List<Issue> errors) {
     String stageName = stageConf.getInstanceName();
     IssueCreator issueCreator = (stageDef.isErrorStage()) ? IssueCreator.getStage(stageName)

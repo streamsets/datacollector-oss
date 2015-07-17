@@ -116,6 +116,8 @@ public enum ContainerError implements ErrorCode {
   //Runner
   CONTAINER_0800("Pipeline '{}' validation error : {}"),
 
+  //Configuration upgrader
+  CONTAINER_0900("Error while upgrading stage configuration from version '{}' to version '{}': {}"),
   ;
 
   private final String msg;

@@ -10,7 +10,7 @@ import com.google.common.base.Joiner;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Maps;
 import com.streamsets.pipeline.api.impl.Utils;
-import com.streamsets.pipeline.config.ConfigConfiguration;
+import com.streamsets.pipeline.api.Config;
 import com.streamsets.pipeline.config.PipelineConfiguration;
 import com.streamsets.pipeline.config.StageConfiguration;
 import com.streamsets.pipeline.config.StageDefinition;
@@ -258,7 +258,7 @@ public class ClusterProviderImpl implements ClusterProvider {
       StageDefinition stageDef = stageLibrary.getStage(stageConf.getLibrary(), stageConf.getStageName(),
                                                        false);
       if (stageConf.getInputLanes().isEmpty()) {
-        for (ConfigConfiguration conf : stageConf.getConfiguration()) {
+        for (Config conf : stageConf.getConfiguration()) {
           if (conf.getValue() != null) {
             if (canCastToString(conf.getValue())) {
               LOG.debug("Adding to source configs " + conf.getName() + "=" + conf.getValue());

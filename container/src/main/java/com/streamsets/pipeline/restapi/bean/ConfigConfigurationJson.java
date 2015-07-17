@@ -7,33 +7,34 @@ package com.streamsets.pipeline.restapi.bean;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.streamsets.pipeline.api.Config;
 import com.streamsets.pipeline.api.impl.Utils;
 
 public class ConfigConfigurationJson {
 
-  private final com.streamsets.pipeline.config.ConfigConfiguration configConfiguration;
+  private final Config config;
 
   public ConfigConfigurationJson(
     @JsonProperty("name") String name,
     @JsonProperty("value") Object value) {
-    this.configConfiguration = new com.streamsets.pipeline.config.ConfigConfiguration(name, value);
+    this.config = new Config(name, value);
   }
 
-  public ConfigConfigurationJson(com.streamsets.pipeline.config.ConfigConfiguration configConfiguration) {
-    Utils.checkNotNull(configConfiguration, "configConfiguration");
-    this.configConfiguration = configConfiguration;
+  public ConfigConfigurationJson(Config config) {
+    Utils.checkNotNull(config, "configConfiguration");
+    this.config = config;
   }
 
   public String getName() {
-    return configConfiguration.getName();
+    return config.getName();
   }
 
   public Object getValue() {
-    return configConfiguration.getValue();
+    return config.getValue();
   }
 
   @JsonIgnore
-  public com.streamsets.pipeline.config.ConfigConfiguration getConfigConfiguration() {
-    return configConfiguration;
+  public Config getConfigConfiguration() {
+    return config;
   }
 }

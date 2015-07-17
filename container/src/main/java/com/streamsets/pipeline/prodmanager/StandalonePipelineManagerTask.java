@@ -23,7 +23,7 @@ import com.streamsets.pipeline.api.impl.ErrorMessage;
 import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.callback.CallbackInfo;
 import com.streamsets.pipeline.callback.CallbackServerMetricsEventListener;
-import com.streamsets.pipeline.config.ConfigConfiguration;
+import com.streamsets.pipeline.api.Config;
 import com.streamsets.pipeline.config.DeliveryGuarantee;
 import com.streamsets.pipeline.config.MemoryLimitConfiguration;
 import com.streamsets.pipeline.config.PipelineConfiguration;
@@ -62,9 +62,7 @@ import com.streamsets.pipeline.task.AbstractTask;
 import com.streamsets.pipeline.updatechecker.UpdateChecker;
 import com.streamsets.pipeline.util.Configuration;
 import com.streamsets.pipeline.util.ContainerError;
-import com.streamsets.pipeline.util.ElUtil;
 import com.streamsets.pipeline.util.PipelineDirectoryUtil;
-import com.streamsets.pipeline.util.ValidationUtil;
 import com.streamsets.pipeline.validation.Issue;
 import com.streamsets.pipeline.validation.ValidationError;
 import org.slf4j.Logger;
@@ -76,7 +74,6 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ArrayBlockingQueue;
@@ -568,7 +565,7 @@ public class StandalonePipelineManagerTask extends AbstractTask implements Pipel
     throws PipelineStoreException, PipelineRuntimeException, StageException, PipelineManagerException {
 
     DeliveryGuarantee deliveryGuarantee = DeliveryGuarantee.AT_LEAST_ONCE;
-    for(ConfigConfiguration config : pipelineConfiguration.getConfiguration()) {
+    for(Config config : pipelineConfiguration.getConfiguration()) {
       if(Constants.DELIVERY_GUARANTEE.equals(config.getName())) {
         deliveryGuarantee = DeliveryGuarantee.valueOf((String)config.getValue());
       }

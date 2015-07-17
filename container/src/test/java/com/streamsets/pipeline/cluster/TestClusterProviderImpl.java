@@ -5,10 +5,9 @@
  */
 package com.streamsets.pipeline.cluster;
 
-import com.streamsets.pipeline.config.ConfigConfiguration;
+import com.streamsets.pipeline.api.Config;
 import com.streamsets.pipeline.config.PipelineConfiguration;
 import com.streamsets.pipeline.config.StageConfiguration;
-import com.streamsets.pipeline.creation.PipelineConfigBean;
 import com.streamsets.pipeline.runner.MockStages;
 import com.streamsets.pipeline.stagelibrary.StageLibraryTask;
 import com.streamsets.pipeline.store.PipelineStoreTask;
@@ -76,12 +75,12 @@ public class TestClusterProviderImpl {
     Assert.assertTrue(bootstrapSparkLibDir.mkdirs());
     Assert.assertTrue(new File(bootstrapMainLibDir, "streamsets-datacollector-bootstrap.jar").createNewFile());
     Assert.assertTrue(new File(bootstrapSparkLibDir, "streamsets-datacollector-spark-bootstrap.jar").createNewFile());
-    List<ConfigConfiguration> configs = new ArrayList<ConfigConfiguration>();
-    configs.add(new ConfigConfiguration("clusterSlaveMemory", 512));
-    configs.add(new ConfigConfiguration("clusterSlaveJavaOpts", ""));
-    configs.add(new ConfigConfiguration("clusterKerberos", false));
-    configs.add(new ConfigConfiguration("kerberosPrincipal", ""));
-    configs.add(new ConfigConfiguration("kerberosKeytab", ""));
+    List<Config> configs = new ArrayList<Config>();
+    configs.add(new Config("clusterSlaveMemory", 512));
+    configs.add(new Config("clusterSlaveJavaOpts", ""));
+    configs.add(new Config("clusterKerberos", false));
+    configs.add(new Config("kerberosPrincipal", ""));
+    configs.add(new Config("kerberosKeytab", ""));
     pipelineConf = new PipelineConfiguration(PipelineStoreTask.SCHEMA_VERSION, UUID.randomUUID(),
       null, configs, null, new ArrayList<StageConfiguration>(),
       MockStages.getErrorStageConfig());

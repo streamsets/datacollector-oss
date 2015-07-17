@@ -5,7 +5,7 @@
  */
 package com.streamsets.pipeline.restapi.bean;
 
-import com.streamsets.pipeline.config.ConfigConfiguration;
+import com.streamsets.pipeline.api.Config;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -19,32 +19,32 @@ public class TestConfigConfigurationBean {
 
   @Test
   public void testConfigConfigurationBean() {
-    com.streamsets.pipeline.config.ConfigConfiguration configConfiguration =
-      new ConfigConfiguration("url", "http://localhost:9090");
+    Config config =
+      new Config("url", "http://localhost:9090");
     ConfigConfigurationJson configConfigurationJsonBean =
-      new ConfigConfigurationJson(configConfiguration);
+      new ConfigConfigurationJson(config);
 
-    Assert.assertEquals(configConfiguration.getName(), configConfigurationJsonBean.getName());
-    Assert.assertEquals(configConfiguration.getValue(), configConfigurationJsonBean.getValue());
+    Assert.assertEquals(config.getName(), configConfigurationJsonBean.getName());
+    Assert.assertEquals(config.getValue(), configConfigurationJsonBean.getValue());
 
-    Assert.assertEquals(configConfiguration.getName(), configConfigurationJsonBean.getConfigConfiguration().getName());
-    Assert.assertEquals(configConfiguration.getValue(), configConfigurationJsonBean.getConfigConfiguration().getValue());
+    Assert.assertEquals(config.getName(), configConfigurationJsonBean.getConfigConfiguration().getName());
+    Assert.assertEquals(config.getValue(), configConfigurationJsonBean.getConfigConfiguration().getValue());
 
   }
 
   @Test
   public void testConfigConfigurationBeanConstructorWithArgs() {
-    com.streamsets.pipeline.config.ConfigConfiguration configConfiguration =
-      new ConfigConfiguration("url", "http://localhost:9090");
+    Config config =
+      new Config("url", "http://localhost:9090");
 
     ConfigConfigurationJson configConfigurationJsonBean =
       new ConfigConfigurationJson("url", "http://localhost:9090");
 
-    Assert.assertEquals(configConfiguration.getName(), configConfigurationJsonBean.getName());
-    Assert.assertEquals(configConfiguration.getValue(), configConfigurationJsonBean.getValue());
+    Assert.assertEquals(config.getName(), configConfigurationJsonBean.getName());
+    Assert.assertEquals(config.getValue(), configConfigurationJsonBean.getValue());
 
-    Assert.assertEquals(configConfiguration.getName(), configConfigurationJsonBean.getConfigConfiguration().getName());
-    Assert.assertEquals(configConfiguration.getValue(), configConfigurationJsonBean.getConfigConfiguration().getValue());
+    Assert.assertEquals(config.getName(), configConfigurationJsonBean.getConfigConfiguration().getName());
+    Assert.assertEquals(config.getValue(), configConfigurationJsonBean.getConfigConfiguration().getValue());
 
   }
 }

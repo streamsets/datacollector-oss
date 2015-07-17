@@ -8,6 +8,7 @@ package com.streamsets.pipeline.config;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Preconditions;
+import com.streamsets.pipeline.api.Config;
 import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.store.PipelineInfo;
 import com.streamsets.pipeline.validation.Issues;
@@ -26,8 +27,8 @@ public class PipelineConfiguration implements Serializable{
   private UUID uuid = null;
   private PipelineInfo info;
   private String description;
-  private List<ConfigConfiguration> configuration;
-  private Map<String, ConfigConfiguration> configurationMap;
+  private List<Config> configuration;
+  private Map<String, Config> configurationMap;
   private final Map<String, Object> uiInfo;
   private List<StageConfiguration> stages;
   private StageConfiguration errorStage;
@@ -36,14 +37,14 @@ public class PipelineConfiguration implements Serializable{
   private MemoryLimitConfiguration memoryLimitConfiguration;
 
   @SuppressWarnings("unchecked")
-  public PipelineConfiguration(int schemaVersion, UUID uuid, String description, List<ConfigConfiguration> configuration,
+  public PipelineConfiguration(int schemaVersion, UUID uuid, String description, List<Config> configuration,
       Map<String, Object> uiInfo, List<StageConfiguration> stages, StageConfiguration errorStage) {
     this.schemaVersion = schemaVersion;
     this.uuid = Preconditions.checkNotNull(uuid, "uuid cannot be null");
     this.description = description;
     this.configuration = configuration;
     configurationMap = new HashMap<>();
-    for (ConfigConfiguration conf : configuration) {
+    for (Config conf : configuration) {
       configurationMap.put(conf.getName(), conf);
     }
     this.uiInfo = uiInfo;
@@ -131,11 +132,11 @@ public class PipelineConfiguration implements Serializable{
     return (issues !=null) && previewable;
   }
 
-  public List<ConfigConfiguration> getConfiguration() {
+  public List<Config> getConfiguration() {
     return configuration;
   }
 
-  public ConfigConfiguration getConfiguration(String name) {
+  public Config getConfiguration(String name) {
     return configurationMap.get(name);
   }
 
@@ -161,9 +162,9 @@ public class PipelineConfiguration implements Serializable{
 
   @VisibleForTesting
   @JsonIgnore
-  public PipelineConfiguration createWithNewConfig(ConfigConfiguration replacement) {
-    List<ConfigConfiguration> newConfigurations = new ArrayList<>();
-    for (ConfigConfiguration candidate : this.configuration) {
+  public PipelineConfiguration createWithNewConfig(Config replacement) {
+    List<Config> newConfigurations = new ArrayList<>();
+    for (Config candidate : this.configuration) {
       if (replacement.getName().equals(candidate.getName())) {
         newConfigurations.add(replacement);
       } else {

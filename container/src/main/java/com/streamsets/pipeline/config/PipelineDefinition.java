@@ -7,6 +7,7 @@ package com.streamsets.pipeline.config;
 
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.collect.ImmutableList;
+import com.streamsets.pipeline.api.Config;
 import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.definition.ConfigDefinitionExtractor;
 import com.streamsets.pipeline.definition.ConfigGroupExtractor;
@@ -19,7 +20,7 @@ public class PipelineDefinition {
   /*The config definitions of the pipeline*/
   private final List<ConfigDefinition> configDefinitions;
   private final ConfigGroupDefinition groupDefinition;
-  private final List<ConfigConfiguration> defaultConfigs;
+  private final List<Config> defaultConfigs;
 
   public static PipelineDefinition getPipelineDef() {
     return new PipelineDefinition().localize();
@@ -43,9 +44,9 @@ public class PipelineDefinition {
   private PipelineDefinition(List<ConfigDefinition> configDefs, ConfigGroupDefinition groupDef) {
     configDefinitions = configDefs;
     groupDefinition = groupDef;
-    List<ConfigConfiguration> configs = new ArrayList<>();
+    List<Config> configs = new ArrayList<>();
     for (ConfigDefinition configDef : configDefs) {
-      configs.add(new ConfigConfiguration(configDef.getName(), configDef.getDefaultValue()));
+      configs.add(new Config(configDef.getName(), configDef.getDefaultValue()));
     }
     defaultConfigs = ImmutableList.copyOf(configs);
   }
@@ -68,7 +69,7 @@ public class PipelineDefinition {
     return groupDefinition;
   }
 
-  public List<ConfigConfiguration> getPipelineDefaultConfigs() {
+  public List<Config> getPipelineDefaultConfigs() {
     return defaultConfigs;
   }
 

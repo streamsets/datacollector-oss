@@ -7,6 +7,7 @@ package com.streamsets.pipeline.definition;
 
 import com.streamsets.pipeline.api.Batch;
 import com.streamsets.pipeline.api.BatchMaker;
+import com.streamsets.pipeline.api.Config;
 import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.ConfigGroups;
 import com.streamsets.pipeline.api.ErrorStage;
@@ -17,6 +18,7 @@ import com.streamsets.pipeline.api.RawSource;
 import com.streamsets.pipeline.api.RawSourcePreviewer;
 import com.streamsets.pipeline.api.StageDef;
 import com.streamsets.pipeline.api.StageException;
+import com.streamsets.pipeline.api.StageUpgrader;
 import com.streamsets.pipeline.api.base.BaseSource;
 import com.streamsets.pipeline.api.base.BaseTarget;
 import com.streamsets.pipeline.config.StageDefinition;
@@ -26,6 +28,7 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import java.io.InputStream;
+import java.util.List;
 import java.util.Properties;
 
 public class TestStageDefinitionExtractor {
@@ -82,6 +85,14 @@ public class TestStageDefinitionExtractor {
     }
   }
 
+  public static class Source2Upgrader implements StageUpgrader {
+    @Override
+    public List<Config> upgrade(String library, String stageName, String stageInstance, int fromVersion, int toVersion,
+        List<Config> configs) throws StageException {
+      return configs;
+    }
+  }
+
   public enum TwoOutputStreams implements Label {
     OS1, OS2;
 
@@ -93,7 +104,7 @@ public class TestStageDefinitionExtractor {
 
   @StageDef(version = 2, label = "LL", description = "DD", icon = "TargetIcon.svg",
       execution = ExecutionMode.STANDALONE, outputStreams = TwoOutputStreams.class, recordsByRef = true,
-      privateClassLoader = true)
+      privateClassLoader = true, upgrader = Source2Upgrader.class)
   @ConfigGroups(Group1.class)
   @RawSource(rawSourcePreviewer = Previewer.class)
   @HideConfig(value = "config2", preconditions = true, onErrorRecord = true)
@@ -191,6 +202,7 @@ public class TestStageDefinitionExtractor {
     Assert.assertFalse(def.getConfigDefinitionsMap().containsKey(StageDefinitionExtractor.PRECONDITIONS.getName()));
     Assert.assertTrue(def.getConfigDefinitionsMap().containsKey(StageDefinitionExtractor.ON_ERROR_RECORD.getName()));
     Assert.assertFalse(def.getRecordsByRef());
+    Assert.assertTrue(def.getUpgrader() instanceof StageUpgrader.Default);
   }
 
   @Test
@@ -214,6 +226,7 @@ public class TestStageDefinitionExtractor {
     Assert.assertFalse(def.isVariableOutputStreams());
     Assert.assertFalse(def.hasOnRecordError());
     Assert.assertFalse(def.hasPreconditions());
+    Assert.assertTrue(def.getUpgrader() instanceof Source2Upgrader);
   }
 
   @Test

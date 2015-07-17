@@ -6,6 +6,7 @@
 package com.streamsets.pipeline.runner.preview;
 
 import com.streamsets.pipeline.api.ExecutionMode;
+import com.streamsets.pipeline.api.StageUpgrader;
 import com.streamsets.pipeline.config.ConfigDefinition;
 import com.streamsets.pipeline.config.PipelineDefinition;
 import com.streamsets.pipeline.config.StageDefinition;
@@ -29,7 +30,8 @@ public class PreviewStageLibraryTask extends TaskWrapper implements StageLibrary
 
   private static final StageDefinition PLUG_STAGE =  new StageDefinition(PREVIEW_LIB, false, PreviewPlugTarget.class,
       NAME, VERSION, "previewPlug", "Preview Plug", StageType.TARGET, false, false, false, Collections.<ConfigDefinition>emptyList(),
-      null/*raw source definition*/, "", null, false, 0, null, Arrays.asList(ExecutionMode.STANDALONE), false);
+      null/*raw source definition*/, "", null, false, 0, null, Arrays.asList(ExecutionMode.STANDALONE), false,
+      new StageUpgrader.Default());
 
   private final StageLibraryTask library;
 

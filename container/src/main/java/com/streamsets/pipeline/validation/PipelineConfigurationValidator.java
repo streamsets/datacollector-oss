@@ -13,7 +13,7 @@ import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.el.ELEval;
 import com.streamsets.pipeline.api.el.ELEvalException;
 import com.streamsets.pipeline.api.impl.TextUtils;
-import com.streamsets.pipeline.config.ConfigConfiguration;
+import com.streamsets.pipeline.api.Config;
 import com.streamsets.pipeline.config.ConfigDefinition;
 import com.streamsets.pipeline.config.PipelineConfiguration;
 import com.streamsets.pipeline.creation.PipelineBean;
@@ -246,8 +246,8 @@ public class PipelineConfigurationValidator {
     return preview;
   }
 
-  private ConfigConfiguration getConfig(List<ConfigConfiguration> configs, String name) {
-    for (ConfigConfiguration config : configs) {
+  private Config getConfig(List<Config> configs, String name) {
+    for (Config config : configs) {
       if (config.getName().equals(name)) {
         return config;
       }
@@ -358,7 +358,7 @@ public class PipelineConfigurationValidator {
           preview &= validateRequiredField(confDef, stageConf, issueCreator);
         }
       }
-      for (ConfigConfiguration conf : stageConf.getConfiguration()) {
+      for (Config conf : stageConf.getConfiguration()) {
         ConfigDefinition confDef = stageDef.getConfigDefinition(conf.getName());
         preview &= validateConfigDefinition(confDef, conf, stageConf, stageDef, null, issueCreator, true/*inject*/);
         if (stageDef.hasPreconditions() && confDef.getName().equals(ConfigDefinition.PRECONDITIONS)) {
@@ -399,7 +399,7 @@ public class PipelineConfigurationValidator {
 
   private static final Record PRECONDITION_RECORD = new RecordImpl("dummy", "dummy", null, null);
 
-  boolean validatePreconditions(String instanceName, ConfigDefinition confDef, ConfigConfiguration conf, Issues issues,
+  boolean validatePreconditions(String instanceName, ConfigDefinition confDef, Config conf, Issues issues,
       IssueCreator issueCreator) {
     boolean valid = true;
     if (conf.getValue() != null && conf.getValue() instanceof List) {
@@ -428,7 +428,7 @@ public class PipelineConfigurationValidator {
     return valid;
   }
 
-  private boolean validateConfigDefinition(ConfigDefinition confDef, ConfigConfiguration conf,
+  private boolean validateConfigDefinition(ConfigDefinition confDef, Config conf,
                                            StageConfiguration stageConf, StageDefinition stageDef,
                                            Map<String, Object> parentConf, IssueCreator issueCreator,
                                            boolean inject) {
@@ -447,12 +447,12 @@ public class PipelineConfigurationValidator {
       (confDef.getTriggeredByValues() != null && confDef.getTriggeredByValues().size() > 0)) {
       String dependsOn = confDef.getDependsOn();
       List<Object> triggeredBy = confDef.getTriggeredByValues();
-      ConfigConfiguration dependsOnConfig = getConfig(stageConf.getConfiguration(), dependsOn);
+      Config dependsOnConfig = getConfig(stageConf.getConfiguration(), dependsOn);
       if(dependsOnConfig == null) {
         //complex field case?
         //look at the configurations in model definition
         if(parentConf != null && parentConf.containsKey(dependsOn)) {
-          dependsOnConfig = new ConfigConfiguration(dependsOn, parentConf.get(dependsOn));
+          dependsOnConfig = new Config(dependsOn, parentConf.get(dependsOn));
         }
       }
       if (dependsOnConfig != null && dependsOnConfig.getValue() != null) {
@@ -486,7 +486,7 @@ public class PipelineConfigurationValidator {
     return preview;
   }
 
-  private boolean validateModel(StageConfiguration stageConf, StageDefinition stageDef, ConfigDefinition confDef, ConfigConfiguration conf,
+  private boolean validateModel(StageConfiguration stageConf, StageDefinition stageDef, ConfigDefinition confDef, Config conf,
       IssueCreator issueCreator) {
     String instanceName = stageConf.getInstanceName();
     boolean preview = true;
@@ -608,8 +608,8 @@ public class PipelineConfigurationValidator {
       String configName = entry.getKey();
       Object value = entry.getValue();
       ConfigDefinition configDefinition = configDefinitionsMap.get(configName);
-      ConfigConfiguration configConfiguration = new ConfigConfiguration(configName, value);
-      preview &= validateConfigDefinition(configDefinition, configConfiguration, stageConf, stageDef, confvalue,
+      Config config = new Config(configName, value);
+      preview &= validateConfigDefinition(configDefinition, config, stageConf, stageDef, confvalue,
         issueCreator, false /*do not inject*/);
     }
     return preview;

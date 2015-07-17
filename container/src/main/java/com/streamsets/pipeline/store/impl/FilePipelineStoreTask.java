@@ -12,7 +12,7 @@ import com.streamsets.dc.execution.PipelineStateStore;
 import com.streamsets.dc.execution.PipelineStatus;
 import com.streamsets.pipeline.api.ExecutionMode;
 import com.streamsets.pipeline.api.impl.Utils;
-import com.streamsets.pipeline.config.ConfigConfiguration;
+import com.streamsets.pipeline.api.Config;
 import com.streamsets.pipeline.config.ConfigDefinition;
 import com.streamsets.pipeline.config.DataRuleDefinition;
 import com.streamsets.pipeline.config.MetricsRuleDefinition;
@@ -405,7 +405,7 @@ public class FilePipelineStoreTask extends AbstractTask implements PipelineStore
     StageConfiguration errorStageConf = syncStageConfiguration(pipelineConfig.getErrorStage(), stageLibrary);
 
     //sync pipeline configuration options
-    List<ConfigConfiguration> pipelineConfigs = syncPipelineConf(pipelineConfig, name, tagOrRev);
+    List<Config> pipelineConfigs = syncPipelineConf(pipelineConfig, name, tagOrRev);
 
     //sync stage configurations
     List<StageConfiguration> stageConfigs = new ArrayList<>();
@@ -417,20 +417,20 @@ public class FilePipelineStoreTask extends AbstractTask implements PipelineStore
       pipelineConfig.getDescription(), pipelineConfigs, pipelineConfig.getUiInfo(), stageConfigs, errorStageConf);
   }
 
-  private List<ConfigConfiguration> syncPipelineConf(PipelineConfiguration pipelineConfig, String name,
+  private List<Config> syncPipelineConf(PipelineConfiguration pipelineConfig, String name,
                                                      String tagOrRev) {
     PipelineDefinition pipelineDef = PipelineDefinition.getPipelineDef();
     Set<String> configsToRemove = getNamesFromConfigConf(pipelineConfig.getConfiguration());
 
-    List<ConfigConfiguration> configuration = new ArrayList<>(pipelineConfig.getConfiguration());
+    List<Config> configuration = new ArrayList<>(pipelineConfig.getConfiguration());
 
     for(ConfigDefinition configDefinition : pipelineDef.getConfigDefinitions()) {
-      ConfigConfiguration configConf = pipelineConfig.getConfiguration(configDefinition.getName());
+      Config configConf = pipelineConfig.getConfiguration(configDefinition.getName());
       if(configConf == null) {
         LOG.warn("Pipeline [name : {}, version : {}] does not have expected configuration '{}'. " +
             "Adding the configuration with default value '{}'", name, tagOrRev, configDefinition.getName(),
           configDefinition.getDefaultValue());
-        configConf = new ConfigConfiguration(configDefinition.getName(), configDefinition.getDefaultValue());
+        configConf = new Config(configDefinition.getName(), configDefinition.getDefaultValue());
         configuration.add(configConf);
       }
       configsToRemove.remove(configDefinition.getName());
@@ -438,8 +438,8 @@ public class FilePipelineStoreTask extends AbstractTask implements PipelineStore
     }
 
     if(configsToRemove.size() > 0) {
-      List<ConfigConfiguration> remove = new ArrayList<>();
-      for(ConfigConfiguration c : pipelineConfig.getConfiguration()) {
+      List<Config> remove = new ArrayList<>();
+      for(Config c : pipelineConfig.getConfiguration()) {
         if(configsToRemove.contains(c.getName())) {
           remove.add(c);
         }
@@ -471,20 +471,20 @@ public class FilePipelineStoreTask extends AbstractTask implements PipelineStore
     Set<String> configsToRemove = getNamesFromConfigConf(argStageConf.getConfiguration());
 
     //Updated list of configurations
-    Map<String, ConfigConfiguration> configuration = new LinkedHashMap<>();
-    for(ConfigConfiguration c : argStageConf.getConfiguration()) {
+    Map<String, Config> configuration = new LinkedHashMap<>();
+    for(Config c : argStageConf.getConfiguration()) {
       configuration.put(c.getName(), c);
     }
 
     //go over every config def and make sure it is present in the config configuration
     for(ConfigDefinition configDef : stageDef.getConfigDefinitions()) {
-      ConfigConfiguration configConf = argStageConf.getConfig(configDef.getName());
+      Config configConf = argStageConf.getConfig(configDef.getName());
       if(configConf == null) {
         LOG.warn("Stage [name : {}, library : {}, version : {}] does not have expected configuration '{}'. " +
             "Adding the configuration with default value '{}'",
           argStageConf.getStageName(), argStageConf.getLibrary(), argStageConf.getStageVersion(), configDef.getName(),
           configDef.getDefaultValue());
-        configConf = new ConfigConfiguration(configDef.getName(), configDef.getDefaultValue());
+        configConf = new Config(configDef.getName(), configDef.getDefaultValue());
         configuration.put(configDef.getName(), configConf);
       }
       if(configDef.getModel() != null && configDef.getModel().getConfigDefinitions() != null
@@ -495,7 +495,7 @@ public class FilePipelineStoreTask extends AbstractTask implements PipelineStore
         List<Map<String, Object>> value = (List<Map<String, Object>>)configConf.getValue();
         if(value == null) {
           value = new ArrayList<>();
-          configConf = new ConfigConfiguration(configConf.getName(), value);
+          configConf = new Config(configConf.getName(), value);
           configuration.put(configConf.getName(), configConf);
         }
         if(value.isEmpty()) {
@@ -519,8 +519,8 @@ public class FilePipelineStoreTask extends AbstractTask implements PipelineStore
 
     //Remove unexpected configurations
     if(configsToRemove.size() > 0) {
-      List<ConfigConfiguration> remove = new ArrayList<>();
-      for (ConfigConfiguration c : configuration.values()) {
+      List<Config> remove = new ArrayList<>();
+      for (Config c : configuration.values()) {
         if (configsToRemove.contains(c.getName())) {
           remove.add(c);
         }
@@ -543,13 +543,13 @@ public class FilePipelineStoreTask extends AbstractTask implements PipelineStore
           }
         }
       }
-      for(ConfigConfiguration c : remove) {
+      for(Config c : remove) {
         configuration.remove(c.getName());
       }
     }
 
-    List<ConfigConfiguration> config = new ArrayList<>();
-    for(ConfigConfiguration c : configuration.values()) {
+    List<Config> config = new ArrayList<>();
+    for(Config c : configuration.values()) {
       config.add(c);
     }
     return new StageConfiguration(argStageConf.getInstanceName(), argStageConf.getLibrary(),
@@ -566,9 +566,9 @@ public class FilePipelineStoreTask extends AbstractTask implements PipelineStore
    * @param configDefs
    * @return
    */
-  private Set<String> getNamesFromConfigConf(List<ConfigConfiguration> configDefs) {
+  private Set<String> getNamesFromConfigConf(List<Config> configDefs) {
     Set<String> expectedConfigNames = new HashSet<>();
-    for(ConfigConfiguration c : configDefs) {
+    for(Config c : configDefs) {
       expectedConfigNames.add(c.getName());
       if(c.getValue() instanceof List) {
         for (Object object : (List) c.getValue()) {

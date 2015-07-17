@@ -14,6 +14,7 @@ import com.streamsets.pipeline.api.Processor;
 import com.streamsets.pipeline.api.Source;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.StageDef;
+import com.streamsets.pipeline.api.StageUpgrader;
 import com.streamsets.pipeline.api.Target;
 import com.streamsets.pipeline.api.impl.ErrorMessage;
 import com.streamsets.pipeline.api.impl.Utils;
@@ -143,6 +144,8 @@ public abstract class StageDefinitionExtractor {
           }
         }
       }
+
+
     }
     return errors;
   }
@@ -185,10 +188,18 @@ public abstract class StageDefinitionExtractor {
 
       boolean privateClassLoader = sDef.privateClassLoader();
 
+      StageUpgrader upgrader;
+      try {
+        upgrader = sDef.upgrader().newInstance();
+      } catch (Exception ex) {
+        throw new IllegalArgumentException(Utils.format(
+            "Could not instantiate StageUpgrader for StageDefinition '{}': {}", name, ex.getMessage(), ex));
+      }
+
       return new StageDefinition(libraryDef, privateClassLoader, klass, name, version, label, description, type,
                                  errorStage, preconditions, onRecordError, configDefinitions, rawSourceDefinition, icon,
                                  configGroupDefinition, variableOutputStreams, outputStreams,
-                                 outputStreamLabelProviderClass, executionModes, recordsByRef);
+                                 outputStreamLabelProviderClass, executionModes, recordsByRef, upgrader);
     } else {
       throw new IllegalArgumentException(Utils.format("Invalid StageDefinition: {}", errors));
     }

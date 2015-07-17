@@ -16,7 +16,7 @@ import com.streamsets.pipeline.api.ExecutionMode;
 import com.streamsets.pipeline.api.StageDef;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.base.BaseTarget;
-import com.streamsets.pipeline.config.ConfigConfiguration;
+import com.streamsets.pipeline.api.Config;
 import com.streamsets.pipeline.config.ConfigDefinition;
 import com.streamsets.pipeline.config.PipelineConfiguration;
 import com.streamsets.pipeline.config.StageConfiguration;
@@ -350,7 +350,7 @@ public class TestPipelineBeanCreator {
     Mockito.when(libraryDef.getClassLoader()).thenReturn(Thread.currentThread().getContextClassLoader());
     StageDefinition stageDef = StageDefinitionExtractor.get().extract(libraryDef, MyTarget.class, "");
 
-    StageConfiguration stageConf = new StageConfiguration("i", "l", "n", 1, Collections.<ConfigConfiguration>emptyList(),
+    StageConfiguration stageConf = new StageConfiguration("i", "l", "n", 1, Collections.<Config>emptyList(),
                                                           Collections.<String, Object>emptyMap(),
                                                           Collections.<String>emptyList(),
                                                           Collections.<String>emptyList());
@@ -380,13 +380,13 @@ public class TestPipelineBeanCreator {
     Mockito.when(libraryDef.getClassLoader()).thenReturn(Thread.currentThread().getContextClassLoader());
     StageDefinition stageDef = StageDefinitionExtractor.get().extract(libraryDef, MyTarget.class, "");
 
-    List<ConfigConfiguration> configConfs = ImmutableList.of(
-        new ConfigConfiguration("list", ImmutableList.of("X")),
-        new ConfigConfiguration("map", ImmutableList.of(ImmutableMap.of("key", "a", "value", "AA"))),
-        new ConfigConfiguration("bean.beanInt", new Long(3)),
-        new ConfigConfiguration("bean.beanSubBean.subBeanEnum", "A"),
-        new ConfigConfiguration("bean.beanSubBean.subBeanString", "AA"),
-        new ConfigConfiguration("complexField", ImmutableList.of(ImmutableMap.of(
+    List<Config> configConfs = ImmutableList.of(
+        new Config("list", ImmutableList.of("X")),
+        new Config("map", ImmutableList.of(ImmutableMap.of("key", "a", "value", "AA"))),
+        new Config("bean.beanInt", new Long(3)),
+        new Config("bean.beanSubBean.subBeanEnum", "A"),
+        new Config("bean.beanSubBean.subBeanString", "AA"),
+        new Config("complexField", ImmutableList.of(ImmutableMap.of(
             "beanInt", 4,
             "beanSubBean.subBeanEnum", "A",
             "beanSubBean.subBeanList", ImmutableList.of("a", "b"),
@@ -433,16 +433,16 @@ public class TestPipelineBeanCreator {
            .thenReturn(errorStageDef);
     Mockito.when(libraryDef.getClassLoader()).thenReturn(Thread.currentThread().getContextClassLoader());
 
-    List<ConfigConfiguration> pipelineConfigs = ImmutableList.of(
-        new ConfigConfiguration("executionMode", ExecutionMode.CLUSTER.name()),
-        new ConfigConfiguration("memoryLimit", 1000)
+    List<Config> pipelineConfigs = ImmutableList.of(
+        new Config("executionMode", ExecutionMode.CLUSTER.name()),
+        new Config("memoryLimit", 1000)
     );
 
     StageConfiguration stageConf = new StageConfiguration("si", "l", "s", 1,
-        ImmutableList.of(new ConfigConfiguration("list", ImmutableList.of("S"))),
+        ImmutableList.of(new Config("list", ImmutableList.of("S"))),
         Collections.<String, Object>emptyMap(), Collections.<String>emptyList(), Collections.<String>emptyList());
     StageConfiguration errorStageConf = new StageConfiguration("ei", "l", "e", 1,
-        ImmutableList.of(new ConfigConfiguration("list", ImmutableList.of("E"))),
+        ImmutableList.of(new Config("list", ImmutableList.of("E"))),
         Collections.<String, Object>emptyMap(), Collections.<String>emptyList(), Collections.<String>emptyList());
     PipelineConfiguration pipelineConf = new PipelineConfiguration(1, UUID.randomUUID(), "D", pipelineConfigs,
         Collections.EMPTY_MAP, ImmutableList.of(stageConf), errorStageConf);
@@ -474,7 +474,7 @@ public class TestPipelineBeanCreator {
     StageDefinition stageDef = StageDefinitionExtractor.get().extract(libraryDef, MyTarget.class, "");
 
     StageConfiguration stageConf =
-        new StageConfiguration("i", "l", "n", 1, Collections.<ConfigConfiguration>emptyList(),
+        new StageConfiguration("i", "l", "n", 1, Collections.<Config>emptyList(),
                                Collections.<String, Object>emptyMap(),
                                Collections.<String>emptyList(),
                                Collections.<String>emptyList());

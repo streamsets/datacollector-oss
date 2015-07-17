@@ -16,9 +16,8 @@ import com.streamsets.pipeline.cluster.MockClusterProvider;
 import com.streamsets.pipeline.cluster.MockSystemProcess;
 import com.streamsets.pipeline.cluster.MockSystemProcessFactory;
 import com.streamsets.pipeline.cluster.ClusterManager;
-import com.streamsets.pipeline.config.ConfigConfiguration;
+import com.streamsets.pipeline.api.Config;
 import com.streamsets.pipeline.config.PipelineConfiguration;
-import com.streamsets.pipeline.creation.PipelineConfigBean;
 import com.streamsets.pipeline.lib.util.ThreadUtil;
 import com.streamsets.pipeline.main.RuntimeInfo;
 import com.streamsets.pipeline.prodmanager.ClusterPipelineManager.ClusterSourceInfo;
@@ -322,7 +321,7 @@ public class TestClusterPipelineManager {
     clusterPipelineManager = createClusterPipelineManager();
     clusterPipelineManager.initTask();
     PipelineConfiguration pipelineConf = pipelineStoreTask.load(NAME, REV).createWithNewConfig(
-        new ConfigConfiguration("executionMode", ExecutionMode.CLUSTER));
+        new Config("executionMode", ExecutionMode.CLUSTER));
     pipelineConf = pipelineStoreTask.save("admin", NAME, REV, "", pipelineConf);
     clusterPipelineManager.startPipeline(NAME, REV);
     Assert.assertEquals(State.ERROR, getState());

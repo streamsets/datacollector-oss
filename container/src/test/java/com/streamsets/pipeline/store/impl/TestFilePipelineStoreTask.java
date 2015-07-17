@@ -10,7 +10,7 @@ import com.google.common.collect.ImmutableList;
 import static org.junit.Assert.assertEquals;
 
 import com.streamsets.dc.execution.PipelineStateStore;
-import com.streamsets.pipeline.config.ConfigConfiguration;
+import com.streamsets.pipeline.api.Config;
 import com.streamsets.pipeline.config.DataRuleDefinition;
 import com.streamsets.pipeline.config.MetricElement;
 import com.streamsets.pipeline.config.MetricType;
@@ -355,8 +355,8 @@ public class TestFilePipelineStoreTask {
     PipelineConfiguration expectedPipelineConfig = MockStages.createPipelineWithRequiredDependentConfig();
 
     //error stage has an unexpected config and does not have expected config
-    List<ConfigConfiguration> configuration = new ArrayList<>();
-      configuration.add(new ConfigConfiguration("Hello", "World"));
+    List<Config> configuration = new ArrayList<>();
+      configuration.add(new Config("Hello", "World"));
     expectedPipelineConfig.getErrorStage().setConfig(configuration);
     Assert.assertEquals(1, expectedPipelineConfig.getErrorStage().getConfiguration().size());
 
@@ -364,7 +364,7 @@ public class TestFilePipelineStoreTask {
     Assert.assertTrue(expectedPipelineConfig.getStages().get(0).getConfiguration().size() == 0);
     //Target has 1 configuration, expected 0
     Assert.assertTrue(expectedPipelineConfig.getStages().get(1).getConfiguration().size() == 0);
-    expectedPipelineConfig.getStages().get(1).getConfiguration().add(new ConfigConfiguration("unexpected", "conf"));
+    expectedPipelineConfig.getStages().get(1).getConfiguration().add(new Config("unexpected", "conf"));
     Assert.assertTrue(expectedPipelineConfig.getStages().get(1).getConfiguration().size() == 1);
 
     /*
@@ -390,7 +390,7 @@ public class TestFilePipelineStoreTask {
     Assert.assertEquals("/SDC_HOME/errorDir", expectedPipelineConfig.getErrorStage().getConfiguration().get(0).getValue());
 
     //Source has configuration, expected 2
-    List<ConfigConfiguration> sourceConfig = expectedPipelineConfig.getStages().get(0).getConfiguration();
+    List<Config> sourceConfig = expectedPipelineConfig.getStages().get(0).getConfiguration();
     Assert.assertTrue(sourceConfig.size() == 2);
 
     Assert.assertEquals("dependencyConfName", sourceConfig.get(0).getName());
@@ -428,7 +428,7 @@ public class TestFilePipelineStoreTask {
      */
 
     //Source has configuration, expected 1
-    List<ConfigConfiguration> sourceConfig = expectedPipelineConfig.getStages().get(0).getConfiguration();
+    List<Config> sourceConfig = expectedPipelineConfig.getStages().get(0).getConfiguration();
     Assert.assertEquals(1, sourceConfig.size());
     Assert.assertEquals("complexConfName", sourceConfig.get(0).getName());
     Assert.assertTrue(sourceConfig.get(0).getValue() instanceof List);
@@ -464,7 +464,7 @@ public class TestFilePipelineStoreTask {
     List<Map<String, Object>> listOfMap = new ArrayList<>();
     listOfMap.add(map1);
     listOfMap.add(map2);
-    ConfigConfiguration c = new ConfigConfiguration("complexConfName", listOfMap);
+    Config c = new Config("complexConfName", listOfMap);
     expectedPipelineConfig.getStages().get(0).setConfig(Arrays.asList(c));
     Assert.assertTrue(expectedPipelineConfig.getStages().get(0).getConfiguration().size() == 1);
 
@@ -481,7 +481,7 @@ public class TestFilePipelineStoreTask {
      */
 
     //Source has configuration, expected 1
-    List<ConfigConfiguration> sourceConfig = expectedPipelineConfig.getStages().get(0).getConfiguration();
+    List<Config> sourceConfig = expectedPipelineConfig.getStages().get(0).getConfiguration();
     Assert.assertEquals(1, sourceConfig.size());
     Assert.assertEquals("complexConfName", sourceConfig.get(0).getName());
     Assert.assertTrue(sourceConfig.get(0).getValue() instanceof List);
@@ -510,7 +510,7 @@ public class TestFilePipelineStoreTask {
     PipelineConfiguration expectedPipelineConfig = MockStages.createPipelineWithRequiredDependentConfig();
 
     StageConfiguration nonExistingStage = new StageConfiguration("nonExistingStage", "default", "nonExistingStage", 1,
-      Collections.<ConfigConfiguration>emptyList(), null, ImmutableList.of("p"), Collections.<String>emptyList());
+      Collections.<Config>emptyList(), null, ImmutableList.of("p"), Collections.<String>emptyList());
     expectedPipelineConfig.getStages().add(nonExistingStage);
 
     try {

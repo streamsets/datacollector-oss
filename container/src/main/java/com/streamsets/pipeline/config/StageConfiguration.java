@@ -6,6 +6,7 @@
 package com.streamsets.pipeline.config;
 
 import com.google.common.annotations.VisibleForTesting;
+import com.streamsets.pipeline.api.Config;
 import com.streamsets.pipeline.api.impl.Utils;
 
 import java.io.Serializable;
@@ -21,8 +22,8 @@ public class StageConfiguration implements Serializable {
   private final String library;
   private final String stageName;
   private final int stageVersion;
-  private final List<ConfigConfiguration> configuration;
-  private final Map<String, ConfigConfiguration> configurationMap;
+  private final List<Config> configuration;
+  private final Map<String, Config> configurationMap;
   private final Map<String, Object> uiInfo;
 
   //wiring with other components
@@ -32,7 +33,7 @@ public class StageConfiguration implements Serializable {
   private boolean systemGenerated;
 
   public StageConfiguration(String instanceName, String library, String stageName, int stageVersion,
-      List<ConfigConfiguration> configuration, Map<String, Object> uiInfo, List<String> inputLanes,
+      List<Config> configuration, Map<String, Object> uiInfo, List<String> inputLanes,
       List<String> outputLanes) {
     this.instanceName = instanceName;
     this.library = library;
@@ -62,7 +63,7 @@ public class StageConfiguration implements Serializable {
     return stageVersion;
   }
 
-  public List<ConfigConfiguration> getConfiguration() {
+  public List<Config> getConfiguration() {
     return configuration;
   }
 
@@ -78,16 +79,16 @@ public class StageConfiguration implements Serializable {
     return outputLanes;
   }
 
-  public ConfigConfiguration getConfig(String name) {
+  public Config getConfig(String name) {
     return configurationMap.get(name);
   }
 
   @VisibleForTesting
-  public void setConfig(List<ConfigConfiguration> configList) {
+  public void setConfig(List<Config> configList) {
     configuration.clear();
     configuration.addAll(configList);
     configurationMap.clear();
-    for (ConfigConfiguration conf : configuration) {
+    for (Config conf : configuration) {
       configurationMap.put(conf.getName(), conf);
     }
   }

@@ -13,7 +13,7 @@ import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.Source;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.Target;
-import com.streamsets.pipeline.config.ConfigConfiguration;
+import com.streamsets.pipeline.api.Config;
 import com.streamsets.pipeline.config.DeliveryGuarantee;
 import com.streamsets.pipeline.config.PipelineConfiguration;
 import com.streamsets.pipeline.config.StageConfiguration;
@@ -45,9 +45,9 @@ public class TestPipeline {
         MockStages.createProcessor("p", ImmutableList.of("s"), ImmutableList.of("p")),
         MockStages.createTarget("t", ImmutableList.of("p"))
     );
-    List<ConfigConfiguration> pipelineConfigs = new ArrayList<>(2);
-    pipelineConfigs.add(new ConfigConfiguration("deliveryGuarantee", DeliveryGuarantee.AT_LEAST_ONCE));
-    pipelineConfigs.add(new ConfigConfiguration("stopPipelineOnError", false));
+    List<Config> pipelineConfigs = new ArrayList<>(2);
+    pipelineConfigs.add(new Config("deliveryGuarantee", DeliveryGuarantee.AT_LEAST_ONCE));
+    pipelineConfigs.add(new Config("stopPipelineOnError", false));
     PipelineConfiguration pipelineConf = new PipelineConfiguration(PipelineStoreTask.SCHEMA_VERSION, UUID.randomUUID(),
       null, pipelineConfigs, null, stageDefs, MockStages.getErrorStageConfig());
     Pipeline.Builder builder = new Pipeline.Builder(lib, "name", "name", "0", pipelineConf);
@@ -135,9 +135,9 @@ public class TestPipeline {
         MockStages.createProcessor("p", ImmutableList.of("s"), ImmutableList.of("p")),
         MockStages.createTarget("t", ImmutableList.of("p"))
     );
-    List<ConfigConfiguration> pipelineConfigs = new ArrayList<>(2);
-    pipelineConfigs.add(new ConfigConfiguration("deliveryGuarantee", DeliveryGuarantee.AT_LEAST_ONCE));
-    pipelineConfigs.add(new ConfigConfiguration("stopPipelineOnError", false));
+    List<Config> pipelineConfigs = new ArrayList<>(2);
+    pipelineConfigs.add(new Config("deliveryGuarantee", DeliveryGuarantee.AT_LEAST_ONCE));
+    pipelineConfigs.add(new Config("stopPipelineOnError", false));
     PipelineConfiguration pipelineConf = new PipelineConfiguration(PipelineStoreTask.SCHEMA_VERSION, UUID.randomUUID(),
        null, pipelineConfigs, null, stageDefs, MockStages.getErrorStageConfig());
     Pipeline.Builder builder = new Pipeline.Builder(lib, "name", "name", "0", pipelineConf);
@@ -182,9 +182,9 @@ public class TestPipeline {
         MockStages.createProcessor("p", ImmutableList.of("s"), ImmutableList.of("p")),
         MockStages.createTarget("t", ImmutableList.of("p"))
     );
-    List<ConfigConfiguration> pipelineConfigs = new ArrayList<>(2);
-    pipelineConfigs.add(new ConfigConfiguration("deliveryGuarantee", DeliveryGuarantee.AT_LEAST_ONCE));
-    pipelineConfigs.add(new ConfigConfiguration("stopPipelineOnError", false));
+    List<Config> pipelineConfigs = new ArrayList<>(2);
+    pipelineConfigs.add(new Config("deliveryGuarantee", DeliveryGuarantee.AT_LEAST_ONCE));
+    pipelineConfigs.add(new Config("stopPipelineOnError", false));
 
     PipelineConfiguration pipelineConf = new PipelineConfiguration(PipelineStoreTask.SCHEMA_VERSION, UUID.randomUUID(),
        null, pipelineConfigs, null, stageDefs, MockStages.getErrorStageConfig());
@@ -246,9 +246,9 @@ public class TestPipeline {
         MockStages.createProcessor("p", ImmutableList.of("s"), ImmutableList.of("p")),
         MockStages.createTarget("t", ImmutableList.of("p"))
     );
-    List<ConfigConfiguration> pipelineConfigs = new ArrayList<>(2);
-    pipelineConfigs.add(new ConfigConfiguration("deliveryGuarantee", DeliveryGuarantee.AT_LEAST_ONCE));
-    pipelineConfigs.add(new ConfigConfiguration("stopPipelineOnError", false));
+    List<Config> pipelineConfigs = new ArrayList<>(2);
+    pipelineConfigs.add(new Config("deliveryGuarantee", DeliveryGuarantee.AT_LEAST_ONCE));
+    pipelineConfigs.add(new Config("stopPipelineOnError", false));
 
     PipelineConfiguration pipelineConf = new PipelineConfiguration(PipelineStoreTask.SCHEMA_VERSION, UUID.randomUUID(),
        null, pipelineConfigs, null, stageDefs, MockStages.getErrorStageConfig());

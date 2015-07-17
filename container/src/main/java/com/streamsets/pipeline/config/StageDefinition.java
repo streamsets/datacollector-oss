@@ -7,6 +7,7 @@ package com.streamsets.pipeline.config;
 
 import com.streamsets.pipeline.api.ExecutionMode;
 import com.streamsets.pipeline.api.Label;
+import com.streamsets.pipeline.api.StageUpgrader;
 import com.streamsets.pipeline.api.impl.LocalizableMessage;
 import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.creation.StageConfigBean;
@@ -44,6 +45,7 @@ public class StageDefinition {
   private List<String> outputStreamLabels;
   private List<ExecutionMode> executionModes;
   private final boolean recordsByRef;
+  private final StageUpgrader upgrader;
 
   // localized version
   private StageDefinition(StageLibraryDefinition libraryDefinition, boolean privateClassLoader, ClassLoader classLoader,
@@ -51,7 +53,8 @@ public class StageDefinition {
       int version, String label, String description, StageType type, boolean errorStage, boolean preconditions,
       boolean onRecordError, List<ConfigDefinition> configDefinitions, RawSourceDefinition rawSourceDefinition,
       String icon, ConfigGroupDefinition configGroupDefinition, boolean variableOutputStreams, int outputStreams,
-      List<String> outputStreamLabels, List<ExecutionMode> executionModes, boolean recordsByRef) {
+      List<String> outputStreamLabels, List<ExecutionMode> executionModes, boolean recordsByRef,
+      StageUpgrader upgrader) {
     this.libraryDefinition = libraryDefinition;
     this.privateClassLoader = privateClassLoader;
     this.classLoader = classLoader;
@@ -87,6 +90,7 @@ public class StageDefinition {
     outputStreamLabelProviderClass = null;
     this.executionModes = executionModes;
     this.recordsByRef = recordsByRef;
+    this.upgrader = upgrader;
   }
 
   public StageDefinition(StageDefinition def, ClassLoader classLoader) {
@@ -116,15 +120,16 @@ public class StageDefinition {
     outputStreamLabelProviderClass = def.outputStreamLabelProviderClass;
     executionModes = def.executionModes;
     recordsByRef = def.recordsByRef;
+    upgrader = def.upgrader;
   }
 
-    public StageDefinition(StageLibraryDefinition libraryDefinition, boolean privateClassLoader, Class klass, String name,
-      int version,
-      String label, String description,
+    public StageDefinition(StageLibraryDefinition libraryDefinition, boolean privateClassLoader, Class klass,
+        String name, int version, String label, String description,
       StageType type, boolean errorStage, boolean preconditions, boolean onRecordError,
       List<ConfigDefinition> configDefinitions, RawSourceDefinition rawSourceDefinition, String icon,
       ConfigGroupDefinition configGroupDefinition, boolean variableOutputStreams, int outputStreams,
-      String outputStreamLabelProviderClass, List<ExecutionMode> executionModes, boolean recordsByRef) {
+      String outputStreamLabelProviderClass, List<ExecutionMode> executionModes, boolean recordsByRef,
+        StageUpgrader upgrader) {
     this.libraryDefinition = libraryDefinition;
     this.privateClassLoader = privateClassLoader;
     this.classLoader = libraryDefinition.getClassLoader();
@@ -159,6 +164,7 @@ public class StageDefinition {
     this.outputStreamLabelProviderClass = outputStreamLabelProviderClass;
     this.executionModes = executionModes;
     this.recordsByRef = recordsByRef;
+    this.upgrader = upgrader;
   }
 
   public void setLibraryExecutionModes(List<ExecutionMode> executionModes) {
@@ -288,6 +294,10 @@ public class StageDefinition {
     return recordsByRef;
   }
 
+  public StageUpgrader getUpgrader() {
+    return upgrader;
+  }
+
   private final static String STAGE_LABEL = "stageLabel";
   private final static String STAGE_DESCRIPTION = "stageDescription";
 
@@ -381,7 +391,8 @@ public class StageDefinition {
     return new StageDefinition(libraryDefinition, privateClassLoader, getStageClassLoader(), getStageClass(), getName(),
                                getVersion(), label, description, getType(), isErrorStage(),
                                hasPreconditions(), hasOnRecordError(), configDefs, rawSourceDef, getIcon(), groupDefs,
-                               isVariableOutputStreams(), getOutputStreams(), streamLabels, executionModes, recordsByRef);
+                               isVariableOutputStreams(), getOutputStreams(), streamLabels, executionModes,
+                               recordsByRef, upgrader);
   }
 
   private List<String> _getOutputStreamLabels(ClassLoader classLoader, boolean localized) {

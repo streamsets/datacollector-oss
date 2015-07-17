@@ -8,7 +8,7 @@ package com.streamsets.pipeline.util;
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.streamsets.pipeline.config.ConfigConfiguration;
+import com.streamsets.pipeline.api.Config;
 import com.streamsets.pipeline.config.PipelineConfiguration;
 import com.streamsets.pipeline.config.StageConfiguration;
 import com.streamsets.pipeline.json.ObjectMapperFactory;
@@ -35,9 +35,9 @@ public class PipelineConfigurationUtil {
   public static Map<String, Object> getFlattenedMap(String mapName, PipelineConfiguration pipelineConf) {
     Map<String, Object> constants = new HashMap<>();
     if(pipelineConf != null && pipelineConf.getConfiguration() != null) {
-      for (ConfigConfiguration configConfiguration : pipelineConf.getConfiguration()) {
-        if (mapName.equals(configConfiguration.getName()) && configConfiguration.getValue() != null) {
-          for (Map<String, String> map : (List<Map<String, String>>) configConfiguration.getValue()) {
+      for (Config config : pipelineConf.getConfiguration()) {
+        if (mapName.equals(config.getName()) && config.getValue() != null) {
+          for (Map<String, String> map : (List<Map<String, String>>) config.getValue()) {
             constants.put(map.get(KEY), map.get(VALUE));
           }
           return constants;

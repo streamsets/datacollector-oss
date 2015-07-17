@@ -10,6 +10,7 @@ import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.ExecutionMode;
+import com.streamsets.pipeline.api.StageUpgrader;
 import com.streamsets.pipeline.api.impl.LocaleInContext;
 
 import com.streamsets.pipeline.el.ElConstantDefinition;
@@ -63,8 +64,8 @@ public class TestStageDefinitionLocalization {
                                               "StageDescription", StageType.PROCESSOR, true, true, true, configs,
                                               rawSource, "", configGroup, false, 1,
                                               TOutput.class.getName(),
-                                              Arrays.asList(ExecutionMode.CLUSTER,
-                                                            ExecutionMode.STANDALONE), false);
+                                              Arrays.asList(ExecutionMode.CLUSTER, ExecutionMode.STANDALONE), false,
+                                              new StageUpgrader.Default());
     return def;
   }
 

@@ -13,6 +13,7 @@ import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.ExecutionMode;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
+import com.streamsets.pipeline.api.StageUpgrader;
 import com.streamsets.pipeline.api.base.BaseSource;
 import com.streamsets.pipeline.api.base.BaseTarget;
 import com.streamsets.pipeline.api.impl.ErrorMessage;
@@ -136,12 +137,13 @@ public class TestUtil {
     StageDefinition sourceDef = new StageDefinition(
         MOCK_LIB_DEF, false, TSource.class, "source", 1, "label", "description",
         StageType.SOURCE, false, true, true, configDefs, null/*raw source definition*/, "", null, false ,1,
-        null, Arrays.asList(ExecutionMode.CLUSTER, ExecutionMode.STANDALONE), false);
+        null, Arrays.asList(ExecutionMode.CLUSTER, ExecutionMode.STANDALONE), false, new StageUpgrader.Default());
     StageDefinition targetDef = new StageDefinition(
         MOCK_LIB_DEF, false, TTarget.class, "target", 1, "label", "description",
         StageType.TARGET, false, true, true, Collections.<ConfigDefinition>emptyList(), null/*raw source definition*/,
         "TargetIcon.svg", null, false, 0, null, Arrays.asList(ExecutionMode.CLUSTER,
-                                                              ExecutionMode.STANDALONE), false);
+                                                              ExecutionMode.STANDALONE), false,
+        new StageUpgrader.Default());
     Mockito.when(lib.getStage(Mockito.eq("library"), Mockito.eq("source"), Mockito.eq(false)))
            .thenReturn(sourceDef);
     Mockito.when(lib.getStage(Mockito.eq("library"), Mockito.eq("target"), Mockito.eq(false)))

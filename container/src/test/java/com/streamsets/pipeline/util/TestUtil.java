@@ -35,7 +35,7 @@ import com.streamsets.pipeline.api.base.BaseSource;
 import com.streamsets.pipeline.api.base.BaseTarget;
 import com.streamsets.pipeline.api.base.SingleLaneProcessor;
 import com.streamsets.pipeline.api.base.SingleLaneRecordProcessor;
-import com.streamsets.pipeline.config.ConfigConfiguration;
+import com.streamsets.pipeline.api.Config;
 import com.streamsets.pipeline.config.DataRuleDefinition;
 import com.streamsets.pipeline.config.MetricsRuleDefinition;
 import com.streamsets.pipeline.config.PipelineConfiguration;
@@ -302,7 +302,7 @@ public class TestUtil {
           PipelineConfiguration pipelineConf = pipelineStoreTask.load("invalid", PIPELINE_REV);
           PipelineConfiguration mockPipelineConf = MockStages.createPipelineConfigurationSourceTarget();
           pipelineConf.setErrorStage(mockPipelineConf.getErrorStage());
-          pipelineConf.getConfiguration().add(new ConfigConfiguration("executionMode",
+          pipelineConf.getConfiguration().add(new Config("executionMode",
             ExecutionMode.STANDALONE.name()));
         }
 
@@ -312,7 +312,7 @@ public class TestUtil {
           PipelineConfiguration mockPipelineConf = MockStages.createPipelineConfigurationSourceTarget();
           pipelineConf.setStages(mockPipelineConf.getStages());
           pipelineConf.setErrorStage(mockPipelineConf.getErrorStage());
-          pipelineConf.getConfiguration().add(new ConfigConfiguration("executionMode",
+          pipelineConf.getConfiguration().add(new Config("executionMode",
             ExecutionMode.STANDALONE.name()));
           pipelineStoreTask.save("admin", MY_PIPELINE, ZERO_REV, "description"
             , pipelineConf);
@@ -334,7 +334,7 @@ public class TestUtil {
           PipelineConfiguration mockPipelineConf = MockStages.createPipelineConfigurationSourceProcessorTarget();
           pipelineConf.setStages(mockPipelineConf.getStages());
           pipelineConf.setErrorStage(mockPipelineConf.getErrorStage());
-          pipelineConf.getConfiguration().add(new ConfigConfiguration("executionMode",
+          pipelineConf.getConfiguration().add(new Config("executionMode",
             ExecutionMode.STANDALONE.name()));
           pipelineStoreTask.save("admin2", MY_SECOND_PIPELINE, ZERO_REV, "description"
             , pipelineConf);

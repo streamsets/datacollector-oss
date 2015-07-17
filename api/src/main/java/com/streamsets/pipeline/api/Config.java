@@ -3,17 +3,17 @@
  * be copied, modified, or distributed in whole or part without
  * written consent of StreamSets, Inc.
  */
-package com.streamsets.pipeline.config;
+package com.streamsets.pipeline.api;
 
 import java.io.Serializable;
 
 import com.streamsets.pipeline.api.impl.Utils;
 
-public class ConfigConfiguration implements Serializable{
+public class Config implements Serializable{
   private final String name;
   private final Object value;
 
-  public ConfigConfiguration(String name, Object value) {
+  public Config(String name, Object value) {
     this.name = name;
     this.value = value;
   }
@@ -28,7 +28,7 @@ public class ConfigConfiguration implements Serializable{
 
   @Override
   public String toString() {
-    return Utils.format("ConfigConfiguration[name='{}' value='{}']", getName(), getValue());
+    return Utils.format("Config[name='{}' value='{}']", getName(), getValue());
   }
 
 }
