@@ -12,7 +12,8 @@ import com.streamsets.pipeline.api.Label;
 @GenerateResourceBundle
 public enum Groups implements Label {
   UDP("UDP"),
-  SYSLOG("Syslog")
+  SYSLOG("syslog"),
+  COLLECTD("collectd"),
   ;
 
   private final String label;

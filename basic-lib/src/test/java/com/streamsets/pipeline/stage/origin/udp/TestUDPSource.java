@@ -8,6 +8,7 @@ package com.streamsets.pipeline.stage.origin.udp;
 import com.streamsets.pipeline.api.BatchMaker;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
+import com.streamsets.pipeline.lib.parser.ParserConfig;
 import com.streamsets.pipeline.lib.util.ThreadUtil;
 import com.streamsets.pipeline.sdk.SourceRunner;
 import com.streamsets.pipeline.sdk.StageRunner;
@@ -19,16 +20,16 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.ByteArrayOutputStream;
-import java.io.File;
 import java.io.InputStream;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
+
+import static com.streamsets.pipeline.lib.parser.ParserConfigKey.CHARSET;
 
 public class TestUDPSource {
   private static final String TEN_PACKETS_RESOURCE = "netflow-v5-file-1";
@@ -52,8 +53,8 @@ public class TestUDPSource {
 
     boolean produceCalled;
 
-    public TUDPSource(List<String> ports, UDPDataFormat dataFormat, int maxBatchSize, long maxWaitTime) {
-      super(ports, "UTF-8", dataFormat, maxBatchSize, maxWaitTime);
+    public TUDPSource(List<String> ports, ParserConfig parserConfig, UDPDataFormat dataFormat, int maxBatchSize, long maxWaitTime) {
+      super(ports, parserConfig, dataFormat, maxBatchSize, maxWaitTime);
     }
 
     @Override
@@ -93,7 +94,9 @@ public class TestUDPSource {
 
   private void doBasicTest(UDPDataFormat dataFormat) throws Exception {
     List<String> ports = genPorts();
-    TUDPSource source = new TUDPSource(ports, dataFormat, 20, 100L);
+    ParserConfig parserConfig = new ParserConfig();
+    parserConfig.put(CHARSET, "UTF-8");
+    TUDPSource source = new TUDPSource(ports, parserConfig, dataFormat, 20, 100L);
     SourceRunner runner = new SourceRunner.Builder(TUDPSource.class, source).addOutputLane("lane").build();
     runner.runInit();
     try {

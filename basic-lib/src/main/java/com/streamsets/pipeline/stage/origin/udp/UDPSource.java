@@ -12,11 +12,12 @@ import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.base.BaseSource;
 import com.streamsets.pipeline.api.base.OnRecordErrorException;
 import com.streamsets.pipeline.api.impl.Utils;
-import com.streamsets.pipeline.lib.parser.netflow.NetflowParser;
 import com.streamsets.pipeline.lib.parser.AbstractParser;
+import com.streamsets.pipeline.lib.parser.ParserConfig;
+import com.streamsets.pipeline.lib.parser.collectd.CollectdParser;
+import com.streamsets.pipeline.lib.parser.netflow.NetflowParser;
 import com.streamsets.pipeline.lib.parser.syslog.SyslogParser;
 import io.netty.channel.socket.DatagramPacket;
-import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -33,6 +34,12 @@ import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.TimeUnit;
 
+import static com.streamsets.pipeline.lib.parser.ParserConfigKey.AUTH_FILE_PATH;
+import static com.streamsets.pipeline.lib.parser.ParserConfigKey.CHARSET;
+import static com.streamsets.pipeline.lib.parser.ParserConfigKey.CONVERT_TIME;
+import static com.streamsets.pipeline.lib.parser.ParserConfigKey.EXCLUDE_INTERVAL;
+import static com.streamsets.pipeline.lib.parser.ParserConfigKey.TYPES_DB_PATH;
+
 
 public class UDPSource extends BaseSource {
   private static final Logger LOG = LoggerFactory.getLogger(UDPSource.class);
@@ -43,18 +50,22 @@ public class UDPSource extends BaseSource {
   private final Queue<Record> overrunQueue;
   private final long maxWaitTime;
   private final List<InetSocketAddress> addresses;
-  private final String charsetName;
+  private final ParserConfig parserConfig;
   private final UDPDataFormat dataFormat;
-  private Charset charset;
   private long recordCount;
   private UDPConsumingServer udpServer;
   private AbstractParser parser;
   private BlockingQueue<DatagramPacket> incomingQueue;
 
-  public UDPSource(List<String> ports, String charsetName, UDPDataFormat dataFormat, int maxBatchSize,
-                   long maxWaitTime) {
+  public UDPSource(
+      List<String> ports,
+      ParserConfig parserConfig,
+      UDPDataFormat dataFormat,
+      int maxBatchSize,
+      long maxWaitTime
+  ) {
     this.ports = ImmutableSet.copyOf(ports);
-    this.charsetName = charsetName;
+    this.parserConfig = parserConfig;
     this.dataFormat = dataFormat;
     this.maxBatchSize = maxBatchSize;
     this.maxWaitTime = maxWaitTime;
@@ -86,8 +97,9 @@ public class UDPSource extends BaseSource {
         }
       }
     }
+    Charset charset;
     try {
-      charset = Charset.forName(charsetName);
+      charset = Charset.forName(parserConfig.getString(CHARSET));
     } catch (UnsupportedCharsetException ex) {
       charset = StandardCharsets.UTF_8;
       issues.add(getContext().createConfigIssue(Groups.SYSLOG.name(), "charset", Errors.UDP_04, charset));
@@ -98,6 +110,16 @@ public class UDPSource extends BaseSource {
         break;
       case SYSLOG:
         parser = new SyslogParser(getContext(), charset);
+        break;
+      case COLLECTD:
+        parser = new CollectdParser(
+            getContext(),
+            parserConfig.getBoolean(CONVERT_TIME),
+            parserConfig.getString(TYPES_DB_PATH),
+            parserConfig.getBoolean(EXCLUDE_INTERVAL),
+            parserConfig.getString(AUTH_FILE_PATH),
+            charset
+        );
         break;
       default:
         issues.add(getContext().createConfigIssue(Groups.UDP.name(), "dataFormat",
