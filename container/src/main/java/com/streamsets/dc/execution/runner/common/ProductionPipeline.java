@@ -17,8 +17,8 @@ import com.streamsets.pipeline.runner.Pipeline;
 import com.streamsets.pipeline.runner.PipelineRuntimeException;
 import com.streamsets.pipeline.runner.production.ProductionSourceOffsetTracker;
 import com.streamsets.pipeline.runner.production.ThreadHealthReporter;
+import com.streamsets.pipeline.util.ContainerError;
 import com.streamsets.pipeline.validation.Issue;
-import com.streamsets.pipeline.validation.Issues;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -83,6 +83,12 @@ public class ProductionPipeline {
             }
             throw e;
           }
+        } else {
+          LOG.debug("Stopped due to validation error");
+          PipelineRuntimeException e = new PipelineRuntimeException(ContainerError.CONTAINER_0800,
+            issues.get(0).getMessage());
+          stateChanged(PipelineStatus.START_ERROR, issues.get(0).getMessage(), null);
+          throw e;
         }
       } finally {
         LOG.debug("Destroying");

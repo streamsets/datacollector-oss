@@ -111,6 +111,11 @@ public enum ContainerError implements ErrorCode {
   CONTAINER_0700("Error stage initialization error: {}"),
   CONTAINER_0701("Stage '{}' initialization error: {}"),
   CONTAINER_0702("Pipeline initialization error: {}"),
+
+
+  //Runner
+  CONTAINER_0800("Pipeline '{}' validation error : {}"),
+
   ;
 
   private final String msg;
