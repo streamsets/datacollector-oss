@@ -12,7 +12,7 @@ import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.base.SingleLaneRecordProcessor;
 
 @GenerateResourceBundle
-@StageDef(version = "1.0.0", label = "Identity",
+@StageDef(version = 1, label = "Identity",
           description = "It echoes every record it receives without changing, other than stage header information",
           icon="identity.png")
 public class IdentityProcessor extends SingleLaneRecordProcessor {

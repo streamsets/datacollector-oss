@@ -20,7 +20,7 @@ import java.util.List;
 
 @GenerateResourceBundle
 @StageDef(
-    version = "1.0.0",
+    version = 1,
     label = "Solr",
     description = "Upload data to an Apache Solr",
     icon = "solr.png"

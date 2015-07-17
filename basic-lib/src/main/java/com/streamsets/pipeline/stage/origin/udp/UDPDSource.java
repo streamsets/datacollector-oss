@@ -21,7 +21,7 @@ import com.streamsets.pipeline.lib.parser.netflow.NetflowParser;
 import java.util.List;
 
 @StageDef(
-  version = "1.0.0",
+  version = 1,
   label = "UDP Source",
   description = "Listens for UDP messages on a single port",
   icon="udp.png",

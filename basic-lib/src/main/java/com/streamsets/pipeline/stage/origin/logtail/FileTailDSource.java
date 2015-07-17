@@ -26,7 +26,7 @@ import com.streamsets.pipeline.lib.parser.log.RegExConfig;
 import java.util.List;
 
 @StageDef(
-    version="1.0.0",
+    version=1,
     label="File Tail",
     description = "Tails a file. It handles rolling files within the same directory",
     icon="fileTail.png",

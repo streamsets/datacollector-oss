@@ -40,7 +40,7 @@ import java.util.Map;
 
 // FOR TESTING ONLY- COPIED FROM kafka-protolib
 @StageDef(
-    version = "1.0.0",
+    version = 1,
     label = "Kafka Consumer",
     description = "Reads data from Kafka",
     icon = "kafka.png"

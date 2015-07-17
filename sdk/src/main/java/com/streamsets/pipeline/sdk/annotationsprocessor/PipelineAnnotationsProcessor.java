@@ -92,7 +92,7 @@ public class PipelineAnnotationsProcessor extends AbstractProcessor {
   /**************** private variables ************/
 
   /*Map that keeps track of all the encountered stage implementations and the versions*/
-  private Map<String, String> stageNameToVersionMap = null;
+  private Map<String, Integer> stageNameToVersionMap = null;
   /*An instance of StageCollection collects all the stage definitions and configurations
   in maps and will later be serialized into json.*/
   private List<StageInfo> stageDefinitions = null;
@@ -221,9 +221,9 @@ public class PipelineAnnotationsProcessor extends AbstractProcessor {
 
   private static class StageInfo {
     private final String className;
-    private final String version;
+    private final int version;
 
-    public StageInfo(String className, String version) {
+    public StageInfo(String className, int version) {
       this.className = className;
       this.version = version;
     }
@@ -232,7 +232,7 @@ public class PipelineAnnotationsProcessor extends AbstractProcessor {
       return className;
     }
 
-    public String getVersion() {
+    public int getVersion() {
       return version;
     }
 

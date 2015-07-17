@@ -21,7 +21,7 @@ public interface Stage<C extends Stage.Context> {
 
     public String getName();
 
-    public String getVersion();
+    public int getVersion();
 
     public String getInstanceName();
 

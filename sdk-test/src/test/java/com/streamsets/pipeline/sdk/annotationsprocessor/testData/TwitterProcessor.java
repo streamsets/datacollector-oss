@@ -18,7 +18,7 @@ import com.streamsets.pipeline.api.base.BaseProcessor;
 import java.util.Map;
 @GenerateResourceBundle
 @StageDef(description = "processes twitter feeds", label = "twitter_processor"
-, version = "1.0")
+, version = 1)
 public class TwitterProcessor extends BaseProcessor{
 
   @FieldValueChooser(TypesProvider.class)

@@ -18,7 +18,7 @@ import java.util.Map;
 
 @GenerateResourceBundle
 @StageDef(
-    version = "1.0.0",
+    version = 1,
     label = "HBase",
     description = "Writes data to HBase",
     icon = "hbase.png",

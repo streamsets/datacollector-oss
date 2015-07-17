@@ -16,7 +16,7 @@ import com.streamsets.pipeline.stage.processor.scripting.ProcessingMode;
 import com.streamsets.pipeline.stage.processor.scripting.ProcessingModeChooserValues;
 
 @StageDef(
-    version = "1.0.0",
+    version = 1,
     label = "Jython Evaluator",
     description = "Processes records using Jython",
     icon="jython.png"

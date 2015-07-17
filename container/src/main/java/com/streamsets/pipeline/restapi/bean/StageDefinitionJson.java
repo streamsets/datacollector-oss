@@ -37,7 +37,7 @@ public class StageDefinitionJson {
   }
 
   public String getVersion() {
-    return stageDefinition.getVersion();
+    return Integer.toString(stageDefinition.getVersion());
   }
 
   public String getLabel() {

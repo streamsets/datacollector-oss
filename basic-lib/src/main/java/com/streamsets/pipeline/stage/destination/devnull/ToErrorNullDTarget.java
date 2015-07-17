@@ -11,7 +11,7 @@ import com.streamsets.pipeline.api.HideConfig;
 import com.streamsets.pipeline.api.StageDef;
 
 @StageDef(
-    version = "1.0.0",
+    version = 1,
     label = "Discard",
     description = "Discards records",
     icon=""

@@ -12,7 +12,7 @@ import com.streamsets.pipeline.api.Target;
 import com.streamsets.pipeline.configurablestage.DTarget;
 
 @StageDef(
-    version = "1.0.0",
+    version = 1,
     label = "To Error",
     description = "Sends records to the pipeline configured error records handling",
     icon="toerror.png"

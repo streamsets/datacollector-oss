@@ -19,7 +19,7 @@ import com.streamsets.pipeline.configurablestage.DProcessor;
 import java.util.List;
 
 @StageDef(
-    version="1.0.0",
+    version=1,
     label="Field Splitter",
     description = "Splits a string field based on a separator character",
     icon="splitter.png"

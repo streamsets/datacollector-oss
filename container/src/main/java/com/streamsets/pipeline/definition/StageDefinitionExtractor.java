@@ -75,10 +75,6 @@ public abstract class StageDefinitionExtractor {
     if (sDef == null) {
       errors.add(new ErrorMessage(DefinitionError.DEF_300, contextMsg));
     } else {
-      String version = sDef.version();
-      if (version.isEmpty()) {
-        errors.add(new ErrorMessage(DefinitionError.DEF_301, contextMsg));
-      }
       if (!sDef.icon().isEmpty()) {
         if (klass.getClassLoader().getResource(sDef.icon()) == null) {
           errors.add(new ErrorMessage(DefinitionError.DEF_311, contextMsg, sDef.icon()));
@@ -158,7 +154,7 @@ public abstract class StageDefinitionExtractor {
 
       StageDef sDef = klass.getAnnotation(StageDef.class);
       String name = getStageName(klass);
-      String version = sDef.version();
+      int version = sDef.version();
       String label = sDef.label();
       String description = sDef.description();
       String icon = sDef.icon();

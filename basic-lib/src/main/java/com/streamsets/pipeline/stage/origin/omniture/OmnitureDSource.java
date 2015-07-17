@@ -16,7 +16,7 @@ import com.streamsets.pipeline.api.ValueChooser;
 import com.streamsets.pipeline.configurablestage.DSource;
 
 @StageDef(
-    version = "1.0.0",
+    version = 1,
     label = "Omniture",
     description = "Retrieves Omniture reports via the REST API.",
     icon="omniture_icon.png",

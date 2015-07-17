@@ -14,7 +14,7 @@ import com.streamsets.pipeline.api.Target;
 import com.streamsets.pipeline.config.DataFormat;
 
 @StageDef(
-    version = "1.0.0",
+    version = 1,
     label = "Write to Kafka",
     description = "Writes records to Kafka as SDC Records",
     icon = "")

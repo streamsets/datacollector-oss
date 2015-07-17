@@ -23,7 +23,7 @@ import java.util.Map;
 
 @GenerateResourceBundle
 @StageDef(
-    version = "1.0.0",
+    version = 1,
     label = "Elasticsearch",
     description = "Upload data to an Elasticsearch cluster",
     icon = "elasticsearch.png"

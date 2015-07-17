@@ -509,7 +509,7 @@ public class TestFilePipelineStoreTask {
 
     PipelineConfiguration expectedPipelineConfig = MockStages.createPipelineWithRequiredDependentConfig();
 
-    StageConfiguration nonExistingStage = new StageConfiguration("nonExistingStage", "default", "nonExistingStage", "1.0.0",
+    StageConfiguration nonExistingStage = new StageConfiguration("nonExistingStage", "default", "nonExistingStage", 1,
       Collections.<ConfigConfiguration>emptyList(), null, ImmutableList.of("p"), Collections.<String>emptyList());
     expectedPipelineConfig.getStages().add(nonExistingStage);
 

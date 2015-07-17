@@ -19,7 +19,7 @@ import java.util.List;
 
 @GenerateResourceBundle
 @StageDef(description = "Consumes twitter feeds", label = "twitter_target"
-, version = "1.3", execution = ExecutionMode.CLUSTER)
+, version = 3, execution = ExecutionMode.CLUSTER)
 public class TwitterTarget implements Target {
 
   @ConfigDef(

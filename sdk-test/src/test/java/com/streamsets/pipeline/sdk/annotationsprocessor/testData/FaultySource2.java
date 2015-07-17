@@ -12,7 +12,7 @@ import com.streamsets.pipeline.api.base.BaseSource;
 
 //28. VariableOutputStreams but no outputStreamsDrivenByConfig
 @StageDef(description = "Produces twitter feeds", label = "twitter_source"
-  , version = "1.0", outputStreams = StageDef.VariableOutputStreams.class)
+  , version = 1, outputStreams = StageDef.VariableOutputStreams.class)
 public class FaultySource2 extends BaseSource {
 
 

@@ -12,7 +12,7 @@ import com.streamsets.pipeline.api.base.BaseSource;
 
 //27. Output streams is default but driven by config option is non empty
 @StageDef(description = "Produces twitter feeds", label = "twitter_source"
-  , version = "1.0", outputStreams = StageDef.DefaultOutputStreams.class, outputStreamsDrivenByConfig = "xyz")
+  , version = 1, outputStreams = StageDef.DefaultOutputStreams.class, outputStreamsDrivenByConfig = "xyz")
 public class FaultySource3 extends BaseSource {
 
 

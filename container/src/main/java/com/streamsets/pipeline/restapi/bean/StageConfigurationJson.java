@@ -28,10 +28,12 @@ public class StageConfigurationJson {
     @JsonProperty("inputLanes") List<String> inputLanes,
     @JsonProperty("outputLanes") List<String> outputLanes) {
     this.stageConfiguration = new com.streamsets.pipeline.config.StageConfiguration(instanceName, library, stageName,
-      stageVersion, BeanHelper.unwrapConfigConfiguration(configuration), uiInfo, inputLanes, outputLanes);
-
+      convertVersion(stageVersion), BeanHelper.unwrapConfigConfiguration(configuration), uiInfo, inputLanes, outputLanes);
   }
 
+  private static int convertVersion(String version) {
+    return ("1.0.0".equals(version)) ? 1 : Integer.parseInt(version);
+  }
   public StageConfigurationJson(com.streamsets.pipeline.config.StageConfiguration stageConfiguration) {
     Utils.checkNotNull(stageConfiguration, "stageConfiguration");
     this.stageConfiguration = stageConfiguration;
@@ -50,7 +52,7 @@ public class StageConfigurationJson {
   }
 
   public String getStageVersion() {
-    return stageConfiguration.getStageVersion();
+    return Integer.toString(stageConfiguration.getStageVersion());
   }
 
   public List<ConfigConfigurationJson> getConfiguration() {

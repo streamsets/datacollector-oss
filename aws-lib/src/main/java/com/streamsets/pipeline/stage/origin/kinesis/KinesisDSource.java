@@ -18,7 +18,7 @@ import com.streamsets.pipeline.configurablestage.DSourceOffsetCommitter;
 import com.streamsets.pipeline.stage.lib.kinesis.AWSRegionChooserValues;
 
 @StageDef(
-    version = "1.0.0",
+    version = 1,
     label = "Kinesis Consumer",
     description = "Reads data from Kinesis",
     icon = "kinesis.png",

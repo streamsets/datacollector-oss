@@ -20,7 +20,7 @@ import com.streamsets.pipeline.configurablestage.DProcessor;
 import java.util.List;
 
 @StageDef(
-    version="1.0.0",
+    version=1,
     label="Field Hasher",
     description = "Uses an algorithm to hash field values",
     icon="hash.png")

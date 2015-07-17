@@ -184,7 +184,7 @@ public class TestPipelineBeanCreator {
 
   }
 
-  @StageDef(version = "1", label = "L")
+  @StageDef(version = 1, label = "L")
   public static class MyTarget extends BaseTarget {
 
     @ConfigDef(
@@ -238,7 +238,7 @@ public class TestPipelineBeanCreator {
     }
   }
 
-  @StageDef(version = "1", label = "L")
+  @StageDef(version = 1, label = "L")
   @ErrorStage
   public static class ErrorMyTarget extends MyTarget {
   }
@@ -350,7 +350,7 @@ public class TestPipelineBeanCreator {
     Mockito.when(libraryDef.getClassLoader()).thenReturn(Thread.currentThread().getContextClassLoader());
     StageDefinition stageDef = StageDefinitionExtractor.get().extract(libraryDef, MyTarget.class, "");
 
-    StageConfiguration stageConf = new StageConfiguration("i", "l", "n", "v", Collections.<ConfigConfiguration>emptyList(),
+    StageConfiguration stageConf = new StageConfiguration("i", "l", "n", 1, Collections.<ConfigConfiguration>emptyList(),
                                                           Collections.<String, Object>emptyMap(),
                                                           Collections.<String>emptyList(),
                                                           Collections.<String>emptyList());
@@ -392,7 +392,7 @@ public class TestPipelineBeanCreator {
             "beanSubBean.subBeanList", ImmutableList.of("a", "b"),
             "beanSubBean.subBeanString", "X")))
     );
-    StageConfiguration stageConf = new StageConfiguration("i", "l", "n", "v", configConfs,
+    StageConfiguration stageConf = new StageConfiguration("i", "l", "n", 1, configConfs,
                                                           Collections.<String, Object>emptyMap(),
                                                           Collections.<String>emptyList(),
                                                           Collections.<String>emptyList());
@@ -427,9 +427,9 @@ public class TestPipelineBeanCreator {
     StageDefinition stageDef = StageDefinitionExtractor.get().extract(libraryDef, MyTarget.class, "");
     StageDefinition errorStageDef = StageDefinitionExtractor.get().extract(libraryDef, ErrorMyTarget.class, "");
     StageLibraryTask library = Mockito.mock(StageLibraryTask.class);
-    Mockito.when(library.getStage(Mockito.eq("l"), Mockito.eq("s"), Mockito.eq("v"), Mockito.eq(false)))
+    Mockito.when(library.getStage(Mockito.eq("l"), Mockito.eq("s"), Mockito.eq(1), Mockito.eq(false)))
            .thenReturn(stageDef);
-    Mockito.when(library.getStage(Mockito.eq("l"), Mockito.eq("e"), Mockito.eq("v"), Mockito.eq(false)))
+    Mockito.when(library.getStage(Mockito.eq("l"), Mockito.eq("e"), Mockito.eq(1), Mockito.eq(false)))
            .thenReturn(errorStageDef);
     Mockito.when(libraryDef.getClassLoader()).thenReturn(Thread.currentThread().getContextClassLoader());
 
@@ -438,10 +438,10 @@ public class TestPipelineBeanCreator {
         new ConfigConfiguration("memoryLimit", 1000)
     );
 
-    StageConfiguration stageConf = new StageConfiguration("si", "l", "s", "v",
+    StageConfiguration stageConf = new StageConfiguration("si", "l", "s", 1,
         ImmutableList.of(new ConfigConfiguration("list", ImmutableList.of("S"))),
         Collections.<String, Object>emptyMap(), Collections.<String>emptyList(), Collections.<String>emptyList());
-    StageConfiguration errorStageConf = new StageConfiguration("ei", "l", "e", "v",
+    StageConfiguration errorStageConf = new StageConfiguration("ei", "l", "e", 1,
         ImmutableList.of(new ConfigConfiguration("list", ImmutableList.of("E"))),
         Collections.<String, Object>emptyMap(), Collections.<String>emptyList(), Collections.<String>emptyList());
     PipelineConfiguration pipelineConf = new PipelineConfiguration(1, UUID.randomUUID(), "D", pipelineConfigs,
@@ -474,7 +474,7 @@ public class TestPipelineBeanCreator {
     StageDefinition stageDef = StageDefinitionExtractor.get().extract(libraryDef, MyTarget.class, "");
 
     StageConfiguration stageConf =
-        new StageConfiguration("i", "l", "n", "v", Collections.<ConfigConfiguration>emptyList(),
+        new StageConfiguration("i", "l", "n", 1, Collections.<ConfigConfiguration>emptyList(),
                                Collections.<String, Object>emptyMap(),
                                Collections.<String>emptyList(),
                                Collections.<String>emptyList());

@@ -27,7 +27,7 @@ import com.streamsets.pipeline.lib.el.StringEL;
 import java.util.Map;
 
 @StageDef(
-  version = "1.0.0",
+  version = 1,
   label = "Kafka Producer",
   description = "Writes data to Kafka",
   icon = "kafka.png")

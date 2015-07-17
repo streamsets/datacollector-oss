@@ -17,7 +17,7 @@ import com.streamsets.pipeline.lib.el.TimeEL;
 import java.util.Map;
 
 @StageDef(
-    version = "1.0.0",
+    version = 1,
     label = "JDBC Consumer",
     description = "Reads data from a JDBC source.",
     icon = "rdbms.png",

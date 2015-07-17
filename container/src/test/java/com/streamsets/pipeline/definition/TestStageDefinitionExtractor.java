@@ -57,7 +57,7 @@ public class TestStageDefinitionExtractor {
     }
   }
 
-  @StageDef(version = "1", label = "L", description = "D", icon = "TargetIcon.svg")
+  @StageDef(version = 1, label = "L", description = "D", icon = "TargetIcon.svg")
   public static class Source1 extends BaseSource {
 
     @ConfigDef(
@@ -91,7 +91,7 @@ public class TestStageDefinitionExtractor {
     }
   }
 
-  @StageDef(version = "2", label = "LL", description = "DD", icon = "TargetIcon.svg",
+  @StageDef(version = 2, label = "LL", description = "DD", icon = "TargetIcon.svg",
       execution = ExecutionMode.STANDALONE, outputStreams = TwoOutputStreams.class, recordsByRef = true,
       privateClassLoader = true)
   @ConfigGroups(Group1.class)
@@ -121,7 +121,7 @@ public class TestStageDefinitionExtractor {
     }
   }
 
-  @StageDef(version = "1", label = "L", outputStreams = StageDef.VariableOutputStreams.class,
+  @StageDef(version = 1, label = "L", outputStreams = StageDef.VariableOutputStreams.class,
       outputStreamsDrivenByConfig = "config1")
   public static class Source3 extends Source1 {
 
@@ -131,7 +131,7 @@ public class TestStageDefinitionExtractor {
     }
   }
 
-  @StageDef(version = "1", label = "L")
+  @StageDef(version = 1, label = "L")
   @HideConfig(preconditions = true)
   public static class Target1 extends BaseTarget {
     @Override
@@ -140,7 +140,7 @@ public class TestStageDefinitionExtractor {
     }
   }
 
-  @StageDef(version = "1", label = "L")
+  @StageDef(version = 1, label = "L")
   public static class Target2 extends BaseTarget {
     @Override
     public void write(Batch batch) throws StageException {
@@ -148,7 +148,7 @@ public class TestStageDefinitionExtractor {
     }
   }
 
-  @StageDef(version = "1", label = "L")
+  @StageDef(version = 1, label = "L")
   @ErrorStage
   public static class ToErrorTarget1 extends Target1 {
     @Override
@@ -157,7 +157,7 @@ public class TestStageDefinitionExtractor {
     }
   }
 
-  @StageDef(version = "1", label = "", icon="missing.svg")
+  @StageDef(version = 1, label = "", icon="missing.svg")
   @ErrorStage
   public static class MissingIcon extends BaseTarget {
     @Override
@@ -175,7 +175,7 @@ public class TestStageDefinitionExtractor {
     Assert.assertFalse(def.isPrivateClassLoader());
     Assert.assertEquals(Source1.class.getName(), def.getClassName());
     Assert.assertEquals(StageDefinitionExtractor.getStageName(Source1.class), def.getName());
-    Assert.assertEquals("1", def.getVersion());
+    Assert.assertEquals(1, def.getVersion());
     Assert.assertEquals("L", def.getLabel());
     Assert.assertEquals("D", def.getDescription());
     Assert.assertEquals(null, def.getRawSourceDefinition());
@@ -199,7 +199,7 @@ public class TestStageDefinitionExtractor {
     Assert.assertTrue(def.isPrivateClassLoader());
     Assert.assertEquals(Source2.class.getName(), def.getClassName());
     Assert.assertEquals(StageDefinitionExtractor.getStageName(Source2.class), def.getName());
-    Assert.assertEquals("2", def.getVersion());
+    Assert.assertEquals(2, def.getVersion());
     Assert.assertEquals("LL", def.getLabel());
     Assert.assertEquals("DD", def.getDescription());
     Assert.assertNotNull(def.getRawSourceDefinition());

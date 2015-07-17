@@ -19,7 +19,7 @@ import com.streamsets.pipeline.configurablestage.DProcessor;
 import java.util.List;
 
 @StageDef(
-    version = "1.0.0",
+    version = 1,
     label = "Record Deduplicator",
     description = "Separates unique and duplicate records based on field comparison",
     icon="dedup.png",

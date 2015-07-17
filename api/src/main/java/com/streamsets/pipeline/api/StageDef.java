@@ -52,7 +52,7 @@ public @interface StageDef {
     }
   }
 
-  String version();
+  int version();
 
   String label();
 

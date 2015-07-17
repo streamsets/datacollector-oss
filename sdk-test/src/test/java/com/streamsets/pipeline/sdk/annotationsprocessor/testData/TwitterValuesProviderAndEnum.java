@@ -20,7 +20,7 @@ import java.util.List;
 import java.util.Map;
 
 @GenerateResourceBundle
-@StageDef(description = "Produces twitter feeds", label = "twitter_source", version = "1.0")
+@StageDef(description = "Produces twitter feeds", label = "twitter_source", version = 1)
 public class TwitterValuesProviderAndEnum extends BaseSource {
 
   @FieldValueChooser(Misc.TwitterTypesProvider.class)

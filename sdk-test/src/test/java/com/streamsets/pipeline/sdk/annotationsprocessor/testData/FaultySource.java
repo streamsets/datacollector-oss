@@ -26,7 +26,7 @@ import java.util.List;
 @GenerateResourceBundle
 @RawSource(rawSourcePreviewer = TestRawSourcePreviewer.FaultyRawSourcePreviewer.class)
 @StageDef(description = "Produces twitter feeds", label = "twitter_source"
-  , version = "1.0", outputStreams = StageDef.VariableOutputStreams.class)
+  , version = 1, outputStreams = StageDef.VariableOutputStreams.class)
 @ConfigGroups(FaultySource.MyGroups.class)
 public class FaultySource {
 

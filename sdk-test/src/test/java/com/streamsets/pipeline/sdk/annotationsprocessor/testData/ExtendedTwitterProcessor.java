@@ -11,7 +11,7 @@ import com.streamsets.pipeline.api.StageDef;
 
 @GenerateResourceBundle
 @StageDef(description = "processes twitter feeds", label = "extended_twitter_processor"
-  , version = "1.0")
+  , version = 1)
 @HideConfig(value = {"tweetType1", "tweetType2"})
 public class ExtendedTwitterProcessor extends TwitterProcessor {
 }

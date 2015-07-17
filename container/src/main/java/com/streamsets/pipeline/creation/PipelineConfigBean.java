@@ -29,7 +29,7 @@ import java.util.Map;
 // the annotation processor does not work on this maven project
 // we have a hardcoded 'datacollector-resource-bundles.json' file in resources
 @GenerateResourceBundle
-@StageDef(version = "1.0.0", label = "Pipeline")
+@StageDef(version = 1, label = "Pipeline")
 @ConfigGroups(PipelineGroups.class)
 public class PipelineConfigBean implements Stage {
 

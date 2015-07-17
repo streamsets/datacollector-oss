@@ -47,7 +47,7 @@ public class StageRuntime {
       }
 
       @Override
-      public String getVersion() {
+      public int getVersion() {
         return def.getVersion();
       }
 

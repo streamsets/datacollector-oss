@@ -16,7 +16,7 @@ import com.streamsets.pipeline.configurablestage.DProcessor;
 import java.util.List;
 
 @StageDef(
-    version="1.0.0",
+    version=1,
     label="Expression Evaluator",
     description="Performs calculations on a field-by-field basis",
     icon="expression.png"

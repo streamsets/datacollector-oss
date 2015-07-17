@@ -30,7 +30,7 @@ public class TestBatchMakerImpl {
 
   @SuppressWarnings("unchecked")
   private StagePipe createStagePipe(List<String> outputs) {
-    StageConfiguration stageConfiguration = new StageConfiguration("i", "l", "n", "1",
+    StageConfiguration stageConfiguration = new StageConfiguration("i", "l", "n", 1,
                                                                    Collections.EMPTY_LIST,
                                                                    Collections.EMPTY_MAP,
                                                                    ImmutableList.of("i"),
@@ -41,7 +41,7 @@ public class TestBatchMakerImpl {
     Stage.Info stageInfo = Mockito.mock(Stage.Info.class);
     Mockito.when(stageInfo.getInstanceName()).thenReturn("i");
     Mockito.when(stageInfo.getName()).thenReturn("n");
-    Mockito.when(stageInfo.getVersion()).thenReturn("1");
+    Mockito.when(stageInfo.getVersion()).thenReturn(1);
     Mockito.when(stageRuntime.getInfo()).thenReturn(stageInfo);
     Mockito.when(stageRuntime.getConfiguration()).thenReturn(stageConfiguration);
     Mockito.when(stageRuntime.getDefinition()).thenReturn(stageDef);
@@ -207,7 +207,7 @@ public class TestBatchMakerImpl {
 
   @Test
   public void testRecordByRef() {
-    StageConfiguration stageConfiguration = new StageConfiguration("i", "l", "n", "1",
+    StageConfiguration stageConfiguration = new StageConfiguration("i", "l", "n", 1,
                                                                    Collections.EMPTY_LIST,
                                                                    Collections.EMPTY_MAP,
                                                                    Collections.EMPTY_LIST,

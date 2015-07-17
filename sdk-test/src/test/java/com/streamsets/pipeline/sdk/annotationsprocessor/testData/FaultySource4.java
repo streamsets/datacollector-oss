@@ -12,7 +12,7 @@ import com.streamsets.pipeline.api.base.BaseSource;
 
 //29. VariableOutputStreams and non existing outputStreamsDrivenByConfig
 @StageDef(description = "Produces twitter feeds", label = "twitter_source"
-  , version = "1.0", outputStreams = StageDef.VariableOutputStreams.class, outputStreamsDrivenByConfig = "xyz")
+  , version = 1, outputStreams = StageDef.VariableOutputStreams.class, outputStreamsDrivenByConfig = "xyz")
 public class FaultySource4 extends BaseSource {
   @Override
   public String produce(String lastSourceOffset, int maxBatchSize, BatchMaker batchMaker) throws StageException {

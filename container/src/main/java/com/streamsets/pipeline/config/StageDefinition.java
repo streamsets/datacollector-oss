@@ -26,7 +26,7 @@ public class StageDefinition {
   private final ClassLoader classLoader;
   private final Class klass;
   private final String name;
-  private final String version;
+  private final int version;
   private final String label;
   private final String description;
   private final StageType type;
@@ -48,7 +48,7 @@ public class StageDefinition {
   // localized version
   private StageDefinition(StageLibraryDefinition libraryDefinition, boolean privateClassLoader, ClassLoader classLoader,
       Class klass, String name,
-      String version, String label, String description, StageType type, boolean errorStage, boolean preconditions,
+      int version, String label, String description, StageType type, boolean errorStage, boolean preconditions,
       boolean onRecordError, List<ConfigDefinition> configDefinitions, RawSourceDefinition rawSourceDefinition,
       String icon, ConfigGroupDefinition configGroupDefinition, boolean variableOutputStreams, int outputStreams,
       List<String> outputStreamLabels, List<ExecutionMode> executionModes, boolean recordsByRef) {
@@ -119,7 +119,7 @@ public class StageDefinition {
   }
 
     public StageDefinition(StageLibraryDefinition libraryDefinition, boolean privateClassLoader, Class klass, String name,
-      String version,
+      int version,
       String label, String description,
       StageType type, boolean errorStage, boolean preconditions, boolean onRecordError,
       List<ConfigDefinition> configDefinitions, RawSourceDefinition rawSourceDefinition, String icon,
@@ -201,7 +201,7 @@ public class StageDefinition {
     return name;
   }
 
-  public String getVersion() {
+  public int getVersion() {
     return version;
   }
 

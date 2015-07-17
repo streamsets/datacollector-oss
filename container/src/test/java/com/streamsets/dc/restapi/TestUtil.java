@@ -134,17 +134,17 @@ public class TestUtil {
       ConfigDef.Evaluation.IMPLICIT, null);
     configDefs.add(configDef);
     StageDefinition sourceDef = new StageDefinition(
-        MOCK_LIB_DEF, false, TSource.class, "source", "1.0.0", "label", "description",
+        MOCK_LIB_DEF, false, TSource.class, "source", 1, "label", "description",
         StageType.SOURCE, false, true, true, configDefs, null/*raw source definition*/, "", null, false ,1,
         null, Arrays.asList(ExecutionMode.CLUSTER, ExecutionMode.STANDALONE), false);
     StageDefinition targetDef = new StageDefinition(
-        MOCK_LIB_DEF, false, TTarget.class, "target", "1.0.0", "label", "description",
+        MOCK_LIB_DEF, false, TTarget.class, "target", 1, "label", "description",
         StageType.TARGET, false, true, true, Collections.<ConfigDefinition>emptyList(), null/*raw source definition*/,
         "TargetIcon.svg", null, false, 0, null, Arrays.asList(ExecutionMode.CLUSTER,
                                                               ExecutionMode.STANDALONE), false);
-    Mockito.when(lib.getStage(Mockito.eq("library"), Mockito.eq("source"), Mockito.eq("1.0.0"), Mockito.eq(false)))
+    Mockito.when(lib.getStage(Mockito.eq("library"), Mockito.eq("source"), Mockito.eq(1), Mockito.eq(false)))
            .thenReturn(sourceDef);
-    Mockito.when(lib.getStage(Mockito.eq("library"), Mockito.eq("target"), Mockito.eq("1.0.0"), Mockito.eq(false)))
+    Mockito.when(lib.getStage(Mockito.eq("library"), Mockito.eq("target"), Mockito.eq(1), Mockito.eq(false)))
            .thenReturn(targetDef);
 
     List<StageDefinition> stages = new ArrayList<>(2);

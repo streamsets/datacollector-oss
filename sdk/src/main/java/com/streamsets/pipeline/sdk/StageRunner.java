@@ -57,9 +57,9 @@ public abstract class StageRunner<S extends Stage> {
     return StageHelper.getStageNameFromClassName(klass.getName());
   }
 
-  private String getVersion(Class<? extends Stage> klass) {
+  private int getVersion(Class<? extends Stage> klass) {
     StageDef def = getStageDefinition(klass);
-    return (def != null) ? def.version() : "<UNANNOTATED-STAGE>";
+    return (def != null) ? def.version() : -1;
   }
 
   private Set<String> getStageConfigurationFields(Class<? extends Stage> klass) throws Exception {
@@ -192,7 +192,7 @@ public abstract class StageRunner<S extends Stage> {
       throw new RuntimeException(ex);
     }
     String name = getName(stage.getClass());
-    String version = getVersion(stage.getClass());
+    int version = getVersion(stage.getClass());
     String instanceName = name + "_1";
     info = ContextInfoCreator.createInfo(name, version, instanceName);
     Map<String, Class<?>[]> configToElDefMap;

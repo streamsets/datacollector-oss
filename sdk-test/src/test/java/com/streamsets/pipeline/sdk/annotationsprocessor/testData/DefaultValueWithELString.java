@@ -13,7 +13,7 @@ import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.base.BaseSource;
 @GenerateResourceBundle
 @StageDef(description = "ELString As Default Value", label = "twitter_source"
-  , version = "1.0")
+  , version = 1)
 public class DefaultValueWithELString extends BaseSource {
 
   @ConfigDef(

@@ -271,7 +271,7 @@ public class ClassLoaderStageLibraryTask extends AbstractTask implements StageLi
     }
   }
 
-  private String createKey(String library, String name, String version) {
+  private String createKey(String library, String name, int version) {
     return library + ":" + name + ":" + version;
   }
 
@@ -292,7 +292,7 @@ public class ClassLoaderStageLibraryTask extends AbstractTask implements StageLi
 
   @Override
   @SuppressWarnings("unchecked")
-  public StageDefinition getStage(String library, String name, String version, boolean forExecution) {
+  public StageDefinition getStage(String library, String name, int version, boolean forExecution) {
     StageDefinition def = stageMap.get(createKey(library, name, version));
     if (forExecution &&  def.isPrivateClassLoader()) {
       def = new StageDefinition(def, getStageClassLoader(def));

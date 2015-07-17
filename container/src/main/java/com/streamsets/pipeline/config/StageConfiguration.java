@@ -20,7 +20,7 @@ public class StageConfiguration implements Serializable {
   private final String instanceName;
   private final String library;
   private final String stageName;
-  private final String stageVersion;
+  private final int stageVersion;
   private final List<ConfigConfiguration> configuration;
   private final Map<String, ConfigConfiguration> configurationMap;
   private final Map<String, Object> uiInfo;
@@ -31,7 +31,7 @@ public class StageConfiguration implements Serializable {
 
   private boolean systemGenerated;
 
-  public StageConfiguration(String instanceName, String library, String stageName, String stageVersion,
+  public StageConfiguration(String instanceName, String library, String stageName, int stageVersion,
       List<ConfigConfiguration> configuration, Map<String, Object> uiInfo, List<String> inputLanes,
       List<String> outputLanes) {
     this.instanceName = instanceName;
@@ -58,7 +58,7 @@ public class StageConfiguration implements Serializable {
     return stageName;
   }
 
-  public String getStageVersion() {
+  public int getStageVersion() {
     return stageVersion;
   }
 

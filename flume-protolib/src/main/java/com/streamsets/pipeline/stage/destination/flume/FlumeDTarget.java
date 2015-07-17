@@ -25,7 +25,7 @@ import com.streamsets.pipeline.configurablestage.DTarget;
 import java.util.Map;
 
 @StageDef(
-  version = "1.0.0",
+  version = 1,
   label = "Flume",
   description = "Writes data to Flume Source",
   icon = "flume.png")

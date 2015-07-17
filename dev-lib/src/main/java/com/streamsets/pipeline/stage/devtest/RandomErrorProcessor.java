@@ -17,7 +17,7 @@ import java.util.List;
 import java.util.Random;
 
 @GenerateResourceBundle
-@StageDef(version = "1.0.0", label = "Dev Random Error",
+@StageDef(version = 1, label = "Dev Random Error",
           description = "Randomly do something with the record, output, error, vanish, the threshold for what to do " +
                         "is randomly selected per batch",
           icon="random.png")

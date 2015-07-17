@@ -25,7 +25,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 @GenerateResourceBundle
-@StageDef(version="1.0.0", label="Dev Random Record Source",
+@StageDef(version=1, label="Dev Random Record Source",
           icon="random.png")
 public class RandomSource extends BaseSource {
   private static final Logger LOG = LoggerFactory.getLogger(RandomSource.class);

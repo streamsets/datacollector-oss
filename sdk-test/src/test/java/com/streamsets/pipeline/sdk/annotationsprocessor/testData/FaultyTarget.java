@@ -11,7 +11,7 @@ import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.base.BaseTarget;
 
 //25. Target defines a on DefaultOutputStreams class
-@StageDef(label = "Fault Target", version = "1.0", outputStreams = StageDef.VariableOutputStreams.class)
+@StageDef(label = "Fault Target", version = 1, outputStreams = StageDef.VariableOutputStreams.class)
 public class FaultyTarget extends BaseTarget {
   @Override
   public void write(Batch batch) throws StageException {

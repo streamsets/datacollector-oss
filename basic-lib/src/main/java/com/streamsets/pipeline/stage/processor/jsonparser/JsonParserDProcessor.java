@@ -13,7 +13,7 @@ import com.streamsets.pipeline.api.StageDef;
 import com.streamsets.pipeline.configurablestage.DProcessor;
 
 @StageDef(
-    version="1.0.0",
+    version=1,
     label="JSON Parser",
     description = "Parses a string field with JSON data",
     icon="jsonparser.png"

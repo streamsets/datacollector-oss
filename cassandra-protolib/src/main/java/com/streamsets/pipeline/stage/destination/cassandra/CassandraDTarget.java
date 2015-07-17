@@ -17,7 +17,7 @@ import java.util.List;
 
 @GenerateResourceBundle
 @StageDef(
-    version = "1.0.0",
+    version = 1,
     label = "Cassandra",
     description = "Writes data to Cassandra",
     icon = "cassandra.png")

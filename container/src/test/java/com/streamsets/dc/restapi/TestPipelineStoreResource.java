@@ -64,7 +64,7 @@ public class TestPipelineStoreResource extends JerseyTest {
 
   @Test
   public void testGetInfoPipeline() {
-    Response response = target("/v1/pipeline-library/xyz").queryParam("rev", "1.0.0").queryParam("get", "pipeline").
+    Response response = target("/v1/pipeline-library/xyz").queryParam("rev", "1").queryParam("get", "pipeline").
         request().get();
     PipelineConfigurationJson pipelineConfig = response.readEntity(PipelineConfigurationJson.class);
     Assert.assertNotNull(pipelineConfig);
@@ -99,7 +99,7 @@ public class TestPipelineStoreResource extends JerseyTest {
     StageConfigurationJson stageConf = pipelineConfig.getStages().get(0);
     Assert.assertEquals("s", stageConf.getInstanceName());
     Assert.assertEquals("sourceName", stageConf.getStageName());
-    Assert.assertEquals("1.0.0", stageConf.getStageVersion());
+    Assert.assertEquals("1", stageConf.getStageVersion());
     Assert.assertEquals("default", stageConf.getLibrary());
 
   }
@@ -208,7 +208,7 @@ public class TestPipelineStoreResource extends JerseyTest {
           new com.streamsets.pipeline.store.PipelineRevInfo(new com.streamsets.pipeline.store.PipelineInfo("xyz",
             "xyz description", new java.util.Date(0), new java.util.Date(0), "xyz creator",
                 "xyz lastModifier", "1", UUID.randomUUID(), true))));
-        Mockito.when(pipelineStore.load("xyz", "1.0.0")).thenReturn(
+        Mockito.when(pipelineStore.load("xyz", "1")).thenReturn(
             MockStages.createPipelineConfigurationSourceProcessorTarget());
         Mockito.when(pipelineStore.create("nobody", "myPipeline", "my description")).thenReturn(
           MockStages.createPipelineConfigurationSourceProcessorTarget());

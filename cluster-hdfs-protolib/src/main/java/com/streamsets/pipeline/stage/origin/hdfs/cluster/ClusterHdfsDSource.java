@@ -27,7 +27,7 @@ import com.streamsets.pipeline.lib.parser.log.RegExConfig;
 
 
 @StageDef(
-    version = "1.0.0",
+    version = 1,
     label = "Hadoop FS",
     description = "Reads data from Hadoop file system",
     execution = ExecutionMode.CLUSTER,

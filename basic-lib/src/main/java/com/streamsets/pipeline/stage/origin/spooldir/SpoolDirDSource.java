@@ -38,7 +38,7 @@ import com.streamsets.pipeline.lib.parser.log.RegExConfig;
 import java.util.List;
 
 @StageDef(
-    version = "1.0.0",
+    version = 1,
     label = "Directory",
     description = "Reads files from a directory",
     icon="directory.png",

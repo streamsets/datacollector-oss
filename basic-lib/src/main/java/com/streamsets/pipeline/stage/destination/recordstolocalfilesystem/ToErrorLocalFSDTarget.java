@@ -18,7 +18,7 @@ import com.streamsets.pipeline.configurablestage.DTarget;
 import com.streamsets.pipeline.lib.el.TimeEL;
 
 @StageDef(
-    version = "1.0.0",
+    version = 1,
     label = "Write To File",
     description = "Writes records to a local File System as SDC records",
     icon="",

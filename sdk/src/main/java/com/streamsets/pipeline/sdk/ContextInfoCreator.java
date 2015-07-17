@@ -19,7 +19,7 @@ import java.util.Map;
 
 public class ContextInfoCreator {
 
-  public static Stage.Info createInfo(final String name, final String version, final String instanceName) {
+  public static Stage.Info createInfo(final String name, final int version, final String instanceName) {
     return new Stage.Info() {
       @Override
       public String getName() {
@@ -27,7 +27,7 @@ public class ContextInfoCreator {
       }
 
       @Override
-      public String getVersion() {
+      public int getVersion() {
         return version;
       }
 

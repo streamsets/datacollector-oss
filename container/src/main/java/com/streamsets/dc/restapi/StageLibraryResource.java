@@ -110,7 +110,7 @@ public class StageLibraryResource {
   @PermitAll
   public Response getIcon(@QueryParam("name") String name,
                           @QueryParam("library") String library,
-                          @QueryParam("version") String version) {
+                          @QueryParam("version") int version) {
     StageDefinition stage = Utils.checkNotNull(stageLibrary.getStage(library, name, version, false),
       Utils.formatL("Could not find stage library: {}, name: {}, version: {}", library, name, version));
     String iconFile = DEFAULT_ICON_FILE;

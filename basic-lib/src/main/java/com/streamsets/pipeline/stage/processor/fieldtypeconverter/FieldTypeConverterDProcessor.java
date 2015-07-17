@@ -17,7 +17,7 @@ import com.streamsets.pipeline.configurablestage.DProcessor;
 import java.util.List;
 
 @StageDef(
-    version="1.0.0",
+    version=1,
     label="Field Converter",
     description = "Converts the data type of a field",
     icon="converter.png"

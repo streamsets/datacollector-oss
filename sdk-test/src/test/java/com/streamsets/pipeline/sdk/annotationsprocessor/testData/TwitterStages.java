@@ -27,7 +27,7 @@ import java.util.Map;
 public class TwitterStages {
 
   @StageDef(description = "Produces twitter feeds", label = "twitter_source"
-    , version = "1.0")
+    , version = 1)
   public class TwitterSource extends BaseSource{
 
     @FieldSelector
@@ -67,7 +67,7 @@ public class TwitterStages {
   }
 
   @StageDef(description = "processes twitter feeds", label = "twitter_processor"
-    , version = "1.0")
+    , version = 1)
   public class TwitterProcessor extends BaseProcessor {
 
     @FieldValueChooser(TypesProvider.class)
@@ -103,7 +103,7 @@ public class TwitterStages {
 
 
   @StageDef(description = "Consumes twitter feeds", label = "twitter_target"
-    , version = "1.3")
+    , version = 3)
   public class TwitterTarget implements Target {
 
     @ConfigDef(

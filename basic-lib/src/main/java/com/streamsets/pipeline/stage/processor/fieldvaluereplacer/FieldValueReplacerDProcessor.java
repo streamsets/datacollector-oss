@@ -21,7 +21,7 @@ import com.streamsets.pipeline.configurablestage.DProcessor;
 import java.util.List;
 
 @StageDef(
-    version="1.0.0",
+    version=1,
     label="Value Replacer",
     description = "Replaces null values with a constant and replaces values with NULL",
     icon="replacer.png"

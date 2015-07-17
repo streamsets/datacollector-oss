@@ -20,7 +20,7 @@ import com.streamsets.pipeline.lib.parser.log.RegExConfig;
 import java.util.List;
 
 @StageDef(
-    version="1.0.0",
+    version=1,
     label="Log Parser",
     description = "Parses a string field which contains a Log line",
     icon="logparser.png"

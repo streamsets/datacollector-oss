@@ -17,7 +17,7 @@ import com.streamsets.pipeline.configurablestage.DTarget;
 import com.streamsets.pipeline.stage.lib.kinesis.AWSRegionChooserValues;
 
 @StageDef(
-    version = "1.0.0",
+    version = 1,
     label = "Kinesis Producer",
     description = "Writes data to Amazon Kinesis",
     icon = "kinesis.png")

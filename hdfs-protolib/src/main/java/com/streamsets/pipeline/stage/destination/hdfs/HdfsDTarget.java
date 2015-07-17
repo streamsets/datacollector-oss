@@ -29,7 +29,7 @@ import com.streamsets.pipeline.lib.el.TimeNowEL;
 import java.util.Map;
 
 @StageDef(
-    version = "1.0.0",
+    version = 1,
     label = "Hadoop FS",
     description = "Writes to a Hadoop file system",
     icon = "hdfs.png",

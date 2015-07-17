@@ -12,7 +12,7 @@ import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.base.BaseSource;
 @GenerateResourceBundle
 @StageDef(description = "Produces twitter feeds", label = "twitter_source"
-, version = "1.0")
+, version = 1)
 public class SourceWithOnlyStageDef extends BaseSource{
 
   public SourceWithOnlyStageDef() {

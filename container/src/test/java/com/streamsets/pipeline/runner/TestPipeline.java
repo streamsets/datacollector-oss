@@ -91,7 +91,7 @@ public class TestPipeline {
       Assert.assertNotNull(stage.getInfo());
       String instanceName;
       String stageName;
-      String stageVersion;
+      int stageVersion;
       if (i < 3) {
         instanceName = "s";
         stageName = stageDefs.get(0).getStageName();

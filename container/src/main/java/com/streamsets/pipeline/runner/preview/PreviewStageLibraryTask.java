@@ -22,7 +22,7 @@ import java.util.Properties;
 public class PreviewStageLibraryTask extends TaskWrapper implements StageLibraryTask {
   public static final String LIBRARY = ":system:";
   public static final String NAME = ":plug:";
-  public static final String VERSION = "1.0.0";
+  public static final int VERSION = 1;
 
   private static final StageLibraryDefinition PREVIEW_LIB = new StageLibraryDefinition(
       PreviewStageLibraryTask.class.getClassLoader(), LIBRARY, "Preview", new Properties());
@@ -49,9 +49,9 @@ public class PreviewStageLibraryTask extends TaskWrapper implements StageLibrary
   }
 
   @Override
-  public StageDefinition getStage(String library, String name, String version, boolean forExecution) {
+  public StageDefinition getStage(String library, String name, int version, boolean forExecution) {
     StageDefinition def;
-    if (LIBRARY.equals(library) && NAME.equals(name) && VERSION.equals(VERSION)) {
+    if (LIBRARY.equals(library) && NAME.equals(name) && VERSION == version) {
       def = PLUG_STAGE;
     } else {
       def = this.library.getStage(library, name, version, forExecution);

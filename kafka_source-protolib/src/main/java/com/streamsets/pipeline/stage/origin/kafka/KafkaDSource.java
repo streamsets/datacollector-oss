@@ -33,7 +33,7 @@ import java.util.List;
 import java.util.Map;
 
 @StageDef(
-    version = "1.0.0",
+    version = 1,
     label = "Kafka Consumer",
     description = "Reads data from Kafka",
     icon = "kafka.png",

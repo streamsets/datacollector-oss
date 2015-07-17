@@ -20,7 +20,7 @@ import java.util.List;
 @GenerateResourceBundle
 @RawSource(rawSourcePreviewer = TwitterRawSourcePreviewer.class)
 @StageDef(description = "Produces twitter feeds", label = "twitter_source"
-, version = "1.0")
+, version = 1)
 @ConfigGroups(TwitterSource.TwitterConfigGroups.class)
 public class TwitterSource extends BaseSource {
 
