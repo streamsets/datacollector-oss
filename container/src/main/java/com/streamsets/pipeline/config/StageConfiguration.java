@@ -21,7 +21,7 @@ public class StageConfiguration implements Serializable {
   private final String instanceName;
   private final String library;
   private final String stageName;
-  private final int stageVersion;
+  private int stageVersion;
   private final List<Config> configuration;
   private final Map<String, Config> configurationMap;
   private final Map<String, Object> uiInfo;
@@ -59,12 +59,16 @@ public class StageConfiguration implements Serializable {
     return stageName;
   }
 
+  public void setStageVersion(int version) {
+    stageVersion = version;
+  }
+
   public int getStageVersion() {
     return stageVersion;
   }
 
   public List<Config> getConfiguration() {
-    return configuration;
+    return new ArrayList<>(configuration);
   }
 
   public Map<String, Object> getUiInfo() {
@@ -83,7 +87,6 @@ public class StageConfiguration implements Serializable {
     return configurationMap.get(name);
   }
 
-  @VisibleForTesting
   public void setConfig(List<Config> configList) {
     configuration.clear();
     configuration.addAll(configList);

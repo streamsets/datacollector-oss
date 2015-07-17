@@ -47,7 +47,7 @@ public abstract class PipelineBeanCreator {
     return CREATOR;
   }
 
-  private static final StageDefinition PIPELINE_DEFINITION = getPipelineDefinition();
+  public static final StageDefinition PIPELINE_DEFINITION = getPipelineDefinition();
 
   static private StageDefinition getPipelineDefinition() {
     StageLibraryDefinition libraryDef = new StageLibraryDefinition(Thread.currentThread().getContextClassLoader(),
@@ -122,7 +122,7 @@ public abstract class PipelineBeanCreator {
   }
 
   @SuppressWarnings("unchecked")
-  StageConfiguration getPipelineConfAsStageConf(PipelineConfiguration pipelineConf) {
+  public static StageConfiguration getPipelineConfAsStageConf(PipelineConfiguration pipelineConf) {
     return new StageConfiguration(null, "none", "pipeline", 1, pipelineConf.getConfiguration(),
                                   Collections.EMPTY_MAP, Collections.EMPTY_LIST, Collections.EMPTY_LIST);
   }

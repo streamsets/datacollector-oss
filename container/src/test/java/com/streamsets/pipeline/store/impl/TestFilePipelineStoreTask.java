@@ -364,7 +364,7 @@ public class TestFilePipelineStoreTask {
     Assert.assertTrue(expectedPipelineConfig.getStages().get(0).getConfiguration().size() == 0);
     //Target has 1 configuration, expected 0
     Assert.assertTrue(expectedPipelineConfig.getStages().get(1).getConfiguration().size() == 0);
-    expectedPipelineConfig.getStages().get(1).getConfiguration().add(new Config("unexpected", "conf"));
+    expectedPipelineConfig.getStages().get(1).setConfig(ImmutableList.of(new Config("unexpected", "conf")));
     Assert.assertTrue(expectedPipelineConfig.getStages().get(1).getConfiguration().size() == 1);
 
     /*

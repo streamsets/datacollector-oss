@@ -17,7 +17,6 @@ import com.streamsets.pipeline.validation.PipelineConfigurationValidator;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -29,7 +28,6 @@ public class PipelineConfiguration implements Serializable{
   private PipelineInfo info;
   private String description;
   private List<Config> configuration;
-  private Map<String, Config> configurationMap;
   private final Map<String, Object> uiInfo;
   private List<StageConfiguration> stages;
   private StageConfiguration errorStage;
@@ -45,10 +43,6 @@ public class PipelineConfiguration implements Serializable{
     this.uuid = Preconditions.checkNotNull(uuid, "uuid cannot be null");
     this.description = description;
     this.configuration = configuration;
-    configurationMap = new HashMap<>();
-    for (Config conf : configuration) {
-      configurationMap.put(conf.getName(), conf);
-    }
     this.uiInfo = uiInfo;
     this.stages = (stages != null) ? stages : Collections.<StageConfiguration>emptyList();
     this.errorStage = errorStage;
@@ -68,6 +62,10 @@ public class PipelineConfiguration implements Serializable{
 
   public int getSchemaVersion() {
     return schemaVersion;
+  }
+
+  public void setVersion(int version) {
+    this.version = version;
   }
 
   public int getVersion() {
@@ -138,12 +136,21 @@ public class PipelineConfiguration implements Serializable{
     return (issues !=null) && previewable;
   }
 
+  public void setConfiguration(List<Config> configuration) {
+    this.configuration = configuration;
+  }
+
   public List<Config> getConfiguration() {
     return configuration;
   }
 
   public Config getConfiguration(String name) {
-    return configurationMap.get(name);
+    for (Config config : configuration) {
+      if (config.getName().equals(name)) {
+        return config;
+      }
+    }
+    return null;
   }
 
   public Map<String, Object> getUiInfo() {

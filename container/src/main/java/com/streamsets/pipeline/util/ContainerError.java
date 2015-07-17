@@ -112,12 +112,13 @@ public enum ContainerError implements ErrorCode {
   CONTAINER_0701("Stage '{}' initialization error: {}"),
   CONTAINER_0702("Pipeline initialization error: {}"),
 
-
   //Runner
   CONTAINER_0800("Pipeline '{}' validation error : {}"),
 
-  //Configuration upgrader
+  //PipelineConfigurationUpgrader
   CONTAINER_0900("Error while upgrading stage configuration from version '{}' to version '{}': {}"),
+  CONTAINER_0901("Could not find stage definition for '{}:{}'"),
+  CONTAINER_0902("Stage definition '{}:{}' version '{}' is older than the version specified in the configuration '{}' for stage '{}'"),
   ;
 
   private final String msg;
