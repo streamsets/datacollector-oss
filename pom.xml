@@ -200,8 +200,8 @@
         </property>
       </activation>
       <modules>
-        <!--module>miniITnew</module-->
-      </modules>
+        <module>miniITnew</module>
+     </modules>
     </profile>
     <profile>
       <id>release</id>

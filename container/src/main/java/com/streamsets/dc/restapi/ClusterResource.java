@@ -34,7 +34,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-@Path("/v2/cluster")
+@Path("/v1/cluster")
 @DenyAll
 public class ClusterResource {
 

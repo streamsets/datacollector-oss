@@ -42,7 +42,6 @@ public class RuntimeInfo {
   public static final String UNDEF = "UNDEF";
   // TODO -remove after refactoring
   public static final String CALLBACK_URL = "/rest/v1/cluster/callback";
-  public static final String CALLBACK_URL_2 = "/rest/v2/cluster/callback";
   private final static String USER_ROLE = "user";
 
   public static final String LOG4J_CONFIGURATION_URL_ATTR = "log4j.configuration.url";
@@ -296,7 +295,4 @@ public class RuntimeInfo {
     return getBaseHttpUrl() + CALLBACK_URL;
   }
 
-  public String getClusterCallbackURL2() {
-    return getBaseHttpUrl() + CALLBACK_URL_2;
-  }
 }

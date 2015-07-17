@@ -174,13 +174,7 @@ public class ClusterProviderImpl implements ClusterProvider {
 
       if(runtimeInfo != null) {
         sdcProperties.setProperty(PipelineManager.SDC_CLUSTER_TOKEN_KEY, runtimeInfo.getSDCToken());
-        if (!sourceInfo.containsKey(ClusterModeConstants.CLUSTER_PIPELINE_USER)) {
-          LOG.info("This is the old way"); // TODO - remove after refactoring
-          sdcProperties.setProperty(PipelineManager.CALLBACK_SERVER_URL_KEY, runtimeInfo.getClusterCallbackURL());
-        } else {
-          LOG.info("This is the new way");
-          sdcProperties.setProperty(PipelineManager.CALLBACK_SERVER_URL_KEY, runtimeInfo.getClusterCallbackURL2());
-        }
+        sdcProperties.setProperty(PipelineManager.CALLBACK_SERVER_URL_KEY, runtimeInfo.getClusterCallbackURL());
       }
 
       for (Map.Entry<String, String> entry : sourceConfigs.entrySet()) {

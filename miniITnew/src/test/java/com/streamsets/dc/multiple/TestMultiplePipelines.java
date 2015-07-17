@@ -14,8 +14,10 @@ import com.streamsets.dc.util.TestUtil;
 import com.streamsets.dc.util.VerifyUtils;
 import com.streamsets.pipeline.lib.KafkaTestUtil;
 import com.streamsets.pipeline.lib.util.ThreadUtil;
+
 import kafka.javaapi.producer.Producer;
 import kafka.producer.KeyedMessage;
+
 import org.apache.flume.Channel;
 import org.apache.flume.ChannelSelector;
 import org.apache.flume.Context;
@@ -34,6 +36,7 @@ import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.io.File;
@@ -49,6 +52,7 @@ import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+@Ignore
 public class TestMultiplePipelines {
 
   private static MiniSDCTestingUtility miniSDCTestingUtility;
@@ -229,7 +233,7 @@ public class TestMultiplePipelines {
   @Test
   public void testRestartAndHistory() throws Exception {
 
-    //Almost-simultaneous stops 
+    //Almost-simultaneous stops
     for(Map.Entry<String, String> e : getPipelineNameAndRev().entrySet()) {
       VerifyUtils.stopPipeline(serverURI, e.getKey(), e.getValue());
     }

@@ -45,13 +45,16 @@ public class MetricsObserverRunner {
       }
     }
 
-    List<MetricsRuleDefinition> metricsRuleDefinitions =
-      currentChangeRequest.getRuleDefinitions().getMetricsRuleDefinitions();
-    if(metricsRuleDefinitions != null) {
-      for (MetricsRuleDefinition metricsRuleDefinition : metricsRuleDefinitions) {
-        MetricRuleEvaluator metricAlertsHelper = new MetricRuleEvaluator(metricsRuleDefinition, metrics, alertManager,
-          currentChangeRequest.getRuleDefinitions().getEmailIds());
-        metricAlertsHelper.checkForAlerts();
+    if (currentChangeRequest != null) {
+      List<MetricsRuleDefinition> metricsRuleDefinitions =
+        currentChangeRequest.getRuleDefinitions().getMetricsRuleDefinitions();
+      if (metricsRuleDefinitions != null) {
+        for (MetricsRuleDefinition metricsRuleDefinition : metricsRuleDefinitions) {
+          MetricRuleEvaluator metricAlertsHelper =
+            new MetricRuleEvaluator(metricsRuleDefinition, metrics, alertManager, currentChangeRequest
+              .getRuleDefinitions().getEmailIds());
+          metricAlertsHelper.checkForAlerts();
+        }
       }
     }
   }

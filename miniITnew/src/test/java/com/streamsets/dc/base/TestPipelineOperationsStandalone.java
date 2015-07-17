@@ -8,9 +8,11 @@ package com.streamsets.dc.base;
 import com.streamsets.dc.MiniSDC;
 import com.streamsets.dc.MiniSDCTestingUtility;
 import com.streamsets.dc.util.VerifyUtils;
+
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.io.IOException;
@@ -132,6 +134,7 @@ public abstract class TestPipelineOperationsStandalone extends TestPipelineOpera
     Assert.assertEquals(8, history.size());
   }
 
+  @Ignore
   @Test
   public void testPreview() throws IOException, InterruptedException {
     URI serverURI = getServerURI();

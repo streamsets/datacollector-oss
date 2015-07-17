@@ -39,18 +39,6 @@ public class VerifyUtils {
     return null;
   }
 
-  public static Map<String, Map<String, Integer>> getMetrics(URI serverURI, String name, String rev) throws IOException, InterruptedException {
-    // TODO - Get aggregated slave counters
-    LOG.info("Retrieving counters from Slave URI " + serverURI);
-    Client client = ClientBuilder.newClient();
-    WebTarget target = client.target(serverURI.toURL().toString()).path("/rest/v2/pipeline/metrics")
-      .queryParam("name", name).queryParam("rev", rev);
-    Response response = target.request(MediaType.APPLICATION_JSON_TYPE).get();
-    checkResponse(response, Response.Status.OK);
-    Map<String, Map<String, Map<String, Integer>>> map = response.readEntity(Map.class);
-    Map<String, Map<String, Integer>> countersMap = map.get("counters");
-    return countersMap;
-  }
 
   public static int getSourceOutputRecords(Map<String, Map<String, Integer>> metrics) {
     return getCounter(metrics, "stage.*Source.*outputRecords.counter");
@@ -84,28 +72,42 @@ public class VerifyUtils {
     return getCounter(metrics, "stage.*Target.*stageErrors.counter");
   }
 
+  public static Map<String, Map<String, Integer>> getMetrics(URI serverURI, String name, String rev) throws IOException, InterruptedException {
+    // TODO - Get aggregated slave counters
+    LOG.info("Retrieving counters from Slave URI " + serverURI);
+    Client client = ClientBuilder.newClient();
+    WebTarget target = client.target(serverURI.toURL().toString()).path("/rest/v1/pipeline/" + name + "/metrics")
+      .queryParam("name", name).queryParam("rev", rev);
+    Response response = target.request(MediaType.APPLICATION_JSON_TYPE).get();
+    checkResponse(response, Response.Status.OK);
+    Map<String, Map<String, Map<String, Integer>>> map = response.readEntity(Map.class);
+    Map<String, Map<String, Integer>> countersMap = map.get("counters");
+    return countersMap;
+  }
+
   public static void startPipeline(URI serverURI, String name, String rev) throws IOException {
     Client client = ClientBuilder.newClient();
-    WebTarget target = client.target(serverURI.toURL().toString()).path("/rest/v2/pipeline/start")
-      .queryParam("name", name).queryParam("rev", rev);
-    Response response = target.request(MediaType.APPLICATION_JSON_TYPE)
-      .post(Entity.entity("", MediaType.APPLICATION_JSON));
+    WebTarget target =
+      client.target(serverURI.toURL().toString()).path("/rest/v1/pipeline/" + name + "/start").queryParam("rev", rev);
+
+    Response response =
+      target.request(MediaType.APPLICATION_JSON_TYPE).post(Entity.entity("", MediaType.APPLICATION_JSON));
     checkResponse(response, Response.Status.OK);
   }
 
   public static void stopPipeline(URI serverURI, String name, String rev) throws IOException {
     Client client = ClientBuilder.newClient();
-    WebTarget target = client.target(serverURI.toURL().toString()).path("/rest/v2/pipeline/stop")
-      .queryParam("name", name).queryParam("rev", rev);
-    Response response = target.request(MediaType.APPLICATION_JSON_TYPE)
-      .post(Entity.entity("", MediaType.APPLICATION_JSON));
+    WebTarget target =
+      client.target(serverURI.toURL().toString()).path("/rest/v1/pipeline/" + name + "/stop").queryParam("rev", rev);
+    Response response =
+      target.request(MediaType.APPLICATION_JSON_TYPE).post(Entity.entity("", MediaType.APPLICATION_JSON));
     checkResponse(response, Response.Status.OK);
   }
 
   public static String getPipelineState(URI serverURI, String name, String rev) throws IOException {
     Client client = ClientBuilder.newClient();
-    WebTarget target = client.target(serverURI.toURL().toString()).path("/rest/v2/pipeline/status")
-      .queryParam("name", name).queryParam("rev", rev);
+    WebTarget target =
+      client.target(serverURI.toURL().toString()).path("/rest/v1/pipeline/" + name + "/status").queryParam("rev", rev);
     Response response = target.request(MediaType.APPLICATION_JSON_TYPE).get();
     checkResponse(response, Response.Status.OK);
     Map<String, String> map = response.readEntity(Map.class);
@@ -114,16 +116,16 @@ public class VerifyUtils {
 
   public static void deleteHistory(URI serverURI, String name, String rev) throws MalformedURLException {
     Client client = ClientBuilder.newClient();
-    WebTarget target = client.target(serverURI.toURL().toString()).path("/rest/v2/pipeline/history/" + name)
-      .queryParam("rev", rev);
+    WebTarget target =
+      client.target(serverURI.toURL().toString()).path("/rest/v1/pipeline/" + name + "/history").queryParam("rev", rev);
     Response response = target.request(MediaType.APPLICATION_JSON_TYPE).delete();
     checkResponse(response, Response.Status.OK);
   }
 
   public static List<Map<String, Object>> getHistory(URI serverURI, String name, String rev) throws MalformedURLException {
     Client client = ClientBuilder.newClient();
-    WebTarget target = client.target(serverURI.toURL().toString()).path("/rest/v2/pipeline/history/" + name)
-      .queryParam("rev", rev);
+    WebTarget target =
+      client.target(serverURI.toURL().toString()).path("/rest/v1/pipeline/" + name + "/history").queryParam("rev", rev);
     Response response = target.request(MediaType.APPLICATION_JSON_TYPE).get();
     checkResponse(response, Response.Status.OK);
     return response.readEntity(new GenericType<List<Map<String, Object>>>() {});
@@ -132,8 +134,8 @@ public class VerifyUtils {
   public static void captureSnapshot(URI serverURI, String name, String rev, String snapshotName, int batchSize)
     throws IOException {
     Client client = ClientBuilder.newClient();
-    WebTarget target = client.target(serverURI.toURL().toString()).path("/rest/v2/pipeline/snapshots/" + snapshotName)
-      .queryParam("batchSize", batchSize).queryParam("name", name).queryParam("rev", rev);
+    WebTarget target = client.target(serverURI.toURL().toString()).path("/rest/v1/pipeline/" + name + "/snapshot/" + snapshotName)
+      .queryParam("batchSize", batchSize).queryParam("rev", rev);
     Response response = target.request(MediaType.APPLICATION_JSON_TYPE)
       .put(Entity.entity("", MediaType.APPLICATION_JSON));
     checkResponse(response, Response.Status.OK);
@@ -141,20 +143,21 @@ public class VerifyUtils {
 
   public static boolean snapShotExists(URI serverURI, String name, String rev, String snapshotName) throws IOException {
     Client client = ClientBuilder.newClient();
-    WebTarget target = client.target(serverURI.toURL().toString()).path("/rest/v2/pipeline/snapshots/" + snapshotName)
-      .queryParam("name", name).queryParam("rev", rev);
+    WebTarget target =
+      client.target(serverURI.toURL().toString())
+        .path("/rest/v1/pipeline/" + name + "/snapshot/" + snapshotName + "/status").queryParam("rev", rev);
     Response response = target.request(MediaType.APPLICATION_JSON_TYPE).get();
     checkResponse(response, Response.Status.OK);
     Map<String, Object> map = response.readEntity(Map.class);
-    return !(Boolean)map.get("inProgress");
+    return !(Boolean) map.get("inProgress");
   }
 
   public static Map<String, List<List<Map<String, Object>>>> getSnapShot(URI serverURI, String pipelineName, String rev,
                                                                    String snapshotName) throws MalformedURLException {
     ///snapshots/{pipelineName}/{snapshotName}
     Client client = ClientBuilder.newClient();
-    WebTarget target = client.target(serverURI.toURL().toString()).path("/rest/v2/pipeline/snapshots/" + pipelineName
-      + "/" + snapshotName).queryParam("rev", rev);
+    WebTarget target = client.target(serverURI.toURL().toString()).path("/rest/v1/pipeline/" + pipelineName
+      + "/snapshot/" + snapshotName).queryParam("rev", rev);
     Response response = target.request(MediaType.APPLICATION_JSON_TYPE).get();
     checkResponse(response, Response.Status.OK);
     return response.readEntity(new GenericType<Map<String, List<List<Map<String, Object>>>>>() {});
