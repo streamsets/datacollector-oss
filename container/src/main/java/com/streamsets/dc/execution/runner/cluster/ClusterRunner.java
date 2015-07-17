@@ -272,6 +272,7 @@ public class ClusterRunner implements Runner {
     attributes.putAll(getAttributes());
     ApplicationState appState = new ApplicationState((Map) attributes.get(APPLICATION_STATE));
     if (appState.getId() == null) {
+      prepareForStart();
       start();
     } else {
       runtimeInfo.setSDCToken(appState.getSdcToken());
@@ -284,12 +285,8 @@ public class ClusterRunner implements Runner {
 
   @Override
   public void prepareForStart() throws PipelineStoreException, PipelineRunnerException {
-    if (getState().getStatus() == PipelineStatus.STARTING) {
-      LOG.debug("Pipeline '{}::{}' is already in STARTING state", name, rev);
-    } else {
-      LOG.info("Preparing to start pipeline '{}::{}'", name, rev);
-      validateAndSetStateTransition(PipelineStatus.STARTING, "Starting pipeline in cluster mode");
-    }
+    LOG.info("Preparing to start pipeline '{}::{}'", name, rev);
+    validateAndSetStateTransition(PipelineStatus.STARTING, "Starting pipeline in cluster mode");
   }
 
   @Override
@@ -301,7 +298,6 @@ public class ClusterRunner implements Runner {
     if (executionMode != ExecutionMode.CLUSTER) {
       throw new PipelineRunnerException(ValidationError.VALIDATION_0073);
     }
-    prepareForStart();
     LOG.debug("State of pipeline for '{}::{}' is '{}' ", name, rev, getState());
     PipelineConfiguration pipelineConf = getPipelineConf();
     doStart(pipelineConf, getClusterSourceInfo(name, rev, pipelineConf));

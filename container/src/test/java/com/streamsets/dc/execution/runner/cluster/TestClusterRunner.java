@@ -233,6 +233,7 @@ public class TestClusterRunner {
   public void testPipelineStatusStart() throws Exception {
     setState(PipelineStatus.EDITED);
     Runner clusterRunner = createClusterRunner();
+    clusterRunner.prepareForStart();
     clusterRunner.start();
     Assert.assertEquals(PipelineStatus.RUNNING, clusterRunner.getState().getStatus());
   }
@@ -242,10 +243,12 @@ public class TestClusterRunner {
     setState(PipelineStatus.EDITED);
     Runner clusterRunner = createClusterRunner();
     clusterProvider.submitTimesOut = true;
+    clusterRunner.prepareForStart();
     clusterRunner.start();
     Assert.assertEquals(PipelineStatus.START_ERROR, clusterRunner.getState().getStatus());
     clusterProvider.submitTimesOut = false;
     clusterProvider.appId = APPID;
+    clusterRunner.prepareForStart();
     clusterRunner.start();
     Assert.assertEquals(PipelineStatus.RUNNING, clusterRunner.getState().getStatus());
     ApplicationState appState = new ApplicationState((Map)pipelineStateStore.getState(NAME, REV).getAttributes().
@@ -278,6 +281,7 @@ public class TestClusterRunner {
     assertFalse(slaves.isEmpty());
     assertEquals("slaveToken", slaves.get(0).getSdcSlaveToken());
     assertEquals(runtimeInfo.getSDCToken(), slaves.get(0).getSdcClusterToken());
+    clusterRunner.prepareForStart();
     clusterRunner.start();
     slaves = new ArrayList<CallbackInfo>(clusterRunner.getSlaveCallbackList());
     assertTrue(slaves.isEmpty());

@@ -201,6 +201,7 @@ public class StandaloneRunner implements Runner, StateListener {
         String msg = "Pipeline was in DISCONNECTED state, changing it to CONNECTING";
         LOG.debug(msg);
         validateAndSetStateTransition(PipelineStatus.CONNECTING, msg, null);
+        prepareForStart();
         start();
       default:
         LOG.error(Utils.format("Pipeline cannot start with status: '{}'", status));
@@ -403,12 +404,8 @@ public class StandaloneRunner implements Runner, StateListener {
 
   @Override
   public void prepareForStart() throws PipelineStoreException, PipelineRunnerException {
-    if (getState().getStatus() == PipelineStatus.STARTING) {
-      LOG.debug("Pipeline '{}::{}' is already in STARTING state", name, rev);
-    } else {
       LOG.info("Preparing to start pipeline '{}::{}'", name, rev);
       validateAndSetStateTransition(PipelineStatus.STARTING, null, null);
-    }
   }
 
   @Override
@@ -417,7 +414,6 @@ public class StandaloneRunner implements Runner, StateListener {
       Utils.formatL("Cannot start the pipeline '{}::{}' as the runner is already closed", name, rev));
 
     synchronized (this) {
-      prepareForStart();
       LOG.info("Starting pipeline {} {}", name, rev);
       /*
        * Implementation Notes: --------------------- What are the different threads and runnables created? - - - - - - - -

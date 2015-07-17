@@ -55,7 +55,6 @@ public class ProductionPipeline {
     if (stateListener!=null) {
       stateListener.stateChanged(pipelineStatus, message, attributes);
     }
-
   }
 
   public void run() throws StageException, PipelineRuntimeException {
@@ -63,37 +62,40 @@ public class ProductionPipeline {
     boolean finishing = false;
     boolean errorWhileRunning = false;
     try {
-      LOG.debug("Initializing");
-      List<Issue> issues = pipeline.init();
-      if (issues.isEmpty()) {
-        try {
-          stateChanged(PipelineStatus.RUNNING, null, null);
-          LOG.debug("Running");
-          pipeline.run();
-          if (!wasStopped()) {
-            LOG.debug("Finishing");
-            stateChanged(PipelineStatus.FINISHING, null, null);
-            finishing = true;
+      try {
+        LOG.debug("Initializing");
+        List<Issue> issues = pipeline.init();
+        if (issues.isEmpty()) {
+          try {
+            stateChanged(PipelineStatus.RUNNING, null, null);
+            LOG.debug("Running");
+            pipeline.run();
+            if (!wasStopped()) {
+              LOG.debug("Finishing");
+              stateChanged(PipelineStatus.FINISHING, null, null);
+              finishing = true;
+            }
+          } catch (Exception e) {
+            if (!wasStopped()) {
+              LOG.warn("Error while running: {}", e.getMessage(), e);
+              stateChanged(PipelineStatus.RUNNING_ERROR, e.getMessage(), null);
+              errorWhileRunning = true;
+            }
+            throw e;
           }
-        } catch (Exception e) {
-          if (!wasStopped()) {
-            LOG.warn("Error while running: {}", e.getMessage(), e);
-            stateChanged(PipelineStatus.RUNNING_ERROR, e.getMessage(), null);
-            errorWhileRunning = true;
-          }
-          throw e;
+        }
+      } finally {
+        LOG.debug("Destroying");
+        pipeline.destroy();
+        if (finishing) {
+          LOG.debug("Finished");
+          stateChanged(PipelineStatus.FINISHED, null, null);
+        } else if (errorWhileRunning) {
+          LOG.debug("Stopped due to an error");
+          stateChanged(PipelineStatus.RUN_ERROR, null, null);
         }
       }
     } finally {
-      LOG.debug("Destroying");
-      pipeline.destroy();
-      if (finishing) {
-        LOG.debug("Finished");
-        stateChanged(PipelineStatus.FINISHED, null, null);
-      } else if (errorWhileRunning) {
-        LOG.debug("Stopped due to an error");
-        stateChanged(PipelineStatus.RUN_ERROR, null, null);
-      }
       MetricsConfigurator.cleanUpJmxMetrics();
     }
   }

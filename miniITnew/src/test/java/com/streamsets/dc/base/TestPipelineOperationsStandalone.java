@@ -80,12 +80,14 @@ public abstract class TestPipelineOperationsStandalone extends TestPipelineOpera
 
   @After
   public void tearDown() throws Exception {
-    if ("RUNNING".equals(VerifyUtils.getPipelineState(serverURI, getPipelineName(), getPipelineRev()))) {
+    String status = VerifyUtils.getPipelineState(serverURI, getPipelineName(), getPipelineRev());
+    if ("RUNNING".equals(status) || "STARTING".equals(status)) {
       miniSDC.stopPipeline();
       VerifyUtils.waitForPipelineToStop(serverURI, getPipelineName(), getPipelineRev());
     }
   }
 
+  @Override
   protected  boolean clusterModeTest() {
     return false;
   }
@@ -128,9 +130,6 @@ public abstract class TestPipelineOperationsStandalone extends TestPipelineOpera
 
     history = VerifyUtils.getHistory(serverURI, getPipelineName(), getPipelineRev());
     Assert.assertEquals(8, history.size());
-
-    //The pipeline must be running at the end of the test
-    VerifyUtils.startPipeline(serverURI, getPipelineName(), getPipelineRev());
   }
 
   @Test
@@ -182,7 +181,5 @@ public abstract class TestPipelineOperationsStandalone extends TestPipelineOpera
         }
       }
     }
-
-    VerifyUtils.startPipeline(serverURI, getPipelineName(), getPipelineRev());
   }
 }
