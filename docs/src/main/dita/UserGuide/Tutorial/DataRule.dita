@@ -2,15 +2,19 @@
 <!DOCTYPE task PUBLIC "-//OASIS//DTD DITA General Task//EN" "generalTask.dtd">
 <task id="task_ets_dkj_ps">
     <title>Create a Data Rule and Alert</title>
-    <shortdesc>The basic pipeline is basically complete. But let's create a data rule and alert.
-        Data rules are user defined rules used to assess data moving through a stream or link
-        between two stages. </shortdesc>
+    <shortdesc>The basic pipeline is complete. Now let's add a data rule and alert. Data rules are
+        user-defined rules used to inspect data moving between two stages. </shortdesc>
     <taskbody>
         <context>
-            <p>The script in the Jython Evaluator sends records to error that were paid by credit
-                card but don't have a credit card number associated with the record. But we can
-                create a data rule and alert to let us know when the count reaches a specified
-                threshold. </p>
+            <p>Data rules and alerts require a detailed understanding of the data passing through
+                the pipeline. For more general pipeline monitoring information, you can use metric
+                rules and alerts.</p>
+            <p>The script in the Jython Evaluator creates error records for credit card transactions
+                without credit card numbers. We can create a data rule and alert to let us know when
+                the record count reaches a specified threshold. </p>
+            <p>We'll use an expression with the record:value() function to identify when the credit
+                card number field, [20]/value, is null. The record:value() function returns the data
+                in the specified field. </p>
         </context>
         <steps id="steps_cw5_qqj_ps">
             <step>
@@ -51,9 +55,9 @@
                             <stentry>10</stentry>
                         </strow>
                     </simpletable>
+                    <note>With a larger data set, a smaller sampling percentage might be
+                        appropriate, but for the purposes of this tutorial, we'll use 20.</note>
                 </info>
-                <info>With a larger data set, a smaller sampling percentage might be appropriate,
-                    but for the purposes of this tutorial, we'll use 20. </info>
             </step>
             <step>
                 <cmd>Click <uicontrol>Save</uicontrol>.</cmd>

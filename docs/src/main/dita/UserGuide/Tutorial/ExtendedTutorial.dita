@@ -3,17 +3,19 @@
 <concept id="concept_w4n_gjt_ls">
  <title>Extended Tutorial</title>
  <shortdesc>The extended tutorial builds on the basic tutorial, using an additional set of stages to
-    flatten delimited data, perform some minor data transformations, and write to
-    Elasticsearch.</shortdesc>
+    flatten delimited data, perform some minor data transformations with the flattened data, and
+    write to the Trash development destination. We'll also use data preview to edit preview data and
+    test stage configuration. </shortdesc>
  <conbody>
-  <p>If you don't use Elasticsearch, you can use data preview to see how the pipeline transforms
-      data before we add the destination.</p>
+  <p>You can write to a real destination instead of the Trash destination. The Trash destination
+      allows you to run the pipeline without writing to a real destination system. </p>
     <p>The extended tutorial continues with the following steps:<ol id="ol_m23_hhk_ps">
         <li>Use a Jython Evaluator to flatten data.</li>
         <li>Configure a Field Converter to convert field types.</li>
         <li>Manipulate data with the Expression Evaluator.</li>
         <li>Use data preview to review and edit the pipeline.</li>
-        <li>Optionally connect an Elasticsearch destination and start the pipeline.</li>
+        <li>Complete the pipeline with the placeholder Trash destination.</li>
+                <li>Reset the origin and run the extended pipeline.</li>
       </ol></p>
  </conbody>
 </concept>

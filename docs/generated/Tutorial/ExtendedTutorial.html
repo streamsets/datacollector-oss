@@ -2,7 +2,7 @@
 <!DOCTYPE html
   SYSTEM "about:legacy-compat">
 <html xml:lang="en-us" lang="en-us">
-<head><meta name="description" content="The extended tutorial builds on the basic tutorial, using an additional set of stages to flatten delimited data, perform some minor data transformations, and write to Elasticsearch. If you don't use ..."></meta><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><meta name="copyright" content="(C) Copyright 2005"></meta><meta name="DC.rights.owner" content="(C) Copyright 2005"></meta><meta name="DC.Type" content="concept"></meta><meta name="DC.Title" content="Extended Tutorial"></meta><meta name="abstract" content="The extended tutorial builds on the basic tutorial, using an additional set of stages to flatten delimited data, perform some minor data transformations, and write to Elasticsearch."></meta><meta name="description" content="The extended tutorial builds on the basic tutorial, using an additional set of stages to flatten delimited data, perform some minor data transformations, and write to Elasticsearch."></meta><meta name="DC.Relation" scheme="URI" content="../Tutorial/Tutorial-title.html"></meta><meta name="DC.Format" content="XHTML"></meta><meta name="DC.Identifier" content="concept_w4n_gjt_ls"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/commonltr.css"><!----></link><title>Extended Tutorial</title><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/webhelp_topic.css"><!----></link><link rel="stylesheet" type="text/css" href="../skin.css"></link><script type="text/javascript"><!--
+<head><meta name="description" content="The extended tutorial builds on the basic tutorial, using an additional set of stages to flatten delimited data, perform some minor data transformations with the flattened data, and write to the Trash ..."></meta><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><meta name="copyright" content="(C) Copyright 2005"></meta><meta name="DC.rights.owner" content="(C) Copyright 2005"></meta><meta name="DC.Type" content="concept"></meta><meta name="DC.Title" content="Extended Tutorial"></meta><meta name="abstract" content="The extended tutorial builds on the basic tutorial, using an additional set of stages to flatten delimited data, perform some minor data transformations with the flattened data, and write to the Trash development destination. We'll also use data preview to edit preview data and test stage configuration."></meta><meta name="description" content="The extended tutorial builds on the basic tutorial, using an additional set of stages to flatten delimited data, perform some minor data transformations with the flattened data, and write to the Trash development destination. We'll also use data preview to edit preview data and test stage configuration."></meta><meta name="DC.Relation" scheme="URI" content="../Tutorial/Tutorial-title.html"></meta><meta name="DC.Format" content="XHTML"></meta><meta name="DC.Identifier" content="concept_w4n_gjt_ls"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/commonltr.css"><!----></link><title>Extended Tutorial</title><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/webhelp_topic.css"><!----></link><link rel="stylesheet" type="text/css" href="../skin.css"></link><script type="text/javascript"><!--
           
           var prefix = "../index.html";
           
@@ -15,11 +15,12 @@
 
  
  <div class="body conbody"><p class="shortdesc">The extended tutorial builds on the basic tutorial, using an additional set of stages to
-    flatten delimited data, perform some minor data transformations, and write to
-    Elasticsearch.</p>
+    flatten delimited data, perform some minor data transformations with the flattened data, and
+    write to the Trash development destination. We'll also use data preview to edit preview data and
+    test stage configuration. </p>
 
-  <p class="p">If you don't use Elasticsearch, you can use data preview to see how the pipeline transforms
-      data before we add the destination.</p>
+  <p class="p">You can write to a real destination instead of the Trash destination. The Trash destination
+      allows you to run the pipeline without writing to a real destination system. </p>
 
     <div class="p">The extended tutorial continues with the following steps:<ol class="ol" id="concept_w4n_gjt_ls__ol_m23_hhk_ps">
         <li class="li">Use a Jython Evaluator to flatten data.</li>
@@ -30,7 +31,9 @@
 
         <li class="li">Use data preview to review and edit the pipeline.</li>
 
-        <li class="li">Optionally connect an Elasticsearch destination and start the pipeline.</li>
+        <li class="li">Complete the pipeline with the placeholder Trash destination.</li>
+
+                <li class="li">Reset the origin and run the extended pipeline.</li>
 
       </ol>
 </div>
@@ -42,13 +45,13 @@
     <h2 class="title topictitle2">Flatten Data with a Jython Evaluator</h2>
 
     
-    <div class="body taskbody"><p class="shortdesc">To flatten data from the delimited data record format, let's use a Jython script with
-        the Jython Evaluator.</p>
+    <div class="body taskbody"><p class="shortdesc">To flatten data from the delimited data record format, let's use another Jython
+        script with the Jython Evaluator.</p>
 
         <div class="section context">
             <p class="p">Flattening the delimited data converts the data from list format to a single level.
                 After flattening the records, you no longer need to use delimited functions to
-                return field data, or use an index in the field path. </p>
+                return field data or an index in the field path. </p>
 
             <p class="p">For example, before flattening, we used the following field path to reference the
                 field with credit card numbers: <samp class="ph codeph">[20]/value</samp>. After flattening, you
@@ -57,9 +60,8 @@
         </div>
 
         <ol class="ol steps" id="task_cn5_w3k_ps__steps_s4j_x3k_ps"><li class="li step stepexpand">
-                <span class="ph cmd">In the stage library, select the <span class="ph uicontrol">Jython Evaluator</span> and
-                    connect the Field Masker and the Expression Evaluator to the stage, as
-                    shown:</span>
+                <span class="ph cmd">Add a <span class="ph uicontrol">Jython Evaluator</span> to the canvas and connect the
+                    Field Masker and the Expression Evaluator to the stage, as shown:</span>
                 <div class="itemgroup info"><img class="image" id="task_cn5_w3k_ps__image_fsy_3nk_ps" src="../Graphics/Tutorial-Jython2pipeline.png" height="145" width="593"></img></div>
             </li>
 <li class="li step stepexpand">
@@ -75,8 +77,10 @@ except Exception as e:
   err.write(record, e.message)  </pre>
 
                     <div class="note note"><span class="notetitle">Note:</span> Incorrect indentation can cause
-                  Jython validation errors. For best results, copy the script from the online help.
-                  Copying the script from the User Guide PDF can cause incorrect indentation. </div>
+                  Jython validation errors. Copying the script from the PDF can cause incorrect
+                  indentation. For best results, copy the script from the online help: online help &gt;
+                  Data Collector Tutorial &gt; Extended Tutorial &gt; Flatten Data with a Jython
+                  Evaluator. </div>
 
                 </div>
             </li>
@@ -96,9 +100,8 @@ except Exception as e:
         <div class="section context"></div>
 
         <ol class="ol steps" id="task_kxl_tvk_ps__steps_wx1_xvk_ps"><li class="li step stepexpand">
-                <span class="ph cmd">From the stage library, select the <span class="ph uicontrol">Field Converter</span>
-                    processor and connect it to the Jython Evaluator. Or, from the Pipeline Creation
-                    Help Bar, click <span class="ph menucascade"><span class="ph uicontrol">Select Processor to Connect</span> &gt; <span class="ph uicontrol">Field Converter</span></span>.</span>
+                <span class="ph cmd">Add a <span class="ph uicontrol">Field Converter</span> to the canvas and connect the
+                    Jython Evaluator to the stage.</span>
             </li>
 <li class="li step stepexpand">
                 <span class="ph cmd">Click the <span class="ph uicontrol">Conversions</span> tab.</span>
@@ -112,9 +115,9 @@ except Exception as e:
                             
                             <thead class="thead" align="left">
                                 <tr class="row">
-                                    <th class="entry" valign="top" id="d48979e178">Field Converter Property</th>
+                                    <th class="entry" valign="top" id="d49063e173">Field Converter Property</th>
 
-                                    <th class="entry" valign="top" id="d48979e181">Datetime Conversion</th>
+                                    <th class="entry" valign="top" id="d49063e176">Datetime Conversion</th>
 
                                 </tr>
 
@@ -122,9 +125,9 @@ except Exception as e:
 
                             <tbody class="tbody">
                                 <tr class="row">
-                                    <td class="entry" valign="top" headers="d48979e178 ">Fields to Convert</td>
+                                    <td class="entry" valign="top" headers="d49063e173 ">Fields to Convert</td>
 
-                                    <td class="entry" valign="top" headers="d48979e181 ">Click in the field and select the following fields:<ul class="ul" id="task_kxl_tvk_ps__ul_v3g_23z_ps">
+                                    <td class="entry" valign="top" headers="d49063e176 ">Click in the field and select the following fields:<ul class="ul" id="task_kxl_tvk_ps__ul_v3g_23z_ps">
                                             <li class="li">/dropoff_datetime</li>
 
                                             <li class="li">/pickup_datetime</li>
@@ -135,16 +138,19 @@ except Exception as e:
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" headers="d48979e178 ">Convert to Type</td>
+                                    <td class="entry" valign="top" headers="d49063e173 ">Convert to Type</td>
 
-                                    <td class="entry" valign="top" headers="d48979e181 ">Datetime</td>
+                                    <td class="entry" valign="top" headers="d49063e176 ">Datetime</td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" headers="d48979e178 ">Date Format</td>
+                                    <td class="entry" valign="top" headers="d49063e173 ">Date Format</td>
 
-                                    <td class="entry" valign="top" headers="d48979e181 ">Select a format that you like.</td>
+                                    <td class="entry" valign="top" headers="d49063e176 ">Date format used by the data. <p class="p">Select the following
+                                            format: <span class="ph uicontrol">YYYY-MM-DD
+                                        hh:mm:ss</span>.</p>
+</td>
 
                                 </tr>
 
@@ -165,9 +171,9 @@ except Exception as e:
                             
                             <thead class="thead" align="left">
                                 <tr class="row">
-                                    <th class="entry" valign="top" id="d48979e250">Field Converter Property</th>
+                                    <th class="entry" valign="top" id="d49063e250">Field Converter Property</th>
 
-                                    <th class="entry" valign="top" id="d48979e253">Double Conversion</th>
+                                    <th class="entry" valign="top" id="d49063e253">Double Conversion</th>
 
                                 </tr>
 
@@ -175,9 +181,9 @@ except Exception as e:
 
                             <tbody class="tbody">
                                 <tr class="row">
-                                    <td class="entry" valign="top" headers="d48979e250 ">Fields to Convert</td>
+                                    <td class="entry" valign="top" headers="d49063e250 ">Fields to Convert</td>
 
-                                    <td class="entry" valign="top" headers="d48979e253 ">Click in the field and select the following fields:<ul class="ul" id="task_kxl_tvk_ps__ul_tlc_33z_ps">
+                                    <td class="entry" valign="top" headers="d49063e253 ">Click in the field and select the following fields:<ul class="ul" id="task_kxl_tvk_ps__ul_tlc_33z_ps">
                                             <li class="li">/fare_amount</li>
 
                                             <li class="li">/mta_tax</li>
@@ -200,9 +206,9 @@ except Exception as e:
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" headers="d48979e250 ">Convert to Type</td>
+                                    <td class="entry" valign="top" headers="d49063e250 ">Convert to Type</td>
 
-                                    <td class="entry" valign="top" headers="d48979e253 ">Double</td>
+                                    <td class="entry" valign="top" headers="d49063e253 ">Double</td>
 
                                 </tr>
 
@@ -225,14 +231,13 @@ except Exception as e:
     <h2 class="title topictitle2">Manipulate Data with the Expression Evaluator</h2>
 
     
-    <div class="body taskbody"><p class="shortdesc">Before writing data to Elasticsearch, let's use an Expression Evaluator to merge the
-        longitude and latitude information into a single pickup location field. </p>
-
-        <div class="section context">We'll also calculate a total fare without the tip to get the basic trip revenue. </div>
+    <div class="body taskbody"><p class="shortdesc">Let's use an Expression Evaluator to merge the longitude and latitude information
+        into a single pickup location field. We'll also calculate the basic trip revenue by
+        subtracting the tip from the total fare. </p>
 
         <ol class="ol steps" id="task_rlk_tdq_ps__steps_dzt_j3q_ps"><li class="li step stepexpand">
-                <span class="ph cmd">Add an <span class="ph uicontrol">Expression Evaluator</span> to the canvas and connect it
-                    to the <span class="ph uicontrol">Field Converter</span>.</span>
+                <span class="ph cmd">Add an <span class="ph uicontrol">Expression Evaluator</span> to the canvas and connect
+                    the Field Converter to the stage. </span>
             </li>
 <li class="li step stepexpand">
                 <span class="ph cmd">On the <span class="ph uicontrol">Expressions</span> tab, enter the following information
@@ -242,9 +247,10 @@ except Exception as e:
                         <li class="li">For the <span class="ph uicontrol">Output Field</span> property, enter
                             "/pickup_location".</li>
 
-                        <li class="li">For <span class="ph uicontrol">Expression</span> property, enter the following expression:<pre class="pre codeblock">${record:value('/pickup_latitude')}, ${record:value('/pickup_longitude')}</pre>
-
-                            <p class="p">This returns the data from the two flattened fields in the following
+                        <li class="li">For <span class="ph uicontrol">Expression</span> property, enter the following
+                                expression:<pre class="pre codeblock">${record:value('/pickup_latitude')}, ${record:value('/pickup_longitude')}</pre>
+<p class="p">This
+                                returns the data from the two flattened fields in the following
                                 format: &lt;pickup latitude&gt;, &lt;pickup longitude&gt;.</p>
 </li>
 
@@ -286,16 +292,18 @@ except Exception as e:
  <h2 class="title topictitle2">Preview and Edit the Pipeline</h2>
 
  
- <div class="body conbody"><p class="shortdesc">Except for the Elasticsearch destination, the extended tutorial is complete. Let's use
-  data preview to see how stages transform data. We'll also make some configuration changes and edit
-  preview data for testing. </p>
+ <div class="body conbody"><p class="shortdesc">The extended tutorial is almost done, so let's use data preview to see how stages
+    transform data. While in data preview, we'll make some configuration changes and edit preview
+    data for testing. </p>
 
-  <p class="p">To preview the pipeline, click the preview icon: <img class="image" id="concept_u4h_mwf_qs__image_iqz_1hg_qs" src="../Graphics/icon-ConfigDataPreview.png" height="15" width="20"></img></p>
+  <p class="p">To preview the pipeline, click the preview icon: <img class="image" id="concept_u4h_mwf_qs__image_iqz_1hg_qs" src="../Graphics/icon-ConfigDataPreview.png" height="13" width="17"></img>.</p>
 
   <div class="p">You can explore how each stage transforms data by selecting the stage and reviewing the input
    and output records in the Preview panel. Listed here are some details to note:<dl class="dl">
     
      <dt class="dt dlterm">Field Masker</dt>
+
+          <dd class="dd">Let's see how the Field Masker masks credit card numbers and change the mask type. </dd>
 
      <dd class="dd">To see how the Field Masker masks credit card numbers: <ol class="ol" id="concept_u4h_mwf_qs__ol_ht2_5lg_qs">
        <li class="li">Select the Field Masker in the canvas, and then expand the first input and output
@@ -310,86 +318,91 @@ except Exception as e:
 </dd>
 
      <dd class="dd">Say we want to change the mask type to mask the whole credit card number. To review the
-      stage property that made this happen and try a different option, complete the following
-       steps:<ol class="ol" id="concept_u4h_mwf_qs__ol_vvw_wlg_qs">
-       <li class="li">Scroll up and select the <span class="ph uicontrol">Stage Configuration</span> icon: <img class="image" id="concept_u4h_mwf_qs__image_xnl_lmg_qs" src="../Graphics/icon_PrevStageConfig.png" height="16" width="18"></img></li>
+            stage configuration and try a different option:<ol class="ol" id="concept_u4h_mwf_qs__ol_vvw_wlg_qs">
+              <li class="li">On the left side of the Preview panel, select the <span class="ph uicontrol">Stage
+                  Configuration</span> icon: <img class="image" id="concept_u4h_mwf_qs__image_xnl_lmg_qs" src="../Graphics/icon_PrevStageConfig.png" height="13" width="16"></img>.<p class="p">You might need to scroll up to the top of
+                  the panel.</p>
+</li>
 
-       <li class="li">Click the <span class="ph uicontrol">Mask</span> tab.</li>
+              <li class="li">Click the <span class="ph uicontrol">Mask</span> tab.</li>
 
-       <li class="li">Change the <span class="ph uicontrol">Mask Type</span> to <span class="ph uicontrol">Variable Length</span> to
-        mask all numbers while showing how many numbers there are in the data. </li>
+              <li class="li">Change the <span class="ph uicontrol">Mask Type</span> to <span class="ph uicontrol">Variable
+                  Length</span> to mask all numbers while showing how many numbers there are in
+                the data. </li>
 
-       <li class="li">To view the data with this change, click the <span class="ph uicontrol">Refresh Preview</span> icon.
-         </li>
+              <li class="li">To view the data with this change, click the <span class="ph uicontrol">Run with
+                  Changes</span> icon. </li>
 
-       <li class="li">In the canvas, select the Field Masker processor and if the Preview panel displays the
-        stage configuration, select the <span class="ph uicontrol">Records</span> tab to view the preview
-        records. </li>
+              <li class="li">In the canvas, select the <span class="ph uicontrol">Field Masker</span> processor and if the
+                Preview panel displays the stage configuration, select the
+                  <span class="ph uicontrol">Records</span> tab to view the preview records. </li>
 
-       <li class="li"> Expand an output record, expand index 20, and notice how the entire number is now
-        masked. </li>
+              <li class="li"> Expand an output record, expand index 20, and notice how the entire number is now
+                masked. </li>
 
-      </ol>
+            </ol>
 </dd>
 
     
     
      <dt class="dt dlterm">Second Jython Evaluator</dt>
 
-     <dd class="dd">Next, let's look at the second Jython Evaluator in the pipeline. This stage flattens the
-      delimited data, but let's see what that looks like:<ul class="ul" id="concept_u4h_mwf_qs__ul_qvt_lmm_qs">
-       <li class="li">Select the second Jython Evaluator and expand the first input and output record.
-         <p class="p">Notice how the input record is a list of maps and the output record has been flattened
-         to the following structure: &lt;field name&gt;: &lt;value&gt;. Isn't that great? </p>
+     <dd class="dd">The second Jython Evaluator flattens the delimited data. Let's take a look:<ul class="ul" id="concept_u4h_mwf_qs__ul_qvt_lmm_qs">
+              <li class="li">Select the <span class="ph uicontrol">second Jython Evaluator</span> and expand the first
+                input and output record. <p class="p">Notice how the input record is a list of maps and the
+                  output record has been flattened to the following structure: &lt;field name&gt;:
+                  &lt;value&gt;. Isn't that great? </p>
 </li>
 
-      </ul>
+            </ul>
 </dd>
 
     
     
      <dt class="dt dlterm">Field Converter</dt>
 
-     <dd class="dd">Now let's look at the Field Converter. <ol class="ol" id="concept_u4h_mwf_qs__ol_ajx_pmm_qs">
-       <li class="li">To move the focus to the Field Converter, instead of selecting the stage in the pipeline,
-        you can click the <span class="ph uicontrol">Next Stage</span> icon.<p class="p">You might notice a red message
-         that indicates the first record has an unparsable date - it shows that the date data
-         includes invalid characters at the end. </p>
-<p class="p">So what happens to this bad record? It
-         depends on how the stage is configured. We used the default configuration, but let's see
-         what that is:</p>
+     <dd class="dd">The Field Converter changes the data type of a few fields. We'll take a look at that stage
+            and try changing stage configuration. <ol class="ol" id="concept_u4h_mwf_qs__ol_ajx_pmm_qs">
+              <li class="li">To move the preview focus to the Field Converter, you can click the
+                  <span class="ph uicontrol">Next Stage</span> icon instead of selecting the stage in the
+                  pipeline.<p class="p">You might notice a red message that indicates the first record has an
+                  unparsable date - it shows that the date data includes invalid characters at the
+                  end. </p>
+<p class="p">So what happens to this bad record? It depends on how the stage is
+                  configured. We used the default configuration, but let's see what that
+                is.</p>
 </li>
 
-       <li class="li">Click the Stage Configuration icon. Notice the <span class="ph uicontrol">On Record Error</span>
-                property is set to <span class="ph uicontrol">Send to Error</span>. <p class="p">This means error records
-                  are sent to the pipeline for error handling. And you might recall we configured
-                  the pipeline to write all error records to file. So with this configuration, the
-                  error record will be dropped from the pipeline and written to file. </p>
-<p class="p">You can
-                  configure this property to stop the pipeline on encountering an error record or to
-                  discard error records.</p>
+              <li class="li">Click the <span class="ph uicontrol">Stage Configuration</span> icon. Notice the
+                  <span class="ph uicontrol">On Record Error</span> property is set to <span class="ph uicontrol">Send to
+                  Error</span>. <p class="p">This means error records are sent to the pipeline for error
+                  handling. And you might recall we configured the pipeline to write all error
+                  records to file. So with this configuration, the error record will be dropped from
+                  the pipeline and written to file. </p>
+<p class="p">You can configure this property to stop
+                  the pipeline on encountering an error record or to discard error records.</p>
 </li>
 
-       <li class="li">To see how it looks when you discard errors, set <span class="ph uicontrol">On Record Error</span>
-        to <span class="ph uicontrol">Discard</span>. And then, click the <span class="ph uicontrol">Refresh
-         Preview</span> icon.</li>
+              <li class="li">To see how it looks when you discard errors, set <span class="ph uicontrol">On Record
+                  Error</span> to <span class="ph uicontrol">Discard</span>. And then, click the
+                  <span class="ph uicontrol">Refresh Preview</span> icon.</li>
 
-       <li class="li">On the canvas, select the <span class="ph uicontrol">Field Converter </span>stage, and then click
-        the <span class="ph uicontrol">Records</span> icon in the Preview panel. Notice the first record is
-        discarded without notice of the error that occurred. </li>
+              <li class="li">On the canvas, select the <span class="ph uicontrol">Field Converter </span>stage, and then
+                click the <span class="ph uicontrol">Records</span> icon in the Preview panel. Notice the first
+                record is discarded without notice of the error that occurred. </li>
 
-       <li class="li">We prefer to keep error records, so go back to the Stage Configuration tab and change
-         <span class="ph uicontrol">On Record Error</span> back to <span class="ph uicontrol">Send to Error</span>.</li>
+              <li class="li">We prefer to keep error records, so go back to the Stage Configuration tab and
+                change <span class="ph uicontrol">On Record Error</span> back to <span class="ph uicontrol">Send to
+                  Error</span>.</li>
 
-      </ol>
+            </ol>
 </dd>
 
     
     
      <dt class="dt dlterm">Second Expression Evaluator</dt>
 
-     <dd class="dd">The second Expression Evaluator manipulates data. Let's take a look and try editing some
-              data.<ol class="ol" id="concept_u4h_mwf_qs__ol_u54_mx3_rs">
+     <dd class="dd">The second Expression Evaluator manipulates data. Let's try editing the preview data:<ol class="ol" id="concept_u4h_mwf_qs__ol_u54_mx3_rs">
               <li class="li">Click the <span class="ph uicontrol">Next Stage</span> icon or select the Expression
                 Evaluator.</li>
 
@@ -407,7 +420,7 @@ except Exception as e:
 </li>
 
               <li class="li">To test the change, click the <span class="ph uicontrol">Run Preview with Changes</span>
-                icon: <img class="image" id="concept_u4h_mwf_qs__image_awt_jbj_rs" src="../Graphics/icon_PreviewRerun.png" height="13" width="17"></img><p class="p">The <span class="ph">Data
+                icon: <img class="image" id="concept_u4h_mwf_qs__image_awt_jbj_rs" src="../Graphics/icon_PreviewRerun.png" height="12" width="19"></img>.<p class="p">The <span class="ph">Data
                   Collector</span> runs the preview with the change. Notice the corresponding output record now
                   has -40.730068 for both pickup_latitude and pickup_location. </p>
 <p class="p"><img class="image" id="concept_u4h_mwf_qs__image_bgm_cfj_rs" src="../Graphics/Tutorial-PreviewEditData.png" height="388" width="692"></img></p>
@@ -415,8 +428,10 @@ except Exception as e:
                   test some cases that didn't come up in the preview data. </p>
 </li>
 
-              <li class="li">To revert that change, click the <span class="ph uicontrol">Revert Data Changes</span> icon.
-                This icon does not revert configuration changes. </li>
+              <li class="li">To revert that change, click the <span class="ph uicontrol">Revert Data Changes</span> icon:
+                  <img class="image" id="concept_u4h_mwf_qs__image_pnr_bfp_rs" src="../Graphics/icon_PrevRevertChanges.png" height="11" width="12"></img>.<p class="p">This icon does not revert configuration changes. </p>
+
+              </li>
 
             </ol>
 </dd>
@@ -429,81 +444,70 @@ except Exception as e:
 
 </div>
 <div class="topic task nested1" id="task_lh2_yhy_ps">
-    <h2 class="title topictitle2">Write to Elasticsearch</h2>
+    <h2 class="title topictitle2">Write to Trash</h2>
 
     
-    <div class="body taskbody"><p class="shortdesc">We'll use the Elasticsearch destination to write to an Elasticsearch cluster. You
-        write data to Elasticsearch as individual documents with an index and mapping fields defined
-        to help return the documents on a search.</p>
+    <div class="body taskbody"><p class="shortdesc">To wrap up the extended tutorial, configure a destination to write the data to a
+        destination system that you use. To write to a file system, you can use the Hadoop FS
+        destination like earlier in the tutorial. </p>
 
         <div class="section context">
-            <p class="p">If you have an Elasticsearch cluster, you can configure the destination to write to
-                your instance. For the tutorial, we'll use the default placeholder properties for
-                required fields so we can run data preview instead of running the pipeline. </p>
+            <p class="p">If you don't want to write the tutorial data to any of your systems, you can use the
+                Trash destination. The Trash destination deletes any records that pass to it. This
+                allows you to complete a pipeline in development so you can test the pipeline
+                without writing data to to a production system. </p>
 
         </div>
 
-        <ol class="ol steps" id="task_lh2_yhy_ps__steps_nqd_p3y_ps"><li class="li step stepexpand">
-                <span class="ph cmd">Add an <span class="ph uicontrol">Elasticsearch</span> destination to the canvas and
-                    connect it to the <span class="ph uicontrol">Expression Evaluator</span>.</span>
-            </li>
-<li class="li step stepexpand">
-                <span class="ph cmd">On the <span class="keyword wintitle">Elasticsearch</span> tab, enter the following properties
-                    and use defaults for the rest:</span>
-                <div class="itemgroup info">
-                    
-<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_lh2_yhy_ps__table_mdq_p3z_ps" class="table" frame="border" border="1" rules="all">
-                            
-                            
-                            <thead class="thead" align="left">
-                                <tr class="row">
-                                    <th class="entry" valign="top" id="d48979e703">Elasticsearch Property</th>
-
-                                    <th class="entry" valign="top" id="d48979e706">Value</th>
-
-                                </tr>
-
-                            </thead>
-
-                            <tbody class="tbody">
-                                <tr class="row">
-                                    <td class="entry" valign="top" headers="d48979e703 ">Index</td>
-
-                                    <td class="entry" valign="top" headers="d48979e706 ">taxi_rides</td>
-
-                                </tr>
-
-                                <tr class="row">
-                                    <td class="entry" valign="top" headers="d48979e703 ">Type</td>
-
-                                    <td class="entry" valign="top" headers="d48979e706 ">taxi_ride</td>
-
-                                </tr>
-
-                            </tbody>
-
-                        </table>
-</div>
-
-                </div>
-            </li>
-</ol>
-
-        <div class="section result">Here's the full pipeline:<p class="p"><img class="image" id="task_lh2_yhy_ps__image_xds_wry_ps" src="../Graphics/Tutorial-Elasticsearch.png" height="364" width="807"></img></p>
+        <div class="section result">Here's the full pipeline with a Trash destination:<p class="p"><img class="image" id="task_lh2_yhy_ps__image_hyb_cy4_rs" src="../Graphics/Tutorial-ExtendedPipe.png" height="112" width="715"></img></p>
 </div>
 
     </div>
 
 </div>
 <div class="topic task nested1" id="task_fsb_1my_ps">
-    <h2 class="title topictitle2">Run or Preview the Pipeline</h2>
+    <h2 class="title topictitle2">Run the Extended Pipeline</h2>
 
     
-    <div class="body taskbody"><p class="shortdesc">You can run the pipeline if you configured the Elasticsearch destination to write to
-        your Elasticsearch cluster. Or, if you don't use Elasticsearch, or if you want a close look
-        at how the pipeline works, use data preview.</p>
+    <div class="body taskbody"><p class="shortdesc">Now that the extended pipeline is complete, let's reset the origin and run the
+        pipeline again. </p>
 
-        <div class="section context"></div>
+        <div class="section context">
+            <p class="p">Reset the origin when you want the Data Collector to process all available data
+                instead of processing data from the last-saved offset. Not all origins can be reset,
+                but you can reset the origin for Directory.</p>
+
+        </div>
+
+        <ol class="ol steps" id="task_fsb_1my_ps__steps_qhq_bwj_rs"><li class="li step">
+                <span class="ph cmd">In the console menu bar, click the <span class="ph uicontrol">More</span> icon, and then
+                    click <span class="ph uicontrol">Reset Origin</span>.</span>
+            </li>
+<li class="li step">
+                <span class="ph cmd">When the confirmation dialog box displays, click
+                    <span class="ph uicontrol">Yes</span>.</span>
+            </li>
+<li class="li step">
+                <span class="ph cmd">To start the pipeline, click the <span class="ph uicontrol">Start</span> icon.</span>
+            </li>
+</ol>
+
+        <div class="section result">The console goes into monitor mode and the data alert triggers again. Before long,
+            you'll see some error records in the Jython Evaluator and the Field Converter. <p class="p">For
+                each stage, you can see the error messages for latest error records. To look at all
+                the error records, go to the location configured to accept error records.
+                </p>
+<div class="p">Error records include a great deal of information about the record. The
+                following fields can help determine the cause of the error: <ul class="ul" id="task_fsb_1my_ps__ul_br3_z54_rs">
+                  <li class="li">errorStage - The stage in the pipeline that generated the error.</li>
+
+                  <li class="li">errorCode - The error code associated with the error message.</li>
+
+                  <li class="li">errorMessage - The text of the error message. </li>
+
+            </ul>
+</div>
+</div>
 
     </div>
 

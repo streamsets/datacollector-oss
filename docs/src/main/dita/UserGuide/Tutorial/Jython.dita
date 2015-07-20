@@ -2,27 +2,26 @@
 <!DOCTYPE task PUBLIC "-//OASIS//DTD DITA General Task//EN" "generalTask.dtd">
 <task id="task_cdx_kfm_ls">
     <title>Use Jython for Card Typing</title>
-    <shortdesc> Next, we'll evaluate credit card numbers and determine the credit card type
-        associated with each number. You can use an Expression Evaluator to do the same
-        calculations, but using a Jython Evaluator is a bit simpler.</shortdesc>
+    <shortdesc> Next, we'll evaluate credit card numbers to determine the credit card type. You can
+        use an Expression Evaluator to do the same calculations, but with the a short script, the
+        Jython Evaluator is easier.</shortdesc>
     <taskbody>
-        <context><p>The <ph
+        <context>
+            <p>The <ph
                     conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
                 /> provides the JavaScript Evaluator and the Jython Evaluator so you can use custom
-                script to perform processing that is not easily performed using other <ph
+                scripts to perform processing that is not easily performed using other <ph
                     conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                /> processors.</p>The Jython script that we're using creates an additional field,
-            credit_card_type, and generates the credit card type based on the first few digits of
-            the credit card number. The script passes an error message if the record has a credit
-            card payment type, but no credit card number. </context>
+                /> processors.</p>
+            <p>The Jython script that we'll use creates an additional field, credit_card_type, and
+                generates the credit card type based on the first few digits of the credit card
+                number. The script returns an error message if the record has a credit card payment
+                type without a corresponding credit card number. </p>
+        </context>
         <steps id="steps_lnv_lfm_ls">
             <step>
-                <cmd>From the stage library, select the <uicontrol>Jython Evaluator</uicontrol>
-                    processor and connect it to the first output location of the Stream Selector.
-                    Or, from the Pipeline Creation Help Bar, click <menucascade>
-                        <uicontrol>Select Processor to Connect</uicontrol>
-                        <uicontrol>Jython Evaluator</uicontrol>
-                    </menucascade>.</cmd>
+                <cmd>Add a <uicontrol>Jython Evaluator</uicontrol> processor to the canvas and
+                    connect it to the first output location of the Stream Selector.</cmd>
                 <info>This routes records paid by credit card to the Jython Evaluator. </info>
             </step>
             <step>
@@ -30,12 +29,12 @@
                         <wintitle>Jython</wintitle> tab. </cmd>
             </step>
             <step>
-                <cmd>Use the default record processing mode to process data in batches instead of
+                <cmd>Use the default record processing mode to process data in batches, instead of
                     record by record. </cmd>
             </step>
             <step>
-                <cmd>In the Script text box, delete everything below the first set of comments, and
-                    then paste the following script: </cmd>
+                <cmd>In the <uicontrol>Script</uicontrol> text box, delete everything below the
+                    first set of comments, and then paste the following script: </cmd>
                 <info>
                     <codeblock>try: 
   for record in records:
@@ -69,7 +68,7 @@ except Exception as e:
                 </info>
             </step>
         </steps>
-        <result>In the processor, the script should look like this:<p><image
+        <result>In the Jython Evaluator, the script should look like this:<p><image
                     href="../Graphics/Tutorial-Jython.png" id="image_jt1_4ch_4s" scale="90"
             /></p></result>
     </taskbody>

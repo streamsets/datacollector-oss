@@ -9,12 +9,8 @@
         <context/>
         <steps id="steps_wx1_xvk_ps">
             <step>
-                <cmd>From the stage library, select the <uicontrol>Field Converter</uicontrol>
-                    processor and connect it to the Jython Evaluator. Or, from the Pipeline Creation
-                    Help Bar, click <menucascade>
-                        <uicontrol>Select Processor to Connect</uicontrol>
-                        <uicontrol>Field Converter</uicontrol>
-                    </menucascade>.</cmd>
+                <cmd>Add a <uicontrol>Field Converter</uicontrol> to the canvas and connect the
+                    Jython Evaluator to the stage.</cmd>
             </step>
             <step>
                 <cmd>Click the <uicontrol>Conversions</uicontrol> tab.</cmd>
@@ -47,7 +43,9 @@
                                 </row>
                                 <row>
                                     <entry>Date Format</entry>
-                                    <entry>Select a format that you like.</entry>
+                                    <entry>Date format used by the data. <p>Select the following
+                                            format: <uicontrol>YYYY-MM-DD
+                                        hh:mm:ss</uicontrol>.</p></entry>
                                 </row>
                             </tbody>
                         </tgroup>

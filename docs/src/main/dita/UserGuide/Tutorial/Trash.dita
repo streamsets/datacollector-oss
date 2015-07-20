@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE task PUBLIC "-//OASIS//DTD DITA General Task//EN" "generalTask.dtd">
+<task id="task_lh2_yhy_ps">
+    <title>Write to Trash</title>
+    <shortdesc>To wrap up the extended tutorial, configure a destination to write the data to a
+        destination system that you use. To write to a file system, you can use the Hadoop FS
+        destination like earlier in the tutorial. </shortdesc>
+    <taskbody>
+        <context>
+            <p>If you don't want to write the tutorial data to any of your systems, you can use the
+                Trash destination. The Trash destination deletes any records that pass to it. This
+                allows you to complete a pipeline in development so you can test the pipeline
+                without writing data to to a production system. </p>
+        </context>
+        <result>Here's the full pipeline with a Trash destination:<p><image
+                    href="../Graphics/Tutorial-ExtendedPipe.png" id="image_hyb_cy4_rs" scale="70"
+                /></p></result>
+    </taskbody>
+</task>

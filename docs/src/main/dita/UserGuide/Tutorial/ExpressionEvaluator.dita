@@ -62,10 +62,10 @@
             <step>
                 <cmd>To write the data from this branch to the destination and merge the non-credit
                     card data with the credit card data, link the Expression Evaluator to the Hadoop
-                    FS destination.</cmd>
+                    FS destination:</cmd>
+                <info><image href="../Graphics/Tutorial-Expression.png" id="image_adv_r2r_ps"
+                        scale="80"/></info>
             </step>
         </steps>
-        <result><image href="../Graphics/Tutorial-Expression.png" id="image_adv_r2r_ps" scale="80"
-            /></result>
     </taskbody>
 </task>

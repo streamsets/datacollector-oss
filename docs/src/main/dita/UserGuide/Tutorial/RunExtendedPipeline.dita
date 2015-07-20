@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE task PUBLIC "-//OASIS//DTD DITA General Task//EN" "generalTask.dtd">
+<task id="task_fsb_1my_ps">
+    <title>Run the Extended Pipeline</title>
+    <shortdesc>Now that the extended pipeline is complete, let's reset the origin and run the
+        pipeline again. </shortdesc>
+    <taskbody>
+        <context>
+            <p>Reset the origin when you want the Data Collector to process all available data
+                instead of processing data from the last-saved offset. Not all origins can be reset,
+                but you can reset the origin for Directory.</p>
+        </context>
+        <steps id="steps_qhq_bwj_rs">
+            <step>
+                <cmd>In the console menu bar, click the <uicontrol>More</uicontrol> icon, and then
+                    click <uicontrol>Reset Origin</uicontrol>.</cmd>
+            </step>
+            <step>
+                <cmd>When the confirmation dialog box displays, click
+                    <uicontrol>Yes</uicontrol>.</cmd>
+            </step>
+            <step>
+                <cmd>To start the pipeline, click the <uicontrol>Start</uicontrol> icon.</cmd>
+            </step>
+        </steps>
+        <result>The console goes into monitor mode and the data alert triggers again. Before long,
+            you'll see some error records in the Jython Evaluator and the Field Converter. <p>For
+                each stage, you can see the error messages for latest error records. To look at all
+                the error records, go to the location configured to accept error records.
+                </p><p>Error records include a great deal of information about the record. The
+                following fields can help determine the cause of the error: <ul
+                    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/ul_ErrorInformation"
+                    id="ul_br3_z54_rs">
+                    <li/>
+                </ul></p></result>
+    </taskbody>
+</task>

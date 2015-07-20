@@ -107,7 +107,7 @@
               </entry>
             </row>
             <row>
-              <entry><image href="../Graphics/icon_PrevClose.png" id="image_cjl_jmr_br" 
+              <entry><image href="../Graphics/icon_PrevClose.png" id="image_cjl_jmr_br" scale="90"
                 /></entry>
               <entry>Close Preview icon</entry>
               <entry>Closes the data preview.</entry>

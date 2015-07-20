@@ -63,11 +63,12 @@
                   creating the expression. </p>
             <p>
                   <draft-comment author="Loretta">Using the following in the Configuring topic for
-                        several processors (Expression Evaluator, Field Converter, Field Hasher,  -
+                        several processors (Expression Evaluator, Field Converter, Field Hasher, -
                         whichever ones allow wildcard use:</draft-comment>
             </p>
             <p id="wildcard">You can use the asterisk wildcard to represent array indices and map
-                  elements. <xref href="../Pipeline_Configuration/WildcardsArraysMaps.dita#concept_vqr_sqc_wr"
+                  elements. <xref
+                        href="../Pipeline_Configuration/WildcardsArraysMaps.dita#concept_vqr_sqc_wr"
                               ><image href="../Graphics/icon_moreInfo.png" scale="10"/>
                   </xref>
             </p>
@@ -140,7 +141,26 @@
             <draft-comment author="Loretta">The following note is used on both Jython topics in the
                   Tutorial:</draft-comment>
             <note outputclass="" type="note" id="Note-JythonScript">Incorrect indentation can cause
-                  Jython validation errors. For best results, copy the script from the online help.
-                  Copying the script from the User Guide PDF can cause incorrect indentation. </note>
+                  Jython validation errors. Copying the script from the PDF can cause incorrect
+                  indentation. For best results, copy the script from the online help: online help >
+                  Data Collector Tutorial > Extended Tutorial > Flatten Data with a Jython
+                  Evaluator. </note>
+            <draft-comment author="Loretta">The following bullets are used in Troubleshooting >
+                  Accessing Error Message and Tutorial > Run the Extended Pipeline</draft-comment>
+            <ul id="ul_ErrorInformation">
+                  <li>errorStage - The stage in the pipeline that generated the error.</li>
+                  <li>errorCode - The error code associated with the error message.</li>
+                  <li>errorMessage - The text of the error message. <draft-comment author="Loretta"
+                              >Dev: I am listing the subset of key info - are there other ones I
+                              should list here as particularly useful?</draft-comment></li>
+            </ul>
+            <p>
+                  <draft-comment author="Loretta">The following is used in the Tutorial chapter, in
+                        tables in the Creating a Pipeline... topic and the Write to the Destination
+                        topic.</draft-comment>
+            </p>
+            <p id="FilePrefix">By default, the files are prefixed with "SDC" and an expression that
+                  returns the <ph conref="#concept_vhs_5tz_xp/pName-long"/> ID, but that's more than
+                  we need here. </p>
       </conbody>
 </concept>

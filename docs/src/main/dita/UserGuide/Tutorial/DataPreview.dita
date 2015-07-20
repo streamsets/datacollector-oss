@@ -6,26 +6,31 @@
         some details for pipeline configuration. </shortdesc>
     <taskbody>
         <context>
-            <p> Here's the information we're looking for: <ul id="ul_a41_hvh_4s">
+            <p> This is the information we need: <ul id="ul_a41_hvh_4s">
                     <li>The name and field path of the field that contains payment information -
                         We'll use this to route data in the Stream Selector. </li>
                     <li>The field path for credit card numbers - We'll use this to mask the data in
                         the Field Masker.</li>
                 </ul></p>
-            <p>
-                <note>The format for field paths differs based on the type of data you're working
-                    with. For more information, see <xref
-                        href="../Pipeline_Configuration/ReferencingFieldNames.dita#concept_hjk_b4l_vq"
-                    />.</note>
-            </p>
-            <p>To start data preview, all stages must be connected and all required fields filled,
-                though not necessarily correctly. In this case, since the origin is configured and
-                the only stage, the pipeline should be ready to preview as is. </p>
+            <p>The format for field paths differs based on the type of data you're working with. In
+                short, when working with a simple JSON object or record, you'd reference a field
+                path as follows: <codeph>/&lt;fieldname></codeph>. </p>
+            <p>But for a delimited record, a field path includes the index and path to the field as
+                follows: <codeph>[index number]/&lt;path to field></codeph>. </p>
+            <p>You'll see what we mean as we go through the tutorial. But if you'd like some extra
+                reading, you can find some details here: <xref
+                    href="../Pipeline_Configuration/ReferencingFieldNames.dita#concept_hjk_b4l_vq"/>
+                or <xref
+                    href="../Pipeline_Configuration/DelimitedDataRecordStructure.dita#concept_zcg_bm4_fs"
+                />.</p>
+            <p>To start data preview, all stages must be connected and all required fields filled
+                (though not necessarily correctly). Since the origin is configured and the only
+                stage, the pipeline should be ready to preview as is. </p>
         </context>
         <steps id="steps_jxv_fpf_4s">
             <step>
                 <cmd>Above the pipeline canvas, click the <uicontrol>Preview</uicontrol> icon:
-                        <image href="../Graphics/icon-Preview.png" id="image_tj5_qqf_4s" scale="75"
+                        <image href="../Graphics/icon_Preview.png" id="image_x4k_njp_rs" scale="70"
                     />.</cmd>
                 <info>If the icon is not enabled, make sure you completed all the previous steps for
                     the tutorial. If more than one issue displays in the list, correct any issue
@@ -39,42 +44,38 @@
                     file, displays 10 records, and avoids writing preview data to the destination. </info>
                 <info>Selecting Remember the Configuration means that the next time you click the
                     Data Preview icon, the data preview uses the configured settings without
-                    displaying the Preview Configuration dialog box again. </info>
+                    displaying this dialog box again. </info>
             </step>
             <step>
                 <cmd>Click <uicontrol>Run Preview</uicontrol>.</cmd>
                 <stepresult>The Preview Panel displays a list of 10 output records for Directory in
                     list view. If you drill down a bit, you see that the delimited record data
-                    structure is a list with a maps for each set of header and value. But we aren't
-                    worried about the details right now. <p>(For more information about the record
-                        structure for delimited data, see <xref
-                            href="../Pipeline_Configuration/DelimitedDataRecordStructure.dita#concept_zcg_bm4_fs"
-                        />.)</p><p>Note that in the Preview Panel, the preview records display on
-                        the Records tab. You can click the Client Configuration tab to review or
-                        change properties. You can click the Preview Configuration tab to change
-                        preview properties.</p></stepresult>
+                    structure is a list with a maps, and each map includes a header and value.
+                        <p>Note that in the Preview panel, the preview records display on the
+                        Records tab. You can click the Client Configuration tab to review or change
+                        properties. You can click the Preview Configuration tab to change preview
+                        properties.</p></stepresult>
             </step>
             <step>
                 <cmd>For a full view of the data, click the <uicontrol>Table View</uicontrol> icon:
                         <image href="../Graphics/icon_PrevTableView.png" id="image_zxq_1zf_4s"
-                        scale="85"/></cmd>
+                        scale="85"/>.</cmd>
                 <info>The Preview panel displays the first several columns of data. <p><image
                             href="../Graphics/Tutorial-PreviewDirectory.png" id="image_d1m_yzf_4s"
                             scale="70"/></p></info>
             </step>
             <step>
                 <cmd>To view all columns, click <uicontrol>Show All</uicontrol>.</cmd>
-                <info>If you scroll to the right, you can verify that the
-                        <uicontrol>credit_card</uicontrol> field contains credit card numbers for
-                    the first three records. When you scroll back to the left, notice this
-                    corresponds to "CRD" in the payment_type field. </info>
+                <info>If you scroll to the right, you can verify that the credit_card field contains
+                    credit card numbers for the first three records. When you scroll back to the
+                    left, notice this corresponds to "CRD" in the payment_type field. </info>
                 <info>Now we know that to route records paid by credit card, we should look for
                     records where the payment_type field = "CRD".</info>
             </step>
             <step>
-                <cmd>To check the what the field path is for this field, click the List icon: <image
+                <cmd>To check the field path for this field, click the List icon: <image
                         href="../Graphics/icon_PrevListView.png" id="image_hq1_hrg_4s" scale="85"
-                    /></cmd>
+                    />.</cmd>
             </step>
             <step>
                 <cmd>Click the arrow by the first record to display the list of maps in the record.
@@ -82,9 +83,8 @@
                     3. </cmd>
                 <info><image href="../Graphics/Tutorial-PreviewList.png" id="image_ujw_rwh_4s"
                         scale="80"/></info>
-                <info>From this information, we know that to reference the value of the payment_type
-                    field, we should use the following field path:
-                    <codeph>[3]/value</codeph>.</info>
+                <info>From this information, we know to reference the data in the payment_type field
+                    as follows: <codeph>[3]/value</codeph>.</info>
             </step>
             <step>
                 <cmd>The credit_card field was the last in the record, so scroll down and click the
@@ -92,22 +92,22 @@
                 <info>Notice, the index number is 20, and the field name for the value is "value".
                     So to access this data, we'll use the following field path:
                         <codeph>[20]/value</codeph>.</info>
-                <info>By the way, working with delimited data presents specific challenges like
-                    these. If this were a field in a database table, the field path could have been
-                    "/credit_card". </info>
+                <info>As mentioned earlier, working with delimited data presents specific challenges
+                    like these. If this were a field in a database table or a simple JSON record,
+                    the field path could have been: <codeph>/credit_card</codeph>. </info>
             </step>
             <step>
-                <cmd>Now that we have the information that we need, exit data preview by clicking
-                    the Close Preview icon: <image href="../Graphics/icon_PrevClose.png"
-                        id="image_zs2_2bg_4s" scale="75"/></cmd>
+                <cmd>Now that we have the information that we need, click the <uicontrol>Close
+                        Preview</uicontrol> icon: <image href="../Graphics/icon_PrevClose.png"
+                        id="image_zs2_2bg_4s" scale="65"/>.</cmd>
             </step>
         </steps>
-        <result>To summarize, here are the details that we figured out by previewing data:<ul
+        <result>To summarize, here are the details that we discovered with data preview: <ul
                 id="ul_rhp_gx3_ps">
-                <li>payment_type is the header for the field that contains payment type
-                    information.</li>
-                <li><codeph>[3]/value</codeph> is the field path for the payment_type data.</li>
-                <li><codeph>[20]/value</codeph> is the field path for credit card numbers.</li>
+                <li>The header for the field that contains payment type information is
+                    payment_type.</li>
+                <li>The field path for the payment type data is <codeph>[3]/value</codeph>.</li>
+                <li>The field path for credit card numbers is <codeph>[20]/value</codeph>.</li>
             </ul></result>
     </taskbody>
 </task>

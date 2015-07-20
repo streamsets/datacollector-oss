@@ -2,13 +2,13 @@
 <!DOCTYPE task PUBLIC "-//OASIS//DTD DITA General Task//EN" "generalTask.dtd">
 <task id="task_wsj_5tm_ls">
     <title>Write to the Destination</title>
-    <shortdesc>You can use the Hadoop FS destination to write tutorial data to HDFS or to a local
-        directory. We'll write to the local directory that you set up. </shortdesc>
+    <shortdesc>You can use the Hadoop FS destination to write to HDFS or to a local directory. We'll
+        write to a local directory.</shortdesc>
     <taskbody>
         <context>
-            <p>When you configure the output file properties, you define the directory template.
-                This determines the naming convention for the output directories that are created.
-                Use the directory where you want the output files to be written. </p>
+            <p>When you configure the Hadoop FS destination, you define the directory template. This
+                determines the naming convention for the output directories that are created. Use
+                the directory where you want the output files to be written. </p>
         </context>
         <steps id="steps_xdd_wwm_ls">
             <step>
@@ -17,7 +17,7 @@
             </step>
             <step>
                 <cmd>In the Properties panel, click the <wintitle>Hadoop FS</wintitle> tab. If you
-                    have a real Hadoop FS installation, you can configure the stage to write to it. </cmd>
+                    have an HDFS installation, you can configure the stage to write to it. </cmd>
                 <info>Or, to use Hadoop FS to write to a local file system, enter the following
                     configuration for the <uicontrol>Hadoop FS URI</uicontrol> property:
                         <codeph>file:///</codeph>.</info>
@@ -43,18 +43,17 @@
                                 </row>
                                 <row>
                                     <entry>Files Prefix</entry>
-                                    <entry>By default, Hadoop FS uses the <ph
-                                            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                                        /> ID. That can be useful, but let's simplify and use
-                                        "Tutorial_" instead.</entry>
+                                    <entry>Defines a prefix for output files. <p
+                                            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/FilePrefix"
+                                        />Let's simplify and use "Tutorial_" instead.</entry>
                                 </row>
                                 <row>
                                     <entry>Directory Template</entry>
                                     <entry>Use the output directory where you want the files to be
-                                        written and optionally include constants to indicate the
-                                        frequency at which the files should be rolled over. <p>For
-                                            example the following directory rolls the output file
-                                            once a year, but works for this tutorial:
+                                        written and optionally include datetime variables to
+                                        indicate the frequency at which the files should be rolled
+                                        over. <p>For example the following directory rolls the
+                                            output file once a year, but works for this tutorial:
                                                 <codeph>&lt;output
                                             directory>/${YYYY()}</codeph>.</p></entry>
                                 </row>
@@ -64,9 +63,8 @@
                                 </row>
                                 <row>
                                     <entry>Max File Size (MB)</entry>
-                                    <entry>If writing to a local file system, you might prefer to
-                                        lower the file size to something manageable, like 5 or
-                                        1.</entry>
+                                    <entry>If writing to a local file system, you might lower the
+                                        file size to something manageable, like 5 or 1.</entry>
                                 </row>
                             </tbody>
                         </tgroup>
@@ -90,8 +88,8 @@
                 </info>
             </step>
         </steps>
-        <result>That completes the primary branch. Now, let's go back to the Stream Selector and
-            complete the secondary branch.<p><image href="../Graphics/Tutorial-HDFS.png"
-                    id="image_svj_rvq_ps" scale="80"/></p></result>
+        <result>That completes the primary branch:<p><image href="../Graphics/Tutorial-HDFS.png"
+                    id="image_svj_rvq_ps" scale="80"/></p><p> Now, let's go back to the Stream
+                Selector and complete the secondary branch.</p></result>
     </taskbody>
 </task>

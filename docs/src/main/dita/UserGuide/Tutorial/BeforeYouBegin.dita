@@ -2,36 +2,40 @@
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_hg5_j2p_ms">
  <title>Before You Begin</title>
- <shortdesc>Before you start this tutorial, you'll need a few things:</shortdesc>
+ <shortdesc>Before you start this tutorial, you'll need to do a few things:</shortdesc>
  <conbody>
   <p>
    <ol id="ol_xyv_3x4_ms">
-    <li><indexterm>tutorial<indexterm>prerequisites</indexterm></indexterm>Download sample data -
-     You can download sample data for this tutorial from the StreamSets website:<draft-comment
-      author="Loretta">URL - decide if we just want the smaller file - works for running the basic
-      tutorial.</draft-comment><p>To run the pipeline, you'll need the larger file to provide enough
-      data to see how things work. If you don't plan to run the pipeline, download the smaller file
-      so you can at least preview data and examine how the pipeline processes a sample set.</p></li>
-    <li>Set up origin and destination and error directories: <ul id="ul_qwn_mz4_ms">
-      <li>Origin directory - Save the sample data in a directory local to the <ph
-        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>. Ensure
-       that the user who started the <ph
-        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> has
-       permission to read from the directory.</li>
-      <li>Destination directory - The pipeline writes output records to file. Consider where you
-       want to write the output files and make sure the  user has write permission for the
-       directory. </li>
-      <li>Error directory - The pipeline writes error records to file. Consider where you want to
-       write the error files and make sure the user has write permission for the directory. </li>
-     </ul></li>
+    <li><indexterm>tutorial<indexterm>prerequisites</indexterm></indexterm>Download sample data.
+      <p>You can download sample data from the StreamSets website. You'll need a login to the
+      password-protected section of the site - it just takes a moment to set up an
+      account.</p><p>Sample data URL: </p><draft-comment author="Loretta">URL </draft-comment></li>
+    <li>Set up origin, destination, and error directories. <p>We will be prefixing output and error
+            files, so for convenience you can use the same directory for all three file types. If
+            you prefer to use separate directories, set up the following:</p><ul id="ul_qwn_mz4_ms">
+            <li>Origin directory - Save the sample data in a directory local to the <ph
+                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>.
+              Make sure that the user who started the <ph
+                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
+              has permission to read from the directory.</li>
+            <li>Destination directory - The pipeline writes output records to file. Consider where
+              you want to write the output files and make sure the <ph
+                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
+              user has write permission for the directory. </li>
+            <li>Error directory - The pipeline also writes error records to file - though you can
+              configure it to write to Kafka if you prefer. Make sure the <ph
+                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
+              user has write permission for the error directory.</li>
+          </ul></li>
     <li>The <ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
-     should be installed and running, but not running other pipelines. At this time, a <ph
-      conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> instance can
-     run a single pipeline, but you can install multiple instances on the same machine.</li>
+     should be installed and running, but not running other pipelines. <p>At this time, a <ph
+       conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> instance
+      can run a single pipeline, but you can install multiple instances on the same
+       machine.<draft-comment author="Loretta">change this soon? </draft-comment></p></li>
     <li>To create and run the pipeline, you should have a login with the creator and manager roles
-     or the admin role. If using the default logins shipped with the <ph
-      conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>, you can use
-     the admin login: admin / admin. </li>
+     or the admin role. <p>If using the default logins shipped with the <ph
+       conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>, you can
+      use the admin login: <codeph>admin</codeph> / <codeph>admin</codeph>. </p></li>
    </ol>
   </p>
  </conbody>

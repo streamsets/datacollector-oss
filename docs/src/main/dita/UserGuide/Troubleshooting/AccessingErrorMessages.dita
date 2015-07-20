@@ -35,12 +35,10 @@
      <dt>Error record information</dt>
      <dd>You can use the Error Records pipeline properties to write error records and related
       details to a file or Kafka. The information in the following fields can help you determine the
-      problem that occurred:<ul id="ul_gqp_1dm_2s">
-       <li>errorStage - The stage in the pipeline that generated the error.</li>
-       <li>errorCode - The error code associated with the error message.</li>
-       <li>errorMessage - The text of the error message. <draft-comment author="Loretta">Dev: I am
-         listing the subset of key info - are there other ones I should list here as particularly
-         useful?</draft-comment></li>
+      problem that occurred:<ul
+       conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/ul_ErrorInformation"
+       id="ul_ez4_t54_rs">
+       <li/>
       </ul></dd>
     </dlentry>
     <dlentry>

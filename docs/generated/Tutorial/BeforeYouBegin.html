@@ -2,7 +2,7 @@
 <!DOCTYPE html
   SYSTEM "about:legacy-compat">
 <html xml:lang="en-us" lang="en-us">
-<head><meta name="description" content="Before you start this tutorial, you'll need a few things: Download sample data - You can download sample data for this tutorial from the StreamSets website: To run the pipeline, you'll need the larger ..."></meta><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><meta name="copyright" content="(C) Copyright 2005"></meta><meta name="DC.rights.owner" content="(C) Copyright 2005"></meta><meta name="DC.Type" content="concept"></meta><meta name="DC.Title" content="Before You Begin"></meta><meta name="abstract" content="Before you start this tutorial, you'll need a few things:"></meta><meta name="description" content="Before you start this tutorial, you'll need a few things:"></meta><meta name="DC.Relation" scheme="URI" content="../Tutorial/Tutorial-title.html"></meta><meta name="DC.Format" content="XHTML"></meta><meta name="DC.Identifier" content="concept_hg5_j2p_ms"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/commonltr.css"><!----></link><title>Before You Begin</title><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/webhelp_topic.css"><!----></link><link rel="stylesheet" type="text/css" href="../skin.css"></link><script type="text/javascript"><!--
+<head><meta name="description" content="Before you start this tutorial, you'll need to do a few things: Download sample data. You can download sample data from the StreamSets website. You'll need a login to the password-protected section of ..."></meta><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><meta name="copyright" content="(C) Copyright 2005"></meta><meta name="DC.rights.owner" content="(C) Copyright 2005"></meta><meta name="DC.Type" content="concept"></meta><meta name="DC.Title" content="Before You Begin"></meta><meta name="abstract" content="Before you start this tutorial, you'll need to do a few things:"></meta><meta name="description" content="Before you start this tutorial, you'll need to do a few things:"></meta><meta name="DC.Relation" scheme="URI" content="../Tutorial/Tutorial-title.html"></meta><meta name="DC.Format" content="XHTML"></meta><meta name="DC.Identifier" content="concept_hg5_j2p_ms"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/commonltr.css"><!----></link><title>Before You Begin</title><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/webhelp_topic.css"><!----></link><link rel="stylesheet" type="text/css" href="../skin.css"></link><script type="text/javascript"><!--
           
           var prefix = "../index.html";
           
@@ -14,43 +14,53 @@
  <h1 class="title topictitle1">Before You Begin</h1>
 
  
- <div class="body conbody"><p class="shortdesc">Before you start this tutorial, you'll need a few things:</p>
+ <div class="body conbody"><p class="shortdesc">Before you start this tutorial, you'll need to do a few things:</p>
 
   <div class="p">
    <ol class="ol" id="concept_hg5_j2p_ms__ol_xyv_3x4_ms">
-    <li class="li">Download sample data -
-     You can download sample data for this tutorial from the StreamSets website:<p class="p">To run the pipeline, you'll need the larger file to provide enough
-      data to see how things work. If you don't plan to run the pipeline, download the smaller file
-      so you can at least preview data and examine how the pipeline processes a sample set.</p>
+    <li class="li">Download sample data.
+      <p class="p">You can download sample data from the StreamSets website. You'll need a login to the
+      password-protected section of the site - it just takes a moment to set up an
+      account.</p>
+<p class="p">Sample data URL: </p>
 </li>
 
-    <li class="li">Set up origin and destination and error directories: <ul class="ul" id="concept_hg5_j2p_ms__ul_qwn_mz4_ms">
-      <li class="li">Origin directory - Save the sample data in a directory local to the <span class="ph">Data
-                  Collector</span>. Ensure
-       that the user who started the <span class="ph">Data
-                  Collector</span> has
-       permission to read from the directory.</li>
+    <li class="li">Set up origin, destination, and error directories. <p class="p">We will be prefixing output and error
+            files, so for convenience you can use the same directory for all three file types. If
+            you prefer to use separate directories, set up the following:</p>
+<ul class="ul" id="concept_hg5_j2p_ms__ul_qwn_mz4_ms">
+            <li class="li">Origin directory - Save the sample data in a directory local to the <span class="ph">Data
+                  Collector</span>.
+              Make sure that the user who started the <span class="ph">Data
+                  Collector</span>
+              has permission to read from the directory.</li>
 
-      <li class="li">Destination directory - The pipeline writes output records to file. Consider where you
-       want to write the output files and make sure the  user has write permission for the
-       directory. </li>
+            <li class="li">Destination directory - The pipeline writes output records to file. Consider where
+              you want to write the output files and make sure the <span class="ph">Data
+                  Collector</span>
+              user has write permission for the directory. </li>
 
-      <li class="li">Error directory - The pipeline writes error records to file. Consider where you want to
-       write the error files and make sure the user has write permission for the directory. </li>
+            <li class="li">Error directory - The pipeline also writes error records to file - though you can
+              configure it to write to Kafka if you prefer. Make sure the <span class="ph">Data
+                  Collector</span>
+              user has write permission for the error directory.</li>
 
-     </ul>
+          </ul>
 </li>
 
     <li class="li">The <span class="ph">Data
                   Collector</span>
-     should be installed and running, but not running other pipelines. At this time, a <span class="ph">Data
-                  Collector</span> instance can
-     run a single pipeline, but you can install multiple instances on the same machine.</li>
+     should be installed and running, but not running other pipelines. <p class="p">At this time, a <span class="ph">Data
+                  Collector</span> instance
+      can run a single pipeline, but you can install multiple instances on the same
+       machine.</p>
+</li>
 
     <li class="li">To create and run the pipeline, you should have a login with the creator and manager roles
-     or the admin role. If using the default logins shipped with the <span class="ph">Data
-                  Collector</span>, you can use
-     the admin login: admin / admin. </li>
+     or the admin role. <p class="p">If using the default logins shipped with the <span class="ph">Data
+                  Collector</span>, you can
+      use the admin login: <samp class="ph codeph">admin</samp> / <samp class="ph codeph">admin</samp>. </p>
+</li>
 
    </ol>
 

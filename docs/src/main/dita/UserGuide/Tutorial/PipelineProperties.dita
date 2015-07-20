@@ -2,11 +2,11 @@
 <!DOCTYPE task PUBLIC "-//OASIS//DTD DITA General Task//EN" "generalTask.dtd">
 <task id="task_jmz_3dn_ls">
     <title>Creating a Pipeline and Defining Pipeline Properties</title>
-    <shortdesc>Generally, you can use defaults for pipeline properties, but you should always define
-        how you want to handle error records. </shortdesc>
+    <shortdesc>When you configure a pipeline, you need to decide what to do with error records. You
+        can discard them, write them to file, or write them to Kafka. </shortdesc>
     <taskbody>
         <context>
-            <p>The tutorial writes the records to a local file, but if you prefer to write error
+            <p>This tutorial writes the records to a local file, but if you prefer to write error
                 records to Kafka, feel free. </p>
         </context>
         <steps id="steps_hsz_b2n_ls">
@@ -34,20 +34,21 @@
                                     <entry>Directory</entry>
                                     <entry>Enter the directory local to the <ph
                                             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                                        /> where you want to write error record files. <note>The
-                                            directory must exist to prevent validation errors.
-                                        </note></entry>
+                                        /> where you want to write error record files. <note>To
+                                            prevent validation errors, the directory must already
+                                            exist.</note></entry>
                                 </row>
                                 <row>
                                     <entry>Files Prefix</entry>
-                                    <entry>This defines a prefix for error record files. Delete the
-                                        default and use "Err_".</entry>
+                                    <entry>This defines a prefix for error record files. <p
+                                            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/FilePrefix"
+                                            /><p>Delete the default and enter "Err_".</p></entry>
                                 </row>
                                 <row>
                                     <entry>Max File Size</entry>
                                     <entry>When writing to a local directory, you might want to
                                         reduce the files size to something more managable, such as 5
-                                        MB.</entry>
+                                        or 1 MB.</entry>
                                 </row>
                             </tbody>
                         </tgroup>

@@ -20,7 +20,7 @@
                     <table frame="all" rowsep="1" colsep="1" id="table_ozv_nnk_wq">
                         <tgroup cols="2">
                             <colspec colname="c1" colnum="1" colwidth="1*"/>
-                            <colspec colname="c2" colnum="2" colwidth="1.99*"/>
+                            <colspec colname="c2" colnum="2" colwidth="2.59*"/>
                             <thead>
                                 <row>
                                     <entry>Field Converter Property</entry>
@@ -36,17 +36,16 @@
                                 </row>
                                 <row>
                                     <entry>Convert to Type <xref
-                                            href="FieldConverter_Datatypes.dita#concept_ixz_s5q_wq"
-                                                >
-                                        <image href="../Graphics/icon_moreInfo.png"
-                                            id="image_sd4_jx2_2r" scale="10" />
-                                    </xref>
+                                            href="FieldConverter_Datatypes.dita#concept_ixz_s5q_wq">
+                                            <image href="../Graphics/icon_moreInfo.png"
+                                                id="image_sd4_jx2_2r" scale="10"/>
+                                        </xref>
                                     </entry>
                                     <entry>Data type for conversion. Select a valid type. </entry>
                                 </row>
                                 <row>
                                     <entry>Data Locale </entry>
-                                    <entry>Locale of field data.  <p>Can determine how the Field
+                                    <entry>Locale of field data. <p>Can determine how the Field
                                             Converter formats converted data, such as a comma or
                                             period as a decimal separator. </p><p>Available for
                                             types affected by locale. </p></entry>

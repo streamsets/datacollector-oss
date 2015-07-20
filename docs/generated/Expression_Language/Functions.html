@@ -305,9 +305,9 @@
 
   <div class="p">The expression language provides the following delimited data record functions:<dl class="dl">
     
-     <dt class="dt dlterm">record:dExists('&lt;header&gt;')</dt>
+     <dt class="dt dlterm">record:dExists('&lt;header name&gt;')</dt>
 
-     <dd class="dd">Determines if the specified header exists in the record.</dd>
+     <dd class="dd">Determines if the specified header name exists in the record.</dd>
 
      <dd class="dd">Return type: Boolean.</dd>
 
@@ -315,24 +315,24 @@
     
      <dt class="dt dlterm">record:dHasDupHeader()</dt>
 
-     <dd class="dd">Determines if the record has duplicate headers. </dd>
+     <dd class="dd">Determines if the record has duplicate header names. </dd>
 
      <dd class="dd">Return type: Boolean.</dd>
 
     
     
-     <dt class="dt dlterm">record:dIndex('&lt;header&gt;')</dt>
+     <dt class="dt dlterm">record:dIndex('&lt;header name&gt;')</dt>
 
-     <dd class="dd">Returns the index associated with the specified header. Use to find the position of a
+     <dd class="dd">Returns the index associated with the specified header name. Use to find the position of a
       header in the record. </dd>
 
      <dd class="dd">Return type: Integer, starting with 0 for the first position.</dd>
 
     
     
-     <dt class="dt dlterm">record:dIsDupHeader('&lt;header&gt;')</dt>
+     <dt class="dt dlterm">record:dIsDupHeader('&lt;header name&gt;')</dt>
 
-     <dd class="dd">Determines if the specified header is used more than once in a record. </dd>
+     <dd class="dd">Determines if the specified header name is used more than once in a record. </dd>
 
      <dd class="dd">Return type: Boolean.</dd>
 
@@ -346,9 +346,9 @@
 
     
     
-     <dt class="dt dlterm">record:dValue('&lt;header&gt;')</dt>
+     <dt class="dt dlterm">record:dValue('&lt;header name&gt;')</dt>
 
-     <dd class="dd">Returns the value associated with the specified header. </dd>
+     <dd class="dd">Returns the value associated with the specified header name. </dd>
 
      <dd class="dd">Return type: String.</dd>
 

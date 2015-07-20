@@ -2,14 +2,14 @@
 <!DOCTYPE task PUBLIC "-//OASIS//DTD DITA General Task//EN" "generalTask.dtd">
 <task id="task_rlk_tdq_ps">
     <title>Manipulate Data with the Expression Evaluator</title>
-    <shortdesc>Before writing data to Elasticsearch, let's use an Expression Evaluator to merge the
-        longitude and latitude information into a single pickup location field. </shortdesc>
+    <shortdesc>Let's use an Expression Evaluator to merge the longitude and latitude information
+        into a single pickup location field. We'll also calculate the basic trip revenue by
+        subtracting the tip from the total fare. </shortdesc>
     <taskbody>
-        <context>We'll also calculate a total fare without the tip to get the basic trip revenue. </context>
         <steps id="steps_dzt_j3q_ps">
             <step>
-                <cmd>Add an <uicontrol>Expression Evaluator</uicontrol> to the canvas and connect it
-                    to the <uicontrol>Field Converter</uicontrol>.</cmd>
+                <cmd>Add an <uicontrol>Expression Evaluator</uicontrol> to the canvas and connect
+                    the Field Converter to the stage. </cmd>
             </step>
             <step>
                 <cmd>On the <uicontrol>Expressions</uicontrol> tab, enter the following information
@@ -18,8 +18,9 @@
                     <ul id="ul_bfl_y2y_ps">
                         <li>For the <uicontrol>Output Field</uicontrol> property, enter
                             "/pickup_location".</li>
-                        <li>For <uicontrol>Expression</uicontrol> property, enter the following expression:<codeblock>${record:value('/pickup_latitude')}, ${record:value('/pickup_longitude')}</codeblock>
-                            <p>This returns the data from the two flattened fields in the following
+                        <li>For <uicontrol>Expression</uicontrol> property, enter the following
+                                expression:<codeblock>${record:value('/pickup_latitude')}, ${record:value('/pickup_longitude')}</codeblock><p>This
+                                returns the data from the two flattened fields in the following
                                 format: &lt;pickup latitude>, &lt;pickup longitude>.</p></li>
                     </ul>
                 </info>

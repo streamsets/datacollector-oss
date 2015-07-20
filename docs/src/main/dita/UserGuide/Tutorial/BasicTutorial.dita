@@ -2,28 +2,27 @@
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_phf_cjt_ls">
  <title>Basic Tutorial</title>
- <shortdesc>The basic tutorial creates a pipeline that splits data to two branches and merges it
-  before writing to the destination. You'll use data prevew to help configure the pipeline, and
-  you'll create a data alert before starting the pipeline. </shortdesc>
+ <shortdesc>The basic tutorial creates a pipeline that processes data in two branches and writes all
+  data to the destination. You'll use data prevew to help configure the pipeline, and you'll create
+  a data alert and run the pipeline. </shortdesc>
  <conbody>
-  <p><indexterm>tutorial<indexterm>basic</indexterm></indexterm>Here are high level steps we'll take
-   to build the basic pipeline:<draft-comment author="Loretta">review/update these as
-    necessary.</draft-comment><ol id="ol_emy_rhp_ms">
+  <p><indexterm>tutorial<indexterm>basic</indexterm></indexterm>Here are high level steps for
+   building and running the basic pipeline:<ol id="ol_emy_rhp_ms">
     <li>Configure pipeline properties, primarily error handling.</li>
     <li>Add a Directory origin to represent the data to be processed. </li>
-    <li>Preview source data to determine field-level details needed for the pipeline.</li>
-    <li>Use a Stream Selector processor to route records paid by credit card to the primary branch
-     and those paid by cash to an different branch. We'll set up a required field to discard records
+    <li>Preview source data to determine the field-level details needed for the pipeline.</li>
+    <li>Use a Stream Selector processor to route credit card transactions to the primary branch and
+     cash transactions to the secondary branch. We'll define a required field to discard records
      without a payment type.</li>
     <li>Configure a Jython Evaluator to perform custom processing that determines the credit card
      type based on the credit card number. </li>
     <li>Add a Field Masker to mask credit card numbers. Use a required field to discard records
      without credit card numbers.</li>
-    <li>Use an Expression Evaluator to add corresponding fields to the cash records so all records
-     have the same data format in the destination. Use data preview to verify the fields to add. </li>
-    <li>Merge both branches to a Hadoop FS destination.</li>
-    <li>Add a data rule to raise an alert if too many credit card payments don't have a
-     corresponding credit card number.</li>
+    <li>In the secondary branch, use an Expression Evaluator to add fields to the cash records to
+     match the credit card records. Use data preview to verify the fields to add. </li>
+    <li>Connect both branches to a Hadoop FS destination.</li>
+    <li>Add a data rule to raise an alert if too many credit card payments are missing credit card
+     numbers.</li>
     <li>Start the pipeline and monitor the results.</li>
    </ol></p>
   

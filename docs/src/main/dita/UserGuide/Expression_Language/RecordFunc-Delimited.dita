@@ -14,24 +14,24 @@
     href="../Pipeline_Configuration/DelimitedDataRecordStructure.dita#concept_zcg_bm4_fs"/>.</p>
   <p>The expression language provides the following delimited data record functions:<dl>
     <dlentry>
-     <dt>record:dExists('&lt;header>')</dt>
-     <dd>Determines if the specified header exists in the record.</dd>
+     <dt>record:dExists('&lt;header name>')</dt>
+     <dd>Determines if the specified header name exists in the record.</dd>
      <dd>Return type: Boolean.</dd>
     </dlentry>
     <dlentry>
      <dt>record:dHasDupHeader()</dt>
-     <dd>Determines if the record has duplicate headers. </dd>
+     <dd>Determines if the record has duplicate header names. </dd>
      <dd>Return type: Boolean.</dd>
     </dlentry>
     <dlentry>
-     <dt>record:dIndex('&lt;header>')</dt>
-     <dd>Returns the index associated with the specified header. Use to find the position of a
+     <dt>record:dIndex('&lt;header name>')</dt>
+     <dd>Returns the index associated with the specified header name. Use to find the position of a
       header in the record. </dd>
      <dd>Return type: Integer, starting with 0 for the first position.</dd>
     </dlentry>
     <dlentry>
-     <dt>record:dIsDupHeader('&lt;header>')</dt>
-     <dd>Determines if the specified header is used more than once in a record. </dd>
+     <dt>record:dIsDupHeader('&lt;header name>')</dt>
+     <dd>Determines if the specified header name is used more than once in a record. </dd>
      <dd>Return type: Boolean.</dd>
     </dlentry>
     <dlentry>
@@ -40,8 +40,8 @@
      <dd>Return type: Record in map format.</dd>
     </dlentry>
     <dlentry>
-     <dt>record:dValue('&lt;header>')</dt>
-     <dd>Returns the value associated with the specified header. </dd>
+     <dt>record:dValue('&lt;header name>')</dt>
+     <dd>Returns the value associated with the specified header name. </dd>
      <dd>Return type: String.</dd>
     </dlentry>
     <dlentry>

@@ -2,17 +2,17 @@
 <!DOCTYPE task PUBLIC "-//OASIS//DTD DITA General Task//EN" "generalTask.dtd">
 <task id="task_qbw_d3m_ls">
     <title>Mask Credit Card Numbers</title>
-    <shortdesc>Now that the credit card type has been evaluated, we'll use a Field Masker to mask
-        the credit card numbers. </shortdesc>
+    <shortdesc>Now we've evaluated the credit card type, let's use a Field Masker to mask the credit
+        card numbers. </shortdesc>
     <taskbody>
         <context>
-            <p>The Field Masker provides fixed and variable-length masks that mask all data. You can
-                create a custom mask that contains masked positions and revealed positions. And you
-                can use a regular expression mask that defines the string and optionally allows you
-                to reveal one or more groups in the string. </p>
-            <p>For our pipeline, let's mask all but the last four digits of the credit card number
-                with the following regular expression:<codeblock>(.*)([0-9]{4})</codeblock></p>
-            <p>The expression deliberately defines two groups so we can reveal the second group.</p>
+            <p>The Field Masker provides fixed and variable-length masks to mask all data. You can
+                create a custom mask - a static mask that can reveal positions. And you can use a
+                regular expression mask to define the string to be masked and optionally reveal one
+                or more groups in the string.</p>
+            <p>For the credit card numbers, we'll use the following regular expression to mask all
+                but the last four digits:<codeblock>(.*)([0-9]{4})</codeblock></p>
+            <p>The regular expression defines two groups so we can reveal the second group.</p>
         </context>
         <steps id="steps_wwy_fjm_ls">
             <step>
@@ -24,10 +24,10 @@
             </step>
             <step>
                 <cmd>Click in the <uicontrol>Fields to Mask</uicontrol> field. Scroll down the list
-                    of fields to select the field that represents credit card data:
+                    of fields and select the field that represents credit card data:
                         <uicontrol>[20]/value</uicontrol>. </cmd>
                 <info>A list of fields displays when the pipeline is valid for data preview. If the
-                    list does not display, you can type in the field path: [20]/value.</info>
+                    list does not display, you can enter the field path manually.</info>
             </step>
             <step>
                 <cmd>To use a regular expression as a mask and display the last 4 digits of the
@@ -63,7 +63,7 @@
                 </info>
             </step>
         </steps>
-        <result><image href="../Graphics/Tutorial-FieldMasker.png" id="image_v1y_35q_ps" scale="80"
-            /></result>
+        <result>Here's the pipeline so far:<p><image href="../Graphics/Tutorial-FieldMasker.png"
+                    id="image_v1y_35q_ps" scale="80"/></p></result>
     </taskbody>
 </task>
