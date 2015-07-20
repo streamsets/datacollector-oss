@@ -30,6 +30,7 @@ import javax.inject.Named;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.Callable;
 
 public class AsyncRunner implements Runner, PipelineInfo {
@@ -219,5 +220,10 @@ public class AsyncRunner implements Runner, PipelineInfo {
   @Override
   public void updateSlaveCallbackInfo(com.streamsets.dc.callback.CallbackInfo callbackInfo) {
     runner.updateSlaveCallbackInfo(callbackInfo);
+  }
+
+  @Override
+  public Map getUpdateInfo() {
+    return runner.getUpdateInfo();
   }
 }

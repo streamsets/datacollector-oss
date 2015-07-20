@@ -61,6 +61,7 @@ import com.streamsets.pipeline.runner.production.ThreadHealthReporter;
 import com.streamsets.pipeline.stagelibrary.StageLibraryTask;
 import com.streamsets.pipeline.store.PipelineStoreException;
 import com.streamsets.pipeline.store.PipelineStoreTask;
+import com.streamsets.dc.updatechecker.UpdateChecker;
 import com.streamsets.pipeline.util.Configuration;
 import com.streamsets.pipeline.util.ContainerError;
 import com.streamsets.pipeline.validation.Issue;
@@ -110,6 +111,7 @@ public class StandaloneRunner implements Runner, StateListener {
   private final MetricsEventRunnable metricsEventRunnable;
   private ProductionPipelineRunnable pipelineRunnable;
   private volatile boolean isClosed;
+  private UpdateChecker updateChecker;
 
   private static final Map<PipelineStatus, Set<PipelineStatus>> VALID_TRANSITIONS =
     new ImmutableMap.Builder<PipelineStatus, Set<PipelineStatus>>()
@@ -485,14 +487,20 @@ public class StandaloneRunner implements Runner, StateListener {
       ScheduledFuture<?> metricObserverFuture = runnerExecutor.scheduleWithFixedDelay(metricObserverRunnable, 1, 2,
         TimeUnit.SECONDS);
 
+      // update checker
+      updateChecker = new UpdateChecker(runtimeInfo, configuration, pipelineConfiguration, this);
+      ScheduledFuture<?> updateCheckerFuture = runnerExecutor.scheduleAtFixedRate(updateChecker, 1, 24 * 60, TimeUnit.MINUTES);
+
       observerRunnable.setRequestQueue(productionObserveRequests);
       Future<?> observerFuture = runnerExecutor.submit(observerRunnable);
 
       List<Future<?>> list;
       if (metricsFuture != null) {
-        list = ImmutableList.of(configLoaderFuture, observerFuture, metricObserverFuture, metricsFuture);
+        list =
+          ImmutableList
+            .of(configLoaderFuture, observerFuture, metricObserverFuture, metricsFuture, updateCheckerFuture);
       } else {
-        list = ImmutableList.of(configLoaderFuture, observerFuture, metricObserverFuture);
+        list = ImmutableList.of(configLoaderFuture, observerFuture, metricObserverFuture, updateCheckerFuture);
       }
       pipelineRunnable = new ProductionPipelineRunnable(threadHealthReporter, this, prodPipeline, name, rev, list);
     }
@@ -521,6 +529,11 @@ public class StandaloneRunner implements Runner, StateListener {
   @Override
   public void close() {
     isClosed = true;
+  }
+
+  @Override
+  public Map getUpdateInfo() {
+    return updateChecker.getUpdateInfo();
   }
 
   public Pipeline getPipeline() {

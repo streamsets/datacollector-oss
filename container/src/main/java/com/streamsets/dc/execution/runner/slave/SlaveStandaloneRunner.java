@@ -32,6 +32,7 @@ import javax.inject.Inject;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 
 
 public class SlaveStandaloneRunner implements Runner, PipelineInfo  {
@@ -209,6 +210,11 @@ public class SlaveStandaloneRunner implements Runner, PipelineInfo  {
   @Override
   public void updateSlaveCallbackInfo(com.streamsets.dc.callback.CallbackInfo callbackInfo) {
     standaloneRunner.updateSlaveCallbackInfo(callbackInfo);
+  }
+
+  @Override
+  public Map getUpdateInfo() {
+    return standaloneRunner.getUpdateInfo();
   }
 
 

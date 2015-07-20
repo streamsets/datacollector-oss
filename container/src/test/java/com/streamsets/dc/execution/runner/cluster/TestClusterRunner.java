@@ -103,6 +103,11 @@ public class TestClusterRunner {
   public void tearDown() {
     System.clearProperty(RuntimeInfo.TRANSIENT_ENVIRONMENT);
     System.clearProperty("sdc.testing-mode");
+    clusterProvider.submitTimesOut = false;
+    clusterProvider.isRunningCommandFails = false;
+    clusterProvider.isRunningTimesOut = false;
+    clusterProvider.isSucceeded = false;
+    clusterProvider.isRunning = true;
     FileUtils.deleteQuietly(tempDir);
     if (executorService != null) {
       executorService.shutdownNow();

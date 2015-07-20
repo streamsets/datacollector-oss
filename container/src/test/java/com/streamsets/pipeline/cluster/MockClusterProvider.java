@@ -23,7 +23,7 @@ public class MockClusterProvider implements ClusterProvider {
   public boolean isRunningTimesOut = false;
   public boolean isRunningCommandFails = false;
   public boolean isSucceeded = false;
-  public boolean isRunning = false;
+  public boolean isRunning = true;
   public String appId = null;
 
   @Override

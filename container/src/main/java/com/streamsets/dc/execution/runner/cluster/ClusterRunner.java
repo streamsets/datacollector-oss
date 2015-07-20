@@ -42,6 +42,7 @@ import com.streamsets.pipeline.lib.executor.SafeScheduledExecutorService;
 import com.streamsets.pipeline.main.RuntimeInfo;
 import com.streamsets.pipeline.metrics.MetricsEventListener;
 import com.streamsets.dc.execution.metrics.MetricsEventRunnable;
+import com.streamsets.dc.updatechecker.UpdateChecker;
 import com.streamsets.pipeline.runner.Pipeline;
 import com.streamsets.pipeline.runner.PipelineRuntimeException;
 import com.streamsets.pipeline.runner.production.ProductionPipeline;
@@ -104,6 +105,8 @@ public class ClusterRunner implements Runner {
   private ScheduledFuture<?> managerRunnableFuture;
   private ScheduledFuture<?> metricRunnableFuture;
   private volatile boolean isClosed;
+  private ScheduledFuture<?> updateCheckerFuture;
+  private UpdateChecker updateChecker;
 
   private static final Map<PipelineStatus, Set<PipelineStatus>> VALID_TRANSITIONS =
      new ImmutableMap.Builder<PipelineStatus, Set<PipelineStatus>>()
@@ -163,6 +166,10 @@ public class ClusterRunner implements Runner {
       .build();
     this.tempDir = Files.createTempDir();
     this.clusterHelper = new ClusterHelper(runtimeInfo, tempDir);
+    int refreshInterval = configuration.get(REFRESH_INTERVAL_PROPERTY, REFRESH_INTERVAL_PROPERTY_DEFAULT);
+    if (refreshInterval > 0) {
+      metricsEventRunnable = new MetricsEventRunnable(runtimeInfo, refreshInterval, this, null);
+    }
   }
 
   @Override
@@ -276,9 +283,10 @@ public class ClusterRunner implements Runner {
       start();
     } else {
       runtimeInfo.setSDCToken(appState.getSdcToken());
-      connect(appState, getPipelineConf());
+      PipelineConfiguration pipelineConf = getPipelineConf();
+      connect(appState, pipelineConf);
       if (getState().getStatus().isActive()) {
-        scheduleRunnable();
+        scheduleRunnable(pipelineConf);
       }
     }
   }
@@ -635,7 +643,7 @@ public class ClusterRunner implements Runner {
       attributes.putAll(getAttributes());
       attributes.put(APPLICATION_STATE, applicationState.getMap());
       validateAndSetStateTransition(PipelineStatus.RUNNING, "Pipeline in cluster is running", attributes);
-      scheduleRunnable();
+      scheduleRunnable(pipelineConf);
     } catch (IOException ex) {
       msg = "IO Error while trying to start the pipeline" + ex;
       LOG.error(msg, ex);
@@ -651,12 +659,13 @@ public class ClusterRunner implements Runner {
     }
   }
 
-  private void scheduleRunnable() throws PipelineStoreException {
-    int refreshInterval = configuration.get(REFRESH_INTERVAL_PROPERTY, REFRESH_INTERVAL_PROPERTY_DEFAULT);
-    if (refreshInterval > 0) {
-      metricsEventRunnable = new MetricsEventRunnable(runtimeInfo, refreshInterval, this, null);
+  private void scheduleRunnable(PipelineConfiguration pipelineConf) throws PipelineStoreException {
+    updateChecker = new UpdateChecker(runtimeInfo, configuration, pipelineConf, this);
+    updateCheckerFuture = runnerExecutor.scheduleAtFixedRate(updateChecker, 1, 24 * 60, TimeUnit.MINUTES);
+    if (metricsEventRunnable != null) {
       metricRunnableFuture =
-        runnerExecutor.scheduleAtFixedRate(metricsEventRunnable, 0, refreshInterval, TimeUnit.MILLISECONDS);
+        runnerExecutor.scheduleAtFixedRate(metricsEventRunnable, 0, metricsEventRunnable.getScheduledDelay(),
+          TimeUnit.MILLISECONDS);
     }
     managerRunnableFuture =
       runnerExecutor.scheduleAtFixedRate(new ManagerRunnable(this, getPipelineConf()), 0, 30, TimeUnit.SECONDS);
@@ -668,6 +677,9 @@ public class ClusterRunner implements Runner {
     }
     if (managerRunnableFuture != null) {
       managerRunnableFuture.cancel(false);
+    }
+    if (updateCheckerFuture != null) {
+      updateCheckerFuture.cancel(true);
     }
   }
 
@@ -702,5 +714,10 @@ public class ClusterRunner implements Runner {
 
   private PipelineConfiguration getPipelineConf() throws PipelineStoreException {
     return pipelineStore.load(name, rev);
+  }
+
+  @Override
+  public Map getUpdateInfo() {
+    return updateChecker.getUpdateInfo();
   }
 }

@@ -20,6 +20,7 @@ import com.streamsets.pipeline.util.PipelineException;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 
 // 3 Runner implementations:
 //  STANDALONE  : current standalone
@@ -131,5 +132,7 @@ public interface Runner {
   void close();
 
   void updateSlaveCallbackInfo(CallbackInfo callbackInfo);
+
+  Map getUpdateInfo();
 
 }
