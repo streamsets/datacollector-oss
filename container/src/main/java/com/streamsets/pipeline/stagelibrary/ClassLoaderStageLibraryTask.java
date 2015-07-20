@@ -46,9 +46,11 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.ExecutionException;
 
 public class ClassLoaderStageLibraryTask extends AbstractTask implements StageLibraryTask {
@@ -171,6 +173,7 @@ public class ClassLoaderStageLibraryTask extends AbstractTask implements StageLi
         return list;
       }
     });
+    validateStageVersions(stageList);
 
     // initializing the list of targets that can be used for error handling
     ErrorHandlingChooserValues.setErrorHandlingOptions(this);
@@ -255,6 +258,33 @@ public class ClassLoaderStageLibraryTask extends AbstractTask implements StageLi
                 System.currentTimeMillis() - start);
     } finally {
       LocaleInContext.set(null);
+    }
+  }
+
+  void validateStageVersions(List<StageDefinition> stageList) {
+    boolean err = false;
+    Map<String, Set<Integer>> stageVersions = new HashMap<>();
+    for (StageDefinition stage : stageList) {
+      Set<Integer> versions = stageVersions.get(stage.getName());
+      if (versions == null) {
+        versions = new HashSet<>();
+        stageVersions.put(stage.getName(), versions);
+      }
+      versions.add(stage.getVersion());
+      err |= versions.size() > 1;
+    }
+    if (err) {
+      List<String> errors = new ArrayList<>();
+      for (Map.Entry<String, Set<Integer>> entry : stageVersions.entrySet()) {
+        if (entry.getValue().size() > 1) {
+          for (StageDefinition stage : stageList) {
+            errors.add(Utils.format("Stage='{}' Version='{}' Library='{}'", stage.getName(), stage.getVersion(),
+                                    stage.getLibrary()));
+          }
+        }
+      }
+      LOG.error("There cannot be 2 different versions of the same stage: {}", errors);
+      throw new RuntimeException(Utils.format("There cannot be 2 different versions of the same stage: {}", errors));
     }
   }
 
