@@ -5,19 +5,16 @@
  */
 package com.streamsets.pipeline.store.impl;
 
-import com.google.common.collect.ImmutableList;
 
 import static org.junit.Assert.assertEquals;
 
 import com.streamsets.dc.execution.PipelineStateStore;
-import com.streamsets.pipeline.api.Config;
 import com.streamsets.pipeline.config.DataRuleDefinition;
 import com.streamsets.pipeline.config.MetricElement;
 import com.streamsets.pipeline.config.MetricType;
 import com.streamsets.pipeline.config.MetricsRuleDefinition;
 import com.streamsets.pipeline.config.PipelineConfiguration;
 import com.streamsets.pipeline.config.RuleDefinitions;
-import com.streamsets.pipeline.config.StageConfiguration;
 import com.streamsets.pipeline.config.ThresholdType;
 import com.streamsets.pipeline.main.RuntimeInfo;
 import com.streamsets.pipeline.runner.MockStages;
@@ -38,12 +35,7 @@ import org.mockito.Mockito;
 
 import javax.inject.Singleton;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.UUID;
 
 public class TestFilePipelineStoreTask {
@@ -340,195 +332,6 @@ public class TestFilePipelineStoreTask {
 
   private void createDefaultPipeline(PipelineStoreTask store) throws PipelineStoreException {
     store.create(SYSTEM_USER, DEFAULT_PIPELINE_NAME, DEFAULT_PIPELINE_DESCRIPTION);
-  }
-
-  @Test
-  public void testSyncPipelineConfiguration() throws PipelineStoreException {
-    store.init();
-
-    /*
-     * BEFORE SYNC -
-     * 1. error stage has an unexpected config and does not have expected config
-     * 2. Source has 0 configuration, expected 2
-     * 3. Target has 1 configuration, expected 0
-     */
-    PipelineConfiguration expectedPipelineConfig = MockStages.createPipelineWithRequiredDependentConfig();
-
-    //error stage has an unexpected config and does not have expected config
-    List<Config> configuration = new ArrayList<>();
-      configuration.add(new Config("Hello", "World"));
-    expectedPipelineConfig.getErrorStage().setConfig(configuration);
-    Assert.assertEquals(1, expectedPipelineConfig.getErrorStage().getConfiguration().size());
-
-    //Source has 0 configuration, expected 2
-    Assert.assertTrue(expectedPipelineConfig.getStages().get(0).getConfiguration().size() == 0);
-    //Target has 1 configuration, expected 0
-    Assert.assertTrue(expectedPipelineConfig.getStages().get(1).getConfiguration().size() == 0);
-    expectedPipelineConfig.getStages().get(1).setConfig(ImmutableList.of(new Config("unexpected", "conf")));
-    Assert.assertTrue(expectedPipelineConfig.getStages().get(1).getConfiguration().size() == 1);
-
-    /*
-     * SYNC
-     */
-    expectedPipelineConfig = getFilePipelineStoreTask().syncPipelineConfiguration(expectedPipelineConfig, "myPipeline", "1.0",
-      MockStages.createStageLibrary());
-
-    /*
-     * AFTER SYNC -
-     * 1. pipeline has 8 configurations with default values
-     * 2. error stage has expected config with expected default value
-     * 3. Source has 2 expected config with default values
-     * 4. Target has 0 configs
-     */
-
-    //pipeline config should have 12 configs
-    Assert.assertEquals(12, expectedPipelineConfig.getConfiguration().size());
-
-    //error stage has an expected config
-    Assert.assertEquals(1, expectedPipelineConfig.getErrorStage().getConfiguration().size());
-    Assert.assertEquals("errorTargetConfName", expectedPipelineConfig.getErrorStage().getConfiguration().get(0).getName());
-    Assert.assertEquals("/SDC_HOME/errorDir", expectedPipelineConfig.getErrorStage().getConfiguration().get(0).getValue());
-
-    //Source has configuration, expected 2
-    List<Config> sourceConfig = expectedPipelineConfig.getStages().get(0).getConfiguration();
-    Assert.assertTrue(sourceConfig.size() == 2);
-
-    Assert.assertEquals("dependencyConfName", sourceConfig.get(0).getName());
-    Assert.assertEquals(5, sourceConfig.get(0).getValue());
-
-    Assert.assertEquals("triggeredConfName", sourceConfig.get(1).getName());
-    Assert.assertEquals(10, sourceConfig.get(1).getValue());
-
-    //Target has 1 configuration, expected 0
-    Assert.assertTrue(expectedPipelineConfig.getStages().get(1).getConfiguration().size() == 0);
-  }
-
-  @Test
-  public void testSyncPipelineComplexConfiguration1() throws PipelineStoreException {
-    store.init();
-
-    //Scenario 1 - expected complex config but has none
-    PipelineConfiguration expectedPipelineConfig = MockStages.createPipelineConfigurationComplexSourceTarget();
-
-    /*
-     * BEFORE SYNC -
-     * Source has 0 config, expected 1 complex config
-     */
-    Assert.assertTrue(expectedPipelineConfig.getStages().get(0).getConfiguration().size() == 0);
-
-    /*
-     * SYNC
-     */
-    expectedPipelineConfig = getFilePipelineStoreTask().syncPipelineConfiguration(expectedPipelineConfig, "myPipeline", "1.0",
-      MockStages.createStageLibrary());
-
-    /*
-     * AFTER SYNC -
-     * 1. Source has 1 complex config
-     */
-
-    //Source has configuration, expected 1
-    List<Config> sourceConfig = expectedPipelineConfig.getStages().get(0).getConfiguration();
-    Assert.assertEquals(1, sourceConfig.size());
-    Assert.assertEquals("complexConfName", sourceConfig.get(0).getName());
-    Assert.assertTrue(sourceConfig.get(0).getValue() instanceof List);
-    List value = (List) sourceConfig.get(0).getValue();
-    Assert.assertEquals(1, value.size());
-
-    Assert.assertTrue(value.get(0) instanceof Map);
-    Map<String, Object> m = (Map<String, Object>) value.get(0);
-    Assert.assertEquals(1, m.entrySet().size());
-
-    Assert.assertTrue(m.containsKey("regularConfName"));
-    Assert.assertEquals(10, m.get("regularConfName"));
-
-  }
-
-  @Test
-  public void testSyncPipelineComplexConfiguration2() throws PipelineStoreException {
-    store.init();
-
-    PipelineConfiguration expectedPipelineConfig = MockStages.createPipelineConfigurationComplexSourceTarget();
-
-     /*
-     * BEFORE SYNC -
-     * Source has many unexpected config
-     */
-    Assert.assertTrue(expectedPipelineConfig.getStages().get(0).getConfiguration().size() == 0);
-    Map<String, Object> map1 = new HashMap<>();
-    map1.put("unexpectedConfig1", "Unexpected value1");
-    map1.put("unexpectedConfig2", "Unexpected value2");
-    Map<String, Object> map2 = new HashMap<>();
-    map2.put("unexpectedConfig3", "Unexpected value3");
-    map2.put("unexpectedConfig4", "Unexpected value4");
-    List<Map<String, Object>> listOfMap = new ArrayList<>();
-    listOfMap.add(map1);
-    listOfMap.add(map2);
-    Config c = new Config("complexConfName", listOfMap);
-    expectedPipelineConfig.getStages().get(0).setConfig(Arrays.asList(c));
-    Assert.assertTrue(expectedPipelineConfig.getStages().get(0).getConfiguration().size() == 1);
-
-    /*
-     * SYNC
-     */
-    expectedPipelineConfig = getFilePipelineStoreTask().syncPipelineConfiguration(expectedPipelineConfig,
-      "myPipeline", "1.0",
-      MockStages.createStageLibrary());
-
-    /*
-     * AFTER SYNC -
-     * 1. Source has expected complex config
-     */
-
-    //Source has configuration, expected 1
-    List<Config> sourceConfig = expectedPipelineConfig.getStages().get(0).getConfiguration();
-    Assert.assertEquals(1, sourceConfig.size());
-    Assert.assertEquals("complexConfName", sourceConfig.get(0).getName());
-    Assert.assertTrue(sourceConfig.get(0).getValue() instanceof List);
-    List value = (List) sourceConfig.get(0).getValue();
-    Assert.assertEquals(2, value.size());
-
-    Assert.assertTrue(value.get(0) instanceof Map);
-    Map<String, Object> m = (Map<String, Object>) value.get(0);
-    Assert.assertEquals(1, m.entrySet().size());
-
-    Assert.assertTrue(m.containsKey("regularConfName"));
-    Assert.assertEquals(10, m.get("regularConfName"));
-
-    Assert.assertTrue(value.get(1) instanceof Map);
-    m = (Map<String, Object>) value.get(1);
-    Assert.assertEquals(1, m.entrySet().size());
-
-    Assert.assertTrue(m.containsKey("regularConfName"));
-    Assert.assertEquals(10, m.get("regularConfName"));
-  }
-
-  @Test
-  public void testSyncPipelineConfigurationInvalidStage() throws PipelineStoreException {
-    store.init();
-
-    PipelineConfiguration expectedPipelineConfig = MockStages.createPipelineWithRequiredDependentConfig();
-
-    StageConfiguration nonExistingStage = new StageConfiguration("nonExistingStage", "default", "nonExistingStage", 1,
-      Collections.<Config>emptyList(), null, ImmutableList.of("p"), Collections.<String>emptyList());
-    expectedPipelineConfig.getStages().add(nonExistingStage);
-
-    try {
-      getFilePipelineStoreTask().syncPipelineConfiguration(expectedPipelineConfig, "p", "1",
-        MockStages.createStageLibrary());
-    } catch (PipelineStoreException e) {
-      Assert.assertEquals(ContainerError.CONTAINER_0207, e.getErrorCode());
-    }
-  }
-
-  private FilePipelineStoreTask getFilePipelineStoreTask() {
-    FilePipelineStoreTask filePipelineStoreTask;
-    if (store instanceof FilePipelineStoreTask) {
-      filePipelineStoreTask = ((FilePipelineStoreTask) store);
-    } else {
-      filePipelineStoreTask = (FilePipelineStoreTask) ((CachePipelineStoreTask) store).getActualStore();
-    }
-    return filePipelineStoreTask;
   }
 
 }

@@ -40,7 +40,7 @@ public class PreviewPipelineBuilder {
   private final StageLibraryTask stageLib;
   private final String name;
   private final String rev;
-  private final PipelineConfiguration pipelineConf;
+  private PipelineConfiguration pipelineConf;
   private final String endStageInstanceName;
 
   /**
@@ -97,7 +97,8 @@ public class PreviewPipelineBuilder {
     }
 
     PipelineConfigurationValidator validator = new PipelineConfigurationValidator(stageLib, name, pipelineConf);
-    if (validator.validate() || validator.canPreview()) {
+    pipelineConf = validator.validate();
+    if (!validator.getIssues().hasIssues() || validator.canPreview()) {
       List<String> openLanes = validator.getOpenLanes();
       if (!openLanes.isEmpty()) {
         pipelineConf.getStages().add(createPlugStage(openLanes));

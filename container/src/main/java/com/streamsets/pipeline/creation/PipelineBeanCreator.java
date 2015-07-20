@@ -123,7 +123,7 @@ public abstract class PipelineBeanCreator {
 
   @SuppressWarnings("unchecked")
   public static StageConfiguration getPipelineConfAsStageConf(PipelineConfiguration pipelineConf) {
-    return new StageConfiguration(null, "none", "pipeline", 1, pipelineConf.getConfiguration(),
+    return new StageConfiguration(null, "none", "pipeline", pipelineConf.getVersion(), pipelineConf.getConfiguration(),
                                   Collections.EMPTY_MAP, Collections.EMPTY_LIST, Collections.EMPTY_LIST);
   }
 

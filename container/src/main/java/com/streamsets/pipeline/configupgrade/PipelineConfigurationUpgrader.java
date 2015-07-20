@@ -19,7 +19,7 @@ import com.streamsets.pipeline.validation.IssueCreator;
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class PipelineConfigurationUpgrader {
+public class PipelineConfigurationUpgrader {
 
   private static final PipelineConfigurationUpgrader UPGRADER = new PipelineConfigurationUpgrader() {
   };
@@ -28,19 +28,22 @@ public abstract class PipelineConfigurationUpgrader {
     return UPGRADER;
   }
 
+  protected PipelineConfigurationUpgrader() {
+  }
+
   public PipelineConfiguration upgradeIfNecessary(StageLibraryTask library, PipelineConfiguration pipelineConf,
       List<Issue> issues) {
     List<Issue> ownIssues = new ArrayList<>();
-    boolean upgrade = needsUpgrade(library, pipelineConf, issues);
+    boolean upgrade = needsUpgrade(library, pipelineConf, ownIssues);
     if (upgrade && ownIssues.isEmpty()) {
       //we try to upgrade only if we have all defs for the pipelineConf
-      pipelineConf = upgrade(library, pipelineConf, issues);
+      pipelineConf = upgrade(library, pipelineConf, ownIssues);
     }
     issues.addAll(ownIssues);
     return (ownIssues.isEmpty()) ? pipelineConf : null;
   }
 
-  StageDefinition getPipelineDefinition() {
+  public StageDefinition getPipelineDefinition() {
     return PipelineBeanCreator.PIPELINE_DEFINITION;
   }
 

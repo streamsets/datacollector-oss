@@ -126,8 +126,7 @@ public class PipelineStoreResource {
     if (get.equals("pipeline")) {
       PipelineConfiguration pipeline = store.load(name, rev);
       PipelineConfigurationValidator validator = new PipelineConfigurationValidator(stageLibrary, name, pipeline);
-      validator.validate();
-      pipeline.setValidation(validator);
+      pipeline = validator.validate();
       data = BeanHelper.wrapPipelineConfiguration(pipeline);
     } else if (get.equals("info")) {
       data = BeanHelper.wrapPipelineInfo(store.getInfo(name));
@@ -192,8 +191,7 @@ public class PipelineStoreResource {
     store.storeRules(name, "0", ruleDefinitions);
 
     PipelineConfigurationValidator validator = new PipelineConfigurationValidator(stageLibrary, name, pipeline);
-    validator.validate();
-    pipeline.setValidation(validator);
+    pipeline = validator.validate();
     return Response.created(UriBuilder.fromUri(uri).path(name).build()).entity(
       BeanHelper.wrapPipelineConfiguration(pipeline)).build();
   }
@@ -232,8 +230,7 @@ public class PipelineStoreResource {
     PipelineConfiguration pipelineConfig = BeanHelper.unwrapPipelineConfiguration(
       pipeline);
     PipelineConfigurationValidator validator = new PipelineConfigurationValidator(stageLibrary, name, pipelineConfig);
-    validator.validate();
-    pipelineConfig.setValidation(validator);
+    pipelineConfig = validator.validate();
     pipelineConfig = store.save(user, name, rev, description, pipelineConfig);
     return Response.ok().entity(BeanHelper.wrapPipelineConfiguration(pipelineConfig)).build();
   }

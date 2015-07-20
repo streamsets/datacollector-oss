@@ -16,15 +16,12 @@ import com.streamsets.pipeline.runner.SourceOffsetTracker;
 import com.streamsets.pipeline.stagelibrary.StageLibraryTask;
 import com.streamsets.pipeline.util.ContainerError;
 import com.streamsets.pipeline.util.ValidationUtil;
-import com.streamsets.pipeline.validation.Issue;
-import com.streamsets.pipeline.validation.Issues;
 import com.streamsets.pipeline.validation.PipelineConfigurationValidator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
 import javax.inject.Named;
-import java.util.List;
 
 public class ProductionPipelineBuilder {
   private static final Logger LOG = LoggerFactory.getLogger(ProductionPipelineBuilder.class);
@@ -65,7 +62,8 @@ public class ProductionPipelineBuilder {
   public ProductionPipeline build(ProductionPipelineRunner runner, SourceOffsetTracker offsetTracker, Observer observer)
       throws PipelineRuntimeException, StageException {
     PipelineConfigurationValidator validator = new PipelineConfigurationValidator(stageLib, name, pipelineConf);
-    if (!validator.validate()) {
+    pipelineConf = validator.validate();
+    if (validator.getIssues().hasIssues()) {
       throw new PipelineRuntimeException(ContainerError.CONTAINER_0158, ValidationUtil.getFirstIssueAsString(name,
         validator.getIssues()));
     }
@@ -84,7 +82,8 @@ public class ProductionPipelineBuilder {
   public ProductionPipeline build(PipelineConfiguration pipelineConf)
     throws PipelineRuntimeException, StageException {
     PipelineConfigurationValidator validator = new PipelineConfigurationValidator(stageLib, name, pipelineConf);
-    if (!validator.validate()) {
+    pipelineConf = validator.validate();
+    if (validator.getIssues().hasIssues()) {
       throw new PipelineRuntimeException(ContainerError.CONTAINER_0158, ValidationUtil.getFirstIssueAsString(name,
         validator.getIssues()));
     }

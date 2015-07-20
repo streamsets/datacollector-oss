@@ -59,10 +59,8 @@ public class EmbeddedDataCollector implements DataCollector {
     realPipelineConfig.setUuid(tmpPipelineConfig.getUuid());
     PipelineConfigurationValidator validator =
       new PipelineConfigurationValidator(stageLibrary, pipelineName, realPipelineConfig);
-    validator.validate();
-    realPipelineConfig.setValidation(validator);
-    realPipelineConfig =
-      store.save(user, pipelineName, tag, desc, realPipelineConfig);
+    realPipelineConfig = validator.validate();
+    realPipelineConfig = store.save(user, pipelineName, tag, desc, realPipelineConfig);
   }
 
   @Override

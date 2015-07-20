@@ -16,6 +16,7 @@ import com.streamsets.pipeline.api.impl.TextUtils;
 import com.streamsets.pipeline.api.Config;
 import com.streamsets.pipeline.config.ConfigDefinition;
 import com.streamsets.pipeline.config.PipelineConfiguration;
+import com.streamsets.pipeline.configupgrade.PipelineConfigurationUpgrader;
 import com.streamsets.pipeline.creation.PipelineBean;
 import com.streamsets.pipeline.creation.PipelineBeanCreator;
 import com.streamsets.pipeline.creation.PipelineConfigBean;
@@ -53,7 +54,7 @@ public class PipelineConfigurationValidator {
 
   private final StageLibraryTask stageLibrary;
   private final String name;
-  private final PipelineConfiguration pipelineConfiguration;
+  private PipelineConfiguration pipelineConfiguration;
   private final Issues issues;
   private final List<String> openLanes;
   private boolean validated;
@@ -105,12 +106,14 @@ public class PipelineConfigurationValidator {
     return ok;
   }
 
-  public boolean validate() {
+  public PipelineConfiguration validate() {
     Preconditions.checkState(!validated, "Already validated");
     validated = true;
     LOG.trace("Pipeline '{}' starting validation", name);
     if (validSchemaVersion()) {
-      canPreview = sortStages();
+      canPreview = resolveLibraryAliases();
+      canPreview &= upgradePipeline();
+      canPreview &= sortStages();
       canPreview &= checkIfPipelineIsEmpty();
       canPreview &= loadPipelineConfig();
       canPreview &= validatePipelineMemoryConfiguration();
@@ -134,8 +137,30 @@ public class PipelineConfigurationValidator {
       LOG.debug("Pipeline '{}' validation. Unsupported pipeline schema '{}'", name,
                 pipelineConfiguration.getSchemaVersion());
     }
-    return !issues.hasIssues();
+    pipelineConfiguration.setValidation(this);
+    return pipelineConfiguration;
   }
+
+  boolean resolveLibraryAliases() {
+    return true;
+  }
+
+  @VisibleForTesting
+  PipelineConfigurationUpgrader getUpgrader() {
+    return PipelineConfigurationUpgrader.get();
+  }
+
+  boolean upgradePipeline() {
+    List<Issue> upgradeIssues = new ArrayList<>();
+    PipelineConfiguration pConf = getUpgrader().upgradeIfNecessary(stageLibrary,
+                                                                   pipelineConfiguration, upgradeIssues);
+    if (pConf != null) {
+      pipelineConfiguration = pConf;
+    }
+    issues.addAll(upgradeIssues);
+    return upgradeIssues.isEmpty();
+  }
+
   private boolean validateClusterModeConfig() {
     boolean canPreview = true;
     if (pipelineBean != null) {

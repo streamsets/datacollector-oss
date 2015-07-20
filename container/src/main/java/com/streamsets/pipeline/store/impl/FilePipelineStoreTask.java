@@ -12,15 +12,10 @@ import com.streamsets.dc.execution.PipelineStateStore;
 import com.streamsets.dc.execution.PipelineStatus;
 import com.streamsets.pipeline.api.ExecutionMode;
 import com.streamsets.pipeline.api.impl.Utils;
-import com.streamsets.pipeline.api.Config;
-import com.streamsets.pipeline.config.ConfigDefinition;
 import com.streamsets.pipeline.config.DataRuleDefinition;
 import com.streamsets.pipeline.config.MetricsRuleDefinition;
 import com.streamsets.pipeline.config.PipelineConfiguration;
-import com.streamsets.pipeline.config.PipelineDefinition;
 import com.streamsets.pipeline.config.RuleDefinitions;
-import com.streamsets.pipeline.config.StageConfiguration;
-import com.streamsets.pipeline.config.StageDefinition;
 import com.streamsets.pipeline.creation.PipelineBeanCreator;
 import com.streamsets.pipeline.creation.PipelineConfigBean;
 import com.streamsets.pipeline.io.DataStore;
@@ -259,9 +254,6 @@ public class FilePipelineStoreTask extends AbstractTask implements PipelineStore
     PipelineInfo info = new PipelineInfo(getInfo(name), pipeline.getDescription(), new Date(), user, REV, uuid,
                                          pipeline.isValid());
 
-    //synchronize pipeline configuration with whats present in the stage library
-    syncPipelineConfiguration(pipeline, name, tag, stageLibrary);
-
     try {
       pipeline.setUuid(uuid);
       json.writeValue(getInfoFile(name), BeanHelper.wrapPipelineInfo(info));
@@ -298,7 +290,6 @@ public class FilePipelineStoreTask extends AbstractTask implements PipelineStore
         PipelineConfigurationJson.class);
       PipelineConfiguration pipeline = pipelineConfigBean.getPipelineConfiguration();
       pipeline.setPipelineInfo(info);
-      syncPipelineConfiguration(pipeline, name, tagOrRev, stageLibrary);
       return pipeline;
     } catch (Exception ex) {
       throw new PipelineStoreException(ContainerError.CONTAINER_0206, name, ex.getMessage(),
@@ -380,221 +371,6 @@ public class FilePipelineStoreTask extends AbstractTask implements PipelineStore
 
   public String getPipelineKey(String pipelineName, String rev) {
     return pipelineName + "$" + rev;
-  }
-
-  @VisibleForTesting
-  /**
-   * Compares the argument PipelineConfiguration object with the pipeline definition available in the stage library.
-   *
-   * Expected but missing configuration will be added with default values and unexpected but existing configurations
-   * will be removed.
-   *
-   * Pipeline Error Stage configuration, stage configuration and pipeline configuration options are checked.
-   *
-   * @param pipelineConfig
-   * @param name
-   * @param tagOrRev
-   * @param stageLibrary
-   * @throws PipelineStoreException if the stage definition is found in the the library.
-   */
-  PipelineConfiguration syncPipelineConfiguration(PipelineConfiguration pipelineConfig, String name, String tagOrRev,
-                                         StageLibraryTask stageLibrary)
-    throws PipelineStoreException {
-
-    //sync error stage configuration options
-    StageConfiguration errorStageConf = syncStageConfiguration(pipelineConfig.getErrorStage(), stageLibrary);
-
-    //sync pipeline configuration options
-    List<Config> pipelineConfigs = syncPipelineConf(pipelineConfig, name, tagOrRev);
-
-    //sync stage configurations
-    List<StageConfiguration> stageConfigs = new ArrayList<>();
-    for(StageConfiguration argStageConf : pipelineConfig.getStages()) {
-      stageConfigs.add(syncStageConfiguration(argStageConf, stageLibrary));
-    }
-
-    return new PipelineConfiguration(pipelineConfig.getSchemaVersion(), pipelineConfig.getVersion(),
-        pipelineConfig.getUuid(), pipelineConfig.getDescription(), pipelineConfigs, pipelineConfig.getUiInfo(),
-        stageConfigs, errorStageConf);
-  }
-
-  private List<Config> syncPipelineConf(PipelineConfiguration pipelineConfig, String name,
-                                                     String tagOrRev) {
-    PipelineDefinition pipelineDef = PipelineDefinition.getPipelineDef();
-    Set<String> configsToRemove = getNamesFromConfigConf(pipelineConfig.getConfiguration());
-
-    List<Config> configuration = new ArrayList<>(pipelineConfig.getConfiguration());
-
-    for(ConfigDefinition configDefinition : pipelineDef.getConfigDefinitions()) {
-      Config configConf = pipelineConfig.getConfiguration(configDefinition.getName());
-      if(configConf == null) {
-        LOG.warn("Pipeline [name : {}, version : {}] does not have expected configuration '{}'. " +
-            "Adding the configuration with default value '{}'", name, tagOrRev, configDefinition.getName(),
-          configDefinition.getDefaultValue());
-        configConf = new Config(configDefinition.getName(), configDefinition.getDefaultValue());
-        configuration.add(configConf);
-      }
-      configsToRemove.remove(configDefinition.getName());
-      //No complex configurations are expected in the pipeline configurations as of now.
-    }
-
-    if(configsToRemove.size() > 0) {
-      List<Config> remove = new ArrayList<>();
-      for(Config c : pipelineConfig.getConfiguration()) {
-        if(configsToRemove.contains(c.getName())) {
-          remove.add(c);
-        }
-      }
-      configuration.removeAll(remove);
-    }
-    return configuration;
-  }
-
-  private StageConfiguration syncStageConfiguration(StageConfiguration argStageConf, StageLibraryTask stageLibrary)
-    throws PipelineStoreException {
-    if(argStageConf == null) {
-      return null;
-    }
-    //get the definition of this stage from the stage library. This is the source of truth.
-    //The configuration object must adhere to this definition.
-    StageDefinition stageDef = stageLibrary.getStage(argStageConf.getLibrary(), argStageConf.getStageName(),
-                                                     false);
-
-    if(stageDef == null) {
-      //Encountered a stage whose definition is not available - can happen if the pipeline was designed in an
-      //environment where there is a stage library X and then the pipeline is exported and imported in to this
-      //setup where there is no library X
-      throw new PipelineStoreException(ContainerError.CONTAINER_0207, argStageConf.getStageName(),
-        argStageConf.getLibrary(), argStageConf.getStageVersion());
-    }
-
-    //Collect all the available configuration names from the stage configuration
-    Set<String> configsToRemove = getNamesFromConfigConf(argStageConf.getConfiguration());
-
-    //Updated list of configurations
-    Map<String, Config> configuration = new LinkedHashMap<>();
-    for(Config c : argStageConf.getConfiguration()) {
-      configuration.put(c.getName(), c);
-    }
-
-    //go over every config def and make sure it is present in the config configuration
-    for(ConfigDefinition configDef : stageDef.getConfigDefinitions()) {
-      Config configConf = argStageConf.getConfig(configDef.getName());
-      if(configConf == null) {
-        LOG.warn("Stage [name : {}, library : {}, version : {}] does not have expected configuration '{}'. " +
-            "Adding the configuration with default value '{}'",
-          argStageConf.getStageName(), argStageConf.getLibrary(), argStageConf.getStageVersion(), configDef.getName(),
-          configDef.getDefaultValue());
-        configConf = new Config(configDef.getName(), configDef.getDefaultValue());
-        configuration.put(configDef.getName(), configConf);
-      }
-      if(configDef.getModel() != null && configDef.getModel().getConfigDefinitions() != null
-        && !configDef.getModel().getConfigDefinitions().isEmpty()) {
-        //complex field
-        //ConfigConfiguration for this will be of the form List - > HashMap <String, Object>
-        // where each HashMap contains entries of the form "nested config name"  - > value
-        List<Map<String, Object>> value = (List<Map<String, Object>>)configConf.getValue();
-        if(value == null) {
-          value = new ArrayList<>();
-          configConf = new Config(configConf.getName(), value);
-          configuration.put(configConf.getName(), configConf);
-        }
-        if(value.isEmpty()) {
-          value.add(new HashMap<String, Object>());
-        }
-        for(ConfigDefinition c : configDef.getModel().getConfigDefinitions()) {
-          for(Map<String, Object> map : value) {
-            if(!map.containsKey(c.getName())) {
-              LOG.warn("Stage [name : {}, library : {}, version : {}] does not have expected configuration '{}'. " +
-                  "Adding the configuration with default value '{}'",
-                argStageConf.getStageName(), argStageConf.getLibrary(), argStageConf.getStageVersion(),
-                configDef.getName() + "/" + c.getName(), c.getDefaultValue());
-              map.put(c.getName(), c.getDefaultValue());
-            }
-            configsToRemove.remove(configDef.getName() + "/" + c.getName());
-          }
-        }
-      }
-      configsToRemove.remove(configDef.getName());
-    }
-
-    //Remove unexpected configurations
-    if(configsToRemove.size() > 0) {
-      List<Config> remove = new ArrayList<>();
-      for (Config c : configuration.values()) {
-        if (configsToRemove.contains(c.getName())) {
-          remove.add(c);
-        }
-        if (c.getValue() != null && c.getValue() instanceof List) {
-          for (Object object : (List) c.getValue()) {
-            if (object instanceof Map) {
-              Map<String, Object> map = (Map) object;
-              if(isComplexConfiguration(map)) {
-                List<String> keysToRemove = new ArrayList<>();
-                for (String key : map.keySet()) {
-                  if (configsToRemove.contains(c.getName() + "/" + key)) {
-                    keysToRemove.add(key);
-                  }
-                }
-                for (String key : keysToRemove) {
-                  map.remove(key);
-                }
-              }
-            }
-          }
-        }
-      }
-      for(Config c : remove) {
-        configuration.remove(c.getName());
-      }
-    }
-
-    List<Config> config = new ArrayList<>();
-    for(Config c : configuration.values()) {
-      config.add(c);
-    }
-    return new StageConfiguration(argStageConf.getInstanceName(), argStageConf.getLibrary(),
-      argStageConf.getStageName(), argStageConf.getStageVersion(), config , argStageConf.getUiInfo(),
-      argStageConf.getInputLanes(), argStageConf.getOutputLanes());
-  }
-
-  /**
-   * Retrieves names of all the configurations from the given ConfigConfiguration objects.
-   * Includes nested configuration objects for complex configurations.
-   *
-   * Complex configuration names will be of the form <parentConfigName>/<childConfigName>
-   *
-   * @param configDefs
-   * @return
-   */
-  private Set<String> getNamesFromConfigConf(List<Config> configDefs) {
-    Set<String> expectedConfigNames = new HashSet<>();
-    for(Config c : configDefs) {
-      expectedConfigNames.add(c.getName());
-      if(c.getValue() instanceof List) {
-        for (Object object : (List) c.getValue()) {
-          if (object instanceof Map) {
-            Map<String, Object> map = (Map) object;
-            if(isComplexConfiguration(map)) {
-              for (String key : map.keySet()) {
-                expectedConfigNames.add(c.getName() + "/" + key);
-              }
-            }
-          }
-        }
-      }
-    }
-    return expectedConfigNames;
-  }
-
-  private boolean isComplexConfiguration(Map<String, Object> map) {
-    if(!map.isEmpty()
-      && map.keySet().size() == 2 //regular configuration contains 2 entries
-      && ((map.keySet().contains("key") && map.keySet().contains("value")) //one of them with key "key" & "value"
-      || (map.keySet().contains("outputLane") && map.keySet().contains("predicate")))) { //lanePredicate case
-      return false;
-    }
-    return true;
   }
 
 }
