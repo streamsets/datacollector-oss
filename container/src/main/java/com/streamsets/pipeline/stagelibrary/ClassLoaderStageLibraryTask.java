@@ -55,9 +55,12 @@ public class ClassLoaderStageLibraryTask extends AbstractTask implements StageLi
   public static final String MAX_PRIVATE_STAGE_CLASS_LOADERS_KEY = "max.stage.private.classloaders";
   public static final int MAX_PRIVATE_STAGE_CLASS_LOADERS_DEFAULT = 50;
 
+  private static final String CONFIG_LIBRARY_ALIAS_PREFIX = "library.alias.";
+
   private static final Logger LOG = LoggerFactory.getLogger(ClassLoaderStageLibraryTask.class);
 
   private final RuntimeInfo runtimeInfo;
+  private final Map<String,String> libraryNameAliases;
   private final Configuration configuration;
   private List<? extends ClassLoader> stageClassLoaders;
   private Map<String, StageDefinition> stageMap;
@@ -71,6 +74,12 @@ public class ClassLoaderStageLibraryTask extends AbstractTask implements StageLi
     super("stageLibrary");
     this.runtimeInfo = runtimeInfo;
     this.configuration = configuration;
+    Map<String, String> aliases = new HashMap<>();
+    for (Map.Entry<String,String> entry
+        : configuration.getSubSetConfiguration(CONFIG_LIBRARY_ALIAS_PREFIX).getValues().entrySet()) {
+      aliases.put(entry.getKey().substring(CONFIG_LIBRARY_ALIAS_PREFIX.length()), entry.getValue());
+    }
+    libraryNameAliases = ImmutableMap.copyOf(aliases);
   }
 
   private Method duplicateClassLoaderMethod;
@@ -298,6 +307,11 @@ public class ClassLoaderStageLibraryTask extends AbstractTask implements StageLi
       def = new StageDefinition(def, getStageClassLoader(def));
     }
     return def;
+  }
+
+  @Override
+  public Map<String, String> getLibraryNameAliases() {
+    return libraryNameAliases;
   }
 
   ClassLoader getStageClassLoader(StageDefinition stageDefinition) {

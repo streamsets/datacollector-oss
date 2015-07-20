@@ -443,6 +443,11 @@ public class MockStages {
     }
 
     @Override
+    public Map<String, String> getLibraryNameAliases() {
+      return Collections.emptyMap();
+    }
+
+    @Override
     public void releaseStageClassLoader(ClassLoader classLoader) {
     }
 

@@ -141,7 +141,27 @@ public class PipelineConfigurationValidator {
     return pipelineConfiguration;
   }
 
+  boolean isLibraryAlias(String name) {
+    return stageLibrary.getLibraryNameAliases().containsKey(name);
+  }
+
+  String resolveLibraryAlias(String name) {
+    return stageLibrary.getLibraryNameAliases().get(name);
+  }
+
   boolean resolveLibraryAliases() {
+    if (pipelineConfiguration.getErrorStage() != null) {
+      String name = pipelineConfiguration.getErrorStage().getLibrary();
+      if (isLibraryAlias(name)) {
+        pipelineConfiguration.getErrorStage().setLibrary(resolveLibraryAlias(name));
+      }
+    }
+    for (StageConfiguration stageConf : pipelineConfiguration.getStages()) {
+      String name = stageConf.getLibrary();
+      if (isLibraryAlias(name)) {
+        stageConf.setLibrary(resolveLibraryAlias(name));
+      }
+    }
     return true;
   }
 

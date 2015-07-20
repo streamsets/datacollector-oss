@@ -10,6 +10,7 @@ import com.streamsets.pipeline.config.StageDefinition;
 import com.streamsets.pipeline.task.Task;
 
 import java.util.List;
+import java.util.Map;
 
 public interface StageLibraryTask extends Task, ClassLoaderReleaser {
 
@@ -20,5 +21,7 @@ public interface StageLibraryTask extends Task, ClassLoaderReleaser {
   public List<StageDefinition> getStages();
 
   public StageDefinition getStage(String library, String name, boolean forExecution);
+
+  public Map<String, String> getLibraryNameAliases();
 
 }

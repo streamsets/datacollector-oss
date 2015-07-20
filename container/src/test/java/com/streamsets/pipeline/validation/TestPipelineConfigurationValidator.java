@@ -5,6 +5,7 @@
  */
 package com.streamsets.pipeline.validation;
 
+import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Lists;
 import com.streamsets.pipeline.api.ExecutionMode;
 import com.streamsets.pipeline.api.StageException;
@@ -22,6 +23,7 @@ import org.junit.Test;
 import org.mockito.Mockito;
 
 import java.util.List;
+import java.util.Map;
 
 public class TestPipelineConfigurationValidator {
 
@@ -170,7 +172,6 @@ public class TestPipelineConfigurationValidator {
     PipelineConfigurationValidator validator = new PipelineConfigurationValidator(lib, "name", conf);
     conf = validator.validate();
     Assert.assertFalse(conf.getIssues().hasIssues());
-
     Assert.assertEquals(stageLib, conf.getStages().get(0).getLibrary());
   }
 

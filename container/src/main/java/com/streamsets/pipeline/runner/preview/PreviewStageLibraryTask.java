@@ -18,6 +18,7 @@ import com.streamsets.pipeline.task.TaskWrapper;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.Properties;
 
 public class PreviewStageLibraryTask extends TaskWrapper implements StageLibraryTask {
@@ -59,6 +60,11 @@ public class PreviewStageLibraryTask extends TaskWrapper implements StageLibrary
       def = this.library.getStage(library, name, forExecution);
     }
     return def;
+  }
+
+  @Override
+  public Map<String, String> getLibraryNameAliases() {
+    return library.getLibraryNameAliases();
   }
 
   @Override
