@@ -95,7 +95,7 @@ angular
        */
       startPipeline: function() {
         $scope.trackEvent(pipelineConstant.BUTTON_CATEGORY, pipelineConstant.CLICK_ACTION, 'Start Pipeline', 1);
-        if($rootScope.common.pipelineStatus.state !== 'RUNNING') {
+        if($rootScope.common.pipelineStatusMap[$scope.activeConfigInfo.name].status !== 'RUNNING') {
           var startResponse;
           $scope.$storage.maximizeDetailPane = false;
           $scope.$storage.minimizeDetailPane = false;
@@ -105,12 +105,12 @@ angular
             then(
             function (res) {
               $scope.moveGraphToCenter();
-              $rootScope.common.pipelineStatus = res.data;
+              $rootScope.common.pipelineStatusMap[$scope.activeConfigInfo.name] = res.data;
 
               $timeout(function() {
                 $scope.refreshGraph();
               });
-
+              $scope.startMonitoring();
             },
             function (res) {
               $rootScope.common.errors = [res.data];
@@ -118,7 +118,7 @@ angular
           );
         } else {
           $translate('home.graphPane.startErrorMessage', {
-            name: $rootScope.common.pipelineStatus.name
+            name: $scope.activeConfigInfo.name
           }).then(function(translation) {
             $rootScope.common.errors = [translation];
           });
@@ -145,8 +145,9 @@ angular
 
         modalInstance.result.then(function(status) {
           $scope.moveGraphToCenter();
-          $rootScope.common.pipelineStatus = status;
+          $rootScope.common.pipelineStatusMap[$scope.activeConfigInfo.name] = status;
           $scope.refreshGraph();
+          $scope.stopMonitoring();
         }, function () {
 
         });

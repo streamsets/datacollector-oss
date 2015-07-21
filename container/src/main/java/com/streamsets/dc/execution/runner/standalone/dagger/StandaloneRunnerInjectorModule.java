@@ -5,9 +5,18 @@
  */
 package com.streamsets.dc.execution.runner.standalone.dagger;
 
+import com.streamsets.dc.execution.EventListenerManager;
 import com.streamsets.dc.execution.runner.standalone.StandaloneRunner;
 import dagger.Module;
+import dagger.Provides;
+
+import javax.inject.Singleton;
+import javax.ws.rs.ext.Provider;
 
 @Module(injects = StandaloneRunner.class, library = true, complete = false)
 public class StandaloneRunnerInjectorModule {
+  @Provides @Singleton
+  public EventListenerManager provideEventListenerManager() {
+    return new EventListenerManager();
+  }
 }

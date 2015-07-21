@@ -5,6 +5,8 @@
  */
 package com.streamsets.dc.execution.runner.cluster;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Strings;
 import com.google.common.cache.Cache;
@@ -12,10 +14,10 @@ import com.google.common.cache.CacheBuilder;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.io.Files;
+import com.streamsets.dc.execution.AbstractRunner;
 import com.streamsets.dc.execution.PipelineState;
 import com.streamsets.dc.execution.PipelineStateStore;
 import com.streamsets.dc.execution.PipelineStatus;
-import com.streamsets.dc.execution.Runner;
 import com.streamsets.dc.execution.Snapshot;
 import com.streamsets.dc.execution.SnapshotInfo;
 import com.streamsets.dc.execution.cluster.ClusterHelper;
@@ -38,6 +40,7 @@ import com.streamsets.pipeline.config.PipelineConfiguration;
 import com.streamsets.pipeline.config.RuleDefinition;
 import com.streamsets.pipeline.creation.PipelineBeanCreator;
 import com.streamsets.pipeline.creation.PipelineConfigBean;
+import com.streamsets.pipeline.json.ObjectMapperFactory;
 import com.streamsets.pipeline.lib.executor.SafeScheduledExecutorService;
 import com.streamsets.pipeline.main.RuntimeInfo;
 import com.streamsets.pipeline.metrics.MetricsEventListener;
@@ -81,7 +84,7 @@ import java.util.concurrent.locks.ReentrantLock;
  * Control class to interact with slave pipelines running on cluster. It provides support for starting, stopping and
  * checking status of pipeline. It also registers information about the pipelines running on slaves.
  */
-public class ClusterRunner implements Runner {
+public class ClusterRunner extends AbstractRunner {
   private static final Logger LOG = LoggerFactory.getLogger(ClusterRunner.class);
   static final String APPLICATION_STATE = "cluster.application.state";
 
@@ -100,13 +103,14 @@ public class ClusterRunner implements Runner {
   private ClusterHelper clusterHelper;
   private final File tempDir;
   private final Cache<String, CallbackInfo> slaveCallbackList;
-  private MetricsEventRunnable metricsEventRunnable;
   private static final long SUBMIT_TIMEOUT_SECS = 120;
   private ScheduledFuture<?> managerRunnableFuture;
   private ScheduledFuture<?> metricRunnableFuture;
   private volatile boolean isClosed;
   private ScheduledFuture<?> updateCheckerFuture;
   private UpdateChecker updateChecker;
+  private MetricsEventRunnable metricsEventRunnable;
+
 
   private static final Map<PipelineStatus, Set<PipelineStatus>> VALID_TRANSITIONS =
      new ImmutableMap.Builder<PipelineStatus, Set<PipelineStatus>>()
@@ -168,7 +172,7 @@ public class ClusterRunner implements Runner {
     this.clusterHelper = new ClusterHelper(runtimeInfo, tempDir);
     int refreshInterval = configuration.get(REFRESH_INTERVAL_PROPERTY, REFRESH_INTERVAL_PROPERTY_DEFAULT);
     if (refreshInterval > 0) {
-      metricsEventRunnable = new MetricsEventRunnable(runtimeInfo, refreshInterval, this, null);
+      metricsEventRunnable = new MetricsEventRunnable(runtimeInfo, refreshInterval, this, null, eventListenerManager);
     }
   }
 
@@ -393,18 +397,8 @@ public class ClusterRunner implements Runner {
   }
 
   @Override
-  public void broadcastAlerts(RuleDefinition ruleDefinition) {
-    throw new UnsupportedOperationException();
-  }
-
-  @Override
   public boolean deleteAlert(String alertId) throws PipelineRunnerException, PipelineStoreException {
     throw new UnsupportedOperationException();
-  }
-
-  @Override
-  public void addMetricsEventListener(MetricsEventListener metricsEventListener) {
-    metricsEventRunnable.addMetricsEventListener(metricsEventListener);
   }
 
   @Override
@@ -427,7 +421,11 @@ public class ClusterRunner implements Runner {
       LOG.debug(Utils.format("Ignoring status '{}' as this is same as current status", status));
     } else {
       checkState(VALID_TRANSITIONS.get(status).contains(toStatus), ContainerError.CONTAINER_0102, status, toStatus);
-      pipelineStateStore.saveState(user, name, rev, toStatus, message, attributes, ExecutionMode.CLUSTER);
+      PipelineState pipelineState = pipelineStateStore.saveState(user, name, rev, toStatus, message, attributes,
+        ExecutionMode.CLUSTER);
+      if(eventListenerManager != null) {
+        eventListenerManager.broadcastPipelineState(pipelineState);
+      }
     }
   }
 

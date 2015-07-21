@@ -63,7 +63,10 @@ angular.module('dataCollectorApp')
       BACKSPACE_KEY = 8,
       DELETE_KEY = 46,
       Z_KEY = 90,
-      Y_KEY = 89;
+      Y_KEY = 89,
+      destroyed = false,
+      webSocketStatusURL = webSocketBaseURL + '/rest/v1/webSocket?type=status',
+      statusWebSocket;
 
     $rootScope.pipelineConstant = pipelineConstant;
     $rootScope.$storage = $localStorage.$default({
@@ -199,6 +202,20 @@ angular.module('dataCollectorApp')
             //UNDO Operation
             $rootScope.$broadcast('bodyUndoKeyPressed');
           }
+        },
+
+        /**
+         * Google Analytics Track Event
+         *
+         * @param category Typically the object that was interacted with (e.g. button)
+         * @param action The type of interaction (e.g. click)
+         * @param label Useful for categorizing events (e.g. nav buttons)
+         * @param value Values must be non-negative. Useful to pass counts (e.g. 4 times)
+         */
+        trackEvent: function(category, action, label, value) {
+          if(configuration.isAnalyticsEnabled()) {
+            Analytics.trackEvent(category, action, label, value);
+          }
         }
       };
 
@@ -219,6 +236,8 @@ angular.module('dataCollectorApp')
       if(configuration.isAnalyticsEnabled()) {
         Analytics.createAnalyticsScriptTag();
       }
+      isWebSocketSupported = (typeof(WebSocket) === "function") && configuration.isWebSocketUseEnabled();
+      refreshPipelineStatus();
     });
 
     // set actions to be taken each time the user navigates
@@ -239,6 +258,85 @@ angular.module('dataCollectorApp')
     $rootScope.go = function ( path ) {
       $location.path( path );
     };
+
+    /**
+     * Fetch the Pipeline Status every configured refresh interval.
+     *
+     */
+    var refreshPipelineStatus = function() {
+      if(destroyed) {
+        return;
+      }
+
+      if(isWebSocketSupported) {
+        //WebSocket to get Pipeline Status
+
+        statusWebSocket = new WebSocket(webSocketStatusURL);
+
+        statusWebSocket.onmessage = function (evt) {
+          var received_msg = evt.data;
+
+          $rootScope.$apply(function() {
+            var parsedStatus = JSON.parse(received_msg);
+            $rootScope.common.pipelineStatusMap[parsedStatus.name] = parsedStatus;
+          });
+        };
+
+        statusWebSocket.onerror = function (evt) {
+          isWebSocketSupported = false;
+          refreshPipelineStatus();
+        };
+
+        statusWebSocket.onclose = function(evt) {
+          //On Close try calling REST API so that if server is down it will reload the page.
+          api.pipelineAgent.getAllPipelineStatus();
+        };
+
+      } else {
+        //WebSocket is not support use polling to get Pipeline Status
+
+        pipelineStatusTimer = $timeout(
+          function() {
+            //console.log( "Pipeline Status Timeout executed", Date.now() );
+          },
+          configuration.getRefreshInterval()
+        );
+
+        pipelineStatusTimer.then(
+          function() {
+            api.pipelineAgent.getAllPipelineStatus()
+              .success(function(data) {
+                if(!_.isObject(data) && _.isString(data) && data.indexOf('<!doctype html>') !== -1) {
+                  //Session invalidated
+                  window.location.reload();
+                  return;
+                }
+
+                $rootScope.common.pipelineStatusMap = data;
+
+                refreshPipelineStatus();
+              })
+              .error(function(data, status, headers, config) {
+                $rootScope.common.errors = [data];
+              });
+          },
+          function() {
+            //console.log( "Timer rejected!" );
+          }
+        );
+      }
+    };
+
+
+    $rootScope.$on('$destroy', function() {
+      if(isWebSocketSupported) {
+        statusWebSocket.close();
+      } else {
+        $timeout.cancel(pipelineStatusTimer);
+      }
+
+      destroyed = true;
+    });
 
     var unloadMessage = 'If you leave this page you are going to lose all unsaved changes, are you sure you want to leave?';
 

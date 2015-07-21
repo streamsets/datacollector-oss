@@ -5,7 +5,7 @@
  */
 package com.streamsets.pipeline.prodmanager;
 
-import com.codahale.metrics.MetricRegistry;
+import com.streamsets.dc.execution.StateEventListener;
 import com.streamsets.pipeline.alerts.AlertEventListener;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
@@ -15,7 +15,6 @@ import com.streamsets.pipeline.config.PipelineConfiguration;
 import com.streamsets.pipeline.config.RuleDefinition;
 import com.streamsets.pipeline.metrics.MetricsEventListener;
 import com.streamsets.pipeline.runner.PipelineRuntimeException;
-import com.streamsets.pipeline.runner.production.ProductionPipeline;
 import com.streamsets.pipeline.snapshotstore.SnapshotInfo;
 import com.streamsets.pipeline.snapshotstore.SnapshotStatus;
 import com.streamsets.pipeline.store.PipelineStoreException;

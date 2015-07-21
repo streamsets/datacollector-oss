@@ -12,6 +12,7 @@ import com.google.common.annotations.VisibleForTesting;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
+import com.streamsets.dc.execution.StateEventListener;
 import com.streamsets.dc.execution.runner.standalone.StandaloneRunner;
 import com.streamsets.pipeline.alerts.AlertEventListener;
 import com.streamsets.pipeline.alerts.AlertManager;

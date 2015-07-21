@@ -5,11 +5,11 @@
  */
 package com.streamsets.dc.execution.runner.slave;
 
-import com.codahale.metrics.MetricRegistry;
 import com.streamsets.dc.execution.PipelineState;
 import com.streamsets.dc.execution.Runner;
 import com.streamsets.dc.execution.Snapshot;
 import com.streamsets.dc.execution.SnapshotInfo;
+import com.streamsets.dc.execution.StateEventListener;
 import com.streamsets.dc.execution.runner.common.PipelineInfo;
 import com.streamsets.dc.execution.runner.common.PipelineRunnerException;
 import com.streamsets.dc.execution.runner.standalone.StandaloneRunner;
@@ -173,6 +173,16 @@ public class SlaveStandaloneRunner implements Runner, PipelineInfo  {
   }
 
   @Override
+  public void addStateEventListener(StateEventListener stateEventListener) {
+    standaloneRunner.addStateEventListener(stateEventListener);
+  }
+
+  @Override
+  public void removeStateEventListener(StateEventListener stateEventListener) {
+    standaloneRunner.removeStateEventListener(stateEventListener);
+  }
+
+  @Override
   public void addAlertEventListener(AlertEventListener alertEventListener) {
     standaloneRunner.addAlertEventListener(alertEventListener);
   }
@@ -183,13 +193,13 @@ public class SlaveStandaloneRunner implements Runner, PipelineInfo  {
   }
 
   @Override
-  public void broadcastAlerts(RuleDefinition ruleDefinition) {
-    standaloneRunner.broadcastAlerts(ruleDefinition);
+  public void addMetricsEventListener(MetricsEventListener metricsEventListener) {
+    standaloneRunner.addMetricsEventListener(metricsEventListener);
   }
 
   @Override
-  public void addMetricsEventListener(MetricsEventListener metricsEventListener) {
-    standaloneRunner.addMetricsEventListener(metricsEventListener);
+  public void removeMetricsEventListener(MetricsEventListener metricsEventListener) {
+    standaloneRunner.removeMetricsEventListener(metricsEventListener);
   }
 
   @Override

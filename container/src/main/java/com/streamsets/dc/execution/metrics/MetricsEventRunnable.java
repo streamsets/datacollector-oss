@@ -7,6 +7,7 @@
 package com.streamsets.dc.execution.metrics;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.streamsets.dc.execution.EventListenerManager;
 import com.streamsets.dc.execution.Runner;
 import com.streamsets.dc.callback.CallbackInfo;
 import com.streamsets.pipeline.json.ObjectMapperFactory;
@@ -32,30 +33,25 @@ import java.util.Map;
 public class MetricsEventRunnable implements Runnable {
   public static final String RUNNABLE_NAME = "MetricsEventRunnable";
   private final static Logger LOG = LoggerFactory.getLogger(MetricsEventRunnable.class);
-  private final List<MetricsEventListener> metricsEventListenerList = new ArrayList<>();
   private final Map<String, MetricRegistryJson> slaveMetrics;
   private final RuntimeInfo runtimeInfo;
   private ThreadHealthReporter threadHealthReporter;
   private final int scheduledDelay;
   private final Runner runner;
+  private final EventListenerManager eventListenerManager;
 
   @Inject
   public MetricsEventRunnable(RuntimeInfo runtimeInfo, int scheduledDelay, Runner runner,
-                              ThreadHealthReporter threadHealthReporter) {
+                              ThreadHealthReporter threadHealthReporter, EventListenerManager eventListenerManager) {
     this.runtimeInfo = runtimeInfo;
     this.scheduledDelay = scheduledDelay/1000;
     slaveMetrics = new HashMap<>();
     this.runner = runner;
     this.threadHealthReporter = threadHealthReporter;
+    this.eventListenerManager = eventListenerManager;
   }
 
-  public void addMetricsEventListener(MetricsEventListener metricsEventListener) {
-    metricsEventListenerList.add(metricsEventListener);
-  }
 
-  public void removeMetricsEventListener(MetricsEventListener metricsEventListener) {
-    metricsEventListenerList.remove(metricsEventListener);
-  }
 
   public void clearSlaveMetrics() {
     slaveMetrics.clear();
@@ -75,11 +71,9 @@ public class MetricsEventRunnable implements Runnable {
       if(threadHealthReporter != null) {
         threadHealthReporter.reportHealth(RUNNABLE_NAME, scheduledDelay, System.currentTimeMillis());
       }
-      if (metricsEventListenerList.size() > 0 && runner.getState().getStatus().isActive()) {
+      if (eventListenerManager.getMetricsEventListenerList().size() > 0 && runner.getState().getStatus().isActive()) {
         ObjectMapper objectMapper = ObjectMapperFactory.get();
-
         String metricsJSONStr;
-
         if(runtimeInfo.getExecutionMode().equals(RuntimeInfo.ExecutionMode.CLUSTER)) {
           MetricRegistryJson metricRegistryJson = getAggregatedMetrics();
           metricsJSONStr = objectMapper.writer().writeValueAsString(metricRegistryJson);
@@ -87,14 +81,7 @@ public class MetricsEventRunnable implements Runnable {
           metricsJSONStr =
             objectMapper.writer().writeValueAsString(runner.getMetrics());
         }
-
-        for(MetricsEventListener alertEventListener : metricsEventListenerList) {
-          try {
-            alertEventListener.notification(metricsJSONStr);
-          } catch(Exception ex) {
-            LOG.warn("Error while notifying metrics, {}", ex.getMessage(), ex);
-          }
-        }
+        eventListenerManager.broadcastMetrics(metricsJSONStr);
       }
     } catch (IOException ex) {
       LOG.warn("Error while serializing metrics, {}", ex.getMessage(), ex);

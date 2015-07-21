@@ -3,12 +3,12 @@
  * be copied, modified, or distributed in whole or part without
  * written consent of StreamSets, Inc.
  */
-package com.streamsets.pipeline.websockets;
+package com.streamsets.dc.execution;
 
-public interface ListenerManager<L> {
+import java.util.EventListener;
 
-  public void register(L listener);
+public interface StateEventListener extends EventListener {
 
-  public void unregister(L listener);
+  void notification(String pipelineState);
 
 }

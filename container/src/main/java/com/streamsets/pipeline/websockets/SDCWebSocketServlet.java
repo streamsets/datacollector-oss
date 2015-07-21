@@ -5,12 +5,13 @@
  */
 package com.streamsets.pipeline.websockets;
 
+import com.streamsets.dc.websockets.*;
 import com.streamsets.pipeline.alerts.AlertEventListener;
 import com.streamsets.pipeline.lib.executor.SafeScheduledExecutorService;
 import com.streamsets.pipeline.main.RuntimeInfo;
 import com.streamsets.pipeline.metrics.MetricsEventListener;
 import com.streamsets.pipeline.prodmanager.PipelineManager;
-import com.streamsets.pipeline.prodmanager.StateEventListener;
+import com.streamsets.dc.execution.StateEventListener;
 import com.streamsets.pipeline.util.AuthzRole;
 import com.streamsets.pipeline.util.Configuration;
 import org.eclipse.jetty.websocket.api.WebSocketException;

@@ -6,6 +6,7 @@
 package com.streamsets.dc.execution.manager.standalone;
 
 import com.codahale.metrics.MetricRegistry;
+import com.streamsets.dc.execution.EventListenerManager;
 import com.streamsets.dc.execution.Manager;
 import com.streamsets.dc.execution.PipelineState;
 import com.streamsets.dc.execution.PipelineStateStore;
@@ -56,7 +57,8 @@ public class TestStandalonePipelineManager {
   private Manager pipelineManager;
   private PipelineStateStore pipelineStateStore;
 
-  @Module(injects = {StandaloneAndClusterPipelineManager.class, PipelineStoreTask.class, PipelineStateStore.class, StandaloneRunner.class},
+  @Module(injects = {StandaloneAndClusterPipelineManager.class, PipelineStoreTask.class, PipelineStateStore.class,
+    StandaloneRunner.class, EventListenerManager.class},
     library = true)
   public static class TestPipelineManagerModule {
 
@@ -143,6 +145,11 @@ public class TestStandalonePipelineManager {
     @Provides @Singleton
     public SnapshotStore provideSnapshotStore(RuntimeInfo runtimeInfo) {
       return new FileSnapshotStore(runtimeInfo);
+    }
+
+    @Provides @Singleton
+    public EventListenerManager provideEventListenerManager() {
+      return new EventListenerManager();
     }
 
   }

@@ -184,6 +184,25 @@
                     <span>{{'global.form.export' | translate}}</span>
                   </a>
                 </li>
+
+                <li ng-repeat-end role="presentation" class="divider"></li>
+
+                <li role="presentation"
+                    ng-hide="common.pipelineStatusMap[pipeline.name].status === 'RUNNING' || !pipeline.valid">
+                  <a href="#" dropdown-toggle ng-click="startPipeline(pipeline, $event)">
+                    <i class="glyphicon glyphicon-play"></i>
+                    <span>{{'home.header.start' | translate}}</span>
+                  </a>
+                </li>
+
+                <li role="presentation"
+                    ng-show="common.pipelineStatusMap[pipeline.name].status === 'RUNNING'">
+                  <a href="#" dropdown-toggle ng-click="stopPipeline(pipeline, $event)">
+                    <i class="glyphicon glyphicon-stop"></i>
+                    <span>{{'home.header.stop' | translate}}</span>
+                  </a>
+                </li>
+
               </ul>
             </div>
 

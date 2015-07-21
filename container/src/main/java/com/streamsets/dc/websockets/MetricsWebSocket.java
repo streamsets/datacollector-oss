@@ -3,10 +3,9 @@
  * be copied, modified, or distributed in whole or part without
  * written consent of StreamSets, Inc.
  */
-package com.streamsets.pipeline.websockets;
+package com.streamsets.dc.websockets;
 
 import com.streamsets.pipeline.metrics.MetricsEventListener;
-import com.streamsets.pipeline.prodmanager.PipelineManager;
 
 import java.util.Queue;
 

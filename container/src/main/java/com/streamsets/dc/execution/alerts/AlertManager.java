@@ -9,6 +9,7 @@ import com.codahale.metrics.Gauge;
 import com.codahale.metrics.MetricRegistry;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.streamsets.dc.execution.EventListenerManager;
 import com.streamsets.pipeline.alerts.AlertEventListener;
 import com.streamsets.pipeline.alerts.AlertsUtil;
 import com.streamsets.pipeline.config.RuleDefinition;
@@ -24,6 +25,7 @@ import javax.inject.Named;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -64,16 +66,16 @@ public class AlertManager {
   private final EmailSender emailSender;
   private final MetricRegistry metrics;
   private final RuntimeInfo runtimeInfo;
-  private List<AlertEventListener> alertEventListenerList;
+  private final EventListenerManager eventListenerManager;
 
-  public AlertManager(@Named("name") String pipelineName,  @Named("rev") String revision, EmailSender emailSender, MetricRegistry metrics,
-                      RuntimeInfo runtimeInfo) {
+  public AlertManager(@Named("name") String pipelineName,  @Named("rev") String revision, EmailSender emailSender,
+                      MetricRegistry metrics, RuntimeInfo runtimeInfo, EventListenerManager eventListenerManager) {
     this.pipelineName = pipelineName;
     this.revision = revision;
     this.emailSender = emailSender;
     this.metrics = metrics;
     this.runtimeInfo = runtimeInfo;
-    this.alertEventListenerList = new CopyOnWriteArrayList<>();
+    this.eventListenerManager = eventListenerManager;
   }
 
   public void alert(List<String> emailIds, Throwable throwable) {
@@ -144,12 +146,12 @@ public class AlertManager {
           }
         }
       }
-      broadcastAlerts(ruleDefinition);
+      eventListenerManager.broadcastAlerts(ruleDefinition);
     } else {
       //remove existing gauge
       MetricsConfigurator.removeGauge(metrics, AlertsUtil.getAlertGaugeName(ruleDefinition.getId()), pipelineName,
         revision);
-      alertResponse.put(TIMESTAMP, ((Map<String, Object>)gauge.getValue()).get(TIMESTAMP));
+      alertResponse.put(TIMESTAMP, ((Map<String, Object>) gauge.getValue()).get(TIMESTAMP));
     }
     Gauge<Object> alertResponseGauge = new Gauge<Object>() {
       @Override
@@ -182,32 +184,5 @@ public class AlertManager {
 
     MetricsConfigurator.createGauge(metrics, AlertsUtil.getAlertGaugeName(ruleDefinition.getId()),
       alertResponseGauge, pipelineName, revision);
-  }
-
-  public void addAlertEventListener(AlertEventListener alertEventListener) {
-    alertEventListenerList.add(alertEventListener);
-  }
-
-  public void removeAlertEventListener(AlertEventListener alertEventListener) {
-    alertEventListenerList.remove(alertEventListener);
-  }
-
-
-  public void broadcastAlerts(RuleDefinition ruleDefinition) {
-    if(alertEventListenerList.size() > 0) {
-      try {
-        ObjectMapper objectMapper = ObjectMapperFactory.get();
-        String ruleDefinitionJSONStr = objectMapper.writer().writeValueAsString(ruleDefinition);
-        for(AlertEventListener alertEventListener : alertEventListenerList) {
-          try {
-            alertEventListener.notification(ruleDefinitionJSONStr);
-          } catch (Exception ex) {
-            LOG.warn("Error while notifying alerts, {}", ex.getMessage(), ex);
-          }
-        }
-      } catch (JsonProcessingException ex) {
-        LOG.warn("Error while broadcasting alerts, {}", ex.getMessage(), ex);
-      }
-    }
   }
 }

@@ -5,18 +5,18 @@
  */
 package com.streamsets.dc.execution.runner.common;
 
-import com.codahale.metrics.MetricRegistry;
 import com.google.common.annotations.VisibleForTesting;
+import com.streamsets.dc.callback.CallbackInfo;
 import com.streamsets.dc.execution.PipelineState;
 import com.streamsets.dc.execution.Runner;
 import com.streamsets.dc.execution.Snapshot;
 import com.streamsets.dc.execution.SnapshotInfo;
+import com.streamsets.dc.execution.StateEventListener;
 import com.streamsets.pipeline.alerts.AlertEventListener;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.impl.ErrorMessage;
 import com.streamsets.pipeline.api.impl.Utils;
-import com.streamsets.dc.callback.CallbackInfo;
 import com.streamsets.pipeline.config.RuleDefinition;
 import com.streamsets.pipeline.lib.executor.SafeScheduledExecutorService;
 import com.streamsets.pipeline.metrics.MetricsEventListener;
@@ -27,7 +27,6 @@ import com.streamsets.pipeline.util.PipelineException;
 
 import javax.inject.Inject;
 import javax.inject.Named;
-
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
@@ -173,6 +172,16 @@ public class AsyncRunner implements Runner, PipelineInfo {
   }
 
   @Override
+  public void addStateEventListener(StateEventListener stateEventListener) {
+    runner.addStateEventListener(stateEventListener);
+  }
+
+  @Override
+  public void removeStateEventListener(StateEventListener stateEventListener) {
+    runner.removeStateEventListener(stateEventListener);
+  }
+
+  @Override
   public void addAlertEventListener(AlertEventListener alertEventListener) {
     runner.addAlertEventListener(alertEventListener);
   }
@@ -183,13 +192,13 @@ public class AsyncRunner implements Runner, PipelineInfo {
   }
 
   @Override
-  public void broadcastAlerts(RuleDefinition ruleDefinition) {
-    runner.broadcastAlerts(ruleDefinition);
+  public void addMetricsEventListener(MetricsEventListener metricsEventListener) {
+    runner.addMetricsEventListener(metricsEventListener);
   }
 
   @Override
-  public void addMetricsEventListener(MetricsEventListener metricsEventListener) {
-    runner.addMetricsEventListener(metricsEventListener);
+  public void removeMetricsEventListener(MetricsEventListener metricsEventListener) {
+    runner.removeMetricsEventListener(metricsEventListener);
   }
 
   @Override

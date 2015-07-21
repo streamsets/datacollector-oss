@@ -6,6 +6,7 @@
 package com.streamsets.pipeline.util;
 
 import com.codahale.metrics.MetricRegistry;
+import com.streamsets.dc.execution.EventListenerManager;
 import com.streamsets.dc.execution.PipelineStateStore;
 import com.streamsets.dc.execution.Previewer;
 import com.streamsets.dc.execution.PreviewerListener;
@@ -603,6 +604,11 @@ public class TestUtil {
           return testRunnerModule.provideRunner(new SafeScheduledExecutorService(1, "asyncExecutor"));
         }
       };
+    }
+
+    @Provides @Singleton
+    public EventListenerManager provideEventListenerManager() {
+      return new EventListenerManager();
     }
 
   }

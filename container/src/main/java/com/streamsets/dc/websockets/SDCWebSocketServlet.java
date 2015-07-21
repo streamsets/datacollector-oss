@@ -6,15 +6,16 @@
 package com.streamsets.dc.websockets;
 
 import com.streamsets.dc.execution.Manager;
+import com.streamsets.dc.execution.PipelineState;
+import com.streamsets.dc.execution.Runner;
+import com.streamsets.pipeline.alerts.AlertEventListener;
 import com.streamsets.pipeline.lib.executor.SafeScheduledExecutorService;
 import com.streamsets.pipeline.main.RuntimeInfo;
+import com.streamsets.pipeline.metrics.MetricsEventListener;
+import com.streamsets.dc.execution.StateEventListener;
+import com.streamsets.pipeline.store.PipelineStoreException;
 import com.streamsets.pipeline.util.AuthzRole;
 import com.streamsets.pipeline.util.Configuration;
-import com.streamsets.pipeline.websockets.AlertsWebSocket;
-import com.streamsets.pipeline.websockets.LogMessageWebSocket;
-import com.streamsets.pipeline.websockets.MetricsWebSocket;
-import com.streamsets.pipeline.websockets.StatusWebSocket;
-import com.streamsets.pipeline.websockets.WebSocketMessage;
 import org.eclipse.jetty.websocket.api.WebSocketException;
 import org.eclipse.jetty.websocket.servlet.ServletUpgradeRequest;
 import org.eclipse.jetty.websocket.servlet.ServletUpgradeResponse;
@@ -28,6 +29,9 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.security.Principal;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ScheduledExecutorService;
@@ -92,48 +96,83 @@ public class SDCWebSocketServlet extends WebSocketServlet implements WebSocketCr
   @Override
   public Object createWebSocket(ServletUpgradeRequest req, ServletUpgradeResponse resp) {
     HttpServletRequest httpRequest = req.getHttpServletRequest();
+    Principal principal = httpRequest.getUserPrincipal();
+    final String userName = principal.getName();
     String webSocketType = httpRequest.getParameter("type");
+    String pipelineName = httpRequest.getParameter("pipelineName");
+    String rev = httpRequest.getParameter("rev");
     if(webSocketType != null) {
-      /*switch (webSocketType) {
+
+      final List<Runner> runnerList = new ArrayList<Runner>();
+      try {
+        if(pipelineName != null) {
+          if(rev == null) {
+            rev = "0";
+          }
+          runnerList.add(manager.getRunner(userName, pipelineName, rev));
+        } else {
+          for(PipelineState pipelineState: manager.getPipelines()) {
+            runnerList.add(manager.getRunner(userName, pipelineState.getName(), pipelineState.getRev()));
+          }
+        }
+      } catch (PipelineStoreException ex) {
+        LOG.warn("Failed to create WebSocket: {}", ex.getMessage(), ex);
+        return null;
+      }
+
+      switch (webSocketType) {
         case LogMessageWebSocket.TYPE:
           return new LogMessageWebSocket(config, runtimeInfo);
         case StatusWebSocket.TYPE:
           return new StatusWebSocket(new ListenerManager<StateEventListener>() {
             @Override
             public void register(StateEventListener listener) {
-              ((PipelineManager)manager).addStateEventListener(listener);
+              for(Runner runner: runnerList) {
+                runner.addStateEventListener(listener);
+              }
             }
 
             @Override
             public void unregister(StateEventListener listener) {
-              manager.removeStateEventListener(listener);
+              for(Runner runner: runnerList) {
+                runner.removeStateEventListener(listener);
+              }
+
             }
           }, queue);
         case MetricsWebSocket.TYPE:
           return new MetricsWebSocket(new ListenerManager<MetricsEventListener>() {
             @Override
             public void register(MetricsEventListener listener) {
-              manager.addMetricsEventListener(listener);
+              for(Runner runner: runnerList) {
+                runner.addMetricsEventListener(listener);
+              }
             }
 
             @Override
             public void unregister(MetricsEventListener listener) {
-              manager.removeMetricsEventListener(listener);
+              for(Runner runner: runnerList) {
+                runner.removeMetricsEventListener(listener);
+              }
             }
           }, queue);
         case AlertsWebSocket.TYPE:
           return new AlertsWebSocket(new ListenerManager<AlertEventListener>() {
             @Override
             public void register(AlertEventListener listener) {
-              manager.addAlertEventListener(listener);
+              for(Runner runner: runnerList) {
+                runner.addAlertEventListener(listener);
+              }
             }
 
             @Override
             public void unregister(AlertEventListener listener) {
-              manager.removeAlertEventListener(listener);
+              for(Runner runner: runnerList) {
+                runner.removeAlertEventListener(listener);
+              }
             }
           }, queue);
-      }*/
+      }
     }
     return null;
   }

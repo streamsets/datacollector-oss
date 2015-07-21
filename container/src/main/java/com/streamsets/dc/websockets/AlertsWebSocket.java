@@ -3,16 +3,10 @@
  * be copied, modified, or distributed in whole or part without
  * written consent of StreamSets, Inc.
  */
-package com.streamsets.pipeline.websockets;
+package com.streamsets.dc.websockets;
 
 import com.streamsets.pipeline.alerts.AlertEventListener;
-import com.streamsets.pipeline.prodmanager.PipelineManager;
-import org.eclipse.jetty.websocket.api.Session;
-import org.eclipse.jetty.websocket.api.WebSocketAdapter;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
-import java.io.IOException;
 import java.util.Queue;
 
 

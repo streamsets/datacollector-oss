@@ -9,11 +9,11 @@ import com.codahale.metrics.MetricRegistry;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
-import com.google.common.util.concurrent.Service.State;
+import com.streamsets.dc.callback.CallbackInfo;
+import com.streamsets.dc.execution.AbstractRunner;
 import com.streamsets.dc.execution.PipelineState;
 import com.streamsets.dc.execution.PipelineStateStore;
 import com.streamsets.dc.execution.PipelineStatus;
-import com.streamsets.dc.execution.Runner;
 import com.streamsets.dc.execution.Snapshot;
 import com.streamsets.dc.execution.SnapshotInfo;
 import com.streamsets.dc.execution.SnapshotStore;
@@ -30,26 +30,22 @@ import com.streamsets.dc.execution.runner.common.ProductionPipelineBuilder;
 import com.streamsets.dc.execution.runner.common.ProductionPipelineRunnable;
 import com.streamsets.dc.execution.runner.common.ProductionPipelineRunner;
 import com.streamsets.dc.execution.runner.common.dagger.PipelineProviderModule;
-import com.streamsets.pipeline.alerts.AlertEventListener;
+import com.streamsets.dc.updatechecker.UpdateChecker;
 import com.streamsets.pipeline.alerts.AlertsUtil;
 import com.streamsets.pipeline.api.ExecutionMode;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.impl.ErrorMessage;
 import com.streamsets.pipeline.api.impl.Utils;
-import com.streamsets.dc.callback.CallbackInfo;
-import com.streamsets.pipeline.callback.CallbackServerMetricsEventListener;
 import com.streamsets.pipeline.config.MemoryLimitConfiguration;
 import com.streamsets.pipeline.config.MemoryLimitExceeded;
 import com.streamsets.pipeline.config.PipelineConfiguration;
-import com.streamsets.pipeline.config.RuleDefinition;
 import com.streamsets.pipeline.creation.PipelineBeanCreator;
 import com.streamsets.pipeline.creation.PipelineConfigBean;
 import com.streamsets.pipeline.el.JvmEL;
 import com.streamsets.pipeline.lib.executor.SafeScheduledExecutorService;
 import com.streamsets.pipeline.main.RuntimeInfo;
 import com.streamsets.pipeline.metrics.MetricsConfigurator;
-import com.streamsets.pipeline.metrics.MetricsEventListener;
 import com.streamsets.pipeline.runner.Observer;
 import com.streamsets.pipeline.runner.Pipeline;
 import com.streamsets.pipeline.runner.PipelineRunner;
@@ -61,21 +57,17 @@ import com.streamsets.pipeline.runner.production.ThreadHealthReporter;
 import com.streamsets.pipeline.stagelibrary.StageLibraryTask;
 import com.streamsets.pipeline.store.PipelineStoreException;
 import com.streamsets.pipeline.store.PipelineStoreTask;
-import com.streamsets.dc.updatechecker.UpdateChecker;
 import com.streamsets.pipeline.util.Configuration;
 import com.streamsets.pipeline.util.ContainerError;
+import com.streamsets.pipeline.util.PipelineException;
 import com.streamsets.pipeline.validation.Issue;
 import com.streamsets.pipeline.validation.ValidationError;
-import com.streamsets.pipeline.util.PipelineException;
-
 import dagger.ObjectGraph;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
 import javax.inject.Named;
-
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -87,7 +79,7 @@ import java.util.concurrent.Future;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 
-public class StandaloneRunner implements Runner, StateListener {
+public class StandaloneRunner extends AbstractRunner implements StateListener {
   private static final Logger LOG = LoggerFactory.getLogger(StandaloneRunner.class);
 
   @Inject RuntimeInfo runtimeInfo;
@@ -104,11 +96,11 @@ public class StandaloneRunner implements Runner, StateListener {
   private final String user;
 
   /*Mutex objects to synchronize start and stop pipeline methods*/
-  private AlertManager alertManager;
   private ThreadHealthReporter threadHealthReporter;
   private DataObserverRunnable observerRunnable;
   private ProductionPipeline prodPipeline;
-  private final MetricsEventRunnable metricsEventRunnable;
+  private MetricsEventRunnable metricsEventRunnable;
+
   private ProductionPipelineRunnable pipelineRunnable;
   private volatile boolean isClosed;
   private UpdateChecker updateChecker;
@@ -140,7 +132,8 @@ public class StandaloneRunner implements Runner, StateListener {
     objectGraph.inject(this);
     int refreshInterval = configuration.get(REFRESH_INTERVAL_PROPERTY, REFRESH_INTERVAL_PROPERTY_DEFAULT);
     if (refreshInterval > 0) {
-      metricsEventRunnable = new MetricsEventRunnable(runtimeInfo, refreshInterval, this, threadHealthReporter);
+      metricsEventRunnable = new MetricsEventRunnable(runtimeInfo, refreshInterval, this, threadHealthReporter,
+        eventListenerManager);
     } else {
       metricsEventRunnable = null;
     }
@@ -208,26 +201,6 @@ public class StandaloneRunner implements Runner, StateListener {
       default:
         LOG.error(Utils.format("Pipeline cannot start with status: '{}'", status));
     }
-  }
-
-  @Override
-  public void addMetricsEventListener(MetricsEventListener metricsEventListener) {
-    metricsEventRunnable.addMetricsEventListener(metricsEventListener);
-  }
-
-  @Override
-  public void addAlertEventListener(AlertEventListener alertEventListener) {
-    alertManager.addAlertEventListener(alertEventListener);
-  }
-
-  @Override
-  public void removeAlertEventListener(AlertEventListener alertEventListener) {
-    alertManager.removeAlertEventListener(alertEventListener);
-  }
-
-  @Override
-  public void broadcastAlerts(RuleDefinition ruleDefinition) {
-    alertManager.broadcastAlerts(ruleDefinition);
   }
 
   @Override
@@ -337,7 +310,7 @@ public class StandaloneRunner implements Runner, StateListener {
 
   @Override
   public void deleteHistory() {
-    pipelineStateStore.deleteHistory(name ,rev);
+    pipelineStateStore.deleteHistory(name, rev);
   }
 
   @Override
@@ -360,9 +333,9 @@ public class StandaloneRunner implements Runner, StateListener {
 
   @Override
   public boolean deleteAlert(String alertId) throws PipelineRunnerException, PipelineStoreException {
-    checkState(getState().equals(PipelineStatus.RUNNING), ContainerError.CONTAINER_0402);
-    MetricsConfigurator.resetCounter((MetricRegistry)getMetrics(), AlertsUtil.getUserMetricName(alertId));
-    return MetricsConfigurator.removeGauge((MetricRegistry)getMetrics(), AlertsUtil.getAlertGaugeName(alertId), name ,rev);
+    checkState(getState().getStatus().isActive(), ContainerError.CONTAINER_0402);
+    MetricsConfigurator.resetCounter((MetricRegistry) getMetrics(), AlertsUtil.getUserMetricName(alertId));
+    return MetricsConfigurator.removeGauge((MetricRegistry) getMetrics(), AlertsUtil.getAlertGaugeName(alertId), name, rev);
   }
 
   @Override
@@ -379,7 +352,9 @@ public class StandaloneRunner implements Runner, StateListener {
     throws PipelineStoreException, PipelineRunnerException {
     PipelineStatus status = getState().getStatus();
     checkState(VALID_TRANSITIONS.get(status).contains(toStatus), ContainerError.CONTAINER_0102, status, toStatus);
-    pipelineStateStore.saveState(user, name, rev, toStatus, message, attributes, ExecutionMode.STANDALONE);
+    PipelineState pipelineState = pipelineStateStore.saveState(user, name, rev, toStatus, message, attributes,
+      ExecutionMode.STANDALONE);
+    eventListenerManager.broadcastPipelineState(pipelineState);
   }
 
   private void checkState(boolean expr, ContainerError error, Object... args) throws PipelineRunnerException {
@@ -448,7 +423,6 @@ public class StandaloneRunner implements Runner, StateListener {
       //with fresh instances of MetricRegistry, alert manager, observer etc etc..
       ObjectGraph objectGraph = this.objectGraph.plus(new PipelineProviderModule(name, rev));
 
-      alertManager = objectGraph.get(AlertManager.class);
       threadHealthReporter = objectGraph.get(ThreadHealthReporter.class);
       observerRunnable = objectGraph.get(DataObserverRunnable.class);
 
@@ -472,7 +446,7 @@ public class StandaloneRunner implements Runner, StateListener {
       if (metricsEventRunnable != null) {
         metricsFuture =
           runnerExecutor.scheduleAtFixedRate(metricsEventRunnable, 0, metricsEventRunnable.getScheduledDelay(),
-            TimeUnit.MILLISECONDS);
+            TimeUnit.SECONDS);
       }
       //Schedule Rules Config Loader
       try {

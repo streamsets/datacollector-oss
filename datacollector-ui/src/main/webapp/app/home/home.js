@@ -19,7 +19,9 @@ angular
         }
       });
   }])
-  .controller('HomeController', function ($scope, $rootScope, $q, $modal, $location, pipelineService, api) {
+  .controller('HomeController', function ($scope, $rootScope, $q, $modal, $location, pipelineService, api,
+                                          pipelineConstant) {
+
     $location.search('auth_token', null);
     $location.search('auth_user', null);
 
@@ -77,6 +79,64 @@ angular
        */
       openPipeline: function(pipeline) {
         $location.path('/collector/pipeline/' + pipeline.name);
+      },
+
+      /**
+       * On Start Pipeline button click.
+       *
+       */
+      startPipeline: function(pipelineInfo, $event) {
+        if($event) {
+          $event.stopPropagation();
+        }
+
+        $rootScope.common.trackEvent(pipelineConstant.BUTTON_CATEGORY, pipelineConstant.CLICK_ACTION, 'Start Pipeline', 1);
+        if($rootScope.common.pipelineStatusMap[pipelineInfo.name].state !== 'RUNNING') {
+          api.pipelineAgent.startPipeline(pipelineInfo.name, 0).
+            then(
+            function (res) {
+              $rootScope.common.pipelineStatusMap[pipelineInfo.name] = res.data;
+            },
+            function (res) {
+              $rootScope.common.errors = [res.data];
+            }
+          );
+        } else {
+          $translate('home.graphPane.startErrorMessage', {
+            name: pipelineInfo.name
+          }).then(function(translation) {
+            $rootScope.common.errors = [translation];
+          });
+        }
+      },
+
+      /**
+       * On Stop Pipeline button click.
+       *
+       */
+      stopPipeline: function(pipelineInfo, $event) {
+        if($event) {
+          $event.stopPropagation();
+        }
+
+        $rootScope.common.trackEvent(pipelineConstant.BUTTON_CATEGORY, pipelineConstant.CLICK_ACTION, 'Stop Pipeline', 1);
+        var modalInstance = $modal.open({
+          templateUrl: 'app/home/header/stop/stopConfirmation.tpl.html',
+          controller: 'StopConfirmationModalInstanceController',
+          size: '',
+          backdrop: 'static',
+          resolve: {
+            pipelineInfo: function () {
+              return pipelineInfo;
+            }
+          }
+        });
+
+        modalInstance.result.then(function(status) {
+          $rootScope.common.pipelineStatusMap[pipelineInfo.name] = status;
+        }, function () {
+
+        });
       }
     });
 
@@ -94,7 +154,5 @@ angular
         $scope.loaded = true;
       }
     );
-
-
 
   });

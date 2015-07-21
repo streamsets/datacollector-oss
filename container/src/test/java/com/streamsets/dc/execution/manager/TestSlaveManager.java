@@ -6,6 +6,7 @@
 package com.streamsets.dc.execution.manager;
 
 import com.codahale.metrics.MetricRegistry;
+import com.streamsets.dc.execution.EventListenerManager;
 import com.streamsets.dc.execution.Manager;
 import com.streamsets.dc.execution.PipelineStateStore;
 import com.streamsets.dc.execution.Runner;
@@ -50,7 +51,7 @@ public class TestSlaveManager {
 
   @Module(
     injects = { SlavePipelineManager.class, PipelineStoreTask.class, PipelineStateStore.class,
-      StandaloneRunner.class},
+      StandaloneRunner.class, EventListenerManager.class},
     library = true)
   public static class TestSlaveManagerModule {
 
@@ -119,6 +120,12 @@ public class TestSlaveManager {
     public SnapshotStore provideSnapshotStore(RuntimeInfo runtimeInfo) {
       return Mockito.mock(SnapshotStore.class);
     }
+
+    @Provides @Singleton
+    public EventListenerManager provideEventListenerManager() {
+      return new EventListenerManager();
+    }
+
   }
 
   private void setUpManager() {

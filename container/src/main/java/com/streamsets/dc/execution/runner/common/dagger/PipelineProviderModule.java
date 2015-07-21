@@ -7,6 +7,7 @@ package com.streamsets.dc.execution.runner.common.dagger;
 
 
 import com.codahale.metrics.MetricRegistry;
+import com.streamsets.dc.execution.EventListenerManager;
 import com.streamsets.dc.execution.SnapshotStore;
 import com.streamsets.dc.execution.alerts.AlertManager;
 import com.streamsets.dc.execution.metrics.MetricsEventRunnable;
@@ -68,8 +69,9 @@ public class PipelineProviderModule {
 
   @Provides @Singleton
   public AlertManager provideAlertManager(@Named("name") String name, @Named("rev") String rev, EmailSender emailSender,
-                                          MetricRegistry metricRegistry, RuntimeInfo runtimeInfo) {
-    return new AlertManager(name, rev, emailSender, metricRegistry, runtimeInfo);
+                                          MetricRegistry metricRegistry, RuntimeInfo runtimeInfo,
+                                          EventListenerManager eventListenerManager) {
+    return new AlertManager(name, rev, emailSender, metricRegistry, runtimeInfo, eventListenerManager);
   }
 
   @Provides @Singleton
