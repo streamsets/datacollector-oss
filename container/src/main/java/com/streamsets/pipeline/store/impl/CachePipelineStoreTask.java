@@ -108,7 +108,7 @@ public class CachePipelineStoreTask implements PipelineStoreTask {
   public synchronized PipelineConfiguration save(String user, String name, String tag, String tagDescription,
     PipelineConfiguration pipeline) throws PipelineStoreException {
     PipelineConfiguration pipelineConf =  pipelineStore.save(user, name, tag, tagDescription, pipeline);
-    pipelineInfoMap.put(PipelineDirectoryUtil.getEscapedPipelineName(name), pipelineConf.getInfo());
+    pipelineInfoMap.put(name, pipelineConf.getInfo());
     return pipelineConf;
   }
 

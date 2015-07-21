@@ -1443,7 +1443,7 @@ angular
       $scope.activeConfigStatus = $rootScope.common.pipelineStatusMap[routeParamPipelineName];
     });
 
-    $rootScope.$watch('common.pipelineStatusMap.' + routeParamPipelineName, function() {
+    $rootScope.$watch('common.pipelineStatusMap["' + routeParamPipelineName + '"]', function() {
       var oldActiveConfigStatus = $scope.activeConfigStatus || {};
 
       $scope.isPipelineRunning = derivePipelineRunning();

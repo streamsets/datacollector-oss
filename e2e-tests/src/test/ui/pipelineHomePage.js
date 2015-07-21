@@ -145,6 +145,8 @@ describe('StreamSets Data Collector App', function() {
 
         element(by.css('[ng-click="toggleLibraryPanel()"]')).click();
 
+        browser.sleep(1000);
+
         element.all(by.repeater('pipeline in pipelines')).then(function(pipelines) {
           //Click dropdown toggle icon
           pipelines[1].element(by.css('.dropdown-toggle')).click();
