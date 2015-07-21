@@ -1264,19 +1264,6 @@ angular
       (pipelineStatus.status === 'RUNNING' || pipelineStatus.status === 'STARTING'));
     };
 
-    var derivePipelineStatus = function() {
-      var pipelineStatus = $rootScope.common.pipelineStatusMap[routeParamPipelineName],
-        config = $scope.pipelineConfig;
-
-      if(pipelineStatus && config && pipelineStatus.name === config.info.name) {
-        return pipelineStatus;
-      } else {
-        return {
-          status: 'STOPPED'
-        };
-      }
-    };
-
     /**
      * Save Rules Update
      * @param rules
@@ -1453,16 +1440,16 @@ angular
 
     $scope.$watch('pipelineConfig.info.name', function() {
       $scope.isPipelineRunning = derivePipelineRunning();
-      $scope.activeConfigStatus = derivePipelineStatus();
+      $scope.activeConfigStatus = $rootScope.common.pipelineStatusMap[routeParamPipelineName];
     });
 
-    $rootScope.$watch('common.pipelineStatus', function() {
-      var oldActiveConfigStatus = $scope.activeConfigStatus;
+    $rootScope.$watch('common.pipelineStatusMap.' + routeParamPipelineName, function() {
+      var oldActiveConfigStatus = $scope.activeConfigStatus || {};
 
       $scope.isPipelineRunning = derivePipelineRunning();
-      $scope.activeConfigStatus = derivePipelineStatus();
+      $scope.activeConfigStatus = $rootScope.common.pipelineStatusMap[routeParamPipelineName] || {};
 
-      if(oldActiveConfigStatus.lastStatusChange !== $scope.activeConfigStatus.lastStatusChange &&
+      if(oldActiveConfigStatus.timeStamp !== $scope.activeConfigStatus.timeStamp &&
         $scope.activeConfigStatus.status === 'ERROR') {
         $rootScope.common.errors = [$scope.activeConfigStatus.message];
       }
