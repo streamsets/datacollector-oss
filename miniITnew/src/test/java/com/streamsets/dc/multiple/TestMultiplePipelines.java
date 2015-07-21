@@ -351,7 +351,7 @@ public class TestMultiplePipelines {
     for(Map.Entry<String, String> e : getPipelineNameAndRev().entrySet()) {
       Assert.assertEquals("RUNNING", VerifyUtils.getPipelineState(serverURI, e.getKey(), e.getValue()));
       Thread.sleep(2000);
-      Map<String, Map<String, Integer>> metrics = VerifyUtils.getMetrics(serverURI, e.getKey(), e.getValue());
+      Map<String, Map<String, Object>> metrics = VerifyUtils.getCountersFromMetrics(serverURI, e.getKey(), e.getValue());
 
       Assert.assertTrue(VerifyUtils.getSourceOutputRecords(metrics) > 0);
       Assert.assertTrue(VerifyUtils.getSourceInputRecords(metrics) == 0);

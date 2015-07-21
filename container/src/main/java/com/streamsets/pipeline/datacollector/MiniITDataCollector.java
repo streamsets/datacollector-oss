@@ -202,4 +202,9 @@ public class MiniITDataCollector implements DataCollector {
     return sdcURLList;
   }
 
+  @Override
+  public String storeRules(String name, String tag, String ruleDefinitionsJsonString) throws Exception {
+    throw new UnsupportedOperationException("Unsupported");
+  }
+
 }

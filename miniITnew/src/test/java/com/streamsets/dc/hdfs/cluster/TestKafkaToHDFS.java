@@ -127,7 +127,7 @@ public class TestKafkaToHDFS {
     List<URI> list = miniSDC.getListOfSlaveSDCURI();
     Assert.assertTrue(list != null && !list.isEmpty());
 
-    Map<String, Map<String, Integer>> countersMap = VerifyUtils.getCounters(list, "cluster_kafka_hdfs", "0");
+    Map<String, Map<String, Object>> countersMap = VerifyUtils.getCounters(list, "cluster_kafka_hdfs", "0");
     Assert.assertNotNull(countersMap);
     Assert.assertEquals("Output records counters for source should be equal to " + RECORDS_PRODUCED, RECORDS_PRODUCED,
       VerifyUtils.getSourceOutputRecords(countersMap));

@@ -53,7 +53,7 @@ public abstract class TestPipelineRunStandalone {
       miniSDC.createAndStartPipeline(getPipelineJson());
       //FIXME<Hari>: Do we need to wait for 5 seconds?
       Thread.sleep(5000);
-      Map<String, Map<String, Integer>> countersMap = VerifyUtils.getMetrics(serverURI, getPipelineName(),
+      Map<String, Map<String, Object>> countersMap = VerifyUtils.getCountersFromMetrics(serverURI, getPipelineName(),
         getPipelineRev());
       int recordsInTarget = getRecordsInTarget();
       int recordsInOrigin = getRecordsInOrigin();

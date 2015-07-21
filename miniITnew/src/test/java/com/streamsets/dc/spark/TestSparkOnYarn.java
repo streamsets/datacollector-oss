@@ -135,7 +135,7 @@ public class TestSparkOnYarn {
       Thread.sleep(60000);
       List<URI> list = miniSDC.getListOfSlaveSDCURI();
       assertTrue(list != null && !list.isEmpty());
-      Map<String, Map<String, Integer>> countersMap = VerifyUtils.getCounters(list, "admin", "0");
+      Map<String, Map<String, Object>> countersMap = VerifyUtils.getCounters(list, "admin", "0");
       assertNotNull(countersMap);
       assertEquals("Output records counters for source should be equal to " + expectedRecords, expectedRecords,
         VerifyUtils.getSourceOutputRecords(countersMap));

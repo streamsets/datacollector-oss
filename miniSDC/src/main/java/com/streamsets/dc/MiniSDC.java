@@ -92,6 +92,13 @@ public class MiniSDC {
     dataCollector.createPipeline(pipelineJson);
   }
 
+  public String createRules(String name, String tag, String rulesJson) throws Exception {
+    if(dataCollector == null) {
+      throw new IllegalStateException("DataCollector is not initialized.");
+    }
+    return dataCollector.storeRules(name, tag, rulesJson);
+  }
+
   public void startPipeline() throws Exception {
     if(dataCollector == null) {
       throw new IllegalStateException("DataCollector is not initialized.");

@@ -27,4 +27,6 @@ public interface DataCollector {
 
   public List<URI> getWorkerList() throws URISyntaxException;
 
+  public String storeRules(String name, String tag, String ruleDefinition) throws Exception;
+
 }

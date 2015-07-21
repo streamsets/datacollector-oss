@@ -18,7 +18,6 @@ import com.streamsets.dc.execution.Snapshot;
 import com.streamsets.dc.execution.SnapshotInfo;
 import com.streamsets.dc.execution.SnapshotStore;
 import com.streamsets.dc.execution.StateListener;
-import com.streamsets.dc.execution.alerts.AlertManager;
 import com.streamsets.dc.execution.metrics.MetricsEventRunnable;
 import com.streamsets.dc.execution.runner.common.Constants;
 import com.streamsets.dc.execution.runner.common.DataObserverRunnable;

@@ -108,7 +108,7 @@ public abstract class TestPipelineOperationsBase {
   private void testMetrics(URI serverURI) throws IOException, InterruptedException {
     Assert.assertEquals("RUNNING", VerifyUtils.getPipelineState(serverURI, getPipelineName(), getPipelineRev()));
     Thread.sleep(2000);
-    Map<String, Map<String, Integer>> metrics = VerifyUtils.getMetrics(serverURI, getPipelineName(), getPipelineRev());
+    Map<String, Map<String, Object>> metrics = VerifyUtils.getCountersFromMetrics(serverURI, getPipelineName(), getPipelineRev());
 
     Assert.assertTrue(VerifyUtils.getSourceOutputRecords(metrics) > 0);
     Assert.assertTrue(VerifyUtils.getSourceInputRecords(metrics) == 0);

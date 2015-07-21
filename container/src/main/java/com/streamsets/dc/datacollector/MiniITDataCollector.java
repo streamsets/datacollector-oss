@@ -15,6 +15,7 @@ import com.streamsets.dc.main.PipelineTask;
 import com.streamsets.pipeline.DataCollector;
 import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.config.PipelineConfiguration;
+import com.streamsets.pipeline.config.RuleDefinitions;
 import com.streamsets.pipeline.http.ServerNotYetRunningException;
 import com.streamsets.pipeline.json.ObjectMapperFactory;
 import com.streamsets.pipeline.main.BuildInfo;
@@ -22,6 +23,7 @@ import com.streamsets.pipeline.main.LogConfigurator;
 import com.streamsets.pipeline.main.RuntimeInfo;
 import com.streamsets.pipeline.restapi.bean.BeanHelper;
 import com.streamsets.pipeline.restapi.bean.PipelineConfigurationJson;
+import com.streamsets.pipeline.restapi.bean.RuleDefinitionsJson;
 import com.streamsets.pipeline.stagelibrary.StageLibraryTask;
 import com.streamsets.pipeline.store.PipelineStoreException;
 import com.streamsets.pipeline.store.PipelineStoreTask;
@@ -206,6 +208,16 @@ public class MiniITDataCollector implements DataCollector {
       sdcURLList.add(new URI(callBackInfo.getSdcURL()));
     }
     return sdcURLList;
+  }
+
+  @Override
+  public String storeRules(String name, String tag, String ruleDefinitionsJsonString) throws Exception {
+    Utils.checkNotNull(ruleDefinitionsJsonString, "Rule Definition Json string");
+    ObjectMapper json = ObjectMapperFactory.getOneLine();
+    RuleDefinitionsJson ruleDefinitionsJson = json.readValue(ruleDefinitionsJsonString, RuleDefinitionsJson.class);
+    RuleDefinitions ruleDefinitions = BeanHelper.unwrapRuleDefinitions(ruleDefinitionsJson);
+    RuleDefinitions ruleDefinitions1 = pipelineTask.getPipelineStoreTask().storeRules(name, tag, ruleDefinitions);
+    return ObjectMapperFactory.get().writeValueAsString(BeanHelper.wrapRuleDefinitions(ruleDefinitions1));
   }
 
 }

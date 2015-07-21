@@ -6,6 +6,7 @@
 
 package com.streamsets.dc.datacollector;
 
+import com.streamsets.dc.callback.CallbackInfo;
 import com.streamsets.dc.execution.Manager;
 import com.streamsets.dc.execution.Runner;
 import com.streamsets.dc.execution.runner.common.PipelineInfo;
@@ -13,7 +14,6 @@ import com.streamsets.dc.main.MainSlavePipelineManagerModule;
 import com.streamsets.dc.main.PipelineTask;
 import com.streamsets.pipeline.DataCollector;
 import com.streamsets.pipeline.api.impl.Utils;
-import com.streamsets.dc.callback.CallbackInfo;
 import com.streamsets.pipeline.http.ServerNotYetRunningException;
 import com.streamsets.pipeline.main.BuildInfo;
 import com.streamsets.pipeline.main.LogConfigurator;
@@ -21,9 +21,7 @@ import com.streamsets.pipeline.main.RuntimeInfo;
 import com.streamsets.pipeline.runner.Pipeline;
 import com.streamsets.pipeline.task.Task;
 import com.streamsets.pipeline.task.TaskWrapper;
-
 import dagger.ObjectGraph;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -167,6 +165,11 @@ public class EmbeddedDataCollector implements DataCollector {
   @Override
   public void startPipeline(String pipelineJson) throws Exception {
     throw new UnsupportedOperationException("This method is not supported. Use \"startPipeline()\" method");
+  }
+
+  @Override
+  public String storeRules(String name, String tag, String ruleDefinitionsJsonString) throws Exception {
+    throw new UnsupportedOperationException("This method is not supported.");
   }
 
 }

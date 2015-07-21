@@ -33,7 +33,7 @@ public class TestSimpleMiniSDC {
       miniSDC.createAndStartPipeline(pipelineJson);
       URI serverURI = miniSDC.getServerURI();
       Thread.sleep(10000);
-      Map<String, Map<String, Integer>> countersMap = VerifyUtils.getMetrics(serverURI, "admin", "0");
+      Map<String, Map<String, Object>> countersMap = VerifyUtils.getCountersFromMetrics(serverURI, "admin", "0");
       assertEquals("Output records counter for source should be equal to" + expectedRecords, expectedRecords,
         VerifyUtils.getSourceOutputRecords(countersMap));
       assertEquals("Output records counter for target should be equal to" + expectedRecords, expectedRecords,

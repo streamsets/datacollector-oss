@@ -181,11 +181,16 @@ public class EmbeddedDataCollector implements DataCollector {
 
   @Override
   public List<URI> getWorkerList() throws URISyntaxException {
-    List<URI> sdcURLList = new ArrayList<URI>();
+    List<URI> sdcURLList = new ArrayList<>();
     for (CallbackInfo callBackInfo : pipelineManager.getSlaveCallbackList() ) {
       sdcURLList.add(new URI(callBackInfo.getSdcURL()));
     }
     return sdcURLList;
+  }
+
+  @Override
+  public String storeRules(String name, String tag, String ruleDefinitionsJsonString) throws Exception {
+    throw new UnsupportedOperationException("This method is not supported.");
   }
 
 }
