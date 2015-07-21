@@ -40,7 +40,6 @@ public class RuntimeInfo {
   public static final String STATIC_WEB_DIR = ".static-web.dir";
   public static final String TRANSIENT_ENVIRONMENT = "sdc.transient-env";
   public static final String UNDEF = "UNDEF";
-  // TODO -remove after refactoring
   public static final String CALLBACK_URL = "/rest/v1/cluster/callback";
   private final static String USER_ROLE = "user";
 

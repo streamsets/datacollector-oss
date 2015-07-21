@@ -319,28 +319,18 @@ public class ClusterProviderImpl implements ClusterProvider {
     File etcTarGz = new File(tempDir, "etc.tar.gz");
     try {
       etcDir = createDirectoryClone(etcDir, tempDir);
-      File pipelineFile;
-      if (sourceInfo.containsKey(ClusterModeConstants.CLUSTER_PIPELINE_USER)) {
-        PipelineInfo pipelineInfo = Utils.checkNotNull(pipelineConfiguration.getInfo(),
-          "Pipeline Info");
-        LOG.info("This is the new runner");
-        String pipelineName = pipelineInfo.getName();
-        File pipelineBaseDir = new File(etcDir, PipelineDirectoryUtil.PIPELINE_INFO_BASE_DIR);
-        File pipelineDir = new File(pipelineBaseDir, PipelineDirectoryUtil.getEscapedPipelineName(pipelineName));
-        if (!pipelineDir.exists()) {
-          pipelineDir.mkdirs();
-        }
-        pipelineFile = new File(pipelineDir, FilePipelineStoreTask.PIPELINE_FILE);
-        ObjectMapperFactory.getOneLine().writeValue(pipelineFile,
-          BeanHelper.wrapPipelineConfiguration(pipelineConfiguration));
-        File infoFile = new File(pipelineDir, FilePipelineStoreTask.INFO_FILE);
-        ObjectMapperFactory.getOneLine().writeValue(infoFile, BeanHelper.wrapPipelineInfo(pipelineInfo));
-      } else { // TODO - remove after refactoring
-        LOG.info("This is the old runner");
-        pipelineFile = new File(etcDir, "pipeline.json");
-        ObjectMapperFactory.getOneLine().writeValue(pipelineFile,
-          BeanHelper.wrapPipelineConfiguration(pipelineConfiguration));
+      PipelineInfo pipelineInfo = Utils.checkNotNull(pipelineConfiguration.getInfo(), "Pipeline Info");
+      String pipelineName = pipelineInfo.getName();
+      File pipelineBaseDir = new File(etcDir, PipelineDirectoryUtil.PIPELINE_INFO_BASE_DIR);
+      File pipelineDir = new File(pipelineBaseDir, PipelineDirectoryUtil.getEscapedPipelineName(pipelineName));
+      if (!pipelineDir.exists()) {
+        pipelineDir.mkdirs();
       }
+      File pipelineFile = new File(pipelineDir, FilePipelineStoreTask.PIPELINE_FILE);
+      ObjectMapperFactory.getOneLine().writeValue(pipelineFile,
+        BeanHelper.wrapPipelineConfiguration(pipelineConfiguration));
+      File infoFile = new File(pipelineDir, FilePipelineStoreTask.INFO_FILE);
+      ObjectMapperFactory.getOneLine().writeValue(infoFile, BeanHelper.wrapPipelineInfo(pipelineInfo));
       File sdcPropertiesFile = new File(etcDir, "sdc.properties");
       rewriteProperties(sdcPropertiesFile, sourceConfigs, sourceInfo);
       TarFileCreator.createTarGz(etcDir, etcTarGz);

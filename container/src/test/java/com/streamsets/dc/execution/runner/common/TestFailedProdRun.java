@@ -71,8 +71,6 @@ public class TestFailedProdRun {
     runner.setOffsetTracker(tracker);
     PipelineConfiguration pipelineConfiguration = MockStages.createPipelineConfigurationSourceProcessorTarget();
     pipelineConfiguration.getStages().remove(2);
-
-
     ProductionPipeline pipeline = new ProductionPipelineBuilder(PIPELINE_NAME, REVISION, runtimeInfo,
       MockStages.createStageLibrary(), runner, null).build(pipelineConfiguration);
 

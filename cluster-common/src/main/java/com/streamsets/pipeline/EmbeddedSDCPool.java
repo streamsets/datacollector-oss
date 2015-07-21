@@ -52,22 +52,7 @@ public class EmbeddedSDCPool {
   protected EmbeddedSDC createEmbeddedSDC() throws Exception {
     final EmbeddedSDC embeddedSDC = new EmbeddedSDC();
     Object source;
-    if (properties.getProperty("cluster.pipeline.user") == null) { // TODO - remove after refactoring
-      LOG.info("Running the old way");
-      source = BootstrapCluster.createPipeline(properties, pipelineJson, new Runnable() { // post-batch runnable
-          @Override
-          public void run() {
-            if (!embeddedSDC.inErrorState()) {
-              LOG.debug("Returning SDC instance {} back to queue", embeddedSDC.getInstanceId());
-              returnEmbeddedSDC(embeddedSDC);
-            } else {
-              LOG.info("SDC is in error state, not returning to pool");
-            }
-          }
-        });
-    } else {
-      LOG.info("Running the new way");
-      source = BootstrapCluster.startPipeline(new Runnable() { // post-batch runnable
+    source = BootstrapCluster.startPipeline(new Runnable() { // post-batch runnable
         @Override
         public void run() {
           if (!embeddedSDC.inErrorState()) {
@@ -78,7 +63,6 @@ public class EmbeddedSDCPool {
           }
         }
       });
-    }
 
     if (source instanceof DSource) {
       long startTime = System.currentTimeMillis();

@@ -72,23 +72,16 @@ public class BootstrapCluster {
     properties = new Properties();
     properties.load(new FileInputStream(sdcProperties));
 
-    File pipelineJsonFile;
-    if (properties.getProperty("cluster.pipeline.user") != null) {
-      System.out.println("This is being used by the refactored code");
-      System.setProperty("sdc.data.dir", etcRoot);
-      File basePipelineDir = new File(etcRoot, "pipelines");
-      String pipelineName = properties.getProperty("cluster.pipeline.name");
-      if (pipelineName == null) {
-        throw new IllegalStateException("Pipeline to be run cannot be null");
-      }
-      File pipelineDir = new File(basePipelineDir, pipelineName);
-      pipelineJsonFile = new File(pipelineDir, "pipeline.json");
-    } else { // TODO - remove after refactoring
-      System.out.println("This is being used by the old code");
-      pipelineJsonFile = new File(etcRoot, "pipeline.json");
+    System.setProperty("sdc.data.dir", etcRoot);
+    File basePipelineDir = new File(etcRoot, "pipelines");
+    String pipelineName = properties.getProperty("cluster.pipeline.name");
+    if (pipelineName == null) {
+      throw new IllegalStateException("Pipeline to be run cannot be null");
     }
-    SDCClassLoader.setDebug(Boolean.getBoolean("pipeline.bootstrap.debug") ||
-      Boolean.parseBoolean(properties.getProperty("pipeline.bootstrap.debug")));
+    File pipelineDir = new File(basePipelineDir, pipelineName);
+    File pipelineJsonFile = new File(pipelineDir, "pipeline.json");
+    SDCClassLoader.setDebug(Boolean.getBoolean("pipeline.bootstrap.debug")
+      || Boolean.parseBoolean(properties.getProperty("pipeline.bootstrap.debug")));
 
     if (!pipelineJsonFile.isFile()) {
       String msg = "Pipeline JSON file does not exist at expected location: " + pipelineJsonFile;

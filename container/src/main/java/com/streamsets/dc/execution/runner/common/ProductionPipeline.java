@@ -51,8 +51,8 @@ public class ProductionPipeline {
   }
 
   private void stateChanged(PipelineStatus pipelineStatus, String message, Map<String, Object> attributes)
-      throws PipelineRuntimeException {
-    if (stateListener!=null) {
+    throws PipelineRuntimeException {
+    if (stateListener != null) {
       stateListener.stateChanged(pipelineStatus, message, attributes);
     }
   }
@@ -64,7 +64,16 @@ public class ProductionPipeline {
     try {
       try {
         LOG.debug("Initializing");
-        List<Issue> issues = pipeline.init();
+        List<Issue> issues = null;
+        try {
+          issues = pipeline.init();
+        } catch (Exception e) {
+          if (!wasStopped()) {
+            LOG.warn("Error while starting: {}", e.getMessage(), e);
+            stateChanged(PipelineStatus.START_ERROR, e.getMessage(), null);
+          }
+          throw new PipelineRuntimeException(ContainerError.CONTAINER_0702, e.getMessage(), e);
+        }
         if (issues.isEmpty()) {
           try {
             stateChanged(PipelineStatus.RUNNING, null, null);
