@@ -7,6 +7,7 @@ package com.streamsets.dc.execution.runner.common;
 
 import com.google.common.annotations.VisibleForTesting;
 import com.streamsets.dc.callback.CallbackInfo;
+import com.streamsets.dc.execution.PipelineInfo;
 import com.streamsets.dc.execution.PipelineState;
 import com.streamsets.dc.execution.Runner;
 import com.streamsets.dc.execution.Snapshot;
@@ -17,7 +18,6 @@ import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.impl.ErrorMessage;
 import com.streamsets.pipeline.api.impl.Utils;
-import com.streamsets.pipeline.config.RuleDefinition;
 import com.streamsets.pipeline.lib.executor.SafeScheduledExecutorService;
 import com.streamsets.pipeline.metrics.MetricsEventListener;
 import com.streamsets.pipeline.runner.Pipeline;

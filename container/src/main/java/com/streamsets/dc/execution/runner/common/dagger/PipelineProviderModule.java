@@ -18,6 +18,8 @@ import com.streamsets.dc.execution.runner.common.ProductionObserver;
 import com.streamsets.dc.execution.runner.common.ProductionPipelineBuilder;
 import com.streamsets.dc.execution.runner.common.ProductionPipelineRunnable;
 import com.streamsets.dc.execution.runner.common.ProductionPipelineRunner;
+import com.streamsets.dc.execution.runner.common.RulesConfigLoader;
+import com.streamsets.dc.execution.runner.common.ThreadHealthReporter;
 import com.streamsets.dc.execution.snapshot.file.FileSnapshotStore;
 import com.streamsets.pipeline.email.EmailSender;
 import com.streamsets.pipeline.main.RuntimeInfo;
@@ -26,12 +28,11 @@ import com.streamsets.pipeline.runner.Observer;
 import com.streamsets.pipeline.runner.PipelineRunner;
 import com.streamsets.pipeline.runner.SourceOffsetTracker;
 import com.streamsets.pipeline.runner.production.ProductionSourceOffsetTracker;
-import com.streamsets.pipeline.runner.production.RulesConfigLoader;
 import com.streamsets.pipeline.runner.production.RulesConfigLoaderRunnable;
-import com.streamsets.pipeline.runner.production.ThreadHealthReporter;
 import com.streamsets.pipeline.stagelibrary.StageLibraryTask;
 import com.streamsets.pipeline.store.PipelineStoreTask;
 import com.streamsets.pipeline.util.Configuration;
+
 import dagger.Module;
 import dagger.Provides;
 

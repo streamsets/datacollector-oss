@@ -7,13 +7,15 @@ package com.streamsets.pipeline.http;
 
 
 import com.google.common.collect.ImmutableSet;
-import com.streamsets.pipeline.main.PipelineTaskModule;
+import com.streamsets.dc.main.MainStandalonePipelineManagerModule;
 import com.streamsets.pipeline.main.RuntimeInfo;
 import com.streamsets.pipeline.main.RuntimeModule;
 import com.streamsets.pipeline.task.Task;
 import com.streamsets.pipeline.task.TaskWrapper;
 import com.streamsets.pipeline.util.Configuration;
+
 import dagger.ObjectGraph;
+
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
@@ -21,6 +23,7 @@ import org.junit.Test;
 
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.core.Response;
+
 import java.io.File;
 import java.io.FileWriter;
 import java.io.Writer;
@@ -96,7 +99,7 @@ public class TestTokenAuthentication {
       PosixFilePermission.OWNER_READ,
       PosixFilePermission.OWNER_WRITE));
 
-    ObjectGraph dagger = ObjectGraph.create(PipelineTaskModule.class);
+    ObjectGraph dagger = ObjectGraph.create(MainStandalonePipelineManagerModule.class);
 
     runtimeInfo = dagger.get(RuntimeInfo.class);
     runtimeInfo.setAttribute(RuntimeInfo.LOG4J_CONFIGURATION_URL_ATTR, new URL("file://" + baseDir + "/log4j.properties"));

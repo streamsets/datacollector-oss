@@ -13,7 +13,6 @@ import com.streamsets.dc.execution.alerts.DataRuleEvaluator;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.config.DataRuleDefinition;
 import com.streamsets.pipeline.metrics.MetricsConfigurator;
-import com.streamsets.pipeline.prodmanager.Constants;
 import com.streamsets.pipeline.runner.production.DataRulesEvaluationRequest;
 import com.streamsets.pipeline.runner.production.PipelineErrorNotificationRequest;
 import com.streamsets.pipeline.runner.production.RulesConfigurationChangeRequest;
@@ -126,8 +125,8 @@ public class DataObserverRunner {
     return Collections.emptyList();
   }
 
-  @VisibleForTesting
-  RulesConfigurationChangeRequest getRulesConfigurationChangeRequest() {
+  @VisibleForTesting // make package private after refactoring
+  public RulesConfigurationChangeRequest getRulesConfigurationChangeRequest() {
     return this.rulesConfigurationChangeRequest;
   }
 

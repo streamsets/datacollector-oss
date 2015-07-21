@@ -16,9 +16,9 @@ import com.streamsets.pipeline.metrics.MetricsConfigurator;
 import com.streamsets.pipeline.runner.Pipeline;
 import com.streamsets.pipeline.runner.PipelineRuntimeException;
 import com.streamsets.pipeline.runner.production.ProductionSourceOffsetTracker;
-import com.streamsets.pipeline.runner.production.ThreadHealthReporter;
 import com.streamsets.pipeline.util.ContainerError;
 import com.streamsets.pipeline.validation.Issue;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

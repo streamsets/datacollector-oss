@@ -7,13 +7,16 @@ package com.streamsets.pipeline.http;
 
 import com.streamsets.pipeline.json.ObjectMapperFactory;
 import com.streamsets.pipeline.log.LogUtils;
-import com.streamsets.pipeline.main.PipelineTaskModule;
+import com.streamsets.dc.main.MainStandalonePipelineManagerModule;
+import com.streamsets.dc.main.PipelineTaskModule;
 import com.streamsets.pipeline.main.RuntimeInfo;
 import com.streamsets.pipeline.main.RuntimeModule;
 import com.streamsets.pipeline.task.Task;
 import com.streamsets.pipeline.task.TaskWrapper;
 import com.streamsets.pipeline.util.Configuration;
+
 import dagger.ObjectGraph;
+
 import org.apache.commons.io.IOUtils;
 import org.junit.After;
 import org.junit.Assert;
@@ -100,7 +103,7 @@ public class TestLogServlet {
       writer = new FileWriter(new File(System.getProperty(RuntimeModule.SDC_PROPERTY_PREFIX + RuntimeInfo.CONFIG_DIR), "sdc.properties"));
       conf.save(writer);
       writer.close();
-      ObjectGraph dagger = ObjectGraph.create(PipelineTaskModule.class);
+      ObjectGraph dagger = ObjectGraph.create(MainStandalonePipelineManagerModule.class);
       RuntimeInfo runtimeInfo = dagger.get(RuntimeInfo.class);
       runtimeInfo.setAttribute(RuntimeInfo.LOG4J_CONFIGURATION_URL_ATTR, new URL("file://" + baseDir + "/log4j.properties"));
       server = dagger.get(TaskWrapper.class);
@@ -109,7 +112,7 @@ public class TestLogServlet {
       server.run();
       return "http://127.0.0.1:" + port;
     } catch (Exception e) {
-      System.out.println();
+      System.out.println("Got exception " + e);
       return null;
     }
   }

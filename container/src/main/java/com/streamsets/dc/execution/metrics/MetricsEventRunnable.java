@@ -9,6 +9,7 @@ package com.streamsets.dc.execution.metrics;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.streamsets.dc.execution.EventListenerManager;
 import com.streamsets.dc.execution.Runner;
+import com.streamsets.dc.execution.runner.common.ThreadHealthReporter;
 import com.streamsets.dc.callback.CallbackInfo;
 import com.streamsets.pipeline.json.ObjectMapperFactory;
 import com.streamsets.pipeline.main.RuntimeInfo;
@@ -16,12 +17,13 @@ import com.streamsets.pipeline.metrics.MetricsEventListener;
 import com.streamsets.pipeline.restapi.bean.CounterJson;
 import com.streamsets.pipeline.restapi.bean.MeterJson;
 import com.streamsets.pipeline.restapi.bean.MetricRegistryJson;
-import com.streamsets.pipeline.runner.production.ThreadHealthReporter;
 import com.streamsets.pipeline.store.PipelineStoreException;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
+
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;

@@ -8,8 +8,8 @@ package com.streamsets.dc.datacollector;
 
 import com.streamsets.dc.callback.CallbackInfo;
 import com.streamsets.dc.execution.Manager;
+import com.streamsets.dc.execution.PipelineInfo;
 import com.streamsets.dc.execution.Runner;
-import com.streamsets.dc.execution.runner.common.PipelineInfo;
 import com.streamsets.dc.main.MainSlavePipelineManagerModule;
 import com.streamsets.dc.main.PipelineTask;
 import com.streamsets.pipeline.DataCollector;

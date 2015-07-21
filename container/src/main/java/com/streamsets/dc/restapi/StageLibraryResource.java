@@ -6,7 +6,7 @@
 package com.streamsets.dc.restapi;
 
 import com.google.common.annotations.VisibleForTesting;
-import com.streamsets.pipeline.alerts.DataRuleEvaluator;
+import com.streamsets.dc.execution.alerts.DataRuleEvaluator;
 import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.config.StageDefinition;
 import com.streamsets.pipeline.definition.ELDefinitionExtractor;

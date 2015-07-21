@@ -5,7 +5,7 @@
  */
 package com.streamsets.dc.execution.executor;
 
-import com.streamsets.dc.execution.common.Constants;
+import com.streamsets.dc.execution.common.ExecutorConstants;
 import com.streamsets.pipeline.lib.executor.SafeScheduledExecutorService;
 import com.streamsets.pipeline.main.RuntimeModule;
 import com.streamsets.pipeline.util.Configuration;
@@ -31,19 +31,19 @@ public class ExecutorModule {
   @Provides @Singleton @Named("previewExecutor")
   public SafeScheduledExecutorService providePreviewExecutor(Configuration configuration) {
     return new SafeScheduledExecutorService(
-      configuration.get(Constants.PREVIEWER_THREAD_POOL_SIZE_KEY, Constants.PREVIEWER_THREAD_POOL_SIZE_DEFAULT), "preview");
+      configuration.get(ExecutorConstants.PREVIEWER_THREAD_POOL_SIZE_KEY, ExecutorConstants.PREVIEWER_THREAD_POOL_SIZE_DEFAULT), "preview");
   }
 
   @Provides @Singleton @Named("runnerExecutor")
   public SafeScheduledExecutorService provideRunnerExecutor(Configuration configuration) {
     return new SafeScheduledExecutorService(
-      configuration.get(Constants.RUNNER_THREAD_POOL_SIZE_KEY, Constants.RUNNER_THREAD_POOL_SIZE_DEFAULT), "runner");
+      configuration.get(ExecutorConstants.RUNNER_THREAD_POOL_SIZE_KEY, ExecutorConstants.RUNNER_THREAD_POOL_SIZE_DEFAULT), "runner");
   }
 
   @Provides @Singleton @Named("asyncExecutor")
   public SafeScheduledExecutorService provideAsyncExecutor(Configuration configuration) {
     return new SafeScheduledExecutorService(
-      configuration.get(Constants.ASYNC_EXECUTOR_THREAD_POOL_SIZE_KEY, Constants.ASYNC_EXECUTOR_THREAD_POOL_SIZE_DEFAULT),
+      configuration.get(ExecutorConstants.ASYNC_EXECUTOR_THREAD_POOL_SIZE_KEY, ExecutorConstants.ASYNC_EXECUTOR_THREAD_POOL_SIZE_DEFAULT),
       "asyncExecutor");
   }
 
@@ -51,7 +51,7 @@ public class ExecutorModule {
   public SafeScheduledExecutorService provideManagerExecutor(Configuration configuration) {
     //thread used to evict runners from the cache in manager
     return new SafeScheduledExecutorService(
-      configuration.get(Constants.MANAGER_EXECUTOR_THREAD_POOL_SIZE_KEY, Constants.MANAGER_EXECUTOR_THREAD_POOL_SIZE_DEFAULT),
+      configuration.get(ExecutorConstants.MANAGER_EXECUTOR_THREAD_POOL_SIZE_KEY, ExecutorConstants.MANAGER_EXECUTOR_THREAD_POOL_SIZE_DEFAULT),
       "managerExecutor");
   }
 }

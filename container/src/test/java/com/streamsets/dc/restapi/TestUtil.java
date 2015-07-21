@@ -5,18 +5,14 @@
  */
 package com.streamsets.dc.restapi;
 
-import com.codahale.metrics.MetricRegistry;
-import com.google.common.collect.ImmutableList;
 import com.streamsets.pipeline.api.Batch;
 import com.streamsets.pipeline.api.BatchMaker;
 import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.ExecutionMode;
-import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.StageUpgrader;
 import com.streamsets.pipeline.api.base.BaseSource;
 import com.streamsets.pipeline.api.base.BaseTarget;
-import com.streamsets.pipeline.api.impl.ErrorMessage;
 import com.streamsets.pipeline.config.ConfigDefinition;
 import com.streamsets.pipeline.config.StageDefinition;
 import com.streamsets.pipeline.config.StageLibraryDefinition;
@@ -24,15 +20,7 @@ import com.streamsets.pipeline.config.StageType;
 import com.streamsets.pipeline.el.ElConstantDefinition;
 import com.streamsets.pipeline.el.ElFunctionDefinition;
 import com.streamsets.pipeline.main.RuntimeInfo;
-import com.streamsets.pipeline.prodmanager.PipelineManagerException;
-import com.streamsets.pipeline.prodmanager.PipelineState;
-import com.streamsets.pipeline.prodmanager.StandalonePipelineManagerTask;
-import com.streamsets.pipeline.prodmanager.State;
-import com.streamsets.pipeline.record.RecordImpl;
-import com.streamsets.pipeline.runner.PipelineRuntimeException;
-import com.streamsets.pipeline.snapshotstore.SnapshotStatus;
 import com.streamsets.pipeline.stagelibrary.StageLibraryTask;
-import com.streamsets.pipeline.store.PipelineStoreException;
 
 import org.glassfish.hk2.api.Factory;
 import org.mockito.Mockito;
@@ -206,90 +194,6 @@ public class TestUtil {
     }
 
   }
-
-  static class PipelineManagerTestInjector implements Factory<StandalonePipelineManagerTask> {
-
-    public PipelineManagerTestInjector() {
-    }
-
-    @Singleton
-    @Override
-    public StandalonePipelineManagerTask provide() {
-
-      StandalonePipelineManagerTask pipelineManager = Mockito.mock(StandalonePipelineManagerTask.class);
-      try {
-        Mockito.when(pipelineManager.startPipeline(PIPELINE_NAME, PIPELINE_REV)).thenReturn(new PipelineState(
-          PIPELINE_NAME, "2.0", State.RUNNING, "The pipeline is now running", System.currentTimeMillis(), null, null));
-      } catch (PipelineManagerException | StageException | PipelineRuntimeException | PipelineStoreException e) {
-        e.printStackTrace();
-      }
-
-      try {
-        Mockito.when(pipelineManager.stopPipeline(false)).thenReturn(
-          new PipelineState(PIPELINE_NAME, PIPELINE_REV, State.STOPPED, "The pipeline is not running",
-                            System.currentTimeMillis(), null, null));
-      } catch (PipelineManagerException e) {
-        e.printStackTrace();
-      }
-
-      Mockito.when(pipelineManager.getPipelineState()).thenReturn(new PipelineState(PIPELINE_NAME, PIPELINE_REV,
-                                                                                    State.STOPPED
-        , "Pipeline is not running", System.currentTimeMillis(), null, null));
-
-      try {
-        Mockito.when(pipelineManager.getSnapshot(PIPELINE_NAME, DEFAULT_PIPELINE_REV, SNAPSHOT_NAME))
-          .thenReturn(getClass().getClassLoader().getResourceAsStream("snapshot.json"))
-          .thenReturn(null);
-      } catch (PipelineManagerException e) {
-        e.printStackTrace();
-      }
-
-      Mockito.when(pipelineManager.getSnapshotStatus(SNAPSHOT_NAME)).thenReturn(new SnapshotStatus(false, true));
-
-      Mockito.when(pipelineManager.getMetrics()).thenReturn(new MetricRegistry());
-
-      List<PipelineState> states = new ArrayList<>();
-      states.add(new PipelineState(PIPELINE_NAME, "1", State.STOPPED, "", System.currentTimeMillis(), null, null));
-      states.add(new PipelineState(PIPELINE_NAME, "1", State.RUNNING, "", System.currentTimeMillis(), null, null));
-      states.add(new PipelineState(PIPELINE_NAME, "1", State.STOPPED, "", System.currentTimeMillis(), null, null));
-      try {
-        Mockito.when(pipelineManager.getHistory(PIPELINE_NAME, DEFAULT_PIPELINE_REV, false)).thenReturn(states);
-      } catch (PipelineManagerException e) {
-        e.printStackTrace();
-      }
-
-      Mockito.doNothing().when(pipelineManager).deleteSnapshot(PIPELINE_NAME, PIPELINE_REV, SNAPSHOT_NAME);
-
-      Record r = new RecordImpl("a", "b", "c".getBytes(), "d");
-      try {
-        Mockito.when(pipelineManager.getErrorRecords("myProcessorStage", 100)).thenReturn(
-          ImmutableList.of(r));
-      } catch (PipelineManagerException e) {
-        e.printStackTrace();
-      }
-
-      ErrorMessage em = new ErrorMessage("a", "b", 2L);
-      try {
-        Mockito.when(pipelineManager.getErrorMessages("myProcessorStage", 100)).thenReturn(
-          ImmutableList.of(em));
-      } catch (PipelineManagerException e) {
-        e.printStackTrace();
-      }
-
-      try {
-        Mockito.doNothing().when(pipelineManager).resetOffset(PIPELINE_NAME, PIPELINE_REV);
-      } catch (PipelineManagerException e) {
-        e.printStackTrace();
-      }
-
-      return pipelineManager;
-    }
-
-    @Override
-    public void dispose(StandalonePipelineManagerTask pipelineManagerTask) {
-    }
-  }
-
 
   public static class RuntimeInfoTestInjector implements Factory<RuntimeInfo> {
     @Singleton

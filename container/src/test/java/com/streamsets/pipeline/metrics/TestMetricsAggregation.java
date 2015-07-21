@@ -6,21 +6,23 @@
 
 package com.streamsets.pipeline.metrics;
 
-import com.streamsets.pipeline.callback.CallbackInfo;
+import com.streamsets.dc.callback.CallbackInfo;
+import com.streamsets.dc.execution.EventListenerManager;
+import com.streamsets.dc.execution.PipelineStatus;
+import com.streamsets.dc.execution.Runner;
+import com.streamsets.dc.execution.manager.PipelineStateImpl;
+import com.streamsets.dc.execution.metrics.MetricsEventRunnable;
 import com.streamsets.pipeline.main.RuntimeInfo;
-import com.streamsets.pipeline.prodmanager.PipelineManager;
-import com.streamsets.pipeline.prodmanager.PipelineState;
-import com.streamsets.pipeline.prodmanager.State;
 import com.streamsets.pipeline.restapi.bean.CounterJson;
 import com.streamsets.pipeline.restapi.bean.MeterJson;
 import com.streamsets.pipeline.restapi.bean.MetricRegistryJson;
+
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
 
 import java.io.IOException;
-import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -29,9 +31,9 @@ import java.util.HashSet;
 import java.util.Map;
 
 public class TestMetricsAggregation {
-  PipelineManager pipelineManager;
   RuntimeInfo runtimeInfo;
   Collection<CallbackInfo> callbackInfoCollection;
+  Runner runner;
 
   @Before
   public void setup() throws Exception {
@@ -39,25 +41,25 @@ public class TestMetricsAggregation {
 
     callbackInfoCollection = new HashSet<>();
 
-    callbackInfoCollection.add(new CallbackInfo(null, "worker1", null, null, null, null, null,
+    callbackInfoCollection.add(new CallbackInfo(null, null, null, null, "worker1", null, null, null, null, null,
       readFile(classLoader.getResource("metrics/metrics1.json").getFile())));
 
-    callbackInfoCollection.add(new CallbackInfo(null, "worker2", null, null, null, null, null,
+    callbackInfoCollection.add(new CallbackInfo(null, null, null, null, "worker2", null, null, null, null, null,
       readFile(classLoader.getResource("metrics/metrics2.json").getFile())));
 
-    callbackInfoCollection.add(new CallbackInfo(null, "worker3", null, null, null, null, null,
+    callbackInfoCollection.add(new CallbackInfo(null, null, null, null, "worker3", null, null, null, null, null,
       readFile(classLoader.getResource("metrics/metrics3.json").getFile())));
 
-    callbackInfoCollection.add(new CallbackInfo(null, "worker4", null, null, null, null, null,
+    callbackInfoCollection.add(new CallbackInfo(null, null, null, null, "worker4", null, null, null, null, null,
       readFile(classLoader.getResource("metrics/metrics4.json").getFile())));
 
 
-    pipelineManager = Mockito.mock(PipelineManager.class);
-    Mockito.when(pipelineManager.getPipelineState())
-      .thenReturn(new PipelineState("samplePipeline", "1.0.0",
-        State.RUNNING, "The pipeline is not running", System.currentTimeMillis(), null, null));
+    runner = Mockito.mock(Runner.class);
+    Mockito.when(runner.getState())
+      .thenReturn(new PipelineStateImpl("aaa", "samplePipeline", "1.0.0",
+        PipelineStatus.RUNNING, "The pipeline is not running", System.currentTimeMillis(), null, null));
 
-    Mockito.when(pipelineManager.getSlaveCallbackList())
+    Mockito.when(runner.getSlaveCallbackList())
       .thenReturn(callbackInfoCollection);
 
     runtimeInfo = Mockito.mock(RuntimeInfo.class);
@@ -73,7 +75,7 @@ public class TestMetricsAggregation {
 
   @Test
   public void testAggregatedMetrics() {
-    MetricsEventRunnable metricsEventRunnable = new MetricsEventRunnable(pipelineManager, runtimeInfo, 2000, null);
+    MetricsEventRunnable metricsEventRunnable = new MetricsEventRunnable(runtimeInfo, 2000, runner, null, new EventListenerManager());
     MetricRegistryJson aggregatedMetrics = metricsEventRunnable.getAggregatedMetrics();
 
     Map<String, CounterJson> counters = aggregatedMetrics.getCounters();

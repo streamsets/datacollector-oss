@@ -5,8 +5,7 @@
  */
 package com.streamsets.dc.execution.runner.cluster;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import com.codahale.metrics.MetricRegistry;
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Strings;
 import com.google.common.cache.Cache;
@@ -22,6 +21,7 @@ import com.streamsets.dc.execution.Snapshot;
 import com.streamsets.dc.execution.SnapshotInfo;
 import com.streamsets.dc.execution.cluster.ClusterHelper;
 import com.streamsets.dc.execution.runner.common.PipelineRunnerException;
+import com.streamsets.dc.execution.runner.common.ProductionPipelineBuilder;
 import com.streamsets.pipeline.alerts.AlertEventListener;
 import com.streamsets.pipeline.api.ClusterSource;
 import com.streamsets.pipeline.api.ExecutionMode;
@@ -34,23 +34,17 @@ import com.streamsets.dc.callback.CallbackInfo;
 import com.streamsets.pipeline.cluster.ApplicationState;
 import com.streamsets.pipeline.cluster.ClusterModeConstants;
 import com.streamsets.pipeline.cluster.ClusterPipelineStatus;
-import com.streamsets.pipeline.config.DeliveryGuarantee;
-import com.streamsets.pipeline.config.MemoryLimitConfiguration;
 import com.streamsets.pipeline.config.PipelineConfiguration;
-import com.streamsets.pipeline.config.RuleDefinition;
 import com.streamsets.pipeline.creation.PipelineBeanCreator;
 import com.streamsets.pipeline.creation.PipelineConfigBean;
-import com.streamsets.pipeline.json.ObjectMapperFactory;
 import com.streamsets.pipeline.lib.executor.SafeScheduledExecutorService;
 import com.streamsets.pipeline.main.RuntimeInfo;
-import com.streamsets.pipeline.metrics.MetricsEventListener;
 import com.streamsets.dc.execution.metrics.MetricsEventRunnable;
 import com.streamsets.dc.updatechecker.UpdateChecker;
 import com.streamsets.pipeline.runner.Pipeline;
 import com.streamsets.pipeline.runner.PipelineRuntimeException;
-import com.streamsets.pipeline.runner.production.ProductionPipeline;
-import com.streamsets.pipeline.runner.production.ProductionPipelineBuilder;
-import com.streamsets.pipeline.runner.production.ProductionPipelineRunner;
+import com.streamsets.dc.execution.runner.common.ProductionPipeline;
+import com.streamsets.dc.execution.runner.common.ProductionPipelineRunner;
 import com.streamsets.pipeline.stagelibrary.StageLibraryTask;
 import com.streamsets.pipeline.store.PipelineStoreException;
 import com.streamsets.pipeline.store.PipelineStoreTask;
@@ -464,7 +458,7 @@ public class ClusterRunner extends AbstractRunner {
   ClusterSourceInfo getClusterSourceInfo(String name, String rev, PipelineConfiguration pipelineConf)
     throws PipelineRuntimeException, StageException, PipelineStoreException {
 
-    ProductionPipeline p = createProductionPipeline(name, rev, pipelineConf);
+    ProductionPipeline p = createProductionPipeline(name, rev, configuration, pipelineConf);
     Pipeline pipeline = p.getPipeline();
     try {
       pipeline.init();
@@ -524,15 +518,15 @@ public class ClusterRunner extends AbstractRunner {
 
   }
 
-  private ProductionPipeline createProductionPipeline(String name, String rev,
+  private ProductionPipeline createProductionPipeline(String name, String rev, Configuration configuration,
     PipelineConfiguration pipelineConfiguration) throws PipelineStoreException, PipelineRuntimeException,
     StageException {
     ProductionPipelineRunner runner =
-      new ProductionPipelineRunner(runtimeInfo, null, DeliveryGuarantee.AT_LEAST_ONCE, name, rev, null, null,
-        new MemoryLimitConfiguration());
+      new ProductionPipelineRunner(name, rev, configuration, runtimeInfo, new MetricRegistry(),
+        null, null, null);
     ProductionPipelineBuilder builder =
-      new ProductionPipelineBuilder(stageLibrary, name, rev, runtimeInfo, pipelineConfiguration);
-    return builder.build(runner, null, null);
+      new ProductionPipelineBuilder(name, rev, runtimeInfo, stageLibrary,  runner, null);
+    return builder.build(pipelineConfiguration);
   }
 
   static class ManagerRunnable implements Runnable {

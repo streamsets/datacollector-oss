@@ -26,7 +26,6 @@ import com.streamsets.pipeline.config.MemoryLimitExceeded;
 import com.streamsets.pipeline.config.StageType;
 import com.streamsets.pipeline.main.RuntimeInfo;
 import com.streamsets.pipeline.metrics.MetricsConfigurator;
-import com.streamsets.pipeline.prodmanager.Constants;
 import com.streamsets.pipeline.record.HeaderImpl;
 import com.streamsets.pipeline.record.RecordImpl;
 import com.streamsets.pipeline.runner.BatchListener;
@@ -43,14 +42,15 @@ import com.streamsets.pipeline.runner.StageOutput;
 import com.streamsets.pipeline.runner.StagePipe;
 import com.streamsets.pipeline.runner.production.BadRecordsHandler;
 import com.streamsets.pipeline.runner.production.PipelineErrorNotificationRequest;
-import com.streamsets.pipeline.runner.production.ThreadHealthReporter;
 import com.streamsets.pipeline.util.ContainerError;
 import com.streamsets.pipeline.util.PipelineException;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
 import javax.inject.Named;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -96,18 +96,18 @@ public class ProductionPipelineRunner implements PipelineRunner {
   /*indicates the batch size to be captured*/
   private volatile int snapshotBatchSize;
   /*Cache last N error records per stage in memory*/
-  private Map<String, EvictingQueue<Record>> stageToErrorRecordsMap;
+  private final Map<String, EvictingQueue<Record>> stageToErrorRecordsMap;
   /*Cache last N error messages in memory*/
-  private Map<String, EvictingQueue<ErrorMessage>> stageToErrorMessagesMap;
+  private final Map<String, EvictingQueue<ErrorMessage>> stageToErrorMessagesMap;
   /**/
   private BlockingQueue<Object> observeRequests;
   private Observer observer;
-  private List<BatchListener> batchListenerList = new CopyOnWriteArrayList<BatchListener>();
-  private Object errorRecordsMutex;
+  private final List<BatchListener> batchListenerList = new CopyOnWriteArrayList<BatchListener>();
+  private final Object errorRecordsMutex;
   private MemoryLimitConfiguration memoryLimitConfiguration;
   private long lastMemoryLimitNotification;
   private ThreadHealthReporter threadHealthReporter;
-  private List<List<StageOutput>> capturedbatches = new ArrayList<>();
+  private final List<List<StageOutput>> capturedbatches = new ArrayList<>();
 
   @Inject
   public ProductionPipelineRunner(@Named("name") String pipelineName, @Named ("rev") String revision,

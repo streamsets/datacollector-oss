@@ -9,7 +9,6 @@ import com.streamsets.dc.execution.PipelineStatus;
 import com.streamsets.dc.execution.runner.standalone.StandaloneRunner;
 import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.runner.PipelineRuntimeException;
-import com.streamsets.pipeline.runner.production.ThreadHealthReporter;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

@@ -5,13 +5,13 @@
  */
 package com.streamsets.pipeline.util;
 
-import com.streamsets.pipeline.prodmanager.Constants;
-
 import org.apache.log4j.Appender;
 import org.apache.log4j.Logger;
 import org.apache.log4j.PatternLayout;
 import org.apache.log4j.RollingFileAppender;
 import org.slf4j.LoggerFactory;
+
+import com.streamsets.dc.execution.runner.common.Constants;
 
 import java.io.IOException;
 

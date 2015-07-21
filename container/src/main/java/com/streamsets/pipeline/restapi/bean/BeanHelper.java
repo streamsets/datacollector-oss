@@ -12,14 +12,12 @@ import com.streamsets.dc.restapi.bean.PreviewOutputJson;
 import com.streamsets.dc.restapi.bean.StatusJson;
 import com.streamsets.pipeline.api.Config;
 import com.streamsets.pipeline.api.ExecutionMode;
-import com.streamsets.pipeline.callback.CallbackInfo;
 import com.streamsets.pipeline.el.ElConstantDefinition;
 import com.streamsets.pipeline.el.ElFunctionArgumentDefinition;
 import com.streamsets.pipeline.el.ElFunctionDefinition;
 import com.streamsets.pipeline.record.HeaderImpl;
 import com.streamsets.pipeline.record.RecordImpl;
 import com.streamsets.pipeline.runner.production.SourceOffset;
-import com.streamsets.pipeline.snapshotstore.SnapshotInfo;
 import com.streamsets.pipeline.store.PipelineInfo;
 
 import java.util.ArrayList;
@@ -29,51 +27,12 @@ import java.util.Map;
 
 public class BeanHelper {
 
-  public static PipelineStateJson wrapPipelineState(com.streamsets.pipeline.prodmanager.PipelineState pipelineState) {
-    if(pipelineState == null) {
-      return null;
-    }
-    return new PipelineStateJson(pipelineState);
-  }
-
   public static com.streamsets.dc.restapi.bean.PipelineStateJson wrapPipelineState(com.streamsets.dc.execution.PipelineState pipelineState) {
     if(pipelineState == null) {
       return null;
     }
     return new com.streamsets.dc.restapi.bean.PipelineStateJson(pipelineState);
   }
-
-  public static SnapshotStatusJson wrapSnapshotStatus(com.streamsets.pipeline.snapshotstore.SnapshotStatus snapshotStatus) {
-    if(snapshotStatus == null) {
-      return null;
-    }
-    return new SnapshotStatusJson(snapshotStatus);
-  }
-
-  public static List<PipelineStateJson> wrapPipelineStates(
-    List<com.streamsets.pipeline.prodmanager.PipelineState> pipelineStates) {
-    if(pipelineStates == null) {
-      return null;
-    }
-    List<PipelineStateJson> states = new ArrayList<>(pipelineStates.size());
-    for(com.streamsets.pipeline.prodmanager.PipelineState p : pipelineStates) {
-      states.add(BeanHelper.wrapPipelineState(p));
-    }
-    return states;
-  }
-
-  public static List<com.streamsets.pipeline.prodmanager.PipelineState> unwrapPipelineStates(
-    List<PipelineStateJson> pipelineStateJsons) {
-    if(pipelineStateJsons == null) {
-      return null;
-    }
-    List<com.streamsets.pipeline.prodmanager.PipelineState> states = new ArrayList<>(pipelineStateJsons.size());
-    for(PipelineStateJson p : pipelineStateJsons) {
-      states.add(p.getPipelineState());
-    }
-    return states;
-  }
-
 
   public static List<com.streamsets.dc.restapi.bean.PipelineStateJson> wrapPipelineStatesNewAPI(
     List<com.streamsets.dc.execution.PipelineState> pipelineStates) {
@@ -129,18 +88,6 @@ public class BeanHelper {
       return null;
     }
     return new com.streamsets.dc.restapi.bean.SnapshotInfoJson(snapshotInfo);
-  }
-
-  public static List<SnapshotInfoJson> wrapSnapshotInfo(List<SnapshotInfo>
-                                                          snapshotInfoList) {
-    if(snapshotInfoList == null) {
-      return null;
-    }
-    List<SnapshotInfoJson> snapshotInfoJsonList = new ArrayList<>(snapshotInfoList.size());
-    for(com.streamsets.pipeline.snapshotstore.SnapshotInfo p : snapshotInfoList) {
-      snapshotInfoJsonList.add(new SnapshotInfoJson(p));
-    }
-    return snapshotInfoJsonList;
   }
 
   public static ConfigConfigurationJson wrapConfigConfiguration(
@@ -705,27 +652,6 @@ public class BeanHelper {
   /***************** Enum Helper ***********************/
   /*****************************************************/
 
-  public static StateJson wrapState(com.streamsets.pipeline.prodmanager.State state) {
-    if(state == null) {
-      return null;
-    }
-    switch(state) {
-      case STOPPED:
-        return StateJson.STOPPED;
-      case STOPPING:
-        return StateJson.STOPPING;
-      case RUNNING:
-        return StateJson.RUNNING;
-      case ERROR:
-        return StateJson.ERROR;
-      case FINISHED:
-        return StateJson.FINISHED;
-      case NODE_PROCESS_SHUTDOWN:
-        return StateJson.NODE_PROCESS_SHUTDOWN;
-      default:
-        throw new IllegalArgumentException("Unrecognized state" + state);
-    }
-  }
 
   public static StatusJson wrapState(com.streamsets.dc.execution.PipelineStatus status) {
     if(status == null) {
@@ -765,28 +691,6 @@ public class BeanHelper {
       default:
         throw new IllegalArgumentException("Unrecognized state" + status);
 
-    }
-  }
-
-  public static com.streamsets.pipeline.prodmanager.State unwrapState(StateJson stateJson) {
-    if(stateJson == null) {
-      return null;
-    }
-    switch(stateJson) {
-      case STOPPED:
-        return com.streamsets.pipeline.prodmanager.State.STOPPED;
-      case STOPPING:
-        return com.streamsets.pipeline.prodmanager.State.STOPPING;
-      case RUNNING:
-        return com.streamsets.pipeline.prodmanager.State.RUNNING;
-      case ERROR:
-        return com.streamsets.pipeline.prodmanager.State.ERROR;
-      case FINISHED:
-        return com.streamsets.pipeline.prodmanager.State.FINISHED;
-      case NODE_PROCESS_SHUTDOWN:
-        return com.streamsets.pipeline.prodmanager.State.NODE_PROCESS_SHUTDOWN;
-      default:
-        throw new IllegalArgumentException("Unrecognized state");
     }
   }
 
@@ -1173,13 +1077,6 @@ public class BeanHelper {
       default:
         throw new IllegalArgumentException("Unrecognized model type");
     }
-  }
-
-  public static CallbackInfoJson wrapCallbackInfo(CallbackInfo callbackInfo) {
-    if(callbackInfo == null) {
-      return null;
-    }
-    return new CallbackInfoJson(callbackInfo);
   }
 
   public static com.streamsets.dc.restapi.bean.CallbackInfoJson wrapCallbackInfo(com.streamsets.dc.callback.CallbackInfo callbackInfo) {

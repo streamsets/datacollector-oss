@@ -11,8 +11,8 @@ import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.runner.production.DataRulesEvaluationRequest;
 import com.streamsets.pipeline.runner.production.PipelineErrorNotificationRequest;
 import com.streamsets.pipeline.runner.production.RulesConfigurationChangeRequest;
-import com.streamsets.pipeline.runner.production.ThreadHealthReporter;
 import com.streamsets.pipeline.util.Configuration;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

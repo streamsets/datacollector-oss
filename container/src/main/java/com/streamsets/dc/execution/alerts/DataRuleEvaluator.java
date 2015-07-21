@@ -10,6 +10,7 @@ import com.codahale.metrics.Meter;
 import com.codahale.metrics.MetricRegistry;
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.collect.EvictingQueue;
+import com.streamsets.dc.execution.runner.common.Constants;
 import com.streamsets.pipeline.alerts.AlertsUtil;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.config.DataRuleDefinition;
@@ -20,10 +21,10 @@ import com.streamsets.pipeline.el.ElConstantDefinition;
 import com.streamsets.pipeline.el.ElFunctionDefinition;
 import com.streamsets.pipeline.el.RuleELRegistry;
 import com.streamsets.pipeline.metrics.MetricsConfigurator;
-import com.streamsets.pipeline.prodmanager.Constants;
 import com.streamsets.pipeline.runner.LaneResolver;
 import com.streamsets.pipeline.util.Configuration;
 import com.streamsets.pipeline.util.ObserverException;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

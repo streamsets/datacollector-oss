@@ -8,7 +8,6 @@ package com.streamsets.dc.execution.runner.common;
 import com.google.common.annotations.VisibleForTesting;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.config.DataRuleDefinition;
-import com.streamsets.pipeline.prodmanager.Constants;
 import com.streamsets.pipeline.record.RecordImpl;
 import com.streamsets.pipeline.runner.Observer;
 import com.streamsets.pipeline.runner.Pipe;
@@ -36,7 +35,7 @@ public class ProductionObserver implements Observer {
 
   private final com.streamsets.pipeline.util.Configuration configuration;
   private BlockingQueue<Object> observeRequests;
-  private MetricsObserverRunner metricsObserverRunner;
+  private final MetricsObserverRunner metricsObserverRunner;
 
   private volatile RulesConfigurationChangeRequest currentConfig;
   private volatile RulesConfigurationChangeRequest newConfig;
@@ -55,7 +54,7 @@ public class ProductionObserver implements Observer {
   private final Map<String, Integer> laneToRecordCounterMap;
   /*Contains integers between 0 and 99 and n random numbers are selected by shuffling this list and picking the first
   n*/
-  private List<Integer> randomNumberSampleSpace;
+  private final List<Integer> randomNumberSampleSpace;
 
   @Inject
   public ProductionObserver(Configuration configuration, MetricsObserverRunner metricsObserverRunner) {

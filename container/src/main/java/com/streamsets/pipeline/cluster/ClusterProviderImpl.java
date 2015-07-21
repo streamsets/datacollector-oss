@@ -9,6 +9,8 @@ import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Joiner;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Maps;
+import com.streamsets.dc.execution.cluster.ClusterHelper;
+import com.streamsets.dc.execution.runner.common.Constants;
 import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.api.Config;
 import com.streamsets.pipeline.config.PipelineConfiguration;
@@ -21,7 +23,6 @@ import com.streamsets.pipeline.json.ObjectMapperFactory;
 import com.streamsets.pipeline.lib.util.ThreadUtil;
 import com.streamsets.pipeline.main.RuntimeInfo;
 import com.streamsets.pipeline.main.RuntimeModule;
-import com.streamsets.pipeline.prodmanager.PipelineManager;
 import com.streamsets.pipeline.restapi.bean.BeanHelper;
 import com.streamsets.pipeline.stagelibrary.StageLibraryTask;
 import com.streamsets.pipeline.stagelibrary.StageLibraryUtils;
@@ -30,8 +31,8 @@ import com.streamsets.pipeline.store.impl.FilePipelineStoreTask;
 import com.streamsets.pipeline.util.PipelineDirectoryUtil;
 import com.streamsets.pipeline.util.SystemProcess;
 import com.streamsets.pipeline.util.SystemProcessFactory;
-
 import com.streamsets.pipeline.validation.Issue;
+
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
@@ -90,7 +91,7 @@ public class ClusterProviderImpl implements ClusterProvider {
     args.add(sparkManager.getAbsolutePath());
     args.add("kill");
     args.add(appId);
-    SystemProcess process = systemProcessFactory.create(ClusterManager.class.getSimpleName(), tempDir, args.build());
+    SystemProcess process = systemProcessFactory.create(ClusterHelper.class.getSimpleName(), tempDir, args.build());
     try {
       process.start(environment);
       if (!process.waitFor(30, TimeUnit.SECONDS)) {
@@ -130,7 +131,7 @@ public class ClusterProviderImpl implements ClusterProvider {
     args.add(sparkManager.getAbsolutePath());
     args.add("status");
     args.add(appId);
-    SystemProcess process = systemProcessFactory.create(ClusterManager.class.getSimpleName(), tempDir, args.build());
+    SystemProcess process = systemProcessFactory.create(ClusterHelper.class.getSimpleName(), tempDir, args.build());
     try {
       process.start(environment);
       if (!process.waitFor(30, TimeUnit.SECONDS)) {
@@ -173,8 +174,8 @@ public class ClusterProviderImpl implements ClusterProvider {
         RuntimeInfo.ExecutionMode.SLAVE.name().toLowerCase());
 
       if(runtimeInfo != null) {
-        sdcProperties.setProperty(PipelineManager.SDC_CLUSTER_TOKEN_KEY, runtimeInfo.getSDCToken());
-        sdcProperties.setProperty(PipelineManager.CALLBACK_SERVER_URL_KEY, runtimeInfo.getClusterCallbackURL());
+        sdcProperties.setProperty(Constants.SDC_CLUSTER_TOKEN_KEY, runtimeInfo.getSDCToken());
+        sdcProperties.setProperty(Constants.CALLBACK_SERVER_URL_KEY, runtimeInfo.getClusterCallbackURL());
       }
 
       for (Map.Entry<String, String> entry : sourceConfigs.entrySet()) {
@@ -405,7 +406,7 @@ public class ClusterProviderImpl implements ClusterProvider {
     args.add("--class");
     args.add("com.streamsets.pipeline.BootstrapCluster");
     args.add(sparkBootstrapJar.getAbsolutePath());
-    SystemProcess process = systemProcessFactory.create(ClusterManager.class.getSimpleName(), tempDir, args);
+    SystemProcess process = systemProcessFactory.create(ClusterHelper.class.getSimpleName(), tempDir, args);
     LOG.info("Starting: " + process);
     try {
       process.start(environment);

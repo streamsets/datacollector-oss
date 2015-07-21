@@ -22,7 +22,6 @@ import com.streamsets.pipeline.cluster.MockSystemProcessFactory;
 import com.streamsets.pipeline.config.PipelineConfiguration;
 import com.streamsets.pipeline.lib.executor.SafeScheduledExecutorService;
 import com.streamsets.pipeline.main.RuntimeInfo;
-import com.streamsets.pipeline.prodmanager.PipelineManagerException;
 import com.streamsets.pipeline.runner.MockStages;
 import com.streamsets.pipeline.runner.PipelineRuntimeException;
 import com.streamsets.pipeline.stagelibrary.StageLibraryTask;
@@ -293,13 +292,14 @@ public class TestClusterRunner {
   }
 
   @Test
-  public void testGetParallelism() throws PipelineRuntimeException, StageException, PipelineStoreException,
-    PipelineManagerException {
-    ClusterRunner clusterRunner = (ClusterRunner)createClusterRunner();
-    ClusterSourceInfo clusterSourceInfo = clusterRunner.getClusterSourceInfo(NAME, REV,
-      MockStages.createPipelineConfigurationWithClusterOnlyStage(ExecutionMode.CLUSTER) //creates ClusterMSource which
-      //has parallelism 25
-    );
+  public void testGetParallelism() throws PipelineRuntimeException, StageException, PipelineStoreException {
+    ClusterRunner clusterRunner = (ClusterRunner) createClusterRunner();
+    ClusterSourceInfo clusterSourceInfo =
+      clusterRunner.getClusterSourceInfo(NAME, REV,
+        MockStages.createPipelineConfigurationWithClusterOnlyStage(ExecutionMode.CLUSTER) // creates ClusterMSource
+                                                                                          // which
+        // has parallelism 25
+        );
     Assert.assertEquals(25, clusterSourceInfo.getParallelism());
     Assert.assertEquals("ClusterMSource", clusterSourceInfo.getClusterSourceName());
   }

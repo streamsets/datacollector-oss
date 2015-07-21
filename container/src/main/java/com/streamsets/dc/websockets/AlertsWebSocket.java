@@ -6,7 +6,6 @@
 package com.streamsets.dc.websockets;
 
 import com.streamsets.pipeline.alerts.AlertEventListener;
-
 import java.util.Queue;
 
 

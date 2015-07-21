@@ -16,12 +16,10 @@ import com.streamsets.dc.restapi.bean.SnapshotInfoJson;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.main.RuntimeInfo;
-import com.streamsets.pipeline.prodmanager.PipelineManagerException;
 import com.streamsets.pipeline.restapi.bean.BeanHelper;
 import com.streamsets.pipeline.restapi.bean.ErrorMessageJson;
 import com.streamsets.pipeline.restapi.bean.MetricRegistryJson;
 import com.streamsets.pipeline.restapi.bean.RecordJson;
-import com.streamsets.pipeline.restapi.bean.SnapshotStatusJson;
 import com.streamsets.pipeline.runner.PipelineRuntimeException;
 import com.streamsets.pipeline.store.PipelineStoreException;
 import com.streamsets.pipeline.util.AuthzRole;
@@ -74,7 +72,7 @@ public class ManagerResource {
     authorizations = @Authorization(value = "basic"))
   @Produces(MediaType.APPLICATION_JSON)
   @PermitAll
-  public Response getAllPipelineStatus() throws PipelineManagerException, PipelineStoreException {
+  public Response getAllPipelineStatus() throws PipelineStoreException {
     List<PipelineState> pipelineStateList = manager.getPipelines();
     Map<String, PipelineStateJson> pipelineStateMap = new HashMap<>();
     for(PipelineState pipelineState: pipelineStateList) {
@@ -91,7 +89,7 @@ public class ManagerResource {
   @PermitAll
   public Response getPipelineStatus(
     @PathParam("pipelineName") String pipelineName,
-    @QueryParam("rev") @DefaultValue("0") String rev) throws PipelineManagerException, PipelineStoreException {
+    @QueryParam("rev") @DefaultValue("0") String rev) throws PipelineStoreException {
     if(pipelineName != null) {
       Runner runner = manager.getRunner(user, pipelineName, rev);
       if(runner != null) {
@@ -110,7 +108,7 @@ public class ManagerResource {
   public Response startPipeline(
       @PathParam("pipelineName") String pipelineName,
       @QueryParam("rev") @DefaultValue("0") String rev)
-    throws PipelineStoreException, PipelineRuntimeException, StageException, PipelineManagerException, PipelineRunnerException {
+    throws PipelineStoreException, PipelineRuntimeException, StageException, PipelineRunnerException {
     Utils.checkState(runtimeInfo.getExecutionMode() != RuntimeInfo.ExecutionMode.SLAVE,
       "This operation is not supported in SLAVE mode");
     if(pipelineName != null) {
@@ -139,7 +137,7 @@ public class ManagerResource {
   @RolesAllowed({ AuthzRole.MANAGER, AuthzRole.ADMIN })
   public Response stopPipeline(
     @PathParam("pipelineName") String pipelineName,
-    @QueryParam("rev") @DefaultValue("0") String rev) throws PipelineManagerException, PipelineStoreException,
+    @QueryParam("rev") @DefaultValue("0") String rev) throws PipelineStoreException,
     PipelineRunnerException {
     Utils.checkState(runtimeInfo.getExecutionMode() != RuntimeInfo.ExecutionMode.SLAVE,
       "This operation is not supported in SLAVE mode");
@@ -155,7 +153,7 @@ public class ManagerResource {
   @RolesAllowed({ AuthzRole.MANAGER, AuthzRole.ADMIN })
   public Response resetOffset(
       @PathParam("pipelineName") String name,
-      @QueryParam("rev") @DefaultValue("0") String rev) throws PipelineManagerException, PipelineStoreException,
+      @QueryParam("rev") @DefaultValue("0") String rev) throws PipelineStoreException,
     PipelineRunnerException {
     Utils.checkState(runtimeInfo.getExecutionMode() != RuntimeInfo.ExecutionMode.SLAVE,
       "This operation is not supported in SLAVE mode");
@@ -236,7 +234,7 @@ public class ManagerResource {
 
   @Path("/pipeline/{pipelineName}/snapshot/{snapshotName}/status")
   @GET
-  @ApiOperation(value = "Return Snapshot status", response = SnapshotStatusJson.class,
+  @ApiOperation(value = "Return Snapshot status", response = SnapshotInfoJson.class,
     authorizations = @Authorization(value = "basic"))
   @Produces(MediaType.APPLICATION_JSON)
   @RolesAllowed({ AuthzRole.MANAGER, AuthzRole.ADMIN })
@@ -351,7 +349,7 @@ public class ManagerResource {
   public Response getHistory(
     @PathParam("pipelineName") String name,
     @QueryParam("rev") @DefaultValue("0") String rev,
-    @QueryParam("fromBeginning") @DefaultValue("false") boolean fromBeginning) throws PipelineManagerException, PipelineStoreException {
+    @QueryParam("fromBeginning") @DefaultValue("false") boolean fromBeginning) throws PipelineStoreException {
     Runner runner = manager.getRunner(user, name, rev);
     if(runner != null) {
       return Response.ok().type(MediaType.APPLICATION_JSON).entity(
@@ -370,7 +368,7 @@ public class ManagerResource {
     @PathParam("pipelineName") String pipelineName,
     @QueryParam("rev") @DefaultValue("0") String rev,
     @QueryParam ("sampleId") String sampleId,
-    @QueryParam ("sampleSize") @DefaultValue("10") int sampleSize) throws PipelineManagerException,
+    @QueryParam ("sampleSize") @DefaultValue("10") int sampleSize) throws
     PipelineStoreException, PipelineRunnerException {
     sampleSize = sampleSize > 100 ? 100 : sampleSize;
     Runner runner = manager.getRunner(user, pipelineName, rev);
@@ -390,7 +388,7 @@ public class ManagerResource {
   public Response deleteAlert(
     @PathParam("pipelineName") String pipelineName,
     @QueryParam("rev") @DefaultValue("0") String rev,
-    @QueryParam("alertId") String alertId) throws PipelineManagerException, PipelineStoreException,
+    @QueryParam("alertId") String alertId) throws PipelineStoreException,
     PipelineRunnerException {
     return Response.ok().type(MediaType.APPLICATION_JSON).entity(
       manager.getRunner(user, pipelineName, rev).deleteAlert(alertId)).build();

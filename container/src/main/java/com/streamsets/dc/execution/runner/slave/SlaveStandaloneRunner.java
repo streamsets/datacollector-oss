@@ -5,12 +5,12 @@
  */
 package com.streamsets.dc.execution.runner.slave;
 
+import com.streamsets.dc.execution.PipelineInfo;
 import com.streamsets.dc.execution.PipelineState;
 import com.streamsets.dc.execution.Runner;
 import com.streamsets.dc.execution.Snapshot;
 import com.streamsets.dc.execution.SnapshotInfo;
 import com.streamsets.dc.execution.StateEventListener;
-import com.streamsets.dc.execution.runner.common.PipelineInfo;
 import com.streamsets.dc.execution.runner.common.PipelineRunnerException;
 import com.streamsets.dc.execution.runner.standalone.StandaloneRunner;
 import com.streamsets.pipeline.alerts.AlertEventListener;
@@ -19,7 +19,6 @@ import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.impl.ErrorMessage;
 import com.streamsets.dc.callback.CallbackInfo;
 import com.streamsets.dc.callback.CallbackServerMetricsEventListener;
-import com.streamsets.pipeline.config.RuleDefinition;
 import com.streamsets.pipeline.main.RuntimeInfo;
 import com.streamsets.pipeline.metrics.MetricsEventListener;
 import com.streamsets.pipeline.runner.Pipeline;

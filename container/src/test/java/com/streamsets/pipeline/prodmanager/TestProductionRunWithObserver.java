@@ -2,7 +2,7 @@
  * (c) 2014 StreamSets, Inc. All rights reserved. May not
  * be copied, modified, or distributed in whole or part without
  * written consent of StreamSets, Inc.
- */
+ *//*
 package com.streamsets.pipeline.prodmanager;
 
 import com.codahale.metrics.Counter;
@@ -80,10 +80,10 @@ public class TestProductionRunWithObserver {
   }
 
   @Test()
-  /**
+  *//**
    * Tests pipeline with alerts. The triggered alert is then deleted and the counter is verified.
    * Potentially flaky test - DataRuleDefinition has high threshold value to ensure it runs fine.
-   */
+   *//*
   public void testPipelineWithAlerts() throws PipelineStoreException, PipelineManagerException,
     PipelineRuntimeException, StageException, InterruptedException {
     PipelineState pipelineState = manager.startPipeline(MY_PIPELINE, PIPELINE_REV);
@@ -120,3 +120,4 @@ public class TestProductionRunWithObserver {
   }
 
 }
+*/

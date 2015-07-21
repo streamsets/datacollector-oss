@@ -22,6 +22,8 @@ import com.streamsets.dc.execution.runner.common.MetricObserverRunnable;
 import com.streamsets.dc.execution.runner.common.MetricsObserverRunner;
 import com.streamsets.dc.execution.runner.common.ProductionObserver;
 import com.streamsets.dc.execution.runner.common.ProductionPipelineRunner;
+import com.streamsets.dc.execution.runner.common.RulesConfigLoader;
+import com.streamsets.dc.execution.runner.common.ThreadHealthReporter;
 import com.streamsets.dc.execution.runner.standalone.StandaloneRunner;
 import com.streamsets.dc.execution.snapshot.file.FileSnapshotStore;
 import com.streamsets.dc.execution.store.CachePipelineStateStore;
@@ -47,28 +49,26 @@ import com.streamsets.pipeline.email.EmailSender;
 import com.streamsets.pipeline.lib.executor.SafeScheduledExecutorService;
 import com.streamsets.pipeline.main.RuntimeInfo;
 import com.streamsets.pipeline.main.RuntimeModule;
-import com.streamsets.pipeline.prodmanager.PipelineManagerException;
-import com.streamsets.pipeline.prodmanager.StandalonePipelineManagerTask;
-import com.streamsets.pipeline.prodmanager.State;
 import com.streamsets.pipeline.runner.MockStages;
 import com.streamsets.pipeline.runner.Observer;
 import com.streamsets.pipeline.runner.PipelineRunner;
 import com.streamsets.pipeline.runner.SourceOffsetTracker;
 import com.streamsets.pipeline.runner.production.ProductionSourceOffsetTracker;
-import com.streamsets.pipeline.runner.production.RulesConfigLoader;
 import com.streamsets.pipeline.runner.production.RulesConfigLoaderRunnable;
-import com.streamsets.pipeline.runner.production.ThreadHealthReporter;
 import com.streamsets.pipeline.stagelibrary.StageLibraryTask;
 import com.streamsets.pipeline.store.PipelineStoreException;
 import com.streamsets.pipeline.store.PipelineStoreTask;
 import com.streamsets.pipeline.store.impl.FilePipelineStoreTask;
+
 import dagger.Module;
 import dagger.ObjectGraph;
 import dagger.Provides;
+
 import org.mockito.Mockito;
 
 import javax.inject.Named;
 import javax.inject.Singleton;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -611,46 +611,6 @@ public class TestUtil {
       return new EventListenerManager();
     }
 
-  }
-
-  /*************** StandalonePipelineManagerTask ***************/
-
-  @Module(injects = StandalonePipelineManagerTask.class
-    , library = true, includes = {TestRuntimeModule.class, TestPipelineStoreModule.class
-    , TestStageLibraryModule.class, TestConfigurationModule.class})
-  public static class TestProdManagerModule {
-
-    public TestProdManagerModule() {
-    }
-
-    @Provides
-    public StandalonePipelineManagerTask provideStateManager(RuntimeInfo RuntimeInfo, Configuration configuration
-      ,PipelineStoreTask pipelineStore, StageLibraryTask stageLibrary) {
-      return new StandalonePipelineManagerTask(RuntimeInfo, configuration, pipelineStore, stageLibrary);
-    }
-  }
-
-
-  /********************************************/
-  /*************** Utility methods ************/
-  /********************************************/
-
-  public static void stopPipelineIfNeeded(StandalonePipelineManagerTask manager) throws InterruptedException, PipelineManagerException {
-    if(manager.getPipelineState().getState() == State.RUNNING) {
-      manager.stopPipeline(false);
-    }
-    long start = System.currentTimeMillis();
-    while(manager.getPipelineState().getState() != State.FINISHED &&
-      manager.getPipelineState().getState() != State.STOPPED &&
-      manager.getPipelineState().getState() != State.ERROR) {
-      Thread.sleep(5);
-      long elapsed = System.currentTimeMillis() - start;
-      if (elapsed > TimeUnit.MINUTES.toMillis(5)) {
-        String msg = "TimedOut waiting for pipeline to stop. State is currently: " +
-          manager.getPipelineState().getState() + " after " + TimeUnit.MILLISECONDS.toMinutes(elapsed) + "min";
-        throw new IllegalStateException(msg);
-      }
-    }
   }
 
 }

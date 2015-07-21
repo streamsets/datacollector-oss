@@ -5,7 +5,6 @@
  */
 package com.streamsets.dc.execution.runner.common;
 
-import com.streamsets.pipeline.runner.production.ThreadHealthReporter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
