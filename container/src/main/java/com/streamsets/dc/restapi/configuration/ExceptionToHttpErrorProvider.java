@@ -3,7 +3,7 @@
  * be copied, modified, or distributed in whole or part without
  * written consent of StreamSets, Inc.
  */
-package com.streamsets.pipeline.restapi.configuration;
+package com.streamsets.dc.restapi.configuration;
 
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.util.ContainerError;
