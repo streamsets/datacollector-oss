@@ -157,6 +157,8 @@
               <resources>
                 <resource>
                   <directory>${basedir}/../kafka_source-protolib/src/test/resources</directory>
+                </resource>
+                <resource>
                   <directory>${basedir}/../kafka_target-protolib/src/test/resources</directory>
                 </resource>
               </resources>
