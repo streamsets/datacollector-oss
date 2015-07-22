@@ -54,21 +54,6 @@
           </archive>
         </configuration>
       </plugin>
-      <plugin>
-        <groupId>org.codehaus.mojo</groupId>
-        <artifactId>cobertura-maven-plugin</artifactId>
-        <configuration>
-          <check>
-            <haltOnFailure>true</haltOnFailure>
-            <branchRate>0</branchRate>
-            <lineRate>0</lineRate>
-            <totalBranchRate>98</totalBranchRate>
-            <totalLineRate>98</totalLineRate>
-            <packageLineRate>98</packageLineRate>
-            <packageBranchRate>98</packageBranchRate>
-          </check>
-        </configuration>
-      </plugin>
     </plugins>
   </build>
 
