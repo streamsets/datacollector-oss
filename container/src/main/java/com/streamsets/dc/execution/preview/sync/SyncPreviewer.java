@@ -94,7 +94,7 @@ public class SyncPreviewer implements Previewer {
   }
 
   @Override
-  public void validateConfigs() throws PipelineException {
+  public void validateConfigs(long timeoutMillis) throws PipelineException {
     changeState(PreviewStatus.VALIDATING, null);
     try {
       previewPipeline = buildPreviewPipeline(0, 0, null, false);
@@ -137,7 +137,8 @@ public class SyncPreviewer implements Previewer {
   }
 
   @Override
-  public void start(int batches, int batchSize, boolean skipTargets, String stopStage, List<StageOutput> stagesOverride)
+  public void start(int batches, int batchSize, boolean skipTargets, String stopStage, List<StageOutput> stagesOverride,
+                    long timeoutMillis)
     throws PipelineException {
     changeState(PreviewStatus.RUNNING, null);
     try {
@@ -183,8 +184,23 @@ public class SyncPreviewer implements Previewer {
     }
   }
 
+  public void timeout() {
+    //state is active then call cancelling otherwise just destroy
+    if(previewStatus.isActive()) {
+      changeState(PreviewStatus.TIMING_OUT, null);
+    }
+    if(previewPipeline != null) {
+      previewPipeline.destroy();
+      previewPipeline = null;
+    }
+    if(previewStatus == PreviewStatus.TIMING_OUT) {
+      changeState(PreviewStatus.TIMED_OUT, null);
+    }
+  }
+
+
   @Override
-  public boolean waitForCompletion(int millis) {
+  public boolean waitForCompletion(long timeoutMillis) {
     return true;
   }
 

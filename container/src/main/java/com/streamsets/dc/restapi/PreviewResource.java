@@ -85,6 +85,7 @@ public class PreviewResource {
       @QueryParam("batches") @DefaultValue("1") int batches,
       @QueryParam("skipTargets") @DefaultValue("true") boolean skipTargets,
       @QueryParam("endStage") String endStageInstanceName,
+      @QueryParam("timeout") @DefaultValue("2000") long timeout,
       @ApiParam(name="stageOutputsToOverrideJson", required = true)  List<StageOutputJson> stageOutputsToOverrideJson)
       throws PipelineException, StageException {
 
@@ -103,7 +104,7 @@ public class PreviewResource {
 
     try {
       previewer.start(batches, batchSize, skipTargets, endStageInstanceName,
-        BeanHelper.unwrapStageOutput(stageOutputsToOverrideJson));
+        BeanHelper.unwrapStageOutput(stageOutputsToOverrideJson), timeout);
 
       return Response.ok().type(MediaType.APPLICATION_JSON).entity(ImmutableMap.of("previewerId", previewer.getId()))
         .build();
@@ -182,11 +183,12 @@ public class PreviewResource {
   @RolesAllowed({ AuthzRole.CREATOR, AuthzRole.MANAGER, AuthzRole.ADMIN })
   public Response validateConfigs(
       @PathParam("pipelineName") String pipelineName,
-      @QueryParam("rev") String rev)
+      @QueryParam("rev") String rev,
+      @QueryParam("timeout") @DefaultValue("2000") long timeout)
       throws PipelineException, StageException {
     try {
       Previewer previewer = manager.createPreviewer(this.user, pipelineName, rev);
-      previewer.validateConfigs();
+      previewer.validateConfigs(timeout);
 
       return Response.ok().type(MediaType.APPLICATION_JSON)
                      .entity(ImmutableMap.of("previewerId", previewer.getId())).build();

@@ -30,19 +30,19 @@ public interface Previewer {
 
   public String getRev();
 
-  public void validateConfigs() throws PipelineException;
+  public void validateConfigs(long timeoutMillis) throws PipelineException;
 
   public RawPreview getRawSource(int maxLength, MultivaluedMap<String, String> previewParams)
     throws PipelineRuntimeException, PipelineStoreException;
 
-  public void start(int batches, int batchSize, boolean skipTargets, String stopStage, List<StageOutput> stagesOverride)
-    throws PipelineException;
+  public void start(int batches, int batchSize, boolean skipTargets, String stopStage, List<StageOutput> stagesOverride,
+                    long timeoutMillis) throws PipelineException;
 
   public void stop();
 
   // in the case of the synchronous one the only acceptable value is -1 (wait until it finishes)
   // in the case of the asynchronous one acceptable values are 0 (dispatch and wait) and greater (dispatch and block for millis)
-  public boolean waitForCompletion(int millis) throws PipelineException;
+  public boolean waitForCompletion(long timeoutMillis) throws PipelineException;
 
   public PreviewStatus getStatus();
 

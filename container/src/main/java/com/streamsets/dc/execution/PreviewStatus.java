@@ -20,6 +20,9 @@ public enum PreviewStatus {
 
   CANCELLING(true),     // preview has been manually stopped
   CANCELLED(false),      // preview has been manually stopped
+
+  TIMING_OUT(true),     //preview/validate time out
+  TIMED_OUT(false),     //preview/validate time out
   ;
 
   private final boolean isActive;

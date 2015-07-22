@@ -54,15 +54,16 @@ public class AsyncPreviewer implements Previewer {
   }
 
   @Override
-  public void validateConfigs() throws PipelineException {
+  public void validateConfigs(final long timeoutMillis) throws PipelineException {
     Callable<Object> callable = new Callable<Object>() {
       @Override
       public Object call() throws Exception {
-        syncPreviewer.validateConfigs();
+        syncPreviewer.validateConfigs(timeoutMillis);
         return null;
       }
     };
     future = executorService.submit(callable);
+    scheduleTimeout(timeoutMillis);
   }
 
   @Override
@@ -73,32 +74,37 @@ public class AsyncPreviewer implements Previewer {
 
   @Override
   public void start(final int batches, final int batchSize, final boolean skipTargets, final String stopStage,
-                    final List<StageOutput> stagesOverride) {
+                    final List<StageOutput> stagesOverride, final long timeoutMillis) {
     Callable<Object> callable = new Callable<Object>() {
       @Override
       public Object call() throws PipelineException {
-        syncPreviewer.start(batches, batchSize, skipTargets, stopStage, stagesOverride);
+        syncPreviewer.start(batches, batchSize, skipTargets, stopStage, stagesOverride, timeoutMillis);
         return null;
       }
     };
     future = executorService.submit(callable);
+    scheduleTimeout(timeoutMillis);
   }
 
   @Override
   public void stop() {
-    if(future != null && !future.isDone()) {
-      future.cancel(true);
-      syncPreviewer.stop();
+    if (future != null) {
+      synchronized (future) {
+        if(!future.isDone()) {
+          future.cancel(true);
+          syncPreviewer.stop();
+        }
+      }
     }
   }
 
   @Override
-  public boolean waitForCompletion(int millis) throws PipelineException {
+  public boolean waitForCompletion(long timeoutMillis) throws PipelineException {
     if(future == null) {
       throw new PipelineRuntimeException(PreviewError.PREVIEW_0001);
     }
     try {
-      future.get(millis, TimeUnit.MILLISECONDS);
+      future.get(timeoutMillis, TimeUnit.MILLISECONDS);
       return true;
     } catch (ExecutionException e) {
       if (e.getCause() instanceof PipelineException) {
@@ -121,6 +127,24 @@ public class AsyncPreviewer implements Previewer {
   @Override
   public PreviewOutput getOutput() {
     return (future.isDone()) ? syncPreviewer.getOutput() : null;
+  }
+
+  private void scheduleTimeout(long timeoutMillis) {
+    executorService.schedule(new Callable() {
+      @Override
+      public Object call() throws PipelineException {
+        if (future != null) {
+          synchronized (future) {
+            if (!future.isDone()) {
+              future.cancel(true);
+              syncPreviewer.timeout();
+              return true;
+            }
+          }
+        }
+        return false;
+      }
+    }, timeoutMillis, TimeUnit.MILLISECONDS);
   }
 
 }
