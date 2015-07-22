@@ -8,6 +8,7 @@ package com.streamsets.pipeline;
 import java.io.IOException;
 import java.net.URL;
 import java.net.URLClassLoader;
+import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.List;
 
@@ -81,6 +82,30 @@ public class BlackListURLClassLoader extends URLClassLoader {
 
   public String getType() {
     return type;
+  }
+
+  public String dumpClasspath(String linePrefix) {
+    List<String> entries = new ArrayList<>();
+    dumpClasspath(this, entries);
+    StringBuilder sb = new StringBuilder();
+    sb.append(linePrefix).append("ClassLoader name=").append(getName()).append(" type=").append(getType()).append("\n");
+    for (String entry : entries) {
+      sb.append(linePrefix).append("  ").append(entry).append("\n");
+    }
+    return sb.toString();
+  }
+
+  private String dumpClasspath(ClassLoader classLoader, List<String> entries) {
+    String prefix = "";
+    if (classLoader.getParent() != null && classLoader.getParent() instanceof URLClassLoader) {
+      prefix += "  " + dumpClasspath(classLoader.getParent(), entries);
+    }
+    if (classLoader instanceof URLClassLoader) {
+      for (URL url : ((URLClassLoader) classLoader).getURLs()) {
+        entries.add(prefix + url.toString());
+      }
+    }
+    return prefix;
   }
 
 }

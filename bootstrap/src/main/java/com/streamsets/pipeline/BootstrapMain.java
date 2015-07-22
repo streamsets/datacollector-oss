@@ -17,6 +17,8 @@ import java.util.List;
 import java.util.Map;
 
 public class BootstrapMain {
+  private static final String PIPELINE_BOOTSTRAP_DEBUG_SYS_PROP = "streamsets.bootstrap.debug";
+  private static final String PIPELINE_BOOTSTRAP_CLASSLOADER_SYS_PROP = "streamsets.classloader.debug";
 
   private static final String MAIN_CLASS_OPTION = "-mainClass";
   private static final String API_CLASSPATH_OPTION = "-apiClasspath";
@@ -42,7 +44,9 @@ public class BootstrapMain {
   private static final String CLASSPATH_DIR_DOES_NOT_EXIST_MSG = "Classpath directory '%s' does not exist";
   private static final String CLASSPATH_PATH_S_IS_NOT_A_DIR_MSG = "Specified Classpath path '%s' is not a directory";
 
-  private static final String DEBUG_MSG = "DEBUG: '%s' %s";
+  private static final String DEBUG_MSG_PREFIX = "DEBUG: ";
+
+  private static final String DEBUG_MSG = DEBUG_MSG_PREFIX + "'%s' %s";
 
   private static Instrumentation instrumentation;
 
@@ -68,8 +72,8 @@ public class BootstrapMain {
       String msg = "Error: Security is enabled but sdc policy file is misconfigured";
       throw new IllegalArgumentException(msg, e);
     }
-    boolean debug = Boolean.getBoolean("pipeline.bootstrap.debug");
-    SDCClassLoader.setDebug(debug);
+    SDCClassLoader.setDebug(Boolean.getBoolean(PIPELINE_BOOTSTRAP_CLASSLOADER_SYS_PROP));
+
     String mainClass = null;
     String apiClasspath = null;
     String containerClasspath = null;
@@ -132,16 +136,17 @@ public class BootstrapMain {
       throw new IllegalArgumentException(String.format(OPTION_NOT_SPECIFIED_MSG, USER_LIBRARIES_DIR_OPTION));
     }
 
+    boolean debug = Boolean.getBoolean(PIPELINE_BOOTSTRAP_DEBUG_SYS_PROP);
     if (debug) {
-      System.out.println();
+      System.out.println(DEBUG_MSG_PREFIX);
       System.out.println(String.format(DEBUG_MSG, MAIN_CLASS_OPTION, mainClass));
-      System.out.println();
+      System.out.println(DEBUG_MSG_PREFIX);
       System.out.println(String.format(DEBUG_MSG, API_CLASSPATH_OPTION, apiClasspath));
-      System.out.println();
+      System.out.println(DEBUG_MSG_PREFIX);
       System.out.println(String.format(DEBUG_MSG, CONTAINER_CLASSPATH_OPTION, containerClasspath));
-      System.out.println();
+      System.out.println(DEBUG_MSG_PREFIX);
       System.out.println(String.format(DEBUG_MSG, STREAMSETS_LIBRARIES_DIR_OPTION, streamsetsLibrariesDir));
-      System.out.println();
+      System.out.println(DEBUG_MSG_PREFIX);
       System.out.println(String.format(DEBUG_MSG, USER_LIBRARIES_DIR_OPTION, userLibrariesDir));
     }
 
@@ -152,24 +157,35 @@ public class BootstrapMain {
     Map<String, List<URL>> userLibsUrls = getStageLibrariesClasspaths(userLibrariesDir);
 
     if (debug) {
-      System.out.println();
+      System.out.println(DEBUG_MSG_PREFIX);
       System.out.println(String.format(DEBUG_MSG, "API classpath            : ", apiUrls));
-      System.out.println();
+      System.out.println(DEBUG_MSG_PREFIX);
       System.out.println(String.format(DEBUG_MSG, "Container classpath      :", containerUrls));
-      System.out.println();
+      System.out.println(DEBUG_MSG_PREFIX);
       System.out.println(String.format(DEBUG_MSG, "StreamSets libraries classpath:", streamsetsLibsUrls));
-      System.out.println();
+      System.out.println(DEBUG_MSG_PREFIX);
       System.out.println(String.format(DEBUG_MSG, "User libraries classpath:", userLibsUrls));
-      System.out.println();
+      System.out.println(DEBUG_MSG_PREFIX);
     }
 
     Map<String, List<URL>> libsUrls = new LinkedHashMap<>();
     libsUrls.putAll(streamsetsLibsUrls);
     libsUrls.putAll(userLibsUrls);
 
+
     // Create all ClassLoaders
-    ClassLoader apiCL = SDCClassLoader.getAPIClassLoader(apiUrls, ClassLoader.getSystemClassLoader());
-    ClassLoader containerCL = SDCClassLoader.getContainerCLassLoader(containerUrls, apiCL);
+    SDCClassLoader apiCL = SDCClassLoader.getAPIClassLoader(apiUrls, ClassLoader.getSystemClassLoader());
+    if (debug) {
+      System.out.println(DEBUG_MSG_PREFIX);
+      System.out.print(apiCL.dumpClasspath(DEBUG_MSG_PREFIX));
+      System.out.println(DEBUG_MSG_PREFIX);
+    }
+    SDCClassLoader containerCL = SDCClassLoader.getContainerCLassLoader(containerUrls, apiCL);
+    if (debug) {
+      System.out.println(DEBUG_MSG_PREFIX);
+      System.out.print(containerCL.dumpClasspath(DEBUG_MSG_PREFIX));
+      System.out.println(DEBUG_MSG_PREFIX);
+    }
     List<ClassLoader> stageLibrariesCLs = new ArrayList<>();
     for (Map.Entry<String,List<URL>> entry : libsUrls.entrySet()) {
       String[] parts = entry.getKey().split(FILE_SEPARATOR);
@@ -179,7 +195,13 @@ public class BootstrapMain {
       }
       String type = parts[0];
       String name = parts[1];
-      stageLibrariesCLs.add(SDCClassLoader.getStageClassLoader(type, name, entry.getValue(), apiCL));
+      SDCClassLoader cl = SDCClassLoader.getStageClassLoader(type, name, entry.getValue(), apiCL);
+      if (debug) {
+        System.out.println(DEBUG_MSG_PREFIX);
+        System.out.print(cl.dumpClasspath(DEBUG_MSG_PREFIX));
+        System.out.println(DEBUG_MSG_PREFIX);
+      }
+      stageLibrariesCLs.add(cl);
     }
 
     // Bootstrap container
