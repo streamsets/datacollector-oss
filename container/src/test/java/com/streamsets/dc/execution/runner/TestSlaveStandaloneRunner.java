@@ -5,6 +5,7 @@
 package com.streamsets.dc.execution.runner;
 
 import com.streamsets.dc.execution.Manager;
+import com.streamsets.dc.execution.PipelineState;
 import com.streamsets.dc.execution.PipelineStatus;
 import com.streamsets.dc.execution.Runner;
 import com.streamsets.dc.execution.manager.TestSlaveManager;
@@ -68,6 +69,22 @@ public class TestSlaveStandaloneRunner {
     while (runner.getState().getStatus() != PipelineStatus.STOPPED) {
       Thread.sleep(100);
     }
+  }
+
+  @Test(timeout = 20000)
+  public void testLoadingUnsupportedPipeline() throws Exception {
+    ObjectGraph objectGraph = ObjectGraph.create(new TestPipelineProviderModule(TestUtil.MY_PIPELINE, "0"));
+    ObjectGraph plus = objectGraph.plus(new TestSlaveManager.TestSlaveManagerModule());
+    Manager pipelineManager = new SlavePipelineManager(plus);
+    pipelineManager.init();
+    Runner runner = pipelineManager.getRunner("user2", TestUtil.HIGHER_VERSION_PIPELINE, "0");
+    runner.start();
+    while(pipelineManager.getRunner("user2", TestUtil.HIGHER_VERSION_PIPELINE, "0").getState().getStatus() != PipelineStatus.START_ERROR) {
+      Thread.sleep(100);
+    }
+    PipelineState state = pipelineManager.getRunner("user2", TestUtil.HIGHER_VERSION_PIPELINE, "0").getState();
+    Assert.assertTrue(state.getStatus() == PipelineStatus.START_ERROR);
+    Assert.assertTrue(state.getMessage().contains("CONTAINER_0158"));
   }
 
   @Test (timeout = 10000)

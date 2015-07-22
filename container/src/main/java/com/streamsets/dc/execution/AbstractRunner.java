@@ -6,24 +6,24 @@
 
 package com.streamsets.dc.execution;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.streamsets.dc.execution.alerts.AlertManager;
-import com.streamsets.dc.execution.metrics.MetricsEventRunnable;
+import com.streamsets.dc.execution.runner.common.PipelineRunnerException;
 import com.streamsets.pipeline.alerts.AlertEventListener;
-import com.streamsets.pipeline.config.RuleDefinition;
-import com.streamsets.pipeline.json.ObjectMapperFactory;
+import com.streamsets.pipeline.config.PipelineConfiguration;
 import com.streamsets.pipeline.metrics.MetricsEventListener;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import com.streamsets.pipeline.stagelibrary.StageLibraryTask;
+import com.streamsets.pipeline.store.PipelineStoreException;
+import com.streamsets.pipeline.store.PipelineStoreTask;
+import com.streamsets.pipeline.util.ContainerError;
+import com.streamsets.pipeline.util.ValidationUtil;
+import com.streamsets.pipeline.validation.PipelineConfigurationValidator;
 
 import javax.inject.Inject;
-import java.util.ArrayList;
-import java.util.List;
 
 public abstract  class AbstractRunner implements Runner {
-  @Inject
-  protected EventListenerManager eventListenerManager;
+
+  @Inject protected EventListenerManager eventListenerManager;
+  @Inject protected PipelineStoreTask pipelineStore;
+  @Inject protected StageLibraryTask stageLibrary;
 
   @Override
   public void addStateEventListener(StateEventListener stateEventListener) {
@@ -65,5 +65,17 @@ public abstract  class AbstractRunner implements Runner {
     if(eventListenerManager != null) {
       eventListenerManager.removeAlertEventListener(alertEventListener);
     }
+  }
+
+  protected PipelineConfiguration getPipelineConf(String name, String rev) throws PipelineStoreException,
+    PipelineRunnerException {
+    PipelineConfiguration load = pipelineStore.load(name, rev);
+    PipelineConfigurationValidator validator = new PipelineConfigurationValidator(stageLibrary, name, load);
+    PipelineConfiguration validate = validator.validate();
+    if(validator.getIssues().hasIssues()) {
+      throw new PipelineRunnerException(ContainerError.CONTAINER_0158, ValidationUtil.getFirstIssueAsString(name,
+        validator.getIssues()));
+    }
+    return validate;
   }
 }

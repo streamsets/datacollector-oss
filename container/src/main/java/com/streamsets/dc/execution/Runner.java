@@ -71,10 +71,10 @@ public interface Runner {
 
   // called for all existing pipelines when the data collector is shutting down
   // it should disconnect/reset-status of all pipelines
-  public void onDataCollectorStop() throws PipelineStoreException, PipelineRunnerException;
+  public void onDataCollectorStop() throws PipelineStoreException, PipelineRunnerException, PipelineRuntimeException;
 
   // stops the pipeline
-  public void stop() throws PipelineStoreException, PipelineRunnerException;
+  public void stop() throws PipelineStoreException, PipelineRunnerException, PipelineRuntimeException;
 
   // Sets the state to STARTING. Should be called before doing a start on async runners.
   public void prepareForStart() throws PipelineStoreException, PipelineRunnerException;

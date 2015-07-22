@@ -84,6 +84,7 @@ public class TestUtil {
   public static final String USER = "user";
   public static final String MY_PIPELINE = "my pipeline";
   public static final String MY_SECOND_PIPELINE = "my second pipeline";
+  public static final String HIGHER_VERSION_PIPELINE = "higher version pipeline";
   public static final String PIPELINE_REV = "2.0";
   public static final String ZERO_REV = "0";
   public static boolean EMPTY_OFFSET = false;
@@ -340,6 +341,17 @@ public class TestUtil {
           pipelineStoreTask.save("admin2", MY_SECOND_PIPELINE, ZERO_REV, "description"
             , pipelineConf);
         }
+
+        if(!pipelineStoreTask.hasPipeline(HIGHER_VERSION_PIPELINE)) {
+          PipelineConfiguration pipelineConfiguration = pipelineStoreTask.create("user2", HIGHER_VERSION_PIPELINE, "description2");
+          PipelineConfiguration mockPipelineConf = MockStages.createPipelineConfigurationSourceProcessorTargetHigherVersion();
+          mockPipelineConf.getConfiguration().add(new Config("executionMode",
+            ExecutionMode.STANDALONE.name()));
+          mockPipelineConf.setUuid(pipelineConfiguration.getUuid());
+          pipelineStoreTask.save("admin2", HIGHER_VERSION_PIPELINE, ZERO_REV, "description"
+            , mockPipelineConf);
+        }
+
       } catch (PipelineStoreException e) {
         throw new RuntimeException(e);
       }

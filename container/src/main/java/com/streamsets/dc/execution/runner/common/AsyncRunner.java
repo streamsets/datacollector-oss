@@ -87,18 +87,18 @@ public class AsyncRunner implements Runner, PipelineInfo {
   }
 
   @Override
-  public void onDataCollectorStop() throws PipelineStoreException, PipelineRunnerException {
+  public void onDataCollectorStop() throws PipelineStoreException, PipelineRunnerException, PipelineRuntimeException {
     runner.onDataCollectorStop();
   }
 
   @Override
-  public synchronized void stop() throws PipelineStoreException, PipelineRunnerException {
+  public synchronized void stop() throws PipelineStoreException, PipelineRunnerException, PipelineRuntimeException {
     runner.stop();
   }
 
   @Override
   public void prepareForStart() throws PipelineStoreException, PipelineRunnerException {
-    runner.prepareForStart();
+    throw new UnsupportedOperationException("This method is not supported for AsyncRunner. Call start() instead.");
   }
 
   @Override
@@ -115,7 +115,7 @@ public class AsyncRunner implements Runner, PipelineInfo {
   }
 
   @Override
-  public String captureSnapshot(String name, int batches, int batchSize) throws PipelineException, PipelineStoreException {
+  public String captureSnapshot(String name, int batches, int batchSize) throws PipelineException {
     return runner.captureSnapshot(name, batches, batchSize);
   }
 

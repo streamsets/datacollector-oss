@@ -138,7 +138,7 @@ public class ManagerResource {
   public Response stopPipeline(
     @PathParam("pipelineName") String pipelineName,
     @QueryParam("rev") @DefaultValue("0") String rev) throws PipelineStoreException,
-    PipelineRunnerException {
+    PipelineRunnerException, PipelineRuntimeException {
     Utils.checkState(runtimeInfo.getExecutionMode() != RuntimeInfo.ExecutionMode.SLAVE,
       "This operation is not supported in SLAVE mode");
     Runner runner = manager.getRunner(user, pipelineName, rev);

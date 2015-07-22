@@ -5,13 +5,16 @@
 package com.streamsets.dc.execution.runner.cluster;
 
 import com.google.common.io.Files;
+import com.streamsets.dc.execution.PipelineState;
 import com.streamsets.dc.execution.PipelineStateStore;
 import com.streamsets.dc.execution.PipelineStatus;
 import com.streamsets.dc.execution.Runner;
 import com.streamsets.dc.execution.cluster.ClusterHelper;
 import com.streamsets.dc.execution.runner.cluster.ClusterRunner.ClusterSourceInfo;
+import com.streamsets.dc.execution.runner.common.AsyncRunner;
 import com.streamsets.dc.execution.store.CachePipelineStateStore;
 import com.streamsets.dc.execution.store.FilePipelineStateStore;
+import com.streamsets.pipeline.api.Config;
 import com.streamsets.pipeline.api.ExecutionMode;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.dc.callback.CallbackInfo;
@@ -29,6 +32,7 @@ import com.streamsets.pipeline.store.PipelineStoreException;
 import com.streamsets.pipeline.store.PipelineStoreTask;
 import com.streamsets.pipeline.store.impl.FilePipelineStoreTask;
 import com.streamsets.pipeline.util.Configuration;
+import com.streamsets.pipeline.util.TestUtil;
 import org.apache.commons.io.FileUtils;
 import org.junit.After;
 import org.junit.Assert;
@@ -93,6 +97,17 @@ public class TestClusterRunner {
     pipelineStoreTask = new FilePipelineStoreTask(runtimeInfo, stageLibraryTask, pipelineStateStore);
     pipelineStoreTask.init();
     pipelineStoreTask.create("admin", NAME, "some desc");
+
+    //Create an invalid pipeline
+    PipelineConfiguration pipelineConfiguration = pipelineStoreTask.create("user2", TestUtil.HIGHER_VERSION_PIPELINE,
+      "description2");
+    PipelineConfiguration mockPipelineConf = MockStages.createPipelineConfigurationSourceProcessorTargetHigherVersion();
+    mockPipelineConf.getConfiguration().add(new Config("executionMode",
+      ExecutionMode.CLUSTER.name()));
+    mockPipelineConf.setUuid(pipelineConfiguration.getUuid());
+    pipelineStoreTask.save("user2", TestUtil.HIGHER_VERSION_PIPELINE, "0", "description"
+      , mockPipelineConf);
+
     clusterHelper = new ClusterHelper(new MockSystemProcessFactory(), clusterProvider, tempDir, sparkManagerShell,
       emptyCL, emptyCL);
     setExecMode(ExecutionMode.CLUSTER);
@@ -279,7 +294,8 @@ public class TestClusterRunner {
   @Test
   public void testSlaveList() throws Exception {
     ClusterRunner clusterRunner = (ClusterRunner) createClusterRunner();
-    CallbackInfo callbackInfo = new CallbackInfo("user", "name", "rev", runtimeInfo.getSDCToken(), "slaveToken", "", "", "", "", "", "");
+    CallbackInfo callbackInfo = new CallbackInfo("user", "name", "rev", runtimeInfo.getSDCToken(), "slaveToken", "",
+      "", "", "", "", "");
     clusterRunner.updateSlaveCallbackInfo(callbackInfo);
     List<CallbackInfo> slaves = new ArrayList<CallbackInfo>(clusterRunner.getSlaveCallbackList());
     assertFalse(slaves.isEmpty());
@@ -287,7 +303,7 @@ public class TestClusterRunner {
     assertEquals(runtimeInfo.getSDCToken(), slaves.get(0).getSdcClusterToken());
     clusterRunner.prepareForStart();
     clusterRunner.start();
-    slaves = new ArrayList<CallbackInfo>(clusterRunner.getSlaveCallbackList());
+    slaves = new ArrayList<>(clusterRunner.getSlaveCallbackList());
     assertTrue(slaves.isEmpty());
   }
 
@@ -304,10 +320,59 @@ public class TestClusterRunner {
     Assert.assertEquals("ClusterMSource", clusterSourceInfo.getClusterSourceName());
   }
 
+  @Test(timeout = 20000)
+  public void testLoadingUnsupportedPipeline() throws Exception {
+    Runner runner = createClusterRunnerForUnsupportedPipeline();
+    runner.start();
+    while(runner.getState().getStatus() != PipelineStatus.START_ERROR) {
+      Thread.sleep(100);
+    }
+    PipelineState state = runner.getState();
+    Assert.assertTrue(state.getStatus() == PipelineStatus.START_ERROR);
+    Assert.assertTrue(state.getMessage().contains("CONTAINER_0158"));
+  }
+
+  @Test
+  public void tesOnDataCollectorStartUnsupportedPipeline1() throws Exception {
+    pipelineStateStore.saveState("admin", TestUtil.HIGHER_VERSION_PIPELINE, "0", PipelineStatus.STARTING, null,
+      attributes, ExecutionMode.CLUSTER);
+    Runner clusterRunner = createClusterRunnerForUnsupportedPipeline();
+    clusterRunner.prepareForDataCollectorStart();
+    clusterProvider.submitTimesOut = true;
+    clusterRunner.onDataCollectorStart();
+    while(clusterRunner.getState().getStatus() != PipelineStatus.START_ERROR) {
+      Thread.sleep(100);
+    }
+    PipelineState state = clusterRunner.getState();
+    Assert.assertTrue(state.getStatus() == PipelineStatus.START_ERROR);
+    Assert.assertTrue(state.getMessage().contains("CONTAINER_0158"));
+  }
+
+  @Test
+  public void tesOnDataCollectorStartUnsupportedPipeline2() throws Exception {
+    pipelineStateStore.saveState("admin", TestUtil.HIGHER_VERSION_PIPELINE, "0", PipelineStatus.RUNNING, null,
+      attributes, ExecutionMode.CLUSTER);
+    Runner clusterRunner = createClusterRunnerForUnsupportedPipeline();
+    clusterRunner.prepareForDataCollectorStart();
+    clusterProvider.submitTimesOut = true;
+    clusterRunner.onDataCollectorStart();
+    while(clusterRunner.getState().getStatus() != PipelineStatus.START_ERROR) {
+      Thread.sleep(100);
+    }
+    PipelineState state = clusterRunner.getState();
+    Assert.assertTrue(state.getStatus() == PipelineStatus.START_ERROR);
+    Assert.assertTrue(state.getMessage().contains("CONTAINER_0158"));
+  }
+
   private Runner createClusterRunner() {
     return new ClusterRunner(NAME, "0", "admin", runtimeInfo, conf, pipelineStoreTask, pipelineStateStore,
       stageLibraryTask, executorService, clusterHelper);
   }
 
+  private Runner createClusterRunnerForUnsupportedPipeline() {
+    return new AsyncRunner(new ClusterRunner(TestUtil.HIGHER_VERSION_PIPELINE, "0", "admin", runtimeInfo, conf,
+      pipelineStoreTask, pipelineStateStore, stageLibraryTask, executorService, clusterHelper),
+      new SafeScheduledExecutorService(1, "runner"));
+  }
 
 }

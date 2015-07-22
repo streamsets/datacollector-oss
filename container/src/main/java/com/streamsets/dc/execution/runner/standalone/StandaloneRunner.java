@@ -18,6 +18,7 @@ import com.streamsets.dc.execution.Snapshot;
 import com.streamsets.dc.execution.SnapshotInfo;
 import com.streamsets.dc.execution.SnapshotStore;
 import com.streamsets.dc.execution.StateListener;
+import com.streamsets.dc.execution.common.ExecutorConstants;
 import com.streamsets.dc.execution.metrics.MetricsEventRunnable;
 import com.streamsets.dc.execution.runner.common.Constants;
 import com.streamsets.dc.execution.runner.common.DataObserverRunnable;
@@ -53,9 +54,7 @@ import com.streamsets.pipeline.runner.PipelineRunner;
 import com.streamsets.pipeline.runner.PipelineRuntimeException;
 import com.streamsets.pipeline.runner.production.ProductionSourceOffsetTracker;
 import com.streamsets.pipeline.runner.production.RulesConfigLoaderRunnable;
-import com.streamsets.pipeline.stagelibrary.StageLibraryTask;
 import com.streamsets.pipeline.store.PipelineStoreException;
-import com.streamsets.pipeline.store.PipelineStoreTask;
 import com.streamsets.pipeline.util.Configuration;
 import com.streamsets.pipeline.util.ContainerError;
 import com.streamsets.pipeline.util.PipelineException;
@@ -84,9 +83,7 @@ public class StandaloneRunner extends AbstractRunner implements StateListener {
   @Inject RuntimeInfo runtimeInfo;
   @Inject Configuration configuration;
   @Inject PipelineStateStore pipelineStateStore;
-  @Inject StageLibraryTask stageLibrary;
   @Inject SnapshotStore snapshotStore;
-  @Inject PipelineStoreTask pipelineStore;
   @Inject @Named("runnerExecutor") SafeScheduledExecutorService runnerExecutor;
 
   private final ObjectGraph objectGraph;
@@ -390,7 +387,8 @@ public class StandaloneRunner extends AbstractRunner implements StateListener {
       Utils.formatL("Cannot start the pipeline '{}::{}' as the runner is already closed", name, rev));
 
     synchronized (this) {
-      LOG.info("Starting pipeline {} {}", name, rev);
+      try {
+        LOG.info("Starting pipeline {} {}", name, rev);
       /*
        * Implementation Notes: --------------------- What are the different threads and runnables created? - - - - - - - -
        * - - - - - - - - - - - - - - - - - - - RulesConfigLoader ProductionObserver MetricObserver
@@ -402,80 +400,84 @@ public class StandaloneRunner extends AbstractRunner implements StateListener {
        * Manager - responsible for creating alerts and sending email.
        */
 
-      PipelineConfiguration pipelineConfiguration = pipelineStore.load(name, rev);
-      List<Issue> errors = new ArrayList<>();
-      PipelineConfigBean pipelineConfigBean = PipelineBeanCreator.get().create(pipelineConfiguration, errors);
-      if (pipelineConfigBean == null) {
-        throw new PipelineRuntimeException(ContainerError.CONTAINER_0116, errors);
-      }
+        PipelineConfiguration pipelineConfiguration = getPipelineConf(name, rev);
+        List<Issue> errors = new ArrayList<>();
+        PipelineConfigBean pipelineConfigBean = PipelineBeanCreator.get().create(pipelineConfiguration, errors);
+        if (pipelineConfigBean == null) {
+          throw new PipelineRuntimeException(ContainerError.CONTAINER_0116, errors);
+        }
 
-      MemoryLimitConfiguration memoryLimitConfiguration = getMemoryLimitConfiguration(pipelineConfigBean);
+        MemoryLimitConfiguration memoryLimitConfiguration = getMemoryLimitConfiguration(pipelineConfigBean);
 
-      BlockingQueue<Object> productionObserveRequests =
-        new ArrayBlockingQueue<>(configuration.get(Constants.OBSERVER_QUEUE_SIZE_KEY,
-          Constants.OBSERVER_QUEUE_SIZE_DEFAULT), true /* FIFO */);
+        BlockingQueue<Object> productionObserveRequests =
+          new ArrayBlockingQueue<>(configuration.get(Constants.OBSERVER_QUEUE_SIZE_KEY,
+            Constants.OBSERVER_QUEUE_SIZE_DEFAULT), true /* FIFO */);
 
-      //Need to augment the existing object graph with pipeline related modules.
-      //This ensures that the singletons defined in those modules are singletons within the
-      //scope of a pipeline.
-      //So if a pipeline is started again for the second time, the object graph recreates the production pipeline
-      //with fresh instances of MetricRegistry, alert manager, observer etc etc..
-      ObjectGraph objectGraph = this.objectGraph.plus(new PipelineProviderModule(name, rev));
+        //Need to augment the existing object graph with pipeline related modules.
+        //This ensures that the singletons defined in those modules are singletons within the
+        //scope of a pipeline.
+        //So if a pipeline is started again for the second time, the object graph recreates the production pipeline
+        //with fresh instances of MetricRegistry, alert manager, observer etc etc..
+        ObjectGraph objectGraph = this.objectGraph.plus(new PipelineProviderModule(name, rev));
 
-      threadHealthReporter = objectGraph.get(ThreadHealthReporter.class);
-      observerRunnable = objectGraph.get(DataObserverRunnable.class);
+        threadHealthReporter = objectGraph.get(ThreadHealthReporter.class);
+        observerRunnable = objectGraph.get(DataObserverRunnable.class);
 
-      ProductionObserver productionObserver = (ProductionObserver)objectGraph.get(Observer.class);
-      RulesConfigLoader rulesConfigLoader = objectGraph.get(RulesConfigLoader.class);
-      RulesConfigLoaderRunnable rulesConfigLoaderRunnable = objectGraph.get(RulesConfigLoaderRunnable.class);
-      MetricObserverRunnable metricObserverRunnable = objectGraph.get(MetricObserverRunnable.class);
-      ProductionPipelineRunner runner = (ProductionPipelineRunner)objectGraph.get(PipelineRunner.class);
-      ProductionPipelineBuilder builder = objectGraph.get(ProductionPipelineBuilder.class);
+        ProductionObserver productionObserver = (ProductionObserver) objectGraph.get(Observer.class);
+        RulesConfigLoader rulesConfigLoader = objectGraph.get(RulesConfigLoader.class);
+        RulesConfigLoaderRunnable rulesConfigLoaderRunnable = objectGraph.get(RulesConfigLoaderRunnable.class);
+        MetricObserverRunnable metricObserverRunnable = objectGraph.get(MetricObserverRunnable.class);
+        ProductionPipelineRunner runner = (ProductionPipelineRunner) objectGraph.get(PipelineRunner.class);
+        ProductionPipelineBuilder builder = objectGraph.get(ProductionPipelineBuilder.class);
 
-      //This which are not injected as of now.
-      productionObserver.setObserveRequests(productionObserveRequests);
-      runner.setObserveRequests(productionObserveRequests);
-      runner.setDeliveryGuarantee(pipelineConfigBean.deliveryGuarantee);
-      runner.setMemoryLimitConfiguration(memoryLimitConfiguration);
+        //This which are not injected as of now.
+        productionObserver.setObserveRequests(productionObserveRequests);
+        runner.setObserveRequests(productionObserveRequests);
+        runner.setDeliveryGuarantee(pipelineConfigBean.deliveryGuarantee);
+        runner.setMemoryLimitConfiguration(memoryLimitConfiguration);
 
-      prodPipeline = builder.build(pipelineConfiguration);
-      prodPipeline.registerStatusListener(this);
+        prodPipeline = builder.build(pipelineConfiguration);
+        prodPipeline.registerStatusListener(this);
 
-      ScheduledFuture<?> metricsFuture = null;
-      if (metricsEventRunnable != null) {
-        metricsFuture =
-          runnerExecutor.scheduleAtFixedRate(metricsEventRunnable, 0, metricsEventRunnable.getScheduledDelay(),
+        ScheduledFuture<?> metricsFuture = null;
+        if (metricsEventRunnable != null) {
+          metricsFuture =
+            runnerExecutor.scheduleAtFixedRate(metricsEventRunnable, 0, metricsEventRunnable.getScheduledDelay(),
+              TimeUnit.SECONDS);
+        }
+        //Schedule Rules Config Loader
+        try {
+          rulesConfigLoader.load(productionObserver);
+        } catch (InterruptedException e) {
+          throw new PipelineRuntimeException(ContainerError.CONTAINER_0403, name, e.getMessage(), e);
+        }
+        ScheduledFuture<?> configLoaderFuture =
+          runnerExecutor.scheduleWithFixedDelay(rulesConfigLoaderRunnable, 1, RulesConfigLoaderRunnable.SCHEDULED_DELAY,
             TimeUnit.SECONDS);
-      }
-      //Schedule Rules Config Loader
-      try {
-        rulesConfigLoader.load(productionObserver);
-      } catch (InterruptedException e) {
-        throw new PipelineRuntimeException(ContainerError.CONTAINER_0403, name, e.getMessage(), e);
-      }
-      ScheduledFuture<?> configLoaderFuture =
-        runnerExecutor.scheduleWithFixedDelay(rulesConfigLoaderRunnable, 1, RulesConfigLoaderRunnable.SCHEDULED_DELAY,
+
+        ScheduledFuture<?> metricObserverFuture = runnerExecutor.scheduleWithFixedDelay(metricObserverRunnable, 1, 2,
           TimeUnit.SECONDS);
 
-      ScheduledFuture<?> metricObserverFuture = runnerExecutor.scheduleWithFixedDelay(metricObserverRunnable, 1, 2,
-        TimeUnit.SECONDS);
+        // update checker
+        updateChecker = new UpdateChecker(runtimeInfo, configuration, pipelineConfiguration, this);
+        ScheduledFuture<?> updateCheckerFuture = runnerExecutor.scheduleAtFixedRate(updateChecker, 1, 24 * 60, TimeUnit.MINUTES);
 
-      // update checker
-      updateChecker = new UpdateChecker(runtimeInfo, configuration, pipelineConfiguration, this);
-      ScheduledFuture<?> updateCheckerFuture = runnerExecutor.scheduleAtFixedRate(updateChecker, 1, 24 * 60, TimeUnit.MINUTES);
+        observerRunnable.setRequestQueue(productionObserveRequests);
+        Future<?> observerFuture = runnerExecutor.submit(observerRunnable);
 
-      observerRunnable.setRequestQueue(productionObserveRequests);
-      Future<?> observerFuture = runnerExecutor.submit(observerRunnable);
-
-      List<Future<?>> list;
-      if (metricsFuture != null) {
-        list =
-          ImmutableList
-            .of(configLoaderFuture, observerFuture, metricObserverFuture, metricsFuture, updateCheckerFuture);
-      } else {
-        list = ImmutableList.of(configLoaderFuture, observerFuture, metricObserverFuture, updateCheckerFuture);
+        List<Future<?>> list;
+        if (metricsFuture != null) {
+          list =
+            ImmutableList
+              .of(configLoaderFuture, observerFuture, metricObserverFuture, metricsFuture, updateCheckerFuture);
+        } else {
+          list = ImmutableList.of(configLoaderFuture, observerFuture, metricObserverFuture, updateCheckerFuture);
+        }
+        pipelineRunnable = new ProductionPipelineRunnable(threadHealthReporter, this, prodPipeline, name, rev, list);
+      } catch (Exception e) {
+        validateAndSetStateTransition(PipelineStatus.START_ERROR, e.getMessage(), null);
+        throw e;
       }
-      pipelineRunnable = new ProductionPipelineRunnable(threadHealthReporter, this, prodPipeline, name, rev, list);
     }
 
     if(!pipelineRunnable.isStopped()) {

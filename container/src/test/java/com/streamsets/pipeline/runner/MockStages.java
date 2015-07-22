@@ -628,6 +628,10 @@ public class MockStages {
     return createPipelineConfigurationSourceProcessorTarget(PipelineStoreTask.SCHEMA_VERSION);
   }
 
+  public static PipelineConfiguration createPipelineConfigurationSourceProcessorTargetHigherVersion() {
+    return createPipelineConfigurationSourceProcessorTarget(PipelineStoreTask.SCHEMA_VERSION + 1);
+  }
+
   public static PipelineConfiguration createPipelineConfigurationComplexSourceProcessorTarget() {
     return createPipelineConfigurationComplexSourceProcessorTarget(PipelineStoreTask.SCHEMA_VERSION);
   }
