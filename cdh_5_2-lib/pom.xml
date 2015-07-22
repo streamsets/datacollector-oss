@@ -17,16 +17,16 @@
   <groupId>com.streamsets</groupId>
   <artifactId>streamsets-datacollector-cdh_5_2-lib</artifactId>
   <version>1.0.0b3-SNAPSHOT</version>
-  <description>StreamSets Data Collector CDH5.2.4 Lib</description>
-  <name>StreamSets Data Collector CDH5.2.4 Lib</name>
+  <description>StreamSets Data Collector CDH5.2.6 Lib</description>
+  <name>StreamSets Data Collector CDH5.2.6 Lib</name>
   <packaging>jar</packaging>
 
   <properties>
-    <hadoop.version>2.5.0-cdh5.2.4</hadoop.version>
-    <hbase.version>0.98.6-cdh5.2.4</hbase.version>
-    <solr.version>4.4.0-cdh5.2.4</solr.version>
+    <hadoop.version>2.5.0-cdh5.2.6</hadoop.version>
+    <hbase.version>0.98.6-cdh5.2.6</hbase.version>
+    <solr.version>4.4.0-cdh5.2.6</solr.version>
     <solr.test.jetty.version>8.1.10.v20130312</solr.test.jetty.version>
-    <flume.version>1.5.0-cdh5.2.4</flume.version>
+    <flume.version>1.5.0-cdh5.2.6</flume.version>
     <thrift.version>0.9.0-cdh5-2</thrift.version>
   </properties>
 
