@@ -129,31 +129,34 @@ describe('StreamSets Data Collector App', function() {
       });
     });
 
+    var deletePipelineName = 'Sample Pipelinecopy',
+      deletePipelineElement;
 
     it('should be able to delete pipeline', function() {
-      browser.get('/collector/pipeline/Sample Pipeline');
+      browser.get('/collector/pipeline/' + deletePipelineName);
       browser.sleep(1000);
       //Toggle Library Pane
       element(by.css('[ng-click="toggleLibraryPanel()"]')).click();
 
-      element.all(by.repeater('pipeline in pipelines')).then(function(pipelines) {
+      element.all(by.repeater('pipeline in pipelines'))
+        .then(function(pipelines) {
+          pipelines.forEach(function(pipeline) {
+            var tagElement = pipeline.element(by.css('.pipeline-details-name'));
+            tagElement.getText().then(function(text) {
+              if(text == deletePipelineName) {
+                deletePipelineElement = pipeline;
+              }
+            });
+          });
 
-        //Select 2 pipeline
-        pipelines[1].click();
-
-        browser.sleep(1000);
-
-        element(by.css('[ng-click="toggleLibraryPanel()"]')).click();
-
-        browser.sleep(1000);
-
-        element.all(by.repeater('pipeline in pipelines')).then(function(pipelines) {
+          return browser.sleep(1000);
+        })
+        .then(function() {
           //Click dropdown toggle icon
-          pipelines[1].element(by.css('.dropdown-toggle')).click();
+          deletePipelineElement.element(by.css('.dropdown-toggle')).click();
 
           //Click Delete button in dropdown
-          pipelines[1].element(by.css('[ng-click="deletePipelineConfig(pipeline, $event)"]')).click();
-
+          deletePipelineElement.element(by.css('[ng-click="deletePipelineConfig(pipeline, $event)"]')).click();
 
           //Click yes button
           element(by.css('[ng-click="yes()"]')).click();
@@ -168,8 +171,6 @@ describe('StreamSets Data Collector App', function() {
             expect(pipelines.length).toEqual(2);
           });
         });
-
-      });
     });
 
     it('should be able to toggle stage library and click on stage to add', function() {
@@ -221,6 +222,13 @@ describe('StreamSets Data Collector App', function() {
         browser.sleep(2000);
       });
 
+    });
+
+    it('should redirect to home page with no pipeline exists error when wrong pipeline name is passed in URL', function() {
+      browser.get('/collector/pipeline/noPipelineExistsName');
+      browser.sleep(1000);
+      var alertElement = element(by.css('.alert'));
+      expect(alertElement.isPresent()).toBeTruthy();
     });
 
   });

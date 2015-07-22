@@ -16,7 +16,8 @@ import java.util.Iterator;
 
 @GenerateResourceBundle
 @StageDef(version = 1, label = "Dev Record Creator",
-          description = "It creates 2 records from each original record")
+          description = "It creates 2 records from each original record",
+          icon="random.png")
 public class RecordCreatorProcessor extends SingleLaneProcessor {
 
   @Override

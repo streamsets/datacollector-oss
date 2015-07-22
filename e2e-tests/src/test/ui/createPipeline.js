@@ -184,7 +184,7 @@ frisby.create('Login to StreamSets Data Collector')
         pipelineJSON.configuration.forEach(function(config) {
           if(config.name === 'badRecordsHandling') {
             expect(config.value).toBeDefined();
-            expect(config.value === 'streamsets-datacollector-basic-lib::com_streamsets_pipeline_stage_destination_devnull_ToErrorNullDTarget::1.0.0').toBeTruthy();
+            expect(config.value === 'streamsets-datacollector-basic-lib::com_streamsets_pipeline_stage_destination_devnull_ToErrorNullDTarget::1').toBeTruthy();
           } else if(config.name === 'constants') {
             expect(config.value).toBeDefined();
             expect(config.value.length === 1).toBeTruthy();

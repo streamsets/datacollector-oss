@@ -9,17 +9,21 @@
 
   display: none;
 
+  .error-alert-div {
+    margin-top: 50px;
+  }
+
   .create-pipeline-btn-group {
     margin: 250px 0 0 38%;
     color: #ffffff;
-    
+
     h2 {
       padding-left: @defaultPadding * 6;
       padding-bottom: @defaultPadding * 2;
       font-style: italic;
       font-family: serif;
     }
-    
+
     .btn {
       margin-right: @defaultPadding;
     }
@@ -75,6 +79,10 @@
     position: absolute;
     transition: opacity .3s;
     overflow: auto;
+
+    .alert {
+      margin-left: @defaultPadding;
+    }
 
     .tile-list {
 

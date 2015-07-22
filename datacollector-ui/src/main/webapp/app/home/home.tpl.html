@@ -2,6 +2,12 @@
 
 <div class="pipeline-empty-container" ng-class="{'show': loaded}"
      ng-show="pipelines.length == 0">
+
+  <div class="error-alert-div">
+    <ng-include ng-if="common.errors" src="'app/home/alerts/error/errorModal.tpl.html'"></ng-include>
+    <ng-include ng-if="common.errors" src="'app/home/alerts/error/errorAlert.tpl.html'"></ng-include>
+  </div>
+
   <div class="create-pipeline-btn-group">
     <h2 translate="home.getStarted">Get Started</h2>
     <button class="btn btn-primary pull-left create-pipeline-btn"
@@ -19,10 +25,6 @@
     </button>
   </div>
 </div>
-
-<ng-include src="'app/home/alerts/error/errorModal.tpl.html'"></ng-include>
-<ng-include src="'app/home/alerts/error/errorAlert.tpl.html'"></ng-include>
-
 
 
 <div class="panel panel-default page-panel home-page" ng-show="pipelines.length > 0">
@@ -104,6 +106,8 @@
   </div>
 
   <div class="panel-body"  ng-style="{'height': (windowHeight - 60) + 'px', 'width': (windowWidth) + 'px'}" resize>
+    <ng-include src="'app/home/alerts/error/errorModal.tpl.html'"></ng-include>
+    <ng-include src="'app/home/alerts/error/errorAlert.tpl.html'"></ng-include>
 
     <section class="tile-list ">
 

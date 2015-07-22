@@ -627,13 +627,11 @@ angular
      */
     $q.all([
       api.pipelineAgent.getAllPipelineStatus(),
-      api.pipelineAgent.getPipelineMetrics(routeParamPipelineName, 0),
       pipelineService.init(),
       configuration.init()
     ])
       .then(function (results) {
-        var pipelineStatusMap = results[0].data,
-          pipelineMetrics = results[1].data;
+        var pipelineStatusMap = results[0].data;
 
         isWebSocketSupported = (typeof(WebSocket) === "function") && configuration.isWebSocketUseEnabled();
         undoLimit = configuration.getUndoLimit();
@@ -659,23 +657,14 @@ angular
 
         $rootScope.common.pipelineStatusMap = pipelineStatusMap;
 
-        $rootScope.common.pipelineMetrics = pipelineMetrics;
-
         $scope.activeConfigInfo = _.find($scope.pipelines, function(pipelineDefn) {
           return pipelineDefn.name === routeParamPipelineName;
         });
 
-        if($rootScope.common.pipelineStatusMap[routeParamPipelineName].status === 'RUNNING') {
-          refreshPipelineMetrics();
-
-          if($rootScope.common.sdcExecutionMode !== pipelineConstant.CLUSTER) {
-            initializeAlertWebSocket();
-          }
-        }
-
         if($scope.activeConfigInfo) {
           return $q.all([api.pipelineAgent.getPipelineConfig($scope.activeConfigInfo.name),
-            api.pipelineAgent.getPipelineRules($scope.activeConfigInfo.name)]);
+            api.pipelineAgent.getPipelineRules($scope.activeConfigInfo.name),
+            api.pipelineAgent.getPipelineMetrics($scope.activeConfigInfo.name, 0)]);
         } else {
           $translate('global.messages.info.noPipelineExists', {name: routeParamPipelineName}).then(function(translation) {
             $rootScope.common.errors = [translation];
@@ -685,14 +674,24 @@ angular
           $location.replace();
         }
 
-      },function(data, status, headers, config) {
-          $rootScope.common.errors = [data];
+      },function(resp) {
+          $rootScope.common.errors = [resp.data];
       })
       .then(function(results) {
-        //Pipeline Configuration
+        //Pipeline Configuration, Rules & Metrics
         if(results && results.length > 1) {
           var config = results[0].data,
             rules = results[1].data;
+
+          $rootScope.common.pipelineMetrics = results[2].data;
+          if($rootScope.common.pipelineStatusMap[routeParamPipelineName].status === 'RUNNING') {
+            refreshPipelineMetrics();
+
+            if($rootScope.common.sdcExecutionMode !== pipelineConstant.CLUSTER) {
+              initializeAlertWebSocket();
+            }
+          }
+
           updateGraph(config, rules);
           updateDetailPane({
             selectedObject: undefined,
