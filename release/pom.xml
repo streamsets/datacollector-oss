@@ -133,6 +133,21 @@
             </configuration>
           </execution>
           <execution>
+            <id>hdp-2.3.0</id>
+            <phase>package</phase>
+            <goals>
+              <goal>single</goal>
+            </goals>
+            <configuration>
+              <appendAssemblyId>false</appendAssemblyId>
+              <attach>false</attach>
+              <finalName>streamsets-datacollector-hdp_2_3-lib-${project.version}</finalName>
+              <descriptors>
+                <descriptor>src/main/assemblies/data-collector-hdp_2_3-lib.xml</descriptor>
+              </descriptors>
+            </configuration>
+          </execution>
+          <execution>
             <id>apache-kafka-0.8.1.1</id>
             <phase>package</phase>
             <goals>

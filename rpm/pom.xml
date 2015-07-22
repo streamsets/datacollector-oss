@@ -873,6 +873,62 @@
             </configuration>
           </execution>
           <execution>
+            <id>generate-hdp-2.3-rpm</id>
+            <goals>
+              <goal>attached-rpm</goal>
+            </goals>
+            <configuration>
+              <name>streamsets-datacollector-hdp-2.3-lib</name>
+              <classifier>hdp-2.2-lib</classifier>
+              <license>Proprietary</license>
+              <distribution>el6</distribution>
+              <group>Applications/System</group>
+              <packager>StreamSets</packager>
+              <targetOS>linux</targetOS>
+              <prefix>/opt</prefix>
+              <provides>
+                <provide>streamsets-datacollector-hdp-2.3</provide>
+              </provides>
+              <requires>
+                <require>java</require>
+                <require>streamsets-datacollector</require>
+              </requires>
+              <defineStatements>
+                <defineStatement>_unpackaged_files_terminate_build 0</defineStatement>
+                <defineStatement>service_user ${sdc.user}</defineStatement>
+                <defineStatement>service_group ${sdc.group}</defineStatement>
+                <defineStatement>install_dir ${sdc.dir}</defineStatement>
+              </defineStatements>
+              <mappings>
+                <!-- Separate mappings for dirs exist b/c of the Won't Fix for this JIRA https://jira.codehaus.org/browse/MRPM-8 -->
+                <mapping>
+                  <directory>${sdc.dir}/streamsets-datacollector-${project.version}/streamsets-libs/streamsets-datacollector-hdp_2_3-lib</directory>
+                  <filemode>755</filemode>
+                  <username>root</username>
+                  <groupname>root</groupname>
+                </mapping>
+                <mapping>
+                  <directory>${sdc.dir}/streamsets-datacollector-${project.version}/streamsets-libs/streamsets-datacollector-hdp_2_3-lib/lib</directory>
+                  <filemode>755</filemode>
+                  <username>root</username>
+                  <groupname>root</groupname>
+                </mapping>
+                <mapping>
+                  <directory>${sdc.dir}/streamsets-datacollector-${project.version}/streamsets-libs/streamsets-datacollector-hdp_2_3-lib</directory>
+                  <directoryIncluded>false</directoryIncluded>
+                  <filemode>644</filemode>
+                  <username>root</username>
+                  <groupname>root</groupname>
+                  <sources>
+                    <source>
+                      <location>${sdc.distroot}/streamsets-datacollector-${project.version}/streamsets-libs/streamsets-datacollector-hdp_2_3-lib</location>
+                    </source>
+                  </sources>
+                </mapping>
+              </mappings>
+            </configuration>
+          </execution>
+          <execution>
             <id>generate-mongodb-3.0-rpm</id>
             <goals>
               <goal>attached-rpm</goal>
