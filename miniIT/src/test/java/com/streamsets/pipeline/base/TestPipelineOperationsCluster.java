@@ -5,7 +5,7 @@
  */
 package com.streamsets.pipeline.base;
 
-import com.streamsets.pipeline.MiniSDC;
+import com.streamsets.datacollector.MiniSDC;
 import com.streamsets.pipeline.util.ClusterUtil;
 import org.apache.hadoop.yarn.conf.YarnConfiguration;
 

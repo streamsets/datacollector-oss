@@ -39,7 +39,7 @@ public class ClusterRunnerModule {
 
   @Provides
   public Runner provideAsyncRunner(ClusterRunner runner,
-                                        @Named("asyncExecutor") SafeScheduledExecutorService asyncExecutor) {
+                                        @Named("runnerExecutor") SafeScheduledExecutorService asyncExecutor) {
     return new AsyncRunner(runner, asyncExecutor);
   }
 }

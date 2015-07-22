@@ -9,7 +9,6 @@ package com.streamsets.datacollector.execution.runner.common.dagger;
 import com.codahale.metrics.MetricRegistry;
 import com.streamsets.datacollector.email.EmailSender;
 import com.streamsets.datacollector.execution.EventListenerManager;
-import com.streamsets.datacollector.execution.SnapshotStore;
 import com.streamsets.datacollector.execution.alerts.AlertManager;
 import com.streamsets.datacollector.execution.metrics.MetricsEventRunnable;
 import com.streamsets.datacollector.execution.runner.common.DataObserverRunnable;
@@ -21,7 +20,6 @@ import com.streamsets.datacollector.execution.runner.common.ProductionPipelineRu
 import com.streamsets.datacollector.execution.runner.common.ProductionPipelineRunner;
 import com.streamsets.datacollector.execution.runner.common.RulesConfigLoader;
 import com.streamsets.datacollector.execution.runner.common.ThreadHealthReporter;
-import com.streamsets.datacollector.execution.snapshot.file.FileSnapshotStore;
 import com.streamsets.datacollector.main.RuntimeInfo;
 import com.streamsets.datacollector.metrics.MetricsModule;
 import com.streamsets.datacollector.runner.Observer;
@@ -32,7 +30,6 @@ import com.streamsets.datacollector.runner.production.RulesConfigLoaderRunnable;
 import com.streamsets.datacollector.stagelibrary.StageLibraryTask;
 import com.streamsets.datacollector.store.PipelineStoreTask;
 import com.streamsets.datacollector.util.Configuration;
-
 import dagger.Module;
 import dagger.Provides;
 
@@ -141,8 +138,4 @@ public class PipelineProviderModule {
     return new ProductionPipelineBuilder(name, rev, runtimeInfo, stageLib, (ProductionPipelineRunner)runner, observer);
   }
 
-  @Provides @Singleton
-  public SnapshotStore provideSnapshotStore(FileSnapshotStore fileSnapshotStore) {
-    return fileSnapshotStore;
-  }
 }

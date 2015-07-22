@@ -46,9 +46,9 @@ import com.streamsets.datacollector.stagelibrary.StageLibraryTask;
 import com.streamsets.datacollector.store.PipelineStoreException;
 import com.streamsets.datacollector.store.PipelineStoreTask;
 import com.streamsets.datacollector.store.impl.FilePipelineStoreTask;
-import com.streamsets.datacollector.util.Configuration;
 import com.streamsets.pipeline.api.Batch;
 import com.streamsets.pipeline.api.BatchMaker;
+import com.streamsets.pipeline.api.Config;
 import com.streamsets.pipeline.api.ExecutionMode;
 import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.Record;
@@ -57,18 +57,14 @@ import com.streamsets.pipeline.api.base.BaseSource;
 import com.streamsets.pipeline.api.base.BaseTarget;
 import com.streamsets.pipeline.api.base.SingleLaneProcessor;
 import com.streamsets.pipeline.api.base.SingleLaneRecordProcessor;
-import com.streamsets.pipeline.api.Config;
 import com.streamsets.pipeline.lib.executor.SafeScheduledExecutorService;
-
 import dagger.Module;
 import dagger.ObjectGraph;
 import dagger.Provides;
-
 import org.mockito.Mockito;
 
 import javax.inject.Named;
 import javax.inject.Singleton;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -78,7 +74,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Random;
 import java.util.UUID;
-import java.util.concurrent.TimeUnit;
 
 public class TestUtil {
   public static final String USER = "user";
@@ -235,56 +230,9 @@ public class TestUtil {
   }
 
   /*************** PipelineStore ***************/
-
-  @Module(injects = PipelineStoreTask.class, library = true, includes = {TestRuntimeModule.class,
-    TestStageLibraryModule.class, TestConfigurationModule.class, TestPipelineStateStoreModule.class})
-  public static class TestPipelineStoreModule {
-
-    public TestPipelineStoreModule() {
-    }
-
-    @Provides
-    public PipelineStoreTask providePipelineStore(RuntimeInfo info, StageLibraryTask stageLibraryTask) {
-      FilePipelineStoreTask pipelineStoreTask = new FilePipelineStoreTask(info, stageLibraryTask, null, new LockCache<String>());
-      pipelineStoreTask.init();
-      try {
-        //create an invalid pipeline
-        pipelineStoreTask.create("user", "invalid", "invalid cox its empty");
-        PipelineConfiguration pipelineConf = pipelineStoreTask.load("invalid", PIPELINE_REV);
-        PipelineConfiguration mockPipelineConf = MockStages.createPipelineConfigurationSourceProcessorTarget();
-        pipelineConf.setErrorStage(mockPipelineConf.getErrorStage());
-
-        //create a valid pipeline
-        pipelineStoreTask.create("user", MY_PIPELINE, "description");
-        pipelineConf = pipelineStoreTask.load(MY_PIPELINE, PIPELINE_REV);
-        mockPipelineConf = MockStages.createPipelineConfigurationSourceProcessorTarget();
-        pipelineConf.setStages(mockPipelineConf.getStages());
-        pipelineConf.setErrorStage(mockPipelineConf.getErrorStage());
-        pipelineStoreTask.save("admin", MY_PIPELINE, PIPELINE_REV, "description"
-          , pipelineConf);
-
-        //create a DataRuleDefinition for one of the stages
-        DataRuleDefinition dataRuleDefinition = new DataRuleDefinition("myID", "myLabel", "s", 100, 10,
-          "${record:value(\"/name\") != null}", true, "alertText", ThresholdType.COUNT, "100", 100, true, false, true);
-        List<DataRuleDefinition> dataRuleDefinitions = new ArrayList<>();
-        dataRuleDefinitions.add(dataRuleDefinition);
-
-        RuleDefinitions ruleDefinitions = new RuleDefinitions(Collections.<MetricsRuleDefinition>emptyList(),
-          dataRuleDefinitions, Collections.<String>emptyList(), UUID.randomUUID());
-        pipelineStoreTask.storeRules(MY_PIPELINE, PIPELINE_REV, ruleDefinitions);
-
-      } catch (PipelineStoreException e) {
-        throw new RuntimeException(e);
-      }
-
-      return pipelineStoreTask;
-    }
-  }
-
-  /*************** PipelineStore ***************/
   // TODO - Rename TestPipelineStoreModule after multi pipeline support
   @Module(injects = PipelineStoreTask.class, library = true, includes = {TestRuntimeModule.class,
-    TestStageLibraryModule.class, TestConfigurationModule.class, TestPipelineStateStoreModule.class })
+    TestStageLibraryModule.class,  TestPipelineStateStoreModule.class })
   public static class TestPipelineStoreModuleNew {
 
     public TestPipelineStoreModuleNew() {
@@ -362,8 +310,7 @@ public class TestUtil {
 
   /*************** PipelineStateStore ***************/
 
-  @Module(injects = PipelineStateStore.class, library = true, includes = {TestRuntimeModule.class,
-    TestConfigurationModule.class})
+  @Module(injects = PipelineStateStore.class, library = true, includes = {TestRuntimeModule.class})
   public static class TestPipelineStateStoreModule {
     public TestPipelineStateStoreModule() {
     }
@@ -374,21 +321,6 @@ public class TestUtil {
       CachePipelineStateStore cachePipelineStateStore = new CachePipelineStateStore(pipelineStateStore);
       cachePipelineStateStore.init();
       return cachePipelineStateStore;
-    }
-  }
-
-  /*************** Configuration ***************/
-
-  @Module(library = true)
-  public static class TestConfigurationModule {
-
-    public TestConfigurationModule() {
-    }
-
-    @Provides  @Singleton
-    public Configuration provideConfiguration() {
-      Configuration conf = new Configuration();
-      return conf;
     }
   }
 
@@ -405,6 +337,12 @@ public class TestUtil {
       RuntimeInfo info = new RuntimeInfo(RuntimeModule.SDC_PROPERTY_PREFIX, new MetricRegistry(),
         Arrays.asList(getClass().getClassLoader()));
       return info;
+    }
+
+    @Provides  @Singleton
+    public Configuration provideConfiguration() {
+      Configuration conf = new Configuration();
+      return conf;
     }
 
   }
@@ -542,6 +480,11 @@ public class TestUtil {
         (ProductionPipelineRunner)runner, observer);
     }
 
+
+    @Provides @Singleton
+    public EventListenerManager provideEventListenerManager() {
+      return new EventListenerManager();
+    }
   }
 
   /*************** Runner ***************/
@@ -582,9 +525,7 @@ public class TestUtil {
   /*************** PipelineManager ***************/
 
   @Module(injects = {StandaloneAndClusterPipelineManager.class, StandaloneRunner.class}, library = true,
-    includes = { TestRuntimeModule.class, TestPipelineStoreModuleNew.class, TestPipelineStateStoreModule.class,
-      TestStageLibraryModule.class, TestConfigurationModule.class, TestExecutorModule.class,
-      TestPipelineProviderModule.class})
+    includes = {TestPipelineStoreModuleNew.class, TestExecutorModule.class, TestSnapshotStoreModule.class})
   public static class TestPipelineManagerModule {
 
     public TestPipelineManagerModule() {
@@ -613,14 +554,9 @@ public class TestUtil {
                                    ExecutionMode executionMode) {
           ObjectGraph plus = objectGraph.plus(new TestPipelineProviderModule(name, rev));
           TestRunnerModule testRunnerModule = new TestRunnerModule(user, name, rev, plus);
-          return testRunnerModule.provideRunner(new SafeScheduledExecutorService(1, "asyncExecutor"));
+          return testRunnerModule.provideRunner(new SafeScheduledExecutorService(1, "runnerExecutor"));
         }
       };
-    }
-
-    @Provides @Singleton
-    public EventListenerManager provideEventListenerManager() {
-      return new EventListenerManager();
     }
 
   }

@@ -8,6 +8,7 @@ package com.streamsets.datacollector.execution.executor;
 import com.streamsets.datacollector.execution.common.ExecutorConstants;
 import com.streamsets.datacollector.main.RuntimeModule;
 import com.streamsets.datacollector.util.Configuration;
+import com.streamsets.dc.execution.manager.standalone.ResourceManager;
 import com.streamsets.pipeline.lib.executor.SafeScheduledExecutorService;
 
 import dagger.Module;
@@ -41,18 +42,16 @@ public class ExecutorModule {
       configuration.get(ExecutorConstants.RUNNER_THREAD_POOL_SIZE_KEY, ExecutorConstants.RUNNER_THREAD_POOL_SIZE_DEFAULT), "runner");
   }
 
-  @Provides @Singleton @Named("asyncExecutor")
-  public SafeScheduledExecutorService provideAsyncExecutor(Configuration configuration) {
-    return new SafeScheduledExecutorService(
-      configuration.get(ExecutorConstants.ASYNC_EXECUTOR_THREAD_POOL_SIZE_KEY, ExecutorConstants.ASYNC_EXECUTOR_THREAD_POOL_SIZE_DEFAULT),
-      "asyncExecutor");
-  }
-
   @Provides @Singleton @Named("managerExecutor")
   public SafeScheduledExecutorService provideManagerExecutor(Configuration configuration) {
     //thread used to evict runners from the cache in manager
     return new SafeScheduledExecutorService(
       configuration.get(ExecutorConstants.MANAGER_EXECUTOR_THREAD_POOL_SIZE_KEY, ExecutorConstants.MANAGER_EXECUTOR_THREAD_POOL_SIZE_DEFAULT),
       "managerExecutor");
+  }
+
+  @Provides @Singleton
+  ResourceManager provideResourceManager(Configuration configuration) {
+    return new ResourceManager(configuration);
   }
 }

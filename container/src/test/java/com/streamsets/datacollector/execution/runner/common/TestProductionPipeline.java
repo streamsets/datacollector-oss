@@ -11,9 +11,6 @@ import com.streamsets.datacollector.config.MemoryLimitConfiguration;
 import com.streamsets.datacollector.config.MemoryLimitExceeded;
 import com.streamsets.datacollector.config.PipelineConfiguration;
 import com.streamsets.datacollector.execution.SnapshotStore;
-import com.streamsets.datacollector.execution.runner.common.ProductionPipeline;
-import com.streamsets.datacollector.execution.runner.common.ProductionPipelineBuilder;
-import com.streamsets.datacollector.execution.runner.common.ProductionPipelineRunner;
 import com.streamsets.datacollector.execution.snapshot.common.SnapshotInfoImpl;
 import com.streamsets.datacollector.execution.snapshot.file.FileSnapshotStore;
 import com.streamsets.datacollector.main.RuntimeInfo;
@@ -37,7 +34,6 @@ import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.base.BaseProcessor;
 import com.streamsets.pipeline.api.base.BaseSource;
 import com.streamsets.pipeline.api.base.BaseTarget;
-
 import org.apache.commons.io.FileUtils;
 import org.junit.AfterClass;
 import org.junit.Assert;
@@ -285,7 +281,7 @@ public class TestProductionPipeline {
   }
 
   private ProductionPipeline createProductionPipeline(DeliveryGuarantee deliveryGuarantee, boolean captureNextBatch,
-    boolean sourceOffsetCommitter) throws PipelineRuntimeException, StageException, Exception {
+    boolean sourceOffsetCommitter) throws Exception {
     SourceOffsetTracker tracker = new TestUtil.SourceOffsetTrackerImpl("1");
     SnapshotStore snapshotStore = Mockito.mock(FileSnapshotStore.class);
 

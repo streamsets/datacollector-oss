@@ -5,8 +5,7 @@
  */
 package com.streamsets.pipeline.base;
 
-import com.google.common.collect.ImmutableList;
-import com.streamsets.pipeline.MiniSDC;
+import com.streamsets.datacollector.MiniSDC;
 import com.streamsets.pipeline.MiniSDCTestingUtility;
 import com.streamsets.pipeline.util.VerifyUtils;
 import org.junit.After;

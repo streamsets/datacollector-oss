@@ -9,8 +9,6 @@ import com.streamsets.datacollector.config.DataRuleDefinition;
 import com.streamsets.datacollector.config.MetricsRuleDefinition;
 import com.streamsets.datacollector.config.RuleDefinitions;
 import com.streamsets.datacollector.config.ThresholdType;
-import com.streamsets.datacollector.execution.runner.common.ProductionObserver;
-import com.streamsets.datacollector.execution.runner.common.RulesConfigLoader;
 import com.streamsets.datacollector.main.RuntimeInfo;
 import com.streamsets.datacollector.main.RuntimeModule;
 import com.streamsets.datacollector.runner.production.RulesConfigurationChangeRequest;
@@ -18,9 +16,7 @@ import com.streamsets.datacollector.store.PipelineStoreException;
 import com.streamsets.datacollector.store.PipelineStoreTask;
 import com.streamsets.datacollector.util.Configuration;
 import com.streamsets.datacollector.util.TestUtil;
-
 import dagger.ObjectGraph;
-
 import org.apache.commons.io.FileUtils;
 import org.junit.AfterClass;
 import org.junit.Assert;
@@ -50,7 +46,7 @@ public class TestRulesConfigLoader {
     File f = new File(System.getProperty(RuntimeModule.SDC_PROPERTY_PREFIX + RuntimeInfo.DATA_DIR));
     FileUtils.deleteDirectory(f);
     TestUtil.captureStagesForProductionRun();
-    ObjectGraph g = ObjectGraph.create(TestUtil.TestPipelineStoreModule.class);
+    ObjectGraph g = ObjectGraph.create(TestUtil.TestPipelineStoreModuleNew.class);
     pipelineStoreTask = g.get(PipelineStoreTask.class);
   }
 

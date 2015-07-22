@@ -16,9 +16,10 @@ import com.streamsets.datacollector.execution.PipelineStateStore;
 import com.streamsets.datacollector.execution.PipelineStatus;
 import com.streamsets.datacollector.execution.Runner;
 import com.streamsets.datacollector.execution.cluster.ClusterHelper;
-import com.streamsets.datacollector.execution.runner.cluster.ClusterRunner;
+import com.streamsets.datacollector.execution.common.ExecutorConstants;
 import com.streamsets.datacollector.execution.runner.cluster.ClusterRunner.ClusterSourceInfo;
 import com.streamsets.datacollector.execution.runner.common.AsyncRunner;
+import com.streamsets.datacollector.execution.runner.common.PipelineRunnerException;
 import com.streamsets.datacollector.execution.store.CachePipelineStateStore;
 import com.streamsets.datacollector.execution.store.FilePipelineStateStore;
 import com.streamsets.datacollector.main.RuntimeInfo;
@@ -29,8 +30,10 @@ import com.streamsets.datacollector.store.PipelineStoreException;
 import com.streamsets.datacollector.store.PipelineStoreTask;
 import com.streamsets.datacollector.store.impl.FilePipelineStoreTask;
 import com.streamsets.datacollector.util.Configuration;
+import com.streamsets.datacollector.util.ContainerError;
 import com.streamsets.datacollector.util.LockCache;
 import com.streamsets.datacollector.util.TestUtil;
+import com.streamsets.dc.execution.manager.standalone.ResourceManager;
 import com.streamsets.pipeline.api.Config;
 import com.streamsets.pipeline.api.ExecutionMode;
 import com.streamsets.pipeline.api.StageException;
@@ -358,7 +361,7 @@ public class TestClusterRunner {
     clusterRunner.prepareForDataCollectorStart();
     clusterProvider.submitTimesOut = true;
     clusterRunner.onDataCollectorStart();
-    while(clusterRunner.getState().getStatus() != PipelineStatus.START_ERROR) {
+    while (clusterRunner.getState().getStatus() != PipelineStatus.START_ERROR) {
       Thread.sleep(100);
     }
     PipelineState state = clusterRunner.getState();
@@ -366,15 +369,80 @@ public class TestClusterRunner {
     Assert.assertTrue(state.getMessage().contains("CONTAINER_0158"));
   }
 
+  @Test
+  public void testRunningMaxPipelines() throws Exception {
+    Configuration configuration = new Configuration();
+    configuration.set(ExecutorConstants.RUNNER_THREAD_POOL_SIZE_KEY, 1);
+    ResourceManager resourceManager = new ResourceManager(configuration);
+
+    PipelineStoreTask pipelineStoreTask = new FilePipelineStoreTask(runtimeInfo, stageLibraryTask, pipelineStateStore,
+      new LockCache<String>());
+    pipelineStoreTask.init();
+    pipelineStoreTask.create("admin", "a", "some desc");
+    pipelineStoreTask.create("admin", "b", "some desc");
+    pipelineStoreTask.create("admin", "c", "some desc");
+    pipelineStoreTask.create("admin", "d", "some desc");
+    pipelineStoreTask.create("admin", "e", "some desc");
+    pipelineStoreTask.create("admin", "f", "some desc");
+
+    //Only one runner can start pipeline at the max since the runner thread pool size is 3
+    Runner runner1 = createClusterRunner("a", pipelineStoreTask, resourceManager);
+    runner1.prepareForStart();
+
+    Runner runner2 = createClusterRunner("b", pipelineStoreTask, resourceManager);
+    runner2.prepareForStart();
+
+    Runner runner3 = createClusterRunner("c", pipelineStoreTask, resourceManager);
+    runner3.prepareForStart();
+
+    Runner runner4 = createClusterRunner("d", pipelineStoreTask, resourceManager);
+    runner4.prepareForStart();
+
+    Runner runner5 = createClusterRunner("e", pipelineStoreTask, resourceManager);
+    runner5.prepareForStart();
+
+    Runner runner6 = createClusterRunner("f", pipelineStoreTask, resourceManager);
+
+    try {
+      runner6.prepareForStart();
+      Assert.fail("PipelineRunnerException expected as sdc is out of runner thread resources");
+    } catch (PipelineRunnerException e) {
+      Assert.assertEquals(ContainerError.CONTAINER_0166, e.getErrorCode());
+    }
+
+    try {
+      runner5.start();
+      Assert.fail("Expected exception as pipeline is empty");
+    } catch (PipelineRunnerException e) {
+      Assert.assertEquals(ContainerError.CONTAINER_0158, e.getErrorCode());
+    }
+
+    runner6.prepareForStart();
+
+    try {
+      runner5.prepareForStart();
+      Assert.fail("PipelineRunnerException expected as sdc is out of runner thread resources");
+    } catch (PipelineRunnerException e) {
+      Assert.assertEquals(ContainerError.CONTAINER_0166, e.getErrorCode());
+    }
+  }
+
   private Runner createClusterRunner() {
     return new ClusterRunner(NAME, "0", "admin", runtimeInfo, conf, pipelineStoreTask, pipelineStateStore,
-      stageLibraryTask, executorService, clusterHelper);
+      stageLibraryTask, executorService, clusterHelper, new ResourceManager(conf));
+  }
+
+  private Runner createClusterRunner(String name, PipelineStoreTask pipelineStoreTask, ResourceManager resourceManager) {
+    Runner runner = new ClusterRunner(name, "0", "a", runtimeInfo, conf, pipelineStoreTask, pipelineStateStore,
+      stageLibraryTask, executorService, clusterHelper, resourceManager);
+    runner.addStateEventListener(resourceManager);
+    return runner;
   }
 
   private Runner createClusterRunnerForUnsupportedPipeline() {
     return new AsyncRunner(new ClusterRunner(TestUtil.HIGHER_VERSION_PIPELINE, "0", "admin", runtimeInfo, conf,
-      pipelineStoreTask, pipelineStateStore, stageLibraryTask, executorService, clusterHelper),
-      new SafeScheduledExecutorService(1, "runner"));
+      pipelineStoreTask, pipelineStateStore, stageLibraryTask, executorService, clusterHelper,
+      new ResourceManager(conf)), new SafeScheduledExecutorService(1, "runner"));
   }
 
 }

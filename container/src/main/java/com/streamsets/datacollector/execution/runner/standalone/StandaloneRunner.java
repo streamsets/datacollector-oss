@@ -58,6 +58,8 @@ import com.streamsets.datacollector.util.ContainerError;
 import com.streamsets.datacollector.util.PipelineException;
 import com.streamsets.datacollector.validation.Issue;
 import com.streamsets.datacollector.validation.ValidationError;
+import com.streamsets.dc.execution.manager.standalone.ResourceManager;
+import com.streamsets.dc.execution.manager.standalone.ThreadUsage;
 import com.streamsets.pipeline.api.ExecutionMode;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
@@ -95,6 +97,7 @@ public class StandaloneRunner extends AbstractRunner implements StateListener {
   @Inject PipelineStateStore pipelineStateStore;
   @Inject SnapshotStore snapshotStore;
   @Inject @Named("runnerExecutor") SafeScheduledExecutorService runnerExecutor;
+  @Inject ResourceManager resourceManager;
 
   private final ObjectGraph objectGraph;
   private final String name;
@@ -403,11 +406,12 @@ public class StandaloneRunner extends AbstractRunner implements StateListener {
 
   private synchronized void validateAndSetStateTransition(PipelineStatus toStatus, String message, Map<String, Object> attributes)
     throws PipelineStoreException, PipelineRunnerException {
-    PipelineStatus status = getState().getStatus();
-    checkState(VALID_TRANSITIONS.get(status).contains(toStatus), ContainerError.CONTAINER_0102, status, toStatus);
+    PipelineState fromState = getState();
+    checkState(VALID_TRANSITIONS.get(fromState.getStatus()).contains(toStatus), ContainerError.CONTAINER_0102,
+      fromState.getStatus(), toStatus);
     PipelineState pipelineState = pipelineStateStore.saveState(user, name, rev, toStatus, message, attributes,
       ExecutionMode.STANDALONE);
-    eventListenerManager.broadcastPipelineState(pipelineState);
+    eventListenerManager.broadcastStateChange(fromState, pipelineState, ThreadUsage.STANDALONE);
   }
 
   private void checkState(boolean expr, ContainerError error, Object... args) throws PipelineRunnerException {
@@ -434,8 +438,11 @@ public class StandaloneRunner extends AbstractRunner implements StateListener {
 
   @Override
   public void prepareForStart() throws PipelineStoreException, PipelineRunnerException {
-      LOG.info("Preparing to start pipeline '{}::{}'", name, rev);
-      validateAndSetStateTransition(PipelineStatus.STARTING, null, null);
+    if(!resourceManager.requestRunnerResources(ThreadUsage.STANDALONE)) {
+      throw new PipelineRunnerException(ContainerError.CONTAINER_0166, name);
+    }
+    LOG.info("Preparing to start pipeline '{}::{}'", name, rev);
+    validateAndSetStateTransition(PipelineStatus.STARTING, null, null);
   }
 
   @Override

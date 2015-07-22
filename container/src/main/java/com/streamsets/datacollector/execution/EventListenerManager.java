@@ -11,10 +11,11 @@ import com.streamsets.datacollector.alerts.AlertEventListener;
 import com.streamsets.datacollector.execution.alerts.AlertInfo;
 import com.streamsets.datacollector.json.ObjectMapperFactory;
 import com.streamsets.datacollector.metrics.MetricsEventListener;
-
+import com.streamsets.dc.execution.manager.standalone.ThreadUsage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.inject.Inject;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,6 +25,7 @@ public class EventListenerManager {
   private final List<StateEventListener> stateEventListenerList;
   private final List<AlertEventListener> alertEventListenerList;
 
+  @Inject
   public EventListenerManager() {
     metricsEventListenerList = new ArrayList<>();
     stateEventListenerList = new ArrayList<>();
@@ -93,7 +95,7 @@ public class EventListenerManager {
     }
   }
 
-  public void broadcastPipelineState(PipelineState pipelineState) {
+  public void broadcastStateChange(PipelineState fromState, PipelineState toState, ThreadUsage threadUsage) {
     if(stateEventListenerList.size() > 0) {
       List<StateEventListener> stateEventListenerListCopy;
       synchronized (stateEventListenerList) {
@@ -102,11 +104,11 @@ public class EventListenerManager {
 
       try {
         ObjectMapper objectMapper = ObjectMapperFactory.get();
-        String pipelineStateJSONStr = objectMapper.writer().writeValueAsString(pipelineState);
+        String toStateJson = objectMapper.writer().writeValueAsString(toState);
 
         for(StateEventListener stateEventListener : stateEventListenerListCopy) {
           try {
-            stateEventListener.notification(pipelineStateJSONStr);
+            stateEventListener.onStateChange(fromState, toState, toStateJson, threadUsage);
           } catch(Exception ex) {
             LOG.warn("Error while broadcasting Pipeline State, {}", ex.getMessage(), ex);
           }

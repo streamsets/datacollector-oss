@@ -9,21 +9,27 @@ import com.streamsets.datacollector.execution.PipelineState;
 import com.streamsets.datacollector.execution.PipelineStateStore;
 import com.streamsets.datacollector.execution.PipelineStatus;
 import com.streamsets.datacollector.execution.Runner;
+import com.streamsets.datacollector.execution.common.ExecutorConstants;
 import com.streamsets.datacollector.execution.manager.standalone.StandaloneAndClusterPipelineManager;
+import com.streamsets.datacollector.execution.runner.common.PipelineRunnerException;
 import com.streamsets.datacollector.main.RuntimeInfo;
 import com.streamsets.datacollector.main.RuntimeModule;
 import com.streamsets.datacollector.store.PipelineStoreException;
+import com.streamsets.datacollector.util.Configuration;
+import com.streamsets.datacollector.util.ContainerError;
 import com.streamsets.datacollector.util.TestUtil;
+import com.streamsets.dc.execution.manager.standalone.ResourceManager;
 import com.streamsets.pipeline.api.ExecutionMode;
-
+import dagger.Module;
 import dagger.ObjectGraph;
-
+import dagger.Provides;
 import org.apache.commons.io.FileUtils;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
+import javax.inject.Singleton;
 import java.io.File;
 import java.io.IOException;
 import java.util.UUID;
@@ -244,4 +250,51 @@ public class TestStandaloneRunner {
     Assert.assertTrue(runner.getState().getStatus() == pipelineStatus);
   }
 
+  @Test
+  public void testRunningMaxPipelines() throws Exception {
+    ObjectGraph objectGraph = ObjectGraph.create(new TestUtil.TestPipelineManagerModule(), ConfigModule.class);
+    Manager pipelineManager = new StandaloneAndClusterPipelineManager(objectGraph);
+    pipelineManager.init();
+
+    //Only one runner can start pipeline at the max since the runner thread pool size is 3
+    Runner runner1 = pipelineManager.getRunner( "admin", TestUtil.MY_PIPELINE, "0");
+    runner1.start();
+    waitAndAssertState(runner1, PipelineStatus.RUNNING);
+
+    Runner runner2 = pipelineManager.getRunner("admin2", TestUtil.MY_SECOND_PIPELINE, "0");
+    try {
+      runner2.start();
+      Assert.fail("Expected PipelineRunnerException");
+    } catch (PipelineRunnerException e) {
+      Assert.assertEquals(ContainerError.CONTAINER_0166, e.getErrorCode());
+    }
+
+    runner1.stop();
+    waitAndAssertState(runner1, PipelineStatus.STOPPED);
+
+    runner2.start();
+    waitAndAssertState(runner2, PipelineStatus.RUNNING);
+
+    try {
+      runner1.start();
+      Assert.fail("Expected PipelineRunnerException");
+    } catch (PipelineRunnerException e) {
+      Assert.assertEquals(ContainerError.CONTAINER_0166, e.getErrorCode());
+    }
+  }
+
+  @Module(overrides = true, library = true)
+  static class ConfigModule {
+    @Provides @Singleton
+    public Configuration provideConfiguration() {
+      Configuration configuration = new Configuration();
+      configuration.set(ExecutorConstants.RUNNER_THREAD_POOL_SIZE_KEY, 3);
+      return configuration;
+    }
+
+    @Provides @Singleton
+    public ResourceManager provideResourceManager(Configuration configuration) {
+      return new ResourceManager(configuration);
+    }
+  }
 }

@@ -139,11 +139,6 @@ public class TestStandalonePipelineManager {
       return new SafeScheduledExecutorService(10, "manager");
     }
 
-    @Provides @Singleton @Named("asyncExecutor")
-    public SafeScheduledExecutorService provideAsyncExecutor() {
-      return new SafeScheduledExecutorService(1, "asyncExecutor");
-    }
-
     @Provides @Singleton
     public PreviewerProvider providePreviewerProvider() {
       return new PreviewerProvider() {

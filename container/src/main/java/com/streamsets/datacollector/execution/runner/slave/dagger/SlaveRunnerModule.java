@@ -42,7 +42,7 @@ public class SlaveRunnerModule {
 
   @Provides
   public Runner provideAsyncRunner(SlaveStandaloneRunner runner,
-                                        @Named("asyncExecutor") SafeScheduledExecutorService asyncExecutor) {
+                                        @Named("runnerExecutor") SafeScheduledExecutorService asyncExecutor) {
     return new AsyncRunner(runner, asyncExecutor);
   }
 }

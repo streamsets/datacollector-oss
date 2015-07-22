@@ -6,8 +6,7 @@
 package com.streamsets.pipeline.spark;
 
 import com.google.common.io.Resources;
-import com.streamsets.pipeline.MiniSDC;
-import com.streamsets.pipeline.MiniSDC.ExecutionMode;
+import com.streamsets.datacollector.MiniSDC;
 import com.streamsets.pipeline.MiniSDCTestingUtility;
 import com.streamsets.pipeline.lib.KafkaTestUtil;
 import com.streamsets.pipeline.util.ClusterUtil;
@@ -125,7 +124,7 @@ public class TestSparkOnYarn {
 
     MiniSDC miniSDC = null;
     try {
-      miniSDC = miniSDCTestingUtility.createMiniSDC(ExecutionMode.CLUSTER);
+      miniSDC = miniSDCTestingUtility.createMiniSDC(MiniSDC.ExecutionMode.CLUSTER);
       miniSDC.startSDC();
       miniSDC.createAndStartPipeline(pipelineJson);
       URI serverURI = miniSDC.getServerURI();

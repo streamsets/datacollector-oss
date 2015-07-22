@@ -5,7 +5,7 @@
 package com.streamsets.pipeline;
 
 import com.google.common.io.Resources;
-import com.streamsets.pipeline.MiniSDC.ExecutionMode;
+import com.streamsets.datacollector.MiniSDC;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.hadoop.yarn.conf.YarnConfiguration;
@@ -165,7 +165,7 @@ public class MiniSDCTestingUtility {
    * @return
    * @throws Exception
    */
-  public MiniSDC createMiniSDC(ExecutionMode executionMode)
+  public MiniSDC createMiniSDC(MiniSDC.ExecutionMode executionMode)
     throws Exception {
     Properties miniITProps = new Properties();
     File miniITProperties = new File(Resources.getResource("miniIT.properties").toURI());
@@ -255,7 +255,7 @@ public class MiniSDCTestingUtility {
     return commonProps;
   }
 
-  private void rewriteProperties(File sdcPropertiesFile, ExecutionMode executionMode)
+  private void rewriteProperties(File sdcPropertiesFile, MiniSDC.ExecutionMode executionMode)
     throws IOException {
     InputStream sdcInStream = null;
     OutputStream sdcOutStream = null;

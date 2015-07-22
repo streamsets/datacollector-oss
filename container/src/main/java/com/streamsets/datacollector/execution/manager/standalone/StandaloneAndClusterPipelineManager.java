@@ -35,17 +35,15 @@ import com.streamsets.datacollector.util.ContainerError;
 import com.streamsets.datacollector.validation.Issue;
 import com.streamsets.datacollector.validation.ValidationError;
 import com.streamsets.pipeline.api.ExecutionMode;
+import com.streamsets.dc.execution.manager.standalone.ResourceManager;
 import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.lib.executor.SafeScheduledExecutorService;
-
 import dagger.ObjectGraph;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
 import javax.inject.Named;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Callable;
@@ -68,10 +66,9 @@ public class StandaloneAndClusterPipelineManager extends AbstractTask implements
   @Inject @Named("previewExecutor") SafeScheduledExecutorService previewExecutor;
   @Inject @Named("runnerExecutor") SafeScheduledExecutorService runnerExecutor;
   @Inject @Named("managerExecutor") SafeScheduledExecutorService managerExecutor;
-  @Inject
-  RunnerProvider runnerProvider;
-  @Inject
-  PreviewerProvider previewerProvider;
+  @Inject RunnerProvider runnerProvider;
+  @Inject PreviewerProvider previewerProvider;
+  @Inject ResourceManager resourceManager;
 
   private Cache<String, RunnerInfo> runnerCache;
   private Cache<String, Previewer> previewerCache;
@@ -272,9 +269,16 @@ public class StandaloneAndClusterPipelineManager extends AbstractTask implements
     previewerCache.invalidate(id);
   }
 
-
   private Runner getRunner(String user, String name, String rev, ExecutionMode executionMode) throws PipelineStoreException {
-    return runnerProvider.createRunner(user, name, rev, objectGraph, executionMode);
+    List<Issue> errors = new ArrayList<>();
+    PipelineConfiguration pipelineConf = pipelineStore.load(name, rev);
+    PipelineConfigBean pipelineConfigBean = PipelineBeanCreator.get().create(pipelineConf, errors);
+    if (pipelineConfigBean == null) {
+      throw new PipelineStoreException(ContainerError.CONTAINER_0116, errors);
+    }
+    Runner runner = runnerProvider.createRunner(user, name, rev, objectGraph, executionMode);
+    runner.addStateEventListener(resourceManager);
+    return runner;
   }
 
   private String getNameAndRevString(String name, String rev) {

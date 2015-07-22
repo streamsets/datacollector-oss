@@ -22,12 +22,12 @@ import com.streamsets.datacollector.config.PipelineConfiguration;
 import com.streamsets.datacollector.creation.PipelineBeanCreator;
 import com.streamsets.datacollector.creation.PipelineConfigBean;
 import com.streamsets.datacollector.execution.AbstractRunner;
+import com.streamsets.datacollector.execution.EventListenerManager;
 import com.streamsets.datacollector.execution.PipelineState;
 import com.streamsets.datacollector.execution.PipelineStateStore;
 import com.streamsets.datacollector.execution.PipelineStatus;
 import com.streamsets.datacollector.execution.Snapshot;
 import com.streamsets.datacollector.execution.SnapshotInfo;
-import com.streamsets.datacollector.execution.StateListener;
 import com.streamsets.datacollector.execution.alerts.AlertInfo;
 import com.streamsets.datacollector.execution.cluster.ClusterHelper;
 import com.streamsets.datacollector.execution.metrics.MetricsEventRunnable;
@@ -46,6 +46,8 @@ import com.streamsets.datacollector.util.Configuration;
 import com.streamsets.datacollector.util.ContainerError;
 import com.streamsets.datacollector.validation.Issue;
 import com.streamsets.datacollector.validation.ValidationError;
+import com.streamsets.dc.execution.manager.standalone.ResourceManager;
+import com.streamsets.dc.execution.manager.standalone.ThreadUsage;
 import com.streamsets.pipeline.api.ExecutionMode;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.Source;
@@ -54,15 +56,12 @@ import com.streamsets.pipeline.api.impl.ClusterSource;
 import com.streamsets.pipeline.api.impl.ErrorMessage;
 import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.lib.executor.SafeScheduledExecutorService;
-
 import dagger.ObjectGraph;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
 import javax.inject.Named;
-
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -88,6 +87,7 @@ public class ClusterRunner extends AbstractRunner {
   @Inject Configuration configuration;
   @Inject PipelineStateStore pipelineStateStore;
   @Inject @Named("runnerExecutor") SafeScheduledExecutorService runnerExecutor;
+  @Inject ResourceManager resourceManager;
 
   private final String name;
   private final String rev;
@@ -130,7 +130,7 @@ public class ClusterRunner extends AbstractRunner {
   @VisibleForTesting
   ClusterRunner(String name, String rev, String user, RuntimeInfo runtimeInfo, Configuration configuration,
     PipelineStoreTask pipelineStore, PipelineStateStore pipelineStateStore, StageLibraryTask stageLibrary,
-    SafeScheduledExecutorService executorService, ClusterHelper clusterManager) {
+    SafeScheduledExecutorService executorService, ClusterHelper clusterManager, ResourceManager resourceManager) {
 
     this.runtimeInfo = runtimeInfo;
     this.configuration = configuration;
@@ -151,6 +151,8 @@ public class ClusterRunner extends AbstractRunner {
     } else {
       this.clusterHelper = clusterManager;
     }
+    this.resourceManager = resourceManager;
+    this.eventListenerManager = new EventListenerManager();
   }
 
   public ClusterRunner(String user, String name, String rev, ObjectGraph objectGraph) {
@@ -298,6 +300,9 @@ public class ClusterRunner extends AbstractRunner {
 
   @Override
   public void prepareForStart() throws PipelineStoreException, PipelineRunnerException {
+    if(!resourceManager.requestRunnerResources(ThreadUsage.CLUSTER)) {
+      throw new PipelineRunnerException(ContainerError.CONTAINER_0166, name);
+    }
     LOG.info("Preparing to start pipeline '{}::{}'", name, rev);
     validateAndSetStateTransition(PipelineStatus.STARTING, "Starting pipeline in cluster mode");
   }
@@ -427,15 +432,16 @@ public class ClusterRunner extends AbstractRunner {
   private synchronized void validateAndSetStateTransition(PipelineStatus toStatus, String message, Map<String, Object> attributes)
     throws PipelineStoreException, PipelineRunnerException {
     Utils.checkState(attributes!=null, "Attributes cannot be set to null");
-    final PipelineStatus status = getState().getStatus();
-    if (status == toStatus) {
-      LOG.debug(Utils.format("Ignoring status '{}' as this is same as current status", status));
+    PipelineState fromState = getState();
+    if (fromState.getStatus() == toStatus) {
+      LOG.debug(Utils.format("Ignoring status '{}' as this is same as current status", fromState.getStatus()));
     } else {
-      checkState(VALID_TRANSITIONS.get(status).contains(toStatus), ContainerError.CONTAINER_0102, status, toStatus);
+      checkState(VALID_TRANSITIONS.get(fromState.getStatus()).contains(toStatus), ContainerError.CONTAINER_0102,
+        fromState.getStatus(), toStatus);
       PipelineState pipelineState = pipelineStateStore.saveState(user, name, rev, toStatus, message, attributes,
         ExecutionMode.CLUSTER);
       if(eventListenerManager != null) {
-        eventListenerManager.broadcastPipelineState(pipelineState);
+        eventListenerManager.broadcastStateChange(fromState, pipelineState, ThreadUsage.CLUSTER);
       }
     }
   }

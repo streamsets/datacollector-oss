@@ -1,7 +1,7 @@
 package com.streamsets.pipeline.hdfs.cluster;
 
 import com.google.common.io.Resources;
-import com.streamsets.pipeline.MiniSDC;
+import com.streamsets.datacollector.MiniSDC;
 import com.streamsets.pipeline.lib.KafkaTestUtil;
 import com.streamsets.pipeline.util.ClusterUtil;
 import com.streamsets.pipeline.util.VerifyUtils;

@@ -109,19 +109,12 @@ public class TestSlaveManager {
 
     @Provides
     @Singleton
-    @Named("asyncExecutor")
-    public SafeScheduledExecutorService provideAsyncExecutor() {
-      return new SafeScheduledExecutorService(1, "asyncExecutor");
-    }
-
-    @Provides
-    @Singleton
     public RunnerProvider provideRunnerProvider() {
       return new SlaveRunnerProviderImpl();
     }
 
     @Provides @Singleton
-    public SnapshotStore provideSnapshotStore(RuntimeInfo runtimeInfo) {
+    public SnapshotStore provideSnapshotStore() {
       return Mockito.mock(SnapshotStore.class);
     }
 

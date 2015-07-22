@@ -5,7 +5,7 @@
  */
 package com.streamsets.pipeline.util;
 
-import com.streamsets.pipeline.MiniSDC;
+import com.streamsets.datacollector.MiniSDC;
 import com.streamsets.pipeline.MiniSDCTestingUtility;
 import org.apache.commons.io.FileUtils;
 import org.apache.hadoop.conf.Configuration;

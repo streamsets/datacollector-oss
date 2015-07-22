@@ -37,12 +37,12 @@ import java.util.concurrent.Callable;
 public class AsyncRunner implements Runner, PipelineInfo {
 
   private final Runner runner;
-  private final SafeScheduledExecutorService asyncExecutor;
+  private final SafeScheduledExecutorService runnerExecutor;
 
   @Inject
-  public AsyncRunner (Runner runner, @Named("asyncExecutor") SafeScheduledExecutorService asyncExecutor) {
+  public AsyncRunner (Runner runner, @Named("runnerExecutor") SafeScheduledExecutorService runnerExecutor) {
     this.runner = runner;
-    this.asyncExecutor = asyncExecutor;
+    this.runnerExecutor = runnerExecutor;
   }
 
   @Override
@@ -85,7 +85,7 @@ public class AsyncRunner implements Runner, PipelineInfo {
          return null;
       }
     };
-    asyncExecutor.submit(callable);
+    runnerExecutor.submit(callable);
   }
 
   @Override
@@ -113,7 +113,7 @@ public class AsyncRunner implements Runner, PipelineInfo {
          return null;
       }
     };
-    asyncExecutor.submit(callable);
+    runnerExecutor.submit(callable);
   }
 
   @Override
@@ -223,8 +223,8 @@ public class AsyncRunner implements Runner, PipelineInfo {
     if (runner instanceof PipelineInfo) {
       return ((PipelineInfo) runner).getPipeline();
     } else {
-      throw new UnsupportedOperationException(Utils.format("Runner '{}' doesnt support retrieval of "
-        + "pipeline", runner.getClass().getName()));
+      throw new UnsupportedOperationException(Utils.format("Runner '{}' does not support retrieval of  pipeline",
+        runner.getClass().getName()));
     }
   }
 

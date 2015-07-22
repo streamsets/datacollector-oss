@@ -68,6 +68,7 @@ public enum ContainerError implements ErrorCode {
   CONTAINER_0163("Stage '{}', instance '{}', variable '{}', configuration injection error: Value Map has non-string values"),
   CONTAINER_0164("Stage '{}', instance '{}', variable '{}', configuration injection error: Value Map as List has non-string elements"),
   CONTAINER_0165("Stage configuration validation issues: {}"),
+  CONTAINER_0166("Cannot start pipeline '{}' as there are not enough threads available"),
 
   //PipelineStore
   CONTAINER_0200("Pipeline '{}' does not exist"),

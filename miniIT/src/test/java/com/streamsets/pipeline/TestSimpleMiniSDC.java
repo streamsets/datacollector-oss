@@ -6,7 +6,7 @@
 package com.streamsets.pipeline;
 
 import com.google.common.io.Resources;
-import com.streamsets.pipeline.MiniSDC.ExecutionMode;
+import com.streamsets.datacollector.MiniSDC;
 import com.streamsets.pipeline.util.VerifyUtils;
 import org.junit.Test;
 
@@ -28,7 +28,7 @@ public class TestSimpleMiniSDC {
     String pipelineJson = new String(Files.readAllBytes(Paths.get(uri)), StandardCharsets.UTF_8);
     MiniSDCTestingUtility miniSDCTestingUtility = new MiniSDCTestingUtility();
     try {
-      MiniSDC miniSDC = miniSDCTestingUtility.createMiniSDC(ExecutionMode.STANDALONE);
+      MiniSDC miniSDC = miniSDCTestingUtility.createMiniSDC(MiniSDC.ExecutionMode.STANDALONE);
       miniSDC.startSDC();
       miniSDC.createAndStartPipeline(pipelineJson);
       URI serverURI = miniSDC.getServerURI();
