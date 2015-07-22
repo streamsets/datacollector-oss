@@ -582,7 +582,7 @@ angular
       if(stageInstance.uiInfo.stageType !== pipelineConstant.SOURCE_STAGE_TYPE && !$scope.fieldPathsFetchInProgress) {
         $scope.fieldPathsFetchInProgress = true;
 
-        previewService.getInputRecordsFromPreview($scope.activeConfigInfo.name, stageInstance, 10).
+        previewService.getInputRecordsFromPreview($scope.activeConfigInfo.name, stageInstance, 1).
           then(function (inputRecords) {
             $scope.fieldPathsFetchInProgress = false;
             if(_.isArray(inputRecords) && inputRecords.length) {
@@ -679,7 +679,7 @@ angular
     });
 
     $timeout(function() {
-      previewService.getInputRecordsFromPreview(activeConfigInfo.name, detailPaneConfig, 10).
+      previewService.getInputRecordsFromPreview(activeConfigInfo.name, detailPaneConfig, 1).
         then(
           function (inputRecords) {
             $scope.showLoading = false;

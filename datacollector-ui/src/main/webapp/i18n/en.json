@@ -368,6 +368,7 @@
     },
     "previewPane": {
       "batchSize": "Preview Batch Size",
+      "cancelPreview": "Cancel Preview",
       "configTitle": "Preview Configuration",
       "configuredSource": "Configured Source",
       "previewSource": "Preview Source",

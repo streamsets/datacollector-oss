@@ -14,7 +14,7 @@
     </tab>
 
     <tab ng-repeat="groupNameToLabelMap in configGroupTabs"
-         disabled="!isGroupVisible(detailPaneConfig, detailPaneConfigDefn.configDefinitions, groupNameToLabelMap.name)"
+         disable="!isGroupVisible(detailPaneConfig, detailPaneConfigDefn.configDefinitions, groupNameToLabelMap.name)"
          active="groupNameToLabelMap.active"
          select="onTabSelect()">
       <tab-heading>

@@ -7,7 +7,7 @@ angular
 
   .controller('PreviewController', function ($scope, $rootScope, $q, _, api, previewService, pipelineConstant,
                                              $timeout) {
-    var previewDataBackup, previewStatusTimer;
+    var previewDataBackup, previewStatusTimer, currentPreviewerId;
 
     angular.extend($scope, {
       previewInProgress: false,
@@ -114,7 +114,7 @@ angular
           previewConfig.batchSize, 0, !previewConfig.writeToDestinations, stageOutputs).
           success(function (res) {
             var defer = $q.defer();
-
+            currentPreviewerId = res.previewerId;
             checkForPreviewStatus(res.previewerId, defer);
 
             defer.promise.then(function(previewData) {
@@ -195,8 +195,18 @@ angular
           $scope.dirtyLanes.push(record.laneName);
           $rootScope.$broadcast('updateDirtyLaneConnector', $scope.dirtyLanes);
         }
-      }
+      },
 
+      /**
+       * Cancel Preview Button call back function
+       */
+      cancelPreview: function() {
+        if(currentPreviewerId) {
+          api.pipelineAgent.cancelPreview(currentPreviewerId);
+        }
+        $scope.closePreview();
+        $scope.showLoading = false;
+      }
     });
 
     /**
@@ -291,7 +301,7 @@ angular
           previewConfig.batchSize, 0, !previewConfig.writeToDestinations, stageOutputs).
           success(function (res) {
             var defer = $q.defer();
-
+            currentPreviewerId = res.previewerId;
             checkForPreviewStatus(res.previewerId, defer);
 
             defer.promise.then(function(previewData) {
@@ -401,6 +411,7 @@ angular
             .success(function(data) {
               if(data && _.contains(['INVALID', 'START_ERROR', 'RUN_ERROR', 'FINISHED'], data.status)) {
                 fetchPreviewData(previewerId, defer);
+                currentPreviewerId = null;
               } else {
                 checkForPreviewStatus(previewerId, defer);
               }

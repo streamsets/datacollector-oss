@@ -146,8 +146,14 @@
 
         <footer >
           <section class="running-status"
-                   ng-show="common.pipelineStatusMap[pipeline.name].status === 'RUNNING'">
+                   ng-if="common.pipelineStatusMap[pipeline.name].status === 'RUNNING'">
             <i class="fa fa-spinner fa-spin fa-14x"></i>
+          </section>
+
+
+          <section class="invalid-status"
+                   ng-if="!pipeline.valid">
+            <i class="fa fa-exclamation-triangle fa-12x"></i>
           </section>
 
 

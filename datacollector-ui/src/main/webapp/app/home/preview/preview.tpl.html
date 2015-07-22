@@ -57,6 +57,11 @@
 
     <!-- Buttons for Single Stage Preview -->
 
+    <div class="pull-right preview-toolbar" ng-if="showLoading">
+      <a type="button" class="btn btn-danger btn-sm"
+         ng-click="cancelPreview()">{{ 'home.previewPane.cancelPreview' | translate }}</a>
+    </div>
+
     <div class="pull-right preview-toolbar btn-group" ng-if="!showLoading">
 
       <div ng-if="!previewMultipleStages && previousStageInstances.length > 1" class="dropdown pull-left btn-group">

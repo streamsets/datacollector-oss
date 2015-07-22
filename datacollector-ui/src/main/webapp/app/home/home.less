@@ -138,13 +138,21 @@
           position: absolute;
           background-color: #f7f7f7;
 
-          .running-status {
+          .running-status, .invalid-status {
             width: 23px;
             height: 31px;
             position: absolute;
             left: 16px;
             bottom: 0;
             color: @brand-success;
+          }
+
+          .running-status {
+            color: @brand-success;
+          }
+
+          .invalid-status {
+            color: @brand-danger;
           }
 
           .pipeline-menu {
