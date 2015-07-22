@@ -5,7 +5,7 @@
  */
 package com.streamsets.pipeline.stage.origin.kafka.cluster;
 
-import com.streamsets.pipeline.Pair;
+import com.streamsets.pipeline.impl.Pair;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.config.CsvHeader;
@@ -143,7 +143,7 @@ public class TestClusterModeDataFormats {
       StageRunner.Output output = sourceRunner.runProduce(null, 5);
 
       String newOffset = output.getNewOffset();
-      Assert.assertEquals("3", newOffset);
+      Assert.assertEquals("kafka::TestKafkaSource1::2", newOffset);
       List<Record> records = output.getRecords().get("lane");
       Assert.assertEquals(3, records.size());
 
@@ -203,7 +203,7 @@ public class TestClusterModeDataFormats {
       StageRunner.Output output = sourceRunner.runProduce(null, 10);
 
       String newOffset = output.getNewOffset();
-      Assert.assertEquals("1", newOffset);
+      Assert.assertEquals("kafka::TestKafkaSource1::0", newOffset);
       List<Record> records = output.getRecords().get("lane");
       // 4 records in jsonData
       Assert.assertEquals(4, records.size());
@@ -257,7 +257,7 @@ public class TestClusterModeDataFormats {
       StageRunner.Output output = sourceRunner.runProduce(null, 10);
 
       String newOffset = output.getNewOffset();
-      Assert.assertEquals("1", newOffset);
+      Assert.assertEquals("kafka::TestKafkaSource1::0", newOffset);
       List<Record> records = output.getRecords().get("lane");
       Assert.assertEquals(4, records.size());
       error = false;
@@ -319,7 +319,7 @@ public class TestClusterModeDataFormats {
       StageRunner.Output output = sourceRunner.runProduce(null, 10);
 
       String newOffset = output.getNewOffset();
-      Assert.assertEquals("1", newOffset);
+      Assert.assertEquals("kafka::TestKafkaSource1::0", newOffset);
       List<Record> records = output.getRecords().get("lane");
       Assert.assertEquals(1, records.size());
       error = false;
@@ -379,7 +379,7 @@ public class TestClusterModeDataFormats {
       StageRunner.Output output = sourceRunner.runProduce(null, 10);
 
       String newOffset = output.getNewOffset();
-      Assert.assertEquals("1", newOffset);
+      Assert.assertEquals("kafka::TestKafkaSource1::0", newOffset);
       List<Record> records = output.getRecords().get("lane");
       Assert.assertEquals(1, records.size());
       error = false;
@@ -440,7 +440,7 @@ public class TestClusterModeDataFormats {
       StageRunner.Output output = sourceRunner.runProduce(null, 10);
 
       String newOffset = output.getNewOffset();
-      Assert.assertEquals("1", newOffset);
+      Assert.assertEquals("kafka::TestKafkaSource1::0", newOffset);
       List<Record> records = output.getRecords().get("lane");
       Assert.assertEquals(2, records.size());
       error = false;
@@ -501,7 +501,7 @@ public class TestClusterModeDataFormats {
       StageRunner.Output output = sourceRunner.runProduce(null, 10);
 
       String newOffset = output.getNewOffset();
-      Assert.assertEquals("1", newOffset);
+      Assert.assertEquals("kafka::TestKafkaSource1::0", newOffset);
       List<Record> records = output.getRecords().get("lane");
       Assert.assertEquals(1, records.size());
       error = false;

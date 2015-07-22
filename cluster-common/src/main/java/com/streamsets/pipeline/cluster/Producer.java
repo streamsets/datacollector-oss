@@ -6,7 +6,7 @@
 package com.streamsets.pipeline.cluster;
 
 import com.google.common.base.Throwables;
-import com.streamsets.pipeline.OffsetAndResult;
+import com.streamsets.pipeline.impl.OffsetAndResult;
 import com.streamsets.pipeline.api.impl.Utils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -47,7 +47,7 @@ public class Producer {
       throw new RuntimeException(Utils.format("Consumer encountered error: {}", consumerError), consumerError);
     }
     try {
-      final String expectedOffset = batch.getOffset();
+      final Object expectedOffset = batch.getOffset();
       while (!dataChannel.offer(batch, 10, TimeUnit.MILLISECONDS)) {
         for (ControlChannel.Message controlMessage : controlChannel.getProducerMessages()) {
           switch (controlMessage.getType()) {

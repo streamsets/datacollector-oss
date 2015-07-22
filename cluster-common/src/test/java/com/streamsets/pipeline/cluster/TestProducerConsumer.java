@@ -6,7 +6,7 @@
 package com.streamsets.pipeline.cluster;
 
 import com.google.common.base.Throwables;
-import com.streamsets.pipeline.OffsetAndResult;
+import com.streamsets.pipeline.impl.OffsetAndResult;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
@@ -122,7 +122,7 @@ public class TestProducerConsumer {
       public List<Map.Entry> call() throws Exception {
         OffsetAndResult<Map.Entry> result = consumer.take();
         if (commit) {
-          consumer.commit(result.getOffset());
+          consumer.commit(String.valueOf(result.getOffset()));
         }
         return result.getResult();
       }

@@ -5,7 +5,7 @@
  */
 package com.streamsets.pipeline.cluster;
 
-import com.streamsets.pipeline.OffsetAndResult;
+import com.streamsets.pipeline.impl.OffsetAndResult;
 
 import java.util.Map;
 import java.util.concurrent.ArrayBlockingQueue;

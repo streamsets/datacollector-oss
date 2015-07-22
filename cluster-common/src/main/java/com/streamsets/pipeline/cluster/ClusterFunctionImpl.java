@@ -3,22 +3,24 @@
  * be copied, modified, or distributed in whole or part without
  * written consent of StreamSets, Inc.
  */
-package com.streamsets.pipeline.hadoop;
+package com.streamsets.pipeline.cluster;
 
 import com.streamsets.pipeline.EmbeddedSDC;
 import com.streamsets.pipeline.EmbeddedSDCPool;
+import com.streamsets.pipeline.impl.ClusterFunction;
 import com.streamsets.pipeline.api.impl.Utils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.text.NumberFormat;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.concurrent.Callable;
 
-public class HadoopMapFunction {
-  private static final Logger LOG = LoggerFactory.getLogger(HadoopMapFunction.class);
+public class ClusterFunctionImpl implements ClusterFunction  {
+  private static final Logger LOG = LoggerFactory.getLogger(ClusterFunctionImpl.class);
   private static final boolean IS_TRACE_ENABLED = LOG.isTraceEnabled();
   private static volatile EmbeddedSDCPool sdcPool;
   private static volatile boolean initialized = false;
@@ -43,7 +45,20 @@ public class HadoopMapFunction {
     sdcPool = new EmbeddedSDCPool(properties);
   }
 
-  public void call(List<Map.Entry> batch) throws Exception {
+  public static ClusterFunction create(Properties properties, Integer id) throws Exception {
+    initialize(Utils.checkNotNull(properties, "Properties"), id);
+    return new ClusterFunctionImpl();
+  }
+
+  @Override
+  public void invoke(Object... args) throws Exception {
+    if (args == null || args.length != 1) {
+      throw new IllegalArgumentException("Expected one argument, got: " + Arrays.toString(args));
+    }
+    if (!(args[0] instanceof List)) {
+      throw new IllegalArgumentException("Expected argument to be list, got: " + args[0].getClass().getName());
+    }
+    List<Map.Entry> batch = (List)args[0];
     if (IS_TRACE_ENABLED) {
       LOG.trace("In executor function " + " " + Thread.currentThread().getName() + ": " + batch.size());
     }
@@ -51,7 +66,8 @@ public class HadoopMapFunction {
     embeddedSDC.getSource().put(batch);
   }
 
-  public static void shutdown() throws Exception {
+  @Override
+  public void shutdown() throws Exception {
     LOG.info("Shutdown");
     Utils.checkState(initialized, "Not initialized");
     EmbeddedSDC embeddedSDC = sdcPool.checkout();
@@ -59,13 +75,6 @@ public class HadoopMapFunction {
     // return null resulting in the pipeline finishing normally
     embeddedSDC.getSource().shutdown();
     sdcPool.checkin(embeddedSDC);
-  }
-
-  public static void execute(Properties properties, Integer id, List<Map.Entry> batch)
-    throws Exception {
-    initialize(Utils.checkNotNull(properties, "Properties"), id);
-    HadoopMapFunction function = new HadoopMapFunction();
-    function.call(batch);
   }
 
   public static long getRecordsProducedJVMWide() {

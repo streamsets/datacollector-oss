@@ -11,7 +11,6 @@ import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.security.PrivilegedExceptionAction;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -20,23 +19,17 @@ import com.streamsets.pipeline.cluster.Consumer;
 import com.streamsets.pipeline.cluster.ControlChannel;
 import com.streamsets.pipeline.cluster.DataChannel;
 import com.streamsets.pipeline.cluster.Producer;
-import org.apache.hadoop.io.Text;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.CommonConfigurationKeys;
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
-import org.apache.hadoop.mapreduce.InputSplit;
-import org.apache.hadoop.mapreduce.Job;
-import org.apache.hadoop.mapreduce.RecordReader;
-import org.apache.hadoop.mapreduce.TaskAttemptContext;
-import org.apache.hadoop.mapreduce.lib.input.CombineFileInputFormat;
 import org.apache.hadoop.mapreduce.lib.input.FileInputFormat;
 import org.apache.hadoop.security.UserGroupInformation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.google.common.annotations.VisibleForTesting;
-import com.streamsets.pipeline.OffsetAndResult;
+import com.streamsets.pipeline.impl.OffsetAndResult;
 import com.streamsets.pipeline.api.BatchMaker;
 import com.streamsets.pipeline.api.impl.ClusterSource;
 import com.streamsets.pipeline.api.ErrorListener;
@@ -293,10 +286,11 @@ public class ClusterHdfsSource extends BaseSource implements OffsetCommitter, Er
       LOG.info("Received null batch, returning null");
       return null;
     }
+    String messageId = null;
     int count = 0;
     for (Map.Entry message : offsetAndResult.getResult()) {
       count++;
-      String messageId = getRecordId();
+      messageId = String.valueOf(message.getKey());
       List<Record> listRecords = processMessage(messageId, String.valueOf(message.getValue()));
       for (Record record : listRecords) {
         batchMaker.addRecord(record);
@@ -306,7 +300,7 @@ public class ClusterHdfsSource extends BaseSource implements OffsetCommitter, Er
       LOG.info("Received no records, returning null");
       return null;
     }
-    return offsetAndResult.getOffset();
+    return Utils.checkNotNull(messageId, "Log error, message ID cannot be null at this point.");
   }
 
   protected List<Record> processMessage(String messageId, String message) throws StageException {
@@ -333,14 +327,10 @@ public class ClusterHdfsSource extends BaseSource implements OffsetCommitter, Er
     return records;
   }
 
-  private String getRecordId() {
-    return "mr:hdfs";
-  }
-
   @Override
   public void put(List<Map.Entry> batch) throws InterruptedException {
+    producer.put(new OffsetAndResult<>(recordsProduced, batch));
     recordsProduced += batch.size();
-    producer.put(new OffsetAndResult<>(String.valueOf(recordsProduced), batch));
   }
 
   @Override

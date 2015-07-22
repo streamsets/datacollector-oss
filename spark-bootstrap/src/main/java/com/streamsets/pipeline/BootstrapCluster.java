@@ -128,13 +128,13 @@ public class BootstrapCluster {
     apiCL = SDCClassLoader.getAPIClassLoader(apiUrls, parent);
     containerCL = SDCClassLoader.getContainerCLassLoader(containerUrls, apiCL);
 
-    stageLibrariesCLs = new ArrayList<ClassLoader>();
+    stageLibrariesCLs = new ArrayList<>();
     String sparkLib = getSourceLibraryName(pipelineJson);
     if (sparkLib == null) {
       throw new IllegalStateException("Couldn't find the source library in pipeline file");
     }
     String lookupLib = "streamsets-libs" +"/" + sparkLib;
-    System.out.println("\n Lookup lib is " + lookupLib);
+    System.err.println("\n Cluster lib is " + lookupLib);
     for (Map.Entry<String,List<URL>> entry : libsUrls.entrySet()) {
       String[] parts = entry.getKey().split(System.getProperty("file.separator"));
       if (parts.length != 2) {
@@ -242,51 +242,15 @@ public class BootstrapCluster {
     }
   }
 
-  public static Method getHadoopDestroyFunction() throws Exception {
+  public static Object getClusterFunction(Integer id) throws Exception {
     BootstrapCluster.initialize();
     ClassLoader originalClassLoader = Thread.currentThread().getContextClassLoader();
     try {
       Thread.currentThread().setContextClassLoader(sparkCL);
-      return Class.forName("com.streamsets.pipeline.hadoop.HadoopMapFunction", true,
-        sparkCL).getMethod("shutdown");
+      return Class.forName("com.streamsets.pipeline.cluster.ClusterFunctionImpl", true,
+        sparkCL).getMethod("create", Properties.class, Integer.class).invoke(null, properties, id);
     } catch (Exception ex) {
       String msg = "Error trying to obtain HadoopMapFunction Class: " + ex;
-      throw new IllegalStateException(msg, ex);
-    } finally {
-      Thread.currentThread().setContextClassLoader(originalClassLoader);
-    }
-  }
-
-  public static Method getHadoopMapFunction() throws Exception {
-    BootstrapCluster.initialize();
-    ClassLoader originalClassLoader = Thread.currentThread().getContextClassLoader();
-    try {
-      Thread.currentThread().setContextClassLoader(sparkCL);
-      return Class.forName("com.streamsets.pipeline.hadoop.HadoopMapFunction", true,
-        sparkCL).getMethod("execute", Properties.class, Integer.class, List.class);
-    } catch (Exception ex) {
-      String msg = "Error trying to obtain HadoopMapFunction Class: " + ex;
-      throw new IllegalStateException(msg, ex);
-    } finally {
-      Thread.currentThread().setContextClassLoader(originalClassLoader);
-    }
-  }
-
-  /**
-   * Bootstrapping an Executor which is started as part of a spark kafka/hdfs job<br/>
-   * Direction: Spark Executor -> Stage
-   * @return an instance of the real SparkExecutorFunction
-   * @throws Exception
-   */
-  public static Method getSparkExecutorFunction() throws Exception {
-    BootstrapCluster.initialize();
-    ClassLoader originalClassLoader = Thread.currentThread().getContextClassLoader();
-    try {
-      Thread.currentThread().setContextClassLoader(sparkCL);
-      return Class.forName("com.streamsets.pipeline.spark.SparkExecutorFunction", true,
-        sparkCL).getMethod("execute", Properties.class, Iterator.class);
-    } catch (Exception ex) {
-      String msg = "Error trying to obtain SparkExecutorFunction Class: " + ex;
       throw new IllegalStateException(msg, ex);
     } finally {
       Thread.currentThread().setContextClassLoader(originalClassLoader);

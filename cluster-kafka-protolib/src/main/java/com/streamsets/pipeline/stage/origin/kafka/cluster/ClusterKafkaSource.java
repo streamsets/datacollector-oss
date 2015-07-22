@@ -4,13 +4,12 @@
  */
 package com.streamsets.pipeline.stage.origin.kafka.cluster;
 
-import com.streamsets.pipeline.OffsetAndResult;
+import com.streamsets.pipeline.impl.OffsetAndResult;
 import com.streamsets.pipeline.api.BatchMaker;
 import com.streamsets.pipeline.api.impl.ClusterSource;
 import com.streamsets.pipeline.api.ErrorListener;
 import com.streamsets.pipeline.api.OffsetCommitter;
 import com.streamsets.pipeline.api.Record;
-import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.cluster.Consumer;
 import com.streamsets.pipeline.cluster.ControlChannel;
@@ -46,22 +45,20 @@ public class ClusterKafkaSource extends BaseKafkaSource implements OffsetCommitt
     this.recordsProduced = 0;
   }
 
-  private String getRecordId(String topic) {
-    return "spark-streaming" + "::" + topic;
-  }
-
   @Override
   public String produce(String lastSourceOffset, int maxBatchSize, BatchMaker batchMaker) throws StageException {
     // Ignore the batch size
     OffsetAndResult<Map.Entry> offsetAndResult = consumer.take();
+    long offset = (Long)offsetAndResult.getOffset();
+    String messageId = String.format("kafka::%s::unknown", offset); // don't inc as we have not progressed
     for (Map.Entry  messageAndPartition : offsetAndResult.getResult()) {
-      String messageId = getRecordId(topic);
+      messageId = String.format("kafka::%s::%d", topic, offset++);
       List<Record> records = processKafkaMessage(messageId, (byte[]) messageAndPartition.getValue());
       for (Record record : records) {
         batchMaker.addRecord(record);
       }
     }
-    return offsetAndResult.getOffset();
+    return messageId;
   }
 
   @Override
@@ -91,8 +88,8 @@ public class ClusterKafkaSource extends BaseKafkaSource implements OffsetCommitt
 
   @Override
   public void put(List<Map.Entry> batch) throws InterruptedException {
+    producer.put(new OffsetAndResult<>(recordsProduced, batch));
     recordsProduced += batch.size();
-    producer.put(new OffsetAndResult<>(String.valueOf(recordsProduced), batch));
   }
 
   @Override

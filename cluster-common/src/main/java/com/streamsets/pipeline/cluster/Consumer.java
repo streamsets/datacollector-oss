@@ -6,7 +6,7 @@
 package com.streamsets.pipeline.cluster;
 
 import com.google.common.base.Throwables;
-import com.streamsets.pipeline.OffsetAndResult;
+import com.streamsets.pipeline.impl.OffsetAndResult;
 import com.streamsets.pipeline.api.impl.Utils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

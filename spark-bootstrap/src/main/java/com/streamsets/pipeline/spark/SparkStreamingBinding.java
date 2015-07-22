@@ -58,9 +58,9 @@ public class SparkStreamingBinding implements ClusterBinding {
     };
     Runtime.getRuntime().addShutdownHook(shutdownHookThread);
     LOG.info("Making calls through spark context ");
-    if (getProperty("cluster.source.name").equals("kafka")) {
+    if ("kafka".equalsIgnoreCase(getProperty("cluster.source.name"))) {
       JavaPairInputDStream<byte[], byte[]> dStream = createDirectStreamForKafka();
-      dStream.foreachRDD(new SparkDriverFunction(properties));
+      dStream.foreachRDD(new SparkDriverFunction());
     } else {
       throw new IllegalStateException("Property value " + getProperty("cluster.source.name") + " is invalid");
     }
