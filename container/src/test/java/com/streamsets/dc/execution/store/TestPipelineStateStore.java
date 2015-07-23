@@ -19,10 +19,13 @@ import com.streamsets.pipeline.store.PipelineStoreException;
 import com.streamsets.pipeline.store.PipelineStoreTask;
 import com.streamsets.pipeline.store.impl.FilePipelineStoreTask;
 import com.streamsets.pipeline.util.Configuration;
+import com.streamsets.pipeline.util.LockCacheModule;
 import com.streamsets.pipeline.util.TestUtil;
+
 import dagger.Module;
 import dagger.ObjectGraph;
 import dagger.Provides;
+
 import org.apache.commons.io.FileUtils;
 import org.junit.After;
 import org.junit.AfterClass;
@@ -32,6 +35,7 @@ import org.junit.Test;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
@@ -77,7 +81,7 @@ public class TestPipelineStateStore {
   }
 
   @Module(injects = {PipelineStateStore.class, PipelineStoreTask.class}, library = true,
-    includes = TestUtil.TestStageLibraryModule.class)
+    includes = {TestUtil.TestStageLibraryModule.class, LockCacheModule.class})
   static class TestPipelineStateStoreModule {
 
     @Provides @Singleton

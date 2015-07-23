@@ -10,19 +10,22 @@ import com.streamsets.pipeline.main.RuntimeModule;
 import com.streamsets.pipeline.stagelibrary.StageLibraryModule;
 import com.streamsets.pipeline.store.impl.CachePipelineStoreTask;
 import com.streamsets.pipeline.store.impl.FilePipelineStoreTask;
+import com.streamsets.pipeline.util.LockCache;
+import com.streamsets.pipeline.util.LockCacheModule;
+
 import dagger.Module;
 import dagger.Provides;
 
 import javax.inject.Singleton;
 
 @Module(injects = PipelineStoreTask.class, library = true, includes = {RuntimeModule.class, StageLibraryModule.class,
-  CachePipelineStateStoreModule.class})
+  CachePipelineStateStoreModule.class, LockCacheModule.class})
 public class CachePipelineStoreModule {
 
   @Provides
   @Singleton
-  public PipelineStoreTask provideStore(FilePipelineStoreTask store) {
-    return new CachePipelineStoreTask(store);
+  public PipelineStoreTask provideStore(FilePipelineStoreTask store, LockCache<String> lockCache) {
+    return new CachePipelineStoreTask(store, lockCache);
   }
 
 }

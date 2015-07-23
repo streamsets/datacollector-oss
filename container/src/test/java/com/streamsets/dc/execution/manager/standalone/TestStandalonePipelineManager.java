@@ -30,9 +30,13 @@ import com.streamsets.pipeline.stagelibrary.StageLibraryTask;
 import com.streamsets.pipeline.store.PipelineStoreTask;
 import com.streamsets.pipeline.store.impl.FilePipelineStoreTask;
 import com.streamsets.pipeline.util.Configuration;
+import com.streamsets.pipeline.util.LockCache;
+import com.streamsets.pipeline.util.LockCacheModule;
+
 import dagger.Module;
 import dagger.ObjectGraph;
 import dagger.Provides;
+
 import org.apache.commons.io.FileUtils;
 import org.junit.After;
 import org.junit.Before;
@@ -41,6 +45,7 @@ import org.mockito.Mockito;
 
 import javax.inject.Named;
 import javax.inject.Singleton;
+
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
@@ -58,7 +63,7 @@ public class TestStandalonePipelineManager {
   private PipelineStateStore pipelineStateStore;
 
   @Module(injects = {StandaloneAndClusterPipelineManager.class, PipelineStoreTask.class, PipelineStateStore.class,
-    StandaloneRunner.class, EventListenerManager.class},
+    StandaloneRunner.class, EventListenerManager.class, LockCache.class},  includes = LockCacheModule.class,
     library = true)
   public static class TestPipelineManagerModule {
 
@@ -83,9 +88,9 @@ public class TestStandalonePipelineManager {
 
     @Provides @Singleton
     public PipelineStoreTask providePipelineStoreTask(RuntimeInfo runtimeInfo, StageLibraryTask stageLibraryTask,
-                                                      PipelineStateStore pipelineStateStore) {
+                                                      PipelineStateStore pipelineStateStore, LockCache<String> lockCache) {
       FilePipelineStoreTask filePipelineStoreTask = new FilePipelineStoreTask(runtimeInfo, stageLibraryTask,
-        pipelineStateStore);
+        pipelineStateStore, lockCache);
       filePipelineStoreTask.init();
       return filePipelineStoreTask;
     }

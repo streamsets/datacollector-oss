@@ -10,13 +10,15 @@ import com.streamsets.pipeline.main.RuntimeModule;
 import com.streamsets.pipeline.stagelibrary.StageLibraryModule;
 import com.streamsets.pipeline.store.impl.FilePipelineStoreTask;
 import com.streamsets.pipeline.store.impl.SlavePipelineStoreTask;
+import com.streamsets.pipeline.util.LockCacheModule;
+
 import dagger.Module;
 import dagger.Provides;
 
 import javax.inject.Singleton;
 
 @Module(injects = PipelineStoreTask.class, library = true, includes = {RuntimeModule.class, StageLibraryModule.class,
-  SlavePipelineStateStoreModule.class})
+  SlavePipelineStateStoreModule.class, LockCacheModule.class})
 public class SlavePipelineStoreModule {
 
   @Provides

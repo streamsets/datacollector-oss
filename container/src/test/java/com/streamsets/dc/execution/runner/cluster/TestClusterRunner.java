@@ -33,6 +33,7 @@ import com.streamsets.pipeline.store.PipelineStoreTask;
 import com.streamsets.pipeline.store.impl.FilePipelineStoreTask;
 import com.streamsets.pipeline.util.Configuration;
 import com.streamsets.pipeline.util.TestUtil;
+import com.streamsets.pipeline.util.LockCache;
 import org.apache.commons.io.FileUtils;
 import org.junit.After;
 import org.junit.Assert;
@@ -94,7 +95,7 @@ public class TestClusterRunner {
     pipelineStateStore = new CachePipelineStateStore(new FilePipelineStateStore(runtimeInfo, conf));
     attributes = new HashMap<>();
     stageLibraryTask = MockStages.createStageLibrary(emptyCL);
-    pipelineStoreTask = new FilePipelineStoreTask(runtimeInfo, stageLibraryTask, pipelineStateStore);
+    pipelineStoreTask = new FilePipelineStoreTask(runtimeInfo, stageLibraryTask, pipelineStateStore, new LockCache<String>());
     pipelineStoreTask.init();
     pipelineStoreTask.create("admin", NAME, "some desc");
 

@@ -8,8 +8,6 @@ package com.streamsets.pipeline.store.impl;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.collect.ImmutableList;
-import com.streamsets.dc.execution.PipelineStateStore;
-import com.streamsets.dc.execution.PipelineStatus;
 import com.streamsets.pipeline.api.ExecutionMode;
 import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.config.DataRuleDefinition;
@@ -18,6 +16,8 @@ import com.streamsets.pipeline.config.PipelineConfiguration;
 import com.streamsets.pipeline.config.RuleDefinitions;
 import com.streamsets.pipeline.creation.PipelineBeanCreator;
 import com.streamsets.pipeline.creation.PipelineConfigBean;
+import com.streamsets.dc.execution.PipelineStateStore;
+import com.streamsets.dc.execution.PipelineStatus;
 import com.streamsets.pipeline.io.DataStore;
 import com.streamsets.pipeline.json.ObjectMapperFactory;
 import com.streamsets.pipeline.main.RuntimeInfo;
@@ -32,9 +32,10 @@ import com.streamsets.pipeline.store.PipelineStoreException;
 import com.streamsets.pipeline.store.PipelineStoreTask;
 import com.streamsets.pipeline.task.AbstractTask;
 import com.streamsets.pipeline.util.ContainerError;
+import com.streamsets.pipeline.util.LockCache;
 import com.streamsets.pipeline.util.PipelineDirectoryUtil;
-
 import com.streamsets.pipeline.validation.Issue;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -48,22 +49,16 @@ import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
 import java.util.UUID;
-
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 
 public class FilePipelineStoreTask extends AbstractTask implements PipelineStoreTask {
-
   private static final Logger LOG = LoggerFactory.getLogger(FilePipelineStoreTask.class);
-
+  private final LockCache<String> lockCache;
   @VisibleForTesting
   static final String REV = "0";
-
   public static final String INFO_FILE = "info.json";
   public static final String PIPELINE_FILE = "pipeline.json";
   private static final String RULES_FILE = "rules.json";
@@ -73,21 +68,18 @@ public class FilePipelineStoreTask extends AbstractTask implements PipelineStore
   private File storeDir;
   private final ObjectMapper json;
   private final PipelineStateStore pipelineStateStore;
-
-  //rules can be modified while the pipeline is running
-  //runner will look up the rule definition before running each batch, we need synchronization
-  private final Object rulesMutex;
-  private final HashMap<String, RuleDefinitions> pipelineToRuleDefinitionMap;
+  private final ConcurrentMap<String, RuleDefinitions> pipelineToRuleDefinitionMap;
 
   @Inject
-  public FilePipelineStoreTask(RuntimeInfo runtimeInfo, StageLibraryTask stageLibrary, PipelineStateStore pipelineStateStore) {
+  public FilePipelineStoreTask(RuntimeInfo runtimeInfo, StageLibraryTask stageLibrary,
+    PipelineStateStore pipelineStateStore, LockCache<String> lockCache) {
     super("filePipelineStore");
     this.stageLibrary = stageLibrary;
     this.runtimeInfo = runtimeInfo;
     json = ObjectMapperFactory.get();
-    rulesMutex = new Object();
-    pipelineToRuleDefinitionMap = new HashMap<>();
+    pipelineToRuleDefinitionMap = new ConcurrentHashMap<>();
     this.pipelineStateStore = pipelineStateStore;
+    this.lockCache = lockCache;
   }
 
   @VisibleForTesting
@@ -139,32 +131,35 @@ public class FilePipelineStoreTask extends AbstractTask implements PipelineStore
 
   @Override
   public PipelineConfiguration create(String user, String name, String description) throws PipelineStoreException {
-    if (hasPipeline(name)) {
-      throw new PipelineStoreException(ContainerError.CONTAINER_0201, name);
+    synchronized (lockCache.getLock(name)) {
+      if (hasPipeline(name)) {
+        throw new PipelineStoreException(ContainerError.CONTAINER_0201, name);
+      }
+      if (!getPipelineDir(name).mkdir()) {
+        throw new PipelineStoreException(ContainerError.CONTAINER_0202, name, Utils.format("'{}' mkdir failed",
+          getPipelineDir(name)));
+      }
+
+      Date date = new Date();
+      UUID uuid = UUID.randomUUID();
+      PipelineInfo info = new PipelineInfo(name, description, date, date, user, user, REV, uuid, false);
+      PipelineConfiguration pipeline =
+        new PipelineConfiguration(SCHEMA_VERSION, PipelineConfigBean.VERSION, uuid, description, stageLibrary
+          .getPipeline().getPipelineDefaultConfigs(), Collections.EMPTY_MAP, Collections.EMPTY_LIST, null);
+
+      try {
+        json.writeValue(getInfoFile(name), BeanHelper.wrapPipelineInfo(info));
+        json.writeValue(getPipelineFile(name), BeanHelper.wrapPipelineConfiguration(pipeline));
+      } catch (Exception ex) {
+        throw new PipelineStoreException(ContainerError.CONTAINER_0202, name, ex.getMessage(), ex);
+      }
+      pipeline.setPipelineInfo(info);
+      if (pipelineStateStore != null) {
+        pipelineStateStore.saveState(user, name, REV, PipelineStatus.EDITED, "Pipeline edited", null,
+          ExecutionMode.STANDALONE);
+      }
+      return pipeline;
     }
-    if (!getPipelineDir(name).mkdir()) {
-      throw new PipelineStoreException(ContainerError.CONTAINER_0202, name,
-                                       Utils.format("'{}' mkdir failed", getPipelineDir(name)));
-    }
-    Date date = new Date();
-    UUID uuid = UUID.randomUUID();
-    PipelineInfo info = new PipelineInfo(name, description, date, date, user, user, REV, uuid, false);
-    PipelineConfiguration pipeline = new PipelineConfiguration(SCHEMA_VERSION, PipelineConfigBean.VERSION, uuid,
-        description, stageLibrary.getPipeline().getPipelineDefaultConfigs(), Collections.EMPTY_MAP,
-        Collections.EMPTY_LIST, null);
-    try {
-      json.writeValue(getInfoFile(name), BeanHelper.wrapPipelineInfo(info));
-      json.writeValue(getPipelineFile(name), BeanHelper.wrapPipelineConfiguration(pipeline));
-    } catch (Exception ex) {
-      throw new PipelineStoreException(ContainerError.CONTAINER_0202, name, ex.getMessage(),
-                                       ex);
-    }
-    pipeline.setPipelineInfo(info);
-    if (pipelineStateStore != null) {
-      pipelineStateStore.saveState(user, name, REV, PipelineStatus.EDITED, "Pipeline edited", null,
-                                   ExecutionMode.STANDALONE);
-    }
-    return pipeline;
   }
 
   private boolean cleanUp(String name) throws PipelineStoreException {
@@ -172,22 +167,23 @@ public class FilePipelineStoreTask extends AbstractTask implements PipelineStore
   }
 
   @Override
-  public synchronized void delete(String name) throws PipelineStoreException {
-    if (!hasPipeline(name)) {
-      throw new PipelineStoreException(ContainerError.CONTAINER_0200, name);
-    }
-    if (!cleanUp(name)) {
-      throw new PipelineStoreException(ContainerError.CONTAINER_0203, name);
-    }
-    if (pipelineStateStore != null) {
-     // For now, passing rev 0 - make delete take tag/rev as a parameter
-      PipelineStatus pipelineStatus = pipelineStateStore.getState(name, REV).getStatus();
-      if (pipelineStatus.isActive()) {
-        throw new PipelineStoreException(ContainerError.CONTAINER_0208, pipelineStatus);
+  public void delete(String name) throws PipelineStoreException {
+    synchronized (lockCache.getLock(name)) {
+      if (!hasPipeline(name)) {
+        throw new PipelineStoreException(ContainerError.CONTAINER_0200, name);
       }
-      pipelineStateStore.delete(name, REV);
+      if (!cleanUp(name)) {
+        throw new PipelineStoreException(ContainerError.CONTAINER_0203, name);
+      }
+      if (pipelineStateStore != null) {
+        // For now, passing rev 0 - make delete take tag/rev as a parameter
+        PipelineStatus pipelineStatus = pipelineStateStore.getState(name, REV).getStatus();
+        if (pipelineStatus.isActive()) {
+          throw new PipelineStoreException(ContainerError.CONTAINER_0208, pipelineStatus);
+        }
+        pipelineStateStore.delete(name, REV);
+      }
     }
-    cleanUp(name);
   }
 
   @Override
@@ -222,84 +218,91 @@ public class FilePipelineStoreTask extends AbstractTask implements PipelineStore
   }
 
   private PipelineInfo getInfo(String name, boolean checkExistence) throws PipelineStoreException {
-    if (checkExistence && !hasPipeline(name)) {
-      throw new PipelineStoreException(ContainerError.CONTAINER_0200, name);
-    }
-    try {
-      PipelineInfoJson pipelineInfoJsonBean = json.readValue(getInfoFile(name), PipelineInfoJson.class);
-      return pipelineInfoJsonBean.getPipelineInfo();
-    } catch (Exception ex) {
-      throw new PipelineStoreException(ContainerError.CONTAINER_0206, name);
+    synchronized (lockCache.getLock(name)) {
+      if (checkExistence && !hasPipeline(name)) {
+        throw new PipelineStoreException(ContainerError.CONTAINER_0200, name);
+      }
+      try {
+        PipelineInfoJson pipelineInfoJsonBean = json.readValue(getInfoFile(name), PipelineInfoJson.class);
+        return pipelineInfoJsonBean.getPipelineInfo();
+      } catch (Exception ex) {
+        throw new PipelineStoreException(ContainerError.CONTAINER_0206, name);
+      }
     }
   }
 
   @Override
   public PipelineConfiguration save(String user, String name, String tag, String tagDescription,
-      PipelineConfiguration pipeline) throws PipelineStoreException {
-    if (!hasPipeline(name)) {
-      throw new PipelineStoreException(ContainerError.CONTAINER_0200, name);
-    }
-    PipelineInfo savedInfo = getInfo(name);
-    if (!savedInfo.getUuid().equals(pipeline.getUuid())) {
-      throw new PipelineStoreException(ContainerError.CONTAINER_0205, name);
-    }
-    if (pipelineStateStore != null) {
-      PipelineStatus pipelineStatus = pipelineStateStore.getState(name, tag).getStatus();
-      if (pipelineStatus.isActive()) {
-        throw new PipelineStoreException(ContainerError.CONTAINER_0208, pipelineStatus);
+    PipelineConfiguration pipeline) throws PipelineStoreException {
+    synchronized (lockCache.getLock(name)) {
+      if (!hasPipeline(name)) {
+        throw new PipelineStoreException(ContainerError.CONTAINER_0200, name);
       }
-    }
-
-    UUID uuid = UUID.randomUUID();
-    PipelineInfo info = new PipelineInfo(getInfo(name), pipeline.getDescription(), new Date(), user, REV, uuid,
-                                         pipeline.isValid());
-
-    try {
-      pipeline.setUuid(uuid);
-      json.writeValue(getInfoFile(name), BeanHelper.wrapPipelineInfo(info));
-      json.writeValue(getPipelineFile(name), BeanHelper.wrapPipelineConfiguration(pipeline));
+      PipelineInfo savedInfo = getInfo(name);
+      if (!savedInfo.getUuid().equals(pipeline.getUuid())) {
+        throw new PipelineStoreException(ContainerError.CONTAINER_0205, name);
+      }
       if (pipelineStateStore != null) {
-        List<Issue> errors = new ArrayList<>();
-        PipelineConfigBean pipelineConfigBean = PipelineBeanCreator.get().create(pipeline, errors);
-        if (pipelineConfigBean == null) {
-          throw new PipelineStoreException(ContainerError.CONTAINER_0116, errors);
+        PipelineStatus pipelineStatus = pipelineStateStore.getState(name, tag).getStatus();
+        if (pipelineStatus.isActive()) {
+          throw new PipelineStoreException(ContainerError.CONTAINER_0208, pipelineStatus);
         }
-        pipelineStateStore.edited(user, name, tag, pipelineConfigBean.executionMode);
       }
-    } catch (Exception ex) {
-      throw new PipelineStoreException(ContainerError.CONTAINER_0204, name, ex.getMessage(), ex);
+      UUID uuid = UUID.randomUUID();
+      PipelineInfo info =
+        new PipelineInfo(getInfo(name), pipeline.getDescription(), new Date(), user, REV, uuid, pipeline.isValid());
+      try {
+        pipeline.setUuid(uuid);
+        json.writeValue(getInfoFile(name), BeanHelper.wrapPipelineInfo(info));
+        json.writeValue(getPipelineFile(name), BeanHelper.wrapPipelineConfiguration(pipeline));
+        if (pipelineStateStore != null) {
+          List<Issue> errors = new ArrayList<>();
+          PipelineConfigBean pipelineConfigBean = PipelineBeanCreator.get().create(pipeline, errors);
+          if (pipelineConfigBean == null) {
+            throw new PipelineStoreException(ContainerError.CONTAINER_0116, errors);
+          }
+          pipelineStateStore.edited(user, name, tag, pipelineConfigBean.executionMode);
+        }
+
+      } catch (Exception ex) {
+        throw new PipelineStoreException(ContainerError.CONTAINER_0204, name, ex.getMessage(), ex);
+      }
+      pipeline.setPipelineInfo(info);
+      return pipeline;
     }
-    pipeline.setPipelineInfo(info);
-    return pipeline;
   }
 
   @Override
   @SuppressWarnings("unchecked")
   public List<PipelineRevInfo> getHistory(String name) throws PipelineStoreException {
-    return ImmutableList.of(new PipelineRevInfo(getInfo(name)));
+    synchronized (lockCache.getLock(name)) {
+      return ImmutableList.of(new PipelineRevInfo(getInfo(name)));
+    }
   }
 
   @Override
   public PipelineConfiguration load(String name, String tagOrRev) throws PipelineStoreException {
-    if (!hasPipeline(name)) {
-      throw new PipelineStoreException(ContainerError.CONTAINER_0200, name);
-    }
-    try {
-      PipelineInfo info = getInfo(name);
-      PipelineConfigurationJson pipelineConfigBean = json.readValue(getPipelineFile(name),
-        PipelineConfigurationJson.class);
-      PipelineConfiguration pipeline = pipelineConfigBean.getPipelineConfiguration();
-      pipeline.setPipelineInfo(info);
-      return pipeline;
-    } catch (Exception ex) {
-      throw new PipelineStoreException(ContainerError.CONTAINER_0206, name, ex.getMessage(),
-                                       ex);
+    synchronized (lockCache.getLock(name)) {
+      if (!hasPipeline(name)) {
+        throw new PipelineStoreException(ContainerError.CONTAINER_0200, name);
+      }
+      try {
+        PipelineInfo info = getInfo(name);
+        PipelineConfigurationJson pipelineConfigBean =
+          json.readValue(getPipelineFile(name), PipelineConfigurationJson.class);
+        PipelineConfiguration pipeline = pipelineConfigBean.getPipelineConfiguration();
+        pipeline.setPipelineInfo(info);
+        return pipeline;
+      }
+      catch (Exception ex) {
+        throw new PipelineStoreException(ContainerError.CONTAINER_0206, name, ex.getMessage(), ex);
+      }
     }
   }
 
   @Override
   public RuleDefinitions retrieveRules(String name, String tagOrRev) throws PipelineStoreException {
-    synchronized (rulesMutex) {
+    synchronized (lockCache.getLock(name)) {
       if(!pipelineToRuleDefinitionMap.containsKey(getPipelineKey(name, tagOrRev))) {
         if (!hasPipeline(name)) {
           throw new PipelineStoreException(ContainerError.CONTAINER_0200, name);
@@ -332,13 +335,14 @@ public class FilePipelineStoreTask extends AbstractTask implements PipelineStore
   @Override
   public RuleDefinitions storeRules(String pipelineName, String tag, RuleDefinitions ruleDefinitions)
     throws PipelineStoreException {
-    if (!hasPipeline(pipelineName)) {
-      throw new PipelineStoreException(ContainerError.CONTAINER_0200, pipelineName);
-    }
-    synchronized (rulesMutex) {
-      //check the uuid of the existing rule definition to detect any change since the previous load.
-      //two browsers could modify the same rule definition
-      if(pipelineToRuleDefinitionMap.get(getPipelineKey(pipelineName, tag)) != null) {
+    synchronized (lockCache.getLock(pipelineName)) {
+      // check the uuid of the ex
+      if (!hasPipeline(pipelineName)) {
+        throw new PipelineStoreException(ContainerError.CONTAINER_0200, pipelineName);
+      }
+      // Listing rule definition to detect any change since the previous load.
+      // two browsers could modify the same rule definition
+      if (pipelineToRuleDefinitionMap.get(getPipelineKey(pipelineName, tag)) != null) {
         UUID savedUuid = pipelineToRuleDefinitionMap.get(getPipelineKey(pipelineName, tag)).getUuid();
         if (!savedUuid.equals(ruleDefinitions.getUuid())) {
           throw new PipelineStoreException(ContainerError.CONTAINER_0205, pipelineName);
@@ -347,26 +351,26 @@ public class FilePipelineStoreTask extends AbstractTask implements PipelineStore
 
       UUID uuid = UUID.randomUUID();
       ruleDefinitions.setUuid(uuid);
-      try (OutputStream os = new DataStore(getRulesFile(pipelineName)).getOutputStream()){
+      try (OutputStream os = new DataStore(getRulesFile(pipelineName)).getOutputStream()) {
         ObjectMapperFactory.get().writeValue(os, BeanHelper.wrapRuleDefinitions(ruleDefinitions));
         pipelineToRuleDefinitionMap.put(getPipelineKey(pipelineName, tag), ruleDefinitions);
       } catch (IOException ex) {
-        throw new PipelineStoreException(ContainerError.CONTAINER_0404, pipelineName, ex.getMessage(),
-          ex);
+        throw new PipelineStoreException(ContainerError.CONTAINER_0404, pipelineName, ex.getMessage(), ex);
       }
+      return ruleDefinitions;
     }
-    return ruleDefinitions;
   }
 
   @Override
   public boolean deleteRules(String name) throws PipelineStoreException {
-    synchronized (rulesMutex) {
+    synchronized (lockCache.getLock(name)) {
       pipelineToRuleDefinitionMap.remove(getPipelineKey(name, REV));
+
+      if (hasPipeline(name) && getRulesFile(name) != null && getRulesFile(name).exists()) {
+        return getRulesFile(name).delete();
+      }
+      return false;
     }
-    if(hasPipeline(name) && getRulesFile(name) != null && getRulesFile(name).exists()) {
-      return getRulesFile(name).delete();
-    }
-    return false;
   }
 
   public String getPipelineKey(String pipelineName, String rev) {

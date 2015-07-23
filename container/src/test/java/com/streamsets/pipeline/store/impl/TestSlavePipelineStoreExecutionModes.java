@@ -21,6 +21,7 @@ import com.streamsets.pipeline.main.RuntimeInfo;
 import com.streamsets.pipeline.main.RuntimeModule;
 import com.streamsets.pipeline.runner.MockStages;
 import com.streamsets.pipeline.stagelibrary.StageLibraryTask;
+import com.streamsets.pipeline.util.LockCache;
 import com.streamsets.pipeline.util.PipelineDirectoryUtil;
 
 
@@ -35,7 +36,7 @@ public class TestSlavePipelineStoreExecutionModes {
     StageLibraryTask stageLibraryTask = MockStages.createStageLibrary(emptyCL);
     runtimeInfo.setExecutionMode(RuntimeInfo.ExecutionMode.SLAVE.name());
     FilePipelineStoreTask pipelineStoreTask = new FilePipelineStoreTask(runtimeInfo, stageLibraryTask,
-      new SlavePipelineStateStore());
+      new SlavePipelineStateStore(), new LockCache<String>());
     SlavePipelineStoreTask slavePipelineStoreTask = new SlavePipelineStoreTask(pipelineStoreTask);
     slavePipelineStoreTask.init();
     assertEquals(new File(runtimeInfo.getDataDir(), PipelineDirectoryUtil.PIPELINE_INFO_BASE_DIR).getAbsolutePath(), pipelineStoreTask.getStoreDir().getAbsolutePath());
@@ -51,7 +52,7 @@ public class TestSlavePipelineStoreExecutionModes {
     StageLibraryTask stageLibraryTask = MockStages.createStageLibrary(emptyCL);
     runtimeInfo.setExecutionMode(RuntimeInfo.ExecutionMode.STANDALONE.name());
     FilePipelineStoreTask pipelineStoreTask = new FilePipelineStoreTask(runtimeInfo, stageLibraryTask,
-      new SlavePipelineStateStore());
+      new SlavePipelineStateStore(), new LockCache<String>());
     SlavePipelineStoreTask slavePipelineStoreTask = new SlavePipelineStoreTask(pipelineStoreTask);
     slavePipelineStoreTask.init();
     assertEquals(new File(runtimeInfo.getDataDir(), PipelineDirectoryUtil.PIPELINE_INFO_BASE_DIR).getAbsolutePath(),

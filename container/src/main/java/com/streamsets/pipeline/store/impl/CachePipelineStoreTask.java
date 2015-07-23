@@ -14,24 +14,27 @@ import com.streamsets.pipeline.store.PipelineRevInfo;
 import com.streamsets.pipeline.store.PipelineStoreException;
 import com.streamsets.pipeline.store.PipelineStoreTask;
 import com.streamsets.pipeline.util.ContainerError;
-import com.streamsets.pipeline.util.PipelineDirectoryUtil;
+import com.streamsets.pipeline.util.LockCache;
 
 import javax.inject.Inject;
+
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 
 public class CachePipelineStoreTask implements PipelineStoreTask {
 
   private final PipelineStoreTask pipelineStore;
-  private final Map<String, PipelineInfo> pipelineInfoMap;
+  private final ConcurrentMap<String, PipelineInfo> pipelineInfoMap;
+  private final LockCache<String> lockCache;
 
   @Inject
-  public CachePipelineStoreTask(PipelineStoreTask pipelineStore) {
+  public CachePipelineStoreTask(PipelineStoreTask pipelineStore, LockCache<String> lockCache) {
     this.pipelineStore = pipelineStore;
-    pipelineInfoMap = new HashMap<>();
+    pipelineInfoMap = new ConcurrentHashMap<>();
+    this.lockCache = lockCache;
   }
 
   @Override
@@ -73,29 +76,34 @@ public class CachePipelineStoreTask implements PipelineStoreTask {
   }
 
   @Override
-  public synchronized PipelineConfiguration create(String user, String name, String description) throws PipelineStoreException {
-    PipelineConfiguration pipelineConf =  pipelineStore.create(user, name, description);
-    pipelineInfoMap.put(name, pipelineConf.getInfo());
-    return pipelineConf;
+  public PipelineConfiguration create(String user, String name, String description) throws PipelineStoreException {
+    synchronized (lockCache.getLock(name)) {
+      PipelineConfiguration pipelineConf = pipelineStore.create(user, name, description);
+      pipelineInfoMap.put(name, pipelineConf.getInfo());
+      return pipelineConf;
+    }
   }
 
   @Override
-  public synchronized void delete(String name) throws PipelineStoreException {
-    pipelineStore.delete(name);
-    pipelineInfoMap.remove(name);
+  public void delete(String name) throws PipelineStoreException {
+    synchronized (lockCache.getLock(name)) {
+      pipelineStore.delete(name);
+      pipelineInfoMap.remove(name);
+    }
   }
 
   @Override
-  public synchronized List<PipelineInfo> getPipelines() throws PipelineStoreException {
+  public List<PipelineInfo> getPipelines() throws PipelineStoreException {
     return Collections.unmodifiableList(new ArrayList(pipelineInfoMap.values()));
   }
 
   @Override
-  public synchronized PipelineInfo getInfo(String name) throws PipelineStoreException {
-    if (!pipelineInfoMap.containsKey(name)) {
+  public PipelineInfo getInfo(String name) throws PipelineStoreException {
+    PipelineInfo pipelineInfo = pipelineInfoMap.get(name);
+    if (pipelineInfo == null) {
       throw new PipelineStoreException(ContainerError.CONTAINER_0200, name);
     } else {
-      return pipelineInfoMap.get(name);
+      return pipelineInfo;
     }
   }
 
@@ -105,11 +113,13 @@ public class CachePipelineStoreTask implements PipelineStoreTask {
   }
 
   @Override
-  public synchronized PipelineConfiguration save(String user, String name, String tag, String tagDescription,
+  public PipelineConfiguration save(String user, String name, String tag, String tagDescription,
     PipelineConfiguration pipeline) throws PipelineStoreException {
-    PipelineConfiguration pipelineConf =  pipelineStore.save(user, name, tag, tagDescription, pipeline);
-    pipelineInfoMap.put(name, pipelineConf.getInfo());
-    return pipelineConf;
+    synchronized (lockCache.getLock(name)) {
+      PipelineConfiguration pipelineConf = pipelineStore.save(user, name, tag, tagDescription, pipeline);
+      pipelineInfoMap.put(name, pipelineConf.getInfo());
+      return pipelineConf;
+    }
   }
 
   @Override
@@ -118,7 +128,7 @@ public class CachePipelineStoreTask implements PipelineStoreTask {
   }
 
   @Override
-  public synchronized boolean hasPipeline(String name) {
+  public boolean hasPipeline(String name) {
     return pipelineInfoMap.containsKey(name);
   }
 

@@ -23,7 +23,8 @@ import com.streamsets.pipeline.store.PipelineInfo;
 import com.streamsets.pipeline.store.PipelineStoreException;
 import com.streamsets.pipeline.store.PipelineStoreTask;
 import com.streamsets.pipeline.util.ContainerError;
-
+import com.streamsets.pipeline.util.LockCache;
+import com.streamsets.pipeline.util.LockCacheModule;
 import dagger.ObjectGraph;
 import dagger.Provides;
 
@@ -45,7 +46,8 @@ public class TestFilePipelineStoreTask {
   private static final String SYSTEM_USER = "system";
   protected PipelineStoreTask store;
 
-  @dagger.Module(injects = FilePipelineStoreTask.class)
+  @dagger.Module(injects = {FilePipelineStoreTask.class, LockCache.class},
+    includes = LockCacheModule.class)
   public static class Module {
     public Module() {
     }
@@ -75,7 +77,7 @@ public class TestFilePipelineStoreTask {
   public void setUp() {
     ObjectGraph dagger = ObjectGraph.create(new Module());
     FilePipelineStoreTask filePipelineStoreTask = dagger.get(FilePipelineStoreTask.class);
-    store = new CachePipelineStoreTask(filePipelineStoreTask);
+    store = new CachePipelineStoreTask(filePipelineStoreTask, new LockCache<String>());
   }
 
   @After
