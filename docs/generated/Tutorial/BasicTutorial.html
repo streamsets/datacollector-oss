@@ -2,7 +2,7 @@
 <!DOCTYPE html
   SYSTEM "about:legacy-compat">
 <html xml:lang="en-us" lang="en-us">
-<head><meta name="description" content="The basic tutorial creates a pipeline that processes data in two branches and writes all data to the destination. You'll use data prevew to help configure the pipeline, and you'll create a data alert ..."></meta><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><meta name="copyright" content="(C) Copyright 2005"></meta><meta name="DC.rights.owner" content="(C) Copyright 2005"></meta><meta name="DC.Type" content="concept"></meta><meta name="DC.Title" content="Basic Tutorial"></meta><meta name="abstract" content="The basic tutorial creates a pipeline that processes data in two branches and writes all data to the destination. You'll use data prevew to help configure the pipeline, and you'll create a data alert and run the pipeline."></meta><meta name="description" content="The basic tutorial creates a pipeline that processes data in two branches and writes all data to the destination. You'll use data prevew to help configure the pipeline, and you'll create a data alert and run the pipeline."></meta><meta name="DC.Relation" scheme="URI" content="../Tutorial/Tutorial-title.html"></meta><meta name="DC.Format" content="XHTML"></meta><meta name="DC.Identifier" content="concept_phf_cjt_ls"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/commonltr.css"><!----></link><title>Basic Tutorial</title><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/webhelp_topic.css"><!----></link><link rel="stylesheet" type="text/css" href="../skin.css"></link><script type="text/javascript"><!--
+<head><meta name="description" content="The basic tutorial creates a pipeline that processes data in two branches and writes all data to a file system. You'll use data prevew to help configure the pipeline, and you'll create a data alert ..."></meta><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><meta name="copyright" content="(C) Copyright 2005"></meta><meta name="DC.rights.owner" content="(C) Copyright 2005"></meta><meta name="DC.Type" content="concept"></meta><meta name="DC.Title" content="Basic Tutorial"></meta><meta name="abstract" content="The basic tutorial creates a pipeline that processes data in two branches and writes all data to a file system. You'll use data prevew to help configure the pipeline, and you'll create a data alert and run the pipeline."></meta><meta name="description" content="The basic tutorial creates a pipeline that processes data in two branches and writes all data to a file system. You'll use data prevew to help configure the pipeline, and you'll create a data alert and run the pipeline."></meta><meta name="DC.Relation" scheme="URI" content="../Tutorial/Tutorial-title.html"></meta><meta name="DC.Format" content="XHTML"></meta><meta name="DC.Identifier" content="concept_phf_cjt_ls"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/commonltr.css"><!----></link><title>Basic Tutorial</title><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/webhelp_topic.css"><!----></link><link rel="stylesheet" type="text/css" href="../skin.css"></link><script type="text/javascript"><!--
           
           var prefix = "../index.html";
           
@@ -15,8 +15,8 @@
 
  
  <div class="body conbody"><p class="shortdesc">The basic tutorial creates a pipeline that processes data in two branches and writes all
-  data to the destination. You'll use data prevew to help configure the pipeline, and you'll create
-  a data alert and run the pipeline. </p>
+  data to a file system. You'll use data prevew to help configure the pipeline, and you'll create a
+  data alert and run the pipeline. </p>
 
   <div class="p">Here are high level steps for
    building and running the basic pipeline:<ol class="ol" id="concept_phf_cjt_ls__ol_emy_rhp_ms">
@@ -26,9 +26,9 @@
 
     <li class="li">Preview source data to determine the field-level details needed for the pipeline.</li>
 
-    <li class="li">Use a Stream Selector processor to route credit card transactions to the primary branch and
-     cash transactions to the secondary branch. We'll define a required field to discard records
-     without a payment type.</li>
+    <li class="li">Use a Stream Selector to route credit card transactions to the primary branch and cash
+     transactions to the secondary branch. We'll define a required field to discard records without
+     a payment type.</li>
 
     <li class="li">Configure a Jython Evaluator to perform custom processing that determines the credit card
      type based on the credit card number. </li>
@@ -67,6 +67,24 @@
         </div>
 
         <ol class="ol steps" id="task_jmz_3dn_ls__steps_hsz_b2n_ls"><li class="li step stepexpand">
+                <span class="ph cmd">If you aren't already, log in to the <span class="ph">Data
+                  Collector</span>.</span>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">From the <span class="keyword wintitle">Home</span> page or <span class="keyword wintitle">Getting Started</span>
+                    page, click <span class="ph uicontrol">Create New Pipeline</span>. </span>
+                <div class="itemgroup info">If you are in the <span class="ph">Data
+                  Collector</span> console, use
+                    the <span class="ph uicontrol">Toggle Library</span> icon to display the pipeline library,
+                    and click the <span class="ph uicontrol">Create New Pipeline</span> icon.</div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">In the <span class="keyword wintitle">New Pipeline</span> window, enter a pipeline name and
+                    optional description, and click <span class="ph uicontrol">Save</span>.</span>
+                <div class="itemgroup stepresult">The pipeline canvas displays the new name. The Properties panel displays
+                    the pipeline properties. </div>
+            </li>
+<li class="li step stepexpand">
                 <span class="ph cmd">Click the <span class="keyword wintitle">Error Records</span> tab, for the <span class="ph uicontrol">Error
                         Records</span> property, select <span class="ph uicontrol">Write to
                     File</span>.</span>
@@ -81,9 +99,9 @@
                             
                             <thead class="thead" align="left">
                                 <tr class="row">
-                                    <th class="entry" valign="top" width="27.47252747252747%" id="d46622e126">Write to File Property</th>
+                                    <th class="entry" valign="top" width="27.47252747252747%" id="d46585e176">Write to File Property</th>
 
-                                    <th class="entry" valign="top" width="72.52747252747253%" id="d46622e129">Description</th>
+                                    <th class="entry" valign="top" width="72.52747252747253%" id="d46585e179">Description</th>
 
                                 </tr>
 
@@ -91,9 +109,9 @@
 
                             <tbody class="tbody">
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="27.47252747252747%" headers="d46622e126 ">Directory</td>
+                                    <td class="entry" valign="top" width="27.47252747252747%" headers="d46585e176 ">Directory</td>
 
-                                    <td class="entry" valign="top" width="72.52747252747253%" headers="d46622e129 ">Enter the directory local to the <span class="ph">Data
+                                    <td class="entry" valign="top" width="72.52747252747253%" headers="d46585e179 ">Enter the directory local to the <span class="ph">Data
                   Collector</span> where you want to write error record files. <div class="note note"><span class="notetitle">Note:</span> To
                                             prevent validation errors, the directory must already
                                             exist.</div>
@@ -102,9 +120,9 @@
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="27.47252747252747%" headers="d46622e126 ">Files Prefix</td>
+                                    <td class="entry" valign="top" width="27.47252747252747%" headers="d46585e176 ">Files Prefix</td>
 
-                                    <td class="entry" valign="top" width="72.52747252747253%" headers="d46622e129 ">This defines a prefix for error record files. <p class="p">By default, the files are prefixed with "SDC" and an expression that
+                                    <td class="entry" valign="top" width="72.52747252747253%" headers="d46585e179 ">This defines a prefix for error record files. <p class="p">By default, the files are prefixed with "SDC" and an expression that
                   returns the <span class="ph">Data
                   Collector</span> ID, but that's more than
                   we need here. </p>
@@ -114,9 +132,9 @@
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="27.47252747252747%" headers="d46622e126 ">Max File Size</td>
+                                    <td class="entry" valign="top" width="27.47252747252747%" headers="d46585e176 ">Max File Size</td>
 
-                                    <td class="entry" valign="top" width="72.52747252747253%" headers="d46622e129 ">When writing to a local directory, you might want to
+                                    <td class="entry" valign="top" width="72.52747252747253%" headers="d46585e179 ">When writing to a local directory, you might want to
                                         reduce the files size to something more managable, such as 5
                                         or 1 MB.</td>
 
@@ -131,6 +149,8 @@
             </li>
 </ol>
 
+        <div class="section result">Now let's start building the pipeline...</div>
+
     </div>
 
 </div>
@@ -138,11 +158,13 @@
     <h2 class="title topictitle2">Configure the Origin</h2>
 
     
-    <div class="body taskbody"><p class="shortdesc">The origin represents the source data for the pipeline. When you configure the
-        origin, you define how to connect to the data, and the type of data to be processed. </p>
+    <div class="body taskbody"><p class="shortdesc">The origin represents the source data for the pipeline. When you configure the origin
+        you define how to connect to the origin system, the type of data to be processed, and other
+        origin-specific properties. </p>
 
         <div class="section context">
-            <p class="p">To process data in a static file, we'll use the Directory origin.</p>
+            <p class="p">To process data in a static file, we'll use the Directory origin. If we wanted to
+                tail a file in use, we would use the File Tail origin.</p>
 
         </div>
 
@@ -150,8 +172,8 @@
                 <span class="ph cmd">To add the stage to the canvas, in the Stage list, click the
                         <span class="ph uicontrol">Directory</span> origin. Or, from the Pipeline Creation Help
                     Bar, click <span class="ph menucascade"><span class="ph uicontrol">Select Origin</span> &gt; <span class="ph uicontrol">Directory</span></span>.</span>
-                <div class="itemgroup info">The origin displays in the canvas and the Properties panel displays the stage
-                    properties. </div>
+                <div class="itemgroup info">The origin displays in the canvas and the
+                    Properties panel displays the stage properties. </div>
             </li>
 <li class="li step stepexpand">
                 <span class="ph cmd">In the Properties panel, click the <span class="keyword wintitle">Files</span> tab and configure
@@ -163,9 +185,9 @@
                             
                             <thead class="thead" align="left">
                                 <tr class="row">
-                                    <th class="entry" valign="top" width="35.97122302158273%" id="d46622e246">Directory Property</th>
+                                    <th class="entry" valign="top" width="35.97122302158273%" id="d46585e301">Directory Property</th>
 
-                                    <th class="entry" valign="top" width="64.02877697841726%" id="d46622e249">Value</th>
+                                    <th class="entry" valign="top" width="64.02877697841726%" id="d46585e304">Value</th>
 
                                 </tr>
 
@@ -173,24 +195,23 @@
 
                             <tbody class="tbody">
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="35.97122302158273%" headers="d46622e246 ">Data Format</td>
+                                    <td class="entry" valign="top" width="35.97122302158273%" headers="d46585e301 ">Data Format</td>
 
-                                    <td class="entry" valign="top" width="64.02877697841726%" headers="d46622e249 ">Delimited.</td>
-
-                                </tr>
-
-                                <tr class="row">
-                                    <td class="entry" valign="top" width="35.97122302158273%" headers="d46622e246 ">Files Directory</td>
-
-                                    <td class="entry" valign="top" width="64.02877697841726%" headers="d46622e249 ">Enter the local directory where you saved the source
-                                        file. </td>
+                                    <td class="entry" valign="top" width="64.02877697841726%" headers="d46585e304 ">Delimited.</td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="35.97122302158273%" headers="d46622e246 ">File Name Pattern</td>
+                                    <td class="entry" valign="top" width="35.97122302158273%" headers="d46585e301 ">Files Directory</td>
 
-                                    <td class="entry" valign="top" width="64.02877697841726%" headers="d46622e249 ">If the file is the only file in the directory, you can
+                                    <td class="entry" valign="top" width="64.02877697841726%" headers="d46585e304 ">Directory where you saved the source file. </td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="35.97122302158273%" headers="d46585e301 ">File Name Pattern</td>
+
+                                    <td class="entry" valign="top" width="64.02877697841726%" headers="d46585e304 ">If the file is the only file in the directory, you can
                                         use the asterisk wild card (*) or something similarly
                                         generic, like *.csv.</td>
 
@@ -216,7 +237,7 @@
         <div class="section result">This is how the stage and pipeline should look at this point:<p class="p"><img class="image" id="task_ftt_2vq_ks__image_kj1_c5f_4s" src="../Graphics/Tutorial-Directory.png" height="452" width="796"></img></p>
 <p class="p">Notice the error icons on the page. If you click the Issues icon or hover
                 over the Directory error icon, you see a warning that the origin isn't connected to
-                anything yet. All in good time. </p>
+                anything yet. We'll take care of that next.</p>
 </div>
 
     </div>
@@ -227,10 +248,10 @@
 
     
     <div class="body taskbody"><p class="shortdesc">Let's preview the source data to become more familiar with the data set and gather
-        some details for pipeline configuration. </p>
+        some important details. </p>
 
         <div class="section context">
-            <div class="p"> This is the information we need: <ul class="ul" id="task_xb5_2sf_4s__ul_a41_hvh_4s">
+            <div class="p"> This is the information that we'll need to configure the pipeline: <ul class="ul" id="task_xb5_2sf_4s__ul_a41_hvh_4s">
                     <li class="li">The name and field path of the field that contains payment information -
                         We'll use this to route data in the Stream Selector. </li>
 
@@ -247,8 +268,8 @@
             <p class="p">But for a delimited record, a field path includes the index and path to the field as
                 follows: <samp class="ph codeph">[index number]/&lt;path to field&gt;</samp>. </p>
 
-            <p class="p">You'll see what we mean as we go through the tutorial. But if you'd like some extra
-                reading, you can find some details here: <a class="xref" href="../Pipeline_Configuration/Expressions.html#concept_hjk_b4l_vq" title="When a pipeline is valid for preview, you can generally select fields from a list. When a list is not available or when you are defining a new field name, you need to use the appropriate format for the field name.">Referencing Field Names and Field Paths</a>
+            <p class="p">You'll see what we mean as we go through the tutorial. But if you'd like some
+                additional reading, you can find more information here: <a class="xref" href="../Pipeline_Configuration/Expressions.html#concept_hjk_b4l_vq" title="When a pipeline is valid for preview, you can generally select fields from a list. When a list is not available or when you are defining a new field name, you need to use the appropriate format for the field name.">Referencing Field Names and Field Paths</a>
                 or <a class="xref" href="../Pipeline_Configuration/PipelineDesign.html#concept_zcg_bm4_fs" title="When reading delimited data, the Data Collector converts each row of delimited data to a record in List data format. To perform additional processing on the record, you can use the general expression language with your knowledge of the resulting record format or you can use delimited data functions.">Delimited Data Record Structure</a>.</p>
 
             <p class="p">To start data preview, all stages must be connected and all required fields filled
@@ -265,14 +286,13 @@
                     except Validation_0011 for the unconnected Directory stage. </div>
             </li>
 <li class="li step stepexpand">
-                <span class="ph cmd">In the <span class="keyword wintitle">Preview Configuration</span> dialog box, select
-                        <span class="ph uicontrol"> Remember the Configuration</span> and make sure
-                        <span class="ph uicontrol">Write to Destinations</span> is not selected.</span>
-                <div class="itemgroup info">This current configuration ensures that data preview uses data from the source
-                    file, displays 10 records, and avoids writing preview data to the destination. </div>
-                <div class="itemgroup info">Selecting Remember the Configuration means that the next time you click the
-                    Data Preview icon, the data preview uses the configured settings without
-                    displaying this dialog box again. </div>
+                <span class="ph cmd">In the <span class="keyword wintitle">Preview Configuration</span> dialog box, make sure
+                        <span class="ph uicontrol">Write to Destinations</span> is not selected and select
+                        <span class="ph uicontrol"> Remember the Configuration</span>.</span>
+                <div class="itemgroup info">With the default configuration, data preview uses data from the source file,
+                    displays 10 records, and avoids writing preview data to the destination.
+                    Selecting Remember the Configuration means that the data preview uses the
+                    configured settings without displaying this dialog box again. </div>
             </li>
 <li class="li step stepexpand">
                 <span class="ph cmd">Click <span class="ph uicontrol">Run Preview</span>.</span>
@@ -355,21 +375,22 @@
 <p class="p">The Stream Selector uses user-defined conditions
                 to route data. Any data not captured by a user-defined condition routes to the
                 default stream. </p>
-Because the data is delimited, we use a delimited data record
+Because the data is delimited, we'll use a delimited data record
             function for the condition. The <samp class="ph codeph">record:dValue</samp> function returns the
             value associated with the specified header so you don't need to know the exact index
             position of the header in the record. <div class="p">To capture records with credit card payments,
                 use the following condition:
                 <pre class="pre codeblock">${record:dValue('payment_type') == 'CRD'}</pre>
 </div>
-<p class="p">Enclose
-                expressions in a dollar sign and curly brackets, as shown. For more information
-                about the expression language, see <a class="xref" href="../Expression_Language/ExpressionLanguage_overview.html#concept_p54_4kl_vq">Expression Language</a>.</p>
+<p class="p">From this,
+                you see that we enclose expressions in a dollar sign and curly brackets. And we use
+                single or double quotation marks around strings. For more information about the
+                expression language, see <a class="xref" href="../Expression_Language/ExpressionLanguage_overview.html#concept_p54_4kl_vq">Expression Language</a>.</p>
 </div>
 
         <ol class="ol steps" id="task_br5_rzq_ks__steps_xhx_3rk_ls"><li class="li step stepexpand">
                 <span class="ph cmd">In the stage library, select the <span class="ph uicontrol">Stream Selector</span>
-                    processor and connect it to the pipeline. Or, from the Pipeline Creation Help
+                    processor and the Directory origin to it. Or, from the Pipeline Creation Help
                     Bar, click <span class="ph menucascade"><span class="ph uicontrol">Select Processor to Connect</span> &gt; <span class="ph uicontrol">Stream Selector</span></span>.</span>
             </li>
 <li class="li step stepexpand">
@@ -385,10 +406,10 @@ Because the data is delimited, we use a delimited data record
                     [3]/value.</div>
             </li>
 <li class="li step stepexpand">
-                <span class="ph cmd">With the Stream Selector selected, in the Properties panel, click the
+                <span class="ph cmd">To configure the Stream Selector condition, click the
                         <span class="ph uicontrol">Conditions</span> tab.</span>
-                <div class="itemgroup info">A default condition for the default stream displays. The default stream
-                    represents any records not captured by other conditions.</div>
+                <div class="itemgroup info">A condition for the default stream displays. The default stream represents any
+                    records not captured by other conditions.</div>
             </li>
 <li class="li step stepexpand">
                 <span class="ph cmd">Click the <span class="ph uicontrol">Add</span> icon.</span>
@@ -402,9 +423,12 @@ Because the data is delimited, we use a delimited data record
                     <pre class="pre codeblock">${record:dValue('payment_type') == 'CRD'}</pre>
 
                 </div>
-                <div class="itemgroup info">You can use single quotation marks or regular quotation marks around the
-                    string values. </div>
-                <div class="itemgroup info">All other records are captured by the default condition and stream.</div>
+                <div class="itemgroup info">You can copy and paste the expression, but try typing in the expression to see
+                    how the expression completion feature helps select the function and ensure valid
+                    syntax.</div>
+                <div class="itemgroup info">All records that match this condition pass to the first output stream. All
+                    other records are captured by the default condition and passed through the
+                    second output stream.</div>
             </li>
 </ol>
 
@@ -437,7 +461,7 @@ Because the data is delimited, we use a delimited data record
 
         <ol class="ol steps" id="task_cdx_kfm_ls__steps_lnv_lfm_ls"><li class="li step stepexpand">
                 <span class="ph cmd">Add a <span class="ph uicontrol">Jython Evaluator</span> processor to the canvas and
-                    connect it to the first output location of the Stream Selector.</span>
+                    connect the first output location of the Stream Selector to it.</span>
                 <div class="itemgroup info">This routes records paid by credit card to the Jython Evaluator. </div>
             </li>
 <li class="li step stepexpand">
@@ -445,13 +469,19 @@ Because the data is delimited, we use a delimited data record
                         <span class="keyword wintitle">Jython</span> tab. </span>
             </li>
 <li class="li step stepexpand">
-                <span class="ph cmd">Use the default record processing mode to process data in batches, instead of
-                    record by record. </span>
+                <span class="ph cmd">Use the default <span class="ph uicontrol">Batch by Batch</span> record processing mode to
+                    process data in batches, instead of record by record. </span>
             </li>
 <li class="li step stepexpand">
-                <span class="ph cmd">In the <span class="ph uicontrol">Script</span> text box, delete everything below the
-                    first set of comments, and then paste the following script: </span>
+                <span class="ph cmd">In the <span class="ph uicontrol">Script</span> text box, review the information in the
+                    comments, then delete it. Paste in the following script: </span>
                 <div class="itemgroup info">
+                    <div class="note note"><span class="notetitle">Note:</span> Incorrect indentation can cause
+                  Jython validation errors. For best results, copy the script from the online help:
+                  online help &gt; Data Collector Tutorial &gt; Extended Tutorial &gt; Flatten Data with a
+                  Jython Evaluator. Copying the script from the PDF can result in incorrect
+                  indentation. </div>
+
                     <pre class="pre codeblock">try: 
   for record in records:
     cc = record.value[20]['value']
@@ -480,17 +510,11 @@ Because the data is delimited, we use a delimited data record
 except Exception as e:
   err.write(record, e.message)</pre>
 
-                    <div class="note note"><span class="notetitle">Note:</span> Incorrect indentation can cause
-                  Jython validation errors. Copying the script from the PDF can cause incorrect
-                  indentation. For best results, copy the script from the online help: online help &gt;
-                  Data Collector Tutorial &gt; Extended Tutorial &gt; Flatten Data with a Jython
-                  Evaluator. </div>
-
                 </div>
             </li>
 </ol>
 
-        <div class="section result">In the Jython Evaluator, the script should look like this:<p class="p"><img class="image" id="task_cdx_kfm_ls__image_jt1_4ch_4s" src="../Graphics/Tutorial-Jython.png" height="463" width="657"></img></p>
+        <div class="section result">In the Jython Evaluator, the script should look like this:<p class="p"><img class="image" id="task_cdx_kfm_ls__image_jt1_4ch_4s" src="../Graphics/Tutorial-Jython.png" height="468" width="531"></img></p>
 </div>
 
     </div>
@@ -519,7 +543,7 @@ except Exception as e:
 
         <ol class="ol steps" id="task_qbw_d3m_ls__steps_wwy_fjm_ls"><li class="li step stepexpand">
                 <span class="ph cmd">Add a <span class="ph uicontrol">Field Masker</span> processor to the canvas and connect
-                    it to the Jython Evaluator. </span>
+                    the Jython Evaluator to it. </span>
             </li>
 <li class="li step stepexpand">
                 <span class="ph cmd">In the Properties panel, click the <span class="keyword wintitle">Mask</span> tab.</span>
@@ -541,9 +565,9 @@ except Exception as e:
                             
                             <thead class="thead" align="left">
                                 <tr class="row">
-                                    <th class="entry" valign="top" width="28.49002849002849%" id="d46622e831">Field Masker Property</th>
+                                    <th class="entry" valign="top" width="28.49002849002849%" id="d46585e886">Field Masker Property</th>
 
-                                    <th class="entry" valign="top" width="71.5099715099715%" id="d46622e834">Configuration</th>
+                                    <th class="entry" valign="top" width="71.5099715099715%" id="d46585e889">Configuration</th>
 
                                 </tr>
 
@@ -551,24 +575,24 @@ except Exception as e:
 
                             <tbody class="tbody">
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="28.49002849002849%" headers="d46622e831 ">Mask Type</td>
+                                    <td class="entry" valign="top" width="28.49002849002849%" headers="d46585e886 ">Mask Type</td>
 
-                                    <td class="entry" valign="top" width="71.5099715099715%" headers="d46622e834 ">Regular Expression</td>
+                                    <td class="entry" valign="top" width="71.5099715099715%" headers="d46585e889 ">Regular Expression</td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="28.49002849002849%" headers="d46622e831 ">Regular Expression</td>
+                                    <td class="entry" valign="top" width="28.49002849002849%" headers="d46585e886 ">Regular Expression</td>
 
-                                    <td class="entry" valign="top" width="71.5099715099715%" headers="d46622e834 ">
+                                    <td class="entry" valign="top" width="71.5099715099715%" headers="d46585e889 ">
                                         <samp class="ph codeph">(.*)([0-9]{4})</samp></td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="28.49002849002849%" headers="d46622e831 ">Groups to Reveal</td>
+                                    <td class="entry" valign="top" width="28.49002849002849%" headers="d46585e886 ">Groups to Reveal</td>
 
-                                    <td class="entry" valign="top" width="71.5099715099715%" headers="d46622e834 ">2</td>
+                                    <td class="entry" valign="top" width="71.5099715099715%" headers="d46585e889 ">2</td>
 
                                 </tr>
 
@@ -581,7 +605,7 @@ except Exception as e:
             </li>
 </ol>
 
-        <div class="section result">Here's the pipeline so far:<p class="p"><img class="image" id="task_qbw_d3m_ls__image_v1y_35q_ps" src="../Graphics/Tutorial-FieldMasker.png" height="357" width="616"></img></p>
+        <div class="section result">Here's how the Field Masker should look in the pipeline:<p class="p"><img class="image" id="task_qbw_d3m_ls__image_v1y_35q_ps" src="../Graphics/Tutorial-FieldMasker.png" height="357" width="616"></img></p>
 </div>
 
     </div>
@@ -602,8 +626,8 @@ except Exception as e:
         </div>
 
         <ol class="ol steps" id="task_wsj_5tm_ls__steps_xdd_wwm_ls"><li class="li step stepexpand">
-                <span class="ph cmd">Add a <span class="ph uicontrol">Hadoop FS</span> destination to the canvas and and
-                    connect it to the Field Masker.</span>
+                <span class="ph cmd">Add a <span class="ph uicontrol">Hadoop FS</span> destination to the canvas and connect
+                    the Field Masker to it.</span>
             </li>
 <li class="li step stepexpand">
                 <span class="ph cmd">In the Properties panel, click the <span class="keyword wintitle">Hadoop FS</span> tab. If you
@@ -622,9 +646,9 @@ except Exception as e:
                             
                             <thead class="thead" align="left">
                                 <tr class="row">
-                                    <th class="entry" valign="top" width="29.49852507374631%" id="d46622e953">Hadoop FS Property</th>
+                                    <th class="entry" valign="top" width="29.49852507374631%" id="d46585e1008">Hadoop FS Property</th>
 
-                                    <th class="entry" valign="top" width="70.50147492625369%" id="d46622e956">Configuration</th>
+                                    <th class="entry" valign="top" width="70.50147492625369%" id="d46585e1011">Configuration</th>
 
                                 </tr>
 
@@ -632,16 +656,16 @@ except Exception as e:
 
                             <tbody class="tbody">
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="29.49852507374631%" headers="d46622e953 ">Data Format</td>
+                                    <td class="entry" valign="top" width="29.49852507374631%" headers="d46585e1008 ">Data Format</td>
 
-                                    <td class="entry" valign="top" width="70.50147492625369%" headers="d46622e956 ">Delimited</td>
+                                    <td class="entry" valign="top" width="70.50147492625369%" headers="d46585e1011 ">Delimited</td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="29.49852507374631%" headers="d46622e953 ">Files Prefix</td>
+                                    <td class="entry" valign="top" width="29.49852507374631%" headers="d46585e1008 ">Files Prefix</td>
 
-                                    <td class="entry" valign="top" width="70.50147492625369%" headers="d46622e956 ">Defines a prefix for output files. <p class="p">By default, the files are prefixed with "SDC" and an expression that
+                                    <td class="entry" valign="top" width="70.50147492625369%" headers="d46585e1011 ">Defines a prefix for output files. <p class="p">By default, the files are prefixed with "SDC" and an expression that
                   returns the <span class="ph">Data
                   Collector</span> ID, but that's more than
                   we need here. </p>
@@ -650,30 +674,23 @@ Let's simplify and use "Tutorial_" instead.</td>
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="29.49852507374631%" headers="d46622e953 ">Directory Template</td>
+                                    <td class="entry" valign="top" width="29.49852507374631%" headers="d46585e1008 ">Directory Template</td>
 
-                                    <td class="entry" valign="top" width="70.50147492625369%" headers="d46622e956 ">Use the output directory where you want the files to be
+                                    <td class="entry" valign="top" width="70.50147492625369%" headers="d46585e1011 ">Use the output directory where you want the files to be
                                         written and optionally include datetime variables to
                                         indicate the frequency at which the files should be rolled
                                         over. <p class="p">For example the following directory rolls the
-                                            output file once a year, but works for this tutorial:
-                                                <samp class="ph codeph">&lt;output
-                                            directory&gt;/${YYYY()}</samp>.</p>
+                                            output file once a month, which works fine for this
+                                            tutorial: <samp class="ph codeph">&lt;output
+                                                directory&gt;/${YYYY()}-${MM()}</samp>.</p>
 </td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="29.49852507374631%" headers="d46622e953 ">Max Records in File</td>
+                                    <td class="entry" valign="top" width="29.49852507374631%" headers="d46585e1008 ">Max File Size (MB)</td>
 
-                                    <td class="entry" valign="top" width="70.50147492625369%" headers="d46622e956 ">250000</td>
-
-                                </tr>
-
-                                <tr class="row">
-                                    <td class="entry" valign="top" width="29.49852507374631%" headers="d46622e953 ">Max File Size (MB)</td>
-
-                                    <td class="entry" valign="top" width="70.50147492625369%" headers="d46622e956 ">If writing to a local file system, you might lower the
+                                    <td class="entry" valign="top" width="70.50147492625369%" headers="d46585e1011 ">If writing to a local file system, you might lower the
                                         file size to something manageable, like 5 or 1.</td>
 
                                 </tr>
@@ -690,15 +707,15 @@ Let's simplify and use "Tutorial_" instead.</td>
                     property. Use the defaults for the rest:</span>
                 <div class="itemgroup info">
                     <table cellpadding="4" cellspacing="0" summary="" id="task_wsj_5tm_ls__simpletable_jyj_2vq_ps" border="1" class="simpletable"><tr class="sthead">
-                            <th valign="bottom" align="left" id="d46622e1038" class="stentry">Delimited Property</th>
+                            <th valign="bottom" align="left" id="d46585e1084" class="stentry">Delimited Property</th>
 
-                            <th valign="bottom" align="left" id="d46622e1041" class="stentry">Value</th>
+                            <th valign="bottom" align="left" id="d46585e1087" class="stentry">Value</th>
 
                         </tr>
 <tr class="strow">
-                            <td valign="top" headers="d46622e1038" class="stentry">Header Line</td>
+                            <td valign="top" headers="d46585e1084" class="stentry">Header Line</td>
 
-                            <td valign="top" headers="d46622e1041" class="stentry">With Header Line</td>
+                            <td valign="top" headers="d46585e1087" class="stentry">With Header Line</td>
 
                         </tr>
 </table>
@@ -707,7 +724,7 @@ Let's simplify and use "Tutorial_" instead.</td>
             </li>
 </ol>
 
-        <div class="section result">That completes the primary branch:<p class="p"><img class="image" id="task_wsj_5tm_ls__image_svj_rvq_ps" src="../Graphics/Tutorial-HDFS.png" height="75" width="604"></img></p>
+        <div class="section result">This completes the primary branch:<p class="p"><img class="image" id="task_wsj_5tm_ls__image_svj_rvq_ps" src="../Graphics/Tutorial-HDFS.png" height="75" width="604"></img></p>
 <p class="p"> Now, let's go back to the Stream
                 Selector and complete the secondary branch.</p>
 </div>
@@ -737,15 +754,18 @@ Let's simplify and use "Tutorial_" instead.</td>
             </li>
 <li class="li step stepexpand">
                 <span class="ph cmd">Expand the first output record, scroll down, and expand index 21. Note the
-                    header and value information, and then click <span class="ph uicontrol">Close
-                        Preview</span>.</span>
+                    header and value information:</span>
                 <div class="itemgroup info"><img class="image" id="task_wgb_t4p_ms__image_h4c_d4h_4s" src="../Graphics/Tutorial-Exp-JythonPreview.png" height="288" width="700"></img><p class="p">From this, we can see that we need to add a map with an index
                         of 21, as well as the header and value fields.</p>
 </div>
             </li>
 <li class="li step stepexpand">
+                <span class="ph cmd">Click <span class="ph uicontrol">Close Preview</span>.</span>
+            </li>
+<li class="li step stepexpand">
                 <span class="ph cmd">Add an <span class="ph uicontrol">Expression Evaluator</span> processor to the canvas and
-                    connect it to default output of the <span class="ph uicontrol">Stream Selector</span>. </span>
+                    connect the second, default stream of the <span class="ph uicontrol">Stream Selector</span>
+                    to it.</span>
             </li>
 <li class="li step stepexpand">
                 <span class="ph cmd">Click the <span class="keyword wintitle">Expressions</span> tab.</span>
@@ -755,41 +775,43 @@ Let's simplify and use "Tutorial_" instead.</td>
                     follows:</span>
                 <div class="itemgroup info">
                     <table cellpadding="4" cellspacing="0" summary="" id="task_wgb_t4p_ms__simpletable_xdm_rcr_ps" border="1" class="simpletable"><tr class="sthead">
-                            <th valign="bottom" align="left" id="d46622e1155" class="stentry">Output Field</th>
+                            <th valign="bottom" align="left" id="d46585e1207" class="stentry">Output Field</th>
 
-                            <th valign="bottom" align="left" id="d46622e1158" class="stentry">Expression</th>
-
-                        </tr>
-<tr class="strow">
-                            <td valign="top" headers="d46622e1155" class="stentry">[21]</td>
-
-                            <td valign="top" headers="d46622e1158" class="stentry">${emptyMap()}</td>
+                            <th valign="bottom" align="left" id="d46585e1210" class="stentry">Expression</th>
 
                         </tr>
 <tr class="strow">
-                            <td valign="top" headers="d46622e1155" class="stentry">[21]/header</td>
+                            <td valign="top" headers="d46585e1207" class="stentry">[21]</td>
 
-                            <td valign="top" headers="d46622e1158" class="stentry">credit_card_type</td>
+                            <td valign="top" headers="d46585e1210" class="stentry">${emptyMap()}</td>
 
                         </tr>
 <tr class="strow">
-                            <td valign="top" headers="d46622e1155" class="stentry">[21]/value</td>
+                            <td valign="top" headers="d46585e1207" class="stentry">[21]/header</td>
 
-                            <td valign="top" headers="d46622e1158" class="stentry">N/A</td>
+                            <td valign="top" headers="d46585e1210" class="stentry">credit_card_type</td>
+
+                        </tr>
+<tr class="strow">
+                            <td valign="top" headers="d46585e1207" class="stentry">[21]/value</td>
+
+                            <td valign="top" headers="d46585e1210" class="stentry">N/A</td>
 
                         </tr>
 </table>
 
                 </div>
-                <div class="itemgroup info">These fields create a map for index 21, a header field with the name
-                    credit_card_type, and a value field that indicates the information is not
-                    applicable.</div>
+                <div class="itemgroup info">Each row creates a field: The first creates a map for index 21. The second
+                    creates a header field with the name credit_card_type. The third creates a value
+                    field that indicates the information is not applicable.</div>
+                <div class="itemgroup info">For the last two rows, we're using constants as the last two expressions, so
+                    we don't need the dollar sign and brackets for the expression. But if we wanted
+                    to use them, we could define them as ${'credit_card_type'} and ${'N/A'}. </div>
             </li>
 <li class="li step stepexpand">
-                <span class="ph cmd">To write the data from this branch to the destination and merge the non-credit
-                    card data with the credit card data, link the Expression Evaluator to the Hadoop
-                    FS destination:</span>
-                <div class="itemgroup info"><img class="image" id="task_wgb_t4p_ms__image_adv_r2r_ps" src="../Graphics/Tutorial-Expression.png" height="365" width="677"></img></div>
+                <span class="ph cmd">Link the Expression Evaluator to the Hadoop FS destination. </span>
+                <div class="itemgroup info">This streams the data from this branch to the destination, merging data from
+                    both branches: <img class="image" id="task_wgb_t4p_ms__image_adv_r2r_ps" src="../Graphics/Tutorial-Expression.png" height="365" width="677"></img></div>
             </li>
 </ol>
 
@@ -800,7 +822,7 @@ Let's simplify and use "Tutorial_" instead.</td>
     <h2 class="title topictitle2">Create a Data Rule and Alert</h2>
 
     
-    <div class="body taskbody"><p class="shortdesc">The basic pipeline is complete. Now let's add a data rule and alert. Data rules are
+    <div class="body taskbody"><p class="shortdesc">Now before we run the basic pipeline, let's add a data rule and alert. Data rules are
         user-defined rules used to inspect data moving between two stages. </p>
 
         <div class="section context">
@@ -812,15 +834,15 @@ Let's simplify and use "Tutorial_" instead.</td>
                 without credit card numbers. We can create a data rule and alert to let us know when
                 the record count reaches a specified threshold. </p>
 
-            <p class="p">We'll use an expression with the record:value() function to identify when the credit
-                card number field, [20]/value, is null. The record:value() function returns the data
-                in the specified field. </p>
+            <p class="p">We'll use an expression with the record:value('&lt;field path&gt;') function to identify
+                when the credit card number field, [20]/value, is null. The function returns the
+                data in the specified field. </p>
 
         </div>
 
         <ol class="ol steps" id="task_ets_dkj_ps__steps_cw5_qqj_ps"><li class="li step stepexpand">
-                <span class="ph cmd">Select the link between the <span class="ph uicontrol">Stream Selector</span> and the
-                        <span class="ph uicontrol">Jython Evaluator</span>.</span>
+                <span class="ph cmd">Select the Data Inspection icon between the <span class="ph uicontrol">Stream
+                        Selector</span> and the <span class="ph uicontrol">Jython Evaluator</span>: <img class="image" id="task_ets_dkj_ps__image_t4x_lzp_ts" src="../Graphics/icon_MonInspect.png" height="15" width="21"></img>.</span>
                 <div class="itemgroup info">The <span class="keyword wintitle">Data Rules</span> tab displays in the Preview panel. </div>
             </li>
 <li class="li step stepexpand">
@@ -831,39 +853,39 @@ Let's simplify and use "Tutorial_" instead.</td>
                     properties:</span>
                 <div class="itemgroup info">
                     <table cellpadding="4" cellspacing="0" summary="" id="task_ets_dkj_ps__simpletable_z34_ctj_ps" border="1" class="simpletable"><tr class="sthead">
-                            <th valign="bottom" align="left" id="d46622e1274" class="stentry">Data Rule Property</th>
+                            <th valign="bottom" align="left" id="d46585e1332" class="stentry">Data Rule Property</th>
 
-                            <th valign="bottom" align="left" id="d46622e1277" class="stentry">Description</th>
-
-                        </tr>
-<tr class="strow">
-                            <td valign="top" headers="d46622e1274" class="stentry">Label</td>
-
-                            <td valign="top" headers="d46622e1277" class="stentry">Missing Card Numbers</td>
+                            <th valign="bottom" align="left" id="d46585e1335" class="stentry">Description</th>
 
                         </tr>
 <tr class="strow">
-                            <td valign="top" headers="d46622e1274" class="stentry">Condition</td>
+                            <td valign="top" headers="d46585e1332" class="stentry">Label</td>
 
-                            <td valign="top" headers="d46622e1277" class="stentry">${record:value("[20]/value") == ""}</td>
-
-                        </tr>
-<tr class="strow">
-                            <td valign="top" headers="d46622e1274" class="stentry">Sampling Percentage</td>
-
-                            <td valign="top" headers="d46622e1277" class="stentry">20</td>
+                            <td valign="top" headers="d46585e1335" class="stentry">Missing Card Numbers</td>
 
                         </tr>
 <tr class="strow">
-                            <td valign="top" headers="d46622e1274" class="stentry">Alert Text</td>
+                            <td valign="top" headers="d46585e1332" class="stentry">Condition</td>
 
-                            <td valign="top" headers="d46622e1277" class="stentry">Over 10 missing credit card numbers!</td>
+                            <td valign="top" headers="d46585e1335" class="stentry">${record:value("[20]/value") == ""}</td>
 
                         </tr>
 <tr class="strow">
-                            <td valign="top" headers="d46622e1274" class="stentry">Threshold Value</td>
+                            <td valign="top" headers="d46585e1332" class="stentry">Sampling Percentage</td>
 
-                            <td valign="top" headers="d46622e1277" class="stentry">10</td>
+                            <td valign="top" headers="d46585e1335" class="stentry">20</td>
+
+                        </tr>
+<tr class="strow">
+                            <td valign="top" headers="d46585e1332" class="stentry">Alert Text</td>
+
+                            <td valign="top" headers="d46585e1335" class="stentry">Over 10 missing credit card numbers!</td>
+
+                        </tr>
+<tr class="strow">
+                            <td valign="top" headers="d46585e1332" class="stentry">Threshold Value</td>
+
+                            <td valign="top" headers="d46585e1335" class="stentry">10</td>
 
                         </tr>
 </table>
@@ -890,12 +912,12 @@ Let's simplify and use "Tutorial_" instead.</td>
 
     
     <div class="body taskbody"><p class="shortdesc">Now that the basic pipeline is complete, you can start it by clicking the
-            <span class="ph uicontrol">Start</span> icon.</p>
+            <span class="ph uicontrol">Start</span> icon: <img class="image" id="image_lgp_rxp_ts" src="../Graphics/icon_ConfigStartPipeline.png" height="18" width="16"></img>.</p>
 
         <div class="section context">
             <p class="p">The console enters Monitor mode and shows summary statistics in the Monitor panel.
                 Odds are good the data alert has triggered, displaying a pop up message and a
-                notification:</p>
+                notification, and the location of the triggered data alert has turned red:</p>
 
             <p class="p"><img class="image" id="task_m21_dyj_ps__image_gc3_vyr_ps" src="../Graphics/Tutorial-RunPipeline.png" height="563" width="759"></img></p>
 
@@ -903,14 +925,14 @@ Let's simplify and use "Tutorial_" instead.</td>
                 panel.</p>
 
             <p class="p">Note that when you select an unused part of the canvas, the Monitor panel displays
-                monitoring information for the pipeline. When you select a stage, it displays
+                monitoring information for the entire pipeline. When you select a stage, it displays
                 information for the stage. </p>
 
-            <p class="p">The Jython Evaluator shows 40 error records. Click the error records count to see the
-                list of cached error records and related error messages. </p>
+            <p class="p">The Jython Evaluator shows 40 error records. Click the error records number to see
+                the list of cached error records and related error messages. </p>
 
-            <p class="p">You can also select the red Alert icon to view information about the data alert and
-                view the error records associated with the data alert.</p>
+            <p class="p">You can also select the red Data Inspection icon to view information about the data
+                alert and view the error records associated with the data alert.</p>
 
             <p class="p">To continue with the extended tutorial, stop the pipeline. </p>
 

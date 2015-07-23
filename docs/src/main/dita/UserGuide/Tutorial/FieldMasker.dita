@@ -17,7 +17,7 @@
         <steps id="steps_wwy_fjm_ls">
             <step>
                 <cmd>Add a <uicontrol>Field Masker</uicontrol> processor to the canvas and connect
-                    it to the Jython Evaluator. </cmd>
+                    the Jython Evaluator to it. </cmd>
             </step>
             <step>
                 <cmd>In the Properties panel, click the <wintitle>Mask</wintitle> tab.</cmd>
@@ -63,7 +63,8 @@
                 </info>
             </step>
         </steps>
-        <result>Here's the pipeline so far:<p><image href="../Graphics/Tutorial-FieldMasker.png"
-                    id="image_v1y_35q_ps" scale="80"/></p></result>
+        <result>Here's how the Field Masker should look in the pipeline:<p><image
+                    href="../Graphics/Tutorial-FieldMasker.png" id="image_v1y_35q_ps" scale="80"
+                /></p></result>
     </taskbody>
 </task>

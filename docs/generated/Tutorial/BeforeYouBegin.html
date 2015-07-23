@@ -25,9 +25,12 @@
 <p class="p">Sample data URL: </p>
 </li>
 
-    <li class="li">Set up origin, destination, and error directories. <p class="p">We will be prefixing output and error
-            files, so for convenience you can use the same directory for all three file types. If
-            you prefer to use separate directories, set up the following:</p>
+    <li class="li">Set up directories. <p class="p">We will use prefixes for output and error file names, so you can use
+            the same directory for all files as long as the user who started the <span class="ph">Data
+                  Collector</span> has
+            read and write permission for the directory. </p>
+<p class="p">If you prefer to use separate
+            directories, set up the following:</p>
 <ul class="ul" id="concept_hg5_j2p_ms__ul_qwn_mz4_ms">
             <li class="li">Origin directory - Save the sample data in a directory local to the <span class="ph">Data
                   Collector</span>.
@@ -50,16 +53,12 @@
 
     <li class="li">The <span class="ph">Data
                   Collector</span>
-     should be installed and running, but not running other pipelines. <p class="p">At this time, a <span class="ph">Data
-                  Collector</span> instance
-      can run a single pipeline, but you can install multiple instances on the same
-       machine.</p>
-</li>
+          should be installed and running. </li>
 
-    <li class="li">To create and run the pipeline, you should have a login with the creator and manager roles
-     or the admin role. <p class="p">If using the default logins shipped with the <span class="ph">Data
-                  Collector</span>, you can
-      use the admin login: <samp class="ph codeph">admin</samp> / <samp class="ph codeph">admin</samp>. </p>
+    <li class="li">To create and run the pipeline, you should have a login with admin role or both the creator
+          and manager roles. <p class="p">If using the default accounts shipped with the <span class="ph">Data
+                  Collector</span>, you
+            can use the admin login: <samp class="ph codeph">admin</samp> / <samp class="ph codeph">admin</samp>. </p>
 </li>
 
    </ol>

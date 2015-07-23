@@ -14,12 +14,12 @@
                 </cmd>
             </step>
             <step id="CreatePipeline1">
-                <cmd>If this is the first pipeline for the <ph
-                        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                    />, click <uicontrol>Create Pipeline</uicontrol>. </cmd>
-                <info>If you have created other pipelines, if necessary, use the <uicontrol>Toggle
-                        Library</uicontrol> icon to display the pipeline library, and click the
-                        <uicontrol>Create New Pipeline</uicontrol> icon.</info>
+                <cmd>From the <wintitle>Home</wintitle> page or <wintitle>Getting Started</wintitle>
+                    page, click <uicontrol>Create New Pipeline</uicontrol>. </cmd>
+                <info>If you are in the <ph
+                        conref="ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> console, use
+                    the <uicontrol>Toggle Library</uicontrol> icon to display the pipeline library,
+                    and click the <uicontrol>Create New Pipeline</uicontrol> icon.</info>
             </step>
             <step id="CreatePipeline2">
                 <cmd>In the <wintitle>New Pipeline</wintitle> window, enter a pipeline name and

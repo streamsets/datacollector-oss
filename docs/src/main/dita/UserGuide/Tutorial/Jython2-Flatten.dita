@@ -15,10 +15,12 @@
         </context>
         <steps id="steps_s4j_x3k_ps">
             <step>
-                <cmd>Add a <uicontrol>Jython Evaluator</uicontrol> to the canvas and connect the
-                    Field Masker and the Expression Evaluator to the stage, as shown:</cmd>
+                <cmd>Add a <uicontrol>Jython Evaluator</uicontrol> to the canvas. To route all data
+                    from the pipeline through the new stage, connect the Field Masker and the
+                    Expression Evaluator to it as shown:</cmd>
                 <info><image href="../Graphics/Tutorial-Jython2pipeline.png" id="image_fsy_3nk_ps"
                         scale="70"/></info>
+                <info/>
             </step>
             <step>
                 <cmd>On the <uicontrol>Jython</uicontrol> tab, delete everything in the

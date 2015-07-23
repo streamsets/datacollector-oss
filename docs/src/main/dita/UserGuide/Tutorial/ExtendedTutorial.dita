@@ -3,9 +3,9 @@
 <concept id="concept_w4n_gjt_ls">
  <title>Extended Tutorial</title>
  <shortdesc>The extended tutorial builds on the basic tutorial, using an additional set of stages to
-    flatten delimited data, perform some minor data transformations with the flattened data, and
-    write to the Trash development destination. We'll also use data preview to edit preview data and
-    test stage configuration. </shortdesc>
+        flatten delimited data, perform some data transformations with the flattened data, and write
+        to the Trash development destination. We'll also show you how to use data preview to test
+        stage configuration. </shortdesc>
  <conbody>
   <p>You can write to a real destination instead of the Trash destination. The Trash destination
       allows you to run the pipeline without writing to a real destination system. </p>
@@ -13,7 +13,7 @@
         <li>Use a Jython Evaluator to flatten data.</li>
         <li>Configure a Field Converter to convert field types.</li>
         <li>Manipulate data with the Expression Evaluator.</li>
-        <li>Use data preview to review and edit the pipeline.</li>
+        <li>Use data preview to test and update pipeline configuration.</li>
         <li>Complete the pipeline with the placeholder Trash destination.</li>
                 <li>Reset the origin and run the extended pipeline.</li>
       </ol></p>

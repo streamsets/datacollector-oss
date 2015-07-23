@@ -11,20 +11,21 @@
                 pipeline for error handling. If you configured the pipeline to write to file, that's
                 where the error records go. </p><p>The Stream Selector uses user-defined conditions
                 to route data. Any data not captured by a user-defined condition routes to the
-                default stream. </p>Because the data is delimited, we use a delimited data record
+                default stream. </p>Because the data is delimited, we'll use a delimited data record
             function for the condition. The <codeph>record:dValue</codeph> function returns the
             value associated with the specified header so you don't need to know the exact index
             position of the header in the record. <p>To capture records with credit card payments,
                 use the following condition:
-                <codeblock>${record:dValue('payment_type') == 'CRD'}</codeblock></p><p>Enclose
-                expressions in a dollar sign and curly brackets, as shown. For more information
-                about the expression language, see <xref
+                <codeblock>${record:dValue('payment_type') == 'CRD'}</codeblock></p><p>From this,
+                you see that we enclose expressions in a dollar sign and curly brackets. And we use
+                single or double quotation marks around strings. For more information about the
+                expression language, see <xref
                     href="../Expression_Language/ExpressionLanguage_overview.dita#concept_p54_4kl_vq"
                 />.</p></context>
         <steps id="steps_xhx_3rk_ls">
             <step>
                 <cmd>In the stage library, select the <uicontrol>Stream Selector</uicontrol>
-                    processor and connect it to the pipeline. Or, from the Pipeline Creation Help
+                    processor and the Directory origin to it. Or, from the Pipeline Creation Help
                     Bar, click <menucascade>
                         <uicontrol>Select Processor to Connect</uicontrol>
                         <uicontrol>Stream Selector</uicontrol>
@@ -43,10 +44,10 @@
                     [3]/value.</info>
             </step>
             <step>
-                <cmd>With the Stream Selector selected, in the Properties panel, click the
+                <cmd>To configure the Stream Selector condition, click the
                         <uicontrol>Conditions</uicontrol> tab.</cmd>
-                <info>A default condition for the default stream displays. The default stream
-                    represents any records not captured by other conditions.</info>
+                <info>A condition for the default stream displays. The default stream represents any
+                    records not captured by other conditions.</info>
             </step>
             <step>
                 <cmd>Click the <uicontrol>Add</uicontrol> icon.</cmd>
@@ -59,9 +60,12 @@
                 <info>
                     <codeblock>${record:dValue('payment_type') == 'CRD'}</codeblock>
                 </info>
-                <info>You can use single quotation marks or regular quotation marks around the
-                    string values. </info>
-                <info>All other records are captured by the default condition and stream.</info>
+                <info>You can copy and paste the expression, but try typing in the expression to see
+                    how the expression completion feature helps select the function and ensure valid
+                    syntax.</info>
+                <info>All records that match this condition pass to the first output stream. All
+                    other records are captured by the default condition and passed through the
+                    second output stream.</info>
             </step>
         </steps>
         <result>The Stream Selector should look like this:<p><image

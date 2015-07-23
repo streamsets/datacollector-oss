@@ -2,11 +2,12 @@
 <!DOCTYPE task PUBLIC "-//OASIS//DTD DITA General Task//EN" "generalTask.dtd">
 <task id="task_kxl_tvk_ps">
     <title>Convert Types with a Field Converter</title>
-    <shortdesc>Now that data is flattened, you can use a Field Converter to convert the data types
-        of the flattened fields. Let's convert the appropriate fields to Datetime and Double. Any
-        field that you don't convert remains a String field. </shortdesc>
+    <shortdesc>Now, we can use a Field Converter to convert the data types of the flattened
+        fields.</shortdesc>
     <taskbody>
-        <context/>
+        <context>Since the data was read from a file, the fields are all String at this point. Let's
+            convert datetime fields to Datetime. And we'll convert monetary fields as well as the
+            longitude and latitude fields to Double. </context>
         <steps id="steps_wx1_xvk_ps">
             <step>
                 <cmd>Add a <uicontrol>Field Converter</uicontrol> to the canvas and connect the
@@ -20,8 +21,8 @@
                 <info>
                     <table frame="all" rowsep="1" colsep="1" id="table_h3v_yhz_ps">
                         <tgroup cols="2">
-                            <colspec colname="c1" colnum="1"/>
-                            <colspec colname="c2" colnum="2"/>
+                            <colspec colname="c1" colnum="1" colwidth="1*"/>
+                            <colspec colname="c2" colnum="2" colwidth="2.51*"/>
                             <thead>
                                 <row>
                                     <entry>Field Converter Property</entry>
@@ -31,8 +32,8 @@
                             <tbody>
                                 <row>
                                     <entry>Fields to Convert</entry>
-                                    <entry>Click in the field and select the following fields:<ul
-                                            id="ul_v3g_23z_ps">
+                                    <entry>Click in the field. From the list of fields, select the
+                                        following fields:<ul id="ul_v3g_23z_ps">
                                             <li>/dropoff_datetime</li>
                                             <li>/pickup_datetime</li>
                                         </ul></entry>
@@ -53,13 +54,14 @@
                 </info>
             </step>
             <step>
-                <cmd>To convert fields to Double, click the <uicontrol>Add</uicontrol> icon and
-                    configure the properties as follows:</cmd>
+                <cmd>To convert fields that contain monetary information to Double, click the
+                        <uicontrol>Add</uicontrol> icon and configure the properties as
+                    follows:</cmd>
                 <info>
                     <table frame="all" rowsep="1" colsep="1" id="table_xkg_g3z_ps">
                         <tgroup cols="2">
-                            <colspec colname="c1" colnum="1"/>
-                            <colspec colname="c2" colnum="2"/>
+                            <colspec colname="c1" colnum="1" colwidth="1*"/>
+                            <colspec colname="c2" colnum="2" colwidth="2.17*"/>
                             <thead>
                                 <row>
                                     <entry>Field Converter Property</entry>
@@ -72,6 +74,8 @@
                                     <entry>Click in the field and select the following fields:<ul
                                             id="ul_tlc_33z_ps">
                                             <li>/fare_amount</li>
+                                            <li>/dropoff_latitude</li>
+                                            <li>/dropoff_longitude</li>
                                             <li>/mta_tax</li>
                                             <li>/pickup_latitude</li>
                                             <li>/pickup_longitude</li>

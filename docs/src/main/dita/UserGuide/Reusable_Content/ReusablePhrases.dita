@@ -141,10 +141,10 @@
             <draft-comment author="Loretta">The following note is used on both Jython topics in the
                   Tutorial:</draft-comment>
             <note outputclass="" type="note" id="Note-JythonScript">Incorrect indentation can cause
-                  Jython validation errors. Copying the script from the PDF can cause incorrect
-                  indentation. For best results, copy the script from the online help: online help >
-                  Data Collector Tutorial > Extended Tutorial > Flatten Data with a Jython
-                  Evaluator. </note>
+                  Jython validation errors. For best results, copy the script from the online help:
+                  online help > Data Collector Tutorial > Extended Tutorial > Flatten Data with a
+                  Jython Evaluator. Copying the script from the PDF can result in incorrect
+                  indentation. </note>
             <draft-comment author="Loretta">The following bullets are used in Troubleshooting >
                   Accessing Error Message and Tutorial > Run the Extended Pipeline</draft-comment>
             <ul id="ul_ErrorInformation">

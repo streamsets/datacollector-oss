@@ -11,6 +11,15 @@
         </context>
         <steps id="steps_hsz_b2n_ls">
             <step>
+                <cmd>If you aren't already, log in to the <ph
+                        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                    />.</cmd>
+            </step>
+            <step conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/CreatePipeline1"
+                conrefend="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/CreatePipeline2">
+                <cmd/>
+            </step>
+            <step>
                 <cmd>Click the <wintitle>Error Records</wintitle> tab, for the <uicontrol>Error
                         Records</uicontrol> property, select <uicontrol>Write to
                     File</uicontrol>.</cmd>
@@ -56,5 +65,6 @@
                 </info>
             </step>
         </steps>
+        <result>Now let's start building the pipeline...</result>
     </taskbody>
 </task>

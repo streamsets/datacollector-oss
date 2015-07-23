@@ -2,9 +2,9 @@
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_is5_lrq_ks">
  <title>Tutorial Overview</title>
- <shortdesc>This tutorial walks through how to create and run a pipeline. We provide sample data so
-  you can use data preview to help configure the pipeline, run the completed pipeline, and monitor
-  the results. </shortdesc>
+ <shortdesc>This tutorial walks through how to create and run a pipeline. You can download sample
+  data so you can preview data to help configure the pipeline, run the completed pipeline, and
+  monitor the results. </shortdesc>
  <conbody>
   <p>We have a basic and extended version of the tutorial. The basic version allows you to read from
    and write to a local file system so you can easily use the sample data. </p>
@@ -16,13 +16,14 @@
    record format for delimited data. So, in addition to learning some basic <ph
     conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> and pipeline
    configuration concepts, you'll see how to manipulate both delimited and flattened data.</p>
-  <p>For sample data, the tutorial uses fare payment information from a taxi company. The pipeline
-   assesses the credit card vendors that customers use so you can decide later if you want to end
-   contracts with low volume vendors. The pipeline then masks the credit card numbers before writing
-   the results to file. A secondary branch standardizes the record format for non-credit card data. </p>
+  <p>For sample data, the tutorial uses fare payment information from a taxi company. The basic
+   pipeline assesses the credit card vendors that customers use so you can decide later if you want
+   to end contracts with low volume vendors. The pipeline then masks the credit card numbers before
+   writing the results to file. A secondary branch standardizes the record format for non-credit
+   card data. </p>
   <p>Here's what we'll create with the basic tutorial:</p>
   <p><image href="../Graphics/Tutorial-BasicPipe.png" scale="80" id="image_c1c_wj4_ms"/></p>
-  <p>The extended version builds on the basic - it flattens the data, converts some field types and
+  <p>The extended pipeline builds on the basic - it flattens the data, converts some field types and
    then writes the data to the Trash destination. We'll also use data preview to test stage
    configuration and changes in data.</p>
   <p><image href="../Graphics/Tutorial-ExtendedPipe.png" id="image_k3b_dr4_ms" scale="75"/></p>

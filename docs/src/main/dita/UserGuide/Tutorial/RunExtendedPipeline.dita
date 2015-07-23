@@ -23,15 +23,17 @@
                 <cmd>To start the pipeline, click the <uicontrol>Start</uicontrol> icon.</cmd>
             </step>
         </steps>
-        <result>The console goes into monitor mode and the data alert triggers again. Before long,
-            you'll see some error records in the Jython Evaluator and the Field Converter. <p>For
-                each stage, you can see the error messages for latest error records. To look at all
-                the error records, go to the location configured to accept error records.
-                </p><p>Error records include a great deal of information about the record. The
-                following fields can help determine the cause of the error: <ul
-                    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/ul_ErrorInformation"
-                    id="ul_br3_z54_rs">
-                    <li/>
-                </ul></p></result>
+        <result>The console goes into monitor mode and the data alert triggers again. <draft-comment
+                author="Loretta">add monitoring info here or create a new topic for that? Leave
+                error record stuff here? Or new topic? </draft-comment>Before long, you'll see some
+            error records in the Jython Evaluator and the Field Converter. <p>For each stage, you
+                can see the error messages for latest error records. </p><p>To look at all the error
+                records, you can review the error record files in the directory that you specified.
+                Error records are written in the SDC Record data format so you can create an error
+                pipeline to process error records. We'll show you how to create an error pipeline to
+                process these error records in a future tutorial.</p><p>That's it for this tutorial.
+                Hope you found it helpful. Now, go boldly forth and create your own pipelines. And
+                let us know if you have any trouble! <draft-comment author="Loretta">link to
+                    communities/email</draft-comment></p></result>
     </taskbody>
 </task>

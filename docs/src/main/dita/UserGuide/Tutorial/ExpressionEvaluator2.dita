@@ -2,8 +2,8 @@
 <!DOCTYPE task PUBLIC "-//OASIS//DTD DITA General Task//EN" "generalTask.dtd">
 <task id="task_rlk_tdq_ps">
     <title>Manipulate Data with the Expression Evaluator</title>
-    <shortdesc>Let's use an Expression Evaluator to merge the longitude and latitude information
-        into a single pickup location field. We'll also calculate the basic trip revenue by
+    <shortdesc>Let's use an Expression Evaluator to create pickup and dropoff location fields that
+        merge the latitude and longitude details. We'll also calculate the basic trip revenue by
         subtracting the tip from the total fare. </shortdesc>
     <taskbody>
         <steps id="steps_dzt_j3q_ps">
@@ -12,31 +12,63 @@
                     the Field Converter to the stage. </cmd>
             </step>
             <step>
-                <cmd>On the <uicontrol>Expressions</uicontrol> tab, enter the following information
-                    to generate pickup location data:</cmd>
+                <cmd>On the <uicontrol>Expressions</uicontrol> tab, click the add icon, and then
+                    enter the following information to generate the pickup and dropoff location
+                    data:</cmd>
                 <info>
-                    <ul id="ul_bfl_y2y_ps">
-                        <li>For the <uicontrol>Output Field</uicontrol> property, enter
-                            "/pickup_location".</li>
-                        <li>For <uicontrol>Expression</uicontrol> property, enter the following
-                                expression:<codeblock>${record:value('/pickup_latitude')}, ${record:value('/pickup_longitude')}</codeblock><p>This
-                                returns the data from the two flattened fields in the following
-                                format: &lt;pickup latitude>, &lt;pickup longitude>.</p></li>
-                    </ul>
+                    <table frame="all" rowsep="1" colsep="1" id="table_dr1_hld_5s">
+                        <tgroup cols="2">
+                            <colspec colname="c1" colnum="1" colwidth="1*"/>
+                            <colspec colname="c2" colnum="2" colwidth="3.35*"/>
+                            <thead>
+                                <row>
+                                    <entry>Output Field</entry>
+                                    <entry>Expression</entry>
+                                </row>
+                            </thead>
+                            <tbody>
+                                <row>
+                                    <entry>/pickup_location</entry>
+                                    <entry>${record:value('/pickup_latitude')},
+                                        ${record:value('/pickup_longitude')}</entry>
+                                </row>
+                                <row>
+                                    <entry>/dropoff_location</entry>
+                                    <entry>${record:value('/dropoff_latitude')},
+                                        ${record:value('/dropoff_longitude')}</entry>
+                                </row>
+                            </tbody>
+                        </tgroup>
+                    </table>
                 </info>
+                <info>These expressions return the data from the two flattened fields in the
+                    following format: <codeph>&lt;latitude>, &lt;longitude></codeph>.</info>
             </step>
             <step>
                 <cmd>To add another expression, click the <uicontrol>Add</uicontrol> icon and enter
                     the following information to generate a trip revenue with no taxes or
                     tolls:</cmd>
                 <info>
-                    <ul id="ul_xzs_lcn_qs">
-                        <li>For the <uicontrol>Output Field</uicontrol> property, enter
-                            "/trip_revenue".</li>
-                        <li>For the <uicontrol>Expression</uicontrol> property, enter the following
-                            expression:
-                            <codeblock>${record:value('/total_amount') - record:value('/tip_amount')}</codeblock></li>
-                    </ul>
+                    <table frame="all" rowsep="1" colsep="1" id="table_z4k_pld_5s">
+                        <tgroup cols="2">
+                            <colspec colname="c1" colnum="1" colwidth="1*"/>
+                            <colspec colname="c2" colnum="2" colwidth="3.65*"/>
+                            <thead>
+                                <row>
+                                    <entry>Output Field</entry>
+                                    <entry>Expression</entry>
+                                </row>
+                            </thead>
+                            <tbody>
+                                <row>
+                                    <entry>/trip_revenue</entry>
+                                    <entry>${record:value('/total_amount') -
+                                            record:value('/tip_amount')}<p>This expression subtracts
+                                            the tip from the total fare.</p></entry>
+                                </row>
+                            </tbody>
+                        </tgroup>
+                    </table>
                 </info>
             </step>
         </steps>

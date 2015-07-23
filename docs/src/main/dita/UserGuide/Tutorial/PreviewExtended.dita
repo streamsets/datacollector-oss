@@ -6,22 +6,24 @@
     transform data. While in data preview, we'll make some configuration changes and edit preview
     data for testing. </shortdesc>
  <conbody>
-  <p>To preview the pipeline, click the preview icon: <image
-        href="../Graphics/icon-ConfigDataPreview.png" id="image_iqz_1hg_qs" scale="70"/>.</p>
+  <p>To preview the pipeline, click the preview icon: <image href="../Graphics/icon_Preview.png"
+        id="image_wvk_tpd_5s" scale="80"/>.</p>
   <p>You can explore how each stage transforms data by selecting the stage and reviewing the input
-   and output records in the Preview panel. Listed here are some details to note:<dl>
-    <dlentry>
-     <dt>Field Masker</dt>
-          <dd>Let's see how the Field Masker masks credit card numbers and change the mask type. </dd>
-     <dd>To see how the Field Masker masks credit card numbers: <ol id="ol_ht2_5lg_qs">
-       <li>Select the Field Masker in the canvas, and then expand the first input and output
-        record.</li>
-       <li>Scroll down and note that index 20 is highlighted, indicating a change.</li>
-       <li> Expand index 20 for the input and output data. Notice how all digits except the last 4
-        are masked. </li>
-      </ol></dd>
-     <dd>Say we want to change the mask type to mask the whole credit card number. To review the
-            stage configuration and try a different option:<ol id="ol_vvw_wlg_qs">
+      and output records in the Preview panel. Here are some details to note:<dl>
+        <dlentry>
+          <dt>Field Masker</dt>
+          <dd>Let's see how the Field Masker masks credit card numbers and change the mask type that
+            the stage uses.</dd>
+          <dd>To see how the Field Masker masks credit card numbers: <ol id="ol_ht2_5lg_qs">
+              <li>Select the Field Masker in the canvas, and then expand the first input and output
+                record.</li>
+              <li>Scroll down and note that index 20 is highlighted. This indicates the stage
+                changed data in the field.</li>
+              <li> Expand index 20 for both the input and output data. Notice how all digits except
+                the last 4 are masked. </li>
+            </ol></dd>
+          <dd>Say we want to change the mask type to mask the whole credit card number. To review
+            the stage configuration and try a different option:<ol id="ol_vvw_wlg_qs">
               <li>On the left side of the Preview panel, select the <uicontrol>Stage
                   Configuration</uicontrol> icon: <image href="../Graphics/icon_PrevStageConfig.png"
                   id="image_xnl_lmg_qs" scale="85"/>.<p>You might need to scroll up to the top of
@@ -30,33 +32,35 @@
               <li>Change the <uicontrol>Mask Type</uicontrol> to <uicontrol>Variable
                   Length</uicontrol> to mask all numbers while showing how many numbers there are in
                 the data. </li>
-              <li>To view the data with this change, click the <uicontrol>Run with
-                  Changes</uicontrol> icon. <draft-comment author="Loretta">Check if there's a New
-                  Data/Old data option later?</draft-comment></li>
+              <li>To view the data with this change, click the <uicontrol>Run Preview with
+                  Changes</uicontrol> icon: <image href="../Graphics/icon_PreviewRerun.png"
+                  scale="95" id="image_apd_ztd_5s"/>.<draft-comment author="Loretta">Check if
+                  there's a New Data/Old data option later?</draft-comment></li>
               <li>In the canvas, select the <uicontrol>Field Masker</uicontrol> processor and if the
                 Preview panel displays the stage configuration, select the
                   <uicontrol>Records</uicontrol> tab to view the preview records. </li>
               <li> Expand an output record, expand index 20, and notice how the entire number is now
                 masked. </li>
             </ol></dd>
-    </dlentry>
-    <dlentry>
-     <dt>Second Jython Evaluator</dt>
-     <dd>The second Jython Evaluator flattens the delimited data. Let's take a look:<ul
+        </dlentry>
+        <dlentry>
+          <dt>Second Jython Evaluator</dt>
+          <dd>The second Jython Evaluator flattens the delimited data. Let's take a look:<ul
               id="ul_qvt_lmm_qs">
               <li>Select the <uicontrol>second Jython Evaluator</uicontrol> and expand the first
                 input and output record. <p>Notice how the input record is a list of maps and the
                   output record has been flattened to the following structure: &lt;field name>:
                   &lt;value>. Isn't that great? </p></li>
             </ul></dd>
-    </dlentry>
-    <dlentry>
-     <dt>Field Converter</dt>
-     <dd>The Field Converter changes the data type of a few fields. We'll take a look at that stage
-            and try changing stage configuration. <ol id="ol_ajx_pmm_qs">
+        </dlentry>
+        <dlentry>
+          <dt>Field Converter</dt>
+          <dd>The Field Converter changes the data type of a few fields. We'll take a look at that
+            stage and try changing stage configuration. <ol id="ol_ajx_pmm_qs">
               <li>To move the preview focus to the Field Converter, you can click the
                   <uicontrol>Next Stage</uicontrol> icon instead of selecting the stage in the
-                  pipeline.<p>You might notice a red message that indicates the first record has an
+                pipeline: <image href="../Graphics/icon_PrevNextStage.png" id="image_i41_ssd_5s"
+                  />.<p>You might notice a red message that indicates the first record has an
                   unparsable date - it shows that the date data includes invalid characters at the
                   end. </p><p>So what happens to this bad record? It depends on how the stage is
                   configured. We used the default configuration, but let's see what that
@@ -78,11 +82,11 @@
                 change <uicontrol>On Record Error</uicontrol> back to <uicontrol>Send to
                   Error</uicontrol>.</li>
             </ol></dd>
-    </dlentry>
-    <dlentry>
-     <dt>Second Expression Evaluator</dt>
-     <dd>The second Expression Evaluator manipulates data. Let's try editing the preview data:<ol
-              id="ol_u54_mx3_rs">
+        </dlentry>
+        <dlentry>
+          <dt>Second Expression Evaluator</dt>
+          <dd>The second Expression Evaluator manipulates data. Let's try editing the preview
+              data:<ol id="ol_u54_mx3_rs">
               <li>Click the <uicontrol>Next Stage</uicontrol> icon or select the Expression
                 Evaluator.</li>
               <li>If necessary, expand a couple input and output records. <p>Notice the fields
@@ -94,8 +98,8 @@
                 hit <uicontrol>Enter</uicontrol> or click outside the data.<p>The edited input data
                   becomes red to indicate a change. </p></li>
               <li>To test the change, click the <uicontrol>Run Preview with Changes</uicontrol>
-                icon: <image href="../Graphics/icon_PreviewRerun.png" id="image_awt_jbj_rs"
-                  scale="95"/>.<p>The <ph
+                    icon.<p><draft-comment author="Loretta">Check if there's a New Data/Old data
+                    option later?</draft-comment>The <ph
                     conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
                   /> runs the preview with the change. Notice the corresponding output record now
                   has -40.730068 for both pickup_latitude and pickup_location. </p><p><image
@@ -104,10 +108,11 @@
                   test some cases that didn't come up in the preview data. </p></li>
               <li>To revert that change, click the <uicontrol>Revert Data Changes</uicontrol> icon:
                   <image href="../Graphics/icon_PrevRevertChanges.png" id="image_pnr_bfp_rs"
-                  scale="95"/>.<p>This icon does not revert configuration changes. </p>
-              </li>
+                  scale="95"/>.<p>Note that changes to stage or pipeline configuration do not
+                  revert, just changes to preview data.</p></li>
             </ol></dd>
-    </dlentry>
-   </dl></p>
+        </dlentry>
+      </dl></p>
+    <p>When you're done exploring the preview data, click <uicontrol>Close Preview</uicontrol>.</p>
  </conbody>
 </concept>

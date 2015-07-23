@@ -19,15 +19,18 @@
             </step>
             <step>
                 <cmd>Expand the first output record, scroll down, and expand index 21. Note the
-                    header and value information, and then click <uicontrol>Close
-                        Preview</uicontrol>.</cmd>
+                    header and value information:</cmd>
                 <info><image href="../Graphics/Tutorial-Exp-JythonPreview.png" id="image_h4c_d4h_4s"
                         scale="80"/><p>From this, we can see that we need to add a map with an index
                         of 21, as well as the header and value fields.</p></info>
             </step>
             <step>
+                <cmd>Click <uicontrol>Close Preview</uicontrol>.</cmd>
+            </step>
+            <step>
                 <cmd>Add an <uicontrol>Expression Evaluator</uicontrol> processor to the canvas and
-                    connect it to default output of the <uicontrol>Stream Selector</uicontrol>. </cmd>
+                    connect the second, default stream of the <uicontrol>Stream Selector</uicontrol>
+                    to it.</cmd>
             </step>
             <step>
                 <cmd>Click the <wintitle>Expressions</wintitle> tab.</cmd>
@@ -55,16 +58,18 @@
                         </strow>
                     </simpletable>
                 </info>
-                <info>These fields create a map for index 21, a header field with the name
-                    credit_card_type, and a value field that indicates the information is not
-                    applicable.</info>
+                <info>Each row creates a field: The first creates a map for index 21. The second
+                    creates a header field with the name credit_card_type. The third creates a value
+                    field that indicates the information is not applicable.</info>
+                <info>For the last two rows, we're using constants as the last two expressions, so
+                    we don't need the dollar sign and brackets for the expression. But if we wanted
+                    to use them, we could define them as ${'credit_card_type'} and ${'N/A'}. </info>
             </step>
             <step>
-                <cmd>To write the data from this branch to the destination and merge the non-credit
-                    card data with the credit card data, link the Expression Evaluator to the Hadoop
-                    FS destination:</cmd>
-                <info><image href="../Graphics/Tutorial-Expression.png" id="image_adv_r2r_ps"
-                        scale="80"/></info>
+                <cmd>Link the Expression Evaluator to the Hadoop FS destination. </cmd>
+                <info>This streams the data from this branch to the destination, merging data from
+                    both branches: <image href="../Graphics/Tutorial-Expression.png"
+                        id="image_adv_r2r_ps" scale="80"/></info>
             </step>
         </steps>
     </taskbody>

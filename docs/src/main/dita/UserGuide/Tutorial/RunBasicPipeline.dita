@@ -3,23 +3,25 @@
 <task id="task_m21_dyj_ps">
     <title>Run the Basic Pipeline</title>
     <shortdesc>Now that the basic pipeline is complete, you can start it by clicking the
-            <uicontrol>Start</uicontrol> icon.</shortdesc>
+            <uicontrol>Start</uicontrol> icon: <image
+            href="../Graphics/icon_ConfigStartPipeline.png" id="image_lgp_rxp_ts" scale="75"
+        />.</shortdesc>
     <taskbody>
         <context>
             <p>The console enters Monitor mode and shows summary statistics in the Monitor panel.
                 Odds are good the data alert has triggered, displaying a pop up message and a
-                notification:</p>
+                notification, and the location of the triggered data alert has turned red:</p>
             <p><image href="../Graphics/Tutorial-RunPipeline.png" id="image_gc3_vyr_ps" scale="80"
                 /></p>
             <p>You can close the message and explore the information available in the Monitor
                 panel.</p>
             <p>Note that when you select an unused part of the canvas, the Monitor panel displays
-                monitoring information for the pipeline. When you select a stage, it displays
+                monitoring information for the entire pipeline. When you select a stage, it displays
                 information for the stage. </p>
-            <p>The Jython Evaluator shows 40 error records. Click the error records count to see the
-                list of cached error records and related error messages. </p>
-            <p>You can also select the red Alert icon to view information about the data alert and
-                view the error records associated with the data alert.</p>
+            <p>The Jython Evaluator shows 40 error records. Click the error records number to see
+                the list of cached error records and related error messages. </p>
+            <p>You can also select the red Data Inspection icon to view information about the data
+                alert and view the error records associated with the data alert.</p>
             <p>To continue with the extended tutorial, stop the pipeline. </p>
             <p>If you like, you can use data preview to step through the pipeline to review how each
                 stage processes the data. But if you hang in there, you can do it with us at the end

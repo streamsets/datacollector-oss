@@ -51,6 +51,7 @@
         <stentry>More icon</stentry>
         <stentry>Provides additional actions for the pipeline. Use to pause monitoring. </stentry>
       </strow>
+      <strow conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/Icon-Help"/>
       <strow>
         <stentry><image href="../Graphics/icon_MonArrange.png" id="image_xh2_st2_gs"/></stentry>
         <stentry>Auto Arrange icon</stentry>

@@ -2,18 +2,19 @@
 <!DOCTYPE task PUBLIC "-//OASIS//DTD DITA General Task//EN" "generalTask.dtd">
 <task id="task_lh2_yhy_ps">
     <title>Write to Trash</title>
-    <shortdesc>To wrap up the extended tutorial, configure a destination to write the data to a
-        destination system that you use. To write to a file system, you can use the Hadoop FS
-        destination like earlier in the tutorial. </shortdesc>
+    <shortdesc>To wrap up the extended tutorial, let's use the Trash destination as a placeholder
+        for a destination system to be determined later. </shortdesc>
     <taskbody>
         <context>
-            <p>If you don't want to write the tutorial data to any of your systems, you can use the
-                Trash destination. The Trash destination deletes any records that pass to it. This
-                allows you to complete a pipeline in development so you can test the pipeline
-                without writing data to to a production system. </p>
+            <p>The Trash destination deletes any records that pass to it. This allows you to
+                complete a pipeline in development so you can test the pipeline without writing data
+                to to a production system. </p>
+            <p>If you prefer, you can use the Hadoop FS destination to write to file as we did
+                earlier in the tutorial, or you can use another destination to write to a
+                development destination system available to you.</p>
+            <p>The Trash destination requires no configuration, so just add it to the canvas and
+                connect the Expression Evaluator to it: </p>
+            <p><image href="../Graphics/Tutorial-Trash.png" id="image_bpg_nwd_5s" scale="80"/></p>
         </context>
-        <result>Here's the full pipeline with a Trash destination:<p><image
-                    href="../Graphics/Tutorial-ExtendedPipe.png" id="image_hyb_cy4_rs" scale="70"
-                /></p></result>
     </taskbody>
 </task>

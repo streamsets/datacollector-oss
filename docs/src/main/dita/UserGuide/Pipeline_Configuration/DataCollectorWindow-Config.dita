@@ -10,133 +10,134 @@
       when you configure a pipeline:</p>
    <p>
       <image href="../Graphics/CanvasConfig.png" id="image_u5b_1mb_rr" scale="80"/></p>
-    <table frame="all" rowsep="1" colsep="1" id="table_qwf_byk_sq">
-      <tgroup cols="3">
-        <colspec colname="c1" colnum="1" colwidth=".5*"/>
-        <colspec colname="c2" colnum="2" colwidth="1.0*"/>
-        <colspec colname="c3" colnum="3" colwidth="2.0*"/>
-        <thead>
-          <row>
-            <entry>Area / Icon</entry>
-            <entry>Name</entry>
-            <entry>Description</entry>
-          </row>
-        </thead>
-        <tbody>
-          <row>
-            <entry>1</entry>
-            <entry>Pipeline canvas</entry>
-            <entry>Displays the pipeline. Use to configure the pipeline data flow.</entry>
-          </row>
-          <row>
-            <entry>2</entry>
-            <entry>Pipeline Creation Help Bar</entry>
-            <entry>Offers lists of stages to help complete the pipeline. <p>You can use the help bar
-                to connect a stage to an open node. You can also add a stage between linked stages
-                by clicking the link. </p></entry>
-          </row>
-          <row>
-            <entry>3</entry>
-            <entry>Stage list</entry>
-            <entry>Lists the stages in the pipeline. Use to select a stage to configure. You can
-              also select the stage in the canvas.</entry>
-          </row>
-          <row>
-            <entry>4</entry>
-            <entry>Properties panel</entry>
-            <entry>Displays the properties of the pipeline or selected stage when you configure a
-              pipeline. </entry>
-          </row>
-          <row>
-            <entry>5</entry>
-            <entry>Stage library</entry>
-            <entry><p>List of available stages. Use to add stages to the pipeline. You can drag a stage
-              to a location on canvas or click a stage to add it to the end of the pipeline.</p><p>You
-                can view all stages, stages by type, or stages by library. You can also search for a
-                stage by name.</p></entry>
-          </row>
-          <row>
-            <entry><image href="../Graphics/icon-ConfigMore.png" id="image_mwf_yzw_rr"/></entry>
-            <entry>More icon</entry>
-            <entry>Provides additional actions for the pipeline. Use to reset the origin for the
-              pipeline. Or to view or delete snapshot data.</entry>
-          </row>
-          <row>
-            <entry><image href="../Graphics/icon_Issues.png" id="image_lmk_p4z_sq"/></entry>
-            <entry>Issues icon</entry>
-            <entry>Displays the number of implicit validation issues in the pipeline. Click to view
-              a detailed list of issues found during implicit validation.</entry>
-          </row>
-          <row>
-            <entry><image href="../Graphics/icon-ConfigUndo.png" id="image_ppg_542_gs"/></entry>
-            <entry>Undo icon</entry>
-            <entry>Reverts recent changes. On Mac, you can also use Cmd+Z. On Windows, you can use
-              Ctrl+Z. </entry>
-          </row>
-          <row>
-            <entry><image href="../Graphics/icon-ConfigRedo.png" id="image_aym_v42_gs"/></entry>
-            <entry>Redo icon</entry>
-            <entry>Restores changes that were reverted. On Mac, you can also use Cmd+Shift+Z. On
-              Windows, you can use Ctrl+Y. </entry>
-          </row>
-          <row>
-            <entry><image href="../Graphics/icon-ConfigDelete.png" id="image_mhh_31x_rr"/></entry>
-            <entry>Delete icon</entry>
-            <entry>Deletes the selected stage or link.</entry>
-          </row>
-          <row>
-            <entry><image href="../Graphics/icon-ConfigCopy.png" id="image_amh_41x_rr"/></entry>
-            <entry>Copy icon</entry>
-            <entry>Copies the selected stage. You can copy processor and destination stages. Because
-              a pipeline can include only one origin, you cannot copy an origin stage.</entry>
-          </row>
-          <row>
-            <entry><image href="../Graphics/icon-ConfigArrange.png" id="image_xtv_v1x_rr"/></entry>
-            <entry>Auto Arrange icon </entry>
-            <entry>Arranges the stages in the pipeline.</entry>
-          </row>
-          <row>
-            <entry><image href="../Graphics/icon-ConfigDataPreview.png" id="image_f5t_gbx_rr"
-              /></entry>
-            <entry>Preview icon</entry>
-            <entry>Starts a data preview. </entry>
-          </row>
-          <row>
-            <entry><image href="../Graphics/icon-ConfigValidate.png" id="image_axt_lbx_rr"/></entry>
-            <entry>Validate icon</entry>
-            <entry>Validates the pipeline. Performs explicit validation.</entry>
-          </row>
-          <row>
-            <entry><image href="../Graphics/icon-ConfigStartPipeline.png" id="image_lvj_qbx_rr"
-              /></entry>
-            <entry>Start icon</entry>
-            <entry>Starts the pipeline.</entry>
-          </row>
-          <row>
-            <entry><image href="../Graphics/icon-StageLibrary.png" id="image_ftx_sjb_cr" 
-              /></entry>
-            <entry>Stage Library icon</entry>
-            <entry>Toggles the display of the stage library.</entry>
-          </row>
-          <row>
-            <entry><image href="../Graphics/icon-ConfigLink.png" id="image_lzk_fcx_rr"/></entry>
-            <entry>Stream link icon</entry>
-            <entry>Indicates the flow of data through the pipeline. Select to configure data rules
-              and alerts. </entry>
-          </row>
-          <row>
-            <entry><image href="../Graphics/icon-ConfigStageIssue.png" id="image_o3b_lcx_rr"
-              /></entry>
-            <entry>Error icon</entry>
-            <entry>Indicates that one or more required properties are not defined. Can display on a
-              stage for stage properties or in the canvas for pipeline properties. <p>Related error
-                messages display when you hover over the icon. You can also view the messages in the
-                Issues list.</p><p>The icon can also display on tabs in the properties panel to
-                indicate the location of missing properties. </p></entry>
-          </row>
-        </tbody>
-      </tgroup>
-    </table>
+    <simpletable frame="all" id="simpletable_xgh_gl3_ts" relcolwidth="1.0* 1.62* 5.08*">
+      <sthead>
+        <stentry>Area / Icon</stentry>
+        <stentry>Name</stentry>
+        <stentry>Description</stentry>
+      </sthead>
+      <strow>
+        <stentry>1</stentry>
+        <stentry>Pipeline canvas</stentry>
+        <stentry>Displays the pipeline. Use to configure the pipeline data flow.</stentry>
+      </strow>
+      <strow>
+        <stentry>2</stentry>
+        <stentry>Pipeline Creation Help Bar</stentry>
+        <stentry>Offers lists of stages to help complete the pipeline. <p>You can use the help bar
+            to connect a stage to an open node. You can also add a stage between linked stages by
+            clicking the link. </p></stentry>
+      </strow>
+      <strow>
+        <stentry>3</stentry>
+        <stentry>Stage list</stentry>
+        <stentry>Lists the stages in the pipeline. Use to select a stage to configure. You can also
+          select the stage in the canvas.</stentry>
+      </strow>
+      <strow>
+        <stentry>4</stentry>
+        <stentry>Properties panel</stentry>
+        <stentry>Displays the properties of the pipeline or selected stage when you configure a
+          pipeline. </stentry>
+      </strow>
+      <strow>
+        <stentry>5</stentry>
+        <stentry>Stage library</stentry>
+        <stentry> List of available stages. Use to add stages to the pipeline. You can drag a stage
+          to a location on canvas or click a stage to add it to the end of the pipeline. <p>You can
+            view all stages, stages by type, or stages by library. You can also search for a stage
+            by name.</p>
+        </stentry>
+      </strow>
+      <strow>
+        <stentry><image href="../Graphics/icon_ConfigMore.png" id="image_prb_4l3_ts"/></stentry>
+        <stentry>More icon</stentry>
+        <stentry>Provides additional actions for the pipeline. Use to reset the origin for the
+          pipeline. Or to view or delete snapshot data.</stentry>
+      </strow>
+      <strow>
+        <stentry><image href="../Graphics/icon_Issues.png" id="image_t1h_rl3_ts"/></stentry>
+        <stentry>Issues icon</stentry>
+        <stentry>Displays the number of implicit validation issues in the pipeline. Click to view a
+          detailed list of issues found during implicit validation.</stentry>
+      </strow>
+      <strow>
+        <stentry><image href="../Graphics/icon_ConfigUndo.png" id="image_dqr_tl3_ts"/></stentry>
+        <stentry>Undo icon</stentry>
+        <stentry>Reverts recent changes. On Mac, you can also use Cmd+Z. On Windows, you can use
+          Ctrl+Z. </stentry>
+      </strow>
+      <strow>
+        <stentry><image href="../Graphics/icon_ConfigRedo.png" id="image_pzj_vl3_ts"/></stentry>
+        <stentry>Redo icon</stentry>
+        <stentry>Restores changes that were reverted. On Mac, you can also use Cmd+Shift+Z. On
+          Windows, you can use Ctrl+Y. </stentry>
+      </strow>
+      <strow>
+        <stentry><image href="../Graphics/icon_ConfigDelete.png" id="image_lqt_wl3_ts"/></stentry>
+        <stentry>Delete icon</stentry>
+        <stentry>Deletes the selected stage or link.</stentry>
+      </strow>
+      <strow>
+        <stentry><image href="../Graphics/icon_ConfigCopy.png" id="image_nd1_zl3_ts"/></stentry>
+        <stentry>Duplicate Stage icon</stentry>
+        <stentry>Duplicates the selected stage. You can duplicate processors and destinations.
+          Because a pipeline can include only one origin, you cannot duplicate an origin
+            stage.<draft-comment author="Loretta">added a note to SDC-81 to see if we will enable
+            copying between pipelines.</draft-comment></stentry>
+      </strow>
+      <strow>
+        <stentry><image href="../Graphics/icon_ConfigArrange.png" id="image_e25_vm3_ts"/></stentry>
+        <stentry>Auto Arrange icon</stentry>
+        <stentry>Arranges the stages in the pipeline.</stentry>
+      </strow>
+      <strow>
+        <stentry><image href="../Graphics/icon_ConfigDataPreview.png" id="image_t1h_xm3_ts"
+          /></stentry>
+        <stentry>Preview icon</stentry>
+        <stentry>Starts a data preview. </stentry>
+      </strow>
+      <strow>
+        <stentry><image href="../Graphics/icon_ConfigValidate.png" id="image_e3d_mn3_ts"/></stentry>
+        <stentry>Validate icon</stentry>
+        <stentry>Validates the pipeline. Performs explicit validation.</stentry>
+      </strow>
+      <strow>
+        <stentry><image href="../Graphics/icon_ConfigStartPipeline.png" id="image_kyk_4n3_ts"
+          /></stentry>
+        <stentry>Start icon</stentry>
+        <stentry>Starts the pipeline.</stentry>
+      </strow>
+      <strow>
+        <stentry><image href="../Graphics/icon_ConfigStageLibrary.png" id="image_hbw_pn3_ts"
+          /></stentry>
+        <stentry>Stage Library icon</stentry>
+        <stentry>Toggles the display of the stage library.</stentry>
+      </strow>
+      <strow>
+        <stentry><image href="../Graphics/icon_ConfigLink.png" scale="85" id="image_ctp_sn3_ts"
+          /></stentry>
+        <stentry>Stream Link icon</stentry>
+        <stentry>Indicates the flow of data through the pipeline. Select to configure data rules and
+          alerts. </stentry>
+      </strow>
+      <strow>
+        <stentry><image href="../Graphics/icon_ConfigStageIssue.png" id="image_ndf_5n3_ts"
+          /></stentry>
+        <stentry>Error icon</stentry>
+        <stentry>Indicates that one or more required properties are not defined. Can display on a
+          stage for stage properties or in the canvas for pipeline properties. <p>Related error
+            messages display when you hover over the icon. You can also view the messages in the
+            Issues list.</p><p>The icon can also display on tabs in the properties panel to indicate
+            the location of missing properties. </p></stentry>
+      </strow>
+      <strow conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/Icon-Help"/>
+      <strow>
+        <stentry><image href="../Graphics/icon_ConfigMaximize.png" id="image_lfb_l43_ts"/></stentry>
+        <stentry>Maximize Pane icon</stentry>
+        <stentry>Maximizes the configuration panel. </stentry>
+      </strow>
+    </simpletable>
     <note conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/Note-OptionDispay"/>
     <p>For example, the Copy icon displays only when you select stage that can be copied, it does
       not display when you select a link or an origin. Or, if you log in with the Manager role, most

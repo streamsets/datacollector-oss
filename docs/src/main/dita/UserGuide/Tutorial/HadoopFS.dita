@@ -12,8 +12,8 @@
         </context>
         <steps id="steps_xdd_wwm_ls">
             <step>
-                <cmd>Add a <uicontrol>Hadoop FS</uicontrol> destination to the canvas and and
-                    connect it to the Field Masker.</cmd>
+                <cmd>Add a <uicontrol>Hadoop FS</uicontrol> destination to the canvas and connect
+                    the Field Masker to it.</cmd>
             </step>
             <step>
                 <cmd>In the Properties panel, click the <wintitle>Hadoop FS</wintitle> tab. If you
@@ -53,13 +53,9 @@
                                         written and optionally include datetime variables to
                                         indicate the frequency at which the files should be rolled
                                         over. <p>For example the following directory rolls the
-                                            output file once a year, but works for this tutorial:
-                                                <codeph>&lt;output
-                                            directory>/${YYYY()}</codeph>.</p></entry>
-                                </row>
-                                <row>
-                                    <entry>Max Records in File</entry>
-                                    <entry>250000</entry>
+                                            output file once a month, which works fine for this
+                                            tutorial: <codeph>&lt;output
+                                                directory>/${YYYY()}-${MM()}</codeph>.</p></entry>
                                 </row>
                                 <row>
                                     <entry>Max File Size (MB)</entry>
@@ -88,7 +84,7 @@
                 </info>
             </step>
         </steps>
-        <result>That completes the primary branch:<p><image href="../Graphics/Tutorial-HDFS.png"
+        <result>This completes the primary branch:<p><image href="../Graphics/Tutorial-HDFS.png"
                     id="image_svj_rvq_ps" scale="80"/></p><p> Now, let's go back to the Stream
                 Selector and complete the secondary branch.</p></result>
     </taskbody>

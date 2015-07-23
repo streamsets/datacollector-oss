@@ -2,11 +2,13 @@
 <!DOCTYPE task PUBLIC "-//OASIS//DTD DITA General Task//EN" "generalTask.dtd">
 <task id="task_ftt_2vq_ks">
     <title>Configure the Origin</title>
-    <shortdesc>The origin represents the source data for the pipeline. When you configure the
-        origin, you define how to connect to the data, and the type of data to be processed. </shortdesc>
+    <shortdesc>The origin represents the source data for the pipeline. When you configure the origin
+        you define how to connect to the origin system, the type of data to be processed, and other
+        origin-specific properties. </shortdesc>
     <taskbody>
         <context>
-            <p>To process data in a static file, we'll use the Directory origin.</p>
+            <p>To process data in a static file, we'll use the Directory origin. If we wanted to
+                tail a file in use, we would use the File Tail origin.</p>
         </context>
         <steps id="steps_ckz_gvq_ks">
             <step>
@@ -16,8 +18,9 @@
                         <uicontrol>Select Origin</uicontrol>
                         <uicontrol>Directory</uicontrol>
                     </menucascade>.</cmd>
-                <info>The origin displays in the canvas and the Properties panel displays the stage
-                    properties. </info>
+                <info><draft-comment author="Loretta">Do I need a screenshot here to show the two
+                        options? </draft-comment>The origin displays in the canvas and the
+                    Properties panel displays the stage properties. </info>
             </step>
             <step>
                 <cmd>In the Properties panel, click the <wintitle>Files</wintitle> tab and configure
@@ -40,8 +43,7 @@
                                 </row>
                                 <row>
                                     <entry>Files Directory</entry>
-                                    <entry>Enter the local directory where you saved the source
-                                        file. </entry>
+                                    <entry>Directory where you saved the source file. </entry>
                                 </row>
                                 <row>
                                     <entry>File Name Pattern</entry>
@@ -67,6 +69,6 @@
                     href="../Graphics/Tutorial-Directory.png" id="image_kj1_c5f_4s" scale="80"
                 /></p><p>Notice the error icons on the page. If you click the Issues icon or hover
                 over the Directory error icon, you see a warning that the origin isn't connected to
-                anything yet. All in good time. </p></result>
+                anything yet. We'll take care of that next.</p></result>
     </taskbody>
 </task>

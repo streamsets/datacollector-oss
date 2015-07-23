@@ -3,10 +3,11 @@
 <task id="task_xb5_2sf_4s">
     <title>Preview Data </title>
     <shortdesc>Let's preview the source data to become more familiar with the data set and gather
-        some details for pipeline configuration. </shortdesc>
+        some important details. </shortdesc>
     <taskbody>
         <context>
-            <p> This is the information we need: <ul id="ul_a41_hvh_4s">
+            <p> This is the information that we'll need to configure the pipeline: <ul
+                    id="ul_a41_hvh_4s">
                     <li>The name and field path of the field that contains payment information -
                         We'll use this to route data in the Stream Selector. </li>
                     <li>The field path for credit card numbers - We'll use this to mask the data in
@@ -17,8 +18,8 @@
                 path as follows: <codeph>/&lt;fieldname></codeph>. </p>
             <p>But for a delimited record, a field path includes the index and path to the field as
                 follows: <codeph>[index number]/&lt;path to field></codeph>. </p>
-            <p>You'll see what we mean as we go through the tutorial. But if you'd like some extra
-                reading, you can find some details here: <xref
+            <p>You'll see what we mean as we go through the tutorial. But if you'd like some
+                additional reading, you can find more information here: <xref
                     href="../Pipeline_Configuration/ReferencingFieldNames.dita#concept_hjk_b4l_vq"/>
                 or <xref
                     href="../Pipeline_Configuration/DelimitedDataRecordStructure.dita#concept_zcg_bm4_fs"
@@ -37,14 +38,13 @@
                     except Validation_0011 for the unconnected Directory stage. </info>
             </step>
             <step>
-                <cmd>In the <wintitle>Preview Configuration</wintitle> dialog box, select
-                        <uicontrol> Remember the Configuration</uicontrol> and make sure
-                        <uicontrol>Write to Destinations</uicontrol> is not selected.</cmd>
-                <info>This current configuration ensures that data preview uses data from the source
-                    file, displays 10 records, and avoids writing preview data to the destination. </info>
-                <info>Selecting Remember the Configuration means that the next time you click the
-                    Data Preview icon, the data preview uses the configured settings without
-                    displaying this dialog box again. </info>
+                <cmd>In the <wintitle>Preview Configuration</wintitle> dialog box, make sure
+                        <uicontrol>Write to Destinations</uicontrol> is not selected and select
+                        <uicontrol> Remember the Configuration</uicontrol>.</cmd>
+                <info>With the default configuration, data preview uses data from the source file,
+                    displays 10 records, and avoids writing preview data to the destination.
+                    Selecting Remember the Configuration means that the data preview uses the
+                    configured settings without displaying this dialog box again. </info>
             </step>
             <step>
                 <cmd>Click <uicontrol>Run Preview</uicontrol>.</cmd>
