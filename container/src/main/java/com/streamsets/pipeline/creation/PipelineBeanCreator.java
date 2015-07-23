@@ -19,7 +19,6 @@ import com.streamsets.pipeline.config.PipelineGroups;
 import com.streamsets.pipeline.config.StageConfiguration;
 import com.streamsets.pipeline.config.StageDefinition;
 import com.streamsets.pipeline.config.StageLibraryDefinition;
-import com.streamsets.pipeline.definition.ConfigDefinitionExtractor;
 import com.streamsets.pipeline.definition.ConfigValueExtractor;
 import com.streamsets.pipeline.definition.StageDefinitionExtractor;
 import com.streamsets.pipeline.stagelibrary.ClassLoaderReleaser;
@@ -27,6 +26,8 @@ import com.streamsets.pipeline.stagelibrary.StageLibraryTask;
 import com.streamsets.pipeline.util.ElUtil;
 import com.streamsets.pipeline.validation.Issue;
 import com.streamsets.pipeline.validation.IssueCreator;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
@@ -39,6 +40,7 @@ import java.util.Map;
 import java.util.Properties;
 
 public abstract class PipelineBeanCreator {
+  private static final Logger LOG = LoggerFactory.getLogger(PipelineBeanCreator.class);
 
   private static final PipelineBeanCreator CREATOR = new PipelineBeanCreator() {
   };
@@ -53,15 +55,6 @@ public abstract class PipelineBeanCreator {
     StageLibraryDefinition libraryDef = new StageLibraryDefinition(Thread.currentThread().getContextClassLoader(),
                                                                    "system", "System", new Properties());
     return StageDefinitionExtractor.get().extract(libraryDef, PipelineConfigBean.class, "Pipeline Config Definitions");
-  }
-
-  static private Map<String, ConfigDefinition> getSystemStageConfigDefMap() {
-    Map<String, ConfigDefinition> map = new HashMap<>();
-    for (ConfigDefinition def
-        : ConfigDefinitionExtractor.get().extract(StageConfigBean.class, "System Stage Config Definitions")) {
-      map.put(def.getName(), def);
-    }
-    return ImmutableMap.copyOf(map);
   }
 
   public PipelineConfigBean create(PipelineConfiguration pipelineConf, List<Issue> errors) {
@@ -98,8 +91,7 @@ public abstract class PipelineBeanCreator {
 
   StageBean createStageBean(boolean forExecution, StageLibraryTask library, StageConfiguration stageConf,
       boolean errorStage, Map<String, Object> constants, List<Issue> errors) {
-    IssueCreator issueCreator = (errorStage) ? IssueCreator.getStage(stageConf.getInstanceName())
-                                             : IssueCreator.getStage(stageConf.getInstanceName());
+    IssueCreator issueCreator = IssueCreator.getStage(stageConf.getInstanceName());
     StageBean bean = null;
     StageDefinition stageDef = library.getStage(stageConf.getLibrary(), stageConf.getStageName(),
                                                 forExecution);
@@ -160,8 +152,7 @@ public abstract class PipelineBeanCreator {
     try {
       stage = (Stage) stageDef.getStageClass().newInstance();
     } catch (InstantiationException | IllegalAccessException ex) {
-      IssueCreator issueCreator = (stageDef.isErrorStage()) ? IssueCreator.getStage(stageName)
-                                                            : IssueCreator.getStage(stageName);
+      IssueCreator issueCreator = IssueCreator.getStage(stageName);
       errors.add(issueCreator.create(CreationError.CREATION_000, stageDef.getLabel(), ex.getMessage()));
     }
     return stage;
@@ -200,8 +191,7 @@ public abstract class PipelineBeanCreator {
           }
         } catch (InstantiationException | IllegalAccessException ex) {
           ok = false;
-          IssueCreator issueCreator = (stageDef.isErrorStage()) ? IssueCreator.getStage(stageName)
-                                                                : IssueCreator.getStage(stageName);
+          IssueCreator issueCreator = IssueCreator.getStage(stageName);
           errors.add(issueCreator.create(CreationError.CREATION_001, field.getType().getSimpleName(), ex.getMessage()));
         }
       }
@@ -213,8 +203,7 @@ public abstract class PipelineBeanCreator {
       Map<String, ConfigDefinition> configDefMap, StageDefinition stageDef, StageConfiguration stageConf,
       Map<String, Object> pipelineConstants, List<Issue> errors) {
     String stageName = stageConf.getInstanceName();
-    IssueCreator issueCreator = (stageDef.isErrorStage()) ? IssueCreator.getStage(stageName)
-                                                          : IssueCreator.getStage(stageName);
+    IssueCreator issueCreator = IssueCreator.getStage(stageName);
     for (Field field : obj.getClass().getFields()) {
       String configName = configPrefix + field.getName();
       if (field.getAnnotation(ConfigDef.class) != null) {
@@ -224,7 +213,7 @@ public abstract class PipelineBeanCreator {
         } else {
           Object value = valueMap.get(configName);
           if (value == null) {
-            //TODO LOG WARNING missing config in state config
+            LOG.warn("Stage '{}' missing configuration '{}', using default", stageName, configDef.getName());
             injectDefaultValue(obj, field, stageDef, stageConf, configDef, pipelineConstants, stageName, errors);
           } else {
             injectConfigValue(obj, field, value, stageDef, stageConf, configDef, null, pipelineConstants, errors);
@@ -246,8 +235,7 @@ public abstract class PipelineBeanCreator {
       StageDefinition stageDef, StageConfiguration stageConf, Map<String, Object> pipelineConstants,
       List<Issue> errors) {
     String stageName = stageConf.getInstanceName();
-    IssueCreator issueCreator = (stageDef.isErrorStage()) ? IssueCreator.getStage(stageName)
-                                                          : IssueCreator.getStage(stageName);
+    IssueCreator issueCreator = IssueCreator.getStage(stageName);
     for (Field field : obj.getClass().getFields()) {
       String configName = configPrefix + field.getName();
       if (field.getAnnotation(ConfigDef.class) != null) {
@@ -256,7 +244,7 @@ public abstract class PipelineBeanCreator {
         if (configDef != null) {
           Config configConf = stageConf.getConfig(configName);
           if (configConf == null) {
-            //TODO LOG WARNING missing config in state config
+            LOG.warn("Stage '{}' missing configuration '{}', using default", stageName, configDef.getName());
             injectDefaultValue(obj, field, stageDef, stageConf, configDef, pipelineConstants, stageName, errors);
           } else {
             injectConfigValue(obj, field, stageDef, stageConf, configDef, configConf, pipelineConstants, errors);
@@ -285,8 +273,7 @@ public abstract class PipelineBeanCreator {
     try {
       value = Enum.valueOf(klass, value.toString());
     } catch (IllegalArgumentException ex) {
-      IssueCreator issueCreator = (stageDef.isErrorStage()) ? IssueCreator.getStage(stageName)
-                                                            : IssueCreator.getStage(stageName);
+      IssueCreator issueCreator = IssueCreator.getStage(stageName);
       errors.add(issueCreator.create(groupName, configName, CreationError.CREATION_010, value, klass.getSimpleName(),
                                      ex.getMessage()));
       value = null;
@@ -297,8 +284,7 @@ public abstract class PipelineBeanCreator {
   Object toString(Object value, StageDefinition stageDef, String stageName, String groupName, String configName,
       List<Issue> errors) {
     if (!(value instanceof String)) {
-      IssueCreator issueCreator = (stageDef.isErrorStage()) ? IssueCreator.getStage(stageName)
-                                                            : IssueCreator.getStage(stageName);
+      IssueCreator issueCreator = IssueCreator.getStage(stageName);
       errors.add(issueCreator.create(groupName, configName, CreationError.CREATION_011, value,
                                      value.getClass().getSimpleName()));
       value = null;
@@ -308,8 +294,7 @@ public abstract class PipelineBeanCreator {
 
   Object toChar(Object value, StageDefinition stageDef, String stageName, String groupName, String configName,
       List<Issue> errors) {
-    IssueCreator issueCreator = (stageDef.isErrorStage()) ? IssueCreator.getStage(stageName)
-                                                          : IssueCreator.getStage(stageName);
+    IssueCreator issueCreator = IssueCreator.getStage(stageName);
     if (!(value instanceof String)) {
       errors.add(issueCreator.create(groupName, configName, CreationError.CREATION_012, value));
       value = null;
@@ -328,8 +313,7 @@ public abstract class PipelineBeanCreator {
   Object toBoolean(Object value, StageDefinition stageDef, String stageName, String groupName, String configName,
       List<Issue> errors) {
     if (!(value instanceof Boolean)) {
-      IssueCreator issueCreator = (stageDef.isErrorStage()) ? IssueCreator.getStage(stageName)
-                                                            : IssueCreator.getStage(stageName);
+      IssueCreator issueCreator = IssueCreator.getStage(stageName);
       errors.add(issueCreator.create(groupName, configName, CreationError.CREATION_013, value));
       value = null;
     }
@@ -365,8 +349,7 @@ public abstract class PipelineBeanCreator {
 
   Object toNumber(Class numberType, Object value, StageDefinition stageDef, String stageName, String groupName,
       String configName, List<Issue> errors) {
-    IssueCreator issueCreator = (stageDef.isErrorStage()) ? IssueCreator.getStage(stageName)
-                                                          : IssueCreator.getStage(stageName);
+    IssueCreator issueCreator = IssueCreator.getStage(stageName);
     if (!ConfigValueExtractor.NUMBER_TYPES.contains(value.getClass())) {
       errors.add(issueCreator.create(groupName, configName, CreationError.CREATION_014, value));
       value = null;
@@ -388,8 +371,7 @@ public abstract class PipelineBeanCreator {
   Object toList(Object value, StageDefinition stageDef, ConfigDefinition configDef,
       Map<String, Object> pipelineConstants, String stageName, String groupName, String configName,
       List<Issue> errors) {
-    IssueCreator issueCreator = (stageDef.isErrorStage()) ? IssueCreator.getStage(stageName)
-                                                          : IssueCreator.getStage(stageName);
+    IssueCreator issueCreator = IssueCreator.getStage(stageName);
     if (!(value instanceof List)) {
       errors.add(issueCreator.create(groupName, configName, CreationError.CREATION_020));
       value = null;
@@ -418,8 +400,7 @@ public abstract class PipelineBeanCreator {
   Object toMap(Object value, StageDefinition stageDef, ConfigDefinition configDef,
       Map<String, Object> pipelineConstants, String stageName, String groupName, String configName,
       List<Issue> errors) {
-    IssueCreator issueCreator = (stageDef.isErrorStage()) ? IssueCreator.getStage(stageName)
-                                                          : IssueCreator.getStage(stageName);
+    IssueCreator issueCreator = IssueCreator.getStage(stageName);
     if (!(value instanceof List)) {
       errors.add(issueCreator.create(groupName, configName, CreationError.CREATION_030));
       value = null;
@@ -462,8 +443,7 @@ public abstract class PipelineBeanCreator {
       ConfigDefinition configDef, Config configConf, Map<String, Object> pipelineConstants,
       List<Issue> errors) {
     String stageName = stageConf.getInstanceName();
-    IssueCreator issueCreator = (stageDef.isErrorStage()) ? IssueCreator.getStage(stageName)
-                                                          : IssueCreator.getStage(stageName);
+    IssueCreator issueCreator = IssueCreator.getStage(stageName);
     if (!(value instanceof List)) {
       errors.add(issueCreator.create(configDef.getGroup(), configDef.getName(), CreationError.CREATION_040,
                            value.getClass().getSimpleName()));
@@ -502,8 +482,7 @@ public abstract class PipelineBeanCreator {
 
   Object resolveIfImplicitEL(Object value, StageDefinition stageDef, ConfigDefinition configDef,
       Map<String, Object> pipelineConstants, String stageName, List<Issue> errors) {
-    IssueCreator issueCreator = (stageDef.isErrorStage()) ? IssueCreator.getStage(stageName)
-                                                          : IssueCreator.getStage(stageName);
+    IssueCreator issueCreator = IssueCreator.getStage(stageName);
     if (configDef.getEvaluation() == ConfigDef.Evaluation.IMPLICIT && value instanceof String &&
         ElUtil.isElString(value)) {
       try {
@@ -532,8 +511,7 @@ public abstract class PipelineBeanCreator {
       ConfigDefinition configDef, Config configConf, Map<String, Object> pipelineConstants,
       List<Issue> errors) {
     String stageName = stageConf.getInstanceName();
-    IssueCreator issueCreator = (stageDef.isErrorStage()) ? IssueCreator.getStage(stageName)
-                                                          : IssueCreator.getStage(stageName);
+    IssueCreator issueCreator = IssueCreator.getStage(stageName);
     String groupName = configDef.getGroup();
     String configName = configDef.getName();
     if (value == null) {

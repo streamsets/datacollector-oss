@@ -15,11 +15,14 @@ import com.streamsets.pipeline.stagelibrary.StageLibraryTask;
 import com.streamsets.pipeline.util.ContainerError;
 import com.streamsets.pipeline.validation.Issue;
 import com.streamsets.pipeline.validation.IssueCreator;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class PipelineConfigurationUpgrader {
+  private static final Logger LOG = LoggerFactory.getLogger(PipelineConfigurationUpgrader.class);
 
   private static final PipelineConfigurationUpgrader UPGRADER = new PipelineConfigurationUpgrader() {
   };
@@ -145,6 +148,8 @@ public class PipelineConfigurationUpgrader {
     int toVersion = def.getVersion();
     try {
       Thread.currentThread().setContextClassLoader(def.getStageClassLoader());
+      LOG.warn("Upgraded instance '{}' from version '{}' to version '{}'", conf.getInstanceName(), fromVersion,
+               toVersion);
       List<Config> configs = def.getUpgrader().upgrade(def.getLibrary(), def.getName(), conf.getInstanceName(),
                                                        fromVersion, toVersion, conf.getConfiguration());
       conf.setStageVersion(def.getVersion());
