@@ -29,7 +29,10 @@ public class VerifyUtils {
     Map<String, Map<String, Object>> countersMap = null;
     for (URI serverURI: serverURIList) {
       try {
-        countersMap = getCountersFromMetrics(serverURI, name, rev);
+        while (countersMap == null) {
+          Thread.sleep(500);
+          countersMap = getCountersFromMetrics(serverURI, name, rev);
+        }
       } catch (IOException ioe) {
         LOG.warn("Failed while retrieving counters from " + serverURI);
       }
@@ -76,7 +79,7 @@ public class VerifyUtils {
   public static Map<String, Map<String, Object>> getCountersFromMetrics(URI serverURI, String name, String rev)
     throws IOException, InterruptedException {
     Map<String, Map<String, Map<String, Object>>> map = getMetrics(serverURI, name, rev);
-    Map<String, Map<String, Object>> countersMap = map.get("counters");
+    Map<String, Map<String, Object>> countersMap = map != null ? map.get("counters") : null;
     return countersMap;
   }
 
@@ -94,6 +97,10 @@ public class VerifyUtils {
     WebTarget target = client.target(serverURI.toURL().toString()).path("/rest/v1/pipeline/" + name + "/metrics")
       .queryParam("name", name).queryParam("rev", rev);
     Response response = target.request(MediaType.APPLICATION_JSON_TYPE).get();
+    if (response.getStatusInfo().equals(Response.noContent().build().getStatusInfo())) {
+      LOG.debug("Got empty status info");
+      return null;
+    }
     checkResponse(response, Response.Status.OK);
     Map<String, Map<String, Map<String, Object>>> map = response.readEntity(Map.class);
     return map;

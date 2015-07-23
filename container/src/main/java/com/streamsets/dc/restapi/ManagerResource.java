@@ -25,6 +25,7 @@ import com.streamsets.pipeline.store.PipelineStoreException;
 import com.streamsets.pipeline.util.AuthzRole;
 import com.streamsets.pipeline.util.ContainerError;
 import com.streamsets.pipeline.util.PipelineException;
+
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.Authorization;
@@ -44,6 +45,10 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.security.Principal;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -58,6 +63,7 @@ public class ManagerResource {
   private final String user;
   private final Manager manager;
   private final RuntimeInfo runtimeInfo;
+  private static final Logger LOG = LoggerFactory.getLogger(ManagerResource.class);
 
   @Inject
   public ManagerResource(Manager manager, RuntimeInfo runtimeInfo, Principal user) {
@@ -175,7 +181,14 @@ public class ManagerResource {
       if (runner != null && runner.getState().getStatus() == PipelineStatus.RUNNING) {
         return Response.ok().type(MediaType.APPLICATION_JSON).entity(runner.getMetrics()).build();
       }
+      if (runner != null) {
+        LOG.info("Status is " + runner.getState().getStatus());
+      } else {
+        LOG.info("Runner is null");
+      }
+
     }
+
     return Response.noContent().build();
   }
 

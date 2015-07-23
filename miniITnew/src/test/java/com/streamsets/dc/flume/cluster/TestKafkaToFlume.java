@@ -120,7 +120,7 @@ public class TestKafkaToFlume {
     }
   }
 
-  @Test
+  @Test(timeout=120000)
   public void testKafkaToFlumeOnCluster() throws Exception {
     Assert.assertEquals("RUNNING", VerifyUtils.getPipelineState(serverURI, "kafka_origin_pipeline_cluster", "0"));
     List<URI> list = miniSDC.getListOfSlaveSDCURI();

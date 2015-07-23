@@ -122,7 +122,7 @@ public class TestKafkaToHDFS {
     }
   }
 
-  @Test
+  @Test(timeout=120000)
   public void testKafkaToHDFSOnCluster() throws Exception {
     List<URI> list = miniSDC.getListOfSlaveSDCURI();
     Assert.assertTrue(list != null && !list.isEmpty());
