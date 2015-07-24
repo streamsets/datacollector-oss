@@ -6,10 +6,10 @@
         card numbers. </shortdesc>
     <taskbody>
         <context>
-            <p>The Field Masker provides fixed and variable-length masks to mask all data. You can
-                create a custom mask - a static mask that can reveal positions. And you can use a
-                regular expression mask to define the string to be masked and optionally reveal one
-                or more groups in the string.</p>
+            <p>The Field Masker provides fixed and variable-length masks to mask all data. To reveal
+                specified positions in the data, you can create a custom mask. To reveal a group of
+                positions within the data, you can use a regular expression mask to define the
+                structure of the data and then reveal one or more groups.</p>
             <p>For the credit card numbers, we'll use the following regular expression to mask all
                 but the last four digits:<codeblock>(.*)([0-9]{4})</codeblock></p>
             <p>The regular expression defines two groups so we can reveal the second group.</p>
@@ -54,7 +54,7 @@
                                         <codeph>(.*)([0-9]{4})</codeph></entry>
                                 </row>
                                 <row>
-                                    <entry>Groups to Reveal</entry>
+                                    <entry>Groups to Show</entry>
                                     <entry>2</entry>
                                 </row>
                             </tbody>

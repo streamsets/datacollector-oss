@@ -3,8 +3,7 @@
 <concept id="concept_is5_lrq_ks">
  <title>Tutorial Overview</title>
  <shortdesc>This tutorial walks through how to create and run a pipeline. You can download sample
-  data so you can preview data to help configure the pipeline, run the completed pipeline, and
-  monitor the results. </shortdesc>
+  data so you can perform data preview, run the completed pipeline, and monitor the results. </shortdesc>
  <conbody>
   <p>We have a basic and extended version of the tutorial. The basic version allows you to read from
    and write to a local file system so you can easily use the sample data. </p>
@@ -23,9 +22,9 @@
    card data. </p>
   <p>Here's what we'll create with the basic tutorial:</p>
   <p><image href="../Graphics/Tutorial-BasicPipe.png" scale="80" id="image_c1c_wj4_ms"/></p>
-  <p>The extended pipeline builds on the basic - it flattens the data, converts some field types and
-   then writes the data to the Trash destination. We'll also use data preview to test stage
-   configuration and changes in data.</p>
+  <p>The extended pipeline adds an additional branch to flatten the data, convert some field types
+   and then write the data to the Trash destination. We'll use data preview to test stage
+   configuration and changes in data before we complete the extended pipeline:</p>
   <p><image href="../Graphics/Tutorial-ExtendedPipe.png" id="image_k3b_dr4_ms" scale="75"/></p>
  </conbody>
 </concept>

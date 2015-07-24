@@ -6,8 +6,8 @@
         stream so all records have the same format when written to the destination.</shortdesc>
     <taskbody>
         <context>
-            <p>To do this, let's use data preview to verify how we added the credit card type to the
-                records.</p>
+            <p>To do this, let's use data preview to verify how the Jython Evaluator adds the credit
+                card type to records.</p>
         </context>
         <steps id="steps_mr4_2pp_ms">
             <step>

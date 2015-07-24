@@ -3,8 +3,8 @@
 <task id="task_cdx_kfm_ls">
     <title>Use Jython for Card Typing</title>
     <shortdesc> Next, we'll evaluate credit card numbers to determine the credit card type. You can
-        use an Expression Evaluator to do the same calculations, but with the a short script, the
-        Jython Evaluator is easier.</shortdesc>
+        use an Expression Evaluator to do the same calculations, but with a short script, the Jython
+        Evaluator is easier.</shortdesc>
     <taskbody>
         <context>
             <p>The <ph

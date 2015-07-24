@@ -10,29 +10,16 @@
       <p>You can download sample data from the StreamSets website. You'll need a login to the
       password-protected section of the site - it just takes a moment to set up an
       account.</p><p>Sample data URL: </p><draft-comment author="Loretta">URL </draft-comment></li>
-    <li>Set up directories. <p>We will use prefixes for output and error file names, so you can use
-            the same directory for all files as long as the user who started the <ph
+    <li>Set up a directory local to the <ph
+            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>, and
+          save the sample data in the directory.<p>Let's use the same directory for the source,
+            destination, and error record files. Make sure the user who started the <ph
               conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> has
-            read and write permission for the directory. </p><p>If you prefer to use separate
-            directories, set up the following:</p><ul id="ul_qwn_mz4_ms">
-            <li>Origin directory - Save the sample data in a directory local to the <ph
-                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>.
-              Make sure that the user who started the <ph
-                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
-              has permission to read from the directory.</li>
-            <li>Destination directory - The pipeline writes output records to file. Consider where
-              you want to write the output files and make sure the <ph
-                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
-              user has write permission for the directory. </li>
-            <li>Error directory - The pipeline also writes error records to file - though you can
-              configure it to write to Kafka if you prefer. Make sure the <ph
-                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
-              user has write permission for the error directory.</li>
-          </ul></li>
+            read and write permission for the directory. </p></li>
     <li>The <ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
           should be installed and running. </li>
-    <li>To create and run the pipeline, you should have a login with admin role or both the creator
-          and manager roles. <p>If using the default accounts shipped with the <ph
+    <li>To create and run the pipeline, you should have a login with the admin role or both the
+          creator and manager roles. <p>If using the default accounts shipped with the <ph
               conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>, you
             can use the admin login: <codeph>admin</codeph> / <codeph>admin</codeph>. </p></li>
    </ol>

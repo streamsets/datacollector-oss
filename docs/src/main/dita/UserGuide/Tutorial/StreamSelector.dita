@@ -17,7 +17,7 @@
             position of the header in the record. <p>To capture records with credit card payments,
                 use the following condition:
                 <codeblock>${record:dValue('payment_type') == 'CRD'}</codeblock></p><p>From this,
-                you see that we enclose expressions in a dollar sign and curly brackets. And we use
+                you see that we enclose expressions in a dollar sign and curly brackets. You can use
                 single or double quotation marks around strings. For more information about the
                 expression language, see <xref
                     href="../Expression_Language/ExpressionLanguage_overview.dita#concept_p54_4kl_vq"
@@ -55,14 +55,13 @@
                     output location appears on the stage in the canvas.</info>
             </step>
             <step>
-                <cmd>Enter the following condition to capture records where a credit card is used
-                    for payment:</cmd>
+                <cmd>The following condition captures records where a credit card is used for
+                    payment. You can copy and paste the expression, but try typing it in to see how
+                    the expression completion feature helps you select the function and ensure valid
+                    syntax.</cmd>
                 <info>
                     <codeblock>${record:dValue('payment_type') == 'CRD'}</codeblock>
                 </info>
-                <info>You can copy and paste the expression, but try typing in the expression to see
-                    how the expression completion feature helps select the function and ensure valid
-                    syntax.</info>
                 <info>All records that match this condition pass to the first output stream. All
                     other records are captured by the default condition and passed through the
                     second output stream.</info>

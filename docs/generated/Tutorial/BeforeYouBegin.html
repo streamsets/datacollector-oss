@@ -25,38 +25,20 @@
 <p class="p">Sample data URL: </p>
 </li>
 
-    <li class="li">Set up directories. <p class="p">We will use prefixes for output and error file names, so you can use
-            the same directory for all files as long as the user who started the <span class="ph">Data
+    <li class="li">Set up a directory local to the <span class="ph">Data
+                  Collector</span>, and
+          save the sample data in the directory.<p class="p">Let's use the same directory for the source,
+            destination, and error record files. Make sure the user who started the <span class="ph">Data
                   Collector</span> has
             read and write permission for the directory. </p>
-<p class="p">If you prefer to use separate
-            directories, set up the following:</p>
-<ul class="ul" id="concept_hg5_j2p_ms__ul_qwn_mz4_ms">
-            <li class="li">Origin directory - Save the sample data in a directory local to the <span class="ph">Data
-                  Collector</span>.
-              Make sure that the user who started the <span class="ph">Data
-                  Collector</span>
-              has permission to read from the directory.</li>
-
-            <li class="li">Destination directory - The pipeline writes output records to file. Consider where
-              you want to write the output files and make sure the <span class="ph">Data
-                  Collector</span>
-              user has write permission for the directory. </li>
-
-            <li class="li">Error directory - The pipeline also writes error records to file - though you can
-              configure it to write to Kafka if you prefer. Make sure the <span class="ph">Data
-                  Collector</span>
-              user has write permission for the error directory.</li>
-
-          </ul>
 </li>
 
     <li class="li">The <span class="ph">Data
                   Collector</span>
           should be installed and running. </li>
 
-    <li class="li">To create and run the pipeline, you should have a login with admin role or both the creator
-          and manager roles. <p class="p">If using the default accounts shipped with the <span class="ph">Data
+    <li class="li">To create and run the pipeline, you should have a login with the admin role or both the
+          creator and manager roles. <p class="p">If using the default accounts shipped with the <span class="ph">Data
                   Collector</span>, you
             can use the admin login: <samp class="ph codeph">admin</samp> / <samp class="ph codeph">admin</samp>. </p>
 </li>

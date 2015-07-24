@@ -24,8 +24,9 @@
             <step id="CreatePipeline2">
                 <cmd>In the <wintitle>New Pipeline</wintitle> window, enter a pipeline name and
                     optional description, and click <uicontrol>Save</uicontrol>.</cmd>
-                <stepresult>The pipeline canvas displays the new name. The Properties panel displays
-                    the pipeline properties. </stepresult>
+                <stepresult>The pipeline canvas displays pipeline name and an error icon. The error
+                    icon indicates that you need to configure error handling for the pipeline. The
+                    Properties panel displays the pipeline properties. </stepresult>
             </step>
             <step>
                 <cmd>

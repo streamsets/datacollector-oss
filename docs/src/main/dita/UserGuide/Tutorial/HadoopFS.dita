@@ -7,8 +7,7 @@
     <taskbody>
         <context>
             <p>When you configure the Hadoop FS destination, you define the directory template. This
-                determines the naming convention for the output directories that are created. Use
-                the directory where you want the output files to be written. </p>
+                determines the naming convention for the output directories that are created. </p>
         </context>
         <steps id="steps_xdd_wwm_ls">
             <step>
@@ -16,11 +15,29 @@
                     the Field Masker to it.</cmd>
             </step>
             <step>
-                <cmd>In the Properties panel, click the <wintitle>Hadoop FS</wintitle> tab. If you
-                    have an HDFS installation, you can configure the stage to write to it. </cmd>
-                <info>Or, to use Hadoop FS to write to a local file system, enter the following
-                    configuration for the <uicontrol>Hadoop FS URI</uicontrol> property:
-                        <codeph>file:///</codeph>.</info>
+                <cmd>In the Properties panel, click the <wintitle>Hadoop FS</wintitle> tab. To use
+                    Hadoop FS to write to a local file system, configure the following property and
+                    use defaults for the rest: </cmd>
+                <info>
+                    <table frame="all" rowsep="1" colsep="1" id="table_tlp_hvj_5s">
+                        <tgroup cols="2">
+                            <colspec colname="c1" colnum="1" colwidth="1*"/>
+                            <colspec colname="c2" colnum="2" colwidth="2.64*"/>
+                            <thead>
+                                <row>
+                                    <entry>Hadoop FS Property</entry>
+                                    <entry>Configuration</entry>
+                                </row>
+                            </thead>
+                            <tbody>
+                                <row>
+                                    <entry>Hadoop FS URI</entry>
+                                    <entry>file:///</entry>
+                                </row>
+                            </tbody>
+                        </tgroup>
+                    </table>
+                </info>
             </step>
             <step>
                 <cmd>Click the <wintitle>Output Files</wintitle> tab and configure the following
@@ -45,11 +62,11 @@
                                     <entry>Files Prefix</entry>
                                     <entry>Defines a prefix for output files. <p
                                             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/FilePrefix"
-                                        />Let's simplify and use "Tutorial_" instead.</entry>
+                                        />Let's simplify and use "out_" instead.</entry>
                                 </row>
                                 <row>
                                     <entry>Directory Template</entry>
-                                    <entry>Use the output directory where you want the files to be
+                                    <entry>Enter the directory where you want the files to be
                                         written and optionally include datetime variables to
                                         indicate the frequency at which the files should be rolled
                                         over. <p>For example the following directory rolls the
@@ -59,8 +76,8 @@
                                 </row>
                                 <row>
                                     <entry>Max File Size (MB)</entry>
-                                    <entry>If writing to a local file system, you might lower the
-                                        file size to something manageable, like 5 or 1.</entry>
+                                    <entry>For the tutorial, let's lower the file size to something
+                                        manageable, like 5 or 1.</entry>
                                 </row>
                             </tbody>
                         </tgroup>
@@ -74,7 +91,7 @@
                     <simpletable frame="all" id="simpletable_jyj_2vq_ps">
                         <sthead>
                             <stentry>Delimited Property</stentry>
-                            <stentry>Value</stentry>
+                            <stentry>Configuration</stentry>
                         </sthead>
                         <strow>
                             <stentry>Header Line</stentry>

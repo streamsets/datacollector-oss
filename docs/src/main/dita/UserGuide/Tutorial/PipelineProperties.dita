@@ -20,9 +20,9 @@
                 <cmd/>
             </step>
             <step>
-                <cmd>Click the <wintitle>Error Records</wintitle> tab, for the <uicontrol>Error
-                        Records</uicontrol> property, select <uicontrol>Write to
-                    File</uicontrol>.</cmd>
+                <cmd>In the Properties panel, click the <wintitle>Error Records</wintitle> tab, for
+                    the <uicontrol>Error Records</uicontrol> property, select <uicontrol>Write to
+                        File</uicontrol>.</cmd>
             </step>
             <step>
                 <cmd>Click the <wintitle>Error Records - Write to File</wintitle> tab and configure
@@ -41,23 +41,20 @@
                             <tbody>
                                 <row>
                                     <entry>Directory</entry>
-                                    <entry>Enter the directory local to the <ph
-                                            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                                        /> where you want to write error record files. <note>To
-                                            prevent validation errors, the directory must already
-                                            exist.</note></entry>
+                                    <entry>Directory for error record files. Enter the directory
+                                        that you set up for the tutorial.<note>To prevent validation
+                                            errors, the directory must already exist.</note></entry>
                                 </row>
                                 <row>
                                     <entry>Files Prefix</entry>
                                     <entry>This defines a prefix for error record files. <p
                                             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/FilePrefix"
-                                            /><p>Delete the default and enter "Err_".</p></entry>
+                                            /><p>Delete the default and enter "err_".</p></entry>
                                 </row>
                                 <row>
                                     <entry>Max File Size</entry>
-                                    <entry>When writing to a local directory, you might want to
-                                        reduce the files size to something more managable, such as 5
-                                        or 1 MB.</entry>
+                                    <entry>Let's reduce the files size to something more managable,
+                                        such as 5 or 1 MB.</entry>
                                 </row>
                             </tbody>
                         </tgroup>
@@ -65,6 +62,6 @@
                 </info>
             </step>
         </steps>
-        <result>Now let's start building the pipeline...</result>
+        <result>Now we'll start building the pipeline...</result>
     </taskbody>
 </task>

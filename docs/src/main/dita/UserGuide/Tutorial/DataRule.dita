@@ -13,14 +13,14 @@
                 without credit card numbers. We can create a data rule and alert to let us know when
                 the record count reaches a specified threshold. </p>
             <p>We'll use an expression with the record:value('&lt;field path>') function to identify
-                when the credit card number field, [20]/value, is null. The function returns the
-                data in the specified field. </p>
+                when the credit card number field, <codeph>[20]/value</codeph>, is null. The
+                function returns the data in the specified field. </p>
         </context>
         <steps id="steps_cw5_qqj_ps">
             <step>
-                <cmd>Select the Data Inspection icon between the <uicontrol>Stream
-                        Selector</uicontrol> and the <uicontrol>Jython Evaluator</uicontrol>: <image
-                        href="../Graphics/icon_MonInspect.png" id="image_t4x_lzp_ts" scale="70"
+                <cmd>Between the <uicontrol>Stream Selector</uicontrol> and the <uicontrol>Jython
+                        Evaluator</uicontrol>, select the link or Data Inspection icon: <image
+                        href="../Graphics/icon_ConfigLink.png" id="image_qfg_txj_5s" scale="60"
                     />.</cmd>
                 <info>The <wintitle>Data Rules</wintitle> tab displays in the Preview panel. </info>
             </step>

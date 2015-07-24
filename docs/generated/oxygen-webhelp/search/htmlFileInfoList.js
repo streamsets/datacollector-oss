@@ -123,5 +123,5 @@ fil["120"]= "Troubleshooting/Troubleshooting_title.html@@@Troubleshooting@@@..."
 fil["121"]= "Tutorial/BasicTutorial.html@@@Basic Tutorial@@@Now before we run the basic pipeline, let s add a data rule and alert. Data rules are user-defined rules used to inspect data moving between two stages...";
 fil["122"]= "Tutorial/BeforeYouBegin.html@@@Before You Begin@@@Before you start this tutorial, you ll need to do a few things...";
 fil["123"]= "Tutorial/ExtendedTutorial.html@@@Extended Tutorial@@@Now that the extended pipeline is complete, let s reset the origin and run the pipeline again...";
-fil["124"]= "Tutorial/Overview.html@@@Tutorial Overview@@@This tutorial walks through how to create and run a pipeline. You can download sample data so you can preview data to help configure the pipeline, run the completed pipeline, and monitor the results...";
+fil["124"]= "Tutorial/Overview.html@@@Tutorial Overview@@@This tutorial walks through how to create and run a pipeline. You can download sample data so you can perform data preview, run the completed pipeline, and monitor the results...";
 fil["125"]= "Tutorial/Tutorial-title.html@@@Data Collector Tutorial@@@...";
