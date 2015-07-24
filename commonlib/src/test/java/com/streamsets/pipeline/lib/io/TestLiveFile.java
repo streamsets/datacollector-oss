@@ -11,10 +11,12 @@ import org.junit.Test;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.NoSuchFileException;
 import java.nio.file.Path;
 import java.nio.file.attribute.BasicFileAttributes;
+import java.util.Arrays;
 import java.util.UUID;
 
 public class TestLiveFile {
@@ -114,6 +116,18 @@ public class TestLiveFile {
     LiveFile lf = new LiveFile(path);
     Files.delete(path);
     Assert.assertEquals(lf, lf.refresh());
+  }
+
+  //simulating ext4 behavior that inodes are used on file delete
+  @Test
+  public void testInodeReused() throws IOException {
+    Path path = new File(testDir, "1.txt").toPath();
+    Files.write(path, Arrays.asList("Hello"), StandardCharsets.UTF_8);
+    LiveFile lf1 = new LiveFile(path);
+    Files.write(path, Arrays.asList("Hola"), StandardCharsets.UTF_8);
+    LiveFile lf2 = new LiveFile(path);
+    Assert.assertNotEquals(lf1, lf2);
+    Assert.assertEquals(lf1, lf1.refresh());
   }
 
 }
