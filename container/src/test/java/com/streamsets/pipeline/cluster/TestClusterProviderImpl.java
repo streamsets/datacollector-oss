@@ -136,4 +136,11 @@ public class TestClusterProviderImpl {
       "--class", "com.streamsets.pipeline.BootstrapClusterStreaming",
       "<masked>/bootstrap-lib/spark/streamsets-datacollector-spark-bootstrap.jar"}, MockSystemProcess.args.toArray());
   }
+
+
+  @Test
+  public void testExclude() throws Throwable {
+    Assert.assertTrue(ClusterProviderImpl.exclude(Arrays.asList("scala.*"), "scala-library.jar"));
+    Assert.assertFalse(ClusterProviderImpl.exclude(Arrays.asList("^scala.*"), "Xscala-library.jar"));
+  }
 }

@@ -35,6 +35,7 @@ import com.streamsets.pipeline.util.SystemProcessFactory;
 import com.streamsets.pipeline.validation.Issue;
 
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -76,6 +77,7 @@ public class ClusterProviderImpl implements ClusterProvider {
   private final YARNStatusParser yarnStatusParser;
 
   private static final Logger LOG = LoggerFactory.getLogger(ClusterProviderImpl.class);
+  private static final boolean IS_TRACE_ENABLED = LOG.isTraceEnabled();
 
   @VisibleForTesting
   ClusterProviderImpl() {
@@ -226,6 +228,17 @@ public class ClusterProviderImpl implements ClusterProvider {
     return tempSrcDir;
   }
 
+  static boolean exclude(List<String> blacklist, String name) {
+    for (String pattern : blacklist) {
+      if(Pattern.compile(pattern).matcher(name).find()) {
+        return true;
+      } else if (IS_TRACE_ENABLED) {
+        LOG.trace("Pattern '{}' does not match '{}'", pattern, name);
+      }
+    }
+    return false;
+  }
+
   @Override
   public ApplicationState startPipeline(SystemProcessFactory systemProcessFactory, File clusterManager, File tempDir,
                        Map<String, String> environment, Map<String, String> sourceInfo,
@@ -234,8 +247,8 @@ public class ClusterProviderImpl implements ClusterProvider {
                        URLClassLoader containerCL, long timeToWaitForFailure) throws IOException, TimeoutException {
     environment = Maps.newHashMap(environment);
     // create libs.tar.gz file for pipeline
-    Map<String, URLClassLoader > streamsetsLibsCl = new HashMap<>();
-    Map<String, URLClassLoader > userLibsCL = new HashMap<>();
+    Map<String, List<URL> > streamsetsLibsCl = new HashMap<>();
+    Map<String, List<URL> > userLibsCL = new HashMap<>();
     Map<String, String> sourceConfigs = new HashMap<>();
     ImmutableList.Builder<StageConfiguration> pipelineConfigurations = ImmutableList.builder();
     // order is important here as we don't want error stage
@@ -293,9 +306,25 @@ public class ClusterProviderImpl implements ClusterProvider {
       String type = StageLibraryUtils.getLibraryType(stageDef.getStageClassLoader());
       String name = StageLibraryUtils.getLibraryName(stageDef.getStageClassLoader());
       if (ClusterModeConstants.STREAMSETS_LIBS.equals(type)) {
-        streamsetsLibsCl.put(name, (URLClassLoader)stageDef.getStageClassLoader());
+        List<URL> urls = new ArrayList<>();
+        List<String> blacklist = stageDef.getJarBlacklist();
+        if (IS_TRACE_ENABLED) {
+          LOG.trace("Blacklist for '{}': '{}'", name, blacklist);
+        }
+        for (URL url : ((URLClassLoader) stageDef.getStageClassLoader()).getURLs()) {
+          if (blacklist.isEmpty()) {
+            urls.add(url);
+          } else {
+              if (exclude(blacklist, FilenameUtils.getName(url.getPath()))) {
+                LOG.debug("Skipping '{}' for '{}' due to '{}'", url, name, blacklist);
+              } else {
+                urls.add(url);
+              }
+          }
+        }
+        streamsetsLibsCl.put(name, urls);
       } else if (ClusterModeConstants.USER_LIBS.equals(type)) {
-        userLibsCL.put(name, (URLClassLoader)stageDef.getStageClassLoader());
+        userLibsCL.put(name, ImmutableList.copyOf(((URLClassLoader) stageDef.getStageClassLoader()).getURLs()));
       } else {
         throw new IllegalStateException(Utils.format("Error unknown stage library type: '{}'", type));
       }
@@ -312,8 +341,9 @@ public class ClusterProviderImpl implements ClusterProvider {
     Utils.checkState(staticWebDir.isDirectory(), Utils.format("Expected '{}' to be a directory", staticWebDir));
     File libsTarGz = new File(tempDir, "libs.tar.gz");
     try {
-      TarFileCreator.createLibsTarGz(apiCL, containerCL, streamsetsLibsCl, userLibsCL,
-        ClusterModeConstants.EXCLUDED_JAR_PREFIXES, staticWebDir, libsTarGz);
+      TarFileCreator.createLibsTarGz(ImmutableList.copyOf(apiCL.getURLs()), ImmutableList.copyOf(containerCL.getURLs()),
+        streamsetsLibsCl, userLibsCL, staticWebDir,
+        libsTarGz);
     } catch (Exception ex) {
       String msg = errorString("Serializing classpath: '{}'", ex);
       throw new RuntimeException(msg, ex);

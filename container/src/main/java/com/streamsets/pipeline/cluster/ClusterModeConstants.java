@@ -20,11 +20,6 @@ public class ClusterModeConstants {
   public static final String CLUSTER_PIPELINE_USER = "cluster.pipeline.user";
 
   public static final String SPARK_KAFKA_JAR_PREFIX = "spark-streaming-kafka";
-  /**
-   * These jars are needed for preview and validate but cannot be shipped to the cluster
-   */
-  public static final ImmutableSet<String> EXCLUDED_JAR_PREFIXES = ImmutableSet.of("slf4j", "log4j", "scala",
-    SPARK_KAFKA_JAR_PREFIX);
   public static final String CLUSTER_SOURCE_BATCHMODE = "cluster.source.batchmode";
 
 }
