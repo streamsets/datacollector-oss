@@ -139,6 +139,10 @@ public class StageDefinition {
     return libraryDefinition.getName();
   }
 
+  public List<String> getJarBlacklist() {
+    return libraryDefinition.getClusterModeJarBlacklist(klass.getName());
+  }
+
   public String getLibraryLabel() {
     return libraryDefinition.getLabel();
   }

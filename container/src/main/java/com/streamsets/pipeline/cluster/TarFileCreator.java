@@ -18,18 +18,15 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.URL;
-import java.net.URLClassLoader;
-import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.zip.GZIPOutputStream;
 
 public class TarFileCreator {
 
-  public static void createLibsTarGz(URLClassLoader apiCl, URLClassLoader containerCL,
-                                         Map<String, URLClassLoader> streamsetsLibsCl,
-                                         Map<String, URLClassLoader> userLibsCL,
-                                          Set<String> excludedJarPrefixes,
+  public static void createLibsTarGz(List<URL> apiCl, List<URL> containerCL,
+                                         Map<String, List<URL>> streamsetsLibsCl,
+                                         Map<String, List<URL>> userLibsCL,
                                          File staticWebDir,
                                          File outputFile) throws IOException {
     long now = System.currentTimeMillis() / 1000L;
@@ -38,12 +35,12 @@ public class TarFileCreator {
     // api-lib
     String prefix = ClusterModeConstants.API_LIB;
     out.putNextEntry(new TarEntry(TarHeader.createHeader(prefix, 0L, now, true)));
-    addClasspath(prefix, out, apiCl.getURLs(), excludedJarPrefixes);
+    addClasspath(prefix, out, apiCl);
     prefix = ClusterModeConstants.CONTAINER_LIB;
     out.putNextEntry(new TarEntry(TarHeader.createHeader(prefix, 0L, now, true)));
-    addClasspath(prefix, out, containerCL.getURLs(), excludedJarPrefixes);
-    addLibrary(ClusterModeConstants.STREAMSETS_LIBS, now, out, streamsetsLibsCl, excludedJarPrefixes);
-    addLibrary(ClusterModeConstants.USER_LIBS, now, out, userLibsCL, excludedJarPrefixes);
+    addClasspath(prefix, out, containerCL);
+    addLibrary(ClusterModeConstants.STREAMSETS_LIBS, now, out, streamsetsLibsCl);
+    addLibrary(ClusterModeConstants.USER_LIBS, now, out, userLibsCL);
     tarFolder(null, staticWebDir.getAbsolutePath(), out);
     out.flush();
     out.close();
@@ -53,7 +50,6 @@ public class TarFileCreator {
                                  File outputFile) throws IOException {
     Utils.checkState(dir.isDirectory(), Utils.formatL("Path {} is not a directory", dir));
     Utils.checkState(dir.canRead(), Utils.formatL("Directory {} cannot be read", dir));
-    long now = System.currentTimeMillis() / 1000L;
     FileOutputStream dest = new FileOutputStream(outputFile);
     TarOutputStream out = new TarOutputStream(new BufferedOutputStream(new GZIPOutputStream(dest), 65536));
     File[] files = dir.listFiles();
@@ -64,19 +60,19 @@ public class TarFileCreator {
   }
 
   private static void addLibrary(final String originalPrefix, long now, TarOutputStream out,
-                                 Map<String, URLClassLoader> lib, Set<String> excludedJarPrefixes) throws IOException {
+                                 Map<String, List<URL>> lib) throws IOException {
     out.putNextEntry(new TarEntry(TarHeader.createHeader(originalPrefix, 0L, now, true)));
-    for (Map.Entry<String, URLClassLoader> entry : lib.entrySet()) {
+    for (Map.Entry<String, List<URL>> entry : lib.entrySet()) {
       String prefix = originalPrefix;
       prefix += "/" + entry.getKey();
       out.putNextEntry(new TarEntry(TarHeader.createHeader(prefix, 0L, now, true)));
       prefix += "/lib";
       out.putNextEntry(new TarEntry(TarHeader.createHeader(prefix, 0L, now, true)));
-      addClasspath(prefix, out, entry.getValue().getURLs(), excludedJarPrefixes);
+      addClasspath(prefix, out, entry.getValue());
     }
   }
 
-  private static void addClasspath(String prefix, TarOutputStream out, URL[] urls, Set<String> excludedJarPrefixes)
+  private static void addClasspath(String prefix, TarOutputStream out, List<URL> urls)
     throws IOException {
     if (urls != null) {
       String dirname = null;
@@ -84,26 +80,17 @@ public class TarFileCreator {
         File file = new File(url.getPath());
         String name = file.getName();
         if (name.endsWith(".jar")) {
-          boolean include = true;
-          for (String excludedPrefix : excludedJarPrefixes) {
-            if (name.startsWith(excludedPrefix)) {
-              include = false;
-              break;
-            }
+          if (dirname == null) {
+            dirname = file.getParent();
+          } else if (!dirname.equals(file.getParent())) {
+            String msg = Utils.format("Expected {} to be a sub-directory of {}", file.getPath(), dirname);
+            throw new IllegalStateException(msg);
           }
-          if (include) {
-            if (dirname == null) {
-              dirname = file.getParent();
-            } else if (!dirname.equals(file.getParent())) {
-              String msg = Utils.format("Expected {} to be a sub-directory of {}", file.getPath(), dirname);
-              throw new IllegalStateException(msg);
-            }
-            out.putNextEntry(new TarEntry(file, prefix + "/" + file.getName()));
-            BufferedInputStream src = new BufferedInputStream(new FileInputStream(file), 65536);
-            IOUtils.copy(src, out);
-            src.close();
-            out.flush();
-          }
+          out.putNextEntry(new TarEntry(file, prefix + "/" + file.getName()));
+          BufferedInputStream src = new BufferedInputStream(new FileInputStream(file), 65536);
+          IOUtils.copy(src, out);
+          src.close();
+          out.flush();
         }
       }
     }

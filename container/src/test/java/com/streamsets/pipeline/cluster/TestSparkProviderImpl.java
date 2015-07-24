@@ -22,6 +22,7 @@ import java.io.File;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -122,5 +123,12 @@ public class TestSparkProviderImpl {
     Assert.assertEquals(id, sparkProvider.startPipeline(new MockSystemProcessFactory(), sparkManagerShell,
       providerTemp, env, sourceInfo, pipelineConf, stageLibrary, etcDir, resourcesDir, webDir,
       bootstrapLibDir, classLoader, classLoader, 60).getId());
+  }
+
+
+  @Test
+  public void testExclude() throws Throwable {
+    Assert.assertTrue(SparkProviderImpl.exclude(Arrays.asList("scala.*"), "scala-library.jar"));
+    Assert.assertFalse(SparkProviderImpl.exclude(Arrays.asList("^scala.*"), "Xscala-library.jar"));
   }
 }
