@@ -1,0 +1,314 @@
+{
+  "schemaVersion" : 1,
+  "version" : 1,
+  "uuid" : "7812216f-58d7-40d3-b6d3-f288c2b5a334",
+  "description" : "",
+  "configuration" : [ {
+    "name" : "executionMode",
+    "value" : "STANDALONE"
+  }, {
+    "name" : "deliveryGuarantee",
+    "value" : "AT_LEAST_ONCE"
+  }, {
+    "name" : "memoryLimitExceeded",
+    "value" : "STOP_PIPELINE"
+  }, {
+    "name" : "memoryLimit",
+    "value" : "${jvm:maxMemoryMB() * 0.65}"
+  }, {
+    "name" : "constants",
+    "value" : [ ]
+  }, {
+    "name" : "badRecordsHandling",
+    "value" : "streamsets-datacollector-basic-lib::com_streamsets_pipeline_stage_destination_devnull_ToErrorNullDTarget::1"
+  }, {
+    "name" : "clusterSlaveMemory",
+    "value" : 1024
+  }, {
+    "name" : "clusterSlaveJavaOpts",
+    "value" : "-XX:PermSize=128M -XX:MaxPermSize=256M -Dlog4j.debug"
+  }, {
+    "name" : "clusterKerberos",
+    "value" : false
+  }, {
+    "name" : "kerberosPrincipal",
+    "value" : ""
+  }, {
+    "name" : "kerberosKeytab",
+    "value" : ""
+  }, {
+    "name" : "clusterLauncherEnv",
+    "value" : [ ]
+  } ],
+  "uiInfo" : {
+    "previewConfig" : {
+      "previewSource" : "CONFIGURED_SOURCE",
+      "batchSize" : 10,
+      "writeToDestinations" : false,
+      "rememberMe" : false
+    }
+  },
+  "stages" : [ {
+    "instanceName" : "com_streamsets_pipeline_stage_devtest_RandomDataGeneratorSource1437695373677",
+    "library" : "streamsets-datacollector-dev-lib",
+    "stageName" : "com_streamsets_pipeline_stage_devtest_RandomDataGeneratorSource",
+    "stageVersion" : "1",
+    "configuration" : [ {
+      "name" : "dataGenConfigs",
+      "value" : [ {
+        "field" : "name",
+        "type" : "STRING"
+      }, {
+        "field" : "age",
+        "type" : "INTEGER"
+      } ]
+    }, {
+      "name" : "stageOnRecordError",
+      "value" : "TO_ERROR"
+    } ],
+    "uiInfo" : {
+      "label" : "Dev Data Generator 1",
+      "description" : "",
+      "xPos" : 261,
+      "yPos" : 227,
+      "stageType" : "SOURCE"
+    },
+    "inputLanes" : [ ],
+    "outputLanes" : [ "com_streamsets_pipeline_stage_devtest_RandomDataGeneratorSource1437695373677OutputLane14376953736770" ]
+  }, {
+    "instanceName" : "com_streamsets_pipeline_stage_processor_expression_ExpressionDProcessor1437695400214",
+    "library" : "streamsets-datacollector-basic-lib",
+    "stageName" : "com_streamsets_pipeline_stage_processor_expression_ExpressionDProcessor",
+    "stageVersion" : "1",
+    "configuration" : [ {
+      "name" : "expressionProcessorConfigs",
+      "value" : [ {
+        "fieldToSet" : "/cleansedAge",
+        "expression" : "${record:value('/age')%100}"
+      } ]
+    }, {
+      "name" : "stageRequiredFields",
+      "value" : [ ]
+    }, {
+      "name" : "stageRecordPreconditions",
+      "value" : [ ]
+    }, {
+      "name" : "stageOnRecordError",
+      "value" : "TO_ERROR"
+    } ],
+    "uiInfo" : {
+      "label" : "Expression Evaluator 1",
+      "description" : "",
+      "xPos" : 560,
+      "yPos" : 225,
+      "stageType" : "PROCESSOR"
+    },
+    "inputLanes" : [ "com_streamsets_pipeline_stage_devtest_RandomDataGeneratorSource1437695373677OutputLane14376953736770" ],
+    "outputLanes" : [ "com_streamsets_pipeline_stage_processor_expression_ExpressionDProcessor1437695400214OutputLane14376954002140" ]
+  }, {
+    "instanceName" : "com_streamsets_pipeline_stage_processor_selector_SelectorDProcessor1437695461697",
+    "library" : "streamsets-datacollector-basic-lib",
+    "stageName" : "com_streamsets_pipeline_stage_processor_selector_SelectorDProcessor",
+    "stageVersion" : "1",
+    "configuration" : [ {
+      "name" : "lanePredicates",
+      "value" : [ {
+        "outputLane" : "com_streamsets_pipeline_stage_processor_selector_SelectorDProcessor1437695461697OutputLane1437695661123",
+        "predicate" : "${record:value('/cleansedAge') < 0}"
+      }, {
+        "outputLane" : "com_streamsets_pipeline_stage_processor_selector_SelectorDProcessor1437695461697OutputLane1437695467622",
+        "predicate" : "${record:value('/cleansedAge') > 50}"
+      }, {
+        "outputLane" : "com_streamsets_pipeline_stage_processor_selector_SelectorDProcessor1437695461697OutputLane1437695461697",
+        "predicate" : "default"
+      } ]
+    }, {
+      "name" : "stageRequiredFields",
+      "value" : [ ]
+    }, {
+      "name" : "stageRecordPreconditions",
+      "value" : [ ]
+    }, {
+      "name" : "stageOnRecordError",
+      "value" : "TO_ERROR"
+    } ],
+    "uiInfo" : {
+      "label" : "Stream Selector 1",
+      "description" : "",
+      "xPos" : 929,
+      "yPos" : 184,
+      "stageType" : "PROCESSOR"
+    },
+    "inputLanes" : [ "com_streamsets_pipeline_stage_processor_expression_ExpressionDProcessor1437695400214OutputLane14376954002140" ],
+    "outputLanes" : [ "com_streamsets_pipeline_stage_processor_selector_SelectorDProcessor1437695461697OutputLane1437695661123", "com_streamsets_pipeline_stage_processor_selector_SelectorDProcessor1437695461697OutputLane1437695467622", "com_streamsets_pipeline_stage_processor_selector_SelectorDProcessor1437695461697OutputLane1437695461697" ]
+  }, {
+    "instanceName" : "com_streamsets_pipeline_stage_processor_fieldfilter_FieldFilterDProcessor1437695494082",
+    "library" : "streamsets-datacollector-basic-lib",
+    "stageName" : "com_streamsets_pipeline_stage_processor_fieldfilter_FieldFilterDProcessor",
+    "stageVersion" : "1",
+    "configuration" : [ {
+      "name" : "filterOperation",
+      "value" : "REMOVE"
+    }, {
+      "name" : "fields",
+      "value" : [ "/age" ]
+    }, {
+      "name" : "stageRequiredFields",
+      "value" : [ ]
+    }, {
+      "name" : "stageRecordPreconditions",
+      "value" : [ ]
+    } ],
+    "uiInfo" : {
+      "label" : "Field Remover 1",
+      "description" : "",
+      "xPos" : 1359,
+      "yPos" : -6,
+      "stageType" : "PROCESSOR"
+    },
+    "inputLanes" : [ "com_streamsets_pipeline_stage_processor_selector_SelectorDProcessor1437695461697OutputLane1437695467622" ],
+    "outputLanes" : [ "com_streamsets_pipeline_stage_processor_fieldfilter_FieldFilterDProcessor1437695494082OutputLane14376954940820" ]
+  }, {
+    "instanceName" : "com_streamsets_pipeline_stage_processor_fieldmask_FieldMaskDProcessor1437695516123",
+    "library" : "streamsets-datacollector-basic-lib",
+    "stageName" : "com_streamsets_pipeline_stage_processor_fieldmask_FieldMaskDProcessor",
+    "stageVersion" : "1",
+    "configuration" : [ {
+      "name" : "fieldMaskConfigs",
+      "value" : [ {
+        "fields" : [ "/name" ],
+        "maskType" : "FIXED_LENGTH",
+        "mask" : "",
+        "regex" : "(.*)",
+        "groupsToShow" : "1"
+      } ]
+    }, {
+      "name" : "stageRequiredFields",
+      "value" : [ ]
+    }, {
+      "name" : "stageRecordPreconditions",
+      "value" : [ ]
+    }, {
+      "name" : "stageOnRecordError",
+      "value" : "TO_ERROR"
+    } ],
+    "uiInfo" : {
+      "label" : "Field Masker 1",
+      "description" : "",
+      "xPos" : 1696,
+      "yPos" : -4,
+      "stageType" : "PROCESSOR"
+    },
+    "inputLanes" : [ "com_streamsets_pipeline_stage_processor_fieldfilter_FieldFilterDProcessor1437695494082OutputLane14376954940820" ],
+    "outputLanes" : [ "com_streamsets_pipeline_stage_processor_fieldmask_FieldMaskDProcessor1437695516123OutputLane14376955161230" ]
+  }, {
+    "instanceName" : "com_streamsets_pipeline_stage_processor_fieldhasher_FieldHasherDProcessor1437695539893",
+    "library" : "streamsets-datacollector-basic-lib",
+    "stageName" : "com_streamsets_pipeline_stage_processor_fieldhasher_FieldHasherDProcessor",
+    "stageVersion" : "1",
+    "configuration" : [ {
+      "name" : "fieldHasherConfigs",
+      "value" : [ {
+        "fieldsToHash" : [ "/name" ],
+        "hashType" : "SHA2"
+      } ]
+    }, {
+      "name" : "onStagePreConditionFailure",
+      "value" : "TO_ERROR"
+    }, {
+      "name" : "stageRequiredFields",
+      "value" : [ ]
+    }, {
+      "name" : "stageRecordPreconditions",
+      "value" : [ ]
+    }, {
+      "name" : "stageOnRecordError",
+      "value" : "TO_ERROR"
+    } ],
+    "uiInfo" : {
+      "label" : "Field Hasher 1",
+      "description" : "",
+      "xPos" : 1312,
+      "yPos" : 337,
+      "stageType" : "PROCESSOR"
+    },
+    "inputLanes" : [ "com_streamsets_pipeline_stage_processor_selector_SelectorDProcessor1437695461697OutputLane1437695461697" ],
+    "outputLanes" : [ "com_streamsets_pipeline_stage_processor_fieldhasher_FieldHasherDProcessor1437695539893OutputLane14376955398930" ]
+  }, {
+    "instanceName" : "com_streamsets_pipeline_stage_processor_fieldfilter_FieldFilterDProcessor1437695556927",
+    "library" : "streamsets-datacollector-basic-lib",
+    "stageName" : "com_streamsets_pipeline_stage_processor_fieldfilter_FieldFilterDProcessor",
+    "stageVersion" : "1",
+    "configuration" : [ {
+      "name" : "filterOperation",
+      "value" : "REMOVE"
+    }, {
+      "name" : "fields",
+      "value" : [ "/age" ]
+    }, {
+      "name" : "stageRequiredFields",
+      "value" : [ ]
+    }, {
+      "name" : "stageRecordPreconditions",
+      "value" : [ ]
+    } ],
+    "uiInfo" : {
+      "label" : "Field Remover 2",
+      "description" : "",
+      "xPos" : 1600,
+      "yPos" : 346,
+      "stageType" : "PROCESSOR"
+    },
+    "inputLanes" : [ "com_streamsets_pipeline_stage_processor_fieldhasher_FieldHasherDProcessor1437695539893OutputLane14376955398930" ],
+    "outputLanes" : [ "com_streamsets_pipeline_stage_processor_fieldfilter_FieldFilterDProcessor1437695556927OutputLane14376955569270" ]
+  }, {
+    "instanceName" : "com_streamsets_pipeline_stage_destination_devnull_NullDTarget1437695568232",
+    "library" : "streamsets-datacollector-basic-lib",
+    "stageName" : "com_streamsets_pipeline_stage_destination_devnull_NullDTarget",
+    "stageVersion" : "1",
+    "configuration" : [ ],
+    "uiInfo" : {
+      "label" : "Trash 1",
+      "description" : "",
+      "xPos" : 2143,
+      "yPos" : 234,
+      "stageType" : "TARGET"
+    },
+    "inputLanes" : [ "com_streamsets_pipeline_stage_processor_fieldmask_FieldMaskDProcessor1437695516123OutputLane14376955161230", "com_streamsets_pipeline_stage_processor_fieldfilter_FieldFilterDProcessor1437695556927OutputLane14376955569270", "com_streamsets_pipeline_stage_processor_selector_SelectorDProcessor1437695461697OutputLane1437695661123" ],
+    "outputLanes" : [ ]
+  } ],
+  "errorStage" : {
+    "instanceName" : "com_streamsets_pipeline_stage_destination_devnull_ToErrorNullDTarget1437695366330",
+    "library" : "streamsets-datacollector-basic-lib",
+    "stageName" : "com_streamsets_pipeline_stage_destination_devnull_ToErrorNullDTarget",
+    "stageVersion" : "1",
+    "configuration" : [ ],
+    "uiInfo" : {
+      "label" : "Bad Records - Discard",
+      "description" : "",
+      "xPos" : 60,
+      "yPos" : 50,
+      "stageType" : "TARGET"
+    },
+    "inputLanes" : [ ],
+    "outputLanes" : [ ]
+  },
+  "info" : {
+    "name" : "dev_multiple_pipelines",
+    "description" : "",
+    "created" : 1437695362500,
+    "lastModified" : 1437695770918,
+    "creator" : "admin",
+    "lastModifier" : "admin",
+    "lastRev" : "0",
+    "uuid" : "7812216f-58d7-40d3-b6d3-f288c2b5a334",
+    "valid" : true
+  },
+  "valid" : true,
+  "previewable" : true,
+  "issues" : {
+    "pipelineIssues" : [ ],
+    "stageIssues" : { },
+    "issueCount" : 0
+  }
+}

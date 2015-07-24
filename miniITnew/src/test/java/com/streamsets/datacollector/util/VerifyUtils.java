@@ -228,13 +228,13 @@ public class VerifyUtils {
 
   public static void waitForPipelineToStop(URI serverURI, String name, String rev) throws InterruptedException, IOException {
     while(!"STOPPED".equals(getPipelineState(serverURI, name, rev))) {
-      Thread.sleep(500);
+      Thread.sleep(200);
     }
   }
 
   public static void waitForPipelineToStart(URI serverURI, String name, String rev) throws InterruptedException, IOException {
     while(!"RUNNING".equals(getPipelineState(serverURI, name, rev))) {
-      Thread.sleep(500);
+      Thread.sleep(200);
     }
   }
 
@@ -247,7 +247,7 @@ public class VerifyUtils {
   public static void waitForPreview(URI serverURI, String previewerId) throws MalformedURLException,
     InterruptedException {
     while (!isPreviewDone(serverURI, previewerId)) {
-      Thread.sleep(500);
+      Thread.sleep(200);
     }
   }
 
