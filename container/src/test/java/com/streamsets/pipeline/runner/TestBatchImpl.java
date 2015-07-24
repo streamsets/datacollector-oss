@@ -12,7 +12,6 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.mockito.Mockito;
 
-import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
@@ -36,12 +35,6 @@ public class TestBatchImpl {
       it.remove();
       Assert.fail();
     } catch (UnsupportedOperationException ex) {
-      //expected
-    }
-    try {
-      batch.getRecords();
-      Assert.fail();
-    } catch (IllegalStateException ex) {
       //expected
     }
   }
