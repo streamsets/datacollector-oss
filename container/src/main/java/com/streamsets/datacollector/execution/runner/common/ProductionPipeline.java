@@ -10,18 +10,20 @@ import com.streamsets.datacollector.execution.PipelineStatus;
 import com.streamsets.datacollector.execution.StateListener;
 import com.streamsets.datacollector.main.RuntimeInfo;
 import com.streamsets.datacollector.metrics.MetricsConfigurator;
+import com.streamsets.datacollector.restapi.bean.IssuesJson;
 import com.streamsets.datacollector.runner.Pipeline;
 import com.streamsets.datacollector.runner.PipelineRuntimeException;
 import com.streamsets.datacollector.runner.production.ProductionSourceOffsetTracker;
 import com.streamsets.datacollector.util.ContainerError;
 import com.streamsets.datacollector.validation.Issue;
+import com.streamsets.datacollector.validation.Issues;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.impl.ErrorMessage;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -63,6 +65,7 @@ public class ProductionPipeline {
     MetricsConfigurator.registerJmxMetrics(runtimeInfo.getMetrics());
     boolean finishing = false;
     boolean errorWhileRunning = false;
+    String runningErrorMsg = "";
     try {
       try {
         LOG.debug("Initializing");
@@ -88,8 +91,9 @@ public class ProductionPipeline {
             }
           } catch (Exception e) {
             if (!wasStopped()) {
-              LOG.warn("Error while running: {}", e.getMessage(), e);
-              stateChanged(PipelineStatus.RUNNING_ERROR, e.getMessage(), null);
+              runningErrorMsg = e.getMessage();
+              LOG.warn("Error while running: {}", runningErrorMsg, e);
+              stateChanged(PipelineStatus.RUNNING_ERROR, runningErrorMsg, null);
               errorWhileRunning = true;
             }
             throw e;
@@ -98,7 +102,9 @@ public class ProductionPipeline {
           LOG.debug("Stopped due to validation error");
           PipelineRuntimeException e = new PipelineRuntimeException(ContainerError.CONTAINER_0800,
             issues.get(0).getMessage());
-          stateChanged(PipelineStatus.START_ERROR, issues.get(0).getMessage(), null);
+          Map<String, Object> attributes = new HashMap<>();
+          attributes.put("issues", new IssuesJson(new Issues(issues)));
+          stateChanged(PipelineStatus.START_ERROR, issues.get(0).getMessage(), attributes);
           throw e;
         }
       } finally {
@@ -109,7 +115,7 @@ public class ProductionPipeline {
           stateChanged(PipelineStatus.FINISHED, null, null);
         } else if (errorWhileRunning) {
           LOG.debug("Stopped due to an error");
-          stateChanged(PipelineStatus.RUN_ERROR, null, null);
+          stateChanged(PipelineStatus.RUN_ERROR, runningErrorMsg, null);
         }
       }
     } finally {
