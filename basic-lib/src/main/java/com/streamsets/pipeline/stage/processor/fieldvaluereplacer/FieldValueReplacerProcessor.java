@@ -17,6 +17,7 @@
  */
 package com.streamsets.pipeline.stage.processor.fieldvaluereplacer;
 
+import com.google.common.base.Joiner;
 import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
@@ -24,7 +25,6 @@ import com.streamsets.pipeline.api.base.OnRecordErrorException;
 import com.streamsets.pipeline.api.base.SingleLaneRecordProcessor;
 import com.streamsets.pipeline.config.OnStagePreConditionFailure;
 import com.streamsets.pipeline.lib.util.FieldRegexUtil;
-import com.streamsets.pipeline.stage.util.StageUtil;
 
 import java.math.BigDecimal;
 import java.text.DateFormat;
@@ -90,7 +90,7 @@ public class FieldValueReplacerProcessor extends SingleLaneRecordProcessor {
 
     if(onStagePreConditionFailure == OnStagePreConditionFailure.TO_ERROR && !fieldsThatDoNotExist.isEmpty()) {
      throw new OnRecordErrorException(Errors.VALUE_REPLACER_01, record.getHeader().getSourceId(),
-       StageUtil.getCommaSeparatedNames(fieldsThatDoNotExist));
+       Joiner.on(", ").join(fieldsThatDoNotExist));
     }
     batchMaker.addRecord(record);
   }

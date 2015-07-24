@@ -17,13 +17,13 @@
  */
 package com.streamsets.pipeline.stage.processor.fieldmerger;
 
+import com.google.common.base.Joiner;
 import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.base.OnRecordErrorException;
 import com.streamsets.pipeline.api.base.SingleLaneRecordProcessor;
 import com.streamsets.pipeline.config.OnStagePreConditionFailure;
-import com.streamsets.pipeline.stage.util.StageUtil;
 
 import java.util.HashSet;
 import java.util.List;
@@ -121,12 +121,12 @@ public class FieldMergerProcessor extends SingleLaneRecordProcessor {
 
     if (onStagePreConditionFailure == OnStagePreConditionFailure.TO_ERROR && !fieldsThatDoNotExist.isEmpty()) {
      throw new OnRecordErrorException(Errors.FIELD_MERGER_00, record.getHeader().getSourceId(),
-       StageUtil.getCommaSeparatedNames(fieldsThatDoNotExist));
+       Joiner.on(", ").join(fieldsThatDoNotExist));
     }
 
     if (!overwriteExisting && !fieldsRequiringOverwrite.isEmpty()) {
       throw new OnRecordErrorException(Errors.FIELD_MERGER_01,
-          StageUtil.getCommaSeparatedNames(fieldsRequiringOverwrite),
+          Joiner.on(", ").join(fieldsRequiringOverwrite),
           record.getHeader().getSourceId());
     }
     batchMaker.addRecord(record);

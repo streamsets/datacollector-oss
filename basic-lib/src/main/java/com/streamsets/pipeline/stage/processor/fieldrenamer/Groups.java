@@ -15,23 +15,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.streamsets.pipeline.stage.util;
+package com.streamsets.pipeline.stage.processor.fieldrenamer;
 
-import java.util.Iterator;
-import java.util.Set;
+import com.streamsets.pipeline.api.GenerateResourceBundle;
+import com.streamsets.pipeline.api.Label;
 
-public class StageUtil {
+@GenerateResourceBundle
+public enum Groups implements Label {
+  RENAME;
 
-  public static String getCommaSeparatedNames(Set<String> names) {
-    StringBuilder stringBuilder = new StringBuilder();
-    if(names.size() > 0) {
-      Iterator<String> iterator = names.iterator();
-      stringBuilder.append(iterator.next());
-      while(iterator.hasNext()) {
-        stringBuilder.append(", ");
-        stringBuilder.append(iterator.next());
-      }
-    }
-    return stringBuilder.toString();
+  @Override
+  public String getLabel() {
+    return "Rename";
   }
+
 }

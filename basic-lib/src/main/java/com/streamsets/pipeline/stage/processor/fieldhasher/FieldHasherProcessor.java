@@ -17,6 +17,7 @@
  */
 package com.streamsets.pipeline.stage.processor.fieldhasher;
 
+import com.google.common.base.Joiner;
 import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
@@ -24,7 +25,6 @@ import com.streamsets.pipeline.api.base.OnRecordErrorException;
 import com.streamsets.pipeline.api.base.SingleLaneRecordProcessor;
 import com.streamsets.pipeline.config.OnStagePreConditionFailure;
 import com.streamsets.pipeline.lib.util.FieldRegexUtil;
-import com.streamsets.pipeline.stage.util.StageUtil;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -73,8 +73,8 @@ public class FieldHasherProcessor extends SingleLaneRecordProcessor {
     if(onStagePreConditionFailure == OnStagePreConditionFailure.TO_ERROR
       && !(fieldsDontExist.isEmpty() && fieldsWithListOrMapType.isEmpty() && fieldsWithNull.isEmpty())) {
       throw new OnRecordErrorException(Errors.HASH_01, record.getHeader().getSourceId(),
-        StageUtil.getCommaSeparatedNames(fieldsDontExist),  StageUtil.getCommaSeparatedNames(fieldsWithNull),
-        StageUtil.getCommaSeparatedNames(fieldsWithListOrMapType));
+        Joiner.on(", ").join(fieldsDontExist),  Joiner.on(", ").join(fieldsWithNull),
+        Joiner.on(", ").join(fieldsWithListOrMapType));
     }
     batchMaker.addRecord(record);
   }
