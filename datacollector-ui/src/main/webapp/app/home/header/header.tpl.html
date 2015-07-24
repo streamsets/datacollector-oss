@@ -152,7 +152,7 @@
          ng-hide="isPipelineRunning || previewMode || snapshotMode"
          ng-if="isAuthorized([userRoles.admin, userRoles.creator]) && common.sdcExecutionMode != pipelineConstant.SLAVE"
          ng-disabled="!canUndo()"
-         ng-click="undo()">
+         ng-click="!canUndo() || undo()">
         <span class="fa fa-undo fa-14x"></span>
       </a>
 
@@ -163,7 +163,7 @@
          ng-hide="isPipelineRunning || previewMode || snapshotMode"
          ng-if="isAuthorized([userRoles.admin, userRoles.creator]) && common.sdcExecutionMode != pipelineConstant.SLAVE"
          ng-disabled="!canRedo()"
-         ng-click="redo()">
+         ng-click="!canRedo() || redo()">
         <span class="fa fa-repeat fa-14x"></span>
       </a>
 
@@ -175,7 +175,7 @@
          ng-hide="isPipelineRunning || previewMode || snapshotMode"
          ng-disabled="selectedType === pipelineConstant.PIPELINE"
          ng-if="isAuthorized([userRoles.admin, userRoles.creator]) && common.sdcExecutionMode != pipelineConstant.SLAVE"
-         ng-click="deleteSelection()">
+         ng-click="(selectedType === pipelineConstant.PIPELINE) || deleteSelection()">
         <span class="fa fa-trash fa-14x"></span>
       </a>
 
@@ -186,7 +186,7 @@
          ng-hide="isPipelineRunning || previewMode || snapshotMode"
          ng-disabled="selectedType !== pipelineConstant.STAGE_INSTANCE || selectedObject.uiInfo.stageType === pipelineConstant.SOURCE_STAGE_TYPE"
          ng-if="isAuthorized([userRoles.admin, userRoles.creator]) && common.sdcExecutionMode != pipelineConstant.SLAVE"
-         ng-click="duplicateStage()">
+         ng-click="(selectedType !== pipelineConstant.STAGE_INSTANCE || selectedObject.uiInfo.stageType === pipelineConstant.SOURCE_STAGE_TYPE) || duplicateStage()">
         <span class="glyphicon glyphicon-duplicate fa-14x"></span>
       </a>
 
@@ -226,8 +226,8 @@
           tooltip-popup-delay="500"
           ng-hide="isPipelineRunning || previewMode || snapshotMode"
           ng-if="isAuthorized([userRoles.admin, userRoles.creator]) && common.sdcExecutionMode != pipelineConstant.SLAVE"
-          ng-click="previewPipeline()"
-          ng-disabled="!pipelineConfig.previewable">
+          ng-disabled="!pipelineConfig.previewable"
+          ng-click="!pipelineConfig.previewable || previewPipeline()">
         <span class="glyphicon glyphicon-eye-open fa-14x"></span>
       </a>
 
@@ -249,7 +249,7 @@
          ng-if="isAuthorized([userRoles.admin, userRoles.creator]) && common.sdcExecutionMode != pipelineConstant.SLAVE"
          ng-hide="isPipelineRunning || previewMode || snapshotMode"
          ng-disabled="!pipelineConfig.valid"
-         ng-click="validatePipeline()">
+         ng-click="!pipelineConfig.valid || validatePipeline()">
         <span class="glyphicon glyphicon-ok-circle fa-14x"></span>
       </a>
 
@@ -260,7 +260,7 @@
           ng-hide="isPipelineRunning || previewMode || snapshotMode"
           ng-if="isAuthorized([userRoles.admin, userRoles.manager])"
           ng-disabled="!pipelineConfig.valid"
-          ng-click="startPipeline()">
+          ng-click="!pipelineConfig.valid || startPipeline()">
         <span class="glyphicon glyphicon-play fa-14x"></span>
       </a>
 

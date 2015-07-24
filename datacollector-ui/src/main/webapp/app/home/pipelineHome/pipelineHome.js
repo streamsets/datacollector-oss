@@ -1358,11 +1358,13 @@ angular
               stageLibrary.version === badRecordHandlingConfigArr[2];
           });
 
-          newValue.errorStage = pipelineService.getNewStageInstance({
-            stage: badRecordsStage,
-            pipelineConfig: $scope.pipelineConfig,
-            errorStage: true
-          });
+          if(badRecordsStage) {
+            newValue.errorStage = pipelineService.getNewStageInstance({
+              stage: badRecordsStage,
+              pipelineConfig: $scope.pipelineConfig,
+              errorStage: true
+            });
+          }
         }
 
         if (configTimeout) {

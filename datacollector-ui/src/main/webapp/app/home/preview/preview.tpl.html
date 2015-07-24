@@ -12,25 +12,6 @@
 
     <div class="pull-right size-toolbar">
 
-      <!--div class="btn-group pull-left detail-settings-dropdown" ng-if="!$storage.dontShowRESTResponseMenu">
-        <a class="btn btn-link dropdown-toggle" data-toggle="dropdown"
-           tooltip-placement="top"
-           tooltip="{{'home.header.more' | translate}}"
-           tooltip-popup-delay="500">
-          <span class="fa fa-ellipsis-h fa-14x pointer"></span>
-        </a>
-        <ul class="dropdown-menu pull-right" role="menu">
-
-          <li role="presentation" class="dropdown-header"
-              translate="home.detailPane.restURL">REST URL</li>
-
-          <li role="presentation">
-            <a role="menuitem" tabindex="-1" href="/rest/{{common.apiVersion}}/pipeline-library/{{pipelineConfig.info.name}}/preview" target="_blank">{{'home.detailPane.pipelinePreviewJSONData' | translate}}</a>
-          </li>
-
-        </ul>
-      </div-->
-
       <span class="fa fa-question-circle fa-14x pointer"
             tooltip-placement="top"
             tooltip="{{'global.form.help' | translate}}"
@@ -86,7 +67,7 @@
          tooltip-placement="bottom" tooltip="{{'global.form.previousStage' | translate}}"
          tooltip-popup-delay="500"
          tooltip-append-to-body="true"
-         ng-click="previousStagePreview(previousStageInstances[0])"
+         ng-click="previousStageInstances.length === 0 || previousStagePreview(previousStageInstances[0])"
          ng-disabled="previousStageInstances.length === 0">
         <span class="glyphicon glyphicon-arrow-left"></span>
       </a>
@@ -114,7 +95,7 @@
          tooltip-popup-delay="500"
          tooltip-append-to-body="true"
          ng-disabled="nextStageInstances.length === 0"
-         ng-click="nextStagePreview(nextStageInstances[0], stagePreviewData.output)">
+         ng-click="nextStageInstances.length === 0 || nextStagePreview(nextStageInstances[0], stagePreviewData.output)">
         <span class="glyphicon glyphicon-arrow-right"></span>
       </a>
 
@@ -122,7 +103,6 @@
          tooltip-placement="bottom" tooltip="{{'home.header.refreshPreview' | translate}}"
          tooltip-popup-delay="500"
          tooltip-append-to-body="true"
-         ng-disabled="previewDataUpdated || pipelineConfigUpdated"
          ng-click="previewPipeline(true)">
         <span class="fa fa-refresh"></span>
       </a>
@@ -132,7 +112,7 @@
          tooltip-popup-delay="500"
          tooltip-append-to-body="true"
          ng-disabled="!previewDataUpdated && !pipelineConfigUpdated"
-         ng-click="stepPreview(detailPaneConfig, stagePreviewData.input)">
+         ng-click="(!previewDataUpdated && !pipelineConfigUpdated) || stepPreview(detailPaneConfig, stagePreviewData.input)">
         <span class="fa fa-refresh"></span> *
       </a>
 
@@ -140,7 +120,7 @@
          tooltip-placement="bottom" tooltip="{{'global.form.revertChanges' | translate}}"
          tooltip-popup-delay="500"
          tooltip-append-to-body="true"
-         ng-click="revertChanges()"
+         ng-click="!previewDataUpdated || revertChanges()"
          ng-disabled="!previewDataUpdated">
         <span class="fa fa-undo"></span>
       </a>
