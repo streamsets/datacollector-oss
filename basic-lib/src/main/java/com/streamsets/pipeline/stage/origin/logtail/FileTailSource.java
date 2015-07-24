@@ -366,33 +366,28 @@ public class FileTailSource extends BaseSource {
     }
 
     while (recordCounter < maxBatchSize && !isTimeout(startTime)) {
-      try {
-        LiveFileChunk chunk = multiDirReader.next(getRemainingWaitTime(startTime));
+      LiveFileChunk chunk = multiDirReader.next(getRemainingWaitTime(startTime));
 
-        if (chunk != null) {
-          String tag = chunk.getTag();
-          tag = (tag != null && tag.isEmpty()) ? null : tag;
-          String liveFileStr = chunk.getFile().serialize();
-          for (FileLine line : chunk.getLines()) {
-            String sourceId = liveFileStr + "::" + line.getFileOffset();
-            try (DataParser parser = parserFactory.getParser(sourceId, line.getText())) {
-              Record record = parser.parse();
-              if (record != null) {
-                if (tag != null) {
-                  record.getHeader().setAttribute("tag", tag);
-                }
-                record.getHeader().setAttribute("file", chunk.getFile().getPath().toString());
-                batchMaker.addRecord(record, outputLane);
-                recordCounter++;
+      if (chunk != null) {
+        String tag = chunk.getTag();
+        tag = (tag != null && tag.isEmpty()) ? null : tag;
+        String liveFileStr = chunk.getFile().serialize();
+        for (FileLine line : chunk.getLines()) {
+          String sourceId = liveFileStr + "::" + line.getFileOffset();
+          try (DataParser parser = parserFactory.getParser(sourceId, line.getText())) {
+            Record record = parser.parse();
+            if (record != null) {
+              if (tag != null) {
+                record.getHeader().setAttribute("tag", tag);
               }
-            } catch (IOException | DataParserException ex) {
-              handleException(sourceId, ex);
+              record.getHeader().setAttribute("file", chunk.getFile().getPath().toString());
+              batchMaker.addRecord(record, outputLane);
+              recordCounter++;
             }
+          } catch (IOException | DataParserException ex) {
+            handleException(sourceId, ex);
           }
         }
-      } catch (IOException ex) {
-        LOG.warn("Error while reading file: {}", ex.getMessage(), ex);
-        multiDirReader.purge();
       }
     }
 
@@ -406,7 +401,7 @@ public class FileTailSource extends BaseSource {
         map.put("fileName", Field.create(file.getPath().toString()));
         map.put("inode", Field.create(file.getINode()));
         map.put("time", Field.createDate(now));
-        map.put("event", Field.create((event.isStart() ? "START" : "END")));
+        map.put("event", Field.create((event.getAction().name())));
         metadataRecord.set(Field.create(map));
         batchMaker.addRecord(metadataRecord, metadataLane);
       } catch (IOException ex) {

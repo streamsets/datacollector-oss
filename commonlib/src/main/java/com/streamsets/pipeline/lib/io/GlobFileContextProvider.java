@@ -124,7 +124,9 @@ public class GlobFileContextProvider implements FileContextProvider {
       if (!fileContext.isActive()) {
         fileContext.close();
         iterator.remove();
-        fileToGlobFile.get(fileContext).forget(fileContext.getMultiFileInfo());
+        if (fileToGlobFile.containsKey(fileContext)) {
+          fileToGlobFile.get(fileContext).forget(fileContext.getMultiFileInfo());
+        }
         LOG.debug("Removed '{}'", fileContext);
         purgedAtLeastOne = true;
       }

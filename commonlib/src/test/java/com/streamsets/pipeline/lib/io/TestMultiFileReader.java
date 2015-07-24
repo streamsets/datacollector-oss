@@ -135,7 +135,7 @@ public class TestMultiFileReader {
     //after first read we should get 1st file start event
     Assert.assertEquals(1, mdr.getEvents().size());
     LiveFile lf1 = new LiveFile(file1.toPath());
-    Assert.assertEquals(new FileEvent(lf1, true), mdr.getEvents().get(0));
+    Assert.assertEquals(new FileEvent(lf1, FileEvent.Action.START), mdr.getEvents().get(0));
 
     Files.write(file1.toPath(), Arrays.asList("f1.01"), UTF8, StandardOpenOption.APPEND);
 
@@ -150,7 +150,7 @@ public class TestMultiFileReader {
     //after first read we should get 2nd file start event
     Assert.assertEquals(1, mdr.getEvents().size());
     LiveFile lf2 = new LiveFile(file2.toPath());
-    Assert.assertEquals(new FileEvent(lf2, true), mdr.getEvents().get(0));
+    Assert.assertEquals(new FileEvent(lf2, FileEvent.Action.START), mdr.getEvents().get(0));
 
     Assert.assertNotNull(chunk);
     Assert.assertEquals("tag2", chunk.getTag());
@@ -205,7 +205,7 @@ public class TestMultiFileReader {
     //after first read we should get 1 file end event for the original lf2
     LiveFile oldLf2 = lf2.refresh(); //old because it is renamed
     Assert.assertEquals(1, mdr.getEvents().size());
-    Assert.assertEquals(new FileEvent(oldLf2, false), mdr.getEvents().get(0));
+    Assert.assertEquals(new FileEvent(oldLf2, FileEvent.Action.END), mdr.getEvents().get(0));
 
     Assert.assertNotNull(chunk);
     Assert.assertEquals("tag2", chunk.getTag());
@@ -220,7 +220,7 @@ public class TestMultiFileReader {
 
     //after first read we should get 1 file start event for the new lf2
     Assert.assertEquals(1, mdr.getEvents().size());
-    Assert.assertEquals(new FileEvent(new LiveFile(file2.toPath()), true), mdr.getEvents().get(0));
+    Assert.assertEquals(new FileEvent(new LiveFile(file2.toPath()), FileEvent.Action.START), mdr.getEvents().get(0));
 
     long start = System.currentTimeMillis();
     while (chunk == null && System.currentTimeMillis() - start < 10000) {
