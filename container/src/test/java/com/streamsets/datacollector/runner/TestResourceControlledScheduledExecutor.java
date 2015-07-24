@@ -15,9 +15,6 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 public class TestResourceControlledScheduledExecutor {
 
-  private final long startTime = System.currentTimeMillis() - 60000L;
-
-
   @Test
   public void testTypicalAverage() {
     Assert.assertEquals(5940000, ResourceControlledScheduledExecutor.calculateDelay(60000L, 0.01));

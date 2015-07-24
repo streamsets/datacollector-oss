@@ -12,42 +12,33 @@ import com.streamsets.datacollector.execution.Manager;
 import com.streamsets.datacollector.execution.PipelineStateStore;
 import com.streamsets.datacollector.execution.PipelineStatus;
 import com.streamsets.datacollector.execution.Runner;
+import com.streamsets.datacollector.execution.StateListener;
 import com.streamsets.datacollector.execution.manager.standalone.StandaloneAndClusterPipelineManager;
-import com.streamsets.datacollector.execution.runner.common.AsyncRunner;
-import com.streamsets.datacollector.execution.runner.common.ProductionPipeline;
-import com.streamsets.datacollector.execution.runner.common.ProductionPipelineBuilder;
-import com.streamsets.datacollector.execution.runner.common.ProductionPipelineRunnable;
-import com.streamsets.datacollector.execution.runner.common.ProductionPipelineRunner;
 import com.streamsets.datacollector.execution.runner.standalone.StandaloneRunner;
 import com.streamsets.datacollector.execution.snapshot.common.SnapshotInfoImpl;
 import com.streamsets.datacollector.execution.snapshot.file.FileSnapshotStore;
 import com.streamsets.datacollector.main.RuntimeInfo;
 import com.streamsets.datacollector.main.RuntimeModule;
 import com.streamsets.datacollector.runner.MockStages;
+import com.streamsets.datacollector.runner.PipelineRuntimeException;
 import com.streamsets.datacollector.runner.SourceOffsetTracker;
-import com.streamsets.datacollector.store.PipelineStoreTask;
 import com.streamsets.datacollector.util.Configuration;
 import com.streamsets.datacollector.util.PipelineException;
 import com.streamsets.datacollector.util.TestUtil;
 import com.streamsets.pipeline.api.BatchMaker;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.base.BaseSource;
-
 import dagger.ObjectGraph;
-
-import org.apache.commons.io.FileUtils;
 import org.junit.After;
-import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
 import org.mockito.Mockito;
 
 import java.io.File;
-import java.io.IOException;
-import java.util.Arrays;
 import java.util.Collections;
+import java.util.Map;
+import java.util.UUID;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.CountDownLatch;
@@ -57,28 +48,15 @@ public class TestProdPipelineRunnable {
 
   private static final String SNAPSHOT_NAME = "snapshot";
   private Runner runner;
-  private PipelineStoreTask pipelineStoreTask;
-  private RuntimeInfo info;
   private PipelineStateStore pipelineStateStore;
   private Manager manager;
 
-  @BeforeClass
-  public static void beforeClass() throws IOException {
-    System.setProperty(RuntimeModule.SDC_PROPERTY_PREFIX + RuntimeInfo.DATA_DIR, "./target/var");
-    File f = new File(System.getProperty(RuntimeModule.SDC_PROPERTY_PREFIX + RuntimeInfo.DATA_DIR));
-    FileUtils.deleteDirectory(f);
-  }
-
-  @AfterClass
-  public static void afterClass() throws IOException {
-    System.getProperties().remove(RuntimeModule.SDC_PROPERTY_PREFIX + RuntimeInfo.DATA_DIR);
-  }
-
   @Before()
   public void setUp() throws Exception {
+    File testDir = new File("target", UUID.randomUUID().toString()).getAbsoluteFile();
+    Assert.assertTrue(testDir.mkdirs());
+    System.setProperty(RuntimeModule.SDC_PROPERTY_PREFIX + RuntimeInfo.DATA_DIR, testDir.getAbsolutePath());
     MockStages.resetStageCaptures();
-    info = new RuntimeInfo(RuntimeModule.SDC_PROPERTY_PREFIX, new MetricRegistry(),
-      Arrays.asList(getClass().getClassLoader()));
     ObjectGraph objectGraph = ObjectGraph.create(new TestUtil.TestPipelineManagerModule());
     pipelineStateStore = objectGraph.get(PipelineStateStore.class);
     manager = new StandaloneAndClusterPipelineManager(objectGraph);
@@ -88,7 +66,7 @@ public class TestProdPipelineRunnable {
 
   @After
   public void tearDown() {
-
+    System.getProperties().remove(RuntimeModule.SDC_PROPERTY_PREFIX + RuntimeInfo.DATA_DIR);
   }
 
   @Test
@@ -139,6 +117,12 @@ public class TestProdPipelineRunnable {
     });
 
     ProductionPipeline pipeline = createProductionPipeline(DeliveryGuarantee.AT_MOST_ONCE, false);
+    pipeline.registerStatusListener(new StateListener() {
+      @Override
+      public void stateChanged(PipelineStatus pipelineStatus, String message, Map<String, Object> attributes) throws PipelineRuntimeException {
+
+      }
+    });
     ProductionPipelineRunnable runnable =
       new ProductionPipelineRunnable(null, (StandaloneRunner) ((AsyncRunner) runner).getRunner(), pipeline,
         TestUtil.MY_PIPELINE, "0", Collections.<Future<?>> emptyList());
